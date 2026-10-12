@@ -1,4 +1,5 @@
 using System.Collections;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
@@ -60,6 +61,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Object.Destroy(jugador);
             Object.Destroy(piso);
             Object.Destroy(datos);
+            Registros.LimpiarTodos();
+            EventosLugares.LimpiarSuscriptores();
             base.TearDown();
         }
 

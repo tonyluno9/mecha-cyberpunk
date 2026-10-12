@@ -27,7 +27,7 @@ namespace MechaCyberpunk.Tests.UI
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
         private const float DeltaTimeEstable = 0.05f;
-        private const float SensibilidadRaton = 0.1f;
+        private static float SensibilidadRaton => UnityEditor.AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.ConfigControlesAPie>("Assets/_Proyecto/Personaje/Datos/ConfigControlesAPie_Base.asset").SensibilidadRaton;
 
         protected class JugadorFalso : IJugador
         {

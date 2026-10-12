@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
         private const float DeltaTimeEstable = 0.05f;
-        private const float SensibilidadRaton = 0.1f;
+        private static float SensibilidadRaton => UnityEditor.AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.ConfigControlesAPie>("Assets/_Proyecto/Personaje/Datos/ConfigControlesAPie_Base.asset").SensibilidadRaton;
         private const float GananciaGiro = 0.4f;
         private const float AnguloParaCaminar = 60f;
         private const float GradosMediaVuelta = 180f;
@@ -71,6 +71,19 @@ namespace MechaCyberpunk.Tests.Personaje
             Registros.LimpiarTodos();
             EventosLugares.LimpiarSuscriptores();
             base.TearDown();
+        }
+
+        // La escena se cargó en Single: se destruyen sus raíz para que no contamine otras pruebas.
+        [UnityEngine.TestTools.UnityTearDown]
+        public IEnumerator DescargarEscena()
+        {
+            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                UnityEngine.Object.Destroy(raiz);
+            }
+            yield return null;
+            Registros.LimpiarTodos();
+            EventosLugares.LimpiarSuscriptores();
         }
 
         // ---- Preparación y utilidades ----
