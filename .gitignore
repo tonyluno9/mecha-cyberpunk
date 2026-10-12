@@ -1,0 +1,54 @@
+# Unity: carpetas que Unity regenera
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Proyectos y soluciones que genera el IDE
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# IDEs
+.vs/
+.idea/
+.vscode/
+.consulo/
+ExportedObj/
+
+# Reportes y builds
+sysinfo.txt
+crashlytics-buildid.txt
+*.apk
+*.aab
+*.app
+*.unitypackage
+/[Aa]ssets/[Ss]treaming[Aa]ssets/aa/*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Claude Code: ajustes locales de cada persona
+.claude/settings.local.json

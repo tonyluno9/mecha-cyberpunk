@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.IA",
+    "rootNamespace": "MechaCyberpunk.IA",
+    "references": ["MechaCyberpunk.Core"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Arena",
+    "rootNamespace": "MechaCyberpunk.Arena",
+    "references": ["MechaCyberpunk.Core", "Unity.InputSystem", "UnityEngine.UI"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
