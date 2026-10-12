@@ -23,6 +23,8 @@ namespace MechaCyberpunk.UI.Editor
         private const float SeparacionTextoBarra = 4f;
         private const float LadoPunto = 4f;
         private const float GrosorMira = 2f;
+        private const float AnchoTextoCentral = 800f;
+        private const float AlturaAvisoInteraccion = 110f;
         private const float HuecoMira = 6f;
         private static readonly Color ColorSombra = new Color(0f, 0f, 0f, 0.8f);
         private static readonly Vector2 DesplazamientoSombra = new Vector2(1.5f, -1.5f);
@@ -100,6 +102,27 @@ namespace MechaCyberpunk.UI.Editor
                 Text textoCancion = CrearTexto("Texto", grupoCancion, config, TextAnchor.UpperLeft);
                 Stretch(textoCancion.rectTransform);
 
+                // Objetivo: arriba al centro, con el texto, la flecha que gira y la distancia.
+                float altoObjetivo = AltoTexto + config.LadoFlecha + AltoTexto;
+                RectTransform grupoObjetivo = CrearGrupo("Objetivo", raiz.transform, new Vector2(0.5f, 1f), new Vector2(0f, -config.Margen),
+                    new Vector2(AnchoTextoCentral, altoObjetivo));
+                Text textoObjetivo = CrearTexto("Texto", grupoObjetivo, config, TextAnchor.UpperCenter);
+                Stretch(textoObjetivo.rectTransform);
+                Image flecha = CrearImagen("Flecha", grupoObjetivo, config.ColorTexto);
+                RectTransform rectFlecha = flecha.rectTransform;
+                rectFlecha.anchorMin = rectFlecha.anchorMax = new Vector2(0.5f, 1f);
+                rectFlecha.pivot = new Vector2(0.5f, 0.5f);
+                rectFlecha.anchoredPosition = new Vector2(0f, -AltoTexto - config.LadoFlecha / 2f);
+                rectFlecha.sizeDelta = new Vector2(config.LadoFlecha, config.LadoFlecha);
+                Text textoDistancia = CrearTexto("Distancia", grupoObjetivo, config, TextAnchor.LowerCenter);
+                Stretch(textoDistancia.rectTransform);
+
+                // Interacción: abajo al centro, encima del borde.
+                RectTransform grupoInteraccion = CrearGrupo("Interaccion", raiz.transform, new Vector2(0.5f, 0f),
+                    new Vector2(0f, AlturaAvisoInteraccion), new Vector2(AnchoTextoCentral, AltoTexto));
+                Text textoInteraccion = CrearTexto("Texto", grupoInteraccion, config, TextAnchor.LowerCenter);
+                Stretch(textoInteraccion.rectTransform);
+
                 HudAPie hud = raiz.AddComponent<HudAPie>();
                 SerializedObject so = new SerializedObject(hud);
                 so.FindProperty("config").objectReferenceValue = config;
@@ -112,6 +135,12 @@ namespace MechaCyberpunk.UI.Editor
                 so.FindProperty("textoVida").objectReferenceValue = textoVida;
                 so.FindProperty("textoArma").objectReferenceValue = textoArma;
                 so.FindProperty("textoCancion").objectReferenceValue = textoCancion;
+                so.FindProperty("grupoObjetivo").objectReferenceValue = grupoObjetivo.gameObject;
+                so.FindProperty("textoObjetivo").objectReferenceValue = textoObjetivo;
+                so.FindProperty("flecha").objectReferenceValue = flecha;
+                so.FindProperty("textoDistancia").objectReferenceValue = textoDistancia;
+                so.FindProperty("grupoInteraccion").objectReferenceValue = grupoInteraccion.gameObject;
+                so.FindProperty("textoInteraccion").objectReferenceValue = textoInteraccion;
                 Image[] partes = { punto, arriba, abajo, izquierda, derecha };
                 SerializedProperty lista = so.FindProperty("partesMira");
                 lista.arraySize = partes.Length;

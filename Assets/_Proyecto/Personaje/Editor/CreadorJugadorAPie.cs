@@ -9,6 +9,7 @@ using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Progresion.Pruebas;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -43,6 +44,7 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaMaterialMarca = RutaPersonaje + "/Materiales/Greybox_Marca.mat";
         private const string RutaDatosPistola = RutaPersonaje + "/Datos/DatosPistola_Base.asset";
         private const string RutaPrefabHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
+        private const string RutaPrefabServiciosProgresion = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
         private const string RutaEscena ="Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
 
         private const float AlturaCuerpo = 1.8f;
@@ -472,6 +474,21 @@ namespace MechaCyberpunk.Personaje.Editor
             {
                 PrefabUtility.InstantiatePrefab(prefabHud);
             }
+
+            // Objetivo de la historia (T-057): los servicios de progresión y un fijador que empieza con el Bar.
+            GameObject prefabServicios = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabServiciosProgresion);
+            if (prefabServicios != null)
+            {
+                PrefabUtility.InstantiatePrefab(prefabServicios);
+            }
+            GameObject fijador = new GameObject("Fijador de objetivo");
+            SerializedObject soFijador = new SerializedObject(fijador.AddComponent<FijadorObjetivoDePrueba>());
+            SerializedProperty listaObjetivos = soFijador.FindProperty("objetivos");
+            listaObjetivos.arraySize = 1;
+            SerializedProperty primero = listaObjetivos.GetArrayElementAtIndex(0);
+            primero.FindPropertyRelative("texto").stringValue = "Ve al bar";
+            primero.FindPropertyRelative("lugar").enumValueIndex = (int)IdLugar.Bar;
+            soFijador.ApplyModifiedPropertiesWithoutUndo();
 
             GameObject herramientas = new GameObject("Herramientas de prueba");
             DaniadorDePrueba daniador = herramientas.AddComponent<DaniadorDePrueba>();
