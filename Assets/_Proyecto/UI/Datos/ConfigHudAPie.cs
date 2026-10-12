@@ -42,6 +42,44 @@ namespace MechaCyberpunk.UI
         [Tooltip("Largo de cada brazo de la cruz de la mira (px de referencia).")]
         [Min(1f)] [SerializeField] private float largoMira = 14f;
 
+        [Header("Objetivo e interacción (T-057)")]
+        [Tooltip("Color del aviso REGRESA y de la flecha mientras el jugador se aleja (magenta neón).")]
+        [SerializeField] private Color colorRegresa = new Color(1f, 0.1f, 0.6f, 1f);
+
+        [Tooltip("Cuánto dura el aviso de por qué no abrió una puerta (s).")]
+        [Min(0.1f)] [SerializeField] private float duracionAvisoPuerta = 2f;
+
+        [Tooltip("Pulsos por segundo de la flecha mientras el jugador se aleja (Hz).")]
+        [Min(0.1f)] [SerializeField] private float velocidadPulsoFlecha = 3f;
+
+        [Tooltip("Cuánto crece la flecha al pulsar (0.25 es un 25% más grande).")]
+        [Range(0f, 1f)] [SerializeField] private float amplitudPulsoFlecha = 0.25f;
+
+        [Tooltip("Lado de la flecha del objetivo (px de referencia).")]
+        [Min(8f)] [SerializeField] private float ladoFlecha = 48f;
+
+        [Tooltip("Texto de la E con una puerta de frente; después va el nombre del lugar.")]
+        [SerializeField] private string textoAbrir = "E · Abrir";
+
+        [Tooltip("Aviso del objetivo cuando el jugador se aleja.")]
+        [SerializeField] private string textoRegresa = "REGRESA";
+
+        [Tooltip("Aviso de una puerta cerrada sin horario que la abra.")]
+        [SerializeField] private string textoCerradoProximamente = "CERRADO · PRÓXIMAMENTE";
+
+        [Tooltip("Aviso de una puerta cerrada por horario; {0} es la hora de apertura.")]
+        [SerializeField] private string textoCerradoAbre = "CERRADO · abre {0}";
+
+        public Color ColorRegresa => colorRegresa;
+        public float DuracionAvisoPuerta => duracionAvisoPuerta;
+        public float VelocidadPulsoFlecha => velocidadPulsoFlecha;
+        public float AmplitudPulsoFlecha => amplitudPulsoFlecha;
+        public float LadoFlecha => ladoFlecha;
+        public string TextoAbrir => textoAbrir;
+        public string TextoRegresa => textoRegresa;
+        public string TextoCerradoProximamente => textoCerradoProximamente;
+        public string TextoCerradoAbre => textoCerradoAbre;
+
         public Color ColorVida => colorVida;
         public Color ColorVidaBaja => colorVidaBaja;
         public Color ColorTexto => colorTexto;
