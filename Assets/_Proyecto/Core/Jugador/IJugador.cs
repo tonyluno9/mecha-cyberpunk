@@ -10,7 +10,9 @@ namespace MechaCyberpunk.Core
     /// triggers del mundo lo detecten con <c>GetComponentInParent&lt;IJugador&gt;()</c>.
     /// Se agrega a <c>Registro&lt;IJugador&gt;</c> en <c>OnEnable</c> y se quita en <c>OnDisable</c>;
     /// solo hay un jugador registrado a la vez.
-    /// Por ahora nadie la registra en <c>Registro&lt;IJugador&gt;</c>: lo hará la tarea de la fase T-F4/T-F5 de Tony; no la leas de <c>Registro&lt;IJugador&gt;</c> todavía.
+    /// La registra <c>JugadorAPie</c> (Personaje/, tarea T-051 de la fase T-F3); mientras no esté en main, usa tu cámara libre o un doble.
+    /// <see cref="Camara"/> y <see cref="Modo"/> cambian al subir o bajar de un <see cref="IMontable"/>.
+    /// El jugador a pie NO es <see cref="IPeleador"/>: <c>DirectorPelea</c> y los rivales buscan al jugador como el <see cref="IPeleador"/> de lado Jugador.
     /// </summary>
     public interface IJugador
     {

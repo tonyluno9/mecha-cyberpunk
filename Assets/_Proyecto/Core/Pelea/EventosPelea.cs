@@ -10,7 +10,7 @@ namespace MechaCyberpunk.Core
         public static event Action<int> ConteoCambio;
         public static event Action PeleaIniciada;
         public static event Action<ResultadoPelea> PeleaTerminada;
-        /// <summary>Objetivo, daño pedido y resultado.</summary>
+        /// <summary>Objetivo, daño pedido y resultado. El objetivo es null si quien recibió el daño no es un <see cref="IPeleador"/> (personas a pie, muñecos); tolera null.</summary>
         public static event Action<IPeleador, InfoDanio, ResultadoDanio> ImpactoRecibido;
 
         public static void PublicarConteo(int numero) => ConteoCambio?.Invoke(numero);
