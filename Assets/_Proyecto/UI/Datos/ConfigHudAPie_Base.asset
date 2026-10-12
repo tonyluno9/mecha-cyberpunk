@@ -35,6 +35,10 @@ MonoBehaviour:
   textoRegresa: REGRESA
   textoCerradoProximamente: "CERRADO \xB7 PR\xD3XIMAMENTE"
   textoCerradoAbre: "CERRADO \xB7 abre {0}"
+  textoMechaEnCamino: "MECHA EN CAMINO \xB7 {0}"
+  textoZonaProhibida: "AQU\xCD NO PUEDE LLEGAR TU MECHA"
+  textoMechaRegresa: TU MECHA REGRESA AL TALLER
+  duracionAvisoLlamado: 2.5
   textoVida: VIDA {0}
   textoPunos: "PU\xD1OS"
   textoPistola: PISTOLA {0}/{1}

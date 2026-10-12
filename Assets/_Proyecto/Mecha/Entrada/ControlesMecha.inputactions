@@ -221,6 +221,35 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Llamado",
+            "id": "2c0945a5-d144-4847-a39c-d3c71530d68b",
+            "actions": [
+                {
+                    "name": "LlamarMecha",
+                    "type": "Button",
+                    "id": "8f35d03d-df9c-40a3-bcd9-f99ca612f01e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "efacc2de-1716-47f3-a426-ade4d9339d22",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LlamarMecha",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

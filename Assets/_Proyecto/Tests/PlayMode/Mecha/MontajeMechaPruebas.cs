@@ -23,6 +23,7 @@ namespace MechaCyberpunk.Tests.Mecha
     {
         private const string RutaCalle = "Assets/_Proyecto/Escenas/Tony/Pruebas_Calle.unity";
         private const string RutaTony = "Assets/_Proyecto/Escenas/Pruebas_Tony.unity";
+        private const float DistanciaInicialAlTaller = 5f;
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
         private const float DeltaTimeEstable = 0.05f;
@@ -112,6 +113,9 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.IsNotNull(montaje, "Pruebas_Calle trae el mecha");
             controlador = montaje.GetComponent<ControladorMecha>();
             interaccion.BajarNegado += () => bajarNegado++;
+            // El mecha arranca en el taller, detrás del inicio (T-066): el jugador se coloca de frente a él, a unos metros.
+            Transform mecha = montaje.transform;
+            jugador.Colocar(new Pose(mecha.position + mecha.forward * DistanciaInicialAlTaller, Quaternion.LookRotation(-mecha.forward)));
             yield return null;
         }
 

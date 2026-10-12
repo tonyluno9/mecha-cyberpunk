@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Mecha.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Pruebas;
 using UnityEditor;
@@ -19,6 +20,7 @@ namespace MechaCyberpunk.Mecha.Editor
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Calle.unity";
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaMecha = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
+        private const string RutaHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
         private const string RutaMaterialPiso = "Assets/_Proyecto/Mecha/Materiales/Calle_Piso.mat";
         private const string RutaMaterialAsfalto = "Assets/_Proyecto/Mecha/Materiales/Calle_Asfalto.mat";
         private const string RutaMaterialEdificio = "Assets/_Proyecto/Mecha/Materiales/Calle_Edificio.mat";
@@ -37,6 +39,16 @@ namespace MechaCyberpunk.Mecha.Editor
         private const float XBorde = 30f;
         private const float ZMecha = 8f;
         private const float AlturaInicio = 0.05f;
+
+        // Taller (T-066): un cobertizo detrás del inicio, abierto hacia +Z. Su estacionamiento es el centro.
+        private const float ZTaller = -5f;
+        private const float LadoTaller = 8f;
+        private const float AlturaTecho = 6f;
+        private const float GrosorTecho = 0.3f;
+        private const float GrosorPared = 0.4f;
+        // Zona de llamado: la llegada y su radio. Más allá de la zona (más de 75 m del inicio) el mecha no llega.
+        private const float ZLlegada = 20f;
+        private const float RadioLlamado = 30f;
 
         [MenuItem("Mecha Cyberpunk/Crear escena Pruebas_Calle")]
         public static void Crear()
@@ -91,9 +103,39 @@ namespace MechaCyberpunk.Mecha.Editor
             GameObject mecha = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaMecha));
             mecha.transform.SetPositionAndRotation(new Vector3(0f, AlturaInicio, ZMecha), Quaternion.Euler(0f, 180f, 0f));
 
+            ArmarLlamado(edificio);
+
+            GameObject hud = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
+            hud.name = "HudAPie";
+
             EditorSceneManager.SaveScene(escena, RutaEscena);
             AssetDatabase.SaveAssets();
             Debug.Log("[Mecha] Pruebas_Calle creada.");
+        }
+
+        // Taller con cobertizo greybox y un punto de llamado en la calle (dobles de lo de Alan).
+        private static void ArmarLlamado(Material material)
+        {
+            GameObject taller = new GameObject("Taller");
+            taller.transform.SetPositionAndRotation(new Vector3(0f, 0f, ZTaller), Quaternion.identity);
+            taller.AddComponent<TallerDePrueba>();
+            float mitad = LadoTaller / 2f;
+            CajaHija(taller.transform, "Techo", new Vector3(0f, AlturaTecho + GrosorTecho / 2f, 0f),
+                new Vector3(LadoTaller + GrosorPared * 2f, GrosorTecho, LadoTaller), material);
+            CajaHija(taller.transform, "Pared izquierda", new Vector3(-mitad - GrosorPared / 2f, AlturaTecho / 2f, 0f),
+                new Vector3(GrosorPared, AlturaTecho, LadoTaller), material);
+            CajaHija(taller.transform, "Pared derecha", new Vector3(mitad + GrosorPared / 2f, AlturaTecho / 2f, 0f),
+                new Vector3(GrosorPared, AlturaTecho, LadoTaller), material);
+
+            GameObject punto = new GameObject("PuntoLlamado Calle");
+            punto.transform.SetPositionAndRotation(new Vector3(0f, 0f, ZLlegada), Quaternion.Euler(0f, 180f, 0f));
+            punto.AddComponent<PuntoLlamadoDePrueba>().Configurar(RadioLlamado, true);
+        }
+
+        private static void CajaHija(Transform padre, string nombre, Vector3 centroLocal, Vector3 tamano, Material material)
+        {
+            GameObject caja = Caja(nombre, padre.TransformPoint(centroLocal), tamano, material, true);
+            caja.transform.SetParent(padre, true);
         }
 
         private static void Edificio(string nombre, float centroX, float zInicio, float zFin, float ancho, Material material)

@@ -76,6 +76,19 @@ namespace MechaCyberpunk.UI
         [Tooltip("Aviso de una puerta cerrada por horario; {0} es la hora de apertura.")]
         [SerializeField] private string textoCerradoAbre = "CERRADO · abre {0}";
 
+        [Header("Llamado del mecha (T-066)")]
+        [Tooltip("Aviso mientras el mecha viene en camino; {0} son los segundos que faltan.")]
+        [SerializeField] private string textoMechaEnCamino = "MECHA EN CAMINO · {0}";
+
+        [Tooltip("Aviso al llamar al mecha fuera de toda zona permitida.")]
+        [SerializeField] private string textoZonaProhibida = "AQUÍ NO PUEDE LLEGAR TU MECHA";
+
+        [Tooltip("Aviso mientras el mecha vuelve al taller.")]
+        [SerializeField] private string textoMechaRegresa = "TU MECHA REGRESA AL TALLER";
+
+        [Tooltip("Cuánto dura el aviso de zona prohibida (s).")]
+        [Min(0.1f)] [SerializeField] private float duracionAvisoLlamado = 2.5f;
+
         [Header("Textos de vida y arma")]
         [Tooltip("Texto de la vida; {0} es la vida redondeada hacia arriba.")]
         [SerializeField] private string textoVida = "VIDA {0}";
@@ -92,6 +105,10 @@ namespace MechaCyberpunk.UI
         [Tooltip("Lo que se agrega al texto de la pistola cuando no le quedan balas.")]
         [SerializeField] private string textoPistolaSinBalas = " · R";
 
+        public string TextoMechaEnCamino => textoMechaEnCamino;
+        public string TextoZonaProhibida => textoZonaProhibida;
+        public string TextoMechaRegresa => textoMechaRegresa;
+        public float DuracionAvisoLlamado => duracionAvisoLlamado;
         public Color ColorRegresa => colorRegresa;
         public float DuracionAvisoPuerta => duracionAvisoPuerta;
         public float VelocidadPulsoFlecha => velocidadPulsoFlecha;

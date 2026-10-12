@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Mecha.Llamado;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Progresion;
@@ -38,6 +39,13 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private GameObject grupoInteraccion;
         [SerializeField] private Text textoInteraccion;
 
+        [Header("Llamado del mecha (arriba de la interacción)")]
+        [SerializeField] private GameObject grupoLlamado;
+        [SerializeField] private Text textoLlamado;
+
+        private LlamadoMecha llamado;
+        private string avisoLlamado = string.Empty;
+        private float avisoLlamadoRestante;
         private IJugador jugador;
         private IVida vida;
         private ArmasAPie armas;
@@ -66,6 +74,8 @@ namespace MechaCyberpunk.UI.Hud
         public Text TextoDistancia => textoDistancia;
         public GameObject GrupoInteraccion => grupoInteraccion;
         public Text TextoAvisoInteraccion => textoInteraccion;
+        public GameObject GrupoLlamado => grupoLlamado;
+        public Text TextoLlamado => textoLlamado;
 
         /// <summary>Último ángulo (°) calculado para la flecha: 0 enfrente, positivo a la derecha.</summary>
         public float AnguloFlecha => anguloFlecha;
@@ -75,7 +85,7 @@ namespace MechaCyberpunk.UI.Hud
             if (config == null || grupoVida == null || grupoMira == null || grupoArma == null || grupoCancion == null
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
                 || grupoObjetivo == null || textoObjetivo == null || flecha == null || textoDistancia == null
-                || grupoInteraccion == null || textoInteraccion == null)
+                || grupoInteraccion == null || textoInteraccion == null || grupoLlamado == null || textoLlamado == null)
             {
                 Debug.LogError("[UI] Faltan referencias en HudAPie de " + name, this);
                 enabled = false;
@@ -102,6 +112,7 @@ namespace MechaCyberpunk.UI.Hud
             textoObjetivo.color = config.ColorTexto;
             textoDistancia.color = config.ColorTexto;
             textoInteraccion.color = config.ColorTexto;
+            textoLlamado.color = config.ColorTexto;
             if (partesMira != null)
             {
                 foreach (Image parte in partesMira)
@@ -131,7 +142,10 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IJugador>.Quitado += AlQuitarJugador;
             Registro<IObjetivos>.Agregado += AlAgregarObjetivos;
             Registro<IObjetivos>.Quitado += AlQuitarObjetivos;
+            Registro<LlamadoMecha>.Agregado += AlAgregarLlamado;
+            Registro<LlamadoMecha>.Quitado += AlQuitarLlamado;
             VincularObjetivos(Registro<IObjetivos>.Actual);
+            VincularLlamado(Registro<LlamadoMecha>.Actual);
             Vincular(Registro<IJugador>.Actual);
         }
 
@@ -145,6 +159,7 @@ namespace MechaCyberpunk.UI.Hud
             }
             ActualizarFlecha();
             ActualizarInteraccion();
+            ActualizarLlamado();
         }
 
         private void OnDisable()
@@ -157,8 +172,11 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IJugador>.Quitado -= AlQuitarJugador;
             Registro<IObjetivos>.Agregado -= AlAgregarObjetivos;
             Registro<IObjetivos>.Quitado -= AlQuitarObjetivos;
+            Registro<LlamadoMecha>.Agregado -= AlAgregarLlamado;
+            Registro<LlamadoMecha>.Quitado -= AlQuitarLlamado;
             Desvincular();
             DesvincularObjetivos();
+            DesvincularLlamado();
         }
 
         private void OnDestroy()
@@ -273,6 +291,7 @@ namespace MechaCyberpunk.UI.Hud
             grupoCancion.SetActive(false);
             grupoObjetivo.SetActive(false);
             grupoInteraccion.SetActive(false);
+            grupoLlamado.SetActive(false);
         }
 
         private void ActualizarVida()
@@ -419,6 +438,73 @@ namespace MechaCyberpunk.UI.Hud
             textura.SetPixels32(pixeles);
             textura.Apply();
             return textura;
+        }
+
+        // ---- Llamado del mecha ----
+
+        private void AlAgregarLlamado(LlamadoMecha nuevo) => VincularLlamado(nuevo);
+
+        private void AlQuitarLlamado(LlamadoMecha quitado)
+        {
+            if (quitado == llamado)
+            {
+                VincularLlamado(Registro<LlamadoMecha>.Actual);
+            }
+        }
+
+        private void VincularLlamado(LlamadoMecha nuevo)
+        {
+            DesvincularLlamado();
+            llamado = nuevo;
+            if (llamado != null)
+            {
+                llamado.LlamadoIntentado += AlIntentarLlamado;
+            }
+        }
+
+        private void DesvincularLlamado()
+        {
+            if (llamado != null)
+            {
+                llamado.LlamadoIntentado -= AlIntentarLlamado;
+            }
+            llamado = null;
+            avisoLlamado = string.Empty;
+            avisoLlamadoRestante = 0f;
+        }
+
+        // Solo la zona prohibida deja un aviso temporal; la llegada y el regreso se muestran mientras duran.
+        private void AlIntentarLlamado(ResultadoLlamado resultado)
+        {
+            if (resultado == ResultadoLlamado.ZonaProhibida)
+            {
+                avisoLlamado = config.TextoZonaProhibida;
+                avisoLlamadoRestante = config.DuracionAvisoLlamado;
+            }
+        }
+
+        // A pie y en carro; en la cabina no (todo es diegético).
+        private void ActualizarLlamado()
+        {
+            string texto = string.Empty;
+            if (llamado != null && jugador != null && jugador.Modo != ModoJugador.Mecha)
+            {
+                if (llamado.Estado == EstadoLlamado.Llegando)
+                {
+                    texto = string.Format(config.TextoMechaEnCamino, Mathf.CeilToInt(llamado.SegundosParaLlegar));
+                }
+                else if (llamado.Estado == EstadoLlamado.Regresando)
+                {
+                    texto = config.TextoMechaRegresa;
+                }
+                else if (avisoLlamadoRestante > 0f)
+                {
+                    avisoLlamadoRestante -= Time.deltaTime;
+                    texto = avisoLlamado;
+                }
+            }
+            textoLlamado.text = texto;
+            grupoLlamado.SetActive(texto.Length > 0);
         }
 
         // ---- Interacción ----

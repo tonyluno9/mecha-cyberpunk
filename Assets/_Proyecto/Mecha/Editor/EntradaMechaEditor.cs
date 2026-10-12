@@ -15,13 +15,16 @@ namespace MechaCyberpunk.Mecha.Editor
         public const string RutaEntrada = "Assets/_Proyecto/Mecha/Entrada/ControlesMecha.inputactions";
         public const string NombreMapa = "Mecha";
 
-        /// <summary>Agrega la acción con un binding a la ruta dada si el mapa no la tiene. Devuelve true si la agregó.</summary>
-        public static bool AgregarAccion(string nombre, string ruta, InputActionType tipo = InputActionType.Button)
+        /// <summary>
+        /// Agrega la acción con un binding a la ruta dada si el mapa no la tiene (el mapa se crea si no existe; por defecto
+        /// "Mecha"). Devuelve true si la agregó.
+        /// </summary>
+        public static bool AgregarAccion(string nombre, string ruta, InputActionType tipo = InputActionType.Button, string mapaNombre = NombreMapa)
         {
             InputActionAsset asset = InputActionAsset.FromJson(File.ReadAllText(RutaEntrada));
             try
             {
-                InputActionMap mapa = asset.FindActionMap(NombreMapa, true);
+                InputActionMap mapa = asset.FindActionMap(mapaNombre) ?? asset.AddActionMap(mapaNombre);
                 if (mapa.FindAction(nombre) != null)
                 {
                     return false;
