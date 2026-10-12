@@ -9,18 +9,20 @@ Diseño en docs/diseno/, fase actual y tareas en docs/estado.md, decisiones en d
 ## Equipo y modo de trabajo
 
 Somos Tony y Alan. En documentos viejos, "compañero" o "compa" es Alan (D-021).
-El trabajo se hace en **modo automático**: la persona dice "trabaja" o "haz lo que me toca" y Claude sigue
-`.claude/skills/trabajar/SKILL.md`. Claude ejecuta, verifica, revisa e integra todas las tareas de esa persona
-sin pedirle que compruebe nada; lo que solo un humano puede juzgar queda en docs/revision-<persona>.md
-para la revisión nocturna. Si alguien dice "haz lo que indique el repo" o "haz todo lo que me toca", es lo mismo.
+El trabajo se hace en **modo automático**, en dos turnos (D-024), siguiendo `.claude/skills/trabajar/SKILL.md`:
+- **Turno de día**: solo Sonnet. Hace y verifica todas las tareas de la persona y las integra en `<persona>/fase-N`.
+- **Turno de noche**: Opus revisa a fondo todo lo del día, corrige y deja docs/revision-<persona>.md listo.
+Claude no le pide a la persona que compruebe nada; solo lo que necesita a un humano queda en la revisión.
+"Trabaja" o "haz lo que me toca" es el turno de día; "revisa" o "me voy a dormir" es el turno de noche.
 
-| Rol | Modelo | Archivo |
-| --- | --- | --- |
-| Orquestador (sesión principal) | Opus 5.5, medium | .claude/skills/trabajar/SKILL.md |
-| Implementador | Sonnet 5.5, medium | .claude/agents/implementador.md |
-| Verificador | Sonnet 5.5, medium | .claude/agents/verificador.md |
-| Revisor | Opus 5.5, high | .claude/agents/revisor.md |
-| Planificador | Opus 5.5, high | .claude/agents/planificador.md |
+| Rol | Turno | Modelo | Archivo |
+| --- | --- | --- | --- |
+| Orquestador (sesión principal) | Día | Sonnet 5.5, medium | .claude/skills/trabajar/SKILL.md |
+| Orquestador (sesión principal) | Noche | Opus 5.5, medium | .claude/skills/trabajar/SKILL.md |
+| Implementador | Los dos | Sonnet 5.5, medium | .claude/agents/implementador.md |
+| Verificador | Los dos | Sonnet 5.5, medium | .claude/agents/verificador.md |
+| Revisor | Noche | Opus 5.5, high | .claude/agents/revisor.md |
+| Planificador | Noche, si se pide | Opus 5.5, high | .claude/agents/planificador.md |
 
 La guía para personas está en docs/ARRANQUE.md.
 

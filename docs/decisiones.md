@@ -103,3 +103,9 @@ escribe solo en docs/estado-<persona>.md, docs/decisiones-pendientes-<persona>.m
 Un criterio de aceptación se da por cumplido solo con evidencia: prueba automática, valor medido en Unity en vivo o
 captura revisada. Las tareas jugables llevan pruebas de PlayMode con entrada simulada. Solo los criterios de
 sensación o gusto visual quedan para la revisión nocturna.
+
+### D-024 Turnos de día y de noche
+De día trabaja solo Sonnet 5.5: el orquestador, el implementador y el verificador. Hace y verifica las tareas y las
+integra en `<persona>/fase-N` marcadas "hecha (sin revisar)". De noche, cuando la persona lo pide, el orquestador corre
+en Opus 5.5 y el revisor (Opus 5.5, high) revisa cada tarea del día y el conjunto, y se corrige lo importante.
+main solo cambia cuando la persona aprueba después de probar. Reemplaza el paso del revisor por tarea de D-022.
