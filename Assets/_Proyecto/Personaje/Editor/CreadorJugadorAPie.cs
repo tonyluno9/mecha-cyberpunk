@@ -43,6 +43,10 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaMaterialPistola = RutaPersonaje + "/Materiales/Greybox_Pistola.mat";
         private const string RutaMaterialMarca = RutaPersonaje + "/Materiales/Greybox_Marca.mat";
         private const string RutaDatosPistola = RutaPersonaje + "/Datos/DatosPistola_Base.asset";
+        private const string RutaEntradaCarro = RutaPersonaje + "/Pruebas/ControlesCarroDePrueba.inputactions";
+        private const string RutaConfigCarro = RutaPersonaje + "/Datos/ConfigCarroDePrueba_Base.asset";
+        private const string RutaPrefabCarro = RutaPersonaje + "/Pruebas/CarroDePrueba.prefab";
+        private const string RutaMaterialCarro = RutaPersonaje + "/Materiales/Greybox_Carro.mat";
         private const string RutaPrefabHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
         private const string RutaPrefabServiciosProgresion = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
         private const string RutaEscena ="Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
@@ -53,6 +57,8 @@ namespace MechaCyberpunk.Personaje.Editor
         private const float DistanciaManos = 0.5f;
         private const float LadoPiso = 200f;
         private const float PosicionZLocales = -50f;
+        private const float CalleCarroX = 60f;
+        private const float CalleCarroLargo = 60f;
 
         [MenuItem("Mecha Cyberpunk/Crear T-051")]
         public static void Crear()
@@ -71,6 +77,8 @@ namespace MechaCyberpunk.Personaje.Editor
             CrearAsset<ConfigControlesAPie>(RutaConfig);
             CrearAsset<ConfigInteraccionAPie>(RutaConfigInteraccion);
             CrearAsset<DatosPistola>(RutaDatosPistola);
+            CrearAsset<ConfigCarroDePrueba>(RutaConfigCarro);
+            CrearEntradaCarro();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
@@ -85,6 +93,7 @@ namespace MechaCyberpunk.Personaje.Editor
             CrearPrefab(cuerpo, puno, pistola, marca);
             CrearPrefabMuneco(muneco);
             CrearPrefabLocal(cubo, obstaculo);
+            CrearPrefabCarro(CrearMaterial(RutaMaterialCarro, new Color(0.9f, 0.2f, 0.45f)));
             CrearEscena(piso, cubo, obstaculo);
             AssetDatabase.SaveAssets();
             Debug.Log("[Personaje] T-051 creada.");
@@ -137,6 +146,85 @@ namespace MechaCyberpunk.Personaje.Editor
             File.WriteAllText(RutaEntrada, asset.ToJson());
             Object.DestroyImmediate(asset);
             AssetDatabase.ImportAsset(RutaEntrada);
+        }
+
+        // Manejo del carro de prueba con las flechas, para no chocar con WASD. Si ya existe se conserva.
+        private static void CrearEntradaCarro()
+        {
+            if (File.Exists(RutaEntradaCarro))
+            {
+                return;
+            }
+            InputActionAsset asset = ScriptableObject.CreateInstance<InputActionAsset>();
+            asset.name = "ControlesCarroDePrueba";
+            InputActionMap mapa = asset.AddActionMap("Carro");
+            InputAction conducir = mapa.AddAction("Conducir", InputActionType.Value, expectedControlLayout: "Vector2");
+            conducir.AddCompositeBinding("2DVector")
+                .With("Up", "<Keyboard>/upArrow")
+                .With("Down", "<Keyboard>/downArrow")
+                .With("Left", "<Keyboard>/leftArrow")
+                .With("Right", "<Keyboard>/rightArrow");
+            File.WriteAllText(RutaEntradaCarro, asset.ToJson());
+            Object.DestroyImmediate(asset);
+            AssetDatabase.ImportAsset(RutaEntradaCarro);
+        }
+
+        private static InputActionReference ReferenciaCarro()
+        {
+            return AssetDatabase.LoadAllAssetsAtPath(RutaEntradaCarro)
+                .OfType<InputActionReference>()
+                .First(r => r.action != null && r.action.name == "Conducir");
+        }
+
+        // Carro de prueba: caja de 2 x 1.5 x 4.2 m (ancho, alto, largo) con el frente en +Z; el asiento y la puerta van a la izquierda (-X).
+        private static void CrearPrefabCarro(Material material)
+        {
+            const float ancho = 2f;
+            const float alto = 1.5f;
+            const float largo = 4.2f;
+            const float distanciaPuerta = 1f;
+
+            GameObject raiz = new GameObject("CarroDePrueba");
+            raiz.AddComponent<Rigidbody>().isKinematic = true;
+            BoxCollider caja = raiz.AddComponent<BoxCollider>();
+            caja.center = new Vector3(0f, alto / 2f, 0f);
+            caja.size = new Vector3(ancho, alto, largo);
+
+            GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            visual.name = "Caja";
+            Object.DestroyImmediate(visual.GetComponent<Collider>());
+            visual.transform.SetParent(raiz.transform, false);
+            visual.transform.localPosition = new Vector3(0f, alto / 2f, 0f);
+            visual.transform.localScale = new Vector3(ancho, alto, largo);
+            visual.GetComponent<MeshRenderer>().sharedMaterial = material;
+
+            GameObject asiento = new GameObject("Asiento");
+            asiento.transform.SetParent(raiz.transform, false);
+            asiento.transform.localPosition = new Vector3(-ancho / 4f, 0.1f, 0.4f);
+
+            GameObject camaraObj = new GameObject("Camara");
+            camaraObj.transform.SetParent(raiz.transform, false);
+            camaraObj.transform.localPosition = new Vector3(0f, 3.2f, -7f);
+            camaraObj.transform.localRotation = Quaternion.Euler(12f, 0f, 0f);
+            Camera camara = camaraObj.AddComponent<Camera>();
+            camara.nearClipPlane = 0.1f;
+            camara.enabled = false;
+            camaraObj.AddComponent<AudioListener>().enabled = false;
+
+            GameObject puntoSubida = new GameObject("PuntoSubida");
+            puntoSubida.transform.SetParent(raiz.transform, false);
+            puntoSubida.transform.localPosition = new Vector3(-(ancho / 2f + distanciaPuerta), 0f, 0.4f);
+
+            SerializedObject so = new SerializedObject(raiz.AddComponent<CarroDePrueba>());
+            so.FindProperty("config").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ConfigCarroDePrueba>(RutaConfigCarro);
+            so.FindProperty("asiento").objectReferenceValue = asiento.transform;
+            so.FindProperty("camara").objectReferenceValue = camara;
+            so.FindProperty("puntoSubida").objectReferenceValue = puntoSubida.transform;
+            so.FindProperty("conducir").objectReferenceValue = ReferenciaCarro();
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabCarro);
+            Object.DestroyImmediate(raiz);
         }
 
         private static InputActionReference Referencia(string nombreAccion)
@@ -489,6 +577,11 @@ namespace MechaCyberpunk.Personaje.Editor
             primero.FindPropertyRelative("texto").stringValue = "Ve al bar";
             primero.FindPropertyRelative("lugar").enumValueIndex = (int)IdLugar.Bar;
             soFijador.ApplyModifiedPropertiesWithoutUndo();
+
+            // Carro de prueba (T-058) en una calle despejada de 60 m (x = 60, de z = -30 a z = 30), mirando a +Z.
+            GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabCarro));
+            carro.name = "Carro de prueba";
+            carro.transform.position = new Vector3(CalleCarroX, 0f, -CalleCarroLargo / 2f);
 
             GameObject herramientas = new GameObject("Herramientas de prueba");
             DaniadorDePrueba daniador = herramientas.AddComponent<DaniadorDePrueba>();

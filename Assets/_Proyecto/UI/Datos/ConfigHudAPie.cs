@@ -61,6 +61,12 @@ namespace MechaCyberpunk.UI
         [Tooltip("Texto de la E con una puerta de frente; después va el nombre del lugar.")]
         [SerializeField] private string textoAbrir = "E · Abrir";
 
+        [Tooltip("Texto de la E con un carro o mecha de frente; después va su nombre.")]
+        [SerializeField] private string textoSubir = "E · Subir";
+
+        [Tooltip("Aviso al pulsar E para bajar cuando el vehículo todavía va rápido.")]
+        [SerializeField] private string textoFrenaParaBajar = "Frena para bajar";
+
         [Tooltip("Aviso del objetivo cuando el jugador se aleja.")]
         [SerializeField] private string textoRegresa = "REGRESA";
 
@@ -76,6 +82,8 @@ namespace MechaCyberpunk.UI
         public float AmplitudPulsoFlecha => amplitudPulsoFlecha;
         public float LadoFlecha => ladoFlecha;
         public string TextoAbrir => textoAbrir;
+        public string TextoSubir => textoSubir;
+        public string TextoFrenaParaBajar => textoFrenaParaBajar;
         public string TextoRegresa => textoRegresa;
         public string TextoCerradoProximamente => textoCerradoProximamente;
         public string TextoCerradoAbre => textoCerradoAbre;
