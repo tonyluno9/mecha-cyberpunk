@@ -1,7 +1,30 @@
 # Estado de Tony (modo automático)
 
-Fase T-F3 (docs/hoja-de-ruta.md), rama de integración: tony/fase-3 (sale de main). T-F2 terminó con revisión de conjunto y corrección, todo en tony/fase-2 y las tareas de Core en main.
+Fase T-F4 (docs/hoja-de-ruta.md): tareas escritas, sin empezar. Rama de integración: tony/fase-4, que se crea desde tony/fase-3 al
+empezar a ejecutar (todavía no existe). T-F3 está completa, revisada y corregida en tony/fase-3 (la corrección se integró con el
+merge fc6d8af); las tareas de Core de T-F2 y T-F3 están en main.
 Todo lo de la fase 1 (T-001, T-002, T-010 a T-013) está aprobado y en main (D-025).
+
+## T-F4: mecha en la calle y emboscada
+
+Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-39 en docs/decisiones-pendientes-tony.md.
+
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-062 Contratos de llamado del mecha, taller y perfil (Core, a main al verificarse) | nada | pendiente |
+| T-063 Deudas menores de T-F3 | nada | pendiente |
+| T-064 El mecha como montable | nada nuevo | pendiente |
+| T-065 Encendido del mecha en 3 pasos | T-064 | pendiente |
+| T-066 Llamar al mecha, zonas y regreso | T-062, T-064 | pendiente |
+| T-067 Calor por usar el mecha en la calle | T-062, T-066 | pendiente |
+| T-068 Rival que no te deja perder y rival del tutorial | nada nuevo | pendiente |
+| T-069 Pandilla con turnos de ataque | T-068 | pendiente |
+| T-070 Presentador y perfil del jugador | T-062, T-068 | pendiente |
+| T-071 Director de la emboscada | T-064, T-065, T-066, T-069 | pendiente |
+| T-072 Recorrido de la emboscada (cierre de T-F4 de Tony) | T-063 a T-071 | pendiente |
+| T-073 Emboscada en el callejón de Alan | T-072, T-060 | bloqueada (espera A-F3) |
+
+## T-F3 y anteriores
 
 | Tarea | Estado |
 | --- | --- |
@@ -25,12 +48,6 @@ Todo lo de la fase 1 (T-001, T-002, T-010 a T-013) está aprobado y en main (D-0
 | T-058 Subir y bajar del carro | hecha (sin revisar) |
 | T-059 Prefab completo del jugador a pie y recorrido | hecha (sin revisar) |
 
-T-050 a T-059 de la fase T-F3: hechas (sin revisar a mano) e integradas en tony/fase-3.
-Qué sigue: T-F3 está completa y revisada en conjunto (revisor: aprobar con cambios). La corrección está A MEDIAS en la rama tony/T-F3-correccion (sale de tony/fase-3), sin verificar y sin correr verificar.sh; me detuve a petición tuya.
-Falta de la corrección: (1) quitar del índice AGENTS.md, .agents/ y .codex/ con `git rm --cached -r` (el commit 4248361 los metió; siguen en disco sin versionar); (2) [UnityTearDown] en RecorridoAPiePruebas que cargue escena vacía y limpie Registros (hecho en parte en RecorridoAPiePruebas y BaseJugadorAPie, sin probar); (3) SensibilidadRaton leída del ConfigControlesAPie_Base en RecorridoAPiePruebas y BaseHudObjetivo (hecho en parte); (4) docs/revision-tony.md con las posiciones actuales de Pruebas_APie (editado, sin revisar) y estado. Luego: verificar.sh todo, merge a tony/fase-3 y planificar T-F4 con el planificador (Opus). Observaciones menores del revisor sin tratar (HUD repetido en pruebas, textos de FormatoHud como datos, captura T-059-2 sin el aviso de cerrado, flaky GolpeBloqueoPruebas.Golpe_ClicsSeguidos). T-060 y T-061 bloqueadas esperando a Alan. Unity quedó cerrado (maté una corrida de PlayMode a medias del agente).
-
-## Parada (12-oct-2026, a petición de Tony)
-Rama: tony/T-F3-correccion. Sin cambios nuevos desde el WIP anterior. Ya hecho: AGENTS.md, .agents/ y .codex/ fuera del índice (commit c1d34d7); siguen sin versionar en disco.
-Me detuve al lanzar `verificar.sh todo`: llegó a abrir Unity en PlayMode y lo cerré a la fuerza (sin resultados; limpié InitTestScene*, SceneTemplateSettings.json y ProjectSettings.asset).
-Falta: (1) correr `bash herramientas/verificar.sh todo` y confirmar la corrección (UnityTearDown de RecorridoAPiePruebas, sensibilidad desde ConfigControlesAPie_Base, docs/revision-tony.md); (2) merge --no-ff a tony/fase-3 y push; (3) planificar T-F4 con el planificador (Opus); (4) observaciones menores del revisor sin tratar (HUD repetido en pruebas, textos de FormatoHud como datos, captura T-059-2, flaky GolpeBloqueoPruebas.Golpe_ClicsSeguidos).
-Sigue: verificar la corrección. T-060 y T-061 siguen bloqueadas esperando a Alan.
+Qué sigue: crear tony/fase-4 desde tony/fase-3 y empezar por T-062 (Core; Alan la necesita para A-F3, se integra a main en cuanto
+se verifique) y T-063. Las observaciones menores de la revisión de T-F3 (prueba inestable de GolpeBloqueoPruebas, HUD repetido en
+pruebas, textos de FormatoHud, captura T-059-2) son T-063. T-060, T-061 y T-073 siguen bloqueadas esperando a Alan (A-F1, A-F2 y A-F3).
