@@ -65,6 +65,3 @@ No tocar: Core/, Arena/, IA/, otras escenas ni ProjectSettings/.
 - LED rojo, cristal cuarteado y mecha más lento con vida baja
 - Daño persistente entre peleas, reparaciones, kits de reparación
 - Sonido de impacto
-
-## Bloqueada
-Bloqueada: depende de T-002 (herramientas de verificación), que no está verificada ni integrada en tony/fase-1. Ver docs/revision-tony.md.

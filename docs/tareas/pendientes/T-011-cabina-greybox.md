@@ -49,6 +49,3 @@ No tocar: Core/, Combate/, UI/, Arena/, IA/, otras escenas ni ProjectSettings/.
 - LED rojo y cristal cuarteado con vida baja
 - Encendido de 3 pasos, palancas y botones de la cabina
 - Modelos finales
-
-## Bloqueada
-Bloqueada: depende de T-002 (herramientas de verificación), que no está verificada ni integrada en tony/fase-1. Ver docs/revision-tony.md.
