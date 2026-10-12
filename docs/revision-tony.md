@@ -72,3 +72,9 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Verificado automáticamente: todos los criterios (EditMode 206/206, PlayMode 131/131). Sin criterios de sensación.
 - Decisiones del agente: Llego se mantiene hasta que cambia el objetivo; PublicarEntro del lugar del objetivo cuenta como llegada aunque el jugador esté lejos; tecla O de prueba cambia de objetivo.
 - Cubre el pendiente de la revisión de conjunto de T-F2 (IObjetivos ya se registra).
+
+### T-054 Puertas desde el lado del jugador
+- Verificado automáticamente: todos los criterios (EditMode 220/220, PlayMode 155/155; recorrido en vivo con consola sin errores; captura docs/capturas/T-054-1.png).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Párate a unos 2 m de cada local (Bar, Clandestino, Casino) y pulsa E sin centrar la puerta; camina con W para entrar y gira para salir. ¿E responde al instante? ¿Hay tirones al cruzar el umbral? (El Clandestino debe decir cerrado por horario y el Casino bloqueado.)
+- Observación para Alan: si se teletransporta al jugador desactivando su CharacterController dentro de una zona, el trigger no avisa la salida (JugadorDentro queda en true).
+- Decisiones del agente: "no funciona en KO" usa ControladorAPie.ControlActivo (el jugador a pie aún no tiene vida).
