@@ -1,20 +1,12 @@
-# Revisión de Tony (turno de día, detenido)
+# Revisión de Tony (turno de día)
 
-## Detenido: faltan permisos
-- El merge de tony/T-001-contratos-core a main (paso 1.e, D-020) fue denegado por el clasificador del modo automático. main no se tocó.
-  tony/fase-1 ya contiene T-001 y se usa como base.
-- La verificación de T-002 quedó incompleta: el clasificador denegó `herramientas/verificar.sh todo` y matar 3 procesos
-  AssetImportWorker huérfanos (PIDs 32504, 44408, 44440, iniciados 19:41, padre 44312 ya no existe). Vienen del editor vivo
-  de la verificación de T-001, que se cerró con taskkill sin sus hijos.
+## Para probar de noche / al despertar
+- Pruebas_Tony.unity, Play: WASD, ratón, Escape y clic. Observa si el mecha se siente pesado (T-010).
+- El piso no tiene muros: se puede caer por el borde.
 
 ## Tareas
-| Tarea | Estado | Evidencia |
-| --- | --- | --- |
-| T-001 | verificada, 5/5 criterios, EditMode 18/18 | En tony/fase-1 desde antes; sin merge a main |
-| T-002 | bloqueada: implementada, NO verificada | Rama tony/T-002-verificacion-automatica (pusheada). El implementador reporta verificar.sh todo OK (editmode 18/18, playmode 3/3) y captura real, sin verificación independiente |
-| T-010, T-011, T-013, T-012 | bloqueadas (en bloqueadas/) | Dependen de T-002 (herramientas de verificación) |
-
-## Para Tony
-1. Cierra o mata los 3 AssetImportWorker huérfanos, o autoriza matarlos.
-2. Autoriza correr `herramientas/verificar.sh` y `unity-vivo.sh`, y los merges/push a main que pide el skill.
-3. T-002 toca `.gitattributes` (`*.sh text eol=lf`), fuera de las carpetas permitidas; decide si se acepta.
+### T-001: hecha (sin revisar). Verificada antes: 5/5, EditMode 18/18. Sin merge a main.
+### T-002: hecha (sin revisar)
+Verificada 5/5: verificar.sh todo (compilar, EditMode 18/18, PlayMode 3/3), editor vivo y captura real (docs/capturas/T-002-1.png). Merge a main no hecho (el clasificador lo denegó antes); está en tony/fase-1. `.gitattributes` (*.sh eol=lf) cae fuera de las carpetas permitidas: decide si se acepta.
+### T-010: hecha (sin revisar)
+Verificada 9/9. EditMode 29/29, PlayMode 14/14, 125 s de Play sin errores. Capturas T-010-1/2.png. Detalles en docs/bitacora/2026-10-11-tony-T-010.md.
