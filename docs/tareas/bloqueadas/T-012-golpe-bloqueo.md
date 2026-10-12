@@ -70,3 +70,6 @@ EditMode, en Tests/EditMode/Combate/:
 - Contraataque, golpe del brazo izquierdo, combos
 - Misiles, habilidades, munición
 - Sonido, partículas, vibración de cámara al golpear
+
+## Bloqueada
+Bloqueada: depende de T-002 (herramientas de verificación), que no está verificada ni integrada en tony/fase-1. Ver docs/revision-tony.md.

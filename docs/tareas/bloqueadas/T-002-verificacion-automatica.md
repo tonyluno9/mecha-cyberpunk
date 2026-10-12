@@ -66,3 +66,6 @@ y en la revisión nocturna, y termina la tarea con lo demás.
 
 ## Fuera de alcance
 - Código del juego, escenas del juego, cambios a los contratos de Core
+
+## Bloqueada
+Implementada en la rama tony/T-002-verificacion-automatica (pusheada), pero sin verificar: el clasificador de permisos denegó correr herramientas/verificar.sh y matar 3 AssetImportWorker huérfanos (PIDs 32504, 44408, 44440). Necesita que Tony autorice o lo haga, y decida sobre el cambio fuera de alcance en .gitattributes.
