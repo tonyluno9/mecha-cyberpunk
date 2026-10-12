@@ -65,7 +65,7 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 
 ### T-051 Jugador a pie
 - Verificado automáticamente: todos los criterios (EditMode 192/192, PlayMode 118/118; captura docs/capturas/T-051-1.png; consola 0 errores en Play).
-- Para ti: Escenas/Tony/Pruebas_APie.unity, Play, WASD, ratón, Shift para correr, Espacio para saltar. ¿Responde al instante sin patinar ni flotar? ¿El salto y la carrera se sienten ligeros, distintos del mecha? ¿La altura de ojos (1.65 m) no se siente enana ni gigante junto a los cubos y la rampa de 30°?
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play, WASD, ratón, Shift para correr, Espacio para saltar. ¿Responde al instante sin patinar ni flotar? ¿El salto y la carrera se sienten ligeros, distintos del mecha? ¿La altura de ojos (1.65 m) no se siente enana ni gigante junto a los edificios y las banquetas del barrio en L?
 - Decisiones del agente: clic con cursor libre lo vuelve a bloquear; Manos es hijo de Camara; valores de aceleración, frenado, gravedad y control en el aire en ConfigControlesAPie.
 
 ### T-055 Servicio de objetivos
@@ -75,7 +75,7 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 
 ### T-054 Puertas desde el lado del jugador
 - Verificado automáticamente: todos los criterios (EditMode 220/220, PlayMode 155/155; recorrido en vivo con consola sin errores; captura docs/capturas/T-054-1.png).
-- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Párate a unos 2 m de cada local (Bar, Clandestino, Casino) y pulsa E sin centrar la puerta; camina con W para entrar y gira para salir. ¿E responde al instante? ¿Hay tirones al cruzar el umbral? (El Clandestino debe decir cerrado por horario y el Casino bloqueado.)
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Párate a unos 2 m de cada puerta (Bar x=8, Clandestino x=17, Casino x=26, todas en z=17) y pulsa E sin centrar la puerta; camina con W para entrar y gira para salir. ¿E responde al instante? ¿Hay tirones al cruzar el umbral? (El Clandestino debe decir cerrado por horario y el Casino bloqueado.)
 - Observación para Alan: si se teletransporta al jugador desactivando su CharacterController dentro de una zona, el trigger no avisa la salida (JugadorDentro queda en true).
 - Decisiones del agente: "no funciona en KO" usa ControladorAPie.ControlActivo (el jugador a pie aún no tiene vida).
 
@@ -86,7 +86,7 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 
 ### T-053 Pistola
 - Verificado automáticamente: todos los criterios (EditMode 228/228, PlayMode 180/180 dos corridas; en vivo 32 disparos y 3 recargas, consola 0 errores; captura docs/capturas/T-053-1.png sin destello visible, la luz dura 0.05 s).
-- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Tecla 2, apunta al muñeco a 20 m y haz clic repetido: ¿se ven el destello, el retroceso corto y la marca en el muro, y se siente seco y claro? Dispara 8 veces y un clic más: ¿se entiende que el clic vacío recarga? Prueba R y 1 / 2 para cambiar de arma.
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Tecla 2, apunta a uno de los muñecos (16, 0, 4) y (16, 0, 7) y haz clic repetido: ¿se ven el destello, el retroceso corto y la marca en el muro, y se siente seco y claro? Dispara 8 veces y un clic más: ¿se entiende que el clic vacío recarga? Prueba R y 1 / 2 para cambiar de arma.
 - Decisiones del agente: ArmasAPie conserva el arma y la copia a GolpeAPie; los avisos de HUD salen por el evento Cambio de ArmasAPie. Las pruebas usan blancos de 8 m de alto por el calentamiento de los primeros frames; en el juego la cámara está a 1.70 m.
 
 ### T-056 HUD a pie: vida, arma y canción
@@ -96,13 +96,14 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 
 ### T-057 HUD del objetivo y avisos de interacción
 - Verificado automáticamente: todos los criterios (EditMode 264/264, PlayMode 206/206 dos corridas; recorrido en vivo con consola 0 errores; capturas docs/capturas/T-057-1.png, -2.png y -3.png).
-- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Camina con W siguiendo solo la flecha hacia el Bar: ¿se llega sin pensar? Camina hacia atrás unos 40 m: ¿el "REGRESA" magenta se nota sin molestar? Acércate a la puerta del Clandestino (x=0, z=-51.5, mirando +Z) y pulsa E: ¿"CERRADO · abre 20:00" se entiende a la primera y no se queda pegado? Igual con el Casino.
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Camina con W siguiendo solo la flecha hacia el Bar: ¿se llega sin pensar? Camina hacia atrás unos 40 m: ¿el "REGRESA" magenta se nota sin molestar? Acércate a la puerta del Clandestino (x=17, z=17, mirando +Z) y pulsa E: ¿"CERRADO · abre 20:00" se entiende a la primera y no se queda pegado? Igual con el Casino.
 - Observaciones: la flecha apunta en línea recta (se topa con el muro trasero del Bar, por diseño); la prueba de Carro sin aviso de interacción pasa casi por construcción (JugadorFalso sin InteraccionAPie).
+- Pendiente (corrección T-F3): la captura docs/capturas/T-059-2.png muestra el aviso "E · Abrir Clandestino" y no el de cerrado por horario que pide el criterio; hay que recapturarla con el reloj fuera de 20:00-06:00 o verificar la hora de la demo.
 - Decisiones del agente: flecha dibujada por código; UI y Personaje/Editor referencian Progresion (mismo dueño).
 
 ### T-058 Subir y bajar del carro (lado del jugador)
 - Verificado automáticamente: todos los criterios (EditMode 276/276, PlayMode 218/218 dos corridas; en vivo el carro se movió ~16 m y 11 ciclos subir/bajar con consola 0 errores; capturas docs/capturas/T-058-1.png, -2.png y T-058-vivo-1/2.png).
-- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. WASD hasta el carro rosa (x=60, z=-30), E para subir, flechas para manejar, E con el carro detenido para bajar. ¿Subir y bajar es inmediato y claro, y la cámara no marea? Al bajar debes quedar a la izquierda, fuera del collider y mirando hacia adelante.
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. WASD hasta el carro rosa (-2, 0, 9), E para subir, flechas para manejar, E con el carro detenido para bajar. ¿Subir y bajar es inmediato y claro, y la cámara no marea? Al bajar debes quedar a la izquierda, fuera del collider y mirando hacia adelante.
 - Decisiones del agente: la E la lee InteraccionAPie (siempre prendida); al subir se apagan ControladorAPie y ArmasAPie y se congela el control; el carro usa un .inputactions propio con las flechas.
 - Para Alan (A-F2): el carro de Alan solo necesita implementar IMontable (contrato en Core/Jugador/IMontable.cs); CarroDePrueba es el ejemplo.
 
