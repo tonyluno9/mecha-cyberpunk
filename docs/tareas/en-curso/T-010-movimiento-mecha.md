@@ -66,6 +66,3 @@ EditMode, en Tests/EditMode/Mecha/:
 - Cabina y brazos (T-011), golpe y bloqueo (T-012), vida (T-013)
 - Correr, saltar, agacharse, sonido de pasos
 - Mecha más lento con vida baja
-
-## Bloqueada
-Bloqueada: depende de T-002 (herramientas de verificación), que no está verificada ni integrada en tony/fase-1. Ver docs/revision-tony.md.
