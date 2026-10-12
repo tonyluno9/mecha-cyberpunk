@@ -83,3 +83,8 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Verificado automáticamente: todos los criterios (EditMode 221/221, PlayMode 168/168 dos corridas; captura docs/capturas/T-052-1.png; consola 0 errores).
 - Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Clic izquierdo frente a un muñeco: ¿el puño avanza y el muñeco parpadea justo al conectar, sin sentirse tardío? H varias veces hasta el KO: ¿la vista cae a 0.4 m y se ladea sin verse como error? K revive.
 - Decisiones del agente: el jugador a pie NO es IPeleador (D-tony-15); el creador conserva ControlesAPie.inputactions si ya existe; tiempos y geometría del KO en DatosPersonaje.
+
+### T-053 Pistola
+- Verificado automáticamente: todos los criterios (EditMode 228/228, PlayMode 180/180 dos corridas; en vivo 32 disparos y 3 recargas, consola 0 errores; captura docs/capturas/T-053-1.png sin destello visible, la luz dura 0.05 s).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Tecla 2, apunta al muñeco a 20 m y haz clic repetido: ¿se ven el destello, el retroceso corto y la marca en el muro, y se siente seco y claro? Dispara 8 veces y un clic más: ¿se entiende que el clic vacío recarga? Prueba R y 1 / 2 para cambiar de arma.
+- Decisiones del agente: ArmasAPie conserva el arma y la copia a GolpeAPie; los avisos de HUD salen por el evento Cambio de ArmasAPie. Las pruebas usan blancos de 8 m de alto por el calentamiento de los primeros frames; en el juego la cámara está a 1.70 m.
