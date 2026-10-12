@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MechaCyberpunk.Combate.Peleador;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Mecha.Encendido;
 using MechaCyberpunk.Mecha.Montaje;
 using MechaCyberpunk.Mecha.Movimiento;
 using MechaCyberpunk.Personaje.Interaccion;
@@ -35,6 +36,7 @@ namespace MechaCyberpunk.Tests.Mecha
         private const float AlturaObstaculo = 3f;
         private const float DistanciaObstaculo = 2f;
         private const float MinimoMovido = 0.5f;
+        private const float MaxSegundosEncender = 10f;
 
         /// <summary>Mide, después de todos los LateUpdate, qué tan lejos está la raíz del jugador del asiento.</summary>
         [DefaultExecutionOrder(10000)]
@@ -149,6 +151,28 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return CaminarAlMecha();
             yield return Tecla(teclado.eKey);
             Assert.AreEqual(ModoJugador.Mecha, jugador.Modo, "La E frente al mecha lo sube");
+            yield return Encender();
+        }
+
+        // Al subir hay que encender la cabina (T-065): F, mantener Espacio y Q.
+        private IEnumerator Encender()
+        {
+            EncendidoMecha encendido = montaje.GetComponent<EncendidoMecha>();
+            Assert.IsFalse(encendido.EstaEncendido, "Al subir la cabina está apagada");
+            yield return Tecla(teclado.fKey);
+            Press(teclado.spaceKey);
+            float fin = Time.time + MaxSegundosEncender;
+            while (Time.time < fin && encendido.Paso != PasoEncendido.Paso3)
+            {
+                yield return null;
+            }
+            Release(teclado.spaceKey);
+            yield return Tecla(teclado.qKey);
+            while (Time.time < fin && !encendido.EstaEncendido)
+            {
+                yield return null;
+            }
+            Assert.IsTrue(encendido.EstaEncendido, "La cabina quedó encendida");
         }
 
         // Espera a que el mecha esté casi detenido.
