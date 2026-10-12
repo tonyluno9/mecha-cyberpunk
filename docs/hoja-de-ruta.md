@@ -31,10 +31,11 @@ que sí se puede perder. Casino y mercado negro se ven por fuera y están cerrad
 - Meta: todo lo que Alan necesita para enchufarse está en Core/, y hay una pelea completa con rival, conteo y revancha.
 - Tareas: T-030 (carpetas y asmdefs), T-031 (contratos de arena y jugador), T-032 (reloj, lugares y puertas),
   T-033 (cartera y ofertas), T-034 (calor y objetivos), T-021 (rival básico), T-022 (flujo de pelea).
+  Orden: T-030, T-031, T-032, T-021, T-022, T-033, T-034 (la pelea antes que cartera y calor: H1 la necesita y Alan no usa cartera ni calor hasta A-F5).
 - Prueba de cierre: en Pruebas_Tony.unity, 3 peleas seguidas con revancha ganando y perdiendo sin errores; en
   Clandestino.unity (con la arena de Alan) lo mismo (H1).
 - Depende de Alan: la jaula de A-F1 (T-020) para cerrar H1 en Clandestino.unity. Hasta entonces prueba en Pruebas_Tony.unity.
-- Alan espera de Tony: T-030 y T-031 primero, T-032 después, T-033 y T-034 al final.
+- Alan espera de Tony: T-030 y T-031 primero, T-032 después, T-022 para H1, T-033 y T-034 al final. Las tareas de Core se integran a main apenas se verifican.
 
 ### T-F3. Jugador a pie y HUD
 - Meta: caminar por el barrio de Alan con un HUD mínimo, y pasar a pie, a carro y a mecha por un solo contrato.
@@ -80,7 +81,7 @@ que sí se puede perder. Casino y mercado negro se ven por fuera y están cerrad
 ### A-F1. Arena y barrio greybox (primera fase de Alan)
 - Meta: la jaula del clandestino y un barrio greybox donde caminar, con día y noche y locales que abren y cierran.
 - Tareas (ver docs/tareas/pendientes): T-020 (arena), T-040 (barrio greybox de unas 6 manzanas), T-041 (reloj y ciclo de
-  día y noche), T-042 (locales con puertas y horarios), T-043 (bar interior sin carga).
+  día y noche), T-042 (locales con puertas y horarios), T-043 (bar interior sin carga) y T-044 (pelea en Clandestino.unity, cierra H1 cuando T-022 de Tony esté en main).
 - Prueba de cierre: con una cámara libre en Pruebas_Alan.unity, de casa al clandestino hay al menos una vuelta, el
   clandestino está abierto de noche y cerrado de día, y entro y salgo del bar sin pantalla de carga (H2 del lado del mundo);
   la arena publica sus puntos por el contrato de Core (H1).
