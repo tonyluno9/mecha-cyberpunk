@@ -17,6 +17,7 @@ Todo lo de la fase 1 (T-001, T-002, T-010 a T-013) está aprobado y en main (D-0
 | T-050 Contrato de subir y bajar | hecha (sin revisar), integrada a main |
 | T-051 Jugador a pie | hecha (sin revisar) |
 | T-055 Servicio de objetivos | hecha (sin revisar) |
+| T-054 Puertas desde el lado del jugador | hecha (sin revisar) |
 
 T-050 a T-059 de la fase T-F3: pendientes, en el orden T-050, T-051, T-055, T-054, T-052, T-053, T-056, T-057, T-058, T-059.
-Qué sigue: T-054, T-052, T-053, T-056, T-057, T-058, T-059.
+Qué sigue: T-052, T-053, T-056, T-057, T-058, T-059.
