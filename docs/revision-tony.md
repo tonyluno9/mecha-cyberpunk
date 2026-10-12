@@ -10,3 +10,10 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Decisiones del agente: la regla "Core no referencia nada" solo aplica a MechaCyberpunk.Core.
 - Se quitó del commit ProjectSettings/SceneTemplateSettings.json (lo generó el editor).
 - Integrada a main porque Alan la necesita.
+
+### T-031 Contratos de arena y jugador
+- Verificado automáticamente: todos los criterios (EditMode 68/68, PlayMode 64/64).
+- Para ti (o Alan): abrir Assets/_Proyecto/Core/Arena/IArenaPelea.cs y confirmar que los comentarios bastan para armar la jaula y orientar la pantalla (+Z) sin preguntar.
+- Decisiones del agente: Registros.Apuntar público pero documentado como interno; Quitar(null) no hace nada.
+- Sugerencia: prueba de PlayMode de Registro<T> con un MonoBehaviour real, en una tarea posterior.
+- Integrada a main porque Alan la necesita.
