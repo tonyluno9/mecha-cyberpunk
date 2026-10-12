@@ -10,6 +10,7 @@ namespace MechaCyberpunk.Core
     /// triggers del mundo lo detecten con <c>GetComponentInParent&lt;IJugador&gt;()</c>.
     /// Se agrega a <c>Registro&lt;IJugador&gt;</c> en <c>OnEnable</c> y se quita en <c>OnDisable</c>;
     /// solo hay un jugador registrado a la vez.
+    /// Por ahora nadie la registra en <c>Registro&lt;IJugador&gt;</c>: lo hará la tarea de la fase T-F4/T-F5 de Tony; no la leas de <c>Registro&lt;IJugador&gt;</c> todavía.
     /// </summary>
     public interface IJugador
     {

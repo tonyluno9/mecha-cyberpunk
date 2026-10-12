@@ -31,10 +31,15 @@ namespace MechaCyberpunk.Core
         /// Transform de la pantalla de la arena. Va en el centro de la cara visible de la pantalla y su +Z (forward)
         /// apunta desde la jaula hacia la pantalla, como la mirada de quien la ve. Así un Canvas World Space alineado
         /// con este Transform se lee desde dentro de la jaula. El flujo de pelea pone ahí el conteo y el resultado.
+        /// No puede ser null. Colócala por encima de unos 5 m, o detrás del rival y más alta, para que el conteo
+        /// no tape al rival.
         /// </summary>
         Transform PantallaArena { get; }
 
-        /// <summary>Ancho (x) y alto (y) de la zona útil de la pantalla, en metros.</summary>
+        /// <summary>
+        /// Ancho (x) y alto (y) de la zona útil de la pantalla, en metros. Ambos deben ser mayores que 0; si no,
+        /// el flujo avisa y usa un tamaño de respaldo.
+        /// </summary>
         Vector2 TamanoPantalla { get; }
     }
 }

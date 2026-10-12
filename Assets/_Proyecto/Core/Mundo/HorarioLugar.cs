@@ -7,6 +7,8 @@ namespace MechaCyberpunk.Core
     /// Horario de un lugar: de qué hora a qué hora está abierto. Es un dato serializable que Alan pone en sus
     /// assets (Mundo/Datos/); la regla de "¿está abierto?" vive aquí y no se implementa en otro lado.
     /// Horas de 0 a 24 con decimales (21.5 es 21:30). Si <c>abre</c> es mayor que <c>cierra</c>, cruza la medianoche.
+    /// Ojo: un horario de 0 a 24 se normaliza a 0 = 0 y queda Cerrado (nunca abre). Para abierto todo el día se usa
+    /// <see cref="Siempre"/> / <c>siempreAbierto</c>.
     /// </summary>
     [Serializable]
     public struct HorarioLugar
@@ -42,7 +44,8 @@ namespace MechaCyberpunk.Core
 
         /// <summary>
         /// ¿Está abierto a esa hora? La hora se normaliza a [0, 24) (24 es 0, 25 es 1, -1 es 23).
-        /// Siempre abierto da true; <c>abre == cierra</c> da false (nunca abre); si <c>abre &lt; cierra</c> está abierto
+        /// Siempre abierto da true; <c>abre == cierra</c> da false (nunca abre; también 0 a 24, porque 24 se normaliza
+        /// a 0: para todo el día usa <see cref="Siempre"/>); si <c>abre &lt; cierra</c> está abierto
         /// en [abre, cierra); si no, cruza la medianoche y está abierto si <c>hora &gt;= abre</c> o <c>hora &lt; cierra</c>.
         /// </summary>
         public bool EstaAbierto(float hora)

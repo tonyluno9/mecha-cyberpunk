@@ -127,6 +127,30 @@ namespace MechaCyberpunk.Tests.IA
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator Control_ApagadoAntesDelStart_NoSeVuelveAQuitarAlDevolverlo()
+        {
+            yield return CrearJugador();
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabRival);
+            rivalObjeto = Object.Instantiate(prefab, new Vector3(0f, AlturaPiso, DistanciaInicial), Quaternion.Euler(0f, 180f, 0f));
+            rival = rivalObjeto.GetComponent<RivalBasico>();
+            peleadorRival = rivalObjeto.GetComponent<PeleadorMecha>();
+
+            // Como el director cuando su Start corre antes que el del rival: lo prepara antes de que el rival tenga Start.
+            peleadorRival.PrepararPelea(new Pose(rivalObjeto.transform.position, rivalObjeto.transform.rotation));
+            yield return null;
+            yield return null;
+            Assert.IsFalse(peleadorRival.ControlActivo);
+            Assert.IsFalse(rival.enabled, "Sigue apagado, sin haber corrido su Start");
+
+            peleadorRival.ActivarControl(true);
+            yield return null;
+            yield return null;
+            Assert.IsTrue(peleadorRival.ControlActivo, "Su Start no le quitó el control otra vez");
+            Assert.IsTrue(rival.enabled);
+            Assert.IsNotNull(rival.Objetivo, "Su Start sí corrió y buscó al jugador");
+        }
+
         private IEnumerator Escenario(float distancia = DistanciaInicial)
         {
             yield return CrearJugador();
