@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Tests.Mecha
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab);
             mecha = Object.Instantiate(prefab, new Vector3(0f, 0.05f, 0f), Quaternion.identity);
             controlador = mecha.GetComponent<ControladorMecha>();
-            cabina = mecha.transform.Find("Cabina");
+            cabina = mecha.transform.Find("Sacudida/Cabina");
             camara = mecha.GetComponentInChildren<Camera>();
         }
 
