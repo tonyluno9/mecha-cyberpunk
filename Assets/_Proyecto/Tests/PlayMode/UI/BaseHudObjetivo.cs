@@ -90,6 +90,15 @@ namespace MechaCyberpunk.Tests.UI
         protected void CrearJugador()
         {
             jugador = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugador), new Vector3(0f, 0.05f, 0f), Quaternion.identity);
+            // Desde T-059 el prefab del jugador trae su propio HUD y sus servicios; estas pruebas crean los suyos por separado.
+            foreach (HudAPie propio in jugador.GetComponentsInChildren<HudAPie>(true))
+            {
+                UnityEngine.Object.DestroyImmediate(propio.gameObject);
+            }
+            foreach (ServicioObjetivos propio in jugador.GetComponentsInChildren<ServicioObjetivos>(true))
+            {
+                UnityEngine.Object.DestroyImmediate(propio.gameObject);
+            }
         }
 
         protected void CrearHud()
