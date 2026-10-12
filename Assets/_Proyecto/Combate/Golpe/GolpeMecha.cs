@@ -82,28 +82,8 @@ namespace MechaCyberpunk.Combate.Golpe
             DatosMecha datos = vida.Datos;
             Vector3 origen = controlador != null ? transform.TransformPoint(controlador.center) : transform.position;
             Vector3 direccion = transform.forward;
-            float distancia = Mathf.Max(0f, datos.AlcanceGolpe - radioBusqueda);
-            int cantidad = Physics.SphereCastNonAlloc(origen, radioBusqueda, direccion, impactos, distancia,
-                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
-
-            float mejorDistancia = float.MaxValue;
-            IRecibeDanio objetivo = null;
-            Vector3 punto = origen;
-            for (int i = 0; i < cantidad; i++)
-            {
-                RaycastHit golpe = impactos[i];
-                if (golpe.collider.transform.root == transform.root || golpe.distance >= mejorDistancia)
-                {
-                    continue;
-                }
-                IRecibeDanio candidato = golpe.collider.GetComponentInParent<IRecibeDanio>();
-                if (candidato != null)
-                {
-                    mejorDistancia = golpe.distance;
-                    objetivo = candidato;
-                    punto = golpe.point;
-                }
-            }
+            IRecibeDanio objetivo = BarridoGolpe.Buscar(transform, origen, direccion, datos.AlcanceGolpe,
+                radioBusqueda, impactos, out Vector3 punto);
 
             if (objetivo != null)
             {

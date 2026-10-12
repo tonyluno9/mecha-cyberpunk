@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
@@ -21,6 +22,9 @@ namespace MechaCyberpunk.Combate.Peleador
         public Transform Raiz => transform;
         public IVida Vida => vida;
         public bool ControlActivo => controlActivo;
+
+        /// <summary>Avisa al final de <see cref="PrepararPelea"/>, cuando el mecha ya quedó de pie y sin control.</summary>
+        public event Action PeleaPreparada;
 
         private void Awake()
         {
@@ -67,6 +71,7 @@ namespace MechaCyberpunk.Combate.Peleador
             }
 
             ActivarControl(false);
+            PeleaPreparada?.Invoke();
         }
 
         private void AlLlegarAKO() => ActivarControl(false);

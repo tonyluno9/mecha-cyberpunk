@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Pelea.Editor",
+    "rootNamespace": "MechaCyberpunk.Pelea.Editor",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Pelea", "Unity.InputSystem", "UnityEngine.UI"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
