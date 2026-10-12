@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Trafico",
+    "rootNamespace": "MechaCyberpunk.Trafico",
+    "references": ["MechaCyberpunk.Core"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
