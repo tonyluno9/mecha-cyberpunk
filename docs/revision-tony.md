@@ -112,3 +112,10 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Para ti: Pruebas_APie, Play, WASD y ratón siguiendo solo la flecha hasta la esquina, el Bar y el carro. ¿Nada se atora, la flecha basta, el HUD es legible?
 - Pedido para Alan (D-tony-25): colocar Personaje/Prefabs/JugadorAPie.prefab en Ciudad.unity y Pruebas_Alan.unity con idAparicion "Casa_Puerta" y apagar su cámara libre.
 - Observación: GolpeBloqueoPruebas.Golpe_ClicsSeguidos... es flaky (preexistente, de Combate).
+
+## T-F4
+
+### T-062 Contratos de llamado del mecha, taller y perfil (Core)
+- Verificado automáticamente: 5 de 5 criterios (EditMode 281/281, PlayMode 229/229 en la rama; EditMode 181/181 en main).
+- Integrada a main con push (cherry-pick, para no llevar a main lo no aprobado de tony/fase-3).
+- Para ti / Alan: pedido D-tony-37 (ver bitácora): ITallerMecha en la casa, IPuntoLlamadoMecha en el callejón, y colocar MechaEstacionado.prefab y Emboscada.prefab cuando existan.
