@@ -93,3 +93,9 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Verificado automáticamente: todos los criterios menos la captura a 1920×1080 (EditMode 245/245, PlayMode 189/189; captura docs/capturas/T-056-1.png a 1280×720, hecha con el Canvas en ScreenSpaceCamera solo en memoria porque la herramienta no dibuja el Overlay).
 - Para ti: Escenas/Tony/Pruebas_APie.unity, Play, vista Game a 1920×1080 y a 1280×720. ¿Se leen vida, arma y balas, canción y mira sin taparse? (El texto se ve pequeño y de contraste justo sobre el cielo; si molesta, se sube el tamaño en ConfigHudAPie_Base.) Cambia con 1/2, dispara, R, y H para recibir daño: ¿el HUD se siente mínimo y neón?
 - Decisiones del agente: UI ahora referencia Personaje (mismo dueño); el HUD repite la lectura de vida un frame después de registrarse el jugador.
+
+### T-057 HUD del objetivo y avisos de interacción
+- Verificado automáticamente: todos los criterios (EditMode 264/264, PlayMode 206/206 dos corridas; recorrido en vivo con consola 0 errores; capturas docs/capturas/T-057-1.png, -2.png y -3.png).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Camina con W siguiendo solo la flecha hacia el Bar: ¿se llega sin pensar? Camina hacia atrás unos 40 m: ¿el "REGRESA" magenta se nota sin molestar? Acércate a la puerta del Clandestino (x=0, z=-51.5, mirando +Z) y pulsa E: ¿"CERRADO · abre 20:00" se entiende a la primera y no se queda pegado? Igual con el Casino.
+- Observaciones: la flecha apunta en línea recta (se topa con el muro trasero del Bar, por diseño); la prueba de Carro sin aviso de interacción pasa casi por construcción (JugadorFalso sin InteraccionAPie).
+- Decisiones del agente: flecha dibujada por código; UI y Personaje/Editor referencian Progresion (mismo dueño).
