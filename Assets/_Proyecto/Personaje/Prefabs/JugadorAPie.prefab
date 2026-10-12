@@ -195,6 +195,7 @@ GameObject:
   - component: {fileID: 2506223313458755818}
   - component: {fileID: 2284642068289421251}
   - component: {fileID: 6535121655832087697}
+  - component: {fileID: 2138692446394705084}
   m_Layer: 0
   m_Name: JugadorAPie
   m_TagString: Untagged
@@ -274,10 +275,24 @@ MonoBehaviour:
   camara: {fileID: 4078812885340158003}
   mover: {fileID: -5651465645919506382, guid: c989656e714a4084491168fccd720455, type: 3}
   mirar: {fileID: -8730192903236940084, guid: c989656e714a4084491168fccd720455, type: 3}
-  correr: {fileID: -6661771699950545300, guid: c989656e714a4084491168fccd720455, type: 3}
+  correr: {fileID: -6729821780329341335, guid: c989656e714a4084491168fccd720455, type: 3}
   saltar: {fileID: -4344151317583576797, guid: c989656e714a4084491168fccd720455, type: 3}
-  atacar: {fileID: -8016969865737702011, guid: c989656e714a4084491168fccd720455, type: 3}
-  liberarCursor: {fileID: -6765021030829543253, guid: c989656e714a4084491168fccd720455, type: 3}
+  atacar: {fileID: -5751973666824944471, guid: c989656e714a4084491168fccd720455, type: 3}
+  liberarCursor: {fileID: -3168402071549423400, guid: c989656e714a4084491168fccd720455, type: 3}
+--- !u!114 &2138692446394705084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6098087285878163752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa43c17fa52e66040b4680b73bd7654e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Interaccion.InteraccionAPie
+  config: {fileID: 11400000, guid: 05d94ba2b963f5840bed86dac7eab77d, type: 2}
+  interactuar: {fileID: -2901322967774942102, guid: c989656e714a4084491168fccd720455, type: 3}
 --- !u!1 &6993115529328030156
 GameObject:
   m_ObjectHideFlags: 0

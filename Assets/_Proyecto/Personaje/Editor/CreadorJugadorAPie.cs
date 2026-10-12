@@ -1,6 +1,9 @@
 using System.IO;
 using System.Linq;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje;
+using MechaCyberpunk.Personaje.Interaccion;
+using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using UnityEditor;
@@ -23,7 +26,9 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaEntrada = RutaPersonaje + "/Entrada/ControlesAPie.inputactions";
         private const string RutaDatos = RutaPersonaje + "/Datos/DatosPersonaje_Base.asset";
         private const string RutaConfig = RutaPersonaje + "/Datos/ConfigControlesAPie_Base.asset";
+        private const string RutaConfigInteraccion = RutaPersonaje + "/Datos/ConfigInteraccionAPie_Base.asset";
         private const string RutaPrefab = RutaPersonaje + "/Prefabs/JugadorAPie.prefab";
+        private const string RutaPrefabLocal = RutaPersonaje + "/Pruebas/LocalDePrueba.prefab";
         private const string RutaMaterialPiso = RutaPersonaje + "/Materiales/Greybox_Piso.mat";
         private const string RutaMaterialCubo = RutaPersonaje + "/Materiales/Greybox_Cubo.mat";
         private const string RutaMaterialObstaculo = RutaPersonaje + "/Materiales/Greybox_Obstaculo.mat";
@@ -35,6 +40,7 @@ namespace MechaCyberpunk.Personaje.Editor
         private const float AlturaCamara = 1.65f;
         private const float DistanciaManos = 0.5f;
         private const float LadoPiso = 120f;
+        private const float PosicionZLocales = -50f;
 
         [MenuItem("Mecha Cyberpunk/Crear T-051")]
         public static void Crear()
@@ -43,11 +49,13 @@ namespace MechaCyberpunk.Personaje.Editor
             AsegurarCarpeta(RutaPersonaje + "/Datos");
             AsegurarCarpeta(RutaPersonaje + "/Prefabs");
             AsegurarCarpeta(RutaPersonaje + "/Materiales");
+            AsegurarCarpeta(RutaPersonaje + "/Pruebas");
             AsegurarCarpeta("Assets/_Proyecto/Escenas/Tony");
 
             CrearEntrada();
             CrearAsset<DatosPersonaje>(RutaDatos);
             CrearAsset<ConfigControlesAPie>(RutaConfig);
+            CrearAsset<ConfigInteraccionAPie>(RutaConfigInteraccion);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
@@ -56,6 +64,7 @@ namespace MechaCyberpunk.Personaje.Editor
             Material obstaculo = CrearMaterial(RutaMaterialObstaculo, new Color(0.85f, 0.55f, 0.2f));
             Material cuerpo = CrearMaterial(RutaMaterialCuerpo, new Color(0.3f, 0.5f, 0.7f));
             CrearPrefab(cuerpo);
+            CrearPrefabLocal(cubo, obstaculo);
             CrearEscena(piso, cubo, obstaculo);
             AssetDatabase.SaveAssets();
             Debug.Log("[Personaje] T-051 creada.");
@@ -175,6 +184,11 @@ namespace MechaCyberpunk.Personaje.Editor
             so.FindProperty("liberarCursor").objectReferenceValue = Referencia("LiberarCursor");
             so.ApplyModifiedPropertiesWithoutUndo();
 
+            SerializedObject soInteraccion = new SerializedObject(raiz.AddComponent<InteraccionAPie>());
+            soInteraccion.FindProperty("config").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ConfigInteraccionAPie>(RutaConfigInteraccion);
+            soInteraccion.FindProperty("interactuar").objectReferenceValue = Referencia("Interactuar");
+            soInteraccion.ApplyModifiedPropertiesWithoutUndo();
+
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             Object.DestroyImmediate(raiz);
         }
@@ -199,6 +213,97 @@ namespace MechaCyberpunk.Personaje.Editor
             Vector3 centro = new Vector3(x, 0f, zInicio) + direccion * (largo / 2f) - normal * (grosor / 2f);
             GameObject rampa = Caja(nombre, centro, new Vector3(ancho, grosor, largo), material);
             rampa.transform.rotation = Quaternion.Euler(-grados, 0f, 0f);
+        }
+
+        // Local greybox de 8 x 6 x 3.5 m. El origen es el centro del hueco de la puerta, al piso; el interior va hacia +Z
+        // y la calle hacia -Z. La hoja de la puerta va del lado de la calle y se desliza hacia +X.
+        private static void CrearPrefabLocal(Material muro, Material puerta)
+        {
+            const float ancho = 8f;
+            const float fondo = 6f;
+            const float alto = 3.5f;
+            const float grosor = 0.2f;
+            const float anchoHueco = 1.2f;
+            const float altoHueco = 2.4f;
+            const float distanciaEntrada = 1.5f;
+            const float grosorHoja = 0.1f;
+            const float margen = 0.15f;
+
+            GameObject raiz = new GameObject("LocalDePrueba");
+            Transform t = raiz.transform;
+
+            float anchoLado = (ancho - anchoHueco) / 2f;
+            Pieza("Muro frente izq", t, new Vector3(-(anchoHueco + anchoLado) / 2f, alto / 2f, 0f), new Vector3(anchoLado, alto, grosor), muro);
+            Pieza("Muro frente der", t, new Vector3((anchoHueco + anchoLado) / 2f, alto / 2f, 0f), new Vector3(anchoLado, alto, grosor), muro);
+            Pieza("Dintel", t, new Vector3(0f, (altoHueco + alto) / 2f, 0f), new Vector3(anchoHueco, alto - altoHueco, grosor), muro);
+            Pieza("Muro fondo", t, new Vector3(0f, alto / 2f, fondo), new Vector3(ancho, alto, grosor), muro);
+            Pieza("Muro izquierdo", t, new Vector3(-ancho / 2f, alto / 2f, fondo / 2f), new Vector3(grosor, alto, fondo), muro);
+            Pieza("Muro derecho", t, new Vector3(ancho / 2f, alto / 2f, fondo / 2f), new Vector3(grosor, alto, fondo), muro);
+            Pieza("Techo", t, new Vector3(0f, alto + grosor / 2f, fondo / 2f), new Vector3(ancho, grosor, fondo), muro);
+
+            GameObject puertaObj = new GameObject("Puerta");
+            puertaObj.transform.SetParent(t, false);
+            puertaObj.transform.localPosition = new Vector3(0f, altoHueco / 2f, 0f);
+            GameObject hoja = Pieza("Hoja", puertaObj.transform, new Vector3(0f, 0f, -(grosor + grosorHoja) / 2f),
+                new Vector3(anchoHueco, altoHueco, grosorHoja), puerta);
+
+            GameObject entrada = new GameObject("Entrada");
+            entrada.transform.SetParent(t, false);
+            entrada.transform.localPosition = new Vector3(0f, 0f, -distanciaEntrada);
+
+            // Zona: cubre el interior, desde un margen dentro de la cara interior del muro del frente.
+            float zInicio = grosor / 2f + margen;
+            float zFin = fondo - grosor / 2f - margen;
+            GameObject zona = new GameObject("Zona");
+            zona.transform.SetParent(t, false);
+            zona.transform.localPosition = new Vector3(0f, alto / 2f, (zInicio + zFin) / 2f);
+            BoxCollider caja = zona.AddComponent<BoxCollider>();
+            caja.isTrigger = true;
+            caja.size = new Vector3(ancho - grosor - margen * 2f, alto, zFin - zInicio);
+
+            LugarDePrueba lugar = raiz.AddComponent<LugarDePrueba>();
+            SerializedObject soLugar = new SerializedObject(lugar);
+            soLugar.FindProperty("entrada").objectReferenceValue = entrada.transform;
+            soLugar.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject soPuerta = new SerializedObject(puertaObj.AddComponent<PuertaDePrueba>());
+            soPuerta.FindProperty("lugar").objectReferenceValue = lugar;
+            soPuerta.FindProperty("hoja").objectReferenceValue = hoja.transform;
+            soPuerta.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject soZona = new SerializedObject(zona.AddComponent<ZonaLugarDePrueba>());
+            soZona.FindProperty("lugar").objectReferenceValue = lugar;
+            soZona.ApplyModifiedPropertiesWithoutUndo();
+
+            PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabLocal);
+            Object.DestroyImmediate(raiz);
+        }
+
+        private static GameObject Pieza(string nombre, Transform padre, Vector3 posicionLocal, Vector3 tamano, Material material)
+        {
+            GameObject pieza = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            pieza.name = nombre;
+            pieza.transform.SetParent(padre, false);
+            pieza.transform.localPosition = posicionLocal;
+            pieza.transform.localScale = tamano;
+            pieza.GetComponent<MeshRenderer>().sharedMaterial = material;
+            return pieza;
+        }
+
+        private static void ColocarLocal(string nombre, float x, IdLugar id, HorarioLugar horario, bool cerradoEnDemo, bool abiertoPorHorario)
+        {
+            GameObject local = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabLocal));
+            local.name = nombre;
+            local.transform.position = new Vector3(x, 0f, PosicionZLocales);
+            SerializedObject so = new SerializedObject(local.GetComponent<LugarDePrueba>());
+            so.FindProperty("idLugar").enumValueIndex = (int)id;
+            so.FindProperty("nombre").stringValue = nombre;
+            so.FindProperty("horario.abre").floatValue = horario.Abre;
+            so.FindProperty("horario.cierra").floatValue = horario.Cierra;
+            so.FindProperty("horario.siempreAbierto").boolValue = horario.SiempreAbierto;
+            so.FindProperty("cerradoEnDemo").boolValue = cerradoEnDemo;
+            so.FindProperty("abiertoPorHorario").boolValue = abiertoPorHorario;
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void CrearEscena(Material piso, Material cubo, Material obstaculo)
@@ -228,6 +333,11 @@ namespace MechaCyberpunk.Personaje.Editor
             {
                 Caja("Edificio " + (i + 1), new Vector3(cubos[i].x, cubos[i].y / 2f, cubos[i].z), Vector3.one * cubos[i].y, cubo);
             }
+
+            // Locales de prueba detrás del jugador: Bar abierto, Clandestino cerrado por horario, Casino cerrado en la demo.
+            ColocarLocal("Bar", -20f, IdLugar.Bar, HorarioLugar.Siempre, false, true);
+            ColocarLocal("Clandestino", 0f, IdLugar.Clandestino, new HorarioLugar(20f, 6f), false, false);
+            ColocarLocal("Casino", 20f, IdLugar.Casino, HorarioLugar.Siempre, true, true);
 
             GameObject jugador = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab));
             jugador.transform.position = new Vector3(0f, 0.05f, 0f);
