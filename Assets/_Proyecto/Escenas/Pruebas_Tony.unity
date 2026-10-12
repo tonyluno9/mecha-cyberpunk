@@ -455,6 +455,70 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &727380132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 727380134}
+  - component: {fileID: 727380133}
+  m_Layer: 0
+  m_Name: DaniadorDePrueba
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &727380133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727380132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cfdd73be05bb524a93d403eaf662f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Pruebas.DaniadorDePrueba
+  objetivo: {fileID: 1850596301}
+  danio: 10
+  aplicar:
+    m_Name: Danar
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 39d0d339-745d-4871-bc8d-8159b37c33ee
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 0cd6826b-c587-4d60-830e-054c864d3c59
+      m_Path: <Keyboard>/h
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Danar
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
+--- !u!4 &727380134
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727380132}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &867017802
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,6 +1121,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1430f7c9d7194e640977e608eac1a3ad, type: 3}
+--- !u!1 &1850596301 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3070993614766129967, guid: 1430f7c9d7194e640977e608eac1a3ad, type: 3}
+  m_PrefabInstance: {fileID: 1850596300}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2022098803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1296,3 +1365,4 @@ SceneRoots:
   - {fileID: 1435560222}
   - {fileID: 676794358}
   - {fileID: 1850596300}
+  - {fileID: 727380134}
