@@ -12,7 +12,7 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
 | T-062 Contratos de llamado del mecha, taller y perfil (Core) | nada | hecha (sin revisar), integrada a main |
-| T-063 Deudas menores de T-F3 | nada | pendiente |
+| T-063 Deudas menores de T-F3 | nada | hecha (sin revisar) |
 | T-064 El mecha como montable | nada nuevo | pendiente |
 | T-065 Encendido del mecha en 3 pasos | T-064 | pendiente |
 | T-066 Llamar al mecha, zonas y regreso | T-062, T-064 | pendiente |

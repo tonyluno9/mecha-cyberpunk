@@ -119,3 +119,6 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Verificado automáticamente: 5 de 5 criterios (EditMode 281/281, PlayMode 229/229 en la rama; EditMode 181/181 en main).
 - Integrada a main con push (cherry-pick, para no llevar a main lo no aprobado de tony/fase-3).
 - Para ti / Alan: pedido D-tony-37 (ver bitácora): ITallerMecha en la casa, IPuntoLlamadoMecha en el callejón, y colocar MechaEstacionado.prefab y Emboscada.prefab cuando existan.
+
+### T-063 Deudas menores de T-F3
+- Verificado automáticamente: 5 de 5 criterios (EditMode 281/281, PlayMode 229/229). Sin juicio humano.

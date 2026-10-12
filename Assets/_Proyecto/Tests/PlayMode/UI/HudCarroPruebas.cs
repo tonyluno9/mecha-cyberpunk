@@ -33,9 +33,9 @@ namespace MechaCyberpunk.Tests.UI
 
         private IEnumerator Preparar()
         {
+            CrearJugador();
             CrearHud();
             CrearServicio();
-            CrearJugador();
             carroObj = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaCarro), PosicionCarro, Quaternion.identity);
             carro = carroObj.GetComponent<CarroDePrueba>();
             yield return Calentar();

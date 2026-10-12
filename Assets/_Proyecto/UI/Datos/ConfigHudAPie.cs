@@ -76,11 +76,32 @@ namespace MechaCyberpunk.UI
         [Tooltip("Aviso de una puerta cerrada por horario; {0} es la hora de apertura.")]
         [SerializeField] private string textoCerradoAbre = "CERRADO · abre {0}";
 
+        [Header("Textos de vida y arma")]
+        [Tooltip("Texto de la vida; {0} es la vida redondeada hacia arriba.")]
+        [SerializeField] private string textoVida = "VIDA {0}";
+
+        [Tooltip("Texto del arma con los puños.")]
+        [SerializeField] private string textoPunos = "PUÑOS";
+
+        [Tooltip("Texto de la pistola; {0} son las balas y {1} el tamaño del cargador.")]
+        [SerializeField] private string textoPistola = "PISTOLA {0}/{1}";
+
+        [Tooltip("Texto de la pistola mientras recarga.")]
+        [SerializeField] private string textoPistolaRecargando = "PISTOLA · RECARGANDO";
+
+        [Tooltip("Lo que se agrega al texto de la pistola cuando no le quedan balas.")]
+        [SerializeField] private string textoPistolaSinBalas = " · R";
+
         public Color ColorRegresa => colorRegresa;
         public float DuracionAvisoPuerta => duracionAvisoPuerta;
         public float VelocidadPulsoFlecha => velocidadPulsoFlecha;
         public float AmplitudPulsoFlecha => amplitudPulsoFlecha;
         public float LadoFlecha => ladoFlecha;
+        public string TextoVida => textoVida;
+        public string TextoPunos => textoPunos;
+        public string TextoPistola => textoPistola;
+        public string TextoPistolaRecargando => textoPistolaRecargando;
+        public string TextoPistolaSinBalas => textoPistolaSinBalas;
         public string TextoAbrir => textoAbrir;
         public string TextoSubir => textoSubir;
         public string TextoFrenaParaBajar => textoFrenaParaBajar;

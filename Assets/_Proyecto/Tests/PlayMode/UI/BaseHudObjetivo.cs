@@ -6,6 +6,7 @@ using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI;
 using MechaCyberpunk.UI.Hud;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -87,30 +88,44 @@ namespace MechaCyberpunk.Tests.UI
             base.TearDown();
         }
 
-        protected void CrearJugador()
+        /// <summary>
+        /// Instancia el jugador con el HUD y los servicios que ya trae anidados (desde T-059). Con <paramref name="conHud"/> en falso
+        /// quita el HUD anidado, para pruebas que lo crean después con <see cref="CrearHud"/>.
+        /// </summary>
+        protected void CrearJugador(bool conHud = true)
         {
             jugador = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugador), new Vector3(0f, 0.05f, 0f), Quaternion.identity);
-            // Desde T-059 el prefab del jugador trae su propio HUD y sus servicios; estas pruebas crean los suyos por separado.
-            foreach (HudAPie propio in jugador.GetComponentsInChildren<HudAPie>(true))
+            if (!conHud)
             {
-                UnityEngine.Object.DestroyImmediate(propio.gameObject);
-            }
-            foreach (ServicioObjetivos propio in jugador.GetComponentsInChildren<ServicioObjetivos>(true))
-            {
-                UnityEngine.Object.DestroyImmediate(propio.gameObject);
+                foreach (HudAPie propio in jugador.GetComponentsInChildren<HudAPie>(true))
+                {
+                    UnityEngine.Object.DestroyImmediate(propio.gameObject);
+                }
             }
         }
 
+        /// <summary>Toma el HUD anidado del jugador si hay uno; si no, instancia el prefab. Siempre queda un solo HudAPie.</summary>
         protected void CrearHud()
         {
-            objetoHud = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
-            hud = objetoHud.GetComponent<HudAPie>();
+            hud = jugador != null ? jugador.GetComponentInChildren<HudAPie>(true) : null;
+            if (hud == null)
+            {
+                objetoHud = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
+                hud = objetoHud.GetComponent<HudAPie>();
+            }
+            Assert.AreEqual(1, UnityEngine.Object.FindObjectsByType<HudAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length,
+                "Debe haber exactamente un HudAPie en la escena");
         }
 
+        /// <summary>Toma el servicio de objetivos anidado en el jugador si hay uno; si no, instancia ServiciosProgresion.</summary>
         protected void CrearServicio()
         {
-            objetoServicio = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaServicios));
-            servicio = objetoServicio.GetComponent<ServicioObjetivos>();
+            servicio = jugador != null ? jugador.GetComponentInChildren<ServicioObjetivos>(true) : null;
+            if (servicio == null)
+            {
+                objetoServicio = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaServicios));
+                servicio = objetoServicio.GetComponent<ServicioObjetivos>();
+            }
         }
 
         protected JugadorFalso RegistrarFalso(ModoJugador modo)

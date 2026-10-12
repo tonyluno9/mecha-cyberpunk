@@ -24,3 +24,19 @@ MonoBehaviour:
   anchoBarra: 260
   altoBarra: 12
   largoMira: 14
+  colorRegresa: {r: 1, g: 0.1, b: 0.6, a: 1}
+  duracionAvisoPuerta: 2
+  velocidadPulsoFlecha: 3
+  amplitudPulsoFlecha: 0.25
+  ladoFlecha: 48
+  textoAbrir: "E \xB7 Abrir"
+  textoSubir: "E \xB7 Subir"
+  textoFrenaParaBajar: Frena para bajar
+  textoRegresa: REGRESA
+  textoCerradoProximamente: "CERRADO \xB7 PR\xD3XIMAMENTE"
+  textoCerradoAbre: "CERRADO \xB7 abre {0}"
+  textoVida: VIDA {0}
+  textoPunos: "PU\xD1OS"
+  textoPistola: PISTOLA {0}/{1}
+  textoPistolaRecargando: "PISTOLA \xB7 RECARGANDO"
+  textoPistolaSinBalas: " \xB7 R"
