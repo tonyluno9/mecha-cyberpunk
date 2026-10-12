@@ -180,6 +180,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &775119559255724051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2712224112858564025}
+  m_Layer: 0
+  m_Name: PuntoSubida
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2712224112858564025
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775119559255724051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6909106605119421894}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &897973636288682584
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,6 +452,7 @@ GameObject:
   - component: {fileID: 6881662012566636349}
   - component: {fileID: 2933284429344227689}
   - component: {fileID: 8033794217026706427}
+  - component: {fileID: 1711215442931180318}
   m_Layer: 0
   m_Name: MechaJugador
   m_TagString: Untagged
@@ -443,6 +475,8 @@ Transform:
   m_Children:
   - {fileID: 4233796943806037615}
   - {fileID: 3900748725982754112}
+  - {fileID: 1237070801823891455}
+  - {fileID: 2712224112858564025}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &3015118752469736745
@@ -561,6 +595,24 @@ MonoBehaviour:
   brazoIzquierdo: {fileID: 2202219288072438768}
   brazoDerecho: {fileID: 7019088074468906833}
   config: {fileID: 11400000, guid: 801f3efe373ff90489e0113845fef543, type: 2}
+--- !u!114 &1711215442931180318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3070993614766129967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa37687aa233d064088db9d84f765762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.Montaje.MontajeMecha
+  config: {fileID: 11400000, guid: 46a8e2e4836b4d84bafe869e72dc9150, type: 2}
+  arranque: 0
+  nombre: Mecha
+  asiento: {fileID: 1237070801823891455}
+  camara: {fileID: 1903294009670933589}
+  puntoSubida: {fileID: 2712224112858564025}
 --- !u!1 &3815857753821001713
 GameObject:
   m_ObjectHideFlags: 0
@@ -2356,6 +2408,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8804284985085428705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1237070801823891455}
+  m_Layer: 0
+  m_Name: Asiento
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1237070801823891455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8804284985085428705}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6909106605119421894}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8815242511758099021
 GameObject:
   m_ObjectHideFlags: 0
