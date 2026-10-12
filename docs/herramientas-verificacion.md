@@ -15,9 +15,13 @@ bash herramientas/verificar.sh {compilar|editmode|playmode|todo}
 - Logs y resultados en `Logs/` (`compilar.log`, `editmode.log`, `resultados-editmode.xml`, etc.). Tarda ~1 min en total.
 - Si hay un editor de Unity abierto, imprime `UNITY ABIERTO` y sale con 3 en vez de esperar.
   El `unity.exe` del Hub/CLI no cuenta; solo el de `...\Editor\Unity.exe`. Un `Temp/UnityLockfile` viejo sin proceso se ignora.
-- Cada modo corre solo su ensamblado (`-assemblyNames MechaCyberpunk.Tests.<Modo>`). Sin eso, `testables` de
-  com.unity.inputsystem mete las pruebas del propio paquete (en PlayMode 2 más, ignoradas) y el conteo cambia.
-- Una prueba nueva solo cuenta si su ensamblado la incluye: `total=0` se reporta como fallo.
+- Cada modo corre los ensamblados de pruebas de todas las áreas, unidos con `;` en `-assemblyNames`: cada
+  `Tests/<Modo>/<Área>/MechaCyberpunk.Tests.<Modo>.<Área>.asmdef` cuya carpeta tenga al menos un `.cs`. Un área nueva con
+  pruebas entra sola y una carpeta vacía no estorba. Sin `-assemblyNames`, `testables` de com.unity.inputsystem mete las
+  pruebas del propio paquete (en PlayMode 2 más, ignoradas) y el conteo cambia.
+- `bash herramientas/verificar.sh ensamblados` imprime, sin abrir Unity, la lista de EditMode y la de PlayMode, un nombre por línea.
+- Una prueba nueva solo cuenta si su carpeta (`Tests/<Modo>/<Área>/`) tiene asmdef: sin él no la corre nadie. Si la lista de un
+  modo queda vacía o `total=0`, el paso sale como fallo.
 
 ## unity-vivo.sh: editor vivo
 
