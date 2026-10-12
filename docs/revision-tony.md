@@ -122,3 +122,8 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 
 ### T-063 Deudas menores de T-F3
 - Verificado automáticamente: 5 de 5 criterios (EditMode 281/281, PlayMode 229/229). Sin juicio humano.
+
+### T-064 El mecha como montable
+- Verificado automáticamente: todos los criterios (EditMode 286/286, PlayMode 237/237, 5 ciclos en vivo).
+- Para ti: en Pruebas_Calle camina con W hasta el mecha (8 m) y pulsa E: ¿el salto de vista a pie a cabina marea? Maneja, frena y pulsa E: ¿bajas frente a la escotilla?
+- El mecha estacionado mira al inicio de la calle, no al barrio (T-064-2.png lo muestra girado).

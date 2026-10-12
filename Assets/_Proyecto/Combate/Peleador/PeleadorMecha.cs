@@ -15,6 +15,8 @@ namespace MechaCyberpunk.Combate.Peleador
         [SerializeField] private List<Behaviour> controlados = new List<Behaviour>();
 
         private VidaMecha vida;
+        private bool permisoPelea = true;
+        private bool permisoPiloto = true;
         private bool controlActivo = true;
 
         public string Nombre => vida != null && vida.Datos != null ? vida.Datos.Nombre : name;
@@ -22,6 +24,9 @@ namespace MechaCyberpunk.Combate.Peleador
         public Transform Raiz => transform;
         public IVida Vida => vida;
         public bool ControlActivo => controlActivo;
+
+        /// <summary>Segundo permiso de control: lo da quien monta el mecha (false = nadie lo maneja). Por defecto true.</summary>
+        public bool PermisoPiloto => permisoPiloto;
 
         /// <summary>Avisa al final de <see cref="PrepararPelea"/>, cuando el mecha ya quedó de pie y sin control.</summary>
         public event Action PeleaPreparada;
@@ -43,8 +48,25 @@ namespace MechaCyberpunk.Combate.Peleador
 
         public void ActivarControl(bool activo)
         {
+            permisoPelea = activo;
+            AplicarControl();
+        }
+
+        /// <summary>Da o quita el permiso de piloto sin tocar el permiso de pelea del director.</summary>
+        public void FijarPermisoPiloto(bool permiso)
+        {
+            permisoPiloto = permiso;
+            AplicarControl();
+        }
+
+        private void AplicarControl()
+        {
+            if (vida == null)
+            {
+                vida = GetComponent<VidaMecha>();
+            }
             // Un mecha en KO no recupera el control hasta que PrepararPelea le devuelva la vida.
-            controlActivo = activo && !vida.EstaKO;
+            controlActivo = ReglaControlMecha.Calcular(permisoPelea, permisoPiloto, vida.EstaKO);
             foreach (Behaviour componente in controlados)
             {
                 if (componente != null)
