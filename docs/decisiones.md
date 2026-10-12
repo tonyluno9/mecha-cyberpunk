@@ -47,30 +47,30 @@ Viven en ProjectSettings/, un archivo compartido. Para no golpearse a sí mismo,
 Los textos del mundo usan uGUI `Text` en un Canvas World Space. TextMeshPro pide importar recursos a una carpeta compartida,
 así que espera a una tarea de Core.
 
-### D-011 Pantallas diegéticas. Propuesta.
+### D-011 Pantallas diegéticas
 Basado en estetica-hud.md ("en el mecha todo es diegético"). La vida del jugador se ve en una pantalla de la cabina (UI/).
 El conteo y el resultado se ven en una pantalla grande de la arena (Arena/Flujo/). Nada flota sobre la vista.
 La vida del rival no se muestra en la fase 1, porque personaje-progresion.md la liga al implante de ojos;
 se comprueba en el inspector y con el parpadeo del rival al recibir un golpe.
 
-### D-012 Golpe y bloqueo. Propuesta.
+### D-012 Golpe y bloqueo
 El golpe tiene tres momentos: preparación, impacto y recarga. En el rival, la preparación es el aviso visible.
 La guardia tarda `tiempoSubirGuardia` en quedar arriba. Si está arriba al momento del impacto, el bloqueo es normal y quita
 `reduccionBloqueo` del daño. Si quedó arriba dentro de los últimos `ventanaBloqueoPerfecto` segundos antes del impacto,
 el bloqueo es perfecto y no entra daño. Esta es la ventana de tiempo para bloquear. El contraataque queda para otra fase.
 
-### D-013 La revancha restaura la vida. Propuesta.
+### D-013 La revancha restaura la vida
 En la fase 1, la revancha empieza con la vida completa. El daño persistente y las reparaciones son el paso 5
 del orden de construcción y se harán después.
 
-### D-014 Escala. Propuesta.
+### D-014 Escala
 1 unidad = 1 metro. El mecha greybox mide unos 4 m y la cámara de la cabina va a unos 3.5 m del piso.
 La jaula mide unos 24 × 24 m. Los peleadores empiezan a unos 12 m uno del otro.
 
-### D-015 Movimiento sin NavMesh. Propuesta.
+### D-015 Movimiento sin NavMesh
 Los mechas usan `CharacterController`. El rival camina directo hacia su objetivo, porque la jaula es abierta.
 
-### D-016 Fin de pelea. Propuesta.
+### D-016 Fin de pelea
 Gana quien deja al otro en KO primero. Si los dos caen en el mismo frame, cuenta el primer aviso de KO que llegue al flujo.
 No hay límite de tiempo ni rounds en la fase 1.
 
@@ -79,3 +79,6 @@ T-00x son tareas de Core y preparación. En la fase 1, T-01x son de Tony y T-02x
 
 ### D-018 Herramientas de prueba
 Los muñecos y atacantes de prueba viven en `<Área>/Pruebas/` de su dueño y solo se ponen en escenas de pruebas.
+
+### D-019 Confirmación de D-011 a D-016
+Tony confirmó D-011, D-012, D-013, D-014, D-015 y D-016 el 2026-10-11. Ya no son propuestas.

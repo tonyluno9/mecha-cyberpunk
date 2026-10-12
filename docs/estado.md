@@ -32,6 +32,4 @@ Prueba de cierre: cada uno juega 3 peleas completas en Clandestino.unity sin err
 - Las pruebas de EditMode corren en batchmode (0 pruebas por ahora).
 
 ## Pendiente de Tony
-- Confirmar o cambiar las decisiones marcadas "Propuesta" en docs/decisiones.md (D-011 a D-016) antes de que empiecen
-  las tareas que las usan.
 - Dar acceso al repo al compañero. Él clona, corre `git lfs install` y abre el proyecto con Unity 6000.3.25f1.
