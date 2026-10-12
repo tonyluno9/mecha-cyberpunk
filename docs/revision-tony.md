@@ -41,3 +41,9 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Para ti (o Alan): leer ITienda y DatosOferta en Core/Economia/ y confirmar que los /// bastan para hacer el mostrador del mercado negro.
 - Decisiones del agente: PuedePagar false con cantidad <= 0; Comprar con cartera null devuelve NoDisponible; id de oferta = nombre del archivo.
 - Integrada a main porque Alan la necesita.
+
+### T-034 Contratos de calor y objetivos
+- Verificado automáticamente: 4 de 4 criterios (EditMode 161/161, PlayMode 92/92).
+- Para ti (o Alan): leer los /// de ICalor e IObjetivos en Core/ y confirmar que queda claro cuándo persiguen los drones y cómo dibujar el objetivo.
+- Decisiones del agente: Avanzar enfría solo lo que pasa del retraso; Enfriar y Borrar no reinician el retraso.
+- Integrada a main porque Alan la necesita.
