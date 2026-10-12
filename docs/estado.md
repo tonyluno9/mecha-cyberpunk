@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Actualizado: 2026-10-11, sesión T-000b (preparación del repo y planeación de la fase 1).
+Actualizado: 2026-10-11, sesión T-001 (contratos de Core).
 
 ## Fase actual: 1, pelea greybox
 Meta: puedo golpear a un rival que me golpea, y uno de los dos gana. Todo con cubos y cápsulas, sin modelos finales.
@@ -10,7 +10,7 @@ Prueba de cierre: cada uno juega 3 peleas completas en Clandestino.unity sin err
 
 | ID | Tarea | Dueño | Depende de | Estado |
 | --- | --- | --- | --- | --- |
-| T-001 | Contratos de Core | Tony (revisa el compañero) | Nada | Pendiente |
+| T-001 | Contratos de Core | Tony (revisa el compañero) | Nada | En revisión (rama tony/T-001-contratos-core): faltan criterios del editor y merge |
 | T-010 | Movimiento del mecha en primera persona | Tony | T-001 | Pendiente |
 | T-011 | Cabina greybox | Tony | T-001, T-010 | Pendiente |
 | T-013 | Vida del mecha y recibir daño | Tony | T-001, T-011 | Pendiente |
@@ -28,8 +28,8 @@ Prueba de cierre: cada uno juega 3 peleas completas en Clandestino.unity sin err
 ## Qué hay en main
 - Repo preparado: .gitignore, Git LFS, carpetas de Assets/_Proyecto con sus asmdefs, CLAUDE.md, reglas de C#,
   skill `/tarea`, subagente `revisor`, diseño separado por bloque, plantillas y tareas de la fase 1.
-- Todavía no hay código del juego.
-- Las pruebas de EditMode corren en batchmode (0 pruebas por ahora).
+- Todavía no hay código del juego en main (los contratos de Core están en la rama de T-001 hasta mergear).
+- Las pruebas de EditMode corren en batchmode (0 pruebas en main; 17 con T-001).
 
 ## Pendiente de Tony
 - Dar acceso al repo al compañero. Él clona, corre `git lfs install` y abre el proyecto con Unity 6000.3.25f1.

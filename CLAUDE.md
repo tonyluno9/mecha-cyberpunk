@@ -75,7 +75,7 @@ Los datos de cada área (assets de ScriptableObject) van en `<Área>/Datos/` y l
 
 ## Pruebas desde la terminal
 
-La forma normal, cuando exista (T-002): `bash herramientas/verificar.sh todo`, y el editor vivo con
+La forma normal es `bash herramientas/verificar.sh todo` (compilar, EditMode y PlayMode), y el editor vivo se usa con
 `bash herramientas/unity-vivo.sh`. Detalles en docs/herramientas-verificacion.md.
 
 Comando base, con Unity cerrado, desde la raíz del repo (Bash; Unity.exe espera a terminar):

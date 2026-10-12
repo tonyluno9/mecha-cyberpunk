@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Mecha.Editor",
+    "rootNamespace": "MechaCyberpunk.Mecha.Editor",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Mecha", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "Unity.InputSystem", "UnityEngine.UI"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
