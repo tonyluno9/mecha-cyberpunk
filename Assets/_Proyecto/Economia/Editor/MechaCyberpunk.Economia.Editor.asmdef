@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Economia.Editor",
+    "rootNamespace": "MechaCyberpunk.Economia.Editor",
+    "references": ["MechaCyberpunk.Core"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

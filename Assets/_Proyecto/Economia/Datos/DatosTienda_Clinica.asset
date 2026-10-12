@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da55d6b3aa5b8c84ea99ee94a2b1af84, type: 3}
+  m_Name: DatosTienda_Clinica
+  m_EditorClassIdentifier: MechaCyberpunk.Core::MechaCyberpunk.Core.DatosTienda
+  lugar: 8
+  nombre: "Cl\xEDnica"
+  ofertas:
+  - {fileID: 11400000, guid: 13bbbdcaf4e28c4469d49851311d4770, type: 2}
