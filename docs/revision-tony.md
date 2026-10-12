@@ -11,8 +11,8 @@
 | Tarea | Estado | Evidencia |
 | --- | --- | --- |
 | T-001 | verificada, 5/5 criterios, EditMode 18/18 | En tony/fase-1 desde antes; sin merge a main |
-| T-002 | implementada, NO verificada | Rama tony/T-002-verificacion-automatica (pusheada). El implementador reporta verificar.sh todo OK (editmode 18/18, playmode 3/3) y captura real, sin verificación independiente |
-| T-010, T-011, T-013, T-012 | pendientes | Dependen de T-002 (herramientas de verificación) |
+| T-002 | bloqueada: implementada, NO verificada | Rama tony/T-002-verificacion-automatica (pusheada). El implementador reporta verificar.sh todo OK (editmode 18/18, playmode 3/3) y captura real, sin verificación independiente |
+| T-010, T-011, T-013, T-012 | bloqueadas (en bloqueadas/) | Dependen de T-002 (herramientas de verificación) |
 
 ## Para Tony
 1. Cierra o mata los 3 AssetImportWorker huérfanos, o autoriza matarlos.
