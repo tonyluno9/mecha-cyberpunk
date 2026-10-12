@@ -52,3 +52,6 @@ Desktop.ini
 
 # Claude Code: ajustes locales de cada persona
 .claude/settings.local.json
+
+# Ajustes propios de cada máquina (ruta de Unity, versión de la Unity CLI)
+.claude/maquina.local.md
