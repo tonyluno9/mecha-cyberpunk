@@ -47,6 +47,8 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaConfigCarro = RutaPersonaje + "/Datos/ConfigCarroDePrueba_Base.asset";
         private const string RutaPrefabCarro = RutaPersonaje + "/Pruebas/CarroDePrueba.prefab";
         private const string RutaMaterialCarro = RutaPersonaje + "/Materiales/Greybox_Carro.mat";
+        private const string RutaMaterialCalle = RutaPersonaje + "/Materiales/Greybox_Calle.mat";
+        private const string RutaMaterialBanqueta = RutaPersonaje + "/Materiales/Greybox_Banqueta.mat";
         private const string RutaPrefabHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
         private const string RutaPrefabServiciosProgresion = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
         private const string RutaEscena ="Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
@@ -56,9 +58,8 @@ namespace MechaCyberpunk.Personaje.Editor
         private const float AlturaCamara = 1.65f;
         private const float DistanciaManos = 0.5f;
         private const float LadoPiso = 200f;
-        private const float PosicionZLocales = -50f;
-        private const float CalleCarroX = 60f;
-        private const float CalleCarroLargo = 60f;
+        private const float PosicionZLocales = 17f;
+        private const float PosicionEsquinaZ = 14f;
 
         [MenuItem("Mecha Cyberpunk/Crear T-051")]
         public static void Crear()
@@ -94,7 +95,8 @@ namespace MechaCyberpunk.Personaje.Editor
             CrearPrefabMuneco(muneco);
             CrearPrefabLocal(cubo, obstaculo);
             CrearPrefabCarro(CrearMaterial(RutaMaterialCarro, new Color(0.9f, 0.2f, 0.45f)));
-            CrearEscena(piso, cubo, obstaculo);
+            CrearEscena(piso, CrearMaterial(RutaMaterialCalle, new Color(0.12f, 0.12f, 0.14f)),
+                CrearMaterial(RutaMaterialBanqueta, new Color(0.45f, 0.45f, 0.48f)), cubo);
             AssetDatabase.SaveAssets();
             Debug.Log("[Personaje] T-051 creada.");
         }
@@ -360,6 +362,11 @@ namespace MechaCyberpunk.Personaje.Editor
             soArmas.FindProperty("visualPistola").objectReferenceValue = pistolaObj;
             soArmas.ApplyModifiedPropertiesWithoutUndo();
 
+            // Un solo prefab para Alan (D-tony-23): el HUD y los servicios de objetivos van anidados, y la aparición en un punto.
+            AnidarPrefab(RutaPrefabHud, raiz.transform);
+            AnidarPrefab(RutaPrefabServiciosProgresion, raiz.transform);
+            raiz.AddComponent<AparicionJugador>();
+
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             Object.DestroyImmediate(raiz);
         }
@@ -398,18 +405,6 @@ namespace MechaCyberpunk.Personaje.Editor
             caja.transform.localScale = tamano;
             caja.GetComponent<MeshRenderer>().sharedMaterial = material;
             return caja;
-        }
-
-        // Rampa que sube hacia +Z desde (x, 0, zInicio); el borde bajo de la cara de arriba queda a ras del piso.
-        private static void Rampa(string nombre, float x, float zInicio, float grados, float largo, float ancho, Material material)
-        {
-            const float grosor = 0.5f;
-            float radianes = grados * Mathf.Deg2Rad;
-            Vector3 direccion = new Vector3(0f, Mathf.Sin(radianes), Mathf.Cos(radianes));
-            Vector3 normal = new Vector3(0f, Mathf.Cos(radianes), -Mathf.Sin(radianes));
-            Vector3 centro = new Vector3(x, 0f, zInicio) + direccion * (largo / 2f) - normal * (grosor / 2f);
-            GameObject rampa = Caja(nombre, centro, new Vector3(ancho, grosor, largo), material);
-            rampa.transform.rotation = Quaternion.Euler(-grados, 0f, 0f);
         }
 
         // Local greybox de 8 x 6 x 3.5 m. El origen es el centro del hueco de la puerta, al piso; el interior va hacia +Z
@@ -503,7 +498,9 @@ namespace MechaCyberpunk.Personaje.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void CrearEscena(Material piso, Material cubo, Material obstaculo)
+        // Barrio mínimo (T-059): calle 1 sobre el eje Z (x de -3 a 3, z de 0 a 17), calle 2 sobre el eje X (z de 11 a 17, x de 3 a 32).
+        // La esquina de la L queda en (0, 14). El edificio de la esquina tapa la línea recta del inicio al Bar.
+        private static void CrearEscena(Material piso, Material calle, Material banqueta, Material cubo)
         {
             Scene escena = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
@@ -514,74 +511,68 @@ namespace MechaCyberpunk.Personaje.Editor
 
             Caja("Piso", new Vector3(0f, -0.5f, 0f), new Vector3(LadoPiso, 1f, LadoPiso), piso);
 
-            // Obstáculos delante del jugador (que mira a +Z): muro, escalón y rampas.
-            Caja("Muro 1.2 m", new Vector3(7f, 0.6f, 8f), new Vector3(6f, 1.2f, 0.5f), obstaculo);
-            Caja("Escalon 0.3 m", new Vector3(-4f, 0.15f, 9f), new Vector3(6f, 0.3f, 4f), obstaculo);
-            Rampa("Rampa 30 grados", 0f, 10f, 30f, 14f, 4f, obstaculo);
-            Rampa("Rampa 50 grados", -10f, 10f, 50f, 8f, 4f, obstaculo);
+            // Calles y banquetas (la banqueta mide 0.15 m, menos que el escalón que sube el jugador).
+            Caja("Calle 1", new Vector3(0f, 0.02f, 8.5f), new Vector3(6f, 0.04f, 17f), calle);
+            Caja("Calle 2", new Vector3(17.5f, 0.02f, 14f), new Vector3(29f, 0.04f, 6f), calle);
+            Caja("Banqueta oeste", new Vector3(-3.75f, 0.075f, 8.5f), new Vector3(1.5f, 0.15f, 17f), banqueta);
+            Caja("Banqueta este", new Vector3(3.75f, 0.075f, 5f), new Vector3(1.5f, 0.15f, 10f), banqueta);
+            Caja("Banqueta sur", new Vector3(18.25f, 0.075f, 10.5f), new Vector3(27.5f, 0.15f, 1f), banqueta);
 
-            // "Edificios": lado en m en el campo y; x y z son la posición en el piso.
-            Vector3[] cubos =
-            {
-                new Vector3(-20f, 6f, 30f), new Vector3(15f, 10f, 35f), new Vector3(0f, 8f, 45f), new Vector3(30f, 5f, 15f),
-                new Vector3(-30f, 4f, -10f), new Vector3(20f, 3f, -25f), new Vector3(-12f, 7f, -30f), new Vector3(40f, 9f, 40f)
-            };
-            for (int i = 0; i < cubos.Length; i++)
-            {
-                Caja("Edificio " + (i + 1), new Vector3(cubos[i].x, cubos[i].y / 2f, cubos[i].z), Vector3.one * cubos[i].y, cubo);
-            }
+            // Edificios del lado sur de la calle 2, con un callejón de 4 m entre los dos (x de 14 a 18).
+            Caja("Edificio esquina", new Vector3(9.25f, 6f, 5f), new Vector3(9.5f, 12f, 10f), cubo);
+            Caja("Edificio sur", new Vector3(25f, 4f, 5f), new Vector3(14f, 8f, 10f), cubo);
 
-            // Locales de prueba detrás del jugador: Bar abierto, Clandestino cerrado por horario, Casino cerrado en la demo.
-            ColocarLocal("Bar", -20f, IdLugar.Bar, HorarioLugar.Siempre, false, true);
-            ColocarLocal("Clandestino", 0f, IdLugar.Clandestino, new HorarioLugar(20f, 6f), false, false);
-            ColocarLocal("Casino", 20f, IdLugar.Casino, HorarioLugar.Siempre, true, true);
+            GameObject esquina = new GameObject("Esquina");
+            esquina.transform.position = new Vector3(0f, 0f, PosicionEsquinaZ);
+
+            // Locales de prueba en la calle 2, de espaldas a ella: Bar abierto, Clandestino cerrado por horario, Casino cerrado en la demo.
+            ColocarLocal("Bar", 8f, IdLugar.Bar, HorarioLugar.Siempre, false, true);
+            ColocarLocal("Clandestino", 17f, IdLugar.Clandestino, new HorarioLugar(20f, 6f), false, false);
+            ColocarLocal("Casino", 26f, IdLugar.Casino, HorarioLugar.Siempre, true, true);
+
+            // Carro de prueba en la calle 1, mirando a -Z: su puerta (a la izquierda del carro) queda del lado del centro de la calle.
+            GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabCarro));
+            carro.name = "Carro de prueba";
+            carro.transform.SetPositionAndRotation(new Vector3(-2f, 0f, 9f), Quaternion.Euler(0f, 180f, 0f));
+
+            // Punto de aparición y jugador completo (el HUD y los servicios de objetivos van dentro del prefab). El jugador empieza
+            // lejos del punto para que la prueba compruebe que aparece donde debe.
+            GameObject puntoObj = new GameObject("Punto Prueba_Inicio");
+            puntoObj.transform.SetPositionAndRotation(new Vector3(0f, 0.05f, 0f), Quaternion.identity);
+            puntoObj.AddComponent<PuntoAparicionDePrueba>();
 
             GameObject jugador = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab));
-            jugador.transform.position = new Vector3(0f, 0.05f, 0f);
+            jugador.transform.SetPositionAndRotation(new Vector3(-30f, 0.05f, -20f), Quaternion.Euler(0f, 90f, 0f));
+            SerializedObject soAparicion = new SerializedObject(jugador.GetComponent<AparicionJugador>());
+            soAparicion.FindProperty("idAparicion").stringValue = "Prueba_Inicio";
+            soAparicion.ApplyModifiedPropertiesWithoutUndo();
 
-            // Dos muñecos frente al jugador, el daniador (H) y el revividor (K).
+            // Dos muñecos en el callejón, el daniador (H) y el revividor (K) para probar.
             GameObject prefabMuneco = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabMuneco);
             GameObject muneco1 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
             muneco1.name = "Muneco 1";
-            muneco1.transform.position = new Vector3(0f, 0f, 1.4f);
+            muneco1.transform.position = new Vector3(16f, 0f, 4f);
             GameObject muneco2 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
             muneco2.name = "Muneco 2";
-            muneco2.transform.position = new Vector3(2.5f, 0f, 3f);
+            muneco2.transform.position = new Vector3(16f, 0f, 7f);
 
-            // Muñecos de la pistola: uno a 20 m (en alcance) y otro a 80 m (fuera de alcance), en x = -5 para esquivar rampas y edificios.
-            GameObject muneco20 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
-            muneco20.name = "Muneco 20 m";
-            muneco20.transform.position = new Vector3(-5f, 0f, Mathf.Sqrt(400f - 25f));
-            GameObject muneco80 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
-            muneco80.name = "Muneco 80 m";
-            muneco80.transform.position = new Vector3(-5f, 0f, Mathf.Sqrt(6400f - 25f));
-
-            // HUD a pie (T-056): si el prefab de UI ya existe, se instancia; el anidado en el jugador es de T-059.
-            GameObject prefabHud = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabHud);
-            if (prefabHud != null)
-            {
-                PrefabUtility.InstantiatePrefab(prefabHud);
-            }
-
-            // Objetivo de la historia (T-057): los servicios de progresión y un fijador que empieza con el Bar.
-            GameObject prefabServicios = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabServiciosProgresion);
-            if (prefabServicios != null)
-            {
-                PrefabUtility.InstantiatePrefab(prefabServicios);
-            }
+            // Secuencia de objetivos: la esquina, el Bar y el carro; pasa al siguiente al llegar.
             GameObject fijador = new GameObject("Fijador de objetivo");
             SerializedObject soFijador = new SerializedObject(fijador.AddComponent<FijadorObjetivoDePrueba>());
+            soFijador.FindProperty("avanzarAlLlegar").boolValue = true;
             SerializedProperty listaObjetivos = soFijador.FindProperty("objetivos");
-            listaObjetivos.arraySize = 1;
+            listaObjetivos.arraySize = 3;
             SerializedProperty primero = listaObjetivos.GetArrayElementAtIndex(0);
-            primero.FindPropertyRelative("texto").stringValue = "Ve al bar";
-            primero.FindPropertyRelative("lugar").enumValueIndex = (int)IdLugar.Bar;
+            primero.FindPropertyRelative("texto").stringValue = "Ve a la esquina";
+            primero.FindPropertyRelative("destino").objectReferenceValue = esquina.transform;
+            SerializedProperty segundo = listaObjetivos.GetArrayElementAtIndex(1);
+            segundo.FindPropertyRelative("texto").stringValue = "Entra al bar";
+            segundo.FindPropertyRelative("lugar").enumValueIndex = (int)IdLugar.Bar;
+            segundo.FindPropertyRelative("destino").objectReferenceValue = null;
+            SerializedProperty tercero = listaObjetivos.GetArrayElementAtIndex(2);
+            tercero.FindPropertyRelative("texto").stringValue = "Sube al carro";
+            tercero.FindPropertyRelative("destino").objectReferenceValue = carro.transform.Find("PuntoSubida");
             soFijador.ApplyModifiedPropertiesWithoutUndo();
-
-            // Carro de prueba (T-058) en una calle despejada de 60 m (x = 60, de z = -30 a z = 30), mirando a +Z.
-            GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabCarro));
-            carro.name = "Carro de prueba";
-            carro.transform.position = new Vector3(CalleCarroX, 0f, -CalleCarroLargo / 2f);
 
             GameObject herramientas = new GameObject("Herramientas de prueba");
             DaniadorDePrueba daniador = herramientas.AddComponent<DaniadorDePrueba>();
@@ -590,6 +581,18 @@ namespace MechaCyberpunk.Personaje.Editor
             revividor.Configurar(jugador.GetComponent<VidaAPie>(), new InputAction("Revivir", InputActionType.Button, "<Keyboard>/k"));
 
             EditorSceneManager.SaveScene(escena, RutaEscena);
+        }
+
+        // Instancia un prefab existente como hijo de la raíz; si no existe todavía (otra tarea no lo ha creado), lo omite.
+        private static void AnidarPrefab(string ruta, Transform padre)
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            if (prefab == null)
+            {
+                Debug.LogWarning("[Personaje] No existe " + ruta + "; el jugador queda sin él.");
+                return;
+            }
+            PrefabUtility.InstantiatePrefab(prefab, padre);
         }
     }
 }

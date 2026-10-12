@@ -105,3 +105,9 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Para ti: Escenas/Tony/Pruebas_APie.unity, Play. WASD hasta el carro rosa (x=60, z=-30), E para subir, flechas para manejar, E con el carro detenido para bajar. ¿Subir y bajar es inmediato y claro, y la cámara no marea? Al bajar debes quedar a la izquierda, fuera del collider y mirando hacia adelante.
 - Decisiones del agente: la E la lee InteraccionAPie (siempre prendida); al subir se apagan ControladorAPie y ArmasAPie y se congela el control; el carro usa un .inputactions propio con las flechas.
 - Para Alan (A-F2): el carro de Alan solo necesita implementar IMontable (contrato en Core/Jugador/IMontable.cs); CarroDePrueba es el ejemplo.
+
+### T-059 Prefab completo del jugador a pie y recorrido
+- Verificado automáticamente: todos los criterios (EditMode 276/276, PlayMode 229/229; capturas docs/capturas/T-059-1 a -3.png).
+- Para ti: Pruebas_APie, Play, WASD y ratón siguiendo solo la flecha hasta la esquina, el Bar y el carro. ¿Nada se atora, la flecha basta, el HUD es legible?
+- Pedido para Alan (D-tony-25): colocar Personaje/Prefabs/JugadorAPie.prefab en Ciudad.unity y Pruebas_Alan.unity con idAparicion "Casa_Puerta" y apagar su cámara libre.
+- Observación: GolpeBloqueoPruebas.Golpe_ClicsSeguidos... es flaky (preexistente, de Combate).
