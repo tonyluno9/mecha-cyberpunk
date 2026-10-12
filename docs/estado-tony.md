@@ -15,7 +15,7 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 | T-063 Deudas menores de T-F3 | nada | hecha (sin revisar) |
 | T-064 El mecha como montable | nada nuevo | hecha (sin revisar) |
 | T-065 Encendido del mecha en 3 pasos | T-064 | hecha (sin revisar) |
-| T-066 Llamar al mecha, zonas y regreso | T-062, T-064 | pendiente |
+| T-066 Llamar al mecha, zonas y regreso | T-062, T-064 | hecha (sin revisar) |
 | T-067 Calor por usar el mecha en la calle | T-062, T-066 | pendiente |
 | T-068 Rival que no te deja perder y rival del tutorial | nada nuevo | pendiente |
 | T-069 Pandilla con turnos de ataque | T-068 | pendiente |
