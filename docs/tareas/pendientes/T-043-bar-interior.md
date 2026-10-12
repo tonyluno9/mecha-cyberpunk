@@ -12,7 +12,7 @@ noche, objetivos) lo sepan. Es la mitad del mundo del hito H2.
 - Diseño: docs/diseno/ciudad.md (entras y sales en tiempo real, sin pantallas de carga; criterio: entro y salgo del bar sin
   pantalla de carga), docs/diseno/economia-misiones.md (las misiones ilegales salen en el bar de noche; el club sirve para ligar,
   de forma no explícita: aquí solo el espacio), docs/diseno/estetica-hud.md (neón, low-poly).
-- Contrato: `ILugar.JugadorDentro`, `EventosLugares.PublicarJugadorEntro` y `PublicarJugadorSalio` (Core/Mundo/ en main).
+- Contrato: `ILugar.JugadorDentro`, `EventosLugares.PublicarEntro` y `PublicarSalio` (Core/Mundo/ en main).
   Los triggers detectan al jugador con `GetComponentInParent<IJugador>()` (comentario de `IJugador`); la cámara libre tiene
   CharacterController, así que los triggers la ven.
 
@@ -28,7 +28,7 @@ noche, objetivos) lo sepan. Es la mitad del mundo del hito H2.
 
 ### Cuando T-032 esté en main
 4. `ZonaInterior` tiene el `ILugar` de su local: al entrar el jugador pone `JugadorDentro` en true y publica
-   `EventosLugares.PublicarJugadorEntro(Bar)`; al salir, false y `PublicarJugadorSalio(Bar)`. Una vez por entrada y salida,
+   `EventosLugares.PublicarEntro(Bar)`; al salir, false y `PublicarSalio(Bar)`. Una vez por entrada y salida,
    aunque el jugador tenga varios colliders.
 
 ## Carpetas permitidas

@@ -47,3 +47,12 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Para ti (o Alan): leer los /// de ICalor e IObjetivos en Core/ y confirmar que queda claro cuándo persiguen los drones y cómo dibujar el objetivo.
 - Decisiones del agente: Avanzar enfría solo lo que pasa del retraso; Enfriar y Borrar no reinician el retraso.
 - Integrada a main porque Alan la necesita.
+
+## Revisión de conjunto de T-F2 (revisor, Opus) y correcciones
+- Veredicto: código aprobado; ninguna área referencia a un área del otro dueño. Corrida: EditMode 164/164, PlayMode 98/98 tras la corrección.
+- Corregido en tony/T-F2-correccion (Core, integrada a main): orden de decisión de IPuerta/ILugar alineado con T-042; nombres de avisos de T-042 y T-043
+  (PublicarEntro, PublicarSalio, PublicarEstadoLugar); MostrarKO no se borraba en un KO temprano; contrato y respaldo de la pantalla de la arena;
+  aviso en HorarioLugar (0 a 24 queda cerrado: usa SiempreAbierto); Fijar(Ninguno) = Quitar; precio 0 comprable; DirectorPelea escucha Quitado y se re-suscribe;
+  RivalBasico ya no se congela según el orden de Start; /// de ITienda; nota de "nadie lo registra todavía" en ICalor, ICartera, IObjetivos, ITienda e IJugador.
+- Pendiente anotado (no es bug): ningún componente registra todavía ICalor, ICartera, ITienda, IObjetivos ni IJugador (llegan en T-F3 a T-F5);
+  RivalBasico pasa siempre tieneControl=true a CerebroRival; el "3" del conteo queda pegado a la cabeza del rival en T-022-1.png (el contrato de la pantalla ya recomienda ponerla alta).
