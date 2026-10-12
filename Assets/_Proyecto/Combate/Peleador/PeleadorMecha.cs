@@ -19,11 +19,20 @@ namespace MechaCyberpunk.Combate.Peleador
         private bool permisoPiloto = true;
         private bool controlActivo = true;
 
-        public string Nombre => vida != null && vida.Datos != null ? vida.Datos.Nombre : name;
+        private string nombreVisible;
+
+        public string Nombre => !string.IsNullOrEmpty(nombreVisible) ? nombreVisible
+            : vida != null && vida.Datos != null ? vida.Datos.Nombre : name;
         public LadoPelea Lado => lado;
         public Transform Raiz => transform;
         public IVida Vida => vida;
         public bool ControlActivo => controlActivo;
+
+        /// <summary>Fija el nombre para mostrar (el alias del rival). Vacío o null vuelve al nombre de su DatosMecha.</summary>
+        public void FijarNombre(string nombre)
+        {
+            nombreVisible = nombre;
+        }
 
         /// <summary>Segundo permiso de control: lo da quien monta el mecha (false = nadie lo maneja). Por defecto true.</summary>
         public bool PermisoPiloto => permisoPiloto;

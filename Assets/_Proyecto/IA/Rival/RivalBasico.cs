@@ -1,4 +1,5 @@
 using MechaCyberpunk.Combate.Golpe;
+using MechaCyberpunk.Combate.Peleador;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Datos;
 using UnityEngine;
@@ -63,6 +64,14 @@ namespace MechaCyberpunk.IA.Rival
         public Transform Brazo => brazo;
         public Renderer[] PiezasBrazo => piezasBrazo;
         public DatosRival Datos => datos;
+        /// <summary>Multiplica el daño de sus golpes (1 = normal). Lo cambia PiedadRival.</summary>
+        public float MultiplicadorDanio { get; set; } = 1f;
+        /// <summary>Multiplica la espera entre golpes (1 = normal). Lo cambia PiedadRival.</summary>
+        public float MultiplicadorEspera { get; set; } = 1f;
+        /// <summary>Multiplica su velocidad y aceleración (1 = normal). Lo cambia PiedadRival.</summary>
+        public float MultiplicadorVelocidad { get; set; } = 1f;
+        /// <summary>Si existe, recibe el daño del golpe y devuelve el que se pide de verdad. Lo pone PiedadRival.</summary>
+        public System.Func<float, float> LimitarDanio { get; set; }
         /// <summary>Se dispara en cada impacto, haya dado a alguien o no.</summary>
         public event System.Action Impacto;
 
@@ -78,6 +87,11 @@ namespace MechaCyberpunk.IA.Rival
                 return;
             }
             cerebro = new CerebroRival(datos);
+            PeleadorMecha peleadorMecha = GetComponent<PeleadorMecha>();
+            if (peleadorMecha != null)
+            {
+                peleadorMecha.FijarNombre(datos.Alias);
+            }
             ciclo = new CicloGolpe(datos.Mecha.PreparacionGolpe, datos.Mecha.RecargaGolpe);
             bloque = new MaterialPropertyBlock();
             giroReposoBrazo = brazo.localRotation;
@@ -166,6 +180,7 @@ namespace MechaCyberpunk.IA.Rival
             DecisionRival decision = DecisionRival.Esperar;
             if (hayObjetivo && ciclo.Fase == FaseGolpe.Listo)
             {
+                cerebro.MultiplicadorEspera = MultiplicadorEspera;
                 decision = cerebro.Decidir(distancia, objetivoKO, true, dt);
             }
             if (decision == DecisionRival.EmpezarGolpe)
@@ -190,9 +205,9 @@ namespace MechaCyberpunk.IA.Rival
             float velocidadDeseada = 0f;
             if (decision == DecisionRival.Acercarse)
             {
-                velocidadDeseada = VelocidadParaFrenar(distancia, mecha) * alineacion;
+                velocidadDeseada = VelocidadParaFrenar(distancia, mecha) * alineacion * MultiplicadorVelocidad;
             }
-            float cambio = velocidadDeseada > velocidad ? mecha.Aceleracion : mecha.Desaceleracion;
+            float cambio = (velocidadDeseada > velocidad ? mecha.Aceleracion : mecha.Desaceleracion) * MultiplicadorVelocidad;
             velocidad = Mathf.MoveTowards(velocidad, velocidadDeseada, cambio * dt);
 
             // Nunca pasa de la distancia mínima aunque la inercia lo empuje.
@@ -227,7 +242,15 @@ namespace MechaCyberpunk.IA.Rival
                 radioBusqueda, impactos, out Vector3 punto);
             if (recibe != null)
             {
-                recibe.RecibirDanio(new InfoDanio(mecha.DanioGolpe, TipoDanio.Golpe, punto, direccion, propio));
+                float danio = mecha.DanioGolpe * MultiplicadorDanio;
+                if (LimitarDanio != null)
+                {
+                    danio = LimitarDanio(danio);
+                }
+                if (danio > 0f)
+                {
+                    recibe.RecibirDanio(new InfoDanio(danio, TipoDanio.Golpe, punto, direccion, propio));
+                }
             }
             Impacto?.Invoke();
         }

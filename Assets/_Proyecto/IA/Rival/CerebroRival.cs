@@ -31,6 +31,9 @@ namespace MechaCyberpunk.IA.Rival
         /// <summary>Segundos que faltan para poder empezar el siguiente golpe.</summary>
         public float EsperaRestante => espera;
 
+        /// <summary>Multiplica la espera que se elige entre golpes (1 = normal).</summary>
+        public float MultiplicadorEspera { get; set; } = 1f;
+
         /// <summary>Decide qué hacer. <paramref name="distancia"/> es la horizontal al objetivo (m).</summary>
         public DecisionRival Decidir(float distancia, bool objetivoKO, bool tieneControl, float dt)
         {
@@ -57,7 +60,7 @@ namespace MechaCyberpunk.IA.Rival
             float minima = datos.EsperaEntreAtaquesMin;
             float maxima = datos.EsperaEntreAtaquesMax;
             float t = Math.Max(0f, Math.Min(1f, azar()));
-            return minima + (maxima - minima) * t;
+            return (minima + (maxima - minima) * t) * MultiplicadorEspera;
         }
     }
 }
