@@ -1,4 +1,5 @@
 using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.UI;
 using UnityEngine;
 
 namespace MechaCyberpunk.UI.Hud
@@ -7,9 +8,9 @@ namespace MechaCyberpunk.UI.Hud
     public static class FormatoHud
     {
         /// <summary>"VIDA 75". La vida se redondea hacia arriba para no mostrar 0 con vida.</summary>
-        public static string TextoVida(float actual)
+        public static string TextoVida(float actual, ConfigHudAPie config)
         {
-            return "VIDA " + Mathf.CeilToInt(Mathf.Max(0f, actual));
+            return string.Format(config.TextoVida, Mathf.CeilToInt(Mathf.Max(0f, actual)));
         }
 
         /// <summary>Parte de la barra llena, siempre entre 0 y 1.</summary>
@@ -25,18 +26,18 @@ namespace MechaCyberpunk.UI.Hud
         }
 
         /// <summary>"PUÑOS", "PISTOLA 7/8", "PISTOLA · RECARGANDO" o "PISTOLA 0/8 · R".</summary>
-        public static string TextoArma(ArmaAPie arma, int balas, int tamanoCargador, bool recargando)
+        public static string TextoArma(ArmaAPie arma, int balas, int tamanoCargador, bool recargando, ConfigHudAPie config)
         {
             if (arma == ArmaAPie.Punos)
             {
-                return "PUÑOS";
+                return config.TextoPunos;
             }
             if (recargando)
             {
-                return "PISTOLA · RECARGANDO";
+                return config.TextoPistolaRecargando;
             }
-            string texto = "PISTOLA " + balas + "/" + tamanoCargador;
-            return balas <= 0 ? texto + " · R" : texto;
+            string texto = string.Format(config.TextoPistola, balas, tamanoCargador);
+            return balas <= 0 ? texto + config.TextoPistolaSinBalas : texto;
         }
     }
 }

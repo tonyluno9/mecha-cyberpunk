@@ -41,6 +41,8 @@ namespace MechaCyberpunk.UI.Editor
                 config = ScriptableObject.CreateInstance<ConfigHudAPie>();
                 AssetDatabase.CreateAsset(config, RutaConfig);
             }
+            // Reserializa el config: los campos nuevos con valor por defecto quedan escritos en el asset.
+            EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
             CrearPrefab(config);
             AssetDatabase.SaveAssets();

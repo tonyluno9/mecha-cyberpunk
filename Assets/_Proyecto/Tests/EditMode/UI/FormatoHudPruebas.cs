@@ -1,11 +1,27 @@
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.UI.Hud;
+using MechaCyberpunk.UI;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace MechaCyberpunk.Tests.UI
 {
     public class FormatoHudPruebas
     {
+        private ConfigHudAPie config;
+
+        [SetUp]
+        public void Setup()
+        {
+            config = ScriptableObject.CreateInstance<ConfigHudAPie>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Object.DestroyImmediate(config);
+        }
+
         [TestCase(100f, "VIDA 100")]
         [TestCase(75f, "VIDA 75")]
         [TestCase(74.2f, "VIDA 75")]
@@ -14,7 +30,7 @@ namespace MechaCyberpunk.Tests.UI
         [TestCase(-5f, "VIDA 0")]
         public void TextoVida_DaElTextoRedondeadoHaciaArriba(float actual, string esperado)
         {
-            Assert.AreEqual(esperado, FormatoHud.TextoVida(actual));
+            Assert.AreEqual(esperado, FormatoHud.TextoVida(actual, config));
         }
 
         [TestCase(100f, 100f, 1f)]
@@ -41,26 +57,26 @@ namespace MechaCyberpunk.Tests.UI
         [Test]
         public void TextoArma_Punos_DicePunos()
         {
-            Assert.AreEqual("PUÑOS", FormatoHud.TextoArma(ArmaAPie.Punos, 8, 8, false));
+            Assert.AreEqual("PUÑOS", FormatoHud.TextoArma(ArmaAPie.Punos, 8, 8, false, config));
         }
 
         [Test]
         public void TextoArma_PistolaConBalas_MuestraBalasYCargador()
         {
-            Assert.AreEqual("PISTOLA 7/8", FormatoHud.TextoArma(ArmaAPie.Pistola, 7, 8, false));
-            Assert.AreEqual("PISTOLA 8/8", FormatoHud.TextoArma(ArmaAPie.Pistola, 8, 8, false));
+            Assert.AreEqual("PISTOLA 7/8", FormatoHud.TextoArma(ArmaAPie.Pistola, 7, 8, false, config));
+            Assert.AreEqual("PISTOLA 8/8", FormatoHud.TextoArma(ArmaAPie.Pistola, 8, 8, false, config));
         }
 
         [Test]
         public void TextoArma_PistolaRecargando_DiceRecargando()
         {
-            Assert.AreEqual("PISTOLA · RECARGANDO", FormatoHud.TextoArma(ArmaAPie.Pistola, 3, 8, true));
+            Assert.AreEqual("PISTOLA · RECARGANDO", FormatoHud.TextoArma(ArmaAPie.Pistola, 3, 8, true, config));
         }
 
         [Test]
         public void TextoArma_PistolaVacia_PideRecargar()
         {
-            Assert.AreEqual("PISTOLA 0/8 · R", FormatoHud.TextoArma(ArmaAPie.Pistola, 0, 8, false));
+            Assert.AreEqual("PISTOLA 0/8 · R", FormatoHud.TextoArma(ArmaAPie.Pistola, 0, 8, false, config));
         }
     }
 }

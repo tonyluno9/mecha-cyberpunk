@@ -25,9 +25,9 @@ namespace MechaCyberpunk.Tests.UI
 
         private IEnumerator Preparar(Vector3 posicionBar)
         {
+            CrearJugador();
             CrearHud();
             CrearServicio();
-            CrearJugador();
             CrearLocal(IdLugar.Bar, posicionBar, HorarioLugar.Siempre, false, true);
             yield return Calentar();
         }
@@ -243,8 +243,8 @@ namespace MechaCyberpunk.Tests.UI
         [UnityTest]
         public IEnumerator Objetivo_SeFijaAntesQueElHud_ElHudLoMuestraAlNacer()
         {
+            CrearJugador(false);
             CrearServicio();
-            CrearJugador();
             CrearLocal(IdLugar.Bar, PuertaAlFrente, HorarioLugar.Siempre, false, true);
             yield return null;
             servicio.Fijar(new Objetivo("Ve al bar", IdLugar.Bar));

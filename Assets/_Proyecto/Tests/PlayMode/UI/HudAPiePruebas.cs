@@ -80,10 +80,26 @@ namespace MechaCyberpunk.Tests.UI
             armas = jugador.GetComponent<ArmasAPie>();
         }
 
+        private void CrearJugadorSinHud()
+        {
+            CrearJugador();
+            foreach (HudAPie propio in jugador.GetComponentsInChildren<HudAPie>(true))
+            {
+                UnityEngine.Object.DestroyImmediate(propio.gameObject);
+            }
+        }
+
+        /// <summary>Toma el HUD anidado del jugador si hay uno; si no, instancia el prefab. Siempre queda un solo HudAPie.</summary>
         private void CrearHud()
         {
-            objetoHud = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
-            hud = objetoHud.GetComponent<HudAPie>();
+            hud = jugador != null ? jugador.GetComponentInChildren<HudAPie>(true) : null;
+            if (hud == null)
+            {
+                objetoHud = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
+                hud = objetoHud.GetComponent<HudAPie>();
+            }
+            Assert.AreEqual(1, UnityEngine.Object.FindObjectsByType<HudAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length,
+                "Debe haber exactamente un HudAPie en la escena");
         }
 
         private JugadorFalso RegistrarFalso(ModoJugador modo)
@@ -257,7 +273,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return Calentar();
             AssertGrupos(false, false, false, false);
 
-            CrearJugador();
+            CrearJugadorSinHud();
             yield return null;
 
             AssertGrupos(true, true, true, true);

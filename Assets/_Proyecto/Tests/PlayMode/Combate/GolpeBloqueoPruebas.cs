@@ -232,14 +232,24 @@ namespace MechaCyberpunk.Tests.Combate
             List<float> tiempos = new List<float>();
             golpe.Impacto += () => tiempos.Add(Time.time);
 
+            // Paso de tiempo fijo por frame: la medida no depende de la carga de la máquina.
+            float deltaAnterior = Time.captureDeltaTime;
+            Time.captureDeltaTime = 0.02f;
             float inicio = Time.time;
             float duracion = 4f;
-            while (Time.time < inicio + duracion)
+            try
             {
-                Press(raton.leftButton);
-                yield return null;
-                Release(raton.leftButton);
-                yield return null;
+                while (Time.time < inicio + duracion)
+                {
+                    Press(raton.leftButton);
+                    yield return null;
+                    Release(raton.leftButton);
+                    yield return null;
+                }
+            }
+            finally
+            {
+                Time.captureDeltaTime = deltaAnterior;
             }
 
             float ciclo = datos.PreparacionGolpe + datos.RecargaGolpe;

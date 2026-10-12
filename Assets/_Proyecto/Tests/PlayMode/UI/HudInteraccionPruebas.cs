@@ -18,8 +18,8 @@ namespace MechaCyberpunk.Tests.UI
 
         private IEnumerator Preparar(IdLugar id, bool cerradoEnDemo, bool abiertoPorHorario)
         {
-            CrearHud();
             CrearJugador();
+            CrearHud();
             CrearLocal(id, PuertaAlFrente, new HorarioLugar(HoraAbre, HoraCierra), cerradoEnDemo, abiertoPorHorario);
             yield return Calentar();
             yield return Esperar(0.1f);

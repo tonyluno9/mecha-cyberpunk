@@ -283,7 +283,7 @@ namespace MechaCyberpunk.UI.Hud
             }
             relleno.fillAmount = FormatoHud.Fraccion(vida.Actual, vida.Maxima);
             relleno.color = FormatoHud.EsVidaBaja(vida.Actual, vida.Maxima, config.UmbralVidaBaja) ? config.ColorVidaBaja : config.ColorVida;
-            textoVida.text = FormatoHud.TextoVida(vida.Actual);
+            textoVida.text = FormatoHud.TextoVida(vida.Actual, config);
             textoVida.color = relleno.color;
         }
 
@@ -294,7 +294,7 @@ namespace MechaCyberpunk.UI.Hud
                 textoArma.text = string.Empty;
                 return;
             }
-            textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Balas, armas.TamanoCargador, armas.Recargando);
+            textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Balas, armas.TamanoCargador, armas.Recargando, config);
             bool aviso = armas.ArmaActiva == ArmaAPie.Pistola && (armas.Recargando || armas.Balas <= 0);
             textoArma.color = aviso ? config.ColorAviso : config.ColorTexto;
         }
