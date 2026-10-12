@@ -10,7 +10,7 @@ Prueba de cierre: cada uno juega 3 peleas completas en Clandestino.unity sin err
 
 | ID | Tarea | Dueño | Depende de | Estado |
 | --- | --- | --- | --- | --- |
-| T-001 | Contratos de Core | Tony (revisa el compañero) | Nada | Hecha en rama tony/T-001-contratos-core, falta mergear a main |
+| T-001 | Contratos de Core | Tony (revisa el compañero) | Nada | En revisión (rama tony/T-001-contratos-core): faltan criterios del editor y merge |
 | T-010 | Movimiento del mecha en primera persona | Tony | T-001 | Pendiente |
 | T-011 | Cabina greybox | Tony | T-001, T-010 | Pendiente |
 | T-013 | Vida del mecha y recibir daño | Tony | T-001, T-011 | Pendiente |

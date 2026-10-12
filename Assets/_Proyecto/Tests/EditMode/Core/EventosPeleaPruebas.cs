@@ -6,6 +6,17 @@ namespace MechaCyberpunk.Tests.Core
 {
     public class EventosPeleaPruebas
     {
+        private class PeleadorFalso : IPeleador
+        {
+            public string Nombre => "Falso";
+            public LadoPelea Lado => LadoPelea.Jugador;
+            public Transform Raiz => null;
+            public IVida Vida => null;
+            public bool ControlActivo { get; private set; }
+            public void ActivarControl(bool activo) => ControlActivo = activo;
+            public void PrepararPelea(Pose inicio) { }
+        }
+
         [SetUp]
         public void SetUp() => EventosPelea.LimpiarSuscriptores();
 
@@ -58,12 +69,17 @@ namespace MechaCyberpunk.Tests.Core
                 infoRecibida = i;
                 resultadoRecibido = r;
             };
-            var info = new InfoDanio(10f, TipoDanio.Golpe, new Vector3(1f, 2f, 3f), Vector3.forward, null);
+            var objetivo = new PeleadorFalso();
+            var atacante = new PeleadorFalso();
+            var info = new InfoDanio(10f, TipoDanio.Golpe, new Vector3(1f, 2f, 3f), Vector3.forward, atacante);
             var resultado = new ResultadoDanio(7f, TipoBloqueo.Normal, true);
 
-            EventosPelea.PublicarImpacto(null, info, resultado);
+            EventosPelea.PublicarImpacto(objetivo, info, resultado);
 
-            Assert.IsNull(objetivoRecibido);
+            Assert.AreSame(objetivo, objetivoRecibido);
+            Assert.AreSame(atacante, infoRecibida.Atacante);
+            Assert.AreEqual(TipoDanio.Golpe, infoRecibida.Tipo);
+            Assert.AreEqual(Vector3.forward, infoRecibida.Direccion);
             Assert.AreEqual(10f, infoRecibida.Cantidad);
             Assert.AreEqual(new Vector3(1f, 2f, 3f), infoRecibida.Punto);
             Assert.AreEqual(7f, resultadoRecibido.DanioAplicado);

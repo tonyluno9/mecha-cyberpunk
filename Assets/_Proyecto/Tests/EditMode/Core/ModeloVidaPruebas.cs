@@ -75,6 +75,21 @@ namespace MechaCyberpunk.Tests.Core
         }
 
         [Test]
+        public void Aplicar_DanioMortal_EstaKOYaEsVerdadEnLosAvisos()
+        {
+            var vida = new ModeloVida(10f);
+            bool koEnCambio = false;
+            bool koEnKO = false;
+            vida.Cambio += () => koEnCambio = vida.EstaKO;
+            vida.KO += () => koEnKO = vida.EstaKO;
+
+            vida.Aplicar(10f);
+
+            Assert.IsTrue(koEnCambio);
+            Assert.IsTrue(koEnKO);
+        }
+
+        [Test]
         public void Aplicar_DanioValido_AvisaCambio()
         {
             var vida = new ModeloVida(100f);

@@ -29,14 +29,16 @@ namespace MechaCyberpunk.Core
 
             float restado = Math.Min(cantidad, Actual);
             Actual -= restado;
-            Cambio?.Invoke();
-
             if (Actual <= 0f)
             {
                 Actual = 0f;
                 EstaKO = true;
-                KO?.Invoke();
             }
+
+            // El estado ya es coherente cuando se avisa: quien escuche Cambio ve EstaKO al día.
+            Cambio?.Invoke();
+            if (EstaKO)
+                KO?.Invoke();
 
             return restado;
         }

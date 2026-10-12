@@ -6,6 +6,9 @@ namespace MechaCyberpunk.Core
     [CreateAssetMenu(menuName = "Mecha Cyberpunk/Datos del rival", fileName = "DatosRival_Nuevo")]
     public class DatosRival : ScriptableObject
     {
+        /// <summary>Si la distancia mínima queda mal, se corrige a esta fracción de la de ataque.</summary>
+        private const float FraccionDistanciaMinima = 0.9f;
+
         [Tooltip("Nombre del rival (texto).")]
         [SerializeField] private string alias = "Rival";
 
@@ -37,7 +40,7 @@ namespace MechaCyberpunk.Core
                 esperaEntreAtaquesMax = esperaEntreAtaquesMin;
 
             if (distanciaMinima >= distanciaAtaque)
-                distanciaMinima = Mathf.Max(0.1f, distanciaAtaque - 0.1f);
+                distanciaMinima = distanciaAtaque * FraccionDistanciaMinima;
 
             if (mecha != null && distanciaAtaque > mecha.AlcanceGolpe)
                 Debug.LogWarning($"[IA] {name}: distanciaAtaque ({distanciaAtaque} m) es mayor que el alcance de golpe de su mecha ({mecha.AlcanceGolpe} m).", this);
