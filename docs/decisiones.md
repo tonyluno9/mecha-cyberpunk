@@ -82,3 +82,24 @@ Los muñecos y atacantes de prueba viven en `<Área>/Pruebas/` de su dueño y so
 
 ### D-019 Confirmación de D-011 a D-016
 Tony confirmó D-011, D-012, D-013, D-014, D-015 y D-016 el 2026-10-11. Ya no son propuestas.
+
+## Modo automático (2026-10-11, preparado por Claude en chat con Tony)
+
+### D-020 Integraciones de preparación
+T-001 (contratos de Core) y T-002 (verificación automática) las integra a main el orquestador de Tony en cuanto
+estén verificadas, sin esperar la revisión nocturna, porque las dos personas dependen de ellas.
+
+### D-021 El compañero es Alan
+El compañero se llama Alan. Prefijo de ramas `alan/`. Su escena de pruebas es Pruebas_Alan.unity.
+Donde los documentos viejos digan "compañero", "compa" o "Pruebas_Compa", se refiere a Alan.
+
+### D-022 Modo automático y revisión nocturna
+Cada persona arranca a Claude con el `/goal` de docs/ARRANQUE.md y Claude hace todas sus tareas: Opus 5.5 orquesta,
+Sonnet 5.5 programa y verifica, Opus 5.5 revisa. El trabajo se integra en `<persona>/fase-N`. main solo cambia
+cuando la persona lo aprueba en la revisión nocturna (excepto D-020). Mientras trabaja en automático, cada persona
+escribe solo en docs/estado-<persona>.md, docs/decisiones-pendientes-<persona>.md y docs/revision-<persona>.md.
+
+### D-023 Verificación sin humanos
+Un criterio de aceptación se da por cumplido solo con evidencia: prueba automática, valor medido en Unity en vivo o
+captura revisada. Las tareas jugables llevan pruebas de PlayMode con entrada simulada. Solo los criterios de
+sensación o gusto visual quedan para la revisión nocturna.
