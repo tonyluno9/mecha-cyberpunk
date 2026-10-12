@@ -34,10 +34,10 @@ namespace MechaCyberpunk.Combate.Editor
         private const float VidaSaco = 1000f;
         private const float PreparacionAtacante = 0.6f;
         private const float LadoSaco = 4f;
-        private const float LadoAtacante = 2f;
-        // Saco detrás-izquierda del jugador (hay que girar para golpearlo); atacante de frente, a 2.8 m del jugador.
+        private static readonly Vector3 TamanoAtacante = new Vector3(3f, 4f, 1f);
+        // Saco detrás-izquierda del jugador (hay que girar para golpearlo); atacante de frente, a 2.9 m del jugador (dentro del alcance de 3 m).
         private static readonly Vector3 PosicionSaco = new Vector3(-6f, LadoSaco / 2f, -4f);
-        private static readonly Vector3 PosicionAtacante = new Vector3(0f, LadoAtacante / 2f, 2.8f);
+        private static readonly Vector3 PosicionAtacante = new Vector3(0f, TamanoAtacante.y / 2f, 2.9f);
 
         [MenuItem("Mecha Cyberpunk/Crear T-012")]
         public static void Crear()
@@ -208,11 +208,11 @@ namespace MechaCyberpunk.Combate.Editor
             soPeleador.ApplyModifiedPropertiesWithoutUndo();
             saco.AddComponent<SacoDePrueba>();
 
-            // Atacante: cubo de 2 m frente al jugador.
+            // Atacante: bloque de 3 x 4 x 1 m frente al jugador (su cara queda a 2.4 m: se ve de frente sobre el panel).
             GameObject atacante = GameObject.CreatePrimitive(PrimitiveType.Cube);
             atacante.name = "AtacanteDePrueba";
             atacante.transform.position = PosicionAtacante;
-            atacante.transform.localScale = Vector3.one * LadoAtacante;
+            atacante.transform.localScale = TamanoAtacante;
             MeshRenderer visual = atacante.GetComponent<MeshRenderer>();
             visual.sharedMaterial = materialAtacante;
             AtacanteDePrueba componente = atacante.AddComponent<AtacanteDePrueba>();
