@@ -39,13 +39,16 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaPrefabMuneco = RutaPersonaje + "/Pruebas/MunecoAPie.prefab";
         private const string RutaMaterialPuno = RutaPersonaje + "/Materiales/Greybox_Puno.mat";
         private const string RutaMaterialMuneco = RutaPersonaje + "/Materiales/Greybox_Muneco.mat";
+        private const string RutaMaterialPistola = RutaPersonaje + "/Materiales/Greybox_Pistola.mat";
+        private const string RutaMaterialMarca = RutaPersonaje + "/Materiales/Greybox_Marca.mat";
+        private const string RutaDatosPistola = RutaPersonaje + "/Datos/DatosPistola_Base.asset";
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
 
         private const float AlturaCuerpo = 1.8f;
         private const float RadioCuerpo = 0.35f;
         private const float AlturaCamara = 1.65f;
         private const float DistanciaManos = 0.5f;
-        private const float LadoPiso = 120f;
+        private const float LadoPiso = 200f;
         private const float PosicionZLocales = -50f;
 
         [MenuItem("Mecha Cyberpunk/Crear T-051")]
@@ -64,6 +67,7 @@ namespace MechaCyberpunk.Personaje.Editor
             EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<DatosPersonaje>(RutaDatos));
             CrearAsset<ConfigControlesAPie>(RutaConfig);
             CrearAsset<ConfigInteraccionAPie>(RutaConfigInteraccion);
+            CrearAsset<DatosPistola>(RutaDatosPistola);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
@@ -73,7 +77,9 @@ namespace MechaCyberpunk.Personaje.Editor
             Material cuerpo = CrearMaterial(RutaMaterialCuerpo, new Color(0.3f, 0.5f, 0.7f));
             Material puno = CrearMaterial(RutaMaterialPuno, new Color(0.9f, 0.75f, 0.6f));
             Material muneco = CrearMaterial(RutaMaterialMuneco, new Color(0.8f, 0.8f, 0.8f));
-            CrearPrefab(cuerpo, puno);
+            Material pistola = CrearMaterial(RutaMaterialPistola, new Color(0.15f, 0.15f, 0.18f));
+            Material marca = CrearMaterial(RutaMaterialMarca, new Color(0.05f, 0.05f, 0.05f));
+            CrearPrefab(cuerpo, puno, pistola, marca);
             CrearPrefabMuneco(muneco);
             CrearPrefabLocal(cubo, obstaculo);
             CrearEscena(piso, cubo, obstaculo);
@@ -150,7 +156,7 @@ namespace MechaCyberpunk.Personaje.Editor
             return material;
         }
 
-        private static void CrearPrefab(Material materialCuerpo, Material materialPuno)
+        private static void CrearPrefab(Material materialCuerpo, Material materialPuno, Material materialPistola, Material materialMarca)
         {
             GameObject raiz = new GameObject("JugadorAPie");
             CharacterController cc = raiz.AddComponent<CharacterController>();
@@ -224,6 +230,44 @@ namespace MechaCyberpunk.Personaje.Editor
             soGolpe.FindProperty("atacar").objectReferenceValue = Referencia("Atacar");
             soGolpe.FindProperty("puno").objectReferenceValue = punoObj.transform;
             soGolpe.ApplyModifiedPropertiesWithoutUndo();
+
+            // Pistola greybox: cuerpo y cañón de cubos en Manos, con una luz breve en la boca.
+            GameObject pistolaObj = new GameObject("Pistola");
+            pistolaObj.transform.SetParent(manos.transform, false);
+            pistolaObj.transform.localPosition = new Vector3(0.2f, -0.22f, 0.05f);
+            Pieza("Cuerpo pistola", pistolaObj.transform, Vector3.zero, new Vector3(0.07f, 0.13f, 0.22f), materialPistola);
+            Pieza("Canon", pistolaObj.transform, new Vector3(0f, 0.05f, 0.18f), new Vector3(0.05f, 0.05f, 0.2f), materialPistola);
+            foreach (Transform pieza in pistolaObj.transform)
+            {
+                Object.DestroyImmediate(pieza.GetComponent<Collider>());
+                pieza.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+            }
+            GameObject bocaObj = new GameObject("Boca");
+            bocaObj.transform.SetParent(pistolaObj.transform, false);
+            bocaObj.transform.localPosition = new Vector3(0f, 0.05f, 0.32f);
+            Light luzBoca = bocaObj.AddComponent<Light>();
+            luzBoca.type = LightType.Point;
+            luzBoca.color = new Color(1f, 0.8f, 0.4f);
+            luzBoca.intensity = 8f;
+            luzBoca.range = 12f;
+            luzBoca.shadows = LightShadows.None;
+            luzBoca.enabled = false;
+
+            SerializedObject soPistola = new SerializedObject(raiz.AddComponent<PistolaAPie>());
+            soPistola.FindProperty("datos").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosPistola>(RutaDatosPistola);
+            soPistola.FindProperty("atacar").objectReferenceValue = Referencia("Atacar");
+            soPistola.FindProperty("recargar").objectReferenceValue = Referencia("Recargar");
+            soPistola.FindProperty("visual").objectReferenceValue = pistolaObj.transform;
+            soPistola.FindProperty("luzBoca").objectReferenceValue = luzBoca;
+            soPistola.FindProperty("materialMarca").objectReferenceValue = materialMarca;
+            soPistola.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject soArmas = new SerializedObject(raiz.AddComponent<ArmasAPie>());
+            soArmas.FindProperty("armaPunos").objectReferenceValue = Referencia("ArmaPunos");
+            soArmas.FindProperty("armaPistola").objectReferenceValue = Referencia("ArmaPistola");
+            soArmas.FindProperty("visualPunos").objectReferenceValue = punoObj;
+            soArmas.FindProperty("visualPistola").objectReferenceValue = pistolaObj;
+            soArmas.ApplyModifiedPropertiesWithoutUndo();
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             Object.DestroyImmediate(raiz);
@@ -412,6 +456,14 @@ namespace MechaCyberpunk.Personaje.Editor
             GameObject muneco2 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
             muneco2.name = "Muneco 2";
             muneco2.transform.position = new Vector3(2.5f, 0f, 3f);
+
+            // Muñecos de la pistola: uno a 20 m (en alcance) y otro a 80 m (fuera de alcance), en x = -5 para esquivar rampas y edificios.
+            GameObject muneco20 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
+            muneco20.name = "Muneco 20 m";
+            muneco20.transform.position = new Vector3(-5f, 0f, Mathf.Sqrt(400f - 25f));
+            GameObject muneco80 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
+            muneco80.name = "Muneco 80 m";
+            muneco80.transform.position = new Vector3(-5f, 0f, Mathf.Sqrt(6400f - 25f));
 
             GameObject herramientas = new GameObject("Herramientas de prueba");
             DaniadorDePrueba daniador = herramientas.AddComponent<DaniadorDePrueba>();
