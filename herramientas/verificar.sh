@@ -1,8 +1,27 @@
 #!/usr/bin/env bash
 # Verificación automática: compilar, editmode, playmode, todo.
-# Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|todo}
+# Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|todo|ensamblados}
 cd "$(dirname "$0")/.." || exit 1
 mkdir -p Logs
+
+# Ensamblados de pruebas de un modo: los asmdef Tests/<Modo>/*/MechaCyberpunk.Tests.<Modo>.*.asmdef
+# cuya carpeta tiene al menos un .cs (en ella o en subcarpetas). Un nombre por linea.
+ensamblados_modo() {
+  local modo="$1" asm dir
+  for asm in Assets/_Proyecto/Tests/"$modo"/*/MechaCyberpunk.Tests."$modo".*.asmdef; do
+    [ -f "$asm" ] || continue
+    dir=$(dirname "$asm")
+    if [ -n "$(find "$dir" -name '*.cs' -print -quit)" ]; then
+      basename "$asm" .asmdef
+    fi
+  done
+}
+
+if [ "$1" = "ensamblados" ]; then
+  echo "EditMode:"; ensamblados_modo EditMode | sed 's/^/  /'
+  echo "PlayMode:"; ensamblados_modo PlayMode | sed 's/^/  /'
+  exit 0
+fi
 
 unity_exe="${UNITY_EXE:-}"
 if [ -z "$unity_exe" ] && [ -f .claude/maquina.local.md ]; then
@@ -39,8 +58,13 @@ compilar() {
 pruebas() {
   local modo="$1" minus; minus=$(echo "$modo" | tr 'A-Z' 'a-z')
   rm -f "Logs/resultados-$minus.xml"
+  local lista
+  lista=$(ensamblados_modo "$modo" | paste -sd ';' -)
+  if [ -z "$lista" ]; then
+    echo "$minus FALLO: no hay ensamblados de pruebas con codigo (Tests/$modo)"; return 1
+  fi
   "$unity_exe" -batchmode -projectPath . -runTests -testPlatform "$modo" \
-    -assemblyNames "MechaCyberpunk.Tests.$modo" -testResults "Logs/resultados-$minus.xml" -logFile "Logs/$minus.log"
+    -assemblyNames "$lista" -testResults "Logs/resultados-$minus.xml" -logFile "Logs/$minus.log"
   local codigo=$?
   local xml="Logs/resultados-$minus.xml"
   if [ ! -f "$xml" ]; then
@@ -68,5 +92,5 @@ case "$1" in
   editmode) pruebas EditMode ;;
   playmode) pruebas PlayMode ;;
   todo) compilar && pruebas EditMode && pruebas PlayMode ;;
-  *) echo "Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|todo}"; exit 2 ;;
+  *) echo "Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|todo|ensamblados}"; exit 2 ;;
 esac

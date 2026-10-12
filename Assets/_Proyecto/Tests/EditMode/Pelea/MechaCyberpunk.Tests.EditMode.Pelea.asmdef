@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Tests.EditMode.Pelea",
+    "rootNamespace": "MechaCyberpunk.Tests",
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "MechaCyberpunk.Mecha", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "MechaCyberpunk.IA", "MechaCyberpunk.Pelea", "MechaCyberpunk.Personaje", "MechaCyberpunk.Economia", "MechaCyberpunk.Progresion", "MechaCyberpunk.Radio", "UnityEngine.UI"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
