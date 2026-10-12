@@ -519,6 +519,69 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &742920907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 742920909}
+  - component: {fileID: 742920908}
+  m_Layer: 0
+  m_Name: IniciadorPeleaDePrueba
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &742920908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742920907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd47c15fabdb78c42a554fbabd3e9f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Pelea::MechaCyberpunk.Pelea.Pruebas.IniciadorPeleaDePrueba
+  iniciar:
+    m_Name: Iniciar pelea
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: e76a3f9b-4d96-42c0-b08f-c21a0bbd6e36
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 1df37146-7050-4536-be49-38b6a9b907cd
+      m_Path: <Keyboard>/p
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: 
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
+  director: {fileID: 2136643849}
+--- !u!4 &742920909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742920907}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &758288779
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1405,6 +1468,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3070993614766129967, guid: 1430f7c9d7194e640977e608eac1a3ad, type: 3}
   m_PrefabInstance: {fileID: 1850596300}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1996868299
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1795291326319160351, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_Name
+      value: ArenaDePrueba
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6135159070367111231, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 56d03a91d2b9a4c41953692a60b003d4, type: 3}
 --- !u!1 &2022098803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1629,6 +1749,82 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2136643848
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 401318693245306879, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: rivalEnEscena
+      value: 
+      objectReference: {fileID: 758288780}
+    - target: {fileID: 401318693245306879, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: empezarAlArrancar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8522743643544654422, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+      propertyPath: m_Name
+      value: FlujoPelea
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+--- !u!114 &2136643849 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 401318693245306879, guid: 54dd1ed058d888a428d34e64a729b051, type: 3}
+  m_PrefabInstance: {fileID: 2136643848}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cedfbaace4682774bba968d3795f29fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Pelea::MechaCyberpunk.Pelea.Flujo.DirectorPelea
 --- !u!1 &2141839606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1780,3 +1976,6 @@ SceneRoots:
   - {fileID: 2141839611}
   - {fileID: 758288779}
   - {fileID: 902494825}
+  - {fileID: 1996868299}
+  - {fileID: 2136643848}
+  - {fileID: 742920909}

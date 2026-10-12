@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aacb1ee02c76cf64e8841de3e079a4fa, type: 3}
+  m_Name: ConfigFlujoPelea_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Pelea::MechaCyberpunk.Pelea.Datos.ConfigFlujoPelea
+  segundosPorNumero: 1
+  pausaDespuesKO: 2
+  segundosTextoPelea: 1
+  textoPelea: "\xA1PELEA!"
+  textoKO: KO
+  textoGanaste: GANASTE
+  textoPerdiste: PERDISTE
+  textoRevancha: 'R: revancha'
+  tamanoLetra: 280
+  tamanoLetraRevancha: 80
+  colorConteo: {r: 1, g: 1, b: 1, a: 1}
+  colorPelea: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorKO: {r: 1, g: 0.15, b: 0.15, a: 1}
+  colorGanaste: {r: 0.2, g: 1, b: 0.4, a: 1}
+  colorPerdiste: {r: 1, g: 0.15, b: 0.15, a: 1}
