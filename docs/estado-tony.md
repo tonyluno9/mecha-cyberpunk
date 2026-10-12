@@ -23,7 +23,7 @@ Todo lo de la fase 1 (T-001, T-002, T-010 a T-013) está aprobado y en main (D-0
 | T-056 HUD a pie | hecha (sin revisar) |
 | T-057 HUD del objetivo y avisos de interacción | hecha (sin revisar) |
 | T-058 Subir y bajar del carro | hecha (sin revisar) |
-| T-059 Prefab completo del jugador a pie y recorrido | en curso (a medias, sin verificar) |
+| T-059 Prefab completo del jugador a pie y recorrido | hecha (sin revisar) |
 
 T-050 a T-059 de la fase T-F3: pendientes, en el orden T-050, T-051, T-055, T-054, T-052, T-053, T-056, T-057, T-058, T-059.
-Qué sigue: terminar T-059 en su rama tony/T-059-prefab-jugador-recorrido. Hecho a medias (commit WIP, NO verificado, sin correr verificar.sh): AparicionJugador, PuntoAparicionDePrueba, materiales de calle y banqueta, JugadorAPie.prefab con HUD y servicios anidados, Pruebas_APie regenerada como barrio en L, pruebas AparicionJugadorPruebas, PrefabJugadorAPiePruebas y RecorridoAPiePruebas, capturas T-059-1 y T-059-2. Falta: correr verificar.sh todo y arreglar lo que falle; confirmar que RecorridoAPiePruebas pasa completo (casos a-f y ningún frame de más de 100 ms); captura T-059-3 (dentro del carro); quitar de la escena las instancias sueltas del HUD y de los servicios si quedaron; pasar por el verificador. Después: cerrar T-059 (bitácora y revisión; en la revisión anotar el pedido para Alan: colocar JugadorAPie.prefab en Ciudad.unity y Pruebas_Alan.unity con idAparicion "Casa_Puerta" y apagar su cámara libre, D-tony-25), revisión de conjunto de T-F3 con el revisor (Opus) contra main y corregir lo importante, y luego T-F4. T-060 y T-061 siguen bloqueadas esperando a Alan. Me detuve a petición tuya con el turno largo sin terminar; Unity quedó cerrado.
+Qué sigue: revisión de conjunto de T-F3 con el revisor (Opus) contra main y corregir lo importante; luego planificar T-F4. T-060 y T-061 siguen bloqueadas esperando a Alan.
