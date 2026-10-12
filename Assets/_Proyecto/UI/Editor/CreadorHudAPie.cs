@@ -25,6 +25,7 @@ namespace MechaCyberpunk.UI.Editor
         private const float GrosorMira = 2f;
         private const float AnchoTextoCentral = 800f;
         private const float AlturaAvisoInteraccion = 110f;
+        private const float AlturaAvisoLlamado = 160f;
         private const float HuecoMira = 6f;
         private static readonly Color ColorSombra = new Color(0f, 0f, 0f, 0.8f);
         private static readonly Vector2 DesplazamientoSombra = new Vector2(1.5f, -1.5f);
@@ -125,6 +126,12 @@ namespace MechaCyberpunk.UI.Editor
                 Text textoInteraccion = CrearTexto("Texto", grupoInteraccion, config, TextAnchor.LowerCenter);
                 Stretch(textoInteraccion.rectTransform);
 
+                // Llamado del mecha: abajo al centro, encima del aviso de interacción.
+                RectTransform grupoLlamado = CrearGrupo("Llamado", raiz.transform, new Vector2(0.5f, 0f),
+                    new Vector2(0f, AlturaAvisoLlamado), new Vector2(AnchoTextoCentral, AltoTexto));
+                Text textoLlamado = CrearTexto("Texto", grupoLlamado, config, TextAnchor.LowerCenter);
+                Stretch(textoLlamado.rectTransform);
+
                 HudAPie hud = raiz.AddComponent<HudAPie>();
                 SerializedObject so = new SerializedObject(hud);
                 so.FindProperty("config").objectReferenceValue = config;
@@ -143,6 +150,8 @@ namespace MechaCyberpunk.UI.Editor
                 so.FindProperty("textoDistancia").objectReferenceValue = textoDistancia;
                 so.FindProperty("grupoInteraccion").objectReferenceValue = grupoInteraccion.gameObject;
                 so.FindProperty("textoInteraccion").objectReferenceValue = textoInteraccion;
+                so.FindProperty("grupoLlamado").objectReferenceValue = grupoLlamado.gameObject;
+                so.FindProperty("textoLlamado").objectReferenceValue = textoLlamado;
                 Image[] partes = { punto, arriba, abajo, izquierda, derecha };
                 SerializedProperty lista = so.FindProperty("partesMira");
                 lista.arraySize = partes.Length;

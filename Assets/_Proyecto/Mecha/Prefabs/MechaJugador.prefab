@@ -625,6 +625,7 @@ GameObject:
   - component: {fileID: 8033794217026706427}
   - component: {fileID: 1711215442931180318}
   - component: {fileID: 199609566105717251}
+  - component: {fileID: 4647646183542583283}
   m_Layer: 0
   m_Name: MechaJugador
   m_TagString: Untagged
@@ -807,6 +808,21 @@ MonoBehaviour:
   - {fileID: 1045284296079431097}
   - {fileID: 8412824838022982112}
   pantallaVida: {fileID: 8149111834223602725}
+--- !u!114 &4647646183542583283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3070993614766129967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03283856573631d4c8215752dd81b48d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.Llamado.LlamadoMecha
+  config: {fileID: 11400000, guid: 39aa2bb856da0854eb4f4de02246ab14, type: 2}
+  llamar: {fileID: 2751064634562482794, guid: f9eb26f3677f07646b876e204c5b43f0, type: 3}
+  materialMarca: {fileID: 2100000, guid: 48a7a51f6d228cd4ea81ba4f20cb4194, type: 2}
 --- !u!1 &3815857753821001713
 GameObject:
   m_ObjectHideFlags: 0

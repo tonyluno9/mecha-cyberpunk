@@ -133,3 +133,7 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Para ti: en Pruebas_Calle sube al mecha con E y enciende con F, mantén Espacio y Q: ¿se entienden los 3 pasos solo con la pantalla?, ¿se siente máquina pesada y no menú?, ¿~5 s se aguanta la segunda vez?
 - Mira la consola al subir: si sale 'There are 2 audio listeners' repetido, hay un AudioListener duplicado.
 - Desviación menor: UI.asmdef referencia Mecha (necesario para PantallaEncendido).
+
+### T-066 Llamar al mecha con M
+- Verificado automáticamente: todos los criterios (EditMode 315/315, PlayMode 257/257).
+- Para ti: en Pruebas_Calle, a pie, pulsa M en la calle: ¿ver bajar al mecha del cielo se siente grande y 6 s se sienten bien o largos? A más de 75 m pulsa M: ¿'AQUÍ NO PUEDE LLEGAR TU MECHA' basta para entender?

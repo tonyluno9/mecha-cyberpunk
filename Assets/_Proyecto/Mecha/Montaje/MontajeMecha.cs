@@ -2,6 +2,7 @@ using System;
 using MechaCyberpunk.Combate.Peleador;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Mecha.Llamado;
 using MechaCyberpunk.Mecha.Movimiento;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ namespace MechaCyberpunk.Mecha.Montaje
         private ControladorMecha controlador;
         private PeleadorMecha peleador;
         private VidaMecha vida;
+        private LlamadoMecha llamado;
         private AudioListener oyente;
         private bool bajadaBloqueada;
         private readonly Collider[] colisionadores = new Collider[MaxColisionadores];
@@ -41,7 +43,8 @@ namespace MechaCyberpunk.Mecha.Montaje
         public Vector3 PuntoSubida => puntoSubida != null ? puntoSubida.position : transform.position;
         public bool Ocupado { get; private set; }
         public bool Estacionado => arranque == ArranqueMontaje.Estacionado;
-        public bool PuedeSubir => Estacionado && !Ocupado && isActiveAndEnabled && vida != null && !vida.EstaKO;
+        public bool PuedeSubir => Estacionado && !Ocupado && isActiveAndEnabled && vida != null && !vida.EstaKO
+            && (llamado == null || llamado.PermiteSubir);
         public bool PuedeBajar => Ocupado && !bajadaBloqueada && controlador.VelocidadLocal.magnitude < config.VelocidadMaximaParaBajar;
         public Transform Asiento => asiento;
         public Camera Camara => camara;
@@ -53,6 +56,7 @@ namespace MechaCyberpunk.Mecha.Montaje
             controlador = GetComponent<ControladorMecha>();
             peleador = GetComponent<PeleadorMecha>();
             vida = GetComponent<VidaMecha>();
+            llamado = GetComponent<LlamadoMecha>();
             if (config == null || asiento == null || camara == null || puntoSubida == null || vida == null)
             {
                 Debug.LogError("[Mecha] Faltan referencias en MontajeMecha de " + name, this);
