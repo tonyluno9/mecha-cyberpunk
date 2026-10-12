@@ -8,7 +8,7 @@ effort: high
 <contexto>
 Lee CLAUDE.md, docs/estado.md, docs/decisiones.md, docs/diseno/, las revisiones docs/revision-tony.md y
 docs/revision-alan.md, y docs/tareas/_prompt-planeacion.md. Las fases están en docs/estado.md y en el plan del equipo.
-Dueños: Tony tiene Mecha/, Combate/ y UI/. Alan tiene Arena/, IA/ y Arena/Flujo/.
+Dueños: tabla de CLAUDE.md y D-026 a D-029. Tony: sistemas y datos del jugador (y las tareas de Core). Alan: el mundo. Fases y hitos: docs/hoja-de-ruta.md.
 </contexto>
 
 <entrega>

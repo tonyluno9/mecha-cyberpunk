@@ -16,8 +16,11 @@ Sigue trabajando hasta terminar tu turno. Solo te detienes por las causas de <cu
 El argumento o el mensaje dicen el turno (día o noche) y la persona (Tony o Alan). Si falta el turno, deduce:
 "trabaja", "haz lo que me toca" = día; "revisa", "me voy a dormir", "turno de noche" = noche.
 Si falta la persona, pregúntalo una vez.
-- Tony: dueño de Mecha/, Combate/, UI/ y Escenas/Pruebas_Tony.unity. Prefijo de ramas `tony/`.
-- Alan: dueño de Arena/ (incluye Arena/Flujo/), IA/, Escenas/Clandestino.unity y Escenas/Pruebas_Alan.unity. Prefijo `alan/`.
+- Tony: el jugador y todo lo que es sistema y datos (D-026). Dueño de Mecha/, Combate/, UI/, IA/, Pelea/, Personaje/,
+  Economia/, Progresion/, Radio/, Escenas/Pruebas_Tony.unity y Escenas/Tony/. Hace también las tareas de Core. Prefijo `tony/`.
+- Alan: el mundo (D-026). Dueño de Arena/, Mundo/, Vehiculos/, Casino/, Trafico/, Assets/Arte/, Escenas/Clandestino.unity,
+  Pruebas_Alan.unity, Ciudad.unity y Flashback.unity. Coloca el prefab MechaJugador sin editarlo. Prefijo `alan/`.
+  Si le falta algo de Core o de Tony, lo escribe en docs/revision-alan.md (D-032).
 En documentos viejos "compañero", "compa" o "Pruebas_Compa" se refieren a Alan (D-021).
 </turno_y_persona>
 
@@ -74,12 +77,12 @@ Paso 1, en los dos turnos. Revisa rápido y arregla solo lo que falte.
      - Si Unity 6000.3.25f1 no está instalado, instálalo con `unity install 6000.3.25f1 --yes --accept-eula`.
        Si pide iniciar sesión o licencia, anótalo en la revisión y detente.
      - Primera vez en la máquina: `git lfs install` y `git lfs pull`.
-  e. Solo Tony, turno de día: si T-001 no está en main, pide al verificador que compruebe los criterios del editor de
-     T-001 en la rama `tony/T-001-contratos-core` (ya la revisó Opus antes). Si cumplen, actualiza su bitácora a
-     "hecha", haz merge a main y push (D-020). Si no, trátala como una tarea más con main como rama base.
-  f. Solo Tony, turno de día: si T-002 está en pendientes, hazla con main como rama base y, al verificarla, haz merge a
-     main y push (D-020). Queda "hecha (sin revisar)" y el turno de noche la revisa como las demás.
-  g. Solo Alan: si T-001 o T-002 no están en main, escribe en la revisión que Tony debe correr primero y detente.
+  e. T-001 y T-002 ya están en main (D-025). Una tarea de Core de Tony (T-03x) que otra persona necesite pronto se
+     integra a main en cuanto el verificador la apruebe, con push (D-020 aplica a las tareas de Core); queda
+     "hecha (sin revisar)" y el turno de noche la revisa como las demás.
+  f. Solo Alan: si una tarea depende de una tarea de Core que todavía no está en main, haz primero las partes que no
+     dependen de ella y anota el resto en la revisión (paso 2 del turno de día).
+  g. Al empezar, lee docs/hoja-de-ruta.md: dice la fase de cada persona, los hitos de integración y qué espera cada uno del otro.
   h. Crea `<persona>/fase-N` desde main si no existe (N = fase actual de docs/estado.md), o cámbiate a ella y mezcla main.
 </preparacion>
 

@@ -1,6 +1,6 @@
 <contexto>
 Lee CLAUDE.md, docs/estado.md, docs/decisiones.md y docs/diseno/.
-Dueños: Tony tiene Mecha/, Combate/ y UI/. El compañero tiene Arena/, IA/ y el flujo de pelea.
+Dueños: tabla de CLAUDE.md y D-026 a D-029. Fases y hitos: docs/hoja-de-ruta.md.
 </contexto>
 
 <objetivo>

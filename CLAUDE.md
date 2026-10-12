@@ -2,7 +2,7 @@
 
 Juego de peleas de mechas en primera persona, desde la cabina, para PC con teclado y ratón.
 Estética cyberpunk low-poly en una megaciudad inspirada en México.
-Diseño en docs/diseno/, fase actual y tareas en docs/estado.md, decisiones en docs/decisiones.md.
+Diseño en docs/diseno/, fase actual y tareas en docs/estado.md, hoja de ruta en docs/hoja-de-ruta.md, decisiones en docs/decisiones.md.
 
 **Unity 6000.3.25f1** (Unity 6.3), URP 17.3, Input System 1.20 (el Input Manager viejo está apagado), Test Framework 1.6.
 
@@ -30,17 +30,30 @@ La guía para personas está en docs/ARRANQUE.md.
 
 | Carpeta | Dueño | Qué va |
 | --- | --- | --- |
-| Assets/_Proyecto/Core/ | Nadie: solo en tareas de Core | Contratos: daño, vida, peleadores, eventos de pelea, tipos de datos |
-| Assets/_Proyecto/Mecha/ | Tony | Movimiento, cabina, entrada, prefab del jugador |
-| Assets/_Proyecto/Combate/ | Tony | Golpe, bloqueo, vida del mecha |
-| Assets/_Proyecto/UI/ | Tony | Pantallas de la cabina |
-| Assets/_Proyecto/Arena/ | Alan | Jaula, luces, flujo de pelea (Arena/Flujo/) |
-| Assets/_Proyecto/IA/ | Alan | Rivales |
-| Assets/_Proyecto/Escenas/ | Por archivo | Pruebas_Tony.unity: Tony. Clandestino.unity y Pruebas_Alan.unity: Alan |
+| Assets/_Proyecto/Core/ | Nadie: solo en tareas de Core (las hace Tony, D-032) | Contratos entre áreas: daño, vida, peleadores, eventos, arena, jugador, reloj, lugares, cartera, calor, objetivos |
+| Assets/_Proyecto/Mecha/ | Tony | Movimiento, cabina, entrada, prefab del jugador (MechaJugador) |
+| Assets/_Proyecto/Combate/ | Tony | Golpe, bloqueo, vida del mecha, habilidades |
+| Assets/_Proyecto/UI/ | Tony | Pantallas de la cabina y HUD a pie |
+| Assets/_Proyecto/IA/ | Tony | Rivales y su cerebro |
+| Assets/_Proyecto/Pelea/ | Tony | Flujo de pelea, conteo, resultado, pantalla de la arena (la lógica) |
+| Assets/_Proyecto/Personaje/ | Tony | Jugador a pie, combate a pie, creación de personaje |
+| Assets/_Proyecto/Economia/ | Tony | Dinero, precios, premios, reparaciones, renta, apuestas |
+| Assets/_Proyecto/Progresion/ | Tony | Ligas, implantes, misiones, reputación, historia, guardado |
+| Assets/_Proyecto/Radio/ | Tony | Radio y estaciones |
+| Assets/_Proyecto/Arena/ | Alan | Jaula y luces del clandestino (el flujo de pelea es de Tony: Pelea/) |
+| Assets/_Proyecto/Mundo/ | Alan | Ciudad, calles, locales, interiores, día y noche, ambiente |
+| Assets/_Proyecto/Vehiculos/ | Alan | Carros y manejo |
+| Assets/_Proyecto/Casino/ | Alan | Tragamonedas, fichas, cajera |
+| Assets/_Proyecto/Trafico/ | Alan | Tráfico, peatones, drones y patrullas |
+| Assets/_Proyecto/Escenas/ | Por archivo | Pruebas_Tony.unity y Escenas/Tony/: Tony. Clandestino, Pruebas_Alan, Ciudad y Flashback: Alan |
 | Assets/_Proyecto/Tests/EditMode/`<Área>`/ y PlayMode/`<Área>`/ | Dueño del área | Pruebas |
-| Assets/Arte/ | Quien diga la tarea | Modelos, texturas y audio finales (Git LFS) |
+| Assets/Arte/ | Quien diga la tarea (por defecto Alan) | Modelos, texturas y audio finales (Git LFS) |
 | ProjectSettings/, Packages/ | Nadie: solo en tareas de Core | Ajustes del proyecto y paquetes |
 | herramientas/ | Nadie: solo en tareas de Core | Scripts de verificación |
+
+Tony hace el jugador y todo lo que es sistema y datos; Alan hace el mundo (D-026). Alan coloca el prefab MechaJugador
+en sus escenas pero no lo edita (D-029). Lo que se dicen los dos va como contrato en Core/ (D-027). Las fases y los
+hitos están en docs/hoja-de-ruta.md.
 
 Cada área tiene su asmdef (`MechaCyberpunk.<Área>`) y referencia a MechaCyberpunk.Core y paquetes de Unity.
 Puede referenciar otra área del mismo dueño solo si la tarea lo pide.
