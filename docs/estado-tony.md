@@ -5,5 +5,6 @@ Todo lo de la fase 1 (T-001, T-002, T-010 a T-013) está aprobado y en main (D-0
 
 | Tarea | Estado |
 | --- | --- |
+| T-030 Carpetas y asmdefs | hecha (sin revisar), integrada a main |
 
-Qué sigue: arrancar el turno de día; el orquestador llena la tabla con las tareas de docs/tareas/pendientes que sean de Tony.
+Qué sigue: T-031, luego T-032, T-021, T-022, T-033 y T-034.
