@@ -22,6 +22,7 @@ Todo lo de la fase 1 (T-001, T-002, T-010 a T-013) está aprobado y en main (D-0
 | T-053 Pistola | hecha (sin revisar) |
 | T-056 HUD a pie | hecha (sin revisar) |
 | T-057 HUD del objetivo y avisos de interacción | hecha (sin revisar) |
+| T-058 Subir y bajar del carro | hecha (sin revisar) |
 
 T-050 a T-059 de la fase T-F3: pendientes, en el orden T-050, T-051, T-055, T-054, T-052, T-053, T-056, T-057, T-058, T-059.
-Qué sigue: T-058, T-059.
+Qué sigue: T-059 (prefab completo y recorrido), luego la revisión de conjunto de T-F3.

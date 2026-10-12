@@ -215,6 +215,7 @@ namespace MechaCyberpunk.UI.Hud
             if (interaccion != null)
             {
                 interaccion.PuertaIntentada += AlIntentarPuerta;
+                interaccion.BajarNegado += AlNegarBajar;
             }
             ActualizarVida();
             ActualizarArma();
@@ -240,6 +241,7 @@ namespace MechaCyberpunk.UI.Hud
             if (interaccion != null)
             {
                 interaccion.PuertaIntentada -= AlIntentarPuerta;
+                interaccion.BajarNegado -= AlNegarBajar;
             }
             jugador = null;
             vida = null;
@@ -259,11 +261,8 @@ namespace MechaCyberpunk.UI.Hud
             grupoArma.SetActive(aPie);
             grupoCancion.SetActive(modo != ModoJugador.Mecha);
             RefrescarObjetivo();
-            if (!aPie)
-            {
-                avisoRestante = 0f;
-                grupoInteraccion.SetActive(false);
-            }
+            avisoRestante = 0f;
+            grupoInteraccion.SetActive(false);
         }
 
         private void OcultarTodo()
@@ -437,26 +436,46 @@ namespace MechaCyberpunk.UI.Hud
             avisoRestante = config.DuracionAvisoPuerta;
         }
 
-        // Solo a pie: el aviso temporal de la puerta manda; si no, lo que hace la E con la puerta de frente.
+        private void AlNegarBajar()
+        {
+            avisoPuerta = TextoInteraccion.AvisoNoPuedeBajar(config);
+            avisoRestante = config.DuracionAvisoPuerta;
+        }
+
+        // El aviso temporal (puerta cerrada, "Frena para bajar") manda en cualquier modo menos el mecha; si no, a pie
+        // se muestra lo que hace la E con lo que hay de frente.
         private void ActualizarInteraccion()
         {
             string texto = string.Empty;
-            if (jugador != null && jugador.Modo == ModoJugador.APie)
+            if (jugador != null && jugador.Modo != ModoJugador.Mecha)
             {
                 if (avisoRestante > 0f)
                 {
                     avisoRestante -= Time.deltaTime;
                     texto = avisoPuerta;
                 }
-                else if (interaccion != null && interaccion.PuertaCandidata != null)
+                else if (jugador.Modo == ModoJugador.APie && interaccion != null)
                 {
-                    ILugar lugar = interaccion.LugarCandidato ?? BuscarLugar(interaccion.PuertaCandidata.Lugar);
-                    texto = TextoInteraccion.Candidato(TipoCandidatoInteraccion.Puerta, lugar != null ? lugar.Nombre : null, config);
+                    texto = TextoCandidato();
                 }
             }
 
             textoInteraccion.text = texto;
             grupoInteraccion.SetActive(texto.Length > 0);
+        }
+
+        private string TextoCandidato()
+        {
+            switch (interaccion.TipoCandidato)
+            {
+                case TipoCandidatoAPie.Puerta:
+                    ILugar lugar = interaccion.LugarCandidato ?? BuscarLugar(interaccion.PuertaCandidata.Lugar);
+                    return TextoInteraccion.Candidato(TipoCandidatoInteraccion.Puerta, lugar != null ? lugar.Nombre : null, config);
+                case TipoCandidatoAPie.Montable:
+                    return TextoInteraccion.Candidato(TipoCandidatoInteraccion.Montable, interaccion.MontableCandidato.Nombre, config);
+                default:
+                    return string.Empty;
+            }
         }
 
         private static ILugar BuscarLugar(IdLugar id)

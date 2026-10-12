@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Vida;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace MechaCyberpunk.Personaje.Interaccion
 {
     /// <summary>
-    /// Interacción del jugador a pie con las puertas: cada frame elige la puerta cerrada más cercana y de frente
-    /// (buscando en Registro&lt;IPuerta&gt;, sin asumir nada de su jerarquía) y con Interactuar (E) intenta abrirla.
+    /// Interacción del jugador con la tecla E: a pie elige la puerta cerrada o el montable libre más cercano y de frente
+    /// (buscando en Registro&lt;IPuerta&gt; y Registro&lt;IMontable&gt;, sin asumir nada de su jerarquía) y lo usa; dentro de un
+    /// montable, la E lo baja. Este componente sigue prendido en carro y mecha porque es el que lee la E.
     /// </summary>
     [RequireComponent(typeof(JugadorAPie))]
     [RequireComponent(typeof(ControladorAPie))]
@@ -21,7 +23,9 @@ namespace MechaCyberpunk.Personaje.Interaccion
 
         private JugadorAPie jugador;
         private ControladorAPie controlador;
+        private VidaAPie vida;
         private readonly List<IPuerta> puertas = new List<IPuerta>();
+        private readonly List<IMontable> montables = new List<IMontable>();
         private readonly List<Vector3> puntos = new List<Vector3>();
 
         /// <summary>La puerta que E intentaría abrir ahora, o null.</summary>
@@ -30,13 +34,23 @@ namespace MechaCyberpunk.Personaje.Interaccion
         /// <summary>El lugar al que da la puerta candidata, o null si no hay puerta o su lugar no está registrado.</summary>
         public ILugar LugarCandidato { get; private set; }
 
+        /// <summary>El montable al que E subiría ahora, o null.</summary>
+        public IMontable MontableCandidato { get; private set; }
+
+        /// <summary>Qué hay enfrente: una puerta, un montable o nada.</summary>
+        public TipoCandidatoAPie TipoCandidato { get; private set; }
+
         /// <summary>Se dispara cada vez que el jugador intenta abrir una puerta, con la puerta y su resultado.</summary>
         public event Action<IPuerta, ResultadoPuerta> PuertaIntentada;
+
+        /// <summary>Se dispara cuando el jugador pulsa E dentro de un montable que todavía no puede dejar.</summary>
+        public event Action BajarNegado;
 
         private void Awake()
         {
             jugador = GetComponent<JugadorAPie>();
             controlador = GetComponent<ControladorAPie>();
+            vida = GetComponent<VidaAPie>();
             if (config == null || interactuar == null)
             {
                 Debug.LogError("[Personaje] Faltan referencias en InteraccionAPie de " + name, this);
@@ -52,45 +66,100 @@ namespace MechaCyberpunk.Personaje.Interaccion
         private void OnDisable()
         {
             interactuar.action.Disable();
-            PuertaCandidata = null;
-            LugarCandidato = null;
+            LimpiarCandidatos();
         }
 
         private void Update()
         {
-            if (!controlador.ControlActivo || jugador.Camara == null)
+            LimpiarCandidatos();
+            bool dentro = jugador.Modo != ModoJugador.APie;
+            if (!dentro)
             {
-                PuertaCandidata = null;
-                LugarCandidato = null;
+                if (!controlador.ControlActivo || jugador.Camara == null)
+                {
+                    return;
+                }
+                ElegirCandidato();
+            }
+
+            if (!interactuar.action.WasPressedThisFrame())
+            {
                 return;
             }
 
-            ElegirCandidata();
-            if (PuertaCandidata != null && interactuar.action.WasPressedThisFrame())
+            IMontable montable = dentro ? jugador.MontableActual : MontableCandidato;
+            bool estaKO = vida != null && vida.EstaKO;
+            AccionMontar accion = ReglaMontar.Decidir(jugador.Modo, estaKO, TipoCandidato,
+                montable != null && montable.PuedeSubir, montable != null && montable.PuedeBajar);
+            switch (accion)
             {
-                IPuerta puerta = PuertaCandidata;
-                ResultadoPuerta resultado = puerta.IntentarAbrir();
-                Debug.Log("[Personaje] Puerta " + puerta.Lugar + ": " + resultado);
-                PuertaIntentada?.Invoke(puerta, resultado);
+                case AccionMontar.AbrirPuerta:
+                    IPuerta puerta = PuertaCandidata;
+                    ResultadoPuerta resultado = puerta.IntentarAbrir();
+                    Debug.Log("[Personaje] Puerta " + puerta.Lugar + ": " + resultado);
+                    PuertaIntentada?.Invoke(puerta, resultado);
+                    break;
+                case AccionMontar.Subir:
+                    jugador.Subir(montable);
+                    LimpiarCandidatos();
+                    break;
+                case AccionMontar.Bajar:
+                    jugador.Bajar();
+                    break;
+                case AccionMontar.NoPuedeBajar:
+                    BajarNegado?.Invoke();
+                    break;
             }
         }
 
-        private void ElegirCandidata()
+        private void LimpiarCandidatos()
+        {
+            PuertaCandidata = null;
+            LugarCandidato = null;
+            MontableCandidato = null;
+            TipoCandidato = TipoCandidatoAPie.Ninguno;
+        }
+
+        // Puertas y montables compiten en la misma lista de puntos: gana el más cercano y de frente.
+        private void ElegirCandidato()
         {
             puertas.Clear();
+            montables.Clear();
             puntos.Clear();
-            IReadOnlyList<IPuerta> todas = Registro<IPuerta>.Todos;
-            for (int i = 0; i < todas.Count; i++)
+            IReadOnlyList<IPuerta> todasPuertas = Registro<IPuerta>.Todos;
+            for (int i = 0; i < todasPuertas.Count; i++)
             {
-                if (todas[i].EstaAbierta) continue;
-                puertas.Add(todas[i]);
-                puntos.Add(todas[i].Posicion);
+                if (todasPuertas[i].EstaAbierta) continue;
+                puertas.Add(todasPuertas[i]);
+                montables.Add(null);
+                puntos.Add(todasPuertas[i].Posicion);
+            }
+            IReadOnlyList<IMontable> todosMontables = Registro<IMontable>.Todos;
+            for (int i = 0; i < todosMontables.Count; i++)
+            {
+                if (!todosMontables[i].PuedeSubir) continue;
+                puertas.Add(null);
+                montables.Add(todosMontables[i]);
+                puntos.Add(todosMontables[i].PuntoSubida);
             }
 
             int indice = SelectorInteraccion.Elegir(transform.position, jugador.Camara.transform.forward, puntos,
                 config.Alcance, config.AnguloMaximo);
-            PuertaCandidata = indice >= 0 ? puertas[indice] : null;
-            LugarCandidato = PuertaCandidata != null ? BuscarLugar(PuertaCandidata.Lugar) : null;
+            if (indice < 0)
+            {
+                return;
+            }
+            PuertaCandidata = puertas[indice];
+            MontableCandidato = montables[indice];
+            if (PuertaCandidata != null)
+            {
+                TipoCandidato = TipoCandidatoAPie.Puerta;
+                LugarCandidato = BuscarLugar(PuertaCandidata.Lugar);
+            }
+            else
+            {
+                TipoCandidato = TipoCandidatoAPie.Montable;
+            }
         }
 
         private static ILugar BuscarLugar(IdLugar id)

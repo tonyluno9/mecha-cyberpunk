@@ -41,6 +41,25 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
+        public void Candidato_MontableCarroDePrueba_DiceESubirCarroDePrueba()
+        {
+            Assert.AreEqual("E · Subir Carro de prueba",
+                TextoInteraccion.Candidato(TipoCandidatoInteraccion.Montable, "Carro de prueba", config));
+        }
+
+        [Test]
+        public void Candidato_MontableSinNombre_DiceSoloESubir()
+        {
+            Assert.AreEqual("E · Subir", TextoInteraccion.Candidato(TipoCandidatoInteraccion.Montable, null, config));
+        }
+
+        [Test]
+        public void AvisoNoPuedeBajar_DiceFrenaParaBajar()
+        {
+            Assert.AreEqual("Frena para bajar", TextoInteraccion.AvisoNoPuedeBajar(config));
+        }
+
+        [Test]
         public void Aviso_CerradaPorHorarioDe20a06_DiceAbre2000()
         {
             string aviso = TextoInteraccion.Aviso(ResultadoPuerta.CerradaPorHorario, new HorarioLugar(20f, 6f), config);

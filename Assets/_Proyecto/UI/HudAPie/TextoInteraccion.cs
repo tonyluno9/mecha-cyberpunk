@@ -5,14 +5,31 @@ namespace MechaCyberpunk.UI.Hud
     /// <summary>Lógica pura de los textos de interacción del HUD: qué hace la E y por qué no abrió una puerta.</summary>
     public static class TextoInteraccion
     {
-        /// <summary>"E · Abrir Bar" para una puerta; vacío si no hay candidato. Sin nombre, solo "E · Abrir".</summary>
-        public static string Candidato(TipoCandidatoInteraccion tipo, string nombreLugar, ConfigHudAPie config)
+        /// <summary>
+        /// "E · Abrir Bar" para una puerta y "E · Subir Carro de prueba" para un montable; vacío si no hay candidato.
+        /// Sin nombre, solo "E · Abrir" o "E · Subir".
+        /// </summary>
+        public static string Candidato(TipoCandidatoInteraccion tipo, string nombre, ConfigHudAPie config)
         {
-            if (tipo != TipoCandidatoInteraccion.Puerta)
+            string verbo;
+            switch (tipo)
             {
-                return string.Empty;
+                case TipoCandidatoInteraccion.Puerta:
+                    verbo = config.TextoAbrir;
+                    break;
+                case TipoCandidatoInteraccion.Montable:
+                    verbo = config.TextoSubir;
+                    break;
+                default:
+                    return string.Empty;
             }
-            return string.IsNullOrEmpty(nombreLugar) ? config.TextoAbrir : config.TextoAbrir + " " + nombreLugar;
+            return string.IsNullOrEmpty(nombre) ? verbo : verbo + " " + nombre;
+        }
+
+        /// <summary>Aviso al pulsar E dentro de un montable que todavía no puede dejar: "Frena para bajar".</summary>
+        public static string AvisoNoPuedeBajar(ConfigHudAPie config)
+        {
+            return config.TextoFrenaParaBajar;
         }
 
         /// <summary>
