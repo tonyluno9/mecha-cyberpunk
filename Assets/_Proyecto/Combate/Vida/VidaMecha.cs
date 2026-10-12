@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Combate.Bloqueo;
 using MechaCyberpunk.Core;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace MechaCyberpunk.Combate.Vida
 {
     /// <summary>
     /// Vida de un mecha: envuelve un <see cref="ModeloVida"/> y cumple el contrato de <see cref="IRecibeDanio"/>.
-    /// T-012 agrega el bloqueo dentro de <see cref="RecibirDanio"/>.
+    /// Si el objeto tiene <see cref="GuardiaMecha"/>, <see cref="RecibirDanio"/> aplica el bloqueo.
     /// </summary>
     public class VidaMecha : MonoBehaviour, IVida, IRecibeDanio
     {
@@ -14,6 +15,8 @@ namespace MechaCyberpunk.Combate.Vida
 
         private ModeloVida modelo;
         private IPeleador peleador;
+        private GuardiaMecha guardia;
+        private bool buscoGuardia;
 
         public DatosMecha Datos => datos;
         public float Actual => modelo != null ? modelo.Actual : 0f;
@@ -71,8 +74,25 @@ namespace MechaCyberpunk.Combate.Vida
                 return ResultadoDanio.Ignorado;
             }
 
-            float aplicado = modelo.Aplicar(info.Cantidad);
-            ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
+            if (!buscoGuardia)
+            {
+                guardia = GetComponent<GuardiaMecha>();
+                buscoGuardia = true;
+            }
+            float cantidad = info.Cantidad;
+            TipoBloqueo bloqueo = TipoBloqueo.Ninguno;
+            if (guardia != null)
+            {
+                (cantidad, bloqueo) = CalculoBloqueo.Calcular(cantidad, guardia.EstaArriba, guardia.SegundosArriba,
+                    datos.VentanaBloqueoPerfecto, datos.ReduccionBloqueo);
+                if (bloqueo != TipoBloqueo.Ninguno)
+                {
+                    Debug.Log(bloqueo == TipoBloqueo.Perfecto ? "[Combate] Bloqueo perfecto" : "[Combate] Bloqueo normal");
+                }
+            }
+
+            float aplicado = cantidad > 0f ? modelo.Aplicar(cantidad) : 0f;
+            ResultadoDanio resultado = new ResultadoDanio(aplicado, bloqueo, modelo.EstaKO);
             if (peleador == null)
             {
                 peleador = GetComponent<IPeleador>();
