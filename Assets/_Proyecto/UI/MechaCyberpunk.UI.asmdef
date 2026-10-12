@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.UI",
     "rootNamespace": "MechaCyberpunk.UI",
-    "references": ["MechaCyberpunk.Core", "UnityEngine.UI"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Personaje", "UnityEngine.UI"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
