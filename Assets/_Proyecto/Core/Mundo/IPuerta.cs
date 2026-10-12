@@ -21,9 +21,11 @@ namespace MechaCyberpunk.Core
         Vector3 Posicion { get; }
 
         /// <summary>
-        /// Intenta abrir. Si el lugar está cerrado por horario devuelve <c>CerradaPorHorario</c>; si está cerrado
-        /// por algo que no depende de la hora (cerrado en la demo) devuelve <c>Bloqueada</c>; si ya estaba abierta,
-        /// <c>YaAbierta</c>; si no, la abre y devuelve <c>Abierta</c>. Solo avisa <c>Cambio</c> cuando de verdad abre.
+        /// Intenta abrir. Orden de decisión: 1) si ya estaba abierta, <c>YaAbierta</c>; 2) si el jugador está dentro
+        /// del lugar, abre siempre (para poder salir) y devuelve <c>Abierta</c>; 3) si el lugar está cerrado por algo
+        /// que no depende de la hora (cerrado en la demo), <c>Bloqueada</c>; 4) si está fuera de horario,
+        /// <c>CerradaPorHorario</c>; 5) si no, la abre y devuelve <c>Abierta</c>.
+        /// Solo avisa <c>Cambio</c> cuando de verdad abre.
         /// </summary>
         ResultadoPuerta IntentarAbrir();
 

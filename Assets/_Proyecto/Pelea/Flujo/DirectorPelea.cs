@@ -40,6 +40,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         private bool empezarPendiente;
         private bool avisoSinArena;
         private bool avisoSinJugador;
+        private bool avisoArenaPerdida;
+        private bool esperandoArena;
 
         public EstadoFlujoPelea Estado => maquina != null ? maquina.Estado : EstadoFlujoPelea.Preparando;
         public IArenaPelea Arena => arena;
@@ -65,12 +67,19 @@ namespace MechaCyberpunk.Pelea.Flujo
         private void OnEnable()
         {
             revancha.Enable();
+            Registro<IArenaPelea>.Quitado += AlQuitarseArena;
+            if (esperandoArena)
+            {
+                Registro<IArenaPelea>.Agregado -= AlAgregarseArena;
+                Registro<IArenaPelea>.Agregado += AlAgregarseArena;
+            }
         }
 
         private void OnDisable()
         {
             revancha.Disable();
             Registro<IArenaPelea>.Agregado -= AlAgregarseArena;
+            Registro<IArenaPelea>.Quitado -= AlQuitarseArena;
         }
 
         private void Start()
@@ -126,6 +135,11 @@ namespace MechaCyberpunk.Pelea.Flujo
 
         private void PedirRevancha()
         {
+            // Sin arena (se fue) no hay dónde colocar a nadie: espera a que aparezca otra.
+            if (arena == null)
+            {
+                return;
+            }
             if (maquina.PedirRevancha())
             {
                 PrepararYContar();
@@ -186,6 +200,7 @@ namespace MechaCyberpunk.Pelea.Flujo
                 avisoSinArena = true;
                 Debug.LogWarning("[Pelea] DirectorPelea de " + name + " no encontró ninguna arena; espera a que aparezca una.", this);
             }
+            esperandoArena = true;
             Registro<IArenaPelea>.Agregado -= AlAgregarseArena;
             Registro<IArenaPelea>.Agregado += AlAgregarseArena;
         }
@@ -197,8 +212,30 @@ namespace MechaCyberpunk.Pelea.Flujo
                 return;
             }
             Registro<IArenaPelea>.Agregado -= AlAgregarseArena;
+            esperandoArena = false;
             ResolverArena();
             IntentarEmpezar();
+        }
+
+        // Si la arena actual desaparece, se suelta (no se usa una destruida en la revancha) y se espera otra.
+        private void AlQuitarseArena(IArenaPelea quitada)
+        {
+            if (arena == null || !ReferenceEquals(quitada, arena))
+            {
+                return;
+            }
+            arena = null;
+            if (arenaEnEscena != null && ReferenceEquals(arenaEnEscena.GetComponent<IArenaPelea>(), quitada))
+            {
+                arenaEnEscena = null;
+            }
+            if (!avisoArenaPerdida)
+            {
+                avisoArenaPerdida = true;
+                Debug.LogWarning("[Pelea] DirectorPelea de " + name + " perdió su arena; espera a que aparezca otra.", this);
+            }
+            avisoSinArena = true; // el aviso de arriba ya lo dice
+            ResolverArena();
         }
 
         private void ResolverRival()

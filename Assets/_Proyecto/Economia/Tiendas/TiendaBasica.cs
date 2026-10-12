@@ -33,7 +33,8 @@ namespace MechaCyberpunk.Economia
             if (!EstaDisponible(oferta) || cartera == null) return ResultadoCompra.NoDisponible;
 
             var motivo = datos.Lugar == IdLugar.Clinica ? MotivoDinero.Clinica : MotivoDinero.Compra;
-            if (!cartera.IntentarPagar(oferta.Precio, motivo)) return ResultadoCompra.SinDinero;
+            // Precio 0 es gratis: no se cobra (IntentarPagar rechaza cantidades menores o iguales a 0).
+            if (oferta.Precio > 0 && !cartera.IntentarPagar(oferta.Precio, motivo)) return ResultadoCompra.SinDinero;
 
             Comprado?.Invoke(oferta);
             return ResultadoCompra.Comprado;

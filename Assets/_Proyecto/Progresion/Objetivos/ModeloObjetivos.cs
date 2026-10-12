@@ -13,6 +13,12 @@ namespace MechaCyberpunk.Progresion
 
         public void Fijar(Objetivo objetivo)
         {
+            // Fijar(Ninguno) es lo mismo que Quitar, como dice IObjetivos.
+            if (Igual(objetivo, Objetivo.Ninguno))
+            {
+                Quitar();
+                return;
+            }
             if (HayObjetivo && Igual(Actual, objetivo)) return;
             Actual = objetivo;
             HayObjetivo = true;

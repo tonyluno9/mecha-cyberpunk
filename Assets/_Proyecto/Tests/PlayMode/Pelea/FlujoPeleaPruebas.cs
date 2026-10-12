@@ -156,11 +156,11 @@ namespace MechaCyberpunk.Tests.Pelea
         }
 
         // Instancia FlujoPelea dentro de un padre inactivo para cambiarle el config antes de su Awake.
-        private DirectorPelea CrearFlujo(Vector3 posicion)
+        private DirectorPelea CrearFlujo(Vector3 posicion, float pausaKO = PausaKO)
         {
             configPrueba = ScriptableObject.CreateInstance<ConfigFlujoPelea>();
             FijarFloat(configPrueba, "segundosPorNumero", SegundosPorNumero);
-            FijarFloat(configPrueba, "pausaDespuesKO", PausaKO);
+            FijarFloat(configPrueba, "pausaDespuesKO", pausaKO);
             FijarFloat(configPrueba, "segundosTextoPelea", SegundosTextoPelea);
 
             GameObject padre = new GameObject("PadreInactivo");
@@ -182,7 +182,7 @@ namespace MechaCyberpunk.Tests.Pelea
             return director;
         }
 
-        private IEnumerator Escenario(bool conArena = true)
+        private IEnumerator Escenario(bool conArena = true, float pausaKO = PausaKO)
         {
             yield return Calentar();
             if (conArena)
@@ -194,7 +194,7 @@ namespace MechaCyberpunk.Tests.Pelea
             {
                 CrearJugador(PosicionArena);
             }
-            CrearFlujo(PosicionArena);
+            CrearFlujo(PosicionArena, pausaKO);
         }
 
         private IEnumerator HastaEstado(EstadoFlujoPelea estado)
@@ -475,6 +475,145 @@ namespace MechaCyberpunk.Tests.Pelea
             }
             yield return Esperar(EsperaCorta);
             Assert.AreEqual(0, errores.Count, "Errores o excepciones en la consola: " + string.Join(" | ", errores));
+        }
+
+        // Arena sin pantalla válida, para probar el respaldo.
+        private class ArenaSinPantalla : IArenaPelea
+        {
+            public Transform Pantalla;
+            public Vector2 Tamano;
+            public string Nombre => "Arena rota";
+            public Pose InicioJugador => new Pose(PosicionArena + new Vector3(0f, 0f, -6f), Quaternion.identity);
+            public Pose InicioRival => new Pose(PosicionArena + new Vector3(0f, 0f, 6f), Quaternion.Euler(0f, 180f, 0f));
+            public Vector3 Centro => PosicionArena;
+            public Transform PantallaArena => Pantalla;
+            public Vector2 TamanoPantalla => Tamano;
+        }
+
+        [UnityTest]
+        public IEnumerator Pantalla_KOEnElPrimerSegundoDespuesDePelea_ElKoSiguePuestoHastaElResultado()
+        {
+            yield return Escenario(true, 1f);
+            yield return HastaEstado(EstadoFlujoPelea.Peleando);
+
+            Matar(director.Rival);
+            // Pasa de sobra el tiempo del texto "¡PELEA!" (0.3 s) con el KO en pantalla, sin importar si el texto está vacío.
+            float fin = Time.time + SegundosTextoPelea + EsperaCorta;
+            while (Time.time < fin)
+            {
+                yield return null;
+                Assert.AreEqual(EstadoFlujoPelea.KO, director.Estado);
+                Assert.AreEqual("KO", director.Pantalla.Texto, "El KO se borró antes del resultado");
+            }
+            yield return HastaEstado(EstadoFlujoPelea.Resultado);
+            Assert.AreEqual("GANASTE", director.Pantalla.Texto);
+        }
+
+        [UnityTest]
+        public IEnumerator Pantalla_ArenaSinPantallaNiTamano_AvisaUnaVezYUsaRespaldoVisible()
+        {
+            LogAssert.Expect(LogType.Warning, new Regex("PantallaArena"));
+            ArenaSinPantalla rota = new ArenaSinPantalla { Pantalla = null, Tamano = Vector2.zero };
+            Registro<IArenaPelea>.Agregar(rota);
+            try
+            {
+                yield return Escenario(false);
+                yield return null;
+
+                Assert.AreSame(rota, director.Arena);
+                Transform lienzo = director.Pantalla.Lienzo.transform;
+                Assert.IsFalse(float.IsNaN(lienzo.position.x + lienzo.position.y + lienzo.position.z));
+                Assert.Greater(lienzo.localScale.x, 0f, "El respaldo tiene tamaño visible");
+                Assert.Greater(lienzo.position.y, 3f, "El respaldo queda alto");
+                Assert.Greater(lienzo.position.z, rota.InicioRival.position.z - 0.01f, "Detrás del rival, no entre los dos");
+                director.Pantalla.Colocar(rota);
+                Assert.AreEqual(1, avisos.FindAll(a => a.Contains("PantallaArena")).Count, "Avisa una sola vez");
+                Assert.AreEqual(0, errores.Count, string.Join(" | ", errores));
+                Assert.AreEqual(EstadoFlujoPelea.Conteo, director.Estado, "La pelea sigue adelante");
+            }
+            finally
+            {
+                Registro<IArenaPelea>.Quitar(rota);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Pantalla_TamanoCeroConPantallaValida_UsaTamanoDeRespaldo()
+        {
+            LogAssert.Expect(LogType.Warning, new Regex("PantallaArena"));
+            GameObject marca = Registrar(new GameObject("PantallaFalsa"));
+            marca.transform.position = PosicionArena + new Vector3(0f, 8f, 12f);
+            ArenaSinPantalla rota = new ArenaSinPantalla { Pantalla = marca.transform, Tamano = new Vector2(0f, 3f) };
+            Registro<IArenaPelea>.Agregar(rota);
+            try
+            {
+                yield return Escenario(false);
+                yield return null;
+
+                Transform lienzo = director.Pantalla.Lienzo.transform;
+                Assert.Greater(lienzo.localScale.x, 0f);
+                Assert.IsFalse(float.IsInfinity(lienzo.localScale.x) || float.IsNaN(lienzo.localScale.x));
+                Assert.Less(Vector3.Distance(lienzo.position, marca.transform.position), MargenPosicion + 0.1f,
+                    "Con pantalla válida la coloca ahí aunque el tamaño sea de respaldo");
+            }
+            finally
+            {
+                Registro<IArenaPelea>.Quitar(rota);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Director_ArenaDesaparece_LaSueltaYEsperaOtraSinUsarLaDestruidaEnLaRevancha()
+        {
+            LogAssert.Expect(LogType.Warning, new Regex("perdió su arena"));
+            yield return Calentar();
+            GameObject arena = CrearArena(PosicionArena);
+            CrearJugador(arena.GetComponent<IArenaPelea>().InicioJugador.position);
+            CrearFlujo(PosicionArena);
+            yield return HastaEstado(EstadoFlujoPelea.Peleando);
+
+            Matar(director.Rival);
+            yield return HastaEstado(EstadoFlujoPelea.Resultado);
+            Object.Destroy(arena);
+            yield return null;
+            yield return null;
+            Assert.IsNull(director.Arena, "Soltó la arena destruida");
+
+            yield return PulsarTecla(Key.R);
+            yield return Esperar(EsperaCorta);
+            Assert.AreEqual(EstadoFlujoPelea.Resultado, director.Estado, "Sin arena no hay revancha");
+            Assert.AreEqual(0, errores.Count, string.Join(" | ", errores));
+            Assert.AreEqual(1, avisos.FindAll(a => a.Contains("perdió su arena")).Count);
+
+            GameObject otra = CrearArena(PosicionArenaLejana);
+            yield return null;
+            Assert.AreSame(otra.GetComponent<IArenaPelea>(), director.Arena, "Tomó la arena nueva");
+
+            yield return PulsarTecla(Key.R);
+            Assert.AreEqual(EstadoFlujoPelea.Conteo, director.Estado);
+            Assert.Less(DistanciaAPose(director.Jugador.Raiz, director.Arena.InicioJugador), MargenPosicion);
+            Assert.AreEqual(0, errores.Count, string.Join(" | ", errores));
+        }
+
+        [UnityTest]
+        public IEnumerator Director_ApagadoYPrendidoMientrasEsperaArena_SigueEscuchandoLaLlegada()
+        {
+            LogAssert.Expect(LogType.Warning, new Regex("ninguna arena"));
+            yield return Escenario(false);
+            yield return Esperar(EsperaCorta);
+            Assert.IsNull(director.Arena);
+
+            director.enabled = false;
+            yield return null;
+            director.enabled = true;
+            yield return null;
+
+            CrearArena(PosicionArena);
+            yield return null;
+            yield return null;
+            Assert.IsNotNull(director.Arena, "Siguió escuchando tras apagar y prender");
+            Assert.AreEqual(EstadoFlujoPelea.Conteo, director.Estado);
+            Assert.AreEqual(0, errores.Count, string.Join(" | ", errores));
         }
 
         [UnityTest]

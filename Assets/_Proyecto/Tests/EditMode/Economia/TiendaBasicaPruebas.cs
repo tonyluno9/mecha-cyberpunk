@@ -117,6 +117,31 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        public void Comprar_OfertaGratis_SeEntregaSinCobrarNiDevolverSinDinero()
+        {
+            var gratis = Oferta("gratis", 0);
+            var datos = Tienda(IdLugar.MercadoNegro, gratis);
+            try
+            {
+                var t = new TiendaBasica(datos);
+                int avisos = 0;
+                int cambios = 0;
+                t.Comprado += _ => avisos++;
+                cartera.Cambio += (_, __) => cambios++;
+                Assert.AreEqual(ResultadoCompra.Comprado, t.Comprar(gratis, cartera));
+                Assert.AreEqual(1000, cartera.Dinero);
+                Assert.AreEqual(1, avisos);
+                Assert.AreEqual(0, cambios);
+                Assert.AreEqual(ResultadoCompra.Comprado, t.Comprar(gratis, new ModeloCartera(0)), "Gratis aunque no tenga nada");
+            }
+            finally
+            {
+                Object.DestroyImmediate(datos);
+                Object.DestroyImmediate(gratis);
+            }
+        }
+
+        [Test]
         public void Propiedades_VienenDeLosDatos()
         {
             Assert.AreEqual(IdLugar.MercadoNegro, tienda.Lugar);

@@ -41,7 +41,7 @@ cerrados en la demo. Las puertas cumplen `IPuerta` para que el jugador de Tony l
    siempre (para que pueda salir); cerrado en demo da `Bloqueada`; fuera de horario da `CerradaPorHorario`; si no, `Abierta`.
 6. `Mundo/Lugares/LugarMundo.cs : MonoBehaviour, ILugar` en cada local: lee el reloj de `Registro<IRelojMundo>`; `EstaAbierto` =
    no cerrado en demo y horario abierto; `PosicionEntrada` es su hijo `Entrada`; avisa `EstadoCambio` y
-   `EventosLugares.PublicarEstadoLugarCambio` solo cuando cambia; se agrega a `Registro<ILugar>`.
+   `EventosLugares.PublicarEstadoLugar` solo cuando cambia; se agrega a `Registro<ILugar>`.
    `JugadorDentro` lo cambia la zona del interior (T-043); por ahora queda en false.
 7. `Mundo/Lugares/PuertaLocal.cs : MonoBehaviour, IPuerta`: usa `ReglaPuerta` y `HojaPuerta`; se agrega a `Registro<IPuerta>`.
 8. `Mundo/Lugares/LetreroLugar.cs`: nombre y `HorarioLugar.Texto()`, y "ABIERTO" en turquesa o "CERRADO" en magenta;

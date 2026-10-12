@@ -50,6 +50,9 @@ namespace MechaCyberpunk.IA.Rival
         private float velocidadVertical;
         private bool avisoSinObjetivo;
         private bool brazoEnAviso;
+        private bool inicioHecho;
+        // Alguien (el director de pelea) ya le quitó el control antes de su Start: no se lo vuelve a quitar.
+        private bool controlDecidido;
 
         /// <summary>El rival está en la preparación del golpe: brazo atrás y en color de aviso.</summary>
         public bool EnAviso => ciclo != null && ciclo.Fase == FaseGolpe.Preparando;
@@ -96,7 +99,8 @@ namespace MechaCyberpunk.IA.Rival
                 objetivo = BuscarObjetivo();
             }
             AsignarObjetivo(objetivo);
-            if (!controlAlArrancar)
+            inicioHecho = true;
+            if (!controlAlArrancar && !controlDecidido)
             {
                 propio.ActivarControl(false);
             }
@@ -107,6 +111,12 @@ namespace MechaCyberpunk.IA.Rival
             if (ciclo == null)
             {
                 return;
+            }
+            // Apagarlo antes de su Start es una decisión de control de otro (PrepararPelea / ActivarControl(false)).
+            // Ese Start corre al devolverle el control, y entonces no debe quitárselo otra vez.
+            if (!inicioHecho)
+            {
+                controlDecidido = true;
             }
             ciclo.Reiniciar();
             velocidad = 0f;

@@ -20,7 +20,9 @@ namespace MechaCyberpunk.Core
 
         /// <summary>
         /// ¿Está abierto ahora? Combina el horario con el reloj del mundo y con cualquier cierre especial
-        /// (por ejemplo, "cerrado en la demo"). Es lo que manda: si es false, su puerta no abre.
+        /// (por ejemplo, "cerrado en la demo"). Es lo que manda: si es false, su puerta no abre desde la calle.
+        /// Excepción: mientras <see cref="JugadorDentro"/> es true la puerta abre aunque <c>EstaAbierto</c> sea false,
+        /// para que el jugador pueda salir (ver <c>IPuerta.IntentarAbrir</c>). <c>EstaAbierto</c> por sí solo no abre la puerta.
         /// </summary>
         bool EstaAbierto { get; }
 
