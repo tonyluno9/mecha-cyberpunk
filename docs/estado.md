@@ -1,35 +1,25 @@
 # Estado del proyecto
 
-Actualizado: 2026-10-11, sesión T-001 (contratos de Core).
+Actualizado: 2026-10-11, sesión de aprobación de la fase 1 de Tony y nueva división del trabajo (D-025 a D-032).
+Fases, hitos y dependencias: docs/hoja-de-ruta.md.
 
-## Fase actual: 1, pelea greybox
-Meta: puedo golpear a un rival que me golpea, y uno de los dos gana. Todo con cubos y cápsulas, sin modelos finales.
-Prueba de cierre: cada uno juega 3 peleas completas en Clandestino.unity sin errores en la consola.
+## Dónde está cada uno
 
-## Tareas de la fase 1
+| Persona | Fase actual | Meta | Estado |
+| --- | --- | --- | --- |
+| Tony | T-F2: contratos de Core y pelea completa | Todo lo que Alan necesita está en Core/ y hay una pelea completa con rival, conteo y revancha | Tareas escritas en docs/tareas/pendientes (T-030 a T-034, T-021, T-022). T-F1 aprobada |
+| Alan | A-F1: arena y barrio greybox | La jaula del clandestino y un barrio donde caminar, con día y noche y locales con horario | Tareas escritas en docs/tareas/pendientes (T-020, T-040 a T-043). Todavía no arranca |
 
-| ID | Tarea | Dueño | Depende de | Estado |
-| --- | --- | --- | --- | --- |
-| T-001 | Contratos de Core | Tony (revisa el compañero) | Nada | En revisión (rama tony/T-001-contratos-core): faltan criterios del editor y merge |
-| T-010 | Movimiento del mecha en primera persona | Tony | T-001 | Pendiente |
-| T-011 | Cabina greybox | Tony | T-001, T-010 | Pendiente |
-| T-013 | Vida del mecha y recibir daño | Tony | T-001, T-011 | Pendiente |
-| T-012 | Golpe y bloqueo | Tony | T-001, T-011, T-013 | Pendiente |
-| T-020 | Arena greybox del clandestino | Compañero | T-001 | Pendiente |
-| T-021 | Rival básico | Compañero | T-001, T-020 | Pendiente |
-| T-022 | Flujo de pelea | Compañero | T-001, T-020, T-021, T-013 (paso 6) | Pendiente |
+## Hecho y aprobado (en main)
+- T-001 Contratos de Core, T-002 Verificación automática (herramientas/verificar.sh y unity-vivo.sh).
+- T-010 Movimiento del mecha, T-011 Cabina greybox, T-013 Vida y daño, T-012 Golpe y bloqueo (Tony, fase 1).
+- Pruebas en main: compilar OK, EditMode 51/51, PlayMode 64/64. Prueba de Tony en Pruebas_Tony.unity: aprobada.
 
-## Orden recomendado
-1. T-001 primero. Nadie empieza otra tarea hasta que esté en main.
-2. Después, en paralelo: Tony hace T-010, T-011, T-013 y T-012; el compañero hace T-020, T-021 y T-022.
-3. T-013 va antes que T-012 porque el bloqueo cambia el daño que recibe la vida.
-4. El paso 6 de T-022 (integrar el mecha de Tony en Clandestino.unity) necesita T-013 en main.
+## Qué sigue, en orden
+1. Tony: T-030 y T-031 primero (Alan los necesita), luego T-032, T-033, T-034, T-021 y T-022.
+2. Alan: T-020 y T-040 pueden empezar de inmediato en greybox; T-041 a T-043 esperan T-032 para los contratos de reloj y puertas.
+3. Hito H1 (pelea completa en el clandestino) cuando T-022 y T-020 estén en main.
 
-## Qué hay en main
-- Repo preparado: .gitignore, Git LFS, carpetas de Assets/_Proyecto con sus asmdefs, CLAUDE.md, reglas de C#,
-  skill `/tarea`, subagente `revisor`, diseño separado por bloque, plantillas y tareas de la fase 1.
-- Todavía no hay código del juego en main (los contratos de Core están en la rama de T-001 hasta mergear).
-- Las pruebas de EditMode corren en batchmode (0 pruebas en main; 17 con T-001).
-
-## Pendiente de Tony
-- Dar acceso al repo al compañero. Él clona, corre `git lfs install` y abre el proyecto con Unity 6000.3.25f1.
+## Pendiente de las personas
+- Tony: dar acceso al repo a Alan si falta. Alan clona, corre `git lfs install` y abre el proyecto con Unity 6000.3.25f1.
+- Cuando algo de Tony o Alan se apruebe, el estado de cada tarea pasa de docs/estado-<persona>.md a este archivo.

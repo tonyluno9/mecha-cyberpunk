@@ -14,6 +14,8 @@ Tú solo arrancas cada turno y, cuando quieras, pruebas lo que quedó y lo aprue
 
 ## Tony
 
+Tu fase actual es T-F2 (contratos de Core y pelea completa). Tu rama de integración es `tony/fase-2`; cambia `fase-N` por `fase-2` en el `/goal`.
+
 ### Turno de día (Sonnet)
 En la terminal, dentro de la carpeta del proyecto:
 ```
@@ -42,13 +44,38 @@ Dentro de Claude:
 
 ## Alan
 
+Tú haces **el mundo**: la ciudad (un barrio de unas 6 manzanas), el clandestino y su arena, la casa con taller, el bar,
+el casino, el mercado negro con clínica, los carros, el día y la noche, el tráfico, las persecuciones y el ambiente.
+Tony hace el jugador y los sistemas (mecha, combate, rivales, dinero, progresión, guardado). Los dos se hablan por
+contratos en `Assets/_Proyecto/Core/` y nunca editan la carpeta del otro.
+
+### Qué es tuyo y qué no
+- Tuyo: `Arena/`, `Mundo/`, `Vehiculos/`, `Casino/`, `Trafico/`, `Assets/Arte/` y las escenas `Clandestino.unity`,
+  `Pruebas_Alan.unity`, `Ciudad.unity` y `Flashback.unity`. Tus ramas empiezan con `alan/`.
+- De Tony: todo lo demás, incluido el prefab `MechaJugador`. Tú lo colocas en tus escenas, no lo editas.
+- Si te falta algo de Core o de Tony, escríbelo en `docs/revision-alan.md`; el Claude de Tony lo vuelve tarea de Core.
+- Tabla completa de dueños: `CLAUDE.md`. Decisiones: `docs/decisiones.md` (D-025 a D-032). Fases: `docs/hoja-de-ruta.md`.
+
+### Tu primera fase: A-F1 "Arena y barrio greybox"
+Tareas en `docs/tareas/pendientes/`: T-020 (arena), T-040 (barrio greybox), T-041 (reloj y día y noche), T-042 (locales con
+puertas y horarios) y T-043 (bar interior sin carga). Algunas esperan contratos de Core que Tony escribe primero
+(T-030 a T-032): tu Claude hace lo que no los necesita y deja el resto anotado en tu revisión. No pasa nada si tarda.
+Prueba de cierre de la fase: ver docs/hoja-de-ruta.md.
+
+### Cómo arrancar
 Solo la primera vez, en una terminal, en la carpeta donde quieras el proyecto:
 ```
 git clone https://github.com/tonyluno9/mecha-cyberpunk.git
 cd mecha-cyberpunk
+git lfs install
+git lfs pull
 ```
 Después usa los mismos turnos que Tony, cambiando "como Tony" por "como Alan", `tony/fase-N` por `alan/fase-N`,
-`estado-tony.md` por `estado-alan.md` y `revision-tony.md` por `revision-alan.md`.
+`estado-tony.md` por `estado-alan.md` y `revision-tony.md` por `revision-alan.md`. Tu rama de integración es `alan/fase-1`.
+Por ejemplo, el turno de día:
+```
+/goal Turno de día como Alan: sigue .claude/skills/trabajar/SKILL.md usando solo Sonnet. Termina cuando no quede ninguna tarea de Alan en docs/tareas/pendientes ni en docs/tareas/en-curso (las que no se puedan hacer quedan en docs/tareas/bloqueadas con su motivo), todas las hechas estén integradas en la rama alan/fase-N con push, y docs/revision-alan.md esté actualizado.
+```
 Claude instala lo que falte en tu máquina (Unity CLI, y Unity 6000.3.25f1 si no lo tienes). Si Unity te pide
 iniciar sesión, hazlo una vez y vuelve a lanzar el `/goal`.
 
