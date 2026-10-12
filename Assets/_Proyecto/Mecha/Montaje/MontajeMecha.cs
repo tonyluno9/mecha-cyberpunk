@@ -33,6 +33,7 @@ namespace MechaCyberpunk.Mecha.Montaje
         private PeleadorMecha peleador;
         private VidaMecha vida;
         private AudioListener oyente;
+        private bool bajadaBloqueada;
         private readonly Collider[] colisionadores = new Collider[MaxColisionadores];
 
         public ModoJugador Modo => ModoJugador.Mecha;
@@ -41,7 +42,7 @@ namespace MechaCyberpunk.Mecha.Montaje
         public bool Ocupado { get; private set; }
         public bool Estacionado => arranque == ArranqueMontaje.Estacionado;
         public bool PuedeSubir => Estacionado && !Ocupado && isActiveAndEnabled && vida != null && !vida.EstaKO;
-        public bool PuedeBajar => Ocupado && controlador.VelocidadLocal.magnitude < config.VelocidadMaximaParaBajar;
+        public bool PuedeBajar => Ocupado && !bajadaBloqueada && controlador.VelocidadLocal.magnitude < config.VelocidadMaximaParaBajar;
         public Transform Asiento => asiento;
         public Camera Camara => camara;
 
@@ -81,6 +82,12 @@ namespace MechaCyberpunk.Mecha.Montaje
         private void OnDisable()
         {
             Registro<IMontable>.Quitar(this);
+        }
+
+        /// <summary>El encendido (T-065) impide bajar mientras la cabina no está encendida.</summary>
+        public void FijarBajadaBloqueada(bool bloqueada)
+        {
+            bajadaBloqueada = bloqueada;
         }
 
         public bool IntentarSubir(IJugador jugador)

@@ -127,3 +127,9 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Verificado automáticamente: todos los criterios (EditMode 286/286, PlayMode 237/237, 5 ciclos en vivo).
 - Para ti: en Pruebas_Calle camina con W hasta el mecha (8 m) y pulsa E: ¿el salto de vista a pie a cabina marea? Maneja, frena y pulsa E: ¿bajas frente a la escotilla?
 - El mecha estacionado mira al inicio de la calle, no al barrio (T-064-2.png lo muestra girado).
+
+### T-065 Encendido del mecha en 3 pasos
+- Verificado automáticamente: todos los criterios (EditMode 300/300, PlayMode 246/246).
+- Para ti: en Pruebas_Calle sube al mecha con E y enciende con F, mantén Espacio y Q: ¿se entienden los 3 pasos solo con la pantalla?, ¿se siente máquina pesada y no menú?, ¿~5 s se aguanta la segunda vez?
+- Mira la consola al subir: si sale 'There are 2 audio listeners' repetido, hay un AudioListener duplicado.
+- Desviación menor: UI.asmdef referencia Mecha (necesario para PantallaEncendido).
