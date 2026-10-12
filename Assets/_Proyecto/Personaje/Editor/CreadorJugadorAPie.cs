@@ -1,7 +1,10 @@
 using System.IO;
 using System.Linq;
+using MechaCyberpunk.Combate.Pruebas;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje;
+using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
@@ -33,6 +36,9 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaMaterialCubo = RutaPersonaje + "/Materiales/Greybox_Cubo.mat";
         private const string RutaMaterialObstaculo = RutaPersonaje + "/Materiales/Greybox_Obstaculo.mat";
         private const string RutaMaterialCuerpo = RutaPersonaje + "/Materiales/Greybox_Cuerpo.mat";
+        private const string RutaPrefabMuneco = RutaPersonaje + "/Pruebas/MunecoAPie.prefab";
+        private const string RutaMaterialPuno = RutaPersonaje + "/Materiales/Greybox_Puno.mat";
+        private const string RutaMaterialMuneco = RutaPersonaje + "/Materiales/Greybox_Muneco.mat";
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
 
         private const float AlturaCuerpo = 1.8f;
@@ -54,6 +60,8 @@ namespace MechaCyberpunk.Personaje.Editor
 
             CrearEntrada();
             CrearAsset<DatosPersonaje>(RutaDatos);
+            // Reescribe el asset con los campos nuevos (golpe, KO) aunque ya existiera.
+            EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<DatosPersonaje>(RutaDatos));
             CrearAsset<ConfigControlesAPie>(RutaConfig);
             CrearAsset<ConfigInteraccionAPie>(RutaConfigInteraccion);
             AssetDatabase.SaveAssets();
@@ -63,7 +71,10 @@ namespace MechaCyberpunk.Personaje.Editor
             Material cubo = CrearMaterial(RutaMaterialCubo, new Color(0.55f, 0.35f, 0.65f));
             Material obstaculo = CrearMaterial(RutaMaterialObstaculo, new Color(0.85f, 0.55f, 0.2f));
             Material cuerpo = CrearMaterial(RutaMaterialCuerpo, new Color(0.3f, 0.5f, 0.7f));
-            CrearPrefab(cuerpo);
+            Material puno = CrearMaterial(RutaMaterialPuno, new Color(0.9f, 0.75f, 0.6f));
+            Material muneco = CrearMaterial(RutaMaterialMuneco, new Color(0.8f, 0.8f, 0.8f));
+            CrearPrefab(cuerpo, puno);
+            CrearPrefabMuneco(muneco);
             CrearPrefabLocal(cubo, obstaculo);
             CrearEscena(piso, cubo, obstaculo);
             AssetDatabase.SaveAssets();
@@ -89,6 +100,11 @@ namespace MechaCyberpunk.Personaje.Editor
 
         private static void CrearEntrada()
         {
+            // Si ya existe se conserva: regenerarla cambia los ids de las acciones y ensucia el prefab sin motivo.
+            if (File.Exists(RutaEntrada))
+            {
+                return;
+            }
             InputActionAsset asset = ScriptableObject.CreateInstance<InputActionAsset>();
             asset.name = "ControlesAPie";
             InputActionMap mapa = asset.AddActionMap("APie");
@@ -134,7 +150,7 @@ namespace MechaCyberpunk.Personaje.Editor
             return material;
         }
 
-        private static void CrearPrefab(Material materialCuerpo)
+        private static void CrearPrefab(Material materialCuerpo, Material materialPuno)
         {
             GameObject raiz = new GameObject("JugadorAPie");
             CharacterController cc = raiz.AddComponent<CharacterController>();
@@ -189,7 +205,53 @@ namespace MechaCyberpunk.Personaje.Editor
             soInteraccion.FindProperty("interactuar").objectReferenceValue = Referencia("Interactuar");
             soInteraccion.ApplyModifiedPropertiesWithoutUndo();
 
+            GameObject punoObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            punoObj.name = "Puno";
+            Object.DestroyImmediate(punoObj.GetComponent<Collider>());
+            punoObj.transform.SetParent(manos.transform, false);
+            punoObj.transform.localPosition = new Vector3(0.25f, -0.28f, 0f);
+            punoObj.transform.localScale = new Vector3(0.14f, 0.14f, 0.2f);
+            punoObj.GetComponent<MeshRenderer>().sharedMaterial = materialPuno;
+            punoObj.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+
+            DatosPersonaje datosPersonaje = AssetDatabase.LoadAssetAtPath<DatosPersonaje>(RutaDatos);
+            SerializedObject soVida = new SerializedObject(raiz.AddComponent<VidaAPie>());
+            soVida.FindProperty("datos").objectReferenceValue = datosPersonaje;
+            soVida.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject soGolpe = new SerializedObject(raiz.AddComponent<GolpeAPie>());
+            soGolpe.FindProperty("datos").objectReferenceValue = datosPersonaje;
+            soGolpe.FindProperty("atacar").objectReferenceValue = Referencia("Atacar");
+            soGolpe.FindProperty("puno").objectReferenceValue = punoObj.transform;
+            soGolpe.ApplyModifiedPropertiesWithoutUndo();
+
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+            Object.DestroyImmediate(raiz);
+        }
+
+        // Muñeco de 1.8 m: cápsula visual con su collider; Y local 0.9 para que los pies queden en el piso.
+        private static void CrearPrefabMuneco(Material material)
+        {
+            GameObject raiz = new GameObject("MunecoAPie");
+            GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            visual.name = "Cuerpo";
+            Object.DestroyImmediate(visual.GetComponent<Collider>());
+            visual.transform.SetParent(raiz.transform, false);
+            visual.transform.localPosition = new Vector3(0f, AlturaCuerpo / 2f, 0f);
+            visual.transform.localScale = new Vector3(RadioCuerpo * 2f, AlturaCuerpo / 2f, RadioCuerpo * 2f);
+            MeshRenderer render = visual.GetComponent<MeshRenderer>();
+            render.sharedMaterial = material;
+
+            CapsuleCollider capsula = raiz.AddComponent<CapsuleCollider>();
+            capsula.height = AlturaCuerpo;
+            capsula.radius = RadioCuerpo;
+            capsula.center = new Vector3(0f, AlturaCuerpo / 2f, 0f);
+
+            SerializedObject so = new SerializedObject(raiz.AddComponent<MunecoAPie>());
+            so.FindProperty("visual").objectReferenceValue = render;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabMuneco);
             Object.DestroyImmediate(raiz);
         }
 
@@ -341,6 +403,21 @@ namespace MechaCyberpunk.Personaje.Editor
 
             GameObject jugador = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab));
             jugador.transform.position = new Vector3(0f, 0.05f, 0f);
+
+            // Dos muñecos frente al jugador, el daniador (H) y el revividor (K).
+            GameObject prefabMuneco = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabMuneco);
+            GameObject muneco1 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
+            muneco1.name = "Muneco 1";
+            muneco1.transform.position = new Vector3(0f, 0f, 1.4f);
+            GameObject muneco2 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
+            muneco2.name = "Muneco 2";
+            muneco2.transform.position = new Vector3(2.5f, 0f, 3f);
+
+            GameObject herramientas = new GameObject("Herramientas de prueba");
+            DaniadorDePrueba daniador = herramientas.AddComponent<DaniadorDePrueba>();
+            daniador.Configurar(jugador, 10f, new InputAction("Danio", InputActionType.Button, "<Keyboard>/h"));
+            RevividorDePrueba revividor = herramientas.AddComponent<RevividorDePrueba>();
+            revividor.Configurar(jugador.GetComponent<VidaAPie>(), new InputAction("Revivir", InputActionType.Button, "<Keyboard>/k"));
 
             EditorSceneManager.SaveScene(escena, RutaEscena);
         }

@@ -16,3 +16,11 @@ MonoBehaviour:
   velocidadCaminar: 4.5
   velocidadCorrer: 7.5
   alturaSalto: 1.1
+  danioGolpe: 15
+  alcanceGolpe: 1.6
+  radioGolpe: 0.3
+  preparacionGolpe: 0.12
+  recargaGolpe: 0.45
+  alturaCamaraKO: 0.4
+  ladeoCamaraKO: 40
+  velocidadCaidaKO: 6
