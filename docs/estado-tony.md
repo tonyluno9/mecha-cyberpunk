@@ -9,6 +9,6 @@ Fase 1, rama de integración: tony/fase-1 (sin merge a main; main solo cambia co
 | T-010 | hecha (sin revisar) |
 | T-011 | hecha (sin revisar) |
 | T-013 | hecha (sin revisar) |
-| T-012 | pendiente |
+| T-012 | hecha (sin revisar) |
 
-Qué sigue: T-012.
+Qué sigue: turno de noche revisa T-001, T-002, T-010, T-011, T-013 y T-012.
