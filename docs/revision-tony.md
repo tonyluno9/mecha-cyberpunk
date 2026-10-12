@@ -56,3 +56,9 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
   RivalBasico ya no se congela según el orden de Start; /// de ITienda; nota de "nadie lo registra todavía" en ICalor, ICartera, IObjetivos, ITienda e IJugador.
 - Pendiente anotado (no es bug): ningún componente registra todavía ICalor, ICartera, ITienda, IObjetivos ni IJugador (llegan en T-F3 a T-F5);
   RivalBasico pasa siempre tieneControl=true a CerebroRival; el "3" del conteo queda pegado a la cabeza del rival en T-022-1.png (el contrato de la pantalla ya recomienda ponerla alta).
+
+### T-050 Contrato para subir y bajar de un vehículo
+- Verificado automáticamente: 6 de 6 criterios (EditMode 176/176, PlayMode 98/98).
+- Para ti (o Alan): leer solo los /// de Core/Jugador/IMontable.cs y confirmar que responden sin dudas quién prende la cámara y el AudioListener al subir, quién lee la E y dónde queda el jugador al bajar.
+- Decisiones del agente: Resolver deja posicion en cero al devolver false; IntentarBajar en false deja `salida` sin uso.
+- Integrada a main porque Alan la necesita para el carro (A-F2).

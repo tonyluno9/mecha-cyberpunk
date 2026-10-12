@@ -14,6 +14,7 @@ Todo lo de la fase 1 (T-001, T-002, T-010 a T-013) está aprobado y en main (D-0
 | T-034 Contratos de calor y objetivos | hecha (sin revisar), integrada a main |
 | T-060 Jugador en el barrio de Alan | bloqueada (espera A-F1) |
 | T-061 Subir al carro de Alan | bloqueada (espera A-F2) |
+| T-050 Contrato de subir y bajar | hecha (sin revisar), integrada a main |
 
 T-050 a T-059 de la fase T-F3: pendientes, en el orden T-050, T-051, T-055, T-054, T-052, T-053, T-056, T-057, T-058, T-059.
-Qué sigue: T-050.
+Qué sigue: T-051, T-055, T-054, T-052, T-053, T-056, T-057, T-058, T-059.
