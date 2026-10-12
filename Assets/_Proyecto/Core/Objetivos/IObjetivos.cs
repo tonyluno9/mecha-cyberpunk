@@ -8,6 +8,7 @@ namespace MechaCyberpunk.Core
     /// Para dibujarlo, el mundo usa <see cref="Objetivo.Posicion"/> si <see cref="Objetivo.TienePosicion"/>;
     /// si no, busca en <c>Registro&lt;ILugar&gt;</c> el lugar con ese <see cref="Objetivo.Lugar"/> como <c>Id</c>
     /// y usa su <c>PosicionEntrada</c>.
+    /// Por ahora nadie la registra en <c>Registro&lt;IObjetivos&gt;</c>: lo hará la tarea de la fase T-F4/T-F5 de Tony; no la leas de <c>Registro&lt;IObjetivos&gt;</c> todavía.
     /// </summary>
     public interface IObjetivos
     {

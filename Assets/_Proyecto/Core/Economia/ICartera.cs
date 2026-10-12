@@ -5,6 +5,7 @@ namespace MechaCyberpunk.Core
     /// <summary>
     /// El dinero del jugador (enteros). Se busca en <c>Registro&lt;ICartera&gt;</c>.
     /// El dinero puede quedar negativo (deuda) solo por <see cref="CargarDeuda"/>.
+    /// Por ahora nadie la registra en <c>Registro&lt;ICartera&gt;</c>: lo hará la tarea de la fase T-F4/T-F5 de Tony; no la leas de <c>Registro&lt;ICartera&gt;</c> todavía.
     /// </summary>
     public interface ICartera
     {

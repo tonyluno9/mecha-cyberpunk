@@ -6,6 +6,7 @@ namespace MechaCyberpunk.Core
     /// El calor policial del jugador. Se busca en <c>Registro&lt;ICalor&gt;</c>. Lo implementa Tony (Progresion/).
     /// Los drones y patrullas de Alan persiguen según <see cref="Nivel"/>; el mundo puede llamar a
     /// <see cref="Enfriar"/> (escondites), <see cref="Borrar"/> (llegar a casa) y <see cref="Sumar"/> (chocar con una patrulla).
+    /// Por ahora nadie la registra en <c>Registro&lt;ICalor&gt;</c>: lo hará la tarea de la fase T-F4/T-F5 de Tony; no la leas de <c>Registro&lt;ICalor&gt;</c> todavía.
     /// Contrato: el valor nunca sale de [0, <see cref="Maximo"/>]; cantidades menores o iguales a 0 no hacen nada.
     /// </summary>
     public interface ICalor

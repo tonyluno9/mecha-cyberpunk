@@ -71,6 +71,26 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        public void Fijar_Ninguno_SeComportaComoQuitar()
+        {
+            modelo.Fijar(new Objetivo("Ve al taller", IdLugar.Taller));
+            avisos = 0;
+            modelo.Fijar(Objetivo.Ninguno);
+            Assert.IsFalse(modelo.HayObjetivo);
+            Assert.AreEqual(Objetivo.Ninguno, modelo.Actual);
+            Assert.AreEqual(1, avisos);
+            Assert.AreEqual(Objetivo.Ninguno, ultimo);
+        }
+
+        [Test]
+        public void Fijar_NingunoSinObjetivo_NoAvisaNiMarcaHayObjetivo()
+        {
+            modelo.Fijar(Objetivo.Ninguno);
+            Assert.IsFalse(modelo.HayObjetivo);
+            Assert.AreEqual(0, avisos);
+        }
+
+        [Test]
         public void Quitar_SinObjetivo_NoAvisa()
         {
             modelo.Quitar();
