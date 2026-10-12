@@ -42,7 +42,8 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaMaterialPistola = RutaPersonaje + "/Materiales/Greybox_Pistola.mat";
         private const string RutaMaterialMarca = RutaPersonaje + "/Materiales/Greybox_Marca.mat";
         private const string RutaDatosPistola = RutaPersonaje + "/Datos/DatosPistola_Base.asset";
-        private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
+        private const string RutaPrefabHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
+        private const string RutaEscena ="Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
 
         private const float AlturaCuerpo = 1.8f;
         private const float RadioCuerpo = 0.35f;
@@ -464,6 +465,13 @@ namespace MechaCyberpunk.Personaje.Editor
             GameObject muneco80 = (GameObject)PrefabUtility.InstantiatePrefab(prefabMuneco);
             muneco80.name = "Muneco 80 m";
             muneco80.transform.position = new Vector3(-5f, 0f, Mathf.Sqrt(6400f - 25f));
+
+            // HUD a pie (T-056): si el prefab de UI ya existe, se instancia; el anidado en el jugador es de T-059.
+            GameObject prefabHud = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabHud);
+            if (prefabHud != null)
+            {
+                PrefabUtility.InstantiatePrefab(prefabHud);
+            }
 
             GameObject herramientas = new GameObject("Herramientas de prueba");
             DaniadorDePrueba daniador = herramientas.AddComponent<DaniadorDePrueba>();
