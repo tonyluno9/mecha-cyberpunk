@@ -17,3 +17,9 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Decisiones del agente: Registros.Apuntar público pero documentado como interno; Quitar(null) no hace nada.
 - Sugerencia: prueba de PlayMode de Registro<T> con un MonoBehaviour real, en una tarea posterior.
 - Integrada a main porque Alan la necesita.
+
+### T-032 Contratos de reloj, lugares y puertas
+- Verificado automáticamente: 6 de 6 criterios (EditMode 94/94, PlayMode 64/64).
+- Para ti (o Alan): leer los /// de IRelojMundo, ILugar e IPuerta en Core/Mundo/ y confirmar que bastan para T-041 y T-042.
+- Decisiones del agente: HorarioLugar normaliza abre/cierra (24 = 0); nombres PublicarEntro / PublicarSalio / PublicarEstadoLugar.
+- Integrada a main porque Alan la necesita.
