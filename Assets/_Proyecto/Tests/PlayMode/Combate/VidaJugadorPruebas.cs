@@ -4,6 +4,7 @@ using MechaCyberpunk.Combate.Peleador;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mecha.Cabina;
+using MechaCyberpunk.Mecha.Movimiento;
 using MechaCyberpunk.UI.Cabina;
 using NUnit.Framework;
 using UnityEditor;
@@ -56,8 +57,23 @@ namespace MechaCyberpunk.Tests.Combate
         public override void TearDown()
         {
             Application.logMessageReceived -= ContarKO;
+            VaciarEscenaDePruebas();
             EventosPelea.LimpiarSuscriptores();
             base.TearDown();
+        }
+
+        // La escena cargada sigue viva al terminar la prueba: se vacía para no estorbar a las pruebas siguientes.
+        private static void VaciarEscenaDePruebas()
+        {
+            Scene escena = SceneManager.GetSceneByPath(RutaEscena);
+            if (!escena.IsValid())
+            {
+                return;
+            }
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                Object.Destroy(raiz);
+            }
         }
 
         private void ContarKO(string mensaje, string pila, LogType tipo)
@@ -72,8 +88,11 @@ namespace MechaCyberpunk.Tests.Combate
         {
             yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
-            vida = Object.FindFirstObjectByType<VidaMecha>();
-            peleador = Object.FindFirstObjectByType<PeleadorMecha>();
+            // La escena también tiene un saco con VidaMecha: se busca la del mecha del jugador.
+            ControladorMecha jugador = Object.FindFirstObjectByType<ControladorMecha>();
+            Assert.IsNotNull(jugador, "Falta el mecha del jugador en la escena");
+            vida = jugador.GetComponent<VidaMecha>();
+            peleador = jugador.GetComponent<PeleadorMecha>();
             sacudida = Object.FindFirstObjectByType<SacudidaCabina>();
             pantalla = Object.FindFirstObjectByType<PantallaVidaCabina>();
             Assert.IsNotNull(vida, "Falta VidaMecha en la escena");

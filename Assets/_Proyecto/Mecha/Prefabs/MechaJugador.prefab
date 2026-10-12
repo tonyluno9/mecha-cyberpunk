@@ -418,6 +418,9 @@ GameObject:
   - component: {fileID: 1990697387266957958}
   - component: {fileID: 7395534122207976564}
   - component: {fileID: 6989887370766502217}
+  - component: {fileID: 6881662012566636349}
+  - component: {fileID: 2933284429344227689}
+  - component: {fileID: 8033794217026706427}
   m_Layer: 0
   m_Name: MechaJugador
   m_TagString: Untagged
@@ -514,6 +517,50 @@ MonoBehaviour:
   lado: 0
   controlados:
   - {fileID: 1990697387266957958}
+  - {fileID: 6881662012566636349}
+  - {fileID: 2933284429344227689}
+--- !u!114 &6881662012566636349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3070993614766129967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47d017db42104e74188707739f45a680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Golpe.GolpeMecha
+  golpear: {fileID: 8921593620868153684, guid: f9eb26f3677f07646b876e204c5b43f0, type: 3}
+  radioBusqueda: 0.25
+--- !u!114 &2933284429344227689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3070993614766129967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b9c3e0adccb2c0428200a54f9e08b87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Bloqueo.GuardiaMecha
+  bloquear: {fileID: 8094448370161898345, guid: f9eb26f3677f07646b876e204c5b43f0, type: 3}
+--- !u!114 &8033794217026706427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3070993614766129967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd71bb277f830d340a3109f029f5d0e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Brazos.AnimadorBrazos
+  brazoIzquierdo: {fileID: 2202219288072438768}
+  brazoDerecho: {fileID: 7019088074468906833}
+  config: {fileID: 11400000, guid: 801f3efe373ff90489e0113845fef543, type: 2}
 --- !u!1 &3815857753821001713
 GameObject:
   m_ObjectHideFlags: 0
