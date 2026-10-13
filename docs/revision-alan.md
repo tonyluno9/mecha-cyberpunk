@@ -23,5 +23,10 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Para ti: Pruebas_Alan.unity, Play: N=22:00, M=12:00, T=x30; que amanecer y anochecer no sean saltos bruscos, que la noche se sienta fría con niebla y farolas (en la captura el cielo es casi negro).
 - Decisiones del agente: LuzNocturna con MaterialPropertyBlock; CicloDiaNoche pinta el fondo de la cámara como la niebla; CreadorReloj restaura configs a valores del código.
 
+### T-042 Locales, puertas y horarios
+- Verificado automáticamente: todos los criterios (EditMode 213/213, PlayMode 160/160; capturas T-042-1..3; consola x30 3 min sin errores).
+- Para ti: Ciudad.unity, E y luego W frente al bar: que la puerta abra sin estorbar; de noche, que se vea de un vistazo qué está abierto; el estado del letrero del casino se lee pequeño a ~13 m.
+- Decisiones del agente: ninguna relevante.
+
 ## Bloqueos y preguntas
 - Nada todavía.
