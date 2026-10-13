@@ -15,6 +15,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
         private const string RutaBase = "Assets/_Proyecto/Vehiculos";
         private const string RutaConfig = RutaBase + "/Datos/ConfigCarro_Viejo.asset";
         private const string RutaControles = RutaBase + "/Carro/ControlesCarro.inputactions";
+        private const string RutaConfigCamara = RutaBase + "/Datos/ConfigCamaraCarro_Viejo.asset";
         private const string RutaPrefab = RutaBase + "/Prefabs/CarroViejo.prefab";
         private const string RutaMateriales = RutaBase + "/Materiales";
         private const string RutaMaterialFisico = RutaMateriales + "/Carro_SinFriccion.asset";
@@ -32,6 +33,12 @@ namespace MechaCyberpunk.Vehiculos.Editor
         private const float ViaMitad = 0.78f;
         private const float EjeDelanteroZ = 1.35f;
         private const float EjeTraseroZ = -1.35f;
+        // Asiento del conductor (izquierda); el punto de subida está 1 m afuera de la puerta (el costado está en 0.9 m).
+        private const float AsientoX = 0.4f;
+        private const float AsientoY = 0.75f;
+        private const float AsientoZ = -0.1f;
+        private const float PuntoSubidaX = 1.9f;
+        private const float PlanoCercano = 0.1f;
 
         [MenuItem("Mecha Cyberpunk/Crear carro (T-074)")]
         public static void Crear()
@@ -42,12 +49,13 @@ namespace MechaCyberpunk.Vehiculos.Editor
             AsegurarCarpeta(RutaMateriales);
             ConfigCarro config = CrearConfig();
             InputActionAsset controles = CrearControles();
+            ConfigCamaraCarro configCamara = CrearConfigCamara();
             Material carroceria = Material("Carro_Carroceria", new Color(0.45f, 0.18f, 0.12f), 0.3f);
             Material cabina = Material("Carro_Cabina", new Color(0.2f, 0.25f, 0.3f), 0.5f);
             Material rueda = Material("Carro_Rueda", new Color(0.05f, 0.05f, 0.06f), 0.1f);
             PhysicsMaterial sinFriccion = CrearMaterialFisico();
             AssetDatabase.SaveAssets();
-            CrearPrefab(config, controles, carroceria, cabina, rueda, sinFriccion);
+            CrearPrefab(config, configCamara, controles, carroceria, cabina, rueda, sinFriccion);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[Vehiculos] T-074 creada.");
@@ -68,6 +76,17 @@ namespace MechaCyberpunk.Vehiculos.Editor
             {
                 config = ScriptableObject.CreateInstance<ConfigCarro>();
                 AssetDatabase.CreateAsset(config, RutaConfig);
+            }
+            return config;
+        }
+
+        private static ConfigCamaraCarro CrearConfigCamara()
+        {
+            ConfigCamaraCarro config = AssetDatabase.LoadAssetAtPath<ConfigCamaraCarro>(RutaConfigCamara);
+            if (config == null)
+            {
+                config = ScriptableObject.CreateInstance<ConfigCamaraCarro>();
+                AssetDatabase.CreateAsset(config, RutaConfigCamara);
             }
             return config;
         }
@@ -160,7 +179,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             return eje.transform;
         }
 
-        private static void CrearPrefab(ConfigCarro config, InputActionAsset controles, Material carroceria, Material cabina,
+        private static void CrearPrefab(ConfigCarro config, ConfigCamaraCarro configCamara, InputActionAsset controles, Material carroceria, Material cabina,
             Material rueda, PhysicsMaterial fisico)
         {
             GameObject raiz = new GameObject("CarroViejo");
@@ -179,8 +198,31 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Transform ti = CrearRueda("Rueda_TI", raiz.transform, -ViaMitad, EjeTraseroZ, rueda);
             Transform td = CrearRueda("Rueda_TD", raiz.transform, ViaMitad, EjeTraseroZ, rueda);
 
+            Transform asiento = new GameObject("Asiento").transform;
+            asiento.SetParent(raiz.transform, false);
+            asiento.localPosition = new Vector3(-AsientoX, AsientoY, AsientoZ);
+            Transform puntoSubida = new GameObject("PuntoSubida").transform;
+            puntoSubida.SetParent(raiz.transform, false);
+            puntoSubida.localPosition = new Vector3(-PuntoSubidaX, 0f, AsientoZ);
+
+            GameObject camaraObjeto = new GameObject("CamaraCarro");
+            camaraObjeto.transform.SetParent(raiz.transform, false);
+            camaraObjeto.transform.localPosition = asiento.localPosition + Vector3.up * configCamara.AlturaOjos;
+            CamaraCarro camaraCarro = camaraObjeto.AddComponent<CamaraCarro>();
+            Camera camara = camaraObjeto.GetComponent<Camera>();
+            camara.nearClipPlane = PlanoCercano;
+            camara.enabled = false;
+            AudioListener oyente = camaraObjeto.AddComponent<AudioListener>();
+            oyente.enabled = false;
+            SerializedObject soCamara = new SerializedObject(camaraCarro);
+            soCamara.FindProperty("config").objectReferenceValue = configCamara;
+            soCamara.ApplyModifiedPropertiesWithoutUndo();
+
             CarroViejo carro = raiz.AddComponent<CarroViejo>();
             SerializedObject so = new SerializedObject(carro);
+            so.FindProperty("asiento").objectReferenceValue = asiento;
+            so.FindProperty("puntoSubida").objectReferenceValue = puntoSubida;
+            so.FindProperty("camaraCarro").objectReferenceValue = camaraCarro;
             so.FindProperty("config").objectReferenceValue = config;
             so.FindProperty("controles").objectReferenceValue = controles;
             so.FindProperty("ruedaDelanteraIzquierda").objectReferenceValue = di;

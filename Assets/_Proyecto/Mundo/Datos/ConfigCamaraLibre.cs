@@ -31,6 +31,14 @@ namespace MechaCyberpunk.Mundo.Datos
         [Tooltip("Alcance del rayo de la tecla E al frente (m).")]
         [SerializeField, Min(0.1f)] private float distanciaInteraccion = 3f;
 
+        [Tooltip("Distancia máxima al punto de subida de un vehículo para poder subir con la tecla E (m, en el plano).")]
+        [SerializeField, Min(0.1f)] private float distanciaSubida = 2.5f;
+
+        [Tooltip("Ángulo máximo entre hacia dónde mira y el punto de subida para poder subir (°).")]
+        [SerializeField, Range(1f, 180f)] private float anguloSubida = 60f;
+
+        public float DistanciaSubida => distanciaSubida;
+        public float AnguloSubida => anguloSubida;
         public float DistanciaInteraccion => distanciaInteraccion;
         public float VelocidadAPie => velocidadAPie;
         public float VelocidadCorriendo => velocidadCorriendo;
