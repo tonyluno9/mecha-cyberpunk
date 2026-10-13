@@ -59,10 +59,10 @@ namespace MechaCyberpunk.Mundo.Lugares
             Cambio?.Invoke(abierta);
         }
 
-        // Un lugar que cierra cierra su puerta, salvo que el jugador esté dentro (necesita poder salir).
+        // Un lugar que cierra cierra su puerta, salvo que el jugador esté dentro o alguien esté en el umbral (la hoja se cierra sola al quedar libre).
         private void AlCambiarLugar(bool abierto)
         {
-            if (!abierto && !lugar.JugadorDentro)
+            if (!abierto && !lugar.JugadorDentro && hoja.OcupantesEnUmbral == 0)
             {
                 hoja.Cerrar();
             }

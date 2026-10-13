@@ -198,7 +198,8 @@ namespace MechaCyberpunk.Tests.Arena
             Assert.AreEqual(Hijo("InicioJugador").position, contrato.InicioJugador.position);
             Assert.AreEqual(Hijo("InicioRival").position, contrato.InicioRival.position);
             Assert.AreSame(Hijo("PantallaArena"), contrato.PantallaArena);
-            Assert.AreEqual(Hijo("Piso").position, contrato.Centro);
+            Assert.AreEqual(Hijo("Piso").position + Vector3.up * 0.5f, contrato.Centro, "El centro debe estar en la superficie del piso (y = 0)");
+            Assert.AreEqual(0f, contrato.Centro.y, 1e-3f);
             Assert.AreEqual(new Vector2(8f, 4.5f), contrato.TamanoPantalla);
             Assert.IsNotEmpty(contrato.Nombre);
 

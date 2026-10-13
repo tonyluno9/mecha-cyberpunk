@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Arena.Jaula
         [SerializeField, Tooltip("Centro de la cara visible de la pantalla; su +Z apunta de la jaula hacia la pantalla.")]
         private Transform pantallaArena;
 
-        [SerializeField, Tooltip("Piso de la jaula; su centro es el Centro de la arena.")]
+        [SerializeField, Tooltip("Piso de la jaula; el Centro de la arena es el punto de su superficie sobre su centro.")]
         private Transform piso;
 
         [SerializeField, Tooltip("Ancho (x) y alto (y) de la zona útil de la pantalla (m).")]
@@ -33,7 +33,7 @@ namespace MechaCyberpunk.Arena.Jaula
         public string Nombre => nombre;
         public Pose InicioJugador => new Pose(inicioJugador.position, inicioJugador.rotation);
         public Pose InicioRival => new Pose(inicioRival.position, inicioRival.rotation);
-        public Vector3 Centro => piso.position;
+        public Vector3 Centro => CentroSuperficie();
         public Transform PantallaArena => pantallaArena;
         public Vector2 TamanoPantalla => tamanoPantalla;
 
@@ -54,6 +54,15 @@ namespace MechaCyberpunk.Arena.Jaula
         private void OnDisable()
         {
             Registro<IArenaPelea>.Quitar(this);
+        }
+
+        // Punto de la cara superior del piso, sobre su centro: allí pisan los mechas.
+        private Vector3 CentroSuperficie()
+        {
+            Vector3 centro = piso.position;
+            Collider colisionador = piso.GetComponent<Collider>();
+            centro.y = colisionador != null ? colisionador.bounds.max.y : piso.position.y + piso.lossyScale.y / 2f;
+            return centro;
         }
 
         private void OnDrawGizmos()

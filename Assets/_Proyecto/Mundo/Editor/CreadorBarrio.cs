@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Mundo.Editor
     /// <summary>
     /// Crea los assets de T-040: materiales, cámara libre (prefab, config y controles), prefab del barrio greybox y las
     /// escenas Ciudad y Pruebas_Alan.
+    /// AVISO: rehace el prefab Barrio y las escenas Ciudad y Pruebas_Alan desde cero (borra T-041..T-044).
+    /// Orden: CreadorArena, CreadorBarrio, CreadorReloj, CreadorLugares, CreadorBar, CreadorPeleaClandestino; usa CreadorTodo.Crear.
     /// Batchmode: -executeMethod MechaCyberpunk.Mundo.Editor.CreadorBarrio.Crear
     /// </summary>
     public static class CreadorBarrio

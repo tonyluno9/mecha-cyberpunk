@@ -79,6 +79,11 @@ namespace MechaCyberpunk.Mundo.Lugares
             {
                 estadoInicializado = reloj != null;
                 ultimoEstado = estado;
+                if (estadoInicializado)
+                {
+                    // El reloj apareció después de Start: los letreros que se pintaron sin reloj se actualizan.
+                    EstadoCambio?.Invoke(estado);
+                }
                 return;
             }
             if (estado == ultimoEstado)

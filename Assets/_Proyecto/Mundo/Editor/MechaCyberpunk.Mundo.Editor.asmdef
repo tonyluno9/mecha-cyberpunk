@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Mundo.Editor",
     "rootNamespace": "MechaCyberpunk.Mundo.Editor",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Mundo", "Unity.InputSystem"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Mundo", "MechaCyberpunk.Arena.Editor", "Unity.InputSystem"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -12,7 +12,7 @@ namespace MechaCyberpunk.Mundo.Editor
     /// <summary>
     /// Crea los assets de T-042: acción Interactuar, config de puertas, datos de los cinco locales y, en el prefab del
     /// barrio, vestíbulo, puerta con hoja, letrero con Canvas World Space y los componentes de cada local.
-    /// Se puede correr varias veces. Batchmode: -executeMethod MechaCyberpunk.Mundo.Editor.CreadorLugares.Crear
+    /// Se puede correr varias veces. Orden: despues de CreadorBarrio y CreadorReloj; usa CreadorTodo.Crear. Batchmode: -executeMethod MechaCyberpunk.Mundo.Editor.CreadorLugares.Crear
     /// </summary>
     public static class CreadorLugares
     {
@@ -98,7 +98,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return config;
         }
 
-        // Siempre vuelve a escribir los valores para que el asset coincida con la tarea.
+        // Solo configura el asset al crearlo: no pisa valores existentes.
         private static DatosLugar CrearDatos(string archivo, IdLugar id, string nombre, HorarioLugar horario, bool cerradoEnDemo)
         {
             string ruta = RutaDatos + "/DatosLugar_" + archivo + ".asset";
@@ -107,9 +107,9 @@ namespace MechaCyberpunk.Mundo.Editor
             {
                 datos = ScriptableObject.CreateInstance<DatosLugar>();
                 AssetDatabase.CreateAsset(datos, ruta);
+                datos.Configurar(id, nombre, horario, cerradoEnDemo);
+                EditorUtility.SetDirty(datos);
             }
-            datos.Configurar(id, nombre, horario, cerradoEnDemo);
-            EditorUtility.SetDirty(datos);
             return datos;
         }
 

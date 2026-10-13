@@ -18,6 +18,8 @@ namespace MechaCyberpunk.Mundo.Reloj
         [SerializeField, Min(0f)] private float escalaTiempo = 1f;
 
         private readonly List<EventoReloj> eventos = new List<EventoReloj>();
+        private readonly Queue<EventoReloj> pendientes = new Queue<EventoReloj>();
+        private bool publicando;
         private CalculoReloj calculo;
 
         public float Hora => calculo.Hora;
@@ -82,23 +84,43 @@ namespace MechaCyberpunk.Mundo.Reloj
 
         private void Publicar()
         {
+            // Los eventos nuevos van a una cola: si un suscriptor llama AvanzarHasta durante la publicación,
+            // sus avisos se publican después, en orden, sin perder los que faltaban.
             for (int i = 0; i < eventos.Count; i++)
             {
-                EventoReloj evento = eventos[i];
-                switch (evento.Tipo)
-                {
-                    case TipoEventoReloj.HoraEntera:
-                        HoraEnteraCambio?.Invoke(evento.Valor);
-                        break;
-                    case TipoEventoReloj.Franja:
-                        FranjaCambio?.Invoke(evento.Valor == 1 ? FranjaDia.Noche : FranjaDia.Dia);
-                        break;
-                    case TipoEventoReloj.Dia:
-                        DiaCambio?.Invoke(evento.Valor);
-                        break;
-                }
+                pendientes.Enqueue(eventos[i]);
             }
             eventos.Clear();
+            if (publicando)
+            {
+                return;
+            }
+
+            publicando = true;
+            try
+            {
+                while (pendientes.Count > 0)
+                {
+                    EventoReloj evento = pendientes.Dequeue();
+                    switch (evento.Tipo)
+                    {
+                        case TipoEventoReloj.HoraEntera:
+                            HoraEnteraCambio?.Invoke(evento.Valor);
+                            break;
+                        case TipoEventoReloj.Franja:
+                            FranjaCambio?.Invoke(evento.Valor == 1 ? FranjaDia.Noche : FranjaDia.Dia);
+                            break;
+                        case TipoEventoReloj.Dia:
+                            DiaCambio?.Invoke(evento.Valor);
+                            break;
+                    }
+                }
+            }
+            finally
+            {
+                publicando = false;
+                pendientes.Clear();
+            }
         }
     }
 }

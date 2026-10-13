@@ -64,6 +64,7 @@ namespace MechaCyberpunk.Tests.Arena
 
         private void RegistrarLog(string mensaje, string pila, LogType tipo)
         {
+            // Solo errores, excepciones y asserts cuentan: los Debug.Log de otras áreas (p. ej. "[Combate] KO") no son fallos.
             if (tipo == LogType.Error || tipo == LogType.Exception || tipo == LogType.Assert)
             {
                 errores.Add(mensaje);
@@ -203,6 +204,21 @@ namespace MechaCyberpunk.Tests.Arena
             yield return Esperar(0.3f);
             Assert.AreEqual(3, resultados.Count);
             Assert.AreEqual(0, errores.Count, string.Join(" | ", errores));
+        }
+
+        [UnityTest]
+        public IEnumerator PantallaPelea_EnClandestino_QuedaPegadaALaPantallaDeLaArena()
+        {
+            const float DistanciaMaxima = 0.1f;
+            yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
+            yield return HastaCondicion(() => GameObject.Find("PantallaPelea") != null && Registro<IArenaPelea>.Actual != null, "Canvas PantallaPelea y arena");
+            yield return null;
+            yield return null;
+            Canvas canvas = GameObject.Find("PantallaPelea").GetComponent<Canvas>();
+            Assert.IsNotNull(canvas, "PantallaPelea debe tener un Canvas");
+            Transform anclaje = Registro<IArenaPelea>.Actual.PantallaArena;
+            Assert.Less(Vector3.Distance(canvas.transform.position, anclaje.position), DistanciaMaxima,
+                "El Canvas PantallaPelea debe quedar a menos de 0.1 m de PantallaArena");
         }
     }
 }
