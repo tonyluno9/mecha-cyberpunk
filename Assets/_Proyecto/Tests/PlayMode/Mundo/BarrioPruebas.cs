@@ -153,7 +153,7 @@ namespace MechaCyberpunk.Tests.Mundo
                 float angulo = i * 360f / CantidadRayos;
                 Vector3 direccion = Quaternion.Euler(0f, angulo, 0f) * Vector3.forward;
                 Assert.IsTrue(Physics.Raycast(origen, direccion, out RaycastHit golpe, LargoRayo), "El rayo a " + angulo + "° no choca con nada");
-                MeshRenderer visual = golpe.collider.GetComponent<MeshRenderer>();
+                MeshRenderer visual = golpe.collider.GetComponentInChildren<MeshRenderer>(); // T-080: las piezas del kit llevan el collider en la raíz y el modelo en un hijo
                 Assert.IsNotNull(visual, "El rayo a " + angulo + "° choca con '" + golpe.collider.name + "', que no tiene MeshRenderer");
                 Assert.IsTrue(visual.enabled && visual.gameObject.activeInHierarchy, "'" + golpe.collider.name + "' no se ve");
             }
@@ -169,7 +169,7 @@ namespace MechaCyberpunk.Tests.Mundo
                 Assert.IsNotEmpty(colliders, nombre + " no tiene colliders");
                 foreach (Collider collider in colliders)
                 {
-                    Assert.IsNotNull(collider.GetComponent<MeshRenderer>(), nombre + "/" + collider.name + " tiene collider pero no se ve");
+                    Assert.IsNotNull(collider.GetComponentInChildren<MeshRenderer>(), nombre + "/" + collider.name + " tiene collider pero no se ve");
                 }
             }
         }

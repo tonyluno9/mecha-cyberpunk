@@ -55,7 +55,6 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float AltoPuerta = 3.2f;
         private const float GrosorFachada = 1f;
         private static readonly float[] DesplazamientosFarola = { -33f, -12f, 12f, 33f };
-        private const float AlturaFarola = 6f;
 
         private static readonly Vector2[] CentrosManzana =
         {
@@ -269,6 +268,7 @@ namespace MechaCyberpunk.Mundo.Editor
             numeroEdificio = 0;
             numeroFarola = 0;
             puntosLibres.Clear();
+            VestirCalle.Preparar(puntosLibres);
 
             GameObject raiz = new GameObject("Barrio");
             Transform t = raiz.transform;
@@ -280,8 +280,10 @@ namespace MechaCyberpunk.Mundo.Editor
             }
             CrearFinales(t);
             CrearFarolas(t);
+            CrearPuestosTacos(t);
             CrearAmbientacion(t);
             CrearPuntosAparicion(t);
+            VestirCalle.Cables(t);
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabBarrio);
             Object.DestroyImmediate(raiz);
@@ -405,10 +407,11 @@ namespace MechaCyberpunk.Mundo.Editor
             {
                 GameObject lamina = Cubo("Lamina", edificio, new Vector3(0f, alturaPiso + 0.5f, 0f), new Vector3(w * 0.8f, 0.1f, d * 0.8f), "Lamina", false);
                 lamina.transform.localRotation = Quaternion.Euler(6f + (float)azar.NextDouble() * 8f, 0f, 0f);
+                VestirCalle.TinacoPobre(edificio, w, alturaPiso, new Random(8000 + numeroEdificio));
             }
             else
             {
-                Cubo("Tanque", edificio, new Vector3(w * 0.25f, alturaPiso + 0.8f, d * 0.25f), new Vector3(1.8f, 1.6f, 1.8f), "Azotea", false);
+                VestirCalle.AzoteaKit(edificio, w, d, alturaPiso, w * 0.25f, d * 0.25f, new Random(8000 + numeroEdificio));
             }
 
             if (azar.NextDouble() < 0.45)
@@ -436,7 +439,7 @@ namespace MechaCyberpunk.Mundo.Editor
             Cubo("Dintel", lugar, new Vector3(0f, AltoPuerta + (altura - AltoPuerta) / 2f, zFrente - GrosorFachada / 2f), new Vector3(AnchoPuerta, altura - AltoPuerta, GrosorFachada), material);
             Cubo("PanelPuerta", lugar, new Vector3(0f, AltoPuerta / 2f, zFrente - GrosorFachada / 2f), new Vector3(AnchoPuerta, AltoPuerta, 0.3f), "PanelPuerta");
             Cubo("Letrero", lugar, new Vector3(0f, AltoPuerta + 1.2f, zFrente + 0.15f), new Vector3(AnchoPuerta + 2f, 1.4f, 0.3f), letrero, false);
-            Cubo("Azotea", lugar, new Vector3(ancho * 0.25f, altura + 0.8f, -fondo * 0.2f), new Vector3(2f, 1.6f, 2f), "Azotea", false);
+            VestirCalle.AzoteaKit(lugar, ancho, fondo, altura, ancho * 0.25f, -fondo * 0.2f, new Random(9000 + (int)(centro.x * 10f) + (int)(centro.y * 100f)));
 
             Transform entrada = Vacio("Entrada", lugar, new Vector3(0f, 0f, zFrente + DistanciaEntrada), Quaternion.identity);
             puntosLibres.Add(entrada.position);
@@ -452,15 +455,8 @@ namespace MechaCyberpunk.Mundo.Editor
 
         private static void CrearPuestosCallejon(Transform manzana)
         {
-            // Puestos bajos del mercado negro a lo largo del callejón (x = -22 local), sin tapar la puerta del mercado.
-            Transform puestos = Vacio("PuestosCallejon", manzana, Vector3.zero, Quaternion.identity);
-            string[] colores = { "Letrero_Magenta", "Letrero_Cian", "Letrero_Naranja" };
-            float[] profundidades = { -33f, -29f, -9f, -5f };
-            for (int i = 0; i < profundidades.Length; i++)
-            {
-                Cubo("Puesto", puestos, new Vector3(-19.9f, AltoBanqueta + 0.6f, profundidades[i]), new Vector3(1.2f, 1.2f, 2f), colores[i % colores.Length]);
-            }
-            Cubo("Caja", puestos, new Vector3(-24.2f, AltoBanqueta + 0.5f, -8f), new Vector3(1.4f, 1f, 1.4f), "Mercado");
+            // Puestos del mercado negro a lo largo del callejón (T-080: puestos de tacos del kit), sin tapar la puerta del mercado.
+            VestirCalle.PuestosCallejon(manzana);
         }
 
         // ---------------------------------------------------------------- finales
@@ -501,11 +497,13 @@ namespace MechaCyberpunk.Mundo.Editor
                     {
                         continue;
                     }
-                    Vector2 tangente = new Vector2(-n.y, n.x);
                     foreach (float desplazamiento in DesplazamientosFarola)
                     {
-                        Vector2 posicion = c + n * (MitadManzana - 0.6f) + tangente * desplazamiento;
-                        CrearFarola(farolas, posicion, n);
+                        numeroFarola++;
+                        if (VestirCalle.Farola(farolas, numeroFarola, c, i, n, desplazamiento) == null)
+                        {
+                            numeroFarola--; // cayó junto a una entrada: sin poste
+                        }
                     }
                 }
             }
@@ -517,28 +515,16 @@ namespace MechaCyberpunk.Mundo.Editor
             return Mathf.Abs(destino.x) > MitadBarrioX - 1f || Mathf.Abs(destino.y) > MitadBarrioZ - 1f;
         }
 
-        private static void CrearFarola(Transform padre, Vector2 posicion, Vector2 haciaCalle)
+        // Los puestos de tacos del kit: 2 en la banqueta del bar (manzana 5) y 1 en la del clandestino (manzana 2).
+        private static void CrearPuestosTacos(Transform padre)
         {
-            numeroFarola++;
-            Transform farola = Vacio("Farola_" + numeroFarola, padre, new Vector3(posicion.x, AltoBanqueta, posicion.y), Quaternion.identity);
-            Cubo("Poste", farola, new Vector3(0f, AlturaFarola / 2f, 0f), new Vector3(0.2f, AlturaFarola, 0.2f), "Farola");
-            Vector3 hacia = new Vector3(haciaCalle.x, 0f, haciaCalle.y);
-            Cubo("Brazo", farola, hacia * 0.6f + Vector3.up * (AlturaFarola - 0.1f), new Vector3(Mathf.Abs(haciaCalle.x) > 0f ? 1.2f : 0.15f, 0.15f, Mathf.Abs(haciaCalle.y) > 0f ? 1.2f : 0.15f), "Farola", false);
-            Cubo("Lampara", farola, hacia * 1.2f + Vector3.up * (AlturaFarola - 0.25f), new Vector3(0.5f, 0.2f, 0.5f), "Lampara", false);
-
-            GameObject luz = new GameObject("Luz");
-            luz.transform.SetParent(farola, false);
-            luz.transform.localPosition = hacia * 1.2f + Vector3.up * (AlturaFarola - 0.6f);
-            Light componente = luz.AddComponent<Light>();
-            componente.type = LightType.Point;
-            componente.color = new Color(1f, 0.85f, 0.6f);
-            componente.range = 22f; // T-079: más luz para que el asfalto mojado la refleje
-            componente.intensity = 160f;
-            componente.shadows = LightShadows.None;
-            componente.enabled = false; // T-041 la prende de noche
+            Transform grupo = VestirCalle.GrupoPuestos(padre);
+            VestirCalle.PuestoBanqueta(grupo, CentrosManzana[4], new Vector2(0f, 1f), 20f, "Puesto_Tacos_Bar_1");
+            VestirCalle.PuestoBanqueta(grupo, CentrosManzana[4], new Vector2(0f, 1f), -20f, "Puesto_Tacos_Bar_2");
+            VestirCalle.PuestoBanqueta(grupo, CentrosManzana[1], new Vector2(0f, -1f), 20f, "Puesto_Tacos_Clandestino");
         }
 
-        // Botes en la banqueta y carros estacionados junto a la acera, lejos de puertas y del callejón.
+        // Basureros del kit en la banqueta y carros estacionados junto a la acera, lejos de puertas y del callejón.
         private static void CrearAmbientacion(Transform padre)
         {
             Transform grupo = Vacio("Ambientacion", padre, Vector3.zero, Quaternion.identity);
@@ -569,7 +555,10 @@ namespace MechaCyberpunk.Mundo.Editor
                         numero++;
                         if (tirada < 0.3)
                         {
-                            Cubo("Bote_" + numero, grupo, new Vector3(sobreBanqueta.x, AltoBanqueta + 0.5f, sobreBanqueta.y), new Vector3(0.7f, 1f, 0.7f), "Bote");
+                            if (!VestirCalle.EstaOcupado(sobreBanqueta, 1.1f))
+                            {
+                                VestirCalle.Basurero(grupo, numero, c, n, desplazamiento, new Random(5000 + numero));
+                            }
                         }
                         else if (tirada < 0.5)
                         {
