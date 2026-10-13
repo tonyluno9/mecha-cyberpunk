@@ -49,6 +49,8 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float AlturaMinima = 8f;
         private const float AlturaMaxima = 30f;
         private const float DistanciaEntrada = 1.5f;
+        private const float DistanciaCochera = 12f;
+        private const float DespejeCochera = 6f;
         private const float AnchoPuerta = 3f;
         private const float AltoPuerta = 3.2f;
         private const float GrosorFachada = 1f;
@@ -438,6 +440,14 @@ namespace MechaCyberpunk.Mundo.Editor
 
             Transform entrada = Vacio("Entrada", lugar, new Vector3(0f, 0f, zFrente + DistanciaEntrada), Quaternion.identity);
             puntosLibres.Add(entrada.position);
+            if (nombre == "Lugar_Casa")
+            {
+                // La cochera (T-078): el carro viejo se estaciona ahí; ni carros greybox ni botes a 8 m a su alrededor.
+                for (float dz = -DespejeCochera; dz <= DespejeCochera; dz += DespejeCochera)
+                {
+                    puntosLibres.Add(entrada.position + new Vector3(0f, 0f, DistanciaCochera + dz));
+                }
+            }
         }
 
         private static void CrearPuestosCallejon(Transform manzana)
@@ -591,7 +601,7 @@ namespace MechaCyberpunk.Mundo.Editor
             Transform grupo = Vacio("PuntosAparicion", padre, Vector3.zero, Quaternion.identity);
             Transform casa = padre.Find("Manzana_4/Lugar_Casa/Entrada");
             Transform clandestino = padre.Find("Manzana_2/Lugar_Clandestino/Entrada");
-            Vector3 cochera = casa.position + new Vector3(0f, 0f, 12f);
+            Vector3 cochera = casa.position + new Vector3(0f, 0f, DistanciaCochera);
             CrearPunto(grupo, "Casa_Puerta", casa.position, casa.rotation, ModoJugador.APie);
             CrearPunto(grupo, "Casa_Cochera", cochera, casa.rotation, ModoJugador.Carro);
             CrearPunto(grupo, "Clandestino_Puerta", clandestino.position, clandestino.rotation, ModoJugador.APie);

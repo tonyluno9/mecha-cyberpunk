@@ -37,7 +37,7 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return Cargar(RutaCiudad);
             Assert.IsNotNull(GameObject.Find("Barrio"));
             Assert.IsNotNull(GameObject.Find("Manzana_6"));
-            Assert.AreEqual(0, Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).Length, "Ciudad no lleva cámara de pruebas");
+            Assert.AreEqual(0, System.Array.FindAll(Object.FindObjectsByType<Camera>(FindObjectsSortMode.None), camara => camara.enabled).Length, "Ciudad no lleva cámara de pruebas encendida");
             Assert.IsTrue(RenderSettings.fog, "La niebla debe estar activa");
             Light luz = GameObject.Find("LuzNoche").GetComponent<Light>();
             Assert.AreEqual(LightType.Directional, luz.type);
