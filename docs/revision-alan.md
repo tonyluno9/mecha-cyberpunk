@@ -59,5 +59,12 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Verificado automáticamente: todos los criterios medibles (EditMode 262/262, PlayMode 210/210; capturas T-077-1/2; carro a 40 m con W 8 s en los 6 extremos sin salir).
 - Para ti: de noche, en el extremo norte y el este: que el retén se entienda como cierre y no como muro de videojuego; la torreta llama la atención sin cegar; el jersey y la reja salen oscuros (un poco más de luz sería un extra).
 
+### T-078 El carro en el barrio (cierre de H3, lado de Alan)
+- Verificado automáticamente: EditMode 262/262, PlayMode 214/214; carro único junto a la cochera en Ciudad y Pruebas_Alan; recorrido casa a clandestino en 14.1 s con giro de 130°; 165 s de manejo en vivo sin errores; capturas T-078-1/2/3.
+- No cumple: `CreadorTodo.Crear` dos veces deja la misma lista de archivos pero no los mismos bytes (p. ej. `_Color` de Barrio_Reja.mat cambia entre corridas); es el ruido de creadores viejos, pendiente de arreglar.
+- Para ti: Pruebas_Alan, Play: de la puerta de la casa al carro, E, W y A/D hasta el clandestino, C cambia cámara, bajar con E. Que la vuelta y el manejo se sientan naturales. La captura 3 no enmarca la puerta del clandestino.
+- **Decisión tuya:** el barrio se cruza en unos 20 s con el carro a 16 m/s; ciudad.md pide "minuto y medio". Opciones: agrandar el barrio o bajar la velocidad máxima.
+- T-061 (subir al carro, de Tony) se desbloquea cuando alan/fase-2 llegue a main; teclas del carro y regla `PuedeBajar` en el encabezado de `CarroViejo.cs`.
+
 ## Bloqueos y preguntas
 - Nada todavía.

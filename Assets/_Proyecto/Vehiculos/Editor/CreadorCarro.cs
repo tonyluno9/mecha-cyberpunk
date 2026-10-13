@@ -1,8 +1,10 @@
 using System.IO;
 using MechaCyberpunk.Vehiculos.Carro;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.Vehiculos.Editor
 {
@@ -40,6 +42,18 @@ namespace MechaCyberpunk.Vehiculos.Editor
         private const float PuntoSubidaX = 1.9f;
         private const float PlanoCercano = 0.1f;
 
+        // Colocación en las escenas (T-078). La Entrada de la casa está a 1.5 m del borde de la banqueta, el carro queda a 1.2 m del borde.
+        private const string NombreCarro = "CarroViejo";
+        private const string NombreCamaraLibre = "CamaraLibre";
+        private const string PuntoCochera = "Casa_Cochera";
+        private const string PuntoPuerta = "Casa_Puerta";
+        private const float BordeBanqueta = 1.5f;
+        private const float SeparacionBorde = 1.2f;
+        private const float AlturaColocado = 0.1f;
+        private const float AlturaCamara = 0.05f;
+        private static readonly string[] RutasEscenas = { "Assets/_Proyecto/Escenas/Ciudad.unity", "Assets/_Proyecto/Escenas/Pruebas_Alan.unity" };
+        private const float DistanciaAlCarro = BordeBanqueta + SeparacionBorde + Ancho / 2f;
+
         [MenuItem("Mecha Cyberpunk/Crear carro (T-074)")]
         public static void Crear()
         {
@@ -59,6 +73,69 @@ namespace MechaCyberpunk.Vehiculos.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[Vehiculos] T-074 creada.");
+        }
+
+        /// <summary>
+        /// T-078: estaciona el carro viejo en Ciudad.unity y Pruebas_Alan.unity, en la calle junto a Casa_Cochera, mirando al norte,
+        /// con su costado del conductor (PuntoSubida) del lado de la banqueta de la casa. En Pruebas_Alan, la cámara libre
+        /// empieza en la puerta de la casa mirando al carro. Se puede correr varias veces: reemplaza el carro anterior.
+        /// </summary>
+        public static void ColocarEnEscenas()
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab);
+            if (prefab == null)
+            {
+                Crear();
+                prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab);
+            }
+            foreach (string ruta in RutasEscenas)
+            {
+                Scene escena = EditorSceneManager.OpenScene(ruta, OpenSceneMode.Single);
+                foreach (GameObject raiz in escena.GetRootGameObjects())
+                {
+                    if (raiz.name == NombreCarro)
+                    {
+                        Object.DestroyImmediate(raiz);
+                    }
+                }
+                GameObject cochera = GameObject.Find(PuntoCochera);
+                GameObject puerta = GameObject.Find(PuntoPuerta);
+                if (cochera == null || puerta == null)
+                {
+                    throw new System.InvalidOperationException("Falta " + PuntoCochera + " o " + PuntoPuerta + " en " + ruta + "; corre CreadorBarrio antes.");
+                }
+                Vector3 haciaCalle = cochera.transform.rotation * Vector3.forward;
+                Vector3 posicion = cochera.transform.position + haciaCalle * DistanciaAlCarro + Vector3.up * AlturaColocado;
+                GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(prefab, escena);
+                carro.transform.SetPositionAndRotation(posicion, Quaternion.identity);
+
+                if (ruta.EndsWith("Pruebas_Alan.unity"))
+                {
+                    ColocarCamara(puerta.transform.position, posicion);
+                }
+                EditorSceneManager.MarkSceneDirty(escena);
+                EditorSceneManager.SaveScene(escena);
+            }
+            Debug.Log("[Vehiculos] T-078: carro viejo estacionado frente a la casa.");
+        }
+
+        private static void ColocarCamara(Vector3 origen, Vector3 carro)
+        {
+            Transform camara = null;
+            foreach (Transform t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (t.name == NombreCamaraLibre && t.parent == null)
+                {
+                    camara = t;
+                }
+            }
+            if (camara == null)
+            {
+                throw new System.InvalidOperationException("Pruebas_Alan no tiene " + NombreCamaraLibre + ".");
+            }
+            Vector3 hacia = carro - origen;
+            hacia.y = 0f;
+            camara.SetPositionAndRotation(origen + Vector3.up * AlturaCamara, Quaternion.LookRotation(hacia, Vector3.up));
         }
 
         private static void AsegurarCarpeta(string ruta)
