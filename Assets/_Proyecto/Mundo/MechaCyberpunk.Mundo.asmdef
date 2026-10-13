@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Mundo",
     "rootNamespace": "MechaCyberpunk.Mundo",
-    "references": ["MechaCyberpunk.Core", "Unity.InputSystem", "UnityEngine.UI"],
+    "references": ["MechaCyberpunk.Core", "Unity.InputSystem", "UnityEngine.UI", "Unity.RenderPipelines.Core.Runtime"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

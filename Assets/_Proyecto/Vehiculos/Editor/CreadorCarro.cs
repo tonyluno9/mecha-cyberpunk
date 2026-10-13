@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.Vehiculos.Editor
@@ -289,6 +290,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Camera camara = camaraObjeto.GetComponent<Camera>();
             camara.nearClipPlane = PlanoCercano;
             camara.enabled = false;
+            camara.GetUniversalAdditionalCameraData().renderPostProcessing = true;
             AudioListener oyente = camaraObjeto.AddComponent<AudioListener>();
             oyente.enabled = false;
             SerializedObject soCamara = new SerializedObject(camaraCarro);

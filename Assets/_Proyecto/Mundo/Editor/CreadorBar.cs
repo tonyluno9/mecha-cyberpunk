@@ -37,9 +37,9 @@ namespace MechaCyberpunk.Mundo.Editor
             Material madera = Mat("Madera", new Color(0.3f, 0.17f, 0.09f), 0.3f, default);
             Material cuero = Mat("Cuero", new Color(0.45f, 0.08f, 0.18f), 0.3f, default);
             Material metal = Mat("Metal", new Color(0.18f, 0.19f, 0.22f), 0.5f, default);
-            Material neonCian = Mat("NeonCian", new Color(0.1f, 0.8f, 0.9f), 0.2f, new Color(0.1f, 1.2f, 1.4f));
-            Material neonMagenta = Mat("NeonMagenta", new Color(0.9f, 0.1f, 0.6f), 0.2f, new Color(1.4f, 0.1f, 0.9f));
-            Material neonNaranja = Mat("NeonNaranja", new Color(0.95f, 0.5f, 0.1f), 0.2f, new Color(1.4f, 0.6f, 0.1f));
+            Material neonCian = Mat("NeonCian", new Color(0.1f, 0.8f, 0.9f), 0.2f, new Color(0.3f, 2.8f, 3.2f));
+            Material neonMagenta = Mat("NeonMagenta", new Color(0.9f, 0.1f, 0.6f), 0.2f, new Color(3.2f, 0.2f, 2f));
+            Material neonNaranja = Mat("NeonNaranja", new Color(0.95f, 0.5f, 0.1f), 0.2f, new Color(3.2f, 1.4f, 0.15f));
             Material pantalla = Mat("Pantalla", new Color(0.05f, 0.3f, 0.35f), 0.4f, new Color(0.15f, 0.9f, 1.0f));
 
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefabBarrio);

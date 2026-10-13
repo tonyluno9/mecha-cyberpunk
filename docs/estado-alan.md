@@ -10,7 +10,7 @@ A-F1 (T-020, T-040 a T-045) está hecha y revisada en alan/fase-1; espera la apr
 | T-076 Arte de Blender a Unity: FBX, materiales y prefabs | hecha (sin revisar) |
 | T-077 Finales sólidos y retenes | hecha (sin revisar) |
 | T-078 El carro en el barrio, cierre de H3 | hecha (sin revisar) |
-| T-079 Noche cyberpunk: posproceso y asfalto mojado | pendiente (depende de T-076) |
+| T-079 Noche cyberpunk: posproceso y asfalto mojado | hecha (sin revisar) |
 | T-080 La calle vestida con el kit urbano | pendiente (depende de T-076 y T-079) |
 | T-081 Fachadas con detalle | pendiente (depende de T-076 y T-079) |
 | T-082 Letreros de neón | pendiente (depende de T-076 y T-081) |

@@ -66,5 +66,13 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - **Decisión tuya:** el barrio se cruza en unos 20 s con el carro a 16 m/s; ciudad.md pide "minuto y medio". Opciones: agrandar el barrio o bajar la velocidad máxima.
 - T-061 (subir al carro, de Tony) se desbloquea cuando alan/fase-2 llegue a main; teclas del carro y regla `PuedeBajar` en el encabezado de `CarroViejo.cs`.
 
+## Pedido a Tony (T-079, propuesta D-alan-19)
+- Prender `renderPostProcessing` (UniversalAdditionalCameraData) en la cámara de MechaJugador para que el jugador vea el bloom y el color de noche.
+
+### T-079 Noche cyberpunk: posproceso, neón con bloom, asfalto mojado
+- Verificado automáticamente: EditMode 269/269 y PlayMode 220/220 en dos corridas seguidas; luminancia V1 22:00 = 0.362 (+79 % sobre la base 0.203), 0.00 % saturado; capturas T-079-1..5; 2 min a x30 sin errores. Ronda 1: se perdía el keyword _EMISSION tras EditMode; arreglado con CreadorAmbiente.AsegurarEmision.
+- Para ti: Pruebas_Alan, Play, `VistasReferencia.Ir(1, 22)`: halo del neón sin cegar, asfalto que se sienta mojado, fachadas legibles. `Ir(1, 13)`: el día no se ve gris. Flojos: la vista aérea V4 (0.12) sigue algo plana; el día (0.25) es más oscuro que la noche (0.36); los charcos son manchas suaves, no reflejos nítidos.
+- Pedido a Tony: prender `renderPostProcessing` en la cámara de MechaJugador y de JugadorAPie. Clandestino.unity no recibe este posproceso.
+
 ## Bloqueos y preguntas
 - Nada todavía.

@@ -101,7 +101,7 @@ namespace MechaCyberpunk.Mundo.Editor
         private static void CrearMateriales()
         {
             materiales.Clear();
-            Mat("Asfalto", new Color(0.07f, 0.075f, 0.085f), 0.35f);
+            Mat("Asfalto", new Color(0.04f, 0.045f, 0.055f), 0.85f); // mojado: oscuro y liso (T-079)
             Mat("Banqueta", new Color(0.36f, 0.37f, 0.4f), 0.1f);
             Mat("Marca", new Color(0.8f, 0.75f, 0.35f), 0.2f);
             Mat("Edif_A", new Color(0.22f, 0.24f, 0.29f), 0.1f);
@@ -118,9 +118,9 @@ namespace MechaCyberpunk.Mundo.Editor
             Mat("Casino", new Color(0.55f, 0.42f, 0.12f), 0.3f);
             Mat("Mercado", new Color(0.55f, 0.3f, 0.1f), 0f);
             Mat("PanelPuerta", new Color(0.05f, 0.05f, 0.06f), 0.2f);
-            Mat("Letrero_Magenta", new Color(0.9f, 0.1f, 0.6f), 0.2f, new Color(0.5f, 0.03f, 0.3f));
-            Mat("Letrero_Cian", new Color(0.1f, 0.8f, 0.9f), 0.2f, new Color(0.03f, 0.35f, 0.4f));
-            Mat("Letrero_Naranja", new Color(0.95f, 0.5f, 0.1f), 0.2f, new Color(0.45f, 0.18f, 0.02f));
+            Mat("Letrero_Magenta", new Color(0.9f, 0.1f, 0.6f), 0.2f, new Color(3.2f, 0.2f, 1.9f)); // emisión HDR para el bloom (T-079)
+            Mat("Letrero_Cian", new Color(0.1f, 0.8f, 0.9f), 0.2f, new Color(0.2f, 2.6f, 3f));
+            Mat("Letrero_Naranja", new Color(0.95f, 0.5f, 0.1f), 0.2f, new Color(3f, 1.2f, 0.1f));
             Mat("Concreto", new Color(0.5f, 0.5f, 0.5f), 0.1f);
             Mat("ConcretoOscuro", new Color(0.3f, 0.3f, 0.32f), 0.1f);
             Mat("Valla", new Color(0.9f, 0.45f, 0.1f), 0.1f);
@@ -532,8 +532,8 @@ namespace MechaCyberpunk.Mundo.Editor
             Light componente = luz.AddComponent<Light>();
             componente.type = LightType.Point;
             componente.color = new Color(1f, 0.85f, 0.6f);
-            componente.range = 16f;
-            componente.intensity = 40f;
+            componente.range = 22f; // T-079: más luz para que el asfalto mojado la refleje
+            componente.intensity = 160f;
             componente.shadows = LightShadows.None;
             componente.enabled = false; // T-041 la prende de noche
         }

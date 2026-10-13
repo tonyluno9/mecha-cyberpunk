@@ -244,7 +244,13 @@ namespace MechaCyberpunk.Mundo.Pruebas
 
         private void AlternarVuelo()
         {
-            volando = !volando;
+            PonerVuelo(!volando);
+        }
+
+        /// <summary>Prende o apaga el vuelo sin colisiones (lo usan las vistas de referencia para la aérea).</summary>
+        public void PonerVuelo(bool vuela)
+        {
+            volando = vuela;
             personaje.enabled = !volando;
             velocidadVertical = 0f;
         }
@@ -252,11 +258,17 @@ namespace MechaCyberpunk.Mundo.Pruebas
         /// <summary>Teletransporta sin atravesar nada: apaga el CharacterController, mueve y lo vuelve a prender (si no vuela).</summary>
         public void Colocar(Pose pose)
         {
+            Colocar(pose, 0f);
+        }
+
+        /// <summary>Igual que <see cref="Colocar(Pose)"/> pero además inclina la mirada (° hacia abajo): para las vistas de referencia.</summary>
+        public void Colocar(Pose pose, float inclinacionGrados)
+        {
             personaje.enabled = false;
             transform.SetPositionAndRotation(pose.position, Quaternion.Euler(0f, pose.rotation.eulerAngles.y, 0f));
             yaw = pose.rotation.eulerAngles.y;
-            inclinacion = 0f;
-            camara.transform.localRotation = Quaternion.identity;
+            inclinacion = inclinacionGrados;
+            camara.transform.localRotation = Quaternion.Euler(inclinacionGrados, 0f, 0f);
             velocidadVertical = 0f;
             personaje.enabled = !volando;
         }
