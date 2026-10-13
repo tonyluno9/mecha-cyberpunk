@@ -17,7 +17,7 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 | T-065 Encendido del mecha en 3 pasos | T-064 | hecha (sin revisar) |
 | T-066 Llamar al mecha, zonas y regreso | T-062, T-064 | hecha (sin revisar) |
 | T-067 Calor por usar el mecha en la calle | T-062, T-066 | pendiente |
-| T-068 Rival que no te deja perder y rival del tutorial | nada nuevo | pendiente |
+| T-068 Rival que no te deja perder y rival del tutorial | nada nuevo | hecha (sin revisar) |
 | T-069 Pandilla con turnos de ataque | T-068 | pendiente |
 | T-070 Presentador y perfil del jugador | T-062, T-068 | pendiente |
 | T-071 Director de la emboscada | T-064, T-065, T-066, T-069 | pendiente |
