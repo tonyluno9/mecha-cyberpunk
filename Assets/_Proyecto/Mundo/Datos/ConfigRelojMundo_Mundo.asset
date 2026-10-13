@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e89eff960452fd4f9d342ba2f6bbcda, type: 3}
+  m_Name: ConfigRelojMundo_Mundo
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Datos.ConfigRelojMundo
+  horaAmanecer: 7
+  horaAnochecer: 19
+  minutosRealesDia: 8
+  minutosRealesNoche: 12
+  horaInicial: 21
+  diaInicial: 1
