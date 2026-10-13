@@ -8,8 +8,8 @@ Fase A-F1, rama de integración: alan/fase-1.
 | T-040 Barrio greybox | hecha (sin revisar) |
 | T-041 Reloj y día y noche | hecha (sin revisar) |
 | T-042 Locales, puertas y horarios | hecha (sin revisar) |
-| T-043 Bar interior | pendiente |
+| T-043 Bar interior | hecha (sin revisar) |
 | T-044 Pelea en Clandestino | pendiente |
 | T-060, T-061 | bloqueada (dependen de Tony) |
 
-Qué sigue: T-043 bar interior.
+Qué sigue: T-044 pelea en Clandestino.
