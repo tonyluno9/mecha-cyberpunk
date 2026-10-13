@@ -102,6 +102,7 @@ namespace MechaCyberpunk.Mundo.Editor
                 PrepararEscena(ruta);
             }
             AssetDatabase.SaveAssets();
+            AsegurarEmision();
             Debug.Log("[Mundo] T-079 creada.");
         }
 
@@ -162,7 +163,7 @@ namespace MechaCyberpunk.Mundo.Editor
             if (Agregar(perfil, out Bloom bloom))
             {
                 bloom.threshold.Override(noche ? 1f : 1.1f);
-                bloom.intensity.Override(noche ? 1.4f : 0.25f);
+                bloom.intensity.Override(noche ? 2f : 0.3f);
                 bloom.scatter.Override(noche ? 0.7f : 0.5f);
                 bloom.tint.Override(Color.white);
             }
@@ -172,7 +173,7 @@ namespace MechaCyberpunk.Mundo.Editor
             }
             if (Agregar(perfil, out ColorAdjustments color))
             {
-                color.postExposure.Override(noche ? 1.7f : 1.5f);
+                color.postExposure.Override(noche ? 2.2f : 2f);
                 color.contrast.Override(noche ? 15f : 15f);
                 color.saturation.Override(noche ? 25f : 12f);
                 color.colorFilter.Override(noche ? new Color(0.82f, 0.9f, 1f) : new Color(1f, 0.98f, 0.94f));
@@ -226,6 +227,25 @@ namespace MechaCyberpunk.Mundo.Editor
                 }
             }
             PrefabUtility.UnloadPrefabContents(raiz);
+        }
+
+        // El keyword _EMISSION se pierde al reimportar si la bandera de GI es None (URP la vuelve a calcular): por eso emisión en tiempo real, y se pone al final.
+        private static void AsegurarEmision()
+        {
+            foreach (string guia in AssetDatabase.FindAssets("t:Material", new[] { RutaMateriales }))
+            {
+                string ruta = AssetDatabase.GUIDToAssetPath(guia);
+                string nombre = Path.GetFileNameWithoutExtension(ruta);
+                if (!nombre.StartsWith("Barrio_Letrero_") && !nombre.StartsWith("Bar_Neon"))
+                {
+                    continue;
+                }
+                Material material = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+                material.EnableKeyword("_EMISSION");
+                material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                EditorUtility.SetDirty(material);
+            }
+            AssetDatabase.SaveAssets();
         }
 
         // ---------------------------------------------------------------- charcos

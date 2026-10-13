@@ -33,7 +33,7 @@ namespace MechaCyberpunk.Mundo.Datos
         [Tooltip("Color del ambiente según la hora del día.")]
         [SerializeField] private Gradient colorAmbiente = Crear(
             (0f, new Color(0.27f, 0.29f, 0.58f)), (0.27f, new Color(0.3f, 0.3f, 0.6f)), (0.31f, new Color(0.4f, 0.32f, 0.4f)),
-            (0.4f, new Color(0.5f, 0.54f, 0.6f)), (0.54f, new Color(0.55f, 0.58f, 0.64f)), (0.75f, new Color(0.5f, 0.45f, 0.5f)),
+            (0.4f, new Color(0.65f, 0.7f, 0.78f)), (0.54f, new Color(0.7f, 0.74f, 0.82f)), (0.75f, new Color(0.5f, 0.45f, 0.5f)),
             (0.82f, new Color(0.3f, 0.25f, 0.5f)), (0.88f, new Color(0.27f, 0.29f, 0.58f)));
 
         [Tooltip("Color de la niebla según la hora del día.")]
