@@ -1,0 +1,196 @@
+using System.IO;
+using MechaCyberpunk.Vehiculos.Carro;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+namespace MechaCyberpunk.Vehiculos.Editor
+{
+    /// <summary>
+    /// Crea los assets del carro viejo (T-074): config, controles, materiales greybox y CarroViejo.prefab.
+    /// Se puede correr varias veces: el config que ya existe no se pisa.
+    /// </summary>
+    public static class CreadorCarro
+    {
+        private const string RutaBase = "Assets/_Proyecto/Vehiculos";
+        private const string RutaConfig = RutaBase + "/Datos/ConfigCarro_Viejo.asset";
+        private const string RutaControles = RutaBase + "/Carro/ControlesCarro.inputactions";
+        private const string RutaPrefab = RutaBase + "/Prefabs/CarroViejo.prefab";
+        private const string RutaMateriales = RutaBase + "/Materiales";
+        private const string RutaMaterialFisico = RutaMateriales + "/Carro_SinFriccion.asset";
+
+        private const float Largo = 4.2f;
+        private const float Ancho = 1.8f;
+        private const float AlturaPiso = 0.45f;
+        private const float AlturaCarroceria = 0.55f;
+        private const float AlturaCabina = 0.45f;
+        private const float AnchoCabina = 1.5f;
+        private const float LargoCabina = 2.2f;
+        private const float DesfaseCabinaZ = -0.2f;
+        private const float RadioRueda = 0.35f;
+        private const float AnchoRueda = 0.24f;
+        private const float ViaMitad = 0.78f;
+        private const float EjeDelanteroZ = 1.35f;
+        private const float EjeTraseroZ = -1.35f;
+
+        [MenuItem("Mecha Cyberpunk/Crear carro (T-074)")]
+        public static void Crear()
+        {
+            AsegurarCarpeta(RutaBase + "/Datos");
+            AsegurarCarpeta(RutaBase + "/Carro");
+            AsegurarCarpeta(RutaBase + "/Prefabs");
+            AsegurarCarpeta(RutaMateriales);
+            ConfigCarro config = CrearConfig();
+            InputActionAsset controles = CrearControles();
+            Material carroceria = Material("Carro_Carroceria", new Color(0.45f, 0.18f, 0.12f), 0.3f);
+            Material cabina = Material("Carro_Cabina", new Color(0.2f, 0.25f, 0.3f), 0.5f);
+            Material rueda = Material("Carro_Rueda", new Color(0.05f, 0.05f, 0.06f), 0.1f);
+            PhysicsMaterial sinFriccion = CrearMaterialFisico();
+            AssetDatabase.SaveAssets();
+            CrearPrefab(config, controles, carroceria, cabina, rueda, sinFriccion);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[Vehiculos] T-074 creada.");
+        }
+
+        private static void AsegurarCarpeta(string ruta)
+        {
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta);
+            }
+        }
+
+        private static ConfigCarro CrearConfig()
+        {
+            ConfigCarro config = AssetDatabase.LoadAssetAtPath<ConfigCarro>(RutaConfig);
+            if (config == null)
+            {
+                config = ScriptableObject.CreateInstance<ConfigCarro>();
+                AssetDatabase.CreateAsset(config, RutaConfig);
+            }
+            return config;
+        }
+
+        private static InputActionAsset CrearControles()
+        {
+            InputActionAsset asset = ScriptableObject.CreateInstance<InputActionAsset>();
+            asset.name = "ControlesCarro";
+            InputActionMap mapa = asset.AddActionMap("Carro");
+            InputAction acelerar = mapa.AddAction("Acelerar", InputActionType.Button);
+            acelerar.AddBinding("<Keyboard>/w");
+            acelerar.AddBinding("<Keyboard>/upArrow");
+            InputAction frenar = mapa.AddAction("Frenar", InputActionType.Button);
+            frenar.AddBinding("<Keyboard>/s");
+            frenar.AddBinding("<Keyboard>/downArrow");
+            InputAction girar = mapa.AddAction("Girar", InputActionType.Value, expectedControlLayout: "Axis");
+            girar.AddCompositeBinding("1DAxis")
+                .With("Negative", "<Keyboard>/a")
+                .With("Positive", "<Keyboard>/d");
+            girar.AddCompositeBinding("1DAxis")
+                .With("Negative", "<Keyboard>/leftArrow")
+                .With("Positive", "<Keyboard>/rightArrow");
+            mapa.AddAction("FrenoMano", InputActionType.Button, "<Keyboard>/space");
+            mapa.AddAction("CambiarCamara", InputActionType.Button, "<Keyboard>/c");
+            mapa.AddAction("Mirar", InputActionType.Value, "<Mouse>/delta", expectedControlLayout: "Vector2");
+            File.WriteAllText(RutaControles, asset.ToJson());
+            Object.DestroyImmediate(asset);
+            AssetDatabase.ImportAsset(RutaControles);
+            return AssetDatabase.LoadAssetAtPath<InputActionAsset>(RutaControles);
+        }
+
+        private static Material Material(string nombre, Color color, float suavidad)
+        {
+            string ruta = RutaMateriales + "/" + nombre + ".mat";
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+            if (material == null)
+            {
+                material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                AssetDatabase.CreateAsset(material, ruta);
+            }
+            material.SetColor("_BaseColor", color);
+            material.SetFloat("_Smoothness", suavidad);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        private static PhysicsMaterial CrearMaterialFisico()
+        {
+            PhysicsMaterial material = AssetDatabase.LoadAssetAtPath<PhysicsMaterial>(RutaMaterialFisico);
+            if (material == null)
+            {
+                material = new PhysicsMaterial("Carro_SinFriccion");
+                AssetDatabase.CreateAsset(material, RutaMaterialFisico);
+            }
+            material.dynamicFriction = 0f;
+            material.staticFriction = 0f;
+            material.frictionCombine = PhysicsMaterialCombine.Minimum;
+            material.bounciness = 0f;
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        private static GameObject Caja(string nombre, Transform padre, Vector3 centro, Vector3 tamano, Material material,
+            PhysicsMaterial fisico)
+        {
+            GameObject caja = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            caja.name = nombre;
+            caja.transform.SetParent(padre, false);
+            caja.transform.localPosition = centro;
+            caja.transform.localScale = tamano;
+            caja.GetComponent<Renderer>().sharedMaterial = material;
+            caja.GetComponent<BoxCollider>().sharedMaterial = fisico;
+            return caja;
+        }
+
+        private static Transform CrearRueda(string nombre, Transform padre, float x, float z, Material material)
+        {
+            GameObject eje = new GameObject(nombre);
+            eje.transform.SetParent(padre, false);
+            eje.transform.localPosition = new Vector3(x, RadioRueda, z);
+
+            GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            visual.name = "Visual";
+            Object.DestroyImmediate(visual.GetComponent<Collider>());
+            visual.transform.SetParent(eje.transform, false);
+            visual.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            // El cilindro de Unity mide 2 m de alto y 1 m de diámetro.
+            visual.transform.localScale = new Vector3(RadioRueda * 2f, AnchoRueda / 2f, RadioRueda * 2f);
+            visual.GetComponent<Renderer>().sharedMaterial = material;
+            return eje.transform;
+        }
+
+        private static void CrearPrefab(ConfigCarro config, InputActionAsset controles, Material carroceria, Material cabina,
+            Material rueda, PhysicsMaterial fisico)
+        {
+            GameObject raiz = new GameObject("CarroViejo");
+            Rigidbody cuerpo = raiz.AddComponent<Rigidbody>();
+            cuerpo.mass = config.Masa;
+            cuerpo.interpolation = RigidbodyInterpolation.Interpolate;
+            cuerpo.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
+            Caja("Carroceria", raiz.transform, new Vector3(0f, AlturaPiso + AlturaCarroceria / 2f, 0f),
+                new Vector3(Ancho, AlturaCarroceria, Largo), carroceria, fisico);
+            Caja("Cabina", raiz.transform, new Vector3(0f, AlturaPiso + AlturaCarroceria + AlturaCabina / 2f, DesfaseCabinaZ),
+                new Vector3(AnchoCabina, AlturaCabina, LargoCabina), cabina, fisico);
+
+            Transform di = CrearRueda("Rueda_DI", raiz.transform, -ViaMitad, EjeDelanteroZ, rueda);
+            Transform dd = CrearRueda("Rueda_DD", raiz.transform, ViaMitad, EjeDelanteroZ, rueda);
+            Transform ti = CrearRueda("Rueda_TI", raiz.transform, -ViaMitad, EjeTraseroZ, rueda);
+            Transform td = CrearRueda("Rueda_TD", raiz.transform, ViaMitad, EjeTraseroZ, rueda);
+
+            CarroViejo carro = raiz.AddComponent<CarroViejo>();
+            SerializedObject so = new SerializedObject(carro);
+            so.FindProperty("config").objectReferenceValue = config;
+            so.FindProperty("controles").objectReferenceValue = controles;
+            so.FindProperty("ruedaDelanteraIzquierda").objectReferenceValue = di;
+            so.FindProperty("ruedaDelanteraDerecha").objectReferenceValue = dd;
+            so.FindProperty("ruedaTraseraIzquierda").objectReferenceValue = ti;
+            so.FindProperty("ruedaTraseraDerecha").objectReferenceValue = td;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+            Object.DestroyImmediate(raiz);
+        }
+    }
+}
