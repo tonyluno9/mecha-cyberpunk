@@ -6,7 +6,7 @@ A-F1 (T-020, T-040 a T-045) está hecha y revisada en alan/fase-1; espera la apr
 | Tarea | Estado |
 | --- | --- |
 | T-074 Carro viejo: física y manejo | hecha (sin revisar) |
-| T-075 Subir y bajar del carro, y sus cámaras | pendiente (depende de T-074) |
+| T-075 Subir y bajar del carro, y sus cámaras | hecha (sin revisar) |
 | T-076 Arte de Blender a Unity: FBX, materiales y prefabs | hecha (sin revisar) |
 | T-077 Finales sólidos y retenes | pendiente (depende de T-074) |
 | T-078 El carro en el barrio, cierre de H3 | pendiente (depende de T-075 y T-077) |
