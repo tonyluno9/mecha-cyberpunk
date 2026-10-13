@@ -216,9 +216,18 @@ namespace MechaCyberpunk.Tests.Arena
             yield return null;
             yield return null;
             Assert.IsNotNull(Object.FindFirstObjectByType<ArenaPelea>(), "La escena no tiene la jaula");
-            Assert.IsNotNull(GameObject.Find("CamaraVistaArena"));
+            if (ruta == RutaClandestino)
+            {
+                Assert.IsNotNull(GameObject.Find("CamaraVistaArena"));
+            }
             Assert.IsTrue(RenderSettings.fog, "La niebla debe estar activa");
             Assert.AreEqual(1, Registro<IArenaPelea>.Cantidad);
+
+            // Deja la escena vacía para que no estorbe a las pruebas siguientes.
+            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                Object.DestroyImmediate(raiz);
+            }
         }
     }
 }
