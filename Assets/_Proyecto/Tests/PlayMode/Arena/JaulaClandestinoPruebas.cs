@@ -218,7 +218,8 @@ namespace MechaCyberpunk.Tests.Arena
             Assert.IsNotNull(Object.FindFirstObjectByType<ArenaPelea>(), "La escena no tiene la jaula");
             if (ruta == RutaClandestino)
             {
-                Assert.IsNotNull(GameObject.Find("CamaraVistaArena"));
+                Assert.IsNull(GameObject.Find("CamaraVistaArena"), "T-044: la cámara es la de la cabina");
+                Assert.AreEqual(1, Camera.allCameras.Length, "Debe haber una sola cámara activa (la de la cabina)");
             }
             Assert.IsTrue(RenderSettings.fog, "La niebla debe estar activa");
             Assert.AreEqual(1, Registro<IArenaPelea>.Cantidad);
