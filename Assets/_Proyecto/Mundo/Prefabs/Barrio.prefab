@@ -1710,6 +1710,7 @@ GameObject:
   - component: {fileID: 2843463069433038091}
   - component: {fileID: 635469844004822433}
   - component: {fileID: 6527092822541493715}
+  - component: {fileID: 7977547369329120866}
   m_Layer: 0
   m_Name: Aviso
   m_TagString: Untagged
@@ -1789,6 +1790,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7977547369329120866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149853999789481282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 6527092822541493715}
 --- !u!1 &165477939148386947
 GameObject:
   m_ObjectHideFlags: 0
@@ -1910,6 +1926,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7528469969926825264}
+  - component: {fileID: 6350423365089150312}
   m_Layer: 0
   m_Name: Farola_46
   m_TagString: Untagged
@@ -1936,6 +1953,21 @@ Transform:
   - {fileID: 1013797845006883616}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6350423365089150312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166678238931901016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 3896975983526278797}
+  renderers:
+  - {fileID: 1459601369140872928}
 --- !u!1 &177471928981670809
 GameObject:
   m_ObjectHideFlags: 0
@@ -2239,6 +2271,7 @@ GameObject:
   - component: {fileID: 4279835114988033944}
   - component: {fileID: 4409204750345961467}
   - component: {fileID: 1556353807710414006}
+  - component: {fileID: 439149467376754134}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -2318,6 +2351,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &439149467376754134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235906800896842243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 1556353807710414006}
 --- !u!1 &258338102956549583
 GameObject:
   m_ObjectHideFlags: 0
@@ -3404,6 +3452,7 @@ GameObject:
   - component: {fileID: 1684644095035683620}
   - component: {fileID: 9223145687600473991}
   - component: {fileID: 7679518945057024303}
+  - component: {fileID: 296662968071661118}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -3483,6 +3532,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &296662968071661118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499918109038222783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7679518945057024303}
 --- !u!1 &502239817307475428
 GameObject:
   m_ObjectHideFlags: 0
@@ -3898,6 +3962,7 @@ GameObject:
   - component: {fileID: 1056130845297819022}
   - component: {fileID: 7609747815940549185}
   - component: {fileID: 5232101561856479094}
+  - component: {fileID: 3464549993965322068}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -3977,6 +4042,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3464549993965322068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541021453090892691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 5232101561856479094}
 --- !u!1 &550886798275607051
 GameObject:
   m_ObjectHideFlags: 0
@@ -3986,6 +4066,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2212277022431282916}
+  - component: {fileID: 242980818668099018}
   m_Layer: 0
   m_Name: Farola_13
   m_TagString: Untagged
@@ -4012,6 +4093,21 @@ Transform:
   - {fileID: 7933395060858034833}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &242980818668099018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550886798275607051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4636336988792612521}
+  renderers:
+  - {fileID: 2297713401431065945}
 --- !u!1 &561913046168561726
 GameObject:
   m_ObjectHideFlags: 0
@@ -6105,6 +6201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2873279248775228607}
+  - component: {fileID: 3639033346321457268}
   m_Layer: 0
   m_Name: Farola_22
   m_TagString: Untagged
@@ -6131,6 +6228,21 @@ Transform:
   - {fileID: 2416198664317336455}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3639033346321457268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821402939719497955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 7911766368064889080}
+  renderers:
+  - {fileID: 6856367268034909248}
 --- !u!1 &825589512078353379
 GameObject:
   m_ObjectHideFlags: 0
@@ -6412,6 +6524,7 @@ GameObject:
   - component: {fileID: 8610034991191959435}
   - component: {fileID: 3550261683816604194}
   - component: {fileID: 7751949750506001855}
+  - component: {fileID: 4462022695408478507}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -6491,6 +6604,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4462022695408478507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845375038022367744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7751949750506001855}
 --- !u!1 &856261370434146744
 GameObject:
   m_ObjectHideFlags: 0
@@ -6502,6 +6630,7 @@ GameObject:
   - component: {fileID: 1816870554722226856}
   - component: {fileID: 3027882235420751408}
   - component: {fileID: 7525650328800162861}
+  - component: {fileID: 7721640910399957673}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -6581,6 +6710,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7721640910399957673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856261370434146744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7525650328800162861}
 --- !u!1 &859147157152330091
 GameObject:
   m_ObjectHideFlags: 0
@@ -6792,6 +6936,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 761271732460856046}
+  - component: {fileID: 3545919671564277988}
   m_Layer: 0
   m_Name: Farola_5
   m_TagString: Untagged
@@ -6818,6 +6963,21 @@ Transform:
   - {fileID: 7544094369515167555}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3545919671564277988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879945996744463719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4277831976352744415}
+  renderers:
+  - {fileID: 5620865454835787432}
 --- !u!1 &889833161667836735
 GameObject:
   m_ObjectHideFlags: 0
@@ -6941,6 +7101,7 @@ GameObject:
   - component: {fileID: 4877636861000145761}
   - component: {fileID: 7817079636336996045}
   - component: {fileID: 9078358434912504552}
+  - component: {fileID: 5024376847125832483}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -7020,6 +7181,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5024376847125832483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898326417391321755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 9078358434912504552}
 --- !u!1 &917389307155080268
 GameObject:
   m_ObjectHideFlags: 0
@@ -7126,6 +7302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5080090109733863645}
+  - component: {fileID: 1705852076121383161}
   m_Layer: 0
   m_Name: Farola_16
   m_TagString: Untagged
@@ -7152,6 +7329,21 @@ Transform:
   - {fileID: 6281741805484810531}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1705852076121383161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933386563428263688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 412895757082315242}
+  renderers:
+  - {fileID: 3873454455517178156}
 --- !u!1 &935948954918934778
 GameObject:
   m_ObjectHideFlags: 0
@@ -7543,6 +7735,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4756560410343782879}
+  - component: {fileID: 3853745675913084624}
   m_Layer: 0
   m_Name: Farola_4
   m_TagString: Untagged
@@ -7569,6 +7762,21 @@ Transform:
   - {fileID: 4230419893158849464}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3853745675913084624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 994056339430397498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 8894825850626087886}
+  renderers:
+  - {fileID: 2431178164029562643}
 --- !u!1 &1003204739993261594
 GameObject:
   m_ObjectHideFlags: 0
@@ -8303,6 +8511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 312863078518558427}
+  - component: {fileID: 4579441324776756479}
   m_Layer: 0
   m_Name: Farola_43
   m_TagString: Untagged
@@ -8329,6 +8538,21 @@ Transform:
   - {fileID: 6721662291242710212}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4579441324776756479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1053764513613169147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 7943796431146657766}
+  renderers:
+  - {fileID: 4410076666373930775}
 --- !u!1 &1067556343866197557
 GameObject:
   m_ObjectHideFlags: 0
@@ -8663,6 +8887,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4786032684291742711}
+  - component: {fileID: 1454802180074079087}
   m_Layer: 0
   m_Name: Farola_39
   m_TagString: Untagged
@@ -8689,6 +8914,21 @@ Transform:
   - {fileID: 6798294171330422040}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1454802180074079087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108264430293997414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 3872948198109457938}
+  renderers:
+  - {fileID: 2717689942961268450}
 --- !u!1 &1108477218984455260
 GameObject:
   m_ObjectHideFlags: 0
@@ -8698,6 +8938,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4215294337738957110}
+  - component: {fileID: 7175658615891207068}
   m_Layer: 0
   m_Name: Farola_32
   m_TagString: Untagged
@@ -8724,6 +8965,21 @@ Transform:
   - {fileID: 1993646915574540003}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7175658615891207068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108477218984455260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 5037414444947411942}
+  renderers:
+  - {fileID: 8621345858940486218}
 --- !u!1 &1109737697060315827
 GameObject:
   m_ObjectHideFlags: 0
@@ -8991,6 +9247,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1774757943933519021}
+  - component: {fileID: 607904810251925611}
   m_Layer: 0
   m_Name: Farola_44
   m_TagString: Untagged
@@ -9017,6 +9274,21 @@ Transform:
   - {fileID: 3158812745469277703}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &607904810251925611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171704828810985742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 7180867436961190249}
+  renderers:
+  - {fileID: 4283644217022264341}
 --- !u!1 &1172858150463688565
 GameObject:
   m_ObjectHideFlags: 0
@@ -9026,6 +9298,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8963465082641433506}
+  - component: {fileID: 8051506622092498931}
   m_Layer: 0
   m_Name: Farola_27
   m_TagString: Untagged
@@ -9052,6 +9325,21 @@ Transform:
   - {fileID: 3650376653140470387}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8051506622092498931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172858150463688565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6555048733444113800}
+  renderers:
+  - {fileID: 2552786929312236412}
 --- !u!1 &1175317253801164875
 GameObject:
   m_ObjectHideFlags: 0
@@ -10046,6 +10334,7 @@ GameObject:
   - component: {fileID: 1338638814118697827}
   - component: {fileID: 8916489327569448676}
   - component: {fileID: 5309425283711457087}
+  - component: {fileID: 626365359491910520}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -10125,6 +10414,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &626365359491910520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286769950596093697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 5309425283711457087}
 --- !u!1 &1287505011267168095
 GameObject:
   m_ObjectHideFlags: 0
@@ -10433,6 +10737,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3925551829338549866}
+  - component: {fileID: 5208029427141201916}
   m_Layer: 0
   m_Name: Farola_34
   m_TagString: Untagged
@@ -10459,6 +10764,21 @@ Transform:
   - {fileID: 7737483092315226371}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5208029427141201916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323734739398223291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 3182799678869028666}
+  renderers:
+  - {fileID: 2946646617116552809}
 --- !u!1 &1343590164381767905
 GameObject:
   m_ObjectHideFlags: 0
@@ -11239,6 +11559,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8165134324198324497}
+  - component: {fileID: 6592644813301777820}
   m_Layer: 0
   m_Name: Farola_24
   m_TagString: Untagged
@@ -11265,6 +11586,21 @@ Transform:
   - {fileID: 7689821214237813677}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6592644813301777820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436264450009496362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 5727800591456758262}
+  renderers:
+  - {fileID: 978179895588263105}
 --- !u!1 &1447884039439529559
 GameObject:
   m_ObjectHideFlags: 0
@@ -12247,6 +12583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8941208685926855901}
+  - component: {fileID: 2613110120182146580}
   m_Layer: 0
   m_Name: Farola_19
   m_TagString: Untagged
@@ -12273,6 +12610,21 @@ Transform:
   - {fileID: 6315820029039283992}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2613110120182146580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646953259667389989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 3716996794671150648}
+  renderers:
+  - {fileID: 1653238901205602097}
 --- !u!1 &1649177546453933989
 GameObject:
   m_ObjectHideFlags: 0
@@ -12469,6 +12821,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5723739811410650829}
+  - component: {fileID: 9173925827113204886}
   m_Layer: 0
   m_Name: Farola_28
   m_TagString: Untagged
@@ -12495,6 +12848,21 @@ Transform:
   - {fileID: 4185236692724680966}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9173925827113204886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662610815534593669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 8834358610575555088}
+  renderers:
+  - {fileID: 4063043879915432276}
 --- !u!1 &1670405284316803569
 GameObject:
   m_ObjectHideFlags: 0
@@ -13874,6 +14242,7 @@ GameObject:
   - component: {fileID: 9172246021481163037}
   - component: {fileID: 1413561913628230151}
   - component: {fileID: 2043431399697756063}
+  - component: {fileID: 367592791409124111}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -13953,6 +14322,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &367592791409124111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818487108908952055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 2043431399697756063}
 --- !u!1 &1831277730499540993
 GameObject:
   m_ObjectHideFlags: 0
@@ -13964,6 +14348,7 @@ GameObject:
   - component: {fileID: 5350371216222704421}
   - component: {fileID: 5099643289035208804}
   - component: {fileID: 3179366243145251485}
+  - component: {fileID: 1702270110116652845}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -14043,6 +14428,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1702270110116652845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831277730499540993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 3179366243145251485}
 --- !u!1 &1839237611017056817
 GameObject:
   m_ObjectHideFlags: 0
@@ -14054,6 +14454,7 @@ GameObject:
   - component: {fileID: 9185914131036617775}
   - component: {fileID: 452262044394147629}
   - component: {fileID: 5562645458641157599}
+  - component: {fileID: 4338821671060281506}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -14133,6 +14534,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4338821671060281506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839237611017056817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 5562645458641157599}
 --- !u!1 &1861362093941715165
 GameObject:
   m_ObjectHideFlags: 0
@@ -14434,6 +14850,7 @@ GameObject:
   - component: {fileID: 1389292487885510413}
   - component: {fileID: 2943623621418324934}
   - component: {fileID: 6840203736572681569}
+  - component: {fileID: 7727213800573663363}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -14513,6 +14930,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7727213800573663363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888113214291722259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 6840203736572681569}
 --- !u!1 &1890233684575080255
 GameObject:
   m_ObjectHideFlags: 0
@@ -14522,6 +14954,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5533932801253091653}
+  - component: {fileID: 5855636587047278913}
   m_Layer: 0
   m_Name: Farola_30
   m_TagString: Untagged
@@ -14548,6 +14981,21 @@ Transform:
   - {fileID: 1310962015298599932}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5855636587047278913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890233684575080255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 1751244475920481169}
+  renderers:
+  - {fileID: 6640309122823366524}
 --- !u!1 &1898720818669750150
 GameObject:
   m_ObjectHideFlags: 0
@@ -17537,6 +17985,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2227946331194034728}
+  - component: {fileID: 562507669569126806}
   m_Layer: 0
   m_Name: Farola_18
   m_TagString: Untagged
@@ -17563,6 +18012,21 @@ Transform:
   - {fileID: 5152430658616094066}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &562507669569126806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431334886077593365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 7332812275321935394}
+  renderers:
+  - {fileID: 32719219789194203}
 --- !u!1 &2440237127181337009
 GameObject:
   m_ObjectHideFlags: 0
@@ -17684,6 +18148,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3536712809799963455}
+  - component: {fileID: 2455160546043867451}
   m_Layer: 0
   m_Name: Farola_42
   m_TagString: Untagged
@@ -17710,6 +18175,21 @@ Transform:
   - {fileID: 32362806046331352}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2455160546043867451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2443515292130657016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 243969945054732567}
+  renderers:
+  - {fileID: 941406326803564341}
 --- !u!1 &2448446258858535166
 GameObject:
   m_ObjectHideFlags: 0
@@ -18240,6 +18720,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3534001886568187135}
+  - component: {fileID: 5076704013142524944}
   m_Layer: 0
   m_Name: Farola_9
   m_TagString: Untagged
@@ -18266,6 +18747,21 @@ Transform:
   - {fileID: 800567772697246292}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5076704013142524944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528204521866317397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 7351599439285290907}
+  renderers:
+  - {fileID: 5497530629094677630}
 --- !u!1 &2529233834899539460
 GameObject:
   m_ObjectHideFlags: 0
@@ -18791,6 +19287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4375347032557829632}
+  - component: {fileID: 5005427127400852520}
   m_Layer: 0
   m_Name: Farola_1
   m_TagString: Untagged
@@ -18817,6 +19314,21 @@ Transform:
   - {fileID: 345066532286618316}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5005427127400852520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2601216141986150380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 5436748524993019038}
+  renderers:
+  - {fileID: 1278325688392123396}
 --- !u!1 &2612801605612669923
 GameObject:
   m_ObjectHideFlags: 0
@@ -21034,6 +21546,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 325786665386940687}
+  - component: {fileID: 3106911705017627326}
   m_Layer: 0
   m_Name: Farola_12
   m_TagString: Untagged
@@ -21060,6 +21573,21 @@ Transform:
   - {fileID: 4407963533110244382}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3106911705017627326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2960918917322395437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4764396100723530692}
+  renderers:
+  - {fileID: 3684435351198129532}
 --- !u!1 &2967434768163729026
 GameObject:
   m_ObjectHideFlags: 0
@@ -21607,6 +22135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4374807004488465691}
+  - component: {fileID: 5953598979149849296}
   m_Layer: 0
   m_Name: Farola_54
   m_TagString: Untagged
@@ -21633,6 +22162,21 @@ Transform:
   - {fileID: 5576487874077829219}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5953598979149849296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003134193191323892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4318850087223095432}
+  renderers:
+  - {fileID: 885210688458571765}
 --- !u!1 &3011846894691066669
 GameObject:
   m_ObjectHideFlags: 0
@@ -21754,6 +22298,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8500439314296251706}
+  - component: {fileID: 6065989921483050063}
   m_Layer: 0
   m_Name: Farola_40
   m_TagString: Untagged
@@ -21780,6 +22325,21 @@ Transform:
   - {fileID: 6619235547184274024}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6065989921483050063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3036404659403226499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6602230642640634289}
+  renderers:
+  - {fileID: 6766970834718565870}
 --- !u!1 &3051791931503641964
 GameObject:
   m_ObjectHideFlags: 0
@@ -22496,6 +23056,7 @@ GameObject:
   - component: {fileID: 1463056743289937104}
   - component: {fileID: 1544041494965568360}
   - component: {fileID: 7153709644720646753}
+  - component: {fileID: 8780504220893336095}
   m_Layer: 0
   m_Name: Puesto
   m_TagString: Untagged
@@ -22596,6 +23157,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8780504220893336095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3128220201028018912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7153709644720646753}
 --- !u!1 &3129122693752638085
 GameObject:
   m_ObjectHideFlags: 0
@@ -22719,6 +23295,7 @@ GameObject:
   - component: {fileID: 7733505698004891153}
   - component: {fileID: 2271917751161815692}
   - component: {fileID: 2898892246546759371}
+  - component: {fileID: 425071037413185383}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -22798,6 +23375,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &425071037413185383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3138243890444233607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 2898892246546759371}
 --- !u!1 &3148619675539255466
 GameObject:
   m_ObjectHideFlags: 0
@@ -24964,6 +25556,7 @@ GameObject:
   - component: {fileID: 5343278723468289466}
   - component: {fileID: 4131795502793792100}
   - component: {fileID: 3412893872541745025}
+  - component: {fileID: 8437085610226595474}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -25043,6 +25636,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8437085610226595474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3418173160351974781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 3412893872541745025}
 --- !u!1 &3424317976656973763
 GameObject:
   m_ObjectHideFlags: 0
@@ -25322,6 +25930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 802121280461403824}
+  - component: {fileID: 1452616434367364050}
   m_Layer: 0
   m_Name: Farola_2
   m_TagString: Untagged
@@ -25348,6 +25957,21 @@ Transform:
   - {fileID: 3683381407917166458}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1452616434367364050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3440101443458190764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 1377361843131981720}
+  renderers:
+  - {fileID: 7744034419447296328}
 --- !u!1 &3456499074858525465
 GameObject:
   m_ObjectHideFlags: 0
@@ -27241,6 +27865,7 @@ GameObject:
   - component: {fileID: 2385831272151300947}
   - component: {fileID: 7188812749930702342}
   - component: {fileID: 7840859795961231515}
+  - component: {fileID: 2326965765121692334}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -27320,6 +27945,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2326965765121692334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750708465993031395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7840859795961231515}
 --- !u!1 &3754679189496175475
 GameObject:
   m_ObjectHideFlags: 0
@@ -27329,6 +27969,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4780053703234307443}
+  - component: {fileID: 5244007489744110790}
   m_Layer: 0
   m_Name: Farola_31
   m_TagString: Untagged
@@ -27355,6 +27996,21 @@ Transform:
   - {fileID: 8305989548406765153}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5244007489744110790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3754679189496175475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 8388941485780682834}
+  renderers:
+  - {fileID: 4533377417761956527}
 --- !u!1 &3766715789397163687
 GameObject:
   m_ObjectHideFlags: 0
@@ -27404,6 +28060,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1451220944892899096}
+  - component: {fileID: 8790886121886893878}
   m_Layer: 0
   m_Name: Farola_36
   m_TagString: Untagged
@@ -27430,6 +28087,21 @@ Transform:
   - {fileID: 6248030931753292045}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8790886121886893878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3771897147264904516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 368011766601193995}
+  renderers:
+  - {fileID: 1530655551896961333}
 --- !u!1 &3791310709571923384
 GameObject:
   m_ObjectHideFlags: 0
@@ -28485,6 +29157,7 @@ GameObject:
   - component: {fileID: 4832093454747983642}
   - component: {fileID: 8987542147916492721}
   - component: {fileID: 1262870168257775135}
+  - component: {fileID: 4507725233027791621}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -28564,6 +29237,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4507725233027791621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3913977033614799885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 1262870168257775135}
 --- !u!1 &3916145233085694613
 GameObject:
   m_ObjectHideFlags: 0
@@ -29750,6 +30438,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 968525023226742449}
+  - component: {fileID: 1590486776493211661}
   m_Layer: 0
   m_Name: Farola_3
   m_TagString: Untagged
@@ -29776,6 +30465,21 @@ Transform:
   - {fileID: 8966278056962255721}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1590486776493211661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4069988578807327592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4031937071089439101}
+  renderers:
+  - {fileID: 2117365819846409180}
 --- !u!1 &4073798250630106415
 GameObject:
   m_ObjectHideFlags: 0
@@ -30661,6 +31365,7 @@ GameObject:
   - component: {fileID: 3471696283562613837}
   - component: {fileID: 5629118065943629843}
   - component: {fileID: 2356658499196342596}
+  - component: {fileID: 341390205392972248}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -30740,6 +31445,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &341390205392972248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4136071464137789008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 2356658499196342596}
 --- !u!1 &4137277317128778214
 GameObject:
   m_ObjectHideFlags: 0
@@ -31549,6 +32269,7 @@ GameObject:
   - component: {fileID: 3629691864961828777}
   - component: {fileID: 3134702657280276185}
   - component: {fileID: 1419415911792270096}
+  - component: {fileID: 1496617978495539183}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -31628,6 +32349,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1496617978495539183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4208571936283242949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 1419415911792270096}
 --- !u!1 &4209540681845247199
 GameObject:
   m_ObjectHideFlags: 0
@@ -32173,6 +32909,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2143019288963556261}
+  - component: {fileID: 5407935879170909223}
   m_Layer: 0
   m_Name: Farola_38
   m_TagString: Untagged
@@ -32199,6 +32936,21 @@ Transform:
   - {fileID: 1336533526058401458}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5407935879170909223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4259471960278971363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4286416986164197630}
+  renderers:
+  - {fileID: 6938607942436370389}
 --- !u!1 &4281171857508990863
 GameObject:
   m_ObjectHideFlags: 0
@@ -34142,6 +34894,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3666714205045055850}
+  - component: {fileID: 7069149972941441829}
   m_Layer: 0
   m_Name: Farola_55
   m_TagString: Untagged
@@ -34168,6 +34921,21 @@ Transform:
   - {fileID: 562012376597852572}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7069149972941441829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4482566549221993526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4195820900716666080}
+  renderers:
+  - {fileID: 6828412811931609005}
 --- !u!1 &4485058657389786270
 GameObject:
   m_ObjectHideFlags: 0
@@ -34513,6 +35281,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 70413988215197203}
+  - component: {fileID: 3391035404646926146}
   m_Layer: 0
   m_Name: Farola_23
   m_TagString: Untagged
@@ -34539,6 +35308,21 @@ Transform:
   - {fileID: 6947253468051476947}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3391035404646926146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4554819336646231171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4104577025449772087}
+  renderers:
+  - {fileID: 1982014588344092320}
 --- !u!1 &4605531691107842771
 GameObject:
   m_ObjectHideFlags: 0
@@ -35633,6 +36417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5424228679378528067}
+  - component: {fileID: 9174868768181921968}
   m_Layer: 0
   m_Name: Farola_21
   m_TagString: Untagged
@@ -35659,6 +36444,21 @@ Transform:
   - {fileID: 6463852500888182540}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9174868768181921968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4742847162129709590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 7648574342080344135}
+  renderers:
+  - {fileID: 2630186173718034456}
 --- !u!1 &4750888741229619667
 GameObject:
   m_ObjectHideFlags: 0
@@ -35758,6 +36558,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3873787916756455754}
+  - component: {fileID: 1689483157409370241}
   m_Layer: 0
   m_Name: Farola_25
   m_TagString: Untagged
@@ -35784,6 +36585,21 @@ Transform:
   - {fileID: 2619320773324935033}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1689483157409370241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4772922615142774351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 2893575988550255303}
+  renderers:
+  - {fileID: 4976717185813792680}
 --- !u!1 &4782789910288500265
 GameObject:
   m_ObjectHideFlags: 0
@@ -35826,6 +36642,7 @@ GameObject:
   - component: {fileID: 6622733136605509350}
   - component: {fileID: 8130358627979659507}
   - component: {fileID: 7156561574296047391}
+  - component: {fileID: 1848696189912099213}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -35905,6 +36722,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1848696189912099213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4789691675624999850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7156561574296047391}
 --- !u!1 &4792495194140377129
 GameObject:
   m_ObjectHideFlags: 0
@@ -36006,6 +36838,7 @@ GameObject:
   - component: {fileID: 810834175102583970}
   - component: {fileID: 2861295832578607024}
   - component: {fileID: 7792064287353993629}
+  - component: {fileID: 3232424014967601202}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -36085,6 +36918,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3232424014967601202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4828098058167812585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7792064287353993629}
 --- !u!1 &4828948769608828036
 GameObject:
   m_ObjectHideFlags: 0
@@ -36610,6 +37458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2780955454791945540}
+  - component: {fileID: 855698400236460216}
   m_Layer: 0
   m_Name: Farola_48
   m_TagString: Untagged
@@ -36636,6 +37485,21 @@ Transform:
   - {fileID: 497257932674624873}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &855698400236460216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4870656358834061226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 325094814576216824}
+  renderers:
+  - {fileID: 1275058507900710551}
 --- !u!1 &4871841055197371242
 GameObject:
   m_ObjectHideFlags: 0
@@ -38333,6 +39197,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1601947820303118810}
+  - component: {fileID: 1636662532401111646}
   m_Layer: 0
   m_Name: Farola_6
   m_TagString: Untagged
@@ -38359,6 +39224,21 @@ Transform:
   - {fileID: 6300106061249322654}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1636662532401111646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5179655299731260353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 2288706020072139948}
+  renderers:
+  - {fileID: 7946353761433110011}
 --- !u!1 &5201153997607665808
 GameObject:
   m_ObjectHideFlags: 0
@@ -38370,6 +39250,7 @@ GameObject:
   - component: {fileID: 6612023540839691190}
   - component: {fileID: 7449666548374274749}
   - component: {fileID: 4069826501096616345}
+  - component: {fileID: 7627497628692849076}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -38449,6 +39330,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7627497628692849076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5201153997607665808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 4069826501096616345}
 --- !u!1 &5233970226217893482
 GameObject:
   m_ObjectHideFlags: 0
@@ -40068,6 +40964,7 @@ GameObject:
   - component: {fileID: 6131652424200374369}
   - component: {fileID: 2876078424205486801}
   - component: {fileID: 2407400541918292229}
+  - component: {fileID: 6934325644282296740}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -40147,6 +41044,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6934325644282296740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422150208892012706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 2407400541918292229}
 --- !u!1 &5437604561520979486
 GameObject:
   m_ObjectHideFlags: 0
@@ -40881,6 +41793,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1119643588160664308}
+  - component: {fileID: 4631123719657869608}
   m_Layer: 0
   m_Name: Farola_7
   m_TagString: Untagged
@@ -40907,6 +41820,21 @@ Transform:
   - {fileID: 3662875280166640883}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4631123719657869608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5508853769353383767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 5714972895911554608}
+  renderers:
+  - {fileID: 9169900633991300854}
 --- !u!1 &5545909013365148789
 GameObject:
   m_ObjectHideFlags: 0
@@ -41955,6 +42883,7 @@ GameObject:
   - component: {fileID: 8612028137517508681}
   - component: {fileID: 4485167426078916455}
   - component: {fileID: 7082617959389170594}
+  - component: {fileID: 8073040126929304132}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -42034,6 +42963,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8073040126929304132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5644007780606703421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 7082617959389170594}
 --- !u!1 &5654417993407774725
 GameObject:
   m_ObjectHideFlags: 0
@@ -42537,6 +43481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 87674442371471961}
+  - component: {fileID: 2345267305815195652}
   m_Layer: 0
   m_Name: Farola_47
   m_TagString: Untagged
@@ -42563,6 +43508,21 @@ Transform:
   - {fileID: 7312048462251051469}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2345267305815195652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5692372560091155487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6776525073238770553}
+  renderers:
+  - {fileID: 211022777157759597}
 --- !u!1 &5694698484567405088
 GameObject:
   m_ObjectHideFlags: 0
@@ -42575,6 +43535,7 @@ GameObject:
   - component: {fileID: 3836371715846629962}
   - component: {fileID: 2814554084768897435}
   - component: {fileID: 9124049456712098176}
+  - component: {fileID: 1362205162261573791}
   m_Layer: 0
   m_Name: Puesto
   m_TagString: Untagged
@@ -42675,6 +43636,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1362205162261573791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5694698484567405088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 9124049456712098176}
 --- !u!1 &5702306166396188703
 GameObject:
   m_ObjectHideFlags: 0
@@ -42719,6 +43695,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6457941394372653491}
+  - component: {fileID: 6980674005793797291}
   m_Layer: 0
   m_Name: Farola_56
   m_TagString: Untagged
@@ -42745,6 +43722,21 @@ Transform:
   - {fileID: 966085841266985320}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6980674005793797291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5710055233488338550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 2359329647362512341}
+  renderers:
+  - {fileID: 6556982804083649354}
 --- !u!1 &5716377560862550656
 GameObject:
   m_ObjectHideFlags: 0
@@ -43168,6 +44160,7 @@ GameObject:
   - component: {fileID: 7870795166353844391}
   - component: {fileID: 6782584988918240314}
   - component: {fileID: 2533458954477193069}
+  - component: {fileID: 4147944565595519832}
   m_Layer: 0
   m_Name: Puesto
   m_TagString: Untagged
@@ -43268,6 +44261,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4147944565595519832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5767117017589879755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 2533458954477193069}
 --- !u!1 &5767923964898150515
 GameObject:
   m_ObjectHideFlags: 0
@@ -43459,6 +44467,7 @@ GameObject:
   - component: {fileID: 692282692059360392}
   - component: {fileID: 3164685712212806641}
   - component: {fileID: 333401322573167500}
+  - component: {fileID: 31832735832843616}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -43538,6 +44547,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &31832735832843616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5779944595436710573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 333401322573167500}
 --- !u!1 &5783841280959537546
 GameObject:
   m_ObjectHideFlags: 0
@@ -43752,6 +44776,7 @@ GameObject:
   - component: {fileID: 1363080791968177333}
   - component: {fileID: 6776688760455533267}
   - component: {fileID: 4030372751072767637}
+  - component: {fileID: 2400989063925535306}
   m_Layer: 0
   m_Name: Puesto
   m_TagString: Untagged
@@ -43852,6 +44877,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2400989063925535306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5798308998505679584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 4030372751072767637}
 --- !u!1 &5804857984218469385
 GameObject:
   m_ObjectHideFlags: 0
@@ -44872,6 +45912,7 @@ GameObject:
   - component: {fileID: 2489242534831576537}
   - component: {fileID: 1956600212939329467}
   - component: {fileID: 955156269347683068}
+  - component: {fileID: 3120860646876680948}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -44951,6 +45992,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3120860646876680948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934110848943533524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 955156269347683068}
 --- !u!1 &5935643979211745745
 GameObject:
   m_ObjectHideFlags: 0
@@ -45850,6 +46906,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5294136627479126097}
+  - component: {fileID: 6250861468118659782}
   m_Layer: 0
   m_Name: Farola_33
   m_TagString: Untagged
@@ -45876,6 +46933,21 @@ Transform:
   - {fileID: 3391094575143474159}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6250861468118659782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6039239668577144745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 1141303977436686907}
+  renderers:
+  - {fileID: 5282843029724191043}
 --- !u!1 &6048555625535088172
 GameObject:
   m_ObjectHideFlags: 0
@@ -45997,6 +47069,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7533076669269075838}
+  - component: {fileID: 2528400241090685313}
   m_Layer: 0
   m_Name: Farola_14
   m_TagString: Untagged
@@ -46023,6 +47096,21 @@ Transform:
   - {fileID: 4751379820059489892}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2528400241090685313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6056814320700235555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 3855317278257789075}
+  renderers:
+  - {fileID: 8995867161508567231}
 --- !u!1 &6065503098329868144
 GameObject:
   m_ObjectHideFlags: 0
@@ -46574,6 +47662,7 @@ GameObject:
   - component: {fileID: 2395187965999063844}
   - component: {fileID: 4548756207460514182}
   - component: {fileID: 5848050864031385924}
+  - component: {fileID: 7567122791453912925}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -46653,6 +47742,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7567122791453912925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6157600826719188551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 5848050864031385924}
 --- !u!1 &6158396101961215133
 GameObject:
   m_ObjectHideFlags: 0
@@ -46989,6 +48093,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4393563071108042548}
+  - component: {fileID: 5064744412535372136}
   m_Layer: 0
   m_Name: Farola_41
   m_TagString: Untagged
@@ -47015,6 +48120,21 @@ Transform:
   - {fileID: 2180418328551991427}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5064744412535372136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6223786881141865266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 5290594433009051141}
+  renderers:
+  - {fileID: 6761202496415963640}
 --- !u!1 &6224520909196176723
 GameObject:
   m_ObjectHideFlags: 0
@@ -48489,6 +49609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3065301599179934686}
+  - component: {fileID: 881382291707580133}
   m_Layer: 0
   m_Name: Farola_49
   m_TagString: Untagged
@@ -48515,6 +49636,21 @@ Transform:
   - {fileID: 3800799009044906005}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &881382291707580133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6373761674574848106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 7201706745510431771}
+  renderers:
+  - {fileID: 1333519481160398877}
 --- !u!1 &6404050494190698373
 GameObject:
   m_ObjectHideFlags: 0
@@ -48963,6 +50099,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7105773774873490834}
+  - component: {fileID: 5661219986886614462}
   m_Layer: 0
   m_Name: Farola_26
   m_TagString: Untagged
@@ -48989,6 +50126,21 @@ Transform:
   - {fileID: 794244544474279664}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5661219986886614462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6439290135985931507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 5603595730066849706}
+  renderers:
+  - {fileID: 6581283728948262096}
 --- !u!1 &6450670891916630438
 GameObject:
   m_ObjectHideFlags: 0
@@ -49826,6 +50978,7 @@ GameObject:
   - component: {fileID: 3488876972123185809}
   - component: {fileID: 1319052561542055613}
   - component: {fileID: 944958741642458144}
+  - component: {fileID: 5944698618261041318}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -49905,6 +51058,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5944698618261041318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6559674527206704489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 944958741642458144}
 --- !u!1 &6560060380688003257
 GameObject:
   m_ObjectHideFlags: 0
@@ -52250,6 +53418,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2141474525983020872}
+  - component: {fileID: 5492244451615515226}
   m_Layer: 0
   m_Name: Farola_20
   m_TagString: Untagged
@@ -52276,6 +53445,21 @@ Transform:
   - {fileID: 8184354051519656266}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5492244451615515226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6785612851860368729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 2464024841543000634}
+  renderers:
+  - {fileID: 8874877292051992386}
 --- !u!1 &6822259317357672018
 GameObject:
   m_ObjectHideFlags: 0
@@ -52656,6 +53840,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6128348517339543036}
+  - component: {fileID: 8056408238697684065}
   m_Layer: 0
   m_Name: Farola_51
   m_TagString: Untagged
@@ -52682,6 +53867,21 @@ Transform:
   - {fileID: 7449133162180042242}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8056408238697684065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6902012846187197770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6831592105102626392}
+  renderers:
+  - {fileID: 7680286492918547518}
 --- !u!1 &6918897560984545715
 GameObject:
   m_ObjectHideFlags: 0
@@ -53199,6 +54399,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8801108181167451657}
+  - component: {fileID: 8571287832593191822}
   m_Layer: 0
   m_Name: Farola_15
   m_TagString: Untagged
@@ -53225,6 +54426,21 @@ Transform:
   - {fileID: 4473090806245024172}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8571287832593191822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6989830115812000259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4699366876884821575}
+  renderers:
+  - {fileID: 3755859653337510300}
 --- !u!1 &6994874945969790418
 GameObject:
   m_ObjectHideFlags: 0
@@ -54058,6 +55274,7 @@ GameObject:
   - component: {fileID: 4995801397036598451}
   - component: {fileID: 2337053575413805406}
   - component: {fileID: 6312712822389110081}
+  - component: {fileID: 8966602755687702522}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -54137,6 +55354,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8966602755687702522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7044443253777388974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 6312712822389110081}
 --- !u!1 &7045994804946866786
 GameObject:
   m_ObjectHideFlags: 0
@@ -54968,6 +56200,7 @@ GameObject:
   - component: {fileID: 8901932336158061513}
   - component: {fileID: 5896075620406926226}
   - component: {fileID: 1166987434897366231}
+  - component: {fileID: 128058447246651850}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -55047,6 +56280,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &128058447246651850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7125985774185634602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 1166987434897366231}
 --- !u!1 &7127894871970864182
 GameObject:
   m_ObjectHideFlags: 0
@@ -55056,6 +56304,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4739169638934395201}
+  - component: {fileID: 8249078365743474407}
   m_Layer: 0
   m_Name: Farola_52
   m_TagString: Untagged
@@ -55082,6 +56331,21 @@ Transform:
   - {fileID: 4319044976770137095}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8249078365743474407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7127894871970864182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 3538456672771807990}
+  renderers:
+  - {fileID: 6057997908707417184}
 --- !u!1 &7129868657172379496
 GameObject:
   m_ObjectHideFlags: 0
@@ -55757,6 +57021,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6156032867695786914}
+  - component: {fileID: 1924813933355279361}
   m_Layer: 0
   m_Name: Farola_35
   m_TagString: Untagged
@@ -55783,6 +57048,21 @@ Transform:
   - {fileID: 1971078596078505741}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1924813933355279361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7270221588164872988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 327155606649943073}
+  renderers:
+  - {fileID: 6241745406103399817}
 --- !u!1 &7327837069860551429
 GameObject:
   m_ObjectHideFlags: 0
@@ -55926,6 +57206,7 @@ GameObject:
   - component: {fileID: 2186355950582458910}
   - component: {fileID: 7282566654801275711}
   - component: {fileID: 1550105022351858554}
+  - component: {fileID: 3034582949969828842}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -56005,6 +57286,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3034582949969828842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7356379080773627313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 1550105022351858554}
 --- !u!1 &7391866159481231175
 GameObject:
   m_ObjectHideFlags: 0
@@ -58625,6 +59921,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1223658849921801895}
+  - component: {fileID: 4120536745929118749}
   m_Layer: 0
   m_Name: Farola_10
   m_TagString: Untagged
@@ -58651,6 +59948,21 @@ Transform:
   - {fileID: 4026408514133540210}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4120536745929118749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7607599605092575925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 4301793306873268862}
+  renderers:
+  - {fileID: 2483304866668584342}
 --- !u!1 &7610400243459649384
 GameObject:
   m_ObjectHideFlags: 0
@@ -60644,6 +61956,7 @@ GameObject:
   - component: {fileID: 4604150315380603947}
   - component: {fileID: 6455190764305796453}
   - component: {fileID: 1870640350778149965}
+  - component: {fileID: 3217692100999749668}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -60723,6 +62036,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3217692100999749668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7808018651953920059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 1870640350778149965}
 --- !u!1 &7809341449164823539
 GameObject:
   m_ObjectHideFlags: 0
@@ -61106,6 +62434,7 @@ GameObject:
   - component: {fileID: 3653899645547611088}
   - component: {fileID: 4593027183897428457}
   - component: {fileID: 1392814568988049601}
+  - component: {fileID: 5304487297701407714}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -61185,6 +62514,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5304487297701407714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7849876610700112364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 1392814568988049601}
 --- !u!1 &7860261575733006869
 GameObject:
   m_ObjectHideFlags: 0
@@ -62053,6 +63397,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 478547529029031219}
+  - component: {fileID: 2847761989193814292}
   m_Layer: 0
   m_Name: Farola_11
   m_TagString: Untagged
@@ -62079,6 +63424,21 @@ Transform:
   - {fileID: 8961997569497005744}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2847761989193814292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7998890172881107091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6629226245139454583}
+  renderers:
+  - {fileID: 2659060892951932049}
 --- !u!1 &8010792117675890595
 GameObject:
   m_ObjectHideFlags: 0
@@ -63074,6 +64434,7 @@ GameObject:
   - component: {fileID: 1937535974395631817}
   - component: {fileID: 2691183732611227119}
   - component: {fileID: 2407980537822018430}
+  - component: {fileID: 8583640011237934571}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -63153,6 +64514,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8583640011237934571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8140833542055616981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 2407980537822018430}
 --- !u!1 &8151694657359477330
 GameObject:
   m_ObjectHideFlags: 0
@@ -63378,6 +64754,7 @@ GameObject:
   - component: {fileID: 7560574680941182625}
   - component: {fileID: 5893530135267922681}
   - component: {fileID: 5017209221498581399}
+  - component: {fileID: 5880323397856703016}
   m_Layer: 0
   m_Name: Letrero
   m_TagString: Untagged
@@ -63457,6 +64834,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5880323397856703016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8173870707770529926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 0}
+  renderers:
+  - {fileID: 5017209221498581399}
 --- !u!1 &8178612126828005481
 GameObject:
   m_ObjectHideFlags: 0
@@ -63991,6 +65383,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 474901110691133569}
+  - component: {fileID: 4831812200794892377}
   m_Layer: 0
   m_Name: Farola_50
   m_TagString: Untagged
@@ -64017,6 +65410,21 @@ Transform:
   - {fileID: 7745622285035114852}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4831812200794892377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8325312156897842378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 2064592476824195420}
+  renderers:
+  - {fileID: 8618410831708258756}
 --- !u!1 &8347785761309350504
 GameObject:
   m_ObjectHideFlags: 0
@@ -64838,6 +66246,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6346001048762010466}
+  - component: {fileID: 1442480604809191908}
   m_Layer: 0
   m_Name: Farola_45
   m_TagString: Untagged
@@ -64864,6 +66273,21 @@ Transform:
   - {fileID: 442319681584821320}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1442480604809191908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8401051938895950600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6912250429851779542}
+  renderers:
+  - {fileID: 8482949512113562230}
 --- !u!1 &8403982476515515530
 GameObject:
   m_ObjectHideFlags: 0
@@ -65164,6 +66588,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2095184775648733588}
+  - component: {fileID: 3506617563904603040}
   m_Layer: 0
   m_Name: Farola_17
   m_TagString: Untagged
@@ -65190,6 +66615,21 @@ Transform:
   - {fileID: 1874935113027387142}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3506617563904603040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8476707622978972981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6359754717250809089}
+  renderers:
+  - {fileID: 6167027489996235752}
 --- !u!1 &8481229978793567554
 GameObject:
   m_ObjectHideFlags: 0
@@ -66393,6 +67833,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7726541585641962785}
+  - component: {fileID: 6898512749327474224}
   m_Layer: 0
   m_Name: Farola_8
   m_TagString: Untagged
@@ -66419,6 +67860,21 @@ Transform:
   - {fileID: 3530775838520848117}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6898512749327474224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8623306116663760316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 6660361501969861539}
+  renderers:
+  - {fileID: 2716152430310393782}
 --- !u!1 &8639318688401224206
 GameObject:
   m_ObjectHideFlags: 0
@@ -68783,6 +70239,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5820090989891892619}
+  - component: {fileID: 7911143357452908347}
   m_Layer: 0
   m_Name: Farola_53
   m_TagString: Untagged
@@ -68809,6 +70266,21 @@ Transform:
   - {fileID: 5174392340201855447}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7911143357452908347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8904002858974768878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 700553829597931653}
+  renderers:
+  - {fileID: 6987600419955531395}
 --- !u!1 &8904176121450611427
 GameObject:
   m_ObjectHideFlags: 0
@@ -69879,6 +71351,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8186854600866024575}
+  - component: {fileID: 2550225490039569875}
   m_Layer: 0
   m_Name: Farola_37
   m_TagString: Untagged
@@ -69905,6 +71378,21 @@ Transform:
   - {fileID: 6977249808445714120}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2550225490039569875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8984175964748142281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 2931129952369120697}
+  renderers:
+  - {fileID: 2896274593578543488}
 --- !u!1 &8985726944284503796
 GameObject:
   m_ObjectHideFlags: 0
@@ -70101,6 +71589,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 929661092244440028}
+  - component: {fileID: 2521817098301847593}
   m_Layer: 0
   m_Name: Farola_29
   m_TagString: Untagged
@@ -70127,6 +71616,21 @@ Transform:
   - {fileID: 7820915555723648818}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2521817098301847593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033476141669313723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f074e81b260cd034f8b0e7cbe3f8afee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
+  luz: {fileID: 2722343345952053683}
+  renderers:
+  - {fileID: 3083495486802923422}
 --- !u!1 &9037370115982211139
 GameObject:
   m_ObjectHideFlags: 0

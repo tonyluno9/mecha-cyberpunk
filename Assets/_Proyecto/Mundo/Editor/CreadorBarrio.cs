@@ -170,6 +170,10 @@ namespace MechaCyberpunk.Mundo.Editor
             mapa.AddAction("AlternarVuelo", InputActionType.Button, "<Keyboard>/f");
             mapa.AddAction("Subir", InputActionType.Button, "<Keyboard>/space");
             mapa.AddAction("Bajar", InputActionType.Button, "<Keyboard>/leftCtrl");
+            // Acciones del reloj de prueba (T-041).
+            mapa.AddAction("SaltarANoche", InputActionType.Button, "<Keyboard>/n");
+            mapa.AddAction("SaltarAMediodia", InputActionType.Button, "<Keyboard>/m");
+            mapa.AddAction("AlternarVelocidad", InputActionType.Button, "<Keyboard>/t");
             File.WriteAllText(RutaControles, asset.ToJson());
             Object.DestroyImmediate(asset);
             AssetDatabase.ImportAsset(RutaControles);

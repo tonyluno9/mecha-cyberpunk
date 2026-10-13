@@ -65,6 +65,36 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "SaltarANoche",
+                    "type": "Button",
+                    "id": "0d74e084-ee8d-4312-a203-a87feef38489",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "SaltarAMediodia",
+                    "type": "Button",
+                    "id": "2ae3b5c0-e336-4743-9a42-8d92e632373d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "AlternarVelocidad",
+                    "type": "Button",
+                    "id": "ac59b94d-d692-459e-b1a0-fe568453c93c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -175,6 +205,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Bajar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c37bc7dc-b66f-442d-bc25-6df8d1eae041",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SaltarANoche",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "18384919-7ebb-4687-bb53-8aaa56160da8",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SaltarAMediodia",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bfdae48b-28f5-4312-ba4e-e167b552dfd2",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AlternarVelocidad",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
