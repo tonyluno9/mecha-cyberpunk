@@ -27,6 +27,11 @@ namespace MechaCyberpunk.Mundo.Datos
         [Tooltip("Aceleración de caída al caminar (m/s²).")]
         [SerializeField, Min(0f)] private float gravedad = 20f;
 
+        [Header("Interactuar")]
+        [Tooltip("Alcance del rayo de la tecla E al frente (m).")]
+        [SerializeField, Min(0.1f)] private float distanciaInteraccion = 3f;
+
+        public float DistanciaInteraccion => distanciaInteraccion;
         public float VelocidadAPie => velocidadAPie;
         public float VelocidadCorriendo => velocidadCorriendo;
         public float VelocidadVolando => velocidadVolando;

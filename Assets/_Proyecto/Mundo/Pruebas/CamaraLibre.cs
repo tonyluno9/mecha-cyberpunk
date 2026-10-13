@@ -27,6 +27,7 @@ namespace MechaCyberpunk.Mundo.Pruebas
         private InputAction alternarVuelo;
         private InputAction subir;
         private InputAction bajar;
+        private InputAction interactuar;
         private float yaw;
         private float inclinacion;
         private float velocidadVertical;
@@ -38,6 +39,15 @@ namespace MechaCyberpunk.Mundo.Pruebas
         public bool EstaVolando => volando;
         public float Yaw => yaw;
         public float Inclinacion => inclinacion;
+
+        /// <summary>Resultado de la última puerta con la que se interactuó (null si todavía ninguna).</summary>
+        public ResultadoPuerta? UltimoResultadoPuerta { get; private set; }
+
+        /// <summary>Lugar de la última puerta con la que se interactuó.</summary>
+        public IdLugar UltimaPuerta { get; private set; }
+
+        /// <summary>Avisa cada vez que se interactúa con una puerta, con su lugar y lo que respondió.</summary>
+        public event Action<IdLugar, ResultadoPuerta> InteractuoConPuerta;
 
         // El modo de la cámara libre nunca cambia: el evento existe solo para cumplir IJugador.
 #pragma warning disable CS0067
@@ -59,6 +69,7 @@ namespace MechaCyberpunk.Mundo.Pruebas
             alternarVuelo = controles.FindAction("AlternarVuelo", true);
             subir = controles.FindAction("Subir", true);
             bajar = controles.FindAction("Bajar", true);
+            interactuar = controles.FindAction("Interactuar", true);
             yaw = transform.eulerAngles.y;
         }
 
@@ -91,6 +102,10 @@ namespace MechaCyberpunk.Mundo.Pruebas
             }
 
             Mirar();
+            if (interactuar.WasPressedThisFrame())
+            {
+                Interactuar();
+            }
             if (volando)
             {
                 Volar(Time.deltaTime);
@@ -130,6 +145,26 @@ namespace MechaCyberpunk.Mundo.Pruebas
             }
             float rapidez = CalculoCamaraLibre.Rapidez(true, false, config.VelocidadAPie, config.VelocidadCorriendo, config.VelocidadVolando);
             transform.position += direccion * (rapidez * dt);
+        }
+
+        // Lanza un rayo al frente; si da con una puerta (IPuerta), le pide abrir y escribe el resultado en la consola.
+        private void Interactuar()
+        {
+            Transform ojos = camara.transform;
+            if (!Physics.Raycast(ojos.position, ojos.forward, out RaycastHit golpe, config.DistanciaInteraccion, ~0, QueryTriggerInteraction.Ignore))
+            {
+                return;
+            }
+            IPuerta puerta = golpe.collider.GetComponentInParent<IPuerta>();
+            if (puerta == null)
+            {
+                return;
+            }
+            ResultadoPuerta resultado = puerta.IntentarAbrir();
+            UltimaPuerta = puerta.Lugar;
+            UltimoResultadoPuerta = resultado;
+            Debug.Log("[Mundo] Puerta " + puerta.Lugar + ": " + resultado);
+            InteractuoConPuerta?.Invoke(puerta.Lugar, resultado);
         }
 
         private void AlternarVuelo()
