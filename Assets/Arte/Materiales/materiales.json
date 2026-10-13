@@ -1,0 +1,549 @@
+{
+  "materiales": [
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.03,
+        0.03,
+        0.035
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Bolsa_Basura",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.6,
+        0.6,
+        0.62
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Bolsa_Blanca",
+      "rugosidad": 0.4
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.55,
+        0.2,
+        0.05
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Carne_Pastor",
+      "rugosidad": 0.7
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.45,
+        0.3,
+        0.15
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Carton",
+      "rugosidad": 0.9
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.13,
+        0.12,
+        0.11
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Concreto_Manchas",
+      "rugosidad": 0.98
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.3,
+        0.285,
+        0.26
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Concreto_Sucio",
+      "rugosidad": 0.95
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.04,
+        0.14,
+        0.1
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.5,
+      "nombre": "Contenedor_Verde",
+      "rugosidad": 0.6
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        1.0,
+        0.85,
+        0.0
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Graf_Amarillo",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.1,
+        0.3,
+        1.0
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Graf_Azul",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Graf_Negro",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        1.0,
+        0.1,
+        0.5
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Graf_Rosa",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.2,
+        0.9,
+        0.1
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Graf_Verde",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.02,
+        0.02,
+        0.02
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Hule_Negro",
+      "rugosidad": 0.9
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "emision_color": [
+        1.0,
+        0.05,
+        0.05
+      ],
+      "emision_fuerza": 5.0,
+      "metalico": 0.0,
+      "nombre": "Luz_Roja",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.12,
+        0.06,
+        0.04
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Madera_Oscura",
+      "rugosidad": 0.35
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.2,
+        0.12,
+        0.07
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Madera_Vieja",
+      "rugosidad": 0.9
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.13,
+        0.14,
+        0.17
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.6,
+      "nombre": "Metal_Oscuro",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.0,
+        0.05,
+        0.06
+      ],
+      "emision_color": [
+        0.0,
+        0.85,
+        1.0
+      ],
+      "emision_fuerza": 6.0,
+      "metalico": 0.0,
+      "nombre": "Neon_Cian",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.06,
+        0.0,
+        0.04
+      ],
+      "emision_color": [
+        1.0,
+        0.0,
+        0.6
+      ],
+      "emision_fuerza": 6.0,
+      "metalico": 0.0,
+      "nombre": "Neon_Magenta",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.06,
+        0.02,
+        0.0
+      ],
+      "emision_color": [
+        1.0,
+        0.4,
+        0.02
+      ],
+      "emision_fuerza": 6.0,
+      "metalico": 0.0,
+      "nombre": "Neon_Naranja",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.0,
+        0.06,
+        0.04
+      ],
+      "emision_color": [
+        0.0,
+        1.0,
+        0.65
+      ],
+      "emision_fuerza": 6.0,
+      "metalico": 0.0,
+      "nombre": "Neon_Turquesa",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.8,
+        0.78,
+        0.6
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Papel_Volante",
+      "rugosidad": 0.9
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.9,
+        0.7,
+        0.1
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Pina",
+      "rugosidad": 0.6
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.8,
+        0.8,
+        0.75
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Porcelana",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.7,
+        0.05,
+        0.03
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Salsa_Roja",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.1,
+        0.5,
+        0.1
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Salsa_Verde",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.75,
+        0.75,
+        0.7
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.4,
+      "nombre": "Tanque_Gas",
+      "rugosidad": 0.5
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.05,
+        0.15,
+        0.35
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Tinaco_Azul",
+      "rugosidad": 0.6
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.75,
+        0.68,
+        0.5
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Toldo_Crema",
+      "rugosidad": 0.9
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.55,
+        0.05,
+        0.08
+      ],
+      "emision_color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "emision_fuerza": 0.0,
+      "metalico": 0.0,
+      "nombre": "Toldo_Rojo",
+      "rugosidad": 0.9
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.0,
+        0.05,
+        0.05
+      ],
+      "emision_color": [
+        0.0,
+        0.84,
+        0.66
+      ],
+      "emision_fuerza": 1.0,
+      "metalico": 0.0,
+      "nombre": "Vidrio_Interior",
+      "rugosidad": 0.2
+    }
+  ],
+  "notas": [
+    "Material Metal_Oscuro distinto en prop_barra: gana el primero (kit urbano)",
+    "Material Neon_Cian distinto en prop_barra: gana el primero (kit urbano)",
+    "Material Neon_Magenta distinto en prop_barra: gana el primero (kit urbano)",
+    "Material Neon_Naranja distinto en prop_barra: gana el primero (kit urbano)",
+    "Material Metal_Oscuro distinto en prop_dj: gana el primero (kit urbano)",
+    "Material Neon_Magenta distinto en prop_dj: gana el primero (kit urbano)",
+    "Material Neon_Cian distinto en prop_dj: gana el primero (kit urbano)",
+    "Material Neon_Naranja distinto en prop_dj: gana el primero (kit urbano)",
+    "Material Metal_Oscuro distinto en prop_letrero: gana el primero (kit urbano)",
+    "Material Neon_Cian distinto en prop_letrero: gana el primero (kit urbano)",
+    "Material Neon_Magenta distinto en prop_letrero: gana el primero (kit urbano)",
+    "Material Neon_Naranja distinto en prop_letrero: gana el primero (kit urbano)",
+    "Material Neon_Cian distinto en prop_mesa: gana el primero (kit urbano)",
+    "Material Metal_Oscuro distinto en prop_mesa: gana el primero (kit urbano)",
+    "Material Neon_Naranja distinto en prop_mesa: gana el primero (kit urbano)",
+    "Material Neon_Magenta distinto en prop_mesa: gana el primero (kit urbano)"
+  ]
+}
