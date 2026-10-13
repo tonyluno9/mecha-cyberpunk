@@ -137,3 +137,8 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 ### T-066 Llamar al mecha con M
 - Verificado automáticamente: todos los criterios (EditMode 315/315, PlayMode 257/257).
 - Para ti: en Pruebas_Calle, a pie, pulsa M en la calle: ¿ver bajar al mecha del cielo se siente grande y 6 s se sienten bien o largos? A más de 75 m pulsa M: ¿'AQUÍ NO PUEDE LLEGAR TU MECHA' basta para entender?
+
+### T-068 Rival que no te deja perder y rival del tutorial
+- Verificado automáticamente: todos los criterios (EditMode 326/326, PlayMode 263/263).
+- Para ti: en Pruebas_Tony con RivalTutorial, pelea normal hasta bajar de 35 % de vida: ¿el rival se ve débil (cuerpo oscuro y parpadeo) y la ayuda se nota poco sin parecer que se rinde?
+- La captura T-068-1 no tiene una del rival normal para comparar color.
