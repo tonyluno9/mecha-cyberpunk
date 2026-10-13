@@ -66,5 +66,8 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - **Decisión tuya:** el barrio se cruza en unos 20 s con el carro a 16 m/s; ciudad.md pide "minuto y medio". Opciones: agrandar el barrio o bajar la velocidad máxima.
 - T-061 (subir al carro, de Tony) se desbloquea cuando alan/fase-2 llegue a main; teclas del carro y regla `PuedeBajar` en el encabezado de `CarroViejo.cs`.
 
+## Pedido a Tony (T-079, propuesta D-alan-19)
+- Prender `renderPostProcessing` (UniversalAdditionalCameraData) en la cámara de MechaJugador para que el jugador vea el bloom y el color de noche.
+
 ## Bloqueos y preguntas
 - Nada todavía.
