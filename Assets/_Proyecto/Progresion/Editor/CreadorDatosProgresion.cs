@@ -69,5 +69,29 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
+
+        /// <summary>Agrega ServicioCalor (con DatosCalor_Base) a ServiciosProgresion.prefab si todavía no lo tiene (T-067). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-067 servicio de calor")]
+        public static void CrearT067()
+        {
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                var servicio = raiz.GetComponent<ServicioCalor>();
+                if (servicio == null)
+                {
+                    servicio = raiz.AddComponent<ServicioCalor>();
+                }
+                var so = new SerializedObject(servicio);
+                so.FindProperty("datos").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosCalor>(Ruta);
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
     }
 }

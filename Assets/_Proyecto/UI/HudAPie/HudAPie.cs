@@ -43,6 +43,12 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private GameObject grupoLlamado;
         [SerializeField] private Text textoLlamado;
 
+        [Header("Calor policial (arriba a la derecha; solo con nivel mayor que 0)")]
+        [SerializeField] private GameObject grupoCalor;
+        [SerializeField] private Text textoCalor;
+        [SerializeField] private Image[] marcasCalor;
+
+        private ICalor calor;
         private LlamadoMecha llamado;
         private string avisoLlamado = string.Empty;
         private float avisoLlamadoRestante;
@@ -74,6 +80,24 @@ namespace MechaCyberpunk.UI.Hud
         public Text TextoDistancia => textoDistancia;
         public GameObject GrupoInteraccion => grupoInteraccion;
         public Text TextoAvisoInteraccion => textoInteraccion;
+        public GameObject GrupoCalor => grupoCalor;
+        public Text TextoCalor => textoCalor;
+        public Image[] MarcasCalor => marcasCalor;
+
+        /// <summary>Cuántas marcas de calor están llenas (naranjas).</summary>
+        public int MarcasCalorLlenas
+        {
+            get
+            {
+                int cuenta = 0;
+                foreach (Image marca in marcasCalor)
+                {
+                    if (marca.color == config.ColorCalor) cuenta++;
+                }
+                return cuenta;
+            }
+        }
+
         public GameObject GrupoLlamado => grupoLlamado;
         public Text TextoLlamado => textoLlamado;
 
@@ -85,7 +109,8 @@ namespace MechaCyberpunk.UI.Hud
             if (config == null || grupoVida == null || grupoMira == null || grupoArma == null || grupoCancion == null
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
                 || grupoObjetivo == null || textoObjetivo == null || flecha == null || textoDistancia == null
-                || grupoInteraccion == null || textoInteraccion == null || grupoLlamado == null || textoLlamado == null)
+                || grupoInteraccion == null || textoInteraccion == null || grupoLlamado == null || textoLlamado == null
+                || grupoCalor == null || textoCalor == null || marcasCalor == null || marcasCalor.Length == 0)
             {
                 Debug.LogError("[UI] Faltan referencias en HudAPie de " + name, this);
                 enabled = false;
@@ -113,6 +138,8 @@ namespace MechaCyberpunk.UI.Hud
             textoDistancia.color = config.ColorTexto;
             textoInteraccion.color = config.ColorTexto;
             textoLlamado.color = config.ColorTexto;
+            textoCalor.color = config.ColorCalor;
+            textoCalor.text = config.TextoCalor;
             if (partesMira != null)
             {
                 foreach (Image parte in partesMira)
@@ -144,6 +171,9 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IObjetivos>.Quitado += AlQuitarObjetivos;
             Registro<LlamadoMecha>.Agregado += AlAgregarLlamado;
             Registro<LlamadoMecha>.Quitado += AlQuitarLlamado;
+            Registro<ICalor>.Agregado += AlAgregarCalor;
+            Registro<ICalor>.Quitado += AlQuitarCalor;
+            VincularCalor(Registro<ICalor>.Actual);
             VincularObjetivos(Registro<IObjetivos>.Actual);
             VincularLlamado(Registro<LlamadoMecha>.Actual);
             Vincular(Registro<IJugador>.Actual);
@@ -174,6 +204,9 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IObjetivos>.Quitado -= AlQuitarObjetivos;
             Registro<LlamadoMecha>.Agregado -= AlAgregarLlamado;
             Registro<LlamadoMecha>.Quitado -= AlQuitarLlamado;
+            Registro<ICalor>.Agregado -= AlAgregarCalor;
+            Registro<ICalor>.Quitado -= AlQuitarCalor;
+            DesvincularCalor();
             Desvincular();
             DesvincularObjetivos();
             DesvincularLlamado();
@@ -279,6 +312,7 @@ namespace MechaCyberpunk.UI.Hud
             grupoArma.SetActive(aPie);
             grupoCancion.SetActive(modo != ModoJugador.Mecha);
             RefrescarObjetivo();
+            RefrescarCalor();
             avisoRestante = 0f;
             grupoInteraccion.SetActive(false);
         }
@@ -292,6 +326,7 @@ namespace MechaCyberpunk.UI.Hud
             grupoObjetivo.SetActive(false);
             grupoInteraccion.SetActive(false);
             grupoLlamado.SetActive(false);
+            grupoCalor.SetActive(false);
         }
 
         private void ActualizarVida()
@@ -316,6 +351,56 @@ namespace MechaCyberpunk.UI.Hud
             textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Balas, armas.TamanoCargador, armas.Recargando, config);
             bool aviso = armas.ArmaActiva == ArmaAPie.Pistola && (armas.Recargando || armas.Balas <= 0);
             textoArma.color = aviso ? config.ColorAviso : config.ColorTexto;
+        }
+
+        // ---- Calor policial ----
+
+        private void AlAgregarCalor(ICalor nuevo) => VincularCalor(nuevo);
+
+        private void AlQuitarCalor(ICalor quitado)
+        {
+            if (quitado == calor)
+            {
+                VincularCalor(Registro<ICalor>.Actual);
+            }
+        }
+
+        private void VincularCalor(ICalor nuevo)
+        {
+            DesvincularCalor();
+            calor = nuevo;
+            if (calor != null)
+            {
+                calor.NivelCambio += AlCambiarNivelCalor;
+            }
+            RefrescarCalor();
+        }
+
+        private void DesvincularCalor()
+        {
+            if (calor != null)
+            {
+                calor.NivelCambio -= AlCambiarNivelCalor;
+            }
+            calor = null;
+        }
+
+        private void AlCambiarNivelCalor(int nivel) => RefrescarCalor();
+
+        // El calor se ve a pie y en carro, y solo si hay (nivel mayor que 0); en el mecha lo muestra la cabina.
+        private void RefrescarCalor()
+        {
+            int nivel = calor != null ? calor.Nivel : 0;
+            bool visible = jugador != null && jugador.Modo != ModoJugador.Mecha && nivel > 0;
+            grupoCalor.SetActive(visible);
+            if (!visible)
+            {
+                return;
+            }
+            for (int i = 0; i < marcasCalor.Length; i++)
+            {
+                marcasCalor[i].color = i < nivel ? config.ColorCalor : config.ColorMarcaCalorApagada;
+            }
         }
 
         // ---- Objetivo ----

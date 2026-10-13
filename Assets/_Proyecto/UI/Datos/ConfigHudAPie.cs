@@ -89,6 +89,22 @@ namespace MechaCyberpunk.UI
         [Tooltip("Cuánto dura el aviso de zona prohibida (s).")]
         [Min(0.1f)] [SerializeField] private float duracionAvisoLlamado = 2.5f;
 
+        [Header("Calor policial (T-067)")]
+        [Tooltip("Texto del grupo de calor.")]
+        [SerializeField] private string textoCalor = "CALOR";
+
+        [Tooltip("Color de las marcas llenas y del texto de calor (naranja neón).")]
+        [SerializeField] private Color colorCalor = new Color(1f, 0.55f, 0.1f, 1f);
+
+        [Tooltip("Color de las marcas de calor que todavía no se llenan.")]
+        [SerializeField] private Color colorMarcaCalorApagada = new Color(0.3f, 0.2f, 0.1f, 0.5f);
+
+        [Tooltip("Ancho de cada marca de calor (px de referencia).")]
+        [Min(2f)] [SerializeField] private float anchoMarcaCalor = 28f;
+
+        [Tooltip("Alto de cada marca de calor (px de referencia).")]
+        [Min(2f)] [SerializeField] private float altoMarcaCalor = 12f;
+
         [Header("Textos de vida y arma")]
         [Tooltip("Texto de la vida; {0} es la vida redondeada hacia arriba.")]
         [SerializeField] private string textoVida = "VIDA {0}";
@@ -105,6 +121,11 @@ namespace MechaCyberpunk.UI
         [Tooltip("Lo que se agrega al texto de la pistola cuando no le quedan balas.")]
         [SerializeField] private string textoPistolaSinBalas = " · R";
 
+        public string TextoCalor => textoCalor;
+        public Color ColorCalor => colorCalor;
+        public Color ColorMarcaCalorApagada => colorMarcaCalorApagada;
+        public float AnchoMarcaCalor => anchoMarcaCalor;
+        public float AltoMarcaCalor => altoMarcaCalor;
         public string TextoMechaEnCamino => textoMechaEnCamino;
         public string TextoZonaProhibida => textoZonaProhibida;
         public string TextoMechaRegresa => textoMechaRegresa;

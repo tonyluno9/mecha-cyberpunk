@@ -2,6 +2,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Mecha.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Pruebas;
+using MechaCyberpunk.Progresion.Pruebas;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -104,6 +105,9 @@ namespace MechaCyberpunk.Mecha.Editor
             mecha.transform.SetPositionAndRotation(new Vector3(0f, AlturaInicio, ZMecha), Quaternion.Euler(0f, 180f, 0f));
 
             ArmarLlamado(edificio);
+
+            // Tecla de prueba del calor (T-067): 9 suma 25, 0 borra.
+            new GameObject("CalorDePrueba").AddComponent<CalorDePrueba>();
 
             GameObject hud = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
             hud.name = "HudAPie";

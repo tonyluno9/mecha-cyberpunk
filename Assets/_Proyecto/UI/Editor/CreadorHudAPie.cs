@@ -27,6 +27,8 @@ namespace MechaCyberpunk.UI.Editor
         private const float AlturaAvisoInteraccion = 110f;
         private const float AlturaAvisoLlamado = 160f;
         private const float HuecoMira = 6f;
+        private const int NumeroMarcasCalor = 3;
+        private const float SeparacionMarcasCalor = 6f;
         private static readonly Color ColorSombra = new Color(0f, 0f, 0f, 0.8f);
         private static readonly Vector2 DesplazamientoSombra = new Vector2(1.5f, -1.5f);
 
@@ -45,7 +47,12 @@ namespace MechaCyberpunk.UI.Editor
             // Reserializa el config: los campos nuevos con valor por defecto quedan escritos en el asset.
             EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
-            CrearPrefab(config);
+            // Si el prefab ya existe no se regenera (conserva sus fileID); solo se le agrega lo que falte.
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab) == null)
+            {
+                CrearPrefab(config);
+            }
+            CompletarPrefab(config);
             AssetDatabase.SaveAssets();
             Debug.Log("[UI] T-056 creada.");
         }
@@ -166,6 +173,50 @@ namespace MechaCyberpunk.UI.Editor
             finally
             {
                 Object.DestroyImmediate(raiz);
+            }
+        }
+
+        // Agrega al prefab existente el grupo de calor (T-067) si todavía no lo tiene.
+        private static void CompletarPrefab(ConfigHudAPie config)
+        {
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                HudAPie hud = raiz.GetComponent<HudAPie>();
+                SerializedObject so = new SerializedObject(hud);
+                if (so.FindProperty("grupoCalor").objectReferenceValue == null)
+                {
+                    RectTransform grupo = CrearGrupo("Calor", raiz.transform, new Vector2(1f, 1f), new Vector2(-config.Margen, -config.Margen),
+                        new Vector2(AnchoTextoLateral, AltoTexto + SeparacionTextoBarra + config.AltoMarcaCalor));
+                    Text texto = CrearTexto("Texto", grupo, config, TextAnchor.UpperRight);
+                    Stretch(texto.rectTransform);
+                    texto.color = config.ColorCalor;
+                    texto.text = config.TextoCalor;
+                    Image[] marcas = new Image[NumeroMarcasCalor];
+                    for (int i = 0; i < NumeroMarcasCalor; i++)
+                    {
+                        marcas[i] = CrearImagen("Marca" + (i + 1), grupo, config.ColorMarcaCalorApagada);
+                        RectTransform rect = marcas[i].rectTransform;
+                        rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(1f, 0f);
+                        rect.sizeDelta = new Vector2(config.AnchoMarcaCalor, config.AltoMarcaCalor);
+                        // La marca 1 queda a la izquierda y la 3 al borde derecho.
+                        rect.anchoredPosition = new Vector2(-(NumeroMarcasCalor - 1 - i) * (config.AnchoMarcaCalor + SeparacionMarcasCalor), 0f);
+                    }
+                    so.FindProperty("grupoCalor").objectReferenceValue = grupo.gameObject;
+                    so.FindProperty("textoCalor").objectReferenceValue = texto;
+                    SerializedProperty lista = so.FindProperty("marcasCalor");
+                    lista.arraySize = marcas.Length;
+                    for (int i = 0; i < marcas.Length; i++)
+                    {
+                        lista.GetArrayElementAtIndex(i).objectReferenceValue = marcas[i];
+                    }
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                }
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
             }
         }
 
