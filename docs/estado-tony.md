@@ -16,7 +16,7 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 | T-064 El mecha como montable | nada nuevo | hecha (sin revisar) |
 | T-065 Encendido del mecha en 3 pasos | T-064 | hecha (sin revisar) |
 | T-066 Llamar al mecha, zonas y regreso | T-062, T-064 | hecha (sin revisar) |
-| T-067 Calor por usar el mecha en la calle | T-062, T-066 | pendiente |
+| T-067 Calor por usar el mecha en la calle | T-062, T-066 | en curso (implementada, sin verificar) |
 | T-068 Rival que no te deja perder y rival del tutorial | nada nuevo | hecha (sin revisar) |
 | T-069 Pandilla con turnos de ataque | T-068 | pendiente |
 | T-070 Presentador y perfil del jugador | T-062, T-068 | pendiente |
@@ -48,6 +48,7 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 | T-058 Subir y bajar del carro | hecha (sin revisar) |
 | T-059 Prefab completo del jugador a pie y recorrido | hecha (sin revisar) |
 
-Qué sigue: crear tony/fase-4 desde tony/fase-3 y empezar por T-062 (Core; Alan la necesita para A-F3, se integra a main en cuanto
-se verifique) y T-063. Las observaciones menores de la revisión de T-F3 (prueba inestable de GolpeBloqueoPruebas, HUD repetido en
-pruebas, textos de FormatoHud, captura T-059-2) son T-063. T-060, T-061 y T-073 siguen bloqueadas esperando a Alan (A-F1, A-F2 y A-F3).
+Qué sigue (parada a petición de Tony, 12-oct-2026): T-F4 en tony/fase-4. Hechas e integradas (sin revisar a mano): T-062 (también en main por cherry-pick), T-063, T-064, T-065, T-066, T-068.
+T-067 (calor del mecha) está implementada y subida en la rama tony/T-067-calor-mecha (commit cd90307; el implementador informa EditMode 334/334 y PlayMode 279/279) pero SIN VERIFICAR: paré al verificador a medias. Falta: (1) verificarla (criterios, capturas T-067-1/2, que la barra fina del valor se corta abajo en la pantalla de cabina, que HudAPie/MechaJugador/ServiciosProgresion prefabs solo ganen líneas, y la referencia nueva de Mecha.Editor.asmdef a Progresion, que la tarea quizá no listaba); (2) cierrar con cierre.sh y merge a tony/fase-4.
+Después: T-069, T-070, T-071, T-072 (cierre de T-F4 del lado de Tony), revisión de conjunto de T-F4 por el revisor contra main, y planificar T-F5. T-060, T-061 y T-073 siguen bloqueadas esperando a Alan (A-F1, A-F2, A-F3).
+Pendientes menores: aviso "2 audio listeners" visto al montar por código en T-065; mecha estacionado mira al inicio de la calle, no al barrio (T-064).
