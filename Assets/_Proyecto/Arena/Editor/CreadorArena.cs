@@ -10,6 +10,8 @@ namespace MechaCyberpunk.Arena.Editor
 {
     /// <summary>
     /// Crea los assets de T-020: materiales, prefab de la jaula del clandestino y las escenas Clandestino y Pruebas_Alan.
+    /// AVISO: rehace Clandestino y Pruebas_Alan desde cero (borra jugador, flujo y lo que CreadorBarrio puso en Pruebas_Alan).
+    /// Orden: CreadorArena, CreadorBarrio, CreadorReloj, CreadorLugares, CreadorBar, CreadorPeleaClandestino; usa CreadorTodo.Crear.
     /// Batchmode: -executeMethod MechaCyberpunk.Arena.Editor.CreadorArena.Crear
     /// </summary>
     public static class CreadorArena

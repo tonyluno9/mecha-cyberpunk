@@ -7,7 +7,7 @@ namespace MechaCyberpunk.Mundo.Editor
     /// <summary>
     /// Crea el interior del bar de T-043 dentro del prefab del barrio: muros gruesos con collider, barra con bancos, mesas,
     /// escenario con cabina de DJ, puerta falsa a los baños, pantallas, neón, luces y la <see cref="ZonaInterior"/>.
-    /// Corre después de CreadorBarrio y CreadorLugares y se puede repetir.
+    /// Corre después de CreadorBarrio, CreadorReloj y CreadorLugares y se puede repetir (usa CreadorTodo.Crear).
     /// Batchmode: -executeMethod MechaCyberpunk.Mundo.Editor.CreadorBar.Crear
     /// </summary>
     public static class CreadorBar

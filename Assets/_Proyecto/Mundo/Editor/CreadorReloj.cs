@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Mundo.Editor
         public static void Crear()
         {
             CrearConfig<ConfigRelojMundo>(RutaConfigReloj);
-            CrearConfig<ConfigCicloDia>(RutaConfigCiclo, true);
+            CrearConfig<ConfigCicloDia>(RutaConfigCiclo);
             AgregarAccionesDePrueba();
             AssetDatabase.Refresh();
             PonerLuzNocturnaEnBarrio();
@@ -40,18 +40,12 @@ namespace MechaCyberpunk.Mundo.Editor
             Debug.Log("[Mundo] T-041 creada.");
         }
 
-        // Con restaurar, los valores del asset vuelven a los del código (el config del ciclo se afina allí).
-        private static void CrearConfig<T>(string ruta, bool restaurar = false) where T : ScriptableObject
+        // Solo crea el asset si no existe: nunca pisa valores afinados.
+        private static void CrearConfig<T>(string ruta) where T : ScriptableObject
         {
-            T existente = AssetDatabase.LoadAssetAtPath<T>(ruta);
-            if (existente == null)
+            if (AssetDatabase.LoadAssetAtPath<T>(ruta) == null)
             {
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<T>(), ruta);
-            }
-            else if (restaurar)
-            {
-                EditorUtility.CopySerialized(ScriptableObject.CreateInstance<T>(), existente);
-                EditorUtility.SetDirty(existente);
             }
         }
 

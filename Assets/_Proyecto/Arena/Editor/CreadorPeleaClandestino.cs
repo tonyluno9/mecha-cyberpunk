@@ -8,6 +8,7 @@ namespace MechaCyberpunk.Arena.Editor
 {
     /// <summary>
     /// T-044: coloca MechaJugador y FlujoPelea (prefabs de Tony, sin overrides) en Clandestino.unity y quita CamaraVistaArena.
+    /// Orden: es el ultimo (despues de CreadorArena); usa CreadorTodo.Crear. Se puede repetir.
     /// Batchmode: -executeMethod MechaCyberpunk.Arena.Editor.CreadorPeleaClandestino.Crear
     /// </summary>
     public static class CreadorPeleaClandestino

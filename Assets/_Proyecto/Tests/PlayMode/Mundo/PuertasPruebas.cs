@@ -123,6 +123,23 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
+        public IEnumerator Puerta_ElLocalCierraConAlguienEnElUmbral_NoSeCierraEnEseMomento()
+        {
+            const float HoraDespuesDelCierreDelBar = 5f;
+            yield return Preparar(EscenaLugares.HoraNoche, IdLugar.Bar);
+            IPuerta puerta = EscenaLugares.Puerta(IdLugar.Bar);
+            yield return PresionarE();
+            Assert.IsTrue(puerta.EstaAbierta);
+            camara.Colocar(new Pose(puerta.Posicion + Vector3.up * 0.05f, Quaternion.LookRotation(EscenaLugares.HaciaLaPuerta(IdLugar.Bar), Vector3.up)));
+            yield return null;
+            reloj.AvanzarHasta(HoraDespuesDelCierreDelBar);
+            yield return null;
+            yield return null;
+            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Bar).EstaAbierto, "El bar ya debe estar cerrado por horario");
+            Assert.IsTrue(puerta.EstaAbierta, "Con alguien en el umbral la puerta no se cierra al cerrar el local");
+        }
+
+        [UnityTest]
         public IEnumerator Clandestino_A12_EDaCerradaPorHorarioYNoDejaPasar()
         {
             yield return Preparar(EscenaLugares.HoraMediodia, IdLugar.Clandestino);
