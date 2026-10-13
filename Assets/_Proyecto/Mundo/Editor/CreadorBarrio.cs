@@ -43,8 +43,8 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float PasoManzana = LadoManzana + AnchoCalle;
         private const float MitadManzana = LadoManzana / 2f;
         private const float MitadInterior = MitadManzana - AnchoBanqueta;
-        private const float MitadBarrioX = PasoManzana + MitadManzana;       // 134
-        private const float MitadBarrioZ = PasoManzana / 2f + MitadManzana;  // 87
+        internal const float MitadBarrioX = PasoManzana + MitadManzana;       // 134
+        internal const float MitadBarrioZ = PasoManzana / 2f + MitadManzana;  // 87
         private const float LoteMaximo = 26f;
         private const float AlturaMinima = 8f;
         private const float AlturaMaxima = 30f;
@@ -132,6 +132,12 @@ namespace MechaCyberpunk.Mundo.Editor
             Mat("Carro_B", new Color(0.1f, 0.2f, 0.4f), 0.5f);
             Mat("Carro_C", new Color(0.55f, 0.55f, 0.5f), 0.5f);
             Mat("Bote", new Color(0.15f, 0.3f, 0.2f), 0.2f);
+            Mat("Reja", new Color(0.14f, 0.15f, 0.18f), 0.3f);
+            Mat("Patrulla", new Color(0.07f, 0.09f, 0.16f), 0.5f);
+            Mat("PatrullaBlanco", new Color(0.8f, 0.82f, 0.85f), 0.4f);
+            Mat("TorretaRoja", new Color(0.9f, 0.05f, 0.05f), 0.3f, new Color(3f, 0.1f, 0.1f));
+            Mat("TorretaAzul", new Color(0.05f, 0.15f, 0.95f), 0.3f, new Color(0.1f, 0.3f, 3f));
+            Mat("AvisoCorp", new Color(0.04f, 0.04f, 0.06f), 0.2f);
         }
 
         private static Material Mat(string nombre, Color color, float suavidad, Color emision = default)
@@ -225,12 +231,12 @@ namespace MechaCyberpunk.Mundo.Editor
 
         // ---------------------------------------------------------------- piezas básicas
 
-        private static Material M(string nombre)
+        internal static Material M(string nombre)
         {
             return materiales[nombre];
         }
 
-        private static GameObject Cubo(string nombre, Transform padre, Vector3 posicion, Vector3 escala, string material, bool conCollider = true)
+        internal static GameObject Cubo(string nombre, Transform padre, Vector3 posicion, Vector3 escala, string material, bool conCollider = true)
         {
             GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             go.name = nombre;
@@ -245,7 +251,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return go;
         }
 
-        private static Transform Vacio(string nombre, Transform padre, Vector3 posicion, Quaternion rotacion)
+        internal static Transform Vacio(string nombre, Transform padre, Vector3 posicion, Quaternion rotacion)
         {
             GameObject go = new GameObject(nombre);
             go.transform.SetParent(padre, false);
@@ -452,46 +458,8 @@ namespace MechaCyberpunk.Mundo.Editor
         private static void CrearFinales(Transform padre)
         {
             Transform finales = Vacio("Finales", padre, Vector3.zero, Quaternion.identity);
-            CrearReten(finales);
-            CrearObraOeste(finales);
             CrearAutopista(finales);
-            CrearObraSur(finales);
-        }
-
-        private static void CrearReten(Transform padre)
-        {
-            Transform t = Vacio("Final_Reten", padre, Vector3.zero, Quaternion.identity);
-            Cubo("Muro_Este", t, new Vector3(MitadBarrioX + 1f, 2.5f, 0f), new Vector3(2f, 5f, 2f * MitadBarrioZ + 4f), "ConcretoOscuro");
-            for (int i = 0; i < 5; i++)
-            {
-                Cubo("Jersey", t, new Vector3(MitadBarrioX - 3f, 0.6f, -6.4f + i * 3.2f), new Vector3(1.2f, 1.2f, 3.2f), "Concreto");
-            }
-            Cubo("Caseta", t, new Vector3(MitadBarrioX - 10f, 1.4f, 5f), new Vector3(3f, 2.8f, 3f), "Concreto");
-            Cubo("TechoCaseta", t, new Vector3(MitadBarrioX - 10f, 2.95f, 5f), new Vector3(3.6f, 0.3f, 3.6f), "ConcretoOscuro");
-            Cubo("PosteBarrera", t, new Vector3(MitadBarrioX - 10f, 0.7f, -7f), new Vector3(0.4f, 1.4f, 0.4f), "ConcretoOscuro");
-            for (int i = 0; i < 5; i++)
-            {
-                Cubo("Barrera_" + i, t, new Vector3(MitadBarrioX - 10f, 1.1f, 3.4f - i * 2.1f), new Vector3(0.2f, 0.2f, 2.1f), i % 2 == 0 ? "RayaRoja" : "RayaBlanca");
-            }
-            Cubo("Aviso", t, new Vector3(MitadBarrioX - 10f, 4.2f, 0f), new Vector3(0.3f, 1.2f, 6f), "Letrero_Naranja", false);
-        }
-
-        private static void CrearObraOeste(Transform padre)
-        {
-            Transform t = Vacio("Final_Obra", padre, Vector3.zero, Quaternion.identity);
-            Cubo("Valla_Obra_Oeste", t, new Vector3(-MitadBarrioX - 1f, 2f, 0f), new Vector3(2f, 4f, 2f * MitadBarrioZ + 4f), "Valla");
-            for (int i = 0; i < 5; i++)
-            {
-                Cubo("Valla", t, new Vector3(-MitadBarrioX + 8f, 0.9f, -5.6f + i * 2.8f), new Vector3(0.2f, 1.8f, 2.8f), i % 2 == 0 ? "Valla" : "RayaBlanca");
-            }
-            for (int i = 0; i < 8; i++)
-            {
-                Cubo("Cono", t, new Vector3(-MitadBarrioX + 10f, 0.35f, -6f + i * 1.7f), new Vector3(0.45f, 0.7f, 0.45f), "Valla");
-            }
-            Cubo("Excavadora", t, new Vector3(-MitadBarrioX + 3f, 1.4f, 3.5f), new Vector3(4f, 2.2f, 3f), "Maquina");
-            Cubo("BrazoExcavadora", t, new Vector3(-MitadBarrioX + 3.5f, 3f, 3.5f), new Vector3(0.6f, 0.6f, 5f), "Maquina");
-            GameObject monton = Cubo("MontonTierra", t, new Vector3(-MitadBarrioX + 4f, 1f, -3.5f), new Vector3(6f, 2f, 5f), "Tierra");
-            monton.transform.localRotation = Quaternion.Euler(0f, 25f, 0f);
+            CreadorFinales.Crear(finales);
         }
 
         private static void CrearAutopista(Transform padre)
@@ -505,24 +473,6 @@ namespace MechaCyberpunk.Mundo.Editor
             for (float x = -130f; x <= 130f; x += 26f)
             {
                 Cubo("Pilar", t, new Vector3(x, 4.5f, MitadBarrioZ + 9f), new Vector3(1.6f, 9f, 1.6f), "Concreto");
-            }
-        }
-
-        private static void CrearObraSur(Transform padre)
-        {
-            Transform t = Vacio("Final_Obra_Sur", padre, Vector3.zero, Quaternion.identity);
-            Cubo("Valla_Obra_Sur", t, new Vector3(0f, 2f, -MitadBarrioZ - 1f), new Vector3(2f * MitadBarrioX + 4f, 4f, 2f), "Valla");
-            foreach (float cx in new[] { -PasoManzana / 2f, PasoManzana / 2f })
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    Cubo("Valla", t, new Vector3(cx - 5.6f + i * 2.8f, 0.9f, -MitadBarrioZ + 4f), new Vector3(2.8f, 1.8f, 0.2f), i % 2 == 0 ? "Valla" : "RayaBlanca");
-                }
-                for (int i = 0; i < 6; i++)
-                {
-                    Cubo("Cono", t, new Vector3(cx - 4.5f + i * 1.8f, 0.35f, -MitadBarrioZ + 6f), new Vector3(0.45f, 0.7f, 0.45f), "Valla");
-                }
-                Cubo("Tubos", t, new Vector3(cx + 3f, 0.6f, -MitadBarrioZ + 1.8f), new Vector3(5f, 1.2f, 1.5f), "ConcretoOscuro");
             }
         }
 
