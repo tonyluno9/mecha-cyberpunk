@@ -33,5 +33,10 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Para ti: Pruebas_Alan, 22:00, puerta del bar, E y W: sin tirón al cruzar; el interior sale algo oscuro (muros y techo); tamaño entre mesas.
 - Props de Blender (barra, mesa, DJ, letrero) en Assets/Arte/Mundo/Bar/, aún no colocados en el bar.
 
+### T-044 Pelea en Clandestino (cierre de H1)
+- Verificado automáticamente: todos los criterios (EditMode 213/213, PlayMode 166/166; capturas T-044-1/2).
+- Para ti: Clandestino.unity, Play, pelea tres veces con R: que la luz de la jaula deje leer al rival y su aviso naranja, que la pantalla se lea desde la cabina y que se sienta igual que en Pruebas_Tony.
+- Decisiones del agente: sin LogAssert.NoUnexpectedReceived por el log "[Combate] KO" de Tony.
+
 ## Bloqueos y preguntas
 - Nada todavía.
