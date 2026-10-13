@@ -1,3 +1,5 @@
+using System;
+using MechaCyberpunk.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,9 +8,21 @@ namespace MechaCyberpunk.Vehiculos.Carro
     /// <summary>
     /// Carro viejo con física arcade: cuerpo rígido y suspensión por rayos (un rayo hacia abajo por rueda, sin WheelCollider).
     /// Solo lee la entrada cuando tiene control (<see cref="TomarControl"/>); sin control se queda estacionado.
+    ///
+    /// Es un <see cref="IMontable"/> (T-075), para el jugador de Tony (T-061) y la cámara libre de Alan:
+    /// - Teclas del conductor (ControlesCarro): W o flecha arriba acelera, S o flecha abajo frena y da reversa,
+    ///   A y D o flechas izquierda y derecha giran, Espacio es el freno de mano, C alterna primera y tercera persona,
+    ///   el ratón mira en primera persona. La E es del jugador: el carro no la lee.
+    /// - Subir: <c>IntentarSubir</c> funciona si no está ocupado. El jugador decide la distancia; el contrato sugiere
+    ///   2.5 m o menos de <see cref="PuntoSubida"/> y 60° o menos de hacia dónde mira.
+    /// - Bajar: <see cref="PuedeBajar"/> es true solo si está ocupado, su rapidez es menor que 0.5 m/s
+    ///   (<see cref="ConfigCarro.RapidezMaximaParaBajar"/>) y hay una salida libre: junto a <see cref="PuntoSubida"/>
+    ///   (lado del conductor) o, si ahí choca una cápsula de persona de 0.4 m de radio y 1.8 m de alto, del lado del copiloto.
+    ///   Con el carro en marcha <c>IntentarBajar</c> devuelve false y no avisa nada.
+    /// - Al bajar entrega una pose en el piso mirando como el carro.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
-    public class CarroViejo : MonoBehaviour
+    public class CarroViejo : MonoBehaviour, IMontable
     {
         private const string NombreMapa = "Carro";
         private const string AccionAcelerar = "Acelerar";
@@ -19,12 +33,23 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const int RuedasMinimasParaGirar = 2;
         private const int MaxImpactosPorRayo = 8;
         private const float CompresionMaximaPermitida = 0.8f;
+        private const int MaxImpactosSalida = 8;
+        private const float AlturaRayoSalida = 1.5f;
+        private const float LargoRayoSalida = 4f;
 
         [Header("Datos")]
         [Tooltip("Valores de física y sensación del carro.")]
         [SerializeField] private ConfigCarro config;
         [Tooltip("Controles del carro (ControlesCarro.inputactions).")]
         [SerializeField] private InputActionAsset controles;
+
+        [Header("Montar")]
+        [Tooltip("Asiento del conductor (lado izquierdo): a donde se pega el jugador.")]
+        [SerializeField] private Transform asiento;
+        [Tooltip("Punto en el piso, 1 m afuera de la puerta del conductor.")]
+        [SerializeField] private Transform puntoSubida;
+        [Tooltip("Cámara del carro, con su AudioListener; los dos apagados al empezar.")]
+        [SerializeField] private CamaraCarro camaraCarro;
 
         [Header("Ruedas")]
         [Tooltip("Rueda delantera izquierda: punto en el eje, con el carro en reposo.")]
@@ -46,6 +71,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private InputAction frenoMano;
         private ParametrosManejo parametros;
         private bool listo;
+        private readonly RaycastHit[] impactosSalida = new RaycastHit[MaxImpactosSalida];
 
         /// <summary>Velocidad hacia adelante (m/s), negativa en reversa.</summary>
         public float Velocidad { get; private set; }
@@ -68,10 +94,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void Awake()
         {
             cuerpo = GetComponent<Rigidbody>();
-            if (config == null || controles == null || ruedaDelanteraIzquierda == null || ruedaDelanteraDerecha == null
+            if (config == null || controles == null || asiento == null || puntoSubida == null || camaraCarro == null
+                || ruedaDelanteraIzquierda == null || ruedaDelanteraDerecha == null
                 || ruedaTraseraIzquierda == null || ruedaTraseraDerecha == null)
             {
-                Debug.LogError($"[Vehiculos] {name}: faltan la config, los controles o alguna rueda.", this);
+                Debug.LogError($"[Vehiculos] {name}: faltan la config, los controles, el asiento, el punto de subida, la cámara o alguna rueda.", this);
                 enabled = false;
                 return;
             }
@@ -99,10 +126,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void OnEnable()
         {
             ActualizarMapa();
+            Registro<IMontable>.Agregar(this);
         }
 
         private void OnDisable()
         {
+            Registro<IMontable>.Quitar(this);
             controlesPropios?.Disable();
         }
 
@@ -112,6 +141,96 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 Destroy(controlesPropios);
             }
+        }
+
+        public ModoJugador Modo => ModoJugador.Carro;
+        public string Nombre => "Carro viejo";
+        public Vector3 PuntoSubida => puntoSubida.position;
+        public bool Ocupado { get; private set; }
+        public bool PuedeSubir => listo && !Ocupado;
+        public Transform Asiento => asiento;
+        public Camera Camara => camaraCarro.Camara;
+        public event Action<bool> OcupadoCambio;
+
+        /// <summary>La cámara del carro (para saber si va en tercera persona).</summary>
+        public CamaraCarro CamaraDelCarro => camaraCarro;
+
+        public bool PuedeBajar => Ocupado && CalculoSalida.VaLentoParaBajar(Rapidez, config.RapidezMaximaParaBajar)
+            && CalculoSalida.Elegir(SalidaLibre(LadoSalida.Conductor, out _), SalidaLibre(LadoSalida.Copiloto, out _)) != LadoSalida.Ninguno;
+
+        public bool IntentarSubir(IJugador jugador)
+        {
+            if (!PuedeSubir)
+            {
+                return false;
+            }
+            Ocupado = true;
+            camaraCarro.Encender(true);
+            TomarControl(true);
+            OcupadoCambio?.Invoke(true);
+            return true;
+        }
+
+        public bool IntentarBajar(out Pose salida)
+        {
+            salida = Pose.identity;
+            if (!Ocupado || !CalculoSalida.VaLentoParaBajar(Rapidez, config.RapidezMaximaParaBajar))
+            {
+                return false;
+            }
+            LadoSalida lado = CalculoSalida.Elegir(SalidaLibre(LadoSalida.Conductor, out Pose conductor),
+                SalidaLibre(LadoSalida.Copiloto, out Pose copiloto));
+            if (lado == LadoSalida.Ninguno)
+            {
+                return false;
+            }
+            salida = lado == LadoSalida.Conductor ? conductor : copiloto;
+            Ocupado = false;
+            camaraCarro.Encender(false);
+            TomarControl(false);
+            OcupadoCambio?.Invoke(false);
+            return true;
+        }
+
+        // Pose en el piso junto al carro (lado del conductor o espejo del lado del copiloto) y si cabe una persona ahí.
+        private bool SalidaLibre(LadoSalida lado, out Pose pose)
+        {
+            Vector3 punto = puntoSubida.position;
+            if (lado == LadoSalida.Copiloto)
+            {
+                Vector3 local = transform.InverseTransformPoint(punto);
+                local.x = -local.x;
+                punto = transform.TransformPoint(local);
+            }
+            Quaternion mirada = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            pose = new Pose(punto, mirada);
+
+            Vector3 origen = punto + Vector3.up * AlturaRayoSalida;
+            int cantidad = Physics.RaycastNonAlloc(origen, Vector3.down, impactosSalida, LargoRayoSalida,
+                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            float mejor = float.MaxValue;
+            bool hayPiso = false;
+            for (int i = 0; i < cantidad; i++)
+            {
+                RaycastHit impacto = impactosSalida[i];
+                if (impacto.collider.transform.IsChildOf(transform) || impacto.distance >= mejor)
+                {
+                    continue;
+                }
+                mejor = impacto.distance;
+                punto = impacto.point;
+                hayPiso = true;
+            }
+            if (!hayPiso)
+            {
+                return false;
+            }
+            pose = new Pose(punto, mirada);
+
+            float radio = config.RadioSalida;
+            Vector3 abajo = punto + Vector3.up * (config.HolguraSalida + radio);
+            Vector3 arriba = punto + Vector3.up * (config.AlturaSalida - radio);
+            return !Physics.CheckCapsule(abajo, arriba, radio, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
         }
 
         /// <summary>Prende o apaga la lectura de la entrada. Sin control el carro se queda estacionado.</summary>

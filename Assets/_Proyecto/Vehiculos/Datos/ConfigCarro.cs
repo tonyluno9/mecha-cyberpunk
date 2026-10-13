@@ -65,6 +65,20 @@ namespace MechaCyberpunk.Vehiculos
         [Tooltip("Amortiguamiento de cada resorte (N·s/m).")]
         [Min(0f)] [SerializeField] private float amortiguamiento = 3500f;
 
+        [Header("Bajar")]
+        [Tooltip("Rapidez bajo la cual el conductor puede bajar (m/s).")]
+        [Min(0.01f)] [SerializeField] private float rapidezMaximaParaBajar = 0.5f;
+        [Tooltip("Radio de la cápsula de persona que debe caber en la salida (m).")]
+        [Min(0.1f)] [SerializeField] private float radioSalida = 0.4f;
+        [Tooltip("Alto de la cápsula de persona que debe caber en la salida (m).")]
+        [Min(0.5f)] [SerializeField] private float alturaSalida = 1.8f;
+        [Tooltip("Cuánto se levanta la cápsula del piso al revisar la salida, para no chocar con el piso (m).")]
+        [Min(0f)] [SerializeField] private float holguraSalida = 0.05f;
+
+        public float RapidezMaximaParaBajar => rapidezMaximaParaBajar;
+        public float RadioSalida => radioSalida;
+        public float AlturaSalida => alturaSalida;
+        public float HolguraSalida => holguraSalida;
         public float Masa => masa;
         public float AlturaCentroMasa => alturaCentroMasa;
         public float FuerzaAntivuelco => fuerzaAntivuelco;
