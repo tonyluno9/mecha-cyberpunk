@@ -10,7 +10,7 @@ namespace MechaCyberpunk.Mecha.Editor
 {
     /// <summary>
     /// Arma lo de T-067 en MechaJugador.prefab (y por herencia en MechaEstacionado.prefab): CalorPorMecha con su config y la pantalla
-    /// de calor al lado de la de vida. Idempotente: no regenera lo que ya existe.
+    /// de calor al lado de la de vida. Idempotente: rehace la pantalla cada vez.
     /// Batchmode: -executeMethod MechaCyberpunk.Mecha.Editor.CreadorCalorMecha.Crear
     /// </summary>
     public static class CreadorCalorMecha
@@ -24,7 +24,7 @@ namespace MechaCyberpunk.Mecha.Editor
         // Misma altura, distancia e inclinación que la pantalla de vida (CreadorCabina), a su derecha en el tablero.
         private const float AlturaCamara = 3.5f;
         private const float XPantalla = 0.225f;
-        private const float YPantalla = -0.285f;
+        private const float YPantalla = -0.245f;
         private const float ZPantalla = 0.6f;
         private const float InclinacionPantalla = 60f;
         private const float SeparacionDelTablero = -0.003f;
@@ -53,10 +53,13 @@ namespace MechaCyberpunk.Mecha.Editor
                 AsignarObjeto(calor, "config", configMecha);
 
                 Transform cabina = raiz.transform.Find("Sacudida/Cabina");
-                if (cabina.Find(NombrePantalla) == null)
+                // Si ya existe (de una versión anterior) se rehace: la posición cambió para que el tablero no tape la barra.
+                Transform vieja = cabina.Find(NombrePantalla);
+                if (vieja != null)
                 {
-                    ArmarPantalla(cabina, raiz.GetComponent<EncendidoMecha>(), configPantalla);
+                    Object.DestroyImmediate(vieja.gameObject);
                 }
+                ArmarPantalla(cabina, raiz.GetComponent<EncendidoMecha>(), configPantalla);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }
             finally
