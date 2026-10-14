@@ -143,6 +143,11 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Referencia nueva de Mecha.Editor.asmdef a Progresion: necesaria para el creador, ambas son de Tony.
 - Para ti: en Pruebas_Calle, sube al mecha, enciéndelo y maneja 30 s por la calle: ¿el calor llega a nivel 3 a buen ritmo y la pantalla no distrae?
 
+### T-070 Presentador y perfil del jugador
+- Verificado automáticamente: todos los criterios (EditMode 362/362, PlayMode 294/294); sin ConfigPresentador el flujo no cambia; Core y Pruebas_Tony intactos.
+- Decisiones del implementador: EstadoFlujoPelea.Presentacion al final del enum; grito 150 pt y líneas 100 pt; nombre de respaldo del perfil "JUGADOR" (provisional hasta T-F6).
+- Para ti: en Pruebas_Tutorial.unity, Play sin tocar teclas: ¿las 4 líneas de 1.6 s (6.4 s) se sienten como arranque de campeonato y no como carga, y el grito del alias destaca? Revancha con R: no debe repetir la presentación.
+
 ### T-069 Pandilla con turnos de ataque
 - Verificado automáticamente: todos los criterios (EditMode 345/345, PlayMode 284/284; caso d estable en 4 corridas, ~5.6 s).
 - Decisiones del implementador: pide turno al llegar a distancia de ataque + 2 m y con su espera a 0.6 s o menos de acabar; sin turno rodea a 1.2 m/s en un anillo de 4.6 m; los pandilleros no chocan entre sí (Physics.IgnoreCollision solo con usarTurnos) porque los cuerpos caídos los atoraban. Para T-071: retirar los cuerpos de los pandilleros caídos.

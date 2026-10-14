@@ -93,5 +93,41 @@ namespace MechaCyberpunk.Progresion.Editor
             }
             AssetDatabase.SaveAssets();
         }
+
+        private const string RutaDatosPerfil = "Assets/_Proyecto/Progresion/Datos/DatosPerfil_Base.asset";
+
+        /// <summary>Crea DatosPerfil_Base y agrega ServicioPerfil a ServiciosProgresion.prefab si no lo tiene (T-070). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-070 servicio de perfil")]
+        public static void CrearT070()
+        {
+            var datos = AssetDatabase.LoadAssetAtPath<DatosPerfil>(RutaDatosPerfil);
+            if (datos == null)
+            {
+                datos = ScriptableObject.CreateInstance<DatosPerfil>();
+                AssetDatabase.CreateAsset(datos, RutaDatosPerfil);
+            }
+            EditorUtility.SetDirty(datos);
+            AssetDatabase.SaveAssets();
+            datos = AssetDatabase.LoadAssetAtPath<DatosPerfil>(RutaDatosPerfil);
+
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                var servicio = raiz.GetComponent<ServicioPerfil>();
+                if (servicio == null)
+                {
+                    servicio = raiz.AddComponent<ServicioPerfil>();
+                }
+                var so = new SerializedObject(servicio);
+                so.FindProperty("datos").objectReferenceValue = datos;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
     }
 }

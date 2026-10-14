@@ -42,6 +42,8 @@ namespace MechaCyberpunk.Pelea.Flujo
                 enabled = false;
                 return;
             }
+            // Las líneas del presentador son largas: se parten en vez de salirse de la pantalla.
+            texto.horizontalOverflow = HorizontalWrapMode.Wrap;
             Limpiar();
         }
 
@@ -118,6 +120,16 @@ namespace MechaCyberpunk.Pelea.Flujo
             lienzo.transform.localScale = Vector3.one * escala;
         }
 
+        /// <summary>El presentador dice una línea (T-070): se muestra en el texto grande con su color y tamaño.</summary>
+        public void MostrarLinea(string contenido, Color color, int tamanoLetra)
+        {
+            ocultando = false;
+            textoRevancha.enabled = false;
+            Mostrar(contenido, color, tamanoLetra);
+            // Arriba, para que el rival (que está delante de la pantalla) no tape el texto.
+            texto.alignment = TextAnchor.UpperCenter;
+        }
+
         /// <summary>El director avisa que alguien cayó: muestra "KO".</summary>
         public void MostrarKO()
         {
@@ -156,6 +168,7 @@ namespace MechaCyberpunk.Pelea.Flujo
             texto.text = contenido;
             texto.color = color;
             texto.fontSize = tamanoLetra;
+            texto.alignment = TextAnchor.MiddleCenter;
             texto.enabled = true;
         }
 

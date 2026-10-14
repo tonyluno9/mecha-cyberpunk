@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Pelea.Datos;
 using UnityEngine;
@@ -27,6 +29,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         [SerializeField] private GameObject prefabRival;
         [Tooltip("Si es verdadero, la pelea empieza sola al dar Play. Si no, la inicia quien llame a EmpezarPelea.")]
         [SerializeField] private bool empezarAlArrancar = true;
+        [Tooltip("Opcional: lo que dice el presentador antes del conteo. Sin esto no hay presentación.")]
+        [SerializeField] private ConfigPresentador presentador;
         [Tooltip("Acción de la revancha (tecla R). Solo funciona en el resultado.")]
         [SerializeField] private InputAction revancha;
 
@@ -49,6 +53,9 @@ namespace MechaCyberpunk.Pelea.Flujo
         public IPeleador Rival => rival;
         public PantallaPelea Pantalla => pantalla;
 
+        /// <summary>Avisa cada línea que dice el presentador, ya con alias y rival puestos y en mayúsculas (para el audio).</summary>
+        public event Action<string> LineaDicha;
+
         private void Awake()
         {
             if (config == null || pantalla == null)
@@ -57,7 +64,18 @@ namespace MechaCyberpunk.Pelea.Flujo
                 enabled = false;
                 return;
             }
-            maquina = new MaquinaFlujoPelea(config.SegundosPorNumero, config.PausaDespuesKO);
+            List<float> duraciones = null;
+            if (presentador != null && presentador.Lineas != null)
+            {
+                duraciones = new List<float>(presentador.Lineas.Length);
+                foreach (string linea in presentador.Lineas)
+                {
+                    duraciones.Add(presentador.SegundosPorLinea);
+                }
+            }
+            maquina = new MaquinaFlujoPelea(config.SegundosPorNumero, config.PausaDespuesKO, duraciones,
+                presentador != null && presentador.PresentarEnRevancha);
+            maquina.LineaCambio += AlCambiarLinea;
             maquina.ConteoCambio += EventosPelea.PublicarConteo;
             maquina.PeleaIniciada += AlIniciarPelea;
             maquina.KOOcurrido += AlOcurrirKO;
@@ -293,6 +311,19 @@ namespace MechaCyberpunk.Pelea.Flujo
                 rival.PrepararPelea(arena.InicioRival);
             }
             maquina.IniciarConteo();
+        }
+
+        private void AlCambiarLinea(int indice)
+        {
+            string plantilla = presentador.Lineas[indice] ?? string.Empty;
+            IPerfilJugador perfil = Registro<IPerfilJugador>.Actual;
+            string alias = perfil != null && !string.IsNullOrEmpty(perfil.Alias) ? perfil.Alias : presentador.AliasRespaldo;
+            string nombreRival = rival != null ? rival.Nombre : string.Empty;
+            string linea = plantilla.Replace("{alias}", alias).Replace("{rival}", nombreRival).ToUpperInvariant();
+            bool grito = indice == presentador.IndiceGrito;
+            pantalla.MostrarLinea(linea, grito ? presentador.ColorGrito : presentador.ColorLinea,
+                grito ? presentador.TamanoLetraGrito : presentador.TamanoLetraLinea);
+            LineaDicha?.Invoke(linea);
         }
 
         private void AlIniciarPelea()

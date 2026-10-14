@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2167960357063286808}
   - component: {fileID: 6672507968215783303}
   - component: {fileID: 569070465315801893}
+  - component: {fileID: 1594139855374585399}
   m_Layer: 0
   m_Name: ServiciosProgresion
   m_TagString: Untagged
@@ -59,3 +60,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioCalor
   datos: {fileID: 11400000, guid: e2d9a1b64abe4414b9caceea7621e137, type: 2}
+--- !u!114 &1594139855374585399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b886ef0c9e6f6f440b85fda2c9f4e7ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioPerfil
+  datos: {fileID: 11400000, guid: 14d2cbfb195dd28449c6e9d1977fd0cf, type: 2}
