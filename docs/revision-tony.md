@@ -143,6 +143,11 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Referencia nueva de Mecha.Editor.asmdef a Progresion: necesaria para el creador, ambas son de Tony.
 - Para ti: en Pruebas_Calle, sube al mecha, enciéndelo y maneja 30 s por la calle: ¿el calor llega a nivel 3 a buen ritmo y la pantalla no distrae?
 
+### T-069 Pandilla con turnos de ataque
+- Verificado automáticamente: todos los criterios (EditMode 345/345, PlayMode 284/284; caso d estable en 4 corridas, ~5.6 s).
+- Decisiones del implementador: pide turno al llegar a distancia de ataque + 2 m y con su espera a 0.6 s o menos de acabar; sin turno rodea a 1.2 m/s en un anillo de 4.6 m; los pandilleros no chocan entre sí (Physics.IgnoreCollision solo con usarTurnos) porque los cuerpos caídos los atoraban. Para T-071: retirar los cuerpos de los pandilleros caídos.
+- Para ti: en Pruebas_Tony con 3 RivalPandilla y MechaJugador, pelea contra 2 o 3: ¿se turnan como grupo de película y se lee quién va a pegar, o parece una fila?
+
 ### T-068 Rival que no te deja perder y rival del tutorial
 - Verificado automáticamente: todos los criterios (EditMode 326/326, PlayMode 263/263).
 - Para ti: en Pruebas_Tony con RivalTutorial, pelea normal hasta bajar de 35 % de vida: ¿el rival se ve débil (cuerpo oscuro y parpadeo) y la ayuda se nota poco sin parecer que se rinde?
