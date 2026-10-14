@@ -19,7 +19,7 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 | T-067 Calor por usar el mecha en la calle | T-062, T-066 | hecha (sin revisar) |
 | T-068 Rival que no te deja perder y rival del tutorial | nada nuevo | hecha (sin revisar) |
 | T-069 Pandilla con turnos de ataque | T-068 | hecha (sin revisar) |
-| T-070 Presentador y perfil del jugador | T-062, T-068 | pendiente |
+| T-070 Presentador y perfil del jugador | T-062, T-068 | hecha (sin revisar) |
 | T-071 Director de la emboscada | T-064, T-065, T-066, T-069 | pendiente |
 | T-072 Recorrido de la emboscada (cierre de T-F4 de Tony) | T-063 a T-071 | pendiente |
 | T-073 Emboscada en el callejón de Alan | T-072, T-060 | bloqueada (espera A-F3) |
@@ -50,5 +50,5 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 
 Qué sigue (parada a petición de Tony, 12-oct-2026): T-F4 en tony/fase-4. Hechas e integradas (sin revisar a mano): T-062 (también en main por cherry-pick), T-063, T-064, T-065, T-066, T-068.
 T-067 hecha e integrada (EditMode 335/335, PlayMode 279/279; la barra de la pantalla de calor se corrigió en una ronda).
-Sigue: T-070, T-071, T-072 (cierre de T-F4 del lado de Tony), revisión de conjunto de T-F4 por el revisor contra main, y planificar T-F5. T-060, T-061 y T-073 siguen bloqueadas esperando a Alan (A-F1, A-F2, A-F3).
+Sigue: T-071, T-072 (cierre de T-F4 del lado de Tony), revisión de conjunto de T-F4 por el revisor contra main, y planificar T-F5. T-060, T-061 y T-073 siguen bloqueadas esperando a Alan (A-F1, A-F2, A-F3).
 Pendientes menores: aviso "2 audio listeners" visto al montar por código en T-065; mecha estacionado mira al inicio de la calle, no al barrio (T-064).
