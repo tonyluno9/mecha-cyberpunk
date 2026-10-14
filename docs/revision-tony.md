@@ -143,6 +143,11 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Referencia nueva de Mecha.Editor.asmdef a Progresion: necesaria para el creador, ambas son de Tony.
 - Para ti: en Pruebas_Calle, sube al mecha, enciéndelo y maneja 30 s por la calle: ¿el calor llega a nivel 3 a buen ritmo y la pantalla no distrae?
 
+### T-072 Recorrido de la emboscada (H4 del lado de Tony)
+- Verificado automáticamente: EditMode 375/375, PlayMode 304/304. Recorrido a-f con entrada simulada en 47-53 s de juego (4 corridas, estable); `Terminada` una vez; vida mínima 28-44 con piso 15; g) 60 s sin pelear: vida 15 y sigue vivo. Sin código del juego tocado.
+- Para ti (prueba humana de H4): Pruebas_Calle, Play, sin ayuda: W al callejón, M llamar, E subir, encendido (F, Espacio mantenido, Q), pelea con ratón y clic. ¿Tensión de la aparición, ritual de encendido y pelea se sienten bien? ¿El mecha cae demasiado cerca del piso de piedad? Duración ~50 s contra meta de 1 a 2 minutos.
+- Las capturas T-072-1/2 son poco legibles (el banner SISTEMAS EN LÍNEA sigue visible; los KO no se distinguen).
+
 ### T-071 Director de la emboscada
 - Verificado automáticamente: todos los criterios (EditMode 375/375, PlayMode 302/302; 14 casos de MaquinaEmboscada y 8 de DirectorEmboscada). Core intacto.
 - Decisiones del implementador: Pelea usa ServicioObjetivos (Progresion, mismo dueño) para fijar el objetivo, porque IObjetivos no lo permite; rival caído se retira a los 4 s; "Sube a tu mecha" solo si el mecha está a menos de 6 m de la llegada de un punto de llamado.

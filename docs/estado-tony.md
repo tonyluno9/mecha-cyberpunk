@@ -21,7 +21,7 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 | T-069 Pandilla con turnos de ataque | T-068 | hecha (sin revisar) |
 | T-070 Presentador y perfil del jugador | T-062, T-068 | hecha (sin revisar) |
 | T-071 Director de la emboscada | T-064, T-065, T-066, T-069 | hecha (sin revisar) |
-| T-072 Recorrido de la emboscada (cierre de T-F4 de Tony) | T-063 a T-071 | pendiente |
+| T-072 Recorrido de la emboscada (cierre de T-F4 de Tony) | T-063 a T-071 | hecha (sin revisar) |
 | T-073 Emboscada en el callejón de Alan | T-072, T-060 | bloqueada (espera A-F3) |
 
 ## T-F3 y anteriores
