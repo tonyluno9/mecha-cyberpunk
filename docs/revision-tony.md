@@ -138,6 +138,11 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Verificado automáticamente: todos los criterios (EditMode 315/315, PlayMode 257/257).
 - Para ti: en Pruebas_Calle, a pie, pulsa M en la calle: ¿ver bajar al mecha del cielo se siente grande y 6 s se sienten bien o largos? A más de 75 m pulsa M: ¿'AQUÍ NO PUEDE LLEGAR TU MECHA' basta para entender?
 
+### T-067 Calor policial por usar el mecha
+- Verificado automáticamente: todos los criterios (EditMode 335/335, PlayMode 279/279). Primera ronda: la barra fina de la pantalla de calor quedaba tapada por el tablero; se subió la pantalla, se regeneró el prefab y se recapturó T-067-1 (barra visible).
+- Referencia nueva de Mecha.Editor.asmdef a Progresion: necesaria para el creador, ambas son de Tony.
+- Para ti: en Pruebas_Calle, sube al mecha, enciéndelo y maneja 30 s por la calle: ¿el calor llega a nivel 3 a buen ritmo y la pantalla no distrae?
+
 ### T-068 Rival que no te deja perder y rival del tutorial
 - Verificado automáticamente: todos los criterios (EditMode 326/326, PlayMode 263/263).
 - Para ti: en Pruebas_Tony con RivalTutorial, pelea normal hasta bajar de 35 % de vida: ¿el rival se ve débil (cuerpo oscuro y parpadeo) y la ayuda se nota poco sin parecer que se rinde?
