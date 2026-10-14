@@ -143,6 +143,11 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Referencia nueva de Mecha.Editor.asmdef a Progresion: necesaria para el creador, ambas son de Tony.
 - Para ti: en Pruebas_Calle, sube al mecha, enciéndelo y maneja 30 s por la calle: ¿el calor llega a nivel 3 a buen ritmo y la pantalla no distrae?
 
+### T-071 Director de la emboscada
+- Verificado automáticamente: todos los criterios (EditMode 375/375, PlayMode 302/302; 14 casos de MaquinaEmboscada y 8 de DirectorEmboscada). Core intacto.
+- Decisiones del implementador: Pelea usa ServicioObjetivos (Progresion, mismo dueño) para fijar el objetivo, porque IObjetivos no lo permite; rival caído se retira a los 4 s; "Sube a tu mecha" solo si el mecha está a menos de 6 m de la llegada de un punto de llamado.
+- Para ti: en Pruebas_Calle, a pie, acércate al callejón del fondo: ¿la pandilla se siente como amenaza y "Llama a tu mecha (M)" queda claro? Con M: ¿los pandilleros que esperan al mecha se ven creíbles o parece que se congeló?
+
 ### T-070 Presentador y perfil del jugador
 - Verificado automáticamente: todos los criterios (EditMode 362/362, PlayMode 294/294); sin ConfigPresentador el flujo no cambia; Core y Pruebas_Tony intactos.
 - Decisiones del implementador: EstadoFlujoPelea.Presentacion al final del enum; grito 150 pt y líneas 100 pt; nombre de respaldo del perfil "JUGADOR" (provisional hasta T-F6).
