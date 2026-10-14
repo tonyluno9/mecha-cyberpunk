@@ -50,5 +50,5 @@ Orden recomendado (D-tony-39). Decisiones de la planeación: D-tony-27 a D-tony-
 
 Qué sigue (parada a petición de Tony, 12-oct-2026): T-F4 en tony/fase-4. Hechas e integradas (sin revisar a mano): T-062 (también en main por cherry-pick), T-063, T-064, T-065, T-066, T-068.
 T-067 hecha e integrada (EditMode 335/335, PlayMode 279/279; la barra de la pantalla de calor se corrigió en una ronda).
-Sigue: T-072 (cierre de T-F4 del lado de Tony), revisión de conjunto de T-F4 por el revisor contra main, y planificar T-F5. T-060, T-061 y T-073 siguen bloqueadas esperando a Alan (A-F1, A-F2, A-F3).
+T-F4 del lado de Tony completa (T-062 a T-072 hechas). Sigue: revisión de conjunto de T-F4 por el revisor contra main, y planificar T-F5. T-060, T-061 y T-073 siguen bloqueadas esperando a Alan (A-F1, A-F2, A-F3).
 Pendientes menores: aviso "2 audio listeners" visto al montar por código en T-065; mecha estacionado mira al inicio de la calle, no al barrio (T-064).
