@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MechaCyberpunk.Combate.Golpe;
 using MechaCyberpunk.Combate.Peleador;
 using MechaCyberpunk.Core;
@@ -19,7 +20,13 @@ namespace MechaCyberpunk.IA.Rival
         private const float VelocidadVerticalEnPiso = -2f;
         private const float MitadDeLaDistancia = 0.5f;
         private const float FactorFrenado = 2f;
+        // Tolerancia al medir si ya llegó al anillo de espera (m).
+        private const float MargenAnillo = 0.25f;
+        private const float ProbabilidadRodeoInverso = 0.5f;
+        private const float VelocidadMinimaAvance = 0.2f;
+        private const float TiempoParaRodearEstorbo = 0.5f;
 
+        private static readonly List<RivalBasico> Grupo = new List<RivalBasico>();
         private static readonly int IdColorBase = Shader.PropertyToID("_BaseColor");
         private static readonly int IdColorEmision = Shader.PropertyToID("_EmissionColor");
 
@@ -37,8 +44,22 @@ namespace MechaCyberpunk.IA.Rival
         [SerializeField] private bool controlAlArrancar;
         [Tooltip("Radio de la esfera del golpe (m). El alcance llega hasta su borde.")]
         [Min(0.01f)] [SerializeField] private float radioBusqueda = 0.25f;
+        [Tooltip("Pandilla: solo uno por lado prepara un golpe a la vez; los demás esperan rodeando. Falso: el rival de arena.")]
+        [SerializeField] private bool usarTurnos;
+        [Tooltip("Sin turno, espera a su distancia de ataque más esto (m).")]
+        [Min(0f)] [SerializeField] private float margenEspera = 2f;
+        [Tooltip("Velocidad con la que rodea al objetivo mientras espera su turno (m/s).")]
+        [Min(0f)] [SerializeField] private float velocidadRodeo = 1.2f;
+        [Tooltip("Cada cuánto busca al objetivo si no tiene (s).")]
+        [Min(0.05f)] [SerializeField] private float intervaloBusqueda = 0.5f;
+        [Tooltip("Pide el turno cuando le faltan esto o menos para poder golpear (s): así se turnan en vez de acaparar.")]
+        [Min(0f)] [SerializeField] private float anticipoTurno = 0.6f;
 
         private CharacterController controlador;
+        private float esperaBusqueda;
+        private float sentidoRodeo = 1f;
+        private float tiempoAtorado;
+        private bool enGrupo;
         private IPeleador propio;
         private IPeleador peleadorObjetivo;
         private CerebroRival cerebro;
@@ -87,6 +108,7 @@ namespace MechaCyberpunk.IA.Rival
                 return;
             }
             cerebro = new CerebroRival(datos);
+            sentidoRodeo = Random.value < ProbabilidadRodeoInverso ? -1f : 1f;
             PeleadorMecha peleadorMecha = GetComponent<PeleadorMecha>();
             if (peleadorMecha != null)
             {
@@ -120,6 +142,41 @@ namespace MechaCyberpunk.IA.Rival
             }
         }
 
+        private void OnEnable()
+        {
+            if (usarTurnos && controlador != null && !enGrupo)
+            {
+                RegistrarEnGrupo();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            Grupo.Remove(this);
+        }
+
+        // La pandilla no se estorba físicamente: ni entre vivos ni con los caídos. Así nadie queda atorado entre cuerpos
+        // y los turnos son lo único que ordena el ataque. El jugador sí los bloquea.
+        private void RegistrarEnGrupo()
+        {
+            enGrupo = true;
+            Collider[] propios = GetComponentsInChildren<Collider>();
+            foreach (RivalBasico otro in Grupo)
+            {
+                foreach (Collider ajeno in otro.GetComponentsInChildren<Collider>())
+                {
+                    foreach (Collider propio in propios)
+                    {
+                        Physics.IgnoreCollision(propio, ajeno, true);
+                    }
+                }
+            }
+            Grupo.Add(this);
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ReiniciarGrupo() => Grupo.Clear();
+
         private void OnDisable()
         {
             if (ciclo == null)
@@ -133,6 +190,7 @@ namespace MechaCyberpunk.IA.Rival
                 controlDecidido = true;
             }
             ciclo.Reiniciar();
+            TurnosAtaque.Compartido.Soltar(propio);
             velocidad = 0f;
             PonerBrazoEnReposo();
         }
@@ -167,8 +225,10 @@ namespace MechaCyberpunk.IA.Rival
             float dt = Time.deltaTime;
             DatosMecha mecha = datos.Mecha;
 
+            BuscarSiHaceFalta(dt);
+
             Vector3 haciaObjetivo = Vector3.zero;
-            bool hayObjetivo = peleadorObjetivo != null && peleadorObjetivo.Raiz != null;
+            bool hayObjetivo = objetivo != null && peleadorObjetivo != null && peleadorObjetivo.Raiz != null;
             if (hayObjetivo)
             {
                 haciaObjetivo = peleadorObjetivo.Raiz.position - transform.position;
@@ -176,20 +236,42 @@ namespace MechaCyberpunk.IA.Rival
             }
             float distancia = haciaObjetivo.magnitude;
             bool objetivoKO = hayObjetivo && peleadorObjetivo.Vida != null && peleadorObjetivo.Vida.EstaKO;
+            float anillo = datos.DistanciaAtaque + margenEspera;
+            bool sinTurno = false;
+            bool rodeando = false;
 
             DecisionRival decision = DecisionRival.Esperar;
             if (hayObjetivo && ciclo.Fase == FaseGolpe.Listo)
             {
                 cerebro.MultiplicadorEspera = MultiplicadorEspera;
                 decision = cerebro.Decidir(distancia, objetivoKO, true, dt);
+                if (usarTurnos)
+                {
+                    sinTurno = !ConseguirTurno(distancia, anillo, objetivoKO);
+                    if (sinTurno)
+                    {
+                        rodeando = distancia <= anillo + MargenAnillo;
+                        decision = rodeando ? DecisionRival.Esperar : DecisionRival.Acercarse;
+                    }
+                }
+            }
+            else if (usarTurnos && !hayObjetivo)
+            {
+                TurnosAtaque.Compartido.Soltar(propio);
             }
             if (decision == DecisionRival.EmpezarGolpe)
             {
                 ciclo.IntentarGolpear();
             }
+            bool ocupado = ciclo.Fase != FaseGolpe.Listo;
             if (ciclo.Avanzar(dt))
             {
                 Impactar();
+            }
+            if (usarTurnos && ocupado && ciclo.Fase == FaseGolpe.Listo)
+            {
+                // Terminó la recarga: el turno pasa al siguiente.
+                TurnosAtaque.Compartido.Soltar(propio);
             }
 
             float alineacion = 0f;
@@ -205,13 +287,31 @@ namespace MechaCyberpunk.IA.Rival
             float velocidadDeseada = 0f;
             if (decision == DecisionRival.Acercarse)
             {
-                velocidadDeseada = VelocidadParaFrenar(distancia, mecha) * alineacion * MultiplicadorVelocidad;
+                float parada = sinTurno ? anillo : (datos.DistanciaMinima + datos.DistanciaAtaque) * MitadDeLaDistancia;
+                velocidadDeseada = VelocidadParaFrenar(distancia, mecha, parada) * alineacion * MultiplicadorVelocidad;
             }
             float cambio = (velocidadDeseada > velocidad ? mecha.Aceleracion : mecha.Desaceleracion) * MultiplicadorVelocidad;
             velocidad = Mathf.MoveTowards(velocidad, velocidadDeseada, cambio * dt);
 
-            // Nunca pasa de la distancia mínima aunque la inercia lo empuje.
-            float avance = Mathf.Min(velocidad * dt, Mathf.Max(0f, distancia - datos.DistanciaMinima));
+            // Nunca pasa de la distancia mínima (o del anillo de espera, si no tiene turno) aunque la inercia lo empuje.
+            float limite = sinTurno ? anillo : datos.DistanciaMinima;
+            float avance = Mathf.Min(velocidad * dt, Mathf.Max(0f, distancia - limite));
+            Vector3 rodeo = Vector3.zero;
+            if (rodeando)
+            {
+                // Se mueve de lado alrededor del objetivo y se corrige hacia el anillo para no abrirse ni cerrarse.
+                float error = Mathf.Clamp(distancia - anillo, -1f, 1f);
+                rodeo = (transform.right * sentidoRodeo + transform.forward * error) * (velocidadRodeo * MultiplicadorVelocidad * dt);
+            }
+            // Si quiere avanzar pero algo lo frena (un mecha caído, otro pandillero), rodea el estorbo de lado.
+            Vector3 velocidadReal = controlador.velocity;
+            velocidadReal.y = 0f;
+            bool atorado = avance > 0f && velocidad > VelocidadMinimaAvance && Vector3.Dot(velocidadReal, transform.forward) < VelocidadMinimaAvance;
+            tiempoAtorado = atorado ? tiempoAtorado + dt : 0f;
+            if (tiempoAtorado > TiempoParaRodearEstorbo)
+            {
+                rodeo += transform.right * (SentidoDeEstorbo() * velocidadRodeo * MultiplicadorVelocidad * dt);
+            }
             if (controlador.isGrounded)
             {
                 velocidadVertical = VelocidadVerticalEnPiso;
@@ -220,15 +320,59 @@ namespace MechaCyberpunk.IA.Rival
             {
                 velocidadVertical += Physics.gravity.y * dt;
             }
-            controlador.Move(transform.forward * avance + Vector3.up * (velocidadVertical * dt));
+            controlador.Move(transform.forward * avance + rodeo + Vector3.up * (velocidadVertical * dt));
 
             ActualizarBrazo();
         }
 
-        // Velocidad desde la que todavía puede frenar antes de la mitad entre la distancia mínima y la de ataque.
-        private float VelocidadParaFrenar(float distancia, DatosMecha mecha)
+        // Al atorarse prueba de un lado y, si sigue sin avanzar, del otro.
+        private float SentidoDeEstorbo()
         {
-            float parada = (datos.DistanciaMinima + datos.DistanciaAtaque) * MitadDeLaDistancia;
+            int intento = Mathf.FloorToInt((tiempoAtorado - TiempoParaRodearEstorbo) / TiempoParaRodearEstorbo);
+            return intento % 2 == 0 ? sentidoRodeo : -sentidoRodeo;
+        }
+
+        // Pide el turno cuando ya está en el anillo de espera y su espera casi terminó. Devuelve si es suyo.
+        private bool ConseguirTurno(float distancia, float anillo, bool objetivoKO)
+        {
+            TurnosAtaque turnos = TurnosAtaque.Compartido;
+            if (objetivoKO)
+            {
+                turnos.Soltar(propio);
+                return false;
+            }
+            if (turnos.Tiene(propio))
+            {
+                return true;
+            }
+            bool listoParaPedir = distancia <= anillo + MargenAnillo && cerebro.EsperaRestante <= anticipoTurno;
+            return listoParaPedir && turnos.Pedir(propio);
+        }
+
+        // Sin objetivo, o si el suyo se destruyó, lo busca otra vez cada intervaloBusqueda segundos.
+        private void BuscarSiHaceFalta(float dt)
+        {
+            if (objetivo != null)
+            {
+                return;
+            }
+            peleadorObjetivo = null;
+            esperaBusqueda -= dt;
+            if (esperaBusqueda > 0f)
+            {
+                return;
+            }
+            esperaBusqueda = intervaloBusqueda;
+            GameObject encontrado = BuscarObjetivo();
+            if (encontrado != null)
+            {
+                AsignarObjetivo(encontrado);
+            }
+        }
+
+        // Velocidad desde la que todavía puede frenar antes de llegar a la distancia de parada.
+        private float VelocidadParaFrenar(float distancia, DatosMecha mecha, float parada)
+        {
             float libre = Mathf.Max(0f, distancia - parada);
             return Mathf.Min(mecha.VelocidadMaxima, Mathf.Sqrt(FactorFrenado * mecha.Desaceleracion * libre));
         }
@@ -240,7 +384,11 @@ namespace MechaCyberpunk.IA.Rival
             Vector3 direccion = transform.forward;
             IRecibeDanio recibe = BarridoGolpe.Buscar(transform, origen, direccion, mecha.AlcanceGolpe,
                 radioBusqueda, impactos, out Vector3 punto);
-            if (recibe != null)
+            // La pandilla no se pega entre ella: si lo que encontró es un peleador de su lado, no hace daño.
+            Component componente = recibe as Component;
+            IPeleador golpeado = componente != null ? componente.GetComponentInParent<IPeleador>() : null;
+            bool esAliado = golpeado != null && golpeado.Lado == propio.Lado;
+            if (recibe != null && !esAliado)
             {
                 float danio = mecha.DanioGolpe * MultiplicadorDanio;
                 if (LimitarDanio != null)
