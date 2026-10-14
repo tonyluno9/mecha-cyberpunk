@@ -51,6 +51,15 @@ namespace MechaCyberpunk.Mecha.Editor
         private const float ZLlegada = 20f;
         private const float RadioLlamado = 30f;
 
+        // Emboscada (T-071): en la boca del callejón (a la izquierda de la calle), mirando hacia adentro (-X).
+        private const string RutaEmboscada = "Assets/_Proyecto/Pelea/Prefabs/Emboscada.prefab";
+        private const float ZEmboscada = 87f;
+        private const float XEntradaCallejon = -7f;
+        private const float GiroEmboscada = -90f;
+        // Punto de llamado junto a la entrada del callejón: zona pequeña que cubre la boca, sin alcanzar el centro de la calle.
+        private const float XLlegadaCallejon = -7.5f;
+        private const float RadioLlamadoCallejon = 3.5f;
+
         [MenuItem("Mecha Cyberpunk/Crear escena Pruebas_Calle")]
         public static void Crear()
         {
@@ -134,6 +143,13 @@ namespace MechaCyberpunk.Mecha.Editor
             GameObject punto = new GameObject("PuntoLlamado Calle");
             punto.transform.SetPositionAndRotation(new Vector3(0f, 0f, ZLlegada), Quaternion.Euler(0f, 180f, 0f));
             punto.AddComponent<PuntoLlamadoDePrueba>().Configurar(RadioLlamado, true);
+
+            GameObject puntoCallejon = new GameObject("PuntoLlamado Callejón");
+            puntoCallejon.transform.SetPositionAndRotation(new Vector3(XLlegadaCallejon, 0f, ZEmboscada), Quaternion.Euler(0f, GiroEmboscada, 0f));
+            puntoCallejon.AddComponent<PuntoLlamadoDePrueba>().Configurar(RadioLlamadoCallejon, true);
+
+            GameObject emboscada = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaEmboscada));
+            emboscada.transform.SetPositionAndRotation(new Vector3(XEntradaCallejon, 0f, ZEmboscada), Quaternion.Euler(0f, GiroEmboscada, 0f));
         }
 
         private static void CajaHija(Transform padre, string nombre, Vector3 centroLocal, Vector3 tamano, Material material)
