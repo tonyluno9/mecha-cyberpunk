@@ -39,6 +39,11 @@ MonoBehaviour:
   textoZonaProhibida: "AQU\xCD NO PUEDE LLEGAR TU MECHA"
   textoMechaRegresa: TU MECHA REGRESA AL TALLER
   duracionAvisoLlamado: 2.5
+  textoCalor: CALOR
+  colorCalor: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorMarcaCalorApagada: {r: 0.3, g: 0.2, b: 0.1, a: 0.5}
+  anchoMarcaCalor: 28
+  altoMarcaCalor: 12
   textoVida: VIDA {0}
   textoPunos: "PU\xD1OS"
   textoPistola: PISTOLA {0}/{1}
