@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccdc22dd64ec54d42b3fff78ceedb441, type: 3}
+  m_Name: ConfigHudAPie_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigHudAPie
+  colorVida: {r: 0, g: 1, b: 0.9, a: 1}
+  colorVidaBaja: {r: 1, g: 0.1, b: 0.6, a: 1}
+  colorTexto: {r: 0.55, g: 0.85, b: 1, a: 1}
+  colorAviso: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorHueco: {r: 0.05, g: 0.08, b: 0.12, a: 0.6}
+  umbralVidaBaja: 0.3
+  textoCancionEspera: "RADIO \xB7 sin se\xF1al"
+  tamanoTexto: 22
+  margen: 36
+  anchoBarra: 260
+  altoBarra: 12
+  largoMira: 14
+  colorRegresa: {r: 1, g: 0.1, b: 0.6, a: 1}
+  duracionAvisoPuerta: 2
+  velocidadPulsoFlecha: 3
+  amplitudPulsoFlecha: 0.25
+  ladoFlecha: 48
+  textoAbrir: "E \xB7 Abrir"
+  textoSubir: "E \xB7 Subir"
+  textoFrenaParaBajar: Frena para bajar
+  textoRegresa: REGRESA
+  textoCerradoProximamente: "CERRADO \xB7 PR\xD3XIMAMENTE"
+  textoCerradoAbre: "CERRADO \xB7 abre {0}"
+  textoMechaEnCamino: "MECHA EN CAMINO \xB7 {0}"
+  textoZonaProhibida: "AQU\xCD NO PUEDE LLEGAR TU MECHA"
+  textoMechaRegresa: TU MECHA REGRESA AL TALLER
+  duracionAvisoLlamado: 2.5
+  textoCalor: CALOR
+  colorCalor: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorMarcaCalorApagada: {r: 0.3, g: 0.2, b: 0.1, a: 0.5}
+  anchoMarcaCalor: 28
+  altoMarcaCalor: 12
+  textoVida: VIDA {0}
+  textoPunos: "PU\xD1OS"
+  textoPistola: PISTOLA {0}/{1}
+  textoPistolaRecargando: "PISTOLA \xB7 RECARGANDO"
+  textoPistolaSinBalas: " \xB7 R"

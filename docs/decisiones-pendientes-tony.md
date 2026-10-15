@@ -142,3 +142,91 @@ de H2 en Ciudad.unity.
 Propuesta. T-050 (Core, se integra a main en cuanto se verifica, porque Alan necesita `IMontable` para A-F2), T-051, T-055,
 T-054, T-052, T-053, T-056, T-057, T-058, T-059; luego T-060 y T-061 cuando Alan entregue. El mecha como montable (llamarlo,
 subir y el encendido) es de T-F4: `MechaJugador` implementará `IMontable` con modo Mecha y por ahora no es `IJugador`.
+
+## Planeación de T-F4 (2026-10-12, planificador Opus 5.5)
+
+### D-tony-27 Contratos de T-F4 en Core (T-062)
+Propuesta. Tres contratos nuevos, escritos antes de usarse (D-027) e integrados a main en cuanto se verifiquen, porque Alan los
+necesita en A-F3: `Core/Mecha/IPuntoLlamadoMecha` (Alan: `Llegada`, `Radio`, `Habilitado`; la zona permitida es el círculo del
+radio y fuera de todos es zona prohibida, así no hay polígonos), `Core/Mecha/ITallerMecha` (Alan: `Estacionamiento` donde descansa
+el mecha y `PuntoInteraccion` para reparar en T-F5) y `Core/Jugador/IPerfilJugador` (Tony: `Nombre`, `Alias`, `Cambio`; la
+apariencia se agrega en T-F6 con otra tarea de Core). Bajar a la fuerza de un montable (D-tony-14) no hace falta en T-F4 porque
+la emboscada no se puede perder: queda para T-F5/T-F6 (morir en la calle).
+
+### D-tony-28 El mecha es montable, con dos arranques y un permiso de piloto (T-064)
+Propuesta. `MontajeMecha` (Mecha/) implementa `IMontable` modo Mecha. Arranque `Directo`: como hasta T-F3 (sin piloto, cámara y
+control propios, no se registra como montable); es el de `MechaJugador.prefab`, para Pruebas_Tony, las pruebas de pelea y lo que
+Alan ya coloque en Clandestino. Arranque `Estacionado`: vacío hasta que el jugador sube con E; es la variante
+`MechaEstacionado.prefab` que Alan coloca en la ciudad. `PeleadorMecha` gana un permiso de piloto: control efectivo = permiso de
+pelea (DirectorPelea) y permiso de piloto (montaje y encendido) y no KO, así el director y el montaje no se pisan.
+`MechaCyberpunk.Mecha` referencia `MechaCyberpunk.Combate` (mismo dueño).
+
+### D-tony-29 Encendido de 3 pasos (T-065)
+Propuesta. Cada vez que se sube: F confirma la entrada (1.0 s, se prenden luces y pantallas), mantener Espacio 1.5 s levanta el
+mecha (la cámara sube desde agachado) y Q desbloquea el cristal (1.2 s, sube la persiana), con 0.3 s entre pasos: unos 5 s con
+entrada inmediata (mecha-taller.md). Mientras enciende no se mueve, no golpea, no deja bajar y sí recibe daño. Las indicaciones van
+en una pantalla de la cabina (D-011). Tecla equivocada: parpadeo rojo, sin castigo. Una pelea de arena (`PeleaPreparada`) y el
+arranque Directo lo dejan encendido. Las acciones nuevas se agregan a ControlesMecha.inputactions conservando los id de las
+existentes, para no romper las referencias del prefab.
+
+### D-tony-30 Llamado del mecha (T-066)
+Propuesta. Tecla M, solo a pie. Llega si el jugador está dentro del radio de un `IPuntoLlamadoMecha` habilitado (el más cercano);
+si no, aviso "AQUÍ NO PUEDE LLEGAR TU MECHA". Tarda 6 s (combate.md: "unos segundos"): desaparece del taller y en los últimos 1.5 s
+baja del cielo desde 25 m a la `Llegada`, con una marca de neón en el piso; mientras llega no se puede subir. Con el mecha vacío
+en la calle, M lo devuelve al taller (2 s), y regresa solo si el jugador se aleja más de 60 m. Sin taller registrado, su casa es
+su pose inicial. Los avisos van en el HUD a pie (UI referencia Mecha; Mecha no referencia UI). Valores en ConfigLlamadoMecha.
+
+### D-tony-31 Calor por el mecha (T-067)
+Propuesta. `ServicioCalor` (Progresion/, dentro de ServiciosProgresion.prefab) registra `ICalor`. El mecha suma 10 al llamarlo y
+2 por segundo mientras el jugador va dentro y el mecha está en la calle (estado `EnCalle` del llamado): nivel 3 en unos 30 s.
+Un mecha en arranque Directo (arena) no da calor, así no hace falta saber en qué lugar está el jugador (en el mecha los triggers
+de Alan no lo ven). Se ve siempre en una pantalla de la cabina y en el HUD a pie y en carro solo con nivel mayor que 0.
+
+### D-tony-32 "No se puede perder" es dato del rival (T-068)
+Propuesta. `PiedadRival` va en el prefab del rival, no en la escena: sus golpes nunca dejan al objetivo por debajo del 15 % de su
+vida máxima (en el piso pegan 0) y, con el objetivo en 35 % o menos, se debilita hasta la revancha (daño ×0.5, espera ×1.6,
+velocidad ×0.7, recibe daño ×1.5) y se ve débil. La llevan `RivalTutorial` y `RivalPandilla`; el rival normal no, así la pelea
+casera de T-F6 sí se puede perder (demo.md). `IPeleador.Nombre` del rival pasa a ser el `Alias` de su `DatosRival` (lo necesita el
+presentador). Rival del tutorial provisional: "EL CAMPEÓN", vida 120 y daño 12.
+
+### D-tony-33 Pandilla con turno de ataque (T-069)
+Propuesta. Solo un rival por lado prepara golpe a la vez (turno compartido); los demás esperan a su distancia de ataque más 2 m
+rodeando despacio. Los rivales no se pegan entre ellos y buscan objetivo cada 0.5 s si no tienen. `RivalBasico.usarTurnos` es
+falso por defecto (el rival de arena no cambia). Pandilla provisional: "PANDILLERO", vida 60, daño 8; dos en la emboscada.
+
+### D-tony-34 Presentador (T-070)
+Propuesta. Etapa `Presentacion` antes del conteo con líneas de `ConfigPresentador` (`{alias}`, `{rival}`, 1.6 s por línea, una
+línea de grito más grande); sin config, el flujo es igual que hoy. Solo en la primera pelea, no en la revancha (configurable). El
+alias sale de `Registro<IPerfilJugador>`; sin perfil, "NOVATO". Texto en la pantalla de la arena y evento `LineaDicha` para el audio
+futuro. `ServicioPerfil` (Progresion/) va en ServiciosProgresion.prefab. `FlujoPeleaTutorial.prefab` (RivalTutorial + presentador)
+queda listo para el prólogo.
+
+### D-tony-35 Emboscada como prefab de Tony que Alan coloca (T-071)
+Propuesta. `Emboscada.prefab` (Pelea/) se coloca en el callejón con su +Z hacia el fondo; los rivales aparecen en poses de
+`DatosEmboscada` relativas al prefab (con gizmos para que Alan vea dónde). Se activa al entrar el jugador a 12 m (o con
+`Empezar()` desde el director del prólogo), una sola vez. Los rivales solo tienen control mientras el jugador va en el mecha: a pie
+un golpe de mecha mataría a la persona, y si se baja a media pelea se detienen. Termina cuando todos están en KO y avisa
+`Terminada`. Opcionalmente fija objetivos ("Llama a tu mecha (M)", "Sube a tu mecha", "Derrota a la pandilla"). Pelea sigue sin
+referenciar IA ni Mecha.
+
+### D-tony-36 Escena de pruebas de la calle (T-064 a T-072)
+Propuesta. `Escenas/Tony/Pruebas_Calle.unity` (calle, callejón, taller y punto de llamado de prueba, jugador a pie, mecha
+estacionado y emboscada), generada solo por `Mecha/Editor/CreadorEscenaCalle.cs`; cada tarea agrega su parte y la regenera.
+`MechaCyberpunk.Mecha.Editor` puede referenciar las áreas de Tony que necesite para armarla (solo editor). Los dobles de Alan van en
+`Mecha/Pruebas/` (`PuntoLlamadoDePrueba`, `TallerDePrueba`). Pruebas_Tony.unity y Pruebas_APie.unity no se tocan.
+
+### D-tony-37 Lo que espera a Alan en T-F4 (T-073)
+Propuesta. Todo T-F4 se hace con dobles. Solo T-073 (la emboscada en el callejón de Alan) queda bloqueada hasta A-F3. Pedido a
+Alan para A-F3: un `ITallerMecha` en la casa; un `IPuntoLlamadoMecha` que cubra la entrada del callejón de la emboscada (y los que
+quiera en calles abiertas, ninguno en interiores ni bajo techos); y, cuando estén en main, colocar sin editarlos
+`Mecha/Prefabs/MechaEstacionado.prefab` (en cualquier sitio: se coloca solo en el taller) y `Pelea/Prefabs/Emboscada.prefab` en el
+callejón. Aparecer ya dentro del mecha (pendiente de T-059) se pasa a T-F6, donde lo necesita el director del prólogo.
+
+### D-tony-38 Deudas de T-F3 primero (T-063)
+Propuesta. Antes de tocar Combate y el HUD se quitan las observaciones menores de la revisión de T-F3: la prueba inestable de
+GolpeBloqueoPruebas (se arregla la medición, no se afloja), el HUD repetido en pruebas, los textos de FormatoHud a ConfigHudAPie y
+la captura T-059-2.
+
+### D-tony-39 Orden de T-F4
+Propuesta. T-062 (Core, a main en cuanto se verifique), T-063, T-064, T-065, T-066, T-067, T-068, T-069, T-070, T-071, T-072;
+T-073 cuando Alan entregue A-F3. T-068 a T-070 no dependen del mecha montable y pueden adelantarse si algo se bloquea.

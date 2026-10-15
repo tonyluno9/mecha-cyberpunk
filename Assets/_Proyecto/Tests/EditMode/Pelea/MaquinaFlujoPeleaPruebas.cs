@@ -192,5 +192,107 @@ namespace MechaCyberpunk.Tests.Pelea
             Assert.AreEqual(LadoPelea.Rival, resultados[1].Ganador);
             Assert.AreEqual(0f, resultados[1].DuracionSegundos, Margen);
         }
+
+        private const float SegundosPorLinea = 1.6f;
+        private static readonly float[] CuatroLineas = { SegundosPorLinea, SegundosPorLinea, SegundosPorLinea, SegundosPorLinea };
+
+        private MaquinaFlujoPelea CrearConLineas(bool presentarEnRevancha = false)
+        {
+            MaquinaFlujoPelea m = new MaquinaFlujoPelea(SegundosPorNumero, PausaKO, CuatroLineas, presentarEnRevancha);
+            numeros.Clear();
+            m.ConteoCambio += numeros.Add;
+            return m;
+        }
+
+        [Test]
+        public void IniciarConteo_SinLineas_PasaDirectoAlConteo()
+        {
+            MaquinaFlujoPelea sinLineas = new MaquinaFlujoPelea(SegundosPorNumero, PausaKO, new float[0]);
+            Assert.IsTrue(sinLineas.IniciarConteo());
+            Assert.AreEqual(EstadoFlujoPelea.Conteo, sinLineas.Estado);
+        }
+
+        [Test]
+        public void IniciarConteo_ConCuatroLineas_PresentaYElConteoEmpiezaALos6Punto4Segundos()
+        {
+            MaquinaFlujoPelea m = CrearConLineas();
+            List<int> lineas = new List<int>();
+            m.LineaCambio += lineas.Add;
+            m.IniciarConteo();
+            Assert.AreEqual(EstadoFlujoPelea.Presentacion, m.Estado);
+            CollectionAssert.AreEqual(new[] { 0 }, lineas);
+            Assert.IsEmpty(numeros);
+
+            m.Avanzar(SegundosPorLinea * 3f - 0.1f);
+            Assert.AreEqual(EstadoFlujoPelea.Presentacion, m.Estado);
+            CollectionAssert.AreEqual(new[] { 0, 1, 2 }, lineas);
+
+            m.Avanzar(0.1f + SegundosPorLinea - 0.05f);
+            Assert.AreEqual(EstadoFlujoPelea.Presentacion, m.Estado, "A 6.35 s todavia presenta");
+            CollectionAssert.AreEqual(new[] { 0, 1, 2, 3 }, lineas);
+            Assert.IsEmpty(numeros);
+
+            m.Avanzar(0.05f);
+            Assert.AreEqual(EstadoFlujoPelea.Conteo, m.Estado, "A 6.4 s empieza el conteo");
+            CollectionAssert.AreEqual(new[] { 3 }, numeros);
+        }
+
+        [Test]
+        public void Avanzar_UnSoloPasoGrande_RecorreLasLineasYElSobranteCuentaEnElConteo()
+        {
+            MaquinaFlujoPelea m = CrearConLineas();
+            List<int> lineas = new List<int>();
+            m.LineaCambio += lineas.Add;
+            m.IniciarConteo();
+            m.Avanzar(SegundosPorLinea * 4f + SegundosPorNumero * 3f + 0.01f);
+            CollectionAssert.AreEqual(new[] { 0, 1, 2, 3 }, lineas);
+            CollectionAssert.AreEqual(new[] { 3, 2, 1, 0 }, numeros);
+            Assert.AreEqual(EstadoFlujoPelea.Peleando, m.Estado);
+        }
+
+        [Test]
+        public void NotificarKO_EnPresentacion_NoHaceNada()
+        {
+            MaquinaFlujoPelea m = CrearConLineas();
+            m.IniciarConteo();
+            m.NotificarKO(LadoPelea.Jugador);
+            Assert.AreEqual(EstadoFlujoPelea.Presentacion, m.Estado);
+        }
+
+        [Test]
+        public void PedirRevancha_PorDefecto_NoPresentaDeNuevo()
+        {
+            MaquinaFlujoPelea m = CrearConLineas();
+            m.IniciarConteo();
+            m.Avanzar(SegundosPorLinea * 4f + SegundosPorNumero * 3f + 0.01f);
+            m.NotificarKO(LadoPelea.Rival);
+            m.Avanzar(PausaKO);
+            Assert.IsTrue(m.PedirRevancha());
+            m.IniciarConteo();
+            Assert.AreEqual(EstadoFlujoPelea.Conteo, m.Estado);
+        }
+
+        [Test]
+        public void PedirRevancha_ConPresentarEnRevancha_PresentaDeNuevo()
+        {
+            MaquinaFlujoPelea m = CrearConLineas(true);
+            m.IniciarConteo();
+            m.Avanzar(SegundosPorLinea * 4f + SegundosPorNumero * 3f + 0.01f);
+            m.NotificarKO(LadoPelea.Rival);
+            m.Avanzar(PausaKO);
+            Assert.IsTrue(m.PedirRevancha());
+            m.IniciarConteo();
+            Assert.AreEqual(EstadoFlujoPelea.Presentacion, m.Estado);
+        }
+
+        [Test]
+        public void EstadoFlujoPelea_ValoresExistentes_NoCambiaronDeNumero()
+        {
+            Assert.AreEqual(0, (int)EstadoFlujoPelea.Preparando);
+            Assert.AreEqual(1, (int)EstadoFlujoPelea.Conteo);
+            Assert.AreEqual(2, (int)EstadoFlujoPelea.Peleando);
+            Assert.AreEqual(3, (int)EstadoFlujoPelea.KO);
+            Assert.AreEqual(4, (int)EstadoFlujoPelea.Resultado);
+        }
     }
 }

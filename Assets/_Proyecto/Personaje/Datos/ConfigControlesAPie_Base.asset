@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac7266cdd85d23043a22e75678fe9c3e, type: 3}
+  m_Name: ConfigControlesAPie_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigControlesAPie
+  sensibilidadRaton: 0.1
+  limiteMirarVertical: 85
+  aceleracionPiso: 30
+  frenadoPiso: 40
+  controlAire: 0.3
+  gravedad: 20
+  alturaOjos: 1.65
+  amplitudCabeceo: 0.04
+  frecuenciaCabeceo: 1.8

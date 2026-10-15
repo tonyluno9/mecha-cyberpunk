@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 235899bd372082b4fb20f82c43a3a4da, type: 3}
+  m_Name: ConfigEncendido_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.ConfigEncendido
+  segundosPaso1: 1
+  segundosMantenerPaso2: 1.5
+  segundosPaso3: 1.2
+  pausaEntrePasos: 0.3
+  desplazamientoAgachado: -1.2
+  alturaPersiana: 1.1
+  textoPaso1: "PASO 1/3 \xB7 [F] CONFIRMAR ENTRADA"
+  textoPaso2: "PASO 2/3 \xB7 MANT\xC9N [ESPACIO] \xB7 LEVANTAR"
+  textoPaso3: "PASO 3/3 \xB7 [Q] DESBLOQUEAR CRISTAL"
+  textoEncendido: "SISTEMAS EN L\xCDNEA"

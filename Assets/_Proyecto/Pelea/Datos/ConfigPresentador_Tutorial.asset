@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7211452ae2a73a243b112e93ef9bac47, type: 3}
+  m_Name: ConfigPresentador_Tutorial
+  m_EditorClassIdentifier: MechaCyberpunk.Pelea::MechaCyberpunk.Pelea.Datos.ConfigPresentador
+  lineas:
+  - "\xA1BIENVENIDOS AL CLANDESTINO!"
+  - POR EL CAMPEONATO DEL BARRIO...
+  - "EN ESTA ESQUINA... \xA1{rival}!"
+  - "Y EN ESTA OTRA... \xA1\xA1{alias}!!"
+  segundosPorLinea: 1.6
+  indiceGrito: 3
+  aliasRespaldo: NOVATO
+  presentarEnRevancha: 0
+  tamanoLetraLinea: 100
+  tamanoLetraGrito: 150
+  colorLinea: {r: 1, g: 1, b: 1, a: 1}
+  colorGrito: {r: 1, g: 0.85, b: 0.1, a: 1}
