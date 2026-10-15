@@ -26,7 +26,6 @@ namespace MechaCyberpunk.Tests.Pelea
         private const string RutaConfigPresentador = "Assets/_Proyecto/Pelea/Datos/ConfigPresentador_Tutorial.asset";
         private const string RutaCaptura = "docs/capturas/T-106-1.png";
         private const string VariableCaptura = "CAPTURAR_T106";
-        private const float DesvioCaptura = 2f;
         private const int AnchoCaptura = 1280;
         private const int AltoCaptura = 720;
         private const int ProfundidadCaptura = 24;
@@ -178,12 +177,17 @@ namespace MechaCyberpunk.Tests.Pelea
             RenderTexture rt = new RenderTexture(AnchoCaptura, AltoCaptura, ProfundidadCaptura);
             Texture2D imagen = new Texture2D(AnchoCaptura, AltoCaptura, TextureFormat.RGB24, false);
             RenderTexture anterior = RenderTexture.active;
-            // El rival de pie queda delante de la pantalla y tapa el centro: la cámara se corre un momento a un lado para ver la línea del premio.
-            Vector3 posicionOriginal = camara.transform.position;
-            camara.transform.position = posicionOriginal + camara.transform.right * DesvioCaptura;
+            // Para que el texto se lea limpio se ocultan las mallas 3D (rival, cubos, suelo): la pantalla es uGUI y no usa Renderer.
+            List<Renderer> ocultos = new List<Renderer>();
+            foreach (Renderer malla in Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+            {
+                if (!malla.enabled) continue;
+                malla.enabled = false;
+                ocultos.Add(malla);
+            }
             camara.targetTexture = rt;
             camara.Render();
-            camara.transform.position = posicionOriginal;
+            foreach (Renderer malla in ocultos) { if (malla != null) malla.enabled = true; }
             RenderTexture.active = rt;
             imagen.ReadPixels(new Rect(0f, 0f, AnchoCaptura, AltoCaptura), 0, 0);
             imagen.Apply();
