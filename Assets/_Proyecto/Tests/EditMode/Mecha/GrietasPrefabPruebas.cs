@@ -11,6 +11,7 @@ namespace MechaCyberpunk.Tests.Mecha
     public class GrietasPrefabPruebas
     {
         private const string RutaPrefab = "Assets/_Proyecto/Mecha/Prefabs/MechaJugador.prefab";
+        private const string RutaCopia = "Assets/_Proyecto/Tests/EditMode/Mecha/Temp_MechaJugadorCopia.prefab";
         private const float MitadCentroLibre = 0.2f;
         private const float PasoMuestreo = 0.01f;
 
@@ -109,32 +110,48 @@ namespace MechaCyberpunk.Tests.Mecha
         [Test]
         public void Creador_CorridoDosVeces_DejaLosMismosVertices()
         {
-            CreadorDanioCabina.Crear();
-            string antes = Huella();
-            CreadorDanioCabina.Crear();
-            CreadorDanioCabina.Crear();
-            Assert.AreEqual(antes, Huella(), "El creador cambió las grietas al correr otra vez");
+            // Trabaja sobre una copia temporal: correr las pruebas no debe reescribir el prefab versionado.
+            AssetDatabase.DeleteAsset(RutaCopia);
+            Assert.IsTrue(AssetDatabase.CopyAsset(RutaPrefab, RutaCopia), "No se pudo copiar el prefab");
+            try
+            {
+                CreadorDanioCabina.Crear(RutaCopia);
+                string antes = Huella(RutaCopia);
+                CreadorDanioCabina.Crear(RutaCopia);
+                CreadorDanioCabina.Crear(RutaCopia);
+                Assert.AreEqual(antes, Huella(RutaCopia), "El creador cambió las grietas al correr otra vez");
+            }
+            finally
+            {
+                AssetDatabase.DeleteAsset(RutaCopia);
+            }
         }
 
         // Todos los vértices de los dos grupos, en orden, como texto.
-        private string Huella()
+        private static string Huella(string ruta)
         {
-            PrefabUtility.UnloadPrefabContents(raiz);
-            raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
-            Transform cristal = Cristal().transform;
-            System.Text.StringBuilder texto = new System.Text.StringBuilder();
-            foreach (string grupo in new[] { "Grietas1", "Grietas2" })
+            GameObject copia = PrefabUtility.LoadPrefabContents(ruta);
+            try
             {
-                foreach (Vector3[] linea in Lineas(cristal, grupo))
+                Transform cristal = copia.GetComponentInChildren<CristalCuarteado>(true).transform;
+                System.Text.StringBuilder texto = new System.Text.StringBuilder();
+                foreach (string grupo in new[] { "Grietas1", "Grietas2" })
                 {
-                    foreach (Vector3 p in linea)
+                    foreach (Vector3[] linea in Lineas(cristal, grupo))
                     {
-                        texto.Append(p.x.ToString("R")).Append(',').Append(p.y.ToString("R")).Append(',').Append(p.z.ToString("R")).Append(';');
+                        foreach (Vector3 p in linea)
+                        {
+                            texto.Append(p.x.ToString("R")).Append(',').Append(p.y.ToString("R")).Append(',').Append(p.z.ToString("R")).Append(';');
+                        }
+                        texto.Append('|');
                     }
-                    texto.Append('|');
                 }
+                return texto.ToString();
             }
-            return texto.ToString();
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(copia);
+            }
         }
     }
 }

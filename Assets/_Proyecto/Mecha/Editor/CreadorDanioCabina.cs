@@ -36,6 +36,12 @@ namespace MechaCyberpunk.Mecha.Editor
         [MenuItem("Mecha Cyberpunk/Crear T-104 mecha dañado")]
         public static void Crear()
         {
+            Crear(RutaPrefab);
+        }
+
+        /// <summary>Igual que Crear pero sobre otro prefab (las pruebas usan una copia temporal para no tocar el versionado).</summary>
+        public static void Crear(string rutaPrefab)
+        {
             ConfigMechaDaniado config = AssetDatabase.LoadAssetAtPath<ConfigMechaDaniado>(RutaConfig);
             if (config == null)
             {
@@ -50,7 +56,7 @@ namespace MechaCyberpunk.Mecha.Editor
                 config.ColorAlarma * FactorEmisionLed);
             AssetDatabase.SaveAssets();
 
-            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            GameObject raiz = PrefabUtility.LoadPrefabContents(rutaPrefab);
             try
             {
                 Transform cabina = raiz.transform.Find("Sacudida/Cabina");
@@ -100,7 +106,7 @@ namespace MechaCyberpunk.Mecha.Editor
 
                 CrearGrietas(cabina, config, CrearMaterialGrietas(RutaMateriales + "Cabina_Grietas.mat", config.ColorGrietas));
 
-                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+                PrefabUtility.SaveAsPrefabAsset(raiz, rutaPrefab);
             }
             finally
             {
