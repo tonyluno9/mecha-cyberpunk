@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Pelea",
     "rootNamespace": "MechaCyberpunk.Pelea",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Progresion", "Unity.InputSystem", "UnityEngine.UI"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Progresion", "MechaCyberpunk.Economia", "Unity.InputSystem", "UnityEngine.UI"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

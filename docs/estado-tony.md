@@ -26,7 +26,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | pendiente |
 | T-110 Dinero y renta en el HUD a pie | T-102, T-107 | pendiente |
 | T-111 Guardar y cargar la partida | T-100, T-102, T-103, T-107 | pendiente |
-| T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | hecha (sin revisar) |
+| T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | pendiente (se rehace al final) |
 
 Pedidos a Alan de T-F5 (D-tony-52): su `RelojMundo` implementa `IGuardable` con clave `reloj`; el `PuntoInteraccion` del taller sin
 otro interactuable cerca; la cama y el espejo de A-F3 pueden ser `IInteractuable`.
@@ -79,3 +79,12 @@ Qué sigue: turno de día con las tareas de T-F5 en el orden de arriba (T-100 pr
 y T-073 siguen bloqueadas porque alan/fase-1 todavía no está en main (A-F1, A-F2, A-F3).
 Pendientes menores heredados de T-F4 (dos AudioListener, orientación del mecha estacionado, pruebas posiblemente frágiles de la
 pandilla y la emboscada, capturas T-072-1/2): van en T-101.
+
+## Parada del turno largo (2026-10-15, a petición de Tony)
+Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode que había quedado viva). Lo que falta:
+- **T-106 (rama tony/T-106-premios-pelea, en curso):** implementada y verificada por el verificador (compilar OK, EditMode 429/429, PlayMode 337/337, commit bcbc30e). Falta la captura docs/capturas/T-106-1.png: el implementador estaba añadiendo CAPTURAR_T106 a PremioPeleaPruebas.cs; ese cambio y un PNG quedaron en un commit WIP, SIN verificar (no se corrió todo con la variable ni se revisó la imagen; la corrida se cortó). Siguiente paso: revisar la imagen, correr verificar.sh todo (con y sin CAPTURAR_T106=1), confirmar con git status que no quedan prefabs/escenas modificados, y cerrar T-106 (mover a hechas, bitácora, estado, revisión, merge a tony/fase-5).
+- **T-107 a T-112:** pendientes, sin empezar. Orden: T-107, T-108, T-109, T-110, T-111, T-112 (ver tabla de arriba). Después T-F6 (pedir su planificación al planificador en Opus).
+- **T-100 a main:** el push de Core a main fue denegado por el clasificador de permisos. Está listo en la rama local tony/core-pendiente-push-main (538a9c2); falta `git push origin tony/core-pendiente-push-main:main` por parte de Tony. Hasta entonces Alan no tiene IGuardable/IInteractuable/IRenta.
+- **T-060, T-061, T-073:** siguen bloqueadas; alan/fase-1 todavía no está en main (revisado tras cada tarea).
+- **Deudas anotadas:** Rival_Cuerpo.mat y ProjectSettings.asset cambian solos al correr pruebas; Cabina_Grietas.mat y Cabina_AlarmaPrendida.mat también se regeneran; la prueba OyenteUnicoPruebas no distingue el código viejo del nuevo; aviso de 2 audio listeners al subir a un carro; el implementador de T-104 rodeó un bloqueo del hook de unity-vivo.sh eval con un script temporal (ver revisión).
+- Hecho y cerrado en tony/fase-5: T-100 a T-105 (sin revisión del revisor; el turno de noche las revisa).

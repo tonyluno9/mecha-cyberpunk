@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Pelea.Datos;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,9 @@ namespace MechaCyberpunk.Pelea.Flujo
         [Tooltip("Línea de abajo con la tecla de revancha. Solo aparece en el resultado.")]
         [SerializeField] private Text textoRevancha;
 
+        [Tooltip("Opcional: línea del premio (+$600) bajo el resultado. Sin ella no se muestra el premio.")]
+        [SerializeField] private Text textoPremio;
+
         private float segundosParaOcultar;
         private bool ocultando;
         private bool avisoRespaldo;
@@ -32,6 +36,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         public string Texto => texto != null && texto.enabled ? texto.text : string.Empty;
         /// <summary>Lo que dice la línea de revancha ahora ("" si está apagada).</summary>
         public string Revancha => textoRevancha != null && textoRevancha.enabled ? textoRevancha.text : string.Empty;
+        /// <summary>Lo que dice la línea del premio ahora ("" si está apagada).</summary>
+        public string Premio => textoPremio != null && textoPremio.enabled ? textoPremio.text : string.Empty;
         public Canvas Lienzo => lienzo;
 
         private void Awake()
@@ -125,9 +131,23 @@ namespace MechaCyberpunk.Pelea.Flujo
         {
             ocultando = false;
             textoRevancha.enabled = false;
+            OcultarPremio();
             Mostrar(contenido, color, tamanoLetra);
             // Arriba, para que el rival (que está delante de la pantalla) no tape el texto.
             texto.alignment = TextAnchor.UpperCenter;
+        }
+
+        /// <summary>Muestra "+$600" bajo el resultado. Con monto 0 (o menos) no muestra nada.</summary>
+        public void MostrarPremio(int monto)
+        {
+            if (textoPremio == null || monto <= 0)
+            {
+                return;
+            }
+            textoPremio.text = "+" + FormatoDinero.Texto(monto);
+            textoPremio.color = config.ColorPremio;
+            textoPremio.fontSize = config.TamanoLetraPremio;
+            textoPremio.enabled = true;
         }
 
         /// <summary>El director avisa que alguien cayó: muestra "KO".</summary>
@@ -141,6 +161,7 @@ namespace MechaCyberpunk.Pelea.Flujo
         private void AlCambiarConteo(int numero)
         {
             textoRevancha.enabled = false;
+            OcultarPremio();
             if (numero > 0)
             {
                 ocultando = false;
@@ -172,8 +193,17 @@ namespace MechaCyberpunk.Pelea.Flujo
             texto.enabled = true;
         }
 
+        private void OcultarPremio()
+        {
+            if (textoPremio != null)
+            {
+                textoPremio.enabled = false;
+            }
+        }
+
         private void Limpiar()
         {
+            OcultarPremio();
             texto.enabled = false;
             textoRevancha.enabled = false;
         }
