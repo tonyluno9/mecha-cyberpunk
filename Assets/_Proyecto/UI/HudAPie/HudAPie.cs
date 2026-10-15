@@ -632,6 +632,9 @@ namespace MechaCyberpunk.UI.Hud
             }
 
             textoInteraccion.text = texto;
+            bool negado = jugador != null && jugador.Modo == ModoJugador.APie && avisoRestante <= 0f && interaccion != null
+                && interaccion.InteractuableCandidato != null && !interaccion.InteractuableCandidato.PuedeUsar;
+            textoInteraccion.color = negado ? config.ColorAviso : config.ColorTexto;
             grupoInteraccion.SetActive(texto.Length > 0);
         }
 
@@ -644,6 +647,9 @@ namespace MechaCyberpunk.UI.Hud
                     return TextoInteraccion.Candidato(TipoCandidatoInteraccion.Puerta, lugar != null ? lugar.Nombre : null, config);
                 case TipoCandidatoAPie.Montable:
                     return TextoInteraccion.Candidato(TipoCandidatoInteraccion.Montable, interaccion.MontableCandidato.Nombre, config);
+                case TipoCandidatoAPie.Interactuable:
+                    return TextoInteraccion.Interactuable(interaccion.InteractuableCandidato.Texto,
+                        interaccion.InteractuableCandidato.PuedeUsar, config);
                 default:
                     return string.Empty;
             }

@@ -5,6 +5,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
     {
         Ninguno,
         Puerta,
-        Montable
+        Montable,
+        Interactuable
     }
 }

@@ -98,7 +98,7 @@ namespace MechaCyberpunk.Personaje.Editor
             CrearPrefabLocal(cubo, obstaculo);
             CrearPrefabCarro(CrearMaterial(RutaMaterialCarro, new Color(0.9f, 0.2f, 0.45f)));
             CrearEscena(piso, CrearMaterial(RutaMaterialCalle, new Color(0.12f, 0.12f, 0.14f)),
-                CrearMaterial(RutaMaterialBanqueta, new Color(0.45f, 0.45f, 0.48f)), cubo);
+                CrearMaterial(RutaMaterialBanqueta, new Color(0.45f, 0.45f, 0.48f)), cubo, obstaculo);
             AssetDatabase.SaveAssets();
             Debug.Log("[Personaje] T-051 creada.");
         }
@@ -505,7 +505,7 @@ namespace MechaCyberpunk.Personaje.Editor
 
         // Barrio mínimo (T-059): calle 1 sobre el eje Z (x de -3 a 3, z de 0 a 17), calle 2 sobre el eje X (z de 11 a 17, x de 3 a 32).
         // La esquina de la L queda en (0, 14). El edificio de la esquina tapa la línea recta del inicio al Bar.
-        private static void CrearEscena(Material piso, Material calle, Material banqueta, Material cubo)
+        private static void CrearEscena(Material piso, Material calle, Material banqueta, Material cubo, Material obstaculo)
         {
             Scene escena = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
@@ -539,6 +539,15 @@ namespace MechaCyberpunk.Personaje.Editor
             GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabCarro));
             carro.name = "Carro de prueba";
             carro.transform.SetPositionAndRotation(new Vector3(-2f, 0f, 9f), Quaternion.Euler(0f, 180f, 0f));
+
+            // Interactuable de prueba (T-108), lejos de las puertas y del carro.
+            GameObject bancoPrueba = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            bancoPrueba.name = "Interactuable de prueba";
+            bancoPrueba.transform.position = new Vector3(4f, 0.5f, 12f);
+            bancoPrueba.transform.localScale = new Vector3(0.6f, 0.5f, 0.6f);
+            Object.DestroyImmediate(bancoPrueba.GetComponent<Collider>());
+            bancoPrueba.GetComponent<Renderer>().sharedMaterial = obstaculo;
+            bancoPrueba.AddComponent<InteractuableDePrueba>();
 
             // Punto de aparición y jugador completo (el HUD y los servicios de objetivos van dentro del prefab). El jugador empieza
             // lejos del punto para que la prueba compruebe que aparece donde debe.

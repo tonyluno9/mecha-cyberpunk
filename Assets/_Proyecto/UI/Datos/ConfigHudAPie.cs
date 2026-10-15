@@ -64,6 +64,9 @@ namespace MechaCyberpunk.UI
         [Tooltip("Texto de la E con un carro o mecha de frente; después va su nombre.")]
         [SerializeField] private string textoSubir = "E · Subir";
 
+        [Tooltip("Prefijo de la E con un interactuable que se puede usar; después va su texto.")]
+        [SerializeField] private string prefijoUsar = "E · ";
+
         [Tooltip("Aviso al pulsar E para bajar cuando el vehículo todavía va rápido.")]
         [SerializeField] private string textoFrenaParaBajar = "Frena para bajar";
 
@@ -142,6 +145,7 @@ namespace MechaCyberpunk.UI
         public string TextoPistolaSinBalas => textoPistolaSinBalas;
         public string TextoAbrir => textoAbrir;
         public string TextoSubir => textoSubir;
+        public string PrefijoUsar => prefijoUsar;
         public string TextoFrenaParaBajar => textoFrenaParaBajar;
         public string TextoRegresa => textoRegresa;
         public string TextoCerradoProximamente => textoCerradoProximamente;

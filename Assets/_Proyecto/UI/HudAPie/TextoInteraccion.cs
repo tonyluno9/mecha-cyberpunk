@@ -26,6 +26,18 @@ namespace MechaCyberpunk.UI.Hud
             return string.IsNullOrEmpty(nombre) ? verbo : verbo + " " + nombre;
         }
 
+        /// <summary>
+        /// Texto de un interactuable: "E · Dormir" si se puede usar; solo el texto (el aviso) si no. Vacío si no hay texto.
+        /// </summary>
+        public static string Interactuable(string texto, bool puedeUsar, ConfigHudAPie config)
+        {
+            if (string.IsNullOrEmpty(texto))
+            {
+                return string.Empty;
+            }
+            return puedeUsar ? config.PrefijoUsar + texto : texto;
+        }
+
         /// <summary>Aviso al pulsar E dentro de un montable que todavía no puede dejar: "Frena para bajar".</summary>
         public static string AvisoNoPuedeBajar(ConfigHudAPie config)
         {
