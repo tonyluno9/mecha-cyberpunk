@@ -321,6 +321,9 @@ namespace MechaCyberpunk.Tests.IA
             yield return HastaEstado(EstadoFlujoPelea.Resultado);
             Assert.IsTrue(piedad.EstaDebil, "Sigue débil hasta la revancha");
 
+            // T-103: el daño del jugador persiste y lo dejaría bajo el umbral en la revancha; se repara para medir solo
+            // que la revancha quita la debilidad.
+            vidaJugador.Restaurar();
             Press(teclado.rKey);
             yield return null;
             Release(teclado.rKey);

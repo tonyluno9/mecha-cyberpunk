@@ -37,6 +37,12 @@ namespace MechaCyberpunk.Combate.Peleador
         /// <summary>Segundo permiso de control: lo da quien monta el mecha (false = nadie lo maneja). Por defecto true.</summary>
         public bool PermisoPiloto => permisoPiloto;
 
+        /// <summary>
+        /// Si es true, <see cref="PrepararPelea"/> no restaura la vida: el mecha empieza con la que traía (daño persistente).
+        /// Por defecto false. Lo activa quien guarda el daño (MechaPersistente).
+        /// </summary>
+        public bool ConservarVidaAlPreparar { get; set; }
+
         /// <summary>Avisa al final de <see cref="PrepararPelea"/>, cuando el mecha ya quedó de pie y sin control.</summary>
         public event Action PeleaPreparada;
 
@@ -87,7 +93,10 @@ namespace MechaCyberpunk.Combate.Peleador
 
         public void PrepararPelea(Pose inicio)
         {
-            vida.Restaurar();
+            if (!ConservarVidaAlPreparar)
+            {
+                vida.Restaurar();
+            }
 
             CharacterController controlador = GetComponent<CharacterController>();
             bool teniaControlador = controlador != null && controlador.enabled;
