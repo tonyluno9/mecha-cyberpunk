@@ -75,6 +75,25 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(MotivoDinero.Reparacion, ultimoMotivo);
         }
 
+        [TestCase(1400, 400)]
+        [TestCase(-50, -1050)]
+        public void Restablecer_ConOtroDinero_AvisaConCargaYLaDiferencia(int nuevo, int diferencia)
+        {
+            cartera.Restablecer(nuevo);
+            Assert.AreEqual(nuevo, cartera.Dinero);
+            Assert.AreEqual(1, avisos);
+            Assert.AreEqual(diferencia, ultimaDiferencia);
+            Assert.AreEqual(MotivoDinero.Carga, ultimoMotivo);
+        }
+
+        [Test]
+        public void Restablecer_ConElMismoDinero_NoAvisa()
+        {
+            cartera.Restablecer(1000);
+            Assert.AreEqual(1000, cartera.Dinero);
+            Assert.AreEqual(0, avisos);
+        }
+
         [TestCase(1, true)]
         [TestCase(1000, true)]
         [TestCase(1001, false)]

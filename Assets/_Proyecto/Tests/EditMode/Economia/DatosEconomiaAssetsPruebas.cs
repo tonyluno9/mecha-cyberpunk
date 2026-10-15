@@ -29,6 +29,18 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        public void DatosEconomiaBase_Existe_ConLosValoresDeLaDemo()
+        {
+            var d = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Economia.DatosEconomia>(Carpeta + "DatosEconomia_Base.asset");
+            Assert.IsNotNull(d);
+            Assert.AreEqual(500, d.DineroInicial);
+            Assert.AreEqual(10, d.CostoReparacionPorPunto);
+            Assert.AreEqual(50, d.CostoReparacionMinimo);
+            Assert.AreEqual(500, d.Renta);
+            Assert.AreEqual(7, d.DiasEntreRentas);
+        }
+
+        [Test]
         public void Assets_ExistenConLosValoresDeT033()
         {
             var kit = Oferta("KitReparacion", 300, TipoOferta.KitReparacion);

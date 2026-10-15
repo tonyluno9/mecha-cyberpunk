@@ -36,6 +36,13 @@ namespace MechaCyberpunk.Economia
             Aplicar(-cantidad, motivo);
         }
 
+        /// <summary>Fija el dinero (carga de partida). Avisa con <see cref="MotivoDinero.Carga"/> solo si cambió.</summary>
+        public void Restablecer(int dinero)
+        {
+            if (dinero == Dinero) return;
+            Aplicar(dinero - Dinero, MotivoDinero.Carga);
+        }
+
         private void Aplicar(int diferencia, MotivoDinero motivo)
         {
             Dinero += diferencia;

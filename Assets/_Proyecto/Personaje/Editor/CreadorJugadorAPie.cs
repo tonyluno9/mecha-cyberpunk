@@ -52,6 +52,7 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaMaterialBanqueta = RutaPersonaje + "/Materiales/Greybox_Banqueta.mat";
         private const string RutaPrefabHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
         private const string RutaPrefabServiciosProgresion = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
+        private const string RutaPrefabServiciosEconomia = "Assets/_Proyecto/Economia/Prefabs/ServiciosEconomia.prefab";
         private const string RutaEscena ="Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
 
         private const float AlturaCuerpo = 1.8f;
@@ -368,6 +369,7 @@ namespace MechaCyberpunk.Personaje.Editor
             // Un solo prefab para Alan (D-tony-23): el HUD y los servicios de objetivos van anidados, y la aparición en un punto.
             AnidarPrefab(RutaPrefabHud, raiz.transform);
             AnidarPrefab(RutaPrefabServiciosProgresion, raiz.transform);
+            AnidarPrefab(RutaPrefabServiciosEconomia, raiz.transform);
             raiz.AddComponent<AparicionJugador>();
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
