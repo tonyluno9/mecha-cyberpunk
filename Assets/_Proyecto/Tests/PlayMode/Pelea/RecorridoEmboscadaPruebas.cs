@@ -75,6 +75,8 @@ namespace MechaCyberpunk.Tests.Pelea
         private const float SegundosCaidaCaptura = 1.5f;
         private const float DistanciaCamaraCaptura = 4f;
         private const float AlturaCamaraCaptura = 13f;
+        private const float DistanciaCamaraPelea = 9f;
+        private const float AlturaCamaraPelea = 6f;
 
         private Keyboard teclado;
         private Mouse raton;
@@ -454,7 +456,7 @@ namespace MechaCyberpunk.Tests.Pelea
                         && (pantallaEncendido == null || !pantallaEncendido.Visible))
                     {
                         capturadaPelea = true;
-                        Capturar(rutaCapturaPelea);
+                        CapturarPeleaDesdeUnLado(rutaCapturaPelea, rival);
                     }
                 }
                 yield return Frame();
@@ -525,6 +527,26 @@ namespace MechaCyberpunk.Tests.Pelea
             Camera camara = objeto.AddComponent<Camera>();
             objeto.transform.position = centro + haciaMecha.normalized * DistanciaCamaraCaptura + Vector3.up * AlturaCamaraCaptura;
             objeto.transform.LookAt(centro);
+            Capturar(ruta, camara);
+            Object.Destroy(objeto);
+        }
+
+        // Desde la cabina la pelea queda tapada por el cuerpo del rival (una masa blanca a un paso de la cámara): la captura
+        // sale de una cámara temporal al costado y en alto, mirando al punto medio entre el mecha y el rival golpeado.
+        private void CapturarPeleaDesdeUnLado(string ruta, IPeleador rival)
+        {
+            if (Environment.GetEnvironmentVariable(VariableCaptura) != "1")
+            {
+                return;
+            }
+            Vector3 centro = (montaje.transform.position + rival.Raiz.position) / 2f;
+            Vector3 haciaRival = rival.Raiz.position - montaje.transform.position;
+            haciaRival.y = 0f;
+            Vector3 costado = Vector3.Cross(Vector3.up, haciaRival.normalized);
+            GameObject objeto = new GameObject("CamaraCaptura");
+            Camera camara = objeto.AddComponent<Camera>();
+            objeto.transform.position = centro + costado * DistanciaCamaraPelea + Vector3.up * AlturaCamaraPelea;
+            objeto.transform.LookAt(centro + Vector3.up);
             Capturar(ruta, camara);
             Object.Destroy(objeto);
         }
