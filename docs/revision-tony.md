@@ -188,3 +188,6 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Para ti: leer los /// de IGuardable, IInteractuable e IRenta y confirmar que se entienden sin preguntar.
 - Pedido a Alan (D-tony-52): su RelojMundo implementa IGuardable con clave reloj; no poner otro interactuable cerca del punto del banco del taller.
 - Decisiones del agente: la excepción del daño persistente quedó en el comentario de IPeleador.PrepararPelea.
+
+### Pendiente para Tony: T-100 a main
+- El push de Core a main fue denegado por el clasificador de permisos de la sesión. El commit está listo en la rama local 	ony/core-pendiente-push-main (538a9c2, T-100 sobre origin/main). Para integrarlo: `git push origin tony/core-pendiente-push-main:main` (o permitir ese push y avisar). Alan lo necesita para IGuardable/IInteractuable/IRenta.
