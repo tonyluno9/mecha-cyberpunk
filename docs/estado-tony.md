@@ -14,7 +14,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
-| T-100 Contratos de guardado, interacción y renta (Core; a main en cuanto se verifique) | nada | pendiente |
+| T-100 Contratos de guardado, interacción y renta (Core; a main en cuanto se verifique) | nada | hecha (sin revisar), en main |
 | T-101 Deudas de T-F4 y pedido de Alan (posproceso en cámaras) | nada | pendiente |
 | T-102 Cartera del jugador y datos de la economía | T-100 | pendiente |
 | T-103 Daño persistente del mecha del jugador | T-100 | pendiente |

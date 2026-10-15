@@ -15,7 +15,8 @@ namespace MechaCyberpunk.Core
         /// <summary>El flujo de pelea congela y libera a los peleadores con esto.</summary>
         void ActivarControl(bool activo);
         /// <summary>
-        /// Restaura la vida, coloca al peleador en la pose (si tiene CharacterController lo desactiva
+        /// Restaura la vida (salvo en el mecha del jugador con daño persistente, T-F5, que conserva su daño y solo
+        /// sube a un piso de emergencia si quedó muy bajo o en KO), coloca al peleador en la pose (si tiene CharacterController lo desactiva
         /// para moverlo y lo vuelve a activar), lo pone de pie y deja <see cref="ControlActivo"/> en false.
         /// </summary>
         void PrepararPelea(Pose inicio);
