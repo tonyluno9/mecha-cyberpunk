@@ -213,3 +213,7 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Verificado automáticamente: compilar OK, EditMode 429/429, PlayMode 337/337; PremioPeleaPruebas a-e; captura T-106-1.png legible.
 - Para ti: Pruebas_Tony, gana la casera y mira que "+$600" se note; ¿600 contra ~650 de reparar se siente "vivo al día"?
 - Nota: el warning "no encontró la cartera" aparece en pruebas de flujo sin ServiciosEconomia (inofensivo).
+### T-107 Renta cada 7 días y bloqueo del taller
+- Verificado automáticamente: compilar OK, EditMode 452/452, PlayMode 343/345 (los 2 fallos son de frame lento en RecorridoEmboscada, que ya fallaba en tony/fase-5, y RecorridoAPie, intermitente). Pruebas propias de la tarea todas en verde.
+- Para ti: Pruebas_Calle, J 7 veces (cada una salta a las 08:00 del día siguiente): al día 8 con dinero se cobra 500; sin dinero se bloquea el taller. ¿500 por semana contra 600 por pelea aprieta lo justo?
+- Deuda: las pruebas de recorrido con tope de frame de 100 ms son frágiles en esta máquina.
