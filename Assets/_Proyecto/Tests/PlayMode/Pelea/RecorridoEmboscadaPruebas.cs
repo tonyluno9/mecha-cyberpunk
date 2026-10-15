@@ -13,6 +13,7 @@ using MechaCyberpunk.Pelea.Emboscada;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.UI.Cabina;
 using MechaCyberpunk.UI.Hud;
 using NUnit.Framework;
 using UnityEditor;
@@ -37,8 +38,8 @@ namespace MechaCyberpunk.Tests.Pelea
         private const string RutaControlesAPie = "Assets/_Proyecto/Personaje/Datos/ConfigControlesAPie_Base.asset";
         private const string RutaControlesMecha = "Assets/_Proyecto/Mecha/Datos/ConfigControlesMecha_Base.asset";
         private const string RutaPiedad = "Assets/_Proyecto/IA/Datos/ConfigPiedadRival_Base.asset";
-        private const string RutaCaptura1 = "docs/capturas/T-072-1.png";
-        private const string RutaCaptura2 = "docs/capturas/T-072-2.png";
+        private const string RutaCaptura1 = "docs/capturas/T-101-1.png";
+        private const string RutaCaptura2 = "docs/capturas/T-101-2.png";
         private const string VariableCaptura = "CAPTURAR_T072";
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
@@ -71,6 +72,11 @@ namespace MechaCyberpunk.Tests.Pelea
         private const int ProfundidadCaptura = 24;
         private const int SaltoDePixeles = 97;
         private const float VariacionMinima = 0.05f;
+        private const float SegundosCaidaCaptura = 1.5f;
+        private const float DistanciaCamaraCaptura = 4f;
+        private const float AlturaCamaraCaptura = 13f;
+        private const float DistanciaCamaraPelea = 9f;
+        private const float AlturaCamaraPelea = 6f;
 
         private Keyboard teclado;
         private Mouse raton;
@@ -81,6 +87,7 @@ namespace MechaCyberpunk.Tests.Pelea
         private EncendidoMecha encendido;
         private VidaMecha vidaMecha;
         private DirectorEmboscada director;
+        private PantallaEncendido pantallaEncendido;
         private ICalor calor;
         private float sensibilidadAPie;
         private float sensibilidadMecha;
@@ -157,6 +164,7 @@ namespace MechaCyberpunk.Tests.Pelea
             interaccion = Object.FindFirstObjectByType<InteraccionAPie>();
             montaje = Object.FindFirstObjectByType<MontajeMecha>();
             director = Object.FindFirstObjectByType<DirectorEmboscada>();
+            pantallaEncendido = Object.FindFirstObjectByType<PantallaEncendido>(FindObjectsInactive.Include);
             Assert.IsNotNull(jugador, "Pruebas_Calle trae el jugador");
             Assert.IsNotNull(interaccion, "El jugador trae la interacción");
             Assert.IsNotNull(montaje, "Pruebas_Calle trae el mecha");
@@ -444,10 +452,11 @@ namespace MechaCyberpunk.Tests.Pelea
                     }
                     ApuntarYGolpear(rival, clic);
                     if (!capturadaPelea && DistanciaPlana(rival.Raiz.position, montaje.transform.position) < MetrosCapturaPelea
-                        && rival.Vida.Actual < rival.Vida.Maxima && RivalesEnPie() == director.Rivales.Count)
+                        && rival.Vida.Actual < rival.Vida.Maxima && RivalesEnPie() == director.Rivales.Count
+                        && (pantallaEncendido == null || !pantallaEncendido.Visible))
                     {
                         capturadaPelea = true;
-                        Capturar(rutaCapturaPelea);
+                        CapturarPeleaDesdeUnLado(rutaCapturaPelea, rival);
                     }
                 }
                 yield return Frame();
@@ -455,10 +464,27 @@ namespace MechaCyberpunk.Tests.Pelea
             Release(raton.leftButton);
             yield return Frame();
             Assert.AreEqual(EstadoEmboscada.Superada, director.Estado, "La pandilla cayó antes de " + MaxSegundosPelea + " s de pelea");
-            // La captura de la pandilla caída se toma en cuanto el director da por superada la emboscada.
-            Capturar(rutaCapturaKO);
+            // La captura de la pandilla caída se toma después de dejar pasar su caída (duracionCaida 1 s en
+            // ConfigPresentacionRival_Base) con un margen.
+            yield return Esperar(SegundosCaidaCaptura);
+            CapturarCaidosDesdeArriba(rutaCapturaKO);
             yield return Esperar(SegundosDetenido);
             Assert.AreEqual(1, terminadas, "Terminada llega una sola vez");
+        }
+
+        private Vector3 PuntoMedioDeLosRivales()
+        {
+            Vector3 suma = Vector3.zero;
+            int cuenta = 0;
+            foreach (IPeleador rival in director.Rivales)
+            {
+                if (Existe(rival))
+                {
+                    suma += rival.Raiz.position;
+                    cuenta++;
+                }
+            }
+            return cuenta > 0 ? suma / cuenta : montaje.transform.position + montaje.transform.forward;
         }
 
         private int RivalesEnPie()
@@ -486,13 +512,52 @@ namespace MechaCyberpunk.Tests.Pelea
             yield return EsperarHasta(() => llamado.Estado == EstadoLlamado.EnTaller, 10f, "el mecha vuelve al taller");
         }
 
-        private void Capturar(string ruta)
+        // La cabina no alcanza a ver el piso cercano: la captura de los caídos sale de una cámara temporal en alto, mirando al
+        // punto medio de los dos pandilleros.
+        private void CapturarCaidosDesdeArriba(string ruta)
         {
             if (Environment.GetEnvironmentVariable(VariableCaptura) != "1")
             {
                 return;
             }
-            Camera camara = jugador.Camara;
+            Vector3 centro = PuntoMedioDeLosRivales();
+            Vector3 haciaMecha = montaje.transform.position - centro;
+            haciaMecha.y = 0f;
+            GameObject objeto = new GameObject("CamaraCaptura");
+            Camera camara = objeto.AddComponent<Camera>();
+            objeto.transform.position = centro + haciaMecha.normalized * DistanciaCamaraCaptura + Vector3.up * AlturaCamaraCaptura;
+            objeto.transform.LookAt(centro);
+            Capturar(ruta, camara);
+            Object.Destroy(objeto);
+        }
+
+        // Desde la cabina la pelea queda tapada por el cuerpo del rival (una masa blanca a un paso de la cámara): la captura
+        // sale de una cámara temporal al costado y en alto, mirando al punto medio entre el mecha y el rival golpeado.
+        private void CapturarPeleaDesdeUnLado(string ruta, IPeleador rival)
+        {
+            if (Environment.GetEnvironmentVariable(VariableCaptura) != "1")
+            {
+                return;
+            }
+            Vector3 centro = (montaje.transform.position + rival.Raiz.position) / 2f;
+            Vector3 haciaRival = rival.Raiz.position - montaje.transform.position;
+            haciaRival.y = 0f;
+            Vector3 costado = Vector3.Cross(Vector3.up, haciaRival.normalized);
+            GameObject objeto = new GameObject("CamaraCaptura");
+            Camera camara = objeto.AddComponent<Camera>();
+            objeto.transform.position = centro + costado * DistanciaCamaraPelea + Vector3.up * AlturaCamaraPelea;
+            objeto.transform.LookAt(centro + Vector3.up);
+            Capturar(ruta, camara);
+            Object.Destroy(objeto);
+        }
+
+        private void Capturar(string ruta, Camera camaraElegida = null)
+        {
+            if (Environment.GetEnvironmentVariable(VariableCaptura) != "1")
+            {
+                return;
+            }
+            Camera camara = camaraElegida != null ? camaraElegida : jugador.Camara;
             RenderTexture rt = new RenderTexture(AnchoCaptura, AltoCaptura, ProfundidadCaptura);
             Texture2D imagen = new Texture2D(AnchoCaptura, AltoCaptura, TextureFormat.RGB24, false);
             RenderTexture anterior = RenderTexture.active;

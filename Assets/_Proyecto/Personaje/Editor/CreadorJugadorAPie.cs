@@ -15,6 +15,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.Personaje.Editor
@@ -267,6 +268,8 @@ namespace MechaCyberpunk.Personaje.Editor
             camara.nearClipPlane = 0.05f;
             camaraObj.AddComponent<AudioListener>();
             camaraObj.tag = "MainCamera";
+            // Pedido de Alan (D-alan-19): la cámara del jugador dibuja el posproceso de los Volumes de su escena.
+            camara.GetUniversalAdditionalCameraData().renderPostProcessing = true;
 
             GameObject manos = new GameObject("Manos");
             manos.transform.SetParent(camaraObj.transform, false);

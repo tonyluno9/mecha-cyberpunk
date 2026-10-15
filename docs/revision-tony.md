@@ -191,3 +191,8 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 
 ### Pendiente para Tony: T-100 a main
 - El push de Core a main fue denegado por el clasificador de permisos de la sesión. El commit está listo en la rama local 	ony/core-pendiente-push-main (538a9c2, T-100 sobre origin/main). Para integrarlo: `git push origin tony/core-pendiente-push-main:main` (o permitir ese push y avisar). Alan lo necesita para IGuardable/IInteractuable/IRenta.
+
+### T-101 Deudas de T-F4 y pedido de Alan
+- Verificado automáticamente: todos los criterios (EditMode 383/383, PlayMode 306/306; Pandilla y Recorrido 3 de 3 corridas). Capturas docs/capturas/T-101-1.png y T-101-2.png revisadas.
+- Para ti: en Pruebas_Calle.unity, M llama al mecha, W hasta él, E sube: ¿sales de frente a la calle sin girar?
+- Para el revisor: revertir el bloque de oyente en JugadorAPie.Subir y confirmar si OyenteUnicoPruebas falla (hoy no distingue). Queda un aviso de 2 audio listeners al subir a un carro (otra prueba).

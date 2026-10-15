@@ -15,7 +15,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
 | T-100 Contratos de guardado, interacción y renta (Core; a main en cuanto se verifique) | nada | hecha (sin revisar), en main |
-| T-101 Deudas de T-F4 y pedido de Alan (posproceso en cámaras) | nada | pendiente |
+| T-101 Deudas de T-F4 y pedido de Alan (posproceso en cámaras) | nada | hecha (sin revisar) |
 | T-102 Cartera del jugador y datos de la economía | T-100 | pendiente |
 | T-103 Daño persistente del mecha del jugador | T-100 | pendiente |
 | T-104 Mecha dañado: más lento, peor manejo y alarma roja | T-103 | pendiente |
@@ -26,7 +26,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | pendiente |
 | T-110 Dinero y renta en el HUD a pie | T-102, T-107 | pendiente |
 | T-111 Guardar y cargar la partida | T-100, T-102, T-103, T-107 | pendiente |
-| T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | pendiente |
+| T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | hecha (sin revisar) |
 
 Pedidos a Alan de T-F5 (D-tony-52): su `RelojMundo` implementa `IGuardable` con clave `reloj`; el `PuntoInteraccion` del taller sin
 otro interactuable cerca; la cama y el espejo de A-F3 pueden ser `IInteractuable`.
