@@ -1,6 +1,19 @@
 # Revisión de Tony
 
-Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
+Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
+(merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
+
+## Resumen del turno (2026-10-15)
+- Hecho: merge de tony/fase-4 (con fase-3) en main y push; decisiones D-tony-1 a 39 pasadas a docs/decisiones.md como D-033 a D-071,
+  más D-072 (Pelea referencia Progresion); docs/estado.md y docs/estado-tony.md actualizados; docs/decisiones-pendientes-tony.md vaciado.
+- Bloqueado: T-060, T-061 y T-073 siguen en bloqueadas porque alan/fase-1 no está en main (A-F1 a A-F3).
+- No hay tareas de Tony pendientes: T-F5 está sin planificar. No se corrió revisión nocturna: Tony aprobó sin ella, así que las
+  tareas de T-F3 y T-F4 pasan a main sin la revisión de conjunto del revisor (quedó sin resultado el 14-oct).
+- Para un humano: lo de abajo (probar en Pruebas_APie.unity y Pruebas_Calle.unity cómo se siente el jugador a pie, el mecha y la
+  emboscada) sigue sin probarse a mano. Capturas T-072-1/2 poco legibles; posible fragilidad en PandillaPruebas caso d y
+  RecorridoEmboscadaPruebas (~50 s).
+- Pregunta para Tony: ¿planificamos T-F5 en el próximo turno de noche?
+
 
 ## Por tarea
 
