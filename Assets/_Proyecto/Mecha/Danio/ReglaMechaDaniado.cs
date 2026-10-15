@@ -15,6 +15,21 @@ namespace MechaCyberpunk.Mecha.Danio
             return actual / maxima <= umbral;
         }
 
+        /// <summary>Nivel de grietas del cristal: 0 sin grietas, 1 leves (fracción &lt;= umbral1), 2 fuertes (&lt;= umbral2). En KO es 2.</summary>
+        public static int NivelGrietas(float actual, float maxima, float umbral1, float umbral2)
+        {
+            if (maxima <= 0f)
+            {
+                return 0;
+            }
+            float fraccion = actual / maxima;
+            if (actual <= 0f || fraccion <= umbral2)
+            {
+                return 2;
+            }
+            return fraccion <= umbral1 ? 1 : 0;
+        }
+
         /// <summary>El factor con vida baja; 1 si no.</summary>
         public static float Factor(bool vidaBaja, float factor)
         {
