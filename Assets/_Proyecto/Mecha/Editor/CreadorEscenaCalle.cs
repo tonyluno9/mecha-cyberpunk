@@ -125,6 +125,9 @@ namespace MechaCyberpunk.Mecha.Editor
             // FindFirstObjectByType y el orden de los objetos de la escena cambia cuál punto de llamado encuentra.
             new GameObject("DineroDePrueba").AddComponent<MechaCyberpunk.Economia.Pruebas.DineroDePrueba>();
 
+            // Reloj de prueba (T-107): la renta cobra al empezar cada día. J salta a las 08:00 del día siguiente.
+            new GameObject("RelojDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.RelojDePrueba>();
+
             EditorSceneManager.SaveScene(escena, RutaEscena);
             AssetDatabase.SaveAssets();
             Debug.Log("[Mecha] Pruebas_Calle creada.");

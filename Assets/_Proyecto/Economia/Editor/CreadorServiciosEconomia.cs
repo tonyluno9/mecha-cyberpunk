@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Economia.Editor
 {
     /// <summary>
-    /// Crea DatosEconomia_Base y ServiciosEconomia.prefab con el ServicioCartera (T-102). Idempotente.
+    /// Crea DatosEconomia_Base y ServiciosEconomia.prefab con el ServicioCartera (T-102) y el ServicioRenta (T-107). Idempotente.
     /// Batchmode: -executeMethod MechaCyberpunk.Economia.Editor.CreadorServiciosEconomia.Crear
     /// </summary>
     public static class CreadorServiciosEconomia
@@ -34,6 +34,12 @@ namespace MechaCyberpunk.Economia.Editor
             var so = new SerializedObject(servicio);
             so.FindProperty("datos").objectReferenceValue = datos;
             so.ApplyModifiedPropertiesWithoutUndo();
+
+            // La renta (T-107) comparte los mismos datos.
+            var renta = raiz.AddComponent<ServicioRenta>();
+            var soRenta = new SerializedObject(renta);
+            soRenta.FindProperty("datos").objectReferenceValue = datos;
+            soRenta.ApplyModifiedPropertiesWithoutUndo();
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             Object.DestroyImmediate(raiz);
 
