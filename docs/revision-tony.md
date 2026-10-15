@@ -180,3 +180,11 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Verificado automáticamente: todos los criterios (EditMode 326/326, PlayMode 263/263).
 - Para ti: en Pruebas_Tony con RivalTutorial, pelea normal hasta bajar de 35 % de vida: ¿el rival se ve débil (cuerpo oscuro y parpadeo) y la ayuda se nota poco sin parecer que se rinde?
 - La captura T-068-1 no tiene una del rival normal para comparar color.
+
+## T-F5 (turno largo 2026-10-15)
+
+### T-100 Contratos de guardado, interacción y renta (Core, a main)
+- Verificado automáticamente: todos los criterios (compilar OK, EditMode 380/380, PlayMode 304/304).
+- Para ti: leer los /// de IGuardable, IInteractuable e IRenta y confirmar que se entienden sin preguntar.
+- Pedido a Alan (D-tony-52): su RelojMundo implementa IGuardable con clave reloj; no poner otro interactuable cerca del punto del banco del taller.
+- Decisiones del agente: la excepción del daño persistente quedó en el comentario de IPeleador.PrepararPelea.
