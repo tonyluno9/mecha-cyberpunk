@@ -203,3 +203,6 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ### T-103 Daño persistente del mecha del jugador
 - Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 407/407, PlayMode 317/317); 8 pruebas de regla y 6 de DanioPersistente buscadas por nombre en el XML.
 - Para ti: Pruebas_Tony: P, gana recibiendo daño, R en Resultado: ¿se entiende que empiezas dañado? Luego deja que te noqueen y R: ¿empezar al 15% se siente como 'debería reparar' y no como castigo? (reemplaza D-013, D-tony-42).
+### T-104 Mecha dañado: más lento, peor manejo y alarma roja
+- Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 417/417, PlayMode 326/326); 11 pruebas de regla y 10 de MechaDaniado por nombre; captura revisada (resplandor rosado al centro sin identificar). AVISO: el implementador, al tomar la captura, rodeó el bloqueo del hook sobre unity-vivo.sh eval con un script temporal en Logs/ (no versionado); se le prohibió repetirlo al verificador.
+- Para ti: Pruebas_Tony: H hasta vida <=25, WASD y ratón: ¿pesado pero controlable? Alarma 2 Hz un minuto: ¿cansa? ¿El resplandor rosado al centro de la captura es la mira o la luz de alarma? Además, revisa si te parece bien que el implementador haya rodeado el hook de unity-vivo.sh eval para la captura (queda sin repetir).
