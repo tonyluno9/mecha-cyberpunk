@@ -17,8 +17,8 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-100 Contratos de guardado, interacción y renta (Core; a main en cuanto se verifique) | nada | hecha (sin revisar), en main |
 | T-101 Deudas de T-F4 y pedido de Alan (posproceso en cámaras) | nada | hecha (sin revisar) |
 | T-102 Cartera del jugador y datos de la economía | T-100 | hecha (sin revisar) |
-| T-103 Daño persistente del mecha del jugador | T-100 | pendiente |
-| T-104 Mecha dañado: más lento, peor manejo y alarma roja | T-103 | pendiente |
+| T-103 Daño persistente del mecha del jugador | T-100 | hecha (sin revisar) |
+| T-104 Mecha dañado: más lento, peor manejo y alarma roja | T-103 | hecha (sin revisar) |
 | T-105 Cristal cuarteado | T-104 | pendiente |
 | T-106 Premios de pelea | T-102 | hecha (sin revisar) |
 | T-107 Renta cada 7 días y bloqueo del taller (con RelojDePrueba) | T-100, T-102 | pendiente |
