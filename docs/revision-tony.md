@@ -196,3 +196,7 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Verificado automáticamente: todos los criterios (EditMode 383/383, PlayMode 306/306; Pandilla y Recorrido 3 de 3 corridas). Capturas docs/capturas/T-101-1.png y T-101-2.png revisadas.
 - Para ti: en Pruebas_Calle.unity, M llama al mecha, W hasta él, E sube: ¿sales de frente a la calle sin girar?
 - Para el revisor: revertir el bloque de oyente en JugadorAPie.Subir y confirmar si OyenteUnicoPruebas falla (hoy no distingue). Queda un aviso de 2 audio listeners al subir a un carro (otra prueba).
+
+### T-102 Cartera del jugador y datos de la economía
+- Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 399/399, PlayMode 311/311) por implementador y verificador.
+- Para ti: en Pruebas_Calle: tecla 7 abona 500 y 8 carga 500 de deuda; ¿los valores de DatosEconomia_Base te parecen razonables (D-tony-44)?
