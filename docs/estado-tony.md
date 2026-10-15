@@ -19,7 +19,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-102 Cartera del jugador y datos de la economía | T-100 | hecha (sin revisar) |
 | T-103 Daño persistente del mecha del jugador | T-100 | hecha (sin revisar) |
 | T-104 Mecha dañado: más lento, peor manejo y alarma roja | T-103 | hecha (sin revisar) |
-| T-105 Cristal cuarteado | T-104 | pendiente |
+| T-105 Cristal cuarteado | T-104 | hecha (sin revisar) |
 | T-106 Premios de pelea | T-102 | hecha (sin revisar) |
 | T-107 Renta cada 7 días y bloqueo del taller (con RelojDePrueba) | T-100, T-102 | pendiente |
 | T-108 Usar interactuables con E | T-100 | pendiente |

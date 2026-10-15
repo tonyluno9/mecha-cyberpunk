@@ -13,3 +13,11 @@ MonoBehaviour:
   m_Name: ConfigMechaDaniado_Base
   m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.ConfigMechaDaniado
   pisoVidaPersistente: 0.15
+  umbralVidaBaja: 0.3
+  factorVelocidad: 0.7
+  factorAceleracion: 0.6
+  factorGiro: 0.75
+  frecuenciaAlarma: 2
+  colorAlarma: {r: 1, g: 0.05, b: 0.05, a: 1}
+  intensidadLuzAlarma: 1.5
+  alcanceLuzAlarma: 2.5
