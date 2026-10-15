@@ -2,7 +2,34 @@
 
 Sesión de aprobación del 2026-10-15: Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y se integraron en main.
 Las decisiones D-tony-1 a D-tony-39 pasaron a docs/decisiones.md como D-033 a D-071 (más D-072). T-F1 a T-F4 del lado de Tony
-están aprobadas y en main. Rama de integración siguiente: tony/fase-5 (se crea desde main cuando T-F5 esté planificada).
+están aprobadas y en main. Rama de integración: tony/fase-5 (creada desde main; T-F5 planificada el 2026-10-15).
+
+## T-F5: daño persistente, reparaciones y guardado
+
+Planeada el 2026-10-15 (planificador Opus 5.5). Decisiones propuestas: D-tony-40 a D-tony-55 en docs/decisiones-pendientes-tony.md.
+IDs T-100 a T-112 porque Alan ya usa T-074 a T-085 (D-tony-40). Todo con dobles (TallerDePrueba, RelojDePrueba): nada espera a Alan.
+La integración con el taller de la casa de Alan (H5 completo) se escribe cuando A-F3 esté en main (D-tony-52).
+
+Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, T-107, T-108, T-109, T-110, T-111, T-112.
+
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-100 Contratos de guardado, interacción y renta (Core; a main en cuanto se verifique) | nada | pendiente |
+| T-101 Deudas de T-F4 y pedido de Alan (posproceso en cámaras) | nada | pendiente |
+| T-102 Cartera del jugador y datos de la economía | T-100 | pendiente |
+| T-103 Daño persistente del mecha del jugador | T-100 | pendiente |
+| T-104 Mecha dañado: más lento, peor manejo y alarma roja | T-103 | pendiente |
+| T-105 Cristal cuarteado | T-104 | pendiente |
+| T-106 Premios de pelea | T-102 | pendiente |
+| T-107 Renta cada 7 días y bloqueo del taller (con RelojDePrueba) | T-100, T-102 | pendiente |
+| T-108 Usar interactuables con E | T-100 | pendiente |
+| T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | pendiente |
+| T-110 Dinero y renta en el HUD a pie | T-102, T-107 | pendiente |
+| T-111 Guardar y cargar la partida | T-100, T-102, T-103, T-107 | pendiente |
+| T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | pendiente |
+
+Pedidos a Alan de T-F5 (D-tony-52): su `RelojMundo` implementa `IGuardable` con clave `reloj`; el `PuntoInteraccion` del taller sin
+otro interactuable cerca; la cama y el espejo de A-F3 pueden ser `IInteractuable`.
 
 ## T-F4: mecha en la calle y emboscada
 
@@ -48,8 +75,7 @@ Orden recomendado (D-071). Decisiones de la planeación: D-059 a D-071 en docs/d
 | T-059 Prefab completo del jugador a pie y recorrido | aprobada, en main |
 
 
-Qué sigue: planificar T-F5 con el planificador (turno de noche, si Tony lo pide). T-060, T-061 y T-073 siguen bloqueadas porque
-alan/fase-1 todavía no está en main (A-F1, A-F2, A-F3).
-Pendientes menores heredados: aviso "2 audio listeners" al montar por código (T-065); el mecha estacionado mira al inicio de la
-calle, no al barrio (T-064); PandillaPruebas caso d y RecorridoEmboscadaPruebas (~50 s) podrían ser frágiles; las capturas T-072-1/2
-son poco legibles.
+Qué sigue: turno de día con las tareas de T-F5 en el orden de arriba (T-100 primero y a main en cuanto se verifique). T-060, T-061
+y T-073 siguen bloqueadas porque alan/fase-1 todavía no está en main (A-F1, A-F2, A-F3).
+Pendientes menores heredados de T-F4 (dos AudioListener, orientación del mecha estacionado, pruebas posiblemente frágiles de la
+pandilla y la emboscada, capturas T-072-1/2): van en T-101.
