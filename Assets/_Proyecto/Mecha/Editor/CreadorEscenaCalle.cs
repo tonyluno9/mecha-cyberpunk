@@ -121,6 +121,10 @@ namespace MechaCyberpunk.Mecha.Editor
             GameObject hud = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
             hud.name = "HudAPie";
 
+            // Teclas de prueba del dinero (T-102): 7 abona 500, 8 carga 500 de deuda. Va al final: LlamadoMechaPruebas usa
+            // FindFirstObjectByType y el orden de los objetos de la escena cambia cuál punto de llamado encuentra.
+            new GameObject("DineroDePrueba").AddComponent<MechaCyberpunk.Economia.Pruebas.DineroDePrueba>();
+
             EditorSceneManager.SaveScene(escena, RutaEscena);
             AssetDatabase.SaveAssets();
             Debug.Log("[Mecha] Pruebas_Calle creada.");
