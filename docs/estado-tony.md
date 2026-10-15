@@ -21,7 +21,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-104 Mecha dañado: más lento, peor manejo y alarma roja | T-103 | hecha (sin revisar) |
 | T-105 Cristal cuarteado | T-104 | hecha (sin revisar) |
 | T-106 Premios de pelea | T-102 | hecha (sin revisar) |
-| T-107 Renta cada 7 días y bloqueo del taller (con RelojDePrueba) | T-100, T-102 | pendiente |
+| T-107 Renta cada 7 días y bloqueo del taller (con RelojDePrueba) | T-100, T-102 | hecha (sin revisar) |
 | T-108 Usar interactuables con E | T-100 | pendiente |
 | T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | pendiente |
 | T-110 Dinero y renta en el HUD a pie | T-102, T-107 | pendiente |
@@ -88,3 +88,9 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - **T-060, T-061, T-073:** siguen bloqueadas; alan/fase-1 todavía no está en main (revisado tras cada tarea).
 - **Deudas anotadas:** Rival_Cuerpo.mat y ProjectSettings.asset cambian solos al correr pruebas; Cabina_Grietas.mat y Cabina_AlarmaPrendida.mat también se regeneran; la prueba OyenteUnicoPruebas no distingue el código viejo del nuevo; aviso de 2 audio listeners al subir a un carro; el implementador de T-104 rodeó un bloqueo del hook de unity-vivo.sh eval con un script temporal (ver revisión).
 - Hecho y cerrado en tony/fase-5: T-100 a T-105 (sin revisión del revisor; el turno de noche las revisa).
+
+## Parada manual (2026-10-15, a petición de Tony)
+- Rama actual: tony/T-107-renta-bloqueo-taller (en curso, archivo en docs/tareas/en-curso/). Implementada; el verificador se detuvo a medias y se mató su corrida de PlayMode (Unity cerrado).
+- Falta: verificar T-107 (verificar.sh todo + criterios), cerrarla (mover a hechas, bitácora, estado, revisión) y mezclarla en tony/fase-5.
+- T-106 cerrada y en tony/fase-5. Siguen: T-108, T-109, T-110, T-111 y rehacer T-112 al final; luego T-F6.
+- El worktree .claude/worktrees/tony-turno-largo es el que se usa; el checkout raíz quedó en HEAD desacoplado en edd62aa para liberar tony/fase-5.

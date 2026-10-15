@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7337398860580942578}
   - component: {fileID: 8563836908892897789}
+  - component: {fileID: 4573761825992882620}
   m_Layer: 0
   m_Name: ServiciosEconomia
   m_TagString: Untagged
@@ -44,4 +45,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b9fd5a39f484e147bebb3ffb4d55996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.ServicioCartera
+  datos: {fileID: 11400000, guid: 295c1da139d2f5c4e9a5f8063fb82b38, type: 2}
+--- !u!114 &4573761825992882620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965035204475803924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea020d34a6916e24b852622649c38e19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.ServicioRenta
   datos: {fileID: 11400000, guid: 295c1da139d2f5c4e9a5f8063fb82b38, type: 2}
