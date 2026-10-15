@@ -209,3 +209,7 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ### T-105 Cristal cuarteado
 - Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 427/427, PlayMode 332/332) por verificador; tras la corrección, solo el implementador re-corrió todo (427/332) y comprobó git status (MechaJugador.prefab sin cambios); sin segunda verificación independiente. Observación: Rival_Cuerpo.mat y ProjectSettings.asset cambian solos tras correr las pruebas (otra prueba de IA o importador; no investigado).
 - Para ti: Pruebas_Tony: H a vida 45 y luego 20: ¿las grietas (finas, ancho 0.004) dicen 'mecha fregado' sin estorbar? ¿Se ven low-poly o como error de textura? Deuda: algo cambia Rival_Cuerpo.mat al correr pruebas.
+### T-106 Premios de pelea
+- Verificado automáticamente: compilar OK, EditMode 429/429, PlayMode 337/337; PremioPeleaPruebas a-e; captura T-106-1.png legible.
+- Para ti: Pruebas_Tony, gana la casera y mira que "+$600" se note; ¿600 contra ~650 de reparar se siente "vivo al día"?
+- Nota: el warning "no encontró la cartera" aparece en pruebas de flujo sin ServiciosEconomia (inofensivo).

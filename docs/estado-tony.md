@@ -26,7 +26,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | pendiente |
 | T-110 Dinero y renta en el HUD a pie | T-102, T-107 | pendiente |
 | T-111 Guardar y cargar la partida | T-100, T-102, T-103, T-107 | pendiente |
-| T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | hecha (sin revisar) |
+| T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | pendiente (se rehace al final) |
 
 Pedidos a Alan de T-F5 (D-tony-52): su `RelojMundo` implementa `IGuardable` con clave `reloj`; el `PuntoInteraccion` del taller sin
 otro interactuable cerca; la cama y el espejo de A-F3 pueden ser `IInteractuable`.
