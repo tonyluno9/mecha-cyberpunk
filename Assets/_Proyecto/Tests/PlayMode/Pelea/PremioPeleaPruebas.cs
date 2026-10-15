@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using MechaCyberpunk.Combate.Vida;
@@ -23,6 +24,12 @@ namespace MechaCyberpunk.Tests.Pelea
         private const string RutaJugador = "Assets/_Proyecto/Mecha/Prefabs/MechaJugador.prefab";
         private const string RutaServicios = "Assets/_Proyecto/Economia/Prefabs/ServiciosEconomia.prefab";
         private const string RutaConfigPresentador = "Assets/_Proyecto/Pelea/Datos/ConfigPresentador_Tutorial.asset";
+        private const string RutaCaptura = "docs/capturas/T-106-1.png";
+        private const string VariableCaptura = "CAPTURAR_T106";
+        private const float DesvioCaptura = 2f;
+        private const int AnchoCaptura = 1280;
+        private const int AltoCaptura = 720;
+        private const int ProfundidadCaptura = 24;
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
         private const float DeltaTimeEstable = 0.05f;
@@ -162,6 +169,33 @@ namespace MechaCyberpunk.Tests.Pelea
                 new InfoDanio(DanioMortal, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
         }
 
+        // Solo con CAPTURAR_T106=1: dibuja lo que ve la cámara del jugador (GANASTE y la línea del premio) y lo guarda como PNG.
+        private void TomarCaptura()
+        {
+            Camera camara = Camera.main;
+            if (camara == null) camara = Object.FindFirstObjectByType<Camera>();
+            Assert.IsNotNull(camara, "Hay una cámara para la captura");
+            RenderTexture rt = new RenderTexture(AnchoCaptura, AltoCaptura, ProfundidadCaptura);
+            Texture2D imagen = new Texture2D(AnchoCaptura, AltoCaptura, TextureFormat.RGB24, false);
+            RenderTexture anterior = RenderTexture.active;
+            // El rival de pie queda delante de la pantalla y tapa el centro: la cámara se corre un momento a un lado para ver la línea del premio.
+            Vector3 posicionOriginal = camara.transform.position;
+            camara.transform.position = posicionOriginal + camara.transform.right * DesvioCaptura;
+            camara.targetTexture = rt;
+            camara.Render();
+            camara.transform.position = posicionOriginal;
+            RenderTexture.active = rt;
+            imagen.ReadPixels(new Rect(0f, 0f, AnchoCaptura, AltoCaptura), 0, 0);
+            imagen.Apply();
+            camara.targetTexture = null;
+            RenderTexture.active = anterior;
+            string ruta = Path.GetFullPath(Path.Combine(Application.dataPath, "..", RutaCaptura));
+            Directory.CreateDirectory(Path.GetDirectoryName(ruta));
+            File.WriteAllBytes(ruta, imagen.EncodeToPNG());
+            Object.Destroy(rt);
+            Object.Destroy(imagen);
+        }
+
         private IEnumerator PulsarTecla(Key tecla)
         {
             Press(teclado[tecla]);
@@ -179,6 +213,8 @@ namespace MechaCyberpunk.Tests.Pelea
             Matar(director.Rival);
             yield return HastaEstado(EstadoFlujoPelea.Resultado);
             for (int i = 0; i < 10; i++) yield return null;
+
+            if (System.Environment.GetEnvironmentVariable(VariableCaptura) == "1") TomarCaptura();
 
             Assert.AreEqual(antes + PremioCasera, cartera.Dinero);
             Assert.AreEqual(1, cambios.Count, "Un solo abono");
