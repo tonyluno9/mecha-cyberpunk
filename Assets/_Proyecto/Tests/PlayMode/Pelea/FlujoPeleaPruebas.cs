@@ -422,7 +422,7 @@ namespace MechaCyberpunk.Tests.Pelea
         }
 
         [UnityTest]
-        public IEnumerator Revancha_REnElResultado_RestauraTodoYVuelveElConteo()
+        public IEnumerator Revancha_REnElResultado_RivalCompletoYJugadorConservaSuDanioYVuelveElConteo()
         {
             yield return Escenario();
             yield return HastaEstado(EstadoFlujoPelea.Peleando);
@@ -442,7 +442,8 @@ namespace MechaCyberpunk.Tests.Pelea
             Assert.AreEqual(2, conteos.FindAll(n => n == 3).Count, "Vuelve el conteo");
             Assert.AreEqual("3", director.Pantalla.Texto);
             Assert.AreEqual(string.Empty, director.Pantalla.Revancha);
-            Assert.AreEqual(Vida(director.Jugador).Maxima, Vida(director.Jugador).Actual, 1e-3f);
+            // D-tony-42: el daño del jugador persiste (100 - 30); el rival vuelve completo.
+            Assert.AreEqual(Vida(director.Jugador).Maxima - 30f, Vida(director.Jugador).Actual, 1e-3f);
             Assert.AreEqual(Vida(director.Rival).Maxima, Vida(director.Rival).Actual, 1e-3f);
             Assert.IsFalse(Vida(director.Rival).EstaKO);
             IArenaPelea arena = director.Arena;
