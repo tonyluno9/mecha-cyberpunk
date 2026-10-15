@@ -57,6 +57,7 @@ namespace MechaCyberpunk.Pelea.Editor
                 so.FindProperty("presentador").objectReferenceValue = config;
                 so.FindProperty("empezarAlArrancar").boolValue = true;
                 so.ApplyModifiedPropertiesWithoutUndo();
+                CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioTutorial);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabTutorial);
             }
             finally
