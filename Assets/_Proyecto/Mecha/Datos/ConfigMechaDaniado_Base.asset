@@ -21,3 +21,7 @@ MonoBehaviour:
   colorAlarma: {r: 1, g: 0.05, b: 0.05, a: 1}
   intensidadLuzAlarma: 1.5
   alcanceLuzAlarma: 2.5
+  umbralGrietas1: 0.5
+  umbralGrietas2: 0.25
+  colorGrietas: {r: 0.8, g: 0.9, b: 1, a: 0.55}
+  anchoGrietas: 0.004

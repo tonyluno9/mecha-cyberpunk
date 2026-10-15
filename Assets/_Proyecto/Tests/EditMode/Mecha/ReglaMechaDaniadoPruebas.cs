@@ -68,5 +68,16 @@ namespace MechaCyberpunk.Tests.Mecha
         {
             Assert.IsFalse(ReglaMechaDaniado.AlarmaPrendida(0.1f, 0f));
         }
+
+        [TestCase(100f, 0)]
+        [TestCase(60f, 0)]
+        [TestCase(50f, 1)]
+        [TestCase(26f, 1)]
+        [TestCase(25f, 2)]
+        [TestCase(0f, 2)]
+        public void NivelGrietas_SegunLaVida_DaElNivel(float actual, int esperado)
+        {
+            Assert.AreEqual(esperado, ReglaMechaDaniado.NivelGrietas(actual, Maxima, 0.5f, 0.25f));
+        }
     }
 }

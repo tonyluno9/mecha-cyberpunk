@@ -26,6 +26,14 @@ namespace MechaCyberpunk.Mecha
         [Min(0f)] [SerializeField] private float intensidadLuzAlarma = 1.5f;
         [Tooltip("Alcance de la luz de la alarma (m).")]
         [Min(0.1f)] [SerializeField] private float alcanceLuzAlarma = 2.5f;
+        [Tooltip("Con la vida en esta fracción de la máxima o menos (0.5 = 50 %) el cristal muestra grietas leves desde las orillas.")]
+        [Range(0.01f, 1f)] [SerializeField] private float umbralGrietas1 = 0.5f;
+        [Tooltip("Con la vida en esta fracción de la máxima o menos (0.25 = 25 %) el cristal muestra grietas fuertes con impacto en estrella.")]
+        [Range(0.01f, 1f)] [SerializeField] private float umbralGrietas2 = 0.25f;
+        [Tooltip("Color de las grietas del cristal (blanco azulado, con alfa).")]
+        [SerializeField] private Color colorGrietas = new Color(0.8f, 0.9f, 1f, 0.55f);
+        [Tooltip("Ancho de las grietas del cristal (m).")]
+        [Min(0.0005f)] [SerializeField] private float anchoGrietas = 0.004f;
 
         public float PisoVidaPersistente => pisoVidaPersistente;
         public float UmbralVidaBaja => umbralVidaBaja;
@@ -36,5 +44,9 @@ namespace MechaCyberpunk.Mecha
         public Color ColorAlarma => colorAlarma;
         public float IntensidadLuzAlarma => intensidadLuzAlarma;
         public float AlcanceLuzAlarma => alcanceLuzAlarma;
+        public float UmbralGrietas1 => umbralGrietas1;
+        public float UmbralGrietas2 => umbralGrietas2;
+        public Color ColorGrietas => colorGrietas;
+        public float AnchoGrietas => anchoGrietas;
     }
 }
