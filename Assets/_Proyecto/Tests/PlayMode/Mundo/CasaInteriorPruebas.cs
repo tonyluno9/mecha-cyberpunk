@@ -25,6 +25,8 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float AtrasCaptura = 2.5f;     // m desde el centro de la zona hacia la puerta
         private const float AlturaOjos = 1.7f;
         private const float SegundosFisica = 0.3f;
+        private const float DistanciaPuntoUso = 0.8f;
+        private const float RadioPuntoUso = 0.3f;
 
         private Keyboard teclado;
         private GameObject camaraObjeto;
@@ -167,11 +169,49 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return EscenaLugares.Esperar(SegundosFisica);
             CapturaPruebas.Guardar(camara.Camara, "docs/capturas/T-086-1.png");
 
-            Transform cama = zona.transform.parent.Find("Sala/CamaBase");
+            Transform cama = zona.transform.parent.Find("Sala/Prop_Cama");
             Assert.IsNotNull(cama, "La sala tiene su cama");
             camara.Colocar(new Pose(desde, Quaternion.LookRotation(cama.position - desde, Vector3.up)));
             yield return EscenaLugares.Esperar(SegundosFisica);
             CapturaPruebas.Guardar(camara.Camara, "docs/capturas/T-086-2.png");
+        }
+
+        [UnityTest]
+        public IEnumerator Casa_PropsDelDormitorio_TienenColliderYPuntoUsoLibreDentroDeLaCasa()
+        {
+            yield return Preparar();
+            Bounds limites = zona.GetComponent<BoxCollider>().bounds;
+            foreach (string nombre in new[] { "Prop_Cama", "Prop_Espejo", "Prop_Mesita" })
+            {
+                Transform prop = zona.transform.parent.Find("Sala/" + nombre);
+                Assert.IsNotNull(prop, nombre + " está colocado en la casa");
+                Assert.IsNotNull(prop.GetComponentInChildren<Collider>(), nombre + " tiene collider");
+                Transform punto = prop.Find("PuntoUso");
+                Assert.IsNotNull(punto, nombre + " tiene PuntoUso");
+                Assert.IsTrue(limites.Contains(punto.position + Vector3.up * AlturaOjos), nombre + ": el PuntoUso está dentro de la casa");
+                Assert.AreEqual(DistanciaPuntoUso, Vector3.Distance(punto.position, prop.GetComponentInChildren<Collider>().ClosestPoint(punto.position)), 0.7f, nombre + ": PuntoUso cerca del prop");
+                Vector3 haciaElProp = prop.position - punto.position;
+                haciaElProp.y = 0f;
+                Assert.Greater(Vector3.Dot(punto.forward, haciaElProp.normalized), 0.9f, nombre + ": PuntoUso mira al prop");
+                Assert.IsFalse(Physics.CheckSphere(punto.position + Vector3.up * RadioPuntoUso * 2f, RadioPuntoUso, ~0, QueryTriggerInteraction.Ignore), nombre + ": PuntoUso sin obstáculos");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Casa_Captura_Dormitorio()
+        {
+            yield return Preparar();
+            camara = EscenaLugares.ColocarFrenteA(IdLugar.Casa, out camaraObjeto);
+            yield return EscenaLugares.Calentar();
+            Transform cama = zona.transform.parent.Find("Sala/Prop_Cama");
+            Transform espejo = zona.transform.parent.Find("Sala/Prop_Espejo");
+            Bounds limites = zona.GetComponent<BoxCollider>().bounds;
+            Vector3 desde = limites.center + EscenaLugares.HaciaLaPuerta(IdLugar.Casa) * AtrasCaptura;
+            desde.y = limites.min.y + AlturaOjos;
+            Vector3 objetivo = (cama.position + espejo.position) / 2f + Vector3.up * 0.9f;
+            camara.Colocar(new Pose(desde, Quaternion.LookRotation(objetivo - desde, Vector3.up)));
+            yield return EscenaLugares.Esperar(SegundosFisica);
+            CapturaPruebas.Guardar(camara.Camara, "docs/capturas/T-087-1.png");
         }
     }
 }

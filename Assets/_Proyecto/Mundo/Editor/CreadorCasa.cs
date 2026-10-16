@@ -124,9 +124,10 @@ namespace MechaCyberpunk.Mundo.Editor
 
             // Sala: cama (cubos hasta T-087), mesita, mesa con dos bancos y cocineta contra el muro derecho.
             Transform sala = Grupo("Sala");
-            Caja(sala, "CamaBase", Pos(5.4f, 0.25f, 1.3f, zFondoInterior), new Vector3(1.8f, 0.5f, 2.2f), madera, true);
-            Caja(sala, "CamaColchon", Pos(5.4f, 0.6f, 1.3f, zFondoInterior), new Vector3(1.7f, 0.2f, 2.1f), tela, false);
-            Caja(sala, "Mesita", Pos(4.1f, 0.3f, 0.45f, zFondoInterior), new Vector3(0.5f, 0.6f, 0.5f), madera, true);
+            CrearProps(madera, tela, metal);
+            Prop(sala, RutaPropCama, Pos(5.4f, 0.02f, 1.3f, zFondoInterior));
+            Prop(sala, RutaPropMesita, Pos(4.1f, 0.02f, 0.45f, zFondoInterior));
+            Prop(sala, RutaPropEspejo, Pos(1.8f, 0.02f, 0.1f, zFondoInterior));
             Caja(sala, "Mesa", Pos(3.0f, 0.7f, 4.5f, zFondoInterior), new Vector3(1.3f, 0.06f, 0.9f), madera, true);
             Caja(sala, "PataMesa", Pos(3.0f, 0.35f, 4.5f, zFondoInterior), new Vector3(0.12f, 0.7f, 0.12f), madera, false);
             Caja(sala, "Banco1", Pos(3.0f, 0.22f, 3.7f, zFondoInterior), new Vector3(0.9f, 0.44f, 0.35f), madera, true);
@@ -173,6 +174,64 @@ namespace MechaCyberpunk.Mundo.Editor
             PrefabUtility.UnloadPrefabContents(raiz);
             AssetDatabase.SaveAssets();
             Debug.Log("[Mundo] T-086 creada: interior de la casa con taller y " + luces.Length + " luces.");
+        }
+
+        // Props de T-087 (cubos con materiales, sin Blender): raíz en el piso con +Z al frente y un hijo PuntoUso a 0.8 m delante, mirando al prop.
+        private const string RutaKit = "Assets/_Proyecto/Mundo/Prefabs/Kit/";
+        private const string RutaPropCama = RutaKit + "Prop_Cama.prefab";
+        private const string RutaPropEspejo = RutaKit + "Prop_Espejo.prefab";
+        private const string RutaPropMesita = RutaKit + "Prop_Mesita.prefab";
+        private const float DistanciaPuntoUso = 0.8f;
+
+        private static void CrearProps(Material madera, Material tela, Material metal)
+        {
+            Material vidrio = Mat("Espejo", new Color(0.55f, 0.62f, 0.68f), 0.95f, default);
+            vidrio.SetFloat("_Metallic", 1f);
+            Material lampara = Mat("LamparaMesita", new Color(0.9f, 0.6f, 0.3f), 0.3f, new Color(2.2f, 1.3f, 0.5f));
+
+            // Cama de 1.8 × 2.2 m con la cabecera hacia -Z; el punto de uso queda a los pies.
+            GuardarProp(RutaPropCama, "Prop_Cama", raiz =>
+            {
+                Caja(raiz, "Base", new Vector3(0f, 0.25f, 0f), new Vector3(1.8f, 0.5f, 2.2f), madera, true);
+                Caja(raiz, "Colchon", new Vector3(0f, 0.6f, 0f), new Vector3(1.7f, 0.2f, 2.1f), tela, false);
+                Caja(raiz, "Almohada", new Vector3(0f, 0.78f, -0.85f), new Vector3(0.9f, 0.16f, 0.35f), vidrio, false);
+                Caja(raiz, "Cabecera", new Vector3(0f, 0.8f, -1.1f), new Vector3(1.8f, 0.8f, 0.1f), madera, false);
+                return 1.1f;
+            });
+            GuardarProp(RutaPropMesita, "Prop_Mesita", raiz =>
+            {
+                Caja(raiz, "Cuerpo", new Vector3(0f, 0.3f, 0f), new Vector3(0.5f, 0.6f, 0.5f), madera, true);
+                Caja(raiz, "Lampara", new Vector3(0f, 0.7f, 0f), new Vector3(0.14f, 0.2f, 0.14f), lampara, false);
+                return 0.25f;
+            });
+            GuardarProp(RutaPropEspejo, "Prop_Espejo", raiz =>
+            {
+                Caja(raiz, "Marco", new Vector3(0f, 1.3f, 0f), new Vector3(0.9f, 1.8f, 0.08f), metal, true);
+                Caja(raiz, "Cristal", new Vector3(0f, 1.3f, 0.045f), new Vector3(0.78f, 1.68f, 0.02f), vidrio, false);
+                return 0.04f;
+            });
+        }
+
+        // Arma un prop en una escena vacía temporal y lo guarda como prefab; 'construir' devuelve la mitad de su fondo (m) en +Z.
+        private static void GuardarProp(string ruta, string nombre, System.Func<Transform, float> construir)
+        {
+            GameObject raiz = new GameObject(nombre);
+            float frente = construir(raiz.transform);
+            GameObject punto = new GameObject("PuntoUso");
+            punto.transform.SetParent(raiz.transform, false);
+            punto.transform.localPosition = new Vector3(0f, 0f, frente + DistanciaPuntoUso);
+            punto.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
+            Object.DestroyImmediate(raiz);
+        }
+
+        private static GameObject Prop(Transform padre, string ruta, Vector3 posicion)
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            go.transform.localPosition = posicion;
+            go.transform.localRotation = Quaternion.identity;
+            return go;
         }
 
         private static Vector3 Pos(float x, float y, float desdeElFondo, float zFondoInterior)
