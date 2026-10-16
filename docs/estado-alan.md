@@ -1,7 +1,8 @@
 # Estado de Alan (modo automático)
 
 Fase A-F2 (Carro, docs/hoja-de-ruta.md), rama de integración: alan/fase-2 (sale de alan/fase-1).
-A-F1 (T-020, T-040 a T-045) está hecha y revisada en alan/fase-1; espera la aprobación de Alan para pasar a main.
+A-F1 y A-F2 (T-074 a T-083) están en main (6be7940; EditMode 476/476, PlayMode 447/447). T-084 y T-085 siguen pendientes.
+A-F3 (planificada en alan/planificacion-fase-3): T-086 casa y taller, T-087 cama y espejo, T-088 callejón y llamado, T-089 clandestino por dentro, T-090 Flashback; bloqueadas por Tony: T-092, T-093.
 
 | Tarea | Estado |
 | --- | --- |
