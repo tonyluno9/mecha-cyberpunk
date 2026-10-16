@@ -61,7 +61,7 @@ Orden recomendado (D-071). Decisiones de la planeación: D-059 a D-071 en docs/d
 | T-022 Flujo de pelea | aprobada, en main |
 | T-033 Contratos de cartera y ofertas | aprobada, en main |
 | T-034 Contratos de calor y objetivos | aprobada, en main |
-| T-060 Jugador en el barrio de Alan | bloqueada (espera A-F1) |
+| T-060 Jugador en el barrio de Alan | hecha (sin revisar) |
 | T-061 Subir al carro de Alan | bloqueada (espera A-F2) |
 | T-050 Contrato de subir y bajar | aprobada, en main |
 | T-051 Jugador a pie | aprobada, en main |
@@ -75,8 +75,7 @@ Orden recomendado (D-071). Decisiones de la planeación: D-059 a D-071 en docs/d
 | T-059 Prefab completo del jugador a pie y recorrido | aprobada, en main |
 
 
-Qué sigue: turno de día con las tareas de T-F5 en el orden de arriba (T-100 primero y a main en cuanto se verifique). T-060, T-061
-y T-073 siguen bloqueadas porque alan/fase-1 todavía no está en main (A-F1, A-F2, A-F3).
+Qué sigue: T-112 (rehacer al final) y T-F6. T-061 y T-073 siguen bloqueadas: alan/fase-1 (A-F1) ya está en main, pero faltan A-F2 (IMontable en Vehiculos/) y A-F3 (IPuntoLlamadoMecha e ITallerMecha en Mundo/).
 Pendientes menores heredados de T-F4 (dos AudioListener, orientación del mecha estacionado, pruebas posiblemente frágiles de la
 pandilla y la emboscada, capturas T-072-1/2): van en T-101.
 
