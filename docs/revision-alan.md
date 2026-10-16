@@ -76,3 +76,10 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 
 ## Bloqueos y preguntas
 - Nada todavía.
+
+## A-F2 (rama alan/fase-2)
+
+### T-080 La calle vestida con el kit urbano
+- Verificado automáticamente: todos los criterios (EditMode 463/463, PlayMode 433/433 tras mezclar main; capturas T-080-1..4).
+- Para ti: Ciudad.unity, `VistasReferencia.Ir(1,22)` y `Ir(1,13)`: densidad de cables, puestos y basureros; caminar por la banqueta y pasar en carro sin rozar postes.
+- Decisiones del agente: colliders de transformador, puesto y basurero achicados al cuerpo.
