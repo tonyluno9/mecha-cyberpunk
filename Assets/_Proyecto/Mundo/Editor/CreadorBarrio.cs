@@ -49,6 +49,9 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float AlturaMinima = 8f;
         private const float AlturaMaxima = 30f;
         private const float DistanciaEntrada = 1.5f;
+        internal const float CallejonX0 = 7f;      // T-088: fondo cerrado del callejón (x local de Manzana_4)
+        internal const float CallejonZ0 = -17f;
+        internal const float CallejonZ1 = -7f;
         private const float DistanciaCochera = 12f;
         private const float DespejeCochera = 6f;
         private const float AnchoPuerta = 3f;
@@ -363,8 +366,12 @@ namespace MechaCyberpunk.Mundo.Editor
                     break;
                 case 3: // Manzana_4: la casa, en la zona pobre y cerca del fondo de la calle del oeste
                     Lugar(manzana, "Lugar_Casa", new Vector2(31f, -30f), 14f, 12f, 7f, new Vector3(1f, 0f, 0f), "Casa", "Letrero_Naranja");
-                    Rellenar(edificios, 25f, 37f, -23f, 37f, azar, hMin, hMax, pobre);
-                    Rellenar(edificios, -37f, 25f, -37f, 37f, azar, hMin, hMax, pobre);
+                    // T-088: el callejón de la emboscada queda libre entre CallejonX0 y la banqueta del este, entre CallejonZ0 y CallejonZ1.
+                    Rellenar(edificios, 25f, 37f, -23f, CallejonZ0, azar, hMin, hMax, pobre);
+                    Rellenar(edificios, 25f, 37f, CallejonZ1, 37f, azar, hMin, hMax, pobre);
+                    Rellenar(edificios, -37f, CallejonX0, -37f, 37f, azar, hMin, hMax, pobre);
+                    Rellenar(edificios, CallejonX0, 25f, -37f, CallejonZ0, azar, hMin, hMax, pobre);
+                    Rellenar(edificios, CallejonX0, 25f, CallejonZ1, 37f, azar, hMin, hMax, pobre);
                     break;
                 default:
                     Rellenar(edificios, -MitadInterior, MitadInterior, -MitadInterior, MitadInterior, azar, hMin, hMax, pobre);
