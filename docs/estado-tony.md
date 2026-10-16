@@ -23,7 +23,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-106 Premios de pelea | T-102 | hecha (sin revisar) |
 | T-107 Renta cada 7 días y bloqueo del taller (con RelojDePrueba) | T-100, T-102 | hecha (sin revisar) |
 | T-108 Usar interactuables con E | T-100 | hecha (sin revisar) |
-| T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | pendiente |
+| T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | hecha (sin revisar) |
 | T-110 Dinero y renta en el HUD a pie | T-102, T-107 | pendiente |
 | T-111 Guardar y cargar la partida | T-100, T-102, T-103, T-107 | pendiente |
 | T-112 Recorrido de daño, taller y guardado (cierre de T-F5 de Tony) | T-101 a T-111 | pendiente (se rehace al final) |
