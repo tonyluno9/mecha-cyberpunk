@@ -31,6 +31,7 @@ namespace MechaCyberpunk.Pelea.Flujo
         private float segundosParaOcultar;
         private bool ocultando;
         private bool avisoRespaldo;
+        private bool mostrarRevancha = true;
 
         /// <summary>Lo que dice el texto grande ahora ("" si está apagado).</summary>
         public string Texto => texto != null && texto.enabled ? texto.text : string.Empty;
@@ -39,6 +40,23 @@ namespace MechaCyberpunk.Pelea.Flujo
         /// <summary>Lo que dice la línea del premio ahora ("" si está apagada).</summary>
         public string Premio => textoPremio != null && textoPremio.enabled ? textoPremio.text : string.Empty;
         public Canvas Lienzo => lienzo;
+
+        /// <summary>Si es false, el resultado no muestra la línea "R: revancha" (pelea sin revancha, T-128).</summary>
+        public void FijarRevanchaVisible(bool visible)
+        {
+            mostrarRevancha = visible;
+            if (!visible && textoRevancha != null)
+            {
+                textoRevancha.enabled = false;
+            }
+        }
+
+        /// <summary>Apaga todos los textos de la pantalla (conteo, resultado, revancha y premio).</summary>
+        public void Ocultar()
+        {
+            ocultando = false;
+            Limpiar();
+        }
 
         private void Awake()
         {
@@ -181,7 +199,7 @@ namespace MechaCyberpunk.Pelea.Flujo
                 gano ? config.ColorGanaste : config.ColorPerdiste, config.TamanoLetra);
             textoRevancha.text = config.TextoRevancha;
             textoRevancha.fontSize = config.TamanoLetraRevancha;
-            textoRevancha.enabled = true;
+            textoRevancha.enabled = mostrarRevancha;
         }
 
         private void Mostrar(string contenido, Color color, int tamanoLetra)
