@@ -28,7 +28,7 @@ namespace MechaCyberpunk.Progresion.Pruebas
 
         private void AlGuardar(InputAction.CallbackContext contexto)
         {
-            ServicioGuardado servicio = FindFirstObjectByType<ServicioGuardado>();
+            ServicioGuardado servicio = ServicioGuardado.Actual;
             if (servicio == null)
             {
                 Debug.LogWarning("[Progresion] No hay ServicioGuardado en la escena.");
@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Progresion.Pruebas
 
         private void AlCargar(InputAction.CallbackContext contexto)
         {
-            ServicioGuardado servicio = FindFirstObjectByType<ServicioGuardado>();
+            ServicioGuardado servicio = ServicioGuardado.Actual;
             if (servicio == null)
             {
                 Debug.LogWarning("[Progresion] No hay ServicioGuardado en la escena.");

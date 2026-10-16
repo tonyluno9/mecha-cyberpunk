@@ -20,7 +20,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-121 Deudas de T-F5: daño persistente solo en el mecha de la historia y creador de Pruebas_Calle | nada | hecha (sin revisar) |
 | T-122 Pruebas frágiles: tope de frame, ritmo del rival y materiales que cambian solos | nada (mejor tras T-121) | hecha (sin revisar) |
 | T-123 Apariencia del jugador: catálogo, cuerpo y vista previa | T-120 | hecha (sin revisar) |
-| T-124 Etapas de la historia y partida entre escenas | T-120 | pendiente |
+| T-124 Etapas de la historia y partida entre escenas | T-120 | hecha (sin revisar) |
 | T-125 Fundido a negro y pantalla de "continuará" | nada | pendiente |
 | T-126 Pantalla de título y creación de personaje | T-123, T-124, T-125 | pendiente |
 | T-127 Ensamblado del prólogo y escena Pruebas_Prologo | T-120, T-121 | pendiente |
@@ -136,3 +136,16 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - Unity: la corrida batch de PlayMode del implementador (PID 41164) seguía viva y no pude cerrarla (permiso denegado). Hay que cerrarla antes de seguir; Temp/UnityLockfile existe en el worktree.
 - Falta: terminar T-108, verificarla, cerrarla; luego T-109, T-110, T-111, rehacer T-112; luego T-F6. Revisar que Pruebas_APie.unity se haya regenerado con el creador y no a mano.
 - Deuda: RecorridoEmboscadaPruebas y RecorridoAPiePruebas fallan por tope de frame de 100 ms.
+
+## Parada por límite de la cuenta (2026-10-16)
+El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hora de México) en medio de T-124. Nada se perdió:
+- tony/fase-5 tiene cerradas y verificadas T-107 a T-112 (T-F5 completa), T-060, T-120 a T-123. Pendiente de Tony: llevar T-100 y T-120 (Core) a main (el permiso de merge a main fue denegado).
+- T-124 (Etapas de la historia y cambio de escena): rama tony/T-124-historia-cambio-escena, implementación A MEDIAS (WIP commit), sin compilar ni verificar. Para retomar: correr bash herramientas/verificar.sh todo en esa rama, terminar lo que falte según docs/tareas/en-curso/T-124-historia-cambio-escena.md, verificar y cerrar con el mismo flujo.
+- Sigue en orden: T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas esperando A-F3/A-F4. T-061 y T-073 bloqueadas esperando A-F2/A-F3 de Alan.
+
+## Parada manual (2026-10-16, a petición de Tony)
+- Rama actual: tony/T-124-historia-cambio-escena (archivo de la tarea en docs/tareas/en-curso/). Implementación A MEDIAS: código de Progresion/ (DatosEscenas, ServicioGuardado, CreadorDatosProgresion, GuardadoDePrueba) sin compilar ni verificar por completo. La última corrida batch (CambioEscenaPruebas, filtro de PlayMode) la detuve yo a la fuerza; no hay resultado.
+- Unity: cerrado. Quité el Temp/UnityLockfile huérfano del worktree tony-turno-largo.
+- Falta: terminar T-124 según su archivo, compilar, correr EditMode y PlayMode, verificarla y cerrarla; luego T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas (A-F3/A-F4); T-061 y T-073 bloqueadas (A-F2/A-F3).
+- Pendiente de Tony: llevar T-100 y T-120 (Core) a main; decidir D-tony-58 (el prólogo como futuro, empieza de cero, o despertar la mañana siguiente con lo que quedó).
+- Recordatorio: el límite semanal de la cuenta se renueva el 20-oct a las 11 pm (México).
