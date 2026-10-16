@@ -24,22 +24,39 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float FondoInterior = 14f;
         private const float AltoInterior = 4.5f;
         private const float GrosorRevestimiento = 0.1f;
-        private const float AltoBarra = 1.1f;
+
+        private const string RutaKit = "Assets/_Proyecto/Mundo/Prefabs/Kit/";
+        private const string RutaPropBarra = RutaKit + "Prop_Barra.prefab";
+        private const string RutaPropMesa = RutaKit + "Prop_Mesa.prefab";
+        private const string RutaPropDj = RutaKit + "Prop_DJ.prefab";
+        private const string RutaPropLetrero = RutaKit + "Prop_Letrero.prefab";
+        private const int CantidadBarras = 5;
+        private const float AnchoBarra = 3.1f;
+        private const float DistanciaBarra = 2f;    // m desde el muro del fondo al centro de cada barra (su estante queda a 1.2 m)
+        private const int BotellasPorEstante = 14;
+        private const int TirasTecho = 3;
+        private const float IntensidadNeonEscenario = 5f;
+        private const float IntensidadRelleno = 13f;
+        private const float AlturaColgante = 0.9f;
 
         private static Transform interior;
 
         [MenuItem("Mecha Cyberpunk/Crear T-043")]
         public static void Crear()
         {
-            Material muro = Mat("Muro", new Color(0.12f, 0.07f, 0.16f), 0.1f, default);
-            Material piso = Mat("Piso", new Color(0.07f, 0.07f, 0.09f), 0.45f, default);
-            Material techo = Mat("Techo", new Color(0.05f, 0.04f, 0.07f), 0f, default);
+            Material muro = Mat("Muro", new Color(0.3f, 0.2f, 0.4f), 0.1f, default);
+            Material piso = Mat("Piso", new Color(0.22f, 0.22f, 0.28f), 0.45f, default);
+            Material techo = Mat("Techo", new Color(0.24f, 0.18f, 0.3f), 0f, default);
             Material madera = Mat("Madera", new Color(0.3f, 0.17f, 0.09f), 0.3f, default);
             Material cuero = Mat("Cuero", new Color(0.45f, 0.08f, 0.18f), 0.3f, default);
             Material metal = Mat("Metal", new Color(0.18f, 0.19f, 0.22f), 0.5f, default);
             Material neonCian = Mat("NeonCian", new Color(0.1f, 0.8f, 0.9f), 0.2f, new Color(0.3f, 2.8f, 3.2f));
             Material neonMagenta = Mat("NeonMagenta", new Color(0.9f, 0.1f, 0.6f), 0.2f, new Color(3.2f, 0.2f, 2f));
             Material neonNaranja = Mat("NeonNaranja", new Color(0.95f, 0.5f, 0.1f), 0.2f, new Color(3.2f, 1.4f, 0.15f));
+            Material botellaAmbar = Mat("BotellaAmbar", new Color(0.5f, 0.25f, 0.05f), 0.6f, new Color(0.7f, 0.32f, 0.05f));
+            Material botellaVerde = Mat("BotellaVerde", new Color(0.1f, 0.4f, 0.2f), 0.6f, new Color(0.1f, 0.55f, 0.25f));
+            Material botellaAzul = Mat("BotellaAzul", new Color(0.1f, 0.25f, 0.5f), 0.6f, new Color(0.1f, 0.3f, 0.7f));
+            Material lampara = Mat("Lampara", new Color(0.9f, 0.6f, 0.3f), 0.3f, new Color(2.2f, 1.3f, 0.5f));
             Material pantalla = Mat("Pantalla", new Color(0.05f, 0.3f, 0.35f), 0.4f, new Color(0.15f, 0.9f, 1.0f));
 
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefabBarrio);
@@ -92,46 +109,46 @@ namespace MechaCyberpunk.Mundo.Editor
             Caja(revestimiento, "MuroFrenteIzq", Pos(-(AnchoPuerta / 2f + anchoFrente / 2f), AltoInterior / 2f, FondoInterior - GrosorRevestimiento / 2f, zFondoInterior), new Vector3(anchoFrente, AltoInterior, GrosorRevestimiento), muro, false);
             Caja(revestimiento, "MuroFrenteDer", Pos(AnchoPuerta / 2f + anchoFrente / 2f, AltoInterior / 2f, FondoInterior - GrosorRevestimiento / 2f, zFondoInterior), new Vector3(anchoFrente, AltoInterior, GrosorRevestimiento), muro, false);
 
-            // Barra con bancos y estante con botellas.
+            // Barra de 5 Prop_Barra en fila (con sus bancos), estante de botellas en el muro y tiras de neón.
             Transform mobiliario = Grupo("Mobiliario");
-            Caja(mobiliario, "Barra", Pos(0f, AltoBarra / 2f, 2.4f, zFondoInterior), new Vector3(16f, AltoBarra, 1f), madera, true);
-            Caja(mobiliario, "BarraTapa", Pos(0f, AltoBarra + 0.05f, 2.4f, zFondoInterior), new Vector3(16.3f, 0.1f, 1.3f), metal, false);
-            Caja(mobiliario, "BarraNeon", Pos(0f, 0.25f, 1.88f, zFondoInterior), new Vector3(15.6f, 0.08f, 0.04f), neonNaranja, false);
-            Caja(mobiliario, "Estante", Pos(0f, 1.9f, 0.3f, zFondoInterior), new Vector3(14f, 0.1f, 0.5f), metal, false);
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < CantidadBarras; i++)
             {
-                Material botella = i % 3 == 0 ? neonCian : i % 3 == 1 ? neonMagenta : neonNaranja;
-                Caja(mobiliario, "Botella", Pos(-6.5f + i * 1.18f, 2.2f, 0.3f, zFondoInterior), new Vector3(0.18f, 0.5f, 0.18f), botella, false);
+                Prop(mobiliario, RutaPropBarra, Pos((i - (CantidadBarras - 1) / 2f) * AnchoBarra, 0.02f, DistanciaBarra, zFondoInterior), 0f);
             }
-            for (int i = 0; i < 7; i++)
+            Material[] botellas = { botellaAmbar, botellaVerde, botellaAzul, botellaAmbar, botellaVerde };
+            float[] alturasEstante = { 2.3f, 2.85f };
+            foreach (float alturaEstante in alturasEstante)
             {
-                float x = -6f + i * 2f;
-                Caja(mobiliario, "Banco", Pos(x, 0.35f, 3.7f, zFondoInterior), new Vector3(0.45f, 0.7f, 0.45f), cuero, true);
+                Caja(mobiliario, "Estante", Pos(0f, alturaEstante, 0.3f, zFondoInterior), new Vector3(14f, 0.08f, 0.45f), metal, false);
+                for (int i = 0; i < BotellasPorEstante; i++)
+                {
+                    float alto = 0.3f + 0.05f * (i % 4);
+                    Caja(mobiliario, "Botella", Pos(-6.7f + i * 13.4f / (BotellasPorEstante - 1), alturaEstante + 0.04f + alto / 2f, 0.3f, zFondoInterior), new Vector3(0.15f, alto, 0.15f), botellas[i % botellas.Length], false);
+                }
             }
 
-            // Mesas con dos bancos cada una.
-            float[] mesasX = { -7.5f, -4f, 4f };
-            float[] mesasZ = { 7.5f, 11f };
+            // Mesas redondas con sillas en una cuadrícula con pasillos de más de 1.2 m.
+            float[] mesasX = { -7.5f, -4.8f, -2.1f, 3.2f };
+            float[] mesasZ = { 7f, 10.5f };
             foreach (float mx in mesasX)
             {
                 foreach (float mz in mesasZ)
                 {
-                    Caja(mobiliario, "Mesa", Pos(mx, 0.375f, mz, zFondoInterior), new Vector3(1.2f, 0.75f, 1.2f), madera, true);
-                    Caja(mobiliario, "BancoMesa", Pos(mx - 1.1f, 0.25f, mz, zFondoInterior), new Vector3(0.45f, 0.5f, 0.45f), cuero, true);
-                    Caja(mobiliario, "BancoMesa", Pos(mx + 1.1f, 0.25f, mz, zFondoInterior), new Vector3(0.45f, 0.5f, 0.45f), cuero, true);
+                    Prop(mobiliario, RutaPropMesa, Pos(mx, 0.02f, mz, zFondoInterior), 0f);
                 }
             }
 
-            // Escenario pequeño con cabina de DJ en la esquina derecha.
+            // Escenario pequeño con la cabina Prop_DJ en la esquina derecha, mirando al salón (hacia -x).
             Caja(mobiliario, "Escenario", Pos(8.3f, 0.25f, 9.2f, zFondoInterior), new Vector3(3.4f, 0.5f, 6.5f), metal, true);
-            Caja(mobiliario, "CabinaDJ", Pos(9.0f, 1.0f, 9.2f, zFondoInterior), new Vector3(1.2f, 1f, 2.4f), metal, true);
-            Caja(mobiliario, "CabinaDJNeon", Pos(8.38f, 1.0f, 9.2f, zFondoInterior), new Vector3(0.04f, 0.8f, 2.2f), neonMagenta, false);
-            Caja(mobiliario, "Bocina", Pos(9.2f, 1.1f, 12.2f, zFondoInterior), new Vector3(0.8f, 1.6f, 0.8f), techo, true);
-            Caja(mobiliario, "Bocina", Pos(9.2f, 1.1f, 6.2f, zFondoInterior), new Vector3(0.8f, 1.6f, 0.8f), techo, true);
+            Prop(mobiliario, RutaPropDj, Pos(9.0f, 0.5f, 9.2f, zFondoInterior), -90f);
 
             // Puerta falsa a los baños en el muro izquierdo.
             Caja(mobiliario, "PuertaBanos", Pos(-mitadInterior + 0.15f, 1.1f, 5.5f, zFondoInterior), new Vector3(0.1f, 2.2f, 1.3f), metal, false);
             Caja(mobiliario, "LetreroBanos", Pos(-mitadInterior + 0.15f, 2.6f, 5.5f, zFondoInterior), new Vector3(0.06f, 0.3f, 1.0f), neonCian, false);
+
+            // Dos Prop_Letrero: en el muro del fondo y junto a la puerta de los baños.
+            Prop(mobiliario, RutaPropLetrero, Pos(0f, 2.9f, 0.2f, zFondoInterior), 0f);
+            Prop(mobiliario, RutaPropLetrero, Pos(-mitadInterior + 0.2f, 1.9f, 7.6f, zFondoInterior), 90f);
 
             // Pantallas y tiras de neón.
             Transform neon = Grupo("Neon");
@@ -141,18 +158,27 @@ namespace MechaCyberpunk.Mundo.Editor
             Caja(neon, "TiraAtras", Pos(0f, 4.2f, 0.12f, zFondoInterior), new Vector3(18f, 0.08f, 0.04f), neonMagenta, false);
             Caja(neon, "TiraIzquierda", Pos(-mitadInterior + 0.12f, 4.2f, FondoInterior / 2f, zFondoInterior), new Vector3(0.04f, 0.08f, 13f), neonCian, false);
             Caja(neon, "TiraDerecha", Pos(mitadInterior - 0.12f, 4.2f, FondoInterior / 2f, zFondoInterior), new Vector3(0.04f, 0.08f, 13f), neonCian, false);
+            for (int i = 0; i < TirasTecho; i++)
+            {
+                Caja(neon, "TiraTecho", Pos(0f, AltoInterior - 0.12f, 3f + i * 4.5f, zFondoInterior), new Vector3(16f, 0.04f, 0.08f), i % 2 == 0 ? neonCian : neonMagenta, false);
+            }
             Caja(neon, "TiraCentro", Pos(0f, AltoInterior - 0.15f, 7f, zFondoInterior), new Vector3(0.08f, 0.04f, 9f), neonMagenta, false);
 
-            // Luces: cálidas sobre las mesas y la barra, de neón en el escenario y detrás de la barra.
+            // Lámparas colgantes cálidas sobre la barra y las mesas (cada una con su luz) y luces de relleno y de neón.
             Transform grupoLuces = Grupo("Luces");
+            Color calida = new Color(1f, 0.7f, 0.4f);
             Light[] luces =
             {
-                Luz(grupoLuces, "LuzCalidaMesasIzq", Pos(-5.5f, 3.9f, 9f, zFondoInterior), new Color(1f, 0.7f, 0.4f), 6f, 10f),
-                Luz(grupoLuces, "LuzCalidaMesasDer", Pos(3f, 3.9f, 9f, zFondoInterior), new Color(1f, 0.7f, 0.4f), 6f, 10f),
-                Luz(grupoLuces, "LuzCalidaBarra", Pos(0f, 3.9f, 4f, zFondoInterior), new Color(1f, 0.75f, 0.45f), 6f, 10f),
-                Luz(grupoLuces, "LuzNeonEscenario", Pos(7.5f, 3.6f, 9.2f, zFondoInterior), new Color(0.9f, 0.1f, 0.7f), 5f, 8f),
-                Luz(grupoLuces, "LuzNeonBarra", Pos(0f, 3.2f, 1f, zFondoInterior), new Color(0.1f, 0.8f, 0.9f), 5f, 9f),
-                Luz(grupoLuces, "LuzEntrada", Pos(0f, 3.8f, 12.5f, zFondoInterior), new Color(1f, 0.7f, 0.4f), 4f, 6f)
+                Colgante(grupoLuces, lampara, "LuzCalidaBarra1", Pos(-5f, AltoInterior, 3.4f, zFondoInterior), calida),
+                Colgante(grupoLuces, lampara, "LuzCalidaBarra2", Pos(0f, AltoInterior, 3.4f, zFondoInterior), calida),
+                Colgante(grupoLuces, lampara, "LuzCalidaBarra3", Pos(5f, AltoInterior, 3.4f, zFondoInterior), calida),
+                Colgante(grupoLuces, lampara, "LuzCalidaMesasIzq", Pos(-4.8f, AltoInterior, 8.75f, zFondoInterior), calida),
+                Colgante(grupoLuces, lampara, "LuzCalidaMesasDer", Pos(3.2f, AltoInterior, 8.75f, zFondoInterior), calida),
+                Luz(grupoLuces, "LuzNeonEscenario", Pos(7.0f, 3.4f, 9.2f, zFondoInterior), new Color(0.9f, 0.1f, 0.7f), IntensidadNeonEscenario, 9f),
+                Luz(grupoLuces, "LuzNeonBarra", Pos(0f, 3.0f, 1.2f, zFondoInterior), new Color(0.1f, 0.8f, 0.9f), 5f, 9f),
+                Luz(grupoLuces, "LuzEntrada", Pos(0f, 3.8f, 12.5f, zFondoInterior), calida, 4f, 6f),
+                Luz(grupoLuces, "LuzRellenoIzq", Pos(-5f, 4.0f, 6f, zFondoInterior), new Color(0.75f, 0.7f, 1f), IntensidadRelleno, 12f),
+                Luz(grupoLuces, "LuzRellenoDer", Pos(5f, 4.0f, 6f, zFondoInterior), new Color(0.75f, 0.7f, 1f), IntensidadRelleno, 12f)
             };
 
             // Zona: del umbral interior (cara de adentro de la puerta) al muro del fondo.
@@ -222,6 +248,34 @@ namespace MechaCyberpunk.Mundo.Editor
             luz.range = alcance;
             luz.shadows = LightShadows.None;
             return luz;
+        }
+
+        // Instancia un prefab del kit dentro del interior; el frente del prop mira a +z y 'giro' lo rota en y.
+        private static GameObject Prop(Transform padre, string ruta, Vector3 posicion, float giro)
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            if (prefab == null)
+            {
+                throw new System.InvalidOperationException("No existe el prefab " + ruta + "; corre CreadorArte antes.");
+            }
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            go.transform.localPosition = posicion;
+            go.transform.localRotation = Quaternion.Euler(0f, giro, 0f);
+            return go;
+        }
+
+        // Lámpara que cuelga del techo (cable y pantalla emisiva) con su luz cálida debajo.
+        private static Light Colgante(Transform padre, Material material, string nombre, Vector3 techo, Color color)
+        {
+            Caja(padre, nombre + "_Cable", techo - Vector3.up * (AlturaColgante / 2f), new Vector3(0.03f, AlturaColgante, 0.03f), material, false);
+            GameObject pantalla = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pantalla.name = nombre + "_Pantalla";
+            pantalla.transform.SetParent(padre, false);
+            pantalla.transform.localPosition = techo - Vector3.up * AlturaColgante;
+            pantalla.transform.localScale = new Vector3(0.6f, 0.11f, 0.6f);
+            pantalla.GetComponent<MeshRenderer>().sharedMaterial = material;
+            Object.DestroyImmediate(pantalla.GetComponent<Collider>());
+            return Luz(padre, nombre, techo - Vector3.up * (AlturaColgante + 0.3f), color, 8f, 10f);
         }
 
         private static Transform BuscarPorNombre(Transform raiz, string nombre)
