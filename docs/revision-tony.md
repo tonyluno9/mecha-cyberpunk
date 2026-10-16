@@ -1,6 +1,19 @@
 # Revisión de Tony
 
-Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
+Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
+(merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
+
+## Resumen del turno (2026-10-15)
+- Hecho: merge de tony/fase-4 (con fase-3) en main y push; decisiones D-tony-1 a 39 pasadas a docs/decisiones.md como D-033 a D-071,
+  más D-072 (Pelea referencia Progresion); docs/estado.md y docs/estado-tony.md actualizados; docs/decisiones-pendientes-tony.md vaciado.
+- Bloqueado: T-060, T-061 y T-073 siguen en bloqueadas porque alan/fase-1 no está en main (A-F1 a A-F3).
+- No hay tareas de Tony pendientes: T-F5 está sin planificar. No se corrió revisión nocturna: Tony aprobó sin ella, así que las
+  tareas de T-F3 y T-F4 pasan a main sin la revisión de conjunto del revisor (quedó sin resultado el 14-oct).
+- Para un humano: lo de abajo (probar en Pruebas_APie.unity y Pruebas_Calle.unity cómo se siente el jugador a pie, el mecha y la
+  emboscada) sigue sin probarse a mano. Capturas T-072-1/2 poco legibles; posible fragilidad en PandillaPruebas caso d y
+  RecorridoEmboscadaPruebas (~50 s).
+- Pregunta para Tony: ¿planificamos T-F5 en el próximo turno de noche?
+
 
 ## Por tarea
 
@@ -62,3 +75,108 @@ Rama para probar: `tony/fase-2`. Turno de día en curso (2026-10-12).
 - Para ti (o Alan): leer solo los /// de Core/Jugador/IMontable.cs y confirmar que responden sin dudas quién prende la cámara y el AudioListener al subir, quién lee la E y dónde queda el jugador al bajar.
 - Decisiones del agente: Resolver deja posicion en cero al devolver false; IntentarBajar en false deja `salida` sin uso.
 - Integrada a main porque Alan la necesita para el carro (A-F2).
+
+### T-051 Jugador a pie
+- Verificado automáticamente: todos los criterios (EditMode 192/192, PlayMode 118/118; captura docs/capturas/T-051-1.png; consola 0 errores en Play).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play, WASD, ratón, Shift para correr, Espacio para saltar. ¿Responde al instante sin patinar ni flotar? ¿El salto y la carrera se sienten ligeros, distintos del mecha? ¿La altura de ojos (1.65 m) no se siente enana ni gigante junto a los edificios y las banquetas del barrio en L?
+- Decisiones del agente: clic con cursor libre lo vuelve a bloquear; Manos es hijo de Camara; valores de aceleración, frenado, gravedad y control en el aire en ConfigControlesAPie.
+
+### T-055 Servicio de objetivos
+- Verificado automáticamente: todos los criterios (EditMode 206/206, PlayMode 131/131). Sin criterios de sensación.
+- Decisiones del agente: Llego se mantiene hasta que cambia el objetivo; PublicarEntro del lugar del objetivo cuenta como llegada aunque el jugador esté lejos; tecla O de prueba cambia de objetivo.
+- Cubre el pendiente de la revisión de conjunto de T-F2 (IObjetivos ya se registra).
+
+### T-054 Puertas desde el lado del jugador
+- Verificado automáticamente: todos los criterios (EditMode 220/220, PlayMode 155/155; recorrido en vivo con consola sin errores; captura docs/capturas/T-054-1.png).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Párate a unos 2 m de cada puerta (Bar x=8, Clandestino x=17, Casino x=26, todas en z=17) y pulsa E sin centrar la puerta; camina con W para entrar y gira para salir. ¿E responde al instante? ¿Hay tirones al cruzar el umbral? (El Clandestino debe decir cerrado por horario y el Casino bloqueado.)
+- Observación para Alan: si se teletransporta al jugador desactivando su CharacterController dentro de una zona, el trigger no avisa la salida (JugadorDentro queda en true).
+- Decisiones del agente: "no funciona en KO" usa ControladorAPie.ControlActivo (el jugador a pie aún no tiene vida).
+
+### T-052 Vida y golpes a pie
+- Verificado automáticamente: todos los criterios (EditMode 221/221, PlayMode 168/168 dos corridas; captura docs/capturas/T-052-1.png; consola 0 errores).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Clic izquierdo frente a un muñeco: ¿el puño avanza y el muñeco parpadea justo al conectar, sin sentirse tardío? H varias veces hasta el KO: ¿la vista cae a 0.4 m y se ladea sin verse como error? K revive.
+- Decisiones del agente: el jugador a pie NO es IPeleador (D-tony-15); el creador conserva ControlesAPie.inputactions si ya existe; tiempos y geometría del KO en DatosPersonaje.
+
+### T-053 Pistola
+- Verificado automáticamente: todos los criterios (EditMode 228/228, PlayMode 180/180 dos corridas; en vivo 32 disparos y 3 recargas, consola 0 errores; captura docs/capturas/T-053-1.png sin destello visible, la luz dura 0.05 s).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Tecla 2, apunta a uno de los muñecos (16, 0, 4) y (16, 0, 7) y haz clic repetido: ¿se ven el destello, el retroceso corto y la marca en el muro, y se siente seco y claro? Dispara 8 veces y un clic más: ¿se entiende que el clic vacío recarga? Prueba R y 1 / 2 para cambiar de arma.
+- Decisiones del agente: ArmasAPie conserva el arma y la copia a GolpeAPie; los avisos de HUD salen por el evento Cambio de ArmasAPie. Las pruebas usan blancos de 8 m de alto por el calentamiento de los primeros frames; en el juego la cámara está a 1.70 m.
+
+### T-056 HUD a pie: vida, arma y canción
+- Verificado automáticamente: todos los criterios menos la captura a 1920×1080 (EditMode 245/245, PlayMode 189/189; captura docs/capturas/T-056-1.png a 1280×720, hecha con el Canvas en ScreenSpaceCamera solo en memoria porque la herramienta no dibuja el Overlay).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play, vista Game a 1920×1080 y a 1280×720. ¿Se leen vida, arma y balas, canción y mira sin taparse? (El texto se ve pequeño y de contraste justo sobre el cielo; si molesta, se sube el tamaño en ConfigHudAPie_Base.) Cambia con 1/2, dispara, R, y H para recibir daño: ¿el HUD se siente mínimo y neón?
+- Decisiones del agente: UI ahora referencia Personaje (mismo dueño); el HUD repite la lectura de vida un frame después de registrarse el jugador.
+
+### T-057 HUD del objetivo y avisos de interacción
+- Verificado automáticamente: todos los criterios (EditMode 264/264, PlayMode 206/206 dos corridas; recorrido en vivo con consola 0 errores; capturas docs/capturas/T-057-1.png, -2.png y -3.png).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. Camina con W siguiendo solo la flecha hacia el Bar: ¿se llega sin pensar? Camina hacia atrás unos 40 m: ¿el "REGRESA" magenta se nota sin molestar? Acércate a la puerta del Clandestino (x=17, z=17, mirando +Z) y pulsa E: ¿"CERRADO · abre 20:00" se entiende a la primera y no se queda pegado? Igual con el Casino.
+- Observaciones: la flecha apunta en línea recta (se topa con el muro trasero del Bar, por diseño); la prueba de Carro sin aviso de interacción pasa casi por construcción (JugadorFalso sin InteraccionAPie).
+- Pendiente (corrección T-F3): la captura docs/capturas/T-059-2.png muestra el aviso "E · Abrir Clandestino" y no el de cerrado por horario que pide el criterio; hay que recapturarla con el reloj fuera de 20:00-06:00 o verificar la hora de la demo.
+- Decisiones del agente: flecha dibujada por código; UI y Personaje/Editor referencian Progresion (mismo dueño).
+
+### T-058 Subir y bajar del carro (lado del jugador)
+- Verificado automáticamente: todos los criterios (EditMode 276/276, PlayMode 218/218 dos corridas; en vivo el carro se movió ~16 m y 11 ciclos subir/bajar con consola 0 errores; capturas docs/capturas/T-058-1.png, -2.png y T-058-vivo-1/2.png).
+- Para ti: Escenas/Tony/Pruebas_APie.unity, Play. WASD hasta el carro rosa (-2, 0, 9), E para subir, flechas para manejar, E con el carro detenido para bajar. ¿Subir y bajar es inmediato y claro, y la cámara no marea? Al bajar debes quedar a la izquierda, fuera del collider y mirando hacia adelante.
+- Decisiones del agente: la E la lee InteraccionAPie (siempre prendida); al subir se apagan ControladorAPie y ArmasAPie y se congela el control; el carro usa un .inputactions propio con las flechas.
+- Para Alan (A-F2): el carro de Alan solo necesita implementar IMontable (contrato en Core/Jugador/IMontable.cs); CarroDePrueba es el ejemplo.
+
+### T-059 Prefab completo del jugador a pie y recorrido
+- Verificado automáticamente: todos los criterios (EditMode 276/276, PlayMode 229/229; capturas docs/capturas/T-059-1 a -3.png).
+- Para ti: Pruebas_APie, Play, WASD y ratón siguiendo solo la flecha hasta la esquina, el Bar y el carro. ¿Nada se atora, la flecha basta, el HUD es legible?
+- Pedido para Alan (D-tony-25): colocar Personaje/Prefabs/JugadorAPie.prefab en Ciudad.unity y Pruebas_Alan.unity con idAparicion "Casa_Puerta" y apagar su cámara libre.
+- Observación: GolpeBloqueoPruebas.Golpe_ClicsSeguidos... es flaky (preexistente, de Combate).
+
+## T-F4
+
+### T-062 Contratos de llamado del mecha, taller y perfil (Core)
+- Verificado automáticamente: 5 de 5 criterios (EditMode 281/281, PlayMode 229/229 en la rama; EditMode 181/181 en main).
+- Integrada a main con push (cherry-pick, para no llevar a main lo no aprobado de tony/fase-3).
+- Para ti / Alan: pedido D-tony-37 (ver bitácora): ITallerMecha en la casa, IPuntoLlamadoMecha en el callejón, y colocar MechaEstacionado.prefab y Emboscada.prefab cuando existan.
+
+### T-063 Deudas menores de T-F3
+- Verificado automáticamente: 5 de 5 criterios (EditMode 281/281, PlayMode 229/229). Sin juicio humano.
+
+### T-064 El mecha como montable
+- Verificado automáticamente: todos los criterios (EditMode 286/286, PlayMode 237/237, 5 ciclos en vivo).
+- Para ti: en Pruebas_Calle camina con W hasta el mecha (8 m) y pulsa E: ¿el salto de vista a pie a cabina marea? Maneja, frena y pulsa E: ¿bajas frente a la escotilla?
+- El mecha estacionado mira al inicio de la calle, no al barrio (T-064-2.png lo muestra girado).
+
+### T-065 Encendido del mecha en 3 pasos
+- Verificado automáticamente: todos los criterios (EditMode 300/300, PlayMode 246/246).
+- Para ti: en Pruebas_Calle sube al mecha con E y enciende con F, mantén Espacio y Q: ¿se entienden los 3 pasos solo con la pantalla?, ¿se siente máquina pesada y no menú?, ¿~5 s se aguanta la segunda vez?
+- Mira la consola al subir: si sale 'There are 2 audio listeners' repetido, hay un AudioListener duplicado.
+- Desviación menor: UI.asmdef referencia Mecha (necesario para PantallaEncendido).
+
+### T-066 Llamar al mecha con M
+- Verificado automáticamente: todos los criterios (EditMode 315/315, PlayMode 257/257).
+- Para ti: en Pruebas_Calle, a pie, pulsa M en la calle: ¿ver bajar al mecha del cielo se siente grande y 6 s se sienten bien o largos? A más de 75 m pulsa M: ¿'AQUÍ NO PUEDE LLEGAR TU MECHA' basta para entender?
+
+### T-067 Calor policial por usar el mecha
+- Verificado automáticamente: todos los criterios (EditMode 335/335, PlayMode 279/279). Primera ronda: la barra fina de la pantalla de calor quedaba tapada por el tablero; se subió la pantalla, se regeneró el prefab y se recapturó T-067-1 (barra visible).
+- Referencia nueva de Mecha.Editor.asmdef a Progresion: necesaria para el creador, ambas son de Tony.
+- Para ti: en Pruebas_Calle, sube al mecha, enciéndelo y maneja 30 s por la calle: ¿el calor llega a nivel 3 a buen ritmo y la pantalla no distrae?
+
+### T-072 Recorrido de la emboscada (H4 del lado de Tony)
+- Verificado automáticamente: EditMode 375/375, PlayMode 304/304. Recorrido a-f con entrada simulada en 47-53 s de juego (4 corridas, estable); `Terminada` una vez; vida mínima 28-44 con piso 15; g) 60 s sin pelear: vida 15 y sigue vivo. Sin código del juego tocado.
+- Para ti (prueba humana de H4): Pruebas_Calle, Play, sin ayuda: W al callejón, M llamar, E subir, encendido (F, Espacio mantenido, Q), pelea con ratón y clic. ¿Tensión de la aparición, ritual de encendido y pelea se sienten bien? ¿El mecha cae demasiado cerca del piso de piedad? Duración ~50 s contra meta de 1 a 2 minutos.
+- Las capturas T-072-1/2 son poco legibles (el banner SISTEMAS EN LÍNEA sigue visible; los KO no se distinguen).
+
+### T-071 Director de la emboscada
+- Verificado automáticamente: todos los criterios (EditMode 375/375, PlayMode 302/302; 14 casos de MaquinaEmboscada y 8 de DirectorEmboscada). Core intacto.
+- Decisiones del implementador: Pelea usa ServicioObjetivos (Progresion, mismo dueño) para fijar el objetivo, porque IObjetivos no lo permite; rival caído se retira a los 4 s; "Sube a tu mecha" solo si el mecha está a menos de 6 m de la llegada de un punto de llamado.
+- Para ti: en Pruebas_Calle, a pie, acércate al callejón del fondo: ¿la pandilla se siente como amenaza y "Llama a tu mecha (M)" queda claro? Con M: ¿los pandilleros que esperan al mecha se ven creíbles o parece que se congeló?
+
+### T-070 Presentador y perfil del jugador
+- Verificado automáticamente: todos los criterios (EditMode 362/362, PlayMode 294/294); sin ConfigPresentador el flujo no cambia; Core y Pruebas_Tony intactos.
+- Decisiones del implementador: EstadoFlujoPelea.Presentacion al final del enum; grito 150 pt y líneas 100 pt; nombre de respaldo del perfil "JUGADOR" (provisional hasta T-F6).
+- Para ti: en Pruebas_Tutorial.unity, Play sin tocar teclas: ¿las 4 líneas de 1.6 s (6.4 s) se sienten como arranque de campeonato y no como carga, y el grito del alias destaca? Revancha con R: no debe repetir la presentación.
+
+### T-069 Pandilla con turnos de ataque
+- Verificado automáticamente: todos los criterios (EditMode 345/345, PlayMode 284/284; caso d estable en 4 corridas, ~5.6 s).
+- Decisiones del implementador: pide turno al llegar a distancia de ataque + 2 m y con su espera a 0.6 s o menos de acabar; sin turno rodea a 1.2 m/s en un anillo de 4.6 m; los pandilleros no chocan entre sí (Physics.IgnoreCollision solo con usarTurnos) porque los cuerpos caídos los atoraban. Para T-071: retirar los cuerpos de los pandilleros caídos.
+- Para ti: en Pruebas_Tony con 3 RivalPandilla y MechaJugador, pelea contra 2 o 3: ¿se turnan como grupo de película y se lee quién va a pegar, o parece una fila?
+
+### T-068 Rival que no te deja perder y rival del tutorial
+- Verificado automáticamente: todos los criterios (EditMode 326/326, PlayMode 263/263).
+- Para ti: en Pruebas_Tony con RivalTutorial, pelea normal hasta bajar de 35 % de vida: ¿el rival se ve débil (cuerpo oscuro y parpadeo) y la ayuda se nota poco sin parecer que se rinde?
+- La captura T-068-1 no tiene una del rival normal para comparar color.
