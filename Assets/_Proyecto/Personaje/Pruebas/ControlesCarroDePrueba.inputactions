@@ -1,0 +1,80 @@
+{
+    "version": 1,
+    "name": "ControlesCarroDePrueba",
+    "maps": [
+        {
+            "name": "Carro",
+            "id": "f51dc7c9-da13-4b33-9b99-154cb4c03fcb",
+            "actions": [
+                {
+                    "name": "Conducir",
+                    "type": "Value",
+                    "id": "7d642d2d-ac09-4eea-b4ee-12e35a72b2d8",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "2DVector",
+                    "id": "937a1827-b50d-4f51-91e7-43ec184c0766",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Conducir",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Up",
+                    "id": "14cfbed2-9e0a-4ca7-9a3a-c4f2ef237096",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Conducir",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "838982b6-b213-4162-87aa-0c3d87f559a4",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Conducir",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "d4b4ac67-b1d8-4105-b53e-1a36dad4b29a",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Conducir",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "acf33633-6123-4a3a-bc1c-1584c034a0d3",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Conducir",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

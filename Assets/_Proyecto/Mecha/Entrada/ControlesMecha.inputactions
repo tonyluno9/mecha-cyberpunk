@@ -55,6 +55,36 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Confirmar",
+                    "type": "Button",
+                    "id": "a77b0f7a-c9b9-41c0-a106-79b0c10ee7ca",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Levantar",
+                    "type": "Button",
+                    "id": "285b7e0b-50b0-49e9-900e-fa0b8ccc9538",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Cristal",
+                    "type": "Button",
+                    "id": "a2e213ba-80f9-4e6b-8eb0-90b90f250969",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -154,6 +184,68 @@
                     "processors": "",
                     "groups": "",
                     "action": "LiberarCursor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cbb3e43d-f79f-4ed6-89d5-11e9c0f4c15c",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Confirmar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2b45b279-e25c-49d5-8f7b-06d62c978749",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Levantar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c267da9-08fe-4860-962d-94b0c4d9fffe",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cristal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Llamado",
+            "id": "2c0945a5-d144-4847-a39c-d3c71530d68b",
+            "actions": [
+                {
+                    "name": "LlamarMecha",
+                    "type": "Button",
+                    "id": "8f35d03d-df9c-40a3-bcd9-f99ca612f01e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "efacc2de-1716-47f3-a426-ade4d9339d22",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LlamarMecha",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

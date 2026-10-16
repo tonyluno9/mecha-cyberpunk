@@ -17,11 +17,19 @@ namespace MechaCyberpunk.Combate.Vida
         private IPeleador peleador;
         private GuardiaMecha guardia;
         private bool buscoGuardia;
+        private float multiplicadorDanioRecibido = 1f;
 
         public DatosMecha Datos => datos;
         public float Actual => modelo != null ? modelo.Actual : 0f;
         public float Maxima => modelo != null ? modelo.Maxima : 0f;
         public bool EstaKO => modelo != null && modelo.EstaKO;
+
+        /// <summary>Multiplica el daño que entra, antes del bloqueo (1 = normal). Nunca baja de 0.</summary>
+        public float MultiplicadorDanioRecibido
+        {
+            get => multiplicadorDanioRecibido;
+            set => multiplicadorDanioRecibido = Mathf.Max(0f, value);
+        }
 
         public event Action Cambio;
         public event Action KO;
@@ -79,7 +87,7 @@ namespace MechaCyberpunk.Combate.Vida
                 guardia = GetComponent<GuardiaMecha>();
                 buscoGuardia = true;
             }
-            float cantidad = info.Cantidad;
+            float cantidad = info.Cantidad * multiplicadorDanioRecibido;
             TipoBloqueo bloqueo = TipoBloqueo.Ninguno;
             if (guardia != null)
             {
