@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8487f8e66921b4594a597ccccac71e, type: 3}
+  m_Name: ConfigPantallasHistoria_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallasHistoria
+  segundosSalida: 0.6
+  segundosEntrada: 0.6
+  segundosMinimos: 4
+  colorTitulo: {r: 0, g: 1, b: 0.9, a: 1}
+  colorTexto: {r: 0.9, g: 0.95, b: 1, a: 1}
+  tamanoTitulo: 120
+  tamanoTexto: 40
+  textoTitulo: "CONTINUAR\xC1\u2026"
+  textoGano: Ganaste tu primera pelea casera
+  textoPerdio: Perdiste tu primera pelea casera, vuelve cuando lo repares
+  textoTeclas: "ENTER \xB7 seguir jugando   ESC \xB7 salir al t\xEDtulo"
