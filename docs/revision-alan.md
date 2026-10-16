@@ -98,3 +98,9 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 ### T-083 El bar con los props de Blender y mejor luz
 - Verificado automáticamente: EditMode 476/476, PlayMode 447/447; capturas T-083-1..3. Luminancia +57 % y 10 luces: solo de la bitácora, no remedido. No confirmado: 3 minutos entrando y saliendo con la consola abierta.
 - Para ti: Ciudad.unity o Pruebas_Alan.unity a las 22:00, entra al bar y camina entre mesas, barra y DJ; ¿dan ganas de quedarse?, ¿algo fuera de escala? (techo algo oscuro, letreros pequeños). Deja 3 minutos entrando y saliendo y mira la consola.
+
+### Cierre de A-F2 e integración a main (2026-10-16)
+- `bash herramientas/verificar.sh todo` en alan/fase-2: compilar OK, EditMode 476/476, PlayMode 447/447 (22 min). Alan autorizó integrar sus fases verificadas: alan/fase-2 se mezcló a main (6be7940) y se subió, sin force push.
+- **T-084 (tráfico de fachada) y T-085 (modelo del carro viejo) siguen PENDIENTES.** El modo Auto negó lanzar sus implementadores; no se hicieron ni verificaron por otra vía. Están en docs/tareas/pendientes/. Así que A-F2 entra a main sin ellas: el carro usa su modelo actual y no hay tráfico.
+- Las pruebas regeneran capturas de T-074/T-075 y cambian `SENTIS_ANALYTICS_ENABLED` en ProjectSettings; se descartaron con `git restore`.
+- A-F3 planificada: T-086 a T-090 (pendientes, independientes) y T-092, T-093 (bloqueadas por `IInteractuable`/`IGuardable` y T-F4/T-F5 de Tony). Rama alan/planificacion-fase-3.
