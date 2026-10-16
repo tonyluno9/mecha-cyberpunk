@@ -3,8 +3,8 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
-## Pendiente para Tony: Core a main (2026-10-16)
-El clasificador de permisos del modo automático me negó el merge/push a main de las tareas de Core. T-100 (tony/core-pendiente-push-main, 538a9c2) y las tareas de Core de T-F6 (T-120, T-137) están integradas solo en tony/fase-5 (con push). Para llevarlas a main haz tú: `git checkout main && git pull && git merge --no-ff tony/fase-5` cuando apruebes la fase, o autoriza el push a main y lo hago yo.
+## Core a main (2026-10-16)
+Tony autorizó el merge: tony/fase-5 (T-F5, T-060, T-100, T-120 a T-123) está en main desde bc8a486, con alan/fase-2 ya mezclada (compilar OK, EditMode 613/613). T-100 y T-120 ya llegan a Alan.
 
 ## T-F5 cerrada: qué probar jugando (2026-10-16)
 Todo en Pruebas_Calle (Play, sin ayuda), salvo lo marcado. Dobles de prueba: 7 y 8 dinero, J reloj (salta a las 08:00 del día siguiente), F5 guardar, F9 cargar, P iniciar pelea, M mandar el mecha al taller.

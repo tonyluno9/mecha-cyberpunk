@@ -237,3 +237,6 @@ atora; T-134 solo depende de T-121 y puede adelantarse; T-131 puede ir antes que
 Propuesta. Build Settings con Escenas/Tony/CreacionPersonaje.unity (índice 0), Escenas/Ciudad.unity y Escenas/Flashback.unity (sale
 SampleScene), nombre del producto "Mecha Cyberpunk (demo)" y build de Windows 64 bits en Builds/ (ignorado por git) con un método de editor.
 Es la última tarea porque depende de las escenas finales de Alan; es de Core porque cambia ProjectSettings/.
+
+## Aceptada por Tony (2026-10-16): D-tony-58
+El prólogo es el futuro: al despertar se reinicia el estado (dinero $500, mecha al 45 %, renta reiniciada, calor 0, hora 19:30). T-132 y T-133 lo aplican; no se despierta "la mañana siguiente con lo que quedó".
