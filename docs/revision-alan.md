@@ -43,5 +43,58 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - CreadorReloj y CreadorLugares ya no pisan assets existentes. RelojMundo publica con cola (reentrada segura). ArenaPelea.Centro está en la superficie del piso (y = 0).
 - Menores: PuertaLocal no cierra con alguien en el umbral; LugarMundo avisa si el reloj aparece tarde (LetreroLugar se actualiza); prueba de Canvas PantallaPelea a menos de 0.1 m. Sin prueba propia: el aviso tardío del reloj en LugarMundo.
 
+### T-074 Carro: física y manejo
+- Verificado automáticamente: 12 criterios (EditMode 234/234, PlayMode 182/182; captura T-074-1).
+- Para ti: abre CarroViejo.prefab sobre un piso, TomarControl(true), Play: W S A D Espacio; acelera sin prisa, frena firme, no derrapa solo; escalón de 0.2 m a 5 m/s da un brinquito.
+
+### T-076 Arte de Blender a Unity
+- Verificado automáticamente: 13 FBX, 31 materiales, 13 prefabs en Mundo/Prefabs/Kit (EditMode 241/241, PlayMode 182/182; capturas T-076-1/2). La prueba de orientación usa vértices Neon_* porque la original (promedio de z de Concreto_Manchas) estaba mal definida.
+- Para ti: CreadorArte.Vitrina() en una escena sin guardar: colores iguales a los renders de Blender, neón que brille (el bloom llega con T-079), nada negro, rosa ni volteado.
+
+### T-075 Subir y bajar del carro, cámaras
+- Verificado automáticamente: 9 criterios (EditMode 255/255, PlayMode 201/201; capturas T-075-1/2; 10 subidas y bajadas sin errores).
+- Para ti: Pruebas_Alan con cámara libre: a <2.5 m de la puerta del conductor, E sube y E baja (inmediato, sin saltos); dentro, WASD; C alterna primera y tercera persona sin marear ni temblor.
+
+### T-077 Finales del barrio y retenes
+- Verificado automáticamente: todos los criterios medibles (EditMode 262/262, PlayMode 210/210; capturas T-077-1/2; carro a 40 m con W 8 s en los 6 extremos sin salir).
+- Para ti: de noche, en el extremo norte y el este: que el retén se entienda como cierre y no como muro de videojuego; la torreta llama la atención sin cegar; el jersey y la reja salen oscuros (un poco más de luz sería un extra).
+
+### T-078 El carro en el barrio (cierre de H3, lado de Alan)
+- Verificado automáticamente: EditMode 262/262, PlayMode 214/214; carro único junto a la cochera en Ciudad y Pruebas_Alan; recorrido casa a clandestino en 14.1 s con giro de 130°; 165 s de manejo en vivo sin errores; capturas T-078-1/2/3.
+- No cumple: `CreadorTodo.Crear` dos veces deja la misma lista de archivos pero no los mismos bytes (p. ej. `_Color` de Barrio_Reja.mat cambia entre corridas); es el ruido de creadores viejos, pendiente de arreglar.
+- Para ti: Pruebas_Alan, Play: de la puerta de la casa al carro, E, W y A/D hasta el clandestino, C cambia cámara, bajar con E. Que la vuelta y el manejo se sientan naturales. La captura 3 no enmarca la puerta del clandestino.
+- **Decisión tuya:** el barrio se cruza en unos 20 s con el carro a 16 m/s; ciudad.md pide "minuto y medio". Opciones: agrandar el barrio o bajar la velocidad máxima.
+- T-061 (subir al carro, de Tony) se desbloquea cuando alan/fase-2 llegue a main; teclas del carro y regla `PuedeBajar` en el encabezado de `CarroViejo.cs`.
+
+## Pedido a Tony (T-079, propuesta D-alan-19)
+- Prender `renderPostProcessing` (UniversalAdditionalCameraData) en la cámara de MechaJugador para que el jugador vea el bloom y el color de noche.
+
+### T-079 Noche cyberpunk: posproceso, neón con bloom, asfalto mojado
+- Verificado automáticamente: EditMode 269/269 y PlayMode 220/220 en dos corridas seguidas; luminancia V1 22:00 = 0.362 (+79 % sobre la base 0.203), 0.00 % saturado; capturas T-079-1..5; 2 min a x30 sin errores. Ronda 1: se perdía el keyword _EMISSION tras EditMode; arreglado con CreadorAmbiente.AsegurarEmision.
+- Para ti: Pruebas_Alan, Play, `VistasReferencia.Ir(1, 22)`: halo del neón sin cegar, asfalto que se sienta mojado, fachadas legibles. `Ir(1, 13)`: el día no se ve gris. Flojos: la vista aérea V4 (0.12) sigue algo plana; el día (0.25) es más oscuro que la noche (0.36); los charcos son manchas suaves, no reflejos nítidos.
+- Pedido a Tony: prender `renderPostProcessing` en la cámara de MechaJugador y de JugadorAPie. Clandestino.unity no recibe este posproceso.
+
 ## Bloqueos y preguntas
 - Nada todavía.
+
+## A-F2 (rama alan/fase-2)
+
+### T-080 La calle vestida con el kit urbano
+- Verificado automáticamente: todos los criterios (EditMode 463/463, PlayMode 433/433 tras mezclar main; capturas T-080-1..4).
+- Para ti: Ciudad.unity, `VistasReferencia.Ir(1,22)` y `Ir(1,13)`: densidad de cables, puestos y basureros; caminar por la banqueta y pasar en carro sin rozar postes.
+- Decisiones del agente: colliders de transformador, puesto y basurero achicados al cuerpo.
+
+### T-081 Fachadas con detalle
+- Verificado automáticamente: todos los criterios (EditMode 467/467, PlayMode 437/437; capturas T-081-1..5). Triángulos del barrio 201 692 → 792 334.
+- Para ti: Ciudad.unity, `VistasReferencia.Ir(1,22)` y `Ir(1,13)`: barrio denso y habitado, zona pobre (Manzanas 1 y 4) distinta del centro; muros lisos donde el vecino es más bajo (conocido).
+- Decisiones del agente: Fachada_Modular se achica en Z para no pasar de 0.45 m; emisión RealtimeEmissive 1.
+- Pendiente de confirmar: los EXR de Mundo/Reflejos no cambiaron en el commit; comprobar que las sondas reflejan las fachadas (rehornear con CreadorAmbiente.HornearReflejos() en el editor).
+
+### T-082 Letreros de neón
+- Verificado automáticamente: todos los criterios (EditMode 476/476, PlayMode 444/444; capturas T-082-1..4). Reflejos rehorneados: los 4 .exr cambiaron (solo los letreros están marcados ReflectionProbeStatic; el resto del barrio sigue fuera del horneado).
+- Para ti: Ciudad.unity a las 22:00: ¿"río de neón"? En la captura 1 los letreros se ven pequeños y escasos; cantina del bar y CASINO no tienen captura, míralos de lejos; parpadeo de 1 de cada 6 (neón viejo).
+- Decisiones del agente: ParpadeoNeon propio en lugar de LuzNocturna; banderas a 1.5×; marcar todo el barrio para reflejos cambiaría los charcos (siguiente paso posible).
+
+### T-083 El bar con los props de Blender y mejor luz
+- Verificado automáticamente: EditMode 476/476, PlayMode 447/447; capturas T-083-1..3. Luminancia +57 % y 10 luces: solo de la bitácora, no remedido. No confirmado: 3 minutos entrando y saliendo con la consola abierta.
+- Para ti: Ciudad.unity o Pruebas_Alan.unity a las 22:00, entra al bar y camina entre mesas, barra y DJ; ¿dan ganas de quedarse?, ¿algo fuera de escala? (techo algo oscuro, letreros pequeños). Deja 3 minutos entrando y saliendo y mira la consola.
