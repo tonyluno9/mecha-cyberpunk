@@ -268,3 +268,6 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Para ti: pon Personaje/Prefabs/CuerpoJugador.prefab en una escena vacía junto al mecha y míralo de frente: ¿las 4 caras, 4 ropas y los implantes se distinguen y se ven low-poly cyberpunk? ¿1.75 m se ve proporcionado junto al mecha de 4 m? La captura los muestra de espaldas/perfil.
 ### T-124 Etapas de la historia y partida entre escenas
 - Verificado automáticamente (acotado): compilar OK, EditMode 84/84, PlayMode 49/49 en las áreas tocadas. Sin criterios de sensación.
+### T-061 Subir al carro de Alan
+- Verificado automáticamente (acotado): compilar OK; CarroAlanPruebas pasa 3 de 3 corridas; BarrioAlan, MontarCarro y PuertasAPie en verde; captura T-061-1.png.
+- Para ti: en Pruebas_Alan.unity acércate al carro, E sube, W maneja, frena, E baja: ¿subir y bajar se sienten tan inmediatos como con el carro de prueba?
