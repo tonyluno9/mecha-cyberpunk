@@ -255,7 +255,7 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return Calentar();
             vida.FijarVida(VidaBajaDePrueba);
             yield return Esperar(0.7f);
-            mecha.GetComponent<MechaPersistente>().Reparar();
+            vida.Restaurar(); // el mecha de arranque Directo no lleva MechaPersistente (D-tony-59)
             Assert.IsFalse(alarma.Prendida, "Apagada al instante");
             float t = 0f;
             while (t < SegundosAlarma)

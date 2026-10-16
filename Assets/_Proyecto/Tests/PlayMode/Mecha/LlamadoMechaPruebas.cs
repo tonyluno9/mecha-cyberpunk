@@ -89,7 +89,15 @@ namespace MechaCyberpunk.Tests.Mecha
             montaje = Object.FindFirstObjectByType<MontajeMecha>();
             llamado = montaje.GetComponent<LlamadoMecha>();
             taller = Object.FindFirstObjectByType<TallerDePrueba>();
-            punto = Object.FindFirstObjectByType<PuntoLlamadoDePrueba>();
+            // Por nombre: Pruebas_Calle tiene dos puntos de llamado (calle y callejón) y no importa el orden de los objetos.
+            punto = null;
+            foreach (PuntoLlamadoDePrueba candidato in Object.FindObjectsByType<PuntoLlamadoDePrueba>(FindObjectsSortMode.None))
+            {
+                if (candidato.name == "PuntoLlamado Calle")
+                {
+                    punto = candidato;
+                }
+            }
             Assert.IsNotNull(jugador, "Pruebas_Calle trae el jugador");
             Assert.IsNotNull(llamado, "El mecha trae LlamadoMecha");
             Assert.IsNotNull(taller, "Pruebas_Calle trae el taller");

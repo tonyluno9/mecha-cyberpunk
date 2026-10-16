@@ -1858,7 +1858,6 @@ GameObject:
   - component: {fileID: 199609566105717251}
   - component: {fileID: 4647646183542583283}
   - component: {fileID: 660093148348260620}
-  - component: {fileID: 8159156256704086488}
   - component: {fileID: 5522019746784433787}
   m_Layer: 0
   m_Name: MechaJugador
@@ -2071,19 +2070,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.Calor.CalorPorMecha
   config: {fileID: 11400000, guid: 80b380de11c985145954b9f627bdbd1d, type: 2}
---- !u!114 &8159156256704086488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3070993614766129967}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 098a2c1c1e221bd459b55957bab3e0a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.Estado.MechaPersistente
-  config: {fileID: 11400000, guid: 87c5b792122fa454185a24f27cb237ad, type: 2}
 --- !u!114 &5522019746784433787
 MonoBehaviour:
   m_ObjectHideFlags: 0

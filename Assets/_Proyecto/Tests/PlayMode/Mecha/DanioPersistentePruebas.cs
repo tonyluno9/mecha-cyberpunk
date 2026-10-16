@@ -132,12 +132,13 @@ namespace MechaCyberpunk.Tests.Mecha
             vida.RecibirDanio(new InfoDanio(cantidad, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
         }
 
-        // Pruebas_Tony: P empieza la pelea y se espera a ¡PELEA!.
-        private IEnumerator EmpezarPeleaEnPruebasTony()
+        // El daño persistente vive en el mecha de la historia (MechaEstacionado): la pelea de prueba de Pruebas_Calle lo usa.
+        // P empieza la pelea y se espera a ¡PELEA!.
+        private IEnumerator EmpezarPeleaEnPruebasCalle()
         {
-            yield return CargarEscena(RutaTony);
+            yield return CargarEscena(RutaCalle);
             director = Object.FindFirstObjectByType<DirectorPelea>();
-            Assert.IsNotNull(director, "Falta FlujoPelea en Pruebas_Tony");
+            Assert.IsNotNull(director, "Falta FlujoPelea en Pruebas_Calle");
             yield return Tecla(Key.P);
             yield return HastaEstado(EstadoFlujoPelea.Peleando);
         }
@@ -145,7 +146,7 @@ namespace MechaCyberpunk.Tests.Mecha
         [UnityTest]
         public IEnumerator Revancha_ConJugadorHerido_EmpiezaConSuDanioYElRivalCompleto()
         {
-            yield return EmpezarPeleaEnPruebasTony();
+            yield return EmpezarPeleaEnPruebasCalle();
             Danar(Vida(director.Rival), DanioMortal);
             Danar(Vida(director.Jugador), 30f);
             yield return HastaEstado(EstadoFlujoPelea.Resultado);
@@ -159,9 +160,28 @@ namespace MechaCyberpunk.Tests.Mecha
         }
 
         [UnityTest]
+        public IEnumerator Directo_SinMechaPersistente_LaRevanchaRestauraLaVida()
+        {
+            yield return CargarEscena(RutaTony);
+            director = Object.FindFirstObjectByType<DirectorPelea>();
+            Assert.IsNotNull(director, "Falta FlujoPelea en Pruebas_Tony");
+            Assert.IsNull(((Component)director.Jugador).GetComponent<MechaPersistente>(), "MechaJugador.prefab no lleva MechaPersistente");
+            yield return Tecla(Key.P);
+            yield return HastaEstado(EstadoFlujoPelea.Peleando);
+            Danar(Vida(director.Rival), DanioMortal);
+            Danar(Vida(director.Jugador), 30f);
+            yield return HastaEstado(EstadoFlujoPelea.Resultado);
+
+            yield return Tecla(Key.R);
+
+            Assert.AreEqual(EstadoFlujoPelea.Conteo, director.Estado);
+            Assert.AreEqual(Vida(director.Jugador).Maxima, Vida(director.Jugador).Actual, Margen, "Sin persistencia, la revancha restaura la vida");
+        }
+
+        [UnityTest]
         public IEnumerator Revancha_TrasPerder_EmpiezaAl15PorCientoYLaPeleaSeJuega()
         {
-            yield return EmpezarPeleaEnPruebasTony();
+            yield return EmpezarPeleaEnPruebasCalle();
             Danar(Vida(director.Jugador), DanioMortal);
             yield return HastaEstado(EstadoFlujoPelea.Resultado);
             Assert.IsTrue(Vida(director.Jugador).EstaKO);
@@ -174,7 +194,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.IsFalse(Vida(director.Jugador).EstaKO);
 
             yield return HastaEstado(EstadoFlujoPelea.Peleando);
-            Assert.IsTrue(director.Jugador.ControlActivo, "Con ¡PELEA! tiene control");
+            // (El control con la señal de pelea lo cubre FlujoPeleaPruebas: en Pruebas_Calle el mecha está estacionado, sin piloto.)
             int terminadas = resultados.Count;
             yield return Esperar(SegundosJugando);
             Assert.AreEqual(EstadoFlujoPelea.Peleando, director.Estado, "La pelea no termina sola");
@@ -198,9 +218,9 @@ namespace MechaCyberpunk.Tests.Mecha
         }
 
         [UnityTest]
-        public IEnumerator Guardable_EnPruebasTony_GuardaCargaYRepara()
+        public IEnumerator Guardable_EnPruebasCalle_GuardaCargaYRepara()
         {
-            yield return CargarEscena(RutaTony);
+            yield return CargarEscena(RutaCalle);
             List<IGuardable> mechas = new List<IGuardable>();
             foreach (IGuardable guardable in Registro<IGuardable>.Todos)
             {

@@ -131,7 +131,7 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return Calentar();
             vida.FijarVida(VidaNivel2);
             AfirmarGrupos(true, true, "antes de reparar");
-            mecha.GetComponent<MechaPersistente>().Reparar();
+            vida.Restaurar(); // el mecha de arranque Directo no lleva MechaPersistente (D-tony-59)
             Assert.AreEqual(0, cristal.Nivel);
             AfirmarGrupos(false, false, "reparado");
         }

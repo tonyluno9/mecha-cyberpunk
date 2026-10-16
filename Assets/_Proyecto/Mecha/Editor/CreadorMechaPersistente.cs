@@ -5,12 +5,13 @@ using UnityEngine;
 namespace MechaCyberpunk.Mecha.Editor
 {
     /// <summary>
-    /// Arma lo de T-103: ConfigMechaDaniado_Base y MechaPersistente en MechaJugador.prefab (MechaEstacionado.prefab lo hereda).
+    /// Arma lo de T-103: ConfigMechaDaniado_Base y MechaPersistente en MechaEstacionado.prefab (no en MechaJugador.prefab, D-tony-59).
     /// Idempotente. Batchmode: -executeMethod MechaCyberpunk.Mecha.Editor.CreadorMechaPersistente.Crear
     /// </summary>
     public static class CreadorMechaPersistente
     {
         private const string RutaPrefab = "Assets/_Proyecto/Mecha/Prefabs/MechaJugador.prefab";
+        private const string RutaVariante = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
         private const string RutaConfig = "Assets/_Proyecto/Mecha/Datos/ConfigMechaDaniado_Base.asset";
 
         [MenuItem("Mecha Cyberpunk/Crear T-103 mecha persistente")]
@@ -24,7 +25,23 @@ namespace MechaCyberpunk.Mecha.Editor
             }
             AssetDatabase.SaveAssets();
 
-            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            // El prefab base (arranque Directo) no lleva daño persistente (D-tony-59): si lo tiene de antes, se quita.
+            GameObject baseMecha = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                MechaPersistente enBase = baseMecha.GetComponent<MechaPersistente>();
+                if (enBase != null)
+                {
+                    Object.DestroyImmediate(enBase);
+                    PrefabUtility.SaveAsPrefabAsset(baseMecha, RutaPrefab);
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(baseMecha);
+            }
+
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaVariante);
             try
             {
                 MechaPersistente persistente = raiz.GetComponent<MechaPersistente>();
@@ -35,7 +52,7 @@ namespace MechaCyberpunk.Mecha.Editor
                 SerializedObject so = new SerializedObject(persistente);
                 so.FindProperty("config").objectReferenceValue = config;
                 so.ApplyModifiedPropertiesWithoutUndo();
-                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaVariante);
             }
             finally
             {
