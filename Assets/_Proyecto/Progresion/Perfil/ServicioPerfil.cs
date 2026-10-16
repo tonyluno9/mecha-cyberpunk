@@ -27,6 +27,8 @@ namespace MechaCyberpunk.Progresion
         public string Nombre => nombre ?? (datos != null ? datos.NombreRespaldo : string.Empty);
         public string Alias => alias ?? (datos != null ? datos.AliasRespaldo : string.Empty);
 
+        public AparienciaJugador Apariencia => AparienciaJugador.Predeterminada;
+
         public string ClaveGuardado => Clave;
 
         public event Action Cambio;

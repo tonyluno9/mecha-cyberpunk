@@ -252,3 +252,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-112 Recorrido de daño, taller y guardado
 - Verificado automáticamente: compilar OK, EditMode 518/518, PlayMode 445/454 (9 fallos de Arena de Alan); RecorridoTallerPruebas pasa 3 corridas seguidas (~29 s de juego); capturas T-112-1/2/3.
 - Para ti: ver la lista de arriba "T-F5 cerrada".
+### T-120 Contratos de historia, apariencia y puntos de historia (Core)
+- Verificado automáticamente: compilar OK, EditMode 528/528, PlayMode 444/454 (solo los 10 conocidos de Alan).
+- Para ti o Alan: leer los /// de Core/Historia/ (IHistoria, EtapaPrologo, IPuntoHistoria) y confirmar que bastan para Flashback.unity y Ciudad.unity sin preguntar. Pedido a Alan en D-tony-72.
+- Core: falta llevarla a main (ver "Pendiente para Tony").
