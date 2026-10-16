@@ -292,6 +292,23 @@
     {
       "alfa": 1.0,
       "color_base": [
+        0.06,
+        0.05,
+        0.0
+      ],
+      "emision_color": [
+        1.0,
+        0.8,
+        0.08
+      ],
+      "emision_fuerza": 6.0,
+      "metalico": 0.0,
+      "nombre": "Neon_Amarillo",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
         0.0,
         0.05,
         0.06
@@ -338,6 +355,23 @@
       "emision_fuerza": 6.0,
       "metalico": 0.0,
       "nombre": "Neon_Naranja",
+      "rugosidad": 0.3
+    },
+    {
+      "alfa": 1.0,
+      "color_base": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "emision_color": [
+        1.0,
+        0.06,
+        0.04
+      ],
+      "emision_fuerza": 6.0,
+      "metalico": 0.0,
+      "nombre": "Neon_Rojo",
       "rugosidad": 0.3
     },
     {

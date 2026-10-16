@@ -57,6 +57,16 @@ namespace MechaCyberpunk.Mundo.Editor
             new Pieza("prop_mesa", "Bar", "Prop_Mesa", true),
             new Pieza("prop_dj", "Bar", "Prop_DJ", true),
             new Pieza("prop_letrero", "Bar", "Prop_Letrero", false),
+            // T-082: letreros de neón en español. Banderas (Hotel, Ciber): origen en la placa de pared, el cuerpo sale hacia +X.
+            new Pieza("letrero_hotel", "Letreros", "Letrero_Hotel", false),
+            new Pieza("letrero_ciber", "Letreros", "Letrero_Ciber", false),
+            new Pieza("letrero_birria", "Letreros", "Letrero_Birria", false),
+            new Pieza("letrero_refacciones", "Letreros", "Letrero_Refacciones", false),
+            new Pieza("letrero_lavanderia", "Letreros", "Letrero_Lavanderia", false),
+            new Pieza("letrero_peleas", "Letreros", "Letrero_Peleas", false),
+            new Pieza("letrero_casino", "Letreros", "Letrero_Casino", false),
+            new Pieza("letrero_flecha", "Letreros", "Letrero_Flecha", false),
+            new Pieza("letrero_hotel_azotea", "Letreros", "Letrero_Hotel_Azotea", false),
         };
 
         [Serializable]

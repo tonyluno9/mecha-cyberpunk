@@ -89,3 +89,8 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Para ti: Ciudad.unity, `VistasReferencia.Ir(1,22)` y `Ir(1,13)`: barrio denso y habitado, zona pobre (Manzanas 1 y 4) distinta del centro; muros lisos donde el vecino es más bajo (conocido).
 - Decisiones del agente: Fachada_Modular se achica en Z para no pasar de 0.45 m; emisión RealtimeEmissive 1.
 - Pendiente de confirmar: los EXR de Mundo/Reflejos no cambiaron en el commit; comprobar que las sondas reflejan las fachadas (rehornear con CreadorAmbiente.HornearReflejos() en el editor).
+
+### T-082 Letreros de neón
+- Verificado automáticamente: todos los criterios (EditMode 476/476, PlayMode 444/444; capturas T-082-1..4). Reflejos rehorneados: los 4 .exr cambiaron (solo los letreros están marcados ReflectionProbeStatic; el resto del barrio sigue fuera del horneado).
+- Para ti: Ciudad.unity a las 22:00: ¿"río de neón"? En la captura 1 los letreros se ven pequeños y escasos; cantina del bar y CASINO no tienen captura, míralos de lejos; parpadeo de 1 de cada 6 (neón viejo).
+- Decisiones del agente: ParpadeoNeon propio en lugar de LuzNocturna; banderas a 1.5×; marcar todo el barrio para reflejos cambiaría los charcos (siguiente paso posible).

@@ -32,6 +32,16 @@ namespace MechaCyberpunk.Tests.Mundo
             ("Prop_Mesa", "prop_mesa", true),
             ("Prop_DJ", "prop_dj", true),
             ("Prop_Letrero", "prop_letrero", false),
+            // T-082
+            ("Letrero_Hotel", "letrero_hotel", false),
+            ("Letrero_Ciber", "letrero_ciber", false),
+            ("Letrero_Birria", "letrero_birria", false),
+            ("Letrero_Refacciones", "letrero_refacciones", false),
+            ("Letrero_Lavanderia", "letrero_lavanderia", false),
+            ("Letrero_Peleas", "letrero_peleas", false),
+            ("Letrero_Casino", "letrero_casino", false),
+            ("Letrero_Flecha", "letrero_flecha", false),
+            ("Letrero_Hotel_Azotea", "letrero_hotel_azotea", false),
         };
 
         [Serializable]
@@ -107,9 +117,9 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Prefabs_Existen_Los13()
+        public void Prefabs_Existen_Los22()
         {
-            Assert.AreEqual(13, Piezas.Length);
+            Assert.AreEqual(22, Piezas.Length);
             foreach (var pieza in Piezas)
             {
                 Prefab(pieza.prefab);
