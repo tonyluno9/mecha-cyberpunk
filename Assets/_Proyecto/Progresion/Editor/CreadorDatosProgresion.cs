@@ -94,6 +94,26 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>Agrega ServicioGuardado a ServiciosProgresion.prefab si no lo tiene (T-111). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-111 servicio de guardado")]
+        public static void CrearT111()
+        {
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                if (raiz.GetComponent<MechaCyberpunk.Progresion.Guardado.ServicioGuardado>() == null)
+                {
+                    raiz.AddComponent<MechaCyberpunk.Progresion.Guardado.ServicioGuardado>();
+                }
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         private const string RutaDatosPerfil = "Assets/_Proyecto/Progresion/Datos/DatosPerfil_Base.asset";
 
         /// <summary>Crea DatosPerfil_Base y agrega ServicioPerfil a ServiciosProgresion.prefab si no lo tiene (T-070). Idempotente.</summary>

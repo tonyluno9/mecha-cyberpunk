@@ -60,6 +60,21 @@ namespace MechaCyberpunk.Mecha.Editor
         private const float XLlegadaCallejon = -7.5f;
         private const float RadioLlamadoCallejon = 3.5f;
 
+        /// <summary>
+        /// Agrega GuardadoDePrueba (T-111) a la Pruebas_Calle ya creada, sin regenerarla (regenerar cambia el orden de los
+        /// objetos y LlamadoMechaPruebas encuentra otro punto de llamado). Idempotente.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Agregar guardado de prueba a Pruebas_Calle")]
+        public static void AgregarGuardadoDePrueba()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            if (Object.FindFirstObjectByType<MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba>() == null)
+            {
+                new GameObject("GuardadoDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba>();
+                EditorSceneManager.SaveScene(escena);
+            }
+        }
+
         [MenuItem("Mecha Cyberpunk/Crear escena Pruebas_Calle")]
         public static void Crear()
         {
@@ -127,6 +142,9 @@ namespace MechaCyberpunk.Mecha.Editor
 
             // Reloj de prueba (T-107): la renta cobra al empezar cada día. J salta a las 08:00 del día siguiente.
             new GameObject("RelojDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.RelojDePrueba>();
+
+            // Guardado de prueba (T-111): F5 guarda y F9 carga la partida.
+            new GameObject("GuardadoDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba>();
 
             EditorSceneManager.SaveScene(escena, RutaEscena);
             AssetDatabase.SaveAssets();

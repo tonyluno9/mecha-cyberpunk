@@ -1970,6 +1970,86 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1804951209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1804951211}
+  - component: {fileID: 1804951210}
+  m_Layer: 0
+  m_Name: GuardadoDePrueba
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1804951210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804951209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24250c6b72726b041993946f30a1752d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba
+  guardar:
+    m_Name: GuardarPartida
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 155b54d6-3154-44bf-bbd6-e65f0b214d92
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 28484e1d-e805-4e42-beb3-66240b47b965
+      m_Path: <Keyboard>/f5
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: GuardarPartida
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
+  cargar:
+    m_Name: CargarPartida
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 0a03b9a8-2216-4c37-b14b-a937e47065e3
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: ba9fa639-30f7-48ca-920f-b6ce2fbc2c11
+      m_Path: <Keyboard>/f9
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: CargarPartida
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
+--- !u!4 &1804951211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804951209}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1910864793
 GameObject:
   m_ObjectHideFlags: 0
@@ -2137,3 +2217,4 @@ SceneRoots:
   - {fileID: 2053024902}
   - {fileID: 1445872004}
   - {fileID: 1268173825}
+  - {fileID: 1804951211}
