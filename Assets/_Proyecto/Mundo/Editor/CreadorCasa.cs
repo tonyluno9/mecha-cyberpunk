@@ -142,8 +142,8 @@ namespace MechaCyberpunk.Mundo.Editor
             Caja(grupoLuces, "TuboTaller2", Pos(TallerX + 1f, AltoInterior - 0.1f, TallerD, zFondoInterior), new Vector3(0.1f, 0.05f, 2.5f), fluorescente, false);
             Light[] luces =
             {
-                Luz(grupoLuces, "LuzTaller1", Pos(TallerX - 1f, AltoInterior - 0.8f, TallerD, zFondoInterior), fria, 9f, 9f),
-                Luz(grupoLuces, "LuzTaller2", Pos(TallerX + 1f, AltoInterior - 0.8f, TallerD, zFondoInterior), fria, 9f, 9f),
+                Luz(grupoLuces, "LuzTaller1", Pos(TallerX - 1f, AltoInterior - 0.8f, TallerD, zFondoInterior), fria, 4.5f, 9f),
+                Luz(grupoLuces, "LuzTaller2", Pos(TallerX + 1f, AltoInterior - 0.8f, TallerD, zFondoInterior), fria, 4.5f, 9f),
                 Luz(grupoLuces, "LuzSala", Pos(4f, AltoInterior - 0.8f, 3f, zFondoInterior), calida, 10f, 9f),
                 Luz(grupoLuces, "LuzCama", Pos(5f, 1.8f, 1.2f, zFondoInterior), calida, 4f, 5f),
                 Luz(grupoLuces, "LuzEntrada", Pos(0f, AltoInterior - 0.8f, FondoInterior - 0.8f, zFondoInterior), calida, 6f, 7f)
