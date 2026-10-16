@@ -104,3 +104,8 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - **T-084 (tráfico de fachada) y T-085 (modelo del carro viejo) siguen PENDIENTES.** El modo Auto negó lanzar sus implementadores; no se hicieron ni verificaron por otra vía. Están en docs/tareas/pendientes/. Así que A-F2 entra a main sin ellas: el carro usa su modelo actual y no hay tráfico.
 - Las pruebas regeneran capturas de T-074/T-075 y cambian `SENTIS_ANALYTICS_ENABLED` en ProjectSettings; se descartaron con `git restore`.
 - A-F3 planificada: T-086 a T-090 (pendientes, independientes) y T-092, T-093 (bloqueadas por `IInteractuable`/`IGuardable` y T-F4/T-F5 de Tony). Rama alan/planificacion-fase-3.
+
+### T-086 Casa por dentro con el taller
+- Verificado automáticamente: compilar OK, EditMode 476/476, PlayMode 452/452 (CasaInteriorPruebas: 1 solo `ITallerMecha`, cilindro de 2 m × 5 m libre, Estacionamiento mira a la salida, 36 rayos sin huecos a 1 y 3 m, de la banqueta al centro sin cargas).
+- NO hecho: capturas docs/capturas/T-086-1/2.png (no se tomaron) y la salida ancha de 6 m (la casa mide 14 × 12 y el vestíbulo es de 3 m; el mecha llega del cielo, el Estacionamiento mira hacia la puerta). Interior de 13 × 7.5 × 5.6 m.
+- Para ti: Ciudad.unity, entra a la casa de noche: ¿el taller (izquierda) y la sala con cama (derecha) se ven bien y caben? Reabre luces: 5 luces bajo ZonaInterior.
