@@ -17,17 +17,21 @@ namespace MechaCyberpunk.Progresion
         {
             public string nombre;
             public string alias;
+            public int cara;
+            public int ropa;
+            public int implante;
         }
 
         [SerializeField] private DatosPerfil datos;
 
         private string nombre;
         private string alias;
+        private AparienciaJugador apariencia = AparienciaJugador.Predeterminada;
 
         public string Nombre => nombre ?? (datos != null ? datos.NombreRespaldo : string.Empty);
         public string Alias => alias ?? (datos != null ? datos.AliasRespaldo : string.Empty);
 
-        public AparienciaJugador Apariencia => AparienciaJugador.Predeterminada;
+        public AparienciaJugador Apariencia => apariencia;
 
         public string ClaveGuardado => Clave;
 
@@ -58,7 +62,14 @@ namespace MechaCyberpunk.Progresion
             Registro<IGuardable>.Quitar(this);
         }
 
-        public string Guardar() => JsonUtility.ToJson(new DatosGuardados { nombre = Nombre, alias = Alias });
+        public string Guardar() => JsonUtility.ToJson(new DatosGuardados
+        {
+            nombre = Nombre,
+            alias = Alias,
+            cara = apariencia.Cara,
+            ropa = apariencia.Ropa,
+            implante = apariencia.Implante
+        });
 
         public void Cargar(string texto)
         {
@@ -77,7 +88,15 @@ namespace MechaCyberpunk.Progresion
                 Debug.LogWarning("[Progresion] El perfil no entendió los datos guardados; no se cambia nada.");
                 return;
             }
-            Fijar(leidos.nombre, leidos.alias);
+            // Un texto viejo sin los campos de apariencia deja cara, ropa e implante en 0 (la Predeterminada).
+            string n = ReglaAlias.Normalizar(leidos.nombre, datos.NombreRespaldo);
+            string a = ReglaAlias.Normalizar(leidos.alias, datos.AliasRespaldo);
+            AparienciaJugador ap = ReglaApariencia.Normalizar(new AparienciaJugador(leidos.cara, leidos.ropa, leidos.implante));
+            if (n == Nombre && a == Alias && ap == apariencia) return;
+            nombre = n;
+            alias = a;
+            apariencia = ap;
+            Cambio?.Invoke();
         }
 
         /// <summary>
@@ -92,6 +111,18 @@ namespace MechaCyberpunk.Progresion
             if (n == nombre && a == alias) return;
             nombre = n;
             alias = a;
+            Cambio?.Invoke();
+        }
+
+        /// <summary>
+        /// Cambia la apariencia pasándola por <see cref="ReglaApariencia"/> (índices negativos a 0). Avisa
+        /// <see cref="Cambio"/> solo si cambió de verdad.
+        /// </summary>
+        public void FijarApariencia(AparienciaJugador nueva)
+        {
+            AparienciaJugador normalizada = ReglaApariencia.Normalizar(nueva);
+            if (normalizada == apariencia) return;
+            apariencia = normalizada;
             Cambio?.Invoke();
         }
     }
