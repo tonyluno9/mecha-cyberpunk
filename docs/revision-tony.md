@@ -260,3 +260,6 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente: compilar OK, EditMode 528/528, PlayMode 447/455 (solo los 8 de la cápsula, de Alan). TresPeleasSeguidasConRevancha pasa de nuevo.
 - Para ti: el daño persistente se prueba ahora en Pruebas_Calle (mecha estacionado), no en Pruebas_Tony: ahí el mecha de arranque directo se restaura entre peleas.
 - Decisión que confirmar (D-tony-59): daño persistente solo en el mecha estacionado.
+### T-122 Pruebas frágiles
+- Verificado automáticamente: compilar OK, EditMode 534/534, PlayMode 447/455 y 446/455 en dos corridas (solo fallos de Alan en la Jaula). Los .mat ya no cambian solos tras correr.
+- Para ti: nada que jugar. MedidorFrames tolera unos pocos frames lentos (0.1-0.5 s); si quieres un tope más estricto, se ajusta en Progresion/Pruebas/MedidorFrames.cs.
