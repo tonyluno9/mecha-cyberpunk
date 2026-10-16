@@ -110,3 +110,8 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Capturas tomadas y revisadas: docs/capturas/T-086-1.png (taller, vacío porque el mecha lo coloca Tony) y T-086-2.png (sala con cama), con CapturaPruebas. Luz fría del taller bajada a 4.5 tras ver la primera. Tras repetir: PlayMode 453/453.
 - NO hecho: la salida ancha de 6 m (la casa mide 14 × 12 y el vestíbulo es de 3 m; el mecha llega del cielo, el Estacionamiento mira hacia la puerta). Interior de 13 × 7.5 × 5.6 m.
 - Para ti: Ciudad.unity, entra a la casa de noche: ¿el taller (izquierda) y la sala con cama (derecha) se ven bien y caben? Reabre luces: 5 luces bajo ZonaInterior.
+
+### T-087 Cama y espejo (solo lo visual)
+- Verificado automáticamente: compilar OK, EditMode 476/476, PlayMode 455/455 (props con collider, PuntoUso dentro de la casa, mirando al prop y libre; captura docs/capturas/T-087-1.png revisada).
+- Límite: los 3 props (Prop_Cama, Prop_Espejo, Prop_Mesita en Mundo/Prefabs/Kit/) son cubos con materiales, no modelos de Blender (el MCP de Blender no se usó); el espejo es un cristal reflectante barato, sin reflejo real.
+- Para ti: Ciudad.unity, entra a la casa: ¿la cama, la mesita con lámpara y el espejo se ven bien? ¿quieres modelos de Blender más detallados?
