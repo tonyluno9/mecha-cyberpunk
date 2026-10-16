@@ -271,3 +271,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-061 Subir al carro de Alan
 - Verificado automáticamente (acotado): compilar OK; CarroAlanPruebas pasa 3 de 3 corridas; BarrioAlan, MontarCarro y PuertasAPie en verde; captura T-061-1.png.
 - Para ti: en Pruebas_Alan.unity acércate al carro, E sube, W maneja, frena, E baja: ¿subir y bajar se sienten tan inmediatos como con el carro de prueba?
+### T-125 Fundido a negro y pantalla de "continuará"
+- Verificado automáticamente (acotado): compilar OK, PlayMode UI 64/64, EditMode UI + ReglasEnsamblados 62/62. Capturas T-125-1/2.
+- Para ti: ¿"CONTINUARÁ…" se siente cierre de demo cyberpunk y no pantalla de error? ¿0.6 s de fundido se siente cinematográfico o lento (se ajusta en ConfigPantallasHistoria_Base.asset)? La captura T-125-1 (fundido a medias) no deja ver claramente el oscurecimiento parcial.
+- Nota para T-133: apagar controles a pie/mecha mientras PantallaContinuara.Visible.
