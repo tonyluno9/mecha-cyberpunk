@@ -149,3 +149,11 @@ El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hor
 - Falta: terminar T-124 según su archivo, compilar, correr EditMode y PlayMode, verificarla y cerrarla; luego T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas (A-F3/A-F4); T-061 y T-073 bloqueadas (A-F2/A-F3).
 - Pendiente de Tony: llevar T-100 y T-120 (Core) a main; decidir D-tony-58 (el prólogo como futuro, empieza de cero, o despertar la mañana siguiente con lo que quedó).
 - Recordatorio: el límite semanal de la cuenta se renueva el 20-oct a las 11 pm (México).
+
+## Parada manual 2 (2026-10-16, a petición de Tony)
+- Hecho y mezclado en tony/fase-5: T-F5 completa, T-060, T-061, T-120 a T-128. tony/fase-5 (hasta T-123 + T-124...T-128 después) está en origin; main trae T-F5, T-060, T-100 y T-120 a T-123 desde bc8a486 (Tony autorizó el merge). T-124 a T-128 y T-061 están solo en tony/fase-5.
+- Rama actual: tony/T-129-pelea-casera (archivo de la tarea en docs/tareas/en-curso/). Implementación A MEDIAS (WIP): RivalCasero (DatosRival_Casero, DatosMecha_Casero, CreadorRivalCasero, prefab y material), ConfigPresentador_Casera, cambios en CreadorEscenaPrologo, Pruebas_Prologo.unity regenerada y EntradaArenaPruebas. NO compilada ni verificada; detuve al implementador durante una corrida de PlayMode (no hay resultado). Unity cerrado y sin lockfile.
+- Falta: terminar T-129 (pelea casera "EL CHATARRAS", sin piedad, $600, MostradorPeleas.prefab; ver la nota de T-128: EntradaArena no empieza si el mecha no puede subir), compilar, correr los namespaces IA, Pelea, Economia, Progresion y Mecha, verificar y cerrar.
+- Sigue: T-130 (cama y espejo), T-131 (flashback), T-132 y T-133 (director del prólogo; D-tony-58 aceptada: al despertar se reinicia el estado), T-134 (ayudas de controles), T-135 (recorrido de cierre). Al cerrar T-F6: correr la suite completa, dejar en revision-tony.md qué probar jugando y mezclar la fase a main con push.
+- Deudas: Progresion.CambioEscenaPruebas falla solo en corrida conjunta por estado estático (orden de ejecución); ruido recurrente de Cabina_*.mat tras correr pruebas (m_CustomRenderQueue 3000/3001).
+- Bloqueadas por Alan: T-073, T-136, T-137 (esperan A-F3/A-F4).

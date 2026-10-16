@@ -121,8 +121,23 @@ namespace MechaCyberpunk.Tests.Progresion
                 estables = Time.deltaTime < DeltaTimeEstable ? estables + 1 : 0;
             }
             jugador = Object.FindFirstObjectByType<JugadorAPie>();
-            entrada = Object.FindFirstObjectByType<EntradaArena>();
-            director = Object.FindFirstObjectByType<DirectorPelea>();
+            // El mostrador de peleas (T-129) trae su propia entrada y su propio flujo: aquí se prueba la del tutorial.
+            entrada = null;
+            foreach (EntradaArena candidata in Object.FindObjectsByType<EntradaArena>(FindObjectsSortMode.None))
+            {
+                if (candidata.GetComponent<MostradorPeleas>() == null)
+                {
+                    entrada = candidata;
+                }
+            }
+            director = null;
+            foreach (DirectorPelea candidato in Object.FindObjectsByType<DirectorPelea>(FindObjectsSortMode.None))
+            {
+                if (candidato.GetComponentInParent<MostradorPeleas>() == null)
+                {
+                    director = candidato;
+                }
+            }
             montaje = Object.FindFirstObjectByType<MontajeMecha>();
             Assert.IsNotNull(jugador, "Pruebas_Prologo trae al jugador");
             Assert.IsNotNull(entrada, "Pruebas_Prologo trae EntradaArena");
