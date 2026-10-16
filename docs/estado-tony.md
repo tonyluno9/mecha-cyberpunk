@@ -20,7 +20,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-121 Deudas de T-F5: daño persistente solo en el mecha de la historia y creador de Pruebas_Calle | nada | hecha (sin revisar) |
 | T-122 Pruebas frágiles: tope de frame, ritmo del rival y materiales que cambian solos | nada (mejor tras T-121) | hecha (sin revisar) |
 | T-123 Apariencia del jugador: catálogo, cuerpo y vista previa | T-120 | hecha (sin revisar) |
-| T-124 Etapas de la historia y partida entre escenas | T-120 | pendiente |
+| T-124 Etapas de la historia y partida entre escenas | T-120 | hecha (sin revisar) |
 | T-125 Fundido a negro y pantalla de "continuará" | nada | pendiente |
 | T-126 Pantalla de título y creación de personaje | T-123, T-124, T-125 | pendiente |
 | T-127 Ensamblado del prólogo y escena Pruebas_Prologo | T-120, T-121 | pendiente |
