@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Tests.Core
         {
             public string Nombre { get; private set; } = "Respaldo";
             public string Alias { get; private set; } = "Alias";
+            public AparienciaJugador Apariencia => AparienciaJugador.Predeterminada;
             public event Action Cambio;
 
             public void Poner(string nombre, string alias)

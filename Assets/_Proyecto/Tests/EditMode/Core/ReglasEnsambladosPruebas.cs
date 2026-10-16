@@ -45,6 +45,9 @@ namespace MechaCyberpunk.Tests.Core
 
             if (resto.EndsWith(".Editor")) resto = resto.Substring(0, resto.Length - ".Editor".Length);
             if (resto == DuenoCore) return DuenoCore;
+            // Un subensamblado <Area>.<Sub> tiene el dueño de <Area>.
+            int punto = resto.IndexOf('.');
+            if (punto > 0) resto = resto.Substring(0, punto);
             return DuenoPorArea.TryGetValue(resto, out var dueno) ? dueno : null;
         }
 
@@ -133,6 +136,47 @@ namespace MechaCyberpunk.Tests.Core
             Assert.AreEqual(1, errores.Count);
             StringAssert.Contains("MechaCyberpunk.IA", errores[0]);
             StringAssert.Contains("MechaCyberpunk.Mundo", errores[0]);
+        }
+
+        [Test]
+        public void SubensambladoDeTonyReferenciaAreasDeTony_NoDaError()
+        {
+            var lista = ProyectoCompleto();
+            lista.Add(Asm("MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Core", "MechaCyberpunk.Mecha", "MechaCyberpunk.Pelea", "MechaCyberpunk.UI"));
+
+            Assert.IsEmpty(Validar(lista));
+        }
+
+        [Test]
+        public void SubensambladoDeTonyReferenciaMundo_DaErrorQueNombraALosDos()
+        {
+            var lista = ProyectoCompleto();
+            lista.Add(Asm("MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Core", "MechaCyberpunk.Mundo"));
+
+            var errores = Validar(lista);
+
+            Assert.AreEqual(1, errores.Count);
+            StringAssert.Contains("MechaCyberpunk.Progresion.Prologo", errores[0]);
+            StringAssert.Contains("MechaCyberpunk.Mundo", errores[0]);
+        }
+
+        [Test]
+        public void SubensambladoEditor_EsDeTony()
+        {
+            Assert.AreEqual(DuenoTony, DuenoDe("MechaCyberpunk.Progresion.Prologo.Editor"));
+            Assert.AreEqual(DuenoTony, DuenoDe("MechaCyberpunk.Tests.PlayMode.Progresion.Prologo"));
+        }
+
+        [Test]
+        public void SubensambladoDeAreaInventada_DaNombreDesconocido()
+        {
+            var lista = ProyectoCompleto();
+            lista.Add(Asm("MechaCyberpunk.Inventada.Sub", "MechaCyberpunk.Core"));
+
+            var errores = Validar(lista);
+
+            Assert.AreEqual(1, errores.Count);
+            StringAssert.Contains("nombre desconocido", errores[0]);
         }
 
         [Test]
