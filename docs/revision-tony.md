@@ -263,3 +263,6 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-122 Pruebas frágiles
 - Verificado automáticamente: compilar OK, EditMode 534/534, PlayMode 447/455 y 446/455 en dos corridas (solo fallos de Alan en la Jaula). Los .mat ya no cambian solos tras correr.
 - Para ti: nada que jugar. MedidorFrames tolera unos pocos frames lentos (0.1-0.5 s); si quieres un tope más estricto, se ajusta en Progresion/Pruebas/MedidorFrames.cs.
+### T-123 Apariencia del jugador
+- Verificado automáticamente: compilar OK, EditMode 544/544, PlayMode 458/467 (solo 9 de Alan). Captura T-123-1.png.
+- Para ti: pon Personaje/Prefabs/CuerpoJugador.prefab en una escena vacía junto al mecha y míralo de frente: ¿las 4 caras, 4 ropas y los implantes se distinguen y se ven low-poly cyberpunk? ¿1.75 m se ve proporcionado junto al mecha de 4 m? La captura los muestra de espaldas/perfil.
