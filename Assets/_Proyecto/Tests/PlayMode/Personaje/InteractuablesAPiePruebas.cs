@@ -70,15 +70,15 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNull(interaccion.InteractuableCandidato, "A 6 m no es candidato");
 
             Press(teclado.wKey);
-            int frames = 0;
-            while (jugador.transform.position.z < 4f && frames++ < 600)
+            float limite = Time.time + 10f;
+            while (jugador.transform.position.z < 4f && Time.time < limite)
             {
                 yield return null;
             }
             Release(teclado.wKey);
             yield return null;
 
-            Assert.AreSame(objeto, interaccion.InteractuableCandidato);
+            Assert.AreSame(objeto, interaccion.InteractuableCandidato, "pos=" + jugador.transform.position);
             Assert.AreEqual(TipoCandidatoAPie.Interactuable, interaccion.TipoCandidato);
 
             yield return PresionarE();
