@@ -22,6 +22,9 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float AlturaApoyo = 0.05f;
         private const float MargenCapsula = 0.1f;
         private const float GradosMaximosHaciaLaSalida = 60f;
+        private const float AtrasCaptura = 2.5f;     // m desde el centro de la zona hacia la puerta
+        private const float AlturaOjos = 1.7f;
+        private const float SegundosFisica = 0.3f;
 
         private Keyboard teclado;
         private GameObject camaraObjeto;
@@ -146,6 +149,29 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(1, UnityEngine.SceneManagement.SceneManager.sceneCount, "No hay escenas extra");
             yield return null;
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casa).JugadorDentro);
+        }
+
+        [UnityTest]
+        public IEnumerator Casa_Capturas_TallerYSala()
+        {
+            yield return Preparar();
+            camara = EscenaLugares.ColocarFrenteA(IdLugar.Casa, out camaraObjeto);
+            yield return EscenaLugares.Calentar();
+            Bounds limites = zona.GetComponent<BoxCollider>().bounds;
+            Vector3 haciaLaPuerta = EscenaLugares.HaciaLaPuerta(IdLugar.Casa);
+            Vector3 desde = limites.center + haciaLaPuerta * AtrasCaptura;
+            desde.y = limites.min.y + AlturaOjos;
+
+            Vector3 mecha = Registro<ITallerMecha>.Todos[0].Estacionamiento.position + Vector3.up;
+            camara.Colocar(new Pose(desde, Quaternion.LookRotation(mecha - desde, Vector3.up)));
+            yield return EscenaLugares.Esperar(SegundosFisica);
+            CapturaPruebas.Guardar(camara.Camara, "docs/capturas/T-086-1.png");
+
+            Transform cama = zona.transform.parent.Find("Sala/CamaBase");
+            Assert.IsNotNull(cama, "La sala tiene su cama");
+            camara.Colocar(new Pose(desde, Quaternion.LookRotation(cama.position - desde, Vector3.up)));
+            yield return EscenaLugares.Esperar(SegundosFisica);
+            CapturaPruebas.Guardar(camara.Camara, "docs/capturas/T-086-2.png");
         }
     }
 }
