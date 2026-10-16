@@ -221,3 +221,6 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Verificado automáticamente: compilar OK, EditMode 459/459, PlayMode 354/355 (falló RivalBasicoPruebas.Ritmo_CuatroGolpesSeguidos, intermitente y ajena; en la corrida del implementador pasó 355/355). Pruebas propias en verde; captura T-108-1.png legible.
 - Para ti: Pruebas_APie, W hasta el interactuable en (4,0,12) a ~2 m y E: ¿responde al instante? ¿el aviso estorba al pasar de largo?
 - Deuda: RivalBasicoPruebas.Ritmo_... intermitente (IA).
+### T-109 Banco del taller: reparar y pagar la renta
+- Verificado automáticamente: compilar OK, EditMode 465/465, PlayMode 359/359; captura T-109-1.png.
+- Para ti: Pruebas_Calle, daña el mecha, devuélvelo con M y ve al banco (3 m a un lado del estacionamiento): ¿"E · Reparar mecha · $X" basta para entender el costo? ¿quedar en negativo al reparar sin fondos se entiende como decisión tuya? Prueba el taller bloqueado ("TALLER BLOQUEADO · debes $X de renta") y pagar.
