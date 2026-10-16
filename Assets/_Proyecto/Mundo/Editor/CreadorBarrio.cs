@@ -76,6 +76,7 @@ namespace MechaCyberpunk.Mundo.Editor
             AsegurarCarpeta(RutaMundo + "/Pruebas");
             CrearMateriales();
             AssetDatabase.SaveAssets();
+            VestirFachadas.CrearAssets(); // T-081: texturas de ventanas y materiales Fachada_*
             CrearControles();
             CrearConfig();
             CrearPrefabCamara();
@@ -284,6 +285,7 @@ namespace MechaCyberpunk.Mundo.Editor
             CrearAmbientacion(t);
             CrearPuntosAparicion(t);
             VestirCalle.Cables(t);
+            VestirFachadas.Vestir(t); // T-081: locales, ventanas y cornisas en los lados visibles
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabBarrio);
             Object.DestroyImmediate(raiz);
