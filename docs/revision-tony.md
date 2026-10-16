@@ -275,3 +275,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK, PlayMode UI 64/64, EditMode UI + ReglasEnsamblados 62/62. Capturas T-125-1/2.
 - Para ti: ¿"CONTINUARÁ…" se siente cierre de demo cyberpunk y no pantalla de error? ¿0.6 s de fundido se siente cinematográfico o lento (se ajusta en ConfigPantallasHistoria_Base.asset)? La captura T-125-1 (fundido a medias) no deja ver claramente el oscurecimiento parcial.
 - Nota para T-133: apagar controles a pie/mecha mientras PantallaContinuara.Visible.
+### T-126 Título y creación de personaje
+- Verificado automáticamente (acotado): compilar OK, EditMode UI + ReglasEnsamblados 62/62, PlayMode UI+Progresion+Personaje 227/228 (CambioEscenaPruebas de T-124 falla solo en corrida conjunta por orden; pasa sola). Capturas T-126-1/2.
+- Para ti: abre Escenas/Tony/CreacionPersonaje.unity y dale Play. Teclado: Tab o ↑↓ cambia de fila, ←→ cambia de opción. ¿Se entiende sin explicación? ¿El cuerpo cambia al instante? ¿Crear el personaje toma menos de 1.5 min? EMPEZAR falla por escena faltante hasta T-127.
+- Deuda: CambioEscenaPruebas depende del orden de ejecución.

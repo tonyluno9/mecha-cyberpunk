@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e339e9cf32a02b439abff58501e50d1, type: 3}
+  m_Name: ConfigPantallaCreacion_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaCreacion
+  colorNormal: {r: 0.65, g: 0.7, b: 0.8, a: 1}
+  colorElegido: {r: 0, g: 1, b: 0.9, a: 1}
+  colorAviso: {r: 1, g: 0.3, b: 0.55, a: 1}
+  tamanoTitulo: 90
+  tamanoTexto: 44
+  tamanoAyuda: 28
+  segundosParpadeo: 0.5
+  textoJuego: MECHA CYBERPUNK
+  textoContinuar: CONTINUAR
+  textoNuevaPartida: NUEVA PARTIDA
+  textoConfirmar: "Se borrar\xE1 tu partida \xB7 ENTER confirmar \xB7 ESC volver"
+  textoCrea: CREA A TU PELEADOR
+  textoNombre: NOMBRE
+  textoAlias: ALIAS
+  textoCara: CARA
+  textoRopa: ROPA
+  textoImplante: IMPLANTE
+  textoEmpezar: EMPEZAR
+  textoAviso: Escribe tu nombre y tu alias
+  textoAyuda: "\u2191 \u2193 \xB7 TAB cambiar de fila     \u2190 \u2192 cambiar opci\xF3n    
+    ENTER confirmar"
+  textoAyudaTitulo: "\u2191 \u2193 elegir     ENTER confirmar"
