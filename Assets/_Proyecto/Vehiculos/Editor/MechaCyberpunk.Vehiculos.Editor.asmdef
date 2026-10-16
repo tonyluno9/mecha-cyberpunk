@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Vehiculos.Editor",
+    "rootNamespace": "MechaCyberpunk.Vehiculos.Editor",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Vehiculos", "Unity.InputSystem", "Unity.RenderPipelines.Universal.Runtime"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

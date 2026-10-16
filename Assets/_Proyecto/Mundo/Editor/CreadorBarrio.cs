@@ -43,17 +43,18 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float PasoManzana = LadoManzana + AnchoCalle;
         private const float MitadManzana = LadoManzana / 2f;
         private const float MitadInterior = MitadManzana - AnchoBanqueta;
-        private const float MitadBarrioX = PasoManzana + MitadManzana;       // 134
-        private const float MitadBarrioZ = PasoManzana / 2f + MitadManzana;  // 87
+        internal const float MitadBarrioX = PasoManzana + MitadManzana;       // 134
+        internal const float MitadBarrioZ = PasoManzana / 2f + MitadManzana;  // 87
         private const float LoteMaximo = 26f;
         private const float AlturaMinima = 8f;
         private const float AlturaMaxima = 30f;
         private const float DistanciaEntrada = 1.5f;
+        private const float DistanciaCochera = 12f;
+        private const float DespejeCochera = 6f;
         private const float AnchoPuerta = 3f;
         private const float AltoPuerta = 3.2f;
         private const float GrosorFachada = 1f;
         private static readonly float[] DesplazamientosFarola = { -33f, -12f, 12f, 33f };
-        private const float AlturaFarola = 6f;
 
         private static readonly Vector2[] CentrosManzana =
         {
@@ -75,6 +76,7 @@ namespace MechaCyberpunk.Mundo.Editor
             AsegurarCarpeta(RutaMundo + "/Pruebas");
             CrearMateriales();
             AssetDatabase.SaveAssets();
+            VestirFachadas.CrearAssets(); // T-081: texturas de ventanas y materiales Fachada_*
             CrearControles();
             CrearConfig();
             CrearPrefabCamara();
@@ -99,7 +101,7 @@ namespace MechaCyberpunk.Mundo.Editor
         private static void CrearMateriales()
         {
             materiales.Clear();
-            Mat("Asfalto", new Color(0.07f, 0.075f, 0.085f), 0.35f);
+            Mat("Asfalto", new Color(0.04f, 0.045f, 0.055f), 0.85f); // mojado: oscuro y liso (T-079)
             Mat("Banqueta", new Color(0.36f, 0.37f, 0.4f), 0.1f);
             Mat("Marca", new Color(0.8f, 0.75f, 0.35f), 0.2f);
             Mat("Edif_A", new Color(0.22f, 0.24f, 0.29f), 0.1f);
@@ -116,9 +118,9 @@ namespace MechaCyberpunk.Mundo.Editor
             Mat("Casino", new Color(0.55f, 0.42f, 0.12f), 0.3f);
             Mat("Mercado", new Color(0.55f, 0.3f, 0.1f), 0f);
             Mat("PanelPuerta", new Color(0.05f, 0.05f, 0.06f), 0.2f);
-            Mat("Letrero_Magenta", new Color(0.9f, 0.1f, 0.6f), 0.2f, new Color(0.5f, 0.03f, 0.3f));
-            Mat("Letrero_Cian", new Color(0.1f, 0.8f, 0.9f), 0.2f, new Color(0.03f, 0.35f, 0.4f));
-            Mat("Letrero_Naranja", new Color(0.95f, 0.5f, 0.1f), 0.2f, new Color(0.45f, 0.18f, 0.02f));
+            Mat("Letrero_Magenta", new Color(0.9f, 0.1f, 0.6f), 0.2f, new Color(3.2f, 0.2f, 1.9f)); // emisión HDR para el bloom (T-079)
+            Mat("Letrero_Cian", new Color(0.1f, 0.8f, 0.9f), 0.2f, new Color(0.2f, 2.6f, 3f));
+            Mat("Letrero_Naranja", new Color(0.95f, 0.5f, 0.1f), 0.2f, new Color(3f, 1.2f, 0.1f));
             Mat("Concreto", new Color(0.5f, 0.5f, 0.5f), 0.1f);
             Mat("ConcretoOscuro", new Color(0.3f, 0.3f, 0.32f), 0.1f);
             Mat("Valla", new Color(0.9f, 0.45f, 0.1f), 0.1f);
@@ -132,6 +134,12 @@ namespace MechaCyberpunk.Mundo.Editor
             Mat("Carro_B", new Color(0.1f, 0.2f, 0.4f), 0.5f);
             Mat("Carro_C", new Color(0.55f, 0.55f, 0.5f), 0.5f);
             Mat("Bote", new Color(0.15f, 0.3f, 0.2f), 0.2f);
+            Mat("Reja", new Color(0.14f, 0.15f, 0.18f), 0.3f);
+            Mat("Patrulla", new Color(0.07f, 0.09f, 0.16f), 0.5f);
+            Mat("PatrullaBlanco", new Color(0.8f, 0.82f, 0.85f), 0.4f);
+            Mat("TorretaRoja", new Color(0.9f, 0.05f, 0.05f), 0.3f, new Color(3f, 0.1f, 0.1f));
+            Mat("TorretaAzul", new Color(0.05f, 0.15f, 0.95f), 0.3f, new Color(0.1f, 0.3f, 3f));
+            Mat("AvisoCorp", new Color(0.04f, 0.04f, 0.06f), 0.2f);
         }
 
         private static Material Mat(string nombre, Color color, float suavidad, Color emision = default)
@@ -225,12 +233,12 @@ namespace MechaCyberpunk.Mundo.Editor
 
         // ---------------------------------------------------------------- piezas básicas
 
-        private static Material M(string nombre)
+        internal static Material M(string nombre)
         {
             return materiales[nombre];
         }
 
-        private static GameObject Cubo(string nombre, Transform padre, Vector3 posicion, Vector3 escala, string material, bool conCollider = true)
+        internal static GameObject Cubo(string nombre, Transform padre, Vector3 posicion, Vector3 escala, string material, bool conCollider = true)
         {
             GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             go.name = nombre;
@@ -245,7 +253,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return go;
         }
 
-        private static Transform Vacio(string nombre, Transform padre, Vector3 posicion, Quaternion rotacion)
+        internal static Transform Vacio(string nombre, Transform padre, Vector3 posicion, Quaternion rotacion)
         {
             GameObject go = new GameObject(nombre);
             go.transform.SetParent(padre, false);
@@ -261,6 +269,7 @@ namespace MechaCyberpunk.Mundo.Editor
             numeroEdificio = 0;
             numeroFarola = 0;
             puntosLibres.Clear();
+            VestirCalle.Preparar(puntosLibres);
 
             GameObject raiz = new GameObject("Barrio");
             Transform t = raiz.transform;
@@ -272,8 +281,12 @@ namespace MechaCyberpunk.Mundo.Editor
             }
             CrearFinales(t);
             CrearFarolas(t);
+            CrearPuestosTacos(t);
             CrearAmbientacion(t);
             CrearPuntosAparicion(t);
+            VestirCalle.Cables(t);
+            VestirFachadas.Vestir(t); // T-081: locales, ventanas y cornisas en los lados visibles
+            VestirLetreros.Vestir(t); // T-082: letreros de neón del kit en lugar de los cubos greybox
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabBarrio);
             Object.DestroyImmediate(raiz);
@@ -397,10 +410,11 @@ namespace MechaCyberpunk.Mundo.Editor
             {
                 GameObject lamina = Cubo("Lamina", edificio, new Vector3(0f, alturaPiso + 0.5f, 0f), new Vector3(w * 0.8f, 0.1f, d * 0.8f), "Lamina", false);
                 lamina.transform.localRotation = Quaternion.Euler(6f + (float)azar.NextDouble() * 8f, 0f, 0f);
+                VestirCalle.TinacoPobre(edificio, w, alturaPiso, new Random(8000 + numeroEdificio));
             }
             else
             {
-                Cubo("Tanque", edificio, new Vector3(w * 0.25f, alturaPiso + 0.8f, d * 0.25f), new Vector3(1.8f, 1.6f, 1.8f), "Azotea", false);
+                VestirCalle.AzoteaKit(edificio, w, d, alturaPiso, w * 0.25f, d * 0.25f, new Random(8000 + numeroEdificio));
             }
 
             if (azar.NextDouble() < 0.45)
@@ -428,23 +442,24 @@ namespace MechaCyberpunk.Mundo.Editor
             Cubo("Dintel", lugar, new Vector3(0f, AltoPuerta + (altura - AltoPuerta) / 2f, zFrente - GrosorFachada / 2f), new Vector3(AnchoPuerta, altura - AltoPuerta, GrosorFachada), material);
             Cubo("PanelPuerta", lugar, new Vector3(0f, AltoPuerta / 2f, zFrente - GrosorFachada / 2f), new Vector3(AnchoPuerta, AltoPuerta, 0.3f), "PanelPuerta");
             Cubo("Letrero", lugar, new Vector3(0f, AltoPuerta + 1.2f, zFrente + 0.15f), new Vector3(AnchoPuerta + 2f, 1.4f, 0.3f), letrero, false);
-            Cubo("Azotea", lugar, new Vector3(ancho * 0.25f, altura + 0.8f, -fondo * 0.2f), new Vector3(2f, 1.6f, 2f), "Azotea", false);
+            VestirCalle.AzoteaKit(lugar, ancho, fondo, altura, ancho * 0.25f, -fondo * 0.2f, new Random(9000 + (int)(centro.x * 10f) + (int)(centro.y * 100f)));
 
             Transform entrada = Vacio("Entrada", lugar, new Vector3(0f, 0f, zFrente + DistanciaEntrada), Quaternion.identity);
             puntosLibres.Add(entrada.position);
+            if (nombre == "Lugar_Casa")
+            {
+                // La cochera (T-078): el carro viejo se estaciona ahí; ni carros greybox ni botes a 8 m a su alrededor.
+                for (float dz = -DespejeCochera; dz <= DespejeCochera; dz += DespejeCochera)
+                {
+                    puntosLibres.Add(entrada.position + new Vector3(0f, 0f, DistanciaCochera + dz));
+                }
+            }
         }
 
         private static void CrearPuestosCallejon(Transform manzana)
         {
-            // Puestos bajos del mercado negro a lo largo del callejón (x = -22 local), sin tapar la puerta del mercado.
-            Transform puestos = Vacio("PuestosCallejon", manzana, Vector3.zero, Quaternion.identity);
-            string[] colores = { "Letrero_Magenta", "Letrero_Cian", "Letrero_Naranja" };
-            float[] profundidades = { -33f, -29f, -9f, -5f };
-            for (int i = 0; i < profundidades.Length; i++)
-            {
-                Cubo("Puesto", puestos, new Vector3(-19.9f, AltoBanqueta + 0.6f, profundidades[i]), new Vector3(1.2f, 1.2f, 2f), colores[i % colores.Length]);
-            }
-            Cubo("Caja", puestos, new Vector3(-24.2f, AltoBanqueta + 0.5f, -8f), new Vector3(1.4f, 1f, 1.4f), "Mercado");
+            // Puestos del mercado negro a lo largo del callejón (T-080: puestos de tacos del kit), sin tapar la puerta del mercado.
+            VestirCalle.PuestosCallejon(manzana);
         }
 
         // ---------------------------------------------------------------- finales
@@ -452,46 +467,8 @@ namespace MechaCyberpunk.Mundo.Editor
         private static void CrearFinales(Transform padre)
         {
             Transform finales = Vacio("Finales", padre, Vector3.zero, Quaternion.identity);
-            CrearReten(finales);
-            CrearObraOeste(finales);
             CrearAutopista(finales);
-            CrearObraSur(finales);
-        }
-
-        private static void CrearReten(Transform padre)
-        {
-            Transform t = Vacio("Final_Reten", padre, Vector3.zero, Quaternion.identity);
-            Cubo("Muro_Este", t, new Vector3(MitadBarrioX + 1f, 2.5f, 0f), new Vector3(2f, 5f, 2f * MitadBarrioZ + 4f), "ConcretoOscuro");
-            for (int i = 0; i < 5; i++)
-            {
-                Cubo("Jersey", t, new Vector3(MitadBarrioX - 3f, 0.6f, -6.4f + i * 3.2f), new Vector3(1.2f, 1.2f, 3.2f), "Concreto");
-            }
-            Cubo("Caseta", t, new Vector3(MitadBarrioX - 10f, 1.4f, 5f), new Vector3(3f, 2.8f, 3f), "Concreto");
-            Cubo("TechoCaseta", t, new Vector3(MitadBarrioX - 10f, 2.95f, 5f), new Vector3(3.6f, 0.3f, 3.6f), "ConcretoOscuro");
-            Cubo("PosteBarrera", t, new Vector3(MitadBarrioX - 10f, 0.7f, -7f), new Vector3(0.4f, 1.4f, 0.4f), "ConcretoOscuro");
-            for (int i = 0; i < 5; i++)
-            {
-                Cubo("Barrera_" + i, t, new Vector3(MitadBarrioX - 10f, 1.1f, 3.4f - i * 2.1f), new Vector3(0.2f, 0.2f, 2.1f), i % 2 == 0 ? "RayaRoja" : "RayaBlanca");
-            }
-            Cubo("Aviso", t, new Vector3(MitadBarrioX - 10f, 4.2f, 0f), new Vector3(0.3f, 1.2f, 6f), "Letrero_Naranja", false);
-        }
-
-        private static void CrearObraOeste(Transform padre)
-        {
-            Transform t = Vacio("Final_Obra", padre, Vector3.zero, Quaternion.identity);
-            Cubo("Valla_Obra_Oeste", t, new Vector3(-MitadBarrioX - 1f, 2f, 0f), new Vector3(2f, 4f, 2f * MitadBarrioZ + 4f), "Valla");
-            for (int i = 0; i < 5; i++)
-            {
-                Cubo("Valla", t, new Vector3(-MitadBarrioX + 8f, 0.9f, -5.6f + i * 2.8f), new Vector3(0.2f, 1.8f, 2.8f), i % 2 == 0 ? "Valla" : "RayaBlanca");
-            }
-            for (int i = 0; i < 8; i++)
-            {
-                Cubo("Cono", t, new Vector3(-MitadBarrioX + 10f, 0.35f, -6f + i * 1.7f), new Vector3(0.45f, 0.7f, 0.45f), "Valla");
-            }
-            Cubo("Excavadora", t, new Vector3(-MitadBarrioX + 3f, 1.4f, 3.5f), new Vector3(4f, 2.2f, 3f), "Maquina");
-            Cubo("BrazoExcavadora", t, new Vector3(-MitadBarrioX + 3.5f, 3f, 3.5f), new Vector3(0.6f, 0.6f, 5f), "Maquina");
-            GameObject monton = Cubo("MontonTierra", t, new Vector3(-MitadBarrioX + 4f, 1f, -3.5f), new Vector3(6f, 2f, 5f), "Tierra");
-            monton.transform.localRotation = Quaternion.Euler(0f, 25f, 0f);
+            CreadorFinales.Crear(finales);
         }
 
         private static void CrearAutopista(Transform padre)
@@ -505,24 +482,6 @@ namespace MechaCyberpunk.Mundo.Editor
             for (float x = -130f; x <= 130f; x += 26f)
             {
                 Cubo("Pilar", t, new Vector3(x, 4.5f, MitadBarrioZ + 9f), new Vector3(1.6f, 9f, 1.6f), "Concreto");
-            }
-        }
-
-        private static void CrearObraSur(Transform padre)
-        {
-            Transform t = Vacio("Final_Obra_Sur", padre, Vector3.zero, Quaternion.identity);
-            Cubo("Valla_Obra_Sur", t, new Vector3(0f, 2f, -MitadBarrioZ - 1f), new Vector3(2f * MitadBarrioX + 4f, 4f, 2f), "Valla");
-            foreach (float cx in new[] { -PasoManzana / 2f, PasoManzana / 2f })
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    Cubo("Valla", t, new Vector3(cx - 5.6f + i * 2.8f, 0.9f, -MitadBarrioZ + 4f), new Vector3(2.8f, 1.8f, 0.2f), i % 2 == 0 ? "Valla" : "RayaBlanca");
-                }
-                for (int i = 0; i < 6; i++)
-                {
-                    Cubo("Cono", t, new Vector3(cx - 4.5f + i * 1.8f, 0.35f, -MitadBarrioZ + 6f), new Vector3(0.45f, 0.7f, 0.45f), "Valla");
-                }
-                Cubo("Tubos", t, new Vector3(cx + 3f, 0.6f, -MitadBarrioZ + 1.8f), new Vector3(5f, 1.2f, 1.5f), "ConcretoOscuro");
             }
         }
 
@@ -541,11 +500,13 @@ namespace MechaCyberpunk.Mundo.Editor
                     {
                         continue;
                     }
-                    Vector2 tangente = new Vector2(-n.y, n.x);
                     foreach (float desplazamiento in DesplazamientosFarola)
                     {
-                        Vector2 posicion = c + n * (MitadManzana - 0.6f) + tangente * desplazamiento;
-                        CrearFarola(farolas, posicion, n);
+                        numeroFarola++;
+                        if (VestirCalle.Farola(farolas, numeroFarola, c, i, n, desplazamiento) == null)
+                        {
+                            numeroFarola--; // cayó junto a una entrada: sin poste
+                        }
                     }
                 }
             }
@@ -557,28 +518,16 @@ namespace MechaCyberpunk.Mundo.Editor
             return Mathf.Abs(destino.x) > MitadBarrioX - 1f || Mathf.Abs(destino.y) > MitadBarrioZ - 1f;
         }
 
-        private static void CrearFarola(Transform padre, Vector2 posicion, Vector2 haciaCalle)
+        // Los puestos de tacos del kit: 2 en la banqueta del bar (manzana 5) y 1 en la del clandestino (manzana 2).
+        private static void CrearPuestosTacos(Transform padre)
         {
-            numeroFarola++;
-            Transform farola = Vacio("Farola_" + numeroFarola, padre, new Vector3(posicion.x, AltoBanqueta, posicion.y), Quaternion.identity);
-            Cubo("Poste", farola, new Vector3(0f, AlturaFarola / 2f, 0f), new Vector3(0.2f, AlturaFarola, 0.2f), "Farola");
-            Vector3 hacia = new Vector3(haciaCalle.x, 0f, haciaCalle.y);
-            Cubo("Brazo", farola, hacia * 0.6f + Vector3.up * (AlturaFarola - 0.1f), new Vector3(Mathf.Abs(haciaCalle.x) > 0f ? 1.2f : 0.15f, 0.15f, Mathf.Abs(haciaCalle.y) > 0f ? 1.2f : 0.15f), "Farola", false);
-            Cubo("Lampara", farola, hacia * 1.2f + Vector3.up * (AlturaFarola - 0.25f), new Vector3(0.5f, 0.2f, 0.5f), "Lampara", false);
-
-            GameObject luz = new GameObject("Luz");
-            luz.transform.SetParent(farola, false);
-            luz.transform.localPosition = hacia * 1.2f + Vector3.up * (AlturaFarola - 0.6f);
-            Light componente = luz.AddComponent<Light>();
-            componente.type = LightType.Point;
-            componente.color = new Color(1f, 0.85f, 0.6f);
-            componente.range = 16f;
-            componente.intensity = 40f;
-            componente.shadows = LightShadows.None;
-            componente.enabled = false; // T-041 la prende de noche
+            Transform grupo = VestirCalle.GrupoPuestos(padre);
+            VestirCalle.PuestoBanqueta(grupo, CentrosManzana[4], new Vector2(0f, 1f), 20f, "Puesto_Tacos_Bar_1");
+            VestirCalle.PuestoBanqueta(grupo, CentrosManzana[4], new Vector2(0f, 1f), -20f, "Puesto_Tacos_Bar_2");
+            VestirCalle.PuestoBanqueta(grupo, CentrosManzana[1], new Vector2(0f, -1f), 20f, "Puesto_Tacos_Clandestino");
         }
 
-        // Botes en la banqueta y carros estacionados junto a la acera, lejos de puertas y del callejón.
+        // Basureros del kit en la banqueta y carros estacionados junto a la acera, lejos de puertas y del callejón.
         private static void CrearAmbientacion(Transform padre)
         {
             Transform grupo = Vacio("Ambientacion", padre, Vector3.zero, Quaternion.identity);
@@ -609,7 +558,10 @@ namespace MechaCyberpunk.Mundo.Editor
                         numero++;
                         if (tirada < 0.3)
                         {
-                            Cubo("Bote_" + numero, grupo, new Vector3(sobreBanqueta.x, AltoBanqueta + 0.5f, sobreBanqueta.y), new Vector3(0.7f, 1f, 0.7f), "Bote");
+                            if (!VestirCalle.EstaOcupado(sobreBanqueta, 1.1f))
+                            {
+                                VestirCalle.Basurero(grupo, numero, c, n, desplazamiento, new Random(5000 + numero));
+                            }
                         }
                         else if (tirada < 0.5)
                         {
@@ -641,7 +593,7 @@ namespace MechaCyberpunk.Mundo.Editor
             Transform grupo = Vacio("PuntosAparicion", padre, Vector3.zero, Quaternion.identity);
             Transform casa = padre.Find("Manzana_4/Lugar_Casa/Entrada");
             Transform clandestino = padre.Find("Manzana_2/Lugar_Clandestino/Entrada");
-            Vector3 cochera = casa.position + new Vector3(0f, 0f, 12f);
+            Vector3 cochera = casa.position + new Vector3(0f, 0f, DistanciaCochera);
             CrearPunto(grupo, "Casa_Puerta", casa.position, casa.rotation, ModoJugador.APie);
             CrearPunto(grupo, "Casa_Cochera", cochera, casa.rotation, ModoJugador.Carro);
             CrearPunto(grupo, "Clandestino_Puerta", clandestino.position, clandestino.rotation, ModoJugador.APie);

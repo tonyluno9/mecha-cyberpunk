@@ -19,8 +19,8 @@ namespace MechaCyberpunk.Mundo.Datos
 
         [Tooltip("Intensidad de la luz según la hora (h).")]
         [SerializeField] private AnimationCurve intensidadLuz = new AnimationCurve(
-            new Keyframe(0f, 0.6f), new Keyframe(6f, 0.45f), new Keyframe(8f, 1.1f), new Keyframe(13f, 1.5f),
-            new Keyframe(18f, 1.1f), new Keyframe(19.5f, 0.45f), new Keyframe(21f, 0.6f), new Keyframe(24f, 0.6f));
+            new Keyframe(0f, 1.1f), new Keyframe(6f, 0.8f), new Keyframe(8f, 1.1f), new Keyframe(13f, 1.5f),
+            new Keyframe(18f, 1.1f), new Keyframe(19.5f, 0.8f), new Keyframe(21f, 1.1f), new Keyframe(24f, 1.1f));
 
         [Tooltip("Elevación del sol o la luna sobre el horizonte según la hora (°).")]
         [SerializeField] private AnimationCurve elevacion = new AnimationCurve(
@@ -32,21 +32,28 @@ namespace MechaCyberpunk.Mundo.Datos
         [Header("Ambiente y niebla")]
         [Tooltip("Color del ambiente según la hora del día.")]
         [SerializeField] private Gradient colorAmbiente = Crear(
-            (0f, new Color(0.1f, 0.12f, 0.24f)), (0.27f, new Color(0.14f, 0.15f, 0.28f)), (0.31f, new Color(0.4f, 0.32f, 0.4f)),
-            (0.4f, new Color(0.5f, 0.54f, 0.6f)), (0.54f, new Color(0.55f, 0.58f, 0.64f)), (0.75f, new Color(0.5f, 0.45f, 0.5f)),
-            (0.82f, new Color(0.2f, 0.17f, 0.3f)), (0.88f, new Color(0.1f, 0.12f, 0.24f)));
+            (0f, new Color(0.27f, 0.29f, 0.58f)), (0.27f, new Color(0.3f, 0.3f, 0.6f)), (0.31f, new Color(0.4f, 0.32f, 0.4f)),
+            (0.4f, new Color(0.65f, 0.7f, 0.78f)), (0.54f, new Color(0.7f, 0.74f, 0.82f)), (0.75f, new Color(0.5f, 0.45f, 0.5f)),
+            (0.82f, new Color(0.3f, 0.25f, 0.5f)), (0.88f, new Color(0.27f, 0.29f, 0.58f)));
 
         [Tooltip("Color de la niebla según la hora del día.")]
         [SerializeField] private Gradient colorNiebla = Crear(
-            (0f, new Color(0.05f, 0.06f, 0.13f)), (0.27f, new Color(0.07f, 0.08f, 0.16f)), (0.31f, new Color(0.45f, 0.38f, 0.45f)),
+            (0f, new Color(0.12f, 0.09f, 0.26f)), (0.27f, new Color(0.13f, 0.1f, 0.28f)), (0.31f, new Color(0.45f, 0.38f, 0.45f)),
             (0.4f, new Color(0.55f, 0.62f, 0.7f)), (0.54f, new Color(0.6f, 0.66f, 0.72f)), (0.75f, new Color(0.55f, 0.5f, 0.55f)),
-            (0.82f, new Color(0.18f, 0.12f, 0.24f)), (0.88f, new Color(0.05f, 0.06f, 0.13f)));
+            (0.82f, new Color(0.2f, 0.12f, 0.3f)), (0.88f, new Color(0.12f, 0.09f, 0.26f)));
 
         [Tooltip("Densidad de la niebla (exponencial al cuadrado) según la hora (h).")]
         [SerializeField] private AnimationCurve densidadNiebla = new AnimationCurve(
-            new Keyframe(0f, 0.016f), new Keyframe(6f, 0.016f), new Keyframe(8f, 0.005f), new Keyframe(13f, 0.003f),
-            new Keyframe(18f, 0.005f), new Keyframe(20f, 0.016f), new Keyframe(24f, 0.016f));
+            new Keyframe(0f, 0.02f), new Keyframe(6f, 0.02f), new Keyframe(8f, 0.005f), new Keyframe(13f, 0.003f),
+            new Keyframe(18f, 0.005f), new Keyframe(20f, 0.02f), new Keyframe(24f, 0.02f));
 
+        [Header("Posproceso")]
+        [Tooltip("Peso del Volume de noche según la hora (h): 1 es noche completa, 0 es día. El de día es 1 menos este.")]
+        [SerializeField] private AnimationCurve pesoNoche = new AnimationCurve(
+            new Keyframe(0f, 1f), new Keyframe(6.5f, 1f), new Keyframe(7.5f, 0f), new Keyframe(18.5f, 0f),
+            new Keyframe(19.5f, 1f), new Keyframe(24f, 1f));
+
+        public float PesoNoche(float hora) => Mathf.Clamp01(pesoNoche.Evaluate(Horas(hora)));
         public Color ColorLuz(float hora) => colorLuz.Evaluate(Fraccion(hora));
         public float IntensidadLuz(float hora) => intensidadLuz.Evaluate(Horas(hora));
         public float Elevacion(float hora) => elevacion.Evaluate(Horas(hora));

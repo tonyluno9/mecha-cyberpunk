@@ -7,7 +7,7 @@ namespace MechaCyberpunk.Mundo.Reloj
 {
     /// <summary>
     /// Cambia con la hora del reloj del mundo la luz direccional (sol o luna), el ambiente y la niebla de la escena,
-    /// según <see cref="ConfigCicloDia"/>. Solo toca RenderSettings de la escena en ejecución, nunca ProjectSettings.
+    /// según <see cref="ConfigCicloDia"/>, y mezcla el peso de los dos Volumes de posproceso (noche y día). Solo toca RenderSettings de la escena en ejecución, nunca ProjectSettings.
     /// </summary>
     public class CicloDiaNoche : MonoBehaviour
     {
@@ -16,8 +16,17 @@ namespace MechaCyberpunk.Mundo.Reloj
         [Tooltip("Luz direccional que hace de sol de día y de luna de noche.")]
         [SerializeField] private Light luz;
 
+        [Tooltip("Volume global del posproceso de noche (peso 1 de noche, 0 de día).")]
+        [SerializeField] private Volume volumeNoche;
+
+        [Tooltip("Volume global del posproceso de día (peso 1 de día, 0 de noche).")]
+        [SerializeField] private Volume volumeDia;
+
         private IRelojMundo reloj;
         private Camera camara;
+
+        public Volume VolumeNoche => volumeNoche;
+        public Volume VolumeDia => volumeDia;
 
         private void Awake()
         {
@@ -55,6 +64,16 @@ namespace MechaCyberpunk.Mundo.Reloj
             luz.color = config.ColorLuz(hora);
             luz.intensity = config.IntensidadLuz(hora);
             luz.transform.rotation = Quaternion.Euler(config.Elevacion(hora), config.Giro, 0f);
+
+            float pesoNoche = config.PesoNoche(hora);
+            if (volumeNoche != null)
+            {
+                volumeNoche.weight = pesoNoche;
+            }
+            if (volumeDia != null)
+            {
+                volumeDia.weight = 1f - pesoNoche;
+            }
 
             RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.ambientLight = config.ColorAmbiente(hora);
