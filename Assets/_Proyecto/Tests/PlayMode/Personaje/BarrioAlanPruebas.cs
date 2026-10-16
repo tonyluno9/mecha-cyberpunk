@@ -5,6 +5,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.UI.Hud;
 using NUnit.Framework;
 using UnityEditor;
@@ -41,7 +42,6 @@ namespace MechaCyberpunk.Tests.Personaje
         private const float MaxSegundosPorTramo = 30f;
         private const float RadioLlegadaObjetivo = 4f;
         private const float MargenLlegadaEntrada = 0.5f;
-        private const float MaxFrameSegundos = 0.1f;
         private const float MetrosFrenteAPuerta = 1.2f;
         private const float AlturaPies = 0.05f;
 
@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private IRelojMundo reloj;
         private float sensibilidadRaton;
         private bool avanzando;
-        private float maxFrame;
+        private readonly MedidorFrames medidor = new MedidorFrames();
         private readonly List<ResultadoPuerta> resultados = new List<ResultadoPuerta>();
         private readonly List<IdLugar> entradas = new List<IdLugar>();
         private readonly List<IdLugar> salidas = new List<IdLugar>();
@@ -71,7 +71,7 @@ namespace MechaCyberpunk.Tests.Personaje
             entradas.Clear();
             salidas.Clear();
             avanzando = false;
-            maxFrame = 0f;
+            medidor.Reiniciar();
         }
 
         public override void TearDown()
@@ -152,7 +152,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private IEnumerator Frame()
         {
             yield return null;
-            maxFrame = Mathf.Max(maxFrame, Time.unscaledDeltaTime);
+            medidor.Registrar(Time.unscaledDeltaTime);
         }
 
         private IEnumerator Esperar(float segundos)
@@ -324,7 +324,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Assert.Greater(DistanciaHorizontal(inicio), MetrosMinimosCaminata, "Avanzó más de 12 m en 4 s");
             Assert.Greater(jugador.transform.position.y, AlturaMinimaPiso, "No cayó del piso");
-            Assert.Less(maxFrame, MaxFrameSegundos);
+            Assert.IsTrue(medidor.Cumple, "Frames del recorrido: " + medidor.Resumen());
         }
 
         [UnityTest]
@@ -385,7 +385,7 @@ namespace MechaCyberpunk.Tests.Personaje
             CollectionAssert.AreEqual(new[] { IdLugar.Bar }, entradas, "Y no hubo otra entrada");
             Assert.IsFalse(bar.JugadorDentro);
             Assert.AreEqual(1, Registro<IJugador>.Cantidad, "Siempre un solo IJugador");
-            Assert.Less(maxFrame, MaxFrameSegundos, "Ningún frame dura más de 100 ms");
+            Assert.IsTrue(medidor.Cumple, "Frames del recorrido: " + medidor.Resumen());
         }
 
         [UnityTest]
