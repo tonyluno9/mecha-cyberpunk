@@ -83,3 +83,9 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Verificado automáticamente: todos los criterios (EditMode 463/463, PlayMode 433/433 tras mezclar main; capturas T-080-1..4).
 - Para ti: Ciudad.unity, `VistasReferencia.Ir(1,22)` y `Ir(1,13)`: densidad de cables, puestos y basureros; caminar por la banqueta y pasar en carro sin rozar postes.
 - Decisiones del agente: colliders de transformador, puesto y basurero achicados al cuerpo.
+
+### T-081 Fachadas con detalle
+- Verificado automáticamente: todos los criterios (EditMode 467/467, PlayMode 437/437; capturas T-081-1..5). Triángulos del barrio 201 692 → 792 334.
+- Para ti: Ciudad.unity, `VistasReferencia.Ir(1,22)` y `Ir(1,13)`: barrio denso y habitado, zona pobre (Manzanas 1 y 4) distinta del centro; muros lisos donde el vecino es más bajo (conocido).
+- Decisiones del agente: Fachada_Modular se achica en Z para no pasar de 0.45 m; emisión RealtimeEmissive 1.
+- Pendiente de confirmar: los EXR de Mundo/Reflejos no cambiaron en el commit; comprobar que las sondas reflejan las fachadas (rehornear con CreadorAmbiente.HornearReflejos() en el editor).
