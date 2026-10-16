@@ -62,10 +62,11 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         // La escena nueva puede activar al jugador unos frames después: espera a que el servicio de perfil vivo sea el de ella.
-        private static IEnumerator EsperarServiciosDeLaEscenaNueva()
+        private static IEnumerator EsperarServiciosDeLaEscenaNueva(string rutaEscena)
         {
             for (int i = 0; i < MaxFramesEscena; i++)
             {
+                if (SceneManager.GetActiveScene().path != rutaEscena) { yield return null; continue; }
                 var perfil = Registro<IPerfilJugador>.Actual as ServicioPerfil;
                 if (perfil != null && perfil.gameObject.scene == SceneManager.GetActiveScene()) break;
                 yield return null;
@@ -94,7 +95,7 @@ namespace MechaCyberpunk.Tests.Progresion
 
             CambioEscena.Ir(RutaAPie);
             yield return Esperar();
-            yield return EsperarServiciosDeLaEscenaNueva();
+            yield return EsperarServiciosDeLaEscenaNueva(RutaAPie);
 
             Assert.AreEqual(RutaAPie, SceneManager.GetActiveScene().path);
             Assert.AreEqual(AliasGuardado, Registro<IPerfilJugador>.Actual.Alias);
