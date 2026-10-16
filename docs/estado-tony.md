@@ -4,6 +4,42 @@ Sesión de aprobación del 2026-10-15: Tony aprobó tony/fase-3 y tony/fase-4 si
 Las decisiones D-tony-1 a D-tony-39 pasaron a docs/decisiones.md como D-033 a D-071 (más D-072). T-F1 a T-F4 del lado de Tony
 están aprobadas y en main. Rama de integración: tony/fase-5 (creada desde main; T-F5 planificada el 2026-10-15).
 
+## T-F6: creación de personaje, prólogo y cierre de la demo
+
+Planeada el 2026-10-16 (planificador Opus 5.5) en tony/planificacion-fase-6, integrada en tony/fase-5 (se sigue trabajando ahí hasta que
+Tony apruebe T-F5 y se abra tony/fase-6). Decisiones propuestas: D-tony-56 a D-tony-74 en docs/decisiones-pendientes-tony.md.
+IDs T-120 a T-137; T-113 a T-119 reservadas para deudas (D-tony-56). Todo con dobles y escenas de Tony (Pruebas_Prologo,
+Pruebas_Flashback); lo que espera a Alan está bloqueado (T-136, T-137), como T-073.
+
+Orden recomendado (D-tony-73): T-120, T-121, T-122, T-123, T-124, T-125, T-126, T-127, T-128, T-129, T-130, T-131, T-132, T-133, T-134, T-135.
+T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); T-134 solo depende de T-121.
+
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-120 Contratos de historia, apariencia y puntos de historia (Core; a main en cuanto se verifique, detrás de T-100) | nada | pendiente |
+| T-121 Deudas de T-F5: daño persistente solo en el mecha de la historia y creador de Pruebas_Calle | nada | pendiente |
+| T-122 Pruebas frágiles: tope de frame, ritmo del rival y materiales que cambian solos | nada (mejor tras T-121) | pendiente |
+| T-123 Apariencia del jugador: catálogo, cuerpo y vista previa | T-120 | pendiente |
+| T-124 Etapas de la historia y partida entre escenas | T-120 | pendiente |
+| T-125 Fundido a negro y pantalla de "continuará" | nada | pendiente |
+| T-126 Pantalla de título y creación de personaje | T-123, T-124, T-125 | pendiente |
+| T-127 Ensamblado del prólogo y escena Pruebas_Prologo | T-120, T-121 | pendiente |
+| T-128 El mecha de la historia entra a la arena | T-121, T-125, T-127 | pendiente |
+| T-129 Primera pelea casera y mostrador del clandestino | T-128 | pendiente |
+| T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | pendiente |
+| T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | pendiente |
+| T-132 Director del prólogo, parte 1: la noche del campeonato | T-124, T-127, T-128, T-130 | pendiente |
+| T-133 Director del prólogo, parte 2: despertar, pelea casera y "continuará" | T-129, T-131, T-132 | pendiente |
+| T-134 Ayudas de controles para una persona nueva | T-121 | pendiente |
+| T-135 Recorrido del prólogo completo (cierre de T-F6 de Tony) | T-121 a T-134 | pendiente |
+| T-136 El prólogo en Ciudad.unity y Flashback.unity de Alan (H6) | T-135, T-073, T-061 | bloqueada (espera A-F3 y A-F4) |
+| T-137 Escenas de la demo en Build Settings y build de Windows (Core) | T-136 | bloqueada (espera A-F4) |
+
+Pedidos a Alan de T-F6 (D-tony-72): colocar `DirectorPrologo.prefab`, `CamaJugador.prefab`, `EspejoJugador.prefab` y `MostradorPeleas.prefab`
+en Ciudad.unity y `Flashback.prefab` en Flashback.unity; apariciones "Casa_Cama", "Casa_Puerta", "Clandestino_Salida"; `IPuntoHistoria`
+"Prologo_Carro", "Prologo_Esquina_N" y "Flashback_Plano_1" a "_6"; leer `IHistoria` (carro cerca del clandestino en la noche del prólogo).
+Pregunta para Tony (D-tony-58): ¿al despertar empieza la historia desde cero ($500, mecha al 45 %) o sigue la mañana siguiente con lo que quedó?
+
 ## T-F5: daño persistente, reparaciones y guardado
 
 Planeada el 2026-10-15 (planificador Opus 5.5). Decisiones propuestas: D-tony-40 a D-tony-55 en docs/decisiones-pendientes-tony.md.
