@@ -8,7 +8,7 @@ namespace MechaCyberpunk.Mecha.Llamado
     {
         /// <summary>
         /// Decide el resultado. Alguien dentro del mecha manda sobre todo (Ocupado); si no, el estado: Llegando es YaViene,
-        /// Regresando es Nada, EnCalle es Regresa y EnTaller busca la zona. <paramref name="indice"/> es el punto elegido
+        /// Regresando y EnArena son Nada, EnCalle es Regresa y EnTaller busca la zona. <paramref name="indice"/> es el punto elegido
         /// cuando el resultado es Llega, y -1 en los demás casos.
         /// </summary>
         public static ResultadoLlamado Decidir(Vector3 posicionJugador, IReadOnlyList<PuntoLlamado> puntos, EstadoLlamado estado,
@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Mecha.Llamado
                 case EstadoLlamado.Llegando:
                     return ResultadoLlamado.YaViene;
                 case EstadoLlamado.Regresando:
+                case EstadoLlamado.EnArena:
                     return ResultadoLlamado.Nada;
                 case EstadoLlamado.EnCalle:
                     return ResultadoLlamado.Regresa;

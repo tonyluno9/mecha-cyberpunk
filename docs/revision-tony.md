@@ -282,3 +282,6 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-127 Ensamblado del prólogo y escena Pruebas_Prologo
 - Verificado automáticamente (acotado): compilar OK, EditMode 159/159, PlayMode 49/49 + EscenaPrologoPruebas 4/4 en 2 corridas. Captura T-127-1.png.
 - Para ti: Pruebas_Prologo.unity, Play, WASD de la casa al clandestino: ¿dura unos 40 s, la vuelta en (40,0,0) se siente natural y el callejón de z=40 parece sitio de emboscada? En la captura el carro y el jugador casi no se distinguen.
+### T-128 Entrada a la arena
+- Verificado automáticamente (acotado): compilar OK, PlayMode 203/203 (pelea, mecha, Progresion, IA, PeleaClandestino), EditMode 285/285. Captura T-128-1.png.
+- Para ti: Pruebas_Prologo, Play, tecla T: ¿aparecer dentro del mecha con el fundido se siente como "empieza el campeonato" y no como teletransporte? Al terminar, ¿quedar a pie en la salida con el mecha de vuelta en el taller se entiende sin explicación?

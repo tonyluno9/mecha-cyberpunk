@@ -34,6 +34,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         [SerializeField] private ConfigPresentador presentador;
         [Tooltip("Opcional: lo que paga esta pelea. Sin esto no hay premio.")]
         [SerializeField] private DatosPremioPelea premio;
+        [Tooltip("Si es falso, el resultado no ofrece revancha: no se muestra \"R: revancha\" y la tecla R no hace nada.")]
+        [SerializeField] private bool permitirRevancha = true;
         [Tooltip("Acción de la revancha (tecla R). Solo funciona en el resultado.")]
         [SerializeField] private InputAction revancha;
 
@@ -56,6 +58,7 @@ namespace MechaCyberpunk.Pelea.Flujo
         public IPeleador Jugador => jugador;
         public IPeleador Rival => rival;
         public PantallaPelea Pantalla => pantalla;
+        public bool PermiteRevancha => permitirRevancha;
 
         /// <summary>Avisa cada línea que dice el presentador, ya con alias y rival puestos y en mayúsculas (para el audio).</summary>
         public event Action<string> LineaDicha;
@@ -71,6 +74,7 @@ namespace MechaCyberpunk.Pelea.Flujo
                 enabled = false;
                 return;
             }
+            pantalla.FijarRevanchaVisible(permitirRevancha);
             List<float> duraciones = null;
             if (presentador != null && presentador.Lineas != null)
             {
@@ -144,13 +148,36 @@ namespace MechaCyberpunk.Pelea.Flujo
             IntentarEmpezar();
         }
 
+        /// <summary>
+        /// Desde el resultado: destruye al rival que creó, limpia la pantalla y vuelve a Preparando, listo para otra pelea nueva
+        /// con <see cref="EmpezarPelea"/> (con presentación si el config la trae). Fuera del resultado no hace nada.
+        /// </summary>
+        public bool Reiniciar()
+        {
+            if (maquina == null || !maquina.Reiniciar())
+            {
+                return false;
+            }
+            empezarPendiente = false;
+            rivalNuevo = false;
+            if (rivalCreado != null)
+            {
+                Desuscribir(rival);
+                Destroy(rivalCreado);
+                rivalCreado = null;
+                rival = null;
+            }
+            pantalla.Ocultar();
+            return true;
+        }
+
         private void Update()
         {
             if (maquina == null)
             {
                 return;
             }
-            if (maquina.Estado == EstadoFlujoPelea.Resultado && revancha.WasPressedThisFrame())
+            if (permitirRevancha && maquina.Estado == EstadoFlujoPelea.Resultado && revancha.WasPressedThisFrame())
             {
                 PedirRevancha();
                 return;

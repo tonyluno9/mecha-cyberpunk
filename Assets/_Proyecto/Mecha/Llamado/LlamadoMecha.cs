@@ -45,7 +45,8 @@ namespace MechaCyberpunk.Mecha.Llamado
         public float SegundosParaLlegar => estado == EstadoLlamado.Llegando ? Mathf.Max(0f, config.SegundosLlegada - tiempo) : 0f;
 
         /// <summary>false mientras el mecha viene en camino o regresa: no se puede subir.</summary>
-        public bool PermiteSubir => estado == EstadoLlamado.EnTaller || estado == EstadoLlamado.EnCalle;
+        public bool PermiteSubir => estado == EstadoLlamado.EnTaller || estado == EstadoLlamado.EnCalle
+            || estado == EstadoLlamado.EnArena;
 
         /// <summary>Se dispara cada vez que el jugador intenta llamar, con el resultado.</summary>
         public event Action<ResultadoLlamado> LlamadoIntentado;
@@ -158,6 +159,40 @@ namespace MechaCyberpunk.Mecha.Llamado
             }
             LlamadoIntentado?.Invoke(resultado);
             return resultado;
+        }
+
+        /// <summary>
+        /// Pone al mecha en <paramref name="pose"/> al instante y lo deja en <see cref="EstadoLlamado.EnArena"/> (T-128): sin calor,
+        /// sin regreso automático, M no lo regresa y se puede subir. Si venía en camino, deja todo visible y sin marca.
+        /// </summary>
+        public void LlevarA(Pose pose)
+        {
+            RestaurarTransito();
+            Colocar(pose);
+            CambiarEstado(EstadoLlamado.EnArena);
+        }
+
+        /// <summary>Deja al mecha al instante en su estacionamiento, en <see cref="EstadoLlamado.EnTaller"/>, con la vida que tenga.</summary>
+        public void VolverAlTallerYa()
+        {
+            RestaurarTransito();
+            Colocar(PoseCasa());
+            CambiarEstado(EstadoLlamado.EnTaller);
+        }
+
+        // Si el mecha venía llegando (oculto, sin colisiones) o regresando (sin colisiones), lo devuelve a la normalidad.
+        private void RestaurarTransito()
+        {
+            if (estado == EstadoLlamado.Llegando)
+            {
+                RestaurarVisuales();
+                RestaurarColisionadores();
+                QuitarMarca();
+            }
+            else if (estado == EstadoLlamado.Regresando)
+            {
+                RestaurarColisionadores();
+            }
         }
 
         // Si el jugador sube al mecha estando en el taller, el mecha ya no descansa ahí.

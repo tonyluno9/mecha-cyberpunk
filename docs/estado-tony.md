@@ -24,7 +24,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-125 Fundido a negro y pantalla de "continuará" | nada | hecha (sin revisar) |
 | T-126 Pantalla de título y creación de personaje | T-123, T-124, T-125 | hecha (sin revisar) |
 | T-127 Ensamblado del prólogo y escena Pruebas_Prologo | T-120, T-121 | hecha (sin revisar) |
-| T-128 El mecha de la historia entra a la arena | T-121, T-125, T-127 | pendiente |
+| T-128 El mecha de la historia entra a la arena | T-121, T-125, T-127 | hecha (sin revisar) |
 | T-129 Primera pelea casera y mostrador del clandestino | T-128 | pendiente |
 | T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | pendiente |
 | T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | pendiente |

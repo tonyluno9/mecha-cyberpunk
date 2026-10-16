@@ -179,5 +179,22 @@ namespace MechaCyberpunk.Pelea.Flujo
             esRevancha = true;
             return true;
         }
+
+        /// <summary>
+        /// Vuelve a Preparando desde Resultado como si fuera una pelea nueva (no una revancha): la presentación vuelve a salir si
+        /// hay líneas. Fuera de Resultado no hace nada. Devuelve si lo hizo.
+        /// </summary>
+        public bool Reiniciar()
+        {
+            if (Estado != EstadoFlujoPelea.Resultado)
+            {
+                return false;
+            }
+            Estado = EstadoFlujoPelea.Preparando;
+            tiempoEnEtapa = 0f;
+            DuracionPelea = 0f;
+            esRevancha = false;
+            return true;
+        }
     }
 }
