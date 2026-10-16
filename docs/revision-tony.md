@@ -3,6 +3,9 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Pendiente para Tony: Core a main (2026-10-16)
+El clasificador de permisos del modo automático me negó el merge/push a main de las tareas de Core. T-100 (tony/core-pendiente-push-main, 538a9c2) y las tareas de Core de T-F6 (T-120, T-137) están integradas solo en tony/fase-5 (con push). Para llevarlas a main haz tú: `git checkout main && git pull && git merge --no-ff tony/fase-5` cuando apruebes la fase, o autoriza el push a main y lo hago yo.
+
 ## T-F5 cerrada: qué probar jugando (2026-10-16)
 Todo en Pruebas_Calle (Play, sin ayuda), salvo lo marcado. Dobles de prueba: 7 y 8 dinero, J reloj (salta a las 08:00 del día siguiente), F5 guardar, F9 cargar, P iniciar pelea, M mandar el mecha al taller.
 1. Sube al mecha (E), enciéndelo (F, Espacio, Q) y pelea (P). Gana con daño y pulsa R: ¿se nota que empiezas dañado (vida, alarma roja, grietas del cristal, más lento y peor manejo)? ¿"+$600 · PREMIO" se siente bien?
