@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.IA.Datos;
 using MechaCyberpunk.Mecha;
 using MechaCyberpunk.Mecha.Encendido;
@@ -44,7 +45,6 @@ namespace MechaCyberpunk.Tests.Pelea
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
         private const float DeltaTimeEstable = 0.05f;
-        private const float MaxFrameSegundos = 0.1f;
         private const float MaxSegundosRecorrido = 120f;
         private const float MaxSegundosTramo = 40f;
         private const float MaxSegundosPelea = 70f;
@@ -94,7 +94,7 @@ namespace MechaCyberpunk.Tests.Pelea
         private float piso;
         private bool avanzando;
         private bool saltarMedicion;
-        private float maxFrame;
+        private readonly MedidorFrames medidor = new MedidorFrames();
         private float vidaMinima;
         private float inicioJuego;
         private float yawMechaAnterior;
@@ -110,7 +110,7 @@ namespace MechaCyberpunk.Tests.Pelea
             errores.Clear();
             avanzando = false;
             saltarMedicion = false;
-            maxFrame = 0f;
+            medidor.Reiniciar();
             giroPedidoPendiente = 0f;
             vidaMinima = float.MaxValue;
             Application.logMessageReceived += RegistrarError;
@@ -180,7 +180,7 @@ namespace MechaCyberpunk.Tests.Pelea
             Assert.Less(Vector3.Distance(new Vector3(0f, AlturaJugador, 0f), jugador.transform.position), 0.1f, "Aparece en Calle_Inicio");
             Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado, "El mecha empieza en el taller");
             inicioJuego = Time.time;
-            maxFrame = 0f;
+            medidor.Reiniciar();
             yawMechaAnterior = montaje.transform.eulerAngles.y;
         }
 
@@ -196,7 +196,7 @@ namespace MechaCyberpunk.Tests.Pelea
             }
             else
             {
-                maxFrame = Mathf.Max(maxFrame, Time.unscaledDeltaTime);
+                medidor.Registrar(Time.unscaledDeltaTime);
             }
             if (vidaMecha != null)
             {
@@ -609,7 +609,7 @@ namespace MechaCyberpunk.Tests.Pelea
             float segundos = Time.time - inicioJuego;
             Debug.Log("[Prueba T-072] Recorrido a-f: " + segundos.ToString("F1") + " s de juego, vida mínima del mecha "
                 + vidaMinima.ToString("F1") + " de " + vidaMecha.Maxima.ToString("F0") + " (piso " + piso.ToString("F1")
-                + "), frame más largo " + (maxFrame * 1000f).ToString("F0") + " ms, calor final " + calor.Valor.ToString("F1")
+                + "), frame más largo " + (medidor.Maximo * 1000f).ToString("F0") + " ms, calor final " + calor.Valor.ToString("F1")
                 + " (nivel " + calor.Nivel + ")");
 
             Assert.Less(segundos, MaxSegundosRecorrido, "El recorrido dura menos de 120 s de juego");
@@ -619,7 +619,7 @@ namespace MechaCyberpunk.Tests.Pelea
             Assert.GreaterOrEqual(vidaMinima, piso - MargenPiso, "Nunca bajó del piso de piedad");
             Assert.Greater(calor.Valor, 0f, "Al final hay calor");
             Assert.GreaterOrEqual(calor.Nivel, 1, "Y es de nivel 1 o más");
-            Assert.Less(maxFrame, MaxFrameSegundos, "Ningún frame dura más de 100 ms");
+            Assert.IsTrue(medidor.Cumple, "Frames del recorrido: " + medidor.Resumen());
             AssertSinErrores();
         }
 
@@ -637,7 +637,7 @@ namespace MechaCyberpunk.Tests.Pelea
             yield return Esperar(SegundosSinPelear);
             Debug.Log("[Prueba T-072] Sin pelear " + SegundosSinPelear + " s: vida mínima del mecha " + vidaMinima.ToString("F1")
                 + " de " + vidaMecha.Maxima.ToString("F0") + " (piso " + piso.ToString("F1") + "), vida final "
-                + vidaMecha.Actual.ToString("F1") + ", frame más largo " + (maxFrame * 1000f).ToString("F0") + " ms");
+                + vidaMecha.Actual.ToString("F1") + ", frame más largo " + (medidor.Maximo * 1000f).ToString("F0") + " ms");
 
             Assert.IsFalse(vidaMecha.EstaKO, "El mecha no cayó en KO");
             Assert.Greater(vidaMinima, 0f, "La vida del mecha nunca llegó a 0");

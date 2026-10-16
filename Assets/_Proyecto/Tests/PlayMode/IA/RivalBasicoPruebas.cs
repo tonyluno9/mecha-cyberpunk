@@ -403,21 +403,25 @@ namespace MechaCyberpunk.Tests.IA
             peleadorRival.ActivarControl(true);
 
             float fin = Time.time + 25f;
+            float mayorFrame = 0f;
             while (impactos.Count < 4 && Time.time < fin)
             {
                 yield return null;
+                mayorFrame = Mathf.Max(mayorFrame, Time.deltaTime);
             }
             peleadorRival.ActivarControl(false);
 
             Assert.AreEqual(4, impactos.Count, "Cuatro golpes");
             float ciclo = datosRival.PreparacionGolpe + datosRival.RecargaGolpe;
+            // El impacto se lee al final de un frame: cada marca de tiempo tiene hasta un frame de error, así que el margen crece con el frame más largo.
+            float margenFrame = 0.1f + 2f * mayorFrame;
             float menor = float.MaxValue;
             float mayor = float.MinValue;
             for (int i = 1; i < impactos.Count; i++)
             {
                 float espera = impactos[i] - impactos[i - 1] - ciclo;
-                Assert.GreaterOrEqual(espera, datos.EsperaEntreAtaquesMin - 0.1f, "Espera " + i + " no menor que la mínima");
-                Assert.LessOrEqual(espera, datos.EsperaEntreAtaquesMax + 0.1f, "Espera " + i + " no mayor que la máxima");
+                Assert.GreaterOrEqual(espera, datos.EsperaEntreAtaquesMin - margenFrame, "Espera " + i + " no menor que la mínima");
+                Assert.LessOrEqual(espera, datos.EsperaEntreAtaquesMax + margenFrame, "Espera " + i + " no mayor que la máxima");
                 menor = Mathf.Min(menor, espera);
                 mayor = Mathf.Max(mayor, espera);
             }

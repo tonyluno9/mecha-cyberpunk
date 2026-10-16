@@ -182,6 +182,10 @@ namespace MechaCyberpunk.Mecha.Editor
                 AssetDatabase.CreateAsset(m, ruta);
             }
             m.SetColor("_BaseColor", color);
+            if (m.HasProperty("_Color"))
+            {
+                m.SetColor("_Color", color);
+            } // igual que _BaseColor: Unity lo sincroniza al importar y el asset no cambia solo
             m.SetFloat("_Surface", 1f);
             m.SetFloat("_Blend", 0f);
             m.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
@@ -203,6 +207,10 @@ namespace MechaCyberpunk.Mecha.Editor
                 AssetDatabase.CreateAsset(m, ruta);
             }
             m.SetColor("_BaseColor", color);
+            if (m.HasProperty("_Color"))
+            {
+                m.SetColor("_Color", color);
+            } // igual que _BaseColor: Unity lo sincroniza al importar y el asset no cambia solo
             m.SetFloat("_Smoothness", 0.3f);
             if (emision.HasValue)
             {
