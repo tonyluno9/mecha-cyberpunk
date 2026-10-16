@@ -198,7 +198,7 @@ namespace MechaCyberpunk.Pelea.Editor
             binding.FindPropertyRelative("m_Id").stringValue = System.Guid.NewGuid().ToString();
         }
 
-        private static Text CrearTexto(string nombre, RectTransform padre, Vector2 anclaMin, Vector2 anclaMax)
+        internal static Text CrearTexto(string nombre, RectTransform padre, Vector2 anclaMin, Vector2 anclaMax)
         {
             GameObject objeto = new GameObject(nombre, typeof(RectTransform));
             RectTransform rect = (RectTransform)objeto.transform;
@@ -256,6 +256,7 @@ namespace MechaCyberpunk.Pelea.Editor
                 ConfigurarAccion(soDirector.FindProperty("revancha"), "Revancha", TeclaRevancha);
                 soDirector.ApplyModifiedPropertiesWithoutUndo();
 
+                CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioCasera);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabFlujo);
             }
             finally

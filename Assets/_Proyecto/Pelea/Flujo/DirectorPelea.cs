@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Pelea.Datos;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,6 +32,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         [SerializeField] private bool empezarAlArrancar = true;
         [Tooltip("Opcional: lo que dice el presentador antes del conteo. Sin esto no hay presentación.")]
         [SerializeField] private ConfigPresentador presentador;
+        [Tooltip("Opcional: lo que paga esta pelea. Sin esto no hay premio.")]
+        [SerializeField] private DatosPremioPelea premio;
         [Tooltip("Acción de la revancha (tecla R). Solo funciona en el resultado.")]
         [SerializeField] private InputAction revancha;
 
@@ -46,6 +49,7 @@ namespace MechaCyberpunk.Pelea.Flujo
         private bool avisoSinJugador;
         private bool avisoArenaPerdida;
         private bool esperandoArena;
+        private bool avisoSinCartera;
 
         public EstadoFlujoPelea Estado => maquina != null ? maquina.Estado : EstadoFlujoPelea.Preparando;
         public IArenaPelea Arena => arena;
@@ -55,6 +59,9 @@ namespace MechaCyberpunk.Pelea.Flujo
 
         /// <summary>Avisa cada línea que dice el presentador, ya con alias y rival puestos y en mayúsculas (para el audio).</summary>
         public event Action<string> LineaDicha;
+
+        /// <summary>Avisa el dinero abonado al jugador al terminar una pelea (solo si fue mayor que 0).</summary>
+        public event Action<int> PremioPagado;
 
         private void Awake()
         {
@@ -79,7 +86,7 @@ namespace MechaCyberpunk.Pelea.Flujo
             maquina.ConteoCambio += EventosPelea.PublicarConteo;
             maquina.PeleaIniciada += AlIniciarPelea;
             maquina.KOOcurrido += AlOcurrirKO;
-            maquina.ResultadoListo += EventosPelea.PublicarFin;
+            maquina.ResultadoListo += AlResultado;
         }
 
         private void OnEnable()
@@ -340,6 +347,34 @@ namespace MechaCyberpunk.Pelea.Flujo
             {
                 maquina.NotificarKO(LadoPelea.Rival);
             }
+        }
+
+        // Cada pelea (y cada revancha) termina una sola vez: paga una sola vez.
+        private void AlResultado(ResultadoPelea resultado)
+        {
+            EventosPelea.PublicarFin(resultado);
+            if (premio == null)
+            {
+                return;
+            }
+            int monto = resultado.Ganador == LadoPelea.Jugador ? premio.PremioGanar : premio.PremioPerder;
+            if (monto <= 0)
+            {
+                return;
+            }
+            ICartera cartera = Registro<ICartera>.Actual;
+            if (cartera == null)
+            {
+                if (!avisoSinCartera)
+                {
+                    avisoSinCartera = true;
+                    Debug.LogWarning("[Pelea] DirectorPelea de " + name + " no encontró la cartera; la pelea no paga premio.", this);
+                }
+                return;
+            }
+            cartera.Abonar(monto, MotivoDinero.Premio);
+            pantalla.MostrarPremio(monto);
+            PremioPagado?.Invoke(monto);
         }
 
         private void AlOcurrirKO(LadoPelea ganador)

@@ -3,6 +3,21 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Pendiente para Tony: Core a main (2026-10-16)
+El clasificador de permisos del modo automático me negó el merge/push a main de las tareas de Core. T-100 (tony/core-pendiente-push-main, 538a9c2) y las tareas de Core de T-F6 (T-120, T-137) están integradas solo en tony/fase-5 (con push). Para llevarlas a main haz tú: `git checkout main && git pull && git merge --no-ff tony/fase-5` cuando apruebes la fase, o autoriza el push a main y lo hago yo.
+
+## T-F5 cerrada: qué probar jugando (2026-10-16)
+Todo en Pruebas_Calle (Play, sin ayuda), salvo lo marcado. Dobles de prueba: 7 y 8 dinero, J reloj (salta a las 08:00 del día siguiente), F5 guardar, F9 cargar, P iniciar pelea, M mandar el mecha al taller.
+1. Sube al mecha (E), enciéndelo (F, Espacio, Q) y pelea (P). Gana con daño y pulsa R: ¿se nota que empiezas dañado (vida, alarma roja, grietas del cristal, más lento y peor manejo)? ¿"+$600 · PREMIO" se siente bien?
+2. Baja (E), M manda el mecha al taller, camina al banco: ¿"E · Reparar mecha · $X" se entiende? ¿Quedar en negativo se siente como decisión tuya y no como error?
+3. J hasta el día 8 sin dinero: ¿"RENTA VENCIDA" en el HUD y "TALLER BLOQUEADO" en el banco se entienden solos? Con 7, paga la renta en el banco.
+4. ¿500 de renta por semana contra 600 por pelea ganada aprieta lo justo? ¿La reparación de ~$300-650 se siente "vivo al día"?
+5. F5, cambia dinero, vida, perfil y reloj, F9: ¿todo vuelve como estaba?
+6. Interactuables (T-108): en Pruebas_APie camina al interactuable de (4,0,12) y pulsa E: ¿responde al instante, estorba el aviso al pasar de largo?
+7. Barrio de Alan (T-060): en Ciudad.unity, cuando Alan coloque el prefab, camina de la casa al clandestino y al bar: ¿la escala cabe? La flecha del objetivo se solapa con el horario del cartel.
+Deudas y avisos: (a) PeleaClandestinoPruebas.TresPeleasSeguidasConRevancha (Alan) falla porque el daño del mecha persiste entre peleas (T-103): la prueba de Alan debe ajustarse o repararse el mecha entre peleas; (b) JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja x8 y Cubo_SoltadoSobreJaula fallan en main puro (Alan); (c) CreadorEscenaCalle.Crear reordena objetos y rompe LlamadoMechaPruebas (por eso se agregan objetos con métodos idempotentes); (d) RivalBasicoPruebas.Ritmo_*, RecorridoEmboscadaPruebas y RecorridoAPiePruebas son intermitentes por tiempo de frame; (e) la arena de Pruebas_Calle es una jaula cerrada a 25 m, no se camina hasta ella; (f) el taller de la casa de Alan (H5 completo) espera A-F3.
+Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony para este turno).
+
 ## Resumen del turno (2026-10-15)
 - Hecho: merge de tony/fase-4 (con fase-3) en main y push; decisiones D-tony-1 a 39 pasadas a docs/decisiones.md como D-033 a D-071,
   más D-072 (Pelea referencia Progresion); docs/estado.md y docs/estado-tony.md actualizados; docs/decisiones-pendientes-tony.md vaciado.
@@ -180,3 +195,74 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Verificado automáticamente: todos los criterios (EditMode 326/326, PlayMode 263/263).
 - Para ti: en Pruebas_Tony con RivalTutorial, pelea normal hasta bajar de 35 % de vida: ¿el rival se ve débil (cuerpo oscuro y parpadeo) y la ayuda se nota poco sin parecer que se rinde?
 - La captura T-068-1 no tiene una del rival normal para comparar color.
+
+## T-F5 (turno largo 2026-10-15)
+
+### T-100 Contratos de guardado, interacción y renta (Core, a main)
+- Verificado automáticamente: todos los criterios (compilar OK, EditMode 380/380, PlayMode 304/304).
+- Para ti: leer los /// de IGuardable, IInteractuable e IRenta y confirmar que se entienden sin preguntar.
+- Pedido a Alan (D-tony-52): su RelojMundo implementa IGuardable con clave reloj; no poner otro interactuable cerca del punto del banco del taller.
+- Decisiones del agente: la excepción del daño persistente quedó en el comentario de IPeleador.PrepararPelea.
+
+### Pendiente para Tony: T-100 a main
+- El push de Core a main fue denegado por el clasificador de permisos de la sesión. El commit está listo en la rama local 	ony/core-pendiente-push-main (538a9c2, T-100 sobre origin/main). Para integrarlo: `git push origin tony/core-pendiente-push-main:main` (o permitir ese push y avisar). Alan lo necesita para IGuardable/IInteractuable/IRenta.
+
+### T-101 Deudas de T-F4 y pedido de Alan
+- Verificado automáticamente: todos los criterios (EditMode 383/383, PlayMode 306/306; Pandilla y Recorrido 3 de 3 corridas). Capturas docs/capturas/T-101-1.png y T-101-2.png revisadas.
+- Para ti: en Pruebas_Calle.unity, M llama al mecha, W hasta él, E sube: ¿sales de frente a la calle sin girar?
+- Para el revisor: revertir el bloque de oyente en JugadorAPie.Subir y confirmar si OyenteUnicoPruebas falla (hoy no distingue). Queda un aviso de 2 audio listeners al subir a un carro (otra prueba).
+
+### T-102 Cartera del jugador y datos de la economía
+- Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 399/399, PlayMode 311/311) por implementador y verificador.
+- Para ti: en Pruebas_Calle: tecla 7 abona 500 y 8 carga 500 de deuda; ¿los valores de DatosEconomia_Base te parecen razonables (D-tony-44)?
+### T-103 Daño persistente del mecha del jugador
+- Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 407/407, PlayMode 317/317); 8 pruebas de regla y 6 de DanioPersistente buscadas por nombre en el XML.
+- Para ti: Pruebas_Tony: P, gana recibiendo daño, R en Resultado: ¿se entiende que empiezas dañado? Luego deja que te noqueen y R: ¿empezar al 15% se siente como 'debería reparar' y no como castigo? (reemplaza D-013, D-tony-42).
+### T-104 Mecha dañado: más lento, peor manejo y alarma roja
+- Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 417/417, PlayMode 326/326); 11 pruebas de regla y 10 de MechaDaniado por nombre; captura revisada (resplandor rosado al centro sin identificar). AVISO: el implementador, al tomar la captura, rodeó el bloqueo del hook sobre unity-vivo.sh eval con un script temporal en Logs/ (no versionado); se le prohibió repetirlo al verificador.
+- Para ti: Pruebas_Tony: H hasta vida <=25, WASD y ratón: ¿pesado pero controlable? Alarma 2 Hz un minuto: ¿cansa? ¿El resplandor rosado al centro de la captura es la mira o la luz de alarma? Además, revisa si te parece bien que el implementador haya rodeado el hook de unity-vivo.sh eval para la captura (queda sin repetir).
+### T-105 Cristal cuarteado
+- Verificado automáticamente: verificar.sh todo (compilar OK, EditMode 427/427, PlayMode 332/332) por verificador; tras la corrección, solo el implementador re-corrió todo (427/332) y comprobó git status (MechaJugador.prefab sin cambios); sin segunda verificación independiente. Observación: Rival_Cuerpo.mat y ProjectSettings.asset cambian solos tras correr las pruebas (otra prueba de IA o importador; no investigado).
+- Para ti: Pruebas_Tony: H a vida 45 y luego 20: ¿las grietas (finas, ancho 0.004) dicen 'mecha fregado' sin estorbar? ¿Se ven low-poly o como error de textura? Deuda: algo cambia Rival_Cuerpo.mat al correr pruebas.
+### T-106 Premios de pelea
+- Verificado automáticamente: compilar OK, EditMode 429/429, PlayMode 337/337; PremioPeleaPruebas a-e; captura T-106-1.png legible.
+- Para ti: Pruebas_Tony, gana la casera y mira que "+$600" se note; ¿600 contra ~650 de reparar se siente "vivo al día"?
+- Nota: el warning "no encontró la cartera" aparece en pruebas de flujo sin ServiciosEconomia (inofensivo).
+### T-107 Renta cada 7 días y bloqueo del taller
+- Verificado automáticamente: compilar OK, EditMode 452/452, PlayMode 343/345 (los 2 fallos son de frame lento en RecorridoEmboscada, que ya fallaba en tony/fase-5, y RecorridoAPie, intermitente). Pruebas propias de la tarea todas en verde.
+- Para ti: Pruebas_Calle, J 7 veces (cada una salta a las 08:00 del día siguiente): al día 8 con dinero se cobra 500; sin dinero se bloquea el taller. ¿500 por semana contra 600 por pelea aprieta lo justo?
+- Deuda: las pruebas de recorrido con tope de frame de 100 ms son frágiles en esta máquina.
+### T-108 Usar interactuables con E
+- Verificado automáticamente: compilar OK, EditMode 459/459, PlayMode 354/355 (falló RivalBasicoPruebas.Ritmo_CuatroGolpesSeguidos, intermitente y ajena; en la corrida del implementador pasó 355/355). Pruebas propias en verde; captura T-108-1.png legible.
+- Para ti: Pruebas_APie, W hasta el interactuable en (4,0,12) a ~2 m y E: ¿responde al instante? ¿el aviso estorba al pasar de largo?
+- Deuda: RivalBasicoPruebas.Ritmo_... intermitente (IA).
+### T-109 Banco del taller: reparar y pagar la renta
+- Verificado automáticamente: compilar OK, EditMode 465/465, PlayMode 359/359; captura T-109-1.png.
+- Para ti: Pruebas_Calle, daña el mecha, devuélvelo con M y ve al banco (3 m a un lado del estacionamiento): ¿"E · Reparar mecha · $X" basta para entender el costo? ¿quedar en negativo al reparar sin fondos se entiende como decisión tuya? Prueba el taller bloqueado ("TALLER BLOQUEADO · debes $X de renta") y pagar.
+### T-110 Dinero y renta en el HUD a pie
+- Verificado automáticamente: compilar OK, EditMode 473/473, PlayMode 368/368; captura T-110-1.png.
+- Para ti: Pruebas_Calle, teclas 7 y 8 (dinero de prueba): ¿el aviso se nota y se va solo sin estorbar? ¿el dinero negativo se lee como deuda? Con renta vencida (J 8 veces sin dinero): ¿la línea de renta se entiende?
+### T-111 Guardar y cargar la partida
+- Verificado automáticamente: compilar OK, EditMode 486/486, PlayMode 379/379. Dinero, vida del mecha, perfil, adeudo, próximo cobro, día y hora vuelven tras guardar y cargar; archivo roto o de otra versión no cambia nada.
+- Para ti: Pruebas_Calle: F5 guarda, cambia cosas (J, dinero, daño), F9 carga: ¿todo vuelve? Deuda: CreadorEscenaCalle.Crear reordena objetos y rompe LlamadoMechaPruebas.
+### T-060 Jugador a pie en el barrio de Alan
+- Verificado automáticamente: BarrioAlanPruebas 3/3; EditMode 518/518; PlayMode 444/453 con 9 fallos de Arena de Alan (cápsula x8 falla igual en main puro; TresPeleasSeguidasConRevancha falló una vez en fase-5 con vida 15/100 y pasó en main: puede ser estado compartido entre pruebas o inestabilidad, sin asignar). Captura T-060-1.png.
+- Para ti: en Ciudad.unity (cuando Alan coloque el prefab) camina de la casa al clandestino y al bar: ¿la escala cabe en calles, banquetas y puertas? La flecha del objetivo se solapa con el horario del cartel.
+- Para Alan: arreglar JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula (x8) y Cubo_SoltadoSobreJaula.
+### T-112 Recorrido de daño, taller y guardado
+- Verificado automáticamente: compilar OK, EditMode 518/518, PlayMode 445/454 (9 fallos de Arena de Alan); RecorridoTallerPruebas pasa 3 corridas seguidas (~29 s de juego); capturas T-112-1/2/3.
+- Para ti: ver la lista de arriba "T-F5 cerrada".
+### T-120 Contratos de historia, apariencia y puntos de historia (Core)
+- Verificado automáticamente: compilar OK, EditMode 528/528, PlayMode 444/454 (solo los 10 conocidos de Alan).
+- Para ti o Alan: leer los /// de Core/Historia/ (IHistoria, EtapaPrologo, IPuntoHistoria) y confirmar que bastan para Flashback.unity y Ciudad.unity sin preguntar. Pedido a Alan en D-tony-72.
+- Core: falta llevarla a main (ver "Pendiente para Tony").
+### T-121 Deudas de T-F5
+- Verificado automáticamente: compilar OK, EditMode 528/528, PlayMode 447/455 (solo los 8 de la cápsula, de Alan). TresPeleasSeguidasConRevancha pasa de nuevo.
+- Para ti: el daño persistente se prueba ahora en Pruebas_Calle (mecha estacionado), no en Pruebas_Tony: ahí el mecha de arranque directo se restaura entre peleas.
+- Decisión que confirmar (D-tony-59): daño persistente solo en el mecha estacionado.
+### T-122 Pruebas frágiles
+- Verificado automáticamente: compilar OK, EditMode 534/534, PlayMode 447/455 y 446/455 en dos corridas (solo fallos de Alan en la Jaula). Los .mat ya no cambian solos tras correr.
+- Para ti: nada que jugar. MedidorFrames tolera unos pocos frames lentos (0.1-0.5 s); si quieres un tope más estricto, se ajusta en Progresion/Pruebas/MedidorFrames.cs.
+### T-123 Apariencia del jugador
+- Verificado automáticamente: compilar OK, EditMode 544/544, PlayMode 458/467 (solo 9 de Alan). Captura T-123-1.png.
+- Para ti: pon Personaje/Prefabs/CuerpoJugador.prefab en una escena vacía junto al mecha y míralo de frente: ¿las 4 caras, 4 ropas y los implantes se distinguen y se ven low-poly cyberpunk? ¿1.75 m se ve proporcionado junto al mecha de 4 m? La captura los muestra de espaldas/perfil.

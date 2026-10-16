@@ -11,7 +11,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
 {
     /// <summary>
     /// Interacción del jugador con la tecla E: a pie elige la puerta cerrada o el montable libre más cercano y de frente
-    /// (buscando en Registro&lt;IPuerta&gt; y Registro&lt;IMontable&gt;, sin asumir nada de su jerarquía) y lo usa; dentro de un
+    /// (buscando en Registro&lt;IPuerta&gt; y Registro&lt;IMontable&gt;, sin asumir nada de su jerarquía) y lo usa (también los IInteractuable de Registro&lt;IInteractuable&gt;); dentro de un
     /// montable, la E lo baja. Este componente sigue prendido en carro y mecha porque es el que lee la E.
     /// </summary>
     [RequireComponent(typeof(JugadorAPie))]
@@ -26,6 +26,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
         private VidaAPie vida;
         private readonly List<IPuerta> puertas = new List<IPuerta>();
         private readonly List<IMontable> montables = new List<IMontable>();
+        private readonly List<IInteractuable> interactuables = new List<IInteractuable>();
         private readonly List<Vector3> puntos = new List<Vector3>();
 
         /// <summary>La puerta que E intentaría abrir ahora, o null.</summary>
@@ -37,11 +38,20 @@ namespace MechaCyberpunk.Personaje.Interaccion
         /// <summary>El montable al que E subiría ahora, o null.</summary>
         public IMontable MontableCandidato { get; private set; }
 
-        /// <summary>Qué hay enfrente: una puerta, un montable o nada.</summary>
+        /// <summary>El interactuable que E usaría ahora (aunque no se pueda usar), o null.</summary>
+        public IInteractuable InteractuableCandidato { get; private set; }
+
+        /// <summary>Qué hay enfrente: una puerta, un montable, un interactuable o nada.</summary>
         public TipoCandidatoAPie TipoCandidato { get; private set; }
 
         /// <summary>Se dispara cada vez que el jugador intenta abrir una puerta, con la puerta y su resultado.</summary>
         public event Action<IPuerta, ResultadoPuerta> PuertaIntentada;
+
+        /// <summary>Se dispara una vez por pulsación de E, después de llamar a Usar() del interactuable.</summary>
+        public event Action<IInteractuable> InteractuableUsado;
+
+        /// <summary>Se dispara cuando el jugador pulsa E frente a un interactuable que no se puede usar.</summary>
+        public event Action<IInteractuable> InteractuableNegado;
 
         /// <summary>Se dispara cuando el jugador pulsa E dentro de un montable que todavía no puede dejar.</summary>
         public event Action BajarNegado;
@@ -90,7 +100,8 @@ namespace MechaCyberpunk.Personaje.Interaccion
             IMontable montable = dentro ? jugador.MontableActual : MontableCandidato;
             bool estaKO = vida != null && vida.EstaKO;
             AccionMontar accion = ReglaMontar.Decidir(jugador.Modo, estaKO, TipoCandidato,
-                montable != null && montable.PuedeSubir, montable != null && montable.PuedeBajar);
+                montable != null && montable.PuedeSubir, montable != null && montable.PuedeBajar,
+                InteractuableCandidato != null && InteractuableCandidato.PuedeUsar);
             switch (accion)
             {
                 case AccionMontar.AbrirPuerta:
@@ -109,6 +120,14 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 case AccionMontar.NoPuedeBajar:
                     BajarNegado?.Invoke();
                     break;
+                case AccionMontar.Usar:
+                    IInteractuable usado = InteractuableCandidato;
+                    usado.Usar();
+                    InteractuableUsado?.Invoke(usado);
+                    break;
+                case AccionMontar.UsarNegado:
+                    InteractuableNegado?.Invoke(InteractuableCandidato);
+                    break;
             }
         }
 
@@ -117,6 +136,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
             PuertaCandidata = null;
             LugarCandidato = null;
             MontableCandidato = null;
+            InteractuableCandidato = null;
             TipoCandidato = TipoCandidatoAPie.Ninguno;
         }
 
@@ -125,6 +145,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
         {
             puertas.Clear();
             montables.Clear();
+            interactuables.Clear();
             puntos.Clear();
             IReadOnlyList<IPuerta> todasPuertas = Registro<IPuerta>.Todos;
             for (int i = 0; i < todasPuertas.Count; i++)
@@ -132,6 +153,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 if (todasPuertas[i].EstaAbierta) continue;
                 puertas.Add(todasPuertas[i]);
                 montables.Add(null);
+                interactuables.Add(null);
                 puntos.Add(todasPuertas[i].Posicion);
             }
             IReadOnlyList<IMontable> todosMontables = Registro<IMontable>.Todos;
@@ -140,7 +162,16 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 if (!todosMontables[i].PuedeSubir) continue;
                 puertas.Add(null);
                 montables.Add(todosMontables[i]);
+                interactuables.Add(null);
                 puntos.Add(todosMontables[i].PuntoSubida);
+            }
+            IReadOnlyList<IInteractuable> todosInteractuables = Registro<IInteractuable>.Todos;
+            for (int i = 0; i < todosInteractuables.Count; i++)
+            {
+                puertas.Add(null);
+                montables.Add(null);
+                interactuables.Add(todosInteractuables[i]);
+                puntos.Add(todosInteractuables[i].Posicion);
             }
 
             int indice = SelectorInteraccion.Elegir(transform.position, jugador.Camara.transform.forward, puntos,
@@ -151,10 +182,15 @@ namespace MechaCyberpunk.Personaje.Interaccion
             }
             PuertaCandidata = puertas[indice];
             MontableCandidato = montables[indice];
+            InteractuableCandidato = interactuables[indice];
             if (PuertaCandidata != null)
             {
                 TipoCandidato = TipoCandidatoAPie.Puerta;
                 LugarCandidato = BuscarLugar(PuertaCandidata.Lugar);
+            }
+            else if (InteractuableCandidato != null)
+            {
+                TipoCandidato = TipoCandidatoAPie.Interactuable;
             }
             else
             {

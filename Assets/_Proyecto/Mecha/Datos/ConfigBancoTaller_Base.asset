@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b5c1bd464968146b35c66be418d932, type: 3}
+  m_Name: ConfigBancoTaller_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.ConfigBancoTaller
+  textoPagarRenta: "Pagar renta \xB7 {0}"
+  textoBloqueado: "TALLER BLOQUEADO \xB7 debes {0} de renta"
+  textoMechaFuera: "Tu mecha no est\xE1 en el taller"
+  textoSinDanio: "Mecha sin da\xF1os"
+  textoReparar: "Reparar mecha \xB7 {0}"
+  radioEnTaller: 3

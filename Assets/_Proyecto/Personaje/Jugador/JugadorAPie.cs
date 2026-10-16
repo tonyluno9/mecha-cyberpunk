@@ -103,8 +103,18 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return false;
             }
+            // El oído propio se apaga antes de que el montable prenda el suyo: Unity avisa si hay dos prendidos a la vez.
+            bool oyenteEstabaPrendido = oyente != null && oyente.enabled;
+            if (oyenteEstabaPrendido)
+            {
+                oyente.enabled = false;
+            }
             if (!montable.IntentarSubir(this))
             {
+                if (oyenteEstabaPrendido)
+                {
+                    oyente.enabled = true;
+                }
                 return false;
             }
 

@@ -31,6 +31,7 @@ MonoBehaviour:
   ladoFlecha: 48
   textoAbrir: "E \xB7 Abrir"
   textoSubir: "E \xB7 Subir"
+  prefijoUsar: "E \xB7 "
   textoFrenaParaBajar: Frena para bajar
   textoRegresa: REGRESA
   textoCerradoProximamente: "CERRADO \xB7 PR\xD3XIMAMENTE"
@@ -44,6 +45,19 @@ MonoBehaviour:
   colorMarcaCalorApagada: {r: 0.3, g: 0.2, b: 0.1, a: 0.5}
   anchoMarcaCalor: 28
   altoMarcaCalor: 12
+  colorDeuda: {r: 1, g: 0.1, b: 0.6, a: 1}
+  segundosAvisoDinero: 2.5
+  textoRentaVencida: "RENTA VENCIDA \xB7 {0}"
+  nombresMotivo:
+  - PREMIO
+  - APUESTA
+  - "REPARACI\xD3N"
+  - RENTA
+  - COMPRA
+  - VENTA
+  - CASINO
+  - "CL\xCDNICA"
+  - OTRO
   textoVida: VIDA {0}
   textoPunos: "PU\xD1OS"
   textoPistola: PISTOLA {0}/{1}

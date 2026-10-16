@@ -7,6 +7,8 @@ namespace MechaCyberpunk.Core
     /// Lo implementa Alan (Mundo/), una vez por escena, y lo agrega a <c>Registro&lt;IRelojMundo&gt;</c>.
     /// Lo leen Tony (renta cada 7 días, misiones, HUD) y las herramientas de prueba.
     /// Las horas de amanecer y anochecer son datos de Alan.
+    /// El reloj de Alan implementa también <see cref="IGuardable"/> con clave <c>reloj</c> (guarda <c>Dia</c> y <c>Hora</c>;
+    /// al cargar no avisa <c>DiaCambio</c> ni <c>HoraEnteraCambio</c>, sí <c>FranjaCambio</c> si cambió la franja).
     /// </summary>
     public interface IRelojMundo
     {
@@ -51,7 +53,7 @@ namespace MechaCyberpunk.Core
         /// si ya pasó hoy, al día siguiente; si es la hora actual, no cambia nada y no avisa nada.
         /// Avisa <c>HoraEnteraCambio</c> una sola vez, con la hora entera final; <c>DiaCambio</c> una vez por cada
         /// medianoche cruzada; y <c>FranjaCambio</c> solo si la franja final es distinta de la inicial.
-        /// Sirve para dormir (T-F5) y para las herramientas de prueba.
+        /// Sirve para dormir (dormir llega en T-F6) y para las herramientas de prueba.
         /// </summary>
         void AvanzarHasta(float hora);
     }
