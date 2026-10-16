@@ -227,3 +227,6 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ### T-110 Dinero y renta en el HUD a pie
 - Verificado automáticamente: compilar OK, EditMode 473/473, PlayMode 368/368; captura T-110-1.png.
 - Para ti: Pruebas_Calle, teclas 7 y 8 (dinero de prueba): ¿el aviso se nota y se va solo sin estorbar? ¿el dinero negativo se lee como deuda? Con renta vencida (J 8 veces sin dinero): ¿la línea de renta se entiende?
+### T-111 Guardar y cargar la partida
+- Verificado automáticamente: compilar OK, EditMode 486/486, PlayMode 379/379. Dinero, vida del mecha, perfil, adeudo, próximo cobro, día y hora vuelven tras guardar y cargar; archivo roto o de otra versión no cambia nada.
+- Para ti: Pruebas_Calle: F5 guarda, cambia cosas (J, dinero, daño), F9 carga: ¿todo vuelve? Deuda: CreadorEscenaCalle.Crear reordena objetos y rompe LlamadoMechaPruebas.
