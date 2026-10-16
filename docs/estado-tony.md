@@ -22,7 +22,7 @@ Orden recomendado (D-tony-54): T-100, T-101, T-102, T-103, T-104, T-105, T-106, 
 | T-105 Cristal cuarteado | T-104 | hecha (sin revisar) |
 | T-106 Premios de pelea | T-102 | hecha (sin revisar) |
 | T-107 Renta cada 7 días y bloqueo del taller (con RelojDePrueba) | T-100, T-102 | hecha (sin revisar) |
-| T-108 Usar interactuables con E | T-100 | pendiente |
+| T-108 Usar interactuables con E | T-100 | hecha (sin revisar) |
 | T-109 Banco del taller: reparar y pagar la renta | T-102, T-103, T-107, T-108 | pendiente |
 | T-110 Dinero y renta en el HUD a pie | T-102, T-107 | pendiente |
 | T-111 Guardar y cargar la partida | T-100, T-102, T-103, T-107 | pendiente |
@@ -94,3 +94,10 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - Falta: verificar T-107 (verificar.sh todo + criterios), cerrarla (mover a hechas, bitácora, estado, revisión) y mezclarla en tony/fase-5.
 - T-106 cerrada y en tony/fase-5. Siguen: T-108, T-109, T-110, T-111 y rehacer T-112 al final; luego T-F6.
 - El worktree .claude/worktrees/tony-turno-largo es el que se usa; el checkout raíz quedó en HEAD desacoplado en edd62aa para liberar tony/fase-5.
+
+## Parada manual 2 (2026-10-15, a petición de Tony)
+- T-107 hecha y mezclada en tony/fase-5 (b3f5b0d). Verificada: EditMode 452/452, PlayMode 343/345 (2 fallos de tope de frame 100 ms, ajenos).
+- Rama actual: tony/T-108-interactuables-con-e, archivo en docs/tareas/en-curso/. Implementación A MEDIAS (WIP en Personaje/ y UI/HudAPie, Pruebas_APie.unity, CreadorJugadorAPie); no compilada ni verificada. El implementador fue detenido durante `verificar.sh` de PlayMode.
+- Unity: la corrida batch de PlayMode del implementador (PID 41164) seguía viva y no pude cerrarla (permiso denegado). Hay que cerrarla antes de seguir; Temp/UnityLockfile existe en el worktree.
+- Falta: terminar T-108, verificarla, cerrarla; luego T-109, T-110, T-111, rehacer T-112; luego T-F6. Revisar que Pruebas_APie.unity se haya regenerado con el creador y no a mano.
+- Deuda: RecorridoEmboscadaPruebas y RecorridoAPiePruebas fallan por tope de frame de 100 ms.

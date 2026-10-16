@@ -92,5 +92,24 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(string.Empty, TextoInteraccion.Aviso(ResultadoPuerta.Abierta, new HorarioLugar(20f, 6f), config));
             Assert.AreEqual(string.Empty, TextoInteraccion.Aviso(ResultadoPuerta.YaAbierta, new HorarioLugar(20f, 6f), config));
         }
-    }
+    
+        [Test]
+        public void Interactuable_PuedeUsar_DiceEMasTexto()
+        {
+            Assert.AreEqual("E · Dormir", TextoInteraccion.Interactuable("Dormir", true, config));
+        }
+
+        [Test]
+        public void Interactuable_NoPuedeUsar_DiceSoloElAviso()
+        {
+            Assert.AreEqual("TALLER BLOQUEADO", TextoInteraccion.Interactuable("TALLER BLOQUEADO", false, config));
+        }
+
+        [Test]
+        public void Interactuable_SinTexto_EsVacio()
+        {
+            Assert.AreEqual(string.Empty, TextoInteraccion.Interactuable(string.Empty, true, config));
+            Assert.AreEqual(string.Empty, TextoInteraccion.Interactuable(null, false, config));
+        }
+}
 }

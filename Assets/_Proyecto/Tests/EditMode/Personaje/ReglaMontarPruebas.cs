@@ -75,5 +75,33 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(AccionMontar.Nada,
                 ReglaMontar.Decidir(ModoJugador.Carro, true, TipoCandidatoAPie.Ninguno, true, true));
         }
-    }
+    
+        [Test]
+        public void Decidir_APieConInteractuableQuePuedeUsarse_Usa()
+        {
+            Assert.AreEqual(AccionMontar.Usar,
+                ReglaMontar.Decidir(ModoJugador.APie, false, TipoCandidatoAPie.Interactuable, false, false, true));
+        }
+
+        [Test]
+        public void Decidir_APieConInteractuableQueNoPuedeUsarse_Niega()
+        {
+            Assert.AreEqual(AccionMontar.UsarNegado,
+                ReglaMontar.Decidir(ModoJugador.APie, false, TipoCandidatoAPie.Interactuable, false, false, false));
+        }
+
+        [Test]
+        public void Decidir_InteractuableEnKO_NoHaceNada()
+        {
+            Assert.AreEqual(AccionMontar.Nada,
+                ReglaMontar.Decidir(ModoJugador.APie, true, TipoCandidatoAPie.Interactuable, false, false, true));
+        }
+
+        [Test]
+        public void Decidir_EnCarroConInteractuable_BajaComoSiempre()
+        {
+            Assert.AreEqual(AccionMontar.Bajar,
+                ReglaMontar.Decidir(ModoJugador.Carro, false, TipoCandidatoAPie.Interactuable, false, true, true));
+        }
+}
 }

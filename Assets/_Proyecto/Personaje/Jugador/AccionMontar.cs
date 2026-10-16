@@ -7,6 +7,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         AbrirPuerta,
         Subir,
         Bajar,
-        NoPuedeBajar
+        NoPuedeBajar,
+        Usar,
+        UsarNegado
     }
 }
