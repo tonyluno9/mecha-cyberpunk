@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Mundo.Ambiente;
 using MechaCyberpunk.Mundo.Reloj;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
@@ -93,7 +94,7 @@ namespace MechaCyberpunk.Tests.Mundo
             }
             foreach (Light luz in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
             {
-                if (luz.type == LightType.Point)
+                if (luz.type == LightType.Point && luz.GetComponentInParent<LuzTorreta>() == null) // las torretas parpadean siempre
                 {
                     Assert.IsFalse(luz.enabled, "Las luces de las farolas deben estar apagadas de día");
                 }

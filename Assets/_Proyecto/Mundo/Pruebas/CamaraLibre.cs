@@ -32,10 +32,12 @@ namespace MechaCyberpunk.Mundo.Pruebas
         private float inclinacion;
         private float velocidadVertical;
         private bool volando;
+        private AudioListener oyente;
+        private IMontable montable;
 
         public Transform Raiz => transform;
-        public ModoJugador Modo => ModoJugador.APie;
-        public Camera Camara => camara;
+        public ModoJugador Modo { get; private set; } = ModoJugador.APie;
+        public Camera Camara => montable != null ? montable.Camara : camara;
         public bool EstaVolando => volando;
         public float Yaw => yaw;
         public float Inclinacion => inclinacion;
@@ -49,10 +51,7 @@ namespace MechaCyberpunk.Mundo.Pruebas
         /// <summary>Avisa cada vez que se interactúa con una puerta, con su lugar y lo que respondió.</summary>
         public event Action<IdLugar, ResultadoPuerta> InteractuoConPuerta;
 
-        // El modo de la cámara libre nunca cambia: el evento existe solo para cumplir IJugador.
-#pragma warning disable CS0067
         public event Action<ModoJugador> ModoCambio;
-#pragma warning restore CS0067
 
         private void Awake()
         {
@@ -70,6 +69,7 @@ namespace MechaCyberpunk.Mundo.Pruebas
             subir = controles.FindAction("Subir", true);
             bajar = controles.FindAction("Bajar", true);
             interactuar = controles.FindAction("Interactuar", true);
+            oyente = camara.GetComponent<AudioListener>();
             yaw = transform.eulerAngles.y;
         }
 
@@ -96,6 +96,16 @@ namespace MechaCyberpunk.Mundo.Pruebas
 
         private void Update()
         {
+            if (montable != null)
+            {
+                // Dentro de un vehículo solo se lee la E: el vehículo lee su propia entrada y la raíz lo sigue en LateUpdate.
+                if (interactuar.WasPressedThisFrame())
+                {
+                    Bajar();
+                }
+                return;
+            }
+
             if (alternarVuelo.WasPressedThisFrame())
             {
                 AlternarVuelo();
@@ -106,6 +116,10 @@ namespace MechaCyberpunk.Mundo.Pruebas
             {
                 Interactuar();
             }
+            if (montable != null)
+            {
+                return;
+            }
             if (volando)
             {
                 Volar(Time.deltaTime);
@@ -113,6 +127,14 @@ namespace MechaCyberpunk.Mundo.Pruebas
             else
             {
                 Caminar(Time.deltaTime);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (montable != null)
+            {
+                transform.SetPositionAndRotation(montable.Asiento.position, montable.Asiento.rotation);
             }
         }
 
@@ -151,13 +173,14 @@ namespace MechaCyberpunk.Mundo.Pruebas
         private void Interactuar()
         {
             Transform ojos = camara.transform;
-            if (!Physics.Raycast(ojos.position, ojos.forward, out RaycastHit golpe, config.DistanciaInteraccion, ~0, QueryTriggerInteraction.Ignore))
+            IPuerta puerta = null;
+            if (Physics.Raycast(ojos.position, ojos.forward, out RaycastHit golpe, config.DistanciaInteraccion, ~0, QueryTriggerInteraction.Ignore))
             {
-                return;
+                puerta = golpe.collider.GetComponentInParent<IPuerta>();
             }
-            IPuerta puerta = golpe.collider.GetComponentInParent<IPuerta>();
             if (puerta == null)
             {
+                IntentarSubir();
                 return;
             }
             ResultadoPuerta resultado = puerta.IntentarAbrir();
@@ -167,9 +190,67 @@ namespace MechaCyberpunk.Mundo.Pruebas
             InteractuoConPuerta?.Invoke(puerta.Lugar, resultado);
         }
 
+        // Busca el montable que se puede subir más cercano al frente (por Registro<IMontable>, sin conocer su clase) y se sube.
+        private void IntentarSubir()
+        {
+            IMontable mejor = null;
+            float mejorDistancia = float.MaxValue;
+            foreach (IMontable candidato in Registro<IMontable>.Todos)
+            {
+                if (!candidato.PuedeSubir || !CalculoCamaraLibre.EnRangoDeSubida(transform.position, camara.transform.forward,
+                        candidato.PuntoSubida, config.DistanciaSubida, config.AnguloSubida))
+                {
+                    continue;
+                }
+                float distancia = (candidato.PuntoSubida - transform.position).sqrMagnitude;
+                if (distancia < mejorDistancia)
+                {
+                    mejorDistancia = distancia;
+                    mejor = candidato;
+                }
+            }
+            if (mejor == null || !mejor.IntentarSubir(this))
+            {
+                return;
+            }
+            montable = mejor;
+            camara.enabled = false;
+            if (oyente != null)
+            {
+                oyente.enabled = false;
+            }
+            personaje.enabled = false;
+            Modo = mejor.Modo;
+            ModoCambio?.Invoke(Modo);
+        }
+
+        private void Bajar()
+        {
+            if (!montable.IntentarBajar(out Pose salida))
+            {
+                Debug.Log("[Mundo] Frena para bajar");
+                return;
+            }
+            montable = null;
+            Colocar(salida);
+            camara.enabled = true;
+            if (oyente != null)
+            {
+                oyente.enabled = true;
+            }
+            Modo = ModoJugador.APie;
+            ModoCambio?.Invoke(Modo);
+        }
+
         private void AlternarVuelo()
         {
-            volando = !volando;
+            PonerVuelo(!volando);
+        }
+
+        /// <summary>Prende o apaga el vuelo sin colisiones (lo usan las vistas de referencia para la aérea).</summary>
+        public void PonerVuelo(bool vuela)
+        {
+            volando = vuela;
             personaje.enabled = !volando;
             velocidadVertical = 0f;
         }
@@ -177,11 +258,17 @@ namespace MechaCyberpunk.Mundo.Pruebas
         /// <summary>Teletransporta sin atravesar nada: apaga el CharacterController, mueve y lo vuelve a prender (si no vuela).</summary>
         public void Colocar(Pose pose)
         {
+            Colocar(pose, 0f);
+        }
+
+        /// <summary>Igual que <see cref="Colocar(Pose)"/> pero además inclina la mirada (° hacia abajo): para las vistas de referencia.</summary>
+        public void Colocar(Pose pose, float inclinacionGrados)
+        {
             personaje.enabled = false;
             transform.SetPositionAndRotation(pose.position, Quaternion.Euler(0f, pose.rotation.eulerAngles.y, 0f));
             yaw = pose.rotation.eulerAngles.y;
-            inclinacion = 0f;
-            camara.transform.localRotation = Quaternion.identity;
+            inclinacion = inclinacionGrados;
+            camara.transform.localRotation = Quaternion.Euler(inclinacionGrados, 0f, 0f);
             velocidadVertical = 0f;
             personaje.enabled = !volando;
         }
