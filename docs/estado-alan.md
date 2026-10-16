@@ -13,7 +13,7 @@ A-F1 (T-020, T-040 a T-045) está hecha y revisada en alan/fase-1; espera la apr
 | T-079 Noche cyberpunk: posproceso y asfalto mojado | hecha (sin revisar) |
 | T-080 La calle vestida con el kit urbano | hecha (sin revisar) |
 | T-081 Fachadas con detalle | hecha (sin revisar) |
-| T-082 Letreros de neón | pendiente (depende de T-076 y T-081) |
+| T-082 Letreros de neón | hecha (sin revisar) |
 | T-083 El bar con los props de Blender y mejor luz | pendiente (depende de T-076 y T-079) |
 | T-084 Tráfico mínimo de fachada | pendiente (depende de T-077 y T-078) |
 | T-085 Modelo del carro viejo | pendiente (depende de T-075 y T-076) |
