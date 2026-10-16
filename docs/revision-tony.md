@@ -230,3 +230,7 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ### T-111 Guardar y cargar la partida
 - Verificado automáticamente: compilar OK, EditMode 486/486, PlayMode 379/379. Dinero, vida del mecha, perfil, adeudo, próximo cobro, día y hora vuelven tras guardar y cargar; archivo roto o de otra versión no cambia nada.
 - Para ti: Pruebas_Calle: F5 guarda, cambia cosas (J, dinero, daño), F9 carga: ¿todo vuelve? Deuda: CreadorEscenaCalle.Crear reordena objetos y rompe LlamadoMechaPruebas.
+### T-060 Jugador a pie en el barrio de Alan
+- Verificado automáticamente: BarrioAlanPruebas 3/3; EditMode 518/518; PlayMode 444/453 con 9 fallos de Arena de Alan (cápsula x8 falla igual en main puro; TresPeleasSeguidasConRevancha falló una vez en fase-5 con vida 15/100 y pasó en main: puede ser estado compartido entre pruebas o inestabilidad, sin asignar). Captura T-060-1.png.
+- Para ti: en Ciudad.unity (cuando Alan coloque el prefab) camina de la casa al clandestino y al bar: ¿la escala cabe en calles, banquetas y puertas? La flecha del objetivo se solapa con el horario del cartel.
+- Para Alan: arreglar JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula (x8) y Cubo_SoltadoSobreJaula.
