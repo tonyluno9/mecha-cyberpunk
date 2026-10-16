@@ -1,0 +1,45 @@
+using UnityEngine;
+
+namespace MechaCyberpunk.Mundo.Pruebas
+{
+    /// <summary>Cuentas puras de la cámara libre (sin MonoBehaviour), para probarlas en EditMode.</summary>
+    public static class CalculoCamaraLibre
+    {
+        /// <summary>Inclinación nueva (°) tras mirar <paramref name="delta"/> grados, sin pasar de ±<paramref name="limite"/>.</summary>
+        public static float LimitarInclinacion(float actual, float delta, float limite)
+        {
+            return Mathf.Clamp(actual + delta, -limite, limite);
+        }
+
+        /// <summary>Rapidez deseada (m/s): volando manda la de vuelo; si no, correr o caminar.</summary>
+        public static float Rapidez(bool volando, bool corriendo, float aPie, float correr, float volar)
+        {
+            if (volando)
+            {
+                return volar;
+            }
+            return corriendo ? correr : aPie;
+        }
+
+        /// <summary>Dirección horizontal en el mundo para la entrada (x = lado, y = frente) con la vista girada <paramref name="yaw"/>°.</summary>
+        public static Vector3 DireccionHorizontal(Vector2 entrada, float yaw)
+        {
+            Vector3 local = new Vector3(entrada.x, 0f, entrada.y);
+            if (local.sqrMagnitude > 1f)
+            {
+                local.Normalize();
+            }
+            return Quaternion.Euler(0f, yaw, 0f) * local;
+        }
+
+        /// <summary>Velocidad vertical nueva al caminar: pegada al piso si está en él, o acelerando hacia abajo.</summary>
+        public static float VelocidadVertical(float actual, bool enSuelo, float gravedad, float dt, float pegadoAlSuelo)
+        {
+            if (enSuelo && actual < 0f)
+            {
+                return -pegadoAlSuelo;
+            }
+            return actual - gravedad * dt;
+        }
+    }
+}
