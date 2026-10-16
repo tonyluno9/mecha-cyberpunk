@@ -224,3 +224,6 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ### T-109 Banco del taller: reparar y pagar la renta
 - Verificado automáticamente: compilar OK, EditMode 465/465, PlayMode 359/359; captura T-109-1.png.
 - Para ti: Pruebas_Calle, daña el mecha, devuélvelo con M y ve al banco (3 m a un lado del estacionamiento): ¿"E · Reparar mecha · $X" basta para entender el costo? ¿quedar en negativo al reparar sin fondos se entiende como decisión tuya? Prueba el taller bloqueado ("TALLER BLOQUEADO · debes $X de renta") y pagar.
+### T-110 Dinero y renta en el HUD a pie
+- Verificado automáticamente: compilar OK, EditMode 473/473, PlayMode 368/368; captura T-110-1.png.
+- Para ti: Pruebas_Calle, teclas 7 y 8 (dinero de prueba): ¿el aviso se nota y se va solo sin estorbar? ¿el dinero negativo se lee como deuda? Con renta vencida (J 8 veces sin dinero): ¿la línea de renta se entiende?
