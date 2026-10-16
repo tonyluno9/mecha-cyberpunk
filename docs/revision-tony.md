@@ -217,3 +217,7 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Verificado automáticamente: compilar OK, EditMode 452/452, PlayMode 343/345 (los 2 fallos son de frame lento en RecorridoEmboscada, que ya fallaba en tony/fase-5, y RecorridoAPie, intermitente). Pruebas propias de la tarea todas en verde.
 - Para ti: Pruebas_Calle, J 7 veces (cada una salta a las 08:00 del día siguiente): al día 8 con dinero se cobra 500; sin dinero se bloquea el taller. ¿500 por semana contra 600 por pelea aprieta lo justo?
 - Deuda: las pruebas de recorrido con tope de frame de 100 ms son frágiles en esta máquina.
+### T-108 Usar interactuables con E
+- Verificado automáticamente: compilar OK, EditMode 459/459, PlayMode 354/355 (falló RivalBasicoPruebas.Ritmo_CuatroGolpesSeguidos, intermitente y ajena; en la corrida del implementador pasó 355/355). Pruebas propias en verde; captura T-108-1.png legible.
+- Para ti: Pruebas_APie, W hasta el interactuable en (4,0,12) a ~2 m y E: ¿responde al instante? ¿el aviso estorba al pasar de largo?
+- Deuda: RivalBasicoPruebas.Ritmo_... intermitente (IA).
