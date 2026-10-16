@@ -108,3 +108,132 @@ si conviene llegar antes al banco del taller.
 Propuesta. El dinero se ve solo a pie (D-052), con un aviso de 2.5 s por cada movimiento ("+$600 · PREMIO") salvo los de `Carga`, y
 una línea fija "RENTA VENCIDA · $500" mientras el taller está bloqueado. En el mecha no hay dinero en pantalla: el premio se ve en la
 pantalla de la arena. `MechaCyberpunk.UI` referencia Economia por `FormatoDinero`.
+
+## Planeación de T-F6 (2026-10-16, planificador Opus 5.5)
+
+### D-tony-56 IDs de las tareas de T-F6
+Propuesta. Las tareas de T-F6 de Tony son T-120 a T-137. T-113 a T-119 quedan reservadas para deudas o correcciones de T-F5 que
+aparezcan en la revisión. Alan sigue con T-074 a T-085 (A-F2) y T-086 a T-099 quedan libres para sus fases siguientes.
+
+### D-tony-57 Contratos de T-F6 en Core (T-120)
+Propuesta. Tres contratos nuevos y un cambio, escritos antes de usarse (D-027) e integrados a main en cuanto se verifiquen (detrás de
+T-100, que sigue sin push a main):
+- `Core/Historia/EtapaPrologo` (Ninguna, CreacionPersonaje, PeleaTutorial, SalidaClandestino, Emboscada, RegresoACasa, Dormir, Flashback,
+  Despertar, PeleaCasera, Continuara, Libre; solo se agregan valores al final) e `IHistoria` (Etapa, EtapaCambio). La implementa Tony
+  (`ServicioHistoria`, clave de guardado `historia`); Alan solo la lee para que su mundo acompañe. Sin `IHistoria`, el mundo es `Libre`.
+- `Core/Jugador/AparienciaJugador` (Cara, Ropa, Implante: índices al catálogo de Tony) e `IPerfilJugador.Apariencia` (lo prometido en D-059).
+  Alan no interpreta los índices: para mostrar al jugador coloca `CuerpoJugador.prefab`.
+- `Core/Historia/IPuntoHistoria` (Id, Pose, Activar): puntos con nombre que pone Alan para la historia: planos de cámara del flashback
+  (`Flashback_*`) y pasos de la ruta del prólogo (`Prologo_*`). Uno solo para los dos usos, así Alan aprende un contrato.
+- ReglasEnsamblados acepta subensamblados `MechaCyberpunk.<Área>.<Sub>` con el dueño de `<Área>` (D-tony-62).
+
+### D-tony-58 El prólogo es el futuro: al despertar empieza la historia (T-133)
+Propuesta. concepto-historia.md dice que el prólogo es el futuro y que al llegar a esa noche "el juego no termina: es una bisagra". Por eso,
+al despertar después del flashback, el director pone el estado inicial de la historia una sola vez: dinero inicial ($500), mecha al 45 %
+de vida (grietas leves, sin alarma) en su taller, renta reiniciada (próximo cobro en 7 días, sin adeudo), calor 0 y reloj a las 19:30 (el
+clandestino abre a las 20:00 y un día dura 20 minutos reales). El premio de $1,500 del campeonato se ve y se cobra en la noche del prólogo,
+pero no sobrevive al despertar. Alternativa (si Tony prefiere): despertar a la mañana siguiente con el dinero y el daño que quedaron de la
+emboscada. Pregunta para Tony en la revisión.
+
+### D-tony-59 Daño persistente solo en el mecha de la historia (T-121). Modifica D-tony-42
+Propuesta. `MechaPersistente` va en `MechaEstacionado.prefab` (el mecha de la historia, el que vive en el taller) y no en `MechaJugador.prefab`.
+El arranque Directo (Pruebas_Tony, pruebas de pelea y el Clandestino.unity suelto de Alan) vuelve a restaurar la vida en cada pelea, como
+D-013. Así la prueba de Alan `TresPeleasSeguidasConRevancha` pasa sin tocar Arena/, y en la demo las peleas del clandestino se juegan con el
+mecha de la historia por medio de `EntradaArena` (D-tony-65), que sí conserva el daño.
+
+### D-tony-60 Tope de frame en las pruebas de recorrido (T-122)
+Propuesta. Los recorridos ya no exigen que ningún frame pase de 100 ms: `MedidorFrames` (Progresion/Pruebas/) ignora 2 s de calentamiento,
+permite hasta 3 frames (o el 1 %) sobre 100 ms y ninguno sobre 500 ms, y da un resumen (máximo, percentil 99) para el mensaje del assert.
+Sigue midiendo tirones reales sin fallar por el editor en batch.
+
+### D-tony-61 Partida entre escenas por el guardado (T-124)
+Propuesta. La creación de personaje, la ciudad y el flashback son escenas distintas. `CambioEscena.Ir(ruta)` guarda la partida, marca una
+transición pendiente y carga la escena por ruta (en el editor con `EditorSceneManager.LoadSceneAsyncInPlayMode`, así no hace falta Build
+Settings hasta T-137; en un build con `SceneManager`). En la escena nueva, `ServicioGuardado` carga la partida al arrancar solo si hubo
+transición: dar Play directo en una escena de pruebas nunca lee la partida del humano. `ServicioGuardado.RutaForzada` (estática) aísla a las
+pruebas que cruzan escenas. `DatosEscenas` dice qué escena va con cada etapa; `DatosEscenas_Pruebas` usa las escenas de Tony y
+`DatosEscenas_Demo` las de la demo (hasta T-136, también las de Tony).
+
+### D-tony-62 Ensamblado del prólogo (T-127)
+Propuesta. El director del prólogo, la entrada a la arena, el mostrador, la cama, el espejo y el flashback encadenan Mecha, Pelea, Personaje,
+Progresion, Economia, IA y UI, así que van en un subensamblado nuevo `MechaCyberpunk.Progresion.Prologo` (Progresion/Prologo/), encima de todos;
+nadie lo referencia. CLAUDE.md ya dice que Progresion lleva "historia". Lo que es dato o servicio de bajo nivel (`ServicioHistoria`,
+`CambioEscena`, `DatosEscenas`) se queda en Progresion. T-120 cambia la prueba de ensamblados para aceptarlo; si Tony quiere mencionarlo en
+CLAUDE.md, lo hace él.
+
+### D-tony-63 Apariencia (T-123)
+Propuesta. 4 caras (tono de piel y peinado), 4 ropas (chamarra magenta, sudadera turquesa, chaleco naranja, overol azul) y 4 implantes
+visibles con "Ninguno" (brazo cromado, ojo LED rojo, placa en la sien), en `CatalogoApariencia_Base` (Personaje/Datos/); nombres y colores
+se cambian en el asset. El cuerpo es greybox de primitivas (`CuerpoJugador.prefab`) y una vista previa reutilizable
+(`VistaPreviaApariencia.prefab`, cámara a RenderTexture lejos del mundo) sirve a la creación y al espejo. La apariencia se guarda con el
+perfil; una partida vieja sin apariencia carga la predeterminada. No se ve el propio cuerpo en primera persona.
+
+### D-tony-64 Pantalla de título y creación de personaje (T-126)
+Propuesta. La demo arranca en `Escenas/Tony/CreacionPersonaje.unity` (D-029: escena de pantallas de Tony). Con partida guardada aparece un
+título con CONTINUAR (va a la escena de la etapa guardada) y NUEVA PARTIDA (pide confirmar y borra). La creación se maneja con el teclado
+(↑ ↓/Tab, ← →, Enter) y, si es barato, con el ratón; el texto se escribe con un campo propio que lee `Keyboard.onTextInput` (el `InputField`
+de uGUI no recibe texto simulado). Nombre y alias son obligatorios (el presentador grita el alias). EMPEZAR deja la partida en
+`PeleaTutorial` y pasa a la ciudad con un fundido.
+
+### D-tony-65 El mecha de la historia entra a la arena (T-128)
+Propuesta. `EntradaArena` (Prologo) lleva al mecha de la historia a la arena con un fundido (estado nuevo de llamado `EnArena`: sin calor ni
+regreso automático), sube al jugador y arranca un `DirectorPelea` sin revancha (`permitirRevancha` en false); al terminar, el jugador queda a
+pie en la aparición "Clandestino_Salida", el mecha vuelve al instante a su taller con su daño y el director se `Reinicia` para otra pelea.
+Resuelve "aparecer ya dentro del mecha" (D-069). `FlujoPelea.prefab` (el que Alan usa con revancha) no cambia.
+
+### D-tony-66 Primera pelea casera (T-129)
+Propuesta (responde la pregunta abierta de demo.md "contra quién"). Rival "EL CHATARRAS" (vida 90, daño 10, un poco más lento, sin
+`PiedadRival`: la casera sí se puede perder), presentador corto de dos líneas, premio $600 (0 al perder) y sin revancha. Se pelea desde
+`MostradorPeleas.prefab` (un `IInteractuable` que Alan coloca dentro del clandestino): "Pelea casera · premio $600"; solo de noche y en las
+etapas `PeleaCasera` o `Libre`; en la noche del prólogo dice "Hoy no hay peleas caseras".
+
+### D-tony-67 Cama y espejo son prefabs de Tony (T-130). Cambia parte de D-tony-52
+Propuesta. En vez de que Alan programe la cama y el espejo como `IInteractuable`, Tony entrega `CamaJugador.prefab` y `EspejoJugador.prefab`
+(Progresion/Prologo/Prefabs/) y Alan los coloca en la casa (D-029). Dormir: fundido, reloj a las 08:00 y guardado automático (lo que D-tony-50
+dejó para T-F6); en la etapa `Dormir` lleva al flashback; antes de llegar a casa en la noche del prólogo y en `PeleaCasera` no se duerme. El
+espejo muestra a pantalla completa tu cuerpo con tu apariencia y tu alias (vista previa), sin reflejo real.
+
+### D-tony-68 Flashback (T-131)
+Propuesta. `Flashback.prefab` (Prologo) con `DatosFlashback`: 6 planos de unos 9 s (unos 55 s en total) con subtítulos, fundidos de 0.5 s,
+cámara puesta en los `IPuntoHistoria` "Flashback_Plano_1" a "_6" de Alan (si falta uno, sigue con warning) y `Activar` para que Alan anime
+cada plano. Se salta manteniendo Espacio 1 s. Al terminar pasa a `Despertar` y vuelve a la ciudad. Textos provisionales que cuentan que los
+papás se fueron en una camioneta con un logo desconocido (el hilo de la corporación) y dejaron el mecha; Tony los cambia en el asset. Tony
+prueba con `Escenas/Tony/Pruebas_Flashback.unity`.
+
+### D-tony-69 Director del prólogo (T-127, T-132, T-133)
+Propuesta. `DirectorPrologo.prefab` (Prologo; anida el flujo del tutorial, una `EntradaArena` y las pantallas de historia) se coloca una vez
+en la ciudad. Avanza las etapas de `IHistoria` y fija un objetivo por paso: pelea de campeonato a las 22:00, "Ve a tu carro" (la emboscada
+del callejón se activa en el camino; fuera de esa etapa queda deshabilitada con `DirectorEmboscada.Habilitada`), "Regresa a casa en tu carro"
+con pasos intermedios por `IPuntoHistoria` "Prologo_Esquina_N" (D-053), "Duerme en tu cama", y en el presente "Ve al clandestino" y "Habla con el
+encargado". Una partida cargada a media noche se reanuda desde la salida del clandestino (la emboscada se repite). Con el valor del prefab
+(`etapaSinPartida` = `Libre`) no hace nada si Alan da Play en su Ciudad; Pruebas_Prologo (greybox de Tony con dobles) usa `PeleaTutorial`.
+
+### D-tony-70 "Continuará" (T-125, T-133)
+Propuesta (responde la pregunta abierta de demo.md). Al terminar la primera pelea casera, gane o pierda, se ve "CONTINUARÁ…" con el alias,
+el dinero y el resultado; después de 4 s, Enter sigue jugando en la ciudad (etapa `Libre`: peleas caseras repetibles y taller) y Esc guarda y
+vuelve al título.
+
+### D-tony-71 Ayudas de controles (T-134)
+Propuesta. Para que una persona nueva termine la demo sin ayuda (H6): la primera vez en la sesión que camina, maneja, llama al mecha, pelea
+en el mecha o va en el mecha por la calle, ve una línea con las teclas que se va sola (12 s o cuando ya las usó). A pie va en el HUD; en el
+mecha en una pantalla de la cabina fuera del centro (D-011). Lo visto se recuerda en la sesión aunque cambie la escena.
+
+### D-tony-72 Lo que espera a Alan en T-F6 (T-136, T-137)
+Propuesta. Todo T-F6 se hace con dobles y escenas de Tony (Pruebas_Prologo, Pruebas_Flashback). Quedan bloqueadas T-136 (el prólogo en
+Ciudad.unity y Flashback.unity; espera A-F3 y A-F4, y también T-073 y T-061) y T-137 (Build Settings y build de Windows, de Core; espera
+T-136). Pedidos a Alan, cuando T-120 y los prefabs estén en main: colocar en Ciudad.unity `DirectorPrologo.prefab`, `CamaJugador.prefab` y
+`EspejoJugador.prefab` en la casa, `MostradorPeleas.prefab` dentro del clandestino (junto a la entrada a la arena), además de lo ya pedido
+(`JugadorAPie`, `MechaEstacionado`, `Emboscada`); apariciones "Casa_Cama", "Casa_Puerta" y "Clandestino_Salida"; `IPuntoHistoria`
+"Prologo_Carro" (donde queda su carro al salir del clandestino) y "Prologo_Esquina_N" en las vueltas de regreso a casa; en Flashback.unity el
+escenario de la infancia, `Flashback.prefab` y los puntos "Flashback_Plano_1" a "_6"; leer `IHistoria` para dejar el carro cerca del
+clandestino en la noche del prólogo y casino y mercado negro cerrados; su `RelojMundo` como `IGuardable` (D-tony-52).
+
+### D-tony-73 Orden de T-F6
+Propuesta. T-120 (Core, a main en cuanto se verifique), T-121, T-122, T-123, T-124, T-125, T-126, T-127, T-128, T-129, T-130, T-131, T-132,
+T-133, T-134 y T-135 (cierre); T-136 y T-137 cuando Alan entregue. T-121, T-122 y T-125 no dependen de Core y pueden ir primero si T-120 se
+atora; T-134 solo depende de T-121 y puede adelantarse; T-131 puede ir antes que T-128 a T-130 si conviene.
+
+### D-tony-74 Build de la demo (T-137)
+Propuesta. Build Settings con Escenas/Tony/CreacionPersonaje.unity (índice 0), Escenas/Ciudad.unity y Escenas/Flashback.unity (sale
+SampleScene), nombre del producto "Mecha Cyberpunk (demo)" y build de Windows 64 bits en Builds/ (ignorado por git) con un método de editor.
+Es la última tarea porque depende de las escenas finales de Alan; es de Core porque cambia ProjectSettings/.
