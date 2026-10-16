@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Mecha.Llamado;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
@@ -48,6 +49,17 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private Text textoCalor;
         [SerializeField] private Image[] marcasCalor;
 
+        [Header("Dinero y renta (T-110; solo a pie)")]
+        [SerializeField] private GameObject grupoDinero;
+        [SerializeField] private Text textoDinero;
+        [SerializeField] private GameObject grupoAvisoDinero;
+        [SerializeField] private Text textoAvisoDinero;
+        [SerializeField] private GameObject grupoRenta;
+        [SerializeField] private Text textoRenta;
+
+        private ICartera cartera;
+        private IRenta renta;
+        private float avisoDineroRestante;
         private ICalor calor;
         private LlamadoMecha llamado;
         private string avisoLlamado = string.Empty;
@@ -98,6 +110,13 @@ namespace MechaCyberpunk.UI.Hud
             }
         }
 
+        public GameObject GrupoDinero => grupoDinero;
+        public Text TextoDinero => textoDinero;
+        public GameObject GrupoAvisoDinero => grupoAvisoDinero;
+        public Text TextoAvisoDinero => textoAvisoDinero;
+        public GameObject GrupoRenta => grupoRenta;
+        public Text TextoRenta => textoRenta;
+
         public GameObject GrupoLlamado => grupoLlamado;
         public Text TextoLlamado => textoLlamado;
 
@@ -110,7 +129,9 @@ namespace MechaCyberpunk.UI.Hud
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
                 || grupoObjetivo == null || textoObjetivo == null || flecha == null || textoDistancia == null
                 || grupoInteraccion == null || textoInteraccion == null || grupoLlamado == null || textoLlamado == null
-                || grupoCalor == null || textoCalor == null || marcasCalor == null || marcasCalor.Length == 0)
+                || grupoCalor == null || textoCalor == null || marcasCalor == null || marcasCalor.Length == 0
+                || grupoDinero == null || textoDinero == null || grupoAvisoDinero == null || textoAvisoDinero == null
+                || grupoRenta == null || textoRenta == null)
             {
                 Debug.LogError("[UI] Faltan referencias en HudAPie de " + name, this);
                 enabled = false;
@@ -138,6 +159,9 @@ namespace MechaCyberpunk.UI.Hud
             textoDistancia.color = config.ColorTexto;
             textoInteraccion.color = config.ColorTexto;
             textoLlamado.color = config.ColorTexto;
+            textoDinero.color = config.ColorTexto;
+            textoAvisoDinero.color = config.ColorTexto;
+            textoRenta.color = config.ColorAviso;
             textoCalor.color = config.ColorCalor;
             textoCalor.text = config.TextoCalor;
             if (partesMira != null)
@@ -173,6 +197,12 @@ namespace MechaCyberpunk.UI.Hud
             Registro<LlamadoMecha>.Quitado += AlQuitarLlamado;
             Registro<ICalor>.Agregado += AlAgregarCalor;
             Registro<ICalor>.Quitado += AlQuitarCalor;
+            Registro<ICartera>.Agregado += AlAgregarCartera;
+            Registro<ICartera>.Quitado += AlQuitarCartera;
+            Registro<IRenta>.Agregado += AlAgregarRenta;
+            Registro<IRenta>.Quitado += AlQuitarRenta;
+            VincularCartera(Registro<ICartera>.Actual);
+            VincularRenta(Registro<IRenta>.Actual);
             VincularCalor(Registro<ICalor>.Actual);
             VincularObjetivos(Registro<IObjetivos>.Actual);
             VincularLlamado(Registro<LlamadoMecha>.Actual);
@@ -190,6 +220,7 @@ namespace MechaCyberpunk.UI.Hud
             ActualizarFlecha();
             ActualizarInteraccion();
             ActualizarLlamado();
+            ActualizarAvisoDinero();
         }
 
         private void OnDisable()
@@ -206,6 +237,12 @@ namespace MechaCyberpunk.UI.Hud
             Registro<LlamadoMecha>.Quitado -= AlQuitarLlamado;
             Registro<ICalor>.Agregado -= AlAgregarCalor;
             Registro<ICalor>.Quitado -= AlQuitarCalor;
+            Registro<ICartera>.Agregado -= AlAgregarCartera;
+            Registro<ICartera>.Quitado -= AlQuitarCartera;
+            Registro<IRenta>.Agregado -= AlAgregarRenta;
+            Registro<IRenta>.Quitado -= AlQuitarRenta;
+            DesvincularCartera();
+            DesvincularRenta();
             DesvincularCalor();
             Desvincular();
             DesvincularObjetivos();
@@ -313,6 +350,8 @@ namespace MechaCyberpunk.UI.Hud
             grupoCancion.SetActive(modo != ModoJugador.Mecha);
             RefrescarObjetivo();
             RefrescarCalor();
+            RefrescarDinero();
+            RefrescarRenta();
             avisoRestante = 0f;
             grupoInteraccion.SetActive(false);
         }
@@ -327,6 +366,9 @@ namespace MechaCyberpunk.UI.Hud
             grupoInteraccion.SetActive(false);
             grupoLlamado.SetActive(false);
             grupoCalor.SetActive(false);
+            grupoDinero.SetActive(false);
+            grupoAvisoDinero.SetActive(false);
+            grupoRenta.SetActive(false);
         }
 
         private void ActualizarVida()
@@ -351,6 +393,119 @@ namespace MechaCyberpunk.UI.Hud
             textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Balas, armas.TamanoCargador, armas.Recargando, config);
             bool aviso = armas.ArmaActiva == ArmaAPie.Pistola && (armas.Recargando || armas.Balas <= 0);
             textoArma.color = aviso ? config.ColorAviso : config.ColorTexto;
+        }
+
+        // ---- Dinero y renta ----
+
+        private bool EstaAPie => jugador != null && jugador.Modo == ModoJugador.APie;
+
+        private void AlAgregarCartera(ICartera nueva) => VincularCartera(nueva);
+
+        private void AlQuitarCartera(ICartera quitada)
+        {
+            if (quitada == cartera)
+            {
+                VincularCartera(Registro<ICartera>.Actual);
+            }
+        }
+
+        private void VincularCartera(ICartera nueva)
+        {
+            DesvincularCartera();
+            cartera = nueva;
+            if (cartera != null)
+            {
+                cartera.Cambio += AlCambiarDinero;
+            }
+            RefrescarDinero();
+        }
+
+        private void DesvincularCartera()
+        {
+            if (cartera != null)
+            {
+                cartera.Cambio -= AlCambiarDinero;
+            }
+            cartera = null;
+            avisoDineroRestante = 0f;
+        }
+
+        private void AlCambiarDinero(int diferencia, MotivoDinero motivo)
+        {
+            RefrescarDinero();
+            string aviso = FormatoHud.TextoAvisoDinero(diferencia, motivo, config);
+            if (aviso.Length == 0 || !EstaAPie)
+            {
+                return;
+            }
+            textoAvisoDinero.text = aviso;
+            textoAvisoDinero.color = diferencia > 0 ? config.ColorTexto : config.ColorAviso;
+            avisoDineroRestante = config.SegundosAvisoDinero;
+            grupoAvisoDinero.SetActive(true);
+        }
+
+        // El dinero se ve solo a pie y solo si hay cartera.
+        private void RefrescarDinero()
+        {
+            bool visible = EstaAPie && cartera != null;
+            grupoDinero.SetActive(visible);
+            if (!visible)
+            {
+                grupoAvisoDinero.SetActive(false);
+                return;
+            }
+            textoDinero.text = FormatoDinero.Texto(cartera.Dinero);
+            textoDinero.color = cartera.Dinero < 0 ? config.ColorDeuda : config.ColorTexto;
+        }
+
+        private void ActualizarAvisoDinero()
+        {
+            if (avisoDineroRestante <= 0f)
+            {
+                return;
+            }
+            avisoDineroRestante -= Time.deltaTime;
+            grupoAvisoDinero.SetActive(avisoDineroRestante > 0f && EstaAPie && cartera != null);
+        }
+
+        private void AlAgregarRenta(IRenta nueva) => VincularRenta(nueva);
+
+        private void AlQuitarRenta(IRenta quitada)
+        {
+            if (quitada == renta)
+            {
+                VincularRenta(Registro<IRenta>.Actual);
+            }
+        }
+
+        private void VincularRenta(IRenta nueva)
+        {
+            DesvincularRenta();
+            renta = nueva;
+            if (renta != null)
+            {
+                renta.Cambio += RefrescarRenta;
+            }
+            RefrescarRenta();
+        }
+
+        private void DesvincularRenta()
+        {
+            if (renta != null)
+            {
+                renta.Cambio -= RefrescarRenta;
+            }
+            renta = null;
+        }
+
+        private void RefrescarRenta()
+        {
+            bool visible = EstaAPie && renta != null && renta.TallerBloqueado;
+            grupoRenta.SetActive(visible);
+            if (visible)
+            {
+                textoRenta.text = FormatoHud.TextoRentaVencida(renta.Adeudo, config);
+            }
         }
 
         // ---- Calor policial ----

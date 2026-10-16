@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.UI.Hud;
 using MechaCyberpunk.UI;
@@ -77,6 +78,29 @@ namespace MechaCyberpunk.Tests.UI
         public void TextoArma_PistolaVacia_PideRecargar()
         {
             Assert.AreEqual("PISTOLA 0/8 · R", FormatoHud.TextoArma(ArmaAPie.Pistola, 0, 8, false, config));
+        }
+
+        [TestCase(600, MotivoDinero.Premio, "+$600 · PREMIO")]
+        [TestCase(-650, MotivoDinero.Reparacion, "-$650 · REPARACIÓN")]
+        [TestCase(-500, MotivoDinero.Renta, "-$500 · RENTA")]
+        [TestCase(500, MotivoDinero.Otro, "+$500 · OTRO")]
+        [TestCase(1250, MotivoDinero.Casino, "+$1,250 · CASINO")]
+        public void TextoAvisoDinero_DaSignoCantidadYMotivo(int diferencia, MotivoDinero motivo, string esperado)
+        {
+            Assert.AreEqual(esperado, FormatoHud.TextoAvisoDinero(diferencia, motivo, config));
+        }
+
+        [TestCase(600)]
+        [TestCase(-300)]
+        public void TextoAvisoDinero_Carga_EsVacio(int diferencia)
+        {
+            Assert.AreEqual(string.Empty, FormatoHud.TextoAvisoDinero(diferencia, MotivoDinero.Carga, config));
+        }
+
+        [Test]
+        public void TextoRentaVencida_MuestraElAdeudo()
+        {
+            Assert.AreEqual("RENTA VENCIDA · $500", FormatoHud.TextoRentaVencida(500, config));
         }
     }
 }
