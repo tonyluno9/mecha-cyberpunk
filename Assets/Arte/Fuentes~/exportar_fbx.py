@@ -10,7 +10,7 @@ from mathutils import Matrix
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 ARTE = os.path.abspath(os.path.join(AQUI, ".."))
-GRUPOS = [("kit-urbano", "KitUrbano"), ("bar", "Bar")]  # el kit urbano va primero: gana en materiales repetidos
+GRUPOS = [("kit-urbano", "KitUrbano"), ("bar", "Bar"), ("letreros", "Letreros")]  # el kit urbano va primero: gana en materiales repetidos
 NOTAS = []
 
 

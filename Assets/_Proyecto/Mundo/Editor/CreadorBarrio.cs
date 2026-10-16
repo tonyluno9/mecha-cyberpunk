@@ -286,6 +286,7 @@ namespace MechaCyberpunk.Mundo.Editor
             CrearPuntosAparicion(t);
             VestirCalle.Cables(t);
             VestirFachadas.Vestir(t); // T-081: locales, ventanas y cornisas en los lados visibles
+            VestirLetreros.Vestir(t); // T-082: letreros de neón del kit en lugar de los cubos greybox
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabBarrio);
             Object.DestroyImmediate(raiz);

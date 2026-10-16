@@ -22,6 +22,13 @@
       "nombre": "fachada_modular"
     },
     {
+      "alto": 1.0872,
+      "ancho": 3.4,
+      "fondo": 0.57,
+      "grupo": "Letreros",
+      "nombre": "letrero_birria"
+    },
+    {
       "alto": 3.2022,
       "ancho": 0.85,
       "fondo": 0.645,
@@ -29,11 +36,67 @@
       "nombre": "letrero_cantina"
     },
     {
+      "alto": 1.5872,
+      "ancho": 4.6,
+      "fondo": 0.5736,
+      "grupo": "Letreros",
+      "nombre": "letrero_casino"
+    },
+    {
+      "alto": 3.0357,
+      "ancho": 0.71,
+      "fondo": 0.3436,
+      "grupo": "Letreros",
+      "nombre": "letrero_ciber"
+    },
+    {
       "alto": 3.4019,
       "ancho": 0.9,
       "fondo": 0.64,
       "grupo": "KitUrbano",
       "nombre": "letrero_farmacia"
+    },
+    {
+      "alto": 1.0872,
+      "ancho": 1.9,
+      "fondo": 0.55,
+      "grupo": "Letreros",
+      "nombre": "letrero_flecha"
+    },
+    {
+      "alto": 3.0357,
+      "ancho": 0.71,
+      "fondo": 0.3436,
+      "grupo": "Letreros",
+      "nombre": "letrero_hotel"
+    },
+    {
+      "alto": 2.5,
+      "ancho": 3.4,
+      "fondo": 0.34,
+      "grupo": "Letreros",
+      "nombre": "letrero_hotel_azotea"
+    },
+    {
+      "alto": 1.0872,
+      "ancho": 3.9,
+      "fondo": 0.5563,
+      "grupo": "Letreros",
+      "nombre": "letrero_lavanderia"
+    },
+    {
+      "alto": 1.6872,
+      "ancho": 5.0,
+      "fondo": 0.5846,
+      "grupo": "Letreros",
+      "nombre": "letrero_peleas"
+    },
+    {
+      "alto": 1.0872,
+      "ancho": 4.4,
+      "fondo": 0.5595,
+      "grupo": "Letreros",
+      "nombre": "letrero_refacciones"
     },
     {
       "alto": 3.0024,
