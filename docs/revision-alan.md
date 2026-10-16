@@ -115,3 +115,10 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Verificado automáticamente: compilar OK, EditMode 476/476, PlayMode 455/455 (props con collider, PuntoUso dentro de la casa, mirando al prop y libre; captura docs/capturas/T-087-1.png revisada).
 - Límite: los 3 props (Prop_Cama, Prop_Espejo, Prop_Mesita en Mundo/Prefabs/Kit/) son cubos con materiales, no modelos de Blender (el MCP de Blender no se usó); el espejo es un cristal reflectante barato, sin reflejo real.
 - Para ti: Ciudad.unity, entra a la casa: ¿la cama, la mesita con lámpara y el espejo se ven bien? ¿quieres modelos de Blender más detallados?
+
+### T-088 Callejón de la emboscada y punto de llamado
+- Verificado automáticamente: compilar OK, EditMode 476/476, PlayMode 460/460 (CallejonPruebas: Llegada con cilindro 3 m × 6 m libre y cielo abierto, radio que cubre la boca y deja fuera los interiores, camino a pie con SphereCast, rivales de la emboscada en piso libre; capturas T-088-1 y T-088-2 revisadas).
+- Cambios: Manzana_4 deja libre un callejón de 30 × 10 m abierto a la calle del este (CreadorBarrio, `CallejonX0/Z0/Z1`); `PuntoLlamadoMundo` (radio 14 m, llegada x=28); punto de aparición `Callejon_Entrada` (BarrioPruebas ahora espera 4 puntos); luces y neón del callejón con LuzNocturna.
+- Decisión: NO coloqué `Emboscada.prefab` en el barrio, porque se activa sola al acercarse cualquier IJugador (incluida la cámara libre) y cambiaría la escena de Alan (D-029). El callejón publica `Emboscada_Anclaje` (+Z hacia el fondo) y la prueba instancia el prefab ahí. T-073 de Tony debe instanciarlo en ese anclaje.
+- Límites: el radio de llamado solo cubre el callejón y su boca, no la calle frente a la casa; las poses de los rivales (14 m, ±1.5 m) están copiadas de DatosEmboscada_Base en la prueba; el callejón usa cubos, no modelos de Blender.
+- Para ti: Ciudad.unity de noche, `Callejon_Entrada`: ¿el callejón se siente apto para una pelea y para que baje el mecha?

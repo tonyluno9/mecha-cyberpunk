@@ -190,7 +190,7 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void PuntosAparicion_EstanRegistradosConIdYModo()
         {
-            Assert.AreEqual(3, Registro<IPuntoAparicion>.Cantidad);
+            Assert.AreEqual(4, Registro<IPuntoAparicion>.Cantidad); // T-088 sumó Callejon_Entrada
             IPuntoAparicion casaPuerta = Registro<IPuntoAparicion>.Todos.Single(p => p.Id == "Casa_Puerta");
             IPuntoAparicion cochera = Registro<IPuntoAparicion>.Todos.Single(p => p.Id == "Casa_Cochera");
             IPuntoAparicion clandestino = Registro<IPuntoAparicion>.Todos.Single(p => p.Id == "Clandestino_Puerta");
