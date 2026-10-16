@@ -98,3 +98,7 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 ### T-083 El bar con los props de Blender y mejor luz
 - Verificado automáticamente: EditMode 476/476, PlayMode 447/447; capturas T-083-1..3. Luminancia +57 % y 10 luces: solo de la bitácora, no remedido. No confirmado: 3 minutos entrando y saliendo con la consola abierta.
 - Para ti: Ciudad.unity o Pruebas_Alan.unity a las 22:00, entra al bar y camina entre mesas, barra y DJ; ¿dan ganas de quedarse?, ¿algo fuera de escala? (techo algo oscuro, letreros pequeños). Deja 3 minutos entrando y saliendo y mira la consola.
+
+### Bloqueos de A-F2
+- T-084 (tráfico de fachada) y T-085 (modelo del carro viejo) no se hicieron: el modo Auto negó lanzar el implementador. alan/fase-2 (T-074 a T-083) está subida pero no mezclada a main porque la fase no está cerrada.
+- Pedido a Tony: IGuardable e IInteractuable no están en main (ver docs/estado-alan.md).

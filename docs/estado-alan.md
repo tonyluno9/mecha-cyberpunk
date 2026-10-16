@@ -16,7 +16,7 @@ A-F1 (T-020, T-040 a T-045) está hecha y revisada en alan/fase-1; espera la apr
 | T-082 Letreros de neón | hecha (sin revisar) |
 | T-083 El bar con los props de Blender y mejor luz | hecha (sin revisar) |
 | T-084 Tráfico mínimo de fachada | pendiente (el modo Auto negó lanzar el implementador; no se intentó por otra vía; rama local alan/T-084-trafico-fachada sin trabajo) |
-| T-085 Modelo del carro viejo | pendiente (depende de T-075 y T-076) |
+| T-085 Modelo del carro viejo | bloqueada (el modo Auto negó lanzar el implementador; sin código ni verificación; rama local alan/T-085-modelo-carro-viejo con un commit "en curso", sin push) |
 | T-060, T-061 (de Tony) | bloqueadas: siguen esperando que A-F1 y A-F2 lleguen a main (D-alan-22) |
 
 Orden: T-074, T-075, T-076, T-077, T-078, T-079, T-080, T-081, T-082, T-083, T-084, T-085, una tras otra (D-alan-21).
@@ -24,3 +24,13 @@ Las fuentes de Blender están en Assets/Arte/Fuentes~/ (D-alan-18).
 Qué sigue: crear alan/fase-2 desde alan/planificacion-fase-2 (ya contiene alan/fase-1 y estas tareas; main todavía no tiene A-F1)
 y empezar con T-074. Ojo: docs/estado.md todavía dice A-F1 para Alan y la skill trabajar crea `<persona>/fase-N` desde main;
 hasta que A-F1 se apruebe, la fase de Alan es A-F2 y su rama alan/fase-2 sale de esta rama, no de main.
+
+## Pedido a Tony (Core)
+- `IGuardable` (Core/Guardado) e `IInteractuable` (Core/Jugador) solo existen en origin/tony/fase-5, no en main. Cuando lleguen a main:
+  RelojMundo implementa `IGuardable` con clave `reloj`; cama, espejo y punto del taller como `IInteractuable` (A-F3).
+
+## Bloqueo del turno (2026-10-16)
+- El modo Auto negó lanzar el implementador de T-084 y el de T-085 ("Auto-Mode Bypass"). No se intentó por otra vía.
+- Sin agentes no queda trabajo independiente: T-084 y T-085 (A-F2), cierre de A-F2 y planificar A-F3.
+- Falta de A-F2: T-084, T-085 y la mezcla de alan/fase-2 a main (no se hizo: la fase no está completa).
+- Para seguir: autorizar el implementador de T-085 y T-084, o decidir cerrar A-F2 sin ellas.
