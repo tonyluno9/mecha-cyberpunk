@@ -279,3 +279,6 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK, EditMode UI + ReglasEnsamblados 62/62, PlayMode UI+Progresion+Personaje 227/228 (CambioEscenaPruebas de T-124 falla solo en corrida conjunta por orden; pasa sola). Capturas T-126-1/2.
 - Para ti: abre Escenas/Tony/CreacionPersonaje.unity y dale Play. Teclado: Tab o ↑↓ cambia de fila, ←→ cambia de opción. ¿Se entiende sin explicación? ¿El cuerpo cambia al instante? ¿Crear el personaje toma menos de 1.5 min? EMPEZAR falla por escena faltante hasta T-127.
 - Deuda: CambioEscenaPruebas depende del orden de ejecución.
+### T-127 Ensamblado del prólogo y escena Pruebas_Prologo
+- Verificado automáticamente (acotado): compilar OK, EditMode 159/159, PlayMode 49/49 + EscenaPrologoPruebas 4/4 en 2 corridas. Captura T-127-1.png.
+- Para ti: Pruebas_Prologo.unity, Play, WASD de la casa al clandestino: ¿dura unos 40 s, la vuelta en (40,0,0) se siente natural y el callejón de z=40 parece sitio de emboscada? En la captura el carro y el jugador casi no se distinguen.
