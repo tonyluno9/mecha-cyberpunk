@@ -136,3 +136,9 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - Unity: la corrida batch de PlayMode del implementador (PID 41164) seguía viva y no pude cerrarla (permiso denegado). Hay que cerrarla antes de seguir; Temp/UnityLockfile existe en el worktree.
 - Falta: terminar T-108, verificarla, cerrarla; luego T-109, T-110, T-111, rehacer T-112; luego T-F6. Revisar que Pruebas_APie.unity se haya regenerado con el creador y no a mano.
 - Deuda: RecorridoEmboscadaPruebas y RecorridoAPiePruebas fallan por tope de frame de 100 ms.
+
+## Parada por límite de la cuenta (2026-10-16)
+El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hora de México) en medio de T-124. Nada se perdió:
+- tony/fase-5 tiene cerradas y verificadas T-107 a T-112 (T-F5 completa), T-060, T-120 a T-123. Pendiente de Tony: llevar T-100 y T-120 (Core) a main (el permiso de merge a main fue denegado).
+- T-124 (Etapas de la historia y cambio de escena): rama tony/T-124-historia-cambio-escena, implementación A MEDIAS (WIP commit), sin compilar ni verificar. Para retomar: correr bash herramientas/verificar.sh todo en esa rama, terminar lo que falte según docs/tareas/en-curso/T-124-historia-cambio-escena.md, verificar y cerrar con el mismo flujo.
+- Sigue en orden: T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas esperando A-F3/A-F4. T-061 y T-073 bloqueadas esperando A-F2/A-F3 de Alan.

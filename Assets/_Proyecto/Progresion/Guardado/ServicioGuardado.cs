@@ -18,8 +18,22 @@ namespace MechaCyberpunk.Progresion.Guardado
         private string ruta;
         private readonly Dictionary<string, string> pendientes = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Si está puesta, gana sobre la ruta por defecto en todas las instancias (pruebas que cruzan escenas sin tocar la partida
+        /// real). Una ruta puesta con <see cref="FijarRuta"/> en esa instancia gana sobre esta. Se limpia al entrar a Play.
+        /// </summary>
+        public static string RutaForzada { get; set; }
+
         /// <summary>Dónde está el archivo. Por defecto persistentDataPath/partida.json.</summary>
-        public string RutaArchivo => ruta ?? (ruta = Path.Combine(Application.persistentDataPath, NombreArchivo));
+        public string RutaArchivo => ruta ?? (!string.IsNullOrEmpty(RutaForzada)
+            ? RutaForzada
+            : Path.Combine(Application.persistentDataPath, NombreArchivo));
+
+        /// <summary>El servicio de guardado activo de la escena, o null (para otras áreas sin Find).</summary>
+        public static ServicioGuardado Actual => Registro<ServicioGuardado>.Actual;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ReiniciarEstatico() => RutaForzada = null;
 
         public bool HayPartida => File.Exists(RutaArchivo);
 
@@ -35,11 +49,19 @@ namespace MechaCyberpunk.Progresion.Guardado
         private void OnEnable()
         {
             Registro<IGuardable>.Agregado += AlRegistrarse;
+            Registro<ServicioGuardado>.Agregar(this);
+        }
+
+        private void Start()
+        {
+            // Solo tras un cambio de escena se lee la partida: dar Play directo no lee la del humano.
+            if (CambioEscena.ConsumirTransicion()) Cargar();
         }
 
         private void OnDisable()
         {
             Registro<IGuardable>.Agregado -= AlRegistrarse;
+            Registro<ServicioGuardado>.Quitar(this);
         }
 
         /// <summary>Escribe la partida de forma atómica. False (con error en consola) si no se pudo; el archivo anterior queda intacto.</summary>
