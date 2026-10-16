@@ -1,11 +1,14 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mecha.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Pelea.Flujo;
+using MechaCyberpunk.Pelea.Pruebas;
 using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Progresion.Pruebas;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.Mecha.Editor
@@ -59,6 +62,57 @@ namespace MechaCyberpunk.Mecha.Editor
         // Punto de llamado junto a la entrada del callejón: zona pequeña que cubre la boca, sin alcanzar el centro de la calle.
         private const float XLlegadaCallejon = -7.5f;
         private const float RadioLlamadoCallejon = 3.5f;
+
+        // Pelea de prueba (T-112): una arena cerrada al sur del taller, más allá del muro trasero (a 25 m del banco), lejos de la
+        // emboscada (12 m de radio en el callejón). El director teletransporta a los peleadores adentro, no hace falta llegar a pie.
+        private const string RutaArenaPrueba = "Assets/_Proyecto/Pelea/Pruebas/ArenaDePrueba.prefab";
+        private const string RutaFlujoPelea = "Assets/_Proyecto/Pelea/Prefabs/FlujoPelea.prefab";
+        private const string TeclaIniciarPelea = "<Keyboard>/p";
+        private static readonly Vector3 PosicionArenaPrueba = new Vector3(0f, 0f, -30f);
+
+        /// <summary>
+        /// Agrega a la Pruebas_Calle ya creada la arena de prueba, el flujo de pelea (casera, empieza con P) y el iniciador, sin
+        /// regenerarla. Idempotente.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Agregar arena y pelea de prueba a Pruebas_Calle")]
+        public static void AgregarPeleaDePrueba()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            if (Object.FindFirstObjectByType<IniciadorPeleaDePrueba>() == null)
+            {
+                ArmarPeleaDePrueba(escena);
+                EditorSceneManager.SaveScene(escena);
+                AssetDatabase.SaveAssets();
+            }
+        }
+
+        private static void ArmarPeleaDePrueba(Scene escena)
+        {
+            GameObject arena = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaArenaPrueba), escena);
+            arena.transform.position = PosicionArenaPrueba;
+
+            GameObject flujo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaFlujoPelea), escena);
+            flujo.transform.position = PosicionArenaPrueba;
+            DirectorPelea director = flujo.GetComponent<DirectorPelea>();
+            SerializedObject soDirector = new SerializedObject(director);
+            soDirector.FindProperty("empezarAlArrancar").boolValue = false;
+            soDirector.ApplyModifiedPropertiesWithoutUndo();
+
+            GameObject iniciador = new GameObject("IniciadorPeleaDePrueba");
+            SceneManager.MoveGameObjectToScene(iniciador, escena);
+            IniciadorPeleaDePrueba componente = iniciador.AddComponent<IniciadorPeleaDePrueba>();
+            SerializedObject soIniciador = new SerializedObject(componente);
+            soIniciador.FindProperty("director").objectReferenceValue = director;
+            SerializedProperty accion = soIniciador.FindProperty("iniciar");
+            accion.FindPropertyRelative("m_Name").stringValue = "Iniciar pelea";
+            accion.FindPropertyRelative("m_Type").intValue = (int)InputActionType.Button;
+            SerializedProperty bindings = accion.FindPropertyRelative("m_SingletonActionBindings");
+            bindings.arraySize = 1;
+            SerializedProperty binding = bindings.GetArrayElementAtIndex(0);
+            binding.FindPropertyRelative("m_Path").stringValue = TeclaIniciarPelea;
+            binding.FindPropertyRelative("m_Id").stringValue = System.Guid.NewGuid().ToString();
+            soIniciador.ApplyModifiedPropertiesWithoutUndo();
+        }
 
         /// <summary>
         /// Agrega GuardadoDePrueba (T-111) a la Pruebas_Calle ya creada, sin regenerarla (regenerar cambia el orden de los
@@ -145,6 +199,8 @@ namespace MechaCyberpunk.Mecha.Editor
 
             // Guardado de prueba (T-111): F5 guarda y F9 carga la partida.
             new GameObject("GuardadoDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba>();
+
+            ArmarPeleaDePrueba(escena);
 
             EditorSceneManager.SaveScene(escena, RutaEscena);
             AssetDatabase.SaveAssets();

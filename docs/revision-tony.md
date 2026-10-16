@@ -3,6 +3,18 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## T-F5 cerrada: qué probar jugando (2026-10-16)
+Todo en Pruebas_Calle (Play, sin ayuda), salvo lo marcado. Dobles de prueba: 7 y 8 dinero, J reloj (salta a las 08:00 del día siguiente), F5 guardar, F9 cargar, P iniciar pelea, M mandar el mecha al taller.
+1. Sube al mecha (E), enciéndelo (F, Espacio, Q) y pelea (P). Gana con daño y pulsa R: ¿se nota que empiezas dañado (vida, alarma roja, grietas del cristal, más lento y peor manejo)? ¿"+$600 · PREMIO" se siente bien?
+2. Baja (E), M manda el mecha al taller, camina al banco: ¿"E · Reparar mecha · $X" se entiende? ¿Quedar en negativo se siente como decisión tuya y no como error?
+3. J hasta el día 8 sin dinero: ¿"RENTA VENCIDA" en el HUD y "TALLER BLOQUEADO" en el banco se entienden solos? Con 7, paga la renta en el banco.
+4. ¿500 de renta por semana contra 600 por pelea ganada aprieta lo justo? ¿La reparación de ~$300-650 se siente "vivo al día"?
+5. F5, cambia dinero, vida, perfil y reloj, F9: ¿todo vuelve como estaba?
+6. Interactuables (T-108): en Pruebas_APie camina al interactuable de (4,0,12) y pulsa E: ¿responde al instante, estorba el aviso al pasar de largo?
+7. Barrio de Alan (T-060): en Ciudad.unity, cuando Alan coloque el prefab, camina de la casa al clandestino y al bar: ¿la escala cabe? La flecha del objetivo se solapa con el horario del cartel.
+Deudas y avisos: (a) PeleaClandestinoPruebas.TresPeleasSeguidasConRevancha (Alan) falla porque el daño del mecha persiste entre peleas (T-103): la prueba de Alan debe ajustarse o repararse el mecha entre peleas; (b) JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja x8 y Cubo_SoltadoSobreJaula fallan en main puro (Alan); (c) CreadorEscenaCalle.Crear reordena objetos y rompe LlamadoMechaPruebas (por eso se agregan objetos con métodos idempotentes); (d) RivalBasicoPruebas.Ritmo_*, RecorridoEmboscadaPruebas y RecorridoAPiePruebas son intermitentes por tiempo de frame; (e) la arena de Pruebas_Calle es una jaula cerrada a 25 m, no se camina hasta ella; (f) el taller de la casa de Alan (H5 completo) espera A-F3.
+Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony para este turno).
+
 ## Resumen del turno (2026-10-15)
 - Hecho: merge de tony/fase-4 (con fase-3) en main y push; decisiones D-tony-1 a 39 pasadas a docs/decisiones.md como D-033 a D-071,
   más D-072 (Pelea referencia Progresion); docs/estado.md y docs/estado-tony.md actualizados; docs/decisiones-pendientes-tony.md vaciado.
@@ -234,3 +246,6 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 - Verificado automáticamente: BarrioAlanPruebas 3/3; EditMode 518/518; PlayMode 444/453 con 9 fallos de Arena de Alan (cápsula x8 falla igual en main puro; TresPeleasSeguidasConRevancha falló una vez en fase-5 con vida 15/100 y pasó en main: puede ser estado compartido entre pruebas o inestabilidad, sin asignar). Captura T-060-1.png.
 - Para ti: en Ciudad.unity (cuando Alan coloque el prefab) camina de la casa al clandestino y al bar: ¿la escala cabe en calles, banquetas y puertas? La flecha del objetivo se solapa con el horario del cartel.
 - Para Alan: arreglar JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula (x8) y Cubo_SoltadoSobreJaula.
+### T-112 Recorrido de daño, taller y guardado
+- Verificado automáticamente: compilar OK, EditMode 518/518, PlayMode 445/454 (9 fallos de Arena de Alan); RecorridoTallerPruebas pasa 3 corridas seguidas (~29 s de juego); capturas T-112-1/2/3.
+- Para ti: ver la lista de arriba "T-F5 cerrada".
