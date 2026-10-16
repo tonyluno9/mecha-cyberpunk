@@ -98,7 +98,7 @@ Orden recomendado (D-071). Decisiones de la planeación: D-059 a D-071 en docs/d
 | T-033 Contratos de cartera y ofertas | aprobada, en main |
 | T-034 Contratos de calor y objetivos | aprobada, en main |
 | T-060 Jugador en el barrio de Alan | hecha (sin revisar) |
-| T-061 Subir al carro de Alan | bloqueada (espera A-F2) |
+| T-061 Subir al carro de Alan | hecha (sin revisar) |
 | T-050 Contrato de subir y bajar | aprobada, en main |
 | T-051 Jugador a pie | aprobada, en main |
 | T-055 Servicio de objetivos | aprobada, en main |
