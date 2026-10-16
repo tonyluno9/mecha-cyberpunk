@@ -94,3 +94,7 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Verificado automáticamente: todos los criterios (EditMode 476/476, PlayMode 444/444; capturas T-082-1..4). Reflejos rehorneados: los 4 .exr cambiaron (solo los letreros están marcados ReflectionProbeStatic; el resto del barrio sigue fuera del horneado).
 - Para ti: Ciudad.unity a las 22:00: ¿"río de neón"? En la captura 1 los letreros se ven pequeños y escasos; cantina del bar y CASINO no tienen captura, míralos de lejos; parpadeo de 1 de cada 6 (neón viejo).
 - Decisiones del agente: ParpadeoNeon propio en lugar de LuzNocturna; banderas a 1.5×; marcar todo el barrio para reflejos cambiaría los charcos (siguiente paso posible).
+
+### T-083 El bar con los props de Blender y mejor luz
+- Verificado automáticamente: EditMode 476/476, PlayMode 447/447; capturas T-083-1..3. Luminancia +57 % y 10 luces: solo de la bitácora, no remedido. No confirmado: 3 minutos entrando y saliendo con la consola abierta.
+- Para ti: Ciudad.unity o Pruebas_Alan.unity a las 22:00, entra al bar y camina entre mesas, barra y DJ; ¿dan ganas de quedarse?, ¿algo fuera de escala? (techo algo oscuro, letreros pequeños). Deja 3 minutos entrando y saliendo y mira la consola.
