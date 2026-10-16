@@ -11,7 +11,6 @@ namespace MechaCyberpunk.Mecha.Taller
     /// El banco del taller (T-109): con E se repara el mecha completo pagando según el daño (puede quedar en deuda) o se paga
     /// la renta vencida. Vive en el mecha y solo se ofrece si el mecha arrancó Estacionado, hay un taller y hay cartera.
     /// </summary>
-    [RequireComponent(typeof(MechaPersistente))]
     [RequireComponent(typeof(MontajeMecha))]
     public class BancoTaller : MonoBehaviour, IInteractuable
     {
@@ -94,6 +93,12 @@ namespace MechaCyberpunk.Mecha.Taller
         private void Awake()
         {
             persistente = GetComponent<MechaPersistente>();
+            if (persistente == null)
+            {
+                // Mecha de arranque Directo: no guarda daño, no hay nada que reparar. No ofrece el banco.
+                enabled = false;
+                return;
+            }
             montaje = GetComponent<MontajeMecha>();
             llamado = GetComponent<LlamadoMecha>();
             if (config == null)
