@@ -256,3 +256,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente: compilar OK, EditMode 528/528, PlayMode 444/454 (solo los 10 conocidos de Alan).
 - Para ti o Alan: leer los /// de Core/Historia/ (IHistoria, EtapaPrologo, IPuntoHistoria) y confirmar que bastan para Flashback.unity y Ciudad.unity sin preguntar. Pedido a Alan en D-tony-72.
 - Core: falta llevarla a main (ver "Pendiente para Tony").
+### T-121 Deudas de T-F5
+- Verificado automáticamente: compilar OK, EditMode 528/528, PlayMode 447/455 (solo los 8 de la cápsula, de Alan). TresPeleasSeguidasConRevancha pasa de nuevo.
+- Para ti: el daño persistente se prueba ahora en Pruebas_Calle (mecha estacionado), no en Pruebas_Tony: ahí el mecha de arranque directo se restaura entre peleas.
+- Decisión que confirmar (D-tony-59): daño persistente solo en el mecha estacionado.
