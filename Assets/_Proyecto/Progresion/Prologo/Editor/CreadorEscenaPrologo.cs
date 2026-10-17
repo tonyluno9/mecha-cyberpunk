@@ -344,7 +344,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
         // ---------- Ayudas ----------
 
-        private static void ArmarLugar(string nombreObjeto, IdLugar id, string nombre, Vector3 centroZona, Vector3 tamanoZona, Vector3 entrada)
+        internal static void ArmarLugar(string nombreObjeto, IdLugar id, string nombre, Vector3 centroZona, Vector3 tamanoZona, Vector3 entrada)
         {
             GameObject objeto = new GameObject(nombreObjeto);
             objeto.transform.position = centroZona;
@@ -370,7 +370,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             soZona.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void Aparicion(string id, ModoJugador modo, Vector3 posicion, Quaternion rotacion)
+        internal static void Aparicion(string id, ModoJugador modo, Vector3 posicion, Quaternion rotacion)
         {
             GameObject objeto = new GameObject("PuntoAparicion " + id);
             objeto.transform.SetPositionAndRotation(posicion, rotacion);
@@ -389,17 +389,17 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void Vacio(string nombre, Vector3 posicion)
+        internal static void Vacio(string nombre, Vector3 posicion)
         {
             new GameObject(nombre).transform.position = posicion;
         }
 
-        private static void Hija(GameObject padre, GameObject hijo)
+        internal static void Hija(GameObject padre, GameObject hijo)
         {
             hijo.transform.SetParent(padre.transform, true);
         }
 
-        private static GameObject Caja(string nombre, Vector3 centro, Vector3 tamano, Material material, bool conCollider)
+        internal static GameObject Caja(string nombre, Vector3 centro, Vector3 tamano, Material material, bool conCollider)
         {
             GameObject caja = GameObject.CreatePrimitive(PrimitiveType.Cube);
             caja.name = nombre;
@@ -443,7 +443,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         }
 
         // Texto con todo lo que importa de la escena: objetos en orden, componentes y sus valores serializados.
-        private static string Firma(Scene escena)
+        internal static string Firma(Scene escena)
         {
             StringBuilder texto = new StringBuilder();
             foreach (GameObject raiz in escena.GetRootGameObjects())
