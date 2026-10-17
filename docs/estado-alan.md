@@ -2,7 +2,7 @@
 
 Fase A-F2 (Carro, docs/hoja-de-ruta.md), rama de integración: alan/fase-2 (sale de alan/fase-1).
 A-F1 y A-F2 (T-074 a T-083) están en main (6be7940; EditMode 476/476, PlayMode 447/447). T-084 y T-085 siguen pendientes.
-A-F3 en alan/fase-3 (sin mezclar a main): T-086 casa y taller, T-087 cama y espejo, T-088 callejón y llamado, T-089 clandestino por dentro (fosa visual, sin la jaula real) y T-090 Flashback están hechas y verificadas (PlayMode 468/468). Bloqueadas por Tony: T-092, T-093. T-084 y T-085 siguen pendientes (denegadas por el modo Auto).
+A-F3 y A-F4 en alan/fase-3 (sin mezclar a main, incompletas): hechas y verificadas T-086 a T-090 (A-F3) y T-094 a T-099 (A-F4: exteriores cerrados, grafitis, lluvia y niebla, audio, calles y finales, iluminación; PlayMode 487/487). Pendientes: T-084 y T-085 (A-F2, denegadas por el modo Auto), bloqueadas por Tony: T-092 y T-093.
 
 | Tarea | Estado |
 | --- | --- |
