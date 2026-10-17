@@ -27,7 +27,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-148 Kits de reparación en plena pelea | T-142, T-143 | hecha (sin revisar) |
 | T-149 Reparar a medias en el banco del taller | T-143 | hecha (sin revisar) |
 | T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | hecha (sin revisar) |
-| T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | pendiente |
+| T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
 
 Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-152; D-tony-76):
 1. Ligas: 4 ligas de 5 rivales, campeón con pelea de jefe, subir de liga, premios y momios por liga.
@@ -212,3 +212,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-150 (2026-10-17)
 - T-150 hecha (sin revisar). Sigue T-151 (recorrido de cierre del bloque de economía). Deuda: CreadorKitReparacion.Crear modifica MechaJugador.prefab cada vez que corre (no es idempotente).
+
+## Después de T-151 (2026-10-17)
+- T-151 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.

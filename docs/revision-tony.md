@@ -405,3 +405,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 | Kit de reparación | compra $250, cura 20 de 100 puntos ($12.5 por punto), máximo 3, 2 por pelea |
 - Para probar jugando: una semana en Pruebas_Economia (J pasa días): ¿se vive al día, con decisiones (apostar o no, kit o taller, reparar todo o a medias) y sin quedar atorado?
 - Decisiones: sin cambios de valores. La regla d toma el precio de compra de la oferta enlazada o, si no hay enlace (el brazo no la tiene), de la oferta con el mismo nombre. Los creadores de ofertas, premios, objetos y apuesta ya no pisan valores de assets existentes. Nota: correr CreadorKitReparacion modifica MechaJugador.prefab (no lo toqué; lo restauré).
+
+### T-151 Recorrido de cierre del bloque de economía
+- Verificado automáticamente (acotado): RecorridoEconomiaPruebas pasa 3 de 3 corridas (46 s cada una); Progresion 87/87. Dinero final $699, $700, $700 igual al calculado; tiempo de juego 45.5 s; MedidorFrames 0 frames lentos (máx 12-13 ms); kit curó 20.0 puntos en 1.5 s; partida real no tocada.
+- Para probar jugando: Pruebas_Economia, Play, de noche: compra un kit, apuesta $250 al casero (con el brazo en juego), pelea y usa G, repara a medias en el banco, vende el brazo. ¿La economía se siente apretada pero justa, como vivir al día?
+- Decisiones: Atajos: Colocar cerca del mercado, mostrador y banco; RecibirDanio al rival casero tras daño real; FijarVida al 20 % antes de la pelea que se pierde. Aviso del HUD en el banco ya no lleva el costo (E · Reparar mecha…). El área Progresion roza el límite de 900 s de playmode-por-area: usar LIMITE_AREA=2400 en la suite completa.
