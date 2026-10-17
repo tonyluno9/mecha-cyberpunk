@@ -347,3 +347,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK; EditMode 664/664 (10 de ContratosApuestasPruebas; ReglasEnsambladosPruebas en verde). playmode-por-area con AREAS='Core Economia': Core 3/3, Economia 13/13, salida 0. Con LIMITE_AREA=20 ambas áreas salen LIMITE, sigue con la siguiente, sin Unity vivo ni lockfile.
 - Para probar jugando: Leer los /// de IApuestasPelea con la mirada de Alan: ¿basta para poner una ventanilla de apuestas en el casino sin preguntar?
 - Decisiones: Core a main en cuanto se verificó. El modo cierra solo el PID de Windows que lanzó (taskkill //PID //T //F). LIMITE_AREA=20 prueba el cierre pero no un cuelgue a mitad de prueba.
+
+### T-142 Inventario del jugador y objetos vendibles
+- Verificado automáticamente (acotado): compilar OK; EditMode 676/676; PlayMode por área: Economia 19/19, Personaje 111/111, Progresion 79/79.
+- Para probar jugando: Nada jugable aún (T-143 pone las teclas 9 y 0 en la escena de pruebas de economía).
+- Decisiones: Ids brazo_chatarra, chatarra, kit_reparacion; Brazo de chatarra $300 máx 5, chatarra $50 máx 20, kit $0 máx 3. Al cargar, una cantidad mayor al tope se recorta; id repetido se ignora; id desconocido da warning. Aviso: DatosOferta_KitReparacion (T-033) cuesta $300 y D-tony-86 dice $250: se ajusta en T-146/T-150. T-143 debe asignar brazo y kit en InventarioDePrueba.
