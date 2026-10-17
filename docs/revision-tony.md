@@ -429,3 +429,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): creador x2 deja md5 iguales en ServiciosProgresion.prefab y DatosLigas_Base.asset; EditMode 777/777; PlayMode Progresion 92/92.
 - Para probar jugando: nada todavía (LigasDePrueba, tecla L, se coloca en T-159).
 - Decisiones: ver D-tony-106 en docs/decisiones-pendientes-tony.md.
+
+### T-155 Cartel por pelea en el flujo
+- Verificado automáticamente (acotado): EditMode Pelea 37/37; PlayMode Pelea 60/60 (10 nuevas de CartelPeleaPruebas con flujo casero y tutorial reales).
+- Para probar jugando: nada todavía (la cartelera llega en T-159 y T-160).
+- Decisiones: ver D-tony-107 en docs/decisiones-pendientes-tony.md.

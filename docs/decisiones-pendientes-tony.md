@@ -438,3 +438,6 @@ Propuesta: el creador del kit ya no rehace la pantalla si existe (para cambiarla
 
 ### D-tony-106 Detalles de T-154
 Propuesta: `rivalesPorLiga` en DatosLigas es un entero común a todas las ligas; `ModeloLigas.Poner` valida rangos pero no que campeones concuerde con la liga; sin asset de datos el servicio cae a 4x5 con nombres por defecto. Sin impacto en el diseño.
+
+### D-tony-107 Detalles de T-155
+Propuesta: con cartel, el cartel manda entero: rival, premio, apuesta y presentador (un cartel sin apuesta o sin presentador no tiene apuesta ni presentación; no cae a lo del prefab). `QuitarCartel` devuelve false si no había cartel. `PrepararCartel` no crea al rival: nace al empezar o al anunciar la apuesta. `{liga}` queda vacío sin servicio o con liga 0. El premio con fracción se redondea al entero (`Mathf.RoundToInt`). Sin impacto en el diseño.
