@@ -147,3 +147,11 @@ El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hor
 - T-129 hecha (sin revisar), integrada en tony/fase-5. Sigue T-130 a T-135, luego T-F6 (suite completa, revision-tony.md, merge a main con push).
 - Deuda: PlayMode de Economia se cuelga en esta máquina tras el primer aviso de ServicioCartera (no lo toca T-129; por investigar en la suite completa).
 - T-073 y T-136/T-137 esperan a alan/fase-3 y A-F4 en main.
+
+## Parada manual (2026-10-17, a petición de Tony)
+- Rama actual: tony/T-130-cama-espejo (archivo de la tarea en docs/tareas/en-curso/). Sin código todavía: el implementador solo había empezado a leer MostradorPeleas, EntradaArena y CreadorEscenaPrologo cuando se detuvo. Unity cerrado y sin lockfile.
+- T-129 hecha (sin revisar) y mezclada en tony/fase-5 (con push).
+- Falta: T-130 completa (CamaJugador, EspejoJugador, PantallaEspejo, Pruebas_Prologo con Sitio_Cama y Sitio_Espejo, CamaEspejoPruebas, capturas T-130-1 y T-130-2), luego cerrar (hechas, bitácora, estado, revisión) y mezclar en tony/fase-5.
+- Sigue: T-131 a T-135, luego T-F6 (suite completa, revision-tony.md con qué probar jugando, merge de tony/fase-5 a main con push, autorizado por Tony). alan/fase-3 aún no está en main (T-073, T-136 y T-137 esperan).
+- Deudas: PlayMode de Economia se cuelga en esta máquina tras el primer aviso de ServicioCartera (no lo toca T-129). Correr los ensamblados de PlayMode uno por llamada; no matar Unity por nombre, solo por PID propio.
+
