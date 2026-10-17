@@ -372,3 +372,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK; EditMode Economia+UI+Progresion 270/270; PlayMode UI 88/89 (1 ignorada ya existente), Economia 19/19, Progresion 86/86. Captura T-146-1.
 - Para probar jugando: Pruebas_Economia, Play: camina al mercado (8,6), E abre el mostrador del mercado negro: kit $250, Enter compra, Esc cierra. ¿Se entiende cuánto llevas y el máximo? ¿VENDER (aún 'PRONTO') tiene sitio claro?
 - Decisiones: El mostrador es un prefab de Tony que Alan solo coloca (D-tony-81); el texto del mostrador es solo el nombre de la tienda; cerrado sin hora legible dice CERRADO; solo se lista un objeto si su oferta es de esa tienda (hoy solo el kit); kit a $250 (D-tony-86) con valorVenta $0; VENDER muestra PRONTO hasta T-147. Sugerencia: prueba EditMode de que el kit cuesta $250 y se vende en $0 para T-150.
+
+### T-147 Vender piezas y chatarra
+- Verificado automáticamente (acotado): compilar OK; EditMode 711/711; PlayMode UI 93/94 (1 omitida, captura de otra tarea), Economia 19/19. Vender 1 brazo deja $400 (+$300 · VENTA en el HUD), segundo $700, el kit no se compra. Captura T-147-1.
+- Para probar jugando: Pruebas_Economia: tecla 9 da un brazo, E en el mercado, → pestaña VENDER, Enter vende. ¿El precio de venta ($300 el brazo, $50 la chatarra) se siente justo contra apostar el brazo ($250)?
+- Decisiones: D-tony-89: compra vacío esconde la pestaña VENDER; vender quita 1 del inventario primero y luego abona con MotivoDinero.Venta; una fila por objeto distinto; textos VENDISTE {0} POR {1} y ayuda Enter vender.
