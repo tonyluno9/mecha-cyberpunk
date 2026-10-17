@@ -159,6 +159,10 @@ MonoBehaviour:
   texto: {fileID: 7841047620346041231}
   textoRevancha: {fileID: 3516978479802934985}
   textoPremio: {fileID: 686099111339917625}
+  textoApuesta: {fileID: 0}
+  etiquetaApuesta: APUESTA
+  tamanoLetraApuesta: 110
+  colorApuestaPerdida: {r: 1, g: 0.15, b: 0.15, a: 1}
 --- !u!1 &6569064291862048368
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +375,9 @@ MonoBehaviour:
   empezarAlArrancar: 1
   presentador: {fileID: 11400000, guid: fa5f9304e28ab5c47b7b1e9ae60c3bba, type: 2}
   premio: {fileID: 11400000, guid: bcbf6f27cb6bf79499243ea6415b5808, type: 2}
+  apuesta: {fileID: 0}
+  liga: 4
+  esJefe: 1
   permitirRevancha: 0
   revancha:
     m_Name: Revancha
