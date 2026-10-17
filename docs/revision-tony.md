@@ -292,3 +292,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Decisión: PeleaCaseraPruebas descarta el estado de los mapas de acciones también al terminar (si no, contaminaba a otras pruebas con `statePtr`).
 - Pendiente: PlayMode de Economia se cuelga en esta máquina; se mira en la suite completa.
 
+### T-130 Cama y espejo de la casa
+- Verificado automáticamente (acotado): compilar OK; EditMode Progresion+UI 148/148; PlayMode Progresion 61/61 y UI 73/73. Capturas T-130-1 y T-130-2.
+- Para probar jugando: Pruebas_Prologo, Play: mírate al espejo (E, E o Esc para salir) y duerme en la cama (E). ¿Verte se siente tuyo? ¿Dormir se siente como cerrar el día y no como pantalla de carga?
+- Decisiones: Se corrigió que la E que cierra el espejo lo reabría en el mismo cuadro; sin IHistoria o en etapa no listada se duerme hasta las 08:00; alias del espejo de IPerfilJugador.Alias (respaldo SIN ALIAS); canvas del espejo en ScreenSpaceCamera. Sugerencia: acción propia E/Esc en un .inputactions.
