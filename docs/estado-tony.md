@@ -67,7 +67,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-133 Director del prólogo, parte 2: despertar, pelea casera y "continuará" | T-129, T-131, T-132 | hecha (sin revisar) |
 | T-134 Ayudas de controles para una persona nueva | T-121 | hecha (sin revisar) |
 | T-135 Recorrido del prólogo completo (cierre de T-F6 de Tony) | T-121 a T-134 | hecha (sin revisar) |
-| T-136 El prólogo en Ciudad.unity y Flashback.unity de Alan (H6) | T-135, T-073, T-061 | pendiente (A-F3 ya mezclada; falta T-061 y A-F4) |
+| T-136 El prólogo en Ciudad.unity y Flashback.unity de Alan (H6) | T-135, T-073, T-061 | bloqueada (A-F3 mezclada, pero Ciudad.unity no trae DirectorPrologo ni IPuntoHistoria de Tony; falta T-061 y A-F4) |
 | T-137 Escenas de la demo en Build Settings y build de Windows (Core) | T-136 | bloqueada (espera A-F4) |
 
 Pedidos a Alan de T-F6 (D-tony-72): colocar `DirectorPrologo.prefab`, `CamaJugador.prefab`, `EspejoJugador.prefab` y `MostradorPeleas.prefab`
