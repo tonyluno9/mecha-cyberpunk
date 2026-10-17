@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -22,10 +23,13 @@ namespace MechaCyberpunk.Tests.Progresion
 
         private string carpeta;
         private readonly List<string> errores = new List<string>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         [SetUp]
         public void Preparar()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             Registros.LimpiarTodos();
             carpeta = Path.Combine(Application.temporaryCachePath, "escena_prologo_" + System.Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
@@ -38,10 +42,7 @@ namespace MechaCyberpunk.Tests.Progresion
         public IEnumerator Limpiar()
         {
             Application.logMessageReceived -= AlRegistrar;
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
             ServicioGuardado.RutaForzada = null;

@@ -432,3 +432,6 @@ Hoy no hay límite. (b) ¿La casera sigue pagando $600 cada vez, o baja después
 
 ### D-tony-104 Detalles de T-152
 Propuesta: la línea de éxito de playmode-por-area imprime "(límite N s)"; el doble de IProgresoLigas ignora un campeón fuera de orden como si fuera revancha. Sin impacto en el diseño.
+
+### D-tony-105 Detalles de T-153
+Propuesta: el creador del kit ya no rehace la pantalla si existe (para cambiarla hay que borrarla del prefab antes); RaicesDePrueba es el helper para todo teardown. La fragilidad no se reprodujo, por eso el cierre es por defensa y no por causa demostrada. Sin impacto en el diseño.

@@ -29,6 +29,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | hecha (sin revisar) |
 | T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
 | T-152 Contrato de ligas, InfoPelea y límite por área (Core) | nada | hecha (sin revisar) |
+| T-153 Deudas del bloque de economía (creador del kit y raíces en teardown) | nada | hecha (sin revisar) |
 
 ## T-F7, bloque 2: ligas
 
@@ -44,7 +45,6 @@ T-153 y T-156 no dependen de Core (pueden ir primero si T-152 se atora); T-156 y
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
 | T-152 Contrato del progreso de ligas, presentación de pelea y límite por área de Progresion (Core; a main en cuanto se verifique) | nada | pendiente |
-| T-153 Deudas del bloque de economía: creador del kit idempotente y orden frágil en Progresion | nada | pendiente |
 | T-154 Progreso de las ligas: datos, modelo y servicio que se guarda | T-152 | pendiente |
 | T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | pendiente |
 | T-156 Pelea de jefe: furia a la mitad de la vida | nada | pendiente |

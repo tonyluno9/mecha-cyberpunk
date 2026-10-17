@@ -1,10 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mecha.Estado;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -31,9 +33,12 @@ namespace MechaCyberpunk.Tests.Progresion
 
         private Keyboard teclado;
         private string carpeta;
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             base.Setup();
             Registros.LimpiarTodos();
             teclado = InputSystem.AddDevice<Keyboard>();
@@ -52,10 +57,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator Descargar()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }

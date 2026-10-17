@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -23,10 +25,13 @@ namespace MechaCyberpunk.Tests.Progresion
         private const int MaxFramesEscena = 600;
 
         private string carpeta;
+        private HashSet<GameObject> raicesIniciales;
+
 
         [SetUp]
         public void Preparar()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             Registros.LimpiarTodos();
             carpeta = Path.Combine(Application.temporaryCachePath, "cambio_escena_" + System.Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
@@ -48,10 +53,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator Descargar()
         {
-            foreach (GameObject objeto in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(objeto);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }
