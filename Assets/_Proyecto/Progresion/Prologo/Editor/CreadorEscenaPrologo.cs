@@ -38,6 +38,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaPantallasHistoria = "Assets/_Proyecto/UI/Prefabs/PantallasHistoria.prefab";
         private const string RutaDatos = "Assets/_Proyecto/Progresion/Prologo/Datos";
         private const string RutaMostrador = "Assets/_Proyecto/Progresion/Prologo/Prefabs/MostradorPeleas.prefab";
+        private const string RutaCama = CreadorCamaEspejo.RutaPrefabCama;
+        private const string RutaEspejo = CreadorCamaEspejo.RutaPrefabEspejo;
+        private const string RutaDatosEscenasPruebas = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Pruebas.asset";
         private const float HoraAnochecerClandestino = 20f;
         private const string RutaConfigEntrada = RutaDatos + "/ConfigEntradaArena_Base.asset";
         private const string TeclaEntrarArena = "<Keyboard>/t";
@@ -96,6 +99,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             ArmarJugadorYServicios();
             ArmarEntradaArena();
             ArmarMostradorPeleas();
+            ArmarCamaYEspejo();
 
             string firmaNueva = Firma(escena);
             if (firmaActual != null && firmaActual == firmaNueva)
@@ -198,7 +202,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             Aparicion(IdCasaCama, ModoJugador.APie, PosicionCasaCama, Quaternion.identity);
             Aparicion(IdCasaPuerta, ModoJugador.APie, PosicionCasaPuerta, Quaternion.Euler(0f, 90f, 0f));
             Vacio("Sitio_Cama", new Vector3(-73f, 0f, 11f));
-            Vacio("Sitio_Espejo", new Vector3(-67f, 0f, 11.4f));
+            Vacio("Sitio_Espejo", new Vector3(-67f, 0f, 9.9f));
         }
 
         private static void ArmarTaller()
@@ -337,6 +341,25 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             GameObject mostrador = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaMostrador));
             mostrador.transform.position = sitio != null ? sitio.transform.position : Vector3.zero;
             mostrador.GetComponentInChildren<DirectorPelea>(true).transform.position = PosicionArena;
+        }
+
+        // T-130: la cama y el espejo de la casa en sus sitios; la cama usa las rutas de pruebas (el flashback de pruebas).
+        private static void ArmarCamaYEspejo()
+        {
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaCama) == null || AssetDatabase.LoadAssetAtPath<GameObject>(RutaEspejo) == null)
+            {
+                CreadorCamaEspejo.Crear();
+            }
+            GameObject sitioCama = GameObject.Find("Sitio_Cama");
+            GameObject cama = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaCama));
+            cama.transform.position = sitioCama != null ? sitioCama.transform.position : Vector3.zero;
+            SerializedObject soCama = new SerializedObject(cama.GetComponent<CamaJugador>());
+            soCama.FindProperty("datosEscenas").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosEscenas>(RutaDatosEscenasPruebas);
+            soCama.ApplyModifiedPropertiesWithoutUndo();
+
+            GameObject sitioEspejo = GameObject.Find("Sitio_Espejo");
+            GameObject espejo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaEspejo));
+            espejo.transform.position = sitioEspejo != null ? sitioEspejo.transform.position : Vector3.zero;
         }
 
         // ---------- Ayudas ----------

@@ -26,7 +26,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-127 Ensamblado del prólogo y escena Pruebas_Prologo | T-120, T-121 | hecha (sin revisar) |
 | T-128 El mecha de la historia entra a la arena | T-121, T-125, T-127 | hecha (sin revisar) |
 | T-129 Primera pelea casera y mostrador del clandestino | T-128 | hecha (sin revisar) |
-| T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | pendiente |
+| T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | hecha (sin revisar) |
 | T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | pendiente |
 | T-132 Director del prólogo, parte 1: la noche del campeonato | T-124, T-127, T-128, T-130 | pendiente |
 | T-133 Director del prólogo, parte 2: despertar, pelea casera y "continuará" | T-129, T-131, T-132 | pendiente |
@@ -124,26 +124,5 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - **Deudas anotadas:** Rival_Cuerpo.mat y ProjectSettings.asset cambian solos al correr pruebas; Cabina_Grietas.mat y Cabina_AlarmaPrendida.mat también se regeneran; la prueba OyenteUnicoPruebas no distingue el código viejo del nuevo; aviso de 2 audio listeners al subir a un carro; el implementador de T-104 rodeó un bloqueo del hook de unity-vivo.sh eval con un script temporal (ver revisión).
 - Hecho y cerrado en tony/fase-5: T-100 a T-105 (sin revisión del revisor; el turno de noche las revisa).
 
-## Parada manual (2026-10-15, a petición de Tony)
-- Rama actual: tony/T-107-renta-bloqueo-taller (en curso, archivo en docs/tareas/en-curso/). Implementada; el verificador se detuvo a medias y se mató su corrida de PlayMode (Unity cerrado).
-- Falta: verificar T-107 (verificar.sh todo + criterios), cerrarla (mover a hechas, bitácora, estado, revisión) y mezclarla en tony/fase-5.
-- T-106 cerrada y en tony/fase-5. Siguen: T-108, T-109, T-110, T-111 y rehacer T-112 al final; luego T-F6.
-- El worktree .claude/worktrees/tony-turno-largo es el que se usa; el checkout raíz quedó en HEAD desacoplado en edd62aa para liberar tony/fase-5.
-
-## Parada manual 2 (2026-10-15, a petición de Tony)
-- T-107 hecha y mezclada en tony/fase-5 (b3f5b0d). Verificada: EditMode 452/452, PlayMode 343/345 (2 fallos de tope de frame 100 ms, ajenos).
-- Rama actual: tony/T-108-interactuables-con-e, archivo en docs/tareas/en-curso/. Implementación A MEDIAS (WIP en Personaje/ y UI/HudAPie, Pruebas_APie.unity, CreadorJugadorAPie); no compilada ni verificada. El implementador fue detenido durante `verificar.sh` de PlayMode.
-- Unity: la corrida batch de PlayMode del implementador (PID 41164) seguía viva y no pude cerrarla (permiso denegado). Hay que cerrarla antes de seguir; Temp/UnityLockfile existe en el worktree.
-- Falta: terminar T-108, verificarla, cerrarla; luego T-109, T-110, T-111, rehacer T-112; luego T-F6. Revisar que Pruebas_APie.unity se haya regenerado con el creador y no a mano.
-- Deuda: RecorridoEmboscadaPruebas y RecorridoAPiePruebas fallan por tope de frame de 100 ms.
-
-## Parada por límite de la cuenta (2026-10-16)
-El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hora de México) en medio de T-124. Nada se perdió:
-- tony/fase-5 tiene cerradas y verificadas T-107 a T-112 (T-F5 completa), T-060, T-120 a T-123. Pendiente de Tony: llevar T-100 y T-120 (Core) a main (el permiso de merge a main fue denegado).
-- T-124 (Etapas de la historia y cambio de escena): rama tony/T-124-historia-cambio-escena, implementación A MEDIAS (WIP commit), sin compilar ni verificar. Para retomar: correr bash herramientas/verificar.sh todo en esa rama, terminar lo que falte según docs/tareas/en-curso/T-124-historia-cambio-escena.md, verificar y cerrar con el mismo flujo.
-- Sigue en orden: T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas esperando A-F3/A-F4. T-061 y T-073 bloqueadas esperando A-F2/A-F3 de Alan.
-
-## Después de T-129 (2026-10-17)
-- T-129 hecha (sin revisar), integrada en tony/fase-5. Sigue T-130 a T-135, luego T-F6 (suite completa, revision-tony.md, merge a main con push).
-- Deuda: PlayMode de Economia se cuelga en esta máquina tras el primer aviso de ServicioCartera (no lo toca T-129; por investigar en la suite completa).
-- T-073 y T-136/T-137 esperan a alan/fase-3 y A-F4 en main.
+## Después de T-130 (2026-10-17)
+- T-130 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
