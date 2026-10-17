@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.IA.Datos;
 using MechaCyberpunk.Mecha;
 using MechaCyberpunk.Mecha.Encendido;
@@ -132,7 +133,7 @@ namespace MechaCyberpunk.Tests.Progresion
             EventosPelea.LimpiarSuscriptores();
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
-            ReiniciarMapasDeAcciones(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
             carpeta = Path.Combine(Application.temporaryCachePath, "prologo_noche_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
             ServicioGuardado.RutaForzada = Path.Combine(carpeta, "partida.json");
@@ -146,23 +147,6 @@ namespace MechaCyberpunk.Tests.Progresion
             giroPedidoPendiente = 0f;
             vidaMinima = float.MaxValue;
             Application.logMessageReceived += RegistrarError;
-        }
-
-        // Los mapas de acciones (assets) guardan el estado de resolución anterior al reinicio del fixture. Cambiar `devices` en un
-        // mapa apagado descarta ese estado: la escena los resuelve de nuevo al prenderlos.
-        private static void ReiniciarMapasDeAcciones(InputDevice[] dispositivos)
-        {
-            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
-            {
-                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset == null)
-                {
-                    continue;
-                }
-                asset.Disable();
-                asset.devices = dispositivos;
-                asset.devices = null;
-            }
         }
 
         public override void TearDown()
@@ -179,10 +163,9 @@ namespace MechaCyberpunk.Tests.Progresion
             Registros.LimpiarTodos();
             // Deja los mapas apagados y sin dispositivos antes y después de que el fixture reinicie el Input System
             // (si no, las pruebas siguientes heredan controles ya liberados: ArgumentNullException statePtr).
-            InputSystem.DisableAllEnabledActions();
-            ReiniciarMapasDeAcciones(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
             base.TearDown();
-            ReiniciarMapasDeAcciones(new InputDevice[0]);
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]
@@ -472,6 +455,8 @@ namespace MechaCyberpunk.Tests.Progresion
                     {
                         espacioPulsado = false;
                         Release(teclado.spaceKey);
+                        // Un cuadro entre soltar y la tecla siguiente: Press justo tras Release en el mismo cuadro vuelve a pegar la tecla.
+                        yield return null;
                     }
                     if (ultimoTocado != PasoEncendido.Paso3)
                     {

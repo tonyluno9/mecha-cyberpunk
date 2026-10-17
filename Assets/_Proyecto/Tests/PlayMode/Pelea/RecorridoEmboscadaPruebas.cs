@@ -358,6 +358,8 @@ namespace MechaCyberpunk.Tests.Pelea
                     {
                         espacioPulsado = false;
                         Release(teclado.spaceKey);
+                        // Un cuadro entre soltar y la tecla siguiente: Press justo tras Release en el mismo cuadro vuelve a pegar la tecla.
+                        yield return null;
                     }
                     if (ultimoTocado != PasoEncendido.Paso3)
                     {

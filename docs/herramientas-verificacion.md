@@ -6,7 +6,7 @@ Dos scripts en `herramientas/`, para correr con Git Bash desde la raíz del repo
 ## verificar.sh: compilar y pruebas
 
 ```bash
-bash herramientas/verificar.sh {compilar|editmode|playmode|todo}
+bash herramientas/verificar.sh {compilar|editmode|playmode|playmode-por-area|todo}
 ```
 
 - Lee la ruta de Unity de `UNITY_EXE` o de la línea `Unity.exe:` (o `unity_exe:`) de `.claude/maquina.local.md`.
@@ -20,6 +20,12 @@ bash herramientas/verificar.sh {compilar|editmode|playmode|todo}
   pruebas entra sola y una carpeta vacía no estorba. Sin `-assemblyNames`, `testables` de com.unity.inputsystem mete las
   pruebas del propio paquete (en PlayMode 2 más, ignoradas) y el conteo cambia.
 - `bash herramientas/verificar.sh ensamblados` imprime, sin abrir Unity, la lista de EditMode y la de PlayMode, un nombre por línea.
+- `bash herramientas/verificar.sh playmode-por-area` (T-141) corre PlayMode un ensamblado por llamada de Unity (la lista de
+  `ensamblados`), con `Logs/resultados-playmode-<Area>.xml` y `Logs/playmode-<Area>.log` por área. Imprime una línea por área
+  (`Economia 9/9`, `Arena FALLO 8/17 (fallaron 9)` con los nombres, `Mecha LIMITE 900 s`) y un total; sale con 0 solo si todas pasaron.
+  `LIMITE_AREA=<segundos>` (900 por defecto) es el tope por área: al pasarlo cierra SOLO el Unity que lanzó (`taskkill //PID` de su PID de
+  Windows, con su árbol), borra `Temp/UnityLockfile`, marca `LIMITE` y sigue con la siguiente. `AREAS="Economia Core"` (opcional,
+  nombres separados por espacio) limita las áreas que corre. Un cuelgue en un área ya no tumba a las demás. Los otros modos no cambian.
 - Una prueba nueva solo cuenta si su carpeta (`Tests/<Modo>/<Área>/`) tiene asmdef: sin él no la corre nadie. Si la lista de un
   modo queda vacía o `total=0`, el paso sale como fallo.
 

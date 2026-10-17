@@ -6,6 +6,9 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ## Core a main (2026-10-16)
 Tony autorizó el merge: tony/fase-5 (T-F5, T-060, T-100, T-120 a T-123) está en main desde bc8a486, con alan/fase-2 ya mezclada (compilar OK, EditMode 613/613). T-100 y T-120 ya llegan a Alan.
 
+## Para Alan (2026-10-17)
+- Core nuevo en main: `Core/Economia/IApuestasPelea` (T-141). El casino de A-F5 puede leerlo y llamar `Apostar`/`Cancelar` sin implementar nada; Tony lo implementa en T-144. Hasta entonces usa un doble (ver ContratosApuestasPruebas). El mostrador del mercado negro será un prefab de Tony que Alan solo coloca (D-tony-81), como la cama y el espejo.
+
 ## T-F6 cerrada (Tony): qué probar jugando (2026-10-17)
 Del lado de Tony, sin el mundo de Alan. Todo con las escenas de Tony. Sin revisor: T-F6 no pasó por revisión de Opus.
 1. Recorrido completo (la prueba H6 de Tony): abre `Escenas/Tony/CreacionPersonaje.unity`, Play, sin ayuda, hasta CONTINUARÁ. ¿Termina? ¿En cuánto? La prueba automática lo hace en 123 s de juego; una persona real tardará más. ¿Dónde duda?
@@ -16,7 +19,7 @@ Del lado de Tony, sin el mundo de Alan. Todo con las escenas de Tony. Sin reviso
 6. Despertar (T-133): sin el dinero del campeonato ($500) y con el mecha al 45 %. ¿Se entiende como "eso fue el futuro"? ¿19:30 deja tiempo para reparar antes de que abra el clandestino (20:00)? Reparar sin fondos deja la cartera en negativo ($500 - $550): ¿lo quieres así (D-046)?
 7. Pelea casera (T-129): ¿EL CHATARRAS se siente perdible, distinto del campeón? Ganar o perder lleva a CONTINUARÁ, que no bloquea movimiento ni cámara.
 8. Ayudas (T-134): que alguien que no conozca el juego pelee y camine sin que le digas teclas. ¿Las ayudas se van antes de estorbar?
-Suite completa (tony/fase-5, 2026-10-17): compilar OK; EditMode 654/654; PlayMode por ensamblado: Combate 40/40, Core 3/3, IA 28/28, Mecha 90/91 (0 fallos, 1 no corrida), Mundo 96/96, Pelea 41/41, Personaje 111/111, Progresion 79/79, UI 83/84 (0 fallos, 1 no corrida), Vehiculos 30/30. Arena 8/17: 9 fallos de Alan ya conocidos (JaulaClandestinoPruebas: cápsula x8 y cubo; fallan igual en main). Economia PlayMode: se cuelga al correr cualquier prueba que instancia el jugador (probado también en el commit de T-107, antes de T-129: no es regresión de T-F6); queda como deuda. Se corre un ensamblado por llamada, con límite de tiempo.
+Suite completa (tony/fase-5, 2026-10-17): compilar OK; EditMode 654/654; PlayMode por ensamblado: Combate 40/40, Core 3/3, IA 28/28, Mecha 90/91 (0 fallos, 1 no corrida), Mundo 96/96, Pelea 41/41, Personaje 111/111, Progresion 79/79, UI 83/84 (0 fallos, 1 no corrida), Vehiculos 30/30. Arena 8/17: 9 fallos de Alan ya conocidos (JaulaClandestinoPruebas: cápsula x8 y cubo; fallan igual en main). Economia PlayMode: se colgaba (causa y arreglo en T-140: el teardown destruía la raíz del test runner; ya pasa 13/13). Se corre un ensamblado por llamada, con límite de tiempo.
 Pendiente para Alan: colocar Flashback.prefab con los puntos Flashback_Plano_1 a 6, y en Ciudad Prologo_Carro y Prologo_Esquina_* como IPuntoHistoria (T-136).
 
 ## T-F5 cerrada: qué probar jugando (2026-10-16)
@@ -334,3 +337,13 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): RecorridoPrologoPruebas pasa 3 de 3 corridas seguidas. Etapas en orden PeleaTutorial, SalidaClandestino, Emboscada, RegresoACasa, Dormir, Flashback, Despertar, PeleaCasera, Continuara, Libre; +$1,500 y +$600; reparación $550 exactos; vida mínima del mecha 15 (nunca 0); partida real no tocada; MedidorFrames máx 15 ms. Tiempo de juego 122.8 s: creación 0.9, campeonato 19.5, salida y emboscada 50.2, regreso 4.0, dormir 1.1, flashback 11.6, despertar 0.6, reparar 5.0, casera 20.3, continuará y título 9.7.
 - Para probar jugando: H6 de Tony: que alguien que no conozca el juego abra CreacionPersonaje.unity y juegue hasta CONTINUARÁ sin ayuda. ¿Lo termina, en cuánto, dónde dudó? ¿La casera se siente perdible y el campeonato y la emboscada no? ¿El salto de campeón con $1,500 a mecha fregado con $500 se entiende por el flashback? Aviso: reparar sin fondos deja la cartera en negativo ($500 - $550 = -$50), permitido a propósito (D-tony-46): confirma que es lo que quieres.
 - Decisiones: Sin carro en Pruebas_Prologo (T-136): el regreso es a pie siguiendo el mismo objetivo. Atajos: RecibirDanio tras daño real, Colocar en esquina (40 m), casa (109 m) y entrada del clandestino (119 m), AvanzarHasta(20.5). Hallazgo en pruebas viejas: InputTestFixture.Press tras Release en el mismo cuadro vuelve a pegar la tecla (Encender() de PrologoNochePruebas y RecorridoEmboscadaPruebas); no falla, pero conviene un cuadro de espera.
+
+### T-140 Deudas: cuelgue de PlayMode de Economia y helper de mapas de acciones
+- Verificado automáticamente (acotado): Economia PlayMode 13/13 en 3 corridas seguidas (25-32 s); Progresion+Economia en una llamada 92/92 (496 s); Mecha 90/91, UI 83/84 (1 saltada en cada una, 0 fallos); Pelea 41/41. Sin verificar.sh todo (se corre al cerrar el bloque).
+- Para probar jugando: Nada jugable. Aviso: Mecha y UI traen 1 prueba saltada cada una; por mirar cuál.
+- Decisiones: Causa del cuelgue: el [UnityTearDown] DescargarEscena destruía todas las raíces de la escena activa; en la escena vacía del test runner una raíz es 'Code-based tests runner' y al destruirla el runner entra en bucle al 100 % de CPU. No era el prefab ni el Input System. Evidencia: logs temporales y prueba temporal solo con ese teardown colgada 100 s; con el arreglo 13/13 x3. Sugerencia: aplicar el mismo patrón de anotar raíces a PeleaCasera, CamaEspejo y otras como defensa.
+
+### T-141 Contrato de apuestas y PlayMode por área
+- Verificado automáticamente (acotado): compilar OK; EditMode 664/664 (10 de ContratosApuestasPruebas; ReglasEnsambladosPruebas en verde). playmode-por-area con AREAS='Core Economia': Core 3/3, Economia 13/13, salida 0. Con LIMITE_AREA=20 ambas áreas salen LIMITE, sigue con la siguiente, sin Unity vivo ni lockfile.
+- Para probar jugando: Leer los /// de IApuestasPelea con la mirada de Alan: ¿basta para poner una ventanilla de apuestas en el casino sin preguntar?
+- Decisiones: Core a main en cuanto se verificó. El modo cierra solo el PID de Windows que lanzó (taskkill //PID //T //F). LIMITE_AREA=20 prueba el cierre pero no un cuelgue a mitad de prueba.

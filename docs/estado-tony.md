@@ -4,6 +4,41 @@ Sesión de aprobación del 2026-10-15: Tony aprobó tony/fase-3 y tony/fase-4 si
 Las decisiones D-tony-1 a D-tony-39 pasaron a docs/decisiones.md como D-033 a D-071 (más D-072). T-F1 a T-F4 del lado de Tony
 están aprobadas y en main. Rama de integración: tony/fase-5 (creada desde main; T-F5 planificada el 2026-10-15).
 
+## T-F7, bloque 1: economía completa
+
+Planeado el 2026-10-17 (planificador Opus 5.5) en tony/planificacion-fase-7, que sale de main (ya con T-F6). Decisiones propuestas: D-tony-75 a
+D-tony-88 en docs/decisiones-pendientes-tony.md. T-F7 se planifica por bloques (D-tony-75); este es el primero. Todo con dobles y la escena
+nueva de Tony Pruebas_Economia (T-143): nada espera a Alan. Pedido a Alan para A-F5: colocar `MostradorMercadoNegro.prefab` en su mercado negro;
+su casino puede tomar apuestas con `IApuestasPelea` (T-141).
+
+Orden recomendado (D-tony-88): T-140, T-141, T-142, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150, T-151.
+T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no necesita T-146.
+
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-140 Deudas: cuelgue de PlayMode de Economia y helper del estado de los mapas de acciones | nada | hecha (sin revisar) |
+| T-141 Contrato de apuestas de pelea y PlayMode por área en verificar.sh (Core; a main en cuanto se verifique) | nada (mejor tras T-140) | hecha (sin revisar) |
+| T-142 Inventario del jugador y objetos vendibles | T-140 | pendiente |
+| T-143 Escena Pruebas_Economia | T-140, T-142 | pendiente |
+| T-144 Apuestas: lógica, datos y resolución en el flujo de pelea | T-141, T-142 | pendiente |
+| T-145 Apostar en el mostrador de peleas | T-143, T-144 | pendiente |
+| T-146 Mostrador de tienda: comprar en el mercado negro | T-142, T-143 | pendiente |
+| T-147 Vender piezas y chatarra en el mercado negro | T-146 | pendiente |
+| T-148 Kits de reparación en plena pelea | T-142, T-143 | pendiente |
+| T-149 Reparar a medias en el banco del taller | T-143 | pendiente |
+| T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | pendiente |
+| T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | pendiente |
+
+Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-152; D-tony-76):
+1. Ligas: 4 ligas de 5 rivales, campeón con pelea de jefe, subir de liga, premios y momios por liga.
+2. Piezas por ramas y niveles: 5 piezas, 4 ramas mezclables, 4 niveles desbloqueados por liga, compra en el taller y piezas viejas al inventario.
+3. Habilidades: especiales por pieza con cooldown y munición limitada que se compra.
+4. Implantes: 4 espacios (ojos, brazos, piernas, sistema nervioso) en la clínica, con el doctor y su deuda al morir en la calle.
+5. Misiones y reputación: barrio, corporativas, ilegales y robos, con reputación de barrio y corporaciones y favores usables.
+6. Radio: 3 estaciones en el carro y el mecha.
+7. Adaptación del rival: el rival aprende de tu forma de pelear en peleas repetidas.
+8. Hackeo, si sobra tiempo.
+
 ## T-F6: creación de personaje, prólogo y cierre de la demo
 
 Planeada el 2026-10-16 (planificador Opus 5.5) en tony/planificacion-fase-6, integrada en tony/fase-5 (se sigue trabajando ahí hasta que
@@ -144,3 +179,9 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## T-F6 cerrada (2026-10-17)
 - T-129 a T-135 hechas (sin revisar) en tony/fase-5. Suite completa en docs/revision-tony.md. Deuda: PlayMode de Economia se cuelga (anterior a T-129). Siguiente: merge a main, mezclar alan/fase-3, T-073, T-136, T-137 y planificar T-F7.
+
+## Después de T-140 (2026-10-17)
+- T-140 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-141 (2026-10-17)
+- T-141 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
