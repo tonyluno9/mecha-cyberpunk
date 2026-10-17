@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3cfd640de39c1a40a6adf45a3f9126d, type: 3}
+  m_Name: DatosFlashback_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Prologo::MechaCyberpunk.Progresion.Prologo.DatosFlashback
+  planos:
+  - idPunto: Flashback_Plano_1
+    segundos: 9
+    subtitulo: "Ten\xEDas ocho a\xF1os la \xFAltima vez que los viste."
+  - idPunto: Flashback_Plano_2
+    segundos: 9
+    subtitulo: "Mam\xE1 le dio una vuelta m\xE1s a cada tornillo del mecha."
+  - idPunto: Flashback_Plano_3
+    segundos: 9
+    subtitulo: "Pap\xE1 dijo que volver\xEDan antes de que amaneciera."
+  - idPunto: Flashback_Plano_4
+    segundos: 10
+    subtitulo: "Se fueron en una camioneta sin placas, con un logo que no conoc\xEDas."
+  - idPunto: Flashback_Plano_5
+    segundos: 8
+    subtitulo: No volvieron.
+  - idPunto: Flashback_Plano_6
+    segundos: 10
+    subtitulo: "Solo qued\xF3 el mecha. Y las preguntas."
+  segundosFundido: 0.5
+  textoSalto: "Mant\xE9n ESPACIO para saltar"
+  segundosParaSaltar: 1

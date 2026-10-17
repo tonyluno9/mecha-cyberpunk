@@ -296,3 +296,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK; EditMode Progresion+UI 148/148; PlayMode Progresion 61/61 y UI 73/73. Capturas T-130-1 y T-130-2.
 - Para probar jugando: Pruebas_Prologo, Play: mírate al espejo (E, E o Esc para salir) y duerme en la cama (E). ¿Verte se siente tuyo? ¿Dormir se siente como cerrar el día y no como pantalla de carga?
 - Decisiones: Se corrigió que la E que cierra el espejo lo reabría en el mismo cuadro; sin IHistoria o en etapa no listada se duerme hasta las 08:00; alias del espejo de IPerfilJugador.Alias (respaldo SIN ALIAS); canvas del espejo en ScreenSpaceCamera. Sugerencia: acción propia E/Esc en un .inputactions.
+
+### T-131 Flashback de los papás
+- Verificado automáticamente (acotado): compilar OK; EditMode Progresion 101/101; PlayMode Progresion 66/66 (5 de FlashbackPruebas). Capturas T-131-1 y T-131-2.
+- Para probar jugando: Abre Escenas/Tony/Pruebas_Flashback.unity y Play (unos 61 s; Espacio 1 s salta). ¿Los textos cuentan lo de tus papás sin explicar de más y dejan el misterio de la corporación? ¿Se lee el subtítulo? En la captura 2 (plano 4, camioneta) el encuadre es flojo: cámara muy pegada al muro y camioneta oscura; retocar punto o color. Textos y tiempos en DatosFlashback_Base.
+- Decisiones: D-tony-68: textos de la tarea; planos de 9, 9, 9, 10, 8 y 10 s; fundido 0.5 s; saltar con Espacio 1 s (segundosParaSaltar); sin PantallaFundido corre sin fundidos con warning. Para Alan (A-F3): colocar Flashback.prefab y puntos Flashback_Plano_1 a 6.
