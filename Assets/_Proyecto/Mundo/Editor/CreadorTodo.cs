@@ -22,8 +22,17 @@ namespace MechaCyberpunk.Mundo.Editor
             CreadorReloj.Crear();
             CreadorLugares.Crear();
             CreadorBar.Crear();
+            CreadorCasa.Crear(); // T-086
+            CreadorCallejon.Crear(); // T-088
+            CreadorClandestino.Crear(); // T-089
+            VestirCerrados.Crear(); // T-094
+            VestirGrafitis.Crear(); // T-095
+            CreadorLluvia.Crear(); // T-096
+            CreadorAudio.Crear(); // T-097
+            VestirFinales.Crear(); // T-098
             CreadorCarro.ColocarEnEscenas();
             CreadorAmbiente.HornearReflejos(); // T-080, T-081 y T-082: el barrio cambió, las sondas se rehornean
+            CreadorFlashback.Crear(); // T-090
             CreadorPeleaClandestino.Crear();
             Debug.Log("[Mundo] Creadores de Alan corridos en orden.");
         }
