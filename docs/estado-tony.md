@@ -24,7 +24,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-145 Apostar en el mostrador de peleas | T-143, T-144 | hecha (sin revisar) |
 | T-146 Mostrador de tienda: comprar en el mercado negro | T-142, T-143 | hecha (sin revisar) |
 | T-147 Vender piezas y chatarra en el mercado negro | T-146 | hecha (sin revisar) |
-| T-148 Kits de reparación en plena pelea | T-142, T-143 | pendiente |
+| T-148 Kits de reparación en plena pelea | T-142, T-143 | hecha (sin revisar) |
 | T-149 Reparar a medias en el banco del taller | T-143 | pendiente |
 | T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | pendiente |
 | T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | pendiente |
@@ -203,3 +203,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-147 (2026-10-17)
 - T-147 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-148 (2026-10-17)
+- T-148 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
