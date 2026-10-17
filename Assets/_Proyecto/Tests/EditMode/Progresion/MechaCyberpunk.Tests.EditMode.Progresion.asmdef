@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Tests.EditMode.Progresion",
     "rootNamespace": "MechaCyberpunk.Tests",
-    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "MechaCyberpunk.Mecha", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "MechaCyberpunk.IA", "MechaCyberpunk.Pelea", "MechaCyberpunk.Personaje", "MechaCyberpunk.Economia", "MechaCyberpunk.Progresion", "MechaCyberpunk.Radio", "UnityEngine.UI"],
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "MechaCyberpunk.Mecha", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "MechaCyberpunk.IA", "MechaCyberpunk.Pelea", "MechaCyberpunk.Personaje", "MechaCyberpunk.Economia", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Radio", "UnityEngine.UI"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

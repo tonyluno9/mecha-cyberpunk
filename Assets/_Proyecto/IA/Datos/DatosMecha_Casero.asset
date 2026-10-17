@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a843589d6cda79f43835e0981f86ba87, type: 3}
+  m_Name: DatosMecha_Casero
+  m_EditorClassIdentifier: MechaCyberpunk.Core::MechaCyberpunk.Core.DatosMecha
+  nombre: Chatarras
+  vidaMaxima: 90
+  velocidadMaxima: 3.5
+  aceleracion: 6
+  desaceleracion: 10
+  velocidadGiroMaxima: 90
+  danioGolpe: 10
+  alcanceGolpe: 3
+  preparacionGolpe: 0.5
+  recargaGolpe: 0.8
+  tiempoSubirGuardia: 0.15
+  reduccionBloqueo: 0.7
+  ventanaBloqueoPerfecto: 0.2

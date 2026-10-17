@@ -30,6 +30,12 @@ namespace MechaCyberpunk.Pelea.Emboscada
         private MaquinaEmboscada maquina;
         private bool objetivoFijado;
 
+        /// <summary>
+        /// Si es falso, acercarse no la activa (el director del prólogo la apaga fuera de su etapa, T-132). <see cref="Empezar"/> sigue
+        /// funcionando. Verdadero por defecto: las escenas que no tienen director no cambian.
+        /// </summary>
+        public bool Habilitada { get; set; } = true;
+
         public EstadoEmboscada Estado => maquina != null ? maquina.Estado : EstadoEmboscada.Esperando;
 
         /// <summary>Los rivales que aparecieron (los que ya se retiraron siguen en la lista como destruidos).</summary>
@@ -81,7 +87,7 @@ namespace MechaCyberpunk.Pelea.Emboscada
             }
             IJugador jugador = Registro<IJugador>.Actual;
             ModoJugador modo = jugador != null ? jugador.Modo : ModoJugador.APie;
-            bool cerca = activarAlAcercarse && jugador != null && jugador.Raiz != null && DistanciaPlana(jugador.Raiz.position) <= datos.RadioActivacion;
+            bool cerca = Habilitada && activarAlAcercarse && jugador != null && jugador.Raiz != null && DistanciaPlana(jugador.Raiz.position) <= datos.RadioActivacion;
             maquina.Avanzar(Time.deltaTime, cerca, modo, ContarEnPie());
             AplicarControl();
             RetirarCuerpos();

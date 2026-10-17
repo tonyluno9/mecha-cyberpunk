@@ -142,6 +142,35 @@ namespace MechaCyberpunk.Tests.Economia
         }
 
         [Test]
+        public void Reiniciar_PoneElProximoCobroEnDiaMasIntervaloYBorraElAdeudo()
+        {
+            Preparar(0);
+            renta.AlEmpezarDia(PrimerDia, cartera); // sin dinero: queda adeudo y el cobro pasa al día 15
+            Assert.AreEqual(Monto, renta.Adeudo);
+            int avisos = 0;
+            renta.Cambio += () => avisos++;
+
+            renta.Reiniciar(3);
+
+            Assert.AreEqual(3 + DiasEntreCobros, renta.DiaProximoCobro, "Próximo cobro = día actual + 7");
+            Assert.AreEqual(0, renta.Adeudo);
+            Assert.IsFalse(renta.Bloqueado);
+            Assert.AreEqual(1, avisos, "Avisa Cambio");
+            Assert.AreEqual(0, cartera.Dinero, "No cobra nada");
+        }
+
+        [Test]
+        public void Reiniciar_DespuesDeReiniciar_NoCobraHastaElNuevoDia()
+        {
+            Preparar(1000);
+            renta.Reiniciar(2);
+            renta.AlEmpezarDia(2 + DiasEntreCobros - 1, cartera);
+            Assert.AreEqual(1000, cartera.Dinero, "Antes del nuevo día de cobro no se cobra");
+            renta.AlEmpezarDia(2 + DiasEntreCobros, cartera);
+            Assert.AreEqual(1000 - Monto, cartera.Dinero, "Al llegar el día se cobra");
+        }
+
+        [Test]
         public void Restablecer_FijaElEstadoSinCobrarNada()
         {
             Preparar(500);

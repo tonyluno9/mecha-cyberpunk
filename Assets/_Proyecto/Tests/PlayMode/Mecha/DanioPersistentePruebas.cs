@@ -347,6 +347,32 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return null;
         }
 
+        // T-133: FijarFraccionVida deja la vida en esa fracción de la máxima, respeta el piso de emergencia y quita el KO.
+        [UnityTest]
+        public IEnumerator FijarFraccionVida_DejaLaFraccionRespetaElPisoYQuitaElKO()
+        {
+            yield return null;
+            DatosMecha datos = AssetDatabase.LoadAssetAtPath<DatosMecha>(RutaDatosJugador);
+            MechaCyberpunk.Mecha.ConfigMechaDaniado config = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Mecha.ConfigMechaDaniado>(RutaConfig);
+            MechaPersistente persistente = CrearMechaMinimo("MechaFraccion", datos, config);
+            VidaMecha vida = persistente.GetComponent<VidaMecha>();
+
+            persistente.FijarFraccionVida(0.45f);
+            Assert.AreEqual(vida.Maxima * 0.45f, vida.Actual, Margen, "45 % de la máxima");
+
+            persistente.FijarFraccionVida(0.01f);
+            Assert.AreEqual(vida.Maxima * config.PisoVidaPersistente, vida.Actual, Margen, "Por debajo del piso queda en el piso");
+
+            persistente.FijarFraccionVida(2f);
+            Assert.AreEqual(vida.Maxima, vida.Actual, Margen, "Más de 1 queda en la máxima");
+
+            Danar(vida, DanioMortal);
+            Assert.IsTrue(vida.EstaKO, "Antes de fijar, en KO");
+            persistente.FijarFraccionVida(0.45f);
+            Assert.IsFalse(vida.EstaKO, "Fijar la fracción levanta el KO");
+            Assert.AreEqual(vida.Maxima * 0.45f, vida.Actual, Margen);
+        }
+
         // Un mecha con solo vida, peleador y MechaPersistente; se arma inactivo para dar sus referencias antes del Awake.
         private MechaPersistente CrearMechaMinimo(string nombre, DatosMecha datos, MechaCyberpunk.Mecha.ConfigMechaDaniado config)
         {

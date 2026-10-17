@@ -25,5 +25,18 @@ namespace MechaCyberpunk.Mecha.Estado
             float piso = maximaActual * fraccionPiso;
             return Math.Min(Math.Max(escalada, piso), maximaActual);
         }
+
+        /// <summary>
+        /// La vida (puntos) que queda al fijar una <paramref name="fraccion"/> de la máxima: no baja del piso
+        /// (<paramref name="fraccionPiso"/> de la máxima) ni pasa de la máxima.
+        /// </summary>
+        public static float AlFijarFraccion(float maxima, float fraccion, float fraccionPiso)
+        {
+            if (float.IsNaN(fraccion))
+            {
+                return maxima;
+            }
+            return Math.Min(Math.Max(maxima * fraccion, maxima * fraccionPiso), maxima);
+        }
     }
 }
