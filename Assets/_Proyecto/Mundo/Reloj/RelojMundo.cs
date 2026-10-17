@@ -10,7 +10,7 @@ namespace MechaCyberpunk.Mundo.Reloj
     /// El reloj del mundo de la escena: avanza con el tiempo real según <see cref="ConfigRelojMundo"/> y se publica
     /// como <see cref="IRelojMundo"/> en <c>Registro&lt;IRelojMundo&gt;</c>. Uno por escena.
     /// </summary>
-    public class RelojMundo : MonoBehaviour, IRelojMundo
+    public class RelojMundo : MonoBehaviour, IRelojMundo, IGuardable
     {
         [SerializeField] private ConfigRelojMundo config;
 
@@ -58,12 +58,14 @@ namespace MechaCyberpunk.Mundo.Reloj
             if (calculo != null)
             {
                 Registro<IRelojMundo>.Agregar(this);
+                Registro<IGuardable>.Agregar(this);
             }
         }
 
         private void OnDisable()
         {
             Registro<IRelojMundo>.Quitar(this);
+            Registro<IGuardable>.Quitar(this);
         }
 
         private void Update()
@@ -74,6 +76,43 @@ namespace MechaCyberpunk.Mundo.Reloj
         }
 
         public void Pausar(bool pausado) => calculo.Pausar(pausado);
+
+        // ---------------------------------------------------------------- guardado (IGuardable)
+
+        /// <summary>Día y hora que se guardan; la clave del archivo es <see cref="ClaveGuardado"/>.</summary>
+        [Serializable]
+        private class DatosGuardado
+        {
+            public int dia;
+            public float hora;
+        }
+
+        public string ClaveGuardado => "reloj";
+
+        public string Guardar()
+        {
+            return JsonUtility.ToJson(new DatosGuardado { dia = calculo.Dia, hora = calculo.Hora });
+        }
+
+        public void Cargar(string datos)
+        {
+            DatosGuardado leidos = null;
+            try
+            {
+                leidos = string.IsNullOrEmpty(datos) ? null : JsonUtility.FromJson<DatosGuardado>(datos);
+            }
+            catch (Exception)
+            {
+                leidos = null;
+            }
+            eventos.Clear();
+            if (leidos == null || !calculo.Restaurar(leidos.dia, leidos.hora, eventos))
+            {
+                Debug.LogWarning("[Mundo] El guardado del reloj no se entiende; no cambia nada.");
+                return;
+            }
+            Publicar();   // solo queda el aviso de franja: los de día y hora entera no se emiten al cargar
+        }
 
         public void AvanzarHasta(float hora)
         {

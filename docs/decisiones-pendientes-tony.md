@@ -344,3 +344,6 @@ Pruebas_Calle, Pruebas_Economia, Pruebas_Prologo y las escenas de Alan que coloq
 mínimo cobrable en puntos: 5 con $10 por punto y mínimo $50); "con lo que tienes" = `dinero / costoPorPunto` puntos (0 si el dinero no llega al
 mínimo) y cuesta exactamente esos puntos × $10, así que con $125 gasta $120. ↑ ↓ no dan la vuelta; Enter elige y cierra; Esc cierra sin cobrar. El control
 del jugador vuelve un cuadro después de cerrar (D-tony-67).
+
+### D-tony-91 T-073 integrada desde tony/fase-6b-alan; T-136 y T-137 siguen bloqueadas
+Propuesta. T-073 ya estaba hecha y verificada en tony/fase-6b-alan (Pelea 42/42 entonces); se mezcló en tony/fase-7 junto con alan/fase-3, conservando el `yield return null` de T-140 en `RecorridoEmboscadaBase` (Pelea 50/50 después). T-136 y T-137 quedan bloqueadas: Ciudad.unity de Alan (A-F3) no trae `DirectorPrologo.prefab` colocado, T-061 sigue en curso y falta A-F4. La suite de PlayMode del cierre del bloque 1 (EditMode 749/749, PlayMode 671/684) solo falla los 9 conocidos de Alan en `JaulaClandestinoPruebas`.

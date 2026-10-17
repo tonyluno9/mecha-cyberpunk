@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4229091d67ad0ea49bb78f61b3684619, type: 3}
+  m_Name: ConfigLluvia_Mundo
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Datos.ConfigLluvia
+  lluviaDeDia: 0
+  ladoCaja: 30
+  altoCaja: 15
+  gotasPorSegundo: 1500
+  velocidadCaida: 18
+  anchoGota: 0.02
+  largoGota: 40
+  colorGota: {r: 0.7, g: 0.8, b: 1, a: 0.35}
+  maximoGotas: 3000
+  ladoNiebla: 60
+  altoNiebla: 2.5
+  nubesPorSegundo: 3
+  vidaNube: 14
+  tamanoNube: 9
+  colorNiebla: {r: 0.45, g: 0.5, b: 0.75, a: 0.08}
+  maximoNubes: 80
