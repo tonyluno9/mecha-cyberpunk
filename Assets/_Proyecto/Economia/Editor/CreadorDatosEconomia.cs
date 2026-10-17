@@ -29,6 +29,9 @@ namespace MechaCyberpunk.Economia.Editor
 
         private static DatosOferta Oferta(string archivo, string nombre, int precio, TipoOferta tipo)
         {
+            string ruta = $"{Carpeta}/DatosOferta_{archivo}.asset";
+            var existente = AssetDatabase.LoadAssetAtPath<DatosOferta>(ruta);
+            if (existente != null) return existente; // no se pisan los precios ajustados en el inspector (T-150)
             var o = Cargar<DatosOferta>($"DatosOferta_{archivo}");
             var so = new SerializedObject(o);
             so.FindProperty("id").stringValue = archivo;
