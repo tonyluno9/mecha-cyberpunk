@@ -25,7 +25,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-126 Pantalla de título y creación de personaje | T-123, T-124, T-125 | hecha (sin revisar) |
 | T-127 Ensamblado del prólogo y escena Pruebas_Prologo | T-120, T-121 | hecha (sin revisar) |
 | T-128 El mecha de la historia entra a la arena | T-121, T-125, T-127 | hecha (sin revisar) |
-| T-129 Primera pelea casera y mostrador del clandestino | T-128 | pendiente |
+| T-129 Primera pelea casera y mostrador del clandestino | T-128 | hecha (sin revisar) |
 | T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | pendiente |
 | T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | pendiente |
 | T-132 Director del prólogo, parte 1: la noche del campeonato | T-124, T-127, T-128, T-130 | pendiente |
@@ -143,23 +143,7 @@ El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hor
 - T-124 (Etapas de la historia y cambio de escena): rama tony/T-124-historia-cambio-escena, implementación A MEDIAS (WIP commit), sin compilar ni verificar. Para retomar: correr bash herramientas/verificar.sh todo en esa rama, terminar lo que falte según docs/tareas/en-curso/T-124-historia-cambio-escena.md, verificar y cerrar con el mismo flujo.
 - Sigue en orden: T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas esperando A-F3/A-F4. T-061 y T-073 bloqueadas esperando A-F2/A-F3 de Alan.
 
-## Parada manual (2026-10-16, a petición de Tony)
-- Rama actual: tony/T-124-historia-cambio-escena (archivo de la tarea en docs/tareas/en-curso/). Implementación A MEDIAS: código de Progresion/ (DatosEscenas, ServicioGuardado, CreadorDatosProgresion, GuardadoDePrueba) sin compilar ni verificar por completo. La última corrida batch (CambioEscenaPruebas, filtro de PlayMode) la detuve yo a la fuerza; no hay resultado.
-- Unity: cerrado. Quité el Temp/UnityLockfile huérfano del worktree tony-turno-largo.
-- Falta: terminar T-124 según su archivo, compilar, correr EditMode y PlayMode, verificarla y cerrarla; luego T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas (A-F3/A-F4); T-061 y T-073 bloqueadas (A-F2/A-F3).
-- Pendiente de Tony: llevar T-100 y T-120 (Core) a main; decidir D-tony-58 (el prólogo como futuro, empieza de cero, o despertar la mañana siguiente con lo que quedó).
-- Recordatorio: el límite semanal de la cuenta se renueva el 20-oct a las 11 pm (México).
-
-## Parada manual 2 (2026-10-16, a petición de Tony)
-- Hecho y mezclado en tony/fase-5: T-F5 completa, T-060, T-061, T-120 a T-128. tony/fase-5 (hasta T-123 + T-124...T-128 después) está en origin; main trae T-F5, T-060, T-100 y T-120 a T-123 desde bc8a486 (Tony autorizó el merge). T-124 a T-128 y T-061 están solo en tony/fase-5.
-- Rama actual: tony/T-129-pelea-casera (archivo de la tarea en docs/tareas/en-curso/). Implementación A MEDIAS (WIP): RivalCasero (DatosRival_Casero, DatosMecha_Casero, CreadorRivalCasero, prefab y material), ConfigPresentador_Casera, cambios en CreadorEscenaPrologo, Pruebas_Prologo.unity regenerada y EntradaArenaPruebas. NO compilada ni verificada; detuve al implementador durante una corrida de PlayMode (no hay resultado). Unity cerrado y sin lockfile.
-- Falta: terminar T-129 (pelea casera "EL CHATARRAS", sin piedad, $600, MostradorPeleas.prefab; ver la nota de T-128: EntradaArena no empieza si el mecha no puede subir), compilar, correr los namespaces IA, Pelea, Economia, Progresion y Mecha, verificar y cerrar.
-- Sigue: T-130 (cama y espejo), T-131 (flashback), T-132 y T-133 (director del prólogo; D-tony-58 aceptada: al despertar se reinicia el estado), T-134 (ayudas de controles), T-135 (recorrido de cierre). Al cerrar T-F6: correr la suite completa, dejar en revision-tony.md qué probar jugando y mezclar la fase a main con push.
-- Deudas: Progresion.CambioEscenaPruebas falla solo en corrida conjunta por estado estático (orden de ejecución); ruido recurrente de Cabina_*.mat tras correr pruebas (m_CustomRenderQueue 3000/3001).
-- Bloqueadas por Alan: T-073, T-136, T-137 (esperan A-F3/A-F4).
-
-## Parada manual (2026-10-16, a petición de Tony)
-- Rama actual: tony/T-129-pelea-casera (en curso, archivo en docs/tareas/en-curso/). Se detuvo al implementador a medias; Unity cerrado.
-- Hecho (commits WIP): rival casero, FlujoPeleaCasera, ConfigPresentador_Casera, MostradorPeleas/creador, Prologo_Mostrador, cambios en Pruebas_Prologo, y un PeleaCaseraPruebas.cs y T-129-1.png modificados sin verificar.
-- Falta: revisar que MostradorPeleas.cs y su prefab existan y compilen; correr pruebas de Progresion, IA y Pelea (PeleaCaseraPruebas a-d, RivalCasero sin PiedadRival); revisar la captura T-129-1.png; verificador; cerrar (hechas, bitácora, estado, revisión) y mezclar en tony/fase-5.
-- Sigue: T-130 a T-135, luego T-F6. T-073 y T-136/T-137 esperan a alan/fase-3 y A-F4 en main (alan/fase-3 aún no está en main).
+## Después de T-129 (2026-10-17)
+- T-129 hecha (sin revisar), integrada en tony/fase-5. Sigue T-130 a T-135, luego T-F6 (suite completa, revision-tony.md, merge a main con push).
+- Deuda: PlayMode de Economia se cuelga en esta máquina tras el primer aviso de ServicioCartera (no lo toca T-129; por investigar en la suite completa).
+- T-073 y T-136/T-137 esperan a alan/fase-3 y A-F4 en main.

@@ -123,7 +123,31 @@ namespace MechaCyberpunk.Tests.Progresion
             }
             EventosPelea.LimpiarSuscriptores();
             Registros.LimpiarTodos();
+            // Deja los mapas de acciones apagados y sin dispositivos antes de que el fixture reinicie el Input System:
+            // si no, las pruebas siguientes heredan un estado con controles ya liberados (ArgumentNullException statePtr).
+            InputSystem.DisableAllEnabledActions();
+            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
+            {
+                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
+                if (asset != null)
+                {
+                    asset.Disable();
+                    asset.devices = new InputDevice[] { teclado, raton };
+                    asset.devices = null;
+                }
+            }
             base.TearDown();
+            // Tras el reinicio del fixture, descarta otra vez el estado de resolución de los mapas (apuntaba a controles liberados).
+            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
+            {
+                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
+                if (asset != null)
+                {
+                    asset.Disable();
+                    asset.devices = new InputDevice[0];
+                    asset.devices = null;
+                }
+            }
         }
 
         [UnityTearDown]
