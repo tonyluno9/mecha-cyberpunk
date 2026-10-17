@@ -27,7 +27,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-128 El mecha de la historia entra a la arena | T-121, T-125, T-127 | hecha (sin revisar) |
 | T-129 Primera pelea casera y mostrador del clandestino | T-128 | hecha (sin revisar) |
 | T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | hecha (sin revisar) |
-| T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | pendiente |
+| T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | hecha (sin revisar) |
 | T-132 Director del prólogo, parte 1: la noche del campeonato | T-124, T-127, T-128, T-130 | pendiente |
 | T-133 Director del prólogo, parte 2: despertar, pelea casera y "continuará" | T-129, T-131, T-132 | pendiente |
 | T-134 Ayudas de controles para una persona nueva | T-121 | pendiente |
@@ -126,3 +126,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-130 (2026-10-17)
 - T-130 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-131 (2026-10-17)
+- T-131 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
