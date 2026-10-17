@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8563836908892897789}
   - component: {fileID: 4573761825992882620}
   - component: {fileID: 2967616792900712033}
+  - component: {fileID: 1420995054672344638}
   m_Layer: 0
   m_Name: ServiciosEconomia
   m_TagString: Untagged
@@ -73,3 +74,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.ServicioInventario
   catalogo: {fileID: 11400000, guid: abca37efbbf9abf489f6dc9f88fe05f1, type: 2}
+--- !u!114 &1420995054672344638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965035204475803924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be05e39658bcab4b8e2cdb665f653a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.ServicioApuestas

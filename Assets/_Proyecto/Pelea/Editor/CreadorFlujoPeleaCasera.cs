@@ -1,3 +1,4 @@
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Pelea.Datos;
 using MechaCyberpunk.Pelea.Flujo;
 using UnityEditor;
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Pelea.Editor
 {
     /// <summary>
-    /// Crea lo de T-129: ConfigPresentador_Casera (dos líneas) y FlujoPeleaCasera.prefab (FlujoPelea con RivalCasero, premio de la
+    /// Crea lo de T-129 (y la apuesta de T-144): ConfigPresentador_Casera (dos líneas) y FlujoPeleaCasera.prefab (FlujoPelea con RivalCasero, premio de la
     /// casera, sin revancha y sin empezar solo). Idempotente. Necesita RivalCasero.prefab (CreadorRivalCasero.Crear).
     /// Batchmode: -executeMethod MechaCyberpunk.Pelea.Editor.CreadorFlujoPeleaCasera.Crear
     /// </summary>
@@ -14,6 +15,7 @@ namespace MechaCyberpunk.Pelea.Editor
     {
         public const string RutaPrefab = "Assets/_Proyecto/Pelea/Prefabs/FlujoPeleaCasera.prefab";
 
+        private const string RutaApuestaCasera = "Assets/_Proyecto/Economia/Datos/DatosApuestaPelea_Casera.asset";
         private const string RutaConfig = "Assets/_Proyecto/Pelea/Datos/ConfigPresentador_Casera.asset";
         private const string RutaPrefabBase = "Assets/_Proyecto/Pelea/Prefabs/FlujoPelea.prefab";
         private const string RutaRivalCasero = "Assets/_Proyecto/IA/Prefabs/RivalCasero.prefab";
@@ -54,6 +56,8 @@ namespace MechaCyberpunk.Pelea.Editor
                 so.FindProperty("presentador").objectReferenceValue = config;
                 so.FindProperty("empezarAlArrancar").boolValue = false;
                 so.FindProperty("permitirRevancha").boolValue = false;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                so.FindProperty("apuesta").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosApuestaPelea>(RutaApuestaCasera);
                 so.ApplyModifiedPropertiesWithoutUndo();
                 CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioCasera);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);

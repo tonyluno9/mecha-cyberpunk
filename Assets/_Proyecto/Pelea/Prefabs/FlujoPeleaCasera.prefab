@@ -371,6 +371,7 @@ MonoBehaviour:
   empezarAlArrancar: 0
   presentador: {fileID: 11400000, guid: 0f6ea18e0a7f10440863cf60f12d39e7, type: 2}
   premio: {fileID: 11400000, guid: cb3908a8331c0db40b7858938bc88a67, type: 2}
+  apuesta: {fileID: 11400000, guid: 6c146539a932962419b88703f7038fd2, type: 2}
   permitirRevancha: 0
   revancha:
     m_Name: Revancha

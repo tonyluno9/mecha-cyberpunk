@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e68faf790c959458db3a46179992bf, type: 3}
+  m_Name: DatosApuestaPelea_Casera
+  m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.DatosApuestaPelea
+  momio: 1
+  apuestaMaxima: 500
+  montos: 64000000fa000000f4010000
+  piezaEnJuego: {fileID: 11400000, guid: e45bd2965984bbb44a2e9783832a8210, type: 2}
+  apuestaMinimaPorPieza: 250

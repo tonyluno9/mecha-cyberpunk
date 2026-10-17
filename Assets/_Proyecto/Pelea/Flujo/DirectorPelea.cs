@@ -34,6 +34,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         [SerializeField] private ConfigPresentador presentador;
         [Tooltip("Opcional: lo que paga esta pelea. Sin esto no hay premio.")]
         [SerializeField] private DatosPremioPelea premio;
+        [Tooltip("Opcional: las reglas de la apuesta de esta pelea. Sin esto, o sin ServicioApuestas en la escena, no hay apuesta.")]
+        [SerializeField] private DatosApuestaPelea apuesta;
         [Tooltip("Si es falso, el resultado no ofrece revancha: no se muestra \"R: revancha\" y la tecla R no hace nada.")]
         [SerializeField] private bool permitirRevancha = true;
         [Tooltip("Acción de la revancha (tecla R). Solo funciona en el resultado.")]
@@ -52,6 +54,7 @@ namespace MechaCyberpunk.Pelea.Flujo
         private bool avisoArenaPerdida;
         private bool esperandoArena;
         private bool avisoSinCartera;
+        private ServicioApuestas servicioApuestas;
 
         public EstadoFlujoPelea Estado => maquina != null ? maquina.Estado : EstadoFlujoPelea.Preparando;
         public IArenaPelea Arena => arena;
@@ -65,6 +68,9 @@ namespace MechaCyberpunk.Pelea.Flujo
 
         /// <summary>Avisa el dinero abonado al jugador al terminar una pelea (solo si fue mayor que 0).</summary>
         public event Action<int> PremioPagado;
+
+        /// <summary>Avisa el cambio neto de la apuesta al terminar la pelea (positivo ganó, negativo perdió), solo si había apuesta.</summary>
+        public event Action<int> ApuestaResuelta;
 
         private void Awake()
         {
@@ -126,6 +132,7 @@ namespace MechaCyberpunk.Pelea.Flujo
 
         private void OnDestroy()
         {
+            DevolverApuesta();
             Desuscribir(jugador);
             Desuscribir(rival);
             if (rivalCreado != null)
@@ -160,6 +167,7 @@ namespace MechaCyberpunk.Pelea.Flujo
             }
             empezarPendiente = false;
             rivalNuevo = false;
+            DevolverApuesta();
             if (rivalCreado != null)
             {
                 Desuscribir(rival);
@@ -169,6 +177,48 @@ namespace MechaCyberpunk.Pelea.Flujo
             }
             pantalla.Ocultar();
             return true;
+        }
+
+        /// <summary>
+        /// Anuncia esta pelea al <see cref="ServicioApuestas"/> con el alias del rival, para que el jugador pueda apostar antes de
+        /// <see cref="EmpezarPelea"/>. Sin datos de apuesta, sin servicio, sin arena o fuera de Preparando no hace nada.
+        /// Crea al rival ya, porque su alias sale de él.
+        /// </summary>
+        public bool AnunciarApuesta()
+        {
+            if (apuesta == null || maquina == null || maquina.Estado != EstadoFlujoPelea.Preparando || arena == null)
+            {
+                return false;
+            }
+            ServicioApuestas servicio = Registro<ServicioApuestas>.Actual;
+            if (servicio == null)
+            {
+                return false;
+            }
+            if (rival == null)
+            {
+                ResolverRival();
+            }
+            if (!servicio.Anunciar(rival != null ? rival.Nombre : string.Empty, apuesta))
+            {
+                return false;
+            }
+            servicioApuestas = servicio;
+            return true;
+        }
+
+        private void DevolverApuesta()
+        {
+            if (servicioApuestas == null)
+            {
+                return;
+            }
+            ServicioApuestas servicio = servicioApuestas;
+            servicioApuestas = null;
+            if (servicio != null)
+            {
+                servicio.Devolver();
+            }
         }
 
         private void Update()
@@ -334,6 +384,10 @@ namespace MechaCyberpunk.Pelea.Flujo
         private void PrepararYContar()
         {
             jugador.PrepararPelea(arena.InicioJugador);
+            if (servicioApuestas != null)
+            {
+                servicioApuestas.Cerrar();
+            }
             if (rivalNuevo)
             {
                 // Nació en su pose. Apagarle el control antes de su primer Start lo dejaría sin Start hasta que se lo
@@ -380,6 +434,26 @@ namespace MechaCyberpunk.Pelea.Flujo
         private void AlResultado(ResultadoPelea resultado)
         {
             EventosPelea.PublicarFin(resultado);
+            PagarPremio(resultado);
+            ResolverApuesta(resultado);
+        }
+
+        private void ResolverApuesta(ResultadoPelea resultado)
+        {
+            if (servicioApuestas == null)
+            {
+                return;
+            }
+            ServicioApuestas servicio = servicioApuestas;
+            servicioApuestas = null;
+            if (servicio != null && servicio.Resolver(resultado.Ganador == LadoPelea.Jugador, out int neto))
+            {
+                ApuestaResuelta?.Invoke(neto);
+            }
+        }
+
+        private void PagarPremio(ResultadoPelea resultado)
+        {
             if (premio == null)
             {
                 return;
