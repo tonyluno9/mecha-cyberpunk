@@ -11,6 +11,12 @@ namespace MechaCyberpunk.Mecha
         [SerializeField] private string textoMechaFuera = "Tu mecha no está en el taller";
         [SerializeField] private string textoSinDanio = "Mecha sin daños";
         [SerializeField] private string textoReparar = "Reparar mecha · {0}";
+        [Tooltip("Opción de la pantalla del banco: todo el daño. {0} = costo con $.")]
+        [SerializeField] private string formatoOpcionTodo = "REPARAR TODO · {0}";
+        [Tooltip("Opción de la pantalla del banco: la mitad del daño. {0} = costo con $.")]
+        [SerializeField] private string formatoOpcionMitad = "REPARAR LA MITAD · {0}";
+        [Tooltip("Opción de la pantalla del banco: lo que alcanza. {0} = costo con $, {1} = puntos de vida que sube.")]
+        [SerializeField] private string formatoOpcionConLoQueTienes = "CON LO QUE TIENES · {0} (+{1})";
         [Tooltip("Distancia máxima al estacionamiento (m) para contar el mecha como en el taller cuando no tiene LlamadoMecha.")]
         [Min(0.5f)] [SerializeField] private float radioEnTaller = 3f;
 
@@ -19,6 +25,9 @@ namespace MechaCyberpunk.Mecha
         public string TextoMechaFuera => textoMechaFuera;
         public string TextoSinDanio => textoSinDanio;
         public string TextoReparar => textoReparar;
+        public string FormatoOpcionTodo => formatoOpcionTodo;
+        public string FormatoOpcionMitad => formatoOpcionMitad;
+        public string FormatoOpcionConLoQueTienes => formatoOpcionConLoQueTienes;
         public float RadioEnTaller => radioEnTaller;
     }
 }

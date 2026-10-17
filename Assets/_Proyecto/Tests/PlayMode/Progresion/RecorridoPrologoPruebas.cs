@@ -1105,6 +1105,7 @@ namespace MechaCyberpunk.Tests.Progresion
             int costo = banco.Costo;
             Assert.Greater(costo, 0, "Reparar cuesta");
             yield return Tecla(teclado.eKey);
+            yield return Tecla(teclado.enterKey); // T-149: E abre la pantalla del banco; Enter elige "REPARAR TODO".
             Assert.AreEqual(DineroInicial - costo, Cartera.Dinero, "Dinero = 500 - costo exacto de la reparación (" + costo + ")");
             Assert.AreEqual(vidaMecha.Maxima, vidaMecha.Actual, 0.01f, "Vida al máximo");
             AnotarTramo("f2) reparar en el banco (costo $" + costo + ")", inicioBanco);

@@ -335,3 +335,12 @@ VENDER se esconde y → no la abre. La regla pura `ReglaVenta` dice qué se vend
 Vender quita uno del inventario primero y después abona con `MotivoDinero.Venta`; si quitar falla no paga. Una fila por objeto distinto, con
 "$300 c/u" y "TIENES n"; la fila elegida se acomoda sola cuando el objeto se acaba. Textos en `ConfigPantallaTienda`: "VENDISTE {0} POR {1}" y
 "NO TIENES NADA QUE LE INTERESE".
+
+### D-tony-90 Pantalla del banco dentro del mecha (T-149)
+Propuesta. `PantallaBancoTaller.prefab` (UI/) va anidado en `MechaJugador.prefab` (lo hereda `MechaEstacionado`), no en el HUD ni en las escenas: el
+banco vive en el mecha (D-tony-49), la pantalla le pide sus opciones por el evento `BancoTaller.OpcionesPedidas` (`GetComponentInParent`) y así
+Pruebas_Calle, Pruebas_Economia, Pruebas_Prologo y las escenas de Alan que coloquen el mecha la traen sin colocar ni regenerar nada. Sin pantalla
+(o con la pantalla apagada) E repara todo como antes. Valores: la mitad = `ceil(daño / 2)` y solo si el daño es al menos 2 × `PuntosMinimos` (el
+mínimo cobrable en puntos: 5 con $10 por punto y mínimo $50); "con lo que tienes" = `dinero / costoPorPunto` puntos (0 si el dinero no llega al
+mínimo) y cuesta exactamente esos puntos × $10, así que con $125 gasta $120. ↑ ↓ no dan la vuelta; Enter elige y cierra; Esc cierra sin cobrar. El control
+del jugador vuelve un cuadro después de cerrar (D-tony-67).

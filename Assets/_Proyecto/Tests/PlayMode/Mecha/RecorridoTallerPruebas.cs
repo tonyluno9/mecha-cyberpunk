@@ -520,6 +520,7 @@ namespace MechaCyberpunk.Tests.Mecha
             int dineroAntesReparar = cartera.Dinero;
             cambios.Clear();
             yield return Tecla(teclado.eKey);
+            yield return Tecla(teclado.enterKey); // T-149: E abre la pantalla del banco; Enter elige "REPARAR TODO".
             Assert.AreEqual(dineroAntesReparar - costo, cartera.Dinero, "El dinero baja exactamente el costo");
             Assert.AreEqual(1, cambios.Count);
             Assert.AreEqual((-costo, MotivoDinero.Reparacion), cambios[0]);

@@ -15,6 +15,7 @@ namespace MechaCyberpunk.Mecha.Estado
     public class MechaPersistente : MonoBehaviour, IGuardable
     {
         public const string Clave = "mecha";
+        private const float ToleranciaCompleta = 0.001f;
 
         [Serializable]
         private class DatosGuardados
@@ -96,6 +97,22 @@ namespace MechaCyberpunk.Mecha.Estado
         {
             vida.Restaurar();
             Reparado?.Invoke();
+        }
+
+        /// <summary>
+        /// Sube la vida esos puntos sin pasar de la máxima y quita el KO si sube de 0 (T-149). Avisa <see cref="Reparado"/>
+        /// solo si la vida quedó completa. Con 0 o menos no hace nada.
+        /// </summary>
+        public void RepararPuntos(float puntos)
+        {
+            if (puntos <= 0f || float.IsNaN(puntos)) return;
+            float objetivo = ReglaVidaPersistente.AlRepararPuntos(vida.Actual, vida.Maxima, puntos);
+            if (objetivo >= vida.Maxima - ToleranciaCompleta)
+            {
+                Reparar();
+                return;
+            }
+            vida.FijarVida(objetivo);
         }
 
         /// <summary>Fija la vida a esa fracción de la máxima (0 a 1), sin bajar del piso de emergencia, y quita el KO (T-133).</summary>

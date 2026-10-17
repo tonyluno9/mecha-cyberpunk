@@ -26,6 +26,16 @@ namespace MechaCyberpunk.Mecha.Estado
             return Math.Min(Math.Max(escalada, piso), maximaActual);
         }
 
+        /// <summary>La vida (puntos) tras reparar esos puntos (T-149): sube lo pedido sin pasar de la máxima. Puntos &lt;= 0 no cambia nada.</summary>
+        public static float AlRepararPuntos(float actual, float maxima, float puntos)
+        {
+            if (float.IsNaN(puntos) || puntos <= 0f)
+            {
+                return actual;
+            }
+            return Math.Min(actual + puntos, maxima);
+        }
+
         /// <summary>
         /// La vida (puntos) que queda al fijar una <paramref name="fraccion"/> de la máxima: no baja del piso
         /// (<paramref name="fraccionPiso"/> de la máxima) ni pasa de la máxima.
