@@ -24,19 +24,20 @@ namespace MechaCyberpunk.Economia.Editor
             var datos = AssetDatabase.LoadAssetAtPath<DatosApuestaPelea>(RutaDatos);
             if (datos == null)
             {
+                // Solo al crearlo: si ya existe no se pisan los valores ajustados en el inspector (T-150).
                 datos = ScriptableObject.CreateInstance<DatosApuestaPelea>();
                 AssetDatabase.CreateAsset(datos, RutaDatos);
+                var so = new SerializedObject(datos);
+                so.FindProperty("momio").floatValue = MomioCasera;
+                so.FindProperty("apuestaMaxima").intValue = MaximoCasera;
+                SerializedProperty montos = so.FindProperty("montos");
+                montos.arraySize = MontosCasera.Length;
+                for (int i = 0; i < MontosCasera.Length; i++) montos.GetArrayElementAtIndex(i).intValue = MontosCasera[i];
+                so.FindProperty("piezaEnJuego").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosObjeto>(RutaBrazo);
+                so.FindProperty("apuestaMinimaPorPieza").intValue = MinimoPiezaCasera;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(datos);
             }
-            var so = new SerializedObject(datos);
-            so.FindProperty("momio").floatValue = MomioCasera;
-            so.FindProperty("apuestaMaxima").intValue = MaximoCasera;
-            SerializedProperty montos = so.FindProperty("montos");
-            montos.arraySize = MontosCasera.Length;
-            for (int i = 0; i < MontosCasera.Length; i++) montos.GetArrayElementAtIndex(i).intValue = MontosCasera[i];
-            so.FindProperty("piezaEnJuego").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosObjeto>(RutaBrazo);
-            so.FindProperty("apuestaMinimaPorPieza").intValue = MinimoPiezaCasera;
-            so.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(datos);
             AssetDatabase.SaveAssets();
 
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);

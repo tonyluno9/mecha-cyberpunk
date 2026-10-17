@@ -61,11 +61,9 @@ namespace MechaCyberpunk.Economia.Editor
         {
             string ruta = $"{Carpeta}/DatosObjeto_{archivo}.asset";
             var o = AssetDatabase.LoadAssetAtPath<DatosObjeto>(ruta);
-            if (o == null)
-            {
-                o = ScriptableObject.CreateInstance<DatosObjeto>();
-                AssetDatabase.CreateAsset(o, ruta);
-            }
+            if (o != null) return o; // ya existe: no se pisan los valores ajustados en el inspector (T-150)
+            o = ScriptableObject.CreateInstance<DatosObjeto>();
+            AssetDatabase.CreateAsset(o, ruta);
             var so = new SerializedObject(o);
             so.FindProperty("id").stringValue = id;
             so.FindProperty("nombre").stringValue = nombre;

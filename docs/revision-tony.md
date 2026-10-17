@@ -387,3 +387,21 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK; EditMode Economia+Mecha+UI 283/283; PlayMode Mecha 107/110 (3 omitidas, 0 fallos), Economia 19/19, UI 93/94, Progresion 86/86 (en la primera corrida fallaron CambioEscenaPruebas y PrologoPresentePruebas; pasaron al repetir sin cambiar su código: fragilidad de orden por vigilar). Captura T-149-1.
 - Para probar jugando: En Pruebas_Economia: pelea y quedas dañado, ve al banco, E: ¿las tres opciones (todo, la mitad, con lo que tienes) se entienden? ¿Reparar a medias se siente como decisión de dinero justo?
 - Decisiones: D-tony-90: la pantalla va dentro del mecha (GetComponentInParent), no en las escenas; sin pantalla activa E repara todo como antes; la mitad es ceil(daño/2) y solo si el daño es al menos 10 puntos; con lo que tienes cobra puntos por $10 exactos; las flechas no dan la vuelta, Enter elige y cierra, Esc cierra sin cobrar. Sugerencia: prueba que vigile que ninguna escena de Alan trae el mecha sin BancoTaller.
+
+### T-150 Precios de la economía y pruebas de balance
+- Verificado automáticamente (acotado): EditMode Economia 114/114 (incluye las reglas a a g sobre los assets reales); creadores de datos corridos dos veces sin cambios en los assets.
+- Tabla de precios (para ajustar jugando; si rompes una regla, BalanceEconomiaPruebas dice cuál):
+
+| Número | Valor |
+| --- | --- |
+| Dinero inicial | $500 |
+| Reparación | $10 por punto, mínimo $50 (de KO a 100 puntos: $1,000) |
+| Renta | $500 cada 7 días |
+| Premio casera ganar / perder | $600 / $0 |
+| Premio campeonato del tutorial | $1,500 |
+| Apuesta casera | montos $100/$250/$500, momio 1.0, máxima $500, Brazo de chatarra desde $250 |
+| Brazo de chatarra | compra $1,200, venta $300, máximo 5 |
+| Chatarra | venta $50, máximo 20 |
+| Kit de reparación | compra $250, cura 20 de 100 puntos ($12.5 por punto), máximo 3, 2 por pelea |
+- Para probar jugando: una semana en Pruebas_Economia (J pasa días): ¿se vive al día, con decisiones (apostar o no, kit o taller, reparar todo o a medias) y sin quedar atorado?
+- Decisiones: sin cambios de valores. La regla d toma el precio de compra de la oferta enlazada o, si no hay enlace (el brazo no la tiene), de la oferta con el mismo nombre. Los creadores de ofertas, premios, objetos y apuesta ya no pisan valores de assets existentes. Nota: correr CreadorKitReparacion modifica MechaJugador.prefab (no lo toqué; lo restauré).
