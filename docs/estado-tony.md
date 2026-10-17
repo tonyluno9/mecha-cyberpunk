@@ -29,7 +29,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | hecha (sin revisar) |
 | T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | hecha (sin revisar) |
 | T-132 Director del prólogo, parte 1: la noche del campeonato | T-124, T-127, T-128, T-130 | hecha (sin revisar) |
-| T-133 Director del prólogo, parte 2: despertar, pelea casera y "continuará" | T-129, T-131, T-132 | pendiente |
+| T-133 Director del prólogo, parte 2: despertar, pelea casera y "continuará" | T-129, T-131, T-132 | hecha (sin revisar) |
 | T-134 Ayudas de controles para una persona nueva | T-121 | pendiente |
 | T-135 Recorrido del prólogo completo (cierre de T-F6 de Tony) | T-121 a T-134 | pendiente |
 | T-136 El prólogo en Ciudad.unity y Flashback.unity de Alan (H6) | T-135, T-073, T-061 | bloqueada (espera A-F3 y A-F4) |
@@ -132,3 +132,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-132 (2026-10-17)
 - T-132 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-133 (2026-10-17)
+- T-133 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
