@@ -215,3 +215,12 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-151 (2026-10-17)
 - T-151 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Parada manual (2026-10-17, a petición de Tony)
+- Rama actual: tony/T-151-recorrido-economia (commit f89c2c3, con push). T-151 está TERMINADA y verificada (RecorridoEconomiaPruebas 3/3, Progresion 87/87) pero SIN cerrar: falta mover su archivo a docs/tareas/hechas/, la bitácora, la entrada en docs/revision-tony.md y el merge a tony/fase-7.
+- tony/fase-7 llega hasta T-150 (T-140 a T-150 mezcladas y con push). T-140 y T-141 (Core) ya están en main; el resto del bloque de economía NO está en main.
+- Falta: cerrar T-151; correr la suite completa del bloque (compilar, EditMode y `LIMITE_AREA=2400 bash herramientas/verificar.sh playmode-por-area`; Progresion roza los 900 s por defecto); dejar en docs/revision-tony.md qué probar jugando; mezclar tony/fase-7 en main con push (autorizado por Tony).
+- Sigue: planificar y construir los bloques siguientes de T-F7 (ligas, piezas por ramas y niveles, habilidades, implantes, misiones y reputación, radio, adaptación del rival, hackeo) desde T-152.
+- Deudas: CreadorKitReparacion.Crear ensucia MechaJugador.prefab cada vez que corre (no es idempotente); Mecha y UI traen pruebas omitidas por mirar; CambioEscenaPruebas y PrologoPresentePruebas fallan a veces en la primera corrida de Progresion (orden); T-136 y T-137 siguen bloqueadas (Alan aún no coloca IPuntoHistoria ni mis prefabs en Ciudad.unity); tony/fase-6b-alan (main + origin/alan/fase-3, con T-073) no se ha mezclado a main.
+- Unity cerrado, sin lockfile y sin procesos míos.
+
