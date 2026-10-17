@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fcb076bca6105b41b3045d67b8da2c2, type: 3}
+  m_Name: ConfigPantallaTienda_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaTienda
+  colorElegido: {r: 1, g: 0.1, b: 0.7, a: 1}
+  colorNormal: {r: 0.75, g: 0.8, b: 0.9, a: 1}
+  colorApagado: {r: 0.35, g: 0.38, b: 0.45, a: 1}
+  colorDinero: {r: 1, g: 0.85, b: 0.2, a: 1}
+  colorAviso: {r: 0, g: 1, b: 0.9, a: 1}
+  colorFondo: {r: 0.04, g: 0.01, b: 0.06, a: 0.88}
+  tamanoTitulo: 80
+  tamanoTexto: 46
+  tamanoFilas: 50
+  tamanoAyuda: 28
+  formatoTitulo: '{0}'
+  formatoDinero: TIENES {0}
+  textoComprar: COMPRAR
+  textoVender: VENDER
+  formatoPestanaElegida: '[ {0} ]'
+  formatoFila: '{0}     {1}     LLEVAS {2}/{3}'
+  formatoFilaElegida: '> {0}'
+  textoVenderPronto: PRONTO
+  textoSinOfertas: NO HAY NADA A LA VENTA
+  formatoComprado: COMPRASTE {0}
+  textoMaximo: "LLEVAS EL M\xC1XIMO"
+  textoNoAlcanza: NO TE ALCANZA
+  textoNoDisponible: "NO SE VENDE AQU\xCD"
+  textoAyuda: "\u2191 \u2193 elegir \xB7 \u2190 \u2192 pesta\xF1a \xB7 Enter comprar
+    \xB7 Esc salir"

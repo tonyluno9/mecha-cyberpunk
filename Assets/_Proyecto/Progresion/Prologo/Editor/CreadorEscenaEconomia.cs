@@ -27,6 +27,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaMecha = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
         private const string RutaArena = "Assets/_Proyecto/Pelea/Pruebas/ArenaDePrueba.prefab";
         private const string RutaMostrador = CreadorMostradorPeleas.RutaPrefab;
+        private const string RutaMostradorTienda = "Assets/_Proyecto/UI/Prefabs/MostradorMercadoNegro.prefab";
         private const string RutaBrazo = "Assets/_Proyecto/Economia/Datos/DatosObjeto_BrazoChatarra.asset";
         private const string RutaKit = "Assets/_Proyecto/Economia/Datos/DatosObjeto_KitReparacion.asset";
         private const string RutaMateriales = "Assets/_Proyecto/Progresion/Prologo/Materiales/";
@@ -185,9 +186,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
         private static void ArmarMercado()
         {
-            // Sitio del mostrador del mercado negro (T-146) con su lugar siempre abierto (el horario por defecto no cierra nunca).
+            // Sitio del mostrador del mercado negro (T-146, MostradorMercadoNegro.prefab) con su lugar siempre abierto (el horario por defecto no cierra nunca).
             CreadorEscenaPrologo.Vacio("Sitio_Mercado", PosicionMercado);
             CreadorEscenaPrologo.ArmarLugar("Lugar MercadoNegro", IdLugar.MercadoNegro, "Mercado negro", PosicionMercado, new Vector3(8f, 3f, 6f), PosicionMercado + new Vector3(0f, 0f, -3f));
+            GameObject tienda = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaMostradorTienda));
+            tienda.transform.position = PosicionMercado;
             CreadorEscenaPrologo.Caja("Mercado suelo", new Vector3(PosicionMercado.x, 0.01f, PosicionMercado.z), new Vector3(7f, 0.02f, 5f), matMercado, false);
             Letrero("Letrero MERCADO", "MERCADO", new Vector3(PosicionMercado.x, 0f, PosicionMercado.z + 3.5f), matMercado);
         }

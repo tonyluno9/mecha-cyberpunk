@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Economia.Editor
         [MenuItem("Mecha Cyberpunk/Crear T-033")]
         public static void Crear()
         {
-            var kit = Oferta("KitReparacion", "Kit de reparación", 300, TipoOferta.KitReparacion);
+            var kit = Oferta("KitReparacion", "Kit de reparación", 250, TipoOferta.KitReparacion);
             var misil = Oferta("MunicionMisil", "Munición de misil", 500, TipoOferta.Municion);
             var brazo = Oferta("BrazoChatarra", "Brazo de chatarra", 1200, TipoOferta.Pieza);
             var ojos = Oferta("ImplanteOjos", "Implante de ojos", 5000, TipoOferta.Implante);

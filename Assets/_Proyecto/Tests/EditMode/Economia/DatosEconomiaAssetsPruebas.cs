@@ -73,7 +73,7 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void Assets_ExistenConLosValoresDeT033()
         {
-            var kit = Oferta("KitReparacion", 300, TipoOferta.KitReparacion);
+            var kit = Oferta("KitReparacion", 250, TipoOferta.KitReparacion);
             var misil = Oferta("MunicionMisil", 500, TipoOferta.Municion);
             var brazo = Oferta("BrazoChatarra", 1200, TipoOferta.Pieza);
             var ojos = Oferta("ImplanteOjos", 5000, TipoOferta.Implante);
