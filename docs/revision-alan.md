@@ -139,3 +139,9 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Qué hay: casino con marquesina, columnas doradas, alfombra, postes con cadena y tubos de neón tenues; mercado con cortina de 8 tablillas, guías, candados, cajas y manta "VOLVEMOS PRONTO". El cartel "CERRADO" ya lo daba el letrero de horario de T-042, no hice otro.
 - Límites: la cortina y la manta son cubos y texto de Canvas; de noche el mercado se ve muy oscuro y azul (T-099 lo ajusta con la luz final).
 - Para ti: Ciudad.unity, `Lugar_Casino` y `Lugar_MercadoNegro` de día y de noche: ¿se leen como cerrados y con carácter?
+
+### T-095 Grafitis
+- Verificado automáticamente: compilar OK, EditMode 476/476, PlayMode 474/474 (GrafitisPruebas: 33 decales —entre 30 y 60—, ninguno con collider, cada uno mira hacia afuera con muro o fachada detrás y nada pegado delante; capturas T-095-1 y T-095-2 revisadas). Triángulos: no los medí; son 33 cuads de 2 triángulos (66 en total).
+- Qué hay: 8 texturas procedurales con alfa (estrella, calavera, firma en zigzag, espiral, ojo, rayo, flecha, cruz con aro) con materiales `Grafiti_N` (URP/Lit con recorte alfa y un poco de emisión); 25 en muros que dan a la calle de las Manzanas 1 y 4 y 8 en las paredes del callejón de T-088.
+- Límite: las fachadas de T-081 sobresalen hasta 0.45 m, así que los decales flotan a 0.5 m del muro (con 3 cm quedaban escondidos detrás de las fachadas): se leen como paneles pintados delante de las cortinas, no pintura sobre el muro. La captura 1 salió muy clara/lavada (no sé por qué esa toma no se ve de noche; el reloj lo fijó la prueba a las 22:00). Las texturas son simples (formas, no letras reales).
+- Para ti: Ciudad.unity de noche en la zona pobre y en el callejón: ¿los grafitis aportan o estorban? ¿quieres otros diseños?
