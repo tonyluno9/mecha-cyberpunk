@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verificación automática: compilar, editmode, playmode, todo.
-# Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|todo|ensamblados}
+# Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|playmode-por-area|todo|ensamblados}
 cd "$(dirname "$0")/.." || exit 1
 mkdir -p Logs
 
@@ -87,10 +87,70 @@ pruebas() {
   echo "$minus $pasaron/$total"
 }
 
+# PlayMode un ensamblado por llamada de Unity, con limite de tiempo por area (LIMITE_AREA en segundos, 900 por defecto).
+# AREAS="Economia Mecha" (opcional) limita las areas que corre. Si un area pasa el limite se cierra SOLO el Unity
+# que lanzo este script (por su PID de Windows, con su arbol de procesos) y se sigue con la siguiente.
+playmode_por_area() {
+  local limite="${LIMITE_AREA:-900}" asm area xml log total_areas=0 pasaron_areas=0 gran_total=0 gran_pasaron=0
+  local lista_asm filtro="${AREAS:-}"
+  lista_asm=$(ensamblados_modo PlayMode)
+  if [ -z "$lista_asm" ]; then
+    echo "playmode-por-area FALLO: no hay ensamblados de pruebas con codigo (Tests/PlayMode)"; return 1
+  fi
+  for asm in $lista_asm; do
+    area="${asm#MechaCyberpunk.Tests.PlayMode.}"
+    if [ -n "$filtro" ] && ! echo " $filtro " | grep -q " $area "; then continue; fi
+    total_areas=$((total_areas + 1))
+    xml="Logs/resultados-playmode-$area.xml"; log="Logs/playmode-$area.log"
+    rm -f "$xml"
+    "$unity_exe" -batchmode -projectPath . -runTests -testPlatform PlayMode \
+      -assemblyNames "$asm" -testResults "$xml" -logFile "$log" &
+    local pid=$! winpid inicio=$SECONDS limite_alcanzado=0
+    winpid=$(cat "/proc/$pid/winpid" 2>/dev/null || echo "$pid")
+    while kill -0 "$pid" 2>/dev/null; do
+      if [ $((SECONDS - inicio)) -ge "$limite" ]; then
+        limite_alcanzado=1
+        taskkill //PID "$winpid" //T //F >/dev/null 2>&1
+        break
+      fi
+      sleep 2
+    done
+    wait "$pid" 2>/dev/null
+    local codigo=$?
+    if [ "$limite_alcanzado" = "1" ]; then
+      rm -f Temp/UnityLockfile
+      echo "$area LIMITE $limite s"
+      continue
+    fi
+    if [ ! -f "$xml" ]; then
+      echo "$area FALLO (codigo $codigo, sin resultados)"; mostrar_errores "$log"; continue
+    fi
+    local cabecera total pasaron falladas
+    cabecera=$(grep -m1 '<test-run' "$xml")
+    total=$(echo "$cabecera" | sed -n 's/.* total="\([0-9]*\)".*/\1/p')
+    pasaron=$(echo "$cabecera" | sed -n 's/.* passed="\([0-9]*\)".*/\1/p')
+    falladas=$(echo "$cabecera" | sed -n 's/.* failed="\([0-9]*\)".*/\1/p')
+    if [ -z "$total" ] || [ "$total" = "0" ]; then
+      echo "$area FALLO: no corrio ninguna prueba (total=0)"; mostrar_errores "$log"; continue
+    fi
+    gran_total=$((gran_total + total)); gran_pasaron=$((gran_pasaron + pasaron))
+    if [ "$codigo" -ne 0 ] || [ "$falladas" != "0" ]; then
+      echo "$area FALLO $pasaron/$total (fallaron $falladas)"
+      grep -E '<test-case[^>]*result="Failed"' "$xml" | sed -n 's/.* fullname="\([^"]*\)".*/  fallo: \1/p' | head -n 8
+      continue
+    fi
+    pasaron_areas=$((pasaron_areas + 1))
+    echo "$area $pasaron/$total"
+  done
+  echo "playmode-por-area: $pasaron_areas/$total_areas areas pasaron, $gran_pasaron/$gran_total pruebas"
+  [ "$total_areas" -gt 0 ] && [ "$pasaron_areas" -eq "$total_areas" ]
+}
+
 case "$1" in
   compilar) compilar ;;
   editmode) pruebas EditMode ;;
   playmode) pruebas PlayMode ;;
+  playmode-por-area) playmode_por_area ;;
   todo) compilar && pruebas EditMode && pruebas PlayMode ;;
-  *) echo "Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|todo|ensamblados}"; exit 2 ;;
+  *) echo "Uso: bash herramientas/verificar.sh {compilar|editmode|playmode|playmode-por-area|todo|ensamblados}"; exit 2 ;;
 esac
