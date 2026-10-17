@@ -424,3 +424,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): CreadorKitReparacion x2 deja los md5 de MechaJugador y MechaEstacionado iguales; EditMode 767/767; PlayMode Progresion 87/87 dos veces; Mecha 107/110 (3 omitidas a propósito).
 - Para probar jugando: nada (no cambia nada jugable).
 - Decisiones: la causa de CambioEscenaPruebas/PrologoPresentePruebas no se reprodujo; se quitó la única fuga hallada (teardown que destruía las raíces del test runner). Si vuelve a fallar en la primera corrida, abrir la bitácora de T-153. Ver D-tony-105.
+
+### T-154 Progreso de las ligas
+- Verificado automáticamente (acotado): creador x2 deja md5 iguales en ServiciosProgresion.prefab y DatosLigas_Base.asset; EditMode 777/777; PlayMode Progresion 92/92.
+- Para probar jugando: nada todavía (LigasDePrueba, tecla L, se coloca en T-159).
+- Decisiones: ver D-tony-106 en docs/decisiones-pendientes-tony.md.
