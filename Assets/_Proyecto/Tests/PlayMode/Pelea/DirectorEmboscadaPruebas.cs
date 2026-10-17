@@ -440,6 +440,43 @@ namespace MechaCyberpunk.Tests.Pelea
         }
 
         [UnityTest]
+        public IEnumerator Habilitada_PorDefectoEsVerdadera()
+        {
+            yield return CargarCalle();
+            Assert.IsTrue(director.Habilitada, "Sin director del prólogo la emboscada nace habilitada");
+        }
+
+        [UnityTest]
+        public IEnumerator Habilitada_Falsa_AcercarseNoLaActivaYAlVolverAHabilitarlaSi()
+        {
+            yield return CargarCalle();
+            director.Habilitada = false;
+
+            PonerJugadorEn(XBocaCallejon);
+            yield return Esperar(datos.SegundosAparicion + SegundosSinHacerNada);
+            Assert.AreEqual(EstadoEmboscada.Esperando, director.Estado, "Deshabilitada, acercarse no la activa");
+            Assert.AreEqual(0, director.Rivales.Count);
+
+            director.Habilitada = true;
+            yield return EsperarHasta(() => director.Estado != EstadoEmboscada.Esperando, MaxSegundosAparicion,
+                "Habilitada otra vez, con el jugador ya cerca, empieza");
+            Assert.AreEqual(RivalesEsperados, director.Rivales.Count);
+            AssertSinErrores();
+        }
+
+        [UnityTest]
+        public IEnumerator Habilitada_Falsa_EmpezarManualSigueFuncionando()
+        {
+            yield return CargarCalle();
+            director.Habilitada = false;
+            director.Empezar();
+            yield return null;
+            Assert.AreEqual(EstadoEmboscada.Aparicion, director.Estado);
+            Assert.AreEqual(RivalesEsperados, director.Rivales.Count);
+            AssertSinErrores();
+        }
+
+        [UnityTest]
         public IEnumerator Captura_PandillaRecienAparecida_SeVeALoLejosConElObjetivoEnElHud()
         {
             yield return CargarCalle();
