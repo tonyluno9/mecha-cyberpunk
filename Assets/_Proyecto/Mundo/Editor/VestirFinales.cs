@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Mundo.Editor
         [MenuItem("Mecha Cyberpunk/Crear T-098")]
         public static void Crear()
         {
-            Material raya = Mat("Raya", new Color(0.85f, 0.85f, 0.8f), 0.2f, default);
+            Material raya = Mat("Raya", new Color(0.55f, 0.55f, 0.5f), 0.2f, default);
             Material tapa = Mat("Tapa", new Color(0.08f, 0.08f, 0.09f), 0.5f, default);
             Material grieta = Mat("Grieta", new Color(0.01f, 0.01f, 0.012f), 0.1f, default);
             Material concreto = Mat("Concreto", new Color(0.28f, 0.28f, 0.3f), 0.1f, default);
