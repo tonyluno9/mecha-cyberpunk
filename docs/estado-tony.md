@@ -67,7 +67,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-133 Director del prólogo, parte 2: despertar, pelea casera y "continuará" | T-129, T-131, T-132 | hecha (sin revisar) |
 | T-134 Ayudas de controles para una persona nueva | T-121 | hecha (sin revisar) |
 | T-135 Recorrido del prólogo completo (cierre de T-F6 de Tony) | T-121 a T-134 | hecha (sin revisar) |
-| T-136 El prólogo en Ciudad.unity y Flashback.unity de Alan (H6) | T-135, T-073, T-061 | bloqueada (espera A-F3 y A-F4) |
+| T-136 El prólogo en Ciudad.unity y Flashback.unity de Alan (H6) | T-135, T-073, T-061 | pendiente (A-F3 ya mezclada; falta T-061 y A-F4) |
 | T-137 Escenas de la demo en Build Settings y build de Windows (Core) | T-136 | bloqueada (espera A-F4) |
 
 Pedidos a Alan de T-F6 (D-tony-72): colocar `DirectorPrologo.prefab`, `CamaJugador.prefab`, `EspejoJugador.prefab` y `MostradorPeleas.prefab`
@@ -119,7 +119,7 @@ Orden recomendado (D-071). Decisiones de la planeación: D-059 a D-071 en docs/d
 | T-070 Presentador y perfil del jugador | T-062, T-068 | aprobada, en main |
 | T-071 Director de la emboscada | T-064, T-065, T-066, T-069 | aprobada, en main |
 | T-072 Recorrido de la emboscada (cierre de T-F4 de Tony) | T-063 a T-071 | aprobada, en main |
-| T-073 Emboscada en el callejón de Alan | T-072, T-060 | bloqueada (espera A-F3) |
+| T-073 Emboscada en el callejón de Alan | T-072, T-060 | hecha (sin revisar) |
 
 ## T-F3 y anteriores
 
@@ -224,3 +224,5 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - Deudas: CreadorKitReparacion.Crear ensucia MechaJugador.prefab cada vez que corre (no es idempotente); Mecha y UI traen pruebas omitidas por mirar; CambioEscenaPruebas y PrologoPresentePruebas fallan a veces en la primera corrida de Progresion (orden); T-136 y T-137 siguen bloqueadas (Alan aún no coloca IPuntoHistoria ni mis prefabs en Ciudad.unity); tony/fase-6b-alan (main + origin/alan/fase-3, con T-073) no se ha mezclado a main.
 - Unity cerrado, sin lockfile y sin procesos míos.
 
+## Después de T-073 (2026-10-17)
+- T-073 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
