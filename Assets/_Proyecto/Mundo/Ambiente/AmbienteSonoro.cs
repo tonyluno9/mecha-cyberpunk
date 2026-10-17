@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
 
         private void Update()
         {
-            if (sonando && escucha == null)
+            if (sonando && (escucha == null || !escucha.isActiveAndEnabled))
             {
                 Detener();     // se destruyó el AudioListener: sin él Unity avisa en la consola por cada fuente que suena
             }
@@ -90,7 +90,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
                 return;
             }
             proximaRevision = Time.unscaledTime + SegundosEntreRevisiones;
-            escucha = FindFirstObjectByType<AudioListener>();
+            escucha = BuscarEscucha();
             if (escucha == null)
             {
                 return;
@@ -104,6 +104,19 @@ namespace MechaCyberpunk.Mundo.Ambiente
             neon.Play();
             trafico.Play();
             musica.Play();
+        }
+
+        // Un AudioListener que cuenta para Unity: activo y con el componente habilitado.
+        private static AudioListener BuscarEscucha()
+        {
+            foreach (AudioListener candidato in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+            {
+                if (candidato.isActiveAndEnabled)
+                {
+                    return candidato;
+                }
+            }
+            return null;
         }
 
         private void Detener()
