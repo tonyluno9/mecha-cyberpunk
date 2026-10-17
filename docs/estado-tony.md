@@ -30,6 +30,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
 | T-152 Contrato de ligas, InfoPelea y límite por área (Core) | nada | hecha (sin revisar) |
 | T-153 Deudas del bloque de economía (creador del kit y raíces en teardown) | nada | hecha (sin revisar) |
+| T-154 Progreso de las ligas (datos, modelo y servicio que se guarda) | T-152 | hecha (sin revisar) |
 
 ## T-F7, bloque 2: ligas
 

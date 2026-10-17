@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1594139855374585399}
   - component: {fileID: 3182210647534682041}
   - component: {fileID: 8183069906299412953}
+  - component: {fileID: 1124973490429733552}
   m_Layer: 0
   m_Name: ServiciosProgresion
   m_TagString: Untagged
@@ -99,3 +100,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f08bc9a31f3c8e41b3cd45574337105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioHistoria
+--- !u!114 &1124973490429733552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff316799feb1a04fac25cc227f5ecd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioLigas
+  datos: {fileID: 11400000, guid: 2c015342fbf9c044bbd343e0fc83906f, type: 2}

@@ -435,3 +435,6 @@ Propuesta: la línea de éxito de playmode-por-area imprime "(límite N s)"; el 
 
 ### D-tony-105 Detalles de T-153
 Propuesta: el creador del kit ya no rehace la pantalla si existe (para cambiarla hay que borrarla del prefab antes); RaicesDePrueba es el helper para todo teardown. La fragilidad no se reprodujo, por eso el cierre es por defensa y no por causa demostrada. Sin impacto en el diseño.
+
+### D-tony-106 Detalles de T-154
+Propuesta: `rivalesPorLiga` en DatosLigas es un entero común a todas las ligas; `ModeloLigas.Poner` valida rangos pero no que campeones concuerde con la liga; sin asset de datos el servicio cae a 4x5 con nombres por defecto. Sin impacto en el diseño.
