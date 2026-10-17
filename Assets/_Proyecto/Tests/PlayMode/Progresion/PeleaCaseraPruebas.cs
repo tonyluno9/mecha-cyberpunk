@@ -79,17 +79,38 @@ namespace MechaCyberpunk.Tests.Progresion
 
         public override void Setup()
         {
+            // Otras pruebas (sin InputTestFixture) dejan acciones prendidas; el reinicio del fixture las dejaría con un estado viejo
+            // (prendidas pero sin controles) y la E no llegaría. Se apagan antes de que el fixture reinicie el Input System.
+            InputSystem.DisableAllEnabledActions();
             base.Setup();
             Registros.LimpiarTodos();
             EventosPelea.LimpiarSuscriptores();
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
+            ReiniciarMapasDeAcciones();
             carpeta = Path.Combine(Application.temporaryCachePath, "pelea_casera_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
             ServicioGuardado.RutaForzada = Path.Combine(carpeta, "partida.json");
             errores.Clear();
             terminadas.Clear();
             Application.logMessageReceived += RegistrarError;
+        }
+
+        // Los mapas de acciones (assets) guardan el estado de resolución anterior al reinicio del fixture y no ven el teclado nuevo.
+        // Cambiar `devices` en un mapa apagado descarta ese estado: la escena los resuelve de nuevo al prenderlos.
+        private void ReiniciarMapasDeAcciones()
+        {
+            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
+            {
+                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
+                if (asset == null)
+                {
+                    continue;
+                }
+                asset.Disable();
+                asset.devices = new InputDevice[] { teclado, raton };
+                asset.devices = null;
+            }
         }
 
         public override void TearDown()

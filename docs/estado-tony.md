@@ -157,3 +157,9 @@ El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hor
 - Sigue: T-130 (cama y espejo), T-131 (flashback), T-132 y T-133 (director del prólogo; D-tony-58 aceptada: al despertar se reinicia el estado), T-134 (ayudas de controles), T-135 (recorrido de cierre). Al cerrar T-F6: correr la suite completa, dejar en revision-tony.md qué probar jugando y mezclar la fase a main con push.
 - Deudas: Progresion.CambioEscenaPruebas falla solo en corrida conjunta por estado estático (orden de ejecución); ruido recurrente de Cabina_*.mat tras correr pruebas (m_CustomRenderQueue 3000/3001).
 - Bloqueadas por Alan: T-073, T-136, T-137 (esperan A-F3/A-F4).
+
+## Parada manual (2026-10-16, a petición de Tony)
+- Rama actual: tony/T-129-pelea-casera (en curso, archivo en docs/tareas/en-curso/). Se detuvo al implementador a medias; Unity cerrado.
+- Hecho (commits WIP): rival casero, FlujoPeleaCasera, ConfigPresentador_Casera, MostradorPeleas/creador, Prologo_Mostrador, cambios en Pruebas_Prologo, y un PeleaCaseraPruebas.cs y T-129-1.png modificados sin verificar.
+- Falta: revisar que MostradorPeleas.cs y su prefab existan y compilen; correr pruebas de Progresion, IA y Pelea (PeleaCaseraPruebas a-d, RivalCasero sin PiedadRival); revisar la captura T-129-1.png; verificador; cerrar (hechas, bitácora, estado, revisión) y mezclar en tony/fase-5.
+- Sigue: T-130 a T-135, luego T-F6. T-073 y T-136/T-137 esperan a alan/fase-3 y A-F4 en main (alan/fase-3 aún no está en main).
