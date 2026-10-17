@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.Mecha.Encendido;
 using MechaCyberpunk.Mecha.Montaje;
 using MechaCyberpunk.Personaje.Jugador;
@@ -69,7 +70,7 @@ namespace MechaCyberpunk.Tests.Mecha
             AyudasVistas.Olvidar();
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
-            DescartarEstadoDeMapas(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
             config = AssetDatabase.LoadAssetAtPath<ConfigAyudas>(RutaConfig);
         }
 
@@ -78,27 +79,9 @@ namespace MechaCyberpunk.Tests.Mecha
             EventosPelea.LimpiarSuscriptores();
             Registros.LimpiarTodos();
             AyudasVistas.Olvidar();
-            InputSystem.DisableAllEnabledActions();
-            DescartarEstadoDeMapas(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
             base.TearDown();
-            DescartarEstadoDeMapas(new InputDevice[0]);
-        }
-
-        // Los mapas de acciones (assets) guardan el estado de resolución anterior al reinicio del fixture: cambiar `devices` en un
-        // mapa apagado lo descarta y la escena los resuelve de nuevo al prenderlos.
-        private static void DescartarEstadoDeMapas(InputDevice[] dispositivos)
-        {
-            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
-            {
-                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset == null)
-                {
-                    continue;
-                }
-                asset.Disable();
-                asset.devices = dispositivos;
-                asset.devices = null;
-            }
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]

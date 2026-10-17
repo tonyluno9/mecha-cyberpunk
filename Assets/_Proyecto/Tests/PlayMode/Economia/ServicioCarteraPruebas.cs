@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -23,18 +25,25 @@ namespace MechaCyberpunk.Tests.Economia
         private const float DeltaTimeEstable = 0.05f;
 
         private Keyboard teclado;
+        private readonly HashSet<GameObject> raicesIniciales = new HashSet<GameObject>();
 
         public override void Setup()
         {
             base.Setup();
             Registros.LimpiarTodos();
             teclado = InputSystem.AddDevice<Keyboard>();
+            MapasDeAccionesDePrueba.Reiniciar(teclado);
+            // El runner de pruebas vive como raíz de la escena activa: se anota para no destruirlo en el UnityTearDown.
+            raicesIniciales.Clear();
+            raicesIniciales.UnionWith(SceneManager.GetActiveScene().GetRootGameObjects());
         }
 
         public override void TearDown()
         {
             Registros.LimpiarTodos();
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado);
             base.TearDown();
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]
@@ -42,7 +51,7 @@ namespace MechaCyberpunk.Tests.Economia
         {
             foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
             {
-                Object.Destroy(raiz);
+                if (!raicesIniciales.Contains(raiz)) Object.Destroy(raiz);
             }
             yield return null;
             Registros.LimpiarTodos();

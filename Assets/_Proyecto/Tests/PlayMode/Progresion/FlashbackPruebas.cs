@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Registros.LimpiarTodos();
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
-            DescartarEstadoDeMapas(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
             carpeta = Path.Combine(Application.temporaryCachePath, "flashback_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
             ServicioGuardado.RutaForzada = Path.Combine(carpeta, "partida.json");
@@ -89,22 +89,6 @@ namespace MechaCyberpunk.Tests.Progresion
             Application.logMessageReceived += RegistrarLog;
         }
 
-        // Los mapas de acciones (assets) guardan el estado de resolución anterior al reinicio del fixture.
-        // Cambiar `devices` en un mapa apagado descarta ese estado.
-        private static void DescartarEstadoDeMapas(InputDevice[] dispositivos)
-        {
-            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
-            {
-                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset != null)
-                {
-                    asset.Disable();
-                    asset.devices = dispositivos;
-                    asset.devices = null;
-                }
-            }
-        }
-
         public override void TearDown()
         {
             Application.logMessageReceived -= RegistrarLog;
@@ -116,10 +100,9 @@ namespace MechaCyberpunk.Tests.Progresion
                 Directory.Delete(carpeta, true);
             }
             Registros.LimpiarTodos();
-            InputSystem.DisableAllEnabledActions();
-            DescartarEstadoDeMapas(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
             base.TearDown();
-            DescartarEstadoDeMapas(new InputDevice[0]);
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]

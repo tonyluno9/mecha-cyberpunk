@@ -183,7 +183,7 @@ namespace MechaCyberpunk.Tests.Progresion
             EventosPelea.LimpiarSuscriptores();
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
-            ReiniciarMapasDeAcciones(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
             carpeta = Path.Combine(Application.temporaryCachePath, "recorrido_prologo_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
             ServicioGuardado.RutaForzada = Path.Combine(carpeta, "partida.json");
@@ -206,23 +206,6 @@ namespace MechaCyberpunk.Tests.Progresion
             Application.logMessageReceived += RegistrarError;
         }
 
-        // Los mapas de acciones (assets) guardan el estado de resolución anterior al reinicio del fixture. Cambiar `devices` en un
-        // mapa apagado descarta ese estado: la escena los resuelve de nuevo al prenderlos.
-        private static void ReiniciarMapasDeAcciones(InputDevice[] dispositivos)
-        {
-            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
-            {
-                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset == null)
-                {
-                    continue;
-                }
-                asset.Disable();
-                asset.devices = dispositivos;
-                asset.devices = null;
-            }
-        }
-
         public override void TearDown()
         {
             Application.logMessageReceived -= RegistrarError;
@@ -236,10 +219,9 @@ namespace MechaCyberpunk.Tests.Progresion
             EventosPelea.LimpiarSuscriptores();
             Registros.LimpiarTodos();
             // Deja los mapas apagados y sin dispositivos antes y después de que el fixture reinicie el Input System.
-            InputSystem.DisableAllEnabledActions();
-            ReiniciarMapasDeAcciones(new InputDevice[] { teclado, raton });
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
             base.TearDown();
-            ReiniciarMapasDeAcciones(new InputDevice[0]);
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]

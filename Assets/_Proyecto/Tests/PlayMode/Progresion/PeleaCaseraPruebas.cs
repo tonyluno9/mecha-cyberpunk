@@ -10,6 +10,7 @@ using MechaCyberpunk.Mecha.Montaje;
 using MechaCyberpunk.Pelea.Flujo;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Prologo;
 using MechaCyberpunk.UI.Hud;
@@ -87,30 +88,13 @@ namespace MechaCyberpunk.Tests.Progresion
             EventosPelea.LimpiarSuscriptores();
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
-            ReiniciarMapasDeAcciones();
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
             carpeta = Path.Combine(Application.temporaryCachePath, "pelea_casera_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
             ServicioGuardado.RutaForzada = Path.Combine(carpeta, "partida.json");
             errores.Clear();
             terminadas.Clear();
             Application.logMessageReceived += RegistrarError;
-        }
-
-        // Los mapas de acciones (assets) guardan el estado de resolución anterior al reinicio del fixture y no ven el teclado nuevo.
-        // Cambiar `devices` en un mapa apagado descarta ese estado: la escena los resuelve de nuevo al prenderlos.
-        private void ReiniciarMapasDeAcciones()
-        {
-            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
-            {
-                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset == null)
-                {
-                    continue;
-                }
-                asset.Disable();
-                asset.devices = new InputDevice[] { teclado, raton };
-                asset.devices = null;
-            }
         }
 
         public override void TearDown()
@@ -123,31 +107,9 @@ namespace MechaCyberpunk.Tests.Progresion
             }
             EventosPelea.LimpiarSuscriptores();
             Registros.LimpiarTodos();
-            // Deja los mapas de acciones apagados y sin dispositivos antes de que el fixture reinicie el Input System:
-            // si no, las pruebas siguientes heredan un estado con controles ya liberados (ArgumentNullException statePtr).
-            InputSystem.DisableAllEnabledActions();
-            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
-            {
-                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset != null)
-                {
-                    asset.Disable();
-                    asset.devices = new InputDevice[] { teclado, raton };
-                    asset.devices = null;
-                }
-            }
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
             base.TearDown();
-            // Tras el reinicio del fixture, descarta otra vez el estado de resolución de los mapas (apuntaba a controles liberados).
-            foreach (string guid in AssetDatabase.FindAssets("t:InputActionAsset"))
-            {
-                InputActionAsset asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset != null)
-                {
-                    asset.Disable();
-                    asset.devices = new InputDevice[0];
-                    asset.devices = null;
-                }
-            }
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]
