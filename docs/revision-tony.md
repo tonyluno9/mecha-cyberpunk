@@ -6,6 +6,9 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ## Core a main (2026-10-16)
 Tony autorizó el merge: tony/fase-5 (T-F5, T-060, T-100, T-120 a T-123) está en main desde bc8a486, con alan/fase-2 ya mezclada (compilar OK, EditMode 613/613). T-100 y T-120 ya llegan a Alan.
 
+## Para Alan (2026-10-17)
+- Core nuevo en main: `Core/Economia/IApuestasPelea` (T-141). El casino de A-F5 puede leerlo y llamar `Apostar`/`Cancelar` sin implementar nada; Tony lo implementa en T-144. Hasta entonces usa un doble (ver ContratosApuestasPruebas). El mostrador del mercado negro será un prefab de Tony que Alan solo coloca (D-tony-81), como la cama y el espejo.
+
 ## T-F6 cerrada (Tony): qué probar jugando (2026-10-17)
 Del lado de Tony, sin el mundo de Alan. Todo con las escenas de Tony. Sin revisor: T-F6 no pasó por revisión de Opus.
 1. Recorrido completo (la prueba H6 de Tony): abre `Escenas/Tony/CreacionPersonaje.unity`, Play, sin ayuda, hasta CONTINUARÁ. ¿Termina? ¿En cuánto? La prueba automática lo hace en 123 s de juego; una persona real tardará más. ¿Dónde duda?
@@ -339,3 +342,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): Economia PlayMode 13/13 en 3 corridas seguidas (25-32 s); Progresion+Economia en una llamada 92/92 (496 s); Mecha 90/91, UI 83/84 (1 saltada en cada una, 0 fallos); Pelea 41/41. Sin verificar.sh todo (se corre al cerrar el bloque).
 - Para probar jugando: Nada jugable. Aviso: Mecha y UI traen 1 prueba saltada cada una; por mirar cuál.
 - Decisiones: Causa del cuelgue: el [UnityTearDown] DescargarEscena destruía todas las raíces de la escena activa; en la escena vacía del test runner una raíz es 'Code-based tests runner' y al destruirla el runner entra en bucle al 100 % de CPU. No era el prefab ni el Input System. Evidencia: logs temporales y prueba temporal solo con ese teardown colgada 100 s; con el arreglo 13/13 x3. Sugerencia: aplicar el mismo patrón de anotar raíces a PeleaCasera, CamaEspejo y otras como defensa.
+
+### T-141 Contrato de apuestas y PlayMode por área
+- Verificado automáticamente (acotado): compilar OK; EditMode 664/664 (10 de ContratosApuestasPruebas; ReglasEnsambladosPruebas en verde). playmode-por-area con AREAS='Core Economia': Core 3/3, Economia 13/13, salida 0. Con LIMITE_AREA=20 ambas áreas salen LIMITE, sigue con la siguiente, sin Unity vivo ni lockfile.
+- Para probar jugando: Leer los /// de IApuestasPelea con la mirada de Alan: ¿basta para poner una ventanilla de apuestas en el casino sin preguntar?
+- Decisiones: Core a main en cuanto se verificó. El modo cierra solo el PID de Windows que lanzó (taskkill //PID //T //F). LIMITE_AREA=20 prueba el cierre pero no un cuelgue a mitad de prueba.
