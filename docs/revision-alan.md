@@ -133,3 +133,9 @@ Rama para probar: `alan/fase-1`. Actualizado: 2026-10-13.
 - Qué es: cuarto de 10 × 8 m de tarde (luz cálida, posproceso PerfilDia), mesa con dos sillas de adulto y una de niño, maletas junto a la puerta y el mecha cubierto con una lona (cubo gris, no es el mecha de Tony). Del diseño solo salía "de niño tus papás se fueron y te dejaron el mecha"; el lugar y la hora son mi interpretación.
 - Límites: la escena no lleva cámara (la pone el jugador de Tony); no hay secuencia, diálogos ni cambio de escena (T-F6); el porche no tiene calle ni cielo detallado.
 - Para ti: abre Flashback.unity y dime si el lugar (cuarto de la casa, de tarde) coincide con lo que imaginas.
+
+### T-094 Exteriores cerrados del casino y el mercado negro
+- Verificado automáticamente: compilar OK, EditMode 476/476, PlayMode 471/471 (CerradosPruebas: siguen cerrados a las 12:00 y a las 22:00, nada sobre la Entrada ni más de ~2 m hacia la calle; capturas T-094-1..4 de día y de noche revisadas). Una primera versión con colliders rompió 3 pruebas (puertas y franja de caminar de KitCalle); por eso todo lo nuevo es decorativo, sin collider. Las capturas del mercado salieron en niebla pura con la cámara a 6 m (quedaba dentro de un edificio) y se repitieron a 3.2 m.
+- Qué hay: casino con marquesina, columnas doradas, alfombra, postes con cadena y tubos de neón tenues; mercado con cortina de 8 tablillas, guías, candados, cajas y manta "VOLVEMOS PRONTO". El cartel "CERRADO" ya lo daba el letrero de horario de T-042, no hice otro.
+- Límites: la cortina y la manta son cubos y texto de Canvas; de noche el mercado se ve muy oscuro y azul (T-099 lo ajusta con la luz final).
+- Para ti: Ciudad.unity, `Lugar_Casino` y `Lugar_MercadoNegro` de día y de noche: ¿se leen como cerrados y con carácter?
