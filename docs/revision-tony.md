@@ -352,3 +352,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK; EditMode 676/676; PlayMode por área: Economia 19/19, Personaje 111/111, Progresion 79/79.
 - Para probar jugando: Nada jugable aún (T-143 pone las teclas 9 y 0 en la escena de pruebas de economía).
 - Decisiones: Ids brazo_chatarra, chatarra, kit_reparacion; Brazo de chatarra $300 máx 5, chatarra $50 máx 20, kit $0 máx 3. Al cargar, una cantidad mayor al tope se recorta; id repetido se ignora; id desconocido da warning. Aviso: DatosOferta_KitReparacion (T-033) cuesta $300 y D-tony-86 dice $250: se ajusta en T-146/T-150. T-143 debe asignar brazo y kit en InventarioDePrueba.
+
+### T-143 Escena de pruebas de economía
+- Verificado automáticamente (acotado): compilar OK; PlayMode Progresion 82/82. Creador idempotente (md5 igual en la segunda corrida). Captura T-143-1.
+- Para probar jugando: Abre Pruebas_Economia.unity, Play: taller (-12,3), mercado (8,6), mostrador de peleas (0,15). Teclas 7 abona $500, 8 carga $500 de deuda, 9 brazo, 0 kit, J reloj, F5/F9 guardado. ¿Se entienden los tres sitios y la distancia entre ellos?
+- Decisiones: Letreros con tablero y TextMesh; materiales reutilizados de Pruebas_Prologo; la historia pasa a Libre en Start; en la prueba de recorrido solo se simuló W.
