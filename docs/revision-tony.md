@@ -357,3 +357,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK; PlayMode Progresion 82/82. Creador idempotente (md5 igual en la segunda corrida). Captura T-143-1.
 - Para probar jugando: Abre Pruebas_Economia.unity, Play: taller (-12,3), mercado (8,6), mostrador de peleas (0,15). Teclas 7 abona $500, 8 carga $500 de deuda, 9 brazo, 0 kit, J reloj, F5/F9 guardado. ¿Se entienden los tres sitios y la distancia entre ellos?
 - Decisiones: Letreros con tablero y TextMesh; materiales reutilizados de Pruebas_Prologo; la historia pasa a Libre en Start; en la prueba de recorrido solo se simuló W.
+
+### T-144 Apuestas: lógica, datos y resolución
+- Verificado automáticamente (acotado): compilar OK; EditMode Economia+Pelea 120/120; PlayMode Economia 19/19, Pelea 49/49, Progresion 82/82. Gana con $250: $1,350 y 1 Brazo de chatarra; pierde: -250 sin pieza; cancelar devuelve; destruir el flujo devuelve la apuesta.
+- Para probar jugando: Aún sin pantalla de apuesta (T-145). Para probar a mano más adelante: apostar en el mostrador de peleas de Pruebas_Economia.
+- Decisiones: AnunciarApuesta crea al rival en ese momento (Pelea no referencia IA); Anunciar devuelve false si queda una apuesta sin resolver; el neto de Resuelta es solo la ganancia por momio; momio redondeado al entero más cercano (.5 arriba); montos 100/250/500, tope $500, Brazo de chatarra desde $250. Pendiente: DatosOferta_KitReparacion cuesta $300 y D-tony-86 dice $250: lo resuelve T-146/T-150.

@@ -47,6 +47,8 @@ namespace MechaCyberpunk.Economia.Editor
             AssetDatabase.Refresh();
             // El inventario (T-142) se agrega al prefab recién regenerado.
             CreadorInventario.Crear();
+            // Las apuestas (T-144) también.
+            CreadorApuestas.Crear();
             Debug.Log("[Economia] T-102 servicios de economía creados.");
         }
     }
