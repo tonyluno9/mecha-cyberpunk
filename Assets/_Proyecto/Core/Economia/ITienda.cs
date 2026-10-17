@@ -5,8 +5,8 @@ namespace MechaCyberpunk.Core
 {
     /// <summary>
     /// Una tienda de un lugar. La implementa Tony (Economia/, <c>TiendaBasica</c>) y se busca en <c>Registro&lt;ITienda&gt;</c>.
-    /// Por ahora nadie la registra en <c>Registro&lt;ITienda&gt;</c>: lo hará la tarea de la fase T-F4/T-F5 de Tony;
-    /// no la leas de <c>Registro&lt;ITienda&gt;</c> todavía.
+    /// La registra el <c>MostradorTienda</c> de Tony (UI/, T-146) mientras está activo; Alan coloca el prefab del
+    /// mostrador en su local y no implementa <c>ITienda</c>.
     /// El mundo decide si el lugar está abierto antes de mostrar la tienda; la tienda solo cobra y avisa.
     /// </summary>
     public interface ITienda

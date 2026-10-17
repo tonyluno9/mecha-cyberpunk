@@ -5,6 +5,7 @@ namespace MechaCyberpunk.UI.Hud
     {
         Ninguno,
         Puerta,
-        Montable
+        Montable,
+        Interactuable
     }
 }

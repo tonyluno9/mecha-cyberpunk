@@ -26,6 +26,8 @@ namespace MechaCyberpunk.Pelea.Datos
         [Min(1)] [SerializeField] private int tamanoLetra = 280;
         [Tooltip("Tamaño de la letra de la línea de revancha (puntos).")]
         [Min(1)] [SerializeField] private int tamanoLetraRevancha = 80;
+        [Tooltip("Tamaño de la letra de la línea del premio (puntos).")]
+        [Min(1)] [SerializeField] private int tamanoLetraPremio = 160;
         [Header("Pantalla de respaldo (si la arena no da una válida)")]
         [Tooltip("Ancho (x) y alto (y) de la zona útil de respaldo (m).")]
         [SerializeField] private Vector2 tamanoPantallaRespaldo = new Vector2(8f, 4.5f);
@@ -38,6 +40,7 @@ namespace MechaCyberpunk.Pelea.Datos
         [SerializeField] private Color colorKO = new Color(1f, 0.15f, 0.15f);
         [SerializeField] private Color colorGanaste = new Color(0.2f, 1f, 0.4f);
         [SerializeField] private Color colorPerdiste = new Color(1f, 0.15f, 0.15f);
+        [SerializeField] private Color colorPremio = new Color(1f, 0.85f, 0.2f);
 
         public float SegundosPorNumero => segundosPorNumero;
         public float PausaDespuesKO => pausaDespuesKO;
@@ -49,6 +52,7 @@ namespace MechaCyberpunk.Pelea.Datos
         public string TextoRevancha => textoRevancha;
         public int TamanoLetra => tamanoLetra;
         public int TamanoLetraRevancha => tamanoLetraRevancha;
+        public int TamanoLetraPremio => tamanoLetraPremio;
         public Vector2 TamanoPantallaRespaldo => tamanoPantallaRespaldo;
         public float DistanciaPantallaRespaldo => distanciaPantallaRespaldo;
         public float AlturaPantallaRespaldo => alturaPantallaRespaldo;
@@ -57,5 +61,6 @@ namespace MechaCyberpunk.Pelea.Datos
         public Color ColorKO => colorKO;
         public Color ColorGanaste => colorGanaste;
         public Color ColorPerdiste => colorPerdiste;
+        public Color ColorPremio => colorPremio;
     }
 }

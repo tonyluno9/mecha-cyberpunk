@@ -34,7 +34,6 @@ namespace MechaCyberpunk.Tests.Personaje
         private const float MaxSegundosRecorrido = 60f;
         private const float MaxSegundosREGRESA = 4f;
         private const float MetrosAlejarse = 40f;
-        private const float MaxFrameSegundos = 0.1f;
         private const float RadioLlegadaEsquina = 4.5f;
         private const float DistanciaSubir = 1.2f;
         private const float MetrosManejando = 10f;
@@ -50,7 +49,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private CarroDePrueba carro;
         private readonly List<IdLugar> entradas = new List<IdLugar>();
         private readonly List<IdLugar> salidas = new List<IdLugar>();
-        private float maxFrame;
+        private readonly MedidorFrames medidor = new MedidorFrames();
         private bool avanzando;
 
         public override void Setup()
@@ -62,7 +61,7 @@ namespace MechaCyberpunk.Tests.Personaje
             raton = InputSystem.AddDevice<Mouse>();
             entradas.Clear();
             salidas.Clear();
-            maxFrame = 0f;
+            medidor.Reiniciar();
             avanzando = false;
         }
 
@@ -122,7 +121,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private IEnumerator Frame()
         {
             yield return null;
-            maxFrame = Mathf.Max(maxFrame, Time.unscaledDeltaTime);
+            medidor.Registrar(Time.unscaledDeltaTime);
         }
 
         private IEnumerator Esperar(float segundos)
@@ -350,7 +349,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(ModoJugador.APie, jugadorAPie.Modo, "E baja en modo APie");
             Assert.IsFalse(carro.Ocupado);
 
-            Assert.Less(maxFrame, MaxFrameSegundos, "Ningún frame del recorrido dura más de 100 ms");
+            Assert.IsTrue(medidor.Cumple, "Frames del recorrido: " + medidor.Resumen());
         }
 
         [UnityTest]
@@ -387,7 +386,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             StringAssert.Contains(TextoRegresa, hud.TextoObjetivo.text, "REGRESA en menos de 4 s tras alejarse 40 m");
             Assert.Less(Time.time - llegoA40, MaxSegundosREGRESA + 0.5f);
-            Assert.Less(maxFrame, MaxFrameSegundos, "Ningún frame dura más de 100 ms");
+            Assert.IsTrue(medidor.Cumple, "Frames del recorrido: " + medidor.Resumen());
         }
     }
 }

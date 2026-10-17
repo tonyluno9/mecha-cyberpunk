@@ -22,6 +22,15 @@ namespace MechaCyberpunk.Pelea.Editor
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Tutorial.unity";
         private static readonly Vector3 GiroLuz = new Vector3(50f, -30f, 0f);
 
+        /// <summary>Solo el prefab del tutorial (sin tocar Pruebas_Tutorial). Batchmode: -executeMethod MechaCyberpunk.Pelea.Editor.CreadorPresentador.CrearPrefab</summary>
+        public static void CrearPrefab()
+        {
+            ConfigPresentador config = AssetDatabase.LoadAssetAtPath<ConfigPresentador>(RutaConfig);
+            ArmarPrefab(config);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Pelea] FlujoPeleaTutorial actualizado.");
+        }
+
         [MenuItem("Mecha Cyberpunk/Crear T-070 presentador")]
         public static void Crear()
         {
@@ -56,7 +65,10 @@ namespace MechaCyberpunk.Pelea.Editor
                 so.FindProperty("prefabRival").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(RutaRivalTutorial);
                 so.FindProperty("presentador").objectReferenceValue = config;
                 so.FindProperty("empezarAlArrancar").boolValue = true;
+                // La pelea tutorial no tiene revancha (T-128): se entra y se sale una sola vez.
+                so.FindProperty("permitirRevancha").boolValue = false;
                 so.ApplyModifiedPropertiesWithoutUndo();
+                CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioTutorial);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabTutorial);
             }
             finally

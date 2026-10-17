@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Pelea.Datos;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,6 +32,10 @@ namespace MechaCyberpunk.Pelea.Flujo
         [SerializeField] private bool empezarAlArrancar = true;
         [Tooltip("Opcional: lo que dice el presentador antes del conteo. Sin esto no hay presentación.")]
         [SerializeField] private ConfigPresentador presentador;
+        [Tooltip("Opcional: lo que paga esta pelea. Sin esto no hay premio.")]
+        [SerializeField] private DatosPremioPelea premio;
+        [Tooltip("Si es falso, el resultado no ofrece revancha: no se muestra \"R: revancha\" y la tecla R no hace nada.")]
+        [SerializeField] private bool permitirRevancha = true;
         [Tooltip("Acción de la revancha (tecla R). Solo funciona en el resultado.")]
         [SerializeField] private InputAction revancha;
 
@@ -46,15 +51,20 @@ namespace MechaCyberpunk.Pelea.Flujo
         private bool avisoSinJugador;
         private bool avisoArenaPerdida;
         private bool esperandoArena;
+        private bool avisoSinCartera;
 
         public EstadoFlujoPelea Estado => maquina != null ? maquina.Estado : EstadoFlujoPelea.Preparando;
         public IArenaPelea Arena => arena;
         public IPeleador Jugador => jugador;
         public IPeleador Rival => rival;
         public PantallaPelea Pantalla => pantalla;
+        public bool PermiteRevancha => permitirRevancha;
 
         /// <summary>Avisa cada línea que dice el presentador, ya con alias y rival puestos y en mayúsculas (para el audio).</summary>
         public event Action<string> LineaDicha;
+
+        /// <summary>Avisa el dinero abonado al jugador al terminar una pelea (solo si fue mayor que 0).</summary>
+        public event Action<int> PremioPagado;
 
         private void Awake()
         {
@@ -64,6 +74,7 @@ namespace MechaCyberpunk.Pelea.Flujo
                 enabled = false;
                 return;
             }
+            pantalla.FijarRevanchaVisible(permitirRevancha);
             List<float> duraciones = null;
             if (presentador != null && presentador.Lineas != null)
             {
@@ -79,7 +90,7 @@ namespace MechaCyberpunk.Pelea.Flujo
             maquina.ConteoCambio += EventosPelea.PublicarConteo;
             maquina.PeleaIniciada += AlIniciarPelea;
             maquina.KOOcurrido += AlOcurrirKO;
-            maquina.ResultadoListo += EventosPelea.PublicarFin;
+            maquina.ResultadoListo += AlResultado;
         }
 
         private void OnEnable()
@@ -137,13 +148,36 @@ namespace MechaCyberpunk.Pelea.Flujo
             IntentarEmpezar();
         }
 
+        /// <summary>
+        /// Desde el resultado: destruye al rival que creó, limpia la pantalla y vuelve a Preparando, listo para otra pelea nueva
+        /// con <see cref="EmpezarPelea"/> (con presentación si el config la trae). Fuera del resultado no hace nada.
+        /// </summary>
+        public bool Reiniciar()
+        {
+            if (maquina == null || !maquina.Reiniciar())
+            {
+                return false;
+            }
+            empezarPendiente = false;
+            rivalNuevo = false;
+            if (rivalCreado != null)
+            {
+                Desuscribir(rival);
+                Destroy(rivalCreado);
+                rivalCreado = null;
+                rival = null;
+            }
+            pantalla.Ocultar();
+            return true;
+        }
+
         private void Update()
         {
             if (maquina == null)
             {
                 return;
             }
-            if (maquina.Estado == EstadoFlujoPelea.Resultado && revancha.WasPressedThisFrame())
+            if (permitirRevancha && maquina.Estado == EstadoFlujoPelea.Resultado && revancha.WasPressedThisFrame())
             {
                 PedirRevancha();
                 return;
@@ -340,6 +374,34 @@ namespace MechaCyberpunk.Pelea.Flujo
             {
                 maquina.NotificarKO(LadoPelea.Rival);
             }
+        }
+
+        // Cada pelea (y cada revancha) termina una sola vez: paga una sola vez.
+        private void AlResultado(ResultadoPelea resultado)
+        {
+            EventosPelea.PublicarFin(resultado);
+            if (premio == null)
+            {
+                return;
+            }
+            int monto = resultado.Ganador == LadoPelea.Jugador ? premio.PremioGanar : premio.PremioPerder;
+            if (monto <= 0)
+            {
+                return;
+            }
+            ICartera cartera = Registro<ICartera>.Actual;
+            if (cartera == null)
+            {
+                if (!avisoSinCartera)
+                {
+                    avisoSinCartera = true;
+                    Debug.LogWarning("[Pelea] DirectorPelea de " + name + " no encontró la cartera; la pelea no paga premio.", this);
+                }
+                return;
+            }
+            cartera.Abonar(monto, MotivoDinero.Premio);
+            pantalla.MostrarPremio(monto);
+            PremioPagado?.Invoke(monto);
         }
 
         private void AlOcurrirKO(LadoPelea ganador)

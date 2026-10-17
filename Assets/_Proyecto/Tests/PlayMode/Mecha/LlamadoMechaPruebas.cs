@@ -89,7 +89,15 @@ namespace MechaCyberpunk.Tests.Mecha
             montaje = Object.FindFirstObjectByType<MontajeMecha>();
             llamado = montaje.GetComponent<LlamadoMecha>();
             taller = Object.FindFirstObjectByType<TallerDePrueba>();
-            punto = Object.FindFirstObjectByType<PuntoLlamadoDePrueba>();
+            // Por nombre: Pruebas_Calle tiene dos puntos de llamado (calle y callejón) y no importa el orden de los objetos.
+            punto = null;
+            foreach (PuntoLlamadoDePrueba candidato in Object.FindObjectsByType<PuntoLlamadoDePrueba>(FindObjectsSortMode.None))
+            {
+                if (candidato.name == "PuntoLlamado Calle")
+                {
+                    punto = candidato;
+                }
+            }
             Assert.IsNotNull(jugador, "Pruebas_Calle trae el jugador");
             Assert.IsNotNull(llamado, "El mecha trae LlamadoMecha");
             Assert.IsNotNull(taller, "Pruebas_Calle trae el taller");
@@ -372,6 +380,60 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.Less(Vector3.Distance(montaje.transform.position, poseInicialMecha.position), ToleranciaMetros,
                 "Vuelve a donde arrancó en la escena");
             Assert.Less(Quaternion.Angle(montaje.transform.rotation, poseInicialMecha.rotation), 1f);
+        }
+
+        [UnityTest]
+        public IEnumerator LlevarA_PoneAlMechaEnLaPoseYLoDejaEnArenaSinRegresoNiM()
+        {
+            yield return CargarCalle();
+            Pose destino = new Pose(new Vector3(30f, 0.05f, 40f), Quaternion.Euler(0f, 90f, 0f));
+
+            llamado.LlevarA(destino);
+
+            Assert.AreEqual(EstadoLlamado.EnArena, llamado.Estado);
+            Assert.Less(Vector3.Distance(montaje.transform.position, destino.position), ToleranciaMetros, "Quedó en la pose al instante");
+            Assert.IsTrue(montaje.PuedeSubir, "En la arena se puede subir");
+
+            // M con el jugador a pie lejos del mecha no lo regresa ni lo llama.
+            yield return Tecla(teclado.mKey);
+            Assert.AreEqual(ResultadoLlamado.Nada, intentos[intentos.Count - 1]);
+            Assert.AreEqual(EstadoLlamado.EnArena, llamado.Estado);
+
+            // Tampoco regresa solo por lejanía.
+            yield return Esperar(1f);
+            Assert.AreEqual(EstadoLlamado.EnArena, llamado.Estado);
+            Assert.Less(Vector3.Distance(montaje.transform.position, destino.position), ToleranciaMetros);
+        }
+
+        [UnityTest]
+        public IEnumerator VolverAlTallerYa_DejaAlMechaEnSuEstacionamientoConLaMismaVida()
+        {
+            yield return CargarCalle();
+            var vida = montaje.GetComponent<MechaCyberpunk.Combate.Vida.VidaMecha>();
+            vida.FijarVida(40f);
+            llamado.LlevarA(new Pose(new Vector3(30f, 0.05f, 40f), Quaternion.identity));
+
+            llamado.VolverAlTallerYa();
+
+            Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado);
+            Assert.Less(Vector3.Distance(montaje.transform.position, taller.Estacionamiento.position), ToleranciaMetros);
+            Assert.AreEqual(40f, vida.Actual, 0.01f, "Conserva la vida que tenía");
+        }
+
+        [UnityTest]
+        public IEnumerator LlevarA_MientrasLlega_DejaElMechaVisibleYConColisiones()
+        {
+            yield return CargarCalle();
+            yield return Tecla(teclado.mKey);
+            Assert.AreEqual(EstadoLlamado.Llegando, llamado.Estado);
+            Assert.AreEqual(0, RenderersPrendidos(), "Oculto mientras llega");
+
+            llamado.LlevarA(new Pose(new Vector3(30f, 0.05f, 40f), Quaternion.identity));
+
+            Assert.Greater(RenderersPrendidos(), 0, "Se ve de nuevo");
+            Assert.IsTrue(montaje.GetComponent<CharacterController>().enabled);
+            yield return null; // Destroy de la marca se aplica al final del cuadro
+            Assert.IsNull(GameObject.Find("MarcaLlamadoMecha"), "Sin marca de llegada");
         }
     }
 }

@@ -1,6 +1,7 @@
 using MechaCyberpunk.Mecha.Montaje;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace MechaCyberpunk.Mecha.Editor
 {
@@ -35,6 +36,8 @@ namespace MechaCyberpunk.Mecha.Editor
                 Transform asiento = Hijo(raiz.transform, "Asiento", new Vector3(0f, AlturaAsiento, 0f));
                 Transform punto = Hijo(raiz.transform, "PuntoSubida", new Vector3(0f, 0f, DistanciaPuntoSubida));
                 Camera camara = raiz.GetComponentInChildren<Camera>(true);
+                // Pedido de Alan (D-alan-19): la cámara del mecha dibuja el posproceso de los Volumes de su escena.
+                camara.GetUniversalAdditionalCameraData().renderPostProcessing = true;
 
                 MontajeMecha montaje = raiz.GetComponent<MontajeMecha>();
                 if (montaje == null)

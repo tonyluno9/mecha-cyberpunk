@@ -108,6 +108,7 @@ namespace MechaCyberpunk.IA.Editor
                 AssetDatabase.CreateAsset(material, ruta);
             }
             material.SetColor("_BaseColor", color);
+            material.SetColor("_Color", color); // Unity sincroniza _Color con _BaseColor al importar; así el asset ya queda igual y no cambia solo
             if (conEmision)
             {
                 material.EnableKeyword("_EMISSION");

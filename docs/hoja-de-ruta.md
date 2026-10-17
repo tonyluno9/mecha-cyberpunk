@@ -73,6 +73,8 @@ que sí se puede perder. Casino y mercado negro se ven por fuera y están cerrad
 - Contenido, en este orden: economía completa (premios, apuestas en peleas, venta de piezas), ligas (4 de 5 rivales, jefes),
   piezas por ramas y niveles, habilidades con cooldown y munición, implantes (4 espacios), misiones y reputación (barrio y
   corporaciones), radio con 3 estaciones, adaptación del rival, y hackeo si sobra tiempo.
+- Se planifica por bloques, en ese orden, y cada bloque se escribe al terminar el anterior (D-tony-75). Bloque 1, economía completa
+  (apuestas, venta de piezas, kits, reparar a medias, precios): T-140 a T-151, empezando por la estabilización de pruebas (T-140).
 - Prueba de cierre: vencer a los campeones de las 4 ligas; reputación visible en la ciudad (H7).
 - Depende de Alan: casino, mercado negro y clínica abiertos, persecuciones, ciclo completo (A-F5).
 

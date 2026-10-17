@@ -1,3 +1,5 @@
+using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.UI;
 using UnityEngine;
@@ -38,6 +40,23 @@ namespace MechaCyberpunk.UI.Hud
             }
             string texto = string.Format(config.TextoPistola, balas, tamanoCargador);
             return balas <= 0 ? texto + config.TextoPistolaSinBalas : texto;
+        }
+
+        /// <summary>"+$600 · PREMIO" o "-$650 · REPARACIÓN". Vacío si el motivo es <see cref="MotivoDinero.Carga"/> o no hubo cambio.</summary>
+        public static string TextoAvisoDinero(int diferencia, MotivoDinero motivo, ConfigHudAPie config)
+        {
+            if (motivo == MotivoDinero.Carga || diferencia == 0)
+            {
+                return string.Empty;
+            }
+            string cantidad = FormatoDinero.Texto(diferencia);
+            return (diferencia > 0 ? "+" : string.Empty) + cantidad + " · " + config.NombreMotivo(motivo);
+        }
+
+        /// <summary>"RENTA VENCIDA · $500".</summary>
+        public static string TextoRentaVencida(int adeudo, ConfigHudAPie config)
+        {
+            return string.Format(config.TextoRentaVencida, FormatoDinero.Texto(adeudo));
         }
     }
 }

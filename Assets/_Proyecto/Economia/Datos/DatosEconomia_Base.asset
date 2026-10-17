@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da6824ddb9e11d40b66502bccf6f7ee, type: 3}
+  m_Name: DatosEconomia_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.DatosEconomia
+  dineroInicial: 500
+  costoReparacionPorPunto: 10
+  costoReparacionMinimo: 50
+  renta: 500
+  diasEntreRentas: 7

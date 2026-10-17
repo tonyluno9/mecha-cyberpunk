@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749496a2415cd2d44ad35384021a4f74, type: 3}
+  m_Name: CatalogoApariencia_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.CatalogoApariencia
+  caras:
+  - nombre: Rapado
+    piel: {r: 0.96, g: 0.8, b: 0.66, a: 1}
+    peinado: 0
+    colorPeinado: {r: 0.12, g: 0.12, b: 0.15, a: 1}
+  - nombre: Cresta
+    piel: {r: 0.78, g: 0.58, b: 0.42, a: 1}
+    peinado: 1
+    colorPeinado: {r: 0.9, g: 0.2, b: 0.6, a: 1}
+  - nombre: Trenza
+    piel: {r: 0.55, g: 0.38, b: 0.27, a: 1}
+    peinado: 2
+    colorPeinado: {r: 0.1, g: 0.75, b: 0.75, a: 1}
+  - nombre: Gorra
+    piel: {r: 0.35, g: 0.24, b: 0.18, a: 1}
+    peinado: 3
+    colorPeinado: {r: 0.95, g: 0.5, b: 0.1, a: 1}
+  ropas:
+  - nombre: Chamarra magenta
+    color: {r: 0.85, g: 0.1, b: 0.55, a: 1}
+    pantalon: {r: 0.1, g: 0.1, b: 0.15, a: 1}
+    conMangas: 1
+    pieza: 0
+    colorPieza: {r: 0.2, g: 0.2, b: 0.25, a: 1}
+  - nombre: Sudadera turquesa
+    color: {r: 0.1, g: 0.7, b: 0.7, a: 1}
+    pantalon: {r: 0.15, g: 0.18, b: 0.3, a: 1}
+    conMangas: 1
+    pieza: 1
+    colorPieza: {r: 0.07, g: 0.5, b: 0.5, a: 1}
+  - nombre: Chaleco naranja
+    color: {r: 0.95, g: 0.5, b: 0.1, a: 1}
+    pantalon: {r: 0.2, g: 0.2, b: 0.22, a: 1}
+    conMangas: 0
+    pieza: 2
+    colorPieza: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+  - nombre: Overol azul
+    color: {r: 0.1, g: 0.25, b: 0.8, a: 1}
+    pantalon: {r: 0.1, g: 0.25, b: 0.8, a: 1}
+    conMangas: 0
+    pieza: 3
+    colorPieza: {r: 0.05, g: 0.15, b: 0.55, a: 1}
+  implantes:
+  - nombre: Ninguno
+    implante: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - nombre: Brazo cromado
+    implante: 1
+    color: {r: 0.8, g: 0.82, b: 0.88, a: 1}
+  - nombre: Ojo LED rojo
+    implante: 2
+    color: {r: 1, g: 0.05, b: 0.05, a: 1}
+  - nombre: Placa en la sien
+    implante: 3
+    color: {r: 0.6, g: 0.65, b: 0.7, a: 1}

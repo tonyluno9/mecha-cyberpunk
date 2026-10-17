@@ -10,6 +10,9 @@ namespace MechaCyberpunk.Mecha.Llamado
         /// <summary>Está en la calle.</summary>
         EnCalle,
         /// <summary>Vuelve al taller, subiendo al cielo. No se puede subir.</summary>
-        Regresando
+        Regresando,
+        /// <summary>Está en una arena peleando con el jugador dentro (T-128). Sin calor, sin regreso por lejanía y M no lo regresa.
+        /// Va al final para no cambiar los números de los demás.</summary>
+        EnArena
     }
 }

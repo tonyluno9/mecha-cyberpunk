@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Mecha",
     "rootNamespace": "MechaCyberpunk.Mecha",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Combate", "Unity.InputSystem"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Combate", "MechaCyberpunk.Economia", "Unity.InputSystem"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

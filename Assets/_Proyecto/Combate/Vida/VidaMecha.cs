@@ -70,6 +70,31 @@ namespace MechaCyberpunk.Combate.Vida
             }
         }
 
+        /// <summary>
+        /// Deja la vida en <paramref name="valor"/> (limitado a (0, Maxima]) y quita el KO. Avisa <see cref="Cambio"/>
+        /// pero no publica impacto ni KO. Con valor &lt;= 0 no hace nada y avisa un warning.
+        /// </summary>
+        public void FijarVida(float valor)
+        {
+            if (modelo == null)
+            {
+                return;
+            }
+            if (valor <= 0f || float.IsNaN(valor))
+            {
+                Debug.LogWarning("[Combate] FijarVida pide una vida mayor que 0 en " + name + ": " + valor);
+                return;
+            }
+            float objetivo = Mathf.Min(valor, modelo.Maxima);
+            // Restaurar() avisa Cambio y Aplicar() también; quien escuche ve el estado final al último aviso.
+            modelo.Restaurar();
+            float resta = modelo.Maxima - objetivo;
+            if (resta > 0f)
+            {
+                modelo.Aplicar(resta);
+            }
+        }
+
         public ResultadoDanio RecibirDanio(InfoDanio info)
         {
             if (modelo == null)

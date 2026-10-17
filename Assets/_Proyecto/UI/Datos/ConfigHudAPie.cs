@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using UnityEngine;
 
 namespace MechaCyberpunk.UI
@@ -64,6 +65,9 @@ namespace MechaCyberpunk.UI
         [Tooltip("Texto de la E con un carro o mecha de frente; después va su nombre.")]
         [SerializeField] private string textoSubir = "E · Subir";
 
+        [Tooltip("Prefijo de la E con un interactuable que se puede usar; después va su texto.")]
+        [SerializeField] private string prefijoUsar = "E · ";
+
         [Tooltip("Aviso al pulsar E para bajar cuando el vehículo todavía va rápido.")]
         [SerializeField] private string textoFrenaParaBajar = "Frena para bajar";
 
@@ -105,6 +109,20 @@ namespace MechaCyberpunk.UI
         [Tooltip("Alto de cada marca de calor (px de referencia).")]
         [Min(2f)] [SerializeField] private float altoMarcaCalor = 12f;
 
+        [Header("Dinero y renta (T-110)")]
+        [Tooltip("Color del dinero cuando es negativo (deuda; magenta neón).")]
+        [SerializeField] private Color colorDeuda = new Color(1f, 0.1f, 0.6f, 1f);
+
+        [Tooltip("Cuánto dura el aviso de un movimiento de dinero (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosAvisoDinero = 2.5f;
+
+        [Tooltip("Aviso de renta vencida; {0} es lo que se debe.")]
+        [SerializeField] private string textoRentaVencida = "RENTA VENCIDA · {0}";
+
+        [Tooltip("Nombre de cada motivo en el aviso, en el orden de MotivoDinero (Premio, Apuesta, Reparacion, Renta, Compra, Venta, Casino, Clinica, Otro).")]
+        [SerializeField] private string[] nombresMotivo =
+            { "PREMIO", "APUESTA", "REPARACIÓN", "RENTA", "COMPRA", "VENTA", "CASINO", "CLÍNICA", "OTRO" };
+
         [Header("Textos de vida y arma")]
         [Tooltip("Texto de la vida; {0} es la vida redondeada hacia arriba.")]
         [SerializeField] private string textoVida = "VIDA {0}";
@@ -120,6 +138,21 @@ namespace MechaCyberpunk.UI
 
         [Tooltip("Lo que se agrega al texto de la pistola cuando no le quedan balas.")]
         [SerializeField] private string textoPistolaSinBalas = " · R";
+
+        public Color ColorDeuda => colorDeuda;
+        public float SegundosAvisoDinero => segundosAvisoDinero;
+        public string TextoRentaVencida => textoRentaVencida;
+
+        /// <summary>Nombre del motivo en el aviso; si la lista no lo trae, el nombre del enum en mayúsculas.</summary>
+        public string NombreMotivo(MotivoDinero motivo)
+        {
+            int indice = (int)motivo;
+            if (nombresMotivo != null && indice >= 0 && indice < nombresMotivo.Length && !string.IsNullOrEmpty(nombresMotivo[indice]))
+            {
+                return nombresMotivo[indice];
+            }
+            return motivo.ToString().ToUpperInvariant();
+        }
 
         public string TextoCalor => textoCalor;
         public Color ColorCalor => colorCalor;
@@ -142,6 +175,7 @@ namespace MechaCyberpunk.UI
         public string TextoPistolaSinBalas => textoPistolaSinBalas;
         public string TextoAbrir => textoAbrir;
         public string TextoSubir => textoSubir;
+        public string PrefijoUsar => prefijoUsar;
         public string TextoFrenaParaBajar => textoFrenaParaBajar;
         public string TextoRegresa => textoRegresa;
         public string TextoCerradoProximamente => textoCerradoProximamente;

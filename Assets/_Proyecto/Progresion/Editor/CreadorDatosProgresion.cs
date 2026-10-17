@@ -94,6 +94,26 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>Agrega ServicioGuardado a ServiciosProgresion.prefab si no lo tiene (T-111). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-111 servicio de guardado")]
+        public static void CrearT111()
+        {
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                if (raiz.GetComponent<MechaCyberpunk.Progresion.Guardado.ServicioGuardado>() == null)
+                {
+                    raiz.AddComponent<MechaCyberpunk.Progresion.Guardado.ServicioGuardado>();
+                }
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         private const string RutaDatosPerfil = "Assets/_Proyecto/Progresion/Datos/DatosPerfil_Base.asset";
 
         /// <summary>Crea DatosPerfil_Base y agrega ServicioPerfil a ServiciosProgresion.prefab si no lo tiene (T-070). Idempotente.</summary>
@@ -128,6 +148,49 @@ namespace MechaCyberpunk.Progresion.Editor
                 PrefabUtility.UnloadPrefabContents(raiz);
             }
             AssetDatabase.SaveAssets();
+        }
+
+        private const string RutaDatosEscenasPruebas = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Pruebas.asset";
+        private const string RutaDatosEscenasDemo = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Demo.asset";
+        private const string EscenaTitulo = "Assets/_Proyecto/Escenas/Tony/CreacionPersonaje.unity";
+        private const string EscenaCiudad = "Assets/_Proyecto/Escenas/Tony/Pruebas_Prologo.unity";
+        private const string EscenaFlashback = "Assets/_Proyecto/Escenas/Tony/Pruebas_Flashback.unity";
+
+        /// <summary>Crea DatosEscenas_Pruebas y _Demo y agrega ServicioHistoria a ServiciosProgresion.prefab (T-124). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-124 historia y escenas")]
+        public static void CrearT124()
+        {
+            CrearDatosEscenas(RutaDatosEscenasPruebas);
+            CrearDatosEscenas(RutaDatosEscenasDemo);
+            AssetDatabase.SaveAssets();
+
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                if (raiz.GetComponent<ServicioHistoria>() == null) raiz.AddComponent<ServicioHistoria>();
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        private static void CrearDatosEscenas(string ruta)
+        {
+            var datos = AssetDatabase.LoadAssetAtPath<DatosEscenas>(ruta);
+            if (datos == null)
+            {
+                datos = ScriptableObject.CreateInstance<DatosEscenas>();
+                AssetDatabase.CreateAsset(datos, ruta);
+            }
+            var so = new SerializedObject(datos);
+            so.FindProperty("rutaTitulo").stringValue = EscenaTitulo;
+            so.FindProperty("rutaCiudad").stringValue = EscenaCiudad;
+            so.FindProperty("rutaFlashback").stringValue = EscenaFlashback;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(datos);
         }
     }
 }

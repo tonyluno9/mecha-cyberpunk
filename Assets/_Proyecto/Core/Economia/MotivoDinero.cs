@@ -11,6 +11,8 @@ namespace MechaCyberpunk.Core
         Venta,
         Casino,
         Clinica,
-        Otro
+        Otro,
+        /// <summary>El dinero cambió porque se cargó una partida; no es un movimiento real y el HUD no lo anuncia.</summary>
+        Carga
     }
 }

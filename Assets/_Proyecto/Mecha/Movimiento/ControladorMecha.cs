@@ -1,4 +1,6 @@
+using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Mecha.Danio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,12 +17,15 @@ namespace MechaCyberpunk.Mecha.Movimiento
         [SerializeField] private ConfigControlesMecha config;
         [Tooltip("Cámara hija del mecha. Se inclina para mirar y se mece al caminar.")]
         [SerializeField] private Transform camara;
+        [Tooltip("Opcional. Con vida baja reduce velocidad, aceleración y giro. Sin esto el mecha se mueve siempre igual.")]
+        [SerializeField] private ConfigMechaDaniado configDanio;
         [SerializeField] private InputActionReference mover;
         [SerializeField] private InputActionReference mirar;
         [SerializeField] private InputActionReference golpear;
         [SerializeField] private InputActionReference liberarCursor;
 
         private CharacterController controlador;
+        private VidaMecha vida;
         private Vector2 velocidadLocal;
         private float giroPendiente;
         private float inclinacionVertical;
@@ -49,6 +54,7 @@ namespace MechaCyberpunk.Mecha.Movimiento
                 enabled = false;
                 return;
             }
+            vida = GetComponent<VidaMecha>();
             alturaCamaraBase = camara.localPosition.y;
         }
 
@@ -74,8 +80,14 @@ namespace MechaCyberpunk.Mecha.Movimiento
             ActualizarCursor();
 
             Vector2 entrada = mover.action.ReadValue<Vector2>();
+            bool vidaBaja = configDanio != null && vida != null
+                && ReglaMechaDaniado.VidaBaja(vida.Actual, vida.Maxima, configDanio.UmbralVidaBaja);
+            float factorVelocidad = vidaBaja ? ReglaMechaDaniado.Factor(true, configDanio.FactorVelocidad) : 1f;
+            float factorAceleracion = vidaBaja ? ReglaMechaDaniado.Factor(true, configDanio.FactorAceleracion) : 1f;
+            float factorGiro = vidaBaja ? ReglaMechaDaniado.Factor(true, configDanio.FactorGiro) : 1f;
             velocidadLocal = MovimientoPesado.Calcular(entrada, velocidadLocal, dt,
-                datos.VelocidadMaxima, datos.Aceleracion, datos.Desaceleracion);
+                datos.VelocidadMaxima * factorVelocidad, datos.Aceleracion * factorAceleracion,
+                datos.Desaceleracion * factorAceleracion);
 
             if (cursorBloqueado)
             {
@@ -85,7 +97,7 @@ namespace MechaCyberpunk.Mecha.Movimiento
                     -config.LimiteMirarVertical, config.LimiteMirarVertical);
             }
 
-            float giro = GiroPesado.Calcular(giroPendiente, dt, datos.VelocidadGiroMaxima);
+            float giro = GiroPesado.Calcular(giroPendiente, dt, datos.VelocidadGiroMaxima * factorGiro);
             giroPendiente -= giro;
             transform.Rotate(0f, giro, 0f);
 

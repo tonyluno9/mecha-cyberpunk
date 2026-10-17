@@ -156,7 +156,7 @@ namespace MechaCyberpunk.Tests.Pelea
         }
 
         // Instancia FlujoPelea dentro de un padre inactivo para cambiarle el config antes de su Awake.
-        private DirectorPelea CrearFlujo(Vector3 posicion, float pausaKO = PausaKO)
+        private DirectorPelea CrearFlujo(Vector3 posicion, float pausaKO = PausaKO, bool conRevancha = true)
         {
             configPrueba = ScriptableObject.CreateInstance<ConfigFlujoPelea>();
             FijarFloat(configPrueba, "segundosPorNumero", SegundosPorNumero);
@@ -172,6 +172,7 @@ namespace MechaCyberpunk.Tests.Pelea
             director = flujo.GetComponent<DirectorPelea>();
             SerializedObject soDirector = new SerializedObject(director);
             soDirector.FindProperty("config").objectReferenceValue = configPrueba;
+            soDirector.FindProperty("permitirRevancha").boolValue = conRevancha;
             soDirector.ApplyModifiedPropertiesWithoutUndo();
             SerializedObject soPantalla = new SerializedObject(flujo.GetComponentInChildren<PantallaPelea>(true));
             soPantalla.FindProperty("config").objectReferenceValue = configPrueba;
@@ -182,7 +183,7 @@ namespace MechaCyberpunk.Tests.Pelea
             return director;
         }
 
-        private IEnumerator Escenario(bool conArena = true, float pausaKO = PausaKO)
+        private IEnumerator Escenario(bool conArena = true, float pausaKO = PausaKO, bool conRevancha = true)
         {
             yield return Calentar();
             if (conArena)
@@ -194,7 +195,7 @@ namespace MechaCyberpunk.Tests.Pelea
             {
                 CrearJugador(PosicionArena);
             }
-            CrearFlujo(PosicionArena, pausaKO);
+            CrearFlujo(PosicionArena, pausaKO, conRevancha);
         }
 
         private IEnumerator HastaEstado(EstadoFlujoPelea estado)
@@ -422,7 +423,7 @@ namespace MechaCyberpunk.Tests.Pelea
         }
 
         [UnityTest]
-        public IEnumerator Revancha_REnElResultado_RestauraTodoYVuelveElConteo()
+        public IEnumerator Revancha_REnElResultado_RivalCompletoYJugadorConservaSuDanioYVuelveElConteo()
         {
             yield return Escenario();
             yield return HastaEstado(EstadoFlujoPelea.Peleando);
@@ -442,6 +443,7 @@ namespace MechaCyberpunk.Tests.Pelea
             Assert.AreEqual(2, conteos.FindAll(n => n == 3).Count, "Vuelve el conteo");
             Assert.AreEqual("3", director.Pantalla.Texto);
             Assert.AreEqual(string.Empty, director.Pantalla.Revancha);
+            // D-tony-59: este mecha (arranque Directo) no lleva MechaPersistente: la revancha lo restaura, igual que al rival.
             Assert.AreEqual(Vida(director.Jugador).Maxima, Vida(director.Jugador).Actual, 1e-3f);
             Assert.AreEqual(Vida(director.Rival).Maxima, Vida(director.Rival).Actual, 1e-3f);
             Assert.IsFalse(Vida(director.Rival).EstaKO);
@@ -639,6 +641,54 @@ namespace MechaCyberpunk.Tests.Pelea
             yield return HastaEstado(EstadoFlujoPelea.Peleando);
             Assert.IsTrue(director.Jugador.ControlActivo);
             Assert.IsTrue(director.Rival.ControlActivo);
+        }
+
+        [UnityTest]
+        public IEnumerator Revancha_SinPermiso_RNoHaceNadaYLaPantallaNoLaOfrece()
+        {
+            yield return Escenario(conRevancha: false);
+            Assert.IsFalse(director.PermiteRevancha);
+            yield return HastaEstado(EstadoFlujoPelea.Peleando);
+            Matar(director.Rival);
+            yield return HastaEstado(EstadoFlujoPelea.Resultado);
+            Assert.AreEqual("GANASTE", director.Pantalla.Texto);
+            Assert.AreEqual(string.Empty, director.Pantalla.Revancha, "No aparece R: revancha");
+
+            yield return PulsarTecla(Key.R);
+            yield return Esperar(EsperaCorta);
+            Assert.AreEqual(EstadoFlujoPelea.Resultado, director.Estado, "R no hace nada");
+            Assert.AreEqual(1, conteos.FindAll(n => n == 3).Count, "No volvió el conteo");
+            Assert.IsEmpty(errores, string.Join(" | ", errores));
+        }
+
+        [UnityTest]
+        public IEnumerator Reiniciar_DesdeElResultado_DejaPreparandoYDestruyeAlRivalCreado()
+        {
+            yield return Escenario(conRevancha: false);
+            Assert.IsFalse(director.Reiniciar(), "Fuera del resultado no hace nada");
+            yield return HastaEstado(EstadoFlujoPelea.Peleando);
+            Assert.IsFalse(director.Reiniciar(), "En plena pelea no hace nada");
+            GameObject primerRival = director.Rival.Raiz.gameObject;
+            Matar(director.Rival);
+            yield return HastaEstado(EstadoFlujoPelea.Resultado);
+
+            Assert.IsTrue(director.Reiniciar());
+            yield return null;
+            yield return null;
+            Assert.IsTrue(primerRival == null, "El rival creado se destruyó");
+            Assert.IsNull(director.Rival, "El director soltó al rival");
+            Assert.AreEqual(EstadoFlujoPelea.Preparando, director.Estado);
+            Assert.AreEqual(string.Empty, director.Pantalla.Texto, "La pantalla quedó limpia");
+
+            // Una pelea nueva arranca con un rival nuevo y completo.
+            director.EmpezarPelea();
+            yield return null;
+            Assert.AreEqual(EstadoFlujoPelea.Conteo, director.Estado);
+            Assert.IsNotNull(director.Rival);
+            Assert.AreNotSame(primerRival, director.Rival.Raiz.gameObject);
+            Assert.AreEqual(director.Rival.Vida.Maxima, director.Rival.Vida.Actual, 1e-3f);
+            Assert.AreEqual("3", director.Pantalla.Texto);
+            Assert.IsEmpty(errores, string.Join(" | ", errores));
         }
     }
 }

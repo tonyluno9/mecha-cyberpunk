@@ -1,11 +1,14 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mecha.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Pelea.Flujo;
+using MechaCyberpunk.Pelea.Pruebas;
 using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Progresion.Pruebas;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.Mecha.Editor
@@ -60,12 +63,87 @@ namespace MechaCyberpunk.Mecha.Editor
         private const float XLlegadaCallejon = -7.5f;
         private const float RadioLlamadoCallejon = 3.5f;
 
+        // Pelea de prueba (T-112): una arena cerrada al sur del taller, más allá del muro trasero (a 25 m del banco), lejos de la
+        // emboscada (12 m de radio en el callejón). El director teletransporta a los peleadores adentro, no hace falta llegar a pie.
+        private const string RutaArenaPrueba = "Assets/_Proyecto/Pelea/Pruebas/ArenaDePrueba.prefab";
+        private const string RutaFlujoPelea = "Assets/_Proyecto/Pelea/Prefabs/FlujoPelea.prefab";
+        private const string TeclaIniciarPelea = "<Keyboard>/p";
+        private const string IdBindingIniciar = "7f3c1d52-4b8a-4e6d-9a10-5c2b8e4d7a31";
+        private static readonly Vector3 PosicionArenaPrueba = new Vector3(0f, 0f, -30f);
+
+        /// <summary>
+        /// Agrega a la Pruebas_Calle ya creada la arena de prueba, el flujo de pelea (casera, empieza con P) y el iniciador, sin
+        /// regenerarla. Idempotente.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Agregar arena y pelea de prueba a Pruebas_Calle")]
+        public static void AgregarPeleaDePrueba()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            if (Object.FindFirstObjectByType<IniciadorPeleaDePrueba>() == null)
+            {
+                ArmarPeleaDePrueba(escena);
+                EditorSceneManager.SaveScene(escena);
+                AssetDatabase.SaveAssets();
+            }
+        }
+
+        private static void ArmarPeleaDePrueba(Scene escena)
+        {
+            GameObject arena = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaArenaPrueba), escena);
+            arena.transform.position = PosicionArenaPrueba;
+
+            GameObject flujo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaFlujoPelea), escena);
+            flujo.transform.position = PosicionArenaPrueba;
+            DirectorPelea director = flujo.GetComponent<DirectorPelea>();
+            SerializedObject soDirector = new SerializedObject(director);
+            soDirector.FindProperty("empezarAlArrancar").boolValue = false;
+            soDirector.ApplyModifiedPropertiesWithoutUndo();
+
+            GameObject iniciador = new GameObject("IniciadorPeleaDePrueba");
+            SceneManager.MoveGameObjectToScene(iniciador, escena);
+            IniciadorPeleaDePrueba componente = iniciador.AddComponent<IniciadorPeleaDePrueba>();
+            SerializedObject soIniciador = new SerializedObject(componente);
+            soIniciador.FindProperty("director").objectReferenceValue = director;
+            SerializedProperty accion = soIniciador.FindProperty("iniciar");
+            accion.FindPropertyRelative("m_Name").stringValue = "Iniciar pelea";
+            accion.FindPropertyRelative("m_Type").intValue = (int)InputActionType.Button;
+            SerializedProperty bindings = accion.FindPropertyRelative("m_SingletonActionBindings");
+            bindings.arraySize = 1;
+            SerializedProperty binding = bindings.GetArrayElementAtIndex(0);
+            binding.FindPropertyRelative("m_Path").stringValue = TeclaIniciarPelea;
+            binding.FindPropertyRelative("m_Id").stringValue = IdBindingIniciar; // fijo: Crear dos veces deja el mismo archivo
+            soIniciador.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// Agrega GuardadoDePrueba (T-111) a la Pruebas_Calle ya creada, sin regenerarla (regenerar cambia el orden de los
+        /// objetos y LlamadoMechaPruebas encuentra otro punto de llamado). Idempotente.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Agregar guardado de prueba a Pruebas_Calle")]
+        public static void AgregarGuardadoDePrueba()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            if (Object.FindFirstObjectByType<MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba>() == null)
+            {
+                new GameObject("GuardadoDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba>();
+                EditorSceneManager.SaveScene(escena);
+            }
+        }
+
         [MenuItem("Mecha Cyberpunk/Crear escena Pruebas_Calle")]
         public static void Crear()
         {
             Material piso = CrearMaterial(RutaMaterialPiso, new Color(0.2f, 0.21f, 0.23f));
             Material asfalto = CrearMaterial(RutaMaterialAsfalto, new Color(0.08f, 0.08f, 0.1f));
             Material edificio = CrearMaterial(RutaMaterialEdificio, new Color(0.3f, 0.26f, 0.38f));
+
+            // Unity numera los objetos al azar al guardar: regenerar la misma escena cambiaría el archivo sin cambiar nada real.
+            // Por eso, si lo que se arma es igual a lo que ya hay, no se guarda (idempotente).
+            string firmaActual = null;
+            if (System.IO.File.Exists(RutaEscena))
+            {
+                firmaActual = Firma(EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single));
+            }
 
             Scene escena = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
@@ -121,9 +199,78 @@ namespace MechaCyberpunk.Mecha.Editor
             GameObject hud = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaHud));
             hud.name = "HudAPie";
 
+            // Teclas de prueba del dinero (T-102): 7 abona 500, 8 carga 500 de deuda. Va al final: LlamadoMechaPruebas usa
+            // FindFirstObjectByType y el orden de los objetos de la escena cambia cuál punto de llamado encuentra.
+            new GameObject("DineroDePrueba").AddComponent<MechaCyberpunk.Economia.Pruebas.DineroDePrueba>();
+
+            // Reloj de prueba (T-107): la renta cobra al empezar cada día. J salta a las 08:00 del día siguiente.
+            new GameObject("RelojDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.RelojDePrueba>();
+
+            // Guardado de prueba (T-111): F5 guarda y F9 carga la partida.
+            new GameObject("GuardadoDePrueba").AddComponent<MechaCyberpunk.Progresion.Pruebas.GuardadoDePrueba>();
+
+            ArmarPeleaDePrueba(escena);
+
+            string firmaNueva = Firma(escena);
+            if (firmaActual != null && firmaActual == firmaNueva)
+            {
+                Debug.Log("[Mecha] Pruebas_Calle ya estaba completa; no se guarda de nuevo.");
+                return;
+            }
             EditorSceneManager.SaveScene(escena, RutaEscena);
             AssetDatabase.SaveAssets();
             Debug.Log("[Mecha] Pruebas_Calle creada.");
+        }
+
+        // Texto con todo lo que importa de la escena: objetos en orden, transform, componentes y sus valores serializados.
+        private static string Firma(Scene escena)
+        {
+            System.Text.StringBuilder texto = new System.Text.StringBuilder();
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                FirmarObjeto(raiz.transform, texto);
+            }
+            return texto.ToString();
+        }
+
+        private static void FirmarObjeto(Transform objeto, System.Text.StringBuilder texto)
+        {
+            texto.Append(objeto.name).Append('|').Append(objeto.gameObject.activeSelf).Append('|')
+                .Append(PrefabUtility.GetCorrespondingObjectFromSource(objeto.gameObject)).Append('\n');
+            foreach (Component componente in objeto.GetComponents<Component>())
+            {
+                if (componente == null)
+                {
+                    continue;
+                }
+                texto.Append(componente.GetType().Name).Append('\n');
+                if (componente is RectTransform)
+                {
+                    continue; // el layout de la UI cambia al cargar; la jerarquía y los demás componentes ya la describen
+                }
+                SerializedObject so = new SerializedObject(componente);
+                SerializedProperty propiedad = so.GetIterator();
+                while (propiedad.NextVisible(true))
+                {
+                    if (propiedad.propertyPath.EndsWith("m_Id"))
+                    {
+                        continue; // los ids de las InputAction se inventan al crearlas y no son parte del diseño
+                    }
+                    if (propiedad.propertyType == SerializedPropertyType.ObjectReference)
+                    {
+                        Object referencia = propiedad.objectReferenceValue;
+                        texto.Append(propiedad.propertyPath).Append('=').Append(referencia != null ? referencia.name : "null").Append('\n');
+                    }
+                    else if (propiedad.propertyType != SerializedPropertyType.Generic)
+                    {
+                        texto.Append(propiedad.propertyPath).Append('=').Append(propiedad.boxedValue).Append('\n');
+                    }
+                }
+            }
+            foreach (Transform hijo in objeto)
+            {
+                FirmarObjeto(hijo, texto);
+            }
         }
 
         // Taller con cobertizo greybox y un punto de llamado en la calle (dobles de lo de Alan).

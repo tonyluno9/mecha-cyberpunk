@@ -17,7 +17,8 @@ namespace MechaCyberpunk.Core
 
         /// <summary>
         /// Punto en el piso (m, en el mundo) junto al banco de trabajo donde el jugador repara y mejora con E.
-        /// Lo usa T-F5; en T-F4 solo se lee <see cref="Estacionamiento"/>.
+        /// Tony registra ahí el banco del taller como <c>IInteractuable</c> (reparar y pagar la renta); no pongas otro
+        /// interactuable a menos de 2.5 m de este punto.
         /// </summary>
         Vector3 PuntoInteraccion { get; }
     }

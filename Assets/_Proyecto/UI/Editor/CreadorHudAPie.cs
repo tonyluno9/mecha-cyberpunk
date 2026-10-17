@@ -176,7 +176,7 @@ namespace MechaCyberpunk.UI.Editor
             }
         }
 
-        // Agrega al prefab existente el grupo de calor (T-067) si todavía no lo tiene.
+        // Agrega al prefab existente el grupo de calor (T-067) y los de dinero y renta (T-110) si todavía no los tiene.
         private static void CompletarPrefab(ConfigHudAPie config)
         {
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
@@ -210,6 +210,32 @@ namespace MechaCyberpunk.UI.Editor
                     {
                         lista.GetArrayElementAtIndex(i).objectReferenceValue = marcas[i];
                     }
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                }
+                if (so.FindProperty("grupoDinero").objectReferenceValue == null)
+                {
+                    // Dinero: abajo a la izquierda, encima de la vida; el aviso encima del dinero; la renta, arriba a la izquierda bajo la canción.
+                    float alturaVida = AltoTexto + SeparacionTextoBarra + config.AltoBarra;
+                    float baseDinero = config.Margen + alturaVida + SeparacionTextoBarra;
+                    RectTransform dinero = CrearGrupo("Dinero", raiz.transform, new Vector2(0f, 0f), new Vector2(config.Margen, baseDinero),
+                        new Vector2(AnchoTextoLateral, AltoTexto));
+                    Text textoDinero = CrearTexto("Texto", dinero, config, TextAnchor.LowerLeft);
+                    Stretch(textoDinero.rectTransform);
+                    RectTransform aviso = CrearGrupo("AvisoDinero", raiz.transform, new Vector2(0f, 0f),
+                        new Vector2(config.Margen, baseDinero + AltoTexto), new Vector2(AnchoTextoLateral, AltoTexto));
+                    Text textoAviso = CrearTexto("Texto", aviso, config, TextAnchor.LowerLeft);
+                    Stretch(textoAviso.rectTransform);
+                    RectTransform grupoRenta = CrearGrupo("Renta", raiz.transform, new Vector2(0f, 1f),
+                        new Vector2(config.Margen, -config.Margen - AltoTexto - SeparacionTextoBarra), new Vector2(AnchoTextoLateral, AltoTexto));
+                    Text textoRenta = CrearTexto("Texto", grupoRenta, config, TextAnchor.UpperLeft);
+                    Stretch(textoRenta.rectTransform);
+                    textoRenta.color = config.ColorAviso;
+                    so.FindProperty("grupoDinero").objectReferenceValue = dinero.gameObject;
+                    so.FindProperty("textoDinero").objectReferenceValue = textoDinero;
+                    so.FindProperty("grupoAvisoDinero").objectReferenceValue = aviso.gameObject;
+                    so.FindProperty("textoAvisoDinero").objectReferenceValue = textoAviso;
+                    so.FindProperty("grupoRenta").objectReferenceValue = grupoRenta.gameObject;
+                    so.FindProperty("textoRenta").objectReferenceValue = textoRenta;
                     so.ApplyModifiedPropertiesWithoutUndo();
                 }
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
