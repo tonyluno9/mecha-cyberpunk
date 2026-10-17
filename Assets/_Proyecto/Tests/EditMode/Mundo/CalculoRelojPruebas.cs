@@ -231,5 +231,45 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.Throws<System.ArgumentException>(() => new CalculoReloj(19f, 7f, 8f, 12f, 21f, 1));
             Assert.Throws<System.ArgumentException>(() => new CalculoReloj(7f, 19f, 0f, 12f, 21f, 1));
         }
+
+        [Test]
+        public void Restaurar_DiaYHora_QuedaEnEseMomentoSinAvisarDiaNiHoraEntera()
+        {
+            CalculoReloj reloj = Crear(21f, 1);
+            Assert.IsTrue(reloj.Restaurar(5, 10.5f, eventos));
+            Assert.AreEqual(5, reloj.Dia);
+            Assert.AreEqual(10.5f, reloj.Hora, 0.0001f);
+            Assert.IsFalse(reloj.EsDeNoche);
+            Assert.AreEqual(0, Contar(TipoEventoReloj.Dia));
+            Assert.AreEqual(0, Contar(TipoEventoReloj.HoraEntera));
+            Assert.AreEqual(1, Contar(TipoEventoReloj.Franja), "De noche a día: un aviso de franja");
+        }
+
+        [Test]
+        public void Restaurar_ALaMismaFranja_NoAvisaNada()
+        {
+            CalculoReloj reloj = Crear(21f, 1);
+            Assert.IsTrue(reloj.Restaurar(3, 23f, eventos));
+            Assert.AreEqual(0, eventos.Count);
+        }
+
+        [Test]
+        public void Restaurar_ConDatosInvalidos_NoCambiaNada()
+        {
+            CalculoReloj reloj = Crear(21f, 2);
+            Assert.IsFalse(reloj.Restaurar(0, 10f, eventos));
+            Assert.IsFalse(reloj.Restaurar(4, float.NaN, eventos));
+            Assert.AreEqual(2, reloj.Dia);
+            Assert.AreEqual(21f, reloj.Hora, 0.0001f);
+            Assert.AreEqual(0, eventos.Count);
+        }
+
+        [Test]
+        public void Restaurar_HoraFueraDeRango_SeNormaliza()
+        {
+            CalculoReloj reloj = Crear(21f, 1);
+            Assert.IsTrue(reloj.Restaurar(2, 25f, eventos));
+            Assert.AreEqual(1f, reloj.Hora, 0.0001f);
+        }
     }
 }

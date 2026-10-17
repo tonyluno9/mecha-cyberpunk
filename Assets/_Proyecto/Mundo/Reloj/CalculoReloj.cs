@@ -148,6 +148,26 @@ namespace MechaCyberpunk.Mundo.Reloj
             eventos?.Add(new EventoReloj(TipoEventoReloj.HoraEntera, (int)Math.Floor(hora)));
         }
 
+        /// <summary>
+        /// Pone el reloj en el día y la hora dados (la hora se normaliza a [0, 24)), como al cargar una partida. No avisa de día ni de hora
+        /// entera: solo agrega el evento de franja si la franja cambió. Devuelve false, sin cambiar nada, si el día es menor que 1 o la hora no es un número.
+        /// </summary>
+        public bool Restaurar(int dia, float horaNueva, List<EventoReloj> eventos)
+        {
+            if (dia < 1 || float.IsNaN(horaNueva) || float.IsInfinity(horaNueva))
+            {
+                return false;
+            }
+            bool nocheAntes = EsNoche(hora);
+            Dia = dia;
+            hora = Normalizar(horaNueva);
+            if (EsNoche(hora) != nocheAntes)
+            {
+                eventos?.Add(new EventoReloj(TipoEventoReloj.Franja, EsNoche(hora) ? 1 : 0));
+            }
+            return true;
+        }
+
         private bool EsNoche(double h) => h < amanecer || h >= anochecer;
 
         // Siguiente hora entera o cambio de franja, lo que llegue primero (24 incluida).
