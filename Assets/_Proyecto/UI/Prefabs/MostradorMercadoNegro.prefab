@@ -51,6 +51,7 @@ MonoBehaviour:
   datos: {fileID: 11400000, guid: ddc107540204458438100e6893793981, type: 2}
   catalogo: {fileID: 11400000, guid: abca37efbbf9abf489f6dc9f88fe05f1, type: 2}
   pantalla: {fileID: 9084601489436300796}
+  compra: 0000000001000000
   formatoCerrado: "CERRADO \xB7 abre {0}"
   textoCerrado: CERRADO
 --- !u!1 &4978916535242411600

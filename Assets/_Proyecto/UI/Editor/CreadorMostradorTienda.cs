@@ -1,3 +1,4 @@
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.UI.Tiendas;
 using UnityEditor;
 using UnityEngine;
@@ -68,8 +69,40 @@ namespace MechaCyberpunk.UI.Editor
             {
                 CrearMostrador();
             }
+            AsegurarCompra();
             AssetDatabase.SaveAssets();
-            Debug.Log("[UI] T-146 mostrador de tienda creado.");
+            Debug.Log("[UI] T-146/T-147 mostrador de tienda creado.");
+        }
+
+        // T-147: el mostrador del mercado negro compra piezas y chatarra. Idempotente: solo escribe si la lista es distinta.
+        private static void AsegurarCompra()
+        {
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaMostrador);
+            try
+            {
+                SerializedObject so = new SerializedObject(raiz.GetComponent<MostradorTienda>());
+                SerializedProperty lista = so.FindProperty("compra");
+                int[] esperado = { (int)TipoObjeto.Pieza, (int)TipoObjeto.Chatarra };
+                bool igual = lista.arraySize == esperado.Length;
+                for (int i = 0; igual && i < esperado.Length; i++)
+                {
+                    igual = lista.GetArrayElementAtIndex(i).enumValueIndex == esperado[i];
+                }
+                if (!igual)
+                {
+                    lista.arraySize = esperado.Length;
+                    for (int i = 0; i < esperado.Length; i++)
+                    {
+                        lista.GetArrayElementAtIndex(i).enumValueIndex = esperado[i];
+                    }
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    PrefabUtility.SaveAsPrefabAsset(raiz, RutaMostrador);
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
         }
 
         private static void CrearPantalla(ConfigPantallaTienda config)

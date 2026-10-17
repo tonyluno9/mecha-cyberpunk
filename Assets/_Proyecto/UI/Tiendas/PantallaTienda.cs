@@ -18,7 +18,7 @@ namespace MechaCyberpunk.UI.Tiendas
     /// <summary>
     /// Pantalla de tienda del mercado negro (T-146): Canvas Overlay con el dinero, las pestañas COMPRAR y VENDER (← →), la lista de
     /// objetos (↑ ↓), Enter para comprar y Esc para salir. Compra con <see cref="ITienda.Comprar"/> y mete el objeto al
-    /// <see cref="ServicioInventario"/>. VENDER dice "PRONTO" hasta T-147. Quien la abre la cierra con <see cref="Ocultar"/>.
+    /// <see cref="ServicioInventario"/>. VENDER (T-147) lista lo que el mostrador compra (<see cref="ReglaVenta"/>) y Enter vende uno; sin tipos que comprar no aparece. Quien la abre la cierra con <see cref="Ocultar"/>.
     /// </summary>
     public class PantallaTienda : MonoBehaviour
     {
@@ -43,6 +43,8 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private readonly List<Text> textosFilas = new List<Text>();
         private readonly List<DatosObjeto> objetos = new List<DatosObjeto>();
+        private readonly List<DatosObjeto> vendibles = new List<DatosObjeto>();
+        private readonly List<TipoObjeto> compra = new List<TipoObjeto>();
         private ITienda tienda;
         private Action alSalir;
         private PestanaTienda pestana;
@@ -53,6 +55,8 @@ namespace MechaCyberpunk.UI.Tiendas
         public PestanaTienda Pestana => pestana;
         public int IndiceElegido => indice;
         public int CantidadFilas => textosFilas.Count;
+        /// <summary>True si el mostrador compra algo (la pestaña VENDER existe).</summary>
+        public bool PuedeVender => compra.Count > 0;
         public string Titulo => textoTitulo != null ? textoTitulo.text : string.Empty;
         public string Dinero => textoDinero != null ? textoDinero.text : string.Empty;
         public string TextoPestanaComprar => textoPestanaComprar != null ? textoPestanaComprar.text : string.Empty;
@@ -89,8 +93,14 @@ namespace MechaCyberpunk.UI.Tiendas
         }
 
         /// <summary>Abre la pantalla en COMPRAR con la lista de objetos que la tienda vende. <paramref name="alSalir"/> avisa Esc.</summary>
-        public void Mostrar(ITienda tienda, IReadOnlyList<DatosObjeto> objetosEnVenta, Action alSalir)
+        public void Mostrar(ITienda tienda, IReadOnlyList<DatosObjeto> objetosEnVenta, Action alSalir,
+            IReadOnlyList<TipoObjeto> tiposQueCompra = null)
         {
+            compra.Clear();
+            if (tiposQueCompra != null)
+            {
+                compra.AddRange(tiposQueCompra);
+            }
             this.tienda = tienda;
             this.alSalir = alSalir;
             objetos.Clear();
@@ -100,7 +110,6 @@ namespace MechaCyberpunk.UI.Tiendas
 
             fondo.color = config.ColorFondo;
             Preparar(textoTitulo, string.Format(config.FormatoTitulo, tienda.Nombre.ToUpperInvariant()), config.ColorElegido, config.TamanoTitulo);
-            Preparar(textoAyuda, config.TextoAyuda, config.ColorNormal, config.TamanoAyuda);
             Preparar(textoAviso, string.Empty, config.ColorAviso, config.TamanoTexto);
             textoAviso.gameObject.SetActive(false);
             Pintar();
@@ -151,21 +160,22 @@ namespace MechaCyberpunk.UI.Tiendas
                 CambiarPestana(PestanaTienda.Comprar);
                 cambio = true;
             }
-            else if (derecha.WasPressedThisFrame() && pestana != PestanaTienda.Vender)
+            else if (derecha.WasPressedThisFrame() && pestana != PestanaTienda.Vender && PuedeVender)
             {
                 CambiarPestana(PestanaTienda.Vender);
                 cambio = true;
             }
-            if (pestana == PestanaTienda.Comprar && objetos.Count > 0)
+            int cantidad = pestana == PestanaTienda.Comprar ? objetos.Count : vendibles.Count;
+            if (cantidad > 0)
             {
                 if (arriba.WasPressedThisFrame())
                 {
-                    indice = (indice + objetos.Count - 1) % objetos.Count;
+                    indice = (indice + cantidad - 1) % cantidad;
                     cambio = true;
                 }
                 if (abajo.WasPressedThisFrame())
                 {
-                    indice = (indice + 1) % objetos.Count;
+                    indice = (indice + 1) % cantidad;
                     cambio = true;
                 }
             }
@@ -175,7 +185,14 @@ namespace MechaCyberpunk.UI.Tiendas
             }
             if (confirmar.WasPressedThisFrame())
             {
-                Comprar();
+                if (pestana == PestanaTienda.Vender)
+                {
+                    Vender();
+                }
+                else
+                {
+                    Comprar();
+                }
                 return;
             }
             if (cambio)
@@ -226,6 +243,28 @@ namespace MechaCyberpunk.UI.Tiendas
             Pintar();
         }
 
+        private void Vender()
+        {
+            if (vendibles.Count == 0)
+            {
+                return;
+            }
+            DatosObjeto objeto = vendibles[Mathf.Clamp(indice, 0, vendibles.Count - 1)];
+            ServicioInventario inventario = Registro<ServicioInventario>.Actual;
+            ICartera cartera = Registro<ICartera>.Actual;
+            int pago = ReglaVenta.Pago(objeto, compra);
+            if (inventario == null || cartera == null || pago <= 0 || !inventario.Quitar(objeto, 1))
+            {
+                MostrarAviso(config.TextoNoDisponible);
+            }
+            else
+            {
+                cartera.Abonar(pago, MotivoDinero.Venta);
+                MostrarAviso(string.Format(config.FormatoVendido, objeto.Nombre.ToUpperInvariant(), FormatoDinero.Texto(pago)));
+            }
+            Pintar();
+        }
+
         private void MostrarAviso(string texto)
         {
             textoAviso.text = texto;
@@ -238,7 +277,10 @@ namespace MechaCyberpunk.UI.Tiendas
             Preparar(textoDinero, string.Format(config.FormatoDinero, FormatoDinero.Texto(cartera != null ? cartera.Dinero : 0)),
                 config.ColorDinero, config.TamanoTexto);
             PintarPestana(textoPestanaComprar, config.TextoComprar, pestana == PestanaTienda.Comprar);
+            textoPestanaVender.gameObject.SetActive(PuedeVender);
             PintarPestana(textoPestanaVender, config.TextoVender, pestana == PestanaTienda.Vender);
+            Preparar(textoAyuda, pestana == PestanaTienda.Vender ? config.TextoAyudaVender : config.TextoAyuda, config.ColorNormal,
+                config.TamanoAyuda);
 
             foreach (Text viejo in textosFilas)
             {
@@ -251,7 +293,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
             if (pestana == PestanaTienda.Vender)
             {
-                AgregarFila(config.TextoVenderPronto, config.ColorApagado);
+                PintarVender();
                 return;
             }
             if (objetos.Count == 0)
@@ -266,6 +308,27 @@ namespace MechaCyberpunk.UI.Tiendas
                 int lleva = inventario != null ? inventario.Cantidad(objeto) : 0;
                 string fila = string.Format(config.FormatoFila, objeto.Nombre.ToUpperInvariant(), FormatoDinero.Texto(objeto.Oferta.Precio),
                     lleva, objeto.Maximo);
+                bool elegida = i == indice;
+                AgregarFila(elegida ? string.Format(config.FormatoFilaElegida, fila) : fila, elegida ? config.ColorElegido : config.ColorNormal);
+            }
+        }
+
+        private void PintarVender()
+        {
+            ServicioInventario inventario = Registro<ServicioInventario>.Actual;
+            ReglaVenta.Vendibles(inventario != null ? inventario.Todos : null, inventario, compra, vendibles);
+            if (vendibles.Count == 0)
+            {
+                indice = 0;
+                AgregarFila(config.TextoNadaQueVender, config.ColorApagado);
+                return;
+            }
+            indice = Mathf.Clamp(indice, 0, vendibles.Count - 1);
+            for (int i = 0; i < vendibles.Count; i++)
+            {
+                DatosObjeto objeto = vendibles[i];
+                string fila = string.Format(config.FormatoFilaVenta, objeto.Nombre.ToUpperInvariant(),
+                    FormatoDinero.Texto(ReglaVenta.Pago(objeto, compra)), inventario.Cantidad(objeto));
                 bool elegida = i == indice;
                 AgregarFila(elegida ? string.Format(config.FormatoFilaElegida, fila) : fila, elegida ? config.ColorElegido : config.ColorNormal);
             }
