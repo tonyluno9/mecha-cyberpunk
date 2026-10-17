@@ -28,6 +28,7 @@ namespace MechaCyberpunk.Mundo.Editor
             VestirCerrados.Crear(); // T-094
             VestirGrafitis.Crear(); // T-095
             CreadorLluvia.Crear(); // T-096
+            CreadorAudio.Crear(); // T-097
             CreadorCarro.ColocarEnEscenas();
             CreadorAmbiente.HornearReflejos(); // T-080, T-081 y T-082: el barrio cambió, las sondas se rehornean
             CreadorFlashback.Crear(); // T-090
