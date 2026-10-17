@@ -6,6 +6,19 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ## Core a main (2026-10-16)
 Tony autorizó el merge: tony/fase-5 (T-F5, T-060, T-100, T-120 a T-123) está en main desde bc8a486, con alan/fase-2 ya mezclada (compilar OK, EditMode 613/613). T-100 y T-120 ya llegan a Alan.
 
+## T-F6 cerrada (Tony): qué probar jugando (2026-10-17)
+Del lado de Tony, sin el mundo de Alan. Todo con las escenas de Tony. Sin revisor: T-F6 no pasó por revisión de Opus.
+1. Recorrido completo (la prueba H6 de Tony): abre `Escenas/Tony/CreacionPersonaje.unity`, Play, sin ayuda, hasta CONTINUARÁ. ¿Termina? ¿En cuánto? La prueba automática lo hace en 123 s de juego; una persona real tardará más. ¿Dónde duda?
+2. Creación (T-126): nombre, alias, cara, ropa, implante. ¿EMPEZAR se entiende?
+3. Noche del campeonato (T-127, T-128, T-132) en `Pruebas_Prologo`: ¿no se puede perder la pelea ni la emboscada? ¿"Ve a tu carro" y la flecha te guían? No hay carro en Pruebas_Prologo (T-136): el regreso es a pie.
+4. Casa (T-130): E en el espejo (¿te sientes tú?) y en la cama (¿dormir se siente como cerrar el día?).
+5. Flashback (T-131) en `Pruebas_Flashback.unity`: ~61 s, Espacio 1 s salta. ¿Los textos dejan el misterio de la corporación sin explicar de más? El plano 4 (camioneta) tiene encuadre flojo y se ve oscuro.
+6. Despertar (T-133): sin el dinero del campeonato ($500) y con el mecha al 45 %. ¿Se entiende como "eso fue el futuro"? ¿19:30 deja tiempo para reparar antes de que abra el clandestino (20:00)? Reparar sin fondos deja la cartera en negativo ($500 - $550): ¿lo quieres así (D-046)?
+7. Pelea casera (T-129): ¿EL CHATARRAS se siente perdible, distinto del campeón? Ganar o perder lleva a CONTINUARÁ, que no bloquea movimiento ni cámara.
+8. Ayudas (T-134): que alguien que no conozca el juego pelee y camine sin que le digas teclas. ¿Las ayudas se van antes de estorbar?
+Suite completa (tony/fase-5, 2026-10-17): compilar OK; EditMode 654/654; PlayMode por ensamblado: Combate 40/40, Core 3/3, IA 28/28, Mecha 90/91 (0 fallos, 1 no corrida), Mundo 96/96, Pelea 41/41, Personaje 111/111, Progresion 79/79, UI 83/84 (0 fallos, 1 no corrida), Vehiculos 30/30. Arena 8/17: 9 fallos de Alan ya conocidos (JaulaClandestinoPruebas: cápsula x8 y cubo; fallan igual en main). Economia PlayMode: se cuelga al correr cualquier prueba que instancia el jugador (probado también en el commit de T-107, antes de T-129: no es regresión de T-F6); queda como deuda. Se corre un ensamblado por llamada, con límite de tiempo.
+Pendiente para Alan: colocar Flashback.prefab con los puntos Flashback_Plano_1 a 6, y en Ciudad Prologo_Carro y Prologo_Esquina_* como IPuntoHistoria (T-136).
+
 ## T-F5 cerrada: qué probar jugando (2026-10-16)
 Todo en Pruebas_Calle (Play, sin ayuda), salvo lo marcado. Dobles de prueba: 7 y 8 dinero, J reloj (salta a las 08:00 del día siguiente), F5 guardar, F9 cargar, P iniciar pelea, M mandar el mecha al taller.
 1. Sube al mecha (E), enciéndelo (F, Espacio, Q) y pelea (P). Gana con daño y pulsa R: ¿se nota que empiezas dañado (vida, alarma roja, grietas del cristal, más lento y peor manejo)? ¿"+$600 · PREMIO" se siente bien?
