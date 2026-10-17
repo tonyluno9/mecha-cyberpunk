@@ -414,3 +414,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK (con la mezcla de origin/alan/fase-3); PlayMode Pelea 42/42 (incluye CallejonAlanPruebas y RecorridoEmboscadaPruebas). Escenas de Alan sin cambios. Captura T-073-1.
 - Para probar jugando: En Ciudad.unity o Pruebas_Alan.unity, de noche: sal al callejón, llama al mecha (M) y gana la emboscada. ¿La escala del mecha cabe en el callejón y la llegada del cielo se ve bien entre los edificios? (el mecha estacionado es greybox: se ve como cápsula).
 - Decisiones: Escena Pruebas_Alan.unity: Alan no coloca Emboscada.prefab ni MechaEstacionado.prefab, solo Emboscada_Anclaje, Callejon_Entrada, Llamado_Callejon (radio 14) y TallerCasa; la prueba instancia jugador, mecha y emboscada en tiempo de juego. Rama tony/fase-6b-alan = main + origin/alan/fase-3, sin tocar nada de Alan; no se mezcló a main.
+
+### T-152 Contrato de ligas y presentación de pelea (Core)
+- Verificado automáticamente (acotado): compilar OK; EditMode 767/767; PlayMode Core 3/3; límite por área comprobado (LIMITE 20 s sin Unity huérfano). Nada jugable.
+- Para probar jugando: nada. Para Alan: leer los `///` de IProgresoLigas e InfoPelea (Core/Ligas, Core/Pelea) y decir si bastan para un cartel de liga o luces de jefe. Tarea de Core: integrar a main tras el verificador.
+- Decisiones: ver docs/decisiones-pendientes-tony.md (D-tony-104).
