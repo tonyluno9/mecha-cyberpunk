@@ -429,3 +429,6 @@ cartelera y las ligas sin que Alan coloque nada nuevo. Pedidos opcionales para A
 Propuesta: ninguna se aplica sin respuesta. (a) ¿Límite de peleas de liga por noche (por ejemplo, una) para que la renta y el reloj pesen más?
 Hoy no hay límite. (b) ¿La casera sigue pagando $600 cada vez, o baja después de abrir las ligas? (c) Nombres de las ligas y de los 20 rivales:
 ¿te suenan bien o los cambias? (d) ¿El prólogo debe anunciar "PELEA DE JEFE" (adelanta su importancia) o solo las ligas?
+
+### D-tony-104 Detalles de T-152
+Propuesta: la línea de éxito de playmode-por-area imprime "(límite N s)"; el doble de IProgresoLigas ignora un campeón fuera de orden como si fuera revancha. Sin impacto en el diseño.

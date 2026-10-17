@@ -28,6 +28,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-149 Reparar a medias en el banco del taller | T-143 | hecha (sin revisar) |
 | T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | hecha (sin revisar) |
 | T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
+| T-152 Contrato de ligas, InfoPelea y límite por área (Core) | nada | hecha (sin revisar) |
 
 ## T-F7, bloque 2: ligas
 
