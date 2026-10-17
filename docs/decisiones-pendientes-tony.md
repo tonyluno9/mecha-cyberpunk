@@ -347,3 +347,85 @@ del jugador vuelve un cuadro después de cerrar (D-tony-67).
 
 ### D-tony-91 T-073 integrada desde tony/fase-6b-alan; T-136 y T-137 siguen bloqueadas
 Propuesta. T-073 ya estaba hecha y verificada en tony/fase-6b-alan (Pelea 42/42 entonces); se mezcló en tony/fase-7 junto con alan/fase-3, conservando el `yield return null` de T-140 en `RecorridoEmboscadaBase` (Pelea 50/50 después). T-136 y T-137 quedan bloqueadas: Ciudad.unity de Alan (A-F3) no trae `DirectorPrologo.prefab` colocado, T-061 sigue en curso y falta A-F4. La suite de PlayMode del cierre del bloque 1 (EditMode 749/749, PlayMode 671/684) solo falla los 9 conocidos de Alan en `JaulaClandestinoPruebas`.
+
+## Planeación de T-F7, bloque 2: ligas (2026-10-17, planificador Opus 5.5)
+
+### D-tony-92 IDs y orden del bloque 2
+Propuesta. El bloque 2 (ligas) son T-152 a T-162. Orden: T-152 (Core, a main en cuanto se verifique), T-153 (deudas), T-154, T-155, T-156,
+T-157, T-158, T-159, T-160, T-161 y T-162 (cierre). T-153 y T-156 no dependen de Core y pueden ir primero si T-152 se atora; T-156 y T-157 (IA)
+pueden ir en paralelo con T-154 y T-155. El bloque siguiente (piezas por ramas y niveles) empieza en T-163.
+
+### D-tony-93 Contratos de ligas en Core (T-152)
+Propuesta. `Core/Ligas/IProgresoLigas` (solo lectura: `CantidadLigas`, `LigaActual`, `CampeonesVencidos`, `NombreLiga`, `Cambio`, `CampeonVencido`)
+y `Core/Pelea/InfoPelea` con `EventosPelea.PeleaPresentada` (rival, liga 0..4, si es jefe; una vez por pelea y por revancha, antes de la
+presentación). Van en Core aunque dentro de Tony no hagan falta del todo porque: el bloque de piezas (Mecha/Economia, que no referencian
+Progresion) toma `LigaActual` como el nivel máximo de pieza que se compra (mecha-taller.md: "4 niveles por rama, desbloqueados con las 4 ligas"),
+y Alan puede leerlos para su clandestino (luces de la jaula en una pelea de jefe, carteles de la liga) sin implementar nada (D-027: el contrato
+antes de usarse). Solo Tony registra victorias. Clave de guardado nueva: `ligas`. Además, `playmode-por-area` usa 2400 s para Progresion y 900 s
+para las demás (T-151 vio que Progresion roza los 900 s).
+
+### D-tony-94 Dónde vive cada parte de las ligas
+Propuesta. Progreso puro y guardado: `ServicioLigas` en Progresion/Ligas/ (en `ServiciosProgresion.prefab`; Progresion solo referencia Core) con
+`DatosLigas_Base` (nombres "SÓTANO", "CALLE", "DISTRITO", "CAMPEONATO", 5 rivales por liga, fracción de revancha 0.5). Lo que se pelea: `CartelPelea`
+(clase serializable) y `CalendarioLigas_Base` en Pelea/Datos/ (Pelea ya referencia Economia y Progresion; carga los prefabs de IA por ruta sin
+referenciar IA). Rivales: IA/Prefabs/Ligas/. Elegir y retar: `MostradorPeleas` (Progresion.Prologo, que referencia todo). Pantalla: UI/Peleas/.
+Se usa el mismo `DirectorPelea` del mostrador (el casero) con `PrepararCartel`/`QuitarCartel`, en vez de un segundo flujo: un solo director
+escucha el KO del jugador, y la casera sigue siendo lo que el prefab trae por defecto.
+
+### D-tony-95 Reglas del progreso de las ligas (T-154, T-159)
+Propuesta. Los 5 rivales de una liga se pelean en orden y solo se reta al siguiente (no hay saltos ni ligas más altas, como propone
+personaje-progresion.md). Perder no cambia el progreso y se puede volver a retar cuando quieras (con el daño y la reparación como costo).
+Vencer al quinto (el campeón) abre la siguiente liga; tras el campeón de la 4 eres "campeón del clandestino" y todo queda como revancha.
+Revanchas: solo contra los rivales ya vencidos de tu liga actual (y los 5 de la última al final), pagan la mitad del premio (el límite a repetir
+peleas que D-tony-48 dejó para las ligas) y no cambian el progreso. Las ligas solo se ofrecen en la etapa `Libre`; en `PeleaCasera` (la demo) el
+mostrador sigue ofreciendo solo la casera. La casera sigue repetible y paga $600.
+
+### D-tony-96 Pelea de jefe (T-155, T-156, T-161)
+Propuesta. El campeón de cada liga: más vida y daño que su liga, presentador propio ("¡NOCHE DE CAMPEONES EN LA LIGA {liga}!"), letrero "PELEA DE
+JEFE" en la pantalla de la arena y "¡VENCISTE AL CAMPEÓN!" al ganarle, y furia a la mitad de su vida (`FuriaJefe`, IA/: daño ×1.25, espera entre
+golpes ×0.6, velocidad ×1.2 y cuerpo pulsando en rojo a 3 Hz, una vez por pelea; valores en `ConfigFuriaJefe_Base`). Sin `PiedadRival`: el jefe se
+puede perder. `InfoPelea.EsJefe` permite que Alan cambie las luces de la jaula. El campeón del prólogo (tutorial) se anuncia como jefe de la liga 4
+("la noche del prólogo es tu primera pelea de campeonato") pero conserva su piedad y no tiene furia.
+
+### D-tony-97 Los 20 rivales (T-157)
+Propuesta (responde, provisional, "nombres y comportamientos de los 20 rivales" de personaje-progresion.md). Sótano: TORNILLO, LA RATA, EL BACHE,
+MOFLE y DON FIERRO; Calle: NEÓN, CUMBIA, EL TOPE, LA PATRULLA y LA MATRACA; Distrito: VOLTIO, LA DOÑA, GRÚA, EL PERITO y EL ALCALDE; Campeonato:
+OBSIDIANA, XOLO, TLÁLOC, LA LLORONA y EL CACIQUE. El "comportamiento" por ahora es su ritmo (rápido y débil, lento y pesado, equilibrado) con los
+valores de `RivalBasico`; vida de 80 a 320 y daño de 8 a 22 (tabla en T-157). Reglas que vigila una prueba: el primer rival no supera al jugador,
+cada liga promedia más vida y daño que la anterior, el jefe es el más duro de su liga. Las ligas 3 y 4 están pensadas para un mecha con piezas
+(bloque 3) y se reajustan entonces; con el mecha base son casi imposibles, y es esperado. Tony cambia nombres y valores en los assets.
+
+### D-tony-98 Premios y momios por liga (T-158). Completa D-tony-86
+Propuesta (provisionales). Premio de ganar: Sótano 600/700/800/900 y jefe 2,000; Calle 1,000/1,100/1,200/1,300 y jefe 3,000; Distrito
+1,500/1,650/1,800/1,950 y jefe 4,500; Campeonato 2,200/2,400/2,600/2,800 y jefe 7,500. Perder paga 0, 100, 150 y 200 según la liga. Momio de la liga
+1.0, 1.2, 1.4 y 1.6; del jefe 1.5, 1.8, 2.0 y 2.5; tope de apuesta igual o menor que el premio de ganar (liga: 500, 1,000, 1,500, 2,000; jefe: 1,000,
+2,000, 3,000, 5,000). Pieza en juego solo en la liga 1 (Brazo de chatarra desde $250; con el jefe desde $500) hasta que existan las piezas por
+rama. Reglas de balance (prueba de T-158): premio sube con el rival; jefe ≥ 2 × rival 1; cada liga empieza pagando más que el rival 4 de la
+anterior; momio sube con la liga y el del jefe es mayor; tope ≤ premio; perder ≤ 20 % de ganar; el rival 1 paga al menos lo de la casera; el jefe
+paga más que reparar de KO; la pieza en juego vale menos que el premio.
+
+### D-tony-99 La cartelera del mostrador (T-159, T-160)
+Propuesta. En `Libre`, E en el mostrador abre "PELEAS DEL CLANDESTINO · LIGA {liga} · CAMPEONES {n}/4" con filas en este orden: el siguiente rival
+(o "JEFE DE LA LIGA …" en naranja), las revanchas de tu liga a mitad de premio, la pelea casera y la liga que sigue en gris ("BLOQUEADA · VENCE A
+{jefe}"). ↑ ↓ eligen sin dar la vuelta, Enter pasa a la pantalla de apuesta de siempre (con el rival, el premio y el momio de ese cartel), Esc sale
+sin cobrar y el control vuelve un cuadro después. Sin la pantalla, o con solo la casera, E hace lo de hoy (prólogo y escenas viejas sin cambios).
+
+### D-tony-100 Subir de liga y campeón del clandestino (T-161)
+Propuesta. Al vencer por primera vez al campeón de una liga, ya a pie, el HUD muestra 5 s "¡CAMPEÓN DE LA LIGA {liga}!" y "SE ABRE LA LIGA {siguiente}";
+con el de la liga 4, "¡CAMPEÓN DEL CLANDESTINO!". No se avisa al cargar ni en revanchas (lo garantiza `IProgresoLigas.CampeonVencido`). Sin
+cinemática ni música especial en este bloque.
+
+### D-tony-101 Deudas del bloque 1 antes de las ligas (T-153)
+Propuesta. Antes de sumar pruebas largas a Progresion: `CreadorKitReparacion.Crear` idempotente (hoy ensucia `MechaJugador.prefab`) y la causa de
+que `CambioEscenaPruebas` y `PrologoPresentePruebas` fallen a veces en la primera corrida del área (prohibido ignorarlas o reordenarlas a mano). Las
+pruebas "omitidas" de Mecha y UI son capturas que solo corren con su variable: no son deuda.
+
+### D-tony-102 Lo que espera a Alan en el bloque 2
+Propuesta. Nada del bloque espera a Alan: todo se prueba en Pruebas_Economia con dobles. `MostradorPeleas.prefab` (ya pedido en D-tony-72) trae la
+cartelera y las ligas sin que Alan coloque nada nuevo. Pedidos opcionales para A-F5, cuando T-152 esté en main: cambiar las luces de la jaula si
+`EventosPelea.PeleaPresentada` llega con `EsJefe`; un cartel en el clandestino con `IProgresoLigas.NombreLiga(LigaActual)`.
+
+### D-tony-103 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿Límite de peleas de liga por noche (por ejemplo, una) para que la renta y el reloj pesen más?
+Hoy no hay límite. (b) ¿La casera sigue pagando $600 cada vez, o baja después de abrir las ligas? (c) Nombres de las ligas y de los 20 rivales:
+¿te suenan bien o los cambias? (d) ¿El prólogo debe anunciar "PELEA DE JEFE" (adelanta su importancia) o solo las ligas?

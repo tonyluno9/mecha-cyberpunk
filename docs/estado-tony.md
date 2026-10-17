@@ -29,15 +29,40 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | hecha (sin revisar) |
 | T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
 
-Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-152; D-tony-76):
-1. Ligas: 4 ligas de 5 rivales, campeón con pelea de jefe, subir de liga, premios y momios por liga.
-2. Piezas por ramas y niveles: 5 piezas, 4 ramas mezclables, 4 niveles desbloqueados por liga, compra en el taller y piezas viejas al inventario.
-3. Habilidades: especiales por pieza con cooldown y munición limitada que se compra.
-4. Implantes: 4 espacios (ojos, brazos, piernas, sistema nervioso) en la clínica, con el doctor y su deuda al morir en la calle.
-5. Misiones y reputación: barrio, corporativas, ilegales y robos, con reputación de barrio y corporaciones y favores usables.
-6. Radio: 3 estaciones en el carro y el mecha.
-7. Adaptación del rival: el rival aprende de tu forma de pelear en peleas repetidas.
-8. Hackeo, si sobra tiempo.
+## T-F7, bloque 2: ligas
+
+Planeado el 2026-10-17 (planificador Opus 5.5) en tony/fase-7. Decisiones propuestas: D-tony-92 a D-tony-103 en docs/decisiones-pendientes-tony.md.
+4 ligas (Sótano, Calle, Distrito, Campeonato) de 5 rivales; el quinto es el campeón, con furia de jefe; vencerlo abre la siguiente liga; premios
+y momios por liga; cartelera en el mostrador de peleas (solo en etapa `Libre`). Todo con dobles y Pruebas_Economia: nada espera a Alan.
+Pedidos opcionales a Alan (D-tony-102): luces de la jaula con `EventosPelea.PeleaPresentada` (`EsJefe`) y un cartel con `IProgresoLigas`.
+Preguntas para Tony: D-tony-103.
+
+Orden recomendado (D-tony-92): T-152, T-153, T-154, T-155, T-156, T-157, T-158, T-159, T-160, T-161, T-162.
+T-153 y T-156 no dependen de Core (pueden ir primero si T-152 se atora); T-156 y T-157 pueden ir en paralelo con T-154 y T-155.
+
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-152 Contrato del progreso de ligas, presentación de pelea y límite por área de Progresion (Core; a main en cuanto se verifique) | nada | pendiente |
+| T-153 Deudas del bloque de economía: creador del kit idempotente y orden frágil en Progresion | nada | pendiente |
+| T-154 Progreso de las ligas: datos, modelo y servicio que se guarda | T-152 | pendiente |
+| T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | pendiente |
+| T-156 Pelea de jefe: furia a la mitad de la vida | nada | pendiente |
+| T-157 Los 20 rivales de las 4 ligas | T-156 | pendiente |
+| T-158 Calendario de las ligas: premios, momios y presentadores por liga | T-154, T-155, T-157 | pendiente |
+| T-159 Retar en las ligas desde el mostrador (lógica, sin pantalla) | T-154, T-158 | pendiente |
+| T-160 Pantalla de la cartelera en el mostrador | T-159 | pendiente |
+| T-161 Pelea de jefe en la arena, subir de liga y campeón del clandestino | T-155, T-159 | pendiente |
+| T-162 Recorrido de las ligas (cierre del bloque 2) | T-152 a T-161 | pendiente |
+
+Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-163; D-tony-76):
+1. Piezas por ramas y niveles: 5 piezas, 4 ramas mezclables, 4 niveles desbloqueados por liga (`IProgresoLigas.LigaActual`, D-tony-93), compra en
+   el taller y piezas viejas al inventario. Reajusta los rivales de las ligas 3 y 4 (D-tony-97).
+2. Habilidades: especiales por pieza con cooldown y munición limitada que se compra.
+3. Implantes: 4 espacios (ojos, brazos, piernas, sistema nervioso) en la clínica, con el doctor y su deuda al morir en la calle.
+4. Misiones y reputación: barrio, corporativas, ilegales y robos, con reputación de barrio y corporaciones y favores usables.
+5. Radio: 3 estaciones en el carro y el mecha.
+6. Adaptación del rival: el rival aprende de tu forma de pelear en peleas repetidas.
+7. Hackeo, si sobra tiempo.
 
 ## T-F6: creación de personaje, prólogo y cierre de la demo
 
