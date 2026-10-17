@@ -12,11 +12,13 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string Regreso = "Regresa a casa en tu carro";
         private const string Cama = "Duerme en tu cama";
         private const string RutaDatos = "Assets/_Proyecto/Progresion/Prologo/Datos/DatosPrologo_Base.asset";
+        private const string Clandestino = "Ve al clandestino: tu primera pelea casera";
+        private const string Mostrador = "Habla con el encargado (E)";
         private const int PasosDeRuta = 2;
 
         private MaquinaPrologo Nueva(EtapaPrologo etapa, int pasos = PasosDeRuta, bool reanudar = false)
         {
-            MaquinaPrologo maquina = new MaquinaPrologo(Carro, Regreso, Cama, pasos);
+            MaquinaPrologo maquina = new MaquinaPrologo(Carro, Regreso, Cama, pasos, Clandestino, Mostrador);
             maquina.Iniciar(etapa, reanudar);
             return maquina;
         }
@@ -146,19 +148,113 @@ namespace MechaCyberpunk.Tests.Progresion
         public void EtapasFueraDeLaNoche_LaMaquinaEstaInactivaYNoPideNada()
         {
             foreach (EtapaPrologo etapa in new[] { EtapaPrologo.Ninguna, EtapaPrologo.CreacionPersonaje, EtapaPrologo.Flashback,
-                EtapaPrologo.Despertar, EtapaPrologo.PeleaCasera, EtapaPrologo.Continuara, EtapaPrologo.Libre })
+                EtapaPrologo.Libre })
             {
                 MaquinaPrologo maquina = Nueva(etapa, PasosDeRuta, true);
-                Assert.IsFalse(maquina.Activa, etapa + " no es de la noche");
+                Assert.IsFalse(maquina.Activa, etapa + " no la lleva la máquina");
                 Assert.IsFalse(maquina.EmboscadaHabilitada, etapa + ": la emboscada queda apagada");
                 Assert.AreEqual(DestinoObjetivo.Ninguno, maquina.ObjetivoActual.Destino, etapa + ": sin objetivo");
                 foreach (AvisoPrologo aviso in new[] { AvisoPrologo.TutorialTerminado, AvisoPrologo.EmboscadaEmpezo,
-                    AvisoPrologo.EmboscadaTerminada, AvisoPrologo.LlegoAPaso, AvisoPrologo.EntroACasa })
+                    AvisoPrologo.EmboscadaTerminada, AvisoPrologo.LlegoAPaso, AvisoPrologo.EntroACasa, AvisoPrologo.Despertado,
+                    AvisoPrologo.EntroAlClandestino, AvisoPrologo.PeleaCaseraTerminada, AvisoPrologo.SeguirJugando })
                 {
                     Assert.IsFalse(maquina.Avisar(aviso), etapa + " ignora " + aviso);
                 }
                 Assert.AreEqual(etapa, maquina.Etapa);
             }
+        }
+
+        [Test]
+        public void Presente_Secuencia_DespertarPeleaCaseraContinuaraLibre()
+        {
+            MaquinaPrologo maquina = Nueva(EtapaPrologo.Despertar);
+            Assert.IsTrue(maquina.Activa, "El despertar lo lleva la máquina");
+            Assert.IsFalse(maquina.EmboscadaHabilitada, "En el presente no hay emboscada");
+            Assert.AreEqual(DestinoObjetivo.Ninguno, maquina.ObjetivoActual.Destino);
+
+            Assert.IsTrue(maquina.Avisar(AvisoPrologo.Despertado));
+            Assert.AreEqual(EtapaPrologo.PeleaCasera, maquina.Etapa);
+            Assert.AreEqual(DestinoObjetivo.Clandestino, maquina.ObjetivoActual.Destino);
+            Assert.AreEqual(Clandestino, maquina.ObjetivoActual.Texto);
+            Assert.IsFalse(maquina.EmboscadaHabilitada);
+
+            Assert.IsTrue(maquina.Avisar(AvisoPrologo.EntroAlClandestino));
+            Assert.IsTrue(maquina.EnClandestino);
+            Assert.AreEqual(DestinoObjetivo.Mostrador, maquina.ObjetivoActual.Destino);
+            Assert.AreEqual(Mostrador, maquina.ObjetivoActual.Texto);
+            Assert.IsFalse(maquina.Avisar(AvisoPrologo.EntroAlClandestino), "Entrar otra vez no cambia nada");
+
+            Assert.IsTrue(maquina.Avisar(AvisoPrologo.PeleaCaseraTerminada));
+            Assert.AreEqual(EtapaPrologo.Continuara, maquina.Etapa);
+            Assert.IsTrue(maquina.Activa);
+            Assert.AreEqual(DestinoObjetivo.Ninguno, maquina.ObjetivoActual.Destino, "En continuará no hay objetivo");
+
+            Assert.IsTrue(maquina.Avisar(AvisoPrologo.SeguirJugando));
+            Assert.AreEqual(EtapaPrologo.Libre, maquina.Etapa);
+            Assert.IsFalse(maquina.Activa, "Libre: el director ya no hace nada");
+            Assert.AreEqual(DestinoObjetivo.Ninguno, maquina.ObjetivoActual.Destino);
+        }
+
+        [Test]
+        public void Presente_AvisosFueraDeOrden_SeIgnoran()
+        {
+            MaquinaPrologo despertar = Nueva(EtapaPrologo.Despertar);
+            Assert.IsFalse(despertar.Avisar(AvisoPrologo.EntroAlClandestino), "No se entra al clandestino antes de despertar");
+            Assert.IsFalse(despertar.Avisar(AvisoPrologo.PeleaCaseraTerminada));
+            Assert.IsFalse(despertar.Avisar(AvisoPrologo.SeguirJugando));
+            Assert.AreEqual(EtapaPrologo.Despertar, despertar.Etapa);
+
+            MaquinaPrologo casera = Nueva(EtapaPrologo.PeleaCasera);
+            Assert.IsFalse(casera.Avisar(AvisoPrologo.Despertado), "Despertar solo vale en Despertar");
+            Assert.IsFalse(casera.Avisar(AvisoPrologo.SeguirJugando), "Seguir jugando solo vale en continuará");
+            Assert.IsFalse(casera.Avisar(AvisoPrologo.TutorialTerminado));
+            Assert.IsFalse(casera.Avisar(AvisoPrologo.EntroACasa));
+            Assert.AreEqual(EtapaPrologo.PeleaCasera, casera.Etapa);
+
+            MaquinaPrologo continuara = Nueva(EtapaPrologo.Continuara);
+            Assert.IsFalse(continuara.Avisar(AvisoPrologo.PeleaCaseraTerminada), "La pelea ya terminó");
+            Assert.IsFalse(continuara.Avisar(AvisoPrologo.EntroAlClandestino));
+            Assert.AreEqual(EtapaPrologo.Continuara, continuara.Etapa);
+        }
+
+        [Test]
+        public void Presente_PerderLaCasera_TambienLlevaAContinuara()
+        {
+            MaquinaPrologo maquina = Nueva(EtapaPrologo.PeleaCasera);
+            Assert.IsTrue(maquina.Avisar(AvisoPrologo.PeleaCaseraTerminada), "Ganar o perder, el aviso es el mismo");
+            Assert.AreEqual(EtapaPrologo.Continuara, maquina.Etapa);
+        }
+
+        [Test]
+        public void Presente_Reanudar_PeleaCaseraEmpiezaPorElClandestinoYContinuaraSeQuedaEnSuEtapa()
+        {
+            MaquinaPrologo casera = Nueva(EtapaPrologo.PeleaCasera, PasosDeRuta, true);
+            Assert.AreEqual(EtapaPrologo.PeleaCasera, casera.Etapa);
+            Assert.IsFalse(casera.EnClandestino);
+            Assert.AreEqual(DestinoObjetivo.Clandestino, casera.ObjetivoActual.Destino, "Reanuda desde la cama: primero el clandestino");
+            MaquinaPrologo continuara = Nueva(EtapaPrologo.Continuara, PasosDeRuta, true);
+            Assert.AreEqual(EtapaPrologo.Continuara, continuara.Etapa);
+            Assert.IsTrue(continuara.Activa);
+            MaquinaPrologo libre = Nueva(EtapaPrologo.Libre, PasosDeRuta, true);
+            Assert.IsFalse(libre.Activa, "Libre no hace nada");
+        }
+
+        [Test]
+        public void Maneja_LaNocheYElPresente_PeroNoLibreNiLoDeAntes()
+        {
+            foreach (EtapaPrologo etapa in new[] { EtapaPrologo.PeleaTutorial, EtapaPrologo.Dormir, EtapaPrologo.Despertar,
+                EtapaPrologo.PeleaCasera, EtapaPrologo.Continuara })
+            {
+                Assert.IsTrue(MaquinaPrologo.Maneja(etapa), etapa + " la lleva el director");
+            }
+            foreach (EtapaPrologo etapa in new[] { EtapaPrologo.Ninguna, EtapaPrologo.CreacionPersonaje, EtapaPrologo.Flashback,
+                EtapaPrologo.Libre })
+            {
+                Assert.IsFalse(MaquinaPrologo.Maneja(etapa), etapa + " no la lleva el director");
+            }
+            Assert.IsTrue(MaquinaPrologo.EsDelPresente(EtapaPrologo.Despertar));
+            Assert.IsFalse(MaquinaPrologo.EsDelPresente(EtapaPrologo.Dormir));
+            Assert.IsFalse(MaquinaPrologo.EsDelPresente(EtapaPrologo.Libre));
         }
 
         [Test]
@@ -182,6 +278,13 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual("Prologo_Carro", datos.IdPuntoCarro);
             CollectionAssert.AreEqual(new[] { "Prologo_Esquina_1" }, datos.PasosRuta);
             Assert.AreEqual(IdLugar.Casa, datos.LugarFinal);
+            Assert.AreEqual(19.5f, datos.HoraDespertar);
+            Assert.AreEqual(0.45f, datos.FraccionVidaDespertar);
+            Assert.AreEqual("Tu mecha quedó fregado. Puedes repararlo en el banco del taller antes de pelear.", datos.TextoAvisoDespertar);
+            Assert.AreEqual(6f, datos.SegundosAvisoDespertar);
+            Assert.AreEqual(Clandestino, datos.TextoIrAlClandestino);
+            Assert.AreEqual(Mostrador, datos.TextoHablarEncargado);
+            Assert.AreEqual(IdLugar.Clandestino, datos.LugarClandestino);
         }
     }
 }

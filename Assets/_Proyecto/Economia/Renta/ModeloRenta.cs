@@ -46,6 +46,12 @@ namespace MechaCyberpunk.Economia
             return true;
         }
 
+        /// <summary>Empieza de cero en <paramref name="diaActual"/>: próximo cobro en ese día más el intervalo y sin adeudo. No cobra nada.</summary>
+        public void Reiniciar(int diaActual)
+        {
+            Restablecer(diaActual + diasEntreCobros, 0);
+        }
+
         /// <summary>Fija el estado (carga de partida). No cobra nada.</summary>
         public void Restablecer(int diaProximoCobro, int adeudo)
         {

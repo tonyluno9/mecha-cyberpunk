@@ -19,6 +19,18 @@ namespace MechaCyberpunk.Progresion.Prologo
 
         /// <summary>El jugador entró a la casa.</summary>
         EntroACasa,
+
+        /// <summary>T-133: el jugador despertó en el presente y el estado inicial ya está puesto.</summary>
+        Despertado,
+
+        /// <summary>T-133: el jugador entró al clandestino camino a su primera pelea casera.</summary>
+        EntroAlClandestino,
+
+        /// <summary>T-133: terminó la pelea casera (y la salida de la arena).</summary>
+        PeleaCaseraTerminada,
+
+        /// <summary>T-133: el jugador eligió seguir jugando en la pantalla de continuará.</summary>
+        SeguirJugando,
     }
 
     /// <summary>A dónde apunta el objetivo que se muestra.</summary>
@@ -38,6 +50,12 @@ namespace MechaCyberpunk.Progresion.Prologo
 
         /// <summary>La cama.</summary>
         Cama,
+
+        /// <summary>El lugar del clandestino (T-133).</summary>
+        Clandestino,
+
+        /// <summary>El mostrador de peleas del clandestino (T-133).</summary>
+        Mostrador,
     }
 
     /// <summary>El objetivo a mostrar: su texto y a dónde apunta.</summary>
@@ -59,7 +77,7 @@ namespace MechaCyberpunk.Progresion.Prologo
 
     /// <summary>
     /// La noche del prólogo como lógica pura (T-132): con la etapa actual y los avisos da la etapa siguiente y el objetivo a mostrar.
-    /// Maneja de PeleaTutorial a Dormir; en cualquier otra etapa está inactiva. Un aviso que no toca a la etapa actual se ignora.
+    /// Maneja de PeleaTutorial a Dormir y, desde T-133, el presente (Despertar, PeleaCasera, Continuara); en cualquier otra etapa (Libre incluida) está inactiva. Un aviso que no toca a la etapa actual se ignora.
     /// </summary>
     public class MaquinaPrologo
     {
@@ -67,9 +85,14 @@ namespace MechaCyberpunk.Progresion.Prologo
         private readonly string textoRegreso;
         private readonly string textoCama;
         private readonly int pasosRuta;
+        private readonly string textoClandestino;
+        private readonly string textoMostrador;
 
-        public MaquinaPrologo(string textoCarro, string textoRegreso, string textoCama, int pasosRuta)
+        public MaquinaPrologo(string textoCarro, string textoRegreso, string textoCama, int pasosRuta,
+            string textoClandestino = "", string textoMostrador = "")
         {
+            this.textoClandestino = textoClandestino;
+            this.textoMostrador = textoMostrador;
             this.textoCarro = textoCarro;
             this.textoRegreso = textoRegreso;
             this.textoCama = textoCama;
@@ -83,11 +106,26 @@ namespace MechaCyberpunk.Progresion.Prologo
         /// <summary>Paso de la ruta de regreso a la vista. Con el valor de la cantidad de pasos, el objetivo es la casa.</summary>
         public int IndicePaso { get; private set; }
 
+        /// <summary>T-133: en <see cref="EtapaPrologo.PeleaCasera"/>, true cuando el jugador ya entró al clandestino (el objetivo es el mostrador).</summary>
+        public bool EnClandestino { get; private set; }
+
         /// <summary>True si la etapa es una de las que maneja la máquina.</summary>
-        public bool Activa => EsDeLaNoche(Etapa);
+        public bool Activa => Maneja(Etapa);
 
         /// <summary>La emboscada solo está habilitada mientras el jugador sale del clandestino.</summary>
         public bool EmboscadaHabilitada => Etapa == EtapaPrologo.SalidaClandestino;
+
+        /// <summary>True si la etapa pertenece al presente que maneja el director (T-133): despertar, pelea casera y continuará.</summary>
+        public static bool EsDelPresente(EtapaPrologo etapa)
+        {
+            return etapa >= EtapaPrologo.Despertar && etapa <= EtapaPrologo.Continuara;
+        }
+
+        /// <summary>True si el director lleva esa etapa: la noche o el presente.</summary>
+        public static bool Maneja(EtapaPrologo etapa)
+        {
+            return EsDeLaNoche(etapa) || EsDelPresente(etapa);
+        }
 
         /// <summary>True si la etapa pertenece a la noche que maneja el director.</summary>
         public static bool EsDeLaNoche(EtapaPrologo etapa)
@@ -109,6 +147,7 @@ namespace MechaCyberpunk.Progresion.Prologo
         {
             Etapa = reanudar ? EtapaAlReanudar(etapa) : etapa;
             IndicePaso = 0;
+            EnClandestino = false;
         }
 
         /// <summary>Procesa un aviso. True si la etapa o el paso cambiaron; false si se ignoró por no tocar a la etapa actual.</summary>
@@ -131,6 +170,19 @@ namespace MechaCyberpunk.Progresion.Prologo
                     return true;
                 case AvisoPrologo.EntroACasa:
                     return Pasar(EtapaPrologo.RegresoACasa, EtapaPrologo.Dormir);
+                case AvisoPrologo.Despertado:
+                    return Pasar(EtapaPrologo.Despertar, EtapaPrologo.PeleaCasera);
+                case AvisoPrologo.EntroAlClandestino:
+                    if (Etapa != EtapaPrologo.PeleaCasera || EnClandestino)
+                    {
+                        return false;
+                    }
+                    EnClandestino = true;
+                    return true;
+                case AvisoPrologo.PeleaCaseraTerminada:
+                    return Pasar(EtapaPrologo.PeleaCasera, EtapaPrologo.Continuara);
+                case AvisoPrologo.SeguirJugando:
+                    return Pasar(EtapaPrologo.Continuara, EtapaPrologo.Libre);
                 default:
                     return false;
             }
@@ -151,6 +203,10 @@ namespace MechaCyberpunk.Progresion.Prologo
                             : new ObjetivoPrologo(textoRegreso, DestinoObjetivo.Casa, 0);
                     case EtapaPrologo.Dormir:
                         return new ObjetivoPrologo(textoCama, DestinoObjetivo.Cama, 0);
+                    case EtapaPrologo.PeleaCasera:
+                        return EnClandestino
+                            ? new ObjetivoPrologo(textoMostrador, DestinoObjetivo.Mostrador, 0)
+                            : new ObjetivoPrologo(textoClandestino, DestinoObjetivo.Clandestino, 0);
                     default:
                         return new ObjetivoPrologo(string.Empty, DestinoObjetivo.Ninguno, 0);
                 }
@@ -165,6 +221,7 @@ namespace MechaCyberpunk.Progresion.Prologo
             }
             Etapa = hasta;
             IndicePaso = 0;
+            EnClandestino = false;
             return true;
         }
     }

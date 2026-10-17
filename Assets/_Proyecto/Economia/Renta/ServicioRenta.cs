@@ -68,6 +68,9 @@ namespace MechaCyberpunk.Economia
             Desconectar();
         }
 
+        /// <summary>Empieza la renta de cero en <paramref name="diaActual"/> (T-133): próximo cobro en ese día más el intervalo, adeudo 0. Avisa <see cref="Cambio"/> si algo cambió.</summary>
+        public void Reiniciar(int diaActual) => modelo?.Reiniciar(diaActual);
+
         public bool PagarAdeudo() => modelo != null && modelo.PagarAdeudo(Registro<ICartera>.Actual);
 
         public string Guardar() => JsonUtility.ToJson(new DatosGuardados { diaProximoCobro = DiaProximoCobro, adeudo = Adeudo });

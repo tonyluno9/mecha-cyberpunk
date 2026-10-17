@@ -293,6 +293,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             GameObject director = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CreadorDirectorPrologo.RutaPrefab));
             SerializedObject soDirector = new SerializedObject(director.GetComponent<DirectorPrologo>());
             soDirector.FindProperty("etapaSinPartida").enumValueIndex = (int)EtapaPrologo.PeleaTutorial;
+            soDirector.FindProperty("datosEscenas").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosEscenas>(RutaDatosEscenasPruebas);
             soDirector.ApplyModifiedPropertiesWithoutUndo();
 
             DirectorPelea flujo = director.GetComponentInChildren<DirectorPelea>(true);

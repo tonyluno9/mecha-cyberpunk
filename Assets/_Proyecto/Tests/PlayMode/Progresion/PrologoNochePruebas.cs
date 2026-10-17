@@ -901,13 +901,13 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         [UnityTest]
-        public IEnumerator Reanudar_EtapaFueraDeLaNoche_ApagaLaEmboscadaYNoHaceMas()
+        public IEnumerator Reanudar_EtapaLibre_ApagaLaEmboscadaYNoHaceMas()
         {
-            PrepararPartidaGuardada(EtapaPrologo.PeleaCasera);
+            PrepararPartidaGuardada(EtapaPrologo.Libre);
             yield return CargarEscena(false);
             yield return EsperarSegundos(SegundosLibre);
 
-            Assert.AreEqual(EtapaPrologo.PeleaCasera, historia.Etapa);
+            Assert.AreEqual(EtapaPrologo.Libre, historia.Etapa);
             Assert.IsFalse(prologo.Activo, "El director no lleva esa etapa");
             Assert.IsFalse(emboscada.Habilitada, "En cualquier otra etapa la emboscada queda deshabilitada");
             Assert.IsFalse(Objetivos.HayObjetivo, "Sin objetivo del director");

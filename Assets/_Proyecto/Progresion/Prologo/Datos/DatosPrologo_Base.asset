@@ -22,3 +22,11 @@ MonoBehaviour:
   lugarFinal: 2
   idAparicionSalida: Clandestino_Salida
   idAparicionCama: Casa_Cama
+  horaDespertar: 19.5
+  fraccionVidaDespertar: 0.45
+  textoAvisoDespertar: "Tu mecha qued\xF3 fregado. Puedes repararlo en el banco del
+    taller antes de pelear."
+  segundosAvisoDespertar: 6
+  textoIrAlClandestino: 'Ve al clandestino: tu primera pelea casera'
+  textoHablarEncargado: Habla con el encargado (E)
+  lugarClandestino: 5

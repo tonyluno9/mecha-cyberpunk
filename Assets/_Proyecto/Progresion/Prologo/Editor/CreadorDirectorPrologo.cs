@@ -1,6 +1,8 @@
 using MechaCyberpunk.Pelea.Flujo;
+using MechaCyberpunk.UI.Historia;
 using UnityEditor;
 using UnityEngine;
+using MechaCyberpunk.Progresion;
 
 namespace MechaCyberpunk.Progresion.Prologo.Editor
 {
@@ -17,14 +19,43 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaConfigEntrada = "Assets/_Proyecto/Progresion/Prologo/Datos/ConfigEntradaArena_Base.asset";
         private const string RutaFlujoTutorial = "Assets/_Proyecto/Pelea/Prefabs/FlujoPeleaTutorial.prefab";
         private const string RutaPantallasHistoria = "Assets/_Proyecto/UI/Prefabs/PantallasHistoria.prefab";
+        private const string RutaDatosEscenasDemo = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Demo.asset";
 
         [MenuItem("Mecha Cyberpunk/Crear T-132 director del prólogo")]
         public static void Crear()
         {
             CrearDatos();
             CrearPrefab();
+            ActualizarT133();
             AssetDatabase.SaveAssets();
-            Debug.Log("[Progresion] T-132 director del prólogo creado.");
+            Debug.Log("[Progresion] Director del prólogo (T-132, T-133) creado.");
+        }
+
+        // T-133: el asset de datos guarda los campos nuevos, y el prefab del director suma los subtítulos del aviso, la pantalla de continuará
+        // (ya viene en PantallasHistoria) y las rutas de las escenas. Idempotente.
+        private static void ActualizarT133()
+        {
+            DatosPrologo datos = AssetDatabase.LoadAssetAtPath<DatosPrologo>(RutaDatos);
+            EditorUtility.SetDirty(datos);
+
+            GameObject contenido = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                DirectorPrologo prologo = contenido.GetComponent<DirectorPrologo>();
+                SerializedObject so = new SerializedObject(prologo);
+                if (so.FindProperty("subtitulos").objectReferenceValue == null)
+                {
+                    so.FindProperty("subtitulos").objectReferenceValue = CreadorEscenaFlashback.CrearSubtitulos(contenido.transform);
+                }
+                so.FindProperty("continuara").objectReferenceValue = contenido.GetComponentInChildren<PantallaContinuara>(true);
+                so.FindProperty("datosEscenas").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosEscenas>(RutaDatosEscenasDemo);
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(contenido, RutaPrefab);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contenido);
+            }
         }
 
         private static void CrearDatos()
