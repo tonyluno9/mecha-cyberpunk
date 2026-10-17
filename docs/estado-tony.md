@@ -16,7 +16,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
-| T-140 Deudas: cuelgue de PlayMode de Economia y helper del estado de los mapas de acciones | nada | pendiente |
+| T-140 Deudas: cuelgue de PlayMode de Economia y helper del estado de los mapas de acciones | nada | hecha (sin revisar) |
 | T-141 Contrato de apuestas de pelea y PlayMode por área en verificar.sh (Core; a main en cuanto se verifique) | nada (mejor tras T-140) | pendiente |
 | T-142 Inventario del jugador y objetos vendibles | T-140 | pendiente |
 | T-143 Escena Pruebas_Economia | T-140, T-142 | pendiente |
@@ -179,3 +179,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## T-F6 cerrada (2026-10-17)
 - T-129 a T-135 hechas (sin revisar) en tony/fase-5. Suite completa en docs/revision-tony.md. Deuda: PlayMode de Economia se cuelga (anterior a T-129). Siguiente: merge a main, mezclar alan/fase-3, T-073, T-136, T-137 y planificar T-F7.
+
+## Después de T-140 (2026-10-17)
+- T-140 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
