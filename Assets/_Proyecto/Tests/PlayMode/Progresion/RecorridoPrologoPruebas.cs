@@ -1135,6 +1135,7 @@ namespace MechaCyberpunk.Tests.Progresion
             vigilarVida = false;
             int dineroAntes = Cartera.Dinero;
             yield return Tecla(teclado.eKey);
+            yield return Tecla(teclado.enterKey); // T-145: la pantalla de apuesta, sin apostar
             yield return EsperarHasta(() => jugador.Modo == ModoJugador.Mecha, MaxSegundosEstado, "el jugador va en el mecha");
             yield return EsperarHasta(() => flujoCasero.Estado == EstadoFlujoPelea.Peleando, MaxSegundosEstado, "la pelea casera");
             float limite = vidaMecha.Maxima * FraccionDanioBuscada;

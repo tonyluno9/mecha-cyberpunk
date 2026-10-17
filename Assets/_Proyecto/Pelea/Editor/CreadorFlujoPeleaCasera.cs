@@ -3,6 +3,7 @@ using MechaCyberpunk.Pelea.Datos;
 using MechaCyberpunk.Pelea.Flujo;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MechaCyberpunk.Pelea.Editor
 {
@@ -22,6 +23,24 @@ namespace MechaCyberpunk.Pelea.Editor
         private const string LineaLugar = "PELEA CASERA EN EL SÓTANO";
         private const string LineaGrito = "¡{alias} CONTRA {rival}!";
         private const int IndiceGrito = 1;
+        private const float FraccionBajaApuesta = 0.02f;
+        private const float FraccionAltaApuesta = 0.17f;
+
+        // T-145: la línea "APUESTA +$500" de la pantalla de la arena, bajo el premio (en la franja de la revancha, que la casera no usa).
+        private static void AgregarLineaApuesta(GameObject raiz)
+        {
+            PantallaPelea pantalla = raiz.GetComponentInChildren<PantallaPelea>(true);
+            SerializedObject soPantalla = new SerializedObject(pantalla);
+            SerializedProperty propiedad = soPantalla.FindProperty("textoApuesta");
+            if (propiedad.objectReferenceValue != null)
+            {
+                return;
+            }
+            Text texto = CreadorFlujoPelea.CrearTexto("Apuesta", (RectTransform)pantalla.transform, new Vector2(0f, FraccionBajaApuesta),
+                new Vector2(1f, FraccionAltaApuesta));
+            propiedad.objectReferenceValue = texto;
+            soPantalla.ApplyModifiedPropertiesWithoutUndo();
+        }
 
         [MenuItem("Mecha Cyberpunk/Crear T-129 flujo casero")]
         public static void Crear()
@@ -60,6 +79,7 @@ namespace MechaCyberpunk.Pelea.Editor
                 so.FindProperty("apuesta").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosApuestaPelea>(RutaApuestaCasera);
                 so.ApplyModifiedPropertiesWithoutUndo();
                 CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioCasera);
+                AgregarLineaApuesta(raiz);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }
             finally

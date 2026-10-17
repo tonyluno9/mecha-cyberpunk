@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Pelea.Flujo;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.UI.Peleas;
 using UnityEngine;
 
 namespace MechaCyberpunk.Progresion.Prologo
@@ -27,14 +30,22 @@ namespace MechaCyberpunk.Progresion.Prologo
         [SerializeField] private string textoDeDia = "Peleas caseras de noche · abre {0}";
         [SerializeField] private string textoMechaNoListo = "Tu mecha no está listo · repáralo en el taller";
 
+        [Tooltip("Opcional: pantalla de apuesta (PantallaApuesta, hija de este objeto). Sin ella, E pelea directo.")]
+        [SerializeField] private PantallaApuesta pantallaApuesta;
+
         private bool registrado;
+        private bool apuestaAbierta;
+        private ControladorAPie controlCongelado;
+
+        /// <summary>True mientras la pantalla de apuesta está abierta.</summary>
+        public bool ApuestaAbierta => apuestaAbierta;
 
         /// <summary>Se avisa al terminar la pelea y la salida, con su resultado (para el director de la demo).</summary>
         public event Action<ResultadoPelea> PeleaTerminada;
 
         public Vector3 Posicion => transform.position;
 
-        public bool PuedeUsar => Decidir(out _);
+        public bool PuedeUsar => !apuestaAbierta && Decidir(out _);
 
         public string Texto
         {
@@ -73,6 +84,11 @@ namespace MechaCyberpunk.Progresion.Prologo
                 Registro<IInteractuable>.Quitar(this);
                 registrado = false;
             }
+            if (apuestaAbierta)
+            {
+                CerrarApuesta(true);
+                flujo.CancelarApuesta();
+            }
         }
 
         private void AlTerminarEntrada(ResultadoPelea resultado)
@@ -82,9 +98,106 @@ namespace MechaCyberpunk.Progresion.Prologo
 
         public void Usar()
         {
-            if (PuedeUsar)
+            if (!PuedeUsar)
+            {
+                return;
+            }
+            if (!AbrirApuesta())
             {
                 entrada.Empezar(flujo);
+            }
+        }
+
+        // T-145: con datos de apuesta y un servicio de apuestas, E anuncia la pelea y abre la pantalla en vez de pelear directo.
+        private bool AbrirApuesta()
+        {
+            DatosApuestaPelea datos = flujo.Apuesta;
+            IApuestasPelea apuestas = Registro<IApuestasPelea>.Actual;
+            if (pantallaApuesta == null || datos == null || apuestas == null || !flujo.AnunciarApuesta())
+            {
+                return false;
+            }
+            apuestaAbierta = true;
+            int premioGanar = premio != null ? premio.PremioGanar : 0;
+            pantallaApuesta.Mostrar(apuestas.Rival, premioGanar, apuestas.Momio, datos.Montos, datos.PiezaEnJuego,
+                datos.ApuestaMinimaPorPieza, apuestas.PuedeApostar, AlPelear, AlSalirDeLaApuesta);
+
+            JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;
+            ControladorAPie controlador = jugador != null ? jugador.GetComponent<ControladorAPie>() : null;
+            if (controlador != null && controlador.ControlActivo)
+            {
+                controlador.ActivarControl(false);
+                controlCongelado = controlador;
+            }
+            return true;
+        }
+
+        private void AlPelear(int monto)
+        {
+            IApuestasPelea apuestas = Registro<IApuestasPelea>.Actual;
+            if (monto > 0 && (apuestas == null || !apuestas.Apostar(monto)))
+            {
+                pantallaApuesta.MostrarAviso(pantallaApuesta.TextoNoAlcanza);
+                return;
+            }
+            pantallaApuesta.Ocultar();
+            apuestaAbierta = false;
+            if (entrada.Empezar(flujo))
+            {
+                // El control sigue apagado: subir al mecha lo apaga y bajar lo devuelve.
+                controlCongelado = null;
+                return;
+            }
+            // No empezó (por ejemplo, sin mecha): se devuelve lo apostado y el control.
+            flujo.CancelarApuesta();
+            DevolverControlDespues();
+        }
+
+        private void AlSalirDeLaApuesta()
+        {
+            CerrarApuesta(false);
+            flujo.CancelarApuesta();
+        }
+
+        // La E que cierra es la misma que abre: el control vuelve un cuadro después para que no reabra la pantalla (D-tony-67).
+        private void CerrarApuesta(bool inmediato)
+        {
+            pantallaApuesta.Ocultar();
+            apuestaAbierta = false;
+            if (inmediato)
+            {
+                DevolverControl();
+            }
+            else
+            {
+                DevolverControlDespues();
+            }
+        }
+
+        private void DevolverControlDespues()
+        {
+            if (isActiveAndEnabled)
+            {
+                StartCoroutine(EsperarYDevolverControl());
+            }
+            else
+            {
+                DevolverControl();
+            }
+        }
+
+        private IEnumerator EsperarYDevolverControl()
+        {
+            yield return null;
+            DevolverControl();
+        }
+
+        private void DevolverControl()
+        {
+            if (controlCongelado != null)
+            {
+                controlCongelado.ActivarControl(true);
+                controlCongelado = null;
             }
         }
 

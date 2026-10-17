@@ -26,7 +26,7 @@ de la arena dice cuánto ganó o perdió en la apuesta. Es la primera parte juga
    abre la pantalla en vez de pelear directo; congela al jugador mientras está abierta (como el espejo). Enter con monto > 0: `Apostar`; si
    falla, no pelea y la pantalla lo dice; luego `EntradaArena.Empezar(flujo)`. Enter con "SIN APUESTA": pelea sin apostar. Esc: cierra,
    cancela lo anunciado, devuelve el control y no cobra nada. Sin datos de apuesta, el mostrador se comporta como hoy.
-3. `PantallaPelea.MostrarApuesta(int neto)`: debajo del premio, "APUESTA +$500" en el color del premio o "APUESTA −$250" en rojo;
+3. `PantallaPelea.MostrarApuesta(int neto)`: debajo del premio, "APUESTA +$250" en el color del premio o "APUESTA −$250" en rojo;
    `DirectorPelea` la llama con su `ApuestaResuelta`. Sin apuesta no se muestra nada.
 4. Pruebas_Economia (T-143): nada nuevo que colocar (el mostrador ya está); si el creador del mostrador cambia, vuelve a correr los creadores.
 5. PlayMode `Tests/PlayMode/Progresion/ApuestaMostradorPruebas.cs` en Pruebas_Economia, todo con entrada simulada (W, ratón, E, flechas,
@@ -41,7 +41,7 @@ No tocar: Core/, Economia/ (salvo que falte algo de T-144: anótalo en la bitác
 ## Criterios de aceptación (los comprueba el verificador)
 - [ ] `bash herramientas/verificar.sh todo` pasa (salvo los 9 fallos conocidos de Alan en Arena)
 - [ ] ApuestaMostradorPruebas a): con $500, E en el mostrador abre la pantalla con "CONTRA EL CHATARRAS" y "PREMIO $600"; → → elige $250;
-      Enter: tras el fundido pelea; gana: al volver a pie el dinero es $1,350, hay 1 Brazo de chatarra y la pantalla de la arena mostró "APUESTA +$500"
+      Enter: tras el fundido pelea; gana: al volver a pie el dinero es $1,350, hay 1 Brazo de chatarra y la pantalla de la arena mostró "APUESTA +$250"
 - [ ] b) apuesta $250 y pierde con golpes reales del rival: dinero $250, inventario igual, la pantalla de la arena mostró "APUESTA −$250"
 - [ ] c) E y luego Esc: no pelea, el dinero no cambia, y con W el jugador vuelve a moverse; la E que abrió no reabre la pantalla al cerrarla
 - [ ] d) con $80, las flechas no salen de "SIN APUESTA" y Enter pelea sin apuesta (dinero tras perder: $80)

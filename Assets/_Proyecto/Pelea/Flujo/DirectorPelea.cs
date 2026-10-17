@@ -62,6 +62,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         public IPeleador Rival => rival;
         public PantallaPelea Pantalla => pantalla;
         public bool PermiteRevancha => permitirRevancha;
+        /// <summary>Las reglas de apuesta de esta pelea (null si no tiene).</summary>
+        public DatosApuestaPelea Apuesta => apuesta;
 
         /// <summary>Avisa cada línea que dice el presentador, ya con alias y rival puestos y en mayúsculas (para el audio).</summary>
         public event Action<string> LineaDicha;
@@ -205,6 +207,15 @@ namespace MechaCyberpunk.Pelea.Flujo
             }
             servicioApuestas = servicio;
             return true;
+        }
+
+        /// <summary>
+        /// Cancela la pelea anunciada con <see cref="AnunciarApuesta"/> (el jugador se echó para atrás): devuelve lo apostado y deja
+        /// el servicio listo para anunciar otra. Sin anuncio no hace nada.
+        /// </summary>
+        public void CancelarApuesta()
+        {
+            DevolverApuesta();
         }
 
         private void DevolverApuesta()
@@ -448,6 +459,7 @@ namespace MechaCyberpunk.Pelea.Flujo
             servicioApuestas = null;
             if (servicio != null && servicio.Resolver(resultado.Ganador == LadoPelea.Jugador, out int neto))
             {
+                pantalla.MostrarApuesta(neto);
                 ApuestaResuelta?.Invoke(neto);
             }
         }
