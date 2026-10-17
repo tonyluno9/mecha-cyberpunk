@@ -27,7 +27,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-148 Kits de reparación en plena pelea | T-142, T-143 | hecha (sin revisar) |
 | T-149 Reparar a medias en el banco del taller | T-143 | hecha (sin revisar) |
 | T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | hecha (sin revisar) |
-| T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | pendiente |
+| T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
 
 Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-152; D-tony-76):
 1. Ligas: 4 ligas de 5 rivales, campeón con pelea de jefe, subir de liga, premios y momios por liga.
@@ -212,3 +212,15 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-150 (2026-10-17)
 - T-150 hecha (sin revisar). Sigue T-151 (recorrido de cierre del bloque de economía). Deuda: CreadorKitReparacion.Crear modifica MechaJugador.prefab cada vez que corre (no es idempotente).
+
+## Después de T-151 (2026-10-17)
+- T-151 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Parada manual (2026-10-17, a petición de Tony)
+- Rama actual: tony/T-151-recorrido-economia (commit f89c2c3, con push). T-151 está TERMINADA y verificada (RecorridoEconomiaPruebas 3/3, Progresion 87/87) pero SIN cerrar: falta mover su archivo a docs/tareas/hechas/, la bitácora, la entrada en docs/revision-tony.md y el merge a tony/fase-7.
+- tony/fase-7 llega hasta T-150 (T-140 a T-150 mezcladas y con push). T-140 y T-141 (Core) ya están en main; el resto del bloque de economía NO está en main.
+- Falta: cerrar T-151; correr la suite completa del bloque (compilar, EditMode y `LIMITE_AREA=2400 bash herramientas/verificar.sh playmode-por-area`; Progresion roza los 900 s por defecto); dejar en docs/revision-tony.md qué probar jugando; mezclar tony/fase-7 en main con push (autorizado por Tony).
+- Sigue: planificar y construir los bloques siguientes de T-F7 (ligas, piezas por ramas y niveles, habilidades, implantes, misiones y reputación, radio, adaptación del rival, hackeo) desde T-152.
+- Deudas: CreadorKitReparacion.Crear ensucia MechaJugador.prefab cada vez que corre (no es idempotente); Mecha y UI traen pruebas omitidas por mirar; CambioEscenaPruebas y PrologoPresentePruebas fallan a veces en la primera corrida de Progresion (orden); T-136 y T-137 siguen bloqueadas (Alan aún no coloca IPuntoHistoria ni mis prefabs en Ciudad.unity); tony/fase-6b-alan (main + origin/alan/fase-3, con T-073) no se ha mezclado a main.
+- Unity cerrado, sin lockfile y sin procesos míos.
+
