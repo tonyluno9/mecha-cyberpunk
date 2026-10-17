@@ -240,3 +240,91 @@ Es la última tarea porque depende de las escenas finales de Alan; es de Core po
 
 ## Aceptada por Tony (2026-10-16): D-tony-58
 El prólogo es el futuro: al despertar se reinicia el estado (dinero $500, mecha al 45 %, renta reiniciada, calor 0, hora 19:30). T-132 y T-133 lo aplican; no se despierta "la mañana siguiente con lo que quedó".
+
+## Planeación de T-F7, bloque 1: economía completa (2026-10-17, planificador Opus 5.5)
+
+### D-tony-75 IDs y bloques de T-F7
+Propuesta. T-F7 de Tony se planifica por bloques, en el orden de docs/hoja-de-ruta.md, y cada bloque se escribe cuando el anterior está
+hecho. El bloque 1 (economía completa) son T-140 a T-151; los siguientes bloques siguen desde T-152. T-136 y T-137 siguen bloqueadas (esperan a
+Alan) y T-138 y T-139 quedan libres para correcciones de T-F6.
+
+### D-tony-76 Orden de los bloques de T-F7
+Propuesta. 1) economía completa (premios, apuestas, venta de piezas, kits, reparar a medias, precios); 2) ligas (4 ligas de 5 rivales, campeón
+con pelea de jefe, subir de liga, premios y momios por liga); 3) piezas por ramas y niveles (5 piezas, 4 ramas, 4 niveles, compra en el taller,
+piezas viejas al inventario); 4) habilidades con cooldown y munición comprada; 5) implantes (4 espacios, clínica; con ella el doctor que te
+levanta al morir en la calle y su deuda); 6) misiones y reputación (barrio, corporativas, ilegales y robos; favores; chatarra de robos);
+7) radio con 3 estaciones; 8) adaptación del rival en peleas repetidas; 9) hackeo si sobra tiempo.
+
+### D-tony-77 Estabilización primero y un helper para el estado de entrada (T-140)
+Propuesta. Antes de la economía se arregla de raíz el cuelgue de PlayMode de Economia (diagnóstico por clase con el log; prohibido ignorar o
+marcar pruebas) y la limpieza del estado de los `InputActionAsset` entre fixtures (hoy copiada en 8 pruebas) pasa a un helper estático
+`Progresion/Pruebas/MapasDeAccionesDePrueba` dentro de `#if UNITY_EDITOR`, como `MedidorFrames`: todas las pruebas de PlayMode de Tony ya
+referencian Progresion, así que no hace falta un ensamblado de pruebas compartido. También se quita el `Press` tras `Release` en el mismo cuadro.
+
+### D-tony-78 Contrato de apuestas en Core y PlayMode por área (T-141)
+Propuesta. `Core/Economia/IApuestasPelea`: la apuesta del jugador sobre SU próxima pelea (abierta, rival, momio, tope, apostado, apostar,
+cancelar, avisos de cambio y de resolución). Dentro de Tony no hace falta (Pelea y Progresion ya referencian Economia); va en Core para que el
+casino de Alan (A-F5, "apuestas sobre las peleas") tome apuestas sin implementar nada (D-027: el contrato antes de usarse). Anunciar y resolver
+la pelea no están en el contrato: solo los hace Tony. `herramientas/verificar.sh` gana `playmode-por-area` (un ensamblado por llamada, con
+límite de tiempo por área y sin tumbar la corrida si un área se cuelga). Se integra a main en cuanto se verifique.
+
+### D-tony-79 Inventario del jugador en Economia, sin contrato de Core (T-142)
+Propuesta. `ServicioInventario` (Economia/, en `ServiciosEconomia.prefab`, clave de guardado `inventario`) con objetos `DatosObjeto` (id,
+nombre, tipo Pieza/Chatarra/KitReparacion, valor de venta, máximo y la oferta de tienda que lo entrega) y un `CatalogoObjetos`. No va en Core:
+Alan no lo necesita, porque los mostradores que compran y venden son de Tony (D-tony-81). El bloque de piezas extenderá `DatosObjeto`. Si Alan lo
+llega a necesitar (por ejemplo, premios del casino en objetos), será una tarea de Core.
+
+### D-tony-80 Reglas de las apuestas (T-144, T-145)
+Propuesta. Se apuesta dinero a que tú ganas, una vez por pelea, con montos fijos de la pelea (casera: $100, $250, $500) y solo si alcanza
+(con dinero negativo no se apuesta). Se cobra al apostar. Ganas: te devuelven lo apostado más lo apostado × momio, además del premio; si apostaste
+al menos el mínimo de la pieza, te llevas la pieza que el rival puso en juego (si no cabe en el inventario, te pagan su valor de venta). Pierdes:
+pierdes lo apostado y el premio (economia-misiones.md). Se apuesta en una pantalla al pulsar E en el mostrador de peleas, justo antes de pelear;
+Esc sale sin cobrar. Si la pelea no termina (el flujo se destruye o se reinicia), la apuesta se devuelve. Las apuestas no se guardan: en este
+bloque solo hay apuesta abierta durante la pelea, que nunca se guarda a media pelea; si el casino de Alan permite apostar antes, el guardado de
+una apuesta abierta se resuelve en esa tarea.
+
+### D-tony-81 Los mostradores de tienda son prefabs de Tony (T-146, T-147). Cambia la idea de T-033
+Propuesta. En T-033 se pensó que Alan haría el mostrador del mercado negro con `ITienda`. Como con la cama, el espejo y el mostrador de peleas
+(D-tony-66, D-tony-67), Tony entrega `UI/Prefabs/MostradorMercadoNegro.prefab` (un `IInteractuable` con su pantalla de comprar y vender) y Alan
+solo lo coloca dentro de su mercado negro. El mostrador está abierto si el `ILugar` registrado con su mismo `IdLugar` está abierto (el horario y
+el "cerrado en la demo" siguen siendo de Alan); sin ese `ILugar` (escenas de Tony) está abierto. Registra su `ITienda` mientras está activo.
+Solo lista ofertas que tienen un objeto de inventario (en este bloque, el kit); las demás llegan con su bloque. El casino (tragamonedas, fichas,
+cajera) sigue siendo de Alan.
+
+### D-tony-82 Venta (T-147)
+Propuesta. Cada objeto tiene un valor de venta fijo (sin regateo ni precios que cambian); el mercado negro compra piezas y chatarra, no kits.
+Vender paga con `MotivoDinero.Venta` y el HUD a pie lo anuncia ("+$300 · VENTA"). Las piezas viejas del mecha se venderán igual cuando exista el
+bloque de piezas (al cambiar una pieza, la vieja va al inventario).
+
+### D-tony-83 Kits de reparación (T-148)
+Propuesta. Tecla G dentro de una pelea (no en el conteo, no en KO, no con vida completa): gasta un kit al instante y cura el 20 % de la vida
+máxima de forma pareja en 1.5 s; máximo 2 por pelea; llevas máximo 3. Una pantalla de cabina fuera del centro dice "KITS n · G". Fuera de las
+peleas del flujo (calle, emboscada) no se usan en este bloque.
+
+### D-tony-84 Reparar a medias (T-149). Completa D-tony-46
+Propuesta. E en el banco abre opciones: "REPARAR TODO" (fiado, como hoy), "REPARAR LA MITAD" (la mitad del daño, fiado) y "CON LO QUE TIENES"
+(solo con dinero positivo menor al costo total, sin deuda). Sin pantalla en la escena, E repara todo como antes. No hay límite de crédito: un
+límite podría atorar al jugador (sin dinero, mecha en KO y sin poder reparar para ganar).
+
+### D-tony-85 Deudas
+Propuesta. La deuda es el dinero negativo (D-039) más el adeudo de renta (D-tony-47). Con dinero negativo no se compra ni se apuesta (falla
+`IntentarPagar`), pero sí se repara fiado y se pelea. Sin intereses ni cobradores en este bloque. La deuda con el doctor (personaje-progresion.md,
+propuesta) llega con la clínica en el bloque de implantes.
+
+### D-tony-86 Precios del bloque de economía (provisionales; T-142 a T-150)
+Propuesta. Siguen los de D-tony-44 (inicial $500; reparación $10 por punto, mínimo $50; renta $500 cada 7 días; casera $600 al ganar y $0 al
+perder; campeonato del tutorial $1,500). Nuevos: apuesta casera $100/$250/$500 con momio 1.0 (paga uno a uno) y tope $500; pieza en juego de la
+casera: Brazo de chatarra desde $250; venta del Brazo de chatarra $300 (máximo 5), chatarra $50 (máximo 20); kit $250, cura 20 de 100 puntos
+($12.5 por punto contra $10 del taller), máximo 3 en el inventario y 2 por pelea. Reglas de balance que vigila una prueba (T-150): premio de la
+casera ≥ renta; reparar de KO cuesta más que el premio de la casera; el kit cuesta más por punto que el taller; nada se vende por su precio de
+compra o más; la pieza en juego vale menos que el premio; la apuesta máxima no pasa del premio.
+
+### D-tony-87 Escena Pruebas_Economia (T-143)
+Propuesta. Una escena greybox de Tony, chica, para probar toda la economía después de la demo sin pasar por el prólogo: taller con el mecha de la
+historia y su banco, mostrador de peleas con su arena de prueba, mercado negro de prueba siempre abierto, reloj de noche, historia en `Libre` y
+teclas de prueba (7/8 dinero, 9 brazo, 0 kit, J reloj). Pruebas_Prologo no se usa para esto porque arranca el prólogo.
+
+### D-tony-88 Orden del bloque 1 de T-F7
+Propuesta. T-140 (deudas), T-141 (Core, a main en cuanto se verifique), T-142, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150 y T-151
+(cierre). T-141 no depende de T-140 y puede ir primero si T-140 se atora; T-149 solo necesita T-143 y puede adelantarse; T-148 no necesita T-146
+(las pruebas dan los kits por código).
