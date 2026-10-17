@@ -45,7 +45,12 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string formatoFila = "{0}     {1}     LLEVAS {2}/{3}";
         [Tooltip("Fila elegida: {0} = texto de la fila.")]
         [SerializeField] private string formatoFilaElegida = "> {0}";
-        [SerializeField] private string textoVenderPronto = "PRONTO";
+        [Tooltip("Pestaña VENDER: {0} = nombre (mayúsculas), {1} = lo que paga con $, {2} = cuántos tiene.")]
+        [SerializeField] private string formatoFilaVenta = "{0}     {1} c/u     TIENES {2}";
+        [SerializeField] private string textoNadaQueVender = "NO TIENES NADA QUE LE INTERESE";
+        [Tooltip("{0} = nombre del objeto (mayúsculas), {1} = lo que pagaron con $.")]
+        [SerializeField] private string formatoVendido = "VENDISTE {0} POR {1}";
+        [SerializeField] private string textoAyudaVender = "↑ ↓ elegir · ← → pestaña · Enter vender · Esc salir";
         [SerializeField] private string textoSinOfertas = "NO HAY NADA A LA VENTA";
         [Tooltip("{0} = nombre del objeto (mayúsculas).")]
         [SerializeField] private string formatoComprado = "COMPRASTE {0}";
@@ -71,7 +76,10 @@ namespace MechaCyberpunk.UI
         public string FormatoPestanaElegida => formatoPestanaElegida;
         public string FormatoFila => formatoFila;
         public string FormatoFilaElegida => formatoFilaElegida;
-        public string TextoVenderPronto => textoVenderPronto;
+        public string FormatoFilaVenta => formatoFilaVenta;
+        public string TextoNadaQueVender => textoNadaQueVender;
+        public string FormatoVendido => formatoVendido;
+        public string TextoAyudaVender => textoAyudaVender;
         public string TextoSinOfertas => textoSinOfertas;
         public string FormatoComprado => formatoComprado;
         public string TextoMaximo => textoMaximo;

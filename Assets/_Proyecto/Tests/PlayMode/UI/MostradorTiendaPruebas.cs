@@ -38,7 +38,7 @@ namespace MechaCyberpunk.Tests.UI
         private const string TextoLleva0 = "LLEVAS 0/3";
         private const string TextoMaximo = "LLEVAS EL MÁXIMO";
         private const string TextoNoAlcanza = "NO TE ALCANZA";
-        private const string TextoPronto = "PRONTO";
+        private const string TextoNada = "NO TIENES NADA QUE LE INTERESE";
         private const int DineroInicial = 500;
         private const int DineroDeSobra = 1000;
         private const int DineroPoco = 100;
@@ -349,7 +349,7 @@ namespace MechaCyberpunk.Tests.UI
 
             yield return Tecla(teclado.rightArrowKey);
             Assert.AreEqual(PestanaTienda.Vender, pantalla.Pestana, "→ pasa a VENDER");
-            StringAssert.Contains(TextoPronto, pantalla.TextoFila(0), "VENDER dice PRONTO");
+            StringAssert.Contains(TextoNada, pantalla.TextoFila(0), "VENDER sin nada dice que no le interesa");
             yield return Tecla(teclado.leftArrowKey);
             Assert.AreEqual(PestanaTienda.Comprar, pantalla.Pestana, "← vuelve a COMPRAR");
 

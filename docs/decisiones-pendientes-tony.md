@@ -328,3 +328,10 @@ teclas de prueba (7/8 dinero, 9 brazo, 0 kit, J reloj). Pruebas_Prologo no se us
 Propuesta. T-140 (deudas), T-141 (Core, a main en cuanto se verifique), T-142, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150 y T-151
 (cierre). T-141 no depende de T-140 y puede ir primero si T-140 se atora; T-149 solo necesita T-143 y puede adelantarse; T-148 no necesita T-146
 (las pruebas dan los kits por código).
+
+### D-tony-89 Pestaña VENDER (T-147)
+Propuesta. `MostradorTienda.compra` es la lista de tipos que compra el mostrador (el mercado negro: Pieza y Chatarra); con la lista vacía la pestaña
+VENDER se esconde y → no la abre. La regla pura `ReglaVenta` dice qué se vende (tipo comprado y `valorVenta` > 0) y cuánto paga (`valorVenta`, fijo).
+Vender quita uno del inventario primero y después abona con `MotivoDinero.Venta`; si quitar falla no paga. Una fila por objeto distinto, con
+"$300 c/u" y "TIENES n"; la fila elegida se acomoda sola cuando el objeto se acaba. Textos en `ConfigPantallaTienda`: "VENDISTE {0} POR {1}" y
+"NO TIENES NADA QUE LE INTERESE".
