@@ -27,6 +27,26 @@ namespace MechaCyberpunk.Tests.Mecha
         }
 
         [Test]
+        public void AlFijarFraccion_ConFraccionNormal_DaEsaFraccionDeLaMaxima()
+        {
+            Assert.AreEqual(45f, ReglaVidaPersistente.AlFijarFraccion(100f, 0.45f, Piso), Margen);
+        }
+
+        [Test]
+        public void AlFijarFraccion_BajoElPiso_SubeAlPiso()
+        {
+            Assert.AreEqual(15f, ReglaVidaPersistente.AlFijarFraccion(100f, 0.05f, Piso), Margen);
+            Assert.AreEqual(15f, ReglaVidaPersistente.AlFijarFraccion(100f, 0f, Piso), Margen);
+        }
+
+        [Test]
+        public void AlFijarFraccion_SobreLaMaxima_QuedaEnLaMaxima()
+        {
+            Assert.AreEqual(100f, ReglaVidaPersistente.AlFijarFraccion(100f, 1.5f, Piso), Margen);
+            Assert.AreEqual(100f, ReglaVidaPersistente.AlFijarFraccion(100f, float.NaN, Piso), Margen);
+        }
+
+        [Test]
         public void AlCargar_MismaMaxima_ConservaLaVida()
         {
             Assert.AreEqual(40f, ReglaVidaPersistente.AlCargar(40f, 100f, 100f, Piso), Margen);

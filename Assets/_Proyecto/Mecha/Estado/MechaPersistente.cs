@@ -98,6 +98,12 @@ namespace MechaCyberpunk.Mecha.Estado
             Reparado?.Invoke();
         }
 
+        /// <summary>Fija la vida a esa fracción de la máxima (0 a 1), sin bajar del piso de emergencia, y quita el KO (T-133).</summary>
+        public void FijarFraccionVida(float fraccion)
+        {
+            vida.FijarVida(ReglaVidaPersistente.AlFijarFraccion(vida.Maxima, fraccion, config.PisoVidaPersistente));
+        }
+
         public string Guardar()
         {
             return JsonUtility.ToJson(new DatosGuardados { vida = vida.Actual, vidaMaxima = vida.Maxima });

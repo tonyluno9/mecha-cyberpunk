@@ -1,7 +1,12 @@
 using System.Collections;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
+using MechaCyberpunk.Mecha.Estado;
+using MechaCyberpunk.Mecha.Llamado;
 using MechaCyberpunk.Pelea.Emboscada;
 using MechaCyberpunk.Pelea.Flujo;
+using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.UI.Historia;
 using UnityEngine;
 
 namespace MechaCyberpunk.Progresion.Prologo
@@ -11,7 +16,8 @@ namespace MechaCyberpunk.Progresion.Prologo
     /// emboscada de la pandilla, regreso a casa y a dormir. Cada paso es una etapa de <see cref="IHistoria"/> (siempre se avanza por
     /// <see cref="ServicioHistoria.Avanzar"/>) y fija su objetivo en el HUD. Un cuadro después de arrancar, para que la partida se cargue y todo
     /// se registre, lee la etapa; sin partida (<c>Ninguna</c>) usa <see cref="etapaSinPartida"/>. Con una etapa fuera de la noche no
-    /// hace nada. Las reglas están en <see cref="MaquinaPrologo"/>.
+    /// hace nada. Desde T-133 también lleva el presente: despierta al jugador en su cama (estado inicial, D-tony-58), lo guía a su primera
+    /// pelea casera en el mostrador del clandestino y cierra la demo con "continuará" (D-tony-70). Las reglas están en <see cref="MaquinaPrologo"/>.
     /// </summary>
     public class DirectorPrologo : MonoBehaviour
     {
@@ -22,11 +28,20 @@ namespace MechaCyberpunk.Progresion.Prologo
         [SerializeField] private DirectorPelea flujoTutorial;
         [Tooltip("Etapa con la que arranca si no hay partida (etapa Ninguna). Libre = el director no hace nada.")]
         [SerializeField] private EtapaPrologo etapaSinPartida = EtapaPrologo.Libre;
+        [Tooltip("Rutas de las escenas (el título al salir de la pantalla de continuará). Demo por defecto; Pruebas_Prologo usa DatosEscenas_Pruebas.")]
+        [SerializeField] private DatosEscenas datosEscenas;
+        [Tooltip("Subtítulos de una línea (hijo de este prefab): el aviso al despertar.")]
+        [SerializeField] private PantallaSubtitulos subtitulos;
+        [Tooltip("Pantalla de continuará (de PantallasHistoria, hija de este prefab).")]
+        [SerializeField] private PantallaContinuara continuara;
 
         private MaquinaPrologo maquina;
         private ServicioHistoria historia;
         private DirectorEmboscada emboscada;
         private bool eventosEmboscada;
+        private MostradorPeleas mostrador;
+        private bool avisoVisible;
+        private bool ganoCasera = true;
 
         /// <summary>True cuando el director tomó una etapa de la noche y la está llevando.</summary>
         public bool Activo => maquina != null && maquina.Activa;
@@ -52,12 +67,32 @@ namespace MechaCyberpunk.Progresion.Prologo
         {
             entrada.Terminada += AlTerminarTutorial;
             EventosLugares.JugadorEntro += AlEntrarLugar;
+            if (continuara != null)
+            {
+                continuara.SeguirJugando += AlSeguirJugando;
+                continuara.SalirAlTitulo += AlSalirAlTitulo;
+            }
         }
 
         private void OnDisable()
         {
             entrada.Terminada -= AlTerminarTutorial;
             EventosLugares.JugadorEntro -= AlEntrarLugar;
+            if (continuara != null)
+            {
+                continuara.SeguirJugando -= AlSeguirJugando;
+                continuara.SalirAlTitulo -= AlSalirAlTitulo;
+            }
+            if (mostrador != null)
+            {
+                mostrador.PeleaTerminada -= AlTerminarCasera;
+                mostrador = null;
+            }
+            if (avisoVisible && subtitulos != null)
+            {
+                subtitulos.Ocultar();
+                avisoVisible = false;
+            }
             SoltarEmboscada();
         }
 
@@ -75,9 +110,9 @@ namespace MechaCyberpunk.Progresion.Prologo
             EtapaPrologo guardada = historia != null ? historia.Etapa : EtapaPrologo.Ninguna;
             bool reanudar = guardada != EtapaPrologo.Ninguna;
             EtapaPrologo etapa = reanudar ? guardada : etapaSinPartida;
-            if (!reanudar && !MaquinaPrologo.EsDeLaNoche(etapa))
+            if (!reanudar && !MaquinaPrologo.Maneja(etapa))
             {
-                return; // sin partida y sin etapa de la noche: el director no hace nada
+                return; // sin partida y sin etapa de la noche ni del presente: el director no hace nada
             }
             if (historia == null)
             {
@@ -97,7 +132,8 @@ namespace MechaCyberpunk.Progresion.Prologo
                 eventosEmboscada = true;
             }
 
-            maquina = new MaquinaPrologo(datos.TextoIrAlCarro, datos.TextoRegresarACasa, datos.TextoDormir, datos.PasosRuta.Count);
+            maquina = new MaquinaPrologo(datos.TextoIrAlCarro, datos.TextoRegresarACasa, datos.TextoDormir, datos.PasosRuta.Count,
+                datos.TextoIrAlClandestino, datos.TextoHablarEncargado);
             maquina.Iniciar(etapa, reanudar);
             if (!maquina.Activa)
             {
@@ -105,6 +141,24 @@ namespace MechaCyberpunk.Progresion.Prologo
                 return;
             }
 
+            if (MaquinaPrologo.EsDelPresente(maquina.Etapa))
+            {
+                mostrador = Object.FindFirstObjectByType<MostradorPeleas>();
+                if (mostrador == null)
+                {
+                    Debug.LogWarning("[Progresion] DirectorPrologo no encontró el mostrador de peleas de la escena.", this);
+                }
+                else
+                {
+                    mostrador.PeleaTerminada += AlTerminarCasera;
+                }
+            }
+
+            if (maquina.Etapa == EtapaPrologo.Despertar)
+            {
+                Despertar();
+                return;
+            }
             if (reanudar)
             {
                 ColocarAlReanudar();
@@ -113,6 +167,10 @@ namespace MechaCyberpunk.Progresion.Prologo
             if (maquina.Etapa == EtapaPrologo.PeleaTutorial)
             {
                 EmpezarTutorial();
+            }
+            else if (maquina.Etapa == EtapaPrologo.Continuara)
+            {
+                MostrarContinuara();
             }
         }
 
@@ -166,6 +224,49 @@ namespace MechaCyberpunk.Progresion.Prologo
             {
                 Avisar(AvisoPrologo.EntroACasa);
             }
+            if (lugar == datos.LugarClandestino)
+            {
+                Avisar(AvisoPrologo.EntroAlClandestino);
+            }
+        }
+
+        private void AlTerminarCasera(ResultadoPelea resultado)
+        {
+            ganoCasera = resultado.Ganador == LadoPelea.Jugador;
+            if (maquina == null || !maquina.Avisar(AvisoPrologo.PeleaCaseraTerminada))
+            {
+                return;
+            }
+            Aplicar();
+            Guardar();
+            MostrarContinuara();
+        }
+
+        private void AlSeguirJugando()
+        {
+            if (continuara != null)
+            {
+                continuara.Ocultar();
+            }
+            if (maquina != null && maquina.Avisar(AvisoPrologo.SeguirJugando))
+            {
+                Aplicar();
+                Guardar();
+            }
+        }
+
+        private void AlSalirAlTitulo()
+        {
+            if (continuara != null)
+            {
+                continuara.Ocultar();
+            }
+            if (datosEscenas == null)
+            {
+                Debug.LogError("[Progresion] DirectorPrologo no tiene DatosEscenas: no puede volver al título.", this);
+                return;
+            }
+            CambioEscena.Ir(datosEscenas.RutaPara(EtapaPrologo.CreacionPersonaje)); // CambioEscena guarda antes de cambiar
         }
 
         private void Avisar(AvisoPrologo aviso)
@@ -185,6 +286,15 @@ namespace MechaCyberpunk.Progresion.Prologo
             historia.Avanzar(maquina.Etapa); // no retrocede: al reanudar desde Emboscada se queda en Emboscada
             Habilitar(maquina.EmboscadaHabilitada);
             FijarObjetivo();
+        }
+
+        private static void Guardar()
+        {
+            ServicioGuardado servicio = ServicioGuardado.Actual;
+            if (servicio != null)
+            {
+                servicio.Guardar();
+            }
         }
 
         private void Habilitar(bool habilitada)
@@ -208,6 +318,109 @@ namespace MechaCyberpunk.Progresion.Prologo
             }
         }
 
+        // ---------- El presente (T-133) ----------
+
+        [System.Serializable]
+        private class DineroGuardado
+        {
+            public int dinero;
+        }
+
+        // El estado inicial al despertar (D-tony-58): una sola vez, al empezar la etapa Despertar. El reloj va primero para que la renta
+        // cuente desde el día en que se despierta.
+        private void Despertar()
+        {
+            ColocarEn(datos.IdAparicionCama);
+
+            IRelojMundo reloj = Registro<IRelojMundo>.Actual;
+            if (reloj != null)
+            {
+                reloj.AvanzarHasta(datos.HoraDespertar);
+            }
+            ServicioRenta renta = Registro<IRenta>.Actual as ServicioRenta;
+            if (renta != null)
+            {
+                renta.Reiniciar(reloj != null ? reloj.Dia : 1);
+            }
+            PonerDineroInicial();
+            PonerElMechaFregado();
+            Registro<ICalor>.Actual?.Borrar();
+
+            // Avanza la historia a PeleaCasera y fija el objetivo; luego guarda ya con todo el estado inicial puesto.
+            Avisar(AvisoPrologo.Despertado);
+            Guardar();
+            EmpezarFundidoYAviso();
+        }
+
+        // Dinero = el inicial de DatosEconomia, por el camino de carga de la cartera (motivo Carga: sin aviso de premio ni de cobro).
+        private void PonerDineroInicial()
+        {
+            ServicioCartera cartera = Registro<ICartera>.Actual as ServicioCartera;
+            if (cartera == null || cartera.Datos == null)
+            {
+                Debug.LogWarning("[Progresion] DirectorPrologo no encontró la cartera: el dinero no se reinicia.", this);
+                return;
+            }
+            cartera.Cargar(JsonUtility.ToJson(new DineroGuardado { dinero = cartera.Datos.DineroInicial }));
+        }
+
+        private void PonerElMechaFregado()
+        {
+            MechaPersistente persistente = Object.FindFirstObjectByType<MechaPersistente>();
+            if (persistente == null)
+            {
+                Debug.LogWarning("[Progresion] DirectorPrologo no encontró el mecha de la historia: no se pone fregado.", this);
+                return;
+            }
+            persistente.FijarFraccionVida(datos.FraccionVidaDespertar);
+            LlamadoMecha llamado = persistente.GetComponent<LlamadoMecha>();
+            if (llamado != null)
+            {
+                llamado.VolverAlTallerYa();
+            }
+        }
+
+        private void EmpezarFundidoYAviso()
+        {
+            PantallaFundido fundido = PantallaFundido.Actual;
+            if (fundido != null)
+            {
+                fundido.Fijar(1f);
+                StartCoroutine(fundido.Fundir(0f, fundido.Config.SegundosEntrada));
+            }
+            if (subtitulos != null)
+            {
+                StartCoroutine(AvisarAlDespertar());
+            }
+        }
+
+        private IEnumerator AvisarAlDespertar()
+        {
+            subtitulos.Mostrar(datos.TextoAvisoDespertar);
+            avisoVisible = true;
+            float transcurrido = 0f;
+            while (transcurrido < datos.SegundosAvisoDespertar)
+            {
+                yield return null;
+                transcurrido += Time.unscaledDeltaTime;
+            }
+            subtitulos.Ocultar();
+            avisoVisible = false;
+        }
+
+        // La pantalla de fin de la demo con el alias, el dinero y el resultado. Al reanudar en Continuara el resultado no se guardó: se asume victoria.
+        private void MostrarContinuara()
+        {
+            if (continuara == null)
+            {
+                Debug.LogWarning("[Progresion] DirectorPrologo no tiene la pantalla de continuará.", this);
+                return;
+            }
+            IPerfilJugador perfil = Registro<IPerfilJugador>.Actual;
+            ICartera cartera = Registro<ICartera>.Actual;
+            continuara.Mostrar(perfil != null ? perfil.Alias : string.Empty, cartera != null ? cartera.Dinero : 0, ganoCasera);
+        }
+
         // Partida cargada a media noche: el jugador aparece a pie donde le toca.
         private void ColocarAlReanudar()
         {
@@ -219,9 +432,15 @@ namespace MechaCyberpunk.Progresion.Prologo
                     id = datos.IdAparicionSalida;
                     break;
                 case EtapaPrologo.Dormir:
+                case EtapaPrologo.PeleaCasera:
                     id = datos.IdAparicionCama;
                     break;
             }
+            ColocarEn(id);
+        }
+
+        private void ColocarEn(string id)
+        {
             IJugador jugador = Registro<IJugador>.Actual;
             if (id == null || jugador == null)
             {
@@ -246,6 +465,20 @@ namespace MechaCyberpunk.Progresion.Prologo
             ObjetivoPrologo deseado = maquina.ObjetivoActual;
             switch (deseado.Destino)
             {
+                case DestinoObjetivo.Ninguno:
+                    if (maquina.Etapa == EtapaPrologo.Continuara || maquina.Etapa == EtapaPrologo.Libre)
+                    {
+                        servicio.Quitar(); // el fin de la demo y el juego libre no llevan objetivo
+                    }
+                    break;
+                case DestinoObjetivo.Clandestino:
+                    servicio.Fijar(new Objetivo(deseado.Texto, datos.LugarClandestino));
+                    break;
+                case DestinoObjetivo.Mostrador:
+                    servicio.Fijar(mostrador != null
+                        ? new Objetivo(deseado.Texto, mostrador.Posicion)
+                        : new Objetivo(deseado.Texto, datos.LugarClandestino));
+                    break;
                 case DestinoObjetivo.Carro:
                     if (TryPosicionCarro(out Vector3 posicionCarro))
                     {

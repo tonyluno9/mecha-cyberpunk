@@ -147,7 +147,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
         }
 
-        private static PantallaSubtitulos CrearSubtitulos(Transform padre)
+        internal static PantallaSubtitulos CrearSubtitulos(Transform padre)
         {
             GameObject raiz = Hijo("Subtitulos", padre);
             Canvas canvas = raiz.AddComponent<Canvas>();
