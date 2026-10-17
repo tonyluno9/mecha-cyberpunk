@@ -1,12 +1,6 @@
 # T-073 Emboscada en el callejón de Alan (H4, lado de Tony)
 Dueño: Tony | Rama: tony/T-073-emboscada-en-callejon-alan | Modelo: Sonnet 5.5, medium
 Depende de: T-072, T-060
-**Espera A-F3.** Motivo: necesita en main el callejón de la emboscada con `Emboscada.prefab` colocado, al menos un
-`IPuntoLlamadoMecha` que cubra la entrada del callejón, la casa con su `ITallerMecha` y `MechaEstacionado.prefab` colocado
-(pedido D-tony-37), todo en Pruebas_Alan.unity o Ciudad.unity. El orquestador la deja en docs/tareas/bloqueadas/ hasta que esté en main.
-Cómo saber si llegó: `git grep -l "IPuntoLlamadoMecha" main -- Assets/_Proyecto/Mundo/` y
-`git grep -l "ITallerMecha" main -- Assets/_Proyecto/Mundo/` encuentran al menos un archivo cada uno, y la tarea de Alan del
-callejón está en docs/tareas/hechas/.
 
 ## Objetivo
 La emboscada de Tony funciona sin cambios en el barrio real de Alan: el mecha descansa en el taller de la casa, el jugador
