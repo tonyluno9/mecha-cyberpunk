@@ -285,3 +285,10 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-128 Entrada a la arena
 - Verificado automáticamente (acotado): compilar OK, PlayMode 203/203 (pelea, mecha, Progresion, IA, PeleaClandestino), EditMode 285/285. Captura T-128-1.png.
 - Para ti: Pruebas_Prologo, Play, tecla T: ¿aparecer dentro del mecha con el fundido se siente como "empieza el campeonato" y no como teletransporte? Al terminar, ¿quedar a pie en la salida con el mecha de vuelta en el taller se entiende sin explicación?
+
+### T-129 Primera pelea casera y mostrador del clandestino
+- Verificado automáticamente (acotado): PlayMode Progresion 56/56, IA 28/28, Pelea 38/38, Mecha 83/83; EditMode 305/305. Captura T-129-1.png.
+- Para probar jugando: Pruebas_Prologo, de noche, a pie, E en el mostrador. ¿EL CHATARRAS se siente como un rival de sótano que te puede ganar, distinto del campeón del tutorial? ¿El presentador corto da ambiente sin alargar?
+- Decisión: PeleaCaseraPruebas descarta el estado de los mapas de acciones también al terminar (si no, contaminaba a otras pruebas con `statePtr`).
+- Pendiente: PlayMode de Economia se cuelga en esta máquina; se mira en la suite completa.
+

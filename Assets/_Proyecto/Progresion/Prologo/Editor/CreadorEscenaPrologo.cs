@@ -37,6 +37,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaFlujoTutorial = "Assets/_Proyecto/Pelea/Prefabs/FlujoPeleaTutorial.prefab";
         private const string RutaPantallasHistoria = "Assets/_Proyecto/UI/Prefabs/PantallasHistoria.prefab";
         private const string RutaDatos = "Assets/_Proyecto/Progresion/Prologo/Datos";
+        private const string RutaMostrador = "Assets/_Proyecto/Progresion/Prologo/Prefabs/MostradorPeleas.prefab";
+        private const float HoraAnochecerClandestino = 20f;
         private const string RutaConfigEntrada = RutaDatos + "/ConfigEntradaArena_Base.asset";
         private const string TeclaEntrarArena = "<Keyboard>/t";
         private const string RutaCaptura = "docs/capturas/T-127-1.png";
@@ -93,6 +95,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             ArmarCarroYRuta();
             ArmarJugadorYServicios();
             ArmarEntradaArena();
+            ArmarMostradorPeleas();
 
             string firmaNueva = Firma(escena);
             if (firmaActual != null && firmaActual == firmaNueva)
@@ -266,7 +269,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
         private static void ArmarJugadorYServicios()
         {
-            new GameObject("RelojDePrueba").AddComponent<RelojDePrueba>(); // día 1, 21:00 por defecto
+            // Día 1, 21:00 por defecto. La noche empieza a las 20:00, la hora a la que abre el clandestino (T-129).
+            RelojDePrueba reloj = new GameObject("RelojDePrueba").AddComponent<RelojDePrueba>();
+            SerializedObject soReloj = new SerializedObject(reloj);
+            soReloj.FindProperty("horaAnochecer").floatValue = HoraAnochecerClandestino;
+            soReloj.ApplyModifiedPropertiesWithoutUndo();
             new GameObject("GuardadoDePrueba").AddComponent<GuardadoDePrueba>();
             new GameObject("DineroDePrueba").AddComponent<MechaCyberpunk.Economia.Pruebas.DineroDePrueba>();
 
@@ -321,6 +328,15 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             bindings.GetArrayElementAtIndex(0).FindPropertyRelative("m_Path").stringValue = TeclaEntrarArena;
             bindings.GetArrayElementAtIndex(0).FindPropertyRelative("m_Id").stringValue = System.Guid.NewGuid().ToString();
             soPrueba.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // T-129: el mostrador de peleas junto a la entrada del clandestino; su flujo casero usa la misma arena que el del tutorial.
+        private static void ArmarMostradorPeleas()
+        {
+            GameObject sitio = GameObject.Find("Sitio_Mostrador");
+            GameObject mostrador = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaMostrador));
+            mostrador.transform.position = sitio != null ? sitio.transform.position : Vector3.zero;
+            mostrador.GetComponentInChildren<DirectorPelea>(true).transform.position = PosicionArena;
         }
 
         // ---------- Ayudas ----------

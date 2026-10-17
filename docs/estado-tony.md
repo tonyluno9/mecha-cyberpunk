@@ -25,7 +25,7 @@ T-121, T-122 y T-125 no dependen de Core (pueden ir primero si T-120 se atora); 
 | T-126 Pantalla de título y creación de personaje | T-123, T-124, T-125 | hecha (sin revisar) |
 | T-127 Ensamblado del prólogo y escena Pruebas_Prologo | T-120, T-121 | hecha (sin revisar) |
 | T-128 El mecha de la historia entra a la arena | T-121, T-125, T-127 | hecha (sin revisar) |
-| T-129 Primera pelea casera y mostrador del clandestino | T-128 | pendiente |
+| T-129 Primera pelea casera y mostrador del clandestino | T-128 | hecha (sin revisar) |
 | T-130 Cama (dormir y guardar) y espejo de la casa | T-123, T-124, T-125, T-127 | pendiente |
 | T-131 Flashback de los papás: lógica, datos y escena de pruebas | T-120, T-124, T-125, T-127 | pendiente |
 | T-132 Director del prólogo, parte 1: la noche del campeonato | T-124, T-127, T-128, T-130 | pendiente |
@@ -143,9 +143,7 @@ El límite semanal de la cuenta se agotó (se renueva el 20-oct a las 11 pm, hor
 - T-124 (Etapas de la historia y cambio de escena): rama tony/T-124-historia-cambio-escena, implementación A MEDIAS (WIP commit), sin compilar ni verificar. Para retomar: correr bash herramientas/verificar.sh todo en esa rama, terminar lo que falte según docs/tareas/en-curso/T-124-historia-cambio-escena.md, verificar y cerrar con el mismo flujo.
 - Sigue en orden: T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas esperando A-F3/A-F4. T-061 y T-073 bloqueadas esperando A-F2/A-F3 de Alan.
 
-## Parada manual (2026-10-16, a petición de Tony)
-- Rama actual: tony/T-124-historia-cambio-escena (archivo de la tarea en docs/tareas/en-curso/). Implementación A MEDIAS: código de Progresion/ (DatosEscenas, ServicioGuardado, CreadorDatosProgresion, GuardadoDePrueba) sin compilar ni verificar por completo. La última corrida batch (CambioEscenaPruebas, filtro de PlayMode) la detuve yo a la fuerza; no hay resultado.
-- Unity: cerrado. Quité el Temp/UnityLockfile huérfano del worktree tony-turno-largo.
-- Falta: terminar T-124 según su archivo, compilar, correr EditMode y PlayMode, verificarla y cerrarla; luego T-125 a T-135 (T-134 solo depende de T-121). T-136 y T-137 bloqueadas (A-F3/A-F4); T-061 y T-073 bloqueadas (A-F2/A-F3).
-- Pendiente de Tony: llevar T-100 y T-120 (Core) a main; decidir D-tony-58 (el prólogo como futuro, empieza de cero, o despertar la mañana siguiente con lo que quedó).
-- Recordatorio: el límite semanal de la cuenta se renueva el 20-oct a las 11 pm (México).
+## Después de T-129 (2026-10-17)
+- T-129 hecha (sin revisar), integrada en tony/fase-5. Sigue T-130 a T-135, luego T-F6 (suite completa, revision-tony.md, merge a main con push).
+- Deuda: PlayMode de Economia se cuelga en esta máquina tras el primer aviso de ServicioCartera (no lo toca T-129; por investigar en la suite completa).
+- T-073 y T-136/T-137 esperan a alan/fase-3 y A-F4 en main.
