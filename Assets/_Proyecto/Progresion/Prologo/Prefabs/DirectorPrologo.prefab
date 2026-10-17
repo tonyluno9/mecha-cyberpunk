@@ -1,0 +1,238 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3351696295273266753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6854819792727948809}
+  - component: {fileID: 5376300292216600773}
+  m_Layer: 0
+  m_Name: DirectorPrologo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6854819792727948809
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3351696295273266753}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3883913186869337861}
+  - {fileID: 794533805732472440}
+  - {fileID: 6951847787594760818}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5376300292216600773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3351696295273266753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 276735f4e95c4fe4fab4f926c34c7248, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Prologo::MechaCyberpunk.Progresion.Prologo.DirectorPrologo
+  datos: {fileID: 11400000, guid: b0648f2c469b42343b5b6584ac2f8c1d, type: 2}
+  entrada: {fileID: 1404293270238278846}
+  flujoTutorial: {fileID: 6315399772059941889}
+  etapaSinPartida: 11
+--- !u!1 &6059581563944050230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6951847787594760818}
+  - component: {fileID: 1404293270238278846}
+  m_Layer: 0
+  m_Name: EntradaArena
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6951847787594760818
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059581563944050230}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6854819792727948809}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1404293270238278846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059581563944050230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ebb86e8ea1da26439307034bec910cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Prologo::MechaCyberpunk.Progresion.Prologo.EntradaArena
+  config: {fileID: 11400000, guid: a30569acf9f20e6429bace5065ec2ff2, type: 2}
+  prefabPantallas: {fileID: 1083629388740951626, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+--- !u!1001 &1100891958377206261
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6854819792727948809}
+    m_Modifications:
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083629388740951626, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+      propertyPath: m_Name
+      value: PantallasHistoria
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+--- !u!4 &794533805732472440 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 306780435056261005, guid: 56cd72f5cdd35774b95aa622390352f9, type: 3}
+  m_PrefabInstance: {fileID: 1100891958377206261}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5923653634296085502
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6854819792727948809}
+    m_Modifications:
+    - target: {fileID: 401318693245306879, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: empezarAlArrancar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8522743643544654422, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+      propertyPath: m_Name
+      value: FlujoPeleaTutorial
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+--- !u!4 &3883913186869337861 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7481435484328436987, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+  m_PrefabInstance: {fileID: 5923653634296085502}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6315399772059941889 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 401318693245306879, guid: 0a64f40c0a9813940bac1b134b819651, type: 3}
+  m_PrefabInstance: {fileID: 5923653634296085502}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cedfbaace4682774bba968d3795f29fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Pelea::MechaCyberpunk.Pelea.Flujo.DirectorPelea

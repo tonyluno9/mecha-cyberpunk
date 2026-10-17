@@ -62,6 +62,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private static IEnumerator CargarEscena()
         {
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
+            // El director del prólogo (T-132) arrancaría la pelea del campeonato solo; esta prueba maneja la escena a mano.
+            MechaCyberpunk.Progresion.Prologo.DirectorPrologo prologo = Object.FindFirstObjectByType<MechaCyberpunk.Progresion.Prologo.DirectorPrologo>();
+            if (prologo != null)
+            {
+                Object.Destroy(prologo);
+            }
             for (int frame = 0; frame < 3; frame++)
             {
                 yield return null;

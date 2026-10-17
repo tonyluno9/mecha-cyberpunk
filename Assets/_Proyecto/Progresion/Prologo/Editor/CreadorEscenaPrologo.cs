@@ -34,15 +34,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaCarro = "Assets/_Proyecto/Personaje/Pruebas/CarroDePrueba.prefab";
         private const string RutaArena = "Assets/_Proyecto/Pelea/Pruebas/ArenaDePrueba.prefab";
         private const string RutaEmboscada = "Assets/_Proyecto/Pelea/Prefabs/Emboscada.prefab";
-        private const string RutaFlujoTutorial = "Assets/_Proyecto/Pelea/Prefabs/FlujoPeleaTutorial.prefab";
-        private const string RutaPantallasHistoria = "Assets/_Proyecto/UI/Prefabs/PantallasHistoria.prefab";
-        private const string RutaDatos = "Assets/_Proyecto/Progresion/Prologo/Datos";
         private const string RutaMostrador = "Assets/_Proyecto/Progresion/Prologo/Prefabs/MostradorPeleas.prefab";
         private const string RutaCama = CreadorCamaEspejo.RutaPrefabCama;
         private const string RutaEspejo = CreadorCamaEspejo.RutaPrefabEspejo;
         private const string RutaDatosEscenasPruebas = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Pruebas.asset";
         private const float HoraAnochecerClandestino = 20f;
-        private const string RutaConfigEntrada = RutaDatos + "/ConfigEntradaArena_Base.asset";
         private const string TeclaEntrarArena = "<Keyboard>/t";
         private const string RutaCaptura = "docs/capturas/T-127-1.png";
 
@@ -288,42 +284,25 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             soAparicion.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        // T-128: el flujo de la pelea tutorial (sin arrancar solo), las pantallas de historia (fundido) y la entrada a la arena con su tecla T.
+        // T-132: el director del prólogo (con el flujo de la pelea tutorial, la entrada a la arena y las pantallas de historia) arranca la
+        // escena en la pelea del campeonato. La tecla T de prueba (T-128) sigue entrando a la arena.
         private static void ArmarEntradaArena()
         {
-            ConfigEntradaArena config = AssetDatabase.LoadAssetAtPath<ConfigEntradaArena>(RutaConfigEntrada);
-            if (config == null)
-            {
-                if (!AssetDatabase.IsValidFolder(RutaDatos))
-                {
-                    AssetDatabase.CreateFolder("Assets/_Proyecto/Progresion/Prologo", "Datos");
-                }
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<ConfigEntradaArena>(), RutaConfigEntrada);
-                AssetDatabase.SaveAssets();
-                config = AssetDatabase.LoadAssetAtPath<ConfigEntradaArena>(RutaConfigEntrada);
-            }
+            CreadorDirectorPrologo.Crear();
 
-            GameObject flujo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaFlujoTutorial));
-            flujo.transform.position = PosicionArena;
-            DirectorPelea director = flujo.GetComponent<DirectorPelea>();
-            SerializedObject soDirector = new SerializedObject(director);
-            soDirector.FindProperty("empezarAlArrancar").boolValue = false;
+            GameObject director = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CreadorDirectorPrologo.RutaPrefab));
+            SerializedObject soDirector = new SerializedObject(director.GetComponent<DirectorPrologo>());
+            soDirector.FindProperty("etapaSinPartida").enumValueIndex = (int)EtapaPrologo.PeleaTutorial;
             soDirector.ApplyModifiedPropertiesWithoutUndo();
 
-            GameObject prefabPantallas = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPantallasHistoria);
-            PrefabUtility.InstantiatePrefab(prefabPantallas);
+            DirectorPelea flujo = director.GetComponentInChildren<DirectorPelea>(true);
+            flujo.transform.position = PosicionArena;
+            EntradaArena entrada = director.GetComponentInChildren<EntradaArena>(true);
 
-            GameObject objeto = new GameObject("EntradaArena");
-            EntradaArena entrada = objeto.AddComponent<EntradaArena>();
-            SerializedObject soEntrada = new SerializedObject(entrada);
-            soEntrada.FindProperty("config").objectReferenceValue = config;
-            soEntrada.FindProperty("prefabPantallas").objectReferenceValue = prefabPantallas;
-            soEntrada.ApplyModifiedPropertiesWithoutUndo();
-
-            EntradaArenaDePrueba prueba = objeto.AddComponent<EntradaArenaDePrueba>();
+            EntradaArenaDePrueba prueba = entrada.gameObject.AddComponent<EntradaArenaDePrueba>();
             SerializedObject soPrueba = new SerializedObject(prueba);
             soPrueba.FindProperty("entrada").objectReferenceValue = entrada;
-            soPrueba.FindProperty("director").objectReferenceValue = director;
+            soPrueba.FindProperty("director").objectReferenceValue = flujo;
             SerializedProperty accion = soPrueba.FindProperty("entrar");
             accion.FindPropertyRelative("m_Name").stringValue = "Entrar a la arena";
             accion.FindPropertyRelative("m_Type").intValue = (int)InputActionType.Button;
