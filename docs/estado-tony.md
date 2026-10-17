@@ -18,16 +18,16 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | --- | --- | --- |
 | T-140 Deudas: cuelgue de PlayMode de Economia y helper del estado de los mapas de acciones | nada | hecha (sin revisar) |
 | T-141 Contrato de apuestas de pelea y PlayMode por área en verificar.sh (Core; a main en cuanto se verifique) | nada (mejor tras T-140) | hecha (sin revisar) |
-| T-142 Inventario del jugador y objetos vendibles | T-140 | pendiente |
-| T-143 Escena Pruebas_Economia | T-140, T-142 | pendiente |
-| T-144 Apuestas: lógica, datos y resolución en el flujo de pelea | T-141, T-142 | pendiente |
-| T-145 Apostar en el mostrador de peleas | T-143, T-144 | pendiente |
-| T-146 Mostrador de tienda: comprar en el mercado negro | T-142, T-143 | pendiente |
-| T-147 Vender piezas y chatarra en el mercado negro | T-146 | pendiente |
-| T-148 Kits de reparación en plena pelea | T-142, T-143 | pendiente |
-| T-149 Reparar a medias en el banco del taller | T-143 | pendiente |
-| T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | pendiente |
-| T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | pendiente |
+| T-142 Inventario del jugador y objetos vendibles | T-140 | hecha (sin revisar) |
+| T-143 Escena Pruebas_Economia | T-140, T-142 | hecha (sin revisar) |
+| T-144 Apuestas: lógica, datos y resolución en el flujo de pelea | T-141, T-142 | hecha (sin revisar) |
+| T-145 Apostar en el mostrador de peleas | T-143, T-144 | hecha (sin revisar) |
+| T-146 Mostrador de tienda: comprar en el mercado negro | T-142, T-143 | hecha (sin revisar) |
+| T-147 Vender piezas y chatarra en el mercado negro | T-146 | hecha (sin revisar) |
+| T-148 Kits de reparación en plena pelea | T-142, T-143 | hecha (sin revisar) |
+| T-149 Reparar a medias en el banco del taller | T-143 | hecha (sin revisar) |
+| T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | hecha (sin revisar) |
+| T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
 
 Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-152; D-tony-76):
 1. Ligas: 4 ligas de 5 rivales, campeón con pelea de jefe, subir de liga, premios y momios por liga.
@@ -185,3 +185,42 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-141 (2026-10-17)
 - T-141 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-142 (2026-10-17)
+- T-142 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-143 (2026-10-17)
+- T-143 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-144 (2026-10-17)
+- T-144 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-145 (2026-10-17)
+- T-145 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-146 (2026-10-17)
+- T-146 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-147 (2026-10-17)
+- T-147 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-148 (2026-10-17)
+- T-148 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-149 (2026-10-17)
+- T-149 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Después de T-150 (2026-10-17)
+- T-150 hecha (sin revisar). Sigue T-151 (recorrido de cierre del bloque de economía). Deuda: CreadorKitReparacion.Crear modifica MechaJugador.prefab cada vez que corre (no es idempotente).
+
+## Después de T-151 (2026-10-17)
+- T-151 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Parada manual (2026-10-17, a petición de Tony)
+- Rama actual: tony/T-151-recorrido-economia (commit f89c2c3, con push). T-151 está TERMINADA y verificada (RecorridoEconomiaPruebas 3/3, Progresion 87/87) pero SIN cerrar: falta mover su archivo a docs/tareas/hechas/, la bitácora, la entrada en docs/revision-tony.md y el merge a tony/fase-7.
+- tony/fase-7 llega hasta T-150 (T-140 a T-150 mezcladas y con push). T-140 y T-141 (Core) ya están en main; el resto del bloque de economía NO está en main.
+- Falta: cerrar T-151; correr la suite completa del bloque (compilar, EditMode y `LIMITE_AREA=2400 bash herramientas/verificar.sh playmode-por-area`; Progresion roza los 900 s por defecto); dejar en docs/revision-tony.md qué probar jugando; mezclar tony/fase-7 en main con push (autorizado por Tony).
+- Sigue: planificar y construir los bloques siguientes de T-F7 (ligas, piezas por ramas y niveles, habilidades, implantes, misiones y reputación, radio, adaptación del rival, hackeo) desde T-152.
+- Deudas: CreadorKitReparacion.Crear ensucia MechaJugador.prefab cada vez que corre (no es idempotente); Mecha y UI traen pruebas omitidas por mirar; CambioEscenaPruebas y PrologoPresentePruebas fallan a veces en la primera corrida de Progresion (orden); T-136 y T-137 siguen bloqueadas (Alan aún no coloca IPuntoHistoria ni mis prefabs en Ciudad.unity); tony/fase-6b-alan (main + origin/alan/fase-3, con T-073) no se ha mezclado a main.
+- Unity cerrado, sin lockfile y sin procesos míos.
+

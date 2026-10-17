@@ -8,6 +8,7 @@ using MechaCyberpunk.Mecha.Montaje;
 using MechaCyberpunk.Mecha.Taller;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.UI.Hud;
+using MechaCyberpunk.UI.Taller;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -145,15 +146,22 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.AreEqual("E · Reparar mecha · $650", hud.TextoAvisoInteraccion.text);
             Assert.AreEqual(CostoEsperado, banco.Costo);
             yield return Tecla(teclado.eKey);
+            PantallaBancoTaller pantalla = banco.GetComponentInChildren<PantallaBancoTaller>(true);
+            Assert.IsTrue(pantalla.Visible, "E abre la pantalla del banco y todavía no cobra");
+            Assert.AreEqual(DineroInicial, cartera.Dinero);
+            yield return Tecla(teclado.enterKey);
 
+            Assert.IsFalse(pantalla.Visible);
             Assert.AreEqual(DineroInicial - CostoEsperado, cartera.Dinero, "Quedó en deuda: $500 - $650");
             Assert.AreEqual(1, cambios.Count);
             Assert.AreEqual((-CostoEsperado, MotivoDinero.Reparacion), cambios[0]);
             Assert.AreEqual(vida.Maxima, vida.Actual, 0.001f, "Vida al máximo");
 
             yield return null;
+            yield return null; // el control del jugador vuelve un cuadro después de cerrar la pantalla
             Assert.AreEqual("Mecha sin daños", hud.TextoAvisoInteraccion.text);
             yield return Tecla(teclado.eKey);
+            Assert.IsFalse(pantalla.Visible, "Sin daño no abre la pantalla");
             Assert.AreEqual(-150, cartera.Dinero, "La segunda E no cobra");
             Assert.AreEqual(1, cambios.Count);
             Assert.AreEqual(vida.Maxima, vida.Actual, 0.001f);

@@ -15,6 +15,8 @@ namespace MechaCyberpunk.Pelea.Flujo
     {
         // Lo que sobresale hacia la jaula para no hundirse en la pantalla de la arena (D-tony-3).
         private const float SeparacionHaciaLaJaula = 0.05f;
+        // El signo menos de verdad (U+2212), como en "APUESTA −$250".
+        private const string MenosTipografico = "−";
 
         [Tooltip("Ritmo, textos y colores.")]
         [SerializeField] private ConfigFlujoPelea config;
@@ -28,6 +30,15 @@ namespace MechaCyberpunk.Pelea.Flujo
         [Tooltip("Opcional: línea del premio (+$600) bajo el resultado. Sin ella no se muestra el premio.")]
         [SerializeField] private Text textoPremio;
 
+        [Tooltip("Opcional: línea de la apuesta (APUESTA +$500) bajo el premio. Sin ella no se muestra la apuesta.")]
+        [SerializeField] private Text textoApuesta;
+        [Tooltip("Palabra que abre la línea de la apuesta.")]
+        [SerializeField] private string etiquetaApuesta = "APUESTA";
+        [Tooltip("Tamaño de la letra de la línea de la apuesta (puntos).")]
+        [Min(1)] [SerializeField] private int tamanoLetraApuesta = 110;
+        [Tooltip("Color de la apuesta perdida.")]
+        [SerializeField] private Color colorApuestaPerdida = new Color(1f, 0.15f, 0.15f);
+
         private float segundosParaOcultar;
         private bool ocultando;
         private bool avisoRespaldo;
@@ -39,6 +50,8 @@ namespace MechaCyberpunk.Pelea.Flujo
         public string Revancha => textoRevancha != null && textoRevancha.enabled ? textoRevancha.text : string.Empty;
         /// <summary>Lo que dice la línea del premio ahora ("" si está apagada).</summary>
         public string Premio => textoPremio != null && textoPremio.enabled ? textoPremio.text : string.Empty;
+        /// <summary>Lo que dice la línea de la apuesta ahora ("" si está apagada).</summary>
+        public string Apuesta => textoApuesta != null && textoApuesta.enabled ? textoApuesta.text : string.Empty;
         public Canvas Lienzo => lienzo;
 
         /// <summary>Si es false, el resultado no muestra la línea "R: revancha" (pelea sin revancha, T-128).</summary>
@@ -168,6 +181,23 @@ namespace MechaCyberpunk.Pelea.Flujo
             textoPremio.enabled = true;
         }
 
+        /// <summary>
+        /// Muestra el cambio neto de la apuesta bajo el premio: "APUESTA +$500" en el color del premio o "APUESTA −$250" en rojo.
+        /// Con 0 (o sin la línea en la pantalla) no muestra nada.
+        /// </summary>
+        public void MostrarApuesta(int neto)
+        {
+            if (textoApuesta == null || neto == 0)
+            {
+                return;
+            }
+            bool gano = neto > 0;
+            textoApuesta.text = etiquetaApuesta + " " + (gano ? "+" : MenosTipografico) + FormatoDinero.Texto(Mathf.Abs(neto));
+            textoApuesta.color = gano ? config.ColorPremio : colorApuestaPerdida;
+            textoApuesta.fontSize = tamanoLetraApuesta;
+            textoApuesta.enabled = true;
+        }
+
         /// <summary>El director avisa que alguien cayó: muestra "KO".</summary>
         public void MostrarKO()
         {
@@ -216,6 +246,10 @@ namespace MechaCyberpunk.Pelea.Flujo
             if (textoPremio != null)
             {
                 textoPremio.enabled = false;
+            }
+            if (textoApuesta != null)
+            {
+                textoApuesta.enabled = false;
             }
         }
 

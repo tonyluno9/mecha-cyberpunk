@@ -27,11 +27,9 @@ namespace MechaCyberpunk.Economia.Editor
         {
             string ruta = $"{Carpeta}/DatosPremioPelea_{archivo}.asset";
             var datos = AssetDatabase.LoadAssetAtPath<DatosPremioPelea>(ruta);
-            if (datos == null)
-            {
-                datos = ScriptableObject.CreateInstance<DatosPremioPelea>();
-                AssetDatabase.CreateAsset(datos, ruta);
-            }
+            if (datos != null) return; // ya existe: no se pisan los valores ajustados en el inspector (T-150)
+            datos = ScriptableObject.CreateInstance<DatosPremioPelea>();
+            AssetDatabase.CreateAsset(datos, ruta);
             var so = new SerializedObject(datos);
             so.FindProperty("premioGanar").intValue = ganar;
             so.FindProperty("premioPerder").intValue = perder;

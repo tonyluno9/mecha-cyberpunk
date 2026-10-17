@@ -328,3 +328,19 @@ teclas de prueba (7/8 dinero, 9 brazo, 0 kit, J reloj). Pruebas_Prologo no se us
 Propuesta. T-140 (deudas), T-141 (Core, a main en cuanto se verifique), T-142, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150 y T-151
 (cierre). T-141 no depende de T-140 y puede ir primero si T-140 se atora; T-149 solo necesita T-143 y puede adelantarse; T-148 no necesita T-146
 (las pruebas dan los kits por código).
+
+### D-tony-89 Pestaña VENDER (T-147)
+Propuesta. `MostradorTienda.compra` es la lista de tipos que compra el mostrador (el mercado negro: Pieza y Chatarra); con la lista vacía la pestaña
+VENDER se esconde y → no la abre. La regla pura `ReglaVenta` dice qué se vende (tipo comprado y `valorVenta` > 0) y cuánto paga (`valorVenta`, fijo).
+Vender quita uno del inventario primero y después abona con `MotivoDinero.Venta`; si quitar falla no paga. Una fila por objeto distinto, con
+"$300 c/u" y "TIENES n"; la fila elegida se acomoda sola cuando el objeto se acaba. Textos en `ConfigPantallaTienda`: "VENDISTE {0} POR {1}" y
+"NO TIENES NADA QUE LE INTERESE".
+
+### D-tony-90 Pantalla del banco dentro del mecha (T-149)
+Propuesta. `PantallaBancoTaller.prefab` (UI/) va anidado en `MechaJugador.prefab` (lo hereda `MechaEstacionado`), no en el HUD ni en las escenas: el
+banco vive en el mecha (D-tony-49), la pantalla le pide sus opciones por el evento `BancoTaller.OpcionesPedidas` (`GetComponentInParent`) y así
+Pruebas_Calle, Pruebas_Economia, Pruebas_Prologo y las escenas de Alan que coloquen el mecha la traen sin colocar ni regenerar nada. Sin pantalla
+(o con la pantalla apagada) E repara todo como antes. Valores: la mitad = `ceil(daño / 2)` y solo si el daño es al menos 2 × `PuntosMinimos` (el
+mínimo cobrable en puntos: 5 con $10 por punto y mínimo $50); "con lo que tienes" = `dinero / costoPorPunto` puntos (0 si el dinero no llega al
+mínimo) y cuesta exactamente esos puntos × $10, así que con $125 gasta $120. ↑ ↓ no dan la vuelta; Enter elige y cierra; Esc cierra sin cobrar. El control
+del jugador vuelve un cuadro después de cerrar (D-tony-67).

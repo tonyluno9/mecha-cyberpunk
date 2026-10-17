@@ -1,5 +1,6 @@
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Pelea.Flujo;
+using MechaCyberpunk.UI.Peleas;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaFlujo = "Assets/_Proyecto/Pelea/Prefabs/FlujoPeleaCasera.prefab";
         private const string RutaConfigEntrada = "Assets/_Proyecto/Progresion/Prologo/Datos/ConfigEntradaArena_Base.asset";
         private const string RutaPantallasHistoria = "Assets/_Proyecto/UI/Prefabs/PantallasHistoria.prefab";
+        private const string RutaPantallaApuesta = "Assets/_Proyecto/UI/Prefabs/PantallaApuesta.prefab";
         private const string RutaPremio = "Assets/_Proyecto/Economia/Datos/DatosPremioPelea_Casera.asset";
         private const string RutaMaterial = "Assets/_Proyecto/Progresion/Prologo/Materiales/Prologo_Mostrador.mat";
         private static readonly Vector3 TamanoMostrador = new Vector3(2f, 1.1f, 0.8f);
@@ -32,6 +34,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab) != null)
             {
+                AgregarPantallaApuesta();
                 return;
             }
 
@@ -76,7 +79,40 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 Object.DestroyImmediate(raiz);
             }
             AssetDatabase.SaveAssets();
+            AgregarPantallaApuesta();
             Debug.Log("[Progresion] T-129 mostrador de peleas creado.");
+        }
+
+        // T-145: le agrega al mostrador su pantalla de apuesta (hija) y la conecta. Idempotente y conserva todo lo demás del prefab.
+        private static void AgregarPantallaApuesta()
+        {
+            GameObject prefabPantalla = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPantallaApuesta);
+            if (prefabPantalla == null)
+            {
+                Debug.LogError("[Progresion] Falta " + RutaPantallaApuesta + ": corre CreadorPantallaApuesta.Crear primero.");
+                return;
+            }
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                MostradorPeleas mostrador = raiz.GetComponent<MostradorPeleas>();
+                SerializedObject so = new SerializedObject(mostrador);
+                SerializedProperty propiedad = so.FindProperty("pantallaApuesta");
+                if (propiedad.objectReferenceValue != null)
+                {
+                    return;
+                }
+                GameObject hija = (GameObject)PrefabUtility.InstantiatePrefab(prefabPantalla, raiz.transform);
+                propiedad.objectReferenceValue = hija.GetComponent<PantallaApuesta>();
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Progresion] T-145 pantalla de apuesta agregada al mostrador.");
         }
     }
 }

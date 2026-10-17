@@ -347,3 +347,66 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): compilar OK; EditMode 664/664 (10 de ContratosApuestasPruebas; ReglasEnsambladosPruebas en verde). playmode-por-area con AREAS='Core Economia': Core 3/3, Economia 13/13, salida 0. Con LIMITE_AREA=20 ambas áreas salen LIMITE, sigue con la siguiente, sin Unity vivo ni lockfile.
 - Para probar jugando: Leer los /// de IApuestasPelea con la mirada de Alan: ¿basta para poner una ventanilla de apuestas en el casino sin preguntar?
 - Decisiones: Core a main en cuanto se verificó. El modo cierra solo el PID de Windows que lanzó (taskkill //PID //T //F). LIMITE_AREA=20 prueba el cierre pero no un cuelgue a mitad de prueba.
+
+### T-142 Inventario del jugador y objetos vendibles
+- Verificado automáticamente (acotado): compilar OK; EditMode 676/676; PlayMode por área: Economia 19/19, Personaje 111/111, Progresion 79/79.
+- Para probar jugando: Nada jugable aún (T-143 pone las teclas 9 y 0 en la escena de pruebas de economía).
+- Decisiones: Ids brazo_chatarra, chatarra, kit_reparacion; Brazo de chatarra $300 máx 5, chatarra $50 máx 20, kit $0 máx 3. Al cargar, una cantidad mayor al tope se recorta; id repetido se ignora; id desconocido da warning. Aviso: DatosOferta_KitReparacion (T-033) cuesta $300 y D-tony-86 dice $250: se ajusta en T-146/T-150. T-143 debe asignar brazo y kit en InventarioDePrueba.
+
+### T-143 Escena de pruebas de economía
+- Verificado automáticamente (acotado): compilar OK; PlayMode Progresion 82/82. Creador idempotente (md5 igual en la segunda corrida). Captura T-143-1.
+- Para probar jugando: Abre Pruebas_Economia.unity, Play: taller (-12,3), mercado (8,6), mostrador de peleas (0,15). Teclas 7 abona $500, 8 carga $500 de deuda, 9 brazo, 0 kit, J reloj, F5/F9 guardado. ¿Se entienden los tres sitios y la distancia entre ellos?
+- Decisiones: Letreros con tablero y TextMesh; materiales reutilizados de Pruebas_Prologo; la historia pasa a Libre en Start; en la prueba de recorrido solo se simuló W.
+
+### T-144 Apuestas: lógica, datos y resolución
+- Verificado automáticamente (acotado): compilar OK; EditMode Economia+Pelea 120/120; PlayMode Economia 19/19, Pelea 49/49, Progresion 82/82. Gana con $250: $1,350 y 1 Brazo de chatarra; pierde: -250 sin pieza; cancelar devuelve; destruir el flujo devuelve la apuesta.
+- Para probar jugando: Aún sin pantalla de apuesta (T-145). Para probar a mano más adelante: apostar en el mostrador de peleas de Pruebas_Economia.
+- Decisiones: AnunciarApuesta crea al rival en ese momento (Pelea no referencia IA); Anunciar devuelve false si queda una apuesta sin resolver; el neto de Resuelta es solo la ganancia por momio; momio redondeado al entero más cercano (.5 arriba); montos 100/250/500, tope $500, Brazo de chatarra desde $250. Pendiente: DatosOferta_KitReparacion cuesta $300 y D-tony-86 dice $250: lo resuelve T-146/T-150.
+
+### T-145 Pantalla de apuesta
+- Verificado automáticamente (acotado): compilar OK; EditMode UI+Pelea+Progresion+Economia 303/303; PlayMode Economia 19/19, Pelea 49/49, UI 83/84 (1 omitida), Progresion 85/86 en la corrida completa; el único fallo era una constante del criterio a), corregida: ApuestaMostradorPruebas 4/4. Capturas T-145-1 y T-145-2.
+- Para probar jugando: Pruebas_Economia, Play: E en el mostrador de peleas abre la apuesta; Izq/Der elige monto, Enter apuesta, Esc cancela. ¿Se entiende el riesgo (pierdes lo apostado y el premio) y la pieza en juego desde $250? ¿La línea APUESTA de la pantalla de la arena se lee?
+- Decisiones: La pantalla de la arena muestra el neto del contrato IApuestasPelea.Resuelta (+$250 al ganar con $250); el criterio a) decía +$500 y se corrigió. Los textos de la apuesta van en PantallaPelea porque Pelea/Datos no estaba permitida. Si Apostar falla avisa NO ALCANZA y la pantalla sigue abierta; si Empezar falla devuelve lo apostado. Ahora E en el mostrador abre la pantalla en toda escena con ServiciosEconomia (Enter confirma).
+
+### T-146 Mostrador del mercado negro: comprar
+- Verificado automáticamente (acotado): compilar OK; EditMode Economia+UI+Progresion 270/270; PlayMode UI 88/89 (1 ignorada ya existente), Economia 19/19, Progresion 86/86. Captura T-146-1.
+- Para probar jugando: Pruebas_Economia, Play: camina al mercado (8,6), E abre el mostrador del mercado negro: kit $250, Enter compra, Esc cierra. ¿Se entiende cuánto llevas y el máximo? ¿VENDER (aún 'PRONTO') tiene sitio claro?
+- Decisiones: El mostrador es un prefab de Tony que Alan solo coloca (D-tony-81); el texto del mostrador es solo el nombre de la tienda; cerrado sin hora legible dice CERRADO; solo se lista un objeto si su oferta es de esa tienda (hoy solo el kit); kit a $250 (D-tony-86) con valorVenta $0; VENDER muestra PRONTO hasta T-147. Sugerencia: prueba EditMode de que el kit cuesta $250 y se vende en $0 para T-150.
+
+### T-147 Vender piezas y chatarra
+- Verificado automáticamente (acotado): compilar OK; EditMode 711/711; PlayMode UI 93/94 (1 omitida, captura de otra tarea), Economia 19/19. Vender 1 brazo deja $400 (+$300 · VENTA en el HUD), segundo $700, el kit no se compra. Captura T-147-1.
+- Para probar jugando: Pruebas_Economia: tecla 9 da un brazo, E en el mercado, → pestaña VENDER, Enter vende. ¿El precio de venta ($300 el brazo, $50 la chatarra) se siente justo contra apostar el brazo ($250)?
+- Decisiones: D-tony-89: compra vacío esconde la pestaña VENDER; vender quita 1 del inventario primero y luego abona con MotivoDinero.Venta; una fila por objeto distinto; textos VENDISTE {0} POR {1} y ayuda Enter vender.
+
+### T-148 Kits de reparación en plena pelea
+- Verificado automáticamente (acotado): compilar OK; EditMode Mecha+UI 174/174; PlayMode Mecha 101/103 (2 capturas omitidas, 0 fallos), Combate 40/40, UI 93/94, Economia 19/19, Pelea 49/49, Progresion 86/86. Captura T-148-1.
+- Para probar jugando: Pruebas_Economia (tecla 0 da un kit) o Pruebas_Tony: sube al mecha, empieza una pelea, G con la vida baja. ¿20 % en 1.5 s y máximo 2 por pelea se sienten como decisión y no como botón de curar sin fin? ¿'KITS 2 · G' se lee en la cabina?
+- Decisiones: El kit responde con el mecha controlado y la pelea empezada; la curación suma por cuadro sobre la vida actual (si te pegan mientras curas, el daño se conserva); pantalla a la izquierda de la de vida; G con vida completa no gasta el kit; prioridad del texto REPARANDO, LÍMITE DE KITS, SIN KITS, KITS n · G. Sugerencia: la pantalla refresca cada cuadro con string.Format (poca basura).
+
+### T-149 Reparar a medias en el banco del taller
+- Verificado automáticamente (acotado): compilar OK; EditMode Economia+Mecha+UI 283/283; PlayMode Mecha 107/110 (3 omitidas, 0 fallos), Economia 19/19, UI 93/94, Progresion 86/86 (en la primera corrida fallaron CambioEscenaPruebas y PrologoPresentePruebas; pasaron al repetir sin cambiar su código: fragilidad de orden por vigilar). Captura T-149-1.
+- Para probar jugando: En Pruebas_Economia: pelea y quedas dañado, ve al banco, E: ¿las tres opciones (todo, la mitad, con lo que tienes) se entienden? ¿Reparar a medias se siente como decisión de dinero justo?
+- Decisiones: D-tony-90: la pantalla va dentro del mecha (GetComponentInParent), no en las escenas; sin pantalla activa E repara todo como antes; la mitad es ceil(daño/2) y solo si el daño es al menos 10 puntos; con lo que tienes cobra puntos por $10 exactos; las flechas no dan la vuelta, Enter elige y cierra, Esc cierra sin cobrar. Sugerencia: prueba que vigile que ninguna escena de Alan trae el mecha sin BancoTaller.
+
+### T-150 Precios de la economía y pruebas de balance
+- Verificado automáticamente (acotado): EditMode Economia 114/114 (incluye las reglas a a g sobre los assets reales); creadores de datos corridos dos veces sin cambios en los assets.
+- Tabla de precios (para ajustar jugando; si rompes una regla, BalanceEconomiaPruebas dice cuál):
+
+| Número | Valor |
+| --- | --- |
+| Dinero inicial | $500 |
+| Reparación | $10 por punto, mínimo $50 (de KO a 100 puntos: $1,000) |
+| Renta | $500 cada 7 días |
+| Premio casera ganar / perder | $600 / $0 |
+| Premio campeonato del tutorial | $1,500 |
+| Apuesta casera | montos $100/$250/$500, momio 1.0, máxima $500, Brazo de chatarra desde $250 |
+| Brazo de chatarra | compra $1,200, venta $300, máximo 5 |
+| Chatarra | venta $50, máximo 20 |
+| Kit de reparación | compra $250, cura 20 de 100 puntos ($12.5 por punto), máximo 3, 2 por pelea |
+- Para probar jugando: una semana en Pruebas_Economia (J pasa días): ¿se vive al día, con decisiones (apostar o no, kit o taller, reparar todo o a medias) y sin quedar atorado?
+- Decisiones: sin cambios de valores. La regla d toma el precio de compra de la oferta enlazada o, si no hay enlace (el brazo no la tiene), de la oferta con el mismo nombre. Los creadores de ofertas, premios, objetos y apuesta ya no pisan valores de assets existentes. Nota: correr CreadorKitReparacion modifica MechaJugador.prefab (no lo toqué; lo restauré).
+
+### T-151 Recorrido de cierre del bloque de economía
+- Verificado automáticamente (acotado): RecorridoEconomiaPruebas pasa 3 de 3 corridas (46 s cada una); Progresion 87/87. Dinero final $699, $700, $700 igual al calculado; tiempo de juego 45.5 s; MedidorFrames 0 frames lentos (máx 12-13 ms); kit curó 20.0 puntos en 1.5 s; partida real no tocada.
+- Para probar jugando: Pruebas_Economia, Play, de noche: compra un kit, apuesta $250 al casero (con el brazo en juego), pelea y usa G, repara a medias en el banco, vende el brazo. ¿La economía se siente apretada pero justa, como vivir al día?
+- Decisiones: Atajos: Colocar cerca del mercado, mostrador y banco; RecibirDanio al rival casero tras daño real; FijarVida al 20 % antes de la pelea que se pierde. Aviso del HUD en el banco ya no lleva el costo (E · Reparar mecha…). El área Progresion roza el límite de 900 s de playmode-por-area: usar LIMITE_AREA=2400 en la suite completa.

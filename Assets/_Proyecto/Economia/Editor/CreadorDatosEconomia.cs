@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Economia.Editor
         [MenuItem("Mecha Cyberpunk/Crear T-033")]
         public static void Crear()
         {
-            var kit = Oferta("KitReparacion", "Kit de reparación", 300, TipoOferta.KitReparacion);
+            var kit = Oferta("KitReparacion", "Kit de reparación", 250, TipoOferta.KitReparacion);
             var misil = Oferta("MunicionMisil", "Munición de misil", 500, TipoOferta.Municion);
             var brazo = Oferta("BrazoChatarra", "Brazo de chatarra", 1200, TipoOferta.Pieza);
             var ojos = Oferta("ImplanteOjos", "Implante de ojos", 5000, TipoOferta.Implante);
@@ -29,6 +29,9 @@ namespace MechaCyberpunk.Economia.Editor
 
         private static DatosOferta Oferta(string archivo, string nombre, int precio, TipoOferta tipo)
         {
+            string ruta = $"{Carpeta}/DatosOferta_{archivo}.asset";
+            var existente = AssetDatabase.LoadAssetAtPath<DatosOferta>(ruta);
+            if (existente != null) return existente; // no se pisan los precios ajustados en el inspector (T-150)
             var o = Cargar<DatosOferta>($"DatosOferta_{archivo}");
             var so = new SerializedObject(o);
             so.FindProperty("id").stringValue = archivo;
