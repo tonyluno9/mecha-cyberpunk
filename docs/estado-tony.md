@@ -282,3 +282,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-160 (2026-10-18)
 - T-160 hecha (sin revisar), integrada en tony/fase-7. Fallo conocido e intermitente: CambioEscenaPruebas (orden) en la corrida completa de Progresion. Sigue T-161.
+
+## Después de T-161 (2026-10-18)
+- T-161 hecha (sin revisar), integrada en tony/fase-7. Sigue T-162 y luego cierre del bloque 2.

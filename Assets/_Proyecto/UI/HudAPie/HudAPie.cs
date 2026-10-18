@@ -57,6 +57,14 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private GameObject grupoRenta;
         [SerializeField] private Text textoRenta;
 
+        [Header("Subir de liga (T-161; opcional; solo a pie)")]
+        [SerializeField] private GameObject grupoAvisoLiga;
+        [SerializeField] private Text textoAvisoLiga;
+        [SerializeField] private Text textoAvisoLiga2;
+
+        private IProgresoLigas ligas;
+        private int ligaPendiente;
+        private float avisoLigaRestante;
         private ICartera cartera;
         private IRenta renta;
         private float avisoDineroRestante;
@@ -116,6 +124,10 @@ namespace MechaCyberpunk.UI.Hud
         public Text TextoAvisoDinero => textoAvisoDinero;
         public GameObject GrupoRenta => grupoRenta;
         public Text TextoRenta => textoRenta;
+
+        public GameObject GrupoAvisoLiga => grupoAvisoLiga;
+        public Text TextoAvisoLiga => textoAvisoLiga;
+        public Text TextoAvisoLiga2 => textoAvisoLiga2;
 
         public GameObject GrupoLlamado => grupoLlamado;
         public Text TextoLlamado => textoLlamado;
@@ -201,6 +213,9 @@ namespace MechaCyberpunk.UI.Hud
             Registro<ICartera>.Quitado += AlQuitarCartera;
             Registro<IRenta>.Agregado += AlAgregarRenta;
             Registro<IRenta>.Quitado += AlQuitarRenta;
+            Registro<IProgresoLigas>.Agregado += AlAgregarLigas;
+            Registro<IProgresoLigas>.Quitado += AlQuitarLigas;
+            VincularLigas(Registro<IProgresoLigas>.Actual);
             VincularCartera(Registro<ICartera>.Actual);
             VincularRenta(Registro<IRenta>.Actual);
             VincularCalor(Registro<ICalor>.Actual);
@@ -221,6 +236,7 @@ namespace MechaCyberpunk.UI.Hud
             ActualizarInteraccion();
             ActualizarLlamado();
             ActualizarAvisoDinero();
+            ActualizarAvisoLiga();
         }
 
         private void OnDisable()
@@ -241,6 +257,9 @@ namespace MechaCyberpunk.UI.Hud
             Registro<ICartera>.Quitado -= AlQuitarCartera;
             Registro<IRenta>.Agregado -= AlAgregarRenta;
             Registro<IRenta>.Quitado -= AlQuitarRenta;
+            Registro<IProgresoLigas>.Agregado -= AlAgregarLigas;
+            Registro<IProgresoLigas>.Quitado -= AlQuitarLigas;
+            DesvincularLigas();
             DesvincularCartera();
             DesvincularRenta();
             DesvincularCalor();
@@ -352,6 +371,7 @@ namespace MechaCyberpunk.UI.Hud
             RefrescarCalor();
             RefrescarDinero();
             RefrescarRenta();
+            RefrescarAvisoLiga();
             avisoRestante = 0f;
             grupoInteraccion.SetActive(false);
         }
@@ -369,6 +389,10 @@ namespace MechaCyberpunk.UI.Hud
             grupoDinero.SetActive(false);
             grupoAvisoDinero.SetActive(false);
             grupoRenta.SetActive(false);
+            if (grupoAvisoLiga != null)
+            {
+                grupoAvisoLiga.SetActive(false);
+            }
         }
 
         private void ActualizarVida()
@@ -393,6 +417,85 @@ namespace MechaCyberpunk.UI.Hud
             textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Balas, armas.TamanoCargador, armas.Recargando, config);
             bool aviso = armas.ArmaActiva == ArmaAPie.Pistola && (armas.Recargando || armas.Balas <= 0);
             textoArma.color = aviso ? config.ColorAviso : config.ColorTexto;
+        }
+
+        // ---- Subir de liga ----
+
+        private void AlAgregarLigas(IProgresoLigas nuevas) => VincularLigas(nuevas);
+
+        private void AlQuitarLigas(IProgresoLigas quitadas)
+        {
+            if (quitadas == ligas)
+            {
+                VincularLigas(Registro<IProgresoLigas>.Actual);
+            }
+        }
+
+        private void VincularLigas(IProgresoLigas nuevas)
+        {
+            DesvincularLigas();
+            ligas = nuevas;
+            if (ligas != null)
+            {
+                ligas.CampeonVencido += AlVencerCampeon;
+            }
+        }
+
+        private void DesvincularLigas()
+        {
+            if (ligas != null)
+            {
+                ligas.CampeonVencido -= AlVencerCampeon;
+            }
+            ligas = null;
+        }
+
+        // Si el jugador está en el mecha o en un carro, el aviso espera a que vuelva a pie.
+        private void AlVencerCampeon(int liga)
+        {
+            if (grupoAvisoLiga == null || textoAvisoLiga == null || textoAvisoLiga2 == null)
+            {
+                return;
+            }
+            ligaPendiente = liga;
+            avisoLigaRestante = config.SegundosAvisoLiga;
+            RefrescarAvisoLiga();
+        }
+
+        private void RefrescarAvisoLiga()
+        {
+            if (grupoAvisoLiga == null)
+            {
+                return;
+            }
+            bool visible = ligaPendiente > 0 && avisoLigaRestante > 0f && EstaAPie && ligas != null;
+            grupoAvisoLiga.SetActive(visible);
+            if (!visible)
+            {
+                return;
+            }
+            (string primera, string segunda) = FormatoHud.AvisoLiga(ligaPendiente, ligas, config);
+            textoAvisoLiga.text = primera;
+            textoAvisoLiga.color = config.ColorAvisoLiga;
+            textoAvisoLiga.fontSize = config.TamanoAvisoLiga;
+            textoAvisoLiga2.text = segunda;
+            textoAvisoLiga2.color = config.ColorAvisoLiga;
+            textoAvisoLiga2.fontSize = config.TamanoAvisoLiga2;
+            textoAvisoLiga2.gameObject.SetActive(segunda.Length > 0);
+        }
+
+        private void ActualizarAvisoLiga()
+        {
+            if (ligaPendiente <= 0 || !EstaAPie)
+            {
+                return;
+            }
+            avisoLigaRestante -= Time.deltaTime;
+            if (avisoLigaRestante <= 0f)
+            {
+                ligaPendiente = 0;
+                RefrescarAvisoLiga();
+            }
         }
 
         // ---- Dinero y renta ----

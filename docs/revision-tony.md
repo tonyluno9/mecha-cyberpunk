@@ -457,3 +457,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-160 Pantalla de la cartelera
 - Verificado automáticamente: EditMode 820/820; PlayMode Economia 19/19, UI 93/94 (1 ignorada), Progresion 104/105 (CambioEscenaPruebas, intermitente por orden, fuera del diff). Creadores idempotentes. Capturas T-160-1 y T-160-2.
 - Para ti (sensación): Pruebas_Economia, de noche, E en el mostrador. ¿Se entiende liga, rival y premio de un vistazo? ¿El jefe naranja se distingue? ¿La fila gris "VENCE A DON FIERRO" motiva o estorba?
+
+### T-161 Subir de liga al vencer al campeón
+- Verificado automáticamente: EditMode 824/824; PlayMode Pelea 66/66, Progresion 105/105, UI 101/102 (1 ignorada). Capturas T-161-1 y T-161-2.
+- Para ti (sensación): Pruebas_Economia, tecla L hasta el jefe de la liga 1 y pelea contra DON FIERRO. ¿"PELEA DE JEFE" suma? ¿El aviso de liga al bajar del mecha se siente logro? ¿5 s es mucho o poco? ¿"PELEA DE JEFE" en el prólogo quita sorpresa?
+- Decisiones: D-tony-111.
