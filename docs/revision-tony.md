@@ -531,3 +531,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (por el implementador, sin verificador aparte): compilar OK; EditMode 859/859 (9 nuevas); PlayMode Mecha 133/136, Economia 19/19, Personaje 111/111, UI 101/102, Progresion 109/109; 11 nuevas de TallerPiezasPruebas. Creador idempotente. Pruebas viejas de BancoTaller, ReparacionParcial y RecorridoEconomia ajustadas por la opción nueva (una línea de RecorridoEconomiaPruebas fuera de carpetas permitidas, sin cambiar lo que comprueba).
 - Para probar jugando: nada todavía (la pantalla es T-169).
 - Decisiones: D-tony-131.
+
+### T-169 Pantalla "PIEZAS DEL MECHA" en el taller
+- Verificado automáticamente (por el implementador, sin verificador aparte): verificar.sh todo: EditMode 859/859; PlayMode 807/820 (9 fallos conocidos de Alan en Arena); UI 113 sin fallos propios; 11 nuevas de PantallaPiezasPruebas; MedidorFrames 0 lentos. Creador idempotente. Capturas T-169-1 y T-169-2 revisadas.
+- Para ti (sensación): Pruebas_Economia, E en el mecha estacionado, PIEZAS DEL MECHA. ¿Se entiende qué cambia cada pieza (VIDA +2 · DAÑO −1) y por qué una está gris? Límite: con 10 o más filas la lista roza la línea de estadísticas (hoy el máximo es 9).
+- Decisiones: D-tony-132.
