@@ -261,3 +261,10 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - T-159 (retar desde el mostrador) quedó A MEDIAS en la rama tony/T-159-retar-ligas: cambios sin verificar en MostradorPeleas.cs, su prefab, CreadorMostradorPeleas, CreadorEscenaEconomia y Pruebas_Economia.unity (esta última modificada por un creador en batch; revisar que sea intencional). No hay pruebas nuevas corridas ni bitácora. Unity cerrado.
 - Qué sigue: retomar T-159 en esa rama (leer el archivo en docs/tareas/en-curso/), verificar Progresion y Economia, cerrar; luego T-160, T-161, T-162. Al cerrar el bloque 2: suite completa y merge de tony/fase-7 a main con push.
 - T-136 y T-137 siguen bloqueadas (D-tony-91).
+
+## Parada manual 2 en T-159 (2026-10-17)
+- Tony detuvo el turno otra vez. Rama: tony/T-159-retar-ligas (base tony/fase-7). El código y las pruebas de T-159 siguen como en el commit "T-159 a medias"; nada nuevo se verificó.
+- Falta: compilar; EditMode de Progresion (ReglaCarteleraPruebas); PlayMode de Progresion y Economia (LigasMostradorPruebas, ApuestaMostradorPruebas, PeleaCaseraPruebas, RecorridoEconomiaPruebas, RecorridoPrologoPruebas); comprobar que Pruebas_Economia.unity solo tenga cambios intencionales y que el creador sea idempotente; cerrar (archivo a hechas/, bitácora, revisión) y mezclar en tony/fase-7.
+- Sucio sin commit a propósito (lo tocó un batch de pruebas, no es de T-159): Mecha/Materiales/Cabina_AlarmaApagada.mat, Cabina_Grietas.mat y ProjectSettings.asset (revisar si solo es SENTIS_ANALYTICS_ENABLED y descartar con git restore).
+- UNITY SIGUE ABIERTO: el batch de PlayMode de Economia (PID 14960, lanzado por el subagente que detuve) sigue corriendo; el cierre forzado fue negado por permisos. Ciérralo tú o espera a que termine; luego borra Temp/UnityLockfile si queda.
+- Sigue: retomar T-159, luego T-160, T-161, T-162; al cerrar el bloque 2, suite completa y merge a main con push.
