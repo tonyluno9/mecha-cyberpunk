@@ -508,3 +508,11 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (por el implementador, sin verificador aparte): EditMode 829/829; PlayMode Combate 40/40, IA 35/35, Mecha 113/116 (3 omitidas como antes); suite PlayMode 776/789 (9 fallos conocidos de Alan en Arena). 5 pruebas nuevas de ReglaCambioDatos y 6 de CambiarDatosMechaPruebas con el prefab real.
 - Para probar jugando: nada todavía (las piezas que cambian los datos llegan en T-167).
 - Decisiones: D-tony-127.
+
+### T-163 Valores del mecha en tiempo de ejecución (Core)
+- Verificado automáticamente (por el implementador, sin verificador aparte): compilar OK; EditMode 834/834 (5 nuevas de ValoresMechaPruebas; ReglasEnsambladosPruebas en verde); PlayMode Combate 40/40, IA 35/35, Pelea 66/66, Mecha 113/116 (3 omitidas). Ningún DatosMecha_*.asset cambió.
+- Se hizo sin aprobación explícita de Tony por su orden de no parar (D-tony-128); revertible deshaciendo su merge.
+- Para probar jugando: nada todavía.
+
+#### Para Alan
+- Existe `ValoresMecha` y `DatosMecha.CrearEnEjecucion(ValoresMecha)` en Core/Datos, por si algún día creas mechas del mundo por código. No hace falta hacer nada; viaja con tony/fase-7.
