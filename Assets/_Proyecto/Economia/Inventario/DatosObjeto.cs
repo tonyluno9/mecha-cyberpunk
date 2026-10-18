@@ -32,6 +32,16 @@ namespace MechaCyberpunk.Economia
         public int Maximo => maximo;
         public DatosOferta Oferta => oferta;
 
+        /// <summary>Para clases hijas: fija los campos básicos (T-166). No cambia los campos serializados.</summary>
+        protected void Configurar(string idNuevo, string nombreNuevo, TipoObjeto tipoNuevo, int valorVentaNuevo, int maximoNuevo)
+        {
+            id = idNuevo;
+            nombre = nombreNuevo;
+            tipo = tipoNuevo;
+            valorVenta = Mathf.Max(0, valorVentaNuevo);
+            maximo = Mathf.Max(1, maximoNuevo);
+        }
+
         /// <summary>Crea un objeto en memoria (para pruebas y herramientas).</summary>
         public static DatosObjeto Crear(string id, string nombre, TipoObjeto tipo, int valorVenta, int maximo, DatosOferta oferta = null)
         {

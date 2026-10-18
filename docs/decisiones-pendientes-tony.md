@@ -552,3 +552,6 @@ Propuesta: (a) un golpe a medias al cambiar datos se cancela y el ciclo se rehac
 
 ### D-tony-128 T-163 (Core) se hace sin aprobación explícita
 Propuesta: T-163 solo agrega tipos nuevos a Core (ValoresMecha, DatosMecha.Valores, CrearEnEjecucion) sin cambiar ningún asset, y Core lo cambian las tareas de Core de Tony (D-032). Como Tony ordenó seguir sin parar y decidir lo razonable, se hace en el turno largo; queda para su revisión y se puede revertir con el merge --no-ff de su rama.
+
+### D-tony-129 T-166: detalles de la regla y los creadores
+Propuesta: (a) `ReglaEstadisticasPiezas.Componer` tiene dos formas: con lista (cada pieza va en su propia ranura; null o repetida se ignora con warning) y con diccionario ranura→pieza (una pieza en la ranura equivocada se ignora con warning). (b) La recarga nunca baja de 0.3 s, pero si la de serie ya es menor, no se sube. (c) `DatosObjeto` gana `Configurar(...)` protegido; `CreadorInventario` ahora solo agrega al catálogo lo que falta (antes reescribía la lista) y así los dos creadores corren en cualquier orden. (d) Id de las de serie: `pieza_<ranura>_serie_0`; ramas en ids: militar, tech, cuerpoacuerpo, fuego; ranuras: brazoizq, brazoder, torso, piernas, cabina. (e) Valor de venta de las de rama = precio / 2.
