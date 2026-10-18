@@ -526,3 +526,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (por el implementador, sin verificador aparte): EditMode 849/849; PlayMode Mecha 123/126 (3 omitidas de captura), Combate 40/40, Economia 19/19, Progresion 109/109, UI 101/102 (1 omitida). 10 pruebas nuevas de EquipoMechaPruebas. Creador idempotente (md5 igual de los dos prefabs).
 - Para probar jugando: nada todavía (la pantalla llega en T-169 y lo visible en T-170).
 - Decisiones: D-tony-130.
+
+### T-168 Comprar y cambiar piezas en el banco del taller (lógica)
+- Verificado automáticamente (por el implementador, sin verificador aparte): compilar OK; EditMode 859/859 (9 nuevas); PlayMode Mecha 133/136, Economia 19/19, Personaje 111/111, UI 101/102, Progresion 109/109; 11 nuevas de TallerPiezasPruebas. Creador idempotente. Pruebas viejas de BancoTaller, ReparacionParcial y RecorridoEconomia ajustadas por la opción nueva (una línea de RecorridoEconomiaPruebas fuera de carpetas permitidas, sin cambiar lo que comprueba).
+- Para probar jugando: nada todavía (la pantalla es T-169).
+- Decisiones: D-tony-131.

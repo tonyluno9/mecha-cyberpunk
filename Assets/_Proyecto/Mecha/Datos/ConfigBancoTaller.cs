@@ -17,6 +17,10 @@ namespace MechaCyberpunk.Mecha
         [SerializeField] private string formatoOpcionMitad = "REPARAR LA MITAD · {0}";
         [Tooltip("Opción de la pantalla del banco: lo que alcanza. {0} = costo con $, {1} = puntos de vida que sube.")]
         [SerializeField] private string formatoOpcionConLoQueTienes = "CON LO QUE TIENES · {0} (+{1})";
+        [Tooltip("Aviso del banco sin daño, cuando el mecha tiene taller de piezas (T-168). El HUD le pone el prefijo \"E · \".")]
+        [SerializeField] private string textoPiezas = "Taller · piezas";
+        [Tooltip("Última opción de la pantalla del banco: abre las piezas del mecha (T-168).")]
+        [SerializeField] private string textoOpcionPiezas = "PIEZAS DEL MECHA";
         [Tooltip("Distancia máxima al estacionamiento (m) para contar el mecha como en el taller cuando no tiene LlamadoMecha.")]
         [Min(0.5f)] [SerializeField] private float radioEnTaller = 3f;
 
@@ -28,6 +32,8 @@ namespace MechaCyberpunk.Mecha
         public string FormatoOpcionTodo => formatoOpcionTodo;
         public string FormatoOpcionMitad => formatoOpcionMitad;
         public string FormatoOpcionConLoQueTienes => formatoOpcionConLoQueTienes;
+        public string TextoPiezas => textoPiezas;
+        public string TextoOpcionPiezas => textoOpcionPiezas;
         public float RadioEnTaller => radioEnTaller;
     }
 }

@@ -8,7 +8,9 @@ namespace MechaCyberpunk.Mecha.Taller
         /// <summary>La mitad del daño (hacia arriba), fiado.</summary>
         Mitad,
         /// <summary>Lo que alcanza con el dinero que tienes, sin deuda.</summary>
-        ConLoQueTienes
+        ConLoQueTienes,
+        /// <summary>Abre las piezas del mecha (T-168); no repara ni cobra.</summary>
+        Piezas
     }
 
     /// <summary>Una salida de la pantalla del banco: texto, puntos de vida que sube, costo en $ y si se puede elegir.</summary>

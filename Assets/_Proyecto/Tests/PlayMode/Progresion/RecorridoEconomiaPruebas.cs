@@ -469,7 +469,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(precios.DineroInicial, cartera.Dinero, "a) empieza con el dinero inicial del asset");
             Assert.AreEqual(vidaMecha.Maxima, vidaMecha.Actual, MargenVida, "a) el mecha tiene la vida completa");
             Assert.AreEqual(0f, persistente.Danio, MargenVida, "a) sin daño");
-            Assert.AreEqual(EstadoBanco.SinDanio, banco.Estado, "a) el mecha está en su taller y no hay nada que reparar");
+            Assert.AreEqual(EstadoBanco.Piezas, banco.Estado, "a) el mecha está en su taller y no hay nada que reparar, solo piezas (T-168)");
             foreach (DatosObjeto objeto in inventario.Todos)
             {
                 Assert.AreEqual(0, inventario.Cantidad(objeto), "a) inventario vacío: " + objeto.Nombre);
