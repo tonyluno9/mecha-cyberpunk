@@ -549,3 +549,6 @@ destruida en pelea" (propuesta del diseño) más adelante? (e) ¿Las piezas debe
 
 ### D-tony-127 T-165: detalles de cambiar los datos de un mecha
 Propuesta: (a) un golpe a medias al cambiar datos se cancela y el ciclo se rehace con la nueva preparación y recarga (más simple que dejarlo terminar con el ciclo viejo). (b) `GuardiaMecha` ya lee `vida.Datos` cada frame, así que no necesitó escuchar `DatosCambiados`. (c) `ControladorMecha` usa `VidaMecha.Datos` si existe (propiedad `Datos`); su campo `datos` queda solo para un mecha sin vida. Por eso `ControladorMechaPruebas` ahora también configura la vida con sus datos. (d) El modelo de vida se recrea al cambiar de datos (su máxima es de solo lectura en Core); sin avisar KO de nuevo.
+
+### D-tony-128 T-163 (Core) se hace sin aprobación explícita
+Propuesta: T-163 solo agrega tipos nuevos a Core (ValoresMecha, DatosMecha.Valores, CrearEnEjecucion) sin cambiar ningún asset, y Core lo cambian las tareas de Core de Tony (D-032). Como Tony ordenó seguir sin parar y decidir lo razonable, se hace en el turno largo; queda para su revisión y se puede revertir con el merge --no-ff de su rama.
