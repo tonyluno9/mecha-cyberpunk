@@ -453,3 +453,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-159 Retar en las ligas desde el mostrador
 - Verificado automáticamente: compilar OK; EditMode 811/811 (8 de ReglaCarteleraPruebas); PlayMode Economia 19/19 y Progresion 97/98 (6 de LigasMostradorPruebas en verde; falló RecorridoPrologoPruebas por un frame de 583 ms, intermitente: sola pasa 1/1). Creador de Pruebas_Economia idempotente (dos corridas, escena igual).
 - Para probar jugando: nada todavía (la pantalla para elegir es T-160; en Pruebas_Economia la tecla L vence al siguiente rival).
+
+### T-160 Pantalla de la cartelera
+- Verificado automáticamente: EditMode 820/820; PlayMode Economia 19/19, UI 93/94 (1 ignorada), Progresion 104/105 (CambioEscenaPruebas, intermitente por orden, fuera del diff). Creadores idempotentes. Capturas T-160-1 y T-160-2.
+- Para ti (sensación): Pruebas_Economia, de noche, E en el mostrador. ¿Se entiende liga, rival y premio de un vistazo? ¿El jefe naranja se distingue? ¿La fila gris "VENCE A DON FIERRO" motiva o estorba?

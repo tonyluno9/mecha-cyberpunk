@@ -279,3 +279,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - Se cerró a mano el Unity del batch de Progresion (PID 31412); se borró Temp/UnityLockfile y se descartó ProjectSettings.asset.
 - T-136 y T-137 siguen bloqueadas: Ciudad.unity en origin/main no trae DirectorPrologo.
 - Sigue: terminar T-160, luego T-161 y T-162; al cerrar el bloque 2, suite completa y merge de tony/fase-7 a main con push.
+
+## Después de T-160 (2026-10-18)
+- T-160 hecha (sin revisar), integrada en tony/fase-7. Fallo conocido e intermitente: CambioEscenaPruebas (orden) en la corrida completa de Progresion. Sigue T-161.
