@@ -73,6 +73,7 @@ namespace MechaCyberpunk.Pelea.Editor
                 so.FindProperty("esJefe").boolValue = true;
                 so.ApplyModifiedPropertiesWithoutUndo();
                 CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioTutorial);
+                CreadorFlujoPeleaCasera.AgregarLetreroJefe(raiz);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabTutorial);
             }
             finally

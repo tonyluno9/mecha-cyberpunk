@@ -25,6 +25,8 @@ namespace MechaCyberpunk.Pelea.Editor
         private const int IndiceGrito = 1;
         private const float FraccionBajaApuesta = 0.02f;
         private const float FraccionAltaApuesta = 0.17f;
+        private const float FraccionBajaJefe = 0.57f;
+        private const float FraccionAltaJefe = 0.74f;
 
         // T-145: la línea "APUESTA +$500" de la pantalla de la arena, bajo el premio (en la franja de la revancha, que la casera no usa).
         private static void AgregarLineaApuesta(GameObject raiz)
@@ -38,6 +40,22 @@ namespace MechaCyberpunk.Pelea.Editor
             }
             Text texto = CreadorFlujoPelea.CrearTexto("Apuesta", (RectTransform)pantalla.transform, new Vector2(0f, FraccionBajaApuesta),
                 new Vector2(1f, FraccionAltaApuesta));
+            propiedad.objectReferenceValue = texto;
+            soPantalla.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>T-161: agrega el letrero de jefe a la pantalla de un flujo abierto (idempotente). Franja bajo el texto grande, sobre el premio.</summary>
+        public static void AgregarLetreroJefe(GameObject raiz)
+        {
+            PantallaPelea pantalla = raiz.GetComponentInChildren<PantallaPelea>(true);
+            SerializedObject soPantalla = new SerializedObject(pantalla);
+            SerializedProperty propiedad = soPantalla.FindProperty("textoJefe");
+            if (propiedad.objectReferenceValue != null)
+            {
+                return;
+            }
+            Text texto = CreadorFlujoPelea.CrearTexto("Jefe", (RectTransform)pantalla.transform, new Vector2(0f, FraccionBajaJefe),
+                new Vector2(1f, FraccionAltaJefe));
             propiedad.objectReferenceValue = texto;
             soPantalla.ApplyModifiedPropertiesWithoutUndo();
         }
@@ -80,6 +98,7 @@ namespace MechaCyberpunk.Pelea.Editor
                 so.ApplyModifiedPropertiesWithoutUndo();
                 CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioCasera);
                 AgregarLineaApuesta(raiz);
+                AgregarLetreroJefe(raiz);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }
             finally

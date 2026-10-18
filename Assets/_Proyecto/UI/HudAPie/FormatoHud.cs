@@ -53,6 +53,20 @@ namespace MechaCyberpunk.UI.Hud
             return (diferencia > 0 ? "+" : string.Empty) + cantidad + " · " + config.NombreMotivo(motivo);
         }
 
+        /// <summary>
+        /// Las dos líneas del aviso al vencer al campeón de <paramref name="liga"/>: "¡CAMPEÓN DE LA LIGA SÓTANO!" y "SE ABRE LA LIGA CALLE".
+        /// En la última liga solo "¡CAMPEÓN DEL CLANDESTINO!" y la segunda línea vacía.
+        /// </summary>
+        public static (string primera, string segunda) AvisoLiga(int liga, IProgresoLigas ligas, ConfigHudAPie config)
+        {
+            if (liga >= ligas.CantidadLigas)
+            {
+                return (config.TextoCampeonClandestino, string.Empty);
+            }
+            return (string.Format(config.TextoCampeonLiga, ligas.NombreLiga(liga)),
+                string.Format(config.TextoSeAbreLiga, ligas.NombreLiga(liga + 1)));
+        }
+
         /// <summary>"RENTA VENCIDA · $500".</summary>
         public static string TextoRentaVencida(int adeudo, ConfigHudAPie config)
         {
