@@ -444,3 +444,6 @@ Propuesta: con cartel, el cartel manda entero: rival, premio, apuesta y presenta
 
 ### D-tony-108 Detalles de T-156
 Propuesta: la furia mide la vida del propio jefe (no la del jugador) y entra una sola vez por pelea; el color pulsa entre el color base del material y `colorFuria`, y el parpadeo blanco de daño tiene prioridad mientras dura. El jefe de prueba (150 de vida, 12 de daño) tiene espera fija de 3 s, preparación 0.3 s y recarga 0.2 s para que la prueba mida la espera sin azar (con las esperas aleatorias normales, 0.6 de multiplicador no garantiza 30 % porque preparación y recarga no se acortan). Sin impacto en el diseño.
+
+### D-tony-109 Detalles de T-157
+Propuesta: el creador solo escribe valores al crear un asset; si Tony cambia alias o números en los assets, volver a correr el creador no los pisa. `DatosMecha.nombre` es el alias con mayúscula inicial. Los prefabs son variantes de RivalBasico (que ya no lleva PiedadRival) y los jefes añaden FuriaJefe con ConfigFuriaJefe_Base. Aceleración, frenado, giro, recarga y bloqueo quedan en los valores por defecto de DatosMecha. Sin impacto en el diseño.

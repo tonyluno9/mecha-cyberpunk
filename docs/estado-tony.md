@@ -51,7 +51,7 @@ T-153 y T-156 no dependen de Core (pueden ir primero si T-152 se atora); T-156 y
 | T-154 Progreso de las ligas: datos, modelo y servicio que se guarda | T-152 | pendiente |
 | T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | hecha (sin revisar) |
 | T-156 Pelea de jefe: furia a la mitad de la vida | nada | hecha (sin revisar) |
-| T-157 Los 20 rivales de las 4 ligas | T-156 | pendiente |
+| T-157 Los 20 rivales de las 4 ligas | T-156 | hecha (sin revisar) |
 | T-158 Calendario de las ligas: premios, momios y presentadores por liga | T-154, T-155, T-157 | pendiente |
 | T-159 Retar en las ligas desde el mostrador (lógica, sin pantalla) | T-154, T-158 | pendiente |
 | T-160 Pantalla de la cartelera en el mostrador | T-159 | pendiente |
