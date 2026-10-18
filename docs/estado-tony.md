@@ -312,3 +312,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-162 (2026-10-18)
 - T-162 hecha (sin revisar). Bloque 2 de T-F7 (ligas) cerrado: suite completa EditMode 824/824, PlayMode 767/780 (9 fallos de Alan en Arena). Sigue mezcla a main y planificar el bloque 3.
+
+## Después de T-164 (2026-10-18)
+- T-164 hecha (sin revisar), integrada en tony/fase-7. Sigue T-165; T-163 (Core) después.
