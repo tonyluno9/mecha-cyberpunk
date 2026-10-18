@@ -444,3 +444,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): EditMode 793/793 (6 nuevas de RivalesLigaPruebas, reglas a a f sobre los assets reales); PlayMode IA 35/35 (2 nuevas: los 20 nacen con su alias y su vida sin errores, y captura). Creador corrido dos veces: md5 igual de 68 archivos (20 prefabs, 40 datos, 8 materiales). Captura docs/capturas/T-157-1.png (los 5 de la liga 1 de izquierda a derecha, el jefe naranja brillante).
 - Para probar jugando: nada todavía (los carteles llegan en T-158 y la cartelera en T-159).
 - Decisiones: ver D-tony-109 en docs/decisiones-pendientes-tony.md.
+
+### T-158 Calendario de las ligas: premios, momios y presentadores por liga
+- Verificado automáticamente (acotado): EditMode 803/803 (10 nuevas de BalanceLigasPruebas, reglas a a j sobre los assets reales; BalanceEconomiaPruebas en verde); PlayMode Economia 19/19 y Pelea 60/60. Creadores corridos dos veces: md5 igual de 11 assets. Prueba negativa hecha: jefe de la liga 2 a $1,500 hace fallar la regla b con mensaje que lo nombra; revertido.
+- Para ti (sensación): con la tabla en mano, ¿el jefe de la liga 1 ($2,000, más de 3 veces la casera) se siente como progreso? ¿Momios de 1.0 a 2.5 hacen tentador apostar fuerte contra jefes? Se ajusta en CalendarioLigas_Base.asset y DatosApuestaPelea_*; la prueba avisa si rompes una regla.
+- Decisiones: D-tony-110 en decisiones-pendientes-tony.md.
