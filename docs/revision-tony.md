@@ -3,6 +3,42 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Ligas (T-F7, bloque 2) cerradas: qué probar jugando (2026-10-18)
+Del lado de Tony, en `Escenas/Tony/Pruebas_Economia.unity` (Play, de noche, sin ayuda). Sin revisor: T-F7 bloque 2 no pasó por revisión de Opus.
+Base automática: `RecorridoLigasPruebas` (T-162) recorre la cartelera, la apuesta, ganar, perder y reintentar, revancha, DON FIERRO en furia, subir a la liga Calle, F5/F9 y EL CACIQUE (campeón del clandestino) con entrada simulada. 3 corridas seguidas pasan (~122 s reales cada una, ~121 s de juego). Dinero final y progreso final coinciden con lo calculado desde los assets ($13,000; liga 4, siguiente 0, 4 campeones). Tiempo de juego por paso (corrida 1): a) 0.0 s, b) TORNILLO con apuesta 19.9 s, c) reparar 0.0 s, d) LA RATA perder, reparar y ganar 40.1 s, e) revancha 20.1 s, f) DON FIERRO y subir de liga 18.2 s, g) guardar y cargar 5.0 s, h) EL CACIQUE 17.5 s. Capturas: `docs/capturas/T-162-1.png` (cartelera con el jefe), `T-162-2.png` (jefe en furia desde la cabina), `T-162-3.png` (aviso de liga en el HUD).
+
+Lista para un humano, en orden de juego (sin L ni atajos; peleas de verdad):
+1. T-159/T-160 Cartelera: E en el mostrador abre "PELEAS DEL CLANDESTINO · LIGA SÓTANO · CAMPEONES 0/4". ¿Se entiende qué es lo siguiente, qué son revanchas y qué está bloqueado? ¿↓ ↑ Enter Esc responden bien?
+2. T-158 Apuesta: en TORNILLO, ¿el momio y el premio que anuncia la pantalla coinciden con lo que cobras? ¿Apostar $500 a un rival que no supera al jugador se siente seguro o atractivo?
+3. T-157 Rivales: ¿TORNILLO es fácil, LA RATA rápida y débil, EL BACHE lento y pesado? ¿Cada rival se siente más difícil que el anterior?
+4. T-153/T-103 Reparar entre peleas: ¿el dinero alcanza para reparar entre peleas sin sobrar? Perder con LA RATA sin apostar: ¿se siente como "vuelvo a intentarlo" y no como castigo?
+5. T-156/T-161 DON FIERRO: ¿"PELEA DE JEFE" en la pantalla de la arena se nota? A la mitad de su vida, ¿la furia (más daño, ataques más seguidos, cuerpo rojo) obliga a cambiar de forma de pelear? ¿"¡VENCISTE AL CAMPEÓN!" cierra bien?
+6. T-161 Subir de liga: al bajar del mecha, "¡CAMPEÓN DE LA LIGA SÓTANO!" y "SE ABRE LA LIGA CALLE" (5 s). ¿Se siente como un logro? ¿Falta música o cinemática (no hay en este bloque)?
+7. T-159 Revanchas: pagan la mitad del premio. ¿Sirven para juntar dinero o se sienten como castigo?
+8. T-F5 Guardar: F5, gana o gasta, F9: ¿vuelven la liga, los campeones y el dinero sin que reaparezca el aviso de liga?
+9. Liga Calle en adelante: las ligas 3 y 4 son casi imposibles con el mecha base (esperado: se reajustan con el bloque de piezas).
+
+Tabla de rivales (T-157, provisional; vida / daño / velocidad m/s):
+| Liga | 1 | 2 | 3 | 4 | 5 (jefe) |
+| --- | --- | --- | --- | --- | --- |
+| 1 Sótano | TORNILLO 80/8/3.8 | LA RATA 90/8/4.6 | EL BACHE 110/11/3.2 | MOFLE 100/10/4.0 | DON FIERRO 150/12/4.0 |
+| 2 Calle | NEÓN 120/11/4.2 | CUMBIA 125/11/4.8 | EL TOPE 160/14/3.3 | LA PATRULLA 140/12/4.2 | LA MATRACA 190/14/4.3 |
+| 3 Distrito | VOLTIO 165/14/4.4 | LA DOÑA 175/14/4.6 | GRÚA 210/17/3.4 | EL PERITO 190/15/4.4 | EL ALCALDE 250/17/4.5 |
+| 4 Campeonato | OBSIDIANA 220/17/4.5 | XOLO 225/17/5.0 | TLÁLOC 270/20/3.6 | LA LLORONA 240/18/4.6 | EL CACIQUE 320/22/4.6 |
+
+Tabla de premios y momios (T-158, provisional):
+| Liga | Premio de ganar (rivales 1 a 4) | Jefe | Perder | Momio liga | Momio jefe | Tope apuesta liga / jefe |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 Sótano | 600 / 700 / 800 / 900 | 2,000 | 0 | 1.0 | 1.5 | 500 / 1,000 |
+| 2 Calle | 1,000 / 1,100 / 1,200 / 1,300 | 3,000 | 100 | 1.2 | 1.8 | 1,000 / 2,000 |
+| 3 Distrito | 1,500 / 1,650 / 1,800 / 1,950 | 4,500 | 150 | 1.4 | 2.0 | 1,500 / 3,000 |
+| 4 Campeonato | 2,200 / 2,400 / 2,600 / 2,800 | 7,500 | 200 | 1.6 | 2.5 | 2,000 / 5,000 |
+Revancha: mitad del premio. Pieza en juego solo en la liga 1 (Brazo de chatarra desde $250; con el jefe desde $500).
+
+Suite completa (tony/T-162-recorrido-ligas, 2026-10-18): `verificar.sh todo`: compilar OK; EditMode 824/824; PlayMode 767/780 (9 fallos, todos los conocidos de Alan en Arena: JaulaClandestinoPruebas, cápsula x8 y cubo). `playmode-por-area`: Combate 40/40, Core 3/3, Economia 19/19, IA 35/35, Mecha 107/110 (0 fallos, 3 no corridas), Mundo 141/141, Pelea 66/66, Personaje 111/111, Progresion 106/106 (límite 2400 s), UI 101/102 (0 fallos, 1 no corrida), Vehiculos 30/30, Arena 8/17 (los 9 de Alan). Ningún área marcó LIMITE.
+
+Preguntas abiertas para Tony (D-tony-103, ninguna se aplica sin respuesta): (a) ¿límite de peleas de liga por noche (por ejemplo una) para que la renta y el reloj pesen más? Hoy no hay límite. (b) ¿La casera sigue pagando $600 cada vez o baja después de abrir las ligas? (c) ¿Te suenan bien los nombres de las ligas y de los 20 rivales? (d) ¿El prólogo debe anunciar "PELEA DE JEFE"?
+Pedidos opcionales a Alan (D-tony-102, para A-F5): cambiar las luces de la jaula si `EventosPelea.PeleaPresentada` llega con `EsJefe`; un cartel en el clandestino con `IProgresoLigas.NombreLiga(LigaActual)`; colocar `MostradorPeleas.prefab` (trae la cartelera y las ligas). La integración en Ciudad y en el clandestino de Alan queda para cuando lo coloque (como T-136).
 ## Core a main (2026-10-16)
 Tony autorizó el merge: tony/fase-5 (T-F5, T-060, T-100, T-120 a T-123) está en main desde bc8a486, con alan/fase-2 ya mezclada (compilar OK, EditMode 613/613). T-100 y T-120 ya llegan a Alan.
 
