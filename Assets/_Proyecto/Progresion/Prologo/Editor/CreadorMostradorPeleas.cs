@@ -1,4 +1,5 @@
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.Pelea.Datos;
 using MechaCyberpunk.Pelea.Flujo;
 using MechaCyberpunk.UI.Peleas;
 using UnityEditor;
@@ -21,6 +22,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaPantallasHistoria = "Assets/_Proyecto/UI/Prefabs/PantallasHistoria.prefab";
         private const string RutaPantallaApuesta = "Assets/_Proyecto/UI/Prefabs/PantallaApuesta.prefab";
         private const string RutaPremio = "Assets/_Proyecto/Economia/Datos/DatosPremioPelea_Casera.asset";
+        private const string RutaCalendario = "Assets/_Proyecto/Pelea/Datos/CalendarioLigas_Base.asset";
         private const string RutaMaterial = "Assets/_Proyecto/Progresion/Prologo/Materiales/Prologo_Mostrador.mat";
         private static readonly Vector3 TamanoMostrador = new Vector3(2f, 1.1f, 0.8f);
         private static readonly Color ColorMostrador = new Color(0.55f, 0.3f, 0.12f);
@@ -35,6 +37,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab) != null)
             {
                 AgregarPantallaApuesta();
+                AsignarCalendario();
                 return;
             }
 
@@ -80,7 +83,38 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
             AssetDatabase.SaveAssets();
             AgregarPantallaApuesta();
+            AsignarCalendario();
             Debug.Log("[Progresion] T-129 mostrador de peleas creado.");
+        }
+
+        // T-159: le asigna el calendario de las ligas al mostrador. Idempotente: no pisa un calendario ya puesto.
+        private static void AsignarCalendario()
+        {
+            CalendarioLigas calendario = AssetDatabase.LoadAssetAtPath<CalendarioLigas>(RutaCalendario);
+            if (calendario == null)
+            {
+                Debug.LogError("[Progresion] Falta " + RutaCalendario);
+                return;
+            }
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                SerializedObject so = new SerializedObject(raiz.GetComponent<MostradorPeleas>());
+                SerializedProperty propiedad = so.FindProperty("calendario");
+                if (propiedad.objectReferenceValue != null)
+                {
+                    return;
+                }
+                propiedad.objectReferenceValue = calendario;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Progresion] T-159 calendario de ligas asignado al mostrador.");
         }
 
         // T-145: le agrega al mostrador su pantalla de apuesta (hija) y la conecta. Idempotente y conserva todo lo demás del prefab.

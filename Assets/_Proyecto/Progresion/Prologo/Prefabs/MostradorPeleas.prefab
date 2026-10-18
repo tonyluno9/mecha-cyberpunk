@@ -71,6 +71,8 @@ MonoBehaviour:
   textoDeDia: "Peleas caseras de noche \xB7 abre {0}"
   textoMechaNoListo: "Tu mecha no est\xE1 listo \xB7 rep\xE1ralo en el taller"
   pantallaApuesta: {fileID: 6861880862278667962}
+  calendario: {fileID: 11400000, guid: b02b0e90fe8833f49ae2a089a5b729a5, type: 2}
+  textoSinAlias: ???
 --- !u!1 &2208045492363752425
 GameObject:
   m_ObjectHideFlags: 0
