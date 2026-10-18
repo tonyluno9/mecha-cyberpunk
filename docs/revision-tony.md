@@ -498,3 +498,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente: EditMode 824/824; PlayMode Pelea 66/66, Progresion 105/105, UI 101/102 (1 ignorada). Capturas T-161-1 y T-161-2.
 - Para ti (sensación): Pruebas_Economia, tecla L hasta el jefe de la liga 1 y pelea contra DON FIERRO. ¿"PELEA DE JEFE" suma? ¿El aviso de liga al bajar del mecha se siente logro? ¿5 s es mucho o poco? ¿"PELEA DE JEFE" en el prólogo quita sorpresa?
 - Decisiones: D-tony-111.
+
+### T-164 Deudas: guardado y CambioEscenaPruebas
+- Verificado automáticamente (por el implementador, sin verificador aparte): EditMode 824/824; PlayMode Progresion 109/109 cuatro veces seguidas; CambioEscenaPruebas 4/4 en 8 corridas aisladas. 3 pruebas nuevas de GuardadoClavesPendientesPruebas.
+- Ojo: la causa de CambioEscenaPruebas (tope de 600 frames ≈ 1 s en batch) está demostrada por la medición del margen, no por un fallo reproducido. Si vuelve a fallar, reabrir.
+- Para probar jugando: nada.
