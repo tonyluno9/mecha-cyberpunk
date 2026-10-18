@@ -163,6 +163,8 @@ MonoBehaviour:
   textoPremio: {fileID: 289571134416102177}
   textoApuesta: {fileID: 2590331156398039027}
   textoJefe: {fileID: 4595741981951940318}
+  franjaJefePresentacion: {x: 0.57, y: 0.74}
+  franjaJefeResultado: {x: 0.35, y: 0.5}
   etiquetaApuesta: APUESTA
   tamanoLetraApuesta: 110
   colorApuestaPerdida: {r: 1, g: 0.15, b: 0.15, a: 1}
