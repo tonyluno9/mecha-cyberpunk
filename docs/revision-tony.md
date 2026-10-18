@@ -521,3 +521,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (por el implementador, sin verificador aparte): compilar OK; EditMode 849/849 (15 nuevas: ReglaEstadisticasPiezasPruebas y PiezasAssetsPruebas); PlayMode por área 776/789 (8 fallos conocidos de Arena, 4 omitidas). Creadores idempotentes en los dos órdenes (md5 igual de Mecha/Datos/Piezas, Economia/Datos y ServiciosEconomia.prefab).
 - Para ti (sensación): la tabla de bonos y precios de las 85 piezas (fuego: golpe más seguido; militar: golpe más pesado). Se ajusta en CreadorPiezas.cs; las pruebas avisan si rompes una regla.
 - Decisiones: D-tony-129.
+
+### T-167 EquipoMecha: las piezas puestas cambian al mecha y se guardan
+- Verificado automáticamente (por el implementador, sin verificador aparte): EditMode 849/849; PlayMode Mecha 123/126 (3 omitidas de captura), Combate 40/40, Economia 19/19, Progresion 109/109, UI 101/102 (1 omitida). 10 pruebas nuevas de EquipoMechaPruebas. Creador idempotente (md5 igual de los dos prefabs).
+- Para probar jugando: nada todavía (la pantalla llega en T-169 y lo visible en T-170).
+- Decisiones: D-tony-130.

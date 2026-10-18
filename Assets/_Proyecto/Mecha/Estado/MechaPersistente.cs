@@ -22,12 +22,16 @@ namespace MechaCyberpunk.Mecha.Estado
         {
             public float vida;
             public float vidaMaxima;
+            // T-167: ids de las piezas puestas y daño en puntos. Una partida vieja no los trae (piezas null).
+            public string[] piezas;
+            public float danio;
         }
 
         [SerializeField] private ConfigMechaDaniado config;
 
         private VidaMecha vida;
         private PeleadorMecha peleador;
+        private EquipoMecha equipo;
         private bool registrado;
 
         public string ClaveGuardado => Clave;
@@ -42,6 +46,7 @@ namespace MechaCyberpunk.Mecha.Estado
         {
             vida = GetComponent<VidaMecha>();
             peleador = GetComponent<PeleadorMecha>();
+            equipo = GetComponent<EquipoMecha>();
             if (config == null)
             {
                 Debug.LogError("[Mecha] MechaPersistente sin ConfigMechaDaniado en " + name, this);
@@ -123,7 +128,16 @@ namespace MechaCyberpunk.Mecha.Estado
 
         public string Guardar()
         {
-            return JsonUtility.ToJson(new DatosGuardados { vida = vida.Actual, vidaMaxima = vida.Maxima });
+            var datos = new DatosGuardados { vida = vida.Actual, vidaMaxima = vida.Maxima, danio = Danio };
+            if (equipo != null && equipo.Puestas.Count > 0)
+            {
+                datos.piezas = new string[equipo.Puestas.Count];
+                for (int i = 0; i < datos.piezas.Length; i++)
+                {
+                    datos.piezas[i] = equipo.Puestas[i] != null ? equipo.Puestas[i].Id : string.Empty;
+                }
+            }
+            return JsonUtility.ToJson(datos);
         }
 
         public void Cargar(string datos)
@@ -142,7 +156,17 @@ namespace MechaCyberpunk.Mecha.Estado
                 Debug.LogWarning("[Mecha] No se entendió el estado guardado del mecha; no cambia nada.");
                 return;
             }
-            float objetivo = ReglaVidaPersistente.AlCargar(leidos.vida, leidos.vidaMaxima, vida.Maxima, config.PisoVidaPersistente);
+            float objetivo;
+            if (equipo != null && leidos.piezas != null && leidos.piezas.Length > 0)
+            {
+                // Primero las piezas (cambian la vida máxima) y luego el mismo daño en puntos que al guardar.
+                equipo.PonerPorIds(leidos.piezas);
+                objetivo = ReglaVidaPersistente.AlCargar(vida.Maxima - leidos.danio, vida.Maxima, vida.Maxima, config.PisoVidaPersistente);
+            }
+            else
+            {
+                objetivo = ReglaVidaPersistente.AlCargar(leidos.vida, leidos.vidaMaxima, vida.Maxima, config.PisoVidaPersistente);
+            }
             vida.FijarVida(objetivo);
         }
     }
