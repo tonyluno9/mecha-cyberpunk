@@ -66,6 +66,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3070993614766129967, guid: 1430f7c9d7194e640977e608eac1a3ad, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8674353947711640094}
+    - targetCorrespondingSourceObject: {fileID: 3070993614766129967, guid: 1430f7c9d7194e640977e608eac1a3ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9048579527410333122}
   m_SourcePrefab: {fileID: 100100000, guid: 1430f7c9d7194e640977e608eac1a3ad, type: 3}
 --- !u!1 &8224558267268553924 stripped
 GameObject:
@@ -98,3 +101,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.EquipoMecha
   catalogo: {fileID: 11400000, guid: 85bf0b084cdb1cf4caee5f11836e7c39, type: 2}
+--- !u!114 &9048579527410333122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8224558267268553924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab567cda0dda02241a3f25749746b53b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.Taller.TallerPiezas

@@ -187,7 +187,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.IsTrue(pantalla.Visible, "E abre la pantalla del banco");
             Assert.AreEqual(1000, cartera.Dinero, "Abrir la pantalla no cobra");
             Assert.AreEqual(40f, vida.Actual, MargenVida, "Abrir la pantalla no repara");
-            Assert.AreEqual(2, pantalla.CantidadOpciones, "Solo todo y mitad");
+            Assert.AreEqual(3, pantalla.CantidadOpciones, "Todo, mitad y PIEZAS DEL MECHA (T-168)");
             Assert.AreEqual(TextoTodo600, TextosBase()[0]);
             Assert.AreEqual(TextoMitad300, TextosBase()[1]);
             foreach (string texto in TextosBase())
@@ -214,7 +214,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             yield return Tecla(teclado.eKey);
             Assert.IsTrue(pantalla.Visible);
-            Assert.AreEqual(3, pantalla.CantidadOpciones, "Las tres opciones");
+            Assert.AreEqual(4, pantalla.CantidadOpciones, "Las tres de reparar y PIEZAS DEL MECHA (T-168)");
             Assert.AreEqual(TextoTodo300, TextosBase()[0]);
             Assert.AreEqual(TextoMitad150, TextosBase()[1]);
             Assert.AreEqual(TextoAlcanza, TextosBase()[2]);
@@ -222,7 +222,9 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return Tecla(teclado.downArrowKey);
             yield return Tecla(teclado.downArrowKey);
             yield return Tecla(teclado.downArrowKey);
-            Assert.AreEqual(2, pantalla.IndiceElegido, "↓ no pasa de la última opción");
+            Assert.AreEqual(3, pantalla.IndiceElegido, "↓ no pasa de la última opción (PIEZAS DEL MECHA)");
+            yield return Tecla(teclado.upArrowKey);
+            Assert.AreEqual(2, pantalla.IndiceElegido, "↑ vuelve a CON LO QUE TIENES");
             yield return Tecla(teclado.enterKey);
 
             Assert.AreEqual(82f, vida.Actual, MargenVida, "Vida 82");
@@ -237,7 +239,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             yield return Tecla(teclado.eKey);
             Assert.IsTrue(pantalla.Visible);
-            Assert.AreEqual(2, pantalla.CantidadOpciones, "Todo y mitad; sin CON LO QUE TIENES");
+            Assert.AreEqual(3, pantalla.CantidadOpciones, "Todo y mitad y PIEZAS DEL MECHA; sin CON LO QUE TIENES");
             Assert.AreEqual(TextoTodo300, TextosBase()[0]);
             Assert.AreEqual(TextoMitad150, TextosBase()[1]);
             Assert.AreEqual("DINERO -$50", pantalla.Dinero);
@@ -334,7 +336,7 @@ namespace MechaCyberpunk.Tests.Mecha
             }
             yield return Escenario(70f, 120);
             yield return Tecla(teclado.eKey);
-            Assert.AreEqual(3, pantalla.CantidadOpciones);
+            Assert.AreEqual(4, pantalla.CantidadOpciones);
             yield return Tecla(teclado.downArrowKey);
             yield return null;
 

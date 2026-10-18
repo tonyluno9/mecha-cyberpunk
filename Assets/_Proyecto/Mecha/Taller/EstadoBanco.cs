@@ -12,6 +12,8 @@ namespace MechaCyberpunk.Mecha.Taller
         /// <summary>El mecha no tiene daño que reparar.</summary>
         SinDanio,
         /// <summary>Se puede reparar (aunque el dinero no alcance: queda en deuda).</summary>
-        Reparar
+        Reparar,
+        /// <summary>Sin daño ni renta vencida y con taller de piezas: se pueden comprar y cambiar piezas (T-168).</summary>
+        Piezas
     }
 }

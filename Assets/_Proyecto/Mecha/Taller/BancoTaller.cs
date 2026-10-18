@@ -25,6 +25,7 @@ namespace MechaCyberpunk.Mecha.Taller
         private VidaMecha vidaMecha;
         private MontajeMecha montaje;
         private LlamadoMecha llamado;
+        private TallerPiezas piezas;
         private ITallerMecha taller;
         private bool registrado;
         private bool avisoCarteraDado;
@@ -37,6 +38,25 @@ namespace MechaCyberpunk.Mecha.Taller
         /// (no hay pantalla en la escena), el banco repara todo directamente.
         /// </summary>
         public event Action<IReadOnlyList<OpcionReparacion>> OpcionesPedidas;
+
+        /// <summary>
+        /// Avisa que se pidió la pantalla de piezas del mecha (T-168): E sin daño o la opción "PIEZAS DEL MECHA". Sin nadie que
+        /// escuche, no hace nada.
+        /// </summary>
+        public event Action PiezasPedidas;
+
+        /// <summary>True si el mecha cuenta como estacionado en el taller (vacío y en su lugar).</summary>
+        public bool EnElTaller => montaje != null && MechaEnTaller;
+
+        /// <summary>Renta vencida ($, 0 si no hay renta).</summary>
+        public int Adeudo
+        {
+            get
+            {
+                IRenta renta = Registro<IRenta>.Actual;
+                return renta != null ? renta.Adeudo : 0;
+            }
+        }
 
         /// <summary>Vida actual del mecha (puntos).</summary>
         public float VidaActual => vidaMecha != null ? vidaMecha.Actual : 0f;
@@ -58,6 +78,7 @@ namespace MechaCyberpunk.Mecha.Taller
                     case EstadoBanco.Bloqueado: return string.Format(config.TextoBloqueado, FormatoDinero.Texto(Adeudo));
                     case EstadoBanco.MechaFuera: return config.TextoMechaFuera;
                     case EstadoBanco.SinDanio: return config.TextoSinDanio;
+                    case EstadoBanco.Piezas: return config.TextoPiezas;
                     default: return string.Format(config.TextoReparar, FormatoDinero.Texto(Costo));
                 }
             }
@@ -69,7 +90,8 @@ namespace MechaCyberpunk.Mecha.Taller
             get
             {
                 ICartera cartera = Registro<ICartera>.Actual;
-                return ReglaBancoTaller.Decidir(Adeudo, cartera != null ? cartera.Dinero : 0, MechaEnTaller, persistente.Danio);
+                return ReglaBancoTaller.Decidir(Adeudo, cartera != null ? cartera.Dinero : 0, MechaEnTaller, persistente.Danio,
+                    piezas != null);
             }
         }
 
@@ -81,15 +103,6 @@ namespace MechaCyberpunk.Mecha.Taller
                 DatosEconomia precios = Precios();
                 return precios == null ? 0
                     : ReglaReparacion.Costo(persistente.Danio, precios.CostoReparacionPorPunto, precios.CostoReparacionMinimo);
-            }
-        }
-
-        private int Adeudo
-        {
-            get
-            {
-                IRenta renta = Registro<IRenta>.Actual;
-                return renta != null ? renta.Adeudo : 0;
             }
         }
 
@@ -118,6 +131,7 @@ namespace MechaCyberpunk.Mecha.Taller
             montaje = GetComponent<MontajeMecha>();
             vidaMecha = GetComponent<VidaMecha>();
             llamado = GetComponent<LlamadoMecha>();
+            piezas = GetComponent<TallerPiezas>();
             if (config == null)
             {
                 Debug.LogError("[Mecha] BancoTaller sin ConfigBancoTaller en " + name, this);
@@ -208,6 +222,9 @@ namespace MechaCyberpunk.Mecha.Taller
                     }
                     OpcionesPedidas.Invoke(opciones);
                     break;
+                case EstadoBanco.Piezas:
+                    PiezasPedidas?.Invoke();
+                    break;
             }
         }
 
@@ -250,6 +267,10 @@ namespace MechaCyberpunk.Mecha.Taller
                         puntosAlcanza, costoAlcanza, true));
                 }
             }
+            if (piezas != null)
+            {
+                opciones.Add(new OpcionReparacion(TipoReparacion.Piezas, config.TextoOpcionPiezas, 0f, 0, true));
+            }
             return opciones;
         }
 
@@ -274,6 +295,9 @@ namespace MechaCyberpunk.Mecha.Taller
                 case TipoReparacion.ConLoQueTienes:
                     if (!cartera.IntentarPagar(opcion.Costo, MotivoDinero.Reparacion)) return false;
                     persistente.RepararPuntos(opcion.Puntos);
+                    return true;
+                case TipoReparacion.Piezas:
+                    PiezasPedidas?.Invoke();
                     return true;
                 default:
                     return false;
