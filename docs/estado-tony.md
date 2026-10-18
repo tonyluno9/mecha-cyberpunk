@@ -268,3 +268,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - Sucio sin commit a propósito (lo tocó un batch de pruebas, no es de T-159): Mecha/Materiales/Cabina_AlarmaApagada.mat, Cabina_Grietas.mat y ProjectSettings.asset (revisar si solo es SENTIS_ANALYTICS_ENABLED y descartar con git restore).
 - UNITY SIGUE ABIERTO: el batch de PlayMode de Economia (PID 14960, lanzado por el subagente que detuve) sigue corriendo; el cierre forzado fue negado por permisos. Ciérralo tú o espera a que termine; luego borra Temp/UnityLockfile si queda.
 - Sigue: retomar T-159, luego T-160, T-161, T-162; al cerrar el bloque 2, suite completa y merge a main con push.
+
+## Después de T-159 (2026-10-17)
+- T-159 hecha (sin revisar), integrada en tony/fase-7. EditMode 811/811, PlayMode Economia 19/19, Progresion 97/98 (RecorridoPrologoPruebas, frame lento intermitente; pasa sola). Unity cerrado. Sigue T-160.

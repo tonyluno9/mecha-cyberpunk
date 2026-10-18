@@ -449,3 +449,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): EditMode 803/803 (10 nuevas de BalanceLigasPruebas, reglas a a j sobre los assets reales; BalanceEconomiaPruebas en verde); PlayMode Economia 19/19 y Pelea 60/60. Creadores corridos dos veces: md5 igual de 11 assets. Prueba negativa hecha: jefe de la liga 2 a $1,500 hace fallar la regla b con mensaje que lo nombra; revertido.
 - Para ti (sensación): con la tabla en mano, ¿el jefe de la liga 1 ($2,000, más de 3 veces la casera) se siente como progreso? ¿Momios de 1.0 a 2.5 hacen tentador apostar fuerte contra jefes? Se ajusta en CalendarioLigas_Base.asset y DatosApuestaPelea_*; la prueba avisa si rompes una regla.
 - Decisiones: D-tony-110 en decisiones-pendientes-tony.md.
+
+### T-159 Retar en las ligas desde el mostrador
+- Verificado automáticamente: compilar OK; EditMode 811/811 (8 de ReglaCarteleraPruebas); PlayMode Economia 19/19 y Progresion 97/98 (6 de LigasMostradorPruebas en verde; falló RecorridoPrologoPruebas por un frame de 583 ms, intermitente: sola pasa 1/1). Creador de Pruebas_Economia idempotente (dos corridas, escena igual).
+- Para probar jugando: nada todavía (la pantalla para elegir es T-160; en Pruebas_Economia la tecla L vence al siguiente rival).
