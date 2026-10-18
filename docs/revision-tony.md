@@ -503,3 +503,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (por el implementador, sin verificador aparte): EditMode 824/824; PlayMode Progresion 109/109 cuatro veces seguidas; CambioEscenaPruebas 4/4 en 8 corridas aisladas. 3 pruebas nuevas de GuardadoClavesPendientesPruebas.
 - Ojo: la causa de CambioEscenaPruebas (tope de 600 frames ≈ 1 s en batch) está demostrada por la medición del margen, no por un fallo reproducido. Si vuelve a fallar, reabrir.
 - Para probar jugando: nada.
+
+### T-165 Cambiar los datos de un mecha en juego
+- Verificado automáticamente (por el implementador, sin verificador aparte): EditMode 829/829; PlayMode Combate 40/40, IA 35/35, Mecha 113/116 (3 omitidas como antes); suite PlayMode 776/789 (9 fallos conocidos de Alan en Arena). 5 pruebas nuevas de ReglaCambioDatos y 6 de CambiarDatosMechaPruebas con el prefab real.
+- Para probar jugando: nada todavía (las piezas que cambian los datos llegan en T-167).
+- Decisiones: D-tony-127.
