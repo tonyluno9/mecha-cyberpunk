@@ -516,3 +516,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 
 #### Para Alan
 - Existe `ValoresMecha` y `DatosMecha.CrearEnEjecucion(ValoresMecha)` en Core/Datos, por si algún día creas mechas del mundo por código. No hace falta hacer nada; viaja con tony/fase-7.
+
+### T-166 Piezas como datos
+- Verificado automáticamente (por el implementador, sin verificador aparte): compilar OK; EditMode 849/849 (15 nuevas: ReglaEstadisticasPiezasPruebas y PiezasAssetsPruebas); PlayMode por área 776/789 (8 fallos conocidos de Arena, 4 omitidas). Creadores idempotentes en los dos órdenes (md5 igual de Mecha/Datos/Piezas, Economia/Datos y ServiciosEconomia.prefab).
+- Para ti (sensación): la tabla de bonos y precios de las 85 piezas (fuego: golpe más seguido; militar: golpe más pesado). Se ajusta en CreadorPiezas.cs; las pruebas avisan si rompes una regla.
+- Decisiones: D-tony-129.

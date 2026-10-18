@@ -321,3 +321,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-163 (2026-10-18)
 - T-163 hecha (sin revisar), integrada en tony/fase-7. Sigue T-166.
+
+## Después de T-166 (2026-10-18)
+- T-166 hecha (sin revisar), integrada en tony/fase-7. Sigue T-167.
