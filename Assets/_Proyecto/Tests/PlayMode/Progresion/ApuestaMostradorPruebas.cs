@@ -80,6 +80,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private EntradaArena entrada;
         private DirectorPelea director;
         private PantallaApuesta pantalla;
+        private PantallaCartelera cartelera;
         private VidaMecha vidaMecha;
         private ICartera cartera;
         private ServicioInventario inventario;
@@ -160,6 +161,7 @@ namespace MechaCyberpunk.Tests.Progresion
             entrada = mostrador.GetComponent<EntradaArena>();
             director = mostrador.GetComponentInChildren<DirectorPelea>(true);
             pantalla = mostrador.GetComponentInChildren<PantallaApuesta>(true);
+            cartelera = mostrador.GetComponentInChildren<PantallaCartelera>(true);
             Assert.IsNotNull(director, "El mostrador trae el flujo casero");
             Assert.IsNotNull(pantalla, "El mostrador trae la pantalla de apuesta");
             vidaMecha = montaje.GetComponent<VidaMecha>();
@@ -201,11 +203,16 @@ namespace MechaCyberpunk.Tests.Progresion
             }
         }
 
-        // E en el mostrador: abre la pantalla de apuesta.
+        // E en el mostrador: abre la cartelera; ↓ elige la pelea casera y Enter abre la pantalla de apuesta (T-160).
         private IEnumerator AbrirPantalla()
         {
             Assert.IsTrue(mostrador.PuedeUsar, "El mostrador ofrece la pelea: " + mostrador.Texto);
             yield return Tecla(teclado.eKey);
+            Assert.IsTrue(cartelera.Visible, "E abre la cartelera");
+            yield return Tecla(teclado.downArrowKey);
+            StringAssert.StartsWith("PELEA CASERA", cartelera.TextoBaseFila(cartelera.IndiceElegido), "↓ elige la pelea casera");
+            yield return Tecla(teclado.enterKey);
+            Assert.IsFalse(cartelera.Visible, "Enter cierra la cartelera");
             Assert.IsTrue(pantalla.Visible, "E abre la pantalla de apuesta");
             Assert.IsTrue(mostrador.ApuestaAbierta, "El mostrador la tiene abierta");
             Assert.IsFalse(entrada.EnCurso, "Todavía no se pelea");
@@ -447,7 +454,7 @@ namespace MechaCyberpunk.Tests.Progresion
             // La E que abre sigue pulsada cuando llega Esc: al cerrar no debe reabrirse.
             Press(teclado.eKey);
             yield return null;
-            Assert.IsTrue(pantalla.Visible, "E abre la pantalla");
+            Assert.IsTrue(cartelera.Visible, "E abre la cartelera");
             Assert.IsFalse(controlador.ControlActivo, "El jugador queda congelado mientras se ve");
             Press(teclado.escapeKey);
             yield return null;
@@ -455,7 +462,8 @@ namespace MechaCyberpunk.Tests.Progresion
             Release(teclado.eKey);
             yield return Cuadros(FramesDeEspera);
 
-            Assert.IsFalse(pantalla.Visible, "Esc cierra la pantalla");
+            Assert.IsFalse(cartelera.Visible, "Esc cierra la cartelera");
+            Assert.IsFalse(pantalla.Visible, "Y no abre la pantalla de apuesta");
             Assert.IsFalse(mostrador.ApuestaAbierta, "El mostrador ya no la tiene abierta");
             Assert.IsFalse(entrada.EnCurso, "No pelea");
             Assert.AreEqual(EstadoFlujoPelea.Preparando, director.Estado, "El flujo no arrancó");

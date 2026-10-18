@@ -271,3 +271,11 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-159 (2026-10-17)
 - T-159 hecha (sin revisar), integrada en tony/fase-7. EditMode 811/811, PlayMode Economia 19/19, Progresion 97/98 (RecorridoPrologoPruebas, frame lento intermitente; pasa sola). Unity cerrado. Sigue T-160.
+
+## Parada manual en T-160 (2026-10-17)
+- Tony detuvo el turno. T-159 está hecha (sin revisar) y mezclada en tony/fase-7 (merge 0401f84).
+- T-160 (pantalla de la cartelera) quedó A MEDIAS en tony/T-160-pantalla-cartelera: escrito pero SIN VERIFICAR, SIN cerrar. Hay SeleccionCartelera, FilaCartelera, PantallaCartelera, ConfigPantallaCartelera_Base, su prefab y creador, cambios en MostradorPeleas (+ prefab y creador), PantallaApuesta y pruebas ajustadas (Apuesta, EscenaEconomia, RecorridoEconomia), más SeleccionCarteleraPruebas y CarteleraMostradorPruebas. Hay capturas T-160-1.png y T-160-2.png sin revisar a ojo.
+- Falta: compilar; EditMode (SeleccionCarteleraPruebas); PlayMode de UI, Progresion y Economia (corrida de Progresion cortada a medias al detener); revisar capturas; comprobar idempotencia de los creadores; cerrar (archivo a hechas/, bitácora, revisión, decisiones-pendientes si hubo) y mezclar en tony/fase-7.
+- Se cerró a mano el Unity del batch de Progresion (PID 31412); se borró Temp/UnityLockfile y se descartó ProjectSettings.asset.
+- T-136 y T-137 siguen bloqueadas: Ciudad.unity en origin/main no trae DirectorPrologo.
+- Sigue: terminar T-160, luego T-161 y T-162; al cerrar el bloque 2, suite completa y merge de tony/fase-7 a main con push.

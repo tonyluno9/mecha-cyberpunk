@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc886a941d201d54a926637c179d9257, type: 3}
+  m_Name: ConfigPantallaCartelera_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaCartelera
+  colorElegido: {r: 0, g: 1, b: 0.9, a: 1}
+  colorNormal: {r: 0.8, g: 0.85, b: 0.95, a: 1}
+  colorJefe: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorBloqueada: {r: 0.35, g: 0.38, b: 0.45, a: 1}
+  colorEncabezado: {r: 1, g: 0.2, b: 0.7, a: 1}
+  colorFondo: {r: 0.02, g: 0.02, b: 0.06, a: 0.85}
+  tamanoEncabezado: 48
+  tamanoFilas: 44
+  tamanoAyuda: 28
+  formatoEncabezado: "PELEAS DEL CLANDESTINO \xB7 LIGA {0} \xB7 CAMPEONES {1}/{2}"
+  formatoSiguiente: "LIGA {0} {1}/{2} \xB7 {3} \xB7 {4}"
+  formatoJefe: "JEFE DE LA LIGA {0} \xB7 {1} \xB7 {2}"
+  formatoRevancha: "REVANCHA \xB7 {0} \xB7 {1}"
+  formatoCasera: "PELEA CASERA \xB7 {0} \xB7 {1}"
+  formatoBloqueada: "LIGA {0} \xB7 BLOQUEADA \xB7 VENCE A {1}"
+  textoAyuda: "\u2191 \u2193 ELEGIR \xB7 ENTER PELEAR \xB7 ESC SALIR"
+  formatoElegido: '> {0}'
