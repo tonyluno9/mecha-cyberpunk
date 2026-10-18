@@ -28,7 +28,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Economia.unity";
         private const string RutaBrazo = "Assets/_Proyecto/Economia/Datos/DatosObjeto_BrazoChatarra.asset";
         private const string RutaKit = "Assets/_Proyecto/Economia/Datos/DatosObjeto_KitReparacion.asset";
-        private const string TextoOfrecido = "E · Pelea casera · premio $600";
+        private const string TextoOfrecido = "E · Peleas del clandestino"; // T-160: en Libre el mostrador ofrece la cartelera
         private const int AbonoDePrueba = 500;
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
