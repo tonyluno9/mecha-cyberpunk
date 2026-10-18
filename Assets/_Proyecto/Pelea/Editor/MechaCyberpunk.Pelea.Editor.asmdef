@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Pelea.Editor",
     "rootNamespace": "MechaCyberpunk.Pelea.Editor",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Pelea", "MechaCyberpunk.Economia", "Unity.InputSystem", "UnityEngine.UI"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Pelea", "MechaCyberpunk.Economia", "MechaCyberpunk.Economia.Editor", "Unity.InputSystem", "UnityEngine.UI"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

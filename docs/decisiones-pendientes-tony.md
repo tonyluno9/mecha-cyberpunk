@@ -447,3 +447,6 @@ Propuesta: la furia mide la vida del propio jefe (no la del jugador) y entra una
 
 ### D-tony-109 Detalles de T-157
 Propuesta: el creador solo escribe valores al crear un asset; si Tony cambia alias o números en los assets, volver a correr el creador no los pisa. `DatosMecha.nombre` es el alias con mayúscula inicial. Los prefabs son variantes de RivalBasico (que ya no lleva PiedadRival) y los jefes añaden FuriaJefe con ConfigFuriaJefe_Base. Aceleración, frenado, giro, recarga y bloqueo quedan en los valores por defecto de DatosMecha. Sin impacto en el diseño.
+
+### D-tony-110 Detalles de T-158
+Propuesta: los creadores solo escriben al crear un asset; si Tony ajusta premios o momios, volver a correrlos no los pisa. El calendario es una lista de filas (FilaLiga) con los carteles; `Cartel(liga, indice)` y `RivalesEn` son 1-based. El jefe es el último cartel de la fila (regla a lo exige). Perder paga lo mismo para todos los rivales de una liga. Regla d compara el momio mínimo de los rivales normales de cada liga contra el máximo de la anterior. Pelea.Editor referencia Economia.Editor para reutilizar las rutas de las apuestas. Sin impacto en el diseño.
