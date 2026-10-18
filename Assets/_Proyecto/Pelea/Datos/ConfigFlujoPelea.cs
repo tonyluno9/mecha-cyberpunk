@@ -20,6 +20,10 @@ namespace MechaCyberpunk.Pelea.Datos
         [SerializeField] private string textoGanaste = "GANASTE";
         [SerializeField] private string textoPerdiste = "PERDISTE";
         [SerializeField] private string textoRevancha = "R: revancha";
+        [Tooltip("Letrero de la pelea de jefe, de la presentación a '¡PELEA!' (T-161).")]
+        [SerializeField] private string textoJefe = "PELEA DE JEFE";
+        [Tooltip("Letrero al ganar una pelea de jefe (T-161).")]
+        [SerializeField] private string textoVencisteCampeon = "¡VENCISTE AL CAMPEÓN!";
 
         [Header("Pantalla")]
         [Tooltip("Tamaño de la letra del texto grande (puntos).")]
@@ -28,6 +32,8 @@ namespace MechaCyberpunk.Pelea.Datos
         [Min(1)] [SerializeField] private int tamanoLetraRevancha = 80;
         [Tooltip("Tamaño de la letra de la línea del premio (puntos).")]
         [Min(1)] [SerializeField] private int tamanoLetraPremio = 160;
+        [Tooltip("Tamaño de la letra del letrero de jefe (puntos).")]
+        [Min(1)] [SerializeField] private int tamanoLetraJefe = 130;
         [Header("Pantalla de respaldo (si la arena no da una válida)")]
         [Tooltip("Ancho (x) y alto (y) de la zona útil de respaldo (m).")]
         [SerializeField] private Vector2 tamanoPantallaRespaldo = new Vector2(8f, 4.5f);
@@ -41,6 +47,8 @@ namespace MechaCyberpunk.Pelea.Datos
         [SerializeField] private Color colorGanaste = new Color(0.2f, 1f, 0.4f);
         [SerializeField] private Color colorPerdiste = new Color(1f, 0.15f, 0.15f);
         [SerializeField] private Color colorPremio = new Color(1f, 0.85f, 0.2f);
+        [Tooltip("Color del letrero de la pelea de jefe.")]
+        [SerializeField] private Color colorJefe = new Color(1f, 0.55f, 0.1f);
 
         public float SegundosPorNumero => segundosPorNumero;
         public float PausaDespuesKO => pausaDespuesKO;
@@ -50,6 +58,10 @@ namespace MechaCyberpunk.Pelea.Datos
         public string TextoGanaste => textoGanaste;
         public string TextoPerdiste => textoPerdiste;
         public string TextoRevancha => textoRevancha;
+        public string TextoJefe => textoJefe;
+        public string TextoVencisteCampeon => textoVencisteCampeon;
+        public int TamanoLetraJefe => tamanoLetraJefe;
+        public Color ColorJefe => colorJefe;
         public int TamanoLetra => tamanoLetra;
         public int TamanoLetraRevancha => tamanoLetraRevancha;
         public int TamanoLetraPremio => tamanoLetraPremio;

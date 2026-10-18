@@ -11,7 +11,7 @@ namespace MechaCyberpunk.Mecha.Editor
 {
     /// <summary>
     /// Arma lo de T-148 en MechaJugador.prefab (y por herencia en MechaEstacionado.prefab): UsoKitReparacion con su config y la pantalla
-    /// de kits a la izquierda de la de vida (espejo de la de calor). Idempotente: rehace la pantalla cada vez.
+    /// de kits a la izquierda de la de vida (espejo de la de calor). Idempotente: una segunda corrida no cambia el prefab.
     /// Batchmode: -executeMethod MechaCyberpunk.Mecha.Editor.CreadorKitReparacion.Crear
     /// </summary>
     public static class CreadorKitReparacion
@@ -54,24 +54,32 @@ namespace MechaCyberpunk.Mecha.Editor
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
             try
             {
+                bool cambio = false;
                 UsoKitReparacion uso = raiz.GetComponent<UsoKitReparacion>();
                 if (uso == null)
                 {
                     uso = raiz.AddComponent<UsoKitReparacion>();
+                    cambio = true;
                 }
                 SerializedObject soUso = new SerializedObject(uso);
                 soUso.FindProperty("config").objectReferenceValue = configMecha;
                 soUso.FindProperty("objetoKit").objectReferenceValue = kit;
-                soUso.ApplyModifiedPropertiesWithoutUndo();
-
-                Transform cabina = raiz.transform.Find("Sacudida/Cabina");
-                Transform vieja = cabina.Find(NombrePantalla);
-                if (vieja != null)
+                if (soUso.ApplyModifiedPropertiesWithoutUndo())
                 {
-                    Object.DestroyImmediate(vieja.gameObject);
+                    cambio = true;
                 }
-                ArmarPantalla(cabina, uso, raiz.GetComponent<EncendidoMecha>(), configPantalla);
-                PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+
+                // Idempotente: si la pantalla ya existe no se rehace (rehacerla cambia los fileID y ensucia el prefab).
+                Transform cabina = raiz.transform.Find("Sacudida/Cabina");
+                if (cabina.Find(NombrePantalla) == null)
+                {
+                    ArmarPantalla(cabina, uso, raiz.GetComponent<EncendidoMecha>(), configPantalla);
+                    cambio = true;
+                }
+                if (cambio)
+                {
+                    PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
+                }
             }
             finally
             {

@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5745519566318862530
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2889574523815293284, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: m_Name
+      value: RivalLiga1_5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5759667083090437754, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: datos
+      value: 
+      objectReference: {fileID: 11400000, guid: e013663467ee8be40b60939c97b60039, type: 2}
+    - target: {fileID: 7648639858014300197, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: datos
+      value: 
+      objectReference: {fileID: 11400000, guid: 7eace387583bab44d85185bea32d542e, type: 2}
+    - target: {fileID: 9067806622296367316, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b2809a4c6554c5644a309790a4cb772d, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2562261205238806116}
+  m_SourcePrefab: {fileID: 100100000, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+--- !u!1 &35736176446820618 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+  m_PrefabInstance: {fileID: 5745519566318862530}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2562261205238806116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35736176446820618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 109a170d0f078f64d84715e248e1461f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Rival.FuriaJefe
+  config: {fileID: 11400000, guid: 826badd3d62569744bd5004b595124b1, type: 2}

@@ -432,3 +432,27 @@ Hoy no hay límite. (b) ¿La casera sigue pagando $600 cada vez, o baja después
 
 ### D-tony-104 Detalles de T-152
 Propuesta: la línea de éxito de playmode-por-area imprime "(límite N s)"; el doble de IProgresoLigas ignora un campeón fuera de orden como si fuera revancha. Sin impacto en el diseño.
+
+### D-tony-105 Detalles de T-153
+Propuesta: el creador del kit ya no rehace la pantalla si existe (para cambiarla hay que borrarla del prefab antes); RaicesDePrueba es el helper para todo teardown. La fragilidad no se reprodujo, por eso el cierre es por defensa y no por causa demostrada. Sin impacto en el diseño.
+
+### D-tony-106 Detalles de T-154
+Propuesta: `rivalesPorLiga` en DatosLigas es un entero común a todas las ligas; `ModeloLigas.Poner` valida rangos pero no que campeones concuerde con la liga; sin asset de datos el servicio cae a 4x5 con nombres por defecto. Sin impacto en el diseño.
+
+### D-tony-107 Detalles de T-155
+Propuesta: con cartel, el cartel manda entero: rival, premio, apuesta y presentador (un cartel sin apuesta o sin presentador no tiene apuesta ni presentación; no cae a lo del prefab). `QuitarCartel` devuelve false si no había cartel. `PrepararCartel` no crea al rival: nace al empezar o al anunciar la apuesta. `{liga}` queda vacío sin servicio o con liga 0. El premio con fracción se redondea al entero (`Mathf.RoundToInt`). Sin impacto en el diseño.
+
+### D-tony-108 Detalles de T-156
+Propuesta: la furia mide la vida del propio jefe (no la del jugador) y entra una sola vez por pelea; el color pulsa entre el color base del material y `colorFuria`, y el parpadeo blanco de daño tiene prioridad mientras dura. El jefe de prueba (150 de vida, 12 de daño) tiene espera fija de 3 s, preparación 0.3 s y recarga 0.2 s para que la prueba mida la espera sin azar (con las esperas aleatorias normales, 0.6 de multiplicador no garantiza 30 % porque preparación y recarga no se acortan). Sin impacto en el diseño.
+
+### D-tony-109 Detalles de T-157
+Propuesta: el creador solo escribe valores al crear un asset; si Tony cambia alias o números en los assets, volver a correr el creador no los pisa. `DatosMecha.nombre` es el alias con mayúscula inicial. Los prefabs son variantes de RivalBasico (que ya no lleva PiedadRival) y los jefes añaden FuriaJefe con ConfigFuriaJefe_Base. Aceleración, frenado, giro, recarga y bloqueo quedan en los valores por defecto de DatosMecha. Sin impacto en el diseño.
+
+### D-tony-110 Detalles de T-158
+Propuesta: los creadores solo escriben al crear un asset; si Tony ajusta premios o momios, volver a correrlos no los pisa. El calendario es una lista de filas (FilaLiga) con los carteles; `Cartel(liga, indice)` y `RivalesEn` son 1-based. El jefe es el último cartel de la fila (regla a lo exige). Perder paga lo mismo para todos los rivales de una liga. Regla d compara el momio mínimo de los rivales normales de cada liga contra el máximo de la anterior. Pelea.Editor referencia Economia.Editor para reutilizar las rutas de las apuestas. Sin impacto en el diseño.
+
+### D-tony-111 Detalles de T-161
+Propuesta: el letrero de jefe es un `Text` aparte de la pantalla de la arena (`textoJefe`, opcional); en la presentación y el conteo ocupa la franja 0.57-0.74 del alto (sobre la cabeza del rival, bajo la línea del presentador) y en el resultado la franja 0.35-0.5 (bajo "GANASTE"); las dos franjas son campos de `PantallaPelea`. Se enciende con `EventosPelea.PeleaPresentada` (si `Info.EsJefe`), se apaga con "¡PELEA!" y en el resultado solo celebra si ganó el jugador. El aviso de liga del HUD usa dos `Text` (la segunda línea se apaga en la última liga), vive en el centro arriba bajo el objetivo, y su temporizador solo corre mientras el jugador está a pie (en carro o mecha el aviso espera y los 5 s empiezan al bajar). Los textos, color, tamaños y segundos están en `ConfigHudAPie`. Sin impacto en el diseño.
+
+### D-tony-112 Atajos del recorrido de las ligas (T-162)
+Propuesta: RecorridoLigasPruebas fija $3000 iniciales por código, calcula las ganancias netas (premio más apuesta por momio, como T-159), repara en el banco antes de cada pelea que lo necesita, pelea al jefe y a EL CACIQUE sin apostar y comprueba la furia bajando al rival a umbral menos 0.1 con RecibirDanio. Todos los atajos están anotados en la prueba.

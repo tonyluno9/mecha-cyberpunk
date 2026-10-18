@@ -10,6 +10,7 @@ using MechaCyberpunk.Pelea.Flujo;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Prologo;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -59,9 +60,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private VidaMecha vidaMecha;
         private readonly List<string> errores = new List<string>();
         private readonly List<ResultadoPelea> terminadas = new List<ResultadoPelea>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             base.Setup();
             Registros.LimpiarTodos();
             EventosPelea.LimpiarSuscriptores();
@@ -91,10 +95,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }

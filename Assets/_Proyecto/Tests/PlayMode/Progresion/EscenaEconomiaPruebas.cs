@@ -28,7 +28,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Economia.unity";
         private const string RutaBrazo = "Assets/_Proyecto/Economia/Datos/DatosObjeto_BrazoChatarra.asset";
         private const string RutaKit = "Assets/_Proyecto/Economia/Datos/DatosObjeto_KitReparacion.asset";
-        private const string TextoOfrecido = "E · Pelea casera · premio $600";
+        private const string TextoOfrecido = "E · Peleas del clandestino"; // T-160: en Libre el mostrador ofrece la cartelera
         private const int AbonoDePrueba = 500;
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
@@ -43,9 +43,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private Mouse raton;
         private string carpeta;
         private readonly List<string> errores = new List<string>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             InputSystem.DisableAllEnabledActions();
             base.Setup();
             Registros.LimpiarTodos();
@@ -76,10 +79,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }

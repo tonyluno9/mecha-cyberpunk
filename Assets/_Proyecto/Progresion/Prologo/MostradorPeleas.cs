@@ -1,7 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.IA.Rival;
+using MechaCyberpunk.Pelea.Datos;
 using MechaCyberpunk.Pelea.Flujo;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
@@ -33,19 +37,99 @@ namespace MechaCyberpunk.Progresion.Prologo
         [Tooltip("Opcional: pantalla de apuesta (PantallaApuesta, hija de este objeto). Sin ella, E pelea directo.")]
         [SerializeField] private PantallaApuesta pantallaApuesta;
 
+        [Tooltip("Opcional (T-159): el calendario de las ligas. Sin él, el mostrador solo ofrece la pelea casera.")]
+        [SerializeField] private CalendarioLigas calendario;
+        [SerializeField] private string textoSinAlias = "???";
+
+        [Tooltip("Opcional (T-160): la cartelera (PantallaCartelera, hija de este objeto). Con ella y con ligas, E abre la cartelera en vez de la apuesta.")]
+        [SerializeField] private PantallaCartelera pantallaCartelera;
+        [Tooltip("Alias del rival de la pelea casera, para su fila de la cartelera (el creador lo copia del rival del flujo).")]
+        [SerializeField] private string aliasCasera = "";
+        [SerializeField] private string textoCartelera = "Peleas del clandestino";
+
+        private OpcionCartelera opcionActual = OpcionCasera;
         private bool registrado;
         private bool apuestaAbierta;
+        private bool carteleraAbierta;
+        private List<OpcionCartelera> opcionesCartelera;
         private ControladorAPie controlCongelado;
 
         /// <summary>True mientras la pantalla de apuesta está abierta.</summary>
         public bool ApuestaAbierta => apuestaAbierta;
+
+        /// <summary>True mientras la pantalla de la cartelera está abierta.</summary>
+        public bool CarteleraAbierta => carteleraAbierta;
+
+        private static OpcionCartelera OpcionCasera => new OpcionCartelera(TipoOpcionCartelera.Casera, 0, 0, false, 0);
+
+        /// <summary>La pelea que se peleó la última vez (o la que está en curso).</summary>
+        public OpcionCartelera UltimaOpcion { get; private set; } = OpcionCasera;
+
+        /// <summary>
+        /// Las peleas que ofrece el mostrador. Con calendario, ligas y la historia en Libre (o sin historia): siguiente, revanchas,
+        /// casera y aviso de la liga que sigue. Si no, solo la casera.
+        /// </summary>
+        public IReadOnlyList<OpcionCartelera> Opciones
+        {
+            get
+            {
+                ServicioLigas ligas = Registro<ServicioLigas>.Actual;
+                int premioCasera = premio != null ? premio.PremioGanar : 0;
+                if (!HayLigas)
+                {
+                    return new List<OpcionCartelera> { new OpcionCartelera(TipoOpcionCartelera.Casera, 0, 0, false, premioCasera) };
+                }
+                return ReglaCartelera.Armar(ligas.CantidadLigas, ligas.RivalesPorLiga, ligas.LigaActual, ligas.Siguiente,
+                    FraccionRevancha(ligas), premioCasera, (liga, indice) => PremioDelCartel(liga, indice));
+            }
+        }
+
+        // Las ligas se ofrecen con calendario, servicio y la historia en Libre (o sin historia).
+        private bool HayLigas
+        {
+            get
+            {
+                IHistoria historia = Registro<IHistoria>.Actual;
+                return calendario != null && Registro<ServicioLigas>.Actual != null && (historia == null || historia.Etapa == EtapaPrologo.Libre);
+            }
+        }
+
+        private bool UsaCartelera => pantallaCartelera != null && HayLigas;
+
+        private static float FraccionRevancha(ServicioLigas ligas) => ligas.Datos != null ? ligas.Datos.FraccionPremioRevancha : 0.5f;
+
+        private int PremioDelCartel(int liga, int indice)
+        {
+            CartelPelea cartel = calendario.Cartel(liga, indice);
+            return cartel != null ? cartel.premioGanar : 0;
+        }
+
+        /// <summary>Alias del rival de la opción (del DatosRival del prefab de su cartel); "???" si no se sabe. En el aviso, el jefe que cierra la liga actual.</summary>
+        public string AliasDe(OpcionCartelera opcion)
+        {
+            if (calendario == null)
+            {
+                return textoSinAlias;
+            }
+            int liga = opcion.Tipo == TipoOpcionCartelera.Bloqueada ? opcion.Liga - 1 : opcion.Liga;
+            if (opcion.Tipo == TipoOpcionCartelera.Casera)
+            {
+                return textoSinAlias;
+            }
+            CartelPelea cartel = calendario.Cartel(liga, opcion.Indice);
+            RivalBasico rival = cartel != null && cartel.prefabRival != null ? cartel.prefabRival.GetComponentInChildren<RivalBasico>(true) : null;
+            return rival != null && rival.Datos != null ? rival.Datos.Alias : textoSinAlias;
+        }
+
+        /// <summary>Premio de ganar que se muestra de la opción (en la revancha, con la fracción).</summary>
+        public int PremioDe(OpcionCartelera opcion) => opcion.Premio;
 
         /// <summary>Se avisa al terminar la pelea y la salida, con su resultado (para el director de la demo).</summary>
         public event Action<ResultadoPelea> PeleaTerminada;
 
         public Vector3 Posicion => transform.position;
 
-        public bool PuedeUsar => !apuestaAbierta && Decidir(out _);
+        public bool PuedeUsar => !apuestaAbierta && !carteleraAbierta && Decidir(out _);
 
         public string Texto
         {
@@ -84,15 +168,28 @@ namespace MechaCyberpunk.Progresion.Prologo
                 Registro<IInteractuable>.Quitar(this);
                 registrado = false;
             }
+            if (carteleraAbierta)
+            {
+                CerrarCartelera(true);
+            }
             if (apuestaAbierta)
             {
                 CerrarApuesta(true);
                 flujo.CancelarApuesta();
+                QuitarCartelDeLiga();
             }
         }
 
         private void AlTerminarEntrada(ResultadoPelea resultado)
         {
+            OpcionCartelera peleada = opcionActual;
+            UltimaOpcion = peleada;
+            if (peleada.Tipo == TipoOpcionCartelera.Siguiente && resultado.Ganador == LadoPelea.Jugador)
+            {
+                Registro<ServicioLigas>.Actual?.RegistrarVictoria(peleada.Liga, peleada.Indice);
+            }
+            flujo.QuitarCartel();
+            opcionActual = OpcionCasera;
             PeleaTerminada?.Invoke(resultado);
         }
 
@@ -102,9 +199,115 @@ namespace MechaCyberpunk.Progresion.Prologo
             {
                 return;
             }
+            if (UsaCartelera)
+            {
+                AbrirCartelera();
+                return;
+            }
+            opcionActual = OpcionCasera;
+            UltimaOpcion = opcionActual;
             if (!AbrirApuesta())
             {
                 entrada.Empezar(flujo);
+            }
+        }
+
+        /// <summary>
+        /// Reta la pelea elegida de <see cref="Opciones"/> (T-159): solo si el mostrador se puede usar y la opción está en la lista y
+        /// no es el aviso de la liga cerrada. Arma el cartel del calendario y sigue el camino de siempre (apuesta o pelea directa).
+        /// Si algo falla, quita el cartel y no cobra nada.
+        /// </summary>
+        public bool Retar(OpcionCartelera opcion)
+        {
+            if (!PuedeUsar || opcion.Tipo == TipoOpcionCartelera.Bloqueada || !Opciones.Contains(opcion))
+            {
+                return false;
+            }
+            if (opcion.Tipo == TipoOpcionCartelera.Casera)
+            {
+                flujo.QuitarCartel();
+            }
+            else
+            {
+                ServicioLigas ligas = Registro<ServicioLigas>.Actual;
+                CartelPelea cartel = calendario.Cartel(opcion.Liga, opcion.Indice);
+                float fraccion = opcion.Tipo == TipoOpcionCartelera.Revancha ? FraccionRevancha(ligas) : 1f;
+                if (cartel == null || !flujo.PrepararCartel(cartel, fraccion))
+                {
+                    flujo.QuitarCartel();
+                    return false;
+                }
+            }
+            opcionActual = opcion;
+            UltimaOpcion = opcion;
+            if (AbrirApuesta() || entrada.Empezar(flujo))
+            {
+                return true;
+            }
+            flujo.QuitarCartel();
+            opcionActual = OpcionCasera;
+            return false;
+        }
+
+        // T-160: la cartelera congela el control como la apuesta; Enter reta la opción elegida y Esc cierra sin cobrar.
+        private void AbrirCartelera()
+        {
+            ServicioLigas ligas = Registro<ServicioLigas>.Actual;
+            opcionesCartelera = new List<OpcionCartelera>(Opciones);
+            var filas = new List<FilaCartelera>(opcionesCartelera.Count);
+            foreach (OpcionCartelera opcion in opcionesCartelera)
+            {
+                bool casera = opcion.Tipo == TipoOpcionCartelera.Casera;
+                string alias = casera ? (string.IsNullOrEmpty(aliasCasera) ? textoSinAlias : aliasCasera) : AliasDe(opcion);
+                filas.Add(pantallaCartelera.ArmarFila(opcion, ligas.NombreLiga(opcion.Liga), alias, ligas.RivalesPorLiga));
+            }
+            string encabezado = pantallaCartelera.TextoEncabezado(ligas.NombreLiga(ligas.LigaActual), ligas.CampeonesVencidos, ligas.CantidadLigas);
+            carteleraAbierta = true;
+            pantallaCartelera.Mostrar(encabezado, filas, AlElegirEnCartelera, AlSalirDeLaCartelera);
+
+            JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;
+            ControladorAPie controlador = jugador != null ? jugador.GetComponent<ControladorAPie>() : null;
+            if (controlador != null && controlador.ControlActivo)
+            {
+                controlador.ActivarControl(false);
+                controlCongelado = controlador;
+            }
+        }
+
+        private void AlElegirEnCartelera(int indice)
+        {
+            OpcionCartelera elegida = opcionesCartelera[indice];
+            CerrarCartelera(true, false);
+            if (!Retar(elegida))
+            {
+                DevolverControlDespues();
+                return;
+            }
+            if (!apuestaAbierta)
+            {
+                // Peleó directo: subir al mecha apaga el control y bajar lo devuelve.
+                controlCongelado = null;
+            }
+        }
+
+        private void AlSalirDeLaCartelera() => CerrarCartelera(false);
+
+        // inmediato = devolver ya el control; si no, un cuadro después (la E que cierra es la que abre, D-tony-67).
+        private void CerrarCartelera(bool inmediato, bool devolverControl = true)
+        {
+            pantallaCartelera.Ocultar();
+            carteleraAbierta = false;
+            if (!devolverControl)
+            {
+                return;
+            }
+            if (inmediato)
+            {
+                DevolverControl();
+            }
+            else
+            {
+                DevolverControlDespues();
             }
         }
 
@@ -118,7 +321,7 @@ namespace MechaCyberpunk.Progresion.Prologo
                 return false;
             }
             apuestaAbierta = true;
-            int premioGanar = premio != null ? premio.PremioGanar : 0;
+            int premioGanar = opcionActual.Tipo == TipoOpcionCartelera.Casera ? (premio != null ? premio.PremioGanar : 0) : opcionActual.Premio;
             pantallaApuesta.Mostrar(apuestas.Rival, premioGanar, apuestas.Momio, datos.Montos, datos.PiezaEnJuego,
                 datos.ApuestaMinimaPorPieza, apuestas.PuedeApostar, AlPelear, AlSalirDeLaApuesta);
 
@@ -150,6 +353,7 @@ namespace MechaCyberpunk.Progresion.Prologo
             }
             // No empezó (por ejemplo, sin mecha): se devuelve lo apostado y el control.
             flujo.CancelarApuesta();
+            QuitarCartelDeLiga();
             DevolverControlDespues();
         }
 
@@ -157,6 +361,13 @@ namespace MechaCyberpunk.Progresion.Prologo
         {
             CerrarApuesta(false);
             flujo.CancelarApuesta();
+            QuitarCartelDeLiga();
+        }
+
+        private void QuitarCartelDeLiga()
+        {
+            flujo.QuitarCartel();
+            opcionActual = OpcionCasera;
         }
 
         // La E que cierra es la misma que abre: el control vuelve un cuadro después para que no reabra la pantalla (D-tony-67).
@@ -231,6 +442,11 @@ namespace MechaCyberpunk.Progresion.Prologo
                 return false;
             }
 
+            if (UsaCartelera)
+            {
+                texto = textoCartelera;
+                return true;
+            }
             texto = premio != null ? string.Format(textoOfrecer, FormatoDinero.Texto(premio.PremioGanar)) : textoSinPremio;
             return true;
         }

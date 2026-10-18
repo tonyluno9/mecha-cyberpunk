@@ -42,6 +42,7 @@ namespace MechaCyberpunk.UI.Peleas
         private Action<int> alPelear;
         private Action alSalir;
         private bool visible;
+        private int cuadroAbierta;
 
         public bool Visible => visible;
         /// <summary>Monto elegido ($); 0 es sin apuesta.</summary>
@@ -123,6 +124,7 @@ namespace MechaCyberpunk.UI.Peleas
 
             ConstruirFila();
             Pintar();
+            cuadroAbierta = Time.frameCount;
             visible = true;
             contenido.SetActive(true);
             izquierda.Enable();
@@ -158,7 +160,8 @@ namespace MechaCyberpunk.UI.Peleas
 
         private void Update()
         {
-            if (!visible)
+            // La tecla que abrió la pantalla en este cuadro (por ejemplo, el Enter de la cartelera) no cuenta como una de la pantalla.
+            if (!visible || Time.frameCount == cuadroAbierta)
             {
                 return;
             }

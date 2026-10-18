@@ -28,6 +28,9 @@ namespace MechaCyberpunk.UI.Editor
         private const float AlturaAvisoLlamado = 160f;
         private const float HuecoMira = 6f;
         private const int NumeroMarcasCalor = 3;
+        private const float AlturaAvisoLiga = 200f;
+        private const float AnchoAvisoLiga = 1200f;
+        private const float AltoAvisoLiga = 130f;
         private const float SeparacionMarcasCalor = 6f;
         private static readonly Color ColorSombra = new Color(0f, 0f, 0f, 0.8f);
         private static readonly Vector2 DesplazamientoSombra = new Vector2(1.5f, -1.5f);
@@ -237,6 +240,31 @@ namespace MechaCyberpunk.UI.Editor
                     so.FindProperty("grupoRenta").objectReferenceValue = grupoRenta.gameObject;
                     so.FindProperty("textoRenta").objectReferenceValue = textoRenta;
                     so.ApplyModifiedPropertiesWithoutUndo();
+                }
+                if (so.FindProperty("grupoAvisoLiga").objectReferenceValue == null)
+                {
+                    // T-161: aviso grande al centro arriba, bajo el objetivo; dos líneas.
+                    RectTransform grupoLiga = CrearGrupo("AvisoLiga", raiz.transform, new Vector2(0.5f, 1f),
+                        new Vector2(0f, -AlturaAvisoLiga), new Vector2(AnchoAvisoLiga, AltoAvisoLiga));
+                    Text primera = CrearTexto("Primera", grupoLiga, config, TextAnchor.UpperCenter);
+                    primera.rectTransform.anchorMin = new Vector2(0f, 0.5f);
+                    primera.rectTransform.anchorMax = Vector2.one;
+                    primera.rectTransform.offsetMin = Vector2.zero;
+                    primera.rectTransform.offsetMax = Vector2.zero;
+                    primera.fontSize = config.TamanoAvisoLiga;
+                    primera.color = config.ColorAvisoLiga;
+                    Text segunda = CrearTexto("Segunda", grupoLiga, config, TextAnchor.UpperCenter);
+                    segunda.rectTransform.anchorMin = Vector2.zero;
+                    segunda.rectTransform.anchorMax = new Vector2(1f, 0.5f);
+                    segunda.rectTransform.offsetMin = Vector2.zero;
+                    segunda.rectTransform.offsetMax = Vector2.zero;
+                    segunda.fontSize = config.TamanoAvisoLiga2;
+                    segunda.color = config.ColorAvisoLiga;
+                    so.FindProperty("grupoAvisoLiga").objectReferenceValue = grupoLiga.gameObject;
+                    so.FindProperty("textoAvisoLiga").objectReferenceValue = primera;
+                    so.FindProperty("textoAvisoLiga2").objectReferenceValue = segunda;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    grupoLiga.gameObject.SetActive(false);
                 }
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }

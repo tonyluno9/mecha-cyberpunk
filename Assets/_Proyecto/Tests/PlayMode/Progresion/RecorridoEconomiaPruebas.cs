@@ -92,6 +92,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private EntradaArena entrada;
         private DirectorPelea director;
         private PantallaApuesta pantallaApuesta;
+        private PantallaCartelera pantallaCartelera;
         private MostradorTienda mercado;
         private PantallaTienda pantallaTienda;
         private BancoTaller banco;
@@ -117,9 +118,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private readonly List<string> tramos = new List<string>();
         private readonly List<ResultadoPelea> terminadas = new List<ResultadoPelea>();
         private readonly List<(int, MotivoDinero)> movimientos = new List<(int, MotivoDinero)>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             InputSystem.DisableAllEnabledActions();
             base.Setup();
             Registros.LimpiarTodos();
@@ -160,10 +164,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }
@@ -271,6 +272,7 @@ namespace MechaCyberpunk.Tests.Progresion
             entrada = mostradorPeleas.GetComponent<EntradaArena>();
             director = mostradorPeleas.GetComponentInChildren<DirectorPelea>(true);
             pantallaApuesta = mostradorPeleas.GetComponentInChildren<PantallaApuesta>(true);
+            pantallaCartelera = mostradorPeleas.GetComponentInChildren<PantallaCartelera>(true);
             pantallaTienda = mercado.GetComponentInChildren<PantallaTienda>(true);
             pantallaBanco = banco.GetComponentInChildren<PantallaBancoTaller>(true);
             persistente = montaje.GetComponent<MechaPersistente>();
@@ -383,11 +385,16 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(ModoJugador.APie, jugador.Modo, "Volvió a pie");
         }
 
-        // E en el mostrador de peleas: abre la pantalla de apuesta y elige el monto con → (0 = sin apuesta, 1 = el primero...).
+        // E en el mostrador de peleas: abre la cartelera, ↓ y Enter eligen la casera (T-160), y en la pantalla de apuesta
+        // elige el monto con → (0 = sin apuesta, 1 = el primero...).
         private IEnumerator AbrirApuestaYElegir(int monto)
         {
             Assert.IsTrue(mostradorPeleas.PuedeUsar, "El mostrador ofrece la pelea: " + mostradorPeleas.Texto);
             yield return Tecla(teclado.eKey);
+            Assert.IsTrue(pantallaCartelera.Visible, "E abre la cartelera");
+            yield return Tecla(teclado.downArrowKey);
+            StringAssert.StartsWith("PELEA CASERA", pantallaCartelera.TextoBaseFila(pantallaCartelera.IndiceElegido), "↓ elige la pelea casera");
+            yield return Tecla(teclado.enterKey);
             Assert.IsTrue(pantallaApuesta.Visible, "E abre la pantalla de apuesta");
             int[] montos = reglasApuesta.Montos;
             int indice = Array.IndexOf(montos, monto) + 1;

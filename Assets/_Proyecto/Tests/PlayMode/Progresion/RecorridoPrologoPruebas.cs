@@ -173,9 +173,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private readonly List<string> atajos = new List<string>();
         private readonly List<EtapaPrologo> etapasVistas = new List<EtapaPrologo>();
         private readonly List<string> tramos = new List<string>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             // Otras pruebas (sin InputTestFixture) dejan acciones prendidas con un estado viejo: se apagan y se descarta su resolución.
             InputSystem.DisableAllEnabledActions();
             base.Setup();
@@ -227,10 +230,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }

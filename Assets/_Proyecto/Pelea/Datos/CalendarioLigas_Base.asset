@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185ccdc2782a4a54eaef0532543252d7, type: 3}
+  m_Name: CalendarioLigas_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Pelea::MechaCyberpunk.Pelea.Datos.CalendarioLigas
+  ligas:
+  - carteles:
+    - prefabRival: {fileID: 8480142738376923170, guid: b43670b90b1692a41a1a942598960699, type: 3}
+      premioGanar: 600
+      premioPerder: 0
+      apuesta: {fileID: 11400000, guid: 2c489c69fbdb14d41aecc440d9678697, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 1
+      esJefe: 0
+    - prefabRival: {fileID: 6766974321482286355, guid: 39c94554752afc24b9f524f501835e8d, type: 3}
+      premioGanar: 700
+      premioPerder: 0
+      apuesta: {fileID: 11400000, guid: 2c489c69fbdb14d41aecc440d9678697, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 1
+      esJefe: 0
+    - prefabRival: {fileID: 1635163265865299456, guid: 51ff5ccbc3da7154f86a9e682f8f43b4, type: 3}
+      premioGanar: 800
+      premioPerder: 0
+      apuesta: {fileID: 11400000, guid: 2c489c69fbdb14d41aecc440d9678697, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 1
+      esJefe: 0
+    - prefabRival: {fileID: 7498886573417927913, guid: dbce581c0f5ddb844a9643fb71db1b4e, type: 3}
+      premioGanar: 900
+      premioPerder: 0
+      apuesta: {fileID: 11400000, guid: 2c489c69fbdb14d41aecc440d9678697, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 1
+      esJefe: 0
+    - prefabRival: {fileID: 35736176446820618, guid: 8bd7fce549d98f64d97258b304385605, type: 3}
+      premioGanar: 2000
+      premioPerder: 0
+      apuesta: {fileID: 11400000, guid: 2ba83a8878998394b8a25b77acc7bca3, type: 2}
+      presentador: {fileID: 11400000, guid: f5bcea0daf9ad2f42a7d8829b6c02c4d, type: 2}
+      liga: 1
+      esJefe: 1
+  - carteles:
+    - prefabRival: {fileID: 3596117273839647667, guid: 5368e1c0268108244b9a01701c6c0692, type: 3}
+      premioGanar: 1000
+      premioPerder: 100
+      apuesta: {fileID: 11400000, guid: 522c4c6d4aa11f44daea16013cb87e1e, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 2
+      esJefe: 0
+    - prefabRival: {fileID: 4198431510011801778, guid: 9fac63c9bf8ba92429916fb507cb4568, type: 3}
+      premioGanar: 1100
+      premioPerder: 100
+      apuesta: {fileID: 11400000, guid: 522c4c6d4aa11f44daea16013cb87e1e, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 2
+      esJefe: 0
+    - prefabRival: {fileID: 6117560998192123125, guid: 80c999937bbf7584b9855e5a93b33ac6, type: 3}
+      premioGanar: 1200
+      premioPerder: 100
+      apuesta: {fileID: 11400000, guid: 522c4c6d4aa11f44daea16013cb87e1e, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 2
+      esJefe: 0
+    - prefabRival: {fileID: 4421024622111279000, guid: da492d46a1082b8429453b9d36eb3f28, type: 3}
+      premioGanar: 1300
+      premioPerder: 100
+      apuesta: {fileID: 11400000, guid: 522c4c6d4aa11f44daea16013cb87e1e, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 2
+      esJefe: 0
+    - prefabRival: {fileID: 6964867399366617942, guid: 6f912fe55d380be4881fe4cea91fdc4e, type: 3}
+      premioGanar: 3000
+      premioPerder: 100
+      apuesta: {fileID: 11400000, guid: 0f37206c12c99b24a99102e4bfb40773, type: 2}
+      presentador: {fileID: 11400000, guid: f5bcea0daf9ad2f42a7d8829b6c02c4d, type: 2}
+      liga: 2
+      esJefe: 1
+  - carteles:
+    - prefabRival: {fileID: 1013875694326193389, guid: 85328c3c39dd13c4b88e7a5e5ded7b16, type: 3}
+      premioGanar: 1500
+      premioPerder: 150
+      apuesta: {fileID: 11400000, guid: 82b41a7b113ae4a458b35f84fcedd557, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 3
+      esJefe: 0
+    - prefabRival: {fileID: 6664676902383345125, guid: d250e19de6172804da77a91a37965068, type: 3}
+      premioGanar: 1650
+      premioPerder: 150
+      apuesta: {fileID: 11400000, guid: 82b41a7b113ae4a458b35f84fcedd557, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 3
+      esJefe: 0
+    - prefabRival: {fileID: 2395356094919959780, guid: 72a53b62b6b50834ab00520f373e3541, type: 3}
+      premioGanar: 1800
+      premioPerder: 150
+      apuesta: {fileID: 11400000, guid: 82b41a7b113ae4a458b35f84fcedd557, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 3
+      esJefe: 0
+    - prefabRival: {fileID: 2242001504493293475, guid: 00cf38f2d6610214c8303a71461663d5, type: 3}
+      premioGanar: 1950
+      premioPerder: 150
+      apuesta: {fileID: 11400000, guid: 82b41a7b113ae4a458b35f84fcedd557, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 3
+      esJefe: 0
+    - prefabRival: {fileID: 8042070234518240731, guid: da7ffe9ee30dbce4289f20da8ed996f4, type: 3}
+      premioGanar: 4500
+      premioPerder: 150
+      apuesta: {fileID: 11400000, guid: 0f6fce388518a6345b417dc1f363bae5, type: 2}
+      presentador: {fileID: 11400000, guid: f5bcea0daf9ad2f42a7d8829b6c02c4d, type: 2}
+      liga: 3
+      esJefe: 1
+  - carteles:
+    - prefabRival: {fileID: 1845808042178846545, guid: 503899b8c343c444b8b6fa58692dae49, type: 3}
+      premioGanar: 2200
+      premioPerder: 200
+      apuesta: {fileID: 11400000, guid: 52c65155678f59149a5998ab2764a1da, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 4
+      esJefe: 0
+    - prefabRival: {fileID: 2321256802612928668, guid: a0945b68bfcc3aa4aad271f7432e25fe, type: 3}
+      premioGanar: 2400
+      premioPerder: 200
+      apuesta: {fileID: 11400000, guid: 52c65155678f59149a5998ab2764a1da, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 4
+      esJefe: 0
+    - prefabRival: {fileID: 6836800578224382798, guid: 9db5b44e383551844831fcf9e6652197, type: 3}
+      premioGanar: 2600
+      premioPerder: 200
+      apuesta: {fileID: 11400000, guid: 52c65155678f59149a5998ab2764a1da, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 4
+      esJefe: 0
+    - prefabRival: {fileID: 4709385717110531943, guid: cae5b71298ab1924b992186fa5aab856, type: 3}
+      premioGanar: 2800
+      premioPerder: 200
+      apuesta: {fileID: 11400000, guid: 52c65155678f59149a5998ab2764a1da, type: 2}
+      presentador: {fileID: 11400000, guid: 02f866187471e3240b86c7a52b3a9446, type: 2}
+      liga: 4
+      esJefe: 0
+    - prefabRival: {fileID: 4223221370170119036, guid: 8005f923f533f4c4695f646c16d4b67e, type: 3}
+      premioGanar: 7500
+      premioPerder: 200
+      apuesta: {fileID: 11400000, guid: 39cbad664284d1249a3c176297ac10d1, type: 2}
+      presentador: {fileID: 11400000, guid: f5bcea0daf9ad2f42a7d8829b6c02c4d, type: 2}
+      liga: 4
+      esJefe: 1

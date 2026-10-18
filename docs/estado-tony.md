@@ -29,6 +29,10 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-150 Precios de la economía y pruebas de balance | T-144, T-146 a T-149 | hecha (sin revisar) |
 | T-151 Recorrido de la economía completa (cierre del bloque 1) | T-140 a T-150 | hecha (sin revisar) |
 | T-152 Contrato de ligas, InfoPelea y límite por área (Core) | nada | hecha (sin revisar) |
+| T-153 Deudas del bloque de economía (creador del kit y raíces en teardown) | nada | hecha (sin revisar) |
+| T-154 Progreso de las ligas (datos, modelo y servicio que se guarda) | T-152 | hecha (sin revisar) |
+| T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | hecha (sin revisar) |
+| T-156 Pelea de jefe: furia a la mitad de la vida | nada | hecha (sin revisar) |
 
 ## T-F7, bloque 2: ligas
 
@@ -44,12 +48,11 @@ T-153 y T-156 no dependen de Core (pueden ir primero si T-152 se atora); T-156 y
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
 | T-152 Contrato del progreso de ligas, presentación de pelea y límite por área de Progresion (Core; a main en cuanto se verifique) | nada | pendiente |
-| T-153 Deudas del bloque de economía: creador del kit idempotente y orden frágil en Progresion | nada | pendiente |
 | T-154 Progreso de las ligas: datos, modelo y servicio que se guarda | T-152 | pendiente |
-| T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | pendiente |
-| T-156 Pelea de jefe: furia a la mitad de la vida | nada | pendiente |
-| T-157 Los 20 rivales de las 4 ligas | T-156 | pendiente |
-| T-158 Calendario de las ligas: premios, momios y presentadores por liga | T-154, T-155, T-157 | pendiente |
+| T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | hecha (sin revisar) |
+| T-156 Pelea de jefe: furia a la mitad de la vida | nada | hecha (sin revisar) |
+| T-157 Los 20 rivales de las 4 ligas | T-156 | hecha (sin revisar) |
+| T-158 Calendario de las ligas: premios, momios y presentadores por liga | T-154, T-155, T-157 | hecha (sin revisar) |
 | T-159 Retar en las ligas desde el mostrador (lógica, sin pantalla) | T-154, T-158 | pendiente |
 | T-160 Pantalla de la cartelera en el mostrador | T-159 | pendiente |
 | T-161 Pelea de jefe en la arena, subir de liga y campeón del clandestino | T-155, T-159 | pendiente |
@@ -252,3 +255,36 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-073 (2026-10-17)
 - T-073 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Parada manual en T-159 (2026-10-17)
+- Tony detuvo el turno. T-152 a T-158 hechas (sin revisar) e integradas en tony/fase-7 (T-152 también en main). Bloque 1 y T-073 ya en main.
+- T-159 (retar desde el mostrador) quedó A MEDIAS en la rama tony/T-159-retar-ligas: cambios sin verificar en MostradorPeleas.cs, su prefab, CreadorMostradorPeleas, CreadorEscenaEconomia y Pruebas_Economia.unity (esta última modificada por un creador en batch; revisar que sea intencional). No hay pruebas nuevas corridas ni bitácora. Unity cerrado.
+- Qué sigue: retomar T-159 en esa rama (leer el archivo en docs/tareas/en-curso/), verificar Progresion y Economia, cerrar; luego T-160, T-161, T-162. Al cerrar el bloque 2: suite completa y merge de tony/fase-7 a main con push.
+- T-136 y T-137 siguen bloqueadas (D-tony-91).
+
+## Parada manual 2 en T-159 (2026-10-17)
+- Tony detuvo el turno otra vez. Rama: tony/T-159-retar-ligas (base tony/fase-7). El código y las pruebas de T-159 siguen como en el commit "T-159 a medias"; nada nuevo se verificó.
+- Falta: compilar; EditMode de Progresion (ReglaCarteleraPruebas); PlayMode de Progresion y Economia (LigasMostradorPruebas, ApuestaMostradorPruebas, PeleaCaseraPruebas, RecorridoEconomiaPruebas, RecorridoPrologoPruebas); comprobar que Pruebas_Economia.unity solo tenga cambios intencionales y que el creador sea idempotente; cerrar (archivo a hechas/, bitácora, revisión) y mezclar en tony/fase-7.
+- Sucio sin commit a propósito (lo tocó un batch de pruebas, no es de T-159): Mecha/Materiales/Cabina_AlarmaApagada.mat, Cabina_Grietas.mat y ProjectSettings.asset (revisar si solo es SENTIS_ANALYTICS_ENABLED y descartar con git restore).
+- UNITY SIGUE ABIERTO: el batch de PlayMode de Economia (PID 14960, lanzado por el subagente que detuve) sigue corriendo; el cierre forzado fue negado por permisos. Ciérralo tú o espera a que termine; luego borra Temp/UnityLockfile si queda.
+- Sigue: retomar T-159, luego T-160, T-161, T-162; al cerrar el bloque 2, suite completa y merge a main con push.
+
+## Después de T-159 (2026-10-17)
+- T-159 hecha (sin revisar), integrada en tony/fase-7. EditMode 811/811, PlayMode Economia 19/19, Progresion 97/98 (RecorridoPrologoPruebas, frame lento intermitente; pasa sola). Unity cerrado. Sigue T-160.
+
+## Parada manual en T-160 (2026-10-17)
+- Tony detuvo el turno. T-159 está hecha (sin revisar) y mezclada en tony/fase-7 (merge 0401f84).
+- T-160 (pantalla de la cartelera) quedó A MEDIAS en tony/T-160-pantalla-cartelera: escrito pero SIN VERIFICAR, SIN cerrar. Hay SeleccionCartelera, FilaCartelera, PantallaCartelera, ConfigPantallaCartelera_Base, su prefab y creador, cambios en MostradorPeleas (+ prefab y creador), PantallaApuesta y pruebas ajustadas (Apuesta, EscenaEconomia, RecorridoEconomia), más SeleccionCarteleraPruebas y CarteleraMostradorPruebas. Hay capturas T-160-1.png y T-160-2.png sin revisar a ojo.
+- Falta: compilar; EditMode (SeleccionCarteleraPruebas); PlayMode de UI, Progresion y Economia (corrida de Progresion cortada a medias al detener); revisar capturas; comprobar idempotencia de los creadores; cerrar (archivo a hechas/, bitácora, revisión, decisiones-pendientes si hubo) y mezclar en tony/fase-7.
+- Se cerró a mano el Unity del batch de Progresion (PID 31412); se borró Temp/UnityLockfile y se descartó ProjectSettings.asset.
+- T-136 y T-137 siguen bloqueadas: Ciudad.unity en origin/main no trae DirectorPrologo.
+- Sigue: terminar T-160, luego T-161 y T-162; al cerrar el bloque 2, suite completa y merge de tony/fase-7 a main con push.
+
+## Después de T-160 (2026-10-18)
+- T-160 hecha (sin revisar), integrada en tony/fase-7. Fallo conocido e intermitente: CambioEscenaPruebas (orden) en la corrida completa de Progresion. Sigue T-161.
+
+## Después de T-161 (2026-10-18)
+- T-161 hecha (sin revisar), integrada en tony/fase-7. Sigue T-162 y luego cierre del bloque 2.
+
+## Después de T-162 (2026-10-18)
+- T-162 hecha (sin revisar). Bloque 2 de T-F7 (ligas) cerrado: suite completa EditMode 824/824, PlayMode 767/780 (9 fallos de Alan en Arena). Sigue mezcla a main y planificar el bloque 3.
