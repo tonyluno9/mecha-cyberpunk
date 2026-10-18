@@ -333,3 +333,9 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-169 (2026-10-18)
 - T-169 hecha (sin revisar), integrada en tony/fase-7. Sigue T-170.
+
+## Parada manual en T-170 (2026-10-18)
+- Tony detuvo el turno. T-160 a T-169 hechas (sin revisar) e integradas en tony/fase-7. Bloque 2 (T-152 a T-162) ya en main. T-163 a T-169 de T-F7 bloque 3 en tony/fase-7, aún no en main.
+- T-170 (las piezas se ven) quedó A MEDIAS en tony/T-170-piezas-se-ven: escrito y SIN VERIFICAR. Hay AspectoPiezas, ConfigAspectoPiezas (+ _Base.asset), CreadorAspectoPiezas, 6 materiales Pieza_*.mat, PantallaPiezasCabina + config + creador, y cambios en MechaJugador.prefab y MechaCyberpunk.UI.Editor.asmdef. No hay pruebas ni capturas de T-170, ni bitácora, ni se movió el archivo (sigue en en-curso/). Se detuvo al implementador a la mitad, así que parte del código puede estar incompleta o no compilar.
+- Falta: compilar; revisar que MechaJugador.prefab y el asmdef cambien solo lo intencional; terminar T-170 según su archivo (pruebas, capturas); verificar Mecha y UI; cerrar y mezclar en tony/fase-7. Luego T-171, T-172, T-173; al cerrar el bloque 3, suite completa y mezcla de tony/fase-7 en main con push.
+- Unity cerrado; borré un Temp/UnityLockfile huérfano. T-136 y T-137 siguen bloqueadas (Ciudad.unity en main sin DirectorPrologo al último fetch). Ninguna de las tareas T-163 a T-169 pasó por el verificador independiente; solo las corrió el implementador.
