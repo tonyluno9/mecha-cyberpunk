@@ -32,6 +32,7 @@ T-141 puede ir primero si T-140 se atora; T-149 solo necesita T-143; T-148 no ne
 | T-153 Deudas del bloque de economía (creador del kit y raíces en teardown) | nada | hecha (sin revisar) |
 | T-154 Progreso de las ligas (datos, modelo y servicio que se guarda) | T-152 | hecha (sin revisar) |
 | T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | hecha (sin revisar) |
+| T-156 Pelea de jefe: furia a la mitad de la vida | nada | hecha (sin revisar) |
 
 ## T-F7, bloque 2: ligas
 
@@ -49,7 +50,7 @@ T-153 y T-156 no dependen de Core (pueden ir primero si T-152 se atora); T-156 y
 | T-152 Contrato del progreso de ligas, presentación de pelea y límite por área de Progresion (Core; a main en cuanto se verifique) | nada | pendiente |
 | T-154 Progreso de las ligas: datos, modelo y servicio que se guarda | T-152 | pendiente |
 | T-155 El flujo de pelea acepta un cartel por pelea y anuncia la presentación | T-152 | hecha (sin revisar) |
-| T-156 Pelea de jefe: furia a la mitad de la vida | nada | pendiente |
+| T-156 Pelea de jefe: furia a la mitad de la vida | nada | hecha (sin revisar) |
 | T-157 Los 20 rivales de las 4 ligas | T-156 | pendiente |
 | T-158 Calendario de las ligas: premios, momios y presentadores por liga | T-154, T-155, T-157 | pendiente |
 | T-159 Retar en las ligas desde el mostrador (lógica, sin pantalla) | T-154, T-158 | pendiente |

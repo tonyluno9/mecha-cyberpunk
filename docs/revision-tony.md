@@ -434,3 +434,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (acotado): EditMode Pelea 37/37; PlayMode Pelea 60/60 (10 nuevas de CartelPeleaPruebas con flujo casero y tutorial reales).
 - Para probar jugando: nada todavía (la cartelera llega en T-159 y T-160).
 - Decisiones: ver D-tony-107 en docs/decisiones-pendientes-tony.md.
+
+### T-156 Pelea de jefe: furia a la mitad de la vida
+- Verificado automáticamente (acotado): EditMode 787/787 (6 nuevas de ReglaFuriaJefePruebas); PlayMode IA 33/33 (5 nuevas de FuriaJefePruebas: daño 12 a 15, espera media baja al menos 30 % en furia, FuriaIniciada una vez, revancha vuelve todo a 1 y quita el color, FuriaJefe con PiedadRival da error y se apaga). Captura docs/capturas/T-156-1.png (cuerpo rojo desde la cabina).
+- Para probar jugando: nada todavía (el prefab RivalJefeDePrueba se puede soltar en una escena de Tony; los jefes reales llegan en T-157).
+- Decisiones: ver D-tony-108 en docs/decisiones-pendientes-tony.md.

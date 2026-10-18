@@ -441,3 +441,6 @@ Propuesta: `rivalesPorLiga` en DatosLigas es un entero común a todas las ligas;
 
 ### D-tony-107 Detalles de T-155
 Propuesta: con cartel, el cartel manda entero: rival, premio, apuesta y presentador (un cartel sin apuesta o sin presentador no tiene apuesta ni presentación; no cae a lo del prefab). `QuitarCartel` devuelve false si no había cartel. `PrepararCartel` no crea al rival: nace al empezar o al anunciar la apuesta. `{liga}` queda vacío sin servicio o con liga 0. El premio con fracción se redondea al entero (`Mathf.RoundToInt`). Sin impacto en el diseño.
+
+### D-tony-108 Detalles de T-156
+Propuesta: la furia mide la vida del propio jefe (no la del jugador) y entra una sola vez por pelea; el color pulsa entre el color base del material y `colorFuria`, y el parpadeo blanco de daño tiene prioridad mientras dura. El jefe de prueba (150 de vida, 12 de daño) tiene espera fija de 3 s, preparación 0.3 s y recarga 0.2 s para que la prueba mida la espera sin azar (con las esperas aleatorias normales, 0.6 de multiplicador no garantiza 30 % porque preparación y recarga no se acortan). Sin impacto en el diseño.
