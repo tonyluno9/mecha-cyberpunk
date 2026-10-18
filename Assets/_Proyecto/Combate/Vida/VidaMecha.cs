@@ -32,6 +32,8 @@ namespace MechaCyberpunk.Combate.Vida
         }
 
         public event Action Cambio;
+        /// <summary>Se dispara cuando <see cref="CambiarDatos"/> o <see cref="Configurar"/> cambian los datos.</summary>
+        public event Action DatosCambiados;
         public event Action KO;
 
         private void Awake()
@@ -59,6 +61,40 @@ namespace MechaCyberpunk.Combate.Vida
                 CrearModelo();
             }
             Cambio?.Invoke();
+            DatosCambiados?.Invoke();
+        }
+
+        /// <summary>
+        /// Cambia los datos sin restaurar: conserva los puntos de daño (<see cref="ReglaCambioDatos"/>) y, si estaba en KO, sigue en KO.
+        /// Avisa <see cref="Cambio"/> y <see cref="DatosCambiados"/>. Null no hace nada (warning).
+        /// </summary>
+        public void CambiarDatos(DatosMecha nuevosDatos)
+        {
+            if (nuevosDatos == null)
+            {
+                Debug.LogWarning("[Combate] CambiarDatos recibió datos nulos en " + name);
+                return;
+            }
+            if (modelo == null)
+            {
+                Configurar(nuevosDatos);
+                return;
+            }
+            float nueva = ReglaCambioDatos.NuevaVida(modelo.Actual, modelo.Maxima, nuevosDatos.VidaMaxima, modelo.EstaKO);
+            SoltarModelo();
+            datos = nuevosDatos;
+            // El modelo nuevo se arma antes de escuchar sus eventos: así no avisa un KO ni un cambio que ya ocurrieron.
+            ModeloVida creado = new ModeloVida(datos.VidaMaxima);
+            float resta = creado.Maxima - nueva;
+            if (resta > 0f)
+            {
+                creado.Aplicar(resta);
+            }
+            modelo = creado;
+            modelo.Cambio += AlCambiar;
+            modelo.KO += AlLlegarAKO;
+            Cambio?.Invoke();
+            DatosCambiados?.Invoke();
         }
 
         /// <summary>Vuelve a la vida máxima y quita el KO.</summary>
