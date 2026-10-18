@@ -456,3 +456,93 @@ Propuesta: el letrero de jefe es un `Text` aparte de la pantalla de la arena (`t
 
 ### D-tony-112 Atajos del recorrido de las ligas (T-162)
 Propuesta: RecorridoLigasPruebas fija $3000 iniciales por código, calcula las ganancias netas (premio más apuesta por momio, como T-159), repara en el banco antes de cada pelea que lo necesita, pelea al jefe y a EL CACIQUE sin apostar y comprueba la furia bajando al rival a umbral menos 0.1 con RecibirDanio. Todos los atajos están anotados en la prueba.
+
+## Planeación de T-F7, bloque 3: piezas por ramas y niveles (2026-10-18, planificador Opus 5.5)
+
+### D-tony-113 IDs y orden del bloque 3
+Propuesta. El bloque 3 son T-163 a T-173. Orden: T-163 (Core, necesita aprobación), T-164 (deudas), T-165, T-166, T-167, T-168, T-169, T-170,
+T-171, T-172 y T-173 (cierre). T-164 y T-165 no dependen de Core y pueden ir mientras T-163 espera aprobación; T-170 y T-171 pueden ir en paralelo
+con T-168 y T-169 (T-171 solo necesita T-166 para los datos). El bloque siguiente (habilidades) empieza en T-174.
+
+### D-tony-114 Core: valores del mecha en tiempo de ejecución (T-163). Necesita aprobación de Tony
+Propuesta. `Core/Datos/ValoresMecha` (struct con los 13 valores de `DatosMecha`), `DatosMecha.Valores` y `DatosMecha.CrearEnEjecucion(ValoresMecha)`
+(instancia `DontSave`, con los mismos límites del inspector; quien la crea la destruye). Es lo único de Core que necesitan las piezas: la suma de
+piezas es de Tony (Mecha/), y vida, golpe, guardia y movimiento ya leen un `DatosMecha`. No cambia ningún campo serializado ni asset. Alan no lo
+necesita, así que no hace falta llevarlo a main antes que el resto del bloque. Alternativa descartada: crear la instancia con
+`JsonUtility.FromJsonOverwrite` desde Mecha/ sin tocar Core; funcionaría, pero depende de los nombres privados de los campos de un tipo de Core y
+esconde un cambio de contrato (D-027). Si Tony no aprueba T-163, T-166 en adelante quedan bloqueadas; T-164 y T-165 siguen.
+
+### D-tony-115 Qué mueve cada ranura (T-166)
+Propuesta (provisional). Torso: vida (lo que más vida da). Piernas: velocidad (y aceleración, frenado y giro en la misma razón) y algo de vida.
+Cada brazo: daño del golpe y algo de vida (los dos brazos suman al golpe, aunque el golpe sale del derecho: así "un brazo de fuego y el otro
+militar" cuenta). Cabina: vida. Fuego además acorta la recarga del golpe (mínimo 0.3 s). Bloqueo, alcance y guardia no cambian en este bloque.
+
+### D-tony-116 Ramas (T-166)
+Propuesta. Cuerpo a cuerpo: más vida y velocidad, menos daño. Militar: golpe más pesado, frágil. Fuego: golpe medio-alto más seguido (recarga más
+corta), la más frágil, algo más rápida que militar. Tech: vida y daño medios; su "cooldown más corto" (mecha-taller.md) llega con las habilidades
+del bloque 4, que agregarán ese dato a `DatosPieza`. Se mezclan libremente: cada ranura tiene su propia rama. Rama `DeSerie` para las 5 piezas con
+las que sale el mecha.
+
+### D-tony-117 Niveles y desbloqueo por liga (T-166, T-168)
+Propuesta. Niveles I a IV; se compra un nivel si es ≤ `IProgresoLigas.LigaActual` (sin servicio registrado, liga 1). El nivel siguiente se muestra
+en gris "SE ABRE EN LA LIGA n" para dar ganas de subir. La pieza en juego de cada liga es de su mismo nivel (T-171), así que el criterio "nivel 3 no
+disponible hasta la liga 3" se cumple también por apuestas. Las piezas de serie (nivel 0) dan exactamente los valores de `DatosMecha_Jugador`: el
+prólogo, la demo y las pruebas viejas no cambian.
+
+### D-tony-118 Dónde viven las piezas y cómo se guardan (T-166, T-167)
+Propuesta. `DatosPieza` hereda de `DatosObjeto` (Economia), como pedía D-tony-79, y vive en Mecha/Piezas/ (Mecha ya referencia Economia; Economia no
+referencia Mecha). Las 85 piezas están en `CatalogoObjetos_Base` (el inventario las guarda por id, se venden en el mercado negro con `ReglaVenta` y
+se ganan en apuestas) y en `CatalogoPiezas_Base`. `EquipoMecha` va junto a `MechaPersistente`, solo en `MechaEstacionado.prefab` (el mecha de la
+historia; el `Directo` de Pruebas_Tony y los rivales no cambian). Las piezas puestas se guardan DENTRO de la clave `mecha` (con el daño en puntos),
+no en una clave nueva: así la vida máxima y el daño se cargan juntos sin depender del orden de registro, y no hace falta tocar los comentarios de
+`IGuardable` en Core. Una partida vieja sin piezas carga con las de serie.
+
+### D-tony-119 Reglas del taller de piezas (T-165, T-168, T-169)
+Propuesta. Se cambian piezas solo en el banco del taller, con el mecha estacionado y vacío; una sola E para todo el taller ("E · Taller · piezas"
+sin daño; "PIEZAS DEL MECHA" al final de las opciones de reparar). Comprar pone la pieza al instante y se paga con `IntentarPagar` (no fiado; con
+dinero negativo no se compra, D-tony-85). Poner una del inventario es gratis. La pieza que se quita va al inventario; si no cabe (máximo 2 de cada
+una), se paga su valor de venta al momento. Al cambiar una pieza se conservan los puntos de daño (la vida máxima cambia; la actual = nueva máxima −
+daño, al menos 1): cambiar piezas no repara. Con renta vencida no se repara ni se mejora (economia-misiones.md). No hay compra de piezas en el
+mercado negro (solo venta). "Pieza destruida en pelea" (propuesta de mecha-taller.md) no se hace en este bloque.
+
+### D-tony-120 Bonos y precios de las piezas (provisionales; T-166)
+Propuesta. Bonos por nivel (× nivel): torso vida +14 militar, +22 tech, +30 cuerpo a cuerpo, +12 fuego; piernas militar vida +4 y vel +0.08, tech
++6 y +0.15, cuerpo a cuerpo +10 y +0.25, fuego +3 y +0.12; cada brazo militar daño +3 y vida +2, tech +2 y +4, cuerpo a cuerpo +1 y +5, fuego
++2.5, +2 y recarga −0.03 s; cabina vida +4, +6, +8, +3. Con las 5 de nivel IV: cuerpo a cuerpo 332 de vida, 18 de daño, 5.0 m/s; tech 268, 26,
+4.6; militar 204, 34, 4.32; fuego 188, 30, 4.48 y recarga 0.56 s. Precios por nivel, iguales en las 4 ramas: I $500, II $800, III $1,200, IV
+$1,800; venta a la mitad; las de serie no se compran y se venden en $100; máximo 2 de cada una en el inventario. Tony cambia todo en los assets.
+
+### D-tony-121 Piezas en juego por liga (T-171). Completa D-tony-98
+Propuesta. Liga 1: PIERNAS CUERPO A CUERPO I (desde $250), jefe TORSO MILITAR I ($500); liga 2: BRAZO IZQ. TECH II ($500), jefe TORSO CUERPO A
+CUERPO II ($1,000); liga 3: BRAZO DER. FUEGO III ($750), jefe CABINA TECH III ($1,500); liga 4: PIERNAS MILITAR IV ($1,000), jefe TORSO FUEGO IV
+($2,500). La mínima por pieza es la mitad del tope. El jefe pone torso o cabina (más vida), del mismo nivel. En una revancha no hay pieza en juego
+(si no, apostar en revanchas contra el rival 1 sería una fábrica de piezas). La casera sigue con el Brazo de chatarra.
+
+### D-tony-122 Cómo se ven las piezas (T-169, T-170)
+Propuesta (greybox). Colores por rama: de serie gris, militar azul acero, tech turquesa, cuerpo a cuerpo naranja, fuego magenta (la paleta de
+estetica-hud.md; nada en rojo puro, que es la alarma y la furia del jefe). En la cabina: brazos con el color de su rama y una franja por nivel en
+el antebrazo; marco de la cabina con el color de la pieza de cabina; una pantalla chica lista las 5 piezas durante el encendido y 5 s después. Desde
+fuera: el cuerpo del mecha estacionado con el color del torso. Sin cambiar materiales en ejecución (se cambia `sharedMaterial` o se usa
+`MaterialPropertyBlock`), por la deuda de los `.mat` que cambiaban solos.
+
+### D-tony-123 Deudas antes de las piezas (T-164)
+Propuesta. `ServicioGuardado.Guardar` vuelve a escribir las claves leídas cuyo dueño no está en la escena (hoy se pierden: guardar en una escena sin
+mecha borraría las piezas y el daño). Y se busca la causa demostrada del fallo intermitente de `CambioEscenaPruebas` (estado estático de
+`CambioEscena`, visto en T-126, T-133, T-149 y T-160), prohibido ignorarla o reordenar.
+
+### D-tony-124 Lo que espera a Alan en el bloque 3
+Propuesta. Nada: todo se prueba en Pruebas_Economia con el mecha de Tony. `MechaEstacionado.prefab` y `MostradorPeleas.prefab` (ya pedidos) traen
+las piezas, la pantalla y el taller sin que Alan coloque nada nuevo. Opcional para A-F5 o una tarea de arte: modelos low-poly de las piezas por rama
+en Assets/Arte/ (hoy son colores y franjas greybox). La integración en el taller de la casa de Alan se escribe cuando el mecha esté colocado (como T-136).
+
+### D-tony-125 Reglas de balance de las piezas contra las ligas (T-172)
+Propuesta. "Razón" = golpes que el rival necesita para tumbarte ÷ golpes que necesitas para tumbarlo (sin bloqueo, ritmo ni furia). Para cada rama y
+liga L: con el nivel L−1, razón ≥ 1 contra el rival 1 de la liga L y < 1 contra su jefe (para el jefe hay que mejorar); con el nivel L, ≥ 0.8
+contra el jefe. Dinero: una pieza de nivel I ≤ el premio del rival 1 de la liga 1; 5 piezas de nivel L ≤ 0.8 × los premios de ganar de la liga L−1.
+Ninguna rama es peor que otra en todo. Con la tabla de D-tony-120 y los rivales de hoy todas pasan al planear (la más justa: fuego IV contra EL
+CACIQUE, 0.82), así que el reajuste de las ligas 3 y 4 de D-tony-97 se hace solo si alguna falla al implementar.
+
+### D-tony-126 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿Apruebas el cambio de Core de T-163? (b) ¿La tabla de bonos y precios te convence, sobre todo
+fuego (golpe más seguido) contra militar (golpe más pesado)? (c) ¿Cambiar piezas debe repararlas (hoy no: conserva el daño)? (d) ¿Quieres "pieza
+destruida en pelea" (propuesta del diseño) más adelante? (e) ¿Las piezas deben poder comprarse también en el mercado negro, más baratas o robadas?

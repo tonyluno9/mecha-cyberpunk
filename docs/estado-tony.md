@@ -58,9 +58,33 @@ T-153 y T-156 no dependen de Core (pueden ir primero si T-152 se atora); T-156 y
 | T-161 Pelea de jefe en la arena, subir de liga y campeón del clandestino | T-155, T-159 | pendiente |
 | T-162 Recorrido de las ligas (cierre del bloque 2) | T-152 a T-161 | pendiente |
 
-Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-163; D-tony-76):
-1. Piezas por ramas y niveles: 5 piezas, 4 ramas mezclables, 4 niveles desbloqueados por liga (`IProgresoLigas.LigaActual`, D-tony-93), compra en
-   el taller y piezas viejas al inventario. Reajusta los rivales de las ligas 3 y 4 (D-tony-97).
+## T-F7, bloque 3: piezas por ramas y niveles
+
+Planeado el 2026-10-18 (planificador Opus 5.5) en tony/fase-7. Decisiones propuestas: D-tony-113 a D-tony-126 en docs/decisiones-pendientes-tony.md.
+5 ranuras, 4 ramas mezclables y 4 niveles (nivel ≤ liga actual), 5 piezas de serie que dan el mecha de hoy; se compran y se ponen en el banco del
+taller (pantalla "PIEZAS DEL MECHA"); la vieja va al inventario y se vende en el mercado negro; piezas de rama en juego en las apuestas de cada liga;
+balance contra las ligas (reajuste de las ligas 3 y 4 solo si falla una regla). Todo en Pruebas_Economia: nada espera a Alan.
+**T-163 (Core) necesita la aprobación de Tony antes de empezar** (D-tony-114); sin ella, T-166 en adelante quedan bloqueadas. Preguntas: D-tony-126.
+
+Orden recomendado (D-tony-113): T-163, T-164, T-165, T-166, T-167, T-168, T-169, T-170, T-171, T-172, T-173.
+T-164 y T-165 no dependen de Core (pueden ir mientras T-163 espera); T-170 y T-171 pueden ir en paralelo con T-168 y T-169.
+
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-163 Valores del mecha en tiempo de ejecución (Core; necesita aprobación) | nada | pendiente (espera aprobación) |
+| T-164 Deudas: el guardado no pierde lo que la escena no tiene y CambioEscenaPruebas por orden | nada | pendiente |
+| T-165 Cambiar los datos de un mecha en juego sin perder el daño | nada | pendiente |
+| T-166 Piezas del mecha: ranuras, ramas, niveles y suma de estadísticas | T-163 | pendiente |
+| T-167 Equipo del mecha: las piezas puestas cambian al mecha y se guardan | T-164, T-165, T-166 | pendiente |
+| T-168 Comprar y cambiar piezas en el taller (lógica y banco) | T-167 | pendiente |
+| T-169 Pantalla de piezas del taller | T-168 | pendiente |
+| T-170 Las piezas se ven al subirte al mecha | T-167 | pendiente |
+| T-171 Piezas de rama en juego en las apuestas de las ligas | T-166 (T-168 para un criterio) | pendiente |
+| T-172 Balance de las piezas contra las ligas y reajuste de las ligas 3 y 4 | T-166, T-171 | pendiente |
+| T-173 Recorrido de las piezas (cierre del bloque 3) | T-163 a T-172 | pendiente |
+
+Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-174; D-tony-76):
+1. Piezas por ramas y niveles: planeado arriba (T-163 a T-173).
 2. Habilidades: especiales por pieza con cooldown y munición limitada que se compra.
 3. Implantes: 4 espacios (ojos, brazos, piernas, sistema nervioso) en la clínica, con el doctor y su deuda al morir en la calle.
 4. Misiones y reputación: barrio, corporativas, ilegales y robos, con reputación de barrio y corporaciones y favores usables.
