@@ -453,3 +453,6 @@ Propuesta: los creadores solo escriben al crear un asset; si Tony ajusta premios
 
 ### D-tony-111 Detalles de T-161
 Propuesta: el letrero de jefe es un `Text` aparte de la pantalla de la arena (`textoJefe`, opcional); en la presentación y el conteo ocupa la franja 0.57-0.74 del alto (sobre la cabeza del rival, bajo la línea del presentador) y en el resultado la franja 0.35-0.5 (bajo "GANASTE"); las dos franjas son campos de `PantallaPelea`. Se enciende con `EventosPelea.PeleaPresentada` (si `Info.EsJefe`), se apaga con "¡PELEA!" y en el resultado solo celebra si ganó el jugador. El aviso de liga del HUD usa dos `Text` (la segunda línea se apaga en la última liga), vive en el centro arriba bajo el objetivo, y su temporizador solo corre mientras el jugador está a pie (en carro o mecha el aviso espera y los 5 s empiezan al bajar). Los textos, color, tamaños y segundos están en `ConfigHudAPie`. Sin impacto en el diseño.
+
+### D-tony-112 Atajos del recorrido de las ligas (T-162)
+Propuesta: RecorridoLigasPruebas fija $3000 iniciales por código, calcula las ganancias netas (premio más apuesta por momio, como T-159), repara en el banco antes de cada pelea que lo necesita, pelea al jefe y a EL CACIQUE sin apostar y comprueba la furia bajando al rival a umbral menos 0.1 con RecibirDanio. Todos los atajos están anotados en la prueba.
