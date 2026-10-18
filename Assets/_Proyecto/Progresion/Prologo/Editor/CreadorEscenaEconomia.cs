@@ -219,6 +219,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             SerializedObject soAparicion = new SerializedObject(jugador.GetComponent<AparicionJugador>());
             soAparicion.FindProperty("idAparicion").stringValue = IdInicio;
             soAparicion.ApplyModifiedPropertiesWithoutUndo();
+
+            // T-159: tecla L para vencer al siguiente rival de la liga sin pelear (al final, sin mover lo demás).
+            new GameObject("LigasDePrueba").AddComponent<LigasDePrueba>();
         }
 
         // ---------- Ayudas ----------

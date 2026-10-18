@@ -255,3 +255,9 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-073 (2026-10-17)
 - T-073 hecha (sin revisar), integrada en tony/fase-5. Sigue la siguiente de T-F6 en el orden de arriba.
+
+## Parada manual en T-159 (2026-10-17)
+- Tony detuvo el turno. T-152 a T-158 hechas (sin revisar) e integradas en tony/fase-7 (T-152 también en main). Bloque 1 y T-073 ya en main.
+- T-159 (retar desde el mostrador) quedó A MEDIAS en la rama tony/T-159-retar-ligas: cambios sin verificar en MostradorPeleas.cs, su prefab, CreadorMostradorPeleas, CreadorEscenaEconomia y Pruebas_Economia.unity (esta última modificada por un creador en batch; revisar que sea intencional). No hay pruebas nuevas corridas ni bitácora. Unity cerrado.
+- Qué sigue: retomar T-159 en esa rama (leer el archivo en docs/tareas/en-curso/), verificar Progresion y Economia, cerrar; luego T-160, T-161, T-162. Al cerrar el bloque 2: suite completa y merge de tony/fase-7 a main con push.
+- T-136 y T-137 siguen bloqueadas (D-tony-91).
