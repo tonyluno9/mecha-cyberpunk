@@ -9,6 +9,9 @@ namespace MechaCyberpunk.Progresion.Guardado
     /// <summary>
     /// Guarda y carga la partida (T-111, D-tony-50). Junta todo lo que está en <c>Registro&lt;IGuardable&gt;</c> sin conocer a
     /// nadie. No guarda ni carga solo: lo decide quien lo llame (menú y dormir, T-F6). Va en ServiciosProgresion.prefab.
+    /// Las piezas leídas cuyo dueño aún no está en la escena quedan pendientes: se entregan cuando se registra y
+    /// <see cref="Guardar"/> las vuelve a escribir tal cual, así guardar en una escena sin mecha no borra el mecha (T-164).
+    /// Un registrado siempre gana sobre una pendiente de su misma clave.
     /// </summary>
     public class ServicioGuardado : MonoBehaviour
     {
@@ -78,6 +81,11 @@ namespace MechaCyberpunk.Progresion.Guardado
                     continue;
                 }
                 piezas.Add(new PiezaGuardada { clave = clave, datos = guardable.Guardar() ?? string.Empty });
+            }
+            // Lo leído cuyo dueño no está en esta escena se escribe igual (T-164): no se pierde al guardar.
+            foreach (KeyValuePair<string, string> pendiente in pendientes)
+            {
+                if (claves.Add(pendiente.Key)) piezas.Add(new PiezaGuardada { clave = pendiente.Key, datos = pendiente.Value });
             }
             string json = ArchivoPartida.Escribir(piezas, DateTime.UtcNow.ToString("o"));
             string temporal = RutaArchivo + ExtensionTemporal;
