@@ -32,15 +32,15 @@ Assets/_Proyecto/IA/ (Datos/, Rival/, Editor/, Pruebas/, Materiales/), Assets/_P
 No tocar: Core/, `RivalBasico.prefab`, `RivalTutorial.prefab`, `RivalCasero.prefab`, `RivalPandilla.prefab`, Pelea/, escenas, todo lo de Alan.
 
 ## Criterios de aceptación (los comprueba el verificador)
-- [ ] `bash herramientas/verificar.sh todo` pasa (salvo los 9 fallos conocidos de Alan en Arena)
-- [ ] ReglaFuriaJefePruebas: con vida máxima 150, a 76 no hay furia; a 75 entra; a 40 no vuelve a avisar; en KO no entra; tras `Reiniciar`
+- [x] `bash herramientas/verificar.sh todo` pasa (salvo los 9 fallos conocidos de Alan en Arena)
+- [x] ReglaFuriaJefePruebas: con vida máxima 150, a 76 no hay furia; a 75 entra; a 40 no vuelve a avisar; en KO no entra; tras `Reiniciar`
       puede entrar otra vez
-- [ ] FuriaJefePruebas (PlayMode): con el prefab de prueba, antes de la furia el golpe que recibe el jugador baja la vida lo de
+- [x] FuriaJefePruebas (PlayMode): con el prefab de prueba, antes de la furia el golpe que recibe el jugador baja la vida lo de
       `DanioGolpe` y después 1.25 veces eso (con 0.1 de tolerancia); la espera media entre golpes medida en 6 golpes baja al menos un 30 %
       tras la furia; `FuriaIniciada` se avisa una vez; tras `PrepararPelea` los multiplicadores vuelven a 1 y el color de furia se va
-- [ ] Un prefab con `FuriaJefe` y `PiedadRival` registra un error y `FuriaJefe` queda apagado (prueba con un objeto armado en la prueba)
-- [ ] Captura docs/capturas/T-156-1.png del jefe de prueba en furia (cuerpo rojo) visto desde la cabina
-- [ ] RivalBasicoPruebas, PiedadRivalPruebas y las de la pandilla siguen en verde
+- [x] Un prefab con `FuriaJefe` y `PiedadRival` registra un error y `FuriaJefe` queda apagado (prueba con un objeto armado en la prueba)
+- [x] Captura docs/capturas/T-156-1.png del jefe de prueba en furia (cuerpo rojo) visto desde la cabina
+- [x] RivalBasicoPruebas, PiedadRivalPruebas y las de la pandilla siguen en verde
 
 ## Criterios de sensación (para un humano)
 - En Pruebas_Tony (o con el prefab de prueba en una escena de Tony): ¿se nota el cambio a la mitad (rojo, más agresivo) y obliga a pelear
