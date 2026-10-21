@@ -541,3 +541,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente: PlayMode Mecha 139/142 (3 omitidas de captura), UI sin fallos (115/117 con captura); 6 pruebas de AspectoPiezasPruebas y 4 de PantallaPiezasCabinaPruebas. Creadores idempotentes. Capturas T-170-1 y T-170-2 (la pantalla no tapa el centro).
 - Para ti (sensación): Pruebas_Economia, compra un brazo de fuego y otro militar y súbete. ¿Se nota la mejora al primer vistazo? ¿Magenta, azul acero, turquesa y naranja se leen como ramas y no como alarma? ¿Las franjas se ven? ¿La lista de 5 piezas durante el encendido ayuda o estorba?
 - Ojo: la captura del mecha desde fuera es una cápsula turquesa (greybox).
+
+### T-171 Piezas de rama en juego en las ligas
+- Verificado automáticamente (por el implementador): EditMode 862/862; PlayMode Progresion 112/112, Economia 19/19, Pelea 66/66. Creador idempotente. Sin capturas.
+- Para ti (sensación): Pruebas_Economia, apuesta $250 contra TORNILLO. ¿La pieza en juego te tienta? ¿Ganarla y ponértela en el taller se siente premio? La revancha de la cartelera ya no da pieza.
+- Decisiones: D-tony-121.
