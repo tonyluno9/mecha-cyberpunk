@@ -79,6 +79,7 @@ T-164 y T-165 no dependen de Core (pueden ir mientras T-163 espera); T-170 y T-1
 | T-168 Comprar y cambiar piezas en el taller (lógica y banco) | T-167 | pendiente |
 | T-169 Pantalla de piezas del taller | T-168 | hecha (sin revisar) |
 | T-170 Las piezas se ven | T-167 | hecha (sin revisar) |
+| T-171 Piezas en juego en las ligas | T-166 | hecha (sin revisar) |
 | T-170 Las piezas se ven al subirte al mecha | T-167 | pendiente |
 | T-171 Piezas de rama en juego en las apuestas de las ligas | T-166 (T-168 para un criterio) | pendiente |
 | T-172 Balance de las piezas contra las ligas y reajuste de las ligas 3 y 4 | T-166, T-171 | pendiente |
@@ -343,3 +344,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-170 (2026-10-21)
 - T-170 hecha (sin revisar), integrada en tony/fase-7. Sigue T-171.
+
+## Después de T-171 (2026-10-21)
+- T-171 hecha (sin revisar), integrada en tony/fase-7. Sigue T-172.
