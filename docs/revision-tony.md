@@ -3,6 +3,100 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Piezas (T-F7, bloque 3) cerradas: qué probar jugando (2026-10-21)
+Del lado de Tony, en `Escenas/Tony/Pruebas_Economia.unity` (Play, de noche, sin ayuda). Sin revisor: T-F7 bloque 3 no pasó por revisión de Opus.
+Base automática: `RecorridoPiezasPruebas` (T-173) recorre con entrada simulada: comprar PIERNAS CUERPO A CUERPO I en el taller (cobra $500; las de nivel II salen "SE ABRE EN LA LIGA 2"), subir al mecha, encender y medir la velocidad con W (4.25 m/s = la compuesta), apostar $250 a TORNILLO y ganar la pieza en juego, comprar BRAZO IZQ. FUEGO I y BRAZO DER. MILITAR I, cambiar entre brazos del inventario sin cobrar, notar el golpe de 15.5 (serie 10) peleando con LA RATA, vender lo viejo en el mercado negro, liga 3 (el nivel III se compra, el IV sale bloqueado), renta vencida (el taller no abre y nada se compra) y F5/F9 con 20 de daño. 3 corridas seguidas pasan (~59 s reales, ~58 s de juego cada una; 4 con la de las capturas). Dinero final $3,080 = calculado desde los assets; piezas finales e inventario final coinciden. Tiempo de juego por paso (corrida 2): a) 0.0 s, b) 0.1 s, c) subir, encender y medir 11.8 s, d) TORNILLO y reparar 19.9 s, e) brazos, encendido y LA RATA 26.6 s, f) a i) 0.0 s (solo teclas de pantalla). Capturas: `docs/capturas/T-173-1.png` (PIEZAS DEL MECHA con ramas mezcladas y el nivel II bloqueado), `T-173-2.png` (cabina con brazo de fuego y brazo militar en el paso 3 del encendido), `T-173-3.png` (mercado negro, pestaña VENDER con piernas de serie y piernas CUERPO A CUERPO I). Detalles y atajos: `docs/bitacora/2026-10-21-tony-T-173.md`.
+Resultado de la suite: `verificar.sh todo` y `playmode-por-area` completos los corre el orquestador (no se corrieron en T-173). PlayMode Progresion corrido aparte: ver la última línea de esta sección.
+
+Lista para un humano, en orden de juego (sin L ni atajos; peleas de verdad):
+1. T-166 Tabla de bonos y precios (abajo): ¿las ramas se sienten distintas en el papel? ¿Fuego (golpe más seguido) contra militar (golpe más pesado) te convence, o quieres otra diferencia?
+2. T-169 PIEZAS DEL MECHA (E en el banco con el mecha sano): arma un mecha con brazos de ramas distintas. ¿Se entiende de un vistazo qué cambia cada pieza (VIDA +2 · DAÑO −1) y cuánto cuesta? Con 10 o más filas la lista roza la línea de estadísticas (hoy el máximo es 9).
+3. T-169 Las piezas de la liga siguiente salen en gris ("SE ABRE EN LA LIGA 2"): ¿te dan ganas de subir de liga o estorban? ¿$500 por la primera pieza se siente alcanzable después de una o dos peleas?
+4. T-170 Compra un brazo de fuego y otro militar y súbete: ¿se nota la mejora al primer vistazo? ¿Magenta, azul acero, turquesa y naranja se leen como ramas y no como alarma? ¿Las franjas de nivel se ven sin buscarlas? ¿La lista de 5 piezas durante el encendido ayuda o estorba?
+5. T-171 Apuesta $250 contra TORNILLO: ¿la pieza en juego te tienta? ¿Ganarla y ponértela en el taller se siente como un premio? La revancha de la cartelera ya no da pieza.
+6. T-167/T-168 Peleando: ¿cuerpo a cuerpo se siente más aguantador y corre más, y militar pega más fuerte? ¿Cambiar una pieza conserva el daño (hoy no repara)? ¿Vender la vieja en el mercado negro (la mitad del precio; $100 las de serie) se siente justo?
+7. T-168 Renta vencida: el banco dice "TALLER BLOQUEADO · debes $500 de renta" y no deja mejorar. ¿Se entiende que hay que pagar antes?
+8. T-172 Balance (`L` hasta la liga 3): con mecha de nivel II, ¿VOLTIO se le gana y EL ALCALDE se siente casi imposible hasta mejorar? Con nivel III, ¿EL ALCALDE se le gana peleando bien?
+9. Criterio de sensación de T-173: la liga Sótano de verdad (sin L), unos 20 minutos, comprando piezas con lo que ganas. ¿Cada pieza se nota al pelear? ¿El dinero alcanza para reparar Y mejorar, o hay que escoger (lo que se busca)? ¿Llegas a DON FIERRO con ganas de ponerte el nivel I que te falta?
+10. T-F5 Guardar: F5, cambia piezas y dinero, F9: ¿vuelven las mismas 5 piezas, la vida máxima, el daño y el inventario?
+
+Tabla de bonos y precios (T-166; 85 piezas = 5 de serie con bonos 0 + 4 ramas x 4 niveles x 5 ranuras; leída de los assets). Todas las ramas cuestan lo mismo por nivel: I $500, II $800, III $1,200, IV $1,800; vender paga la mitad ($250, $400, $600, $900; las de serie $100). V = vida, D = daño por golpe, Vel = m/s, R = recarga entre golpes en s (negativo = golpea más seguido; la recarga nunca baja de 0.3 s). Base del mecha: 100 de vida, 4 m/s, 10 de daño, 0.8 s de recarga.
+
+Militar (más golpe):
+| Nivel | Precio | Brazo izq. y der. | Torso | Piernas | Cabina |
+| --- | --- | --- | --- | --- | --- |
+| I | $500 | V+2 D+3 | V+14 | V+4 Vel+0.08 | V+4 |
+| II | $800 | V+4 D+6 | V+28 | V+8 Vel+0.16 | V+8 |
+| III | $1,200 | V+6 D+9 | V+42 | V+12 Vel+0.24 | V+12 |
+| IV | $1,800 | V+8 D+12 | V+56 | V+16 Vel+0.32 | V+16 |
+
+Tech (equilibrada):
+| Nivel | Precio | Brazo izq. y der. | Torso | Piernas | Cabina |
+| --- | --- | --- | --- | --- | --- |
+| I | $500 | V+4 D+2 | V+22 | V+6 Vel+0.15 | V+6 |
+| II | $800 | V+8 D+4 | V+44 | V+12 Vel+0.3 | V+12 |
+| III | $1,200 | V+12 D+6 | V+66 | V+18 Vel+0.45 | V+18 |
+| IV | $1,800 | V+16 D+8 | V+88 | V+24 Vel+0.6 | V+24 |
+
+Cuerpo a cuerpo (más aguante y más velocidad):
+| Nivel | Precio | Brazo izq. y der. | Torso | Piernas | Cabina |
+| --- | --- | --- | --- | --- | --- |
+| I | $500 | V+5 D+1 | V+30 | V+10 Vel+0.25 | V+8 |
+| II | $800 | V+10 D+2 | V+60 | V+20 Vel+0.5 | V+16 |
+| III | $1,200 | V+15 D+3 | V+90 | V+30 Vel+0.75 | V+24 |
+| IV | $1,800 | V+20 D+4 | V+120 | V+40 Vel+1 | V+32 |
+
+Fuego (golpe más seguido):
+| Nivel | Precio | Brazo izq. y der. | Torso | Piernas | Cabina |
+| --- | --- | --- | --- | --- | --- |
+| I | $500 | V+2 D+2.5 R−0.03 | V+12 | V+3 Vel+0.12 | V+3 |
+| II | $800 | V+4 D+5 R−0.06 | V+24 | V+6 Vel+0.24 | V+6 |
+| III | $1,200 | V+6 D+7.5 R−0.09 | V+36 | V+9 Vel+0.36 | V+9 |
+| IV | $1,800 | V+8 D+10 R−0.12 | V+48 | V+12 Vel+0.48 | V+12 |
+
+Piezas en juego en las ligas (T-171; se llevan ganando y apostando al menos la mínima por pieza; la revancha de la cartelera no da pieza; la pelea casera sigue con el Brazo de chatarra):
+| Pelea | Pieza en juego | Mínima por pieza | Tope de apuesta | Momio |
+| --- | --- | --- | --- | --- |
+| Liga 1 (rivales 1 a 4) | PIERNAS CUERPO A CUERPO I | $250 | $500 | 1.0 |
+| Jefe liga 1 (DON FIERRO) | TORSO MILITAR I | $500 | $1,000 | 1.5 |
+| Liga 2 | BRAZO IZQ. TECH II | $500 | $1,000 | 1.2 |
+| Jefe liga 2 | TORSO CUERPO A CUERPO II | $1,000 | $2,000 | 1.8 |
+| Liga 3 | BRAZO DER. FUEGO III | $750 | $1,500 | 1.4 |
+| Jefe liga 3 | CABINA TECH III | $1,500 | $3,000 | 2.0 |
+| Liga 4 | PIERNAS MILITAR IV | $1,000 | $2,000 | 1.6 |
+| Jefe liga 4 (EL CACIQUE) | TORSO FUEGO IV | $2,500 | $5,000 | 2.5 |
+
+Razones de balance (T-172, D-tony-125; razón = golpes que el rival necesita para tumbarte ÷ golpes que necesitas para tumbarlo, sin bloqueo, ritmo ni furia). a: con el nivel L−1 contra el rival 1 de la liga L, debe ser >= 1.0; b: el mismo contra el jefe, < 1.0 (para el jefe hay que mejorar); c: con el nivel L contra el jefe, >= 0.8. Ninguna regla falló; la más justa es Fuego IV contra EL CACIQUE (0.82).
+| Rama | Liga | a | b | c |
+| --- | --- | --- | --- | --- |
+| Militar | 1 | 1.63 | 0.60 | 1.10 |
+| Militar | 2 | 1.50 | 0.75 | 1.22 |
+| Militar | 3 | 1.38 | 0.75 | 1.22 |
+| Militar | 4 | 1.38 | 0.75 | 1.00 |
+| Tech | 1 | 1.63 | 0.60 | 1.09 |
+| Tech | 2 | 1.44 | 0.79 | 1.27 |
+| Tech | 3 | 1.40 | 0.79 | 1.17 |
+| Tech | 4 | 1.40 | 0.73 | 1.00 |
+| Cuerpo a cuerpo | 1 | 1.63 | 0.60 | 1.08 |
+| Cuerpo a cuerpo | 2 | 1.50 | 0.75 | 1.14 |
+| Cuerpo a cuerpo | 3 | 1.33 | 0.72 | 1.06 |
+| Cuerpo a cuerpo | 4 | 1.21 | 0.65 | 0.89 |
+| Fuego | 1 | 1.63 | 0.60 | 1.10 |
+| Fuego | 2 | 1.50 | 0.69 | 1.10 |
+| Fuego | 3 | 1.22 | 0.69 | 1.00 |
+| Fuego | 4 | 1.11 | 0.62 | 0.82 |
+
+Preguntas abiertas para Tony (D-tony-126; ninguna se aplica sin respuesta):
+- (a) ¿Apruebas el cambio de Core de T-163 (valores del mecha en ejecución)? Se hizo por tu orden de no parar (D-tony-128) y se deshace deshaciendo su merge.
+- (b) ¿La tabla de bonos y precios te convence, sobre todo fuego (golpe más seguido) contra militar (golpe más pesado)?
+- (c) ¿Cambiar piezas debe repararlas (hoy no: conserva el daño)?
+- (d) ¿Quieres "pieza destruida en pelea" (propuesta del diseño) más adelante?
+- (e) ¿Las piezas deben poder comprarse también en el mercado negro, más baratas o robadas?
+
+Lo que queda para Alan (D-tony-124): nada obligatorio. Todo se prueba en Pruebas_Economia con el mecha de Tony; `MechaEstacionado.prefab` y `MostradorPeleas.prefab` ya traen las piezas, la pantalla y el taller sin que Alan coloque nada nuevo. Opcional, para A-F5 o una tarea de arte: modelos low-poly de las piezas por rama en `Assets/Arte/` (hoy son colores y franjas greybox). La integración en el taller de la casa de Alan (Ciudad.unity) se escribe cuando él coloque el mecha y el mostrador, como T-136.
+
+PlayMode Progresion (`AREAS="Progresion" bash herramientas/verificar.sh playmode-por-area`, T-173): 113/113 pasaron (las 112 de antes más RecorridoPiezasPruebas), sin LIMITE.
+
 ## Ligas (T-F7, bloque 2) cerradas: qué probar jugando (2026-10-18)
 Del lado de Tony, en `Escenas/Tony/Pruebas_Economia.unity` (Play, de noche, sin ayuda). Sin revisor: T-F7 bloque 2 no pasó por revisión de Opus.
 Base automática: `RecorridoLigasPruebas` (T-162) recorre la cartelera, la apuesta, ganar, perder y reintentar, revancha, DON FIERRO en furia, subir a la liga Calle, F5/F9 y EL CACIQUE (campeón del clandestino) con entrada simulada. 3 corridas seguidas pasan (~122 s reales cada una, ~121 s de juego). Dinero final y progreso final coinciden con lo calculado desde los assets ($13,000; liga 4, siguiente 0, 4 campeones). Tiempo de juego por paso (corrida 1): a) 0.0 s, b) TORNILLO con apuesta 19.9 s, c) reparar 0.0 s, d) LA RATA perder, reparar y ganar 40.1 s, e) revancha 20.1 s, f) DON FIERRO y subir de liga 18.2 s, g) guardar y cargar 5.0 s, h) EL CACIQUE 17.5 s. Capturas: `docs/capturas/T-162-1.png` (cartelera con el jefe), `T-162-2.png` (jefe en furia desde la cabina), `T-162-3.png` (aviso de liga en el HUD).
