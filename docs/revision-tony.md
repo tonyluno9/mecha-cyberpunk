@@ -536,3 +536,8 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (por el implementador, sin verificador aparte): verificar.sh todo: EditMode 859/859; PlayMode 807/820 (9 fallos conocidos de Alan en Arena); UI 113 sin fallos propios; 11 nuevas de PantallaPiezasPruebas; MedidorFrames 0 lentos. Creador idempotente. Capturas T-169-1 y T-169-2 revisadas.
 - Para ti (sensación): Pruebas_Economia, E en el mecha estacionado, PIEZAS DEL MECHA. ¿Se entiende qué cambia cada pieza (VIDA +2 · DAÑO −1) y por qué una está gris? Límite: con 10 o más filas la lista roza la línea de estadísticas (hoy el máximo es 9).
 - Decisiones: D-tony-132.
+
+### T-170 Las piezas se ven al subirte al mecha
+- Verificado automáticamente: PlayMode Mecha 139/142 (3 omitidas de captura), UI sin fallos (115/117 con captura); 6 pruebas de AspectoPiezasPruebas y 4 de PantallaPiezasCabinaPruebas. Creadores idempotentes. Capturas T-170-1 y T-170-2 (la pantalla no tapa el centro).
+- Para ti (sensación): Pruebas_Economia, compra un brazo de fuego y otro militar y súbete. ¿Se nota la mejora al primer vistazo? ¿Magenta, azul acero, turquesa y naranja se leen como ramas y no como alarma? ¿Las franjas se ven? ¿La lista de 5 piezas durante el encendido ayuda o estorba?
+- Ojo: la captura del mecha desde fuera es una cápsula turquesa (greybox).

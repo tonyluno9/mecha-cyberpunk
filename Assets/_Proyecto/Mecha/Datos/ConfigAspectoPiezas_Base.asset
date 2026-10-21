@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccce07572ab7b8849a5cf4a00df680e3, type: 3}
+  m_Name: ConfigAspectoPiezas_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.ConfigAspectoPiezas
+  deSerie: {fileID: 2100000, guid: 79ddea912bf26804eaa0ee29b770897a, type: 2}
+  militar: {fileID: 2100000, guid: e3c8e050b26c7be408f92982696e6112, type: 2}
+  tech: {fileID: 2100000, guid: 4989f64d0d661e2458360191c011b893, type: 2}
+  cuerpoACuerpo: {fileID: 2100000, guid: e1a40541b3517574b9a2c286c1ec2dc4, type: 2}
+  fuego: {fileID: 2100000, guid: 1f01a1127924b644fbbf442576197a95, type: 2}
+  franja: {fileID: 2100000, guid: 8570e4c4e34a4f44db3b6f1c0e87b22e, type: 2}
+  marcoDeSerie: {fileID: 2100000, guid: 9041d0246bd28c94f81dc3635351cdd4, type: 2}
