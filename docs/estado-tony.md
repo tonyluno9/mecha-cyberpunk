@@ -58,9 +58,37 @@ T-153 y T-156 no dependen de Core (pueden ir primero si T-152 se atora); T-156 y
 | T-161 Pelea de jefe en la arena, subir de liga y campeón del clandestino | T-155, T-159 | pendiente |
 | T-162 Recorrido de las ligas (cierre del bloque 2) | T-152 a T-161 | pendiente |
 
-Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-163; D-tony-76):
-1. Piezas por ramas y niveles: 5 piezas, 4 ramas mezclables, 4 niveles desbloqueados por liga (`IProgresoLigas.LigaActual`, D-tony-93), compra en
-   el taller y piezas viejas al inventario. Reajusta los rivales de las ligas 3 y 4 (D-tony-97).
+## T-F7, bloque 3: piezas por ramas y niveles
+
+Planeado el 2026-10-18 (planificador Opus 5.5) en tony/fase-7. Decisiones propuestas: D-tony-113 a D-tony-126 en docs/decisiones-pendientes-tony.md.
+5 ranuras, 4 ramas mezclables y 4 niveles (nivel ≤ liga actual), 5 piezas de serie que dan el mecha de hoy; se compran y se ponen en el banco del
+taller (pantalla "PIEZAS DEL MECHA"); la vieja va al inventario y se vende en el mercado negro; piezas de rama en juego en las apuestas de cada liga;
+balance contra las ligas (reajuste de las ligas 3 y 4 solo si falla una regla). Todo en Pruebas_Economia: nada espera a Alan.
+**T-163 (Core) necesita la aprobación de Tony antes de empezar** (D-tony-114); sin ella, T-166 en adelante quedan bloqueadas. Preguntas: D-tony-126.
+
+Orden recomendado (D-tony-113): T-163, T-164, T-165, T-166, T-167, T-168, T-169, T-170, T-171, T-172, T-173.
+T-164 y T-165 no dependen de Core (pueden ir mientras T-163 espera); T-170 y T-171 pueden ir en paralelo con T-168 y T-169.
+
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-163 Valores del mecha en tiempo de ejecución (Core; necesita aprobación) | nada | pendiente (espera aprobación) |
+| T-164 Deudas: el guardado no pierde lo que la escena no tiene y CambioEscenaPruebas por orden | nada | pendiente |
+| T-165 Cambiar los datos de un mecha en juego sin perder el daño | nada | pendiente |
+| T-166 Piezas del mecha: ranuras, ramas, niveles y suma de estadísticas | T-163 | pendiente |
+| T-167 Equipo del mecha: las piezas puestas cambian al mecha y se guardan | T-164, T-165, T-166 | pendiente |
+| T-168 Comprar y cambiar piezas en el taller (lógica y banco) | T-167 | pendiente |
+| T-169 Pantalla de piezas del taller | T-168 | hecha (sin revisar) |
+| T-170 Las piezas se ven | T-167 | hecha (sin revisar) |
+| T-171 Piezas en juego en las ligas | T-166 | hecha (sin revisar) |
+| T-172 Balance de piezas y ligas | T-171 | hecha (sin revisar) |
+| T-173 Recorrido de piezas | T-172 | hecha (sin revisar) |
+| T-170 Las piezas se ven al subirte al mecha | T-167 | pendiente |
+| T-171 Piezas de rama en juego en las apuestas de las ligas | T-166 (T-168 para un criterio) | pendiente |
+| T-172 Balance de las piezas contra las ligas y reajuste de las ligas 3 y 4 | T-166, T-171 | pendiente |
+| T-173 Recorrido de las piezas (cierre del bloque 3) | T-163 a T-172 | pendiente |
+
+Bloques siguientes de T-F7, en orden (se escriben al terminar el anterior, desde T-174; D-tony-76):
+1. Piezas por ramas y niveles: planeado arriba (T-163 a T-173).
 2. Habilidades: especiales por pieza con cooldown y munición limitada que se compra.
 3. Implantes: 4 espacios (ojos, brazos, piernas, sistema nervioso) en la clínica, con el doctor y su deuda al morir en la calle.
 4. Misiones y reputación: barrio, corporativas, ilegales y robos, con reputación de barrio y corporaciones y favores usables.
@@ -288,3 +316,45 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-162 (2026-10-18)
 - T-162 hecha (sin revisar). Bloque 2 de T-F7 (ligas) cerrado: suite completa EditMode 824/824, PlayMode 767/780 (9 fallos de Alan en Arena). Sigue mezcla a main y planificar el bloque 3.
+
+## Después de T-164 (2026-10-18)
+- T-164 hecha (sin revisar), integrada en tony/fase-7. Sigue T-165; T-163 (Core) después.
+
+## Después de T-165 (2026-10-18)
+- T-165 hecha (sin revisar), integrada en tony/fase-7. Sigue T-163 (Core, marcada "necesita aprobación"; se hace por la instrucción de Tony de no parar, D-tony-128) y luego T-166.
+
+## Después de T-163 (2026-10-18)
+- T-163 hecha (sin revisar), integrada en tony/fase-7. Sigue T-166.
+
+## Después de T-166 (2026-10-18)
+- T-166 hecha (sin revisar), integrada en tony/fase-7. Sigue T-167.
+
+## Después de T-167 (2026-10-18)
+- T-167 hecha (sin revisar), integrada en tony/fase-7. Sigue T-168.
+
+## Después de T-168 (2026-10-18)
+- T-168 hecha (sin revisar), integrada en tony/fase-7. Sigue T-169.
+
+## Después de T-169 (2026-10-18)
+- T-169 hecha (sin revisar), integrada en tony/fase-7. Sigue T-170.
+
+## Parada manual en T-170 (2026-10-18)
+- Tony detuvo el turno. T-160 a T-169 hechas (sin revisar) e integradas en tony/fase-7. Bloque 2 (T-152 a T-162) ya en main. T-163 a T-169 de T-F7 bloque 3 en tony/fase-7, aún no en main.
+- T-170 (las piezas se ven) quedó A MEDIAS en tony/T-170-piezas-se-ven: escrito y SIN VERIFICAR. Hay AspectoPiezas, ConfigAspectoPiezas (+ _Base.asset), CreadorAspectoPiezas, 6 materiales Pieza_*.mat, PantallaPiezasCabina + config + creador, y cambios en MechaJugador.prefab y MechaCyberpunk.UI.Editor.asmdef. No hay pruebas ni capturas de T-170, ni bitácora, ni se movió el archivo (sigue en en-curso/). Se detuvo al implementador a la mitad, así que parte del código puede estar incompleta o no compilar.
+- Falta: compilar; revisar que MechaJugador.prefab y el asmdef cambien solo lo intencional; terminar T-170 según su archivo (pruebas, capturas); verificar Mecha y UI; cerrar y mezclar en tony/fase-7. Luego T-171, T-172, T-173; al cerrar el bloque 3, suite completa y mezcla de tony/fase-7 en main con push.
+- Unity cerrado; borré un Temp/UnityLockfile huérfano. T-136 y T-137 siguen bloqueadas (Ciudad.unity en main sin DirectorPrologo al último fetch). Ninguna de las tareas T-163 a T-169 pasó por el verificador independiente; solo las corrió el implementador.
+
+## Después de T-170 (2026-10-21)
+- T-170 hecha (sin revisar), integrada en tony/fase-7. Sigue T-171.
+
+## Después de T-171 (2026-10-21)
+- T-171 hecha (sin revisar), integrada en tony/fase-7. Sigue T-172.
+
+## Después de T-172 (2026-10-21)
+- T-172 hecha (sin revisar), integrada en tony/fase-7. Sigue T-173.
+
+## Después de T-173 (2026-10-21)
+- T-173 hecha (sin revisar), integrada en tony/fase-7. Bloque 3 cerrado. Sigue verificador de T-163 a T-169, suite completa y mezcla a main.
+
+## Cierre del bloque 3 (2026-10-21)
+- T-163 a T-173 hechas (sin revisar) y verificadas; tony/fase-7 mezclada en main. T-136 y T-137 siguen bloqueadas (Ciudad.unity en main sin DirectorPrologo). Bloque 4 sin planear.

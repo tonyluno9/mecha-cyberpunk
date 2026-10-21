@@ -32,8 +32,18 @@ namespace MechaCyberpunk.Economia.Editor
             var so = new SerializedObject(catalogo);
             SerializedProperty lista = so.FindProperty("objetos");
             var todos = new[] { brazo, chatarra, kit };
-            lista.arraySize = todos.Length;
-            for (int i = 0; i < todos.Length; i++) lista.GetArrayElementAtIndex(i).objectReferenceValue = todos[i];
+            // Solo agrega lo que falta: conserva lo que otros creadores (piezas del mecha, T-166) ya pusieron.
+            foreach (DatosObjeto objeto in todos)
+            {
+                bool presente = false;
+                for (int i = 0; i < lista.arraySize; i++)
+                {
+                    if (lista.GetArrayElementAtIndex(i).objectReferenceValue == objeto) { presente = true; break; }
+                }
+                if (presente) continue;
+                lista.arraySize++;
+                lista.GetArrayElementAtIndex(lista.arraySize - 1).objectReferenceValue = objeto;
+            }
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(catalogo);
             AssetDatabase.SaveAssets();

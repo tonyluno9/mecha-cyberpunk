@@ -159,7 +159,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             yield return null;
             yield return null; // el control del jugador vuelve un cuadro después de cerrar la pantalla
-            Assert.AreEqual("Mecha sin daños", hud.TextoAvisoInteraccion.text);
+            Assert.AreEqual("E · Taller · piezas", hud.TextoAvisoInteraccion.text, "Sin daño el mismo E abre las piezas (T-168)");
             yield return Tecla(teclado.eKey);
             Assert.IsFalse(pantalla.Visible, "Sin daño no abre la pantalla");
             Assert.AreEqual(-150, cartera.Dinero, "La segunda E no cobra");

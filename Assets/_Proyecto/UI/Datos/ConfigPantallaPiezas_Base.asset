@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb857d7dc0c524f4dab3410c748da7e4, type: 3}
+  m_Name: ConfigPantallaPiezas_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaPiezas
+  colorDeSerie: {r: 0.62, g: 0.64, b: 0.7, a: 1}
+  colorMilitar: {r: 0.42, g: 0.62, b: 0.95, a: 1}
+  colorTech: {r: 0, g: 1, b: 0.9, a: 1}
+  colorCuerpoACuerpo: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorFuego: {r: 1, g: 0.2, b: 0.75, a: 1}
+  colorBloqueada: {r: 0.45, g: 0.46, b: 0.5, a: 1}
+  colorFondo: {r: 0.02, g: 0.02, b: 0.06, a: 0.88}
+  colorTitulo: {r: 0, g: 1, b: 0.9, a: 1}
+  colorTexto: {r: 0.8, g: 0.85, b: 0.95, a: 1}
+  colorDinero: {r: 1, g: 0.85, b: 0.2, a: 1}
+  colorDeuda: {r: 1, g: 0.45, b: 0.35, a: 1}
+  colorSube: {r: 0.3, g: 1, b: 0.45, a: 1}
+  colorBaja: {r: 1, g: 0.2, b: 0.75, a: 1}
+  colorAviso: {r: 1, g: 0.85, b: 0.2, a: 1}
+  colorError: {r: 1, g: 0.45, b: 0.35, a: 1}
+  tamanoTitulo: 72
+  tamanoSubtitulo: 34
+  tamanoDinero: 40
+  tamanoFilas: 38
+  tamanoEstadisticas: 44
+  tamanoDiferencia: 40
+  tamanoAviso: 36
+  tamanoAyuda: 28
+  textoTitulo: PIEZAS DEL MECHA
+  subtituloRanuras: ELIGE UNA RANURA
+  formatoSubtituloPiezas: CAMBIAR {0}
+  formatoDinero: DINERO {0}
+  formatoEstadisticas: "VIDA {0} \xB7 DA\xD1O {1} \xB7 VELOCIDAD {2}"
+  etiquetaVida: VIDA
+  etiquetaDanio: "DA\xD1O"
+  etiquetaVelocidad: VEL
+  textoSinCambios: SIN CAMBIOS
+  formatoElegida: '[ {0} ]'
+  formatoPoner: "{0} \xB7 PONER \xB7 TIENES {1}"
+  formatoComprar: "{0} \xB7 COMPRAR \xB7 {1}"
+  formatoBloqueada: "{0} \xB7 SE ABRE EN LA LIGA {1}"
+  formatoPuesta: 'PUESTA: {0}'
+  formatoVendida: "+{0} \xB7 VENDISTE {1}"
+  textoNoAlcanza: NO TE ALCANZA
+  textoTallerBloqueado: TALLER BLOQUEADO
+  textoNoSePudo: NO SE PUDO
+  textoSinPiezas: NO HAY PIEZAS PARA ESTA RANURA
+  ayudaRanuras: "\u2191 \u2193 elegir \xB7 Enter o \u2192 ver piezas \xB7 Esc salir"
+  ayudaPiezas: "\u2191 \u2193 elegir \xB7 Enter comprar o poner \xB7 \u2190 o Esc
+    volver"
