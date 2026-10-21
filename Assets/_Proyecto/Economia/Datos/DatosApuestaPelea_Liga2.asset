@@ -15,5 +15,5 @@ MonoBehaviour:
   momio: 1.2
   apuestaMaxima: 1000
   montos: fa000000f4010000e8030000
-  piezaEnJuego: {fileID: 0}
-  apuestaMinimaPorPieza: 0
+  piezaEnJuego: {fileID: 11400000, guid: 4102c12a61980ac4391704d3a010be26, type: 2}
+  apuestaMinimaPorPieza: 500

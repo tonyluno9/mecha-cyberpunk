@@ -53,6 +53,7 @@ namespace MechaCyberpunk.Progresion.Prologo
         private bool carteleraAbierta;
         private List<OpcionCartelera> opcionesCartelera;
         private ControladorAPie controlCongelado;
+        private readonly Dictionary<DatosApuestaPelea, DatosApuestaPelea> apuestasSinPieza = new Dictionary<DatosApuestaPelea, DatosApuestaPelea>();
 
         /// <summary>True mientras la pantalla de apuesta está abierta.</summary>
         public bool ApuestaAbierta => apuestaAbierta;
@@ -231,6 +232,10 @@ namespace MechaCyberpunk.Progresion.Prologo
             {
                 ServicioLigas ligas = Registro<ServicioLigas>.Actual;
                 CartelPelea cartel = calendario.Cartel(opcion.Liga, opcion.Indice);
+                if (opcion.Tipo == TipoOpcionCartelera.Revancha)
+                {
+                    cartel = SinPiezaEnJuego(cartel);
+                }
                 float fraccion = opcion.Tipo == TipoOpcionCartelera.Revancha ? FraccionRevancha(ligas) : 1f;
                 if (cartel == null || !flujo.PrepararCartel(cartel, fraccion))
                 {
@@ -247,6 +252,37 @@ namespace MechaCyberpunk.Progresion.Prologo
             flujo.QuitarCartel();
             opcionActual = OpcionCasera;
             return false;
+        }
+
+        // T-171 (D-tony-121): en una revancha de la cartelera no hay pieza en juego. Se arma un cartel igual con una copia en ejecución
+        // de la apuesta sin pieza (se guarda por apuesta y se destruye al destruirse el mostrador).
+        private CartelPelea SinPiezaEnJuego(CartelPelea cartel)
+        {
+            if (cartel == null || cartel.apuesta == null || cartel.apuesta.PiezaEnJuego == null)
+            {
+                return cartel;
+            }
+            if (!apuestasSinPieza.TryGetValue(cartel.apuesta, out DatosApuestaPelea copia) || copia == null)
+            {
+                DatosApuestaPelea o = cartel.apuesta;
+                copia = DatosApuestaPelea.Crear(o.Momio, o.ApuestaMaxima, o.Montos, null, 0);
+                copia.name = o.name + " (revancha)";
+                apuestasSinPieza[o] = copia;
+            }
+            return CartelPelea.Crear(cartel.prefabRival, cartel.premioGanar, cartel.premioPerder, cartel.liga, cartel.esJefe, copia,
+                cartel.presentador);
+        }
+
+        private void OnDestroy()
+        {
+            foreach (DatosApuestaPelea copia in apuestasSinPieza.Values)
+            {
+                if (copia != null)
+                {
+                    Destroy(copia);
+                }
+            }
+            apuestasSinPieza.Clear();
         }
 
         // T-160: la cartelera congela el control como la apuesta; Enter reta la opción elegida y Esc cierra sin cobrar.

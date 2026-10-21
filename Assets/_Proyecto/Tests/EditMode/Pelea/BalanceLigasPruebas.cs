@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.Mecha;
 using MechaCyberpunk.Pelea.Datos;
 using MechaCyberpunk.Progresion;
 using NUnit.Framework;
@@ -21,6 +22,8 @@ namespace MechaCyberpunk.Tests
         private const string RutaPremioCasera = "Assets/_Proyecto/Economia/Datos/DatosPremioPelea_Casera.asset";
         private const string RutaEconomia = "Assets/_Proyecto/Economia/Datos/DatosEconomia_Base.asset";
         private const string RutaMechaJugador = "Assets/_Proyecto/Mecha/Datos/DatosMecha_Jugador.asset";
+        private const string RutaApuestas = "Assets/_Proyecto/Economia/Datos/DatosApuestaPelea_";
+        private const string NombreBrazoChatarra = "Brazo de chatarra";
         private const float MaximoPerderSobreGanar = 0.2f;
         private const int MinimoJefeSobreRival1 = 2;
 
@@ -192,6 +195,52 @@ namespace MechaCyberpunk.Tests
                 if (pieza == null) continue;
                 Assert.Less(pieza.ValorVenta, c.premioGanar,
                     $"REGLA i: la pieza de {Nombre(liga, indice)} vale ${pieza.ValorVenta} y el premio es ${c.premioGanar}.");
+            }
+        }
+
+        // T-171 (D-tony-121): la tabla de piezas en juego por apuesta (nombre de la pieza, nivel y apuesta mínima = mitad del tope).
+        private static readonly (string asset, string pieza, int nivel, int minimo)[] PiezasEnJuego =
+        {
+            ("Liga1", "PIERNAS CUERPO A CUERPO I", 1, 250), ("Jefe1", "TORSO MILITAR I", 1, 500),
+            ("Liga2", "BRAZO IZQ. TECH II", 2, 500), ("Jefe2", "TORSO CUERPO A CUERPO II", 2, 1000),
+            ("Liga3", "BRAZO DER. FUEGO III", 3, 750), ("Jefe3", "CABINA TECH III", 3, 1500),
+            ("Liga4", "PIERNAS MILITAR IV", 4, 1000), ("Jefe4", "TORSO FUEGO IV", 4, 2500),
+        };
+
+        [Test]
+        public void PiezasEnJuego_LosOchoAssetsTraenLaPiezaYLaMinimaDeLaTabla()
+        {
+            foreach (var fila in PiezasEnJuego)
+            {
+                var apuesta = Cargar<DatosApuestaPelea>(RutaApuestas + fila.asset + ".asset");
+                Assert.IsNotNull(apuesta.PiezaEnJuego, $"{fila.asset} no tiene pieza en juego.");
+                Assert.AreEqual(fila.pieza, apuesta.PiezaEnJuego.Nombre, $"{fila.asset}: pieza en juego.");
+                Assert.AreEqual(fila.minimo, apuesta.ApuestaMinimaPorPieza, $"{fila.asset}: apuesta mínima por la pieza.");
+                Assert.AreEqual(apuesta.ApuestaMaxima / 2, fila.minimo, $"{fila.asset}: la mínima es la mitad del tope.");
+            }
+        }
+
+        [Test]
+        public void PiezasEnJuego_LaCaseraSigueConElBrazoDeChatarra()
+        {
+            var casera = Cargar<DatosApuestaPelea>(RutaApuestas + "Casera.asset");
+            Assert.IsNotNull(casera.PiezaEnJuego);
+            Assert.AreEqual(NombreBrazoChatarra, casera.PiezaEnJuego.Nombre);
+        }
+
+        [Test]
+        public void ReglaK_LaPiezaEnJuegoDeCadaLigaEsDeRamaYDeNivelDeLaLiga_YLaMinimaNoPasaDelTope()
+        {
+            foreach (var (liga, indice, c) in Todos())
+            {
+                string quien = Nombre(liga, indice);
+                var pieza = c.apuesta.PiezaEnJuego as DatosPieza;
+                Assert.IsNotNull(pieza, $"REGLA k: la pieza en juego de {quien} no es una pieza de rama.");
+                Assert.AreEqual(liga, pieza.Nivel, $"REGLA k: la pieza de {quien} es de nivel {pieza.Nivel} y la liga es {liga}.");
+                Assert.LessOrEqual(c.apuesta.ApuestaMinimaPorPieza, c.apuesta.ApuestaMaxima,
+                    $"REGLA k: {quien} pide apostar ${c.apuesta.ApuestaMinimaPorPieza} por la pieza y el tope es ${c.apuesta.ApuestaMaxima}.");
+                Assert.IsTrue(c.apuesta.Montos.Any(m => m >= c.apuesta.ApuestaMinimaPorPieza),
+                    $"REGLA k: {quien} no ofrece ningún monto que alcance para la pieza (${c.apuesta.ApuestaMinimaPorPieza}).");
             }
         }
 
