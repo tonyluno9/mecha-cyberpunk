@@ -5,6 +5,7 @@ using MechaCyberpunk.Mecha.Montaje;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Mecha
@@ -14,7 +15,7 @@ namespace MechaCyberpunk.Tests.Mecha
     /// los brazos de la cabina toman el material de su rama y encienden tantas franjas como su nivel, el marco toma el de la cabina
     /// y el cuerpo exterior el del torso. Solo se compara sharedMaterial: ninguna prueba modifica un material.
     /// </summary>
-    public class AspectoPiezasPruebas
+    public class AspectoPiezasPruebas : InputTestFixture
     {
         private const string RutaPrefab = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
         private const string RutaCatalogo = "Assets/_Proyecto/Mecha/Datos/Piezas/CatalogoPiezas_Base.asset";
@@ -27,9 +28,10 @@ namespace MechaCyberpunk.Tests.Mecha
         private CatalogoPiezas catalogo;
         private ConfigAspectoPiezas config;
 
-        [SetUp]
-        public void Preparar()
+        public override void Setup()
         {
+            base.Setup();
+            InputSystem.AddDevice<Keyboard>();
             Registros.LimpiarTodos();
             catalogo = AssetDatabase.LoadAssetAtPath<CatalogoPiezas>(RutaCatalogo);
             config = AssetDatabase.LoadAssetAtPath<ConfigAspectoPiezas>(RutaConfig);
@@ -38,8 +40,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.IsTrue(config.EstaCompleta, "La config trae todos los materiales");
         }
 
-        [TearDown]
-        public void Limpiar()
+        public override void TearDown()
         {
             if (mecha != null)
             {
@@ -47,6 +48,7 @@ namespace MechaCyberpunk.Tests.Mecha
                 mecha = null;
             }
             Registros.LimpiarTodos();
+            base.TearDown();
         }
 
         private IEnumerator CrearMecha()

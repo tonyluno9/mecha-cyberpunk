@@ -77,7 +77,8 @@ T-164 y T-165 no dependen de Core (pueden ir mientras T-163 espera); T-170 y T-1
 | T-166 Piezas del mecha: ranuras, ramas, niveles y suma de estadísticas | T-163 | pendiente |
 | T-167 Equipo del mecha: las piezas puestas cambian al mecha y se guardan | T-164, T-165, T-166 | pendiente |
 | T-168 Comprar y cambiar piezas en el taller (lógica y banco) | T-167 | pendiente |
-| T-169 Pantalla de piezas del taller | T-168 | pendiente |
+| T-169 Pantalla de piezas del taller | T-168 | hecha (sin revisar) |
+| T-170 Las piezas se ven | T-167 | hecha (sin revisar) |
 | T-170 Las piezas se ven al subirte al mecha | T-167 | pendiente |
 | T-171 Piezas de rama en juego en las apuestas de las ligas | T-166 (T-168 para un criterio) | pendiente |
 | T-172 Balance de las piezas contra las ligas y reajuste de las ligas 3 y 4 | T-166, T-171 | pendiente |
@@ -339,3 +340,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 - T-170 (las piezas se ven) quedó A MEDIAS en tony/T-170-piezas-se-ven: escrito y SIN VERIFICAR. Hay AspectoPiezas, ConfigAspectoPiezas (+ _Base.asset), CreadorAspectoPiezas, 6 materiales Pieza_*.mat, PantallaPiezasCabina + config + creador, y cambios en MechaJugador.prefab y MechaCyberpunk.UI.Editor.asmdef. No hay pruebas ni capturas de T-170, ni bitácora, ni se movió el archivo (sigue en en-curso/). Se detuvo al implementador a la mitad, así que parte del código puede estar incompleta o no compilar.
 - Falta: compilar; revisar que MechaJugador.prefab y el asmdef cambien solo lo intencional; terminar T-170 según su archivo (pruebas, capturas); verificar Mecha y UI; cerrar y mezclar en tony/fase-7. Luego T-171, T-172, T-173; al cerrar el bloque 3, suite completa y mezcla de tony/fase-7 en main con push.
 - Unity cerrado; borré un Temp/UnityLockfile huérfano. T-136 y T-137 siguen bloqueadas (Ciudad.unity en main sin DirectorPrologo al último fetch). Ninguna de las tareas T-163 a T-169 pasó por el verificador independiente; solo las corrió el implementador.
+
+## Después de T-170 (2026-10-21)
+- T-170 hecha (sin revisar), integrada en tony/fase-7. Sigue T-171.
