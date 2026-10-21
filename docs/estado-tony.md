@@ -355,3 +355,6 @@ Tony pidió detenerse. Unity cerrado (se terminó la corrida batch de PlayMode q
 
 ## Después de T-173 (2026-10-21)
 - T-173 hecha (sin revisar), integrada en tony/fase-7. Bloque 3 cerrado. Sigue verificador de T-163 a T-169, suite completa y mezcla a main.
+
+## Cierre del bloque 3 (2026-10-21)
+- T-163 a T-173 hechas (sin revisar) y verificadas; tony/fase-7 mezclada en main. T-136 y T-137 siguen bloqueadas (Ciudad.unity en main sin DirectorPrologo). Bloque 4 sin planear.
