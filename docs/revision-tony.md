@@ -546,3 +546,7 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 - Verificado automáticamente (por el implementador): EditMode 862/862; PlayMode Progresion 112/112, Economia 19/19, Pelea 66/66. Creador idempotente. Sin capturas.
 - Para ti (sensación): Pruebas_Economia, apuesta $250 contra TORNILLO. ¿La pieza en juego te tienta? ¿Ganarla y ponértela en el taller se siente premio? La revancha de la cartelera ya no da pieza.
 - Decisiones: D-tony-121.
+
+### T-172 Balance de las piezas contra las ligas
+- Verificado automáticamente (por el implementador): EditMode 869/869 (7 nuevas de BalancePiezasLigasPruebas). Las 6 reglas pasan sin cambiar ningún rival ni bono; la más justa es fuego IV contra el jefe de la liga 4 (0.82; el mínimo es 0.8). Tabla de razones en la bitácora.
+- Para ti (sensación): Pruebas_Economia con LigasDePrueba hasta la liga 3. ¿El jefe se siente ganable con las piezas de tu liga y duro sin ellas?
