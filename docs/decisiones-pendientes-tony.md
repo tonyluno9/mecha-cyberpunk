@@ -688,3 +688,4 @@ Propuesta: ninguna se aplica sin respuesta. (a) ¿El teléfono en la tecla T te 
 de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones de una sola vez con historia (no repetibles) para el hilo de los
 papás, o se dejan para la historia principal?
 - T-181 Core hecha sin aprobación previa explícita, por criterio del /goal
+- verificar.sh: ensamblados_modo ahora busca asmdef de pruebas anidados (Tests/<Modo>/<Area>/<Sub>/), el área es el nombre con puntos (Progresion.Misiones); comprobado con AREAS=Progresion.Misiones playmode-por-area (7/7); tarea de Core hecha dentro de T-183 por encargo del orquestador
