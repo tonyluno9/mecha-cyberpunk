@@ -1,4 +1,6 @@
+using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Mecha;
 using MechaCyberpunk.Mecha.Encendido;
 using MechaCyberpunk.Mecha.Montaje;
 using UnityEngine;
@@ -29,6 +31,9 @@ namespace MechaCyberpunk.UI.Cabina
         private bool hayAyuda;
         private bool secuenciaReal;
         private bool suscrito;
+        private UsoHabilidades usoHabilidades;
+        private bool peleaEnCurso;
+        private bool habilidadesPendientes;
 
         // Un mecha que no nace estacionado ya tiene piloto desde el inicio (arena, pruebas).
         private bool EstaPilotado => !montaje.Estacionado || montaje.Ocupado;
@@ -46,6 +51,7 @@ namespace MechaCyberpunk.UI.Cabina
         {
             montaje = GetComponentInParent<MontajeMecha>();
             encendido = GetComponentInParent<EncendidoMecha>();
+            usoHabilidades = GetComponentInParent<UsoHabilidades>();
             if (config == null || lienzo == null || fondo == null || texto == null || golpear == null || bloquear == null
                 || montaje == null || encendido == null)
             {
@@ -104,10 +110,20 @@ namespace MechaCyberpunk.UI.Cabina
                     progreso.RegistrarGuardia();
                 }
             }
+            if (contextoActual == ContextoAyuda.Habilidades && UsoUnaHabilidad())
+            {
+                progreso.Completar();
+            }
             progreso.Avanzar(Time.deltaTime, false);
             if (progreso.Terminada)
             {
+                ContextoAyuda terminado = contextoActual;
                 Ocultar();
+                // La ayuda de las habilidades esperaba a que la de la pelea se fuera.
+                if (terminado == ContextoAyuda.MechaPelea && peleaEnCurso && habilidadesPendientes)
+                {
+                    MostrarHabilidades();
+                }
                 return;
             }
             lienzo.enabled = EstaPilotado && encendido.EstaEncendido;
@@ -134,19 +150,70 @@ namespace MechaCyberpunk.UI.Cabina
 
         private void AlIniciarPelea()
         {
-            if (!EstaPilotado || AyudasVistas.YaVista(ContextoAyuda.MechaPelea))
+            peleaEnCurso = true;
+            if (!EstaPilotado)
             {
                 return;
             }
-            Mostrar(ContextoAyuda.MechaPelea);
+            habilidadesPendientes = !AyudasVistas.YaVista(ContextoAyuda.Habilidades) && TextoHabilidades().Length > 0;
+            if (!AyudasVistas.YaVista(ContextoAyuda.MechaPelea))
+            {
+                Mostrar(ContextoAyuda.MechaPelea);
+            }
+            else if (habilidadesPendientes)
+            {
+                MostrarHabilidades();
+            }
         }
 
         private void AlTerminarPelea(ResultadoPelea resultado)
         {
-            if (hayAyuda && contextoActual == ContextoAyuda.MechaPelea)
+            peleaEnCurso = false;
+            habilidadesPendientes = false;
+            if (hayAyuda && (contextoActual == ContextoAyuda.MechaPelea || contextoActual == ContextoAyuda.Habilidades))
             {
                 Ocultar();
             }
+        }
+
+        // T-177: "1 · MISIL I  2 · ESCUDO II", solo con las ranuras que tienen habilidad. Vacío si no hay ninguna.
+        private string TextoHabilidades()
+        {
+            if (usoHabilidades == null)
+            {
+                return string.Empty;
+            }
+            DatosHabilidad brazo = usoHabilidades.Habilidad(RanuraPieza.BrazoIzquierdo);
+            DatosHabilidad torso = usoHabilidades.Habilidad(RanuraPieza.Torso);
+            string linea1 = brazo != null
+                ? string.Format(config.FormatoHabilidad1, TextoHabilidad.Etiqueta(brazo, usoHabilidades.Nivel(RanuraPieza.BrazoIzquierdo)))
+                : string.Empty;
+            string linea2 = torso != null
+                ? string.Format(config.FormatoHabilidad2, TextoHabilidad.Etiqueta(torso, usoHabilidades.Nivel(RanuraPieza.Torso)))
+                : string.Empty;
+            return brazo != null && torso != null ? linea1 + config.SeparadorHabilidades + linea2 : linea1 + linea2;
+        }
+
+        private bool UsoUnaHabilidad()
+        {
+            return usoHabilidades.EnfriamientoRestante(RanuraPieza.BrazoIzquierdo) > 0f
+                || usoHabilidades.EnfriamientoRestante(RanuraPieza.Torso) > 0f;
+        }
+
+        private void MostrarHabilidades()
+        {
+            habilidadesPendientes = false;
+            string texto = TextoHabilidades();
+            if (texto.Length == 0)
+            {
+                return;
+            }
+            AyudasVistas.Marcar(ContextoAyuda.Habilidades);
+            contextoActual = ContextoAyuda.Habilidades;
+            hayAyuda = true;
+            progreso = new ProgresoAyuda(config.SegundosMaximosHabilidades);
+            this.texto.text = texto;
+            lienzo.enabled = EstaPilotado && encendido.EstaEncendido;
         }
 
         private void AlCambiarOcupado(bool ocupado)

@@ -43,6 +43,9 @@ MonoBehaviour:
   etiquetaVida: VIDA
   etiquetaDanio: "DA\xD1O"
   etiquetaVelocidad: VEL
+  formatoHabilidad: "HABILIDAD {0} \xB7 {1} \xB7 {2}"
+  textoSinHabilidad: SIN HABILIDAD
+  formatoEnfriamiento: ENFRIAMIENTO {0} %
   textoSinCambios: SIN CAMBIOS
   formatoElegida: '[ {0} ]'
   formatoPoner: "{0} \xB7 PONER \xB7 TIENES {1}"
