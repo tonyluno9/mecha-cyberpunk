@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Combate.Pruebas;
 using MechaCyberpunk.Combate.Vida;
@@ -40,6 +41,9 @@ namespace MechaCyberpunk.Tests.Mecha
         private const float ToleranciaEnfriamiento = 0.1f;
         private const float EsperaMaxima = 12f;
         private const float GiroMouse = 400f;
+        private const int CuadrosDeCalentamiento = 10;
+        private const int CuadrosMedidos = 200;
+        private const long BytesMaximosPorCuadro = 64;
 
         private Keyboard teclado;
         private Mouse raton;
@@ -408,6 +412,30 @@ namespace MechaCyberpunk.Tests.Mecha
             Set(raton.delta, new Vector2(GiroMouse, 0f));
             yield return Esperar(0.5f);
             Assert.Greater(Mathf.Abs(Mathf.DeltaAngle(inicio, mecha.transform.eulerAngles.y)), 1f, "Después sí gira");
+        }
+
+        [UnityTest]
+        public IEnumerator Update_SinCambios_NoCreaBasuraNiAvisa()
+        {
+            yield return Escenario(false);
+            DatosPieza torso = Pieza("pieza_torso_cuerpoacuerpo_1");
+            equipo.Equipar(torso);
+            inventario.Agregar(torso.Municion, 2);
+            yield return null;
+            yield return null;
+            int avisos = 0;
+            uso.Cambio += () => avisos++;
+            MethodInfo actualizar = typeof(UsoHabilidades).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(actualizar, "UsoHabilidades tiene Update");
+            for (int i = 0; i < CuadrosDeCalentamiento; i++) actualizar.Invoke(uso, null);
+
+            long antes = System.GC.GetAllocatedBytesForCurrentThread();
+            for (int i = 0; i < CuadrosMedidos; i++) actualizar.Invoke(uso, null);
+            long gastado = System.GC.GetAllocatedBytesForCurrentThread() - antes;
+
+            // La reflexión misma gasta algo por llamada (los argumentos); un texto nuevo por cuadro y ranura gastaría mucho más.
+            Assert.Less(gastado / CuadrosMedidos, BytesMaximosPorCuadro, "Update no crea textos en cada cuadro");
+            Assert.AreEqual(0, avisos, "Sin cambios no avisa");
         }
     }
 }
