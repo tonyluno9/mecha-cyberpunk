@@ -687,3 +687,4 @@ Propuesta: ninguna se aplica sin respuesta. (a) ¿El teléfono en la tecla T te 
 (piezas, información de tus papás para la historia)? (c) ¿El descuento también en el taller o la clínica? (d) ¿Los robos deberían poder salir mal
 de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones de una sola vez con historia (no repetibles) para el hilo de los
 papás, o se dejan para la historia principal?
+- T-181 Core hecha sin aprobación previa explícita, por criterio del /goal

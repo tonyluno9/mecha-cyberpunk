@@ -13,6 +13,8 @@ namespace MechaCyberpunk.Core
         Clinica,
         Otro,
         /// <summary>El dinero cambió porque se cargó una partida; no es un movimiento real y el HUD no lo anuncia.</summary>
-        Carga
+        Carga,
+        /// <summary>Dinero de una misión (premio o castigo).</summary>
+        Mision
     }
 }

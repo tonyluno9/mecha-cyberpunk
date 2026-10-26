@@ -677,3 +677,11 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-172 Balance de las piezas contra las ligas
 - Verificado automáticamente (por el implementador): EditMode 869/869 (7 nuevas de BalancePiezasLigasPruebas). Las 6 reglas pasan sin cambiar ningún rival ni bono; la más justa es fuego IV contra el jefe de la liga 4 (0.82; el mínimo es 0.8). Tabla de razones en la bitácora.
 - Para ti (sensación): Pruebas_Economia con LigasDePrueba hasta la liga 3. ¿El jefe se siente ganable con las piezas de tu liga y duro sin ellas?
+
+### T-181 Contratos de reputación, misiones y puntos de misión (Core)
+- Verificado automáticamente (por el implementador, sin verificador aparte): compilar OK; EditMode 922/922 (7 nuevas de ContratosMisionesPruebas; ContratosPartidaPruebas ajustada porque `Carga` ya no es el último de `MotivoDinero`).
+- Hecha sin aprobación explícita de Tony por su /goal; tarea de Core, revertible deshaciendo su merge.
+
+#### Para Alan
+- Puedes leer (opcional) `Registro<IReputacion>.Actual` (barrio y corporaciones, nivel -2 a 2: grafitis con el alias con barrio en 1 o más, vecinos que saludan en 2, anuncios que difaman con corporaciones en -1 o menos) y `Registro<IMisiones>.Actual` (misión en curso, por ejemplo patrullas más atentas en un robo). Sin ellos, actúa como nivel 0 y sin misión.
+- Puedes colocar puntos de misión: implementa `IPuntoMision` (Id con prefijo `Mision_`, por ejemplo `Mision_Encargo_DonaLupe`; +Z hacia donde mira el vecino o se para la pelea), agrégalo a `Registro<IPuntoMision>` en OnEnable y quítalo en OnDisable. La lista completa de ids llega con T-183. Nada de esto es obligatorio para ti; si falta un id esa misión solo no se ofrece.

@@ -6,7 +6,8 @@ namespace MechaCyberpunk.Core
     /// El guardado de Tony (<c>ServicioGuardado</c>, Progresion/, T-111) junta el texto de todos al guardar y, al cargar,
     /// le devuelve a cada uno el suyo por <see cref="ClaveGuardado"/>, también a los que se registren después de cargar.
     /// Una clave que no está en el archivo no se toca. Claves en uso: <c>cartera</c>, <c>renta</c>, <c>mecha</c>,
-    /// <c>perfil</c>, <c>historia</c>, <c>inventario</c> (Tony, T-142), <c>ligas</c> (Tony, T-154) y <c>reloj</c> (Alan).
+    /// <c>perfil</c>, <c>historia</c>, <c>inventario</c> (Tony, T-142), <c>ligas</c> (Tony, T-154), <c>reputacion</c> y <c>favores</c> (Tony, T-182),
+    /// <c>misiones</c> (Tony, T-184) y <c>reloj</c> (Alan).
     /// </summary>
     public interface IGuardable
     {

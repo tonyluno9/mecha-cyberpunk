@@ -5,7 +5,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 ## Bloque actual: 5, misiones y reputación (T-181 a T-188; D-tony-143 a D-tony-152)
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
-| T-181 Contratos de reputación, misiones y puntos de misión (Core; autorizada por Tony en el /goal) | nada | pendiente |
+| T-181 Contratos de reputación, misiones y puntos de misión (Core; autorizada por Tony en el /goal) | nada | hecha |
 | T-182 Reputación de barrio y corporaciones, y favores | T-181 | pendiente |
 | T-183 Las misiones como datos: tabla, reglas, máquina de pasos y balance | T-181, T-182 | pendiente |
 | T-184 Servicio de misiones en escena y Pruebas_Misiones | T-182, T-183 | pendiente |
