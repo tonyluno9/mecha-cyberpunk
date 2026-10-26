@@ -315,6 +315,44 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>Agrega ServicioMisiones (con CatalogoMisiones_Base) a ServiciosProgresion.prefab (T-184). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-184 servicio de misiones")]
+        public static void CrearT184()
+        {
+            var catalogo = AssetDatabase.LoadAssetAtPath<CatalogoMisiones>(CreadorMisiones.RutaCatalogo);
+            if (catalogo == null)
+            {
+                Debug.LogError("[Progresion] CrearT184: falta CatalogoMisiones_Base; corre antes CreadorMisiones.Crear.");
+                return;
+            }
+
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                bool cambio = false;
+                var servicio = raiz.GetComponent<ServicioMisiones>();
+                if (servicio == null)
+                {
+                    servicio = raiz.AddComponent<ServicioMisiones>();
+                    cambio = true;
+                }
+                var so = new SerializedObject(servicio);
+                var propiedad = so.FindProperty("catalogo");
+                if (propiedad.objectReferenceValue != catalogo)
+                {
+                    propiedad.objectReferenceValue = catalogo;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    cambio = true;
+                }
+                if (cambio) PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         private static void CrearDatosEscenas(string ruta)
         {
             var datos = AssetDatabase.LoadAssetAtPath<DatosEscenas>(ruta);
