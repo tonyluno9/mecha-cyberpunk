@@ -26,3 +26,6 @@ MonoBehaviour:
   bonoDanio: 3
   bonoVelocidad: 0
   bonoRecarga: 0
+  habilidad: {fileID: 11400000, guid: cf28ae34ab6d7a241a4676296b47f443, type: 2}
+  municion: {fileID: 11400000, guid: 8165faad4855be24e8ac109cad209534, type: 2}
+  bonoEnfriamiento: 0

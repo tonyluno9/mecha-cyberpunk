@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efd868815262ab144b59253ce8268ce7, type: 3}
+  m_Name: DatosHabilidad_Descarga
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Habilidades.DatosHabilidad
+  id: habilidad_descarga
+  nombre: DESCARGA
+  efecto: 1
+  danio: 6
+  enfriamiento: 5
+  colorRama: {r: 0.15, g: 0.9, b: 0.85, a: 1}
+  velocidad: 0
+  alcance: 0
+  radioExplosion: 0
+  cantidad: 1
+  dispersion: 0
+  alcanceCono: 3.5
+  angulo: 30
+  aturdir: 1
+  empuje: 0
+  rompeGuardia: 0
+  reduccion: 0
+  duracion: 0
+  distancia: 0
+  duracionEmbestida: 0

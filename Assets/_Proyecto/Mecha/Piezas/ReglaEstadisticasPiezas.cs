@@ -10,6 +10,20 @@ namespace MechaCyberpunk.Mecha
         /// <summary>Recarga mínima que dejan las piezas (s).</summary>
         public const float RecargaMinima = 0.3f;
 
+        /// <summary>Suma los bonos de enfriamiento de las piezas puestas (tope 0.4, igual que ReglaHabilidad). Null en la lista se ignora.</summary>
+        public static float ReduccionEnfriamiento(IReadOnlyList<DatosPieza> puestas)
+        {
+            float suma = 0f;
+            if (puestas != null)
+            {
+                foreach (DatosPieza pieza in puestas)
+                {
+                    if (pieza != null) suma += pieza.BonoEnfriamiento;
+                }
+            }
+            return Mathf.Clamp(suma, 0f, MechaCyberpunk.Combate.Habilidades.ReglaHabilidad.ReduccionMaxima);
+        }
+
         /// <summary>Compone con una lista: cada pieza va en su propia ranura. Null o repetida en una ranura: se ignora con warning.</summary>
         public static ValoresMecha Componer(ValoresMecha deSerie, IReadOnlyList<DatosPieza> puestas)
         {
