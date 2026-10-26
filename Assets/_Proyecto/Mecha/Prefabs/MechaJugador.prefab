@@ -734,6 +734,8 @@ Transform:
   - {fileID: 6896129075228066406}
   - {fileID: 5614929097068809265}
   - {fileID: 1047315055287651931}
+  - {fileID: 1678913502926791310}
+  - {fileID: 766138336364124041}
   m_Father: {fileID: 3900748725982754112}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1175470950111418822
@@ -2536,6 +2538,8 @@ GameObject:
   - component: {fileID: 5522019746784433787}
   - component: {fileID: 696915429598134064}
   - component: {fileID: 7120140351334620347}
+  - component: {fileID: 4043469135635778444}
+  - component: {fileID: 5801320355521841545}
   m_Layer: 0
   m_Name: MechaJugador
   m_TagString: Untagged
@@ -2831,6 +2835,35 @@ MonoBehaviour:
   - {fileID: 398814228050762209}
   - {fileID: 503778912359582947}
   cuerpo: {fileID: 8833397682075194200}
+--- !u!114 &4043469135635778444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3070993614766129967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8fedcd192305741b8a3213a8a920a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Habilidades.LanzadorHabilidades
+  origenBrazo: {fileID: 1678913502926791310}
+  origenTorso: {fileID: 766138336364124041}
+  config: {fileID: 0}
+--- !u!114 &5801320355521841545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3070993614766129967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b9620e0850d0d64bb9b2f79e4e402b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.UsoHabilidades
+  habilidad1: {fileID: 5553508913019778706, guid: f9eb26f3677f07646b876e204c5b43f0, type: 3}
+  habilidad2: {fileID: -6307982526880375687, guid: f9eb26f3677f07646b876e204c5b43f0, type: 3}
 --- !u!1 &3270381564017572605
 GameObject:
   m_ObjectHideFlags: 0
@@ -3542,6 +3575,37 @@ Transform:
   - {fileID: 2307428982516491745}
   - {fileID: 1720416455883661911}
   - {fileID: 8979371964719286879}
+  m_Father: {fileID: 3437856503399523275}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4115822126294644014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1678913502926791310}
+  m_Layer: 0
+  m_Name: OrigenHabilidadBrazo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1678913502926791310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4115822126294644014}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.42, y: 3.3, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 3437856503399523275}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4137150664864766245
@@ -4931,6 +4995,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &5613835013109367013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 766138336364124041}
+  m_Layer: 0
+  m_Name: OrigenHabilidadTorso
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &766138336364124041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5613835013109367013}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.9, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3437856503399523275}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5633656052581447439
 GameObject:
   m_ObjectHideFlags: 0
