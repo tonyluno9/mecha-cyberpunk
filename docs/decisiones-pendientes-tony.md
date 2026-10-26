@@ -624,3 +624,4 @@ Propuesta: ninguna se aplica sin respuesta. (a) ¿Brazo izquierdo = arma y torso
 debe venderse en el taller (hoy solo en el mercado negro, como los kits)? (c) ¿Las habilidades deben poder usarse en la calle y en la
 emboscada (con más calor)? (d) ¿Quieres los "drones de apoyo" de tech (mecha-taller.md) más adelante? (e) ¿Los rivales normales de las ligas 3
 y 4 también deben usar habilidades, o se deja para la adaptación del bloque 8?
+- 2026-10-26 cierre bloque habilidades: JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula falla 8/15 (determinista, Arena de Alan, sin cambios nuestros). Anotado, no se toca.
