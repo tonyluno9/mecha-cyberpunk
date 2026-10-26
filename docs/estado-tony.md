@@ -7,7 +7,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 3 de T-F7 hechos y en main (econo
 | --- | --- | --- |
 | T-174 Habilidades y munición como datos | T-166 | hecha |
 | T-175 Efectos: proyectil, cono, escudo, embestida y aturdir | T-174 | hecha |
-| T-176 Usar las habilidades desde la cabina (teclas 1 y 2) | T-174, T-175 | pendiente |
+| T-176 Usar las habilidades desde la cabina (teclas 1 y 2) | T-174, T-175 | hecha |
 | T-177 Las habilidades se ven: cabina, ayuda, taller y mercado negro | T-176 | pendiente |
 | T-178 Los jefes de las ligas usan una habilidad | T-174, T-175 (paralela a T-176/T-177) | pendiente |
 | T-179 Balance de las habilidades y la munición | T-174, T-178 | pendiente |
