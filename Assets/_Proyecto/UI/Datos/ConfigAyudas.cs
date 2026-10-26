@@ -16,6 +16,16 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoMechaCalle = "WASD mover · RATÓN mirar · E bajar (quieto)";
         [SerializeField] private string textoLlamar = "M · llamar a tu mecha";
 
+        [Header("Habilidades (T-177)")]
+        [Tooltip("Línea de la tecla 1 (brazo izquierdo). {0} = habilidad con su nivel.")]
+        [SerializeField] private string formatoHabilidad1 = "1 · {0}";
+        [Tooltip("Línea de la tecla 2 (torso). {0} = habilidad con su nivel.")]
+        [SerializeField] private string formatoHabilidad2 = "2 · {0}";
+        [Tooltip("Separador entre las dos habilidades cuando hay las dos.")]
+        [SerializeField] private string separadorHabilidades = "  ";
+        [Tooltip("Tiempo máximo que se ve la ayuda de las habilidades (s).")]
+        [Min(1f)] [SerializeField] private float segundosMaximosHabilidades = 15f;
+
         [Header("Tiempos")]
         [Tooltip("Tiempo máximo que se ve una ayuda a pie, en carro o del mecha en la calle (s).")]
         [Min(1f)] [SerializeField] private float segundosMaximos = 12f;
@@ -47,6 +57,10 @@ namespace MechaCyberpunk.UI
         [Min(8)] [SerializeField] private int tamanoLetraCabina = 20;
 
         public float SegundosMaximos => segundosMaximos;
+        public string FormatoHabilidad1 => formatoHabilidad1;
+        public string FormatoHabilidad2 => formatoHabilidad2;
+        public string SeparadorHabilidades => separadorHabilidades;
+        public float SegundosMaximosHabilidades => segundosMaximosHabilidades;
         public float SegundosMaximosPelea => segundosMaximosPelea;
         public float SegundosCaminando => segundosCaminando;
         public float SegundosManejando => segundosManejando;

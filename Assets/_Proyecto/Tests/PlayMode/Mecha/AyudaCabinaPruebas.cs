@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
+using MechaCyberpunk.Mecha;
 using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.Mecha.Encendido;
 using MechaCyberpunk.Mecha.Montaje;
@@ -330,6 +332,146 @@ namespace MechaCyberpunk.Tests.Mecha
 
             yield return EsperarHasta(() => !pantalla.Visible, "se oculta", config.SegundosMaximos + MargenSegundos);
             Assert.IsTrue(AyudasVistas.YaVista(ContextoAyuda.MechaCalle));
+        }
+
+        // ---- T-177: la línea de las habilidades (MechaEstacionado.prefab con arranque Directo, sin escena) ----
+
+        private const string RutaEstacionado = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
+        private const string RutaCatalogo = "Assets/_Proyecto/Mecha/Datos/Piezas/CatalogoPiezas_Base.asset";
+        private const string TextoAmbasHabilidades = "1 · MISIL I  2 · ESCUDO I";
+
+        private CatalogoPiezas catalogo;
+        private EquipoMecha equipo;
+        private ServicioInventario inventario;
+        private GameObject mechaHabilidades;
+
+        private IEnumerator CrearMechaConHabilidades(bool conPiezas)
+        {
+            GameObject piso = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            piso.transform.position = new Vector3(0f, -0.5f, 0f);
+            piso.transform.localScale = new Vector3(400f, 1f, 400f);
+            GameObject padre = new GameObject("PadreApagado");
+            padre.SetActive(false);
+            mechaHabilidades = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaEstacionado),
+                new Vector3(0f, 0.05f, 0f), Quaternion.identity, padre.transform);
+            SerializedObject so = new SerializedObject(mechaHabilidades.GetComponent<MontajeMecha>());
+            so.FindProperty("arranque").enumValueIndex = (int)ArranqueMontaje.Directo;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            mechaHabilidades.transform.SetParent(null);
+            UnityEngine.Object.Destroy(padre);
+            inventario = new GameObject("InventarioPrueba").AddComponent<ServicioInventario>();
+            equipo = mechaHabilidades.GetComponent<EquipoMecha>();
+            catalogo = AssetDatabase.LoadAssetAtPath<CatalogoPiezas>(RutaCatalogo);
+            pantalla = mechaHabilidades.GetComponentInChildren<PantallaAyudaCabina>(true);
+            config = AssetDatabase.LoadAssetAtPath<ConfigAyudas>(RutaConfig);
+            if (conPiezas)
+            {
+                DatosPieza brazo = catalogo.Buscar("pieza_brazoizq_militar_1");
+                DatosPieza torso = catalogo.Buscar("pieza_torso_tech_1");
+                equipo.Equipar(brazo);
+                equipo.Equipar(torso);
+                inventario.Agregar(brazo.Municion, 3);
+                inventario.Agregar(torso.Municion, 3);
+            }
+            int estables = 0;
+            int intentos = 0;
+            while (estables < FramesEstables && intentos < MaxFramesCalentamiento)
+            {
+                yield return null;
+                intentos++;
+                estables = Time.deltaTime < DeltaTimeEstable ? estables + 1 : 0;
+            }
+            // Esta prueba es de las habilidades: la línea de la primera pelea se da por vista.
+            AyudasVistas.Marcar(ContextoAyuda.MechaPelea);
+        }
+
+        [UnityTest]
+        public IEnumerator Habilidades_PrimeraPeleaConHabilidad_MuestraLaLineaYLaSegundaNo()
+        {
+            yield return CrearMechaConHabilidades(true);
+            Assert.IsFalse(pantalla.Visible, "Antes de la pelea no se ve");
+
+            EventosPelea.PublicarInicio();
+            yield return null;
+            Assert.IsTrue(pantalla.Visible, "La línea de las habilidades se ve");
+            Assert.AreEqual(ContextoAyuda.Habilidades, pantalla.Contexto);
+            Assert.AreEqual(TextoAmbasHabilidades, pantalla.Texto.text);
+            Assert.IsTrue(AyudasVistas.YaVista(ContextoAyuda.Habilidades), "Se recuerda como las otras ayudas");
+
+            EventosPelea.PublicarFin(new ResultadoPelea(LadoPelea.Jugador, 1f));
+            yield return null;
+            Assert.IsFalse(pantalla.Visible, "Al terminar la pelea se va");
+
+            EventosPelea.PublicarInicio();
+            yield return null;
+            Assert.IsFalse(pantalla.Visible, "La segunda pelea no la muestra");
+        }
+
+        [UnityTest]
+        public IEnumerator Habilidades_SoloLasQueHay_YSinHabilidadesNoSale()
+        {
+            yield return CrearMechaConHabilidades(false);
+            EventosPelea.PublicarInicio();
+            yield return null;
+            Assert.IsFalse(pantalla.Visible, "Con piezas de serie no hay línea");
+            Assert.IsFalse(AyudasVistas.YaVista(ContextoAyuda.Habilidades), "No se marca como vista");
+            EventosPelea.PublicarFin(new ResultadoPelea(LadoPelea.Jugador, 1f));
+            yield return null;
+
+            equipo.Equipar(catalogo.Buscar("pieza_torso_tech_2"));
+            EventosPelea.PublicarInicio();
+            yield return null;
+            Assert.IsTrue(pantalla.Visible, "En la primera pelea con habilidad sí sale");
+            Assert.AreEqual("2 · ESCUDO II", pantalla.Texto.text, "Solo la ranura 2");
+        }
+
+        [UnityTest]
+        public IEnumerator Habilidades_AlUsarUnaHabilidad_LaLineaSeVa()
+        {
+            yield return CrearMechaConHabilidades(true);
+            EventosPelea.PublicarInicio();
+            yield return null;
+            Assert.IsTrue(pantalla.Visible);
+
+            yield return Tecla(teclado.digit1Key);
+            yield return null;
+
+            Assert.IsFalse(pantalla.Visible, "Ya usó una habilidad");
+        }
+
+        [UnityTest]
+        public IEnumerator Habilidades_SinUsarlas_LaLineaSeVaAlPasarElTiempoMaximo()
+        {
+            yield return CrearMechaConHabilidades(true);
+            EventosPelea.PublicarInicio();
+            yield return null;
+            Assert.IsTrue(pantalla.Visible);
+
+            yield return EsperarHasta(() => !pantalla.Visible, "se oculta por tiempo", config.SegundosMaximosHabilidades + MargenSegundos);
+            Assert.IsFalse(pantalla.Visible);
+        }
+
+        [UnityTest]
+        public IEnumerator Habilidades_ConLaAyudaDePeleaPrimero_EsperaASuTurno()
+        {
+            yield return CrearMechaConHabilidades(true);
+            AyudasVistas.Olvidar();
+            EventosPelea.PublicarInicio();
+            yield return null;
+            Assert.AreEqual(ContextoAyuda.MechaPelea, pantalla.Contexto, "Primero la de golpear y bloquear");
+
+            yield return Clic(raton.leftButton);
+            yield return Clic(raton.leftButton);
+            yield return Clic(raton.leftButton);
+            Press(raton.rightButton);
+            yield return Esperar(SegundosGuardia);
+            Release(raton.rightButton);
+            yield return null;
+            yield return null;
+
+            Assert.IsTrue(pantalla.Visible, "Después sigue la de las habilidades");
+            Assert.AreEqual(ContextoAyuda.Habilidades, pantalla.Contexto);
+            Assert.AreEqual(TextoAmbasHabilidades, pantalla.Texto.text);
         }
 
         [UnityTest]
