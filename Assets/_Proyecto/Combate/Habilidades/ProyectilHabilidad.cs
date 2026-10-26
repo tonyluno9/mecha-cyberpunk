@@ -82,7 +82,9 @@ namespace MechaCyberpunk.Combate.Habilidades
             if (BuscarChoque(paso, out RaycastHit choque))
             {
                 transform.position += direccion * choque.distance;
-                Explotar(choque.point);
+                // Si ya traslapaba al empezar el barrido, Unity da distancia 0 y punto cero: se explota donde está el misil.
+                bool traslape = choque.distance <= 0f || choque.point == Vector3.zero;
+                Explotar(traslape ? transform.position : choque.point);
                 return;
             }
             transform.position += direccion * paso;
