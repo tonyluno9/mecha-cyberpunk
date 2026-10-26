@@ -7,6 +7,8 @@ namespace MechaCyberpunk.Core
         Pelea,
         Choque,
         Reten,
-        Otro
+        Otro,
+        /// <summary>El calor sube por una misión (robo, ilegal).</summary>
+        Mision
     }
 }
