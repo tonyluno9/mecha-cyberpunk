@@ -33,7 +33,19 @@ namespace MechaCyberpunk.Mecha
         private bool enPelea;
         private readonly float[] finEnfriamiento = new float[NumeroRanuras];
         private readonly float[] totalEnfriamiento = new float[NumeroRanuras];
-        private readonly string[] huella = new string[NumeroRanuras];
+        private readonly Huella[] huella = new Huella[NumeroRanuras];
+
+        // Resumen de lo que ve la pantalla de una ranura. Es un struct comparable: no crea texto en cada cuadro.
+        private struct Huella : IEquatable<Huella>
+        {
+            public DatosHabilidad Habilidad;
+            public int Nivel;
+            public int Municion;
+            public MotivoHabilidad Motivo;
+
+            public bool Equals(Huella otra) =>
+                Habilidad == otra.Habilidad && Nivel == otra.Nivel && Municion == otra.Municion && Motivo == otra.Motivo;
+        }
 
         public bool EnPelea => enPelea;
 
@@ -189,8 +201,11 @@ namespace MechaCyberpunk.Mecha
             {
                 RanuraPieza ranura = i == 0 ? RanuraPieza.BrazoIzquierdo : RanuraPieza.Torso;
                 DatosHabilidad habilidad = Habilidad(ranura);
-                string nueva = (habilidad != null ? habilidad.Id : "-") + "|" + Nivel(ranura) + "|" + Municion(ranura) + "|" + Motivo(ranura);
-                if (nueva != huella[i])
+                Huella nueva = new Huella
+                {
+                    Habilidad = habilidad, Nivel = Nivel(ranura), Municion = Municion(ranura), Motivo = Motivo(ranura)
+                };
+                if (!nueva.Equals(huella[i]))
                 {
                     huella[i] = nueva;
                     cambio = true;

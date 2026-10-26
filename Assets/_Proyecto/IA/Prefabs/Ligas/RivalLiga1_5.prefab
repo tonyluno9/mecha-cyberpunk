@@ -71,6 +71,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2562261205238806116}
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4008309808089995046}
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3575534055089663815}
   m_SourcePrefab: {fileID: 100100000, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
 --- !u!1 &35736176446820618 stripped
 GameObject:
@@ -90,3 +96,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Rival.FuriaJefe
   config: {fileID: 11400000, guid: 826badd3d62569744bd5004b595124b1, type: 2}
+--- !u!114 &4008309808089995046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35736176446820618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8fedcd192305741b8a3213a8a920a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Habilidades.LanzadorHabilidades
+  origenBrazo: {fileID: 0}
+  origenTorso: {fileID: 0}
+  config: {fileID: 11400000, guid: 995427b158272fb47921497b14837972, type: 2}
+--- !u!114 &3575534055089663815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35736176446820618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7113a545c463383448edbc489f3de33f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Rival.HabilidadRival
+  datos: {fileID: 11400000, guid: 400337a293ff9594fae77d03bc00ecab, type: 2}

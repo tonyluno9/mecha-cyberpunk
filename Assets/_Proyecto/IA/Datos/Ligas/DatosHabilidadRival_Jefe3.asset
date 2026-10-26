@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cbd012ff3fec5f44a2bc30873b30722, type: 3}
+  m_Name: DatosHabilidadRival_Jefe3
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosHabilidadRival
+  habilidad: {fileID: 11400000, guid: cf28ae34ab6d7a241a4676296b47f443, type: 2}
+  nivel: 3
+  factorEnfriamiento: 1.5
+  factorEnfriamientoEnFuria: 0.7
+  segundosAviso: 0.6
+  distanciaMinima: 0
+  distanciaMaxima: 20
