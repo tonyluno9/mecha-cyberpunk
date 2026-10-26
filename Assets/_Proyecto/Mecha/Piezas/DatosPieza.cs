@@ -1,3 +1,4 @@
+using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Economia;
 using UnityEngine;
 
@@ -31,6 +32,19 @@ namespace MechaCyberpunk.Mecha
         [Tooltip("Recarga entre golpes que suma (s). Negativo = golpea más seguido.")]
         [SerializeField] private float bonoRecarga;
 
+        [Header("Habilidad (T-174)")]
+        [Tooltip("Habilidad especial que trae la pieza. Vacío = no trae (piezas de serie, brazo derecho, piernas, cabina).")]
+        [SerializeField] private DatosHabilidad habilidad;
+
+        [Tooltip("Munición que gasta la habilidad. Vacío si no hay habilidad.")]
+        [SerializeField] private DatosObjeto municion;
+
+        [Tooltip("Cuánto acorta los enfriamientos de las habilidades (fracción, 0.03 = 3 %). Solo las piezas tech.")]
+        [Range(0f, 0.4f)] [SerializeField] private float bonoEnfriamiento;
+
+        public DatosHabilidad Habilidad => habilidad;
+        public DatosObjeto Municion => municion;
+        public float BonoEnfriamiento => bonoEnfriamiento;
         public RanuraPieza Ranura => ranura;
         public RamaPieza Rama => rama;
         public int Nivel => nivel;
@@ -42,7 +56,8 @@ namespace MechaCyberpunk.Mecha
 
         /// <summary>Crea una pieza en memoria (para pruebas y herramientas).</summary>
         public static DatosPieza Crear(string id, string nombre, RanuraPieza ranura, RamaPieza rama, int nivel, int precio,
-            float bonoVida, float bonoDanio, float bonoVelocidad, float bonoRecarga)
+            float bonoVida, float bonoDanio, float bonoVelocidad, float bonoRecarga, float bonoEnfriamiento = 0f,
+            DatosHabilidad habilidad = null, DatosObjeto municion = null)
         {
             var p = CreateInstance<DatosPieza>();
             p.Configurar(id, nombre, TipoObjeto.Pieza, precio / 2, 2);
@@ -54,6 +69,9 @@ namespace MechaCyberpunk.Mecha
             p.bonoDanio = bonoDanio;
             p.bonoVelocidad = bonoVelocidad;
             p.bonoRecarga = bonoRecarga;
+            p.bonoEnfriamiento = bonoEnfriamiento;
+            p.habilidad = habilidad;
+            p.municion = municion;
             return p;
         }
     }

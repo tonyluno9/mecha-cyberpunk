@@ -26,3 +26,6 @@ MonoBehaviour:
   bonoDanio: 2
   bonoVelocidad: 0
   bonoRecarga: 0
+  habilidad: {fileID: 0}
+  municion: {fileID: 0}
+  bonoEnfriamiento: 0.03

@@ -1,3 +1,4 @@
+using System.Linq;
 using MechaCyberpunk.Core;
 using NUnit.Framework;
 using UnityEditor;
@@ -71,15 +72,45 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        public void Municiones_EstanEnElCatalogoYEnElMercadoNegro_ConPrecioMaximoYSinVenta()
+        {
+            var catalogo = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Economia.CatalogoObjetos>(Carpeta + "CatalogoObjetos_Base.asset");
+            var tienda = AssetDatabase.LoadAssetAtPath<DatosTienda>(Carpeta + "DatosTienda_MercadoNegro.asset");
+            Assert.NotNull(catalogo);
+            Assert.NotNull(tienda);
+            var esperado = new[]
+            {
+                ("municion_misil", "MunicionMisil", 80, 6), ("municion_combustible", "MunicionCombustible", 60, 6),
+                ("municion_celdas", "MunicionCeldas", 40, 8), ("municion_cargas", "MunicionCargas", 50, 6)
+            };
+            foreach (var (id, archivo, precio, maximo) in esperado)
+            {
+                MechaCyberpunk.Economia.DatosObjeto o = catalogo.Buscar(id);
+                Assert.NotNull(o, id);
+                Assert.AreEqual(MechaCyberpunk.Economia.TipoObjeto.Municion, o.Tipo, id);
+                Assert.AreEqual(maximo, o.Maximo, id);
+                Assert.AreEqual(0, o.ValorVenta, id);
+                Assert.NotNull(o.Oferta, id);
+                Assert.AreEqual(precio, o.Oferta.Precio, id);
+                Assert.AreSame(AssetDatabase.LoadAssetAtPath<DatosOferta>($"{Carpeta}DatosOferta_{archivo}.asset"), o.Oferta, id);
+                Assert.IsTrue(tienda.Ofertas.Contains(o.Oferta), id);
+            }
+        }
+
+        [Test]
         public void Assets_ExistenConLosValoresDeT033()
         {
             var kit = Oferta("KitReparacion", 250, TipoOferta.KitReparacion);
-            var misil = Oferta("MunicionMisil", 500, TipoOferta.Municion);
+            var misil = Oferta("MunicionMisil", 80, TipoOferta.Municion);
             var brazo = Oferta("BrazoChatarra", 1200, TipoOferta.Pieza);
             var ojos = Oferta("ImplanteOjos", 5000, TipoOferta.Implante);
             var bebida = Oferta("Bebida", 50, TipoOferta.Consumible);
 
-            Tienda("MercadoNegro", IdLugar.MercadoNegro, kit, misil, brazo);
+            var combustible = Oferta("MunicionCombustible", 60, TipoOferta.Municion);
+            var celdas = Oferta("MunicionCeldas", 40, TipoOferta.Municion);
+            var cargas = Oferta("MunicionCargas", 50, TipoOferta.Municion);
+
+            Tienda("MercadoNegro", IdLugar.MercadoNegro, kit, misil, brazo, combustible, celdas, cargas);
             Tienda("Clinica", IdLugar.Clinica, ojos);
             Tienda("Bar", IdLugar.Bar, bebida);
         }

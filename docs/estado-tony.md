@@ -5,7 +5,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 3 de T-F7 hechos y en main (econo
 ## Bloque actual: 4, habilidades (T-174 a T-180; D-tony-133 a D-tony-142, sin Core)
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
-| T-174 Habilidades y munición como datos | T-166 | pendiente |
+| T-174 Habilidades y munición como datos | T-166 | hecha |
 | T-175 Efectos: proyectil, cono, escudo, embestida y aturdir | T-174 | pendiente |
 | T-176 Usar las habilidades desde la cabina (teclas 1 y 2) | T-174, T-175 | pendiente |
 | T-177 Las habilidades se ven: cabina, ayuda, taller y mercado negro | T-176 | pendiente |

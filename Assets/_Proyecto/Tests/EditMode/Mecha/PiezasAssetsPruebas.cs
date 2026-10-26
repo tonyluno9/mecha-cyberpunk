@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Mecha;
@@ -58,6 +59,69 @@ namespace MechaCyberpunk.Tests
             Assert.NotNull(p);
             Assert.AreEqual("BRAZO DER. MILITAR II", p.Nombre);
             Assert.AreEqual("TORSO DE SERIE", catalogo.DeSerie(RanuraPieza.Torso).Nombre);
+        }
+
+        private static string MunicionDe(RamaPieza rama)
+        {
+            switch (rama)
+            {
+                case RamaPieza.Militar: return "municion_misil";
+                case RamaPieza.Fuego: return "municion_combustible";
+                case RamaPieza.Tech: return "municion_celdas";
+                default: return "municion_cargas";
+            }
+        }
+
+        [Test]
+        public void Habilidades_32PiezasLlevanHabilidadConLaMunicionDeSuRama()
+        {
+            var conHabilidad = catalogo.Piezas.Where(p => p.Habilidad != null).ToList();
+            Assert.AreEqual(32, conHabilidad.Count);
+            Assert.AreEqual(16, conHabilidad.Count(p => p.Ranura == RanuraPieza.BrazoIzquierdo));
+            Assert.AreEqual(16, conHabilidad.Count(p => p.Ranura == RanuraPieza.Torso));
+            foreach (DatosPieza p in conHabilidad)
+            {
+                Assert.AreNotEqual(RamaPieza.DeSerie, p.Rama, p.Id);
+                Assert.NotNull(p.Municion, p.Id);
+                Assert.AreEqual(MunicionDe(p.Rama), p.Municion.Id, p.Id);
+                Assert.AreEqual(TipoObjeto.Municion, p.Municion.Tipo, p.Id);
+            }
+            Assert.AreEqual("habilidad_misil", catalogo.Buscar("pieza_brazoizq_militar_1").Habilidad.Id);
+            Assert.AreEqual("habilidad_salva", catalogo.Buscar("pieza_torso_militar_4").Habilidad.Id);
+            Assert.AreEqual("habilidad_descarga", catalogo.Buscar("pieza_brazoizq_tech_2").Habilidad.Id);
+            Assert.AreEqual("habilidad_escudo", catalogo.Buscar("pieza_torso_tech_3").Habilidad.Id);
+            Assert.AreEqual("habilidad_martillo", catalogo.Buscar("pieza_brazoizq_cuerpoacuerpo_1").Habilidad.Id);
+            Assert.AreEqual("habilidad_embestida", catalogo.Buscar("pieza_torso_cuerpoacuerpo_2").Habilidad.Id);
+            Assert.AreEqual("habilidad_lanzallamas", catalogo.Buscar("pieza_brazoizq_fuego_4").Habilidad.Id);
+            Assert.AreEqual("habilidad_ondacalor", catalogo.Buscar("pieza_torso_fuego_1").Habilidad.Id);
+        }
+
+        [Test]
+        public void Habilidades_LasDemasPiezasNoTienenHabilidadNiMunicion()
+        {
+            foreach (DatosPieza p in catalogo.Piezas.Where(x => x.Habilidad == null))
+            {
+                Assert.IsNull(p.Municion, p.Id);
+            }
+        }
+
+        [Test]
+        public void BonoEnfriamiento_Las20TechTienen003PorNivel_LasDemasCero()
+        {
+            var tech = catalogo.Piezas.Where(p => p.Rama == RamaPieza.Tech).ToList();
+            Assert.AreEqual(20, tech.Count);
+            foreach (DatosPieza p in tech) Assert.AreEqual(0.03f * p.Nivel, p.BonoEnfriamiento, 0.0001f, p.Id);
+            foreach (DatosPieza p in catalogo.Piezas.Where(x => x.Rama != RamaPieza.Tech)) Assert.AreEqual(0f, p.BonoEnfriamiento, p.Id);
+        }
+
+        [Test]
+        public void ReduccionEnfriamiento_SumaLosBonosYTopeaEn04()
+        {
+            var cinco = new List<DatosPieza>();
+            for (int r = 0; r < 5; r++) cinco.Add(catalogo.De((RanuraPieza)r).Single(p => p.Rama == RamaPieza.Tech && p.Nivel == 4));
+            Assert.AreEqual(0.4f, ReglaEstadisticasPiezas.ReduccionEnfriamiento(cinco), 0.0001f);
+            Assert.AreEqual(0.06f, ReglaEstadisticasPiezas.ReduccionEnfriamiento(new[] { catalogo.Buscar("pieza_torso_tech_2") }), 0.0001f);
+            Assert.AreEqual(0f, ReglaEstadisticasPiezas.ReduccionEnfriamiento(null));
         }
 
         private ValoresMecha ConCinco(RamaPieza rama, int nivel)
