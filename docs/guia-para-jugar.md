@@ -46,6 +46,10 @@ En el mecha (ControlesMecha):
 | Levantar | Espacio |
 | Cristal | Q |
 | Llamar al mecha | M |
+| Habilidad del brazo / del torso (solo en pelea) | 1 / 2 |
+
+Habilidades: el brazo izquierdo y el torso con habilidad (BRAZO IZQ. MILITAR I, TORSO TECH I...) gastan una munición por uso y se enfrían. La munición
+(misiles, celdas, cargas, combustible) se compra solo en el mercado negro, pestaña COMPRAR; no se vende. Sin munición solo quedan los brazos.
 
 Pantallas (menús de piezas, apuestas, tienda): flechas y Enter para elegir, Esc para cerrar. Las ayudas de controles (T-134) salen solas
 en pantalla según lo que hagas. Teclas de prueba (solo en escenas de prueba): P iniciar pelea, H hacerse daño, G usar kit, T entrar a la arena,

@@ -3,6 +3,39 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Habilidades (T-F7, bloque 4) cerradas: qué probar jugando (2026-10-26)
+Del lado de Tony, en `Escenas/Tony/Pruebas_Economia.unity` (Play, de noche, sin ayuda). Sin revisor: T-F7 bloque 4 no pasó por revisión de Opus.
+Base automática: `RecorridoHabilidadesPruebas` (T-180) recorre con entrada simulada: comprar 3 MISILES y 2 CELDAS en el mercado negro (la pestaña VENDER no ofrece munición), comprar BRAZO IZQ. MILITAR I y TORSO TECH I (la diferencia muestra "HABILIDAD 1 · MISIL I · MISILES" y "HABILIDAD 2 · ESCUDO I · CELDAS"), subir y encender (la pantalla dice "1 · MISIL I · ×3" y "2 · ESCUDO I · ×2" en gris; 1 y 2 fuera de pelea no gastan), pelear contra TORNILLO con 3 misiles de 20 de daño y enfriamiento medido 7.76 s (8 s menos 3 % de la pieza tech), 1 antes del enfriamiento no gasta, con 0 misiles la fila dice SIN MUNICIÓN y el golpe a puños lleva el daño compuesto (13), el ESCUDO de 2 contra LA RATA (golpe de 8 quita 4 con escudo y 8 sin él), DON FIERRO con su aviso de 0.6 s y su EMBESTIDA de 14, y F5/F9 con la munición. 4 corridas seguidas pasan (~76 s reales, ~90 s de juego cada una). Dinero final igual al calculado desde los assets ($4,300 / $4,220 según lo que cuesta reparar). Tiempo de juego por paso: a) 0.0 s, b) 0.1 s, c) 0.1 s, d) 7.3 s, e) 39.3 s, f) 18.6 s, g) 25.3 s, h) 0.0 s. Capturas: `docs/capturas/T-180-1.png` (cabina con el misil recién lanzado hacia TORNILLO y la fila 1 enfriando "8 s"), `T-180-2.png` (cabina con "SIN MUNICIÓN" mientras se pelea a puños), `T-180-3.png` (DON FIERRO naranja en su aviso antes de embestir). Detalles y atajos: `docs/bitacora/2026-10-26-tony-T-180.md`.
+Suite completa y `playmode-por-area`: no se corrieron en esta tarea (las corre el verificador aparte); solo se corrió la prueba de Progresion de esta tarea. Anotar aquí el resultado por área cuando salga.
+Hallazgo para una tarea de corrección (no se arregló: T-180 no toca código del juego): `ProyectilHabilidad.BuscarChoque` usa SphereCast; si el rival camina hacia el misil y ya traslapa su esfera, el barrido lo devuelve con distancia 0 y punto (0,0,0), el misil explota en el origen del mundo y no daña. Pasó en ~2 de ~25 corridas con un rival lejano acercándose; con el rival parado a 2.3 m nunca. La prueba dispara con el rival ya frente al mecha. Arreglo propuesto: si `punto` es cero o la distancia es 0, explotar en la posición del misil.
+
+Lista para un humano, en orden de juego (sin L ni atajos; peleas de verdad):
+1. Mercado negro (E): ¿comprar 3 misiles y 2 celdas se siente como cargar el arma? ¿LLEVAS 3/6 se entiende? ¿Falta vender munición?
+2. Taller: PIEZAS DEL MECHA con BRAZO IZQ. MILITAR I y TORSO TECH I. ¿"HABILIDAD 1 · MISIL I · MISILES" te dice qué tecla y qué munición pide?
+3. Subir y encender: ¿la pantalla de habilidades del tablero (arriba a la derecha) se lee a la primera? ¿El gris fuera de pelea se entiende como "todavía no"?
+4. Pelea contra TORNILLO: 1 dispara el misil. ¿Se ve y se oye como un golpe fuerte? ¿La barra magenta y los segundos del enfriamiento (8 s) te dicen cuándo repetir? ¿Un misil se siente como un as bajo la manga o como lo principal?
+5. Quedarte sin misiles: ¿"SIN MUNICIÓN" en naranja y pelear a puños se siente como un castigo justo o como estar trabado?
+6. Escudo (2): ¿la franja turquesa del cristal y el marco te avisan que sigue activo? ¿Los 3 s alcanzan para cubrirte de un golpe?
+7. DON FIERRO (liga Sótano): ¿su brillo naranja de 0.6 s te enseña a esperar y esquivar o bloquear la EMBESTIDA?
+8. ¿El dinero alcanza para reparar, mejorar Y cargar munición, o hay que escoger (lo que se busca)?
+9. F5 y F9: la munición y las piezas vuelven iguales.
+
+Tabla de habilidades y munición (de la bitácora de T-179): rama | ranura | habilidad | efecto | daño | enfriamiento (s) | alcance | munición | precio
+- Militar | brazo | MISIL | proyectil | 20 | 8 | 25 | Misiles (máx 6) | $80
+- Militar | torso | SALVA | proyectil | 24 | 10 | 25 | Misiles | $80
+- Tech | brazo | DESCARGA | cono | 6 | 5 | 3.5 | Celdas (máx 8) | $40
+- Tech | torso | ESCUDO | escudo (−50 %, 3 s) | 0 | 8 | 0 | Celdas | $40
+- Cuerpo a cuerpo | brazo | MARTILLO | cono | 16 | 6 | 2.8 | Cargas (máx 6) | $50
+- Cuerpo a cuerpo | torso | EMBESTIDA | embestida | 14 | 7 | 5 | Cargas | $50
+- Fuego | brazo | LANZALLAMAS | cono | 14 | 6 | 4 | Combustible (máx 6) | $60
+- Fuego | torso | ONDA DE CALOR | cono | 15 | 9 | 3 | Combustible | $60
+Daño y duración suben 25 % por nivel; la reducción de enfriamiento de las piezas llega a 40 % como máximo.
+
+Jefes (liga | jefe | habilidad | nivel | daño | enfriamiento con ×1.5, 0.7 de eso en furia): 1 DON FIERRO EMBESTIDA I 14 / 10.5 s; 2 LA MATRACA DESCARGA II 7.5 / 7.5 s; 3 EL ALCALDE MISIL III 30 / 12 s; 4 EL CACIQUE LANZALLAMAS IV 24.5 / 9 s. Todos avisan 0.6 s antes de lanzar y no gastan munición.
+
+Preguntas abiertas para Tony (D-tony-142, ninguna se aplica sin respuesta): (a) ¿brazo izquierdo = arma y torso = sistema, con las teclas 1 y 2? (b) ¿la munición también debe venderse en el taller (hoy solo en el mercado negro, como los kits)? (c) ¿las habilidades deben poder usarse en la calle y en la emboscada (con más calor)? (d) ¿quieres los "drones de apoyo" de tech (mecha-taller.md) más adelante? (e) ¿los rivales normales de las ligas 3 y 4 también deben usar habilidades, o se deja para la adaptación del bloque 8?
+Lo que queda para Alan (D-tony-141): nada obligatorio. Todo se probó en Pruebas_Economia con el mecha, el taller y el mercado negro de Tony; el mercado negro de Alan (A-F5) vende la munición solo con usar `DatosTienda_MercadoNegro`. Opcional para un pase de arte o audio: modelos y sonidos de misil, llamas, descarga y escudo.
+
 ## Piezas (T-F7, bloque 3) cerradas: qué probar jugando (2026-10-21)
 Del lado de Tony, en `Escenas/Tony/Pruebas_Economia.unity` (Play, de noche, sin ayuda). Sin revisor: T-F7 bloque 3 no pasó por revisión de Opus.
 Base automática: `RecorridoPiezasPruebas` (T-173) recorre con entrada simulada: comprar PIERNAS CUERPO A CUERPO I en el taller (cobra $500; las de nivel II salen "SE ABRE EN LA LIGA 2"), subir al mecha, encender y medir la velocidad con W (4.25 m/s = la compuesta), apostar $250 a TORNILLO y ganar la pieza en juego, comprar BRAZO IZQ. FUEGO I y BRAZO DER. MILITAR I, cambiar entre brazos del inventario sin cobrar, notar el golpe de 15.5 (serie 10) peleando con LA RATA, vender lo viejo en el mercado negro, liga 3 (el nivel III se compra, el IV sale bloqueado), renta vencida (el taller no abre y nada se compra) y F5/F9 con 20 de daño. 3 corridas seguidas pasan (~59 s reales, ~58 s de juego cada una; 4 con la de las capturas). Dinero final $3,080 = calculado desde los assets; piezas finales e inventario final coinciden. Tiempo de juego por paso (corrida 2): a) 0.0 s, b) 0.1 s, c) subir, encender y medir 11.8 s, d) TORNILLO y reparar 19.9 s, e) brazos, encendido y LA RATA 26.6 s, f) a i) 0.0 s (solo teclas de pantalla). Capturas: `docs/capturas/T-173-1.png` (PIEZAS DEL MECHA con ramas mezcladas y el nivel II bloqueado), `T-173-2.png` (cabina con brazo de fuego y brazo militar en el paso 3 del encendido), `T-173-3.png` (mercado negro, pestaña VENDER con piernas de serie y piernas CUERPO A CUERPO I). Detalles y atajos: `docs/bitacora/2026-10-21-tony-T-173.md`.
