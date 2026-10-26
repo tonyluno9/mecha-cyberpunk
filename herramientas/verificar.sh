@@ -8,13 +8,14 @@ mkdir -p Logs
 # cuya carpeta tiene al menos un .cs (en ella o en subcarpetas). Un nombre por linea.
 ensamblados_modo() {
   local modo="$1" asm dir
-  for asm in Assets/_Proyecto/Tests/"$modo"/*/MechaCyberpunk.Tests."$modo".*.asmdef; do
+  # Incluye asmdef anidados (Tests/<Modo>/<Area>/<Sub>/...): el nombre del ensamblado ya lleva el area con puntos.
+  while IFS= read -r asm; do
     [ -f "$asm" ] || continue
     dir=$(dirname "$asm")
     if [ -n "$(find "$dir" -name '*.cs' -print -quit)" ]; then
       basename "$asm" .asmdef
     fi
-  done
+  done < <(find Assets/_Proyecto/Tests/"$modo" -name "MechaCyberpunk.Tests.$modo.*.asmdef" 2>/dev/null | sort)
 }
 
 if [ "$1" = "ensamblados" ]; then

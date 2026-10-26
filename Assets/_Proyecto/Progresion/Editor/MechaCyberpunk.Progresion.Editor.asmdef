@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Progresion.Editor",
     "rootNamespace": "MechaCyberpunk.Progresion.Editor",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Progresion"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Economia", "MechaCyberpunk.Progresion"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
