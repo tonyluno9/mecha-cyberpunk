@@ -564,3 +564,64 @@ Propuesta: (a) `TallerPiezas` va solo en `MechaEstacionado.prefab` (creador `Cre
 
 ### D-tony-132 T-169: detalles de la pantalla de piezas
 Propuesta: (a) La fila de una ranura es el nombre de la pieza puesta ("PIERNAS CUERPO A CUERPO I") en el color de su rama; la elegida lleva corchetes. (b) Las opciones salen como "{pieza} · PONER · TIENES n", "{pieza} · COMPRAR · $500" y "{pieza} · SE ABRE EN LA LIGA n" (gris); los textos y colores viven en `ConfigPantallaPiezas_Base`. (c) La diferencia solo muestra lo que cambia ("VIDA +10 · VEL +0.25"; "SIN CAMBIOS" si nada). (d) Enter sobre una opción gris no hace nada ni avisa; si no alcanza o el taller está bloqueado avisa en naranja suave (no rojo puro) y no cambia nada; el aviso se borra al mover la elección. (e) La lista se recalcula cada vez que cambia el dinero, y al pulsar Enter, así una opción vieja no cobra de más. (f) El Enter que abre la pantalla desde "PIEZAS DEL MECHA" (pantalla de reparar) no entra a la primera ranura (se ignora el cuadro de apertura) y la pantalla mantiene congelado al jugador aunque la de reparar le devuelva el control un cuadro después. (g) Con 10 o más filas la lista llega a rozar la línea de estadísticas; hoy una ranura tiene a lo más 9 con el inventario vacío.
+
+## Planeación de T-F7, bloque 4: habilidades (2026-10-26, planificador Opus 5.5)
+
+### D-tony-133 IDs y orden del bloque 4
+Propuesta. El bloque 4 son T-174 a T-180. Orden: T-174 (datos), T-175 (efectos), T-176 (usarlas desde la cabina), T-177 (pantallas), T-178
+(jefes; puede ir en paralelo con T-176 y T-177 en cuanto esté T-175), T-179 (balance) y T-180 (cierre). Sin hackeo. El bloque siguiente
+(misiones y reputación, según docs/estado-tony.md) empieza en T-181.
+
+### D-tony-134 El bloque 4 no necesita Core
+Propuesta. Los datos y los efectos de las habilidades viven en Combate (lo usan el jugador desde Mecha y los jefes desde IA, que ya
+referencian Combate); la pieza (Mecha) une habilidad y munición (Economia). Los proyectiles pegan como `TipoDanio.Disparo` (ya existe) y el
+resto como `Golpe`; el bloqueo los reduce como a cualquier golpe, salvo el MARTILLO (rompe guardia, por un método de `VidaMecha`, sin tocar
+`IRecibeDanio`). Aturdir vive en `PeleadorMecha` y no cambia `ControlActivo`. El escudo usa un factor propio de `VidaMecha` (la piedad ya usa
+`MultiplicadorDanioRecibido`). La habilidad de un jefe va en `IA/Datos/DatosHabilidadRival_*` porque `DatosRival` (Core) no puede referenciar
+Combate. Si Tony quiere tipos de daño propios (explosión, fuego, eléctrico) o que Alan reaccione a las habilidades, sería una tarea de Core aparte.
+
+### D-tony-135 Qué piezas llevan habilidad y con qué tecla
+Propuesta (responde en parte "Qué arma o habilidad tiene cada pieza por rama y nivel", mecha-taller.md). Dos ranuras: el brazo izquierdo
+(el arma, tecla 1) y el torso (el sistema, tecla 2). El brazo derecho golpea (D-tony-115), y piernas y cabina solo dan estadísticas. Las piezas
+de serie no traen habilidad. Cada rama trae su habilidad en cada ranura; el nivel de la pieza da la potencia (I 1.0, II 1.25, III 1.5, IV 1.75 del
+daño y de la duración del escudo). Tech (todas sus ranuras) baja los enfriamientos un 3 % por nivel y por pieza, con tope del 40 %.
+
+### D-tony-136 Las 8 habilidades (provisionales; T-174)
+Propuesta. Brazo: MISIL (militar; proyectil, 20 de daño, 8 s), LANZALLAMAS (fuego; cono de 4 m y 60°, 14, 6 s), DESCARGA (tech; cono de 3.5 m,
+6 y aturde 1 s, 5 s), MARTILLO (cuerpo a cuerpo; cono de 2.8 m, 16, rompe guardia, 6 s). Torso: SALVA (militar; 3 proyectiles de 8, 10 s), ONDA
+DE CALOR (fuego; alrededor, 3 m, 15 y empuja, 9 s), ESCUDO (tech; −50 % de daño durante 3 s, 8 s), EMBESTIDA (cuerpo a cuerpo; 5 m en 0.3 s, 14
+y empuja, 7 s). Tabla completa en T-174. Efectos greybox con el color de la rama (D-tony-122). Tony cambia todo en los assets.
+
+### D-tony-137 Munición
+Propuesta. Una munición por rama, que gastan sus dos habilidades: MISILES $80 (máx. 6), COMBUSTIBLE $60 (6), CELDAS $40 (8), CARGAS $50 (6).
+Una por uso, se gasta al lanzar aunque no pegue. Se compra en el mercado negro, como los kits (D-tony-83; `DatosOferta_MunicionMisil` ya estaba
+ahí con un precio de prueba). No se vende. Es un objeto del inventario, así que se guarda con la partida sin nada nuevo.
+
+### D-tony-138 Reglas de uso
+Propuesta. Como los kits: solo en una pelea del flujo (de `PeleaIniciada` a `PeleaTerminada`), con el jugador piloteando, con control, sin KO
+y sin estar aturdido. La del brazo no sale con la guardia arriba (los brazos están cruzados); la del torso sí. Los enfriamientos se ponen en 0
+al empezar cada pelea y no se guardan. Sin munición no sale nada y la pantalla dice "SIN MUNICIÓN" ("SOLO BRAZOS" si las dos están vacías).
+Salen hacia donde mira el mecha (no se apunta con el ratón). La emboscada y la calle no las usan en este bloque.
+
+### D-tony-139 Jefes con habilidad (T-178)
+Propuesta. Solo los 4 jefes: DON FIERRO EMBESTIDA I, LA MATRACA DESCARGA II, EL ALCALDE MISIL III, EL CACIQUE LANZALLAMAS IV. Sin límite de
+munición; enfriamiento ×1.5 (×0.7 encima en furia); el primer uso llega un enfriamiento después de empezar; 0.6 s de aviso con el cuerpo en el
+color de la rama (no rojo, que es la furia). Los demás rivales esperan al bloque 8 (adaptación).
+
+### D-tony-140 Reglas de balance de las habilidades (T-179)
+Propuesta. a) un uso de nivel L quita ≤ 35 % de la vida del rival 1 de la liga L y ≥ 1.2 × el golpe de serie; b) la munición de una pelea típica
+(2 usos por ranura) ≤ 60 % del premio del rival 1 de la liga 1; c) ninguna habilidad domina a otra de su ranura en daño, enfriamiento, precio y
+alcance; d) con 5 piezas tech, DESCARGA y ESCUDO enfrían más rápido que las de su ranura; e) la habilidad del jefe de la liga L quita ≤ 25 % de la
+vida del jugador con fuego de nivel L−1; f) las razones de D-tony-125 contando las habilidades de los dos lados: < 1.0 con nivel L−1 contra el
+jefe y ≥ 0.7 con nivel L. Si una falla, se ajustan habilidades, munición o el enfriamiento del jefe, no las reglas ni las piezas.
+
+### D-tony-141 Lo que espera a Alan en el bloque 4
+Propuesta. Nada: todo se prueba en Pruebas_Economia con el mecha, el taller y el mercado negro de Tony; el mercado negro de Alan (A-F5) vende la
+munición solo con usar `DatosTienda_MercadoNegro`. Opcional para un pase de arte o audio: modelos y sonidos de misil, llamas, descarga y escudo.
+
+### D-tony-142 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿Brazo izquierdo = arma y torso = sistema, con teclas 1 y 2, te late? (b) ¿La munición también
+debe venderse en el taller (hoy solo en el mercado negro, como los kits)? (c) ¿Las habilidades deben poder usarse en la calle y en la
+emboscada (con más calor)? (d) ¿Quieres los "drones de apoyo" de tech (mecha-taller.md) más adelante? (e) ¿Los rivales normales de las ligas 3
+y 4 también deben usar habilidades, o se deja para la adaptación del bloque 8?
+- 2026-10-26 cierre bloque habilidades: JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula falla 8/15 (determinista, Arena de Alan, sin cambios nuestros). Anotado, no se toca.

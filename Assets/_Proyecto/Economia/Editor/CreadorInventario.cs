@@ -31,7 +31,11 @@ namespace MechaCyberpunk.Economia.Editor
             }
             var so = new SerializedObject(catalogo);
             SerializedProperty lista = so.FindProperty("objetos");
-            var todos = new[] { brazo, chatarra, kit };
+            var misiles = Objeto("MunicionMisil", "municion_misil", "Misiles", TipoObjeto.Municion, 0, 6, Oferta("MunicionMisil"));
+            var combustible = Objeto("MunicionCombustible", "municion_combustible", "Combustible", TipoObjeto.Municion, 0, 6, Oferta("MunicionCombustible"));
+            var celdas = Objeto("MunicionCeldas", "municion_celdas", "Celdas", TipoObjeto.Municion, 0, 8, Oferta("MunicionCeldas"));
+            var cargas = Objeto("MunicionCargas", "municion_cargas", "Cargas", TipoObjeto.Municion, 0, 6, Oferta("MunicionCargas"));
+            var todos = new[] { brazo, chatarra, kit, misiles, combustible, celdas, cargas };
             // Solo agrega lo que falta: conserva lo que otros creadores (piezas del mecha, T-166) ya pusieron.
             foreach (DatosObjeto objeto in todos)
             {
@@ -65,6 +69,11 @@ namespace MechaCyberpunk.Economia.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[Economia] T-142 inventario creado.");
+        }
+
+        private static DatosOferta Oferta(string archivo)
+        {
+            return AssetDatabase.LoadAssetAtPath<DatosOferta>($"{Carpeta}/DatosOferta_{archivo}.asset");
         }
 
         private static DatosObjeto Objeto(string archivo, string id, string nombre, TipoObjeto tipo, int venta, int maximo, DatosOferta oferta)

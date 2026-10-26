@@ -357,8 +357,39 @@ namespace MechaCyberpunk.Tests.UI
             yield return EntrarARanura(BrazoIzquierdo);
             yield return IrAFila("BRAZO IZQ. TECH I ·");
 
-            Assert.AreEqual("VIDA +2 · DAÑO −1", SinEtiquetas(pantalla.Diferencia), "Tech I contra militar I: más vida, menos daño");
+            StringAssert.StartsWith("VIDA +2 · DAÑO −1", SinEtiquetas(pantalla.Diferencia), "Tech I contra militar I: más vida, menos daño");
             StringAssert.Contains("<color=#", pantalla.Diferencia);
+            Assert.IsEmpty(errores, "consola sin errores: " + string.Join(" | ", errores));
+        }
+
+        [UnityTest]
+        public IEnumerator I_LaDiferenciaMuestraLaHabilidadQueCambia_YElEnfriamiento()
+        {
+            yield return Escenario(DineroDeLaPrueba);
+            yield return AbrirPantalla();
+
+            // De serie (sin habilidad) a militar I: trae el misil y no toca los enfriamientos.
+            yield return EntrarARanura(BrazoIzquierdo);
+            yield return IrAFila("BRAZO IZQ. MILITAR I ·");
+            string haciaMisil = SinEtiquetas(pantalla.Diferencia);
+            StringAssert.Contains("HABILIDAD 1 · MISIL I · MISILES", haciaMisil);
+            StringAssert.DoesNotContain("ENFRIAMIENTO", haciaMisil);
+            StringAssert.Contains("<color=#", pantalla.Diferencia, "La habilidad va coloreada");
+            yield return Tecla(teclado.enterKey);
+            Assert.AreEqual(NivelPantallaPiezas.Ranuras, pantalla.Nivel);
+
+            // De militar I a tech I: cambia de habilidad y acorta 3 % los enfriamientos.
+            DatosPieza tech = Pieza("pieza_brazoizq_tech_1");
+            yield return EntrarARanura(BrazoIzquierdo);
+            yield return IrAFila("BRAZO IZQ. TECH I ·");
+            string haciaTech = SinEtiquetas(pantalla.Diferencia);
+            StringAssert.Contains("HABILIDAD 1 · " + tech.Habilidad.Nombre + " I · " + tech.Municion.Nombre.ToUpperInvariant(), haciaTech);
+            StringAssert.Contains("ENFRIAMIENTO −3 %", haciaTech);
+
+            // De militar I a la pieza de serie que quedó en el inventario: se pierde la habilidad.
+            yield return IrAFila("BRAZO IZQ. DE SERIE");
+            string haciaSerie = SinEtiquetas(pantalla.Diferencia);
+            StringAssert.Contains("SIN HABILIDAD", haciaSerie);
             Assert.IsEmpty(errores, "consola sin errores: " + string.Join(" | ", errores));
         }
 
@@ -593,6 +624,22 @@ namespace MechaCyberpunk.Tests.UI
             yield return IrAFila("BRAZO IZQ. TECH I ·");
             yield return Cuadro();
             Capturar(RutaCaptura2);
+        }
+
+        [UnityTest]
+        public IEnumerator Captura_PiezaConHabilidad_GuardaT177Tres()
+        {
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T177") != "1")
+            {
+                Assert.Ignore("Sin CAPTURAR_T177=1 no se regraba la captura.");
+            }
+            yield return Escenario(DineroDeLaPrueba);
+            yield return AbrirPantalla();
+            yield return Comprar(BrazoIzquierdo, "BRAZO IZQ. MILITAR I ·");
+            yield return EntrarARanura(BrazoIzquierdo);
+            yield return IrAFila("BRAZO IZQ. TECH I ·");
+            yield return Cuadro();
+            Capturar("docs/capturas/T-177-3.png");
         }
 
         // Los lienzos en Overlay no salen en una cámara a textura: se pasan un instante a ScreenSpaceCamera.

@@ -5,6 +5,7 @@ namespace MechaCyberpunk.Economia
     {
         Pieza,
         Chatarra,
-        KitReparacion
+        KitReparacion,
+        Municion
     }
 }

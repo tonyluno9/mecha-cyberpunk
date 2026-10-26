@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc6b610b4872264fac91f2669b99387, type: 3}
+  m_Name: ConfigPantallaHabilidades_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaHabilidades
+  formatoFila: "{0} \xB7 {1} \xB7 \xD7{2}"
+  formatoFilaSinMunicion: "{0} \xB7 {1}"
+  formatoFilaVacia: "{0} \xB7"
+  textoVacia: "\u2014"
+  textoListo: LISTO
+  textoSinMunicion: "SIN MUNICI\xD3N"
+  textoSoloBrazos: SOLO BRAZOS
+  formatoSegundos: '{0} s'
+  colorFondo: {r: 0.02, g: 0.03, b: 0.07, a: 0.95}
+  colorMarco: {r: 0.12, g: 0.2, b: 0.3, a: 1}
+  colorEscudo: {r: 0, g: 1, b: 0.9, a: 1}
+  colorListo: {r: 0.3, g: 1, b: 0.6, a: 1}
+  colorEnfriando: {r: 1, g: 0.2, b: 0.75, a: 1}
+  colorSinMunicion: {r: 1, g: 0.6, b: 0.25, a: 1}
+  colorGris: {r: 0.5, g: 0.52, b: 0.58, a: 1}
+  colorFondoBarra: {r: 0.08, g: 0.1, b: 0.16, a: 1}
+  colorTextoBarra: {r: 1, g: 1, b: 1, a: 1}

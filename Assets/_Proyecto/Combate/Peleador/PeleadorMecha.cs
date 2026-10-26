@@ -18,6 +18,8 @@ namespace MechaCyberpunk.Combate.Peleador
         private bool permisoPelea = true;
         private bool permisoPiloto = true;
         private bool controlActivo = true;
+        private float finAturdimiento;
+        private bool aturdido;
 
         private string nombreVisible;
 
@@ -27,6 +29,8 @@ namespace MechaCyberpunk.Combate.Peleador
         public Transform Raiz => transform;
         public IVida Vida => vida;
         public bool ControlActivo => controlActivo;
+        /// <summary>Si está aturdido: sus <c>controlados</c> están apagados aunque <see cref="ControlActivo"/> siga en true.</summary>
+        public bool EstaAturdido => aturdido;
 
         /// <summary>Fija el nombre para mostrar (el alias del rival). Vacío o null vuelve al nombre de su DatosMecha.</summary>
         public void FijarNombre(string nombre)
@@ -61,6 +65,30 @@ namespace MechaCyberpunk.Combate.Peleador
             vida.KO -= AlLlegarAKO;
         }
 
+        /// <summary>
+        /// Apaga los controlados <paramref name="segundos"/> (golpe, guardia, movimiento, cerebro del rival) y luego los vuelve a
+        /// encender si <see cref="ControlActivo"/> sigue en true. Sin control no hace nada. No se suma: queda el que termina más tarde.
+        /// </summary>
+        public void Aturdir(float segundos)
+        {
+            if (!controlActivo || segundos <= 0f)
+            {
+                return;
+            }
+            finAturdimiento = ReglaAturdimiento.NuevoFin(aturdido ? finAturdimiento : 0f, Time.time, segundos);
+            aturdido = true;
+            AplicarControl();
+        }
+
+        private void Update()
+        {
+            if (aturdido && Time.time >= finAturdimiento)
+            {
+                aturdido = false;
+                AplicarControl();
+            }
+        }
+
         public void ActivarControl(bool activo)
         {
             permisoPelea = activo;
@@ -82,11 +110,16 @@ namespace MechaCyberpunk.Combate.Peleador
             }
             // Un mecha en KO no recupera el control hasta que PrepararPelea le devuelva la vida.
             controlActivo = ReglaControlMecha.Calcular(permisoPelea, permisoPiloto, vida.EstaKO);
+            if (!controlActivo)
+            {
+                aturdido = false;
+            }
+            bool encendido = controlActivo && !aturdido;
             foreach (Behaviour componente in controlados)
             {
                 if (componente != null)
                 {
-                    componente.enabled = controlActivo;
+                    componente.enabled = encendido;
                 }
             }
         }

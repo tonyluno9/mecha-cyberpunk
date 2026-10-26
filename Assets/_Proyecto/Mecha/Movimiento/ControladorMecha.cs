@@ -1,3 +1,4 @@
+using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mecha.Danio;
@@ -26,6 +27,7 @@ namespace MechaCyberpunk.Mecha.Movimiento
 
         private CharacterController controlador;
         private VidaMecha vida;
+        private LanzadorHabilidades lanzador;
         private Vector2 velocidadLocal;
         private float giroPendiente;
         private float inclinacionVertical;
@@ -50,6 +52,7 @@ namespace MechaCyberpunk.Mecha.Movimiento
         {
             controlador = GetComponent<CharacterController>();
             vida = GetComponent<VidaMecha>();
+            lanzador = GetComponent<LanzadorHabilidades>();
             if ((datos == null && (vida == null || vida.Datos == null)) || config == null || camara == null || mover == null || mirar == null
                 || golpear == null || liberarCursor == null)
             {
@@ -92,10 +95,19 @@ namespace MechaCyberpunk.Mecha.Movimiento
                 datos.VelocidadMaxima * factorVelocidad, datos.Aceleracion * factorAceleracion,
                 datos.Desaceleracion * factorAceleracion);
 
+            // Mientras embiste, el cuerpo no gira (T-175): el lanzador solo fijó la dirección. La mirada vertical sí se mueve.
+            bool embistiendo = lanzador != null && lanzador.Embistiendo;
+            if (embistiendo)
+            {
+                giroPendiente = 0f;
+            }
             if (cursorBloqueado)
             {
                 Vector2 delta = mirar.action.ReadValue<Vector2>();
-                giroPendiente += delta.x * config.SensibilidadRaton;
+                if (!embistiendo)
+                {
+                    giroPendiente += delta.x * config.SensibilidadRaton;
+                }
                 inclinacionVertical = Mathf.Clamp(inclinacionVertical - delta.y * config.SensibilidadRaton,
                     -config.LimiteMirarVertical, config.LimiteMirarVertical);
             }

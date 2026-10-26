@@ -18,6 +18,10 @@ MonoBehaviour:
     = bloqueo perfecto \xB7 WASD mover"
   textoMechaCalle: "WASD mover \xB7 RAT\xD3N mirar \xB7 E bajar (quieto)"
   textoLlamar: "M \xB7 llamar a tu mecha"
+  formatoHabilidad1: "1 \xB7 {0}"
+  formatoHabilidad2: "2 \xB7 {0}"
+  separadorHabilidades: '  '
+  segundosMaximosHabilidades: 15
   segundosMaximos: 12
   segundosMaximosPelea: 20
   segundosCaminando: 3

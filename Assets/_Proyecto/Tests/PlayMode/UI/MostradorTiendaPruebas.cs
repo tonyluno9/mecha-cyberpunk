@@ -44,6 +44,8 @@ namespace MechaCyberpunk.Tests.UI
         private const int DineroPoco = 100;
         private const int DineroDeuda = -200;
         private const int PrecioKit = 250;
+        private const int FilasDelMercado = 5;
+        private const int MaximoMisiles = 6;
         private const int MaximoKits = 3;
         private const float HoraAbre = 9f;
         private const float HoraCierra = 18f;
@@ -284,7 +286,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(TextoHudAbierto, hud.TextoAvisoInteraccion.text, "El HUD ofrece el mercado negro");
             yield return AbrirPantalla();
             Assert.AreEqual("MERCADO NEGRO", pantalla.Titulo, "Dice qué tienda es");
-            Assert.AreEqual(1, pantalla.CantidadFilas, "En este bloque solo se vende el kit");
+            Assert.AreEqual(FilasDelMercado, pantalla.CantidadFilas, "Vende el kit y las 4 municiones");
             StringAssert.Contains(TextoKit, pantalla.TextoFila(0), "Lista el kit de reparación");
             StringAssert.Contains(TextoPrecio, pantalla.TextoFila(0), "A $250");
             StringAssert.Contains(TextoLleva0, pantalla.TextoFila(0), "No lleva ninguno");
@@ -308,6 +310,73 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(TextoMaximo, pantalla.Aviso, "El cuarto Enter dice que lleva el máximo");
             Assert.AreEqual(DineroDeSobra - PrecioKit * MaximoKits, cartera.Dinero, "No se cobra el cuarto");
             Assert.AreEqual(MaximoKits, inventario.Cantidad(kit), "Siguen siendo tres");
+            Assert.IsEmpty(errores, "Sin errores: " + string.Join(" | ", errores));
+        }
+
+        // T-177: municiones del mercado negro: precio de la oferta y cuántas caben (el máximo de su objeto).
+        private static readonly string[] NombresMunicion = { "MISIL", "CARGAS", "CELDAS", "COMBUSTIBLE" };
+        private static readonly int[] PreciosMunicion = { 80, 50, 40, 60 };
+
+        private int FilaCon(string texto)
+        {
+            for (int i = 0; i < pantalla.CantidadFilas; i++)
+            {
+                if (pantalla.TextoFila(i).ToUpperInvariant().Contains(texto))
+                {
+                    return i;
+                }
+            }
+            Assert.Fail("No hay fila con '" + texto + "'");
+            return -1;
+        }
+
+        [UnityTest]
+        public IEnumerator Municiones_ElMercadoListaLas4ConSuPrecio()
+        {
+            yield return CargarEscena();
+            PonerDinero(DineroDeSobra);
+            yield return IrAlMostradorConW();
+            yield return AbrirPantalla();
+
+            for (int i = 0; i < NombresMunicion.Length; i++)
+            {
+                int fila = FilaCon(NombresMunicion[i]);
+                StringAssert.Contains("$" + PreciosMunicion[i], pantalla.TextoFila(fila), NombresMunicion[i] + " con su precio");
+            }
+            Assert.IsEmpty(errores, "Sin errores: " + string.Join(" | ", errores));
+        }
+
+        [UnityTest]
+        public IEnumerator Municiones_MisilesHastaSeisCobraCadaUnoYElSieteAvisaElMaximo()
+        {
+            yield return CargarEscena();
+            PonerDinero(DineroDeSobra);
+            yield return IrAlMostradorConW();
+            yield return AbrirPantalla();
+            int fila = FilaCon("MISIL");
+            for (int i = 0; i < fila; i++)
+            {
+                yield return Tecla(teclado.downArrowKey);
+            }
+            Assert.AreEqual(fila, pantalla.IndiceElegido, "Eligió la fila de los misiles");
+            DatosObjeto misil = null;
+            foreach (DatosObjeto objeto in mostrador.EnVenta)
+            {
+                if (objeto != null && objeto.Id == "municion_misil") misil = objeto;
+            }
+            Assert.IsNotNull(misil, "Los misiles están a la venta");
+
+            for (int comprados = 1; comprados <= MaximoMisiles; comprados++)
+            {
+                yield return Tecla(teclado.enterKey);
+                Assert.AreEqual(DineroDeSobra - PreciosMunicion[0] * comprados, cartera.Dinero, "Cobra cada misil: " + comprados);
+                Assert.AreEqual(comprados, inventario.Cantidad(misil), "Entra al inventario: " + comprados);
+            }
+
+            yield return Tecla(teclado.enterKey);
+            Assert.AreEqual(TextoMaximo, pantalla.Aviso, "El séptimo avisa el máximo");
+            Assert.AreEqual(DineroDeSobra - PreciosMunicion[0] * MaximoMisiles, cartera.Dinero, "No cobra el séptimo");
+            Assert.AreEqual(MaximoMisiles, inventario.Cantidad(misil), "Siguen siendo seis");
             Assert.IsEmpty(errores, "Sin errores: " + string.Join(" | ", errores));
         }
 
@@ -401,21 +470,20 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator Registro_ElMostradorRegistraSuTiendaYSoloListaElKit()
+        public IEnumerator Registro_ElMostradorRegistraSuTiendaYListaElKitYLasMuniciones()
         {
             yield return CargarEscena();
             Assert.AreEqual(1, Registro<ITienda>.Cantidad, "Hay una tienda registrada");
             ITienda tienda = Registro<ITienda>.Actual;
             Assert.AreSame(mostrador.Tienda, tienda, "Es la del mostrador");
             Assert.AreEqual(IdLugar.MercadoNegro, tienda.Lugar, "Es la del mercado negro");
-            Assert.AreEqual(3, tienda.Ofertas.Count, "La tienda vende kit, munición y brazo");
+            Assert.AreEqual(FilasDelMercado + 1, tienda.Ofertas.Count, "La tienda vende kit, 4 municiones y el brazo");
 
-            Assert.AreEqual(1, mostrador.EnVenta.Count, "Pero solo el kit tiene objeto de inventario");
+            Assert.AreEqual(FilasDelMercado, mostrador.EnVenta.Count, "El brazo no tiene objeto de inventario");
             Assert.AreSame(kit, mostrador.EnVenta[0]);
             yield return IrAlMostradorConW();
             yield return AbrirPantalla();
-            Assert.AreEqual(1, pantalla.CantidadFilas, "La pantalla lista una oferta");
-            StringAssert.DoesNotContain("MUNICI", pantalla.TextoFila(0), "Sin munición");
+            Assert.AreEqual(FilasDelMercado, pantalla.CantidadFilas, "La pantalla lista el kit y las municiones");
             StringAssert.DoesNotContain("BRAZO", pantalla.TextoFila(0), "Sin brazo");
 
             Object.Destroy(mostrador.gameObject);

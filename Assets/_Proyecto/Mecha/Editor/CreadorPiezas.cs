@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Economia;
 using UnityEditor;
 using UnityEngine;
@@ -87,6 +88,64 @@ namespace MechaCyberpunk.Mecha.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log($"[Mecha] T-166 piezas creadas: {todas.Count}.");
+        }
+
+        private const string CarpetaHabilidades = "Assets/_Proyecto/Combate/Datos/Habilidades";
+        private const string CarpetaEconomia = "Assets/_Proyecto/Economia/Datos";
+        private const float BonoEnfriamientoPorNivel = 0.03f;
+
+        // Habilidad y munición por rama (orden: militar, tech, cuerpo a cuerpo, fuego): brazo izquierdo y torso (D-tony-135).
+        private static readonly string[] HabilidadBrazo = { "Misil", "Descarga", "Martillo", "Lanzallamas" };
+        private static readonly string[] HabilidadTorso = { "Salva", "Escudo", "Embestida", "OndaDeCalor" };
+        private static readonly string[] MunicionPorRama = { "MunicionMisil", "MunicionCeldas", "MunicionCargas", "MunicionCombustible" };
+
+        /// <summary>
+        /// Paso explícito (D-tony-109): pone habilidad y munición a las 32 piezas de brazo izquierdo y torso de rama, y el bono de
+        /// enfriamiento a las 20 tech. Las demás quedan sin habilidad. Correrlo dos veces no cambia nada.
+        /// Requiere correr antes CreadorHabilidades, CreadorInventario y CreadorPiezas.
+        /// Batchmode: -executeMethod MechaCyberpunk.Mecha.Editor.CreadorPiezas.AjustarHabilidades
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Ajustar T-174 habilidades de piezas")]
+        public static void AjustarHabilidades()
+        {
+            int ajustadas = 0;
+            for (int r = 0; r < 5; r++)
+            {
+                for (int m = 0; m < 4; m++)
+                {
+                    for (int n = 1; n <= 4; n++)
+                    {
+                        string ruta = $"{Carpeta}/DatosPieza_{IdsRanura[r]}_{IdsRama[m]}_{n}.asset";
+                        var p = AssetDatabase.LoadAssetAtPath<DatosPieza>(ruta);
+                        if (p == null) { Debug.LogError("[Mecha] Falta la pieza " + ruta + ": corre Crear primero."); continue; }
+
+                        DatosHabilidad habilidad = null;
+                        DatosObjeto municion = null;
+                        if (r == (int)RanuraPieza.BrazoIzquierdo || r == (int)RanuraPieza.Torso)
+                        {
+                            string nombreHab = r == (int)RanuraPieza.Torso ? HabilidadTorso[m] : HabilidadBrazo[m];
+                            habilidad = AssetDatabase.LoadAssetAtPath<DatosHabilidad>($"{CarpetaHabilidades}/DatosHabilidad_{nombreHab}.asset");
+                            municion = AssetDatabase.LoadAssetAtPath<DatosObjeto>($"{CarpetaEconomia}/DatosObjeto_{MunicionPorRama[m]}.asset");
+                            if (habilidad == null || municion == null)
+                            {
+                                Debug.LogError($"[Mecha] Faltan habilidad o munición para {p.Id}: corre CreadorHabilidades y CreadorInventario primero.");
+                                continue;
+                            }
+                        }
+                        float bono = Ramas[m] == RamaPieza.Tech ? BonoEnfriamientoPorNivel * n : 0f;
+
+                        var so = new SerializedObject(p);
+                        so.FindProperty("habilidad").objectReferenceValue = habilidad;
+                        so.FindProperty("municion").objectReferenceValue = municion;
+                        so.FindProperty("bonoEnfriamiento").floatValue = bono;
+                        if (so.ApplyModifiedPropertiesWithoutUndo()) EditorUtility.SetDirty(p);
+                        ajustadas++;
+                    }
+                }
+            }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"[Mecha] T-174 habilidades de piezas ajustadas: {ajustadas}.");
         }
 
         private static void AgregarFaltantes(Object catalogo, string campo, List<DatosPieza> piezas)

@@ -51,6 +51,12 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string etiquetaVida = "VIDA";
         [SerializeField] private string etiquetaDanio = "DAÑO";
         [SerializeField] private string etiquetaVelocidad = "VEL";
+        [Tooltip("T-177. {0} = tecla (1 o 2), {1} = habilidad con su nivel, {2} = munición.")]
+        [SerializeField] private string formatoHabilidad = "HABILIDAD {0} · {1} · {2}";
+        [Tooltip("T-177. La pieza nueva no trae la habilidad que traía la puesta.")]
+        [SerializeField] private string textoSinHabilidad = "SIN HABILIDAD";
+        [Tooltip("T-177. {0} = cambio del enfriamiento en puntos de porcentaje (−6: enfría 6 % más rápido).")]
+        [SerializeField] private string formatoEnfriamiento = "ENFRIAMIENTO {0} %";
         [SerializeField] private string textoSinCambios = "SIN CAMBIOS";
         [Tooltip("{0} = texto de la fila elegida.")]
         [SerializeField] private string formatoElegida = "[ {0} ]";
@@ -109,6 +115,9 @@ namespace MechaCyberpunk.UI
         public string EtiquetaVida => etiquetaVida;
         public string EtiquetaDanio => etiquetaDanio;
         public string EtiquetaVelocidad => etiquetaVelocidad;
+        public string FormatoHabilidad => formatoHabilidad;
+        public string TextoSinHabilidad => textoSinHabilidad;
+        public string FormatoEnfriamiento => formatoEnfriamiento;
         public string TextoSinCambios => textoSinCambios;
         public string FormatoElegida => formatoElegida;
         public string FormatoPoner => formatoPoner;

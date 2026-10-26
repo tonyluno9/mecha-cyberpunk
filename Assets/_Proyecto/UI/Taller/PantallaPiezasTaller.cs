@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Mecha;
 using MechaCyberpunk.Mecha.Taller;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.UI.Cabina;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -480,7 +482,41 @@ namespace MechaCyberpunk.UI.Taller
             AgregarDiferencia(partes, config.EtiquetaVida, opcion.DiferenciaVida);
             AgregarDiferencia(partes, config.EtiquetaDanio, opcion.DiferenciaDanio);
             AgregarDiferencia(partes, config.EtiquetaVelocidad, opcion.DiferenciaVelocidad);
+            AgregarHabilidad(partes, opcion.Pieza, equipo.Puesta((RanuraPieza)indiceRanura));
             return partes.Count == 0 ? config.TextoSinCambios : string.Join(Separador, partes);
+        }
+
+        // T-177: la habilidad solo sale cuando cambia ("HABILIDAD 1 · MISIL II · MISILES", o "SIN HABILIDAD") y el enfriamiento
+        // solo cuando la pieza acorta o alarga los de todas las habilidades ("ENFRIAMIENTO −6 %").
+        private void AgregarHabilidad(List<string> partes, DatosPieza nueva, DatosPieza puesta)
+        {
+            DatosHabilidad habilidadNueva = nueva != null ? nueva.Habilidad : null;
+            DatosHabilidad habilidadPuesta = puesta != null ? puesta.Habilidad : null;
+            if (habilidadNueva != null)
+            {
+                bool cambia = habilidadPuesta != habilidadNueva || puesta.Nivel != nueva.Nivel;
+                if (cambia)
+                {
+                    string municion = nueva.Municion != null ? nueva.Municion.Nombre.ToUpperInvariant() : string.Empty;
+                    string texto = string.Format(config.FormatoHabilidad, TextoHabilidad.Tecla(nueva.Ranura),
+                        TextoHabilidad.Etiqueta(habilidadNueva, nueva.Nivel), municion);
+                    partes.Add(string.Format(FormatoColor, ColorUtility.ToHtmlStringRGB(config.ColorDeRama(nueva.Rama)), texto));
+                }
+            }
+            else if (habilidadPuesta != null)
+            {
+                partes.Add(string.Format(FormatoColor, ColorUtility.ToHtmlStringRGB(config.ColorBaja), config.TextoSinHabilidad));
+            }
+
+            float bonoNuevo = nueva != null ? nueva.BonoEnfriamiento : 0f;
+            float bonoPuesto = puesta != null ? puesta.BonoEnfriamiento : 0f;
+            float porcentaje = Mathf.Round((bonoPuesto - bonoNuevo) * 100f);
+            if (Mathf.Abs(porcentaje) >= 1f)
+            {
+                Color color = porcentaje < 0f ? config.ColorSube : config.ColorBaja;
+                string numero = porcentaje.ToString(FormatoDiferencia, CultureInfo.InvariantCulture);
+                partes.Add(string.Format(FormatoColor, ColorUtility.ToHtmlStringRGB(color), string.Format(config.FormatoEnfriamiento, numero)));
+            }
         }
 
         private void AgregarDiferencia(List<string> partes, string etiqueta, float diferencia)
