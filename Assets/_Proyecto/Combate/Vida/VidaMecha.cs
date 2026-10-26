@@ -18,6 +18,7 @@ namespace MechaCyberpunk.Combate.Vida
         private GuardiaMecha guardia;
         private bool buscoGuardia;
         private float multiplicadorDanioRecibido = 1f;
+        private float factorEscudo = 1f;
 
         public DatosMecha Datos => datos;
         public float Actual => modelo != null ? modelo.Actual : 0f;
@@ -29,6 +30,16 @@ namespace MechaCyberpunk.Combate.Vida
         {
             get => multiplicadorDanioRecibido;
             set => multiplicadorDanioRecibido = Mathf.Max(0f, value);
+        }
+
+        /// <summary>
+        /// Factor del escudo de una habilidad (1 = sin escudo). Se multiplica aparte de <see cref="MultiplicadorDanioRecibido"/>
+        /// (la piedad del rival usa ese). Lo pone <c>LanzadorHabilidades</c>. Nunca baja de 0.
+        /// </summary>
+        public float FactorEscudo
+        {
+            get => factorEscudo;
+            set => factorEscudo = Mathf.Max(0f, value);
         }
 
         public event Action Cambio;
@@ -133,6 +144,17 @@ namespace MechaCyberpunk.Combate.Vida
 
         public ResultadoDanio RecibirDanio(InfoDanio info)
         {
+            return Procesar(info, false);
+        }
+
+        /// <summary>Recibe el daño sin aplicar la guardia (el martillo rompe guardia). Lo demás es igual a <see cref="RecibirDanio"/>.</summary>
+        public ResultadoDanio RecibirDanioSinGuardia(InfoDanio info)
+        {
+            return Procesar(info, true);
+        }
+
+        private ResultadoDanio Procesar(InfoDanio info, bool ignorarGuardia)
+        {
             if (modelo == null)
             {
                 Debug.LogError("[Combate] VidaMecha sin DatosMecha en " + name, this);
@@ -148,9 +170,9 @@ namespace MechaCyberpunk.Combate.Vida
                 guardia = GetComponent<GuardiaMecha>();
                 buscoGuardia = true;
             }
-            float cantidad = info.Cantidad * multiplicadorDanioRecibido;
+            float cantidad = info.Cantidad * multiplicadorDanioRecibido * factorEscudo;
             TipoBloqueo bloqueo = TipoBloqueo.Ninguno;
-            if (guardia != null)
+            if (guardia != null && !ignorarGuardia)
             {
                 (cantidad, bloqueo) = CalculoBloqueo.Calcular(cantidad, guardia.EstaArriba, guardia.SegundosArriba,
                     datos.VentanaBloqueoPerfecto, datos.ReduccionBloqueo);
