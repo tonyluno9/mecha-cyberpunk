@@ -625,3 +625,65 @@ debe venderse en el taller (hoy solo en el mercado negro, como los kits)? (c) ¿
 emboscada (con más calor)? (d) ¿Quieres los "drones de apoyo" de tech (mecha-taller.md) más adelante? (e) ¿Los rivales normales de las ligas 3
 y 4 también deben usar habilidades, o se deja para la adaptación del bloque 8?
 - 2026-10-26 cierre bloque habilidades: JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula falla 8/15 (determinista, Arena de Alan, sin cambios nuestros). Anotado, no se toca.
+
+## Planeación de T-F7, bloque 5: misiones y reputación (2026-10-26, planificador Opus 5.5)
+
+### D-tony-143 IDs y orden del bloque 5
+Propuesta. El bloque 5 son T-181 a T-188, sin hackeo. Orden: T-181 (Core) → T-182 (reputación y favores) → T-183 (datos de misiones) → T-184
+(servicio y escena Pruebas_Misiones) → T-185 (pelear y escapar) y T-186 (teléfono, bar y calle) en paralelo → T-187 (usar favores) → T-188
+(cierre). El bloque siguiente (implantes, según docs/estado-tony.md) empieza en T-189.
+
+### D-tony-144 Contratos de Core del bloque 5 (T-181; autorizada por Tony en el /goal)
+Propuesta. `IReputacion` + `TipoReputacion` (solo lectura para Alan: valor de −100 a 100 y nivel de −2 a 2 de barrio y corporaciones),
+`IMisiones` + `TipoMision` (la misión en curso, solo lectura) e `IPuntoMision` + `TipoPuntoMision` (encargos, destinos, botines, peleas y
+escondites que coloca quien arma la escena; Tony pone el interactuable encima). `MotivoDinero.Mision` y `MotivoCalor.Mision` al final.
+Claves de guardado nuevas: `reputacion`, `favores`, `misiones`. Los favores no van en Core: Alan no los necesita.
+
+### D-tony-145 Reputación
+Propuesta. Dos valores de −100 a 100 que empiezan en 0; niveles en ±15 y ±50. Barrio: TRAIDOR, MAL VISTO, DESCONOCIDO, CONOCIDO, JUSTICIERO.
+Corporaciones: ENEMIGO, FICHADO, SIN FICHA, CONTRATISTA, SOCIO. No hay tirón automático: cada misión dice cuánto mueve cada una y ninguna sube
+las dos (así "se jalan"). Efectos: con corporaciones en −1 el calor sube ×1.15 y en −2 ×1.3 ("te odian más"); con barrio en −2 nadie del barrio
+te pide nada; con corporaciones en −2 ya no te llaman; algunas misiones piden un nivel mínimo.
+
+### D-tony-146 Favores
+Propuesta. Tres tipos, máximo 3 de cada uno, un uso cada uno, guardados con la partida: DESCUENTO (−30 % en la siguiente compra del mercado
+negro), INFORMACIÓN (abre EL SOPLO, un robo con más botín y poco calor; se gasta al aceptar y no se devuelve al abandonar) y ESCONDITE (en un
+escondite del barrio, borra el calor y cumple el paso de escapar). Los dan las misiones de barrio; si ya tienes 3, se pierde y se avisa.
+
+### D-tony-147 Cómo funcionan las misiones
+Propuesta. Una a la vez, solo en `Libre`. Pasos: ir a, recoger (E), entregar (E), pelear (pelea callejera en el mecha, reusa la emboscada) y
+escapar (calor a 0, llegar a casa o esconderse). Salen: barrio con los vecinos en la calle (encargos), corporativas por teléfono de día (tecla T)
+e ilegales y robos con el contacto del bar de noche. Sin reloj, cualquier franja vale. Las repetibles vuelven al día siguiente. Fallar (tiempo,
+KO del mecha) o abandonar: −3 a cada reputación que la misión subía. La misión en curso no se guarda: al cargar queda cancelada sin castigo.
+
+### D-tony-148 Las 11 misiones (provisionales; tabla en T-183)
+Propuesta. Barrio: LA TIENDITA DE DOÑA LUPE ($50, barrio +8, DESCUENTO), LOS DEL CALLEJÓN ($100, +12, ESCONDITE, de noche, pelea), LUZ PARA LA
+VECINDAD ($0, +15 / corp. −8, INFORMACIÓN, pide CONOCIDO). Corporativas: ENTREGA URGENTE ($400, −5 / +8, 150 s), COBRO DE ADEUDO ($500, −12 /
++10), LIMPIEZA DE ZONA ($900, −15 / +15, pide CONTRATISTA y liga 2). Ilegales: CARGA CALIENTE ($350, corp. −5, calor 40), PELEA SIN JAULA ($450,
++3 / −5). Robos: BODEGA DE REFACCIONES (6 chatarra, calor 50), CAMIÓN BLINDADO ($200 + 10 chatarra, calor 60, liga 2), EL SOPLO (12 chatarra,
+calor 15, pide INFORMACIÓN). Tony cambia todo en los assets.
+
+### D-tony-149 Reglas de balance de las misiones
+Propuesta. a) toda misión de barrio paga menos que el rival 1 de la liga 1 ($600); b) ninguna paga (efectivo + chatarra a $50) más que el rival 1
+de su liga mínima; c) ninguna sube las dos reputaciones; d) toda misión de barrio sube el barrio y da un favor; e) toda corporativa baja el barrio
+al menos 5; f) los robos pagan más en chatarra que en efectivo; g) toda ilegal y todo robo suma 25 de calor o más, o tiene que escapar. Si una
+falla, se ajustan las misiones, no las reglas ni los premios de las ligas.
+
+### D-tony-150 Dónde vive el código del bloque 5
+Propuesta. Reputación, favores y misiones en Progresion/ (`Reputacion/`, `Favores/`, `Misiones/`); `MechaCyberpunk.Progresion` gana la referencia a
+`MechaCyberpunk.Economia` (chatarra al inventario y descuento; Economia no referencia Progresion). La pelea de misión vive en Pelea/Misiones/
+(Pelea ya referencia Progresion). Pantallas en UI/Misiones/. El descuento es una sobrecarga de `TiendaBasica.Comprar`, así que `ITienda` no cambia.
+Las pruebas de PlayMode del bloque van en su propio ensamblado (`MechaCyberpunk.Tests.PlayMode.Progresion.Misiones`) para no alargar el área
+Progresion, que ya usa 2400 s. Escena del bloque: `Escenas/Tony/Pruebas_Misiones.unity`.
+
+### D-tony-151 Lo que espera a Alan en el bloque 5
+Propuesta. Nada obligatorio: todo se prueba en Pruebas_Misiones con `PuntoMisionDePrueba`, lugares de prueba y el doble
+`ReaccionReputacionDePrueba`. Opcional, cuando quiera: colocar en Ciudad los `IPuntoMision` con los ids de T-183 (lista en docs/revision-tony.md),
+`ContactoBar.prefab` en su bar y `PeleasDeMision.prefab`; y que la ciudad reaccione a `IReputacion` (grafitis con el alias, vecinos que saludan,
+anuncios que difaman) y a `IMisiones` (patrullas atentas en un robo). Las misiones en Ciudad.unity se escriben cuando Alan coloque los puntos.
+
+### D-tony-152 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿El teléfono en la tecla T te late? (b) ¿Las corporativas deben dar algo además de dinero
+(piezas, información de tus papás para la historia)? (c) ¿El descuento también en el taller o la clínica? (d) ¿Los robos deberían poder salir mal
+de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones de una sola vez con historia (no repetibles) para el hilo de los
+papás, o se dejan para la historia principal?
