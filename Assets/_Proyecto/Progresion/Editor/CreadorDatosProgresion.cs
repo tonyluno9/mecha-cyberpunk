@@ -222,6 +222,99 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
         }
 
+        private const string CarpetaDatos = "Assets/_Proyecto/Progresion/Datos/";
+
+        private static T CrearAsset<T>(string nombre, System.Action<T> inicializar = null) where T : ScriptableObject
+        {
+            string ruta = CarpetaDatos + nombre + ".asset";
+            var asset = AssetDatabase.LoadAssetAtPath<T>(ruta);
+            if (asset == null)
+            {
+                asset = ScriptableObject.CreateInstance<T>();
+                inicializar?.Invoke(asset);
+                AssetDatabase.CreateAsset(asset, ruta);
+                AssetDatabase.SaveAssets();
+                asset = AssetDatabase.LoadAssetAtPath<T>(ruta);
+            }
+            return asset;
+        }
+
+        private static void PonerFavor(DatosFavor favor, string id, string nombre, string descripcion, TipoFavor tipo, float valor)
+        {
+            var so = new SerializedObject(favor);
+            so.FindProperty("id").stringValue = id;
+            so.FindProperty("nombre").stringValue = nombre;
+            so.FindProperty("descripcion").stringValue = descripcion;
+            so.FindProperty("tipo").enumValueIndex = (int)tipo;
+            so.FindProperty("maximo").intValue = 3;
+            so.FindProperty("valor").floatValue = valor;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// Crea DatosReputacion_Base y los tres DatosFavor (no pisa valores de assets existentes) y agrega ServicioReputacion y
+        /// ServicioFavores a ServiciosProgresion.prefab (T-182). Idempotente.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-182 reputación y favores")]
+        public static void CrearT182()
+        {
+            var reputacion = CrearAsset<DatosReputacion>("DatosReputacion_Base");
+            var descuento = CrearAsset<DatosFavor>("DatosFavor_Descuento",
+                f => PonerFavor(f, "descuento", "DESCUENTO", "Rebaja un 30 % una compra.", TipoFavor.Descuento, 0.3f));
+            var informacion = CrearAsset<DatosFavor>("DatosFavor_Informacion",
+                f => PonerFavor(f, "informacion", "INFORMACIÓN", "Un dato de la calle sobre un rival o una misión.", TipoFavor.Informacion, 0f));
+            var escondite = CrearAsset<DatosFavor>("DatosFavor_Escondite",
+                f => PonerFavor(f, "escondite", "ESCONDITE", "Un lugar seguro donde bajar el calor.", TipoFavor.Escondite, 0f));
+
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                bool cambio = false;
+                var servicioReputacion = raiz.GetComponent<ServicioReputacion>();
+                if (servicioReputacion == null)
+                {
+                    servicioReputacion = raiz.AddComponent<ServicioReputacion>();
+                    cambio = true;
+                }
+                var soReputacion = new SerializedObject(servicioReputacion);
+                var propiedadDatos = soReputacion.FindProperty("datos");
+                if (propiedadDatos.objectReferenceValue != reputacion)
+                {
+                    propiedadDatos.objectReferenceValue = reputacion;
+                    soReputacion.ApplyModifiedPropertiesWithoutUndo();
+                    cambio = true;
+                }
+
+                var servicioFavores = raiz.GetComponent<ServicioFavores>();
+                if (servicioFavores == null)
+                {
+                    servicioFavores = raiz.AddComponent<ServicioFavores>();
+                    cambio = true;
+                }
+                var soFavores = new SerializedObject(servicioFavores);
+                var lista = soFavores.FindProperty("favores");
+                DatosFavor[] esperados = { descuento, informacion, escondite };
+                bool igual = lista.arraySize == esperados.Length;
+                for (int i = 0; igual && i < esperados.Length; i++)
+                {
+                    igual = lista.GetArrayElementAtIndex(i).objectReferenceValue == esperados[i];
+                }
+                if (!igual)
+                {
+                    lista.arraySize = esperados.Length;
+                    for (int i = 0; i < esperados.Length; i++) lista.GetArrayElementAtIndex(i).objectReferenceValue = esperados[i];
+                    soFavores.ApplyModifiedPropertiesWithoutUndo();
+                    cambio = true;
+                }
+                if (cambio) PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         private static void CrearDatosEscenas(string ruta)
         {
             var datos = AssetDatabase.LoadAssetAtPath<DatosEscenas>(ruta);
