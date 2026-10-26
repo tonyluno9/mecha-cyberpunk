@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using MechaCyberpunk.Combate.Bloqueo;
+using MechaCyberpunk.Combate.Datos;
 using MechaCyberpunk.Combate.Golpe;
 using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Combate.Peleador;
@@ -273,6 +274,24 @@ namespace MechaCyberpunk.Tests.Combate
 
             Assert.AreEqual(VidaInicial, VidaDe(saco).Actual, Tolerancia);
             Assert.AreEqual(0, Contar<ProyectilHabilidad>());
+        }
+
+        // T-180a: rival ya dentro del SphereCast al aparecer el misil (el SphereCast da punto cero y distancia 0)
+        [UnityTest]
+        public IEnumerator MisilI_RivalYaTraslapadoAlAparecer_ExplotaEnElMisilYLeQuitaVeinte()
+        {
+            GameObject lanzador = CrearMecha("Lanzador", new Vector3(50f, 0f, 50f), LadoPelea.Jugador);
+            GameObject rival = CrearMecha("Rival", new Vector3(50f, 0f, 53f), LadoPelea.Rival);
+            yield return Calentar();
+
+            ConfigEfectosHabilidad config = ScriptableObject.CreateInstance<ConfigEfectosHabilidad>();
+            creados.Add(config);
+            Vector3 origen = new Vector3(50f, 1f, 52.9f);
+            ProyectilHabilidad.Crear(origen, Vector3.forward, Cargar("Misil"), 20f, lanzador.transform, config);
+            yield return Esperar(0.5f);
+
+            Assert.AreEqual(VidaInicial - 20f, VidaDe(rival).Actual, Tolerancia);
+            Assert.AreEqual(0, Contar<ProyectilHabilidad>(), "El proyectil sigue vivo");
         }
 
         // b) Misil contra la guardia
