@@ -1,3 +1,4 @@
+using MechaCyberpunk.Mundo.Reloj;
 using UnityEditor;
 using UnityEngine;
 
@@ -118,6 +119,11 @@ namespace MechaCyberpunk.Mundo.Editor
                 luz.intensity = 2.5f;
                 luz.range = 5f;
                 luz.shadows = LightShadows.None;
+                // De día la luz se apaga (el neón de la entrada queda como señal); de noche se prende.
+                LuzNocturna nocturna = luzObjeto.AddComponent<LuzNocturna>();
+                SerializedObject so = new SerializedObject(nocturna);
+                so.FindProperty("luz").objectReferenceValue = luz;
+                so.ApplyModifiedPropertiesWithoutUndo();
             }
         }
 

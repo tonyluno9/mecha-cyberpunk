@@ -22,6 +22,7 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float SegundosFisica = 0.3f;
         private const float InclinacionGrados = 8f;
         private const float DistanciaCaptura = 6f;
+        private const float DistanciaCapturaCallejon = 3.2f;    // el callejón del mercado mide unos 4.5 m de ancho
         private const int LucesMaximasTotal = 2;
         private const int MaterialesMaximos = 6;
 
@@ -127,7 +128,7 @@ namespace MechaCyberpunk.Tests.Mundo
             {
                 CamaraLibre camara = EscenaLugares.ColocarFrenteA(id, out camaraObjeto);
                 Vector3 haciaPuerta = EscenaLugares.HaciaLaPuerta(id);
-                Vector3 desde = EscenaLugares.Lugar(id).PosicionEntrada - haciaPuerta * DistanciaCaptura;
+                Vector3 desde = EscenaLugares.Lugar(id).PosicionEntrada - haciaPuerta * (id == IdLugar.MercadoNegro ? DistanciaCapturaCallejon : DistanciaCaptura);
                 desde.y = EscenaLugares.Lugar(id).PosicionEntrada.y + AlturaOjos;
                 Quaternion mira = Quaternion.LookRotation(haciaPuerta, Vector3.up) * Quaternion.Euler(-InclinacionGrados, 0f, 0f);
                 foreach (float hora in new[] { EscenaLugares.HoraMediodia, EscenaLugares.HoraNoche })
