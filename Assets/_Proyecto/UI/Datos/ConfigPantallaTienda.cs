@@ -58,6 +58,14 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoNoAlcanza = "NO TE ALCANZA";
         [SerializeField] private string textoNoDisponible = "NO SE VENDE AQUÍ";
         [SerializeField] private string textoAyuda = "↑ ↓ elegir · ← → pestaña · Enter comprar · Esc salir";
+        [Tooltip("Precio con el favor de descuento: {0} = precio normal con $, {1} = precio rebajado con $.")]
+        [SerializeField] private string formatoPrecioRebajado = "{0} → {1}";
+        [Tooltip("Línea del favor de descuento: {0} = porcentaje de rebaja, {1} = favores que quedan.")]
+        [SerializeField] private string formatoFavorDescuento = "FAVOR · −{0} % EN ESTA COMPRA · TE QUEDAN {1}";
+        [Tooltip("Tamaño de letra de la línea del favor (puntos).")]
+        [Min(8)] [SerializeField] private int tamanoFavor = 34;
+        [Tooltip("Color de la línea del favor.")]
+        [SerializeField] private Color colorFavor = new Color(1f, 0.85f, 0.2f, 1f);
 
         public Color ColorElegido => colorElegido;
         public Color ColorNormal => colorNormal;
@@ -86,5 +94,9 @@ namespace MechaCyberpunk.UI
         public string TextoNoAlcanza => textoNoAlcanza;
         public string TextoNoDisponible => textoNoDisponible;
         public string TextoAyuda => textoAyuda;
+        public string FormatoPrecioRebajado => formatoPrecioRebajado;
+        public string FormatoFavorDescuento => formatoFavorDescuento;
+        public int TamanoFavor => tamanoFavor;
+        public Color ColorFavor => colorFavor;
     }
 }

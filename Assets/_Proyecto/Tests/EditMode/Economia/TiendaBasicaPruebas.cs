@@ -147,5 +147,58 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(IdLugar.MercadoNegro, tienda.Lugar);
             Assert.AreEqual(2, tienda.Ofertas.Count);
         }
+
+        // T-187: rebaja del favor de descuento.
+        [Test]
+        public void PrecioCon_80Con30Porciento_Es56()
+        {
+            var oferta = Oferta("misil", 80);
+            try { Assert.AreEqual(56, TiendaBasica.PrecioCon(oferta, 0.3f)); }
+            finally { Object.DestroyImmediate(oferta); }
+        }
+
+        [Test]
+        public void PrecioCon_UnPesoConRebajaAlta_NuncaBajaDeUnPeso()
+        {
+            var oferta = Oferta("barato", 1);
+            try { Assert.AreEqual(1, TiendaBasica.PrecioCon(oferta, 0.9f)); }
+            finally { Object.DestroyImmediate(oferta); }
+        }
+
+        [Test]
+        public void PrecioCon_PrecioCero_SigueGratis()
+        {
+            var oferta = Oferta("gratis", 0);
+            try { Assert.AreEqual(0, TiendaBasica.PrecioCon(oferta, 0.3f)); }
+            finally { Object.DestroyImmediate(oferta); }
+        }
+
+        [Test]
+        public void PrecioCon_SinRebaja_EsElPrecioNormalYRedondeaAlPesoMasCercano()
+        {
+            var oferta = Oferta("redondo", 15);
+            try
+            {
+                Assert.AreEqual(15, TiendaBasica.PrecioCon(oferta, 0f));
+                Assert.AreEqual(8, TiendaBasica.PrecioCon(oferta, 0.5f), "7.5 sube al peso más cercano");
+            }
+            finally { Object.DestroyImmediate(oferta); }
+        }
+
+        [Test]
+        public void Comprar_ConRebaja_CobraElPrecioRebajado()
+        {
+            Assert.AreEqual(ResultadoCompra.Comprado, tienda.Comprar(barata, cartera, 0.3f));
+            Assert.AreEqual(1000 - 70, cartera.Dinero);
+        }
+
+        [Test]
+        public void Comprar_SinDineroParaElRebajado_DevuelveSinDinero()
+        {
+            var pobre = new ModeloCartera(69);
+            Assert.AreEqual(ResultadoCompra.SinDinero, tienda.Comprar(barata, pobre, 0.3f));
+            Assert.AreEqual(69, pobre.Dinero);
+            Assert.AreEqual(ResultadoCompra.Comprado, tienda.Comprar(barata, new ModeloCartera(70), 0.3f));
+        }
     }
 }

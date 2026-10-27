@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 4593314297324620775}
   - component: {fileID: 2447612013111949025}
   - component: {fileID: 5016240715847715043}
+  - component: {fileID: 4905222460801062930}
   m_Layer: 0
   m_Name: ServiciosProgresion
   m_TagString: Untagged
@@ -158,3 +159,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioMisiones
   catalogo: {fileID: 11400000, guid: 6140291c3d45569459d2d693d492d921, type: 2}
+--- !u!114 &4905222460801062930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b5e0d3e53a21d42bce78d85127acfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.Escondites
+  textoEsconderte: ESCONDERTE (FAVOR)
+  textoNecesitasFavor: "ESCONDITE \xB7 NECESITAS UN FAVOR"
+  segundosRevision: 0.5
