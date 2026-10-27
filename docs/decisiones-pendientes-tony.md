@@ -699,3 +699,102 @@ papás, o se dejan para la historia principal?
 - Conocido T-186 (no corregido): al cargar una partida (F9), el aviso de reputación del HUD (UI/HudAPie/HudAPie.cs, no está en las carpetas de T-187) muestra los valores guardados como cambio, porque reputacion.Cambio se dispara al cargar; la corrección es ignorar los cambios mientras se carga (o comparar contra el valor recordado en VincularReputacion) y queda para una tarea de HUD.
 - D-tony-160: T-188 hereda de RecorridoEmboscadaBase (como MisionesPeleaPruebas) para pelear en el mecha; en el paso g Doña Lupe se cumple otra vez el día siguiente (así el barrio llega a 19) y no se prueba el texto YA LO HICISTE HOY porque la tiendita ya no se ofrece ese mismo día tras J; la liga 2 se abre con Poner(2, 1, 1); el letrero deformado de T-188-3 se reporta como error y no se corrige aquí.
 - D-tony-161: T-189 corrige el aviso de reputación al cargar desde el HUD (se engancha a ServicioGuardado.Cargada, resincroniza y descarta el aviso) en vez de tocar ServicioReputacion o el guardado; el letrero GRAFITI cuelga de un padre sin escala en la cara oeste del muro. Resuelve el conocido de T-186 y el error de T-188-3.
+- D-tony-162: Pruebas_Misiones no tiene forma de llegar desde el juego, así que el build provisional lleva un segundo build, Builds/Provisional_Misiones/, con las mismas 9 escenas pero arrancando en Pruebas_Misiones.
+
+## Planeación de T-F7, bloque 6: implantes (2026-10-27, planificador Opus 5.5)
+
+### D-tony-163 IDs y orden del bloque 6
+Propuesta. El bloque 6 son T-190 a T-197, sin hackeo. Orden: T-190 (Core) → T-191 (datos, servicio, guardado y balance) → T-192 (brazos y
+piernas a pie; los implantes se ven) → T-193 (clínica y escena Pruebas_Implantes) → T-194 (ojos y sistema nervioso en el mecha) → T-195
+(pandilleros a pie) → T-196 (caer en la calle: el doctor) → T-197 (cierre). T-192 solo usa el contrato y un doble, así que puede ir en paralelo con
+T-191 si hace falta; T-194 y T-195 tocan carpetas distintas salvo el creador de la escena. El bloque siguiente (radio, según docs/estado-tony.md)
+empieza en T-198.
+
+### D-tony-164 Contratos de Core del bloque 6 (T-190; autorizada por Tony en el /goal)
+Propuesta. `Core/Implantes/`: `EspacioImplante` (Ojos, Brazos, Piernas, SistemaNervioso), `EfectosImplantes` (struct de multiplicadores y
+banderas con `Ninguno` y `Combinar`) e `IImplantes` (solo lectura: nivel y nombre por espacio, cantidad, efectos combinados, `Cambio` e
+`Instalado`). Va en Core porque lo leen cuatro áreas de Tony que no referencian Progresion (Personaje, Mecha, UI y el cuerpo del espejo) y porque
+Alan puede querer que su ciudad reaccione al cromo; los efectos van como datos en el contrato para que nadie más tenga que conocer la tabla.
+Clave de guardado nueva: `implantes`. "Clinica_Camilla" se documenta como id de ejemplo de `IPuntoAparicion`. No cambian `MotivoDinero.Clinica`,
+`IdLugar.Clinica`, `TipoOferta.Implante` ni `AparienciaJugador.Implante` (el implante cosmético de la creación sigue siendo solo apariencia y
+los instalados se suman encima). Los datos de prueba de T-033 (`DatosOferta_ImplanteOjos`, `DatosTienda_Clinica`) quedan sin usar y no se borran.
+
+### D-tony-165 Los 8 implantes (provisionales; tabla en T-191)
+Propuesta. Dos niveles por espacio; el 1 desde la liga 1 y el 2 desde la liga 3. OJOS DE LECHUZA ($2,500: vida del rival en la cabina y su
+próximo ataque 0.4 s antes) y OJOS DE ÁGUILA ($6,000: la vida también en números y 0.8 s). BRAZOS DE PISTÓN ($2,000: golpe a pie ×1.5) y BRAZOS
+DE PRENSA ($5,000: ×2.0); la pistola no cambia. PIERNAS DE RESORTE ($2,000: correr ×1.2 y salto ×1.3) y PIERNAS DE CHAPULÍN ($5,000: ×1.35 y
+×1.6); caminar no cambia. SINAPSIS CALLEJERA ($3,000: preparación del golpe y subir guardia del mecha ×0.85, ventana del bloqueo perfecto ÷0.85)
+y SINAPSIS MILITAR ($7,000: ×0.7). Con el mecha de serie: golpe 0.25 → 0.21 / 0.175 s, guardia 0.15 → 0.13 / 0.105 s, ventana 0.2 → 0.24 / 0.29 s.
+Los ojos y la sinapsis no suben vida ni daño: son los implantes "de la jaula" que te hacen mejor peleador; las piezas siguen mandando en las
+estadísticas. Tony cambia nombres y valores en los assets.
+
+### D-tony-166 Reglas de la clínica (T-191, T-193)
+Propuesta. Se instala en el mostrador de la clínica (a pie, E), abierta según el `ILugar` Clinica (el horario es de Alan; sin lugar, abierta).
+Un implante por espacio; el nivel 2 reemplaza al 1 y se paga la diferencia. Se paga con `IntentarPagar` (no fiado: con dinero negativo no se
+instala, D-tony-85). No se quitan ni se venden. Antes de pagar se ve el implante "probado" en tu cuerpo. Al instalar: fundido a negro, pasan 2
+horas y el doc dice una línea. Sin efectos secundarios (ciberpsicosis, humanidad) en este bloque.
+
+### D-tony-167 Cómo se ven los implantes (T-192)
+Propuesta (greybox). En el cuerpo (espejo, vista previa, cinemáticas): OJOS una banda delgada con brillo turquesa, BRAZOS antebrazos cromados,
+PIERNAS espinillas cromadas, SISTEMA NERVIOSO tres placas en la nuca; el nivel 2 con una franja magenta. En primera persona solo cambia el puño
+(cromado con BRAZOS). En la cabina, un LED "SINAPSIS" (dos con el nivel 2). Sin rojo puro (alarma y furia) y sin cambiar materiales en ejecución
+(D-tony-122). Modelos finales: tarea de arte aparte.
+
+### D-tony-168 Ojos: la lectura del rival vive en Combate, no en Core (T-194, T-195)
+Propuesta. Los ojos necesitan leer a los rivales de IA desde UI. En vez de un contrato de Core (Alan no hace rivales) o de que UI referencie IA,
+la interfaz `ILecturaRival` (nombre, raíz, vida, si es mecha, si está preparando, segundos para atacar y si lo próximo es golpe o habilidad) va en
+Combate/Lectura/, que IA y UI ya referencian; los rivales se registran en `Registro<ILecturaRival>`. `RivalBasico` la implementa (con su
+`HabilidadRival` si la tiene) y el pandillero a pie también. La pantalla de ojos elige al rival mecha más centrado en la vista a 40 m o menos; el
+HUD a pie, al pandillero en la mira a 15 m o menos. "Próximo ataque" = aviso prendido cuando el rival está preparando o le falta menos que la
+anticipación; si el rival llega a su alcance con menos tiempo que eso, el aviso llega tarde y se acepta (la prueba pide 80 % de golpes avisados a
+tiempo y cuenta aparte los demás).
+
+### D-tony-169 Pandilleros a pie en este bloque (T-195)
+Propuesta. Hoy nada pega al jugador a pie (solo muñecos y herramientas de prueba), así que "más daño a pie" y "morir en la calle" no tendrían
+dónde notarse. Se agrega un enemigo a pie sencillo (IA/APie/): grupos de 3 que salen de noche en su punto; vida 60, golpe 10 con 0.5 s de aviso
+(brazo naranja), recarga 1.4 s, velocidad 5.5 m/s (más que caminar 4.5, menos que correr 7.5), radio 10 m, correa 25 m, máximo 2 atacando a la
+vez, sin armas, sueltan $40 cada uno (`MotivoDinero.Otro`) y vuelven la noche siguiente. No pelean contra el mecha (se dispersan). Tumbar a uno:
+4 golpes sin implante, 3 con BRAZOS I, 2 con BRAZOS II, 3 tiros de pistola. Alternativa si Tony no los quiere: se quita T-195; los brazos se
+prueban solo con muñecos y caer en la calle solo pasa con el mecha en KO en una pelea de misión.
+
+### D-tony-170 Caer en la calle y el doctor (T-196). Responde "cuánto cobra el doctor"
+Propuesta. "Caer en la calle" = KO a pie, o KO del mecha del jugador fuera de una pelea del flujo (pelea de misión, calle), solo con la historia en
+`Libre` (el prólogo y la emboscada no se pueden perder). Tras unos 3 s, fundido; despiertas 6 horas después en "Clinica_Camilla" (sin ella, en
+"Casa_Cama"; sin ninguna, donde caíste) con la vida llena. El doctor cobra $500 fiado (`CargarDeuda`, `MotivoDinero.Clinica`: si no te alcanza,
+quedas en negativo y esa es la deuda; sin intereses). El calor se borra, la misión en curso falla por KO (sin doble castigo) y, si el mecha
+andaba fuera del taller, vuelve solo al taller con min(su vida, 20 %), sin bajar del piso de emergencia del 15 % (D-tony-42); si estaba en el
+taller, no se toca. Objetivo "VUELVE A CASA". Va en `Progresion.Prologo` (Progresion/Prologo/Clinica/), el ensamblado de arriba (D-tony-62),
+como prefab `DoctorClinica.prefab` que colocan los creadores de escena (y Alan en Ciudad, junto al director del prólogo).
+
+### D-tony-171 Reglas de balance de los implantes (T-191)
+Propuesta. a) ningún implante cambia vida, daño, alcance, velocidad ni recarga del mecha (las reglas de D-tony-125 y D-tony-140 no cambian);
+b) un implante de nivel 1 cuesta entre 3 × el premio del rival 1 de la liga 1 ($1,800) y el premio del jefe de la liga 2 ($3,000); c) uno de nivel
+2 cuesta entre el premio del jefe de la liga 3 ($4,500) y el del jefe de la liga 4 ($7,500); d) el nivel 2 cuesta al menos el doble que el 1 del
+mismo espacio; e) los 4 de nivel 1 juntos ($9,500) cuestan menos que ganar una vez todas las peleas de las ligas 1 y 2 ($12,600); f) BRAZOS II
+nunca tumba a un pandillero de un golpe; g) con SINAPSIS II la preparación del golpe del jugador no baja de 0.15 s, la guardia de 0.08 s y la
+ventana perfecta no pasa de 0.3 s (pisos y tope en la regla, por si las piezas bajan algo en el futuro); h) el doctor cobra menos que el premio
+del rival 1 de la liga 1 (una pelea lo paga) y más que lo que suelta una pandilla entera; i) el salto con PIERNAS II es menor de 2 m. Si una
+falla, se ajustan los implantes, no las reglas ni los premios.
+
+### D-tony-172 Dónde vive el código del bloque 6
+Propuesta. Contratos en Core/Implantes/ (T-190). Datos, regla y servicio en Progresion/Implantes/ (assets en Progresion/Datos/Implantes/;
+`ServicioImplantes` en `ServiciosProgresion.prefab`). Efectos a pie y cuerpo en Personaje/; sinapsis en Mecha/Piezas/ (la compone `EquipoMecha`,
+solo el mecha de la historia); lectura del rival en Combate/Lectura/; pandilleros en IA/APie/; clínica en UI/Clinica/ con
+`UI/Prefabs/MostradorClinica.prefab`; pantalla de ojos en UI/Cabina/ y HUD a pie en UI/HudAPie/; doctor en Progresion/Prologo/Clinica/. Escena del
+bloque: `Escenas/Tony/Pruebas_Implantes.unity` (clínica con camilla y espejo, pista con cajas de salto calculadas, muñecos, taller, arena con
+mostrador, casa y sitio de pandilla); no se agranda Pruebas_Economia para no mover lo que prueban sus recorridos. Pruebas de PlayMode del bloque
+en su propio ensamblado `MechaCyberpunk.Tests.PlayMode.Progresion.Implantes` (como Misiones, D-tony-150). Herramienta `ImplantesDePrueba`
+(Progresion/Pruebas/) con teclas que no choquen con las de las escenas de prueba.
+
+### D-tony-173 Lo que espera a Alan en el bloque 6
+Propuesta. Nada obligatorio: todo se prueba en Pruebas_Implantes. Opcional, cuando quiera: colocar `MostradorClinica.prefab` en su clínica del
+mercado negro (abre con su `ILugar` Clinica), un `IPuntoAparicion` "Clinica_Camilla" y `DoctorClinica.prefab` en Ciudad, y `PandillaAPie.prefab`
+en calles de noche; que las bardas que no se deben brincar midan 2 m o más (con PIERNAS II el jugador salta 1.76 m); y, si quiere, que la ciudad
+lea `IImplantes` (vecinos que notan el cromo). La clínica, el doctor y la pandilla en Ciudad.unity se escriben cuando Alan los coloque (como T-136).
+
+### D-tony-174 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿Dos niveles por espacio, con el 2 desde la liga 3, o uno solo por espacio? (b) ¿$500 por
+levantarte y 6 horas dormido te parece un castigo justo? (c) ¿Quieres los pandilleros a pie (T-195), o los brazos se quedan para después? (d)
+¿Los implantes deberían tener un costo además del dinero (ciberpsicosis, que la gente del barrio desconfíe, que bajen la reputación de barrio)?
+(e) ¿La clínica debería pedir reputación de barrio o de corporaciones para algunos implantes (por ejemplo, los de nivel 2 solo con CONTRATISTA)?
+(f) ¿El ojo cosmético de la creación debería contar como OJOS instalados, o se quedan separados como ahora?
