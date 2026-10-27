@@ -103,6 +103,7 @@ namespace MechaCyberpunk.Personaje.Editor
             CrearEscena(piso, CrearMaterial(RutaMaterialCalle, new Color(0.12f, 0.12f, 0.14f)),
                 CrearMaterial(RutaMaterialBanqueta, new Color(0.45f, 0.45f, 0.48f)), cubo, obstaculo);
             AssetDatabase.SaveAssets();
+            CreadorImplantesAPie.Crear();
             Debug.Log("[Personaje] T-051 creada.");
         }
 

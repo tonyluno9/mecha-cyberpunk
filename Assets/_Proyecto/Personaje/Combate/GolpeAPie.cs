@@ -1,6 +1,7 @@
 using System;
 using MechaCyberpunk.Combate.Golpe;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private ControladorAPie controlador;
         private VidaAPie vida;
         private CicloGolpe ciclo;
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
         private Vector3 posicionReposo;
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactosPorGolpe];
 
@@ -61,10 +63,12 @@ namespace MechaCyberpunk.Personaje.Combate
         private void OnEnable()
         {
             atacar.action.Enable();
+            implantes.Activar();
         }
 
         private void OnDisable()
         {
+            implantes.Desactivar();
             ciclo?.Reiniciar();
             MoverPuno();
         }
@@ -97,7 +101,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 datos.RadioGolpe, impactos, out Vector3 punto);
             if (objetivo != null)
             {
-                objetivo.RecibirDanio(new InfoDanio(datos.DanioGolpe, TipoDanio.Golpe, punto, direccion, null));
+                objetivo.RecibirDanio(new InfoDanio(EfectosAPie.DanioGolpe(datos, implantes.Efectos), TipoDanio.Golpe, punto, direccion, null));
             }
             Impacto?.Invoke();
         }

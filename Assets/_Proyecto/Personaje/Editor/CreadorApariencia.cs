@@ -117,7 +117,7 @@ namespace MechaCyberpunk.Personaje.Editor
             GameObject go = GameObject.CreatePrimitive(tipo);
             go.name = nombre;
             Object.DestroyImmediate(go.GetComponent<Collider>());
-            go.transform.SetParent(padre, false);
+            if (padre != null) go.transform.SetParent(padre, false);
             go.transform.localPosition = posicion;
             go.transform.localScale = escala;
             var r = go.GetComponent<Renderer>();
@@ -129,6 +129,13 @@ namespace MechaCyberpunk.Personaje.Editor
 
         private static void CrearPrefabCuerpo(CatalogoApariencia catalogo, Material m)
         {
+            // Idempotente (T-192): regenerar cambia los ids internos del prefab, así que se conserva si ya tiene las piezas instaladas.
+            var existente = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabCuerpo);
+            if (existente != null && existente.GetComponent<CuerpoJugador>() != null
+                && existente.GetComponent<CuerpoJugador>().PiezasInstaladas.Length == 4)
+            {
+                return;
+            }
             var raiz = new GameObject("CuerpoJugador");
             try
             {
@@ -167,6 +174,33 @@ namespace MechaCyberpunk.Personaje.Editor
                     Primitiva("Implante_PlacaSien", PrimitiveType.Cube, t, new Vector3(0.135f, 1.6f, 0.03f), new Vector3(0.02f, 0.08f, 0.07f), m)
                 };
 
+                // T-192: una pieza por espacio de implante instalado (apagadas; el cuerpo las prende según IImplantes).
+                GameObject[] instaladas =
+                {
+                    Grupo("Instalado_Ojos", t, Primitiva("Banda", PrimitiveType.Cube, null, new Vector3(0f, 1.58f, 0.07f), new Vector3(0.25f, 0.04f, 0.12f), m)),
+                    Grupo("Instalado_Brazos", t,
+                        Primitiva("AntebrazoIzq", PrimitiveType.Cube, null, new Vector3(-0.27f, 0.95f, 0f), new Vector3(0.16f, 0.3f, 0.18f), m),
+                        Primitiva("AntebrazoDer", PrimitiveType.Cube, null, new Vector3(0.27f, 0.95f, 0f), new Vector3(0.16f, 0.3f, 0.18f), m)),
+                    Grupo("Instalado_Piernas", t,
+                        Primitiva("EspinillaIzq", PrimitiveType.Cube, null, new Vector3(-0.1f, 0.2f, 0f), new Vector3(0.18f, 0.34f, 0.2f), m),
+                        Primitiva("EspinillaDer", PrimitiveType.Cube, null, new Vector3(0.1f, 0.2f, 0f), new Vector3(0.18f, 0.34f, 0.2f), m)),
+                    Grupo("Instalado_SistemaNervioso", t,
+                        Primitiva("PlacaIzq", PrimitiveType.Cube, null, new Vector3(-0.06f, 1.46f, -0.095f), new Vector3(0.05f, 0.07f, 0.03f), m),
+                        Primitiva("PlacaCentro", PrimitiveType.Cube, null, new Vector3(0f, 1.46f, -0.095f), new Vector3(0.05f, 0.07f, 0.03f), m),
+                        Primitiva("PlacaDer", PrimitiveType.Cube, null, new Vector3(0.06f, 1.46f, -0.095f), new Vector3(0.05f, 0.07f, 0.03f), m))
+                };
+                GameObject[] franjas =
+                {
+                    Grupo("Franja_Ojos", t, Primitiva("Franja", PrimitiveType.Cube, null, new Vector3(0f, 1.607f, 0.07f), new Vector3(0.255f, 0.012f, 0.125f), m)),
+                    Grupo("Franja_Brazos", t,
+                        Primitiva("FranjaIzq", PrimitiveType.Cube, null, new Vector3(-0.27f, 1.0f, 0f), new Vector3(0.17f, 0.04f, 0.19f), m),
+                        Primitiva("FranjaDer", PrimitiveType.Cube, null, new Vector3(0.27f, 1.0f, 0f), new Vector3(0.17f, 0.04f, 0.19f), m)),
+                    Grupo("Franja_Piernas", t,
+                        Primitiva("FranjaIzq", PrimitiveType.Cube, null, new Vector3(-0.1f, 0.3f, 0f), new Vector3(0.19f, 0.04f, 0.21f), m),
+                        Primitiva("FranjaDer", PrimitiveType.Cube, null, new Vector3(0.1f, 0.3f, 0f), new Vector3(0.19f, 0.04f, 0.21f), m)),
+                    Grupo("Franja_SistemaNervioso", t, Primitiva("Franja", PrimitiveType.Cube, null, new Vector3(0f, 1.5f, -0.095f), new Vector3(0.17f, 0.012f, 0.035f), m))
+                };
+
                 var cuerpo = raiz.AddComponent<CuerpoJugador>();
                 var so = new SerializedObject(cuerpo);
                 so.FindProperty("catalogo").objectReferenceValue = catalogo;
@@ -177,6 +211,8 @@ namespace MechaCyberpunk.Personaje.Editor
                 AsignarLista(so.FindProperty("peinados"), peinados);
                 AsignarLista(so.FindProperty("piezasRopa"), piezasRopa);
                 AsignarLista(so.FindProperty("implantes"), implantes);
+                AsignarLista(so.FindProperty("piezasInstaladas"), instaladas);
+                AsignarLista(so.FindProperty("franjasInstaladas"), franjas);
                 so.ApplyModifiedPropertiesWithoutUndo();
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabCuerpo);
             }
@@ -184,6 +220,19 @@ namespace MechaCyberpunk.Personaje.Editor
             {
                 Object.DestroyImmediate(raiz);
             }
+        }
+
+        // Agrupa piezas bajo un objeto apagado, para prenderlas juntas.
+        private static GameObject Grupo(string nombre, Transform padre, params GameObject[] piezas)
+        {
+            var grupo = new GameObject(nombre);
+            grupo.transform.SetParent(padre, false);
+            foreach (GameObject pieza in piezas)
+            {
+                pieza.transform.SetParent(grupo.transform, false);
+            }
+            grupo.SetActive(false);
+            return grupo;
         }
 
         private static void AsignarLista(SerializedProperty lista, Object[] elementos)
@@ -197,6 +246,7 @@ namespace MechaCyberpunk.Personaje.Editor
 
         private static void CrearPrefabVista()
         {
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabVista) != null) return;
             var raiz = new GameObject("VistaPreviaApariencia");
             try
             {
