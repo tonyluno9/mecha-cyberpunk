@@ -1171,12 +1171,12 @@ MonoBehaviour:
   segundosPrimerCarrete: 0.6
   segundosEntreCarretes: 0.3
   segundosPorCambio: 0.07
-  textoJugar: "Jugar \xB7 ${0}"
-  textoSinDinero: "Sin dinero \xB7 ${0}"
+  textoJugar: "Jugar \xB7 {0} fichas"
+  textoSinFichas: "Sin fichas \xB7 {0} fichas"
   textoGirando: "Girando\u2026"
-  textoGanaste: GANASTE ${0}
+  textoGanaste: GANASTE {0} FICHAS
   textoPerdiste: "SUERTE LA PR\xD3XIMA"
-  textoListo: APUESTA ${0}
+  textoListo: APUESTA {0} FICHAS
   intensidadNeonQuieto: 1.5
   intensidadNeonGirando: 4
   frecuenciaNeonGirando: 12

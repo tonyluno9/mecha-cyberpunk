@@ -2,6 +2,7 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using MechaCyberpunk.Casino.Datos;
+using MechaCyberpunk.Casino.Fichas;
 using MechaCyberpunk.Casino.Tragamonedas;
 using MechaCyberpunk.Core;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ using UnityEngine.UI;
 
 namespace MechaCyberpunk.Tests.Casino
 {
-    /// <summary>La tragamonedas jugable (T-301): cobro, premio, giro, texto y uso con E. Usa un doble de cartera y azar con semilla.</summary>
+    /// <summary>La tragamonedas jugable (T-301): cobro, premio, giro, texto y uso con E. Usa un doble de fichas y azar con semilla.</summary>
     public class TragamonedasMundoPruebas : InputTestFixture
     {
         private const string RutaPrefab = "Assets/_Proyecto/Casino/Prefabs/Tragamonedas.prefab";
@@ -25,52 +26,41 @@ namespace MechaCyberpunk.Tests.Casino
         private const int Anchura = 1280;
         private const int Altura = 720;
         private const int BitsProfundidad = 24;
-        private const int DineroSuficiente = 1000;
+        private const int FichasSuficientes = 1000;
         private const float FOVCaptura = 38f;
 
-        private sealed class CarteraDoble : ICartera
+        private sealed class FichasDoble : IFichas
         {
-            public int Dinero { get; set; }
+            public int Saldo { get; set; }
             public int Cobros;
             public int Abonos;
             public int TotalAbonado;
-            public MotivoDinero UltimoMotivo = MotivoDinero.Otro;
 
-            public event System.Action<int, MotivoDinero> Cambio;
+            public bool PuedePagar(int cantidad) => cantidad > 0 && Saldo >= cantidad;
 
-            public bool PuedePagar(int cantidad) => cantidad > 0 && Dinero >= cantidad;
-
-            public bool IntentarPagar(int cantidad, MotivoDinero motivo)
+            public bool IntentarPagar(int cantidad)
             {
                 if (!PuedePagar(cantidad))
                 {
                     return false;
                 }
-                Dinero -= cantidad;
+                Saldo -= cantidad;
                 Cobros++;
-                UltimoMotivo = motivo;
-                Cambio?.Invoke(-cantidad, motivo);
                 return true;
             }
 
-            public void Abonar(int cantidad, MotivoDinero motivo)
+            public void Abonar(int cantidad)
             {
                 if (cantidad <= 0)
                 {
                     return;
                 }
-                Dinero += cantidad;
+                Saldo += cantidad;
                 Abonos++;
                 TotalAbonado += cantidad;
-                UltimoMotivo = motivo;
-                Cambio?.Invoke(cantidad, motivo);
-            }
-
-            public void CargarDeuda(int cantidad, MotivoDinero motivo)
-            {
-                Dinero -= cantidad;
             }
         }
+
 
         /// <summary>Jugador de prueba: con E usa el interactuable más cercano a 2.5 m, como lo hace el jugador a pie de Tony.</summary>
         private sealed class JugadorDePrueba : MonoBehaviour
@@ -116,7 +106,7 @@ namespace MechaCyberpunk.Tests.Casino
         private Keyboard teclado;
         private DatosTragamonedas datos;
         private TragamonedasMundo maquina;
-        private CarteraDoble cartera;
+        private FichasDoble fichas;
         private GameObject jugador;
         private GameObject escenario;
 
@@ -126,7 +116,7 @@ namespace MechaCyberpunk.Tests.Casino
             teclado = InputSystem.AddDevice<Keyboard>();
             datos = AssetDatabase.LoadAssetAtPath<DatosTragamonedas>(RutaDatos);
             Assert.IsNotNull(datos, "Falta " + RutaDatos);
-            cartera = new CarteraDoble();
+            fichas = new FichasDoble();
         }
 
         public override void TearDown()
@@ -153,7 +143,7 @@ namespace MechaCyberpunk.Tests.Casino
             GameObject instancia = Object.Instantiate(prefab);
             instancia.name = "Tragamonedas_Prueba";
             TragamonedasMundo nueva = instancia.GetComponent<TragamonedasMundo>();
-            nueva.Inyectar(cartera, new System.Random(semilla));
+            nueva.Inyectar(fichas, new System.Random(semilla));
             maquina = nueva;
             return nueva;
         }
@@ -210,26 +200,25 @@ namespace MechaCyberpunk.Tests.Casino
         }
 
         [Test]
-        public void SinDinero_NoGiraNiCobraYAvisa()
+        public void SinFichas_NoGiraNiCobraYAvisa()
         {
             TragamonedasMundo m = CrearMaquina(1);
-            cartera.Dinero = datos.Apuesta - 1;
+            fichas.Saldo = datos.Apuesta - 1;
             Assert.IsFalse(m.PuedeUsar);
-            StringAssert.StartsWith("Sin dinero", m.Texto);
-            StringAssert.Contains("$" + datos.Apuesta, m.Texto);
+            StringAssert.StartsWith("Sin fichas", m.Texto);
             m.Usar();
             Assert.IsFalse(m.Girando);
-            Assert.AreEqual(0, cartera.Cobros);
-            Assert.AreEqual(0, cartera.Abonos);
-            Assert.AreEqual(datos.Apuesta - 1, cartera.Dinero);
+            Assert.AreEqual(0, fichas.Cobros);
+            Assert.AreEqual(0, fichas.Abonos);
+            Assert.AreEqual(datos.Apuesta - 1, fichas.Saldo);
         }
 
         [UnityTest]
-        public IEnumerator ConDinero_CobraUnaVezYAbonaElPremioUnaVez()
+        public IEnumerator ConFichas_CobraUnaVezYAbonaElPremioUnaVez()
         {
             int semilla = BuscarSemilla(true, out int[] esperado, out int premio);
             TragamonedasMundo m = CrearMaquina(semilla);
-            cartera.Dinero = DineroSuficiente;
+            fichas.Saldo = FichasSuficientes;
             StringAssert.StartsWith("Jugar", m.Texto);
             Assert.IsTrue(m.PuedeUsar);
 
@@ -237,17 +226,16 @@ namespace MechaCyberpunk.Tests.Casino
             m.Usar();
             Assert.IsTrue(m.Girando);
             Assert.IsFalse(m.PuedeUsar, "Mientras gira no se puede usar.");
-            Assert.AreEqual(1, cartera.Cobros, "Un solo cobro aunque se use dos veces.");
-            Assert.AreEqual(MotivoDinero.Casino, cartera.UltimoMotivo);
-            Assert.AreEqual(DineroSuficiente - datos.Apuesta, cartera.Dinero);
-            Assert.AreEqual(0, cartera.Abonos, "El premio se abona al parar, no antes.");
+            Assert.AreEqual(1, fichas.Cobros, "Un solo cobro aunque se use dos veces.");
+            Assert.AreEqual(FichasSuficientes - datos.Apuesta, fichas.Saldo);
+            Assert.AreEqual(0, fichas.Abonos, "El premio se abona al parar, no antes.");
 
             yield return EsperarFinGiro(m);
 
-            Assert.AreEqual(1, cartera.Cobros);
-            Assert.AreEqual(1, cartera.Abonos, "El premio se abona una sola vez.");
-            Assert.AreEqual(premio, cartera.TotalAbonado);
-            Assert.AreEqual(DineroSuficiente - datos.Apuesta + premio, cartera.Dinero);
+            Assert.AreEqual(1, fichas.Cobros);
+            Assert.AreEqual(1, fichas.Abonos, "El premio se abona una sola vez.");
+            Assert.AreEqual(premio, fichas.TotalAbonado);
+            Assert.AreEqual(FichasSuficientes - datos.Apuesta + premio, fichas.Saldo);
             CollectionAssert.AreEqual(esperado, m.UltimoResultado);
             Text[] carretes = m.GetComponentsInChildren<Text>();
             for (int i = 0; i < esperado.Length; i++)
@@ -262,13 +250,13 @@ namespace MechaCyberpunk.Tests.Casino
         {
             int semilla = BuscarSemilla(false, out _, out _);
             TragamonedasMundo m = CrearMaquina(semilla);
-            cartera.Dinero = DineroSuficiente;
+            fichas.Saldo = FichasSuficientes;
             m.Usar();
             yield return EsperarFinGiro(m);
-            Assert.AreEqual(1, cartera.Cobros);
-            Assert.AreEqual(0, cartera.Abonos);
+            Assert.AreEqual(1, fichas.Cobros);
+            Assert.AreEqual(0, fichas.Abonos);
             Assert.AreEqual(0, m.UltimoPremio);
-            Assert.AreEqual(DineroSuficiente - datos.Apuesta, cartera.Dinero);
+            Assert.AreEqual(FichasSuficientes - datos.Apuesta, fichas.Saldo);
         }
 
         [UnityTest]
@@ -276,14 +264,14 @@ namespace MechaCyberpunk.Tests.Casino
         {
             int semilla = BuscarSemilla(true, out _, out int premio);
             TragamonedasMundo m = CrearMaquina(semilla);
-            cartera.Dinero = DineroSuficiente;
+            fichas.Saldo = FichasSuficientes;
             m.Usar();
             yield return null;
             Assert.IsTrue(m.Girando);
             m.gameObject.SetActive(false);
             Assert.IsFalse(m.Girando);
-            Assert.AreEqual(1, cartera.Abonos);
-            Assert.AreEqual(premio, cartera.TotalAbonado);
+            Assert.AreEqual(1, fichas.Abonos);
+            Assert.AreEqual(premio, fichas.TotalAbonado);
         }
 
         [UnityTest]
@@ -291,7 +279,7 @@ namespace MechaCyberpunk.Tests.Casino
         {
             int semilla = BuscarSemilla(true, out _, out int premio);
             TragamonedasMundo m = CrearMaquina(semilla);
-            cartera.Dinero = DineroSuficiente;
+            fichas.Saldo = FichasSuficientes;
             jugador = new GameObject("JugadorDePrueba");
             jugador.transform.position = m.Posicion + Vector3.forward * 0.5f;
             jugador.AddComponent<JugadorDePrueba>();
@@ -304,20 +292,20 @@ namespace MechaCyberpunk.Tests.Casino
 
             Assert.IsTrue(m.Girando, "La E con el jugador cerca empieza el giro.");
             Assert.AreEqual("Girando…", m.Texto);
-            Assert.AreEqual(1, cartera.Cobros);
+            Assert.AreEqual(1, fichas.Cobros);
 
             yield return EsperarFinGiro(m);
 
             StringAssert.StartsWith("Jugar", m.Texto);
-            Assert.AreEqual(1, cartera.Abonos);
-            Assert.AreEqual(premio, cartera.TotalAbonado);
+            Assert.AreEqual(1, fichas.Abonos);
+            Assert.AreEqual(premio, fichas.TotalAbonado);
         }
 
         [UnityTest]
         public IEnumerator ConE_ElJugadorLejosNoGira()
         {
             TragamonedasMundo m = CrearMaquina(1);
-            cartera.Dinero = DineroSuficiente;
+            fichas.Saldo = FichasSuficientes;
             jugador = new GameObject("JugadorDePrueba");
             jugador.transform.position = m.Posicion + Vector3.forward * (AlcanceUso + 2f);
             jugador.AddComponent<JugadorDePrueba>();
@@ -329,7 +317,7 @@ namespace MechaCyberpunk.Tests.Casino
             yield return null;
 
             Assert.IsFalse(m.Girando);
-            Assert.AreEqual(0, cartera.Cobros);
+            Assert.AreEqual(0, fichas.Cobros);
         }
 
         [UnityTest]
@@ -337,7 +325,7 @@ namespace MechaCyberpunk.Tests.Casino
         {
             int semilla = BuscarSemilla(true, out _, out _);
             TragamonedasMundo m = CrearMaquina(semilla);
-            cartera.Dinero = DineroSuficiente;
+            fichas.Saldo = FichasSuficientes;
             escenario = new GameObject("EscenarioCaptura");
             GameObject piso = GameObject.CreatePrimitive(PrimitiveType.Cube);
             piso.transform.SetParent(escenario.transform, false);

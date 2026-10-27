@@ -1,5 +1,6 @@
 using System.Collections;
 using MechaCyberpunk.Casino.Datos;
+using MechaCyberpunk.Casino.Fichas;
 using MechaCyberpunk.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,9 +8,9 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.Casino.Tragamonedas
 {
     /// <summary>
-    /// La tragamonedas del casino (T-301): un <see cref="IInteractuable"/> que el jugador a pie usa con E. Cobra la apuesta de la
-    /// <see cref="ICartera"/>, gira los tres carretes con una animación corta, muestra los símbolos y abona el premio. Paga en dinero directo
-    /// (las fichas llegan en T-302). Los números salen de <see cref="DatosTragamonedas"/>; el azar y la cartera se pueden inyectar.
+    /// La tragamonedas del casino (T-301): un <see cref="IInteractuable"/> que el jugador a pie usa con E. Cobra la apuesta de las
+    /// <see cref="IFichas"/>, gira los tres carretes con una animación corta, muestra los símbolos y abona el premio. Paga en fichas (T-302).
+    /// Los números salen de <see cref="DatosTragamonedas"/>; el azar y las fichas se pueden inyectar.
     /// </summary>
     public class TragamonedasMundo : MonoBehaviour, IInteractuable
     {
@@ -28,18 +29,18 @@ namespace MechaCyberpunk.Casino.Tragamonedas
         [SerializeField] private float segundosEntreCarretes = 0.3f;
         [Min(0.01f)] [Tooltip("Cada cuánto cambia el símbolo de un carrete que gira (s).")]
         [SerializeField] private float segundosPorCambio = 0.07f;
-        [SerializeField] private string textoJugar = "Jugar · ${0}";
-        [SerializeField] private string textoSinDinero = "Sin dinero · ${0}";
+        [SerializeField] private string textoJugar = "Jugar · {0} fichas";
+        [SerializeField] private string textoSinFichas = "Sin fichas · {0} fichas";
         [SerializeField] private string textoGirando = "Girando…";
-        [SerializeField] private string textoGanaste = "GANASTE ${0}";
+        [SerializeField] private string textoGanaste = "GANASTE {0} FICHAS";
         [SerializeField] private string textoPerdiste = "SUERTE LA PRÓXIMA";
-        [SerializeField] private string textoListo = "APUESTA ${0}";
+        [SerializeField] private string textoListo = "APUESTA {0} FICHAS";
         [Min(0f)] [SerializeField] private float intensidadNeonQuieto = 1.5f;
         [Min(0f)] [SerializeField] private float intensidadNeonGirando = 4f;
         [Min(0.1f)] [SerializeField] private float frecuenciaNeonGirando = 12f;
 
         private CalculoTragamonedas calculo;
-        private ICartera carteraInyectada;
+        private IFichas fichasInyectadas;
         private System.Random azar;
         private bool registrado;
         private bool girando;
@@ -49,7 +50,7 @@ namespace MechaCyberpunk.Casino.Tragamonedas
 
         public Vector3 Posicion => transform.TransformPoint(puntoDeUso);
 
-        public bool PuedeUsar => !girando && Cartera != null && Cartera.PuedePagar(Apuesta);
+        public bool PuedeUsar => !girando && Fichas != null && Fichas.PuedePagar(Apuesta);
 
         public string Texto
         {
@@ -59,8 +60,8 @@ namespace MechaCyberpunk.Casino.Tragamonedas
                 {
                     return textoGirando;
                 }
-                bool alcanza = Cartera != null && Cartera.PuedePagar(Apuesta);
-                return string.Format(alcanza ? textoJugar : textoSinDinero, Apuesta);
+                bool alcanza = Fichas != null && Fichas.PuedePagar(Apuesta);
+                return string.Format(alcanza ? textoJugar : textoSinFichas, Apuesta);
             }
         }
 
@@ -78,12 +79,12 @@ namespace MechaCyberpunk.Casino.Tragamonedas
 
         public int Apuesta => datos != null ? datos.Apuesta : 0;
 
-        private ICartera Cartera => carteraInyectada ?? Registro<ICartera>.Actual;
+        private IFichas Fichas => fichasInyectadas ?? Registro<IFichas>.Actual;
 
-        /// <summary>Para pruebas y escenas sin servicio de economía: usa esta cartera (y este azar) en vez de los de siempre.</summary>
-        public void Inyectar(ICartera cartera, System.Random nuevoAzar)
+        /// <summary>Para pruebas y escenas sin servicio de fichas: usa estas fichas (y este azar) en vez de los de siempre.</summary>
+        public void Inyectar(IFichas fichas, System.Random nuevoAzar)
         {
-            carteraInyectada = cartera;
+            fichasInyectadas = fichas;
             if (nuevoAzar != null)
             {
                 azar = nuevoAzar;
@@ -130,7 +131,7 @@ namespace MechaCyberpunk.Casino.Tragamonedas
             {
                 return;
             }
-            if (!Cartera.IntentarPagar(Apuesta, MotivoDinero.Casino))
+            if (!Fichas.IntentarPagar(Apuesta))
             {
                 return;
             }
@@ -187,9 +188,9 @@ namespace MechaCyberpunk.Casino.Tragamonedas
             if (!premioPagado)
             {
                 premioPagado = true;
-                if (premioEnCurso > 0 && Cartera != null)
+                if (premioEnCurso > 0 && Fichas != null)
                 {
-                    Cartera.Abonar(premioEnCurso, MotivoDinero.Casino);
+                    Fichas.Abonar(premioEnCurso);
                 }
             }
             UltimoResultado = (int[])simbolosEnCurso.Clone();
