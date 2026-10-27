@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Combate.Golpe;
+using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Combate.Peleador;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Datos;
@@ -13,7 +14,7 @@ namespace MechaCyberpunk.IA.Rival
     /// control no se mueve ni ataca. Sin NavMesh (D-015): camina en línea recta.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class RivalBasico : MonoBehaviour
+    public class RivalBasico : MonoBehaviour, ILecturaRival
     {
         private const int MaxImpactosPorGolpe = 16;
         private const float DistanciaMinimaParaGirar = 0.01f;
@@ -75,6 +76,9 @@ namespace MechaCyberpunk.IA.Rival
         private bool inicioHecho;
         // Alguien (el director de pelea) ya le quitó el control antes de su Start: no se lo vuelve a quitar.
         private bool controlDecidido;
+        private HabilidadRival habilidad;
+        private float distanciaLectura = -1f;
+        private bool objetivoKOLectura;
 
         /// <summary>El rival está en la preparación del golpe: brazo atrás y en color de aviso.</summary>
         public bool EnAviso => ciclo != null && ciclo.Fase == FaseGolpe.Preparando;
@@ -101,10 +105,71 @@ namespace MechaCyberpunk.IA.Rival
         /// </summary>
         public bool Detenido { get; set; }
 
+        // ---- ILecturaRival (T-194, D-tony-168) ----
+        string ILecturaRival.Nombre => propio != null ? propio.Nombre : name;
+        Transform ILecturaRival.Raiz => transform;
+        IVida ILecturaRival.Vida => propio?.Vida;
+        bool ILecturaRival.EsMecha => true;
+        bool ILecturaRival.Preparando => EnAviso || (habilidad != null && habilidad.EnAviso);
+
+        float ILecturaRival.SegundosParaAtacar
+        {
+            get
+            {
+                float golpe = SegundosParaGolpe();
+                float habil = habilidad != null ? habilidad.SegundosParaAviso : -1f;
+                if (habil >= 0f && (golpe < 0f || habil < golpe || habilidad.EnAviso))
+                {
+                    return habil;
+                }
+                return golpe;
+            }
+        }
+
+        TipoAtaqueLeido ILecturaRival.Proximo
+        {
+            get
+            {
+                float golpe = SegundosParaGolpe();
+                float habil = habilidad != null ? habilidad.SegundosParaAviso : -1f;
+                return habil >= 0f && (golpe < 0f || habil < golpe || habilidad.EnAviso) ? TipoAtaqueLeido.Habilidad : TipoAtaqueLeido.Golpe;
+            }
+        }
+
+        // Segundos hasta que empiece el aviso de su próximo golpe; -1 si no se sabe.
+        private float SegundosParaGolpe()
+        {
+            if (ciclo == null || !isActiveAndEnabled)
+            {
+                return -1f;
+            }
+            if (ciclo.Fase == FaseGolpe.Preparando)
+            {
+                return 0f;
+            }
+            if (distanciaLectura < 0f || objetivoKOLectura)
+            {
+                return -1f;
+            }
+            if (ciclo.Fase == FaseGolpe.Recuperando)
+            {
+                return datos.Mecha.RecargaGolpe * (1f - ciclo.Progreso) + Mathf.Max(0f, cerebro.EsperaRestante);
+            }
+            if (distanciaLectura > datos.DistanciaAtaque || (usarTurnos && !TurnosAtaque.Compartido.Tiene(propio)))
+            {
+                return -1f;
+            }
+            return Mathf.Max(0f, cerebro.EsperaRestante);
+        }
+
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
             propio = GetComponent<IPeleador>();
+            habilidad = GetComponent<HabilidadRival>();
+            // Se registra en Awake y no en OnEnable: este componente se apaga cada vez que el rival pierde el control (cuenta atrás,
+            // aturdimiento) y los ojos no deben perderlo de vista por eso.
+            Registro<ILecturaRival>.Agregar(this);
             if (datos == null || datos.Mecha == null || config == null || brazo == null
                 || piezasBrazo == null || piezasBrazo.Length == 0 || propio == null)
             {
@@ -157,6 +222,7 @@ namespace MechaCyberpunk.IA.Rival
 
         private void OnDestroy()
         {
+            Registro<ILecturaRival>.Quitar(this);
             Grupo.Remove(this);
         }
 
@@ -241,6 +307,8 @@ namespace MechaCyberpunk.IA.Rival
             }
             float distancia = haciaObjetivo.magnitude;
             bool objetivoKO = hayObjetivo && peleadorObjetivo.Vida != null && peleadorObjetivo.Vida.EstaKO;
+            distanciaLectura = hayObjetivo ? distancia : -1f;
+            objetivoKOLectura = objetivoKO;
             float anillo = datos.DistanciaAtaque + margenEspera;
             bool sinTurno = false;
             bool rodeando = false;
