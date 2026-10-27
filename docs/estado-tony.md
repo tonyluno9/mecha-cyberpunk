@@ -11,7 +11,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 | T-191 Implantes como datos: tabla, servicio, guardado y balance | T-190 | hecha |
 | T-192 Brazos y piernas a pie; los implantes se ven en el cuerpo | T-190, T-191 | hecha |
 | T-193 La clínica y Pruebas_Implantes | T-191, T-192 | hecha |
-| T-194 Ojos y sistema nervioso en el mecha | T-191, T-193 | pendiente |
+| T-194 Ojos y sistema nervioso en el mecha | T-191, T-193 | a medias (WIP) |
 | T-195 Pandilleros a pie | T-192 a T-194 | pendiente |
 | T-196 Caer en la calle: el doctor | T-193, T-195 | pendiente |
 | T-197 Recorrido de los implantes (cierre del bloque) | T-190 a T-196 | pendiente |
@@ -24,5 +24,12 @@ Build provisional con escenas de Tony: docs/guia-para-jugar.md.
 1. Bloque 7: radio (desde T-198)
 2. Bloque 8: adaptación del rival
 
-## Turno de noche 2026-10-27
-Bloque 5 en main. T-190 (afddc82) y T-191 (846d207), T-192 (b7ef833), T-193 (bdc75f3) hechas. Siguiente: T-194. Conocido T-193: el horario de la clínica no sigue al reloj (va a T-196). Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
+## Parada manual (2026-10-27, 15:10)
+Tony paró el turno de noche. Bloque 5 en main; bloque 6: T-190 a T-193 hechas en tony/fase-7 (no en main).
+T-194 A MEDIAS en tony/T-194-ojos-sinapsis (WIP 39f1fd0): código, creadores, pruebas y captura T-194-1 escritos. PlayMode IA y Combate
+pasaron; Mecha, Pelea, UI y Progresion(.Implantes) se cortaron. Falta: compilar, correr esas áreas (OjosSinapsisPruebas 3 veces),
+revisar T-194-1.png, bitácora, mover a hechas y merge en tony/fase-7. Después: T-195 a T-197, cierre del bloque 6 (verificador, main,
+build), y bloques 7 (radio, desde T-198) y 8.
+Conocido T-193: el horario de la clínica no sigue al reloj (pasarlo a T-196).
+Temp/UnityLockfile quedó suelto por la corrida en batch cortada; no hay ningún Unity abierto. Assets/Logs/ (sin seguimiento) es basura de una corrida: no subir.
+Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
