@@ -95,6 +95,11 @@ namespace MechaCyberpunk.IA.Rival
         public System.Func<float, float> LimitarDanio { get; set; }
         /// <summary>Se dispara en cada impacto, haya dado a alguien o no.</summary>
         public event System.Action Impacto;
+        /// <summary>
+        /// Si es true se queda quieto (sin caminar, rodear ni empezar golpes) pero sigue mirando al objetivo. Lo pone HabilidadRival
+        /// durante el aviso y la embestida.
+        /// </summary>
+        public bool Detenido { get; set; }
 
         private void Awake()
         {
@@ -258,6 +263,12 @@ namespace MechaCyberpunk.IA.Rival
             else if (usarTurnos && !hayObjetivo)
             {
                 TurnosAtaque.Compartido.Soltar(propio);
+            }
+            if (Detenido)
+            {
+                decision = DecisionRival.Esperar;
+                rodeando = false;
+                velocidad = 0f;
             }
             if (decision == DecisionRival.EmpezarGolpe)
             {

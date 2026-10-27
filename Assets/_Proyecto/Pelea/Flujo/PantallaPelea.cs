@@ -15,6 +15,8 @@ namespace MechaCyberpunk.Pelea.Flujo
     {
         // Lo que sobresale hacia la jaula para no hundirse en la pantalla de la arena (D-tony-3).
         private const float SeparacionHaciaLaJaula = 0.05f;
+        // El signo menos de verdad (U+2212), como en "APUESTA −$250".
+        private const string MenosTipografico = "−";
 
         [Tooltip("Ritmo, textos y colores.")]
         [SerializeField] private ConfigFlujoPelea config;
@@ -28,10 +30,26 @@ namespace MechaCyberpunk.Pelea.Flujo
         [Tooltip("Opcional: línea del premio (+$600) bajo el resultado. Sin ella no se muestra el premio.")]
         [SerializeField] private Text textoPremio;
 
+        [Tooltip("Opcional: línea de la apuesta (APUESTA +$500) bajo el premio. Sin ella no se muestra la apuesta.")]
+        [SerializeField] private Text textoApuesta;
+        [Tooltip("Opcional: letrero de la pelea de jefe (T-161). Sin él no se muestra ningún letrero de jefe.")]
+        [SerializeField] private Text textoJefe;
+        [Tooltip("Franja del letrero de jefe en la presentación y el conteo: de abajo (x) a arriba (y), como fracción del alto de la pantalla.")]
+        [SerializeField] private Vector2 franjaJefePresentacion = new Vector2(0.57f, 0.74f);
+        [Tooltip("Franja del letrero de victoria sobre el campeón en el resultado: de abajo (x) a arriba (y), como fracción del alto de la pantalla.")]
+        [SerializeField] private Vector2 franjaJefeResultado = new Vector2(0.35f, 0.5f);
+        [Tooltip("Palabra que abre la línea de la apuesta.")]
+        [SerializeField] private string etiquetaApuesta = "APUESTA";
+        [Tooltip("Tamaño de la letra de la línea de la apuesta (puntos).")]
+        [Min(1)] [SerializeField] private int tamanoLetraApuesta = 110;
+        [Tooltip("Color de la apuesta perdida.")]
+        [SerializeField] private Color colorApuestaPerdida = new Color(1f, 0.15f, 0.15f);
+
         private float segundosParaOcultar;
         private bool ocultando;
         private bool avisoRespaldo;
         private bool mostrarRevancha = true;
+        private bool peleaDeJefe;
 
         /// <summary>Lo que dice el texto grande ahora ("" si está apagado).</summary>
         public string Texto => texto != null && texto.enabled ? texto.text : string.Empty;
@@ -39,6 +57,10 @@ namespace MechaCyberpunk.Pelea.Flujo
         public string Revancha => textoRevancha != null && textoRevancha.enabled ? textoRevancha.text : string.Empty;
         /// <summary>Lo que dice la línea del premio ahora ("" si está apagada).</summary>
         public string Premio => textoPremio != null && textoPremio.enabled ? textoPremio.text : string.Empty;
+        /// <summary>Lo que dice la línea de la apuesta ahora ("" si está apagada).</summary>
+        public string Apuesta => textoApuesta != null && textoApuesta.enabled ? textoApuesta.text : string.Empty;
+        /// <summary>Lo que dice el letrero de jefe ahora ("" si está apagado).</summary>
+        public string Jefe => textoJefe != null && textoJefe.enabled ? textoJefe.text : string.Empty;
         public Canvas Lienzo => lienzo;
 
         /// <summary>Si es false, el resultado no muestra la línea "R: revancha" (pelea sin revancha, T-128).</summary>
@@ -73,12 +95,14 @@ namespace MechaCyberpunk.Pelea.Flujo
 
         private void OnEnable()
         {
+            EventosPelea.PeleaPresentada += AlPresentarse;
             EventosPelea.ConteoCambio += AlCambiarConteo;
             EventosPelea.PeleaTerminada += AlTerminar;
         }
 
         private void OnDisable()
         {
+            EventosPelea.PeleaPresentada -= AlPresentarse;
             EventosPelea.ConteoCambio -= AlCambiarConteo;
             EventosPelea.PeleaTerminada -= AlTerminar;
         }
@@ -168,12 +192,62 @@ namespace MechaCyberpunk.Pelea.Flujo
             textoPremio.enabled = true;
         }
 
+        /// <summary>
+        /// Muestra el cambio neto de la apuesta bajo el premio: "APUESTA +$500" en el color del premio o "APUESTA −$250" en rojo.
+        /// Con 0 (o sin la línea en la pantalla) no muestra nada.
+        /// </summary>
+        public void MostrarApuesta(int neto)
+        {
+            if (textoApuesta == null || neto == 0)
+            {
+                return;
+            }
+            bool gano = neto > 0;
+            textoApuesta.text = etiquetaApuesta + " " + (gano ? "+" : MenosTipografico) + FormatoDinero.Texto(Mathf.Abs(neto));
+            textoApuesta.color = gano ? config.ColorPremio : colorApuestaPerdida;
+            textoApuesta.fontSize = tamanoLetraApuesta;
+            textoApuesta.enabled = true;
+        }
+
         /// <summary>El director avisa que alguien cayó: muestra "KO".</summary>
         public void MostrarKO()
         {
             // Si el KO llega mientras "¡PELEA!" sigue en pantalla, el temporizador no debe borrar el "KO".
             ocultando = false;
             Mostrar(config.TextoKO, config.ColorKO, config.TamanoLetra);
+        }
+
+        private void AlPresentarse(InfoPelea info)
+        {
+            peleaDeJefe = info.EsJefe;
+            OcultarJefe();
+            if (peleaDeJefe)
+            {
+                MostrarJefe(config.TextoJefe, franjaJefePresentacion);
+            }
+        }
+
+        private void MostrarJefe(string contenido, Vector2 franja)
+        {
+            if (textoJefe == null)
+            {
+                return;
+            }
+            // Arriba de la cabeza del rival en la presentación; bajo el "GANASTE" en el resultado.
+            textoJefe.rectTransform.anchorMin = new Vector2(0f, franja.x);
+            textoJefe.rectTransform.anchorMax = new Vector2(1f, franja.y);
+            textoJefe.text = contenido;
+            textoJefe.color = config.ColorJefe;
+            textoJefe.fontSize = config.TamanoLetraJefe;
+            textoJefe.enabled = true;
+        }
+
+        private void OcultarJefe()
+        {
+            if (textoJefe != null)
+            {
+                textoJefe.enabled = false;
+            }
         }
 
         private void AlCambiarConteo(int numero)
@@ -186,6 +260,7 @@ namespace MechaCyberpunk.Pelea.Flujo
                 Mostrar(numero.ToString(), config.ColorConteo, config.TamanoLetra);
                 return;
             }
+            OcultarJefe();
             Mostrar(config.TextoPelea, config.ColorPelea, config.TamanoLetra);
             segundosParaOcultar = config.SegundosTextoPelea;
             ocultando = true;
@@ -200,6 +275,11 @@ namespace MechaCyberpunk.Pelea.Flujo
             textoRevancha.text = config.TextoRevancha;
             textoRevancha.fontSize = config.TamanoLetraRevancha;
             textoRevancha.enabled = mostrarRevancha;
+            OcultarJefe();
+            if (peleaDeJefe && gano)
+            {
+                MostrarJefe(config.TextoVencisteCampeon, franjaJefeResultado);
+            }
         }
 
         private void Mostrar(string contenido, Color color, int tamanoLetra)
@@ -217,11 +297,16 @@ namespace MechaCyberpunk.Pelea.Flujo
             {
                 textoPremio.enabled = false;
             }
+            if (textoApuesta != null)
+            {
+                textoApuesta.enabled = false;
+            }
         }
 
         private void Limpiar()
         {
             OcultarPremio();
+            OcultarJefe();
             texto.enabled = false;
             textoRevancha.enabled = false;
         }

@@ -23,7 +23,7 @@ bash herramientas/verificar.sh {compilar|editmode|playmode|playmode-por-area|tod
 - `bash herramientas/verificar.sh playmode-por-area` (T-141) corre PlayMode un ensamblado por llamada de Unity (la lista de
   `ensamblados`), con `Logs/resultados-playmode-<Area>.xml` y `Logs/playmode-<Area>.log` por área. Imprime una línea por área
   (`Economia 9/9`, `Arena FALLO 8/17 (fallaron 9)` con los nombres, `Mecha LIMITE 900 s`) y un total; sale con 0 solo si todas pasaron.
-  `LIMITE_AREA=<segundos>` (900 por defecto) es el tope por área: al pasarlo cierra SOLO el Unity que lanzó (`taskkill //PID` de su PID de
+  El tope por área sale de una tabla en el script (`limite_de_area`): Progresion 2400 s, las demás 900 s; las líneas de éxito imprimen "(límite N s)". `LIMITE_AREA=<segundos>`, si se define, manda sobre todas. Al pasar el tope: al pasarlo cierra SOLO el Unity que lanzó (`taskkill //PID` de su PID de
   Windows, con su árbol), borra `Temp/UnityLockfile`, marca `LIMITE` y sigue con la siguiente. `AREAS="Economia Core"` (opcional,
   nombres separados por espacio) limita las áreas que corre. Un cuelgue en un área ya no tumba a las demás. Los otros modos no cambian.
 - Una prueba nueva solo cuenta si su carpeta (`Tests/<Modo>/<Área>/`) tiene asmdef: sin él no la corre nadie. Si la lista de un

@@ -122,9 +122,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private readonly List<string> errores = new List<string>();
         private readonly List<string> rutasPedidas = new List<string>();
         private readonly List<string> atajos = new List<string>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             // Otras pruebas (sin InputTestFixture) dejan acciones prendidas con un estado viejo: se apagan y se descarta su resolución.
             InputSystem.DisableAllEnabledActions();
             base.Setup();
@@ -166,10 +169,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }
@@ -470,6 +470,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private IEnumerator PelearCasera(bool ganar)
         {
             yield return Tecla(teclado.eKey);
+            yield return Tecla(teclado.enterKey); // T-145: la pantalla de apuesta, sin apostar
             yield return EsperarHasta(() => jugador.Modo == ModoJugador.Mecha, MaxSegundosEstado, "el jugador va en el mecha");
             yield return EsperarHasta(() => flujoCasero.Estado == EstadoFlujoPelea.Peleando, MaxSegundosEstado, "la pelea");
             if (ganar)
@@ -601,6 +602,7 @@ namespace MechaCyberpunk.Tests.Progresion
             int costo = banco.Costo;
             Assert.Greater(costo, 0, "Reparar cuesta");
             yield return Tecla(teclado.eKey);
+            yield return Tecla(teclado.enterKey); // T-149: E abre la pantalla del banco; Enter elige "REPARAR TODO".
             Assert.AreEqual(DineroInicial - costo, cartera.Dinero, "Dinero = 500 - costo");
             Assert.AreEqual(vidaMecha.Maxima, vidaMecha.Actual, 0.01f, "Vida al máximo");
 

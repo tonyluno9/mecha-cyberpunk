@@ -55,11 +55,22 @@ namespace MechaCyberpunk.Combate.Golpe
                 enabled = false;
                 return;
             }
+            vida.DatosCambiados += AlCambiarDatos;
             ciclo = new CicloGolpe(vida.Datos.PreparacionGolpe, vida.Datos.RecargaGolpe);
+        }
+
+        // Un golpe a medias se cancela y el ciclo se rehace con la nueva preparación y recarga (D-tony-119).
+        private void AlCambiarDatos()
+        {
+            if (vida.Datos != null)
+            {
+                ciclo = new CicloGolpe(vida.Datos.PreparacionGolpe, vida.Datos.RecargaGolpe);
+            }
         }
 
         private void OnDisable()
         {
+            vida.DatosCambiados -= AlCambiarDatos;
             // La acción Golpear la comparte ControladorMecha, así que no se apaga aquí.
             ciclo?.Reiniciar();
         }

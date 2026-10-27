@@ -75,5 +75,30 @@ namespace MechaCyberpunk.Tests.Mecha
         {
             Assert.AreEqual(100f, ReglaVidaPersistente.AlCargar(500f, 100f, 100f, Piso), Margen);
         }
+
+        [Test]
+        public void AlRepararPuntos_SubeLoPedido()
+        {
+            Assert.AreEqual(82f, ReglaVidaPersistente.AlRepararPuntos(70f, 100f, 12f), Margen);
+        }
+
+        [Test]
+        public void AlRepararPuntos_NoPasaDeLaMaxima()
+        {
+            Assert.AreEqual(100f, ReglaVidaPersistente.AlRepararPuntos(90f, 100f, 50f), Margen);
+        }
+
+        [Test]
+        public void AlRepararPuntos_DesdeKO_SubeDeCero()
+        {
+            Assert.AreEqual(30f, ReglaVidaPersistente.AlRepararPuntos(0f, 100f, 30f), Margen);
+        }
+
+        [Test]
+        public void AlRepararPuntos_ConPuntosCeroONegativos_NoCambia()
+        {
+            Assert.AreEqual(40f, ReglaVidaPersistente.AlRepararPuntos(40f, 100f, 0f), Margen);
+            Assert.AreEqual(40f, ReglaVidaPersistente.AlRepararPuntos(40f, 100f, -5f), Margen);
+        }
     }
 }

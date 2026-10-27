@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 862a216138a33d8458f52bbd4db0bb4e, type: 3}
+  m_Name: DatosPieza_piernas_tech_1
+  m_EditorClassIdentifier: MechaCyberpunk.Mecha::MechaCyberpunk.Mecha.DatosPieza
+  id: pieza_piernas_tech_1
+  nombre: PIERNAS TECH I
+  tipo: 0
+  valorVenta: 250
+  maximo: 2
+  oferta: {fileID: 0}
+  ranura: 3
+  rama: 2
+  nivel: 1
+  precio: 500
+  bonoVida: 6
+  bonoDanio: 0
+  bonoVelocidad: 0.15
+  bonoRecarga: 0
+  habilidad: {fileID: 0}
+  municion: {fileID: 0}
+  bonoEnfriamiento: 0.03

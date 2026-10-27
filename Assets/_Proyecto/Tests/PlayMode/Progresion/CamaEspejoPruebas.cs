@@ -85,9 +85,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private HudAPie hud;
         private IRelojMundo reloj;
         private readonly List<string> errores = new List<string>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             // Otras pruebas (sin InputTestFixture) dejan acciones prendidas; se apagan antes de que el fixture reinicie el Input System.
             InputSystem.DisableAllEnabledActions();
             base.Setup();
@@ -123,10 +126,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }

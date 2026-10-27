@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Pelea.Editor
         private const string RutaJugador = "Assets/_Proyecto/Mecha/Prefabs/MechaJugador.prefab";
         private const string RutaServicios = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Tutorial.unity";
+        private const int LigaTutorial = 4;
         private static readonly Vector3 GiroLuz = new Vector3(50f, -30f, 0f);
 
         /// <summary>Solo el prefab del tutorial (sin tocar Pruebas_Tutorial). Batchmode: -executeMethod MechaCyberpunk.Pelea.Editor.CreadorPresentador.CrearPrefab</summary>
@@ -67,8 +68,12 @@ namespace MechaCyberpunk.Pelea.Editor
                 so.FindProperty("empezarAlArrancar").boolValue = true;
                 // La pelea tutorial no tiene revancha (T-128): se entra y se sale una sola vez.
                 so.FindProperty("permitirRevancha").boolValue = false;
+                // T-155: la noche del prólogo es la primera pelea de campeonato (liga 4) y es pelea de jefe.
+                so.FindProperty("liga").intValue = LigaTutorial;
+                so.FindProperty("esJefe").boolValue = true;
                 so.ApplyModifiedPropertiesWithoutUndo();
                 CreadorPremiosPelea.Aplicar(raiz, CreadorPremiosPelea.RutaPremioTutorial);
+                CreadorFlujoPeleaCasera.AgregarLetreroJefe(raiz);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabTutorial);
             }
             finally

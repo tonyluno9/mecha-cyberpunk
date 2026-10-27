@@ -1,3 +1,4 @@
+using MechaCyberpunk.Combate.Habilidades;
 using MechaCyberpunk.Combate.Vida;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mecha.Danio;
@@ -26,6 +27,7 @@ namespace MechaCyberpunk.Mecha.Movimiento
 
         private CharacterController controlador;
         private VidaMecha vida;
+        private LanzadorHabilidades lanzador;
         private Vector2 velocidadLocal;
         private float giroPendiente;
         private float inclinacionVertical;
@@ -42,19 +44,22 @@ namespace MechaCyberpunk.Mecha.Movimiento
         public float InclinacionVertical => inclinacionVertical;
         public bool CursorBloqueado => cursorBloqueado;
         public Transform Camara => camara;
+        /// <summary>Los datos en uso: los de <see cref="VidaMecha"/> si el mecha tiene vida; si no, su campo propio.</summary>
+        public DatosMecha Datos => vida != null && vida.Datos != null ? vida.Datos : datos;
         public float AlturaCamaraBase => alturaCamaraBase;
 
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
-            if (datos == null || config == null || camara == null || mover == null || mirar == null
+            vida = GetComponent<VidaMecha>();
+            lanzador = GetComponent<LanzadorHabilidades>();
+            if ((datos == null && (vida == null || vida.Datos == null)) || config == null || camara == null || mover == null || mirar == null
                 || golpear == null || liberarCursor == null)
             {
                 Debug.LogError("[Mecha] Faltan referencias en ControladorMecha de " + name, this);
                 enabled = false;
                 return;
             }
-            vida = GetComponent<VidaMecha>();
             alturaCamaraBase = camara.localPosition.y;
         }
 
@@ -77,6 +82,7 @@ namespace MechaCyberpunk.Mecha.Movimiento
         private void Update()
         {
             float dt = Time.deltaTime;
+            DatosMecha datos = Datos;
             ActualizarCursor();
 
             Vector2 entrada = mover.action.ReadValue<Vector2>();
@@ -89,10 +95,19 @@ namespace MechaCyberpunk.Mecha.Movimiento
                 datos.VelocidadMaxima * factorVelocidad, datos.Aceleracion * factorAceleracion,
                 datos.Desaceleracion * factorAceleracion);
 
+            // Mientras embiste, el cuerpo no gira (T-175): el lanzador solo fijó la dirección. La mirada vertical sí se mueve.
+            bool embistiendo = lanzador != null && lanzador.Embistiendo;
+            if (embistiendo)
+            {
+                giroPendiente = 0f;
+            }
             if (cursorBloqueado)
             {
                 Vector2 delta = mirar.action.ReadValue<Vector2>();
-                giroPendiente += delta.x * config.SensibilidadRaton;
+                if (!embistiendo)
+                {
+                    giroPendiente += delta.x * config.SensibilidadRaton;
+                }
                 inclinacionVertical = Mathf.Clamp(inclinacionVertical - delta.y * config.SensibilidadRaton,
                     -config.LimiteMirarVertical, config.LimiteMirarVertical);
             }
@@ -113,7 +128,7 @@ namespace MechaCyberpunk.Mecha.Movimiento
             Vector3 horizontal = transform.TransformDirection(new Vector3(velocidadLocal.x, 0f, velocidadLocal.y));
             controlador.Move((horizontal + Vector3.up * velocidadVertical) * dt);
 
-            ActualizarCamara(dt);
+            ActualizarCamara(dt, datos.VelocidadMaxima);
         }
 
         private void ActualizarCursor()
@@ -138,9 +153,9 @@ namespace MechaCyberpunk.Mecha.Movimiento
             Cursor.visible = !bloquear;
         }
 
-        private void ActualizarCamara(float dt)
+        private void ActualizarCamara(float dt, float velocidadMaxima)
         {
-            float proporcion = datos.VelocidadMaxima > 0f ? velocidadLocal.magnitude / datos.VelocidadMaxima : 0f;
+            float proporcion = velocidadMaxima > 0f ? velocidadLocal.magnitude / velocidadMaxima : 0f;
             faseCabeceo = Mathf.Repeat(faseCabeceo + proporcion * config.PasosPorSegundo * VueltaCompleta * dt, VueltaCompleta);
             float desplazamiento = Mathf.Sin(faseCabeceo) * config.AmplitudCabeceo * proporcion;
 

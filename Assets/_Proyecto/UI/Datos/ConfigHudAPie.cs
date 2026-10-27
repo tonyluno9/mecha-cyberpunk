@@ -123,6 +123,28 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string[] nombresMotivo =
             { "PREMIO", "APUESTA", "REPARACIÓN", "RENTA", "COMPRA", "VENTA", "CASINO", "CLÍNICA", "OTRO" };
 
+        [Header("Subir de liga (T-161)")]
+        [Tooltip("Cuánto dura el aviso de campeón vencido (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosAvisoLiga = 5f;
+
+        [Tooltip("Primera línea al vencer al campeón de una liga; {0} es el nombre de esa liga.")]
+        [SerializeField] private string textoCampeonLiga = "¡CAMPEÓN DE LA LIGA {0}!";
+
+        [Tooltip("Segunda línea: la liga que se abre; {0} es su nombre.")]
+        [SerializeField] private string textoSeAbreLiga = "SE ABRE LA LIGA {0}";
+
+        [Tooltip("Aviso único al vencer al campeón de la última liga.")]
+        [SerializeField] private string textoCampeonClandestino = "¡CAMPEÓN DEL CLANDESTINO!";
+
+        [Tooltip("Color del aviso de liga (amarillo neón).")]
+        [SerializeField] private Color colorAvisoLiga = new Color(1f, 0.85f, 0.2f, 1f);
+
+        [Tooltip("Tamaño de la letra de la primera línea del aviso de liga.")]
+        [Min(8)] [SerializeField] private int tamanoAvisoLiga = 56;
+
+        [Tooltip("Tamaño de la letra de la segunda línea del aviso de liga.")]
+        [Min(8)] [SerializeField] private int tamanoAvisoLiga2 = 32;
+
         [Header("Textos de vida y arma")]
         [Tooltip("Texto de la vida; {0} es la vida redondeada hacia arriba.")]
         [SerializeField] private string textoVida = "VIDA {0}";
@@ -139,6 +161,13 @@ namespace MechaCyberpunk.UI
         [Tooltip("Lo que se agrega al texto de la pistola cuando no le quedan balas.")]
         [SerializeField] private string textoPistolaSinBalas = " · R";
 
+        public float SegundosAvisoLiga => segundosAvisoLiga;
+        public string TextoCampeonLiga => textoCampeonLiga;
+        public string TextoSeAbreLiga => textoSeAbreLiga;
+        public string TextoCampeonClandestino => textoCampeonClandestino;
+        public Color ColorAvisoLiga => colorAvisoLiga;
+        public int TamanoAvisoLiga => tamanoAvisoLiga;
+        public int TamanoAvisoLiga2 => tamanoAvisoLiga2;
         public Color ColorDeuda => colorDeuda;
         public float SegundosAvisoDinero => segundosAvisoDinero;
         public string TextoRentaVencida => textoRentaVencida;

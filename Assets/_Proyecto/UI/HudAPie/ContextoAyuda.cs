@@ -12,6 +12,8 @@ namespace MechaCyberpunk.UI
         /// <summary>Mecha recién encendido en la calle.</summary>
         MechaCalle,
         /// <summary>Llamar al mecha.</summary>
-        Llamar
+        Llamar,
+        /// <summary>Primera pelea con una habilidad en el mecha (T-177).</summary>
+        Habilidades
     }
 }

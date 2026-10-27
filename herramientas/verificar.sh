@@ -87,11 +87,20 @@ pruebas() {
   echo "$minus $pasaron/$total"
 }
 
-# PlayMode un ensamblado por llamada de Unity, con limite de tiempo por area (LIMITE_AREA en segundos, 900 por defecto).
+# Limite de tiempo por area en segundos: Progresion 2400, las demas 900. LIMITE_AREA, si se define, manda sobre todas.
+limite_de_area() {
+  if [ -n "${LIMITE_AREA:-}" ]; then echo "$LIMITE_AREA"; return; fi
+  case "$1" in
+    Progresion) echo 2400 ;;
+    *) echo 900 ;;
+  esac
+}
+
+# PlayMode un ensamblado por llamada de Unity, con limite de tiempo por area (ver limite_de_area).
 # AREAS="Economia Mecha" (opcional) limita las areas que corre. Si un area pasa el limite se cierra SOLO el Unity
 # que lanzo este script (por su PID de Windows, con su arbol de procesos) y se sigue con la siguiente.
 playmode_por_area() {
-  local limite="${LIMITE_AREA:-900}" asm area xml log total_areas=0 pasaron_areas=0 gran_total=0 gran_pasaron=0
+  local limite asm area xml log total_areas=0 pasaron_areas=0 gran_total=0 gran_pasaron=0
   local lista_asm filtro="${AREAS:-}"
   lista_asm=$(ensamblados_modo PlayMode)
   if [ -z "$lista_asm" ]; then
@@ -101,6 +110,7 @@ playmode_por_area() {
     area="${asm#MechaCyberpunk.Tests.PlayMode.}"
     if [ -n "$filtro" ] && ! echo " $filtro " | grep -q " $area "; then continue; fi
     total_areas=$((total_areas + 1))
+    limite=$(limite_de_area "$area")
     xml="Logs/resultados-playmode-$area.xml"; log="Logs/playmode-$area.log"
     rm -f "$xml"
     "$unity_exe" -batchmode -projectPath . -runTests -testPlatform PlayMode \
@@ -140,7 +150,7 @@ playmode_por_area() {
       continue
     fi
     pasaron_areas=$((pasaron_areas + 1))
-    echo "$area $pasaron/$total"
+    echo "$area $pasaron/$total (límite $limite s)"
   done
   echo "playmode-por-area: $pasaron_areas/$total_areas areas pasaron, $gran_pasaron/$gran_total pruebas"
   [ "$total_areas" -gt 0 ] && [ "$pasaron_areas" -eq "$total_areas" ]

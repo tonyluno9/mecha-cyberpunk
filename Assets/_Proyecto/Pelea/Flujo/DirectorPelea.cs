@@ -34,6 +34,12 @@ namespace MechaCyberpunk.Pelea.Flujo
         [SerializeField] private ConfigPresentador presentador;
         [Tooltip("Opcional: lo que paga esta pelea. Sin esto no hay premio.")]
         [SerializeField] private DatosPremioPelea premio;
+        [Tooltip("Opcional: las reglas de la apuesta de esta pelea. Sin esto, o sin ServicioApuestas en la escena, no hay apuesta.")]
+        [SerializeField] private DatosApuestaPelea apuesta;
+        [Tooltip("Liga de la pelea cuando no hay cartel (0 = fuera de liga, 1 a 4).")]
+        [Range(0, 4)] [SerializeField] private int liga;
+        [Tooltip("Pelea de jefe cuando no hay cartel.")]
+        [SerializeField] private bool esJefe;
         [Tooltip("Si es falso, el resultado no ofrece revancha: no se muestra \"R: revancha\" y la tecla R no hace nada.")]
         [SerializeField] private bool permitirRevancha = true;
         [Tooltip("Acción de la revancha (tecla R). Solo funciona en el resultado.")]
@@ -52,6 +58,12 @@ namespace MechaCyberpunk.Pelea.Flujo
         private bool avisoArenaPerdida;
         private bool esperandoArena;
         private bool avisoSinCartera;
+        private ServicioApuestas servicioApuestas;
+        private CartelPelea cartelActual;
+        private float fraccionPremio = 1f;
+        private ConfigPresentador presentadorSerializado;
+        private GameObject prefabRivalSerializado;
+        private DatosApuestaPelea apuestaSerializada;
 
         public EstadoFlujoPelea Estado => maquina != null ? maquina.Estado : EstadoFlujoPelea.Preparando;
         public IArenaPelea Arena => arena;
@@ -59,12 +71,22 @@ namespace MechaCyberpunk.Pelea.Flujo
         public IPeleador Rival => rival;
         public PantallaPelea Pantalla => pantalla;
         public bool PermiteRevancha => permitirRevancha;
+        /// <summary>Las reglas de apuesta de esta pelea (null si no tiene).</summary>
+        public DatosApuestaPelea Apuesta => apuesta;
+        /// <summary>El cartel aplicado con <see cref="PrepararCartel"/> (null sin cartel).</summary>
+        public CartelPelea CartelActual => cartelActual;
+        /// <summary>La pelea en curso o preparada: alias del rival (vacío si aún no existe), liga y si es de jefe.</summary>
+        public InfoPelea Info => new InfoPelea(rival != null ? rival.Nombre : string.Empty,
+            cartelActual != null ? cartelActual.liga : liga, cartelActual != null ? cartelActual.esJefe : esJefe);
 
         /// <summary>Avisa cada línea que dice el presentador, ya con alias y rival puestos y en mayúsculas (para el audio).</summary>
         public event Action<string> LineaDicha;
 
         /// <summary>Avisa el dinero abonado al jugador al terminar una pelea (solo si fue mayor que 0).</summary>
         public event Action<int> PremioPagado;
+
+        /// <summary>Avisa el cambio neto de la apuesta al terminar la pelea (positivo ganó, negativo perdió), solo si había apuesta.</summary>
+        public event Action<int> ApuestaResuelta;
 
         private void Awake()
         {
@@ -75,6 +97,15 @@ namespace MechaCyberpunk.Pelea.Flujo
                 return;
             }
             pantalla.FijarRevanchaVisible(permitirRevancha);
+            presentadorSerializado = presentador;
+            prefabRivalSerializado = prefabRival;
+            apuestaSerializada = apuesta;
+            ArmarMaquina();
+        }
+
+        // La máquina depende de las duraciones del presentador: se rearma si cambia el presentador (solo en Preparando).
+        private void ArmarMaquina()
+        {
             List<float> duraciones = null;
             if (presentador != null && presentador.Lineas != null)
             {
@@ -84,6 +115,14 @@ namespace MechaCyberpunk.Pelea.Flujo
                     duraciones.Add(presentador.SegundosPorLinea);
                 }
             }
+            if (maquina != null)
+            {
+                maquina.LineaCambio -= AlCambiarLinea;
+                maquina.ConteoCambio -= EventosPelea.PublicarConteo;
+                maquina.PeleaIniciada -= AlIniciarPelea;
+                maquina.KOOcurrido -= AlOcurrirKO;
+                maquina.ResultadoListo -= AlResultado;
+            }
             maquina = new MaquinaFlujoPelea(config.SegundosPorNumero, config.PausaDespuesKO, duraciones,
                 presentador != null && presentador.PresentarEnRevancha);
             maquina.LineaCambio += AlCambiarLinea;
@@ -91,6 +130,75 @@ namespace MechaCyberpunk.Pelea.Flujo
             maquina.PeleaIniciada += AlIniciarPelea;
             maquina.KOOcurrido += AlOcurrirKO;
             maquina.ResultadoListo += AlResultado;
+        }
+
+        /// <summary>
+        /// Aplica el cartel de la próxima pelea: rival, premio (el de ganar y el de perder por <paramref name="fraccionPremio"/>,
+        /// redondeado), apuesta y presentador del cartel (lo que el cartel no trae, no hay). Solo en Preparando, sin apuesta
+        /// anunciada y sin rival puesto a mano; si ya había creado un rival de otro cartel, lo destruye. Si no se puede, devuelve
+        /// false y no cambia nada. Reiniciar no quita el cartel: lo quita quien lo puso (<see cref="QuitarCartel"/>).
+        /// </summary>
+        public bool PrepararCartel(CartelPelea cartel, float fraccionPremio)
+        {
+            if (cartel == null || !PuedeCambiarCartel())
+            {
+                return false;
+            }
+            cartelActual = cartel;
+            this.fraccionPremio = Mathf.Max(0f, fraccionPremio);
+            prefabRival = cartel.prefabRival;
+            apuesta = cartel.apuesta;
+            AplicarPresentador(cartel.presentador);
+            SoltarRivalCreado();
+            return true;
+        }
+
+        /// <summary>
+        /// Vuelve a lo serializado en el prefab (rival, premio, apuesta, presentador, liga y jefe). Solo en Preparando; devuelve
+        /// false si no había cartel o no se puede.
+        /// </summary>
+        public bool QuitarCartel()
+        {
+            if (cartelActual == null || !PuedeCambiarCartel())
+            {
+                return false;
+            }
+            cartelActual = null;
+            fraccionPremio = 1f;
+            prefabRival = prefabRivalSerializado;
+            apuesta = apuestaSerializada;
+            AplicarPresentador(presentadorSerializado);
+            SoltarRivalCreado();
+            return true;
+        }
+
+        private bool PuedeCambiarCartel()
+        {
+            return maquina != null && maquina.Estado == EstadoFlujoPelea.Preparando && servicioApuestas == null
+                && rivalEnEscena == null;
+        }
+
+        private void AplicarPresentador(ConfigPresentador nuevo)
+        {
+            if (ReferenceEquals(nuevo, presentador))
+            {
+                return;
+            }
+            presentador = nuevo;
+            ArmarMaquina();
+        }
+
+        private void SoltarRivalCreado()
+        {
+            if (rivalCreado == null)
+            {
+                return;
+            }
+            Desuscribir(rival);
+            Destroy(rivalCreado);
+            rivalCreado = null;
+            rival = null;
+            rivalNuevo = false;
         }
 
         private void OnEnable()
@@ -126,6 +234,7 @@ namespace MechaCyberpunk.Pelea.Flujo
 
         private void OnDestroy()
         {
+            DevolverApuesta();
             Desuscribir(jugador);
             Desuscribir(rival);
             if (rivalCreado != null)
@@ -160,6 +269,7 @@ namespace MechaCyberpunk.Pelea.Flujo
             }
             empezarPendiente = false;
             rivalNuevo = false;
+            DevolverApuesta();
             if (rivalCreado != null)
             {
                 Desuscribir(rival);
@@ -169,6 +279,57 @@ namespace MechaCyberpunk.Pelea.Flujo
             }
             pantalla.Ocultar();
             return true;
+        }
+
+        /// <summary>
+        /// Anuncia esta pelea al <see cref="ServicioApuestas"/> con el alias del rival, para que el jugador pueda apostar antes de
+        /// <see cref="EmpezarPelea"/>. Sin datos de apuesta, sin servicio, sin arena o fuera de Preparando no hace nada.
+        /// Crea al rival ya, porque su alias sale de él.
+        /// </summary>
+        public bool AnunciarApuesta()
+        {
+            if (apuesta == null || maquina == null || maquina.Estado != EstadoFlujoPelea.Preparando || arena == null)
+            {
+                return false;
+            }
+            ServicioApuestas servicio = Registro<ServicioApuestas>.Actual;
+            if (servicio == null)
+            {
+                return false;
+            }
+            if (rival == null)
+            {
+                ResolverRival();
+            }
+            if (!servicio.Anunciar(rival != null ? rival.Nombre : string.Empty, apuesta))
+            {
+                return false;
+            }
+            servicioApuestas = servicio;
+            return true;
+        }
+
+        /// <summary>
+        /// Cancela la pelea anunciada con <see cref="AnunciarApuesta"/> (el jugador se echó para atrás): devuelve lo apostado y deja
+        /// el servicio listo para anunciar otra. Sin anuncio no hace nada.
+        /// </summary>
+        public void CancelarApuesta()
+        {
+            DevolverApuesta();
+        }
+
+        private void DevolverApuesta()
+        {
+            if (servicioApuestas == null)
+            {
+                return;
+            }
+            ServicioApuestas servicio = servicioApuestas;
+            servicioApuestas = null;
+            if (servicio != null)
+            {
+                servicio.Devolver();
+            }
         }
 
         private void Update()
@@ -334,6 +495,10 @@ namespace MechaCyberpunk.Pelea.Flujo
         private void PrepararYContar()
         {
             jugador.PrepararPelea(arena.InicioJugador);
+            if (servicioApuestas != null)
+            {
+                servicioApuestas.Cerrar();
+            }
             if (rivalNuevo)
             {
                 // Nació en su pose. Apagarle el control antes de su primer Start lo dejaría sin Start hasta que se lo
@@ -344,16 +509,20 @@ namespace MechaCyberpunk.Pelea.Flujo
             {
                 rival.PrepararPelea(arena.InicioRival);
             }
+            EventosPelea.PublicarPresentacion(Info);
             maquina.IniciarConteo();
         }
 
         private void AlCambiarLinea(int indice)
         {
             string plantilla = presentador.Lineas[indice] ?? string.Empty;
+            IProgresoLigas ligas = Registro<IProgresoLigas>.Actual;
+            int numeroLiga = Info.Liga;
+            string nombreLiga = ligas != null && numeroLiga > 0 ? ligas.NombreLiga(numeroLiga) : string.Empty;
             IPerfilJugador perfil = Registro<IPerfilJugador>.Actual;
             string alias = perfil != null && !string.IsNullOrEmpty(perfil.Alias) ? perfil.Alias : presentador.AliasRespaldo;
             string nombreRival = rival != null ? rival.Nombre : string.Empty;
-            string linea = plantilla.Replace("{alias}", alias).Replace("{rival}", nombreRival).ToUpperInvariant();
+            string linea = LineaPresentador.Armar(plantilla, alias, nombreRival, nombreLiga);
             bool grito = indice == presentador.IndiceGrito;
             pantalla.MostrarLinea(linea, grito ? presentador.ColorGrito : presentador.ColorLinea,
                 grito ? presentador.TamanoLetraGrito : presentador.TamanoLetraLinea);
@@ -380,11 +549,41 @@ namespace MechaCyberpunk.Pelea.Flujo
         private void AlResultado(ResultadoPelea resultado)
         {
             EventosPelea.PublicarFin(resultado);
-            if (premio == null)
+            PagarPremio(resultado);
+            ResolverApuesta(resultado);
+        }
+
+        private void ResolverApuesta(ResultadoPelea resultado)
+        {
+            if (servicioApuestas == null)
             {
                 return;
             }
-            int monto = resultado.Ganador == LadoPelea.Jugador ? premio.PremioGanar : premio.PremioPerder;
+            ServicioApuestas servicio = servicioApuestas;
+            servicioApuestas = null;
+            if (servicio != null && servicio.Resolver(resultado.Ganador == LadoPelea.Jugador, out int neto))
+            {
+                pantalla.MostrarApuesta(neto);
+                ApuestaResuelta?.Invoke(neto);
+            }
+        }
+
+        private void PagarPremio(ResultadoPelea resultado)
+        {
+            if (premio == null && cartelActual == null)
+            {
+                return;
+            }
+            bool gano = resultado.Ganador == LadoPelea.Jugador;
+            int monto;
+            if (cartelActual != null)
+            {
+                monto = Mathf.RoundToInt(Mathf.Max(0, gano ? cartelActual.premioGanar : cartelActual.premioPerder) * fraccionPremio);
+            }
+            else
+            {
+                monto = gano ? premio.PremioGanar : premio.PremioPerder;
+            }
             if (monto <= 0)
             {
                 return;

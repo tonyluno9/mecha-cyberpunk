@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -20,13 +22,16 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string RutaAPie = "Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
         private const string AliasGuardado = "EL RAYO";
         private const int FramesDeEspera = 5;
-        private const int MaxFramesEscena = 600;
+        private const float MaxSegundosEscena = 60f;
 
         private string carpeta;
+        private HashSet<GameObject> raicesIniciales;
+
 
         [SetUp]
         public void Preparar()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             Registros.LimpiarTodos();
             carpeta = Path.Combine(Application.temporaryCachePath, "cambio_escena_" + System.Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
@@ -48,10 +53,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator Descargar()
         {
-            foreach (GameObject objeto in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(objeto);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }
@@ -61,16 +63,23 @@ namespace MechaCyberpunk.Tests.Progresion
             for (int i = 0; i < FramesDeEspera; i++) yield return null;
         }
 
-        // La escena nueva puede activar al jugador unos frames después: espera a que el servicio de perfil vivo sea el de ella.
+        // La escena nueva puede tardar en cargar (la primera vez con Unity recién abierto lee todo del disco) y activa al jugador unos
+        // frames después: se espera por tiempo real, no por frames (a cientos de frames por segundo 600 frames son menos de un segundo).
         private static IEnumerator EsperarServiciosDeLaEscenaNueva(string rutaEscena)
         {
-            for (int i = 0; i < MaxFramesEscena; i++)
+            float inicio = Time.realtimeSinceStartup;
+            int frames = 0;
+            while (Time.realtimeSinceStartup - inicio < MaxSegundosEscena)
             {
-                if (SceneManager.GetActiveScene().path != rutaEscena) { yield return null; continue; }
-                var perfil = Registro<IPerfilJugador>.Actual as ServicioPerfil;
-                if (perfil != null && perfil.gameObject.scene == SceneManager.GetActiveScene()) break;
+                if (SceneManager.GetActiveScene().path == rutaEscena)
+                {
+                    var perfil = Registro<IPerfilJugador>.Actual as ServicioPerfil;
+                    if (perfil != null && perfil.gameObject.scene == SceneManager.GetActiveScene()) break;
+                }
+                frames++;
                 yield return null;
             }
+            Debug.Log("[Pruebas] La escena nueva tardó " + frames + " frames y " + (Time.realtimeSinceStartup - inicio).ToString("F2") + " s.");
             yield return Esperar();
         }
 

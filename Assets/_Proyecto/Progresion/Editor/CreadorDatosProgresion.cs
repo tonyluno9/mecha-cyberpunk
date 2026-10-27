@@ -177,6 +177,51 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
         }
 
+        private const string RutaDatosLigas = "Assets/_Proyecto/Progresion/Datos/DatosLigas_Base.asset";
+
+        /// <summary>
+        /// Crea DatosLigas_Base (no pisa valores de uno existente) y agrega ServicioLigas a ServiciosProgresion.prefab (T-154).
+        /// Idempotente: corrido otra vez no cambia ningún archivo.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-154 servicio de ligas")]
+        public static void CrearT154()
+        {
+            var datos = AssetDatabase.LoadAssetAtPath<DatosLigas>(RutaDatosLigas);
+            if (datos == null)
+            {
+                datos = ScriptableObject.CreateInstance<DatosLigas>();
+                AssetDatabase.CreateAsset(datos, RutaDatosLigas);
+                AssetDatabase.SaveAssets();
+                datos = AssetDatabase.LoadAssetAtPath<DatosLigas>(RutaDatosLigas);
+            }
+
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                var servicio = raiz.GetComponent<ServicioLigas>();
+                bool cambio = false;
+                if (servicio == null)
+                {
+                    servicio = raiz.AddComponent<ServicioLigas>();
+                    cambio = true;
+                }
+                var so = new SerializedObject(servicio);
+                var propiedad = so.FindProperty("datos");
+                if (propiedad.objectReferenceValue != datos)
+                {
+                    propiedad.objectReferenceValue = datos;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    cambio = true;
+                }
+                if (cambio) PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         private static void CrearDatosEscenas(string ruta)
         {
             var datos = AssetDatabase.LoadAssetAtPath<DatosEscenas>(ruta);

@@ -18,6 +18,7 @@ namespace MechaCyberpunk.Combate.Vida
         private GuardiaMecha guardia;
         private bool buscoGuardia;
         private float multiplicadorDanioRecibido = 1f;
+        private float factorEscudo = 1f;
 
         public DatosMecha Datos => datos;
         public float Actual => modelo != null ? modelo.Actual : 0f;
@@ -31,7 +32,19 @@ namespace MechaCyberpunk.Combate.Vida
             set => multiplicadorDanioRecibido = Mathf.Max(0f, value);
         }
 
+        /// <summary>
+        /// Factor del escudo de una habilidad (1 = sin escudo). Se multiplica aparte de <see cref="MultiplicadorDanioRecibido"/>
+        /// (la piedad del rival usa ese). Lo pone <c>LanzadorHabilidades</c>. Nunca baja de 0.
+        /// </summary>
+        public float FactorEscudo
+        {
+            get => factorEscudo;
+            set => factorEscudo = Mathf.Max(0f, value);
+        }
+
         public event Action Cambio;
+        /// <summary>Se dispara cuando <see cref="CambiarDatos"/> o <see cref="Configurar"/> cambian los datos.</summary>
+        public event Action DatosCambiados;
         public event Action KO;
 
         private void Awake()
@@ -59,6 +72,40 @@ namespace MechaCyberpunk.Combate.Vida
                 CrearModelo();
             }
             Cambio?.Invoke();
+            DatosCambiados?.Invoke();
+        }
+
+        /// <summary>
+        /// Cambia los datos sin restaurar: conserva los puntos de daño (<see cref="ReglaCambioDatos"/>) y, si estaba en KO, sigue en KO.
+        /// Avisa <see cref="Cambio"/> y <see cref="DatosCambiados"/>. Null no hace nada (warning).
+        /// </summary>
+        public void CambiarDatos(DatosMecha nuevosDatos)
+        {
+            if (nuevosDatos == null)
+            {
+                Debug.LogWarning("[Combate] CambiarDatos recibió datos nulos en " + name);
+                return;
+            }
+            if (modelo == null)
+            {
+                Configurar(nuevosDatos);
+                return;
+            }
+            float nueva = ReglaCambioDatos.NuevaVida(modelo.Actual, modelo.Maxima, nuevosDatos.VidaMaxima, modelo.EstaKO);
+            SoltarModelo();
+            datos = nuevosDatos;
+            // El modelo nuevo se arma antes de escuchar sus eventos: así no avisa un KO ni un cambio que ya ocurrieron.
+            ModeloVida creado = new ModeloVida(datos.VidaMaxima);
+            float resta = creado.Maxima - nueva;
+            if (resta > 0f)
+            {
+                creado.Aplicar(resta);
+            }
+            modelo = creado;
+            modelo.Cambio += AlCambiar;
+            modelo.KO += AlLlegarAKO;
+            Cambio?.Invoke();
+            DatosCambiados?.Invoke();
         }
 
         /// <summary>Vuelve a la vida máxima y quita el KO.</summary>
@@ -97,6 +144,17 @@ namespace MechaCyberpunk.Combate.Vida
 
         public ResultadoDanio RecibirDanio(InfoDanio info)
         {
+            return Procesar(info, false);
+        }
+
+        /// <summary>Recibe el daño sin aplicar la guardia (el martillo rompe guardia). Lo demás es igual a <see cref="RecibirDanio"/>.</summary>
+        public ResultadoDanio RecibirDanioSinGuardia(InfoDanio info)
+        {
+            return Procesar(info, true);
+        }
+
+        private ResultadoDanio Procesar(InfoDanio info, bool ignorarGuardia)
+        {
             if (modelo == null)
             {
                 Debug.LogError("[Combate] VidaMecha sin DatosMecha en " + name, this);
@@ -112,9 +170,9 @@ namespace MechaCyberpunk.Combate.Vida
                 guardia = GetComponent<GuardiaMecha>();
                 buscoGuardia = true;
             }
-            float cantidad = info.Cantidad * multiplicadorDanioRecibido;
+            float cantidad = info.Cantidad * multiplicadorDanioRecibido * factorEscudo;
             TipoBloqueo bloqueo = TipoBloqueo.Ninguno;
-            if (guardia != null)
+            if (guardia != null && !ignorarGuardia)
             {
                 (cantidad, bloqueo) = CalculoBloqueo.Calcular(cantidad, guardia.EstaArriba, guardia.SegundosArriba,
                     datos.VentanaBloqueoPerfecto, datos.ReduccionBloqueo);

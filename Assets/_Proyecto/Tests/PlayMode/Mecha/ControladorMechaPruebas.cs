@@ -43,6 +43,8 @@ namespace MechaCyberpunk.Tests.Mecha
             SerializedObject so = new SerializedObject(controlador);
             so.FindProperty("datos").objectReferenceValue = datos;
             so.ApplyModifiedPropertiesWithoutUndo();
+            // Con VidaMecha el controlador usa sus datos (T-165): se le dan los mismos.
+            mecha.GetComponent<MechaCyberpunk.Combate.Vida.VidaMecha>().Configurar(datos);
         }
 
         public override void TearDown()

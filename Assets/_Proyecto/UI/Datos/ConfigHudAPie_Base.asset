@@ -58,6 +58,13 @@ MonoBehaviour:
   - CASINO
   - "CL\xCDNICA"
   - OTRO
+  segundosAvisoLiga: 5
+  textoCampeonLiga: "\xA1CAMPE\xD3N DE LA LIGA {0}!"
+  textoSeAbreLiga: SE ABRE LA LIGA {0}
+  textoCampeonClandestino: "\xA1CAMPE\xD3N DEL CLANDESTINO!"
+  colorAvisoLiga: {r: 1, g: 0.85, b: 0.2, a: 1}
+  tamanoAvisoLiga: 56
+  tamanoAvisoLiga2: 32
   textoVida: VIDA {0}
   textoPunos: "PU\xD1OS"
   textoPistola: PISTOLA {0}/{1}

@@ -77,9 +77,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private HudAPie hud;
         private readonly List<string> errores = new List<string>();
         private readonly List<ResultadoPelea> terminadas = new List<ResultadoPelea>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             // Otras pruebas (sin InputTestFixture) dejan acciones prendidas; el reinicio del fixture las dejaría con un estado viejo
             // (prendidas pero sin controles) y la E no llegaría. Se apagan antes de que el fixture reinicie el Input System.
             InputSystem.DisableAllEnabledActions();
@@ -115,10 +118,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }
@@ -294,6 +294,15 @@ namespace MechaCyberpunk.Tests.Progresion
             return null;
         }
 
+        // T-145: E en el mostrador abre la pantalla de apuesta; Enter con "SIN APUESTA" pelea sin apostar.
+        private IEnumerator PulsarEnter()
+        {
+            Press(teclado.enterKey);
+            yield return null;
+            Release(teclado.enterKey);
+            yield return null;
+        }
+
         private IEnumerator PulsarE()
         {
             Press(teclado.eKey);
@@ -370,6 +379,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Capturar();
 
             yield return PulsarE();
+            yield return PulsarEnter();
             Assert.IsTrue(entrada.EnCurso, "E empieza la entrada");
             yield return EsperarPelea();
 
@@ -410,6 +420,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsTrue(mostrador.PuedeUsar, "Con el mecha fregado pero en pie se ofrece la pelea");
 
             yield return PulsarE();
+            yield return PulsarEnter();
             yield return EsperarPelea();
 
             // Solo clics al aire: el rival golpea de verdad hasta dejarlo en KO.

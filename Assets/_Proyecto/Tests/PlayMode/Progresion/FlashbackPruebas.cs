@@ -66,9 +66,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private readonly List<string> avisos = new List<string>();
         private DirectorFlashback director;
         private readonly List<PuntoHistoriaDePrueba> puntos = new List<PuntoHistoriaDePrueba>();
+        private HashSet<GameObject> raicesIniciales;
+
 
         public override void Setup()
         {
+            raicesIniciales = RaicesDePrueba.Anotar();
             InputSystem.DisableAllEnabledActions();
             base.Setup();
             Registros.LimpiarTodos();
@@ -108,10 +111,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
-            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                Object.Destroy(raiz);
-            }
+            RaicesDePrueba.DestruirNuevas(raicesIniciales);
             yield return null;
             Registros.LimpiarTodos();
         }

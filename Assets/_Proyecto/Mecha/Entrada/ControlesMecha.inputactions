@@ -85,6 +85,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Habilidad1",
+                    "type": "Button",
+                    "id": "68a7f44c-33c8-44cc-9ac2-28b9eec25d06",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Habilidad2",
+                    "type": "Button",
+                    "id": "149b1670-5733-4d55-bcf2-fe9ddb9ecdbb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -217,6 +237,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Cristal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "12699b16-2951-4f6d-89be-c494cc2eab25",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Habilidad1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "20d8a8cf-e16e-43e8-ad81-7ceaf917b7a8",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Habilidad2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
