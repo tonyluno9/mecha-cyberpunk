@@ -689,3 +689,4 @@ de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones
 papás, o se dejan para la historia principal?
 - T-181 Core hecha sin aprobación previa explícita, por criterio del /goal
 - verificar.sh: ensamblados_modo ahora busca asmdef de pruebas anidados (Tests/<Modo>/<Area>/<Sub>/), el área es el nombre con puntos (Progresion.Misiones); comprobado con AREAS=Progresion.Misiones playmode-por-area (7/7); tarea de Core hecha dentro de T-183 por encargo del orquestador
+- D-tony-153: T-185 acepta la captura T-185-2 (cabina frente al pandillero con HUD de cabina) sin el texto del paso, que en la cabina no se dibuja en ese momento; la T-185-1 sí muestra el texto del paso a pie.
