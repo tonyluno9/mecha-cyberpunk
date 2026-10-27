@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 2447612013111949025}
   - component: {fileID: 5016240715847715043}
   - component: {fileID: 4905222460801062930}
+  - component: {fileID: 4246532650403101935}
   m_Layer: 0
   m_Name: ServiciosProgresion
   m_TagString: Untagged
@@ -174,3 +175,16 @@ MonoBehaviour:
   textoEsconderte: ESCONDERTE (FAVOR)
   textoNecesitasFavor: "ESCONDITE \xB7 NECESITAS UN FAVOR"
   segundosRevision: 0.5
+--- !u!114 &4246532650403101935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee4ee96e53991a4aa2763f8de16084d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioImplantes
+  catalogo: {fileID: 11400000, guid: d03272f8b0f86dc48b6dfab55ca55a14, type: 2}
