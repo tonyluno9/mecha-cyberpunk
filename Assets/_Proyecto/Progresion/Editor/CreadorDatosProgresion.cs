@@ -353,6 +353,26 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>Agrega Escondites (los escondites del barrio) a ServiciosProgresion.prefab (T-187). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear T-187 escondites")]
+        public static void CrearT187()
+        {
+            var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
+            try
+            {
+                if (raiz.GetComponent<Escondites>() == null)
+                {
+                    raiz.AddComponent<Escondites>();
+                    PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabServicios);
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         private static void CrearDatosEscenas(string ruta)
         {
             var datos = AssetDatabase.LoadAssetAtPath<DatosEscenas>(ruta);

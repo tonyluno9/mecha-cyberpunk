@@ -21,6 +21,8 @@ namespace MechaCyberpunk.UI.Tiendas
         [SerializeField] private PantallaTienda pantalla;
         [Tooltip("Tipos de objeto que este mostrador compra (T-147). Vacía: la pestaña VENDER no aparece.")]
         [SerializeField] private TipoObjeto[] compra = new TipoObjeto[0];
+        [Tooltip("True: con un favor de DESCUENTO, la siguiente compra de este mostrador cuesta menos (T-187; solo el mercado negro).")]
+        [SerializeField] private bool aceptaFavorDescuento;
         [Tooltip("{0} = hora a la que abre (HH:MM).")]
         [SerializeField] private string formatoCerrado = "CERRADO · abre {0}";
         [SerializeField] private string textoCerrado = "CERRADO";
@@ -38,6 +40,8 @@ namespace MechaCyberpunk.UI.Tiendas
         public IReadOnlyList<DatosObjeto> EnVenta => enVenta;
         /// <summary>Los tipos de objeto que el mostrador compra al jugador.</summary>
         public IReadOnlyList<TipoObjeto> Compra => compra;
+
+        public bool AceptaFavorDescuento => aceptaFavorDescuento;
 
         public Vector3 Posicion => transform.position;
 
@@ -99,7 +103,7 @@ namespace MechaCyberpunk.UI.Tiendas
                 return;
             }
             abierta = true;
-            pantalla.Mostrar(tienda, enVenta, AlSalir, compra);
+            pantalla.Mostrar(tienda, enVenta, AlSalir, compra, aceptaFavorDescuento);
             JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;
             ControladorAPie controlador = jugador != null ? jugador.GetComponent<ControladorAPie>() : null;
             if (controlador != null && controlador.ControlActivo)

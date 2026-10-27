@@ -38,6 +38,8 @@ namespace MechaCyberpunk.UI.Editor
         private const float AltoLista = 330f;
         private const float YAviso = -230f;
         private const float YAyuda = -450f;
+        private const float YFavor = -400f;
+        private const float AltoFavor = 50f;
         private static readonly Color ColorSombra = new Color(0f, 0f, 0f, 0.8f);
         private static readonly Vector2 DesplazamientoSombra = new Vector2(2f, -2f);
         private static readonly Color ColorMesa = new Color(0.16f, 0.07f, 0.2f);
@@ -70,8 +72,10 @@ namespace MechaCyberpunk.UI.Editor
                 CrearMostrador();
             }
             AsegurarCompra();
+            AsegurarLineaFavor();
+            AsegurarFavorDescuento();
             AssetDatabase.SaveAssets();
-            Debug.Log("[UI] T-146/T-147 mostrador de tienda creado.");
+            Debug.Log("[UI] T-146/T-147/T-187 mostrador de tienda creado.");
         }
 
         // T-147: el mostrador del mercado negro compra piezas y chatarra. Idempotente: solo escribe si la lista es distinta.
@@ -95,6 +99,63 @@ namespace MechaCyberpunk.UI.Editor
                     {
                         lista.GetArrayElementAtIndex(i).enumValueIndex = esperado[i];
                     }
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    PrefabUtility.SaveAsPrefabAsset(raiz, RutaMostrador);
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+        }
+
+        // T-187: la línea del favor de descuento en PantallaTienda.prefab. Idempotente: solo escribe si falta.
+        private static void AsegurarLineaFavor()
+        {
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPantalla);
+            try
+            {
+                PantallaTienda pantalla = raiz.GetComponent<PantallaTienda>();
+                SerializedObject so = new SerializedObject(pantalla);
+                SerializedProperty propiedad = so.FindProperty("textoFavor");
+                if (propiedad.objectReferenceValue == null)
+                {
+                    Transform contenido = raiz.transform.Find("Contenido");
+                    Text favor = CrearTexto("Favor", contenido, 0f, YFavor, AltoFavor, 1f);
+                    favor.gameObject.SetActive(false);
+                    propiedad.objectReferenceValue = favor;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    PrefabUtility.SaveAsPrefabAsset(raiz, RutaPantalla);
+                }
+                else
+                {
+                    RectTransform rect = ((Text)propiedad.objectReferenceValue).rectTransform;
+                    Vector2 posicion = new Vector2(0f, YFavor);
+                    if (rect.anchoredPosition != posicion || rect.sizeDelta.y != AltoFavor)
+                    {
+                        rect.anchoredPosition = posicion;
+                        rect.sizeDelta = new Vector2(rect.sizeDelta.x, AltoFavor);
+                        PrefabUtility.SaveAsPrefabAsset(raiz, RutaPantalla);
+                    }
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+        }
+
+        // T-187: solo el mercado negro acepta el favor de descuento. Idempotente.
+        private static void AsegurarFavorDescuento()
+        {
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaMostrador);
+            try
+            {
+                SerializedObject so = new SerializedObject(raiz.GetComponent<MostradorTienda>());
+                SerializedProperty propiedad = so.FindProperty("aceptaFavorDescuento");
+                if (!propiedad.boolValue)
+                {
+                    propiedad.boolValue = true;
                     so.ApplyModifiedPropertiesWithoutUndo();
                     PrefabUtility.SaveAsPrefabAsset(raiz, RutaMostrador);
                 }

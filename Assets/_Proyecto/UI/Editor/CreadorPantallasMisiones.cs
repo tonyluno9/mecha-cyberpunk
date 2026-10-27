@@ -36,6 +36,8 @@ namespace MechaCyberpunk.UI.Editor
         private const float YTitulo = 400f;
         private const float YPestanas = 300f;
         private const float XPestanas = 560f;
+        private const float XSeparacionPestanas = 450f;
+        private const float FraccionPestana = 0.22f;
         private const float YLista = 40f;
         private const float AltoLista = 440f;
         private const float YContenido = 60f;
@@ -82,8 +84,43 @@ namespace MechaCyberpunk.UI.Editor
             {
                 CrearContacto(config);
             }
+            AsegurarPestanaFavores();
             AssetDatabase.SaveAssets();
-            Debug.Log("[UI] T-186 pantallas de misiones creadas.");
+            Debug.Log("[UI] T-186/T-187 pantallas de misiones creadas.");
+        }
+
+        // T-187: la cuarta pestaña (FAVORES) del teléfono; las cuatro se reparten el ancho. Idempotente: solo escribe si falta.
+        private static void AsegurarPestanaFavores()
+        {
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaTelefono);
+            try
+            {
+                PantallaTelefono telefono = raiz.GetComponent<PantallaTelefono>();
+                SerializedObject so = new SerializedObject(telefono);
+                SerializedProperty propiedad = so.FindProperty("textoPestanaFavores");
+                if (propiedad.objectReferenceValue != null)
+                {
+                    return;
+                }
+                Transform contenido = raiz.transform.Find("Contenido");
+                Text favores = CrearTexto("PestanaFavores", contenido, 0f, YPestanas, AltoLinea, FraccionPestana);
+                string[] nombres = { "PestanaContratos", "PestanaMision", "PestanaReputacion", "PestanaFavores" };
+                for (int i = 0; i < nombres.Length; i++)
+                {
+                    RectTransform rect = (RectTransform)contenido.Find(nombres[i]);
+                    float x = (i - (nombres.Length - 1) / 2f) * XSeparacionPestanas;
+                    rect.anchorMin = new Vector2(0.5f - FraccionPestana / 2f, 0.5f);
+                    rect.anchorMax = new Vector2(0.5f + FraccionPestana / 2f, 0.5f);
+                    rect.anchoredPosition = new Vector2(x, YPestanas);
+                }
+                propiedad.objectReferenceValue = favores;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaTelefono);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
         }
 
         private static GameObject CrearRaizCanvas(string nombre, int orden)

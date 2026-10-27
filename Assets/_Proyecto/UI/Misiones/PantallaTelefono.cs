@@ -16,7 +16,8 @@ namespace MechaCyberpunk.UI.Misiones
     {
         Contratos,
         Mision,
-        Reputacion
+        Reputacion,
+        Favores
     }
 
     /// <summary>Qué muestra la pestaña CONTRATOS.</summary>
@@ -34,7 +35,7 @@ namespace MechaCyberpunk.UI.Misiones
     /// </summary>
     public class PantallaTelefono : MonoBehaviour
     {
-        private const int Pestanas = 3;
+        private const int Pestanas = 4;
         private const int BarrasReputacion = 2;
 
         [SerializeField] private ConfigPantallaMisiones config;
@@ -44,6 +45,7 @@ namespace MechaCyberpunk.UI.Misiones
         [SerializeField] private Text textoPestanaContratos;
         [SerializeField] private Text textoPestanaMision;
         [SerializeField] private Text textoPestanaReputacion;
+        [SerializeField] private Text textoPestanaFavores;
         [Tooltip("Texto de las pestañas CONTRATOS (sin lista) y MISIÓN.")]
         [SerializeField] private Text textoContenido;
         [SerializeField] private Text textoAyuda;
@@ -65,6 +67,7 @@ namespace MechaCyberpunk.UI.Misiones
         private bool abierto;
         private bool confirmando;
         private int segundosMostrados = -1;
+        private int favoresMostrados = -1;
         private int barrioMostrado = int.MinValue;
         private int corporacionesMostrado = int.MinValue;
 
@@ -85,7 +88,7 @@ namespace MechaCyberpunk.UI.Misiones
         private void Awake()
         {
             if (config == null || contenido == null || fondo == null || textoTitulo == null || textoPestanaContratos == null
-                || textoPestanaMision == null || textoPestanaReputacion == null || textoContenido == null || textoAyuda == null
+                || textoPestanaMision == null || textoPestanaReputacion == null || textoPestanaFavores == null || textoContenido == null || textoAyuda == null
                 || grupoReputacion == null || telefono == null || textosBarras == null || textosBarras.Length != BarrasReputacion
                 || huecosBarras == null || huecosBarras.Length != BarrasReputacion
                 || rellenosBarras == null || rellenosBarras.Length != BarrasReputacion)
@@ -225,7 +228,7 @@ namespace MechaCyberpunk.UI.Misiones
                     CambiarPestana((PestanaTelefono)((int)pestana - 1));
                     return;
                 }
-                if (derecha.WasPressedThisFrame() && pestana != PestanaTelefono.Reputacion)
+                if (derecha.WasPressedThisFrame() && pestana != PestanaTelefono.Favores)
                 {
                     CambiarPestana((PestanaTelefono)((int)pestana + 1));
                     return;
@@ -290,6 +293,13 @@ namespace MechaCyberpunk.UI.Misiones
                         Pintar();
                     }
                     break;
+                case PestanaTelefono.Favores:
+                    ServicioFavores favores = Registro<ServicioFavores>.Actual;
+                    if (favores != null && FirmaFavores(favores) != favoresMostrados)
+                    {
+                        Pintar();
+                    }
+                    break;
             }
         }
 
@@ -309,6 +319,7 @@ namespace MechaCyberpunk.UI.Misiones
             PintarPestana(textoPestanaContratos, config.TextoPestanaContratos, pestana == PestanaTelefono.Contratos);
             PintarPestana(textoPestanaMision, config.TextoPestanaMision, pestana == PestanaTelefono.Mision);
             PintarPestana(textoPestanaReputacion, config.TextoPestanaReputacion, pestana == PestanaTelefono.Reputacion);
+            PintarPestana(textoPestanaFavores, config.TextoPestanaFavores, pestana == PestanaTelefono.Favores);
             textoTitulo.text = config.TituloTelefono;
             textoTitulo.color = config.ColorTitulo;
             textoTitulo.fontSize = config.TamanoTitulo;
@@ -341,6 +352,9 @@ namespace MechaCyberpunk.UI.Misiones
                 case PestanaTelefono.Reputacion:
                     PintarBarras();
                     break;
+                case PestanaTelefono.Favores:
+                    texto = TextoFavores();
+                    break;
             }
             textoAyuda.text = ayuda;
             grupoReputacion.SetActive(pestana == PestanaTelefono.Reputacion);
@@ -368,7 +382,13 @@ namespace MechaCyberpunk.UI.Misiones
             if (misiones == null || !misiones.HayMision)
             {
                 segundosMostrados = -1;
-                return config.TextoSinMision;
+                string sinMision = config.TextoSinMision;
+                if (misiones != null && misiones.UltimoResumen.FavorPerdido)
+                {
+                    ServicioFavores bolsillo = Registro<ServicioFavores>.Actual;
+                    sinMision += "\n" + FormatoMisiones.AvisoFavorPerdido(config, bolsillo != null ? bolsillo.Maximo : 0);
+                }
+                return sinMision;
             }
             string texto = misiones.Titulo.ToUpperInvariant();
             PasoMision paso = misiones.PasoActual;
@@ -383,6 +403,38 @@ namespace MechaCyberpunk.UI.Misiones
             segundosMostrados = Mathf.CeilToInt(misiones.SegundosRestantes);
             texto += "\n" + (confirmando ? config.TextoConfirmarAbandonar : config.TextoAbandonar);
             return texto;
+        }
+
+        // Los tres favores: nombre, cuántos lleva, su descripción y dónde se usan (T-187).
+        private string TextoFavores()
+        {
+            ServicioFavores favores = Registro<ServicioFavores>.Actual;
+            if (favores == null)
+            {
+                return config.TextoSinFavores;
+            }
+            string texto = string.Empty;
+            foreach (TipoFavor tipo in System.Enum.GetValues(typeof(TipoFavor)))
+            {
+                DatosFavor datos = favores.Datos(tipo);
+                if (texto.Length > 0)
+                {
+                    texto += "\n";
+                }
+                texto += FormatoMisiones.FilaFavor(config, tipo, datos, favores.Cantidad(tipo), favores.Maximo);
+            }
+            favoresMostrados = FirmaFavores(favores);
+            return texto;
+        }
+
+        private static int FirmaFavores(ServicioFavores favores)
+        {
+            int firma = 0;
+            foreach (TipoFavor tipo in System.Enum.GetValues(typeof(TipoFavor)))
+            {
+                firma = firma * (favores.Maximo + 1) + favores.Cantidad(tipo);
+            }
+            return firma;
         }
 
         private void PintarBarras()

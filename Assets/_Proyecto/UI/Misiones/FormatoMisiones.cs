@@ -31,7 +31,25 @@ namespace MechaCyberpunk.UI.Misiones
             {
                 texto += config.Separador + string.Format(config.FormatoFavor, datos.Favor.Nombre.ToUpperInvariant());
             }
+            if (datos.ExigeFavor)
+            {
+                texto += config.Separador + string.Format(config.FormatoUsaFavor, config.NombreFavor((int)datos.FavorRequerido));
+            }
             return texto;
+        }
+
+        /// <summary>"DESCUENTO   2/3   REBAJA 30 % UNA COMPRA   ·   MERCADO NEGRO": una línea de la pestaña FAVORES del teléfono.</summary>
+        public static string FilaFavor(ConfigPantallaMisiones config, TipoFavor tipo, DatosFavor datos, int cantidad, int maximo)
+        {
+            string nombre = datos != null ? datos.Nombre.ToUpperInvariant() : config.NombreFavor((int)tipo);
+            string descripcion = datos != null ? datos.Descripcion.ToUpperInvariant() : string.Empty;
+            return string.Format(config.FormatoFilaFavor, nombre, cantidad, maximo, descripcion, config.DondeSeUsaFavor((int)tipo));
+        }
+
+        /// <summary>"FAVOR PERDIDO: YA TIENES 3".</summary>
+        public static string AvisoFavorPerdido(ConfigPantallaMisiones config, int maximo)
+        {
+            return string.Format(config.FormatoFavorPerdido, maximo);
         }
 
         /// <summary>La fila de una misión que no se puede aceptar: "LIMPIEZA DE ZONA · NECESITAS SER CONTRATISTA CON LAS CORPORACIONES".</summary>

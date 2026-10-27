@@ -69,6 +69,9 @@ namespace MechaCyberpunk.UI
         [Tooltip("Favor que da una misión; {0} es su nombre.")]
         [SerializeField] private string formatoFavor = "FAVOR: {0}";
 
+        [Tooltip("Favor que gasta una misión al aceptarla; {0} es su nombre.")]
+        [SerializeField] private string formatoUsaFavor = "USA 1 {0}";
+
         [Tooltip("Fila que no se puede aceptar; {0} es el título y {1} el motivo.")]
         [SerializeField] private string formatoNoDisponible = "{0}  ·  {1}";
 
@@ -101,6 +104,9 @@ namespace MechaCyberpunk.UI
         [Tooltip("Nombre de cada favor en el motivo, en el orden de TipoFavor (Descuento, Informacion, Escondite).")]
         [SerializeField] private string[] nombresFavor = { "DESCUENTO", "INFORMACIÓN", "ESCONDITE" };
 
+        [Tooltip("Aviso al terminar una misión que daba un favor con el bolsillo lleno; {0} es el máximo.")]
+        [SerializeField] private string formatoFavorPerdido = "FAVOR PERDIDO: YA TIENES {0}";
+
         [SerializeField] private string textoHechaHoy = "YA LO HICISTE HOY";
         [SerializeField] private string textoYaHecha = "YA LA HICISTE";
         [SerializeField] private string textoOtraActiva = "YA TIENES UNA MISIÓN";
@@ -112,6 +118,15 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoPestanaContratos = "CONTRATOS";
         [SerializeField] private string textoPestanaMision = "MISIÓN";
         [SerializeField] private string textoPestanaReputacion = "REPUTACIÓN";
+        [SerializeField] private string textoPestanaFavores = "FAVORES";
+
+        [Tooltip("Línea de la pestaña FAVORES; {0} nombre, {1} cuántos lleva, {2} máximo, {3} descripción, {4} dónde se usa.")]
+        [SerializeField] private string formatoFilaFavor = "{0}   {1}/{2}   ·   {3}\nSE USA EN: {4}\n";
+
+        [Tooltip("Dónde se usa cada favor, en el orden de TipoFavor (Descuento, Informacion, Escondite).")]
+        [SerializeField] private string[] dondeSeUsaFavor = { "MERCADO NEGRO", "CONTACTO DEL BAR", "ESCONDITES DEL BARRIO" };
+
+        [SerializeField] private string textoSinFavores = "SIN FAVORES";
 
         [Tooltip("Marca de la pestaña elegida; {0} es su nombre.")]
         [SerializeField] private string formatoPestanaElegida = "[ {0} ]";
@@ -184,6 +199,17 @@ namespace MechaCyberpunk.UI
         public string TextoReputacionBaja => textoReputacionBaja;
         public string FormatoLiga => formatoLiga;
         public string FormatoFaltaFavor => formatoFaltaFavor;
+        public string FormatoUsaFavor => formatoUsaFavor;
+        public string FormatoFavorPerdido => formatoFavorPerdido;
+        public string TextoPestanaFavores => textoPestanaFavores;
+        public string FormatoFilaFavor => formatoFilaFavor;
+        public string TextoSinFavores => textoSinFavores;
+
+        /// <summary>Dónde se usa un favor (por TipoFavor); si falta, vacío.</summary>
+        public string DondeSeUsaFavor(int tipo)
+        {
+            return dondeSeUsaFavor != null && tipo >= 0 && tipo < dondeSeUsaFavor.Length ? dondeSeUsaFavor[tipo] : string.Empty;
+        }
         public string TextoHechaHoy => textoHechaHoy;
         public string TextoYaHecha => textoYaHecha;
         public string TextoOtraActiva => textoOtraActiva;
