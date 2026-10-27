@@ -68,3 +68,13 @@ F5/F9 guardar/cargar, 8 y 9 y 0 cargan deuda/brazo/kit o calor, J saltar reloj, 
 10. Fluidez: que no haya tirones ni errores al cambiar de escena.
 
 (Una sección por bloque se agregará después.)
+
+## Misiones y reputación (Pruebas_Misiones)
+Teléfono: T (contratos de día, misión, reputación, favores). Flechas ← → cambian de pestaña, ↑ ↓ y Enter eligen, Esc o T cierran. CONTRATOS lista las
+corporativas solo de día (de noche "NADIE CONTESTA"); MISIÓN muestra la que llevas y permite abandonar (Enter dos veces, castiga); REPUTACIÓN muestra
+las dos barras (barrio y corporaciones); FAVORES muestra DESCUENTO, INFORMACIÓN y ESCONDITE (máximo 3 de cada uno).
+Dónde se aceptan: los encargos de barrio con E junto a los vecinos (Doña Lupe, el taquero, la vecindad), las corporativas por teléfono de día, y las
+ilegales y los robos con E en el contacto del bar, de noche. Una misión a la vez; la flecha y el texto del HUD te llevan paso a paso (E para recoger y entregar).
+Los favores: DESCUENTO baja 30 % tu siguiente compra en el mercado negro; INFORMACIÓN abre EL SOPLO con el contacto del bar; ESCONDITE se usa con E
+en un escondite del barrio (azotea, lavandería) cuando hay calor: lo borra y cumple el paso de escapar. Pruebas_Misiones es la escena para probarlo todo
+(J pasa al día siguiente a las 8:00; F5 guarda y F9 carga: la misión en curso se cancela sin castigo).
