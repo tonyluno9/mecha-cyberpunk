@@ -7,7 +7,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 ## Bloque actual: 6, implantes (T-190 a T-197; D-tony-163 a D-tony-174)
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
-| T-190 Contratos de los implantes (Core; autorizada por Tony en el /goal) | nada | pendiente |
+| T-190 Contratos de los implantes (Core; autorizada por Tony en el /goal) | nada | hecha |
 | T-191 Implantes como datos: tabla, servicio, guardado y balance | T-190 | pendiente |
 | T-192 Brazos y piernas a pie; los implantes se ven en el cuerpo | T-190, T-191 | pendiente |
 | T-193 La clínica y Pruebas_Implantes | T-191, T-192 | pendiente |
@@ -25,4 +25,4 @@ Build provisional con escenas de Tony: docs/guia-para-jugar.md.
 2. Bloque 8: adaptación del rival
 
 ## Turno de noche 2026-10-27
-Bloque 5 en main. Siguiente: T-190. Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
+Bloque 5 en main. T-190 hecha (afddc82). Siguiente: T-191. Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
