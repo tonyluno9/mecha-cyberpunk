@@ -688,3 +688,43 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 
 #### Para Alan (T-183, opcional)
 Ids de puntos de misión que usan las misiones (prefijo Mision_, tipo entre paréntesis; si falta uno, esa misión no se ofrece): Mision_Botin_BodegaCorp, Mision_Botin_Camion, Mision_Botin_Farmacia, Mision_Botin_Paqueteria, Mision_Botin_Subestacion (Botin); Mision_Destino_Moroso, Mision_Destino_Muelle, Mision_Destino_TorreCorp (Destino); Mision_Encargo_DonaLupe, Mision_Encargo_Taquero, Mision_Encargo_Vecindad (Encargo); Mision_Escondite_Azotea, Mision_Escondite_Lavanderia (Escondite); Mision_Pelea_Baldio, Mision_Pelea_Callejon, Mision_Pelea_Camion (Pelea).
+
+### Misiones y reputación (T-F7, bloque 5) cerradas: qué probar jugando
+- Verificado automáticamente (T-188): `RecorridoMisionesPruebas` pasa 5 corridas seguidas de PlayMode Progresion.Misiones (32/32 cada una, con el recorrido dentro). Un día y una noche de trabajos en Pruebas_Misiones con entrada simulada, unos 65 s de juego: Doña Lupe (+$50, barrio +8, DESCUENTO; paga menos que el rival 1 de la liga 1, $600), cobro de adeudo por teléfono (+$500, "BARRIO −12 · CORPORACIONES +10", barrio −4), robo de la bodega de noche (calor 50, nivel 2) y esconderse con un favor (calor 0, +6 chatarra, corporaciones 0), vender la chatarra (+$300) y misil con descuento ($80 → $56), LOS DEL CALLEJÓN en el mecha (+$100, barrio 11, ESCONDITE real), otro día: barrio 19 CONOCIDO, "GRAFITI: <ALIAS>", LUZ PARA LA VECINDAD ya se ofrece, LIMPIEZA DE ZONA sigue en gris (SIN FICHA), F5/F9 devuelven todo y cancelan la misión en curso sin castigo. Finales (iguales a lo calculado desde los assets): dinero $1944, barrio 19, corporaciones 0, DESCUENTO 1, ESCONDITE 1, INFORMACIÓN 0, chatarra 0, +1 misil. Capturas en docs/capturas/T-188-1 a 3 (la 3 muestra un error, ver abajo).
+- Error encontrado (no corregido, pide tarea): el letrero "GRAFITI: <ALIAS>" del muro de Pruebas_Misiones (`CreadorEscenaMisiones.ArmarMuroReputacion`) cuelga su TextMesh del muro escalado (0.4 x 5 x 7), queda con escala del mundo (17.5, 1, 0.06) y se ve estirado y deformado (T-188-3). El texto sí cambia (la prueba lo lee); hay que sacar el texto del muro escalado o ponerlo bajo un padre sin escala.
+- Qué probar jugando, en orden (Pruebas_Misiones, Play, unos 20 minutos, sin ayuda):
+  1. T-182/T-183: ¿JUSTICIERO y ENEMIGO suenan al juego? ¿Que con las corporaciones de enemigas el calor suba 30 % se siente como "te odian más"? ¿Las de barrio se sienten de barrio y las corporativas pagan bien y cuestan barrio?
+  2. T-184: con Doña Lupe, ¿la flecha y el texto te llevan sin perderte? ¿Recoger y entregar con E se siente natural o falta algo (un vecino, un sonido)?
+  3. T-186: ¿el teléfono con T se siente rápido o estorba? ¿El aviso "BARRIO −12" te hace pensar dos veces antes de otro contrato corporativo? ¿El contacto del bar se siente de noche y escondido?
+  4. T-185: el robo y escapar, ¿tenso o solo esperar a que baje el calor? ¿La pandilla del callejón se siente como defender al taquero? ¿Ir a vender la chatarra cierra bien el robo?
+  5. T-187: ¿los favores se sienten como algo que el barrio te debe o se olvidan? ¿El escondite te salvó en un robo? ¿30 % en una compra es generoso o tacaño?
+  6. Cierre: ¿las misiones dan ganas de hacerlas entre peleas o son relleno? ¿Sentiste el jalón entre barrio y corporaciones al escoger? ¿Las peleas siguen siendo lo que más paga?
+
+#### Tabla final de misiones (de T-183; todo se cambia en Progresion/Datos/Misiones/)
+| Misión | Origen y franja | Paga | Reputación | Extra |
+| --- | --- | --- | --- | --- |
+| LA TIENDITA DE DOÑA LUPE | Calle, cualquiera | $50 | barrio +8 | favor DESCUENTO |
+| LOS DEL CALLEJÓN | Calle (taquero), noche | $100 | barrio +12 | favor ESCONDITE; pelea de 2 en el mecha |
+| LUZ PARA LA VECINDAD | Calle (vecindad), cualquiera | $0 | barrio +15, corp. −8 | favor INFORMACIÓN; pide CONOCIDO; calor 30 |
+| ENTREGA URGENTE | Teléfono, día | $400 | barrio −5, corp. +8 | 150 s |
+| COBRO DE ADEUDO | Teléfono, día | $500 | barrio −12, corp. +10 | |
+| LIMPIEZA DE ZONA | Teléfono, día | $900 | barrio −15, corp. +15 | pide CONTRATISTA y liga 2; pelea |
+| CARGA CALIENTE | Bar, noche | $350 | corp. −5 | calor 40, escapar |
+| PELEA SIN JAULA | Bar, noche | $450 | barrio +3, corp. −5 | pelea de 3 en el baldío, escapar |
+| BODEGA DE REFACCIONES | Bar, noche | 6 chatarra ($300) | barrio +3, corp. −10 | calor 50, escapar |
+| CAMIÓN BLINDADO | Bar, noche | $200 + 10 chatarra | barrio +5, corp. −15 | liga 2; calor 60 |
+| EL SOPLO | Bar, noche | 12 chatarra ($600) | barrio +3, corp. −8 | gasta 1 INFORMACIÓN; calor 15 |
+
+#### Niveles de reputación y favores
+- Niveles (−100 a 100, umbrales ±15 y ±50): barrio TRAIDOR, MAL VISTO, DESCONOCIDO, CONOCIDO, JUSTICIERO; corporaciones ENEMIGO, FICHADO, SIN FICHA, CONTRATISTA, SOCIO. Corporaciones en −1 o −2: el calor sube ×1.15 o ×1.3. Ninguna misión sube las dos.
+- Favores (máximo 3 de cada uno): DESCUENTO (−30 % en la siguiente compra del mercado negro), INFORMACIÓN (abre EL SOPLO; se gasta al aceptar, no se devuelve), ESCONDITE (en un escondite del barrio borra el calor y cumple escapar). Si ya tienes 3, el favor se pierde y se avisa.
+- Conocido T-186: al cargar con F9 el aviso de reputación del HUD muestra los valores guardados como cambio (pide tarea de HUD).
+
+#### Preguntas abiertas para Tony (D-tony-152; ninguna se aplica sin tu respuesta)
+(a) ¿El teléfono en la tecla T te late? (b) ¿Las corporativas deben dar algo más que dinero (piezas, información de tus papás para la historia)? (c) ¿El descuento también en el taller o la clínica? (d) ¿Los robos deberían poder salir mal de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones de una sola vez con historia (no repetibles) para el hilo de los papás, o se dejan para la historia principal?
+
+#### Para Alan (D-tony-151; nada lo bloquea)
+- Ids de los puntos de misión (prefijo Mision_, como en T-183): Botin_BodegaCorp, Botin_Camion, Botin_Farmacia, Botin_Paqueteria, Botin_Subestacion; Destino_Moroso, Destino_Muelle, Destino_TorreCorp; Encargo_DonaLupe, Encargo_Taquero, Encargo_Vecindad; Escondite_Azotea, Escondite_Lavanderia; Pelea_Baldio, Pelea_Callejon, Pelea_Camion. Cada uno implementa `IPuntoMision` y se agrega a `Registro<IPuntoMision>`; si falta uno, esa misión no se ofrece.
+- Prefabs para tu ciudad: `Assets/_Proyecto/UI/Prefabs/ContactoBar.prefab` (el contacto de noche en tu bar) y `Assets/_Proyecto/Pelea/Prefabs/PeleasDeMision.prefab` (levanta las emboscadas de los puntos Pelea).
+- Puedes leer `Registro<IReputacion>.Actual` (Valor y Nivel de barrio y corporaciones, NombreNivel, evento Cambio: grafitis con el alias con barrio en 1 o más, vecinos que saludan en 2, anuncios que difaman con corporaciones en −1 o menos) y `Registro<IMisiones>.Actual` (HayMision, Tipo, evento Terminada: patrullas más atentas en un robo). Sin ellos la ciudad actúa como nivel 0.
+- Suite completa (T-188): `verificar.sh todo`: EditMode 1017/1017; PlayMode 926 (908 pasaron, 9 fallos conocidos de Alan en Arena/JaulaClandestinoPruebas, el resto omitidas). `playmode-por-area` sin ningún LIMITE: Arena 17 (9 fallos conocidos), Combate 61, Core 3, Economia 19, IA 44, Mecha 158, Mundo 141, Pelea 66, Personaje 111, Progresion 114, Progresion.Misiones 32, UI 130, Vehiculos 30.
