@@ -4114,6 +4114,52 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &264975527971047804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3501591988330332808}
+  - component: {fileID: 2054765226267930067}
+  m_Layer: 0
+  m_Name: Casa_Cama
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3501591988330332808
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264975527971047804}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: -0.7071069}
+  m_LocalPosition: {x: -65.3, y: 0.22, z: -82.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5443844883103596454}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2054765226267930067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264975527971047804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48dd7b3dc8af8f94d8bcf0dd76c6dfb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoAparicion
+  id: Casa_Cama
+  modo: 0
 --- !u!1 &268200880753873035
 GameObject:
   m_ObjectHideFlags: 0
@@ -37564,6 +37610,40 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1875019265623912454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 66533936631447277}
+  m_Layer: 0
+  m_Name: PuntosHistoria
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &66533936631447277
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875019265623912454}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6187439264274855162}
+  - {fileID: 7907472979135659284}
+  - {fileID: 525000911511760334}
+  m_Father: {fileID: 6870228419915894630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1876120249516725506
 GameObject:
   m_ObjectHideFlags: 0
@@ -50247,7 +50327,7 @@ Transform:
   - {fileID: 4844040451530509496}
   - {fileID: 7828671928830274831}
   - {fileID: 6526680437752658686}
-  - {fileID: 3655420420790477519}
+  - {fileID: 66533936631447277}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2458554758576873228
@@ -57807,6 +57887,39 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2761583973456299537
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6339838425372243824}
+  m_Layer: 0
+  m_Name: Prologo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6339838425372243824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761583973456299537}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2459075183661535912}
+  - {fileID: 7409422567195901652}
+  m_Father: {fileID: 3208640918571798298}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2763943017857442945
 GameObject:
   m_ObjectHideFlags: 0
@@ -73683,7 +73796,7 @@ Transform:
   - {fileID: 4087925977118561966}
   - {fileID: 1230784316486420695}
   - {fileID: 995200609481134778}
-  - {fileID: 5011334754151461674}
+  - {fileID: 6339838425372243824}
   m_Father: {fileID: 6096337240247547850}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2208076701435737217
@@ -75382,39 +75495,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &3585791305481944867
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5011334754151461674}
-  m_Layer: 0
-  m_Name: Prologo
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5011334754151461674
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3585791305481944867}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4906477696345964228}
-  - {fileID: 8978452100961451566}
-  m_Father: {fileID: 3208640918571798298}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3589145259694547811
 GameObject:
   m_ObjectHideFlags: 0
@@ -87846,8 +87926,8 @@ Transform:
   - {fileID: 5841168554618786427}
   - {fileID: 7757212190345813495}
   - {fileID: 2204193108276637561}
-  - {fileID: 4439121807751742585}
-  - {fileID: 5763404844067848311}
+  - {fileID: 3501591988330332808}
+  - {fileID: 8271189845202843688}
   m_Father: {fileID: 6870228419915894630}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4168202453299449252
@@ -99903,6 +99983,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.LuzNocturna
   luz: {fileID: 1373447622950473841}
   renderers: []
+--- !u!1 &4743713557671643176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8271189845202843688}
+  - component: {fileID: 1795915467008601319}
+  m_Layer: 0
+  m_Name: Clandestino_Salida
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8271189845202843688
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4743713557671643176}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 8.494999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5443844883103596454}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1795915467008601319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4743713557671643176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48dd7b3dc8af8f94d8bcf0dd76c6dfb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoAparicion
+  id: Clandestino_Salida
+  modo: 0
 --- !u!1 &4743983213330608093
 GameObject:
   m_ObjectHideFlags: 0
@@ -120103,6 +120229,52 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5737142920707334139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7907472979135659284}
+  - component: {fileID: 6101071085766721850}
+  m_Layer: 0
+  m_Name: Prologo_Esquina_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7907472979135659284
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5737142920707334139}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: -47, y: 0.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 66533936631447277}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6101071085766721850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5737142920707334139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3c56466abcde448ab2028f4ffbb966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoHistoriaMundo
+  id: Prologo_Esquina_1
+  objetoDelPlano: {fileID: 0}
 --- !u!1 &5740999593108103165
 GameObject:
   m_ObjectHideFlags: 0
@@ -135012,39 +135184,6 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1 &6492824623917169428
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3655420420790477519}
-  m_Layer: 0
-  m_Name: PuntosHistoria
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3655420420790477519
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6492824623917169428}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4562853012253111580}
-  - {fileID: 3436313245825920155}
-  m_Father: {fileID: 6870228419915894630}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6494177362343956441
 GameObject:
   m_ObjectHideFlags: 0
@@ -135866,52 +136005,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &6552329647582564977
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5763404844067848311}
-  - component: {fileID: 6180852140842673237}
-  m_Layer: 0
-  m_Name: Clandestino_Salida
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5763404844067848311
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6552329647582564977}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.2, z: 8.494999}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5443844883103596454}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6180852140842673237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6552329647582564977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48dd7b3dc8af8f94d8bcf0dd76c6dfb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoAparicion
-  id: Clandestino_Salida
-  modo: 0
 --- !u!1 &6562018493048910340
 GameObject:
   m_ObjectHideFlags: 0
@@ -151528,52 +151621,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &7374710426422206091
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4562853012253111580}
-  - component: {fileID: 1888449578467081385}
-  m_Layer: 0
-  m_Name: Prologo_Carro
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4562853012253111580
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7374710426422206091}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -7, y: 0.2, z: 4.494999}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3655420420790477519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1888449578467081385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7374710426422206091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb3c56466abcde448ab2028f4ffbb966, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoHistoriaMundo
-  id: Prologo_Carro
-  objetoDelPlano: {fileID: 0}
 --- !u!1 &7381062287140166161
 GameObject:
   m_ObjectHideFlags: 0
@@ -158045,6 +158092,52 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7699118141857761978
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 525000911511760334}
+  - component: {fileID: 686635975287068440}
+  m_Layer: 0
+  m_Name: Prologo_Esquina_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &525000911511760334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7699118141857761978}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -47, y: 0.2, z: -77}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 66533936631447277}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &686635975287068440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7699118141857761978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3c56466abcde448ab2028f4ffbb966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoHistoriaMundo
+  id: Prologo_Esquina_2
+  objetoDelPlano: {fileID: 0}
 --- !u!1 &7725667835686782879
 GameObject:
   m_ObjectHideFlags: 0
@@ -168893,52 +168986,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &8393909405484668906
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4439121807751742585}
-  - component: {fileID: 6636758078487300641}
-  m_Layer: 0
-  m_Name: Casa_Cama
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4439121807751742585
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8393909405484668906}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: -0.7071069}
-  m_LocalPosition: {x: -65.3, y: 0.22, z: -82.4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5443844883103596454}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6636758078487300641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8393909405484668906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48dd7b3dc8af8f94d8bcf0dd76c6dfb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoAparicion
-  id: Casa_Cama
-  modo: 0
 --- !u!1 &8395638799066191790
 GameObject:
   m_ObjectHideFlags: 0
@@ -175210,52 +175257,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &8622416399358292980
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3436313245825920155}
-  - component: {fileID: 7108004455506850967}
-  m_Layer: 0
-  m_Name: Prologo_Esquina_1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3436313245825920155
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8622416399358292980}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -47, y: 0.2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3655420420790477519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7108004455506850967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8622416399358292980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb3c56466abcde448ab2028f4ffbb966, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoHistoriaMundo
-  id: Prologo_Esquina_1
-  objetoDelPlano: {fileID: 0}
 --- !u!1 &8623306116663760316
 GameObject:
   m_ObjectHideFlags: 0
@@ -180504,6 +180505,52 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8869956487696589771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6187439264274855162}
+  - component: {fileID: 4655431752494204064}
+  m_Layer: 0
+  m_Name: Prologo_Carro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6187439264274855162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8869956487696589771}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -7, y: 0.2, z: 4.494999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 66533936631447277}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4655431752494204064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8869956487696589771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3c56466abcde448ab2028f4ffbb966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuntoHistoriaMundo
+  id: Prologo_Carro
+  objetoDelPlano: {fileID: 0}
 --- !u!1 &8874199548290035463
 GameObject:
   m_ObjectHideFlags: 0
@@ -192131,84 +192178,6 @@ MeshRenderer:
 Transform:
   m_CorrespondingSourceObject: {fileID: 3768149937200174782, guid: 3fb060d86d8f68f4780324e2c60a47cb, type: 3}
   m_PrefabInstance: {fileID: 995939033160338636}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1034433418359159494
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 5011334754151461674}
-    m_Modifications:
-    - target: {fileID: 21364265176564850, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1196485066954948350, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1723499045456783777, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_Name
-      value: CamaJugador
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 5.4000025
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.019999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.3000026
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.000000119209275
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6284890277554388876, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6669757408311663224, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
---- !u!4 &4906477696345964228 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
-  m_PrefabInstance: {fileID: 1034433418359159494}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1061445467822189380
 PrefabInstance:
@@ -220219,6 +220188,84 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1014515019596729143, guid: 60c569cd093370f43b7cacee38a867a2, type: 3}
   m_PrefabInstance: {fileID: 7476096712049778039}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7524432058477385386
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6339838425372243824}
+    m_Modifications:
+    - target: {fileID: 21364265176564850, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1196485066954948350, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1723499045456783777, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_Name
+      value: CamaJugador
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.4000025
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.019999996
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.3000026
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.000000119209275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6284890277554388876, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6669757408311663224, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+--- !u!4 &2459075183661535912 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5353729710738424834, guid: 7a7aa77de26c8e346a835a83a83e9de0, type: 3}
+  m_PrefabInstance: {fileID: 7524432058477385386}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7534879131628843121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -220689,6 +220736,76 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1014515019596729143, guid: 60c569cd093370f43b7cacee38a867a2, type: 3}
   m_PrefabInstance: {fileID: 7631615073853965058}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7632420347229640606
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6339838425372243824}
+    m_Modifications:
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.8000038
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.019999996
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.5599976
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.000000119209275
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2622121186888170507, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_Name
+      value: EspejoJugador
+      objectReference: {fileID: 0}
+    - target: {fileID: 6348496584528647150, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908646148264199385, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+--- !u!4 &7409422567195901652 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
+  m_PrefabInstance: {fileID: 7632420347229640606}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7647923267370840638
 PrefabInstance:
@@ -223947,76 +224064,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0ef1bcb5b9505ff439d76b74d4e29d22, type: 3}
   m_PrefabInstance: {fileID: 8325089590286838469}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &8332114314500888420
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 5011334754151461674}
-    m_Modifications:
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.8000038
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.019999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -4.5599976
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.000000119209275
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2622121186888170507, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_Name
-      value: EspejoJugador
-      objectReference: {fileID: 0}
-    - target: {fileID: 6348496584528647150, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6908646148264199385, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
---- !u!4 &8978452100961451566 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1096700517883537738, guid: 1051b80c70e11244c8854018ee5e3b1f, type: 3}
-  m_PrefabInstance: {fileID: 8332114314500888420}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8340519296757796387
 PrefabInstance:

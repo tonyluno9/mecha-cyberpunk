@@ -1,27 +1,22 @@
 # Estado de Alan (modo automático)
 
-Fase A-F2 (Carro, docs/hoja-de-ruta.md), rama de integración: alan/fase-2 (sale de alan/fase-1).
-A-F1 y A-F2 (T-074 a T-083) están en main (6be7940; EditMode 476/476, PlayMode 447/447). T-084 y T-085 siguen pendientes.
-A-F3 y A-F4 en alan/fase-3 (sin mezclar a main, incompletas): hechas y verificadas T-086 a T-090 (A-F3) y T-094 a T-099 (A-F4: exteriores cerrados, grafitis, lluvia y niebla, audio, calles y finales, iluminación; PlayMode 487/487). Pendientes: T-084 y T-085 (A-F2, denegadas por el modo Auto), bloqueadas por Tony: T-092 y T-093.
+Actualizado: 2026-10-27. Ramas: alan/fase-5 (integración actual, sale de main) y alan/T-093-recorrido-prologo.
+
+**En main (5c6e986):** A-F1 a A-F4 completas, es decir T-020 a T-099 salvo T-084 y T-085 (A-F2, denegadas por el modo Auto: no se intentan por otra vía),
+y T-092. Lo de Tony que Alan esperaba (T-F4, T-F5, T-F6, prefabs del prólogo) también está en main.
+
+**T-093 hecha** (2026-10-27, en alan/T-093-recorrido-prologo y alan/fase-5, todavía no en main): `Ciudad_Prologo.unity` con el prólogo de Tony colocado,
+`Prologo_Esquina_2`, `Flashback_Plano_1` a `_6` y `Flashback.prefab` en `Flashback.unity`, y `RecorridoPrologoCiudadPruebas` (3 pruebas con entrada simulada).
+Verificado: compilar OK, EditMode 914/914, PlayMode 889/898 (0 fallos; las 9 omitidas son capturas de Tony que se activan con variable de entorno).
+Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Demo` a `Ciudad_Prologo.unity`). Ver docs/revision-alan.md, sección T-093.
 
 | Tarea | Estado |
 | --- | --- |
-| T-074 Carro viejo: física y manejo | hecha (sin revisar) |
-| T-075 Subir y bajar del carro, y sus cámaras | hecha (sin revisar) |
-| T-076 Arte de Blender a Unity: FBX, materiales y prefabs | hecha (sin revisar) |
-| T-077 Finales sólidos y retenes | hecha (sin revisar) |
-| T-078 El carro en el barrio, cierre de H3 | hecha (sin revisar) |
-| T-079 Noche cyberpunk: posproceso y asfalto mojado | hecha (sin revisar) |
-| T-080 La calle vestida con el kit urbano | hecha (sin revisar) |
-| T-081 Fachadas con detalle | hecha (sin revisar) |
-| T-082 Letreros de neón | hecha (sin revisar) |
-| T-083 El bar con los props de Blender y mejor luz | hecha (sin revisar) |
-| T-084 Tráfico mínimo de fachada | pendiente (depende de T-077 y T-078) |
-| T-085 Modelo del carro viejo | pendiente (depende de T-075 y T-076) |
-| T-060, T-061 (de Tony) | bloqueadas: siguen esperando que A-F1 y A-F2 lleguen a main (D-alan-22) |
+| T-074 a T-083 (A-F2) | en main |
+| T-084 Tráfico mínimo de fachada, T-085 Modelo del carro viejo | pendientes: el modo Auto las denegó; no se hacen |
+| T-086 a T-092, T-094 a T-099 (A-F3 y A-F4) | en main |
+| T-093 Recorrido del prólogo | hecha, falta mezclar a main (aprobación de Alan) |
+| T-136 (de Tony) | bloqueada solo por el cambio de datos de escena de Tony |
+| T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
-Orden: T-074, T-075, T-076, T-077, T-078, T-079, T-080, T-081, T-082, T-083, T-084, T-085, una tras otra (D-alan-21).
-Las fuentes de Blender están en Assets/Arte/Fuentes~/ (D-alan-18).
-Qué sigue: crear alan/fase-2 desde alan/planificacion-fase-2 (ya contiene alan/fase-1 y estas tareas; main todavía no tiene A-F1)
-y empezar con T-074. Ojo: docs/estado.md todavía dice A-F1 para Alan y la skill trabajar crea `<persona>/fase-N` desde main;
-hasta que A-F1 se apruebe, la fase de Alan es A-F2 y su rama alan/fase-2 sale de esta rama, no de main.
+Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
