@@ -32,6 +32,11 @@ namespace MechaCyberpunk.UI.Editor
         private const float AnchoAvisoLiga = 1200f;
         private const float AltoAvisoLiga = 130f;
         private const float SeparacionMarcasCalor = 6f;
+        private const float AlturaAvisoReputacion = 340f;
+        private const float AnchoAvisoReputacion = 1200f;
+        private const float AltoAvisoReputacion = 90f;
+        private const float AlturaAvisoMision = 450f;
+        private const float AltoAvisoMision = 56f;
         private static readonly Color ColorSombra = new Color(0f, 0f, 0f, 0.8f);
         private static readonly Vector2 DesplazamientoSombra = new Vector2(1.5f, -1.5f);
 
@@ -265,6 +270,39 @@ namespace MechaCyberpunk.UI.Editor
                     so.FindProperty("textoAvisoLiga2").objectReferenceValue = segunda;
                     so.ApplyModifiedPropertiesWithoutUndo();
                     grupoLiga.gameObject.SetActive(false);
+                }
+                if (so.FindProperty("grupoAvisoReputacion").objectReferenceValue == null)
+                {
+                    // T-186: aviso de reputación (dos líneas) y aviso de misión terminada, al centro arriba bajo el aviso de liga.
+                    RectTransform grupoReputacion = CrearGrupo("AvisoReputacion", raiz.transform, new Vector2(0.5f, 1f),
+                        new Vector2(0f, -AlturaAvisoReputacion), new Vector2(AnchoAvisoReputacion, AltoAvisoReputacion));
+                    Text primeraRep = CrearTexto("Primera", grupoReputacion, config, TextAnchor.UpperCenter);
+                    primeraRep.rectTransform.anchorMin = new Vector2(0f, 0.5f);
+                    primeraRep.rectTransform.anchorMax = Vector2.one;
+                    primeraRep.rectTransform.offsetMin = Vector2.zero;
+                    primeraRep.rectTransform.offsetMax = Vector2.zero;
+                    primeraRep.fontSize = config.TamanoAvisoReputacion;
+                    primeraRep.color = config.ColorAvisoReputacion;
+                    Text segundaRep = CrearTexto("Segunda", grupoReputacion, config, TextAnchor.UpperCenter);
+                    segundaRep.rectTransform.anchorMin = Vector2.zero;
+                    segundaRep.rectTransform.anchorMax = new Vector2(1f, 0.5f);
+                    segundaRep.rectTransform.offsetMin = Vector2.zero;
+                    segundaRep.rectTransform.offsetMax = Vector2.zero;
+                    segundaRep.fontSize = config.TamanoAvisoReputacion2;
+                    segundaRep.color = config.ColorAvisoReputacion;
+                    RectTransform grupoMision = CrearGrupo("AvisoMision", raiz.transform, new Vector2(0.5f, 1f),
+                        new Vector2(0f, -AlturaAvisoMision), new Vector2(AnchoAvisoReputacion, AltoAvisoMision));
+                    Text textoMision = CrearTexto("Texto", grupoMision, config, TextAnchor.UpperCenter);
+                    Stretch(textoMision.rectTransform);
+                    textoMision.fontSize = config.TamanoAvisoMision;
+                    so.FindProperty("grupoAvisoReputacion").objectReferenceValue = grupoReputacion.gameObject;
+                    so.FindProperty("textoAvisoReputacion").objectReferenceValue = primeraRep;
+                    so.FindProperty("textoAvisoReputacion2").objectReferenceValue = segundaRep;
+                    so.FindProperty("grupoAvisoMision").objectReferenceValue = grupoMision.gameObject;
+                    so.FindProperty("textoAvisoMision").objectReferenceValue = textoMision;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    grupoReputacion.gameObject.SetActive(false);
+                    grupoMision.gameObject.SetActive(false);
                 }
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }

@@ -27,6 +27,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaMecha = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
         private const string RutaPeleasDeMision = "Assets/_Proyecto/Pelea/Prefabs/PeleasDeMision.prefab";
         private const string RutaMostradorTienda = "Assets/_Proyecto/UI/Prefabs/MostradorMercadoNegro.prefab";
+        private const string RutaContactoBar = "Assets/_Proyecto/UI/Prefabs/ContactoBar.prefab";
         private const string RutaBrazo = "Assets/_Proyecto/Economia/Datos/DatosObjeto_BrazoChatarra.asset";
         private const string RutaKit = "Assets/_Proyecto/Economia/Datos/DatosObjeto_KitReparacion.asset";
         private const string RutaMateriales = "Assets/_Proyecto/Progresion/Prologo/Materiales/";
@@ -93,6 +94,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         // La casa queda a 25 m o más de cualquier botín (T-185): el robo no se cumple por pasar cerca de ella.
         public static readonly Vector3 PosicionCasa = new Vector3(-7.5f, 0f, -22.5f);
         public static readonly Vector3 PosicionBar = new Vector3(-22.5f, 0f, -22.5f);
+        // El contacto del bar (T-186) está dentro del bar, a la derecha de la entrada.
+        public static readonly Vector3 PosicionContacto = new Vector3(-20.5f, 0f, -21.5f);
         public static readonly Vector3 PosicionMercado = new Vector3(7.5f, 0f, -22.5f);
         public static readonly Vector3 PosicionLlamadoCalle = new Vector3(0f, 0f, 14f);
         public static readonly Vector3 PosicionMuroReputacion = new Vector3(44f, 0f, 0f);
@@ -307,6 +310,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             CreadorEscenaPrologo.ArmarLugar("Lugar Bar", IdLugar.Bar, "Bar", PosicionBar, new Vector3(8f, 3f, 6f), PosicionBar + new Vector3(0f, 0f, 3f));
             CreadorEscenaPrologo.Caja("Bar suelo", new Vector3(PosicionBar.x, 0.03f, PosicionBar.z), new Vector3(7f, 0.02f, 5f), matBar, false);
             Letrero("Letrero BAR", "BAR", PosicionBar + new Vector3(0f, 0f, 3.5f));
+            GameObject contacto = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaContactoBar));
+            contacto.transform.position = PosicionContacto;
 
             CreadorEscenaPrologo.Vacio("Sitio_Mercado", PosicionMercado);
             CreadorEscenaPrologo.ArmarLugar("Lugar MercadoNegro", IdLugar.MercadoNegro, "Mercado negro", PosicionMercado, new Vector3(8f, 3f, 6f), PosicionMercado + new Vector3(0f, 0f, 3f));

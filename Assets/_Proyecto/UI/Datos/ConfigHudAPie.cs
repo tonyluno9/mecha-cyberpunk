@@ -161,6 +161,66 @@ namespace MechaCyberpunk.UI
         [Tooltip("Lo que se agrega al texto de la pistola cuando no le quedan balas.")]
         [SerializeField] private string textoPistolaSinBalas = " · R";
 
+        [Header("Reputación y misiones (T-186)")]
+        [Tooltip("Cuánto dura el aviso de un cambio de reputación (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosAvisoReputacion = 3f;
+
+        [Tooltip("Parte del aviso del barrio; {0} es el cambio con signo.")]
+        [SerializeField] private string textoReputacionBarrio = "BARRIO {0}";
+
+        [Tooltip("Parte del aviso de las corporaciones; {0} es el cambio con signo.")]
+        [SerializeField] private string textoReputacionCorporaciones = "CORPORACIONES {0}";
+
+        [Tooltip("Lo que une las partes de un aviso.")]
+        [SerializeField] private string separadorAviso = " · ";
+
+        [Tooltip("Segunda línea al cambiar de nivel en el barrio; {0} es el nombre del nivel nuevo.")]
+        [SerializeField] private string textoNivelBarrio = "AHORA ERES {0} EN EL BARRIO";
+
+        [Tooltip("Segunda línea al cambiar de nivel con las corporaciones; {0} es el nombre del nivel nuevo.")]
+        [SerializeField] private string textoNivelCorporaciones = "AHORA ERES {0} CON LAS CORPORACIONES";
+
+        [Tooltip("Color del aviso de reputación (amarillo).")]
+        [SerializeField] private Color colorAvisoReputacion = new Color(1f, 0.85f, 0.2f, 1f);
+
+        [Tooltip("Tamaño de la letra de la primera línea del aviso de reputación.")]
+        [Min(8)] [SerializeField] private int tamanoAvisoReputacion = 34;
+
+        [Tooltip("Tamaño de la letra de la segunda línea del aviso de reputación.")]
+        [Min(8)] [SerializeField] private int tamanoAvisoReputacion2 = 26;
+
+        [Tooltip("Cuánto dura el aviso de misión terminada (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosAvisoMision = 4f;
+
+        [Tooltip("Aviso al cumplir una misión; después van el pago y la recompensa.")]
+        [SerializeField] private string textoMisionCumplida = "MISIÓN CUMPLIDA";
+
+        [Tooltip("Aviso al fallar o abandonar una misión.")]
+        [SerializeField] private string textoMisionFallida = "MISIÓN FALLIDA";
+
+        [Tooltip("Tamaño de la letra del aviso de misión terminada.")]
+        [Min(8)] [SerializeField] private int tamanoAvisoMision = 40;
+
+        [Tooltip("Nombre del motivo de dinero Mision en el aviso de dinero.")]
+        [SerializeField] private string nombreMotivoMision = "MISIÓN";
+
+        [Tooltip("Lo que sigue a la cantidad de chatarra de una misión cumplida; {0} es la cantidad y {1} el nombre del objeto.")]
+        [SerializeField] private string textoChatarraMision = "+{0} {1}";
+
+        public float SegundosAvisoReputacion => segundosAvisoReputacion;
+        public string TextoReputacionBarrio => textoReputacionBarrio;
+        public string TextoReputacionCorporaciones => textoReputacionCorporaciones;
+        public string SeparadorAviso => separadorAviso;
+        public string TextoNivelBarrio => textoNivelBarrio;
+        public string TextoNivelCorporaciones => textoNivelCorporaciones;
+        public Color ColorAvisoReputacion => colorAvisoReputacion;
+        public int TamanoAvisoReputacion => tamanoAvisoReputacion;
+        public int TamanoAvisoReputacion2 => tamanoAvisoReputacion2;
+        public float SegundosAvisoMision => segundosAvisoMision;
+        public string TextoMisionCumplida => textoMisionCumplida;
+        public string TextoMisionFallida => textoMisionFallida;
+        public int TamanoAvisoMision => tamanoAvisoMision;
+        public string TextoChatarraMision => textoChatarraMision;
         public float SegundosAvisoLiga => segundosAvisoLiga;
         public string TextoCampeonLiga => textoCampeonLiga;
         public string TextoSeAbreLiga => textoSeAbreLiga;
@@ -175,6 +235,10 @@ namespace MechaCyberpunk.UI
         /// <summary>Nombre del motivo en el aviso; si la lista no lo trae, el nombre del enum en mayúsculas.</summary>
         public string NombreMotivo(MotivoDinero motivo)
         {
+            if (motivo == MotivoDinero.Mision)
+            {
+                return nombreMotivoMision;
+            }
             int indice = (int)motivo;
             if (nombresMotivo != null && indice >= 0 && indice < nombresMotivo.Length && !string.IsNullOrEmpty(nombresMotivo[indice]))
             {
