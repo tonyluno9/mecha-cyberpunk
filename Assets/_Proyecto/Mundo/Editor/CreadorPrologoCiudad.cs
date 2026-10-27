@@ -42,11 +42,13 @@ namespace MechaCyberpunk.Mundo.Editor
         [MenuItem("Mecha Cyberpunk/Crear T-093")]
         public static void Crear()
         {
+            // Si la escena ya existe se sobrescribe el archivo y se conserva su .meta: así el GUID no cambia cada vez que se rehace.
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(RutaEscena) != null)
             {
-                AssetDatabase.DeleteAsset(RutaEscena);
+                System.IO.File.Copy(RutaOrigen, RutaEscena, true);
+                AssetDatabase.ImportAsset(RutaEscena, ImportAssetOptions.ForceUpdate);
             }
-            if (!AssetDatabase.CopyAsset(RutaOrigen, RutaEscena))
+            else if (!AssetDatabase.CopyAsset(RutaOrigen, RutaEscena))
             {
                 throw new System.InvalidOperationException("No pude copiar " + RutaOrigen + " a " + RutaEscena);
             }
