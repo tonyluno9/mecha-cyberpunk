@@ -17,7 +17,8 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-086 a T-092, T-094 a T-099 (A-F3 y A-F4) | en main |
 | T-093 Recorrido del prólogo | hecha, falta mezclar a main (aprobación de Alan) |
 | T-300, T-330, T-340 (lógica pura de casino, peatones y persecución) | hechas, en alan/fase-5 |
-| T-301, T-302, T-303, T-320, T-321, T-331, T-341 | pendientes (T-321 espera el mostrador de la clínica de Tony) |
+| T-301 Tragamonedas jugable | hecha (2026-10-27), en alan/fase-5; Casino PlayMode 9/9, suite completa 898/907 sin fallos antes del ajuste visual final |
+| T-302, T-303, T-320, T-321, T-331, T-341 | pendientes (T-321 espera el mostrador de la clínica de Tony) |
 | T-136 (de Tony) | bloqueada solo por el cambio de datos de escena de Tony |
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
