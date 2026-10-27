@@ -800,3 +800,4 @@ levantarte y 6 horas dormido te parece un castigo justo? (c) ¿Quieres los pandi
 (f) ¿El ojo cosmético de la creación debería contar como OJOS instalados, o se quedan separados como ahora?
 
 - D-tony-175: T-190 prueba "sin nada registrado" leyendo Registro<IImplantes>.Actual directo (sin TearDown de registro); la guía de Alan se agrega al final de docs/revision-tony.md como sección nueva "Para Alan (T-190)".
+- D-tony-176: T-191 el método de lectura del implante instalado se llama `ImplanteInstalado(espacio)` (no `Instalado`) porque choca con el evento `IImplantes.Instalado`; `Instalar` permite saltar al nivel 2 sin el 1 (paga el precio completo), la liga se revisa antes que el dinero; la regla h (doctor) no se prueba aún y espera a T-196; la vida del pandillero en el balance es la constante provisional 60 de D-tony-169.
