@@ -60,6 +60,14 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float LargoMinimoCharco = 1.5f;
         private const float LargoMaximoCharco = 4f;
         private const float GradosPorVuelta = 360f;
+        private const int CharcosCunetaPrincipal = 16;
+        private const int CharcosCunetaCruce = 8;
+        private const float PosicionCuneta = 5.9f;      // m desde el eje de la calle: pegado a la banqueta
+        private const float DespejeCunetaCruce = 14f;   // m: fuera de los pasos de cebra (y del largo del charco)
+        private const float LargoMinimoCuneta = 4f;
+        private const float LargoMaximoCuneta = 9f;
+        private const float AnchoMinimoCuneta = 0.8f;
+        private const float AnchoMaximoCuneta = 1.4f;
 
         // Sondas de reflejo (m).
         private const string NombreSondas = "Sondas";
@@ -98,6 +106,7 @@ namespace MechaCyberpunk.Mundo.Editor
             PrenderPosproceso(RutaPrefabCamaraLibre);
             PrenderPosproceso(RutaPrefabCarro);
             PonerCharcos(charco);
+            VestirAsfalto.Aplicar(); // T-312: textura del asfalto, charcos suaves y líneas de borde
             AssetDatabase.Refresh();
 
             foreach (string ruta in RutasEscenas)
@@ -312,8 +321,38 @@ namespace MechaCyberpunk.Mundo.Editor
                     Charco(grupo, material, azar, ref numero, signo * CentroCalleCruce + Rango(azar, -ZonaCruce, ZonaCruce), Rango(azar, -MitadCalle, MitadCalle));
                 }
             }
+            CharcosDeCuneta(grupo, material, azar, ref numero);
             PrefabUtility.SaveAsPrefabAsset(barrio, RutaPrefabBarrio);
             PrefabUtility.UnloadPrefabContents(barrio);
+        }
+
+        // T-312: charcos largos y estrechos pegados a la banqueta, donde el agua corre y se junta; reflejan los letreros de las fachadas.
+        private static void CharcosDeCuneta(Transform grupo, Material material, System.Random azar, ref int numero)
+        {
+            for (int i = 0; i < CharcosCunetaPrincipal; i++)
+            {
+                float x = Rango(azar, -MitadLargoBarrioX, MitadLargoBarrioX);
+                if (Mathf.Abs(Mathf.Abs(x) - CentroCalleCruce) < DespejeCunetaCruce)
+                {
+                    x += Mathf.Sign(x) * DespejeCunetaCruce * 2f;
+                }
+                CharcoCuneta(grupo, material, azar, ref numero, x, (i % 2 == 0 ? 1f : -1f) * PosicionCuneta, 0f);
+            }
+            for (int i = 0; i < CharcosCunetaCruce; i++)
+            {
+                float signoCalle = i % 2 == 0 ? 1f : -1f;
+                float z = Rango(azar, ZonaCruce + DespejeCunetaCruce, MitadLargoBarrioZ) * (azar.NextDouble() < 0.5 ? -1f : 1f);
+                CharcoCuneta(grupo, material, azar, ref numero, signoCalle * CentroCalleCruce + (azar.NextDouble() < 0.5 ? -1f : 1f) * PosicionCuneta, z, 90f);
+            }
+        }
+
+        private static void CharcoCuneta(Transform padre, Material material, System.Random azar, ref int numero, float x, float z, float giro)
+        {
+            Charco(padre, material, azar, ref numero, x, z);
+            Transform charco = padre.GetChild(padre.childCount - 1);
+            charco.localRotation = Quaternion.Euler(90f, giro, 0f);
+            charco.localScale = new Vector3(Rango(azar, LargoMinimoCuneta, LargoMaximoCuneta), Rango(azar, AnchoMinimoCuneta, AnchoMaximoCuneta), 1f);
+            charco.name = "Cuneta_" + numero;
         }
 
         private static float Rango(System.Random azar, float minimo, float maximo)
