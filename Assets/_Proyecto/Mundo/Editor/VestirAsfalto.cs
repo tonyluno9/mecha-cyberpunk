@@ -48,9 +48,9 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float TintaRoja = 0.94f;
         private const float TintaVerde = 0.98f;
         private const float TintaAzul = 1.1f;
-        internal const float BrilloBase = 0.8f;
-        internal const float BrilloMinimo = 0.45f;
-        private const float AmplitudBrillo = 0.3f;
+        internal const float BrilloBase = 0.86f;
+        internal const float BrilloMinimo = 0.5f;
+        private const float AmplitudBrillo = 0.28f;
         private const float BrilloParche = 0.15f;
 
         // Charco: elipse irregular de borde suave. El alfa llega a 1 en el centro.
@@ -106,6 +106,7 @@ namespace MechaCyberpunk.Mundo.Editor
             material.SetTextureScale("_BaseMap", new Vector2(
                 (2f * CreadorBarrio.MitadBarrioX + MargenAsfalto) / MetrosPorRepeticion,
                 (2f * CreadorBarrio.MitadBarrioZ + MargenAsfalto) / MetrosPorRepeticion));
+            material.SetFloat("_Smoothness", 1f); // el alfa de la textura ya trae el brillo (0.5 a 1); CreadorBarrio lo había puesto en 0.85
             material.SetFloat("_SmoothnessTextureChannel", 1f);
             material.EnableKeyword("_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A");
             EditorUtility.SetDirty(material);

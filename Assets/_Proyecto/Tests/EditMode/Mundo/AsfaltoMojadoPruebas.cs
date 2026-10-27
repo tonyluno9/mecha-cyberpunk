@@ -22,7 +22,7 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float DesviacionTonalMinima = 0.05f;
         private const float DesviacionBrilloMinima = 0.05f;
         private const float BrilloMedioMinimo = 0.6f;
-        private const float BrilloPiso = 0.4f;
+        private const float BrilloPiso = 0.45f;
         private const float AlbedoEfectivoMaximo = 0.06f;
         private const float ToleranciaCostura = 1.5f;
         private const float HolguraCostura = 0.01f;
