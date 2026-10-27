@@ -14,10 +14,10 @@ El casino juega con fichas: la cajera cambia dinero por fichas y fichas por dine
 Assets/_Proyecto/Casino/, Tests de Casino, docs/capturas/. No tocar Core/ ni carpetas de Tony.
 
 ## Criterios de aceptación
-- [ ] El saldo de fichas nunca es negativo; guardar y cargar lo conserva y un texto inválido avisa sin cambiar nada
-- [ ] Cambiar y cobrar conserva el valor (tipo de cambio en los datos) sin crear ni perder dinero
-- [ ] La tragamonedas no gira sin fichas
-- [ ] `bash herramientas/verificar.sh todo` pasa
+- [x] El saldo de fichas nunca es negativo; guardar y cargar lo conserva y un texto inválido avisa sin cambiar nada
+- [x] Cambiar y cobrar conserva el valor (tipo de cambio en los datos) sin crear ni perder dinero
+- [x] La tragamonedas no gira sin fichas
+- [x] `bash herramientas/verificar.sh todo` pasa
 
 ## Fuera de alcance
 Apuestas a peleas en el casino (necesitan el prefab de Tony de `IApuestasPelea`).
