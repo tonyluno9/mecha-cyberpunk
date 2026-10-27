@@ -1,6 +1,6 @@
 # T-311 Fachadas y entradas con neón
 Dueño: Alan | Rama: alan/T-311-fachadas-neon (base alan/fase-5) | Modelo: Sonnet 5.5, medium
-Estado: **verificada por partes; falta una corrida completa limpia de `verificar.sh todo`** (ver Evidencia). Se queda en en-curso hasta eso.
+Estado: **hecha y verificada** (corrida completa limpia de `verificar.sh todo`, 2026-10-27).
 
 ## Objetivo
 Que la entrada de cada destino se reconozca desde la calle de día y de noche (auditoría visual: puertas "rectángulo negro", muros lisos), con geometría low-poly y neón acorde a docs/diseno/estetica-hud.md. No cambia la lógica de acceso.
@@ -15,12 +15,12 @@ Que la entrada de cada destino se reconozca desde la calle de día y de noche (a
 - `Tests/PlayMode/Mundo/EntradasNeonPruebas.cs`.
 
 ## Criterios de aceptación
-- [ ] Entrada reconocible en capturas de día y de noche de los 4 destinos: docs/capturas/T-311-<Lugar>-dia|noche.png, revisadas
-- [ ] Nada sobre la `Entrada` ni la puerta; sin colliders nuevos; nada sobresale más de 0.9 m de la fachada (prueba)
-- [ ] Casino y mercado siguen cerrados a cualquier hora (prueba)
-- [ ] Coste: ≤ 2 luces nuevas en total, sin sombras; ≤ 6 materiales distintos (prueba)
-- [ ] `CreadorTodo.Crear` repetido deja el prefab igual
-- [ ] `bash herramientas/verificar.sh todo` pasa
+- [x] Entrada reconocible en capturas de día y de noche de los 4 destinos: docs/capturas/T-311-<Lugar>-dia|noche.png, revisadas
+- [x] Nada sobre la `Entrada` ni la puerta; sin colliders nuevos; nada sobresale más de 0.9 m de la fachada (prueba)
+- [x] Casino y mercado siguen cerrados a cualquier hora (prueba)
+- [x] Coste: ≤ 2 luces nuevas en total, sin sombras; ≤ 6 materiales distintos (prueba)
+- [x] `CreadorTodo.Crear` repetido deja el prefab igual
+- [x] `bash herramientas/verificar.sh todo` pasa
 
 ## Evidencia (Unity 6000.3.25f1, 2026-10-27)
 - Merge de origin/alan/fase-5 (T-093, T-310, T-301, T-302) sin conflictos.
@@ -36,3 +36,9 @@ Que la entrada de cada destino se reconozca desde la calle de día y de noche (a
 ## Límites
 - T-303 (interior del casino, pendiente) vuelve el casino abierto de noche: entonces su neón (hoy tenue y sin luz) deberá subirse; no se tocó aquí.
 - Bar, Taller y fachadas del prólogo no se vistieron.
+
+## Corrida completa final (commit 488eeba, 2026-10-27)
+- `bash herramientas/verificar.sh todo`: compilar OK; EditMode 952/952 (0 fallos); PlayMode 922 casos: 913 pasan, 0 fallan, 9 omitidas por `[Ignore]` (capturas de T-134, T-148, T-149, T-170, T-169 y T-177, no de T-311). Sin corridas Unity sobre este worktree durante la prueba.
+- Los dos fallos de la corrida anterior ya no aparecen (el del prólogo no se reprodujo).
+- Capturas de T-311 revisadas de nuevo (8): entrada reconocible de día y de noche en los 4 destinos.
+- La corrida regeneró capturas viejas, `Vidrio_Interior.mat`, `Flashback_Ventana.mat` y `ProjectSettings.asset`; no se commitearon.
