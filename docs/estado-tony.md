@@ -10,7 +10,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 | T-190 Contratos de los implantes (Core; autorizada por Tony en el /goal) | nada | hecha |
 | T-191 Implantes como datos: tabla, servicio, guardado y balance | T-190 | hecha |
 | T-192 Brazos y piernas a pie; los implantes se ven en el cuerpo | T-190, T-191 | hecha |
-| T-193 La clínica y Pruebas_Implantes | T-191, T-192 | pendiente |
+| T-193 La clínica y Pruebas_Implantes | T-191, T-192 | hecha |
 | T-194 Ojos y sistema nervioso en el mecha | T-191, T-193 | pendiente |
 | T-195 Pandilleros a pie | T-192 a T-194 | pendiente |
 | T-196 Caer en la calle: el doctor | T-193, T-195 | pendiente |
@@ -25,4 +25,4 @@ Build provisional con escenas de Tony: docs/guia-para-jugar.md.
 2. Bloque 8: adaptación del rival
 
 ## Turno de noche 2026-10-27
-Bloque 5 en main. T-190 (afddc82) y T-191 (846d207), T-192 (b7ef833) hechas. Siguiente: T-193. Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
+Bloque 5 en main. T-190 (afddc82) y T-191 (846d207), T-192 (b7ef833), T-193 (bdc75f3) hechas. Siguiente: T-194. Conocido T-193: el horario de la clínica no sigue al reloj (va a T-196). Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
