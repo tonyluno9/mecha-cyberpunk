@@ -12,5 +12,5 @@ Reglas puras de cuántos perseguidores hay por nivel de calor y cómo se acercan
 Assets/_Proyecto/Trafico/, Assets/_Proyecto/Tests/EditMode/Trafico/. No tocar Core/ ni carpetas de Tony.
 
 ## Criterios de aceptación
-- [ ] Cantidades por nivel como arriba; un nivel fuera de rango se recorta; sin números mágicos
-- [ ] `bash herramientas/verificar.sh todo` pasa
+- [x] Cantidades por nivel como arriba; un nivel fuera de rango se recorta; sin números mágicos
+- [x] `bash herramientas/verificar.sh todo` pasa
