@@ -12,8 +12,8 @@ Las reglas de cómo camina un peatón por una banqueta: avanzar por puntos, espe
 Assets/_Proyecto/Trafico/, Assets/_Proyecto/Tests/EditMode/Trafico/. No tocar Core/ ni carpetas de Tony.
 
 ## Criterios de aceptación
-- [ ] Llega al último punto en el tiempo esperado; espera en las esquinas; da la vuelta; con la misma semilla repite
-- [ ] Sin números mágicos; `bash herramientas/verificar.sh todo` pasa
+- [x] Llega al último punto en el tiempo esperado; espera en las esquinas; da la vuelta; con la misma semilla repite
+- [x] Sin números mágicos; `bash herramientas/verificar.sh todo` pasa
 
 ## Fuera de alcance
 Los peatones en la escena (T-331).
