@@ -25,6 +25,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaMecha = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
+        private const string RutaPeleasDeMision = "Assets/_Proyecto/Pelea/Prefabs/PeleasDeMision.prefab";
         private const string RutaMostradorTienda = "Assets/_Proyecto/UI/Prefabs/MostradorMercadoNegro.prefab";
         private const string RutaBrazo = "Assets/_Proyecto/Economia/Datos/DatosObjeto_BrazoChatarra.asset";
         private const string RutaKit = "Assets/_Proyecto/Economia/Datos/DatosObjeto_KitReparacion.asset";
@@ -89,9 +90,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
         public static readonly Vector3 PosicionInicio = new Vector3(0f, 0f, 0f);
         public static readonly Vector3 PosicionTaller = new Vector3(-37.5f, 0f, -22.5f);
-        public static readonly Vector3 PosicionCasa = new Vector3(-22.5f, 0f, -22.5f);
-        public static readonly Vector3 PosicionBar = new Vector3(-7.5f, 0f, -22.5f);
+        // La casa queda a 25 m o más de cualquier botín (T-185): el robo no se cumple por pasar cerca de ella.
+        public static readonly Vector3 PosicionCasa = new Vector3(-7.5f, 0f, -22.5f);
+        public static readonly Vector3 PosicionBar = new Vector3(-22.5f, 0f, -22.5f);
         public static readonly Vector3 PosicionMercado = new Vector3(7.5f, 0f, -22.5f);
+        public static readonly Vector3 PosicionLlamadoCalle = new Vector3(0f, 0f, 14f);
         public static readonly Vector3 PosicionMuroReputacion = new Vector3(44f, 0f, 0f);
 
         private static Material matPiso;
@@ -122,6 +125,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             ArmarTaller();
             ArmarLugares();
             ArmarMuroReputacion();
+            ArmarPeleas();
             ArmarJugadorYServicios();
 
             string firmaNueva = CreadorEscenaPrologo.Firma(escena);
@@ -286,6 +290,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             GameObject llamado = new GameObject("PuntoLlamado Taller");
             llamado.transform.SetPositionAndRotation(PosicionTaller + new Vector3(8f, 0f, 8f), Quaternion.Euler(0f, 90f, 0f));
             llamado.AddComponent<PuntoLlamadoDePrueba>().Configurar(40f, true);
+
+            // Otro punto de llamado en la calle norte-sur, cerca de los callejones (T-185): el mecha llega mirando al norte.
+            GameObject llamadoCalle = new GameObject("PuntoLlamado Calle");
+            llamadoCalle.transform.SetPositionAndRotation(PosicionLlamadoCalle, Quaternion.identity);
+            llamadoCalle.AddComponent<PuntoLlamadoDePrueba>().Configurar(40f, true);
         }
 
         private static void ArmarLugares()
@@ -321,6 +330,17 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             SerializedObject so = new SerializedObject(reaccion);
             so.FindProperty("letrero").objectReferenceValue = mesh;
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void ArmarPeleas()
+        {
+            // Las peleas de misión (T-185): levantan una emboscada en los puntos Pelea cuando el paso en curso es Pelear.
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPeleasDeMision);
+            if (prefab == null)
+            {
+                throw new System.InvalidOperationException("Falta PeleasDeMision.prefab; corre antes CreadorPeleasMision.Crear.");
+            }
+            PrefabUtility.InstantiatePrefab(prefab);
         }
 
         private static void ArmarJugadorYServicios()

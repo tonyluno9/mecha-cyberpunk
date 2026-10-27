@@ -16,6 +16,8 @@ namespace MechaCyberpunk.Progresion
         public const string Clave = "misiones";
         private const string PrefijoRecoger = "RECOGER: ";
         private const string PrefijoEntregar = "ENTREGAR: ";
+        /// <summary>Lo que dice el objetivo del paso Escapar.</summary>
+        public const string TextoEscapar = "PIERDE EL CALOR: escóndete o llega a casa";
         private const string AvisoFavorLleno = "Favor perdido: el bolsillo estaba lleno.";
 
         [Tooltip("Lista de todas las misiones.")]
@@ -70,6 +72,7 @@ namespace MechaCyberpunk.Progresion
         private IPuntoMision puntoActual;
         private InteractuablePaso interactuable;
         private bool suscrito;
+        private bool llegoACasa;
         private Action<TipoMision, bool> terminadaContrato;
         private ResumenMision ultimoResumen;
 
@@ -128,6 +131,7 @@ namespace MechaCyberpunk.Progresion
             maquina.PasoCambio += AlCambiarPaso;
             maquina.Terminada += AlTerminar;
             suscrito = true;
+            EventosLugares.JugadorEntro += AlEntrarALugar;
         }
 
         private void OnDisable()
@@ -138,10 +142,16 @@ namespace MechaCyberpunk.Progresion
                 maquina.Terminada -= AlTerminar;
                 suscrito = false;
             }
+            EventosLugares.JugadorEntro -= AlEntrarALugar;
             Registro<IMisiones>.Quitar(this);
             Registro<IGuardable>.Quitar(this);
             Registro<ServicioMisiones>.Quitar(this);
             LimpiarPaso();
+        }
+
+        private void AlEntrarALugar(IdLugar lugar)
+        {
+            if (lugar == IdLugar.Casa) llegoACasa = true;
         }
 
         private void Update()
@@ -150,12 +160,30 @@ namespace MechaCyberpunk.Progresion
             maquina.Avanzar(Time.deltaTime);
             if (!maquina.Activa) return;
             PasoMision paso = maquina.PasoActual;
+            if (paso.Tipo == TipoPaso.Escapar)
+            {
+                if (EscapoDelCalor()) CumplirPasoActual();
+                return;
+            }
             if (paso.Tipo != TipoPaso.IrA || puntoActual == null) return;
             IJugador jugador = Registro<IJugador>.Actual;
             if (jugador == null || jugador.Raiz == null) return;
             Vector3 d = jugador.Raiz.position - puntoActual.Pose.position;
             d.y = 0f;
             if (d.magnitude <= paso.Radio) CumplirPasoActual();
+        }
+
+        // Escapar se cumple con el calor en 0, al llegar a casa o, sin servicio de calor, al instante.
+        private bool EscapoDelCalor()
+        {
+            if (llegoACasa) return true;
+            ICalor calor = Registro<ICalor>.Actual;
+            if (calor == null)
+            {
+                Avisar("calor-escapar", "no hay ICalor; el paso Escapar se cumple al instante");
+                return true;
+            }
+            return calor.Valor <= 0f;
         }
 
         // ---------- Ofertas ----------
@@ -259,7 +287,7 @@ namespace MechaCyberpunk.Progresion
         /// <summary>Falla la misión en curso por ese motivo (por ejemplo KO en una pelea). Sin misión no hace nada.</summary>
         public void FallarExterno(MotivoFalloMision motivo) => maquina.Fallar(motivo == MotivoFalloMision.Ninguno ? MotivoFalloMision.Abandono : motivo);
 
-        /// <summary>Cumple el paso actual si es de ese tipo (para Pelear y Escapar, que llegan en T-185). True si lo cumplió.</summary>
+        /// <summary>Cumple el paso actual si es de ese tipo (Pelear lo cumple PeleaDeMision; Escapar lo cumple el propio servicio). True si lo cumplió.</summary>
         public bool CumplirPasoExterno(TipoPaso tipo)
         {
             if (!maquina.Activa || maquina.PasoActual.Tipo != tipo) return false;
@@ -292,6 +320,11 @@ namespace MechaCyberpunk.Progresion
         {
             PasoMision paso = maquina.PasoActual;
             ServicioObjetivos objetivos = Registro<IObjetivos>.Actual as ServicioObjetivos;
+            if (paso.Tipo == TipoPaso.Escapar)
+            {
+                EmpezarEscapar(objetivos);
+                return;
+            }
             puntoActual = string.IsNullOrEmpty(paso.IdPunto) ? null : BuscarPunto(paso.IdPunto);
             if (puntoActual != null)
             {
@@ -309,6 +342,21 @@ namespace MechaCyberpunk.Progresion
             {
                 objetivos.Quitar();
             }
+        }
+
+        // Escapar no usa punto: el objetivo apunta a la casa si hay una, y si no, solo dice el texto.
+        private void EmpezarEscapar(ServicioObjetivos objetivos)
+        {
+            puntoActual = null;
+            llegoACasa = false;
+            bool hayCasa = false;
+            foreach (ILugar lugar in Registro<ILugar>.Todos)
+            {
+                if (lugar == null || lugar.Id != IdLugar.Casa) continue;
+                hayCasa = true;
+                llegoACasa = lugar.JugadorDentro;
+            }
+            objetivos?.Fijar(new Objetivo(TextoEscapar, hayCasa ? IdLugar.Casa : IdLugar.Ninguno));
         }
 
         // Quita lo del paso: interactuable y punto apagado.
