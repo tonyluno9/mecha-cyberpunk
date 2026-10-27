@@ -30,6 +30,15 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float XMostrador = 3.2f;           // m a la derecha del eje, fuera del pasillo de la puerta
         private const float AdelanteDeLaFosa = 1.4f;     // m desde BordeFosa hacia la puerta
 
+        /// <summary>Solo lo del prólogo (puntos de historia, Flashback.unity y Ciudad_Prologo.unity), sin rehacer todo el barrio.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear prólogo (T-092, T-090 y T-093)")]
+        public static void CrearSoloPrologo()
+        {
+            CreadorPrologoMundo.Crear();
+            CreadorFlashback.Crear();
+            Crear();
+        }
+
         [MenuItem("Mecha Cyberpunk/Crear T-093")]
         public static void Crear()
         {
@@ -53,6 +62,11 @@ namespace MechaCyberpunk.Mundo.Editor
             Transform estacionamiento = taller.Find("Estacionamiento");
             GameObject mecha = Instanciar(RutaMecha);
             mecha.transform.SetPositionAndRotation(estacionamiento.position, estacionamiento.rotation);
+
+            // El carro espera donde dice el punto Prologo_Carro (junto al clandestino), mirando a la calle del regreso; nadie más lo mueve.
+            Transform carro = Buscar("CarroViejo");
+            Transform puntoCarro = Buscar("Prologo_Carro");
+            carro.SetPositionAndRotation(new Vector3(puntoCarro.position.x, carro.position.y, puntoCarro.position.z), Quaternion.LookRotation(Vector3.left, Vector3.up));
 
             GameObject emboscada = Instanciar(RutaEmboscada);
             emboscada.transform.SetPositionAndRotation(anclaje.position, anclaje.rotation);
