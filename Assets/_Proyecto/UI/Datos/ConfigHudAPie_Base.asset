@@ -70,3 +70,18 @@ MonoBehaviour:
   textoPistola: PISTOLA {0}/{1}
   textoPistolaRecargando: "PISTOLA \xB7 RECARGANDO"
   textoPistolaSinBalas: " \xB7 R"
+  segundosAvisoReputacion: 3
+  textoReputacionBarrio: BARRIO {0}
+  textoReputacionCorporaciones: CORPORACIONES {0}
+  separadorAviso: " \xB7 "
+  textoNivelBarrio: AHORA ERES {0} EN EL BARRIO
+  textoNivelCorporaciones: AHORA ERES {0} CON LAS CORPORACIONES
+  colorAvisoReputacion: {r: 1, g: 0.85, b: 0.2, a: 1}
+  tamanoAvisoReputacion: 34
+  tamanoAvisoReputacion2: 26
+  segundosAvisoMision: 4
+  textoMisionCumplida: "MISI\xD3N CUMPLIDA"
+  textoMisionFallida: "MISI\xD3N FALLIDA"
+  tamanoAvisoMision: 40
+  nombreMotivoMision: "MISI\xD3N"
+  textoChatarraMision: +{0} {1}
