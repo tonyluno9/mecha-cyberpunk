@@ -27,6 +27,7 @@ namespace MechaCyberpunk.Mundo.Editor
             CreadorCallejon.Crear(); // T-088
             CreadorClandestino.Crear(); // T-089
             VestirCerrados.Crear(); // T-094
+            VestirEntradas.Crear(); // T-311
             VestirGrafitis.Crear(); // T-095
             CreadorLluvia.Crear(); // T-096
             CreadorAudio.Crear(); // T-097
