@@ -625,3 +625,77 @@ debe venderse en el taller (hoy solo en el mercado negro, como los kits)? (c) ¿
 emboscada (con más calor)? (d) ¿Quieres los "drones de apoyo" de tech (mecha-taller.md) más adelante? (e) ¿Los rivales normales de las ligas 3
 y 4 también deben usar habilidades, o se deja para la adaptación del bloque 8?
 - 2026-10-26 cierre bloque habilidades: JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula falla 8/15 (determinista, Arena de Alan, sin cambios nuestros). Anotado, no se toca.
+
+## Planeación de T-F7, bloque 5: misiones y reputación (2026-10-26, planificador Opus 5.5)
+
+### D-tony-143 IDs y orden del bloque 5
+Propuesta. El bloque 5 son T-181 a T-188, sin hackeo. Orden: T-181 (Core) → T-182 (reputación y favores) → T-183 (datos de misiones) → T-184
+(servicio y escena Pruebas_Misiones) → T-185 (pelear y escapar) y T-186 (teléfono, bar y calle) en paralelo → T-187 (usar favores) → T-188
+(cierre). El bloque siguiente (implantes, según docs/estado-tony.md) empieza en T-189.
+
+### D-tony-144 Contratos de Core del bloque 5 (T-181; autorizada por Tony en el /goal)
+Propuesta. `IReputacion` + `TipoReputacion` (solo lectura para Alan: valor de −100 a 100 y nivel de −2 a 2 de barrio y corporaciones),
+`IMisiones` + `TipoMision` (la misión en curso, solo lectura) e `IPuntoMision` + `TipoPuntoMision` (encargos, destinos, botines, peleas y
+escondites que coloca quien arma la escena; Tony pone el interactuable encima). `MotivoDinero.Mision` y `MotivoCalor.Mision` al final.
+Claves de guardado nuevas: `reputacion`, `favores`, `misiones`. Los favores no van en Core: Alan no los necesita.
+
+### D-tony-145 Reputación
+Propuesta. Dos valores de −100 a 100 que empiezan en 0; niveles en ±15 y ±50. Barrio: TRAIDOR, MAL VISTO, DESCONOCIDO, CONOCIDO, JUSTICIERO.
+Corporaciones: ENEMIGO, FICHADO, SIN FICHA, CONTRATISTA, SOCIO. No hay tirón automático: cada misión dice cuánto mueve cada una y ninguna sube
+las dos (así "se jalan"). Efectos: con corporaciones en −1 el calor sube ×1.15 y en −2 ×1.3 ("te odian más"); con barrio en −2 nadie del barrio
+te pide nada; con corporaciones en −2 ya no te llaman; algunas misiones piden un nivel mínimo.
+
+### D-tony-146 Favores
+Propuesta. Tres tipos, máximo 3 de cada uno, un uso cada uno, guardados con la partida: DESCUENTO (−30 % en la siguiente compra del mercado
+negro), INFORMACIÓN (abre EL SOPLO, un robo con más botín y poco calor; se gasta al aceptar y no se devuelve al abandonar) y ESCONDITE (en un
+escondite del barrio, borra el calor y cumple el paso de escapar). Los dan las misiones de barrio; si ya tienes 3, se pierde y se avisa.
+
+### D-tony-147 Cómo funcionan las misiones
+Propuesta. Una a la vez, solo en `Libre`. Pasos: ir a, recoger (E), entregar (E), pelear (pelea callejera en el mecha, reusa la emboscada) y
+escapar (calor a 0, llegar a casa o esconderse). Salen: barrio con los vecinos en la calle (encargos), corporativas por teléfono de día (tecla T)
+e ilegales y robos con el contacto del bar de noche. Sin reloj, cualquier franja vale. Las repetibles vuelven al día siguiente. Fallar (tiempo,
+KO del mecha) o abandonar: −3 a cada reputación que la misión subía. La misión en curso no se guarda: al cargar queda cancelada sin castigo.
+
+### D-tony-148 Las 11 misiones (provisionales; tabla en T-183)
+Propuesta. Barrio: LA TIENDITA DE DOÑA LUPE ($50, barrio +8, DESCUENTO), LOS DEL CALLEJÓN ($100, +12, ESCONDITE, de noche, pelea), LUZ PARA LA
+VECINDAD ($0, +15 / corp. −8, INFORMACIÓN, pide CONOCIDO). Corporativas: ENTREGA URGENTE ($400, −5 / +8, 150 s), COBRO DE ADEUDO ($500, −12 /
++10), LIMPIEZA DE ZONA ($900, −15 / +15, pide CONTRATISTA y liga 2). Ilegales: CARGA CALIENTE ($350, corp. −5, calor 40), PELEA SIN JAULA ($450,
++3 / −5). Robos: BODEGA DE REFACCIONES (6 chatarra, calor 50), CAMIÓN BLINDADO ($200 + 10 chatarra, calor 60, liga 2), EL SOPLO (12 chatarra,
+calor 15, pide INFORMACIÓN). Tony cambia todo en los assets.
+
+### D-tony-149 Reglas de balance de las misiones
+Propuesta. a) toda misión de barrio paga menos que el rival 1 de la liga 1 ($600); b) ninguna paga (efectivo + chatarra a $50) más que el rival 1
+de su liga mínima; c) ninguna sube las dos reputaciones; d) toda misión de barrio sube el barrio y da un favor; e) toda corporativa baja el barrio
+al menos 5; f) los robos pagan más en chatarra que en efectivo; g) toda ilegal y todo robo suma 25 de calor o más, o tiene que escapar. Si una
+falla, se ajustan las misiones, no las reglas ni los premios de las ligas.
+
+### D-tony-150 Dónde vive el código del bloque 5
+Propuesta. Reputación, favores y misiones en Progresion/ (`Reputacion/`, `Favores/`, `Misiones/`); `MechaCyberpunk.Progresion` gana la referencia a
+`MechaCyberpunk.Economia` (chatarra al inventario y descuento; Economia no referencia Progresion). La pelea de misión vive en Pelea/Misiones/
+(Pelea ya referencia Progresion). Pantallas en UI/Misiones/. El descuento es una sobrecarga de `TiendaBasica.Comprar`, así que `ITienda` no cambia.
+Las pruebas de PlayMode del bloque van en su propio ensamblado (`MechaCyberpunk.Tests.PlayMode.Progresion.Misiones`) para no alargar el área
+Progresion, que ya usa 2400 s. Escena del bloque: `Escenas/Tony/Pruebas_Misiones.unity`.
+
+### D-tony-151 Lo que espera a Alan en el bloque 5
+Propuesta. Nada obligatorio: todo se prueba en Pruebas_Misiones con `PuntoMisionDePrueba`, lugares de prueba y el doble
+`ReaccionReputacionDePrueba`. Opcional, cuando quiera: colocar en Ciudad los `IPuntoMision` con los ids de T-183 (lista en docs/revision-tony.md),
+`ContactoBar.prefab` en su bar y `PeleasDeMision.prefab`; y que la ciudad reaccione a `IReputacion` (grafitis con el alias, vecinos que saludan,
+anuncios que difaman) y a `IMisiones` (patrullas atentas en un robo). Las misiones en Ciudad.unity se escriben cuando Alan coloque los puntos.
+
+### D-tony-152 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿El teléfono en la tecla T te late? (b) ¿Las corporativas deben dar algo además de dinero
+(piezas, información de tus papás para la historia)? (c) ¿El descuento también en el taller o la clínica? (d) ¿Los robos deberían poder salir mal
+de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones de una sola vez con historia (no repetibles) para el hilo de los
+papás, o se dejan para la historia principal?
+- T-181 Core hecha sin aprobación previa explícita, por criterio del /goal
+- verificar.sh: ensamblados_modo ahora busca asmdef de pruebas anidados (Tests/<Modo>/<Area>/<Sub>/), el área es el nombre con puntos (Progresion.Misiones); comprobado con AREAS=Progresion.Misiones playmode-por-area (7/7); tarea de Core hecha dentro de T-183 por encargo del orquestador
+- D-tony-153: T-185 acepta la captura T-185-2 (cabina frente al pandillero con HUD de cabina) sin el texto del paso, que en la cabina no se dibuja en ese momento; la T-185-1 sí muestra el texto del paso a pie.
+- D-tony-154: T-186 usa una sola config (ConfigPantallaMisiones) para la lista, el teléfono, el contacto y los vecinos; la lista (PantallaMisiones) va embebida en la pestaña CONTRATOS del teléfono (sin fondo ni Esc propios) y al aceptar una misión se cierra la pantalla (y el teléfono), para ver la flecha del objetivo; el teléfono no abre si el control a pie ya está congelado por otra pantalla (tienda, cartelera, KO), en carro ni en mecha.
+- D-tony-155: T-186 EncargosCalle no ofrece el encargo mientras hay otra misión en curso (motivo OtraActiva): si no, el punto del vecino que también es un paso (Doña Lupe entrega) compite con la E del paso; el aviso de reputación del HUD suma los cambios que llegan mientras sigue en pantalla ("BARRIO −12 · CORPORACIONES +10") y al cargar una partida avisaría el cambio de valores (no se distingue de un cambio real); el contacto del bar es una cápsula con letrero (arte pendiente).
+- D-tony-156: T-187 escribe los textos nuevos (precio rebajado, línea del favor, "USA 1 {0}", FAVOR PERDIDO, pestaña FAVORES) en ConfigPantallaTienda y ConfigPantallaMisiones (UI/Datos/), carpeta que la tarea no lista pero es la que manda la regla de Config*; los assets no cambian porque los campos nuevos toman su valor por defecto.
+- D-tony-157: T-187 no cambia ServicioMisiones (fuera de las carpetas permitidas): su aviso interno sigue diciendo "Favor perdido: el bolsillo estaba lleno."; el aviso "FAVOR PERDIDO: YA TIENES 3" lo arma la UI (FormatoMisiones.AvisoFavorPerdido) y se ve en la pestaña MISIÓN del teléfono mientras no hay misión y el último resumen perdió el favor; no hay aviso propio en el HUD.
+- D-tony-158: T-187 pone el descuento solo en la compra: el favor se gasta si Comprar devolvió Comprado y la rebaja de verdad baja el precio (un precio 0 no gasta el favor); la rebaja aplica a todas las filas de COMPRAR del mercado negro y se muestra "$80 → $56"; la línea del favor va abajo de la lista (sobre la ayuda) porque la lista de cinco filas llena la pantalla.
+- D-tony-159: T-187 Escondites vive en ServiciosProgresion.prefab, registra un IInteractuable por escondite solo mientras hay calor y activa los puntos solo entonces; cumple Escapar con CumplirPasoExterno (sin tocar ServicioMisiones). La pestaña FAVORES es la cuarta (Favores al final del enum PestanaTelefono) y dice "SE USA EN": MERCADO NEGRO, CONTACTO DEL BAR, ESCONDITES DEL BARRIO.
+- Conocido T-186 (no corregido): al cargar una partida (F9), el aviso de reputación del HUD (UI/HudAPie/HudAPie.cs, no está en las carpetas de T-187) muestra los valores guardados como cambio, porque reputacion.Cambio se dispara al cargar; la corrección es ignorar los cambios mientras se carga (o comparar contra el valor recordado en VincularReputacion) y queda para una tarea de HUD.
+- D-tony-160: T-188 hereda de RecorridoEmboscadaBase (como MisionesPeleaPruebas) para pelear en el mecha; en el paso g Doña Lupe se cumple otra vez el día siguiente (así el barrio llega a 19) y no se prueba el texto YA LO HICISTE HOY porque la tiendita ya no se ofrece ese mismo día tras J; la liga 2 se abre con Poner(2, 1, 1); el letrero deformado de T-188-3 se reporta como error y no se corrige aquí.
+- D-tony-161: T-189 corrige el aviso de reputación al cargar desde el HUD (se engancha a ServicioGuardado.Cargada, resincroniza y descarta el aviso) en vez de tocar ServicioReputacion o el guardado; el letrero GRAFITI cuelga de un padre sin escala en la cara oeste del muro. Resuelve el conocido de T-186 y el error de T-188-3.

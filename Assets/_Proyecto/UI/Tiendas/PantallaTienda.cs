@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.Progresion;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -34,6 +35,8 @@ namespace MechaCyberpunk.UI.Tiendas
         [SerializeField] private Text plantillaFila;
         [SerializeField] private Text textoAviso;
         [SerializeField] private Text textoAyuda;
+        [Tooltip("Línea del favor de descuento (T-187; opcional).")]
+        [SerializeField] private Text textoFavor;
         [SerializeField] private InputAction arriba = new InputAction("TiendaArriba", InputActionType.Button, "<Keyboard>/upArrow");
         [SerializeField] private InputAction abajo = new InputAction("TiendaAbajo", InputActionType.Button, "<Keyboard>/downArrow");
         [SerializeField] private InputAction izquierda = new InputAction("TiendaIzquierda", InputActionType.Button, "<Keyboard>/leftArrow");
@@ -50,6 +53,7 @@ namespace MechaCyberpunk.UI.Tiendas
         private PestanaTienda pestana;
         private int indice;
         private bool visible;
+        private bool aceptaFavorDescuento;
 
         public bool Visible => visible;
         public PestanaTienda Pestana => pestana;
@@ -62,6 +66,8 @@ namespace MechaCyberpunk.UI.Tiendas
         public string TextoPestanaComprar => textoPestanaComprar != null ? textoPestanaComprar.text : string.Empty;
         public string TextoPestanaVender => textoPestanaVender != null ? textoPestanaVender.text : string.Empty;
         public string Aviso => textoAviso != null && textoAviso.gameObject.activeSelf ? textoAviso.text : string.Empty;
+        /// <summary>La línea del favor de descuento; vacía si no se ve.</summary>
+        public string Favor => textoFavor != null && textoFavor.gameObject.activeSelf ? textoFavor.text : string.Empty;
         public string Ayuda => textoAyuda != null ? textoAyuda.text : string.Empty;
         public Canvas Canvas => GetComponent<Canvas>();
 
@@ -94,8 +100,9 @@ namespace MechaCyberpunk.UI.Tiendas
 
         /// <summary>Abre la pantalla en COMPRAR con la lista de objetos que la tienda vende. <paramref name="alSalir"/> avisa Esc.</summary>
         public void Mostrar(ITienda tienda, IReadOnlyList<DatosObjeto> objetosEnVenta, Action alSalir,
-            IReadOnlyList<TipoObjeto> tiposQueCompra = null)
+            IReadOnlyList<TipoObjeto> tiposQueCompra = null, bool aceptaFavorDescuento = false)
         {
+            this.aceptaFavorDescuento = aceptaFavorDescuento;
             compra.Clear();
             if (tiposQueCompra != null)
             {
@@ -226,9 +233,18 @@ namespace MechaCyberpunk.UI.Tiendas
             }
             else
             {
-                switch (tienda.Comprar(objeto.Oferta, cartera))
+                float rebaja = RebajaPara(objeto.Oferta);
+                ResultadoCompra resultado = rebaja > 0f && tienda is TiendaBasica basica
+                    ? basica.Comprar(objeto.Oferta, cartera, rebaja)
+                    : tienda.Comprar(objeto.Oferta, cartera);
+                switch (resultado)
                 {
                     case ResultadoCompra.Comprado:
+                        if (rebaja > 0f)
+                        {
+                            // El favor se gasta solo si se cobró.
+                            Registro<ServicioFavores>.Actual.Gastar(TipoFavor.Descuento);
+                        }
                         inventario.Agregar(objeto, 1);
                         MostrarAviso(string.Format(config.FormatoComprado, objeto.Nombre.ToUpperInvariant()));
                         break;
@@ -265,6 +281,28 @@ namespace MechaCyberpunk.UI.Tiendas
             Pintar();
         }
 
+        // La rebaja que aplica a esta oferta: la del favor de descuento si el mostrador la acepta, hay favor y rebaja de verdad.
+        private float RebajaPara(DatosOferta oferta)
+        {
+            float rebaja = RebajaDelFavor();
+            return rebaja > 0f && TiendaBasica.PrecioCon(oferta, rebaja) < oferta.Precio ? rebaja : 0f;
+        }
+
+        private float RebajaDelFavor()
+        {
+            if (!aceptaFavorDescuento)
+            {
+                return 0f;
+            }
+            ServicioFavores favores = Registro<ServicioFavores>.Actual;
+            if (favores == null || favores.Cantidad(TipoFavor.Descuento) <= 0)
+            {
+                return 0f;
+            }
+            DatosFavor datosFavor = favores.Datos(TipoFavor.Descuento);
+            return datosFavor != null ? datosFavor.Valor : 0f;
+        }
+
         private void MostrarAviso(string texto)
         {
             textoAviso.text = texto;
@@ -281,6 +319,8 @@ namespace MechaCyberpunk.UI.Tiendas
             PintarPestana(textoPestanaVender, config.TextoVender, pestana == PestanaTienda.Vender);
             Preparar(textoAyuda, pestana == PestanaTienda.Vender ? config.TextoAyudaVender : config.TextoAyuda, config.ColorNormal,
                 config.TamanoAyuda);
+
+            PintarFavor();
 
             foreach (Text viejo in textosFilas)
             {
@@ -306,10 +346,31 @@ namespace MechaCyberpunk.UI.Tiendas
             {
                 DatosObjeto objeto = objetos[i];
                 int lleva = inventario != null ? inventario.Cantidad(objeto) : 0;
-                string fila = string.Format(config.FormatoFila, objeto.Nombre.ToUpperInvariant(), FormatoDinero.Texto(objeto.Oferta.Precio),
-                    lleva, objeto.Maximo);
+                string precio = FormatoDinero.Texto(objeto.Oferta.Precio);
+                float rebaja = RebajaPara(objeto.Oferta);
+                if (rebaja > 0f)
+                {
+                    precio = string.Format(config.FormatoPrecioRebajado, precio, FormatoDinero.Texto(TiendaBasica.PrecioCon(objeto.Oferta, rebaja)));
+                }
+                string fila = string.Format(config.FormatoFila, objeto.Nombre.ToUpperInvariant(), precio, lleva, objeto.Maximo);
                 bool elegida = i == indice;
                 AgregarFila(elegida ? string.Format(config.FormatoFilaElegida, fila) : fila, elegida ? config.ColorElegido : config.ColorNormal);
+            }
+        }
+
+        private void PintarFavor()
+        {
+            if (textoFavor == null)
+            {
+                return;
+            }
+            float rebaja = pestana == PestanaTienda.Comprar ? RebajaDelFavor() : 0f;
+            textoFavor.gameObject.SetActive(rebaja > 0f);
+            if (rebaja > 0f)
+            {
+                int quedan = Registro<ServicioFavores>.Actual.Cantidad(TipoFavor.Descuento);
+                Preparar(textoFavor, string.Format(config.FormatoFavorDescuento, Mathf.RoundToInt(rebaja * 100f), quedan),
+                    config.ColorFavor, config.TamanoFavor);
             }
         }
 

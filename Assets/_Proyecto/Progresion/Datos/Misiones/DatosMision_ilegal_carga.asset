@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da182b3f9b113b147b206fc1a9fbed85, type: 3}
+  m_Name: DatosMision_ilegal_carga
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosMision
+  id: ilegal_carga
+  titulo: CARGA CALIENTE
+  descripcion: "Te dan un paquete al aceptar; ll\xE9valo al muelle sin que te sigan."
+  tipo: 2
+  origen: 2
+  franja: 2
+  idEncargo: 
+  pasos:
+  - tipo: 2
+    idPunto: Mision_Destino_Muelle
+    texto: Entrega la carga en el muelle
+    calor: 40
+    radio: 4
+  - tipo: 4
+    idPunto: 
+    texto: "Pi\xE9rdete antes de que te alcancen"
+    calor: 0
+    radio: 4
+  pago: 350
+  chatarraObjeto: {fileID: 0}
+  chatarraCantidad: 0
+  deltaBarrio: 0
+  deltaCorporaciones: -5
+  favor: {fileID: 0}
+  exigeFavor: 0
+  favorRequerido: 1
+  nivelBarrioMinimo: -2
+  nivelCorporacionesMinimo: -2
+  ligaMinima: 1
+  limiteSegundos: 0
+  repetible: 1

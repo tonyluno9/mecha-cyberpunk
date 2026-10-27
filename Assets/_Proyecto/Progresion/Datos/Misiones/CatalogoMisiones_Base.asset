@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd7a2c923767a1344b1509df3dcb9672, type: 3}
+  m_Name: CatalogoMisiones_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.CatalogoMisiones
+  misiones:
+  - {fileID: 11400000, guid: a3391d8342561324ca9be7b12f954b86, type: 2}
+  - {fileID: 11400000, guid: 08546df1ef9aef94e89b46d587ee748e, type: 2}
+  - {fileID: 11400000, guid: d82da827ac5a91942a366cfa8f4b98f9, type: 2}
+  - {fileID: 11400000, guid: 3b3b9fbacaefd2947b1493c45b7b7437, type: 2}
+  - {fileID: 11400000, guid: 9d36192c65f4a8a4480fa4688bfe9150, type: 2}
+  - {fileID: 11400000, guid: 445f5f3b6ce908d4e998aa4d1c965aeb, type: 2}
+  - {fileID: 11400000, guid: 37e2abe52d030ff479986ba7a87f2e09, type: 2}
+  - {fileID: 11400000, guid: 43749e50badf3c940b8c6ae2391cb456, type: 2}
+  - {fileID: 11400000, guid: 6c9fa18b14b0ec9459f90d9987d48450, type: 2}
+  - {fileID: 11400000, guid: 555d7ef14bd90024a81da045814518a7, type: 2}
+  - {fileID: 11400000, guid: 2eaf182a01fa75549817c311d59287b1, type: 2}

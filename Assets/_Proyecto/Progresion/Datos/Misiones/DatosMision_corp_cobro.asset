@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da182b3f9b113b147b206fc1a9fbed85, type: 3}
+  m_Name: DatosMision_corp_cobro
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosMision
+  id: corp_cobro
+  titulo: COBRO DE ADEUDO
+  descripcion: "Un vecino debe dinero a la corporaci\xF3n y t\xFA vas a cobrarlo."
+  tipo: 1
+  origen: 1
+  franja: 1
+  idEncargo: 
+  pasos:
+  - tipo: 1
+    idPunto: Mision_Destino_Moroso
+    texto: Cobra al vecino
+    calor: 0
+    radio: 4
+  - tipo: 2
+    idPunto: Mision_Destino_TorreCorp
+    texto: Lleva el dinero a la torre corporativa
+    calor: 0
+    radio: 4
+  pago: 500
+  chatarraObjeto: {fileID: 0}
+  chatarraCantidad: 0
+  deltaBarrio: -12
+  deltaCorporaciones: 10
+  favor: {fileID: 0}
+  exigeFavor: 0
+  favorRequerido: 1
+  nivelBarrioMinimo: -2
+  nivelCorporacionesMinimo: -2
+  ligaMinima: 1
+  limiteSegundos: 0
+  repetible: 1

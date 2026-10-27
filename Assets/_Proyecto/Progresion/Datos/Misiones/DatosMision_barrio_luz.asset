@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da182b3f9b113b147b206fc1a9fbed85, type: 3}
+  m_Name: DatosMision_barrio_luz
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosMision
+  id: barrio_luz
+  titulo: LUZ PARA LA VECINDAD
+  descripcion: "La vecindad lleva d\xEDas sin luz: hay que quitarle una pieza a la
+    corporaci\xF3n."
+  tipo: 0
+  origen: 0
+  franja: 0
+  idEncargo: Mision_Encargo_Vecindad
+  pasos:
+  - tipo: 1
+    idPunto: Mision_Botin_Subestacion
+    texto: "Roba el fusible de la subestaci\xF3n"
+    calor: 30
+    radio: 4
+  - tipo: 2
+    idPunto: Mision_Encargo_Vecindad
+    texto: "Ll\xE9valo a la vecindad"
+    calor: 0
+    radio: 4
+  pago: 0
+  chatarraObjeto: {fileID: 0}
+  chatarraCantidad: 0
+  deltaBarrio: 15
+  deltaCorporaciones: -8
+  favor: {fileID: 11400000, guid: 7d8e57afb297341479b11d65adcf5ebb, type: 2}
+  exigeFavor: 0
+  favorRequerido: 1
+  nivelBarrioMinimo: 1
+  nivelCorporacionesMinimo: -2
+  ligaMinima: 1
+  limiteSegundos: 0
+  repetible: 1
