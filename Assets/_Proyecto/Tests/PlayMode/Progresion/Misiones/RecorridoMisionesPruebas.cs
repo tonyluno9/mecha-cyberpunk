@@ -390,6 +390,34 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
 
         // ---- El recorrido ----
 
+        // El letrero ya no cuelga del muro (T-189): se busca por nombre.
+        private static TextMesh BuscarLetreroReputacion()
+        {
+            foreach (TextMesh mesh in Object.FindObjectsByType<TextMesh>(FindObjectsSortMode.None))
+            {
+                if (mesh.gameObject.name == "Texto reputación") return mesh;
+            }
+            return null;
+        }
+
+        [UnityTest]
+        public IEnumerator Escena_LetreroDelMuro_TieneEscalaDeMundoUniformeYPegadoALaCara()
+        {
+            yield return CargarMisiones();
+            TextMesh letrero = BuscarLetreroReputacion();
+            Assert.IsNotNull(letrero, "el muro trae su letrero de reputación");
+            Vector3 escala = letrero.transform.lossyScale;
+            Assert.AreEqual(1f, escala.x, 0.0001f, "escala de mundo x");
+            Assert.AreEqual(escala.x, escala.y, 0.0001f, "escala de mundo uniforme (x = y)");
+            Assert.AreEqual(escala.x, escala.z, 0.0001f, "escala de mundo uniforme (x = z)");
+            Vector3 muro = reaccion.transform.position;
+            float delante = muro.x - letrero.transform.position.x;
+            Assert.Greater(delante, reaccion.transform.lossyScale.x / 2f, "el letrero queda delante de la cara del muro, no dentro");
+            Assert.Less(delante, reaccion.transform.lossyScale.x / 2f + 0.1f, "pegado a la cara del muro");
+            // El TextMesh se lee desde el lado opuesto a su forward: con forward +X se lee desde el oeste, la calle.
+            Assert.AreEqual(1f, letrero.transform.forward.x, 0.0001f, "el texto se lee desde la calle (oeste)");
+        }
+
         [UnityTest]
         public IEnumerator Recorrido_UnDiaYUnaNocheDeTrabajos_LaReputacionLosFavoresYElDineroCuadran()
         {
@@ -631,7 +659,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             Assert.AreEqual(MotivoMision.Disponible, misiones.Motivo(luz), "g) LUZ PARA LA VECINDAD ya se ofrece");
             Assert.IsTrue(misiones.Ofertas(OrigenMision.Calle, PuntoVecindad).Exists(o => o.Datos.Id == IdLuz), "g) y sale en el encargo de la vecindad");
             Assert.AreEqual(1, favores.Cantidad(TipoFavor.Descuento), "g) otro DESCUENTO");
-            TextMesh malla = reaccion.GetComponentInChildren<TextMesh>();
+            TextMesh malla = BuscarLetreroReputacion();
             Assert.IsNotNull(malla, "g) el letrero tiene su TextMesh");
             Assert.AreEqual(reaccion.Texto, malla.text, "g) el TextMesh del letrero dice lo mismo");
             Debug.Log("[T-188] letrero: escala del mundo " + malla.transform.lossyScale + ", límites " + malla.GetComponent<Renderer>().bounds);

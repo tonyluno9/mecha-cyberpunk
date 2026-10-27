@@ -42,6 +42,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const float AnchoCalle = 8f;
         private const float AlturaLetrero = 3f;
         private const float TamanoLetra = 0.5f;
+        private const float SeparacionLetreroMuro = 0.02f;
         private const float TamanoLetraPiso = 0.9f;
         private const float RadioCilindro = 0.75f;
         private const float AlturaCilindro = 2f;
@@ -325,9 +326,12 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         {
             // Un muro al final de la calle este-oeste, con el letrero que reacciona a la reputación (T-182).
             GameObject muro = CreadorEscenaPrologo.Caja("Muro reputación", new Vector3(PosicionMuroReputacion.x, 2.5f, 0f), new Vector3(GrosorMuro, 5f, 7f), matMuro, true);
+            // El texto cuelga de un padre sin escala (el muro está escalado 0.4 × 5 × 7 y deformaría el letrero), pegado a la cara oeste
+            // del muro (la que mira a la calle) y con el texto de cara al oeste.
+            GameObject soporte = new GameObject("Letrero reputación");
+            soporte.transform.SetPositionAndRotation(new Vector3(PosicionMuroReputacion.x - GrosorMuro / 2f - SeparacionLetreroMuro, 3f, 0f), Quaternion.Euler(0f, 90f, 0f));
             GameObject texto = new GameObject("Texto reputación");
-            texto.transform.SetParent(muro.transform, true);
-            texto.transform.SetPositionAndRotation(new Vector3(PosicionMuroReputacion.x - 0.3f, 3f, 0f), Quaternion.Euler(0f, 90f, 0f));
+            texto.transform.SetParent(soporte.transform, false);
             TextMesh mesh = texto.AddComponent<TextMesh>();
             ConfigurarTexto(mesh, "", TamanoLetra);
 

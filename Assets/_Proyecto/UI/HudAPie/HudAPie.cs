@@ -5,6 +5,7 @@ using MechaCyberpunk.Mecha.Llamado;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.Progresion.Guardado;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -70,6 +71,7 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private Text textoAvisoMision;
 
         private IReputacion reputacion;
+        private ServicioGuardado guardado;
         private int valorBarrio;
         private int valorCorporaciones;
         private int deltaBarrioAviso;
@@ -244,6 +246,9 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IReputacion>.Quitado += AlQuitarReputacion;
             Registro<ServicioMisiones>.Agregado += AlAgregarMisiones;
             Registro<ServicioMisiones>.Quitado += AlQuitarMisiones;
+            Registro<ServicioGuardado>.Agregado += AlAgregarGuardado;
+            Registro<ServicioGuardado>.Quitado += AlQuitarGuardado;
+            VincularGuardado(Registro<ServicioGuardado>.Actual);
             VincularReputacion(Registro<IReputacion>.Actual);
             VincularMisiones(Registro<ServicioMisiones>.Actual);
             VincularLigas(Registro<IProgresoLigas>.Actual);
@@ -295,6 +300,9 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IReputacion>.Quitado -= AlQuitarReputacion;
             Registro<ServicioMisiones>.Agregado -= AlAgregarMisiones;
             Registro<ServicioMisiones>.Quitado -= AlQuitarMisiones;
+            Registro<ServicioGuardado>.Agregado -= AlAgregarGuardado;
+            Registro<ServicioGuardado>.Quitado -= AlQuitarGuardado;
+            DesvincularGuardado();
             DesvincularReputacion();
             DesvincularMisiones();
             DesvincularLigas();
@@ -546,6 +554,52 @@ namespace MechaCyberpunk.UI.Hud
         }
 
         // ---- Reputación y misiones (T-186) ----
+
+        // Al cargar una partida la reputación avisa "Cambio" con lo guardado, que no es jugar: cuando el guardado termina de cargar
+        // (en el mismo frame, antes de dibujar) se resincroniza y se descarta ese aviso (T-189).
+        private void AlAgregarGuardado(ServicioGuardado nuevo) => VincularGuardado(nuevo);
+
+        private void AlQuitarGuardado(ServicioGuardado quitado)
+        {
+            if (quitado == guardado)
+            {
+                VincularGuardado(Registro<ServicioGuardado>.Actual);
+            }
+        }
+
+        private void VincularGuardado(ServicioGuardado nuevo)
+        {
+            DesvincularGuardado();
+            guardado = nuevo;
+            if (guardado != null)
+            {
+                guardado.Cargada += AlCargarPartida;
+            }
+        }
+
+        private void DesvincularGuardado()
+        {
+            if (guardado != null)
+            {
+                guardado.Cargada -= AlCargarPartida;
+            }
+            guardado = null;
+        }
+
+        private void AlCargarPartida()
+        {
+            if (reputacion != null)
+            {
+                valorBarrio = reputacion.Valor(TipoReputacion.Barrio);
+                valorCorporaciones = reputacion.Valor(TipoReputacion.Corporaciones);
+            }
+            avisoReputacionRestante = 0f;
+            deltaBarrioAviso = 0;
+            deltaCorporacionesAviso = 0;
+            nivelBarrioAviso = string.Empty;
+            nivelCorporacionesAviso = string.Empty;
+            RefrescarAvisoReputacion();
+        }
 
         private void AlAgregarReputacion(IReputacion nueva) => VincularReputacion(nueva);
 
