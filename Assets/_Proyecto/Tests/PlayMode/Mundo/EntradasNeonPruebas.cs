@@ -23,7 +23,7 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float InclinacionGrados = 8f;
         private const float DistanciaCaptura = 6f;
         private const float DistanciaCapturaCallejon = 3.2f;    // el callejón del mercado mide unos 4.5 m de ancho
-        private const int LucesMaximasTotal = 2;
+        private const int LucesMaximasTotal = 3;
         private const int MaterialesMaximos = 6;
 
         private static readonly IdLugar[] Destinos = { IdLugar.Casa, IdLugar.Clandestino, IdLugar.Casino, IdLugar.MercadoNegro };
@@ -109,13 +109,13 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Entradas_NoCambianElAcceso()
+        public IEnumerator Entradas_CasinoAbreDeNocheYMercadoSigueCerrado()
         {
             yield return EscenaLugares.CargarCiudad();
             RelojMundo reloj = EscenaLugares.RelojPausado();
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             yield return null;
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "el casino sigue cerrado");
+            Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "el casino abre de noche (T-303)");
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "el mercado negro sigue cerrado");
         }
 

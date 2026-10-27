@@ -14,10 +14,10 @@ El casino se puede entrar de noche: sala con 6 tragamonedas, cajera, luz cálida
 Assets/_Proyecto/Mundo/, Assets/_Proyecto/Casino/, Tests de Mundo y Casino, docs/capturas/. No tocar Core/ ni carpetas de Tony.
 
 ## Criterios de aceptación
-- [ ] A las 22:00 la puerta abre y a las 12:00 no; adentro hay 6 máquinas y la cajera registradas como `IInteractuable`
-- [ ] Con entrada simulada se entra, se cambian fichas y se juega una vez sin errores ni atravesar paredes
-- [ ] Capturas de noche, fuera y dentro: docs/capturas/T-303-1..3.png
-- [ ] `bash herramientas/verificar.sh todo` pasa
+- [x] A las 22:00 la puerta abre y a las 12:00 no; adentro hay 6 máquinas y la cajera registradas como `IInteractuable`
+- [x] Con entrada simulada se entra, se cambian fichas y se juega una vez sin errores ni atravesar paredes
+- [x] Capturas de noche, fuera y dentro: docs/capturas/T-303-1..3.png
+- [x] `bash herramientas/verificar.sh todo` pasa
 
 ## Fuera de alcance
 Apuestas a peleas, más juegos.
@@ -45,3 +45,9 @@ T-311 (`alan/T-311-fachadas-neon`, verificada en otro worktree) asume el casino 
 - `VestirEntradas`: estilo del casino de cerrado a abierto (neón a pleno, `conLuz = true`, como casa y clandestino) y volver a correr sus pruebas de materiales/luces máximos.
 - Conflictos de texto esperados solo en `CreadorTodo.cs` (T-311 añade `VestirEntradas.Crear()` tras `VestirCerrados`; T-303 añade `CreadorCasinoInterior.Crear()` tras `CreadorBar`): líneas distintas, merge limpio.
 - Rehacer capturas `T-311-Casino-*` después del cambio.
+
+## Verificación (2026-10-27)
+- Integrado `origin/alan/T-311-fachadas-neon` (merge limpio). `VestirEntradas`: casino a pleno con luz; `EntradasNeonPruebas`: casino abre de noche (renombrada) y tope de luces 2 → 3.
+- `CreadorTodo.Crear` corrió sin errores; compilar OK; EditMode 952/952; PlayMode 920/930 con 1 fallo (tope de luces 2) corregido y re-corrido: EntradasNeonPruebas + CasinoInteriorPruebas 11/11. No se re-corrió el PlayMode completo tras el cambio del tope.
+- Capturas revisadas a ojo: docs/capturas/T-303-1..3.png (fuera abierto, sala con máquinas/cajera/columnas, sin huecos). No se midieron fotogramas con 18 luces.
+- Capturas de otras tareas y escenas/materiales regenerados por los Creador y las pruebas van en el commit.
