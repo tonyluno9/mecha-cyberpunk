@@ -798,3 +798,5 @@ levantarte y 6 horas dormido te parece un castigo justo? (c) ¿Quieres los pandi
 ¿Los implantes deberían tener un costo además del dinero (ciberpsicosis, que la gente del barrio desconfíe, que bajen la reputación de barrio)?
 (e) ¿La clínica debería pedir reputación de barrio o de corporaciones para algunos implantes (por ejemplo, los de nivel 2 solo con CONTRATISTA)?
 (f) ¿El ojo cosmético de la creación debería contar como OJOS instalados, o se quedan separados como ahora?
+
+- D-tony-175: T-190 prueba "sin nada registrado" leyendo Registro<IImplantes>.Actual directo (sin TearDown de registro); la guía de Alan se agrega al final de docs/revision-tony.md como sección nueva "Para Alan (T-190)".
