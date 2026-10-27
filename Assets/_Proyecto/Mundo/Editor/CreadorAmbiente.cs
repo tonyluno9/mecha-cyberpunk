@@ -29,6 +29,8 @@ namespace MechaCyberpunk.Mundo.Editor
         private const string RutaConfigVistas = RutaDatos + "/ConfigVistasReferencia.asset";
         private const string RutaConfigCiclo = RutaDatos + "/ConfigCicloDia_Mundo.asset";
         private const string RutaMaterialCharco = RutaMateriales + "/Barrio_Charco.mat";
+        private const string RutaMaterialCielo = RutaMateriales + "/Cielo_Procedural.mat";
+        private const float GrosorAtmosferaCielo = 0.6f;
         private const string RutaPrefabBarrio = RutaMundo + "/Prefabs/Barrio.prefab";
         private const string RutaPrefabCamaraLibre = RutaMundo + "/Prefabs/CamaraLibre.prefab";
         private const string RutaPrefabCarro = "Assets/_Proyecto/Vehiculos/Prefabs/CarroViejo.prefab";
@@ -90,6 +92,7 @@ namespace MechaCyberpunk.Mundo.Editor
             CrearPerfil(RutaPerfilDia, false);
             CrearConfigVistas();
             Material charco = CrearMaterialCharco();
+            CrearMaterialCielo();
             AssetDatabase.SaveAssets();
 
             PrenderPosproceso(RutaPrefabCamaraLibre);
@@ -130,7 +133,7 @@ namespace MechaCyberpunk.Mundo.Editor
         // ---------------------------------------------------------------- ciclo del día
 
         // La niebla, el ambiente y la curva del peso de noche cambiaron en T-079: se copian del código una sola vez
-        // (mientras el asset no tenga la curva pesoNoche); después los valores afinados a mano no se pisan.
+        // (mientras el asset no tenga el gradiente colorCielo de T-310; esto reemplaza la niebla y el ambiente de día por los nuevos); después los valores afinados a mano no se pisan.
         private static void ActualizarConfigCiclo()
         {
             ConfigCicloDia config = AssetDatabase.LoadAssetAtPath<ConfigCicloDia>(RutaConfigCiclo);
@@ -139,7 +142,7 @@ namespace MechaCyberpunk.Mundo.Editor
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<ConfigCicloDia>(), RutaConfigCiclo);
                 return;
             }
-            if (!File.ReadAllText(RutaConfigCiclo).Contains("pesoNoche:"))
+            if (!File.ReadAllText(RutaConfigCiclo).Contains("colorCielo:"))
             {
                 ConfigCicloDia nueva = ScriptableObject.CreateInstance<ConfigCicloDia>();
                 EditorUtility.CopySerialized(nueva, config);
@@ -265,6 +268,19 @@ namespace MechaCyberpunk.Mundo.Editor
             return material;
         }
 
+        // T-310: skybox procedural; CicloDiaNoche le pone tinte, exposición y sol según la hora en una copia en ejecución.
+        private static void CrearMaterialCielo()
+        {
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialCielo);
+            if (material == null)
+            {
+                material = new Material(Shader.Find("Skybox/Procedural"));
+                AssetDatabase.CreateAsset(material, RutaMaterialCielo);
+            }
+            material.SetFloat("_AtmosphereThickness", GrosorAtmosferaCielo);
+            EditorUtility.SetDirty(material);
+        }
+
         private static void PonerCharcos(Material material)
         {
             GameObject barrio = PrefabUtility.LoadPrefabContents(RutaPrefabBarrio);
@@ -333,6 +349,7 @@ namespace MechaCyberpunk.Mundo.Editor
             SerializedObject so = new SerializedObject(ciclo);
             so.FindProperty("volumeNoche").objectReferenceValue = volumeNoche;
             so.FindProperty("volumeDia").objectReferenceValue = volumeDia;
+            so.FindProperty("cielo").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialCielo);
             so.ApplyModifiedPropertiesWithoutUndo();
 
             VistasReferencia componente = Object.FindFirstObjectByType<VistasReferencia>();
