@@ -22,8 +22,17 @@ namespace MechaCyberpunk.Mundo.Reloj
         [Tooltip("Volume global del posproceso de día (peso 1 de día, 0 de noche).")]
         [SerializeField] private Volume volumeDia;
 
+        [Tooltip("Material Skybox/Procedural del cielo. Si falta, el fondo es de color sólido (el de la niebla).")]
+        [SerializeField] private Material cielo;
+
+        private static readonly int IdTinteCielo = Shader.PropertyToID("_SkyTint");
+        private static readonly int IdColorSuelo = Shader.PropertyToID("_GroundColor");
+        private static readonly int IdExposicion = Shader.PropertyToID("_Exposure");
+        private static readonly int IdTamanoSol = Shader.PropertyToID("_SunSize");
+
         private IRelojMundo reloj;
         private Camera camara;
+        private Material cieloEnEjecucion;
 
         public Volume VolumeNoche => volumeNoche;
         public Volume VolumeDia => volumeDia;
@@ -82,14 +91,46 @@ namespace MechaCyberpunk.Mundo.Reloj
             RenderSettings.fogColor = config.ColorNiebla(hora);
             RenderSettings.fogDensity = config.DensidadNiebla(hora);
 
+            AplicarCielo(hora);
+
             // Sin skybox, el fondo de la cámara es del color de la niebla: así el cielo se funde con el horizonte.
             if (camara == null)
             {
                 camara = Camera.main;
             }
-            if (camara != null && camara.clearFlags == CameraClearFlags.SolidColor)
+            if (camara != null && cieloEnEjecucion != null)
+            {
+                camara.clearFlags = CameraClearFlags.Skybox;
+            }
+            else if (camara != null && camara.clearFlags == CameraClearFlags.SolidColor)
             {
                 camara.backgroundColor = RenderSettings.fogColor;
+            }
+        }
+
+        // El cielo procedural usa una copia del material para no tocar el asset al cambiar la hora.
+        private void AplicarCielo(float hora)
+        {
+            if (cielo == null)
+            {
+                return;
+            }
+            if (cieloEnEjecucion == null)
+            {
+                cieloEnEjecucion = new Material(cielo) { name = cielo.name + " (hora)" };
+            }
+            cieloEnEjecucion.SetColor(IdTinteCielo, config.ColorCielo(hora));
+            cieloEnEjecucion.SetColor(IdColorSuelo, config.ColorNiebla(hora));
+            cieloEnEjecucion.SetFloat(IdExposicion, config.ExposicionCielo(hora));
+            cieloEnEjecucion.SetFloat(IdTamanoSol, config.DiscoSol(hora));
+            RenderSettings.skybox = cieloEnEjecucion;
+        }
+
+        private void OnDestroy()
+        {
+            if (cieloEnEjecucion != null)
+            {
+                Destroy(cieloEnEjecucion);
             }
         }
     }

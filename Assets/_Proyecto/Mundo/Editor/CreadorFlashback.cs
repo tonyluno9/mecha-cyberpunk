@@ -20,6 +20,20 @@ namespace MechaCyberpunk.Mundo.Editor
         private const string RutaMateriales = "Assets/_Proyecto/Mundo/Materiales";
         private const string RutaPerfilDia = "Assets/_Proyecto/Mundo/Datos/PerfilDia.asset";
 
+        private const string RutaPrefabFlashback = "Assets/_Proyecto/Progresion/Prologo/Prefabs/Flashback.prefab";
+        public const float AlturaOjosNino = 1.1f;
+
+        // Pose de cada plano: dónde está la cámara y qué mira (un niño de ocho años). Los textos y tiempos son de Tony (DatosFlashback_Base).
+        public static readonly (Vector3 Posicion, Vector3 Mira)[] Planos =
+        {
+            (new Vector3(-1f, AlturaOjosNino, 1.5f), new Vector3(1.5f, 0.9f, 4.5f)),   // 1: la mesa con las tres sillas
+            (new Vector3(0.5f, AlturaOjosNino, 3.2f), new Vector3(3.2f, 1.5f, 6.2f)),  // 2: el mecha bajo la lona
+            (new Vector3(1.5f, AlturaOjosNino, 5.9f), new Vector3(0f, 1.5f, 0.2f)),    // 3: la puerta, desde la silla del niño
+            (new Vector3(0f, AlturaOjosNino, 1.5f), new Vector3(0f, 1.2f, -6f)),       // 4: el porche, por donde se fue la camioneta
+            (new Vector3(-3.5f, 1f, 3.5f), new Vector3(-1.8f, 0.4f, 1.2f)),            // 5: las maletas que quedaron
+            (new Vector3(0.5f, 1f, 2f), new Vector3(3.2f, 2f, 6.2f)),                  // 6: el mecha, solo
+        };
+
         private const float Ancho = 10f;    // x
         private const float Fondo = 8f;     // z
         private const float Alto = 3.4f;
@@ -108,9 +122,28 @@ namespace MechaCyberpunk.Mundo.Editor
                 volume.sharedProfile = perfil;
             }
 
+            // T-093 (D-tony-72): seis planos de cámara a la altura de los ojos de un niño y el prefab del flashback de Tony (director, cámara y subtítulos).
+            Transform planos = new GameObject("PlanosFlashback").transform;
+            for (int i = 0; i < Planos.Length; i++)
+            {
+                GameObject plano = new GameObject("Flashback_Plano_" + (i + 1));
+                plano.transform.SetParent(planos, false);
+                plano.transform.position = Planos[i].Posicion;
+                plano.transform.rotation = Quaternion.LookRotation(Planos[i].Mira - Planos[i].Posicion, Vector3.up);
+                SerializedObject soPlano = new SerializedObject(plano.AddComponent<PuntoHistoriaMundo>());
+                soPlano.FindProperty("id").stringValue = plano.name;
+                soPlano.ApplyModifiedPropertiesWithoutUndo();
+            }
+            GameObject prefabFlashback = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabFlashback);
+            if (prefabFlashback == null)
+            {
+                throw new System.InvalidOperationException("No existe " + RutaPrefabFlashback + "; falta mezclar origin/main.");
+            }
+            PrefabUtility.InstantiatePrefab(prefabFlashback);
+
             EditorSceneManager.SaveScene(escena, RutaEscena);
             AssetDatabase.SaveAssets();
-            Debug.Log("[Mundo] T-090 creada: Flashback.unity con punto de aparición Flashback_Inicio.");
+            Debug.Log("[Mundo] T-090 creada: Flashback.unity con Flashback_Inicio, seis planos y el prefab del flashback.");
         }
 
         private static GameObject Caja(Transform padre, string nombre, Vector3 posicion, Vector3 escala, Material material, bool conCollider)

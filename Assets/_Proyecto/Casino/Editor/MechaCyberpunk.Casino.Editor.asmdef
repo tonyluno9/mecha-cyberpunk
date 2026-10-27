@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Casino.Editor",
+    "rootNamespace": "MechaCyberpunk.Casino.Editor",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Casino", "UnityEngine.UI"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
