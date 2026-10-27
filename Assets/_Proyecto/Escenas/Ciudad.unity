@@ -2914,6 +2914,7 @@ MonoBehaviour:
   luz: {fileID: 1430859600}
   volumeNoche: {fileID: 1614962305}
   volumeDia: {fileID: 798917469}
+  cielo: {fileID: 2100000, guid: 127125921b4d0954e96dd2e006102101, type: 2}
 --- !u!4 &1290267951
 Transform:
   m_ObjectHideFlags: 0
