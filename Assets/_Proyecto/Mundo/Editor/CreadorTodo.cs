@@ -35,6 +35,7 @@ namespace MechaCyberpunk.Mundo.Editor
             CreadorAmbiente.HornearReflejos(); // T-080, T-081 y T-082: el barrio cambió, las sondas se rehornean
             CreadorFlashback.Crear(); // T-090
             CreadorPeleaClandestino.Crear();
+            CreadorPrologoCiudad.Crear(); // T-093: copia de Ciudad con el conjunto del prólogo de Tony
             Debug.Log("[Mundo] Creadores de Alan corridos en orden.");
         }
     }
