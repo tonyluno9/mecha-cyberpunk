@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
@@ -88,6 +89,11 @@ namespace MechaCyberpunk.Tests.Trafico
 
         private GrupoPeatones ColgarGrupo()
         {
+            Transform colgado = barrio.transform.Find("Peatones");
+            if (colgado != null)
+            {
+                return colgado.GetComponent<GrupoPeatones>();
+            }
             GameObject objeto = new GameObject("Peatones");
             objeto.transform.SetParent(barrio.transform, false);
             GrupoPeatones grupo = objeto.AddComponent<GrupoPeatones>();
@@ -115,6 +121,139 @@ namespace MechaCyberpunk.Tests.Trafico
                 }
             }
             Assert.IsEmpty(problemas.Distinct().ToArray(), "Puntos de ruta que chocan");
+        }
+
+        [Test]
+        public void Barrio_TraeElGrupoDePeatones()
+        {
+            Transform grupo = barrio.transform.Find("Peatones");
+            Assert.IsNotNull(grupo, "Barrio.prefab no tiene el grupo Peatones");
+            Assert.IsNotNull(grupo.GetComponent<GrupoPeatones>());
+        }
+
+        [UnityTest]
+        public IEnumerator EnSesentaSegundos_NingunPeaton_SaleDeLaBanqueta_NiAtraviesaEdificios()
+        {
+            reloj.Noche = true;
+            GrupoPeatones grupo = ColgarGrupo();
+            List<Vector3[]> rutas = RutasDeLasManzanas();
+            List<string> problemas = new List<string>();
+            int muestras = 0;
+            float fin = Time.time + 60f;
+            while (Time.time < fin)
+            {
+                yield return null;
+                foreach (PeatonMundo p in grupo.Peatones)
+                {
+                    if (!p.gameObject.activeSelf) { continue; }
+                    muestras++;
+                    Vector3 local = barrio.transform.InverseTransformPoint(p.transform.position);
+                    if (DistanciaARutas(local, rutas) > 0.05f) { problemas.Add(p.name + " fuera de ruta @" + local.x.ToString("F1") + "," + local.z.ToString("F1")); }
+                    if (Mathf.Abs(local.y - AlturaBanqueta) > 0.05f) { problemas.Add(p.name + " fuera de la banqueta (y=" + local.y.ToString("F2") + ")"); }
+                    Collider[] choques = Physics.OverlapCapsule(p.transform.position + Vector3.up * AlturaInferior, p.transform.position + Vector3.up * AlturaSuperior, RadioCuerpo);
+                    foreach (Collider c in choques) { problemas.Add(p.name + " dentro de " + c.name); }
+                }
+            }
+            Debug.Log("[T-331] muestras en 60 s: " + muestras + ", problemas distintos: " + problemas.Distinct().Count());
+            Assert.Greater(muestras, 1000);
+            Assert.IsEmpty(problemas.Distinct().Take(10).ToArray());
+        }
+
+        private static float DistanciaARutas(Vector3 punto, List<Vector3[]> rutas)
+        {
+            float mejor = float.MaxValue;
+            foreach (Vector3[] ruta in rutas)
+            {
+                for (int i = 0; i < ruta.Length - 1; i++)
+                {
+                    Vector3 ab = ruta[i + 1] - ruta[i];
+                    float t = Mathf.Clamp01(Vector3.Dot(punto - ruta[i], ab) / ab.sqrMagnitude);
+                    mejor = Mathf.Min(mejor, Vector3.Distance(punto, ruta[i] + ab * t));
+                }
+            }
+            return mejor;
+        }
+
+        [UnityTest]
+        public IEnumerator ConTreintaPeatones_NingunCuadro_PasaDeCienMilisegundos()
+        {
+            reloj.Noche = true;
+            GrupoPeatones grupo = ColgarGrupo();
+            List<Vector3[]> rutas = RutasDeLasManzanas();
+            PeatonMundo prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabPeaton).GetComponent<PeatonMundo>();
+            System.Random azar = new System.Random(7);
+            int extra = Mathf.Max(0, 30 - config.Cantidad(true));
+            for (int i = 0; i < extra; i++)
+            {
+                PeatonMundo p = Object.Instantiate(prefab, grupo.transform);
+                p.Preparar(rutas[i % rutas.Count], config, new System.Random(azar.Next()), () => null, i);
+            }
+            yield return null;
+            int activos = grupo.transform.Cast<Transform>().Count(t => t.gameObject.activeSelf);
+            Assert.GreaterOrEqual(activos, 30);
+            float peor = 0f;
+            float fin = Time.realtimeSinceStartup + 5f;
+            float anterior = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup < fin)
+            {
+                yield return null;
+                float ahora = Time.realtimeSinceStartup;
+                peor = Mathf.Max(peor, ahora - anterior);
+                anterior = ahora;
+            }
+            Debug.Log("[T-331] peor cuadro con " + activos + " peatones: " + (peor * 1000f).ToString("F1") + " ms");
+            Assert.Less(peor, 0.1f);
+        }
+
+        [UnityTest]
+        public IEnumerator Capturas_DelBarrioConPeatones()
+        {
+            reloj.Noche = true;
+            GrupoPeatones grupo = ColgarGrupo();
+            GameObject luzObjeto = new GameObject("LuzCaptura");
+            Light luz = luzObjeto.AddComponent<Light>();
+            luz.type = LightType.Directional;
+            luz.intensity = 0.8f;
+            luzObjeto.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+            GameObject camObjeto = new GameObject("CamCaptura");
+            Camera cam = camObjeto.AddComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.03f, 0.04f, 0.08f);
+            cam.farClipPlane = 300f;
+            for (int i = 0; i < 2; i++)
+            {
+                yield return new WaitForSeconds(6f);
+                PeatonMundo cercano = grupo.Peatones.Where(p => p.gameObject.activeSelf && !p.Detenido).ElementAt(i * 7);
+                Vector3 donde = cercano.transform.position;
+                // La primera posición con la vista libre de muros entre la cámara y el peatón.
+                Vector3[] desplazamientos = { new Vector3(5f, 2.5f, -6f), new Vector3(-5f, 2.5f, 6f), new Vector3(6f, 2.5f, 5f), new Vector3(-6f, 2.5f, -5f) };
+                Vector3 objetivo = donde + Vector3.up * 1f;
+                camObjeto.transform.position = donde + desplazamientos[i];
+                foreach (Vector3 d in desplazamientos)
+                {
+                    if (!Physics.Linecast(donde + d, objetivo))
+                    {
+                        camObjeto.transform.position = donde + d;
+                        break;
+                    }
+                }
+                camObjeto.transform.LookAt(objetivo);
+                yield return null;
+                RenderTexture rt = new RenderTexture(1280, 720, 24);
+                cam.targetTexture = rt;
+                cam.Render();
+                RenderTexture.active = rt;
+                Texture2D img = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+                img.ReadPixels(new Rect(0f, 0f, 1280f, 720f), 0, 0);
+                img.Apply();
+                RenderTexture.active = null;
+                cam.targetTexture = null;
+                File.WriteAllBytes(Path.GetFullPath(Path.Combine(Application.dataPath, "..", "docs/capturas/T-331-" + (i + 1) + ".png")), img.EncodeToPNG());
+                Object.Destroy(img);
+                Object.Destroy(rt);
+            }
+            Object.Destroy(camObjeto);
+            Object.Destroy(luzObjeto);
         }
 
         [UnityTest]

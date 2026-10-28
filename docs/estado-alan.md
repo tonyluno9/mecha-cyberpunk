@@ -25,8 +25,10 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 
-## T-331 (WIP, 2026-10-28): peatones, código y pruebas listos, sin regenerar el barrio
-- Rama alan/T-331-peatones (sale de alan/fase-6). `RutasBanqueta`, `PeatonMundo`, `GrupoPeatones`, `CreadorPeatones` (prefab Peaton, ConfigPeatones_Trafico) y el aviso en `CreadorTodo`.
-- Evidencia: EditMode 1097/1097; PlayMode de Trafico 3/3 sobre una instancia de Barrio.prefab (rutas sin choques con ningún collider, cuenta 12 de día / 24 de noche, parada a 2 m del jugador).
-- Hallazgo: los cierres del barrio (vallas, retenes, pórticos) chocaban con las rutas; las manzanas de los extremos no caminan por su lado exterior y sus puntas se acortan 15 m (`RecorteCierres`).
-- NO verificado: `CreadorPeatones.ColgarEnBarrio` no se ha corrido (reescribe Barrio.prefab, bloqueado hasta Merge tony/T-250); faltan la prueba de 60 s con el grupo en la escena real, ningún cuadro de más de 100 ms con 30 peatones, capturas T-331-1..2 y `verificar.sh todo`. No integrada.
+## T-331 (2026-10-28): peatones en el barrio, hecha
+- Rama alan/T-331-peatones, con origin/main (T-250) mezclado. `CreadorPeatones.ColgarEnBarrio` corrido solo sobre Barrio.prefab (+74 líneas: grupo `Peatones` con 6 rutas); el arte de T-250 queda intacto. No se corrió CreadorTodo.
+- Evidencia: compilar OK, EditMode 1097/1097, PlayMode 992 pasaron, 0 fallos, 9 omitidas (capturas de Tony). `PeatonesBarrioPruebas` 7/7:
+  muestreo de 60 s (3.7 M muestras, 0 fuera de ruta/banqueta, 0 choques con colliders), cuenta 12 de día / 24 de noche, parada a 2 m, peor cuadro con 30 peatones 1.0 ms (batchmode, sin vsync), grupo presente en Barrio.
+- Capturas: docs/capturas/T-331-1.png y T-331-2.png (peatones con neón en la banqueta, de noche).
+- Aviso: las pruebas de PlayMode reescriben capturas de otras tareas en docs/capturas/ y ProjectSettings/Peaton_Neon.mat; no se incluyeron en el commit y quedan sin descartar en el árbol de trabajo.
+- No integrada a main ni a fase.
