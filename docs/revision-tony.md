@@ -3,6 +3,44 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Implantes (T-F7, bloque 6) cerrados: qué probar jugando (2026-10-28)
+Del lado de Tony, en `Escenas/Tony/Pruebas_Implantes.unity` (Play, unos 20 minutos, sin ayuda). Sin revisor: el bloque 6 no pasó por revisión de Opus.
+Base automática: `RecorridoImplantesPruebas` (T-197), una prueba de PlayMode con entrada simulada que recorre un día y una noche con cromo (pasos a a j de la tarea); 3 corridas seguidas en verde.
+Suite completa y `playmode-por-area`: no se corrieron en esta tarea (orden del turno: solo las áreas tocadas); se corrió el ensamblado completo de Progresion.Implantes. Anotar aquí el resultado por área cuando las corra el verificador.
+
+Lista para un humano, en orden de juego:
+1. Arrancas a las 10:00 sin implantes. En la pista, corre la recta de 30 m con Shift y salta: ¿se siente lento y bajo? (7.5 m/s; 1.1 m de salto). OJO: la caja PIERNAS I ya se sube sin implantes (ver hallazgo abajo).
+2. E en el mostrador de la CLÍNICA (de día): instala PIERNAS I y BRAZOS I. ¿Cada operación (fundido a negro, línea del doc, +2 h, "IMPLANTE INSTALADO") se siente a la altura de lo que cuesta ($2,000 cada una)?
+3. Mírate al espejo de la casa (E): ¿se ven las piernas cromadas y los brazos? Corre y salta otra vez: PIERNAS I corre a 9 m/s y salta 1.43 m. ¿Se nota?
+4. A las 21:00 sale la pandilla (3). Con BRAZOS I tumbas a cada uno con 3 golpes (4 sin implante) y cobras $120 por los tres. ¿Pelear contra 3 a puño es tenso sin ser injusto? Nunca más de 2 atacan a la vez.
+5. De noche la clínica dice "CERRADA". Al día siguiente instala OJOS I ($2,500) y SISTEMA NERVIOSO I ($3,000).
+6. A las 21:00 en el mostrador de peleas, E: pelea contra TORNILLO. ¿La pantalla de OJOS (vida del rival y PRÓXIMO: GOLPE 0.4 s antes) y el golpe más rápido (0.213 s contra 0.25 s) te hacen ganar una pelea que antes perdías, sin sentirse trampa?
+7. Con la liga 3, mejora los cuatro a nivel 2 pagando la diferencia (los de nivel 2 llevan una franja magenta en el espejo).
+8. Caer en la calle: de noche, déjate tumbar por la pandilla con poco dinero. Despiertas en la camilla a las 05:00, el doc te cobra $500 (puedes quedar en deuda), el calor se borra, el mecha vuelve al taller dañado si estaba en la calle y el objetivo dice VUELVE A CASA. ¿Te dieron ganas de volver con más cromo?
+9. F5 y F9 con todo puesto: implantes, dinero y mecha vuelven.
+
+Tabla final de implantes (provisional, D-tony-165; los números salen de `DatosImplante_*.asset`):
+
+| Implante | Nivel 1 (liga 1) | Nivel 2 (liga 3) |
+| --- | --- | --- |
+| OJOS | $2,500: pantalla de vida del rival y aviso de golpe 0.4 s antes | $6,000: más los números y aviso 0.8 s antes |
+| BRAZOS | $2,000: golpe a pie x1.5 | $5,000: x2 |
+| PIERNAS | $2,000: correr x1.2, salto x1.3 | $5,000: correr x1.35, salto x1.6 |
+| SISTEMA NERVIOSO | $3,000: golpe y guardia del mecha 15 % más rápidos | $7,000: 30 % |
+
+Reglas del doctor (T-196): solo cuando el KO es a pie y la historia está en Libre (no en una pelea del flujo); fundido a negro, 6 horas inconsciente (23:00 pasa a 05:00), cobro de $500 que puede dejar deuda, vida llena, calor 0, despiertas en `Clinica_Camilla`, el objetivo es volver a Casa; si el mecha estaba en la calle vuelve solo al taller con el 20 % de vida (piso de emergencia 15 %) y repararlo se cobra en el banco.
+
+Medidas de la corrida (tiempos de juego por paso): a 9.6 s, b 12.6 s, c 6.1 s, d 10.1 s, e 12.2 s, f 29-31 s, g 26.5 s, h 11.3 s, i 0.02 s. Recta 30 m (tramo 10-30 m): 2.667 s sin implante, 2.222 s con PIERNAS I (esperados 2.667 y 2.222). Salto 1.1 / 1.43 / 1.76 m. Pandilla: 3 golpes por pandillero con BRAZOS I. OJOS I avisa 3 de 3 golpes explicables con 0.4 s (un cuarto llegó pegado a otro).
+
+Hallazgo para una tarea de corrección (no se arregló: T-197 no toca escenas ni código): las cajas de salto de `CreadorEscenaImplantes.AlturasCajasSalto` se calcularon con el salto solo, pero el `CharacterController` sube escalones de `stepOffset` (0.35 m) en pleno salto, así que el alcance real es salto + 0.35: 1.45 m sin implantes, 1.78 con PIERNAS I, 2.11 con PIERNAS II. La caja PIERNAS I (1.265 m) se sube sin implantes y la PIERNAS II (1.595 m) se sube con PIERNAS I. Corrección propuesta: alturas en el punto medio de los alcances reales (cerca de 1.62 y 1.95 m). Mientras tanto la prueba asserta el resultado físico (salto + escalón) y anota la diferencia (D-tony-181).
+
+Preguntas abiertas para Tony (D-tony-174): (a) ¿dos niveles por espacio con el 2 desde la liga 3, o uno solo? (b) ¿$500 por levantarte y 6 horas dormido es un castigo justo? (c) ¿Los pandilleros a pie se quedan? (d) ¿Los implantes deberían costar algo más que dinero (ciberpsicosis, desconfianza del barrio)? (e) ¿Algunos implantes deberían pedir reputación de barrio o de corporaciones? (f) ¿El ojo cosmético de la creación cuenta como OJOS instalados?
+
+### Para Alan (D-tony-173; nada de esto lo bloquea)
+- Prefabs de Tony para colocar en Ciudad.unity cuando quiera: `MostradorClinica.prefab` (E de día, cierra a las 20:00), el punto de aparición `Clinica_Camilla` (donde despierta el jugador), `DoctorClinica.prefab` y `PandillaAPie.prefab` (3 pandilleros de noche en un sitio vacío tipo `Sitio_Pandilla`).
+- Altura de bardas: con PIERNAS II el salto es de 1.76 m (alcance real 2.11 m con el escalón); una barda de 2.2 m o más sigue siendo infranqueable, una de 1.5 m ya no lo es con PIERNAS I.
+- `IImplantes` (Core) se puede leer desde Mundo o Trafico (`Registro<IImplantes>.Actual`: `Cantidad`, `Nivel(espacio)`, `Efectos`, evento `Cambio`) para vecinos que noten el cromo.
+
 ## Habilidades (T-F7, bloque 4) cerradas: qué probar jugando (2026-10-26)
 Del lado de Tony, en `Escenas/Tony/Pruebas_Economia.unity` (Play, de noche, sin ayuda). Sin revisor: T-F7 bloque 4 no pasó por revisión de Opus.
 Base automática: `RecorridoHabilidadesPruebas` (T-180) recorre con entrada simulada: comprar 3 MISILES y 2 CELDAS en el mercado negro (la pestaña VENDER no ofrece munición), comprar BRAZO IZQ. MILITAR I y TORSO TECH I (la diferencia muestra "HABILIDAD 1 · MISIL I · MISILES" y "HABILIDAD 2 · ESCUDO I · CELDAS"), subir y encender (la pantalla dice "1 · MISIL I · ×3" y "2 · ESCUDO I · ×2" en gris; 1 y 2 fuera de pelea no gastan), pelear contra TORNILLO con 3 misiles de 20 de daño y enfriamiento medido 7.76 s (8 s menos 3 % de la pieza tech), 1 antes del enfriamiento no gasta, con 0 misiles la fila dice SIN MUNICIÓN y el golpe a puños lleva el daño compuesto (13), el ESCUDO de 2 contra LA RATA (golpe de 8 quita 4 con escudo y 8 sin él), DON FIERRO con su aviso de 0.6 s y su EMBESTIDA de 14, y F5/F9 con la munición. 4 corridas seguidas pasan (~76 s reales, ~90 s de juego cada una). Dinero final igual al calculado desde los assets ($4,300 / $4,220 según lo que cuesta reparar). Tiempo de juego por paso: a) 0.0 s, b) 0.1 s, c) 0.1 s, d) 7.3 s, e) 39.3 s, f) 18.6 s, g) 25.3 s, h) 0.0 s. Capturas: `docs/capturas/T-180-1.png` (cabina con el misil recién lanzado hacia TORNILLO y la fila 1 enfriando "8 s"), `T-180-2.png` (cabina con "SIN MUNICIÓN" mientras se pelea a puños), `T-180-3.png` (DON FIERRO naranja en su aviso antes de embestir). Detalles y atajos: `docs/bitacora/2026-10-26-tony-T-180.md`.
