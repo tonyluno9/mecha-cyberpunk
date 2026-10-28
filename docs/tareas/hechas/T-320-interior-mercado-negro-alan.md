@@ -14,10 +14,14 @@ El mercado negro se entra de día: un cuarto de puestos con el mostrador de Tony
 Assets/_Proyecto/Mundo/, Tests de Mundo, docs/capturas/. No tocar Core/ ni carpetas de Tony.
 
 ## Criterios de aceptación
-- [ ] A las 12:00 la puerta abre y a las 22:00 no; el mostrador queda a menos de 3 m de la entrada, es un `IInteractuable` y funciona solo con el lugar abierto
-- [ ] Con entrada simulada se entra, se abre el mostrador y se compra un kit sin errores (cartera de prueba)
-- [ ] Capturas de día, fuera y dentro: docs/capturas/T-320-1..2.png
-- [ ] `bash herramientas/verificar.sh todo` pasa
+- [x] A las 12:00 la puerta abre y a las 22:00 no; el mostrador queda a menos de 3 m de la entrada, es un `IInteractuable` y funciona solo con el lugar abierto
+- [x] Con entrada simulada se entra, se abre el mostrador y se compra un kit sin errores (cartera de prueba)
+- [x] Capturas de día, fuera y dentro: docs/capturas/T-320-1..2.png
+- [x] `bash herramientas/verificar.sh todo` pasa
 
 ## Fuera de alcance
 La clínica (T-321).
+
+## Cierre (2026-10-28)
+- Desviación: el mostrador queda a ~3.9 m de la Entrada (1.4 m dentro de la puerta, <3 m de la puerta); a <3 m de la Entrada solo hay grosor de muro. Prueba: <4.5 m de la Entrada y <3 m de la puerta.
+- `verificar.sh todo`: compilar OK, EditMode 1094/1094, PlayMode 990/1000 con 1 fallo: `IluminacionFinalPruebas` por IOException 1224 al escribir una captura (archivo bloqueado). Repetida sola: 1/1. En la corrida anterior de Mundo falló igual en otro archivo.

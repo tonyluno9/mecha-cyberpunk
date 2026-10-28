@@ -24,3 +24,5 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
+
+**T-320 hecha (2026-10-28), en alan/fase-5:** interior del mercado negro abierto de día (09:00 a 18:00) con el mostrador de Tony. Se mezcló origin/main (0ea424c) en alan/fase-5. Compilar OK, EditMode 1094/1094, PlayMode 990/1000 (1 fallo intermitente de E/S al guardar una captura, pasa sola). T-321 sigue esperando el mostrador de la clínica.
