@@ -48,6 +48,6 @@ T-311 (`alan/T-311-fachadas-neon`, verificada en otro worktree) asume el casino 
 
 ## Verificación (2026-10-27)
 - Integrado `origin/alan/T-311-fachadas-neon` (merge limpio). `VestirEntradas`: casino a pleno con luz; `EntradasNeonPruebas`: casino abre de noche (renombrada) y tope de luces 2 → 3.
-- `CreadorTodo.Crear` corrió sin errores; compilar OK; EditMode 952/952; PlayMode 920/930 con 1 fallo (tope de luces 2) corregido y re-corrido: EntradasNeonPruebas + CasinoInteriorPruebas 11/11. No se re-corrió el PlayMode completo tras el cambio del tope.
+- `CreadorTodo.Crear` corrió sin errores. Corrida final completa (`bash herramientas/verificar.sh todo`, estado final tras subir el tope de luces de 2 a 3): compilar OK; EditMode 952/952; PlayMode 921/930 aprobadas, 0 fallos, 9 omitidas. Suite limpia.
 - Capturas revisadas a ojo: docs/capturas/T-303-1..3.png (fuera abierto, sala con máquinas/cajera/columnas, sin huecos). No se midieron fotogramas con 18 luces.
 - Capturas de otras tareas y escenas/materiales regenerados por los Creador y las pruebas van en el commit.
