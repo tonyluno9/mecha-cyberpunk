@@ -85,3 +85,13 @@ MonoBehaviour:
   tamanoAvisoMision: 40
   nombreMotivoMision: "MISI\xD3N"
   textoChatarraMision: +{0} {1}
+  distanciaLecturaRival: 15
+  radioMiraRival: 0.7
+  alturaCentroRival: 0.9
+  anchoBarraRival: 200
+  altoBarraRival: 8
+  alturaBarraRival: 90
+  formatoVidaRival: '{0:0} / {1:0}'
+  textoGolpeRival: "\xA1GOLPE!"
+  tamanoTextoGolpeRival: 32
+  desplazamientoGolpeRival: 110
