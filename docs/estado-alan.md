@@ -30,3 +30,9 @@ Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 - Única falla: `CerradosPruebas.Cerrados_NoTapanLaEntradaNiInvadenLaCalle`: "MercadoNegro tiene su decoración. Expected: greater than 8, But was: 8" (CerradosPruebas.cs:92).
 - Causa probable: el grupo exterior de decoración del Mercado en Barrio.prefab solo tiene 8 piezas. Arreglarlo exige regenerar Barrio.prefab / Ciudad.unity, que están bloqueados hasta que main muestre el merge de tony/T-250. No se debilita la prueba para pasarla.
 - Estado: T-320 queda WIP, NO integrada ni aprobada. Siguiente paso: tras el merge de T-250, regenerar el Mercado y repetir PlayMode.
+
+## T-321 (WIP, 2026-10-28): clínica del mercado negro, código listo, sin regenerar
+- Rama alan/T-321-clinica (sale de T-320). `CreadorMercadoNegroInterior` ahora arma la clínica (tabique con vano, camilla, luz fría, `Lugar_Clinica` con `IdLugar.Clinica` y horario 9 a 18, punto vacío `Clinica_Mostrador`) y `GeometriaClinica` guarda las medidas. Se quitó la pila de cajas izquierda del fondo para dejarle el rincón.
+- Asset `DatosLugar_Clinica.asset` creado con batch (no toca Barrio.prefab). El prefab de Tony (`MostradorClinica`) no existe aún: el punto queda libre.
+- Evidencia: compila; EditMode 957/957 (incluye `ClinicaPruebas`, 5 pruebas de datos y geometría).
+- NO verificado: el creador no se ha corrido (escribe Barrio.prefab, bloqueado hasta Merge tony/T-250), así que faltan PlayMode, captura y `verificar.sh todo`. No integrada.
