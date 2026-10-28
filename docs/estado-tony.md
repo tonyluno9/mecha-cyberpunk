@@ -54,3 +54,6 @@ Rama tony/T-250-assets, mezclada en main. Los 38 modelos del lote importados y c
 Pruebas: EditMode 1094/1094; PlayMode 984/994 (1 intermitente de Misiones, no de T-250, 3/3 sola). Builds/Provisional y
 Builds/Provisional_Assets regenerados con ConstruirT250.Construir. El arte vuelve a ser de Alan desde esta noche.
 Rama tony/T-197-cajas-salto: cajas de salto de Pruebas_Implantes con el stepOffset (0.725/1.615/1.945 m), pruebas ajustadas; D-tony-181 corregida.
+
+## Bloque 6 cerrado (2026-10-28)
+T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas en tony/fase-7: EditMode 1129/1129; PlayMode 999/1017 (8 de JaulaClandestinoPruebas de Alan, conocidos; OjosII_ContraElJefe inestable, 3/3 sola); playmode-por-area sin LIMITE. Mezclado a main. Builds/Provisional y Builds/Provisional_Implantes (385 MB). Criterios de sensación para Tony en docs/revision-tony.md. Doc arreglado: el commit de T-197 había vaciado decisiones-pendientes y la guía (D-tony-183).
