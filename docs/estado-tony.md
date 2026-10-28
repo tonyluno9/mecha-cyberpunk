@@ -48,3 +48,8 @@ Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas). (Ya no: 
 - **T-136 ya se puede hacer** con `Assets/_Proyecto/Escenas/Ciudad_Prologo.unity` (Alan la hizo con JugadorAPie, MechaEstacionado,
   Emboscada, DirectorPrologo y MostradorPeleas; apuntar `DatosEscenas_Demo` a Ciudad_Prologo, no a Ciudad.unity). Su archivo sigue en
   docs/tareas/bloqueadas/ hasta que se empiece.
+
+## T-250 assets 3D: hecha (2026-10-28)
+Rama tony/T-250-assets, mezclada en main. Los 38 modelos del lote importados y colocados (tabla en docs/assets-importados.md).
+Pruebas: EditMode 1094/1094; PlayMode 984/994 (1 intermitente de Misiones, no de T-250, 3/3 sola). Builds/Provisional y
+Builds/Provisional_Assets regenerados con ConstruirT250.Construir. El arte vuelve a ser de Alan desde esta noche.
