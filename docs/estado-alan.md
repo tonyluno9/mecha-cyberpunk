@@ -24,3 +24,8 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
+
+## T-341 (WIP, 2026-10-28): drones y patrullas, código y pruebas listos, sin colgar en el barrio
+- Rama alan/T-341-drones-patrullas (sale de alan/fase-6). `GrafoCalles`, `DronMundo`, `PatrullaMundo`, `GestorPersecucion` (escucha `ICalor.NivelCambio`; al entrar a la Casa llama a `ICalor.Borrar()`), `CreadorPersecucion` (prefabs Dron y Patrulla, ConfigPersecucion_Trafico) y el aviso en `CreadorTodo`. El aviso de la casa vive en el gestor, no en Mundo.
+- Evidencia: EditMode 1100/1100; PlayMode de Trafico 4/4 sobre una instancia de Barrio.prefab con dobles de ICalor e IJugador (0 a 3 de nivel crea y retira, entrar a Casa borra el calor, el dron se acerca sin colliders, la patrulla recorre 60 s de juego a escala 5 sin salir de la calle).
+- NO verificado: `CreadorPersecucion.ColgarEnBarrio` no se ha corrido (reescribe Barrio.prefab, bloqueado hasta Merge tony/T-250); faltan capturas T-341-1..2, sin errores en consola con el barrio real y `verificar.sh todo`. No integrada.

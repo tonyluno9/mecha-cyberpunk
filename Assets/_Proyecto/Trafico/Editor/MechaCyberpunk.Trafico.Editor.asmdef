@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Trafico.Editor",
+    "rootNamespace": "MechaCyberpunk.Trafico.Editor",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Trafico"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
