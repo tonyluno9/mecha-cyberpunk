@@ -106,3 +106,31 @@ Revisado el 2026-10-13. T-060 necesita en main el barrio, el reloj, las puertas 
 `IMontable` en main (`Vehiculos/` en main solo tiene su asmdef): llega con T-075 y T-078 cuando alan/fase-2 se apruebe. Las dos
 se quedan en docs/tareas/bloqueadas/. Pendiente aparte, sin tarea todavía: colocar `JugadorAPie.prefab` en Ciudad.unity y
 Pruebas_Alan.unity (D-tony-25), cuando T-059 esté en main.
+
+## Inventario técnico del bloque de Radio (2026-10-28)
+Solo decisiones y dependencias, sin código. Radio/ es de Tony (hoy solo tiene su asmdef). Base: docs/diseno/estetica-hud.md (Bloque 7)
+y hoja-de-ruta T-F7. En Core/ no existe ningún contrato de radio.
+
+### D-alan-23 Lo que el diseño ya fija
+Propuesta de lectura, sin cambiar el diseño. Radio = audífonos del protagonista, suena siempre (también en peleas). 3 estaciones
+cambiables con una tecla: cumbia electrónica, electrónica oscura, hip hop/rap callejero. A pie: el HUD mínimo muestra la canción
+que suena; en el mecha, una pantalla de la cabina. Canciones = covers del equipo, solo uso escolar, no se suben a internet.
+
+### D-alan-24 Dependencias que faltan (para que Tony las convierta en tareas)
+1. Contrato en Core/ (D-027), p. ej. `IRadio` / `EstacionRadio` / evento "canción cambió" (estación, título), para que UI/ (HUD y
+   pantalla de cabina, Tony) y Mundo/ (Alan) lo lean sin referenciarse. Es tarea de Core de Tony (D-032).
+2. Tecla de cambio de estación: acción nueva en el Input System (Mecha/ y Personaje/ son de Tony).
+3. Datos: ScriptableObject de estaciones y canciones en `Radio/Datos/`.
+4. Audio: los covers los hace el equipo; hoy en Assets/Arte/Audio solo hay ambientes (Ambiente_Musica.wav, etc.). Falta decidir quién
+   los produce y el formato (Git LFS) antes de cualquier tarea de integración.
+
+### D-alan-25 Choque con el audio de Alan (pendiente de decidir)
+`Mundo/Ambiente/AmbienteSonoro` ya reproduce Ambiente_Musica.wav en la ciudad. Propuesta: cuando exista la radio, ese loop se baja o
+se quita para que la radio sea la música (los locales conservan su música diegética por distancia). Alan solo ajusta su volumen; el
+contrato de Core debe exponer si la radio está sonando. Falta confirmación de Tony.
+
+### D-alan-26 Preguntas abiertas
+- ¿Cambio de estación con tecla única cíclica o una por estación? ¿Hay botón de apagar? (el diseño dice "siempre suena").
+- ¿La radio persiste la estación en el guardado (Progresion/, Tony)?
+- ¿Los interiores (casino, bar, mercado) silencian o filtran los audífonos?
+- Fecha de corte 2026-11-12: la radio es del bloque T-F7 (después de la demo); no hay tareas escritas, así que no se implementa nada.
