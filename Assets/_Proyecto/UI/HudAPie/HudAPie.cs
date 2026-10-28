@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Mecha.Llamado;
@@ -74,6 +75,13 @@ namespace MechaCyberpunk.UI.Hud
         [Tooltip("{0} = nombre del implante.")]
         [SerializeField] private string formatoAvisoImplante = "IMPLANTE INSTALADO: {0}";
 
+        [Header("OJOS a pie (T-195; opcional; solo a pie)")]
+        [SerializeField] private GameObject grupoVidaRival;
+        [SerializeField] private Image rellenoVidaRival;
+        [SerializeField] private Text textoVidaRival;
+        [SerializeField] private GameObject grupoGolpeRival;
+        [SerializeField] private Text textoGolpeRival;
+
         private IReputacion reputacion;
         private ServicioGuardado guardado;
         private int valorBarrio;
@@ -111,6 +119,11 @@ namespace MechaCyberpunk.UI.Hud
         private float avisoRestante;
         private float anguloFlecha;
 
+        public GameObject GrupoVidaRival => grupoVidaRival;
+        public Image RellenoVidaRival => rellenoVidaRival;
+        public Text TextoVidaRival => textoVidaRival;
+        public GameObject GrupoGolpeRival => grupoGolpeRival;
+        public Text TextoGolpeRival => textoGolpeRival;
         public Image Relleno => relleno;
         public Text TextoVida => textoVida;
         public Text TextoArma => textoArma;
@@ -278,6 +291,7 @@ namespace MechaCyberpunk.UI.Hud
             ActualizarAvisoDinero();
             ActualizarAvisoLiga();
             ActualizarAvisosMision();
+            ActualizarOjos();
         }
 
         private void OnDisable()
@@ -429,6 +443,14 @@ namespace MechaCyberpunk.UI.Hud
 
         private void OcultarTodo()
         {
+            if (grupoVidaRival != null)
+            {
+                grupoVidaRival.SetActive(false);
+            }
+            if (grupoGolpeRival != null)
+            {
+                grupoGolpeRival.SetActive(false);
+            }
             grupoVida.SetActive(false);
             grupoMira.SetActive(false);
             grupoArma.SetActive(false);
@@ -452,6 +474,71 @@ namespace MechaCyberpunk.UI.Hud
             {
                 grupoAvisoMision.SetActive(false);
             }
+        }
+
+        // OJOS a pie (T-195): la vida del rival en la mira y el aviso de su golpe. Sin el implante no se muestra nada.
+        private void ActualizarOjos()
+        {
+            if (grupoVidaRival == null || grupoGolpeRival == null || rellenoVidaRival == null)
+            {
+                return;
+            }
+            IImplantes implantes = Registro<IImplantes>.Actual;
+            EfectosImplantes efectos = implantes != null ? implantes.Efectos : EfectosImplantes.Ninguno;
+            bool leer = jugador != null && EstaAPie && (efectos.verVidaRival || efectos.anticipacionAtaque > 0f);
+            ILecturaRival rival = leer ? ElegirRivalEnLaMira() : null;
+            bool verVida = rival != null && efectos.verVidaRival;
+            grupoVidaRival.SetActive(verVida);
+            if (verVida)
+            {
+                IVida vidaRival = rival.Vida;
+                float maxima = Mathf.Max(1f, vidaRival.Maxima);
+                rellenoVidaRival.fillAmount = Mathf.Clamp01(vidaRival.Actual / maxima);
+                if (textoVidaRival != null)
+                {
+                    textoVidaRival.gameObject.SetActive(efectos.vidaRivalEnNumeros);
+                    textoVidaRival.text = string.Format(config.FormatoVidaRival, vidaRival.Actual, vidaRival.Maxima);
+                }
+            }
+            bool avisar = rival != null && efectos.anticipacionAtaque > 0f
+                && (rival.Preparando || (rival.SegundosParaAtacar >= 0f && rival.SegundosParaAtacar < efectos.anticipacionAtaque));
+            grupoGolpeRival.SetActive(avisar);
+        }
+
+        // El rival a pie vivo que está en la mira (cerca del rayo de la cámara) a la distancia de lectura; el más cercano.
+        private ILecturaRival ElegirRivalEnLaMira()
+        {
+            Camera camara = jugador.Camara;
+            if (camara == null)
+            {
+                return null;
+            }
+            Vector3 origen = camara.transform.position;
+            Vector3 adelante = camara.transform.forward;
+            IReadOnlyList<ILecturaRival> todos = Registro<ILecturaRival>.Todos;
+            ILecturaRival mejor = null;
+            float mejorDistancia = config.DistanciaLecturaRival;
+            for (int i = 0; i < todos.Count; i++)
+            {
+                ILecturaRival candidato = todos[i];
+                if (candidato.EsMecha || candidato.Raiz == null || !candidato.Raiz.gameObject.activeInHierarchy
+                    || candidato.Vida == null || candidato.Vida.EstaKO)
+                {
+                    continue;
+                }
+                Vector3 hacia = candidato.Raiz.position + Vector3.up * config.AlturaCentroRival - origen;
+                float avance = Vector3.Dot(hacia, adelante);
+                if (avance <= 0f || avance > mejorDistancia)
+                {
+                    continue;
+                }
+                if ((hacia - adelante * avance).magnitude <= config.RadioMiraRival)
+                {
+                    mejorDistancia = avance;
+                    mejor = candidato;
+                }
+            }
+            return mejor;
         }
 
         private void ActualizarVida()

@@ -304,6 +304,44 @@ namespace MechaCyberpunk.UI.Editor
                     grupoReputacion.gameObject.SetActive(false);
                     grupoMision.gameObject.SetActive(false);
                 }
+                if (so.FindProperty("grupoVidaRival").objectReferenceValue == null)
+                {
+                    // T-195: OJOS a pie. Barra delgada turquesa sobre la mira y el aviso de golpe a su derecha.
+                    RectTransform grupoRival = CrearGrupo("VidaRival", raiz.transform, new Vector2(0.5f, 0.5f),
+                        new Vector2(0f, config.AlturaBarraRival), new Vector2(config.AnchoBarraRival, config.AltoBarraRival));
+                    Image huecoRival = CrearImagen("Hueco", grupoRival, config.ColorHueco);
+                    Stretch(huecoRival.rectTransform);
+                    Image rellenoRival = CrearImagen("Relleno", grupoRival, config.ColorVida);
+                    Stretch(rellenoRival.rectTransform);
+                    Texture2D blancoRival = Texture2D.whiteTexture;
+                    rellenoRival.sprite = Sprite.Create(blancoRival, new Rect(0f, 0f, blancoRival.width, blancoRival.height), new Vector2(0.5f, 0.5f));
+                    rellenoRival.type = Image.Type.Filled;
+                    rellenoRival.fillMethod = Image.FillMethod.Horizontal;
+                    rellenoRival.fillOrigin = (int)Image.OriginHorizontal.Left;
+                    Text textoRival = CrearTexto("Numeros", grupoRival, config, TextAnchor.LowerCenter);
+                    textoRival.rectTransform.anchorMin = new Vector2(0f, 1f);
+                    textoRival.rectTransform.anchorMax = new Vector2(1f, 1f);
+                    textoRival.rectTransform.pivot = new Vector2(0.5f, 0f);
+                    textoRival.rectTransform.anchoredPosition = Vector2.zero;
+                    textoRival.rectTransform.sizeDelta = new Vector2(0f, AltoTexto);
+                    textoRival.color = config.ColorVida;
+                    RectTransform grupoGolpe = CrearGrupo("GolpeRival", raiz.transform, new Vector2(0.5f, 0.5f),
+                        new Vector2(config.DesplazamientoGolpeRival, 0f), new Vector2(AnchoTextoLateral / 2f, AltoTexto));
+                    grupoGolpe.pivot = new Vector2(0f, 0.5f);
+                    Text textoGolpe = CrearTexto("Texto", grupoGolpe, config, TextAnchor.MiddleLeft);
+                    Stretch(textoGolpe.rectTransform);
+                    textoGolpe.fontSize = config.TamanoTextoGolpeRival;
+                    textoGolpe.color = config.ColorAviso;
+                    textoGolpe.text = config.TextoGolpeRival;
+                    so.FindProperty("grupoVidaRival").objectReferenceValue = grupoRival.gameObject;
+                    so.FindProperty("rellenoVidaRival").objectReferenceValue = rellenoRival;
+                    so.FindProperty("textoVidaRival").objectReferenceValue = textoRival;
+                    so.FindProperty("grupoGolpeRival").objectReferenceValue = grupoGolpe.gameObject;
+                    so.FindProperty("textoGolpeRival").objectReferenceValue = textoGolpe;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    grupoRival.gameObject.SetActive(false);
+                    grupoGolpe.gameObject.SetActive(false);
+                }
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }
             finally
