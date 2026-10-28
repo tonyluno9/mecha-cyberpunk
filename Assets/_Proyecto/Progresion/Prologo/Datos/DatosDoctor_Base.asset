@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74a440f099a15934e83a5bc3faa04e8d, type: 3}
+  m_Name: DatosDoctor_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Prologo::MechaCyberpunk.Progresion.Prologo.Clinica.DatosDoctor
+  cobro: 500
+  horasInconsciente: 6
+  fraccionVidaMecha: 0.2
+  segundosEspera: 3
+  segundosNegro: 1
+  segundosSubtitulo: 5
+  segundosBusqueda: 0.5
+  textoDoctor: "EL DOC: Otra vez t\xFA. Son quinientos, mijo."
+  textoDeuda: Me los quedas debiendo.
+  textoObjetivo: VUELVE A CASA
+  idAparicionCamilla: Clinica_Camilla
+  idAparicionCasa: Casa_Cama
+  lugarCasa: 2

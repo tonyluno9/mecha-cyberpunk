@@ -36,6 +36,7 @@ namespace MechaCyberpunk.Mecha.Montaje
         private LlamadoMecha llamado;
         private AudioListener oyente;
         private bool bajadaBloqueada;
+        private bool bajadaForzada;
         private readonly Collider[] colisionadores = new Collider[MaxColisionadores];
 
         public ModoJugador Modo => ModoJugador.Mecha;
@@ -111,12 +112,32 @@ namespace MechaCyberpunk.Mecha.Montaje
             return true;
         }
 
+        /// <summary>
+        /// La siguiente <see cref="IntentarBajar"/> (y solo esa) ignora el encendido y la velocidad, y si no hay un lugar libre alrededor
+        /// deja al jugador frente al mecha. La usa el doctor de la clínica (T-196) cuando el mecha cayó en KO con el jugador adentro.
+        /// </summary>
+        public void ForzarSiguienteBajada()
+        {
+            bajadaForzada = true;
+        }
+
         public bool IntentarBajar(out Pose salida)
         {
             salida = Pose.identity;
-            if (!Ocupado || !PuedeBajar || !BuscarSalida(out Pose libre))
+            bool forzada = bajadaForzada;
+            bajadaForzada = false;
+            if (!Ocupado || (!forzada && !PuedeBajar))
             {
                 return false;
+            }
+            Pose libre;
+            if (!BuscarSalida(out libre))
+            {
+                if (!forzada)
+                {
+                    return false;
+                }
+                libre = new Pose(transform.position + transform.forward * config.DistanciaSalida, transform.rotation);
             }
             Ocupado = false;
             peleador.FijarPermisoPiloto(false);

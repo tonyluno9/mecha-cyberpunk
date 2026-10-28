@@ -5,6 +5,7 @@ using MechaCyberpunk.Economia;
 using MechaCyberpunk.Mecha.Pruebas;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Progresion.Pruebas;
+using MechaCyberpunk.UI.Historia;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaMecha = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
+        private const string RutaDoctor = CreadorDoctorClinica.RutaPrefab;
+        private const string RutaPantallasHistoria = "Assets/_Proyecto/UI/Prefabs/PantallasHistoria.prefab";
         private const string RutaPeleasDeMision = "Assets/_Proyecto/Pelea/Prefabs/PeleasDeMision.prefab";
         private const string RutaMostradorTienda = "Assets/_Proyecto/UI/Prefabs/MostradorMercadoNegro.prefab";
         private const string RutaContactoBar = "Assets/_Proyecto/UI/Prefabs/ContactoBar.prefab";
@@ -99,6 +102,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public static readonly Vector3 PosicionContacto = new Vector3(-20.5f, 0f, -21.5f);
         public static readonly Vector3 PosicionMercado = new Vector3(7.5f, 0f, -22.5f);
         public static readonly Vector3 PosicionLlamadoCalle = new Vector3(0f, 0f, 14f);
+        // La camilla del doctor (T-196): a 15 m o más de cualquier punto de misión.
+        public const string IdCamilla = "Clinica_Camilla";
+        public static readonly Vector3 PosicionCamilla = new Vector3(28f, 0f, -22.5f);
         public static readonly Vector3 PosicionMuroReputacion = new Vector3(44f, 0f, 0f);
 
         private static Material matPiso;
@@ -115,6 +121,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public static void Crear()
         {
             CargarMateriales();
+            CreadorDoctorClinica.Crear();
 
             string firmaActual = null;
             if (File.Exists(RutaEscena))
@@ -130,6 +137,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             ArmarLugares();
             ArmarMuroReputacion();
             ArmarPeleas();
+            ArmarDoctor();
             ArmarJugadorYServicios();
 
             string firmaNueva = CreadorEscenaPrologo.Firma(escena);
@@ -350,6 +358,18 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 throw new System.InvalidOperationException("Falta PeleasDeMision.prefab; corre antes CreadorPeleasMision.Crear.");
             }
             PrefabUtility.InstantiatePrefab(prefab);
+        }
+
+        private static void ArmarDoctor()
+        {
+            // El doctor, su camilla, el fundido y los subtítulos que usa al despertar (T-196).
+            PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaDoctor));
+            CreadorEscenaPrologo.Caja("Camilla", PosicionCamilla + new Vector3(0f, 0.3f, 2f), new Vector3(0.9f, 0.6f, 2f), matBanco, true);
+            CreadorEscenaPrologo.Aparicion(IdCamilla, ModoJugador.APie, PosicionCamilla, Quaternion.identity);
+            Letrero("Letrero CLINICA", "CLÍNICA", PosicionCamilla + new Vector3(0f, 0f, 4.5f));
+            PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPantallasHistoria));
+            PantallaSubtitulos subtitulos = CreadorEscenaFlashback.CrearSubtitulos(null);
+            foreach (UnityEngine.UI.Text texto in subtitulos.GetComponentsInChildren<UnityEngine.UI.Text>(true)) texto.resizeTextMaxSize = texto.fontSize;
         }
 
         private static void ArmarJugadorYServicios()
