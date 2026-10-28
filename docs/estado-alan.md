@@ -24,3 +24,5 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
+
+**T-320 hecha (2026-10-28), en la rama alan/T-320-mercado-negro-limpia (sobre origin/main, no en alan/fase-5):** interior del mercado negro abierto de día (09:00 a 18:00) con el mostrador de Tony. Compilar OK, EditMode 1094/1094, PlayMode 991/1000 (0 fallos). El commit 0a78c5d de alan/fase-5 NO debe subirse: su regeneración con CreadorTodo borró el arte de T-250 en Barrio.prefab. Al mezclar T-320 a alan/fase-5, no correr CreadorTodo sin reaplicar `ColocarT250`. Existe además una rama vieja alan/T-320-interior-mercado-negro (WIP de otra sesión, en origin). T-321 sigue esperando el mostrador de la clínica.

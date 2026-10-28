@@ -170,19 +170,21 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator MercadoNegro_A22_EDaBloqueada()
+        public IEnumerator MercadoNegro_A22_EDaCerradaPorHorario()
         {
             yield return Preparar(EscenaLugares.HoraNoche, IdLugar.MercadoNegro);
             yield return PresionarE();
-            Assert.AreEqual(ResultadoPuerta.Bloqueada, camara.UltimoResultadoPuerta);
+            Assert.AreEqual(ResultadoPuerta.CerradaPorHorario, camara.UltimoResultadoPuerta, "T-320: de noche el mercado cierra por horario");
+            Assert.IsFalse(EscenaLugares.Puerta(IdLugar.MercadoNegro).EstaAbierta);
         }
 
         [UnityTest]
-        public IEnumerator MercadoNegro_A12_EnHorarioPeroCerradoEnDemo_DaBloqueada()
+        public IEnumerator MercadoNegro_A12_EAbre()
         {
             yield return Preparar(EscenaLugares.HoraMediodia, IdLugar.MercadoNegro);
             yield return PresionarE();
-            Assert.AreEqual(ResultadoPuerta.Bloqueada, camara.UltimoResultadoPuerta);
+            Assert.AreEqual(ResultadoPuerta.Abierta, camara.UltimoResultadoPuerta, "T-320: a las 12:00 el mercado abre");
+            Assert.IsTrue(EscenaLugares.Puerta(IdLugar.MercadoNegro).EstaAbierta);
         }
 
         [UnityTest]
