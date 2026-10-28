@@ -29,6 +29,7 @@ namespace MechaCyberpunk.Mundo.Editor
             Material metal = Mat("Cortina", new Color(0.32f, 0.34f, 0.36f), 0.55f, default);
             Material herrumbre = Mat("Herrumbre", new Color(0.35f, 0.2f, 0.1f), 0.2f, default);
             Material neonTenue = Mat("NeonTenue", new Color(0.7f, 0.5f, 0.1f), 0.2f, new Color(0.9f, 0.6f, 0.1f));
+            Material neonCasino = Mat("NeonCasino", new Color(0.9f, 0.65f, 0.15f), 0.2f, new Color(2.6f, 1.7f, 0.3f)); // T-303: abierto, brilla a pleno
             Material manta = Mat("Manta", new Color(0.55f, 0.18f, 0.12f), 0.05f, default);
             Material caja = Mat("Caja", new Color(0.4f, 0.28f, 0.16f), 0.15f, default);
             Font fuente = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
@@ -36,7 +37,7 @@ namespace MechaCyberpunk.Mundo.Editor
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefabBarrio);
             Transform casino = BuscarPorNombre(raiz.transform, "Lugar_Casino");
             Transform mercado = BuscarPorNombre(raiz.transform, "Lugar_MercadoNegro");
-            VestirCasino(casino, dorado, alfombra, neonTenue, metal);
+            VestirCasino(casino, dorado, alfombra, neonCasino, metal);
             VestirMercado(mercado, metal, herrumbre, manta, caja, fuente);
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabBarrio);
             PrefabUtility.UnloadPrefabContents(raiz);
@@ -73,11 +74,11 @@ namespace MechaCyberpunk.Mundo.Editor
             Caja(g, "Marquesina", new Vector3(0f, 3.45f, z + 0.65f), new Vector3(7.9f, 0.2f, 1.3f), dorado, false);
             Caja(g, "BordeMarquesina", new Vector3(0f, 3.3f, z + 1.28f), new Vector3(7.9f, 0.12f, 0.06f), neon, false);
             Caja(g, "Alfombra", new Vector3(0f, 0.02f, z + 0.65f), new Vector3(3.2f, 0.03f, 1.2f), alfombra, false);
-            foreach (float x in new[] { -1.9f, 1.9f })
+            // T-303: el casino abre de noche; sin postes ni cadena, y tres focos cálidos bajo la marquesina.
+            foreach (float x in new[] { -2.4f, 0f, 2.4f })
             {
-                Cilindro(g, "PosteCadena", new Vector3(x, 0.5f, z + 0.45f), new Vector3(0.12f, 0.5f, 0.12f), dorado, true);
+                Caja(g, "FocoMarquesina", new Vector3(x, 3.32f, z + 0.65f), new Vector3(0.3f, 0.08f, 0.3f), neon, false);
             }
-            Caja(g, "Cadena", new Vector3(0f, 0.9f, z + 0.45f), new Vector3(3.8f, 0.05f, 0.05f), metal, false);
             foreach (float x in new[] { -(mitad - 0.5f), mitad - 0.5f })
             {
                 Caja(g, "TuboNeon", new Vector3(x, 4f, z + 0.1f), new Vector3(0.1f, 6f, 0.1f), neon, false);

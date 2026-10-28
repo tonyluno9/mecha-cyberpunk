@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Mundo.Editor
         private const float CochesAlLado = 7f;           // m desde la Entrada del clandestino, a lo largo de la calle
         private const float SaliendoDeLaBanqueta = 4f;   // m hacia la calle, para que el carro quede junto a la banqueta
         private const float EsquinaX = -47f;             // el cruce de la calle norte-sur del oeste con la calle este-oeste
+        private const float EsquinaFrenteACasaZ = -77f;  // z de la puerta de la casa (Manzana_4)
         private const float AlturaBanqueta = 0.2f;
 
         [MenuItem("Mecha Cyberpunk/Crear T-092")]
@@ -41,6 +42,8 @@ namespace MechaCyberpunk.Mundo.Editor
             Vector3 carro = entradaClandestino.position + entradaClandestino.rotation * Vector3.forward * SaliendoDeLaBanqueta + entradaClandestino.rotation * Vector3.right * CochesAlLado;
             PuntoDeHistoria(historia, "Prologo_Carro", carro, Quaternion.LookRotation(entradaClandestino.rotation * Vector3.right, Vector3.up));
             PuntoDeHistoria(historia, "Prologo_Esquina_1", new Vector3(EsquinaX, AlturaBanqueta, 0f), Quaternion.LookRotation(Vector3.back, Vector3.up));
+            // T-093: la segunda vuelta, en la calle del oeste frente a la puerta de la casa, donde el carro gira hacia ella.
+            PuntoDeHistoria(historia, "Prologo_Esquina_2", new Vector3(EsquinaX, AlturaBanqueta, EsquinaFrenteACasaZ), Quaternion.LookRotation(Vector3.left, Vector3.up));
 
             // Apariciones a pie: despertar junto a la cama y salir del clandestino a la calle.
             Transform apariciones = raiz.transform.Find("PuntosAparicion");

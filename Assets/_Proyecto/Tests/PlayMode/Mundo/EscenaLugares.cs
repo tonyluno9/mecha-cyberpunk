@@ -94,6 +94,21 @@ namespace MechaCyberpunk.Tests.Mundo
             return null;
         }
 
+        /// <summary>La ZonaInterior del lugar (T-303: Ciudad ya trae la del bar y la del casino).</summary>
+        public static ZonaInterior ZonaDe(IdLugar id)
+        {
+            foreach (ZonaInterior zona in Object.FindObjectsByType<ZonaInterior>(FindObjectsSortMode.None))
+            {
+                LugarMundo lugar = zona.GetComponentInParent<LugarMundo>();
+                if (lugar != null && lugar.Id == id)
+                {
+                    return zona;
+                }
+            }
+            Assert.Fail("No hay ZonaInterior para " + id);
+            return null;
+        }
+
         /// <summary>Dirección horizontal desde la entrada del lugar hacia su puerta (la que mira la cámara al llegar).</summary>
         public static Vector3 HaciaLaPuerta(IdLugar id)
         {
