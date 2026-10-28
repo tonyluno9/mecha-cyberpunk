@@ -56302,6 +56302,7 @@ Transform:
   - {fileID: 2467941070032548605}
   - {fileID: 6526925904296774590}
   - {fileID: 4229586905496709626}
+  - {fileID: 8247148396453524945}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2458855702534107875
@@ -178375,6 +178376,53 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &7619431575077002943
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8247148396453524945}
+  - component: {fileID: 8139978587963445794}
+  m_Layer: 0
+  m_Name: Persecucion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8247148396453524945
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7619431575077002943}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6870228419915894630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8139978587963445794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7619431575077002943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacd44577e58b67499cdc1a89f19e7c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Persecucion.GestorPersecucion
+  config: {fileID: 11400000, guid: 59161d103bc953a419ab48a6537301fa, type: 2}
+  prefabDron: {fileID: 3248984559192185789, guid: 2b5669f9abe65fd468d031db773b894e, type: 3}
+  prefabPatrulla: {fileID: 501313592437967863, guid: cf9d5e30edb800042a687c10f1b024ff, type: 3}
 --- !u!1 &7623115116928755411
 GameObject:
   m_ObjectHideFlags: 0

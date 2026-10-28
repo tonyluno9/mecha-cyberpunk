@@ -19,13 +19,15 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-300, T-330, T-340 (lógica pura de casino, peatones y persecución) | hechas, en alan/fase-5 |
 | T-301 Tragamonedas jugable | hecha (2026-10-27), en alan/fase-5; Casino PlayMode 9/9, suite completa 898/907 sin fallos antes del ajuste visual final |
 | T-302 Fichas y cajera | hecha (2026-10-27), en alan/T-302-fichas-cajera; compilar OK, EditMode 952/952, PlayMode 909/918 (9 omitidas, 0 fallos). Fichas son un servicio aparte (ServicioFichas.prefab): colócalo en una escena siempre cargada para que se guarden (clave `fichas`) |
-| T-303, T-320, T-321, T-331, T-341 | pendientes (T-321 espera el mostrador de la clínica de Tony) |
+| T-341 | hecha (2026-10-28), en alan/T-341-drones-patrullas, sin integrar |
+| T-303, T-320, T-321, T-331 | pendientes (T-321 espera el mostrador de la clínica de Tony) |
 | T-136 (de Tony) | bloqueada solo por el cambio de datos de escena de Tony |
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 
-## T-341 (WIP, 2026-10-28): drones y patrullas, código y pruebas listos, sin colgar en el barrio
-- Rama alan/T-341-drones-patrullas (sale de alan/fase-6). `GrafoCalles`, `DronMundo`, `PatrullaMundo`, `GestorPersecucion` (escucha `ICalor.NivelCambio`; al entrar a la Casa llama a `ICalor.Borrar()`), `CreadorPersecucion` (prefabs Dron y Patrulla, ConfigPersecucion_Trafico) y el aviso en `CreadorTodo`. El aviso de la casa vive en el gestor, no en Mundo.
-- Evidencia: EditMode 1100/1100; PlayMode de Trafico 4/4 sobre una instancia de Barrio.prefab con dobles de ICalor e IJugador (0 a 3 de nivel crea y retira, entrar a Casa borra el calor, el dron se acerca sin colliders, la patrulla recorre 60 s de juego a escala 5 sin salir de la calle).
-- NO verificado: `CreadorPersecucion.ColgarEnBarrio` no se ha corrido (reescribe Barrio.prefab, bloqueado hasta Merge tony/T-250); faltan capturas T-341-1..2, sin errores en consola con el barrio real y `verificar.sh todo`. No integrada.
+## T-341 (2026-10-28): drones y patrullas con calor, lista para revisión
+- Rama alan/T-341-drones-patrullas, con origin/main integrado (incluye T-250). `GrafoCalles`, `DronMundo`, `PatrullaMundo`, `GestorPersecucion` (escucha `ICalor.NivelCambio`; al entrar a la Casa llama a `ICalor.Borrar()`) y `CreadorPersecucion`. El aviso de la casa vive en el gestor, no en Mundo.
+- `CreadorPersecucion.Crear` colgó el gestor "Persecucion" en Barrio.prefab editando el prefab en sitio (+48 líneas, sin regenerar el barrio; el arte T-250 no se tocó).
+- Evidencia: compilar OK; EditMode 1135/1135; PlayMode completo 1012 pasaron, 0 fallos, 9 omitidas. Pruebas de Trafico con doble de ICalor sobre Barrio.prefab: nivel 0 sin perseguidores, subir crea, bajar a 0 retira, entrar a Casa borra el calor, el dron se acerca sin colliders, la patrulla recorre 60 s de juego sin salir de la calle. Capturas revisadas: docs/capturas/T-341-1.png (dron) y T-341-2.png (patrulla con sirena en la calle); las genera la prueba `Capturas_DronYPatrulla`.
+- No se probó con el calor real de Tony (solo dobles) ni a mano en Unity. El PlayMode completo regeneró capturas viejas y ProjectSettings.asset: no se incluyeron en el commit.

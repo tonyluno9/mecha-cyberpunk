@@ -30,6 +30,7 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float ToleranciaDeCalle = 0.05f;
         private const float MetrosMinimosRecorridos = 20f;
         private const int FramesDeEspera = 3;
+        private const float DistanciaDeCaptura = 25f;
 
         private sealed class CalorDoble : ICalor
         {
@@ -202,6 +203,59 @@ namespace MechaCyberpunk.Tests.Trafico
                 Assert.LessOrEqual(calles.DistanciaALaCalle(ahora), ToleranciaDeCalle, "La patrulla salió de la calle en " + ahora);
             }
             Assert.Greater(recorrido, MetrosMinimosRecorridos, "La patrulla debe avanzar hacia el jugador");
+        }
+
+        // Genera docs/capturas/T-341-1.png (dron con su luz) y T-341-2.png (patrulla con sirena) desde una cámara de prueba.
+        [UnityTest]
+        public IEnumerator Capturas_DronYPatrulla()
+        {
+            calor.Poner(3);
+            yield return null;
+            yield return null;
+            DronMundo dron = gestor.GetComponentInChildren<DronMundo>();
+            PatrullaMundo patrulla = gestor.GetComponentInChildren<PatrullaMundo>();
+            Assert.IsNotNull(dron);
+            Assert.IsNotNull(patrulla);
+            // Deja que se acerquen al jugador antes de fotografiarlos.
+            Time.timeScale = EscalaDeTiempo;
+            float limite = Time.time + SegundosDeJuego;
+            Vector3 suelo = jugadorObjeto.transform.position;
+            while (Time.time < limite && Vector3.Distance(patrulla.transform.position, suelo) > DistanciaDeCaptura)
+            {
+                yield return null;
+            }
+            Time.timeScale = 0f;
+            GameObject camObjeto = new GameObject("CamaraCaptura");
+            Camera cam = camObjeto.AddComponent<Camera>();
+            cam.fieldOfView = 60f;
+            cam.farClipPlane = 400f;
+            Vector3 dronPos = dron.transform.position;
+            camObjeto.transform.position = suelo + Vector3.up * 1.7f;
+            camObjeto.transform.LookAt(dronPos);
+            yield return null;
+            Capturar(cam, "T-341-1.png");
+            Vector3 patPos = patrulla.transform.position;
+            camObjeto.transform.position = patPos - patrulla.transform.forward * 9f + Vector3.up * 4f;
+            camObjeto.transform.LookAt(patPos + Vector3.up);
+            yield return null;
+            Capturar(cam, "T-341-2.png");
+            Object.DestroyImmediate(camObjeto);
+        }
+
+        private static void Capturar(Camera cam, string archivo)
+        {
+            RenderTexture rt = new RenderTexture(1280, 720, 24);
+            cam.targetTexture = rt;
+            cam.Render();
+            RenderTexture.active = rt;
+            Texture2D foto = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            foto.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
+            foto.Apply();
+            cam.targetTexture = null;
+            RenderTexture.active = null;
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(Application.dataPath, "..", "docs", "capturas", archivo), foto.EncodeToPNG());
+            Object.DestroyImmediate(foto);
+            Object.DestroyImmediate(rt);
         }
     }
 }
