@@ -33,6 +33,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaMecha = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
         private const string RutaMuneco = "Assets/_Proyecto/Personaje/Pruebas/MunecoAPie.prefab";
+        private const string RutaDoctor = CreadorDoctorClinica.RutaPrefab;
         private const string RutaPandilla = "Assets/_Proyecto/IA/Prefabs/PandillaAPie.prefab";
         private const string RutaArena = "Assets/_Proyecto/Pelea/Pruebas/ArenaDePrueba.prefab";
         private const string RutaMostradorPeleas = CreadorMostradorPeleas.RutaPrefab;
@@ -93,6 +94,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public static void Crear()
         {
             CargarMateriales();
+            CreadorDoctorClinica.Crear();
 
             string firmaActual = null;
             if (File.Exists(RutaEscena))
@@ -230,6 +232,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
             GameObject espejo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaEspejo));
             espejo.transform.position = PosicionEspejo;
+
+            // El doctor (T-196): atiende las caídas en la calle.
+            PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaDoctor));
         }
 
         private static void ArmarPista()
