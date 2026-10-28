@@ -33,3 +33,18 @@ build), y bloques 7 (radio, desde T-198) y 8.
 Conocido T-193: el horario de la clínica no sigue al reloj (pasarlo a T-196).
 Temp/UnityLockfile quedó suelto por la corrida en batch cortada; no hay ningún Unity abierto. Assets/Logs/ (sin seguimiento) es basura de una corrida: no subir.
 Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
+
+## T-250 assets 3D: A MEDIAS (parada manual, 2026-10-28)
+Rama: tony/T-250-assets (sale de origin/main 7b4b27a). Commit WIP con todo lo hecho; no está mezclada en main.
+- Hecho: los 38 modelos del lote (origen assetss/ = zips de Descargas, idénticos; sin E, X ni P) importados en Assets/Arte/<Zona>/ con
+  postprocesador, material URP Lit, prefab y Escenas/Tony/Pruebas_Assets.unity. Colocados con ColocarT250.Colocar en Barrio.prefab
+  (422 fachadas, 54 farolas, 22 basureros, 3 puestos, 17 carros, 10 tinacos, 45 aires, callejón, casa y taller), JaulaClandestino
+  (gradas, sótano, lámpara) y CarroViejo. Capturas antes/después revisadas (docs/capturas/T-250-*). Tabla en docs/assets-importados.md.
+- Pruebas: compilar OK, EditMode 1094/1094. PlayMode SE CORTÓ a medias (parada manual): falta el resultado.
+- Falta, en orden: 1) bash herramientas/verificar.sh todo; ojo con las pruebas de 100 ms por cuadro (LluviaPruebas, BarInteriorPruebas):
+  el barrio suma ~6 M de triángulos (carros 90 mil c/u, gradas 160 mil); si fallan, bajar polígonos o quitar carros de fondo.
+  Si una prueba falla por collider o posición, se ajusta el modelo. 2) C04, C05, C08, H01a y L03 sin lugar en el juego.
+  3) Commits por zona no se hicieron (va en uno WIP). 4) Merge a main con push (autorizado por Tony) y regenerar Builds/Provisional
+  (más un Provisional_Assets que arranque en Ciudad_Prologo, porque las escenas del build actual no cargan Barrio).
+- Para rehacer la colocación: git restore de los 3 prefabs y correr ColocarT250.Colocar (no deshace una colocación anterior).
+- Temp/UnityLockfile puede quedar suelto por la corrida cortada; no hay ningún Unity abierto. No subir assetss/ ni Assets/InitTestScene*.
