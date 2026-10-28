@@ -625,3 +625,188 @@ debe venderse en el taller (hoy solo en el mercado negro, como los kits)? (c) ¿
 emboscada (con más calor)? (d) ¿Quieres los "drones de apoyo" de tech (mecha-taller.md) más adelante? (e) ¿Los rivales normales de las ligas 3
 y 4 también deben usar habilidades, o se deja para la adaptación del bloque 8?
 - 2026-10-26 cierre bloque habilidades: JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula falla 8/15 (determinista, Arena de Alan, sin cambios nuestros). Anotado, no se toca.
+
+## Planeación de T-F7, bloque 5: misiones y reputación (2026-10-26, planificador Opus 5.5)
+
+### D-tony-143 IDs y orden del bloque 5
+Propuesta. El bloque 5 son T-181 a T-188, sin hackeo. Orden: T-181 (Core) → T-182 (reputación y favores) → T-183 (datos de misiones) → T-184
+(servicio y escena Pruebas_Misiones) → T-185 (pelear y escapar) y T-186 (teléfono, bar y calle) en paralelo → T-187 (usar favores) → T-188
+(cierre). El bloque siguiente (implantes, según docs/estado-tony.md) empieza en T-189.
+
+### D-tony-144 Contratos de Core del bloque 5 (T-181; autorizada por Tony en el /goal)
+Propuesta. `IReputacion` + `TipoReputacion` (solo lectura para Alan: valor de −100 a 100 y nivel de −2 a 2 de barrio y corporaciones),
+`IMisiones` + `TipoMision` (la misión en curso, solo lectura) e `IPuntoMision` + `TipoPuntoMision` (encargos, destinos, botines, peleas y
+escondites que coloca quien arma la escena; Tony pone el interactuable encima). `MotivoDinero.Mision` y `MotivoCalor.Mision` al final.
+Claves de guardado nuevas: `reputacion`, `favores`, `misiones`. Los favores no van en Core: Alan no los necesita.
+
+### D-tony-145 Reputación
+Propuesta. Dos valores de −100 a 100 que empiezan en 0; niveles en ±15 y ±50. Barrio: TRAIDOR, MAL VISTO, DESCONOCIDO, CONOCIDO, JUSTICIERO.
+Corporaciones: ENEMIGO, FICHADO, SIN FICHA, CONTRATISTA, SOCIO. No hay tirón automático: cada misión dice cuánto mueve cada una y ninguna sube
+las dos (así "se jalan"). Efectos: con corporaciones en −1 el calor sube ×1.15 y en −2 ×1.3 ("te odian más"); con barrio en −2 nadie del barrio
+te pide nada; con corporaciones en −2 ya no te llaman; algunas misiones piden un nivel mínimo.
+
+### D-tony-146 Favores
+Propuesta. Tres tipos, máximo 3 de cada uno, un uso cada uno, guardados con la partida: DESCUENTO (−30 % en la siguiente compra del mercado
+negro), INFORMACIÓN (abre EL SOPLO, un robo con más botín y poco calor; se gasta al aceptar y no se devuelve al abandonar) y ESCONDITE (en un
+escondite del barrio, borra el calor y cumple el paso de escapar). Los dan las misiones de barrio; si ya tienes 3, se pierde y se avisa.
+
+### D-tony-147 Cómo funcionan las misiones
+Propuesta. Una a la vez, solo en `Libre`. Pasos: ir a, recoger (E), entregar (E), pelear (pelea callejera en el mecha, reusa la emboscada) y
+escapar (calor a 0, llegar a casa o esconderse). Salen: barrio con los vecinos en la calle (encargos), corporativas por teléfono de día (tecla T)
+e ilegales y robos con el contacto del bar de noche. Sin reloj, cualquier franja vale. Las repetibles vuelven al día siguiente. Fallar (tiempo,
+KO del mecha) o abandonar: −3 a cada reputación que la misión subía. La misión en curso no se guarda: al cargar queda cancelada sin castigo.
+
+### D-tony-148 Las 11 misiones (provisionales; tabla en T-183)
+Propuesta. Barrio: LA TIENDITA DE DOÑA LUPE ($50, barrio +8, DESCUENTO), LOS DEL CALLEJÓN ($100, +12, ESCONDITE, de noche, pelea), LUZ PARA LA
+VECINDAD ($0, +15 / corp. −8, INFORMACIÓN, pide CONOCIDO). Corporativas: ENTREGA URGENTE ($400, −5 / +8, 150 s), COBRO DE ADEUDO ($500, −12 /
++10), LIMPIEZA DE ZONA ($900, −15 / +15, pide CONTRATISTA y liga 2). Ilegales: CARGA CALIENTE ($350, corp. −5, calor 40), PELEA SIN JAULA ($450,
++3 / −5). Robos: BODEGA DE REFACCIONES (6 chatarra, calor 50), CAMIÓN BLINDADO ($200 + 10 chatarra, calor 60, liga 2), EL SOPLO (12 chatarra,
+calor 15, pide INFORMACIÓN). Tony cambia todo en los assets.
+
+### D-tony-149 Reglas de balance de las misiones
+Propuesta. a) toda misión de barrio paga menos que el rival 1 de la liga 1 ($600); b) ninguna paga (efectivo + chatarra a $50) más que el rival 1
+de su liga mínima; c) ninguna sube las dos reputaciones; d) toda misión de barrio sube el barrio y da un favor; e) toda corporativa baja el barrio
+al menos 5; f) los robos pagan más en chatarra que en efectivo; g) toda ilegal y todo robo suma 25 de calor o más, o tiene que escapar. Si una
+falla, se ajustan las misiones, no las reglas ni los premios de las ligas.
+
+### D-tony-150 Dónde vive el código del bloque 5
+Propuesta. Reputación, favores y misiones en Progresion/ (`Reputacion/`, `Favores/`, `Misiones/`); `MechaCyberpunk.Progresion` gana la referencia a
+`MechaCyberpunk.Economia` (chatarra al inventario y descuento; Economia no referencia Progresion). La pelea de misión vive en Pelea/Misiones/
+(Pelea ya referencia Progresion). Pantallas en UI/Misiones/. El descuento es una sobrecarga de `TiendaBasica.Comprar`, así que `ITienda` no cambia.
+Las pruebas de PlayMode del bloque van en su propio ensamblado (`MechaCyberpunk.Tests.PlayMode.Progresion.Misiones`) para no alargar el área
+Progresion, que ya usa 2400 s. Escena del bloque: `Escenas/Tony/Pruebas_Misiones.unity`.
+
+### D-tony-151 Lo que espera a Alan en el bloque 5
+Propuesta. Nada obligatorio: todo se prueba en Pruebas_Misiones con `PuntoMisionDePrueba`, lugares de prueba y el doble
+`ReaccionReputacionDePrueba`. Opcional, cuando quiera: colocar en Ciudad los `IPuntoMision` con los ids de T-183 (lista en docs/revision-tony.md),
+`ContactoBar.prefab` en su bar y `PeleasDeMision.prefab`; y que la ciudad reaccione a `IReputacion` (grafitis con el alias, vecinos que saludan,
+anuncios que difaman) y a `IMisiones` (patrullas atentas en un robo). Las misiones en Ciudad.unity se escriben cuando Alan coloque los puntos.
+
+### D-tony-152 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿El teléfono en la tecla T te late? (b) ¿Las corporativas deben dar algo además de dinero
+(piezas, información de tus papás para la historia)? (c) ¿El descuento también en el taller o la clínica? (d) ¿Los robos deberían poder salir mal
+de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones de una sola vez con historia (no repetibles) para el hilo de los
+papás, o se dejan para la historia principal?
+- T-181 Core hecha sin aprobación previa explícita, por criterio del /goal
+- verificar.sh: ensamblados_modo ahora busca asmdef de pruebas anidados (Tests/<Modo>/<Area>/<Sub>/), el área es el nombre con puntos (Progresion.Misiones); comprobado con AREAS=Progresion.Misiones playmode-por-area (7/7); tarea de Core hecha dentro de T-183 por encargo del orquestador
+- D-tony-153: T-185 acepta la captura T-185-2 (cabina frente al pandillero con HUD de cabina) sin el texto del paso, que en la cabina no se dibuja en ese momento; la T-185-1 sí muestra el texto del paso a pie.
+- D-tony-154: T-186 usa una sola config (ConfigPantallaMisiones) para la lista, el teléfono, el contacto y los vecinos; la lista (PantallaMisiones) va embebida en la pestaña CONTRATOS del teléfono (sin fondo ni Esc propios) y al aceptar una misión se cierra la pantalla (y el teléfono), para ver la flecha del objetivo; el teléfono no abre si el control a pie ya está congelado por otra pantalla (tienda, cartelera, KO), en carro ni en mecha.
+- D-tony-155: T-186 EncargosCalle no ofrece el encargo mientras hay otra misión en curso (motivo OtraActiva): si no, el punto del vecino que también es un paso (Doña Lupe entrega) compite con la E del paso; el aviso de reputación del HUD suma los cambios que llegan mientras sigue en pantalla ("BARRIO −12 · CORPORACIONES +10") y al cargar una partida avisaría el cambio de valores (no se distingue de un cambio real); el contacto del bar es una cápsula con letrero (arte pendiente).
+- D-tony-156: T-187 escribe los textos nuevos (precio rebajado, línea del favor, "USA 1 {0}", FAVOR PERDIDO, pestaña FAVORES) en ConfigPantallaTienda y ConfigPantallaMisiones (UI/Datos/), carpeta que la tarea no lista pero es la que manda la regla de Config*; los assets no cambian porque los campos nuevos toman su valor por defecto.
+- D-tony-157: T-187 no cambia ServicioMisiones (fuera de las carpetas permitidas): su aviso interno sigue diciendo "Favor perdido: el bolsillo estaba lleno."; el aviso "FAVOR PERDIDO: YA TIENES 3" lo arma la UI (FormatoMisiones.AvisoFavorPerdido) y se ve en la pestaña MISIÓN del teléfono mientras no hay misión y el último resumen perdió el favor; no hay aviso propio en el HUD.
+- D-tony-158: T-187 pone el descuento solo en la compra: el favor se gasta si Comprar devolvió Comprado y la rebaja de verdad baja el precio (un precio 0 no gasta el favor); la rebaja aplica a todas las filas de COMPRAR del mercado negro y se muestra "$80 → $56"; la línea del favor va abajo de la lista (sobre la ayuda) porque la lista de cinco filas llena la pantalla.
+- D-tony-159: T-187 Escondites vive en ServiciosProgresion.prefab, registra un IInteractuable por escondite solo mientras hay calor y activa los puntos solo entonces; cumple Escapar con CumplirPasoExterno (sin tocar ServicioMisiones). La pestaña FAVORES es la cuarta (Favores al final del enum PestanaTelefono) y dice "SE USA EN": MERCADO NEGRO, CONTACTO DEL BAR, ESCONDITES DEL BARRIO.
+- Conocido T-186 (no corregido): al cargar una partida (F9), el aviso de reputación del HUD (UI/HudAPie/HudAPie.cs, no está en las carpetas de T-187) muestra los valores guardados como cambio, porque reputacion.Cambio se dispara al cargar; la corrección es ignorar los cambios mientras se carga (o comparar contra el valor recordado en VincularReputacion) y queda para una tarea de HUD.
+- D-tony-160: T-188 hereda de RecorridoEmboscadaBase (como MisionesPeleaPruebas) para pelear en el mecha; en el paso g Doña Lupe se cumple otra vez el día siguiente (así el barrio llega a 19) y no se prueba el texto YA LO HICISTE HOY porque la tiendita ya no se ofrece ese mismo día tras J; la liga 2 se abre con Poner(2, 1, 1); el letrero deformado de T-188-3 se reporta como error y no se corrige aquí.
+- D-tony-161: T-189 corrige el aviso de reputación al cargar desde el HUD (se engancha a ServicioGuardado.Cargada, resincroniza y descarta el aviso) en vez de tocar ServicioReputacion o el guardado; el letrero GRAFITI cuelga de un padre sin escala en la cara oeste del muro. Resuelve el conocido de T-186 y el error de T-188-3.
+- D-tony-162: Pruebas_Misiones no tiene forma de llegar desde el juego, así que el build provisional lleva un segundo build, Builds/Provisional_Misiones/, con las mismas 9 escenas pero arrancando en Pruebas_Misiones.
+
+## Planeación de T-F7, bloque 6: implantes (2026-10-27, planificador Opus 5.5)
+
+### D-tony-163 IDs y orden del bloque 6
+Propuesta. El bloque 6 son T-190 a T-197, sin hackeo. Orden: T-190 (Core) → T-191 (datos, servicio, guardado y balance) → T-192 (brazos y
+piernas a pie; los implantes se ven) → T-193 (clínica y escena Pruebas_Implantes) → T-194 (ojos y sistema nervioso en el mecha) → T-195
+(pandilleros a pie) → T-196 (caer en la calle: el doctor) → T-197 (cierre). T-192 solo usa el contrato y un doble, así que puede ir en paralelo con
+T-191 si hace falta; T-194 y T-195 tocan carpetas distintas salvo el creador de la escena. El bloque siguiente (radio, según docs/estado-tony.md)
+empieza en T-198.
+
+### D-tony-164 Contratos de Core del bloque 6 (T-190; autorizada por Tony en el /goal)
+Propuesta. `Core/Implantes/`: `EspacioImplante` (Ojos, Brazos, Piernas, SistemaNervioso), `EfectosImplantes` (struct de multiplicadores y
+banderas con `Ninguno` y `Combinar`) e `IImplantes` (solo lectura: nivel y nombre por espacio, cantidad, efectos combinados, `Cambio` e
+`Instalado`). Va en Core porque lo leen cuatro áreas de Tony que no referencian Progresion (Personaje, Mecha, UI y el cuerpo del espejo) y porque
+Alan puede querer que su ciudad reaccione al cromo; los efectos van como datos en el contrato para que nadie más tenga que conocer la tabla.
+Clave de guardado nueva: `implantes`. "Clinica_Camilla" se documenta como id de ejemplo de `IPuntoAparicion`. No cambian `MotivoDinero.Clinica`,
+`IdLugar.Clinica`, `TipoOferta.Implante` ni `AparienciaJugador.Implante` (el implante cosmético de la creación sigue siendo solo apariencia y
+los instalados se suman encima). Los datos de prueba de T-033 (`DatosOferta_ImplanteOjos`, `DatosTienda_Clinica`) quedan sin usar y no se borran.
+
+### D-tony-165 Los 8 implantes (provisionales; tabla en T-191)
+Propuesta. Dos niveles por espacio; el 1 desde la liga 1 y el 2 desde la liga 3. OJOS DE LECHUZA ($2,500: vida del rival en la cabina y su
+próximo ataque 0.4 s antes) y OJOS DE ÁGUILA ($6,000: la vida también en números y 0.8 s). BRAZOS DE PISTÓN ($2,000: golpe a pie ×1.5) y BRAZOS
+DE PRENSA ($5,000: ×2.0); la pistola no cambia. PIERNAS DE RESORTE ($2,000: correr ×1.2 y salto ×1.3) y PIERNAS DE CHAPULÍN ($5,000: ×1.35 y
+×1.6); caminar no cambia. SINAPSIS CALLEJERA ($3,000: preparación del golpe y subir guardia del mecha ×0.85, ventana del bloqueo perfecto ÷0.85)
+y SINAPSIS MILITAR ($7,000: ×0.7). Con el mecha de serie: golpe 0.25 → 0.21 / 0.175 s, guardia 0.15 → 0.13 / 0.105 s, ventana 0.2 → 0.24 / 0.29 s.
+Los ojos y la sinapsis no suben vida ni daño: son los implantes "de la jaula" que te hacen mejor peleador; las piezas siguen mandando en las
+estadísticas. Tony cambia nombres y valores en los assets.
+
+### D-tony-166 Reglas de la clínica (T-191, T-193)
+Propuesta. Se instala en el mostrador de la clínica (a pie, E), abierta según el `ILugar` Clinica (el horario es de Alan; sin lugar, abierta).
+Un implante por espacio; el nivel 2 reemplaza al 1 y se paga la diferencia. Se paga con `IntentarPagar` (no fiado: con dinero negativo no se
+instala, D-tony-85). No se quitan ni se venden. Antes de pagar se ve el implante "probado" en tu cuerpo. Al instalar: fundido a negro, pasan 2
+horas y el doc dice una línea. Sin efectos secundarios (ciberpsicosis, humanidad) en este bloque.
+
+### D-tony-167 Cómo se ven los implantes (T-192)
+Propuesta (greybox). En el cuerpo (espejo, vista previa, cinemáticas): OJOS una banda delgada con brillo turquesa, BRAZOS antebrazos cromados,
+PIERNAS espinillas cromadas, SISTEMA NERVIOSO tres placas en la nuca; el nivel 2 con una franja magenta. En primera persona solo cambia el puño
+(cromado con BRAZOS). En la cabina, un LED "SINAPSIS" (dos con el nivel 2). Sin rojo puro (alarma y furia) y sin cambiar materiales en ejecución
+(D-tony-122). Modelos finales: tarea de arte aparte.
+
+### D-tony-168 Ojos: la lectura del rival vive en Combate, no en Core (T-194, T-195)
+Propuesta. Los ojos necesitan leer a los rivales de IA desde UI. En vez de un contrato de Core (Alan no hace rivales) o de que UI referencie IA,
+la interfaz `ILecturaRival` (nombre, raíz, vida, si es mecha, si está preparando, segundos para atacar y si lo próximo es golpe o habilidad) va en
+Combate/Lectura/, que IA y UI ya referencian; los rivales se registran en `Registro<ILecturaRival>`. `RivalBasico` la implementa (con su
+`HabilidadRival` si la tiene) y el pandillero a pie también. La pantalla de ojos elige al rival mecha más centrado en la vista a 40 m o menos; el
+HUD a pie, al pandillero en la mira a 15 m o menos. "Próximo ataque" = aviso prendido cuando el rival está preparando o le falta menos que la
+anticipación; si el rival llega a su alcance con menos tiempo que eso, el aviso llega tarde y se acepta (la prueba pide 80 % de golpes avisados a
+tiempo y cuenta aparte los demás).
+
+### D-tony-169 Pandilleros a pie en este bloque (T-195)
+Propuesta. Hoy nada pega al jugador a pie (solo muñecos y herramientas de prueba), así que "más daño a pie" y "morir en la calle" no tendrían
+dónde notarse. Se agrega un enemigo a pie sencillo (IA/APie/): grupos de 3 que salen de noche en su punto; vida 60, golpe 10 con 0.5 s de aviso
+(brazo naranja), recarga 1.4 s, velocidad 5.5 m/s (más que caminar 4.5, menos que correr 7.5), radio 10 m, correa 25 m, máximo 2 atacando a la
+vez, sin armas, sueltan $40 cada uno (`MotivoDinero.Otro`) y vuelven la noche siguiente. No pelean contra el mecha (se dispersan). Tumbar a uno:
+4 golpes sin implante, 3 con BRAZOS I, 2 con BRAZOS II, 3 tiros de pistola. Alternativa si Tony no los quiere: se quita T-195; los brazos se
+prueban solo con muñecos y caer en la calle solo pasa con el mecha en KO en una pelea de misión.
+
+### D-tony-170 Caer en la calle y el doctor (T-196). Responde "cuánto cobra el doctor"
+Propuesta. "Caer en la calle" = KO a pie, o KO del mecha del jugador fuera de una pelea del flujo (pelea de misión, calle), solo con la historia en
+`Libre` (el prólogo y la emboscada no se pueden perder). Tras unos 3 s, fundido; despiertas 6 horas después en "Clinica_Camilla" (sin ella, en
+"Casa_Cama"; sin ninguna, donde caíste) con la vida llena. El doctor cobra $500 fiado (`CargarDeuda`, `MotivoDinero.Clinica`: si no te alcanza,
+quedas en negativo y esa es la deuda; sin intereses). El calor se borra, la misión en curso falla por KO (sin doble castigo) y, si el mecha
+andaba fuera del taller, vuelve solo al taller con min(su vida, 20 %), sin bajar del piso de emergencia del 15 % (D-tony-42); si estaba en el
+taller, no se toca. Objetivo "VUELVE A CASA". Va en `Progresion.Prologo` (Progresion/Prologo/Clinica/), el ensamblado de arriba (D-tony-62),
+como prefab `DoctorClinica.prefab` que colocan los creadores de escena (y Alan en Ciudad, junto al director del prólogo).
+
+### D-tony-171 Reglas de balance de los implantes (T-191)
+Propuesta. a) ningún implante cambia vida, daño, alcance, velocidad ni recarga del mecha (las reglas de D-tony-125 y D-tony-140 no cambian);
+b) un implante de nivel 1 cuesta entre 3 × el premio del rival 1 de la liga 1 ($1,800) y el premio del jefe de la liga 2 ($3,000); c) uno de nivel
+2 cuesta entre el premio del jefe de la liga 3 ($4,500) y el del jefe de la liga 4 ($7,500); d) el nivel 2 cuesta al menos el doble que el 1 del
+mismo espacio; e) los 4 de nivel 1 juntos ($9,500) cuestan menos que ganar una vez todas las peleas de las ligas 1 y 2 ($12,600); f) BRAZOS II
+nunca tumba a un pandillero de un golpe; g) con SINAPSIS II la preparación del golpe del jugador no baja de 0.15 s, la guardia de 0.08 s y la
+ventana perfecta no pasa de 0.3 s (pisos y tope en la regla, por si las piezas bajan algo en el futuro); h) el doctor cobra menos que el premio
+del rival 1 de la liga 1 (una pelea lo paga) y más que lo que suelta una pandilla entera; i) el salto con PIERNAS II es menor de 2 m. Si una
+falla, se ajustan los implantes, no las reglas ni los premios.
+
+### D-tony-172 Dónde vive el código del bloque 6
+Propuesta. Contratos en Core/Implantes/ (T-190). Datos, regla y servicio en Progresion/Implantes/ (assets en Progresion/Datos/Implantes/;
+`ServicioImplantes` en `ServiciosProgresion.prefab`). Efectos a pie y cuerpo en Personaje/; sinapsis en Mecha/Piezas/ (la compone `EquipoMecha`,
+solo el mecha de la historia); lectura del rival en Combate/Lectura/; pandilleros en IA/APie/; clínica en UI/Clinica/ con
+`UI/Prefabs/MostradorClinica.prefab`; pantalla de ojos en UI/Cabina/ y HUD a pie en UI/HudAPie/; doctor en Progresion/Prologo/Clinica/. Escena del
+bloque: `Escenas/Tony/Pruebas_Implantes.unity` (clínica con camilla y espejo, pista con cajas de salto calculadas, muñecos, taller, arena con
+mostrador, casa y sitio de pandilla); no se agranda Pruebas_Economia para no mover lo que prueban sus recorridos. Pruebas de PlayMode del bloque
+en su propio ensamblado `MechaCyberpunk.Tests.PlayMode.Progresion.Implantes` (como Misiones, D-tony-150). Herramienta `ImplantesDePrueba`
+(Progresion/Pruebas/) con teclas que no choquen con las de las escenas de prueba.
+
+### D-tony-173 Lo que espera a Alan en el bloque 6
+Propuesta. Nada obligatorio: todo se prueba en Pruebas_Implantes. Opcional, cuando quiera: colocar `MostradorClinica.prefab` en su clínica del
+mercado negro (abre con su `ILugar` Clinica), un `IPuntoAparicion` "Clinica_Camilla" y `DoctorClinica.prefab` en Ciudad, y `PandillaAPie.prefab`
+en calles de noche; que las bardas que no se deben brincar midan 2 m o más (con PIERNAS II el jugador salta 1.76 m); y, si quiere, que la ciudad
+lea `IImplantes` (vecinos que notan el cromo). La clínica, el doctor y la pandilla en Ciudad.unity se escriben cuando Alan los coloque (como T-136).
+
+### D-tony-174 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿Dos niveles por espacio, con el 2 desde la liga 3, o uno solo por espacio? (b) ¿$500 por
+levantarte y 6 horas dormido te parece un castigo justo? (c) ¿Quieres los pandilleros a pie (T-195), o los brazos se quedan para después? (d)
+¿Los implantes deberían tener un costo además del dinero (ciberpsicosis, que la gente del barrio desconfíe, que bajen la reputación de barrio)?
+(e) ¿La clínica debería pedir reputación de barrio o de corporaciones para algunos implantes (por ejemplo, los de nivel 2 solo con CONTRATISTA)?
+(f) ¿El ojo cosmético de la creación debería contar como OJOS instalados, o se quedan separados como ahora?
+
+- D-tony-175: T-190 prueba "sin nada registrado" leyendo Registro<IImplantes>.Actual directo (sin TearDown de registro); la guía de Alan se agrega al final de docs/revision-tony.md como sección nueva "Para Alan (T-190)".
+- D-tony-176: T-191 el método de lectura del implante instalado se llama `ImplanteInstalado(espacio)` (no `Instalado`) porque choca con el evento `IImplantes.Instalado`; `Instalar` permite saltar al nivel 2 sin el 1 (paga el precio completo), la liga se revisa antes que el dinero; la regla h (doctor) no se prueba aún y espera a T-196; la vida del pandillero en el balance es la constante provisional 60 de D-tony-169.
+- D-tony-177: T-192 el puño cromado y las piezas del cuerpo usan MaterialPropertyBlock (sin tocar .mat); JugadorAPie.prefab se parcha con CreadorImplantesAPie (no se regenera porque otros creadores le agregan cosas) y los creadores de apariencia ya no regeneran los prefabs si existen (así el md5 es igual en dos corridas); ImplantesDePrueba usa teclas 3 (nivel 1), 4 (nivel 2) y 5 (quitar) y instala con ServicioImplantes.Cargar (sin cobrar ni pedir liga); el efecto de brazos y piernas se lee cada frame o cada golpe, así que un cambio a media carrera acelera sin saltos; no se colocó la herramienta en escenas (lo hace T-193).
+- D-tony-178: T-193 el aviso "IMPLANTE INSTALADO: <NOMBRE>" reutiliza el grupo de aviso de misión del HUD (`HudAPie.MostrarAvisoImplante`, formato serializado en el HUD) para no tocar el prefab; el texto del mostrador de la clínica es "CLÍNICA" porque el HUD antepone "E · "; las filas muestran siempre el nombre del implante junto al estado ("OJOS DE ÁGUILA · SE ABRE EN LA LIGA 3", "... · NO TE ALCANZA"); la vista previa prueba cualquier opción con implante (aunque esté en gris); Pruebas_Implantes trae sus propios subtítulos (PantallasHistoria.prefab solo trae fundido y "Continuará") y el horario 8:00 a 20:00 del doble de lugar no sigue al reloj solo: se aplica a mano (J salta a las 8:00 pero no recalcula "abierta"); un conocido: la clínica no tiene aún efecto de sonido ni doctor visible.
+- D-tony-179: T-195 el pandillero a pie le pega al jugador por `IRecibeDanio` (lo busca en la raíz de `IJugador`, sin referenciar Personaje: IA solo ve Core y Combate) y el jugador lo golpea con `GolpeAPie`/`PistolaAPie` que ya buscan `IRecibeDanio`; nada nuevo en Personaje/ ni Core/. Los valores de los pandilleros y de la pandilla (vida 60, golpe 10, aviso 0.5 s, recarga 1.4 s, 5.5 m/s, radio 10 m, correa 25 m, máximo 2 atacando, $40) están todos en `DatosPandilleroAPie_Base` (un solo asset, también los colores). El golpe conecta si el jugador sigue a menos de alcance + 0.4 m y dentro de 70 ° al frente del pandillero en el impacto (así el aviso de 0.5 s se puede esquivar). El turno de ataque se conserva durante el aviso y la recarga. Las OJOS a pie (barra y "¡GOLPE!") leen `ILecturaRival` con un cálculo de ángulo/distancia al rayo de la mira sin física (no ve paredes en medio). El "¡GOLPE!" sale cuando el rival prepara o le faltan menos que la anticipación (el pandillero con turno y a su alcance cuenta 0 s). Sin función nueva en Personaje: no falta nada.
+- D-tony-180: T-196 el doctor no es una regla de Core: `DoctorClinica` (Progresion/Prologo/Clinica/) busca al jugador y al mecha de la historia cada 0.5 s y escucha `VidaAPie.KO` y `VidaMecha.KO`; "pelea del flujo" = `EventosPelea.PeleaIniciada/Terminada` o el mecha en `EnArena` (así un KO que llega antes del fin de la pelea no cuenta); la bajada del mecha en KO usa `JugadorAPie.Bajar()` y, si falla (el encendido apagado la bloquea), `MontajeMecha.ForzarSiguienteBajada()` (nuevo, solo afecta a la siguiente bajada; sin lugar libre deja al jugador frente al mecha); el control del jugador se congela hasta destapar la pantalla (no se puede guardar porque no llega a la cama); el cobro se carga con la pantalla aún negra, justo antes de destapar, para que el HUD muestre "-$500 · CLÍNICA"; Pruebas_Misiones ahora trae fundido, subtítulos, doctor y camilla en (28, 0, -22.5); el texto "quinientos" del doctor está escrito en palabras en `DatosDoctor_Base` (si cambia el cobro, se cambia el texto); la regla h de D-tony-171 se prueba en `ReglaDoctorPruebas` ($500 < $600 del rival 1 de la liga 1 y > $120 de una pandilla); el horario de la clínica que no sigue al reloj (D-tony-178) sigue sin atender: el doctor no usa el horario. Ciudad.unity: Alan puede colocar `DoctorClinica.prefab` y un `IPuntoAparicion` "Clinica_Camilla" cuando quiera (D-tony-173).
+
+- D-tony-181: T-197 hallazgo: las cajas de salto de Pruebas_Implantes (T-193, `CreadorEscenaImplantes.AlturasCajasSalto`) no cuentan que el CharacterController sube escalones de stepOffset (0.35 m) en pleno salto: la caja PIERNAS I se sube sin implantes (alcance 1.45 m) y la PIERNAS II con PIERNAS I (1.78 m). No se arregló (escenas y creadores fuera de la tarea): pedir una tarea de corrección con alturas en el punto medio de los alcances reales (cerca de 1.62 y 1.95 m). El recorrido asserta el resultado físico (salto + escalón) y anota la diferencia; el "no se sube" se cubre con la caja PIERNAS II sin implantes. El recorrido usa `VidaAPie.Restaurar` y `VidaMecha.FijarVida` para no caer a media medición (salvo en el paso h) y cuenta el aviso de OJOS sobre los golpes explicables (un golpe pegado a otro llega sin anticipación y se reporta aparte).
+  Corregido en tony/T-197-cajas-salto: alturas 0.725/1.615/1.945 m (base, PIERNAS I, PIERNAS II); el alcance cuenta el stepOffset.
+- D-tony-182: Noche 28-oct (orquestador). T-250: los modelos salieron de los zips de Descargas (idénticos a `assetss/`, que no se sube); los cubos greybox con collider quedan en ShadowsOnly bajo el modelo nuevo (para que los rayos y pruebas de Alan sigan pegando); se agregó el build Provisional_Assets (arranca en Ciudad_Prologo). MisionesPeleaPruebas.Robo_EsperandoEscondido… y OjosSinapsisPruebas.OjosII_ContraElJefe… son inestables bajo carga (pasan 3/3 solas); no se tocó el juego por ellas.
+- D-tony-183: Cierre del bloque 6: el commit de T-197 (2ffd455) había vaciado decisiones-pendientes-tony.md y guia-para-jugar.md; se rehicieron con su versión anterior más lo nuevo. El build del bloque 6 se hace con un script de editor temporal (no se sube) porque ConstruirT250 vive en Assets/Arte/, que esta noche es de Alan.

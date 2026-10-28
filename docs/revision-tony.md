@@ -3,6 +3,44 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Implantes (T-F7, bloque 6) cerrados: qué probar jugando (2026-10-28)
+Del lado de Tony, en `Escenas/Tony/Pruebas_Implantes.unity` (Play, unos 20 minutos, sin ayuda). Sin revisor: el bloque 6 no pasó por revisión de Opus.
+Base automática: `RecorridoImplantesPruebas` (T-197), una prueba de PlayMode con entrada simulada que recorre un día y una noche con cromo (pasos a a j de la tarea); 3 corridas seguidas en verde.
+Suite completa y `playmode-por-area`: no se corrieron en esta tarea (orden del turno: solo las áreas tocadas); se corrió el ensamblado completo de Progresion.Implantes. Anotar aquí el resultado por área cuando las corra el verificador.
+
+Lista para un humano, en orden de juego:
+1. Arrancas a las 10:00 sin implantes. En la pista, corre la recta de 30 m con Shift y salta: ¿se siente lento y bajo? (7.5 m/s; 1.1 m de salto). OJO: la caja PIERNAS I ya se sube sin implantes (ver hallazgo abajo).
+2. E en el mostrador de la CLÍNICA (de día): instala PIERNAS I y BRAZOS I. ¿Cada operación (fundido a negro, línea del doc, +2 h, "IMPLANTE INSTALADO") se siente a la altura de lo que cuesta ($2,000 cada una)?
+3. Mírate al espejo de la casa (E): ¿se ven las piernas cromadas y los brazos? Corre y salta otra vez: PIERNAS I corre a 9 m/s y salta 1.43 m. ¿Se nota?
+4. A las 21:00 sale la pandilla (3). Con BRAZOS I tumbas a cada uno con 3 golpes (4 sin implante) y cobras $120 por los tres. ¿Pelear contra 3 a puño es tenso sin ser injusto? Nunca más de 2 atacan a la vez.
+5. De noche la clínica dice "CERRADA". Al día siguiente instala OJOS I ($2,500) y SISTEMA NERVIOSO I ($3,000).
+6. A las 21:00 en el mostrador de peleas, E: pelea contra TORNILLO. ¿La pantalla de OJOS (vida del rival y PRÓXIMO: GOLPE 0.4 s antes) y el golpe más rápido (0.213 s contra 0.25 s) te hacen ganar una pelea que antes perdías, sin sentirse trampa?
+7. Con la liga 3, mejora los cuatro a nivel 2 pagando la diferencia (los de nivel 2 llevan una franja magenta en el espejo).
+8. Caer en la calle: de noche, déjate tumbar por la pandilla con poco dinero. Despiertas en la camilla a las 05:00, el doc te cobra $500 (puedes quedar en deuda), el calor se borra, el mecha vuelve al taller dañado si estaba en la calle y el objetivo dice VUELVE A CASA. ¿Te dieron ganas de volver con más cromo?
+9. F5 y F9 con todo puesto: implantes, dinero y mecha vuelven.
+
+Tabla final de implantes (provisional, D-tony-165; los números salen de `DatosImplante_*.asset`):
+
+| Implante | Nivel 1 (liga 1) | Nivel 2 (liga 3) |
+| --- | --- | --- |
+| OJOS | $2,500: pantalla de vida del rival y aviso de golpe 0.4 s antes | $6,000: más los números y aviso 0.8 s antes |
+| BRAZOS | $2,000: golpe a pie x1.5 | $5,000: x2 |
+| PIERNAS | $2,000: correr x1.2, salto x1.3 | $5,000: correr x1.35, salto x1.6 |
+| SISTEMA NERVIOSO | $3,000: golpe y guardia del mecha 15 % más rápidos | $7,000: 30 % |
+
+Reglas del doctor (T-196): solo cuando el KO es a pie y la historia está en Libre (no en una pelea del flujo); fundido a negro, 6 horas inconsciente (23:00 pasa a 05:00), cobro de $500 que puede dejar deuda, vida llena, calor 0, despiertas en `Clinica_Camilla`, el objetivo es volver a Casa; si el mecha estaba en la calle vuelve solo al taller con el 20 % de vida (piso de emergencia 15 %) y repararlo se cobra en el banco.
+
+Medidas de la corrida (tiempos de juego por paso): a 9.6 s, b 12.6 s, c 6.1 s, d 10.1 s, e 12.2 s, f 29-31 s, g 26.5 s, h 11.3 s, i 0.02 s. Recta 30 m (tramo 10-30 m): 2.667 s sin implante, 2.222 s con PIERNAS I (esperados 2.667 y 2.222). Salto 1.1 / 1.43 / 1.76 m. Pandilla: 3 golpes por pandillero con BRAZOS I. OJOS I avisa 3 de 3 golpes explicables con 0.4 s (un cuarto llegó pegado a otro).
+
+Hallazgo para una tarea de corrección (no se arregló: T-197 no toca escenas ni código): las cajas de salto de `CreadorEscenaImplantes.AlturasCajasSalto` se calcularon con el salto solo, pero el `CharacterController` sube escalones de `stepOffset` (0.35 m) en pleno salto, así que el alcance real es salto + 0.35: 1.45 m sin implantes, 1.78 con PIERNAS I, 2.11 con PIERNAS II. La caja PIERNAS I (1.265 m) se sube sin implantes y la PIERNAS II (1.595 m) se sube con PIERNAS I. Corrección propuesta: alturas en el punto medio de los alcances reales (cerca de 1.62 y 1.95 m). Mientras tanto la prueba asserta el resultado físico (salto + escalón) y anota la diferencia (D-tony-181).
+
+Preguntas abiertas para Tony (D-tony-174): (a) ¿dos niveles por espacio con el 2 desde la liga 3, o uno solo? (b) ¿$500 por levantarte y 6 horas dormido es un castigo justo? (c) ¿Los pandilleros a pie se quedan? (d) ¿Los implantes deberían costar algo más que dinero (ciberpsicosis, desconfianza del barrio)? (e) ¿Algunos implantes deberían pedir reputación de barrio o de corporaciones? (f) ¿El ojo cosmético de la creación cuenta como OJOS instalados?
+
+### Para Alan (D-tony-173; nada de esto lo bloquea)
+- Prefabs de Tony para colocar en Ciudad.unity cuando quiera: `MostradorClinica.prefab` (E de día, cierra a las 20:00), el punto de aparición `Clinica_Camilla` (donde despierta el jugador), `DoctorClinica.prefab` y `PandillaAPie.prefab` (3 pandilleros de noche en un sitio vacío tipo `Sitio_Pandilla`).
+- Altura de bardas: con PIERNAS II el salto es de 1.76 m (alcance real 2.11 m con el escalón); una barda de 2.2 m o más sigue siendo infranqueable, una de 1.5 m ya no lo es con PIERNAS I.
+- `IImplantes` (Core) se puede leer desde Mundo o Trafico (`Registro<IImplantes>.Actual`: `Cantidad`, `Nivel(espacio)`, `Efectos`, evento `Cambio`) para vecinos que noten el cromo.
+
 ## Habilidades (T-F7, bloque 4) cerradas: qué probar jugando (2026-10-26)
 Del lado de Tony, en `Escenas/Tony/Pruebas_Economia.unity` (Play, de noche, sin ayuda). Sin revisor: T-F7 bloque 4 no pasó por revisión de Opus.
 Base automática: `RecorridoHabilidadesPruebas` (T-180) recorre con entrada simulada: comprar 3 MISILES y 2 CELDAS en el mercado negro (la pestaña VENDER no ofrece munición), comprar BRAZO IZQ. MILITAR I y TORSO TECH I (la diferencia muestra "HABILIDAD 1 · MISIL I · MISILES" y "HABILIDAD 2 · ESCUDO I · CELDAS"), subir y encender (la pantalla dice "1 · MISIL I · ×3" y "2 · ESCUDO I · ×2" en gris; 1 y 2 fuera de pelea no gastan), pelear contra TORNILLO con 3 misiles de 20 de daño y enfriamiento medido 7.76 s (8 s menos 3 % de la pieza tech), 1 antes del enfriamiento no gasta, con 0 misiles la fila dice SIN MUNICIÓN y el golpe a puños lleva el daño compuesto (13), el ESCUDO de 2 contra LA RATA (golpe de 8 quita 4 con escudo y 8 sin él), DON FIERRO con su aviso de 0.6 s y su EMBESTIDA de 14, y F5/F9 con la munición. 4 corridas seguidas pasan (~76 s reales, ~90 s de juego cada una). Dinero final igual al calculado desde los assets ($4,300 / $4,220 según lo que cuesta reparar). Tiempo de juego por paso: a) 0.0 s, b) 0.1 s, c) 0.1 s, d) 7.3 s, e) 39.3 s, f) 18.6 s, g) 25.3 s, h) 0.0 s. Capturas: `docs/capturas/T-180-1.png` (cabina con el misil recién lanzado hacia TORNILLO y la fila 1 enfriando "8 s"), `T-180-2.png` (cabina con "SIN MUNICIÓN" mientras se pelea a puños), `T-180-3.png` (DON FIERRO naranja en su aviso antes de embestir). Detalles y atajos: `docs/bitacora/2026-10-26-tony-T-180.md`.
@@ -677,3 +715,58 @@ Sin revisor: T-F5 no pasó por revisión nocturna de Opus (indicación de Tony p
 ### T-172 Balance de las piezas contra las ligas
 - Verificado automáticamente (por el implementador): EditMode 869/869 (7 nuevas de BalancePiezasLigasPruebas). Las 6 reglas pasan sin cambiar ningún rival ni bono; la más justa es fuego IV contra el jefe de la liga 4 (0.82; el mínimo es 0.8). Tabla de razones en la bitácora.
 - Para ti (sensación): Pruebas_Economia con LigasDePrueba hasta la liga 3. ¿El jefe se siente ganable con las piezas de tu liga y duro sin ellas?
+
+### T-181 Contratos de reputación, misiones y puntos de misión (Core)
+- Verificado automáticamente (por el implementador, sin verificador aparte): compilar OK; EditMode 922/922 (7 nuevas de ContratosMisionesPruebas; ContratosPartidaPruebas ajustada porque `Carga` ya no es el último de `MotivoDinero`).
+- Hecha sin aprobación explícita de Tony por su /goal; tarea de Core, revertible deshaciendo su merge.
+
+#### Para Alan
+- Puedes leer (opcional) `Registro<IReputacion>.Actual` (barrio y corporaciones, nivel -2 a 2: grafitis con el alias con barrio en 1 o más, vecinos que saludan en 2, anuncios que difaman con corporaciones en -1 o menos) y `Registro<IMisiones>.Actual` (misión en curso, por ejemplo patrullas más atentas en un robo). Sin ellos, actúa como nivel 0 y sin misión.
+- Puedes colocar puntos de misión: implementa `IPuntoMision` (Id con prefijo `Mision_`, por ejemplo `Mision_Encargo_DonaLupe`; +Z hacia donde mira el vecino o se para la pelea), agrégalo a `Registro<IPuntoMision>` en OnEnable y quítalo en OnDisable. La lista completa de ids llega con T-183. Nada de esto es obligatorio para ti; si falta un id esa misión solo no se ofrece.
+
+#### Para Alan (T-183, opcional)
+Ids de puntos de misión que usan las misiones (prefijo Mision_, tipo entre paréntesis; si falta uno, esa misión no se ofrece): Mision_Botin_BodegaCorp, Mision_Botin_Camion, Mision_Botin_Farmacia, Mision_Botin_Paqueteria, Mision_Botin_Subestacion (Botin); Mision_Destino_Moroso, Mision_Destino_Muelle, Mision_Destino_TorreCorp (Destino); Mision_Encargo_DonaLupe, Mision_Encargo_Taquero, Mision_Encargo_Vecindad (Encargo); Mision_Escondite_Azotea, Mision_Escondite_Lavanderia (Escondite); Mision_Pelea_Baldio, Mision_Pelea_Callejon, Mision_Pelea_Camion (Pelea).
+
+### Misiones y reputación (T-F7, bloque 5) cerradas: qué probar jugando
+- Verificado automáticamente (T-188): `RecorridoMisionesPruebas` pasa 5 corridas seguidas de PlayMode Progresion.Misiones (32/32 cada una, con el recorrido dentro). Un día y una noche de trabajos en Pruebas_Misiones con entrada simulada, unos 65 s de juego: Doña Lupe (+$50, barrio +8, DESCUENTO; paga menos que el rival 1 de la liga 1, $600), cobro de adeudo por teléfono (+$500, "BARRIO −12 · CORPORACIONES +10", barrio −4), robo de la bodega de noche (calor 50, nivel 2) y esconderse con un favor (calor 0, +6 chatarra, corporaciones 0), vender la chatarra (+$300) y misil con descuento ($80 → $56), LOS DEL CALLEJÓN en el mecha (+$100, barrio 11, ESCONDITE real), otro día: barrio 19 CONOCIDO, "GRAFITI: <ALIAS>", LUZ PARA LA VECINDAD ya se ofrece, LIMPIEZA DE ZONA sigue en gris (SIN FICHA), F5/F9 devuelven todo y cancelan la misión en curso sin castigo. Finales (iguales a lo calculado desde los assets): dinero $1944, barrio 19, corporaciones 0, DESCUENTO 1, ESCONDITE 1, INFORMACIÓN 0, chatarra 0, +1 misil. Capturas en docs/capturas/T-188-1 a 3 (la 3 muestra un error, ver abajo).
+- Error encontrado (no corregido, pide tarea): el letrero "GRAFITI: <ALIAS>" del muro de Pruebas_Misiones (`CreadorEscenaMisiones.ArmarMuroReputacion`) cuelga su TextMesh del muro escalado (0.4 x 5 x 7), queda con escala del mundo (17.5, 1, 0.06) y se ve estirado y deformado (T-188-3). El texto sí cambia (la prueba lo lee); hay que sacar el texto del muro escalado o ponerlo bajo un padre sin escala.
+- Qué probar jugando, en orden (Pruebas_Misiones, Play, unos 20 minutos, sin ayuda):
+  1. T-182/T-183: ¿JUSTICIERO y ENEMIGO suenan al juego? ¿Que con las corporaciones de enemigas el calor suba 30 % se siente como "te odian más"? ¿Las de barrio se sienten de barrio y las corporativas pagan bien y cuestan barrio?
+  2. T-184: con Doña Lupe, ¿la flecha y el texto te llevan sin perderte? ¿Recoger y entregar con E se siente natural o falta algo (un vecino, un sonido)?
+  3. T-186: ¿el teléfono con T se siente rápido o estorba? ¿El aviso "BARRIO −12" te hace pensar dos veces antes de otro contrato corporativo? ¿El contacto del bar se siente de noche y escondido?
+  4. T-185: el robo y escapar, ¿tenso o solo esperar a que baje el calor? ¿La pandilla del callejón se siente como defender al taquero? ¿Ir a vender la chatarra cierra bien el robo?
+  5. T-187: ¿los favores se sienten como algo que el barrio te debe o se olvidan? ¿El escondite te salvó en un robo? ¿30 % en una compra es generoso o tacaño?
+  6. Cierre: ¿las misiones dan ganas de hacerlas entre peleas o son relleno? ¿Sentiste el jalón entre barrio y corporaciones al escoger? ¿Las peleas siguen siendo lo que más paga?
+
+#### Tabla final de misiones (de T-183; todo se cambia en Progresion/Datos/Misiones/)
+| Misión | Origen y franja | Paga | Reputación | Extra |
+| --- | --- | --- | --- | --- |
+| LA TIENDITA DE DOÑA LUPE | Calle, cualquiera | $50 | barrio +8 | favor DESCUENTO |
+| LOS DEL CALLEJÓN | Calle (taquero), noche | $100 | barrio +12 | favor ESCONDITE; pelea de 2 en el mecha |
+| LUZ PARA LA VECINDAD | Calle (vecindad), cualquiera | $0 | barrio +15, corp. −8 | favor INFORMACIÓN; pide CONOCIDO; calor 30 |
+| ENTREGA URGENTE | Teléfono, día | $400 | barrio −5, corp. +8 | 150 s |
+| COBRO DE ADEUDO | Teléfono, día | $500 | barrio −12, corp. +10 | |
+| LIMPIEZA DE ZONA | Teléfono, día | $900 | barrio −15, corp. +15 | pide CONTRATISTA y liga 2; pelea |
+| CARGA CALIENTE | Bar, noche | $350 | corp. −5 | calor 40, escapar |
+| PELEA SIN JAULA | Bar, noche | $450 | barrio +3, corp. −5 | pelea de 3 en el baldío, escapar |
+| BODEGA DE REFACCIONES | Bar, noche | 6 chatarra ($300) | barrio +3, corp. −10 | calor 50, escapar |
+| CAMIÓN BLINDADO | Bar, noche | $200 + 10 chatarra | barrio +5, corp. −15 | liga 2; calor 60 |
+| EL SOPLO | Bar, noche | 12 chatarra ($600) | barrio +3, corp. −8 | gasta 1 INFORMACIÓN; calor 15 |
+
+#### Niveles de reputación y favores
+- Niveles (−100 a 100, umbrales ±15 y ±50): barrio TRAIDOR, MAL VISTO, DESCONOCIDO, CONOCIDO, JUSTICIERO; corporaciones ENEMIGO, FICHADO, SIN FICHA, CONTRATISTA, SOCIO. Corporaciones en −1 o −2: el calor sube ×1.15 o ×1.3. Ninguna misión sube las dos.
+- Favores (máximo 3 de cada uno): DESCUENTO (−30 % en la siguiente compra del mercado negro), INFORMACIÓN (abre EL SOPLO; se gasta al aceptar, no se devuelve), ESCONDITE (en un escondite del barrio borra el calor y cumple escapar). Si ya tienes 3, el favor se pierde y se avisa.
+- Conocido T-186: al cargar con F9 el aviso de reputación del HUD muestra los valores guardados como cambio (pide tarea de HUD).
+
+#### Preguntas abiertas para Tony (D-tony-152; ninguna se aplica sin tu respuesta)
+(a) ¿El teléfono en la tecla T te late? (b) ¿Las corporativas deben dar algo más que dinero (piezas, información de tus papás para la historia)? (c) ¿El descuento también en el taller o la clínica? (d) ¿Los robos deberían poder salir mal de otra forma (que te atrapen las patrullas de Alan con calor 3)? (e) ¿Misiones de una sola vez con historia (no repetibles) para el hilo de los papás, o se dejan para la historia principal?
+
+#### Para Alan (D-tony-151; nada lo bloquea)
+- Ids de los puntos de misión (prefijo Mision_, como en T-183): Botin_BodegaCorp, Botin_Camion, Botin_Farmacia, Botin_Paqueteria, Botin_Subestacion; Destino_Moroso, Destino_Muelle, Destino_TorreCorp; Encargo_DonaLupe, Encargo_Taquero, Encargo_Vecindad; Escondite_Azotea, Escondite_Lavanderia; Pelea_Baldio, Pelea_Callejon, Pelea_Camion. Cada uno implementa `IPuntoMision` y se agrega a `Registro<IPuntoMision>`; si falta uno, esa misión no se ofrece.
+- Prefabs para tu ciudad: `Assets/_Proyecto/UI/Prefabs/ContactoBar.prefab` (el contacto de noche en tu bar) y `Assets/_Proyecto/Pelea/Prefabs/PeleasDeMision.prefab` (levanta las emboscadas de los puntos Pelea).
+- Puedes leer `Registro<IReputacion>.Actual` (Valor y Nivel de barrio y corporaciones, NombreNivel, evento Cambio: grafitis con el alias con barrio en 1 o más, vecinos que saludan en 2, anuncios que difaman con corporaciones en −1 o menos) y `Registro<IMisiones>.Actual` (HayMision, Tipo, evento Terminada: patrullas más atentas en un robo). Sin ellos la ciudad actúa como nivel 0.
+- Suite completa (T-188): `verificar.sh todo`: EditMode 1017/1017; PlayMode 926 (908 pasaron, 9 fallos conocidos de Alan en Arena/JaulaClandestinoPruebas, el resto omitidas). `playmode-por-area` sin ningún LIMITE: Arena 17 (9 fallos conocidos), Combate 61, Core 3, Economia 19, IA 44, Mecha 158, Mundo 141, Pelea 66, Personaje 111, Progresion 114, Progresion.Misiones 32, UI 130, Vehiculos 30.
+
+#### Para Alan (T-190, bloque 6; nada lo bloquea)
+- Puedes leer `Registro<IImplantes>.Actual` (Core/Implantes: `Cantidad`, `Nivel`/`Nombre` por espacio, `Efectos`, eventos `Cambio` e `Instalado`; ejemplo: un vecino que dice "ese trae cromo" con 3 o más). Sin él registrado, actúa como `Cantidad` 0. El implante cosmético de la creación no cuenta como instalado.
+- Conviene poner un `IPuntoAparicion` con id "Clinica_Camilla" en tu clínica (donde despierta el jugador, llega con T-196). Nada de esto es obligatorio.

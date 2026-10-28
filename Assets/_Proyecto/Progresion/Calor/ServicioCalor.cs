@@ -49,7 +49,18 @@ namespace MechaCyberpunk.Progresion
             modelo.Avanzar(Time.deltaTime);
         }
 
-        public void Sumar(float cantidad, MotivoCalor motivo) => modelo?.Sumar(cantidad, motivo);
+        /// <summary>Suma calor. Con corporaciones en nivel -1 o -2 (reputación registrada) la cantidad se multiplica (T-182).</summary>
+        public void Sumar(float cantidad, MotivoCalor motivo)
+        {
+            if (modelo == null) return;
+            IReputacion reputacion = Registro<IReputacion>.Actual;
+            if (reputacion != null)
+            {
+                DatosReputacion d = reputacion is ServicioReputacion servicio ? servicio.Datos : null;
+                cantidad *= ReglaReputacion.MultiplicadorCalor(d, reputacion.Nivel(TipoReputacion.Corporaciones));
+            }
+            modelo.Sumar(cantidad, motivo);
+        }
 
         public void Enfriar(float cantidad) => modelo?.Enfriar(cantidad);
 

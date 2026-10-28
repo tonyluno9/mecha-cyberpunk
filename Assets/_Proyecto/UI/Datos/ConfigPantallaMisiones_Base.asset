@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c293d0b21d2b840aecc67711fcce38, type: 3}
+  m_Name: ConfigPantallaMisiones_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaMisiones
+  colorElegido: {r: 0, g: 1, b: 0.9, a: 1}
+  colorNormal: {r: 0.8, g: 0.85, b: 0.95, a: 1}
+  colorApagado: {r: 0.4, g: 0.43, b: 0.5, a: 1}
+  colorTitulo: {r: 1, g: 0.2, b: 0.7, a: 1}
+  colorAviso: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorFondo: {r: 0.02, g: 0.02, b: 0.06, a: 0.88}
+  colorBarraPositiva: {r: 0, g: 1, b: 0.9, a: 1}
+  colorBarraNegativa: {r: 1, g: 0.1, b: 0.6, a: 1}
+  colorHuecoBarra: {r: 0.1, g: 0.12, b: 0.18, a: 0.9}
+  tamanoTitulo: 52
+  tamanoFilas: 34
+  tamanoPestanas: 38
+  tamanoTexto: 36
+  tamanoAyuda: 26
+  tituloContratos: CONTRATOS
+  tituloContacto: CONTACTO DEL BAR
+  tituloEncargo: ENCARGO DEL BARRIO
+  formatoElegida: '> {0}'
+  separador: "  \xB7  "
+  formatoReputacion: "BARRIO {0} \xB7 CORP. {1}"
+  formatoChatarra: '{0}x {1}'
+  formatoFavor: 'FAVOR: {0}'
+  formatoNoDisponible: "{0}  \xB7  {1}"
+  textoSinOfertas: SIN OFERTAS
+  textoAyudaLista: "\u2191 \u2193 ELEGIR \xB7 ENTER ACEPTAR \xB7 ESC SALIR"
+  textoAyudaListaEmbebida: "\u2190 \u2192 PESTA\xD1A \xB7 \u2191 \u2193 ELEGIR \xB7
+    ENTER ACEPTAR \xB7 T / ESC CERRAR"
+  textoDeDia: "DE D\xCDA"
+  textoDeNoche: DE NOCHE
+  textoBarrioNoTeHabla: EL BARRIO NO TE HABLA
+  textoCorporacionesNoLlaman: YA NO TE LLAMAN
+  formatoReputacionBarrio: NECESITAS SER {0} EN EL BARRIO
+  formatoReputacionCorporaciones: NECESITAS SER {0} CON LAS CORPORACIONES
+  textoReputacionBaja: "NECESITAS M\xC1S REPUTACI\xD3N"
+  formatoLiga: LIGA {0}
+  formatoFaltaFavor: NECESITAS 1 {0}
+  nombresFavor:
+  - DESCUENTO
+  - "INFORMACI\xD3N"
+  - ESCONDITE
+  textoHechaHoy: YA LO HICISTE HOY
+  textoYaHecha: YA LA HICISTE
+  textoOtraActiva: "YA TIENES UNA MISI\xD3N"
+  textoFueraDeLibre: "TERMINA EL PR\xD3LOGO"
+  textoFaltanPuntos: NO DISPONIBLE
+  tituloTelefono: "TEL\xC9FONO"
+  textoPestanaContratos: CONTRATOS
+  textoPestanaMision: "MISI\xD3N"
+  textoPestanaReputacion: "REPUTACI\xD3N"
+  formatoPestanaElegida: '[ {0} ]'
+  textoNadieContesta: "NADIE CONTESTA \xB7 LLAMA DE D\xCDA"
+  textoYaNoTeLlaman: YA NO TE LLAMAN
+  textoSinMision: "SIN MISI\xD3N"
+  formatoPaso: "PASO {0}/{1} \xB7 {2}"
+  formatoTiempo: TIEMPO {0}
+  textoAbandonar: "Enter \xB7 ABANDONAR"
+  textoConfirmarAbandonar: "\xBFABANDONAR LA MISI\xD3N?   Enter \xB7 S\xCD   Esc
+    \xB7 NO"
+  textoAyudaTelefono: "\u2190 \u2192 PESTA\xD1A \xB7 T / ESC CERRAR"
+  textoAyudaMision: "\u2190 \u2192 PESTA\xD1A \xB7 ENTER ABANDONAR \xB7 T / ESC CERRAR"
+  formatoBarra: '{0}   {1}   {2}'
+  nombreBarrio: BARRIO
+  nombreCorporaciones: CORPORACIONES
+  textoContacto: HABLAR CON EL CONTACTO
+  textoContactoDeDia: EL CONTACTO LLEGA DE NOCHE
+  textoContactoCerrado: CERRADO
+  formatoAyudar: 'AYUDAR: {0}'
+  anchoBarra: 760
+  altoBarra: 34

@@ -99,9 +99,10 @@ namespace MechaCyberpunk.Tests.Core
         public void MotivoDineroCargaEsElUltimoYPremioSigueEnCero()
         {
             var valores = (MotivoDinero[])Enum.GetValues(typeof(MotivoDinero));
-            Assert.AreEqual(MotivoDinero.Carga, valores[valores.Length - 1]);
+            Assert.AreEqual(MotivoDinero.Mision, valores[valores.Length - 1]);
+            Assert.AreEqual(MotivoDinero.Carga, valores[valores.Length - 2]);
             Assert.AreEqual(0, (int)MotivoDinero.Premio);
-            Assert.AreEqual(MotivoDinero.Otro, valores[valores.Length - 2]);
+            Assert.AreEqual(MotivoDinero.Otro, valores[valores.Length - 3]);
         }
     }
 }

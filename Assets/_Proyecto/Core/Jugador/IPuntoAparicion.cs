@@ -10,7 +10,7 @@ namespace MechaCyberpunk.Core
     /// </summary>
     public interface IPuntoAparicion
     {
-        /// <summary>Identificador único en la escena, por ejemplo "Casa_Cama" o "Clandestino_Puerta".</summary>
+        /// <summary>Identificador único en la escena, por ejemplo "Casa_Cama", "Clandestino_Puerta" o "Clinica_Camilla" (donde despiertas cuando el doctor te levanta, T-196).</summary>
         string Id { get; }
 
         /// <summary>Posición en el piso y rotación con la que aparece el jugador.</summary>

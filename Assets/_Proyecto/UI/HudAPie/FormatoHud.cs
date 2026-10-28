@@ -1,6 +1,7 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI;
 using UnityEngine;
 
@@ -65,6 +66,67 @@ namespace MechaCyberpunk.UI.Hud
             }
             return (string.Format(config.TextoCampeonLiga, ligas.NombreLiga(liga)),
                 string.Format(config.TextoSeAbreLiga, ligas.NombreLiga(liga + 1)));
+        }
+
+        /// <summary>El signo menos de los avisos (U+2212).</summary>
+        public const string SignoMenos = "−";
+
+        /// <summary>"+8", "−5" (con el signo menos tipográfico) o "0".</summary>
+        public static string Firmado(int valor)
+        {
+            if (valor > 0)
+            {
+                return "+" + valor;
+            }
+            return valor < 0 ? SignoMenos + (-valor) : "0";
+        }
+
+        /// <summary>
+        /// "BARRIO +8 · CORPORACIONES −5". Solo entran las reputaciones que cambiaron; vacío si ninguna cambió.
+        /// </summary>
+        public static string TextoAvisoReputacion(int deltaBarrio, int deltaCorporaciones, ConfigHudAPie config)
+        {
+            string barrio = deltaBarrio != 0 ? string.Format(config.TextoReputacionBarrio, Firmado(deltaBarrio)) : string.Empty;
+            string corporaciones = deltaCorporaciones != 0
+                ? string.Format(config.TextoReputacionCorporaciones, Firmado(deltaCorporaciones)) : string.Empty;
+            if (barrio.Length > 0 && corporaciones.Length > 0)
+            {
+                return barrio + config.SeparadorAviso + corporaciones;
+            }
+            return barrio + corporaciones;
+        }
+
+        /// <summary>"AHORA ERES CONOCIDO EN EL BARRIO" o "AHORA ERES SOCIO CON LAS CORPORACIONES".</summary>
+        public static string TextoNivel(TipoReputacion tipo, string nombreNivel, ConfigHudAPie config)
+        {
+            string formato = tipo == TipoReputacion.Barrio ? config.TextoNivelBarrio : config.TextoNivelCorporaciones;
+            return string.Format(formato, nombreNivel);
+        }
+
+        /// <summary>
+        /// "MISIÓN CUMPLIDA · +$50 · DESCUENTO" (pago, chatarra y favor solo si los hubo) o "MISIÓN FALLIDA".
+        /// </summary>
+        public static string TextoMisionTerminada(bool cumplida, ResumenMision resumen, ConfigHudAPie config)
+        {
+            if (!cumplida)
+            {
+                return config.TextoMisionFallida;
+            }
+            string texto = config.TextoMisionCumplida;
+            if (resumen.Pago > 0)
+            {
+                texto += config.SeparadorAviso + "+" + FormatoDinero.Texto(resumen.Pago);
+            }
+            if (resumen.Chatarra != null && resumen.ChatarraCantidad > 0)
+            {
+                texto += config.SeparadorAviso + string.Format(config.TextoChatarraMision, resumen.ChatarraCantidad,
+                    resumen.Chatarra.Nombre.ToUpperInvariant());
+            }
+            if (resumen.Favor != null)
+            {
+                texto += config.SeparadorAviso + resumen.Favor.Nombre.ToUpperInvariant();
+            }
+            return texto;
         }
 
         /// <summary>"RENTA VENCIDA · $500".</summary>

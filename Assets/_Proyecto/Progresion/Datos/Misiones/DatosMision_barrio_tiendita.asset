@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da182b3f9b113b147b206fc1a9fbed85, type: 3}
+  m_Name: DatosMision_barrio_tiendita
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosMision
+  id: barrio_tiendita
+  titulo: "LA TIENDITA DE DO\xD1A LUPE"
+  descripcion: "Do\xF1a Lupe necesita unas medicinas de la farmacia y nadie le hace
+    el paro."
+  tipo: 0
+  origen: 0
+  franja: 0
+  idEncargo: Mision_Encargo_DonaLupe
+  pasos:
+  - tipo: 1
+    idPunto: Mision_Botin_Farmacia
+    texto: Recoge el pedido en la farmacia
+    calor: 0
+    radio: 4
+  - tipo: 2
+    idPunto: Mision_Encargo_DonaLupe
+    texto: "Ll\xE9vaselo a Do\xF1a Lupe"
+    calor: 0
+    radio: 4
+  pago: 50
+  chatarraObjeto: {fileID: 0}
+  chatarraCantidad: 0
+  deltaBarrio: 8
+  deltaCorporaciones: 0
+  favor: {fileID: 11400000, guid: 95e2a7019ec1b5549b743fa15c3bfd49, type: 2}
+  exigeFavor: 0
+  favorRequerido: 1
+  nivelBarrioMinimo: -2
+  nivelCorporacionesMinimo: -2
+  ligaMinima: 1
+  limiteSegundos: 0
+  repetible: 1

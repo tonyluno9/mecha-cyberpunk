@@ -32,6 +32,11 @@ namespace MechaCyberpunk.UI.Editor
         private const float AnchoAvisoLiga = 1200f;
         private const float AltoAvisoLiga = 130f;
         private const float SeparacionMarcasCalor = 6f;
+        private const float AlturaAvisoReputacion = 340f;
+        private const float AnchoAvisoReputacion = 1200f;
+        private const float AltoAvisoReputacion = 90f;
+        private const float AlturaAvisoMision = 450f;
+        private const float AltoAvisoMision = 56f;
         private static readonly Color ColorSombra = new Color(0f, 0f, 0f, 0.8f);
         private static readonly Vector2 DesplazamientoSombra = new Vector2(1.5f, -1.5f);
 
@@ -265,6 +270,77 @@ namespace MechaCyberpunk.UI.Editor
                     so.FindProperty("textoAvisoLiga2").objectReferenceValue = segunda;
                     so.ApplyModifiedPropertiesWithoutUndo();
                     grupoLiga.gameObject.SetActive(false);
+                }
+                if (so.FindProperty("grupoAvisoReputacion").objectReferenceValue == null)
+                {
+                    // T-186: aviso de reputación (dos líneas) y aviso de misión terminada, al centro arriba bajo el aviso de liga.
+                    RectTransform grupoReputacion = CrearGrupo("AvisoReputacion", raiz.transform, new Vector2(0.5f, 1f),
+                        new Vector2(0f, -AlturaAvisoReputacion), new Vector2(AnchoAvisoReputacion, AltoAvisoReputacion));
+                    Text primeraRep = CrearTexto("Primera", grupoReputacion, config, TextAnchor.UpperCenter);
+                    primeraRep.rectTransform.anchorMin = new Vector2(0f, 0.5f);
+                    primeraRep.rectTransform.anchorMax = Vector2.one;
+                    primeraRep.rectTransform.offsetMin = Vector2.zero;
+                    primeraRep.rectTransform.offsetMax = Vector2.zero;
+                    primeraRep.fontSize = config.TamanoAvisoReputacion;
+                    primeraRep.color = config.ColorAvisoReputacion;
+                    Text segundaRep = CrearTexto("Segunda", grupoReputacion, config, TextAnchor.UpperCenter);
+                    segundaRep.rectTransform.anchorMin = Vector2.zero;
+                    segundaRep.rectTransform.anchorMax = new Vector2(1f, 0.5f);
+                    segundaRep.rectTransform.offsetMin = Vector2.zero;
+                    segundaRep.rectTransform.offsetMax = Vector2.zero;
+                    segundaRep.fontSize = config.TamanoAvisoReputacion2;
+                    segundaRep.color = config.ColorAvisoReputacion;
+                    RectTransform grupoMision = CrearGrupo("AvisoMision", raiz.transform, new Vector2(0.5f, 1f),
+                        new Vector2(0f, -AlturaAvisoMision), new Vector2(AnchoAvisoReputacion, AltoAvisoMision));
+                    Text textoMision = CrearTexto("Texto", grupoMision, config, TextAnchor.UpperCenter);
+                    Stretch(textoMision.rectTransform);
+                    textoMision.fontSize = config.TamanoAvisoMision;
+                    so.FindProperty("grupoAvisoReputacion").objectReferenceValue = grupoReputacion.gameObject;
+                    so.FindProperty("textoAvisoReputacion").objectReferenceValue = primeraRep;
+                    so.FindProperty("textoAvisoReputacion2").objectReferenceValue = segundaRep;
+                    so.FindProperty("grupoAvisoMision").objectReferenceValue = grupoMision.gameObject;
+                    so.FindProperty("textoAvisoMision").objectReferenceValue = textoMision;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    grupoReputacion.gameObject.SetActive(false);
+                    grupoMision.gameObject.SetActive(false);
+                }
+                if (so.FindProperty("grupoVidaRival").objectReferenceValue == null)
+                {
+                    // T-195: OJOS a pie. Barra delgada turquesa sobre la mira y el aviso de golpe a su derecha.
+                    RectTransform grupoRival = CrearGrupo("VidaRival", raiz.transform, new Vector2(0.5f, 0.5f),
+                        new Vector2(0f, config.AlturaBarraRival), new Vector2(config.AnchoBarraRival, config.AltoBarraRival));
+                    Image huecoRival = CrearImagen("Hueco", grupoRival, config.ColorHueco);
+                    Stretch(huecoRival.rectTransform);
+                    Image rellenoRival = CrearImagen("Relleno", grupoRival, config.ColorVida);
+                    Stretch(rellenoRival.rectTransform);
+                    Texture2D blancoRival = Texture2D.whiteTexture;
+                    rellenoRival.sprite = Sprite.Create(blancoRival, new Rect(0f, 0f, blancoRival.width, blancoRival.height), new Vector2(0.5f, 0.5f));
+                    rellenoRival.type = Image.Type.Filled;
+                    rellenoRival.fillMethod = Image.FillMethod.Horizontal;
+                    rellenoRival.fillOrigin = (int)Image.OriginHorizontal.Left;
+                    Text textoRival = CrearTexto("Numeros", grupoRival, config, TextAnchor.LowerCenter);
+                    textoRival.rectTransform.anchorMin = new Vector2(0f, 1f);
+                    textoRival.rectTransform.anchorMax = new Vector2(1f, 1f);
+                    textoRival.rectTransform.pivot = new Vector2(0.5f, 0f);
+                    textoRival.rectTransform.anchoredPosition = Vector2.zero;
+                    textoRival.rectTransform.sizeDelta = new Vector2(0f, AltoTexto);
+                    textoRival.color = config.ColorVida;
+                    RectTransform grupoGolpe = CrearGrupo("GolpeRival", raiz.transform, new Vector2(0.5f, 0.5f),
+                        new Vector2(config.DesplazamientoGolpeRival, 0f), new Vector2(AnchoTextoLateral / 2f, AltoTexto));
+                    grupoGolpe.pivot = new Vector2(0f, 0.5f);
+                    Text textoGolpe = CrearTexto("Texto", grupoGolpe, config, TextAnchor.MiddleLeft);
+                    Stretch(textoGolpe.rectTransform);
+                    textoGolpe.fontSize = config.TamanoTextoGolpeRival;
+                    textoGolpe.color = config.ColorAviso;
+                    textoGolpe.text = config.TextoGolpeRival;
+                    so.FindProperty("grupoVidaRival").objectReferenceValue = grupoRival.gameObject;
+                    so.FindProperty("rellenoVidaRival").objectReferenceValue = rellenoRival;
+                    so.FindProperty("textoVidaRival").objectReferenceValue = textoRival;
+                    so.FindProperty("grupoGolpeRival").objectReferenceValue = grupoGolpe.gameObject;
+                    so.FindProperty("textoGolpeRival").objectReferenceValue = textoGolpe;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    grupoRival.gameObject.SetActive(false);
+                    grupoGolpe.gameObject.SetActive(false);
                 }
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }
