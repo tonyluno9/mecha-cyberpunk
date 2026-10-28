@@ -58,7 +58,8 @@ namespace MechaCyberpunk.Mundo.Editor
             DatosLugar clandestino = CrearDatos("Clandestino", IdLugar.Clandestino, "El Sótano", new HorarioLugar(20f, 6f), false);
             DatosLugar casino = CrearDatos("Casino", IdLugar.Casino, "Casino Aurora", new HorarioLugar(20f, 6f), false);
             AbrirEnLaDemo(casino); // T-303: el casino ya tiene interior; el asset de T-042 quedó cerrado y aquí se abre
-            DatosLugar mercado = CrearDatos("MercadoNegro", IdLugar.MercadoNegro, "Mercado Negro", new HorarioLugar(9f, 18f), true);
+            DatosLugar mercado = CrearDatos("MercadoNegro", IdLugar.MercadoNegro, "Mercado Negro", new HorarioLugar(9f, 18f), false);
+            AbrirEnLaDemo(mercado); // T-320: el mercado ya tiene interior y mostrador; abre de día (09:00 a 18:00)
             AssetDatabase.SaveAssets();
 
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefabBarrio);
