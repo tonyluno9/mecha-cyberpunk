@@ -57,3 +57,8 @@ Rama tony/T-197-cajas-salto: cajas de salto de Pruebas_Implantes con el stepOffs
 
 ## Bloque 6 cerrado (2026-10-28)
 T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas en tony/fase-7: EditMode 1129/1129; PlayMode 999/1017 (8 de JaulaClandestinoPruebas de Alan, conocidos; OjosII_ContraElJefe inestable, 3/3 sola); playmode-por-area sin LIMITE. Mezclado a main. Builds/Provisional y Builds/Provisional_Implantes (385 MB). Criterios de sensación para Tony en docs/revision-tony.md. Doc arreglado: el commit de T-197 había vaciado decisiones-pendientes y la guía (D-tony-183).
+
+## Detenido por Tony (2026-10-28, mañana)
+- A medias: T-136 en tony/T-136-prologo-en-ciudad-alan (commit WIP). Hecho: CreadorDatosProgresion.CrearT124 ya recibe ciudad y flashback por asset y _Demo apunta a Ciudad_Prologo.unity y Flashback.unity (sin compilar ni correr el creador). Falta: compilar, regenerar DatosEscenas_Demo con el creador, revisar qué tienen Ciudad_Prologo/Flashback de Alan (prefabs y puntos de D-tony-72), ids de ruta en DatosPrologo_Base, texto del carro en ConfigAyudas_Base, PrologoCiudadPruebas, capturas T-136-1..4.
+- Sigue: terminar T-136; luego T-137 (Build Settings, Builds/Demo, verificador y suite, merge a main, guía de la demo de 15 min); luego el paso 4 (planificador, bloque 8 desde T-198).
+- Bloque 6 (T-194 a T-197) cerrado y en main (b392387); T-250 en main (0ea424c).
