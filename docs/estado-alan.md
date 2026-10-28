@@ -41,3 +41,9 @@ Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 - `CreadorPersecucion.Crear` colgó el gestor "Persecucion" en Barrio.prefab editando el prefab en sitio (+48 líneas, sin regenerar el barrio; el arte T-250 no se tocó).
 - Evidencia: compilar OK; EditMode 1135/1135; PlayMode completo 1012 pasaron, 0 fallos, 9 omitidas. Pruebas de Trafico con doble de ICalor sobre Barrio.prefab: nivel 0 sin perseguidores, subir crea, bajar a 0 retira, entrar a Casa borra el calor, el dron se acerca sin colliders, la patrulla recorre 60 s de juego sin salir de la calle. Capturas revisadas: docs/capturas/T-341-1.png (dron) y T-341-2.png (patrulla con sirena en la calle); las genera la prueba `Capturas_DronYPatrulla`.
 - No se probó con el calor real de Tony (solo dobles) ni a mano en Unity. El PlayMode completo regeneró capturas viejas y ProjectSettings.asset: no se incluyeron en el commit.
+
+## Fase 6 de Alan (2026-10-28): integración WIP en alan/fase-6
+- Mezclados en orden con merges normales: origin/main (T-250 de Tony), T-320, T-331 y T-341. Conflictos resueltos solo en archivos de Alan (estado-alan.md, CreadorTodo.cs, Barrio.prefab con las dos adiciones de Peatones y Persecucion, y los .meta de carpeta de Trafico).
+- Evidencia del estado combinado: compilar OK, EditMode 1138/1138, PlayMode 1026 pasaron, 0 fallos, 9 omitidas. Pruebas de T-320, T-331 y T-341 pasan; Barrio.prefab conserva todas las referencias de arte de T-250 (0 GUID perdidos frente a origin/main).
+- **WIP: T-321 sigue pendiente (bloqueada), A-F6 NO está completa.** No integrada a main.
+- Sin descartar en el worktree: regenerados de PlayMode (capturas, Peaton_Neon.mat, ProjectSettings.asset) no incluidos en el commit.
