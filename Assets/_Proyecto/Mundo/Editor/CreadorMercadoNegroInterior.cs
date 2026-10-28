@@ -31,6 +31,7 @@ namespace MechaCyberpunk.Mundo.Editor
         public const float HoraApertura = 9f;
         public const float HoraCierre = 18f;
         public const string NombreMostrador = "Clinica_Mostrador";
+        public const string RutaMostradorClinica = "Assets/_Proyecto/UI/Prefabs/MostradorClinica.prefab";
         public const string RutaDatos = "Assets/_Proyecto/Mundo/Datos/DatosLugar_Clinica.asset";
     }
 
@@ -263,6 +264,13 @@ namespace MechaCyberpunk.Mundo.Editor
             punto.transform.SetParent(clinica, false);
             punto.transform.localPosition = new Vector3(GeometriaClinica.MostradorX, 0.04f, zFondoInterior + GeometriaClinica.MostradorZ);
             punto.transform.localRotation = Quaternion.Euler(0f, GiroMostrador, 0f);
+
+            // Mostrador de Tony (T-193): hermano del punto, sin editar el prefab; si aún no existe, el punto queda libre.
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(GeometriaClinica.RutaMostradorClinica) != null)
+            {
+                GameObject mostradorClinica = PrefabDeRuta(GeometriaClinica.RutaMostradorClinica, clinica, punto.transform.localPosition, GiroMostrador);
+                mostradorClinica.name = "MostradorClinica";
+            }
 
             // El lugar: entrada en el pasillo, frente al vano.
             GameObject lugarObjeto = new GameObject("Lugar_Clinica");

@@ -148,7 +148,7 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             List<Collider> colliders = CollidersDelKit();
             Assert.Greater(colliders.Count, MinimoPostes, "No encontré los colliders del kit");
-            List<Vector3> entradas = Todos().Where(t => t.name == "Entrada").Select(t => t.position).ToList();
+            List<Vector3> entradas = Todos().Where(t => t.name == "Entrada" && t.parent.name != "Lugar_Clinica").Select(t => t.position).ToList();
             Assert.IsNotEmpty(entradas);
             foreach (Collider collider in colliders)
             {

@@ -36,3 +36,9 @@ Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 - Asset `DatosLugar_Clinica.asset` creado con batch (no toca Barrio.prefab). El prefab de Tony (`MostradorClinica`) no existe aún: el punto queda libre.
 - Evidencia: compila; EditMode 957/957 (incluye `ClinicaPruebas`, 5 pruebas de datos y geometría).
 - NO verificado: el creador no se ha corrido (escribe Barrio.prefab, bloqueado hasta Merge tony/T-250), así que faltan PlayMode, captura y `verificar.sh todo`. No integrada.
+
+## T-321 (2026-10-28): clínica del mercado negro, verificada
+- Se mezcló origin/main (trae T-250 y `UI/Prefabs/MostradorClinica.prefab` de Tony). El creador instancia ese prefab junto a `Clinica_Mostrador` (sin editarlo); el punto queda libre y sobre piso (y = 0.04). Se regeneró todo con `CreadorTodo.Crear`.
+- Evidencia: `bash herramientas/verificar.sh todo`: compilar OK, EditMode 1134/1134, PlayMode 1015/1024 (0 fallos, 9 omitidas). Prueba nueva `Clinica_EstaRegistrada_AbreDeDia_ConMostradorDeTonyYPuntoSobrePiso`.
+- Ajustes de pruebas: `LugaresPruebas` espera 5 locales con puerta + la Clínica como ILugar; `KitCallePruebas` ignora la Entrada de `Lugar_Clinica` (está dentro del cuarto, no da a la calle); se agregó `FarolPuerta` al exterior del mercado (arregla la falla de T-320 "más de 8 piezas").
+- Límites: la clínica NO tiene `IPuerta` propia (se entra por el vano del tabique, sin hoja); no hay captura visual específica de la clínica (las pruebas no la capturan y no se hizo captura manual); no se probó el uso real del mostrador con entrada simulada en esta tarea (es de Tony, T-193).

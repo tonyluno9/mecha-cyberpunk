@@ -46,7 +46,8 @@ namespace MechaCyberpunk.Tests.Mundo
         public IEnumerator Registro_LosCincoLugaresYSusPuertas_EstanConEntradaFrenteALaPuerta()
         {
             yield return null;
-            Assert.AreEqual(Cinco.Length, Registro<ILugar>.Cantidad);
+            // T-321: además de los cinco con puerta, la Clínica (dentro del mercado, sin puerta propia) también es un ILugar.
+            Assert.AreEqual(Cinco.Length + 1, Registro<ILugar>.Cantidad);
             Assert.AreEqual(Cinco.Length, Registro<IPuerta>.Cantidad);
             foreach (IdLugar id in Cinco)
             {
@@ -58,6 +59,26 @@ namespace MechaCyberpunk.Tests.Mundo
                 Assert.Greater(Vector3.Dot(lugar.PosicionEntrada - puerta.Posicion, haciaLaCalle), 0f, id + ": la entrada está del lado de la calle");
                 Assert.IsFalse(lugar.JugadorDentro);
             }
+        }
+
+        [UnityTest]
+        public IEnumerator Clinica_EstaRegistrada_AbreDeDia_ConMostradorDeTonyYPuntoSobrePiso()
+        {
+            yield return null;
+            ILugar clinica = EscenaLugares.Lugar(IdLugar.Clinica);
+            Assert.IsNotNull(clinica, "T-321: la Clínica se registra como ILugar");
+            reloj.AvanzarHasta(EscenaLugares.HoraMediodia);
+            Assert.IsTrue(clinica.EstaAbierto, "A las 12:00 la clínica abre");
+            reloj.AvanzarHasta(EscenaLugares.HoraNoche);
+            Assert.IsFalse(clinica.EstaAbierto, "De noche la clínica cierra");
+
+            Transform raiz = ((Component)clinica).transform.parent;
+            Transform punto = raiz.Find("Clinica_Mostrador");
+            Assert.IsNotNull(punto, "Existe el punto Clinica_Mostrador");
+            Assert.AreEqual(0.04f, punto.localPosition.y, 0.001f, "El punto está sobre el piso");
+            Transform mostrador = raiz.Find("MostradorClinica");
+            Assert.IsNotNull(mostrador, "El prefab MostradorClinica de Tony está colocado");
+            Assert.Less(Vector3.Distance(mostrador.position, punto.position), 0.01f, "El mostrador está en el punto");
         }
 
         [UnityTest]

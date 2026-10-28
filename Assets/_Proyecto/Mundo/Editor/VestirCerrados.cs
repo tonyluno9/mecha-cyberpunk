@@ -105,6 +105,8 @@ namespace MechaCyberpunk.Mundo.Editor
             Caja(g, "CajaApilada3", new Vector3(3.6f, 0.35f, z + 0.5f), new Vector3(0.7f, 0.7f, 0.7f), caja, true);
             Caja(g, "CajaApilada1", new Vector3(-3.6f, 0.4f, z + 0.5f), new Vector3(0.8f, 0.8f, 0.8f), caja, true);
             Caja(g, "CajaApilada2", new Vector3(-3.6f, 1.15f, z + 0.5f), new Vector3(0.7f, 0.7f, 0.7f), caja, true);
+            // T-321: un farol de metal sobre la puerta, a la derecha del cajón, para que la fachada tenga más de 8 piezas.
+            Caja(g, "FarolPuerta", new Vector3(AnchoPuerta / 2f + 0.5f, AltoPuerta + 0.6f, z + 0.2f), new Vector3(0.3f, 0.3f, 0.3f), metal, false);
 
             // Manta con el aviso, colgada de la fachada a la izquierda de la puerta.
             Caja(g, "Manta", new Vector3(-3.7f, 2.3f, z + 0.06f), new Vector3(1.6f, 1f, 0.03f), manta, false);
