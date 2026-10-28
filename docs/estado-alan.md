@@ -24,3 +24,9 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
+
+## T-331 (WIP, 2026-10-28): peatones, código y pruebas listos, sin regenerar el barrio
+- Rama alan/T-331-peatones (sale de alan/fase-6). `RutasBanqueta`, `PeatonMundo`, `GrupoPeatones`, `CreadorPeatones` (prefab Peaton, ConfigPeatones_Trafico) y el aviso en `CreadorTodo`.
+- Evidencia: EditMode 1097/1097; PlayMode de Trafico 3/3 sobre una instancia de Barrio.prefab (rutas sin choques con ningún collider, cuenta 12 de día / 24 de noche, parada a 2 m del jugador).
+- Hallazgo: los cierres del barrio (vallas, retenes, pórticos) chocaban con las rutas; las manzanas de los extremos no caminan por su lado exterior y sus puntas se acortan 15 m (`RecorteCierres`).
+- NO verificado: `CreadorPeatones.ColgarEnBarrio` no se ha corrido (reescribe Barrio.prefab, bloqueado hasta Merge tony/T-250); faltan la prueba de 60 s con el grupo en la escena real, ningún cuadro de más de 100 ms con 30 peatones, capturas T-331-1..2 y `verificar.sh todo`. No integrada.

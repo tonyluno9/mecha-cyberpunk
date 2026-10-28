@@ -17,7 +17,19 @@ namespace MechaCyberpunk.Trafico.Datos
         [SerializeField] private int peatonesDeDia = 12;
         [Min(0)] [Tooltip("Cuántos peatones hay de noche (personas).")]
         [SerializeField] private int peatonesDeNoche = 24;
+        [Min(0.5f)] [Tooltip("A qué distancia del jugador se detiene un peatón (m).")]
+        [SerializeField] private float distanciaParada = 2f;
+        [Min(0.5f)] [Tooltip("Cuánto se aleja del borde de la manzana hacia adentro el centro de la banqueta (m).")]
+        [SerializeField] private float margenBanqueta = 2.4f;
 
+        [Min(0f)] [Tooltip("Cuánto se acortan las rutas que terminan junto a los cierres del barrio (m).")]
+        [SerializeField] private float recorteCierres = 15f;
+
+        public float RecorteCierres => recorteCierres;
+        public float DistanciaParada => distanciaParada;
+        public float MargenBanqueta => margenBanqueta;
+        /// <summary>El mayor de los dos conteos: cuántos peatones se preparan en total.</summary>
+        public int Maximo => Mathf.Max(peatonesDeDia, peatonesDeNoche);
         public float Velocidad => velocidad;
         public float EsperaMinima => esperaMinima;
         public float EsperaMaxima => Mathf.Max(esperaMinima, esperaMaxima);
