@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7469ac5ca37a70479dc40488811a050, type: 3}
+  m_Name: DatosReputacion_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosReputacion
+  minimo: -100
+  maximo: 100
+  umbrales: 0f00000032000000
+  nombresBarrio:
+  - TRAIDOR
+  - MAL VISTO
+  - DESCONOCIDO
+  - CONOCIDO
+  - JUSTICIERO
+  nombresCorporaciones:
+  - ENEMIGO
+  - FICHADO
+  - SIN FICHA
+  - CONTRATISTA
+  - SOCIO
+  multiplicadorCalor:
+  - 1.3
+  - 1.15
+  - 1
+  - 1
+  - 1

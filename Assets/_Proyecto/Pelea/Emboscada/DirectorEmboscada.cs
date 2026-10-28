@@ -70,6 +70,18 @@ namespace MechaCyberpunk.Pelea.Emboscada
             maquina.Terminada += AlTerminar;
         }
 
+        /// <summary>
+        /// Pone los datos antes de que el director despierte (T-185): para crear una emboscada por código en un objeto inactivo.
+        /// No hace nada si ya despertó.
+        /// </summary>
+        public void Configurar(DatosEmboscada nuevosDatos)
+        {
+            if (maquina == null)
+            {
+                datos = nuevosDatos;
+            }
+        }
+
         /// <summary>Empieza la emboscada sin esperar al jugador. Solo la primera vez.</summary>
         public void Empezar()
         {

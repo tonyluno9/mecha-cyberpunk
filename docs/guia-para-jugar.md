@@ -1,10 +1,11 @@
 # Guía para jugar el build provisional (Tony)
 
 Build de Windows con solo escenas de Tony (Alan aún no mezcla DirectorPrologo en Ciudad.unity; T-136/T-137 bloqueadas).
-No está en git (`Builds/` está ignorado): se regenera con un script de editor temporal.
+No está en git (`Builds/` está ignorado): se regenera con un script de editor temporal. Actualizado al bloque 5 (misiones y reputación, T-181 a T-189).
 
 ## Cómo abrirlo
-`Builds/Provisional/MechaCyberpunk.exe` (en la raíz del repo). Doble clic. Arranca en CreacionPersonaje (título y creación de personaje).
+- `Builds/Provisional/MechaCyberpunk.exe` (en la raíz del repo). Doble clic. Arranca en CreacionPersonaje (título y creación de personaje).
+- `Builds/Provisional_Misiones/MechaCyberpunk.exe`: las mismas 9 escenas, pero arranca directo en Pruebas_Misiones. Úsalo para probar el bloque 5.
 
 ## Escenas incluidas (en el orden del build)
 | # | Escena | Qué es |
@@ -17,9 +18,10 @@ No está en git (`Builds/` está ignorado): se regenera con un script de editor 
 | 5 | Pruebas_Calle | Calle de prueba con rival |
 | 6 | Pruebas_APie | Jugador a pie |
 | 7 | Pruebas_Tutorial | Tutorial |
+| 8 | Pruebas_Misiones | Misiones, reputación, teléfono y favores (el bloque 5); en Provisional_Misiones es la escena 0 |
 
 Cómo moverse entre ellas: solo el flujo del juego cambia de escena (CambioEscena): título -> prólogo -> flashback -> prólogo, siguiendo la historia.
-No hay menú para saltar a las demás; las escenas 3 a 7 están en el build pero no hay forma de llegar a ellas desde el juego. Para probarlas
+No hay menú para saltar a las demás; las escenas 3 a 8 están en el build pero no hay forma de llegar a ellas desde el juego. Para probarlas
 una por una, cambia el orden en el script de build (la primera escena es la que arranca) o usa el editor.
 
 ## Controles
@@ -67,4 +69,24 @@ F5/F9 guardar/cargar, 8 y 9 y 0 cargan deuda/brazo/kit o calor, J saltar reloj, 
 9. Guardar con F5, cerrar el juego, abrir y cargar con F9.
 10. Fluidez: que no haya tirones ni errores al cambiar de escena.
 
-(Una sección por bloque se agregará después.)
+## Qué probar del bloque 5 (en Provisional_Misiones)
+1. Teléfono (T): ¿se siente rápido o estorba? Cambia de pestaña con las flechas y ciérralo con Esc o T.
+2. Misión de barrio con Doña Lupe (E junto a ella): ¿la flecha y el texto del HUD te llevan sin perderte? ¿Recoger y entregar con E se siente natural o falta algo?
+3. Los tres vecinos (Doña Lupe, el taquero, la vecindad): ¿se sienten de barrio?
+4. Contrato corporativo por teléfono de día: ¿el aviso "BARRIO −12" te hace pensar dos veces antes de aceptar otro? Prueba también de noche ("NADIE CONTESTA").
+5. De noche, el contacto del bar (E): ¿se siente escondido y de noche? Acepta el robo de la bodega y escapa: ¿es tensión real o solo esperar a que baje el calor?
+6. La pandilla del callejón: ¿se siente como defender al taquero? ¿Vender la chatarra después se siente como el cierre del robo?
+7. Favores: ¿se sienten como algo que el barrio te debe? ¿El escondite te salvó en un robo? ¿30 % de descuento en una compra es generoso o tacaño?
+8. Reputación: ¿JUSTICIERO y ENEMIGO suenan al juego? ¿Sentiste el jalón entre barrio y corporaciones? Mira el grafiti GRAFITI del muro oeste.
+9. F5 y F9 con una misión en curso: la misión se cancela sin castigo y no sale un aviso falso de reputación.
+10. En general, 20 minutos de un día y una noche: ¿las misiones dan ganas de hacerlas entre peleas o son relleno?
+
+## Misiones y reputación (Pruebas_Misiones)
+Teléfono: T (contratos de día, misión, reputación, favores). Flechas ← → cambian de pestaña, ↑ ↓ y Enter eligen, Esc o T cierran. CONTRATOS lista las
+corporativas solo de día (de noche "NADIE CONTESTA"); MISIÓN muestra la que llevas y permite abandonar (Enter dos veces, castiga); REPUTACIÓN muestra
+las dos barras (barrio y corporaciones); FAVORES muestra DESCUENTO, INFORMACIÓN y ESCONDITE (máximo 3 de cada uno).
+Dónde se aceptan: los encargos de barrio con E junto a los vecinos (Doña Lupe, el taquero, la vecindad), las corporativas por teléfono de día, y las
+ilegales y los robos con E en el contacto del bar, de noche. Una misión a la vez; la flecha y el texto del HUD te llevan paso a paso (E para recoger y entregar).
+Los favores: DESCUENTO baja 30 % tu siguiente compra en el mercado negro; INFORMACIÓN abre EL SOPLO con el contacto del bar; ESCONDITE se usa con E
+en un escondite del barrio (azotea, lavandería) cuando hay calor: lo borra y cumple el paso de escapar. Pruebas_Misiones es la escena para probarlo todo
+(J pasa al día siguiente a las 8:00; F5 guarda y F9 carga: la misión en curso se cancela sin castigo).

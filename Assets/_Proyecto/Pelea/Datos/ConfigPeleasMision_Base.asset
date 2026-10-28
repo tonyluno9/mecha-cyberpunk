@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c14b5dc5909a574e90b7ab8dd7ca287, type: 3}
+  m_Name: ConfigPeleasMision_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Pelea::MechaCyberpunk.Pelea.Misiones.ConfigPeleasMision
+  entradas:
+  - idMision: barrio_callejon
+    datos: {fileID: 11400000, guid: 642b6b60c300e284c9f5a0340ca3648f, type: 2}
+  - idMision: corp_limpieza
+    datos: {fileID: 11400000, guid: c4b4597d2698f6149b50987236379be1, type: 2}
+  - idMision: ilegal_pelea
+    datos: {fileID: 11400000, guid: c4b4597d2698f6149b50987236379be1, type: 2}
+  - idMision: robo_camion
+    datos: {fileID: 11400000, guid: aeb7cb5a33e3adb44a76f2669bcb565f, type: 2}

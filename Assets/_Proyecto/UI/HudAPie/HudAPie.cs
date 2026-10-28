@@ -5,6 +5,7 @@ using MechaCyberpunk.Mecha.Llamado;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.Progresion.Guardado;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -62,6 +63,30 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private Text textoAvisoLiga;
         [SerializeField] private Text textoAvisoLiga2;
 
+        [Header("Reputación y misiones (T-186; opcional; solo a pie)")]
+        [SerializeField] private GameObject grupoAvisoReputacion;
+        [SerializeField] private Text textoAvisoReputacion;
+        [SerializeField] private Text textoAvisoReputacion2;
+        [SerializeField] private GameObject grupoAvisoMision;
+        [SerializeField] private Text textoAvisoMision;
+
+        [Header("Implante instalado (T-193; usa el aviso de misión; solo a pie)")]
+        [Tooltip("{0} = nombre del implante.")]
+        [SerializeField] private string formatoAvisoImplante = "IMPLANTE INSTALADO: {0}";
+
+        private IReputacion reputacion;
+        private ServicioGuardado guardado;
+        private int valorBarrio;
+        private int valorCorporaciones;
+        private int deltaBarrioAviso;
+        private int deltaCorporacionesAviso;
+        private string nivelBarrioAviso = string.Empty;
+        private string nivelCorporacionesAviso = string.Empty;
+        private float avisoReputacionRestante;
+        private ServicioMisiones misiones;
+        private string avisoMision = string.Empty;
+        private bool avisoMisionCumplida;
+        private float avisoMisionRestante;
         private IProgresoLigas ligas;
         private int ligaPendiente;
         private float avisoLigaRestante;
@@ -128,6 +153,12 @@ namespace MechaCyberpunk.UI.Hud
         public GameObject GrupoAvisoLiga => grupoAvisoLiga;
         public Text TextoAvisoLiga => textoAvisoLiga;
         public Text TextoAvisoLiga2 => textoAvisoLiga2;
+
+        public GameObject GrupoAvisoReputacion => grupoAvisoReputacion;
+        public Text TextoAvisoReputacion => textoAvisoReputacion;
+        public Text TextoAvisoReputacion2 => textoAvisoReputacion2;
+        public GameObject GrupoAvisoMision => grupoAvisoMision;
+        public Text TextoAvisoMision => textoAvisoMision;
 
         public GameObject GrupoLlamado => grupoLlamado;
         public Text TextoLlamado => textoLlamado;
@@ -215,6 +246,15 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IRenta>.Quitado += AlQuitarRenta;
             Registro<IProgresoLigas>.Agregado += AlAgregarLigas;
             Registro<IProgresoLigas>.Quitado += AlQuitarLigas;
+            Registro<IReputacion>.Agregado += AlAgregarReputacion;
+            Registro<IReputacion>.Quitado += AlQuitarReputacion;
+            Registro<ServicioMisiones>.Agregado += AlAgregarMisiones;
+            Registro<ServicioMisiones>.Quitado += AlQuitarMisiones;
+            Registro<ServicioGuardado>.Agregado += AlAgregarGuardado;
+            Registro<ServicioGuardado>.Quitado += AlQuitarGuardado;
+            VincularGuardado(Registro<ServicioGuardado>.Actual);
+            VincularReputacion(Registro<IReputacion>.Actual);
+            VincularMisiones(Registro<ServicioMisiones>.Actual);
             VincularLigas(Registro<IProgresoLigas>.Actual);
             VincularCartera(Registro<ICartera>.Actual);
             VincularRenta(Registro<IRenta>.Actual);
@@ -237,6 +277,7 @@ namespace MechaCyberpunk.UI.Hud
             ActualizarLlamado();
             ActualizarAvisoDinero();
             ActualizarAvisoLiga();
+            ActualizarAvisosMision();
         }
 
         private void OnDisable()
@@ -259,6 +300,15 @@ namespace MechaCyberpunk.UI.Hud
             Registro<IRenta>.Quitado -= AlQuitarRenta;
             Registro<IProgresoLigas>.Agregado -= AlAgregarLigas;
             Registro<IProgresoLigas>.Quitado -= AlQuitarLigas;
+            Registro<IReputacion>.Agregado -= AlAgregarReputacion;
+            Registro<IReputacion>.Quitado -= AlQuitarReputacion;
+            Registro<ServicioMisiones>.Agregado -= AlAgregarMisiones;
+            Registro<ServicioMisiones>.Quitado -= AlQuitarMisiones;
+            Registro<ServicioGuardado>.Agregado -= AlAgregarGuardado;
+            Registro<ServicioGuardado>.Quitado -= AlQuitarGuardado;
+            DesvincularGuardado();
+            DesvincularReputacion();
+            DesvincularMisiones();
             DesvincularLigas();
             DesvincularCartera();
             DesvincularRenta();
@@ -372,6 +422,7 @@ namespace MechaCyberpunk.UI.Hud
             RefrescarDinero();
             RefrescarRenta();
             RefrescarAvisoLiga();
+            RefrescarAvisosMision();
             avisoRestante = 0f;
             grupoInteraccion.SetActive(false);
         }
@@ -392,6 +443,14 @@ namespace MechaCyberpunk.UI.Hud
             if (grupoAvisoLiga != null)
             {
                 grupoAvisoLiga.SetActive(false);
+            }
+            if (grupoAvisoReputacion != null)
+            {
+                grupoAvisoReputacion.SetActive(false);
+            }
+            if (grupoAvisoMision != null)
+            {
+                grupoAvisoMision.SetActive(false);
             }
         }
 
@@ -495,6 +554,254 @@ namespace MechaCyberpunk.UI.Hud
             {
                 ligaPendiente = 0;
                 RefrescarAvisoLiga();
+            }
+        }
+
+        // ---- Reputación y misiones (T-186) ----
+
+        // Al cargar una partida la reputación avisa "Cambio" con lo guardado, que no es jugar: cuando el guardado termina de cargar
+        // (en el mismo frame, antes de dibujar) se resincroniza y se descarta ese aviso (T-189).
+        private void AlAgregarGuardado(ServicioGuardado nuevo) => VincularGuardado(nuevo);
+
+        private void AlQuitarGuardado(ServicioGuardado quitado)
+        {
+            if (quitado == guardado)
+            {
+                VincularGuardado(Registro<ServicioGuardado>.Actual);
+            }
+        }
+
+        private void VincularGuardado(ServicioGuardado nuevo)
+        {
+            DesvincularGuardado();
+            guardado = nuevo;
+            if (guardado != null)
+            {
+                guardado.Cargada += AlCargarPartida;
+            }
+        }
+
+        private void DesvincularGuardado()
+        {
+            if (guardado != null)
+            {
+                guardado.Cargada -= AlCargarPartida;
+            }
+            guardado = null;
+        }
+
+        private void AlCargarPartida()
+        {
+            if (reputacion != null)
+            {
+                valorBarrio = reputacion.Valor(TipoReputacion.Barrio);
+                valorCorporaciones = reputacion.Valor(TipoReputacion.Corporaciones);
+            }
+            avisoReputacionRestante = 0f;
+            deltaBarrioAviso = 0;
+            deltaCorporacionesAviso = 0;
+            nivelBarrioAviso = string.Empty;
+            nivelCorporacionesAviso = string.Empty;
+            RefrescarAvisoReputacion();
+        }
+
+        private void AlAgregarReputacion(IReputacion nueva) => VincularReputacion(nueva);
+
+        private void AlQuitarReputacion(IReputacion quitada)
+        {
+            if (quitada == reputacion)
+            {
+                VincularReputacion(Registro<IReputacion>.Actual);
+            }
+        }
+
+        private void VincularReputacion(IReputacion nueva)
+        {
+            DesvincularReputacion();
+            reputacion = nueva;
+            if (reputacion != null)
+            {
+                valorBarrio = reputacion.Valor(TipoReputacion.Barrio);
+                valorCorporaciones = reputacion.Valor(TipoReputacion.Corporaciones);
+                reputacion.Cambio += AlCambiarReputacion;
+                reputacion.NivelCambio += AlCambiarNivelReputacion;
+            }
+        }
+
+        private void DesvincularReputacion()
+        {
+            if (reputacion != null)
+            {
+                reputacion.Cambio -= AlCambiarReputacion;
+                reputacion.NivelCambio -= AlCambiarNivelReputacion;
+            }
+            reputacion = null;
+            avisoReputacionRestante = 0f;
+        }
+
+        // Los cambios que llegan mientras el aviso sigue en pantalla se suman: "BARRIO −12 · CORPORACIONES +10".
+        private void AlCambiarReputacion()
+        {
+            int barrio = reputacion.Valor(TipoReputacion.Barrio);
+            int corporaciones = reputacion.Valor(TipoReputacion.Corporaciones);
+            int deltaBarrio = barrio - valorBarrio;
+            int deltaCorporaciones = corporaciones - valorCorporaciones;
+            valorBarrio = barrio;
+            valorCorporaciones = corporaciones;
+            if (deltaBarrio == 0 && deltaCorporaciones == 0)
+            {
+                return;
+            }
+            IniciarAvisoReputacion();
+            deltaBarrioAviso += deltaBarrio;
+            deltaCorporacionesAviso += deltaCorporaciones;
+            RefrescarAvisoReputacion();
+        }
+
+        private void AlCambiarNivelReputacion(TipoReputacion tipo, int nivel)
+        {
+            IniciarAvisoReputacion();
+            string nombre = reputacion.NombreNivel(tipo);
+            if (tipo == TipoReputacion.Barrio)
+            {
+                nivelBarrioAviso = nombre;
+            }
+            else
+            {
+                nivelCorporacionesAviso = nombre;
+            }
+            RefrescarAvisoReputacion();
+        }
+
+        private void IniciarAvisoReputacion()
+        {
+            if (avisoReputacionRestante <= 0f)
+            {
+                deltaBarrioAviso = 0;
+                deltaCorporacionesAviso = 0;
+                nivelBarrioAviso = string.Empty;
+                nivelCorporacionesAviso = string.Empty;
+            }
+            avisoReputacionRestante = config.SegundosAvisoReputacion;
+        }
+
+        private void RefrescarAvisoReputacion()
+        {
+            if (grupoAvisoReputacion == null || textoAvisoReputacion == null || textoAvisoReputacion2 == null)
+            {
+                return;
+            }
+            string primera = FormatoHud.TextoAvisoReputacion(deltaBarrioAviso, deltaCorporacionesAviso, config);
+            string segunda = string.Empty;
+            if (nivelBarrioAviso.Length > 0)
+            {
+                segunda = FormatoHud.TextoNivel(TipoReputacion.Barrio, nivelBarrioAviso, config);
+            }
+            if (nivelCorporacionesAviso.Length > 0)
+            {
+                string corporaciones = FormatoHud.TextoNivel(TipoReputacion.Corporaciones, nivelCorporacionesAviso, config);
+                segunda = segunda.Length > 0 ? segunda + config.SeparadorAviso + corporaciones : corporaciones;
+            }
+            textoAvisoReputacion.text = primera;
+            textoAvisoReputacion.color = config.ColorAvisoReputacion;
+            textoAvisoReputacion.fontSize = config.TamanoAvisoReputacion;
+            textoAvisoReputacion2.text = segunda;
+            textoAvisoReputacion2.color = config.ColorAvisoReputacion;
+            textoAvisoReputacion2.fontSize = config.TamanoAvisoReputacion2;
+            textoAvisoReputacion2.gameObject.SetActive(segunda.Length > 0);
+            grupoAvisoReputacion.SetActive(avisoReputacionRestante > 0f && EstaAPie && primera.Length + segunda.Length > 0);
+        }
+
+        private void AlAgregarMisiones(ServicioMisiones nuevo) => VincularMisiones(nuevo);
+
+        private void AlQuitarMisiones(ServicioMisiones quitado)
+        {
+            if (quitado == misiones)
+            {
+                VincularMisiones(Registro<ServicioMisiones>.Actual);
+            }
+        }
+
+        private void VincularMisiones(ServicioMisiones nuevo)
+        {
+            DesvincularMisiones();
+            misiones = nuevo;
+            if (misiones != null)
+            {
+                misiones.Terminada += AlTerminarMision;
+            }
+        }
+
+        private void DesvincularMisiones()
+        {
+            if (misiones != null)
+            {
+                misiones.Terminada -= AlTerminarMision;
+            }
+            misiones = null;
+            avisoMisionRestante = 0f;
+        }
+
+        private void AlTerminarMision(DatosMision datos, bool cumplida, ResumenMision resumen)
+        {
+            if (grupoAvisoMision == null || textoAvisoMision == null)
+            {
+                return;
+            }
+            avisoMision = FormatoHud.TextoMisionTerminada(cumplida, resumen, config);
+            avisoMisionCumplida = cumplida;
+            avisoMisionRestante = config.SegundosAvisoMision;
+            RefrescarAvisosMision();
+        }
+
+        /// <summary>Avisa "IMPLANTE INSTALADO: nombre" en el aviso de misión, el mismo tiempo que ese aviso (T-193).</summary>
+        public void MostrarAvisoImplante(string nombre)
+        {
+            if (grupoAvisoMision == null || textoAvisoMision == null)
+            {
+                return;
+            }
+            avisoMision = string.Format(formatoAvisoImplante, nombre);
+            avisoMisionCumplida = true;
+            avisoMisionRestante = config.SegundosAvisoMision;
+            RefrescarAvisosMision();
+        }
+
+        private void RefrescarAvisosMision()
+        {
+            RefrescarAvisoReputacion();
+            if (grupoAvisoMision == null || textoAvisoMision == null)
+            {
+                return;
+            }
+            bool visible = avisoMisionRestante > 0f && EstaAPie;
+            grupoAvisoMision.SetActive(visible);
+            if (!visible)
+            {
+                return;
+            }
+            textoAvisoMision.text = avisoMision;
+            textoAvisoMision.color = avisoMisionCumplida ? config.ColorVida : config.ColorVidaBaja;
+            textoAvisoMision.fontSize = config.TamanoAvisoMision;
+        }
+
+        private void ActualizarAvisosMision()
+        {
+            if (avisoReputacionRestante > 0f && EstaAPie)
+            {
+                avisoReputacionRestante -= Time.deltaTime;
+                if (avisoReputacionRestante <= 0f)
+                {
+                    RefrescarAvisoReputacion();
+                }
+            }
+            if (avisoMisionRestante > 0f && EstaAPie)
+            {
+                avisoMisionRestante -= Time.deltaTime;
+                if (avisoMisionRestante <= 0f)
+                {
+                    RefrescarAvisosMision();
+                }
             }
         }
 

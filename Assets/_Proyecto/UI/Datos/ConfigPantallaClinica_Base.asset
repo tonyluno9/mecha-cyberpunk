@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86fb804d95acf364b927bdae5096a258, type: 3}
+  m_Name: ConfigPantallaClinica_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaClinica
+  colorElegido: {r: 0, g: 1, b: 0.9, a: 1}
+  colorNormal: {r: 0.8, g: 0.85, b: 0.95, a: 1}
+  colorApagado: {r: 0.35, g: 0.38, b: 0.45, a: 1}
+  colorAviso: {r: 1, g: 0.62, b: 0.25, a: 1}
+  colorPrecio: {r: 1, g: 0.3, b: 0.7, a: 1}
+  colorFondo: {r: 0.02, g: 0.03, b: 0.06, a: 0.9}
+  tamanoTitulo: 80
+  tamanoDinero: 44
+  tamanoEspacio: 30
+  tamanoOpcion: 40
+  tamanoDescripcion: 44
+  tamanoAyuda: 28
+  textoTitulo: "CL\xCDNICA DEL DOC"
+  formatoDinero: TIENES {0}
+  nombresEspacio:
+  - OJOS
+  - BRAZOS
+  - PIERNAS
+  - SINAPSIS
+  formatoEspacio: "{0} \xB7 {1}"
+  textoVacio: "\u2014"
+  formatoPrecio: "{0} \xB7 {1}"
+  textoDiferencia: PAGAS LA DIFERENCIA
+  formatoLiga: "{0} \xB7 SE ABRE EN LA LIGA {1}"
+  formatoSinDinero: "{0} \xB7 NO TE ALCANZA"
+  textoAvisoSinDinero: NO TE ALCANZA
+  textoLoMejor: LO MEJOR QUE HAY
+  formatoConfirmar: "\xBFINSTALAR POR {0}? ENTER S\xCD \xB7 ESC NO"
+  textoAyuda: "\u2191 \u2193 elegir \xB7 Enter instalar \xB7 Esc salir"
+  formatoElegido: '> {0}'
+  textoMostrador: "CL\xCDNICA"
+  textoCerrado: "CL\xCDNICA \xB7 CERRADA"
+  segundosFundidoNegro: 1.5
+  segundosEnNegro: 0.6
+  segundosFundidoVuelta: 1
+  segundosSubtitulo: 3
+  horasOperacion: 2
+  textoSubtitulo: 'EL DOC: Listo. No lo andes presumiendo.'

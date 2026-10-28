@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da182b3f9b113b147b206fc1a9fbed85, type: 3}
+  m_Name: DatosMision_barrio_callejon
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosMision
+  id: barrio_callejon
+  titulo: "LOS DEL CALLEJ\xD3N"
+  descripcion: Unos tipos le espantan la clientela al taquero por las noches.
+  tipo: 0
+  origen: 0
+  franja: 2
+  idEncargo: Mision_Encargo_Taquero
+  pasos:
+  - tipo: 3
+    idPunto: Mision_Pelea_Callejon
+    texto: "Saca a los del callej\xF3n"
+    calor: 0
+    radio: 4
+  - tipo: 0
+    idPunto: Mision_Encargo_Taquero
+    texto: "Av\xEDsale al taquero que ya se puede"
+    calor: 0
+    radio: 4
+  pago: 100
+  chatarraObjeto: {fileID: 0}
+  chatarraCantidad: 0
+  deltaBarrio: 12
+  deltaCorporaciones: 0
+  favor: {fileID: 11400000, guid: c440ae8b355fffa418ab36153cdfb0ea, type: 2}
+  exigeFavor: 0
+  favorRequerido: 1
+  nivelBarrioMinimo: -2
+  nivelCorporacionesMinimo: -2
+  ligaMinima: 1
+  limiteSegundos: 0
+  repetible: 1

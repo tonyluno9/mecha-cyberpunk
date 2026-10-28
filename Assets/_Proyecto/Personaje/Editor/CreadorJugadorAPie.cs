@@ -51,6 +51,9 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaMaterialCalle = RutaPersonaje + "/Materiales/Greybox_Calle.mat";
         private const string RutaMaterialBanqueta = RutaPersonaje + "/Materiales/Greybox_Banqueta.mat";
         private const string RutaPrefabHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
+        private const string RutaPrefabPantallaMisiones = "Assets/_Proyecto/UI/Prefabs/PantallaMisiones.prefab";
+        private const string RutaPrefabPantallaTelefono = "Assets/_Proyecto/UI/Prefabs/PantallaTelefono.prefab";
+        private const string RutaPrefabEncargosCalle = "Assets/_Proyecto/UI/Prefabs/EncargosCalle.prefab";
         private const string RutaPrefabServiciosProgresion = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
         private const string RutaPrefabServiciosEconomia = "Assets/_Proyecto/Economia/Prefabs/ServiciosEconomia.prefab";
         private const string RutaEscena ="Assets/_Proyecto/Escenas/Tony/Pruebas_APie.unity";
@@ -100,6 +103,7 @@ namespace MechaCyberpunk.Personaje.Editor
             CrearEscena(piso, CrearMaterial(RutaMaterialCalle, new Color(0.12f, 0.12f, 0.14f)),
                 CrearMaterial(RutaMaterialBanqueta, new Color(0.45f, 0.45f, 0.48f)), cubo, obstaculo);
             AssetDatabase.SaveAssets();
+            CreadorImplantesAPie.Crear();
             Debug.Log("[Personaje] T-051 creada.");
         }
 
@@ -123,8 +127,10 @@ namespace MechaCyberpunk.Personaje.Editor
         private static void CrearEntrada()
         {
             // Si ya existe se conserva: regenerarla cambia los ids de las acciones y ensucia el prefab sin motivo.
+            // Las acciones nuevas se agregan al archivo que hay, y las que ya existen conservan sus ids.
             if (File.Exists(RutaEntrada))
             {
+                AgregarAccionesFaltantes();
                 return;
             }
             InputActionAsset asset = ScriptableObject.CreateInstance<InputActionAsset>();
@@ -146,7 +152,24 @@ namespace MechaCyberpunk.Personaje.Editor
             mapa.AddAction("ArmaPistola", InputActionType.Button, "<Keyboard>/2");
             mapa.AddAction("Recargar", InputActionType.Button, "<Keyboard>/r");
             mapa.AddAction("LiberarCursor", InputActionType.Button, "<Keyboard>/escape");
+            mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
 
+            File.WriteAllText(RutaEntrada, asset.ToJson());
+            Object.DestroyImmediate(asset);
+            AssetDatabase.ImportAsset(RutaEntrada);
+        }
+
+        // T-186: agrega la acción Telefono (T) al mapa APie si falta, sin tocar las demás.
+        private static void AgregarAccionesFaltantes()
+        {
+            InputActionAsset asset = InputActionAsset.FromJson(File.ReadAllText(RutaEntrada));
+            InputActionMap mapa = asset.FindActionMap("APie");
+            if (mapa.FindAction("Telefono") != null)
+            {
+                Object.DestroyImmediate(asset);
+                return;
+            }
+            mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
             File.WriteAllText(RutaEntrada, asset.ToJson());
             Object.DestroyImmediate(asset);
             AssetDatabase.ImportAsset(RutaEntrada);
@@ -368,6 +391,9 @@ namespace MechaCyberpunk.Personaje.Editor
 
             // Un solo prefab para Alan (D-tony-23): el HUD y los servicios de objetivos van anidados, y la aparición en un punto.
             AnidarPrefab(RutaPrefabHud, raiz.transform);
+            AnidarPrefab(RutaPrefabPantallaMisiones, raiz.transform);
+            AnidarPrefab(RutaPrefabPantallaTelefono, raiz.transform);
+            AnidarPrefab(RutaPrefabEncargosCalle, raiz.transform);
             AnidarPrefab(RutaPrefabServiciosProgresion, raiz.transform);
             AnidarPrefab(RutaPrefabServiciosEconomia, raiz.transform);
             raiz.AddComponent<AparicionJugador>();

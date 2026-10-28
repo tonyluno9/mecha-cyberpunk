@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da182b3f9b113b147b206fc1a9fbed85, type: 3}
+  m_Name: DatosMision_robo_camion
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosMision
+  id: robo_camion
+  titulo: "CAMI\xD3N BLINDADO"
+  descripcion: "Un cami\xF3n blindado con escolta lleva partes de mecha de lujo."
+  tipo: 3
+  origen: 2
+  franja: 2
+  idEncargo: 
+  pasos:
+  - tipo: 3
+    idPunto: Mision_Pelea_Camion
+    texto: "Det\xE9n al escolta del cami\xF3n"
+    calor: 0
+    radio: 4
+  - tipo: 1
+    idPunto: Mision_Botin_Camion
+    texto: "Abre el cami\xF3n y saca la carga"
+    calor: 60
+    radio: 4
+  - tipo: 4
+    idPunto: 
+    texto: "Pi\xE9rdete antes de que lleguen los refuerzos"
+    calor: 0
+    radio: 4
+  pago: 200
+  chatarraObjeto: {fileID: 11400000, guid: e8e4d63049e8bf649a41817c10186a73, type: 2}
+  chatarraCantidad: 10
+  deltaBarrio: 5
+  deltaCorporaciones: -15
+  favor: {fileID: 0}
+  exigeFavor: 0
+  favorRequerido: 1
+  nivelBarrioMinimo: -2
+  nivelCorporacionesMinimo: -2
+  ligaMinima: 2
+  limiteSegundos: 0
+  repetible: 1

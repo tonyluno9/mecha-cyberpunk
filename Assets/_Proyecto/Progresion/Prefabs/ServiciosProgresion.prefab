@@ -15,6 +15,11 @@ GameObject:
   - component: {fileID: 3182210647534682041}
   - component: {fileID: 8183069906299412953}
   - component: {fileID: 1124973490429733552}
+  - component: {fileID: 4593314297324620775}
+  - component: {fileID: 2447612013111949025}
+  - component: {fileID: 5016240715847715043}
+  - component: {fileID: 4905222460801062930}
+  - component: {fileID: 4246532650403101935}
   m_Layer: 0
   m_Name: ServiciosProgresion
   m_TagString: Untagged
@@ -113,3 +118,73 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioLigas
   datos: {fileID: 11400000, guid: 2c015342fbf9c044bbd343e0fc83906f, type: 2}
+--- !u!114 &4593314297324620775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8e97d34b870df4bbf7a8dc2c9e4fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioReputacion
+  datos: {fileID: 11400000, guid: 85d24513e76f926499188d58fa507680, type: 2}
+--- !u!114 &2447612013111949025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0017796dab4514585317efd64de031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioFavores
+  favores:
+  - {fileID: 11400000, guid: 95e2a7019ec1b5549b743fa15c3bfd49, type: 2}
+  - {fileID: 11400000, guid: 7d8e57afb297341479b11d65adcf5ebb, type: 2}
+  - {fileID: 11400000, guid: c440ae8b355fffa418ab36153cdfb0ea, type: 2}
+--- !u!114 &5016240715847715043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df9289dbc3e81a4fad3baf6faffbeb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioMisiones
+  catalogo: {fileID: 11400000, guid: 6140291c3d45569459d2d693d492d921, type: 2}
+--- !u!114 &4905222460801062930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b5e0d3e53a21d42bce78d85127acfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.Escondites
+  textoEsconderte: ESCONDERTE (FAVOR)
+  textoNecesitasFavor: "ESCONDITE \xB7 NECESITAS UN FAVOR"
+  segundosRevision: 0.5
+--- !u!114 &4246532650403101935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee4ee96e53991a4aa2763f8de16084d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioImplantes
+  catalogo: {fileID: 11400000, guid: d03272f8b0f86dc48b6dfab55ca55a14, type: 2}
