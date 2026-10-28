@@ -271,12 +271,12 @@ MonoBehaviour:
     m_Name: Girar
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: ffdcd712-2ab9-47e7-bcf2-d2c8c3442583
+    m_Id: 94c102d7-9ece-41b5-b070-ad46fa8d3ea7
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 1DAxis
-      m_Id: 83065370-5d96-42b9-b584-24a505a11e06
+      m_Id: 3666deca-b832-4175-8c50-75ae5d9b0bf2
       m_Path: 1DAxis
       m_Interactions: 
       m_Processors: 
@@ -284,7 +284,7 @@ MonoBehaviour:
       m_Action: Girar
       m_Flags: 4
     - m_Name: Negative
-      m_Id: e24d5b1d-a3e0-497e-a6a1-05317637eac7
+      m_Id: 72b998d7-5841-4886-9db6-6ec738e7dfb0
       m_Path: <Keyboard>/leftArrow
       m_Interactions: 
       m_Processors: 
@@ -292,7 +292,7 @@ MonoBehaviour:
       m_Action: Girar
       m_Flags: 8
     - m_Name: Positive
-      m_Id: 36d562a2-bcef-4794-8fe7-8a6d5ed99062
+      m_Id: 42a55d73-10c4-47ed-b1a1-f3589e1a9ab6
       m_Path: <Keyboard>/rightArrow
       m_Interactions: 
       m_Processors: 

@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Mundo
 {
-    /// <summary>Exteriores cerrados del casino y el mercado negro (T-094): siguen cerrados a cualquier hora, no tapan la Entrada ni invaden la calle.</summary>
+    /// <summary>Exteriores del casino y el mercado negro (T-094): el mercado sigue cerrado a cualquier hora (el casino abre de noche desde T-303) y ninguno tapa la Entrada ni invade la calle.</summary>
     public class CerradosPruebas
     {
         private const float SalienteMaximo = 1.3f;       // m desde la fachada (VestirCerrados)
@@ -33,7 +33,8 @@ namespace MechaCyberpunk.Tests.Mundo
             EscenaLugares.Descargar();
         }
 
-        private static readonly IdLugar[] Cerrados = { IdLugar.Casino, IdLugar.MercadoNegro };
+        private static readonly IdLugar[] Cerrados = { IdLugar.MercadoNegro };
+        private static readonly IdLugar[] Decorados = { IdLugar.Casino, IdLugar.MercadoNegro };
 
         private static Transform GrupoCerrado(IdLugar id)
         {
@@ -70,7 +71,7 @@ namespace MechaCyberpunk.Tests.Mundo
         public IEnumerator Cerrados_NoTapanLaEntradaNiInvadenLaCalle()
         {
             yield return EscenaLugares.CargarCiudad();
-            foreach (IdLugar id in Cerrados)
+            foreach (IdLugar id in Decorados)
             {
                 Transform grupo = GrupoCerrado(id);
                 Transform lugar = grupo.parent;
@@ -100,7 +101,7 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             yield return EscenaLugares.CargarCiudad();
             RelojMundo reloj = EscenaLugares.RelojPausado();
-            int numero = 1;
+            int numero = 3;   // T-094-1 y 2 (casino cerrado) quedan como evidencia histórica; el casino abierto se captura en T-303
             foreach (IdLugar id in Cerrados)
             {
                 CamaraLibre camara = EscenaLugares.ColocarFrenteA(id, out camaraObjeto);

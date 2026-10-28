@@ -1,3 +1,4 @@
+using MechaCyberpunk.Personaje.Jugador;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,6 +26,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private CharacterController controlador;
         private readonly MovimientoAPie movimiento = new MovimientoAPie();
         private readonly MiradaAPie mirada = new MiradaAPie();
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
         private float faseCabeceo;
         private bool cursorBloqueado;
         private bool controlActivo = true;
@@ -67,6 +69,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             saltar.action.Enable();
             atacar.action.Enable();
             liberarCursor.action.Enable();
+            implantes.Activar();
             AplicarCursor(true);
         }
 
@@ -78,6 +81,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             saltar.action.Disable();
             atacar.action.Disable();
             liberarCursor.action.Disable();
+            implantes.Desactivar();
         }
 
         /// <summary>Congela o libera el control (lo usan el KO y el carro). Al congelar se detiene el movimiento.</summary>
@@ -113,9 +117,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
 
             Vector2 velocidad = movimiento.ActualizarHorizontal(mover.action.ReadValue<Vector2>(), correr.action.IsPressed(),
-                enPiso, dt, datos.VelocidadCaminar, datos.VelocidadCorrer, config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
+                enPiso, dt, datos.VelocidadCaminar, EfectosAPie.VelocidadCorrer(datos, implantes.Efectos), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
             float vertical = movimiento.ActualizarVertical(enPiso, saltar.action.WasPressedThisFrame(), dt,
-                datos.AlturaSalto, config.Gravedad);
+                EfectosAPie.AlturaSalto(datos, implantes.Efectos), config.Gravedad);
 
             Vector3 horizontal = transform.TransformDirection(new Vector3(velocidad.x, 0f, velocidad.y));
             controlador.Move(horizontal * dt + Vector3.up * vertical);

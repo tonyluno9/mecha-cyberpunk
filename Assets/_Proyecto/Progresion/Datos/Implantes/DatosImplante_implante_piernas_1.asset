@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d484f3a5efdc3b42aabcd355fa790d3, type: 3}
+  m_Name: DatosImplante_implante_piernas_1
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
+  id: implante_piernas_1
+  nombre: PIERNAS DE RESORTE
+  espacio: 2
+  nivel: 1
+  precio: 2000
+  ligaMinima: 1
+  descripcion: "CORRES Y SALTAS M\xC1S"
+  efectos:
+    multiplicadorGolpeAPie: 1
+    multiplicadorCorrer: 1.2
+    multiplicadorSalto: 1.3
+    multiplicadorReaccionMecha: 1
+    verVidaRival: 0
+    vidaRivalEnNumeros: 0
+    anticipacionAtaque: 0

@@ -11,7 +11,7 @@ namespace MechaCyberpunk.Mundo.Editor
     /// <summary>
     /// T-082: cambia los letreros greybox de los edificios por letreros de neón del kit (T-076 y T-082): de bandera
     /// (perpendiculares a la fachada), planos sobre la fachada y algunos en azoteas, más el letrero propio del clandestino
-    /// (PELEAS), el bar (cantina) y el casino (CASINO, más tenue por estar cerrado). Cada letrero es un objeto
+    /// (PELEAS), el bar (cantina) y el casino (CASINO, a pleno desde T-303). Cada letrero es un objeto
     /// "LetreroNeon_N_Modelo" con su <see cref="ParpadeoNeon"/> (día y noche, y uno de cada seis parpadea).
     /// Todo con semilla fija: correrlo dos veces deja el barrio igual. El letrero de horario de cada local no se tapa.
     /// Lo llama CreadorBarrio antes de guardar el prefab.
@@ -161,7 +161,7 @@ namespace MechaCyberpunk.Mundo.Editor
             ColocarEnLugar(clandestino, "Letrero_Peleas", 0f, AlturaLetreroLugar, false);
             // La cantina, de pie al lado de la puerta, fuera del ancho del letrero de horario.
             ColocarEnLugar(bar, "Letrero_Cantina", XCantina, AlturaCantina, false);
-            ColocarEnLugar(casino, "Letrero_Casino", 0f, AlturaLetreroLugar, true);
+            ColocarEnLugar(casino, "Letrero_Casino", 0f, AlturaLetreroLugar, false); // T-303: el casino abre de noche
         }
 
         private static void ColocarEnLugar(Transform lugar, string prefab, float x, float baseY, bool cerrado)

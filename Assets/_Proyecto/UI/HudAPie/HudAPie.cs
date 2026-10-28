@@ -70,6 +70,10 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private GameObject grupoAvisoMision;
         [SerializeField] private Text textoAvisoMision;
 
+        [Header("Implante instalado (T-193; usa el aviso de misión; solo a pie)")]
+        [Tooltip("{0} = nombre del implante.")]
+        [SerializeField] private string formatoAvisoImplante = "IMPLANTE INSTALADO: {0}";
+
         private IReputacion reputacion;
         private ServicioGuardado guardado;
         private int valorBarrio;
@@ -746,6 +750,19 @@ namespace MechaCyberpunk.UI.Hud
             }
             avisoMision = FormatoHud.TextoMisionTerminada(cumplida, resumen, config);
             avisoMisionCumplida = cumplida;
+            avisoMisionRestante = config.SegundosAvisoMision;
+            RefrescarAvisosMision();
+        }
+
+        /// <summary>Avisa "IMPLANTE INSTALADO: nombre" en el aviso de misión, el mismo tiempo que ese aviso (T-193).</summary>
+        public void MostrarAvisoImplante(string nombre)
+        {
+            if (grupoAvisoMision == null || textoAvisoMision == null)
+            {
+                return;
+            }
+            avisoMision = string.Format(formatoAvisoImplante, nombre);
+            avisoMisionCumplida = true;
             avisoMisionRestante = config.SegundosAvisoMision;
             RefrescarAvisosMision();
         }

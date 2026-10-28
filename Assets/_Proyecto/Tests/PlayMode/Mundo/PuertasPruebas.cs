@@ -152,11 +152,20 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Casino_A22_EDaBloqueada()
+        public IEnumerator Casino_A22_EAbre()
         {
             yield return Preparar(EscenaLugares.HoraNoche, IdLugar.Casino);
             yield return PresionarE();
-            Assert.AreEqual(ResultadoPuerta.Bloqueada, camara.UltimoResultadoPuerta);
+            Assert.AreEqual(ResultadoPuerta.Abierta, camara.UltimoResultadoPuerta);
+            Assert.IsTrue(EscenaLugares.Puerta(IdLugar.Casino).EstaAbierta);
+        }
+
+        [UnityTest]
+        public IEnumerator Casino_A12_EDaCerradaPorHorario()
+        {
+            yield return Preparar(EscenaLugares.HoraMediodia, IdLugar.Casino);
+            yield return PresionarE();
+            Assert.AreEqual(ResultadoPuerta.CerradaPorHorario, camara.UltimoResultadoPuerta);
             Assert.IsFalse(EscenaLugares.Puerta(IdLugar.Casino).EstaAbierta);
         }
 

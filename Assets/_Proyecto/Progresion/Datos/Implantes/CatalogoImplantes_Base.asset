@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6402c319e1514de48866c81a21a9ff89, type: 3}
+  m_Name: CatalogoImplantes_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.CatalogoImplantes
+  implantes:
+  - {fileID: 11400000, guid: 16a33f3f0ab59c6488353d1a433a7875, type: 2}
+  - {fileID: 11400000, guid: 47fbfdda03d86cd40a127f25fd7d6aab, type: 2}
+  - {fileID: 11400000, guid: e08b072b6859cb04186783029871db6e, type: 2}
+  - {fileID: 11400000, guid: 19a270ce92ab0934db7403613fb18bfe, type: 2}
+  - {fileID: 11400000, guid: a7ad202f4eb2cf24da54d7b5d30e9976, type: 2}
+  - {fileID: 11400000, guid: a63679bd8c1a8f14b82444b32d7dfbe8, type: 2}
+  - {fileID: 11400000, guid: 588b4936af192ba428f62811d81f0918, type: 2}
+  - {fileID: 11400000, guid: 6cc11e198ea33e84084fdfb7adb0f2d6, type: 2}
