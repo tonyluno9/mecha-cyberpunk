@@ -23,7 +23,6 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float DistanciaLocal = 8f;
         private const float AlturaOjos = 1.7f;
         private const float DiezSegundos = 10f;
-        private const float NivelCerrado = 0.35f;
         private const float Tolerancia = 0.001f;
         private const float DeNocheSobreDeDia = 2f;
         private static readonly string[] NombresBandera = { "_Hotel", "_Ciber" };
@@ -174,13 +173,16 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Casino_CerradoBrillaMenosQueLosDemasDeNoche()
+        public IEnumerator Casino_AbiertoBrillaAPlenoDeNoche()
         {
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             yield return null;
             ParpadeoNeon casino = Letreros().First(l => l.name.EndsWith("_Casino"));
-            Assert.IsTrue(casino.Cerrado);
-            Assert.AreEqual(NivelCerrado, casino.FactorActual, Tolerancia);
+            Assert.IsFalse(casino.Cerrado, "T-303: el casino abre de noche, su letrero no es de local cerrado");
+            if (!casino.Parpadea)
+            {
+                Assert.AreEqual(1f, casino.FactorActual, Tolerancia, "El letrero del casino abierto brilla a pleno");
+            }
             ParpadeoNeon fijo = Letreros().First(l => !l.Parpadea && !l.Cerrado);
             Assert.AreEqual(1f, fijo.FactorActual, Tolerancia, fijo.name + " de noche, a pleno");
         }

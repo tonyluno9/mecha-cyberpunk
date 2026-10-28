@@ -239,7 +239,7 @@ namespace MechaCyberpunk.Mundo.Editor
             {
                 string ruta = AssetDatabase.GUIDToAssetPath(guia);
                 string nombre = Path.GetFileNameWithoutExtension(ruta);
-                if (!nombre.StartsWith("Barrio_Letrero_") && !nombre.StartsWith("Bar_Neon"))
+                if (!nombre.StartsWith("Barrio_Letrero_") && !nombre.StartsWith("Bar_Neon") && !nombre.StartsWith("CasinoInt_Neon"))
                 {
                     continue;
                 }

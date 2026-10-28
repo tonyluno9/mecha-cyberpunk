@@ -7,7 +7,7 @@ namespace MechaCyberpunk.Mundo.Editor
     /// <summary>
     /// T-311: hace reconocibles las entradas de los destinos desde la calle, de día y de noche. Alrededor de cada puerta agrega un marco
     /// de acero oscuro, un cajón de luz sobre el dintel, tiras de neón verticales, un zócalo de concreto y un toldo inclinado (low-poly).
-    /// Los abiertos (casa, clandestino) llevan neón brillante y una luz puntual sin sombras; los cerrados (casino, mercado negro),
+    /// Los abiertos (casa, clandestino) llevan neón brillante y una luz puntual sin sombras; los cerrados (mercado negro),
     /// neón tenue y ninguna luz. Todo es decorativo y sin collider: no toca la puerta (3 × 3.2 m), la Entrada (a 1.5 m de la fachada),
     /// los puntos de aparición ni el letrero (a 4.4 m de altura), y nada sobresale más de <see cref="SalienteMaximo"/> de la fachada.
     /// Corre después de VestirCerrados y se puede repetir (CreadorTodo.Crear).
@@ -43,7 +43,7 @@ namespace MechaCyberpunk.Mundo.Editor
             {
                 new Estilo { lugar = "Lugar_Casa", material = "Casa", neon = new Color(1f, 0.5f, 0.1f), intensidad = 2.2f, conLuz = true },
                 new Estilo { lugar = "Lugar_Clandestino", material = "Clandestino", neon = new Color(1f, 0.1f, 0.65f), intensidad = 2.5f, conLuz = true },
-                new Estilo { lugar = "Lugar_Casino", material = "Casino", neon = new Color(1f, 0.75f, 0.2f), intensidad = 0.6f, conLuz = false },
+                new Estilo { lugar = "Lugar_Casino", material = "Casino", neon = new Color(1f, 0.75f, 0.2f), intensidad = 2.4f, conLuz = true },
                 new Estilo { lugar = "Lugar_MercadoNegro", material = "Mercado", neon = new Color(0.1f, 0.9f, 0.8f), intensidad = 0.6f, conLuz = false },
             };
             Material acero = Mat("Marco", new Color(0.07f, 0.08f, 0.1f), 0.5f, default);
