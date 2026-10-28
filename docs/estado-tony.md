@@ -11,7 +11,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 | T-191 Implantes como datos: tabla, servicio, guardado y balance | T-190 | hecha |
 | T-192 Brazos y piernas a pie; los implantes se ven en el cuerpo | T-190, T-191 | hecha |
 | T-193 La clínica y Pruebas_Implantes | T-191, T-192 | hecha |
-| T-194 Ojos y sistema nervioso en el mecha | T-191, T-193 | a medias (WIP) |
+| T-194 Ojos y sistema nervioso en el mecha | T-191, T-193 | hecha (sin revisar): EditMode Mecha 167/0; PlayMode Combate 61, IA 44, Mecha 155/158, Pelea 66, Implantes 18, UI 125/131, sin fallos; OjosSinapsis y ReglaReaccion x3 verdes; md5 de prefabs igual |
 | T-195 Pandilleros a pie | T-192 a T-194 | pendiente |
 | T-196 Caer en la calle: el doctor | T-193, T-195 | pendiente |
 | T-197 Recorrido de los implantes (cierre del bloque) | T-190 a T-196 | pendiente |
