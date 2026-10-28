@@ -33,3 +33,8 @@ build), y bloques 7 (radio, desde T-198) y 8.
 Conocido T-193: el horario de la clínica no sigue al reloj (pasarlo a T-196).
 Temp/UnityLockfile quedó suelto por la corrida en batch cortada; no hay ningún Unity abierto. Assets/Logs/ (sin seguimiento) es basura de una corrida: no subir.
 Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas).
+
+## T-250 assets 3D: hecha (2026-10-28)
+Rama tony/T-250-assets, mezclada en main. Los 38 modelos del lote importados y colocados (tabla en docs/assets-importados.md).
+Pruebas: EditMode 1094/1094; PlayMode 984/994 (1 intermitente de Misiones, no de T-250, 3/3 sola). Builds/Provisional y
+Builds/Provisional_Assets regenerados con ConstruirT250.Construir. El arte vuelve a ser de Alan desde esta noche.
