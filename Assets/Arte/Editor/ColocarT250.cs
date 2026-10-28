@@ -101,6 +101,7 @@ namespace MechaCyberpunk.Arte.Editor
             new Nuevo { Padre = "Manzana_4/Callejon", Codigo = "L04_Llantas", Posicion = new Vector3(-79f, 0.2f, -63.2f), GiroMundo = 180f },
             new Nuevo { Padre = "Manzana_4/Callejon", Codigo = "L05_RejaPorton", Posicion = new Vector3(-86.4f, 0.2f, -59f), GiroMundo = 270f, ProfundidadMaxima = 0.3f },
             new Nuevo { Padre = "Manzana_4/Callejon", Codigo = "C10_AireAcondicionado", Posicion = new Vector3(-66f, 2.6f, -54.35f), GiroMundo = 0f },
+            new Nuevo { Padre = "Manzana_4/Callejon", Codigo = "C08_Transformador", Posicion = new Vector3(-64f, 0.2f, -63.4f), GiroMundo = 180f },
             new Nuevo { Padre = "Manzana_4/Callejon", Codigo = "C14_RegistroMedidores", Posicion = new Vector3(-73f, 1f, -63.7f), GiroMundo = 180f },
             // Taller de la casa: el mecha estacionado está en (-64.5, -73.5); la estación lo rodea y no bloquea su punto de subida.
             new Nuevo { Padre = "Manzana_4/Lugar_Casa/Interior/Taller", Codigo = "T02_EstacionExo", Posicion = new Vector3(-64.5f, 0.2f, -73.5f), GiroMundo = 0f, Alto = 4.5f, SinCollider = true },
@@ -110,6 +111,15 @@ namespace MechaCyberpunk.Arte.Editor
             // Fachada de la casa: paredes con ventana y lisa al frente de los muros a los lados de la puerta (calle hacia +X).
             new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "H01b_ParedVentana", Posicion = new Vector3(-56.85f, 0.2f, -72.2f), GiroMundo = 270f, Alto = 2.4f, ProfundidadMaxima = 0.25f, SinCollider = true },
             new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "H01c_ParedLisa", Posicion = new Vector3(-56.85f, 0.2f, -81.8f), GiroMundo = 270f, Alto = 2.4f, ProfundidadMaxima = 0.25f, SinCollider = true },
+            // Casa: pilares en las orillas de la fachada (fondo 0.4) y pretil sobre la orilla de la azotea del frente (y 7.2).
+            new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "C04_EsquinaPilar", Posicion = new Vector3(-56.8f, 0.2f, -70.3f), GiroMundo = 270f, ProfundidadMaxima = 0.4f, SinCollider = true },
+            new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "C04_EsquinaPilar", Posicion = new Vector3(-56.8f, 0.2f, -83.7f), GiroMundo = 270f, ProfundidadMaxima = 0.4f, SinCollider = true },
+            new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "C05_PretilAzotea", Posicion = new Vector3(-57.2f, 7.2f, -74f), GiroMundo = 270f, SinCollider = true },
+            new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "C05_PretilAzotea", Posicion = new Vector3(-57.2f, 7.2f, -77f), GiroMundo = 270f, SinCollider = true },
+            new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "C05_PretilAzotea", Posicion = new Vector3(-57.2f, 7.2f, -80f), GiroMundo = 270f, SinCollider = true },
+            // Casa por detrás (muro del fondo, cara exterior en x -69.05, mirando a -X): puerta trasera de lámina y escalera de servicio.
+            new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "H01a_ParedPuerta", Posicion = new Vector3(-69.2f, 0.2f, -74f), GiroMundo = 90f, ProfundidadMaxima = 0.25f, SinCollider = true },
+            new Nuevo { Padre = "Manzana_4/Lugar_Casa", Codigo = "L03_EscaleraEmergencia", Posicion = new Vector3(-71.6f, 0.2f, -81f), GiroMundo = 90f, SinCollider = true },
             // Letreros sobre el muro del Edificio_1 (cara sur en z 9.97), arriba de las fachadas nuevas (3.6 m) y sin bloquear la banqueta.
             new Nuevo { Padre = "Manzana_1/Edificios/Edificio_1", Codigo = "C15a_LetreroHorizontal", Posicion = new Vector3(-118.7f, 4f, 9.82f), GiroMundo = 0f, ProfundidadMaxima = 0.3f, SinCollider = true },
             new Nuevo { Padre = "Manzana_1/Edificios/Edificio_1", Codigo = "C15b_LetreroBandera", Posicion = new Vector3(-110.7f, 4f, 9.5f), GiroMundo = 90f, SinCollider = true },
@@ -202,11 +212,20 @@ namespace MechaCyberpunk.Arte.Editor
                 b.Encapsulate(r.bounds);
             }
 
-            bool escalaUniforme = EsUniforme(objetivo.lossyScale);
-            Transform padre = escalaUniforme ? objetivo : objetivo.parent;
+            // El visual va dentro del objeto que lleva el collider (en las farolas, Poste_Luz) y como primer hijo: las pruebas del
+            // barrio buscan el primer MeshRenderer bajo el collider que choca y piden que esté encendido.
+            Transform conCollider = objetivo.GetComponent<Collider>() != null
+                ? objetivo
+                : objetivo.Cast<Transform>().FirstOrDefault(h => h.GetComponent<Collider>() != null) ?? objetivo;
+            bool escalaUniforme = EsUniforme(conCollider.lossyScale);
+            Transform padre = escalaUniforme ? conCollider : objetivo.parent;
             string nombre = escalaUniforme ? NombreVisual : objetivo.name + "_" + NombreVisual;
             GameObject contenedor = new GameObject(nombre);
             contenedor.transform.SetParent(padre, false);
+            if (escalaUniforme)
+            {
+                contenedor.transform.SetSiblingIndex(0);
+            }
             contenedor.transform.position = new Vector3(b.center.x, b.min.y, b.center.z);
             contenedor.transform.rotation = Quaternion.identity;
 
@@ -244,9 +263,25 @@ namespace MechaCyberpunk.Arte.Editor
                 instancia.transform.position = contenedor.transform.position + eje * desplazamiento;
             }
 
+            Apagar(viejos);
+        }
+
+        /// <summary>
+        /// Apaga el greybox. Si el renderer comparte objeto con su collider (un cubo con función), queda encendido pero solo
+        /// proyecta sombra: no se ve y lo que choca sigue teniendo un MeshRenderer encendido, como piden las pruebas del barrio.
+        /// </summary>
+        private static void Apagar(List<Renderer> viejos)
+        {
             foreach (Renderer r in viejos)
             {
-                r.enabled = false;
+                if (r.GetComponent<Collider>() != null)
+                {
+                    r.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                }
+                else
+                {
+                    r.enabled = false;
+                }
             }
         }
 
@@ -421,10 +456,8 @@ namespace MechaCyberpunk.Arte.Editor
             // El modelo tiene el largo en X; el carro avanza en +Z. El frente del modelo apunta a -X.
             visual.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
             visual.transform.localPosition = Vector3.zero;
-            foreach (Renderer r in viejos)
-            {
-                r.enabled = false;
-            }
+            visual.transform.SetSiblingIndex(0);
+            Apagar(viejos);
             Informe.AppendLine("CarroViejo\tV01a_CarroViejito\tcarrocería y cabina apagadas; ruedas greybox visibles dentro del modelo (Rueda_* intactas)");
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaCarro);
             PrefabUtility.UnloadPrefabContents(raiz);
@@ -444,6 +477,7 @@ namespace MechaCyberpunk.Arte.Editor
             { "Callejon", new Vista { Desde = new Vector3(-60f, 2.2f, -59f), Hacia = new Vector3(-86f, 1.2f, -59f) } },
             { "TallerCasa", new Vista { Desde = new Vector3(-61.6f, 3.2f, -77f), Hacia = new Vector3(-68f, 0.8f, -76f) } },
             { "Fachada", new Vista { Desde = new Vector3(-44f, 4f, -77f), Hacia = new Vector3(-58f, 3f, -77f) } },
+            { "CasaAtras", new Vista { Desde = new Vector3(-78f, 5f, -70f), Hacia = new Vector3(-69f, 2f, -78f) } },
             { "Vehiculos", new Vista { Desde = new Vector3(205f, 2.2f, -6f), Hacia = new Vector3(200f, 0.8f, 0f) } },
             { "Clandestino", new Vista { Desde = new Vector3(418f, 11f, -22f), Hacia = new Vector3(400f, 2f, 3f) } },
         };
