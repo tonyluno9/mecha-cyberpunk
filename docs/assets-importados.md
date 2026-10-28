@@ -67,7 +67,15 @@ Los props nuevos (sin greybox) sí llevan su BoxCollider, salvo los marcados aba
 | V01a_CarroViejito | Vehiculos/Prefabs/V01a_CarroViejito | CarroViejo (Visual_T250 de la raíz) y la mitad de los Carro_* del barrio | 4.2×1.95×2.3 | El modelo es una sola malla: sus ruedas no se separan, así que Rueda_DI/DD/TI/TD siguen con su greybox (quedan dentro del modelo). Más alto que el greybox (1.45): la CamaraCarro (y 1.9) queda cerca del techo. 90 mil triángulos |
 | V01b_CarroPro | Vehiculos/Prefabs/V01b_CarroPro | La otra mitad de los Carro_* (17 en total) | 4.5×1.5×2.4 | 90 mil triángulos |
 
-## Pendiente
+## Pruebas (2026-10-28)
+Compilar OK; EditMode 1094/1094; PlayMode 984/994, 9 omitidas, 1 fallo intermitente que no es de T-250
+(`MisionesPeleaPruebas.Robo_EsperandoEscondido...`: un cuadro de 1158 ms en Pruebas_Misiones, que no carga Barrio; pasó 3/3 sola).
+`BarrioPruebas.Rayos_DesdeElCentro_ChocanTodosYElBordeSeVe` pedía un MeshRenderer encendido bajo el collider que choca: el modelo se
+ajustó (Visual_T250 como primer hijo del objeto con collider; los cubos con collider quedan encendidos en "solo sombra").
+Las pruebas de 100 ms por cuadro de la ciudad (Lluvia, Bar) pasaron con el arte nuevo.
+
+## Pendiente (para Alan)
+Los 38 modelos tienen lugar en el juego. Desde el 2026-10-28 el arte es otra vez de Alan: lo que siga lo coloca él.
 - Exos (X) y personajes (P): no venían en el lote; MechaJugador, MechaEstacionado, rivales y JugadorAPie siguen igual.
 - Los modelos de gradas, lámpara y carros pesan mucho (90 mil a 194 mil triángulos); conviene una versión con menos polígonos.
 - Si Alan vuelve a correr CreadorTodo, Barrio.prefab y la jaula se regeneran sin el arte nuevo: hay que volver a correr
