@@ -24,3 +24,9 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
+
+## T-320 (WIP, 2026-10-28): resultado de la corrida de PlayMode
+- Corrida completa y válida (no cortada): Logs/resultados-playmode.xml, 936 pruebas, 926 pasaron, 1 falló, 9 omitidas; EditMode 952/952; compila.
+- Única falla: `CerradosPruebas.Cerrados_NoTapanLaEntradaNiInvadenLaCalle`: "MercadoNegro tiene su decoración. Expected: greater than 8, But was: 8" (CerradosPruebas.cs:92).
+- Causa probable: el grupo exterior de decoración del Mercado en Barrio.prefab solo tiene 8 piezas. Arreglarlo exige regenerar Barrio.prefab / Ciudad.unity, que están bloqueados hasta que main muestre el merge de tony/T-250. No se debilita la prueba para pasarla.
+- Estado: T-320 queda WIP, NO integrada ni aprobada. Siguiente paso: tras el merge de T-250, regenerar el Mercado y repetir PlayMode.
