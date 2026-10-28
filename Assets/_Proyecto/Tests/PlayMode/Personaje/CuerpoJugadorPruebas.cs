@@ -158,6 +158,109 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(ImplanteApariencia.OjoLed, cuerpo.ImplanteActivo);
         }
 
+        private static void AssertSoloPrendido(CuerpoJugador cuerpo, EspacioImplante espacio, int nivel)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                bool esta = i == (int)espacio;
+                Assert.AreEqual(esta, cuerpo.PiezasInstaladas[i].activeSelf, "pieza " + (EspacioImplante)i);
+                Assert.AreEqual(esta && nivel >= 2, cuerpo.FranjasInstaladas[i].activeSelf, "franja " + (EspacioImplante)i);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Implantes_CadaEspacioYNivel_PrendeSoloSuPieza()
+        {
+            CuerpoJugador cuerpo = CrearCuerpo();
+            var falsos = new ImplantesFalsos();
+            Registro<IImplantes>.Agregar(falsos);
+            yield return null;
+            for (int i = 0; i < 4; i++) Assert.IsFalse(cuerpo.PiezasInstaladas[i].activeSelf, "sin implantes " + (EspacioImplante)i);
+
+            foreach (EspacioImplante espacio in System.Enum.GetValues(typeof(EspacioImplante)))
+            {
+                for (int nivel = 1; nivel <= 2; nivel++)
+                {
+                    falsos.Poner(espacio, nivel);
+                    AssertSoloPrendido(cuerpo, espacio, nivel);
+                    falsos.Poner(espacio, 0);
+                }
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                Assert.IsFalse(cuerpo.PiezasInstaladas[i].activeSelf, "quitar los apaga " + (EspacioImplante)i);
+                Assert.IsFalse(cuerpo.FranjasInstaladas[i].activeSelf);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Implantes_ColoresSinRojoPuro_OjosTurquesaFranjaMagenta()
+        {
+            CuerpoJugador cuerpo = CrearCuerpo();
+            var falsos = new ImplantesFalsos();
+            Registro<IImplantes>.Agregar(falsos);
+            yield return null;
+            foreach (EspacioImplante espacio in System.Enum.GetValues(typeof(EspacioImplante))) falsos.Poner(espacio, 2);
+            foreach (GameObject pieza in cuerpo.PiezasInstaladas)
+            {
+                foreach (Renderer r in pieza.GetComponentsInChildren<Renderer>())
+                {
+                    Color c = ColorDe(r);
+                    Assert.IsFalse(c.r > 0.9f && c.g < 0.2f && c.b < 0.2f, "rojo puro en " + pieza.name);
+                }
+            }
+            Color ojos = ColorDe(cuerpo.PiezasInstaladas[(int)EspacioImplante.Ojos].GetComponentInChildren<Renderer>());
+            Assert.Greater(ojos.g, 0.7f);
+            Assert.Greater(ojos.b, 0.7f);
+            Assert.Less(ojos.r, 0.3f);
+            Color franja = ColorDe(cuerpo.FranjasInstaladas[(int)EspacioImplante.Brazos].GetComponentInChildren<Renderer>());
+            Assert.Greater(franja.r, 0.8f);
+            Assert.Less(franja.g, 0.3f);
+            Assert.Greater(franja.b, 0.4f);
+        }
+
+        [UnityTest]
+        public IEnumerator Implantes_MostrarPrueba_SeSumaALoInstaladoYQuitarPruebaLoDevuelve()
+        {
+            CuerpoJugador cuerpo = CrearCuerpo();
+            var falsos = new ImplantesFalsos();
+            Registro<IImplantes>.Agregar(falsos);
+            yield return null;
+            falsos.Poner(EspacioImplante.Brazos, 1);
+            cuerpo.MostrarPrueba(EspacioImplante.Piernas, 2);
+            Assert.IsTrue(cuerpo.PiezasInstaladas[(int)EspacioImplante.Brazos].activeSelf, "lo instalado sigue");
+            Assert.IsFalse(cuerpo.FranjasInstaladas[(int)EspacioImplante.Brazos].activeSelf);
+            Assert.IsTrue(cuerpo.PiezasInstaladas[(int)EspacioImplante.Piernas].activeSelf, "la prueba se suma");
+            Assert.IsTrue(cuerpo.FranjasInstaladas[(int)EspacioImplante.Piernas].activeSelf);
+            Assert.AreEqual(1, falsos.Nivel(EspacioImplante.Brazos));
+            Assert.AreEqual(0, falsos.Nivel(EspacioImplante.Piernas), "la prueba no instala nada");
+
+            cuerpo.MostrarPrueba(EspacioImplante.Brazos, 2);
+            Assert.IsTrue(cuerpo.FranjasInstaladas[(int)EspacioImplante.Brazos].activeSelf, "la prueba sube el nivel mostrado");
+
+            cuerpo.QuitarPrueba();
+            Assert.IsTrue(cuerpo.PiezasInstaladas[(int)EspacioImplante.Brazos].activeSelf);
+            Assert.IsFalse(cuerpo.FranjasInstaladas[(int)EspacioImplante.Brazos].activeSelf);
+            Assert.IsFalse(cuerpo.PiezasInstaladas[(int)EspacioImplante.Piernas].activeSelf);
+        }
+
+        [UnityTest]
+        public IEnumerator Implantes_ServicioQueLlegaDespues_SeSigue_YElCosmeticoNoCambia()
+        {
+            CuerpoJugador cuerpo = CrearCuerpo();
+            yield return null;
+            cuerpo.Aplicar(new AparienciaJugador(0, 0, 2));
+            Assert.IsTrue(cuerpo.Implantes[(int)ImplanteApariencia.OjoLed].activeSelf);
+            for (int i = 0; i < 4; i++) Assert.IsFalse(cuerpo.PiezasInstaladas[i].activeSelf);
+
+            var falsos = new ImplantesFalsos();
+            falsos.Poner(EspacioImplante.Ojos, 1);
+            Registro<IImplantes>.Agregar(falsos);
+            Assert.IsTrue(cuerpo.PiezasInstaladas[(int)EspacioImplante.Ojos].activeSelf, "se sigue al servicio tardío");
+            Assert.IsTrue(cuerpo.Implantes[(int)ImplanteApariencia.OjoLed].activeSelf, "el cosmético sigue igual");
+            Assert.AreEqual(1, ActivasEnLista(cuerpo.Implantes));
+        }
+
         [UnityTest]
         public IEnumerator Prefab_NoTieneCollidersNiSombrasYMideUnosUnMetroSetentaYCinco()
         {

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d484f3a5efdc3b42aabcd355fa790d3, type: 3}
+  m_Name: DatosImplante_implante_ojos_2
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
+  id: implante_ojos_2
+  nombre: "OJOS DE \xC1GUILA"
+  espacio: 0
+  nivel: 2
+  precio: 6000
+  ligaMinima: 3
+  descripcion: "LA VIDA DEL RIVAL EN N\xDAMEROS Y EL ATAQUE CON M\xC1S AVISO"
+  efectos:
+    multiplicadorGolpeAPie: 1
+    multiplicadorCorrer: 1
+    multiplicadorSalto: 1
+    multiplicadorReaccionMecha: 1
+    verVidaRival: 1
+    vidaRivalEnNumeros: 1
+    anticipacionAtaque: 0.8
