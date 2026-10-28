@@ -674,15 +674,15 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             float alturaCajaII = Caja("PIERNAS II").bounds.size.y;
             medidas.Add("salto base " + F(saltoBase) + " m (esperado " + F(datosPersonaje.AlturaSalto) + "), caja PIERNAS I " + F(alturaCajaI) + " m");
             Assert.AreEqual(datosPersonaje.AlturaSalto, saltoBase, ToleranciaSalto, "el salto base mide lo de los datos");
-            Assert.Greater(alturaCajaI, saltoBase, "la caja PIERNAS I es más alta que el salto base");
-            // Hallazgo (D-tony-181): el CharacterController sube escalones de stepOffset en pleno salto, así que el alcance real es salto + stepOffset.
+            // El CharacterController sube escalones de stepOffset en pleno salto, así que el alcance real es salto + stepOffset.
             float escalon = AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugadorPrefab).GetComponent<CharacterController>().stepOffset;
             float alcanceBase = saltoBase + escalon;
             medidas.Add("alcance real sin implantes " + F(alcanceBase) + " m (salto " + F(saltoBase) + " + escalón " + F(escalon) + "); cajas " + F(alturaCajaI) + "/" + F(alturaCajaII) + " m");
             bool subio = false;
             yield return IntentarSubir("PIERNAS I", s => subio = s);
-            Assert.AreEqual(alturaCajaI <= alcanceBase, subio, "sin implantes, la caja PIERNAS I se sube si cabe en salto + escalón (" + F(alcanceBase) + " m)");
-            medidas.Add("sin implantes: caja PIERNAS I " + (subio ? "SE SUBE" : "no se sube") + " (el diseño de T-193 decía que no)");
+            Assert.Greater(alturaCajaI, alcanceBase, "la caja PIERNAS I supera el alcance sin implantes (" + F(alcanceBase) + " m)");
+            Assert.IsFalse(subio, "sin implantes la caja PIERNAS I no se sube");
+            medidas.Add("sin implantes: caja PIERNAS I no se sube");
             subio = true;
             yield return IntentarSubir("PIERNAS II", s => subio = s);
             Assert.IsFalse(subio, "sin implantes la caja PIERNAS II no se sube");
@@ -714,10 +714,11 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             subio = false;
             yield return IntentarSubir("PIERNAS I", s => subio = s);
             Assert.IsTrue(subio, "con PIERNAS I la caja PIERNAS I sí se sube");
-            subio = alturaCajaII > alcanceI;
+            subio = true;
             yield return IntentarSubir("PIERNAS II", s => subio = s);
-            Assert.AreEqual(alturaCajaII <= alcanceI, subio, "con PIERNAS I la caja PIERNAS II se sube si cabe en salto + escalón (" + F(alcanceI) + " m)");
-            medidas.Add("PIERNAS I: alcance real " + F(alcanceI) + " m, caja PIERNAS II " + (subio ? "SE SUBE" : "no se sube") + " (el diseño de T-193 decía que no)");
+            Assert.Greater(alturaCajaII, alcanceI, "la caja PIERNAS II supera el alcance con PIERNAS I (" + F(alcanceI) + " m)");
+            Assert.IsFalse(subio, "con PIERNAS I la caja PIERNAS II no se sube");
+            medidas.Add("PIERNAS I: alcance real " + F(alcanceI) + " m, caja PIERNAS II no se sube");
             float totalI = 0f;
             float tramoI = 0f;
             yield return CorrerRecta((t, tr) => { totalI = t; tramoI = tr; });

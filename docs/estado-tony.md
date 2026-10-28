@@ -53,3 +53,4 @@ Alan aún no coloca DirectorPrologo/Flashback (T-136/T-137 bloqueadas). (Ya no: 
 Rama tony/T-250-assets, mezclada en main. Los 38 modelos del lote importados y colocados (tabla en docs/assets-importados.md).
 Pruebas: EditMode 1094/1094; PlayMode 984/994 (1 intermitente de Misiones, no de T-250, 3/3 sola). Builds/Provisional y
 Builds/Provisional_Assets regenerados con ConstruirT250.Construir. El arte vuelve a ser de Alan desde esta noche.
+Rama tony/T-197-cajas-salto: cajas de salto de Pruebas_Implantes con el stepOffset (0.725/1.615/1.945 m), pruebas ajustadas; D-tony-181 corregida.

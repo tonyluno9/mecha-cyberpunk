@@ -124,8 +124,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         }
 
         /// <summary>
-        /// Las alturas (m) de las tres cajas de salto: cada una queda a medio camino entre lo que salta el nivel anterior y lo que salta el
-        /// suyo (base, piernas I, piernas II), calculado con la altura de salto de DatosPersonaje y la tabla de implantes.
+        /// Las alturas (m) de las tres cajas de salto: el alcance real del jugador es salto + stepOffset, asi que cada caja queda a medio camino entre
+        /// el alcance del nivel anterior y el del suyo (base, piernas I, piernas II), sumando el escalon a las dos ultimas; calculado con la altura de salto de DatosPersonaje y la tabla de implantes.
         /// </summary>
         public static float[] AlturasCajasSalto()
         {
@@ -136,7 +136,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             float nivel2 = baseSalto * catalogo.Buscar(EspacioImplante.Piernas, 2).Efectos.multiplicadorSalto;
             GameObject jugador = AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugador);
             float escalon = jugador.GetComponent<CharacterController>().stepOffset;
-            float[] alturas = { baseSalto / 2f + escalon / 2f, (baseSalto + nivel1) / 2f, (nivel1 + nivel2) / 2f };
+            float[] alturas = { baseSalto / 2f + escalon / 2f, (baseSalto + nivel1) / 2f + escalon, (nivel1 + nivel2) / 2f + escalon };
             if (alturas[0] <= escalon)
             {
                 throw new InvalidOperationException("La caja base no supera el stepOffset del jugador.");
