@@ -63,7 +63,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private const int ProfundidadCaptura = 24;
         private const int SaltoDePixeles = 97;
         private const float DeltaTimeEstable = 0.05f;
-        private const float HoraDespertar = 19.5f;
+        private const float HoraDespertar = 20f;
         private const float HoraAdelantada = 20.5f;
         private const float ToleranciaHora = 0.1f;
         private const float PorcentajeDespertar = 45f;
@@ -578,7 +578,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(reloj.Dia + DiasEntreRentas, renta.DiaProximoCobro, "Próximo cobro: día actual + 7");
             Assert.AreEqual(0, renta.Adeudo, "Sin adeudo");
             Assert.AreEqual(0f, Registro<ICalor>.Actual.Valor, "Calor en 0");
-            Assert.AreEqual(HoraDespertar, reloj.Hora, ToleranciaHora, "Son las 19:30");
+            Assert.AreEqual(HoraDespertar, reloj.Hora, ToleranciaHora, "Son las 20:00");
             Assert.AreEqual(EtapaPrologo.PeleaCasera, historia.Etapa, "La etapa es la pelea casera");
             StringAssert.Contains("PeleaCasera", File.ReadAllText(ServicioGuardado.RutaForzada), "La etapa quedó guardada");
             Assert.IsTrue(subtitulos.SubtituloVisible, "El aviso está visible");

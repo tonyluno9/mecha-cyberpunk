@@ -32,6 +32,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string RutaFlashbackAlan = "Assets/_Proyecto/Escenas/Flashback.unity";
         private const string IdEsquina1 = "Prologo_Esquina_1";
         private const string IdEsquina2 = "Prologo_Esquina_2";
+        private const string TextoAEmboscada = "Maneja a casa";
         private const string VariableCapturaCiudad = "CAPTURAR_T136";
         private const string RutaCapturaCiudad1 = "docs/capturas/T-136-1.png";
         private const string RutaCapturaCiudad2 = "docs/capturas/T-136-2.png";
@@ -56,8 +57,6 @@ namespace MechaCyberpunk.Tests.Progresion
         private const float DistanciaAlCarro = 2.2f;
         private const float MetrosDelExtremo = 4f;
         private const int IntentosPuerta = 3;
-        private const float HoraAbreClandestino = 20f;
-        private const float HoraCierraClandestino = 6f;
         private const float MetrosLibresAlRodear = 3f;
         private const float MetrosAlRodear = 3.5f;
         private const float MetrosDelLado = 2.2f;
@@ -253,6 +252,9 @@ namespace MechaCyberpunk.Tests.Progresion
             IMontable carro = Carro();
             Vector3 salida = jugador.Raiz.position;
             yield return SubirAlCarro(carro);
+            // D-tony-187: ya en el carro, el objetivo y la flecha apuntan a la emboscada, no al carro.
+            yield return EsperarHasta(() => Objetivos.HayObjetivo && Objetivos.Actual.Texto == TextoAEmboscada, 3f, "el objetivo en el carro dice '" + TextoAEmboscada + "'");
+            Assert.Less(DistanciaPlana(Objetivos.Actual.Posicion, emboscada.transform.position), ToleranciaPunto, "El objetivo en el carro apunta a la emboscada");
             yield return Manejar("c1) clandestino a la esquina 1", carro, PuntoHistoria(IdEsquina1).Pose.position, RadioCarro);
             yield return Manejar("c2) esquina 1 al callejón (por la calle de la casa)", carro, PuntoHistoria(IdEsquina2).Pose.position, RadioParada, () => emboscada.Estado != EstadoEmboscada.Esperando);
             metrosHastaEmboscada = DistanciaPlana(salida, jugador.Raiz.position);
@@ -347,7 +349,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(DineroInicial, Cartera.Dinero, "Despierta con $500");
             Assert.AreEqual(PorcentajeDespertar, vidaMecha.Actual / vidaMecha.Maxima * 100f, ToleranciaPorcentaje, "Mecha al 45 %");
             Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado, "Y en su taller");
-            Assert.AreEqual(HoraDespertar, Reloj.Hora, ToleranciaHora, "Son las 19:30");
+            Assert.AreEqual(HoraDespertar, Reloj.Hora, ToleranciaHora, "Son las 20:00");
             Assert.AreEqual(0f, Registro<ICalor>.Actual.Valor, "Calor en 0");
             Assert.IsTrue(subtitulos.SubtituloVisible, "El aviso está visible");
             yield return Cuadros(FramesParaElHud, false);
@@ -392,15 +394,6 @@ namespace MechaCyberpunk.Tests.Progresion
             Vector3 salida = Aparicion(IdSalida).Pose.position;
             yield return CaminarA(salida, DistanciaAlaPuertaDelClandestino, "la entrada del clandestino");
             yield return MirarA(puertaClandestino.Posicion, "la puerta del clandestino");
-            if (Reloj.Hora < HoraAbreClandestino && Reloj.Hora >= HoraCierraClandestino)
-            {
-                // El clandestino de Alan abre a las 20:00 y el prólogo despierta a las 19:30: si el reloj aún no llega, se adelanta (atajo anotado).
-                Reloj.AvanzarHasta(HoraAbreClandestino + 0.1f);
-                atajos.Add("AvanzarHasta(" + (HoraAbreClandestino + 0.1f).ToString("F1", CultureInfo.InvariantCulture) + "): el clandestino abre a las 20:00 y llegamos a las "
-                    + Reloj.Hora.ToString("F1", CultureInfo.InvariantCulture));
-                yield return null;
-                Vigilar();
-            }
             yield return EsperarHasta(() => interaccion.TipoCandidato == TipoCandidatoAPie.Puerta, 3f, "la interacción ofrece la puerta del clandestino");
             for (int intento = 0; intento < IntentosPuerta && !puertaClandestino.EstaAbierta; intento++)
             {

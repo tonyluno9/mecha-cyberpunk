@@ -39,6 +39,7 @@ namespace MechaCyberpunk.Progresion.Prologo
         private ServicioHistoria historia;
         private DirectorEmboscada emboscada;
         private bool eventosEmboscada;
+        private ModoJugador ultimoModo;
         private MostradorPeleas mostrador;
         private bool avisoVisible;
         private bool ganoCasera = true;
@@ -186,6 +187,17 @@ namespace MechaCyberpunk.Progresion.Prologo
 
         private void Update()
         {
+            if (maquina != null && maquina.Etapa == EtapaPrologo.SalidaClandestino && emboscada != null)
+            {
+                // D-tony-187: al subir al carro (o bajar) el objetivo cambia entre el carro y la emboscada.
+                IJugador actual = Registro<IJugador>.Actual;
+                ModoJugador modo = actual != null ? actual.Modo : ModoJugador.APie;
+                if (modo != ultimoModo)
+                {
+                    ultimoModo = modo;
+                    FijarObjetivo();
+                }
+            }
             if (maquina == null || maquina.Etapa != EtapaPrologo.RegresoACasa || maquina.IndicePaso >= datos.PasosRuta.Count)
             {
                 return;
@@ -480,6 +492,11 @@ namespace MechaCyberpunk.Progresion.Prologo
                         : new Objetivo(deseado.Texto, datos.LugarClandestino));
                     break;
                 case DestinoObjetivo.Carro:
+                    if (emboscada != null && Registro<IJugador>.Actual != null && Registro<IJugador>.Actual.Modo == ModoJugador.Carro)
+                    {
+                        servicio.Fijar(new Objetivo(datos.TextoIrALaEmboscada, emboscada.transform.position));
+                        break;
+                    }
                     if (TryPosicionCarro(out Vector3 posicionCarro))
                     {
                         servicio.Fijar(new Objetivo(deseado.Texto, posicionCarro));

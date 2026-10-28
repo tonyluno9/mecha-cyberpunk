@@ -90,7 +90,7 @@ namespace MechaCyberpunk.Tests.Progresion
         protected const float DistanciaPlanoCanvas = 0.35f;
         protected const float DeltaTimeEstable = 0.05f;
         protected const float HoraNoche = 22f;
-        protected const float HoraDespertar = 19.5f;
+        protected const float HoraDespertar = 20f;
         protected const float HoraAdelantada = 20.5f;
         protected const float ToleranciaHora = 0.1f;
         protected const float MargenHora = 0.5f;
@@ -1122,7 +1122,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(DineroInicial, Cartera.Dinero, "Despierta con $500");
             Assert.AreEqual(PorcentajeDespertar, vidaMecha.Actual / vidaMecha.Maxima * 100f, ToleranciaPorcentaje, "Mecha al 45 %");
             Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado, "Y en su taller");
-            Assert.AreEqual(HoraDespertar, Reloj.Hora, ToleranciaHora, "Son las 19:30");
+            Assert.AreEqual(HoraDespertar, Reloj.Hora, ToleranciaHora, "Son las 20:00");
             Assert.AreEqual(0f, Registro<ICalor>.Actual.Valor, "Calor en 0");
             Assert.IsTrue(subtitulos.SubtituloVisible, "El aviso está visible");
             yield return Cuadros(FramesParaElHud, false);
