@@ -26,3 +26,11 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 
 **T-320 hecha (2026-10-28), en la rama alan/T-320-mercado-negro-limpia (sobre origin/main, no en alan/fase-5):** interior del mercado negro abierto de día (09:00 a 18:00) con el mostrador de Tony. Compilar OK, EditMode 1094/1094, PlayMode 991/1000 (0 fallos). El commit 0a78c5d de alan/fase-5 NO debe subirse: su regeneración con CreadorTodo borró el arte de T-250 en Barrio.prefab. Al mezclar T-320 a alan/fase-5, no correr CreadorTodo sin reaplicar `ColocarT250`. Existe además una rama vieja alan/T-320-interior-mercado-negro (WIP de otra sesión, en origin). T-321 sigue esperando el mostrador de la clínica.
+
+## T-331 (2026-10-28): peatones en el barrio, hecha
+- Rama alan/T-331-peatones, con origin/main (T-250) mezclado. `CreadorPeatones.ColgarEnBarrio` corrido solo sobre Barrio.prefab (+74 líneas: grupo `Peatones` con 6 rutas); el arte de T-250 queda intacto. No se corrió CreadorTodo.
+- Evidencia: compilar OK, EditMode 1097/1097, PlayMode 992 pasaron, 0 fallos, 9 omitidas (capturas de Tony). `PeatonesBarrioPruebas` 7/7:
+  muestreo de 60 s (3.7 M muestras, 0 fuera de ruta/banqueta, 0 choques con colliders), cuenta 12 de día / 24 de noche, parada a 2 m, peor cuadro con 30 peatones 1.0 ms (batchmode, sin vsync), grupo presente en Barrio.
+- Capturas: docs/capturas/T-331-1.png y T-331-2.png (peatones con neón en la banqueta, de noche).
+- Aviso: las pruebas de PlayMode reescriben capturas de otras tareas en docs/capturas/ y ProjectSettings/Peaton_Neon.mat; no se incluyeron en el commit y quedan sin descartar en el árbol de trabajo.
+- No integrada a main ni a fase.
