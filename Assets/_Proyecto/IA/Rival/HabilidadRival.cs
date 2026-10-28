@@ -40,6 +40,28 @@ namespace MechaCyberpunk.IA.Rival
         private bool pintado;
         private GameObject objetivoCacheado;
         private IPeleador peleadorObjetivo;
+        private bool objetivoEnRango;
+
+        /// <summary>
+        /// Segundos que faltan para que empiece su próximo aviso (T-194): 0 si ya avisa o está lista; -1 si no se sabe (fuera de pelea
+        /// o con el enfriamiento listo pero el objetivo fuera de distancia).
+        /// </summary>
+        public float SegundosParaAviso
+        {
+            get
+            {
+                if (regla == null || !enPelea)
+                {
+                    return -1f;
+                }
+                if (regla.Avisando)
+                {
+                    return 0f;
+                }
+                float restante = (1f - regla.Progreso) * regla.Enfriamiento(furia != null && furia.EnFuria);
+                return restante <= 0f && !objetivoEnRango ? -1f : Mathf.Max(0f, restante);
+            }
+        }
 
         /// <summary>El rival está avisando: quieto y brillando antes de lanzar.</summary>
         public bool EnAviso => regla != null && regla.Avisando;
@@ -105,7 +127,8 @@ namespace MechaCyberpunk.IA.Rival
                 return;
             }
             bool control = peleador.ControlActivo && !peleador.EstaAturdido && !vida.EstaKO;
-            bool puedeEmpezar = control && !rival.EnAviso && ObjetivoEnRango();
+            objetivoEnRango = ObjetivoEnRango();
+            bool puedeEmpezar = control && !rival.EnAviso && objetivoEnRango;
             bool enFuria = furia != null && furia.EnFuria;
             PasoHabilidadRival paso = regla.Avanzar(Time.deltaTime, enFuria, puedeEmpezar, control);
             switch (paso)

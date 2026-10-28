@@ -23,6 +23,8 @@ namespace MechaCyberpunk.Mecha
         private DatosMecha datosEjecucion;
         private DatosPieza[] puestas;
         private bool listo;
+        private float reaccion = 1f;
+        private IImplantes implantesEscuchados;
 
         /// <summary>Avisa cuando cambia alguna pieza puesta.</summary>
         public event Action Cambio;
@@ -43,7 +45,7 @@ namespace MechaCyberpunk.Mecha
             get
             {
                 Asegurar();
-                return puestas == null ? deSerie : ReglaEstadisticasPiezas.Componer(deSerie, puestas);
+                return puestas == null ? deSerie : Componer();
             }
         }
 
@@ -52,6 +54,69 @@ namespace MechaCyberpunk.Mecha
         private void Awake()
         {
             Asegurar();
+        }
+
+        // T-194: el sistema nervioso se compone encima de serie + piezas. Se lee al activarse y se sigue por Cambio y por Agregado.
+        private void OnEnable()
+        {
+            Registro<IImplantes>.Agregado += AlAgregarImplantes;
+            Registro<IImplantes>.Quitado += AlQuitarImplantes;
+            Escuchar(Registro<IImplantes>.Actual);
+        }
+
+        private void OnDisable()
+        {
+            Registro<IImplantes>.Agregado -= AlAgregarImplantes;
+            Registro<IImplantes>.Quitado -= AlQuitarImplantes;
+            if (implantesEscuchados != null)
+            {
+                implantesEscuchados.Cambio -= LeerImplantes;
+                implantesEscuchados = null;
+            }
+        }
+
+        private void AlAgregarImplantes(IImplantes nuevos) => Escuchar(nuevos);
+
+        private void AlQuitarImplantes(IImplantes quitados)
+        {
+            if (quitados == implantesEscuchados)
+            {
+                Escuchar(Registro<IImplantes>.Actual);
+            }
+        }
+
+        private void Escuchar(IImplantes implantes)
+        {
+            if (implantesEscuchados != null)
+            {
+                implantesEscuchados.Cambio -= LeerImplantes;
+            }
+            implantesEscuchados = implantes;
+            if (implantesEscuchados != null)
+            {
+                implantesEscuchados.Cambio += LeerImplantes;
+            }
+            LeerImplantes();
+        }
+
+        private void LeerImplantes()
+        {
+            float nuevo = implantesEscuchados != null ? implantesEscuchados.Efectos.multiplicadorReaccionMecha : 1f;
+            if (Mathf.Approximately(nuevo, reaccion))
+            {
+                return;
+            }
+            reaccion = nuevo;
+            Asegurar();
+            if (puestas != null)
+            {
+                Aplicar();
+            }
+        }
+
+        private ValoresMecha Componer()
+        {
+            return ReglaReaccionImplantes.Aplicar(ReglaEstadisticasPiezas.Componer(deSerie, puestas), reaccion);
         }
 
         private void OnDestroy()
@@ -171,7 +236,7 @@ namespace MechaCyberpunk.Mecha
 
         private void Aplicar()
         {
-            DatosMecha nuevo = DatosMecha.CrearEnEjecucion(ReglaEstadisticasPiezas.Componer(deSerie, puestas));
+            DatosMecha nuevo = DatosMecha.CrearEnEjecucion(Componer());
             vida.CambiarDatos(nuevo);
             SoltarDatos();
             datosEjecucion = nuevo;
