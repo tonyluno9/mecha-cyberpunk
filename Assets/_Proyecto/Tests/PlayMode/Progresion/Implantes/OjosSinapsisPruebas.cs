@@ -343,7 +343,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             float tiempoPrevio = Time.time;
             float ultimoGolpeEnAviso = -100f;
             float fin = Time.time + MaxSegundosJefe;
-            while (Time.time < fin && avisos < 2)
+            while (Time.time < fin && avisos < 4 && buenos < 1)
             {
                 yield return FinDeCuadro();
                 MantenerVivo();
