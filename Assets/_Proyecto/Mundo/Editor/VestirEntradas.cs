@@ -44,7 +44,7 @@ namespace MechaCyberpunk.Mundo.Editor
                 new Estilo { lugar = "Lugar_Casa", material = "Casa", neon = new Color(1f, 0.5f, 0.1f), intensidad = 2.2f, conLuz = true },
                 new Estilo { lugar = "Lugar_Clandestino", material = "Clandestino", neon = new Color(1f, 0.1f, 0.65f), intensidad = 2.5f, conLuz = true },
                 new Estilo { lugar = "Lugar_Casino", material = "Casino", neon = new Color(1f, 0.75f, 0.2f), intensidad = 2.4f, conLuz = true },
-                new Estilo { lugar = "Lugar_MercadoNegro", material = "Mercado", neon = new Color(0.1f, 0.9f, 0.8f), intensidad = 0.6f, conLuz = false },
+                new Estilo { lugar = "Lugar_MercadoNegro", material = "Mercado", neon = new Color(0.1f, 0.9f, 0.8f), intensidad = 2.2f, conLuz = false },
             };
             Material acero = Mat("Marco", new Color(0.07f, 0.08f, 0.1f), 0.5f, default);
             Material concreto = Mat("Zocalo", new Color(0.16f, 0.16f, 0.18f), 0.15f, default);

@@ -58,7 +58,8 @@ namespace MechaCyberpunk.Mundo.Editor
             DatosLugar clandestino = CrearDatos("Clandestino", IdLugar.Clandestino, "El Sótano", new HorarioLugar(20f, 6f), false);
             DatosLugar casino = CrearDatos("Casino", IdLugar.Casino, "Casino Aurora", new HorarioLugar(20f, 6f), false);
             AbrirEnLaDemo(casino); // T-303: el casino ya tiene interior; el asset de T-042 quedó cerrado y aquí se abre
-            DatosLugar mercado = CrearDatos("MercadoNegro", IdLugar.MercadoNegro, "Mercado Negro", new HorarioLugar(9f, 18f), true);
+            DatosLugar mercado = CrearDatos("MercadoNegro", IdLugar.MercadoNegro, "Mercado Negro", new HorarioLugar(9f, 18f), false);
+            AbrirEnLaDemo(mercado); // T-320: el mercado negro ya tiene interior y abre de día
             AssetDatabase.SaveAssets();
 
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefabBarrio);
@@ -114,7 +115,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return datos;
         }
 
-        // T-303: CrearDatos no pisa assets existentes, así que el casino de T-042 (cerrado en la demo) se corrige aquí.
+        // T-303 y T-320: CrearDatos no pisa assets existentes, así que el casino y el mercado de T-042 (cerrados en la demo) se corrigen aquí.
         private static void AbrirEnLaDemo(DatosLugar datos)
         {
             if (!datos.CerradoEnDemo)

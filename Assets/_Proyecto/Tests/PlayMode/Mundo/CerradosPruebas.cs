@@ -52,19 +52,16 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Cerrados_SiguenCerradosAMediodiaYDeNoche()
+        public IEnumerator MercadoNegro_AbreAMediodiaYCierraDeNoche()
         {
             yield return EscenaLugares.CargarCiudad();
             RelojMundo reloj = EscenaLugares.RelojPausado();
-            foreach (float hora in new[] { EscenaLugares.HoraMediodia, EscenaLugares.HoraNoche })
-            {
-                reloj.AvanzarHasta(hora);
-                yield return null;
-                foreach (IdLugar id in Cerrados)
-                {
-                    Assert.IsFalse(EscenaLugares.Lugar(id).EstaAbierto, id + " sigue cerrado a las " + hora);
-                }
-            }
+            reloj.AvanzarHasta(EscenaLugares.HoraMediodia);
+            yield return null;
+            Assert.IsTrue(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "T-320: abre a las 12:00");
+            reloj.AvanzarHasta(EscenaLugares.HoraNoche);
+            yield return null;
+            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "T-320: cierra a las 22:00");
         }
 
         [UnityTest]

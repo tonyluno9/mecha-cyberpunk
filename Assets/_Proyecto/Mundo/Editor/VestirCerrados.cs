@@ -5,9 +5,8 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.Mundo.Editor
 {
     /// <summary>
-    /// T-094: viste por fuera los dos lugares cerrados de la demo. El casino lleva marquesina, columnas doradas, alfombra gastada,
-    /// postes con cadena y tubos de neón tenues; el mercado negro, una cortina metálica baja con candados, cajas y una manta
-    /// de "VOLVEMOS PRONTO". Todo es decorativo, sin collider (no estorba a la puerta ni a la franja de la banqueta). Nada se pone sobre la Entrada (a 1.5 m de la fachada) ni más allá de 1.3 m de ella.
+    /// T-094: viste por fuera los dos lugares que estaban cerrados en la demo (hoy abren: el casino de noche, T-303, y el mercado de día, T-320). El casino lleva marquesina, columnas doradas, alfombra
+    /// y tubos de neón; el mercado negro, una cortina metálica enrollada en su cajón, cajas y una manta de "COMPRA / VENDE". Todo es decorativo, sin collider (no estorba a la puerta ni a la franja de la banqueta). Nada se pone sobre la Entrada (a 1.5 m de la fachada) ni más allá de 1.3 m de ella.
     /// Corre después de CreadorLugares y se puede repetir (usa CreadorTodo.Crear).
     /// Batchmode: -executeMethod MechaCyberpunk.Mundo.Editor.VestirCerrados.Crear
     /// </summary>
@@ -95,22 +94,15 @@ namespace MechaCyberpunk.Mundo.Editor
         {
             Transform g = Grupo(lugar);
             float z = ZFrente(lugar);
-            // Cortina: ocho tablillas apiladas que cubren la puerta, entre dos guías, con dos candados.
-            int tablillas = 8;
-            float alto = AltoPuerta / tablillas;
-            for (int i = 0; i < tablillas; i++)
-            {
-                Caja(g, "Tablilla" + i, new Vector3(0f, alto * (i + 0.5f), z + 0.2f), new Vector3(AnchoPuerta, alto - 0.03f, 0.08f), metal, true);
-            }
+            // T-320: el mercado abre de día; la cortina está enrollada en su cajón (sin candados) y deja ver la puerta.
+            Cilindro(g, "RolloCortina", new Vector3(0f, AltoPuerta + 0.15f, z + 0.17f), new Vector3(0.28f, AnchoPuerta / 2f, 0.28f), metal, false)
+                .transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
             foreach (float x in new[] { -AnchoPuerta / 2f - 0.08f, AnchoPuerta / 2f + 0.08f })
             {
                 Caja(g, "Guia", new Vector3(x, AltoPuerta / 2f, z + 0.17f), new Vector3(0.16f, AltoPuerta, 0.14f), herrumbre, true);
             }
             Caja(g, "CajonCortina", new Vector3(0f, AltoPuerta + 0.15f, z + 0.17f), new Vector3(AnchoPuerta + 0.4f, 0.3f, 0.2f), herrumbre, false);
-            foreach (float x in new[] { -1f, 1f })
-            {
-                Caja(g, "Candado", new Vector3(x, 0.22f, z + 0.3f), new Vector3(0.14f, 0.18f, 0.08f), herrumbre, false);
-            }
+            Caja(g, "CajaApilada3", new Vector3(3.6f, 0.35f, z + 0.5f), new Vector3(0.7f, 0.7f, 0.7f), caja, true);
             Caja(g, "CajaApilada1", new Vector3(-3.6f, 0.4f, z + 0.5f), new Vector3(0.8f, 0.8f, 0.8f), caja, true);
             Caja(g, "CajaApilada2", new Vector3(-3.6f, 1.15f, z + 0.5f), new Vector3(0.7f, 0.7f, 0.7f), caja, true);
 
@@ -128,7 +120,7 @@ namespace MechaCyberpunk.Mundo.Editor
             textoObjeto.transform.SetParent(canvasObjeto.transform, false);
             Text texto = textoObjeto.AddComponent<Text>();
             texto.font = fuente;
-            texto.text = "VOLVEMOS\nPRONTO";
+            texto.text = "COMPRA\nVENDE";
             texto.alignment = TextAnchor.MiddleCenter;
             texto.fontSize = 22;
             texto.fontStyle = FontStyle.Bold;

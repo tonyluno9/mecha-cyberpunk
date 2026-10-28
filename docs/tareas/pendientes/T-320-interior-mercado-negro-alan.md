@@ -21,3 +21,13 @@ Assets/_Proyecto/Mundo/, Tests de Mundo, docs/capturas/. No tocar Core/ ni carpe
 
 ## Fuera de alcance
 La clínica (T-321).
+
+## WIP (sin verificar)
+Código escrito pero **no compilado ni probado**: esta máquina solo tiene Unity 6000.6.5f1 y el proyecto pide 6000.3.25f1
+(abrirlo con otra versión reimporta y modifica ProjectSettings/Packages, fuera de esta tarea). Pendiente en una máquina con 6000.3.25f1:
+1. `CreadorTodo.Crear` (genera `.meta`, materiales `MercadoInt_*`, Barrio.prefab, DatosLugar_MercadoNegro y escenas).
+2. `bash herramientas/verificar.sh todo`; corregir lo que salga (nuevo: `Tests/PlayMode/Mundo/MercadoNegroInteriorPruebas.cs`).
+3. Capturas `docs/capturas/T-320-1..3.png` (las genera `Mercado_Capturas_DiaFueraYDentro`), revisarlas, y mover la tarea a hechas.
+Hecho en código: `Mundo/Editor/CreadorMercadoNegroInterior.cs` (cuarto 10 × 10 m, 4 puestos, luces de sodio, `ZonaInterior`, mostrador de Tony
+en (-1.1, 4.8) local, a ~2.9 m de la Entrada), `CreadorLugares` abre el mercado (9:00 a 18:00), `VestirCerrados`/`VestirEntradas` en versión abierta,
+`CreadorTodo` lo incluye, y pruebas de Mundo actualizadas (Lugares, Puertas, Cerrados, EntradasNeon).

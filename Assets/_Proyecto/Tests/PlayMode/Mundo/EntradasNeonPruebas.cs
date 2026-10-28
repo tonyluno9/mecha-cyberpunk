@@ -109,14 +109,17 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Entradas_CasinoAbreDeNocheYMercadoSigueCerrado()
+        public IEnumerator Entradas_CasinoAbreDeNocheYMercadoDeDia()
         {
             yield return EscenaLugares.CargarCiudad();
             RelojMundo reloj = EscenaLugares.RelojPausado();
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             yield return null;
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "el casino abre de noche (T-303)");
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "el mercado negro sigue cerrado");
+            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "el mercado negro cierra de noche (T-320)");
+            reloj.AvanzarHasta(EscenaLugares.HoraMediodia);
+            yield return null;
+            Assert.IsTrue(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "el mercado negro abre de día (T-320)");
         }
 
         [UnityTest]
