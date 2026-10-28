@@ -1,11 +1,13 @@
 # Guía para jugar el build provisional (Tony)
 
-Build de Windows con solo escenas de Tony (Alan aún no mezcla DirectorPrologo en Ciudad.unity; T-136/T-137 bloqueadas).
-No está en git (`Builds/` está ignorado): se regenera con un script de editor temporal. Actualizado al bloque 5 (misiones y reputación, T-181 a T-189).
+Build de Windows con las escenas de prueba de Tony más Ciudad_Prologo y Clandestino de Alan (T-136/T-137 aún pendientes: todavía no hay demo encadenada).
+No está en git (`Builds/` está ignorado): se regenera con un script de editor temporal. Actualizado al bloque 6 (implantes, pandilla a pie y clínica, T-190 a T-197) y a los assets 3D de T-250.
 
 ## Cómo abrirlo
 - `Builds/Provisional/MechaCyberpunk.exe` (en la raíz del repo). Doble clic. Arranca en CreacionPersonaje (título y creación de personaje).
-- `Builds/Provisional_Misiones/MechaCyberpunk.exe`: las mismas 9 escenas, pero arranca directo en Pruebas_Misiones. Úsalo para probar el bloque 5.
+- `Builds/Provisional_Implantes/MechaCyberpunk.exe`: las mismas 13 escenas, pero arranca directo en Pruebas_Implantes. Úsalo para probar el bloque 6 (ver "Implantes y la clínica" abajo).
+- `Builds/Provisional_Assets/MechaCyberpunk.exe`: arranca en Ciudad_Prologo con los modelos 3D de T-250 (build del 28-oct, antes del bloque 6).
+- `Builds/Provisional_Misiones/`: build viejo del bloque 5 (no se regeneró); Pruebas_Misiones sigue dentro de Provisional como escena 8.
 
 ## Escenas incluidas (en el orden del build)
 | # | Escena | Qué es |
@@ -18,7 +20,11 @@ No está en git (`Builds/` está ignorado): se regenera con un script de editor 
 | 5 | Pruebas_Calle | Calle de prueba con rival |
 | 6 | Pruebas_APie | Jugador a pie |
 | 7 | Pruebas_Tutorial | Tutorial |
-| 8 | Pruebas_Misiones | Misiones, reputación, teléfono y favores (el bloque 5); en Provisional_Misiones es la escena 0 |
+| 8 | Pruebas_Misiones | Misiones, reputación, teléfono y favores (el bloque 5) |
+| 9 | Pruebas_Implantes | Implantes, clínica, pandilla a pie y el doctor (el bloque 6); en Provisional_Implantes es la escena 0 |
+| 10 | Ciudad_Prologo | Ciudad de Alan con los assets de T-250 |
+| 11 | Clandestino | Arena de Alan con los assets de T-250 |
+| 12 | Pruebas_Assets | Los 38 modelos de T-250 en filas por zona |
 
 Cómo moverse entre ellas: solo el flujo del juego cambia de escena (CambioEscena): título -> prólogo -> flashback -> prólogo, siguiendo la historia.
 No hay menú para saltar a las demás; las escenas 3 a 8 están en el build pero no hay forma de llegar a ellas desde el juego. Para probarlas
@@ -90,3 +96,13 @@ ilegales y los robos con E en el contacto del bar, de noche. Una misión a la ve
 Los favores: DESCUENTO baja 30 % tu siguiente compra en el mercado negro; INFORMACIÓN abre EL SOPLO con el contacto del bar; ESCONDITE se usa con E
 en un escondite del barrio (azotea, lavandería) cuando hay calor: lo borra y cumple el paso de escapar. Pruebas_Misiones es la escena para probarlo todo
 (J pasa al día siguiente a las 8:00; F5 guarda y F9 carga: la misión en curso se cancela sin castigo).
+
+
+
+## Implantes y la clínica (Pruebas_Implantes)
+Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista de 30 m, cajas de salto, muñecos, espejo, taller, mostrador de peleas y casa).
+- **Clínica**: de día (8:00 a 20:00) camina al mostrador "CLÍNICA" y pulsa E. Flechas arriba/abajo eligen la pieza (OJOS, BRAZOS, PIERNAS, SISTEMA NERVIOSO), Enter pide confirmar, Enter otra vez instala, Esc sale. Cada operación cuesta dinero y 2 horas. Los de nivel 2 se abren en la liga 3 y cobran solo la diferencia. De noche dice "CERRADA".
+- **Qué hace cada uno**: OJOS muestra la vida del rival y avisa su próximo golpe (en la cabina y a pie); BRAZOS pega más fuerte a pie; PIERNAS corre más rápido y salta más alto; SISTEMA NERVIOSO acelera tu golpe y tu guardia en el mecha. En el espejo de la casa (E) los ves puestos.
+- **Pandilla de noche**: desde las 21:00 hay 3 pandilleros a pie en el sitio de la pandilla; persiguen, nunca pegan más de 2 a la vez y pagan al caer. De día no están.
+- **Si caes en la calle** (a pie, de noche): despiertas en la camilla de la clínica a las 05:00, el doc te cobra $500 (puedes quedar en deuda), el calor se borra y el objetivo dice VUELVE A CASA; el mecha, si estaba en la calle, vuelve dañado al taller.
+- **Teclas de prueba** (`ImplantesDePrueba`): 3 instala los 4 implantes de nivel 1 sin cobrar, 4 los de nivel 2, 5 los quita. 1 y 2 cambian entre puños y pistola; F5 guarda y F9 carga.

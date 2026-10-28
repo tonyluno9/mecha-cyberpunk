@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51e16e2a4f0c9254a8e9a327d7b16ca5, type: 3}
+  m_Name: DatosPandilleroAPie_Base
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosPandilleroAPie
+  nombre: PANDILLERO
+  vidaMaxima: 60
+  danioGolpe: 10
+  preparacionGolpe: 0.5
+  recargaGolpe: 1.4
+  velocidad: 5.5
+  velocidadGiro: 540
+  radioDeteccion: 10
+  correa: 25
+  alcanceGolpe: 1.8
+  margenImpacto: 0.4
+  anguloGolpe: 70
+  margenLlegada: 0.6
+  dinero: 40
+  segundosParaDesaparecer: 4
+  duracionParpadeo: 0.12
+  anguloBrazoAviso: 130
+  tamanoPandilla: 3
+  maxAtacando: 2
+  radioFormacion: 2.5
+  colorNormal: {r: 0.55, g: 0.15, b: 0.65, a: 1}
+  colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
+  colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  colorAviso: {r: 1, g: 0.55, b: 0.1, a: 1}

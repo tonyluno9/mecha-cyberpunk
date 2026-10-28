@@ -124,10 +124,10 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
 
             Assert.Greater(alturaBase, stepOffset, "la caja base no se sube caminando");
             Assert.Less(alturaBase, saltoBase, "la caja base se sube con el salto base");
-            Assert.Greater(alturaI, saltoBase, "la caja de PIERNAS I no se sube con el salto base");
-            Assert.Less(alturaI, saltoI, "la caja de PIERNAS I se sube con PIERNAS I");
-            Assert.Greater(alturaII, saltoI, "la caja de PIERNAS II no se sube con PIERNAS I");
-            Assert.Less(alturaII, saltoII, "la caja de PIERNAS II se sube con PIERNAS II");
+            Assert.Greater(alturaI, saltoBase + stepOffset, "la caja de PIERNAS I no se sube con el alcance base (salto + escalón)");
+            Assert.Less(alturaI, saltoI + stepOffset, "la caja de PIERNAS I se sube con PIERNAS I");
+            Assert.Greater(alturaII, saltoI + stepOffset, "la caja de PIERNAS II no se sube con PIERNAS I");
+            Assert.Less(alturaII, saltoII + stepOffset, "la caja de PIERNAS II se sube con PIERNAS II");
             VerificarFinal("escena-cajas");
         }
     }
