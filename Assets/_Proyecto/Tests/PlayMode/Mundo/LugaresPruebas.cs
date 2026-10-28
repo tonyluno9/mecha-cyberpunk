@@ -68,14 +68,14 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casa).EstaAbierto);
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Bar).EstaAbierto);
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Clandestino).EstaAbierto);
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto);
+            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "A las 12:00 el casino está cerrado por horario");
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "Está en horario pero cerrado en la demo");
 
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casa).EstaAbierto);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Bar).EstaAbierto);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Clandestino).EstaAbierto);
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "Está en horario pero cerrado en la demo");
+            Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "T-303: de noche el casino abre");
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto);
         }
 
@@ -128,7 +128,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual("CERRADO", Letrero(IdLugar.Clandestino).TextoDeEstado);
             Assert.AreEqual("ABIERTO", Letrero(IdLugar.Casa).TextoDeEstado);
             StringAssert.Contains("24 horas", Letrero(IdLugar.Casa).TextoDeNombre);
-            Assert.AreEqual("CERRADO · PRÓXIMAMENTE", Letrero(IdLugar.Casino).TextoDeEstado);
+            Assert.AreEqual("CERRADO", Letrero(IdLugar.Casino).TextoDeEstado);
             Assert.AreEqual("CERRADO · PRÓXIMAMENTE", Letrero(IdLugar.MercadoNegro).TextoDeEstado, "Cerrado en demo aunque esté en horario");
 
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
@@ -137,7 +137,8 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual("ABIERTO", Letrero(IdLugar.Clandestino).TextoDeEstado);
             Assert.AreEqual("ABIERTO", Letrero(IdLugar.Bar).TextoDeEstado);
             StringAssert.Contains("19:00 a 04:00", Letrero(IdLugar.Bar).TextoDeNombre);
-            Assert.AreEqual("CERRADO · PRÓXIMAMENTE", Letrero(IdLugar.Casino).TextoDeEstado);
+            Assert.AreEqual("ABIERTO", Letrero(IdLugar.Casino).TextoDeEstado);
+            StringAssert.Contains("20:00 a 06:00", Letrero(IdLugar.Casino).TextoDeNombre);
         }
 
         [UnityTest]

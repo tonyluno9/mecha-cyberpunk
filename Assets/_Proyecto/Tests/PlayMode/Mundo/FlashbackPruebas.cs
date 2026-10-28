@@ -18,6 +18,9 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float AlturaCuerpo = 1.8f;
         private const float AlcanceRayos = 20f;
         private const int CantidadRayos = 36;
+        private const float RadioCamara = 0.15f;
+        private const float DistanciaVistaMinima = 0.4f;
+        private const float CampoDeVisionPlano = 60f;
         private const float GradosPorVuelta = 360f;
         private const float AlturaPrueba = 1f;
         private const int MaximoRayosPorLaPuerta = 6;     // la puerta de 1.8 m vista desde 2 m abarca unos 48°
@@ -63,7 +66,7 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return Cargar();
             IPuntoAparicion inicio = Inicio();
             Assert.AreEqual(ModoJugador.APie, inicio.Modo);
-            Assert.AreEqual(0, System.Array.FindAll(Object.FindObjectsByType<Camera>(FindObjectsSortMode.None), c => c.enabled).Length, "La escena no trae cámara: la pone el jugador de Tony");
+            Assert.AreEqual(1, System.Array.FindAll(Object.FindObjectsByType<Camera>(FindObjectsSortMode.None), c => c.enabled).Length, "La única cámara es la del prefab Flashback de Tony (T-093)");
             LogAssert.NoUnexpectedReceived();
         }
 
@@ -107,6 +110,40 @@ namespace MechaCyberpunk.Tests.Mundo
             camara.nearClipPlane = 0.1f;
             yield return null;
             CapturaPruebas.Guardar(camara, "docs/capturas/T-090-1.png");
+        }
+
+        [UnityTest]
+        public IEnumerator Flashback_SeisPlanos_TienenPuntoLibreYVistaDespejada()
+        {
+            yield return Cargar();
+            for (int i = 1; i <= 6; i++)
+            {
+                string id = "Flashback_Plano_" + i;
+                IPuntoHistoria punto = null;
+                foreach (IPuntoHistoria candidato in Registro<IPuntoHistoria>.Todos)
+                {
+                    if (candidato.Id == id)
+                    {
+                        punto = candidato;
+                    }
+                }
+                Assert.IsNotNull(punto, "Falta " + id);
+                Pose pose = punto.Pose;
+                Assert.IsFalse(Physics.CheckSphere(pose.position, RadioCamara, ~0, QueryTriggerInteraction.Ignore), id + ": la cámara no está dentro de nada");
+                Assert.IsFalse(Physics.Raycast(pose.position, pose.rotation * Vector3.forward, DistanciaVistaMinima, ~0, QueryTriggerInteraction.Ignore), id + ": hay algo pegado frente a la cámara");
+                if (i == 1 || i == 4 || i == 6)
+                {
+                    GameObject objeto = new GameObject("CamaraPlano" + i);
+                    Camera camara = objeto.AddComponent<Camera>();
+                    objeto.transform.SetPositionAndRotation(pose.position, pose.rotation);
+                    camara.nearClipPlane = 0.05f;
+                    camara.fieldOfView = CampoDeVisionPlano;
+                    yield return null;
+                    CapturaPruebas.Guardar(camara, "docs/capturas/T-093-flashback-plano-" + i + ".png");
+                    Object.Destroy(objeto);
+                }
+            }
+            LogAssert.NoUnexpectedReceived();
         }
     }
 }

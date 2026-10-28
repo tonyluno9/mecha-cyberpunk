@@ -64,7 +64,7 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return EscenaLugares.CargarCiudad();
             reloj = EscenaLugares.RelojPausado();
             reloj.AvanzarHasta(hora);
-            zona = Object.FindFirstObjectByType<ZonaInterior>();
+            zona = EscenaLugares.ZonaDe(IdLugar.Bar);
             Assert.IsNotNull(zona, "Ciudad debe traer la ZonaInterior del bar");
         }
 
