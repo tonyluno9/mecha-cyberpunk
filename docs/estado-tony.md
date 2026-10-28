@@ -12,7 +12,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 | T-192 Brazos y piernas a pie; los implantes se ven en el cuerpo | T-190, T-191 | hecha |
 | T-193 La clínica y Pruebas_Implantes | T-191, T-192 | hecha |
 | T-194 Ojos y sistema nervioso en el mecha | T-191, T-193 | hecha (sin revisar): EditMode Mecha 167/0; PlayMode Combate 61, IA 44, Mecha 155/158, Pelea 66, Implantes 18, UI 125/131, sin fallos; OjosSinapsis y ReglaReaccion x3 verdes; md5 de prefabs igual |
-| T-195 Pandilleros a pie | T-192 a T-194 | pendiente |
+| T-195 Pandilleros a pie | T-192 a T-194 | hecha (sin revisar): EditMode IA 67/0 x3 (ReglaPandilleroAPie 12); PandillaAPiePruebas 10/10 x3; PlayMode IA 44, Personaje 129, Implantes 28, UI 125/131 (6 omitidas), sin fallos; tumbar: 4 golpes / 3 con BRAZOS I / 2 con BRAZOS II / 3 tiros; $120 por la pandilla; salir del radio 2.53 s sin implante y 1.55 s con PIERNAS I; md5 de prefabs y escena igual; captura T-195-1 revisada |
 | T-196 Caer en la calle: el doctor | T-193, T-195 | pendiente |
 | T-197 Recorrido de los implantes (cierre del bloque) | T-190 a T-196 | pendiente |
 | T-136 El prólogo en Ciudad.unity y Flashback.unity de Alan | Alan (T-093, ya en main) | lista para hacer (con Escenas/Ciudad_Prologo.unity) |

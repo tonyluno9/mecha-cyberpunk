@@ -33,6 +33,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaMecha = "Assets/_Proyecto/Mecha/Prefabs/MechaEstacionado.prefab";
         private const string RutaMuneco = "Assets/_Proyecto/Personaje/Pruebas/MunecoAPie.prefab";
+        private const string RutaPandilla = "Assets/_Proyecto/IA/Prefabs/PandillaAPie.prefab";
         private const string RutaArena = "Assets/_Proyecto/Pelea/Pruebas/ArenaDePrueba.prefab";
         private const string RutaMostradorPeleas = CreadorMostradorPeleas.RutaPrefab;
         private const string RutaMostradorClinica = "Assets/_Proyecto/UI/Prefabs/MostradorClinica.prefab";
@@ -305,8 +306,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             CreadorEscenaPrologo.Aparicion(IdCasaCama, ModoJugador.APie, PosicionCasa, Quaternion.identity);
             Letrero("Letrero CASA", "CASA", PosicionCasa + new Vector3(0f, 0f, 3.5f));
 
-            // El sitio vacío de la pandilla (lo usa T-195), en la calle, a más de 25 m de la clínica.
+            // El sitio de la pandilla (T-195), en la calle, a más de 25 m de la clínica.
             CreadorEscenaPrologo.Vacio(NombreSitioPandilla, PosicionSitioPandilla);
+            GameObject pandilla = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPandilla));
+            pandilla.name = "PandillaAPie";
+            pandilla.transform.position = PosicionSitioPandilla;
             Letrero("Letrero PANDILLA", "PANDILLA", PosicionSitioPandilla + new Vector3(0f, 0f, -3f));
         }
 
