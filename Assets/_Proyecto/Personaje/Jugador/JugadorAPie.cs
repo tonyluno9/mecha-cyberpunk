@@ -14,8 +14,6 @@ namespace MechaCyberpunk.Personaje.Jugador
     [RequireComponent(typeof(CharacterController))]
     public class JugadorAPie : MonoBehaviour, IJugador
     {
-        private const string NombreManos = "Manos";
-
         [Tooltip("Cámara hija del jugador.")]
         [SerializeField] private Camera camara;
 
@@ -23,7 +21,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private ControladorAPie controladorAPie;
         private ArmasAPie armas;
         private AudioListener oyente;
-        private GameObject manos;
+        private GameObject modelo;
         private Camera camaraActual;
         private bool avisoDuplicadoDado;
 
@@ -49,8 +47,9 @@ namespace MechaCyberpunk.Personaje.Jugador
                 return;
             }
             oyente = camara.GetComponent<AudioListener>();
-            Transform hijoManos = camara.transform.Find(NombreManos);
-            manos = hijoManos != null ? hijoManos.gameObject : null;
+            // Tercera persona (T-400): el modelo se oculta en el carro. Las manos de primera persona quedan apagadas en el prefab.
+            Animator animador = GetComponentInChildren<Animator>(true);
+            modelo = animador != null ? animador.gameObject : null;
             camaraActual = camara;
         }
 
@@ -131,9 +130,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 oyente.enabled = false;
             }
-            if (manos != null)
+            if (modelo != null)
             {
-                manos.SetActive(false);
+                modelo.SetActive(false);
             }
             camaraActual = montable.Camara;
             Modo = montable.Modo;
@@ -168,9 +167,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 oyente.enabled = true;
             }
-            if (manos != null)
+            if (modelo != null)
             {
-                manos.SetActive(true);
+                modelo.SetActive(true);
             }
             camaraActual = camara;
             Modo = ModoJugador.APie;

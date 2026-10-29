@@ -5,6 +5,7 @@ using MechaCyberpunk.Economia;
 using MechaCyberpunk.Mecha.Llamado;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
+using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
 using UnityEngine;
@@ -108,6 +109,8 @@ namespace MechaCyberpunk.UI.Hud
         private IJugador jugador;
         private IVida vida;
         private ArmasAPie armas;
+        private ControladorAPie controladorAPie;
+        private bool aPieActual;
         private InteraccionAPie interaccion;
         private IObjetivos objetivos;
         private ServicioObjetivos servicio;
@@ -285,6 +288,7 @@ namespace MechaCyberpunk.UI.Hud
                 ActualizarVida();
                 ActualizarArma();
             }
+            ActualizarMira();
             ActualizarFlecha();
             ActualizarInteraccion();
             ActualizarLlamado();
@@ -373,6 +377,7 @@ namespace MechaCyberpunk.UI.Hud
             Transform raiz = jugador.Raiz;
             vida = raiz != null ? raiz.GetComponent<IVida>() : null;
             armas = raiz != null ? raiz.GetComponent<ArmasAPie>() : null;
+            controladorAPie = raiz != null ? raiz.GetComponent<ControladorAPie>() : null;
             interaccion = raiz != null ? raiz.GetComponent<InteraccionAPie>() : null;
             jugador.ModoCambio += AlCambiarModo;
             if (vida != null)
@@ -417,9 +422,31 @@ namespace MechaCyberpunk.UI.Hud
             jugador = null;
             vida = null;
             armas = null;
+            controladorAPie = null;
             interaccion = null;
             avisoPuerta = string.Empty;
             avisoRestante = 0f;
+        }
+
+        // T-400: la retícula del centro solo se ve apuntando o con un arma de fuego en la mano.
+        private bool MiraVisible()
+        {
+            bool apuntando = controladorAPie != null && controladorAPie.Apuntando;
+            bool armaDeFuego = armas != null && armas.ArmaActiva == ArmaAPie.Pistola;
+            return apuntando || armaDeFuego;
+        }
+
+        private void ActualizarMira()
+        {
+            if (jugador == null || grupoMira == null)
+            {
+                return;
+            }
+            bool visible = aPieActual && MiraVisible();
+            if (grupoMira.activeSelf != visible)
+            {
+                grupoMira.SetActive(visible);
+            }
         }
 
         private void AlCambiarModo(ModoJugador modo) => AplicarModo(modo);
@@ -427,8 +454,9 @@ namespace MechaCyberpunk.UI.Hud
         private void AplicarModo(ModoJugador modo)
         {
             bool aPie = modo == ModoJugador.APie;
+            aPieActual = aPie;
             grupoVida.SetActive(aPie);
-            grupoMira.SetActive(aPie);
+            grupoMira.SetActive(aPie && MiraVisible());
             grupoArma.SetActive(aPie);
             grupoCancion.SetActive(modo != ModoJugador.Mecha);
             RefrescarObjetivo();

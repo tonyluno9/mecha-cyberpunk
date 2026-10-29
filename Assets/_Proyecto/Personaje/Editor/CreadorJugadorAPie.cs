@@ -30,6 +30,7 @@ namespace MechaCyberpunk.Personaje.Editor
         private const string RutaPersonaje = "Assets/_Proyecto/Personaje";
         private const string RutaEntrada = RutaPersonaje + "/Entrada/ControlesAPie.inputactions";
         private const string RutaDatos = RutaPersonaje + "/Datos/DatosPersonaje_Base.asset";
+        private const string RutaConfigCamara = RutaPersonaje + "/Datos/ConfigCamaraHombro_Base.asset";
         private const string RutaConfig = RutaPersonaje + "/Datos/ConfigControlesAPie_Base.asset";
         private const string RutaConfigInteraccion = RutaPersonaje + "/Datos/ConfigInteraccionAPie_Base.asset";
         private const string RutaPrefab = RutaPersonaje + "/Prefabs/JugadorAPie.prefab";
@@ -81,6 +82,7 @@ namespace MechaCyberpunk.Personaje.Editor
             // Reescribe el asset con los campos nuevos (golpe, KO) aunque ya existiera.
             EditorUtility.SetDirty(AssetDatabase.LoadAssetAtPath<DatosPersonaje>(RutaDatos));
             CrearAsset<ConfigControlesAPie>(RutaConfig);
+            CrearAsset<ConfigCamaraHombro>(RutaConfigCamara);
             CrearAsset<ConfigInteraccionAPie>(RutaConfigInteraccion);
             CrearAsset<DatosPistola>(RutaDatosPistola);
             CrearAsset<ConfigCarroDePrueba>(RutaConfigCarro);
@@ -105,6 +107,26 @@ namespace MechaCyberpunk.Personaje.Editor
             AssetDatabase.SaveAssets();
             CreadorImplantesAPie.Crear();
             Debug.Log("[Personaje] T-051 creada.");
+        }
+
+        /// <summary>
+        /// T-400: asegura la acción Apuntar, la config de la cámara de hombro y el muñeco, y regenera solo JugadorAPie.prefab.
+        /// Batchmode: -executeMethod MechaCyberpunk.Personaje.Editor.CreadorJugadorAPie.RegenerarPrefabTerceraPersona
+        /// </summary>
+        public static void RegenerarPrefabTerceraPersona()
+        {
+            CrearEntrada();
+            CrearAsset<ConfigCamaraHombro>(RutaConfigCamara);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            CreadorMunecoHumano.Crear();
+            Material puno = CrearMaterial(RutaMaterialPuno, new Color(0.9f, 0.75f, 0.6f));
+            Material pistola = CrearMaterial(RutaMaterialPistola, new Color(0.15f, 0.15f, 0.18f));
+            Material marca = CrearMaterial(RutaMaterialMarca, new Color(0.05f, 0.05f, 0.05f));
+            Material cuerpo = CrearMaterial(RutaMaterialCuerpo, new Color(0.3f, 0.5f, 0.7f));
+            CrearPrefab(cuerpo, puno, pistola, marca);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Personaje] JugadorAPie.prefab regenerado en tercera persona (T-400).");
         }
 
         private static void AsegurarCarpeta(string ruta)
@@ -153,6 +175,7 @@ namespace MechaCyberpunk.Personaje.Editor
             mapa.AddAction("Recargar", InputActionType.Button, "<Keyboard>/r");
             mapa.AddAction("LiberarCursor", InputActionType.Button, "<Keyboard>/escape");
             mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
+            mapa.AddAction("Apuntar", InputActionType.Button, "<Mouse>/rightButton");
 
             File.WriteAllText(RutaEntrada, asset.ToJson());
             Object.DestroyImmediate(asset);
@@ -164,12 +187,23 @@ namespace MechaCyberpunk.Personaje.Editor
         {
             InputActionAsset asset = InputActionAsset.FromJson(File.ReadAllText(RutaEntrada));
             InputActionMap mapa = asset.FindActionMap("APie");
-            if (mapa.FindAction("Telefono") != null)
+            bool cambio = false;
+            if (mapa.FindAction("Telefono") == null)
+            {
+                mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
+                cambio = true;
+            }
+            // T-400: clic derecho para apuntar.
+            if (mapa.FindAction("Apuntar") == null)
+            {
+                mapa.AddAction("Apuntar", InputActionType.Button, "<Mouse>/rightButton");
+                cambio = true;
+            }
+            if (!cambio)
             {
                 Object.DestroyImmediate(asset);
                 return;
             }
-            mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
             File.WriteAllText(RutaEntrada, asset.ToJson());
             Object.DestroyImmediate(asset);
             AssetDatabase.ImportAsset(RutaEntrada);
@@ -298,6 +332,8 @@ namespace MechaCyberpunk.Personaje.Editor
             GameObject manos = new GameObject("Manos");
             manos.transform.SetParent(camaraObj.transform, false);
             manos.transform.localPosition = new Vector3(0f, 0f, DistanciaManos);
+            // T-400: tercera persona; las manos y el cuerpo de primera persona quedan apagados (sus scripts siguen).
+            manos.SetActive(false);
 
             GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             visual.name = "Cuerpo";
@@ -308,6 +344,14 @@ namespace MechaCyberpunk.Personaje.Editor
             MeshRenderer render = visual.GetComponent<MeshRenderer>();
             render.sharedMaterial = materialCuerpo;
             render.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+            visual.SetActive(false);
+
+            GameObject modeloObj = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CreadorMunecoHumano.RutaModeloJugador), raiz.transform);
+            modeloObj.transform.localPosition = Vector3.zero;
+            modeloObj.transform.localRotation = Quaternion.identity;
+            Transform manoDer = modeloObj.transform.Find("Cadera/Torso/BrazoSupDer/BrazoInfDer/ManoDer");
+
+            CamaraHombro camaraHombro = camaraObj.AddComponent<CamaraHombro>();
 
             SerializedObject soJugador = new SerializedObject(raiz.AddComponent<JugadorAPie>());
             soJugador.FindProperty("camara").objectReferenceValue = camara;
@@ -324,7 +368,16 @@ namespace MechaCyberpunk.Personaje.Editor
             so.FindProperty("saltar").objectReferenceValue = Referencia("Saltar");
             so.FindProperty("atacar").objectReferenceValue = Referencia("Atacar");
             so.FindProperty("liberarCursor").objectReferenceValue = Referencia("LiberarCursor");
+            so.FindProperty("apuntar").objectReferenceValue = Referencia("Apuntar");
+            so.FindProperty("configCamara").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ConfigCamaraHombro>(RutaConfigCamara);
             so.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject soHombro = new SerializedObject(camaraHombro);
+            soHombro.FindProperty("config").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ConfigCamaraHombro>(RutaConfigCamara);
+            soHombro.FindProperty("controlador").objectReferenceValue = controlador;
+            soHombro.FindProperty("camara").objectReferenceValue = camara;
+            soHombro.ApplyModifiedPropertiesWithoutUndo();
+            raiz.AddComponent<AnimacionJugador>();
 
             SerializedObject soInteraccion = new SerializedObject(raiz.AddComponent<InteraccionAPie>());
             soInteraccion.FindProperty("config").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ConfigInteraccionAPie>(RutaConfigInteraccion);
@@ -348,13 +401,15 @@ namespace MechaCyberpunk.Personaje.Editor
             SerializedObject soGolpe = new SerializedObject(raiz.AddComponent<GolpeAPie>());
             soGolpe.FindProperty("datos").objectReferenceValue = datosPersonaje;
             soGolpe.FindProperty("atacar").objectReferenceValue = Referencia("Atacar");
-            soGolpe.FindProperty("puno").objectReferenceValue = punoObj.transform;
+            soGolpe.FindProperty("puno").objectReferenceValue = null;
             soGolpe.ApplyModifiedPropertiesWithoutUndo();
 
             // Pistola greybox: cuerpo y cañón de cubos en Manos, con una luz breve en la boca.
             GameObject pistolaObj = new GameObject("Pistola");
-            pistolaObj.transform.SetParent(manos.transform, false);
-            pistolaObj.transform.localPosition = new Vector3(0.2f, -0.22f, 0.05f);
+            // T-400: la pistola va en la mano derecha del modelo; el antebrazo cuelga en -Y, así que el cañón apunta a -Y local.
+            pistolaObj.transform.SetParent(manoDer, false);
+            pistolaObj.transform.localPosition = new Vector3(0f, -0.05f, 0f);
+            pistolaObj.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             Pieza("Cuerpo pistola", pistolaObj.transform, Vector3.zero, new Vector3(0.07f, 0.13f, 0.22f), materialPistola);
             Pieza("Canon", pistolaObj.transform, new Vector3(0f, 0.05f, 0.18f), new Vector3(0.05f, 0.05f, 0.2f), materialPistola);
             foreach (Transform pieza in pistolaObj.transform)
@@ -385,7 +440,7 @@ namespace MechaCyberpunk.Personaje.Editor
             SerializedObject soArmas = new SerializedObject(raiz.AddComponent<ArmasAPie>());
             soArmas.FindProperty("armaPunos").objectReferenceValue = Referencia("ArmaPunos");
             soArmas.FindProperty("armaPistola").objectReferenceValue = Referencia("ArmaPistola");
-            soArmas.FindProperty("visualPunos").objectReferenceValue = punoObj;
+            soArmas.FindProperty("visualPunos").objectReferenceValue = null;
             soArmas.FindProperty("visualPistola").objectReferenceValue = pistolaObj;
             soArmas.ApplyModifiedPropertiesWithoutUndo();
 

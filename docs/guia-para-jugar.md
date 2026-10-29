@@ -1,5 +1,21 @@
 # Guía para jugar el build provisional (Tony)
 
+## Juego de pandillas (Builds/Juego, fase G desde T-400)
+`Builds/Juego/MechaCyberpunk.exe`: arranca en Ciudad_Prologo (sin mechas; docs/diseno/pandillas.md). Cada tarea de T-400 a T-406 agrega
+aquí 3 líneas de qué probar. La demo final de 15 minutos queda en `Builds/Demo/MechaCyberpunk.exe` (T-406).
+
+### Cómo abrir Builds/Juego
+Doble clic en `Builds/Juego/MechaCyberpunk.exe` (en la raíz del repo; no está en git, se regenera con
+`-executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.ConstruirJuego` o el menú Mecha Cyberpunk > Demo > Construir juego de pandillas).
+Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
+
+### T-400 tercera persona (qué probar)
+- Camina con WASD, corre con Shift y salta con Espacio: la cámara va sobre el hombro y el ratón la orbita; ¿marea o se siente bien? ¿el muñeco se ve vivo?
+- Clic derecho apunta (la cámara se acerca y sale la retícula); con 2 sacas la pistola y clic izquierdo dispara; con 1 y clic izquierdo golpeas.
+- Dos muñecos de prueba están a 8 y 12 m de la puerta de la casa para pegarles; no hay mecha ni emboscada.
+
+## Build viejo con mechas (antes de la fase G)
+
 Build de Windows con las escenas de prueba de Tony más Ciudad_Prologo y Clandestino de Alan (T-136/T-137 aún pendientes: todavía no hay demo encadenada).
 No está en git (`Builds/` está ignorado): se regenera con un script de editor temporal. Actualizado al bloque 6 (implantes, pandilla a pie y clínica, T-190 a T-197) y a los assets 3D de T-250.
 

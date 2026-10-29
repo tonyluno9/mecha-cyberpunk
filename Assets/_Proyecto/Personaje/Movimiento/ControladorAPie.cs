@@ -8,7 +8,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
     [RequireComponent(typeof(CharacterController))]
     public class ControladorAPie : MonoBehaviour
     {
-        private const float VueltaCompleta = Mathf.PI * 2f;
         private const float PendienteMaxima = 45f;
         private const float EscalonMaximo = 0.35f;
 
@@ -22,15 +21,20 @@ namespace MechaCyberpunk.Personaje.Movimiento
         [SerializeField] private InputActionReference saltar;
         [SerializeField] private InputActionReference atacar;
         [SerializeField] private InputActionReference liberarCursor;
+        [Tooltip("Clic derecho: apuntar (T-400). Opcional.")]
+        [SerializeField] private InputActionReference apuntar;
+        [Tooltip("Cámara de hombro: límites de inclinación y giro del cuerpo (T-400). Opcional.")]
+        [SerializeField] private ConfigCamaraHombro configCamara;
 
         private CharacterController controlador;
         private readonly MovimientoAPie movimiento = new MovimientoAPie();
         private readonly MiradaAPie mirada = new MiradaAPie();
         private readonly SeguidorImplantes implantes = new SeguidorImplantes();
-        private float faseCabeceo;
         private bool cursorBloqueado;
         private bool controlActivo = true;
         private bool enPiso;
+        private float giroCamara;
+        private bool apuntando;
 
         /// <summary>Velocidad horizontal en el espacio del jugador (x lateral, y adelante, m/s).</summary>
         public Vector2 Velocidad => movimiento.VelocidadHorizontal;
@@ -40,6 +44,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>Inclinación vertical de la cámara (°, positivo mira hacia abajo).</summary>
         public float Inclinacion => mirada.Inclinacion;
         public Transform Camara => camara;
+        /// <summary>Giro horizontal de la cámara de hombro (° en el mundo). Movimiento y apuntado son relativos a él.</summary>
+        public float GiroCamara => giroCamara;
+        /// <summary>True mientras se mantiene el clic derecho con el control activo.</summary>
+        public bool Apuntando => apuntando;
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
 
@@ -56,9 +64,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             controlador.stepOffset = EscalonMaximo;
             controlador.slopeLimit = PendienteMaxima;
             controlador.minMoveDistance = 0f;
-            Vector3 posicionCamara = camara.localPosition;
-            posicionCamara.y = config.AlturaOjos;
-            camara.localPosition = posicionCamara;
+            giroCamara = transform.eulerAngles.y;
         }
 
         private void OnEnable()
@@ -69,6 +75,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             saltar.action.Enable();
             atacar.action.Enable();
             liberarCursor.action.Enable();
+            apuntar?.action.Enable();
             implantes.Activar();
             AplicarCursor(true);
         }
@@ -81,6 +88,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             saltar.action.Disable();
             atacar.action.Disable();
             liberarCursor.action.Disable();
+            apuntar?.action.Disable();
             implantes.Desactivar();
         }
 
@@ -90,6 +98,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             controlActivo = activo;
             if (!activo)
             {
+                apuntando = false;
                 movimiento.Reiniciar();
             }
         }
@@ -98,6 +107,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public void ReiniciarMovimiento()
         {
             movimiento.Reiniciar();
+            giroCamara = transform.eulerAngles.y;
         }
 
         private void Update()
@@ -112,20 +122,46 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
             if (cursorBloqueado)
             {
-                float giro = mirada.Actualizar(mirar.action.ReadValue<Vector2>(), config.SensibilidadRaton, config.LimiteMirarVertical);
-                transform.Rotate(0f, giro, 0f);
+                float minima = configCamara != null ? configCamara.InclinacionMinima : -40f;
+                float maxima = configCamara != null ? configCamara.InclinacionMaxima : 60f;
+                float giro = mirada.Actualizar(mirar.action.ReadValue<Vector2>(), config.SensibilidadRaton, Mathf.Max(Mathf.Abs(minima), maxima));
+                giroCamara = Mathf.Repeat(giroCamara + giro, 360f);
+                mirada.Limitar(minima, maxima);
             }
+            apuntando = apuntar != null && apuntar.action.IsPressed();
 
-            Vector2 velocidad = movimiento.ActualizarHorizontal(mover.action.ReadValue<Vector2>(), correr.action.IsPressed(),
+            Vector2 entrada = mover.action.ReadValue<Vector2>();
+            Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, correr.action.IsPressed(),
                 enPiso, dt, datos.VelocidadCaminar, EfectosAPie.VelocidadCorrer(datos, implantes.Efectos), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
             float vertical = movimiento.ActualizarVertical(enPiso, saltar.action.WasPressedThisFrame(), dt,
                 EfectosAPie.AlturaSalto(datos, implantes.Efectos), config.Gravedad);
 
-            Vector3 horizontal = transform.TransformDirection(new Vector3(velocidad.x, 0f, velocidad.y));
+            // Tercera persona: el movimiento es relativo a la cámara; el cuerpo gira hacia donde camina, o hacia donde mira si apunta.
+            Quaternion marco = Quaternion.Euler(0f, giroCamara, 0f);
+            Vector3 horizontal = marco * new Vector3(velocidad.x, 0f, velocidad.y);
+            GirarCuerpo(dt, horizontal);
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
+        }
 
-            ActualizarCamara(dt, velocidad);
+        private void GirarCuerpo(float dt, Vector3 horizontal)
+        {
+            float giroMaximo = (configCamara != null ? configCamara.GiroCuerpo : 720f) * dt;
+            float objetivo = transform.eulerAngles.y;
+            if (apuntando)
+            {
+                objetivo = giroCamara;
+            }
+            else if (horizontal.sqrMagnitude > 0.01f)
+            {
+                objetivo = Mathf.Atan2(horizontal.x, horizontal.z) * Mathf.Rad2Deg;
+            }
+            else
+            {
+                return;
+            }
+            float angulo = Mathf.MoveTowardsAngle(transform.eulerAngles.y, objetivo, giroMaximo);
+            transform.rotation = Quaternion.Euler(0f, angulo, 0f);
         }
 
         private void ActualizarCursor()
@@ -148,17 +184,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
             cursorBloqueado = bloquear;
             Cursor.lockState = bloquear ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !bloquear;
-        }
-
-        private void ActualizarCamara(float dt, Vector2 velocidad)
-        {
-            float proporcion = enPiso && datos.VelocidadCaminar > 0f ? Mathf.Min(velocidad.magnitude / datos.VelocidadCaminar, 1f) : 0f;
-            faseCabeceo = Mathf.Repeat(faseCabeceo + proporcion * config.FrecuenciaCabeceo * VueltaCompleta * dt, VueltaCompleta);
-
-            Vector3 posicion = camara.localPosition;
-            posicion.y = config.AlturaOjos + Mathf.Sin(faseCabeceo) * config.AmplitudCabeceo * proporcion;
-            camara.localPosition = posicion;
-            camara.localRotation = Quaternion.Euler(mirada.Inclinacion, 0f, 0f);
         }
     }
 }
