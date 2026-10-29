@@ -53,12 +53,59 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Distancia de cada pandillero al centro de su pandilla (m).")]
         [Min(0f)] [SerializeField] private float radioFormacion = 2.5f;
 
+        [Header("Armado y territorio (T-402)")]
+        [Tooltip("Si es true usa pistola en vez de puños: mantiene la distancia, avisa con un láser y dispara.")]
+        [SerializeField] private bool usaPistola;
+        [Tooltip("Daño de cada disparo que acierta (puntos de vida).")]
+        [Min(0f)] [SerializeField] private float danioDisparo = 8f;
+        [Tooltip("Distancia mínima a la que se queda del jugador; más cerca retrocede (m).")]
+        [Min(0f)] [SerializeField] private float distanciaMinTiro = 6f;
+        [Tooltip("Distancia máxima a la que dispara; más lejos se acerca (m).")]
+        [Min(1f)] [SerializeField] private float distanciaMaxTiro = 12f;
+        [Tooltip("Distancia a la que la probabilidad de acierto es la de 'acierto cerca' (m).")]
+        [Min(0f)] [SerializeField] private float distanciaAciertoCerca = 10f;
+        [Tooltip("Distancia a la que la probabilidad de acierto es la de 'acierto lejos' (m).")]
+        [Min(1f)] [SerializeField] private float distanciaAciertoLejos = 30f;
+        [Tooltip("Probabilidad de acertar a la distancia 'cerca' (0 a 1).")]
+        [Range(0f, 1f)] [SerializeField] private float aciertoCerca = 0.7f;
+        [Tooltip("Probabilidad de acertar a la distancia 'lejos' (0 a 1).")]
+        [Range(0f, 1f)] [SerializeField] private float aciertoLejos = 0.3f;
+        [Tooltip("Cada cuántos segundos cambia de lado al moverse de costado para cubrirse (s).")]
+        [Min(0.2f)] [SerializeField] private float periodoCambioLado = 2f;
+        [Tooltip("Calor policial que suma cada pandillero vencido (puntos de calor). 0 no suma.")]
+        [Min(0f)] [SerializeField] private float calorAlVencer;
+        [Tooltip("Radio del territorio: si el jugador entra a esta distancia del centro del grupo, atacan (m).")]
+        [Min(1f)] [SerializeField] private float radioTerritorio = 35f;
+        [Tooltip("Cuánto más allá del radio lo siguen antes de rendirse y volver (m).")]
+        [Min(0f)] [SerializeField] private float margenPersecucion = 10f;
+        [Tooltip("Segundos que tarda en reaparecer un grupo vencido (s).")]
+        [Min(1f)] [SerializeField] private float segundosReaparicion = 40f;
+        [Tooltip("El grupo solo reaparece si el jugador está más lejos que esto de su centro (m).")]
+        [Min(0f)] [SerializeField] private float distanciaReaparicion = 30f;
+        [Tooltip("Si es true el grupo está siempre, no solo de noche.")]
+        [SerializeField] private bool siempre;
+
         [Header("Colores")]
         [SerializeField] private Color colorNormal = new Color(0.55f, 0.15f, 0.65f);
         [SerializeField] private Color colorGolpe = new Color(1f, 0.2f, 0.2f);
         [SerializeField] private Color colorKO = new Color(0.2f, 0.2f, 0.2f);
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f);
 
+        public bool UsaPistola => usaPistola;
+        public float DanioDisparo => danioDisparo;
+        public float DistanciaMinTiro => distanciaMinTiro;
+        public float DistanciaMaxTiro => distanciaMaxTiro;
+        public float DistanciaAciertoCerca => distanciaAciertoCerca;
+        public float DistanciaAciertoLejos => distanciaAciertoLejos;
+        public float AciertoCerca => aciertoCerca;
+        public float AciertoLejos => aciertoLejos;
+        public float PeriodoCambioLado => periodoCambioLado;
+        public float CalorAlVencer => calorAlVencer;
+        public float RadioTerritorio => radioTerritorio;
+        public float MargenPersecucion => margenPersecucion;
+        public float SegundosReaparicion => segundosReaparicion;
+        public float DistanciaReaparicion => distanciaReaparicion;
+        public bool Siempre => siempre;
         public string Nombre => nombre;
         public float VidaMaxima => vidaMaxima;
         public float DanioGolpe => danioGolpe;

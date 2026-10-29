@@ -17,6 +17,7 @@ namespace MechaCyberpunk.IA.APie
         private const float Gravedad = -20f;
         private const float AlturaCentroImpacto = 1f;
         private const float GradosKO = 90f;
+        private const float GranDistancia = 100000f;
         private static readonly int IdColor = Shader.PropertyToID("_BaseColor");
 
         [SerializeField] private DatosPandilleroAPie datos;
@@ -41,11 +42,29 @@ namespace MechaCyberpunk.IA.APie
         private IVida vidaJugador;
         private IRecibeDanio recibeJugador;
         private bool pintadoAviso;
+        private PistolaPandillero pistola;
+        private Animator animador;
+        private Renderer[] piezasModelo;
+        private int lado = 1;
+        private float proximoCambioLado;
+
+        private static readonly int IdVelocidad = Animator.StringToHash("Velocidad");
+        private static readonly int IdEnPiso = Animator.StringToHash("EnPiso");
+        private static readonly int IdApuntando = Animator.StringToHash("Apuntando");
+        private static readonly int IdArma = Animator.StringToHash("Arma");
+        private static readonly int IdKO = Animator.StringToHash("KO");
+        private static readonly int IdDisparo = Animator.StringToHash("Disparo");
+        private const float AlturaBoca = 1.4f;
+        private const float AlturaPecho = 1.2f;
+        private const float AdelanteBoca = 0.4f;
+        private const int ArmaPistola = 1;
 
         public DatosPandilleroAPie Datos => datos;
         public EstadoPandillero Estado => regla != null ? regla.Estado : EstadoPandillero.Esperando;
         public bool EnPelea => regla != null && !EstaKO && regla.EnPelea;
         public Vector3 Hogar => hogar;
+        /// <summary>True cuando la pandilla dice que el jugador está en su territorio (solo pandilleros armados).</summary>
+        public bool Alerta { get; set; }
         public float Actual => modelo != null ? modelo.Actual : 0f;
         public float Maxima => modelo != null ? modelo.Maxima : 0f;
         public bool EstaKO => modelo != null && modelo.EstaKO;
@@ -88,7 +107,7 @@ namespace MechaCyberpunk.IA.APie
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
-            if (datos == null || cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)
+            if (datos == null || (!datos.UsaPistola && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
             {
                 Debug.LogError("[IA] Faltan referencias en PandilleroAPie de " + name, this);
                 enabled = false;
@@ -106,14 +125,30 @@ namespace MechaCyberpunk.IA.APie
             modelo = new ModeloVida(datos.VidaMaxima);
             modelo.Cambio += AlCambiar;
             modelo.KO += AlLlegarAKO;
-            regla = new ReglaPandilleroAPie(datos.RadioDeteccion, datos.Correa, datos.AlcanceGolpe, datos.PreparacionGolpe,
-                datos.RecargaGolpe, datos.MargenLlegada);
+            if (datos.UsaPistola)
+            {
+                // El territorio lo decide la pandilla (Alerta): la regla solo ve distancias enormes de detección y correa.
+                regla = new ReglaPandilleroAPie(GranDistancia, GranDistancia, datos.DistanciaMaxTiro, datos.PreparacionGolpe,
+                    datos.RecargaGolpe, datos.MargenLlegada);
+                pistola = GetComponent<PistolaPandillero>();
+                if (pistola == null)
+                {
+                    pistola = gameObject.AddComponent<PistolaPandillero>();
+                }
+                animador = GetComponentInChildren<Animator>(true);
+                piezasModelo = GetComponentsInChildren<Renderer>(true);
+            }
+            else
+            {
+                regla = new ReglaPandilleroAPie(datos.RadioDeteccion, datos.Correa, datos.AlcanceGolpe, datos.PreparacionGolpe,
+                    datos.RecargaGolpe, datos.MargenLlegada);
+            }
             bloque = new MaterialPropertyBlock();
             if (!tieneHogar)
             {
                 hogar = transform.position;
             }
-            Pintar(cuerpo, datos.ColorNormal);
+            PintarCuerpo(datos.ColorNormal);
             PintarBrazo(datos.ColorNormal);
         }
 
@@ -149,10 +184,14 @@ namespace MechaCyberpunk.IA.APie
             desaparicion = -1f;
             finParpadeo = -1f;
             velocidadVertical = 0f;
+            if (animador != null)
+            {
+                animador.SetBool(IdKO, false);
+            }
             controlador.enabled = false;
             transform.SetPositionAndRotation(hogar, Quaternion.Euler(0f, transform.eulerAngles.y, 0f));
             controlador.enabled = true;
-            Pintar(cuerpo, datos.ColorNormal);
+            PintarCuerpo(datos.ColorNormal);
             PintarBrazo(datos.ColorNormal);
             PonerBrazo(0f);
         }
@@ -168,7 +207,7 @@ namespace MechaCyberpunk.IA.APie
             if (!modelo.EstaKO)
             {
                 finParpadeo = Time.time + datos.DuracionParpadeo;
-                Pintar(cuerpo, datos.ColorGolpe);
+                PintarCuerpo(datos.ColorGolpe);
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
             return resultado;
@@ -183,7 +222,7 @@ namespace MechaCyberpunk.IA.APie
             if (finParpadeo >= 0f && Time.time >= finParpadeo)
             {
                 finParpadeo = -1f;
-                Pintar(cuerpo, modelo.EstaKO ? datos.ColorKO : datos.ColorNormal);
+                PintarCuerpo(modelo.EstaKO ? datos.ColorKO : datos.ColorNormal);
             }
             if (modelo.EstaKO)
             {
@@ -196,6 +235,11 @@ namespace MechaCyberpunk.IA.APie
             }
 
             BuscarJugador();
+            if (datos.UsaPistola)
+            {
+                ActualizarArmado();
+                return;
+            }
             bool atacable = EsAtacable();
             Vector3 posicionJugador = raizJugador != null ? raizJugador.position : hogar;
             ReglaPandilleroAPie.Entrada entrada = new ReglaPandilleroAPie.Entrada
@@ -221,6 +265,108 @@ namespace MechaCyberpunk.IA.APie
                 Golpear(posicionJugador);
             }
             ActualizarBrazo();
+        }
+
+        // ---- Pandillero armado (T-402) ----
+
+        private void ActualizarArmado()
+        {
+            bool atacable = Alerta && EsAtacable();
+            Vector3 posicionJugador = raizJugador != null ? raizJugador.position : hogar;
+            float distancia = DistanciaPlana(transform.position, posicionJugador);
+            Vector3 pecho = posicionJugador + Vector3.up * AlturaPecho;
+            Vector3 boca = transform.position + Vector3.up * AlturaBoca + transform.forward * AdelanteBoca;
+            bool puedeTirar = false;
+            if (atacable && distancia <= datos.DistanciaMaxTiro)
+            {
+                Vector3 hacia = pecho - boca;
+                puedeTirar = pistola.HayLinea(boca, hacia.normalized, hacia.magnitude, recibeJugador, out _);
+            }
+
+            ReglaPandilleroAPie.Entrada entrada = new ReglaPandilleroAPie.Entrada
+            {
+                DistanciaJugador = atacable ? distancia : float.MaxValue,
+                DistanciaJugadorAlPunto = atacable ? 0f : float.MaxValue,
+                DistanciaAlPunto = DistanciaPlana(transform.position, hogar),
+                JugadorAtacable = atacable
+            };
+            entrada.TieneTurno = regla.Atacando || (puedeTirar && (turnos == null || turnos.Pedir(this)));
+            ReglaPandilleroAPie.Salida salida = regla.Avanzar(Time.deltaTime, entrada);
+            if (!regla.Atacando)
+            {
+                turnos?.Soltar(this);
+            }
+
+            bool apuntando = regla.Estado == EstadoPandillero.Preparando && atacable;
+            if (apuntando)
+            {
+                pistola.Apuntar(boca, pecho);
+            }
+            else
+            {
+                pistola.QuitarAviso();
+            }
+            if (salida.Impacto && atacable)
+            {
+                float probabilidad = PistolaPandillero.ProbabilidadAcierto(distancia, datos.DistanciaAciertoCerca,
+                    datos.DistanciaAciertoLejos, datos.AciertoCerca, datos.AciertoLejos);
+                pistola.Disparar(boca, pecho, recibeJugador, datos.DanioDisparo, probabilidad);
+                if (animador != null)
+                {
+                    animador.SetTrigger(IdDisparo);
+                }
+            }
+
+            Vector3 deseada = Vector3.zero;
+            Vector3 haciaJugador = posicionJugador - transform.position;
+            haciaJugador.y = 0f;
+            if (salida.Orden == ReglaPandilleroAPie.Orden.AlPunto)
+            {
+                deseada = hogar - transform.position;
+                deseada.y = 0f;
+                deseada = deseada.sqrMagnitude > 0.0001f ? deseada.normalized * datos.Velocidad : Vector3.zero;
+            }
+            else if (atacable && regla.Estado != EstadoPandillero.Preparando && haciaJugador.sqrMagnitude > 0.0001f)
+            {
+                Vector3 adelante = haciaJugador.normalized;
+                if (distancia > datos.DistanciaMaxTiro || !puedeTirar && distancia > datos.DistanciaMinTiro)
+                {
+                    deseada = adelante * datos.Velocidad;
+                }
+                else if (distancia < datos.DistanciaMinTiro)
+                {
+                    deseada = -adelante * datos.Velocidad;
+                }
+                else
+                {
+                    if (Time.time >= proximoCambioLado)
+                    {
+                        proximoCambioLado = Time.time + datos.PeriodoCambioLado;
+                        lado = -lado;
+                    }
+                    deseada = Vector3.Cross(Vector3.up, adelante) * lado * datos.Velocidad * 0.6f;
+                }
+            }
+
+            Vector3 mirada = atacable ? haciaJugador : deseada;
+            mirada.y = 0f;
+            if (mirada.sqrMagnitude > 0.0001f)
+            {
+                Quaternion meta = Quaternion.LookRotation(mirada.normalized, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, meta, datos.VelocidadGiro * Time.deltaTime);
+            }
+            velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
+            Vector3 mover = deseada;
+            mover.y = velocidadVertical;
+            controlador.Move(mover * Time.deltaTime);
+
+            if (animador != null)
+            {
+                animador.SetFloat(IdVelocidad, deseada.magnitude);
+                animador.SetBool(IdEnPiso, true);
+                animador.SetBool(IdApuntando, apuntando);
+                animador.SetInteger(IdArma, ArmaPistola);
+            }
         }
 
         private void BuscarJugador()
@@ -302,6 +448,10 @@ namespace MechaCyberpunk.IA.APie
 
         private void PonerBrazo(float progreso)
         {
+            if (brazo == null)
+            {
+                return;
+            }
             brazo.localRotation = Quaternion.Euler(-datos.AnguloBrazoAviso * progreso, 0f, 0f);
         }
 
@@ -311,9 +461,20 @@ namespace MechaCyberpunk.IA.APie
         {
             turnos?.Soltar(this);
             controlador.enabled = false;
-            transform.rotation = Quaternion.Euler(-GradosKO, transform.eulerAngles.y, 0f);
+            if (datos.UsaPistola)
+            {
+                pistola.QuitarAviso();
+                if (animador != null)
+                {
+                    animador.SetBool(IdKO, true);
+                }
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(-GradosKO, transform.eulerAngles.y, 0f);
+            }
             desaparicion = Time.time + datos.SegundosParaDesaparecer;
-            Pintar(cuerpo, datos.ColorKO);
+            PintarCuerpo(datos.ColorKO);
             PonerBrazo(0f);
             PintarBrazo(datos.ColorKO);
             pintadoAviso = false;
@@ -321,8 +482,28 @@ namespace MechaCyberpunk.IA.APie
             Vencido?.Invoke(this);
         }
 
+        private void PintarCuerpo(Color color)
+        {
+            Pintar(cuerpo, color);
+            if (piezasModelo == null)
+            {
+                return;
+            }
+            foreach (Renderer pieza in piezasModelo)
+            {
+                if (!(pieza is LineRenderer))
+                {
+                    Pintar(pieza, color);
+                }
+            }
+        }
+
         private void PintarBrazo(Color color)
         {
+            if (piezasBrazo == null)
+            {
+                return;
+            }
             foreach (Renderer pieza in piezasBrazo)
             {
                 Pintar(pieza, color);

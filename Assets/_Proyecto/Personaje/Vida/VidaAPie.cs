@@ -16,7 +16,7 @@ namespace MechaCyberpunk.Personaje.Vida
         [SerializeField] private DatosPersonaje datos;
 
         private ControladorAPie controlador;
-        private ModeloVida modelo;
+        private ModeloVidaRegenerable modelo;
 
         public DatosPersonaje Datos => datos;
         public float Actual => modelo != null ? modelo.Actual : 0f;
@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Personaje.Vida
                 enabled = false;
                 return;
             }
-            modelo = new ModeloVida(datos.VidaMaxima);
+            modelo = new ModeloVidaRegenerable(datos.VidaMaxima, datos.RegeneracionPorSegundo, datos.SegundosParaRegenerar);
             modelo.Cambio += AlCambiar;
             modelo.KO += AlLlegarAKO;
         }
@@ -70,6 +70,11 @@ namespace MechaCyberpunk.Personaje.Vida
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             EventosPelea.PublicarImpacto(null, info, resultado);
             return resultado;
+        }
+
+        private void Update()
+        {
+            modelo?.Avanzar(Time.deltaTime);
         }
 
         private void LateUpdate()

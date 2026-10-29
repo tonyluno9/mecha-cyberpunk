@@ -34,6 +34,13 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Tiempo después del impacto en que no se puede golpear otra vez (s).")]
         [Min(0.01f)] [SerializeField] private float recargaGolpe = 0.45f;
 
+        [Header("Regeneración")]
+        [Tooltip("Vida que recupera por segundo cuando lleva un rato sin recibir daño (puntos/s).")]
+        [Min(0f)] [SerializeField] private float regeneracionPorSegundo = 5f;
+
+        [Tooltip("Segundos sin recibir daño antes de empezar a regenerar (s).")]
+        [Min(0f)] [SerializeField] private float segundosParaRegenerar = 6f;
+
         [Header("KO a pie")]
         [Tooltip("Altura de la cámara sobre el piso cuando el jugador cae en KO (m).")]
         [Min(0.05f)] [SerializeField] private float alturaCamaraKO = 0.4f;
@@ -45,6 +52,8 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float velocidadCaidaKO = 6f;
 
         public float VidaMaxima => vidaMaxima;
+        public float RegeneracionPorSegundo => regeneracionPorSegundo;
+        public float SegundosParaRegenerar => segundosParaRegenerar;
         public float DanioGolpe => danioGolpe;
         public float AlcanceGolpe => alcanceGolpe;
         public float RadioGolpe => radioGolpe;
