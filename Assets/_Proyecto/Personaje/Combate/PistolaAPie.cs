@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 namespace MechaCyberpunk.Personaje.Combate
 {
     /// <summary>
-    /// Pistola del jugador a pie. Con la pistola en la mano, Atacar lanza un rayo desde la cámara al centro de la vista:
+    /// Pistola del jugador a pie. Con la pistola en la mano, Atacar lanza un rayo desde el centro de la cámara y otro desde la boca del arma hasta ese punto (T-400):
     /// el primer collider que no sea del propio jugador (se ignoran los triggers) decide. Si tiene
     /// <see cref="IRecibeDanio"/> en sus padres recibe daño de tipo Disparo; si no, el tiro se queda en la pared y deja una
     /// marca. R recarga y, con el cargador vacío, Atacar empieza la recarga sola. El atacante es null: la persona no es IPeleador.
@@ -137,26 +137,20 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Disparar()
         {
+            // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
             Transform camara = controlador.Camara;
-            Vector3 origen = camara.position;
-            Vector3 direccion = camara.forward;
-            int cantidad = Physics.RaycastNonAlloc(origen, direccion, impactos, datos.Alcance, ~0, QueryTriggerInteraction.Ignore);
-
-            bool hayImpacto = false;
-            RaycastHit mejor = default;
-            for (int i = 0; i < cantidad; i++)
+            Transform boca = luzBoca != null ? luzBoca.transform : (visual != null ? visual : camara);
+            Vector3 punto = camara.position + camara.forward * datos.Alcance;
+            if (BuscarImpacto(camara.position, camara.forward, datos.Alcance, out RaycastHit centro))
             {
-                RaycastHit impacto = impactos[i];
-                if (impacto.collider.transform.root == transform.root)
-                {
-                    continue;
-                }
-                if (!hayImpacto || impacto.distance < mejor.distance)
-                {
-                    mejor = impacto;
-                    hayImpacto = true;
-                }
+                punto = centro.point;
             }
+            Vector3 origen = boca.position;
+            Vector3 haciaPunto = punto - origen;
+            float largo = haciaPunto.magnitude;
+            Vector3 direccion = largo > 0.01f ? haciaPunto / largo : camara.forward;
+
+            bool hayImpacto = BuscarImpacto(origen, direccion, largo + 0.3f, out RaycastHit mejor);
 
             if (hayImpacto)
             {
@@ -171,6 +165,28 @@ namespace MechaCyberpunk.Personaje.Combate
             inicioRetroceso = Time.time;
             finLuz = Time.time + duracionLuz;
             Disparo?.Invoke();
+        }
+
+        // El primer collider que no sea del propio jugador; los triggers se ignoran.
+        private bool BuscarImpacto(Vector3 origen, Vector3 direccion, float alcance, out RaycastHit mejor)
+        {
+            int cantidad = Physics.RaycastNonAlloc(origen, direccion, impactos, alcance, ~0, QueryTriggerInteraction.Ignore);
+            bool hay = false;
+            mejor = default;
+            for (int i = 0; i < cantidad; i++)
+            {
+                RaycastHit impacto = impactos[i];
+                if (impacto.collider.transform.root == transform.root)
+                {
+                    continue;
+                }
+                if (!hay || impacto.distance < mejor.distance)
+                {
+                    mejor = impacto;
+                    hay = true;
+                }
+            }
+            return hay;
         }
 
         private void AlClicVacio()

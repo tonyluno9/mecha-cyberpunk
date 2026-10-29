@@ -11,7 +11,7 @@ namespace MechaCyberpunk.Personaje.Combate
 {
     /// <summary>
     /// Golpe simple del jugador a pie. Con Atacar y los puños en la mano arranca un <see cref="CicloGolpe"/>; en el impacto
-    /// lanza una esfera desde la cámara hacia donde mira (<see cref="BarridoGolpe"/>) y daña al primer
+    /// lanza una esfera desde el pecho hacia donde mira el cuerpo (<see cref="BarridoGolpe"/>) y daña al primer
     /// <see cref="IRecibeDanio"/> que no sea el propio jugador. En KO no ataca. El atacante es null: la persona no es IPeleador.
     /// </summary>
     [RequireComponent(typeof(ControladorAPie))]
@@ -19,6 +19,7 @@ namespace MechaCyberpunk.Personaje.Combate
     public class GolpeAPie : MonoBehaviour
     {
         private const int MaxImpactosPorGolpe = 16;
+        private const float AlturaPecho = 1.2f;
 
         [SerializeField] private DatosPersonaje datos;
         [SerializeField] private InputActionReference atacar;
@@ -94,9 +95,9 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Impactar()
         {
-            Transform camara = controlador.Camara;
-            Vector3 origen = camara.position;
-            Vector3 direccion = camara.forward;
+            // Tercera persona: el golpe sale del pecho hacia donde mira el cuerpo (apuntando, hacia donde mira la cámara).
+            Vector3 origen = transform.position + Vector3.up * AlturaPecho;
+            Vector3 direccion = controlador.Apuntando ? controlador.Camara.forward : transform.forward;
             IRecibeDanio objetivo = BarridoGolpe.Buscar(transform, origen, direccion, datos.AlcanceGolpe,
                 datos.RadioGolpe, impactos, out Vector3 punto);
             if (objetivo != null)

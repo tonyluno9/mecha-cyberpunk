@@ -18,6 +18,12 @@ namespace MechaCyberpunk.Personaje.Movimiento
             return delta.x * sensibilidad;
         }
 
+        /// <summary>Limita la inclinación a un rango asimétrico (°; negativo mira hacia arriba).</summary>
+        public void Limitar(float minima, float maxima)
+        {
+            Inclinacion = Mathf.Clamp(Inclinacion, minima, maxima);
+        }
+
         public void Reiniciar()
         {
             Inclinacion = 0f;
