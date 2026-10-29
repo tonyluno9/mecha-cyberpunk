@@ -209,7 +209,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(ModoJugador.Carro, jugador.Modo, "La E sube al carro");
             Assert.IsTrue(ayuda.Visible, "La ayuda del carro se ve al subir");
             Assert.AreEqual(ContextoAyuda.Carro, ayuda.Contexto);
-            Assert.AreEqual("FLECHAS manejar · E bajar (detenido)", ayuda.Texto.text);
+            Assert.AreEqual("WASD o FLECHAS manejar · ESPACIO freno · E bajar (detenido)", ayuda.Texto.text); // D-tony-189
 
             Press(teclado.upArrowKey);
             yield return EsperarHasta(() => !ayuda.Visible, "se oculta tras manejar", config.SegundosManejando + MargenSegundos);
