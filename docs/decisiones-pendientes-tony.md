@@ -817,3 +817,110 @@ levantarte y 6 horas dormido te parece un castigo justo? (c) ¿Quieres los pandi
 - D-tony-187: T-136 hallazgo de diseño con la geometría de Alan: el carro (Prologo_Carro) queda junto al clandestino (a 5 m de Clandestino_Salida) y la emboscada a 100 m, en el callejón junto a la casa. "Ve a tu carro" no lleva a la emboscada: la prueba sube al carro y maneja por la calle x=-47 hasta que la emboscada se activa sola al acercarse (radio 12 m). Un jugador nuevo no tiene guía hacia allá. **Resuelta (2026-10-28):** con el jugador en el carro en SalidaClandestino, `DirectorPrologo` fija el objetivo "Maneja a casa" (`DatosPrologo.textoIrALaEmboscada`) sobre la emboscada; al bajar vuelve a "Ve a tu carro". PrologoCiudadPruebas lo comprueba al subir.
 - D-tony-188: T-136 el clandestino de Alan abre a las 20:00 y el prólogo despierta a las 19:30: la prueba adelanta el reloj a las 20:06 si la puerta sigue cerrada (atajo anotado). Para una persona, la caminata (~140 m) no alcanza si el reloj corre lento: conviene `horaDespertar` 20:00 en DatosPrologo_Base o abrir el clandestino a las 19:30 (de Alan). **Resuelta (2026-10-28):** `horaDespertar` 20:00 en DatosPrologo_Base (el código también por defecto); pruebas de 19:30 ajustadas y quitado el atajo del reloj en PrologoCiudadPruebas.
 - D-tony-189: T-136 el texto del carro en ConfigAyudas_Base pasa a "WASD o FLECHAS manejar · ESPACIO freno · E bajar (detenido)" con las teclas reales de ControlesCarro.inputactions de Alan (W/S/A/D y flechas, Espacio freno de mano, C cámara, E bajar).
+
+## Planeación de T-F7, bloque 8: adaptación del rival (2026-10-28, planificador Opus 5.5)
+
+### D-tony-190 IDs y orden del bloque 8
+Propuesta. El bloque 8 son T-198 a T-205, sin hackeo. El bloque 7 (radio) lo lleva Alan en Radio/, así que ninguna de estas tareas toca
+Radio/. Orden: T-198 (Core, solo comentarios) → T-199 (datos y reglas puras; puede ir a la par de T-198) → T-200 (el rival observa y recuerda;
+guardado) → T-201 (GUARDIA) → T-202 (FINTAS y RETIRADA) → T-203 (pantalla de la cabina; puede ir a la par de T-201 y T-202 porque solo usa
+`ILecturaAdaptacion` y un doble) → T-204 (escena Pruebas_Adaptacion y herramienta) → T-205 (recorrido de cierre). T-201 y T-202 tocan
+`RivalBasico` y el mismo creador: van una tras otra. El siguiente bloque de Tony empieza en T-206.
+
+### D-tony-191 El bloque 8 casi no necesita Core (T-198)
+Propuesta. Alan no hace ni lee rivales, y la cabina lee la adaptación por una interfaz en Combate/Lectura/ (como OJOS, D-tony-168), así que no
+hay contrato nuevo. Lo único de Core son comentarios: la clave `adaptacion` en `IGuardable` y que el nombre del asset `DatosRival` es la llave
+de la memoria del rival. No se agrega un `id` a `DatosRival`: renombrar un rival es raro y solo le borra lo aprendido (queda documentado). No se
+toca `InfoPelea` ni el presentador: Pelea no ve IA, y que el presentador anuncie la revancha necesitaría un contrato (pregunta g de D-tony-201).
+
+### D-tony-192 Qué es "adaptarse": tres hábitos, tres respuestas
+Propuesta. El rival no se vuelve más fuerte: aprende a contestar un hábito tuyo, y cada respuesta tiene su contra, que es otro hábito:
+- PUÑOS (tiras muchos golpes) → GUARDIA: sube los brazos al ver venir tu golpe y lo bloquea (normal, nunca perfecto). Contra: pegarle justo
+  después de su golpe (no se cubre mientras golpea), habilidades, MARTILLO (rompe guardia), DESCARGA (lo aturde y le baja la guardia) o un golpe
+  más rápido que su reacción (SINAPSIS II).
+- CUBRIRSE (pasas la pelea con la guardia arriba) → FINTAS: alarga su aviso al azar y a veces amaga. Contra: atacar tú (PUÑOS).
+- CASTIGAR (le pegas cuando acaba de golpear) → RETIRADA: después de su golpe da un paso atrás. Contra: castigar rápido, atacar primero,
+  habilidades de alcance, EMBESTIDA.
+Las respuestas cambian lo que hace, nunca sus números (vida, daño, alcance, velocidad, recarga). Se descartó: subirle estadísticas (se sentiría
+como trampa), una IA que aprende patrones finos (difícil de leer y de probar) y una cuarta respuesta contra las habilidades (ya las limitan la
+munición y el enfriamiento; pregunta d). Esto también cubre lo que T-194 dejó para este bloque ("rivales que reaccionan a tus implantes"): la
+guardia pierde contra SINAPSIS II.
+
+### D-tony-193 Cómo se ve un hábito en una pelea (umbrales provisionales; DatosAdaptacionRival)
+Propuesta. Se mide solo entre `PeleaIniciada` y `PeleaTerminada`, y solo contra el objetivo del rival:
+- PUÑOS: golpes lanzados por el jugador (impactos de su `GolpeMecha`, peguen o no) ≥ 8 y ≥ 24 por minuto de pelea.
+- CUBRIRSE: de los golpes del rival que llegaron al jugador (≥ 4), la mitad o más con su guardia arriba (bloqueo normal o perfecto).
+- CASTIGAR: de los golpes del jugador que conectaron con el rival (≥ 4), el 40 % o más mientras el rival estaba en Recuperando.
+Una pelea de menos de 5 s no enseña nada. Una pelea puede mostrar más de un hábito. Las habilidades no cuentan como hábito (pregunta d).
+Referencia: el golpe del jugador tarda 1.05 s entre clic y clic (0.25 + 0.8), y TORNILLO ataca cada 2.8 a 4 s, así que castigar cada golpe suyo
+da unos 15 a 21 golpes por minuto y no cuenta como PUÑOS.
+
+### D-tony-194 Cómo aprende y olvida
+Propuesta. Memoria por rival (llave: nombre del asset `DatosRival`), guardada con la clave `adaptacion` en `MemoriaRivales`
+(ServiciosProgresion.prefab). Por pelea terminada: cada hábito visto suma 1 de evidencia; cada hábito no visto resta 1 (sin bajar de 0); la
+evidencia no pasa del umbral del nivel máximo (así olvida rápido). Nivel I con 1 de evidencia y nivel II con 3. La primera pelea contra un rival
+nunca está adaptada. Máximo 2 adaptaciones activas: si salen 3, baja la de menos evidencia (empate: la que no se vio en esta pelea, luego la que
+va después en GUARDIA, FINTAS, RETIRADA); así siempre queda un estilo que no te lee. Aprende ganes o pierdas, pero si el jugador lleva 2 derrotas
+seguidas contra ese rival (contando esta), no sube nada, solo olvida: perder no debe hundirte más. Los niveles se calculan al preparar cada pelea
+(también en la revancha), nunca a media pelea. Sin `MemoriaRivales` en la escena, el rival recuerda solo mientras exista (sirve para la revancha
+con R).
+
+### D-tony-195 Quién se adapta
+Propuesta. Los 20 rivales de las ligas y EL CHATARRAS (la casera repetible: buena para descubrirla sin arriesgar la liga). Ligas 1 y 2 y la
+casera con `DatosAdaptacionRival_Base` (hasta nivel I); ligas 3 y 4 con `_Avanzado` (hasta nivel II); los jefes, igual que su liga. No se
+adaptan: `RivalTutorial` (prólogo), `RivalPandilla` (emboscada), los rivales de misión, los pandilleros a pie y `RivalBasico.prefab` base (el del
+Clandestino de Alan con `FlujoPelea.prefab`, que no cambia).
+
+### D-tony-196 Las tres respuestas en números (provisionales; DatosAdaptacionRival)
+Propuesta. Por nivel (I / II):
+- GUARDIA: probabilidad de cubrirse ante cada golpe 0.4 / 0.65. Reacción 0.06 s + su tiempo de subir guardia (0.15 s en los 21 rivales) =
+  guardia arriba 0.21 s después de que empieza tu golpe: alcanza al golpe de serie (0.25 s) y no al de SINAPSIS II (0.175 s); contra SINAPSIS I
+  (0.2125 s) es a moneda y no se promete nada. La sostiene 0.3 s después de tu impacto. Bloqueo normal (quita el 70 %), nunca perfecto. No se
+  cubre mientras prepara o recupera su golpe, durante su habilidad ni aturdido; mientras se cubre no empieza golpes.
+- FINTAS: alarga cada aviso entre 0 y 0.25 / 0.4 s. Amago con probabilidad 0.2 / 0.35: enseña el golpe hasta el 60 % del aviso de serie y lo
+  guarda; 0.3 s después puede golpear de verdad, con el aviso completo. Nunca dos amagos seguidos. La habilidad de los jefes no finta.
+- RETIRADA: probabilidad tras cada golpe suyo 0.45 / 0.7; 0.15 s después de su impacto camina hacia atrás hasta quedar a tu alcance + 0.75 m,
+  con su velocidad y aceleración × 0.8 / 0.9, por a lo más su recarga (0.8 s); mientras, no golpea.
+Tony cambia los números en los dos assets.
+
+### D-tony-197 Reglas de balance de la adaptación (T-199, T-201, T-202, T-205)
+Propuesta. a) `DatosAdaptacionRival` no tiene vida, daño, alcance, recarga ni velocidad; los factores de velocidad son ≤ 1; la adaptación no toca
+los `Multiplicador*` de `RivalBasico` ni de `VidaMecha` (los de piedad y furia siguen siendo los únicos); b) primera pelea sin adaptar; nivel I con
+1 pelea, II con 3 y solo en _Avanzado; máximo 2 activas de 3; c) la segunda derrota seguida no enseña; d) GUARDIA: probabilidad ≤ 0.65; reacción
++ subir guardia ≤ golpe de serie − 2 cuadros (1/30 s) y ≥ golpe con SINAPSIS II + 2 cuadros; nunca perfecto; e) FINTAS: nunca acortan el aviso;
+extra ≤ 0.4 s; amago ≤ 0.35 y nunca dos seguidos; f) RETIRADA: probabilidad ≤ 0.7; factor ≤ 1; dura a lo más la recarga; un contragolpe de serie
+soltado 0.3 s después del impacto del rival siempre conecta (medido en PlayMode, T-202); g) con el estilo contrario, el rival adaptado se vence sin
+habilidades ni implantes (recorrido, T-205). Si una falla, se ajustan los datos de adaptación, no las reglas, los rivales ni las piezas.
+
+### D-tony-198 Cómo se entera el jugador (T-203)
+Propuesta. Una pantalla de la cabina (diegética, como OJOS, pero sin implante): con el rival que tienes enfrente, "TE TIENE ESTUDIADO" y una
+fila por adaptación ("GUARDIA I · TIRAS MUCHOS PUÑOS"); la fila parpadea cada vez que la usa; al terminar la pelea, "APRENDIÓ: FINTAS I" u
+"OLVIDÓ: GUARDIA" y una pista del contra ("NO TE ESCONDAS: ATACA TÚ"). Oculta contra un rival que no te conoce. En el rival se ven solos la pose
+y el color de guardia (azul acero) y el paso atrás; el amago usa el aviso naranja de siempre. Nada flota fuera de la cabina (estetica-hud.md) y
+no hay línea del presentador (D-tony-191). Textos y colores en `ConfigPantallaAdaptacion_Base`.
+
+### D-tony-199 Dónde vive el código del bloque 8
+Propuesta. Reglas puras, componentes y memoria en IA/Adaptacion/ (namespace `MechaCyberpunk.IA.Adaptacion`): `PerfilEstilo`, `ReglaEstilo`,
+`MemoriaRival`, `ListaMemoriasRival`, `ReglaAdaptacion`, `AdaptacionRival`, `MemoriaRivales`, `ReglaGuardiaRival`/`GuardiaRival`,
+`ReglaFintas`/`FintasRival`, `ReglaRetirada`/`RetiradaRival`. Datos: `IA/Datos/DatosAdaptacionRival_Base` y `_Avanzado`. Creador
+`IA/Editor/CreadorAdaptacionRival.cs` (assets, componentes en los prefabs de liga y casera, y `MemoriaRivales` en `ServiciosProgresion.prefab`,
+como CreadorPresentador ya pone cosas de Pelea ahí). En Combate: `TipoAdaptacion`, `CambioAdaptacion` e `ILecturaAdaptacion` en Combate/Lectura/
+(UI no ve IA), el evento `GolpeMecha.Conecto`, `GuardiaMecha` con mando por código y sin perfecto, y `CicloGolpe` con preparación por golpe; el
+jugador no cambia. `RivalBasico` solo gana ganchos (como los de la piedad); las decisiones van en los componentes. Pantalla
+`UI/Cabina/PantallaAdaptacionCabina` con su creador. Escena `Escenas/Tony/Pruebas_Adaptacion.unity`, con creador y herramienta
+`AdaptacionDePrueba` en Progresion/Prologo/ (el ensamblado que ve Pelea e IA). Pruebas de PlayMode: IA (componentes), UI (pantalla) y un
+ensamblado propio `MechaCyberpunk.Tests.PlayMode.Progresion.Adaptacion` (escena y recorrido). Teclas de la herramienta: F6, F7 y F8 (sin uso
+en el proyecto al planear; se confirma con grep).
+
+### D-tony-200 Lo que espera a Alan en el bloque 8
+Propuesta. Nada. Su Clandestino usa `FlujoPelea.prefab` con `RivalBasico.prefab` base, que no se adapta, así que sus pruebas
+(`TresPeleasSeguidasConRevancha`) no cambian. Si algún día quiere que el público o un cartel reaccione a una revancha contra un rival que "ya te
+conoce", se pide un contrato de Core.
+
+### D-tony-201 Preguntas abiertas para Tony
+Propuesta: ninguna se aplica sin respuesta. (a) ¿Tres respuestas (guardia, fintas, retirada) o quieres otra en lugar de alguna? (b) ¿El rival debe
+aprender también cuando le ganas, o solo cuando lo vuelves a retar después de perder? (c) ¿Basta con que la segunda derrota seguida no enseñe, o el
+rival debería olvidar cuando pierdes mucho? (d) ¿Una cuarta respuesta contra las habilidades (que esquive los misiles de lado)? (e) ¿Los jefes
+deberían llegar ya con una lectura ("me contaron de ti") desde la primera pelea? (f) ¿OJOS II debería distinguir un amago de un golpe real? (g)
+¿Quieres que el presentador lo anuncie en la revancha ("¡TORNILLO ya te tiene medido!")? Necesita un contrato pequeño de Core. (h) ¿Los momios
+de la apuesta deberían cambiar contra un rival que te tiene estudiado?

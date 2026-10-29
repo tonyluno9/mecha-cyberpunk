@@ -4,7 +4,23 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 
 ## Bloque 5 cerrado (misiones y reputación, T-181 a T-189): en main (a9b8ffb). Build provisional y guía: ff255ee (ese commit dice "T-190" por error; no es la tarea T-190).
 
-## Bloque actual: 6, implantes (T-190 a T-197; D-tony-163 a D-tony-174)
+## Bloque actual: 8, adaptación del rival (T-198 a T-205; D-tony-190 a D-tony-201)
+El bloque 7 (radio) lo lleva Alan en Radio/; este bloque no lo toca. Planeado el 2026-10-28 (planificador Opus 5.5).
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-198 Contratos del bloque 8: la clave `adaptacion` y la llave del rival (Core, solo comentarios) | nada | hecha (sin revisar): compilar OK, EditMode 1132/1132, solo comentarios; en main |
+| T-199 La adaptación como datos y reglas: hábitos, memoria y niveles | nada | pendiente |
+| T-200 El rival observa y recuerda: estilo por pelea, memoria y guardado | T-199 (T-198 no bloquea) | pendiente |
+| T-201 GUARDIA: el rival que te estudió bloquea tus puños | T-200 | pendiente |
+| T-202 FINTAS y RETIRADA | T-200, T-201 | pendiente |
+| T-203 La cabina te dice qué te leyó el rival | T-200 | pendiente |
+| T-204 Pruebas_Adaptacion: pelear una y otra vez contra el que elijas | T-200 a T-203 | pendiente |
+| T-205 Recorrido de la adaptación del rival (cierre del bloque) | T-198 a T-204 | pendiente |
+
+Sigue: T-198 y T-199 (a la par), luego T-200; después T-201 → T-202 con T-203 en paralelo; luego T-204 y T-205. Las preguntas para Tony
+están en D-tony-201; ninguna bloquea.
+
+## Bloque 6: implantes (T-190 a T-197; D-tony-163 a D-tony-174), cerrado
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
 | T-190 Contratos de los implantes (Core; autorizada por Tony en el /goal) | nada | hecha |
@@ -21,8 +37,8 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 Build provisional con escenas de Tony: docs/guia-para-jugar.md.
 
 ## Pendiente (en orden)
-1. Bloque 7: radio (desde T-198)
-2. Bloque 8: adaptación del rival
+1. Bloque 8: adaptación del rival (T-198 a T-205, arriba). El bloque 7 (radio) es de Alan.
+2. Hackeo si sobra tiempo (desde T-206)
 
 ## Parada manual (2026-10-27, 15:10)
 Tony paró el turno de noche. Bloque 5 en main; bloque 6: T-190 a T-193 hechas en tony/fase-7 (no en main).
