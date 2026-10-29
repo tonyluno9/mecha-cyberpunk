@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a9dc2df472f2f4ab0949dbf6301bcc, type: 3}
+  m_Name: DatosAdaptacionRival_Base
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosAdaptacionRival
+  segundosMinimos: 5
+  golpesLanzadosMinimos: 8
+  golpesPorMinutoMinimo: 24
+  golpesRivalMinimos: 4
+  fraccionCubiertaMinima: 0.5
+  golpesConectadosMinimos: 4
+  fraccionCastigoMinima: 0.4
+  umbralesNivel: 0100000003000000
+  nivelMaximo: 1
+  olvidoPorPelea: 1
+  maximoActivas: 2
+  derrotasSinAprender: 2
+  probabilidadGuardia:
+  - 0.4
+  - 0.65
+  reaccionGuardia: 0.06
+  sostenerTrasImpacto: 0.3
+  extraAvisoMaximo:
+  - 0.25
+  - 0.4
+  probabilidadAmago:
+  - 0.2
+  - 0.35
+  fraccionAmago: 0.6
+  esperaTrasAmago: 0.3
+  probabilidadRetirada:
+  - 0.45
+  - 0.7
+  factorVelocidadRetirada:
+  - 0.8
+  - 0.9
+  demoraRetirada: 0.15
+  margenRetirada: 0.75
