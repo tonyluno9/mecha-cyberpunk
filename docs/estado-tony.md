@@ -1,10 +1,26 @@
 # Estado de Tony
 
-Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, ligas, piezas, habilidades; T-140 a T-180).
+Rama de integración actual: tony/fase-g (fase G, abajo). Antes: tony/fase-7, bloques 1 a 4 de T-F7 hechos (economía, ligas, piezas, habilidades; T-140 a T-180).
+
+## Fase G: juego de pandillas (T-400 a T-406; D-tony-202 a D-tony-224) — ACTUAL
+Concepto nuevo (2026-10-29): sin mechas, GTA de un jugador en tercera persona en Ciudad_Prologo (docs/diseno/pandillas.md).
+Rama de integración: tony/fase-g. MODO RÁPIDO: sin revisor ni verificador, 1 o 2 pruebas nuevas por tarea y al final de cada una
+Builds/Juego/MechaCyberpunk.exe (arranca en Ciudad_Prologo) y 3 líneas en docs/guia-para-jugar.md. Van en serie: todas tocan la escena.
+| Tarea | Depende de | Estado |
+| --- | --- | --- |
+| T-400 El jugador en tercera persona en la ciudad (cámara de hombro, muñeco animado, pistola, mecha fuera, ConstruirJuego) | nada | pendiente |
+| T-401 Carros: cámara en tercera persona, subir y bajar con E, robar los estacionados | T-400 | pendiente |
+| T-402 Pandilleros armados en su territorio: dinero, calor, drones que disparan, clínica (Core: IdPandilla) | T-400 | pendiente |
+| T-403 Cuatro armas del mercado negro con 3 niveles (daño, cargador, recarga) | T-400 (mejor tras T-402) | pendiente |
+| T-404 Tres zonas con dueño: respeto, jefe, conquista y mapa con M (Core: ITerritorio) | T-402 | pendiente |
+| T-405 Tu pandilla: hasta 3 aliados que siguen, pelean y suben de nivel (Core: IPandillaJugador) | T-402, T-404 | pendiente |
+| T-406 Historia corta y demo de 15 min hasta CONTINUARÁ; build final en Builds/Demo | T-400 a T-405 | pendiente |
+
+Orden: T-400 → T-401 → T-402 → T-403 → T-404 → T-405 → T-406. El bloque 8 (T-199 a T-205) queda en pausa (D-tony-202).
 
 ## Bloque 5 cerrado (misiones y reputación, T-181 a T-189): en main (a9b8ffb). Build provisional y guía: ff255ee (ese commit dice "T-190" por error; no es la tarea T-190).
 
-## Bloque actual: 8, adaptación del rival (T-198 a T-205; D-tony-190 a D-tony-201)
+## Bloque 8 (EN PAUSA por la fase G), adaptación del rival (T-198 a T-205; D-tony-190 a D-tony-201)
 El bloque 7 (radio) lo lleva Alan en Radio/; este bloque no lo toca. Planeado el 2026-10-28 (planificador Opus 5.5).
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
