@@ -2,38 +2,30 @@ using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mundo.Lugares;
 using MechaCyberpunk.Mundo.Pruebas;
-using MechaCyberpunk.Mundo.Reloj;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Mundo
 {
-    /// <summary>Exteriores del casino y el mercado negro (T-094): el mercado sigue cerrado a cualquier hora (el casino abre de noche desde T-303) y ninguno tapa la Entrada ni invade la calle.</summary>
+    /// <summary>
+    /// Exteriores del casino y el mercado negro (T-094; los dos abren desde T-303 y T-320): ninguno tapa la Entrada ni invade la calle.
+    /// Que abran y cierren por horario se prueba en LugaresPruebas, PuertasPruebas y MercadoNegroInteriorPruebas.
+    /// </summary>
     public class CerradosPruebas
     {
         private const float SalienteMaximo = 1.3f;       // m desde la fachada (VestirCerrados)
         private const float DistanciaEntrada = 1.5f;
         private const float RadioCuerpo = 0.4f;
         private const float AlturaCuerpo = 1.8f;
-        private const float AlturaOjos = 1.7f;
         private const float Holgura = 0.05f;
-        private const float SegundosFisica = 0.3f;
-        private const float InclinacionGrados = 8f;
-
-        private GameObject camaraObjeto;
 
         [TearDown]
         public void TearDown()
         {
-            if (camaraObjeto != null)
-            {
-                Object.DestroyImmediate(camaraObjeto);
-            }
             EscenaLugares.Descargar();
         }
 
-        private static readonly IdLugar[] Cerrados = { IdLugar.MercadoNegro };
         private static readonly IdLugar[] Decorados = { IdLugar.Casino, IdLugar.MercadoNegro };
 
         private static Transform GrupoCerrado(IdLugar id)
@@ -49,22 +41,6 @@ namespace MechaCyberpunk.Tests.Mundo
             }
             Assert.Fail("No hay lugar " + id);
             return null;
-        }
-
-        [UnityTest]
-        public IEnumerator Cerrados_SiguenCerradosAMediodiaYDeNoche()
-        {
-            yield return EscenaLugares.CargarCiudad();
-            RelojMundo reloj = EscenaLugares.RelojPausado();
-            foreach (float hora in new[] { EscenaLugares.HoraMediodia, EscenaLugares.HoraNoche })
-            {
-                reloj.AvanzarHasta(hora);
-                yield return null;
-                foreach (IdLugar id in Cerrados)
-                {
-                    Assert.IsFalse(EscenaLugares.Lugar(id).EstaAbierto, id + " sigue cerrado a las " + hora);
-                }
-            }
         }
 
         [UnityTest]
@@ -93,33 +69,6 @@ namespace MechaCyberpunk.Tests.Mundo
                     Assert.LessOrEqual(zMax, zFachada + SalienteMaximo + 0.7f, id + ": '" + r.name + "' se mete demasiado a la calle");
                 }
                 Assert.Greater(piezas, 8, id + " tiene su decoración");
-            }
-        }
-
-        [UnityTest]
-        public IEnumerator Cerrados_Capturas_DiaYNoche()
-        {
-            yield return EscenaLugares.CargarCiudad();
-            RelojMundo reloj = EscenaLugares.RelojPausado();
-            int numero = 3;   // T-094-1 y 2 (casino cerrado) quedan como evidencia histórica; el casino abierto se captura en T-303
-            foreach (IdLugar id in Cerrados)
-            {
-                CamaraLibre camara = EscenaLugares.ColocarFrenteA(id, out camaraObjeto);
-                Vector3 haciaPuerta = EscenaLugares.HaciaLaPuerta(id);
-                float atras = id == IdLugar.Casino ? 9f : 3.2f;   // el callejón del mercado mide unos 4.5 m de ancho
-                Vector3 desde = EscenaLugares.Lugar(id).PosicionEntrada - haciaPuerta * atras;
-                desde.y = EscenaLugares.Lugar(id).PosicionEntrada.y + AlturaOjos;
-                Quaternion mira = Quaternion.LookRotation(haciaPuerta, Vector3.up) * Quaternion.Euler(-InclinacionGrados, 0f, 0f);
-                foreach (float hora in new[] { EscenaLugares.HoraMediodia, EscenaLugares.HoraNoche })
-                {
-                    reloj.AvanzarHasta(hora);
-                    camara.Colocar(new Pose(desde, mira));
-                    yield return EscenaLugares.Calentar();
-                    yield return EscenaLugares.Esperar(SegundosFisica);
-                    CapturaPruebas.Guardar(camara.Camara, "docs/capturas/T-094-" + numero++ + ".png");
-                }
-                Object.DestroyImmediate(camaraObjeto);
-                camaraObjeto = null;
             }
         }
     }

@@ -46,7 +46,8 @@ namespace MechaCyberpunk.Tests.Mundo
         public IEnumerator Registro_LosCincoLugaresYSusPuertas_EstanConEntradaFrenteALaPuerta()
         {
             yield return null;
-            Assert.AreEqual(Cinco.Length, Registro<ILugar>.Cantidad);
+            // T-321: además de los cinco con puerta, la Clínica (dentro del mercado, sin puerta propia) también es un ILugar.
+            Assert.AreEqual(Cinco.Length + 1, Registro<ILugar>.Cantidad);
             Assert.AreEqual(Cinco.Length, Registro<IPuerta>.Cantidad);
             foreach (IdLugar id in Cinco)
             {
@@ -61,6 +62,26 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
+        public IEnumerator Clinica_EstaRegistrada_AbreDeDia_ConMostradorDeTonyYPuntoSobrePiso()
+        {
+            yield return null;
+            ILugar clinica = EscenaLugares.Lugar(IdLugar.Clinica);
+            Assert.IsNotNull(clinica, "T-321: la Clínica se registra como ILugar");
+            reloj.AvanzarHasta(EscenaLugares.HoraMediodia);
+            Assert.IsTrue(clinica.EstaAbierto, "A las 12:00 la clínica abre");
+            reloj.AvanzarHasta(EscenaLugares.HoraNoche);
+            Assert.IsFalse(clinica.EstaAbierto, "De noche la clínica cierra");
+
+            Transform raiz = ((Component)clinica).transform.parent;
+            Transform punto = raiz.Find("Clinica_Mostrador");
+            Assert.IsNotNull(punto, "Existe el punto Clinica_Mostrador");
+            Assert.AreEqual(0.04f, punto.localPosition.y, 0.001f, "El punto está sobre el piso");
+            Transform mostrador = raiz.Find("MostradorClinica");
+            Assert.IsNotNull(mostrador, "El prefab MostradorClinica de Tony está colocado");
+            Assert.Less(Vector3.Distance(mostrador.position, punto.position), 0.01f, "El mostrador está en el punto");
+        }
+
+        [UnityTest]
         public IEnumerator EstaAbierto_SegunHoraYCierreDeDemo()
         {
             yield return null;
@@ -69,14 +90,14 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Bar).EstaAbierto);
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Clandestino).EstaAbierto);
             Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "A las 12:00 el casino está cerrado por horario");
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "Está en horario pero cerrado en la demo");
+            Assert.IsTrue(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "T-320: a las 12:00 el mercado negro abre");
 
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casa).EstaAbierto);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Bar).EstaAbierto);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Clandestino).EstaAbierto);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "T-303: de noche el casino abre");
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto);
+            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "A las 22:00 el mercado negro ya cerró");
         }
 
         [UnityTest]
@@ -129,11 +150,13 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual("ABIERTO", Letrero(IdLugar.Casa).TextoDeEstado);
             StringAssert.Contains("24 horas", Letrero(IdLugar.Casa).TextoDeNombre);
             Assert.AreEqual("CERRADO", Letrero(IdLugar.Casino).TextoDeEstado);
-            Assert.AreEqual("CERRADO · PRÓXIMAMENTE", Letrero(IdLugar.MercadoNegro).TextoDeEstado, "Cerrado en demo aunque esté en horario");
+            Assert.AreEqual("ABIERTO", Letrero(IdLugar.MercadoNegro).TextoDeEstado, "T-320: el mercado negro abre de día");
+            StringAssert.Contains("09:00 a 18:00", Letrero(IdLugar.MercadoNegro).TextoDeNombre);
 
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             yield return null;
             yield return null;
+            Assert.AreEqual("CERRADO", Letrero(IdLugar.MercadoNegro).TextoDeEstado, "De noche el mercado cierra por horario, ya no 'próximamente'");
             Assert.AreEqual("ABIERTO", Letrero(IdLugar.Clandestino).TextoDeEstado);
             Assert.AreEqual("ABIERTO", Letrero(IdLugar.Bar).TextoDeEstado);
             StringAssert.Contains("19:00 a 04:00", Letrero(IdLugar.Bar).TextoDeNombre);

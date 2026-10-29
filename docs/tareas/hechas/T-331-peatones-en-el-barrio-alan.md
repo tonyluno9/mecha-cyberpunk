@@ -12,10 +12,10 @@ Entre 12 y 30 peatones low-poly (cuerpo de cubos, chamarra con neón) caminan po
 Assets/_Proyecto/Trafico/, Assets/_Proyecto/Mundo/ (solo colgar el grupo del barrio), Tests de Trafico y Mundo, docs/capturas/. No tocar Core/ ni carpetas de Tony.
 
 ## Criterios de aceptación
-- [ ] En 60 s de juego ningún peatón sale de la banqueta ni atraviesa edificios (muestreo de posiciones)
-- [ ] La cuenta viva cambia con la franja (más a las 22:00 que a las 12:00)
-- [ ] Ningún cuadro de más de 100 ms con 30 peatones; capturas: docs/capturas/T-331-1..2.png
-- [ ] `bash herramientas/verificar.sh todo` pasa
+- [x] En 60 s de juego ningún peatón sale de la banqueta ni atraviesa edificios (muestreo de posiciones)
+- [x] La cuenta viva cambia con la franja (más a las 22:00 que a las 12:00)
+- [x] Ningún cuadro de más de 100 ms con 30 peatones; capturas: docs/capturas/T-331-1..2.png
+- [x] `bash herramientas/verificar.sh todo` pasa
 
 ## Fuera de alcance
 Diálogos, pandillas, reacción al combate.

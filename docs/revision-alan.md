@@ -208,3 +208,14 @@ Rama para probar: `alan/fase-5` (T-093 incluida). Actualizado: 2026-10-27. A-F1 
 - Fallo de Arena que anotó Tony (`JaulaClandestinoPruebas.Capsula_EmpujadaContraLaReja_NuncaSaleDeLaJaula`, 8/15): **no se reproduce** (15/15 en la corrida completa y en la anterior). La prueba mueve la cápsula con `Time.deltaTime`, así que si un cuadro dura mucho (máquina cargada) un paso grande puede atravesar la reja; no es un fallo de la jaula. Si reaparece, la corrección sería mover con un paso fijo; no se cambió porque no hubo fallo real.
 - Ciudad_Prologo.unity es una copia de Ciudad.unity: cada vez que cambie Ciudad hay que rehacerla con `CreadorPrologoCiudad.Crear` (conserva su GUID). Main: **no se mezcló a main.** No encontré en el repo una autorización de Alan para este paso (solo la del 2026-10-16 para alan/fase-2); alan/fase-5 queda lista (sin conflictos con origin/main, que no avanzó) para que Alan la apruebe.
 - Pendiente de la fase: T-301 (tragamonedas jugable), T-302, T-303, T-320, T-321 (espera a Tony), T-331 y T-341 están escritas en docs/tareas/pendientes/. T-310 y T-311 las llevan otras sesiones (worktrees mecha-cyberpunk-alan-visual y -fachadas); T-084 y T-085 no se hacen.
+
+### T-320 Interior del mercado negro (A-F5) — 2026-10-28
+- Rama alan/T-320-mercado-negro-limpia. Verificado: compilar OK, EditMode 1094/1094, PlayMode 991/1000 (0 fallos; 9 omitidas). `MercadoNegroInteriorPruebas` 8/8: abre a las 12:00 y no a las 22:00, el mostrador es IInteractuable y solo se ofrece con el lugar abierto, se entra con E y W, se abre el mostrador y se compra el kit (por ITienda con cartera de prueba), 36 rayos, techo y luces. Capturas docs/capturas/T-320-1..3.png revisadas.
+- Qué hay: `CreadorMercadoNegroInterior` (cuarto de 10 × 10.5 m, 4 puestos, estantes, cajas, luces de sodio), mostrador de Tony girado 180° (su letrero se leía invertido); el exterior ya no tiene cortina baja ni "VOLVEMOS PRONTO".
+- Desviación: <3 m a la Entrada es imposible (cae en el muro); el mostrador queda a ~3.9 m de la Entrada y <3 m de la puerta.
+- Cuidado: no correr `CreadorTodo` sobre esta base: borra el arte de T-250 de Barrio.prefab, la jaula y las escenas. Esta rama solo corrió los dos creadores del mercado sobre el Barrio.prefab de main.
+- Límites: la pantalla de compra se abrió con `Usar()`, pero la compra se probó por ITienda, no con teclas. Un intento de captura desde una esquina mostró cielo donde hay techo, sin explicación (los rayos confirman el techo).
+- Para ti: Ciudad.unity a las 12:00, entra al mercado: ¿se siente como mercado negro?, ¿el paso junto al mostrador es cómodo?
+
+## T-303 en alan/fase-6 (2026-10-28)
+T-301, T-302 y T-303 ya estaban contenidas en alan/fase-6 (ramas ancestro). Estado combinado verificado: compilar OK, EditMode 1143/1143, PlayMode 1028/1037 (0 fallos, 9 omitidas), `CasinoInteriorPruebas` 7/7. Falta a mano: mirar el casino de noche en Unity. A-F6 no está completa (T-136, T-310, T-311); no mezclar a main aún.
