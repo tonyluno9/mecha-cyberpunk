@@ -174,8 +174,10 @@ namespace MechaCyberpunk.Combate.Vida
             TipoBloqueo bloqueo = TipoBloqueo.Ninguno;
             if (guardia != null && !ignorarGuardia)
             {
+                // Sin bloqueo perfecto (el rival, T-201) la ventana es 0 y toda guardia arriba es un bloqueo normal.
+                float ventana = guardia.PermitePerfecto ? datos.VentanaBloqueoPerfecto : 0f;
                 (cantidad, bloqueo) = CalculoBloqueo.Calcular(cantidad, guardia.EstaArriba, guardia.SegundosArriba,
-                    datos.VentanaBloqueoPerfecto, datos.ReduccionBloqueo);
+                    ventana, datos.ReduccionBloqueo);
                 if (bloqueo != TipoBloqueo.Ninguno)
                 {
                     Debug.Log(bloqueo == TipoBloqueo.Perfecto ? "[Combate] Bloqueo perfecto" : "[Combate] Bloqueo normal");

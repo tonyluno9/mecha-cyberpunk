@@ -41,6 +41,9 @@ namespace MechaCyberpunk.IA.Adaptacion
         private IPeleador peleadorObjetivo;
         private bool suscrito;
 
+        /// <summary>Los números de la adaptación de este rival (T-201 lee de aquí la GUARDIA).</summary>
+        public DatosAdaptacionRival Datos => datos;
+
         /// <summary>Nombre del asset DatosRival: la llave de su memoria.</summary>
         public string IdRival => rival != null && rival.Datos != null ? rival.Datos.name : name;
 

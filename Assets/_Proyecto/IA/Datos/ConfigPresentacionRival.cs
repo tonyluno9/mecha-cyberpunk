@@ -12,6 +12,12 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Cuánto se echa atrás el brazo al preparar el golpe (°, el brazo sube hacia atrás).")]
         [Range(0f, 120f)] [SerializeField] private float anguloBrazoAtras = 70f;
 
+        [Header("Guardia (T-201)")]
+        [Tooltip("Color del brazo con la guardia arriba (azul acero emisivo; distinto del naranja del aviso y del turquesa del escudo).")]
+        [ColorUsage(false, true)] [SerializeField] private Color colorGuardia = new Color(0.2f, 0.45f, 1f);
+        [Tooltip("Cuánto sube el brazo al cubrirse (°, el brazo sube frente al pecho; la pose completa es con la guardia arriba).")]
+        [Range(0f, 120f)] [SerializeField] private float anguloBrazoGuardia = 45f;
+
         [Header("Parpadeo al recibir daño")]
         [Tooltip("Color del cuerpo durante el parpadeo.")]
         [SerializeField] private Color colorParpadeo = new Color(1f, 1f, 1f);
@@ -24,6 +30,8 @@ namespace MechaCyberpunk.IA.Datos
 
         public Color ColorAviso => colorAviso;
         public float AnguloBrazoAtras => anguloBrazoAtras;
+        public Color ColorGuardia => colorGuardia;
+        public float AnguloBrazoGuardia => anguloBrazoGuardia;
         public Color ColorParpadeo => colorParpadeo;
         public float DuracionParpadeo => duracionParpadeo;
         public float DuracionCaida => duracionCaida;

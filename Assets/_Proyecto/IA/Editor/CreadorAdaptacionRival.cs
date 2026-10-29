@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using MechaCyberpunk.Combate.Bloqueo;
+using MechaCyberpunk.Combate.Peleador;
 using MechaCyberpunk.IA.Adaptacion;
 using MechaCyberpunk.IA.Datos;
 using UnityEditor;
@@ -11,6 +14,8 @@ namespace MechaCyberpunk.IA.Editor
     /// T-200: también agrega AdaptacionRival a los 20 prefabs de liga (ligas 1 y 2 con _Base, 3 y 4 con _Avanzado) y a RivalCasero (_Base),
     /// y MemoriaRivales a ServiciosProgresion. Se corre después de CreadorRivalesLiga y CreadorHabilidadesJefes. No toca RivalBasico,
     /// RivalTutorial ni RivalPandilla. Un prefab que ya tiene el componente no se vuelve a guardar.
+    /// T-201: a esos mismos prefabs les agrega GuardiaMecha (mando por código, sin bloqueo perfecto) y GuardiaRival, las dos en los
+    /// controlados de su PeleadorMecha, y deja en ConfigPresentacionRival_Base el color y el ángulo de la guardia.
     /// Batchmode: -executeMethod MechaCyberpunk.IA.Editor.CreadorAdaptacionRival.Crear
     /// </summary>
     public static class CreadorAdaptacionRival
@@ -21,6 +26,9 @@ namespace MechaCyberpunk.IA.Editor
         public const string RutaRivalCasero = "Assets/_Proyecto/IA/Prefabs/RivalCasero.prefab";
         public const string RutaServicios = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
         private const int LigasConNivelUno = 2;
+        public const string RutaConfigPresentacion = "Assets/_Proyecto/IA/Datos/ConfigPresentacionRival_Base.asset";
+        private static readonly Color ColorGuardia = new Color(0.2f, 0.45f, 1f);
+        private const float AnguloBrazoGuardia = 45f;
 
         [MenuItem("Mecha Cyberpunk/Crear T-199 adaptación")]
         public static void Crear()
@@ -48,6 +56,95 @@ namespace MechaCyberpunk.IA.Editor
             PonerMemoria();
             AssetDatabase.SaveAssets();
             Debug.Log("[IA] T-200 adaptación puesta en los rivales de liga, el casero y los servicios.");
+            CrearGuardia();
+        }
+
+        /// <summary>T-201: GuardiaMecha y GuardiaRival en los rivales que se adaptan; color y ángulo de guardia en la config. Idempotente.</summary>
+        public static void CrearGuardia()
+        {
+            PonerConfigGuardia();
+            for (int liga = 1; liga <= CreadorRivalesLiga.Ligas; liga++)
+            {
+                for (int n = 1; n <= CreadorRivalesLiga.RivalesPorLiga; n++)
+                {
+                    PonerGuardia(CreadorRivalesLiga.RutaPrefab(liga, n));
+                }
+            }
+            PonerGuardia(RutaRivalCasero);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[IA] T-201 guardia puesta en los rivales que se adaptan.");
+        }
+
+        // Solo escribe los dos campos de la guardia: lo demás de la config no se toca.
+        private static void PonerConfigGuardia()
+        {
+            ConfigPresentacionRival config = AssetDatabase.LoadAssetAtPath<ConfigPresentacionRival>(RutaConfigPresentacion);
+            if (config == null)
+            {
+                Debug.LogError("[IA] Falta " + RutaConfigPresentacion + ": corre antes CreadorRivalBasico.");
+                return;
+            }
+            SerializedObject so = new SerializedObject(config);
+            so.FindProperty("colorGuardia").colorValue = ColorGuardia;
+            so.FindProperty("anguloBrazoGuardia").floatValue = AnguloBrazoGuardia;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            // Aunque el valor sea el de la clase, se marca para que el asset guarde los campos nuevos.
+            EditorUtility.SetDirty(config);
+        }
+
+        private static void PonerGuardia(string rutaPrefab)
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(rutaPrefab);
+            if (prefab == null || prefab.GetComponent<AdaptacionRival>() == null)
+            {
+                Debug.LogError("[IA] " + rutaPrefab + " no tiene AdaptacionRival: corre antes CrearPrefabs.");
+                return;
+            }
+            if (prefab.GetComponent<GuardiaRival>() != null && prefab.GetComponent<GuardiaMecha>() != null)
+            {
+                return;
+            }
+            GameObject contenido = PrefabUtility.LoadPrefabContents(rutaPrefab);
+            try
+            {
+                GuardiaMecha guardia = contenido.GetComponent<GuardiaMecha>();
+                if (guardia == null)
+                {
+                    guardia = contenido.AddComponent<GuardiaMecha>();
+                }
+                SerializedObject soGuardia = new SerializedObject(guardia);
+                soGuardia.FindProperty("mandoPorCodigo").boolValue = true;
+                soGuardia.FindProperty("permitePerfecto").boolValue = false;
+                soGuardia.ApplyModifiedPropertiesWithoutUndo();
+                GuardiaRival guardiaRival = contenido.GetComponent<GuardiaRival>();
+                if (guardiaRival == null)
+                {
+                    guardiaRival = contenido.AddComponent<GuardiaRival>();
+                }
+                SerializedObject soPeleador = new SerializedObject(contenido.GetComponent<PeleadorMecha>());
+                SerializedProperty controlados = soPeleador.FindProperty("controlados");
+                AgregarControlado(controlados, guardia);
+                AgregarControlado(controlados, guardiaRival);
+                soPeleador.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(contenido, rutaPrefab);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contenido);
+            }
+        }
+
+        private static void AgregarControlado(SerializedProperty lista, Behaviour componente)
+        {
+            for (int i = 0; i < lista.arraySize; i++)
+            {
+                if (lista.GetArrayElementAtIndex(i).objectReferenceValue == componente)
+                {
+                    return;
+                }
+            }
+            lista.arraySize++;
+            lista.GetArrayElementAtIndex(lista.arraySize - 1).objectReferenceValue = componente;
         }
 
         private static void PonerAdaptacion(string rutaPrefab, DatosAdaptacionRival datos)

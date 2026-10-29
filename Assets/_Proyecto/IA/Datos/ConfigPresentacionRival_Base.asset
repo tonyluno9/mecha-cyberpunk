@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.ConfigPresentacionRival
   colorAviso: {r: 1, g: 0.45, b: 0.05, a: 1}
   anguloBrazoAtras: 70
+  colorGuardia: {r: 0.2, g: 0.45, b: 1, a: 1}
+  anguloBrazoGuardia: 45
   colorParpadeo: {r: 1, g: 1, b: 1, a: 1}
   duracionParpadeo: 0.12
   duracionCaida: 1
