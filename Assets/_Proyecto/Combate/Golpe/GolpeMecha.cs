@@ -32,6 +32,8 @@ namespace MechaCyberpunk.Combate.Golpe
         public float Progreso => ciclo != null ? ciclo.Progreso : 0f;
         /// <summary>Se dispara en cada impacto, haya dado a alguien o no.</summary>
         public event Action Impacto;
+        /// <summary>Se dispara tras el daño de un golpe que sí dio a alguien, justo antes de <see cref="Impacto"/> (T-200).</summary>
+        public event Action<ResultadoDanio> Conecto;
 
         private void Awake()
         {
@@ -98,7 +100,8 @@ namespace MechaCyberpunk.Combate.Golpe
 
             if (objetivo != null)
             {
-                objetivo.RecibirDanio(new InfoDanio(datos.DanioGolpe, TipoDanio.Golpe, punto, direccion, peleador));
+                ResultadoDanio resultado = objetivo.RecibirDanio(new InfoDanio(datos.DanioGolpe, TipoDanio.Golpe, punto, direccion, peleador));
+                Conecto?.Invoke(resultado);
             }
             Impacto?.Invoke();
         }

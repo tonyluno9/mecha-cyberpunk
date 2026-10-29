@@ -77,6 +77,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       insertIndex: -1
       addedObject: {fileID: 905436402905949439}
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8242854183072072684}
   m_SourcePrefab: {fileID: 100100000, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
 --- !u!1 &8042070234518240731 stripped
 GameObject:
@@ -124,3 +127,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Rival.HabilidadRival
   datos: {fileID: 11400000, guid: 41dfdd3cfd936f24bb97c10d79992147, type: 2}
+--- !u!114 &8242854183072072684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8042070234518240731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1492bc04234c64584b899b7209d770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Adaptacion.AdaptacionRival
+  datos: {fileID: 11400000, guid: 8a0ba7f190cc35249bebb63bdd40c8fe, type: 2}
