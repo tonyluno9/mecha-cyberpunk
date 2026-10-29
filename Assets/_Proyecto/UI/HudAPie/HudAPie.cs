@@ -432,7 +432,7 @@ namespace MechaCyberpunk.UI.Hud
         private bool MiraVisible()
         {
             bool apuntando = controladorAPie != null && controladorAPie.Apuntando;
-            bool armaDeFuego = armas != null && armas.ArmaActiva == ArmaAPie.Pistola;
+            bool armaDeFuego = armas != null && armas.ArmaActiva != ArmaAPie.Punos;
             return apuntando || armaDeFuego;
         }
 
@@ -588,8 +588,8 @@ namespace MechaCyberpunk.UI.Hud
                 textoArma.text = string.Empty;
                 return;
             }
-            textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Balas, armas.TamanoCargador, armas.Recargando, config);
-            bool aviso = armas.ArmaActiva == ArmaAPie.Pistola && (armas.Recargando || armas.Balas <= 0);
+            textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Nivel, armas.Balas, armas.TamanoCargador, armas.Recargando, config);
+            bool aviso = armas.ArmaActiva != ArmaAPie.Punos && (armas.Recargando || armas.Balas <= 0);
             textoArma.color = aviso ? config.ColorAviso : config.ColorTexto;
         }
 

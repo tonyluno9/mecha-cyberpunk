@@ -4,6 +4,8 @@ namespace MechaCyberpunk.Personaje.Combate
     public enum ArmaAPie
     {
         Punos,
-        Pistola
+        Pistola,
+        Escopeta,
+        Subfusil
     }
 }
