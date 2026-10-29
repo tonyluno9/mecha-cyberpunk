@@ -17,10 +17,13 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
     {
         public const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         public const string RaizT400 = "GTA_T400";
+        public const string RaizT401 = "GTA_T401";
         public const float HoraInicial = 19f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
 
+        private const string RutaCarroViejo = "Assets/_Proyecto/Vehiculos/Prefabs/CarroViejo.prefab";
+        private const string TipoCarroEstacionado = "MechaCyberpunk.Vehiculos.Carro.CarroEstacionado, MechaCyberpunk.Vehiculos";
         private const string RutaMuneco = "Assets/_Proyecto/Personaje/Pruebas/MunecoAPie.prefab";
         private const string RutaRelojPandillas = "Assets/_Proyecto/Progresion/Prologo/Datos/ConfigRelojMundo_Pandillas.asset";
         private const string IdAparicion = "Casa_Puerta";
@@ -31,6 +34,15 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         {
             Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
             T400Interno();
+            T401Interno();
+            Guardar(escena);
+        }
+
+        [MenuItem("Mecha Cyberpunk/Pandillas/T-401 Carros para robar")]
+        public static void T401()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            T401Interno();
             Guardar(escena);
         }
 
@@ -103,6 +115,87 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             // 4. Hora inicial 19:00 con una copia de la config del reloj, para no tocar el asset de Alan.
             PonerHoraInicial();
             Debug.Log("[Progresion] CreadorCiudadPandillas.T400: " + RaizT400 + " lista, mecha apagado, hora " + HoraInicial + ".");
+        }
+
+        // T-401: 6 carros de adorno (2 por zona: oeste, centro, este por la X) se apagan y en su lugar van CarroViejo robables.
+        private static void T401Interno()
+        {
+            GameObject anterior = BuscarRaiz(RaizT401);
+            if (anterior != null)
+            {
+                Object.DestroyImmediate(anterior);
+            }
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaCarroViejo);
+            if (prefab == null)
+            {
+                Debug.LogWarning("[Progresion] CreadorCiudadPandillas: falta " + RutaCarroViejo);
+                return;
+            }
+            GameObject raiz = new GameObject(RaizT401);
+            Transform casa = BuscarTransform(IdAparicion);
+            Vector3 referencia = casa != null ? casa.position : Vector3.zero;
+
+            // Los adornos son los Carro_N de la escena (los apagados por una corrida anterior también cuentan).
+            System.Collections.Generic.List<Transform> adornos = new System.Collections.Generic.List<Transform>();
+            foreach (GameObject objetoRaiz in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                foreach (Transform t in objetoRaiz.GetComponentsInChildren<Transform>(true))
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(t.name, @"^Carro_\d+$") && !t.IsChildOf(raiz.transform))
+                    {
+                        adornos.Add(t);
+                    }
+                }
+            }
+            if (adornos.Count < 6)
+            {
+                Debug.LogWarning("[Progresion] CreadorCiudadPandillas: solo hay " + adornos.Count + " Carro_N de adorno.");
+            }
+            adornos.Sort((a, b) => a.position.x.CompareTo(b.position.x));
+            int tercio = Mathf.Max(1, adornos.Count / 3);
+            Color[] tintes =
+            {
+                new Color(0.1f, 0.35f, 0.7f), new Color(0.75f, 0.7f, 0.15f), new Color(0.15f, 0.55f, 0.3f),
+                new Color(0.55f, 0.15f, 0.55f), new Color(0.85f, 0.85f, 0.85f), new Color(0.08f, 0.08f, 0.1f)
+            };
+            int numero = 0;
+            for (int zona = 0; zona < 3; zona++)
+            {
+                int desde = zona * tercio;
+                int hasta = zona == 2 ? adornos.Count : Mathf.Min(adornos.Count, desde + tercio);
+                System.Collections.Generic.List<Transform> candidatos = adornos.GetRange(Mathf.Min(desde, adornos.Count), Mathf.Max(0, hasta - desde));
+                candidatos.Sort((a, b) => (a.position - referencia).sqrMagnitude.CompareTo((b.position - referencia).sqrMagnitude));
+                for (int i = 0; i < 2 && i < candidatos.Count; i++)
+                {
+                    Transform adorno = candidatos[i];
+                    GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(prefab, raiz.transform);
+                    carro.name = "CarroRobable_" + (numero + 1);
+                    carro.transform.SetPositionAndRotation(adorno.position, adorno.rotation);
+                    // Vehiculos es de otra área: el componente se busca por nombre en vez de referenciar su asmdef.
+                    System.Type tipoEstacionado = System.Type.GetType(TipoCarroEstacionado);
+                    if (tipoEstacionado == null)
+                    {
+                        Debug.LogError("[Progresion] CreadorCiudadPandillas: no encuentro CarroEstacionado.");
+                        break;
+                    }
+                    Component estacionado = carro.GetComponent(tipoEstacionado);
+                    if (estacionado == null)
+                    {
+                        estacionado = carro.AddComponent(tipoEstacionado);
+                    }
+                    SerializedObject so = new SerializedObject(estacionado);
+                    so.FindProperty("tinte").colorValue = tintes[numero % tintes.Length];
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    adorno.gameObject.SetActive(false);
+                    Transform visual = adorno.parent != null ? adorno.parent.Find(adorno.name + "_Visual_T250") : null;
+                    if (visual != null)
+                    {
+                        visual.gameObject.SetActive(false);
+                    }
+                    numero++;
+                }
+            }
+            Debug.Log("[Progresion] CreadorCiudadPandillas.T401: " + numero + " carros robables en " + RaizT401 + ".");
         }
 
         private static void PonerHoraInicial()
