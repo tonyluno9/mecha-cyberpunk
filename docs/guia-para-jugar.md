@@ -137,3 +137,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - **Pandilla de noche**: desde las 21:00 hay 3 pandilleros a pie en el sitio de la pandilla; persiguen, nunca pegan más de 2 a la vez y pagan al caer. De día no están.
 - **Si caes en la calle** (a pie, de noche): despiertas en la camilla de la clínica a las 05:00, el doc te cobra $500 (puedes quedar en deuda), el calor se borra y el objetivo dice VUELVE A CASA; el mecha, si estaba en la calle, vuelve dañado al taller.
 - **Teclas de prueba** (`ImplantesDePrueba`): 3 instala los 4 implantes de nivel 1 sin cobrar, 4 los de nivel 2, 5 los quita. 1 y 2 cambian entre puños y pistola; F5 guarda y F9 carga.
+
+### T-404 zonas, respeto y mapa (qué probar)
+- Arriba a la izquierda el HUD dice la zona (LA FOSA tuya al oeste, EL TIANGUIS de los Calaveras al centro, NEÓN ALTO de las Víboras al este) y tu respeto; cada pandillero vencido en una zona rival suma 10. Atajo de prueba: F6 suma 10 de respeto donde estés y F7 te da $500 (se apagan en la demo final). ¿7 pandilleros antes del jefe es mucho o poco?
+- Con 70 de respeto sale "¡EL JEFE TE BUSCA!" y aparece su jefe en la banqueta (250 de vida, escopeta que lanza 8 perdigones, aviso de 0.5 s). Véncelo: "EL TIANGUIS ES TUYO", respeto 100 y su grupo ya no reaparece. Si caes antes, pierdes 10 de respeto. ¿El jefe es un reto?
+- M abre el mapa del barrio (6 manzanas del color de su dueño, nombre, respeto y un punto blanco eres tú); M o Esc lo cierran y mientras está abierto no te mueves ni disparas. ¿Se entiende?

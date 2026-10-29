@@ -7,7 +7,7 @@ namespace MechaCyberpunk.Core
     /// le devuelve a cada uno el suyo por <see cref="ClaveGuardado"/>, también a los que se registren después de cargar.
     /// Una clave que no está en el archivo no se toca. Claves en uso: <c>cartera</c>, <c>renta</c>, <c>mecha</c>,
     /// <c>perfil</c>, <c>historia</c>, <c>inventario</c> (Tony, T-142), <c>ligas</c> (Tony, T-154), <c>reputacion</c> y <c>favores</c> (Tony, T-182),
-    /// <c>misiones</c> (Tony, T-184), <c>implantes</c> (Tony, T-191), <c>adaptacion</c> (Tony, T-200) y <c>reloj</c> (Alan).
+    /// <c>misiones</c> (Tony, T-184), <c>implantes</c> (Tony, T-191), <c>adaptacion</c> (Tony, T-200), <c>territorio</c> (Tony, T-404) y <c>reloj</c> (Alan).
     /// </summary>
     public interface IGuardable
     {
