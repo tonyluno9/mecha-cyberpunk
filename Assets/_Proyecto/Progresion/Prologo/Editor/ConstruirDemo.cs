@@ -108,5 +108,31 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 EditorApplication.Exit(resumen.result == BuildResult.Succeeded ? 0 : 1);
             }
         }
+
+        /// <summary>
+        /// Build final de la demo de pandillas (T-406): como ConstruirJuego pero en Builds/Demo y con el símbolo DEMO_FINAL, que apaga F6, F7 y las teclas
+        /// de prueba. No cambia EditorBuildSettings ni PlayerSettings. Batchmode: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.ConstruirDemoPandillas
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Demo/Construir demo final de pandillas (Builds/Demo)")]
+        public static void ConstruirDemoPandillas()
+        {
+            Directory.CreateDirectory(CarpetaBuild);
+            BuildPlayerOptions opciones = new BuildPlayerOptions
+            {
+                scenes = new[] { EscenaJuego },
+                locationPathName = Path.Combine(CarpetaBuild, NombreEjecutable),
+                target = BuildTarget.StandaloneWindows64,
+                targetGroup = BuildTargetGroup.Standalone,
+                options = BuildOptions.None,
+                extraScriptingDefines = new[] { "DEMO_FINAL" },
+            };
+            BuildSummary resumen = BuildPipeline.BuildPlayer(opciones).summary;
+            Debug.Log("[Progresion] ConstruirDemoPandillas: " + resumen.result + ", " + resumen.totalErrors + " errores, "
+                + (resumen.totalSize / (1024 * 1024)) + " MB en " + resumen.totalTime.TotalSeconds.ToString("F0") + " s");
+            if (Application.isBatchMode)
+            {
+                EditorApplication.Exit(resumen.result == BuildResult.Succeeded ? 0 : 1);
+            }
+        }
     }
 }

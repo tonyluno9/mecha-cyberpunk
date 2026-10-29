@@ -29,6 +29,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string RaizT403 = "GTA_T403";
         public const string RaizT404 = "GTA_T404";
         public const string RaizT405 = "GTA_T405";
+        public const string RaizT406 = "GTA_T406";
         public const float HoraInicial = 19f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
@@ -50,6 +51,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T403Interno();
             T404Interno();
             T405Interno();
+            T406Interno();
             Guardar(escena);
         }
 
@@ -209,6 +211,134 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
             Transform m2 = BuscarTransform("Manzana_2");
             Debug.Log("[Progresion] CreadorCiudadPandillas.T404: zonas, HUD, mapa y jefes listos; Manzana_2 en " + (m2 != null ? m2.position.ToString() : "?") + ".");
+        }
+
+        [MenuItem("Mecha Cyberpunk/Pandillas/T-406 Historia")]
+        public static void T406()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            T406Interno();
+            Guardar(escena);
+        }
+
+        private const string RutaPandilleroPunos = "Assets/_Proyecto/IA/Prefabs/PandilleroAPie.prefab";
+        private const string RutaDatosPunos = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Base.asset";
+        private const string RutaMaterialLupe = "Assets/_Proyecto/Progresion/Prologo/Materiales/Vecina_DonaLupe.mat";
+        private const float DistanciaPelea = 10f;
+        private const float RadioSalidaCasa = 4f; // m a la puerta: la caminata desde la cama termina a unos 2.8 m de ella
+
+        // T-406: el director de la historia, DOÑA LUPE y los 2 Calaveras de la primera pelea. Apaga los grupos de Calaveras del tianguis
+        // (el director los prende en su paso), deja al CHATO solo para la historia y quita la pistola del inicio del jugador.
+        private static void T406Interno()
+        {
+            GameObject anterior = BuscarRaiz(RaizT406);
+            if (anterior != null)
+            {
+                Object.DestroyImmediate(anterior);
+            }
+            GameObject raiz = new GameObject(RaizT406);
+            Transform puerta = BuscarTransform(IdAparicion);
+            Vector3 centro = puerta != null ? puerta.position + puerta.forward * DistanciaPelea : Vector3.zero;
+            Vector3 lateral = puerta != null ? puerta.right : Vector3.right;
+            if (Physics.Raycast(centro + Vector3.up * 20f, Vector3.down, out RaycastHit piso, 60f))
+            {
+                centro = piso.point;
+            }
+
+            // DOÑA LUPE: un muñeco humano quieto, de color de vecina.
+            GameObject modelo = AssetDatabase.LoadAssetAtPath<GameObject>(RutaModeloHumano);
+            GameObject lupe = new GameObject("DonaLupe");
+            lupe.transform.SetParent(raiz.transform, false);
+            lupe.transform.position = centro;
+            if (modelo != null)
+            {
+                GameObject visual = (GameObject)PrefabUtility.InstantiatePrefab(modelo, lupe.transform);
+                visual.transform.localPosition = Vector3.zero;
+                Material vecina = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialLupe);
+                if (vecina == null)
+                {
+                    vecina = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                    vecina.SetColor("_BaseColor", new Color(0.95f, 0.55f, 0.15f));
+                    AssetDatabase.CreateAsset(vecina, RutaMaterialLupe);
+                }
+                foreach (Renderer r in visual.GetComponentsInChildren<Renderer>(true))
+                {
+                    r.sharedMaterial = vecina;
+                }
+            }
+
+            // Los 2 Calaveras a puños, entre la puerta y ella.
+            GameObject prefabPunos = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPandilleroPunos);
+            DatosPandilleroAPie datosPunos = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(RutaDatosPunos);
+            PandilleroAPie[] calaveras = new PandilleroAPie[2];
+            for (int i = 0; i < 2; i++)
+            {
+                Vector3 posicion = centro + lateral * (i == 0 ? -1.5f : 1.5f) + (puerta != null ? -puerta.forward : Vector3.back) * 1.5f;
+                GameObject c = (GameObject)PrefabUtility.InstantiatePrefab(prefabPunos, raiz.transform);
+                c.name = "CalaveraPunos_" + (i + 1);
+                c.transform.SetPositionAndRotation(posicion, Quaternion.identity);
+                SerializedObject soC = new SerializedObject(c.GetComponent<PandilleroAPie>());
+                soC.FindProperty("datos").objectReferenceValue = datosPunos;
+                soC.ApplyModifiedPropertiesWithoutUndo();
+                c.SetActive(false);
+                calaveras[i] = c.GetComponent<PandilleroAPie>();
+            }
+
+            // El CHATO queda solo para la historia.
+            Reclutable chato = null;
+            foreach (Reclutable r in Object.FindObjectsByType<Reclutable>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (r.Nombre == "EL CHATO")
+                {
+                    chato = r;
+                    SerializedObject soR = new SerializedObject(r);
+                    soR.FindProperty("soloHistoria").boolValue = true;
+                    soR.ApplyModifiedPropertiesWithoutUndo();
+                }
+            }
+
+            // Grupos de Calaveras (los del tianguis): apagados.
+            List<GameObject> grupos = new List<GameObject>();
+            foreach (PandillaAPie g in Object.FindObjectsByType<PandillaAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (g.Pandilla == IdPandilla.Calaveras)
+                {
+                    g.gameObject.SetActive(false);
+                    grupos.Add(g.gameObject);
+                }
+            }
+
+            // El jugador no trae la pistola al inicio.
+            int arsenales = 0;
+            foreach (MechaCyberpunk.Personaje.Jugador.ArsenalJugador a in Object.FindObjectsByType<MechaCyberpunk.Personaje.Jugador.ArsenalJugador>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                SerializedObject soA = new SerializedObject(a);
+                soA.FindProperty("pistolaAlInicio").boolValue = false;
+                soA.ApplyModifiedPropertiesWithoutUndo();
+                arsenales++;
+            }
+
+            MechaCyberpunk.Progresion.Prologo.Pandillas.DirectorPandillas director = raiz.AddComponent<MechaCyberpunk.Progresion.Prologo.Pandillas.DirectorPandillas>();
+            SerializedObject so = new SerializedObject(director);
+            so.FindProperty("puertaCasa").objectReferenceValue = puerta;
+            so.FindProperty("donaLupe").objectReferenceValue = lupe.transform;
+            SerializedProperty lista = so.FindProperty("calaveras");
+            lista.arraySize = calaveras.Length;
+            for (int i = 0; i < calaveras.Length; i++)
+            {
+                lista.GetArrayElementAtIndex(i).objectReferenceValue = calaveras[i];
+            }
+            so.FindProperty("chato").objectReferenceValue = chato;
+            so.FindProperty("radioSalida").floatValue = RadioSalidaCasa;
+            SerializedProperty gl = so.FindProperty("gruposTianguis");
+            gl.arraySize = grupos.Count;
+            for (int i = 0; i < grupos.Count; i++)
+            {
+                gl.GetArrayElementAtIndex(i).objectReferenceValue = grupos[i];
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
+            Debug.Log("[Progresion] CreadorCiudadPandillas.T406: director, Lupe en " + centro + ", " + grupos.Count + " grupos apagados, "
+                + arsenales + " arsenal(es) sin pistola, chato " + (chato != null ? "ok" : "NO"));
         }
 
         [MenuItem("Mecha Cyberpunk/Pandillas/T-405 Aliados")]
