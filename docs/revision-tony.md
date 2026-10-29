@@ -17,6 +17,15 @@ Automático: verificador 5/5 criterios. Para un humano: abre `IA/Datos/DatosAdap
 - PlayMode completo: 1 fallo de Alan, `CasinoInteriorPruebas.Casino_A22` ("Sale a la calle", -1.0 en vez de menos de -1.0). No tiene que ver con esta tarea.
 - Para probar tú: en Pruebas_Economia pelea 2 veces contra TORNILLO, una vez con puños seguidos y otra cubriéndote (clic derecho sostenido). Revisa que `[IA] TORNILLO aprendió: ...` diga lo que de verdad hiciste. Con puños seguidos a veces sube también RETIRADA.
 
+### T-201 GUARDIA: el rival bloquea tus puños
+- Qué hace: un rival con GUARDIA aprendida sube el brazo, que se pinta azul acero, cuando ve venir tu golpe, y lo bloquea con bloqueo normal, nunca perfecto. La probabilidad es la de su nivel (0.40 en GUARDIA I).
+- Mientras se cubre no ataca, y no se cubre mientras prepara o recupera su propio golpe.
+- Con SINAPSIS II tu golpe le gana: impacto a +0.175 s, antes que su guardia. Sin SINAPSIS II, su guardia sube a +0.210 s y tu golpe llega a +0.250 s.
+- Evidencia: EditMode 1184/1184. PlayMode 1021/1039; los fallos son solo los 9 conocidos de Arena (Alan). ReglaGuardiaRivalPruebas 10/10 y GuardiaRivalPruebas 8/8, 3 corridas seguidas cada una. Los creadores, corridos 2 veces, dejan los md5 iguales.
+- Corrección: la prueba de azar natural fallaba por mala suerte en cerca del 1 % de las corridas. Ahora usa semilla fija.
+- La captura T-201-1 no es concluyente: el azul de la izquierda se lee como la guardia del rival, pero no es seguro. Míralo en el juego.
+- Para probar tú, en Pruebas_Economia: pelea contra TORNILLO a puro clic y luego la revancha. ¿Se nota que ya te leyó? ¿La guardia se ve a tiempo? ¿Pegarle justo después de su golpe se siente natural?
+
 ## T-137 La demo como programa de Windows (2026-10-28)
 Abre `Builds/Demo/MechaCyberpunk.exe` y juega del título a "continuará" siguiendo docs/guia-demo.md (unos 15 min). Sin revisor.
 ¿Todo funciona igual que en el editor y con buena fluidez? ¿El título de la ventana dice "Mecha Cyberpunk (demo)" y Alt+Enter pasa a ventana? Después, que la juegue la persona nueva de H6.
