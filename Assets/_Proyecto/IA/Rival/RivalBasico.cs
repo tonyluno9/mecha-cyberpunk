@@ -82,6 +82,10 @@ namespace MechaCyberpunk.IA.Rival
         private bool controlDecidido;
         private HabilidadRival habilidad;
         private float distanciaLectura = -1f;
+        private bool retirando;
+        private float distanciaRetirada;
+        private float segundosRetirada;
+        private float factorRetirada = 1f;
         private bool objetivoKOLectura;
 
         /// <summary>El rival está en la preparación del golpe: brazo atrás y en color de aviso.</summary>
@@ -103,6 +107,18 @@ namespace MechaCyberpunk.IA.Rival
         public System.Func<float, float> LimitarDanio { get; set; }
         /// <summary>Se dispara en cada impacto, haya dado a alguien o no.</summary>
         public event System.Action Impacto;
+        /// <summary>Se dispara cuando empieza la preparación de un golpe (T-202).</summary>
+        public event System.Action GolpeIniciado;
+        /// <summary>Se dispara cuando un golpe en preparación se cancela sin impacto (T-202, un amago).</summary>
+        public event System.Action GolpeCancelado;
+        /// <summary>
+        /// Si existe, se pide al empezar cada golpe: segundos que alarga su preparación (≥ 0), sumados a la de su DatosMecha. Lo pone FintasRival.
+        /// </summary>
+        public System.Func<float> PreparacionExtra { get; set; }
+        /// <summary>Camina hacia atrás para quedar a cierta distancia del objetivo y no empieza golpes mientras (T-202).</summary>
+        public bool Retirandose => retirando;
+        /// <summary>Segundos que lleva el aviso del golpe en curso (0 si no está preparando).</summary>
+        public float SegundosDeAviso => ciclo != null && ciclo.Fase == FaseGolpe.Preparando ? ciclo.Progreso * ciclo.PreparacionActual : 0f;
         /// <summary>
         /// Si es true se queda quieto (sin caminar, rodear ni empezar golpes) pero sigue mirando al objetivo. Lo pone HabilidadRival
         /// durante el aviso y la embestida.
@@ -150,6 +166,10 @@ namespace MechaCyberpunk.IA.Rival
             if (ciclo.Fase == FaseGolpe.Preparando)
             {
                 return 0f;
+            }
+            if (retirando)
+            {
+                return -1f;
             }
             if (distanciaLectura < 0f || objetivoKOLectura)
             {
@@ -266,9 +286,48 @@ namespace MechaCyberpunk.IA.Rival
                 controlDecidido = true;
             }
             ciclo.Reiniciar();
+            retirando = false;
             TurnosAtaque.Compartido.Soltar(propio);
             velocidad = 0f;
             PonerBrazoEnReposo();
+        }
+
+        /// <summary>
+        /// Cancela el golpe en preparación sin impacto (un amago): vuelve a Listo con el brazo en reposo y la espera del siguiente golpe
+        /// pasa a <paramref name="esperaHastaElSiguiente"/>. Devuelve false si no estaba preparando.
+        /// </summary>
+        public bool CancelarGolpe(float esperaHastaElSiguiente)
+        {
+            if (ciclo == null || ciclo.Fase != FaseGolpe.Preparando)
+            {
+                return false;
+            }
+            ciclo.Reiniciar();
+            cerebro.FijarEspera(esperaHastaElSiguiente);
+            if (usarTurnos)
+            {
+                TurnosAtaque.Compartido.Soltar(propio);
+            }
+            PonerBrazoEnReposo();
+            GolpeCancelado?.Invoke();
+            return true;
+        }
+
+        /// <summary>
+        /// Camina hacia atrás mirando al objetivo hasta quedar a <paramref name="distancia"/> (m), pasar <paramref name="segundosMaximos"/> o
+        /// perder el control. Va a su aceleración y a su velocidad máxima por <paramref name="factorVelocidad"/> (se limita a 1 o menos).
+        /// Mientras camina no empieza golpes.
+        /// </summary>
+        public void IniciarRetirada(float distancia, float segundosMaximos, float factorVelocidad)
+        {
+            if (ciclo == null || !isActiveAndEnabled)
+            {
+                return;
+            }
+            retirando = true;
+            distanciaRetirada = distancia;
+            segundosRetirada = Mathf.Max(0f, segundosMaximos);
+            factorRetirada = Mathf.Clamp(factorVelocidad, 0f, 1f);
         }
 
         /// <summary>Cambia a quién persigue. Debe tener un <see cref="IPeleador"/>; null lo deja sin objetivo.</summary>
@@ -342,6 +401,25 @@ namespace MechaCyberpunk.IA.Rival
                 decision = DecisionRival.Esperar;
                 rodeando = false;
                 velocidad = 0f;
+                retirando = false;
+            }
+            float velocidadRetirada = 0f;
+            if (retirando)
+            {
+                segundosRetirada -= dt;
+                float restante = distanciaRetirada - distancia;
+                if (!hayObjetivo || objetivoKO || segundosRetirada <= 0f || restante <= 0f)
+                {
+                    retirando = false;
+                }
+                else
+                {
+                    decision = DecisionRival.Esperar;
+                    rodeando = false;
+                    float maxima = mecha.VelocidadMaxima * factorRetirada * Mathf.Min(1f, MultiplicadorVelocidad);
+                    // Camina a tope hasta quedar a la distancia pedida y entonces suelta: la inercia lo lleva un poco más atrás.
+                    velocidadRetirada = -maxima;
+                }
             }
             // Con la guardia levantada (o pedida) no empieza golpes, pero sigue girando y caminando (T-201).
             if (decision == DecisionRival.EmpezarGolpe && guardia != null && (guardia.Levantada || guardia.Pedida))
@@ -350,7 +428,11 @@ namespace MechaCyberpunk.IA.Rival
             }
             if (decision == DecisionRival.EmpezarGolpe)
             {
-                ciclo.IntentarGolpear();
+                float extra = PreparacionExtra != null ? Mathf.Max(0f, PreparacionExtra()) : 0f;
+                if (ciclo.IntentarGolpear(mecha.PreparacionGolpe + extra))
+                {
+                    GolpeIniciado?.Invoke();
+                }
             }
             bool ocupado = ciclo.Fase != FaseGolpe.Listo;
             if (ciclo.Avanzar(dt))
@@ -379,7 +461,13 @@ namespace MechaCyberpunk.IA.Rival
                 float parada = sinTurno ? anillo : (datos.DistanciaMinima + datos.DistanciaAtaque) * MitadDeLaDistancia;
                 velocidadDeseada = VelocidadParaFrenar(distancia, mecha, parada) * alineacion * MultiplicadorVelocidad;
             }
-            float cambio = (velocidadDeseada > velocidad ? mecha.Aceleracion : mecha.Desaceleracion) * MultiplicadorVelocidad;
+            if (retirando)
+            {
+                velocidadDeseada = velocidadRetirada;
+            }
+            // Al retirarse, ganar velocidad hacia atrás es acelerar (con su aceleración) y frenar es desacelerar.
+            bool acelerando = retirando ? Mathf.Abs(velocidadDeseada) > Mathf.Abs(velocidad) : velocidadDeseada > velocidad;
+            float cambio = (acelerando ? mecha.Aceleracion : mecha.Desaceleracion) * MultiplicadorVelocidad;
             velocidad = Mathf.MoveTowards(velocidad, velocidadDeseada, cambio * dt);
 
             // Nunca pasa de la distancia mínima (o del anillo de espera, si no tiene turno) aunque la inercia lo empuje.

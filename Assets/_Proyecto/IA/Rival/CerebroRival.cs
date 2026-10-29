@@ -31,6 +31,12 @@ namespace MechaCyberpunk.IA.Rival
         /// <summary>Segundos que faltan para poder empezar el siguiente golpe.</summary>
         public float EsperaRestante => espera;
 
+        /// <summary>Pone la espera que falta para el siguiente golpe, tal cual (T-202: tras un amago).</summary>
+        public void FijarEspera(float segundos)
+        {
+            espera = Math.Max(0f, segundos);
+        }
+
         /// <summary>Multiplica la espera que se elige entre golpes (1 = normal).</summary>
         public float MultiplicadorEspera { get; set; } = 1f;
 

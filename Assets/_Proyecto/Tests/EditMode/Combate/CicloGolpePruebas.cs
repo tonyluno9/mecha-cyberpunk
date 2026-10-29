@@ -12,6 +12,33 @@ namespace MechaCyberpunk.Tests.Combate
         private static CicloGolpe Nuevo() => new CicloGolpe(Preparacion, Recarga);
 
         [Test]
+        public void IntentarGolpear_ConPreparacionPropia_UsaEsaSoloEstaVez()
+        {
+            CicloGolpe ciclo = Nuevo();
+            Assert.AreEqual(Preparacion, ciclo.PreparacionActual, 1e-6f);
+            Assert.IsTrue(ciclo.IntentarGolpear(0.5f));
+            Assert.AreEqual(0.5f, ciclo.PreparacionActual, 1e-6f);
+            Assert.IsFalse(ciclo.Avanzar(0.49f), "Con 0.5 s no hay impacto a los 0.49");
+            Assert.AreEqual(0.98f, ciclo.Progreso, 1e-4f);
+            Assert.IsTrue(ciclo.Avanzar(0.02f));
+            ciclo.Avanzar(Recarga + 0.1f);
+            Assert.AreEqual(FaseGolpe.Listo, ciclo.Fase);
+            Assert.IsTrue(ciclo.IntentarGolpear());
+            Assert.AreEqual(Preparacion, ciclo.PreparacionActual, 1e-6f, "La de siempre vuelve en el golpe siguiente");
+            Assert.IsFalse(ciclo.Avanzar(Preparacion - Margen));
+            Assert.IsTrue(ciclo.Avanzar(2f * Margen));
+        }
+
+        [Test]
+        public void IntentarGolpear_ConPreparacionPropia_NoEmpiezaSiYaEstaOcupado()
+        {
+            CicloGolpe ciclo = Nuevo();
+            ciclo.IntentarGolpear();
+            Assert.IsFalse(ciclo.IntentarGolpear(1f));
+            Assert.AreEqual(Preparacion, ciclo.PreparacionActual, 1e-6f);
+        }
+
+        [Test]
         public void Nuevo_EstaListoYSinProgreso()
         {
             CicloGolpe ciclo = Nuevo();

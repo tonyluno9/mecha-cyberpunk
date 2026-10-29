@@ -16,6 +16,7 @@ namespace MechaCyberpunk.IA.Editor
     /// RivalTutorial ni RivalPandilla. Un prefab que ya tiene el componente no se vuelve a guardar.
     /// T-201: a esos mismos prefabs les agrega GuardiaMecha (mando por código, sin bloqueo perfecto) y GuardiaRival, las dos en los
     /// controlados de su PeleadorMecha, y deja en ConfigPresentacionRival_Base el color y el ángulo de la guardia.
+    /// T-202: también les agrega FintasRival y RetiradaRival, en los mismos controlados.
     /// Batchmode: -executeMethod MechaCyberpunk.IA.Editor.CreadorAdaptacionRival.Crear
     /// </summary>
     public static class CreadorAdaptacionRival
@@ -57,6 +58,87 @@ namespace MechaCyberpunk.IA.Editor
             AssetDatabase.SaveAssets();
             Debug.Log("[IA] T-200 adaptación puesta en los rivales de liga, el casero y los servicios.");
             CrearGuardia();
+            CrearFintasRetirada();
+        }
+
+        /// <summary>T-202: FintasRival y RetiradaRival en los rivales que se adaptan. Idempotente.</summary>
+        public static void CrearFintasRetirada()
+        {
+            for (int liga = 1; liga <= CreadorRivalesLiga.Ligas; liga++)
+            {
+                for (int n = 1; n <= CreadorRivalesLiga.RivalesPorLiga; n++)
+                {
+                    PonerFintasRetirada(CreadorRivalesLiga.RutaPrefab(liga, n));
+                }
+            }
+            PonerFintasRetirada(RutaRivalCasero);
+            AjustarRetirada();
+            AssetDatabase.SaveAssets();
+            Debug.Log("[IA] T-202 fintas y retirada puestas en los rivales que se adaptan.");
+        }
+
+        // Valores de la RETIRADA medidos en T-202 (bitácora): el golpe del jugador llega hasta 4 m del centro del rival (alcance 3 m más el radio
+        // de 1 m de su cuerpo), así que la demora se acorta y el margen sube un poco para que el paso atrás llegue a tiempo.
+        public const float DemoraRetirada = 0.05f;
+        public const float MargenRetirada = 0.8f;
+
+        /// <summary>T-202: deja la demora y el margen de la RETIRADA medidos en los dos assets de adaptación. Idempotente.</summary>
+        public static void AjustarRetirada()
+        {
+            foreach (string ruta in new[] { RutaBase, RutaAvanzado })
+            {
+                DatosAdaptacionRival datos = AssetDatabase.LoadAssetAtPath<DatosAdaptacionRival>(ruta);
+                if (datos == null)
+                {
+                    Debug.LogError("[IA] Falta " + ruta + ": corre antes Crear.");
+                    continue;
+                }
+                SerializedObject so = new SerializedObject(datos);
+                so.FindProperty("demoraRetirada").floatValue = DemoraRetirada;
+                so.FindProperty("margenRetirada").floatValue = MargenRetirada;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(datos);
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("[IA] T-202 retirada ajustada: demora " + DemoraRetirada + " s, margen " + MargenRetirada + " m.");
+        }
+
+        private static void PonerFintasRetirada(string rutaPrefab)
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(rutaPrefab);
+            if (prefab == null || prefab.GetComponent<AdaptacionRival>() == null)
+            {
+                Debug.LogError("[IA] " + rutaPrefab + " no tiene AdaptacionRival: corre antes CrearPrefabs.");
+                return;
+            }
+            if (prefab.GetComponent<FintasRival>() != null && prefab.GetComponent<RetiradaRival>() != null)
+            {
+                return;
+            }
+            GameObject contenido = PrefabUtility.LoadPrefabContents(rutaPrefab);
+            try
+            {
+                FintasRival fintas = contenido.GetComponent<FintasRival>();
+                if (fintas == null)
+                {
+                    fintas = contenido.AddComponent<FintasRival>();
+                }
+                RetiradaRival retirada = contenido.GetComponent<RetiradaRival>();
+                if (retirada == null)
+                {
+                    retirada = contenido.AddComponent<RetiradaRival>();
+                }
+                SerializedObject soPeleador = new SerializedObject(contenido.GetComponent<PeleadorMecha>());
+                SerializedProperty controlados = soPeleador.FindProperty("controlados");
+                AgregarControlado(controlados, fintas);
+                AgregarControlado(controlados, retirada);
+                soPeleador.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(contenido, rutaPrefab);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contenido);
+            }
         }
 
         /// <summary>T-201: GuardiaMecha y GuardiaRival en los rivales que se adaptan; color y ángulo de guardia en la config. Idempotente.</summary>
