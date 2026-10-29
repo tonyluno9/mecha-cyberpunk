@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 5016240715847715043}
   - component: {fileID: 4905222460801062930}
   - component: {fileID: 4246532650403101935}
+  - component: {fileID: 5621820315526505509}
   m_Layer: 0
   m_Name: ServiciosProgresion
   m_TagString: Untagged
@@ -188,3 +189,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.ServicioImplantes
   catalogo: {fileID: 11400000, guid: d03272f8b0f86dc48b6dfab55ca55a14, type: 2}
+--- !u!114 &5621820315526505509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802769915050779147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd7b1ce2dd1913d40a1a28f1378fa0cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Adaptacion.MemoriaRivales
