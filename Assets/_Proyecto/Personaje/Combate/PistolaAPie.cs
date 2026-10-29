@@ -51,6 +51,8 @@ namespace MechaCyberpunk.Personaje.Combate
         private Transform[] marcas;
         private float[] finMarcas;
         private int siguienteMarca;
+        private bool enInterior;
+        private float finEsperaCalor = -1f;
 
         public DatosPistola Datos => datos;
         public CargadorPistola Cargador => cargador;
@@ -94,10 +96,14 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             atacar.action.Enable();
             recargar.action.Enable();
+            EventosLugares.JugadorEntro += AlEntrarLugar;
+            EventosLugares.JugadorSalio += AlSalirLugar;
         }
 
         private void OnDisable()
         {
+            EventosLugares.JugadorEntro -= AlEntrarLugar;
+            EventosLugares.JugadorSalio -= AlSalirLugar;
             atacar.action.Disable();
             recargar.action.Disable();
         }
@@ -135,6 +141,22 @@ namespace MechaCyberpunk.Personaje.Combate
             ActualizarVisual();
         }
 
+        // Un interior es cualquier lugar que no sea la calle.
+        private void AlEntrarLugar(IdLugar lugar) => enInterior = lugar != IdLugar.Ninguno && lugar != IdLugar.Calle;
+
+        private void AlSalirLugar(IdLugar lugar) => enInterior = false;
+
+        // Cada disparo en la calle suma calor, como máximo una vez cada SegundosEntreCalor.
+        private void SumarCalor()
+        {
+            if (enInterior || Time.time < finEsperaCalor || datos.CalorPorDisparo <= 0f)
+            {
+                return;
+            }
+            finEsperaCalor = Time.time + datos.SegundosEntreCalor;
+            Registro<ICalor>.Actual?.Sumar(datos.CalorPorDisparo, MotivoCalor.Pelea);
+        }
+
         private void Disparar()
         {
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
@@ -162,6 +184,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 PonerMarca(mejor.point, mejor.normal);
             }
 
+            SumarCalor();
             inicioRetroceso = Time.time;
             finLuz = Time.time + duracionLuz;
             Disparo?.Invoke();

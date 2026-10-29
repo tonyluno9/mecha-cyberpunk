@@ -1,4 +1,10 @@
+using System.Collections.Generic;
 using System.IO;
+using MechaCyberpunk.Core;
+using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.IA.Datos;
+using MechaCyberpunk.IA.Editor;
+using MechaCyberpunk.Progresion.Prologo.Clinica;
 using MechaCyberpunk.Progresion.Pruebas;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -18,6 +24,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         public const string RaizT400 = "GTA_T400";
         public const string RaizT401 = "GTA_T401";
+        public const string RaizT402 = "GTA_T402";
         public const float HoraInicial = 19f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
@@ -35,6 +42,15 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
             T400Interno();
             T401Interno();
+            T402Interno();
+            Guardar(escena);
+        }
+
+        [MenuItem("Mecha Cyberpunk/Pandillas/T-402 Pandilleros armados")]
+        public static void T402()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            T402Interno();
             Guardar(escena);
         }
 
@@ -196,6 +212,217 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 }
             }
             Debug.Log("[Progresion] CreadorCiudadPandillas.T401: " + numero + " carros robables en " + RaizT401 + ".");
+        }
+
+
+        // ---------- T-402: pandilleros armados ----------
+
+        private const string RutaDatosDoctor = "Assets/_Proyecto/Progresion/Prologo/Datos/DatosDoctor_Pandillas.asset";
+        private const string RutaPrefabDoctor = "Assets/_Proyecto/Progresion/Prologo/Prefabs/DoctorClinica.prefab";
+        private const string TipoPuntoAparicion = "MechaCyberpunk.Mundo.Lugares.PuntoAparicion, MechaCyberpunk.Mundo";
+        private const int CobroDoctor = 100;
+        private const float HorasDormido = 2f;
+        private const float DistanciaMinPuertas = 45f;
+        private const float DesplazamientoBorde = 36f;
+        private static readonly float[] Desplazamientos = { 38f, 42f, 46f };
+        private const float AlturaRayoCalle = 3f;
+        private const float PasoBorde = 6f;
+        private const float SeparacionPandilleros = 1.8f;
+        private const float AlturaBusquedaPiso = 40f;
+        private const float AlturaMaxBanqueta = 0.6f;
+        private const float RadioLibre = 0.35f;
+
+        private struct GrupoT402
+        {
+            public string Manzana;
+            public IdPandilla Pandilla;
+            public int Cantidad;
+        }
+
+        private static void T402Interno()
+        {
+            GameObject anterior = BuscarRaiz(RaizT402);
+            if (anterior != null)
+            {
+                Object.DestroyImmediate(anterior);
+            }
+            CreadorPandilleroArmado.Crear();
+
+            // Los muñecos de prueba de T-400 se apagan (nunca se borran).
+            GameObject t400 = BuscarRaiz(RaizT400);
+            if (t400 != null)
+            {
+                foreach (Transform hijo in t400.transform)
+                {
+                    if (hijo.name.StartsWith("MunecoPrueba_"))
+                    {
+                        hijo.gameObject.SetActive(false);
+                    }
+                }
+            }
+
+            GameObject raiz = new GameObject(RaizT402);
+            GameObject prefabPandillero = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorPandilleroArmado.RutaPrefab);
+            DatosPandilleroAPie calaveras = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(CreadorPandilleroArmado.RutaDatosCalaveras);
+            DatosPandilleroAPie viboras = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(CreadorPandilleroArmado.RutaDatosViboras);
+            if (prefabPandillero == null || calaveras == null || viboras == null)
+            {
+                Debug.LogError("[Progresion] CreadorCiudadPandillas.T402: faltan el prefab o los datos del pandillero armado.");
+                return;
+            }
+
+            List<Vector3> puertas = new List<Vector3>();
+            foreach (GameObject objetoRaiz in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                foreach (Transform t in objetoRaiz.GetComponentsInChildren<Transform>(false))
+                {
+                    if (t.name == "Puerta" || t.name == "Casa_Puerta")
+                    {
+                        puertas.Add(t.position);
+                    }
+                }
+            }
+
+            GrupoT402[] grupos =
+            {
+                new GrupoT402 { Manzana = "Manzana_2", Pandilla = IdPandilla.Calaveras, Cantidad = 3 },
+                new GrupoT402 { Manzana = "Manzana_5", Pandilla = IdPandilla.Calaveras, Cantidad = 2 },
+                new GrupoT402 { Manzana = "Manzana_3", Pandilla = IdPandilla.Viboras, Cantidad = 3 },
+                new GrupoT402 { Manzana = "Manzana_6", Pandilla = IdPandilla.Viboras, Cantidad = 3 },
+            };
+            int total = 0;
+            for (int g = 0; g < grupos.Length; g++)
+            {
+                Transform manzana = BuscarTransform(grupos[g].Manzana);
+                if (manzana == null)
+                {
+                    Debug.LogWarning("[Progresion] CreadorCiudadPandillas.T402: no encuentro " + grupos[g].Manzana);
+                    continue;
+                }
+                Vector3 punto = ElegirPuntoDeBanqueta(manzana.position, puertas, out Vector3 tangente);
+                GameObject objetoGrupo = new GameObject("Pandilla_" + grupos[g].Pandilla + "_" + (g + 1));
+                objetoGrupo.transform.SetParent(raiz.transform, false);
+                objetoGrupo.transform.position = punto;
+                DatosPandilleroAPie datos = grupos[g].Pandilla == IdPandilla.Calaveras ? calaveras : viboras;
+                for (int i = 0; i < grupos[g].Cantidad; i++)
+                {
+                    GameObject pandillero = (GameObject)PrefabUtility.InstantiatePrefab(prefabPandillero, objetoGrupo.transform);
+                    pandillero.name = "Pandillero_" + (i + 1);
+                    float desvio = (i - (grupos[g].Cantidad - 1) * 0.5f) * SeparacionPandilleros;
+                    Vector3 posicion = punto + tangente * desvio;
+                    if (Physics.Raycast(posicion + Vector3.up * AlturaBusquedaPiso, Vector3.down, out RaycastHit piso, AlturaBusquedaPiso * 2f))
+                    {
+                        posicion = piso.point;
+                    }
+                    pandillero.transform.SetPositionAndRotation(posicion, Quaternion.LookRotation(Vector3.zero - new Vector3(posicion.x, 0f, posicion.z) + Vector3.forward * 0.001f, Vector3.up));
+                    SerializedObject soP = new SerializedObject(pandillero.GetComponent<PandilleroAPie>());
+                    soP.FindProperty("datos").objectReferenceValue = datos;
+                    soP.ApplyModifiedPropertiesWithoutUndo();
+                    total++;
+                }
+                PandillaAPie pandilla = objetoGrupo.AddComponent<PandillaAPie>();
+                SerializedObject soG = new SerializedObject(pandilla);
+                soG.FindProperty("datos").objectReferenceValue = datos;
+                soG.FindProperty("idPandilla").enumValueIndex = (int)grupos[g].Pandilla;
+                soG.ApplyModifiedPropertiesWithoutUndo();
+            }
+
+            CrearDoctor(raiz.transform);
+            Debug.Log("[Progresion] CreadorCiudadPandillas.T402: " + total + " pandilleros armados en " + grupos.Length + " grupos, doctor en la clínica.");
+        }
+
+        // Recorre el borde de la manzana (la banqueta) y elige el punto libre más lejos de todas las puertas.
+        private static Vector3 ElegirPuntoDeBanqueta(Vector3 centro, List<Vector3> puertas, out Vector3 tangente)
+        {
+            Physics.SyncTransforms();
+            int sinPiso = 0, alto = 0, ocupado = 0;
+            Vector3 mejor = centro;
+            Vector3 mejorTangente = Vector3.right;
+            float mejorPuntaje = -1f;
+            foreach (float d in Desplazamientos)
+            for (float u = -DesplazamientoBorde; u <= DesplazamientoBorde + 0.01f; u += PasoBorde)
+            {
+                Vector3[] candidatos =
+                {
+                    centro + new Vector3(u, 0f, d), centro + new Vector3(u, 0f, -d),
+                    centro + new Vector3(d, 0f, u), centro + new Vector3(-d, 0f, u)
+                };
+                Vector3[] tangentes = { Vector3.right, Vector3.right, Vector3.forward, Vector3.forward };
+                for (int k = 0; k < candidatos.Length; k++)
+                {
+                    if (!Physics.Raycast(candidatos[k] + Vector3.up * AlturaRayoCalle, Vector3.down, out RaycastHit piso, AlturaRayoCalle * 2f)
+                        || piso.point.y > AlturaMaxBanqueta)
+                    {
+                        if (piso.collider != null) { alto++; } else { sinPiso++; }
+                        continue;
+                    }
+                    Vector3 p = piso.point;
+                    if (Physics.CheckCapsule(p + Vector3.up * RadioLibre * 1.2f, p + Vector3.up * 1.6f, RadioLibre))
+                    {
+                        ocupado++;
+                        continue;
+                    }
+                    float minPuerta = float.MaxValue;
+                    foreach (Vector3 puerta in puertas)
+                    {
+                        minPuerta = Mathf.Min(minPuerta, Vector3.Distance(p, puerta));
+                    }
+                    float puntaje = Mathf.Min(minPuerta, DistanciaMinPuertas);
+                    if (puntaje > mejorPuntaje)
+                    {
+                        mejorPuntaje = puntaje;
+                        mejor = p;
+                        mejorTangente = tangentes[k];
+                    }
+                }
+            }
+            if (mejorPuntaje < DistanciaMinPuertas)
+            {
+                Debug.LogWarning("[Progresion] CreadorCiudadPandillas.T402: el mejor punto de " + centro + " queda a " + mejorPuntaje + " m de una puerta (sin piso " + sinPiso + ", alto " + alto + ", ocupado " + ocupado + ").");
+            }
+            tangente = mejorTangente;
+            return mejor;
+        }
+
+        private static void CrearDoctor(Transform padre)
+        {
+            DatosDoctor datos = AssetDatabase.LoadAssetAtPath<DatosDoctor>(RutaDatosDoctor);
+            if (datos == null)
+            {
+                datos = ScriptableObject.CreateInstance<DatosDoctor>();
+                AssetDatabase.CreateAsset(datos, RutaDatosDoctor);
+                SerializedObject soD = new SerializedObject(datos);
+                soD.FindProperty("cobro").intValue = CobroDoctor;
+                soD.FindProperty("horasInconsciente").floatValue = HorasDormido;
+                soD.FindProperty("textoDoctor").stringValue = "EL DOC: Otra vez tú. Son cien, mijo.";
+                soD.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(datos);
+            }
+            CreadorDoctorClinica.Crear();
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabDoctor);
+            if (prefab != null)
+            {
+                GameObject doctor = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+                SerializedObject so = new SerializedObject(doctor.GetComponent<DoctorClinica>());
+                so.FindProperty("datos").objectReferenceValue = datos;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+
+            // La camilla: un punto de aparición en la entrada de la clínica (en Mundo no existe uno con ese id).
+            Transform entrada = BuscarTransform("EntradaClinica");
+            System.Type tipo = System.Type.GetType(TipoPuntoAparicion);
+            if (entrada == null || tipo == null)
+            {
+                Debug.LogWarning("[Progresion] CreadorCiudadPandillas.T402: sin EntradaClinica o PuntoAparicion; el doctor usará la cama de casa.");
+                return;
+            }
+            GameObject camilla = new GameObject("Clinica_Camilla");
+            camilla.transform.SetParent(padre, false);
+            camilla.transform.SetPositionAndRotation(entrada.position, entrada.rotation);
+            Component punto = camilla.AddComponent(tipo);
+            SerializedObject soPunto = new SerializedObject(punto);
+            soPunto.FindProperty("id").stringValue = "Clinica_Camilla";
+            soPunto.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void PonerHoraInicial()

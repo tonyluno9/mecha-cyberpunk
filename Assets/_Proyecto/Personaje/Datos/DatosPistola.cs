@@ -21,6 +21,14 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Tiempo que tarda la recarga (s).")]
         [Min(0.01f)] [SerializeField] private float tiempoRecarga = 1.4f;
 
+        [Tooltip("Calor policial que suma cada disparo en la calle (puntos de calor). Dentro de un interior no suma.")]
+        [Min(0f)] [SerializeField] private float calorPorDisparo = 2f;
+
+        [Tooltip("Cada cuántos segundos como máximo un disparo suma calor (s).")]
+        [Min(0f)] [SerializeField] private float segundosEntreCalor = 0.5f;
+
+        public float CalorPorDisparo => calorPorDisparo;
+        public float SegundosEntreCalor => segundosEntreCalor;
         public float Danio => danio;
         public float Alcance => alcance;
         public float TiempoEntreDisparos => tiempoEntreDisparos;

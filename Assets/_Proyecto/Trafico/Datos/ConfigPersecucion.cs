@@ -27,6 +27,23 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(0.05f)] [Tooltip("Cada cuánto cambian de color las luces de la patrulla (s).")]
         [SerializeField] private float periodoSirena = 0.4f;
 
+        [Header("Disparos del dron (T-402)")]
+        [Min(0)] [Tooltip("Desde qué nivel de calor los drones disparan al jugador a pie.")]
+        [SerializeField] private int nivelDisparoDron = 2;
+        [Min(0.1f)] [Tooltip("Segundos entre disparos de cada dron (s).")]
+        [SerializeField] private float segundosEntreTirosDron = 1.5f;
+        [Min(0f)] [Tooltip("Daño de cada disparo del dron (puntos de vida).")]
+        [SerializeField] private float danioDron = 4f;
+        [Range(0f, 1f)] [Tooltip("Probabilidad de acertar (0 a 1).")]
+        [SerializeField] private float aciertoDron = 0.7f;
+        [Min(0.05f)] [Tooltip("Aviso antes del disparo, con la luz del dron en rojo (s).")]
+        [SerializeField] private float avisoDron = 0.3f;
+
+        public int NivelDisparoDron => nivelDisparoDron;
+        public float SegundosEntreTirosDron => segundosEntreTirosDron;
+        public float DanioDron => danioDron;
+        public float AciertoDron => aciertoDron;
+        public float AvisoDron => avisoDron;
         public float AlturaDron => alturaDron;
         public float DistanciaAparicionDron => distanciaAparicionDron;
         public float PeriodoSirena => periodoSirena;
