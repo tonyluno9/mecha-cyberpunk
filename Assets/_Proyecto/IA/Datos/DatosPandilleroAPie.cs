@@ -56,6 +56,8 @@ namespace MechaCyberpunk.IA.Datos
         [Header("Armado y territorio (T-402)")]
         [Tooltip("Si es true usa pistola en vez de puños: mantiene la distancia, avisa con un láser y dispara.")]
         [SerializeField] private bool usaPistola;
+        [Tooltip("Perdigones por disparo (1 = pistola; el jefe lanza 8 como escopeta).")]
+        [Min(1)] [SerializeField] private int perdigones = 1;
         [Tooltip("Daño de cada disparo que acierta (puntos de vida).")]
         [Min(0f)] [SerializeField] private float danioDisparo = 8f;
         [Tooltip("Distancia mínima a la que se queda del jugador; más cerca retrocede (m).")]
@@ -92,6 +94,7 @@ namespace MechaCyberpunk.IA.Datos
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f);
 
         public bool UsaPistola => usaPistola;
+        public int Perdigones => perdigones;
         public float DanioDisparo => danioDisparo;
         public float DistanciaMinTiro => distanciaMinTiro;
         public float DistanciaMaxTiro => distanciaMaxTiro;

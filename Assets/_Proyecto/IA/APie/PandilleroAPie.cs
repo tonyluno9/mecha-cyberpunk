@@ -310,7 +310,10 @@ namespace MechaCyberpunk.IA.APie
             {
                 float probabilidad = PistolaPandillero.ProbabilidadAcierto(distancia, datos.DistanciaAciertoCerca,
                     datos.DistanciaAciertoLejos, datos.AciertoCerca, datos.AciertoLejos);
-                pistola.Disparar(boca, pecho, recibeJugador, datos.DanioDisparo, probabilidad);
+                for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
+                {
+                    pistola.Disparar(boca, pecho, recibeJugador, datos.DanioDisparo, probabilidad);
+                }
                 if (animador != null)
                 {
                     animador.SetTrigger(IdDisparo);
