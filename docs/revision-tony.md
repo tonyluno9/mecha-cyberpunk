@@ -7,6 +7,9 @@ Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fa
 ### Para Alan (T-198)
 No le toca nada. Core solo ganó dos comentarios: la clave de guardado `adaptacion` (IGuardable) y que el nombre del asset `DatosRival` es la llave con la que un rival recuerda al jugador. `RivalBasico.prefab` (el base) y `FlujoPelea.prefab` de su Clandestino no se adaptan, así que sus pruebas no cambian. Si algún día quiere que el público o un cartel reaccione a una revancha contra un rival que "ya te conoce", se pide una tarea de Core (D-tony-200).
 
+### T-199 Datos y reglas de la adaptación
+Automático: verificador 5/5 criterios. Para un humano: abre `IA/Datos/DatosAdaptacionRival_Base.asset` en el inspector: ¿se entienden los tooltips y los umbrales (24 golpes por minuto, 50 % cubiertos, 40 % castigando) se parecen a cómo peleas?
+
 ## T-137 La demo como programa de Windows (2026-10-28)
 Abre `Builds/Demo/MechaCyberpunk.exe` y juega del título a "continuará" siguiendo docs/guia-demo.md (unos 15 min). Sin revisor.
 ¿Todo funciona igual que en el editor y con buena fluidez? ¿El título de la ventana dice "Mecha Cyberpunk (demo)" y Alt+Enter pasa a ventana? Después, que la juegue la persona nueva de H6.
