@@ -101,6 +101,10 @@ namespace MechaCyberpunk.Tests.Progresion
         protected const float MaxSegundosEscena = 90f;
         protected const float MaxSegundosGolpes = 60f;
         protected const float MaxSegundosTramo = 60f;
+        private const float SegundosParaAtasco = 1f;
+        private const float MetrosMinimosPorRevision = 0.3f;
+        private const float SegundosPasoDeLado = 0.6f;
+        private const float SegundosFrameLento = 0.1f;
         protected const float MaxSegundosLlamado = 15f;
         protected const float MaxSegundosEncender = 30f;
         protected const float MaxSegundosPelea = 70f;
@@ -265,6 +269,12 @@ namespace MechaCyberpunk.Tests.Progresion
             else
             {
                 medidor.Registrar(Time.unscaledDeltaTime);
+                if (Time.unscaledDeltaTime > SegundosFrameLento)
+                {
+                    // Para saber dónde pasa un tirón si el medidor falla (T-136).
+                    Debug.Log("[Prueba T-135] Frame lento: " + (Time.unscaledDeltaTime * 1000f).ToString("F0", CultureInfo.InvariantCulture) + " ms en la etapa "
+                        + ultimaEtapa + ", después del tramo " + (tramos.Count > 0 ? tramos[tramos.Count - 1] : "ninguno") + ", jugador " + (jugador != null ? jugador.Raiz.position.ToString() : "-"));
+                }
             }
             if (vigilarVida && vidaMecha != null)
             {
@@ -519,15 +529,45 @@ namespace MechaCyberpunk.Tests.Progresion
             Avanzar(Mathf.Abs(angulo) < AnguloParaCaminar);
         }
 
+        private IEnumerator PasoDeLado(KeyControl tecla)
+        {
+            Avanzar(false);
+            Set(raton.delta, Vector2.zero);
+            Press(tecla);
+            float fin = Time.time + SegundosPasoDeLado;
+            while (Time.time < fin)
+            {
+                yield return null;
+                Vigilar();
+            }
+            Release(tecla);
+            yield return null;
+        }
+
         protected IEnumerator CaminarA(Vector3 destino, float distancia, string que, Func<bool> antes = null)
         {
             float fin = Time.time + MaxSegundosTramo;
+            float revision = Time.time + SegundosParaAtasco;
+            Vector3 ultima = jugador.Raiz.position;
+            int atascos = 0;
             while (DistanciaPlana(jugador.Raiz.position, destino) > distancia && (antes == null || !antes()))
             {
                 if (Time.time > fin)
                 {
                     Avanzar(false);
-                    Assert.Fail("No llegó a: " + que + " (posición " + jugador.Raiz.position + ")");
+                    Assert.Fail("No llegó a: " + que + " (posición " + jugador.Raiz.position + ", destino " + destino + ", atascos " + atascos + ")");
+                }
+                if (Time.time > revision)
+                {
+                    // Algo lo frena (un rival, el mecha o un muro): da un paso de lado, alternando, y sigue derecho (no es un atajo).
+                    if (DistanciaPlana(ultima, jugador.Raiz.position) < MetrosMinimosPorRevision)
+                    {
+                        atascos++;
+                        Debug.Log("[Prueba T-135] Atascado camino a " + que + " en " + jugador.Raiz.position + ": paso de lado " + atascos);
+                        yield return PasoDeLado(atascos % 2 == 1 ? teclado.dKey : teclado.aKey);
+                    }
+                    ultima = jugador.Raiz.position;
+                    revision = Time.time + SegundosParaAtasco;
                 }
                 PasoHacia(destino);
                 yield return null;
