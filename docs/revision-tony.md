@@ -26,6 +26,15 @@ Automático: verificador 5/5 criterios. Para un humano: abre `IA/Datos/DatosAdap
 - La captura T-201-1 no es concluyente: el azul de la izquierda se lee como la guardia del rival, pero no es seguro. Míralo en el juego.
 - Para probar tú, en Pruebas_Economia: pelea contra TORNILLO a puro clic y luego la revancha. ¿Se nota que ya te leyó? ¿La guardia se ve a tiempo? ¿Pegarle justo después de su golpe se siente natural?
 
+### T-202 FINTAS y RETIRADA
+- Qué hace: con FINTAS el rival alarga su aviso al azar y a veces amaga. Con RETIRADA da un paso atrás después de su golpe. No pega más fuerte ni corre más que antes.
+- Medidas con FINTAS: tus bloqueos perfectos bajan de 20 de 20 a 7 de 20.
+- Medidas con RETIRADA, contra TORNILLO y EL CACIQUE: tu contragolpe a 0.3 s después de su golpe conecta 10 de 10 veces; a 0.9 s no conecta ninguna. La habilidad de DON FIERRO no cambia.
+- Ajuste anotado (la tarea lo permite si falla el criterio d): en DatosAdaptacionRival_Base y _Avanzado, la demora de la retirada baja de 0.15 a 0.05 s y el margen sube de 0.75 a 0.8 m. Con los valores propuestos el contragolpe tardío seguía conectando, porque tu golpe alcanza 4 m del centro del rival y no 3.75 m.
+- Evidencia: EditMode 1205/1205. PlayMode 1029/1047; los fallos son solo los 9 de Arena (Alan). Las pruebas nuevas pasaron 3 corridas seguidas. Los creadores, corridos 2 veces, dejan los prefabs con el mismo md5. Las pruebas de retirada descartan un intento si hay un tirón de más de 0.15 s, con un tope de 240 s.
+- La captura T-202-1 no muestra el paso atrás, porque es una imagen fija.
+- Para probar tú: juega la revancha contra TORNILLO con FINTAS y con RETIRADA. ¿El amago te hace decir "me la hizo" o sientes que el juego te engañó? ¿El paso atrás se lee como táctica del rival? ¿Encuentras solo cómo ganarle?
+
 ## T-137 La demo como programa de Windows (2026-10-28)
 Abre `Builds/Demo/MechaCyberpunk.exe` y juega del título a "continuará" siguiendo docs/guia-demo.md (unos 15 min). Sin revisor.
 ¿Todo funciona igual que en el editor y con buena fluidez? ¿El título de la ventana dice "Mecha Cyberpunk (demo)" y Alt+Enter pasa a ventana? Después, que la juegue la persona nueva de H6.

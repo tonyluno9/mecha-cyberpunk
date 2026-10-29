@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 209b46d30e27a134980449ac866f015c, type: 2}
     - target: {fileID: 6422194584748748529, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       propertyPath: controlados.Array.size
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6422194584748748529, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       propertyPath: 'controlados.Array.data[1]'
@@ -68,6 +68,14 @@ PrefabInstance:
       propertyPath: 'controlados.Array.data[2]'
       value: 
       objectReference: {fileID: 7367291174241383975}
+    - target: {fileID: 6422194584748748529, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: 'controlados.Array.data[3]'
+      value: 
+      objectReference: {fileID: 4951434954578721738}
+    - target: {fileID: 6422194584748748529, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: 'controlados.Array.data[4]'
+      value: 
+      objectReference: {fileID: 8910054758514109356}
     - target: {fileID: 7648639858014300197, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       propertyPath: datos
       value: 
@@ -89,6 +97,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7367291174241383975}
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4951434954578721738}
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8910054758514109356}
   m_SourcePrefab: {fileID: 100100000, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
 --- !u!1 &6836800578224382798 stripped
 GameObject:
@@ -135,3 +149,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca4be784b39fff4cbfbb3abc3e40508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Adaptacion.GuardiaRival
+--- !u!114 &4951434954578721738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6836800578224382798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90437f2c532f85544885d9bc771fc0ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Adaptacion.FintasRival
+--- !u!114 &8910054758514109356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6836800578224382798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf503b110323f442aa694987bae31ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Adaptacion.RetiradaRival

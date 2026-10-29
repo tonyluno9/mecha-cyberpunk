@@ -12,7 +12,7 @@ El bloque 7 (radio) lo lleva Alan en Radio/; este bloque no lo toca. Planeado el
 | T-199 La adaptación como datos y reglas: hábitos, memoria y niveles | nada | hecha (sin revisar): EditMode 1167/1167 (35 nuevas); creador idempotente (md5 igual); IA/Adaptacion pura; ventana de la guardia 0.21 s entre 0.2083 y 0.2167 |
 | T-200 El rival observa y recuerda: estilo por pelea, memoria y guardado | T-199 (T-198 no bloquea) | hecha (sin revisar): el rival observa tu estilo por pelea, lo recuerda y se guarda |
 | T-201 GUARDIA: el rival que te estudió bloquea tus puños | T-200 | hecha (sin revisar): GUARDIA, el rival que te estudió bloquea tus puños |
-| T-202 FINTAS y RETIRADA | T-200, T-201 | pendiente |
+| T-202 FINTAS y RETIRADA | T-200, T-201 | hecha (sin revisar): FINTAS (aviso más largo y amagos) y RETIRADA (paso atrás tras su golpe) |
 | T-203 La cabina te dice qué te leyó el rival | T-200 | pendiente |
 | T-204 Pruebas_Adaptacion: pelear una y otra vez contra el que elijas | T-200 a T-203 | pendiente |
 | T-205 Recorrido de la adaptación del rival (cierre del bloque) | T-198 a T-204 | pendiente |

@@ -8,13 +8,18 @@ namespace MechaCyberpunk.Combate.Golpe
     {
         private readonly float preparacion;
         private readonly float recarga;
+        private float preparacionActual;
         private float transcurrido;
 
         public CicloGolpe(float preparacion, float recarga)
         {
             this.preparacion = preparacion;
             this.recarga = recarga;
+            preparacionActual = preparacion;
         }
+
+        /// <summary>Duración de la preparación del golpe en curso (o del último): la de siempre o la que se pidió esta vez (s).</summary>
+        public float PreparacionActual => preparacionActual;
 
         public FaseGolpe Fase { get; private set; }
 
@@ -26,7 +31,7 @@ namespace MechaCyberpunk.Combate.Golpe
                 switch (Fase)
                 {
                     case FaseGolpe.Preparando:
-                        return Limitar01(transcurrido / preparacion);
+                        return Limitar01(transcurrido / preparacionActual);
                     case FaseGolpe.Recuperando:
                         return Limitar01(transcurrido / recarga);
                     default:
@@ -38,10 +43,17 @@ namespace MechaCyberpunk.Combate.Golpe
         /// <summary>Empieza un golpe. Solo funciona en Listo; devuelve si empezó.</summary>
         public bool IntentarGolpear()
         {
+            return IntentarGolpear(preparacion);
+        }
+
+        /// <summary>Empieza un golpe con una preparación distinta solo esta vez (T-202). Solo funciona en Listo.</summary>
+        public bool IntentarGolpear(float preparacionEstaVez)
+        {
             if (Fase != FaseGolpe.Listo)
             {
                 return false;
             }
+            preparacionActual = preparacionEstaVez;
             Fase = FaseGolpe.Preparando;
             transcurrido = 0f;
             return true;
@@ -57,9 +69,9 @@ namespace MechaCyberpunk.Combate.Golpe
 
             bool impacto = false;
             transcurrido += dt;
-            if (Fase == FaseGolpe.Preparando && transcurrido >= preparacion)
+            if (Fase == FaseGolpe.Preparando && transcurrido >= preparacionActual)
             {
-                transcurrido -= preparacion;
+                transcurrido -= preparacionActual;
                 Fase = FaseGolpe.Recuperando;
                 impacto = true;
             }
