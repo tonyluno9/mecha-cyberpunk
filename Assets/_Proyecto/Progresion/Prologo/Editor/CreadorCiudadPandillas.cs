@@ -26,6 +26,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string RaizT401 = "GTA_T401";
         public const string RaizT402 = "GTA_T402";
         public const string RaizT403 = "GTA_T403";
+        public const string RaizT404 = "GTA_T404";
         public const float HoraInicial = 19f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
@@ -45,7 +46,166 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T401Interno();
             T402Interno();
             T403Interno();
+            T404Interno();
             Guardar(escena);
+        }
+
+        [MenuItem("Mecha Cyberpunk/Pandillas/T-404 Zonas y mapa")]
+        public static void T404()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            T404Interno();
+            Guardar(escena);
+        }
+
+        private const string CarpetaZonas = "Assets/_Proyecto/Progresion/Datos/Territorio";
+        private const float LimiteZonaX = 47f;
+        private const float ExtensionZona = 400f;
+        private const float DesvioJefe = 4f;
+
+        private static T CrearAsset<T>(string ruta) where T : ScriptableObject
+        {
+            T asset = AssetDatabase.LoadAssetAtPath<T>(ruta);
+            if (asset == null)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(ruta));
+                asset = ScriptableObject.CreateInstance<T>();
+                AssetDatabase.CreateAsset(asset, ruta);
+            }
+            return asset;
+        }
+
+        private static DatosZona CrearZona(string id, string nombre, IdPandilla dueno, Color color, float xMin, float xMax)
+        {
+            DatosZona zona = CrearAsset<DatosZona>(CarpetaZonas + "/DatosZona_" + id + ".asset");
+            SerializedObject so = new SerializedObject(zona);
+            so.FindProperty("id").stringValue = id;
+            so.FindProperty("nombre").stringValue = nombre;
+            so.FindProperty("duenoInicial").enumValueIndex = (int)dueno;
+            so.FindProperty("color").colorValue = color;
+            so.FindProperty("rectangulo").rectValue = new Rect(xMin, -ExtensionZona, xMax - xMin, ExtensionZona * 2f);
+            so.FindProperty("respetoInicial").intValue = 0;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(zona);
+            return zona;
+        }
+
+        // Datos del jefe: el pandillero armado de la pandilla con 250 de vida y una escopeta (8 perdigones de 6, cada 1.6 s, 15 m, aviso de 0.5 s).
+        private static DatosPandilleroAPie CrearDatosJefe(string ruta, DatosPandilleroAPie baseDatos, string nombre)
+        {
+            DatosPandilleroAPie datos = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(ruta);
+            if (datos == null)
+            {
+                datos = Object.Instantiate(baseDatos);
+                AssetDatabase.CreateAsset(datos, ruta);
+            }
+            SerializedObject so = new SerializedObject(datos);
+            so.FindProperty("nombre").stringValue = nombre;
+            so.FindProperty("vidaMaxima").floatValue = 250f;
+            so.FindProperty("perdigones").intValue = 8;
+            so.FindProperty("danioDisparo").floatValue = 6f;
+            so.FindProperty("preparacionGolpe").floatValue = 0.5f;
+            so.FindProperty("recargaGolpe").floatValue = 1.6f;
+            so.FindProperty("distanciaMinTiro").floatValue = 6f;
+            so.FindProperty("distanciaMaxTiro").floatValue = 15f;
+            so.FindProperty("distanciaAciertoCerca").floatValue = 8f;
+            so.FindProperty("distanciaAciertoLejos").floatValue = 15f;
+            so.FindProperty("aciertoCerca").floatValue = 0.7f;
+            so.FindProperty("aciertoLejos").floatValue = 0.4f;
+            so.FindProperty("maxAtacando").intValue = 1;
+            so.FindProperty("dinero").intValue = 300;
+            so.FindProperty("calorAlVencer").floatValue = 0f;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(datos);
+            return datos;
+        }
+
+        // T-404: el servicio de territorio con las 3 zonas, el HUD de zona, el mapa con M, los atajos de prueba y un jefe apagado por zona rival.
+        private static void T404Interno()
+        {
+            GameObject anterior = BuscarRaiz(RaizT404);
+            if (anterior != null)
+            {
+                Object.DestroyImmediate(anterior);
+            }
+            CreadorPandilleroArmado.Crear();
+            DatosZona fosa = CrearZona("fosa", "LA FOSA", IdPandilla.Jugador, new Color(1f, 0.5f, 0.1f), -ExtensionZona, -LimiteZonaX);
+            DatosZona tianguis = CrearZona("tianguis", "EL TIANGUIS", IdPandilla.Calaveras, new Color(1f, 0.1f, 0.8f), -LimiteZonaX, LimiteZonaX);
+            DatosZona neon = CrearZona("neon", "NEÓN ALTO", IdPandilla.Viboras, new Color(0.45f, 1f, 0.1f), LimiteZonaX, ExtensionZona);
+
+            GameObject raiz = new GameObject(RaizT404);
+            ServicioTerritorio servicio = raiz.AddComponent<ServicioTerritorio>();
+            SerializedObject soServicio = new SerializedObject(servicio);
+            SerializedProperty lista = soServicio.FindProperty("zonas");
+            lista.arraySize = 3;
+            lista.GetArrayElementAtIndex(0).objectReferenceValue = fosa;
+            lista.GetArrayElementAtIndex(1).objectReferenceValue = tianguis;
+            lista.GetArrayElementAtIndex(2).objectReferenceValue = neon;
+            soServicio.ApplyModifiedPropertiesWithoutUndo();
+            raiz.AddComponent<MechaCyberpunk.UI.Hud.HudTerritorio>();
+            raiz.AddComponent<MechaCyberpunk.UI.Mapa.PantallaMapa>();
+#if !DEMO_FINAL
+            raiz.AddComponent<TerritorioDePrueba>();
+#endif
+
+            GameObject prefabPandillero = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorPandilleroArmado.RutaPrefab);
+            DatosPandilleroAPie calaveras = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(CreadorPandilleroArmado.RutaDatosCalaveras);
+            DatosPandilleroAPie viboras = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(CreadorPandilleroArmado.RutaDatosViboras);
+            List<Vector3> puertas = new List<Vector3>();
+            foreach (GameObject objetoRaiz in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                foreach (Transform t in objetoRaiz.GetComponentsInChildren<Transform>(false))
+                {
+                    if (t.name == "Puerta" || t.name == "Casa_Puerta")
+                    {
+                        puertas.Add(t.position);
+                    }
+                }
+            }
+            string[] ids = { "tianguis", "neon" };
+            string[] manzanas = { "Manzana_2", "Manzana_3" };
+            IdPandilla[] pandillas = { IdPandilla.Calaveras, IdPandilla.Viboras };
+            DatosPandilleroAPie[] baseDatos = { calaveras, viboras };
+            string[] rutasJefe =
+            {
+                "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeCalaveras.asset",
+                "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeViboras.asset"
+            };
+            string[] nombresJefe = { "JEFE CALAVERA", "JEFE VÍBORA" };
+            for (int i = 0; i < ids.Length; i++)
+            {
+                Transform manzana = BuscarTransform(manzanas[i]);
+                if (manzana == null || prefabPandillero == null)
+                {
+                    Debug.LogWarning("[Progresion] CreadorCiudadPandillas.T404: sin " + manzanas[i] + " o sin el prefab del pandillero.");
+                    continue;
+                }
+                Vector3 punto = ElegirPuntoDeBanqueta(manzana.position, puertas, out Vector3 tangente);
+                punto += tangente * DesvioJefe;
+                if (Physics.Raycast(punto + Vector3.up * AlturaBusquedaPiso, Vector3.down, out RaycastHit piso, AlturaBusquedaPiso * 2f))
+                {
+                    punto = piso.point;
+                }
+                DatosPandilleroAPie datosJefe = CrearDatosJefe(rutasJefe[i], baseDatos[i], nombresJefe[i]);
+                GameObject objetoJefe = new GameObject("PuntoJefe_" + ids[i]);
+                objetoJefe.transform.SetParent(raiz.transform, false);
+                objetoJefe.transform.position = punto;
+                GameObject pandillero = (GameObject)PrefabUtility.InstantiatePrefab(prefabPandillero, objetoJefe.transform);
+                pandillero.name = "Jefe";
+                pandillero.transform.SetPositionAndRotation(punto, Quaternion.identity);
+                SerializedObject soP = new SerializedObject(pandillero.GetComponent<PandilleroAPie>());
+                soP.FindProperty("datos").objectReferenceValue = datosJefe;
+                soP.ApplyModifiedPropertiesWithoutUndo();
+                pandillero.SetActive(false);
+                JefePandilla jefe = objetoJefe.AddComponent<JefePandilla>();
+                SerializedObject soJ = new SerializedObject(jefe);
+                soJ.FindProperty("zona").stringValue = ids[i];
+                soJ.FindProperty("pandilla").enumValueIndex = (int)pandillas[i];
+                soJ.FindProperty("jefe").objectReferenceValue = pandillero.GetComponent<PandilleroAPie>();
+                soJ.ApplyModifiedPropertiesWithoutUndo();
+            }
+            Transform m2 = BuscarTransform("Manzana_2");
+            Debug.Log("[Progresion] CreadorCiudadPandillas.T404: zonas, HUD, mapa y jefes listos; Manzana_2 en " + (m2 != null ? m2.position.ToString() : "?") + ".");
         }
 
         [MenuItem("Mecha Cyberpunk/Pandillas/T-403 Cuatro armas")]

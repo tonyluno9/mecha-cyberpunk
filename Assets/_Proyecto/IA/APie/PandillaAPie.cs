@@ -155,11 +155,22 @@ namespace MechaCyberpunk.IA.APie
             {
                 vacioDesde = Time.time;
             }
+            if (ZonaEsDelJugador())
+            {
+                return;
+            }
             if (Time.time - vacioDesde >= datos.SegundosReaparicion && distancia > datos.DistanciaReaparicion)
             {
                 vacioDesde = -1f;
                 Aparecer();
             }
+        }
+
+        // T-404: una zona conquistada ya no reaparece su grupo.
+        private bool ZonaEsDelJugador()
+        {
+            ITerritorio territorio = Registro<ITerritorio>.Actual;
+            return territorio != null && territorio.Dueno(territorio.ZonaEn(centro)) == IdPandilla.Jugador;
         }
 
         private void Update()
@@ -262,6 +273,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 Registro<ICalor>.Actual?.Sumar(datos.CalorAlVencer, MotivoCalor.Pelea);
             }
+            Registro<ITerritorio>.Actual?.RegistrarVencido(vencido.transform.position, idPandilla, false);
             Debug.Log("[IA] Pandillero vencido: +" + datos.Dinero);
         }
     }
