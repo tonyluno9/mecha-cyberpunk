@@ -3,6 +3,15 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## T-137 La demo como programa de Windows (2026-10-28)
+Abre `Builds/Demo/MechaCyberpunk.exe` y juega del título a "continuará" siguiendo docs/guia-demo.md (unos 15 min). Sin revisor.
+¿Todo funciona igual que en el editor y con buena fluidez? ¿El título de la ventana dice "Mecha Cyberpunk (demo)" y Alt+Enter pasa a ventana? Después, que la juegue la persona nueva de H6.
+
+## T-136 El prólogo en la ciudad de Alan (2026-10-28)
+Escena: la demo desde `Escenas/Tony/CreacionPersonaje.unity` (pasa a `Ciudad_Prologo.unity` y `Flashback.unity`). Sin revisor.
+Automático: PrologoCiudadPruebas recorre de la creación a "continuará" con entrada simulada (5 de 6 corridas en verde; ver bitácora). D-tony-187: en el carro el objetivo dice "Maneja a casa" y apunta a la emboscada. D-tony-188: despiertas a las 20:00, cuando abre el clandestino.
+Para un humano: ¿al salir del clandestino entiendes que hay que subir al carro y manejar hacia casa, y la pandilla te sale al paso? ¿El recorrido completo dura 11 a 15 min?
+
 ## Implantes (T-F7, bloque 6) cerrados: qué probar jugando (2026-10-28)
 Del lado de Tony, en `Escenas/Tony/Pruebas_Implantes.unity` (Play, unos 20 minutos, sin ayuda). Sin revisor: el bloque 6 no pasó por revisión de Opus.
 Base automática: `RecorridoImplantesPruebas` (T-197), una prueba de PlayMode con entrada simulada que recorre un día y una noche con cromo (pasos a a j de la tarea); 3 corridas seguidas en verde.

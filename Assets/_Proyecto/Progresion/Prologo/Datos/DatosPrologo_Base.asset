@@ -16,13 +16,14 @@ MonoBehaviour:
   textoIrAlCarro: Ve a tu carro
   textoRegresarACasa: Regresa a casa en tu carro
   textoDormir: Duerme en tu cama
+  textoIrALaEmboscada: Maneja a casa
   idPuntoCarro: Prologo_Carro
   pasosRuta:
   - Prologo_Esquina_1
   lugarFinal: 2
   idAparicionSalida: Clandestino_Salida
   idAparicionCama: Casa_Cama
-  horaDespertar: 19.5
+  horaDespertar: 20
   fraccionVidaDespertar: 0.45
   textoAvisoDespertar: "Tu mecha qued\xF3 fregado. Puedes repararlo en el banco del
     taller antes de pelear."

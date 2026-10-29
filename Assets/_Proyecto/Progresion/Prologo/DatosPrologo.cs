@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Progresion.Prologo
         [SerializeField] private string textoIrAlCarro = "Ve a tu carro";
         [SerializeField] private string textoRegresarACasa = "Regresa a casa en tu carro";
         [SerializeField] private string textoDormir = "Duerme en tu cama";
+        [Tooltip("Objetivo de la salida del clandestino cuando el jugador ya va en el carro: apunta a la emboscada (T-136, D-tony-187).")]
+        [SerializeField] private string textoIrALaEmboscada = "Maneja a casa";
 
         [Header("Puntos del mundo")]
         [Tooltip("Id del IPuntoHistoria del carro, estacionado cerca del clandestino.")]
@@ -33,8 +35,8 @@ namespace MechaCyberpunk.Progresion.Prologo
         [SerializeField] private string idAparicionCama = "Casa_Cama";
 
         [Header("El despertar en el presente (T-133, D-tony-58)")]
-        [Tooltip("Hora a la que despierta el jugador (h). Un poco antes de que abra el clandestino.")]
-        [Range(0f, 23.99f)] [SerializeField] private float horaDespertar = 19.5f;
+        [Tooltip("Hora a la que despierta el jugador (h). Cuando abre el clandestino de Alan (20:00): el jugador no espera.")]
+        [Range(0f, 23.99f)] [SerializeField] private float horaDespertar = 20f;
         [Tooltip("Vida del mecha al despertar, como fracción de la máxima (0 a 1). Nunca baja del piso de emergencia.")]
         [Range(0.01f, 1f)] [SerializeField] private float fraccionVidaDespertar = 0.45f;
         [Tooltip("Aviso de una línea al despertar.")]
@@ -50,6 +52,7 @@ namespace MechaCyberpunk.Progresion.Prologo
         public string TextoIrAlCarro => textoIrAlCarro;
         public string TextoRegresarACasa => textoRegresarACasa;
         public string TextoDormir => textoDormir;
+        public string TextoIrALaEmboscada => textoIrALaEmboscada;
         public string IdPuntoCarro => idPuntoCarro;
         public IReadOnlyList<string> PasosRuta => pasosRuta;
         public IdLugar LugarFinal => lugarFinal;

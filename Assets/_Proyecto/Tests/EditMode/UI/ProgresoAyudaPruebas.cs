@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Tests.UI
             ConfigAyudas config = AssetDatabase.LoadAssetAtPath<ConfigAyudas>(RutaConfig);
             Assert.IsNotNull(config, "Falta ConfigAyudas_Base.asset");
             Assert.AreEqual("WASD caminar · SHIFT correr · ESPACIO saltar · E usar", config.Texto(ContextoAyuda.APie));
-            Assert.AreEqual("FLECHAS manejar · E bajar (detenido)", config.Texto(ContextoAyuda.Carro));
+            Assert.AreEqual("WASD o FLECHAS manejar · ESPACIO freno · E bajar (detenido)", config.Texto(ContextoAyuda.Carro));
             Assert.AreEqual("CLIC IZQ golpe · CLIC DER bloquear · justo antes del golpe = bloqueo perfecto · WASD mover",
                 config.Texto(ContextoAyuda.MechaPelea));
             Assert.AreEqual("WASD mover · RATÓN mirar · E bajar (quieto)", config.Texto(ContextoAyuda.MechaCalle));

@@ -278,7 +278,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual("Prologo_Carro", datos.IdPuntoCarro);
             CollectionAssert.AreEqual(new[] { "Prologo_Esquina_1" }, datos.PasosRuta);
             Assert.AreEqual(IdLugar.Casa, datos.LugarFinal);
-            Assert.AreEqual(19.5f, datos.HoraDespertar);
+            Assert.AreEqual(20f, datos.HoraDespertar);
             Assert.AreEqual(0.45f, datos.FraccionVidaDespertar);
             Assert.AreEqual("Tu mecha quedó fregado. Puedes repararlo en el banco del taller antes de pelear.", datos.TextoAvisoDespertar);
             Assert.AreEqual(6f, datos.SegundosAvisoDespertar);

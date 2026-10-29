@@ -120,3 +120,19 @@ Se pasan como `--parametro valor` o, en `eval`, el código como argumento.
     set_runtime_pipeline_settings set_selection set_serialized_field set_tag set_tags_layers set_target_framerate 
     set_time_settings set_timescale set_transform simulate_key simulate_pointer switch_build_target 
     switch_build_target_status test_status unpack_prefab wait_cancel wait_for wait_status write_text_file 
+## Build de la demo (T-137)
+Con Unity cerrado, desde la raíz del repo:
+
+```bash
+"/c/Program Files/Unity/Hub/Editor/6000.3.25f1/Editor/Unity.exe" -batchmode -projectPath . \
+  -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.Construir -logFile Logs/build-demo.log
+```
+
+- Pone en Build Settings las escenas de `DatosEscenas_Demo` (CreacionPersonaje, Ciudad_Prologo, Flashback), el nombre
+  "Mecha Cyberpunk (demo)" y pantalla completa nativa (Alt+Enter: ventana), y construye `Builds/Demo/MechaCyberpunk.exe`
+  (Windows 64 bits). Sale con 0 si el build salió bien y con 1 si no; el resumen está en el log con `[Progresion] ConstruirDemo`.
+- Solo Build Settings: `-executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.AplicarEscenas -quit`.
+  En el editor: menú Mecha Cyberpunk > Demo.
+- Comprobar el ejecutable: `Builds/Demo/MechaCyberpunk.exe -batchmode -nographics -logFile Logs/demo-player.log` unos segundos
+  y luego cerrarlo; el log no debe tener `Exception` ni `Error` y debe decir que cargó CreacionPersonaje.
+- La prueba de EditMode `BuildSettingsDemoPruebas` comprueba la lista de escenas.

@@ -154,14 +154,16 @@ namespace MechaCyberpunk.Progresion.Editor
         private const string RutaDatosEscenasDemo = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Demo.asset";
         private const string EscenaTitulo = "Assets/_Proyecto/Escenas/Tony/CreacionPersonaje.unity";
         private const string EscenaCiudad = "Assets/_Proyecto/Escenas/Tony/Pruebas_Prologo.unity";
+        private const string EscenaCiudadDemo = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
+        private const string EscenaFlashbackDemo = "Assets/_Proyecto/Escenas/Flashback.unity";
         private const string EscenaFlashback = "Assets/_Proyecto/Escenas/Tony/Pruebas_Flashback.unity";
 
         /// <summary>Crea DatosEscenas_Pruebas y _Demo y agrega ServicioHistoria a ServiciosProgresion.prefab (T-124). Idempotente.</summary>
         [MenuItem("Mecha Cyberpunk/Crear T-124 historia y escenas")]
         public static void CrearT124()
         {
-            CrearDatosEscenas(RutaDatosEscenasPruebas);
-            CrearDatosEscenas(RutaDatosEscenasDemo);
+            CrearDatosEscenas(RutaDatosEscenasPruebas, EscenaCiudad, EscenaFlashback);
+            CrearDatosEscenas(RutaDatosEscenasDemo, EscenaCiudadDemo, EscenaFlashbackDemo); // T-136: la demo usa las escenas de Alan
             AssetDatabase.SaveAssets();
 
             var raiz = PrefabUtility.LoadPrefabContents(RutaPrefabServicios);
@@ -373,7 +375,7 @@ namespace MechaCyberpunk.Progresion.Editor
             AssetDatabase.SaveAssets();
         }
 
-        private static void CrearDatosEscenas(string ruta)
+        private static void CrearDatosEscenas(string ruta, string ciudad, string flashback)
         {
             var datos = AssetDatabase.LoadAssetAtPath<DatosEscenas>(ruta);
             if (datos == null)
@@ -383,8 +385,8 @@ namespace MechaCyberpunk.Progresion.Editor
             }
             var so = new SerializedObject(datos);
             so.FindProperty("rutaTitulo").stringValue = EscenaTitulo;
-            so.FindProperty("rutaCiudad").stringValue = EscenaCiudad;
-            so.FindProperty("rutaFlashback").stringValue = EscenaFlashback;
+            so.FindProperty("rutaCiudad").stringValue = ciudad;
+            so.FindProperty("rutaFlashback").stringValue = flashback;
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(datos);
         }
