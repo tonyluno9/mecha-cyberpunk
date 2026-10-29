@@ -20,7 +20,8 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-301 Tragamonedas jugable | hecha (2026-10-27), en alan/fase-5; Casino PlayMode 9/9, suite completa 898/907 sin fallos antes del ajuste visual final |
 | T-302 Fichas y cajera | hecha (2026-10-27), en alan/T-302-fichas-cajera; compilar OK, EditMode 952/952, PlayMode 909/918 (9 omitidas, 0 fallos). Fichas son un servicio aparte (ServicioFichas.prefab): colócalo en una escena siempre cargada para que se guarden (clave `fichas`) |
 | T-341 | hecha (2026-10-28), en alan/T-341-drones-patrullas, sin integrar |
-| T-303, T-320, T-321, T-331 | pendientes (T-321 espera el mostrador de la clínica de Tony) |
+| T-303 | pendiente |
+| T-320, T-321, T-331, T-341 | hechas, integradas en alan/fase-6 (T-321 con el mostrador de Tony) |
 | T-136 (de Tony) | bloqueada solo por el cambio de datos de escena de Tony |
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
 
@@ -45,5 +46,6 @@ Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 ## Fase 6 de Alan (2026-10-28): integración WIP en alan/fase-6
 - Mezclados en orden con merges normales: origin/main (T-250 de Tony), T-320, T-331 y T-341. Conflictos resueltos solo en archivos de Alan (estado-alan.md, CreadorTodo.cs, Barrio.prefab con las dos adiciones de Peatones y Persecucion, y los .meta de carpeta de Trafico).
 - Evidencia del estado combinado: compilar OK, EditMode 1138/1138, PlayMode 1026 pasaron, 0 fallos, 9 omitidas. Pruebas de T-320, T-331 y T-341 pasan; Barrio.prefab conserva todas las referencias de arte de T-250 (0 GUID perdidos frente a origin/main).
-- **WIP: T-321 sigue pendiente (bloqueada), A-F6 NO está completa.** No integrada a main.
+- **T-321 clínica integrada (2026-10-28):** se portó el código sobre el T-320 limpio (no se mezcló la rama alan/T-321-clinica: salía de un T-320 viejo y su commit regeneraba Barrio.prefab entero y borraba el arte de T-250). Solo se corrió `CreadorMercadoNegroInterior.Crear` sobre Barrio.prefab (0 GUID perdidos). Evidencia: compilar OK, EditMode 1143/1143, PlayMode 1028 pasaron, 0 fallos, 9 omitidas. Captura docs/capturas/T-321-1.png revisada (tabique con vano, cruz verde, letrero CLÍNICA, mostrador de Tony y camilla detrás). El rincón izquierdo del fondo cede el estante a la clínica.
+- A-F6 sigue incompleta (T-303 pendiente). No integrada a main.
 - Sin descartar en el worktree: regenerados de PlayMode (capturas, Peaton_Neon.mat, ProjectSettings.asset) no incluidos en el commit.

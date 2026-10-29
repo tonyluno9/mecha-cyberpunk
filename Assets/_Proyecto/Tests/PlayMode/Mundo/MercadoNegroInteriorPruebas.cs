@@ -129,13 +129,26 @@ namespace MechaCyberpunk.Tests.Mundo
             {
                 Component componente = interactuable as Component;
                 LugarMundo lugar = componente != null ? componente.GetComponentInParent<LugarMundo>() : null;
-                if (lugar != null && lugar.Id == IdLugar.MercadoNegro)
+                // T-321: el mostrador de la clínica también cuelga del mercado; se distingue por su grupo.
+                if (lugar != null && lugar.Id == IdLugar.MercadoNegro && !EsDeLaClinica(componente.transform))
                 {
                     return interactuable;
                 }
             }
             Assert.Fail("El mercado negro trae su mostrador registrado como IInteractuable");
             return null;
+        }
+
+        private static bool EsDeLaClinica(Transform t)
+        {
+            for (; t != null; t = t.parent)
+            {
+                if (t.name == "Clinica")
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static ITienda TiendaDelMercado()
@@ -340,6 +353,20 @@ namespace MechaCyberpunk.Tests.Mundo
             {
                 Assert.IsTrue(luz.enabled, "Dentro la luz '" + luz.name + "' debe estar prendida");
             }
+        }
+
+        [UnityTest]
+        public IEnumerator Clinica_Captura_VanoYMostradorDesdeElPasillo()
+        {
+            yield return Preparar(EscenaLugares.HoraMediodia);
+            Vector3 haciaPuerta = EscenaLugares.HaciaLaPuerta(IdLugar.MercadoNegro);
+            Transform entradaClinica = ((Component)EscenaLugares.Lugar(IdLugar.Clinica)).transform.Find("EntradaClinica");
+            Assert.IsNotNull(entradaClinica, "La clínica tiene su punto de entrada");
+            Vector3 ojos = entradaClinica.position - haciaPuerta * 1.4f;   // HaciaLaPuerta apunta al fondo del cuarto
+            ojos.y = entradaClinica.position.y + AlturaOjos;
+            camara.Colocar(new Pose(ojos, Quaternion.LookRotation(haciaPuerta, Vector3.up) * Quaternion.Euler(InclinacionCapturaGrados / 2f, 0f, 0f)));
+            yield return EscenaLugares.Esperar(SegundosMezcla);
+            CapturaPruebas.Guardar(camara.Camara, "docs/capturas/T-321-1.png");
         }
 
         [UnityTest]

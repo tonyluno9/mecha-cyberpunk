@@ -1,9 +1,40 @@
+using MechaCyberpunk.Core;
+using MechaCyberpunk.Mundo.Datos;
 using MechaCyberpunk.Mundo.Lugares;
 using UnityEditor;
 using UnityEngine;
 
 namespace MechaCyberpunk.Mundo.Editor
 {
+    /// <summary>
+    /// Medidas de la clínica de T-321, en metros desde el muro del fondo del cuarto (z hacia la puerta) y x local del mercado.
+    /// Vive en el rincón del fondo a la izquierda: tabique con un vano hacia el pasillo, camilla contra el muro y, detrás del vano,
+    /// el punto libre Clinica_Mostrador para el prefab de Tony. Las pruebas de EditMode comprueban que no choca con los puestos.
+    /// </summary>
+    public static class GeometriaClinica
+    {
+        public const float XMin = -5f;
+        public const float XMax = -1.4f;
+        public const float Profundidad = 1.6f;          // del muro del fondo al tabique
+        public const float GrosorTabique = 0.1f;
+        public const float VanoXMin = -2.8f;
+        public const float VanoXMax = -1.8f;
+        public const float AlturaVano = 2.2f;
+        public const float CamillaXMin = -4.8f;
+        public const float CamillaXMax = -3f;
+        public const float CamillaZMin = 0.2f;
+        public const float CamillaZMax = 0.9f;
+        public const float MostradorX = -2.3f;
+        public const float MostradorZ = 0.8f;
+        public const float EntradaX = -2.3f;
+        public const float EntradaZ = 2.3f;             // afuera del vano, en el pasillo
+        public const float HoraApertura = 9f;
+        public const float HoraCierre = 18f;
+        public const string NombreMostrador = "Clinica_Mostrador";
+        public const string RutaMostradorClinica = "Assets/_Proyecto/UI/Prefabs/MostradorClinica.prefab";
+        public const string RutaDatos = "Assets/_Proyecto/Mundo/Datos/DatosLugar_Clinica.asset";
+    }
+
     /// <summary>
     /// Crea el interior del mercado negro de T-320 dentro del prefab del barrio, igual que CreadorCasinoInterior con el casino: un cuarto de
     /// puestos con muros gruesos con collider, mesas del kit con toldo, estantes, cajas, mallas de alambre, luces de sodio y la
@@ -140,6 +171,10 @@ namespace MechaCyberpunk.Mundo.Editor
             // Estantes de metal contra el muro del fondo, con cajas.
             foreach (float x in XEstantes)
             {
+                if (x < GeometriaClinica.XMax)
+                {
+                    continue;   // T-321: el estante izquierdo cede su lugar a la clínica
+                }
                 Caja(mobiliario, "Estante", Pos(x, 1.1f, 0.45f, zFondoInterior), new Vector3(2.4f, 2.2f, 0.7f), metal, true);
                 Caja(mobiliario, "CajaEstanteBaja", Pos(x - 0.5f, 0.35f, 0.5f, zFondoInterior), new Vector3(0.7f, 0.7f, 0.55f), caja, false);
                 Caja(mobiliario, "CajaEstanteAlta", Pos(x + 0.4f, 1.55f, 0.5f, zFondoInterior), new Vector3(0.8f, 0.6f, 0.55f), caja, false);
@@ -173,6 +208,8 @@ namespace MechaCyberpunk.Mundo.Editor
                 Luz(grupoLuces, "LuzRellenoPuerta", Pos(0f, 3.6f, 9.5f, zFondoInterior), sodio, IntensidadSodio / 2f, 9f)
             };
 
+            ConstruirClinica(zFondoInterior, grupoLuces, luces);
+
             // Zona: del umbral interior (cara de adentro de la puerta) al muro del fondo.
             float profundidadZona = zFrenteInterior - zFondoInterior;
             GameObject zonaObjeto = new GameObject("ZonaInterior");
@@ -197,6 +234,85 @@ namespace MechaCyberpunk.Mundo.Editor
             PrefabUtility.UnloadPrefabContents(raiz);
             AssetDatabase.SaveAssets();
             Debug.Log("[Mundo] T-320 creada: interior del mercado negro con " + (PuestosIzquierda.Length + PuestosDerecha.Length) + " puestos, el mostrador de Tony y " + luces.Count + " luces.");
+        }
+
+        // T-321: cuarto de la clínica en el rincón del fondo, con su LugarMundo (IdLugar.Clinica), su vano y el punto libre del mostrador de Tony.
+        private static void ConstruirClinica(float zFondoInterior, Transform grupoLuces, System.Collections.Generic.List<Light> luces)
+        {
+            Material baldosa = Mat("ClinicaBaldosa", new Color(0.72f, 0.78f, 0.78f), 0.6f, default);
+            Material tabique = Mat("ClinicaTabique", new Color(0.55f, 0.62f, 0.62f), 0.3f, default);
+            Material camilla = Mat("ClinicaCamilla", new Color(0.8f, 0.85f, 0.85f), 0.4f, default);
+            Material tela = Mat("ClinicaTela", new Color(0.2f, 0.5f, 0.55f), 0.2f, default);
+            Material tubo = Mat("ClinicaTubo", new Color(0.7f, 0.95f, 1f), 0.3f, new Color(2.2f, 3.2f, 3.6f));
+            Material cruz = Mat("ClinicaCruz", new Color(0.1f, 0.9f, 0.5f), 0.2f, new Color(0.3f, 3f, 1.5f));
+
+            Transform clinica = Grupo("Clinica");
+            float ancho = GeometriaClinica.XMax - GeometriaClinica.XMin;
+            float xCentro = (GeometriaClinica.XMin + GeometriaClinica.XMax) / 2f;
+            float zTabique = zFondoInterior + GeometriaClinica.Profundidad;
+            float xVano = (GeometriaClinica.VanoXMin + GeometriaClinica.VanoXMax) / 2f;
+
+            Caja(clinica, "PisoBaldosa", new Vector3(xCentro, 0.05f, zFondoInterior + GeometriaClinica.Profundidad / 2f), new Vector3(ancho, 0.02f, GeometriaClinica.Profundidad), baldosa, false);
+
+            // Tabique en dos tramos con el vano entre ellos, más un dintel.
+            float anchoIzquierdo = GeometriaClinica.VanoXMin - GeometriaClinica.XMin;
+            float anchoDerecho = GeometriaClinica.XMax - GeometriaClinica.VanoXMax;
+            float alturaDintel = AltoInterior - GeometriaClinica.AlturaVano;
+            Caja(clinica, "TabiqueIzquierdo", new Vector3(GeometriaClinica.XMin + anchoIzquierdo / 2f, AltoInterior / 2f, zTabique), new Vector3(anchoIzquierdo, AltoInterior, GeometriaClinica.GrosorTabique), tabique, true);
+            Caja(clinica, "TabiqueDerecho", new Vector3(GeometriaClinica.VanoXMax + anchoDerecho / 2f, AltoInterior / 2f, zTabique), new Vector3(anchoDerecho, AltoInterior, GeometriaClinica.GrosorTabique), tabique, true);
+            Caja(clinica, "Dintel", new Vector3(xVano, GeometriaClinica.AlturaVano + alturaDintel / 2f, zTabique), new Vector3(GeometriaClinica.VanoXMax - GeometriaClinica.VanoXMin, alturaDintel, GeometriaClinica.GrosorTabique), tabique, true);
+            Caja(clinica, "CruzVerde", new Vector3(xVano, GeometriaClinica.AlturaVano + 0.1f, zTabique + 0.07f), new Vector3(0.5f, 0.12f, 0.03f), cruz, false);
+
+            // Camilla contra el muro del fondo: base, colchón y almohada.
+            float camillaAncho = GeometriaClinica.CamillaXMax - GeometriaClinica.CamillaXMin;
+            float camillaFondo = GeometriaClinica.CamillaZMax - GeometriaClinica.CamillaZMin;
+            float camillaX = (GeometriaClinica.CamillaXMin + GeometriaClinica.CamillaXMax) / 2f;
+            float camillaZ = zFondoInterior + (GeometriaClinica.CamillaZMin + GeometriaClinica.CamillaZMax) / 2f;
+            Caja(clinica, "Camilla_Base", new Vector3(camillaX, 0.3f, camillaZ), new Vector3(camillaAncho, 0.6f, camillaFondo), camilla, true);
+            Caja(clinica, "Camilla_Colchon", new Vector3(camillaX, 0.65f, camillaZ), new Vector3(camillaAncho - 0.1f, 0.1f, camillaFondo - 0.1f), tela, false);
+            Caja(clinica, "Camilla_Almohada", new Vector3(GeometriaClinica.CamillaXMin + 0.3f, 0.75f, camillaZ), new Vector3(0.4f, 0.1f, 0.4f), camilla, false);
+            Caja(clinica, "Lampara_Tubo", new Vector3(xCentro, AltoInterior - 0.2f, zFondoInterior + 0.8f), new Vector3(2.4f, 0.06f, 0.12f), tubo, false);
+            luces.Add(Luz(grupoLuces, "LuzFriaClinica", new Vector3(xCentro, AltoInterior - 0.6f, zFondoInterior + 0.8f), new Color(0.7f, 0.95f, 1f), 7f, 4.5f));
+
+            // Punto vacío, sobre el piso, donde Tony coloca su mostrador; mismo giro que el del mercado.
+            GameObject punto = new GameObject(GeometriaClinica.NombreMostrador);
+            punto.transform.SetParent(clinica, false);
+            punto.transform.localPosition = new Vector3(GeometriaClinica.MostradorX, 0.04f, zFondoInterior + GeometriaClinica.MostradorZ);
+            punto.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+
+            // Mostrador de Tony (T-193): hermano del punto, sin editar el prefab; si aún no existe, el punto queda libre.
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(GeometriaClinica.RutaMostradorClinica) != null)
+            {
+                GameObject mostradorClinica = Prop(clinica, GeometriaClinica.RutaMostradorClinica, punto.transform.localPosition, 180f);
+                mostradorClinica.name = "MostradorClinica";
+            }
+
+            // El lugar: entrada en el pasillo, frente al vano.
+            GameObject lugarObjeto = new GameObject("Lugar_Clinica");
+            lugarObjeto.transform.SetParent(clinica, false);
+            GameObject entrada = new GameObject("EntradaClinica");
+            entrada.transform.SetParent(lugarObjeto.transform, false);
+            entrada.transform.localPosition = new Vector3(GeometriaClinica.EntradaX, 0f, zFondoInterior + GeometriaClinica.EntradaZ);
+            LugarMundo lugar = lugarObjeto.AddComponent<LugarMundo>();
+            SerializedObject so = new SerializedObject(lugar);
+            so.FindProperty("datos").objectReferenceValue = CrearDatosClinica();
+            so.FindProperty("entrada").objectReferenceValue = entrada.transform;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Crea (sin pisar) DatosLugar_Clinica: IdLugar.Clinica, abierta de día como el mercado. No toca el prefab del barrio.</summary>
+        [MenuItem("Mecha Cyberpunk/Crear datos de la clínica (T-321)")]
+        public static DatosLugar CrearDatosClinica()
+        {
+            DatosLugar datos = AssetDatabase.LoadAssetAtPath<DatosLugar>(GeometriaClinica.RutaDatos);
+            if (datos == null)
+            {
+                datos = ScriptableObject.CreateInstance<DatosLugar>();
+                datos.Configurar(IdLugar.Clinica, "Clínica", new HorarioLugar(GeometriaClinica.HoraApertura, GeometriaClinica.HoraCierre), false);
+                AssetDatabase.CreateAsset(datos, GeometriaClinica.RutaDatos);
+                AssetDatabase.SaveAssets();
+            }
+            return datos;
         }
 
         // Posición local dentro del mercado: x, altura y, metros desde el muro del fondo del interior hacia la puerta.
