@@ -20,7 +20,7 @@ Qué falta para el hito H6 del lado de Tony: T-136 (que apunte `DatosEscenas_Dem
 | T-301 Tragamonedas jugable | hecha (2026-10-27), en alan/fase-5; Casino PlayMode 9/9, suite completa 898/907 sin fallos antes del ajuste visual final |
 | T-302 Fichas y cajera | hecha (2026-10-27), en alan/T-302-fichas-cajera; compilar OK, EditMode 952/952, PlayMode 909/918 (9 omitidas, 0 fallos). Fichas son un servicio aparte (ServicioFichas.prefab): colócalo en una escena siempre cargada para que se guarden (clave `fichas`) |
 | T-341 | hecha (2026-10-28), en alan/T-341-drones-patrullas, sin integrar |
-| T-303 | pendiente |
+| T-303 Interior del casino | hecha; ya integrada en alan/fase-6 (la rama alan/T-303-interior-casino, 56e105e, es ancestro de fase-6; T-301 y T-302 también) |
 | T-320, T-321, T-331, T-341 | hechas, integradas en alan/fase-6 (T-321 con el mostrador de Tony) |
 | T-136 (de Tony) | bloqueada solo por el cambio de datos de escena de Tony |
 | T-310, T-311 (visuales) | en otras sesiones/worktrees (mecha-cyberpunk-alan-visual y -fachadas); no tocar desde aquí |
@@ -47,5 +47,11 @@ Fecha de corte del proyecto: desde el 2026-11-12 no se empiezan tareas nuevas.
 - Mezclados en orden con merges normales: origin/main (T-250 de Tony), T-320, T-331 y T-341. Conflictos resueltos solo en archivos de Alan (estado-alan.md, CreadorTodo.cs, Barrio.prefab con las dos adiciones de Peatones y Persecucion, y los .meta de carpeta de Trafico).
 - Evidencia del estado combinado: compilar OK, EditMode 1138/1138, PlayMode 1026 pasaron, 0 fallos, 9 omitidas. Pruebas de T-320, T-331 y T-341 pasan; Barrio.prefab conserva todas las referencias de arte de T-250 (0 GUID perdidos frente a origin/main).
 - **T-321 clínica integrada (2026-10-28):** se portó el código sobre el T-320 limpio (no se mezcló la rama alan/T-321-clinica: salía de un T-320 viejo y su commit regeneraba Barrio.prefab entero y borraba el arte de T-250). Solo se corrió `CreadorMercadoNegroInterior.Crear` sobre Barrio.prefab (0 GUID perdidos). Evidencia: compilar OK, EditMode 1143/1143, PlayMode 1028 pasaron, 0 fallos, 9 omitidas. Captura docs/capturas/T-321-1.png revisada (tabique con vano, cruz verde, letrero CLÍNICA, mostrador de Tony y camilla detrás). El rincón izquierdo del fondo cede el estante a la clínica.
-- A-F6 sigue incompleta (T-303 pendiente). No integrada a main.
+- A-F6 sigue incompleta: quedan T-136 (de Tony, datos de escena) y T-310/T-311 (otras sesiones). T-084/T-085 no se hacen. No integrada a main.
 - Sin descartar en el worktree: regenerados de PlayMode (capturas, Peaton_Neon.mat, ProjectSettings.asset) no incluidos en el commit.
+
+## T-301, T-302 y T-303 comprobadas en alan/fase-6 (2026-10-28)
+- Las tres ramas son ancestros de alan/fase-6 (`git merge-base --is-ancestor`); no hubo nada que portar. `CreadorCasinoInterior.cs`, los `CasinoInt_*`, las capturas T-303-1..3 y `CasinoInteriorPruebas` son idénticos a la rama T-303; Barrio.prefab referencia los materiales del casino y CreadorTodo llama a `CreadorCasinoInterior`.
+- Evidencia del estado combinado (T-250, T-320, T-321, T-331, T-341 y T-303 juntos): compilar OK, EditMode 1143/1143, PlayMode 1028 pasaron de 1037, 0 fallos, 9 omitidas. `CasinoInteriorPruebas` 7/7.
+- No se tomó una captura nueva del casino: se usan las T-303-1..3 ya revisadas. No se probó a mano en Unity.
+- El PlayMode regeneró capturas, Peaton_Neon.mat y ProjectSettings; no se incluyeron en el commit.

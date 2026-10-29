@@ -216,3 +216,6 @@ Rama para probar: `alan/fase-5` (T-093 incluida). Actualizado: 2026-10-27. A-F1 
 - Cuidado: no correr `CreadorTodo` sobre esta base: borra el arte de T-250 de Barrio.prefab, la jaula y las escenas. Esta rama solo corrió los dos creadores del mercado sobre el Barrio.prefab de main.
 - Límites: la pantalla de compra se abrió con `Usar()`, pero la compra se probó por ITienda, no con teclas. Un intento de captura desde una esquina mostró cielo donde hay techo, sin explicación (los rayos confirman el techo).
 - Para ti: Ciudad.unity a las 12:00, entra al mercado: ¿se siente como mercado negro?, ¿el paso junto al mostrador es cómodo?
+
+## T-303 en alan/fase-6 (2026-10-28)
+T-301, T-302 y T-303 ya estaban contenidas en alan/fase-6 (ramas ancestro). Estado combinado verificado: compilar OK, EditMode 1143/1143, PlayMode 1028/1037 (0 fallos, 9 omitidas), `CasinoInteriorPruebas` 7/7. Falta a mano: mirar el casino de noche en Unity. A-F6 no está completa (T-136, T-310, T-311); no mezclar a main aún.
