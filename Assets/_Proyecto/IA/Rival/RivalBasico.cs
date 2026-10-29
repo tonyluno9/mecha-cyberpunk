@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MechaCyberpunk.Combate.Bloqueo;
 using MechaCyberpunk.Combate.Golpe;
 using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Combate.Peleador;
@@ -26,6 +27,7 @@ namespace MechaCyberpunk.IA.Rival
         private const float ProbabilidadRodeoInverso = 0.5f;
         private const float VelocidadMinimaAvance = 0.2f;
         private const float TiempoParaRodearEstorbo = 0.5f;
+        private const float TinteAviso = -1f;
 
         private static readonly List<RivalBasico> Grupo = new List<RivalBasico>();
         private static readonly int IdColorBase = Shader.PropertyToID("_BaseColor");
@@ -72,7 +74,9 @@ namespace MechaCyberpunk.IA.Rival
         private float velocidad;
         private float velocidadVertical;
         private bool avisoSinObjetivo;
-        private bool brazoEnAviso;
+        // Qué tinte tiene el brazo: -1 aviso del golpe, 0 reposo, de 0 a 1 la guardia subiendo (T-201).
+        private float tinteBrazo;
+        private GuardiaMecha guardia;
         private bool inicioHecho;
         // Alguien (el director de pelea) ya le quitó el control antes de su Start: no se lo vuelve a quitar.
         private bool controlDecidido;
@@ -167,6 +171,7 @@ namespace MechaCyberpunk.IA.Rival
             controlador = GetComponent<CharacterController>();
             propio = GetComponent<IPeleador>();
             habilidad = GetComponent<HabilidadRival>();
+            guardia = GetComponent<GuardiaMecha>();
             // Se registra en Awake y no en OnEnable: este componente se apaga cada vez que el rival pierde el control (cuenta atrás,
             // aturdimiento) y los ojos no deben perderlo de vista por eso.
             Registro<ILecturaRival>.Agregar(this);
@@ -338,6 +343,11 @@ namespace MechaCyberpunk.IA.Rival
                 rodeando = false;
                 velocidad = 0f;
             }
+            // Con la guardia levantada (o pedida) no empieza golpes, pero sigue girando y caminando (T-201).
+            if (decision == DecisionRival.EmpezarGolpe && guardia != null && (guardia.Levantada || guardia.Pedida))
+            {
+                decision = DecisionRival.Esperar;
+            }
             if (decision == DecisionRival.EmpezarGolpe)
             {
                 ciclo.IntentarGolpear();
@@ -487,7 +497,14 @@ namespace MechaCyberpunk.IA.Rival
             if (ciclo.Fase == FaseGolpe.Preparando)
             {
                 brazo.localRotation = giroReposoBrazo * Quaternion.Euler(-config.AnguloBrazoAtras * ciclo.Progreso, 0f, 0f);
-                PintarBrazo(true);
+                PintarBrazo(TinteAviso);
+                return;
+            }
+            float subida = guardia != null ? guardia.Progreso : 0f;
+            if (subida > 0f)
+            {
+                brazo.localRotation = giroReposoBrazo * Quaternion.Euler(-config.AnguloBrazoGuardia * subida, 0f, 0f);
+                PintarBrazo(subida);
             }
             else
             {
@@ -498,21 +515,24 @@ namespace MechaCyberpunk.IA.Rival
         private void PonerBrazoEnReposo()
         {
             brazo.localRotation = giroReposoBrazo;
-            PintarBrazo(false);
+            PintarBrazo(0f);
         }
 
-        private void PintarBrazo(bool aviso)
+        private void PintarBrazo(float tinte)
         {
-            if (aviso == brazoEnAviso)
+            if (Mathf.Approximately(tinte, tinteBrazo))
             {
                 return;
             }
-            brazoEnAviso = aviso;
+            tinteBrazo = tinte;
+            bool aviso = tinte < 0f;
             for (int i = 0; i < piezasBrazo.Length; i++)
             {
                 piezasBrazo[i].GetPropertyBlock(bloque);
-                bloque.SetColor(IdColorBase, aviso ? config.ColorAviso : coloresReposo[i]);
-                bloque.SetColor(IdColorEmision, aviso ? config.ColorAviso : Color.black);
+                Color color = aviso ? config.ColorAviso : Color.Lerp(coloresReposo[i], config.ColorGuardia, tinte);
+                Color emision = aviso ? config.ColorAviso : Color.Lerp(Color.black, config.ColorGuardia, tinte);
+                bloque.SetColor(IdColorBase, color);
+                bloque.SetColor(IdColorEmision, emision);
                 piezasBrazo[i].SetPropertyBlock(bloque);
             }
         }

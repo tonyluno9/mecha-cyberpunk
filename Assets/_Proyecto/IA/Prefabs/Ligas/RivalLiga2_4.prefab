@@ -56,6 +56,18 @@ PrefabInstance:
       propertyPath: datos
       value: 
       objectReference: {fileID: 11400000, guid: b7fba7d505fe5634483e11adc55f0f4f, type: 2}
+    - target: {fileID: 6422194584748748529, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: controlados.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6422194584748748529, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: 'controlados.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8197152570726465089}
+    - target: {fileID: 6422194584748748529, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      propertyPath: 'controlados.Array.data[2]'
+      value: 
+      objectReference: {fileID: 7755518432238969898}
     - target: {fileID: 7648639858014300197, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       propertyPath: datos
       value: 
@@ -71,6 +83,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9071768568620017501}
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8197152570726465089}
+    - targetCorrespondingSourceObject: {fileID: 5747396069579313608, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7755518432238969898}
   m_SourcePrefab: {fileID: 100100000, guid: d9d25157c09219a4eacf98bedb94d851, type: 3}
 --- !u!1 &4421024622111279000 stripped
 GameObject:
@@ -90,3 +108,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Adaptacion.AdaptacionRival
   datos: {fileID: 11400000, guid: 3ef0a5cab7211c84a8b949bd3ff4adef, type: 2}
+--- !u!114 &8197152570726465089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4421024622111279000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b9c3e0adccb2c0428200a54f9e08b87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Combate::MechaCyberpunk.Combate.Bloqueo.GuardiaMecha
+  bloquear: {fileID: 0}
+  mandoPorCodigo: 1
+  permitePerfecto: 0
+--- !u!114 &7755518432238969898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4421024622111279000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bca4be784b39fff4cbfbb3abc3e40508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Adaptacion.GuardiaRival
