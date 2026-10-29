@@ -8,7 +8,7 @@ Rama de integración: tony/fase-7. Bloques 1 a 4 de T-F7 hechos (economía, liga
 El bloque 7 (radio) lo lleva Alan en Radio/; este bloque no lo toca. Planeado el 2026-10-28 (planificador Opus 5.5).
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
-| T-198 Contratos del bloque 8: la clave `adaptacion` y la llave del rival (Core, solo comentarios) | nada | pendiente |
+| T-198 Contratos del bloque 8: la clave `adaptacion` y la llave del rival (Core, solo comentarios) | nada | hecha (sin revisar): compilar OK, EditMode 1132/1132, solo comentarios; en main |
 | T-199 La adaptación como datos y reglas: hábitos, memoria y niveles | nada | pendiente |
 | T-200 El rival observa y recuerda: estilo por pelea, memoria y guardado | T-199 (T-198 no bloquea) | pendiente |
 | T-201 GUARDIA: el rival que te estudió bloquea tus puños | T-200 | pendiente |
