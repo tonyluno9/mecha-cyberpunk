@@ -522,6 +522,57 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &185770535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 185770536}
+  - component: {fileID: 185770537}
+  m_Layer: 0
+  m_Name: "Reclutable_LA G\xDCERA"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &185770536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185770535}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -62.5, y: 0.2, z: -82}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1204563567}
+  m_Father: {fileID: 489360337}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &185770537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185770535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed9cdbf31ba4a0a4b87ffb6a077754c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.Reclutable
+  nombre: "LA G\xDCERA"
+  costo: 200
+  respetoMinimo: 40
+  zona: fosa
+  soloHistoria: 0
+  visual: {fileID: 1204563568}
 --- !u!114 &190726240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2123,6 +2174,73 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1001 &312759939
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 764106407}
+    m_Modifications:
+    - target: {fileID: 4998093974301714449, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_Name
+      value: Modelo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+--- !u!4 &312759940 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+  m_PrefabInstance: {fileID: 312759939}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &312759941 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4998093974301714449, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+  m_PrefabInstance: {fileID: 312759939}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &315173930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2589,6 +2707,70 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &489360334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 489360337}
+  - component: {fileID: 489360336}
+  - component: {fileID: 489360335}
+  m_Layer: 0
+  m_Name: GTA_T405
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &489360335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489360334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45c569b8bfff2414ba1acdf67137a4c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Hud.HudAliados
+  segundosAviso: 3
+--- !u!114 &489360336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489360334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9205c12e4cc69024cb57f51e275d4133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.PandillaJugador
+  prefabAliado: {fileID: 82683616222837917, guid: 61871bd7513a4be4fa0594a0170dbe30, type: 3}
+  segundosVuelta: 45
+  distanciaVuelta: 15
+--- !u!4 &489360337
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489360334}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1783202668}
+  - {fileID: 185770536}
+  - {fileID: 764106407}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &514036564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3143,6 +3325,57 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &764106406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 764106407}
+  - component: {fileID: 764106408}
+  m_Layer: 0
+  m_Name: Reclutable_EL TOPO
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &764106407
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764106406}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -58.5, y: 0.2, z: -86}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 312759940}
+  m_Father: {fileID: 489360337}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &764106408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764106406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed9cdbf31ba4a0a4b87ffb6a077754c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.Reclutable
+  nombre: EL TOPO
+  costo: 350
+  respetoMinimo: 70
+  zona: fosa
+  soloHistoria: 0
+  visual: {fileID: 312759941}
 --- !u!1001 &765853438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3563,6 +3796,73 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1001 &946547236
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1783202668}
+    m_Modifications:
+    - target: {fileID: 4998093974301714449, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_Name
+      value: Modelo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+--- !u!4 &946547237 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+  m_PrefabInstance: {fileID: 946547236}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &946547238 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4998093974301714449, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+  m_PrefabInstance: {fileID: 946547236}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &956513543
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4612,6 +4912,73 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cff16099274bf84aaf014bc6584885b, type: 3}
+--- !u!1001 &1204563566
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 185770536}
+    m_Modifications:
+    - target: {fileID: 4998093974301714449, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_Name
+      value: Modelo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+--- !u!4 &1204563567 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8335306867972346443, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+  m_PrefabInstance: {fileID: 1204563566}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1204563568 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4998093974301714449, guid: fadccfc92f42b3141a0b87351b5db35f, type: 3}
+  m_PrefabInstance: {fileID: 1204563566}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1221228758
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6382,6 +6749,57 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfc764df95055e640a99f57c51b3c4f1, type: 3}
+--- !u!1 &1783202667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1783202668}
+  - component: {fileID: 1783202669}
+  m_Layer: 0
+  m_Name: Reclutable_EL CHATO
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1783202668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783202667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -52.5, y: 0, z: -74}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 946547237}
+  m_Father: {fileID: 489360337}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1783202669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783202667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed9cdbf31ba4a0a4b87ffb6a077754c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.Reclutable
+  nombre: EL CHATO
+  costo: 0
+  respetoMinimo: 10
+  zona: fosa
+  soloHistoria: 0
+  visual: {fileID: 946547238}
 --- !u!1 &1808613259
 GameObject:
   m_ObjectHideFlags: 0
@@ -7483,3 +7901,4 @@ SceneRoots:
   - {fileID: 1698418341}
   - {fileID: 565707289}
   - {fileID: 1455427141}
+  - {fileID: 489360337}

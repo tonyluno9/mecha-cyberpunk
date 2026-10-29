@@ -142,3 +142,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Arriba a la izquierda el HUD dice la zona (LA FOSA tuya al oeste, EL TIANGUIS de los Calaveras al centro, NEÓN ALTO de las Víboras al este) y tu respeto; cada pandillero vencido en una zona rival suma 10. Atajo de prueba: F6 suma 10 de respeto donde estés y F7 te da $500 (se apagan en la demo final). ¿7 pandilleros antes del jefe es mucho o poco?
 - Con 70 de respeto sale "¡EL JEFE TE BUSCA!" y aparece su jefe en la banqueta (250 de vida, escopeta que lanza 8 perdigones, aviso de 0.5 s). Véncelo: "EL TIANGUIS ES TUYO", respeto 100 y su grupo ya no reaparece. Si caes antes, pierdes 10 de respeto. ¿El jefe es un reto?
 - M abre el mapa del barrio (6 manzanas del color de su dueño, nombre, respeto y un punto blanco eres tú); M o Esc lo cierran y mientras está abierto no te mueves ni disparas. ¿Se entiende?
+
+### T-405 tu pandilla (qué probar)
+- En LA FOSA (oeste, cerca de la casa) hay 3 chavos: EL CHATO (gratis, respeto 10), LA GÜERA ($200, respeto 40) y EL TOPO ($350, respeto 70). Con F6 subes respeto y con F7 te dan $500; E junto a ellos los recluta (si falta algo, el texto dice qué).
+- Los aliados naranjas te siguen, corren si te alejas, disparan a los pandilleros y suben de nivel (3 vencidos y 8); abajo a la izquierda ves su nivel y vida, y en el mapa (M) son puntos naranjas. F los manda esperar o seguir.
+- Si cae uno, vuelve a los 45 s; los pandilleros también les disparan. ¿Ayudan o estorban? ¿Se nota subir de nivel?

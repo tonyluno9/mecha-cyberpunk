@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.Datos;
 using UnityEngine;
 
@@ -58,6 +60,12 @@ namespace MechaCyberpunk.IA.APie
         private const float AlturaPecho = 1.2f;
         private const float AdelanteBoca = 0.4f;
         private const int ArmaPistola = 1;
+
+        /// <summary>Los pandilleros activos (T-405): los aliados los buscan aquí.</summary>
+        public static readonly List<PandilleroAPie> Activos = new List<PandilleroAPie>();
+
+        /// <summary>A quién apunta ahora (el jugador o un aliado), o null (T-405).</summary>
+        public Transform ObjetivoActual { get; private set; }
 
         public DatosPandilleroAPie Datos => datos;
         public EstadoPandillero Estado => regla != null ? regla.Estado : EstadoPandillero.Esperando;
@@ -152,13 +160,23 @@ namespace MechaCyberpunk.IA.APie
             PintarBrazo(datos.ColorNormal);
         }
 
-        private void OnEnable() => Registro<ILecturaRival>.Agregar(this);
+        private void OnEnable()
+        {
+            Registro<ILecturaRival>.Agregar(this);
+            Activos.Add(this);
+        }
 
-        private void OnDisable() => Registro<ILecturaRival>.Quitar(this);
+        private void OnDisable()
+        {
+            Registro<ILecturaRival>.Quitar(this);
+            Activos.Remove(this);
+            ObjetivoActual = null;
+        }
 
         private void OnDestroy()
         {
             Registro<ILecturaRival>.Quitar(this);
+            Activos.Remove(this);
             if (modelo != null)
             {
                 modelo.Cambio -= AlCambiar;
@@ -273,6 +291,19 @@ namespace MechaCyberpunk.IA.APie
         {
             bool atacable = Alerta && EsAtacable();
             Vector3 posicionJugador = raizJugador != null ? raizJugador.position : hogar;
+            // T-405: dispara al más cercano entre el jugador y sus aliados.
+            IRecibeDanio recibe = recibeJugador;
+            ObjetivoActual = atacable ? raizJugador : null;
+            if (atacable)
+            {
+                AliadoAPie aliado = AliadoAPie.MasCercano(transform.position, DistanciaPlana(transform.position, posicionJugador));
+                if (aliado != null)
+                {
+                    recibe = aliado;
+                    posicionJugador = aliado.transform.position;
+                    ObjetivoActual = aliado.transform;
+                }
+            }
             float distancia = DistanciaPlana(transform.position, posicionJugador);
             Vector3 pecho = posicionJugador + Vector3.up * AlturaPecho;
             Vector3 boca = transform.position + Vector3.up * AlturaBoca + transform.forward * AdelanteBoca;
@@ -280,7 +311,7 @@ namespace MechaCyberpunk.IA.APie
             if (atacable && distancia <= datos.DistanciaMaxTiro)
             {
                 Vector3 hacia = pecho - boca;
-                puedeTirar = pistola.HayLinea(boca, hacia.normalized, hacia.magnitude, recibeJugador, out _);
+                puedeTirar = pistola.HayLinea(boca, hacia.normalized, hacia.magnitude, recibe, out _);
             }
 
             ReglaPandilleroAPie.Entrada entrada = new ReglaPandilleroAPie.Entrada
@@ -312,7 +343,7 @@ namespace MechaCyberpunk.IA.APie
                     datos.DistanciaAciertoLejos, datos.AciertoCerca, datos.AciertoLejos);
                 for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
                 {
-                    pistola.Disparar(boca, pecho, recibeJugador, datos.DanioDisparo, probabilidad);
+                    pistola.Disparar(boca, pecho, recibe, datos.DanioDisparo, probabilidad);
                 }
                 if (animador != null)
                 {

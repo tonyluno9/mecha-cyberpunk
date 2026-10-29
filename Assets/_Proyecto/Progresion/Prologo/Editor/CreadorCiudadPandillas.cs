@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.IA.Datos;
 using MechaCyberpunk.IA.Editor;
@@ -27,6 +28,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string RaizT402 = "GTA_T402";
         public const string RaizT403 = "GTA_T403";
         public const string RaizT404 = "GTA_T404";
+        public const string RaizT405 = "GTA_T405";
         public const float HoraInicial = 19f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
@@ -47,6 +49,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T402Interno();
             T403Interno();
             T404Interno();
+            T405Interno();
             Guardar(escena);
         }
 
@@ -206,6 +209,61 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
             Transform m2 = BuscarTransform("Manzana_2");
             Debug.Log("[Progresion] CreadorCiudadPandillas.T404: zonas, HUD, mapa y jefes listos; Manzana_2 en " + (m2 != null ? m2.position.ToString() : "?") + ".");
+        }
+
+        [MenuItem("Mecha Cyberpunk/Pandillas/T-405 Aliados")]
+        public static void T405()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            T405Interno();
+            Guardar(escena);
+        }
+
+        private const string RutaModeloHumano = "Assets/Arte/Personajes/MunecoHumano/ModeloHumano.prefab";
+
+        // T-405: los 3 reclutables de LA FOSA (frente a la casa, en la esquina y junto al taller) y la pandilla del jugador con su HUD.
+        private static void T405Interno()
+        {
+            GameObject anterior = BuscarRaiz(RaizT405);
+            if (anterior != null)
+            {
+                Object.DestroyImmediate(anterior);
+            }
+            GameObject prefabAliado = CreadorAliado.Crear();
+            GameObject modelo = AssetDatabase.LoadAssetAtPath<GameObject>(RutaModeloHumano);
+            GameObject raiz = new GameObject(RaizT405);
+            PandillaJugador pandilla = raiz.AddComponent<PandillaJugador>();
+            SerializedObject soPandilla = new SerializedObject(pandilla);
+            soPandilla.FindProperty("prefabAliado").objectReferenceValue = prefabAliado;
+            soPandilla.ApplyModifiedPropertiesWithoutUndo();
+            raiz.AddComponent<MechaCyberpunk.UI.Hud.HudAliados>();
+
+            Transform puerta = BuscarTransform(IdAparicion);
+            Vector3 centro = puerta != null ? puerta.position : Vector3.zero;
+            string[] nombres = { "EL CHATO", "LA GÜERA", "EL TOPO" };
+            int[] costos = { 0, 200, 350 };
+            int[] respetos = { 10, 40, 70 };
+            Vector3[] desvios = { new Vector3(3f, 0f, 3f), new Vector3(-7f, 0f, -5f), new Vector3(-3f, 0f, -9f) };
+            for (int i = 0; i < nombres.Length; i++)
+            {
+                Vector3 punto = centro + desvios[i];
+                if (Physics.Raycast(punto + Vector3.up * 4f, Vector3.down, out RaycastHit piso, 10f))
+                {
+                    punto = piso.point;
+                }
+                GameObject objeto = new GameObject("Reclutable_" + nombres[i]);
+                objeto.transform.SetParent(raiz.transform, false);
+                objeto.transform.position = punto;
+                GameObject visual = (GameObject)PrefabUtility.InstantiatePrefab(modelo, objeto.transform);
+                visual.name = "Modelo";
+                visual.transform.localPosition = Vector3.zero;
+                Reclutable reclutable = objeto.AddComponent<Reclutable>();
+                reclutable.Configurar(nombres[i], costos[i], respetos[i], "fosa");
+                SerializedObject so = new SerializedObject(reclutable);
+                so.FindProperty("visual").objectReferenceValue = visual;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                Debug.Log("[Progresion] T405 reclutable " + nombres[i] + " en " + punto);
+            }
         }
 
         [MenuItem("Mecha Cyberpunk/Pandillas/T-403 Cuatro armas")]

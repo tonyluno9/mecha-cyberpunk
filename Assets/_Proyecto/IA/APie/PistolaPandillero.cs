@@ -113,7 +113,7 @@ namespace MechaCyberpunk.IA.APie
         /// Dispara al pecho del jugador: devuelve true si el daño llegó. <paramref name="objetivo"/> es quien recibe el daño.
         /// Los muros bloquean el tiro; los demás pandilleros no.
         /// </summary>
-        public bool Disparar(Vector3 origen, Vector3 pecho, IRecibeDanio objetivo, float danio, float probabilidad)
+        public bool Disparar(Vector3 origen, Vector3 pecho, IRecibeDanio objetivo, float danio, float probabilidad, bool lineaVerificada = false)
         {
             AsegurarLaser();
             avisando = false;
@@ -121,7 +121,8 @@ namespace MechaCyberpunk.IA.APie
             Vector3 hacia = pecho - origen;
             float distancia = hacia.magnitude;
             Vector3 direccion = distancia > 0.001f ? hacia / distancia : transform.forward;
-            bool libre = HayLinea(origen, direccion, distancia, objetivo, out Vector3 punto);
+            Vector3 punto = pecho;
+            bool libre = lineaVerificada || HayLinea(origen, direccion, distancia, objetivo, out punto);
             bool acierta = libre && Azar() <= probabilidad;
             laser.SetPosition(0, origen);
             laser.SetPosition(1, punto);
