@@ -13,7 +13,7 @@ El bloque 7 (radio) lo lleva Alan en Radio/; este bloque no lo toca. Planeado el
 | T-200 El rival observa y recuerda: estilo por pelea, memoria y guardado | T-199 (T-198 no bloquea) | hecha (sin revisar): el rival observa tu estilo por pelea, lo recuerda y se guarda |
 | T-201 GUARDIA: el rival que te estudió bloquea tus puños | T-200 | hecha (sin revisar): GUARDIA, el rival que te estudió bloquea tus puños |
 | T-202 FINTAS y RETIRADA | T-200, T-201 | hecha (sin revisar): FINTAS (aviso más largo y amagos) y RETIRADA (paso atrás tras su golpe) |
-| T-203 La cabina te dice qué te leyó el rival | T-200 | pendiente |
+| T-203 La cabina te dice qué te leyó el rival | T-200 | implementada, sin verificar (tony/T-203-cabina-adaptacion, 8ccbfa1) |
 | T-204 Pruebas_Adaptacion: pelear una y otra vez contra el que elijas | T-200 a T-203 | pendiente |
 | T-205 Recorrido de la adaptación del rival (cierre del bloque) | T-198 a T-204 | pendiente |
 
@@ -83,3 +83,21 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 - T-136 casi lista en tony/T-136-prologo-en-ciudad-alan (sin merge a tony/fase-7). En e6213c5: DatosEscenas_Demo regenerado (CreacionPersonaje, Ciudad_Prologo, Flashback), texto del carro, PrologoCiudadPruebas (hereda de T-135), capturas T-136-1..4 revisadas, bitácora y D-tony-184 a 189. Pruebas en e6213c5: compilar OK, EditMode 1129/1129, PlayMode Progresion 115/115, PrologoCiudadPruebas 7 de 8 corridas (1 falla sin reproducir en la emboscada). Recorrido 193 s; estimado para una persona 11 a 15 min.
 - A medias, WIP 8fd6349: corrección para H6 de D-tony-187 (con el jugador en el carro, el objetivo apunta a la emboscada: textoIrALaEmboscada y el cambio en DirectorPrologo.Update; falta que FijarObjetivo use la emboscada) y D-tony-188 (horaDespertar 20:00; pruebas que fijaban 19:30 ajustadas; se quitó el atajo del reloj en PrologoCiudadPruebas). Sin compilar ni correr.
 - Sigue: terminar FijarObjetivo, compilar, EditMode Progresion/UI, PlayMode Progresion, PrologoCiudadPruebas 3 veces (guardar xml y log si falla la emboscada), regenerar capturas si cambian, marcar D-tony-187/188 resueltas, mover T-136 a hechas y merge a tony/fase-7. Luego T-137 (Build Settings y Builds/Demo; ojo: la tarea dice Ciudad.unity, pero ahora es Ciudad_Prologo.unity) y el bloque 8 (planificador, desde T-198). El bloque 7 (radio) es de Alan.
+
+## Detenido por Tony (2026-10-29)
+- Hecho y en tony/fase-7 (con push): T-136, T-137, T-198 a T-202. En main (b0c0126 y 20124ce): T-136, T-137 y T-198. T-199 a T-202 todavía no están en main.
+- A medias: T-203 en tony/T-203-cabina-adaptacion (8ccbfa1, con push). Está implementada. Lo que reportó el implementador, sin verificar:
+  - PantallaAdaptacionCabinaPruebas 12/12, 3 corridas seguidas.
+  - EditMode 1205/1205.
+  - PlayMode por área (UI, Mecha, IA, Pelea, Progresion) sin fallos.
+  - Creador idempotente.
+  - Capturas T-203-1 y T-203-2 revisadas.
+- El verificador de T-203 se detuvo a medio camino y no llegó a reportar. Su Unity en batch quedó cerrado. Puede quedar un Temp/UnityLockfile viejo de esa corrida.
+- Sigue:
+  1. Verificar T-203: `verificar.sh todo`, PantallaAdaptacionCabinaPruebas 3 veces, md5 de MechaJugador.prefab con 2 corridas del creador, y las otras pruebas de cabina y HUD.
+  2. Cerrarla a tony/fase-7.
+  3. Hacer T-204 (Pruebas_Adaptacion) y T-205 (recorrido de cierre).
+  4. Cerrar el bloque 8: suite, `git fetch` y merge de origin/main, merge a main con push, y guía o build.
+- Notas:
+  - Casino_A22 (Mundo, de Alan) falla a veces.
+  - Las 9 fallas de Arena (JaulaClandestinoPruebas) son las conocidas de Alan.
