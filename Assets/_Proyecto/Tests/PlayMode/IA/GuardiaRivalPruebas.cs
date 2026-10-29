@@ -57,6 +57,8 @@ namespace MechaCyberpunk.Tests.IA
         private const int GolpesNivelCero = 20;
         private const int GolpesMedidos = 10;
         private const int GolpesNaturales = 40;
+        // Semilla fija: el azar sigue la distribución real pero la prueba no falla por suerte (T-201, verificación).
+        private const int SemillaNatural = 201;
         private const int GolpesSituacion = 3;
         private const float SegundosAturdir = 1f;
         private static readonly Vector3 PosicionArena = new Vector3(1000f, 0f, 0f);
@@ -430,6 +432,8 @@ namespace MechaCyberpunk.Tests.IA
         {
             yield return Escenario(1, 1f, EsperaHuge);
             float probabilidad = adaptacion.Datos.ProbabilidadGuardia[0];
+            System.Random azar = new System.Random(SemillaNatural);
+            cerebroGuardia.FijarAzar(() => (float)azar.NextDouble());
             List<RegistroGolpe> golpes = new List<RegistroGolpe>();
             yield return GolpearConectando(GolpesNaturales, golpes);
             int bloqueados = Bloqueados(golpes);
