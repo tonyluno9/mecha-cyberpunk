@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             animador.SetFloat(IdVelocidad, controlador.Velocidad.magnitude);
             animador.SetBool(IdEnPiso, controlador.EnPiso);
             animador.SetBool(IdApuntando, controlador.Apuntando);
-            animador.SetInteger(IdArma, armas != null ? (int)armas.ArmaActiva : 0);
+            animador.SetInteger(IdArma, armas != null && armas.ArmaActiva != ArmaAPie.Punos ? 1 : 0);
             animador.SetBool(IdKO, vida != null && vida.EstaKO);
 
             FaseGolpe fase = golpe != null ? golpe.Fase : FaseGolpe.Listo;

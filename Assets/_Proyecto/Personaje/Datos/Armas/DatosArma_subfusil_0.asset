@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 821c6226efcb0ca4093622255201496d, type: 3}
+  m_Name: DatosArma_subfusil_0
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosArma
+  id: arma_subfusil_0
+  nombre: Subfusil
+  tipo: 4
+  valorVenta: 0
+  maximo: 1
+  oferta: {fileID: 11400000, guid: 6affa3e45f3d9fb4cacbec165447299d, type: 2}
+  arma: 3
+  nivel: 0
+  precio: 600
+  danio: 12
+  perdigones: 1
+  cargador: 24
+  recarga: 1.8
+  tiempoEntreDisparos: 0.09
+  automatica: 1
+  dispersion: 3
+  dispersionApuntando: 2
+  alcance: 50

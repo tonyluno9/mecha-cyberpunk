@@ -1,5 +1,6 @@
 using System;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
 using UnityEngine;
@@ -26,6 +27,12 @@ namespace MechaCyberpunk.Personaje.Combate
         [SerializeField] private Transform visual;
         [Tooltip("Luz breve en la boca del cañón.")]
         [SerializeField] private Light luzBoca;
+        [Tooltip("Visual de la escopeta (T-403). Se mueve hacia atrás con el retroceso.")]
+        [SerializeField] private Transform visualEscopeta;
+        [SerializeField] private Light luzBocaEscopeta;
+        [Tooltip("Visual del subfusil (T-403).")]
+        [SerializeField] private Transform visualSubfusil;
+        [SerializeField] private Light luzBocaSubfusil;
         [SerializeField] private Material materialMarca;
         [Tooltip("Cuánto dura la luz del cañón (s).")]
         [Min(0.01f)] [SerializeField] private float duracionLuz = 0.05f;
@@ -43,11 +50,18 @@ namespace MechaCyberpunk.Personaje.Combate
         private ControladorAPie controlador;
         private VidaAPie vida;
         private ArmasAPie armas;
-        private CargadorPistola cargador;
+        private const int CantidadArmas = 4;
+        private readonly CargadorPistola[] cargadores = new CargadorPistola[CantidadArmas];
+        private readonly DatosArma[] datosArmas = new DatosArma[CantidadArmas];
+        private readonly Transform[] visuales = new Transform[CantidadArmas];
+        private readonly Light[] luces = new Light[CantidadArmas];
+        private readonly Vector3[] reposos = new Vector3[CantidadArmas];
+        private DatosArma pistolaBase;
+        private ArsenalJugador arsenal;
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
-        private Vector3 posicionReposo;
         private float inicioRetroceso = -100f;
         private float finLuz = -1f;
+        private ArmaAPie armaRetroceso = ArmaAPie.Pistola;
         private Transform[] marcas;
         private float[] finMarcas;
         private int siguienteMarca;
@@ -55,10 +69,18 @@ namespace MechaCyberpunk.Personaje.Combate
         private float finEsperaCalor = -1f;
 
         public DatosPistola Datos => datos;
+        // El cargador del arma de fuego en la mano; con los puños, el de la pistola.
+        private CargadorPistola cargador => cargadores[Indice(armas != null ? armas.ArmaActiva : ArmaAPie.Pistola)];
         public CargadorPistola Cargador => cargador;
         public int Balas => cargador != null ? cargador.Balas : 0;
         public int TamanoCargador => cargador != null ? cargador.Tamano : 0;
         public bool Recargando => cargador != null && cargador.Recargando;
+        /// <summary>Datos del arma de fuego en la mano (T-403).</summary>
+        public DatosArma DatosActuales => datosArmas[Indice(armas != null ? armas.ArmaActiva : ArmaAPie.Pistola)];
+
+        public static bool EsDeFuego(ArmaAPie arma) => arma != ArmaAPie.Punos;
+
+        private static int Indice(ArmaAPie arma) => arma == ArmaAPie.Punos ? (int)ArmaAPie.Pistola : (int)arma;
 
         /// <summary>Se dispara al disparar, al hacer clic vacío y al empezar o terminar la recarga.</summary>
         public event Action Cambio;
@@ -76,20 +98,66 @@ namespace MechaCyberpunk.Personaje.Combate
                 enabled = false;
                 return;
             }
-            cargador = new CargadorPistola(datos.BalasPorCargador, datos.TiempoEntreDisparos, datos.TiempoRecarga);
-            cargador.Disparo += AlCambiar;
-            cargador.RecargaIniciada += AlCambiar;
-            cargador.RecargaTerminada += AlCambiar;
-            cargador.ClicVacio += AlClicVacio;
-            if (visual != null)
+            pistolaBase = DatosArma.Crear("pistola_base", "Pistola", ArmaAPie.Pistola, 0, 0, datos.Danio, 1, datos.BalasPorCargador,
+                datos.TiempoRecarga, datos.TiempoEntreDisparos, false, 0f, 0f, datos.Alcance);
+            visuales[(int)ArmaAPie.Pistola] = visual;
+            visuales[(int)ArmaAPie.Escopeta] = visualEscopeta;
+            visuales[(int)ArmaAPie.Subfusil] = visualSubfusil;
+            luces[(int)ArmaAPie.Pistola] = luzBoca;
+            luces[(int)ArmaAPie.Escopeta] = luzBocaEscopeta;
+            luces[(int)ArmaAPie.Subfusil] = luzBocaSubfusil;
+            for (int i = 1; i < CantidadArmas; i++)
             {
-                posicionReposo = visual.localPosition;
+                if (visuales[i] != null)
+                {
+                    reposos[i] = visuales[i].localPosition;
+                }
+                if (luces[i] != null)
+                {
+                    luces[i].enabled = false;
+                }
             }
-            if (luzBoca != null)
-            {
-                luzBoca.enabled = false;
-            }
+            RevisarArmas();
             CrearMarcas();
+        }
+
+        // Crea o rehace el cargador de cada arma de fuego cuando cambia su nivel (el cargador nuevo viene lleno).
+        private void RevisarArmas()
+        {
+            if (arsenal == null)
+            {
+                arsenal = Registro<ArsenalJugador>.Actual;
+            }
+            for (int i = (int)ArmaAPie.Pistola; i < CantidadArmas; i++)
+            {
+                ArmaAPie arma = (ArmaAPie)i;
+                DatosArma nuevos = arsenal != null ? arsenal.Datos(arma) : null;
+                if (nuevos == null && arma == ArmaAPie.Pistola && (arsenal == null || arsenal.PistolaAlInicio))
+                {
+                    nuevos = pistolaBase;
+                }
+                if (nuevos == datosArmas[i])
+                {
+                    continue;
+                }
+                datosArmas[i] = nuevos;
+                if (nuevos == null)
+                {
+                    cargadores[i] = null;
+                    continue;
+                }
+                CargadorPistola c = new CargadorPistola(nuevos.Cargador, nuevos.TiempoEntreDisparos, nuevos.Recarga);
+                c.Disparo += AlCambiar;
+                c.RecargaIniciada += AlCambiar;
+                c.RecargaTerminada += AlCambiar;
+                c.ClicVacio += () =>
+                {
+                    c.EmpezarRecarga();
+                    Cambio?.Invoke();
+                };
+                cargadores[i] = c;
+                Cambio?.Invoke();
+            }
         }
 
         private void OnEnable()
@@ -125,17 +193,25 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Update()
         {
-            cargador.Avanzar(Time.deltaTime);
-            bool puede = !vida.EstaKO && controlador.ControlActivo && armas.ArmaActiva == ArmaAPie.Pistola;
+            RevisarArmas();
+            for (int i = 0; i < CantidadArmas; i++)
+            {
+                cargadores[i]?.Avanzar(Time.deltaTime);
+            }
+            ArmaAPie activa = armas.ArmaActiva;
+            CargadorPistola actual = EsDeFuego(activa) ? cargadores[(int)activa] : null;
+            bool puede = actual != null && !vida.EstaKO && controlador.ControlActivo;
             if (puede)
             {
                 if (recargar.action.WasPressedThisFrame())
                 {
-                    cargador.EmpezarRecarga();
+                    actual.EmpezarRecarga();
                 }
-                if (atacar.action.WasPressedThisFrame() && cargador.IntentarDisparar())
+                DatosArma d = datosArmas[(int)activa];
+                bool pidio = d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame();
+                if (pidio && actual.IntentarDisparar())
                 {
-                    Disparar();
+                    Disparar(activa, d);
                 }
             }
             ActualizarVisual();
@@ -157,35 +233,50 @@ namespace MechaCyberpunk.Personaje.Combate
             Registro<ICalor>.Actual?.Sumar(datos.CalorPorDisparo, MotivoCalor.Pelea);
         }
 
-        private void Disparar()
+        private void Disparar(ArmaAPie arma, DatosArma d)
         {
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
+            // La escopeta lanza varios perdigones en un cono; la dispersión es el semiángulo del cono.
             Transform camara = controlador.Camara;
-            Transform boca = luzBoca != null ? luzBoca.transform : (visual != null ? visual : camara);
-            Vector3 punto = camara.position + camara.forward * datos.Alcance;
-            if (BuscarImpacto(camara.position, camara.forward, datos.Alcance, out RaycastHit centro))
+            Light luz = luces[(int)arma];
+            Transform visualArma = visuales[(int)arma];
+            Transform boca = luz != null ? luz.transform : (visualArma != null ? visualArma : camara);
+            Vector3 punto = camara.position + camara.forward * d.Alcance;
+            if (BuscarImpacto(camara.position, camara.forward, d.Alcance, out RaycastHit centro))
             {
                 punto = centro.point;
             }
             Vector3 origen = boca.position;
             Vector3 haciaPunto = punto - origen;
             float largo = haciaPunto.magnitude;
-            Vector3 direccion = largo > 0.01f ? haciaPunto / largo : camara.forward;
+            Vector3 direccionBase = largo > 0.01f ? haciaPunto / largo : camara.forward;
+            float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
 
-            bool hayImpacto = BuscarImpacto(origen, direccion, largo + 0.3f, out RaycastHit mejor);
-
-            if (hayImpacto)
+            for (int i = 0; i < d.Perdigones; i++)
             {
-                IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
-                if (objetivo != null)
+                Vector3 direccion = direccionBase;
+                if (cono > 0f)
                 {
-                    objetivo.RecibirDanio(new InfoDanio(datos.Danio, TipoDanio.Disparo, mejor.point, direccion, null));
+                    Vector3 eje = Vector3.Cross(direccionBase, UnityEngine.Random.onUnitSphere);
+                    if (eje.sqrMagnitude > 0.0001f)
+                    {
+                        direccion = Quaternion.AngleAxis(cono * Mathf.Sqrt(UnityEngine.Random.value), eje.normalized) * direccionBase;
+                    }
                 }
-                PonerMarca(mejor.point, mejor.normal);
+                if (BuscarImpacto(origen, direccion, d.Alcance, out RaycastHit mejor))
+                {
+                    IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
+                    if (objetivo != null)
+                    {
+                        objetivo.RecibirDanio(new InfoDanio(d.Danio, TipoDanio.Disparo, mejor.point, direccion, null));
+                    }
+                    PonerMarca(mejor.point, mejor.normal);
+                }
             }
 
             SumarCalor();
             inicioRetroceso = Time.time;
+            armaRetroceso = arma;
             finLuz = Time.time + duracionLuz;
             Disparo?.Invoke();
         }
@@ -212,24 +303,23 @@ namespace MechaCyberpunk.Personaje.Combate
             return hay;
         }
 
-        private void AlClicVacio()
-        {
-            cargador.EmpezarRecarga();
-            Cambio?.Invoke();
-        }
 
         private void AlCambiar() => Cambio?.Invoke();
 
         private void ActualizarVisual()
         {
-            if (luzBoca != null)
+            for (int i = 1; i < CantidadArmas; i++)
             {
-                luzBoca.enabled = Time.time < finLuz;
-            }
-            if (visual != null)
-            {
-                float t = Mathf.Clamp01((Time.time - inicioRetroceso) / duracionRetroceso);
-                visual.localPosition = posicionReposo - Vector3.forward * (retroceso * (1f - t));
+                bool dispara = i == (int)armaRetroceso;
+                if (luces[i] != null)
+                {
+                    luces[i].enabled = dispara && Time.time < finLuz;
+                }
+                if (visuales[i] != null)
+                {
+                    float t = dispara ? Mathf.Clamp01((Time.time - inicioRetroceso) / duracionRetroceso) : 1f;
+                    visuales[i].localPosition = reposos[i] - Vector3.forward * (retroceso * (1f - t));
+                }
             }
             if (marcas == null)
             {

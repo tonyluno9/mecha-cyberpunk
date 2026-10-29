@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 821c6226efcb0ca4093622255201496d, type: 3}
+  m_Name: DatosArma_escopeta_1
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosArma
+  id: arma_escopeta_1
+  nombre: Escopeta I
+  tipo: 4
+  valorVenta: 0
+  maximo: 1
+  oferta: {fileID: 11400000, guid: 32c43d69da3aa39409f4c6d5b63b0841, type: 2}
+  arma: 2
+  nivel: 1
+  precio: 250
+  danio: 11
+  perdigones: 8
+  cargador: 5
+  recarga: 2
+  tiempoEntreDisparos: 0.9
+  automatica: 0
+  dispersion: 6
+  dispersionApuntando: 4
+  alcance: 20

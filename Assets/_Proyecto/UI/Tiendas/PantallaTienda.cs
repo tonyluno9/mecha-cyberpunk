@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.Personaje;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Progresion;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -45,6 +47,7 @@ namespace MechaCyberpunk.UI.Tiendas
         [SerializeField] private InputAction salir = new InputAction("TiendaEsc", InputActionType.Button, "<Keyboard>/escape");
 
         private readonly List<Text> textosFilas = new List<Text>();
+        private readonly List<DatosObjeto> todos = new List<DatosObjeto>();
         private readonly List<DatosObjeto> objetos = new List<DatosObjeto>();
         private readonly List<DatosObjeto> vendibles = new List<DatosObjeto>();
         private readonly List<TipoObjeto> compra = new List<TipoObjeto>();
@@ -111,7 +114,9 @@ namespace MechaCyberpunk.UI.Tiendas
             this.tienda = tienda;
             this.alSalir = alSalir;
             objetos.Clear();
-            objetos.AddRange(objetosEnVenta);
+            todos.Clear();
+            todos.AddRange(objetosEnVenta);
+            Refiltrar();
             pestana = PestanaTienda.Comprar;
             indice = 0;
 
@@ -208,6 +213,22 @@ namespace MechaCyberpunk.UI.Tiendas
             }
         }
 
+        // T-403: de cada arma solo se ofrece la mejora siguiente (el nivel n pide tener el n-1).
+        private void Refiltrar()
+        {
+            ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
+            objetos.Clear();
+            foreach (DatosObjeto objeto in todos)
+            {
+                if (objeto is DatosArma arma && arsenal != null && !arsenal.EsSiguiente(arma))
+                {
+                    continue;
+                }
+                objetos.Add(objeto);
+            }
+            indice = Mathf.Clamp(indice, 0, Mathf.Max(0, objetos.Count - 1));
+        }
+
         private void CambiarPestana(PestanaTienda nueva)
         {
             pestana = nueva;
@@ -246,6 +267,7 @@ namespace MechaCyberpunk.UI.Tiendas
                             Registro<ServicioFavores>.Actual.Gastar(TipoFavor.Descuento);
                         }
                         inventario.Agregar(objeto, 1);
+                        Refiltrar();
                         MostrarAviso(string.Format(config.FormatoComprado, objeto.Nombre.ToUpperInvariant()));
                         break;
                     case ResultadoCompra.SinDinero:

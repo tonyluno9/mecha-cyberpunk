@@ -6,6 +6,7 @@ namespace MechaCyberpunk.Economia
         Pieza,
         Chatarra,
         KitReparacion,
-        Municion
+        Municion,
+        Arma
     }
 }

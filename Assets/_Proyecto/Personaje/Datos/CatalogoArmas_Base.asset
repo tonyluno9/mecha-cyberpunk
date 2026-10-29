@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d328a213729184b8aed4ddeea8afeb, type: 3}
+  m_Name: CatalogoArmas_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.CatalogoArmas
+  armas:
+  - {fileID: 11400000, guid: f1c6b0a29773b1d4d8be9c268f97bde7, type: 2}
+  - {fileID: 11400000, guid: cb114aaba9405bb4290903c512f54e5f, type: 2}
+  - {fileID: 11400000, guid: fcc5103997db2f641b12aa9f7cf6cbbb, type: 2}
+  - {fileID: 11400000, guid: 07a513a096a736b48869e4052be917e0, type: 2}
+  - {fileID: 11400000, guid: 33802c7617e7b054ea42c305f3897415, type: 2}
+  - {fileID: 11400000, guid: 4084068ea743c274e9b008868dc0e5d3, type: 2}
+  - {fileID: 11400000, guid: 58726eda4e6b35e41af0a8cbd965333d, type: 2}
+  - {fileID: 11400000, guid: 1e43f01a19aac174b98a96007e32b68e, type: 2}
+  - {fileID: 11400000, guid: f6c3ba0152db08f4e846f0db3aa0d979, type: 2}
+  - {fileID: 11400000, guid: 59b938462ed62d041a5d8e1e99c06cc9, type: 2}
+  - {fileID: 11400000, guid: 827a5a2402dad374ba82581443da1cab, type: 2}
+  - {fileID: 11400000, guid: c53554815e1f9c34fbdc7b21a8d3827d, type: 2}
+  - {fileID: 11400000, guid: 87fb680916921a5408541fa6f141d38f, type: 2}
+  - {fileID: 11400000, guid: 04336d4532ae80541832aac40d5ebc42, type: 2}
+  - {fileID: 11400000, guid: 75bf2903bd991024b961fe3db58e81f4, type: 2}
+  - {fileID: 11400000, guid: 986f82222679757458eb75c683744545, type: 2}

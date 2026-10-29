@@ -23,6 +23,11 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - Acércate a las banquetas del centro (Calaveras, magenta) y del este (Víboras, verde ácido): a menos de 35 m te disparan; ves un láser rojo 0.35 s antes de cada tiro y ellos se cubren de lado. ¿Ves venir el tiro o te matan sin avisar?
 - Véncelos con la pistola (2 y clic): cada uno suelta $40 y suma +8 de calor, cada tiro tuyo en la calle +2; con calor 1 llegan drones y desde calor 2 también te disparan. ¿Da miedo o estorba?
 - Si caes, despiertas en la clínica del mercado negro (cobra $100, calor a cero); tu vida se regenera sola tras 6 s sin daño; los grupos reaparecen a los 40 s si estás lejos.
+### T-403 cuatro armas (qué probar)
+- Con $400 ve al mercado negro (siempre abierto), pulsa E y compra la ESCOPETA ($350); sal con Esc y pulsa 3: 8 perdigones en cono, pega fuerte de cerca. También 4 = subfusil (mantén el clic), 1 = puños, 2 = pistola y la rueda del ratón cambia de arma (solo las que tienes). ¿Cada arma se siente distinta?
+- La tienda ofrece solo la mejora siguiente de cada arma (nivel I, II, III: más daño, más cargador, recarga más rápida); el HUD dice "ESCOPETA II 5/6". ¿Se nota el nivel II? ¿Valen los precios?
+- Los puños también suben de nivel (más daño y golpe más rápido). Las balas de reserva son infinitas.
+
 
 ## Build viejo con mechas (antes de la fase G)
 
