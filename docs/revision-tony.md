@@ -10,6 +10,13 @@ No le toca nada. Core solo ganó dos comentarios: la clave de guardado `adaptaci
 ### T-199 Datos y reglas de la adaptación
 Automático: verificador 5/5 criterios. Para un humano: abre `IA/Datos/DatosAdaptacionRival_Base.asset` en el inspector: ¿se entienden los tooltips y los umbrales (24 golpes por minuto, 50 % cubiertos, 40 % castigando) se parecen a cómo peleas?
 
+### T-200 El rival observa y recuerda
+- Qué hace: en cada pelea el rival mide cómo peleas (golpes por minuto, cuánto te cubres, cuánto castigas) y sube sus niveles de GUARDIA, FINTAS o RETIRADA. Lo recuerda entre peleas y se guarda con la partida (`adaptacion`).
+- Evidencia: EditMode 1174/1174. AdaptacionRivalPruebas 9/9 en 3 corridas seguidas. PlayMode por área 575/584, sin fallos (lo que falta son pruebas omitidas). El creador, corrido 2 veces, deja los prefabs iguales (md5).
+- Toca `Combate/Golpe/GolpeMecha.cs`, solo para agregar el evento `Conecto`, que la tarea permite.
+- PlayMode completo: 1 fallo de Alan, `CasinoInteriorPruebas.Casino_A22` ("Sale a la calle", -1.0 en vez de menos de -1.0). No tiene que ver con esta tarea.
+- Para probar tú: en Pruebas_Economia pelea 2 veces contra TORNILLO, una vez con puños seguidos y otra cubriéndote (clic derecho sostenido). Revisa que `[IA] TORNILLO aprendió: ...` diga lo que de verdad hiciste. Con puños seguidos a veces sube también RETIRADA.
+
 ## T-137 La demo como programa de Windows (2026-10-28)
 Abre `Builds/Demo/MechaCyberpunk.exe` y juega del título a "continuará" siguiendo docs/guia-demo.md (unos 15 min). Sin revisor.
 ¿Todo funciona igual que en el editor y con buena fluidez? ¿El título de la ventana dice "Mecha Cyberpunk (demo)" y Alt+Enter pasa a ventana? Después, que la juegue la persona nueva de H6.
