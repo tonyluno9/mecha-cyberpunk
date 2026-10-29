@@ -34,6 +34,23 @@ namespace MechaCyberpunk.Vehiculos
         [Tooltip("Distancia mínima al foco cuando hay un muro pegado (m).")]
         [Min(0.1f)] [SerializeField] private float distanciaMinima = 1.2f;
 
+        [Header("Órbita en tercera persona (T-401)")]
+        [Tooltip("Inclinación mínima de la órbita (°); negativo es por debajo del horizonte del foco.")]
+        [Range(-45f, 0f)] [SerializeField] private float inclinacionMinOrbita = -10f;
+        [Tooltip("Inclinación máxima de la órbita (°).")]
+        [Range(10f, 80f)] [SerializeField] private float inclinacionMaxOrbita = 40f;
+        [Tooltip("Inclinación de reposo detrás del carro (°).")]
+        [Range(-10f, 40f)] [SerializeField] private float inclinacionReposo = 15f;
+        [Tooltip("Metros extra de distancia al ir a la rapidez de referencia.")]
+        [Min(0f)] [SerializeField] private float distanciaExtraVelocidad = 2f;
+        [Tooltip("Rapidez a la que la distancia extra llega a su máximo (km/h).")]
+        [Min(1f)] [SerializeField] private float kmhDistanciaExtra = 80f;
+
+        public float InclinacionMinOrbita => inclinacionMinOrbita;
+        public float InclinacionMaxOrbita => inclinacionMaxOrbita;
+        public float InclinacionReposo => inclinacionReposo;
+        public float DistanciaExtraVelocidad => distanciaExtraVelocidad;
+        public float KmhDistanciaExtra => kmhDistanciaExtra;
         public float AlturaOjos => alturaOjos;
         public float LimiteLados => limiteLados;
         public float LimiteVertical => limiteVertical;

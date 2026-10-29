@@ -37,6 +37,29 @@ namespace MechaCyberpunk.Vehiculos.Carro
         }
 
         /// <summary>
+        /// Posición de la cámara en órbita: a <paramref name="distancia"/> del foco, girada <paramref name="yaw"/>° a los lados
+        /// respecto a detrás del carro y elevada <paramref name="inclinacion"/>° sobre el horizonte.
+        /// </summary>
+        public static Vector3 PosicionOrbita(Vector3 foco, Vector3 frente, float distancia, float yaw, float inclinacion)
+        {
+            frente.y = 0f;
+            if (frente.sqrMagnitude < 0.0001f)
+            {
+                frente = Vector3.forward;
+            }
+            frente.Normalize();
+            Vector3 atras = Quaternion.Euler(0f, yaw, 0f) * -frente;
+            float radianes = inclinacion * Mathf.Deg2Rad;
+            return foco + (atras * Mathf.Cos(radianes) + Vector3.up * Mathf.Sin(radianes)) * distancia;
+        }
+
+        /// <summary>Distancia (m) de la órbita: la base más el extra proporcional a la rapidez (km/h), con tope.</summary>
+        public static float DistanciaPorRapidez(float baseMetros, float extra, float kmh, float kmhMaximo)
+        {
+            return baseMetros + extra * Mathf.Clamp01(kmh / Mathf.Max(kmhMaximo, 0.01f));
+        }
+
+        /// <summary>
         /// Distancia (m) a la que poner la cámara sobre el rayo foco-ideal: si hay un muro a <paramref name="distanciaMuro"/>,
         /// se queda <paramref name="margen"/> antes (sin bajar de <paramref name="minima"/>); sin muro, toda la distancia.
         /// </summary>

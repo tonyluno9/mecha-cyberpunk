@@ -26,9 +26,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private float inclinacion;
         private float segundosSinMover;
         private Vector3 posicionTercera;
+        private float yawOrbita;
+        private float inclinacionOrbita;
 
         /// <summary>True si la vista actual es tercera persona.</summary>
-        public bool EsTerceraPersona { get; private set; }
+        public bool EsTerceraPersona { get; private set; } = true;
 
         /// <summary>La cámara de este objeto.</summary>
         public Camera Camara
@@ -70,6 +72,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 yaw = 0f;
                 inclinacion = 0f;
                 segundosSinMover = 0f;
+                yawOrbita = 0f;
+                inclinacionOrbita = config.InclinacionReposo;
                 Camara.enabled = true;
                 if (oyente != null)
                 {
@@ -108,9 +112,16 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 EsTerceraPersona = !EsTerceraPersona;
                 Colocar(true);
             }
-            if (!EsTerceraPersona && mirar != null)
+            if (mirar != null)
             {
-                ActualizarMirada(mirar.ReadValue<Vector2>(), Time.deltaTime);
+                if (EsTerceraPersona)
+                {
+                    ActualizarOrbita(mirar.ReadValue<Vector2>(), Time.deltaTime);
+                }
+                else
+                {
+                    ActualizarMirada(mirar.ReadValue<Vector2>(), Time.deltaTime);
+                }
             }
         }
 
@@ -138,6 +149,27 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
+        // Tercera persona (T-401): el ratón orbita alrededor del carro; sin moverlo, vuelve detrás tras esperaRegreso.
+        private void ActualizarOrbita(Vector2 delta, float dt)
+        {
+            if (delta.sqrMagnitude > 0f)
+            {
+                segundosSinMover = 0f;
+                yawOrbita = Mathf.Repeat(yawOrbita + delta.x * config.Sensibilidad + 180f, 360f) - 180f;
+                inclinacionOrbita = Mathf.Clamp(inclinacionOrbita - delta.y * config.Sensibilidad,
+                    config.InclinacionMinOrbita, config.InclinacionMaxOrbita);
+            }
+            else
+            {
+                segundosSinMover += dt;
+                yawOrbita = CalculoCamaraCarro.Regreso(yawOrbita, segundosSinMover, config.EsperaRegreso, config.VelocidadRegreso, dt);
+                if (segundosSinMover >= config.EsperaRegreso)
+                {
+                    inclinacionOrbita = Mathf.MoveTowards(inclinacionOrbita, config.InclinacionReposo, config.VelocidadRegreso * dt);
+                }
+            }
+        }
+
         private void Colocar(bool deGolpe)
         {
             if (EsTerceraPersona)
@@ -157,7 +189,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         {
             Transform t = carro.transform;
             Vector3 foco = t.position + Vector3.up * config.AlturaFoco;
-            Vector3 ideal = CalculoCamaraCarro.PosicionTercera(foco, t.forward, config.DistanciaAtras, config.AlturaTercera);
+            float kmh = cuerpo != null ? cuerpo.linearVelocity.magnitude * 3.6f : 0f;
+            float distanciaOrbita = CalculoCamaraCarro.DistanciaPorRapidez(config.DistanciaAtras, config.DistanciaExtraVelocidad, kmh, config.KmhDistanciaExtra);
+            Vector3 ideal = CalculoCamaraCarro.PosicionOrbita(foco, t.forward, distanciaOrbita, yawOrbita, inclinacionOrbita);
             float paso = deGolpe ? 1f : 1f - Mathf.Exp(-config.Suavidad * Time.deltaTime);
             posicionTercera = deGolpe ? ideal : Vector3.Lerp(posicionTercera, ideal, paso);
 

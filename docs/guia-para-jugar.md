@@ -14,6 +14,11 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - Clic derecho apunta (la cámara se acerca y sale la retícula); con 2 sacas la pistola y clic izquierdo dispara; con 1 y clic izquierdo golpeas.
 - Dos muñecos de prueba están a 8 y 12 m de la puerta de la casa para pegarles; no hay mecha ni emboscada.
 
+### T-401 carros (qué probar)
+- Camina a un carro estacionado (6 con colores distintos, cerca de la banqueta) y pulsa E a 2.5 m o menos: suena la alarma 3 s (luces que parpadean), sube el calor y ya es tuyo.
+- Maneja con WASD: la cámara va detrás y el ratón la orbita; sin mover el ratón 1.5 s vuelve atrás y se aleja un poco con la velocidad; C cambia a primera persona. ¿Se siente de GTA o se pierde en las vueltas?
+- Frena y pulsa E para bajar: vuelves a la cámara de hombro mirando hacia donde iba el carro. Subir otra vez no suma calor. ¿Robar se siente travieso? ¿Bajar es rápido?
+
 ## Build viejo con mechas (antes de la fase G)
 
 Build de Windows con las escenas de prueba de Tony más Ciudad_Prologo y Clandestino de Alan (T-136/T-137 aún pendientes: todavía no hay demo encadenada).
