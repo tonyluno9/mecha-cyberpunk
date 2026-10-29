@@ -79,5 +79,34 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 EditorApplication.Exit(resumen.result == BuildResult.Succeeded ? 0 : 1);
             }
         }
+
+        public const string CarpetaJuego = "Builds/Juego";
+        public const string EscenaJuego = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
+
+        /// <summary>
+        /// Build del juego de pandillas (T-400, D-tony-207): solo Ciudad_Prologo como escena 0, en Builds/Juego/MechaCyberpunk.exe.
+        /// No cambia EditorBuildSettings ni PlayerSettings. En batchmode sale con 0 si el build salió bien.
+        /// Batchmode: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.ConstruirJuego
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/Demo/Construir juego de pandillas (Builds/Juego)")]
+        public static void ConstruirJuego()
+        {
+            Directory.CreateDirectory(CarpetaJuego);
+            BuildPlayerOptions opciones = new BuildPlayerOptions
+            {
+                scenes = new[] { EscenaJuego },
+                locationPathName = Path.Combine(CarpetaJuego, NombreEjecutable),
+                target = BuildTarget.StandaloneWindows64,
+                targetGroup = BuildTargetGroup.Standalone,
+                options = BuildOptions.None,
+            };
+            BuildSummary resumen = BuildPipeline.BuildPlayer(opciones).summary;
+            Debug.Log("[Progresion] ConstruirJuego: " + resumen.result + ", " + resumen.totalErrors + " errores, "
+                + (resumen.totalSize / (1024 * 1024)) + " MB en " + resumen.totalTime.TotalSeconds.ToString("F0") + " s");
+            if (Application.isBatchMode)
+            {
+                EditorApplication.Exit(resumen.result == BuildResult.Succeeded ? 0 : 1);
+            }
+        }
     }
 }

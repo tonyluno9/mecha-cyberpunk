@@ -8,7 +8,7 @@ Rama de integración: tony/fase-g. MODO RÁPIDO: sin revisor ni verificador, 1 o
 Builds/Juego/MechaCyberpunk.exe (arranca en Ciudad_Prologo) y 3 líneas en docs/guia-para-jugar.md. Van en serie: todas tocan la escena.
 | Tarea | Depende de | Estado |
 | --- | --- | --- |
-| T-400 El jugador en tercera persona en la ciudad (cámara de hombro, muñeco animado, pistola, mecha fuera, ConstruirJuego) | nada | pendiente |
+| T-400 El jugador en tercera persona en la ciudad (cámara de hombro, muñeco animado, pistola, mecha fuera, ConstruirJuego) | nada | hecha (modo rápido) |
 | T-401 Carros: cámara en tercera persona, subir y bajar con E, robar los estacionados | T-400 | pendiente |
 | T-402 Pandilleros armados en su territorio: dinero, calor, drones que disparan, clínica (Core: IdPandilla) | T-400 | pendiente |
 | T-403 Cuatro armas del mercado negro con 3 niveles (daño, cargador, recarga) | T-400 (mejor tras T-402) | pendiente |
