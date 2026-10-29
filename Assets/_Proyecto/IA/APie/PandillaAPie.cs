@@ -12,13 +12,25 @@ namespace MechaCyberpunk.IA.APie
     public class PandillaAPie : MonoBehaviour
     {
         [SerializeField] private DatosPandilleroAPie datos;
+        [Tooltip("A qué pandilla pertenece el grupo.")]
+        [SerializeField] private IdPandilla idPandilla = IdPandilla.Ninguna;
 
         private PandilleroAPie[] pandilleros;
         private TurnosPandillaAPie turnos;
         private IRelojMundo reloj;
         private bool retiroPendiente;
+        private Vector3 centro;
+        private bool alerta;
+        private bool jugadorEnInterior;
+        private float vacioDesde = -1f;
 
         public DatosPandilleroAPie Datos => datos;
+        public IdPandilla Pandilla => idPandilla;
+        /// <summary>Centro del territorio: el promedio de los puntos de los pandilleros.</summary>
+        public Vector3 Centro => centro;
+        public float RadioTerritorio => datos != null ? datos.RadioTerritorio : 0f;
+        /// <summary>True mientras el grupo ataca al jugador por estar en su territorio.</summary>
+        public bool EnAlerta => alerta;
         public TurnosPandillaAPie Turnos => turnos;
         public PandilleroAPie[] Pandilleros => pandilleros;
 
@@ -51,6 +63,7 @@ namespace MechaCyberpunk.IA.APie
             turnos = new TurnosPandillaAPie(datos.MaxAtacando);
             foreach (PandilleroAPie p in pandilleros)
             {
+                centro += p.transform.position / pandilleros.Length;
                 p.Configurar(p.transform.position, turnos);
                 p.Vencido += AlVencerUno;
                 p.gameObject.SetActive(false);
@@ -63,6 +76,13 @@ namespace MechaCyberpunk.IA.APie
             {
                 return;
             }
+            EventosLugares.JugadorEntro += AlEntrarLugar;
+            EventosLugares.JugadorSalio += AlSalirLugar;
+            if (datos.Siempre)
+            {
+                Aparecer();
+                return;
+            }
             Registro<IRelojMundo>.Agregado += AlAgregarReloj;
             Registro<IRelojMundo>.Quitado += AlQuitarReloj;
             Vincular(Registro<IRelojMundo>.Actual);
@@ -70,6 +90,8 @@ namespace MechaCyberpunk.IA.APie
 
         private void OnDisable()
         {
+            EventosLugares.JugadorEntro -= AlEntrarLugar;
+            EventosLugares.JugadorSalio -= AlSalirLugar;
             Registro<IRelojMundo>.Agregado -= AlAgregarReloj;
             Registro<IRelojMundo>.Quitado -= AlQuitarReloj;
             Desvincular();
@@ -90,8 +112,62 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
+        private void AlEntrarLugar(IdLugar lugar) => jugadorEnInterior = lugar != IdLugar.Ninguno && lugar != IdLugar.Calle;
+
+        private void AlSalirLugar(IdLugar lugar) => jugadorEnInterior = false;
+
+        // Territorio (T-402): ataca si el jugador a pie entra al radio y lo sigue hasta radio + margen. Reaparece a los N s si quedó vacío.
+        private void ActualizarTerritorio()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            bool hayJugador = jugador != null && jugador.Raiz != null;
+            float distancia = float.MaxValue;
+            if (hayJugador)
+            {
+                Vector3 delta = jugador.Raiz.position - centro;
+                delta.y = 0f;
+                distancia = delta.magnitude;
+            }
+            bool valido = hayJugador && jugador.Modo == ModoJugador.APie && !jugadorEnInterior;
+            if (!valido)
+            {
+                alerta = false;
+            }
+            else if (!alerta && distancia <= datos.RadioTerritorio)
+            {
+                alerta = true;
+            }
+            else if (alerta && distancia > datos.RadioTerritorio + datos.MargenPersecucion)
+            {
+                alerta = false;
+            }
+            foreach (PandilleroAPie p in pandilleros)
+            {
+                p.Alerta = alerta;
+            }
+
+            if (Presentes > 0)
+            {
+                vacioDesde = -1f;
+                return;
+            }
+            if (vacioDesde < 0f)
+            {
+                vacioDesde = Time.time;
+            }
+            if (Time.time - vacioDesde >= datos.SegundosReaparicion && distancia > datos.DistanciaReaparicion)
+            {
+                vacioDesde = -1f;
+                Aparecer();
+            }
+        }
+
         private void Update()
         {
+            if (datos.UsaPistola)
+            {
+                ActualizarTerritorio();
+            }
             if (!retiroPendiente)
             {
                 return;
@@ -182,6 +258,10 @@ namespace MechaCyberpunk.IA.APie
         {
             ICartera cartera = Registro<ICartera>.Actual;
             cartera?.Abonar(datos.Dinero, MotivoDinero.Otro);
+            if (datos.CalorAlVencer > 0f)
+            {
+                Registro<ICalor>.Actual?.Sumar(datos.CalorAlVencer, MotivoCalor.Pelea);
+            }
             Debug.Log("[IA] Pandillero vencido: +" + datos.Dinero);
         }
     }

@@ -19,6 +19,11 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - Maneja con WASD: la cámara va detrás y el ratón la orbita; sin mover el ratón 1.5 s vuelve atrás y se aleja un poco con la velocidad; C cambia a primera persona. ¿Se siente de GTA o se pierde en las vueltas?
 - Frena y pulsa E para bajar: vuelves a la cámara de hombro mirando hacia donde iba el carro. Subir otra vez no suma calor. ¿Robar se siente travieso? ¿Bajar es rápido?
 
+### T-402 pandilleros armados (qué probar)
+- Acércate a las banquetas del centro (Calaveras, magenta) y del este (Víboras, verde ácido): a menos de 35 m te disparan; ves un láser rojo 0.35 s antes de cada tiro y ellos se cubren de lado. ¿Ves venir el tiro o te matan sin avisar?
+- Véncelos con la pistola (2 y clic): cada uno suelta $40 y suma +8 de calor, cada tiro tuyo en la calle +2; con calor 1 llegan drones y desde calor 2 también te disparan. ¿Da miedo o estorba?
+- Si caes, despiertas en la clínica del mercado negro (cobra $100, calor a cero); tu vida se regenera sola tras 6 s sin daño; los grupos reaparecen a los 40 s si estás lejos.
+
 ## Build viejo con mechas (antes de la fase G)
 
 Build de Windows con las escenas de prueba de Tony más Ciudad_Prologo y Clandestino de Alan (T-136/T-137 aún pendientes: todavía no hay demo encadenada).

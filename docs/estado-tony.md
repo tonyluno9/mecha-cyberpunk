@@ -10,7 +10,7 @@ Builds/Juego/MechaCyberpunk.exe (arranca en Ciudad_Prologo) y 3 líneas en docs/
 | --- | --- | --- |
 | T-400 El jugador en tercera persona en la ciudad (cámara de hombro, muñeco animado, pistola, mecha fuera, ConstruirJuego) | nada | hecha (modo rápido) |
 | T-401 Carros: cámara en tercera persona, subir y bajar con E, robar los estacionados | T-400 | hecha (modo rápido) |
-| T-402 Pandilleros armados en su territorio: dinero, calor, drones que disparan, clínica (Core: IdPandilla) | T-400 | pendiente |
+| T-402 Pandilleros armados en su territorio: dinero, calor, drones que disparan, clínica (Core: IdPandilla) | T-400 | hecha (modo rápido) |
 | T-403 Cuatro armas del mercado negro con 3 niveles (daño, cargador, recarga) | T-400 (mejor tras T-402) | pendiente |
 | T-404 Tres zonas con dueño: respeto, jefe, conquista y mapa con M (Core: ITerritorio) | T-402 | pendiente |
 | T-405 Tu pandilla: hasta 3 aliados que siguen, pelean y suben de nivel (Core: IPandillaJugador) | T-402, T-404 | pendiente |
