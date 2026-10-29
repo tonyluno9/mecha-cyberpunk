@@ -25,6 +25,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string RaizT400 = "GTA_T400";
         public const string RaizT401 = "GTA_T401";
         public const string RaizT402 = "GTA_T402";
+        public const string RaizT403 = "GTA_T403";
         public const float HoraInicial = 19f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
@@ -43,7 +44,76 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T400Interno();
             T401Interno();
             T402Interno();
+            T403Interno();
             Guardar(escena);
+        }
+
+        [MenuItem("Mecha Cyberpunk/Pandillas/T-403 Cuatro armas")]
+        public static void T403()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            T403Interno();
+            Guardar(escena);
+        }
+
+        private const string TipoCreadorArmas = "MechaCyberpunk.Personaje.Editor.CreadorArmas, MechaCyberpunk.Personaje.Editor";
+        private const string RutaMostradorMercado = "Assets/_Proyecto/UI/Prefabs/MostradorMercadoNegro.prefab";
+        private const string RutaLugarMercado = "Assets/_Proyecto/Mundo/Datos/DatosLugar_MercadoNegro.asset";
+
+        // T-403: crea las armas y el catálogo (y regenera el prefab del jugador), abre el mercado negro siempre y se asegura de que haya un
+        // mostrador. El interior de Alan (Barrio.prefab) ya trae el MostradorMercadoNegro; si no hay ninguno, va uno bajo GTA_T403.
+        private static void T403Interno()
+        {
+            System.Type tipoArmas = System.Type.GetType(TipoCreadorArmas);
+            if (tipoArmas == null)
+            {
+                Debug.LogError("[Progresion] CreadorCiudadPandillas.T403: no encuentro CreadorArmas.");
+            }
+            else
+            {
+                tipoArmas.GetMethod("Crear").Invoke(null, null);
+            }
+
+            // Horario Siempre y sin cerrar en la demo (D-tony-216).
+            Object lugar = AssetDatabase.LoadAssetAtPath<Object>(RutaLugarMercado);
+            if (lugar != null)
+            {
+                SerializedObject so = new SerializedObject(lugar);
+                so.FindProperty("horario.siempreAbierto").boolValue = true;
+                so.FindProperty("cerradoEnDemo").boolValue = false;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(lugar);
+            }
+
+            GameObject anterior = BuscarRaiz(RaizT403);
+            if (anterior != null)
+            {
+                Object.DestroyImmediate(anterior);
+            }
+            GameObject raiz = new GameObject(RaizT403);
+            bool hay = false;
+            foreach (MonoBehaviour mb in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (mb != null && mb.GetType().Name == "MostradorTienda" && mb.name.Contains("MercadoNegro"))
+                {
+                    hay = true;
+                }
+            }
+            if (!hay)
+            {
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaMostradorMercado);
+                Transform mercado = BuscarTransform("Lugar_MercadoNegro");
+                if (prefab != null && mercado != null)
+                {
+                    GameObject mostrador = (GameObject)PrefabUtility.InstantiatePrefab(prefab, raiz.transform);
+                    mostrador.transform.SetPositionAndRotation(mercado.position + mercado.forward * 3f, mercado.rotation * Quaternion.Euler(0f, 180f, 0f));
+                }
+                else
+                {
+                    Debug.LogWarning("[Progresion] CreadorCiudadPandillas.T403: sin Lugar_MercadoNegro o sin el prefab del mostrador.");
+                }
+            }
+            Debug.Log("[Progresion] CreadorCiudadPandillas.T403: armas creadas, mercado negro siempre abierto, mostrador " + (hay ? "ya estaba (Barrio)" : "agregado") + ".");
         }
 
         [MenuItem("Mecha Cyberpunk/Pandillas/T-402 Pandilleros armados")]

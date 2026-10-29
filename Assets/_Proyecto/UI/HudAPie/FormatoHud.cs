@@ -28,7 +28,32 @@ namespace MechaCyberpunk.UI.Hud
             return Fraccion(actual, maxima) <= umbral;
         }
 
-        /// <summary>"PUÑOS", "PISTOLA 7/8", "PISTOLA · RECARGANDO" o "PISTOLA 0/8 · R".</summary>
+        private static readonly string[] Numerales = { string.Empty, " I", " II", " III" };
+
+        /// <summary>
+        /// T-403: con el nivel. "ESCOPETA II 5/6", "SUBFUSIL III · RECARGANDO", "PUÑOS II". El nivel 0 no lleva numeral.
+        /// </summary>
+        public static string TextoArma(ArmaAPie arma, int nivel, int balas, int tamanoCargador, bool recargando, ConfigHudAPie config)
+        {
+            string numeral = Numerales[Mathf.Clamp(nivel, 0, Numerales.Length - 1)];
+            if (arma == ArmaAPie.Punos)
+            {
+                return config.TextoPunos + numeral;
+            }
+            if (arma == ArmaAPie.Pistola && nivel <= 0)
+            {
+                return TextoArma(arma, balas, tamanoCargador, recargando, config);
+            }
+            string nombre = arma == ArmaAPie.Escopeta ? "ESCOPETA" : arma == ArmaAPie.Subfusil ? "SUBFUSIL" : "PISTOLA";
+            if (recargando)
+            {
+                return nombre + numeral + " · RECARGANDO";
+            }
+            string texto = nombre + numeral + " " + balas + "/" + tamanoCargador;
+            return balas <= 0 ? texto + " · R" : texto;
+        }
+
+        /// <summary>"PUÑOS", "PISTOLA 7/8","PISTOLA · RECARGANDO" o "PISTOLA 0/8 · R".</summary>
         public static string TextoArma(ArmaAPie arma, int balas, int tamanoCargador, bool recargando, ConfigHudAPie config)
         {
             if (arma == ArmaAPie.Punos)

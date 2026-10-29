@@ -125,6 +125,36 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "ArmaEscopeta",
+                    "type": "Button",
+                    "id": "cfd45f01-8d16-4507-b766-441c5d0be613",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "ArmaSubfusil",
+                    "type": "Button",
+                    "id": "aa8d81fa-a5f3-4f34-89d3-6c90c454b85c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "CambiarArma",
+                    "type": "Value",
+                    "id": "c64495e4-d092-4c8b-beeb-e735ea971412",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -301,6 +331,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Apuntar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "14222ad4-7727-44d6-a19c-dc90948cc7bc",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ArmaEscopeta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a69b137-4961-4c4d-8cbb-579b2d2edde5",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ArmaSubfusil",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0a9d715-76e7-412b-907b-582622e53258",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CambiarArma",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

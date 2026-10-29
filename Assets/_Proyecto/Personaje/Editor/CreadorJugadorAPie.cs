@@ -120,6 +120,7 @@ namespace MechaCyberpunk.Personaje.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             CreadorMunecoHumano.Crear();
+            CreadorArmas.CrearDatos();
             Material puno = CrearMaterial(RutaMaterialPuno, new Color(0.9f, 0.75f, 0.6f));
             Material pistola = CrearMaterial(RutaMaterialPistola, new Color(0.15f, 0.15f, 0.18f));
             Material marca = CrearMaterial(RutaMaterialMarca, new Color(0.05f, 0.05f, 0.05f));
@@ -176,6 +177,9 @@ namespace MechaCyberpunk.Personaje.Editor
             mapa.AddAction("LiberarCursor", InputActionType.Button, "<Keyboard>/escape");
             mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
             mapa.AddAction("Apuntar", InputActionType.Button, "<Mouse>/rightButton");
+            mapa.AddAction("ArmaEscopeta", InputActionType.Button, "<Keyboard>/3");
+            mapa.AddAction("ArmaSubfusil", InputActionType.Button, "<Keyboard>/4");
+            mapa.AddAction("CambiarArma", InputActionType.Value, "<Mouse>/scroll/y", expectedControlLayout: "Axis");
 
             File.WriteAllText(RutaEntrada, asset.ToJson());
             Object.DestroyImmediate(asset);
@@ -197,6 +201,22 @@ namespace MechaCyberpunk.Personaje.Editor
             if (mapa.FindAction("Apuntar") == null)
             {
                 mapa.AddAction("Apuntar", InputActionType.Button, "<Mouse>/rightButton");
+                cambio = true;
+            }
+            // T-403: 3 escopeta, 4 subfusil y la rueda del ratón.
+            if (mapa.FindAction("ArmaEscopeta") == null)
+            {
+                mapa.AddAction("ArmaEscopeta", InputActionType.Button, "<Keyboard>/3");
+                cambio = true;
+            }
+            if (mapa.FindAction("ArmaSubfusil") == null)
+            {
+                mapa.AddAction("ArmaSubfusil", InputActionType.Button, "<Keyboard>/4");
+                cambio = true;
+            }
+            if (mapa.FindAction("CambiarArma") == null)
+            {
+                mapa.AddAction("CambiarArma", InputActionType.Value, "<Mouse>/scroll/y", expectedControlLayout: "Axis");
                 cambio = true;
             }
             if (!cambio)
@@ -310,6 +330,7 @@ namespace MechaCyberpunk.Personaje.Editor
 
         private static void CrearPrefab(Material materialCuerpo, Material materialPuno, Material materialPistola, Material materialMarca)
         {
+            CreadorArmas.CrearDatos();
             GameObject raiz = new GameObject("JugadorAPie");
             CharacterController cc = raiz.AddComponent<CharacterController>();
             cc.height = AlturaCuerpo;
@@ -428,7 +449,21 @@ namespace MechaCyberpunk.Personaje.Editor
             luzBoca.shadows = LightShadows.None;
             luzBoca.enabled = false;
 
+            // T-403: la escopeta (cañón largo, madera) y el subfusil (compacto, oscuro), también de cubos en la mano derecha.
+            Material materialEscopeta = CrearMaterial(RutaPersonaje + "/Materiales/Greybox_Escopeta.mat", new Color(0.4f, 0.25f, 0.12f));
+            Material materialSubfusil = CrearMaterial(RutaPersonaje + "/Materiales/Greybox_Subfusil.mat", new Color(0.1f, 0.35f, 0.4f));
+            GameObject escopetaObj = CrearArmaDeFuego("Escopeta", manoDer, materialEscopeta, new Vector3(0.07f, 0.1f, 0.34f),
+                new Vector3(0.06f, 0.06f, 0.55f), 0.4f, out Light luzEscopeta);
+            GameObject subfusilObj = CrearArmaDeFuego("Subfusil", manoDer, materialSubfusil, new Vector3(0.08f, 0.16f, 0.3f),
+                new Vector3(0.04f, 0.04f, 0.22f), 0.26f, out Light luzSubfusil);
+            escopetaObj.SetActive(false);
+            subfusilObj.SetActive(false);
+
             SerializedObject soPistola = new SerializedObject(raiz.AddComponent<PistolaAPie>());
+            soPistola.FindProperty("visualEscopeta").objectReferenceValue = escopetaObj.transform;
+            soPistola.FindProperty("luzBocaEscopeta").objectReferenceValue = luzEscopeta;
+            soPistola.FindProperty("visualSubfusil").objectReferenceValue = subfusilObj.transform;
+            soPistola.FindProperty("luzBocaSubfusil").objectReferenceValue = luzSubfusil;
             soPistola.FindProperty("datos").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosPistola>(RutaDatosPistola);
             soPistola.FindProperty("atacar").objectReferenceValue = Referencia("Atacar");
             soPistola.FindProperty("recargar").objectReferenceValue = Referencia("Recargar");
@@ -442,7 +477,17 @@ namespace MechaCyberpunk.Personaje.Editor
             soArmas.FindProperty("armaPistola").objectReferenceValue = Referencia("ArmaPistola");
             soArmas.FindProperty("visualPunos").objectReferenceValue = null;
             soArmas.FindProperty("visualPistola").objectReferenceValue = pistolaObj;
+            soArmas.FindProperty("armaEscopeta").objectReferenceValue = Referencia("ArmaEscopeta");
+            soArmas.FindProperty("armaSubfusil").objectReferenceValue = Referencia("ArmaSubfusil");
+            soArmas.FindProperty("cambiarArma").objectReferenceValue = Referencia("CambiarArma");
+            soArmas.FindProperty("visualEscopeta").objectReferenceValue = escopetaObj;
+            soArmas.FindProperty("visualSubfusil").objectReferenceValue = subfusilObj;
             soArmas.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject soArsenal = new SerializedObject(raiz.AddComponent<ArsenalJugador>());
+            soArsenal.FindProperty("catalogo").objectReferenceValue = AssetDatabase.LoadAssetAtPath<CatalogoArmas>(CreadorArmas.RutaCatalogoArmas);
+            soArsenal.FindProperty("pistolaAlInicio").boolValue = true;
+            soArsenal.ApplyModifiedPropertiesWithoutUndo();
 
             // Un solo prefab para Alan (D-tony-23): el HUD y los servicios de objetivos van anidados, y la aparición en un punto.
             AnidarPrefab(RutaPrefabHud, raiz.transform);
@@ -555,6 +600,34 @@ namespace MechaCyberpunk.Personaje.Editor
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefabLocal);
             Object.DestroyImmediate(raiz);
+        }
+
+        // Arma de fuego greybox: cuerpo y cañón de cubos, con una luz breve en la boca. Igual que la pistola de T-400 (cañón hacia -Y local de la mano).
+        private static GameObject CrearArmaDeFuego(string nombre, Transform mano, Material material, Vector3 tamanoCuerpo,
+            Vector3 tamanoCanon, float zBoca, out Light luz)
+        {
+            GameObject arma = new GameObject(nombre);
+            arma.transform.SetParent(mano, false);
+            arma.transform.localPosition = new Vector3(0f, -0.05f, 0f);
+            arma.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            Pieza("Cuerpo " + nombre, arma.transform, Vector3.zero, tamanoCuerpo, material);
+            Pieza("Canon", arma.transform, new Vector3(0f, 0.05f, zBoca - tamanoCanon.z / 2f + 0.1f), tamanoCanon, material);
+            foreach (Transform pieza in arma.transform)
+            {
+                Object.DestroyImmediate(pieza.GetComponent<Collider>());
+                pieza.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+            }
+            GameObject boca = new GameObject("Boca");
+            boca.transform.SetParent(arma.transform, false);
+            boca.transform.localPosition = new Vector3(0f, 0.05f, zBoca + 0.1f);
+            luz = boca.AddComponent<Light>();
+            luz.type = LightType.Point;
+            luz.color = new Color(1f, 0.8f, 0.4f);
+            luz.intensity = 8f;
+            luz.range = 12f;
+            luz.shadows = LightShadows.None;
+            luz.enabled = false;
+            return arma;
         }
 
         private static GameObject Pieza(string nombre, Transform padre, Vector3 posicionLocal, Vector3 tamano, Material material)

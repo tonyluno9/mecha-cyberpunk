@@ -31,6 +31,8 @@ namespace MechaCyberpunk.Personaje.Combate
         private ControladorAPie controlador;
         private VidaAPie vida;
         private CicloGolpe ciclo;
+        private ArsenalJugador arsenal;
+        private float recargaActual;
         private readonly SeguidorImplantes implantes = new SeguidorImplantes();
         private Vector3 posicionReposo;
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactosPorGolpe];
@@ -54,7 +56,8 @@ namespace MechaCyberpunk.Personaje.Combate
                 enabled = false;
                 return;
             }
-            ciclo = new CicloGolpe(datos.PreparacionGolpe, datos.RecargaGolpe);
+            recargaActual = datos.RecargaGolpe;
+            ciclo = new CicloGolpe(datos.PreparacionGolpe, recargaActual);
             if (puno != null)
             {
                 posicionReposo = puno.localPosition;
@@ -82,6 +85,10 @@ namespace MechaCyberpunk.Personaje.Combate
                 MoverPuno();
                 return;
             }
+            if (ciclo.Fase == FaseGolpe.Listo)
+            {
+                AjustarRecarga();
+            }
             if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos)
             {
                 ciclo.IntentarGolpear();
@@ -93,6 +100,31 @@ namespace MechaCyberpunk.Personaje.Combate
             MoverPuno();
         }
 
+        // T-403: los puños usan el daño y la recarga de su nivel. Sin arsenal, los de DatosPersonaje.
+        private DatosArma DatosPunos()
+        {
+            arsenal = arsenal != null ? arsenal : Registro<ArsenalJugador>.Actual;
+            return arsenal != null ? arsenal.Datos(ArmaAPie.Punos) : null;
+        }
+
+        private float DanioDelGolpe()
+        {
+            DatosArma punos = DatosPunos();
+            float basico = punos != null ? punos.Danio : datos.DanioGolpe;
+            return basico * implantes.Efectos.multiplicadorGolpeAPie;
+        }
+
+        private void AjustarRecarga()
+        {
+            DatosArma punos = DatosPunos();
+            float recarga = punos != null ? punos.Recarga : datos.RecargaGolpe;
+            if (!Mathf.Approximately(recarga, recargaActual))
+            {
+                recargaActual = recarga;
+                ciclo = new CicloGolpe(datos.PreparacionGolpe, recarga);
+            }
+        }
+
         private void Impactar()
         {
             // Tercera persona: el golpe sale del pecho hacia donde mira el cuerpo (apuntando, hacia donde mira la cámara).
@@ -102,7 +134,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 datos.RadioGolpe, impactos, out Vector3 punto);
             if (objetivo != null)
             {
-                objetivo.RecibirDanio(new InfoDanio(EfectosAPie.DanioGolpe(datos, implantes.Efectos), TipoDanio.Golpe, punto, direccion, null));
+                objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(), TipoDanio.Golpe, punto, direccion, null));
             }
             Impacto?.Invoke();
         }
