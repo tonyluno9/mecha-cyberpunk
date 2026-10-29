@@ -3,6 +3,10 @@
 Estado al 2026-10-15: sesión de aprobación. Tony aprobó tony/fase-3 y tony/fase-4 sin revisión extra y están en `main`
 (merge limpio; compilar OK, EditMode 375/375, PlayMode 304/304 sobre main).
 
+## Bloque 8, adaptación del rival (T-198 a T-205)
+### Para Alan (T-198)
+No le toca nada. Core solo ganó dos comentarios: la clave de guardado `adaptacion` (IGuardable) y que el nombre del asset `DatosRival` es la llave con la que un rival recuerda al jugador. `RivalBasico.prefab` (el base) y `FlujoPelea.prefab` de su Clandestino no se adaptan, así que sus pruebas no cambian. Si algún día quiere que el público o un cartel reaccione a una revancha contra un rival que "ya te conoce", se pide una tarea de Core (D-tony-200).
+
 ## T-137 La demo como programa de Windows (2026-10-28)
 Abre `Builds/Demo/MechaCyberpunk.exe` y juega del título a "continuará" siguiendo docs/guia-demo.md (unos 15 min). Sin revisor.
 ¿Todo funciona igual que en el editor y con buena fluidez? ¿El título de la ventana dice "Mecha Cyberpunk (demo)" y Alt+Enter pasa a ventana? Después, que la juegue la persona nueva de H6.

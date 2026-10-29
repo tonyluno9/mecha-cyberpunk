@@ -2,7 +2,11 @@ using UnityEngine;
 
 namespace MechaCyberpunk.Core
 {
-    /// <summary>Estadísticas y comportamiento básico de un rival.</summary>
+    /// <summary>
+    /// Estadísticas y comportamiento básico de un rival. El nombre del asset (<c>name</c>) es la llave con la que el rival recuerda
+    /// al jugador entre peleas (IA, <c>AdaptacionRival</c>, T-200): renombrar el asset de un rival que se adapta le borra lo aprendido
+    /// en las partidas guardadas.
+    /// </summary>
     [CreateAssetMenu(menuName = "Mecha Cyberpunk/Datos del rival", fileName = "DatosRival_Nuevo")]
     public class DatosRival : ScriptableObject
     {
