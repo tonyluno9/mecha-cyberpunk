@@ -147,3 +147,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - En LA FOSA (oeste, cerca de la casa) hay 3 chavos: EL CHATO (gratis, respeto 10), LA GÜERA ($200, respeto 40) y EL TOPO ($350, respeto 70). Con F6 subes respeto y con F7 te dan $500; E junto a ellos los recluta (si falta algo, el texto dice qué).
 - Los aliados naranjas te siguen, corren si te alejas, disparan a los pandilleros y suben de nivel (3 vencidos y 8); abajo a la izquierda ves su nivel y vida, y en el mapa (M) son puntos naranjas. F los manda esperar o seguir.
 - Si cae uno, vuelve a los 45 s; los pandilleros también les disparan. ¿Ayudan o estorban? ¿Se nota subir de nivel?
+
+### T-406 la demo de 15 minutos (Builds/Demo/MechaCyberpunk.exe, sin atajos F6/F7)
+- Pasos: despiertas en tu casa a las 19:00 con puños y $0 (objetivo SAL A LA CALLE; WASD, ratón) → afuera 2 Calaveras le pegan a DOÑA LUPE, defiéndela con clic izquierdo (no te matan: con poca vida dejan de pegar 3 s) → el último suelta una pistola, E la recoge (clic derecho apunta, clic izquierdo dispara) → E con EL CHATO lo une gratis → sale a conquistar EL TIANGUIS (M abre el mapa, F manda esperar o seguir a tus aliados): vence Calaveras hasta 70 de respeto, aparece el jefe con la flecha → 4 s después sale "CONTINUARÁ..." y Enter te deja seguir jugando libre.
+- Pistas que salen solas: robar un carro con E y el mercado negro vende escopetas ($). Los grupos del tianguis no aparecen hasta que te mandan ahí.
+- Observa: ¿dura unos 15 minutos? ¿Se entiende qué hacer sin leer esta guía? ¿El final deja ganas de más? ¿La pelea con el jefe es buen cierre? Con Builds/Juego (no final) F6 salta un paso de la historia.

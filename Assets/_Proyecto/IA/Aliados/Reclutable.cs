@@ -25,6 +25,9 @@ namespace MechaCyberpunk.IA.Aliados
         public bool SoloHistoria { get => soloHistoria; set => soloHistoria = value; }
         public Vector3 Posicion => transform.position;
 
+        /// <summary>True: la historia (T-406) lo libera y se une gratis, sin pedir respeto ni dinero.</summary>
+        public bool LiberadoPorHistoria { get; set; }
+
         public void Configurar(string nuevoNombre, int nuevoCosto, int nuevoRespeto, string nuevaZona)
         {
             nombre = nuevoNombre;
@@ -60,6 +63,10 @@ namespace MechaCyberpunk.IA.Aliados
         {
             get
             {
+                if (LiberadoPorHistoria && Pandilla != null && Pandilla.Cantidad < Pandilla.Maximo)
+                {
+                    return "Hablar con " + nombre;
+                }
                 if (Pandilla == null || soloHistoria)
                 {
                     return nombre + " ESPERA ALGO MÁS";
@@ -82,8 +89,8 @@ namespace MechaCyberpunk.IA.Aliados
             }
         }
 
-        public bool PuedeUsar => Pandilla != null && !soloHistoria && Pandilla.Cantidad < Pandilla.Maximo
-            && RespetoActual >= respetoMinimo && DineroActual >= costo;
+        public bool PuedeUsar => Pandilla != null && Pandilla.Cantidad < Pandilla.Maximo
+            && (LiberadoPorHistoria || (!soloHistoria && RespetoActual >= respetoMinimo && DineroActual >= costo));
 
         public void Usar()
         {
@@ -91,7 +98,7 @@ namespace MechaCyberpunk.IA.Aliados
             {
                 return;
             }
-            if (costo > 0 && !Registro<ICartera>.Actual.IntentarPagar(costo, MotivoDinero.Otro))
+            if (!LiberadoPorHistoria && costo > 0 && !Registro<ICartera>.Actual.IntentarPagar(costo, MotivoDinero.Otro))
             {
                 return;
             }
