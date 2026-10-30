@@ -65,7 +65,7 @@ namespace MechaCyberpunk.Tests.Personaje
             {
                 cartera.CargarDeuda(-diferencia, MotivoDinero.Otro);
             }
-            Assert.AreEqual(DineroInicial, cartera.Dinero, "Empieza con $400");
+            Assert.AreEqual(DineroInicial, cartera.Dinero, "Empieza con Ƀ400");
 
             ArmasAPie armas = jugador.GetComponent<ArmasAPie>();
             yield return Tecla(teclado.digit3Key);
@@ -97,7 +97,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 yield return Tecla(teclado.downArrowKey);
             }
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(DineroInicial - PrecioEscopeta, cartera.Dinero, "Cobra $350");
+            Assert.AreEqual(DineroInicial - PrecioEscopeta, cartera.Dinero, "Cobra Ƀ350");
 
             // De la escopeta ahora solo se ofrece la mejora siguiente (nivel I).
             bool nivel0 = false;

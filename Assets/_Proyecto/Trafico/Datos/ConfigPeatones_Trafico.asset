@@ -15,8 +15,8 @@ MonoBehaviour:
   velocidad: 1.4
   esperaMinima: 1
   esperaMaxima: 5
-  peatonesDeDia: 12
-  peatonesDeNoche: 24
+  peatonesDeDia: 6
+  peatonesDeNoche: 8
   distanciaParada: 2
   margenBanqueta: 2.4
   recorteCierres: 15

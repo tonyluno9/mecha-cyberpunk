@@ -314,7 +314,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             Assert.IsFalse(misiones.HayMision, "llegar a casa cumple Escapar y termina el robo");
             CollectionAssert.AreEqual(new[] { (TipoMision.Robo, true) }, terminadas, "Terminada(Robo, true) una vez");
             Assert.IsTrue(casa.JugadorDentro, "el jugador está en la casa");
-            Assert.AreEqual(dinero, cartera.Dinero, "pago $0: el dinero no cambia");
+            Assert.AreEqual(dinero, cartera.Dinero, "pago Ƀ0: el dinero no cambia");
             CollectionAssert.DoesNotContain(movimientos, MotivoDinero.Mision, "ningún cobro de misión");
             Assert.AreEqual(chatarra + esperada.ChatarraCantidad, inventario.Cantidad(esperada.Chatarra), "+6 de chatarra");
             Assert.AreEqual(barrio + esperada.DeltaBarrio, reputacion.Valor(TipoReputacion.Barrio), "barrio +3 (puntos)");
@@ -345,7 +345,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
                 while (pantalla.IndiceElegido < fila) yield return Tecla(teclado.downArrowKey);
                 yield return Tecla(teclado.enterKey);
             }
-            Assert.AreEqual(dinero + esperada.ChatarraCantidad * ventaChatarra, cartera.Dinero, "6 x $50 de venta");
+            Assert.AreEqual(dinero + esperada.ChatarraCantidad * ventaChatarra, cartera.Dinero, "6 x Ƀ50 de venta");
             Assert.AreEqual(chatarra, inventario.Cantidad(esperada.Chatarra), "ya no queda chatarra del robo");
             VerificarFinal();
         }
@@ -492,7 +492,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
 
             Assert.IsFalse(misiones.HayMision, "avisar al taquero termina la misión");
             CollectionAssert.AreEqual(new[] { (TipoMision.Barrio, true) }, terminadas, "Terminada(Barrio, true) una vez");
-            Assert.AreEqual(dinero + esperada.Pago, cartera.Dinero, "pago $100");
+            Assert.AreEqual(dinero + esperada.Pago, cartera.Dinero, "pago Ƀ100");
             Assert.AreEqual(barrio + esperada.DeltaBarrio, reputacion.Valor(TipoReputacion.Barrio), "barrio +12 (puntos)");
             Assert.AreEqual(cantidadFavor + 1, favores.Cantidad(esperada.Favor.Tipo), "1 ESCONDITE");
             Assert.IsFalse(HayRivalesEnLaEscena(), "no quedan rivales");

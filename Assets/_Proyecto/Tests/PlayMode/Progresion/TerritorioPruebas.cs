@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Tests.Progresion
             // Jugador en el centro: el HUD dice EL TIANGUIS.
             jugador.Colocar(new Pose(new Vector3(0f, 0.5f, 0f), Quaternion.identity));
             yield return EsperarHasta(() => hud.TextoZona.text.Contains("EL TIANGUIS"), "el HUD dice EL TIANGUIS");
-            StringAssert.Contains("LOS CALAVERAS", hud.TextoZona.text);
+            StringAssert.Contains("SKULLS", hud.TextoZona.text);
 
             // El mapa: M abre, M cierra, Esc cierra.
             yield return Pulsar(teclado.mKey);
@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(IdPandilla.Jugador, territorio.Dueno("tianguis"));
             Assert.AreEqual(100, territorio.Respeto("tianguis"));
             yield return null;
-            StringAssert.Contains("ES TUYO", hud.TextoAviso.text);
+            StringAssert.Contains("ES DE LOS DE SUBURBIOS", hud.TextoAviso.text);
 
             // El grupo vacío de una zona tuya no reaparece (45 s de juego, acelerados).
             jugador.Colocar(new Pose(new Vector3(-94f, 0.5f, -47f), Quaternion.identity));

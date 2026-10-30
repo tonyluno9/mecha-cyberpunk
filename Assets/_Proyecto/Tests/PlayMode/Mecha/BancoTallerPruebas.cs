@@ -143,7 +143,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Danar();
             yield return IrAlBanco();
 
-            Assert.AreEqual("E · Reparar mecha · $650", hud.TextoAvisoInteraccion.text);
+            Assert.AreEqual("E · Reparar mecha · Ƀ650", hud.TextoAvisoInteraccion.text);
             Assert.AreEqual(CostoEsperado, banco.Costo);
             yield return Tecla(teclado.eKey);
             PantallaBancoTaller pantalla = banco.GetComponentInChildren<PantallaBancoTaller>(true);
@@ -152,7 +152,7 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return Tecla(teclado.enterKey);
 
             Assert.IsFalse(pantalla.Visible);
-            Assert.AreEqual(DineroInicial - CostoEsperado, cartera.Dinero, "Quedó en deuda: $500 - $650");
+            Assert.AreEqual(DineroInicial - CostoEsperado, cartera.Dinero, "Quedó en deuda: Ƀ500 - Ƀ650");
             Assert.AreEqual(1, cambios.Count);
             Assert.AreEqual((-CostoEsperado, MotivoDinero.Reparacion), cambios[0]);
             Assert.AreEqual(vida.Maxima, vida.Actual, 0.001f, "Vida al máximo");
@@ -205,7 +205,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.IsTrue(renta.TallerBloqueado);
             yield return IrAlBanco();
 
-            Assert.AreEqual("TALLER BLOQUEADO · debes $500 de renta", hud.TextoAvisoInteraccion.text);
+            Assert.AreEqual("TALLER BLOQUEADO · debes Ƀ500 de renta", hud.TextoAvisoInteraccion.text);
             yield return Tecla(teclado.eKey);
             Assert.AreEqual(0, cartera.Dinero, "No cobró");
             Assert.AreEqual(VidaDanada, vida.Actual, 0.001f, "No reparó");
@@ -213,7 +213,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             cartera.Abonar(600, MotivoDinero.Otro);
             yield return null;
-            Assert.AreEqual("E · Pagar renta · $500", hud.TextoAvisoInteraccion.text);
+            Assert.AreEqual("E · Pagar renta · Ƀ500", hud.TextoAvisoInteraccion.text);
             yield return Tecla(teclado.eKey);
 
             Assert.AreEqual(100, cartera.Dinero, "Pagó la renta");
@@ -221,7 +221,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.AreEqual(VidaDanada, vida.Actual, 0.001f, "Pagar la renta no repara");
 
             yield return null;
-            Assert.AreEqual("E · Reparar mecha · $650", hud.TextoAvisoInteraccion.text);
+            Assert.AreEqual("E · Reparar mecha · Ƀ650", hud.TextoAvisoInteraccion.text);
         }
 
         [UnityTest]

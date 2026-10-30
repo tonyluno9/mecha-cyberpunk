@@ -534,7 +534,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Tecla(teclado.enterKey);
             Assert.IsFalse(pantallaCartelera.Visible, "Enter cierra la cartelera");
             Assert.IsTrue(pantallaApuesta.Visible, "Los carteles traen su pantalla de apuesta");
-            Assert.AreEqual(0, pantallaApuesta.Monto, "La apuesta empieza en $0");
+            Assert.AreEqual(0, pantallaApuesta.Monto, "La apuesta empieza en Ƀ0");
             int dineroAntes = cartera.Dinero;
             yield return Tecla(teclado.enterKey);
             Assert.IsFalse(pantallaApuesta.Visible, "Enter cierra la pantalla de apuesta");

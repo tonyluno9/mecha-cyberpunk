@@ -22,6 +22,18 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float distanciaApuntando = 1.6f;
         [Range(20f, 120f)] [SerializeField] private float fovApuntando = 48f;
 
+        [Header("Zoom del sniper (T-416)")]
+        [Tooltip("Campo de visión con el zoom del sniper (°).")]
+        [Range(5f, 60f)] [SerializeField] private float fovSniper = 15f;
+        [Tooltip("Cuánto tarda el zoom en entrar o salir (s).")]
+        [Min(0.01f)] [SerializeField] private float duracionZoom = 0.15f;
+        [Tooltip("Factor de la sensibilidad del ratón mientras dura el zoom.")]
+        [Range(0.05f, 1f)] [SerializeField] private float sensibilidadZoom = 0.35f;
+        [Tooltip("Sacudida hacia arriba de cada tiro con zoom (°).")]
+        [Min(0f)] [SerializeField] private float sacudidaZoom = 1.5f;
+        [Tooltip("Cuánto tarda la sacudida en volver (s).")]
+        [Min(0.01f)] [SerializeField] private float duracionSacudida = 0.3f;
+
         [Header("Mirada y choque")]
         [Tooltip("Inclinación mínima (°, negativo mira hacia arriba).")]
         [Range(-89f, 0f)] [SerializeField] private float inclinacionMinima = -40f;
@@ -42,6 +54,11 @@ namespace MechaCyberpunk.Personaje
         public float AlturaApuntando => alturaApuntando;
         public float DistanciaApuntando => distanciaApuntando;
         public float FovApuntando => fovApuntando;
+        public float FovSniper => fovSniper;
+        public float DuracionZoom => duracionZoom;
+        public float SensibilidadZoom => sensibilidadZoom;
+        public float SacudidaZoom => sacudidaZoom;
+        public float DuracionSacudida => duracionSacudida;
         public float InclinacionMinima => inclinacionMinima;
         public float InclinacionMaxima => inclinacionMaxima;
         public float Suavizado => suavizado;

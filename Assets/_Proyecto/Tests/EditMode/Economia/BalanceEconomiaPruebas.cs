@@ -105,7 +105,7 @@ namespace MechaCyberpunk.Tests
             try
             {
                 List<string> mensajes = ObjetosQueSeVendenCaro(new[] { brazoCaro }, ofertas);
-                Assert.AreEqual(1, mensajes.Count, "El brazo a $1,300 debe romper la regla d.");
+                Assert.AreEqual(1, mensajes.Count, "El brazo a Ƀ1,300 debe romper la regla d.");
                 StringAssert.Contains("Brazo de chatarra", mensajes[0]);
                 Debug.Log("Corrida que falla a propósito: " + mensajes[0]);
             }

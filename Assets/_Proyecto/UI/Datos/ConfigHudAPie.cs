@@ -121,7 +121,7 @@ namespace MechaCyberpunk.UI
 
         [Tooltip("Nombre de cada motivo en el aviso, en el orden de MotivoDinero (Premio, Apuesta, Reparacion, Renta, Compra, Venta, Casino, Clinica, Otro).")]
         [SerializeField] private string[] nombresMotivo =
-            { "PREMIO", "APUESTA", "REPARACIÓN", "RENTA", "COMPRA", "VENTA", "CASINO", "CLÍNICA", "OTRO" };
+            { "PREMIO", "APUESTA", "REPARACIÓN", "RENTA", "COMPRA", "VENTA", "VIVACOIN", "I+D+I", "OTRO" };
 
         [Header("Subir de liga (T-161)")]
         [Tooltip("Cuánto dura el aviso de campeón vencido (s).")]

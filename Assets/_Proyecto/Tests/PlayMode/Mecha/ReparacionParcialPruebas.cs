@@ -31,11 +31,11 @@ namespace MechaCyberpunk.Tests.Mecha
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Economia.unity";
         private const string VariableCaptura = "CAPTURAR_T149";
         private const string RutaCaptura = "docs/capturas/T-149-1.png";
-        private const string TextoTodo600 = "REPARAR TODO · $600";
-        private const string TextoMitad300 = "REPARAR LA MITAD · $300";
-        private const string TextoTodo300 = "REPARAR TODO · $300";
-        private const string TextoMitad150 = "REPARAR LA MITAD · $150";
-        private const string TextoAlcanza = "CON LO QUE TIENES · $120 (+12)";
+        private const string TextoTodo600 = "REPARAR TODO · Ƀ600";
+        private const string TextoMitad300 = "REPARAR LA MITAD · Ƀ300";
+        private const string TextoTodo300 = "REPARAR TODO · Ƀ300";
+        private const string TextoMitad150 = "REPARAR LA MITAD · Ƀ150";
+        private const string TextoAlcanza = "CON LO QUE TIENES · Ƀ120 (+12)";
         private const string PrefijoAlcanza = "CON LO QUE TIENES";
         private const string PrefijoAviso = "E ·";
         private const string AdeudoDeRenta = "{\"diaProximoCobro\":15,\"adeudo\":500}";
@@ -203,7 +203,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             Assert.IsFalse(pantalla.Visible, "Enter cierra la pantalla");
             Assert.AreEqual(70f, vida.Actual, MargenVida, "Vida 70");
-            Assert.AreEqual(700, cartera.Dinero, "Dinero $700");
+            Assert.AreEqual(700, cartera.Dinero, "Dinero Ƀ700");
             Assert.IsEmpty(errores, "consola sin errores: " + string.Join(" | ", errores));
         }
 
@@ -228,7 +228,7 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return Tecla(teclado.enterKey);
 
             Assert.AreEqual(82f, vida.Actual, MargenVida, "Vida 82");
-            Assert.AreEqual(0, cartera.Dinero, "Dinero $0: pagó sin deuda");
+            Assert.AreEqual(0, cartera.Dinero, "Dinero Ƀ0: pagó sin deuda");
             Assert.IsEmpty(errores, "consola sin errores: " + string.Join(" | ", errores));
         }
 
@@ -242,13 +242,13 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.AreEqual(3, pantalla.CantidadOpciones, "Todo y mitad y PIEZAS DEL MECHA; sin CON LO QUE TIENES");
             Assert.AreEqual(TextoTodo300, TextosBase()[0]);
             Assert.AreEqual(TextoMitad150, TextosBase()[1]);
-            Assert.AreEqual("DINERO -$50", pantalla.Dinero);
+            Assert.AreEqual("DINERO -Ƀ50", pantalla.Dinero);
             Assert.Greater(pantalla.ColorDinero.r, pantalla.ColorDinero.g, "La deuda se pinta en rojo");
 
             yield return Tecla(teclado.enterKey);
 
             Assert.AreEqual(VidaMaximaEsperada, vida.Actual, MargenVida, "Vida 100");
-            Assert.AreEqual(-350, cartera.Dinero, "Sigue siendo fiado: -$50 - $300");
+            Assert.AreEqual(-350, cartera.Dinero, "Sigue siendo fiado: -Ƀ50 - Ƀ300");
             Assert.IsEmpty(errores, "consola sin errores: " + string.Join(" | ", errores));
         }
 
@@ -304,7 +304,7 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return null;
             yield return Tecla(teclado.eKey);
             Assert.IsFalse(pantalla.Visible, "Pagar la renta no abre la pantalla");
-            Assert.AreEqual(100, cartera.Dinero, "Pagó la renta de $500");
+            Assert.AreEqual(100, cartera.Dinero, "Pagó la renta de Ƀ500");
             Assert.IsFalse(renta.TallerBloqueado);
             Assert.AreEqual(40f, vida.Actual, MargenVida, "Pagar la renta no repara");
 

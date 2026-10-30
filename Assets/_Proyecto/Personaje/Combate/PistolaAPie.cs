@@ -30,9 +30,12 @@ namespace MechaCyberpunk.Personaje.Combate
         [Tooltip("Visual de la escopeta (T-403). Se mueve hacia atrás con el retroceso.")]
         [SerializeField] private Transform visualEscopeta;
         [SerializeField] private Light luzBocaEscopeta;
-        [Tooltip("Visual del subfusil (T-403).")]
-        [SerializeField] private Transform visualSubfusil;
-        [SerializeField] private Light luzBocaSubfusil;
+        [Tooltip("Visual del fusil de asalto (T-403, T-416).")]
+        [SerializeField] private Transform visualFusil;
+        [SerializeField] private Light luzBocaFusil;
+        [Tooltip("Visual del sniper (T-416).")]
+        [SerializeField] private Transform visualSniper;
+        [SerializeField] private Light luzBocaSniper;
         [SerializeField] private Material materialMarca;
         [Tooltip("Cuánto dura la luz del cañón (s).")]
         [Min(0.01f)] [SerializeField] private float duracionLuz = 0.05f;
@@ -50,7 +53,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private ControladorAPie controlador;
         private VidaAPie vida;
         private ArmasAPie armas;
-        private const int CantidadArmas = 4;
+        private const int CantidadArmas = 5;
         private readonly CargadorPistola[] cargadores = new CargadorPistola[CantidadArmas];
         private readonly DatosArma[] datosArmas = new DatosArma[CantidadArmas];
         private readonly Transform[] visuales = new Transform[CantidadArmas];
@@ -102,10 +105,12 @@ namespace MechaCyberpunk.Personaje.Combate
                 datos.TiempoRecarga, datos.TiempoEntreDisparos, false, 0f, 0f, datos.Alcance);
             visuales[(int)ArmaAPie.Pistola] = visual;
             visuales[(int)ArmaAPie.Escopeta] = visualEscopeta;
-            visuales[(int)ArmaAPie.Subfusil] = visualSubfusil;
+            visuales[(int)ArmaAPie.Fusil] = visualFusil;
+            visuales[(int)ArmaAPie.Sniper] = visualSniper;
             luces[(int)ArmaAPie.Pistola] = luzBoca;
             luces[(int)ArmaAPie.Escopeta] = luzBocaEscopeta;
-            luces[(int)ArmaAPie.Subfusil] = luzBocaSubfusil;
+            luces[(int)ArmaAPie.Fusil] = luzBocaFusil;
+            luces[(int)ArmaAPie.Sniper] = luzBocaSniper;
             for (int i = 1; i < CantidadArmas; i++)
             {
                 if (visuales[i] != null)
@@ -243,12 +248,14 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private static string IdDisparo(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Subfusil ? "ARM_SUB_DISPARO" : "ARM_PIS_DISPARO";
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Fusil ? "ARM_SUB_DISPARO"
+                : arma == ArmaAPie.Sniper ? "ARM_SNI_DISPARO" : "ARM_PIS_DISPARO";
         }
 
         private static string IdRecarga(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Subfusil ? "ARM_SUB_RECARGA" : "ARM_PIS_RECARGA";
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Fusil ? "ARM_SUB_RECARGA"
+                : arma == ArmaAPie.Sniper ? "ARM_SNI_RECARGA" : "ARM_PIS_RECARGA";
         }
 
         private void Disparar(ArmaAPie arma, DatosArma d)

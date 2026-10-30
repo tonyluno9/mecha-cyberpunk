@@ -54,6 +54,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T405Interno();
             T406Interno();
             T407Interno();
+            T414Interno();
+            T416Interno();
+            T417Interno();
+            T418Interno();
             Guardar(escena);
         }
 
@@ -144,7 +148,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 Object.DestroyImmediate(anterior);
             }
             CreadorPandilleroArmado.Crear();
-            DatosZona fosa = CrearZona("fosa", "LA FOSA", IdPandilla.Jugador, new Color(1f, 0.5f, 0.1f), -ExtensionZona, -LimiteZonaX);
+            DatosZona fosa = CrearZona("fosa", "SUBURBIOS", IdPandilla.Jugador, new Color(1f, 0.5f, 0.1f), -ExtensionZona, -LimiteZonaX);
             DatosZona tianguis = CrearZona("tianguis", "EL TIANGUIS", IdPandilla.Calaveras, new Color(1f, 0.1f, 0.8f), -LimiteZonaX, LimiteZonaX);
             DatosZona neon = CrearZona("neon", "NEÓN ALTO", IdPandilla.Viboras, new Color(0.45f, 1f, 0.1f), LimiteZonaX, ExtensionZona);
 
@@ -186,7 +190,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeCalaveras.asset",
                 "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeViboras.asset"
             };
-            string[] nombresJefe = { "JEFE CALAVERA", "JEFE VÍBORA" };
+            string[] nombresJefe = { "JEFE SKULL", "JEFE SNAKE" };
             for (int i = 0; i < ids.Length; i++)
             {
                 Transform manzana = BuscarTransform(manzanas[i]);

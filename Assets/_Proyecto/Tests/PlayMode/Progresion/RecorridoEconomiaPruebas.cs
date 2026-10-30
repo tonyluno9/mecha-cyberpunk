@@ -498,7 +498,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsFalse(pantallaTienda.Visible, "Esc cierra la tienda");
         }
 
-        // c) Apuesta $250, pelea la casera, daño real, un kit con G y gana.
+        // c) Apuesta Ƀ250, pelea la casera, daño real, un kit con G y gana.
         private IEnumerator ApostarPelearUsarElKitYGanar(int apuesta)
         {
             int dineroAntes = cartera.Dinero;

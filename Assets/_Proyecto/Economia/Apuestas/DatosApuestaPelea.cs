@@ -12,16 +12,16 @@ namespace MechaCyberpunk.Economia
         [Tooltip("Lo que gana el jugador por cada peso apostado si gana (1.0 = paga uno a uno). Mayor que 0.")]
         [Min(0.01f)] [SerializeField] private float momio = 1f;
 
-        [Tooltip("Lo máximo que se puede apostar en la pelea ($).")]
+        [Tooltip("Lo máximo que se puede apostar en la pelea (Ƀ).")]
         [Min(1)] [SerializeField] private int apuestaMaxima = 500;
 
-        [Tooltip("Montos que ofrece la pantalla de apuesta, en orden ($).")]
+        [Tooltip("Montos que ofrece la pantalla de apuesta, en orden (Ƀ).")]
         [SerializeField] private int[] montos = { 100, 250, 500 };
 
         [Tooltip("Opcional: la pieza que el rival pone en juego y que se lleva el jugador si gana apostando lo suficiente.")]
         [SerializeField] private DatosObjeto piezaEnJuego;
 
-        [Tooltip("Lo mínimo que hay que apostar para llevarse la pieza ($).")]
+        [Tooltip("Lo mínimo que hay que apostar para llevarse la pieza (Ƀ).")]
         [Min(0)] [SerializeField] private int apuestaMinimaPorPieza = 250;
 
         public float Momio => momio > 0f ? momio : MomioDeRespaldo;

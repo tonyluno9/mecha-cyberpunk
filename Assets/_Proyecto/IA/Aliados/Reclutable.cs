@@ -83,9 +83,9 @@ namespace MechaCyberpunk.IA.Aliados
                 }
                 if (DineroActual < costo)
                 {
-                    return "TE FALTA DINERO: $" + costo;
+                    return "TE FALTA DINERO: " + Moneda.Texto(costo);
                 }
-                return "Reclutar a " + nombre + (costo > 0 ? " · $" + costo : " · gratis");
+                return "Reclutar a " + nombre + (costo > 0 ? " · " + Moneda.Texto(costo) : " · gratis");
             }
         }
 

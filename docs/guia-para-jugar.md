@@ -156,3 +156,28 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Pasos: despiertas en tu casa a las 19:00 con puños y $0 (objetivo SAL A LA CALLE; WASD, ratón) → afuera 2 Calaveras le pegan a DOÑA LUPE, defiéndela con clic izquierdo (no te matan: con poca vida dejan de pegar 3 s) → el último suelta una pistola, E la recoge (clic derecho apunta, clic izquierdo dispara) → E con EL CHATO lo une gratis → sale a conquistar EL TIANGUIS (M abre el mapa, F manda esperar o seguir a tus aliados): vence Calaveras hasta 70 de respeto, aparece el jefe con la flecha → 4 s después sale "CONTINUARÁ..." y Enter te deja seguir jugando libre.
 - Pistas que salen solas: robar un carro con E y el mercado negro vende escopetas ($). Los grupos del tianguis no aparecen hasta que te mandan ahí.
 - Observa: ¿dura unos 15 minutos? ¿Se entiende qué hacer sin leer esta guía? ¿El final deja ganas de más? ¿La pelea con el jefe es buen cierre? Con Builds/Juego (no final) F6 salta un paso de la historia.
+
+### T-414 nombres nuevos y Biits
+- Mira: el HUD de dinero dice "Ƀ340" (símbolo de Biits); la tienda se titula EL MERCADO; el HUD de zona dice "SUBURBIOS · TUYA" en tu casa y "EL TIANGUIS · SKULLS" en el centro (ya no se encima con la radio); M abre el mapa con título MEGALOPOLIS.
+- Ve al bar y al casino: los letreros de neón dicen EL FOX (cian) y VIVACOIN (naranja) y los modelos viejos están apagados; la clínica dice I+D+I.
+- Observa: ¿se lee bien la Ƀ?, ¿"SKULLS" y "SNAKES" sin artículo suenan bien?, ¿los letreros nuevos tapan bien a los viejos (son pequeños)?
+
+### T-415 tu pandilla con nombre y color
+- Mira: el HUD de zona en tu casa dice "SUBURBIOS · LOS DE SUBURBIOS · RESPETO n" en naranja; reclutar al CHATO avisa "EL CHATO SE UNE A LOS DE SUBURBIOS"; al conquistar, "EL TIANGUIS ES DE LOS DE SUBURBIOS".
+- Hasta T-413 solo cambia por código (ServicioPerfil.FijarPandilla("los neón", 3)): HUD, mapa (M) y el CHATO se repintan al instante.
+- Observa: ¿"LOS DE SUBURBIOS" te gusta?, ¿los 4 colores se distinguen de SKULLS (magenta) y SNAKES (verde) en el mapa y de noche?
+
+### T-416 fusil y sniper
+- En El Mercado (E, flechas, Enter) compra FUSIL (Ƀ700) y SNIPER (Ƀ900); 4 saca el fusil (mantén el clic, dispara solo) y 5 el sniper (clic derecho = zoom de FOV 15 con mira negra y distancia).
+- La pistola base también se vende (Ƀ150) para quien no la tenga; cada arma sube 3 niveles (I a III) en la misma tienda y la rueda del ratón recorre las 5 armas.
+- Observa: ¿el sniper se siente poderoso?, ¿el zoom marea?, ¿el fusil se siente distinto del viejo subfusil?, ¿los precios cuadran con los Ƀ40 por pandillero?
+
+### T-417 profes y peatones
+- En Suburbios, a 10 a 25 m de tu casa, está el CIC (letrero turquesa): E con EL INVENTOR (TINO) abre la tienda de las 15 mejoras de armas. Más: EL DOC (JOEL) junto a I+D+I cura por Ƀ50, EL HACKER (SERGIO) en VivaCoin da una pista, EL MECÁNICO (CANEPA) junto al carro de tu casa borra el calor por Ƀ100, EL DIRECTOR (ESTRADA) en El Fox solo platica.
+- Cada uno lleva su título, nombre y función sobre la cabeza (se lee a menos de 15 m); son muñecos de prueba hasta que lleguen sus modelos.
+- Observa: ¿encuentras a cada profe?, ¿se entiende qué hace con solo leer el letrero?, ¿la calle se siente viva con 4 peatones de día y 6 de noche, o vacía?
+
+### T-418 la historia de la demo con los profes y NOVA (cierre del paso 2; Builds/Demo/Cyberfix.exe)
+- Nombres y Ƀ: al despertar sale "MEGALOPOLIS · SUBURBIOS"; todo dice SKULLS, SNAKES, El Mercado, I+D+I, El Fox, VivaCoin y los Biits (Ƀ); en El Mercado compra el SNIPER (5, clic derecho = zoom).
+- La historia: tras el CHATO, E con EL DOC te cura gratis ("Aguanta, mijo..."), E con EL INVENTOR deja tu pistola en PISTOLA I gratis; vence SKULLS (VENCE A LOS SKULLS n/7) y a su jefe, ve con EL HACKER en VivaCoin: dice que NOVA les paga y les da armas a los SNAKES, y sale CONTINUARÁ.
+- Después, en el juego libre, aparecen los SNAKES en Neón Alto: 70 de respeto saca a su jefe y al vencerlo Neón Alto es tuya. Observa: ¿se entiende sin explicarla?, ¿los profes rompen el ritmo?, ¿NOVA da ganas de seguir? (6 peatones de día y 8 de noche).

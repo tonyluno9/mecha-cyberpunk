@@ -24,7 +24,7 @@ MonoBehaviour:
   tamanoOpcion: 40
   tamanoDescripcion: 44
   tamanoAyuda: 28
-  textoTitulo: "CL\xCDNICA DEL DOC"
+  textoTitulo: I+D+I
   formatoDinero: TIENES {0}
   nombresEspacio:
   - OJOS
@@ -42,8 +42,8 @@ MonoBehaviour:
   formatoConfirmar: "\xBFINSTALAR POR {0}? ENTER S\xCD \xB7 ESC NO"
   textoAyuda: "\u2191 \u2193 elegir \xB7 Enter instalar \xB7 Esc salir"
   formatoElegido: '> {0}'
-  textoMostrador: "CL\xCDNICA"
-  textoCerrado: "CL\xCDNICA \xB7 CERRADA"
+  textoMostrador: I+D+I
+  textoCerrado: "I+D+I \xB7 CERRADA"
   segundosFundidoNegro: 1.5
   segundosEnNegro: 0.6
   segundosFundidoVuelta: 1

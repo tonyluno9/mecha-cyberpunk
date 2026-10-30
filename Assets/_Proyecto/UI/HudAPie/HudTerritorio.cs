@@ -7,10 +7,13 @@ namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
     /// Arriba a la izquierda dice en qué zona estás, de quién es y tu respeto, con el color del dueño (T-404). Avisa "¡EL JEFE TE BUSCA!"
-    /// cuando el jefe de una zona queda disponible y "&lt;ZONA&gt; ES TUYO" 3 s al conquistarla. Crea su propio canvas; no depende de HudAPie.
+    /// cuando el jefe de una zona queda disponible y "&lt;ZONA&gt; ES DE &lt;TU PANDILLA&gt;" 3 s al conquistarla. Crea su propio canvas; no depende de HudAPie.
     /// </summary>
     public class HudTerritorio : MonoBehaviour
     {
+        // Debajo de la línea de la radio (arriba a la izquierda), para que no se encimen.
+        private const float ArribaZona = 70f;
+
         [Tooltip("Segundos que dura el aviso de conquista (s).")]
         [Min(0.5f)] [SerializeField] private float segundosConquista = 3f;
         [Tooltip("Segundos que dura el aviso del jefe (s).")]
@@ -29,7 +32,7 @@ namespace MechaCyberpunk.UI.Hud
         {
             Canvas canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasTerritorio", 20);
             textoZona = FormatoTerritorio.CrearTexto(canvas.transform, "Zona", 28, TextAnchor.UpperLeft,
-                new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(24f, -20f), new Vector2(900f, 40f));
+                new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(24f, -ArribaZona), new Vector2(900f, 40f));
             textoAviso = FormatoTerritorio.CrearTexto(canvas.transform, "Aviso", 44, TextAnchor.UpperCenter,
                 new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-450f, -120f), new Vector2(900f, 60f));
             textoZona.text = string.Empty;
@@ -92,7 +95,7 @@ namespace MechaCyberpunk.UI.Hud
 
         private void AlConquistar(string zona, IdPandilla anterior)
         {
-            Avisar(territorio.Nombre(zona) + " ES TUYO", FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista);
+            Avisar(FormatoTerritorio.Cortar(territorio.Nombre(zona) + " ES DE " + FormatoTerritorio.NombreDe(IdPandilla.Jugador)), FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista);
         }
 
         private void Avisar(string texto, Color color, float segundos)

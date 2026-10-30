@@ -1,5 +1,22 @@
 # Pandillas (concepto nuevo, fase G)
 Lo pidió Tony el 2026-10-29: ya no hay mechas. Juego tipo GTA de un jugador en el barrio de Alan. Los números son propuesta (D-tony-202 a 224).
+## Nombres en pantalla (T-414, fuente de verdad)
+Solo cambia el texto visible; los ids (`fosa`, `tianguis`, `neon`), los enums (`IdPandilla.Calaveras`, `IdLugar.MercadoNegro`...) y los nombres de objetos y assets se quedan.
+| Antes | Ahora (en pantalla) |
+| --- | --- |
+| LA FOSA (tu zona) | SUBURBIOS |
+| LOS CALAVERAS | SKULLS (en frases: "LOS SKULLS"), magenta `#FF1ACC` |
+| LAS VÍBORAS | SNAKES ("LOS SNAKES"), verde ácido `#73FF1A` |
+| Neotek | NOVA (la usa la historia, T-418) |
+| La ciudad | MEGALOPOLIS (título del mapa y letrero de inicio) |
+| Mercado negro | EL MERCADO ("VE AL MERCADO") |
+| Clínica | I+D+I |
+| Bar El Foco / Cantina El Chip | EL FOX |
+| Casino (Casino Aurora) | VIVACOIN |
+| Taller del Inventor | CIC (T-417) |
+| Moneda ($) | Biits, símbolo Ƀ delante ("Ƀ340", "-Ƀ150"); 1 $ viejo = Ƀ1 |
+EL TIANGUIS, NEÓN ALTO, DOÑA LUPE, EL CHATO, LA GÜERA y EL TOPO no cambian.
+
 - **Vista**: tercera persona, cámara detrás del hombro derecho; clic derecho apunta (la cámara se acerca y sale la retícula).
 - **A pie**: correr, saltar, golpes y 4 armas: puños, pistola, escopeta y subfusil (1 a 4, rueda del ratón). R recarga.
 - **Armas**: se compran en el mercado negro (abierto siempre). Cada una sube 3 niveles; cada nivel mejora daño, cargador y recarga.
@@ -17,4 +34,5 @@ Lo pidió Tony el 2026-10-29: ya no hay mechas. Juego tipo GTA de un jugador en 
   ($350, 70). Te siguen, pelean, suben a nivel 2 con 3 vencidos y a nivel 3 con 8. Si caen, vuelven a los 45 s. F: esperar o seguir.
 - **Demo de 15 min**: despiertas solo en tu casa, dos Calaveras molestan a un vecino (primera pelea a puños), uno suelta la pistola,
   reclutas al CHATO, conquistas EL TIANGUIS y sale "CONTINUARÁ". NEÓN ALTO queda para después.
+- **Demo de T-418**: Suburbios → DOÑA LUPE a puños → pistola → CHATO → EL DOC te cura → EL INVENTOR te da la PISTOLA I → El Tianguis y su jefe → EL HACKER en Neón Alto descubre que NOVA arma a los SNAKES → "CONTINUARÁ"; en el juego libre Neón Alto se conquista con su jefe.
 - **El mecha** se desconecta: su código se queda, pero no aparece, no se llama y no está en la ruta.

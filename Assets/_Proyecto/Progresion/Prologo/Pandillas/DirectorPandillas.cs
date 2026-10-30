@@ -2,7 +2,11 @@ using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.Progresion.Apoyo;
 using MechaCyberpunk.UI.Historia;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +15,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 {
     /// <summary>
     /// Lleva la historia corta del juego de pandillas (T-406, D-tony-223): despiertas en tu casa, defiendes a DOÑA LUPE a puños, recoges la pistola,
-    /// reclutas al CHATO, conquistas EL TIANGUIS y sale "CONTINUARÁ". Las reglas están en <see cref="MaquinaHistoriaPandillas"/>. Revisa cada cuadro
+    /// reclutas al CHATO, EL DOC te cura, EL INVENTOR te mejora la pistola, conquistas EL TIANGUIS, EL HACKER descubre a NOVA en NEÓN ALTO
+    /// y sale "CONTINUARÁ" (T-418). Los SNAKES de Neón Alto quedan apagados hasta el juego libre. Las reglas están en <see cref="MaquinaHistoriaPandillas"/>. Revisa cada cuadro
     /// lo que pasa en el mundo y avisa a la máquina; cada paso fija su objetivo. Guarda su paso con la clave <c>historia_pandillas</c>.
     /// F6 salta un paso (solo fuera de la demo final).
     /// </summary>
@@ -22,7 +27,32 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public const string TextoDefender = "DEFIENDE A DOÑA LUPE";
         public const string TextoPistola = "RECOGE LA PISTOLA (E)";
         public const string TextoChato = "HABLA CON EL CHATO";
-        public const string TextoJefe = "VENCE AL JEFE DE LOS CALAVERAS";
+        public const string TextoJefe = "VENCE AL JEFE DE LOS SKULLS";
+        public const string TextoDoc = "VE CON EL DOC A I+D+I";
+        public const string TextoInventor = "VE CON EL INVENTOR AL CIC";
+        public const string TextoHacker = "VE CON EL HACKER A NEÓN ALTO";
+        public const string PrefijoTianguis = "VENCE A LOS SKULLS ";
+        public const int LargoMaximoObjetivo = 32;
+        public const string AyudaInicio = "MEGALOPOLIS · SUBURBIOS";
+        public const string SubtituloDoc = "—Aguanta, mijo. Esto no te va a doler… mucho.";
+        public const string SubtituloInventor = "—Esa pistola está de museo. Ya quedó.";
+        public const string FinAyudaInventor = ": MÁS DAÑO Y MÁS BALAS";
+        public const string SubtituloTianguis = "—Los SKULLS se creen dueños del Tianguis";
+        public const string AyudaTianguis = "EN EL MERCADO VENDEN ARMAS · EL CIC LAS MEJORA";
+        public const string PrefijoTianguisTuyo = "EL TIANGUIS ES DE ";
+        public const string IdDoc = "doc";
+        public const string IdInventor = "inventor";
+        public const string IdHacker = "hacker";
+        public static readonly string[] SubtitulosHacker =
+        {
+            "—Rastreé el dinero de los SNAKES.",
+            "—Les paga NOVA. Y también les da las armas.",
+            "—Si NOVA está detrás, esto apenas empieza."
+        };
+        private const float SegundosAyudaInicio = 4f;
+        private const float SegundosSubtituloHacker = 4f;
+        private const float SegundosAviso = 5f;
+        private const int RespetoPorSkull = 10;
         public const string NombreChato = "EL CHATO";
         private const float VidaProteccion = 25f;
         private const float SegundosProteccion = 3f;
@@ -34,6 +64,12 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         [SerializeField] private Reclutable chato;
         [Tooltip("Los grupos de Calaveras del tianguis: apagados hasta el paso del tianguis.")]
         [SerializeField] private GameObject[] gruposTianguis = System.Array.Empty<GameObject>();
+        [Tooltip("Los grupos de SNAKES de Neón Alto: apagados hasta el juego libre (T-418).")]
+        [SerializeField] private GameObject[] gruposNeon = System.Array.Empty<GameObject>();
+        [Tooltip("Los profes de la historia (T-418): EL DOC cura gratis, EL INVENTOR mejora la pistola gratis, EL HACKER descubre a NOVA.")]
+        [SerializeField] private PersonajeApoyo doc;
+        [SerializeField] private PersonajeApoyo inventor;
+        [SerializeField] private PersonajeApoyo hacker;
         [SerializeField] private string idCama = "Casa_Cama";
         [SerializeField] private string zona = "tianguis";
         [Min(1)] [SerializeField] private int respetoJefe = 70;
@@ -46,7 +82,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private Vector3 ultimaCaida;
         private bool hayCaida;
         private float proteccionHasta = -1f;
-        private float inicioContinuara = -1f;
+        private float continuaraEn = -1f;
+        private float finRevelacion = -1f;
+        private bool textosTianguisPendientes;
         private int respetoMostrado = -1;
         private bool arrancado;
         private bool cargadoAntes;
@@ -55,6 +93,15 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public bool Iniciado => arrancado;
         public PantallaHistoriaPandillas Pantalla => pantalla;
         public string ClaveGuardado => Clave;
+
+        /// <summary>El objetivo del paso del Tianguis: un SKULL vencido son 10 de respeto ("VENCE A LOS SKULLS 3/7").</summary>
+        public static string TextoTianguis(int vencidos, int total) => PrefijoTianguis + Mathf.Clamp(vencidos, 0, total) + "/" + total;
+
+        /// <summary>Todos los objetivos de la historia, para revisar que quepan en <see cref="LargoMaximoObjetivo"/> (D-tony-240).</summary>
+        public static string[] TextosObjetivo => new[]
+        {
+            TextoSalir, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
+        };
 
         private void Awake()
         {
@@ -67,12 +114,26 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     grupo.SetActive(false);
                 }
             }
+            foreach (GameObject grupo in gruposNeon)
+            {
+                if (grupo != null)
+                {
+                    grupo.SetActive(false);
+                }
+            }
             foreach (PandilleroAPie c in calaveras)
             {
                 if (c != null)
                 {
                     c.gameObject.SetActive(false);
                     c.Vencido += AlVencerCalavera;
+                }
+            }
+            foreach (PersonajeApoyo p in Profes)
+            {
+                if (p != null)
+                {
+                    p.Usado += AlUsarProfe;
                 }
             }
 #if DEMO_FINAL
@@ -99,6 +160,13 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 if (c != null)
                 {
                     c.Vencido -= AlVencerCalavera;
+                }
+            }
+            foreach (PersonajeApoyo p in Profes)
+            {
+                if (p != null)
+                {
+                    p.Usado -= AlUsarProfe;
                 }
             }
             if (pantalla != null)
@@ -129,7 +197,13 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 ColocarEnLaCama();
             }
             Aplicar();
+            if (maquina.Paso == PasoHistoria.Despierta)
+            {
+                pantalla.MostrarAyuda(AyudaInicio, SegundosAyudaInicio);
+            }
         }
+
+        private PersonajeApoyo[] Profes => new[] { doc, inventor, hacker };
 
         private void ColocarEnLaCama()
         {
@@ -187,6 +261,13 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     }
                     break;
                 case PasoHistoria.Tianguis:
+                    // Los textos del Tianguis esperan a que se lea lo que dijo EL INVENTOR.
+                    if (textosTianguisPendientes && pantalla.Subtitulo.Length == 0 && pantalla.Ayuda.Length == 0)
+                    {
+                        textosTianguisPendientes = false;
+                        pantalla.MostrarSubtitulo(SubtituloTianguis, 5f);
+                        pantalla.MostrarAyuda(AyudaTianguis, 10f);
+                    }
                     ActualizarRespeto();
                     ITerritorio territorio = Registro<ITerritorio>.Actual;
                     if (territorio != null && territorio.JefeDisponible(zona))
@@ -198,11 +279,14 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     ITerritorio t = Registro<ITerritorio>.Actual;
                     if (t != null && t.Dueno(zona) == IdPandilla.Jugador)
                     {
+                        IPerfilJugador perfil = Registro<IPerfilJugador>.Actual;
+                        string nombrePandilla = perfil != null && !string.IsNullOrEmpty(perfil.NombrePandilla) ? perfil.NombrePandilla : ColoresPandilla.NombrePredeterminado;
+                        pantalla.MostrarAyuda(PrefijoTianguisTuyo + nombrePandilla.ToUpperInvariant(), SegundosAviso);
                         Avisar(AvisoHistoria.TianguisConquistado);
                     }
                     break;
                 case PasoHistoria.Continuara:
-                    if (inicioContinuara >= 0f && Time.time - inicioContinuara >= segundosContinuara && !pantalla.ContinuaraVisible)
+                    if (continuaraEn >= 0f && Time.unscaledTime >= continuaraEn && !pantalla.ContinuaraVisible)
                     {
                         pantalla.MostrarContinuara();
                     }
@@ -278,7 +362,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             if (respeto != respetoMostrado)
             {
                 respetoMostrado = respeto;
-                FijarObjetivo("CONQUISTA EL TIANGUIS · RESPETO " + respeto + "/" + respetoJefe, PosicionTianguis());
+                FijarObjetivo(TextoTianguis(respeto / RespetoPorSkull, respetoJefe / RespetoPorSkull), PosicionTianguis());
             }
         }
 
@@ -306,6 +390,64 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private void AlCerrarContinuara() => Avisar(AvisoHistoria.ContinuaraCerrado);
 
+        // El profe ya hizo su regalo (si tocaba); aquí solo avanza el paso que le toca.
+        private void AlUsarProfe(string id)
+        {
+            switch (maquina.Paso)
+            {
+                case PasoHistoria.Doc when id == IdDoc:
+                    Avisar(AvisoHistoria.DocUsado);
+                    break;
+                case PasoHistoria.Inventor when id == IdInventor:
+                    Avisar(AvisoHistoria.InventorUsado);
+                    break;
+                case PasoHistoria.NeonAlto when id == IdHacker:
+                    Avisar(AvisoHistoria.HackerUsado);
+                    break;
+            }
+        }
+
+        // EL DOC: te cura sin cobrar.
+        private void RegaloDoc()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            VidaAPie vida = jugador != null && jugador.Raiz != null ? jugador.Raiz.GetComponentInChildren<VidaAPie>() : null;
+            if (vida != null)
+            {
+                vida.Restaurar();
+            }
+            pantalla.MostrarSubtitulo(SubtituloDoc, SegundosAviso);
+        }
+
+        // EL INVENTOR: la pistola sube a PISTOLA I sin cobrar.
+        private void RegaloInventor()
+        {
+            ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
+            DatosArma mejora = arsenal != null ? arsenal.DarMejora(ArmaAPie.Pistola) : null;
+            if (mejora == null)
+            {
+                Debug.LogWarning("[Progresion] DirectorPandillas: EL INVENTOR no pudo mejorar la pistola (falta el arsenal o ya está al máximo).", this);
+            }
+            pantalla.MostrarSubtitulo(SubtituloInventor, SegundosAviso);
+            pantalla.MostrarAyuda((mejora != null ? mejora.Nombre.ToUpperInvariant() : "PISTOLA I") + FinAyudaInventor, SegundosAviso);
+        }
+
+        // EL HACKER: tres subtítulos seguidos; CONTINUARÁ sale al terminar el último.
+        private void RegaloHacker()
+        {
+            finRevelacion = Time.unscaledTime + SubtitulosHacker.Length * SegundosSubtituloHacker;
+            StartCoroutine(Revelar());
+        }
+
+        private IEnumerator Revelar()
+        {
+            foreach (string linea in SubtitulosHacker)
+            {
+                pantalla.MostrarSubtitulo(linea, SegundosSubtituloHacker);
+                yield return new WaitForSecondsRealtime(SegundosSubtituloHacker);
+            }
+        }
+
         // Efectos del paso actual: objetivo, textos y qué hay en el mundo.
         private void Aplicar()
         {
@@ -322,22 +464,25 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     }
                 }
             }
-            if (paso != PasoHistoria.Libre)
-            {
-                foreach (GameObject g in gruposTianguis)
-                {
-                    bool activo = paso >= PasoHistoria.Tianguis;
-                    if (g != null && g.activeSelf != activo)
-                    {
-                        g.SetActive(activo);
-                    }
-                }
-            }
+            Prender(gruposTianguis, paso >= PasoHistoria.Tianguis);
+            Prender(gruposNeon, paso == PasoHistoria.Libre);
             if (chato != null)
             {
                 chato.LiberadoPorHistoria = paso == PasoHistoria.Chato;
             }
-            inicioContinuara = paso == PasoHistoria.Continuara ? Time.time : -1f;
+            if (doc != null)
+            {
+                doc.DarRegalo(paso == PasoHistoria.Doc ? RegaloDoc : (System.Action)null);
+            }
+            if (inventor != null)
+            {
+                inventor.DarRegalo(paso == PasoHistoria.Inventor ? RegaloInventor : (System.Action)null);
+            }
+            if (hacker != null)
+            {
+                hacker.DarRegalo(paso == PasoHistoria.NeonAlto ? RegaloHacker : (System.Action)null);
+            }
+            continuaraEn = paso == PasoHistoria.Continuara ? Mathf.Max(finRevelacion, Time.unscaledTime + segundosContinuara) : -1f;
 
             switch (paso)
             {
@@ -356,17 +501,36 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     pantalla.MostrarAyuda("CLIC DERECHO APUNTA · CLIC IZQUIERDO DISPARA", 8f);
                     FijarObjetivo(TextoChato, chato != null ? chato.Posicion : Vector3.zero);
                     break;
+                case PasoHistoria.Doc:
+                    FijarObjetivo(TextoDoc, doc != null ? doc.Posicion : Vector3.zero);
+                    break;
+                case PasoHistoria.Inventor:
+                    FijarObjetivo(TextoInventor, inventor != null ? inventor.Posicion : Vector3.zero);
+                    break;
                 case PasoHistoria.Tianguis:
-                    pantalla.MostrarSubtitulo("—Los Calaveras se creen dueños del Tianguis", 5f);
-                    pantalla.MostrarAyuda("PUEDES ROBAR UN CARRO CON E\nEN EL MERCADO NEGRO VENDEN ESCOPETAS", 10f);
+                    textosTianguisPendientes = true;
                     ActualizarRespeto();
                     break;
                 case PasoHistoria.Jefe:
                     FijarObjetivo(TextoJefe, PosicionJefe());
                     break;
+                case PasoHistoria.NeonAlto:
+                    FijarObjetivo(TextoHacker, hacker != null ? hacker.Posicion : Vector3.zero);
+                    break;
                 default:
                     QuitarObjetivo();
                     break;
+            }
+        }
+
+        private static void Prender(GameObject[] grupos, bool activo)
+        {
+            foreach (GameObject g in grupos)
+            {
+                if (g != null && g.activeSelf != activo)
+                {
+                    g.SetActive(activo);
+                }
             }
         }
 
@@ -440,10 +604,16 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 // se avisa abajo
             }
-            if (leidos == null || !MaquinaHistoriaPandillas.TryLeer(leidos.paso, out PasoHistoria paso))
+            if (leidos == null)
             {
                 Debug.LogWarning("[Progresion] DirectorPandillas: el guardado no se entiende; no se cambia nada.");
                 return;
+            }
+            if (!MaquinaHistoriaPandillas.TryLeer(leidos.paso, out PasoHistoria paso))
+            {
+                // Un paso que ya no existe (guardado viejo): la historia empieza de nuevo.
+                Debug.LogWarning("[Progresion] DirectorPandillas: el paso '" + leidos.paso + "' no existe; empieza en Despierta.");
+                paso = PasoHistoria.Despierta;
             }
             maquina.Iniciar(paso);
             cargadoAntes = true;

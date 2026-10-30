@@ -35,20 +35,20 @@ namespace MechaCyberpunk.UI
 
         [Tooltip("{0} = nombre de la tienda (en mayúsculas).")]
         [SerializeField] private string formatoTitulo = "{0}";
-        [Tooltip("{0} = dinero con $.")]
+        [Tooltip("{0} = dinero con Ƀ.")]
         [SerializeField] private string formatoDinero = "TIENES {0}";
         [SerializeField] private string textoComprar = "COMPRAR";
         [SerializeField] private string textoVender = "VENDER";
         [Tooltip("Pestaña elegida: {0} = nombre de la pestaña.")]
         [SerializeField] private string formatoPestanaElegida = "[ {0} ]";
-        [Tooltip("{0} = nombre del objeto (mayúsculas), {1} = precio con $, {2} = cuántos lleva, {3} = máximo.")]
+        [Tooltip("{0} = nombre del objeto (mayúsculas), {1} = precio con Ƀ, {2} = cuántos lleva, {3} = máximo.")]
         [SerializeField] private string formatoFila = "{0}     {1}     LLEVAS {2}/{3}";
         [Tooltip("Fila elegida: {0} = texto de la fila.")]
         [SerializeField] private string formatoFilaElegida = "> {0}";
-        [Tooltip("Pestaña VENDER: {0} = nombre (mayúsculas), {1} = lo que paga con $, {2} = cuántos tiene.")]
+        [Tooltip("Pestaña VENDER: {0} = nombre (mayúsculas), {1} = lo que paga con Ƀ, {2} = cuántos tiene.")]
         [SerializeField] private string formatoFilaVenta = "{0}     {1} c/u     TIENES {2}";
         [SerializeField] private string textoNadaQueVender = "NO TIENES NADA QUE LE INTERESE";
-        [Tooltip("{0} = nombre del objeto (mayúsculas), {1} = lo que pagaron con $.")]
+        [Tooltip("{0} = nombre del objeto (mayúsculas), {1} = lo que pagaron con Ƀ.")]
         [SerializeField] private string formatoVendido = "VENDISTE {0} POR {1}";
         [SerializeField] private string textoAyudaVender = "↑ ↓ elegir · ← → pestaña · Enter vender · Esc salir";
         [SerializeField] private string textoSinOfertas = "NO HAY NADA A LA VENTA";
@@ -58,7 +58,7 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoNoAlcanza = "NO TE ALCANZA";
         [SerializeField] private string textoNoDisponible = "NO SE VENDE AQUÍ";
         [SerializeField] private string textoAyuda = "↑ ↓ elegir · ← → pestaña · Enter comprar · Esc salir";
-        [Tooltip("Precio con el favor de descuento: {0} = precio normal con $, {1} = precio rebajado con $.")]
+        [Tooltip("Precio con el favor de descuento: {0} = precio normal con Ƀ, {1} = precio rebajado con Ƀ.")]
         [SerializeField] private string formatoPrecioRebajado = "{0} → {1}";
         [Tooltip("Línea del favor de descuento: {0} = porcentaje de rebaja, {1} = favores que quedan.")]
         [SerializeField] private string formatoFavorDescuento = "FAVOR · −{0} % EN ESTA COMPRA · TE QUEDAN {1}";

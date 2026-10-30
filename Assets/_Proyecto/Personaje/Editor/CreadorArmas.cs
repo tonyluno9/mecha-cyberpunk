@@ -9,8 +9,8 @@ using UnityEngine;
 namespace MechaCyberpunk.Personaje.Editor
 {
     /// <summary>
-    /// T-403: crea los 16 DatosArma (4 armas por 4 niveles, números de D-tony-214), el CatalogoArmas_Base, las 14 ofertas del mercado negro
-    /// (escopeta, subfusil y 12 mejoras), y las agrega al CatalogoObjetos_Base y a DatosTienda_MercadoNegro. Idempotente.
+    /// T-403 y T-416: crea los 20 DatosArma (5 armas por 4 niveles, números de D-tony-214 y D-tony-253), el CatalogoArmas_Base, las 19 ofertas del Mercado
+    /// (4 armas y 15 mejoras), y las agrega al CatalogoObjetos_Base y a DatosTienda_MercadoNegro. Idempotente.
     /// Batchmode: -executeMethod MechaCyberpunk.Personaje.Editor.CreadorArmas.Crear
     /// </summary>
     public static class CreadorArmas
@@ -45,13 +45,16 @@ namespace MechaCyberpunk.Personaje.Editor
                 precio = new[] { 0, 100, 200, 350 } },
             new Familia { arma = ArmaAPie.Pistola, clave = "pistola", nombre = "Pistola", danio = new[] { 25f, 30f, 36f, 44f },
                 cargador = new[] { 8, 10, 12, 15 }, recarga = new[] { 1.4f, 1.2f, 1.0f, 0.8f }, entre = 0.25f, alcance = 60f,
-                precio = new[] { 0, 150, 300, 500 } },
+                precio = new[] { 150, 150, 300, 500 } },
             new Familia { arma = ArmaAPie.Escopeta, clave = "escopeta", nombre = "Escopeta", danio = new[] { 9f, 11f, 13f, 16f }, perdigones = 8,
                 cargador = new[] { 4, 5, 6, 8 }, recarga = new[] { 2.4f, 2.0f, 1.7f, 1.4f }, entre = 0.9f, alcance = 20f,
                 dispersion = 6f, dispersionApuntando = 4f, precio = new[] { 350, 250, 450, 700 } },
-            new Familia { arma = ArmaAPie.Subfusil, clave = "subfusil", nombre = "Subfusil", danio = new[] { 12f, 14f, 17f, 20f },
-                cargador = new[] { 24, 30, 36, 45 }, recarga = new[] { 1.8f, 1.5f, 1.3f, 1.1f }, entre = 0.09f, automatica = true, alcance = 50f,
-                dispersion = 3f, dispersionApuntando = 2f, precio = new[] { 600, 300, 550, 800 } }
+            new Familia { arma = ArmaAPie.Fusil, clave = "fusil", nombre = "Fusil", danio = new[] { 15f, 18f, 21f, 25f },
+                cargador = new[] { 30, 30, 35, 40 }, recarga = new[] { 2.0f, 1.8f, 1.6f, 1.3f }, entre = 0.11f, automatica = true, alcance = 70f,
+                dispersion = 2.5f, dispersionApuntando = 1.2f, precio = new[] { 700, 350, 600, 850 } },
+            new Familia { arma = ArmaAPie.Sniper, clave = "sniper", nombre = "Sniper", danio = new[] { 70f, 85f, 100f, 120f },
+                cargador = new[] { 4, 5, 6, 7 }, recarga = new[] { 2.8f, 2.5f, 2.2f, 1.9f }, entre = 1.2f, alcance = 150f,
+                dispersion = 8f, dispersionApuntando = 0f, precio = new[] { 900, 400, 650, 900 } }
         };
 
         private static readonly string[] Numerales = { string.Empty, " I", " II", " III" };
@@ -61,7 +64,7 @@ namespace MechaCyberpunk.Personaje.Editor
         {
             CrearDatos();
             CreadorJugadorAPie.RegenerarPrefabTerceraPersona();
-            Debug.Log("[Personaje] T-403: armas, catálogo y mercado negro creados.");
+            Debug.Log("[Personaje] T-403/T-416: 5 armas, catálogo y El Mercado creados.");
         }
 
         public static void CrearDatos()
@@ -71,8 +74,10 @@ namespace MechaCyberpunk.Personaje.Editor
                 Directory.CreateDirectory(CarpetaArmas);
                 AssetDatabase.Refresh();
             }
+            BorrarSubfusil();
             var armas = new List<DatosArma>();
-            var ofertas = new List<DatosOferta>();
+            var bases = new List<DatosOferta>();
+            var mejoras = new List<DatosOferta>();
             foreach (Familia f in Familias)
             {
                 for (int nivel = 0; nivel < 4; nivel++)
@@ -80,17 +85,57 @@ namespace MechaCyberpunk.Personaje.Editor
                     DatosOferta oferta = f.precio[nivel] > 0 ? CrearOferta(f, nivel) : null;
                     if (oferta != null)
                     {
-                        ofertas.Add(oferta);
+                        (nivel == 0 ? bases : mejoras).Add(oferta);
                     }
                     armas.Add(CrearArma(f, nivel, oferta));
                 }
             }
+            var ofertas = new List<DatosOferta>(bases);
+            ofertas.AddRange(mejoras);
 
             var catalogo = CargarOCrear<CatalogoArmas>(RutaCatalogoArmas);
             AsignarLista(catalogo, "armas", armas);
-            AgregarALista(AssetDatabase.LoadAssetAtPath<ScriptableObject>(RutaCatalogoObjetos), "objetos", armas);
-            AgregarALista(AssetDatabase.LoadAssetAtPath<ScriptableObject>(RutaTienda), "ofertas", ofertas);
+            ReemplazarArmas(AssetDatabase.LoadAssetAtPath<ScriptableObject>(RutaCatalogoObjetos), "objetos", armas);
+            ReemplazarArmas(AssetDatabase.LoadAssetAtPath<ScriptableObject>(RutaTienda), "ofertas", ofertas);
             AssetDatabase.SaveAssets();
+        }
+
+        // T-416: el subfusil pasó a fusil; los assets viejos se borran.
+        private static void BorrarSubfusil()
+        {
+            foreach (string guid in AssetDatabase.FindAssets("subfusil", new[] { CarpetaArmas, CarpetaOfertas }))
+            {
+                AssetDatabase.DeleteAsset(AssetDatabase.GUIDToAssetPath(guid));
+            }
+        }
+
+        // Quita los vacíos (assets borrados) y las armas u ofertas de armas que ya estaban, y agrega las nuevas en su orden.
+        private static void ReemplazarArmas<T>(ScriptableObject destino, string campo, List<T> nuevos) where T : Object
+        {
+            if (destino == null)
+            {
+                Debug.LogError("[Personaje] CreadorArmas: falta el asset que recibe '" + campo + "'.");
+                return;
+            }
+            var so = new SerializedObject(destino);
+            SerializedProperty lista = so.FindProperty(campo);
+            for (int i = lista.arraySize - 1; i >= 0; i--)
+            {
+                Object elemento = lista.GetArrayElementAtIndex(i).objectReferenceValue;
+                bool esArma = elemento is DatosArma || (elemento is DatosOferta && elemento.name.StartsWith("DatosOferta_Arma_"));
+                if (elemento == null || esArma)
+                {
+                    lista.GetArrayElementAtIndex(i).objectReferenceValue = null;
+                    lista.DeleteArrayElementAtIndex(i);
+                }
+            }
+            foreach (T elemento in nuevos)
+            {
+                lista.arraySize++;
+                lista.GetArrayElementAtIndex(lista.arraySize - 1).objectReferenceValue = elemento;
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(destino);
         }
 
         private static string NombreNivel(Familia f, int nivel) => f.nombre + Numerales[nivel];
@@ -156,32 +201,6 @@ namespace MechaCyberpunk.Personaje.Editor
             for (int i = 0; i < elementos.Count; i++)
             {
                 lista.GetArrayElementAtIndex(i).objectReferenceValue = elementos[i];
-            }
-            so.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(destino);
-        }
-
-        private static void AgregarALista<T>(ScriptableObject destino, string campo, List<T> elementos) where T : Object
-        {
-            if (destino == null)
-            {
-                Debug.LogError("[Personaje] CreadorArmas: falta el asset que recibe '" + campo + "'.");
-                return;
-            }
-            var so = new SerializedObject(destino);
-            SerializedProperty lista = so.FindProperty(campo);
-            foreach (T elemento in elementos)
-            {
-                bool esta = false;
-                for (int i = 0; i < lista.arraySize && !esta; i++)
-                {
-                    esta = lista.GetArrayElementAtIndex(i).objectReferenceValue == elemento;
-                }
-                if (!esta)
-                {
-                    lista.arraySize++;
-                    lista.GetArrayElementAtIndex(lista.arraySize - 1).objectReferenceValue = elemento;
-                }
             }
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(destino);

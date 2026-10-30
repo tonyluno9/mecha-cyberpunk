@@ -181,7 +181,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.IsTrue(compra.Hecho);
             Assert.AreEqual(serie, compra.Quitada);
             Assert.IsFalse(compra.SeVendio);
-            Assert.AreEqual(DineroDeLaPrueba - 500, cartera.Dinero, "Costó $500");
+            Assert.AreEqual(DineroDeLaPrueba - 500, cartera.Dinero, "Costó Ƀ500");
             Assert.AreEqual((-500, MotivoDinero.Compra), cambios.Single());
             Assert.AreEqual(comprada, equipo.Puesta(RanuraPieza.Piernas));
             Assert.AreEqual(1, inventario.Cantidad(serie), "La de serie quedó en el inventario");
@@ -245,7 +245,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             ResultadoTallerPiezas resultado = taller.Elegir(opcion);
 
-            Assert.IsFalse(resultado.Hecho, "Con $300 la opción vieja ya no vale");
+            Assert.IsFalse(resultado.Hecho, "Con Ƀ300 la opción vieja ya no vale");
             Assert.AreEqual(300, cartera.Dinero);
             Assert.AreEqual(0, cambios.Count);
         }
@@ -273,7 +273,7 @@ namespace MechaCyberpunk.Tests.Mecha
             OpcionPieza ahora = Opcion(RanuraPieza.Piernas, "pieza_piernas_cuerpoacuerpo_3");
             Assert.AreEqual(TipoOpcionPieza.Comprar, ahora.Tipo);
             Assert.IsTrue(taller.Elegir(ahora).Hecho);
-            Assert.AreEqual(5000 - 1200, cartera.Dinero, "Nivel III cuesta $1,200");
+            Assert.AreEqual(5000 - 1200, cartera.Dinero, "Nivel III cuesta Ƀ1,200");
         }
 
         [UnityTest]
@@ -362,7 +362,7 @@ namespace MechaCyberpunk.Tests.Mecha
             banco.PiezasPedidas += () => avisos++;
             yield return IrAlBanco();
 
-            Assert.AreEqual("E · Reparar mecha · $650", hud.TextoAvisoInteraccion.text);
+            Assert.AreEqual("E · Reparar mecha · Ƀ650", hud.TextoAvisoInteraccion.text);
             yield return Tecla(teclado.eKey);
             PantallaBancoTaller pantalla = banco.GetComponentInChildren<PantallaBancoTaller>(true);
             Assert.IsTrue(pantalla.Visible);

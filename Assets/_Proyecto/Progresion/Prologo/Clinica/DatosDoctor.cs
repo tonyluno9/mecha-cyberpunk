@@ -8,7 +8,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
     public class DatosDoctor : ScriptableObject
     {
         [Header("Cobro y descanso")]
-        [Tooltip("Lo que cobra por levantarte ($). Si no te alcanza, el dinero queda en negativo: esa es la deuda.")]
+        [Tooltip("Lo que cobra por levantarte (Ƀ). Si no te alcanza, el dinero queda en negativo: esa es la deuda.")]
         [Min(0)] [SerializeField] private int cobro = 500;
         [Tooltip("Horas de juego que pasas inconsciente (h).")]
         [Range(0f, 23f)] [SerializeField] private float horasInconsciente = 6f;

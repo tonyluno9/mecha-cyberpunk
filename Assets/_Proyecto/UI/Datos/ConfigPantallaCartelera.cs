@@ -33,13 +33,13 @@ namespace MechaCyberpunk.UI
 
         [Tooltip("{0} = nombre de la liga, {1} = campeones vencidos, {2} = total de ligas.")]
         [SerializeField] private string formatoEncabezado = "PELEAS DEL CLANDESTINO · LIGA {0} · CAMPEONES {1}/{2}";
-        [Tooltip("{0} = liga, {1} = número del rival, {2} = rivales de la liga, {3} = alias, {4} = premio con $.")]
+        [Tooltip("{0} = liga, {1} = número del rival, {2} = rivales de la liga, {3} = alias, {4} = premio con Ƀ.")]
         [SerializeField] private string formatoSiguiente = "LIGA {0} {1}/{2} · {3} · {4}";
-        [Tooltip("{0} = liga, {1} = alias, {2} = premio con $.")]
+        [Tooltip("{0} = liga, {1} = alias, {2} = premio con Ƀ.")]
         [SerializeField] private string formatoJefe = "JEFE DE LA LIGA {0} · {1} · {2}";
-        [Tooltip("{0} = alias, {1} = premio con $.")]
+        [Tooltip("{0} = alias, {1} = premio con Ƀ.")]
         [SerializeField] private string formatoRevancha = "REVANCHA · {0} · {1}";
-        [Tooltip("{0} = alias del rival casero, {1} = premio con $.")]
+        [Tooltip("{0} = alias del rival casero, {1} = premio con Ƀ.")]
         [SerializeField] private string formatoCasera = "PELEA CASERA · {0} · {1}";
         [Tooltip("{0} = liga que sigue, {1} = alias del jefe que hay que vencer.")]
         [SerializeField] private string formatoBloqueada = "LIGA {0} · BLOQUEADA · VENCE A {1}";

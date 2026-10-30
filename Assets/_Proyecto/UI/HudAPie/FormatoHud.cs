@@ -31,7 +31,7 @@ namespace MechaCyberpunk.UI.Hud
         private static readonly string[] Numerales = { string.Empty, " I", " II", " III" };
 
         /// <summary>
-        /// T-403: con el nivel. "ESCOPETA II 5/6", "SUBFUSIL III · RECARGANDO", "PUÑOS II". El nivel 0 no lleva numeral.
+        /// T-403: con el nivel. "ESCOPETA II 5/6", "FUSIL III · RECARGANDO", "PUÑOS II". El nivel 0 no lleva numeral.
         /// </summary>
         public static string TextoArma(ArmaAPie arma, int nivel, int balas, int tamanoCargador, bool recargando, ConfigHudAPie config)
         {
@@ -44,7 +44,7 @@ namespace MechaCyberpunk.UI.Hud
             {
                 return TextoArma(arma, balas, tamanoCargador, recargando, config);
             }
-            string nombre = arma == ArmaAPie.Escopeta ? "ESCOPETA" : arma == ArmaAPie.Subfusil ? "SUBFUSIL" : "PISTOLA";
+            string nombre = arma == ArmaAPie.Escopeta ? "ESCOPETA" : arma == ArmaAPie.Fusil ? "FUSIL" : arma == ArmaAPie.Sniper ? "SNIPER" : "PISTOLA";
             if (recargando)
             {
                 return nombre + numeral + " · RECARGANDO";

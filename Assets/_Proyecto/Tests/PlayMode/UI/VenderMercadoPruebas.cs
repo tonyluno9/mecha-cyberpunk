@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Tests.UI
         private const string RutaChatarra = "Assets/_Proyecto/Economia/Datos/DatosObjeto_Chatarra.asset";
         private const string TextoBrazo = "BRAZO DE CHATARRA";
         private const string TextoNada = "NO TIENES NADA QUE LE INTERESE";
-        private const string TextoHudVenta = "+$300 · VENTA";
+        private const string TextoHudVenta = "+Ƀ300 · VENTA";
         private const string TextoCerrado = "CERRADO · abre 09:00";
         private const int DineroInicial = 500;
         private const int DineroPoco = 100;
@@ -155,7 +155,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsNotNull(chatarra);
             Assert.IsNotNull(cartera, "Hay cartera");
             Assert.IsNotNull(inventario, "Hay inventario");
-            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se empieza con $500");
+            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se empieza con Ƀ500");
             yield return null;
         }
 
@@ -291,22 +291,22 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(PestanaTienda.Vender, pantalla.Pestana, "Flecha derecha pasa a VENDER");
             Assert.AreEqual(1, pantalla.CantidadFilas, "Solo aparece el brazo (el kit no se compra)");
             StringAssert.Contains(TextoBrazo, pantalla.TextoFila(0));
-            StringAssert.Contains("$300 c/u", pantalla.TextoFila(0));
+            StringAssert.Contains("Ƀ300 c/u", pantalla.TextoFila(0));
             StringAssert.Contains("TIENES 2", pantalla.TextoFila(0));
             StringAssert.DoesNotContain("KIT", pantalla.TextoFila(0));
             yield return Cuadros(FramesParaElHud);
             CapturarCabina(RutaCaptura);
 
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(DineroPoco + PagoBrazo, cartera.Dinero, "Cobra $300");
+            Assert.AreEqual(DineroPoco + PagoBrazo, cartera.Dinero, "Cobra Ƀ300");
             Assert.AreEqual(1, inventario.Cantidad(brazo), "Queda un brazo");
-            Assert.AreEqual("TIENES $400", pantalla.Dinero, "El dinero de arriba se actualiza al instante");
+            Assert.AreEqual("TIENES Ƀ400", pantalla.Dinero, "El dinero de arriba se actualiza al instante");
             StringAssert.Contains("TIENES 1", pantalla.TextoFila(0));
             yield return Cuadros(FramesParaElHud);
             Assert.AreEqual(TextoHudVenta, hud.TextoAvisoDinero.text, "El HUD a pie anuncia la venta");
 
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(DineroPoco + 2 * PagoBrazo, cartera.Dinero, "Segundo brazo: $700");
+            Assert.AreEqual(DineroPoco + 2 * PagoBrazo, cartera.Dinero, "Segundo brazo: Ƀ700");
             Assert.AreEqual(0, inventario.Cantidad(brazo), "Sin brazos");
             Assert.AreEqual(1, pantalla.CantidadFilas);
             Assert.AreEqual(TextoNada, pantalla.TextoFila(0), "Ya no tiene nada que le interese");
@@ -332,7 +332,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return Tecla(teclado.downArrowKey);
             Assert.AreEqual(1, pantalla.IndiceElegido, "Flecha abajo baja a la chatarra");
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(DineroInicial + 50, cartera.Dinero, "La chatarra paga $50");
+            Assert.AreEqual(DineroInicial + 50, cartera.Dinero, "La chatarra paga Ƀ50");
             Assert.AreEqual(2, inventario.Cantidad(chatarra));
             Assert.AreEqual(1, inventario.Cantidad(brazo), "El brazo no se toca");
             Assert.IsEmpty(errores, "Sin errores: " + string.Join(" | ", errores));
@@ -377,7 +377,7 @@ namespace MechaCyberpunk.Tests.UI
                 }
             }
             Assert.IsNotNull(lugar, "La escena trae el lugar MercadoNegro de prueba");
-            lugar.Configurar(IdLugar.MercadoNegro, "Mercado negro", new HorarioLugar(HoraAbre, HoraCierra), false);
+            lugar.Configurar(IdLugar.MercadoNegro, "El Mercado", new HorarioLugar(HoraAbre, HoraCierra), false);
             lugar.PonerAbiertoPorHorario(false);
 
             yield return IrAlMostradorConW();

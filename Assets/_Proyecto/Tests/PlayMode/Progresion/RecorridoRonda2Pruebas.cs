@@ -162,7 +162,7 @@ namespace MechaCyberpunk.Tests.Progresion
                     "Suena un bucle que no es del gestor: " + fuente.name);
             }
 
-            // Dinero: $400 en la cartera.
+            // Dinero: Ƀ400 en la cartera.
             Registro<ICartera>.Actual.Abonar(DineroInicial, MotivoDinero.Otro);
 
             // a. El mercado negro: el jugador aparece en la calle frente a la puerta y camina hacia adentro con W.

@@ -22,8 +22,8 @@ namespace MechaCyberpunk.Economia.Editor
             var celdas = Oferta("MunicionCeldas", "Munición de celdas", 40, TipoOferta.Municion);
             var cargas = Oferta("MunicionCargas", "Munición de cargas", 50, TipoOferta.Municion);
 
-            Tienda("MercadoNegro", IdLugar.MercadoNegro, "Mercado negro", kit, misil, brazo, combustible, celdas, cargas);
-            Tienda("Clinica", IdLugar.Clinica, "Clínica", ojos);
+            Tienda("MercadoNegro", IdLugar.MercadoNegro, "El Mercado", kit, misil, brazo, combustible, celdas, cargas);
+            Tienda("Clinica", IdLugar.Clinica, "I+D+I", ojos);
             Tienda("Bar", IdLugar.Bar, "Bar", bebida);
 
             AssetDatabase.SaveAssets();

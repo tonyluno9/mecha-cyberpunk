@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 821c6226efcb0ca4093622255201496d, type: 3}
+  m_Name: DatosArma_fusil_3
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosArma
+  id: arma_fusil_3
+  nombre: Fusil III
+  tipo: 4
+  valorVenta: 0
+  maximo: 1
+  oferta: {fileID: 11400000, guid: ff8d415dc9d957c48ad71aa8f2afbbe4, type: 2}
+  arma: 3
+  nivel: 3
+  precio: 850
+  danio: 25
+  perdigones: 1
+  cargador: 40
+  recarga: 1.3
+  tiempoEntreDisparos: 0.11
+  automatica: 1
+  dispersion: 2.5
+  dispersionApuntando: 1.2
+  alcance: 70

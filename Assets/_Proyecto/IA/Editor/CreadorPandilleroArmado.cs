@@ -32,8 +32,8 @@ namespace MechaCyberpunk.IA.Editor
         public static void Crear()
         {
             Material laser = CrearMaterialLaser();
-            DatosPandilleroAPie calaveras = CrearDatos(RutaDatosCalaveras, "CALAVERA", 3, new Color(1f, 0.1f, 0.8f));
-            CrearDatos(RutaDatosViboras, "VIBORA", 3, new Color(0.45f, 1f, 0.1f));
+            DatosPandilleroAPie calaveras = CrearDatos(RutaDatosCalaveras, "SKULL", 3, new Color(1f, 0.1f, 0.8f));
+            CrearDatos(RutaDatosViboras, "SNAKE", 3, new Color(0.45f, 1f, 0.1f));
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab) == null)
             {
                 ArmarPrefab(calaveras, laser);

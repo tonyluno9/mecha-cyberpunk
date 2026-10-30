@@ -32,7 +32,7 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.Progresion
 {
     /// <summary>
-    /// T-171: la pieza de rama que pone en juego la liga 1 (PIERNAS CUERPO A CUERPO I desde $250), en Pruebas_Economia con entrada
+    /// T-171: la pieza de rama que pone en juego la liga 1 (PIERNAS CUERPO A CUERPO I desde Ƀ250), en Pruebas_Economia con entrada
     /// simulada: retar a TORNILLO desde la cartelera, apostar, ganar, ver la pieza en el inventario y ponerla desde PIEZAS DEL MECHA
     /// del banco; apostar menos de la mínima no la da; la revancha de la cartelera no anuncia ni da pieza. Atajos permitidos y
     /// anotados: Colocar cerca del mostrador o del banco, dinero por código, y RecibirDanio sobre el rival solo después de daño real al jugador.
@@ -47,7 +47,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string AliasPrimero = "TORNILLO";
         private const string IdPieza = "pieza_piernas_cuerpoacuerpo_1";
         private const string NombrePieza = "PIERNAS CUERPO A CUERPO I";
-        private const string TextoMinima = "$250";
+        private const string TextoMinima = "Ƀ250";
         private const int Sotano = 1;
         private const int DineroDePrueba = 3000;
         private const int ApuestaConPieza = 250;
@@ -443,7 +443,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.Less(ApuestaSinPieza, cartel.apuesta.ApuestaMinimaPorPieza);
             CollectionAssert.Contains(cartel.apuesta.Montos, ApuestaSinPieza, "La pantalla ofrece apostar $" + ApuestaSinPieza);
             yield return GanarAlPrimero(ApuestaSinPieza);
-            Assert.AreEqual(0, inventario.Cantidad(pieza), "Con $100 no se lleva la pieza");
+            Assert.AreEqual(0, inventario.Cantidad(pieza), "Con Ƀ100 no se lleva la pieza");
             Assert.IsEmpty(errores, "Consola sin errores: " + string.Join(" | ", errores));
         }
 
@@ -466,7 +466,7 @@ namespace MechaCyberpunk.Tests.Progresion
             int ganancia = (int)Math.Round(ApuestaRevancha * (double)cartel.apuesta.Momio, MidpointRounding.AwayFromZero);
             dineroEsperado += revancha.Premio + ganancia;
             Assert.AreEqual(dineroEsperado, cartera.Dinero, "La revancha paga la mitad del premio y la apuesta");
-            Assert.AreEqual(1, inventario.Cantidad(pieza), "La revancha ganada con $500 no da otra pieza");
+            Assert.AreEqual(1, inventario.Cantidad(pieza), "La revancha ganada con Ƀ500 no da otra pieza");
             Assert.IsNotNull(cartel.apuesta.PiezaEnJuego, "El asset de la liga conserva su pieza (la copia sin pieza es de ejecución)");
 
             // Una pelea nueva de la liga 1 vuelve a anunciar la pieza.

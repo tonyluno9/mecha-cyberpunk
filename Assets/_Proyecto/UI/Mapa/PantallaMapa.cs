@@ -20,6 +20,9 @@ namespace MechaCyberpunk.UI.Mapa
             new Vector2(-94f, -47f), new Vector2(0f, -47f), new Vector2(94f, -47f),
         };
 
+        /// <summary>Título del mapa (documento del juego, 29-oct).</summary>
+        public const string NombreCiudad = "MEGALOPOLIS";
+
         [Tooltip("Lado de cada manzana en el mapa (m del mundo).")]
         [Min(1f)] [SerializeField] private float ladoManzana = 80f;
         [Tooltip("Píxeles de pantalla (referencia 1920x1080) por metro del mundo.")]
@@ -31,13 +34,16 @@ namespace MechaCyberpunk.UI.Mapa
         private RectTransform contenedor;
         private RectTransform puntoJugador;
         private readonly System.Collections.Generic.List<RectTransform> puntosAliados = new System.Collections.Generic.List<RectTransform>();
+        private readonly System.Collections.Generic.List<Image> imagenesAliados = new System.Collections.Generic.List<Image>();
         private Image[] manzanas;
         private Text[] etiquetas;
+        private Text titulo;
         private ControladorAPie controlCongelado;
 
         public bool Abierto => panel != null && panel.activeSelf;
         public Image[] Manzanas => manzanas;
         public Text[] Etiquetas => etiquetas;
+        public Text Titulo => titulo;
 
         private void Awake()
         {
@@ -75,6 +81,10 @@ namespace MechaCyberpunk.UI.Mapa
             Image imagenPunto = punto.AddComponent<Image>();
             imagenPunto.color = colorJugador;
             imagenPunto.raycastTarget = false;
+            titulo = FormatoTerritorio.CrearTexto(contenedor, "Titulo", 28, TextAnchor.UpperCenter, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -16f), new Vector2(600f, 40f));
+            titulo.text = NombreCiudad;
+            titulo.color = new Color(0.1f, 0.9f, 0.85f);
             FormatoTerritorio.CrearTexto(contenedor, "Ayuda", 20, TextAnchor.LowerCenter, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
                 new Vector2(0f, 12f), new Vector2(600f, 30f)).text = "M o Esc para cerrar";
             panel.SetActive(false);
@@ -157,7 +167,7 @@ namespace MechaCyberpunk.UI.Mapa
                 Vector3 p = jugador.Raiz.position;
                 puntoJugador.anchoredPosition = new Vector2(p.x, p.z) * pixelesPorMetro;
             }
-            // T-405: un punto naranja por aliado.
+            // T-405: un punto por aliado, del color de tu pandilla.
             IPandillaJugador pandilla = Registro<IPandillaJugador>.Actual;
             int cantidad = pandilla != null ? pandilla.Aliados.Count : 0;
             while (puntosAliados.Count < cantidad)
@@ -167,12 +177,13 @@ namespace MechaCyberpunk.UI.Mapa
                 RectTransform rect = (RectTransform)nuevo.transform;
                 rect.sizeDelta = Vector2.one * 10f;
                 Image imagen = nuevo.AddComponent<Image>();
-                imagen.color = new Color(1f, 0.5f, 0.1f);
                 imagen.raycastTarget = false;
                 puntosAliados.Add(rect);
+                imagenesAliados.Add(imagen);
             }
             for (int i = 0; i < puntosAliados.Count; i++)
             {
+                imagenesAliados[i].color = FormatoTerritorio.ColorDe(IdPandilla.Jugador);
                 puntosAliados[i].gameObject.SetActive(i < cantidad);
                 if (i < cantidad)
                 {

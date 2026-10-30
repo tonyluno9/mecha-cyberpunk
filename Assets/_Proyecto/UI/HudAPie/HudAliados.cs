@@ -22,6 +22,7 @@ namespace MechaCyberpunk.UI.Hud
         private Text textoAviso;
         private IPandillaJugador pandilla;
         private float finAviso;
+        private int ultimaCantidad = -1;
         private readonly StringBuilder constructor = new StringBuilder();
 
         public Text TextoFila => textoFila;
@@ -31,11 +32,9 @@ namespace MechaCyberpunk.UI.Hud
         {
             Canvas canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasAliados", 21);
             textoFila = FormatoTerritorio.CrearTexto(canvas.transform, "Aliados", 26, TextAnchor.LowerLeft,
-                new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24f, 20f), new Vector2(700f, 140f));
+                new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24f, 130f), new Vector2(700f, 140f)); // T-418: arriba de la vida y los Biits para no encimarse
             textoAviso = FormatoTerritorio.CrearTexto(canvas.transform, "AvisoNivel", 40, TextAnchor.UpperCenter,
                 new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-450f, -190f), new Vector2(900f, 60f));
-            textoFila.color = new Color(1f, 0.5f, 0.1f);
-            textoAviso.color = new Color(1f, 0.5f, 0.1f);
             textoFila.text = string.Empty;
             textoAviso.text = string.Empty;
         }
@@ -65,11 +64,21 @@ namespace MechaCyberpunk.UI.Hud
             {
                 Desvincular();
                 pandilla = actual;
+                ultimaCantidad = pandilla != null ? pandilla.Cantidad : -1;
                 if (pandilla != null)
                 {
                     pandilla.SubioDeNivel += AlSubir;
                 }
             }
+            Color colorPandilla = FormatoTerritorio.ColorDe(IdPandilla.Jugador);
+            textoFila.color = colorPandilla;
+            textoAviso.color = colorPandilla;
+            if (pandilla != null && pandilla.Cantidad > ultimaCantidad && ultimaCantidad >= 0)
+            {
+                textoAviso.text = FormatoTerritorio.Cortar(pandilla.Nombre(pandilla.Cantidad - 1) + " SE UNE A " + FormatoTerritorio.NombreDe(IdPandilla.Jugador));
+                finAviso = Time.unscaledTime + segundosAviso;
+            }
+            ultimaCantidad = pandilla != null ? pandilla.Cantidad : -1;
             constructor.Clear();
             if (pandilla != null && pandilla.Cantidad > 0)
             {

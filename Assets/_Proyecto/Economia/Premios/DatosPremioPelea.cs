@@ -6,9 +6,9 @@ namespace MechaCyberpunk.Economia
     [CreateAssetMenu(menuName = "Mecha Cyberpunk/Economia/Datos premio de pelea", fileName = "DatosPremioPelea")]
     public class DatosPremioPelea : ScriptableObject
     {
-        [Tooltip("Dinero que se abona al ganar la pelea ($).")]
+        [Tooltip("Dinero que se abona al ganar la pelea (Ƀ).")]
         [Min(0)] [SerializeField] private int premioGanar;
-        [Tooltip("Dinero que se abona al perder la pelea ($).")]
+        [Tooltip("Dinero que se abona al perder la pelea (Ƀ).")]
         [Min(0)] [SerializeField] private int premioPerder;
 
         public int PremioGanar => Mathf.Max(0, premioGanar);
