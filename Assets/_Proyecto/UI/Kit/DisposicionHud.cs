@@ -4,7 +4,7 @@ namespace MechaCyberpunk.UI.Kit
     /// Dónde va cada texto del HUD a pie (T-408), todo medido desde el margen de 48 px y filas de <see cref="EstiloCyberfix.AltoFilaHud"/>,
     /// para que nada se encime (antes cada parche se movía a mano). La tabla está en docs/diseno/ui-cyberfix.md.
     /// Arriba a la izquierda: radio, renta y zona. Arriba al centro: objetivo, aviso de zona, aviso de aliados y ayuda de la historia.
-    /// Arriba a la derecha: calor. Abajo a la izquierda: vida, Biits, aviso de Biits y ayuda de controles. Abajo a la derecha: arma y
+    /// Arriba a la derecha: calor. Abajo a la izquierda: el minimapa (T-409); a su derecha vida, Biits y aviso de Biits, y arriba de él la ayuda de controles. Abajo a la derecha: arma y
     /// pandilla (crece hacia arriba). Abajo al centro: interacción, llamado del mecha y subtítulo.
     /// </summary>
     public static class DisposicionHud
@@ -36,11 +36,16 @@ namespace MechaCyberpunk.UI.Kit
         public static RanuraHud AvisoAliados => new RanuraHud(EsquinaHud.ArribaCentro, AvisoZona.Fin + Hueco, AltoAvisoMediano, 0f);
         public static RanuraHud AyudaHistoria => new RanuraHud(EsquinaHud.ArribaCentro, AvisoAliados.Fin + Hueco, AltoAyudaHistoria, 0f);
 
-        // Abajo a la izquierda.
-        public static RanuraHud Vida => new RanuraHud(EsquinaHud.AbajoIzquierda, M, AltoVida, M);
-        public static RanuraHud Dinero => new RanuraHud(EsquinaHud.AbajoIzquierda, Vida.Fin + Hueco, F, M);
-        public static RanuraHud AvisoDinero => new RanuraHud(EsquinaHud.AbajoIzquierda, Dinero.Fin, F, M);
-        public static RanuraHud AyudaControles => new RanuraHud(EsquinaHud.AbajoIzquierda, AvisoDinero.Fin + Hueco, FilasAyuda * F, M);
+        /// <summary>Lado (px) del minimapa redondo (T-409).</summary>
+        public const float LadoMinimapa = 260f;
+
+        // Abajo a la izquierda (T-409): el minimapa en la esquina, la vida y los Biits a su derecha (48 + 260 + 24) y la ayuda arriba de él.
+        public static RanuraHud Minimapa => new RanuraHud(EsquinaHud.AbajoIzquierda, M, LadoMinimapa, M);
+        public static float JuntoAlMinimapa => M + LadoMinimapa + KitUI.Estilo.SeparacionBloques;
+        public static RanuraHud Vida => new RanuraHud(EsquinaHud.AbajoIzquierda, M, AltoVida, JuntoAlMinimapa);
+        public static RanuraHud Dinero => new RanuraHud(EsquinaHud.AbajoIzquierda, Vida.Fin + Hueco, F, JuntoAlMinimapa);
+        public static RanuraHud AvisoDinero => new RanuraHud(EsquinaHud.AbajoIzquierda, Dinero.Fin, F, JuntoAlMinimapa);
+        public static RanuraHud AyudaControles => new RanuraHud(EsquinaHud.AbajoIzquierda, Minimapa.Fin + KitUI.Estilo.SeparacionBloques, FilasAyuda * F, M);
 
         // Abajo a la derecha.
         public static RanuraHud Arma => new RanuraHud(EsquinaHud.AbajoDerecha, M, F, M);
@@ -49,8 +54,8 @@ namespace MechaCyberpunk.UI.Kit
         // Abajo al centro.
         public static RanuraHud Interaccion => new RanuraHud(EsquinaHud.AbajoCentro, M + 2f * F, F, 0f);
         public static RanuraHud Llamado => new RanuraHud(EsquinaHud.AbajoCentro, Interaccion.Fin + Hueco, F, 0f);
-        // Sobre la ayuda de controles: el subtítulo es más ancho que el hueco que deja.
-        public static RanuraHud Subtitulo => new RanuraHud(EsquinaHud.AbajoCentro, System.Math.Max(Llamado.Fin, AyudaControles.Fin) + Hueco, AltoSubtitulo, 0f);
+        // Sobre el llamado y los Biits (T-409: la ayuda de controles ya está arriba del minimapa, a la izquierda del subtítulo).
+        public static RanuraHud Subtitulo => new RanuraHud(EsquinaHud.AbajoCentro, System.Math.Max(Llamado.Fin, AvisoDinero.Fin) + Hueco, AltoSubtitulo, 0f);
 
         /// <summary>Ancho (px) de los textos de las esquinas de la izquierda abajo (ayuda de controles).</summary>
         public const float AnchoAyudaControles = 520f;

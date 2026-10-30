@@ -33,6 +33,11 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - El Tianguis (calle principal entre x -47 y 47) tiene un arco magenta "EL TIANGUIS" y unos 11 puestos con lona de color. La esquina de la pantalla dice EL TIANGUIS al entrar. ¿Se reconoce como tianguis?
 - Disparos, golpes, pasos, saltos, compras y menús suenan con sonidos provisionales (generados). La lluvia, la música y los ambientes están apagados. ¿Los disparos pegan o estorban?
 
+### T-409 minimapa y mapa (qué probar)
+- Abajo a la izquierda va un minimapa redondo de 60 m que gira contigo (arriba es hacia donde miras): calles grises, manzanas del color de su dueño, enemigos en rojo, tus aliados de tu color y los iconos de EL MERCADO (Ƀ), I+D+I (+), CIC (engrane) y CASA. ¿Te ubicas sin abrir el mapa? ¿Marea que gire?
+- M abre el mapa: la rueda hace zoom de 1x a 3x donde está el cursor, a la derecha va la leyenda; un clic marca un punto y otro clic encima lo quita. M o Esc cierran.
+- Con el mapa cerrado, el punto marcado sale en el minimapa en turquesa con su distancia ("40 m") y baja al caminar hacia él; si está lejos queda pegado al borde. ¿Es útil marcar? ¿60 m es poco o mucho?
+
 ## Build viejo con mechas (antes de la fase G)
 
 Build de Windows con las escenas de prueba de Tony más Ciudad_Prologo y Clandestino de Alan (T-136/T-137 aún pendientes: todavía no hay demo encadenada).

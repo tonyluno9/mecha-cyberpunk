@@ -33,6 +33,10 @@ namespace MechaCyberpunk.UI.Kit
         [SerializeField] private Color contorno = new Color(0.039f, 0.039f, 0.071f, 0.9f);
         [Tooltip("Grosor del contorno del rombo y la flecha (px).")]
         [Min(0f)] [SerializeField] private float grosorContorno = 4f;
+        [Tooltip("Enemigos en el minimapa y el mapa (#FF3333, T-409).")]
+        [SerializeField] private Color enemigo = new Color(1f, 0.2f, 0.2f, 1f);
+        [Tooltip("Calles del minimapa y el mapa (gris, T-409).")]
+        [SerializeField] private Color calles = new Color(0.32f, 0.32f, 0.36f, 1f);
         [Tooltip("Sombra de todo texto (negro al 85 %).")]
         [SerializeField] private Color sombra = new Color(0f, 0f, 0f, 0.85f);
         [Tooltip("Desplazamiento de la sombra (px de referencia).")]
@@ -94,6 +98,8 @@ namespace MechaCyberpunk.UI.Kit
         public Color Sombra => sombra;
         public Color FondoPantalla => fondoPantalla;
         public Color Contorno => contorno;
+        public Color Enemigo => enemigo;
+        public Color Calles => calles;
         public float GrosorContorno => grosorContorno;
         public Vector2 DistanciaSombra => distanciaSombra;
         public float MargenBorde => margenBorde;
