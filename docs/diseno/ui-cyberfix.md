@@ -49,7 +49,7 @@ Cada texto tiene su ranura en `UI/Kit/DisposicionHud` (margen 48, filas de 36 px
 | Arriba a la izquierda | radio, renta, zona (HudTerritorio) |
 | Arriba al centro | objetivo (texto naranja de 28), aviso de zona, aviso de aliados, ayuda de la historia |
 | Arriba a la derecha | calor |
-| Abajo a la izquierda | vida, Biits, aviso de Biits, ayuda de controles |
+| Abajo a la izquierda | minimapa de 260 px (T-409); a su derecha (x = 332) vida, Biits y aviso de Biits; arriba de él la ayuda de controles |
 | Abajo a la derecha | arma, tu pandilla (crece hacia arriba) |
 | Abajo al centro | interacción, llamado del mecha, subtítulo |
 

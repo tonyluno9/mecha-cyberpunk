@@ -146,6 +146,12 @@ namespace MechaCyberpunk.UI.Historia
             {
                 textoAyuda.text = ayu;
             }
+            // T-409: con el mapa abierto la ayuda quedaba tenue detrás de su título; se esconde mientras tanto (sigue contando su tiempo).
+            bool verAyuda = !MechaCyberpunk.UI.Mapa.PantallaMapa.HayAbierto;
+            if (textoAyuda.enabled != verAyuda)
+            {
+                textoAyuda.enabled = verAyuda;
+            }
         }
 
         private static void Mostrar(GameObject objeto, bool visible)

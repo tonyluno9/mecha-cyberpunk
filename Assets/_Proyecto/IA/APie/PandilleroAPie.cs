@@ -14,7 +14,7 @@ namespace MechaCyberpunk.IA.APie
     /// <see cref="ModeloVida"/>, parpadea, cae en KO y desaparece. Lo leen los OJOS por <see cref="ILecturaRival"/>.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class PandilleroAPie : MonoBehaviour, IVida, IRecibeDanio, ILecturaRival
+    public class PandilleroAPie : MonoBehaviour, IVida, IRecibeDanio, ILecturaRival, IMarcaMapa
     {
         private const float Gravedad = -20f;
         private const float AlturaCentroImpacto = 1f;
@@ -86,6 +86,18 @@ namespace MechaCyberpunk.IA.APie
         }
 
         private bool alerta;
+        private bool esJefe;
+
+        /// <summary>True si es el pandillero de un <see cref="JefePandilla"/>: sale más grande en el minimapa (T-409).</summary>
+        public bool EsJefe => esJefe;
+
+        /// <summary>Lo llama <see cref="JefePandilla"/> en su Awake.</summary>
+        public void MarcarComoJefe() => esJefe = true;
+
+        // ---- IMarcaMapa (T-409): sale en el minimapa mientras está activo y en pie ----
+        TipoMarcaMapa IMarcaMapa.Tipo => esJefe ? TipoMarcaMapa.Jefe : TipoMarcaMapa.Enemigo;
+        Vector3 IMarcaMapa.Posicion => transform.position;
+        bool IMarcaMapa.Visible => isActiveAndEnabled && !EstaKO;
         public float Actual => modelo != null ? modelo.Actual : 0f;
         public float Maxima => modelo != null ? modelo.Maxima : 0f;
         public bool EstaKO => modelo != null && modelo.EstaKO;
@@ -176,12 +188,14 @@ namespace MechaCyberpunk.IA.APie
         private void OnEnable()
         {
             Registro<ILecturaRival>.Agregar(this);
+            Registro<IMarcaMapa>.Agregar(this);
             Activos.Add(this);
         }
 
         private void OnDisable()
         {
             Registro<ILecturaRival>.Quitar(this);
+            Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
             ObjetivoActual = null;
         }
@@ -189,6 +203,7 @@ namespace MechaCyberpunk.IA.APie
         private void OnDestroy()
         {
             Registro<ILecturaRival>.Quitar(this);
+            Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
             if (modelo != null)
             {
