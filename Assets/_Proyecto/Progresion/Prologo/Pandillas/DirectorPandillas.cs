@@ -8,6 +8,7 @@ using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
 using MechaCyberpunk.UI.Historia;
+using MechaCyberpunk.Progresion.Partida;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -181,6 +182,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private IEnumerator Start()
         {
+            // T-413: en el título la historia espera (EMPEZAR o CONTINUAR recargan la escena).
+            while (FlujoPartida.EnTitulo)
+            {
+                yield return null;
+            }
             // Unos cuadros: el jugador se coloca y las partidas cargan antes de empezar.
             for (int i = 0; i < CuadrosEspera; i++)
             {

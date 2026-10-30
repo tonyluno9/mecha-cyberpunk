@@ -29,7 +29,7 @@ y 3 líneas en docs/guia-para-jugar.md en cada una. Guía de estilo de todas las
 | T-410 Pausa real con Esc: continuar, guardar, cargar, opciones y salir al título (Core: Pausa) | Sonnet | T-408, T-412 | hecha |
 | T-411 Opciones: sensibilidad, invertir Y, volúmenes, calidad, resolución y pantalla completa (Core: IOpciones) | Sonnet | T-407, T-408, T-410 | hecha |
 | T-412 Guardar y cargar en 3 ranuras más AUTOGUARDADO; "Continuar" carga la más reciente | Opus | T-408 | hecha |
-| T-413 Título CYBERFIX con la ciudad de noche y creación sin mechas: 2 personajes, escoger nombre y color de tu pandilla (los datos son de T-415) | Opus | T-407 a T-412, T-415 | pendiente |
+| T-413 Título CYBERFIX con la ciudad de noche y creación sin mechas: 2 personajes, escoger nombre y color de tu pandilla (los datos son de T-415) | Opus | T-407 a T-412, T-415 | hecha |
 
 Orden: T-407 → (paso 2: T-414 a T-418) → T-408 → T-409 → T-412 → T-410 → T-411 → T-413 (en serie: todas tocan Ciudad_Prologo y ConstruirDemo). La ciudad grande no entra.
 
