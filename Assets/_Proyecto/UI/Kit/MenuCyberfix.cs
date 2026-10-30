@@ -19,6 +19,7 @@ namespace MechaCyberpunk.UI.Kit
         private static int abiertos;
         private readonly List<BotonCyberfix> botones = new List<BotonCyberfix>();
         private int elegido = -1;
+        private int cuadroAbierto = -1;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Limpiar() => abiertos = 0;
@@ -35,6 +36,8 @@ namespace MechaCyberpunk.UI.Kit
         private void OnEnable()
         {
             abiertos++;
+            // T-412: la tecla que abrió este menú (o lo regresó de otro) no cuenta en el mismo cuadro.
+            cuadroAbierto = Time.frameCount;
             KitUI.AsegurarEventSystem();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -98,7 +101,7 @@ namespace MechaCyberpunk.UI.Kit
         private void Update()
         {
             Keyboard teclado = Keyboard.current;
-            if (teclado == null || botones.Count == 0)
+            if (teclado == null || botones.Count == 0 || Time.frameCount == cuadroAbierto)
             {
                 return;
             }

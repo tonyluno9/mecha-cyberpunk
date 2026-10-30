@@ -19,6 +19,7 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         private IJugador jugador;
         private bool pendiente;
+        private bool cancelada;
         private float restante;
 
         /// <summary>Id del punto de aparición. Se puede cambiar justo después de instanciar, antes del primer frame.</summary>
@@ -30,6 +31,13 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         /// <summary>True si ya está esperando que aparezca el punto.</summary>
         public bool EstaEsperando => pendiente;
+
+        /// <summary>No coloca al jugador (T-412: al cargar una partida se queda donde se guardó).</summary>
+        public void Cancelar()
+        {
+            cancelada = true;
+            pendiente = false;
+        }
 
         private void Awake()
         {
@@ -48,7 +56,7 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         private void Start()
         {
-            if (string.IsNullOrEmpty(idAparicion))
+            if (string.IsNullOrEmpty(idAparicion) || cancelada)
             {
                 return;
             }

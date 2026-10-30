@@ -15,6 +15,7 @@ namespace MechaCyberpunk.Progresion.Guardado
     /// <summary>
     /// Formato del archivo de la partida (D-tony-50): versión, fecha ISO y una lista de piezas {clave, datos}.
     /// Funciones puras para pasar de piezas a JSON y de JSON a piezas; nunca lanzan excepciones al leer.
+    /// T-412: lleva un <see cref="ResumenPartida"/> opcional (sigue siendo la versión 1; sin resumen se lee igual).
     /// </summary>
     [Serializable]
     public class ArchivoPartida
@@ -25,11 +26,12 @@ namespace MechaCyberpunk.Progresion.Guardado
         public int version;
         public string fecha;
         public List<PiezaGuardada> piezas = new List<PiezaGuardada>();
+        public ResumenPartida resumen;
 
-        /// <summary>Arma el JSON de la partida con las piezas dadas y la fecha dada (texto ISO).</summary>
-        public static string Escribir(IEnumerable<PiezaGuardada> piezas, string fechaIso)
+        /// <summary>Arma el JSON de la partida con las piezas dadas, la fecha dada (texto ISO) y el resumen (puede ser null).</summary>
+        public static string Escribir(IEnumerable<PiezaGuardada> piezas, string fechaIso, ResumenPartida resumen = null)
         {
-            var archivo = new ArchivoPartida { version = VersionActual, fecha = fechaIso ?? string.Empty };
+            var archivo = new ArchivoPartida { version = VersionActual, fecha = fechaIso ?? string.Empty, resumen = resumen };
             if (piezas != null)
             {
                 foreach (PiezaGuardada pieza in piezas)
@@ -70,6 +72,31 @@ namespace MechaCyberpunk.Progresion.Guardado
                 }
             }
             fecha = leido.fecha ?? string.Empty;
+            return true;
+        }
+
+        /// <summary>
+        /// Lee solo la fecha y el resumen (T-412). False si el texto está vacío, roto o es de otra versión. El resumen sale null si el
+        /// archivo no lo trae. No lanza excepciones.
+        /// </summary>
+        public static bool TryLeerResumen(string json, out ResumenPartida resumen, out string fecha)
+        {
+            resumen = null;
+            fecha = string.Empty;
+            if (string.IsNullOrWhiteSpace(json)) return false;
+            ArchivoPartida leido;
+            try
+            {
+                leido = JsonUtility.FromJson<ArchivoPartida>(json);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            if (leido == null || leido.version != VersionActual || leido.piezas == null) return false;
+            fecha = leido.fecha ?? string.Empty;
+            bool conResumen = leido.resumen != null && !string.IsNullOrEmpty(leido.resumen.fecha);
+            resumen = conResumen ? leido.resumen : null;
             return true;
         }
     }

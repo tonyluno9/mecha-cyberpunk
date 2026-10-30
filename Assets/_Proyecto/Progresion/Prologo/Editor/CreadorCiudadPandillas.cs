@@ -59,6 +59,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T417Interno();
             T418Interno();
             T409Interno();
+            T412Interno();
             Guardar(escena);
         }
 
