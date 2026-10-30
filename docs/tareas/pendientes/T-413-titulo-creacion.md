@@ -1,6 +1,7 @@
 # T-413 Pantalla de título CYBERFIX y creación de personaje sin mechas
 Dueño: Tony | Rama: tony/T-413-titulo-creacion | Modelo: Opus 5.5, medium (diseño de UI) | MODO RÁPIDO (docs/ronda3.md)
-Depende de: T-407 a T-412 (es la última de la ronda 3).
+Depende de: T-407 a T-412 (es la última de la ronda 3) y T-415 (el nombre y el color de tu pandilla ya están en el perfil y se usan en todo;
+aquí solo se escogen en la creación).
 
 ## Objetivo
 El juego y la demo arrancan en el título CYBERFIX: la ciudad de noche de fondo con una cámara lenta, y NUEVA PARTIDA, CONTINUAR, OPCIONES y
@@ -14,22 +15,23 @@ SALIR. NUEVA PARTIDA abre la creación: eliges uno de 2 personajes, tu nombre y 
   vivo en una RawImage).
 - Perfil: `Core/Jugador/IPerfilJugador.cs` (nombre, alias, apariencia) y `Progresion/Perfil/ServicioPerfil.cs` (clave `perfil`).
   El muñeco: `Assets/Arte/Personajes/MunecoHumano/` (ModeloJugador.prefab, D-tony-204).
-- Tu color y tu nombre de pandilla hoy están fijos en `UI/Mapa/FormatoTerritorio.cs` (naranja, "TUYA") y en los aliados (IA/Aliados/).
+- Tu pandilla (T-415): `IPerfilJugador.NombrePandilla` y `ColorPandilla`, `Core/Jugador/ColoresPandilla` (los 4 colores, sus nombres y `Limpiar`)
+  y `ServicioPerfil.FijarPandilla(nombre, color)`. El HUD, el mapa, el minimapa y los aliados ya se repintan con `Cambio`: aquí no se tocan.
 - La historia empieza en `DirectorPandillas.Start` (paso DESPIERTA, en la cama).
-- Decisiones: D-tony-245 (título dentro de Ciudad_Prologo) y D-tony-246 (creación).
-- **Cambio de Core autorizado por Tony**: `IPerfilJugador` suma `string NombrePandilla` y `int ColorPandilla` (con sus dobles de prueba).
+- Decisiones: D-tony-245 (título dentro de Ciudad_Prologo), D-tony-246 (creación), D-tony-252 (tu pandilla, corrige la paleta y el nombre por
+  defecto de D-tony-246) y D-tony-259.
+- Sin cambios de Core: el contrato del perfil lo amplió T-415.
 
 ## Carpetas permitidas
-Core/Jugador/IPerfilJugador.cs, Progresion/Perfil/, Progresion/Partida/, Progresion/Prologo/ (Pandillas/, Editor/), Personaje/Apariencia/,
-Assets/Arte/Personajes/MunecoHumano/ (variante B por código), IA/Aliados/ (color de tu pandilla), UI/ (Titulo/ nuevo, Mapa/, HudAPie/, Kit/,
-Editor/, Datos/), Escenas/Ciudad_Prologo.unity (solo con código), Tests/PlayMode/UI/, los dobles de `IPerfilJugador` en Tests/, docs de Tony.
+Progresion/Perfil/ (solo si hace falta para la creación), Progresion/Partida/, Progresion/Prologo/ (Pandillas/, Editor/), Personaje/Apariencia/,
+Assets/Arte/Personajes/MunecoHumano/ (variante B por código), UI/ (Titulo/ nuevo, Mapa/, HudAPie/, Kit/, Editor/, Datos/),
+Escenas/Ciudad_Prologo.unity (solo con código), Tests/PlayMode/UI/, docs de Tony.
 No tocar: Radio/, Mundo/, Escenas/Tony/CreacionPersonaje.unity.
 
 ## Qué hacer
-1. **Perfil**: `NombrePandilla` (por defecto "LOS DE LA FOSA"; de 3 a 16 letras, espacios y Ñ) y `ColorPandilla` (0 NARANJA `#FF801A`,
-   1 TURQUESA `#1AE6E6`, 2 AMARILLO `#FFD91A`, 3 AZUL `#3380FF`), guardados en `perfil`. `FormatoTerritorio` pinta LA FOSA y tus puntos con
-   ese color y escribe el nombre en lugar de "TUYA"; los aliados se visten de ese color; el minimapa y el mapa también. El naranja de la UI
-   no cambia.
+1. **Perfil**: la creación solo llama a `ServicioPerfil.FijarPandilla(nombre, color)` (T-415) con lo que escribió el jugador; no repitas reglas:
+   el nombre pasa por `ColoresPandilla.Limpiar` y los colores y sus nombres salen de `ColoresPandilla` (NARANJA, TURQUESA, AMARILLO, AZUL; por
+   defecto "LOS DE SUBURBIOS" y NARANJA). El campo de TU PANDILLA no deja escribir más de 16 caracteres ni símbolos.
 2. **Dos personajes**: A "CHAMARRA" (chamarra naranja y cabello turquesa) y B "MÁSCARA" (`ModeloJugador_B.prefab`, variante hecha por
    código). Se eligen con `Apariencia.Cara` 0 o 1; `Personaje/Apariencia/ModeloSegunPerfil.cs` prende el que toca.
 3. **Flujo**: `FlujoPartida.EnTitulo` es verdadero al abrir Ciudad_Prologo sin nada pendiente: en un build siempre; en el editor solo si
@@ -49,7 +51,7 @@ No tocar: Radio/, Mundo/, Escenas/Tony/CreacionPersonaje.unity.
 ## Criterios de aceptación
 - [ ] En el build, al abrir sale el título con la cámara moviéndose y el HUD apagado; Esc no abre la pausa.
 - [ ] Sin partidas, CONTINUAR está desactivado; tras jugar y autoguardar, CONTINUAR carga la más reciente y te deja donde estabas.
-- [ ] La creación con teclado (personaje B, nombre "TONY", pandilla "LOS NEÓN", color AZUL) da ese perfil; LA FOSA sale azul en el mapa,
+- [ ] La creación con teclado (personaje B, nombre "TONY", pandilla "LOS NEÓN", color AZUL) da ese perfil; SUBURBIOS sale azul en el mapa,
       el HUD de zona dice "LOS NEÓN" y el CHATO se viste de azul.
 - [ ] Todo se puede hacer también con el ratón (pasar por encima elige y el clic acepta).
 - [ ] Capturas revisadas a ojo y corregidas si se ven mal: docs/capturas/T-413-1.png (título) y T-413-2.png (creación), en 1920x1080 y 2560x1440.
@@ -57,7 +59,7 @@ No tocar: Radio/, Mundo/, Escenas/Tony/CreacionPersonaje.unity.
 ## Pruebas (solo estas 2 nuevas)
 - PlayMode `TituloCreacionPruebas.RecorridoJugadorNuevo` (InputTestFixture, `TituloEnEditor` y ruta de guardado temporal): Ciudad_Prologo
   en el título; CONTINUAR desactivado; Enter en NUEVA PARTIDA; → elige B; escribe TONY; escribe LOS NEÓN; → → → hasta AZUL; Enter en
-  EMPEZAR; la historia está en DESPIERTA, el perfil tiene esos datos y LA FOSA es azul en el mapa. Toma las dos capturas.
+  EMPEZAR; la historia está en DESPIERTA, el perfil tiene esos datos y SUBURBIOS es azul en el mapa. Toma las dos capturas.
 - PlayMode `TituloCreacionPruebas.ContinuarConRaton`: con una partida AUTO escrita antes, en el título el ratón pasa por encima de
   CONTINUAR y el clic carga: dinero y posición son los de la partida; OPCIONES con clic abre las opciones y Esc vuelve al título.
 

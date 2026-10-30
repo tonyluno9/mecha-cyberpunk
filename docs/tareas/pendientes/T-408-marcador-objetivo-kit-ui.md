@@ -1,10 +1,10 @@
 # T-408 Kit de UI y marcador de objetivo (icono, distancia y flecha en el borde)
 Dueño: Tony | Rama: tony/T-408-marcador-objetivo | Modelo: Opus 5.5, medium (diseño de UI) | MODO RÁPIDO (docs/ronda3.md)
-Depende de: T-407 (sonidos UI y nombre).
+Depende de: T-407 (sonidos UI y nombre) y T-418 (el paso 2 va antes: nombres nuevos de T-414, textos de la historia de T-418 y `CapturaUI` de T-414).
 
 ## Objetivo
 Siempre sabes a dónde ir: un rombo sobre el objetivo con su distancia en metros; si queda fuera de la pantalla o detrás, una flecha en el
-borde apunta hacia él; arriba, un texto corto ("VE AL MERCADO NEGRO", "VENCE A LOS CALAVERAS 2/7"). El mismo objetivo sale en el mapa.
+borde apunta hacia él; arriba, un texto corto ("VE AL MERCADO", "VENCE A LOS SKULLS 2/7"). El mismo objetivo sale en el mapa.
 De paso nace el kit de UI que usan todas las pantallas de la ronda 3.
 
 ## Contexto
@@ -14,7 +14,9 @@ De paso nace el kit de UI que usan todas las pantallas de la ronda 3.
   (`CalculoFlechaObjetivo`); el marcador nuevo la reemplaza (el texto se queda, con el estilo nuevo).
 - `UI/Historia/PantallaHistoriaPandillas.cs` usa OnGUI: pásala al kit (mismo API público para que DirectorPandillas no cambie).
 - `UI/Mapa/FormatoTerritorio.cs` ya crea canvas y textos por código: que llame al kit.
-- Decisiones: D-tony-238 y D-tony-239 (kit y paleta), D-tony-240 (marcador y textos).
+- Nombres en pantalla: la tabla de T-414 (docs/diseno/pandillas.md): SUBURBIOS, SKULLS, SNAKES, EL MERCADO, I+D+I, CIC, Biits (Ƀ).
+- `UI/HudAPie/MiraSniper.cs` (T-416) se hizo con uGUI suelto porque el kit aún no existía: pásala al kit.
+- Decisiones: D-tony-238 y D-tony-239 (kit y paleta), D-tony-240 (marcador y textos), D-tony-259 (ajustes por el paso 2).
 
 ## Carpetas permitidas
 UI/ (Kit/ nuevo, Datos/, Editor/, HudAPie/, Historia/, Mapa/), Progresion/Prologo/Pandillas/ (solo los textos de objetivo),
@@ -28,17 +30,19 @@ docs/diseno/ui-cyberfix.md, docs de Tony. No tocar: Core/, Radio/, Mundo/.
    `AsegurarEventSystem()` (InputSystemUIInputModule); `BotonCyberfix` (estados normal, elegido, pulsado, desactivado de la guía; el ratón
    encima elige; sonidos UI_MOVER, UI_ACEPTAR, UI_ERROR por `Sonidos`); `MenuCyberfix` (navegación con ↑ ↓ W S, ← → A D, Enter, Espacio y
    Esc, elige el primer botón al abrir, muestra y oculta el cursor). Sirve igual desde un creador de editor que en tiempo de juego.
-2. **Ayudante de capturas** `Tests/PlayMode/UI/CapturaUI.cs`: pone los canvas en Screen Space Camera, renderiza a 1920x1080 y a 2560x1440,
-   guarda el PNG y deja todo como estaba. Lo usan T-408 a T-413.
+2. **Ayudante de capturas** `Tests/PlayMode/UI/CapturaUI.cs`: ya lo hizo T-414 (canvas en Screen Space Camera, 1920x1080 y 2560x1440). Úsalo; si
+   le falta algo para el kit, agrégalo sin cambiar su API. Lo usan T-408 a T-413.
 3. **Marcador** `UI/HudAPie/MarcadorObjetivo.cs` (canvas propio, orden 15) con la lógica pura en `CalculoMarcador.cs`: el rombo naranja
    de 36 px va 2.2 m arriba del objetivo con la distancia turquesa abajo ("45 m"); si el objetivo está detrás de la cámara o fuera de la
    pantalla, una flecha naranja en el borde (a 64 px) apunta hacia él, con la distancia; a menos de 3 m, el rombo se apaga. Sonidos
    UI_OBJETIVO_NUEVO al cambiar de objetivo y UI_OBJETIVO_CUMPLIDO al quitarlo. Quita la flecha giratoria de HudAPie con su creador.
-4. **Textos cortos** en DirectorPandillas (MAYÚSCULAS, 32 caracteres como máximo): "SAL A LA CALLE", "DEFIENDE A DOÑA LUPE", "RECOGE LA
-   PISTOLA (E)", "HABLA CON EL CHATO", "VENCE A LOS CALAVERAS n/7" (respeto ÷ 10) y "VENCE AL JEFE". Si la historia te manda a comprar,
-   usa "VE AL MERCADO NEGRO".
-5. **Mapa**: `PantallaMapa` dibuja el objetivo con el mismo rombo y pasa su canvas y sus textos al kit. `HudTerritorio`, `HudAliados` y
-   `PantallaHistoriaPandillas` (ya sin OnGUI) usan el kit y la paleta: misma fuente, mismos colores y tamaño mínimo de 20.
+4. **Textos cortos**: T-418 ya los dejó en DirectorPandillas (MAYÚSCULAS, 32 caracteres como máximo): "SAL A LA CALLE", "DEFIENDE A DOÑA LUPE",
+   "RECOGE LA PISTOLA (E)", "HABLA CON EL CHATO", "VE CON EL DOC A I+D+I", "VE CON EL INVENTOR AL CIC", "VENCE A LOS SKULLS n/7" (respeto ÷ 10),
+   "VENCE AL JEFE DE LOS SKULLS" y "VE CON EL HACKER A NEÓN ALTO". Aquí solo se muestran con el estilo nuevo; si alguno no cabe en una línea en 1080p,
+   acórtalo. Si la historia te manda a comprar, usa "VE AL MERCADO".
+5. **Mapa**: `PantallaMapa` dibuja el objetivo con el mismo rombo y pasa su canvas y sus textos al kit. `HudTerritorio`, `HudAliados`,
+   `MiraSniper` y `PantallaHistoriaPandillas` (ya sin OnGUI) usan el kit y la paleta: misma fuente, mismos colores y tamaño mínimo de 20. El color
+   de tu pandilla (T-415) sigue saliendo de `ColoresPandilla`; el naranja del kit es el de la UI.
 
 ## Criterios de aceptación
 - [ ] Ningún `OnGUI` en Assets/_Proyecto/UI/ (grep).

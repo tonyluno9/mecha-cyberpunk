@@ -1,7 +1,8 @@
 # Ronda 3 — detalle (lo lee el /goal)
+Va después del paso 2 de docs/plan-noche.md (T-414 a T-418): usa sus nombres (Suburbios, SKULLS, SNAKES, El Mercado, I+D+I, CIC, Biits Ƀ).
 Si la ronda 2 (nombre CYBERFIX, silencio, bugs de mercado negro/Tianguis/escopeta, GestorSonidos) no terminó, termínala primero.
-1) Marcador de objetivo nuevo: icono en pantalla sobre el objetivo con distancia en metros; fuera de pantalla, flecha en el borde apuntando; texto corto arriba ("Ve al mercado negro", "Vence a los Calaveras 2/3"). Mismo objetivo en minimapa y mapa.
-2) Minimapa redondo abajo a la izquierda: calles, tu posición y dirección, objetivo, zonas pintadas de su dueño, enemigos cercanos en rojo, aliados en naranja, iconos de mercado negro, clínica y casa. Gira con el jugador. Mapa grande (M): zoom con rueda, leyenda, marcar punto con clic (aparece en minimapa con distancia).
+1) Marcador de objetivo nuevo: icono en pantalla sobre el objetivo con distancia en metros; fuera de pantalla, flecha en el borde apuntando; texto corto arriba ("Ve al Mercado", "Vence a los SKULLS 2/7"). Mismo objetivo en minimapa y mapa.
+2) Minimapa redondo abajo a la izquierda: calles, tu posición y dirección, objetivo, zonas pintadas de su dueño, enemigos cercanos en rojo, aliados del color de tu pandilla, iconos de El Mercado, I+D+I, CIC y casa. Gira con el jugador. Mapa grande (M): zoom con rueda, leyenda, marcar punto con clic (aparece en minimapa con distancia).
 3) Pausa con Esc: continuar, guardar, cargar, opciones, salir al título. Pausa real (tiempo, IA, disparos).
 4) Opciones: sensibilidad, invertir Y, volumen general y por sección, calidad, resolución, pantalla completa. Se guardan y aplican al instante.
 5) Guardar/cargar: 3 ranuras con fecha, zona y dinero; autoguardado al dormir y al conquistar zona; "Continuar" carga la última.

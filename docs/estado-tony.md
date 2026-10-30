@@ -24,14 +24,26 @@ y 3 líneas en docs/guia-para-jugar.md en cada una. Guía de estilo de todas las
 | Tarea | Modelo | Depende de | Estado |
 | --- | --- | --- | --- |
 | T-407 Ronda 2: nombre CYBERFIX, GestorSonidos con provisionales, bugs del mercado negro, el Tianguis y la escopeta (Core: Sonido, productName) | Sonnet | T-406 | hecha |
-| T-408 Kit de UI y marcador de objetivo con distancia y flecha en el borde; adiós OnGUI | Opus | T-407 | pendiente |
+| T-408 Kit de UI y marcador de objetivo con distancia y flecha en el borde; adiós OnGUI | Opus | T-407, T-418 | pendiente |
 | T-409 Minimapa redondo que gira y mapa grande con zoom, leyenda y punto marcado (Core: IMarcaMapa) | Opus | T-408 | pendiente |
 | T-410 Pausa real con Esc: continuar, guardar, cargar, opciones y salir al título (Core: Pausa) | Sonnet | T-408, T-412 | pendiente |
 | T-411 Opciones: sensibilidad, invertir Y, volúmenes, calidad, resolución y pantalla completa (Core: IOpciones) | Sonnet | T-407, T-408, T-410 | pendiente |
 | T-412 Guardar y cargar en 3 ranuras más AUTOGUARDADO; "Continuar" carga la más reciente | Opus | T-408 | pendiente |
-| T-413 Título CYBERFIX con la ciudad de noche y creación sin mechas: 2 personajes, nombre y color de tu pandilla (Core: IPerfilJugador) | Opus | T-407 a T-412 | pendiente |
+| T-413 Título CYBERFIX con la ciudad de noche y creación sin mechas: 2 personajes, escoger nombre y color de tu pandilla (los datos son de T-415) | Opus | T-407 a T-412, T-415 | pendiente |
 
-Orden: T-407 → T-408 → T-409 → T-412 → T-410 → T-411 → T-413 (en serie: todas tocan Ciudad_Prologo y ConstruirDemo). La ciudad grande no entra.
+Orden: T-407 → (paso 2: T-414 a T-418) → T-408 → T-409 → T-412 → T-410 → T-411 → T-413 (en serie: todas tocan Ciudad_Prologo y ConstruirDemo). La ciudad grande no entra.
+
+## Paso 2 del plan de la noche: nombres y decisiones del equipo (T-414 a T-418; D-tony-248 a D-tony-259) — VA ANTES DE T-408
+Plan: docs/plan-noche.md. Rama tony/fase-g, modo rápido; T-414 a T-417 solo se mezclan a tony/fase-g y T-418 cierra el paso (main con push, builds y guía).
+| Tarea | Modelo | Depende de | Estado |
+| --- | --- | --- | --- |
+| T-414 Nombres nuevos (Suburbios, SKULLS, SNAKES, El Mercado, I+D+I, El Fox, VivaCoin, Megalopolis) y moneda Biits Ƀ; CapturaUI (Core: Moneda) | Sonnet | T-407 | pendiente |
+| T-415 Tu pandilla con nombre y color en HUD, mapa, aliados y avisos (Core: IPerfilJugador, ColoresPandilla) | Sonnet | T-414 | pendiente |
+| T-416 Cinco armas en El Mercado: fusil de asalto y sniper con zoom, 3 niveles cada una | Sonnet | T-414 | pendiente |
+| T-417 Profes como NPC de prueba (Inventor en el CIC, Doc en I+D+I, Hacker, Mecánico, Director) y peatones al mínimo | Sonnet | T-414, T-416 | pendiente |
+| T-418 Historia de la demo con El Doc, El Inventor, el jefe de los SKULLS y Nova; cierre del paso 2 | Opus | T-414 a T-417 | pendiente |
+
+Orden: T-414 → T-415 → T-416 → T-417 → T-418 (en serie: todas tocan Ciudad_Prologo y CreadorCiudadPandillas). T-408 a T-413 ya usan los nombres nuevos (D-tony-259).
 
 ## Bloque 5 cerrado (misiones y reputación, T-181 a T-189): en main (a9b8ffb). Build provisional y guía: ff255ee (ese commit dice "T-190" por error; no es la tarea T-190).
 
