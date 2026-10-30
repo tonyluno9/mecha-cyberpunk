@@ -59,11 +59,11 @@ namespace MechaCyberpunk.Trafico.Editor
 
             if (AssetDatabase.LoadAssetAtPath<ConfigPeatones>(RutaConfig) == null)
             {
-                // T-417 (D-tony-255): pocos peatones, 4 de día y 6 de noche.
+                // T-418 (D-tony-255): pocos peatones, 6 de día y 8 de noche.
                 ConfigPeatones nuevo = ScriptableObject.CreateInstance<ConfigPeatones>();
                 SerializedObject soConfig = new SerializedObject(nuevo);
-                soConfig.FindProperty("peatonesDeDia").intValue = 4;
-                soConfig.FindProperty("peatonesDeNoche").intValue = 6;
+                soConfig.FindProperty("peatonesDeDia").intValue = 6;
+                soConfig.FindProperty("peatonesDeNoche").intValue = 8;
                 soConfig.ApplyModifiedPropertiesWithoutUndo();
                 AssetDatabase.CreateAsset(nuevo, RutaConfig);
             }

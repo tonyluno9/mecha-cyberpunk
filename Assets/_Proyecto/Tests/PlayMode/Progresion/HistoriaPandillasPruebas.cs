@@ -16,7 +16,7 @@ using UnityEngine.TestTools;
 namespace MechaCyberpunk.Tests.Progresion
 {
     /// <summary>
-    /// T-406: la máquina de la historia de pandillas y el recorrido completo en Ciudad_Prologo hasta "CONTINUARÁ".
+    /// T-406: la máquina de la historia de pandillas y el recorrido completo en Ciudad_Prologo hasta "CONTINUARÁ" (con EL DOC, EL INVENTOR y EL HACKER de T-418).
     /// Atajos anotados: los clics y E son entrada simulada; al jugador se le acerca con Colocar entre acciones; los pandilleros del tianguis y el jefe caen
     /// por daño directo (IRecibeDanio).
     /// </summary>
@@ -51,8 +51,8 @@ namespace MechaCyberpunk.Tests.Progresion
             AvisoHistoria[] avisos = (AvisoHistoria[])Enum.GetValues(typeof(AvisoHistoria));
             PasoHistoria[] esperados =
             {
-                PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Tianguis,
-                PasoHistoria.Jefe, PasoHistoria.Continuara, PasoHistoria.Libre
+                PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Doc, PasoHistoria.Inventor, PasoHistoria.Tianguis,
+                PasoHistoria.Jefe, PasoHistoria.NeonAlto, PasoHistoria.Continuara, PasoHistoria.Libre
             };
             for (int i = 0; i < avisos.Length; i++)
             {
@@ -71,6 +71,12 @@ namespace MechaCyberpunk.Tests.Progresion
             LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("no se entiende"));
             director.Cargar("basura");
             Assert.AreEqual(PasoHistoria.Chato, director.Paso, "Un guardado roto no cambia nada.");
+            // T-418: los pasos nuevos se cargan por nombre; uno que ya no existe empieza en Despierta.
+            director.Cargar("{\"paso\":\"NeonAlto\"}");
+            Assert.AreEqual(PasoHistoria.NeonAlto, director.Paso);
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("no existe"));
+            director.Cargar("{\"paso\":\"Mecha\"}");
+            Assert.AreEqual(PasoHistoria.Despierta, director.Paso, "Un paso que ya no existe empieza en Despierta.");
             UnityEngine.Object.DestroyImmediate(objeto);
         }
 
@@ -101,6 +107,30 @@ namespace MechaCyberpunk.Tests.Progresion
             Vector3 pos = objetivo - dir * distancia;
             pos.y = objetivo.y + 0.1f;
             jugador.Colocar(new Pose(pos, Quaternion.LookRotation(dir, Vector3.up)));
+        }
+
+        // T-418: el jugador aparece frente al profe (donde mira), mirándolo, y lo usa con E.
+        private IEnumerator UsarProfe(string id, float distancia)
+        {
+            MechaCyberpunk.Progresion.Apoyo.PersonajeApoyo profe = null;
+            foreach (MechaCyberpunk.Progresion.Apoyo.PersonajeApoyo p in UnityEngine.Object.FindObjectsByType<MechaCyberpunk.Progresion.Apoyo.PersonajeApoyo>(FindObjectsSortMode.None))
+            {
+                profe = p.Datos.Id == id ? p : profe;
+            }
+            Assert.IsNotNull(profe, id);
+            Vector3 frente = profe.transform.position + profe.transform.forward * distancia;
+            if (Physics.Raycast(frente + Vector3.up * 3f, Vector3.down, out RaycastHit piso, 6f))
+            {
+                frente = piso.point;
+            }
+            frente.y += 0.1f;
+            Vector3 hacia = profe.transform.position - frente;
+            hacia.y = 0f;
+            Registro<IJugador>.Actual.Colocar(new Pose(frente, Quaternion.LookRotation(hacia.normalized, Vector3.up)));
+            yield return null;
+            yield return null;
+            yield return new WaitForSecondsRealtime(0.3f);
+            yield return Pulsar(teclado.eKey);
         }
 
         [UnityTest]
@@ -192,8 +222,15 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
             yield return null;
             yield return Pulsar(teclado.eKey);
-            yield return EsperarHasta(() => director.Paso == PasoHistoria.Tianguis, "reclutar al CHATO", 5f);
+            yield return EsperarHasta(() => director.Paso == PasoHistoria.Doc, "reclutar al CHATO", 5f);
             Assert.AreEqual(1, Registro<IPandillaJugador>.Actual.Cantidad);
+
+            // d2. T-418: EL DOC y EL INVENTOR, con E.
+            yield return UsarProfe(DirectorPandillas.IdDoc, 1.6f);
+            yield return EsperarHasta(() => director.Paso == PasoHistoria.Inventor, "usar a EL DOC", 5f);
+            yield return UsarProfe(DirectorPandillas.IdInventor, 2.2f);
+            yield return EsperarHasta(() => director.Paso == PasoHistoria.Tianguis, "usar a EL INVENTOR", 5f);
+            Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Pistola), "EL INVENTOR deja la PISTOLA I");
 
             // e. El tianguis: los Calaveras caen por daño directo hasta sacar al jefe.
             Time.timeScale = 4f;
@@ -228,11 +265,13 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return EsperarHasta(() => punto.Vivo, "aparece el jefe", 20f);
             punto.Jefe.RecibirDanio(new InfoDanio(DanoMatar, TipoDanio.Disparo, punto.Jefe.transform.position, Vector3.forward, null));
 
-            // g. CONTINUARÁ.
-            yield return EsperarHasta(() => director.Paso == PasoHistoria.Continuara, "conquista", 5f);
-            yield return EsperarHasta(() => director.Pantalla.ContinuaraVisible, "pantalla CONTINUARÁ", 30f);
+            // g. T-418: Neón Alto con EL HACKER y CONTINUARÁ.
+            yield return EsperarHasta(() => director.Paso == PasoHistoria.NeonAlto, "conquista", 5f);
             Time.timeScale = 1f;
             Assert.AreEqual(IdPandilla.Jugador, territorio.Dueno("tianguis"));
+            yield return UsarProfe(DirectorPandillas.IdHacker, 1.6f);
+            yield return EsperarHasta(() => director.Paso == PasoHistoria.Continuara, "usar a EL HACKER", 5f);
+            yield return EsperarHasta(() => director.Pantalla.ContinuaraVisible, "pantalla CONTINUARÁ", 30f);
             yield return new WaitForSecondsRealtime(1.1f);
             yield return Pulsar(teclado.enterKey);
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Libre, "cerrar el continuará", 5f);

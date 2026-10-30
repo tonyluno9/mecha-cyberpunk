@@ -41,7 +41,7 @@ Plan: docs/plan-noche.md. Rama tony/fase-g, modo rápido; T-414 a T-417 solo se 
 | T-415 Tu pandilla con nombre y color en HUD, mapa, aliados y avisos (Core: IPerfilJugador, ColoresPandilla) | Sonnet | T-414 | hecha |
 | T-416 Cinco armas en El Mercado: fusil de asalto y sniper con zoom, 3 niveles cada una | Sonnet | T-414 | hecha |
 | T-417 Profes como NPC de prueba (Inventor en el CIC, Doc en I+D+I, Hacker, Mecánico, Director) y peatones al mínimo | Sonnet | T-414, T-416 | hecha |
-| T-418 Historia de la demo con El Doc, El Inventor, el jefe de los SKULLS y Nova; cierre del paso 2 | Opus | T-414 a T-417 | pendiente |
+| T-418 Historia de la demo con El Doc, El Inventor, el jefe de los SKULLS y Nova; cierre del paso 2 | Opus | T-414 a T-417 | hecha |
 
 Orden: T-414 → T-415 → T-416 → T-417 → T-418 (en serie: todas tocan Ciudad_Prologo y CreadorCiudadPandillas). T-408 a T-413 ya usan los nombres nuevos (D-tony-259).
 

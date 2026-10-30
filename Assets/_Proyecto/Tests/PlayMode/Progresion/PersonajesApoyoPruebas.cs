@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Tests.Progresion
     /// <summary>
     /// T-417: el recorrido de un jugador con Ƀ500, vida 40 y calor nivel 2 en Ciudad_Prologo. Hay 5 personajes de apoyo sobre el piso y cerca de su lugar;
     /// E con EL DOC cura y cobra Ƀ50, con EL MECÁNICO borra el calor y cobra Ƀ100, con EL INVENTOR abre una tienda de 15 mejoras (Esc la cierra),
-    /// y EL HACKER y EL DIRECTOR sacan un subtítulo. De noche hay 6 peatones o menos y de día 4 o menos.
+    /// y EL HACKER y EL DIRECTOR sacan un subtítulo. De noche hay 8 peatones o menos y de día 6 o menos (T-418).
     /// Con CAPTURAR_T417=1 deja docs/capturas/T-417-1.png (el CIC) y T-417-2.png (la calle principal de noche).
     /// </summary>
     public class PersonajesApoyoPruebas : InputTestFixture
@@ -271,14 +271,14 @@ namespace MechaCyberpunk.Tests.Progresion
                 StringAssert.Contains(p.Datos.Nombre, subtitulos.Subtitulo);
             }
 
-            // f. Peatones: de día 4 o menos, de noche 6 o menos.
+            // f. Peatones: de día 6 o menos, de noche 8 o menos (T-418).
             Registro<IRelojMundo>.Actual.AvanzarHasta(12f);
             yield return new WaitForSecondsRealtime(3f);
-            Assert.LessOrEqual(PeatonesPrendidos(), 4, "De día hay 4 peatones como máximo");
+            Assert.LessOrEqual(PeatonesPrendidos(), 6, "De día hay 6 peatones como máximo");
             Registro<IRelojMundo>.Actual.AvanzarHasta(22f);
             yield return new WaitForSecondsRealtime(3f);
             int deNoche = PeatonesPrendidos();
-            Assert.LessOrEqual(deNoche, 6, "De noche hay 6 peatones como máximo");
+            Assert.LessOrEqual(deNoche, 8, "De noche hay 8 peatones como máximo");
             Debug.Log("[T-417] Peatones prendidos de noche: " + deNoche);
 
             // g. Capturas: el CIC con EL INVENTOR y la calle principal de noche.
