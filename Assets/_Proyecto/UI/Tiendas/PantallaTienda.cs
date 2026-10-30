@@ -163,6 +163,7 @@ namespace MechaCyberpunk.UI.Tiendas
             }
             if (salir.WasPressedThisFrame())
             {
+                Sonidos.Reproducir("UI_CANCELAR");
                 alSalir?.Invoke();
                 return;
             }
@@ -194,9 +195,11 @@ namespace MechaCyberpunk.UI.Tiendas
             if (cambio)
             {
                 textoAviso.gameObject.SetActive(false);
+                Sonidos.Reproducir("UI_MOVER");
             }
             if (confirmar.WasPressedThisFrame())
             {
+                Sonidos.Reproducir("UI_ACEPTAR");
                 if (pestana == PestanaTienda.Vender)
                 {
                     Vender();
@@ -267,10 +270,12 @@ namespace MechaCyberpunk.UI.Tiendas
                             Registro<ServicioFavores>.Actual.Gastar(TipoFavor.Descuento);
                         }
                         inventario.Agregar(objeto, 1);
+                        Sonidos.Reproducir("ECO_COMPRA");
                         Refiltrar();
                         MostrarAviso(string.Format(config.FormatoComprado, objeto.Nombre.ToUpperInvariant()));
                         break;
                     case ResultadoCompra.SinDinero:
+                        Sonidos.Reproducir("ECO_SIN_DINERO");
                         MostrarAviso(config.TextoNoAlcanza);
                         break;
                     default:

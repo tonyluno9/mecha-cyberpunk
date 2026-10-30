@@ -20,7 +20,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
     /// Idempotente: correrlo dos veces deja la escena igual.
     /// Batchmode: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.CreadorCiudadPandillas.Todo
     /// </summary>
-    public static class CreadorCiudadPandillas
+    public static partial class CreadorCiudadPandillas
     {
         public const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         public const string RaizT400 = "GTA_T400";
@@ -30,6 +30,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string RaizT404 = "GTA_T404";
         public const string RaizT405 = "GTA_T405";
         public const string RaizT406 = "GTA_T406";
+        public const string RaizT407 = "GTA_T407";
         public const float HoraInicial = 19f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
@@ -52,6 +53,15 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T404Interno();
             T405Interno();
             T406Interno();
+            T407Interno();
+            Guardar(escena);
+        }
+
+        [MenuItem("Mecha Cyberpunk/Pandillas/T-407 Sonido, mercado y Tianguis")]
+        public static void T407()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            T407Interno();
             Guardar(escena);
         }
 
@@ -218,6 +228,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         {
             Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
             T406Interno();
+            T407Interno();
             Guardar(escena);
         }
 

@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Progresion.Prologo.Editor",
     "rootNamespace": "MechaCyberpunk.Progresion.Prologo.Editor",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Combate", "MechaCyberpunk.IA", "MechaCyberpunk.IA.Editor", "MechaCyberpunk.Mecha", "MechaCyberpunk.Pelea", "MechaCyberpunk.Personaje", "MechaCyberpunk.Progresion", "MechaCyberpunk.Economia", "MechaCyberpunk.UI", "MechaCyberpunk.Progresion.Prologo", "Unity.InputSystem", "UnityEngine.UI"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Combate", "MechaCyberpunk.IA", "MechaCyberpunk.IA.Editor", "MechaCyberpunk.Mecha", "MechaCyberpunk.Pelea", "MechaCyberpunk.Personaje", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Editor", "MechaCyberpunk.Economia", "MechaCyberpunk.UI", "MechaCyberpunk.Progresion.Prologo", "Unity.InputSystem", "UnityEngine.UI"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

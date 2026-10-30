@@ -156,6 +156,7 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             armaActiva = arma;
             Aplicar();
+            Sonidos.Reproducir("ARM_CAMBIAR");
             Cambio?.Invoke();
         }
 

@@ -69,6 +69,7 @@ namespace MechaCyberpunk.Personaje.Vida
             float aplicado = modelo.Aplicar(info.Cantidad);
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             EventosPelea.PublicarImpacto(null, info, resultado);
+            Sonidos.ReproducirEn("JUG_DANIO", transform.position);
             return resultado;
         }
 

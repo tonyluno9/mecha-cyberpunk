@@ -103,6 +103,7 @@ namespace MechaCyberpunk.IA.Aliados
                 return;
             }
             Pandilla.Reclutar(nombre);
+            Sonidos.ReproducirEn("PAN_ALIADO_RECLUTA", transform.position);
         }
 
         private void Update()

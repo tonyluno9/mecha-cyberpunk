@@ -90,6 +90,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 calor.Sumar(calorAlRobar, MotivoCalor.Otro);
             }
+            Sonidos.ReproducirEn("VEH_ALARMA_ROBO", transform.position);
             StartCoroutine(Alarma());
         }
 

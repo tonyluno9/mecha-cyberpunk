@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +11,12 @@ namespace MechaCyberpunk.Personaje.Movimiento
     {
         private const float PendienteMaxima = 45f;
         private const float EscalonMaximo = 0.35f;
+        private const float UmbralPaso = 0.5f;
+        private const float SegundosPasoCaminar = 0.5f;
+        private const float SegundosPasoCorrer = 0.32f;
+        private const float SegundosMinimosAire = 0.25f;
+        private float proximoPaso;
+        private float tiempoAire;
 
         [SerializeField] private DatosPersonaje datos;
         [SerializeField] private ConfigControlesAPie config;
@@ -133,8 +140,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
             Vector2 entrada = mover.action.ReadValue<Vector2>();
             Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, correr.action.IsPressed(),
                 enPiso, dt, datos.VelocidadCaminar, EfectosAPie.VelocidadCorrer(datos, implantes.Efectos), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
-            float vertical = movimiento.ActualizarVertical(enPiso, saltar.action.WasPressedThisFrame(), dt,
+            bool quiereSaltar = saltar.action.WasPressedThisFrame();
+            float vertical = movimiento.ActualizarVertical(enPiso, quiereSaltar, dt,
                 EfectosAPie.AlturaSalto(datos, implantes.Efectos), config.Gravedad);
+            if (enPiso && quiereSaltar && vertical > 0f)
+            {
+                Sonidos.Reproducir("JUG_SALTO");
+            }
 
             // Tercera persona: el movimiento es relativo a la cámara; el cuerpo gira hacia donde camina, o hacia donde mira si apunta.
             Quaternion marco = Quaternion.Euler(0f, giroCamara, 0f);
@@ -142,6 +154,16 @@ namespace MechaCyberpunk.Personaje.Movimiento
             GirarCuerpo(dt, horizontal);
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
+            if (enPiso && tiempoAire > SegundosMinimosAire)
+            {
+                Sonidos.ReproducirEn("JUG_CAER", transform.position);
+            }
+            tiempoAire = enPiso ? 0f : tiempoAire + dt;
+            if (enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && Time.time >= proximoPaso)
+            {
+                proximoPaso = Time.time + (correr.action.IsPressed() ? SegundosPasoCorrer : SegundosPasoCaminar);
+                Sonidos.ReproducirEn("JUG_PASO_ASFALTO", transform.position);
+            }
         }
 
         private void GirarCuerpo(float dt, Vector3 horizontal)

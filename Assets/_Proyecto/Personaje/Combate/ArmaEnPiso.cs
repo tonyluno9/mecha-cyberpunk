@@ -45,6 +45,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 return;
             }
             inventario.Agregar(datos, 1);
+            Sonidos.ReproducirEn("ECO_ARMA_RECOGER", transform.position);
             tomada = true;
             Tomada?.Invoke(this);
             Destroy(gameObject);

@@ -260,6 +260,29 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
+        private const float TonoMinimoMotor = 0.8f;
+        private const float TonoMaximoMotor = 2f;
+        private const float MetrosPorSegundoPorTono = 20f;
+        private int bucleMotor = Sonidos.SinBucle;
+
+        // Motor en marcha mínima mientras alguien maneja; el tono sube con la rapidez.
+        private void ActualizarMotor()
+        {
+            if (Ocupado && bucleMotor == Sonidos.SinBucle)
+            {
+                bucleMotor = Sonidos.ReproducirBucle("VEH_VIEJO_MOTOR_RALENTI", transform);
+            }
+            else if (!Ocupado && bucleMotor != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleMotor);
+                bucleMotor = Sonidos.SinBucle;
+            }
+            if (bucleMotor != Sonidos.SinBucle)
+            {
+                Sonidos.FijarTono(bucleMotor, Mathf.Clamp(TonoMinimoMotor + Rapidez / MetrosPorSegundoPorTono, TonoMinimoMotor, TonoMaximoMotor));
+            }
+        }
+
         private void FixedUpdate()
         {
             if (!listo)
@@ -275,6 +298,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             Vector3 centroMasa = cuerpo.worldCenterOfMass;
 
             Velocidad = Vector3.Dot(cuerpo.linearVelocity, adelante);
+            ActualizarMotor();
             EntradaActual = TieneControl ? LeerEntrada() : default;
 
             // Suspensión: un rayo por rueda. El motor y el agarre se reparten entre las ruedas que tocan piso.
