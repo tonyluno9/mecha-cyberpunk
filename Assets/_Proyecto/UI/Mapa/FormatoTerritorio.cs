@@ -7,16 +7,23 @@ namespace MechaCyberpunk.UI.Mapa
     /// <summary>Textos y colores compartidos por el HUD de zona y el mapa (T-404).</summary>
     public static class FormatoTerritorio
     {
-        private static readonly Color ColorJugador = new Color(1f, 0.5f, 0.1f);
         private static readonly Color ColorCalaveras = new Color(1f, 0.1f, 0.8f);
         private static readonly Color ColorViboras = new Color(0.45f, 1f, 0.1f);
         private static readonly Color ColorNadie = new Color(0.6f, 0.6f, 0.6f);
+
+        /// <summary>Máximo de caracteres de un aviso del HUD; si no cabe se corta (T-415).</summary>
+        public const int LargoMaximoAviso = 40;
+
+        private static IPerfilJugador Perfil => Registro<IPerfilJugador>.Actual;
+
+        /// <summary>Corta un aviso a <see cref="LargoMaximoAviso"/> caracteres.</summary>
+        public static string Cortar(string texto) => texto.Length <= LargoMaximoAviso ? texto : texto.Substring(0, LargoMaximoAviso);
 
         public static Color ColorDe(IdPandilla dueno)
         {
             switch (dueno)
             {
-                case IdPandilla.Jugador: return ColorJugador;
+                case IdPandilla.Jugador: return ColoresPandilla.Color(Perfil != null ? Perfil.ColorPandilla : ColoresPandilla.Predeterminado);
                 case IdPandilla.Calaveras: return ColorCalaveras;
                 case IdPandilla.Viboras: return ColorViboras;
                 default: return ColorNadie;
@@ -27,7 +34,7 @@ namespace MechaCyberpunk.UI.Mapa
         {
             switch (dueno)
             {
-                case IdPandilla.Jugador: return "TUYA";
+                case IdPandilla.Jugador: return Perfil != null ? Perfil.NombrePandilla : ColoresPandilla.NombrePredeterminado;
                 case IdPandilla.Calaveras: return "SKULLS";
                 case IdPandilla.Viboras: return "SNAKES";
                 default: return "SIN DUEÑO";

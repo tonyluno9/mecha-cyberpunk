@@ -34,6 +34,7 @@ namespace MechaCyberpunk.UI.Mapa
         private RectTransform contenedor;
         private RectTransform puntoJugador;
         private readonly System.Collections.Generic.List<RectTransform> puntosAliados = new System.Collections.Generic.List<RectTransform>();
+        private readonly System.Collections.Generic.List<Image> imagenesAliados = new System.Collections.Generic.List<Image>();
         private Image[] manzanas;
         private Text[] etiquetas;
         private Text titulo;
@@ -166,7 +167,7 @@ namespace MechaCyberpunk.UI.Mapa
                 Vector3 p = jugador.Raiz.position;
                 puntoJugador.anchoredPosition = new Vector2(p.x, p.z) * pixelesPorMetro;
             }
-            // T-405: un punto naranja por aliado.
+            // T-405: un punto por aliado, del color de tu pandilla.
             IPandillaJugador pandilla = Registro<IPandillaJugador>.Actual;
             int cantidad = pandilla != null ? pandilla.Aliados.Count : 0;
             while (puntosAliados.Count < cantidad)
@@ -176,12 +177,13 @@ namespace MechaCyberpunk.UI.Mapa
                 RectTransform rect = (RectTransform)nuevo.transform;
                 rect.sizeDelta = Vector2.one * 10f;
                 Image imagen = nuevo.AddComponent<Image>();
-                imagen.color = new Color(1f, 0.5f, 0.1f);
                 imagen.raycastTarget = false;
                 puntosAliados.Add(rect);
+                imagenesAliados.Add(imagen);
             }
             for (int i = 0; i < puntosAliados.Count; i++)
             {
+                imagenesAliados[i].color = FormatoTerritorio.ColorDe(IdPandilla.Jugador);
                 puntosAliados[i].gameObject.SetActive(i < cantidad);
                 if (i < cantidad)
                 {

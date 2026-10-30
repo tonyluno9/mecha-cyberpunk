@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(IdPandilla.Jugador, territorio.Dueno("tianguis"));
             Assert.AreEqual(100, territorio.Respeto("tianguis"));
             yield return null;
-            StringAssert.Contains("ES TUYO", hud.TextoAviso.text);
+            StringAssert.Contains("ES DE LOS DE SUBURBIOS", hud.TextoAviso.text);
 
             // El grupo vacío de una zona tuya no reaparece (45 s de juego, acelerados).
             jugador.Colocar(new Pose(new Vector3(-94f, 0.5f, -47f), Quaternion.identity));

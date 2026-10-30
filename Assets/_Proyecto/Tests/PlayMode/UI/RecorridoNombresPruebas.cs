@@ -202,7 +202,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsNotNull(hud);
             jugador.Colocar(new Pose(new Vector3(XSuburbios, 0.5f, 0f), Quaternion.LookRotation(Vector3.right)));
             yield return EsperarHasta(() => hud.TextoZona.text.Contains("SUBURBIOS"), "el HUD dice SUBURBIOS", 20f);
-            StringAssert.Contains("SUBURBIOS · TUYA · RESPETO", hud.TextoZona.text);
+            StringAssert.Contains("SUBURBIOS · LOS DE SUBURBIOS · RESPETO", hud.TextoZona.text);
             jugador.Colocar(new Pose(new Vector3(XTianguis, 0.5f, 0f), Quaternion.LookRotation(Vector3.right)));
             Press(teclado.wKey);
             yield return EsperarHasta(() => hud.TextoZona.text.Contains("EL TIANGUIS"), "el HUD dice EL TIANGUIS", 20f);

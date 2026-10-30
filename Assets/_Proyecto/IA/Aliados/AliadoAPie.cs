@@ -38,8 +38,8 @@ namespace MechaCyberpunk.IA.Aliados
         private static readonly int IdArma = Animator.StringToHash("Arma");
         private static readonly int IdDisparo = Animator.StringToHash("Disparo");
 
-        [SerializeField] private Color colorAliado = new Color(1f, 0.5f, 0.1f);
 
+        private IPerfilJugador perfil;
         private CharacterController controlador;
         private PistolaPandillero pistola;
         private Animator animador;
@@ -102,11 +102,40 @@ namespace MechaCyberpunk.IA.Aliados
             Pintar();
         }
 
-        private void OnEnable() => Activos.Add(this);
+        private void OnEnable()
+        {
+            Activos.Add(this);
+            VincularPerfil();
+        }
+
+        // La ropa toma el color de tu pandilla (T-415) y se repinta si cambia.
+        private void VincularPerfil()
+        {
+            IPerfilJugador actual = Registro<IPerfilJugador>.Actual;
+            if (ReferenceEquals(actual, perfil))
+            {
+                return;
+            }
+            if (perfil != null)
+            {
+                perfil.Cambio -= Pintar;
+            }
+            perfil = actual;
+            if (perfil != null)
+            {
+                perfil.Cambio += Pintar;
+            }
+            Pintar();
+        }
 
         private void OnDisable()
         {
             Activos.Remove(this);
+            if (perfil != null)
+            {
+                perfil.Cambio -= Pintar;
+                perfil = null;
+            }
             if (pistola != null)
             {
                 pistola.QuitarAviso();
@@ -164,6 +193,10 @@ namespace MechaCyberpunk.IA.Aliados
 
         private void Update()
         {
+            if (perfil == null)
+            {
+                VincularPerfil();
+            }
             if (modelo.EstaKO)
             {
                 return;
@@ -298,6 +331,7 @@ namespace MechaCyberpunk.IA.Aliados
 
         private void Pintar()
         {
+            Color color = ColoresPandilla.Color(perfil != null ? perfil.ColorPandilla : ColoresPandilla.Predeterminado);
             MaterialPropertyBlock bloque = new MaterialPropertyBlock();
             foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
             {
@@ -306,7 +340,7 @@ namespace MechaCyberpunk.IA.Aliados
                     continue;
                 }
                 r.GetPropertyBlock(bloque);
-                bloque.SetColor(IdColor, colorAliado);
+                bloque.SetColor(IdColor, color);
                 r.SetPropertyBlock(bloque);
             }
         }
