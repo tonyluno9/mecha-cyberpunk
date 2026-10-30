@@ -39,9 +39,14 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - Con el mapa cerrado, el punto marcado sale en el minimapa en turquesa con su distancia ("40 m") y baja al caminar hacia él; si está lejos queda pegado al borde. ¿Es útil marcar? ¿60 m es poco o mucho?
 
 ### T-412 guardar y cargar (qué probar)
-- F5 abre GUARDAR PARTIDA (↑ ↓ y Enter; el AUTOGUARDADO no se elige); guardar sobre una ranura llena pide "¿SOBRESCRIBIR?" SÍ/NO. Cada ranura dice fecha, zona y Ƀ, y el objetivo abajo en turquesa. Al guardar sale "GUARDADO" abajo a la derecha.
-- Cambia de lugar, gasta Biits y pulsa F9 (CARGAR PARTIDA, las vacías no se eligen): la ciudad se recarga y vuelves al mismo punto con tu dinero, respeto, armas, aliados y paso de la historia. ¿Cargar te deja donde lo esperabas?
-- Dormir en tu cama o conquistar EL TIANGUIS escribe el AUTOGUARDADO solo (sale "GUARDADO"). ¿Se entiende que el AUTOGUARDADO va aparte? (En Builds/Demo no hay F5/F9; llegan con la pausa, T-410.)
+- Esc → GUARDAR abre GUARDAR PARTIDA (↑ ↓ y Enter; el AUTOGUARDADO no se elige); guardar sobre una ranura llena pide "¿SOBRESCRIBIR?" SÍ/NO. Cada ranura dice fecha, zona y Ƀ, y el objetivo abajo en turquesa. Al guardar sale "GUARDADO" abajo a la derecha.
+- Cambia de lugar, gasta Biits y abre Esc → CARGAR (CARGAR PARTIDA, las vacías no se eligen): la ciudad se recarga y vuelves al mismo punto con tu dinero, respeto, armas, aliados y paso de la historia. ¿Cargar te deja donde lo esperabas?
+- Dormir en tu cama o conquistar EL TIANGUIS escribe el AUTOGUARDADO solo (sale "GUARDADO"). ¿Se entiende que el AUTOGUARDADO va aparte? (F5/F9 se quitaron en T-410: ahora se guarda desde la pausa.)
+
+### T-410 pausa (qué probar)
+- Esc pausa de verdad: el mundo se congela (la lluvia, los pandilleros y sus balas; tu vida no baja), sale PAUSA con CONTINUAR, GUARDAR, CARGAR, OPCIONES (gris hasta T-411) y SALIR AL TÍTULO. ¿Se siente instantánea? ¿Se nota que todo se detuvo?
+- ↑ ↓ (o W S) y Enter, o el ratón encima y clic; Esc o CONTINUAR regresan. GUARDAR/CARGAR abren las ranuras encima y Esc vuelve a la pausa; SALIR AL TÍTULO pregunta "¿SALIR? LO QUE NO GUARDASTE SE PIERDE" en magenta.
+- Con el mapa (M), la tienda o el continuará abiertos, Esc cierra esa pantalla y no pausa; el siguiente Esc pausa. En el carro, en pausa el ratón no gira la cámara. Esc ya no suelta el cursor: lo suelta la pausa.
 
 ## Build viejo con mechas (antes de la fase G)
 
@@ -87,7 +92,7 @@ A pie (ControlesAPie):
 | Atacar | Clic izquierdo |
 | Puños / pistola | 1 / 2 |
 | Recargar | R |
-| Soltar/recuperar cursor | Esc |
+| Pausa (suelta el cursor; antes de T-410 lo soltaba Esc) | Esc |
 
 En el mecha (ControlesMecha):
 | Acción | Tecla |

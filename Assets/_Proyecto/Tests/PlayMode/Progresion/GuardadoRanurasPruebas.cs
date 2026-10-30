@@ -217,8 +217,10 @@ namespace MechaCyberpunk.Tests.Progresion
             Vector3 guardada = jugador.Raiz.position;
             Assert.Greater(Vector3.Distance(Inicio, guardada), 1f, "W movió al jugador");
             PasoHistoria pasoGuardado = director.Paso;
-            yield return Pulsar(teclado.f5Key);
-            Assert.IsTrue(pantalla.Abierta, "F5 abre las ranuras");
+            // T-410 quitó F5 y F9: ahora las abre la pausa (PausaPruebas lo recorre); aquí se abren directo.
+            pantalla.Abrir(ModoRanuras.Guardar);
+            yield return null;
+            Assert.IsTrue(pantalla.Abierta, "Se abren las ranuras en GUARDAR");
             Assert.AreEqual(ModoRanuras.Guardar, pantalla.Modo);
             Assert.IsFalse(pantalla.Fila(ServicioGuardado.RanuraAuto).interactable, "En GUARDAR el AUTOGUARDADO está desactivado");
             Assert.AreSame(pantalla.Fila(1), pantalla.Menu.Elegido, "Empieza en la RANURA 1");
@@ -241,8 +243,9 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.Greater(Vector3.Distance(guardada, jugador.Raiz.position), 1f, "Caminó más");
 
             // c. F9 abre CARGAR: AUTO y la 3 vacías y desactivadas, la 1 y la 2 llenas. Captura.
-            yield return Pulsar(teclado.f9Key);
-            Assert.IsTrue(pantalla.Abierta, "F9 abre las ranuras");
+            pantalla.Abrir(ModoRanuras.Cargar);
+            yield return null;
+            Assert.IsTrue(pantalla.Abierta, "Se abren las ranuras en CARGAR");
             Assert.AreEqual(ModoRanuras.Cargar, pantalla.Modo);
             Assert.IsFalse(pantalla.Fila(ServicioGuardado.RanuraAuto).interactable);
             Assert.IsFalse(pantalla.Fila(3).interactable, "La vacía está desactivada");

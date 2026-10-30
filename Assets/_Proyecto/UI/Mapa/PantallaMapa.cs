@@ -221,13 +221,14 @@ namespace MechaCyberpunk.UI.Mapa
             }
             if (!Abierto)
             {
-                if (teclado.mKey.wasPressedThisFrame)
+                // T-410: M no abre en pausa ni encima de otra pantalla.
+                if (teclado.mKey.wasPressedThisFrame && !Pausa.Activa && PilaPantallas.Vacia)
                 {
                     Abrir();
                 }
                 return;
             }
-            if (teclado.mKey.wasPressedThisFrame || teclado.escapeKey.wasPressedThisFrame)
+            if (PilaPantallas.EsArriba(this) && (teclado.mKey.wasPressedThisFrame || teclado.escapeKey.wasPressedThisFrame))
             {
                 Cerrar();
                 return;
@@ -287,6 +288,7 @@ namespace MechaCyberpunk.UI.Mapa
             panel.SetActive(true);
             fondoPantalla.SetActive(true);
             abierta = this;
+            PilaPantallas.Abrir(this);
             IJugador jugador = Registro<IJugador>.Actual;
             controlCongelado = jugador != null && jugador.Raiz != null ? jugador.Raiz.GetComponentInChildren<ControladorAPie>() : null;
             if (controlCongelado != null && controlCongelado.ControlActivo)
@@ -318,6 +320,7 @@ namespace MechaCyberpunk.UI.Mapa
             {
                 abierta = null;
             }
+            PilaPantallas.Cerrar(this);
             Cursor.lockState = bloqueoPrevio;
             Cursor.visible = cursorPrevio;
             if (controlCongelado != null)

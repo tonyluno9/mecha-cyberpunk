@@ -63,6 +63,7 @@ namespace MechaCyberpunk.UI.Historia
         {
             ContinuaraVisible = true;
             inicioContinuara = Time.unscaledTime;
+            PilaPantallas.Abrir(this);
             Refrescar();
         }
 
@@ -73,6 +74,7 @@ namespace MechaCyberpunk.UI.Historia
                 return;
             }
             ContinuaraVisible = false;
+            PilaPantallas.Cerrar(this);
             Refrescar();
             ContinuaraCerrada?.Invoke();
         }
@@ -117,10 +119,12 @@ namespace MechaCyberpunk.UI.Historia
             return texto;
         }
 
+        private void OnDestroy() => PilaPantallas.Cerrar(this);
+
         private void Update()
         {
             Keyboard teclado = Keyboard.current;
-            if (ContinuaraVisible && teclado != null && Time.unscaledTime - inicioContinuara >= SegundosMinimosContinuara
+            if (ContinuaraVisible && teclado != null && PilaPantallas.EsArriba(this) && Time.unscaledTime - inicioContinuara >= SegundosMinimosContinuara
                 && (teclado.enterKey.wasPressedThisFrame || teclado.numpadEnterKey.wasPressedThisFrame || teclado.escapeKey.wasPressedThisFrame))
             {
                 CerrarContinuara();

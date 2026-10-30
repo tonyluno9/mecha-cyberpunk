@@ -233,7 +233,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             }
 #if !DEMO_FINAL
             Keyboard teclado = Keyboard.current;
-            if (teclado != null && teclado.f6Key.wasPressedThisFrame && maquina.Saltar())
+            if (teclado != null && !Pausa.Activa && teclado.f6Key.wasPressedThisFrame && maquina.Saltar())
             {
                 Aplicar();
             }

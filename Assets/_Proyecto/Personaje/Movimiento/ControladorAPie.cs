@@ -27,7 +27,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
         [SerializeField] private InputActionReference correr;
         [SerializeField] private InputActionReference saltar;
         [SerializeField] private InputActionReference atacar;
-        [SerializeField] private InputActionReference liberarCursor;
         [Tooltip("Clic derecho: apuntar (T-400). Opcional.")]
         [SerializeField] private InputActionReference apuntar;
         [Tooltip("Cámara de hombro: límites de inclinación y giro del cuerpo (T-400). Opcional.")]
@@ -64,7 +63,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         {
             controlador = GetComponent<CharacterController>();
             if (datos == null || config == null || camara == null || mover == null || mirar == null
-                || correr == null || saltar == null || atacar == null || liberarCursor == null)
+                || correr == null || saltar == null || atacar == null)
             {
                 Debug.LogError("[Personaje] Faltan referencias en ControladorAPie de " + name, this);
                 enabled = false;
@@ -83,7 +82,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
             correr.action.Enable();
             saltar.action.Enable();
             atacar.action.Enable();
-            liberarCursor.action.Enable();
             apuntar?.action.Enable();
             implantes.Activar();
             AplicarCursor(true);
@@ -96,7 +94,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
             correr.action.Disable();
             saltar.action.Disable();
             atacar.action.Disable();
-            liberarCursor.action.Disable();
             apuntar?.action.Disable();
             implantes.Desactivar();
         }
@@ -127,7 +124,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
 
             float dt = Time.deltaTime;
-            ActualizarCursor();
 
             if (cursorBloqueado)
             {
@@ -188,21 +184,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             transform.rotation = Quaternion.Euler(0f, angulo, 0f);
         }
 
-        private void ActualizarCursor()
-        {
-            if (cursorBloqueado)
-            {
-                if (liberarCursor.action.WasPressedThisFrame())
-                {
-                    AplicarCursor(false);
-                }
-            }
-            else if (atacar.action.WasPressedThisFrame())
-            {
-                AplicarCursor(true);
-            }
-        }
-
+        // T-410: Esc ya no suelta el cursor; lo abre la pausa (el kit de UI muestra y bloquea el cursor al abrir y cerrar menús).
         private void AplicarCursor(bool bloquear)
         {
             cursorBloqueado = bloquear;
