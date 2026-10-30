@@ -114,3 +114,16 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 - T-136 casi lista en tony/T-136-prologo-en-ciudad-alan (sin merge a tony/fase-7). En e6213c5: DatosEscenas_Demo regenerado (CreacionPersonaje, Ciudad_Prologo, Flashback), texto del carro, PrologoCiudadPruebas (hereda de T-135), capturas T-136-1..4 revisadas, bitácora y D-tony-184 a 189. Pruebas en e6213c5: compilar OK, EditMode 1129/1129, PlayMode Progresion 115/115, PrologoCiudadPruebas 7 de 8 corridas (1 falla sin reproducir en la emboscada). Recorrido 193 s; estimado para una persona 11 a 15 min.
 - A medias, WIP 8fd6349: corrección para H6 de D-tony-187 (con el jugador en el carro, el objetivo apunta a la emboscada: textoIrALaEmboscada y el cambio en DirectorPrologo.Update; falta que FijarObjetivo use la emboscada) y D-tony-188 (horaDespertar 20:00; pruebas que fijaban 19:30 ajustadas; se quitó el atajo del reloj en PrologoCiudadPruebas). Sin compilar ni correr.
 - Sigue: terminar FijarObjetivo, compilar, EditMode Progresion/UI, PlayMode Progresion, PrologoCiudadPruebas 3 veces (guardar xml y log si falla la emboscada), regenerar capturas si cambian, marcar D-tony-187/188 resueltas, mover T-136 a hechas y merge a tony/fase-7. Luego T-137 (Build Settings y Builds/Demo; ojo: la tarea dice Ciudad.unity, pero ahora es Ciudad_Prologo.unity) y el bloque 8 (planificador, desde T-198). El bloque 7 (radio) es de Alan.
+
+## Detenido por Tony (2026-10-29, noche)
+- Fase G (T-400 a T-406) hecha y en main (f482d9f). La demo de pandillas está en Builds/Demo/MechaCyberpunk.exe y el juego con atajos en Builds/Juego.
+- Rondas 2 y 3 planeadas en tony/fase-g (ea66199):
+  - Guía de estilo: docs/diseno/ui-cyberfix.md.
+  - Tareas T-407 a T-413 y decisiones D-tony-232 a 247.
+  - Lo de la ronda 3 está en docs/ronda3.md.
+- A medias: T-407 (ronda 2) en tony/T-407-cyberfix-sonido-bugs, commit WIP 6103fee. Solo se movió la tarea a en-curso; no hay código, porque se detuvo durante el diagnóstico.
+- Sigue:
+  1. Terminar T-407: diagnóstico con entrada simulada (mercado negro, Tianguis, escopeta) y arreglos, productName CYBERFIX, GestorSonidos y builds Cyberfix.exe.
+  2. Luego T-408 a T-413 en el orden de ronda3.md: objetivo, minimapa y mapa, pausa, opciones, guardado y título. La pausa usa el guardado actual hasta T-412.
+  3. Merge a main con push al cerrar cada punto.
+- Sin rastrear y sin tocar (son de Tony): docs/imagenes-cyberfix/, docs/mejoras-pendientes.md, docs/prompts-imagenes-cyberfix.md.
