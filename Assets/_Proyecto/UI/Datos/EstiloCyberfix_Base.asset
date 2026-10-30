@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea44efc6afee07e40a78ad03dc0193f7, type: 3}
+  m_Name: EstiloCyberfix_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Kit.EstiloCyberfix
+  fuente: {fileID: 0}
+  naranja: {r: 1, g: 0.502, b: 0.102, a: 1}
+  turquesa: {r: 0.102, g: 0.902, b: 0.902, a: 1}
+  magenta: {r: 1, g: 0.102, b: 0.8, a: 1}
+  fondo: {r: 0.039, g: 0.039, b: 0.071, a: 0.851}
+  texto: {r: 0.949, g: 0.949, b: 0.949, a: 1}
+  desactivado: {r: 0.478, g: 0.478, b: 0.522, a: 1}
+  sombra: {r: 0, g: 0, b: 0, a: 0.85}
+  distanciaSombra: {x: 1.5, y: -1.5}
+  tamanoTitulo: 96
+  tamanoEncabezado: 48
+  tamanoBoton: 34
+  tamanoTexto: 28
+  tamanoHud: 26
+  tamanoAyuda: 22
+  tamanoMinimo: 20
+  margenBorde: 48
+  separacionBloques: 24
+  relleno: 16
+  bordePanel: 2
+  alfaBordePanel: 0.6
+  altoFilaHud: 36
+  tamanoBotonMenu: {x: 440, y: 64}
+  separacionBotones: 12
+  tamanoFila: {x: 760, y: 56}
+  bordeElegido: 3
+  alfaElegido: 0.25
+  alfaPulsado: 0.6

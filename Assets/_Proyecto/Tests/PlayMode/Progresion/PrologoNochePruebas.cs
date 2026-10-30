@@ -610,7 +610,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Esperar(FramesParaElHud, false);
             Assert.AreEqual(TextoCarro, hud.TextoObjetivo.text, "El HUD dice 'Ve a tu carro'");
             Assert.IsTrue(hud.GrupoObjetivo.activeInHierarchy, "El objetivo está a la vista");
-            Assert.IsTrue(hud.Flecha.gameObject.activeInHierarchy, "Con su flecha");
+            Assert.IsTrue(hud.HayPosicionObjetivo, "Con su flecha");
             Capturar();
 
             Vector3 carro = PuntoHistoria(IdCarro).Pose.position;

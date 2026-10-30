@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Mapa;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +12,9 @@ namespace MechaCyberpunk.UI.Hud
     /// </summary>
     public class HudTerritorio : MonoBehaviour
     {
-        // Debajo de la línea de la radio (arriba a la izquierda), para que no se encimen.
-        private const float ArribaZona = 70f;
+        public const int OrdenCanvas = 10;
+        private const float AnchoZona = 900f;
+        private const float AnchoAviso = 1400f;
 
         [Tooltip("Segundos que dura el aviso de conquista (s).")]
         [Min(0.5f)] [SerializeField] private float segundosConquista = 3f;
@@ -30,11 +32,12 @@ namespace MechaCyberpunk.UI.Hud
 
         private void Awake()
         {
-            Canvas canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasTerritorio", 20);
-            textoZona = FormatoTerritorio.CrearTexto(canvas.transform, "Zona", 28, TextAnchor.UpperLeft,
-                new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(24f, -ArribaZona), new Vector2(900f, 40f));
-            textoAviso = FormatoTerritorio.CrearTexto(canvas.transform, "Aviso", 44, TextAnchor.UpperCenter,
-                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-450f, -120f), new Vector2(900f, 60f));
+            // T-408: el kit y las ranuras de DisposicionHud (zona bajo la radio y la renta; aviso bajo el objetivo).
+            Canvas canvas = KitUI.CrearCanvas(transform, "CanvasTerritorio", OrdenCanvas);
+            textoZona = KitUI.CrearTexto(canvas.transform, "Zona", RolTexto.Hud, TextAnchor.MiddleLeft);
+            KitUI.Colocar(textoZona.rectTransform, DisposicionHud.Zona, AnchoZona);
+            textoAviso = KitUI.CrearTexto(canvas.transform, "Aviso", RolTexto.Encabezado, TextAnchor.MiddleCenter);
+            KitUI.Colocar(textoAviso.rectTransform, DisposicionHud.AvisoZona, AnchoAviso);
             textoZona.text = string.Empty;
             textoAviso.text = string.Empty;
         }
@@ -89,7 +92,7 @@ namespace MechaCyberpunk.UI.Hud
             }
             else if (jefesAvisados.Add(zona))
             {
-                Avisar("¡EL JEFE TE BUSCA!", Color.red, segundosJefe);
+                Avisar("¡EL JEFE TE BUSCA!", KitUI.Estilo.Magenta, segundosJefe);
             }
         }
 
