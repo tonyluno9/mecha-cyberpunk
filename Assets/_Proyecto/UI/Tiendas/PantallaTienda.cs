@@ -5,6 +5,7 @@ using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -99,6 +100,7 @@ namespace MechaCyberpunk.UI.Tiendas
         {
             DesactivarEntrada();
             visible = false;
+            PilaPantallas.Cerrar(this);
             if (contenido != null)
             {
                 contenido.SetActive(false);
@@ -131,6 +133,7 @@ namespace MechaCyberpunk.UI.Tiendas
             Pintar();
             visible = true;
             contenido.SetActive(true);
+            PilaPantallas.Abrir(this);
             arriba.Enable();
             abajo.Enable();
             izquierda.Enable();
@@ -142,6 +145,7 @@ namespace MechaCyberpunk.UI.Tiendas
         public void Ocultar()
         {
             visible = false;
+            PilaPantallas.Cerrar(this);
             DesactivarEntrada();
             if (contenido != null)
             {
@@ -161,7 +165,8 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private void Update()
         {
-            if (!visible)
+            // T-410: si otra pantalla está encima, esa atiende las teclas.
+            if (!visible || !PilaPantallas.EsArriba(this))
             {
                 return;
             }

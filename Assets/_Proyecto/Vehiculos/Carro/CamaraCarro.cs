@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -93,7 +94,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         private void Update()
         {
-            if (!Camara.enabled)
+            // T-410: en pausa no se lee la entrada ni gira la cámara.
+            if (!Camara.enabled || Pausa.Activa)
             {
                 return;
             }

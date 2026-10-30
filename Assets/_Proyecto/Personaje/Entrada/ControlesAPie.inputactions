@@ -97,16 +97,6 @@
                     "priority": 0
                 },
                 {
-                    "name": "LiberarCursor",
-                    "type": "Button",
-                    "id": "653d6f02-6319-4bbb-8dca-74ced73d7c6c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
                     "name": "Telefono",
                     "type": "Button",
                     "id": "e3a79092-9d80-44fa-9dda-cf64bae7fe2c",
@@ -308,17 +298,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Recargar",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "71649a31-4f02-4956-9350-644e8b0e146c",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LiberarCursor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

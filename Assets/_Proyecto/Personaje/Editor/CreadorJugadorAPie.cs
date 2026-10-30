@@ -174,7 +174,6 @@ namespace MechaCyberpunk.Personaje.Editor
             mapa.AddAction("ArmaPunos", InputActionType.Button, "<Keyboard>/1");
             mapa.AddAction("ArmaPistola", InputActionType.Button, "<Keyboard>/2");
             mapa.AddAction("Recargar", InputActionType.Button, "<Keyboard>/r");
-            mapa.AddAction("LiberarCursor", InputActionType.Button, "<Keyboard>/escape");
             mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
             mapa.AddAction("Apuntar", InputActionType.Button, "<Mouse>/rightButton");
             mapa.AddAction("ArmaEscopeta", InputActionType.Button, "<Keyboard>/3");
@@ -400,7 +399,6 @@ namespace MechaCyberpunk.Personaje.Editor
             so.FindProperty("correr").objectReferenceValue = Referencia("Correr");
             so.FindProperty("saltar").objectReferenceValue = Referencia("Saltar");
             so.FindProperty("atacar").objectReferenceValue = Referencia("Atacar");
-            so.FindProperty("liberarCursor").objectReferenceValue = Referencia("LiberarCursor");
             so.FindProperty("apuntar").objectReferenceValue = Referencia("Apuntar");
             so.FindProperty("configCamara").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ConfigCamaraHombro>(RutaConfigCamara);
             so.ApplyModifiedPropertiesWithoutUndo();
