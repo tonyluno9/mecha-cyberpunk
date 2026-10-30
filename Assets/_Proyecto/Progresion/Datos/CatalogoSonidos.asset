@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba91abbdd8a2b9418dadf5a10825583, type: 3}
+  m_Name: CatalogoSonidos
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.Sonido.CatalogoSonidos
+  entradas:
+  - id: ARM_BALA_IMPACTO_CARNE
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: b060c5fb129b83c4db19f1d9351d97d0, type: 3}
+  - id: ARM_BALA_IMPACTO_CONCRETO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 1f6847966e4d6714bba0bb5d815cacdb, type: 3}
+  - id: ARM_CAMBIAR
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: eebef414dba0e7c498265cfbb2b6ddf2, type: 3}
+  - id: ARM_ESC_DISPARO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 2d4e32f32d8bbf545a183a7fc702d8c0, type: 3}
+  - id: ARM_ESC_RECARGA_CARTUCHO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: f21fb21f5646ef048816b33153c21a0a, type: 3}
+  - id: ARM_LASER_AVISO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 45e416e907c475a49beb588dd8950615, type: 3}
+  - id: ARM_PIS_DISPARO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 8b99b68399a18794286c9345970923eb, type: 3}
+  - id: ARM_PIS_RECARGA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 6d7db36bbbc646b4d9ee0a60129cad71, type: 3}
+  - id: ARM_SUB_DISPARO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 5e2dd3120fa67af4a8519aa6abe5e8e8, type: 3}
+  - id: ARM_SUB_RECARGA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: dbffc89c5f80a8e4ea64dff24f43fc7c, type: 3}
+  - id: ARM_VACIO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 94314af9a53dbbc4493e48a08f79c4f4, type: 3}
+  - id: CAL_SUBE_NIVEL
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 5cb1c87b5a3272448925fe1ff6ce8b63, type: 3}
+  - id: ECO_ARMA_RECOGER
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: e3f476dc961f1584396cf41add69150b, type: 3}
+  - id: ECO_CLINICA_DESPERTAR
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 6106d271405f95641827f67a1b9e6db6, type: 3}
+  - id: ECO_COMPRA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: a774e934502643246b876465318aaa31, type: 3}
+  - id: ECO_SIN_DINERO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 7cf3f363f1955c841b36eb8edf41dc89, type: 3}
+  - id: JUG_CAER
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 0f628c7fe089ab24e99a87bf9c366745, type: 3}
+  - id: JUG_DANIO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 5b40dc6084f0d964e8c389fbeacb575d, type: 3}
+  - id: JUG_PASO_ASFALTO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: e467c77a710c36a4b97b6b44eee7a776, type: 3}
+  - id: JUG_SALTO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: c1cf6ada0b64a274b893f8a5ed718983, type: 3}
+  - id: PAN_ALIADO_RECLUTA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: df1a6c5a16d1f0d4ca31f70dd60a4341, type: 3}
+  - id: PAN_JEFE_ENTRADA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: d4905eef83405b54997af5b0c91989b3, type: 3}
+  - id: PAN_RIVAL_ALERTA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: c63cc2b1251f3d441973827fd21e9833, type: 3}
+  - id: PAN_RIVAL_CAE
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 015bf59ea601dcf47b44c958507b468d, type: 3}
+  - id: PUN_GOLPE_AIRE
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 004f26f44f479034d90669753d2143b8, type: 3}
+  - id: PUN_GOLPE_CARNE
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 31d4b927dded4554a922afbe1c66c02c, type: 3}
+  - id: UI_ACEPTAR
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 12d7e27f8984b8a4f8f17d996f556f07, type: 3}
+  - id: UI_CANCELAR
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 51d570e28a4716b4887462bce3208926, type: 3}
+  - id: UI_MOVER
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: ef51d9b30049b2243ac605ba0bfc550e, type: 3}
+  - id: VEH_ALARMA_ROBO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: ddf99bb8f2383ac4e96c1ee4dbdba5c7, type: 3}
+  - id: VEH_VIEJO_MOTOR_RALENTI
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: f91dffe942be1b24e82ef89ec19f4c91, type: 3}
+  - id: ZON_CONQUISTADA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: fb4241889a595d34392268b4161b17a4, type: 3}
+  - id: ZON_RESPETO_SUBE
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 1ad537206dbcb4148bba664150b55ce0, type: 3}

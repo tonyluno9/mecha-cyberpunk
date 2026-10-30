@@ -68,6 +68,16 @@ namespace MechaCyberpunk.Progresion
 
         private void AlCambiarValor(float valor) => ValorCambio?.Invoke(valor);
 
-        private void AlCambiarNivel(int nivel) => NivelCambio?.Invoke(nivel);
+        private void AlCambiarNivel(int nivel)
+        {
+            if (nivel > nivelAnterior)
+            {
+                Sonidos.Reproducir("CAL_SUBE_NIVEL");
+            }
+            nivelAnterior = nivel;
+            NivelCambio?.Invoke(nivel);
+        }
+
+        private int nivelAnterior;
     }
 }

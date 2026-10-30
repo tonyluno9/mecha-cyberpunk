@@ -203,15 +203,20 @@ namespace MechaCyberpunk.Personaje.Combate
             bool puede = actual != null && !vida.EstaKO && controlador.ControlActivo;
             if (puede)
             {
-                if (recargar.action.WasPressedThisFrame())
+                if (recargar.action.WasPressedThisFrame() && actual.EmpezarRecarga())
                 {
-                    actual.EmpezarRecarga();
+                    Sonidos.Reproducir(IdRecarga(activa));
                 }
                 DatosArma d = datosArmas[(int)activa];
                 bool pidio = d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame();
                 if (pidio && actual.IntentarDisparar())
                 {
                     Disparar(activa, d);
+                }
+                else if (pidio && !actual.Recargando && actual.Balas <= 0 && Time.time >= finEsperaVacio)
+                {
+                    finEsperaVacio = Time.time + EsperaClicVacio;
+                    Sonidos.Reproducir("ARM_VACIO");
                 }
             }
             ActualizarVisual();
@@ -233,8 +238,22 @@ namespace MechaCyberpunk.Personaje.Combate
             Registro<ICalor>.Actual?.Sumar(datos.CalorPorDisparo, MotivoCalor.Pelea);
         }
 
+        private const float EsperaClicVacio = 0.3f;
+        private float finEsperaVacio;
+
+        private static string IdDisparo(ArmaAPie arma)
+        {
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Subfusil ? "ARM_SUB_DISPARO" : "ARM_PIS_DISPARO";
+        }
+
+        private static string IdRecarga(ArmaAPie arma)
+        {
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Subfusil ? "ARM_SUB_RECARGA" : "ARM_PIS_RECARGA";
+        }
+
         private void Disparar(ArmaAPie arma, DatosArma d)
         {
+            bool sonoImpacto = false;
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
             // La escopeta lanza varios perdigones en un cono; la dispersión es el semiángulo del cono.
             Transform camara = controlador.Camara;
@@ -252,6 +271,7 @@ namespace MechaCyberpunk.Personaje.Combate
             Vector3 direccionBase = largo > 0.01f ? haciaPunto / largo : camara.forward;
             float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
 
+            Sonidos.ReproducirEn(IdDisparo(arma), origen);
             for (int i = 0; i < d.Perdigones; i++)
             {
                 Vector3 direccion = direccionBase;
@@ -269,6 +289,11 @@ namespace MechaCyberpunk.Personaje.Combate
                     if (objetivo != null)
                     {
                         objetivo.RecibirDanio(new InfoDanio(d.Danio, TipoDanio.Disparo, mejor.point, direccion, null));
+                    }
+                    if (!sonoImpacto)
+                    {
+                        sonoImpacto = true;
+                        Sonidos.ReproducirEn(objetivo != null ? "ARM_BALA_IMPACTO_CARNE" : "ARM_BALA_IMPACTO_CONCRETO", mejor.point);
                     }
                     PonerMarca(mejor.point, mejor.normal);
                 }

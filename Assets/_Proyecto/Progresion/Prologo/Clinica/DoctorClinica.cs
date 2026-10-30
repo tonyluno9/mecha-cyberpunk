@@ -298,6 +298,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             {
                 reloj.AvanzarHasta(ReglaDoctor.HoraDeDespertar(reloj.Hora, datos.HorasInconsciente));
             }
+            Sonidos.Reproducir("ECO_CLINICA_DESPERTAR");
         }
 
         // Camilla, o la cama de casa, o donde cayó (con un aviso).

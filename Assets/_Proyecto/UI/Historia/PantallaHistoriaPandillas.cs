@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Progresion;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -91,6 +92,7 @@ namespace MechaCyberpunk.UI.Historia
                 GUI.color = new Color(0f, 0f, 0f, 0.85f);
                 GUI.DrawTexture(new Rect(0f, 0f, ancho, alto), Texture2D.whiteTexture);
                 GUI.color = Color.white;
+                GUI.Label(new Rect(0f, alto * 0.14f, ancho, alto * 0.12f), NombreJuego.Nombre, estiloTeclas);
                 GUI.Label(new Rect(0f, alto * 0.3f, ancho, alto * 0.2f), "CONTINUARÁ...", estiloTitulo);
                 GUI.Label(new Rect(0f, alto * 0.52f, ancho, alto * 0.1f), "EL TIANGUIS ES TUYO. NEÓN ALTO TE ESPERA.", estiloTeclas);
                 GUI.Label(new Rect(0f, alto * 0.62f, ancho, alto * 0.1f), "ENTER: SEGUIR JUGANDO", estiloTeclas);

@@ -1,11 +1,11 @@
 # Guía para jugar el build provisional (Tony)
 
 ## Juego de pandillas (Builds/Juego, fase G desde T-400)
-`Builds/Juego/MechaCyberpunk.exe`: arranca en Ciudad_Prologo (sin mechas; docs/diseno/pandillas.md). Cada tarea de T-400 a T-406 agrega
-aquí 3 líneas de qué probar. La demo final de 15 minutos queda en `Builds/Demo/MechaCyberpunk.exe` (T-406).
+`Builds/Juego/Cyberfix.exe`: arranca en Ciudad_Prologo (sin mechas; docs/diseno/pandillas.md). Cada tarea de T-400 a T-406 agrega
+aquí 3 líneas de qué probar. La demo final de 15 minutos queda en `Builds/Demo/Cyberfix.exe` (T-406).
 
 ### Cómo abrir Builds/Juego
-Doble clic en `Builds/Juego/MechaCyberpunk.exe` (en la raíz del repo; no está en git, se regenera con
+Doble clic en `Builds/Juego/Cyberfix.exe` (en la raíz del repo; no está en git, se regenera con
 `-executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.ConstruirJuego` o el menú Mecha Cyberpunk > Demo > Construir juego de pandillas).
 Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 
@@ -28,6 +28,10 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - La tienda ofrece solo la mejora siguiente de cada arma (nivel I, II, III: más daño, más cargador, recarga más rápida); el HUD dice "ESCOPETA II 5/6". ¿Se nota el nivel II? ¿Valen los precios?
 - Los puños también suben de nivel (más daño y golpe más rápido). Las balas de reserva son infinitas.
 
+### T-407 CYBERFIX, sonidos y mercado (qué probar)
+- La ventana y el .exe se llaman CYBERFIX / Cyberfix.exe. Camina al mercado negro: la puerta se abre sola al acercarte; hay un vendedor tras el mostrador, un letrero y "E · Mercado negro". Compra la escopeta con E, flechas y Enter.
+- El Tianguis (calle principal entre x -47 y 47) tiene un arco magenta "EL TIANGUIS" y unos 11 puestos con lona de color. La esquina de la pantalla dice EL TIANGUIS al entrar. ¿Se reconoce como tianguis?
+- Disparos, golpes, pasos, saltos, compras y menús suenan con sonidos provisionales (generados). La lluvia, la música y los ambientes están apagados. ¿Los disparos pegan o estorban?
 
 ## Build viejo con mechas (antes de la fase G)
 

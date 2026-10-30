@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
+using MechaCyberpunk.Progresion.Editor;
 using UnityEngine;
 
 namespace MechaCyberpunk.Progresion.Prologo.Editor
@@ -16,7 +17,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
     {
         public const string RutaDatosEscenasDemo = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Demo.asset";
         public const string CarpetaBuild = "Builds/Demo";
-        public const string NombreEjecutable = "MechaCyberpunk.exe";
+        public const string NombreEjecutable = "MechaCyberpunk.exe";   // del Construir() viejo del mecha
+        public const string NombreEjecutableJuego = NombreJuego.Ejecutable;
+        private const string ExeViejo = "MechaCyberpunk.exe";
+        private const string DatosViejo = "MechaCyberpunk_Data";
         public const string NombreProducto = "Mecha Cyberpunk (demo)";
 
         /// <summary>Las escenas de la demo en el orden de Build Settings: la de índice 0 es con la que arranca el build.</summary>
@@ -80,6 +84,21 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
         }
 
+        // T-407: nombre del producto, catálogo de sonidos al día (entran los WAV nuevos) y fuera el .exe viejo de esa carpeta.
+        private static void PrepararBuildCyberfix(string carpeta)
+        {
+            PlayerSettings.productName = NombreJuego.Nombre;
+            CreadorCatalogoSonidos.Crear();
+            string exeViejo = Path.Combine(carpeta, ExeViejo);
+            if (File.Exists(exeViejo)) File.Delete(exeViejo);
+            string datosViejo = Path.Combine(carpeta, DatosViejo);
+            if (Directory.Exists(datosViejo)) Directory.Delete(datosViejo, true);
+            foreach (string viejo in Directory.GetDirectories(carpeta, "*_BurstDebugInformation_DoNotShip"))
+            {
+                Directory.Delete(viejo, true);
+            }
+        }
+
         public const string CarpetaJuego = "Builds/Juego";
         public const string EscenaJuego = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
 
@@ -92,10 +111,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public static void ConstruirJuego()
         {
             Directory.CreateDirectory(CarpetaJuego);
+            PrepararBuildCyberfix(CarpetaJuego);
             BuildPlayerOptions opciones = new BuildPlayerOptions
             {
                 scenes = new[] { EscenaJuego },
-                locationPathName = Path.Combine(CarpetaJuego, NombreEjecutable),
+                locationPathName = Path.Combine(CarpetaJuego, NombreEjecutableJuego),
                 target = BuildTarget.StandaloneWindows64,
                 targetGroup = BuildTargetGroup.Standalone,
                 options = BuildOptions.None,
@@ -117,10 +137,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public static void ConstruirDemoPandillas()
         {
             Directory.CreateDirectory(CarpetaBuild);
+            PrepararBuildCyberfix(CarpetaBuild);
             BuildPlayerOptions opciones = new BuildPlayerOptions
             {
                 scenes = new[] { EscenaJuego },
-                locationPathName = Path.Combine(CarpetaBuild, NombreEjecutable),
+                locationPathName = Path.Combine(CarpetaBuild, NombreEjecutableJuego),
                 target = BuildTarget.StandaloneWindows64,
                 targetGroup = BuildTargetGroup.Standalone,
                 options = BuildOptions.None,

@@ -136,6 +136,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(), TipoDanio.Golpe, punto, direccion, null));
             }
+            Sonidos.ReproducirEn(objetivo != null ? "PUN_GOLPE_CARNE" : "PUN_GOLPE_AIRE", objetivo != null ? punto : origen);
             Impacto?.Invoke();
         }
 

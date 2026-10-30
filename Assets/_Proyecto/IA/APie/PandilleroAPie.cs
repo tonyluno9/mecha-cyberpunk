@@ -72,7 +72,20 @@ namespace MechaCyberpunk.IA.APie
         public bool EnPelea => regla != null && !EstaKO && regla.EnPelea;
         public Vector3 Hogar => hogar;
         /// <summary>True cuando la pandilla dice que el jugador está en su territorio (solo pandilleros armados).</summary>
-        public bool Alerta { get; set; }
+        public bool Alerta
+        {
+            get => alerta;
+            set
+            {
+                if (value && !alerta)
+                {
+                    Sonidos.ReproducirEn("PAN_RIVAL_ALERTA", transform.position);
+                }
+                alerta = value;
+            }
+        }
+
+        private bool alerta;
         public float Actual => modelo != null ? modelo.Actual : 0f;
         public float Maxima => modelo != null ? modelo.Maxima : 0f;
         public bool EstaKO => modelo != null && modelo.EstaKO;
@@ -512,6 +525,7 @@ namespace MechaCyberpunk.IA.APie
             PonerBrazo(0f);
             PintarBrazo(datos.ColorKO);
             pintadoAviso = false;
+            Sonidos.ReproducirEn("PAN_RIVAL_CAE", transform.position);
             KO?.Invoke();
             Vencido?.Invoke(this);
         }

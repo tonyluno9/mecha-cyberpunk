@@ -166,6 +166,7 @@ namespace MechaCyberpunk.Progresion
             Avisar(antes);
             if (conquistada)
             {
+                Sonidos.Reproducir("ZON_CONQUISTADA");
                 Conquistada?.Invoke(ids[zona], anterior);
             }
         }
@@ -195,6 +196,10 @@ namespace MechaCyberpunk.Progresion
             int[] ahora = Foto();
             for (int i = 0; i < regla.Cantidad; i++)
             {
+                if (ahora[i * 2] > antes[i * 2])
+                {
+                    Sonidos.Reproducir("ZON_RESPETO_SUBE");
+                }
                 if (ahora[i * 2] != antes[i * 2] || ahora[i * 2 + 1] != antes[i * 2 + 1])
                 {
                     Cambio?.Invoke(ids[i]);
