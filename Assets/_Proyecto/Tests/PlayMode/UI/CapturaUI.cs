@@ -16,6 +16,8 @@ namespace MechaCyberpunk.Tests.UI
         public const int Ancho2K = 2560;
         public const int Alto2K = 1440;
         private const float DistanciaPlano = 0.01f;
+        private const int OrdenMaximo = 100;
+        private const float SeparacionPorOrden = 0.0005f;
 
         public static void Capturar(string ruta, Camera camara) => Capturar(ruta, camara, Ancho, Alto);
 
@@ -32,7 +34,8 @@ namespace MechaCyberpunk.Tests.UI
                     c.renderMode = RenderMode.ScreenSpaceCamera;
                     c.worldCamera = camara;
                     // T-408: pegado al plano cercano, para que lo que está a menos de 1 m de la cámara no tape la UI.
-                    c.planeDistance = camara.nearClipPlane + DistanciaPlano;
+                    // T-410: a mayor orden, más cerca, para que la pausa (60) tape el HUD (10) también en la foto.
+                    c.planeDistance = camara.nearClipPlane + DistanciaPlano + Mathf.Max(0, OrdenMaximo - c.sortingOrder) * SeparacionPorOrden;
                     cambiados.Add(c);
                 }
             }

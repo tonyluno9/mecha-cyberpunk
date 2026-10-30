@@ -41,6 +41,18 @@ namespace MechaCyberpunk.UI.Kit
             return true;
         }
 
+        /// <summary>T-411: Enter o el clic pasan a la siguiente opción (al final vuelve a la primera).</summary>
+        protected override void AlAceptar()
+        {
+            if (opciones.Length < 2)
+            {
+                return;
+            }
+            indice = (indice + 1) % opciones.Length;
+            Refrescar();
+            CambioValor?.Invoke(indice);
+        }
+
         public void OnScroll(PointerEventData eventData) => Cambiar(Math.Sign(eventData.scrollDelta.y));
 
         protected override string TextoDelValor()

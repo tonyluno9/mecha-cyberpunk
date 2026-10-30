@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Progresion",
     "rootNamespace": "MechaCyberpunk.Progresion",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Economia", "Unity.InputSystem"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Economia", "Unity.InputSystem", "Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

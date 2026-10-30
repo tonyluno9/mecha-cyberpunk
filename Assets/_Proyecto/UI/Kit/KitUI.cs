@@ -251,10 +251,13 @@ namespace MechaCyberpunk.UI.Kit
                     Object.DestroyImmediate(viejo);
                 }
             }
-            if (sistema.GetComponent<InputSystemUIInputModule>() == null)
+            InputSystemUIInputModule modulo = sistema.GetComponent<InputSystemUIInputModule>();
+            if (modulo == null)
             {
-                sistema.gameObject.AddComponent<InputSystemUIInputModule>();
+                modulo = sistema.gameObject.AddComponent<InputSystemUIInputModule>();
             }
+            // T-410: un clic fuera de los botones no quita el elegido (el teclado sigue sabiendo dónde está).
+            modulo.deselectOnBackgroundClick = false;
             return sistema;
         }
 

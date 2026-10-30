@@ -3,9 +3,7 @@ using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.UI.Kit;
-using MechaCyberpunk.UI.Mapa;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Guardado
@@ -15,7 +13,7 @@ namespace MechaCyberpunk.UI.Guardado
     /// una con "RANURA 2 · 29 OCT 21:14 · EL TIANGUIS · Ƀ340" y el objetivo abajo en turquesa, o "VACÍA". En GUARDAR se eligen las 3 manuales
     /// (sobrescribir pide "¿SOBRESCRIBIR?" SÍ/NO en magenta) y AUTO queda desactivada; en CARGAR se eligen las 4 llenas y cargar recarga la
     /// escena con <see cref="FlujoPartida.IrACargar"/>. Esc o VOLVER la cierran. Mientras está abierta el jugador no se mueve ni dispara.
-    /// Hasta que llegue la pausa (T-410), F5 la abre en GUARDAR y F9 en CARGAR, solo fuera de DEMO_FINAL.
+    /// Desde T-410 la abre la pausa (GUARDAR y CARGAR) y se apila en <see cref="PilaPantallas"/>; F5 y F9 ya no existen.
     /// </summary>
     public class PantallaRanuras : MonoBehaviour
     {
@@ -28,10 +26,6 @@ namespace MechaCyberpunk.UI.Guardado
         public const string TextoSi = "SÍ";
         public const string TextoNo = "NO";
         public const string TextoAyuda = "↑ ↓ ELEGIR · ENTER ACEPTAR · ESC VOLVER";
-
-        [Header("Teclas de prueba (hasta la pausa, T-410)")]
-        [SerializeField] private InputAction abrirGuardar = new InputAction("AbrirGuardar", InputActionType.Button, "<Keyboard>/f5");
-        [SerializeField] private InputAction abrirCargar = new InputAction("AbrirCargar", InputActionType.Button, "<Keyboard>/f9");
 
         [Header("Medidas (px a 1920x1080)")]
         [SerializeField] private Vector2 tamanoFila = new Vector2(1080f, 96f);
@@ -64,6 +58,9 @@ namespace MechaCyberpunk.UI.Guardado
         public BotonCyberfix Fila(int ranura) => filas[ranura];
         public Text Objetivo(int ranura) => objetivos[ranura];
         public BotonCyberfix Volver => volver;
+
+        /// <summary>Se dispara al cerrarse (VOLVER, Esc, guardar o cargar). La pausa lo usa para volver a su menú.</summary>
+        public event System.Action Cerrada;
 
         /// <summary>Arma todas las piezas con el kit (lo llama el creador del prefab, o Awake si faltan).</summary>
         public void Armar()
@@ -174,18 +171,8 @@ namespace MechaCyberpunk.UI.Guardado
             contenido.SetActive(false);
         }
 
-        private void OnEnable()
-        {
-#if !DEMO_FINAL
-            abrirGuardar.Enable();
-            abrirCargar.Enable();
-#endif
-        }
-
         private void OnDisable()
         {
-            abrirGuardar.Disable();
-            abrirCargar.Disable();
             Cerrar();
         }
 
@@ -201,22 +188,6 @@ namespace MechaCyberpunk.UI.Guardado
             }
         }
 
-        private void Update()
-        {
-            if (Abierta || MenuCyberfix.Abiertos > 0 || PantallaMapa.HayAbierto)
-            {
-                return;
-            }
-            if (abrirGuardar.WasPressedThisFrame())
-            {
-                Abrir(ModoRanuras.Guardar);
-            }
-            else if (abrirCargar.WasPressedThisFrame())
-            {
-                Abrir(ModoRanuras.Cargar);
-            }
-        }
-
         public void Abrir(ModoRanuras nuevoModo)
         {
             if (Abierta)
@@ -227,6 +198,7 @@ namespace MechaCyberpunk.UI.Guardado
             titulo.text = modo == ModoRanuras.Guardar ? TituloGuardar : TituloCargar;
             Refrescar();
             confirmar.SetActive(false);
+            PilaPantallas.Abrir(this);
             contenido.SetActive(true);
             menu.enabled = true;
             menu.Recargar();
@@ -256,6 +228,8 @@ namespace MechaCyberpunk.UI.Guardado
                 controlCongelado.ActivarControl(true);
                 controlCongelado = null;
             }
+            PilaPantallas.Cerrar(this);
+            Cerrada?.Invoke();
         }
 
         // Lee el resumen de cada ranura sin cargarla y decide cuáles se pueden elegir.

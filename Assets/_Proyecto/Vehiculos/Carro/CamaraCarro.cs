@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -93,7 +94,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         private void Update()
         {
-            if (!Camara.enabled)
+            // T-410: en pausa no se lee la entrada ni gira la cámara.
+            if (!Camara.enabled || Pausa.Activa)
             {
                 return;
             }
@@ -114,15 +116,32 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             if (mirar != null)
             {
+                Vector2 delta = AjustarPorOpciones(mirar.ReadValue<Vector2>());
                 if (EsTerceraPersona)
                 {
-                    ActualizarOrbita(mirar.ReadValue<Vector2>(), Time.deltaTime);
+                    ActualizarOrbita(delta, Time.deltaTime);
                 }
                 else
                 {
-                    ActualizarMirada(mirar.ReadValue<Vector2>(), Time.deltaTime);
+                    ActualizarMirada(delta, Time.deltaTime);
                 }
             }
+        }
+
+        // T-411: la sensibilidad de las opciones multiplica a la del carro y pueden invertir Y.
+        private static Vector2 AjustarPorOpciones(Vector2 delta)
+        {
+            IOpciones opciones = Registro<IOpciones>.Actual;
+            if (opciones == null)
+            {
+                return delta;
+            }
+            delta *= opciones.Sensibilidad;
+            if (opciones.InvertirY)
+            {
+                delta.y = -delta.y;
+            }
+            return delta;
         }
 
         private void LateUpdate()
