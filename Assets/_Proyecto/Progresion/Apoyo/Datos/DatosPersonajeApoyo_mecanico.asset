@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 957776154a40e934f8d85ea034070505, type: 3}
+  m_Name: DatosPersonajeApoyo_mecanico
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Apoyo::MechaCyberpunk.Progresion.Apoyo.DatosPersonajeApoyo
+  id: mecanico
+  titulo: "EL MEC\xC1NICO"
+  nombre: CANEPA
+  funcion: ARREGLA TU CARRO
+  color: {r: 1, g: 0.85, b: 0.1, a: 1}
+  servicio: 3
+  costo: 100
+  frases:
+  - Pintado. Ahora nadie te conoce.
+  - Otro color y a rodar.
+  - "As\xED s\xED."
