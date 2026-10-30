@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Movimiento;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.Personaje.Jugador
 {
@@ -10,12 +12,20 @@ namespace MechaCyberpunk.Personaje.Jugador
     /// El jugador a pie en el mundo: implementa IJugador en la raíz (que tiene el CharacterController)
     /// y se registra en Registro&lt;IJugador&gt; mientras está habilitado. También sube y baja de un
     /// <see cref="IMontable"/>: mientras va dentro apaga lo suyo y su raíz sigue al asiento.
+    /// T-412: es <see cref="IGuardable"/> con la clave <c>jugador</c> (escena, posición, giro y arma en la mano). Dentro de un carro guarda el
+    /// punto de bajada junto al carro. Al cargar en la misma escena se coloca ahí, sobre el piso, y la aparición por id ya no lo mueve.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class JugadorAPie : MonoBehaviour, IJugador
+    public class JugadorAPie : MonoBehaviour, IJugador, IGuardable
     {
+        public const string Clave = "jugador";
+
         [Tooltip("Cámara hija del jugador.")]
         [SerializeField] private Camera camara;
+        [Tooltip("Al cargar, desde qué altura sobre el punto guardado se busca el piso (m).")]
+        [Min(0.1f)] [SerializeField] private float alturaBusquedaPiso = 1.5f;
+        [Tooltip("Al cargar, hasta qué distancia hacia abajo se busca el piso (m).")]
+        [Min(0.1f)] [SerializeField] private float distanciaBusquedaPiso = 4f;
 
         private CharacterController controlador;
         private ControladorAPie controladorAPie;
@@ -61,11 +71,107 @@ namespace MechaCyberpunk.Personaje.Jugador
                 Debug.LogWarning("[Personaje] Ya hay un IJugador registrado; solo debe haber uno (" + name + ").", this);
             }
             Registro<IJugador>.Agregar(this);
+            Registro<IGuardable>.Agregar(this);
         }
 
         private void OnDisable()
         {
             Registro<IJugador>.Quitar(this);
+            Registro<IGuardable>.Quitar(this);
+        }
+
+        public string ClaveGuardado => Clave;
+
+        public string Guardar()
+        {
+            Vector3 posicion = transform.position;
+            Vector3 frente = transform.forward;
+            if (MontableActual != null)
+            {
+                // En el carro: el punto de bajada junto a la puerta, mirando hacia donde va el carro.
+                posicion = MontableActual.PuntoSubida;
+                if (MontableActual.Asiento != null)
+                {
+                    frente = MontableActual.Asiento.forward;
+                }
+            }
+            frente.y = 0f;
+            var datos = new PosicionGuardada
+            {
+                escena = SceneManager.GetActiveScene().path,
+                posicion = posicion,
+                giro = frente.sqrMagnitude > 0f ? Quaternion.LookRotation(frente.normalized, Vector3.up).eulerAngles.y : 0f,
+                arma = armas != null ? armas.ArmaActiva.ToString() : ArmaAPie.Punos.ToString(),
+            };
+            return JsonUtility.ToJson(datos);
+        }
+
+        public void Cargar(string datos)
+        {
+            PosicionGuardada leida = null;
+            try
+            {
+                leida = JsonUtility.FromJson<PosicionGuardada>(datos);
+            }
+            catch (Exception)
+            {
+                leida = null;
+            }
+            if (leida == null)
+            {
+                Debug.LogWarning("[Personaje] La posición guardada del jugador no se entiende; no se mueve.", this);
+                return;
+            }
+            // Otra escena: la posición no sirve aquí.
+            if (leida.escena != SceneManager.GetActiveScene().path || MontableActual != null)
+            {
+                return;
+            }
+            Pose pose = new Pose(SobreElPiso(leida.posicion), Quaternion.Euler(0f, leida.giro, 0f));
+            AparicionJugador aparicion = GetComponent<AparicionJugador>();
+            if (aparicion != null)
+            {
+                aparicion.Cancelar();
+            }
+            Colocar(pose);
+            bool hayArma = Enum.TryParse(leida.arma, out ArmaAPie arma);
+            if (isActiveAndEnabled)
+            {
+                StartCoroutine(TerminarCarga(pose, hayArma, arma));
+            }
+        }
+
+        // Un cuadro después ya cargó el inventario: pone el arma y vuelve a colocarlo por si algo lo movió al arrancar.
+        private IEnumerator TerminarCarga(Pose pose, bool hayArma, ArmaAPie arma)
+        {
+            yield return null;
+            if (MontableActual == null)
+            {
+                Colocar(pose);
+            }
+            if (hayArma && armas != null)
+            {
+                armas.Equipar(arma);
+            }
+        }
+
+        // El piso más cercano bajo el punto (sin contar al jugador); si no hay, el punto tal cual.
+        private Vector3 SobreElPiso(Vector3 punto)
+        {
+            RaycastHit[] golpes = Physics.RaycastAll(punto + Vector3.up * alturaBusquedaPiso, Vector3.down,
+                alturaBusquedaPiso + distanciaBusquedaPiso, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            float mejor = float.MaxValue;
+            Vector3 resultado = punto;
+            foreach (RaycastHit golpe in golpes)
+            {
+                if (golpe.collider.transform.root == transform.root || golpe.distance >= mejor)
+                {
+                    continue;
+                }
+                mejor = golpe.distance;
+                resultado = golpe.point;
+            }
+            return resultado;
         }
 
         private void LateUpdate()

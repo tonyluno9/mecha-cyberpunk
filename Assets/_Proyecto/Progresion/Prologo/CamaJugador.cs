@@ -2,7 +2,6 @@ using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
-using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.UI.Historia;
 using UnityEngine;
 
@@ -159,11 +158,8 @@ namespace MechaCyberpunk.Progresion.Prologo
             {
                 reloj.AvanzarHasta(horaDespertar);
             }
-            ServicioGuardado guardado = Registro<ServicioGuardado>.Actual;
-            if (guardado != null)
-            {
-                guardado.Guardar();
-            }
+            // T-412: dormir escribe el AUTOGUARDADO (y sale "GUARDADO").
+            MechaCyberpunk.Progresion.Partida.Autoguardado.Escribir();
             yield return new WaitForSecondsRealtime(segundosEnNegro);
             if (fundido != null)
             {
