@@ -13,7 +13,9 @@ OPCIONES y SALIR AL TÍTULO. Si hay otra pantalla abierta (mapa, tienda, ranuras
   continuará (`UI/Historia/PantallaHistoriaPandillas.cs`) se cierran con Esc.
 - En el carro, `Vehiculos/Carro/CamaraCarro.cs` lee el ratón cada cuadro y seguiría girando en pausa.
 - Ranuras y salida: `UI/Guardado/PantallaRanuras.cs` y `Progresion/Partida/FlujoPartida.cs` (T-412).
-- Decisión: D-tony-242. **Cambio de Core autorizado por Tony**: `Core/Juego/Pausa.cs` (estático, como `EventosLugares`).
+- Desde el paso 2 también son modales la tienda del CIC (T-417, la misma `PantallaTienda`) y la mira del sniper (T-416, `MiraSniper`): al pausar
+  se suelta el zoom y la mira se apaga; al continuar no vuelve sola hasta que vuelvas a apuntar.
+- Decisiones: D-tony-242 y D-tony-259. **Cambio de Core autorizado por Tony**: `Core/Juego/Pausa.cs` (estático, como `EventosLugares`).
 
 ## Carpetas permitidas
 Core/Juego/ (nuevo), UI/ (Pausa/ nuevo, Kit/, Mapa/, Tiendas/, Historia/, Guardado/, Editor/, Datos/), Personaje/Movimiento/ y Personaje/Entrada/

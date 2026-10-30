@@ -14,7 +14,9 @@ zona. "Continuar" carga la más reciente. Cargar te deja donde estabas, con tu d
   dónde está el jugador**: hoy cargar no lo mueve.
 - Dormir ya guarda (`Progresion/Prologo/CamaJugador.cs`); la conquista se avisa con `ITerritorio.Conquistada`.
 - Con `DEMO_FINAL` el director borra `GuardadoDePrueba` (F5/F9) y la demo empieza siempre nueva (D-tony-231).
-- Decisión: D-tony-244. Guía de estilo: docs/diseno/ui-cyberfix.md.
+- Desde el paso 2: el dinero se escribe con `Moneda.Texto` (Ƀ, T-414); `perfil` ya trae el nombre y el color de tu pandilla (T-415); el arma en la
+  mano puede ser FUSIL o SNIPER (T-416); la historia tiene los pasos Doc, Inventor y NeonAlto (T-418, se guardan por nombre).
+- Decisiones: D-tony-244 y D-tony-259. Guía de estilo: docs/diseno/ui-cyberfix.md.
 - **Cambio de Core autorizado por Tony**: solo el comentario de claves de `Core/Guardado/IGuardable.cs` (agrega `jugador`).
 
 ## Carpetas permitidas
@@ -41,7 +43,7 @@ No tocar: Radio/, Mundo/.
 5. **Autoguardado** `Progresion/Partida/Autoguardado.cs`: escribe la ranura AUTO al dormir (CamaJugador) y al conquistar una zona. Al
    guardar sale abajo a la derecha "GUARDADO" en turquesa durante 2 s, con el sonido UI_GUARDADO.
 6. **`UI/Guardado/PantallaRanuras.cs`** (prefab hecho con el kit; canvas de orden 70): AUTOGUARDADO arriba y las ranuras 1 a 3, cada una con
-   "RANURA 2 · 29 OCT 21:14 · EL TIANGUIS · $340" en una línea y el objetivo abajo en turquesa, o "VACÍA". En modo GUARDAR: las 3 manuales
+   "RANURA 2 · 29 OCT 21:14 · EL TIANGUIS · Ƀ340" en una línea y el objetivo abajo en turquesa, o "VACÍA". En modo GUARDAR: las 3 manuales
    (sobrescribir pide "¿SOBRESCRIBIR?" SÍ/NO en magenta) y AUTO desactivada. En modo CARGAR: las 4, y las vacías desactivadas. Esc o
    VOLVER la cierran. Mientras está abierta, el jugador no se mueve ni dispara. Hasta que llegue la pausa (T-410), F5 la abre en modo
    GUARDAR y F9 en modo CARGAR, solo fuera de `DEMO_FINAL` (reemplaza `GuardadoDePrueba` en la escena).
@@ -60,7 +62,7 @@ No tocar: Radio/, Mundo/.
 ## Pruebas (solo estas 2 nuevas)
 - EditMode `RanurasPruebas.TresRanurasYAuto` (con ruta temporal): escribe las ranuras 1 y 3 y AUTO con fechas distintas; los resúmenes
   son los correctos, la 2 está vacía, `RanuraMasReciente()` es la más nueva y una ranura con texto basura sale vacía.
-- PlayMode `GuardadoRanurasPruebas.RecorridoGuardarYCargar` (InputTestFixture, `RutaForzada` temporal): Ciudad_Prologo con $340 y
+- PlayMode `GuardadoRanurasPruebas.RecorridoGuardarYCargar` (InputTestFixture, `RutaForzada` temporal): Ciudad_Prologo con Ƀ340 y
   respeto 30 en el Tianguis; camina con W; F5 abre las ranuras, ↓ hasta la RANURA 2 y Enter guarda; cambia el dinero y camina más;
   F9, ↓ hasta la RANURA 2 y Enter carga (la escena se recarga por FlujoPartida); comprueba dinero, respeto y posición. Toma la captura.
 
