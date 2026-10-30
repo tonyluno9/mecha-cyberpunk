@@ -43,10 +43,24 @@ mide 8 s de `Time.unscaledDeltaTime`, guarda la captura a 1920x1080 y escribe `m
 ./Builds/Medicion/MechaCyberpunk.exe -screen-fullscreen 0 -screen-width 1920 -screen-height 1080 -medicionSalida <carpeta>
 ```
 
-## Estado del trabajo (interrumpido)
+## Resultado final (2026-10-29)
 
-Pasos 3 y 4 hechos en parte, sin commit. La última corrida (`CreadorAmbienteNoche.Todo` y después la medición) se detuvo
-durante el horneado del APV porque Claude Code la cortó: el sistema se quedó con muy poca memoria. Falta volver a correr
-`Todo`, medir, guardar las capturas del "después", correr las 5 pruebas, generar Builds/Juego y hacer el commit.
-Medición intermedia (build de medición, Ultra, 23:00, antes del último ajuste): calle 236.1 FPS (1 % bajo 130.9),
-callejón 418.4, clandestino 302.8.
+- Se volvió a correr `CreadorAmbienteNoche.Todo` con memoria suficiente. APV quedó horneado con 81 luces y 6 neones, y las 13 sondas de la calle también.
+- FPS a las 23:00 con lluvia. Build de medición, nivel Ultra, 1920x1080 en ventana, RTX 5070 Laptop, sin vsync. Cada punto: 4 s de calentamiento y 8 s medidos.
+
+| Punto | Antes (PC) | Después (Ultra) | 1 % bajo después |
+| --- | --- | --- | --- |
+| Calle principal | 293.6 | 250.3 | 171.5 |
+| Callejón | 451.5 | 422.6 | 273.6 |
+| Clandestino | 376.2 | 296.9 | 143.3 |
+
+  La meta de 60 FPS se cumple con mucho margen.
+- Capturas en docs/capturas, revisadas a ojo: `ambiente-antes-*.png` y `ambiente-despues-*.png` (calle, callejón, clandestino).
+  - Calle: charcos con reflejos, focos colgantes, puestos iluminados, salpicaduras y cielo con tinte magenta.
+  - Clandestino: neón magenta fuerte con bloom, sin quemarse.
+- Pruebas que ya existían, sin editarlas: EditMode AmbientePruebas y CieloDiurnoPruebas 12/12; PlayMode AmbienteNochePruebas, LluviaPruebas y CicloDiaNochePruebas 17/17.
+- Builds/Juego generado con código 0 (394 MB).
+- Pendiente:
+  - El piso del callejón usa otro material, así que no tiene charcos ni salpicaduras.
+  - Los anillos de salpicadura son algo grandes y parejos; se ven mejor en la calle que de cerca.
+  - No hay decals: el decal de URP no cambia la smoothness.
