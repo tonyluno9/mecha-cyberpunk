@@ -370,7 +370,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             StringAssert.Contains("NECESITAS SER CONTRATISTA CON LAS CORPORACIONES", lista.TextoFila(filaLimpieza), "con su motivo");
             int filaEntrega = FilaDe(IdEntrega);
             StringAssert.Contains(entrega.Titulo, lista.TextoFila(filaEntrega));
-            StringAssert.Contains("$" + entrega.Pago, lista.TextoFila(filaEntrega), "el pago");
+            StringAssert.Contains("Ƀ" + entrega.Pago, lista.TextoFila(filaEntrega), "el pago");
             StringAssert.Contains("BARRIO " + FormatoHud.Firmado(entrega.DeltaBarrio) + " · CORP. " + FormatoHud.Firmado(entrega.DeltaCorporaciones),
                 lista.TextoFila(filaEntrega), "el efecto en reputación");
             CapturarConHud(RutaCaptura1);
@@ -432,7 +432,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             StringAssert.Contains(datos.Titulo, lista.TextoFila(0));
             StringAssert.Contains("BARRIO +" + datos.DeltaBarrio, lista.TextoFila(0));
             StringAssert.Contains("FAVOR: " + datos.Favor.Nombre.ToUpperInvariant(), lista.TextoFila(0), "el favor DESCUENTO");
-            StringAssert.Contains("$" + datos.Pago, lista.TextoFila(0));
+            StringAssert.Contains("Ƀ" + datos.Pago, lista.TextoFila(0));
 
             yield return Tecla(teclado.enterKey);
             yield return Cuadros(FramesParaElHud);

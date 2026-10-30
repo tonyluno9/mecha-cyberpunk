@@ -928,7 +928,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
             Vigilar();
 
-            Assert.AreEqual(dineroAntes + PremioTutorial, Cartera.Dinero, "Ganó el premio de $1,500");
+            Assert.AreEqual(dineroAntes + PremioTutorial, Cartera.Dinero, "Ganó el premio de Ƀ1,500");
             Assert.AreEqual(ModoJugador.APie, jugador.Modo, "El jugador quedó a pie");
             IPuntoAparicion salida = Aparicion(IdSalida);
             Assert.IsNotNull(salida, "Existe Clandestino_Salida");
@@ -1159,7 +1159,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(cama, "Existe Casa_Cama");
             Assert.Less(DistanciaPlana(jugador.Raiz.position, cama.Pose.position), ToleranciaJugador - 0.1f, "El jugador despierta en Casa_Cama");
             Assert.AreEqual(ModoJugador.APie, jugador.Modo);
-            Assert.AreEqual(DineroInicial, Cartera.Dinero, "Despierta con $500");
+            Assert.AreEqual(DineroInicial, Cartera.Dinero, "Despierta con Ƀ500");
             Assert.AreEqual(PorcentajeDespertar, vidaMecha.Actual / vidaMecha.Maxima * 100f, ToleranciaPorcentaje, "Mecha al 45 %");
             Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado, "Y en su taller");
             Assert.AreEqual(HoraDespertar, Reloj.Hora, ToleranciaHora, "Son las 20:00");
@@ -1227,7 +1227,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return EsperarHasta(() => pantallaContinuara.Visible, MaxSegundosEstado, "la pantalla de continuará");
             yield return null;
             Vigilar();
-            Assert.AreEqual(dineroAntes + PremioCasero, Cartera.Dinero, "Ganar la casera paga $600");
+            Assert.AreEqual(dineroAntes + PremioCasero, Cartera.Dinero, "Ganar la casera paga Ƀ600");
             AnotarTramo("f3) ir al clandestino y ganar la casera", inicioCasera);
         }
 

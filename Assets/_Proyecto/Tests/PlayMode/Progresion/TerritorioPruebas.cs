@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Tests.Progresion
             // Jugador en el centro: el HUD dice EL TIANGUIS.
             jugador.Colocar(new Pose(new Vector3(0f, 0.5f, 0f), Quaternion.identity));
             yield return EsperarHasta(() => hud.TextoZona.text.Contains("EL TIANGUIS"), "el HUD dice EL TIANGUIS");
-            StringAssert.Contains("LOS CALAVERAS", hud.TextoZona.text);
+            StringAssert.Contains("SKULLS", hud.TextoZona.text);
 
             // El mapa: M abre, M cierra, Esc cierra.
             yield return Pulsar(teclado.mKey);

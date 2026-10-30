@@ -481,7 +481,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             yield return UsarPaso(tiendita.Pasos[0].IdPunto, "E · RECOGER: " + tiendita.Pasos[0].Texto);
             yield return UsarPaso(tiendita.Pasos[1].IdPunto, "E · ENTREGAR: " + tiendita.Pasos[1].Texto);
             Assert.IsFalse(misiones.HayMision, "b) terminó la tiendita");
-            Assert.AreEqual(DineroInicial + rTiendita.Pago, cartera.Dinero, "b) +$50");
+            Assert.AreEqual(DineroInicial + rTiendita.Pago, cartera.Dinero, "b) +Ƀ50");
             Assert.AreEqual(tiendita.DeltaBarrio, reputacion.Valor(TipoReputacion.Barrio), "b) barrio +8");
             StringAssert.Contains("BARRIO " + FormatoHud.Firmado(tiendita.DeltaBarrio), hud.TextoAvisoReputacion.text, "b) el HUD lo dice");
             Assert.AreEqual(1, favores.Cantidad(TipoFavor.Descuento), "b) 1 DESCUENTO");
@@ -502,7 +502,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             yield return UsarPaso(cobro.Pasos[0].IdPunto, "E · RECOGER: " + cobro.Pasos[0].Texto);
             yield return UsarPaso(cobro.Pasos[1].IdPunto, "E · ENTREGAR: " + cobro.Pasos[1].Texto);
             Assert.IsFalse(misiones.HayMision, "c) terminó el cobro");
-            Assert.AreEqual(DineroInicial + rTiendita.Pago + rCobro.Pago, cartera.Dinero, "c) +$500");
+            Assert.AreEqual(DineroInicial + rTiendita.Pago + rCobro.Pago, cartera.Dinero, "c) +Ƀ500");
             Assert.AreEqual("BARRIO −12 · CORPORACIONES +10", hud.TextoAvisoReputacion.text, "c) el HUD avisa el cambio");
             CapturarConHud(RutaCaptura1);
             Assert.AreEqual(tiendita.DeltaBarrio + cobro.DeltaBarrio, reputacion.Valor(TipoReputacion.Barrio), "c) barrio 8 − 12 = −4");
@@ -563,17 +563,17 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
                 yield return ElegirFila(pantalla, fila);
                 yield return Tecla(teclado.enterKey);
             }
-            Assert.AreEqual(dineroAntesMercado + ventaChatarra, cartera.Dinero, "e) +$300 por la chatarra");
+            Assert.AreEqual(dineroAntesMercado + ventaChatarra, cartera.Dinero, "e) +Ƀ300 por la chatarra");
             Assert.AreEqual(0, inventario.Cantidad(chatarra), "e) ya no queda chatarra");
             yield return Tecla(teclado.leftArrowKey);
             Assert.AreEqual(PestanaTienda.Comprar, pantalla.Pestana, "e) flecha izquierda vuelve a COMPRAR");
             int filaMisiles = FilaConTexto(pantalla, FilaMisiles);
             Assert.GreaterOrEqual(filaMisiles, 0, "e) la tienda lista misiles");
             yield return ElegirFila(pantalla, filaMisiles);
-            StringAssert.Contains("$" + precioMisil + " → $" + descuentoMisil, pantalla.TextoFila(filaMisiles), "e) la fila muestra la rebaja");
+            StringAssert.Contains("Ƀ" + precioMisil + " → Ƀ" + descuentoMisil, pantalla.TextoFila(filaMisiles), "e) la fila muestra la rebaja");
             int dineroAntesMisil = cartera.Dinero;
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(dineroAntesMisil - descuentoMisil, cartera.Dinero, "e) el misil cuesta $56 con el descuento");
+            Assert.AreEqual(dineroAntesMisil - descuentoMisil, cartera.Dinero, "e) el misil cuesta Ƀ56 con el descuento");
             Assert.AreEqual(misilesAntes + misilesEsperados, inventario.Cantidad(misiles), "e) entró 1 misil");
             Assert.AreEqual(0, favores.Cantidad(TipoFavor.Descuento), "e) el descuento se gastó");
             yield return Tecla(teclado.escapeKey);
@@ -622,7 +622,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             yield return CaminarA(new Vector3(taquero.x, AlturaJugador, taquero.z), DistanciaLlegada, "el taquero", () => !misiones.HayMision);
             yield return Esperar(FramesParaElHud * 0.02f);
             Assert.IsFalse(misiones.HayMision, "f) avisar al taquero termina la misión");
-            Assert.AreEqual(dineroAntesCallejon + rCallejon.Pago, cartera.Dinero, "f) +$100");
+            Assert.AreEqual(dineroAntesCallejon + rCallejon.Pago, cartera.Dinero, "f) +Ƀ100");
             Assert.AreEqual(barrioAntesCallejon + callejon.DeltaBarrio, reputacion.Valor(TipoReputacion.Barrio), "f) barrio +12");
             Assert.AreEqual(callejon.DeltaBarrio + tiendita.DeltaBarrio + cobro.DeltaBarrio + bodega.DeltaBarrio, 11, "f) los datos suman barrio 11");
             Assert.AreEqual(11, reputacion.Valor(TipoReputacion.Barrio), "f) barrio 11");

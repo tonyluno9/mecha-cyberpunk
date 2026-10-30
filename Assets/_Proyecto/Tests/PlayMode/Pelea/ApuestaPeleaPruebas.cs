@@ -121,7 +121,7 @@ namespace MechaCyberpunk.Tests.Pelea
             GameObject servicios = Crear(RutaServicios, Vector3.zero);
             cartera = Registro<ICartera>.Actual;
             Assert.IsNotNull(cartera, "ServiciosEconomia registra la cartera");
-            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se parte de $500");
+            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se parte de Ƀ500");
             inventario = Registro<ServicioInventario>.Actual;
             Assert.IsNotNull(inventario, "ServiciosEconomia registra el inventario");
             brazo = AssetDatabase.LoadAssetAtPath<DatosObjeto>(RutaBrazo);

@@ -33,7 +33,7 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoTitulo = "BANCO DEL TALLER";
         [Tooltip("{0} = vida actual, {1} = vida máxima (enteros).")]
         [SerializeField] private string formatoVida = "VIDA {0} / {1}";
-        [Tooltip("{0} = dinero con $ (negativo: -$150).")]
+        [Tooltip("{0} = dinero con Ƀ (negativo: -Ƀ150).")]
         [SerializeField] private string formatoDinero = "DINERO {0}";
         [Tooltip("{0} = texto de la opción elegida.")]
         [SerializeField] private string formatoElegido = "[ {0} ]";

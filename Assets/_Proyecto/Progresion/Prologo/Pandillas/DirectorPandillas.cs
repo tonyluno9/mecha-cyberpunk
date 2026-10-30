@@ -22,7 +22,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public const string TextoDefender = "DEFIENDE A DOÑA LUPE";
         public const string TextoPistola = "RECOGE LA PISTOLA (E)";
         public const string TextoChato = "HABLA CON EL CHATO";
-        public const string TextoJefe = "VENCE AL JEFE DE LOS CALAVERAS";
+        public const string TextoJefe = "VENCE AL JEFE DE LOS SKULLS";
         public const string NombreChato = "EL CHATO";
         private const float VidaProteccion = 25f;
         private const float SegundosProteccion = 3f;
@@ -357,8 +357,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     FijarObjetivo(TextoChato, chato != null ? chato.Posicion : Vector3.zero);
                     break;
                 case PasoHistoria.Tianguis:
-                    pantalla.MostrarSubtitulo("—Los Calaveras se creen dueños del Tianguis", 5f);
-                    pantalla.MostrarAyuda("PUEDES ROBAR UN CARRO CON E\nEN EL MERCADO NEGRO VENDEN ESCOPETAS", 10f);
+                    pantalla.MostrarSubtitulo("—Los Skulls se creen dueños del Tianguis", 5f);
+                    pantalla.MostrarAyuda("PUEDES ROBAR UN CARRO CON E\nVE AL MERCADO: AHÍ VENDEN ESCOPETAS", 10f);
                     ActualizarRespeto();
                     break;
                 case PasoHistoria.Jefe:

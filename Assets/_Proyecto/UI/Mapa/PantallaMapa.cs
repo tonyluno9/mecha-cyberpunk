@@ -20,6 +20,9 @@ namespace MechaCyberpunk.UI.Mapa
             new Vector2(-94f, -47f), new Vector2(0f, -47f), new Vector2(94f, -47f),
         };
 
+        /// <summary>Título del mapa (documento del juego, 29-oct).</summary>
+        public const string NombreCiudad = "MEGALOPOLIS";
+
         [Tooltip("Lado de cada manzana en el mapa (m del mundo).")]
         [Min(1f)] [SerializeField] private float ladoManzana = 80f;
         [Tooltip("Píxeles de pantalla (referencia 1920x1080) por metro del mundo.")]
@@ -33,11 +36,13 @@ namespace MechaCyberpunk.UI.Mapa
         private readonly System.Collections.Generic.List<RectTransform> puntosAliados = new System.Collections.Generic.List<RectTransform>();
         private Image[] manzanas;
         private Text[] etiquetas;
+        private Text titulo;
         private ControladorAPie controlCongelado;
 
         public bool Abierto => panel != null && panel.activeSelf;
         public Image[] Manzanas => manzanas;
         public Text[] Etiquetas => etiquetas;
+        public Text Titulo => titulo;
 
         private void Awake()
         {
@@ -75,6 +80,10 @@ namespace MechaCyberpunk.UI.Mapa
             Image imagenPunto = punto.AddComponent<Image>();
             imagenPunto.color = colorJugador;
             imagenPunto.raycastTarget = false;
+            titulo = FormatoTerritorio.CrearTexto(contenedor, "Titulo", 28, TextAnchor.UpperCenter, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -16f), new Vector2(600f, 40f));
+            titulo.text = NombreCiudad;
+            titulo.color = new Color(0.1f, 0.9f, 0.85f);
             FormatoTerritorio.CrearTexto(contenedor, "Ayuda", 20, TextAnchor.LowerCenter, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
                 new Vector2(0f, 12f), new Vector2(600f, 30f)).text = "M o Esc para cerrar";
             panel.SetActive(false);

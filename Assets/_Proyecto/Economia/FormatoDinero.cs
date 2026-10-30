@@ -1,15 +1,13 @@
-using System.Globalization;
+using MechaCyberpunk.Core;
 
 namespace MechaCyberpunk.Economia
 {
-    /// <summary>Texto del dinero: "$500", "$1,250", "-$150". Sin decimales.</summary>
+    /// <summary>Texto del dinero en Biits: "Ƀ500", "Ƀ1,250", "-Ƀ150". Sin decimales.</summary>
     public static class FormatoDinero
     {
         public static string Texto(int dinero)
         {
-            long magnitud = dinero < 0 ? -(long)dinero : dinero;
-            string cifras = magnitud.ToString("N0", CultureInfo.InvariantCulture);
-            return (dinero < 0 ? "-$" : "$") + cifras;
+            return Moneda.Texto(dinero);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace MechaCyberpunk.UI.Editor
         private const string CarpetaMateriales = "Assets/_Proyecto/UI/Materiales";
         private const string RutaMaterialMesa = CarpetaMateriales + "/MercadoNegro_Mesa.mat";
         private const string RutaMaterialLetrero = CarpetaMateriales + "/MercadoNegro_Letrero.mat";
-        private const string TextoLetrero = "MERCADO NEGRO";
+        private const string TextoLetrero = "EL MERCADO";
 
         private const float AnchoReferencia = 1920f;
         private const float AltoReferencia = 1080f;

@@ -75,7 +75,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             Assert.IsTrue(pantalla.Visible);
             Assert.AreEqual("EL RAYO", pantalla.Alias);
-            Assert.AreEqual("$1,250", pantalla.Dinero);
+            Assert.AreEqual("Ƀ1,250", pantalla.Dinero);
             Assert.AreEqual("Ganaste tu primera pelea casera", pantalla.Resultado);
             Assert.IsFalse(pantalla.TeclasVisibles, "Las teclas no se muestran al principio");
         }
@@ -86,7 +86,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             pantalla.Mostrar("EL RAYO", 0, false);
             Assert.AreEqual("Perdiste tu primera pelea casera, vuelve cuando lo repares", pantalla.Resultado);
-            Assert.AreEqual("$0", pantalla.Dinero);
+            Assert.AreEqual("Ƀ0", pantalla.Dinero);
         }
 
         [UnityTest]

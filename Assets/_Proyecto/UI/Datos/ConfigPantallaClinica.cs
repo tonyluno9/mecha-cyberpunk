@@ -29,8 +29,8 @@ namespace MechaCyberpunk.UI
         [Min(8)] [SerializeField] private int tamanoAyuda = 28;
 
         [Header("Textos de la pantalla")]
-        [SerializeField] private string textoTitulo = "CLÍNICA DEL DOC";
-        [Tooltip("{0} = dinero con $.")]
+        [SerializeField] private string textoTitulo = "I+D+I";
+        [Tooltip("{0} = dinero con Ƀ.")]
         [SerializeField] private string formatoDinero = "TIENES {0}";
         [Tooltip("Nombre de cada espacio, en el orden de EspacioImplante: ojos, brazos, piernas, sistema nervioso.")]
         [SerializeField] private string[] nombresEspacio = { "OJOS", "BRAZOS", "PIERNAS", "SINAPSIS" };
@@ -38,7 +38,7 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string formatoEspacio = "{0} · {1}";
         [Tooltip("Lo instalado cuando no hay nada.")]
         [SerializeField] private string textoVacio = "—";
-        [Tooltip("{0} = nombre del implante, {1} = precio con $.")]
+        [Tooltip("{0} = nombre del implante, {1} = precio con Ƀ.")]
         [SerializeField] private string formatoPrecio = "{0} · {1}";
         [Tooltip("Se agrega al precio cuando ya tienes el nivel anterior.")]
         [SerializeField] private string textoDiferencia = "PAGAS LA DIFERENCIA";
@@ -48,7 +48,7 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string formatoSinDinero = "{0} · NO TE ALCANZA";
         [SerializeField] private string textoAvisoSinDinero = "NO TE ALCANZA";
         [SerializeField] private string textoLoMejor = "LO MEJOR QUE HAY";
-        [Tooltip("{0} = precio con $.")]
+        [Tooltip("{0} = precio con Ƀ.")]
         [SerializeField] private string formatoConfirmar = "¿INSTALAR POR {0}? ENTER SÍ · ESC NO";
         [SerializeField] private string textoAyuda = "↑ ↓ elegir · Enter instalar · Esc salir";
         [Tooltip("Marca de la fila elegida; {0} = texto.")]
@@ -56,8 +56,8 @@ namespace MechaCyberpunk.UI
 
         [Header("Mostrador")]
         [Tooltip("El HUD le antepone \"E · \" cuando se puede usar.")]
-        [SerializeField] private string textoMostrador = "CLÍNICA";
-        [SerializeField] private string textoCerrado = "CLÍNICA · CERRADA";
+        [SerializeField] private string textoMostrador = "I+D+I";
+        [SerializeField] private string textoCerrado = "I+D+I · CERRADA";
 
         [Header("Al instalar")]
         [Tooltip("Lo que tarda el fundido a negro (s).")]

@@ -36,16 +36,16 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoTitulo = "PELEA CASERA";
         [Tooltip("{0} = alias del rival.")]
         [SerializeField] private string formatoRival = "CONTRA {0}";
-        [Tooltip("{0} = premio de ganar (con $).")]
+        [Tooltip("{0} = premio de ganar (con Ƀ).")]
         [SerializeField] private string formatoPremio = "PREMIO {0}";
         [Tooltip("{0} = momio (1 = paga uno a uno).")]
         [SerializeField] private string formatoMomio = "PAGA {0} A 1";
         [SerializeField] private string textoSinApuesta = "SIN APUESTA";
-        [Tooltip("{0} = monto con $.")]
+        [Tooltip("{0} = monto con Ƀ.")]
         [SerializeField] private string formatoMonto = "{0}";
-        [Tooltip("{0} = opción elegida (monto con $ o SIN APUESTA).")]
+        [Tooltip("{0} = opción elegida (monto con Ƀ o SIN APUESTA).")]
         [SerializeField] private string formatoElegido = "[ {0} ]";
-        [Tooltip("{0} = nombre de la pieza en juego, {1} = apuesta mínima con $.")]
+        [Tooltip("{0} = nombre de la pieza en juego, {1} = apuesta mínima con Ƀ.")]
         [SerializeField] private string formatoPieza = "+ SU {0} si apuestas {1} o más";
         [SerializeField] private string textoAyuda = "← → apuesta · Enter pelear · Esc salir";
         [SerializeField] private string textoNoAlcanza = "NO ALCANZA PARA ESA APUESTA";

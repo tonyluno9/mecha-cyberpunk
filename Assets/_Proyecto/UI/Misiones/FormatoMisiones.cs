@@ -38,7 +38,7 @@ namespace MechaCyberpunk.UI.Misiones
             return texto;
         }
 
-        /// <summary>"DESCUENTO   2/3   REBAJA 30 % UNA COMPRA   ·   MERCADO NEGRO": una línea de la pestaña FAVORES del teléfono.</summary>
+        /// <summary>"DESCUENTO   2/3   REBAJA 30 % UNA COMPRA   ·   EL MERCADO": una línea de la pestaña FAVORES del teléfono.</summary>
         public static string FilaFavor(ConfigPantallaMisiones config, TipoFavor tipo, DatosFavor datos, int cantidad, int maximo)
         {
             string nombre = datos != null ? datos.Nombre.ToUpperInvariant() : config.NombreFavor((int)tipo);

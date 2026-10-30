@@ -28,13 +28,13 @@ namespace MechaCyberpunk.UI.Mapa
             switch (dueno)
             {
                 case IdPandilla.Jugador: return "TUYA";
-                case IdPandilla.Calaveras: return "LOS CALAVERAS";
-                case IdPandilla.Viboras: return "LAS VÍBORAS";
+                case IdPandilla.Calaveras: return "SKULLS";
+                case IdPandilla.Viboras: return "SNAKES";
                 default: return "SIN DUEÑO";
             }
         }
 
-        /// <summary>"EL TIANGUIS · LOS CALAVERAS · RESPETO 40".</summary>
+        /// <summary>"EL TIANGUIS · SKULLS · RESPETO 40".</summary>
         public static string Linea(ITerritorio territorio, string zona)
         {
             return territorio.Nombre(zona) + " · " + NombreDe(territorio.Dueno(zona)) + " · RESPETO " + territorio.Respeto(zona);

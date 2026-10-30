@@ -226,7 +226,7 @@ namespace MechaCyberpunk.Tests.Pelea
             Assert.AreEqual(MotivoDinero.Premio, cambios[0].Item2);
             CollectionAssert.AreEqual(new[] { PremioCasera }, premiosPagados);
             Assert.AreEqual("GANASTE", director.Pantalla.Texto);
-            Assert.AreEqual("+$600", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ600", director.Pantalla.Premio);
             Assert.AreEqual(0, errores.Count, string.Join("\n", errores));
         }
 
@@ -257,7 +257,7 @@ namespace MechaCyberpunk.Tests.Pelea
             Matar(director.Rival);
             yield return HastaEstado(EstadoFlujoPelea.Resultado);
             yield return null;
-            Assert.AreEqual("+$600", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ600", director.Pantalla.Premio);
 
             yield return PulsarTecla(Key.R);
             Assert.AreNotEqual(EstadoFlujoPelea.Resultado, director.Estado, "La revancha empezó");
@@ -269,7 +269,7 @@ namespace MechaCyberpunk.Tests.Pelea
 
             Assert.AreEqual(antes + 2 * PremioCasera, cartera.Dinero);
             Assert.AreEqual(2, cambios.Count);
-            Assert.AreEqual("+$600", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ600", director.Pantalla.Premio);
             Assert.AreEqual(0, errores.Count, string.Join("\n", errores));
         }
 
@@ -309,7 +309,7 @@ namespace MechaCyberpunk.Tests.Pelea
             Assert.AreEqual(antes + PremioTutorial, cartera.Dinero);
             Assert.AreEqual(1, cambios.Count);
             Assert.AreEqual(MotivoDinero.Premio, cambios[0].Item2);
-            Assert.AreEqual("+$1,500", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ1,500", director.Pantalla.Premio);
             Assert.AreEqual(0, errores.Count, string.Join("\n", errores));
         }
     }

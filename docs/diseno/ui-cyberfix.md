@@ -22,11 +22,11 @@ oraciones normales en los textos largos.
 | --- | --- | --- |
 | Naranja | `#FF801AFF` | Tú, el foco (botón elegido), el objetivo, el título |
 | Turquesa | `#1AE6E6FF` | Información: valores, distancias, teclas de ayuda; bordes de panel al 60 % |
-| Magenta | `#FF1ACCFF` | Alertas y peligro: jefe, calor, "¿seguro?"; también LOS CALAVERAS |
+| Magenta | `#FF1ACCFF` | Alertas y peligro: jefe, calor, "¿seguro?"; también SKULLS |
 | Negro translúcido | `#0A0A12D9` | Fondo de panel (85 %); detrás de la pausa, a pantalla completa, `#000000A6` |
 | Texto | `#F2F2F2FF` | Texto normal |
 | Desactivado | `#7A7A85FF` | Botón o fila que no se puede usar |
-Fuera de la UI: LAS VÍBORAS `#73FF1AFF` y los enemigos del minimapa `#FF3333FF`. No pongas texto magenta sobre naranja ni al revés.
+Fuera de la UI: SNAKES `#73FF1AFF` y los enemigos del minimapa `#FF3333FF`. No pongas texto magenta sobre naranja ni al revés.
 
 ## Tamaños (px a 1920x1080; en 1440p salen x1.33)
 Título 96 · encabezado 48 · botón 34 · texto 28 · HUD 26 · ayuda 22 · **mínimo 20**. Todo texto lleva sombra negra al 85 % (1.5, −1.5).

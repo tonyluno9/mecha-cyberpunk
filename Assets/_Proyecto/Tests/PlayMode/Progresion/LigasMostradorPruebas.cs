@@ -150,7 +150,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(cartera, "Hay cartera");
             Assert.IsNotNull(ligas, "Hay ServicioLigas");
             Assert.IsNotNull(calendario, "Existe el calendario");
-            Assert.AreEqual(DineroBase, cartera.Dinero, "Se empieza con $500");
+            Assert.AreEqual(DineroBase, cartera.Dinero, "Se empieza con Ƀ500");
             Assert.AreEqual(EtapaPrologo.Libre, Registro<IHistoria>.Actual.Etapa, "La escena arranca en Libre");
             EventosPelea.PeleaTerminada += terminadas.Add;
             yield return null;

@@ -308,7 +308,7 @@ namespace MechaCyberpunk.Mundo.Editor
             if (datos == null)
             {
                 datos = ScriptableObject.CreateInstance<DatosLugar>();
-                datos.Configurar(IdLugar.Clinica, "Clínica", new HorarioLugar(GeometriaClinica.HoraApertura, GeometriaClinica.HoraCierre), false);
+                datos.Configurar(IdLugar.Clinica, "I+D+I", new HorarioLugar(GeometriaClinica.HoraApertura, GeometriaClinica.HoraCierre), false);
                 AssetDatabase.CreateAsset(datos, GeometriaClinica.RutaDatos);
                 AssetDatabase.SaveAssets();
             }

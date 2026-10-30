@@ -692,11 +692,11 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             VerificarCarrera("sin implantes", totalSin, tramoSin, datosPersonaje.VelocidadCorrer);
             Paso("a", string.Join("; ", medidas));
 
-            // b) Clínica: PIERNAS I y BRAZOS I, $4,000 en total, +2 h cada una; el espejo muestra las dos piezas.
+            // b) Clínica: PIERNAS I y BRAZOS I, Ƀ4,000 en total, +2 h cada una; el espejo muestra las dos piezas.
             int dineroAntesB = cartera.Dinero;
             yield return InstalarVarios("b", (FilaPiernas, piernas1), (FilaBrazos, brazos1));
             Assert.AreEqual(PrecioPiernasMasBrazos, piernas1.Precio + brazos1.Precio, "los precios de los assets suman 4,000");
-            Assert.AreEqual(dineroAntesB - PrecioPiernasMasBrazos, cartera.Dinero, "−$4,000 en total");
+            Assert.AreEqual(dineroAntesB - PrecioPiernasMasBrazos, cartera.Dinero, "−Ƀ4,000 en total");
             Assert.AreEqual(piernas1.Nombre, implantes.Nombre(EspacioImplante.Piernas));
             Assert.AreEqual(brazos1.Nombre, implantes.Nombre(EspacioImplante.Brazos));
             yield return MirarseAlEspejo(false, null);
@@ -884,7 +884,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.IsTrue(subio, "con PIERNAS II la caja PIERNAS II sí se sube");
             Paso("g", "diferencia total $" + diferenciaTotal + "; " + medidas[medidas.Count - 1]);
 
-            // h) 23:00 con $300: dejarse tumbar por la pandilla. Despierta a las 05:00 con −$200, calor 0 y el objetivo de volver a casa.
+            // h) 23:00 con Ƀ300: dejarse tumbar por la pandilla. Despierta a las 05:00 con −Ƀ200, calor 0 y el objetivo de volver a casa.
             reloj.AvanzarHasta(HoraCaida);
             reloj.Pausar(true);
             atajos.Add("Reloj a las 23:00 y pausado");

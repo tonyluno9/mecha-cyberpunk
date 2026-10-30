@@ -290,7 +290,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual("BRAZO IZQ. DE SERIE", pantalla.TextoBaseFila(0));
             Assert.AreEqual("PIERNAS DE SERIE", pantalla.TextoBaseFila(3));
             Assert.AreEqual("VIDA 100 · DAÑO 10 · VELOCIDAD 4.0", pantalla.Estadisticas);
-            Assert.AreEqual("DINERO $1,000", pantalla.Dinero);
+            Assert.AreEqual("DINERO Ƀ1,000", pantalla.Dinero);
             Assert.AreEqual(0, pantalla.IndiceElegido);
             Assert.IsFalse(controlador.ControlActivo, "La pantalla congela al jugador");
 
@@ -316,11 +316,11 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(NivelPantallaPiezas.Piezas, pantalla.Nivel);
             Assert.AreEqual(8, pantalla.CantidadFilas, "4 de nivel I y 4 de nivel II");
             List<string> filas = Filas();
-            Assert.AreEqual(4, filas.Count(f => f.EndsWith("COMPRAR · $500", StringComparison.Ordinal)), string.Join(" | ", filas));
+            Assert.AreEqual(4, filas.Count(f => f.EndsWith("COMPRAR · Ƀ500", StringComparison.Ordinal)), string.Join(" | ", filas));
             Assert.AreEqual(4, filas.Count(f => f.EndsWith("SE ABRE EN LA LIGA 2", StringComparison.Ordinal)), string.Join(" | ", filas));
             foreach (string rama in new[] { "MILITAR", "TECH", "CUERPO A CUERPO", "FUEGO" })
             {
-                Assert.IsTrue(filas.Any(f => f.StartsWith("PIERNAS " + rama + " I · COMPRAR · $500", StringComparison.Ordinal)), rama);
+                Assert.IsTrue(filas.Any(f => f.StartsWith("PIERNAS " + rama + " I · COMPRAR · Ƀ500", StringComparison.Ordinal)), rama);
             }
             for (int i = 0; i < 4; i++)
             {
@@ -337,7 +337,7 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.AreEqual(NivelPantallaPiezas.Ranuras, pantalla.Nivel, "Elegir vuelve a las ranuras");
             Assert.AreEqual(500, cartera.Dinero);
-            Assert.AreEqual("DINERO $500", pantalla.Dinero);
+            Assert.AreEqual("DINERO Ƀ500", pantalla.Dinero);
             Assert.AreEqual("PIERNAS CUERPO A CUERPO I", pantalla.TextoBaseFila(3));
             Assert.AreEqual("VIDA 110 · DAÑO 10 · VELOCIDAD 4.25", pantalla.Estadisticas);
             Assert.AreEqual("PUESTA: PIERNAS CUERPO A CUERPO I", pantalla.Aviso);
@@ -460,7 +460,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return IrAFila("PIERNAS CUERPO A CUERPO I ·");
             yield return Tecla(teclado.enterKey);
 
-            Assert.AreEqual("PUESTA: PIERNAS CUERPO A CUERPO I · +$100 · VENDISTE PIERNAS DE SERIE", pantalla.Aviso);
+            Assert.AreEqual("PUESTA: PIERNAS CUERPO A CUERPO I · +Ƀ100 · VENDISTE PIERNAS DE SERIE", pantalla.Aviso);
             Assert.AreEqual(DineroDeLaPrueba - 500 + 100, cartera.Dinero);
             Assert.AreEqual(2, inventario.Cantidad(serie));
             Assert.IsEmpty(errores, "consola sin errores: " + string.Join(" | ", errores));

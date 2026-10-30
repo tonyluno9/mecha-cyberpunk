@@ -562,7 +562,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return EsperarHasta(() => historia.Etapa == EtapaPrologo.SalidaClandestino, MaxSegundosEstado, "la etapa de salida");
             yield return null;
 
-            Assert.AreEqual(dineroAntes + PremioTutorial, cartera.Dinero, "Ganó el premio de $1,500");
+            Assert.AreEqual(dineroAntes + PremioTutorial, cartera.Dinero, "Ganó el premio de Ƀ1,500");
             Assert.AreEqual(ModoJugador.APie, jugador.Modo, "El jugador quedó a pie");
             IPuntoAparicion salida = Aparicion(IdSalida);
             Assert.IsNotNull(salida, "Existe Clandestino_Salida");

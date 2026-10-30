@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string RutaRivalCasero = "Assets/_Proyecto/IA/Prefabs/RivalCasero.prefab";
         private const string IdSalida = "Clandestino_Salida";
         private const string AliasRival = "EL CHATARRAS";
-        private const string TextoOfrecido = "E · Pelea casera · premio $600";
+        private const string TextoOfrecido = "E · Pelea casera · premio Ƀ600";
         private const string TextoDeDia = "Peleas caseras de noche · abre 20:00";
         private const string TextoSinPelea = "Hoy no hay peleas caseras";
         private const int PremioCasero = 600;
@@ -396,7 +396,7 @@ namespace MechaCyberpunk.Tests.Progresion
 
             Assert.AreEqual(1, terminadas.Count, "La pelea terminó una vez");
             Assert.AreEqual(LadoPelea.Jugador, terminadas[0].Ganador, "Ganó el jugador");
-            Assert.AreEqual(dineroAntes + PremioCasero, cartera.Dinero, "Cobró $600");
+            Assert.AreEqual(dineroAntes + PremioCasero, cartera.Dinero, "Cobró Ƀ600");
             Assert.AreEqual(ModoJugador.APie, jugador.Modo, "El jugador quedó a pie");
             IPuntoAparicion salida = Aparicion(IdSalida);
             Assert.IsNotNull(salida, "Existe Clandestino_Salida");

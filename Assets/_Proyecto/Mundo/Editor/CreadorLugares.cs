@@ -54,11 +54,11 @@ namespace MechaCyberpunk.Mundo.Editor
             AssetDatabase.Refresh();
             ConfigPuertas config = CrearConfigPuertas();
             DatosLugar casa = CrearDatos("Casa", IdLugar.Casa, "Casa", HorarioLugar.Siempre, false);
-            DatosLugar bar = CrearDatos("Bar", IdLugar.Bar, "Bar El Foco", new HorarioLugar(19f, 4f), false);
+            DatosLugar bar = CrearDatos("Bar", IdLugar.Bar, "El Fox", new HorarioLugar(19f, 4f), false);
             DatosLugar clandestino = CrearDatos("Clandestino", IdLugar.Clandestino, "El Sótano", new HorarioLugar(20f, 6f), false);
-            DatosLugar casino = CrearDatos("Casino", IdLugar.Casino, "Casino Aurora", new HorarioLugar(20f, 6f), false);
+            DatosLugar casino = CrearDatos("Casino", IdLugar.Casino, "VivaCoin", new HorarioLugar(20f, 6f), false);
             AbrirEnLaDemo(casino); // T-303: el casino ya tiene interior; el asset de T-042 quedó cerrado y aquí se abre
-            DatosLugar mercado = CrearDatos("MercadoNegro", IdLugar.MercadoNegro, "Mercado Negro", new HorarioLugar(9f, 18f), false);
+            DatosLugar mercado = CrearDatos("MercadoNegro", IdLugar.MercadoNegro, "El Mercado", new HorarioLugar(9f, 18f), false);
             AbrirEnLaDemo(mercado); // T-320: el mercado ya tiene interior y mostrador; abre de día (09:00 a 18:00)
             AssetDatabase.SaveAssets();
 
