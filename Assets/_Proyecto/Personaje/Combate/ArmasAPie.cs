@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 namespace MechaCyberpunk.Personaje.Combate
 {
     /// <summary>
-    /// Arma activa del jugador a pie: 1 puños, 2 pistola, 3 escopeta, 4 subfusil y la rueda del ratón (T-403). Un arma que no se tiene
+    /// Arma activa del jugador a pie: 1 puños, 2 pistola, 3 escopeta, 4 fusil, 5 sniper y la rueda del ratón (T-403). Un arma que no se tiene
     /// (<see cref="ArsenalJugador"/>) no se elige. Mantiene a <see cref="GolpeAPie"/> al día y muestra solo el visual del arma en la mano.
     /// No se cambia de arma mientras se prepara o se recupera un golpe. El HUD lee el arma, el nivel, las balas y el cargador desde aquí.
     /// </summary>
@@ -23,14 +23,16 @@ namespace MechaCyberpunk.Personaje.Combate
         [SerializeField] private InputActionReference armaPunos;
         [SerializeField] private InputActionReference armaPistola;
         [SerializeField] private InputActionReference armaEscopeta;
-        [SerializeField] private InputActionReference armaSubfusil;
+        [SerializeField] private InputActionReference armaFusil;
+        [SerializeField] private InputActionReference armaSniper;
         [Tooltip("Rueda del ratón: arriba la siguiente arma, abajo la anterior.")]
         [SerializeField] private InputActionReference cambiarArma;
         [Tooltip("Visual del puño (hijo de Manos). Se oculta con un arma de fuego en la mano.")]
         [SerializeField] private GameObject visualPunos;
         [SerializeField] private GameObject visualPistola;
         [SerializeField] private GameObject visualEscopeta;
-        [SerializeField] private GameObject visualSubfusil;
+        [SerializeField] private GameObject visualFusil;
+        [SerializeField] private GameObject visualSniper;
 
         private GolpeAPie golpe;
         private PistolaAPie pistola;
@@ -76,7 +78,8 @@ namespace MechaCyberpunk.Personaje.Combate
             armaPunos.action.Enable();
             armaPistola.action.Enable();
             armaEscopeta?.action.Enable();
-            armaSubfusil?.action.Enable();
+            armaFusil?.action.Enable();
+            armaSniper?.action.Enable();
             cambiarArma?.action.Enable();
             pistola.Cambio += AlCambiarPistola;
         }
@@ -86,7 +89,8 @@ namespace MechaCyberpunk.Personaje.Combate
             armaPunos.action.Disable();
             armaPistola.action.Disable();
             armaEscopeta?.action.Disable();
-            armaSubfusil?.action.Disable();
+            armaFusil?.action.Disable();
+            armaSniper?.action.Disable();
             cambiarArma?.action.Disable();
             pistola.Cambio -= AlCambiarPistola;
         }
@@ -109,9 +113,13 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 Cambiar(ArmaAPie.Escopeta);
             }
-            else if (armaSubfusil != null && armaSubfusil.action.WasPressedThisFrame())
+            else if (armaFusil != null && armaFusil.action.WasPressedThisFrame())
             {
-                Cambiar(ArmaAPie.Subfusil);
+                Cambiar(ArmaAPie.Fusil);
+            }
+            else if (armaSniper != null && armaSniper.action.WasPressedThisFrame())
+            {
+                Cambiar(ArmaAPie.Sniper);
             }
             else if (cambiarArma != null && cambiarArma.action.WasPerformedThisFrame())
             {
@@ -166,7 +174,8 @@ namespace MechaCyberpunk.Personaje.Combate
             Mostrar(visualPunos, ArmaAPie.Punos);
             Mostrar(visualPistola, ArmaAPie.Pistola);
             Mostrar(visualEscopeta, ArmaAPie.Escopeta);
-            Mostrar(visualSubfusil, ArmaAPie.Subfusil);
+            Mostrar(visualFusil, ArmaAPie.Fusil);
+            Mostrar(visualSniper, ArmaAPie.Sniper);
         }
 
         private void Mostrar(GameObject visual, ArmaAPie arma)

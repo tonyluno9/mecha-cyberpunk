@@ -137,7 +137,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "ArmaSubfusil",
+                    "name": "ArmaFusil",
                     "type": "Button",
                     "id": "aa8d81fa-a5f3-4f34-89d3-6c90c454b85c",
                     "expectedControlType": "",
@@ -154,6 +154,16 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "ArmaSniper",
+                    "type": "Button",
+                    "id": "68005e94-2d81-412c-bde0-5bd192140a0c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
                     "priority": 0
                 }
             ],
@@ -352,7 +362,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ArmaSubfusil",
+                    "action": "ArmaFusil",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -364,6 +374,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "CambiarArma",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "325ddfd9-bc7b-4276-bb4b-c3ab6eda7782",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ArmaSniper",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

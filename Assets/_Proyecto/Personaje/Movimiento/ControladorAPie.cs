@@ -55,6 +55,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public float GiroCamara => giroCamara;
         /// <summary>True mientras se mantiene el clic derecho con el control activo.</summary>
         public bool Apuntando => apuntando;
+        /// <summary>Multiplica la sensibilidad del ratón (T-416: baja con el zoom del sniper). 1 = normal.</summary>
+        public float FactorSensibilidad { get; set; } = 1f;
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
 
@@ -131,7 +133,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 float minima = configCamara != null ? configCamara.InclinacionMinima : -40f;
                 float maxima = configCamara != null ? configCamara.InclinacionMaxima : 60f;
-                float giro = mirada.Actualizar(mirar.action.ReadValue<Vector2>(), config.SensibilidadRaton, Mathf.Max(Mathf.Abs(minima), maxima));
+                float giro = mirada.Actualizar(mirar.action.ReadValue<Vector2>(), config.SensibilidadRaton * FactorSensibilidad, Mathf.Max(Mathf.Abs(minima), maxima));
                 giroCamara = Mathf.Repeat(giroCamara + giro, 360f);
                 mirada.Limitar(minima, maxima);
             }

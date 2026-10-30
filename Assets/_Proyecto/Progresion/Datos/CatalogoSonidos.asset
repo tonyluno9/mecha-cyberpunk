@@ -45,6 +45,18 @@ MonoBehaviour:
     finales: []
     provisionales:
     - {fileID: 8300000, guid: 6d7db36bbbc646b4d9ee0a60129cad71, type: 3}
+  - id: ARM_SNI_DISPARO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 1f6a730ff258ff54799bcbd230a918e6, type: 3}
+  - id: ARM_SNI_RECARGA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 800c5f66ecd83544f8cfdc4dffa6c2ed, type: 3}
+  - id: ARM_SNI_ZOOM
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 71bc289062dadce4aad496a08ff03f6b, type: 3}
   - id: ARM_SUB_DISPARO
     finales: []
     provisionales:

@@ -6,6 +6,7 @@ namespace MechaCyberpunk.Personaje.Combate
         Punos,
         Pistola,
         Escopeta,
-        Subfusil
+        Fusil,
+        Sniper
     }
 }

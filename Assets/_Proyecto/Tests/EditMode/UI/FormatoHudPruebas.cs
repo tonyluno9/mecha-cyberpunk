@@ -80,6 +80,15 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual("PISTOLA 0/8 · R", FormatoHud.TextoArma(ArmaAPie.Pistola, 0, 8, false, config));
         }
 
+        [Test]
+        public void TextoArma_FusilYSniper_LlevanNombreYNivel()
+        {
+            Assert.AreEqual("FUSIL II 28/30", FormatoHud.TextoArma(ArmaAPie.Fusil, 2, 28, 30, false, config));
+            Assert.AreEqual("SNIPER 3/4", FormatoHud.TextoArma(ArmaAPie.Sniper, 0, 3, 4, false, config));
+            Assert.AreEqual("SNIPER 0/4 · R", FormatoHud.TextoArma(ArmaAPie.Sniper, 0, 0, 4, false, config));
+            Assert.AreEqual("SNIPER I · RECARGANDO", FormatoHud.TextoArma(ArmaAPie.Sniper, 1, 2, 5, true, config));
+        }
+
         [TestCase(600, MotivoDinero.Premio, "+Ƀ600 · PREMIO")]
         [TestCase(-650, MotivoDinero.Reparacion, "-Ƀ650 · REPARACIÓN")]
         [TestCase(-500, MotivoDinero.Renta, "-Ƀ500 · RENTA")]

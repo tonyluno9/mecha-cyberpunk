@@ -39,7 +39,7 @@ Plan: docs/plan-noche.md. Rama tony/fase-g, modo rápido; T-414 a T-417 solo se 
 | --- | --- | --- | --- |
 | T-414 Nombres nuevos (Suburbios, SKULLS, SNAKES, El Mercado, I+D+I, El Fox, VivaCoin, Megalopolis) y moneda Biits Ƀ; CapturaUI (Core: Moneda) | Sonnet | T-407 | hecha |
 | T-415 Tu pandilla con nombre y color en HUD, mapa, aliados y avisos (Core: IPerfilJugador, ColoresPandilla) | Sonnet | T-414 | hecha |
-| T-416 Cinco armas en El Mercado: fusil de asalto y sniper con zoom, 3 niveles cada una | Sonnet | T-414 | pendiente |
+| T-416 Cinco armas en El Mercado: fusil de asalto y sniper con zoom, 3 niveles cada una | Sonnet | T-414 | hecha |
 | T-417 Profes como NPC de prueba (Inventor en el CIC, Doc en I+D+I, Hacker, Mecánico, Director) y peatones al mínimo | Sonnet | T-414, T-416 | pendiente |
 | T-418 Historia de la demo con El Doc, El Inventor, el jefe de los SKULLS y Nova; cierre del paso 2 | Opus | T-414 a T-417 | pendiente |
 

@@ -25,6 +25,10 @@ namespace MechaCyberpunk.UI.Tiendas
     /// </summary>
     public class PantallaTienda : MonoBehaviour
     {
+        private const int FilasQueCaben = 5;
+        private const float MinimoEscalaFilas = 0.3f;
+        private const int MinimoLetraFilas = 12;
+
         [SerializeField] private ConfigPantallaTienda config;
         [SerializeField] private GameObject contenido;
         [SerializeField] private Image fondo;
@@ -429,11 +433,31 @@ namespace MechaCyberpunk.UI.Tiendas
             texto.fontSize = config.TamanoTexto;
         }
 
+        // T-416: con muchas filas (El Mercado con 5 armas) se achican la letra y el alto para que quepan en la lista.
+        private float EscalaFilas(int cantidad)
+        {
+            LayoutElement plantilla = plantillaFila.GetComponent<LayoutElement>();
+            VerticalLayoutGroup grupo = listaFilas.GetComponent<VerticalLayoutGroup>();
+            if (plantilla == null || grupo == null || cantidad <= FilasQueCaben)
+            {
+                return 1f;
+            }
+            float necesario = cantidad * plantilla.preferredHeight + (cantidad - 1) * grupo.spacing;
+            float disponible = FilasQueCaben * plantilla.preferredHeight + (FilasQueCaben - 1) * grupo.spacing;
+            return Mathf.Clamp(disponible / necesario, MinimoEscalaFilas, 1f);
+        }
+
         private void AgregarFila(string contenidoFila, Color color)
         {
             Text texto = Instantiate(plantillaFila, listaFilas);
             texto.gameObject.SetActive(true);
-            texto.fontSize = config.TamanoFilas;
+            float escala = EscalaFilas(pestana == PestanaTienda.Vender ? vendibles.Count : objetos.Count);
+            texto.fontSize = Mathf.Max(MinimoLetraFilas, Mathf.RoundToInt(config.TamanoFilas * escala));
+            LayoutElement elemento = texto.GetComponent<LayoutElement>();
+            if (elemento != null && escala < 1f)
+            {
+                elemento.minHeight = elemento.preferredHeight = elemento.preferredHeight * escala;
+            }
             texto.text = contenidoFila;
             texto.color = color;
             textosFilas.Add(texto);

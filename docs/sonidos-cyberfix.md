@@ -11,7 +11,10 @@ Volumen por sección (General x sección): Ambiente y Música arrancan en 0 (sil
 | ARM_SUB_DISPARO | PistolaAPie | provisional |
 | ARM_PIS_RECARGA | PistolaAPie | provisional |
 | ARM_ESC_RECARGA_CARTUCHO | PistolaAPie | provisional |
-| ARM_SUB_RECARGA | PistolaAPie | provisional |
+| ARM_SUB_RECARGA | PistolaAPie (fusil de asalto; el ID no se renombra) | provisional |
+| ARM_SNI_DISPARO | PistolaAPie (sniper, T-416) | provisional |
+| ARM_SNI_RECARGA | PistolaAPie (sniper, T-416) | provisional |
+| ARM_SNI_ZOOM | Personaje/Combate/ZoomSniper (T-416) | provisional |
 | ARM_VACIO | PistolaAPie | provisional |
 | ARM_CAMBIAR | Personaje/Combate/ArmasAPie | provisional |
 | ARM_BALA_IMPACTO_CONCRETO | PistolaAPie | provisional |
