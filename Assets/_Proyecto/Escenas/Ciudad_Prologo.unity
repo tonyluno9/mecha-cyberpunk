@@ -23635,10 +23635,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09522eadc5ec1d6498387ec5d9a5504b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Mapa.PantallaMapa
-  ladoManzana: 80
   pixelesPorMetro: 2.6
-  colorFondo: {r: 0.02, g: 0.02, b: 0.05, a: 0.92}
-  colorJugador: {r: 1, g: 1, b: 1, a: 1}
+  tamanoVista: {x: 800, y: 560}
+  anchoLeyenda: 340
+  altoFilaLeyenda: 40
+  pasoZoom: 1.25
+  radioQuitar: 24
+  diagonalRombo: 36
+  ladoIcono: 32
+  ladoFlecha: 22
 --- !u!114 &334292980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31156,6 +31161,51 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &450394015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 450394016}
+  - component: {fileID: 450394017}
+  m_Layer: 0
+  m_Name: Marca_Mercado
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &450394016
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450394015}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -31, y: 0.2, z: 26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 856414939}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &450394017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450394015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45feab1e72e54f945aedc4d37924c209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Mapa.MarcaLugar
+  tipo: 2
 --- !u!114 &460590737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69813,6 +69863,63 @@ ReflectionProbe:
   m_UseOcclusionCulling: 1
   m_Importance: 2
   m_CustomBakedTexture: {fileID: 8900000, guid: f3220fd5d4db49c43be485fbc2598764, type: 3}
+--- !u!1 &856414937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 856414939}
+  - component: {fileID: 856414938}
+  m_Layer: 0
+  m_Name: GTA_T409
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &856414938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856414937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3126c5b57297c654eb80bee74ee40537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Mapa.Minimapa
+  radioMetros: 60
+  alfaManzanas: 0.55
+  alfaFondo: 0.85
+  ladoIcono: 30
+  ladoFlecha: 22
+  diagonalRombo: 24
+  ladoPunto: 22
+  margenPegado: 12
+  separacionTexto: 16
+--- !u!4 &856414939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856414937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 450394016}
+  - {fileID: 2011735722}
+  - {fileID: 2004002406}
+  - {fileID: 1142494406}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &865545248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80126,6 +80233,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1862740939}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1142494405
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1142494406}
+  - component: {fileID: 1142494407}
+  m_Layer: 0
+  m_Name: Marca_Casa
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1142494406
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142494405}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -55.5, y: 0.2, z: -77}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 856414939}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1142494407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142494405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45feab1e72e54f945aedc4d37924c209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Mapa.MarcaLugar
+  tipo: 5
 --- !u!1 &1145322710
 GameObject:
   m_ObjectHideFlags: 0
@@ -102809,6 +102961,51 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &2004002405
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2004002406}
+  - component: {fileID: 2004002407}
+  m_Layer: 0
+  m_Name: Marca_Cic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2004002406
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004002405}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -45.5, y: 0, z: -77}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 856414939}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2004002407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004002405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45feab1e72e54f945aedc4d37924c209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Mapa.MarcaLugar
+  tipo: 4
 --- !u!1 &2005921153
 GameObject:
   m_ObjectHideFlags: 0
@@ -102980,6 +103177,51 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &2011735721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2011735722}
+  - component: {fileID: 2011735723}
+  m_Layer: 0
+  m_Name: Marca_Clinica
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2011735722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011735721}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -34.2, y: 0.2, z: 28.300001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 856414939}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2011735723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011735721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45feab1e72e54f945aedc4d37924c209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Mapa.MarcaLugar
+  tipo: 3
 --- !u!114 &2020178048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109863,3 +110105,4 @@ SceneRoots:
   - {fileID: 158769751}
   - {fileID: 469796612}
   - {fileID: 51167862}
+  - {fileID: 856414939}

@@ -137,10 +137,22 @@ MonoBehaviour:
     finales: []
     provisionales:
     - {fileID: 8300000, guid: 51d570e28a4716b4887462bce3208926, type: 3}
+  - id: UI_ERROR
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 7e49501337447834290c8798f04ce6e3, type: 3}
   - id: UI_MOVER
     finales: []
     provisionales:
     - {fileID: 8300000, guid: ef51d9b30049b2243ac605ba0bfc550e, type: 3}
+  - id: UI_OBJETIVO_CUMPLIDO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: c9e03f35041af7444ac4cb4af062e70f, type: 3}
+  - id: UI_OBJETIVO_NUEVO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 85c19c13e271ed34cb2e77969698a7a8, type: 3}
   - id: VEH_ALARMA_ROBO
     finales: []
     provisionales:

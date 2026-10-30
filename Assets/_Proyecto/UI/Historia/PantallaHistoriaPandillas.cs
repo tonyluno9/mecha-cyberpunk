@@ -1,12 +1,15 @@
 using System;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Historia
 {
     /// <summary>
-    /// Textos de la historia de pandillas (T-406) dibujados con OnGUI: un subtítulo abajo, una ayuda arriba y la pantalla de "CONTINUARÁ...".
+    /// Textos de la historia de pandillas (T-406) con el kit de UI (T-408, canvas propio de orden 20): un subtítulo abajo al centro, una ayuda
+    /// arriba bajo el objetivo y la pantalla de "CONTINUARÁ...".
     /// Enter o Esc cierran el continuará (tras un segundo). Tiempo sin escala.
     /// </summary>
     public class PantallaHistoriaPandillas : MonoBehaviour
@@ -15,16 +18,25 @@ namespace MechaCyberpunk.UI.Historia
         public const string LineaContinuara = "NOVA ARMA A LOS SNAKES. NEÓN ALTO TE ESPERA.";
         public const string TeclasContinuara = "ENTER: SEGUIR JUGANDO";
         private const float SegundosMinimosContinuara = 1f;
+        public const int OrdenCanvas = 20;
+        private const float AnchoTextos = 1400f;
+        private const float AnchoSubtitulo = 960f;
+        private const float AltoPorLetra = 1.4f;
+        private const float AlturaJuego = 0.84f;
+        private const float AlturaTitulo = 0.6f;
+        private const float AlturaLinea = 0.44f;
+        private const float AlturaTeclas = 0.34f;
+        private static readonly Color FondoContinuara = new Color(0f, 0f, 0f, 0.85f);
 
         private string subtitulo = string.Empty;
         private float finSubtitulo;
         private string ayuda = string.Empty;
         private float finAyuda;
         private float inicioContinuara;
-        private GUIStyle estiloSubtitulo;
-        private GUIStyle estiloAyuda;
-        private GUIStyle estiloTitulo;
-        private GUIStyle estiloTeclas;
+        private Canvas canvas;
+        private Text textoSubtitulo;
+        private Text textoAyuda;
+        private Image fondoContinuara;
 
         public string Subtitulo => Time.unscaledTime < finSubtitulo ? subtitulo : string.Empty;
         public string Ayuda => Time.unscaledTime < finAyuda ? ayuda : string.Empty;
@@ -37,18 +49,21 @@ namespace MechaCyberpunk.UI.Historia
         {
             subtitulo = texto;
             finSubtitulo = Time.unscaledTime + segundos;
+            Refrescar();
         }
 
         public void MostrarAyuda(string texto, float segundos)
         {
             ayuda = texto;
             finAyuda = Time.unscaledTime + segundos;
+            Refrescar();
         }
 
         public void MostrarContinuara()
         {
             ContinuaraVisible = true;
             inicioContinuara = Time.unscaledTime;
+            Refrescar();
         }
 
         public void CerrarContinuara()
@@ -58,7 +73,48 @@ namespace MechaCyberpunk.UI.Historia
                 return;
             }
             ContinuaraVisible = false;
+            Refrescar();
             ContinuaraCerrada?.Invoke();
+        }
+
+        private void Awake()
+        {
+            EstiloCyberfix e = KitUI.Estilo;
+            canvas = KitUI.CrearCanvas(transform, "CanvasHistoria", OrdenCanvas);
+            textoSubtitulo = TextoEnRanura("Subtitulo", RolTexto.Texto, DisposicionHud.Subtitulo, e.Texto, AnchoSubtitulo);
+            textoAyuda = TextoEnRanura("Ayuda", RolTexto.Texto, DisposicionHud.AyudaHistoria, e.Turquesa, AnchoTextos);
+
+            fondoContinuara = KitUI.CrearImagen(canvas.transform, "Continuara", FondoContinuara);
+            KitUI.Estirar(fondoContinuara.rectTransform);
+            Transform c = fondoContinuara.transform;
+            TextoCentrado(c, "Juego", RolTexto.Encabezado, e.Turquesa, AlturaJuego).text = NombreJuego.Nombre;
+            TextoCentrado(c, "Titulo", RolTexto.Titulo, e.Magenta, AlturaTitulo).text = TituloContinuara;
+            TextoCentrado(c, "Linea", RolTexto.Texto, e.Texto, AlturaLinea).text = LineaContinuara;
+            TextoCentrado(c, "Teclas", RolTexto.Ayuda, e.Turquesa, AlturaTeclas).text = TeclasContinuara;
+            Refrescar();
+        }
+
+        private Text TextoEnRanura(string nombre, RolTexto rol, RanuraHud ranura, Color color, float ancho)
+        {
+            Text texto = KitUI.CrearTexto(canvas.transform, nombre, rol, TextAnchor.MiddleCenter);
+            KitUI.Colocar(texto.rectTransform, ranura, ancho);
+            texto.horizontalOverflow = HorizontalWrapMode.Wrap;
+            texto.color = color;
+            return texto;
+        }
+
+        // Centrado en x, a una altura (fracción de la pantalla desde abajo).
+        private static Text TextoCentrado(Transform padre, string nombre, RolTexto rol, Color color, float altura)
+        {
+            Text texto = KitUI.CrearTexto(padre, nombre, rol, TextAnchor.MiddleCenter);
+            RectTransform rect = texto.rectTransform;
+            rect.anchorMin = new Vector2(0f, altura);
+            rect.anchorMax = new Vector2(1f, altura);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.sizeDelta = new Vector2(0f, KitUI.Estilo.Tamano(rol) * AltoPorLetra);
+            texto.color = color;
+            return texto;
         }
 
         private void Update()
@@ -69,45 +125,40 @@ namespace MechaCyberpunk.UI.Historia
             {
                 CerrarContinuara();
             }
+            Refrescar();
         }
 
-        private static GUIStyle Estilo(int tamano, FontStyle fuente, TextAnchor ancla, Color color)
+        // El continuará tapa todo; el subtítulo y la ayuda se ven mientras dura su tiempo.
+        private void Refrescar()
         {
-            GUIStyle estilo = new GUIStyle(GUI.skin.label) { fontSize = tamano, fontStyle = fuente, alignment = ancla, wordWrap = true };
-            estilo.normal.textColor = color;
-            return estilo;
-        }
-
-        private void OnGUI()
-        {
-            if (estiloSubtitulo == null)
+            if (fondoContinuara == null)
             {
-                int u = Mathf.Max(14, Screen.height / 36);
-                estiloSubtitulo = Estilo(u, FontStyle.Bold, TextAnchor.MiddleCenter, Color.white);
-                estiloAyuda = Estilo(u, FontStyle.Bold, TextAnchor.UpperCenter, new Color(1f, 0.85f, 0.2f));
-                estiloTitulo = Estilo(u * 4, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(1f, 0.1f, 0.8f));
-                estiloTeclas = Estilo(u, FontStyle.Normal, TextAnchor.MiddleCenter, Color.white);
-            }
-            float ancho = Screen.width;
-            float alto = Screen.height;
-            if (ContinuaraVisible)
-            {
-                GUI.color = new Color(0f, 0f, 0f, 0.85f);
-                GUI.DrawTexture(new Rect(0f, 0f, ancho, alto), Texture2D.whiteTexture);
-                GUI.color = Color.white;
-                GUI.Label(new Rect(0f, alto * 0.14f, ancho, alto * 0.12f), NombreJuego.Nombre, estiloTeclas);
-                GUI.Label(new Rect(0f, alto * 0.3f, ancho, alto * 0.2f), TituloContinuara, estiloTitulo);
-                GUI.Label(new Rect(0f, alto * 0.52f, ancho, alto * 0.1f), LineaContinuara, estiloTeclas);
-                GUI.Label(new Rect(0f, alto * 0.62f, ancho, alto * 0.1f), TeclasContinuara, estiloTeclas);
                 return;
             }
-            if (Time.unscaledTime < finSubtitulo)
+            Mostrar(fondoContinuara.gameObject, ContinuaraVisible);
+            string sub = ContinuaraVisible ? string.Empty : Subtitulo;
+            string ayu = ContinuaraVisible ? string.Empty : Ayuda;
+            if (textoSubtitulo.text != sub)
             {
-                GUI.Label(new Rect(ancho * 0.15f, alto * 0.78f, ancho * 0.7f, alto * 0.08f), subtitulo, estiloSubtitulo);
+                textoSubtitulo.text = sub;
             }
-            if (Time.unscaledTime < finAyuda)
+            if (textoAyuda.text != ayu)
             {
-                GUI.Label(new Rect(ancho * 0.2f, alto * 0.14f, ancho * 0.6f, alto * 0.12f), ayuda, estiloAyuda);
+                textoAyuda.text = ayu;
+            }
+            // T-409: con el mapa abierto la ayuda quedaba tenue detrás de su título; se esconde mientras tanto (sigue contando su tiempo).
+            bool verAyuda = !MechaCyberpunk.UI.Mapa.PantallaMapa.HayAbierto;
+            if (textoAyuda.enabled != verAyuda)
+            {
+                textoAyuda.enabled = verAyuda;
+            }
+        }
+
+        private static void Mostrar(GameObject objeto, bool visible)
+        {
+            if (objeto.activeSelf != visible)
+            {
+                objeto.SetActive(visible);
             }
         }
     }

@@ -188,7 +188,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 if (Time.time > fin)
                 {
                     Avanzar(false);
-                    Assert.Fail("No llegó a: " + que + " (objetivo '" + hud.TextoObjetivo.text + "', distancia " + hud.TextoDistancia.text + ")");
+                    Assert.Fail("No llegó a: " + que + " (objetivo '" + hud.TextoObjetivo.text + "', distancia " + hud.TextoDistancia + ")");
                 }
                 Conducir(hud.AnguloFlecha);
                 yield return Frame();
@@ -269,7 +269,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(0, fijador.Indice);
             Assert.IsTrue(hud.GrupoObjetivo.activeSelf, "El HUD muestra el objetivo");
             StringAssert.Contains("esquina", hud.TextoObjetivo.text);
-            Assert.IsTrue(hud.Flecha.gameObject.activeSelf, "Y su flecha");
+            Assert.IsTrue(hud.HayPosicionObjetivo, "Y su flecha");
 
             // b) Sigue la flecha hasta la esquina.
             yield return SeguirFlecha(() => fijador.Indice >= 1, "la esquina");

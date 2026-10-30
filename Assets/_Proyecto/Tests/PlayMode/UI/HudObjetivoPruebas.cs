@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.UI
 {
-    /// <summary>Pruebas jugables del objetivo en el HUD: texto, flecha, distancia y REGRESA con entrada simulada.</summary>
+    /// <summary>Pruebas jugables del objetivo en el HUD: texto, ángulo, distancia y REGRESA con entrada simulada (la flecha la dibuja el marcador, T-408).</summary>
     public class HudObjetivoPruebas : BaseHudObjetivo
     {
         private const float DistanciaBarAlFrente = 60f;
@@ -60,9 +60,8 @@ namespace MechaCyberpunk.Tests.UI
             servicio.Fijar(new Objetivo("Ve al bar", IdLugar.Bar));
             yield return Esperar(0.2f);
 
-            Assert.IsTrue(hud.Flecha.gameObject.activeSelf);
+            Assert.IsTrue(hud.HayPosicionObjetivo);
             Assert.AreEqual(0f, hud.AnguloFlecha, ToleranciaAnguloCalculado);
-            Assert.AreEqual(0f, Mathf.DeltaAngle(hud.Flecha.rectTransform.localEulerAngles.z, 0f), ToleranciaAnguloCalculado);
         }
 
         [UnityTest]
@@ -74,9 +73,6 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.AreEqual(AnguloEsperado(), hud.AnguloFlecha, ToleranciaAnguloCalculado);
             Assert.AreEqual(45f, hud.AnguloFlecha, ToleranciaAnguloCalculado + 2f, "Está a unos 45 grados a la derecha");
-            // La flecha de la UI gira al revés que el ángulo (positivo es a la izquierda).
-            float girada = hud.Flecha.rectTransform.localEulerAngles.z;
-            Assert.AreEqual(0f, Mathf.DeltaAngle(girada, -hud.AnguloFlecha), ToleranciaAnguloCalculado);
         }
 
         [UnityTest]
@@ -92,8 +88,6 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.AreEqual(-CuartoDeVuelta, hud.AnguloFlecha, ToleranciaAnguloGiro);
             Assert.AreEqual(AnguloEsperado(), hud.AnguloFlecha, ToleranciaAnguloCalculado);
-            Assert.AreEqual(CuartoDeVuelta, Mathf.DeltaAngle(0f, hud.Flecha.rectTransform.localEulerAngles.z), ToleranciaAnguloGiro,
-                "La flecha de la UI queda girada a la izquierda para señalar al objetivo que quedó a la izquierda");
         }
 
         [UnityTest]
@@ -103,7 +97,7 @@ namespace MechaCyberpunk.Tests.UI
             servicio.Fijar(new Objetivo("Ve al bar", IdLugar.Bar));
             yield return Esperar(0.3f);
 
-            string texto = hud.TextoDistancia.text;
+            string texto = hud.TextoDistancia;
             StringAssert.EndsWith(" m", texto);
             float mostrada = float.Parse(texto.Substring(0, texto.Length - 2));
             Assert.AreEqual(servicio.Distancia, mostrada, ToleranciaDistancia);
@@ -138,20 +132,6 @@ namespace MechaCyberpunk.Tests.UI
             StringAssert.StartsWith(config.TextoRegresa + " · ", hud.TextoObjetivo.text);
             StringAssert.EndsWith("Ve al bar", hud.TextoObjetivo.text);
             Assert.AreEqual(config.ColorRegresa, hud.TextoObjetivo.color);
-            Assert.AreEqual(config.ColorRegresa, hud.Flecha.color);
-
-            // La flecha pulsa: su tamaño cambia con el tiempo.
-            float menor = float.MaxValue;
-            float mayor = float.MinValue;
-            float finMuestra = Time.time + 1f / config.VelocidadPulsoFlecha;
-            while (Time.time < finMuestra)
-            {
-                float escala = hud.Flecha.rectTransform.localScale.x;
-                menor = Mathf.Min(menor, escala);
-                mayor = Mathf.Max(mayor, escala);
-                yield return null;
-            }
-            Assert.Greater(mayor - menor, config.AmplitudPulsoFlecha * 0.5f, "La flecha pulsa mientras se aleja");
 
             // Media vuelta y a caminar hacia el objetivo: REGRESA se va.
             yield return Girar(MediaVuelta);
@@ -164,8 +144,7 @@ namespace MechaCyberpunk.Tests.UI
             Release(teclado.wKey);
             yield return null;
             Assert.AreEqual("Ve al bar", hud.TextoObjetivo.text);
-            Assert.AreEqual(config.ColorTexto, hud.TextoObjetivo.color);
-            Assert.AreEqual(1f, hud.Flecha.rectTransform.localScale.x, 0.001f, "La flecha deja de pulsar");
+            Assert.AreEqual(MechaCyberpunk.UI.Kit.KitUI.Estilo.Naranja, hud.TextoObjetivo.color, "El objetivo va en el naranja del kit");
         }
 
         [UnityTest]
@@ -195,7 +174,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return Esperar(0.2f);
 
             Assert.IsTrue(hud.GrupoObjetivo.activeSelf, "En carro el objetivo se ve");
-            Assert.IsTrue(hud.Flecha.gameObject.activeSelf, "También la flecha, medida desde el jugador");
+            Assert.IsTrue(hud.HayPosicionObjetivo, "También la distancia, medida desde el jugador");
             Assert.IsFalse(hud.GrupoInteraccion.activeSelf, "En carro no hay aviso de interacción");
             Assert.AreSame(falso, Registro<IJugador>.Actual);
         }
@@ -236,8 +215,8 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.IsTrue(hud.GrupoObjetivo.activeSelf);
             Assert.AreEqual("Solo texto", hud.TextoObjetivo.text);
-            Assert.IsFalse(hud.Flecha.gameObject.activeSelf);
-            Assert.IsFalse(hud.TextoDistancia.gameObject.activeSelf);
+            Assert.IsFalse(hud.HayPosicionObjetivo);
+            Assert.AreEqual(string.Empty, hud.TextoDistancia);
         }
 
         [UnityTest]

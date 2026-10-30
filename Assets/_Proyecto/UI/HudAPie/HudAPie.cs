@@ -8,20 +8,23 @@ using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// HUD del jugador a pie: vida, mira, arma con balas, canción, objetivo con flecha y aviso de interacción.
+    /// HUD del jugador a pie: vida, mira, arma con balas, canción, objetivo (el rombo y la flecha del borde los dibuja MarcadorObjetivo, T-408) y aviso de interacción.
     /// Encuentra al jugador y el objetivo por <see cref="Registro{T}"/> (ahora o cuando se registren) y casi todo se
-    /// actualiza con eventos; solo la flecha, la distancia y el aviso de la puerta se calculan en cada frame.
+    /// actualiza con eventos; solo el ángulo, la distancia y el aviso de la puerta se calculan en cada frame.
     /// A pie muestra todo, en carro solo la canción y el objetivo y en el mecha nada (en la cabina todo es diegético).
     /// </summary>
     public class HudAPie : MonoBehaviour
     {
         [SerializeField] private ConfigHudAPie config;
+        [Tooltip("Estilo del kit de UI (T-408); lo fija para todo el juego al nacer el HUD.")]
+        [SerializeField] private EstiloCyberfix estilo;
         [Header("Grupos (se encienden y apagan por modo)")]
         [SerializeField] private GameObject grupoVida;
         [SerializeField] private GameObject grupoMira;
@@ -37,8 +40,6 @@ namespace MechaCyberpunk.UI.Hud
         [Header("Objetivo (arriba al centro)")]
         [SerializeField] private GameObject grupoObjetivo;
         [SerializeField] private Text textoObjetivo;
-        [SerializeField] private Image flecha;
-        [SerializeField] private Text textoDistancia;
         [Header("Interacción (abajo al centro)")]
         [SerializeField] private GameObject grupoInteraccion;
         [SerializeField] private Text textoInteraccion;
@@ -116,11 +117,11 @@ namespace MechaCyberpunk.UI.Hud
         private ServicioObjetivos servicio;
         private bool listo;
         private bool pendienteRefresco;
-        private Texture2D texturaFlecha;
-        private Sprite spriteFlecha;
         private string avisoPuerta = string.Empty;
         private float avisoRestante;
         private float anguloFlecha;
+        private string textoDistancia = string.Empty;
+        private bool hayPosicionObjetivo;
 
         public GameObject GrupoVidaRival => grupoVidaRival;
         public Image RellenoVidaRival => rellenoVidaRival;
@@ -137,8 +138,11 @@ namespace MechaCyberpunk.UI.Hud
         public GameObject GrupoCancion => grupoCancion;
         public GameObject GrupoObjetivo => grupoObjetivo;
         public Text TextoObjetivo => textoObjetivo;
-        public Image Flecha => flecha;
-        public Text TextoDistancia => textoDistancia;
+        /// <summary>Distancia al objetivo ("45 m"); el marcador (T-408) la dibuja. Vacía sin posición.</summary>
+        public string TextoDistancia => textoDistancia;
+
+        /// <summary>True si el objetivo tiene posición (el marcador lo dibuja en el mundo).</summary>
+        public bool HayPosicionObjetivo => hayPosicionObjetivo;
         public GameObject GrupoInteraccion => grupoInteraccion;
         public Text TextoAvisoInteraccion => textoInteraccion;
         public GameObject GrupoCalor => grupoCalor;
@@ -179,14 +183,15 @@ namespace MechaCyberpunk.UI.Hud
         public GameObject GrupoLlamado => grupoLlamado;
         public Text TextoLlamado => textoLlamado;
 
-        /// <summary>Último ángulo (°) calculado para la flecha: 0 enfrente, positivo a la derecha.</summary>
+        /// <summary>Ángulo (°) de la cámara al objetivo: 0 enfrente, positivo a la derecha (la flecha giratoria se quitó en T-408).</summary>
         public float AnguloFlecha => anguloFlecha;
 
         private void Awake()
         {
+            KitUI.FijarEstilo(estilo);
             if (config == null || grupoVida == null || grupoMira == null || grupoArma == null || grupoCancion == null
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
-                || grupoObjetivo == null || textoObjetivo == null || flecha == null || textoDistancia == null
+                || grupoObjetivo == null || textoObjetivo == null
                 || grupoInteraccion == null || textoInteraccion == null || grupoLlamado == null || textoLlamado == null
                 || grupoCalor == null || textoCalor == null || marcasCalor == null || marcasCalor.Length == 0
                 || grupoDinero == null || textoDinero == null || grupoAvisoDinero == null || textoAvisoDinero == null
@@ -214,8 +219,7 @@ namespace MechaCyberpunk.UI.Hud
             textoVida.color = config.ColorVida;
             textoArma.color = config.ColorTexto;
             textoCancion.color = config.ColorTexto;
-            textoObjetivo.color = config.ColorTexto;
-            textoDistancia.color = config.ColorTexto;
+            textoObjetivo.color = KitUI.Estilo.Naranja;
             textoInteraccion.color = config.ColorTexto;
             textoLlamado.color = config.ColorTexto;
             textoDinero.color = config.ColorTexto;
@@ -231,12 +235,6 @@ namespace MechaCyberpunk.UI.Hud
                 }
             }
             textoCancion.text = config.TextoCancionEspera;
-
-            // La flecha es un triángulo dibujado por código, sin asset.
-            texturaFlecha = CrearTexturaFlecha();
-            spriteFlecha = Sprite.Create(texturaFlecha, new Rect(0f, 0f, texturaFlecha.width, texturaFlecha.height), new Vector2(0.5f, 0.5f));
-            flecha.sprite = spriteFlecha;
-            flecha.color = config.ColorTexto;
 
             listo = true;
             OcultarTodo();
@@ -289,7 +287,7 @@ namespace MechaCyberpunk.UI.Hud
                 ActualizarArma();
             }
             ActualizarMira();
-            ActualizarFlecha();
+            ActualizarAngulo();
             ActualizarInteraccion();
             ActualizarLlamado();
             ActualizarAvisoDinero();
@@ -336,19 +334,6 @@ namespace MechaCyberpunk.UI.Hud
             DesvincularLlamado();
         }
 
-        private void OnDestroy()
-        {
-            if (spriteFlecha != null)
-            {
-                Destroy(spriteFlecha);
-            }
-            if (texturaFlecha != null)
-            {
-                Destroy(texturaFlecha);
-            }
-        }
-
-        /// <summary>Muestra la canción que suena. Con texto vacío vuelve al texto de espera.</summary>
         public void MostrarCancion(string titulo)
         {
             textoCancion.text = string.IsNullOrEmpty(titulo) ? config.TextoCancionEspera : titulo;
@@ -1143,66 +1128,22 @@ namespace MechaCyberpunk.UI.Hud
             bool seAleja = servicio != null && servicio.SeAleja;
             string texto = objetivos.Actual.Texto ?? string.Empty;
             textoObjetivo.text = seAleja ? config.TextoRegresa + " · " + texto : texto;
-            Color color = seAleja ? config.ColorRegresa : config.ColorTexto;
-            textoObjetivo.color = color;
-            flecha.color = color;
-            if (!seAleja)
-            {
-                flecha.rectTransform.localScale = Vector3.one;
-            }
+            textoObjetivo.color = seAleja ? config.ColorRegresa : KitUI.Estilo.Naranja;
         }
 
-        // La flecha y la distancia sí se calculan cada frame: la cámara gira todo el tiempo.
-        private void ActualizarFlecha()
+        // El ángulo y la distancia se calculan cada frame (la cámara gira todo el tiempo); el marcador dibuja el objetivo.
+        private void ActualizarAngulo()
         {
-            if (!grupoObjetivo.activeSelf)
+            hayPosicionObjetivo = grupoObjetivo.activeSelf && servicio != null && servicio.PosicionResuelta && jugador != null && jugador.Raiz != null;
+            if (!hayPosicionObjetivo)
             {
+                textoDistancia = string.Empty;
                 return;
             }
-
-            bool conPosicion = servicio != null && servicio.PosicionResuelta && jugador != null && jugador.Raiz != null;
-            flecha.gameObject.SetActive(conPosicion);
-            textoDistancia.gameObject.SetActive(conPosicion);
-            if (!conPosicion)
-            {
-                return;
-            }
-
             Camera camara = jugador.Camara;
             Transform origen = camara != null ? camara.transform : jugador.Raiz;
             anguloFlecha = CalculoFlechaObjetivo.Angulo(origen.position, origen.forward, servicio.Posicion);
-            // En la UI un giro positivo va a la izquierda y el ángulo positivo es a la derecha: se invierte.
-            flecha.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -anguloFlecha);
-            textoDistancia.text = CalculoFlechaObjetivo.TextoDistancia(servicio.Distancia);
-
-            if (servicio.SeAleja)
-            {
-                float pulso = 0.5f + 0.5f * Mathf.Sin(Time.time * config.VelocidadPulsoFlecha * Mathf.PI * 2f);
-                flecha.rectTransform.localScale = Vector3.one * (1f + config.AmplitudPulsoFlecha * pulso);
-            }
-        }
-
-        private static Texture2D CrearTexturaFlecha()
-        {
-            const int lado = 64;
-            Texture2D textura = new Texture2D(lado, lado, TextureFormat.RGBA32, false);
-            textura.filterMode = FilterMode.Bilinear;
-            textura.wrapMode = TextureWrapMode.Clamp;
-            Color32[] pixeles = new Color32[lado * lado];
-            // Triángulo con la punta arriba: la fila y = lado - 1 es la de arriba y el ancho crece hacia abajo.
-            for (int y = 0; y < lado; y++)
-            {
-                float ancho = (1f - (float)y / (lado - 1)) * lado;
-                float inicio = (lado - ancho) / 2f;
-                for (int x = 0; x < lado; x++)
-                {
-                    bool dentro = x >= inicio && x <= inicio + ancho;
-                    pixeles[y * lado + x] = dentro ? new Color32(255, 255, 255, 255) : new Color32(255, 255, 255, 0);
-                }
-            }
-            textura.SetPixels32(pixeles);
-            textura.Apply();
-            return textura;
+            textoDistancia = CalculoFlechaObjetivo.TextoDistancia(servicio.Distancia);
         }
 
         // ---- Llamado del mecha ----

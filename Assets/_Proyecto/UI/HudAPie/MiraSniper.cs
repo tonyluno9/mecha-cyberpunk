@@ -1,6 +1,6 @@
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Movimiento;
-using MechaCyberpunk.UI.Mapa;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +9,7 @@ namespace MechaCyberpunk.UI.Hud
     /// <summary>
     /// Mira del sniper (T-416): mientras dura el zoom, pantalla negra con un círculo transparente del 80 % del alto, una cruz fina turquesa
     /// y la distancia al punto apuntado abajo ("82 m"). Va en un objeto de la escena (busca al <see cref="ZoomSniper"/> del jugador); crea su propio canvas (orden 16).
-    /// T-408 la pasa al kit de UI.
+    /// T-408 la pasó al kit de UI: canvas, texto y turquesa de la guía.
     /// </summary>
     public class MiraSniper : MonoBehaviour
     {
@@ -17,7 +17,7 @@ namespace MechaCyberpunk.UI.Hud
         private const int LadoTextura = 512;
         private const float FraccionCirculo = 0.8f;
         private const float AlcanceMaximo = 300f;
-        private static readonly Color Turquesa = new Color(0.1f, 0.9f, 1f);
+        private const float AnchoDistancia = 300f;
 
         private ZoomSniper zoom;
         private ControladorAPie controlador;
@@ -37,16 +37,17 @@ namespace MechaCyberpunk.UI.Hud
 
         private void Awake()
         {
-            canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasMiraSniper", OrdenCanvas);
+            canvas = KitUI.CrearCanvas(transform, "CanvasMiraSniper", OrdenCanvas);
+            Color turquesa = KitUI.Estilo.Turquesa;
             textura = CrearTextura();
             cuadrado = CrearImagen("Circulo", canvas.transform, Color.white, textura);
             barraIzquierda = CrearImagen("BarraIzquierda", canvas.transform, Color.black, null);
             barraDerecha = CrearImagen("BarraDerecha", canvas.transform, Color.black, null);
-            cruzVertical = CrearImagen("CruzVertical", cuadrado, Turquesa, null);
-            cruzHorizontal = CrearImagen("CruzHorizontal", cuadrado, Turquesa, null);
-            textoDistancia = FormatoTerritorio.CrearTexto(canvas.transform, "Distancia", 22, TextAnchor.LowerCenter,
-                new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 70f), new Vector2(300f, 40f));
-            textoDistancia.color = Turquesa;
+            cruzVertical = CrearImagen("CruzVertical", cuadrado, turquesa, null);
+            cruzHorizontal = CrearImagen("CruzHorizontal", cuadrado, turquesa, null);
+            textoDistancia = KitUI.CrearTexto(canvas.transform, "Distancia", RolTexto.Hud, TextAnchor.LowerCenter);
+            KitUI.Colocar(textoDistancia.rectTransform, DisposicionHud.Interaccion, AnchoDistancia);
+            textoDistancia.color = turquesa;
             canvas.enabled = false;
         }
 

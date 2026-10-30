@@ -37,6 +37,7 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
             jefe.Vencido += AlVencer;
+            jefe.MarcarComoJefe();
             jefe.gameObject.SetActive(false);
         }
 

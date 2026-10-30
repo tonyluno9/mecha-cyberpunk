@@ -86,12 +86,20 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.escapeKey);
             Assert.IsFalse(mapa.Abierto, "Esc cierra el mapa.");
 
+            // T-418: la historia apaga los grupos del Tianguis hasta su paso; aquí se prenden (atajo) para contar su zona.
+            foreach (PandillaAPie grupo in Object.FindObjectsByType<PandillaAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                grupo.gameObject.SetActive(true);
+            }
+            yield return null;
+
             // Los pandilleros del centro (zona del tianguis) caen: cada uno suma 10.
             int caidos = 0;
             List<PandillaAPie> delCentro = new List<PandillaAPie>();
             foreach (PandillaAPie grupo in Object.FindObjectsByType<PandillaAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                if (territorio.ZonaEn(grupo.Centro) != "tianguis")
+                // Un grupo que sigue sin Awake (sin pandilleros) no cuenta.
+                if (grupo.Pandilleros == null || territorio.ZonaEn(grupo.Centro) != "tianguis")
                 {
                     continue;
                 }

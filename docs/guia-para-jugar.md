@@ -33,6 +33,11 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - El Tianguis (calle principal entre x -47 y 47) tiene un arco magenta "EL TIANGUIS" y unos 11 puestos con lona de color. La esquina de la pantalla dice EL TIANGUIS al entrar. ¿Se reconoce como tianguis?
 - Disparos, golpes, pasos, saltos, compras y menús suenan con sonidos provisionales (generados). La lluvia, la música y los ambientes están apagados. ¿Los disparos pegan o estorban?
 
+### T-409 minimapa y mapa (qué probar)
+- Abajo a la izquierda va un minimapa redondo de 60 m que gira contigo (arriba es hacia donde miras): calles grises, manzanas del color de su dueño, enemigos en rojo, tus aliados de tu color y los iconos de EL MERCADO (Ƀ), I+D+I (+), CIC (engrane) y CASA. ¿Te ubicas sin abrir el mapa? ¿Marea que gire?
+- M abre el mapa: la rueda hace zoom de 1x a 3x donde está el cursor, a la derecha va la leyenda; un clic marca un punto y otro clic encima lo quita. M o Esc cierran.
+- Con el mapa cerrado, el punto marcado sale en el minimapa en turquesa con su distancia ("40 m") y baja al caminar hacia él; si está lejos queda pegado al borde. ¿Es útil marcar? ¿60 m es poco o mucho?
+
 ## Build viejo con mechas (antes de la fase G)
 
 Build de Windows con las escenas de prueba de Tony más Ciudad_Prologo y Clandestino de Alan (T-136/T-137 aún pendientes: todavía no hay demo encadenada).
@@ -181,3 +186,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Nombres y Ƀ: al despertar sale "MEGALOPOLIS · SUBURBIOS"; todo dice SKULLS, SNAKES, El Mercado, I+D+I, El Fox, VivaCoin y los Biits (Ƀ); en El Mercado compra el SNIPER (5, clic derecho = zoom).
 - La historia: tras el CHATO, E con EL DOC te cura gratis ("Aguanta, mijo..."), E con EL INVENTOR deja tu pistola en PISTOLA I gratis; vence SKULLS (VENCE A LOS SKULLS n/7) y a su jefe, ve con EL HACKER en VivaCoin: dice que NOVA les paga y les da armas a los SNAKES, y sale CONTINUARÁ.
 - Después, en el juego libre, aparecen los SNAKES en Neón Alto: 70 de respeto saca a su jefe y al vencerlo Neón Alto es tuya. Observa: ¿se entiende sin explicarla?, ¿los profes rompen el ritmo?, ¿NOVA da ganas de seguir? (6 peatones de día y 8 de noche).
+
+### T-408 marcador del objetivo y HUD ordenado (paso 3)
+- Al despertar, un rombo naranja flota sobre la puerta con la distancia turquesa abajo ("10 m"); camina hacia él y la distancia baja. Date la vuelta: el rombo se apaga y una flecha naranja en el borde (izquierdo o derecho) apunta hacia la puerta. ¿Encuentras el objetivo sin pensar? ¿La flecha se entiende?
+- M abre el mapa: el mismo rombo marca el objetivo (con contorno oscuro para que se vea sobre tu color). Arriba al centro va el objetivo en naranja ("SAL A LA CALLE", luego "DEFIENDE A DOÑA LUPE"); a menos de 3 m el rombo se apaga.
+- El HUD ya no se encima: radio, renta y zona arriba a la izquierda; Biits, vida y ayuda de controles abajo a la izquierda; tu pandilla abajo a la derecha sobre el arma; subtítulos abajo al centro. ¿Te gustan los colores y la letra? ¿El rombo estorba al pelear?

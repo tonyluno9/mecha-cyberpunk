@@ -24,8 +24,8 @@ y 3 líneas en docs/guia-para-jugar.md en cada una. Guía de estilo de todas las
 | Tarea | Modelo | Depende de | Estado |
 | --- | --- | --- | --- |
 | T-407 Ronda 2: nombre CYBERFIX, GestorSonidos con provisionales, bugs del mercado negro, el Tianguis y la escopeta (Core: Sonido, productName) | Sonnet | T-406 | hecha |
-| T-408 Kit de UI y marcador de objetivo con distancia y flecha en el borde; adiós OnGUI | Opus | T-407, T-418 | pendiente |
-| T-409 Minimapa redondo que gira y mapa grande con zoom, leyenda y punto marcado (Core: IMarcaMapa) | Opus | T-408 | pendiente |
+| T-408 Kit de UI y marcador de objetivo con distancia y flecha en el borde; adiós OnGUI | Opus | T-407, T-418 | hecha |
+| T-409 Minimapa redondo que gira y mapa grande con zoom, leyenda y punto marcado (Core: IMarcaMapa) | Opus | T-408 | hecha |
 | T-410 Pausa real con Esc: continuar, guardar, cargar, opciones y salir al título (Core: Pausa) | Sonnet | T-408, T-412 | pendiente |
 | T-411 Opciones: sensibilidad, invertir Y, volúmenes, calidad, resolución y pantalla completa (Core: IOpciones) | Sonnet | T-407, T-408, T-410 | pendiente |
 | T-412 Guardar y cargar en 3 ranuras más AUTOGUARDADO; "Continuar" carga la más reciente | Opus | T-408 | pendiente |
