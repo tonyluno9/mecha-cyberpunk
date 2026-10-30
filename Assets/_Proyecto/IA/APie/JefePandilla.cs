@@ -55,6 +55,10 @@ namespace MechaCyberpunk.IA.APie
                 IJugador jugador = Registro<IJugador>.Actual;
                 bool cerca = jugador != null && jugador.Raiz != null && jugador.Modo == ModoJugador.APie
                     && (jugador.Raiz.position - transform.position).sqrMagnitude <= radioAviso * radioAviso;
+                if (cerca && !jefe.Alerta)
+                {
+                    Sonidos.ReproducirEn("PAN_JEFE_ENTRADA", transform.position);
+                }
                 jefe.Alerta = cerca;
                 return;
             }

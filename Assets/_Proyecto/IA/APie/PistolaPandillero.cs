@@ -89,6 +89,10 @@ namespace MechaCyberpunk.IA.APie
         public void Apuntar(Vector3 origen, Vector3 objetivo)
         {
             AsegurarLaser();
+            if (!avisando)
+            {
+                Sonidos.ReproducirEn("ARM_LASER_AVISO", origen);
+            }
             avisando = true;
             laser.SetPosition(0, origen);
             laser.SetPosition(1, objetivo);

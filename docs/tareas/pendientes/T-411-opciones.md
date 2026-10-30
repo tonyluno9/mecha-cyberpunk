@@ -13,7 +13,8 @@ y la pantalla completa. Cada cambio se aplica al instante y se guarda, aparte de
 - Volumen: `ISonidos.FijarVolumen(SeccionSonido, float)` (T-407): General, Efectos, Voces, Ambiente, Musica, Interfaz.
 - Calidad: ProjectSettings solo tiene los niveles "Mobile" y "PC", con URP 17.3.
 - Pausa: `UI/Pausa/PantallaPausa.cs` (T-410) con el botón OPCIONES desactivado.
-- Decisión: D-tony-243. **Cambio de Core autorizado por Tony**: `Core/Opciones/IOpciones.cs` (lo leen Personaje y Vehiculos).
+- El zoom del sniper (T-416) baja la sensibilidad a x0.35: ese factor se multiplica por el de las opciones, no lo reemplaza.
+- Decisiones: D-tony-243 y D-tony-259. **Cambio de Core autorizado por Tony**: `Core/Opciones/IOpciones.cs` (lo leen Personaje y Vehiculos).
 
 ## Carpetas permitidas
 Core/Opciones/ (nuevo), Progresion/Opciones/ (nuevo; su asmdef puede referenciar el runtime de URP), Personaje/Movimiento/, Vehiculos/Carro/,
