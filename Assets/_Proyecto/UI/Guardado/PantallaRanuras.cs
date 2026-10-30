@@ -36,6 +36,8 @@ namespace MechaCyberpunk.UI.Guardado
         [Header("Medidas (px a 1920x1080)")]
         [SerializeField] private Vector2 tamanoFila = new Vector2(1080f, 96f);
         [SerializeField] private Vector2 tamanoConfirmar = new Vector2(560f, 260f);
+        [Tooltip("Opacidad del fondo de los paneles (0 a 1): más que el panel del kit para que el HUD de atrás no se lea a través.")]
+        [Range(0f, 1f)] [SerializeField] private float alfaPanel = 0.96f;
 
         [Header("Piezas (las arma el creador con el kit)")]
         [SerializeField] private GameObject contenido;
@@ -80,6 +82,7 @@ namespace MechaCyberpunk.UI.Guardado
                 relleno + altoTitulo + relleno + altoFilas + e.SeparacionBloques + e.TamanoBotonMenu.y + relleno + altoAyuda + relleno);
             RectTransform panel = KitUI.CrearPanel(canvas.transform, "Panel", tamanoPanel);
             menu = panel.gameObject.AddComponent<MenuCyberfix>();
+            Opacar(panel);
 
             titulo = KitUI.CrearTexto(panel, "Titulo", RolTexto.Encabezado, TextAnchor.MiddleCenter);
             KitUI.Colocar(titulo.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -relleno), new Vector2(tamanoPanel.x, altoTitulo));
@@ -113,6 +116,7 @@ namespace MechaCyberpunk.UI.Guardado
             y += separacion - e.SeparacionBloques;
             volver = KitUI.CrearBoton(panel, TextoVolver, null);
             KitUI.Colocar((RectTransform)volver.transform, new Vector2(0.5f, 1f), new Vector2(0f, y), e.TamanoBotonMenu);
+            volver.Texto.alignment = TextAnchor.MiddleCenter;
 
             Text ayuda = KitUI.CrearTexto(panel, "Ayuda", RolTexto.Ayuda, TextAnchor.MiddleCenter);
             KitUI.Colocar(ayuda.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, relleno), new Vector2(tamanoPanel.x, altoAyuda));
@@ -122,6 +126,7 @@ namespace MechaCyberpunk.UI.Guardado
             // ¿SOBRESCRIBIR? SÍ / NO, encima de todo.
             RectTransform caja = KitUI.CrearPanel(canvas.transform, "Confirmar", tamanoConfirmar);
             confirmar = caja.gameObject;
+            Opacar(caja);
             menuConfirmar = confirmar.AddComponent<MenuCyberfix>();
             Text pregunta = KitUI.CrearTexto(caja, "Pregunta", RolTexto.Encabezado, TextAnchor.MiddleCenter);
             KitUI.Colocar(pregunta.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -relleno), new Vector2(tamanoConfirmar.x, altoTitulo));
@@ -129,11 +134,24 @@ namespace MechaCyberpunk.UI.Guardado
             pregunta.color = e.Magenta;
             float yBoton = -(relleno + altoTitulo + relleno);
             si = KitUI.CrearBoton(caja, TextoSi, null);
+            si.Texto.alignment = TextAnchor.MiddleCenter;
             KitUI.Colocar((RectTransform)si.transform, new Vector2(0.5f, 1f), new Vector2(0f, yBoton), e.TamanoBotonMenu);
             no = KitUI.CrearBoton(caja, TextoNo, null);
+            no.Texto.alignment = TextAnchor.MiddleCenter;
             KitUI.Colocar((RectTransform)no.transform, new Vector2(0.5f, 1f), new Vector2(0f, yBoton - e.TamanoBotonMenu.y - separacion), e.TamanoBotonMenu);
             confirmar.SetActive(false);
             contenido.SetActive(false);
+        }
+
+        private void Opacar(RectTransform panel)
+        {
+            Image fondo = panel.GetComponent<Image>();
+            if (fondo != null)
+            {
+                Color color = fondo.color;
+                color.a = Mathf.Max(color.a, alfaPanel);
+                fondo.color = color;
+            }
         }
 
         private void Awake()
