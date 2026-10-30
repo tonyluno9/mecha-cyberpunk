@@ -231,6 +231,14 @@ namespace MechaCyberpunk.UI.Kit
             return s;
         }
 
+        /// <summary>T-413: fila que se escribe con el teclado (solo letras y espacios, hasta <paramref name="largoMaximo"/>).</summary>
+        public static CampoTextoCyberfix CrearCampo(Transform padre, string etiqueta, int largoMaximo, string vacio)
+        {
+            CampoTextoCyberfix c = CrearBase<CampoTextoCyberfix>(padre, "Campo_" + etiqueta, Estilo.TamanoFila, etiqueta, true);
+            c.Configurar(largoMaximo, vacio);
+            return c;
+        }
+
         /// <summary>Un solo EventSystem con InputSystemUIInputModule (el Input Manager viejo está apagado). Lo crea si falta.</summary>
         public static EventSystem AsegurarEventSystem()
         {

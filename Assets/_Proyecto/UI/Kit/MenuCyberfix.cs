@@ -105,23 +105,25 @@ namespace MechaCyberpunk.UI.Kit
             {
                 return;
             }
-            if (teclado.upArrowKey.wasPressedThisFrame || teclado.wKey.wasPressedThisFrame)
+            // T-413: en un campo de texto W, A, S, D y Espacio escriben; solo navegan las flechas y Enter.
+            bool letras = Elegido == null || !Elegido.CapturaTeclado;
+            if (teclado.upArrowKey.wasPressedThisFrame || (letras && teclado.wKey.wasPressedThisFrame))
             {
                 Mover(-1);
             }
-            else if (teclado.downArrowKey.wasPressedThisFrame || teclado.sKey.wasPressedThisFrame)
+            else if (teclado.downArrowKey.wasPressedThisFrame || (letras && teclado.sKey.wasPressedThisFrame))
             {
                 Mover(1);
             }
-            else if (teclado.leftArrowKey.wasPressedThisFrame || teclado.aKey.wasPressedThisFrame)
+            else if (teclado.leftArrowKey.wasPressedThisFrame || (letras && teclado.aKey.wasPressedThisFrame))
             {
                 Elegido?.Cambiar(-1);
             }
-            else if (teclado.rightArrowKey.wasPressedThisFrame || teclado.dKey.wasPressedThisFrame)
+            else if (teclado.rightArrowKey.wasPressedThisFrame || (letras && teclado.dKey.wasPressedThisFrame))
             {
                 Elegido?.Cambiar(1);
             }
-            else if (teclado.enterKey.wasPressedThisFrame || teclado.numpadEnterKey.wasPressedThisFrame || teclado.spaceKey.wasPressedThisFrame)
+            else if (teclado.enterKey.wasPressedThisFrame || teclado.numpadEnterKey.wasPressedThisFrame || (letras && teclado.spaceKey.wasPressedThisFrame))
             {
                 Elegido?.Pulsar();
             }

@@ -140,6 +140,12 @@ namespace MechaCyberpunk.UI.Kit
             return true;
         }
 
+        /// <summary>
+        /// T-413: true si la fila escribe con el teclado (<see cref="CampoTextoCyberfix"/>) mientras está elegida; entonces el menú solo
+        /// navega con las flechas y Enter (W, A, S, D y Espacio son letras).
+        /// </summary>
+        public virtual bool CapturaTeclado => false;
+
         /// <summary>← → o la rueda. Los botones no cambian nada; las filas de valor sí. Devuelve true si cambió.</summary>
         public virtual bool Cambiar(int direccion) => false;
 
