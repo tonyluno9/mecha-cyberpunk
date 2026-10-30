@@ -38,7 +38,7 @@ namespace MechaCyberpunk.Tests.Mecha
             List<OpcionPieza> compras = opciones.Where(o => o.Tipo == TipoOpcionPieza.Comprar).ToList();
             Assert.AreEqual(4, compras.Count, "Las 4 ramas de nivel I");
             Assert.IsTrue(compras.All(o => o.Pieza.Nivel == 1 && o.PuedeElegir && o.Motivo == MotivoNoElegible.Ninguno));
-            Assert.AreEqual("COMPRAR $500", compras[0].Texto);
+            Assert.AreEqual("COMPRAR Ƀ500", compras[0].Texto);
 
             List<OpcionPieza> cerradas = opciones.Where(o => o.Tipo == TipoOpcionPieza.Bloqueada).ToList();
             Assert.AreEqual(4, cerradas.Count, "Las 4 ramas de nivel II");
@@ -69,7 +69,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             Assert.AreEqual(4, compras.Count);
             Assert.IsTrue(compras.All(o => !o.PuedeElegir && o.Motivo == MotivoNoElegible.NoAlcanza));
-            Assert.IsTrue(Torso(1, 500).Where(o => o.Tipo == TipoOpcionPieza.Comprar).All(o => o.PuedeElegir), "Con $500 justos sí");
+            Assert.IsTrue(Torso(1, 500).Where(o => o.Tipo == TipoOpcionPieza.Comprar).All(o => o.PuedeElegir), "Con Ƀ500 justos sí");
         }
 
         [Test]

@@ -37,7 +37,7 @@ Orden: T-407 → (paso 2: T-414 a T-418) → T-408 → T-409 → T-412 → T-410
 Plan: docs/plan-noche.md. Rama tony/fase-g, modo rápido; T-414 a T-417 solo se mezclan a tony/fase-g y T-418 cierra el paso (main con push, builds y guía).
 | Tarea | Modelo | Depende de | Estado |
 | --- | --- | --- | --- |
-| T-414 Nombres nuevos (Suburbios, SKULLS, SNAKES, El Mercado, I+D+I, El Fox, VivaCoin, Megalopolis) y moneda Biits Ƀ; CapturaUI (Core: Moneda) | Sonnet | T-407 | pendiente |
+| T-414 Nombres nuevos (Suburbios, SKULLS, SNAKES, El Mercado, I+D+I, El Fox, VivaCoin, Megalopolis) y moneda Biits Ƀ; CapturaUI (Core: Moneda) | Sonnet | T-407 | hecha |
 | T-415 Tu pandilla con nombre y color en HUD, mapa, aliados y avisos (Core: IPerfilJugador, ColoresPandilla) | Sonnet | T-414 | pendiente |
 | T-416 Cinco armas en El Mercado: fusil de asalto y sniper con zoom, 3 niveles cada una | Sonnet | T-414 | pendiente |
 | T-417 Profes como NPC de prueba (Inventor en el CIC, Doc en I+D+I, Hacker, Mecánico, Director) y peatones al mínimo | Sonnet | T-414, T-416 | pendiente |

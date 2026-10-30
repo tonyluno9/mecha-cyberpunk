@@ -210,7 +210,7 @@ namespace MechaCyberpunk.Tests.Pelea
             yield return PelearYGanar();
 
             Assert.AreEqual(antes + PremioCartel, cartera.Dinero);
-            Assert.AreEqual("+$900", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ900", director.Pantalla.Premio);
             Assert.AreNotEqual(NombreCasero, director.Rival.Nombre, "Peleó contra el rival del cartel");
             Assert.AreEqual(0, errores.Count, string.Join("\n", errores));
         }
@@ -225,7 +225,7 @@ namespace MechaCyberpunk.Tests.Pelea
             yield return PelearYGanar();
 
             Assert.AreEqual(antes + 450, cartera.Dinero);
-            Assert.AreEqual("+$450", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ450", director.Pantalla.Premio);
             Assert.AreEqual(0, errores.Count, string.Join("\n", errores));
         }
 
@@ -246,7 +246,7 @@ namespace MechaCyberpunk.Tests.Pelea
 
             Assert.AreEqual(NombreCasero, director.Rival.Nombre);
             Assert.AreEqual(antes + PremioCasera, cartera.Dinero);
-            Assert.AreEqual("+$600", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ600", director.Pantalla.Premio);
             Assert.AreEqual(0, presentadas[1].Liga, "Sin cartel, la liga vuelve a la del prefab");
             Assert.IsFalse(presentadas[1].EsJefe);
             Assert.AreEqual(0, errores.Count, string.Join("\n", errores));
@@ -336,7 +336,7 @@ namespace MechaCyberpunk.Tests.Pelea
 
             Assert.IsFalse(director.PrepararCartel(Cartel(), 1f), "En el resultado no se acepta");
             Assert.AreSame(rival, director.Rival);
-            Assert.AreEqual("+$600", director.Pantalla.Premio);
+            Assert.AreEqual("+Ƀ600", director.Pantalla.Premio);
             Assert.AreEqual(antes, cartera.Dinero);
             Assert.AreEqual(NombreCasero, director.Rival.Nombre);
             Assert.AreEqual(0, errores.Count, string.Join("\n", errores));

@@ -1,5 +1,22 @@
 # Pandillas (concepto nuevo, fase G)
 Lo pidió Tony el 2026-10-29: ya no hay mechas. Juego tipo GTA de un jugador en el barrio de Alan. Los números son propuesta (D-tony-202 a 224).
+## Nombres en pantalla (T-414, fuente de verdad)
+Solo cambia el texto visible; los ids (`fosa`, `tianguis`, `neon`), los enums (`IdPandilla.Calaveras`, `IdLugar.MercadoNegro`...) y los nombres de objetos y assets se quedan.
+| Antes | Ahora (en pantalla) |
+| --- | --- |
+| LA FOSA (tu zona) | SUBURBIOS |
+| LOS CALAVERAS | SKULLS (en frases: "LOS SKULLS"), magenta `#FF1ACC` |
+| LAS VÍBORAS | SNAKES ("LOS SNAKES"), verde ácido `#73FF1A` |
+| Neotek | NOVA (la usa la historia, T-418) |
+| La ciudad | MEGALOPOLIS (título del mapa y letrero de inicio) |
+| Mercado negro | EL MERCADO ("VE AL MERCADO") |
+| Clínica | I+D+I |
+| Bar El Foco / Cantina El Chip | EL FOX |
+| Casino (Casino Aurora) | VIVACOIN |
+| Taller del Inventor | CIC (T-417) |
+| Moneda ($) | Biits, símbolo Ƀ delante ("Ƀ340", "-Ƀ150"); 1 $ viejo = Ƀ1 |
+EL TIANGUIS, NEÓN ALTO, DOÑA LUPE, EL CHATO, LA GÜERA y EL TOPO no cambian.
+
 - **Vista**: tercera persona, cámara detrás del hombro derecho; clic derecho apunta (la cámara se acerca y sale la retícula).
 - **A pie**: correr, saltar, golpes y 4 armas: puños, pistola, escopeta y subfusil (1 a 4, rueda del ratón). R recarga.
 - **Armas**: se compran en el mercado negro (abierto siempre). Cada una sube 3 niveles; cada nivel mejora daño, cargador y recarga.

@@ -24,7 +24,7 @@ namespace MechaCyberpunk.Tests.IA
         {
             public IReadOnlyList<string> Zonas => new[] { "fosa" };
             public string ZonaEn(Vector3 posicion) => "fosa";
-            public string Nombre(string zona) => "LA FOSA";
+            public string Nombre(string zona) => "SUBURBIOS";
             public IdPandilla Dueno(string zona) => IdPandilla.Jugador;
             public int Respeto(string zona) => 10;
             public bool JefeDisponible(string zona) => false;

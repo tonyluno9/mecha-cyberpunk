@@ -34,12 +34,12 @@ namespace MechaCyberpunk.Tests.Progresion
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Economia.unity";
         private const string RutaBrazo = "Assets/_Proyecto/Economia/Datos/DatosObjeto_BrazoChatarra.asset";
         private const string TextoRival = "CONTRA EL CHATARRAS";
-        private const string TextoPremio = "PREMIO $600";
+        private const string TextoPremio = "PREMIO Ƀ600";
         private const string TextoMomio = "PAGA 1 A 1";
-        private const string TextoPieza = "+ SU BRAZO DE CHATARRA si apuestas $250 o más";
+        private const string TextoPieza = "+ SU BRAZO DE CHATARRA si apuestas Ƀ250 o más";
         private const string TextoAyuda = "← → apuesta · Enter pelear · Esc salir";
-        private const string TextoApuestaGanada = "APUESTA +$250";
-        private const string TextoApuestaPerdida = "APUESTA −$250";
+        private const string TextoApuestaGanada = "APUESTA +Ƀ250";
+        private const string TextoApuestaPerdida = "APUESTA −Ƀ250";
         private const int DineroInicial = 500;
         private const int Apuesta = 250;
         private const int DineroPocoAlcanza = 80;
@@ -171,7 +171,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(cartera, "Hay cartera");
             Assert.IsNotNull(inventario, "Hay inventario");
             Assert.IsNotNull(Registro<IApuestasPelea>.Actual, "Hay servicio de apuestas");
-            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se empieza con $500");
+            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se empieza con Ƀ500");
             EventosPelea.PeleaTerminada += terminadas.Add;
             yield return null;
         }
@@ -385,11 +385,11 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(0, pantalla.Monto);
 
             yield return Tecla(teclado.rightArrowKey);
-            Assert.AreEqual(100, pantalla.Monto, "→ elige $100");
+            Assert.AreEqual(100, pantalla.Monto, "→ elige Ƀ100");
             yield return Tecla(teclado.rightArrowKey);
-            Assert.AreEqual(Apuesta, pantalla.Monto, "→ → elige $250");
-            Assert.AreEqual("[ $250 ]", pantalla.TextoOpcion(2), "El elegido se resalta");
-            Assert.AreEqual("$500", pantalla.TextoOpcion(3));
+            Assert.AreEqual(Apuesta, pantalla.Monto, "→ → elige Ƀ250");
+            Assert.AreEqual("[ Ƀ250 ]", pantalla.TextoOpcion(2), "El elegido se resalta");
+            Assert.AreEqual("Ƀ500", pantalla.TextoOpcion(3));
             yield return Cuadros(FramesParaElHud);
             CapturarCabina(RutaCaptura1);
 
@@ -402,13 +402,13 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return GanarLaPelea();
             yield return TerminarSalida();
             Assert.AreEqual(TextoApuestaGanada, director.Pantalla.Apuesta, "La pantalla de la arena dice la apuesta");
-            Assert.AreEqual("+$600", director.Pantalla.Premio, "Y el premio");
+            Assert.AreEqual("+Ƀ600", director.Pantalla.Premio, "Y el premio");
             CapturarPantallaArena(RutaCaptura2);
             yield return EsperarFinDeLaEntrada();
 
             Assert.AreEqual(1, terminadas.Count, "La pelea terminó una vez");
             Assert.AreEqual(LadoPelea.Jugador, terminadas[0].Ganador, "Ganó el jugador");
-            Assert.AreEqual(DineroTrasGanar, cartera.Dinero, "$500 - 250 + 500 + 600 = $1,350");
+            Assert.AreEqual(DineroTrasGanar, cartera.Dinero, "Ƀ500 - 250 + 500 + 600 = Ƀ1,350");
             Assert.AreEqual(1, inventario.Cantidad(brazo), "Se llevó el Brazo de chatarra");
             Assert.AreEqual(ModoJugador.APie, jugador.Modo, "Volvió a pie");
             Assert.IsFalse(Registro<IApuestasPelea>.Actual.Abierta, "No queda apuesta abierta");
@@ -426,7 +426,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return AbrirPantalla();
             yield return Tecla(teclado.rightArrowKey);
             yield return Tecla(teclado.rightArrowKey);
-            Assert.AreEqual(Apuesta, pantalla.Monto, "→ → elige $250");
+            Assert.AreEqual(Apuesta, pantalla.Monto, "→ → elige Ƀ250");
             yield return Tecla(teclado.enterKey);
             Assert.AreEqual(DineroInicial - Apuesta, cartera.Dinero, "Se cobra lo apostado");
             yield return EsperarPelea();
@@ -438,7 +438,7 @@ namespace MechaCyberpunk.Tests.Progresion
 
             Assert.AreEqual(1, terminadas.Count, "La pelea terminó una vez");
             Assert.AreEqual(LadoPelea.Rival, terminadas[0].Ganador, "Ganó el rival");
-            Assert.AreEqual(DineroInicial - Apuesta, cartera.Dinero, "Perdió lo apostado y el premio ($0 al perder)");
+            Assert.AreEqual(DineroInicial - Apuesta, cartera.Dinero, "Perdió lo apostado y el premio (Ƀ0 al perder)");
             Assert.AreEqual(0, inventario.Cantidad(brazo), "El inventario sigue igual");
             Assert.AreEqual(ModoJugador.APie, jugador.Modo, "Volvió a pie");
             Assert.IsEmpty(errores, "Consola sin errores: " + string.Join(" | ", errores));
@@ -499,7 +499,7 @@ namespace MechaCyberpunk.Tests.Progresion
         {
             yield return CargarEscena();
             vidaMecha.FijarVida(vidaMecha.Maxima * FraccionVidaFregada);
-            Assert.IsTrue(cartera.IntentarPagar(DineroInicial - DineroPocoAlcanza, MotivoDinero.Otro), "Se gastan $420");
+            Assert.IsTrue(cartera.IntentarPagar(DineroInicial - DineroPocoAlcanza, MotivoDinero.Otro), "Se gastan Ƀ420");
             Assert.AreEqual(DineroPocoAlcanza, cartera.Dinero);
             yield return IrAlMostrador();
 
@@ -524,7 +524,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return EsperarFinDeLaEntrada();
 
             Assert.AreEqual(LadoPelea.Rival, terminadas[0].Ganador, "Perdió");
-            Assert.AreEqual(DineroPocoAlcanza, cartera.Dinero, "Dinero tras perder: $80");
+            Assert.AreEqual(DineroPocoAlcanza, cartera.Dinero, "Dinero tras perder: Ƀ80");
             Assert.AreEqual(0, inventario.Cantidad(brazo), "Sin pieza");
             Assert.IsEmpty(errores, "Consola sin errores: " + string.Join(" | ", errores));
         }

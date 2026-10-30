@@ -188,7 +188,7 @@ namespace MechaCyberpunk.Tests.Mecha
             cartera.Cambio += (diferencia, motivo) => cambios.Add((diferencia, motivo));
             yield return null;
 
-            Assert.AreEqual(DineroInicial, cartera.Dinero, "Empieza con $500");
+            Assert.AreEqual(DineroInicial, cartera.Dinero, "Empieza con Ƀ500");
             Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado, "El mecha empieza en el taller");
             inicioJuego = Time.time;
         }
@@ -388,7 +388,7 @@ namespace MechaCyberpunk.Tests.Mecha
             int dineroAntes = cartera.Dinero;
             Matar(director.Rival);
             yield return EsperarHasta(() => director.Estado == EstadoFlujoPelea.Resultado, MaxSegundosEstado, "el resultado");
-            Assert.AreEqual(dineroAntes + PremioEsperado, cartera.Dinero, "Ganar paga +$600");
+            Assert.AreEqual(dineroAntes + PremioEsperado, cartera.Dinero, "Ganar paga +Ƀ600");
         }
 
         // Camina al banco (el jugador sale de la arena cerrada: se le coloca junto al taller) hasta quedar cerca de su punto.
@@ -515,7 +515,7 @@ namespace MechaCyberpunk.Tests.Mecha
             DatosEconomia precios = ((ServicioCartera)cartera).Datos;
             int costo = ReglaReparacion.Costo(persistente.Danio, precios.CostoReparacionPorPunto, precios.CostoReparacionMinimo);
             Assert.Greater(costo, 0, "Hay algo que reparar");
-            Assert.AreEqual("E · Reparar mecha · $" + costo, hud.TextoAvisoInteraccion.text, "El aviso dice el costo de ReglaReparacion");
+            Assert.AreEqual("E · Reparar mecha · Ƀ" + costo, hud.TextoAvisoInteraccion.text, "El aviso dice el costo de ReglaReparacion");
             Capturar(RutaCaptura2);
             int dineroAntesReparar = cartera.Dinero;
             cambios.Clear();
@@ -535,7 +535,7 @@ namespace MechaCyberpunk.Tests.Mecha
             {
                 yield return Tecla(teclado.digit8Key);
             }
-            Assert.Less(cartera.Dinero, Renta, "Quedó con menos de $500");
+            Assert.Less(cartera.Dinero, Renta, "Quedó con menos de Ƀ500");
             for (int i = 0; i < 20 && reloj.Dia < DiaDeLaRenta; i++)
             {
                 yield return Tecla(teclado.jKey);
@@ -545,7 +545,7 @@ namespace MechaCyberpunk.Tests.Mecha
             yield return null;
             Assert.IsTrue(renta.TallerBloqueado, "La renta venció sin dinero");
             Assert.AreEqual(Renta, renta.Adeudo);
-            Assert.AreEqual("RENTA VENCIDA · $500", hud.TextoRenta.text, "El HUD avisa la renta vencida");
+            Assert.AreEqual("RENTA VENCIDA · Ƀ500", hud.TextoRenta.text, "El HUD avisa la renta vencida");
             Assert.IsTrue(hud.GrupoRenta.activeInHierarchy);
             Assert.IsTrue(hud.TextoAvisoInteraccion.text.StartsWith("TALLER BLOQUEADO"), "El banco dice TALLER BLOQUEADO: " + hud.TextoAvisoInteraccion.text);
             int dineroBloqueado = cartera.Dinero;
@@ -558,7 +558,7 @@ namespace MechaCyberpunk.Tests.Mecha
             }
             Assert.GreaterOrEqual(cartera.Dinero, Renta, "7 da dinero");
             yield return null;
-            Assert.AreEqual("E · Pagar renta · $500", hud.TextoAvisoInteraccion.text);
+            Assert.AreEqual("E · Pagar renta · Ƀ500", hud.TextoAvisoInteraccion.text);
             int dineroAntesRenta = cartera.Dinero;
             yield return Tecla(teclado.eKey);
             Assert.AreEqual(dineroAntesRenta - Renta, cartera.Dinero, "E paga la renta");

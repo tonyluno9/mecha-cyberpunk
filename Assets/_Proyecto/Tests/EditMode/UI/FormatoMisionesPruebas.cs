@@ -66,7 +66,7 @@ namespace MechaCyberpunk.Tests.UI
         public void TextoMisionTerminada_Cumplida_LlevaElPago()
         {
             var resumen = new ResumenMision(50, null, 0, 8, 0, null, false, MotivoFalloMision.Ninguno, string.Empty);
-            Assert.AreEqual("MISIÓN CUMPLIDA · +$50", FormatoHud.TextoMisionTerminada(true, resumen, configHud));
+            Assert.AreEqual("MISIÓN CUMPLIDA · +Ƀ50", FormatoHud.TextoMisionTerminada(true, resumen, configHud));
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace MechaCyberpunk.Tests.UI
         {
             DatosMision m = DatosMision.Crear("m3", "ENTREGA URGENTE", Core.TipoMision.Corporativa, OrigenMision.Telefono, FranjaMision.Dia,
                 null, pago: 400, deltaBarrio: -5, deltaCorporaciones: 8);
-            Assert.AreEqual("ENTREGA URGENTE  ·  $400  ·  BARRIO −5 · CORP. +8", FormatoMisiones.Fila(m, config));
+            Assert.AreEqual("ENTREGA URGENTE  ·  Ƀ400  ·  BARRIO −5 · CORP. +8", FormatoMisiones.Fila(m, config));
         }
 
         [Test]

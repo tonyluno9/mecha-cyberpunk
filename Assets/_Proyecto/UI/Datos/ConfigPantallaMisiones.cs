@@ -124,7 +124,7 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string formatoFilaFavor = "{0}   {1}/{2}   ·   {3}\nSE USA EN: {4}\n";
 
         [Tooltip("Dónde se usa cada favor, en el orden de TipoFavor (Descuento, Informacion, Escondite).")]
-        [SerializeField] private string[] dondeSeUsaFavor = { "MERCADO NEGRO", "CONTACTO DEL BAR", "ESCONDITES DEL BARRIO" };
+        [SerializeField] private string[] dondeSeUsaFavor = { "EL MERCADO", "CONTACTO DEL BAR", "ESCONDITES DEL BARRIO" };
 
         [SerializeField] private string textoSinFavores = "SIN FAVORES";
 

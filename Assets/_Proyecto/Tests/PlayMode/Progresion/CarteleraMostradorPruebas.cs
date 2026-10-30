@@ -159,7 +159,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(ligas, "Hay ServicioLigas");
             Assert.IsNotNull(calendario, "Existe el calendario");
             Assert.IsNotNull(premioCasera, "Existe el premio de la casera");
-            Assert.AreEqual(DineroBase, cartera.Dinero, "Se empieza con $500");
+            Assert.AreEqual(DineroBase, cartera.Dinero, "Se empieza con Ƀ500");
             Assert.AreEqual(EtapaPrologo.Libre, Registro<IHistoria>.Actual.Etapa, "La escena arranca en Libre");
             yield return null;
         }
@@ -344,7 +344,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsTrue(pantalla.Visible, "Abre la apuesta");
             Assert.AreEqual("CONTRA " + AliasCasera, pantalla.Rival, "Contra el rival casero");
             StringAssert.Contains(FormatoDinero.Texto(premioCasera.PremioGanar), pantalla.Premio, "Con el premio de la casera");
-            StringAssert.Contains("$600", pantalla.Premio);
+            StringAssert.Contains("Ƀ600", pantalla.Premio);
 
             yield return Tecla(teclado.escapeKey);
             yield return Cuadros(FramesDeEspera);
@@ -363,7 +363,7 @@ namespace MechaCyberpunk.Tests.Progresion
             CartelPelea cartel = calendario.Cartel(1, 5);
 
             Assert.AreEqual("JEFE DE LA LIGA SÓTANO · " + AliasJefe + " · " + FormatoDinero.Texto(cartel.premioGanar), cartelera.TextoBaseFila(0));
-            StringAssert.Contains("$2,000", cartelera.TextoBaseFila(0));
+            StringAssert.Contains("Ƀ2,000", cartelera.TextoBaseFila(0));
             Assert.AreEqual(cartelera.ColorJefe, cartelera.ColorFila(0), "El jefe va en su color aunque sea la elegida");
             Assert.AreNotEqual(cartelera.ColorElegido, cartelera.ColorJefe);
             StringAssert.StartsWith("REVANCHA · ", cartelera.TextoBaseFila(1), "Detrás vienen las revanchas");

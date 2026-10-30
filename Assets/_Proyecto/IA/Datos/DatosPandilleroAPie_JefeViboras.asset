@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e16e2a4f0c9254a8e9a327d7b16ca5, type: 3}
   m_Name: DatosPandilleroAPie_JefeViboras
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosPandilleroAPie
-  nombre: "JEFE V\xCDBORA"
+  nombre: JEFE SNAKE
   vidaMaxima: 250
   danioGolpe: 10
   preparacionGolpe: 0.5

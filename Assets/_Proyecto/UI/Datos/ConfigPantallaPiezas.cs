@@ -44,7 +44,7 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string subtituloRanuras = "ELIGE UNA RANURA";
         [Tooltip("{0} = nombre de la pieza puesta.")]
         [SerializeField] private string formatoSubtituloPiezas = "CAMBIAR {0}";
-        [Tooltip("{0} = dinero con $ (negativo: -$150).")]
+        [Tooltip("{0} = dinero con Ƀ (negativo: -Ƀ150).")]
         [SerializeField] private string formatoDinero = "DINERO {0}";
         [Tooltip("{0} = vida, {1} = daño, {2} = velocidad del mecha armado.")]
         [SerializeField] private string formatoEstadisticas = "VIDA {0} · DAÑO {1} · VELOCIDAD {2}";
@@ -62,13 +62,13 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string formatoElegida = "[ {0} ]";
         [Tooltip("{0} = nombre de la pieza, {1} = cuántas tienes en el inventario.")]
         [SerializeField] private string formatoPoner = "{0} · PONER · TIENES {1}";
-        [Tooltip("{0} = nombre de la pieza, {1} = precio con $.")]
+        [Tooltip("{0} = nombre de la pieza, {1} = precio con Ƀ.")]
         [SerializeField] private string formatoComprar = "{0} · COMPRAR · {1}";
         [Tooltip("{0} = nombre de la pieza, {1} = liga en que se abre.")]
         [SerializeField] private string formatoBloqueada = "{0} · SE ABRE EN LA LIGA {1}";
         [Tooltip("{0} = nombre de la pieza puesta.")]
         [SerializeField] private string formatoPuesta = "PUESTA: {0}";
-        [Tooltip("{0} = dinero con $ que se pagó por la pieza vieja, {1} = su nombre.")]
+        [Tooltip("{0} = dinero con Ƀ que se pagó por la pieza vieja, {1} = su nombre.")]
         [SerializeField] private string formatoVendida = "+{0} · VENDISTE {1}";
         [SerializeField] private string textoNoAlcanza = "NO TE ALCANZA";
         [SerializeField] private string textoTallerBloqueado = "TALLER BLOQUEADO";

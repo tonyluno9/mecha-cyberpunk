@@ -38,7 +38,7 @@ namespace MechaCyberpunk.Tests.UI
         {
             yield return Preparar();
             Assert.IsTrue(hud.GrupoDinero.activeSelf);
-            Assert.AreEqual("$500", hud.TextoDinero.text);
+            Assert.AreEqual("Ƀ500", hud.TextoDinero.text);
             Assert.IsFalse(hud.GrupoAvisoDinero.activeSelf, "Sin movimiento no hay aviso");
             Assert.IsFalse(hud.GrupoRenta.activeSelf, "Sin adeudo no hay recordatorio");
         }
@@ -51,9 +51,9 @@ namespace MechaCyberpunk.Tests.UI
             float inicio = Time.time;
             yield return null;
 
-            Assert.AreEqual("$1,100", hud.TextoDinero.text);
+            Assert.AreEqual("Ƀ1,100", hud.TextoDinero.text);
             Assert.IsTrue(hud.GrupoAvisoDinero.activeSelf);
-            Assert.AreEqual("+$600 · PREMIO", hud.TextoAvisoDinero.text);
+            Assert.AreEqual("+Ƀ600 · PREMIO", hud.TextoAvisoDinero.text);
 
             while (hud.GrupoAvisoDinero.activeSelf && Time.time - inicio < 5f)
             {
@@ -72,7 +72,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return Esperar(1.5f);
             cartera.CargarDeuda(650, MotivoDinero.Reparacion);
             yield return null;
-            Assert.AreEqual("-$650 · REPARACIÓN", hud.TextoAvisoDinero.text);
+            Assert.AreEqual("-Ƀ650 · REPARACIÓN", hud.TextoAvisoDinero.text);
 
             yield return Esperar(1.5f);
             Assert.IsTrue(hud.GrupoAvisoDinero.activeSelf, "A 3 s del primero el segundo sigue (lleva 1.5 s)");
@@ -88,7 +88,7 @@ namespace MechaCyberpunk.Tests.UI
             Registro<ICartera>.Actual.CargarDeuda(650, MotivoDinero.Reparacion);
             yield return null;
 
-            Assert.AreEqual("-$150", hud.TextoDinero.text);
+            Assert.AreEqual("-Ƀ150", hud.TextoDinero.text);
             Assert.AreEqual(config.ColorDeuda, hud.TextoDinero.color);
         }
 
@@ -99,7 +99,7 @@ namespace MechaCyberpunk.Tests.UI
             ((IGuardable)Registro<ICartera>.Actual).Cargar("{\"dinero\":1234}");
             yield return null;
 
-            Assert.AreEqual("$1,234", hud.TextoDinero.text);
+            Assert.AreEqual("Ƀ1,234", hud.TextoDinero.text);
             Assert.IsFalse(hud.GrupoAvisoDinero.activeSelf, "Cargar una partida no es un movimiento");
         }
 
@@ -122,7 +122,7 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.IsTrue(renta.TallerBloqueado);
             Assert.IsTrue(hud.GrupoRenta.activeSelf);
-            Assert.AreEqual("RENTA VENCIDA · $500", hud.TextoRenta.text);
+            Assert.AreEqual("RENTA VENCIDA · Ƀ500", hud.TextoRenta.text);
 
             cartera.Abonar(600, MotivoDinero.Otro);
             Assert.IsTrue(renta.PagarAdeudo());

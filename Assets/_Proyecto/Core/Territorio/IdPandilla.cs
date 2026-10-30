@@ -10,9 +10,9 @@ namespace MechaCyberpunk.Core
         Ninguna,
         /// <summary>La pandilla del jugador.</summary>
         Jugador,
-        /// <summary>Los Calaveras (magenta), centro de la ciudad.</summary>
+        /// <summary>Los Skulls (magenta), centro de la ciudad.</summary>
         Calaveras,
-        /// <summary>Las Víboras (verde ácido), este de la ciudad.</summary>
+        /// <summary>Los Snakes (verde ácido), este de la ciudad.</summary>
         Viboras
     }
 }

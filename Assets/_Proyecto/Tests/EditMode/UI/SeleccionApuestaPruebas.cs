@@ -42,12 +42,12 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.IsTrue(seleccion.Disponible(0), "SIN APUESTA siempre está disponible");
             Assert.IsTrue(seleccion.Disponible(1));
-            Assert.IsFalse(seleccion.Disponible(2), "$250 apagado");
+            Assert.IsFalse(seleccion.Disponible(2), "Ƀ250 apagado");
             Assert.IsTrue(seleccion.Disponible(3));
             seleccion.Mover(1);
             Assert.AreEqual(100, seleccion.Monto);
             seleccion.Mover(1);
-            Assert.AreEqual(500, seleccion.Monto, "Salta el $250");
+            Assert.AreEqual(500, seleccion.Monto, "Salta el Ƀ250");
             seleccion.Mover(-1);
             Assert.AreEqual(100, seleccion.Monto, "Y también de regreso");
         }

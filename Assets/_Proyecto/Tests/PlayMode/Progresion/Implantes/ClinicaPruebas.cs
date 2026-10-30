@@ -56,7 +56,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.AreEqual(piernas.Descripcion, pantalla.Descripcion, "la descripción de la opción elegida");
             yield return Tecla(teclado.enterKey);
             Assert.IsTrue(pantalla.Confirmando, "el primer Enter pide confirmar");
-            StringAssert.Contains("¿INSTALAR POR $" + piernas.Precio.ToString("N0", CultureInfo.InvariantCulture) + "?", pantalla.Aviso);
+            StringAssert.Contains("¿INSTALAR POR Ƀ" + piernas.Precio.ToString("N0", CultureInfo.InvariantCulture) + "?", pantalla.Aviso);
             Assert.AreEqual(DineroAlto, cartera.Dinero, "pedir confirmar no cobra");
 
             float hora0 = reloj.Hora;
@@ -163,7 +163,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             yield return AbrirClinica();
             yield return Bajar(FilaPiernas);
             StringAssert.Contains(config.TextoDiferencia, pantalla.TextoOpcion(FilaPiernas), "avisa que pagas la diferencia");
-            StringAssert.Contains("$" + diferencia.ToString("N0", CultureInfo.InvariantCulture), pantalla.TextoOpcion(FilaPiernas), "muestra la diferencia");
+            StringAssert.Contains("Ƀ" + diferencia.ToString("N0", CultureInfo.InvariantCulture), pantalla.TextoOpcion(FilaPiernas), "muestra la diferencia");
             yield return Tecla(teclado.enterKey);
             yield return Tecla(teclado.enterKey);
             yield return EsperarOperacion();
@@ -297,7 +297,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             yield return Bajar(FilaPiernas);
             yield return Cuadros(FramesParaElHud * 4);
             StringAssert.Contains("SE ABRE EN LA LIGA", pantalla.TextoOpcion(FilaOjos), "una fila en gris");
-            StringAssert.Contains("$", pantalla.TextoOpcion(FilaPiernas), "una fila con precio");
+            StringAssert.Contains("Ƀ", pantalla.TextoOpcion(FilaPiernas), "una fila con precio");
             Assert.AreEqual(1, pantalla.Vista.Cuerpo.NivelMostrado(EspacioImplante.Piernas), "la vista previa lleva el implante probado");
             CapturarConHud(RutaCaptura1);
             VerificarFinal("captura");

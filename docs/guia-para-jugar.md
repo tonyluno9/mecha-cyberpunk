@@ -156,3 +156,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Pasos: despiertas en tu casa a las 19:00 con puños y $0 (objetivo SAL A LA CALLE; WASD, ratón) → afuera 2 Calaveras le pegan a DOÑA LUPE, defiéndela con clic izquierdo (no te matan: con poca vida dejan de pegar 3 s) → el último suelta una pistola, E la recoge (clic derecho apunta, clic izquierdo dispara) → E con EL CHATO lo une gratis → sale a conquistar EL TIANGUIS (M abre el mapa, F manda esperar o seguir a tus aliados): vence Calaveras hasta 70 de respeto, aparece el jefe con la flecha → 4 s después sale "CONTINUARÁ..." y Enter te deja seguir jugando libre.
 - Pistas que salen solas: robar un carro con E y el mercado negro vende escopetas ($). Los grupos del tianguis no aparecen hasta que te mandan ahí.
 - Observa: ¿dura unos 15 minutos? ¿Se entiende qué hacer sin leer esta guía? ¿El final deja ganas de más? ¿La pelea con el jefe es buen cierre? Con Builds/Juego (no final) F6 salta un paso de la historia.
+
+### T-414 nombres nuevos y Biits
+- Mira: el HUD de dinero dice "Ƀ340" (símbolo de Biits); la tienda se titula EL MERCADO; el HUD de zona dice "SUBURBIOS · TUYA" en tu casa y "EL TIANGUIS · SKULLS" en el centro (ya no se encima con la radio); M abre el mapa con título MEGALOPOLIS.
+- Ve al bar y al casino: los letreros de neón dicen EL FOX (cian) y VIVACOIN (naranja) y los modelos viejos están apagados; la clínica dice I+D+I.
+- Observa: ¿se lee bien la Ƀ?, ¿"SKULLS" y "SNAKES" sin artículo suenan bien?, ¿los letreros nuevos tapan bien a los viejos (son pequeños)?

@@ -11,6 +11,9 @@ namespace MechaCyberpunk.UI.Hud
     /// </summary>
     public class HudTerritorio : MonoBehaviour
     {
+        // Debajo de la línea de la radio (arriba a la izquierda), para que no se encimen.
+        private const float ArribaZona = 70f;
+
         [Tooltip("Segundos que dura el aviso de conquista (s).")]
         [Min(0.5f)] [SerializeField] private float segundosConquista = 3f;
         [Tooltip("Segundos que dura el aviso del jefe (s).")]
@@ -29,7 +32,7 @@ namespace MechaCyberpunk.UI.Hud
         {
             Canvas canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasTerritorio", 20);
             textoZona = FormatoTerritorio.CrearTexto(canvas.transform, "Zona", 28, TextAnchor.UpperLeft,
-                new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(24f, -20f), new Vector2(900f, 40f));
+                new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(24f, -ArribaZona), new Vector2(900f, 40f));
             textoAviso = FormatoTerritorio.CrearTexto(canvas.transform, "Aviso", 44, TextAnchor.UpperCenter,
                 new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-450f, -120f), new Vector2(900f, 60f));
             textoZona.text = string.Empty;

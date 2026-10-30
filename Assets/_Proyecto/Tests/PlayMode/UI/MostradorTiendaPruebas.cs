@@ -31,10 +31,10 @@ namespace MechaCyberpunk.Tests.UI
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Tony/Pruebas_Economia.unity";
         private const string RutaKit = "Assets/_Proyecto/Economia/Datos/DatosObjeto_KitReparacion.asset";
-        private const string TextoHudAbierto = "E · Mercado negro";
+        private const string TextoHudAbierto = "E · El Mercado";
         private const string TextoCerrado = "CERRADO · abre 09:00";
         private const string TextoKit = "KIT DE REPARACIÓN";
-        private const string TextoPrecio = "$250";
+        private const string TextoPrecio = "Ƀ250";
         private const string TextoLleva0 = "LLEVAS 0/3";
         private const string TextoMaximo = "LLEVAS EL MÁXIMO";
         private const string TextoNoAlcanza = "NO TE ALCANZA";
@@ -156,7 +156,7 @@ namespace MechaCyberpunk.Tests.UI
             kit = AssetDatabase.LoadAssetAtPath<DatosObjeto>(RutaKit);
             Assert.IsNotNull(cartera, "Hay cartera");
             Assert.IsNotNull(inventario, "Hay inventario");
-            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se empieza con $500");
+            Assert.AreEqual(DineroInicial, cartera.Dinero, "Se empieza con Ƀ500");
             yield return null;
         }
 
@@ -285,25 +285,25 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.AreEqual(TextoHudAbierto, hud.TextoAvisoInteraccion.text, "El HUD ofrece el mercado negro");
             yield return AbrirPantalla();
-            Assert.AreEqual("MERCADO NEGRO", pantalla.Titulo, "Dice qué tienda es");
+            Assert.AreEqual("EL MERCADO", pantalla.Titulo, "Dice qué tienda es");
             Assert.AreEqual(FilasDelMercado, pantalla.CantidadFilas, "Vende el kit y las 4 municiones");
             StringAssert.Contains(TextoKit, pantalla.TextoFila(0), "Lista el kit de reparación");
-            StringAssert.Contains(TextoPrecio, pantalla.TextoFila(0), "A $250");
+            StringAssert.Contains(TextoPrecio, pantalla.TextoFila(0), "A Ƀ250");
             StringAssert.Contains(TextoLleva0, pantalla.TextoFila(0), "No lleva ninguno");
-            Assert.AreEqual("TIENES $1,000", pantalla.Dinero, "Muestra el dinero de arriba");
+            Assert.AreEqual("TIENES Ƀ1,000", pantalla.Dinero, "Muestra el dinero de arriba");
             Assert.AreEqual(PestanaTienda.Comprar, pantalla.Pestana, "Abre en COMPRAR");
 
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(DineroDeSobra - PrecioKit, cartera.Dinero, "Cobra $250");
+            Assert.AreEqual(DineroDeSobra - PrecioKit, cartera.Dinero, "Cobra Ƀ250");
             Assert.AreEqual(1, inventario.Cantidad(kit), "El kit entra al inventario");
             StringAssert.Contains("LLEVAS 1/3", pantalla.TextoFila(0), "La fila se actualiza");
-            Assert.AreEqual("TIENES $750", pantalla.Dinero, "El dinero se actualiza");
+            Assert.AreEqual("TIENES Ƀ750", pantalla.Dinero, "El dinero se actualiza");
             yield return Cuadros(FramesParaElHud);
             CapturarCabina(RutaCaptura);
 
             yield return Tecla(teclado.enterKey);
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(DineroDeSobra - PrecioKit * MaximoKits, cartera.Dinero, "Tres kits cuestan $750");
+            Assert.AreEqual(DineroDeSobra - PrecioKit * MaximoKits, cartera.Dinero, "Tres kits cuestan Ƀ750");
             Assert.AreEqual(MaximoKits, inventario.Cantidad(kit), "Lleva tres kits");
 
             yield return Tecla(teclado.enterKey);
@@ -341,7 +341,7 @@ namespace MechaCyberpunk.Tests.UI
             for (int i = 0; i < NombresMunicion.Length; i++)
             {
                 int fila = FilaCon(NombresMunicion[i]);
-                StringAssert.Contains("$" + PreciosMunicion[i], pantalla.TextoFila(fila), NombresMunicion[i] + " con su precio");
+                StringAssert.Contains("Ƀ" + PreciosMunicion[i], pantalla.TextoFila(fila), NombresMunicion[i] + " con su precio");
             }
             Assert.IsEmpty(errores, "Sin errores: " + string.Join(" | ", errores));
         }
@@ -389,7 +389,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return AbrirPantalla();
 
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(TextoNoAlcanza, pantalla.Aviso, "Con $100 no alcanza");
+            Assert.AreEqual(TextoNoAlcanza, pantalla.Aviso, "Con Ƀ100 no alcanza");
             Assert.AreEqual(DineroPoco, cartera.Dinero, "No se cobra");
             Assert.AreEqual(0, inventario.Cantidad(kit), "No entra nada");
 
@@ -451,7 +451,7 @@ namespace MechaCyberpunk.Tests.UI
                 }
             }
             Assert.IsNotNull(lugar, "La escena trae el lugar MercadoNegro de prueba");
-            lugar.Configurar(IdLugar.MercadoNegro, "Mercado negro", new HorarioLugar(HoraAbre, HoraCierra), false);
+            lugar.Configurar(IdLugar.MercadoNegro, "El Mercado", new HorarioLugar(HoraAbre, HoraCierra), false);
             lugar.PonerAbiertoPorHorario(false);
             Assert.IsFalse(lugar.EstaAbierto, "El lugar está cerrado");
 

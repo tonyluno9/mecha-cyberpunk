@@ -197,7 +197,7 @@ namespace MechaCyberpunk.Tests.Progresion
 
             int dinero = cartera.Dinero;
             yield return PulsarTecla(teclado.digit7Key);
-            Assert.AreEqual(dinero + AbonoDePrueba, cartera.Dinero, "7 abona $500");
+            Assert.AreEqual(dinero + AbonoDePrueba, cartera.Dinero, "7 abona Ƀ500");
 
             yield return PulsarTecla(teclado.digit9Key);
             Assert.AreEqual(1, inventario.Cantidad(brazo), "9 agrega un Brazo de chatarra");
@@ -208,7 +208,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(1, inventario.Cantidad(brazo), "0 no toca el brazo");
 
             yield return PulsarTecla(teclado.digit8Key);
-            Assert.AreEqual(dinero, cartera.Dinero, "8 carga $500 de deuda y vuelve al dinero inicial");
+            Assert.AreEqual(dinero, cartera.Dinero, "8 carga Ƀ500 de deuda y vuelve al dinero inicial");
             Assert.IsEmpty(errores, "consola sin errores: " + string.Join(" | ", errores));
         }
     }

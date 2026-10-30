@@ -445,32 +445,32 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             int dinero = cartera.Dinero;
             int lleva = inventario.Cantidad(misiles);
             Debug.Log("[T-187] esperado: misiles $" + precio + " -> $" + rebajado + ", dinero " + dinero);
-            Assert.AreEqual(80, precio, "los misiles cuestan $80 en los datos");
-            Assert.AreEqual(56, rebajado, "con 30 % cuestan $56");
+            Assert.AreEqual(80, precio, "los misiles cuestan Ƀ80 en los datos");
+            Assert.AreEqual(56, rebajado, "con 30 % cuestan Ƀ56");
 
             yield return AbrirTienda(mostrador);
             int fila = FilaDeMisiles(pantalla);
             yield return ElegirFila(pantalla, fila);
-            StringAssert.Contains("$80 → $56", pantalla.TextoFila(fila), "la fila muestra el precio rebajado");
+            StringAssert.Contains("Ƀ80 → Ƀ56", pantalla.TextoFila(fila), "la fila muestra el precio rebajado");
             Assert.AreEqual("FAVOR · −30 % EN ESTA COMPRA · TE QUEDAN 1", pantalla.Favor, "la línea del favor");
             CapturarConHud(RutaCaptura1);
 
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(dinero - rebajado, cartera.Dinero, "la primera compra cobra $56");
+            Assert.AreEqual(dinero - rebajado, cartera.Dinero, "la primera compra cobra Ƀ56");
             Assert.AreEqual(lleva + 1, inventario.Cantidad(misiles), "entró 1 misil");
             Assert.AreEqual(0, favores.Cantidad(TipoFavor.Descuento), "el favor se gastó");
             Assert.AreEqual(string.Empty, pantalla.Favor, "la línea del favor se apaga");
             StringAssert.DoesNotContain("→", pantalla.TextoFila(fila), "ya no hay rebaja");
 
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(dinero - rebajado - precio, cartera.Dinero, "la segunda compra cobra $80");
+            Assert.AreEqual(dinero - rebajado - precio, cartera.Dinero, "la segunda compra cobra Ƀ80");
             Assert.AreEqual(lleva + 2, inventario.Cantidad(misiles), "entró otro misil");
             yield return Tecla(teclado.escapeKey);
             yield return Cuadros(FramesParaElHud);
 
             yield return IrAPestanaFavores();
             StringAssert.Contains(LineaFavor("DESCUENTO", 0), telefono.Contenido, "FAVORES dice 0/3");
-            StringAssert.Contains("MERCADO NEGRO", telefono.Contenido);
+            StringAssert.Contains("EL MERCADO", telefono.Contenido);
             VerificarFinal();
         }
 

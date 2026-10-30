@@ -1056,7 +1056,7 @@ namespace MechaCyberpunk.Tests.Progresion
             string rentaSana = "{\"diaProximoCobro\":" + renta.DiaProximoCobro + ",\"adeudo\":0}";
             ((IGuardable)renta).Cargar("{\"diaProximoCobro\":" + renta.DiaProximoCobro + ",\"adeudo\":" + precios.Renta + "}");
             cartera.CargarDeuda(dineroGuardado, MotivoDinero.Otro);
-            atajos.Add("Cargar (renta): adeudo de $" + precios.Renta + " y dinero en $0 por código");
+            atajos.Add("Cargar (renta): adeudo de $" + precios.Renta + " y dinero en Ƀ0 por código");
             Assert.AreEqual(DineroDeLaRenta, cartera.Dinero);
             Assert.IsTrue(renta.TallerBloqueado);
             DatosPieza[] puestasAntes = equipo.Puestas.ToArray();

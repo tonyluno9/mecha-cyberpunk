@@ -19,7 +19,7 @@ namespace MechaCyberpunk.UI.Editor
         private const string RutaVista = "Assets/_Proyecto/Personaje/Prefabs/VistaPreviaApariencia.prefab";
         private const string RutaMaterialMesa = "Assets/_Proyecto/UI/Materiales/Clinica_Mesa.mat";
         private const string RutaMaterialLetrero = "Assets/_Proyecto/UI/Materiales/Clinica_Letrero.mat";
-        private const string TextoLetrero = "CLÍNICA";
+        private const string TextoLetrero = "I+D+I";
 
         private const float AnchoReferencia = 1920f;
         private const float AltoReferencia = 1080f;
