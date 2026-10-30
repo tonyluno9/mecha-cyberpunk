@@ -1,5 +1,6 @@
 using System.Text;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Mapa;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,12 +8,14 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// Fila de aliados abajo a la izquierda (T-405): "CHATO II ▮▮▮▯" con su vida, y "¡CHATO SUBIÓ A NIVEL II!" 3 s al subir.
+    /// Fila de aliados abajo a la derecha, sobre el arma (T-405; T-408 la movió para no encimarse con la vida y los Biits): "CHATO II ▮▮▮▯" con su vida, y "¡CHATO SUBIÓ A NIVEL II!" 3 s al subir.
     /// Lee <see cref="IPandillaJugador"/>; crea su propio canvas.
     /// </summary>
     public class HudAliados : MonoBehaviour
     {
         private const int Barras = 4;
+        private const float AnchoFila = 440f;
+        private const float AnchoAviso = 1400f;
         private static readonly string[] Romanos = { "I", "II", "III" };
 
         [Tooltip("Segundos que dura el aviso de nivel (s).")]
@@ -30,11 +33,12 @@ namespace MechaCyberpunk.UI.Hud
 
         private void Awake()
         {
-            Canvas canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasAliados", 21);
-            textoFila = FormatoTerritorio.CrearTexto(canvas.transform, "Aliados", 26, TextAnchor.LowerLeft,
-                new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24f, 130f), new Vector2(700f, 140f)); // T-418: arriba de la vida y los Biits para no encimarse
-            textoAviso = FormatoTerritorio.CrearTexto(canvas.transform, "AvisoNivel", 40, TextAnchor.UpperCenter,
-                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-450f, -190f), new Vector2(900f, 60f));
+            // T-408: el kit y las ranuras de DisposicionHud: la pandilla abajo a la derecha sobre el arma (crece hacia arriba) y el aviso bajo el de zona.
+            Canvas canvas = KitUI.CrearCanvas(transform, "CanvasAliados", HudTerritorio.OrdenCanvas);
+            textoFila = KitUI.CrearTexto(canvas.transform, "Aliados", RolTexto.Hud, TextAnchor.LowerRight);
+            KitUI.Colocar(textoFila.rectTransform, DisposicionHud.Pandilla, AnchoFila);
+            textoAviso = KitUI.CrearTexto(canvas.transform, "AvisoNivel", RolTexto.Boton, TextAnchor.MiddleCenter);
+            KitUI.Colocar(textoAviso.rectTransform, DisposicionHud.AvisoAliados, AnchoAviso);
             textoFila.text = string.Empty;
             textoAviso.text = string.Empty;
         }
@@ -91,7 +95,7 @@ namespace MechaCyberpunk.UI.Hud
                     constructor.Append('▮', llenas).Append('▯', Barras - llenas).Append('\n');
                 }
             }
-            textoFila.text = constructor.ToString();
+            textoFila.text = constructor.ToString().TrimEnd('\n');
             if (textoAviso.text.Length > 0 && Time.unscaledTime >= finAviso)
             {
                 textoAviso.text = string.Empty;

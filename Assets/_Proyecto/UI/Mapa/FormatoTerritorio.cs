@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +8,8 @@ namespace MechaCyberpunk.UI.Mapa
     /// <summary>Textos y colores compartidos por el HUD de zona y el mapa (T-404).</summary>
     public static class FormatoTerritorio
     {
-        private static readonly Color ColorCalaveras = new Color(1f, 0.1f, 0.8f);
-        private static readonly Color ColorViboras = new Color(0.45f, 1f, 0.1f);
-        private static readonly Color ColorNadie = new Color(0.6f, 0.6f, 0.6f);
+        // SNAKES #73FF1A (fuera de la paleta de la UI, docs/diseno/ui-cyberfix.md); SKULLS van en el magenta del kit.
+        private static readonly Color ColorViboras = new Color(0.451f, 1f, 0.102f);
 
         /// <summary>Máximo de caracteres de un aviso del HUD; si no cabe se corta (T-415).</summary>
         public const int LargoMaximoAviso = 40;
@@ -24,9 +24,9 @@ namespace MechaCyberpunk.UI.Mapa
             switch (dueno)
             {
                 case IdPandilla.Jugador: return ColoresPandilla.Color(Perfil != null ? Perfil.ColorPandilla : ColoresPandilla.Predeterminado);
-                case IdPandilla.Calaveras: return ColorCalaveras;
+                case IdPandilla.Calaveras: return KitUI.Estilo.Magenta;
                 case IdPandilla.Viboras: return ColorViboras;
-                default: return ColorNadie;
+                default: return KitUI.Estilo.Desactivado;
             }
         }
 
@@ -47,42 +47,21 @@ namespace MechaCyberpunk.UI.Mapa
             return territorio.Nombre(zona) + " · " + NombreDe(territorio.Dueno(zona)) + " · RESPETO " + territorio.Respeto(zona);
         }
 
-        /// <summary>Un Text con sombra, anclado en el padre. La fuente es la integrada de Unity.</summary>
+        /// <summary>Un Text del kit (fuente, sombra y color de la guía), anclado en el padre; nunca menor que el mínimo de 20 px (T-408).</summary>
         public static Text CrearTexto(Transform padre, string nombre, int tamano, TextAnchor alineacion, Vector2 anclaMin, Vector2 anclaMax, Vector2 posicion, Vector2 tamanoCaja)
         {
-            GameObject objeto = new GameObject(nombre, typeof(RectTransform));
-            objeto.transform.SetParent(padre, false);
-            RectTransform rect = (RectTransform)objeto.transform;
+            Text texto = KitUI.CrearTexto(padre, nombre, RolTexto.Texto, alineacion);
+            texto.fontSize = Mathf.Max(KitUI.Estilo.Tamano(RolTexto.Minimo), tamano);
+            RectTransform rect = texto.rectTransform;
             rect.anchorMin = anclaMin;
             rect.anchorMax = anclaMax;
             rect.pivot = new Vector2(anclaMin.x, anclaMin.y);
             rect.anchoredPosition = posicion;
             rect.sizeDelta = tamanoCaja;
-            Text texto = objeto.AddComponent<Text>();
-            texto.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            texto.fontSize = tamano;
-            texto.alignment = alineacion;
-            texto.horizontalOverflow = HorizontalWrapMode.Overflow;
-            texto.verticalOverflow = VerticalWrapMode.Overflow;
-            texto.raycastTarget = false;
-            Shadow sombra = objeto.AddComponent<Shadow>();
-            sombra.effectColor = new Color(0f, 0f, 0f, 0.85f);
-            sombra.effectDistance = new Vector2(1.5f, -1.5f);
             return texto;
         }
 
-        public static Canvas CrearCanvas(Transform padre, string nombre, int orden)
-        {
-            GameObject objeto = new GameObject(nombre, typeof(RectTransform));
-            objeto.transform.SetParent(padre, false);
-            Canvas canvas = objeto.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = orden;
-            CanvasScaler escala = objeto.AddComponent<CanvasScaler>();
-            escala.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            escala.referenceResolution = new Vector2(1920f, 1080f);
-            escala.matchWidthOrHeight = 0.5f;
-            return canvas;
-        }
+        /// <summary>Canvas del kit (Overlay con el CanvasScaler de la guía).</summary>
+        public static Canvas CrearCanvas(Transform padre, string nombre, int orden) => KitUI.CrearCanvas(padre, nombre, orden);
     }
 }

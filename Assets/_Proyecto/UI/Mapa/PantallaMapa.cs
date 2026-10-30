@@ -1,5 +1,6 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -22,13 +23,16 @@ namespace MechaCyberpunk.UI.Mapa
 
         /// <summary>Título del mapa (documento del juego, 29-oct).</summary>
         public const string NombreCiudad = "MEGALOPOLIS";
+        public const string TextoAyuda = "M O ESC PARA CERRAR";
+        public const int OrdenCanvas = 40;
 
         [Tooltip("Lado de cada manzana en el mapa (m del mundo).")]
         [Min(1f)] [SerializeField] private float ladoManzana = 80f;
         [Tooltip("Píxeles de pantalla (referencia 1920x1080) por metro del mundo.")]
         [Min(0.1f)] [SerializeField] private float pixelesPorMetro = 2.6f;
-        [SerializeField] private Color colorFondo = new Color(0.02f, 0.02f, 0.05f, 0.92f);
         [SerializeField] private Color colorJugador = Color.white;
+        [Tooltip("Tamaño del rombo del objetivo de punta a punta (px a 1920x1080).")]
+        [Min(4f)] [SerializeField] private float diagonalRombo = 36f;
 
         private GameObject panel;
         private RectTransform contenedor;
@@ -38,6 +42,8 @@ namespace MechaCyberpunk.UI.Mapa
         private Image[] manzanas;
         private Text[] etiquetas;
         private Text titulo;
+        private RectTransform romboObjetivo;
+        private GameObject fondoPantalla;
         private ControladorAPie controlCongelado;
 
         public bool Abierto => panel != null && panel.activeSelf;
@@ -45,18 +51,20 @@ namespace MechaCyberpunk.UI.Mapa
         public Text[] Etiquetas => etiquetas;
         public Text Titulo => titulo;
 
+        /// <summary>El rombo del objetivo (T-408), en px del mapa desde su centro (x, z del mundo por píxeles por metro).</summary>
+        public RectTransform RomboObjetivo => romboObjetivo;
+        public bool RomboObjetivoVisible => romboObjetivo != null && romboObjetivo.gameObject.activeSelf;
+        public float PixelesPorMetro => pixelesPorMetro;
+
         private void Awake()
         {
-            Canvas canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasMapa", 40);
-            panel = new GameObject("Panel", typeof(RectTransform));
-            panel.transform.SetParent(canvas.transform, false);
-            RectTransform rectPanel = (RectTransform)panel.transform;
-            rectPanel.anchorMin = new Vector2(0.5f, 0.5f);
-            rectPanel.anchorMax = new Vector2(0.5f, 0.5f);
-            rectPanel.sizeDelta = new Vector2(CentrosManzanas.Length > 0 ? 3f * 94f * pixelesPorMetro + 120f : 400f, 2f * 94f * pixelesPorMetro + 160f);
-            Image fondo = panel.AddComponent<Image>();
-            fondo.color = colorFondo;
-            fondo.raycastTarget = false;
+            // T-408: canvas, panel, textos y rombo del kit de UI.
+            Canvas canvas = KitUI.CrearCanvas(transform, "CanvasMapa", OrdenCanvas);
+            fondoPantalla = KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla").gameObject;
+            fondoPantalla.SetActive(false);
+            RectTransform rectPanel = KitUI.CrearPanel(canvas.transform, "Panel",
+                new Vector2(3f * 94f * pixelesPorMetro + 120f, 2f * 94f * pixelesPorMetro + 160f));
+            panel = rectPanel.gameObject;
             contenedor = rectPanel;
             manzanas = new Image[CentrosManzanas.Length];
             etiquetas = new Text[CentrosManzanas.Length];
@@ -69,7 +77,7 @@ namespace MechaCyberpunk.UI.Mapa
                 rect.anchoredPosition = CentrosManzanas[i] * pixelesPorMetro;
                 manzanas[i] = objeto.AddComponent<Image>();
                 manzanas[i].raycastTarget = false;
-                etiquetas[i] = FormatoTerritorio.CrearTexto(objeto.transform, "Etiqueta", 22, TextAnchor.MiddleCenter,
+                etiquetas[i] = FormatoTerritorio.CrearTexto(objeto.transform, "Etiqueta", KitUI.Estilo.Tamano(RolTexto.Ayuda), TextAnchor.MiddleCenter,
                     new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(ladoManzana * pixelesPorMetro, 60f));
                 ((RectTransform)etiquetas[i].transform).pivot = new Vector2(0.5f, 0.5f);
                 etiquetas[i].color = Color.black;
@@ -81,12 +89,19 @@ namespace MechaCyberpunk.UI.Mapa
             Image imagenPunto = punto.AddComponent<Image>();
             imagenPunto.color = colorJugador;
             imagenPunto.raycastTarget = false;
-            titulo = FormatoTerritorio.CrearTexto(contenedor, "Titulo", 28, TextAnchor.UpperCenter, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -16f), new Vector2(600f, 40f));
+            romboObjetivo = (RectTransform)KitUI.CrearRombo(contenedor, "Objetivo", diagonalRombo, KitUI.Estilo.Naranja).rectTransform.parent;
+            romboObjetivo.gameObject.SetActive(false);
+            float relleno = KitUI.Estilo.Relleno;
+            titulo = FormatoTerritorio.CrearTexto(contenedor, "Titulo", KitUI.Estilo.Tamano(RolTexto.Texto), TextAnchor.UpperCenter, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -relleno), new Vector2(600f, 40f));
+            ((RectTransform)titulo.transform).pivot = new Vector2(0.5f, 1f);
             titulo.text = NombreCiudad;
-            titulo.color = new Color(0.1f, 0.9f, 0.85f);
-            FormatoTerritorio.CrearTexto(contenedor, "Ayuda", 20, TextAnchor.LowerCenter, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(0f, 12f), new Vector2(600f, 30f)).text = "M o Esc para cerrar";
+            titulo.color = KitUI.Estilo.Naranja;
+            Text ayuda = FormatoTerritorio.CrearTexto(contenedor, "Ayuda", KitUI.Estilo.Tamano(RolTexto.Ayuda), TextAnchor.LowerCenter, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
+                new Vector2(0f, relleno), new Vector2(600f, 30f));
+            ((RectTransform)ayuda.transform).pivot = new Vector2(0.5f, 0f);
+            ayuda.text = TextoAyuda;
+            ayuda.color = KitUI.Estilo.Turquesa;
             panel.SetActive(false);
         }
 
@@ -122,6 +137,7 @@ namespace MechaCyberpunk.UI.Mapa
                 return;
             }
             panel.SetActive(true);
+            fondoPantalla.SetActive(true);
             IJugador jugador = Registro<IJugador>.Actual;
             controlCongelado = jugador != null && jugador.Raiz != null ? jugador.Raiz.GetComponentInChildren<ControladorAPie>() : null;
             if (controlCongelado != null && controlCongelado.ControlActivo)
@@ -140,6 +156,7 @@ namespace MechaCyberpunk.UI.Mapa
             if (panel != null)
             {
                 panel.SetActive(false);
+                fondoPantalla.SetActive(false);
             }
             if (controlCongelado != null)
             {
@@ -166,6 +183,20 @@ namespace MechaCyberpunk.UI.Mapa
             {
                 Vector3 p = jugador.Raiz.position;
                 puntoJugador.anchoredPosition = new Vector2(p.x, p.z) * pixelesPorMetro;
+            }
+            // T-408: el objetivo, con el mismo rombo que el marcador.
+            IObjetivos objetivos = Registro<IObjetivos>.Actual;
+            Vector3 destino = Vector3.zero;
+            bool hayObjetivo = objetivos != null && objetivos.HayObjetivo
+                && UbicacionObjetivo.Resolver(objetivos.Actual, Registro<ILugar>.Todos, out destino);
+            if (romboObjetivo.gameObject.activeSelf != hayObjetivo)
+            {
+                romboObjetivo.gameObject.SetActive(hayObjetivo);
+            }
+            if (hayObjetivo)
+            {
+                romboObjetivo.anchoredPosition = new Vector2(destino.x, destino.z) * pixelesPorMetro;
+                romboObjetivo.SetAsLastSibling();
             }
             // T-405: un punto por aliado, del color de tu pandilla.
             IPandillaJugador pandilla = Registro<IPandillaJugador>.Actual;

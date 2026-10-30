@@ -10,7 +10,7 @@ namespace MechaCyberpunk.UI.Editor
     /// Crea lo de T-056: ConfigHudAPie_Base.asset y UI/Prefabs/HudAPie.prefab (idempotente; conserva el config si ya existe).
     /// Batchmode: -executeMethod MechaCyberpunk.UI.Editor.CreadorHudAPie.Crear
     /// </summary>
-    public static class CreadorHudAPie
+    public static partial class CreadorHudAPie
     {
         private const string RutaUI = "Assets/_Proyecto/UI";
         private const string RutaConfig = RutaUI + "/Datos/ConfigHudAPie_Base.asset";
@@ -61,6 +61,7 @@ namespace MechaCyberpunk.UI.Editor
                 CrearPrefab(config);
             }
             CompletarPrefab(config);
+            AcomodarT408(config, CreadorKitUI.AsegurarEstilo());
             AssetDatabase.SaveAssets();
             Debug.Log("[UI] T-056 creada.");
         }
@@ -120,20 +121,11 @@ namespace MechaCyberpunk.UI.Editor
                 Text textoCancion = CrearTexto("Texto", grupoCancion, config, TextAnchor.UpperLeft);
                 Stretch(textoCancion.rectTransform);
 
-                // Objetivo: arriba al centro, con el texto, la flecha que gira y la distancia.
-                float altoObjetivo = AltoTexto + config.LadoFlecha + AltoTexto;
+                // Objetivo: arriba al centro, solo el texto (el rombo y la flecha del borde son de MarcadorObjetivo, T-408).
                 RectTransform grupoObjetivo = CrearGrupo("Objetivo", raiz.transform, new Vector2(0.5f, 1f), new Vector2(0f, -config.Margen),
-                    new Vector2(AnchoTextoCentral, altoObjetivo));
+                    new Vector2(AnchoTextoCentral, AltoTexto));
                 Text textoObjetivo = CrearTexto("Texto", grupoObjetivo, config, TextAnchor.UpperCenter);
                 Stretch(textoObjetivo.rectTransform);
-                Image flecha = CrearImagen("Flecha", grupoObjetivo, config.ColorTexto);
-                RectTransform rectFlecha = flecha.rectTransform;
-                rectFlecha.anchorMin = rectFlecha.anchorMax = new Vector2(0.5f, 1f);
-                rectFlecha.pivot = new Vector2(0.5f, 0.5f);
-                rectFlecha.anchoredPosition = new Vector2(0f, -AltoTexto - config.LadoFlecha / 2f);
-                rectFlecha.sizeDelta = new Vector2(config.LadoFlecha, config.LadoFlecha);
-                Text textoDistancia = CrearTexto("Distancia", grupoObjetivo, config, TextAnchor.LowerCenter);
-                Stretch(textoDistancia.rectTransform);
 
                 // Interacción: abajo al centro, encima del borde.
                 RectTransform grupoInteraccion = CrearGrupo("Interaccion", raiz.transform, new Vector2(0.5f, 0f),
@@ -161,8 +153,6 @@ namespace MechaCyberpunk.UI.Editor
                 so.FindProperty("textoCancion").objectReferenceValue = textoCancion;
                 so.FindProperty("grupoObjetivo").objectReferenceValue = grupoObjetivo.gameObject;
                 so.FindProperty("textoObjetivo").objectReferenceValue = textoObjetivo;
-                so.FindProperty("flecha").objectReferenceValue = flecha;
-                so.FindProperty("textoDistancia").objectReferenceValue = textoDistancia;
                 so.FindProperty("grupoInteraccion").objectReferenceValue = grupoInteraccion.gameObject;
                 so.FindProperty("textoInteraccion").objectReferenceValue = textoInteraccion;
                 so.FindProperty("grupoLlamado").objectReferenceValue = grupoLlamado.gameObject;

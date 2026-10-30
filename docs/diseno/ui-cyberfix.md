@@ -5,7 +5,7 @@ Para todas las pantallas desde T-407 (D-tony-238, D-tony-239). Se diseña a 1920
 - **uGUI con un kit común** en `UI/Kit/`: `KitUI` crea canvas, panel, texto, botón, deslizador, conmutador y selector; `EstiloCyberfix_Base.asset`
   (UI/Datos) guarda la fuente, los colores, los tamaños y los márgenes. Las pantallas nuevas son prefabs que hace un creador de editor
   llamando a `KitUI`; los HUD que arman su canvas por código (HudTerritorio, HudAliados, PantallaMapa) usan las mismas funciones.
-- **Nada nuevo con OnGUI.** El único OnGUI (`UI/Historia/PantallaHistoriaPandillas`) pasa al kit en T-408. OnGUI no escala con el
+- **Nada de OnGUI.** Desde T-408 no queda ninguno en UI/ (PantallaHistoriaPandillas ya usa el kit). OnGUI no escala con el
   CanvasScaler, no comparte fuente ni foco y no se ve en las capturas de las pruebas.
 - Texto: `UnityEngine.UI.Text`, como las pantallas que ya hay. No TextMeshPro, para no mezclar dos sistemas de texto.
 - Canvas: Screen Space Overlay, `CanvasScaler` ScaleWithScreenSize, referencia 1920x1080, match 0.5. Orden de dibujo: HUD 10, marcador 15,
@@ -42,7 +42,22 @@ Título 96 · encabezado 48 · botón 34 · texto 28 · HUD 26 · ayuda 22 · **
 - Al abrir un menú se elige su primer botón activo y se muestra el cursor; al cerrar el último menú el cursor vuelve a quedar bloqueado.
 - Sonidos del kit (T-407): UI_MOVER al cambiar de elegido, UI_ACEPTAR, UI_CANCELAR con Esc y UI_ERROR al pulsar algo desactivado.
 
+## HUD a pie (T-408)
+Cada texto tiene su ranura en `UI/Kit/DisposicionHud` (margen 48, filas de 36 px); nada se mueve a mano.
+| Esquina | De arriba (o de abajo) hacia adentro |
+| --- | --- |
+| Arriba a la izquierda | radio, renta, zona (HudTerritorio) |
+| Arriba al centro | objetivo (texto naranja de 28), aviso de zona, aviso de aliados, ayuda de la historia |
+| Arriba a la derecha | calor |
+| Abajo a la izquierda | vida, Biits, aviso de Biits, ayuda de controles |
+| Abajo a la derecha | arma, tu pandilla (crece hacia arriba) |
+| Abajo al centro | interacción, llamado del mecha, subtítulo |
+
+Marcador del objetivo (`MarcadorObjetivo`, orden 15): rombo naranja de 36 px 2.2 m sobre el objetivo, distancia turquesa abajo; fuera
+de pantalla, flecha naranja a 64 px del borde (detrás: borde izquierdo o derecho a media altura). Rombo y flecha llevan contorno oscuro
+de 4 px para leerse sobre cualquier color. El mapa usa el mismo rombo.
+
 ## Revisión de cada pantalla
 Una captura en 1920x1080 y otra en 2560x1440 en docs/capturas/T-xxx-n.png. Se revisa a ojo: nada se sale ni se encima, se lee a un
 metro de la pantalla y el elegido se nota. Si se ve mal, se arregla antes de seguir. Los canvas Overlay no salen en `Camera.Render()`:
-el ayudante `Tests/PlayMode/UI/CapturaUI.cs` (T-408) los pasa a Screen Space Camera mientras captura.
+el ayudante `Tests/PlayMode/UI/CapturaUI.cs` (T-414) los pasa a Screen Space Camera, pegados al plano cercano, mientras captura.

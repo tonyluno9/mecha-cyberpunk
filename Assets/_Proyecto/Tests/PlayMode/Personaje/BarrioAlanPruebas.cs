@@ -218,7 +218,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 if (Time.time > fin)
                 {
                     Avanzar(false);
-                    Assert.Fail("No llegó a: " + que + " (objetivo '" + hud.TextoObjetivo.text + "', distancia " + hud.TextoDistancia.text
+                    Assert.Fail("No llegó a: " + que + " (objetivo '" + hud.TextoObjetivo.text + "', distancia " + hud.TextoDistancia
                         + ", posición " + jugador.transform.position + ")");
                 }
                 Conducir(hud.AnguloFlecha);

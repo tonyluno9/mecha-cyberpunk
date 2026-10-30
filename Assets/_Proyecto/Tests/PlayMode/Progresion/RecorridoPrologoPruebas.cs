@@ -969,7 +969,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Cuadros(FramesParaElHud, false);
             Assert.AreEqual(TextoCarro, hud.TextoObjetivo.text, "El HUD dice 'Ve a tu carro'");
             Assert.IsTrue(hud.GrupoObjetivo.activeInHierarchy, "El objetivo está a la vista");
-            Assert.IsTrue(hud.Flecha.gameObject.activeInHierarchy, "Con su flecha");
+            Assert.IsTrue(hud.HayPosicionObjetivo, "Con su flecha");
 
             yield return LlegarALaEmboscada();
             Assert.AreNotEqual(EstadoEmboscada.Esperando, emboscada.Estado, "Al acercarse al callejón la pandilla se activa");

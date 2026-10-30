@@ -306,7 +306,7 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             jugador.Colocar(new Pose(destino + new Vector3(0f, AlturaInicio, -DistanciaInicial), Quaternion.identity));
             yield return Cuadros(FramesParaElHud);
             Assert.AreEqual(0f, hud.AnguloFlecha, ToleranciaFlecha, "la flecha del HUD apunta a la farmacia (°)");
-            Assert.AreEqual(CalculoFlechaObjetivo.TextoDistancia(DistanciaInicial), hud.TextoDistancia.text, "la distancia del HUD");
+            Assert.AreEqual(CalculoFlechaObjetivo.TextoDistancia(DistanciaInicial), hud.TextoDistancia, "la distancia del HUD");
 
             yield return UsarPaso(idRecoger, "E · RECOGER: " + datos.Pasos[0].Texto);
             Assert.IsTrue(misiones.HayMision, "sigue la misión");
