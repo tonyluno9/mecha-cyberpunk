@@ -19,7 +19,13 @@ namespace MechaCyberpunk.Core
         /// <summary>Apariencia del jugador. Nunca es inválida: quien implementa pone <see cref="AparienciaJugador.Predeterminada"/> de respaldo.</summary>
         AparienciaJugador Apariencia { get; }
 
-        /// <summary>Se avisa cada vez que cambia <see cref="Nombre"/>, <see cref="Alias"/> o <see cref="Apariencia"/>.</summary>
+        /// <summary>Nombre de tu pandilla (T-415). Nunca es null ni vacío: por defecto <see cref="ColoresPandilla.NombrePredeterminado"/>.</summary>
+        string NombrePandilla { get; }
+
+        /// <summary>Color de tu pandilla (T-415): índice de 0 a 3 en <see cref="ColoresPandilla"/>.</summary>
+        int ColorPandilla { get; }
+
+        /// <summary>Se avisa cada vez que cambia <see cref="Nombre"/>, <see cref="Alias"/>, <see cref="Apariencia"/>, <see cref="NombrePandilla"/> o <see cref="ColorPandilla"/>.</summary>
         event Action Cambio;
     }
 }

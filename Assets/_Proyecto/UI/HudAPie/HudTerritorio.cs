@@ -7,7 +7,7 @@ namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
     /// Arriba a la izquierda dice en qué zona estás, de quién es y tu respeto, con el color del dueño (T-404). Avisa "¡EL JEFE TE BUSCA!"
-    /// cuando el jefe de una zona queda disponible y "&lt;ZONA&gt; ES TUYO" 3 s al conquistarla. Crea su propio canvas; no depende de HudAPie.
+    /// cuando el jefe de una zona queda disponible y "&lt;ZONA&gt; ES DE &lt;TU PANDILLA&gt;" 3 s al conquistarla. Crea su propio canvas; no depende de HudAPie.
     /// </summary>
     public class HudTerritorio : MonoBehaviour
     {
@@ -95,7 +95,7 @@ namespace MechaCyberpunk.UI.Hud
 
         private void AlConquistar(string zona, IdPandilla anterior)
         {
-            Avisar(territorio.Nombre(zona) + " ES TUYO", FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista);
+            Avisar(FormatoTerritorio.Cortar(territorio.Nombre(zona) + " ES DE " + FormatoTerritorio.NombreDe(IdPandilla.Jugador)), FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista);
         }
 
         private void Avisar(string texto, Color color, float segundos)

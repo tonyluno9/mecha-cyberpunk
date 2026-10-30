@@ -997,3 +997,4 @@ Una línea por decisión. Todas son propuesta hasta que Tony las apruebe en la r
 
 - D-tony-250 (T-414): moneda Biits con símbolo Ƀ (U+0243), en Core/Economia/Moneda.cs; la fuente integrada LegacyRuntime.ttf sí lo dibuja (prueba y capturas), no hizo falta ₿ ni "BIITS".
 - T-414: el letrero del mostrador del mercado y de la clínica estaba escrito en sus prefabs; T414() les cambia el texto (TextMesh) sin regenerarlos. El HUD de zona bajó 70 px para no encimarse con "RADIO · sin señal". Los letreros de neón de El Fox y VivaCoin miden lo que el modelo viejo (mínimo 1.6 x 0.8 m) y miran hacia la calle (de la posición del lugar a su Puerta).
+- T-415: "TU PANDILLA ESTÁ LLENA" (Reclutable) se queda en segunda persona, no usa el nombre (con nombres libres la gramática falla). El aviso "SE UNE A" lo da HudAliados al ver subir la cantidad de aliados (un guardado cargado con aliados también lo avisaría). AliadoAPie ya no tiene colorAliado serializado.

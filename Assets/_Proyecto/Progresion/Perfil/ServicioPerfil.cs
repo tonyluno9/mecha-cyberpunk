@@ -20,6 +20,9 @@ namespace MechaCyberpunk.Progresion
             public int cara;
             public int ropa;
             public int implante;
+            // T-415: opcionales; un perfil viejo sin ellos deja null y 0 (predeterminados).
+            public string nombrePandilla;
+            public int colorPandilla;
         }
 
         [SerializeField] private DatosPerfil datos;
@@ -27,11 +30,16 @@ namespace MechaCyberpunk.Progresion
         private string nombre;
         private string alias;
         private AparienciaJugador apariencia = AparienciaJugador.Predeterminada;
+        private string nombrePandilla = ColoresPandilla.NombrePredeterminado;
+        private int colorPandilla = ColoresPandilla.Predeterminado;
 
         public string Nombre => nombre ?? (datos != null ? datos.NombreRespaldo : string.Empty);
         public string Alias => alias ?? (datos != null ? datos.AliasRespaldo : string.Empty);
 
         public AparienciaJugador Apariencia => apariencia;
+
+        public string NombrePandilla => nombrePandilla;
+        public int ColorPandilla => colorPandilla;
 
         public string ClaveGuardado => Clave;
 
@@ -68,7 +76,9 @@ namespace MechaCyberpunk.Progresion
             alias = Alias,
             cara = apariencia.Cara,
             ropa = apariencia.Ropa,
-            implante = apariencia.Implante
+            implante = apariencia.Implante,
+            nombrePandilla = nombrePandilla,
+            colorPandilla = colorPandilla
         });
 
         public void Cargar(string texto)
@@ -92,10 +102,14 @@ namespace MechaCyberpunk.Progresion
             string n = ReglaAlias.Normalizar(leidos.nombre, datos.NombreRespaldo);
             string a = ReglaAlias.Normalizar(leidos.alias, datos.AliasRespaldo);
             AparienciaJugador ap = ReglaApariencia.Normalizar(new AparienciaJugador(leidos.cara, leidos.ropa, leidos.implante));
-            if (n == Nombre && a == Alias && ap == apariencia) return;
+            string np = ColoresPandilla.Limpiar(leidos.nombrePandilla);
+            int cp = ColoresPandilla.Normalizar(leidos.colorPandilla);
+            if (n == Nombre && a == Alias && ap == apariencia && np == nombrePandilla && cp == colorPandilla) return;
             nombre = n;
             alias = a;
             apariencia = ap;
+            nombrePandilla = np;
+            colorPandilla = cp;
             Cambio?.Invoke();
         }
 
@@ -123,6 +137,20 @@ namespace MechaCyberpunk.Progresion
             AparienciaJugador normalizada = ReglaApariencia.Normalizar(nueva);
             if (normalizada == apariencia) return;
             apariencia = normalizada;
+            Cambio?.Invoke();
+        }
+
+        /// <summary>
+        /// Cambia el nombre (pasa por <see cref="ColoresPandilla.Limpiar"/>) y el color de tu pandilla (T-415; fuera de rango = el
+        /// predeterminado). Avisa <see cref="Cambio"/> solo si cambió de verdad.
+        /// </summary>
+        public void FijarPandilla(string nuevoNombre, int nuevoColor)
+        {
+            string n = ColoresPandilla.Limpiar(nuevoNombre);
+            int c = ColoresPandilla.Normalizar(nuevoColor);
+            if (n == nombrePandilla && c == colorPandilla) return;
+            nombrePandilla = n;
+            colorPandilla = c;
             Cambio?.Invoke();
         }
     }

@@ -161,3 +161,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Mira: el HUD de dinero dice "Ƀ340" (símbolo de Biits); la tienda se titula EL MERCADO; el HUD de zona dice "SUBURBIOS · TUYA" en tu casa y "EL TIANGUIS · SKULLS" en el centro (ya no se encima con la radio); M abre el mapa con título MEGALOPOLIS.
 - Ve al bar y al casino: los letreros de neón dicen EL FOX (cian) y VIVACOIN (naranja) y los modelos viejos están apagados; la clínica dice I+D+I.
 - Observa: ¿se lee bien la Ƀ?, ¿"SKULLS" y "SNAKES" sin artículo suenan bien?, ¿los letreros nuevos tapan bien a los viejos (son pequeños)?
+
+### T-415 tu pandilla con nombre y color
+- Mira: el HUD de zona en tu casa dice "SUBURBIOS · LOS DE SUBURBIOS · RESPETO n" en naranja; reclutar al CHATO avisa "EL CHATO SE UNE A LOS DE SUBURBIOS"; al conquistar, "EL TIANGUIS ES DE LOS DE SUBURBIOS".
+- Hasta T-413 solo cambia por código (ServicioPerfil.FijarPandilla("los neón", 3)): HUD, mapa (M) y el CHATO se repintan al instante.
+- Observa: ¿"LOS DE SUBURBIOS" te gusta?, ¿los 4 colores se distinguen de SKULLS (magenta) y SNAKES (verde) en el mapa y de noche?
