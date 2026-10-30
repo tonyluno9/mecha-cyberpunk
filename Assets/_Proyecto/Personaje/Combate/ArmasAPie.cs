@@ -156,6 +156,13 @@ namespace MechaCyberpunk.Personaje.Combate
             }
         }
 
+        /// <summary>Pone el arma en la mano si se tiene (T-412: al cargar la partida). Devuelve si quedó en la mano.</summary>
+        public bool Equipar(ArmaAPie arma)
+        {
+            Cambiar(arma);
+            return armaActiva == arma;
+        }
+
         private void Cambiar(ArmaAPie arma)
         {
             if (arma == armaActiva || !Tiene(arma))

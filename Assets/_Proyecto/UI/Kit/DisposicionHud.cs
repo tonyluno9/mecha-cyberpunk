@@ -50,6 +50,8 @@ namespace MechaCyberpunk.UI.Kit
         // Abajo a la derecha.
         public static RanuraHud Arma => new RanuraHud(EsquinaHud.AbajoDerecha, M, F, M);
         public static RanuraHud Pandilla => new RanuraHud(EsquinaHud.AbajoDerecha, Arma.Fin + Hueco, AltoPandilla, M);
+        /// <summary>El aviso "GUARDADO" (T-412), arriba de tu pandilla.</summary>
+        public static RanuraHud AvisoGuardado => new RanuraHud(EsquinaHud.AbajoDerecha, Pandilla.Fin + Hueco, F, M);
 
         // Abajo al centro.
         public static RanuraHud Interaccion => new RanuraHud(EsquinaHud.AbajoCentro, M + 2f * F, F, 0f);
