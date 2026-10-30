@@ -48,6 +48,11 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - ↑ ↓ (o W S) y Enter, o el ratón encima y clic; Esc o CONTINUAR regresan. GUARDAR/CARGAR abren las ranuras encima y Esc vuelve a la pausa; SALIR AL TÍTULO pregunta "¿SALIR? LO QUE NO GUARDASTE SE PIERDE" en magenta.
 - Con el mapa (M), la tienda o el continuará abiertos, Esc cierra esa pantalla y no pausa; el siguiente Esc pausa. En el carro, en pausa el ratón no gira la cámara. Esc ya no suelta el cursor: lo suelta la pausa.
 
+### T-411 opciones (qué probar)
+- Esc → OPCIONES: ↑ ↓ eligen la fila, ← → (o la rueda) cambian el valor; Enter o clic cambian INVERTIR Y, PANTALLA COMPLETA, CALIDAD y RESOLUCIÓN. Al mover un volumen suena el clic con el nivel nuevo. ¿La sensibilidad 1.00x por defecto está bien?
+- Todo se aplica al instante y se guarda aparte de las partidas (opciones.json): cierra el juego, ábrelo y deben seguir igual. Ambiente y Música empiezan en 0 % (el silencio del plan); súbelos si los quieres oír.
+- CALIDAD BAJA (render al 75 %, sombras a 40 m, sin MSAA) contra ALTA: ¿se nota más fluida en una compu lenta? Prueba RESOLUCIÓN y PANTALLA COMPLETA en el .exe (en el editor no cambian). ¿Te falta alguna opción (FOV, subtítulos)?
+
 ## Build viejo con mechas (antes de la fase G)
 
 Build de Windows con las escenas de prueba de Tony más Ciudad_Prologo y Clandestino de Alan (T-136/T-137 aún pendientes: todavía no hay demo encadenada).

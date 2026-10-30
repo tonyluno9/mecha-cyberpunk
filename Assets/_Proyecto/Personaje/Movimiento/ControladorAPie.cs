@@ -129,7 +129,15 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 float minima = configCamara != null ? configCamara.InclinacionMinima : -40f;
                 float maxima = configCamara != null ? configCamara.InclinacionMaxima : 60f;
-                float giro = mirada.Actualizar(mirar.action.ReadValue<Vector2>(), config.SensibilidadRaton * FactorSensibilidad, Mathf.Max(Mathf.Abs(minima), maxima));
+                // T-411: las opciones multiplican la sensibilidad (encima del factor del zoom) y pueden invertir Y.
+                IOpciones opciones = Registro<IOpciones>.Actual;
+                Vector2 delta = mirar.action.ReadValue<Vector2>();
+                if (opciones != null && opciones.InvertirY)
+                {
+                    delta.y = -delta.y;
+                }
+                float sensibilidad = config.SensibilidadRaton * FactorSensibilidad * (opciones != null ? opciones.Sensibilidad : 1f);
+                float giro = mirada.Actualizar(delta, sensibilidad, Mathf.Max(Mathf.Abs(minima), maxima));
                 giroCamara = Mathf.Repeat(giroCamara + giro, 360f);
                 mirada.Limitar(minima, maxima);
             }
