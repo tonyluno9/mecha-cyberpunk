@@ -7,7 +7,7 @@ aquí 3 líneas de qué probar. La demo final de 15 minutos queda en `Builds/Dem
 ### Cómo abrir Builds/Juego
 Doble clic en `Builds/Juego/Cyberfix.exe` (en la raíz del repo; no está en git, se regenera con
 `-executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.ConstruirJuego` o el menú Mecha Cyberpunk > Demo > Construir juego de pandillas).
-Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
+Arranca en el título CYBERFIX (dentro de Ciudad_Prologo, T-413); la demo (`Builds/Demo/Cyberfix.exe`) también empieza en el título. En el editor sale con Mecha Cyberpunk > Pandillas > Título en el editor.
 
 ### T-400 tercera persona (qué probar)
 - Camina con WASD, corre con Shift y salta con Espacio: la cámara va sobre el hombro y el ratón la orbita; ¿marea o se siente bien? ¿el muñeco se ve vivo?
@@ -52,6 +52,11 @@ Arranca directo en Ciudad_Prologo, a las 19:00, delante de la casa.
 - Esc → OPCIONES: ↑ ↓ eligen la fila, ← → (o la rueda) cambian el valor; Enter o clic cambian INVERTIR Y, PANTALLA COMPLETA, CALIDAD y RESOLUCIÓN. Al mover un volumen suena el clic con el nivel nuevo. ¿La sensibilidad 1.00x por defecto está bien?
 - Todo se aplica al instante y se guarda aparte de las partidas (opciones.json): cierra el juego, ábrelo y deben seguir igual. Ambiente y Música empiezan en 0 % (el silencio del plan); súbelos si los quieres oír.
 - CALIDAD BAJA (render al 75 %, sombras a 40 m, sin MSAA) contra ALTA: ¿se nota más fluida en una compu lenta? Prueba RESOLUCIÓN y PANTALLA COMPLETA en el .exe (en el editor no cambian). ¿Te falta alguna opción (FOV, subtítulos)?
+
+### T-413 título y creación (qué probar)
+- Abre el .exe: sale CYBERFIX con la cámara volando lenta por la calle principal de noche, sin HUD; Esc no pausa. Sin partidas CONTINUAR está gris. ¿Da ganas de jugar o la cámara marea?
+- NUEVA PARTIDA: ← → cambia entre CHAMARRA y MÁSCARA (el muñeco gira a la izquierda), escribe tu nombre y el de tu pandilla (solo letras, máx. 16), ← → elige el COLOR y EMPEZAR: despiertas en la cama con ese nombre y color en el HUD, el mapa y el CHATO. ¿Se distinguen los dos muñecos?
+- Juega hasta autoguardar (dormir o conquistar), sal al título desde la pausa: CONTINUAR muestra el resumen y te deja donde estabas; con el ratón también (pasar encima elige, clic acepta). OPCIONES y Esc vuelven al título.
 
 ## Build viejo con mechas (antes de la fase G)
 
