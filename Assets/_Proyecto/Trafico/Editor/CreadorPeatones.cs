@@ -59,7 +59,13 @@ namespace MechaCyberpunk.Trafico.Editor
 
             if (AssetDatabase.LoadAssetAtPath<ConfigPeatones>(RutaConfig) == null)
             {
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<ConfigPeatones>(), RutaConfig);
+                // T-417 (D-tony-255): pocos peatones, 4 de día y 6 de noche.
+                ConfigPeatones nuevo = ScriptableObject.CreateInstance<ConfigPeatones>();
+                SerializedObject soConfig = new SerializedObject(nuevo);
+                soConfig.FindProperty("peatonesDeDia").intValue = 4;
+                soConfig.FindProperty("peatonesDeNoche").intValue = 6;
+                soConfig.ApplyModifiedPropertiesWithoutUndo();
+                AssetDatabase.CreateAsset(nuevo, RutaConfig);
             }
             AssetDatabase.SaveAssets();
             Debug.Log("[Trafico] T-331: prefab Peaton y ConfigPeatones_Trafico listos.");

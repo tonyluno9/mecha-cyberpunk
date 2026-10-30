@@ -171,3 +171,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - En El Mercado (E, flechas, Enter) compra FUSIL (Ƀ700) y SNIPER (Ƀ900); 4 saca el fusil (mantén el clic, dispara solo) y 5 el sniper (clic derecho = zoom de FOV 15 con mira negra y distancia).
 - La pistola base también se vende (Ƀ150) para quien no la tenga; cada arma sube 3 niveles (I a III) en la misma tienda y la rueda del ratón recorre las 5 armas.
 - Observa: ¿el sniper se siente poderoso?, ¿el zoom marea?, ¿el fusil se siente distinto del viejo subfusil?, ¿los precios cuadran con los Ƀ40 por pandillero?
+
+### T-417 profes y peatones
+- En Suburbios, a 10 a 25 m de tu casa, está el CIC (letrero turquesa): E con EL INVENTOR (TINO) abre la tienda de las 15 mejoras de armas. Más: EL DOC (JOEL) junto a I+D+I cura por Ƀ50, EL HACKER (SERGIO) en VivaCoin da una pista, EL MECÁNICO (CANEPA) junto al carro de tu casa borra el calor por Ƀ100, EL DIRECTOR (ESTRADA) en El Fox solo platica.
+- Cada uno lleva su título, nombre y función sobre la cabeza (se lee a menos de 15 m); son muñecos de prueba hasta que lleguen sus modelos.
+- Observa: ¿encuentras a cada profe?, ¿se entiende qué hace con solo leer el letrero?, ¿la calle se siente viva con 4 peatones de día y 6 de noche, o vacía?
