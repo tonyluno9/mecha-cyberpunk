@@ -53,5 +53,20 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         /// <summary>True si este nivel es el que sigue (el n-1 ya se tiene): la tienda solo muestra esa mejora de cada arma.</summary>
         public bool EsSiguiente(DatosArma oferta) => oferta != null && oferta.Nivel == Nivel(oferta.Arma) + 1;
+
+        /// <summary>
+        /// Regala el nivel que sigue del arma, al menos el I (T-418: EL INVENTOR mejora la pistola). Lo mete al inventario sin cobrar.
+        /// Devuelve sus datos, o null si ya está al máximo o falta el catálogo o el inventario.
+        /// </summary>
+        public DatosArma DarMejora(ArmaAPie arma)
+        {
+            ServicioInventario inventario = Registro<ServicioInventario>.Actual;
+            DatosArma siguiente = catalogo != null ? catalogo.Buscar(arma, Mathf.Max(1, Nivel(arma) + 1)) : null;
+            if (siguiente == null || inventario == null || inventario.Agregar(siguiente, 1) <= 0)
+            {
+                return null;
+            }
+            return siguiente;
+        }
     }
 }

@@ -11,6 +11,9 @@ namespace MechaCyberpunk.UI.Historia
     /// </summary>
     public class PantallaHistoriaPandillas : MonoBehaviour
     {
+        public const string TituloContinuara = "CONTINUARÁ...";
+        public const string LineaContinuara = "NOVA ARMA A LOS SNAKES. NEÓN ALTO TE ESPERA.";
+        public const string TeclasContinuara = "ENTER: SEGUIR JUGANDO";
         private const float SegundosMinimosContinuara = 1f;
 
         private string subtitulo = string.Empty;
@@ -93,9 +96,9 @@ namespace MechaCyberpunk.UI.Historia
                 GUI.DrawTexture(new Rect(0f, 0f, ancho, alto), Texture2D.whiteTexture);
                 GUI.color = Color.white;
                 GUI.Label(new Rect(0f, alto * 0.14f, ancho, alto * 0.12f), NombreJuego.Nombre, estiloTeclas);
-                GUI.Label(new Rect(0f, alto * 0.3f, ancho, alto * 0.2f), "CONTINUARÁ...", estiloTitulo);
-                GUI.Label(new Rect(0f, alto * 0.52f, ancho, alto * 0.1f), "EL TIANGUIS ES TUYO. NEÓN ALTO TE ESPERA.", estiloTeclas);
-                GUI.Label(new Rect(0f, alto * 0.62f, ancho, alto * 0.1f), "ENTER: SEGUIR JUGANDO", estiloTeclas);
+                GUI.Label(new Rect(0f, alto * 0.3f, ancho, alto * 0.2f), TituloContinuara, estiloTitulo);
+                GUI.Label(new Rect(0f, alto * 0.52f, ancho, alto * 0.1f), LineaContinuara, estiloTeclas);
+                GUI.Label(new Rect(0f, alto * 0.62f, ancho, alto * 0.1f), TeclasContinuara, estiloTeclas);
                 return;
             }
             if (Time.unscaledTime < finSubtitulo)

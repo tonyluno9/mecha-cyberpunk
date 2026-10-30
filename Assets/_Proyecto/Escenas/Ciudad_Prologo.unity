@@ -1306,6 +1306,12 @@ MonoBehaviour:
   gruposTianguis:
   - {fileID: 523302619}
   - {fileID: 1999177657}
+  gruposNeon:
+  - {fileID: 383088905}
+  - {fileID: 1874309818}
+  doc: {fileID: 1945107207}
+  inventor: {fileID: 102619065}
+  hacker: {fileID: 31784656}
   idCama: Casa_Cama
   zona: tianguis
   respetoJefe: 70
@@ -29040,7 +29046,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &383088906
 Transform:
   m_ObjectHideFlags: 0
@@ -37759,7 +37765,7 @@ MonoBehaviour:
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 55
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -94602,7 +94608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1874309819
 Transform:
   m_ObjectHideFlags: 0

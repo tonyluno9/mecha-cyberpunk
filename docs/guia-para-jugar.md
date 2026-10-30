@@ -176,3 +176,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - En Suburbios, a 10 a 25 m de tu casa, está el CIC (letrero turquesa): E con EL INVENTOR (TINO) abre la tienda de las 15 mejoras de armas. Más: EL DOC (JOEL) junto a I+D+I cura por Ƀ50, EL HACKER (SERGIO) en VivaCoin da una pista, EL MECÁNICO (CANEPA) junto al carro de tu casa borra el calor por Ƀ100, EL DIRECTOR (ESTRADA) en El Fox solo platica.
 - Cada uno lleva su título, nombre y función sobre la cabeza (se lee a menos de 15 m); son muñecos de prueba hasta que lleguen sus modelos.
 - Observa: ¿encuentras a cada profe?, ¿se entiende qué hace con solo leer el letrero?, ¿la calle se siente viva con 4 peatones de día y 6 de noche, o vacía?
+
+### T-418 la historia de la demo con los profes y NOVA (cierre del paso 2; Builds/Demo/Cyberfix.exe)
+- Nombres y Ƀ: al despertar sale "MEGALOPOLIS · SUBURBIOS"; todo dice SKULLS, SNAKES, El Mercado, I+D+I, El Fox, VivaCoin y los Biits (Ƀ); en El Mercado compra el SNIPER (5, clic derecho = zoom).
+- La historia: tras el CHATO, E con EL DOC te cura gratis ("Aguanta, mijo..."), E con EL INVENTOR deja tu pistola en PISTOLA I gratis; vence SKULLS (VENCE A LOS SKULLS n/7) y a su jefe, ve con EL HACKER en VivaCoin: dice que NOVA les paga y les da armas a los SNAKES, y sale CONTINUARÁ.
+- Después, en el juego libre, aparecen los SNAKES en Neón Alto: 70 de respeto saca a su jefe y al vencerlo Neón Alto es tuya. Observa: ¿se entiende sin explicarla?, ¿los profes rompen el ritmo?, ¿NOVA da ganas de seguir? (6 peatones de día y 8 de noche).

@@ -2,15 +2,21 @@ using System;
 
 namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 {
-    /// <summary>Los pasos de la historia corta del juego de pandillas (T-406), en orden.</summary>
+    /// <summary>
+    /// Los pasos de la historia corta del juego de pandillas (T-406; Doc, Inventor y NeonAlto en T-418), en orden. Se guardan por nombre:
+    /// se pueden meter pasos en medio sin romper partidas.
+    /// </summary>
     public enum PasoHistoria
     {
         Despierta,
         PrimeraPelea,
         Pistola,
         Chato,
+        Doc,
+        Inventor,
         Tianguis,
         Jefe,
+        NeonAlto,
         Continuara,
         Libre
     }
@@ -22,8 +28,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         PeleaGanada,
         PistolaTomada,
         ChatoUnido,
+        DocUsado,
+        InventorUsado,
         JefeDisponible,
         TianguisConquistado,
+        HackerUsado,
         ContinuaraCerrado
     }
 

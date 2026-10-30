@@ -34,4 +34,5 @@ EL TIANGUIS, NEÓN ALTO, DOÑA LUPE, EL CHATO, LA GÜERA y EL TOPO no cambian.
   ($350, 70). Te siguen, pelean, suben a nivel 2 con 3 vencidos y a nivel 3 con 8. Si caen, vuelven a los 45 s. F: esperar o seguir.
 - **Demo de 15 min**: despiertas solo en tu casa, dos Calaveras molestan a un vecino (primera pelea a puños), uno suelta la pistola,
   reclutas al CHATO, conquistas EL TIANGUIS y sale "CONTINUARÁ". NEÓN ALTO queda para después.
+- **Demo de T-418**: Suburbios → DOÑA LUPE a puños → pistola → CHATO → EL DOC te cura → EL INVENTOR te da la PISTOLA I → El Tianguis y su jefe → EL HACKER en Neón Alto descubre que NOVA arma a los SNAKES → "CONTINUARÁ"; en el juego libre Neón Alto se conquista con su jefe.
 - **El mecha** se desconecta: su código se queda, pero no aparece, no se llama y no está en la ruta.

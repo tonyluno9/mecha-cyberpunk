@@ -32,7 +32,7 @@ namespace MechaCyberpunk.UI.Hud
         {
             Canvas canvas = FormatoTerritorio.CrearCanvas(transform, "CanvasAliados", 21);
             textoFila = FormatoTerritorio.CrearTexto(canvas.transform, "Aliados", 26, TextAnchor.LowerLeft,
-                new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24f, 20f), new Vector2(700f, 140f));
+                new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24f, 130f), new Vector2(700f, 140f)); // T-418: arriba de la vida y los Biits para no encimarse
             textoAviso = FormatoTerritorio.CrearTexto(canvas.transform, "AvisoNivel", 40, TextAnchor.UpperCenter,
                 new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-450f, -190f), new Vector2(900f, 60f));
             textoFila.text = string.Empty;
