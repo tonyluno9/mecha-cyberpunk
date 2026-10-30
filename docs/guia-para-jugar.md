@@ -166,3 +166,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Mira: el HUD de zona en tu casa dice "SUBURBIOS · LOS DE SUBURBIOS · RESPETO n" en naranja; reclutar al CHATO avisa "EL CHATO SE UNE A LOS DE SUBURBIOS"; al conquistar, "EL TIANGUIS ES DE LOS DE SUBURBIOS".
 - Hasta T-413 solo cambia por código (ServicioPerfil.FijarPandilla("los neón", 3)): HUD, mapa (M) y el CHATO se repintan al instante.
 - Observa: ¿"LOS DE SUBURBIOS" te gusta?, ¿los 4 colores se distinguen de SKULLS (magenta) y SNAKES (verde) en el mapa y de noche?
+
+### T-416 fusil y sniper
+- En El Mercado (E, flechas, Enter) compra FUSIL (Ƀ700) y SNIPER (Ƀ900); 4 saca el fusil (mantén el clic, dispara solo) y 5 el sniper (clic derecho = zoom de FOV 15 con mira negra y distancia).
+- La pistola base también se vende (Ƀ150) para quien no la tenga; cada arma sube 3 niveles (I a III) en la misma tienda y la rueda del ratón recorre las 5 armas.
+- Observa: ¿el sniper se siente poderoso?, ¿el zoom marea?, ¿el fusil se siente distinto del viejo subfusil?, ¿los precios cuadran con los Ƀ40 por pandillero?

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f6d5bf2c707a7c489e22a699b330b1b, type: 3}
-  m_Name: DatosOferta_Arma_subfusil_3
+  m_Name: DatosOferta_Arma_fusil_0
   m_EditorClassIdentifier: MechaCyberpunk.Core::MechaCyberpunk.Core.DatosOferta
-  id: oferta_arma_subfusil_3
-  nombre: Subfusil III
-  descripcion: "Mejora: m\xE1s da\xF1o, m\xE1s cargador, recarga r\xE1pida."
-  precio: 800
+  id: oferta_arma_fusil_0
+  nombre: Fusil
+  descripcion: Arma nueva.
+  precio: 700
   tipo: 0

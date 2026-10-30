@@ -19,12 +19,15 @@ namespace MechaCyberpunk.Tests
             return o;
         }
 
-        private static void Tienda(string archivo, IdLugar lugar, params DatosOferta[] ofertas)
+        private static void Tienda(string archivo, IdLugar lugar, params DatosOferta[] ofertas) => Tienda(archivo, lugar, 0, ofertas);
+
+        // 'extras' son ofertas que se suman al final (las 19 de armas de El Mercado, T-416).
+        private static void Tienda(string archivo, IdLugar lugar, int extras, params DatosOferta[] ofertas)
         {
             var t = AssetDatabase.LoadAssetAtPath<DatosTienda>($"{Carpeta}DatosTienda_{archivo}.asset");
             Assert.IsNotNull(t, archivo);
             Assert.AreEqual(lugar, t.Lugar, archivo);
-            Assert.AreEqual(ofertas.Length, t.Ofertas.Count, archivo);
+            Assert.AreEqual(ofertas.Length + extras, t.Ofertas.Count, archivo);
             for (int i = 0; i < ofertas.Length; i++)
                 Assert.AreSame(ofertas[i], t.Ofertas[i], archivo);
         }
@@ -110,7 +113,7 @@ namespace MechaCyberpunk.Tests
             var celdas = Oferta("MunicionCeldas", 40, TipoOferta.Municion);
             var cargas = Oferta("MunicionCargas", 50, TipoOferta.Municion);
 
-            Tienda("MercadoNegro", IdLugar.MercadoNegro, kit, misil, brazo, combustible, celdas, cargas);
+            Tienda("MercadoNegro", IdLugar.MercadoNegro, 19, kit, misil, brazo, combustible, celdas, cargas);
             Tienda("Clinica", IdLugar.Clinica, ojos);
             Tienda("Bar", IdLugar.Bar, bebida);
         }

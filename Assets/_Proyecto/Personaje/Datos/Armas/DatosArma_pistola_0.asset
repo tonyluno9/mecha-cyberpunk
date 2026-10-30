@@ -17,10 +17,10 @@ MonoBehaviour:
   tipo: 4
   valorVenta: 0
   maximo: 1
-  oferta: {fileID: 0}
+  oferta: {fileID: 11400000, guid: 58ffaa7e491f28045ba562c1e5ce8a74, type: 2}
   arma: 1
   nivel: 0
-  precio: 0
+  precio: 150
   danio: 25
   perdigones: 1
   cargador: 8

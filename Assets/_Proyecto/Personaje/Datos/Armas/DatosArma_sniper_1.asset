@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 821c6226efcb0ca4093622255201496d, type: 3}
-  m_Name: DatosArma_subfusil_2
+  m_Name: DatosArma_sniper_1
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosArma
-  id: arma_subfusil_2
-  nombre: Subfusil II
+  id: arma_sniper_1
+  nombre: Sniper I
   tipo: 4
   valorVenta: 0
   maximo: 1
-  oferta: {fileID: 11400000, guid: caa502033cb1ebe4ca2950f8f9f3d9a3, type: 2}
-  arma: 3
-  nivel: 2
-  precio: 550
-  danio: 17
+  oferta: {fileID: 11400000, guid: 14a54fdcf74072647bd38215f13b94ef, type: 2}
+  arma: 4
+  nivel: 1
+  precio: 400
+  danio: 85
   perdigones: 1
-  cargador: 36
-  recarga: 1.3
-  tiempoEntreDisparos: 0.09
-  automatica: 1
-  dispersion: 3
-  dispersionApuntando: 2
-  alcance: 50
+  cargador: 5
+  recarga: 2.5
+  tiempoEntreDisparos: 1.2
+  automatica: 0
+  dispersion: 8
+  dispersionApuntando: 0
+  alcance: 150

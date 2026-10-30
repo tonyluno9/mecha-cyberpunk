@@ -50,6 +50,8 @@ namespace MechaCyberpunk.Progresion.Editor
             R("ECO_ARMA_RECOGER", Tipo.Golpe, 0.2f, 1000f, 0.5f), R("ECO_CLINICA_DESPERTAR", Tipo.Tono, 0.6f, 880f, 0.3f),
             R("UI_MOVER", Tipo.Tono, 0.05f, 1200f, 0.3f), R("UI_ACEPTAR", Tipo.Tono, 0.12f, 1600f, 0.35f),
             R("UI_CANCELAR", Tipo.Tono, 0.12f, 800f, 0.35f),
+            R("ARM_SNI_DISPARO", Tipo.Disparo, 0.8f, 0f, 1f), R("ARM_SNI_RECARGA", Tipo.Golpe, 0.4f, 500f, 0.5f),
+            R("ARM_SNI_ZOOM", Tipo.Golpe, 0.08f, 1800f, 0.35f),
         };
 
         public static int CantidadRecetas => Recetas.Length;
