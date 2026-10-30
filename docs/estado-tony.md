@@ -18,6 +18,21 @@ Builds/Juego/MechaCyberpunk.exe (arranca en Ciudad_Prologo) y 3 líneas en docs/
 
 Orden: T-400 → T-401 → T-402 → T-403 → T-404 → T-405 → T-406. El bloque 8 (T-199 a T-205) queda en pausa (D-tony-202).
 
+## Rondas 2 y 3 de CYBERFIX (T-407 a T-413; D-tony-232 a D-tony-247) — SIGUE
+Rama tony/fase-g, modo rápido de docs/ronda3.md: merge a main y push al cerrar cada tarea; Builds/Juego/Cyberfix.exe y Builds/Demo/Cyberfix.exe
+y 3 líneas en docs/guia-para-jugar.md en cada una. Guía de estilo de todas las pantallas: docs/diseno/ui-cyberfix.md.
+| Tarea | Modelo | Depende de | Estado |
+| --- | --- | --- | --- |
+| T-407 Ronda 2: nombre CYBERFIX, GestorSonidos con provisionales, bugs del mercado negro, el Tianguis y la escopeta (Core: Sonido, productName) | Sonnet | T-406 | pendiente |
+| T-408 Kit de UI y marcador de objetivo con distancia y flecha en el borde; adiós OnGUI | Opus | T-407 | pendiente |
+| T-409 Minimapa redondo que gira y mapa grande con zoom, leyenda y punto marcado (Core: IMarcaMapa) | Opus | T-408 | pendiente |
+| T-410 Pausa real con Esc: continuar, guardar, cargar, opciones y salir al título (Core: Pausa) | Sonnet | T-408, T-412 | pendiente |
+| T-411 Opciones: sensibilidad, invertir Y, volúmenes, calidad, resolución y pantalla completa (Core: IOpciones) | Sonnet | T-407, T-408, T-410 | pendiente |
+| T-412 Guardar y cargar en 3 ranuras más AUTOGUARDADO; "Continuar" carga la más reciente | Opus | T-408 | pendiente |
+| T-413 Título CYBERFIX con la ciudad de noche y creación sin mechas: 2 personajes, nombre y color de tu pandilla (Core: IPerfilJugador) | Opus | T-407 a T-412 | pendiente |
+
+Orden: T-407 → T-408 → T-409 → T-412 → T-410 → T-411 → T-413 (en serie: todas tocan Ciudad_Prologo y ConstruirDemo). La ciudad grande no entra.
+
 ## Bloque 5 cerrado (misiones y reputación, T-181 a T-189): en main (a9b8ffb). Build provisional y guía: ff255ee (ese commit dice "T-190" por error; no es la tarea T-190).
 
 ## Bloque 8 (EN PAUSA por la fase G), adaptación del rival (T-198 a T-205; D-tony-190 a D-tony-201)
