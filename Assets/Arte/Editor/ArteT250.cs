@@ -150,7 +150,7 @@ namespace MechaCyberpunk.Arte.Editor
             Debug.Log("[Arte] T-250 listo:\n" + informe);
         }
 
-        private static string CrearPrefab(Modelo modelo)
+        internal static string CrearPrefab(Modelo modelo)
         {
             GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(modelo.RutaFbx);
             if (fbx == null)
