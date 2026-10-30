@@ -3,6 +3,7 @@ using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.UI.Guardado;
 using MechaCyberpunk.UI.Kit;
+using MechaCyberpunk.UI.Opciones;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ namespace MechaCyberpunk.UI.MenuPausa
     /// "PAUSA" y CONTINUAR, GUARDAR, CARGAR, OPCIONES y SALIR AL TÍTULO. Esc la abre solo si no hay otra pantalla en
     /// <see cref="PilaPantallas"/>. Abierta: <c>Time.timeScale</c> en 0 (tiempo, IA y disparos), <c>AudioListener.pause</c> (los sonidos de
     /// Interfaz siguen), cursor visible, jugador congelado y <see cref="Pausa"/> activa. CONTINUAR o Esc dejan todo como estaba.
-    /// GUARDAR y CARGAR abren <see cref="PantallaRanuras"/> encima; SALIR AL TÍTULO pide confirmar y llama <see cref="FlujoPartida.IrAlTitulo"/>.
+    /// GUARDAR y CARGAR abren <see cref="PantallaRanuras"/> encima y OPCIONES abre <see cref="PantallaOpciones"/> (T-411; gris si no hay); SALIR AL TÍTULO pide confirmar y llama <see cref="FlujoPartida.IrAlTitulo"/>.
     /// </summary>
     public class PantallaPausa : MonoBehaviour
     {
@@ -53,6 +54,7 @@ namespace MechaCyberpunk.UI.MenuPausa
         [SerializeField] private BotonCyberfix no;
 
         private PantallaRanuras ranuras;
+        private PantallaOpciones pantallaOpciones;
         private BotonCyberfix volverA;
         private ControladorAPie controlCongelado;
         private float escalaPrevia = 1f;
@@ -80,10 +82,27 @@ namespace MechaCyberpunk.UI.MenuPausa
                     ranuras = FindFirstObjectByType<PantallaRanuras>(FindObjectsInactive.Include);
                     if (ranuras != null)
                     {
-                        ranuras.Cerrada += AlCerrarRanuras;
+                        ranuras.Cerrada += AlCerrarEncima;
                     }
                 }
                 return ranuras;
+            }
+        }
+
+        /// <summary>La pantalla de opciones que abre OPCIONES (la busca en la escena la primera vez).</summary>
+        public PantallaOpciones PantallaOpciones
+        {
+            get
+            {
+                if (pantallaOpciones == null)
+                {
+                    pantallaOpciones = FindFirstObjectByType<PantallaOpciones>(FindObjectsInactive.Include);
+                    if (pantallaOpciones != null)
+                    {
+                        pantallaOpciones.Cerrada += AlCerrarEncima;
+                    }
+                }
+                return pantallaOpciones;
             }
         }
 
@@ -118,7 +137,6 @@ namespace MechaCyberpunk.UI.MenuPausa
             cargar = Boton(panel, TextoCargar, ref y);
             opciones = Boton(panel, TextoOpciones, ref y);
             salir = Boton(panel, TextoSalir, ref y);
-            opciones.interactable = false;
 
             Text ayuda = KitUI.CrearTexto(panel, "Ayuda", RolTexto.Ayuda, TextAnchor.MiddleCenter);
             KitUI.Colocar(ayuda.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, relleno), new Vector2(tamanoPanel.x, altoAyuda));
@@ -180,6 +198,7 @@ namespace MechaCyberpunk.UI.MenuPausa
             continuar.AlPulsar.AddListener(Cerrar);
             guardar.AlPulsar.AddListener(() => AbrirRanuras(ModoRanuras.Guardar, guardar));
             cargar.AlPulsar.AddListener(() => AbrirRanuras(ModoRanuras.Cargar, cargar));
+            opciones.AlPulsar.AddListener(AbrirOpciones);
             salir.AlPulsar.AddListener(AbrirConfirmacion);
             si.AlPulsar.AddListener(SalirAlTitulo);
             no.AlPulsar.AddListener(CancelarConfirmacion);
@@ -204,7 +223,11 @@ namespace MechaCyberpunk.UI.MenuPausa
             }
             if (ranuras != null)
             {
-                ranuras.Cerrada -= AlCerrarRanuras;
+                ranuras.Cerrada -= AlCerrarEncima;
+            }
+            if (pantallaOpciones != null)
+            {
+                pantallaOpciones.Cerrada -= AlCerrarEncima;
             }
         }
 
@@ -250,6 +273,7 @@ namespace MechaCyberpunk.UI.MenuPausa
             }
             PilaPantallas.Abrir(this);
             confirmar.SetActive(false);
+            opciones.interactable = PantallaOpciones != null;
             contenido.SetActive(true);
             menu.enabled = true;
             menu.Recargar();
@@ -267,6 +291,10 @@ namespace MechaCyberpunk.UI.MenuPausa
             if (ranuras != null && ranuras.Abierta)
             {
                 ranuras.Cerrar();
+            }
+            if (pantallaOpciones != null && pantallaOpciones.Abierta)
+            {
+                pantallaOpciones.Cerrar();
             }
             confirmar.SetActive(false);
             contenido.SetActive(false);
@@ -296,8 +324,20 @@ namespace MechaCyberpunk.UI.MenuPausa
             menu.enabled = false;
         }
 
-        // Las ranuras se cerraron (VOLVER, Esc o guardar): la pausa vuelve a su menú, con el botón que las abrió elegido.
-        private void AlCerrarRanuras()
+        private void AbrirOpciones()
+        {
+            PantallaOpciones pantalla = PantallaOpciones;
+            if (pantalla == null)
+            {
+                return;
+            }
+            volverA = opciones;
+            pantalla.Abrir();
+            menu.enabled = false;
+        }
+
+        // Las ranuras o las opciones se cerraron (VOLVER, Esc o guardar): la pausa vuelve a su menú, con el botón que las abrió elegido.
+        private void AlCerrarEncima()
         {
             if (!Abierta || menu.enabled)
             {

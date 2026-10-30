@@ -248,7 +248,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(0f, Time.timeScale);
             Assert.IsTrue(AudioListener.pause);
             Assert.AreSame(pausa.Continuar, pausa.Menu.Elegido, "Empieza en CONTINUAR");
-            Assert.IsFalse(pausa.Opciones.interactable, "OPCIONES queda desactivado hasta T-411");
+            Assert.IsTrue(pausa.Opciones.interactable, "OPCIONES se puede elegir (T-411)");
             float vidaPausa = vida.Actual;
             Vector3 posTirador = tirador.transform.position;
             Vector3 posJugador = jugador.Raiz.position;
