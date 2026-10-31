@@ -282,3 +282,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-440 Créditos en el título
 - En la pantalla de título hay un botón CRÉDITOS (entre OPCIONES y SALIR): la lista sube sola, la rueda o las flechas la mueven y Esc vuelve al título.
 - Observa: ¿se lee bien el texto?, ¿el botón queda a la altura de los demás?
+
+### T-441 Tutorial ligero
+- Al jugar a pie salen avisos cortos arriba, una sola vez cada uno: W A S D, clic derecho apunta, clic izquierdo dispara, R recarga, Q cubre, CTRL rueda, E sube al carro, M mapa, T teléfono.
+- Se pueden apagar en OPCIONES → TUTORIAL (SÍ/NO); lo ya visto se recuerda entre partidas.
+- Observa: ¿salen en un buen momento?, ¿tapan algo?

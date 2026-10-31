@@ -25,6 +25,7 @@ namespace MechaCyberpunk.Tests.UI
     public class TutorialLigeroPruebas : InputTestFixture
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
+        private const string VariableCaptura = "CAPTURAR_T441";
 
         private Keyboard teclado;
         private Mouse raton;
@@ -109,6 +110,15 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
         }
 
+        private static void Capturar(string nombre, Camera camara)
+        {
+            if (Environment.GetEnvironmentVariable(VariableCaptura) != "1")
+            {
+                return;
+            }
+            CapturaUI.Capturar("docs/capturas/" + nombre + ".png", camara);
+        }
+
         [UnityTest]
         public IEnumerator Tutorial_AvisaMoverseSeGuardaYSeApagaEnOpciones()
         {
@@ -130,17 +140,26 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarHasta(() => tutorial.Visible, "el aviso de moverse", 10f);
             Assert.AreEqual(AccionTutorial.Moverse, tutorial.Regla.Aviso);
             StringAssert.Contains("W A S D", tutorial.Texto.text);
+            Capturar("T-441-1", Registro<IJugador>.Actual.Camara);
 
             // b. W lo quita y lo guarda en las opciones.
             yield return Pulsar(teclado.wKey);
-            Assert.IsFalse(tutorial.Visible, "Moverse quita el aviso");
+            Assert.IsTrue(tutorial.Regla.Vista(AccionTutorial.Moverse), "Moverse se da por visto");
+            Assert.IsFalse(tutorial.Visible && tutorial.Regla.Aviso == AccionTutorial.Moverse, "Moverse quita su aviso");
             StringAssert.Contains("Moverse", servicio.TutorialVisto, "Lo visto se guarda en las opciones");
             Assert.IsTrue(File.ReadAllText(ServicioOpciones.Ruta).Contains("Moverse"), "y en opciones.json");
 
             // c. Más tarde sale otro aviso distinto.
-            yield return EsperarHasta(() => tutorial.Visible, "el siguiente aviso", 10f);
+            yield return EsperarHasta(() => tutorial.Visible && tutorial.Regla.Aviso != AccionTutorial.Moverse, "el siguiente aviso", 10f);
             Assert.AreNotEqual(AccionTutorial.Moverse, tutorial.Regla.Aviso, "No repite moverse");
             Debug.Log("[Prueba] T-441 siguiente aviso: " + tutorial.Regla.Aviso + " · " + tutorial.Texto.text);
+
+            // La fila TUTORIAL cabe en la pantalla de opciones.
+            opciones.Abrir();
+            yield return null;
+            Capturar("T-441-2", Registro<IJugador>.Actual.Camara);
+            opciones.Cerrar();
+            yield return null;
 
             // d. Apagar TUTORIAL esconde el aviso y no vuelve a salir.
             int vistasAntes = tutorial.Regla.CantidadVistas;
