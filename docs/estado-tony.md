@@ -156,3 +156,4 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 | T-423 IA de pandilleros más lista | Hecha (rama tony/T-423-ia-pandilleros, integrada en tony/fase-g) |
 | T-424 Apuntado asistido suave | Hecha (rama tony/T-424-apuntado-asistido, integrada en tony/fase-g) |
 | T-425 Rendimiento a 60 FPS | Hecha (rama tony/T-425-rendimiento, integrada en tony/fase-g) |
+| T-426 Misiones secundarias repetibles | Hecha (rama tony/T-426-misiones-secundarias, integrada en tony/fase-g; cuota, defender y robar; faltan escoltar y carreras) |
