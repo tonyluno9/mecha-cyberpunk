@@ -19,6 +19,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         public Vector3 Nodo(int indice) => nodos[indice];
 
+        /// <summary>Los nodos vecinos de uno (a un tramo de calle de distancia).</summary>
+        public IReadOnlyList<int> Vecinos(int indice) => vecinos[indice];
+
         /// <summary>
         /// Calles entre manzanas de <paramref name="lado"/> metros de lado, con centros en <paramref name="centros"/> (x, z) y calles al medio de cada par de
         /// columnas y filas; llegan hasta el borde de las manzanas de los extremos. <paramref name="altura"/> es la y de los puntos (m).

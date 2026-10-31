@@ -88236,6 +88236,53 @@ MonoBehaviour:
   sonidoAlarma: {fileID: 0}
   tinte: {r: 0.75, g: 0.7, b: 0.15, a: 1}
   esTuyo: 0
+--- !u!1 &1364341763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1364341765}
+  - component: {fileID: 1364341764}
+  m_Layer: 0
+  m_Name: GTA_T451
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1364341764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1364341763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c12ae83dfb0f00848ba927d5cf9fb044, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Calle.TraficoCalle
+  config: {fileID: 11400000, guid: 5f22f91079bb0894e937805dd97cff85, type: 2}
+  prefabCarro: {fileID: 4280291405057113680, guid: f071627eec38b104aa8c41c0f990505c, type: 3}
+  barrio: {fileID: 0}
+--- !u!4 &1364341765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1364341763}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1364691603
 GameObject:
   m_ObjectHideFlags: 0
@@ -115195,3 +115242,4 @@ SceneRoots:
   - {fileID: 1683937322}
   - {fileID: 718990836}
   - {fileID: 1939979031}
+  - {fileID: 1364341765}
