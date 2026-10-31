@@ -1,0 +1,3 @@
+# T-429 Negocios en tus zonas que dan dinero por día
+Dueño: Tony | Rama: tony/T-429-negocios | Modelo: Sonnet 5.5 | MODO RÁPIDO (docs/plan-noche.md, paso 5; mejora 9)
+Hecho: 6 negocios (TIENDITA en SUBURBIOS, PUESTO y FONDA en EL TIANGUIS, CLUB y ARCADE en NEÓN ALTO, TALLER en LA REFINERÍA) con poste de neón; E los toma (pagas una vez) y los mejora 2 veces; pagan al cambiar el día con aviso "+Ƀ350 DE TUS NEGOCIOS"; sin la zona no pagan; sección NEGOCIOS en el mapa; guardado `negocios`. Arreglo del HUD: el aviso "ES DE" ya no se encima con la fila de la zona. Decisiones D-tony-302 a 304. Pruebas: EditMode ReglaNegociosPruebas (5), PlayMode NegociosPruebas (1). Capturas T-429-1 y T-429-2.

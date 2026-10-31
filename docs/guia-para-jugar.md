@@ -256,3 +256,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Venciendo a la gente de NEÓN ALTO sube tu respeto; con 70 sale "¡EL JEFE DE NEÓN ALTO TE BUSCA!" (LA CULEBRA, 300 de vida). Véncelo y la zona es tuya y se pinta de tu color en el mapa.
 - Al sureste hay una zona nueva, LA REFINERÍA (violeta, de NOVA): guardias corporativos y su jefe CAPITÁN NOVA (400 de vida, barreras y tambos marcan la entrada). Se conquista igual y NOVA puede atacarla después.
 - Observa: ¿los jefes se sienten distintos?, ¿se entiende dónde acaba una zona y empieza otra en el mapa?
+
+### T-429 Negocios en tus zonas
+- En cada zona tuya hay postes de neón con letrero turquesa (TIENDITA, PUESTO, FONDA, CLUB, ARCADE, TALLER): acércate y pulsa E para tomar el negocio pagando Biits, y otra vez para mejorarlo (hasta nivel 3). Cada día de juego pagan solos y sale "+Ƀ... DE TUS NEGOCIOS"; si pierdes la zona dejan de pagar.
+- El mapa (M) lista tus negocios abajo con su nivel e ingreso por día. Además, el aviso "<ZONA> ES DE ..." ya no se encima con el texto de la zona.
+- Observa: ¿los precios se sienten justos?, ¿se encuentran los postes?
