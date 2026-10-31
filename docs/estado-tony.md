@@ -172,3 +172,22 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 - T-430 implantes a pie: hecha y en main (be4b6a29). Compila; EditMode Personaje+Progresion+UI 452/452; PlayMode Progresion+Implantes+Personaje 282/302. Builds/Juego/Cyberfix.exe regenerado (Result: Success); guía en docs/guia-para-jugar.md.
 - Las 20 pruebas rojas de PlayMode son viejas, no de T-430 (T-430 no toca GolpeAPie): ImplantesAPiePruebas (6, esperan 15 de daño y los puños hacen 20 desde T-403), PandillaAPiePruebas (6), RecorridoImplantesPruebas, RecorridoAPiePruebas, BarrioAlanPruebas, EncargosPruebas.RobarCarro, Prologo* (3), ServicioGuardadoPruebas. ImplantesDocPruebas y EfectosAPiePruebas (las de T-430) pasan. Se atiende en T-440.
 - Sigue: tutorial ligero (prioridad 2), botón CRÉDITOS del título (docs/bugs.md), T-440 pruebas viejas.
+
+### Sesión A, resumen al cierre de T-449 (31-oct-2026, ~06:00)
+Todo en main con push, una rama por tarea (`tony/T-4xx-...`), Builds/Juego regenerado y 3 líneas en docs/guia-para-jugar.md por tarea (Builds/Juego se regeneró en T-441 a T-449; T-440 se incluyó en el de T-441).
+| Tarea | Qué | Prioridad de docs/sesion-A.md |
+| --- | --- | --- |
+| T-430 | Implantes a pie (mejora 10) | 1 |
+| T-440 | Botón CRÉDITOS en el título (bug de la Sesión B) | 3 |
+| T-441 | Tutorial ligero (mejora 11), opción TUTORIAL | 2 |
+| T-442 | Ganchos de sonido de armas y jugador, ARM_FUS, ambiente 80 %, tabla de ensamblados | 3 y 4 |
+| T-443 | Peatones que huyen al oír disparos (`EventosRuido`) | 5 (mitad) |
+| T-444 | Carros que se dañan: humo, fuego, explotan | 6 (mitad) |
+| T-445 | Disparar desde el carro (pistola y fusil) | 6 (mitad) |
+| T-446 | Pandilleros que patrullan su zona | 7 |
+| T-447 | Día y noche conectados (peatones 14/6, pandillas 1/3 de día) | 8 |
+| T-448 | Guarida que sube de nivel: armero, garaje, cama | 9 |
+| T-449 | Teléfono: pestaña MENSAJES de aliados y profes | 10 |
+Pendiente de la lista: **tráfico que frena y pita** (no hay tráfico de calle: solo carros decorativos en la autopista; `EventosRuido` ya está listo para que frenen), ganchos de sonido que faltan de docs/sonidos-faltan-enganchar.md (hechos: ARM_*, JUG_*, PUN_BLOQUEO, VEH_CHOQUE_*; faltan CAL_*, VEH_* restantes, PAN_*, ZON_*, UI_CONTINUARA, ECO_*, MUN_*, AMB_CALLEJON), llamar a tu pandilla desde el teléfono, y conectar los visuales 3D de Mixamo (T-473 de la Sesión B; aún no hay FBX).
+Pruebas rojas viejas que NO son de estas tareas (fallan igual antes): PlayMode Progresion 5 (EncargosPruebas.RobarCarroYEntregarlo, PrologoCiudadPruebas, PrologoNochePruebas, RecorridoPrologoPruebas, ServicioGuardadoPruebas.JugadorAPie_SoloEnEscenaVacia), Progresion.Implantes 7 (PandillaAPiePruebas x6 y RecorridoImplantesPruebas), Personaje 2 (BarrioAlanPruebas, RecorridoAPiePruebas), Vehiculos 2 (Camara_PrimeraPersona de MontableCarroPruebas y RobarCarroPruebas en la corrida completa; solas pasan). ArmasPruebas.ComprarYUsarEscopeta es azarosa (perdigones en cono). EditMode completo en verde (1279/1279).
+Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Sesión A están resueltos: CRÉDITOS en T-440, ARM_FUS en T-442, ambiente al 80 % en T-442; queda el de T-473 y poner `pisoOpcionAmbiente` en 0 de su lado), docs/sonidos-faltan-enganchar.md, Assets/Arte/Audio, GestorSonidos.

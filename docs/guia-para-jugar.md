@@ -326,3 +326,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Dentro de tu casa, junto a la cama, hay tres postes con letrero turquesa: ARMERO, GARAJE y CAMA. Acércate y pulsa E para estrenar o mejorar cada uno (tres niveles, con Biits).
 - ARMERO: tus armas de fuego pegan más. GARAJE: aparece tu carro fuera de la casa y con más nivel aguanta más. CAMA: al dormir despiertas curado y con menos calor.
 - Observa: ¿se encuentran los postes?, ¿los precios son justos?, ¿dónde sale el carro del garaje?
+
+### T-449 Teléfono: mensajes
+- Al avanzar te llegan mensajes de EL INVENTOR, EL MECÁNICO, EL DOC, EL HACKER y NOVA: sale un aviso arriba a la derecha con un sonido. Pulsa T y ve con → a la pestaña MENSAJES (cuatro veces): los nuevos llevan ●.
+- Cada mensaje te dice a dónde ir (CIC, I+D+I, tu cama, los postes de negocios o CONTRATOS).
+- Observa: ¿los avisos salen en buen momento?, ¿se leen?, ¿falta algún personaje?
