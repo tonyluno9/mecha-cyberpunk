@@ -211,3 +211,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Al despertar, un rombo naranja flota sobre la puerta con la distancia turquesa abajo ("10 m"); camina hacia él y la distancia baja. Date la vuelta: el rombo se apaga y una flecha naranja en el borde (izquierdo o derecho) apunta hacia la puerta. ¿Encuentras el objetivo sin pensar? ¿La flecha se entiende?
 - M abre el mapa: el mismo rombo marca el objetivo (con contorno oscuro para que se vea sobre tu color). Arriba al centro va el objetivo en naranja ("SAL A LA CALLE", luego "DEFIENDE A DOÑA LUPE"); a menos de 3 m el rombo se apaga.
 - El HUD ya no se encima: radio, renta y zona arriba a la izquierda; Biits, vida y ayuda de controles abajo a la izquierda; tu pandilla abajo a la derecha sobre el arma; subtítulos abajo al centro. ¿Te gustan los colores y la letra? ¿El rombo estorba al pelear?
+
+### T-419 assets 3D de la noche (paso 4; Builds/Juego y Builds/Demo)
+- Camina de noche por la calle principal, El Tianguis y Neón Alto: los edificios ya tienen pisos con ventanas, macetas, franja y cornisa hasta arriba (ya no se ven cortados); quedan lisas las paredes de los lugares grandes (clandestino). ¿Se ve mejor? ¿Algo flota o atraviesa?
+- Busca lo nuevo: proyector holo, pantallas, cables, antenas en azoteas, expendedoras, puesto de implantes junto al callejón de El Mercado, cámara corporativa y pantalla gigante en Neón Alto, portón de El Mercado, entrada de VivaCoin, moto, tambos y huacales; el dron de la policía tiene modelo nuevo.
+- En la casa: tele, sofá, estufa, repisa con veladoras y buró; en el taller: soldadora, grúa y repisa. Medido: 122 FPS en la calle principal de noche con lluvia (meta 60). ¿Notas tirones al girar?
