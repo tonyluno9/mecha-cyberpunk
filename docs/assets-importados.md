@@ -115,12 +115,12 @@ y se renombró al copiar. Solo traen basecolor: el material no lleva normal map.
 | C17_Huacales | Calle/Prefabs/C17_Huacales | Junto a los puestos del Tianguis y en sus banquetas (10) | 1.1×0.9×0.9 | 4 706 | |
 | C18_BarreraCalle | Calle/Prefabs/C18_BarreraCalle | ArteNoche/Barreras: 8, en las esquinas de las orillas de zona (x ±40 y ±54, z ±11 a ±20) | 1.9×1.0×0.6 | 8 044 | Paralelas a la calle cruzada, en la orilla de la banqueta |
 | C19_Moto | Calle/Prefabs/C19_Moto | ArteNoche/Motos: 5, estacionadas junto a la banqueta de la calle principal | 2.0×1.1×0.8 | 9 528 | |
-| C20a_PisoVentana_cy | Calle/Prefabs/C20a_PisoVentana_cy | Importado; se coloca en la parte 4b (kit de pisos) | 3.0×3.0×0.9 | 4 620 | |
-| C20b_PisoDosVentanas_cy | Calle/Prefabs/C20b_PisoDosVentanas_cy | Parte 4b | 4.0×3.0×0.5 | 4 691 | |
-| C20d_Macetas | Calle/Prefabs/C20d_Macetas | Parte 4b | 5.3×3.0×2.2 | 2 653 | La medida de importación (3 m de alto) es provisional: es una jardinera de ventana, 4b la escala |
-| C21_PisoLiso_cy | Calle/Prefabs/C21_PisoLiso_cy | Parte 4b | 3.0×3.0×0.6 | 3 287 | |
-| C22_Cornisa_cy | Calle/Prefabs/C22_Cornisa_cy | Parte 4b | 1.8×0.8×0.3 | 3 751 | |
-| C23_Franja | Calle/Prefabs/C23_Franja | Parte 4b | 4.4×0.6×0.4 | 1 761 | |
+| C20a_PisoVentana_cy | Calle/Prefabs/C20a_PisoVentana_cy | ArteNoche/Pisos/<Edificio>_<Lado>: casillas de ~3.5 m, escalada en X/Y para cerrar cada fachada, sin collider, estático, sin sombra | 3.0×3.0×0.9 | 4 620 | |
+| C20b_PisoDosVentanas_cy | Calle/Prefabs/C20b_PisoDosVentanas_cy | ArteNoche/Pisos, alterna con C20a/C21/C20d | 4.0×3.0×0.5 | 4 691 | |
+| C20d_Macetas | Calle/Prefabs/C20d_Macetas | ArteNoche/Pisos, 1 de cada 8 casillas, fondo a 0.35 de escala; 4b la escala | 5.3×3.0×2.2 | 2 653 | La medida de importación (3 m de alto) es provisional: es una jardinera de ventana, 4b la escala |
+| C21_PisoLiso_cy | Calle/Prefabs/C21_PisoLiso_cy | ArteNoche/Pisos, variante lisa | 3.0×3.0×0.6 | 3 287 | |
+| C22_Cornisa_cy | Calle/Prefabs/C22_Cornisa_cy | ArteNoche/Pisos, remata arriba de cada fachada, tramos de ~4 m | 1.8×0.8×0.3 | 3 751 | |
+| C23_Franja | Calle/Prefabs/C23_Franja | ArteNoche/Pisos, entre planta baja y pisos (solo en caras con Lado_*) | 4.4×0.6×0.4 | 1 761 | |
 | CY01_ProyectorHolo | Calle/Prefabs/CY01_ProyectorHolo | ArteNoche/Calle_tianguis y Calle_neon (14) | 3.9×2.4×0.7 | 9 373 | |
 | CY02_PantallaVertical | Calle/Prefabs/CY02_PantallaVertical | Calle_tianguis y Calle_neon (15) | 1.6×3.5×0.9 | 7 185 | |
 | CY03_MazoCables | Calle/Prefabs/CY03_MazoCables | Las tres zonas (17) | 0.8×2.5×0.3 | 6 021 | |
@@ -143,3 +143,5 @@ y se renombró al copiar. Solo traen basecolor: el material no lleva normal map.
 | T06_Soldadora | TallerCasa/Prefabs/T06_Soldadora | Taller, junto al último banco (-68.0, -76.15) | 0.65×1.0×0.86 | 4 527 | |
 | T07_GruaMotor | TallerCasa/Prefabs/T07_GruaMotor | Taller, piso libre al sur de la estación del exo (-65.6, -76.6) | 2.1×2.1×1.2 | 5 430 | El taller está lleno (T02 ocupa casi todo): queda fuera de la línea puerta → punto de interacción y puerta → espejo |
 | T08_RepisaTaller | TallerCasa/Prefabs/T08_RepisaTaller | Taller, en el lugar de Estante0-2 y Piezas (apagados, sus colliders quedan) | 3.2×2.45×0.5 | 5 264 | Estirada a los 3.2 m de los estantes |
+
+Kit de pisos (T-419, 4b): 98 fachadas (83 Lado_* y 15 caras lisas al aire), 3433 piezas, cada fachada con LODGroup (LOD0 el kit hasta 9 por ciento de pantalla; LOD1 el decal de ventanas y la cornisa viejos). Medido a 2560x1600 Ultra, noche con lluvia: calle principal 121.9 FPS promedio (1 por ciento bajo 117.2), el punto más bajo; ver docs/capturas/noche-medicion-despues.txt.

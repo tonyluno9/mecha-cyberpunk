@@ -31,3 +31,5 @@ solo se copia. CY04_AntenaAzotea trae nombre `tripo_convert_...`: se renombra al
 ## Carpetas permitidas
 Assets/Arte/, Mundo/ (Barrio.prefab, Editor/ para la medición), Arena/, Casino/, Trafico/Prefabs/Dron.prefab, Escenas/Ciudad_Prologo.unity
 (solo con código), Tests/PlayMode/ de las áreas tocadas, docs/assets-importados.md, docs/capturas/, docs de Tony.
+- 2026-10-30 (4b): kit de pisos apilado con ColocarNoche.ColocarPisos (también lo llama Colocar), 98 fachadas, LODGroup por fachada; FPS de noche mínimo 121.9 en la calle principal; capturas noche-*-despues.png; pruebas ArteNochePruebas 6/6.
+- 2026-10-30: PlayMode HistoriaDemo/HistoriaPandillas/Territorio/ArmasMercado pasan; MercadoNegroInterior (2) y RecorridoPrologoCiudad (3) fallan igual sin los cambios de T-419 (Barrio.prefab de b45f780): vienen de antes, no son del kit de pisos.
