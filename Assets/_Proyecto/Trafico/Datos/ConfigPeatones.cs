@@ -25,6 +25,17 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(0f)] [Tooltip("Cuánto se acortan las rutas que terminan junto a los cierres del barrio (m).")]
         [SerializeField] private float recorteCierres = 15f;
 
+        [Header("Huida (T-443)")]
+        [Min(1f)] [Tooltip("A qué distancia de un disparo los peatones lo oyen y salen corriendo (m).")]
+        [SerializeField] private float radioOirDisparo = 45f;
+        [Min(0.5f)] [Tooltip("Cuánto tiempo corre un peatón después de oír un disparo (s).")]
+        [SerializeField] private float segundosHuida = 6f;
+        [Min(1f)] [Tooltip("Cuántas veces su velocidad normal corre al huir (multiplicador).")]
+        [SerializeField] private float multiplicadorHuida = 2.6f;
+
+        public float RadioOirDisparo => radioOirDisparo;
+        public float SegundosHuida => segundosHuida;
+        public float MultiplicadorHuida => multiplicadorHuida;
         public float RecorteCierres => recorteCierres;
         public float DistanciaParada => distanciaParada;
         public float MargenBanqueta => margenBanqueta;

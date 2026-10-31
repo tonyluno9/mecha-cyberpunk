@@ -127,5 +127,58 @@ namespace MechaCyberpunk.Tests.Trafico
                 UnityEngine.Object.DestroyImmediate(config);
             }
         }
+
+        [Test]
+        public void Avanzar_ConMultiplicador_CaminaMasRapido()
+        {
+            CalculoPeaton normal = Crear(new[] { 100f });
+            CalculoPeaton corriendo = Crear(new[] { 100f });
+            corriendo.MultiplicadorVelocidad = 2.5f;
+            normal.Avanzar(10f);
+            corriendo.Avanzar(10f);
+            Assert.AreEqual(20f / 100f, normal.Fraccion, Tolerancia);
+            Assert.AreEqual(50f / 100f, corriendo.Fraccion, Tolerancia, "A 2.5 veces la velocidad recorre 2.5 veces más");
+        }
+
+        [Test]
+        public void InvertirSentido_AMitadDeTramo_QuedaEnElMismoLugarYRegresa()
+        {
+            CalculoPeaton peaton = Crear(new[] { 10f, 10f });
+            peaton.Avanzar(1.5f);
+            Vector3[] ruta = { Vector3.zero, new Vector3(10f, 0f, 0f), new Vector3(10f, 0f, 10f) };
+            Vector3 antes = RutasBanqueta.Posicion(ruta, peaton);
+            peaton.InvertirSentido();
+            Vector3 despues = RutasBanqueta.Posicion(ruta, peaton);
+            Assert.AreEqual(0f, Vector3.Distance(antes, despues), Tolerancia, "No se mueve al dar la vuelta");
+            Assert.AreEqual(-1, peaton.Sentido);
+            peaton.Avanzar(1f);
+            Assert.Less(RutasBanqueta.Posicion(ruta, peaton).x, antes.x, "Ahora va hacia el punto de donde venía");
+        }
+
+        [Test]
+        public void InvertirSentido_EnUnaEsquinaEsperando_PasaAlTramoAnterior()
+        {
+            CalculoPeaton peaton = Crear(new[] { 10f, 10f });
+            peaton.Avanzar(5f);
+            Assert.IsTrue(peaton.Esperando);
+            Vector3[] ruta = { Vector3.zero, new Vector3(10f, 0f, 0f), new Vector3(10f, 0f, 10f) };
+            Vector3 antes = RutasBanqueta.Posicion(ruta, peaton);
+            peaton.InvertirSentido();
+            peaton.CancelarEspera();
+            Assert.AreEqual(0f, Vector3.Distance(antes, RutasBanqueta.Posicion(ruta, peaton)), Tolerancia, "Sigue en la esquina");
+            Assert.AreEqual(0, peaton.Segmento, "Vuelve al tramo de donde venía");
+            peaton.Avanzar(1f);
+            Assert.Less(RutasBanqueta.Posicion(ruta, peaton).x, antes.x);
+        }
+
+        [Test]
+        public void InvertirSentido_EnElExtremoDeLaRuta_NoCambiaNada()
+        {
+            CalculoPeaton peaton = Crear(new[] { 10f });
+            int segmento = peaton.Segmento;
+            peaton.InvertirSentido();
+            Assert.AreEqual(1, peaton.Sentido, "Sin otro lado no da la vuelta");
+            Assert.AreEqual(segmento, peaton.Segmento);
+        }
     }
 }
