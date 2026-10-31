@@ -270,3 +270,6 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - T-471 Créditos: aún no hay botón en el título (lo agrega la Sesión A; ver docs/bugs.md). El texto está en docs/creditos.md: revisa nombres del equipo y profes.
 - Cuando exista el botón: la lista sube sola, la rueda o las flechas la mueven y Esc vuelve al título. ¿Se lee bien? ¿Falta alguien?
 - Los sonidos CC BY dicen "por confirmar" autor y licencia: hay que completarlos antes de publicar la demo.
+- T-472 Modo video (solo Builds/Juego, NO en la demo): F10 oculta/muestra el HUD, F11 cámara libre (WASD, ratón, Q/E, Shift rápido, rueda cambia velocidad; F11 de nuevo vuelve), F12 captura 2x en Capturas/ junto al .exe.
+- En Builds/Demo estas teclas no hacen nada (confirma que F10/F11/F12 no cambian la vista).
+- En Builds/Juego: ¿F11 devuelve el control y la cámara del jugador exactamente igual? ¿la captura de F12 sale sin el aviso?
