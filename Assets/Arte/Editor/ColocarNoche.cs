@@ -560,6 +560,7 @@ namespace MechaCyberpunk.Arte.Editor
 
             PonerEntradas(raiz);
             PonerCasa(raiz);
+            PonerPisos(raiz);
             PrefabUtility.SaveAsPrefabAsset(raiz, ColocarT250.RutaBarrio);
             PrefabUtility.UnloadPrefabContents(raiz);
         }
@@ -731,6 +732,164 @@ namespace MechaCyberpunk.Arte.Editor
             // La grúa va en el piso libre del taller, al sur de la estación del exo, fuera de la línea de la puerta al punto de interacción y al espejo.
             Poner(taller, new Puesto { Codigo = "T07_GruaMotor", Posicion = new Vector3(-65.6f, 0.2f, -76.6f), Giro = 270f });
             Informe.AppendLine("casa: H06 H07 H08x2 H09 H11 (mesita y cocineta apagadas); taller: T06 T07 T08 (estantes apagados)");
+        }
+
+        // ------------------------------------------------------------------ kit de pisos (parte 4b)
+
+        public const string NombrePisos = "Pisos";
+        private const float AlturaPlantaBaja = 3.78f;   // arriba de las fachadas C01/C02/C03 _cy (0.2 + 3.58)
+        private const float AlturaPiso = 3f;
+        private const float AlturaCornisa = 0.8f;
+        private const float AlturaFranja = 0.6f;
+        private static readonly string[] VariantesPiso = { "C20a_PisoVentana_cy", "C20b_PisoDosVentanas_cy", "C20a_PisoVentana_cy", "C21_PisoLiso_cy", "C20b_PisoDosVentanas_cy", "C20a_PisoVentana_cy", "C20b_PisoDosVentanas_cy", "C20d_Macetas" };
+
+        [MenuItem("Mecha Cyberpunk/T-419/Apilar kit de pisos")]
+        public static void ColocarPisos()
+        {
+            Informe.Clear();
+            GameObject raiz = PrefabUtility.LoadPrefabContents(ColocarT250.RutaBarrio);
+            PonerPisos(raiz);
+            PrefabUtility.SaveAsPrefabAsset(raiz, ColocarT250.RutaBarrio);
+            PrefabUtility.UnloadPrefabContents(raiz);
+            AssetDatabase.SaveAssets();
+            File.WriteAllText("Logs/noche-pisos.txt", Informe.ToString());
+            Debug.Log("[Arte] T-419 pisos:\n" + Informe);
+        }
+
+        /// <summary>
+        /// Sobre cada Lado_* de un edificio greybox (Cuerpo): franja sobre la planta baja, pisos alternando C20a/C20b/C21/C20d hasta la cornisa C22.
+        /// Cada fachada va en un LODGroup: cerca se ven los pisos; lejos, el bloque viejo con su decal de ventanas y su cornisa (no se apagan, no se tocan colliders).
+        /// </summary>
+        private static void PonerPisos(GameObject raiz)
+        {
+            Transform grupo = raiz.transform.Find(NombreGrupo);
+            Transform viejo = grupo.Find(NombrePisos);
+            if (viejo != null)
+            {
+                Object.DestroyImmediate(viejo.gameObject);
+            }
+            Transform pisos = NuevoHijo(grupo, NombrePisos);
+            int lados = 0, piezas = 0;
+            List<Transform> cuerposT = raiz.GetComponentsInChildren<Transform>(true)
+                .Where(t => t.name == "Cuerpo" && !t.IsChildOf(grupo) && t.parent.name.StartsWith("Edificio_")).ToList();
+            List<Bounds> cuerpos = cuerposT.Select(t => new Bounds(t.position, t.lossyScale)).ToList();
+            var caras = new List<(Transform edificio, string nombre, Transform lado)>();
+            foreach (Transform c in cuerposT)
+            {
+                foreach (string n in new[] { "Lado_Sur", "Lado_Norte", "Lado_Oeste", "Lado_Este" })
+                {
+                    caras.Add((c.parent, n, c.parent.Find(n)));
+                }
+            }
+            foreach ((Transform edificio, string nombreLado, Transform lado) in caras)
+            {
+                Transform cuerpo = edificio.Find("Cuerpo");
+                float giro;
+                Vector3 normal;
+                bool alLargoX;
+                switch (nombreLado)
+                {
+                    case "Lado_Sur": giro = 0f; normal = Vector3.back; alLargoX = true; break;
+                    case "Lado_Norte": giro = 180f; normal = Vector3.forward; alLargoX = true; break;
+                    case "Lado_Oeste": giro = 90f; normal = Vector3.left; alLargoX = false; break;
+                    case "Lado_Este": giro = 270f; normal = Vector3.right; alLargoX = false; break;
+                    default: continue;
+                }
+                Vector3 e = cuerpo.lossyScale;
+                float ancho = alLargoX ? e.x : e.z;
+                float semi = (alLargoX ? e.z : e.x) * 0.5f;
+                float suelo = cuerpo.position.y - e.y * 0.5f;
+                float tope = cuerpo.position.y + e.y * 0.5f;
+                Vector3 centro = cuerpo.position + normal * (semi + 0.09f);
+                Vector3 lateral = alLargoX ? Vector3.right : Vector3.forward;
+                // Una cara sin Lado_* (muro liso) solo se cubre si da al aire: no si toca a otro edificio.
+                if (lado == null && cuerpos.Any(c => c.Contains(cuerpo.position + normal * (semi + 1f))))
+                {
+                    continue;
+                }
+                bool sinLado = lado == null;
+                Transform sub = NuevoHijo(pisos, edificio.name + "_" + nombreLado.Substring(5));
+                int semilla = Mathf.Abs(edificio.name.GetHashCode() % 8);
+                List<Renderer> cerca = new List<Renderer>();
+
+                float yFranja = suelo + AlturaPlantaBaja - 0.2f;
+                float yPisos = sinLado ? suelo : yFranja + AlturaFranja;
+                float yCornisa = tope - AlturaCornisa;
+                int nPisos = Mathf.Max(1, Mathf.RoundToInt((yCornisa - yPisos) / AlturaPiso));
+                float escalaPiso = (yCornisa - yPisos) / (nPisos * AlturaPiso);
+
+                // Franja y cornisa: tramos de unos 4 m.
+                int nTramos = Mathf.Max(2, Mathf.RoundToInt(ancho / 4f));
+                float tramo = ancho / nTramos;
+                for (int i = 0; i < nTramos; i++)
+                {
+                    Vector3 c = centro + lateral * (-ancho * 0.5f + tramo * (i + 0.5f));
+                    if (!sinLado)
+                    {
+                        cerca.AddRange(PonerPieza(sub, "C23_Franja", c, yFranja, giro, tramo / Tamano("C23_Franja").x, 1f, 1f));
+                        piezas++;
+                    }
+                    cerca.AddRange(PonerPieza(sub, "C22_Cornisa_cy", c, yCornisa, giro, tramo / Tamano("C22_Cornisa_cy").x, 1f, 1f));
+                    piezas++;
+                }
+                // Pisos: casillas de unos 3.5 m, variantes alternadas.
+                int nCasillas = Mathf.Max(2, Mathf.RoundToInt(ancho / 3.5f));
+                float casilla = ancho / nCasillas;
+                for (int f = 0; f < nPisos; f++)
+                {
+                    for (int i = 0; i < nCasillas; i++)
+                    {
+                        string codigo = VariantesPiso[(i * 5 + f * 3 + semilla) % VariantesPiso.Length];
+                        Vector3 c = centro + lateral * (-ancho * 0.5f + casilla * (i + 0.5f));
+                        Vector3 tam = Tamano(codigo);
+                        float profundidad = codigo == "C20d_Macetas" ? 0.35f : Mathf.Min(1f, 0.55f / tam.z);
+                        cerca.AddRange(PonerPieza(sub, codigo, c, yPisos + f * AlturaPiso * escalaPiso, giro, casilla / tam.x, escalaPiso, profundidad));
+                        piezas++;
+                    }
+                }
+
+                // LOD0: el kit; LOD1: lo de siempre del bloque viejo (decal de ventanas y cornisa), que de cerca queda tapado.
+                List<Renderer> lejos = new List<Renderer>();
+                if (!sinLado)
+                {
+                    foreach (Transform t in lado)
+                    {
+                        if (t.name == "Ventanas" || t.name == "Cornisa")
+                        {
+                            lejos.AddRange(t.GetComponents<Renderer>());
+                        }
+                    }
+                }
+                LODGroup lod = sub.gameObject.AddComponent<LODGroup>();
+                lod.SetLODs(new[]
+                {
+                    new LOD(0.09f, cerca.ToArray()),
+                    new LOD(0.005f, lejos.ToArray()),
+                });
+                lod.fadeMode = LODFadeMode.None;
+                lod.RecalculateBounds();
+                lados++;
+            }
+            Informe.AppendLine("pisos: " + lados + " fachadas, " + piezas + " piezas (franja, cornisa y pisos), LOD0 hasta 9 por ciento de pantalla");
+        }
+
+        private static List<Renderer> PonerPieza(Transform padre, string codigo, Vector3 centro, float y, float giro, float escalaX, float escalaY, float escalaZ)
+        {
+            Puesto p = new Puesto
+            {
+                Codigo = codigo,
+                Posicion = new Vector3(centro.x, y, centro.z),
+                Giro = giro,
+                Escala = new Vector3(escalaX, escalaY, escalaZ),
+                SinCollider = true,
+                SinSombra = true,
+            };
+            GameObject g = Poner(padre, p);
+            foreach (Transform t in g.GetComponentsInChildren<Transform>(true))
+            {
+                GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.BatchingStatic);
+            }
+            return g.GetComponentsInChildren<Renderer>(true).ToList();
         }
 
         private static Bounds LimitesVisibles(Transform t)

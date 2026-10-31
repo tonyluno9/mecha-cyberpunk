@@ -63,6 +63,26 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        public void Barrio_KitDePisos_CadaLadoTieneFranjaPisosCornisaYLod()
+        {
+            GameObject barrio = AssetDatabase.LoadAssetAtPath<GameObject>(RutaBarrio);
+            Transform pisos = barrio.transform.Find("ArteNoche/Pisos");
+            Assert.IsNotNull(pisos, "Falta ArteNoche/Pisos");
+            Assert.IsTrue(pisos.GetComponentsInChildren<Transform>(true).Any(t => t.name.StartsWith("C23_Franja")), "Sin franjas");
+            int lados = barrio.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("Lado_") && t.parent.Find("Cuerpo") != null);
+            Assert.GreaterOrEqual(pisos.childCount, lados, "Una fachada de pisos por cada Lado_* de un edificio (más las caras lisas al aire)");
+            foreach (Transform lado in pisos)
+            {
+                Assert.IsNotNull(lado.GetComponent<LODGroup>(), lado.name + " sin LODGroup");
+                string[] nombres = lado.Cast<Transform>().Select(t => t.name).ToArray();
+                // las caras lisas (sin Lado_*) arrancan en el suelo y no llevan franja
+                Assert.IsTrue(nombres.Any(n => n.StartsWith("C22_Cornisa")), lado.name + " sin cornisa");
+                Assert.IsTrue(nombres.Any(n => n.StartsWith("C20") || n.StartsWith("C21")), lado.name + " sin pisos");
+                Assert.IsNull(lado.GetComponentInChildren<Collider>(true), lado.name + ": el kit no lleva collider");
+            }
+        }
+
+        [Test]
         public void Barrio_PropsDeCalle_NoTapanPuertasNiSonGigantes()
         {
             GameObject barrio = AssetDatabase.LoadAssetAtPath<GameObject>(RutaBarrio);
