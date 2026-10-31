@@ -29,11 +29,12 @@ namespace MechaCyberpunk.UI.Titulo
         public const string TextoNueva = "NUEVA PARTIDA";
         public const string TextoContinuar = "CONTINUAR";
         public const string TextoOpciones = "OPCIONES";
+        public const string TextoCreditos = "CRÉDITOS";
         public const string TextoSalir = "SALIR";
         public const string TextoAyuda = "↑ ↓ ELEGIR · ENTER ACEPTAR";
         public const string TextoSinPartidas = "SIN PARTIDAS GUARDADAS";
         public const string SonidoInicio = "UI_TITULO_INICIO";
-        private const int CantidadBotones = 4;
+        private const int CantidadBotones = 5;
         private const float SegundosRevisar = 0.5f;
 
         [Header("Logo")]
@@ -67,6 +68,7 @@ namespace MechaCyberpunk.UI.Titulo
         [SerializeField] private BotonCyberfix continuar;
         [SerializeField] private Text resumen;
         [SerializeField] private BotonCyberfix opciones;
+        [SerializeField] private BotonCyberfix creditos;
         [SerializeField] private BotonCyberfix salir;
 
         private PantallaCreacionPandilla creacion;
@@ -87,7 +89,14 @@ namespace MechaCyberpunk.UI.Titulo
         public BotonCyberfix Continuar => continuar;
         public Text Resumen => resumen;
         public BotonCyberfix Opciones => opciones;
+        public BotonCyberfix Creditos => creditos;
         public BotonCyberfix Salir => salir;
+
+        /// <summary>
+        /// Se dispara al pulsar CRÉDITOS; el argumento es lo que hay que llamar al cerrar la pantalla de créditos. La pantalla de créditos
+        /// (ensamblado aparte que depende de UI) se engancha desde fuera para no hacer un ciclo de ensamblados (T-440).
+        /// </summary>
+        public static event System.Action<System.Action> PidioCreditos;
         public int RanuraContinuar => ranuraContinuar;
         public Canvas Canvas => contenido != null ? contenido.GetComponent<Canvas>() : null;
 
@@ -135,6 +144,7 @@ namespace MechaCyberpunk.UI.Titulo
             resumen.color = e.Turquesa;
             y -= altoResumen + separacion;
             opciones = Boton(panel, TextoOpciones, ref y);
+            creditos = Boton(panel, TextoCreditos, ref y);
             salir = Boton(panel, TextoSalir, ref y);
 
             Text ayuda = KitUI.CrearTexto(panel, "Ayuda", RolTexto.Ayuda, TextAnchor.MiddleCenter);
@@ -156,13 +166,14 @@ namespace MechaCyberpunk.UI.Titulo
 
         private void Awake()
         {
-            if (contenido == null || menu == null || nueva == null || continuar == null || opciones == null || salir == null)
+            if (contenido == null || menu == null || nueva == null || continuar == null || opciones == null || creditos == null || salir == null)
             {
                 Armar();
             }
             nueva.AlPulsar.AddListener(AbrirCreacion);
             continuar.AlPulsar.AddListener(ContinuarPartida);
             opciones.AlPulsar.AddListener(AbrirOpciones);
+            creditos.AlPulsar.AddListener(AbrirCreditos);
             salir.AlPulsar.AddListener(SalirDelJuego);
             contenido.SetActive(false);
         }
@@ -358,6 +369,17 @@ namespace MechaCyberpunk.UI.Titulo
             volverA = opciones;
             pantallaOpciones.Abrir();
             Esconder();
+        }
+
+        private void AbrirCreditos()
+        {
+            if (PidioCreditos == null)
+            {
+                return;
+            }
+            volverA = creditos;
+            Esconder();
+            PidioCreditos(AlCerrarEncima);
         }
 
         private void Esconder()

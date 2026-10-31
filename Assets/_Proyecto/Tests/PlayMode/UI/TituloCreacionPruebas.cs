@@ -383,6 +383,15 @@ namespace MechaCyberpunk.Tests.UI
             PantallaPausa pausa = UnityEngine.Object.FindFirstObjectByType<PantallaPausa>();
             Assert.IsFalse(pausa.Abierta, "Ese Esc no pausa");
 
+            // CRÉDITOS (T-440) con clic; Esc vuelve al título.
+            Assert.IsNotNull(titulo.Creditos, "El título tiene el botón CRÉDITOS");
+            yield return Clic(titulo.Creditos);
+            MechaCyberpunk.UI.Creditos.PantallaCreditos creditos = UnityEngine.Object.FindFirstObjectByType<MechaCyberpunk.UI.Creditos.PantallaCreditos>();
+            Assert.IsNotNull(creditos, "El clic en CRÉDITOS abre la pantalla de créditos");
+            Assert.IsFalse(titulo.Abierta);
+            yield return Pulsar(teclado.escapeKey);
+            Assert.IsTrue(titulo.Abierta, "Esc cierra los créditos y vuelve al título");
+
             // CONTINUAR con clic carga la partida: dinero y posición.
             yield return Clic(titulo.Continuar);
             yield return EsperarCiudad(null, d => director = d);
