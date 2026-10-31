@@ -24,18 +24,21 @@ namespace MechaCyberpunk.Arte.Editor
         private const string TipoTitulo = "CamaraTitulo";
 
         /// <summary>Pies del jugador y hacia dónde mira (m). La calle principal corre en X con z = 0; Suburbios x &lt; -47, Neón x &gt; 47.</summary>
-        public static readonly (string nombre, Vector3 pies, Vector3 mira)[] Puntos =
+        public static readonly (string nombre, Vector3 pies, Vector3 mira, int carros, bool tiroteo)[] Puntos =
         {
-            ("calle", new Vector3(-30f, 0.2f, -2f), new Vector3(1f, -0.04f, 0.12f)),
-            ("callejon", new Vector3(-53f, 0.2f, -59f), new Vector3(-1f, -0.02f, 0f)),
-            ("tianguis", new Vector3(38f, 0.2f, 0.5f), new Vector3(-1f, -0.05f, 0f)),
-            ("neon", new Vector3(50f, 0.2f, -4f), new Vector3(1f, 0.02f, 0.25f)),
-            ("vivacoin", new Vector3(44f, 0.2f, 36f), new Vector3(0.75f, 0.05f, 0.65f)),
-            ("mercado", new Vector3(-22f, 0.2f, 11f), new Vector3(-0.15f, 0.02f, 1f)),
-            ("clandestino", new Vector3(0f, 0.2f, -1.5f), new Vector3(0f, 0.08f, 1f)),
-            ("casa", new Vector3(-61.8f, 0.2f, -77.6f), new Vector3(-1f, -0.25f, -0.75f)),
-            ("taller", new Vector3(-61.8f, 0.2f, -76.4f), new Vector3(-1f, -0.2f, 0.6f)),
-            ("suburbios", new Vector3(-80f, 0.2f, 3f), new Vector3(-1f, -0.02f, -0.15f)),
+            ("calle", new Vector3(-30f, 0.2f, -2f), new Vector3(1f, -0.04f, 0.12f), 0, false),
+            ("callejon", new Vector3(-53f, 0.2f, -59f), new Vector3(-1f, -0.02f, 0f), 0, false),
+            ("tianguis", new Vector3(38f, 0.2f, 0.5f), new Vector3(-1f, -0.05f, 0f), 0, false),
+            ("neon", new Vector3(50f, 0.2f, -4f), new Vector3(1f, 0.02f, 0.25f), 0, false),
+            ("vivacoin", new Vector3(44f, 0.2f, 36f), new Vector3(0.75f, 0.05f, 0.65f), 0, false),
+            ("mercado", new Vector3(-22f, 0.2f, 11f), new Vector3(-0.15f, 0.02f, 1f), 0, false),
+            ("clandestino", new Vector3(0f, 0.2f, -1.5f), new Vector3(0f, 0.08f, 1f), 0, false),
+            ("casa", new Vector3(-61.8f, 0.2f, -77.6f), new Vector3(-1f, -0.25f, -0.75f), 0, false),
+            ("taller", new Vector3(-61.8f, 0.2f, -76.4f), new Vector3(-1f, -0.2f, 0.6f), 0, false),
+            ("carros", new Vector3(-30f, 0.2f, -2f), new Vector3(1f, -0.04f, 0.12f), 8, false),
+            ("tiroteo", new Vector3(-30f, 0.2f, -2f), new Vector3(1f, 0f, 0f), 0, true),
+            ("gradas", new Vector3(0f, 0.2f, -1.5f), new Vector3(1f, 0.2f, 0.2f), 0, false),
+            ("suburbios", new Vector3(-80f, 0.2f, 3f), new Vector3(-1f, -0.02f, -0.15f), 0, false),
         };
 
         [MenuItem("Mecha Cyberpunk/T-419/Construir build de medición de noche")]
@@ -44,6 +47,8 @@ namespace MechaCyberpunk.Arte.Editor
             byte[] respaldo = File.ReadAllBytes(RutaEscena);
             BuildSummary resumen = default;
             bool bien = false;
+            bool tiemposPrevios = PlayerSettings.enableFrameTimingStats;
+            PlayerSettings.enableFrameTimingStats = true; // T-425: CPU/GPU ms con FrameTimingManager (solo para este build)
             try
             {
                 var escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
@@ -63,7 +68,10 @@ namespace MechaCyberpunk.Arte.Editor
                     p.FindPropertyRelative("nombre").stringValue = Puntos[i].nombre;
                     p.FindPropertyRelative("pies").vector3Value = Puntos[i].pies;
                     p.FindPropertyRelative("mira").vector3Value = Puntos[i].mira;
+                    p.FindPropertyRelative("carros").intValue = Puntos[i].carros;
+                    p.FindPropertyRelative("tiroteo").boolValue = Puntos[i].tiroteo;
                 }
+                so.FindProperty("prefabCarro").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Vehiculos/Prefabs/CarroViejo.prefab");
                 so.FindProperty("segundosCalentar").floatValue = 3f;
                 so.FindProperty("segundosMedir").floatValue = 6f;
                 so.ApplyModifiedPropertiesWithoutUndo();
@@ -83,6 +91,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             finally
             {
+                PlayerSettings.enableFrameTimingStats = tiemposPrevios;
                 EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
                 File.WriteAllBytes(RutaEscena, respaldo);
                 AssetDatabase.ImportAsset(RutaEscena, ImportAssetOptions.ForceUpdate);
