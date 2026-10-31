@@ -72,12 +72,23 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
             Registro<IJugador>.Agregar(this);
             Registro<IGuardable>.Agregar(this);
+            EventosMontaje.SalidaForzada += AlSalidaForzada;
         }
 
         private void OnDisable()
         {
             Registro<IJugador>.Quitar(this);
             Registro<IGuardable>.Quitar(this);
+            EventosMontaje.SalidaForzada -= AlSalidaForzada;
+        }
+
+        // T-444: el carro explota (o algo igual) y saca al jugador de golpe.
+        private void AlSalidaForzada(IMontable montable)
+        {
+            if (montable != null && ReferenceEquals(montable, MontableActual))
+            {
+                Bajar();
+            }
         }
 
         public string ClaveGuardado => Clave;

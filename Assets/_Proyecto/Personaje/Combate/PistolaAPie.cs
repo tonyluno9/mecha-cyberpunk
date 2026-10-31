@@ -328,8 +328,8 @@ namespace MechaCyberpunk.Personaje.Combate
         }
 
         // Metal: lo que se puede montar (carros) suena distinto al concreto.
-        private static string IdImpactoSinCarne(Collider collider) =>
-            collider.GetComponentInParent<IMontable>() != null ? "ARM_BALA_IMPACTO_METAL" : "ARM_BALA_IMPACTO_CONCRETO";
+        private static string IdImpactoSinCarne(Collider collider, IRecibeDanio objetivo) =>
+            objetivo is IObjetoInerte || collider.GetComponentInParent<IMontable>() != null ? "ARM_BALA_IMPACTO_METAL" : "ARM_BALA_IMPACTO_CONCRETO";
 
         private void Disparar(ArmaAPie arma, DatosArma d)
         {
@@ -368,15 +368,16 @@ namespace MechaCyberpunk.Personaje.Combate
                 {
                     IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
                     bool mato = false;
+                    bool esCarne = objetivo != null && !(objetivo is IObjetoInerte);
                     if (objetivo != null)
                     {
                         mato = objetivo.RecibirDanio(new InfoDanio(d.Danio, TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
                     }
-                    BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, objetivo != null, mato));
+                    BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato));
                     if (!sonoImpacto)
                     {
                         sonoImpacto = true;
-                        Sonidos.ReproducirEn(objetivo != null ? "ARM_BALA_IMPACTO_CARNE" : IdImpactoSinCarne(mejor.collider), mejor.point);
+                        Sonidos.ReproducirEn(esCarne ? "ARM_BALA_IMPACTO_CARNE" : IdImpactoSinCarne(mejor.collider, objetivo), mejor.point);
                     }
                     PonerMarca(mejor.point, mejor.normal);
                 }
