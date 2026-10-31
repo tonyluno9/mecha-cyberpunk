@@ -339,7 +339,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(0, GruposSnakesPrendidos());
             yield return Pulsar(teclado.enterKey);
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Libre, "cerrar CONTINUARÁ", 5f);
-            Assert.AreEqual(2, GruposSnakesPrendidos(), "En Libre se prenden los dos grupos de SNAKES");
+            Assert.AreEqual(1, GruposSnakesPrendidos(), "En Libre se prende el grupo de SNAKES de Neon Alto (el otro es de NOVA, T-428)");
 
             // g. Neón Alto se conquista como El Tianguis: 70 de respeto, su jefe sale y al vencerlo la zona es tuya.
             JefePandilla jefeNeon = Jefe("neon");

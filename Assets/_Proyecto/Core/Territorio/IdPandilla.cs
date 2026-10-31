@@ -13,6 +13,8 @@ namespace MechaCyberpunk.Core
         /// <summary>Los Skulls (magenta), centro de la ciudad.</summary>
         Calaveras,
         /// <summary>Los Snakes (verde ácido), este de la ciudad.</summary>
-        Viboras
+        Viboras,
+        /// <summary>Los guardias de NOVA (violeta), dueños de LA REFINERÍA al sureste (T-428).</summary>
+        Nova
     }
 }

@@ -251,3 +251,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - En el juego libre, con EL TIANGUIS o NEÓN ALTO conquistados, cada cierto tiempo sale "¡LOS SNAKES ATACAN EL TIANGUIS!" (o los SKULLS a Neón): la zona se marca en el minimapa y el mapa y tienes 2 min y medio para llegar y vencer a 4 rivales. Ganas Biits y respeto; si no llegas o pierdes la zona baja de respeto y, si queda muy baja, pasa al rival.
 - SUBURBIOS no se ataca, y no ocurre durante la historia ni durante un encargo del tablero.
 - Observa: ¿el aviso se nota?, ¿llegas a tiempo?, ¿es muy seguido o muy raro?
+
+### T-428 Neón Alto y LA REFINERÍA
+- Venciendo a la gente de NEÓN ALTO sube tu respeto; con 70 sale "¡EL JEFE DE NEÓN ALTO TE BUSCA!" (LA CULEBRA, 300 de vida). Véncelo y la zona es tuya y se pinta de tu color en el mapa.
+- Al sureste hay una zona nueva, LA REFINERÍA (violeta, de NOVA): guardias corporativos y su jefe CAPITÁN NOVA (400 de vida, barreras y tambos marcan la entrada). Se conquista igual y NOVA puede atacarla después.
+- Observa: ¿los jefes se sienten distintos?, ¿se entiende dónde acaba una zona y empieza otra en el mapa?

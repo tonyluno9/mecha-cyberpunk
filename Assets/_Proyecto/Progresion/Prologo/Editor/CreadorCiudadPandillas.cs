@@ -60,6 +60,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T418Interno();
             T426Interno();
             T427Interno();
+            T428Interno();
             T409Interno();
             T412Interno();
             T410Interno();
@@ -101,7 +102,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             return asset;
         }
 
-        private static DatosZona CrearZona(string id, string nombre, IdPandilla dueno, Color color, float xMin, float xMax)
+        private static DatosZona CrearZona(string id, string nombre, IdPandilla dueno, Color color, float xMin, float xMax, float zMin = -ExtensionZona, float zMax = ExtensionZona)
         {
             DatosZona zona = CrearAsset<DatosZona>(CarpetaZonas + "/DatosZona_" + id + ".asset");
             SerializedObject so = new SerializedObject(zona);
@@ -109,7 +110,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             so.FindProperty("nombre").stringValue = nombre;
             so.FindProperty("duenoInicial").enumValueIndex = (int)dueno;
             so.FindProperty("color").colorValue = color;
-            so.FindProperty("rectangulo").rectValue = new Rect(xMin, -ExtensionZona, xMax - xMin, ExtensionZona * 2f);
+            so.FindProperty("rectangulo").rectValue = new Rect(xMin, zMin, xMax - xMin, zMax - zMin);
             so.FindProperty("respetoInicial").intValue = 0;
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(zona);
@@ -117,7 +118,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         }
 
         // Datos del jefe: el pandillero armado de la pandilla con 250 de vida y una escopeta (8 perdigones de 6, cada 1.6 s, 15 m, aviso de 0.5 s).
-        private static DatosPandilleroAPie CrearDatosJefe(string ruta, DatosPandilleroAPie baseDatos, string nombre)
+        private static DatosPandilleroAPie CrearDatosJefe(string ruta, DatosPandilleroAPie baseDatos, string nombre, float vida = 250f, int perdigones = 8, float danio = 6f, float recarga = 1.6f, int dinero = 300)
         {
             DatosPandilleroAPie datos = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(ruta);
             if (datos == null)
@@ -127,11 +128,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
             SerializedObject so = new SerializedObject(datos);
             so.FindProperty("nombre").stringValue = nombre;
-            so.FindProperty("vidaMaxima").floatValue = 250f;
-            so.FindProperty("perdigones").intValue = 8;
-            so.FindProperty("danioDisparo").floatValue = 6f;
+            so.FindProperty("vidaMaxima").floatValue = vida;
+            so.FindProperty("perdigones").intValue = perdigones;
+            so.FindProperty("danioDisparo").floatValue = danio;
             so.FindProperty("preparacionGolpe").floatValue = 0.5f;
-            so.FindProperty("recargaGolpe").floatValue = 1.6f;
+            so.FindProperty("recargaGolpe").floatValue = recarga;
             so.FindProperty("distanciaMinTiro").floatValue = 6f;
             so.FindProperty("distanciaMaxTiro").floatValue = 15f;
             so.FindProperty("distanciaAciertoCerca").floatValue = 8f;
@@ -139,7 +140,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             so.FindProperty("aciertoCerca").floatValue = 0.7f;
             so.FindProperty("aciertoLejos").floatValue = 0.4f;
             so.FindProperty("maxAtacando").intValue = 1;
-            so.FindProperty("dinero").intValue = 300;
+            so.FindProperty("dinero").intValue = dinero;
             so.FindProperty("calorAlVencer").floatValue = 0f;
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(datos);
@@ -157,16 +158,19 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             CreadorPandilleroArmado.Crear();
             DatosZona fosa = CrearZona("fosa", "SUBURBIOS", IdPandilla.Jugador, new Color(1f, 0.5f, 0.1f), -ExtensionZona, -LimiteZonaX);
             DatosZona tianguis = CrearZona("tianguis", "EL TIANGUIS", IdPandilla.Calaveras, new Color(1f, 0.1f, 0.8f), -LimiteZonaX, LimiteZonaX);
-            DatosZona neon = CrearZona("neon", "NEÓN ALTO", IdPandilla.Viboras, new Color(0.45f, 1f, 0.1f), LimiteZonaX, ExtensionZona);
+            // T-428: LA REFINERÍA recorta a NEÓN ALTO la mitad sur (z < 0), donde está Manzana_6.
+            DatosZona neon = CrearZona("neon", "NEÓN ALTO", IdPandilla.Viboras, new Color(0.45f, 1f, 0.1f), LimiteZonaX, ExtensionZona, 0f, ExtensionZona);
+            DatosZona refineria = CrearZona("refineria", "LA REFINERÍA", IdPandilla.Nova, new Color(0.62f, 0.4f, 1f), LimiteZonaX, ExtensionZona, -ExtensionZona, 0f);
 
             GameObject raiz = new GameObject(RaizT404);
             ServicioTerritorio servicio = raiz.AddComponent<ServicioTerritorio>();
             SerializedObject soServicio = new SerializedObject(servicio);
             SerializedProperty lista = soServicio.FindProperty("zonas");
-            lista.arraySize = 3;
+            lista.arraySize = 4;
             lista.GetArrayElementAtIndex(0).objectReferenceValue = fosa;
             lista.GetArrayElementAtIndex(1).objectReferenceValue = tianguis;
             lista.GetArrayElementAtIndex(2).objectReferenceValue = neon;
+            lista.GetArrayElementAtIndex(3).objectReferenceValue = refineria;
             soServicio.ApplyModifiedPropertiesWithoutUndo();
             raiz.AddComponent<MechaCyberpunk.UI.Hud.HudTerritorio>();
             raiz.AddComponent<MechaCyberpunk.UI.Mapa.PantallaMapa>();
@@ -188,16 +192,24 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                     }
                 }
             }
-            string[] ids = { "tianguis", "neon" };
-            string[] manzanas = { "Manzana_2", "Manzana_3" };
-            IdPandilla[] pandillas = { IdPandilla.Calaveras, IdPandilla.Viboras };
-            DatosPandilleroAPie[] baseDatos = { calaveras, viboras };
+            DatosPandilleroAPie nova = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(CreadorPandilleroArmado.RutaDatosNova);
+            string[] ids = { "tianguis", "neon", "refineria" };
+            string[] manzanas = { "Manzana_2", "Manzana_3", "Manzana_6" };
+            IdPandilla[] pandillas = { IdPandilla.Calaveras, IdPandilla.Viboras, IdPandilla.Nova };
+            DatosPandilleroAPie[] baseDatos = { calaveras, viboras, nova };
             string[] rutasJefe =
             {
                 "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeCalaveras.asset",
-                "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeViboras.asset"
+                "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeViboras.asset",
+                "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeNova.asset"
             };
-            string[] nombresJefe = { "JEFE SKULL", "JEFE SNAKE" };
+            // T-428: cada jefe con su nombre y su arma: SKULL 250 de vida y 8 perdigones; SNAKE 300 y 10 más rápidos; NOVA 400 y 8 de 8.
+            string[] nombresJefe = { "JEFE SKULL", "LA CULEBRA", "CAPITÁN NOVA" };
+            float[] vidasJefe = { 250f, 300f, 400f };
+            int[] perdigonesJefe = { 8, 10, 8 };
+            float[] danioJefe = { 6f, 6f, 8f };
+            float[] recargaJefe = { 1.6f, 1.4f, 1.2f };
+            int[] dineroJefe = { 300, 400, 600 };
             for (int i = 0; i < ids.Length; i++)
             {
                 Transform manzana = BuscarTransform(manzanas[i]);
@@ -212,7 +224,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 {
                     punto = piso.point;
                 }
-                DatosPandilleroAPie datosJefe = CrearDatosJefe(rutasJefe[i], baseDatos[i], nombresJefe[i]);
+                DatosPandilleroAPie datosJefe = CrearDatosJefe(rutasJefe[i], baseDatos[i], nombresJefe[i], vidasJefe[i], perdigonesJefe[i], danioJefe[i], recargaJefe[i], dineroJefe[i]);
                 GameObject objetoJefe = new GameObject("PuntoJefe_" + ids[i]);
                 objetoJefe.transform.SetParent(raiz.transform, false);
                 objetoJefe.transform.position = punto;
@@ -728,7 +740,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 new GrupoT402 { Manzana = "Manzana_2", Pandilla = IdPandilla.Calaveras, Cantidad = 3 },
                 new GrupoT402 { Manzana = "Manzana_5", Pandilla = IdPandilla.Calaveras, Cantidad = 2 },
                 new GrupoT402 { Manzana = "Manzana_3", Pandilla = IdPandilla.Viboras, Cantidad = 3 },
-                new GrupoT402 { Manzana = "Manzana_6", Pandilla = IdPandilla.Viboras, Cantidad = 3 },
+                new GrupoT402 { Manzana = "Manzana_6", Pandilla = IdPandilla.Nova, Cantidad = 3 },
             };
             int total = 0;
             for (int g = 0; g < grupos.Length; g++)
@@ -743,7 +755,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 GameObject objetoGrupo = new GameObject("Pandilla_" + grupos[g].Pandilla + "_" + (g + 1));
                 objetoGrupo.transform.SetParent(raiz.transform, false);
                 objetoGrupo.transform.position = punto;
-                DatosPandilleroAPie datos = grupos[g].Pandilla == IdPandilla.Calaveras ? calaveras : viboras;
+                DatosPandilleroAPie datos = grupos[g].Pandilla == IdPandilla.Calaveras ? calaveras : grupos[g].Pandilla == IdPandilla.Nova ? AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(CreadorPandilleroArmado.RutaDatosNova) : viboras;
                 for (int i = 0; i < grupos[g].Cantidad; i++)
                 {
                     GameObject pandillero = (GameObject)PrefabUtility.InstantiatePrefab(prefabPandillero, objetoGrupo.transform);

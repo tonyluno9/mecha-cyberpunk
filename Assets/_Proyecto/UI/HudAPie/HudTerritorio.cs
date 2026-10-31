@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// Arriba a la izquierda dice en qué zona estás, de quién es y tu respeto, con el color del dueño (T-404). Avisa "¡EL JEFE TE BUSCA!"
+    /// Arriba a la izquierda dice en qué zona estás, de quién es y tu respeto, con el color del dueño (T-404). Avisa "¡EL JEFE DE &lt;ZONA&gt; TE BUSCA!" (T-428)
     /// cuando el jefe de una zona queda disponible y "&lt;ZONA&gt; ES DE &lt;TU PANDILLA&gt;" 3 s al conquistarla. Crea su propio canvas; no depende de HudAPie.
     /// </summary>
     public class HudTerritorio : MonoBehaviour
@@ -92,7 +92,7 @@ namespace MechaCyberpunk.UI.Hud
             }
             else if (jefesAvisados.Add(zona))
             {
-                Avisar("¡EL JEFE TE BUSCA!", KitUI.Estilo.Magenta, segundosJefe);
+                Avisar(FormatoTerritorio.Cortar("¡EL JEFE DE " + territorio.Nombre(zona) + " TE BUSCA!"), FormatoTerritorio.ColorDe(territorio.Dueno(zona)), segundosJefe);
             }
         }
 
