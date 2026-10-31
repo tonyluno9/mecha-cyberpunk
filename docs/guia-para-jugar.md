@@ -273,3 +273,6 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - T-472 Modo video (solo Builds/Juego, NO en la demo): F10 oculta/muestra el HUD, F11 cámara libre (WASD, ratón, Q/E, Shift rápido, rueda cambia velocidad; F11 de nuevo vuelve), F12 captura 2x en Capturas/ junto al .exe.
 - En Builds/Demo estas teclas no hacen nada (confirma que F10/F11/F12 no cambian la vista).
 - En Builds/Juego: ¿F11 devuelve el control y la cámara del jugador exactamente igual? ¿la captura de F12 sale sin el aviso?
+- T-473 Personajes 3D (aún no se ven en el juego): hay un visual de prueba en Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_Prueba.prefab; la guía para meter modelos de Mixamo está en docs/como-meter-personajes.md.
+- Cuando tengas un FBX de Mixamo: carpeta Assets/Arte/Personajes/<Nombre>/ y el menú Mecha Cyberpunk > Personajes > Crear visual desde FBX. Revisa que no salgan avisos de animaciones faltantes.
+- La Sesión A conecta los visuales al final (docs/bugs.md): hoy en la demo los personajes siguen siendo los muñecos de cubos.
