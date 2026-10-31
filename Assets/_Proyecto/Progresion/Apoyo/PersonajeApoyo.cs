@@ -2,6 +2,7 @@ using System;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.UI.Clinica;
 using MechaCyberpunk.UI.Historia;
 using MechaCyberpunk.UI.Tiendas;
 using UnityEngine;
@@ -55,9 +56,36 @@ namespace MechaCyberpunk.Progresion.Apoyo
                 VidaAPie vida = VidaDelJugador();
                 ICalor calor = Registro<ICalor>.Actual;
                 ICartera cartera = Registro<ICartera>.Actual;
-                return ReglaPersonajeApoyo.Evaluar(datos.Servicio, datos.Costo, vida != null ? vida.Actual : 0f, vida != null ? vida.Maxima : 0f,
+                float actual = vida != null ? vida.Actual : 0f;
+                float maxima = vida != null ? vida.Maxima : 0f;
+                ReglaPersonajeApoyo.Aviso aviso = ReglaPersonajeApoyo.Evaluar(datos.Servicio, datos.Costo, actual, maxima,
                     calor != null ? calor.Nivel : 0, cartera != null ? cartera.Dinero : 0);
+                if (datos.Servicio == ServicioApoyo.Curar)
+                {
+                    // T-430: con la vida llena EL DOC ofrece los implantes (la clínica de I+D+I, que no se ofrece aparte).
+                    MostradorClinica clinica = BuscarClinica();
+                    aviso = ReglaPersonajeApoyo.DocConImplantes(aviso, actual, maxima, vida != null && clinica != null && clinica.PuedeUsar);
+                }
+                return aviso;
             }
+        }
+
+        private MostradorClinica clinica;
+        private float proximaBusquedaClinica;
+
+        // La clínica de I+D+I está en el Barrio; EL DOC la quita de las interacciones sueltas y la abre él.
+        private MostradorClinica BuscarClinica()
+        {
+            if (clinica == null && Time.unscaledTime >= proximaBusquedaClinica)
+            {
+                proximaBusquedaClinica = Time.unscaledTime + 1f;
+                clinica = FindFirstObjectByType<MostradorClinica>(FindObjectsInactive.Exclude);
+                if (clinica != null)
+                {
+                    Registro<IInteractuable>.Quitar(clinica);
+                }
+            }
+            return clinica;
         }
 
         public string Texto => datos != null ? Aviso.Texto : string.Empty;
@@ -150,7 +178,14 @@ namespace MechaCyberpunk.Progresion.Apoyo
                         }
                         break;
                     case ServicioApoyo.Curar:
-                        Curar();
+                        if (Aviso.Texto == ReglaPersonajeApoyo.TextoImplantes)
+                        {
+                            clinica.Usar();
+                        }
+                        else
+                        {
+                            Curar();
+                        }
                         break;
                     case ServicioApoyo.Informacion:
                         Decir(DarPista());

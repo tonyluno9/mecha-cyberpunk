@@ -18,7 +18,7 @@ MonoBehaviour:
   nivel: 1
   precio: 3000
   ligaMinima: 1
-  descripcion: "REACCIONAS M\xC1S R\xC1PIDO EN EL MECHA"
+  descripcion: "RECARGAS M\xC1S R\xC1PIDO Y REACCIONAS M\xC1S EN EL MECHA"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1
@@ -27,3 +27,7 @@ MonoBehaviour:
     verVidaRival: 0
     vidaRivalEnNumeros: 0
     anticipacionAtaque: 0
+    bonusAlcanceApuntado: 0
+    reduccionRetroceso: 0
+    reduccionEnfriamientoRodada: 0
+    reduccionRecarga: 0.2

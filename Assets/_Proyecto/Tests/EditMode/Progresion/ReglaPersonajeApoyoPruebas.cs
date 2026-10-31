@@ -57,5 +57,17 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual("x", ReglaPersonajeApoyo.Pista(false, 0, "", "SUBURBIOS", 50, 70, true, "x"));
             Assert.AreEqual("x", ReglaPersonajeApoyo.Pista(false, 0, "", "", 0, 70, false, "x"));
         }
+
+        [Test]
+        public void DocConImplantes_ConVidaLlenaOfreceImplantesYConVidaBajaSigueCurando()
+        {
+            var curar = ReglaPersonajeApoyo.Evaluar(ServicioApoyo.Curar, 50, 100f, 100f, 0, 500);
+            var llena = ReglaPersonajeApoyo.DocConImplantes(curar, 100f, 100f, true);
+            Assert.AreEqual("IMPLANTES", llena.Texto);
+            Assert.IsTrue(llena.PuedeUsar);
+            var herido = ReglaPersonajeApoyo.Evaluar(ServicioApoyo.Curar, 50, 40f, 100f, 0, 500);
+            Assert.AreEqual(herido.Texto, ReglaPersonajeApoyo.DocConImplantes(herido, 40f, 100f, true).Texto);
+            Assert.AreEqual(curar.Texto, ReglaPersonajeApoyo.DocConImplantes(curar, 100f, 100f, false).Texto, "Sin clínica disponible no ofrece implantes");
+        }
     }
 }

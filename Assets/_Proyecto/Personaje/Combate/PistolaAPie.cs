@@ -94,6 +94,8 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>Se dispara en cada bala o perdigón que pega a algo (T-420).</summary>
         public event Action<ArmaAPie, ImpactoBala> BalaImpacto;
 
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
+
         private void Awake()
         {
             controlador = GetComponent<ControladorAPie>();
@@ -175,6 +177,7 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void OnEnable()
         {
+            implantes.Activar();
             atacar.action.Enable();
             recargar.action.Enable();
             EventosLugares.JugadorEntro += AlEntrarLugar;
@@ -183,6 +186,7 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void OnDisable()
         {
+            implantes.Desactivar();
             EventosLugares.JugadorEntro -= AlEntrarLugar;
             EventosLugares.JugadorSalio -= AlSalirLugar;
             atacar.action.Disable();
@@ -207,8 +211,13 @@ namespace MechaCyberpunk.Personaje.Combate
         private void Update()
         {
             RevisarArmas();
+            float factorRecarga = EfectosAPie.FactorRecarga(implantes.Efectos);
             for (int i = 0; i < CantidadArmas; i++)
             {
+                if (cargadores[i] != null)
+                {
+                    cargadores[i].FactorRecarga = factorRecarga;
+                }
                 cargadores[i]?.Avanzar(Time.deltaTime);
             }
             ArmaAPie activa = armas.ArmaActiva;

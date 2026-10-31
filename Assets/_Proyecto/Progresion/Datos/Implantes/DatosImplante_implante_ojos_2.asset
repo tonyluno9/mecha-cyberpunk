@@ -18,7 +18,7 @@ MonoBehaviour:
   nivel: 2
   precio: 6000
   ligaMinima: 3
-  descripcion: "LA VIDA DEL RIVAL EN N\xDAMEROS Y EL ATAQUE CON M\xC1S AVISO"
+  descripcion: "LA VIDA EN N\xDAMEROS Y APUNTADO A PIE MUCHO M\xC1S LEJOS"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1
@@ -27,3 +27,7 @@ MonoBehaviour:
     verVidaRival: 1
     vidaRivalEnNumeros: 1
     anticipacionAtaque: 0.8
+    bonusAlcanceApuntado: 0.5
+    reduccionRetroceso: 0
+    reduccionEnfriamientoRodada: 0
+    reduccionRecarga: 0

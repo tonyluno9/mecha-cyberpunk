@@ -80,5 +80,73 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(0, seguidor.Nivel(EspacioImplante.Brazos));
             seguidor.Desactivar();
         }
+
+        [Test]
+        public void Ninguno_T430_NadaCambiaEnApuntadoRetrocesoRodadaYRecarga()
+        {
+            EfectosImplantes e = EfectosImplantes.Ninguno;
+            Assert.AreEqual(1f, EfectosAPie.FactorAlcanceApuntado(e), Tolerancia);
+            Assert.AreEqual(1f, EfectosAPie.FactorRetroceso(e), Tolerancia);
+            Assert.AreEqual(1f, EfectosAPie.FactorRecarga(e), Tolerancia);
+            Assert.AreEqual(2f, EfectosAPie.EnfriamientoRodada(2f, e), Tolerancia);
+        }
+
+        [TestCase(EspacioImplante.Ojos)]
+        [TestCase(EspacioImplante.Brazos)]
+        [TestCase(EspacioImplante.Piernas)]
+        [TestCase(EspacioImplante.SistemaNervioso)]
+        public void T430_CadaImplante_TocaSoloSuEfectoAPie(EspacioImplante espacio)
+        {
+            for (int nivel = 1; nivel <= 2; nivel++)
+            {
+                EfectosImplantes e = De(espacio, nivel);
+                Assert.AreEqual(espacio == EspacioImplante.Ojos, EfectosAPie.FactorAlcanceApuntado(e) > 1f, espacio + " alcance");
+                Assert.AreEqual(espacio == EspacioImplante.Brazos, EfectosAPie.FactorRetroceso(e) < 1f, espacio + " retroceso");
+                Assert.AreEqual(espacio == EspacioImplante.Piernas, EfectosAPie.EnfriamientoRodada(2f, e) < 2f, espacio + " rodada");
+                Assert.AreEqual(espacio == EspacioImplante.SistemaNervioso, EfectosAPie.FactorRecarga(e) < 1f, espacio + " recarga");
+            }
+        }
+
+        [TestCase(EspacioImplante.Ojos)]
+        [TestCase(EspacioImplante.Brazos)]
+        [TestCase(EspacioImplante.Piernas)]
+        [TestCase(EspacioImplante.SistemaNervioso)]
+        public void T430_ElNivel2_EsMejorQueElNivel1(EspacioImplante espacio)
+        {
+            EfectosImplantes a = De(espacio, 1);
+            EfectosImplantes b = De(espacio, 2);
+            Assert.GreaterOrEqual(EfectosAPie.FactorAlcanceApuntado(b), EfectosAPie.FactorAlcanceApuntado(a));
+            Assert.LessOrEqual(EfectosAPie.FactorRetroceso(b), EfectosAPie.FactorRetroceso(a));
+            Assert.LessOrEqual(EfectosAPie.EnfriamientoRodada(2f, b), EfectosAPie.EnfriamientoRodada(2f, a));
+            Assert.LessOrEqual(EfectosAPie.FactorRecarga(b), EfectosAPie.FactorRecarga(a));
+        }
+
+        [Test]
+        public void T430_LosCuatroJuntos_SeCombinanYNuncaPasanDeLos90PorCiento()
+        {
+            EfectosImplantes todos = EfectosImplantes.Ninguno;
+            foreach (EspacioImplante espacio in new[] { EspacioImplante.Ojos, EspacioImplante.Brazos, EspacioImplante.Piernas, EspacioImplante.SistemaNervioso })
+            {
+                todos = EfectosImplantes.Combinar(todos, De(espacio, 2));
+            }
+            Assert.Greater(EfectosAPie.FactorAlcanceApuntado(todos), 1f);
+            Assert.Less(EfectosAPie.FactorRetroceso(todos), 1f);
+            Assert.Less(EfectosAPie.FactorRecarga(todos), 1f);
+            var enorme = new EfectosImplantes { reduccionRetroceso = 5f, reduccionRecarga = 5f, reduccionEnfriamientoRodada = 5f };
+            Assert.AreEqual(0.1f, EfectosAPie.FactorRetroceso(enorme), Tolerancia);
+            Assert.AreEqual(0.1f, EfectosAPie.FactorRecarga(enorme), Tolerancia);
+            Assert.AreEqual(0.2f, EfectosAPie.EnfriamientoRodada(2f, enorme), Tolerancia);
+        }
+
+        [Test]
+        public void T430_Sinapsis_LaRecargaDelCargadorDuraMenos()
+        {
+            var cargador = new MechaCyberpunk.Personaje.Combate.CargadorPistola(8, 0.1f, 2f);
+            cargador.IntentarDisparar();
+            cargador.FactorRecarga = EfectosAPie.FactorRecarga(De(EspacioImplante.SistemaNervioso, 2));
+            cargador.EmpezarRecarga();
+            cargador.Avanzar(2f * cargador.FactorRecarga + 0.01f);
+            Assert.IsFalse(cargador.Recargando, "Con SINAPSIS la recarga termina antes de los 2 s base");
+        }
     }
 }

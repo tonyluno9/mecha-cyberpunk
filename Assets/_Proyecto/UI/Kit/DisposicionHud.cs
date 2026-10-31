@@ -30,6 +30,9 @@ namespace MechaCyberpunk.UI.Kit
         // Arriba a la derecha.
         public static RanuraHud Calor => new RanuraHud(EsquinaHud.ArribaDerecha, M, AltoCalor, M);
 
+        // T-430: los iconos de implantes, debajo del calor.
+        public static RanuraHud Implantes => new RanuraHud(EsquinaHud.ArribaDerecha, Calor.Fin + Hueco, 40f, M);
+
         // Arriba al centro.
         public static RanuraHud Objetivo => new RanuraHud(EsquinaHud.ArribaCentro, M, F, 0f);
         // T-429: debajo de la fila de la zona (arriba a la izquierda) para que "<ZONA> ES DE ..." nunca se encime con ella.
