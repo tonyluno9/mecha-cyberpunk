@@ -53,6 +53,11 @@ namespace MechaCyberpunk.Personaje.Combate
         private ControladorAPie controlador;
         private VidaAPie vida;
         private ArmasAPie armas;
+        private JugadorAPie jugadorApie;
+        // T-445: disparar desde el carro (solo pistola y fusil); con la raíz del carro para que la bala no le pegue a él.
+        private bool desdeCarro;
+        private Transform raizCarro;
+        private const float AlturaBocaCarro = 0.4f;
         private const int CantidadArmas = 5;
         private readonly CargadorPistola[] cargadores = new CargadorPistola[CantidadArmas];
         private readonly DatosArma[] datosArmas = new DatosArma[CantidadArmas];
@@ -101,6 +106,7 @@ namespace MechaCyberpunk.Personaje.Combate
             controlador = GetComponent<ControladorAPie>();
             vida = GetComponent<VidaAPie>();
             armas = GetComponent<ArmasAPie>();
+            jugadorApie = GetComponent<JugadorAPie>();
             if (datos == null || atacar == null || recargar == null || armas == null)
             {
                 Debug.LogError("[Personaje] Faltan referencias en PistolaAPie de " + name, this);
@@ -222,8 +228,14 @@ namespace MechaCyberpunk.Personaje.Combate
                 cargadores[i]?.Avanzar(Time.deltaTime);
             }
             ArmaAPie activa = armas.ArmaActiva;
+            bool enCarro = EstaEnCarro();
+            if (enCarro)
+            {
+                activa = ArmaDeCarro(activa);
+            }
+            desdeCarro = enCarro;
             CargadorPistola actual = EsDeFuego(activa) ? cargadores[(int)activa] : null;
-            bool puede = actual != null && !vida.EstaKO && controlador.ControlActivo;
+            bool puede = actual != null && !vida.EstaKO && (controlador.ControlActivo || enCarro);
             if (puede)
             {
                 if (recargar.action.WasPressedThisFrame() && actual.EmpezarRecarga())
@@ -248,6 +260,30 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
             }
             ActualizarVisual();
+        }
+
+        // T-445: ¿el jugador va manejando? Entonces la raíz del carro no recibe sus balas.
+        private bool EstaEnCarro()
+        {
+            IMontable montable = jugadorApie != null ? jugadorApie.MontableActual : null;
+            bool enCarro = montable != null && jugadorApie.Modo == ModoJugador.Carro && montable.Asiento != null;
+            raizCarro = enCarro ? montable.Asiento.root : null;
+            if (enCarro && !atacar.action.enabled)
+            {
+                // El controlador a pie, apagado en el carro, deja apagada la acción de atacar: aquí se vuelve a prender.
+                atacar.action.Enable();
+            }
+            return enCarro;
+        }
+
+        // Desde el carro solo se dispara pistola o fusil: la que lleva en la mano si es una de esas; si no, la pistola.
+        private ArmaAPie ArmaDeCarro(ArmaAPie activa)
+        {
+            if (activa == ArmaAPie.Pistola || activa == ArmaAPie.Fusil)
+            {
+                return activa;
+            }
+            return armas.TieneArma(ArmaAPie.Pistola) ? ArmaAPie.Pistola : ArmaAPie.Punos;
         }
 
         // Un interior es cualquier lugar que no sea la calle.
@@ -336,7 +372,7 @@ namespace MechaCyberpunk.Personaje.Combate
             bool sonoImpacto = false;
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
             // La escopeta lanza varios perdigones en un cono; la dispersión es el semiángulo del cono.
-            Transform camara = controlador.Camara;
+            Transform camara = desdeCarro && jugadorApie.Camara != null ? jugadorApie.Camara.transform : controlador.Camara;
             Light luz = luces[(int)arma];
             Transform visualArma = visuales[(int)arma];
             Transform boca = luz != null ? luz.transform : (visualArma != null ? visualArma : camara);
@@ -345,10 +381,16 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 punto = centro.point;
             }
-            Vector3 origen = boca.position;
+            Vector3 origen = desdeCarro ? jugadorApie.MontableActual.Asiento.position + Vector3.up * AlturaBocaCarro : boca.position;
             Vector3 haciaPunto = punto - origen;
             float largo = haciaPunto.magnitude;
             Vector3 direccionBase = largo > 0.01f ? haciaPunto / largo : camara.forward;
+            if (desdeCarro)
+            {
+                // Desde el carro la bala va horizontal, del asiento hacia el punto que mira la cámara del carro (sin bajar hasta el piso).
+                Vector3 plano = Vector3.ProjectOnPlane(punto - origen, Vector3.up);
+                direccionBase = plano.sqrMagnitude > 0.0001f ? plano.normalized : Vector3.ProjectOnPlane(camara.forward, Vector3.up).normalized;
+            }
             float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
 
             Sonidos.ReproducirEn(IdDisparo(arma), origen);
@@ -401,7 +443,7 @@ namespace MechaCyberpunk.Personaje.Combate
             for (int i = 0; i < cantidad; i++)
             {
                 RaycastHit impacto = impactos[i];
-                if (impacto.collider.transform.root == transform.root)
+                if (impacto.collider.transform.root == transform.root || (raizCarro != null && impacto.collider.transform.root == raizCarro))
                 {
                     continue;
                 }
