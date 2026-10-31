@@ -211,6 +211,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private void Update()
         {
             RevisarArmas();
+            ReproducirDiferidos();
             float factorRecarga = EfectosAPie.FactorRecarga(implantes.Efectos);
             for (int i = 0; i < CantidadArmas; i++)
             {
@@ -231,6 +232,11 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 DatosArma d = datosArmas[(int)activa];
                 bool pidio = d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame();
+                if (!pidio && disparabaAutomatica && activa == ArmaAPie.Fusil)
+                {
+                    Sonidos.ReproducirEn("ARM_FUS_RAFAGA_COLA", transform.position);
+                }
+                disparabaAutomatica = pidio && d.Automatica;
                 if (pidio && actual.IntentarDisparar())
                 {
                     Disparar(activa, d);
@@ -260,20 +266,70 @@ namespace MechaCyberpunk.Personaje.Combate
             Registro<ICalor>.Actual?.Sumar(datos.CalorPorDisparo, MotivoCalor.Pelea);
         }
 
+        // T-442: sonidos que suenan un poco después del disparo (casquillo, bombeo de la escopeta, cerrojo del sniper).
+        private const float SegundosCasquillo = 0.25f;
+        private const float SegundosBombeo = 0.45f;
+        private const float SegundosCerrojo = 0.5f;
+        private const float AlturaCasquillo = 0.05f;
+        private struct SonidoDiferido
+        {
+            public float Cuando;
+            public string Id;
+            public Vector3 Posicion;
+        }
+        private readonly System.Collections.Generic.List<SonidoDiferido> diferidos = new System.Collections.Generic.List<SonidoDiferido>();
+        private bool disparabaAutomatica;
+
         private const float EsperaClicVacio = 0.3f;
         private float finEsperaVacio;
 
         private static string IdDisparo(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Fusil ? "ARM_SUB_DISPARO"
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Fusil ? "ARM_FUS_DISPARO"
                 : arma == ArmaAPie.Sniper ? "ARM_SNI_DISPARO" : "ARM_PIS_DISPARO";
         }
 
         private static string IdRecarga(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Fusil ? "ARM_SUB_RECARGA"
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Fusil ? "ARM_FUS_RECARGA"
                 : arma == ArmaAPie.Sniper ? "ARM_SNI_RECARGA" : "ARM_PIS_RECARGA";
         }
+
+        // T-442: programa un sonido para dentro de unos segundos.
+        private void Diferir(string id, float segundos, Vector3 posicion)
+        {
+            diferidos.Add(new SonidoDiferido { Cuando = Time.time + segundos, Id = id, Posicion = posicion });
+        }
+
+        private void ReproducirDiferidos()
+        {
+            for (int i = diferidos.Count - 1; i >= 0; i--)
+            {
+                if (Time.time >= diferidos[i].Cuando)
+                {
+                    Sonidos.ReproducirEn(diferidos[i].Id, diferidos[i].Posicion);
+                    diferidos.RemoveAt(i);
+                }
+            }
+        }
+
+        // Lo que suena un poco después de cada disparo: el casquillo al caer y el bombeo o el cerrojo de las armas que los tienen.
+        private void ProgramarSonidosTrasDisparo(ArmaAPie arma)
+        {
+            Diferir("ARM_CASQUILLO", SegundosCasquillo, transform.position + Vector3.up * AlturaCasquillo);
+            if (arma == ArmaAPie.Escopeta)
+            {
+                Diferir("ARM_ESC_BOMBEO", SegundosBombeo, transform.position);
+            }
+            else if (arma == ArmaAPie.Sniper)
+            {
+                Diferir("ARM_SNI_CERROJO", SegundosCerrojo, transform.position);
+            }
+        }
+
+        // Metal: lo que se puede montar (carros) suena distinto al concreto.
+        private static string IdImpactoSinCarne(Collider collider) =>
+            collider.GetComponentInParent<IMontable>() != null ? "ARM_BALA_IMPACTO_METAL" : "ARM_BALA_IMPACTO_CONCRETO";
 
         private void Disparar(ArmaAPie arma, DatosArma d)
         {
@@ -319,12 +375,13 @@ namespace MechaCyberpunk.Personaje.Combate
                     if (!sonoImpacto)
                     {
                         sonoImpacto = true;
-                        Sonidos.ReproducirEn(objetivo != null ? "ARM_BALA_IMPACTO_CARNE" : "ARM_BALA_IMPACTO_CONCRETO", mejor.point);
+                        Sonidos.ReproducirEn(objetivo != null ? "ARM_BALA_IMPACTO_CARNE" : IdImpactoSinCarne(mejor.collider), mejor.point);
                     }
                     PonerMarca(mejor.point, mejor.normal);
                 }
             }
 
+            ProgramarSonidosTrasDisparo(arma);
             SumarCalor();
             inicioRetroceso = Time.time;
             armaRetroceso = arma;

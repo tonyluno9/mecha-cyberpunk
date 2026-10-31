@@ -12,13 +12,14 @@ namespace MechaCyberpunk.Tests.Progresion
         [Test]
         public void LimitesYArchivo()
         {
-            // Por defecto: 1x, Y normal, 80 % salvo Ambiente y Música (silencio), ALTA, nativa y pantalla completa.
+            // Por defecto: 1x, Y normal, 80 % salvo la Música (silencio), ALTA, nativa y pantalla completa.
             ValoresOpciones defecto = ReglaOpciones.PorDefecto();
             Assert.AreEqual(1f, defecto.sensibilidad, Tolerancia);
             Assert.IsFalse(defecto.invertirY);
             Assert.AreEqual(ReglaOpciones.CantidadSecciones, defecto.volumenes.Length);
             Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.General], Tolerancia);
             Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.Efectos], Tolerancia);
+            Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.Ambiente], Tolerancia, "T-442: el ambiente suena por defecto");
             Assert.AreEqual(0f, defecto.volumenes[(int)SeccionSonido.Musica], Tolerancia);
             Assert.AreEqual(CalidadGrafica.Alta, defecto.calidad);
             Assert.AreEqual(0, defecto.resolucionAncho);

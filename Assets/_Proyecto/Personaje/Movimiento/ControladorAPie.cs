@@ -16,6 +16,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private const float SegundosPasoCorrer = 0.32f;
         private const float SegundosMinimosAire = 0.25f;
         private float proximoPaso;
+        // T-442: la respiración se oye tras correr este rato seguido y no más seguido que cada tanto.
+        private const float SegundosParaRespirar = 4f;
+        private const float SegundosEntreRespiras = 10f;
+        private float tiempoCorriendo;
+        private float proximaRespira;
         private float tiempoAire;
 
         [SerializeField] private DatosPersonaje datos;
@@ -184,6 +189,14 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 Sonidos.ReproducirEn("JUG_CAER", transform.position);
             }
             tiempoAire = enPiso ? 0f : tiempoAire + dt;
+            bool corriendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && correr.action.IsPressed();
+            tiempoCorriendo = corriendo ? tiempoCorriendo + dt : 0f;
+            if (tiempoCorriendo >= SegundosParaRespirar && Time.time >= proximaRespira)
+            {
+                proximaRespira = Time.time + SegundosEntreRespiras;
+                tiempoCorriendo = 0f;
+                Sonidos.Reproducir("JUG_CORRER_RESPIRA");
+            }
             if (enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && Time.time >= proximoPaso)
             {
                 proximoPaso = Time.time + (correr.action.IsPressed() ? SegundosPasoCorrer : SegundosPasoCaminar);
