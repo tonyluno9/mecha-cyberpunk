@@ -245,7 +245,8 @@ namespace MechaCyberpunk.Tests.UI
             CrearHud();
             JugadorFalso falso = RegistrarFalso(ModoJugador.APie);
             yield return Calentar();
-            AssertGrupos(true, true, true, true);
+            // T-400: con los puños en la mano la retícula no se ve.
+            AssertGrupos(true, false, true, true);
 
             falso.CambiarModo(ModoJugador.Mecha);
             AssertGrupos(false, false, false, false);
@@ -254,7 +255,7 @@ namespace MechaCyberpunk.Tests.UI
             AssertGrupos(false, false, false, true);
 
             falso.CambiarModo(ModoJugador.APie);
-            AssertGrupos(true, true, true, true);
+            AssertGrupos(true, false, true, true);
         }
 
         [UnityTest]
@@ -276,7 +277,7 @@ namespace MechaCyberpunk.Tests.UI
             CrearJugadorSinHud();
             yield return null;
 
-            AssertGrupos(true, true, true, true);
+            AssertGrupos(true, false, true, true);   // T-400: con los puños la retícula no se ve
             Assert.AreEqual("VIDA " + Mathf.CeilToInt(vida.Maxima), hud.TextoVida.text);
             vida.RecibirDanio(new InfoDanio(25f, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
             Assert.AreEqual("VIDA 75", hud.TextoVida.text);
