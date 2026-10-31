@@ -11,12 +11,16 @@ namespace MechaCyberpunk.Personaje.Vida
     /// (<see cref="ControladorAPie.ActivarControl"/>) y baja y ladea la cámara; <see cref="Restaurar"/> lo devuelve todo.
     /// </summary>
     [RequireComponent(typeof(ControladorAPie))]
-    public class VidaAPie : MonoBehaviour, IVida, IRecibeDanio
+    public class VidaAPie : MonoBehaviour, IVida, IRecibeDanio, IProtegeDeBalas
     {
         [SerializeField] private DatosPersonaje datos;
 
         private ControladorAPie controlador;
         private ModeloVidaRegenerable modelo;
+        private CubiertaYRodada cubierta;
+
+        // Distancia hacia atrás desde el impacto para reconstruir de dónde vino una bala (m).
+        private const float DistanciaOrigenBala = 30f;
 
         public DatosPersonaje Datos => datos;
         public float Actual => modelo != null ? modelo.Actual : 0f;
@@ -29,6 +33,7 @@ namespace MechaCyberpunk.Personaje.Vida
         private void Awake()
         {
             controlador = GetComponent<ControladorAPie>();
+            cubierta = GetComponent<CubiertaYRodada>();
             if (datos == null)
             {
                 Debug.LogError("[Personaje] Faltan los datos en VidaAPie de " + name, this);
@@ -66,11 +71,38 @@ namespace MechaCyberpunk.Personaje.Vida
             {
                 return ResultadoDanio.Ignorado;
             }
-            float aplicado = modelo.Aplicar(info.Cantidad);
+            if (cubierta == null)
+            {
+                cubierta = GetComponent<CubiertaYRodada>();
+            }
+            float cantidad = info.Cantidad;
+            if (cubierta != null)
+            {
+                if (cubierta.Invulnerable)
+                {
+                    return ResultadoDanio.Ignorado;
+                }
+                // Una bala que llega del otro lado de la cubierta pasa con la fracción de daño de los datos (0 = ninguno).
+                if (info.Tipo == TipoDanio.Disparo && cubierta.ProtegeDe(info.Punto - info.Direccion.normalized * DistanciaOrigenBala, out _))
+                {
+                    cantidad *= cubierta.Datos.DanioCubierto;
+                    if (cantidad <= 0f)
+                    {
+                        return ResultadoDanio.Ignorado;
+                    }
+                }
+            }
+            float aplicado = modelo.Aplicar(cantidad);
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             EventosPelea.PublicarImpacto(null, info, resultado);
             Sonidos.ReproducirEn("JUG_DANIO", transform.position);
             return resultado;
+        }
+
+        public bool ProtegeDe(Vector3 origen, out Vector3 puntoCubierta)
+        {
+            puntoCubierta = Vector3.zero;
+            return cubierta != null && cubierta.ProtegeDe(origen, out puntoCubierta);
         }
 
         private void Update()

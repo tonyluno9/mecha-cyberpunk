@@ -148,7 +148,7 @@ namespace MechaCyberpunk.Tests.UI
 
             Assert.IsTrue(ayuda.Visible, "La ayuda a pie aparece al arrancar");
             Assert.AreEqual(ContextoAyuda.APie, ayuda.Contexto);
-            Assert.AreEqual("WASD caminar · SHIFT correr · ESPACIO saltar · E usar", ayuda.Texto.text);
+            Assert.AreEqual("WASD caminar · SHIFT correr · ESPACIO saltar · E usar · Q cubrirse · CTRL rodar", ayuda.Texto.text);
             Assert.IsTrue(ayuda.Grupo.activeInHierarchy);
         }
 

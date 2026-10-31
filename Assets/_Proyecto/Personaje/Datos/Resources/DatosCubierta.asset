@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7b9305e853a2f4a94d058632578c1f, type: 3}
+  m_Name: DatosCubierta
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosCubierta
+  distanciaBuscar: 1.2
+  alturaMinimaCubierta: 0.9
+  alturaAgachado: 1
+  bajadaCamara: 0.7
+  escalaAgachado: 0.65
+  factorVelocidad: 0.4
+  cosenoSalida: 0.6
+  cosenoProteccion: 0.3
+  danioCubierto: 0
+  rapidezPegarse: 3
+  distanciaRodada: 4
+  duracionRodada: 0.45
+  invulnerabilidad: 0.3
+  enfriamientoRodada: 1.2
+  alturaRodando: 0.9

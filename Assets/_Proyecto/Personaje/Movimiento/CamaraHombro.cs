@@ -83,7 +83,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             float desvio = sensacion != null ? sensacion.Desvio : 0f;
             Quaternion giro = Quaternion.Euler(controlador.Inclinacion - (zoom != null ? zoom.Sacudida : 0f) - patada, controlador.GiroCamara + desvio, 0f);
             Quaternion giroHorizontal = Quaternion.Euler(0f, controlador.GiroCamara, 0f);
-            Vector3 pivote = controlador.transform.position + Vector3.up * altura + giroHorizontal * (Vector3.right * lateral);
+            Vector3 pivote = controlador.transform.position + Vector3.up * (altura - controlador.AjusteAlturaCamara) + giroHorizontal * (Vector3.right * lateral);
             Vector3 deseada = pivote - giro * Vector3.forward * distancia;
             Vector3 posicion = deseada;
 

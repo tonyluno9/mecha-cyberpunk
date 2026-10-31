@@ -127,6 +127,12 @@ namespace MechaCyberpunk.IA.APie
             Vector3 direccion = distancia > 0.001f ? hacia / distancia : transform.forward;
             Vector3 punto = pecho;
             bool libre = lineaVerificada || HayLinea(origen, direccion, distancia, objetivo, out punto);
+            // T-421: si el jugador está agachado tras una cubierta del otro lado, la bala pega en ella.
+            if (libre && objetivo is IProtegeDeBalas protegido && protegido.ProtegeDe(origen, out Vector3 puntoCubierta))
+            {
+                libre = false;
+                punto = puntoCubierta;
+            }
             bool acierta = libre && Azar() <= probabilidad;
             laser.SetPosition(0, origen);
             laser.SetPosition(1, punto);

@@ -151,3 +151,4 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 | Tarea | Estado |
 | --- | --- |
 | T-420 Sensación de golpe y disparo | Hecha (rama tony/T-420-sensacion-disparo, integrada en tony/fase-g) |
+| T-421 Cubrirse y rodar | Hecha (rama tony/T-421-cubrirse-rodar, integrada en tony/fase-g) |
