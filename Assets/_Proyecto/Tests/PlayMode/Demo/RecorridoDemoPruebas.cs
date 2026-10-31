@@ -47,6 +47,8 @@ namespace MechaCyberpunk.Tests.Demo
     /// </summary>
     public class RecorridoDemoPruebas : InputTestFixture
     {
+        // T-475: la ruta por rejilla se usa desde cerca (EL DOC está tras una pared a 6 m en línea recta).
+        private const float DistanciaRutaMinima = 4f;
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string NombreJugador = "ALAN";
         private const float VelocidadMaxima = 1f;
@@ -534,10 +536,10 @@ namespace MechaCyberpunk.Tests.Demo
         }
 
         // Un cuadro de caminata hacia el destino siguiendo la ruta por las calles (lejos) o directo (cerca).
-        private void PasoRuta(Vector3 destino, bool correr)
+        private void PasoRuta(Vector3 destino, bool correr, float distanciaRuta = 25f)
         {
             Vector3 pos = Jugador.Raiz.position;
-            if (Plano(pos, destino) > 25f)
+            if (Plano(pos, destino) > distanciaRuta)
             {
                 if (ruta == null || Plano(rutaDestino, destino) > 4f || Time.realtimeSinceStartup > rutaHasta)
                 {
@@ -818,7 +820,7 @@ namespace MechaCyberpunk.Tests.Demo
             {
                 if (PosicionMarcador(out Vector3 p) && Plano(Jugador.Raiz.position, p) > DistanciaInteraccion + 0.4f)
                 {
-                    PasoRuta(p, false);
+                    PasoRuta(p, false, DistanciaRutaMinima);
                     yield return Siguiente();
                     continue;
                 }
@@ -1313,6 +1315,8 @@ namespace MechaCyberpunk.Tests.Demo
                         }
                         Debug.Log("[T-474] CONTINUAR apunta a la ranura " + titulo.RanuraContinuar);
                         yield return Elegir(titulo.Menu, titulo.Continuar, "CONTINUAR");
+                        // T-475: en el título la escena es otra (con su propio director); la ciudad nueva es la que sustituye a ESE director, no al del tramo 06.
+                        anterior = Object.FindFirstObjectByType<DirectorPandillas>();
                         Presionar(teclado.enterKey);
                         yield return null;
                         Soltar(teclado.enterKey);
