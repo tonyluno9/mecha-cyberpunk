@@ -130,6 +130,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Vida_RestaurarDespuesDeKO_VidaCompletaYWMueveOtraVez()
         {
             yield return Calentar();
+            float alturaOjos = controlador.Camara.localPosition.y;
             vida.RecibirDanio(new InfoDanio(vida.Maxima, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
             yield return Esperar(0.5f);
 
@@ -144,7 +145,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1f);
             Release(teclado.wKey);
             Assert.Greater(jugador.transform.position.z - inicio.z, 2f);
-            Assert.AreEqual(controlador.Camara.localPosition.y, 1.65f, 0.1f, "La cámara vuelve a la altura de los ojos");
+            Assert.AreEqual(alturaOjos, controlador.Camara.localPosition.y, 0.1f, "La cámara vuelve a la altura de los ojos");
         }
 
         [UnityTest]

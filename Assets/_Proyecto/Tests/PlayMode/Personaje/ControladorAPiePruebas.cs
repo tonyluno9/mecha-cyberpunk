@@ -1,5 +1,7 @@
 using System.Collections;
+using MechaCyberpunk.Personaje;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TestTools;
@@ -155,15 +157,18 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator APie_RatonEnX_GiraElCuerpo()
+        public IEnumerator APie_RatonEnX_GiraLaCamaraNoElCuerpo()
         {
+            // T-400 (tercera persona): el ratón gira la cámara (GiroCamara); el cuerpo gira solo al caminar o apuntar.
             yield return Calentar();
-            float inicio = jugador.transform.eulerAngles.y;
+            float cuerpo = jugador.transform.eulerAngles.y;
+            float inicio = controlador.GiroCamara;
             Set(raton.delta, new Vector2(200f, 0f));
             yield return null;
             yield return null;
-            float giro = Mathf.DeltaAngle(inicio, jugador.transform.eulerAngles.y);
+            float giro = Mathf.DeltaAngle(inicio, controlador.GiroCamara);
             Assert.Greater(giro, 5f);
+            Assert.AreEqual(cuerpo, jugador.transform.eulerAngles.y, 0.001f, "El cuerpo no gira con el ratón");
             Assert.AreEqual(0f, controlador.Inclinacion, 0.001f, "Un delta en X no inclina la cámara");
         }
 
@@ -182,18 +187,19 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator APie_RatonEnormeEnY_SeQuedaEnElLimiteDe85()
+        public IEnumerator APie_RatonEnormeEnY_SeQuedaEnLosLimitesDeLaCamaraDeHombro()
         {
+            // T-400: los límites vienen de ConfigCamaraHombro (-40 a 60), no los 85 de la primera persona.
+            ConfigCamaraHombro hombro = AssetDatabase.LoadAssetAtPath<ConfigCamaraHombro>("Assets/_Proyecto/Personaje/Datos/ConfigCamaraHombro_Base.asset");
             yield return Calentar();
             Set(raton.delta, new Vector2(0f, 1000000f));
             yield return null;
             yield return null;
-            Assert.AreEqual(-85f, controlador.Inclinacion, 0.01f);
+            Assert.AreEqual(hombro.InclinacionMinima, controlador.Inclinacion, 0.01f);
             Set(raton.delta, new Vector2(0f, -1000000f));
             yield return null;
             yield return null;
-            Assert.AreEqual(85f, controlador.Inclinacion, 0.01f);
-            Assert.AreEqual(85f, Mathf.DeltaAngle(0f, controlador.Camara.localEulerAngles.x), 0.01f);
+            Assert.AreEqual(hombro.InclinacionMaxima, controlador.Inclinacion, 0.01f);
         }
 
         [UnityTest]
@@ -216,50 +222,37 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator APie_Caminando_LaCamaraSeMeceYQuietoNo()
+        public IEnumerator APie_Caminando_LaCamaraNoSeMeceEnTerceraPersona()
         {
+            // T-400: el balanceo de la vista era de primera persona; la cámara del jugador ya no se mece.
             yield return Calentar();
+            float alturaInicial = controlador.Camara.localPosition.y;
             Press(teclado.wKey);
             float minimo = float.MaxValue;
             float maximo = float.MinValue;
             float t = 0f;
-            while (t < 3f)
+            while (t < 2f)
             {
                 t += Time.deltaTime;
-                if (t > 1f)
-                {
-                    float y = controlador.Camara.localPosition.y;
-                    minimo = Mathf.Min(minimo, y);
-                    maximo = Mathf.Max(maximo, y);
-                }
+                float y = controlador.Camara.localPosition.y;
+                minimo = Mathf.Min(minimo, y);
+                maximo = Mathf.Max(maximo, y);
                 yield return null;
             }
             Release(teclado.wKey);
-            Assert.Greater(maximo - minimo, 0.02f, "La vista debe mecerse al caminar");
-            Assert.Less(maximo - minimo, 0.2f);
-            yield return Esperar(1f);
-            Assert.AreEqual(1.65f, controlador.Camara.localPosition.y, 0.05f);
+            Assert.Less(maximo - minimo, 0.02f);
+            Assert.AreEqual(alturaInicial, controlador.Camara.localPosition.y, 0.05f);
         }
 
         [UnityTest]
-        public IEnumerator APie_EscapeLiberaElCursorYUnClicLoBloquea()
+        public IEnumerator APie_Escape_NoSueltaElCursor()
         {
+            // T-410: Esc ya no suelta el cursor; lo abre la pausa.
             yield return Calentar();
             Assert.IsTrue(controlador.CursorBloqueado);
             Press(teclado.escapeKey);
             yield return null;
             Release(teclado.escapeKey);
-            yield return null;
-            Assert.IsFalse(controlador.CursorBloqueado);
-
-            Set(raton.delta, new Vector2(500f, 500f));
-            yield return null;
-            yield return null;
-            Assert.AreEqual(0f, controlador.Inclinacion, 0.001f, "Con el cursor libre se ignora el ratón");
-
-            Press(raton.leftButton);
-            yield return null;
-            Release(raton.leftButton);
             yield return null;
             Assert.IsTrue(controlador.CursorBloqueado);
         }

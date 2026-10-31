@@ -1,5 +1,7 @@
 using System.Collections;
+using MechaCyberpunk.Combate.Golpe;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Personaje.Vida;
@@ -33,6 +35,9 @@ namespace MechaCyberpunk.Tests.Personaje
             base.TearDown();
         }
 
+        // T-403: los puños pegan lo que dice su nivel en el arsenal (20 en el nivel 0), no DatosPersonaje.DanioGolpe.
+        private float DanioPunos() => jugador.GetComponent<ArsenalJugador>().Datos(ArmaAPie.Punos).Danio;
+
         private void CrearMuneco(float distancia)
         {
             muneco = GameObject.CreatePrimitive(PrimitiveType.Capsule);
@@ -61,7 +66,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(maxima, vidaMuneco.Actual, 0.0001f, "El daño no llega en el frame del clic");
 
             yield return Esperar(0.3f);
-            Assert.AreEqual(maxima - golpe.Datos.DanioGolpe, vidaMuneco.Actual, 0.0001f);
+            Assert.AreEqual(maxima - DanioPunos(), vidaMuneco.Actual, 0.0001f);
         }
 
         [UnityTest]
@@ -70,7 +75,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             CrearMuneco(1.2f);
             yield return null;
-            float danio = golpe.Datos.DanioGolpe;
+            float danio = DanioPunos();
             float maxima = vidaMuneco.Maxima;
 
             yield return Clic();
@@ -127,24 +132,27 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(vidaMuneco.Maxima, vidaMuneco.Actual, 0.0001f);
         }
 
+        // T-400: en tercera persona no hay puño visible (Puno null); se comprueba el ciclo del golpe.
         [UnityTest]
-        public IEnumerator Golpe_APuntoDeLaPreparacion_ElPunoAvanzaYLuegoRegresa()
+        public IEnumerator Golpe_Clic_PasaPorPreparandoRecuperandoYVuelveAListo()
         {
             yield return Calentar();
             CrearMuneco(1.2f);
             yield return null;
-            float reposoZ = golpe.Puno.localPosition.z;
+            Assert.AreEqual(FaseGolpe.Listo, golpe.Fase);
 
             yield return Clic();
-            float maxAvance = 0f;
-            float fin = Time.time + 0.7f;
+            bool preparo = golpe.Fase == FaseGolpe.Preparando;
+            bool recupero = false;
+            float fin = Time.time + 1.2f;
             while (Time.time < fin)
             {
-                maxAvance = Mathf.Max(maxAvance, golpe.Puno.localPosition.z - reposoZ);
+                recupero |= golpe.Fase == FaseGolpe.Recuperando;
                 yield return null;
             }
-            Assert.Greater(maxAvance, 0.3f, "El puño debe avanzar durante el golpe");
-            Assert.AreEqual(reposoZ, golpe.Puno.localPosition.z, 0.001f, "Y regresar al terminar la recarga");
+            Assert.IsTrue(preparo, "Tras el clic prepara el golpe");
+            Assert.IsTrue(recupero, "Después del impacto recupera");
+            Assert.AreEqual(FaseGolpe.Listo, golpe.Fase, "Y al terminar la recarga queda listo");
         }
     }
 }
