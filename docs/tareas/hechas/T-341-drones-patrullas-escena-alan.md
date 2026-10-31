@@ -1,5 +1,6 @@
 # T-341 Drones y patrullas con calor (A-F5)
 Dueño: Alan | Rama: alan/T-341-drones-patrullas | Modelo: Sonnet 5.5, medium
+Estado: **hecha y verificada** (2026-10-28), integrada en alan/fase-6 (EditMode 1143/1143, PlayMode 1028 pasaron, 0 fallos, 9 omitidas; pruebas de Trafico y capturas T-341-1/2 en docs/estado-alan.md).
 Depende de: T-340, T-077 (calles), `ICalor` e `IJugador` en main.
 
 ## Objetivo
