@@ -267,3 +267,6 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - T-470 Sonidos: camina por la calle, el Tianguis (AMB_TIANGUIS), Neon Alto y entra al mercado negro o a la casa: el ambiente cambia con cruce de 1 s y queda bajo.
 - Dispara pistola, escopeta y sniper, golpea y salta: se oyen los sonidos finales; voces y disparos por encima del ambiente.
 - Los IDs con archivo pero sin gancho estan en docs/sonidos-faltan-enganchar.md (no suenan aun).
+- T-471 Créditos: aún no hay botón en el título (lo agrega la Sesión A; ver docs/bugs.md). El texto está en docs/creditos.md: revisa nombres del equipo y profes.
+- Cuando exista el botón: la lista sube sola, la rueda o las flechas la mueven y Esc vuelve al título. ¿Se lee bien? ¿Falta alguien?
+- Los sonidos CC BY dicen "por confirmar" autor y licencia: hay que completarlos antes de publicar la demo.
