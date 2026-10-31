@@ -18,7 +18,7 @@ MonoBehaviour:
   nivel: 1
   precio: 2500
   ligaMinima: 1
-  descripcion: "VES LA VIDA DEL RIVAL Y SU PR\xD3XIMO ATAQUE"
+  descripcion: "VES LA VIDA DEL RIVAL, APUNTAS DE M\xC1S LEJOS A PIE"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1
@@ -27,3 +27,7 @@ MonoBehaviour:
     verVidaRival: 1
     vidaRivalEnNumeros: 0
     anticipacionAtaque: 0.4
+    bonusAlcanceApuntado: 0.25
+    reduccionRetroceso: 0
+    reduccionEnfriamientoRodada: 0
+    reduccionRecarga: 0

@@ -18,7 +18,7 @@ MonoBehaviour:
   nivel: 2
   precio: 5000
   ligaMinima: 3
-  descripcion: TU GOLPE A PIE PEGA EL DOBLE
+  descripcion: "TUS PU\xD1OS PEGAN EL DOBLE Y LA PISTOLA CASI NO PATEA"
   efectos:
     multiplicadorGolpeAPie: 2
     multiplicadorCorrer: 1
@@ -27,3 +27,7 @@ MonoBehaviour:
     verVidaRival: 0
     vidaRivalEnNumeros: 0
     anticipacionAtaque: 0
+    bonusAlcanceApuntado: 0
+    reduccionRetroceso: 0.5
+    reduccionEnfriamientoRodada: 0
+    reduccionRecarga: 0

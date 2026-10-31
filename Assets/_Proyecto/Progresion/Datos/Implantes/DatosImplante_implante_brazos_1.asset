@@ -18,7 +18,7 @@ MonoBehaviour:
   nivel: 1
   precio: 2000
   ligaMinima: 1
-  descripcion: "TU GOLPE A PIE PEGA M\xC1S FUERTE"
+  descripcion: "TUS PU\xD1OS PEGAN M\xC1S Y LA PISTOLA PATEA MENOS"
   efectos:
     multiplicadorGolpeAPie: 1.5
     multiplicadorCorrer: 1
@@ -27,3 +27,7 @@ MonoBehaviour:
     verVidaRival: 0
     vidaRivalEnNumeros: 0
     anticipacionAtaque: 0
+    bonusAlcanceApuntado: 0
+    reduccionRetroceso: 0.3
+    reduccionEnfriamientoRodada: 0
+    reduccionRecarga: 0
