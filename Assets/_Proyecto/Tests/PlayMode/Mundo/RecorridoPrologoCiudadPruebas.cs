@@ -34,6 +34,7 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float RadioFrenteALaPuerta = 0.5f;
         private const float MetrosAntesDeLaPuerta = 3f;
         private const float MetrosDelPasilloALaCama = -0.25f;
+        private const float MetrosDelPasilloAlSur = -1.5f;   // la grúa de motor del taller (T-419) ocupa el pasillo en el centro
         private const float SegundosPuertaAbriendo = 1.5f;
         private const float MaxSegundosPorTramoAPie = 60f;
         private const float MaxSegundosPorTramoCarro = 60f;
@@ -45,6 +46,12 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float SegundosEntreTeclas = 0.3f;
         private const float MetrosDelCarroAlPunto = 3f;
         private const float MaxSegundosParaBajar = 10f;
+        private const float SegundosRetroceso = 2f;
+        private const float CentroCalleX = -16f;
+        private const float SegundosDeLaCama = 0.5f;
+        private const string NombreDirectorHistoria = "DirectorPandillas";
+        private const string PrefijoCalaveras = "Calavera";
+        private const float GradosParaReorientar = 15f;
 
         private Keyboard teclado;
         private int erroresEnConsola;
@@ -89,6 +96,34 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return null;
             yield return null;
             yield return null;
+            // T-406/T-418: DirectorPandillas espera unos cuadros y entonces acuesta al jugador en la cama (Casa_Cama).
+            yield return new WaitForSeconds(SegundosDeLaCama);
+        }
+
+        // T-418: la historia de la demo pone a los Calaveras frente a la casa al salir. Esta prueba es de geometría del recorrido:
+        // se apaga el director de la historia y se quitan los Calaveras (por nombre; Mundo no referencia a Progresion).
+        private static void QuitarLaHistoria()
+        {
+            foreach (MonoBehaviour m in Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+            {
+                if (m.GetType().Name == NombreDirectorHistoria)
+                {
+                    m.enabled = false;
+                }
+            }
+            foreach (Transform t in Object.FindObjectsByType<Transform>(FindObjectsSortMode.None))
+            {
+                if (t != null && t.name.StartsWith(PrefijoCalaveras))
+                {
+                    Object.Destroy(t.gameObject);
+                }
+            }
+        }
+
+        // La historia de la demo empieza en la cama: las pruebas del recorrido parten de la puerta de la casa.
+        private static void IrALaPuertaDeLaCasa()
+        {
+            Jugador().Colocar(new Pose(Aparicion(IdAparicionPuerta).Pose.position + Vector3.up * 0.05f, Aparicion(IdAparicionPuerta).Pose.rotation));
         }
 
         private static T Buscar<T>(System.Collections.Generic.IReadOnlyList<T> lista, System.Func<T, bool> condicion, string que)
@@ -110,8 +145,32 @@ namespace MechaCyberpunk.Tests.Mundo
         private static IPuntoAparicion Aparicion(string id) =>
             Buscar(Registro<IPuntoAparicion>.Todos, p => p.Id == id, "la aparición " + id);
 
-        private static IMontable Carro() =>
-            Buscar(Registro<IMontable>.Todos, m => m.Modo == ModoJugador.Carro, "el carro (IMontable en modo Carro)");
+        // Hay varios carros en la ciudad (estacionados y de tráfico): el del prólogo es el que espera junto a Prologo_Carro.
+        private static IMontable Carro()
+        {
+            IMontable mejor = null;
+            float distanciaMejor = float.MaxValue;
+            Vector3 punto = Historia(IdCarro).Pose.position;
+            foreach (IMontable m in Registro<IMontable>.Todos)
+            {
+                float d = m.Modo == ModoJugador.Carro ? Vector3.Distance(Plano(m.PuntoSubida), Plano(punto)) : float.MaxValue;
+                if (d < distanciaMejor)
+                {
+                    distanciaMejor = d;
+                    mejor = m;
+                }
+            }
+            Assert.IsNotNull(mejor, "Falta el carro (IMontable en modo Carro)");
+            return mejor;
+        }
+
+        // T-400 (tercera persona): W camina hacia donde mira la cámara, no el cuerpo. Colocar con la rotación deseada
+        // reinicia el giro de la cámara del jugador (ReiniciarMovimiento) y así W va hacia el destino.
+        private static void Orientar(Vector3 hacia)
+        {
+            Transform raiz = Jugador().Raiz;
+            Jugador().Colocar(new Pose(raiz.position, Quaternion.LookRotation(Plano(hacia).normalized, Vector3.up)));
+        }
 
         private static IJugador Jugador()
         {
@@ -144,12 +203,17 @@ namespace MechaCyberpunk.Tests.Mundo
             float inicio = Time.time;
             Vector3 anterior = raiz.position;
             float recorrido = 0f;
+            Orientar(Plano(destino) - Plano(raiz.position));
+            yield return null;
             Press(teclado.wKey);
             while (Vector3.Distance(Plano(raiz.position), Plano(destino)) > radio)
             {
                 Assert.Less(Time.time - inicio, MaxSegundosPorTramoAPie, tramo + ": no llegó a " + destino + "; quedó en " + raiz.position + " (¿muro o estorbo en el camino?)");
                 Vector3 hacia = Plano(destino) - Plano(raiz.position);
-                raiz.rotation = Quaternion.LookRotation(hacia.normalized, Vector3.up);
+                if (Vector3.Angle(Plano(raiz.forward), hacia) > GradosParaReorientar)
+                {
+                    Orientar(hacia);
+                }
                 yield return null;
                 float paso = Vector3.Distance(raiz.position, anterior);
                 recorrido += paso;
@@ -193,8 +257,8 @@ namespace MechaCyberpunk.Tests.Mundo
             }
             // El carro espera junto a Prologo_Carro para que el objetivo del prólogo apunte a donde está.
             Assert.Less(Vector3.Distance(Plano(Carro().PuntoSubida), Plano(Historia(IdCarro).Pose.position)), MetrosDelCarroAlPunto + 3f);
-            // El jugador arranca en la puerta de la casa.
-            Assert.Less(Vector3.Distance(Plano(Jugador().Raiz.position), Plano(Aparicion(IdAparicionPuerta).Pose.position)), RadioLlegadaAPie);
+            // T-418: la demo empieza con el jugador despierto en la cama.
+            Assert.Less(Vector3.Distance(Plano(Jugador().Raiz.position), Plano(Aparicion(IdAparicionCama).Pose.position)), RadioLlegadaAPie);
             Assert.AreEqual(0, erroresEnConsola, "Errores en consola; el primero: " + primerError);
         }
 
@@ -202,6 +266,9 @@ namespace MechaCyberpunk.Tests.Mundo
         public IEnumerator Recorrido_APie_CasaCallejonClandestinoYCarro_SinAtravesarNada()
         {
             yield return Cargar();
+            QuitarLaHistoria();
+            IrALaPuertaDeLaCasa();
+            yield return null;
             Vector3 esquina1 = Historia(IdEsquina1).Pose.position;
             Vector3 esquina2 = Historia(IdEsquina2).Pose.position;
             Vector3 anclaje = EnEscena(NombreAnclaje).transform.position;
@@ -253,6 +320,7 @@ namespace MechaCyberpunk.Tests.Mundo
         public IEnumerator Recorrido_Regreso_EnCarroPorLasEsquinasYCamaDeLaCasa()
         {
             yield return Cargar();
+            QuitarLaHistoria();
             IMontable carro = Carro();
             IJugador jugador = Jugador();
             jugador.Colocar(new Pose(carro.PuntoSubida + Vector3.up * 0.05f, jugador.Raiz.rotation));
@@ -262,6 +330,13 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsTrue(carro.Ocupado, "E junto a la puerta sube al carro");
             Assert.AreEqual(ModoJugador.Carro, jugador.Modo);
 
+            // Hay puestos del Tianguis (T-407) a lo largo de la calle, 3 m delante del carro: se retrocede para tener espacio
+            // y se sale al centro de la calle antes de tirar hacia la esquina.
+            Teclas(false, true, false, false);
+            yield return new WaitForSeconds(SegundosRetroceso);
+            Teclas(false, false, false, false);
+            yield return null;
+            yield return Manejar("8a carro al centro de la calle", carro, new Vector3(CentroCalleX, 0f, 0f), RadioParada);
             yield return Manejar("8 carro a la esquina 1", carro, Historia(IdEsquina1).Pose.position, RadioLlegadaCarro);
             yield return Manejar("9 esquina 1 a la esquina 2", carro, Historia(IdEsquina2).Pose.position, RadioLlegadaCarro);
             yield return Manejar("10 esquina 2 frente a la casa", carro, Historia(IdEsquina2).Pose.position, RadioParada);
@@ -287,7 +362,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Vector3 ejeDeLaPuerta = Plano(puertaCasa.Posicion - entradaCasa).normalized;
             yield return Caminar("11a calle al eje de la puerta", entradaCasa - ejeDeLaPuerta * MetrosAntesDeLaPuerta, RadioFrenteALaPuerta);
             yield return Caminar("11b eje de la puerta a su frente", entradaCasa, RadioFrenteALaPuerta);
-            Jugador().Raiz.rotation = Quaternion.LookRotation(Plano(puertaCasa.Posicion - Jugador().Raiz.position), Vector3.up);
+            Orientar(puertaCasa.Posicion - Jugador().Raiz.position);
             yield return null;
             yield return null;
             PressAndRelease(teclado.eKey);   // la puerta de la casa abre con E
@@ -298,7 +373,7 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return Caminar("12 puerta al centro de la casa", centroDeLaCasa);
             // La mesa con sus bancos queda a un lado: se rodea por el pasillo entre los bancos y los pies de la cama.
             Vector3 cama = Aparicion(IdAparicionCama).Pose.position;
-            Vector3 pasillo = new Vector3(cama.x + MetrosDelPasilloALaCama, 0f, centroDeLaCasa.z);
+            Vector3 pasillo = new Vector3(cama.x + MetrosDelPasilloALaCama, 0f, centroDeLaCasa.z + MetrosDelPasilloAlSur);
             yield return Caminar("13 centro de la casa al pasillo de la cama", pasillo, RadioFrenteALaPuerta);
             yield return Caminar("14 pasillo a los pies de la cama", cama, RadioFrenteALaPuerta);
             Assert.AreEqual(0, erroresEnConsola, "Errores en consola; el primero: " + primerError);

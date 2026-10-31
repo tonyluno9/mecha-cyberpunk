@@ -152,3 +152,4 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 | --- | --- |
 | T-420 Sensación de golpe y disparo | Hecha (rama tony/T-420-sensacion-disparo, integrada en tony/fase-g) |
 | T-421 Cubrirse y rodar | Hecha (rama tony/T-421-cubrirse-rodar, integrada en tony/fase-g) |
+| T-422 Pruebas rojas de PlayMode | Hecha (rama tony/T-422-pruebas-rojas, integrada en tony/fase-g) |

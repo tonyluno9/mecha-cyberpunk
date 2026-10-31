@@ -214,7 +214,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Mercado_A12AbreYA22No()
+        public IEnumerator Mercado_SiempreAbierto_A12YA22AbreLaPuerta()
         {
             yield return Preparar(EscenaLugares.HoraMediodia);
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "A las 12:00 el mercado está abierto");
@@ -226,10 +226,11 @@ namespace MechaCyberpunk.Tests.Mundo
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             yield return null;
             yield return null;
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "A las 22:00 el mercado está cerrado");
+            // T-403 (D-tony-226): el mercado negro quedó siempre abierto.
+            Assert.IsTrue(EscenaLugares.Lugar(IdLugar.MercadoNegro).EstaAbierto, "A las 22:00 el mercado sigue abierto");
             yield return PresionarE();
-            Assert.AreEqual(ResultadoPuerta.CerradaPorHorario, camara.UltimoResultadoPuerta, "A las 22:00 la puerta no abre");
-            Assert.IsFalse(EscenaLugares.Puerta(IdLugar.MercadoNegro).EstaAbierta);
+            Assert.AreEqual(ResultadoPuerta.Abierta, camara.UltimoResultadoPuerta, "A las 22:00 la puerta también abre");
+            Assert.IsTrue(EscenaLugares.Puerta(IdLugar.MercadoNegro).EstaAbierta);
         }
 
         [UnityTest]
@@ -252,7 +253,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Mostrador_SoloSeOfreceConElLugarAbierto()
+        public IEnumerator Mostrador_SeOfreceTambienDeNoche()
         {
             yield return Preparar(EscenaLugares.HoraMediodia);
             IInteractuable mostrador = Mostrador();
@@ -265,8 +266,8 @@ namespace MechaCyberpunk.Tests.Mundo
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             yield return null;
             yield return null;
-            Assert.IsFalse(mostrador.PuedeUsar, "A las 22:00 el mercado cerró y el mostrador no se ofrece");
-            StringAssert.Contains("CERRADO", mostrador.Texto);
+            Assert.IsTrue(mostrador.PuedeUsar, "A las 22:00 el mercado sigue abierto (T-403) y el mostrador se ofrece");
+            StringAssert.DoesNotContain("CERRADO", mostrador.Texto);
         }
 
         [UnityTest]
