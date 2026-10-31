@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -90,6 +91,7 @@ namespace MechaCyberpunk.UI.Historia
             }
             visible = true;
             contenido.SetActive(true);
+            Sonidos.Reproducir("UI_CONTINUARA");
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             accionEnter.Enable();

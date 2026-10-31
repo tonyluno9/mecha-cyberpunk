@@ -299,6 +299,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 finParpadeo = Time.time + datos.DuracionParpadeo;
                 PintarCuerpo(datos.ColorGolpe);
+                Sonidos.ReproducirEn("PAN_RIVAL_DANIO", transform.position);
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
             return resultado;
@@ -748,6 +749,10 @@ namespace MechaCyberpunk.IA.APie
         private void AlLlegarAKO()
         {
             turnos?.Soltar(this);
+            if (esJefe)
+            {
+                Sonidos.ReproducirEn("PAN_JEFE_CAE", transform.position);
+            }
             controlador.enabled = false;
             if (datos.UsaPistola)
             {

@@ -170,6 +170,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 return false;
             }
             Ocupado = true;
+            Sonidos.ReproducirEn("VEH_VIEJO_ARRANQUE", transform.position);
             camaraCarro.Encender(true);
             TomarControl(true);
             OcupadoCambio?.Invoke(true);

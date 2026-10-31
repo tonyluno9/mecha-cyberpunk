@@ -26,6 +26,7 @@ namespace MechaCyberpunk.UI.Hud
         private Text textoAviso;
         private ITerritorio territorio;
         private ServicioNegocios negocios;
+        private string zonaPrevia;
         private float finAviso;
         private readonly System.Collections.Generic.HashSet<string> jefesAvisados = new System.Collections.Generic.HashSet<string>();
 
@@ -96,6 +97,15 @@ namespace MechaCyberpunk.UI.Hud
             }
             IJugador jugador = Registro<IJugador>.Actual;
             string zona = territorio != null && jugador != null && jugador.Raiz != null ? territorio.ZonaEn(jugador.Raiz.position) : string.Empty;
+            if (zona != zonaPrevia)
+            {
+                // T-450: al cruzar a otra zona suena distinto si es tuya o de otra pandilla.
+                if (zona.Length > 0 && zonaPrevia != null)
+                {
+                    Sonidos.Reproducir(territorio.Dueno(zona) == IdPandilla.Jugador ? "ZON_ENTRAR_PROPIA" : "ZON_ENTRAR_RIVAL");
+                }
+                zonaPrevia = zona;
+            }
             if (zona.Length == 0)
             {
                 textoZona.text = string.Empty;

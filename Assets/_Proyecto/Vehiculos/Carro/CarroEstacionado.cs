@@ -80,10 +80,13 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         private void AlCambiarOcupado(bool ocupado)
         {
+            // T-450: la puerta suena al subir y al bajar; la primera vez (robo) también la cerradura forzada.
+            Sonidos.ReproducirEn(ocupado ? "VEH_PUERTA_ABRIR" : "VEH_PUERTA_CERRAR", transform.position);
             if (!ocupado || esTuyo)
             {
                 return;
             }
+            Sonidos.ReproducirEn("VEH_FORZAR_PUERTA", transform.position);
             esTuyo = true;
             ICalor calor = Registro<ICalor>.Actual;
             if (calor != null)
