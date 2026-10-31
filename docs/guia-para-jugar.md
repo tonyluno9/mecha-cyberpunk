@@ -231,3 +231,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Los pandilleros armados se reparten en arco alrededor de ti, se cubren tras cajas, paredes o carros después de disparar y se asoman con el láser rojo antes de tirar. Con menos de 25 % de vida corren lejos y no disparan (si los alcanzas, pelean); los jefes no huyen.
 - Si le pegas a uno, grita y avisa a su grupo (texto amarillo sobre su cabeza: "¡Refuerzos!", "¡Ahí está!", "¡Me largo!").
 - Observa: ¿se amontonan menos?, ¿se cubren de forma creíble en la calle?, ¿huir los hace muy fáciles de cazar?
+
+### T-424 apuntado asistido
+- Al apuntar con clic derecho, si un pandillero o jefe está cerca del centro de la mira y sin muros en medio, la cámara se jala suave hacia él y la retícula se pone roja. No jala a aliados, peatones ni vecinos. Con el sniper con zoom casi no jala.
+- En OPCIONES (pausa) hay APUNTADO ASISTIDO: APAGADO, SUAVE (por defecto) o FUERTE; se guarda con las demás opciones.
+- Observa: ¿se siente ayuda o pelea contra tu ratón?, ¿se nota la diferencia entre SUAVE y FUERTE?

@@ -48,6 +48,10 @@ namespace MechaCyberpunk.Progresion.Opciones
                 volumenes[i] = v.volumenes != null && i < v.volumenes.Length ? RecortarVolumen(v.volumenes[i]) : VolumenInicial((SeccionSonido)i);
             }
             v.volumenes = volumenes;
+            if (!Enum.IsDefined(typeof(NivelApuntadoAsistido), v.apuntadoAsistido))
+            {
+                v.apuntadoAsistido = NivelApuntadoAsistido.Suave;
+            }
             if (!Enum.IsDefined(typeof(CalidadGrafica), v.calidad))
             {
                 v.calidad = CalidadGrafica.Alta;

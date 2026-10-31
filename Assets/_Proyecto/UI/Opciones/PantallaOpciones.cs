@@ -21,12 +21,14 @@ namespace MechaCyberpunk.UI.Opciones
         public const string TextoTitulo = "OPCIONES";
         public const string TextoSensibilidad = "SENSIBILIDAD";
         public const string TextoInvertirY = "INVERTIR Y";
+        public const string TextoApuntado = "APUNTADO ASISTIDO";
         public const string TextoCalidad = "CALIDAD";
         public const string TextoResolucion = "RESOLUCIÓN";
         public const string TextoPantallaCompleta = "PANTALLA COMPLETA";
         public const string TextoVolver = "VOLVER";
         public const string TextoAyuda = "↑ ↓ ELEGIR · ← → CAMBIAR · ESC VOLVER";
         public const string FormatoSensibilidad = "{0:0.00}x";
+        public static readonly string[] TextosApuntado = { "APAGADO", "SUAVE", "FUERTE" };
         public static readonly string[] TextosCalidad = { "BAJA", "MEDIA", "ALTA" };
         // En el orden de SeccionSonido.
         public static readonly string[] TextosVolumen = { "VOLUMEN GENERAL", "EFECTOS", "VOCES", "AMBIENTE", "MÚSICA", "INTERFAZ" };
@@ -43,6 +45,7 @@ namespace MechaCyberpunk.UI.Opciones
         [SerializeField] private DeslizadorCyberfix sensibilidad;
         [SerializeField] private ConmutadorCyberfix invertirY;
         [SerializeField] private DeslizadorCyberfix[] volumenes;
+        [SerializeField] private SelectorCyberfix apuntado;
         [SerializeField] private SelectorCyberfix calidad;
         [SerializeField] private SelectorCyberfix resolucion;
         [SerializeField] private ConmutadorCyberfix pantallaCompleta;
@@ -56,6 +59,7 @@ namespace MechaCyberpunk.UI.Opciones
         public DeslizadorCyberfix Sensibilidad => sensibilidad;
         public ConmutadorCyberfix InvertirY => invertirY;
         public DeslizadorCyberfix Volumen(SeccionSonido seccion) => volumenes[(int)seccion];
+        public SelectorCyberfix Apuntado => apuntado;
         public SelectorCyberfix Calidad => calidad;
         public SelectorCyberfix Resolucion => resolucion;
         public ConmutadorCyberfix PantallaCompleta => pantallaCompleta;
@@ -72,7 +76,7 @@ namespace MechaCyberpunk.UI.Opciones
             Vector2 fila = e.TamanoFila;
             float altoTitulo = e.Tamano(RolTexto.Encabezado) + relleno;
             float altoAyuda = e.AltoFilaHud;
-            int cantidadFilas = 5 + TextosVolumen.Length;
+            int cantidadFilas = 6 + TextosVolumen.Length;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasOpciones", OrdenCanvas);
             contenido = canvas.gameObject;
             KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
@@ -102,6 +106,8 @@ namespace MechaCyberpunk.UI.Opciones
             Fila(sensibilidad, ref y);
             invertirY = KitUI.CrearConmutador(panel, TextoInvertirY, false, null);
             Fila(invertirY, ref y);
+            apuntado = KitUI.CrearSelector(panel, TextoApuntado, TextosApuntado, (int)NivelApuntadoAsistido.Suave, null);
+            Fila(apuntado, ref y);
             volumenes = new DeslizadorCyberfix[TextosVolumen.Length];
             for (int i = 0; i < TextosVolumen.Length; i++)
             {
@@ -136,7 +142,7 @@ namespace MechaCyberpunk.UI.Opciones
 
         private void Awake()
         {
-            if (contenido == null || menu == null || sensibilidad == null || volumenes == null || volumenes.Length != TextosVolumen.Length)
+            if (contenido == null || menu == null || sensibilidad == null || apuntado == null || volumenes == null || volumenes.Length != TextosVolumen.Length)
             {
                 Armar();
             }
@@ -148,6 +154,7 @@ namespace MechaCyberpunk.UI.Opciones
                 SeccionSonido seccion = (SeccionSonido)i;
                 volumenes[i].CambioValor += v => Servicio?.FijarVolumen(seccion, v);
             }
+            apuntado.CambioValor += i => Servicio?.FijarApuntadoAsistido((NivelApuntadoAsistido)i);
             calidad.CambioValor += i => Servicio?.FijarCalidad((CalidadGrafica)i);
             resolucion.CambioValor += AlCambiarResolucion;
             pantallaCompleta.CambioValor += v => Servicio?.FijarPantallaCompleta(v);
@@ -232,6 +239,7 @@ namespace MechaCyberpunk.UI.Opciones
             {
                 volumenes[i].FijarValor(s.Volumen((SeccionSonido)i));
             }
+            apuntado.Configurar(TextosApuntado, (int)s.ApuntadoAsistido);
             calidad.Configurar(TextosCalidad, (int)s.Calidad);
             string[] textos = new string[s.Resoluciones.Count];
             int elegida = 0;
