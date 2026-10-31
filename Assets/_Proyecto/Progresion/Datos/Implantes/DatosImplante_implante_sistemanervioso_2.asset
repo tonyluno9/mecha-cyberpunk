@@ -18,7 +18,7 @@ MonoBehaviour:
   nivel: 2
   precio: 7000
   ligaMinima: 3
-  descripcion: REFLEJOS DE SOLDADO EN EL MECHA
+  descripcion: "RECARGA REL\xC1MPAGO Y REFLEJOS DE SOLDADO EN EL MECHA"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1
@@ -27,3 +27,7 @@ MonoBehaviour:
     verVidaRival: 0
     vidaRivalEnNumeros: 0
     anticipacionAtaque: 0
+    bonusAlcanceApuntado: 0
+    reduccionRetroceso: 0
+    reduccionEnfriamientoRodada: 0
+    reduccionRecarga: 0.35

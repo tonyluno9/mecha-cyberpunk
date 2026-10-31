@@ -18,7 +18,7 @@ MonoBehaviour:
   nivel: 1
   precio: 2000
   ligaMinima: 1
-  descripcion: "CORRES Y SALTAS M\xC1S"
+  descripcion: "CORRES, SALTAS Y RUEDAS M\xC1S"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1.2
@@ -27,3 +27,7 @@ MonoBehaviour:
     verVidaRival: 0
     vidaRivalEnNumeros: 0
     anticipacionAtaque: 0
+    bonusAlcanceApuntado: 0
+    reduccionRetroceso: 0
+    reduccionEnfriamientoRodada: 0.25
+    reduccionRecarga: 0

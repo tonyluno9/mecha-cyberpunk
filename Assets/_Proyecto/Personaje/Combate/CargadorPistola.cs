@@ -25,6 +25,9 @@ namespace MechaCyberpunk.Personaje.Combate
             this.tiempoRecarga = Math.Max(0f, tiempoRecarga);
         }
 
+        /// <summary>Multiplica el tiempo de recarga al empezarla (T-430, implante SINAPSIS). 1 = normal.</summary>
+        public float FactorRecarga { get; set; } = 1f;
+
         public int Tamano { get; }
         public int Balas { get; private set; }
         public bool Recargando { get; private set; }
@@ -66,7 +69,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 return false;
             }
             Recargando = true;
-            recargaRestante = tiempoRecarga;
+            recargaRestante = tiempoRecarga * Math.Max(0f, FactorRecarga);
             RecargaIniciada?.Invoke();
             return true;
         }

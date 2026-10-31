@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Jugador;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -62,14 +63,18 @@ namespace MechaCyberpunk.Personaje.Movimiento
             accionRodar = new InputAction("Rodar", InputActionType.Button, "<Keyboard>/leftCtrl");
         }
 
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
+
         private void OnEnable()
         {
+            implantes.Activar();
             accionCubrirse.Enable();
             accionRodar.Enable();
         }
 
         private void OnDisable()
         {
+            implantes.Desactivar();
             accionCubrirse.Disable();
             accionRodar.Disable();
             cubierta = null;
@@ -137,7 +142,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>Intenta rodar ya (CTRL). Devuelve false si está en enfriamiento.</summary>
         public bool Rodar()
         {
-            if (!rodada.Iniciar(datos.DuracionRodada, datos.Invulnerabilidad, datos.EnfriamientoRodada))
+            if (!rodada.Iniciar(datos.DuracionRodada, datos.Invulnerabilidad,
+                EfectosAPie.EnfriamientoRodada(datos.EnfriamientoRodada, implantes.Efectos)))
             {
                 return false;
             }

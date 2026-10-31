@@ -262,6 +262,11 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - El mapa (M) lista tus negocios abajo con su nivel e ingreso por día. Además, el aviso "<ZONA> ES DE ..." ya no se encima con el texto de la zona.
 - Observa: ¿los precios se sienten justos?, ¿se encuentran los postes?
 
+### T-430 Implantes a pie
+- Con Biits, ve a I+D+I y habla con EL DOC (E): elige OJOS, BRAZOS, PIERNAS o SINAPSIS y pulsa Enter para instalar.
+- Fuera: con OJOS ves la vida del rival y apuntas de más lejos; con PIERNAS cubrirte (Q) y rodar (CTRL) rinden más; con BRAZOS la pistola recarga mejor.
+- Observa: ¿se nota la diferencia?, ¿los precios son justos?
+
 ## Demo (Builds/Demo)
 
 - T-470 Sonidos: camina por la calle, el Tianguis (AMB_TIANGUIS), Neon Alto y entra al mercado negro o a la casa: el ambiente cambia con cruce de 1 s y queda bajo.
