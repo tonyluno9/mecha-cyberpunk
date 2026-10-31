@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Tests.PlayMode.Creditos",
+    "rootNamespace": "MechaCyberpunk.Tests",
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "Unity.InputSystem.TestFramework", "MechaCyberpunk.Core", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Creditos", "UnityEngine.UI"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
