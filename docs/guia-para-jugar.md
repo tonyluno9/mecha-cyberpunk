@@ -335,3 +335,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-450 Más sonidos
 - Sube y baja de un carro estacionado (puerta), róbalo (cerradura forzada y alarma), enciende el carro viejo (arranque), cruza de una zona a otra (distinto si es tuya o rival), baja el calor (un sonido propio), pégale a un pandillero (se queja) y vence a un jefe.
 - Observa: ¿alguno se oye muy fuerte o fuera de lugar?
+
+### T-451 Tráfico de calle
+- Por las calles del barrio andan carros civiles de colores (6 de día, 3 de noche). Párate enfrente de uno: frena y, si no te quitas, pita. Dispara cerca: se detienen y pitan una vez. Choca con uno desde tu carro: ambos rebotan y tu carro se daña.
+- Observa: ¿frenan a tiempo?, ¿se atoran en las esquinas o salen de la calle?

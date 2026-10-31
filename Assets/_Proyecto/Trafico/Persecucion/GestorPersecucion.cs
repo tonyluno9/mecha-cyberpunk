@@ -146,6 +146,20 @@ namespace MechaCyberpunk.Trafico.Persecucion
             patrullas.Add(patrulla);
         }
 
+        /// <summary>Arma el grafo de calles con las manzanas (hijos "Manzana_") de un barrio (T-451: el tráfico de calle lo comparte).</summary>
+        public static GrafoCalles ArmarCallesDe(Transform barrio)
+        {
+            List<Vector2> centros = new List<Vector2>();
+            foreach (Transform hijo in barrio)
+            {
+                if (hijo.name.StartsWith(PrefijoManzana))
+                {
+                    centros.Add(new Vector2(hijo.position.x, hijo.position.z));
+                }
+            }
+            return centros.Count > 0 ? GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles) : null;
+        }
+
         private GrafoCalles ArmarCalles()
         {
             List<Vector2> centros = new List<Vector2>();
