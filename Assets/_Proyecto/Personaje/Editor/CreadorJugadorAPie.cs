@@ -526,6 +526,7 @@ namespace MechaCyberpunk.Personaje.Editor
             AnidarPrefab(RutaPrefabServiciosProgresion, raiz.transform);
             AnidarPrefab(RutaPrefabServiciosEconomia, raiz.transform);
             raiz.AddComponent<AparicionJugador>();
+            CreadorApuntadoAsistido.AgregarA(raiz);
 
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             Object.DestroyImmediate(raiz);

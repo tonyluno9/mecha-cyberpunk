@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mundo.Reloj;
+using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -28,6 +29,8 @@ namespace MechaCyberpunk.Mundo.Pruebas
             public string nombre;
             [Tooltip("Pies del jugador (m).")] public Vector3 pies;
             [Tooltip("Hacia dónde mira la cámara.")] public Vector3 mira;
+            [Tooltip("T-425: carros que cruzan el punto en movimiento (copias de prefabCarro).")] public int carros;
+            [Tooltip("T-425: avisa a las pandillas cercanas (PandillaAPie.Avisar) para medir un tiroteo.")] public bool tiroteo;
         }
 
         [Tooltip("Hora del reloj del mundo durante la medición (h).")]
@@ -46,6 +49,8 @@ namespace MechaCyberpunk.Mundo.Pruebas
         [SerializeField, Min(16)] private int alto = 1080;
         [Tooltip("Campo de visión vertical de la cámara de medición (°).")]
         [SerializeField, Range(20f, 110f)] private float campoVision = 70f;
+        [Tooltip("T-425: carro que se copia en los puntos con 'carros'.")]
+        [SerializeField] private GameObject prefabCarro;
         [SerializeField] private Punto[] puntos;
 
         private readonly StringBuilder informe = new StringBuilder();
@@ -70,15 +75,36 @@ namespace MechaCyberpunk.Mundo.Pruebas
                     }
                 }
             }
+            // T-425: -medicionRes 1280x720, -medicionLod <umbral de Mesh LOD> y -medicionPuntos calle,carros (para medir más rápido).
+            string res = Argumento("-medicionRes", null);
+            if (res != null)
+            {
+                string[] partes = res.Split('x');
+                Screen.SetResolution(int.Parse(partes[0]), int.Parse(partes[1]), FullScreenMode.Windowed);
+            }
+            if (float.TryParse(Argumento("-medicionLod", null), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float umbralLod))
+            {
+                QualitySettings.meshLodThreshold = umbralLod;
+            }
+            string soloPuntos = Argumento("-medicionPuntos", null);
             yield return new WaitForSecondsRealtime(segundosInicio);
 
             Camera camara = CrearCamara();
             informe.AppendLine("gpu=" + SystemInfo.graphicsDeviceName + " api=" + SystemInfo.graphicsDeviceType
                 + " pantalla=" + Screen.width + "x" + Screen.height + " calidad=" + QualitySettings.names[QualitySettings.GetQualityLevel()]
-                + " vsync=" + QualitySettings.vSyncCount + " hora=" + hora);
+                + " meshLod=" + QualitySettings.meshLodThreshold + " vsync=" + QualitySettings.vSyncCount + " hora=" + hora);
 
-            foreach (Punto punto in puntos)
+            foreach (Punto punto0 in puntos)
             {
+                if (soloPuntos != null && !(("," + soloPuntos + ",").Contains("," + punto0.nombre + ",")))
+                {
+                    continue;
+                }
+                Punto punto = punto0;
+                if (punto.tiroteo)
+                {
+                    CercaDePandilla(punto0.pies, ref punto.pies, ref punto.mira);
+                }
                 ApagarOtrasCamaras(camara);
                 PonerHora();
                 MoverJugador(punto.pies);
@@ -86,13 +112,46 @@ namespace MechaCyberpunk.Mundo.Pruebas
                 yield return new WaitForSecondsRealtime(segundosCalentar);
                 camara.transform.SetPositionAndRotation(punto.pies + Vector3.up * alturaOjos, Quaternion.LookRotation(punto.mira, Vector3.up));
 
+                List<GameObject> carrosPunto = PonerCarros(punto);
+                ProfilerRecorder llamadas = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count");
+                ProfilerRecorder lotes = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Batches Count");
+                ProfilerRecorder cambios = ProfilerRecorder.StartNew(ProfilerCategory.Render, "SetPass Calls Count");
+                ProfilerRecorder triangulos = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Triangles Count");
+                FrameTiming[] tiempoCuadro = new FrameTiming[1];
+                double sumaCpu = 0;
+                double sumaGpu = 0;
+                int muestrasCuadro = 0;
+                long sumaLlamadas = 0;
+                long sumaLotes = 0;
+                long sumaCambios = 0;
+                long sumaTriangulos = 0;
                 List<float> tiempos = new List<float>();
                 float inicio = Time.realtimeSinceStartup;
                 while (Time.realtimeSinceStartup - inicio < segundosMedir)
                 {
                     yield return null;
                     tiempos.Add(Time.unscaledDeltaTime);
+                    FrameTimingManager.CaptureFrameTimings();
+                    if (FrameTimingManager.GetLatestTimings(1, tiempoCuadro) > 0)
+                    {
+                        sumaCpu += tiempoCuadro[0].cpuFrameTime;
+                        sumaGpu += tiempoCuadro[0].gpuFrameTime;
+                        muestrasCuadro++;
+                    }
+                    sumaLlamadas += llamadas.Valid ? llamadas.LastValue : 0;
+                    sumaLotes += lotes.Valid ? lotes.LastValue : 0;
+                    sumaCambios += cambios.Valid ? cambios.LastValue : 0;
+                    sumaTriangulos += triangulos.Valid ? triangulos.LastValue : 0;
                 }
+                llamadas.Dispose();
+                lotes.Dispose();
+                cambios.Dispose();
+                triangulos.Dispose();
+                foreach (GameObject carro in carrosPunto)
+                {
+                    Destroy(carro);
+                }
+                int n = Mathf.Max(1, tiempos.Count);
                 tiempos.Sort();
                 float suma = 0f;
                 foreach (float t in tiempos)
@@ -105,11 +164,65 @@ namespace MechaCyberpunk.Mundo.Pruebas
                 Capturar(camara, Path.Combine(salida, punto.nombre + ".png"));
                 informe.AppendLine(punto.nombre + ": fps_promedio=" + (1f / promedio).ToString("F1") + " ms_promedio=" + (promedio * 1000f).ToString("F2")
                     + " fps_1pct_bajo=" + (1f / peor1).ToString("F1") + " fotogramas=" + tiempos.Count
+                    + " cpu_ms=" + (muestrasCuadro > 0 ? (sumaCpu / muestrasCuadro).ToString("F2") : "n/d")
+                    + " gpu_ms=" + (muestrasCuadro > 0 ? (sumaGpu / muestrasCuadro).ToString("F2") : "n/d")
+                    + " llamadas=" + sumaLlamadas / n + " lotes=" + sumaLotes / n + " setpass=" + sumaCambios / n + " triangulos=" + sumaTriangulos / n
                     + " jugador=" + PosicionJugador() + " hora=" + HoraActual());
             }
             File.WriteAllText(Path.Combine(salida, "medicion.txt"), informe.ToString());
             Debug.Log("[Mundo] MedicionAmbiente:\n" + informe);
             Application.Quit(0);
+        }
+
+        // T-425: carros en movimiento cruzando el punto (copias del prefab; se les fija la velocidad en cada FixedUpdate de la corrutina).
+        private List<GameObject> PonerCarros(Punto punto)
+        {
+            List<GameObject> lista = new List<GameObject>();
+            if (punto.carros <= 0 || prefabCarro == null)
+            {
+                return lista;
+            }
+            for (int i = 0; i < punto.carros; i++)
+            {
+                Vector3 pos = punto.pies + new Vector3(8f + i * 9f, 0.6f, (i % 2 == 0 ? 3f : -3f));
+                GameObject carro = Instantiate(prefabCarro, pos, Quaternion.Euler(0f, i % 2 == 0 ? -90f : 90f, 0f));
+                lista.Add(carro);
+                StartCoroutine(Empujar(carro, i % 2 == 0 ? Vector3.left : Vector3.right));
+            }
+            return lista;
+        }
+
+        private static IEnumerator Empujar(GameObject carro, Vector3 direccion)
+        {
+            Rigidbody cuerpo = carro.GetComponent<Rigidbody>();
+            while (carro != null && cuerpo != null)
+            {
+                Vector3 v = direccion * 10f;
+                v.y = cuerpo.linearVelocity.y;
+                cuerpo.linearVelocity = v;
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
+        // T-425: tiroteo = el jugador a 9 m de la pandilla más cercana al punto (por nombre de tipo: Mundo no referencia IA); los pandilleros lo ven y disparan.
+        private static void CercaDePandilla(Vector3 hint, ref Vector3 pies, ref Vector3 mira)
+        {
+            Transform mejor = null;
+            float mejorD = float.MaxValue;
+            foreach (MonoBehaviour m in FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (m != null && m.GetType().Name == "PandillaAPie" && (m.transform.position - hint).sqrMagnitude < mejorD)
+                {
+                    mejorD = (m.transform.position - hint).sqrMagnitude;
+                    mejor = m.transform;
+                }
+            }
+            if (mejor != null)
+            {
+                pies = mejor.position + new Vector3(-9f, 0.2f, 0f);
+                pies.y = 0.2f;
+                mira = new Vector3(1f, 0f, 0f);
+            }
         }
 
         private static string Argumento(string nombre, string porDefecto)
