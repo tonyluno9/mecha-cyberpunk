@@ -290,3 +290,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Al jugar a pie salen avisos cortos arriba, una sola vez cada uno: W A S D, clic derecho apunta, clic izquierdo dispara, R recarga, Q cubre, CTRL rueda, E sube al carro, M mapa, T teléfono.
 - Se pueden apagar en OPCIONES → TUTORIAL (SÍ/NO); lo ya visto se recuerda entre partidas.
 - Observa: ¿salen en un buen momento?, ¿tapan algo?
+
+### T-442 Sonidos de armas y del jugador
+- Dispara cada arma: el fusil suena distinto al soltar el gatillo, la escopeta bombea, el sniper mete el cerrojo y cae el casquillo; un tiro a un carro suena a metal.
+- Corre unos 4 s seguidos: se oye la respiración. Con poca vida (menos de 25 %) suena el aviso y al empezar a curar otro; al caer, el de derrotado.
+- El ambiente de la calle ya viene al 80 % en Opciones (la música sigue en 0).

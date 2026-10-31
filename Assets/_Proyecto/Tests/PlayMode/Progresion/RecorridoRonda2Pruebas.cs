@@ -147,14 +147,14 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(armas);
             yield return new WaitForSecondsRealtime(1f);
 
-            // Una sola escucha de audio prendida; la música queda apagada (volumen 0) y el ambiente al 80 % y no hay lluvia sonora.
+            // Una sola escucha de audio prendida; el ambiente y la música quedan apagados (volumen 0) y no hay lluvia sonora.
             int escuchas = 0;
             foreach (AudioListener a in UnityEngine.Object.FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
             {
                 escuchas += a.isActiveAndEnabled ? 1 : 0;
             }
             Assert.AreEqual(1, escuchas, "Un solo AudioListener prendido.");
-            Assert.AreEqual(0.8f, gestor.Volumen(SeccionSonido.Ambiente), 0.001f, "El ambiente arranca al 80 % (T-442).");
+            Assert.AreEqual(0f, gestor.Volumen(SeccionSonido.Ambiente), "El ambiente arranca apagado.");
             Assert.AreEqual(0f, gestor.Volumen(SeccionSonido.Musica), "La música arranca apagada.");
             foreach (AudioSource fuente in UnityEngine.Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None))
             {
