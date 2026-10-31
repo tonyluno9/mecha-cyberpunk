@@ -10,7 +10,7 @@ namespace MechaCyberpunk.UI
     public class ConfigAyudas : ScriptableObject
     {
         [Header("Textos")]
-        [SerializeField] private string textoAPie = "WASD caminar · SHIFT correr · ESPACIO saltar · E usar";
+        [SerializeField] private string textoAPie = "WASD caminar · SHIFT correr · ESPACIO saltar · E usar · Q cubrirse · CTRL rodar";
         [SerializeField] private string textoCarro = "FLECHAS manejar · E bajar (detenido)";
         [SerializeField] private string textoMechaPelea = "CLIC IZQ golpe · CLIC DER bloquear · justo antes del golpe = bloqueo perfecto · WASD mover";
         [SerializeField] private string textoMechaCalle = "WASD mover · RATÓN mirar · E bajar (quieto)";

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0606c8304cacb8448da7417f4b9524c, type: 3}
   m_Name: ConfigAyudas_Base
   m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigAyudas
-  textoAPie: "WASD caminar \xB7 SHIFT correr \xB7 ESPACIO saltar \xB7 E usar"
+  textoAPie: "WASD caminar \xB7 SHIFT correr \xB7 ESPACIO saltar \xB7 E usar · Q cubrirse · CTRL rodar"
   textoCarro: "WASD o FLECHAS manejar \xB7 ESPACIO freno \xB7 E bajar (detenido)"
   textoMechaPelea: "CLIC IZQ golpe \xB7 CLIC DER bloquear \xB7 justo antes del golpe
     = bloqueo perfecto \xB7 WASD mover"
