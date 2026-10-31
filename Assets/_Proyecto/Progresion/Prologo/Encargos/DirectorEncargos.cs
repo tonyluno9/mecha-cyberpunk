@@ -21,6 +21,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
         public const string TextoCancelar = "E: CANCELAR ENCARGO";
         public const string TextoEspera = "SIN ENCARGOS · VUELVE EN ";
         public const string TextoHistoria = "TABLERO · TERMINA LA HISTORIA";
+        public const string TextoAtaque = "TABLERO · DEFIENDE LA ZONA";
         public const string PrefijoCuota = "COBRA LA CUOTA ";
         public const string TextoMoroso = "VENCE AL MOROSO";
         public const string TextoIrDefender = "VE A DEFENDER SUBURBIOS";
@@ -97,6 +98,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
                 {
                     return TextoHistoria;
                 }
+                if (DirectorAtaques.EnCurso)
+                {
+                    return TextoAtaque;
+                }
                 if (!regla.TryProximo(out TipoEncargo proximo))
                 {
                     return TextoEspera + Mathf.CeilToInt(regla.EsperaMinima()) + " S";
@@ -105,7 +110,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
             }
         }
 
-        public bool PuedeUsarTablero => HayEncargo || (ReglaEncargos.Permitido(HistoriaLibre, HayEncargo) && regla.TryProximo(out _));
+        public bool PuedeUsarTablero => HayEncargo || (!DirectorAtaques.EnCurso && ReglaEncargos.Permitido(HistoriaLibre, HayEncargo) && regla.TryProximo(out _));
 
         private void OnEnable() => Registro<IGuardable>.Agregar(this);
 
@@ -141,7 +146,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
         /// <summary>Empieza un encargo de un tipo. False si no se pudo (otro en curso, historia sin terminar, en espera o sin lo necesario).</summary>
         public bool Iniciar(TipoEncargo nuevo)
         {
-            if (!ReglaEncargos.Permitido(HistoriaLibre, HayEncargo) || !regla.Disponible(nuevo))
+            if (DirectorAtaques.EnCurso || !ReglaEncargos.Permitido(HistoriaLibre, HayEncargo) || !regla.Disponible(nuevo))
             {
                 return false;
             }
@@ -373,7 +378,17 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
 
         private void PonerRival(int indice, Vector3 aprox)
         {
-            if (indice < 0 || indice >= rivales.Length || rivales[indice] == null)
+            if (indice < 0 || indice >= rivales.Length)
+            {
+                return;
+            }
+            ColocarRival(rivales[indice], aprox);
+        }
+
+        /// <summary>Prende un rival a puños en el suelo bajo el punto (lo reutiliza <see cref="DirectorAtaques"/>).</summary>
+        public static void ColocarRival(PandilleroAPie r, Vector3 aprox)
+        {
+            if (r == null)
             {
                 return;
             }
@@ -383,7 +398,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
                 punto = piso.point;
             }
             punto += Vector3.up * 0.1f;
-            PandilleroAPie r = rivales[indice];
             CharacterController cc = r.GetComponent<CharacterController>();
             if (cc != null)
             {
