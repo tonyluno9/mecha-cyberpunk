@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 namespace MechaCyberpunk.Progresion.Prologo.Editor
 {
     /// <summary>
-    /// T-427 del creador de la ciudad de pandillas: el DirectorAtaques con un punto de ataque libre en EL TIANGUIS y en NEÓN ALTO, 4 rivales a puños
+    /// T-427 del creador de la ciudad de pandillas: el DirectorAtaques con un punto de ataque libre en EL TIANGUIS, NEÓN ALTO y LA REFINERÍA (T-428), 4 rivales a puños
     /// apagados y el asset DatosAtaquesZonas_Base. Idempotente: rehace solo la raíz GTA_T427. Va después de T426 (usa su DirectorEncargos).
     /// </summary>
     public static partial class CreadorCiudadPandillas
@@ -28,14 +28,14 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         }
 
         // Un punto libre cerca de la base, dentro de la zona (X entre los límites), buscando en espiral.
-        private static Vector3 PuntoLibreT427(Vector3 baseXZ, float xMin, float xMax)
+        private static Vector3 PuntoLibreT427(Vector3 baseXZ, float xMin, float xMax, float zMin, float zMax)
         {
             for (int k = 0; k < 60; k++)
             {
                 float angulo = k * 47f * Mathf.Deg2Rad;
                 float distancia = 4f + k * 2.5f;
                 Vector3 candidato = PisoT426(baseXZ + new Vector3(Mathf.Cos(angulo), 0f, Mathf.Sin(angulo)) * distancia);
-                if (candidato.x > xMin && candidato.x < xMax && candidato.y < 1f && LibreT426(candidato))
+                if (candidato.x > xMin && candidato.x < xMax && candidato.z > zMin && candidato.z < zMax && candidato.y < 1f && LibreT426(candidato))
                 {
                     return candidato;
                 }
@@ -62,16 +62,18 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             EditorUtility.SetDirty(datos);
 
             GameObject raiz = new GameObject(RaizT427);
-            string[] zonas = { "tianguis", "neon" };
-            Vector3[] bases = { new Vector3(0f, 0f, 30f), new Vector3(110f, 0f, 30f) };
-            float[] xMin = { -LimiteZonaX + 6f, LimiteZonaX + 6f };
-            float[] xMax = { LimiteZonaX - 6f, 400f };
+            string[] zonas = { "tianguis", "neon", "refineria" };
+            Vector3[] bases = { new Vector3(0f, 0f, 30f), new Vector3(110f, 0f, 30f), new Vector3(110f, 0f, -30f) };
+            float[] xMin = { -LimiteZonaX + 6f, LimiteZonaX + 6f, LimiteZonaX + 6f };
+            float[] xMax = { LimiteZonaX - 6f, 400f, 400f };
+            float[] zMin = { -400f, 6f, -400f };
+            float[] zMax = { 400f, 400f, -6f };
             List<Transform> puntos = new List<Transform>();
             for (int i = 0; i < zonas.Length; i++)
             {
                 GameObject p = new GameObject("Ataque_" + zonas[i]);
                 p.transform.SetParent(raiz.transform, false);
-                p.transform.position = PuntoLibreT427(bases[i], xMin[i], xMax[i]);
+                p.transform.position = PuntoLibreT427(bases[i], xMin[i], xMax[i], zMin[i], zMax[i]);
                 puntos.Add(p.transform);
             }
 
@@ -111,7 +113,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
             so.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.SaveAssets();
-            Debug.Log("[T-427] Puntos de ataque: tianguis " + puntos[0].position + ", neón " + puntos[1].position);
+            Debug.Log("[T-427] Puntos de ataque: tianguis " + puntos[0].position + ", neón " + puntos[1].position + ", refinería " + puntos[2].position);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             List<GameObject> grupos = new List<GameObject>();
             foreach (PandillaAPie g in Object.FindObjectsByType<PandillaAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                if (g.Pandilla == IdPandilla.Viboras)
+                if (g.Pandilla == IdPandilla.Viboras || g.Pandilla == IdPandilla.Nova)
                 {
                     g.gameObject.SetActive(false);
                     grupos.Add(g.gameObject);

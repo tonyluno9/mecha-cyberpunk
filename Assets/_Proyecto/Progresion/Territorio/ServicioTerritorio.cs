@@ -122,14 +122,24 @@ namespace MechaCyberpunk.Progresion
 
         public string ZonaEn(Vector3 posicion)
         {
+            // Si dos rectángulos se traslapan gana el más chico (T-428: LA REFINERÍA recorta a NEÓN ALTO).
+            string mejor = string.Empty;
+            float areaMejor = float.MaxValue;
             for (int i = 0; i < zonas.Length; i++)
             {
-                if (zonas[i] != null && zonas[i].Rectangulo.Contains(new Vector2(posicion.x, posicion.z)))
+                if (zonas[i] == null)
                 {
-                    return zonas[i].Id;
+                    continue;
+                }
+                Rect r = zonas[i].Rectangulo;
+                float area = r.width * r.height;
+                if (area < areaMejor && r.Contains(new Vector2(posicion.x, posicion.z)))
+                {
+                    mejor = zonas[i].Id;
+                    areaMejor = area;
                 }
             }
-            return string.Empty;
+            return mejor;
         }
 
         public string Nombre(string zona)

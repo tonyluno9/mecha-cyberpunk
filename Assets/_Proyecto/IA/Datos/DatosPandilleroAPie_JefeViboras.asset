@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e16e2a4f0c9254a8e9a327d7b16ca5, type: 3}
   m_Name: DatosPandilleroAPie_JefeViboras
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosPandilleroAPie
-  nombre: JEFE SNAKE
-  vidaMaxima: 250
+  nombre: LA CULEBRA
+  vidaMaxima: 300
   danioGolpe: 10
   preparacionGolpe: 0.5
-  recargaGolpe: 1.6
+  recargaGolpe: 1.4
   velocidad: 4.5
   velocidadGiro: 540
   radioDeteccion: 10
@@ -25,7 +25,7 @@ MonoBehaviour:
   margenImpacto: 0.4
   anguloGolpe: 70
   margenLlegada: 0.6
-  dinero: 300
+  dinero: 400
   segundosParaDesaparecer: 4
   duracionParpadeo: 0.12
   anguloBrazoAviso: 130
@@ -33,7 +33,7 @@ MonoBehaviour:
   maxAtacando: 1
   radioFormacion: 2.5
   usaPistola: 1
-  perdigones: 8
+  perdigones: 10
   danioDisparo: 6
   distanciaMinTiro: 6
   distanciaMaxTiro: 15
@@ -48,6 +48,16 @@ MonoBehaviour:
   segundosReaparicion: 40
   distanciaReaparicion: 30
   siempre: 1
+  fraccionHuida: 0.25
+  distanciaAcorralado: 3
+  distanciaHuida: 45
+  radioCubierta: 12
+  segundosCubierto: 1.8
+  segundosAsomado: 2
+  arcoRodeo: 240
+  giroRodeo: 8
+  radioRefuerzos: 40
+  segundosRefuerzo: 8
   colorNormal: {r: 0.45, g: 1, b: 0.1, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}

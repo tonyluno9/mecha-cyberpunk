@@ -14,6 +14,7 @@ namespace MechaCyberpunk.IA.Editor
     {
         public const string RutaDatosCalaveras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Calaveras.asset";
         public const string RutaDatosViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Viboras.asset";
+        public const string RutaDatosNova = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Nova.asset";
         public const string RutaPrefab = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab";
         private const string RutaMaterialLaser = "Assets/_Proyecto/IA/Materiales/PistolaPandillero_Laser.mat";
         private const string RutaModelo = "Assets/Arte/Personajes/MunecoHumano/ModeloHumano.prefab";
@@ -34,6 +35,7 @@ namespace MechaCyberpunk.IA.Editor
             Material laser = CrearMaterialLaser();
             DatosPandilleroAPie calaveras = CrearDatos(RutaDatosCalaveras, "SKULL", 3, new Color(1f, 0.1f, 0.8f));
             CrearDatos(RutaDatosViboras, "SNAKE", 3, new Color(0.45f, 1f, 0.1f));
+            CrearDatosNova();
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab) == null)
             {
                 ArmarPrefab(calaveras, laser);
@@ -81,6 +83,21 @@ namespace MechaCyberpunk.IA.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(datos);
             return datos;
+        }
+
+        // T-428: los guardias corporativos de NOVA (LA REFINERÍA): más vida y más dinero que un pandillero, violeta.
+        private static void CrearDatosNova()
+        {
+            bool nuevo = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(RutaDatosNova) == null;
+            DatosPandilleroAPie datos = CrearDatos(RutaDatosNova, "GUARDIA NOVA", 3, new Color(0.62f, 0.4f, 1f));
+            if (nuevo)
+            {
+                SerializedObject so = new SerializedObject(datos);
+                so.FindProperty("vidaMaxima").floatValue = 80f;
+                so.FindProperty("dinero").intValue = 60;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(datos);
+            }
         }
 
         private static void ArmarPrefab(DatosPandilleroAPie datos, Material laser)

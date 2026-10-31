@@ -10,6 +10,8 @@ namespace MechaCyberpunk.UI.Mapa
     {
         // SNAKES #73FF1A (fuera de la paleta de la UI, docs/diseno/ui-cyberfix.md); SKULLS van en el magenta del kit.
         private static readonly Color ColorViboras = new Color(0.451f, 1f, 0.102f);
+        // NOVA (T-428): violeta, que no se parece a las 4 pandillas del jugador ni al rojo de los enemigos.
+        private static readonly Color ColorNova = new Color(0.62f, 0.4f, 1f);
 
         /// <summary>Máximo de caracteres de un aviso del HUD; si no cabe se corta (T-415).</summary>
         public const int LargoMaximoAviso = 40;
@@ -26,6 +28,7 @@ namespace MechaCyberpunk.UI.Mapa
                 case IdPandilla.Jugador: return ColoresPandilla.Color(Perfil != null ? Perfil.ColorPandilla : ColoresPandilla.Predeterminado);
                 case IdPandilla.Calaveras: return KitUI.Estilo.Magenta;
                 case IdPandilla.Viboras: return ColorViboras;
+                case IdPandilla.Nova: return ColorNova;
                 default: return KitUI.Estilo.Desactivado;
             }
         }
@@ -37,6 +40,7 @@ namespace MechaCyberpunk.UI.Mapa
                 case IdPandilla.Jugador: return Perfil != null ? Perfil.NombrePandilla : ColoresPandilla.NombrePredeterminado;
                 case IdPandilla.Calaveras: return "SKULLS";
                 case IdPandilla.Viboras: return "SNAKES";
+                case IdPandilla.Nova: return "NOVA";
                 default: return "SIN DUEÑO";
             }
         }

@@ -25,7 +25,7 @@ namespace MechaCyberpunk.UI.Mapa
         public const string SonidoAbrir = "UI_MAPA_ABRIR";
         public const string SonidoCerrar = "UI_MAPA_CERRAR";
         public static readonly string[] EtiquetasFijasLeyenda =
-            { "SKULLS", "SNAKES", "TÚ", "ALIADOS", "ENEMIGOS", "OBJETIVO", "EL MERCADO", "I+D+I", "CIC", "CASA", "PUNTO MARCADO" };
+            { "SKULLS", "SNAKES", "NOVA", "TÚ", "ALIADOS", "ENEMIGOS", "OBJETIVO", "EL MERCADO", "I+D+I", "CIC", "CASA", "PUNTO MARCADO" };
 
         [Tooltip("Píxeles de pantalla (referencia 1920x1080) por metro del mundo, con zoom 1.")]
         [Min(0.1f)] [SerializeField] private float pixelesPorMetro = 2.6f;
@@ -169,7 +169,7 @@ namespace MechaCyberpunk.UI.Mapa
             panel.SetActive(false);
         }
 
-        // A la derecha: tu pandilla, SKULLS, SNAKES, tú, aliados, enemigos, objetivo, los cuatro lugares y el punto marcado.
+        // A la derecha: tu pandilla, SKULLS, SNAKES, NOVA, tú, aliados, enemigos, objetivo, los cuatro lugares y el punto marcado.
         private void CrearLeyenda(RectTransform padre, Vector2 esquina)
         {
             EstiloCyberfix e = KitUI.Estilo;
@@ -181,16 +181,17 @@ namespace MechaCyberpunk.UI.Mapa
             colorPandilla = IconosMapa.Pieza(FilaVacia(leyenda, fila++, string.Empty, out nombrePandilla), "Cuadro", null, Color.white, cuadro);
             IconosMapa.Pieza(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[0], out _), "Cuadro", null, FormatoTerritorio.ColorDe(IdPandilla.Calaveras), cuadro);
             IconosMapa.Pieza(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[1], out _), "Cuadro", null, FormatoTerritorio.ColorDe(IdPandilla.Viboras), cuadro);
-            KitUI.CrearTriangulo(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[2], out _), "Muestra", ladoFlecha * 0.8f, Color.white);
-            colorAliados = IconosMapa.CrearAliado(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[3], out _), ladoIcono, FormatoTerritorio.ColorDe(IdPandilla.Jugador));
-            IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[4], out _), TipoMarcaMapa.Enemigo, ladoIcono);
-            KitUI.CrearRombo(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[5], out _), "Muestra", ladoIcono * 0.8f, e.Naranja);
+            IconosMapa.Pieza(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[2], out _), "Cuadro", null, FormatoTerritorio.ColorDe(IdPandilla.Nova), cuadro);
+            KitUI.CrearTriangulo(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[3], out _), "Muestra", ladoFlecha * 0.8f, Color.white);
+            colorAliados = IconosMapa.CrearAliado(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[4], out _), ladoIcono, FormatoTerritorio.ColorDe(IdPandilla.Jugador));
+            IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[5], out _), TipoMarcaMapa.Enemigo, ladoIcono);
+            KitUI.CrearRombo(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[6], out _), "Muestra", ladoIcono * 0.8f, e.Naranja);
             TipoMarcaMapa[] lugares = { TipoMarcaMapa.Mercado, TipoMarcaMapa.Clinica, TipoMarcaMapa.Cic, TipoMarcaMapa.Casa };
             for (int i = 0; i < lugares.Length; i++)
             {
-                IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[6 + i], out _), lugares[i], ladoIcono * 0.85f);
+                IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[7 + i], out _), lugares[i], ladoIcono * 0.85f);
             }
-            IconosMapa.CrearPuntoMarcado(FilaVacia(leyenda, fila, EtiquetasFijasLeyenda[10], out _), ladoIcono * 0.8f);
+            IconosMapa.CrearPuntoMarcado(FilaVacia(leyenda, fila, EtiquetasFijasLeyenda[11], out _), ladoIcono * 0.8f);
         }
 
         // Una fila con el hueco de la muestra (a la izquierda) y su texto; devuelve el hueco.

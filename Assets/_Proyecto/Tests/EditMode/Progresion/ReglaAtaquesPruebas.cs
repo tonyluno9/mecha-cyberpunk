@@ -39,6 +39,8 @@ namespace MechaCyberpunk.Tests.Progresion
         {
             Assert.AreEqual(IdPandilla.Viboras, ReglaAtaques.Atacante("tianguis"));
             Assert.AreEqual(IdPandilla.Calaveras, ReglaAtaques.Atacante("neon"));
+            Assert.AreEqual(IdPandilla.Nova, ReglaAtaques.Atacante("refineria"));
+            Assert.AreEqual("NOVA", ReglaAtaques.NombrePandilla(IdPandilla.Nova));
             Assert.AreEqual("¡LOS SNAKES ATACAN EL TIANGUIS!", ReglaAtaques.Aviso(IdPandilla.Viboras, "EL TIANGUIS"));
             Assert.AreEqual(-1, ReglaAtaques.Elegir(0, 0.5f));
             Assert.AreEqual(1, ReglaAtaques.Elegir(2, 0.999f));
