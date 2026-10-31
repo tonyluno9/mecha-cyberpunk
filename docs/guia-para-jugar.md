@@ -226,3 +226,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Junto a una pared, un carro o una caja alta pulsa Q: te pegas, quedas agachado (cámara baja) y las balas de los pandilleros del otro lado se quedan en la cubierta. Mantén clic derecho para asomarte y dispara; Q otra vez o caminar lejos de ella te suelta.
 - CTRL rueda en la dirección en que caminas (hacia adelante si estás quieto): ~0.3 s sin recibir daño y 1.2 s de espera para otra. Las teclas salen en la ayuda de controles del HUD.
 - Observa: ¿Q encuentra la cubierta que esperas?, ¿la rodada alcanza para esquivar un tiro?, ¿el muñeco encogido/girando se ve raro (no hay animaciones nuevas)?
+
+### T-423 pandilleros más listos
+- Los pandilleros armados se reparten en arco alrededor de ti, se cubren tras cajas, paredes o carros después de disparar y se asoman con el láser rojo antes de tirar. Con menos de 25 % de vida corren lejos y no disparan (si los alcanzas, pelean); los jefes no huyen.
+- Si le pegas a uno, grita y avisa a su grupo (texto amarillo sobre su cabeza: "¡Refuerzos!", "¡Ahí está!", "¡Me largo!").
+- Observa: ¿se amontonan menos?, ¿se cubren de forma creíble en la calle?, ¿huir los hace muy fáciles de cazar?

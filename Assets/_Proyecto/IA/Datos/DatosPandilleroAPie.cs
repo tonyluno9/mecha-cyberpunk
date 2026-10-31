@@ -87,12 +87,44 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Si es true el grupo está siempre, no solo de noche.")]
         [SerializeField] private bool siempre;
 
+        [Header("Táctica (T-423)")]
+        [Tooltip("Debajo de esta fracción de vida huye (0 a 1); si lo acorralan pelea.")]
+        [Range(0f, 1f)] [SerializeField] private float fraccionHuida = 0.25f;
+        [Tooltip("Si el jugador se acerca a esta distancia mientras huye, se vuelve a pelear (m).")]
+        [Min(0.5f)] [SerializeField] private float distanciaAcorralado = 3f;
+        [Tooltip("Hasta dónde corre al huir; después se queda quieto (m).")]
+        [Min(5f)] [SerializeField] private float distanciaHuida = 45f;
+        [Tooltip("Radio en que busca cubierta entre ráfagas (m).")]
+        [Min(1f)] [SerializeField] private float radioCubierta = 12f;
+        [Tooltip("Segundos que se queda cubierto sin disparar (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosCubierto = 1.8f;
+        [Tooltip("Segundos máximos asomado para disparar (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosAsomado = 2f;
+        [Tooltip("Arco en que se reparten alrededor del jugador (grados).")]
+        [Range(30f, 360f)] [SerializeField] private float arcoRodeo = 240f;
+        [Tooltip("Cuánto giran los puestos alrededor del jugador (grados por segundo).")]
+        [SerializeField] private float giroRodeo = 8f;
+        [Tooltip("Radio en que avisa a los de su grupo al ver al jugador o recibir daño (m).")]
+        [Min(0f)] [SerializeField] private float radioRefuerzos = 40f;
+        [Tooltip("Segundos que los avisados siguen en alerta aunque el jugador esté fuera del territorio (s).")]
+        [Min(0f)] [SerializeField] private float segundosRefuerzo = 8f;
+
         [Header("Colores")]
         [SerializeField] private Color colorNormal = new Color(0.55f, 0.15f, 0.65f);
         [SerializeField] private Color colorGolpe = new Color(1f, 0.2f, 0.2f);
         [SerializeField] private Color colorKO = new Color(0.2f, 0.2f, 0.2f);
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f);
 
+        public float FraccionHuida => fraccionHuida;
+        public float DistanciaAcorralado => distanciaAcorralado;
+        public float DistanciaHuida => distanciaHuida;
+        public float RadioCubierta => radioCubierta;
+        public float SegundosCubierto => segundosCubierto;
+        public float SegundosAsomado => segundosAsomado;
+        public float ArcoRodeo => arcoRodeo;
+        public float GiroRodeo => giroRodeo;
+        public float RadioRefuerzos => radioRefuerzos;
+        public float SegundosRefuerzo => segundosRefuerzo;
         public bool UsaPistola => usaPistola;
         public int Perdigones => perdigones;
         public float DanioDisparo => danioDisparo;

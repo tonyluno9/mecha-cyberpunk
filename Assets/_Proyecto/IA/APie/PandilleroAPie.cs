@@ -49,6 +49,37 @@ namespace MechaCyberpunk.IA.APie
         private Renderer[] piezasModelo;
         private int lado = 1;
         private float proximoCambioLado;
+        // T-423: táctica
+        private ReglaTacticaPandillero tactica;
+        private ReglaTacticaPandillero.Modo modoAnterior = ReglaTacticaPandillero.Modo.Rodear;
+        private bool tieneCubierta;
+        private Vector3 puntoCubierta;
+        private Vector3 puntoAsomo;
+        private float proximaBusqueda;
+        private bool disparoReciente;
+        private float proximoGrito;
+        private float finGrito = -1f;
+        private TextMesh textoGrito;
+        private static readonly Collider[] candidatosCubierta = new Collider[24];
+        private const float AlturaGrito = 2.3f;
+        private const float PeriodoBusquedaCubierta = 1.5f;
+        private const float EnfriamientoGrito = 4f;
+        private const float SegundosGrito = 1.5f;
+        private const float AlturaMinCubierta = 1.2f;
+        private const float TamanoMaxCubierta = 30f;
+        private const float MargenCubierta = 0.8f;
+        private const float LlegadaCubierta = 0.5f;
+        private const float FactorHuida = 1.15f;
+
+        /// <summary>Pandilla a la que pertenece (T-423): la asigna <see cref="PandillaAPie"/>.</summary>
+        public PandillaAPie Grupo { get; internal set; }
+
+        /// <summary>Modo táctico actual (T-423); Rodear si no es armado.</summary>
+        public ReglaTacticaPandillero.Modo ModoTactico => tactica != null ? tactica.Actual : ReglaTacticaPandillero.Modo.Rodear;
+
+        /// <summary>True si eligió un punto de cubierta (T-423).</summary>
+        public bool TieneCubierta => tieneCubierta;
+        public Vector3 PuntoCubierta => puntoCubierta;
 
         private static readonly int IdVelocidad = Animator.StringToHash("Velocidad");
         private static readonly int IdEnPiso = Animator.StringToHash("EnPiso");
@@ -163,6 +194,7 @@ namespace MechaCyberpunk.IA.APie
                 // El territorio lo decide la pandilla (Alerta): la regla solo ve distancias enormes de detección y correa.
                 regla = new ReglaPandilleroAPie(GranDistancia, GranDistancia, datos.DistanciaMaxTiro, datos.PreparacionGolpe,
                     datos.RecargaGolpe, datos.MargenLlegada);
+                tactica = new ReglaTacticaPandillero(datos.FraccionHuida, datos.SegundosCubierto, datos.SegundosAsomado);
                 pistola = GetComponent<PistolaPandillero>();
                 if (pistola == null)
                 {
@@ -226,6 +258,10 @@ namespace MechaCyberpunk.IA.APie
             Iniciar();
             modelo.Restaurar();
             regla.Reiniciar();
+            tactica?.Reiniciar();
+            tieneCubierta = false;
+            disparoReciente = false;
+            modoAnterior = ReglaTacticaPandillero.Modo.Rodear;
             turnos?.Soltar(this);
             desaparicion = -1f;
             finParpadeo = -1f;
@@ -249,6 +285,11 @@ namespace MechaCyberpunk.IA.APie
                 return ResultadoDanio.Ignorado;
             }
             float aplicado = modelo.Aplicar(info.Cantidad);
+            if (datos.UsaPistola && !modelo.EstaKO && Grupo != null)
+            {
+                // T-423: pide refuerzos a su grupo.
+                Grupo.Avisar(this, "¡Refuerzos!", true);
+            }
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             if (!modelo.EstaKO)
             {
@@ -280,6 +321,7 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
 
+            ActualizarGrito();
             BuscarJugador();
             if (datos.UsaPistola)
             {
@@ -342,21 +384,47 @@ namespace MechaCyberpunk.IA.APie
                 puedeTirar = pistola.HayLinea(boca, hacia.normalized, hacia.magnitude, recibe, out _);
             }
 
+            // T-423: táctica (rodear, cubrirse, asomarse, huir).
+            float fraccionVida = modelo.Maxima > 0f ? modelo.Actual / modelo.Maxima : 1f;
+            bool acorralado = atacable && distancia <= datos.DistanciaAcorralado;
+            if (atacable && modoAnterior == ReglaTacticaPandillero.Modo.Rodear && Time.time >= proximaBusqueda)
+            {
+                BuscarCubierta(posicionJugador);
+            }
+            ReglaTacticaPandillero.Modo modo = tactica.Avanzar(Time.deltaTime, fraccionVida, tieneCubierta, acorralado, disparoReciente,
+                !esJefe && atacable);
+            disparoReciente = false;
+            if (modo == ReglaTacticaPandillero.Modo.Cubrirse && modoAnterior != ReglaTacticaPandillero.Modo.Cubrirse)
+            {
+                BuscarCubierta(posicionJugador);
+                if (!tieneCubierta)
+                {
+                    tactica.Reiniciar();
+                    modo = ReglaTacticaPandillero.Modo.Rodear;
+                }
+            }
+            if (modo == ReglaTacticaPandillero.Modo.Huir && modoAnterior != ReglaTacticaPandillero.Modo.Huir)
+            {
+                Gritar("¡Me largo!");
+            }
+            modoAnterior = modo;
+            bool huyendo = modo == ReglaTacticaPandillero.Modo.Huir;
+
             ReglaPandilleroAPie.Entrada entrada = new ReglaPandilleroAPie.Entrada
             {
-                DistanciaJugador = atacable ? distancia : float.MaxValue,
-                DistanciaJugadorAlPunto = atacable ? 0f : float.MaxValue,
+                DistanciaJugador = atacable && !huyendo ? distancia : float.MaxValue,
+                DistanciaJugadorAlPunto = atacable && !huyendo ? 0f : float.MaxValue,
                 DistanciaAlPunto = DistanciaPlana(transform.position, hogar),
-                JugadorAtacable = atacable
+                JugadorAtacable = atacable && !huyendo
             };
-            entrada.TieneTurno = regla.Atacando || (puedeTirar && (turnos == null || turnos.Pedir(this)));
+            entrada.TieneTurno = regla.Atacando || (puedeTirar && tactica.PuedeDisparar && (turnos == null || turnos.Pedir(this)));
             ReglaPandilleroAPie.Salida salida = regla.Avanzar(Time.deltaTime, entrada);
             if (!regla.Atacando)
             {
                 turnos?.Soltar(this);
             }
 
-            bool apuntando = regla.Estado == EstadoPandillero.Preparando && atacable;
+            bool apuntando = regla.Estado == EstadoPandillero.Preparando && atacable && !huyendo;
             if (apuntando)
             {
                 pistola.Apuntar(boca, pecho);
@@ -365,8 +433,9 @@ namespace MechaCyberpunk.IA.APie
             {
                 pistola.QuitarAviso();
             }
-            if (salida.Impacto && atacable)
+            if (salida.Impacto && atacable && !huyendo)
             {
+                disparoReciente = true;
                 float probabilidad = PistolaPandillero.ProbabilidadAcierto(distancia, datos.DistanciaAciertoCerca,
                     datos.DistanciaAciertoLejos, datos.AciertoCerca, datos.AciertoLejos);
                 for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
@@ -388,10 +457,23 @@ namespace MechaCyberpunk.IA.APie
                 deseada.y = 0f;
                 deseada = deseada.sqrMagnitude > 0.0001f ? deseada.normalized * datos.Velocidad : Vector3.zero;
             }
+            else if (huyendo)
+            {
+                Vector3 lejos = -haciaJugador;
+                deseada = distancia < datos.DistanciaHuida && lejos.sqrMagnitude > 0.0001f
+                    ? lejos.normalized * datos.Velocidad * FactorHuida : Vector3.zero;
+            }
             else if (atacable && regla.Estado != EstadoPandillero.Preparando && haciaJugador.sqrMagnitude > 0.0001f)
             {
                 Vector3 adelante = haciaJugador.normalized;
-                if (distancia > datos.DistanciaMaxTiro || !puedeTirar && distancia > datos.DistanciaMinTiro)
+                if (modo == ReglaTacticaPandillero.Modo.Cubrirse || modo == ReglaTacticaPandillero.Modo.Asomado)
+                {
+                    Vector3 meta = modo == ReglaTacticaPandillero.Modo.Cubrirse ? puntoCubierta : puntoAsomo;
+                    Vector3 aMeta = meta - transform.position;
+                    aMeta.y = 0f;
+                    deseada = aMeta.magnitude > LlegadaCubierta ? aMeta.normalized * datos.Velocidad : Vector3.zero;
+                }
+                else if (distancia > datos.DistanciaMaxTiro || !puedeTirar && distancia > datos.DistanciaMinTiro)
                 {
                     deseada = adelante * datos.Velocidad;
                 }
@@ -401,16 +483,11 @@ namespace MechaCyberpunk.IA.APie
                 }
                 else
                 {
-                    if (Time.time >= proximoCambioLado)
-                    {
-                        proximoCambioLado = Time.time + datos.PeriodoCambioLado;
-                        lado = -lado;
-                    }
-                    deseada = Vector3.Cross(Vector3.up, adelante) * lado * datos.Velocidad * 0.6f;
+                    deseada = VelocidadRodeo(posicionJugador);
                 }
             }
 
-            Vector3 mirada = atacable ? haciaJugador : deseada;
+            Vector3 mirada = atacable && !huyendo ? haciaJugador : deseada;
             mirada.y = 0f;
             if (mirada.sqrMagnitude > 0.0001f)
             {
@@ -428,6 +505,121 @@ namespace MechaCyberpunk.IA.APie
                 animador.SetBool(IdEnPiso, true);
                 animador.SetBool(IdApuntando, apuntando);
                 animador.SetInteger(IdArma, ArmaPistola);
+            }
+        }
+
+        // ---- Táctica (T-423) ----
+
+        // Se reparte en un arco alrededor del jugador (centrado en el lado de su grupo) y avanza hacia su puesto.
+        private Vector3 VelocidadRodeo(Vector3 posicionJugador)
+        {
+            int indice = 0;
+            int total = 1;
+            Grupo?.Repartir(this, out indice, out total);
+            Vector3 deGrupo = (Grupo != null ? Grupo.Centro : hogar) - posicionJugador;
+            float centro = Mathf.Atan2(deGrupo.x, deGrupo.z) * Mathf.Rad2Deg + datos.GiroRodeo * Time.time;
+            float angulo = ReglaTacticaPandillero.AnguloRodeo(indice, total, centro, datos.ArcoRodeo) * Mathf.Deg2Rad;
+            float radio = (datos.DistanciaMinTiro + datos.DistanciaMaxTiro) * 0.5f;
+            Vector3 puesto = posicionJugador + new Vector3(Mathf.Sin(angulo), 0f, Mathf.Cos(angulo)) * radio;
+            Vector3 aPuesto = puesto - transform.position;
+            aPuesto.y = 0f;
+            return aPuesto.magnitude > LlegadaCubierta * 2f ? aPuesto.normalized * datos.Velocidad * 0.8f : Vector3.zero;
+        }
+
+        // Busca la cubierta cercana (pared, carro, caja) cuyo lado lejano al jugador quede tapado. Rara vez: no es por cuadro.
+        private void BuscarCubierta(Vector3 posicionJugador)
+        {
+            proximaBusqueda = Time.time + PeriodoBusquedaCubierta;
+            tieneCubierta = false;
+            int cantidad = Physics.OverlapSphereNonAlloc(transform.position, datos.RadioCubierta, candidatosCubierta, ~0,
+                QueryTriggerInteraction.Ignore);
+            Vector3 pechoJugador = posicionJugador + Vector3.up * AlturaPecho;
+            float mejor = float.MaxValue;
+            for (int i = 0; i < cantidad; i++)
+            {
+                Collider c = candidatosCubierta[i];
+                Bounds caja = c.bounds;
+                if (caja.size.y < AlturaMinCubierta || Mathf.Max(caja.size.x, caja.size.z) > TamanoMaxCubierta
+                    || c.GetComponentInParent<CharacterController>() != null)
+                {
+                    continue;
+                }
+                Vector3 centroCaja = caja.center;
+                centroCaja.y = transform.position.y;
+                Vector3 d = centroCaja - posicionJugador;
+                d.y = 0f;
+                if (d.sqrMagnitude < 0.01f)
+                {
+                    continue;
+                }
+                d.Normalize();
+                float extension = Mathf.Abs(d.x) * caja.extents.x + Mathf.Abs(d.z) * caja.extents.z;
+                Vector3 punto = centroCaja + d * (extension + MargenCubierta);
+                float distancia = DistanciaPlana(transform.position, punto);
+                if (distancia >= mejor)
+                {
+                    continue;
+                }
+                Vector3 pecho = punto + Vector3.up * AlturaPecho;
+                if (!Physics.Linecast(pechoJugador, pecho, out RaycastHit golpe, ~0, QueryTriggerInteraction.Ignore) || golpe.collider != c)
+                {
+                    continue;
+                }
+                Vector3 lateral = Vector3.Cross(Vector3.up, d) * lado;
+                float extensionLateral = Mathf.Abs(lateral.x) * caja.extents.x + Mathf.Abs(lateral.z) * caja.extents.z;
+                mejor = distancia;
+                puntoCubierta = punto;
+                puntoAsomo = centroCaja + lateral * (extensionLateral + MargenCubierta);
+                tieneCubierta = true;
+            }
+        }
+
+        /// <summary>Muestra un grito corto sobre la cabeza (T-423). Tiene enfriamiento.</summary>
+        public void Gritar(string texto)
+        {
+            if (Time.time < proximoGrito || string.IsNullOrEmpty(texto))
+            {
+                return;
+            }
+            proximoGrito = Time.time + EnfriamientoGrito;
+            finGrito = Time.time + SegundosGrito;
+            if (textoGrito == null)
+            {
+                GameObject objeto = new GameObject("Grito");
+                objeto.transform.SetParent(transform, false);
+                objeto.transform.localPosition = Vector3.up * AlturaGrito;
+                textoGrito = objeto.AddComponent<TextMesh>();
+                textoGrito.anchor = TextAnchor.LowerCenter;
+                textoGrito.alignment = TextAlignment.Center;
+                textoGrito.characterSize = 0.12f;
+                textoGrito.fontSize = 48;
+                textoGrito.color = new Color(1f, 0.85f, 0.2f);
+                Font fuente = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                textoGrito.font = fuente;
+                objeto.GetComponent<MeshRenderer>().sharedMaterial = fuente.material;
+            }
+            textoGrito.text = texto;
+            textoGrito.gameObject.SetActive(true);
+        }
+
+        /// <summary>Texto del grito que se ve ahora, o null.</summary>
+        public string GritoActual => textoGrito != null && textoGrito.gameObject.activeSelf ? textoGrito.text : null;
+
+        private void ActualizarGrito()
+        {
+            if (textoGrito == null || !textoGrito.gameObject.activeSelf)
+            {
+                return;
+            }
+            if (Time.time >= finGrito || EstaKO)
+            {
+                textoGrito.gameObject.SetActive(false);
+                return;
+            }
+            Camera camara = Camera.main;
+            if (camara != null)
+            {
+                textoGrito.transform.rotation = camara.transform.rotation;
             }
         }
 
