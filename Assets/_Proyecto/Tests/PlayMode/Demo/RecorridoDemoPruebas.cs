@@ -26,6 +26,7 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
@@ -43,7 +44,8 @@ namespace MechaCyberpunk.Tests.Demo
     /// marcador del objetivo (la posición que resuelve <see cref="UbicacionObjetivo"/>), apunta con el ratón y dispara. Si un tramo se traba, se
     /// anota el tope en Logs/t474-bugs.txt (con captura docs/capturas/T-474-bug-N.png) y SOLO ENTONCES se coloca al jugador junto al objetivo para
     /// poder probar el tramo siguiente. Salidas: Logs/t474-tiempos.txt (tiempo, FPS y ambiente por tramo), Logs/t474-bugs.txt y Logs/t474-consola.txt.
-    /// Correr (Unity cerrado): Unity.exe -batchmode -projectPath . -runTests -testPlatform PlayMode -testFilter MechaCyberpunk.Tests.Demo.RecorridoDemoPruebas (T474_HASTA=3 o 4 lo corta tras ese tramo; T474_SIN_CONTINUAR=1 no sale al título).
+    /// Correr (Unity cerrado): Unity.exe -batchmode -projectPath . -runTests -testPlatform PlayMode -testFilter MechaCyberpunk.Tests.Demo.RecorridoDemoPruebas (T474_HASTA=3, 4, 9, 10 u 11 lo corta tras ese tramo; T474_SIN_CONTINUAR=1 no sale al título; T474_DESDE=12 solo depura el final: salta a Neón Alto).
+    /// T-476: el bot hornea un NavMesh en ejecución (NavMeshBuilder con los colliders sólidos y quietos), sigue su camino de esquina en esquina con WASD, prueba las puertas con E (si no abren, las excluye y vuelve a hornear), compra PUÑOS I y PISTOLA II en el CIC y pelea con visión, ráfagas, R, Q y retirada para que reaparezcan los grupos.
     /// </summary>
     public class RecorridoDemoPruebas : InputTestFixture
     {
@@ -80,6 +82,9 @@ namespace MechaCyberpunk.Tests.Demo
         private Vector3 posMedida;
         private float proximaTraza;
         private float proximaTraza2;
+        private bool sinE;
+        private Vector3 zonaCentro;
+        private Vector3 retirada;
         private float desvio;
         private float ladoRumbo = 1f;
 
@@ -198,10 +203,27 @@ namespace MechaCyberpunk.Tests.Demo
             GuardarSalidas();
         }
 
+        private bool comprando;
+        private bool escTienda;
+
         private void Cuadro()
         {
             cuadrosTramo++;
             peorCuadro = Mathf.Max(peorCuadro, Time.unscaledDeltaTime);
+            // Un E de más junto a un mostrador abre su tienda (modal): fuera de las compras, el jugador la cierra con Esc.
+            if (!comprando && PilaPantallas.Arriba is MechaCyberpunk.UI.Tiendas.PantallaTienda)
+            {
+                if (!escTienda)
+                {
+                    Presionar(teclado.escapeKey);
+                    escTienda = true;
+                }
+            }
+            else if (escTienda)
+            {
+                Soltar(teclado.escapeKey);
+                escTienda = false;
+            }
         }
 
         private IEnumerator Siguiente()
@@ -365,7 +387,7 @@ namespace MechaCyberpunk.Tests.Demo
         }
 
         // Gira la cámara con el ratón hacia un rumbo (aprende cuántos grados da cada unidad de delta). Devuelve el error que queda.
-        private float MirarHacia(float rumbo, float fraccion)
+        private float MirarHacia(float rumbo, float fraccion, float errorInclinacion = 0f)
         {
             ControladorAPie c = Controlador;
             if (c == null)
@@ -386,7 +408,7 @@ namespace MechaCyberpunk.Tests.Demo
             ultimoEnviado = enviar;
             ultimoGiro = c.GiroCamara;
             hayUltimo = true;
-            MoverRaton(new Vector2(enviar, 0f));
+            MoverRaton(new Vector2(enviar, Mathf.Abs(errorInclinacion) < 0.5f ? 0f : errorInclinacion * fraccion / gradosPorUnidad));
             if (++trazasMirada <= 6)
             {
                 Debug.Log("[T-474] mirar: error " + error.ToString("F1") + " envio " + enviar.ToString("F1") + " gpu " + gradosPorUnidad.ToString("F4") + " cursor " + c.CursorBloqueado);
@@ -409,162 +431,198 @@ namespace MechaCyberpunk.Tests.Demo
             return minima;
         }
 
-        // ---------- ruta por las calles (lo que un jugador hace leyendo el mapa) ----------
+        // ---------- ruta por las calles (NavMesh horneado en ejecución desde los colliders, como un jugador que lee el mapa) ----------
 
-        private const float CeldaM = 1.5f;
-        private const float MinX = -140f;
-        private const float MinZ = -140f;
-        private const int CeldasX = 190;
-        private const int CeldasZ = 200;
-        private bool[] libres;
-        private List<Vector3> ruta;
-        private int rutaIndice;
+        private NavMeshDataInstance instanciaNavMesh;
+        private readonly HashSet<Collider> hojasCerradas = new HashSet<Collider>();
+        private readonly HashSet<Collider> hojasProbadas = new HashSet<Collider>();
+        private readonly Dictionary<Collider, int> intentosPuerta = new Dictionary<Collider, int>();
+        private bool navMeshListo;
+        private NavMeshPath camino;
+        private Vector3[] esquinas = new Vector3[0];
         private Vector3 rutaDestino;
         private float rutaHasta;
+        private int rutaGeneracion = -1;
 
-        private static Vector2Int CeldaDe(Vector3 p) => new Vector2Int(Mathf.Clamp(Mathf.FloorToInt((p.x - MinX) / CeldaM), 0, CeldasX - 1), Mathf.Clamp(Mathf.FloorToInt((p.z - MinZ) / CeldaM), 0, CeldasZ - 1));
-
-        private static Vector3 CentroDe(Vector2Int c, float y) => new Vector3(MinX + (c.x + 0.5f) * CeldaM, y, MinZ + (c.y + 0.5f) * CeldaM);
-
-        private readonly Collider[] choques = new Collider[16];
-
-        // Rejilla de celdas por donde cabe el jugador (piso a menos de 1.8 m y sin nada sólido a su altura). Las hojas de puerta cuentan como libres.
-        private void ConstruirRejilla()
+        // Hornea un NavMesh con los colliders sólidos y quietos de la ciudad. Las hojas de puerta no cuentan (se abren con E), ni nada que se mueva.
+        private void HornearNavMesh()
         {
-            libres = new bool[CeldasX * CeldasZ];
-            for (int x = 0; x < CeldasX; x++)
+            navMeshListo = false;
+            if (instanciaNavMesh.valid)
             {
-                for (int z = 0; z < CeldasZ; z++)
+                NavMesh.RemoveNavMeshData(instanciaNavMesh);
+            }
+            List<NavMeshBuildSource> fuentes = new List<NavMeshBuildSource>();
+            Bounds limites = new Bounds(new Vector3(0f, 0f, 0f), new Vector3(400f, 40f, 400f));
+            NavMeshBuilder.CollectSources(limites, ~0, NavMeshCollectGeometry.PhysicsColliders, 0, new List<NavMeshBuildMarkup>(), fuentes);
+            int antes = fuentes.Count;
+            fuentes.RemoveAll(s =>
+            {
+                Collider c = s.component as Collider;
+                if (c == null)
                 {
-                    Vector3 c = CentroDe(new Vector2Int(x, z), 0f);
-                    if (!Physics.Raycast(c + Vector3.up * 2.4f, Vector3.down, out RaycastHit piso, 5f, ~0, QueryTriggerInteraction.Ignore) || piso.point.y > 1.8f)
+                    return false;
+                }
+                return c.isTrigger || (c.name == "Hoja" && !hojasCerradas.Contains(c)) || c.attachedRigidbody != null || c is CharacterController
+                    || c.GetComponentInParent<CharacterController>() != null || c.GetComponentInParent<PandilleroAPie>() != null
+                    || (Jugador != null && c.transform.IsChildOf(Jugador.Raiz)) || c.GetComponentInParent<PersonajeApoyo>() != null;
+            });
+            NavMeshBuildSettings ajustes = NavMesh.CreateSettings();
+            ajustes.agentRadius = 0.35f;
+            ajustes.agentHeight = 1.7f;
+            ajustes.agentClimb = 0.4f;
+            ajustes.agentSlope = 40f;
+            ajustes.minRegionArea = 0.5f;
+            NavMeshData datos = NavMeshBuilder.BuildNavMeshData(ajustes, fuentes, limites, Vector3.zero, Quaternion.identity);
+            instanciaNavMesh = NavMesh.AddNavMeshData(datos);
+            navMeshListo = datos != null;
+            camino = new NavMeshPath();
+            Debug.Log("[T-476] NavMesh horneado: " + fuentes.Count + " fuentes (de " + antes + ") triángulos " + NavMesh.CalculateTriangulation().indices.Length / 3);
+        }
+
+        // Como un jugador ante una puerta que le cierra el paso: se acerca, la mira de frente y pulsa E; si no se mueve, esa puerta no abre (cerrada en la demo)
+        // y el NavMesh se hornea de nuevo sin ese paso. Devuelve true si había una puerta por probar.
+        private IEnumerator UsarPuerta(Func<bool> terminar)
+        {
+            Collider hoja = null;
+            float mejor = 3.5f;
+            Vector3 pos = Jugador.Raiz.position;
+            foreach (Collider c in Physics.OverlapSphere(pos + Vector3.up * 0.9f, 3.5f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                float d = Plano(c.bounds.center, pos);
+                if (c.name == "Hoja" && c.enabled && !hojasCerradas.Contains(c) && !hojasProbadas.Contains(c) && d < mejor)
+                {
+                    mejor = d;
+                    hoja = c;
+                }
+            }
+            if (hoja == null)
+            {
+                yield break;
+            }
+            hojasProbadas.Add(hoja);
+            Vector3 antes = hoja.bounds.center;
+            float fin = Time.realtimeSinceStartup + 4f;
+            while (Time.realtimeSinceStartup < fin && Plano(Jugador.Raiz.position, hoja.bounds.center) > 1.3f && !terminar())
+            {
+                PasoCaminar(hoja.bounds.center, false);
+                yield return Siguiente();
+            }
+            SoltarTeclas();
+            for (int i = 0; i < 10; i++)
+            {
+                MirarHacia(Rumbo(Jugador.Raiz.position, hoja.bounds.center), 0.7f);
+                yield return Siguiente();
+            }
+            MoverRaton(Vector2.zero);
+            yield return Pulsar(teclado.eKey, 30);
+            bool abrio = !hoja.enabled || Vector3.Distance(hoja.bounds.center, antes) > 0.2f || !hoja.gameObject.activeInHierarchy;
+            Debug.Log("[T-476] puerta " + hoja.transform.parent?.name + " en " + antes + (abrio ? ": abrió" : ": no abre"));
+            if (!abrio)
+            {
+                // ¿Es la puerta (horario o cerrada en la demo) o fue la E del bot (mirada o alcance)? IntentarAbrir responde lo mismo que E.
+                IRelojMundo reloj = Registro<IRelojMundo>.Actual;
+                string motivo = "";
+                bool laPuertaAbre = false;
+                foreach (IPuerta puerta in Registro<IPuerta>.Todos)
+                {
+                    if (Plano(puerta.Posicion, antes) < 4f)
                     {
-                        continue;
+                        ResultadoPuerta respuesta = puerta.IntentarAbrir();
+                        laPuertaAbre |= respuesta == ResultadoPuerta.Abierta || respuesta == ResultadoPuerta.YaAbierta;
+                        motivo += puerta.Lugar + " " + respuesta + "; ";
                     }
-                    Vector3 abajo = piso.point + Vector3.up * 0.5f;
-                    Vector3 arriba = piso.point + Vector3.up * 1.5f;
-                    int n = Physics.OverlapCapsuleNonAlloc(abajo, arriba, 0.3f, choques, ~0, QueryTriggerInteraction.Ignore);
-                    bool libre = true;
-                    for (int i = 0; i < n && libre; i++)
-                    {
-                        libre = choques[i].name == "Hoja" || choques[i].transform.IsChildOf(Jugador.Raiz);
-                    }
-                    libres[x * CeldasZ + z] = libre;
+                }
+                string hora = reloj != null ? "hora del mundo " + reloj.Hora.ToString("F1") + " día " + reloj.Dia : "sin reloj";
+                Debug.Log("[T-476] puerta: IntentarAbrir dice " + motivo + hora);
+                intentosPuerta.TryGetValue(hoja, out int intentos);
+                intentosPuerta[hoja] = ++intentos;
+                hojasProbadas.Remove(hoja);
+                if (!laPuertaAbre && intentos >= 3)
+                {
+                    Bug("La puerta en el camino del marcador no abre", motivo + hora + "; es la única ruta del NavMesh hacia el objetivo \"" + TextoObjetivo + "\"", "A", false);
+                    hojasCerradas.Add(hoja);
+                    HornearNavMesh();
+                    esquinas = new Vector3[0];
+                }
+                else if (!laPuertaAbre)
+                {
+                    yield return Segundos(10f);
                 }
             }
         }
 
-        // A* en 8 direcciones desde el jugador hasta el destino; devuelve false si no hay camino.
+        // Si el jugador se traba junto a una hoja de puerta, esa puerta no se abre (cerrada en la demo): se marca y se vuelve a hornear sin ese paso.
+        private bool MarcarHojasTrabadas(Vector3 pos)
+        {
+            bool nueva = false;
+            foreach (Collider c in Physics.OverlapSphere(pos + Vector3.up * 0.9f, 1.6f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (c.name == "Hoja" && c.enabled && hojasCerradas.Add(c))
+                {
+                    nueva = true;
+                    Debug.Log("[T-476] puerta que no abre: " + c.transform.parent?.name + " en " + c.transform.position);
+                }
+            }
+            if (nueva)
+            {
+                HornearNavMesh();
+                esquinas = new Vector3[0];
+            }
+            return nueva;
+        }
+
+        // Camino de esquina en esquina hasta el destino; false si no hay NavMesh o no hay camino.
         private bool CalcularRuta(Vector3 desde, Vector3 hasta)
         {
-            if (libres == null)
+            if (!navMeshListo || instanciaNavMesh.valid == false)
             {
-                ConstruirRejilla();
+                HornearNavMesh();
             }
-            Vector2Int a = CeldaDe(desde);
-            Vector2Int b = CeldaDe(hasta);
-            int total = CeldasX * CeldasZ;
-            float[] coste = new float[total];
-            int[] padre = new int[total];
-            for (int i = 0; i < total; i++)
+            rutaDestino = hasta;
+            rutaHasta = Time.realtimeSinceStartup + 1.5f;
+            esquinas = new Vector3[0];
+            if (!NavMesh.SamplePosition(desde, out NavMeshHit a, 4f, NavMesh.AllAreas) || !NavMesh.SamplePosition(hasta, out NavMeshHit b, 8f, NavMesh.AllAreas))
             {
-                coste[i] = float.MaxValue;
-                padre[i] = -1;
-            }
-            // Las celdas de salida y de llegada se aceptan aunque caigan sobre algo (puerta, personaje).
-            SortedSet<(float, int)> abiertos = new SortedSet<(float, int)>();
-            int inicio = a.x * CeldasZ + a.y;
-            int meta = b.x * CeldasZ + b.y;
-            coste[inicio] = 0f;
-            abiertos.Add((Vector2Int.Distance(a, b), inicio));
-            while (abiertos.Count > 0)
-            {
-                (float _, int actual) = abiertos.Min;
-                abiertos.Remove(abiertos.Min);
-                if (actual == meta)
-                {
-                    break;
-                }
-                int cx = actual / CeldasZ;
-                int cz = actual % CeldasZ;
-                for (int dx = -1; dx <= 1; dx++)
-                {
-                    for (int dz = -1; dz <= 1; dz++)
-                    {
-                        int nx = cx + dx;
-                        int nz = cz + dz;
-                        if ((dx == 0 && dz == 0) || nx < 0 || nz < 0 || nx >= CeldasX || nz >= CeldasZ)
-                        {
-                            continue;
-                        }
-                        int vecino = nx * CeldasZ + nz;
-                        if (!libres[vecino] && vecino != meta)
-                        {
-                            continue;
-                        }
-                        if (dx != 0 && dz != 0 && (!libres[(cx + dx) * CeldasZ + cz] || !libres[cx * CeldasZ + cz + dz]))
-                        {
-                            continue;
-                        }
-                        float nuevo = coste[actual] + (dx != 0 && dz != 0 ? 1.414f : 1f);
-                        if (nuevo < coste[vecino])
-                        {
-                            coste[vecino] = nuevo;
-                            padre[vecino] = actual;
-                            abiertos.Add((nuevo + Vector2Int.Distance(new Vector2Int(nx, nz), b), vecino));
-                        }
-                    }
-                }
-            }
-            if (padre[meta] < 0 && inicio != meta)
-            {
-                ruta = null;
                 return false;
             }
-            List<Vector3> puntos = new List<Vector3>();
-            for (int c = meta; c >= 0 && c != inicio; c = padre[c])
+            if (!NavMesh.CalculatePath(a.position, b.position, NavMesh.AllAreas, camino) || camino.corners.Length < 2)
             {
-                puntos.Add(CentroDe(new Vector2Int(c / CeldasZ, c % CeldasZ), desde.y));
+                return false;
             }
-            puntos.Reverse();
-            puntos.Add(hasta);
-            ruta = puntos;
-            rutaIndice = 0;
-            rutaDestino = hasta;
-            rutaHasta = Time.realtimeSinceStartup + 10f;
+            esquinas = camino.corners;
             return true;
         }
 
-        // Un cuadro de caminata hacia el destino siguiendo la ruta por las calles (lejos) o directo (cerca).
-        private void PasoRuta(Vector3 destino, bool correr, float distanciaRuta = 25f)
+        // Un cuadro de caminata hacia el destino siguiendo el camino del NavMesh (lejos) o directo (cerca).
+        private void PasoRuta(Vector3 destino, bool correr, float distanciaRuta = 6f)
         {
             Vector3 pos = Jugador.Raiz.position;
             if (Plano(pos, destino) > distanciaRuta)
             {
-                if (ruta == null || Plano(rutaDestino, destino) > 4f || Time.realtimeSinceStartup > rutaHasta)
+                if (esquinas.Length < 2 || Plano(rutaDestino, destino) > 3f || Time.realtimeSinceStartup > rutaHasta)
                 {
                     CalcularRuta(pos, destino);
                 }
-                if (ruta != null)
+                if (esquinas.Length >= 2)
                 {
-                    while (rutaIndice < ruta.Count - 1 && Plano(pos, ruta[rutaIndice]) < 1.5f)
+                    // La primera esquina a más de 0.8 m; si la siguiente se ve sin obstáculo y está cerca, se corta la esquina.
+                    int i = 1;
+                    while (i < esquinas.Length - 1 && Plano(pos, esquinas[i]) < 0.8f)
                     {
-                        rutaIndice++;
+                        i++;
                     }
-                    // Apunta a un punto unos metros adelante en la ruta (el más lejano que se ve sin obstáculo).
-                    int objetivo = rutaIndice;
-                    for (int i = rutaIndice; i < Mathf.Min(ruta.Count, rutaIndice + 5); i++)
+                    Vector3 punto = esquinas[i];
+                    if (i + 1 < esquinas.Length && Plano(pos, esquinas[i + 1]) < 5f
+                        && Libre(pos, Rumbo(pos, esquinas[i + 1]), Plano(pos, esquinas[i + 1])) >= Plano(pos, esquinas[i + 1]) - 0.05f)
                     {
-                        if (Libre(pos, Rumbo(pos, ruta[i]), Mathf.Min(Plano(pos, ruta[i]), 6f)) >= Mathf.Min(Plano(pos, ruta[i]), 6f) - 0.01f)
-                        {
-                            objetivo = i;
-                        }
+                        punto = esquinas[i + 1];
                     }
-                    PasoCaminar(ruta[objetivo], correr);
+                    PasoCaminar(punto, correr);
                     return;
                 }
             }
-            ruta = null;
+            esquinas = new Vector3[0];
             PasoCaminar(destino, correr);
         }
 
@@ -586,7 +644,10 @@ namespace MechaCyberpunk.Tests.Demo
                 {
                     desvioHasta = Time.realtimeSinceStartup + 3f;
                     // Como un jugador frente a una puerta cerrada: también prueba con E.
-                    Presionar(teclado.eKey);
+                    if (!sinE)
+                    {
+                        Presionar(teclado.eKey);
+                    }
                     finE = Time.realtimeSinceStartup + 0.15f;
                 }
                 posMedida = pos;
@@ -717,6 +778,7 @@ namespace MechaCyberpunk.Tests.Demo
                     if (Plano(pos, anterior) < 0.5f && Time.realtimeSinceStartup >= finEscape)
                     {
                         trabas++;
+                        yield return UsarPuerta(terminar ?? (() => false));
                         ControladorAPie cc = Controlador;
                         Debug.Log("[T-474] estado: control " + cc.ControlActivo + " enPiso " + cc.EnPiso + " vel " + cc.Velocidad + " timeScale " + Time.timeScale + " w " + teclado.wKey.isPressed + " s " + teclado.sKey.isPressed + " a " + teclado.aKey.isPressed
                             + " libres " + Libre(pos, 0f, 2f) + "," + Libre(pos, 90f, 2f) + "," + Libre(pos, 180f, 2f) + "," + Libre(pos, 270f, 2f) + " pausa " + Pausa.Activa);
@@ -953,18 +1015,132 @@ namespace MechaCyberpunk.Tests.Demo
             Soltar(raton.leftButton);
         }
 
-        // Combate a distancia con la pistola: se acerca a ~12 m del enemigo más cercano, apunta con el ratón y dispara; recarga con R.
+        private Vector3 atascoPos;
+        private float atascoProxima;
+        private float atascoHasta;
+        private float atascoLado = 1f;
+
+        // PasoRuta con salida de atascos: si en 1.5 s casi no avanzó, un momento de lado y saltando (alternando) y se vuelve a planificar.
+        private void AvanzarConAtasco(Vector3 destino, bool correr)
+        {
+            Vector3 pos = Jugador.Raiz.position;
+            if (Time.realtimeSinceStartup >= atascoProxima)
+            {
+                if (Plano(pos, atascoPos) < 0.5f && Time.realtimeSinceStartup >= atascoHasta && Plano(pos, destino) > 3f)
+                {
+                    atascoLado = -atascoLado;
+                    atascoHasta = Time.realtimeSinceStartup + 1.0f;
+                    esquinas = new Vector3[0];
+                    MarcarHojasTrabadas(pos);
+                    Debug.Log("[T-476] atasco en " + pos + " hacia " + destino + " (NavMesh " + NavMesh.SamplePosition(pos, out NavMeshHit _, 2f, NavMesh.AllAreas) + ") control " + Controlador.ControlActivo + " pausa " + Pausa.Activa + " pila " + PilaPantallas.Cantidad + (PilaPantallas.Arriba != null ? " " + PilaPantallas.Arriba.name : "") + " vel " + Controlador.Velocidad + " cursor " + Controlador.CursorBloqueado + " w " + teclado.wKey.isPressed + " timeScale " + Time.timeScale);
+                }
+                atascoPos = pos;
+                atascoProxima = Time.realtimeSinceStartup + 1.5f;
+            }
+            if (Time.realtimeSinceStartup < atascoHasta)
+            {
+                Soltar(teclado.wKey);
+                Presionar(atascoLado > 0 ? teclado.dKey : teclado.aKey);
+                Soltar(atascoLado > 0 ? teclado.aKey : teclado.dKey);
+                Presionar(teclado.spaceKey);
+                return;
+            }
+            Soltar(teclado.spaceKey);
+            PasoRuta(destino, correr);
+        }
+
+        // El enemigo al que se le tira: el más cercano que se ve (a menos de 25 m); si no se ve ninguno, el más cercano. Cambia solo si el nuevo es claramente mejor.
+        private PandilleroAPie ElegirBlancoTiro(Func<PandilleroAPie, bool> filtro)
+        {
+            PandilleroAPie mejor = null;
+            float mejorPuntos = float.MaxValue;
+            Vector3 pos = Jugador.Raiz.position;
+            foreach (PandilleroAPie p in Enemigos())
+            {
+                if (filtro != null && !filtro(p))
+                {
+                    continue;
+                }
+                float d = Plano(p.transform.position, pos);
+                float puntos = d + (d < 25f && LineaDeVista(p, out Vector3 _) ? 0f : 1000f) + (p == blanco ? -4f : 0f);
+                if (puntos < mejorPuntos)
+                {
+                    mejorPuntos = puntos;
+                    mejor = p;
+                }
+            }
+            blanco = mejor;
+            return mejor;
+        }
+
+        // Los enemigos de la zona del objetivo (a menos de 60 m del marcador): no se persigue a las otras pandillas de la ciudad.
+        private bool CercaDelMarcador(PandilleroAPie p)
+        {
+            return Plano(p.transform.position, zonaCentro) < 60f;
+        }
+
+        // Sin enemigos de la zona: el grupo vencido reaparece a los 40 s si el jugador está a más de 30 m, así que se espera a 50 m (también si el objetivo dice "VUELVE A CASA" tras un KO).
+        private bool DestinoSinEnemigos(out Vector3 destino)
+        {
+            if (zonaCentro != Vector3.zero)
+            {
+                destino = retirada;
+                return true;
+            }
+            return PosicionMarcador(out destino);
+        }
+
+        // ¿Se ve el pecho del enemigo desde la cámara? (lo que bloquea es lo sólido que no sea el jugador ni otro pandillero).
+        private static bool LineaDeVista(PandilleroAPie e, out Vector3 pecho)
+        {
+            pecho = e.transform.position + Vector3.up * 1.2f;
+            Vector3 origen = Controlador.Camara.position;
+            Vector3 hacia = pecho - origen;
+            foreach (RaycastHit g in Physics.RaycastAll(origen, hacia.normalized, hacia.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (g.collider.transform.IsChildOf(Jugador.Raiz) || g.collider.GetComponentInParent<PandilleroAPie>() != null || g.collider.GetComponentInParent<AliadoAPie>() != null)
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        // Apunta la cámara al punto con el ratón (giro e inclinación); devuelve el error mayor en grados.
+        private float ApuntarA(Vector3 punto, float fraccion)
+        {
+            Vector3 origen = Controlador.Camara.position;
+            Vector3 d = punto - origen;
+            float horizontal = new Vector2(d.x, d.z).magnitude;
+            float deseada = -Mathf.Atan2(d.y, horizontal) * Mathf.Rad2Deg;
+            float errorInclinacion = Controlador.Inclinacion - deseada;
+            float errorGiro = MirarHacia(Rumbo(origen, punto), fraccion, errorInclinacion);
+            return Mathf.Max(Mathf.Abs(errorGiro), Mathf.Abs(errorInclinacion));
+        }
+
+        // Combate a distancia con la pistola como un jugador: elige al enemigo vivo más cercano, se acerca por el NavMesh hasta verlo a
+        // ~14 m, apunta a su pecho con clic derecho (con el apuntado asistido), dispara ráfagas cortas, recarga con R, se cubre con Q si
+        // la vida baja de 50 % (regenera tras unos segundos sin daño) y vuelve a pelear.
         private IEnumerator PelearConPistola(Func<bool> terminar, Func<PandilleroAPie, bool> filtro, float maximo, string que)
         {
             float fin = Time.realtimeSinceStartup + maximo;
             PistolaAPie pistola = Jugador.Raiz.GetComponentInChildren<PistolaAPie>();
             ArmasAPie armas = Jugador.Raiz.GetComponentInChildren<ArmasAPie>();
+            VidaAPie vida = Jugador.Raiz.GetComponentInChildren<VidaAPie>();
+            CubiertaYRodada cubiertaJ = Jugador.Raiz.GetComponentInChildren<CubiertaYRodada>();
             if (armas != null && armas.ArmaActiva != ArmaAPie.Pistola)
             {
                 yield return Pulsar(teclado.digit2Key);
             }
-            int cuadro = 0;
+            sinE = true;
             float proximaRecarga = 0f;
+            bool volcado = false;
+            bool cubriendo = false;
+            float finCubierta = 0f;
+            float proximoCambioLado = 0f;
+
+            float lado = 1f;
             while (!terminar())
             {
                 if (Time.realtimeSinceStartup > fin)
@@ -972,38 +1148,114 @@ namespace MechaCyberpunk.Tests.Demo
                     SoltarTeclas();
                     Soltar(raton.leftButton);
                     Soltar(raton.rightButton);
+                    sinE = false;
+                    zonaCentro = Vector3.zero;
                     Bug("La pelea con pistola no termina: " + que, "tras " + maximo.ToString("F0") + " s sigue \"" + TextoObjetivo + "\"; enemigos vivos "
                         + CuentaEnemigos(), "B", true);
                     yield break;
                 }
                 yield return EsperarConVida();
-                PandilleroAPie e = Blanco(filtro);
+                PandilleroAPie e = ElegirBlancoTiro(filtro);
                 Vector3 pos = Jugador.Raiz.position;
-                if (e != null && Plano(e.transform.position, pos) < 60f)
+                float fraccionVida = vida != null && vida.Maxima > 0f ? vida.Actual / vida.Maxima : 1f;
+                if (Time.realtimeSinceStartup >= proximaTraza2)
+                {
+                    proximaTraza2 = Time.realtimeSinceStartup + 2f;
+                    if (vida != null && vida.Actual < 90f && !volcado)
+                    {
+                        volcado = true;
+                        foreach (PandilleroAPie q in PandilleroAPie.Activos)
+                        {
+                            Debug.Log("[T-476] activo " + q.name + " act " + q.gameObject.activeInHierarchy + " KO " + q.EstaKO + " pos " + q.transform.position + " estado " + q.Estado + " pandilla " + (q.Grupo != null ? q.Grupo.Pandilla.ToString() : "-"));
+                        }
+                    }
+                    Debug.Log("[T-476] pistola: pos " + pos + " vida " + (vida != null ? vida.Actual.ToString("F0") : "?") + " balas " + (pistola != null ? pistola.Balas : -1) + " enemigo "
+                        + (e != null ? e.name + " d " + Plano(e.transform.position, pos).ToString("F1") + " estado " + e.Estado + " vista " + LineaDeVista(e, out Vector3 _) : "ninguno")
+                        + " vivos " + CuentaEnemigos() + " cubriendo " + cubriendo + " apuntando " + Controlador.Apuntando);
+                }
+                if (cubriendo)
+                {
+                    // Agachado tras la cubierta hasta recuperarse (la vida regenera sin recibir daño).
+                    SoltarTeclas();
+                    Soltar(raton.leftButton);
+                    Soltar(raton.rightButton);
+                    if (pistola != null && pistola.Balas < pistola.TamanoCargador && !pistola.Recargando && Time.realtimeSinceStartup > proximaRecarga)
+                    {
+                        proximaRecarga = Time.realtimeSinceStartup + 2f;
+                        yield return Pulsar(teclado.rKey, 0);
+                    }
+                    if (fraccionVida > 0.85f || Time.realtimeSinceStartup > finCubierta)
+                    {
+                        cubriendo = false;
+                        if (cubiertaJ != null && cubiertaJ.Cubierto)
+                        {
+                            yield return Pulsar(teclado.qKey, 0);
+                        }
+                    }
+                    yield return Siguiente();
+                    continue;
+                }
+                if (fraccionVida < 0.5f && e != null)
+                {
+                    SoltarTeclas();
+                    Soltar(raton.leftButton);
+                    Soltar(raton.rightButton);
+                    yield return Pulsar(teclado.qKey, 1);
+                    cubriendo = cubiertaJ != null && cubiertaJ.Cubierto;
+                    finCubierta = Time.realtimeSinceStartup + 18f;
+                    if (!cubriendo)
+                    {
+                        // Sin cubierta cerca: huye unos segundos (corriendo lejos del enemigo) para dejar que regenere.
+                        Vector3 lejos = pos + (pos - e.transform.position).normalized * 15f;
+                        float finHuida = Time.realtimeSinceStartup + 6f;
+                        while (Time.realtimeSinceStartup < finHuida && !terminar())
+                        {
+                            AvanzarConAtasco(lejos, true);
+                            yield return Siguiente();
+                        }
+                    }
+                    continue;
+                }
+                if (e != null)
                 {
                     float d = Plano(e.transform.position, pos);
-                    if (d > 13f)
+                    bool ve = LineaDeVista(e, out Vector3 pecho) || d < 5f;
+                    if (!ve || d > 14f)
                     {
-                        PasoRuta(e.transform.position, true);
+                        AvanzarConAtasco(e.transform.position, true);
                         Soltar(raton.rightButton);
                         Soltar(raton.leftButton);
+                        if (pistola != null && pistola.Balas < pistola.TamanoCargador / 2 && !pistola.Recargando && Time.realtimeSinceStartup > proximaRecarga)
+                        {
+                            proximaRecarga = Time.realtimeSinceStartup + 2f;
+                            yield return Pulsar(teclado.rKey, 0);
+                        }
                     }
                     else
                     {
                         Soltar(teclado.leftShiftKey);
-                        Soltar(teclado.wKey);
                         Presionar(raton.rightButton);
-                        MirarHacia(Rumbo(pos, e.transform.position), 0.8f);
-                        cuadro++;
+                        float error = ApuntarA(pecho, 0.8f);
+                        if (Time.realtimeSinceStartup >= proximoCambioLado)
+                        {
+                            lado = -lado;
+                            proximoCambioLado = Time.realtimeSinceStartup + UnityEngine.Random.Range(0.8f, 1.8f);
+                        }
+                        // De costado respecto a la cámara para ser un blanco difícil; más cerca de 6 m retrocede.
+                        Poner(teclado.dKey, lado > 0 && d > 5f);
+                        Poner(teclado.aKey, lado < 0 && d > 5f);
+                        Poner(teclado.sKey, d < 6f);
+                        Soltar(teclado.wKey);
                         if (pistola != null && pistola.Balas == 0 && !pistola.Recargando && Time.realtimeSinceStartup > proximaRecarga)
                         {
                             proximaRecarga = Time.realtimeSinceStartup + 1.5f;
+                            Soltar(raton.leftButton);
                             Presionar(teclado.rKey);
                         }
                         else
                         {
                             Soltar(teclado.rKey);
-                            if (Time.realtimeSinceStartup % 0.3f < 0.1f)
+                            if (error < 4f && Time.realtimeSinceStartup % 0.45f < 0.2f)
                             {
                                 Presionar(raton.leftButton);
                             }
@@ -1014,10 +1266,17 @@ namespace MechaCyberpunk.Tests.Demo
                         }
                     }
                 }
-                else if (PosicionMarcador(out Vector3 destino))
+                else if (DestinoSinEnemigos(out Vector3 destino))
                 {
                     Soltar(raton.rightButton);
-                    PasoRuta(destino, true);
+                    if (Plano(pos, destino) > 3f)
+                    {
+                        AvanzarConAtasco(destino, true);
+                    }
+                    else
+                    {
+                        SoltarTeclas();
+                    }
                 }
                 else
                 {
@@ -1029,6 +1288,9 @@ namespace MechaCyberpunk.Tests.Demo
             Soltar(raton.leftButton);
             Soltar(raton.rightButton);
             Soltar(teclado.rKey);
+            Soltar(teclado.qKey);
+            sinE = false;
+                    zonaCentro = Vector3.zero;
         }
 
         private static int CuentaEnemigos()
@@ -1083,8 +1345,40 @@ namespace MechaCyberpunk.Tests.Demo
 
         // ---------- el recorrido ----------
 
+        // T-476: el NavMesh horneado en ejecución conecta la casa con los lugares de la historia (si no, el bot no puede llegar).
         [UnityTest]
-        [Explicit("T-474: recorrido largo (unos 10 min); se corre a propósito con -testFilter, no en la suite")]
+        [Timeout(300000)]
+        public IEnumerator NavMesh_LugaresDeLaHistoria_TienenCamino()
+        {
+            yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
+            yield return Segundos(2f);
+            HornearNavMesh();
+            Vector3[] lugares =
+            {
+                new Vector3(-59f, 0f, -77f), new Vector3(-44.3f, 0f, -77f), new Vector3(-32.8f, 1.24f, 28.9f), new Vector3(-36f, 0.2f, 85f), new Vector3(74.5f, 0.2f, 47f)
+            };
+            string[] nombres = { "casa", "INVENTOR", "DOC", "Tianguis", "HACKER" };
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < lugares.Length; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    bool a = NavMesh.SamplePosition(lugares[i], out NavMeshHit pa, 8f, NavMesh.AllAreas);
+                    bool b = NavMesh.SamplePosition(lugares[j], out NavMeshHit pb, 8f, NavMesh.AllAreas);
+                    NavMeshPath camino = new NavMeshPath();
+                    bool hay = a && b && NavMesh.CalculatePath(pa.position, pb.position, NavMesh.AllAreas, camino);
+                    Debug.Log("[T-476] ruta " + nombres[i] + " -> " + nombres[j] + ": " + (hay ? camino.status.ToString() : "sin camino") + " muestreo " + (a ? Vector3.Distance(lugares[i], pa.position).ToString("F1") : "-") + "/" + (b ? Vector3.Distance(lugares[j], pb.position).ToString("F1") : "-")
+                        + " fin del camino a " + (hay && camino.corners.Length > 0 ? Vector3.Distance(camino.corners[camino.corners.Length - 1], lugares[j]).ToString("F1") : "-") + " m");
+                    Assert.IsTrue(hay && camino.corners.Length > 0 && Plano(camino.corners[camino.corners.Length - 1], lugares[j]) < 3f, nombres[i] + " -> " + nombres[j] + " llega a menos de 3 m del lugar");
+                }
+            }
+        }
+
+        [UnityTest]
+        [Explicit("T-474/T-476: recorrido largo (más de 10 min); se corre a propósito con -testFilter, no en la suite")]
         [Timeout(3000000)]
         public IEnumerator DemoDePrincipioAFin()
         {
@@ -1342,6 +1636,19 @@ namespace MechaCyberpunk.Tests.Demo
             TerminarTramo();
             SinContinuar:
 
+            // Solo para depurar el final: T474_DESDE=12 salta de aquí a Neón Alto (carga el paso y coloca al jugador en El Tianguis). No es parte del recorrido.
+            if (Environment.GetEnvironmentVariable("T474_DESDE") == "12")
+            {
+                director.Cargar("{\"paso\":\"" + PasoHistoria.NeonAlto + "\"}");
+                yield return Segundos(0.5f);
+                yield return Colocar(new Vector3(-37f, 0.3f, 84f), 1.2f);
+                if (float.TryParse(Environment.GetEnvironmentVariable("T474_ESPERA"), out float esperaDebug))
+                {
+                    yield return Segundos(esperaDebug);
+                }
+                goto TramoHacker;
+            }
+
             // 8. EL DOC e EL INVENTOR.
             IniciarTramo("08 EL DOC (curar)");
             if (director.Paso == PasoHistoria.Doc)
@@ -1357,15 +1664,57 @@ namespace MechaCyberpunk.Tests.Demo
             if (director.Paso == PasoHistoria.Inventor)
             {
                 yield return IrYUsar("EL INVENTOR", () => director.Paso != PasoHistoria.Inventor, 75f, 8f, DirectorPandillas.IdInventor);
+                // Se abre la tienda del CIC (modal): como un jugador compra PUÑOS I y PISTOLA II con los B500 y sale con Esc.
+                comprando = true;
+                ICartera cartera = Registro<ICartera>.Actual;
+                int antesDeComprar = cartera.Dinero;
+                MechaCyberpunk.UI.Tiendas.PantallaTienda tienda = null;
+                float finTienda = Time.realtimeSinceStartup + 12f;
+                while (Time.realtimeSinceStartup < finTienda && (tienda == null || !tienda.Visible))
+                {
+                    tienda = Object.FindFirstObjectByType<MechaCyberpunk.UI.Tiendas.PantallaTienda>();
+                    if (tienda == null || !tienda.Visible)
+                    {
+                        // El primer E fue la charla (avanza la historia); otro E, de frente, abre la tienda.
+                        yield return Pulsar(teclado.eKey, 20);
+                    }
+                    yield return Siguiente();
+                }
+                if (tienda == null || !tienda.Visible)
+                {
+                    Bug("La tienda del CIC no se abre", "12 s y varios E después de hablar con EL INVENTOR la tienda no está visible (pausa " + Pausa.Activa + ", control " + Controlador.ControlActivo + ")", "A", true);
+                }
+                yield return Segundos(1f);
+                yield return Pulsar(teclado.enterKey);
+                yield return Pulsar(teclado.downArrowKey);
+                yield return Pulsar(teclado.enterKey);
+                yield return Pulsar(teclado.escapeKey, 10);
+                Debug.Log("[T-476] tienda del CIC: dinero " + antesDeComprar + " -> " + cartera.Dinero + ", pausa " + Pausa.Activa + ", control " + Controlador.ControlActivo);
+                if (cartera.Dinero >= antesDeComprar)
+                {
+                    Bug("La tienda del CIC no cobra al comprar", "dinero " + antesDeComprar + " antes y " + cartera.Dinero + " después de Enter en las dos primeras filas", "A", true);
+                }
+                comprando = false;
+                if (!Controlador.ControlActivo)
+                {
+                    Bug("Esc no cierra la tienda del CIC", "el control del jugador sigue apagado tras Esc", "A", true);
+                }
             }
             TerminarTramo();
+
+            if (Environment.GetEnvironmentVariable("T474_HASTA") == "9")
+            {
+                yield break;
+            }
 
             // 10. Conquistar El Tianguis.
             IniciarTramo("10 El Tianguis (respeto 70)");
             ITerritorio territorio = Registro<ITerritorio>.Actual;
             if (director.Paso == PasoHistoria.Tianguis)
             {
-                yield return PelearConPistola(() => director.Paso != PasoHistoria.Tianguis, p => true, 100f, "los SKULLS del Tianguis");
+                PosicionMarcador(out zonaCentro);
+                retirada = zonaCentro + (Jugador.Raiz.position - zonaCentro).normalized * 50f;
+                yield return PelearConPistola(() => director.Paso != PasoHistoria.Tianguis, CercaDelMarcador, 240f, "los SKULLS del Tianguis");
                 if (director.Paso == PasoHistoria.Tianguis)
                 {
                     // Rescate: los SKULLS restantes caen por daño para poder probar al jefe.
@@ -1378,11 +1727,18 @@ namespace MechaCyberpunk.Tests.Demo
             }
             TerminarTramo("respeto tianguis " + territorio.Respeto("tianguis"));
 
+            if (Environment.GetEnvironmentVariable("T474_HASTA") == "10")
+            {
+                yield break;
+            }
+
             // 11. El jefe.
             IniciarTramo("11 El jefe de los SKULLS");
             if (director.Paso == PasoHistoria.Jefe)
             {
-                yield return PelearConPistola(() => director.Paso != PasoHistoria.Jefe, p => true, 100f, "el jefe de los SKULLS");
+                PosicionMarcador(out zonaCentro);
+                retirada = zonaCentro + (Jugador.Raiz.position - zonaCentro).normalized * 50f;
+                yield return PelearConPistola(() => director.Paso != PasoHistoria.Jefe, CercaDelMarcador, 180f, "el jefe de los SKULLS");
                 if (director.Paso == PasoHistoria.Jefe)
                 {
                     foreach (JefePandilla j in Object.FindObjectsByType<JefePandilla>(FindObjectsInactive.Include, FindObjectsSortMode.None))
@@ -1400,7 +1756,13 @@ namespace MechaCyberpunk.Tests.Demo
                 Bug("El Tianguis no avanza al jefe", "sigue en Tianguis, respeto " + territorio.Respeto("tianguis"), "A", true);
             }
             TerminarTramo("tianguis es de " + territorio.Dueno("tianguis"));
+            if (Environment.GetEnvironmentVariable("T474_HASTA") == "11")
+            {
+                yield break;
+            }
 
+
+            TramoHacker:
             // 12. Neón Alto: EL HACKER y CONTINUARÁ.
             IniciarTramo("12 Neón Alto con EL HACKER");
             if (director.Paso == PasoHistoria.NeonAlto)
