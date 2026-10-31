@@ -119,6 +119,14 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
         }
 
+        /// <summary>Gira la cámara (°) sin el ratón: lo usa el apuntado asistido (T-424). Respeta los límites de inclinación.</summary>
+        public void Empujar(float giro, float inclinacion)
+        {
+            giroCamara = Mathf.Repeat(giroCamara + giro, 360f);
+            mirada.Sumar(inclinacion);
+            mirada.Limitar(configCamara != null ? configCamara.InclinacionMinima : -40f, configCamara != null ? configCamara.InclinacionMaxima : 60f);
+        }
+
         /// <summary>Detiene el movimiento y la mirada pendiente; se usa tras teletransportar.</summary>
         public void ReiniciarMovimiento()
         {

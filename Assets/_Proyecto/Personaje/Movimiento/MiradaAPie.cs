@@ -24,6 +24,12 @@ namespace MechaCyberpunk.Personaje.Movimiento
             Inclinacion = Mathf.Clamp(Inclinacion, minima, maxima);
         }
 
+        /// <summary>Suma grados a la inclinación (positivo mira hacia abajo) sin pasar de los límites que ponga <see cref="Limitar"/>.</summary>
+        public void Sumar(float grados)
+        {
+            Inclinacion += grados;
+        }
+
         public void Reiniciar()
         {
             Inclinacion = 0f;

@@ -16,6 +16,9 @@ namespace MechaCyberpunk.UI
         [Tooltip("Color del texto principal (arma, canción y mira).")]
         [SerializeField] private Color colorTexto = new Color(0.55f, 0.85f, 1f, 1f);
 
+        [Tooltip("Color de la retícula cuando hay un enemigo en la mira (T-424; rojo neón).")]
+        [SerializeField] private Color colorMiraBlanco = new Color(1f, 0.15f, 0.2f, 1f);
+
         [Tooltip("Color de los avisos (naranja neón): arma recargando o sin balas.")]
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f, 1f);
 
@@ -307,6 +310,7 @@ namespace MechaCyberpunk.UI
         public Color ColorVida => colorVida;
         public Color ColorVidaBaja => colorVidaBaja;
         public Color ColorTexto => colorTexto;
+        public Color ColorMiraBlanco => colorMiraBlanco;
         public Color ColorAviso => colorAviso;
         public Color ColorHueco => colorHueco;
         public float UmbralVidaBaja => umbralVidaBaja;
