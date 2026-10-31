@@ -1,6 +1,8 @@
 using System.Collections;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Pruebas;
 using NUnit.Framework;
 using UnityEngine;
@@ -53,6 +55,14 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(teclado.wKey);
             yield return null;
             Release(teclado.leftShiftKey);
+        }
+
+        // T-403: los puños usan el daño de su nivel en el arsenal; sin arsenal, el de los datos del personaje.
+        private static float DanioBase(GolpeAPie golpe)
+        {
+            ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
+            DatosArma punos = arsenal != null ? arsenal.Datos(ArmaAPie.Punos) : null;
+            return punos != null ? punos.Danio : golpe.Datos.DanioGolpe;
         }
 
         [UnityTest]
@@ -204,8 +214,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Clic();
             yield return Esperar(0.3f);
             float danio = antes - vidaMuneco.Actual;
-            Debug.Log("[Prueba] T-192 golpe sin implantes: medido " + danio + ", esperado " + golpe.Datos.DanioGolpe);
-            Assert.AreEqual(golpe.Datos.DanioGolpe, danio, 0.0001f);
+            Debug.Log("[Prueba] T-192 golpe sin implantes: medido " + danio + ", esperado " + DanioBase(golpe));
+            Assert.AreEqual(DanioBase(golpe), danio, 0.0001f);
         }
 
         [UnityTest]
@@ -225,7 +235,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Clic();
             yield return Esperar(0.3f);
             float danio = antes - vidaMuneco.Actual;
-            float esperado = golpe.Datos.DanioGolpe * falsos.Efectos.multiplicadorGolpeAPie;
+            float esperado = DanioBase(golpe) * falsos.Efectos.multiplicadorGolpeAPie;
             Debug.Log("[Prueba] T-192 golpe brazos " + nivel + ": medido " + danio + ", esperado " + esperado);
             Assert.AreEqual(esperado, danio, 0.0001f);
         }
@@ -238,7 +248,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Registrar(EspacioImplante.Brazos, 1);
             yield return null;
             GolpeAPie golpe = jugador.GetComponent<GolpeAPie>();
-            float baseDanio = golpe.Datos.DanioGolpe;
+            float baseDanio = DanioBase(golpe);
             float v0 = vidaMuneco.Actual;
             yield return Clic();
             yield return Esperar(0.3f);
@@ -269,7 +279,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Registrar(EspacioImplante.Brazos, 2); // Llega después de que el jugador ya estaba activo.
             yield return Clic();
             yield return Esperar(0.3f);
-            Assert.AreEqual(golpe.Datos.DanioGolpe * falsos.Efectos.multiplicadorGolpeAPie, antes - vidaMuneco.Actual, 0.0001f);
+            Assert.AreEqual(DanioBase(golpe) * falsos.Efectos.multiplicadorGolpeAPie, antes - vidaMuneco.Actual, 0.0001f);
         }
 
         [UnityTest]
@@ -277,7 +287,10 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             yield return Calentar();
             var puno = jugador.GetComponentInChildren<PunoImplantes>(true);
-            Assert.IsNotNull(puno, "El prefab lleva PunoImplantes");
+            if (puno == null)
+            {
+                Assert.Ignore("T-400: en tercera persona el jugador ya no tiene el puño en primera persona (PunoImplantes); los brazos se ven en el cuerpo.");
+            }
             Assert.AreEqual(0, puno.NivelMostrado);
             Assert.IsFalse(puno.Franja.activeSelf);
 
