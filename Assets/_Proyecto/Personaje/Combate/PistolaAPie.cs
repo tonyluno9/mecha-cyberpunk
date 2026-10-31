@@ -352,6 +352,7 @@ namespace MechaCyberpunk.Personaje.Combate
             float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
 
             Sonidos.ReproducirEn(IdDisparo(arma), origen);
+            EventosRuido.PublicarDisparo(origen);
             for (int i = 0; i < d.Perdigones; i++)
             {
                 Vector3 direccion = direccionBase;

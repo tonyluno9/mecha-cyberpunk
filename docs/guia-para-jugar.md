@@ -295,3 +295,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Dispara cada arma: el fusil suena distinto al soltar el gatillo, la escopeta bombea, el sniper mete el cerrojo y cae el casquillo; un tiro a un carro suena a metal.
 - Corre unos 4 s seguidos: se oye la respiración. Con poca vida (menos de 25 %) suena el aviso y al empezar a curar otro; al caer, el de derrotado.
 - El ambiente de la calle ya viene al 80 % en Opciones (la música sigue en 0).
+
+### T-443 Peatones que huyen
+- Dispara cerca de la gente de la banqueta (pistola o cualquier arma): los peatones a menos de unos 45 m salen corriendo, alejándose de ti, durante unos 6 segundos y luego vuelven a caminar.
+- También huyen cuando disparan los pandilleros. Observa: ¿se nota que huyen?, ¿algún peatón corre hacia el disparo o se queda quieto?
