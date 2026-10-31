@@ -1,0 +1,87 @@
+# CRÉDITOS
+
+## EQUIPO
+
+- Tony
+- Alan
+- Cesar
+- Miranda
+- Mirflur
+- Castillo
+
+Los roles de cada quien están por confirmar: ni el documento del juego ni las listas del equipo los dicen.
+
+## PROFES
+
+- El Inventor: TINO
+- El Doc: JOEL
+- El Hacker: SERGIO
+- El Mecánico: CANEPA
+- El Director: ESTRADA
+
+## HERRAMIENTAS
+
+- Unity 6.3 (6000.3.25f1), con URP e Input System
+- Claude (Anthropic): programación y pruebas con ayuda de IA
+- Tripo: modelos 3D generados con IA
+- Nano Banana: imágenes de referencia generadas con IA
+- Mixamo: personajes y animaciones
+- Freesound: sonidos
+
+## LICENCIAS DE MODELOS 3D
+
+- Modelos 3D de ciudad, props, interiores y clandestino: generados con Tripo (lote de T-250 y de la noche, 39 modelos más).
+  Autor: el equipo, con IA. Fuente: tripo3d.ai. Licencia: por confirmar (depende del plan de Tripo usado).
+- Personajes y animaciones: Mixamo (Adobe). Licencia: por confirmar (uso libre con cuenta de Adobe según sus términos).
+- Detalle de cada modelo en docs/assets-importados.md.
+
+## LICENCIAS DE SONIDOS
+
+Los 194 sonidos del juego vienen de Freesound (freesound.org). Cada uno aparece abajo con su título y su número (fs_NNN, que es la
+dirección freesound.org/s/NNN). El autor y la licencia de cada uno (CC0, CC BY u otra) están por confirmar: los archivos
+docs/creditos-audio/CREDITOS_*.txt solo traen fuente, título y número, y no inventamos nada. Los sonidos con licencia CC BY
+necesitan el nombre de su autor aquí antes de publicar el juego.
+
+### Ambientes
+
+city night 302 AM 230821_0616 (fs_735301); Ambient City Sounds at Night (fs_563887); room tone aparment 1042AM 220813_0498.wav (fs_676269); Gwangjang Market - Voices and Ajumma Greetings (fs_855252); Chapultepec Park Mexico City - Weekend ambience (fs_623600); Crowd Noise Light 3_1night.wav (fs_274356); Rain light 2 (rural) (fs_200273); Pediatric Hospital - Waiting Room - Speaker Announcement (Coimbra, Portugal) (fs_640626); Crowded Bar - Ambient Loop (fs_397569); Cyberpunk rain ambience (rain and city noises stem) (fs_743999); AkasakaPachinkoParlorLunchtime_4micsStereoExpanded.wav (fs_79088).
+
+### Armas
+
+Shot pistol 9mm (PSX Horror SFX Free) (fs_872583); 9mm pistol shot (fs_427592); ASP Pistol (fs_734061); Shot Sound Effect (fs_476433); A small pistol's slide being released \\ bright sounding (fs_854486); Weapons_GunUnHolster.wav (fs_204043); Guns & Explosions Album - Autocannon - Shot 1.wav (fs_423108); Guns & Explosions Album - Cannon impact 9.wav (fs_423105); bomb 001 141231_0484-9.wav (fs_260952); SXP_SHOTGUN_RACK_02 (fs_449613); SXP_SHOTGUN_RACK_03 (fs_449612); Shotgun Shell Insert.wav (fs_563650); Load Shotgun 4 (fs_789645); Load Shotgun 3 (fs_789644); Single Shot - SIG 552 Airsoft (fs_342951); rifle, assault rifle mp5 semiautomatic mode, single shot (fs_515200); Machinegun-ish.wav (fs_77340); Machine Gun 001 - single shot.ogg (fs_212601); Assault Rifle Reload (fs_256912); Blade Runner Blaster Sound.wav (fs_420687); gunfiddle.wav (fs_107795); Reload Fast (fs_848038); Gun scope zoom in (fs_172958); Gun Click (fs_170272); Empty Firearm (Click) (fs_730213); Small_Bullet_Very_Soft_Hit_06 (fs_778027); Small_Bullet_Very_Soft_Hit_04 (fs_778025); Small_Bullet_Very_Soft_Hit_03 (fs_778024); Small_Bullet_Very_Soft_Hit_02 (fs_778023); Shell_.22_Remington_05.wav (fs_158995); Shell_.22_Remington_06.wav (fs_158994); Shell_.30-06_Winchester_01.wav (fs_158993); Shell_.22_Remington_01.wav (fs_158992); Small_Bullet_Medium_Hit_Metallic_05 (fs_777960); Small_Bullet_Medium_Hit_Metallic_04 (fs_777959); Small_Bullet_Medium_Hit_Metallic_03 (fs_777958); Small_Bullet_Medium_Hit_Metallic_02 (fs_777957); Bullet_Flyby_2.wav (fs_90782); Fly-by whiz SFX (subsonic) (fs_789222); Small projectile whiz/pew (fs_789221); Distant Gunshot (fs_541164); MACHINE GUN REVERB OUTDOOR.wav (fs_457406); A Glock handgun being shot 3x // punchy hollywood-esque sounding shots w/ airy forest reverb (fs_855652); Toy Double Barrel Shotgun Equip (fs_693503); equip.mp3 (fs_407481); Axe Impact - Gore.wav (fs_322171); GROSS IMPACT (fs_641040); 2 Impact Wet (fs_376818); Wet Impact (2) (fs_521958); alarm4.wav (fs_667365); Bouncing Power Up 1_3 (fs_478336).
+
+### Calle y dron
+
+popup2 close (fs_554898); Bright Bell (fs_810323); Big Slow Heavy Drone Hovering Idle Loop (fs_854382); Retro, Laser Gun Shot.wav (fs_523205); laser shot (fs_221560); laser_gun_sound.mp3 (fs_508854); 04 - Alarms & Beeps - Scanning For Hostiles A (fs_807656); police siren2.wav (fs_62878); Siren.ogg (fs_536773).
+
+### Economia y tiendas
+
+Shiny Coin Pickup (fs_608431); Coin Pickup Sound V 0.2 (fs_347174); 16. Cash-register_closing.wav (fs_378269); Buzzer sounds (Wrong answer / Error) (fs_493163); Gun_Pickup.wav (fs_464529); beeps for heart monitor.wav (fs_668978); Slot Machine Win Coins Sound MP3 (fs_620132); Classic Big 7 Cherries Win Sound (fs_671249).
+
+### Jugador
+
+Footstep_Run_HardSurface_4.wav (fs_563459); Footstep_Run_HardSurface_1.wav (fs_563454); Footstep_Walk_HardSurface_7.wav (fs_563470); Footstep_Walk_HardSurface_2.wav (fs_563469); Footstep_Walk_HardSurface_4.wav (fs_563467); Footstep_Walk_HardSurface_1.wav (fs_563468); Walk puddle (Footsteps SFX Free) (fs_874042); Step into water puddle / wade (fs_450621); Footstep_Wood_Toe_2.wav (fs_421152); Footstep_Wood_Heel_3.wav (fs_421148); Footstep_Wood_Toe_3.wav (fs_421140); Footstep on wood (fs_340983); Footstep_Wood_Toe_1.wav (fs_421153); Knocking once on wood, single footstep (fs_812363); Footstep_Metal_5.wav (fs_421136); Footstep_Metal_Crouch_2.wav (fs_421146); Footstep_Metal_1.wav (fs_421134); Footstep_Metal_Crouch_3.wav (fs_421145); Jacket/Cloth Rustle 1 (fs_494791); Jacket/Cloth Rustle 6 (fs_494794); Jacket/Cloth Rustle 7 (fs_494793); Footsteps-Tile-Jump-03-Land.wav (fs_458273); Footsteps-Tile-Jump-05-Land.wav (fs_458275); Footsteps-Tile-Jump-07-Land.wav (fs_458272); Voice_AdultMale_PainGrunts_15.wav (fs_547198); Voice_AdultMale_PainGrunts_05.wav (fs_547207); Voice_AdultMale_PainGrunts_17.wav (fs_547196); Voice_AdultMale_PainGrunts_06.wav (fs_547206); Body_impact.wav (fs_221626); BODY FALL - V HVY - DIRT (fs_504626); Heartbeat 97 BPM (fs_688735); Male_Breath_Fast_Loop_Stereo.wav (fs_554907); male_sigh_ML_1 (fs_732803); Rip 5 - Short (fs_676622); Rip 4 (fs_676621); Rip 3 (fs_676620).
+
+### Mundo
+
+DOOR Bathroom Wood INT open close hard far MG.wav (fs_114509); door wood apartment open close subtle inside to outside.flac (fs_451816); door wood interior close hall offmic.flac (fs_452217); door wood ext front door close solid +keys jingle.flac (fs_637486); Rustling bed sheets (fs_644490); sliding large metal garage door - 1 (fs_761943); Metal gate opening.WAV (fs_682776); Glass Break 3 (fs_848284); Glass Break 1 (fs_848281); NeonBuzzLoop.wav (fs_653131); YP Plague Drone Loop 10 (fs_621218); Trash Can Hit 01 Rim (fs_336221); Trash Can Hit 02 Top (fs_336220); spark 1.wav (fs_31348); electricspark.wav (fs_169666); Old Air Conditioner Loop (fs_873136); water_generator_01_loop.wav (fs_170512); WelderSparks.wav (fs_424363); Dog Barking Distance - 1.wav (fs_485962); Dog Barking Distance - 2.wav (fs_485961); Dog barking in the distance (fs_843416).
+
+### Golpes y mechas
+
+Big Punch Short with male moan (fs_322251); Whoosh #1 (fs_427823); Swish 2 (fs_395367); Swish 3 (fs_395366); Punch (fs_517744); Hand 2 (fs_395356); Hit 7 (fs_395345); Hand 1 (fs_395357); Hand 3 (fs_395355); TMNT_2012_inspired_heavy_kick_03092025 (fs_791953); Intense Punch (fs_493916); ANI Big Pipe Hit (fs_244983); Blocking Arm With Hand (fs_321810); Smashing head on wall (fs_377157); kick with some body.wav (fs_486746); Hit Punch cloth pillow bedding-008.wav (fs_561648).
+
+### Interfaz
+
+UI hover item (fs_757328); Modern Ui accept.ogg (fs_629525); Whip 1 (fs_735901); Buzzer sounds (Wrong answer / Error) (fs_493163); ObjectiveComplete.wav (fs_320432); Sparkling Quest Notifications (fs_875761); cinematic boom 130730_06.wav (fs_195790); Heavy object drop (fs_810170); Unfold a map (fs_447931); Expansion 9 (fs_376346); Confirm Sound (Mystic Chimes) (fs_667844); Notification Up II (fs_234563).
+
+### Vehiculos
+
+Old big Toyota car idle (fs_772236); Car engine rev inside.mp3 (fs_115199); Chev 350 start then die.wav (fs_123686); karma-ron - fx background drone spaceship (requested).wav (fs_182047); Acceleration of an electric car (fs_761685); Hover vehicle idle loop (fs_348857); Car Door Open 02 (fs_682346); Car Door Open 05 (fs_682342); MITSUBISHI IMIEV electric car DOOR CLOSE 2.wav (fs_174832); Car Door Close 04 (fs_682340); violinstereoloopracecaralarm.wav (fs_46433); metal crash 2 light.wav (fs_121656); short scrape (like car body or window scratch).flac (fs_492940); [SFX] car screech (fs_233557); metal crash 4 heavy.wav (fs_121658); S30-30 Heavy short car crash.wav (fs_675259); Evan's Old Vocal Car Horn.mp3 (fs_461944); Traffic-Horn Honking.aif (fs_9440); auto horn honks heads up nearby stuck in traffic Middle East Gaza 2016.wav (fs_406171); auto horn honk in traffic Middle East Gaza 2016.wav (fs_406163); SatoBar.aif (fs_14832); KimiMcl.aif (fs_14829); MSchFerr.aif (fs_14830); Lock 2 - Open Lock 2.wav (fs_342681); Distant car tire screeching (fs_752837); Car Drive By Slow (fs_530966).
+
+### Zonas de pandillas
+
+Scary Piano Low/High Hit (fs_448078); piano C4-4.wav (fs_144041); [UI Sound] Approval - High Pitched Bell Synth (fs_625174); Tadaa.wav (fs_415504).
+
+## GRACIAS
+
+Gracias por jugar.
