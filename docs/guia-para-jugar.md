@@ -304,3 +304,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Dispárale a un carro estacionado (pistola, escopeta, fusil...): suena a metal y no sangra; a la mitad de vida sale humo, con poca vida arde y al final explota (daña a quien esté a 7 m y suma calor).
 - Choca contra una pared a toda velocidad: el carro se daña (y suena). Si manejas un carro que explota sales despedido a pie.
 - Observa: ¿cuánto aguanta el carro?, ¿el humo y el fuego se ven bien?, ¿la explosión es muy fuerte?
+
+### T-445 Disparar desde el carro
+- Maneja un carro con la pistola (o el fusil) y pulsa el clic izquierdo: disparas hacia donde mira la cámara del carro, sin pegarle a tu propio carro; R recarga. Sube calor y la gente huye.
+- Observa: ¿se entiende hacia dónde sale la bala?, ¿falta ver el cargador en la pantalla?
