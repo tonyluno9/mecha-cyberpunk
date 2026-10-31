@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Tests.EditMode.Sonido",
+    "rootNamespace": "MechaCyberpunk.Tests",
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "MechaCyberpunk.Core", "MechaCyberpunk.Progresion"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

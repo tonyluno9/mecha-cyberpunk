@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.UI.Creditos",
+    "rootNamespace": "MechaCyberpunk.UI.Creditos",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.UI", "UnityEngine.UI", "Unity.InputSystem"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
