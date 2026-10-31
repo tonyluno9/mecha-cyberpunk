@@ -261,3 +261,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - En cada zona tuya hay postes de neón con letrero turquesa (TIENDITA, PUESTO, FONDA, CLUB, ARCADE, TALLER): acércate y pulsa E para tomar el negocio pagando Biits, y otra vez para mejorarlo (hasta nivel 3). Cada día de juego pagan solos y sale "+Ƀ... DE TUS NEGOCIOS"; si pierdes la zona dejan de pagar.
 - El mapa (M) lista tus negocios abajo con su nivel e ingreso por día. Además, el aviso "<ZONA> ES DE ..." ya no se encima con el texto de la zona.
 - Observa: ¿los precios se sienten justos?, ¿se encuentran los postes?
+
+### T-430 Implantes a pie
+- Con Biits, ve a I+D+I y habla con EL DOC (E): elige OJOS, BRAZOS, PIERNAS o SINAPSIS y pulsa Enter para instalar.
+- Fuera: con OJOS ves la vida del rival y apuntas de más lejos; con PIERNAS cubrirte (Q) y rodar (CTRL) rinden más; con BRAZOS la pistola recarga mejor.
+- Observa: ¿se nota la diferencia?, ¿los precios son justos?
