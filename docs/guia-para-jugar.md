@@ -290,3 +290,30 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-440 Créditos en el título
 - En la pantalla de título hay un botón CRÉDITOS (entre OPCIONES y SALIR): la lista sube sola, la rueda o las flechas la mueven y Esc vuelve al título.
 - Observa: ¿se lee bien el texto?, ¿el botón queda a la altura de los demás?
+
+### T-441 Tutorial ligero
+- Al jugar a pie salen avisos cortos arriba, una sola vez cada uno: W A S D, clic derecho apunta, clic izquierdo dispara, R recarga, Q cubre, CTRL rueda, E sube al carro, M mapa, T teléfono.
+- Se pueden apagar en OPCIONES → TUTORIAL (SÍ/NO); lo ya visto se recuerda entre partidas.
+- Observa: ¿salen en un buen momento?, ¿tapan algo?
+
+### T-442 Sonidos de armas y del jugador
+- Dispara cada arma: el fusil suena distinto al soltar el gatillo, la escopeta bombea, el sniper mete el cerrojo y cae el casquillo; un tiro a un carro suena a metal.
+- Corre unos 4 s seguidos: se oye la respiración. Con poca vida (menos de 25 %) suena el aviso y al empezar a curar otro; al caer, el de derrotado.
+- El ambiente de la calle ya viene al 80 % en Opciones (la música sigue en 0).
+
+### T-443 Peatones que huyen
+- Dispara cerca de la gente de la banqueta (pistola o cualquier arma): los peatones a menos de unos 45 m salen corriendo, alejándose de ti, durante unos 6 segundos y luego vuelven a caminar.
+- También huyen cuando disparan los pandilleros. Observa: ¿se nota que huyen?, ¿algún peatón corre hacia el disparo o se queda quieto?
+
+### T-444 Carros que se dañan
+- Dispárale a un carro estacionado (pistola, escopeta, fusil...): suena a metal y no sangra; a la mitad de vida sale humo, con poca vida arde y al final explota (daña a quien esté a 7 m y suma calor).
+- Choca contra una pared a toda velocidad: el carro se daña (y suena). Si manejas un carro que explota sales despedido a pie.
+- Observa: ¿cuánto aguanta el carro?, ¿el humo y el fuego se ven bien?, ¿la explosión es muy fuerte?
+
+### T-445 Disparar desde el carro
+- Maneja un carro con la pistola (o el fusil) y pulsa el clic izquierdo: disparas hacia donde mira la cámara del carro, sin pegarle a tu propio carro; R recarga. Sube calor y la gente huye.
+- Observa: ¿se entiende hacia dónde sale la bala?, ¿falta ver el cargador en la pantalla?
+
+### T-446 Pandilleros que patrullan
+- Los pandilleros ya no están clavados en su punto: cuando no te han visto caminan despacio por su zona, se paran un rato y siguen. Si te ven (te acercas a menos de unos 10 m a puños, o entras a su territorio armados) dejan la patrulla y pelean.
+- Observa: ¿se ven naturales?, ¿alguno se atora en un muro o sale de su zona?

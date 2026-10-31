@@ -85,6 +85,7 @@ namespace MechaCyberpunk.Personaje.Vida
                 // Una bala que llega del otro lado de la cubierta pasa con la fracción de daño de los datos (0 = ninguno).
                 if (info.Tipo == TipoDanio.Disparo && cubierta.ProtegeDe(info.Punto - info.Direccion.normalized * DistanciaOrigenBala, out _))
                 {
+                    Sonidos.ReproducirEn("PUN_BLOQUEO", transform.position);
                     cantidad *= cubierta.Datos.DanioCubierto;
                     if (cantidad <= 0f)
                     {
@@ -125,11 +126,49 @@ namespace MechaCyberpunk.Personaje.Vida
             camara.localRotation = Quaternion.Slerp(camara.localRotation, Quaternion.Euler(0f, 0f, datos.LadeoCamaraKO), paso);
         }
 
-        private void AlCambiar() => Cambio?.Invoke();
+        // T-442: avisos de sonido de la vida. Vida baja una vez al cruzar el umbral hacia abajo; regenera una vez cuando empieza a curar.
+        private const float FraccionVidaBaja = 0.25f;
+        private float vidaAnterior = -1f;
+        private bool avisoVidaBaja;
+        private bool avisoRegenera;
+
+        private void AlCambiar()
+        {
+            SonidosDeVida();
+            Cambio?.Invoke();
+        }
+
+        private void SonidosDeVida()
+        {
+            float actual = modelo.Actual;
+            if (vidaAnterior >= 0f && !modelo.EstaKO)
+            {
+                if (actual < vidaAnterior)
+                {
+                    avisoRegenera = false;
+                    if (!avisoVidaBaja && actual < modelo.Maxima * FraccionVidaBaja)
+                    {
+                        avisoVidaBaja = true;
+                        Sonidos.ReproducirEn("JUG_VIDA_BAJA", transform.position);
+                    }
+                }
+                else if (actual > vidaAnterior && !avisoRegenera)
+                {
+                    avisoRegenera = true;
+                    Sonidos.ReproducirEn("JUG_REGENERA", transform.position);
+                }
+            }
+            if (actual >= modelo.Maxima * FraccionVidaBaja)
+            {
+                avisoVidaBaja = false;
+            }
+            vidaAnterior = actual;
+        }
 
         private void AlLlegarAKO()
         {
             controlador.ActivarControl(false);
+            Sonidos.ReproducirEn("JUG_CAE_DERROTADO", transform.position);
             Debug.Log("[Personaje] KO a pie");
             KO?.Invoke();
         }

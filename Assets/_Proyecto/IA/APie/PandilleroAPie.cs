@@ -33,6 +33,7 @@ namespace MechaCyberpunk.IA.APie
         private CharacterController controlador;
         private ModeloVida modelo;
         private ReglaPandilleroAPie regla;
+        private CalculoPatrullaPandillero patrulla;
         private TurnosPandillaAPie turnos;
         private MaterialPropertyBlock bloque;
         private Vector3 hogar;
@@ -208,6 +209,8 @@ namespace MechaCyberpunk.IA.APie
                 regla = new ReglaPandilleroAPie(datos.RadioDeteccion, datos.Correa, datos.AlcanceGolpe, datos.PreparacionGolpe,
                     datos.RecargaGolpe, datos.MargenLlegada);
             }
+            patrulla = new CalculoPatrullaPandillero(datos.RadioPatrulla, datos.EsperaPatrullaMinima, datos.EsperaPatrullaMaxima,
+                datos.MargenLlegada, datos.SegundosAtascoPatrulla, () => UnityEngine.Random.value);
             bloque = new MaterialPropertyBlock();
             if (!tieneHogar)
             {
@@ -259,6 +262,7 @@ namespace MechaCyberpunk.IA.APie
             modelo.Restaurar();
             regla.Reiniciar();
             tactica?.Reiniciar();
+            patrulla?.Reiniciar();
             tieneCubierta = false;
             disparoReciente = false;
             modoAnterior = ReglaTacticaPandillero.Modo.Rodear;
@@ -347,7 +351,8 @@ namespace MechaCyberpunk.IA.APie
             }
 
             Vector3 destino = salida.Orden == ReglaPandilleroAPie.Orden.AlPunto ? hogar : posicionJugador;
-            Mover(salida.Orden, destino, regla.Estado != EstadoPandillero.Preparando && atacable);
+            Vector3 paso = salida.Orden == ReglaPandilleroAPie.Orden.Quieto ? VelocidadDePatrulla() : Vector3.zero;
+            Mover(salida.Orden, destino, regla.Estado != EstadoPandillero.Preparando && atacable && paso.sqrMagnitude < PasoMinimoCuadrado, paso);
             if (salida.Impacto)
             {
                 Golpear(posicionJugador);
@@ -487,6 +492,10 @@ namespace MechaCyberpunk.IA.APie
                 }
             }
 
+            if (deseada.sqrMagnitude < PasoMinimoCuadrado)
+            {
+                deseada = VelocidadDePatrulla();
+            }
             Vector3 mirada = atacable && !huyendo ? haciaJugador : deseada;
             mirada.y = 0f;
             if (mirada.sqrMagnitude > 0.0001f)
@@ -643,12 +652,37 @@ namespace MechaCyberpunk.IA.APie
                 && (vidaJugador == null || !vidaJugador.EstaKO);
         }
 
-        private void Mover(ReglaPandilleroAPie.Orden orden, Vector3 destino, bool mirarAlJugador)
+        // T-446: mientras espera en su zona, camina de un punto a otro cerca de su hogar. Sale de la patrulla en cuanto deja de esperar.
+        private const float PasoMinimoCuadrado = 0.0001f;
+
+        private Vector3 VelocidadDePatrulla()
+        {
+            if (patrulla == null || !patrulla.Activa)
+            {
+                return Vector3.zero;
+            }
+            if (regla.Estado != EstadoPandillero.Esperando)
+            {
+                if (patrulla.HayDestino || patrulla.Esperando)
+                {
+                    patrulla.Reiniciar();
+                }
+                return Vector3.zero;
+            }
+            return patrulla.Avanzar(Time.deltaTime, transform.position, hogar) * datos.VelocidadPatrulla;
+        }
+
+        private void Mover(ReglaPandilleroAPie.Orden orden, Vector3 destino, bool mirarAlJugador, Vector3 pasoPatrulla)
         {
             Vector3 hacia = destino - transform.position;
             hacia.y = 0f;
             Vector3 velocidad = Vector3.zero;
-            if (orden != ReglaPandilleroAPie.Orden.Quieto && hacia.sqrMagnitude > 0.0001f)
+            if (orden == ReglaPandilleroAPie.Orden.Quieto && pasoPatrulla.sqrMagnitude >= PasoMinimoCuadrado)
+            {
+                velocidad = pasoPatrulla;
+                hacia = pasoPatrulla;
+            }
+            else if (orden != ReglaPandilleroAPie.Orden.Quieto && hacia.sqrMagnitude > 0.0001f)
             {
                 velocidad = hacia.normalized * datos.Velocidad;
             }

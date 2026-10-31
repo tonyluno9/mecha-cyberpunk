@@ -19,6 +19,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         private int sentido = 1;
         private float recorridoEnSegmento;
         private float esperaRestante;
+        private float multiplicador = 1f;
 
         /// <param name="largosSegmentos">Largo (m) de cada tramo entre puntos consecutivos de la ruta; al menos uno.</param>
         /// <param name="metrosPorSegundo">Velocidad al caminar (m/s).</param>
@@ -61,6 +62,44 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         public bool Esperando => esperaRestante > 0f;
 
+        /// <summary>Cuántas veces su velocidad normal camina ahora (1 = normal; más al huir).</summary>
+        public float MultiplicadorVelocidad
+        {
+            get => multiplicador;
+            set => multiplicador = Math.Max(0.1f, value);
+        }
+
+        /// <summary>
+        /// Da la vuelta en el mismo lugar: queda donde estaba y sigue hacia el otro lado de la ruta. En un extremo de la ruta no hay otro
+        /// lado y se queda como estaba.
+        /// </summary>
+        public void InvertirSentido()
+        {
+            float largo = largosSegmentos[segmento];
+            int nuevoSentido = -sentido;
+            float nuevoRecorrido = largo - recorridoEnSegmento;
+            int nuevoSegmento = segmento;
+            if (nuevoRecorrido >= largo)
+            {
+                // Estaba justo en la salida del tramo: el tramo del otro lado es el anterior en ese sentido, ya recorrido por completo.
+                nuevoSegmento = segmento + nuevoSentido;
+                nuevoRecorrido = 0f;
+                if (nuevoSegmento < 0 || nuevoSegmento >= largosSegmentos.Length)
+                {
+                    return;
+                }
+            }
+            sentido = nuevoSentido;
+            segmento = nuevoSegmento;
+            recorridoEnSegmento = nuevoRecorrido;
+        }
+
+        /// <summary>Quita la espera de la esquina (para salir corriendo).</summary>
+        public void CancelarEspera()
+        {
+            esperaRestante = 0f;
+        }
+
         /// <summary>Avanza <paramref name="dt"/> segundos (s): primero termina la espera y con lo que sobra camina.</summary>
         public void Avanzar(float dt)
         {
@@ -78,13 +117,13 @@ namespace MechaCyberpunk.Trafico.Peatones
                     continue;
                 }
                 float falta = largosSegmentos[segmento] - recorridoEnSegmento;
-                float posible = velocidad * dt;
+                float posible = velocidad * multiplicador * dt;
                 if (posible < falta)
                 {
                     recorridoEnSegmento += posible;
                     return;
                 }
-                dt -= falta / velocidad;
+                dt -= falta / (velocidad * multiplicador);
                 LlegarAlPunto();
             }
         }

@@ -195,6 +195,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<Hitmarker>();
             }
+            if (GetComponent<TutorialLigero>() == null)
+            {
+                gameObject.AddComponent<TutorialLigero>();
+            }
             if (GetComponent<HudImplantes>() == null)
             {
                 gameObject.AddComponent<HudImplantes>();

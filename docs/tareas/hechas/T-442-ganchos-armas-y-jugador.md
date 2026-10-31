@@ -1,0 +1,9 @@
+# T-442 Ganchos de sonido de armas y jugador, ambiente y ensamblados
+Dueño: Tony | Rama: tony/T-442-ganchos-armas-y-jugador | Modelo: Sonnet 5.5 | Sesión A (prioridades 3 y 4 de docs/sesion-A.md; docs/bugs.md y docs/sonidos-faltan-enganchar.md de la Sesión B)
+Hecho:
+- PistolaAPie: el fusil pide ARM_FUS_DISPARO/RECARGA (ya no ARM_SUB_*, bug de la Sesión B); ARM_FUS_RAFAGA_COLA al soltar el gatillo del fusil; ARM_CASQUILLO 0.25 s tras cada disparo; ARM_ESC_BOMBEO (0.45 s) y ARM_SNI_CERROJO (0.5 s); ARM_BALA_IMPACTO_METAL si el rayo pega en algo montable (carro/mecha).
+- ArmasAPie: ARM_PIS_SACAR al sacar la pistola. VidaAPie: JUG_VIDA_BAJA (una vez al bajar de 25 %), JUG_REGENERA (una vez al empezar a curar), JUG_CAE_DERROTADO al quedar KO, PUN_BLOQUEO cuando la cubierta frena una bala. ControladorAPie: JUG_CORRER_RESPIRA tras 4 s corriendo (cada 10 s como máximo).
+- Opciones: Ambiente arranca en 80 % (antes 0; solo la música queda en 0), como pidió la Sesión B; ReglaOpcionesPruebas actualizada. `CatalogoSonidos.pisoOpcionAmbiente` es de la Sesión B: pueden ponerlo en 0 cuando quieran que el slider mande.
+- ReglasEnsambladosPruebas: dueños de los ensamblados nuevos de la Sesión B (Herramientas, Creditos, ModoVideo, PersonajeVisual, Sonido) y excepción documentada de Tests.PlayMode.IA -> Trafico (T-402); la prueba estaba roja.
+Pendiente de la lista (otras tareas): ARM_MEJORA, PUN_GOLPE_FUERTE/PATADA (no existe golpe cargado ni patada), JUG_PASO_* por superficie, CAL_*, VEH_*, PAN_*, ZON_*, UI_*, ECO_*, MUN_* y AMB_*.
+Pruebas: EditMode completo 1251/1252 (la que falla es RutasBanquetaPruebas, vieja: espera 12 peatones de día y hay 6; se atiende con el día y la noche conectados); PlayMode Personaje 130/139 con las mismas rojas viejas (ImplantesAPiePruebas 6, BarrioAlan, RecorridoAPie) más ArmasPruebas.ComprarYUsarEscopeta, que es azarosa (perdigones en cono): falló 1 de 3 corridas y pasó en las otras; RecorridoRonda2Pruebas 1/1.

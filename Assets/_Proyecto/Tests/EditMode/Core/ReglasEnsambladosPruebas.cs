@@ -33,6 +33,19 @@ namespace MechaCyberpunk.Tests.Core
             { "Casino", DuenoAlan }, { "Trafico", DuenoAlan },
         };
 
+        // Nombres de ensamblados que no son un área con asmdef propio (herramientas, pruebas de la Sesión B): tienen dueño pero no se exige su asmdef raíz.
+        private static readonly Dictionary<string, string> DuenoPorNombreExtra = new Dictionary<string, string>
+        {
+            { "Herramientas", DuenoTony }, { "Creditos", DuenoTony }, { "ModoVideo", DuenoTony },
+            { "PersonajeVisual", DuenoTony }, { "Sonido", DuenoTony },
+        };
+
+        // Pruebas de integración que cruzan dueños a propósito (T-402: los drones que disparan viven en Trafico).
+        private static readonly HashSet<string> ReferenciasPermitidas = new HashSet<string>
+        {
+            "MechaCyberpunk.Tests.PlayMode.IA -> MechaCyberpunk.Trafico",
+        };
+
         /// <summary>Dueño de un ensamblado por su nombre, o null si el nombre no está en la tabla.</summary>
         private static string DuenoDe(string nombre)
         {
@@ -48,7 +61,8 @@ namespace MechaCyberpunk.Tests.Core
             // Un subensamblado <Area>.<Sub> tiene el dueño de <Area>.
             int punto = resto.IndexOf('.');
             if (punto > 0) resto = resto.Substring(0, punto);
-            return DuenoPorArea.TryGetValue(resto, out var dueno) ? dueno : null;
+            if (DuenoPorArea.TryGetValue(resto, out var dueno)) return dueno;
+            return DuenoPorNombreExtra.TryGetValue(resto, out var duenoExtra) ? duenoExtra : null;
         }
 
         /// <summary>Devuelve los errores de la lista de ensamblados del proyecto (vacía si todo está bien).</summary>
@@ -79,7 +93,8 @@ namespace MechaCyberpunk.Tests.Core
                     string duenoReferencia = DuenoDe(referencia);
                     if (asm.name == Prefijo + "Core")
                         errores.Add($"{asm.name} (Core) referencia a {referencia}: Core no depende de nada del proyecto");
-                    else if (duenoReferencia != null && duenoReferencia != DuenoCore && duenoReferencia != dueno)
+                    else if (duenoReferencia != null && duenoReferencia != DuenoCore && duenoReferencia != dueno
+                        && !ReferenciasPermitidas.Contains(asm.name + " -> " + referencia))
                         errores.Add($"{asm.name} ({dueno}) referencia a {referencia} ({duenoReferencia}): usen un contrato de Core");
                 }
             }

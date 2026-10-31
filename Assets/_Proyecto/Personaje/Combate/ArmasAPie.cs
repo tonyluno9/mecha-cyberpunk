@@ -131,6 +131,9 @@ namespace MechaCyberpunk.Personaje.Combate
             }
         }
 
+        /// <summary>True si el jugador ya tiene esa arma (T-445).</summary>
+        public bool TieneArma(ArmaAPie arma) => Tiene(arma);
+
         private bool Tiene(ArmaAPie arma)
         {
             arsenal = arsenal != null ? arsenal : Registro<ArsenalJugador>.Actual;
@@ -172,6 +175,10 @@ namespace MechaCyberpunk.Personaje.Combate
             armaActiva = arma;
             Aplicar();
             Sonidos.Reproducir("ARM_CAMBIAR");
+            if (arma == ArmaAPie.Pistola)
+            {
+                Sonidos.Reproducir("ARM_PIS_SACAR");
+            }
             Cambio?.Invoke();
         }
 

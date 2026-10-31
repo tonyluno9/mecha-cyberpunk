@@ -122,6 +122,7 @@ namespace MechaCyberpunk.IA.APie
             AsegurarLaser();
             avisando = false;
             Disparos++;
+            EventosRuido.PublicarDisparo(origen);
             Vector3 hacia = pecho - origen;
             float distancia = hacia.magnitude;
             Vector3 direccion = distancia > 0.001f ? hacia / distancia : transform.forward;

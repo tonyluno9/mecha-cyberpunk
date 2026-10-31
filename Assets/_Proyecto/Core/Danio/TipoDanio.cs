@@ -6,6 +6,8 @@ namespace MechaCyberpunk.Core
         /// <summary>Golpes de mecha y golpes a pie. Vale 0; no cambia.</summary>
         Golpe,
         /// <summary>Armas de fuego (por ejemplo la pistola a pie).</summary>
-        Disparo
+        Disparo,
+        /// <summary>Explosión (T-444): un carro que revienta. No la frena una cubierta.</summary>
+        Explosion
     }
 }

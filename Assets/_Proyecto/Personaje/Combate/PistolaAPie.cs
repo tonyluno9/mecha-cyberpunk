@@ -53,6 +53,11 @@ namespace MechaCyberpunk.Personaje.Combate
         private ControladorAPie controlador;
         private VidaAPie vida;
         private ArmasAPie armas;
+        private JugadorAPie jugadorApie;
+        // T-445: disparar desde el carro (solo pistola y fusil); con la raíz del carro para que la bala no le pegue a él.
+        private bool desdeCarro;
+        private Transform raizCarro;
+        private const float AlturaBocaCarro = 0.4f;
         private const int CantidadArmas = 5;
         private readonly CargadorPistola[] cargadores = new CargadorPistola[CantidadArmas];
         private readonly DatosArma[] datosArmas = new DatosArma[CantidadArmas];
@@ -101,6 +106,7 @@ namespace MechaCyberpunk.Personaje.Combate
             controlador = GetComponent<ControladorAPie>();
             vida = GetComponent<VidaAPie>();
             armas = GetComponent<ArmasAPie>();
+            jugadorApie = GetComponent<JugadorAPie>();
             if (datos == null || atacar == null || recargar == null || armas == null)
             {
                 Debug.LogError("[Personaje] Faltan referencias en PistolaAPie de " + name, this);
@@ -211,6 +217,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private void Update()
         {
             RevisarArmas();
+            ReproducirDiferidos();
             float factorRecarga = EfectosAPie.FactorRecarga(implantes.Efectos);
             for (int i = 0; i < CantidadArmas; i++)
             {
@@ -221,8 +228,14 @@ namespace MechaCyberpunk.Personaje.Combate
                 cargadores[i]?.Avanzar(Time.deltaTime);
             }
             ArmaAPie activa = armas.ArmaActiva;
+            bool enCarro = EstaEnCarro();
+            if (enCarro)
+            {
+                activa = ArmaDeCarro(activa);
+            }
+            desdeCarro = enCarro;
             CargadorPistola actual = EsDeFuego(activa) ? cargadores[(int)activa] : null;
-            bool puede = actual != null && !vida.EstaKO && controlador.ControlActivo;
+            bool puede = actual != null && !vida.EstaKO && (controlador.ControlActivo || enCarro);
             if (puede)
             {
                 if (recargar.action.WasPressedThisFrame() && actual.EmpezarRecarga())
@@ -231,6 +244,11 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 DatosArma d = datosArmas[(int)activa];
                 bool pidio = d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame();
+                if (!pidio && disparabaAutomatica && activa == ArmaAPie.Fusil)
+                {
+                    Sonidos.ReproducirEn("ARM_FUS_RAFAGA_COLA", transform.position);
+                }
+                disparabaAutomatica = pidio && d.Automatica;
                 if (pidio && actual.IntentarDisparar())
                 {
                     Disparar(activa, d);
@@ -242,6 +260,30 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
             }
             ActualizarVisual();
+        }
+
+        // T-445: ¿el jugador va manejando? Entonces la raíz del carro no recibe sus balas.
+        private bool EstaEnCarro()
+        {
+            IMontable montable = jugadorApie != null ? jugadorApie.MontableActual : null;
+            bool enCarro = montable != null && jugadorApie.Modo == ModoJugador.Carro && montable.Asiento != null;
+            raizCarro = enCarro ? montable.Asiento.root : null;
+            if (enCarro && !atacar.action.enabled)
+            {
+                // El controlador a pie, apagado en el carro, deja apagada la acción de atacar: aquí se vuelve a prender.
+                atacar.action.Enable();
+            }
+            return enCarro;
+        }
+
+        // Desde el carro solo se dispara pistola o fusil: la que lleva en la mano si es una de esas; si no, la pistola.
+        private ArmaAPie ArmaDeCarro(ArmaAPie activa)
+        {
+            if (activa == ArmaAPie.Pistola || activa == ArmaAPie.Fusil)
+            {
+                return activa;
+            }
+            return armas.TieneArma(ArmaAPie.Pistola) ? ArmaAPie.Pistola : ArmaAPie.Punos;
         }
 
         // Un interior es cualquier lugar que no sea la calle.
@@ -260,27 +302,77 @@ namespace MechaCyberpunk.Personaje.Combate
             Registro<ICalor>.Actual?.Sumar(datos.CalorPorDisparo, MotivoCalor.Pelea);
         }
 
+        // T-442: sonidos que suenan un poco después del disparo (casquillo, bombeo de la escopeta, cerrojo del sniper).
+        private const float SegundosCasquillo = 0.25f;
+        private const float SegundosBombeo = 0.45f;
+        private const float SegundosCerrojo = 0.5f;
+        private const float AlturaCasquillo = 0.05f;
+        private struct SonidoDiferido
+        {
+            public float Cuando;
+            public string Id;
+            public Vector3 Posicion;
+        }
+        private readonly System.Collections.Generic.List<SonidoDiferido> diferidos = new System.Collections.Generic.List<SonidoDiferido>();
+        private bool disparabaAutomatica;
+
         private const float EsperaClicVacio = 0.3f;
         private float finEsperaVacio;
 
         private static string IdDisparo(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Fusil ? "ARM_SUB_DISPARO"
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Fusil ? "ARM_FUS_DISPARO"
                 : arma == ArmaAPie.Sniper ? "ARM_SNI_DISPARO" : "ARM_PIS_DISPARO";
         }
 
         private static string IdRecarga(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Fusil ? "ARM_SUB_RECARGA"
+            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Fusil ? "ARM_FUS_RECARGA"
                 : arma == ArmaAPie.Sniper ? "ARM_SNI_RECARGA" : "ARM_PIS_RECARGA";
         }
+
+        // T-442: programa un sonido para dentro de unos segundos.
+        private void Diferir(string id, float segundos, Vector3 posicion)
+        {
+            diferidos.Add(new SonidoDiferido { Cuando = Time.time + segundos, Id = id, Posicion = posicion });
+        }
+
+        private void ReproducirDiferidos()
+        {
+            for (int i = diferidos.Count - 1; i >= 0; i--)
+            {
+                if (Time.time >= diferidos[i].Cuando)
+                {
+                    Sonidos.ReproducirEn(diferidos[i].Id, diferidos[i].Posicion);
+                    diferidos.RemoveAt(i);
+                }
+            }
+        }
+
+        // Lo que suena un poco después de cada disparo: el casquillo al caer y el bombeo o el cerrojo de las armas que los tienen.
+        private void ProgramarSonidosTrasDisparo(ArmaAPie arma)
+        {
+            Diferir("ARM_CASQUILLO", SegundosCasquillo, transform.position + Vector3.up * AlturaCasquillo);
+            if (arma == ArmaAPie.Escopeta)
+            {
+                Diferir("ARM_ESC_BOMBEO", SegundosBombeo, transform.position);
+            }
+            else if (arma == ArmaAPie.Sniper)
+            {
+                Diferir("ARM_SNI_CERROJO", SegundosCerrojo, transform.position);
+            }
+        }
+
+        // Metal: lo que se puede montar (carros) suena distinto al concreto.
+        private static string IdImpactoSinCarne(Collider collider, IRecibeDanio objetivo) =>
+            objetivo is IObjetoInerte || collider.GetComponentInParent<IMontable>() != null ? "ARM_BALA_IMPACTO_METAL" : "ARM_BALA_IMPACTO_CONCRETO";
 
         private void Disparar(ArmaAPie arma, DatosArma d)
         {
             bool sonoImpacto = false;
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
             // La escopeta lanza varios perdigones en un cono; la dispersión es el semiángulo del cono.
-            Transform camara = controlador.Camara;
+            Transform camara = desdeCarro && jugadorApie.Camara != null ? jugadorApie.Camara.transform : controlador.Camara;
             Light luz = luces[(int)arma];
             Transform visualArma = visuales[(int)arma];
             Transform boca = luz != null ? luz.transform : (visualArma != null ? visualArma : camara);
@@ -289,13 +381,20 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 punto = centro.point;
             }
-            Vector3 origen = boca.position;
+            Vector3 origen = desdeCarro ? jugadorApie.MontableActual.Asiento.position + Vector3.up * AlturaBocaCarro : boca.position;
             Vector3 haciaPunto = punto - origen;
             float largo = haciaPunto.magnitude;
             Vector3 direccionBase = largo > 0.01f ? haciaPunto / largo : camara.forward;
+            if (desdeCarro)
+            {
+                // Desde el carro la bala va horizontal, del asiento hacia el punto que mira la cámara del carro (sin bajar hasta el piso).
+                Vector3 plano = Vector3.ProjectOnPlane(punto - origen, Vector3.up);
+                direccionBase = plano.sqrMagnitude > 0.0001f ? plano.normalized : Vector3.ProjectOnPlane(camara.forward, Vector3.up).normalized;
+            }
             float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
 
             Sonidos.ReproducirEn(IdDisparo(arma), origen);
+            EventosRuido.PublicarDisparo(origen);
             for (int i = 0; i < d.Perdigones; i++)
             {
                 Vector3 direccion = direccionBase;
@@ -311,20 +410,22 @@ namespace MechaCyberpunk.Personaje.Combate
                 {
                     IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
                     bool mato = false;
+                    bool esCarne = objetivo != null && !(objetivo is IObjetoInerte);
                     if (objetivo != null)
                     {
                         mato = objetivo.RecibirDanio(new InfoDanio(d.Danio, TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
                     }
-                    BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, objetivo != null, mato));
+                    BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato));
                     if (!sonoImpacto)
                     {
                         sonoImpacto = true;
-                        Sonidos.ReproducirEn(objetivo != null ? "ARM_BALA_IMPACTO_CARNE" : "ARM_BALA_IMPACTO_CONCRETO", mejor.point);
+                        Sonidos.ReproducirEn(esCarne ? "ARM_BALA_IMPACTO_CARNE" : IdImpactoSinCarne(mejor.collider, objetivo), mejor.point);
                     }
                     PonerMarca(mejor.point, mejor.normal);
                 }
             }
 
+            ProgramarSonidosTrasDisparo(arma);
             SumarCalor();
             inicioRetroceso = Time.time;
             armaRetroceso = arma;
@@ -342,7 +443,7 @@ namespace MechaCyberpunk.Personaje.Combate
             for (int i = 0; i < cantidad; i++)
             {
                 RaycastHit impacto = impactos[i];
-                if (impacto.collider.transform.root == transform.root)
+                if (impacto.collider.transform.root == transform.root || (raizCarro != null && impacto.collider.transform.root == raizCarro))
                 {
                     continue;
                 }

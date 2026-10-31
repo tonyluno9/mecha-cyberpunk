@@ -71,6 +71,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private InputAction frenoMano;
         private ParametrosManejo parametros;
         private bool listo;
+        private bool salidaForzada;
         private readonly RaycastHit[] impactosSalida = new RaycastHit[MaxImpactosSalida];
 
         /// <summary>Velocidad hacia adelante (m/s), negativa en reversa.</summary>
@@ -94,6 +95,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void Awake()
         {
             cuerpo = GetComponent<Rigidbody>();
+            if (GetComponent<DanioCarro>() == null)
+            {
+                gameObject.AddComponent<DanioCarro>();
+            }
             if (config == null || controles == null || asiento == null || puntoSubida == null || camaraCarro == null
                 || ruedaDelanteraIzquierda == null || ruedaDelanteraDerecha == null
                 || ruedaTraseraIzquierda == null || ruedaTraseraDerecha == null)
@@ -174,17 +179,22 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public bool IntentarBajar(out Pose salida)
         {
             salida = Pose.identity;
-            if (!Ocupado || !CalculoSalida.VaLentoParaBajar(Rapidez, config.RapidezMaximaParaBajar))
+            if (!Ocupado || !(salidaForzada || CalculoSalida.VaLentoParaBajar(Rapidez, config.RapidezMaximaParaBajar)))
             {
                 return false;
             }
             LadoSalida lado = CalculoSalida.Elegir(SalidaLibre(LadoSalida.Conductor, out Pose conductor),
                 SalidaLibre(LadoSalida.Copiloto, out Pose copiloto));
+            if (lado == LadoSalida.Ninguno && salidaForzada)
+            {
+                lado = LadoSalida.Conductor;
+            }
             if (lado == LadoSalida.Ninguno)
             {
                 return false;
             }
             salida = lado == LadoSalida.Conductor ? conductor : copiloto;
+            salidaForzada = false;
             Ocupado = false;
             camaraCarro.Encender(false);
             TomarControl(false);
@@ -231,6 +241,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
             Vector3 abajo = punto + Vector3.up * (config.HolguraSalida + radio);
             Vector3 arriba = punto + Vector3.up * (config.AlturaSalida - radio);
             return !Physics.CheckCapsule(abajo, arriba, radio, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        }
+
+        /// <summary>La siguiente <see cref="IntentarBajar"/> ignora la rapidez y el lugar libre (el carro explota y hay que salir ya) (T-444).</summary>
+        public void PermitirBajarYa()
+        {
+            salidaForzada = true;
         }
 
         /// <summary>Prende o apaga la lectura de la entrada. Sin control el carro se queda estacionado.</summary>
