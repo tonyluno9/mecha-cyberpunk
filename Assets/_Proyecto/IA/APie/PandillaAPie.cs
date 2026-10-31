@@ -23,6 +23,7 @@ namespace MechaCyberpunk.IA.APie
         private bool alerta;
         private bool jugadorEnInterior;
         private float vacioDesde = -1f;
+        private float forzadaHasta = -1f;
 
         public DatosPandilleroAPie Datos => datos;
         public IdPandilla Pandilla => idPandilla;
@@ -65,6 +66,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 centro += p.transform.position / pandilleros.Length;
                 p.Configurar(p.transform.position, turnos);
+                p.Grupo = this;
                 p.Vencido += AlVencerUno;
                 p.gameObject.SetActive(false);
             }
@@ -112,6 +114,67 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
+        private PandilleroAPie PrimeroEnPie()
+        {
+            foreach (PandilleroAPie p in pandilleros)
+            {
+                if (p.gameObject.activeSelf && !p.EstaKO)
+                {
+                    return p;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// T-423: <paramref name="origen"/> grita y los del grupo dentro del radio de refuerzos pasan a alerta. Con <paramref name="forzar"/>
+        /// (recibió daño) la alerta se mantiene unos segundos aunque el jugador esté fuera del territorio.
+        /// </summary>
+        public void Avisar(PandilleroAPie origen, string grito, bool forzar)
+        {
+            if (origen == null)
+            {
+                return;
+            }
+            if (forzar)
+            {
+                forzadaHasta = Time.time + datos.SegundosRefuerzo;
+                alerta = true;
+            }
+            origen.Gritar(grito);
+            float radio2 = datos.RadioRefuerzos * datos.RadioRefuerzos;
+            foreach (PandilleroAPie p in pandilleros)
+            {
+                if (p == origen || !p.gameObject.activeSelf || p.EstaKO)
+                {
+                    continue;
+                }
+                if ((p.transform.position - origen.transform.position).sqrMagnitude <= radio2)
+                {
+                    p.Alerta = true;
+                }
+            }
+        }
+
+        /// <summary>T-423: puesto de <paramref name="quien"/> entre los que siguen en pie (para repartirse alrededor del jugador).</summary>
+        public void Repartir(PandilleroAPie quien, out int indice, out int total)
+        {
+            indice = 0;
+            total = 0;
+            foreach (PandilleroAPie p in pandilleros)
+            {
+                if (!p.gameObject.activeSelf || p.EstaKO)
+                {
+                    continue;
+                }
+                if (p == quien)
+                {
+                    indice = total;
+                }
+                total++;
+            }
+        }
+
         private void AlEntrarLugar(IdLugar lugar) => jugadorEnInterior = lugar != IdLugar.Ninguno && lugar != IdLugar.Calle;
 
         private void AlSalirLugar(IdLugar lugar) => jugadorEnInterior = false;
@@ -128,6 +191,7 @@ namespace MechaCyberpunk.IA.APie
                 delta.y = 0f;
                 distancia = delta.magnitude;
             }
+            bool alertaAntes = alerta;
             bool valido = hayJugador && jugador.Modo == ModoJugador.APie && !jugadorEnInterior;
             if (!valido)
             {
@@ -137,13 +201,18 @@ namespace MechaCyberpunk.IA.APie
             {
                 alerta = true;
             }
-            else if (alerta && distancia > datos.RadioTerritorio + datos.MargenPersecucion)
+            else if (alerta && distancia > datos.RadioTerritorio + datos.MargenPersecucion && Time.time >= forzadaHasta)
             {
                 alerta = false;
             }
             foreach (PandilleroAPie p in pandilleros)
             {
                 p.Alerta = alerta;
+            }
+            if (alerta && !alertaAntes)
+            {
+                // T-423: al ver al jugador, el primero en pie grita y avisa a los demás.
+                Avisar(PrimeroEnPie(), "¡Ahí está!", false);
             }
 
             if (Presentes > 0)
