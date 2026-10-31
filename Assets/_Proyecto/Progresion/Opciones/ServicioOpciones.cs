@@ -46,6 +46,7 @@ namespace MechaCyberpunk.Progresion.Opciones
 
         public float Sensibilidad => Valores.sensibilidad;
         public bool InvertirY => Valores.invertirY;
+        public NivelApuntadoAsistido ApuntadoAsistido => Valores.apuntadoAsistido;
         public CalidadGrafica Calidad => Valores.calidad;
         public bool PantallaCompleta => Valores.pantallaCompleta;
         /// <summary>La copia en memoria del asset de URP que cambia la calidad (null si el proyecto no usa URP).</summary>
@@ -120,6 +121,12 @@ namespace MechaCyberpunk.Progresion.Opciones
         public void FijarInvertirY(bool valor)
         {
             Valores.invertirY = valor;
+            Guardar();
+        }
+
+        public void FijarApuntadoAsistido(NivelApuntadoAsistido nivel)
+        {
+            Valores.apuntadoAsistido = nivel;
             Guardar();
         }
 

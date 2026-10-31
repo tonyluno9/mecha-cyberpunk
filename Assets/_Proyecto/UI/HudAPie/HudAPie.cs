@@ -111,6 +111,8 @@ namespace MechaCyberpunk.UI.Hud
         private IVida vida;
         private ArmasAPie armas;
         private ControladorAPie controladorAPie;
+        private ApuntadoAsistido apuntado;
+        private bool miraEnBlanco;
         private bool aPieActual;
         private InteraccionAPie interaccion;
         private IObjetivos objetivos;
@@ -367,6 +369,7 @@ namespace MechaCyberpunk.UI.Hud
             vida = raiz != null ? raiz.GetComponent<IVida>() : null;
             armas = raiz != null ? raiz.GetComponent<ArmasAPie>() : null;
             controladorAPie = raiz != null ? raiz.GetComponent<ControladorAPie>() : null;
+            apuntado = raiz != null ? raiz.GetComponent<ApuntadoAsistido>() : null;
             interaccion = raiz != null ? raiz.GetComponent<InteraccionAPie>() : null;
             jugador.ModoCambio += AlCambiarModo;
             if (vida != null)
@@ -412,6 +415,7 @@ namespace MechaCyberpunk.UI.Hud
             vida = null;
             armas = null;
             controladorAPie = null;
+            apuntado = null;
             interaccion = null;
             avisoPuerta = string.Empty;
             avisoRestante = 0f;
@@ -435,6 +439,15 @@ namespace MechaCyberpunk.UI.Hud
             if (grupoMira.activeSelf != visible)
             {
                 grupoMira.SetActive(visible);
+            }
+            bool enBlanco = visible && apuntado != null && apuntado.HayBlanco;
+            if (enBlanco != miraEnBlanco && partesMira != null)
+            {
+                miraEnBlanco = enBlanco;
+                foreach (Image parte in partesMira)
+                {
+                    parte.color = enBlanco ? config.ColorMiraBlanco : config.ColorTexto;
+                }
             }
         }
 

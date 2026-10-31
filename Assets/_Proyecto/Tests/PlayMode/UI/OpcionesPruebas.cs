@@ -182,7 +182,8 @@ namespace MechaCyberpunk.Tests.UI
             // b. ↓ ↓ a VOLUMEN GENERAL y cuatro ←: 60 % en el gestor al momento; EFECTOS no cambia.
             yield return Pulsar(teclado.downArrowKey);
             yield return Pulsar(teclado.downArrowKey);
-            Assert.AreSame(opciones.Volumen(SeccionSonido.General), opciones.Menu.Elegido, "↓ ↓ llega a VOLUMEN GENERAL");
+            yield return Pulsar(teclado.downArrowKey);
+            Assert.AreSame(opciones.Volumen(SeccionSonido.General), opciones.Menu.Elegido, "↓ ↓ ↓ llega a VOLUMEN GENERAL");
             for (int i = 0; i < 4; i++)
             {
                 yield return Pulsar(teclado.leftArrowKey);
@@ -194,6 +195,7 @@ namespace MechaCyberpunk.Tests.UI
             Capturar("T-411-1", jugador.Camara);
 
             // c. ↑ a INVERTIR Y (va arriba de los volúmenes) y Enter.
+            yield return Pulsar(teclado.upArrowKey);
             yield return Pulsar(teclado.upArrowKey);
             Assert.AreSame(opciones.InvertirY, opciones.Menu.Elegido, "↑ llega a INVERTIR Y");
             yield return Pulsar(teclado.enterKey);

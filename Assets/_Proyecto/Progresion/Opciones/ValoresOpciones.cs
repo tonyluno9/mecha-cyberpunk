@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Core;
 
 namespace MechaCyberpunk.Progresion.Opciones
 {
@@ -11,6 +12,7 @@ namespace MechaCyberpunk.Progresion.Opciones
     {
         public float sensibilidad = 1f;
         public bool invertirY;
+        public NivelApuntadoAsistido apuntadoAsistido = NivelApuntadoAsistido.Suave;
         public float[] volumenes = new float[0];
         public CalidadGrafica calidad = CalidadGrafica.Alta;
         public int resolucionAncho;

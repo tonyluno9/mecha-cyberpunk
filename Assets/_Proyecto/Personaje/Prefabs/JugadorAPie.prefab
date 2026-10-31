@@ -1256,6 +1256,7 @@ GameObject:
   - component: {fileID: 5568352099590507503}
   - component: {fileID: 4022008871837785212}
   - component: {fileID: 2944641253235240649}
+  - component: {fileID: 574620761478159225}
   m_Layer: 0
   m_Name: JugadorAPie
   m_TagString: Untagged
@@ -1325,6 +1326,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Jugador.JugadorAPie
   camara: {fileID: 523304371379065450}
+  alturaBusquedaPiso: 1.5
+  distanciaBusquedaPiso: 4
 --- !u!114 &6535121655832087697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1345,7 +1348,6 @@ MonoBehaviour:
   correr: {fileID: -6729821780329341335, guid: c989656e714a4084491168fccd720455, type: 3}
   saltar: {fileID: -3572646703785849156, guid: c989656e714a4084491168fccd720455, type: 3}
   atacar: {fileID: -5751973666824944471, guid: c989656e714a4084491168fccd720455, type: 3}
-  liberarCursor: {fileID: -3118587846660334267, guid: c989656e714a4084491168fccd720455, type: 3}
   apuntar: {fileID: 4412098721432619847, guid: c989656e714a4084491168fccd720455, type: 3}
   configCamara: {fileID: 11400000, guid: bbedbe0a2d9300e48b0365e785f9857b, type: 2}
 --- !u!114 &8262144701209970462
@@ -1498,6 +1500,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Jugador.AparicionJugador
   idAparicion: 
   segundosEspera: 1
+--- !u!114 &574620761478159225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6098087285878163752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b045df25f954b64092502f3ea6f51a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Combate.ApuntadoAsistido
+  datos: {fileID: 11400000, guid: 9cf132fcf5c91134bad54dfce9ba8754, type: 2}
 --- !u!1 &6234094412982613420
 GameObject:
   m_ObjectHideFlags: 0

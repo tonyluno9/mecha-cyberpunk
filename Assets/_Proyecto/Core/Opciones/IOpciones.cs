@@ -16,6 +16,9 @@ namespace MechaCyberpunk.Core
         /// <summary>True: mover el ratón hacia arriba mira hacia abajo.</summary>
         bool InvertirY { get; }
 
+        /// <summary>Apuntado asistido al apuntar con clic derecho (T-424). Sin servicio se usa Suave.</summary>
+        NivelApuntadoAsistido ApuntadoAsistido { get; }
+
         /// <summary>Se dispara al cambiar cualquier opción.</summary>
         event Action Cambio;
     }
