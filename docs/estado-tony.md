@@ -160,3 +160,10 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 | T-427 Ataques rivales a tus zonas | Hecha (rama tony/T-427-ataques-zonas, integrada en tony/fase-g) |
 | T-428 Neón Alto + cuarta zona (LA REFINERÍA) | Hecha (rama tony/T-428-neon-cuarta-zona, integrada en tony/fase-g) |
 | T-429 Negocios en tus zonas | Hecha (rama tony/T-429-negocios, integrada en tony/fase-g) |
+
+## Detenido por Tony (2026-10-31, 00:50)
+- En main (f790942, con push): paso 4 completo (T-419: kit de pisos, 122 FPS de noche en la calle) y paso 5 mejoras 1 a 9 (T-420 a T-429) más T-422 (15 pruebas viejas al día). Builds/Juego y Builds/Demo regenerados con T-429.
+- A medias: T-430 (mejora 10, implantes a pie) en tony/T-430-implantes-a-pie, WIP 4c3e4ca: cambios en Core/Implantes, Personaje (pistola, cubierta/rodada, apuntado), El Doc y HudImplantes.cs, sin compilar ni .meta ni archivo de tarea. Falta: compilar, tienda de El Doc, pruebas, captura, docs, builds y merge.
+- Sigue: terminar T-430; mejora 11 (tutorial); 12 a 18 sin la 13; al final suite completa y FPS con MedicionNoche (T-428 agregó props sin medir).
+- Conocido: MostradorTiendaPruebas 2 fallan (esperan 6 artículos, hay 20); en T-426 faltan escoltar aliado y carreras; en la captura de T-429 el jugador sale en el cielo (revisar).
+- Probar primero mañana: Builds/Demo/Cyberfix.exe: disparar (patada y X), Q cubrirse y Ctrl rodar, tablero de encargos junto a tu casa, negocios con E en los postes y la lista en el mapa (M).
