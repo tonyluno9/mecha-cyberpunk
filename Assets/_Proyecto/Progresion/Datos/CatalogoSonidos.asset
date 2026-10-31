@@ -13,48 +13,183 @@ MonoBehaviour:
   m_Name: CatalogoSonidos
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.Sonido.CatalogoSonidos
   entradas:
+  - id: AMB_BAR
+    finales:
+    - {fileID: 8300000, guid: 95d1ef804cae8fd4b919e5af76ea7c6f, type: 3}
+    provisionales: []
+  - id: AMB_CALLE_DIA
+    finales:
+    - {fileID: 8300000, guid: 2c40e237fd8bcb648a9f2a2d43cfc545, type: 3}
+    provisionales: []
+  - id: AMB_CALLE_NOCHE
+    finales:
+    - {fileID: 8300000, guid: 4bcc51da2f450814fac4103fb0626665, type: 3}
+    provisionales: []
+  - id: AMB_CALLEJON
+    finales:
+    - {fileID: 8300000, guid: 6cb54870a2d4cc94992cb4f1b31e8862, type: 3}
+    provisionales: []
+  - id: AMB_CASINO
+    finales:
+    - {fileID: 8300000, guid: 93959cd96a5c75447813c5fdf718dd35, type: 3}
+    provisionales: []
+  - id: AMB_CLANDESTINO
+    finales:
+    - {fileID: 8300000, guid: 5efe040f62fc2b64cb2fe8b269d67427, type: 3}
+    provisionales: []
+  - id: AMB_CLINICA
+    finales:
+    - {fileID: 8300000, guid: c014432806a3d8a4fb92fe810542bba4, type: 3}
+    provisionales: []
+  - id: AMB_INTERIOR_CASA
+    finales:
+    - {fileID: 8300000, guid: 02b67cd8f5708814faadc1c3ac60dda3, type: 3}
+    provisionales: []
+  - id: AMB_LLUVIA_SUAVE
+    finales:
+    - {fileID: 8300000, guid: 0c77dcc6dc7babe43a3264ba5765e10c, type: 3}
+    provisionales: []
+  - id: AMB_MERCADO
+    finales:
+    - {fileID: 8300000, guid: 3da56b44e083dcc42a52c2bff95a938e, type: 3}
+    provisionales: []
+  - id: AMB_NEON_ALTO
+    finales:
+    - {fileID: 8300000, guid: 91211850e3003d14c9ae204abe355fc0, type: 3}
+    provisionales: []
+  - id: AMB_TIANGUIS
+    finales:
+    - {fileID: 8300000, guid: b4d30b161a26c1740a1d3c492fb16285, type: 3}
+    provisionales: []
   - id: ARM_BALA_IMPACTO_CARNE
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 26737841c990eef449eea1639435b72f, type: 3}
+    - {fileID: 8300000, guid: dda4ab0cf03642a4b8c1b1336192b41b, type: 3}
+    - {fileID: 8300000, guid: b5d4795720a8d3343b45dbdf2500ab37, type: 3}
+    - {fileID: 8300000, guid: cb3c25af69d4dd441ab5d0f5902c1656, type: 3}
     provisionales:
     - {fileID: 8300000, guid: b060c5fb129b83c4db19f1d9351d97d0, type: 3}
   - id: ARM_BALA_IMPACTO_CONCRETO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 563b9c1c77b6e184ba97f7209a704b5d, type: 3}
+    - {fileID: 8300000, guid: 1a285e611c27b3b40bd5c50e3742ea45, type: 3}
+    - {fileID: 8300000, guid: 2f1eca18a8703334fb822992f35966f8, type: 3}
+    - {fileID: 8300000, guid: 6cb4acffcbc35d34c80bedec3e2c9c2b, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 1f6847966e4d6714bba0bb5d815cacdb, type: 3}
+  - id: ARM_BALA_IMPACTO_METAL
+    finales:
+    - {fileID: 8300000, guid: 70a0b74d6061f1942905ea2ae2f13ed6, type: 3}
+    - {fileID: 8300000, guid: a5fac3a2cbb8ca342a55d7e1b6676d29, type: 3}
+    - {fileID: 8300000, guid: 7b8a6c7b6b7a76a41ab6c73082aaa248, type: 3}
+    - {fileID: 8300000, guid: a922d99fe0a7cec429bfb553f8740e83, type: 3}
+    provisionales: []
+  - id: ARM_BALA_ZUMBIDO
+    finales:
+    - {fileID: 8300000, guid: a9b30f1c90e6bcc4e901630d83fed0ee, type: 3}
+    - {fileID: 8300000, guid: a3b7a494f00b0194881c1e02f05cc6d4, type: 3}
+    - {fileID: 8300000, guid: 370fc5ea9c511e3499b6f3495031a6c2, type: 3}
+    provisionales: []
   - id: ARM_CAMBIAR
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: b691b90d521499843aa88064bc5fbecb, type: 3}
+    - {fileID: 8300000, guid: fb8b12abf877f2f4e8f8bdf8c2f4eecc, type: 3}
     provisionales:
     - {fileID: 8300000, guid: eebef414dba0e7c498265cfbb2b6ddf2, type: 3}
+  - id: ARM_CASQUILLO
+    finales:
+    - {fileID: 8300000, guid: fa56db1e9781f5f4e95905de2a70a304, type: 3}
+    - {fileID: 8300000, guid: 5ee5b432b0ef437409c32d8eb7572fee, type: 3}
+    - {fileID: 8300000, guid: bce0d0727b88d4a4c82027479435d119, type: 3}
+    - {fileID: 8300000, guid: 1e35dc1fd81f2054393c8e761992dafc, type: 3}
+    provisionales: []
+  - id: ARM_DISPARO_LEJANO
+    finales:
+    - {fileID: 8300000, guid: 631e48b415f30b649a212c3090c7a875, type: 3}
+    - {fileID: 8300000, guid: b6b75a9562e625f4b81cda8a8b8d4d56, type: 3}
+    - {fileID: 8300000, guid: b2eb28c10ca3b2a478c1eb54cb857ff3, type: 3}
+    - {fileID: 8300000, guid: b5b6263e652ea6e468452f6b225244ec, type: 3}
+    provisionales: []
+  - id: ARM_ESC_BOMBEO
+    finales:
+    - {fileID: 8300000, guid: 723e735bd20df4f47ac774f4212b0b19, type: 3}
+    - {fileID: 8300000, guid: 248befc6b13ccb74591f4c7ac53be6e1, type: 3}
+    provisionales: []
   - id: ARM_ESC_DISPARO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 145e42c8dfab576489e9b5e6bdd31b2a, type: 3}
+    - {fileID: 8300000, guid: 9f2f5ab377d13274591c5bb966c3746f, type: 3}
+    - {fileID: 8300000, guid: b6d83b9422d5d454384c43d988e15e54, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 2d4e32f32d8bbf545a183a7fc702d8c0, type: 3}
   - id: ARM_ESC_RECARGA_CARTUCHO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 5c6aaa9641e317243b1f51a8e037b5ca, type: 3}
+    - {fileID: 8300000, guid: a8af45e55a508cc46afd18c8e14cc3eb, type: 3}
+    - {fileID: 8300000, guid: 197a6eecf26f4ca4db44f63710a68e34, type: 3}
     provisionales:
     - {fileID: 8300000, guid: f21fb21f5646ef048816b33153c21a0a, type: 3}
+  - id: ARM_FUS_DISPARO
+    finales:
+    - {fileID: 8300000, guid: 06e268fa4005954468aa55468125a3ef, type: 3}
+    - {fileID: 8300000, guid: 3fd05f88621e5dd4e95fa231ccdd364f, type: 3}
+    - {fileID: 8300000, guid: 9fed413ef704ddb4a81e9e2ffabc0d68, type: 3}
+    - {fileID: 8300000, guid: 0d2879d986c46cc43a15de370a697c07, type: 3}
+    provisionales: []
+  - id: ARM_FUS_RAFAGA_COLA
+    finales:
+    - {fileID: 8300000, guid: 72850a8a92cf71d4993841ab3f50d811, type: 3}
+    - {fileID: 8300000, guid: ebfc52ac9f52ec74dad67200da96413d, type: 3}
+    provisionales: []
+  - id: ARM_FUS_RECARGA
+    finales:
+    - {fileID: 8300000, guid: 9ab8849116e29b547bcd757e1cc857ea, type: 3}
+    provisionales: []
   - id: ARM_LASER_AVISO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 2e0b6eaa79f59af4e8cf18c84f493aa5, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 45e416e907c475a49beb588dd8950615, type: 3}
+  - id: ARM_MEJORA
+    finales:
+    - {fileID: 8300000, guid: d63f35949eba92d47b85096bba82ff7f, type: 3}
+    provisionales: []
   - id: ARM_PIS_DISPARO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 6bd3b713faa24de458c97177fc21a710, type: 3}
+    - {fileID: 8300000, guid: b61bbc86142de1f43b51a0b63359c54e, type: 3}
+    - {fileID: 8300000, guid: c4c793baad55b104fbb810570883f638, type: 3}
+    - {fileID: 8300000, guid: 0d1bcaa54c712f240a3e9cd0aa48a09b, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 8b99b68399a18794286c9345970923eb, type: 3}
   - id: ARM_PIS_RECARGA
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: ee1ce26a405ea9b4b8dc27b5078751c3, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 6d7db36bbbc646b4d9ee0a60129cad71, type: 3}
+  - id: ARM_PIS_SACAR
+    finales:
+    - {fileID: 8300000, guid: 089b8e51ea51a7f498dfdec883d2cb51, type: 3}
+    provisionales: []
+  - id: ARM_SNI_CERROJO
+    finales:
+    - {fileID: 8300000, guid: 0f16b3992c67fc943a701511796175f5, type: 3}
+    provisionales: []
   - id: ARM_SNI_DISPARO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 510a8287664e5e6429da7c637c4d5fc0, type: 3}
+    - {fileID: 8300000, guid: 6d765b1e68558c94b9429db41b5751b5, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 1f6a730ff258ff54799bcbd230a918e6, type: 3}
   - id: ARM_SNI_RECARGA
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: a6ed1453e6b63b24f815f33a64ee91bc, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 800c5f66ecd83544f8cfdc4dffa6c2ed, type: 3}
   - id: ARM_SNI_ZOOM
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 8f4d0b8d7ae214b4da5af8e958f8ccf3, type: 3}
+    - {fileID: 8300000, guid: b29c66db7494c244eb63ef6f8f28494a, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 71bc289062dadce4aad496a08ff03f6b, type: 3}
   - id: ARM_SUB_DISPARO
@@ -66,106 +201,478 @@ MonoBehaviour:
     provisionales:
     - {fileID: 8300000, guid: dbffc89c5f80a8e4ea64dff24f43fc7c, type: 3}
   - id: ARM_VACIO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: e45f0751c7497594c88ab09b262a1ff4, type: 3}
+    - {fileID: 8300000, guid: 96a1d63f2777adf4f85aad653a197932, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 94314af9a53dbbc4493e48a08f79c4f4, type: 3}
+  - id: CAL_BAJA_NIVEL
+    finales:
+    - {fileID: 8300000, guid: 612650e8249721349b23fd14bd5a37ba, type: 3}
+    provisionales: []
+  - id: CAL_DRON_DISPARO
+    finales:
+    - {fileID: 8300000, guid: 39a09938f3f16464698c54bfeaf13021, type: 3}
+    - {fileID: 8300000, guid: 8d735da4d44294348b6eb32249c5e9be, type: 3}
+    - {fileID: 8300000, guid: 26b619bc4bd0e5246b7a732995e2f7cf, type: 3}
+    provisionales: []
+  - id: CAL_DRON_ESCANEO
+    finales:
+    - {fileID: 8300000, guid: 11361dc6ceb789d4ab2ac3a7dabe8665, type: 3}
+    provisionales: []
+  - id: CAL_DRON_ZUMBIDO
+    finales:
+    - {fileID: 8300000, guid: f37bda705bde5854a8215b97fc7f4df8, type: 3}
+    provisionales: []
+  - id: CAL_PATRULLA_MEGAFONO
+    finales:
+    - {fileID: 8300000, guid: 78926bdc98d293f448151976edf60429, type: 3}
+    - {fileID: 8300000, guid: e5589441145728f478be119323e283f4, type: 3}
+    provisionales: []
+  - id: CAL_PATRULLA_SIRENA
+    finales:
+    - {fileID: 8300000, guid: 28d432a6f4264ed409850784ad6cf5f4, type: 3}
+    provisionales: []
   - id: CAL_SUBE_NIVEL
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: bf856d879e2b5734180f8a7e02e0a488, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 5cb1c87b5a3272448925fe1ff6ce8b63, type: 3}
   - id: ECO_ARMA_RECOGER
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 73b9da75de0fa7e459728ee8e126757b, type: 3}
     provisionales:
     - {fileID: 8300000, guid: e3f476dc961f1584396cf41add69150b, type: 3}
+  - id: ECO_CASINO_TRAGAMONEDAS
+    finales:
+    - {fileID: 8300000, guid: b7ccece653c588a4ebd27631b5950784, type: 3}
+    - {fileID: 8300000, guid: 2537e0786de01194cbc7fc0fce84a7a6, type: 3}
+    provisionales: []
   - id: ECO_CLINICA_DESPERTAR
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: ed9902b2b66c69d46939f935611b8e10, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 6106d271405f95641827f67a1b9e6db6, type: 3}
   - id: ECO_COMPRA
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: ae7efd14781f52e4e9c3b68040e611f7, type: 3}
     provisionales:
     - {fileID: 8300000, guid: a774e934502643246b876465318aaa31, type: 3}
+  - id: ECO_DINERO_RECOGER
+    finales:
+    - {fileID: 8300000, guid: 29754ef2de5e80f49972e5f11c9c2001, type: 3}
+    - {fileID: 8300000, guid: e47af902d14af7d4b9083fe68bd43ee2, type: 3}
+    provisionales: []
   - id: ECO_SIN_DINERO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 4969a753b0a031a4cbd0ab06af9e7d28, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 7cf3f363f1955c841b36eb8edf41dc89, type: 3}
+  - id: JUG_CAE_DERROTADO
+    finales:
+    - {fileID: 8300000, guid: b97388d7dfd17294390bd3e6464fb28e, type: 3}
+    - {fileID: 8300000, guid: 29b2448abeb09c64fb5bcecd2646d137, type: 3}
+    provisionales: []
   - id: JUG_CAER
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: be0d30ef4260a3842a9e352c8a8c973d, type: 3}
+    - {fileID: 8300000, guid: b78c11699d1ffc6459fa17ab33c03362, type: 3}
+    - {fileID: 8300000, guid: ef0cf970364e22741ba5b80b7c304eee, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 0f628c7fe089ab24e99a87bf9c366745, type: 3}
+  - id: JUG_CORRER_RESPIRA
+    finales:
+    - {fileID: 8300000, guid: 583d9d5f03cb4d443a8a1ed8f468cefa, type: 3}
+    provisionales: []
   - id: JUG_DANIO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: d5252f564c571a84b97a370076e2f1df, type: 3}
+    - {fileID: 8300000, guid: fd804165b5fef7246b697faa30daa380, type: 3}
+    - {fileID: 8300000, guid: 8235c956653bc3a45b55741b653a82f8, type: 3}
+    - {fileID: 8300000, guid: 72db6f928b0e5094796dd320949e6b43, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 5b40dc6084f0d964e8c389fbeacb575d, type: 3}
   - id: JUG_PASO_ASFALTO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: cf206e645290136448044300fd114405, type: 3}
+    - {fileID: 8300000, guid: ff17544d3f99db342af376537235b93d, type: 3}
+    - {fileID: 8300000, guid: 4f4bd0d8eed18834c8fc228215a7fa6c, type: 3}
+    - {fileID: 8300000, guid: 2430bfc240fcad14a9d548d998d24e33, type: 3}
+    - {fileID: 8300000, guid: add2a16969e96844faf2453bd9c27bfd, type: 3}
+    - {fileID: 8300000, guid: 509bd9284d602ca489b6be7c9ea7f6a0, type: 3}
     provisionales:
     - {fileID: 8300000, guid: e467c77a710c36a4b97b6b44eee7a776, type: 3}
+  - id: JUG_PASO_ASFALTO_MOJADO
+    finales:
+    - {fileID: 8300000, guid: 613d865328a61c140bd9da193b283421, type: 3}
+    - {fileID: 8300000, guid: 4ef7716adffc4d74c9da9ba85aae6932, type: 3}
+    - {fileID: 8300000, guid: 7fc65d493699db849b014d9e04e08b70, type: 3}
+    - {fileID: 8300000, guid: bfe18d37debad1447a4d5eea68710682, type: 3}
+    - {fileID: 8300000, guid: 3d286ececd6647f44bcecbd8fcf2bcd7, type: 3}
+    - {fileID: 8300000, guid: 0792dc4aa07fa854c970cf7f12f358c0, type: 3}
+    provisionales: []
+  - id: JUG_PASO_INTERIOR
+    finales:
+    - {fileID: 8300000, guid: 5094bcdfe7eaa0e4294d775f56458748, type: 3}
+    - {fileID: 8300000, guid: 69e1628d90d48cf45abe11eab41e543a, type: 3}
+    - {fileID: 8300000, guid: 137c77a37cd0ccb47bc8a5addaef85f1, type: 3}
+    - {fileID: 8300000, guid: 4db82f70379a1114d803bb77e5c4131d, type: 3}
+    - {fileID: 8300000, guid: 40ff63efca5ceb4438550443f35af720, type: 3}
+    - {fileID: 8300000, guid: 58e4f299e4bc6124e840e8c47944fad6, type: 3}
+    provisionales: []
+  - id: JUG_PASO_METAL
+    finales:
+    - {fileID: 8300000, guid: f9a6428d911b5e14e8581bdfb21e215e, type: 3}
+    - {fileID: 8300000, guid: a9738b3983920cd4684991829f8cf56f, type: 3}
+    - {fileID: 8300000, guid: 64cb9f49bfddd384f97ca7ead62487e8, type: 3}
+    - {fileID: 8300000, guid: 213f5fade7299f64f9e32bdcb3ae94e4, type: 3}
+    provisionales: []
+  - id: JUG_REGENERA
+    finales:
+    - {fileID: 8300000, guid: 0df8a3198fa1b04458b91ab38a02458a, type: 3}
+    provisionales: []
+  - id: JUG_ROPA_MOVER
+    finales:
+    - {fileID: 8300000, guid: 793b8496fc7ce184c97ecd1fff203989, type: 3}
+    - {fileID: 8300000, guid: 359299c99ca573a43b3374b59ec18b8f, type: 3}
+    - {fileID: 8300000, guid: 91a9d5f6d58ebd5469a0d60bd28af388, type: 3}
+    provisionales: []
   - id: JUG_SALTO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 01da34fb51f9a514ab2833fb45d489ee, type: 3}
+    - {fileID: 8300000, guid: 82c2f6707a1b09c46b36762ab4745b3e, type: 3}
+    - {fileID: 8300000, guid: 939f5c6c3ee694e418a055408aa7910b, type: 3}
     provisionales:
     - {fileID: 8300000, guid: c1cf6ada0b64a274b893f8a5ed718983, type: 3}
+  - id: JUG_VIDA_BAJA
+    finales:
+    - {fileID: 8300000, guid: a7bda0ff6adb33248a10bd3d8040dcf0, type: 3}
+    provisionales: []
+  - id: MUN_AIRE_ACONDICIONADO
+    finales:
+    - {fileID: 8300000, guid: ed70f2f010b9f9e4fa8623216190f473, type: 3}
+    provisionales: []
+  - id: MUN_BASURERO_GOLPE
+    finales:
+    - {fileID: 8300000, guid: 812a337df5ace9343b23f74eaaf718db, type: 3}
+    - {fileID: 8300000, guid: c83e0c73c99c869439bfe8203d269b0f, type: 3}
+    provisionales: []
+  - id: MUN_CAMA
+    finales:
+    - {fileID: 8300000, guid: 378aa674e9bc0354f9aa111bc481663b, type: 3}
+    provisionales: []
+  - id: MUN_CHISPAS_ELECTRICAS
+    finales:
+    - {fileID: 8300000, guid: 4bb7085db1839004596a57ae38c0ec3d, type: 3}
+    - {fileID: 8300000, guid: 02bf25950051ef745b9241d9fd9ad6e9, type: 3}
+    provisionales: []
+  - id: MUN_CORTINA_METALICA
+    finales:
+    - {fileID: 8300000, guid: 947a6e61ed8066c43a3f0aa60ed58a92, type: 3}
+    provisionales: []
+  - id: MUN_GENERADOR
+    finales:
+    - {fileID: 8300000, guid: 2a8fd408132a21243840d2a5e5c29cca, type: 3}
+    provisionales: []
+  - id: MUN_HOLOGRAMA
+    finales:
+    - {fileID: 8300000, guid: f10129c3cdeb1834d86073e5373f6e3f, type: 3}
+    provisionales: []
+  - id: MUN_NEON_ZUMBIDO
+    finales:
+    - {fileID: 8300000, guid: c9b045fe65f42644e83364f07ea67df9, type: 3}
+    provisionales: []
+  - id: MUN_PERRO_LADRA
+    finales:
+    - {fileID: 8300000, guid: d43f82a6d94136549923b80272f717ae, type: 3}
+    - {fileID: 8300000, guid: d7b200849c6eb1a43a4d18a9a42b0408, type: 3}
+    - {fileID: 8300000, guid: 2aeb6d6dcb7a77449b79fec4f4e28147, type: 3}
+    provisionales: []
+  - id: MUN_PUERTA_CASA_ABRIR
+    finales:
+    - {fileID: 8300000, guid: 6f6ed097a52afb64380718e1f5f6e4ca, type: 3}
+    - {fileID: 8300000, guid: 849daf8e1344eb448938f67329a4c527, type: 3}
+    provisionales: []
+  - id: MUN_PUERTA_CASA_CERRAR
+    finales:
+    - {fileID: 8300000, guid: b1c47ee6dd96d0b4f8eb3595da097c96, type: 3}
+    - {fileID: 8300000, guid: 59619f9c9a72a804b9f5bba2bf5663d4, type: 3}
+    provisionales: []
+  - id: MUN_REJA
+    finales:
+    - {fileID: 8300000, guid: 8afce1379bff78844a7db870e6ed6e65, type: 3}
+    provisionales: []
+  - id: MUN_SOLDADORA
+    finales:
+    - {fileID: 8300000, guid: 8e67be754fdde834d8886c1cb24aae75, type: 3}
+    provisionales: []
+  - id: MUN_VIDRIO_ROTO
+    finales:
+    - {fileID: 8300000, guid: 3891f280817cf3a41b609188ea46c448, type: 3}
+    - {fileID: 8300000, guid: 0915dbfac91bf054e838cbf315f6b2e7, type: 3}
+    provisionales: []
+  - id: PAN_ALIADO_CAE
+    finales:
+    - {fileID: 8300000, guid: 93eb2bc45cd0ef149b35b09d688707de, type: 3}
+    - {fileID: 8300000, guid: c8fd4202e52388749a37a3c8644b30b3, type: 3}
+    provisionales: []
+  - id: PAN_ALIADO_ESPERA
+    finales:
+    - {fileID: 8300000, guid: acf2abfbbca247c459002e1eddf4200f, type: 3}
+    - {fileID: 8300000, guid: 2279a3f8d21829d45aa2663ff66c458d, type: 3}
+    provisionales: []
   - id: PAN_ALIADO_RECLUTA
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 56439fa563712fd479262f479524bbdb, type: 3}
+    - {fileID: 8300000, guid: 89fd12c48b17dd9439fdfb037838c048, type: 3}
+    - {fileID: 8300000, guid: c967a837baa59c548b87368612a506a2, type: 3}
     provisionales:
     - {fileID: 8300000, guid: df1a6c5a16d1f0d4ca31f70dd60a4341, type: 3}
+  - id: PAN_ALIADO_SIGUE
+    finales:
+    - {fileID: 8300000, guid: 0e81e4214907e4f42bd8d1f3afc5c51b, type: 3}
+    - {fileID: 8300000, guid: 51c27abcf7fe74b4e835afadd4bc85cc, type: 3}
+    provisionales: []
+  - id: PAN_ALIADO_SUBE_NIVEL
+    finales:
+    - {fileID: 8300000, guid: c7ea157ad608cee4bbc4f315ba37600c, type: 3}
+    provisionales: []
+  - id: PAN_JEFE_CAE
+    finales:
+    - {fileID: 8300000, guid: aea8a3ba35e64df41a4124c7b7c4bc2b, type: 3}
+    provisionales: []
   - id: PAN_JEFE_ENTRADA
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 2771e628705a62442a1ca4ae5c068df5, type: 3}
     provisionales:
     - {fileID: 8300000, guid: d4905eef83405b54997af5b0c91989b3, type: 3}
   - id: PAN_RIVAL_ALERTA
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 9934cb099e28dad42a0410858e55478c, type: 3}
+    - {fileID: 8300000, guid: cf1939aa507f0fa4bae497ac95cf4f3e, type: 3}
+    - {fileID: 8300000, guid: d36ce6b613cf16f49ad43b6faa1f2cd9, type: 3}
+    - {fileID: 8300000, guid: ab98e0c436ba4b6418a9e66f87539ec1, type: 3}
     provisionales:
     - {fileID: 8300000, guid: c63cc2b1251f3d441973827fd21e9833, type: 3}
   - id: PAN_RIVAL_CAE
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 3eefa283b3721f843affd0661a5839b1, type: 3}
+    - {fileID: 8300000, guid: a833a5229d402b5408cc550d858f69c9, type: 3}
+    - {fileID: 8300000, guid: f9f81b6c2d1e94444bb33abc52524b2b, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 015bf59ea601dcf47b44c958507b468d, type: 3}
+  - id: PAN_RIVAL_DANIO
+    finales:
+    - {fileID: 8300000, guid: c8e4c88c85ca2cb4ca02505dd0eef3fd, type: 3}
+    - {fileID: 8300000, guid: e8b2482ff9aa97843a8479f689b5fee3, type: 3}
+    - {fileID: 8300000, guid: dc868b5571d79bc4d9720a82e07f33ea, type: 3}
+    - {fileID: 8300000, guid: 72672d198d123784086379276785aa77, type: 3}
+    provisionales: []
+  - id: PAN_RIVAL_PROVOCA
+    finales:
+    - {fileID: 8300000, guid: 499315edbc4de7943a76e928aee0450c, type: 3}
+    - {fileID: 8300000, guid: 9f1b8856ab8c3fb45ab28a4cf4172baa, type: 3}
+    - {fileID: 8300000, guid: 1b63521f264e7c1409a1601f20fee859, type: 3}
+    - {fileID: 8300000, guid: 2f6fe94b02a570a4db639043d35c6218, type: 3}
+    provisionales: []
+  - id: PAN_SILBIDO_LLAMAR
+    finales:
+    - {fileID: 8300000, guid: 43e089ab092ffce4a8433bf0ea41ce56, type: 3}
+    provisionales: []
+  - id: PAN_VECINO_AUXILIO
+    finales:
+    - {fileID: 8300000, guid: 56ac5a70edb1421478df9f73b15a048a, type: 3}
+    - {fileID: 8300000, guid: d7468c4880f385a4eb8dc67f0d30402c, type: 3}
+    provisionales: []
+  - id: PUN_BLOQUEO
+    finales:
+    - {fileID: 8300000, guid: 38bd339cdfcc4794abee850afe511843, type: 3}
+    - {fileID: 8300000, guid: 8a0624b5e9f2a034595af5fd174b371d, type: 3}
+    - {fileID: 8300000, guid: 368383ef8f3d58c4097d61e24c4159c8, type: 3}
+    provisionales: []
   - id: PUN_GOLPE_AIRE
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 8508442a8d23b6741ba8e7ff383837c7, type: 3}
+    - {fileID: 8300000, guid: aa44d9058c2084a458e808d2c3f34eb7, type: 3}
+    - {fileID: 8300000, guid: f6cb144162a60744d97c54c801a378ff, type: 3}
+    - {fileID: 8300000, guid: 02228ae40e90a4846b996013af789bb6, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 004f26f44f479034d90669753d2143b8, type: 3}
   - id: PUN_GOLPE_CARNE
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 1e19cf4578692f04183b7e8d10a1f128, type: 3}
+    - {fileID: 8300000, guid: b1e46dd348da52e40b02ce5ad6354baf, type: 3}
+    - {fileID: 8300000, guid: 22f937182955ddd47a6eeb00ea9f29f8, type: 3}
+    - {fileID: 8300000, guid: dbd94fbe603c377478fff6d31f5d0746, type: 3}
+    - {fileID: 8300000, guid: 6c3020212eaa7fc4f9dff5de6a842f05, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 31d4b927dded4554a922afbe1c66c02c, type: 3}
+  - id: PUN_GOLPE_FUERTE
+    finales:
+    - {fileID: 8300000, guid: 213646c9904b0714c99378fcbb51ca4f, type: 3}
+    - {fileID: 8300000, guid: eaceae8abeea462429f06801fa53107c, type: 3}
+    - {fileID: 8300000, guid: 5e3e1d0a1657c724eaea4ed4b53f4e26, type: 3}
+    provisionales: []
+  - id: PUN_PATADA
+    finales:
+    - {fileID: 8300000, guid: 5b2d6c77f40d72d4c985e5b2ede41b14, type: 3}
+    - {fileID: 8300000, guid: 305d22a48c19d324a87d7771912f20ae, type: 3}
+    - {fileID: 8300000, guid: 3dced2bef25d90940a1a8e0c43163a17, type: 3}
+    provisionales: []
   - id: UI_ACEPTAR
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 0f43143f237d7034d9551f287240c5b3, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 12d7e27f8984b8a4f8f17d996f556f07, type: 3}
   - id: UI_CANCELAR
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: e04eeea0a98035c43980ef5fe7b58c93, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 51d570e28a4716b4887462bce3208926, type: 3}
+  - id: UI_CONTINUARA
+    finales:
+    - {fileID: 8300000, guid: 3f12cf74980a3dc44a1429e93d17323a, type: 3}
+    provisionales: []
   - id: UI_ERROR
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 030d9d9d88f08c44aaaf0f9a59e7ee8a, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 7e49501337447834290c8798f04ce6e3, type: 3}
+  - id: UI_GUARDADO
+    finales:
+    - {fileID: 8300000, guid: ef2bbccc92096f04abe1961c0005971f, type: 3}
+    provisionales: []
+  - id: UI_MAPA_ABRIR
+    finales:
+    - {fileID: 8300000, guid: 3bd4689e1fc3b6e47887a83ee687728f, type: 3}
+    provisionales: []
+  - id: UI_MAPA_CERRAR
+    finales:
+    - {fileID: 8300000, guid: 88526a6ece7e6f44f8a87b5cad2d648a, type: 3}
+    provisionales: []
   - id: UI_MOVER
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 0d7c4c10683b5ad4c93bc3bab378352d, type: 3}
     provisionales:
     - {fileID: 8300000, guid: ef51d9b30049b2243ac605ba0bfc550e, type: 3}
   - id: UI_OBJETIVO_CUMPLIDO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: e518a06250d543a4d8a443c2bde1a987, type: 3}
     provisionales:
     - {fileID: 8300000, guid: c9e03f35041af7444ac4cb4af062e70f, type: 3}
   - id: UI_OBJETIVO_NUEVO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 0477f39dbb68d9b45a0a9d50529a37be, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 85c19c13e271ed34cb2e77969698a7a8, type: 3}
+  - id: UI_TELEFONO
+    finales:
+    - {fileID: 8300000, guid: 2970461df29fd8641bc02f6c43fed510, type: 3}
+    provisionales: []
+  - id: UI_TITULO_INICIO
+    finales:
+    - {fileID: 8300000, guid: 3fc01afb578ab57479f69ef6710e2f79, type: 3}
+    provisionales: []
   - id: VEH_ALARMA_ROBO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: c5ee6d5b3f6dec041b1dcbf74f691416, type: 3}
     provisionales:
     - {fileID: 8300000, guid: ddf99bb8f2383ac4e96c1ee4dbdba5c7, type: 3}
+  - id: VEH_CHOQUE_FUERTE
+    finales:
+    - {fileID: 8300000, guid: a81823d0853bbaf4ca4cd631bc4d314f, type: 3}
+    - {fileID: 8300000, guid: 1d7ff6eca70e9544fa2e12811dd4f9ac, type: 3}
+    provisionales: []
+  - id: VEH_CHOQUE_LEVE
+    finales:
+    - {fileID: 8300000, guid: 50e6691029710fc4c903fecd9d436cd3, type: 3}
+    - {fileID: 8300000, guid: 8e0aed048dde1b54b9cb85c5c1e7a12f, type: 3}
+    - {fileID: 8300000, guid: 82aafa63549a38b48a81b62434cecbd1, type: 3}
+    provisionales: []
+  - id: VEH_CLAXON_TRAFICO
+    finales:
+    - {fileID: 8300000, guid: e9b15d2d3fa8ad64baeec097b479a7ae, type: 3}
+    - {fileID: 8300000, guid: 75f3ea05f87e35a4e98b8805713d8d4f, type: 3}
+    - {fileID: 8300000, guid: acfd338d748b8154d812bea711bf91aa, type: 3}
+    provisionales: []
+  - id: VEH_CLAXON_VIEJO
+    finales:
+    - {fileID: 8300000, guid: b8b908335ded46c499d4ca8b1f9aafa2, type: 3}
+    provisionales: []
+  - id: VEH_FORZAR_PUERTA
+    finales:
+    - {fileID: 8300000, guid: 9fa4205e5147c6248bba14f39e963516, type: 3}
+    provisionales: []
+  - id: VEH_FRENO_DERRAPE
+    finales:
+    - {fileID: 8300000, guid: 4c3f5adf31773cb4088ab3d35c4f701f, type: 3}
+    provisionales: []
+  - id: VEH_LLANTAS_MOJADO
+    finales:
+    - {fileID: 8300000, guid: 995dfd2fee914cb43a1a759fd9158289, type: 3}
+    provisionales: []
+  - id: VEH_MOTO_MOTOR
+    finales:
+    - {fileID: 8300000, guid: 2dbb29c29d911814b92e8ca558422761, type: 3}
+    provisionales: []
+  - id: VEH_PASA_CERCA
+    finales:
+    - {fileID: 8300000, guid: e8e0bbf05634bfd4896eef6ce1b87fec, type: 3}
+    - {fileID: 8300000, guid: 3bf7b7119de5aa841b0bc4a9fac59542, type: 3}
+    - {fileID: 8300000, guid: 358ace3ee33516142b4a434b4e3c8b6a, type: 3}
+    provisionales: []
+  - id: VEH_PRO_MOTOR_ACELERA
+    finales:
+    - {fileID: 8300000, guid: 12d7fc981fbdbf141b746926c9c62562, type: 3}
+    provisionales: []
+  - id: VEH_PRO_MOTOR_RALENTI
+    finales:
+    - {fileID: 8300000, guid: 5dd1c21fddfee384cbfdf0ace3f6574f, type: 3}
+    provisionales: []
+  - id: VEH_PUERTA_ABRIR
+    finales:
+    - {fileID: 8300000, guid: 58d78d369ca31774abeeaa9eece9a524, type: 3}
+    - {fileID: 8300000, guid: 5fea8ecbe3a3410458f889dae443f4fb, type: 3}
+    provisionales: []
+  - id: VEH_PUERTA_CERRAR
+    finales:
+    - {fileID: 8300000, guid: 733d3101831b9b14c84081e217c71978, type: 3}
+    - {fileID: 8300000, guid: 47d179578e549894987c9c2bdd10dfcd, type: 3}
+    provisionales: []
+  - id: VEH_VIEJO_ARRANQUE
+    finales:
+    - {fileID: 8300000, guid: ebd5f5e5af7521b419f5fe1764765262, type: 3}
+    provisionales: []
+  - id: VEH_VIEJO_MOTOR_ACELERA
+    finales:
+    - {fileID: 8300000, guid: 1c837016ec59e484e95524967435b137, type: 3}
+    provisionales: []
   - id: VEH_VIEJO_MOTOR_RALENTI
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: f1319309e94e6544383cd3e66997ee55, type: 3}
     provisionales:
     - {fileID: 8300000, guid: f91dffe942be1b24e82ef89ec19f4c91, type: 3}
   - id: ZON_CONQUISTADA
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 98b868a3c359c7849a128166c0291c9e, type: 3}
     provisionales:
     - {fileID: 8300000, guid: fb4241889a595d34392268b4161b17a4, type: 3}
+  - id: ZON_ENTRAR_PROPIA
+    finales:
+    - {fileID: 8300000, guid: 244e5f751fe2ad84cb880393af573db8, type: 3}
+    provisionales: []
+  - id: ZON_ENTRAR_RIVAL
+    finales:
+    - {fileID: 8300000, guid: d80290d8de616b74184b6407fd01f8a4, type: 3}
+    provisionales: []
   - id: ZON_RESPETO_SUBE
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 851663d10a9f98e4483091a5cffb3ea2, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 1ad537206dbcb4148bba664150b55ce0, type: 3}
+  gananciaEfectos: 1
+  gananciaVoces: 1
+  gananciaAmbiente: 0.3
+  gananciaMusica: 0
+  gananciaInterfaz: 0.7
+  pisoOpcionAmbiente: 0.8
