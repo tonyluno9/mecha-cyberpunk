@@ -139,3 +139,10 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
   2. Luego T-408 a T-413 en el orden de ronda3.md: objetivo, minimapa y mapa, pausa, opciones, guardado y título. La pausa usa el guardado actual hasta T-412.
   3. Merge a main con push al cerrar cada punto.
 - Sin rastrear y sin tocar (son de Tony): docs/imagenes-cyberfix/, docs/mejoras-pendientes.md, docs/prompts-imagenes-cyberfix.md.
+
+## Detenido por Tony (2026-10-30, tarde)
+- En main (f888f78, con push): paso 1, paso 2 y paso 3 completo del plan de la noche (T-408 a T-413: marcador, minimapa y mapa, pausa, opciones, 3 ranuras con autoguardado, título CYBERFIX y creación de personaje). Builds/Juego y Builds/Demo regenerados con T-413.
+- A medias: paso 4 en tony/T-419-assets-noche, commit WIP c06136b. Los 39 modelos están importados (Assets/Arte/Calle, Clandestino, TallerCasa, Exteriores) y colocados con Arte/Editor/ColocarNoche, menos el kit de pisos. Hay capturas "antes" y de revisión en docs/capturas/noche-*. Decisiones D-tony-268 a 272. Los FBX descomprimidos están en videojuego/assets_noche/, fuera del repo.
+- Falta del paso 4: terminar la medición de FPS de noche con Arte/Editor/MedicionNoche (se cortó a la mitad del build; 60 FPS es obligatorio), correr ArteNochePruebas y las PlayMode de la historia, El Mercado y El Tianguis, apilar el kit de pisos (C20a/b/d, C21, C22, C23) sobre las fachadas, sacar las capturas de después, builds, guía, y merge a tony/fase-g y a main.
+- Sigue: el paso 5 de docs/plan-noche.md (mejoras 1 a 5, luego 6 a 11 y 12 a 18, sin la 13). No se ha empezado.
+- Probar primero mañana: el .exe de Builds/Demo; título, NUEVA PARTIDA, creación, Esc (pausa), OPCIONES, GUARDAR en una ranura, SALIR AL TÍTULO y CONTINUAR.
