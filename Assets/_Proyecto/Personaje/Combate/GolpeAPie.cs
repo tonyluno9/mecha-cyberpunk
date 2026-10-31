@@ -45,6 +45,8 @@ namespace MechaCyberpunk.Personaje.Combate
         public ArmaAPie ArmaActiva { get; set; } = ArmaAPie.Punos;
         /// <summary>Se dispara en cada impacto, haya dado a alguien o no.</summary>
         public event Action Impacto;
+        /// <summary>Se dispara cuando el golpe alcanza a alguien; el argumento es si lo dejó en KO (T-420).</summary>
+        public event Action<bool> Conecto;
 
         private void Awake()
         {
@@ -134,7 +136,8 @@ namespace MechaCyberpunk.Personaje.Combate
                 datos.RadioGolpe, impactos, out Vector3 punto);
             if (objetivo != null)
             {
-                objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(), TipoDanio.Golpe, punto, direccion, null));
+                ResultadoDanio resultado = objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(), TipoDanio.Golpe, punto, direccion, null));
+                Conecto?.Invoke(resultado.CausoKO);
             }
             Sonidos.ReproducirEn(objetivo != null ? "PUN_GOLPE_CARNE" : "PUN_GOLPE_AIRE", objetivo != null ? punto : origen);
             Impacto?.Invoke();

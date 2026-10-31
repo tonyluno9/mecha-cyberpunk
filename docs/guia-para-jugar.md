@@ -216,3 +216,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Camina de noche por la calle principal, El Tianguis y Neón Alto: los edificios ya tienen pisos con ventanas, macetas, franja y cornisa hasta arriba (ya no se ven cortados); quedan lisas las paredes de los lugares grandes (clandestino). ¿Se ve mejor? ¿Algo flota o atraviesa?
 - Busca lo nuevo: proyector holo, pantallas, cables, antenas en azoteas, expendedoras, puesto de implantes junto al callejón de El Mercado, cámara corporativa y pantalla gigante en Neón Alto, portón de El Mercado, entrada de VivaCoin, moto, tambos y huacales; el dron de la policía tiene modelo nuevo.
 - En la casa: tele, sofá, estufa, repisa con veladoras y buró; en el taller: soldadora, grúa y repisa. Medido: 122 FPS en la calle principal de noche con lluvia (meta 60). ¿Notas tirones al girar?
+
+### T-420 sensación de golpe y disparo
+- Dispara cada arma: la cámara patea hacia arriba (mucho con la escopeta y el sniper, poco con el fusil) y el cañón destella. ¿Se siente cada arma distinta?
+- Dispara a una pared o a un carro y salen chispas; a un pandillero, una salpicadura roja y una X blanca en la retícula (naranja y más grande si lo derribas).
+- Pega un puñetazo a alguien: la cámara da un sacudón corto. El zoom del sniper se ve igual que antes.
