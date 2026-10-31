@@ -1,0 +1,4 @@
+# T-473 Listo para los personajes 3D
+Dueño: Tony | Rama: tony/T-473-visual-personajes | Modelo: Sonnet 5.5 | Sesión B, prioridad 4
+Hecho: Personaje/Visual (asmdef nuevo): VisualPersonaje (puente al Animator; lee Velocidad y EnSuelo del CharacterController/Rigidbody/movimiento del padre), ReglasVisual (nombres y reconocimiento de archivos Mixamo), ConstructorControladorVisual (14 estados, 11 parámetros), CreadorVisualPersonaje (menú Mecha Cyberpunk/Personajes/Crear visual desde FBX y -executeMethod CrearDesdeLineaDeComandos) y CreadorVisualPrueba (Visual_Prueba.prefab con el muñeco de T-400 y clips generados). docs/como-meter-personajes.md y entrada en docs/bugs.md para la Sesión A. Decisión D-tony-308. Pruebas: EditMode CreadorVisualPruebas (13), PlayMode VisualPersonajePruebas (3). Captura T-473-1 (7 poses).
+Bitácora: sin FBX humanoide en el proyecto: el importador Humanoid de Mixamo no se probó con un modelo real; no se tocó ningún prefab ni script del juego.
