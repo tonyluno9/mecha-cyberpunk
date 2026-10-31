@@ -208,7 +208,7 @@ namespace MechaCyberpunk.Tests.Trafico
         [UnityTest]
         public IEnumerator Capturas_DelBarrioConPeatones()
         {
-            reloj.Noche = true;
+            reloj.Noche = false; // T-447: de día hay 14 peatones (de noche solo 6, pocos para las capturas)
             GrupoPeatones grupo = ColgarGrupo();
             GameObject luzObjeto = new GameObject("LuzCaptura");
             Light luz = luzObjeto.AddComponent<Light>();
@@ -268,7 +268,7 @@ namespace MechaCyberpunk.Tests.Trafico
             reloj.Noche = true;
             yield return null;
             Assert.AreEqual(config.Cantidad(true), grupo.Vivos);
-            Assert.Greater(config.Cantidad(true), config.Cantidad(false));
+            Assert.Greater(config.Cantidad(false), config.Cantidad(true), "T-447: de día hay más gente que de noche");
         }
 
         [UnityTest]
