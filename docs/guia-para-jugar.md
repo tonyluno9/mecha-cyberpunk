@@ -299,3 +299,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-443 Peatones que huyen
 - Dispara cerca de la gente de la banqueta (pistola o cualquier arma): los peatones a menos de unos 45 m salen corriendo, alejándose de ti, durante unos 6 segundos y luego vuelven a caminar.
 - También huyen cuando disparan los pandilleros. Observa: ¿se nota que huyen?, ¿algún peatón corre hacia el disparo o se queda quieto?
+
+### T-444 Carros que se dañan
+- Dispárale a un carro estacionado (pistola, escopeta...): suena a metal, no sangra y con unos 100 disparos de pistola... mejor con la escopeta o chocándolo: a la mitad de vida sale humo, con poca vida arde y al final explota (daña a quien esté a 7 m y suma calor).
+- Choca contra una pared a toda velocidad: el carro se daña (y suena). Si manejas un carro que explota sales despedido a pie.
+- Observa: ¿cuánto aguanta el carro?, ¿el humo y el fuego se ven bien?, ¿la explosión es muy fuerte?

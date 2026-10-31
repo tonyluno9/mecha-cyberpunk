@@ -159,7 +159,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             yield return Calentar();
             GameObject muro = GameObject.CreatePrimitive(PrimitiveType.Cube);
             muro.name = "Muro";
-            muro.transform.position = new Vector3(0f, 1.5f, 12f);
+            muro.transform.position = new Vector3(0f, 1.5f, 7f);
             muro.transform.localScale = new Vector3(10f, 3f, 1f);
             extras.Add(muro);
             Rigidbody cuerpo = carroObjeto.GetComponent<Rigidbody>();
