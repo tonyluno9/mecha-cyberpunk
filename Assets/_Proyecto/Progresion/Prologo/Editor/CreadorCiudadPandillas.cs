@@ -62,6 +62,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T427Interno();
             T428Interno();
             T429Interno();
+            T448Interno();
             T409Interno();
             T412Interno();
             T410Interno();

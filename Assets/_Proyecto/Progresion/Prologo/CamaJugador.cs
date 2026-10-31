@@ -158,6 +158,8 @@ namespace MechaCyberpunk.Progresion.Prologo
             {
                 reloj.AvanzarHasta(horaDespertar);
             }
+            // T-448: con las mejoras de la cama, despiertas curado y con menos calor.
+            AplicarMejorasDeLaCama();
             // T-412: dormir escribe el AUTOGUARDADO (y sale "GUARDADO").
             MechaCyberpunk.Progresion.Partida.Autoguardado.Escribir();
             yield return new WaitForSecondsRealtime(segundosEnNegro);
@@ -168,6 +170,33 @@ namespace MechaCyberpunk.Progresion.Prologo
             }
             SoltarControl();
             durmiendo = false;
+        }
+
+        // T-448: las mejoras de la cama de la guarida: cura la vida y borra una parte (o todo) del calor policial.
+        private static void AplicarMejorasDeLaCama()
+        {
+            IGuarida guarida = Registro<IGuarida>.Actual;
+            if (guarida == null)
+            {
+                return;
+            }
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (guarida.CamaCura && jugador != null && jugador.Raiz != null)
+            {
+                jugador.Raiz.GetComponentInChildren<MechaCyberpunk.Personaje.Vida.VidaAPie>()?.CurarTodo();
+            }
+            ICalor calor = Registro<ICalor>.Actual;
+            if (calor != null && guarida.CamaBajaCalor > 0f)
+            {
+                if (guarida.CamaBajaCalor >= 1f)
+                {
+                    calor.Borrar();
+                }
+                else
+                {
+                    calor.Enfriar(calor.Valor * guarida.CamaBajaCalor);
+                }
+            }
         }
 
         private static float SegundosSalida(PantallaFundido fundido)
