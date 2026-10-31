@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Progresion.Opciones
 
         public static float VolumenInicial(SeccionSonido seccion)
         {
-            return seccion == SeccionSonido.Ambiente || seccion == SeccionSonido.Musica ? 0f : VolumenPorDefecto;
+            return seccion == SeccionSonido.Musica ? 0f : VolumenPorDefecto;
         }
 
         /// <summary>Deja cada valor en su rango y en su paso. Devuelve el mismo objeto.</summary>

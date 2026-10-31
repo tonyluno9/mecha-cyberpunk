@@ -172,6 +172,10 @@ namespace MechaCyberpunk.Personaje.Combate
             armaActiva = arma;
             Aplicar();
             Sonidos.Reproducir("ARM_CAMBIAR");
+            if (arma == ArmaAPie.Pistola)
+            {
+                Sonidos.Reproducir("ARM_PIS_SACAR");
+            }
             Cambio?.Invoke();
         }
 
