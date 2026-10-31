@@ -282,6 +282,11 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Cuando tengas un FBX de Mixamo: carpeta Assets/Arte/Personajes/<Nombre>/ y el menú Mecha Cyberpunk > Personajes > Crear visual desde FBX. Revisa que no salgan avisos de animaciones faltantes.
 - La Sesión A conecta los visuales al final (docs/bugs.md): hoy en la demo los personajes siguen siendo los muñecos de cubos.
 
+### T-474 Recorrido de la demo (a mano, donde el bot no llegó)
+- Juega Builds/Demo de principio a fin: ¿se entiende que la puerta de casa se abre con E mirándola?, ¿CONTINUAR (tras GUARDAR y salir al título) te deja en el mismo paso de la historia?
+- Del Tianguis en adelante (jefe de los SKULLS, EL HACKER en Neón Alto, CONTINUARÁ): ¿se puede ganar la pelea con pistola?, ¿el marcador lleva bien a EL INVENTOR (100 m)?
+- Escucha los ambientes por zona (calle, casa, Mercado, Tianguis, Neón Alto) y mira la consola: en el recorrido simulado no hubo errores.
+
 ### T-440 Créditos en el título
 - En la pantalla de título hay un botón CRÉDITOS (entre OPCIONES y SALIR): la lista sube sola, la rueda o las flechas la mueven y Esc vuelve al título.
 - Observa: ¿se lee bien el texto?, ¿el botón queda a la altura de los demás?
