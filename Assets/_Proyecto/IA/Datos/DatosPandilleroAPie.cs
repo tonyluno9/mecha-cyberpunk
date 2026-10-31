@@ -87,6 +87,18 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Si es true el grupo está siempre, no solo de noche.")]
         [SerializeField] private bool siempre;
 
+        [Header("Patrulla (T-446)")]
+        [Tooltip("Hasta qué distancia de su punto se aleja al patrullar mientras espera (m). 0 = se queda quieto. Menor que la correa.")]
+        [Min(0f)] [SerializeField] private float radioPatrulla = 6f;
+        [Tooltip("Velocidad al patrullar, más lenta que al perseguir (m/s).")]
+        [Min(0.1f)] [SerializeField] private float velocidadPatrulla = 1.6f;
+        [Tooltip("Espera mínima al llegar a un punto de la patrulla (s).")]
+        [Min(0f)] [SerializeField] private float esperaPatrullaMinima = 1.5f;
+        [Tooltip("Espera máxima al llegar a un punto de la patrulla (s).")]
+        [Min(0f)] [SerializeField] private float esperaPatrullaMaxima = 5f;
+        [Tooltip("Si en este tiempo no se acerca a su punto de patrulla (una pared), elige otro (s).")]
+        [Min(0.5f)] [SerializeField] private float segundosAtascoPatrulla = 2f;
+
         [Header("Táctica (T-423)")]
         [Tooltip("Debajo de esta fracción de vida huye (0 a 1); si lo acorralan pelea.")]
         [Range(0f, 1f)] [SerializeField] private float fraccionHuida = 0.25f;
@@ -139,6 +151,11 @@ namespace MechaCyberpunk.IA.Datos
         public float RadioTerritorio => radioTerritorio;
         public float MargenPersecucion => margenPersecucion;
         public float SegundosReaparicion => segundosReaparicion;
+        public float RadioPatrulla => radioPatrulla;
+        public float VelocidadPatrulla => velocidadPatrulla;
+        public float EsperaPatrullaMinima => esperaPatrullaMinima;
+        public float EsperaPatrullaMaxima => esperaPatrullaMaxima;
+        public float SegundosAtascoPatrulla => segundosAtascoPatrulla;
         public float DistanciaReaparicion => distanciaReaparicion;
         public bool Siempre => siempre;
         public string Nombre => nombre;

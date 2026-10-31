@@ -308,3 +308,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-445 Disparar desde el carro
 - Maneja un carro con la pistola (o el fusil) y pulsa el clic izquierdo: disparas hacia donde mira la cámara del carro, sin pegarle a tu propio carro; R recarga. Sube calor y la gente huye.
 - Observa: ¿se entiende hacia dónde sale la bala?, ¿falta ver el cargador en la pantalla?
+
+### T-446 Pandilleros que patrullan
+- Los pandilleros ya no están clavados en su punto: cuando no te han visto caminan despacio por su zona, se paran un rato y siguen. Si te ven (te acercas a menos de unos 10 m a puños, o entras a su territorio armados) dejan la patrulla y pelean.
+- Observa: ¿se ven naturales?, ¿alguno se atora en un muro o sale de su zona?
