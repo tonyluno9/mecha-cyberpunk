@@ -183,9 +183,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2553281874026750924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.39, y: 0.5}
-  m_AnchorMax: {x: 0.61, y: 0.5}
-  m_AnchoredPosition: {x: 225, y: 300}
+  m_AnchorMin: {x: 0.41, y: 0.5}
+  m_AnchorMax: {x: 0.59000003, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 300}
   m_SizeDelta: {x: 0, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1572605471224664530
@@ -320,6 +320,101 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1911827567502170029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5590551899656256852}
+  - component: {fileID: 8529515907525899679}
+  - component: {fileID: 3341805064613866821}
+  - component: {fileID: 3015941716585249962}
+  m_Layer: 0
+  m_Name: PestanaMensajes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5590551899656256852
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911827567502170029}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2553281874026750924}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.41, y: 0.5}
+  m_AnchorMax: {x: 0.59000003, y: 0.5}
+  m_AnchoredPosition: {x: 720, y: 300}
+  m_SizeDelta: {x: 0, y: 80}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8529515907525899679
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911827567502170029}
+  m_CullTransparentMesh: 1
+--- !u!114 &3341805064613866821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911827567502170029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!114 &3015941716585249962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911827567502170029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Shadow
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.8}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &2582102379320997689
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,6 +586,7 @@ RectTransform:
   - {fileID: 5898990062818998499}
   - {fileID: 8566901263881417258}
   - {fileID: 4308476606686135562}
+  - {fileID: 5590551899656256852}
   m_Father: {fileID: 6646672167437533618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -701,9 +797,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2553281874026750924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.39, y: 0.5}
-  m_AnchorMax: {x: 0.61, y: 0.5}
-  m_AnchoredPosition: {x: -225, y: 300}
+  m_AnchorMin: {x: 0.41, y: 0.5}
+  m_AnchorMax: {x: 0.59000003, y: 0.5}
+  m_AnchoredPosition: {x: -360, y: 300}
   m_SizeDelta: {x: 0, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9218930007322366258
@@ -963,6 +1059,7 @@ MonoBehaviour:
   textoPestanaMision: {fileID: 8583572938326944037}
   textoPestanaReputacion: {fileID: 2715203591372687352}
   textoPestanaFavores: {fileID: 907116299211623994}
+  textoPestanaMensajes: {fileID: 3341805064613866821}
   textoContenido: {fileID: 8934288362645806763}
   textoAyuda: {fileID: 5574925140739397891}
   grupoReputacion: {fileID: 2582102379320997689}
@@ -1158,9 +1255,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2553281874026750924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.39, y: 0.5}
-  m_AnchorMax: {x: 0.61, y: 0.5}
-  m_AnchoredPosition: {x: 675, y: 300}
+  m_AnchorMin: {x: 0.41, y: 0.5}
+  m_AnchorMax: {x: 0.59000003, y: 0.5}
+  m_AnchoredPosition: {x: 360, y: 300}
   m_SizeDelta: {x: 0, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6824043431089986060
@@ -1348,9 +1445,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2553281874026750924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.39, y: 0.5}
-  m_AnchorMax: {x: 0.61, y: 0.5}
-  m_AnchoredPosition: {x: -675, y: 300}
+  m_AnchorMin: {x: 0.41, y: 0.5}
+  m_AnchorMax: {x: 0.59000003, y: 0.5}
+  m_AnchoredPosition: {x: -720, y: 300}
   m_SizeDelta: {x: 0, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4148091574162344209

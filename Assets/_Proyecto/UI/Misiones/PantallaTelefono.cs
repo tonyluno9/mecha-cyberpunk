@@ -17,7 +17,8 @@ namespace MechaCyberpunk.UI.Misiones
         Contratos,
         Mision,
         Reputacion,
-        Favores
+        Favores,
+        Mensajes
     }
 
     /// <summary>Qué muestra la pestaña CONTRATOS.</summary>
@@ -35,7 +36,7 @@ namespace MechaCyberpunk.UI.Misiones
     /// </summary>
     public class PantallaTelefono : MonoBehaviour
     {
-        private const int Pestanas = 4;
+        private const int Pestanas = 5;
         private const int BarrasReputacion = 2;
 
         [SerializeField] private ConfigPantallaMisiones config;
@@ -46,6 +47,8 @@ namespace MechaCyberpunk.UI.Misiones
         [SerializeField] private Text textoPestanaMision;
         [SerializeField] private Text textoPestanaReputacion;
         [SerializeField] private Text textoPestanaFavores;
+        [Tooltip("T-449: la quinta pestaña. Opcional: sin este texto la pestaña existe pero no se rotula.")]
+        [SerializeField] private Text textoPestanaMensajes;
         [Tooltip("Texto de las pestañas CONTRATOS (sin lista) y MISIÓN.")]
         [SerializeField] private Text textoContenido;
         [SerializeField] private Text textoAyuda;
@@ -68,6 +71,7 @@ namespace MechaCyberpunk.UI.Misiones
         private bool confirmando;
         private int segundosMostrados = -1;
         private int favoresMostrados = -1;
+        private int mensajesMostrados = -1;
         private int barrioMostrado = int.MinValue;
         private int corporacionesMostrado = int.MinValue;
 
@@ -228,7 +232,7 @@ namespace MechaCyberpunk.UI.Misiones
                     CambiarPestana((PestanaTelefono)((int)pestana - 1));
                     return;
                 }
-                if (derecha.WasPressedThisFrame() && pestana != PestanaTelefono.Favores)
+                if (derecha.WasPressedThisFrame() && pestana != PestanaTelefono.Mensajes)
                 {
                     CambiarPestana((PestanaTelefono)((int)pestana + 1));
                     return;
@@ -300,6 +304,13 @@ namespace MechaCyberpunk.UI.Misiones
                         Pintar();
                     }
                     break;
+                case PestanaTelefono.Mensajes:
+                    ServicioMensajes mensajes = Registro<ServicioMensajes>.Actual;
+                    if (mensajes != null && FirmaMensajes(mensajes) != mensajesMostrados)
+                    {
+                        Pintar();
+                    }
+                    break;
             }
         }
 
@@ -320,6 +331,10 @@ namespace MechaCyberpunk.UI.Misiones
             PintarPestana(textoPestanaMision, config.TextoPestanaMision, pestana == PestanaTelefono.Mision);
             PintarPestana(textoPestanaReputacion, config.TextoPestanaReputacion, pestana == PestanaTelefono.Reputacion);
             PintarPestana(textoPestanaFavores, config.TextoPestanaFavores, pestana == PestanaTelefono.Favores);
+            if (textoPestanaMensajes != null)
+            {
+                PintarPestana(textoPestanaMensajes, config.TextoPestanaMensajes + SufijoSinLeer(), pestana == PestanaTelefono.Mensajes);
+            }
             textoTitulo.text = config.TituloTelefono;
             textoTitulo.color = config.ColorTitulo;
             textoTitulo.fontSize = config.TamanoTitulo;
@@ -354,6 +369,9 @@ namespace MechaCyberpunk.UI.Misiones
                     break;
                 case PestanaTelefono.Favores:
                     texto = TextoFavores();
+                    break;
+                case PestanaTelefono.Mensajes:
+                    texto = TextoMensajes();
                     break;
             }
             textoAyuda.text = ayuda;
@@ -425,6 +443,41 @@ namespace MechaCyberpunk.UI.Misiones
             }
             favoresMostrados = FirmaFavores(favores);
             return texto;
+        }
+
+        // T-449: los mensajes de aliados y profes, el más nuevo arriba. Al verlos se marcan como leídos.
+        private string TextoMensajes()
+        {
+            ServicioMensajes servicio = Registro<ServicioMensajes>.Actual;
+            if (servicio == null || servicio.Recibidos.Count == 0)
+            {
+                mensajesMostrados = -1;
+                return config.TextoSinMensajes;
+            }
+            string texto = string.Empty;
+            int mostrados = 0;
+            for (int i = servicio.Recibidos.Count - 1; i >= 0 && mostrados < config.MensajesVisibles; i--, mostrados++)
+            {
+                ServicioMensajes.MensajeGuardado guardado = servicio.Recibidos[i];
+                if (!ReglaMensajes.Buscar(guardado.id, out ReglaMensajes.Mensaje mensaje))
+                {
+                    continue;
+                }
+                texto += string.Format(config.FormatoMensaje, guardado.leido ? string.Empty : config.MarcaNoLeido, mensaje.Remitente, mensaje.Texto);
+            }
+            mensajesMostrados = FirmaMensajes(servicio);
+            servicio.MarcarLeidos();
+            return texto;
+        }
+
+        private static int FirmaMensajes(ServicioMensajes servicio) => servicio.Recibidos.Count;
+
+        // El texto de la pestaña con cuántos mensajes hay sin leer: "MENSAJES (2)".
+        private static string SufijoSinLeer()
+        {
+            ServicioMensajes servicio = Registro<ServicioMensajes>.Actual;
+            int sinLeer = servicio != null ? servicio.SinLeer : 0;
+            return sinLeer > 0 ? " (" + sinLeer + ")" : string.Empty;
         }
 
         private static int FirmaFavores(ServicioFavores favores)

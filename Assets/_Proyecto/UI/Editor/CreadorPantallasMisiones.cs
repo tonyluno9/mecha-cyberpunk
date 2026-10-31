@@ -38,6 +38,8 @@ namespace MechaCyberpunk.UI.Editor
         private const float XPestanas = 560f;
         private const float XSeparacionPestanas = 450f;
         private const float FraccionPestana = 0.22f;
+        private const float XSeparacionPestanasCinco = 360f;
+        private const float FraccionPestanaCinco = 0.18f;
         private const float YLista = 40f;
         private const float AltoLista = 440f;
         private const float YContenido = 60f;
@@ -85,8 +87,48 @@ namespace MechaCyberpunk.UI.Editor
                 CrearContacto(config);
             }
             AsegurarPestanaFavores();
+            AsegurarPestanaMensajes();
             AssetDatabase.SaveAssets();
             Debug.Log("[UI] T-186/T-187 pantallas de misiones creadas.");
+        }
+
+        // T-449: la quinta pestaña (MENSAJES) del teléfono; las cinco se reparten el ancho. Idempotente: solo escribe si falta.
+        public static void AsegurarPestanaMensajes()
+        {
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaTelefono) == null)
+            {
+                return;
+            }
+            GameObject raiz = PrefabUtility.LoadPrefabContents(RutaTelefono);
+            try
+            {
+                PantallaTelefono telefono = raiz.GetComponent<PantallaTelefono>();
+                SerializedObject so = new SerializedObject(telefono);
+                SerializedProperty propiedad = so.FindProperty("textoPestanaMensajes");
+                if (propiedad.objectReferenceValue != null)
+                {
+                    return;
+                }
+                Transform contenido = raiz.transform.Find("Contenido");
+                Text mensajes = CrearTexto("PestanaMensajes", contenido, 0f, YPestanas, AltoLinea, FraccionPestanaCinco);
+                string[] nombres = { "PestanaContratos", "PestanaMision", "PestanaReputacion", "PestanaFavores", "PestanaMensajes" };
+                for (int i = 0; i < nombres.Length; i++)
+                {
+                    RectTransform rect = (RectTransform)contenido.Find(nombres[i]);
+                    float x = (i - (nombres.Length - 1) / 2f) * XSeparacionPestanasCinco;
+                    rect.anchorMin = new Vector2(0.5f - FraccionPestanaCinco / 2f, 0.5f);
+                    rect.anchorMax = new Vector2(0.5f + FraccionPestanaCinco / 2f, 0.5f);
+                    rect.anchoredPosition = new Vector2(x, YPestanas);
+                }
+                propiedad.objectReferenceValue = mensajes;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaTelefono);
+                Debug.Log("[UI] T-449: pestaña MENSAJES agregada al teléfono.");
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
         }
 
         // T-187: la cuarta pestaña (FAVORES) del teléfono; las cuatro se reparten el ancho. Idempotente: solo escribe si falta.
