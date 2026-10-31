@@ -1,0 +1,40 @@
+T-425 rendimiento. Build de medición (Arte/Editor/MedicionNoche + Mundo/Pruebas/MedicionAmbiente), noche (hora 23), lluvia, 2560x1600, vsync 0, RTX 5070 Laptop D3D12.
+fps = promedio de 6 s por punto; ms = ms por cuadro; llamadas = draw calls; tris = triángulos por cuadro (incluye pasadas de sombra).
+Puntos nuevos: carros (8 carros en movimiento en la calle), tiroteo (jugador a 9 m de la pandilla más cercana), gradas (clandestino mirando a un lado).
+Nota: en el punto 'tiroteo' ANTES no había teletransporte a la pandilla (se midió en la calle); el valor de antes de ese punto no es comparable.
+En 1280x720 la calle (Medio) cuesta 5.1 ms contra 6.1 ms a 1080p y 7.8 ms a 2560x1600: ~5 ms son de geometría y llamadas de dibujo, no de píxeles. Por eso se atacó geometría.
+
+== Calidad Medio
+punto        fps_antes fps_desp ms_antes  ms_desp calls_ant calls_des   tris_ant   tris_des
+calle           140.4    197.2     7.12     5.07      5011      4299   15372431    9783680
+callejon        288.8    368.2     3.46     2.72      1414       924    5938906    2617525
+tianguis        154.3    206.2     6.48     4.85      5045      4561   12965879    8622131
+neon            194.4    247.9     5.14     4.03      2698      1718   11466639    4585250
+vivacoin        266.5    333.6     3.75     3.00      2205      1429    7918304    2965667
+mercado         196.6    246.6     5.09     4.05      3023      2449    6172385    4403953
+clandestino     181.0    228.1     5.52     4.38      3504      3097    8644145    5891348
+casa            272.3    346.6     3.67     2.89       473       320    2191540    1211226
+taller          212.2    285.8     4.71     3.50      1926      1503    7939883    4772962
+carros          133.0    198.0     7.52     5.05      4907      4358   15991717    9894890
+tiroteo         139.2    301.2     7.18     3.32      4748      2887   14573576    6693413
+gradas          142.7    191.0     7.01     5.24      3482      3176   13079496    8634172
+suburbios       290.7    338.0     3.44     2.96      1103       778    3703016    2235656
+peor punto antes: 133.0 fps (carros); después: 191.0 fps (gradas)
+
+== Calidad Ultra
+punto        fps_antes fps_desp ms_antes  ms_desp calls_ant calls_des   tris_ant   tris_des
+calle           122.3    139.5     8.18     7.17      5847      6071   16532259   15243724
+callejon        256.6    280.0     3.90     3.57      1713      1630    6853432    5598640
+tianguis        122.3    155.1     8.18     6.45      6898      6173   17416232   11942573
+neon            161.8    209.5     6.18     4.77      3183      3006   12754382    8771798
+vivacoin        242.6    264.8     4.12     3.78      2552      2422    8635811    5473907
+mercado         164.6    181.5     6.07     5.51      3946      3524    7791127    6337204
+clandestino     160.4    167.1     6.23     5.98      4745      4387   10396473    8814205
+casa            242.1    260.7     4.13     3.84       515       535    2310587    2348246
+taller          163.0    198.0     6.14     5.05      2731      2367   11038671    8948308
+carros          114.3    138.2     8.75     7.23      6193      5830   19190319   14981647
+tiroteo         112.4    186.8     8.90     5.35      6081      4504   17928103   11894316
+gradas          123.6    151.3     8.09     6.61      4826      4504   16604215   11972767
+suburbios       255.3    269.4     3.92     3.71      1300      1356    4271824    4214481
+peor punto antes: 112.4 fps (tiroteo); después: 138.2 fps (carros)
+

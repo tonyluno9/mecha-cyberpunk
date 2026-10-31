@@ -236,3 +236,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Al apuntar con clic derecho, si un pandillero o jefe está cerca del centro de la mira y sin muros en medio, la cámara se jala suave hacia él y la retícula se pone roja. No jala a aliados, peatones ni vecinos. Con el sniper con zoom casi no jala.
 - En OPCIONES (pausa) hay APUNTADO ASISTIDO: APAGADO, SUAVE (por defecto) o FUERTE; se guarda con las demás opciones.
 - Observa: ¿se siente ayuda o pelea contra tu ratón?, ¿se nota la diferencia entre SUAVE y FUERTE?
+
+### T-425 rendimiento
+- El juego va mucho más fluido en la calle, El Tianguis y las gradas del clandestino (en calidad Media, de ~140 a ~197 FPS en la laptop; en las partes más pesadas el doble de margen sobre 60). De lejos las cosas chicas (botes, cajas, aires) desaparecen y los edificios usan modelos más simples; de cerca se ve igual.
+- En OPCIONES, la calidad Media ya no lleva oclusión ambiental ni sombras suaves; Ultra las conserva.
+- Observa: ¿notas que aparezcan o desaparezcan objetos a media calle (a unos 70 m)?, ¿se ven bien las gradas y los carros de cerca?
