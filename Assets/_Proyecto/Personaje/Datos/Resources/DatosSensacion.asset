@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49a708b60b95ec44a6d7c4f17bf6878, type: 3}
+  m_Name: DatosSensacion
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosSensacion
+  armas:
+  - patada: 0.9
+    desvio: 0.5
+    destello: 0
+    particulas: 0
+  - patada: 1
+    desvio: 0.25
+    destello: 0.3
+    particulas: 6
+  - patada: 3.2
+    desvio: 0.5
+    destello: 0.55
+    particulas: 4
+  - patada: 0.6
+    desvio: 0.35
+    destello: 0.32
+    particulas: 5
+  - patada: 4.5
+    desvio: 0.3
+    destello: 0.45
+    particulas: 10
+  duracionPatada: 0.18
+  topePatada: 5
+  duracionDestello: 0.05
+  vidaParticula: 0.35
+  duracionHitmarker: 0.15
+  duracionHitmarkerMuerte: 0.35
+  materialEfecto: {fileID: 2100000, guid: 03cb8ae5caa706f41b324ee0d55e0453, type: 2}

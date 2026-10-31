@@ -146,3 +146,8 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 - Falta del paso 4: terminar la medición de FPS de noche con Arte/Editor/MedicionNoche (se cortó a la mitad del build; 60 FPS es obligatorio), correr ArteNochePruebas y las PlayMode de la historia, El Mercado y El Tianguis, apilar el kit de pisos (C20a/b/d, C21, C22, C23) sobre las fachadas, sacar las capturas de después, builds, guía, y merge a tony/fase-g y a main.
 - Sigue: el paso 5 de docs/plan-noche.md (mejoras 1 a 5, luego 6 a 11 y 12 a 18, sin la 13). No se ha empezado.
 - Probar primero mañana: el .exe de Builds/Demo; título, NUEVA PARTIDA, creación, Esc (pausa), OPCIONES, GUARDAR en una ranura, SALIR AL TÍTULO y CONTINUAR.
+
+## Paso 5 del plan de la noche: mejoras (T-420 en adelante)
+| Tarea | Estado |
+| --- | --- |
+| T-420 Sensación de golpe y disparo | Hecha (rama tony/T-420-sensacion-disparo, integrada en tony/fase-g) |
