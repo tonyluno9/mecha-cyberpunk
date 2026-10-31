@@ -31,10 +31,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
         public static bool Permitido(bool historiaLibre, bool hayEncargo, bool hayAtaque, int zonasAtacables) =>
             historiaLibre && !hayEncargo && !hayAtaque && zonasAtacables > 0;
 
-        /// <summary>Quién ataca: los SNAKES a las zonas del centro, los SKULLS a las del este (la pandilla vecina).</summary>
-        public static IdPandilla Atacante(string zona) => zona == "neon" ? IdPandilla.Calaveras : IdPandilla.Viboras;
+        /// <summary>Quién ataca: los SNAKES a las zonas del centro, los SKULLS a las del este y NOVA a LA REFINERÍA (T-428).</summary>
+        public static IdPandilla Atacante(string zona) => zona == "neon" ? IdPandilla.Calaveras : zona == "refineria" ? IdPandilla.Nova : IdPandilla.Viboras;
 
-        public static string NombrePandilla(IdPandilla pandilla) => pandilla == IdPandilla.Calaveras ? "SKULLS" : "SNAKES";
+        public static string NombrePandilla(IdPandilla pandilla) => pandilla == IdPandilla.Calaveras ? "SKULLS" : pandilla == IdPandilla.Nova ? "NOVA" : "SNAKES";
 
         public static string Aviso(IdPandilla atacante, string nombreZona) => "¡LOS " + NombrePandilla(atacante) + " ATACAN " + nombreZona + "!";
 
