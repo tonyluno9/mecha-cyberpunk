@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Herramientas.ModoVideo",
+    "rootNamespace": "MechaCyberpunk.Herramientas.ModoVideo",
+    "references": ["MechaCyberpunk.Core", "Unity.InputSystem", "UnityEngine.UI", "Unity.RenderPipelines.Universal.Runtime"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
