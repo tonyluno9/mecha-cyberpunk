@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,6 +32,10 @@ namespace MechaCyberpunk.UI.Mapa
         [Min(0.1f)] [SerializeField] private float pixelesPorMetro = 2.6f;
         [Tooltip("Tamaño de la vista del mapa (px).")]
         [SerializeField] private Vector2 tamanoVista = new Vector2(800f, 560f);
+        /// <summary>Filas (de dos negocios cada una) de la sección NEGOCIOS (T-429): caben 8 negocios.</summary>
+        public const int FilasNegocios = 4;
+        [Tooltip("Alto de cada fila de la sección NEGOCIOS (px).")]
+        [Min(20f)] [SerializeField] private float altoFilaNegocios = 30f;
         [Tooltip("Ancho de la leyenda (px).")]
         [Min(100f)] [SerializeField] private float anchoLeyenda = 340f;
         [Tooltip("Alto de cada fila de la leyenda (px).")]
@@ -66,6 +71,8 @@ namespace MechaCyberpunk.UI.Mapa
         private Image colorPandilla;
         private Image colorAliados;
         private readonly List<Text> textosLeyenda = new List<Text>();
+        private readonly List<Text> textosNegocios = new List<Text>();
+        private Text encabezadoNegocios;
         private float zoom = ZoomMinimo;
         private Vector2 desplazamiento;
         private CursorLockMode bloqueoPrevio;
@@ -82,6 +89,9 @@ namespace MechaCyberpunk.UI.Mapa
         public Text[] Etiquetas => etiquetas;
         public Text Titulo => titulo;
         public IReadOnlyList<Text> TextosLeyenda => textosLeyenda;
+        /// <summary>Las filas de la sección NEGOCIOS (T-429), una por negocio; las sobrantes quedan vacías.</summary>
+        public IReadOnlyList<Text> TextosNegocios => textosNegocios;
+        public Text EncabezadoNegocios => encabezadoNegocios;
         public float Zoom => zoom;
         public RectTransform Vista => vista;
         public RectTransform Contenido => contenido;
@@ -122,7 +132,8 @@ namespace MechaCyberpunk.UI.Mapa
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasMapa", OrdenCanvas);
             fondoPantalla = KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla").gameObject;
             fondoPantalla.SetActive(false);
-            Vector2 tamanoPanel = new Vector2(tamanoVista.x + anchoLeyenda + 3f * relleno, tamanoVista.y + altoTitulo + altoAyuda + 4f * relleno);
+            float altoNegocios = (FilasNegocios + 1) * altoFilaNegocios;
+            Vector2 tamanoPanel = new Vector2(tamanoVista.x + anchoLeyenda + 3f * relleno, tamanoVista.y + altoTitulo + altoAyuda + altoNegocios + 5f * relleno);
             RectTransform rectPanel = KitUI.CrearPanel(canvas.transform, "Panel", tamanoPanel);
             panel = rectPanel.gameObject;
 
@@ -161,6 +172,7 @@ namespace MechaCyberpunk.UI.Mapa
             puntoJugador = (RectTransform)KitUI.CrearTriangulo(contenido, "Jugador", ladoFlecha, Color.white).rectTransform.parent;
 
             CrearLeyenda(rectPanel, new Vector2(-relleno, -(relleno + altoTitulo)));
+            CrearNegocios(rectPanel, new Vector2(relleno, -(2f * relleno + altoTitulo + tamanoVista.y)), new Vector2(tamanoVista.x + anchoLeyenda + relleno, altoFilaNegocios));
 
             Text ayuda = KitUI.CrearTexto(rectPanel, "Ayuda", RolTexto.Ayuda, TextAnchor.MiddleCenter);
             KitUI.Colocar(ayuda.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, relleno), new Vector2(tamanoPanel.x, altoAyuda));
@@ -192,6 +204,44 @@ namespace MechaCyberpunk.UI.Mapa
                 IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[7 + i], out _), lugares[i], ladoIcono * 0.85f);
             }
             IconosMapa.CrearPuntoMarcado(FilaVacia(leyenda, fila, EtiquetasFijasLeyenda[11], out _), ladoIcono * 0.8f);
+        }
+
+        // T-429: debajo del mapa, el encabezado NEGOCIOS y una fila por negocio en dos columnas.
+        private void CrearNegocios(RectTransform padre, Vector2 esquina, Vector2 tamanoFila)
+        {
+            encabezadoNegocios = KitUI.CrearTexto(padre, "NegociosEncabezado", RolTexto.Ayuda, TextAnchor.MiddleLeft);
+            KitUI.Colocar(encabezadoNegocios.rectTransform, new Vector2(0f, 1f), esquina, tamanoFila);
+            encabezadoNegocios.color = KitUI.Estilo.Naranja;
+            float ancho = tamanoFila.x * 0.5f;
+            for (int i = 0; i < FilasNegocios * 2; i++)
+            {
+                Text t = KitUI.CrearTexto(padre, "Negocio_" + (i + 1), RolTexto.Ayuda, TextAnchor.MiddleLeft);
+                Vector2 pos = esquina + new Vector2((i % 2) * ancho, -(1 + i / 2) * tamanoFila.y);
+                KitUI.Colocar(t.rectTransform, new Vector2(0f, 1f), pos, new Vector2(ancho, tamanoFila.y));
+                textosNegocios.Add(t);
+            }
+        }
+
+        /// <summary>La fila de un negocio en el mapa: "PUESTO DEL TIANGUIS · NIV 2 · Ƀ72/DÍA".</summary>
+        public static string LineaNegocio(ServicioNegocios servicio, int i)
+        {
+            DatosNegocios.Negocio n = servicio.Definicion(i);
+            int nivel = servicio.Nivel(n.id);
+            if (nivel == 0)
+            {
+                return n.nombre + " · " + (servicio.ZonaTuya(n.id) ? "SIN TOMAR" : "ZONA AJENA");
+            }
+            return n.nombre + " · NIV " + nivel + " · " + (servicio.ZonaTuya(n.id) ? Moneda.Texto(servicio.IngresoDia(n.id)) + "/DÍA" : "ZONA PERDIDA");
+        }
+
+        private void RefrescarNegocios()
+        {
+            ServicioNegocios servicio = Registro<ServicioNegocios>.Actual;
+            encabezadoNegocios.text = servicio == null ? "NEGOCIOS" : "NEGOCIOS · " + Moneda.Texto(servicio.TotalPorDia) + " POR DÍA";
+            for (int i = 0; i < textosNegocios.Count; i++)
+            {
+                textosNegocios[i].text = servicio != null && i < servicio.Cantidad ? LineaNegocio(servicio, i) : string.Empty;
+            }
         }
 
         // Una fila con el hueco de la muestra (a la izquierda) y su texto; devuelve el hueco.
@@ -379,6 +429,7 @@ namespace MechaCyberpunk.UI.Mapa
             puntoMarcado.rectTransform.anchoredPosition = GeometriaBarrio.AMapa(PuntoMarcadoMapa.Posicion) * pixelesPorMetro;
             puntoMarcado.rectTransform.localScale = contraZoom;
 
+            RefrescarNegocios();
             DibujarMarcas(contraZoom);
             DibujarAliados(tuColor, contraZoom);
             puntoMarcado.rectTransform.SetAsLastSibling();
