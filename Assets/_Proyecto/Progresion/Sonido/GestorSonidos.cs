@@ -7,15 +7,15 @@ namespace MechaCyberpunk.Progresion.Sonido
     /// <summary>
     /// Toca los sonidos por su ID de la LISTA 1 (T-407). 16 fuentes reutilizables; 3D con distancia 2 a 40 m; volumen = general x sección.
     /// Ambiente y Música arrancan en 0 (silencio por defecto, plan de la noche). Un ID sin archivo no suena y avisa una vez (CatalogoSonidos).
-    /// Ambientes: AMB_CALLE_NOCHE en la calle, AMB_INTERIOR_CASA en la casa, AMB_MERCADO_NEGRO en el mercado y AMB_TIANGUIS en la zona
-    /// "tianguis", con cruce de 1 s.
+    /// Ambientes (T-470, ver ReglaAmbienteZona): por lugar y por zona del jugador, de noche o de día, con cruce de 1 s.
+    /// La mezcla (ganancia por sección) vive en el CatalogoSonidos.
     /// </summary>
     public class GestorSonidos : MonoBehaviour, ISonidos
     {
         public const string IdAmbienteCalle = "AMB_CALLE_NOCHE";
         public const string IdAmbienteCasa = "AMB_INTERIOR_CASA";
-        public const string IdAmbienteMercado = "AMB_MERCADO_NEGRO";
-        public const string IdAmbienteTianguis = "AMB_TIANGUIS";
+        public const string IdAmbienteMercado = ReglaAmbienteZona.Mercado;
+        public const string IdAmbienteTianguis = ReglaAmbienteZona.Tianguis;
 
         [SerializeField] private CatalogoSonidos catalogo;
         [Min(1)] [SerializeField] private int cantidadFuentes = 16;
@@ -23,7 +23,6 @@ namespace MechaCyberpunk.Progresion.Sonido
         [Min(0f)] [Tooltip("Distancia máxima del sonido 3D (m).")] [SerializeField] private float distanciaMaxima = 40f;
         [Min(0.01f)] [Tooltip("Duración del cruce entre ambientes (s).")] [SerializeField] private float segundosCruce = 1f;
         [Min(0.05f)] [Tooltip("Cada cuántos segundos se revisa la zona del jugador (s).")] [SerializeField] private float segundosRevision = 0.5f;
-        [SerializeField] private string zonaTianguis = "tianguis";
 
         private readonly Dictionary<SeccionSonido, float> volumenes = new Dictionary<SeccionSonido, float>();
         private readonly Dictionary<string, int> conteo = new Dictionary<string, int>();
@@ -104,7 +103,11 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private float VolumenFinal(SeccionSonido seccion)
         {
-            return seccion == SeccionSonido.General ? Volumen(seccion) : Volumen(SeccionSonido.General) * Volumen(seccion);
+            if (seccion == SeccionSonido.General) return Volumen(seccion);
+            float opcion = Volumen(seccion);
+            if (seccion == SeccionSonido.Ambiente && catalogo != null) opcion = Mathf.Max(opcion, catalogo.PisoOpcionAmbiente);
+            float ganancia = catalogo != null ? catalogo.Ganancia(seccion) : 1f;
+            return Volumen(SeccionSonido.General) * opcion * ganancia;
         }
 
         private AudioSource FuenteLibre()
@@ -188,19 +191,11 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private string AmbienteDe()
         {
-            switch (lugar)
-            {
-                case IdLugar.Casa: return IdAmbienteCasa;
-                case IdLugar.MercadoNegro:
-                case IdLugar.Clinica: return IdAmbienteMercado;
-                case IdLugar.Calle:
-                case IdLugar.Ninguno:
-                    ITerritorio t = Registro<ITerritorio>.Actual;
-                    IJugador j = Registro<IJugador>.Actual;
-                    if (t != null && j != null && t.ZonaEn(j.Raiz.position) == zonaTianguis) return IdAmbienteTianguis;
-                    return IdAmbienteCalle;
-                default: return null;
-            }
+            ITerritorio t = Registro<ITerritorio>.Actual;
+            IJugador j = Registro<IJugador>.Actual;
+            IRelojMundo reloj = Registro<IRelojMundo>.Actual;
+            string zona = t != null && j != null ? t.ZonaEn(j.Raiz.position) : string.Empty;
+            return ReglaAmbienteZona.Elegir(lugar, zona, reloj == null || reloj.EsDeNoche);
         }
 
         private void ActualizarAmbiente()
