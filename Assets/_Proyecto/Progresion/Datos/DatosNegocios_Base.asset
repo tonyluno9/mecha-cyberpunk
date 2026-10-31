@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 328b95c79ca1aa34d9982bb7a1127e58, type: 3}
+  m_Name: DatosNegocios_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosNegocios
+  negocios:
+  - id: tiendita
+    nombre: TIENDITA DE LA ESQUINA
+    zona: fosa
+    precio: 300
+    ingresoBase: 35
+  - id: puesto
+    nombre: PUESTO DEL TIANGUIS
+    zona: tianguis
+    precio: 400
+    ingresoBase: 45
+  - id: fonda
+    nombre: FONDA DEL TIANGUIS
+    zona: tianguis
+    precio: 400
+    ingresoBase: 45
+  - id: club
+    nombre: "CLUB NE\xD3N"
+    zona: neon
+    precio: 600
+    ingresoBase: 70
+  - id: arcade
+    nombre: "ARCADE NE\xD3N"
+    zona: neon
+    precio: 500
+    ingresoBase: 55
+  - id: taller
+    nombre: "TALLER DE LA REFINER\xCDA"
+    zona: refineria
+    precio: 700
+    ingresoBase: 80
+  multiplicadores:
+  - 1
+  - 1.6
+  - 2.4
+  factoresMejora:
+  - 1.25
+  - 2

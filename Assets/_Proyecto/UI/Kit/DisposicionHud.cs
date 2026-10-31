@@ -32,7 +32,8 @@ namespace MechaCyberpunk.UI.Kit
 
         // Arriba al centro.
         public static RanuraHud Objetivo => new RanuraHud(EsquinaHud.ArribaCentro, M, F, 0f);
-        public static RanuraHud AvisoZona => new RanuraHud(EsquinaHud.ArribaCentro, Objetivo.Fin + Hueco * 2f, AltoAvisoGrande, 0f);
+        // T-429: debajo de la fila de la zona (arriba a la izquierda) para que "<ZONA> ES DE ..." nunca se encime con ella.
+        public static RanuraHud AvisoZona => new RanuraHud(EsquinaHud.ArribaCentro, System.Math.Max(Objetivo.Fin + Hueco * 2f, Zona.Fin + Hueco), AltoAvisoGrande, 0f);
         public static RanuraHud AvisoAliados => new RanuraHud(EsquinaHud.ArribaCentro, AvisoZona.Fin + Hueco, AltoAvisoMediano, 0f);
         public static RanuraHud AyudaHistoria => new RanuraHud(EsquinaHud.ArribaCentro, AvisoAliados.Fin + Hueco, AltoAyudaHistoria, 0f);
 

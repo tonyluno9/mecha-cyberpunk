@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Mapa;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace MechaCyberpunk.UI.Hud
         private Text textoZona;
         private Text textoAviso;
         private ITerritorio territorio;
+        private ServicioNegocios negocios;
         private float finAviso;
         private readonly System.Collections.Generic.HashSet<string> jefesAvisados = new System.Collections.Generic.HashSet<string>();
 
@@ -42,7 +44,19 @@ namespace MechaCyberpunk.UI.Hud
             textoAviso.text = string.Empty;
         }
 
-        private void OnDisable() => Desvincular();
+        private void OnDisable()
+        {
+            Desvincular();
+            if (negocios != null)
+            {
+                negocios.Pagado -= AlPagarNegocios;
+                negocios = null;
+            }
+        }
+
+        // T-429: lo que pagaron tus negocios al cambiar el día.
+        private void AlPagarNegocios(int total) =>
+            Avisar(FormatoTerritorio.Cortar(ServicioNegocios.TextoPago(total)), FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista);
 
         private void Desvincular()
         {
@@ -65,6 +79,19 @@ namespace MechaCyberpunk.UI.Hud
                 {
                     territorio.Cambio += AlCambiar;
                     territorio.Conquistada += AlConquistar;
+                }
+            }
+            ServicioNegocios servicioNegocios = Registro<ServicioNegocios>.Actual;
+            if (!ReferenceEquals(servicioNegocios, negocios))
+            {
+                if (negocios != null)
+                {
+                    negocios.Pagado -= AlPagarNegocios;
+                }
+                negocios = servicioNegocios;
+                if (negocios != null)
+                {
+                    negocios.Pagado += AlPagarNegocios;
                 }
             }
             IJugador jugador = Registro<IJugador>.Actual;
