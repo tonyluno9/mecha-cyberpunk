@@ -287,6 +287,11 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Del Tianguis en adelante (jefe de los SKULLS, EL HACKER en Neón Alto, CONTINUARÁ): ¿se puede ganar la pelea con pistola?, ¿el marcador lleva bien a EL INVENTOR (100 m)?
 - Escucha los ambientes por zona (calle, casa, Mercado, Tianguis, Neón Alto) y mira la consola: en el recorrido simulado no hubo errores.
 
+### T-476 Bot del recorrido (Builds/Demo regenerado, el juego no cambió)
+- Ve a EL HACKER (Neón Alto) en el día 2 a medio día: ¿la puerta del Casino te deja pasar? El bot la encontró cerrada por horario (T-476-1).
+- Pelea en El Tianguis y contra el jefe de los SKULLS con PUÑOS I y PISTOLA II del CIC: ¿se puede ganar sin caer KO? El bot no pudo (T-476-2).
+- Junto a EL INVENTOR, un E de más abre una tienda que apaga el control hasta Esc: ¿se entiende que Esc la cierra?
+
 ### T-440 Créditos en el título
 - En la pantalla de título hay un botón CRÉDITOS (entre OPCIONES y SALIR): la lista sube sola, la rueda o las flechas la mueven y Esc vuelve al título.
 - Observa: ¿se lee bien el texto?, ¿el botón queda a la altura de los demás?
