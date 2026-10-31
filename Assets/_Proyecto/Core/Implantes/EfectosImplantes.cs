@@ -35,6 +35,20 @@ namespace MechaCyberpunk.Core
         /// <summary>Segundos de aviso antes del próximo ataque del rival. Neutro: 0 (no lo ves).</summary>
         public float anticipacionAtaque;
 
+        // Efectos del combate a pie de pandillas (T-430). Neutro: 0 (sin implante); se suman al combinar.
+
+        /// <summary>OJOS: fracción extra de radio y de alcance del apuntado asistido (0.25 = 25 % más). Neutro: 0.</summary>
+        public float bonusAlcanceApuntado;
+
+        /// <summary>BRAZOS: fracción que se quita a la patada de cámara al disparar (0.3 = 30 % menos). Neutro: 0.</summary>
+        public float reduccionRetroceso;
+
+        /// <summary>PIERNAS: fracción que se quita al enfriamiento de la rodada (0.25 = 25 % menos). Neutro: 0.</summary>
+        public float reduccionEnfriamientoRodada;
+
+        /// <summary>SINAPSIS: fracción que se quita al tiempo de recarga del arma a pie (0.2 = 20 % menos). Neutro: 0.</summary>
+        public float reduccionRecarga;
+
         /// <summary>Todo neutro: sin implantes.</summary>
         public static EfectosImplantes Ninguno => new EfectosImplantes
         {
@@ -44,7 +58,11 @@ namespace MechaCyberpunk.Core
             multiplicadorReaccionMecha = 1f,
             verVidaRival = false,
             vidaRivalEnNumeros = false,
-            anticipacionAtaque = 0f
+            anticipacionAtaque = 0f,
+            bonusAlcanceApuntado = 0f,
+            reduccionRetroceso = 0f,
+            reduccionEnfriamientoRodada = 0f,
+            reduccionRecarga = 0f
         };
 
         /// <summary>
@@ -61,7 +79,11 @@ namespace MechaCyberpunk.Core
                 multiplicadorReaccionMecha = a.multiplicadorReaccionMecha * b.multiplicadorReaccionMecha,
                 verVidaRival = a.verVidaRival || b.verVidaRival,
                 vidaRivalEnNumeros = a.vidaRivalEnNumeros || b.vidaRivalEnNumeros,
-                anticipacionAtaque = Math.Max(a.anticipacionAtaque, b.anticipacionAtaque)
+                anticipacionAtaque = Math.Max(a.anticipacionAtaque, b.anticipacionAtaque),
+                bonusAlcanceApuntado = a.bonusAlcanceApuntado + b.bonusAlcanceApuntado,
+                reduccionRetroceso = Math.Min(0.9f, a.reduccionRetroceso + b.reduccionRetroceso),
+                reduccionEnfriamientoRodada = Math.Min(0.9f, a.reduccionEnfriamientoRodada + b.reduccionEnfriamientoRodada),
+                reduccionRecarga = Math.Min(0.9f, a.reduccionRecarga + b.reduccionRecarga)
             };
         }
     }

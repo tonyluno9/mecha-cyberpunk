@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using UnityEngine;
 
@@ -45,8 +46,16 @@ namespace MechaCyberpunk.Personaje.Combate
             }
         }
 
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
+
+        private void OnEnable()
+        {
+            implantes.Activar();
+        }
+
         private void OnDisable()
         {
+            implantes.Desactivar();
             HayBlanco = false;
             raizBlanco = null;
         }
@@ -91,7 +100,8 @@ namespace MechaCyberpunk.Personaje.Combate
                 return;
             }
 
-            int indice = ReglaApuntadoAsistido.ElegirBlanco(origen, adelante, centros, datos.Radio(nivel), datos.DistanciaMaxima,
+            float alcance = EfectosAPie.FactorAlcanceApuntado(implantes.Efectos);
+            int indice = ReglaApuntadoAsistido.ElegirBlanco(origen, adelante, centros, datos.Radio(nivel) * alcance, datos.DistanciaMaxima * alcance,
                 i => TieneLineaDeVista(enemigos[i].Raiz, centros[i]));
             if (indice < 0)
             {

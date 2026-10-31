@@ -8,6 +8,7 @@ namespace MechaCyberpunk.Progresion.Apoyo
         public const string TextoMejoras = "MEJORAS DE ARMAS";
         public const string TextoInformacion = "INFORMACIÓN";
         public const string TextoPlaticar = "PLATICAR";
+        public const string TextoImplantes = "IMPLANTES";
         public const string TextoVidaLlena = "ESTÁS BIEN, MIJO";
         public const string TextoSinDinero = "NO TE ALCANZA";
         public const string TextoCarroLimpio = "TU CARRO ESTÁ LIMPIO";
@@ -47,6 +48,14 @@ namespace MechaCyberpunk.Progresion.Apoyo
                 default:
                     return new Aviso(TextoPlaticar, true);
             }
+        }
+
+        /// <summary>
+        /// EL DOC con la vida llena ofrece los implantes (T-430) si la clínica se puede usar; con la vida baja sigue curando.
+        /// </summary>
+        public static Aviso DocConImplantes(Aviso curar, float vida, float vidaMaxima, bool clinicaDisponible)
+        {
+            return vida >= vidaMaxima && clinicaDisponible ? new Aviso(TextoImplantes, true) : curar;
         }
 
         /// <summary>Una frase al azar (<paramref name="azar"/> de 0 a cantidad-1) que no es la última que dijo (-1: ninguna).</summary>

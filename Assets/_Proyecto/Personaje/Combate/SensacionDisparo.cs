@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using UnityEngine;
 
@@ -60,8 +61,11 @@ namespace MechaCyberpunk.Personaje.Combate
             CrearEfectos();
         }
 
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
+
         private void OnEnable()
         {
+            implantes.Activar();
             if (pistola != null)
             {
                 pistola.Fogonazo += AlDisparar;
@@ -75,6 +79,7 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void OnDisable()
         {
+            implantes.Desactivar();
             if (pistola != null)
             {
                 pistola.Fogonazo -= AlDisparar;
@@ -129,7 +134,7 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Patear(AjusteSensacion ajuste)
         {
-            magnitud = Mathf.Min(datos.TopePatada, Patada + ajuste.patada);
+            magnitud = Mathf.Min(datos.TopePatada, Patada + ajuste.patada * EfectosAPie.FactorRetroceso(implantes.Efectos));
             magnitudDesvio = ajuste.desvio * (UnityEngine.Random.value < 0.5f ? -1f : 1f);
             inicio = Time.time;
         }
