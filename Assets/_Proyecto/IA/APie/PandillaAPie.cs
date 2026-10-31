@@ -19,6 +19,7 @@ namespace MechaCyberpunk.IA.APie
         private TurnosPandillaAPie turnos;
         private IRelojMundo reloj;
         private bool retiroPendiente;
+        private bool retiroParcialPendiente;
         private Vector3 centro;
         private bool alerta;
         private bool jugadorEnInterior;
@@ -82,8 +83,8 @@ namespace MechaCyberpunk.IA.APie
             EventosLugares.JugadorSalio += AlSalirLugar;
             if (datos.Siempre)
             {
-                Aparecer();
-                return;
+                // T-447: aunque esté siempre, de día quedan menos (según el reloj, si lo hay) y de noche salen todos.
+                Aparecer(CuantosAhora(Registro<IRelojMundo>.Actual));
             }
             Registro<IRelojMundo>.Agregado += AlAgregarReloj;
             Registro<IRelojMundo>.Quitado += AlQuitarReloj;
@@ -231,7 +232,7 @@ namespace MechaCyberpunk.IA.APie
             if (Time.time - vacioDesde >= datos.SegundosReaparicion && distancia > datos.DistanciaReaparicion)
             {
                 vacioDesde = -1f;
-                Aparecer();
+                Aparecer(CuantosAhora(reloj));
             }
         }
 
@@ -247,6 +248,10 @@ namespace MechaCyberpunk.IA.APie
             if (datos.UsaPistola)
             {
                 ActualizarTerritorio();
+            }
+            if (retiroParcialPendiente)
+            {
+                RetirarSobrantesDeDia();
             }
             if (!retiroPendiente)
             {
@@ -283,9 +288,14 @@ namespace MechaCyberpunk.IA.APie
             Desvincular();
             reloj = nuevo;
             reloj.FranjaCambio += AlCambiarFranja;
-            if (reloj.EsDeNoche)
+            if (datos.Siempre)
             {
-                Aparecer();
+                Aparecer(CuantosAhora(reloj));
+                retiroParcialPendiente = !reloj.EsDeNoche;
+            }
+            else if (reloj.EsDeNoche)
+            {
+                Aparecer(pandilleros.Length);
             }
         }
 
@@ -303,7 +313,13 @@ namespace MechaCyberpunk.IA.APie
             if (franja == FranjaDia.Noche)
             {
                 retiroPendiente = false;
-                Aparecer();
+                retiroParcialPendiente = false;
+                Aparecer(pandilleros.Length);
+            }
+            else if (datos.Siempre)
+            {
+                // De día se quedan algunos y el resto se retira cuando no esté peleando.
+                retiroParcialPendiente = true;
             }
             else
             {
@@ -311,10 +327,21 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
-        private void Aparecer()
+        // T-447: cuántos pandilleros del grupo hay ahora: todos de noche (o sin reloj) y, de día, la fracción de los datos (al menos uno).
+        private int CuantosAhora(IRelojMundo relojActual)
         {
-            foreach (PandilleroAPie p in pandilleros)
+            if (relojActual == null || relojActual.EsDeNoche)
             {
+                return pandilleros.Length;
+            }
+            return Mathf.Clamp(Mathf.RoundToInt(pandilleros.Length * datos.FraccionDeDia), 1, pandilleros.Length);
+        }
+
+        private void Aparecer(int cuantos)
+        {
+            for (int i = 0; i < pandilleros.Length && i < cuantos; i++)
+            {
+                PandilleroAPie p = pandilleros[i];
                 // Un pandillero que sigue en pie de la noche anterior no se reinicia a media pelea.
                 if (p.gameObject.activeSelf && !p.EstaKO)
                 {
@@ -323,6 +350,29 @@ namespace MechaCyberpunk.IA.APie
                 p.gameObject.SetActive(true);
                 p.Reaparecer();
             }
+        }
+
+        // Retira a los que sobran de día (los que están más allá de la fracción) en cuanto no estén peleando.
+        private void RetirarSobrantesDeDia()
+        {
+            int quedan = CuantosAhora(reloj);
+            bool faltan = false;
+            for (int i = quedan; i < pandilleros.Length; i++)
+            {
+                PandilleroAPie p = pandilleros[i];
+                if (!p.gameObject.activeSelf)
+                {
+                    continue;
+                }
+                if (p.EnPelea)
+                {
+                    faltan = true;
+                    continue;
+                }
+                turnos.Soltar(p);
+                p.gameObject.SetActive(false);
+            }
+            retiroParcialPendiente = faltan;
         }
 
         private void Retirar()

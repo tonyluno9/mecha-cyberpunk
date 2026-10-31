@@ -86,6 +86,8 @@ namespace MechaCyberpunk.IA.Datos
         [Min(0f)] [SerializeField] private float distanciaReaparicion = 30f;
         [Tooltip("Si es true el grupo está siempre, no solo de noche.")]
         [SerializeField] private bool siempre;
+        [Tooltip("De día, con el grupo en modo siempre, queda en pie esta fracción de sus pandilleros (de 0 a 1; al menos uno); de noche salen todos (T-447).")]
+        [Range(0f, 1f)] [SerializeField] private float fraccionDeDia = 0.34f;
 
         [Header("Patrulla (T-446)")]
         [Tooltip("Hasta qué distancia de su punto se aleja al patrullar mientras espera (m). 0 = se queda quieto. Menor que la correa.")]
@@ -158,6 +160,7 @@ namespace MechaCyberpunk.IA.Datos
         public float SegundosAtascoPatrulla => segundosAtascoPatrulla;
         public float DistanciaReaparicion => distanciaReaparicion;
         public bool Siempre => siempre;
+        public float FraccionDeDia => fraccionDeDia;
         public string Nombre => nombre;
         public float VidaMaxima => vidaMaxima;
         public float DanioGolpe => danioGolpe;

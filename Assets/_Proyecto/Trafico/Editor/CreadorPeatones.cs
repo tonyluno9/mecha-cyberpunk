@@ -59,16 +59,41 @@ namespace MechaCyberpunk.Trafico.Editor
 
             if (AssetDatabase.LoadAssetAtPath<ConfigPeatones>(RutaConfig) == null)
             {
-                // T-418 (D-tony-255): pocos peatones, 6 de día y 8 de noche.
+                // T-447: más gente de día (14) que de noche (6).
                 ConfigPeatones nuevo = ScriptableObject.CreateInstance<ConfigPeatones>();
                 SerializedObject soConfig = new SerializedObject(nuevo);
-                soConfig.FindProperty("peatonesDeDia").intValue = 6;
-                soConfig.FindProperty("peatonesDeNoche").intValue = 8;
+                soConfig.FindProperty("peatonesDeDia").intValue = PeatonesDeDia;
+                soConfig.FindProperty("peatonesDeNoche").intValue = PeatonesDeNoche;
                 soConfig.ApplyModifiedPropertiesWithoutUndo();
                 AssetDatabase.CreateAsset(nuevo, RutaConfig);
             }
             AssetDatabase.SaveAssets();
             Debug.Log("[Trafico] T-331: prefab Peaton y ConfigPeatones_Trafico listos.");
+        }
+
+        public const int PeatonesDeDia = 14;
+        public const int PeatonesDeNoche = 6;
+
+        /// <summary>
+        /// T-447: día y noche conectados: de día hay más peatones en las banquetas y de noche menos (más pandilleros). Cambia solo esos dos números
+        /// del asset existente. Batchmode: -executeMethod MechaCyberpunk.Trafico.Editor.CreadorPeatones.AjustarDiaNoche
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T-447 Peatones de día y de noche")]
+        public static void AjustarDiaNoche()
+        {
+            ConfigPeatones config = AssetDatabase.LoadAssetAtPath<ConfigPeatones>(RutaConfig);
+            if (config == null)
+            {
+                Debug.LogError("[Trafico] T-447: no existe " + RutaConfig + "; corre antes la creación de peatones.");
+                return;
+            }
+            SerializedObject so = new SerializedObject(config);
+            so.FindProperty("peatonesDeDia").intValue = PeatonesDeDia;
+            so.FindProperty("peatonesDeNoche").intValue = PeatonesDeNoche;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(config);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Trafico] T-447: peatones " + PeatonesDeDia + " de día y " + PeatonesDeNoche + " de noche.");
         }
 
         /// <summary>Cuelga de Barrio.prefab el grupo Peatones con una ruta por manzana. Reescribe el prefab del barrio: correrlo solo con el pipeline completo.</summary>

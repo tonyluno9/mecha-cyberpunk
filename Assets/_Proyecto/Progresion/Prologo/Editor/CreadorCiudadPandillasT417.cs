@@ -23,8 +23,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaTiendaMercado = "Assets/_Proyecto/Economia/Datos/DatosTienda_MercadoNegro.asset";
         private const string RutaConfigPeatones = "Assets/_Proyecto/Trafico/Datos/ConfigPeatones_Trafico.asset";
         private const string RutaCatalogoObjetosT417 = "Assets/_Proyecto/Economia/Datos/CatalogoObjetos_Base.asset";
-        private const int PeatonesDeDiaT417 = 6;
-        private const int PeatonesDeNocheT417 = 8;
+        private const int PeatonesDeDiaT417 = 14;
+        private const int PeatonesDeNocheT417 = 6;
         private const float DistanciaMinCic = 10f;
         private const float DistanciaMaxCic = 25f;
         private const float DistanciaMinPuertaCic = 7f;

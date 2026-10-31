@@ -317,3 +317,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-446 Pandilleros que patrullan
 - Los pandilleros ya no están clavados en su punto: cuando no te han visto caminan despacio por su zona, se paran un rato y siguen. Si te ven (te acercas a menos de unos 10 m a puños, o entras a su territorio armados) dejan la patrulla y pelean.
 - Observa: ¿se ven naturales?, ¿alguno se atora en un muro o sale de su zona?
+
+### T-447 Día y noche
+- De día la calle tiene más gente caminando (14 peatones) y solo 1 de cada 3 pandilleros de cada grupo; al anochecer salen los demás y quedan pocos peatones (6). Espera a que cambie la hora (o usa el salto de hora de pruebas) y compara.
+- Observa: ¿se nota el cambio?, ¿aparecen o desaparecen pandilleros a la vista?

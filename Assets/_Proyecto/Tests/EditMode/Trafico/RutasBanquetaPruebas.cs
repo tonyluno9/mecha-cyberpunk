@@ -66,13 +66,14 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [Test]
-        public void Config_TieneMasDeNocheQueDeDia_YCabeEnElTope()
+        public void Config_TieneMasDeDiaQueDeNoche_YCabeEnElTope()
         {
             ConfigPeatones config = Config();
-            Assert.Greater(config.Cantidad(true), config.Cantidad(false));
+            // T-447: de día hay más gente en las banquetas; de noche salen los pandilleros.
+            Assert.Greater(config.Cantidad(false), config.Cantidad(true));
             Assert.GreaterOrEqual(config.Cantidad(false), MinimoDePeatones);
-            Assert.LessOrEqual(config.Cantidad(true), MaximoDePeatones);
-            Assert.AreEqual(config.Cantidad(true), config.Maximo);
+            Assert.LessOrEqual(config.Cantidad(false), MaximoDePeatones);
+            Assert.AreEqual(config.Cantidad(false), config.Maximo);
             Assert.AreEqual(2f, config.DistanciaParada, Tolerancia);
         }
     }

@@ -271,14 +271,14 @@ namespace MechaCyberpunk.Tests.Progresion
                 StringAssert.Contains(p.Datos.Nombre, subtitulos.Subtitulo);
             }
 
-            // f. Peatones: de día 6 o menos, de noche 8 o menos (T-418).
+            // f. Peatones: de día 14 o menos, de noche 6 o menos (T-447).
             Registro<IRelojMundo>.Actual.AvanzarHasta(12f);
             yield return new WaitForSecondsRealtime(3f);
-            Assert.LessOrEqual(PeatonesPrendidos(), 6, "De día hay 6 peatones como máximo");
+            Assert.LessOrEqual(PeatonesPrendidos(), 14, "De día hay 14 peatones como máximo");
             Registro<IRelojMundo>.Actual.AvanzarHasta(22f);
             yield return new WaitForSecondsRealtime(3f);
             int deNoche = PeatonesPrendidos();
-            Assert.LessOrEqual(deNoche, 8, "De noche hay 8 peatones como máximo");
+            Assert.LessOrEqual(deNoche, 6, "De noche hay 6 peatones como máximo");
             Debug.Log("[T-417] Peatones prendidos de noche: " + deNoche);
 
             // g. Capturas: el CIC con EL INVENTOR y la calle principal de noche.
