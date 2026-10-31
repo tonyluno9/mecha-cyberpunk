@@ -13,23 +13,10 @@ namespace MechaCyberpunk.Personaje.Editor
         [MenuItem("Mecha Cyberpunk/Crear T-424 apuntado asistido")]
         public static void Crear()
         {
-            DatosApuntadoAsistido datos = AssetDatabase.LoadAssetAtPath<DatosApuntadoAsistido>(RutaDatos);
-            if (datos == null)
-            {
-                datos = ScriptableObject.CreateInstance<DatosApuntadoAsistido>();
-                AssetDatabase.CreateAsset(datos, RutaDatos);
-            }
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab);
             try
             {
-                ApuntadoAsistido comp = raiz.GetComponent<ApuntadoAsistido>();
-                if (comp == null)
-                {
-                    comp = raiz.AddComponent<ApuntadoAsistido>();
-                }
-                SerializedObject so = new SerializedObject(comp);
-                so.FindProperty("datos").objectReferenceValue = datos;
-                so.ApplyModifiedPropertiesWithoutUndo();
+                AgregarA(raiz);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }
             finally
@@ -37,6 +24,25 @@ namespace MechaCyberpunk.Personaje.Editor
                 PrefabUtility.UnloadPrefabContents(raiz);
             }
             AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>T-425: lo llama también CreadorJugadorAPie para que regenerar el prefab no pierda el apuntado asistido.</summary>
+        public static void AgregarA(GameObject raiz)
+        {
+            DatosApuntadoAsistido datos = AssetDatabase.LoadAssetAtPath<DatosApuntadoAsistido>(RutaDatos);
+            if (datos == null)
+            {
+                datos = ScriptableObject.CreateInstance<DatosApuntadoAsistido>();
+                AssetDatabase.CreateAsset(datos, RutaDatos);
+            }
+            ApuntadoAsistido comp = raiz.GetComponent<ApuntadoAsistido>();
+            if (comp == null)
+            {
+                comp = raiz.AddComponent<ApuntadoAsistido>();
+            }
+            SerializedObject so = new SerializedObject(comp);
+            so.FindProperty("datos").objectReferenceValue = datos;
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }
