@@ -49,6 +49,10 @@ namespace MechaCyberpunk.Progresion.Opciones
         public NivelApuntadoAsistido ApuntadoAsistido => Valores.apuntadoAsistido;
         public CalidadGrafica Calidad => Valores.calidad;
         public bool PantallaCompleta => Valores.pantallaCompleta;
+        /// <summary>True: se muestran los avisos de la primera vez de cada acción (T-441).</summary>
+        public bool Tutorial => Valores.tutorial;
+        /// <summary>Acciones del tutorial ya mostradas, separadas por comas (T-441).</summary>
+        public string TutorialVisto => Valores.tutorialVisto;
         /// <summary>La copia en memoria del asset de URP que cambia la calidad (null si el proyecto no usa URP).</summary>
         public UniversalRenderPipelineAsset CopiaRender => copia;
         /// <summary>Resoluciones de la pantalla sin repetir ancho x alto, de menor a mayor.</summary>
@@ -149,6 +153,18 @@ namespace MechaCyberpunk.Progresion.Opciones
             Valores.resolucionAncho = resolucion.x;
             Valores.resolucionAlto = resolucion.y;
             AplicarPantalla();
+            Guardar();
+        }
+
+        public void FijarTutorial(bool valor)
+        {
+            Valores.tutorial = valor;
+            Guardar();
+        }
+
+        public void FijarTutorialVisto(string valor)
+        {
+            Valores.tutorialVisto = valor ?? "";
             Guardar();
         }
 

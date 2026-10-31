@@ -56,6 +56,10 @@ namespace MechaCyberpunk.Progresion.Opciones
             {
                 v.calidad = CalidadGrafica.Alta;
             }
+            if (v.tutorialVisto == null)
+            {
+                v.tutorialVisto = "";
+            }
             if (v.resolucionAncho <= 0 || v.resolucionAlto <= 0)
             {
                 v.resolucionAncho = 0;

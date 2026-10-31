@@ -25,6 +25,7 @@ namespace MechaCyberpunk.UI.Opciones
         public const string TextoCalidad = "CALIDAD";
         public const string TextoResolucion = "RESOLUCIÓN";
         public const string TextoPantallaCompleta = "PANTALLA COMPLETA";
+        public const string TextoTutorial = "TUTORIAL";
         public const string TextoVolver = "VOLVER";
         public const string TextoAyuda = "↑ ↓ ELEGIR · ← → CAMBIAR · ESC VOLVER";
         public const string FormatoSensibilidad = "{0:0.00}x";
@@ -49,6 +50,7 @@ namespace MechaCyberpunk.UI.Opciones
         [SerializeField] private SelectorCyberfix calidad;
         [SerializeField] private SelectorCyberfix resolucion;
         [SerializeField] private ConmutadorCyberfix pantallaCompleta;
+        [SerializeField] private ConmutadorCyberfix tutorial;
         [SerializeField] private BotonCyberfix volver;
 
         private ServicioOpciones servicio;
@@ -63,6 +65,7 @@ namespace MechaCyberpunk.UI.Opciones
         public SelectorCyberfix Calidad => calidad;
         public SelectorCyberfix Resolucion => resolucion;
         public ConmutadorCyberfix PantallaCompleta => pantallaCompleta;
+        public ConmutadorCyberfix Tutorial => tutorial;
         public BotonCyberfix Volver => volver;
 
         /// <summary>Se dispara al cerrarse (Esc o VOLVER).</summary>
@@ -76,7 +79,7 @@ namespace MechaCyberpunk.UI.Opciones
             Vector2 fila = e.TamanoFila;
             float altoTitulo = e.Tamano(RolTexto.Encabezado) + relleno;
             float altoAyuda = e.AltoFilaHud;
-            int cantidadFilas = 6 + TextosVolumen.Length;
+            int cantidadFilas = 7 + TextosVolumen.Length;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasOpciones", OrdenCanvas);
             contenido = canvas.gameObject;
             KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
@@ -120,6 +123,8 @@ namespace MechaCyberpunk.UI.Opciones
             Fila(resolucion, ref y);
             pantallaCompleta = KitUI.CrearConmutador(panel, TextoPantallaCompleta, true, null);
             Fila(pantallaCompleta, ref y);
+            tutorial = KitUI.CrearConmutador(panel, TextoTutorial, true, null);
+            Fila(tutorial, ref y);
 
             y += separacionFilas - e.SeparacionBloques;
             volver = KitUI.CrearBoton(panel, TextoVolver, null);
@@ -142,7 +147,7 @@ namespace MechaCyberpunk.UI.Opciones
 
         private void Awake()
         {
-            if (contenido == null || menu == null || sensibilidad == null || apuntado == null || volumenes == null || volumenes.Length != TextosVolumen.Length)
+            if (contenido == null || menu == null || sensibilidad == null || apuntado == null || tutorial == null || volumenes == null || volumenes.Length != TextosVolumen.Length)
             {
                 Armar();
             }
@@ -158,6 +163,7 @@ namespace MechaCyberpunk.UI.Opciones
             calidad.CambioValor += i => Servicio?.FijarCalidad((CalidadGrafica)i);
             resolucion.CambioValor += AlCambiarResolucion;
             pantallaCompleta.CambioValor += v => Servicio?.FijarPantallaCompleta(v);
+            tutorial.CambioValor += v => Servicio?.FijarTutorial(v);
             volver.AlPulsar.AddListener(Cerrar);
             menu.Regresar += Cerrar;
             contenido.SetActive(false);
@@ -254,6 +260,7 @@ namespace MechaCyberpunk.UI.Opciones
             }
             resolucion.Configurar(textos, elegida);
             pantallaCompleta.Configurar(s.PantallaCompleta);
+            tutorial.Configurar(s.Tutorial);
         }
 
         private void AlCambiarResolucion(int indice)

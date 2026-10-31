@@ -18,6 +18,10 @@ namespace MechaCyberpunk.Progresion.Opciones
         public int resolucionAncho;
         public int resolucionAlto;
         public bool pantallaCompleta = true;
+        /// <summary>Avisos de la primera vez de cada acción (T-441). Se apaga en Opciones.</summary>
+        public bool tutorial = true;
+        /// <summary>Acciones del tutorial que ya se mostraron, separadas por comas (T-441).</summary>
+        public string tutorialVisto = "";
 
         public ValoresOpciones Copiar()
         {
