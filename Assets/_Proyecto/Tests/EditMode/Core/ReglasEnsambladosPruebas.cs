@@ -37,7 +37,7 @@ namespace MechaCyberpunk.Tests.Core
         private static readonly Dictionary<string, string> DuenoPorNombreExtra = new Dictionary<string, string>
         {
             { "Herramientas", DuenoTony }, { "Creditos", DuenoTony }, { "ModoVideo", DuenoTony },
-            { "PersonajeVisual", DuenoTony }, { "Sonido", DuenoTony },
+            { "PersonajeVisual", DuenoTony }, { "Sonido", DuenoTony }, { "Demo", DuenoTony },
         };
 
         // Pruebas de integración que cruzan dueños a propósito (T-402: los drones que disparan viven en Trafico).
