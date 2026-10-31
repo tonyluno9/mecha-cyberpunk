@@ -119,6 +119,13 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoPestanaMision = "MISIÓN";
         [SerializeField] private string textoPestanaReputacion = "REPUTACIÓN";
         [SerializeField] private string textoPestanaFavores = "FAVORES";
+        [SerializeField] private string textoPestanaMensajes = "MENSAJES";
+        [SerializeField] private string textoSinMensajes = "SIN MENSAJES TODAVÍA";
+        [Tooltip("Línea de un mensaje; {0} marca de no leído, {1} remitente, {2} texto.")]
+        [SerializeField] private string formatoMensaje = "{0}{1}: {2}\n";
+        [SerializeField] private string marcaNoLeido = "● ";
+        [Min(1)] [Tooltip("Cuántos mensajes se ven a la vez, los más nuevos primero.")]
+        [SerializeField] private int mensajesVisibles = 4;
 
         [Tooltip("Línea de la pestaña FAVORES; {0} nombre, {1} cuántos lleva, {2} máximo, {3} descripción, {4} dónde se usa.")]
         [SerializeField] private string formatoFilaFavor = "{0}   {1}/{2}   ·   {3}\nSE USA EN: {4}\n";
@@ -202,6 +209,11 @@ namespace MechaCyberpunk.UI
         public string FormatoUsaFavor => formatoUsaFavor;
         public string FormatoFavorPerdido => formatoFavorPerdido;
         public string TextoPestanaFavores => textoPestanaFavores;
+        public string TextoPestanaMensajes => textoPestanaMensajes;
+        public string TextoSinMensajes => textoSinMensajes;
+        public string FormatoMensaje => formatoMensaje;
+        public string MarcaNoLeido => marcaNoLeido;
+        public int MensajesVisibles => mensajesVisibles;
         public string FormatoFilaFavor => formatoFilaFavor;
         public string TextoSinFavores => textoSinFavores;
 

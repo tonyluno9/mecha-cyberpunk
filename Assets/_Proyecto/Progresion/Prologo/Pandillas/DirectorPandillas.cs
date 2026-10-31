@@ -237,6 +237,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 return;
             }
+            // T-449: los mensajes del teléfono saben cuándo terminó la historia de la demo (esta máquina, no IHistoria).
+            Registro<ServicioMensajes>.Actual?.FijarHistoriaTerminada(maquina.Paso == PasoHistoria.Libre);
 #if !DEMO_FINAL
             Keyboard teclado = Keyboard.current;
             if (teclado != null && !Pausa.Activa && teclado.f6Key.wasPressedThisFrame && maquina.Saltar())
