@@ -167,3 +167,8 @@ T-194, T-195, T-196, T-197 y la corrección de las cajas de salto, verificadas e
 - Sigue: terminar T-430; mejora 11 (tutorial); 12 a 18 sin la 13; al final suite completa y FPS con MedicionNoche (T-428 agregó props sin medir).
 - Conocido: MostradorTiendaPruebas 2 fallan (esperan 6 artículos, hay 20); en T-426 faltan escoltar aliado y carreras; en la captura de T-429 el jugador sale en el cielo (revisar).
 - Probar primero mañana: Builds/Demo/Cyberfix.exe: disparar (patada y X), Q cubrirse y Ctrl rodar, tablero de encargos junto a tu casa, negocios con E en los postes y la lista en el mapa (M).
+
+## Sesión A (31-oct-2026, desde las 02:00)
+- T-430 implantes a pie: hecha y en main (be4b6a29). Compila; EditMode Personaje+Progresion+UI 452/452; PlayMode Progresion+Implantes+Personaje 282/302. Builds/Juego/Cyberfix.exe regenerado (Result: Success); guía en docs/guia-para-jugar.md.
+- Las 20 pruebas rojas de PlayMode son viejas, no de T-430 (T-430 no toca GolpeAPie): ImplantesAPiePruebas (6, esperan 15 de daño y los puños hacen 20 desde T-403), PandillaAPiePruebas (6), RecorridoImplantesPruebas, RecorridoAPiePruebas, BarrioAlanPruebas, EncargosPruebas.RobarCarro, Prologo* (3), ServicioGuardadoPruebas. ImplantesDocPruebas y EfectosAPiePruebas (las de T-430) pasan. Se atiende en T-440.
+- Sigue: tutorial ligero (prioridad 2), botón CRÉDITOS del título (docs/bugs.md), T-440 pruebas viejas.

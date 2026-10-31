@@ -278,3 +278,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - T-472 Modo video (solo Builds/Juego, NO en la demo): F10 oculta/muestra el HUD, F11 cámara libre (WASD, ratón, Q/E, Shift rápido, rueda cambia velocidad; F11 de nuevo vuelve), F12 captura 2x en Capturas/ junto al .exe.
 - En Builds/Demo estas teclas no hacen nada (confirma que F10/F11/F12 no cambian la vista).
 - En Builds/Juego: ¿F11 devuelve el control y la cámara del jugador exactamente igual? ¿la captura de F12 sale sin el aviso?
+
+### T-440 Créditos en el título
+- En la pantalla de título hay un botón CRÉDITOS (entre OPCIONES y SALIR): la lista sube sola, la rueda o las flechas la mueven y Esc vuelve al título.
+- Observa: ¿se lee bien el texto?, ¿el botón queda a la altura de los demás?
