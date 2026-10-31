@@ -393,6 +393,9 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
 
+            // T-448: el armero de la guarida da más daño a las armas de fuego.
+            IGuarida guarida = Registro<IGuarida>.Actual;
+            float multiplicadorGuarida = 1f + (guarida != null ? guarida.BonoDanioArmas : 0f);
             Sonidos.ReproducirEn(IdDisparo(arma), origen);
             EventosRuido.PublicarDisparo(origen);
             for (int i = 0; i < d.Perdigones; i++)
@@ -413,7 +416,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     bool esCarne = objetivo != null && !(objetivo is IObjetoInerte);
                     if (objetivo != null)
                     {
-                        mato = objetivo.RecibirDanio(new InfoDanio(d.Danio, TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
+                        mato = objetivo.RecibirDanio(new InfoDanio(d.Danio * multiplicadorGuarida, TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
                     }
                     BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato));
                     if (!sonoImpacto)

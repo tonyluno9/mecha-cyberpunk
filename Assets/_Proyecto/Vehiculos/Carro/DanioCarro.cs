@@ -75,6 +75,20 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
+        /// <summary>
+        /// Cambia cuántas veces su vida normal aguanta el carro (el garaje mejorado, T-448), sin perder la fracción de vida que lleva.
+        /// </summary>
+        public void EscalarVida(float factor)
+        {
+            if (calculo == null || config == null)
+            {
+                return;
+            }
+            float fraccion = calculo.Maxima > 0f ? calculo.Actual / calculo.Maxima : 1f;
+            calculo = new CalculoDanioCarro(config.VidaMaxima * Mathf.Max(0.1f, factor), config.FraccionHumo, config.FraccionFuego);
+            calculo.Aplicar(calculo.Maxima * (1f - fraccion));
+        }
+
         public ResultadoDanio RecibirDanio(InfoDanio info)
         {
             if (calculo == null || calculo.Destruido || info.Cantidad <= 0f)

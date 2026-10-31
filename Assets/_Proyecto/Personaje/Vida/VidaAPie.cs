@@ -54,6 +54,12 @@ namespace MechaCyberpunk.Personaje.Vida
             }
         }
 
+        /// <summary>Sube la vida al máximo sin tocar el control (dormir en la cama mejorada, T-448).</summary>
+        public void CurarTodo()
+        {
+            modelo?.Restaurar();
+        }
+
         /// <summary>Vuelve a la vida máxima, devuelve el control y la cámara.</summary>
         public void Restaurar()
         {
