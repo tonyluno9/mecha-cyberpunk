@@ -261,3 +261,9 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - En cada zona tuya hay postes de neón con letrero turquesa (TIENDITA, PUESTO, FONDA, CLUB, ARCADE, TALLER): acércate y pulsa E para tomar el negocio pagando Biits, y otra vez para mejorarlo (hasta nivel 3). Cada día de juego pagan solos y sale "+Ƀ... DE TUS NEGOCIOS"; si pierdes la zona dejan de pagar.
 - El mapa (M) lista tus negocios abajo con su nivel e ingreso por día. Además, el aviso "<ZONA> ES DE ..." ya no se encima con el texto de la zona.
 - Observa: ¿los precios se sienten justos?, ¿se encuentran los postes?
+
+## Demo (Builds/Demo)
+
+- T-470 Sonidos: camina por la calle, el Tianguis (AMB_TIANGUIS), Neon Alto y entra al mercado negro o a la casa: el ambiente cambia con cruce de 1 s y queda bajo.
+- Dispara pistola, escopeta y sniper, golpea y salta: se oyen los sonidos finales; voces y disparos por encima del ambiente.
+- Los IDs con archivo pero sin gancho estan en docs/sonidos-faltan-enganchar.md (no suenan aun).
