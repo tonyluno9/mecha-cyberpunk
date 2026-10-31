@@ -1,0 +1,4 @@
+# T-472 Modo video
+Dueño: Tony | Rama: tony/T-472-modo-video | Modelo: Sonnet 5.5 | Sesión B, prioridad 3
+Hecho: Herramientas/ModoVideo (asmdef nuevo): F10 oculta/muestra todos los Canvas de pantalla y los restaura, F11 cámara libre (WASD, ratón, Q/E, Shift x4, rueda cambia la velocidad) que apaga la cámara del jugador y las acciones de entrada activas y lo restaura al salir, F12 captura superSize 2 a Capturas/ con fecha y hora y aviso breve. Se crea solo al cargar (AfterSceneLoad, DontDestroyOnLoad) salvo con DEMO_FINAL. Capturas/ en .gitignore. Decisión D-tony-307. Pruebas: EditMode ReglasModoVideoPruebas (5), PlayMode ModoVideoPruebas (4 + 1 de captura con CAPTURAR_T472=1). Captura T-472-1.
+Bitácora: batch en verde; ConstruirDemoPandillas y, por excepción pedida, ConstruirJuego regenerados.
