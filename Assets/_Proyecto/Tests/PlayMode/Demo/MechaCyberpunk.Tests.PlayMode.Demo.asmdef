@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Tests.PlayMode.Demo",
+    "rootNamespace": "MechaCyberpunk.Tests",
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "Unity.InputSystem.TestFramework", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Creditos", "MechaCyberpunk.IA", "MechaCyberpunk.Personaje", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Progresion.Apoyo", "UnityEngine.UI", "MechaCyberpunk.Tests.PlayMode.UI"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
