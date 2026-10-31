@@ -221,3 +221,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Dispara cada arma: la cámara patea hacia arriba (mucho con la escopeta y el sniper, poco con el fusil) y el cañón destella. ¿Se siente cada arma distinta?
 - Dispara a una pared o a un carro y salen chispas; a un pandillero, una salpicadura roja y una X blanca en la retícula (naranja y más grande si lo derribas).
 - Pega un puñetazo a alguien: la cámara da un sacudón corto. El zoom del sniper se ve igual que antes.
+
+### T-421 cubrirse y rodar
+- Junto a una pared, un carro o una caja alta pulsa Q: te pegas, quedas agachado (cámara baja) y las balas de los pandilleros del otro lado se quedan en la cubierta. Mantén clic derecho para asomarte y dispara; Q otra vez o caminar lejos de ella te suelta.
+- CTRL rueda en la dirección en que caminas (hacia adelante si estás quieto): ~0.3 s sin recibir daño y 1.2 s de espera para otra. Las teclas salen en la ayuda de controles del HUD.
+- Observa: ¿Q encuentra la cubierta que esperas?, ¿la rodada alcanza para esquivar un tiro?, ¿el muñeco encogido/girando se ve raro (no hay animaciones nuevas)?
