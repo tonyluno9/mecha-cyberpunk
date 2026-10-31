@@ -89,6 +89,10 @@ namespace MechaCyberpunk.Personaje.Combate
         public event Action Cambio;
         /// <summary>Se dispara en cada tiro, haya dado a algo o no.</summary>
         public event Action Disparo;
+        /// <summary>Se dispara en cada tiro con el arma y la posición de la boca (T-420).</summary>
+        public event Action<ArmaAPie, Vector3> Fogonazo;
+        /// <summary>Se dispara en cada bala o perdigón que pega a algo (T-420).</summary>
+        public event Action<ArmaAPie, ImpactoBala> BalaImpacto;
 
         private void Awake()
         {
@@ -124,6 +128,10 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             RevisarArmas();
             CrearMarcas();
+            if (GetComponent<SensacionDisparo>() == null)
+            {
+                gameObject.AddComponent<SensacionDisparo>();
+            }
         }
 
         // Crea o rehace el cargador de cada arma de fuego cuando cambia su nivel (el cargador nuevo viene lleno).
@@ -293,10 +301,12 @@ namespace MechaCyberpunk.Personaje.Combate
                 if (BuscarImpacto(origen, direccion, d.Alcance, out RaycastHit mejor))
                 {
                     IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
+                    bool mato = false;
                     if (objetivo != null)
                     {
-                        objetivo.RecibirDanio(new InfoDanio(d.Danio, TipoDanio.Disparo, mejor.point, direccion, null));
+                        mato = objetivo.RecibirDanio(new InfoDanio(d.Danio, TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
                     }
+                    BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, objetivo != null, mato));
                     if (!sonoImpacto)
                     {
                         sonoImpacto = true;
@@ -310,6 +320,7 @@ namespace MechaCyberpunk.Personaje.Combate
             inicioRetroceso = Time.time;
             armaRetroceso = arma;
             finLuz = Time.time + duracionLuz;
+            Fogonazo?.Invoke(arma, origen);
             Disparo?.Invoke();
         }
 

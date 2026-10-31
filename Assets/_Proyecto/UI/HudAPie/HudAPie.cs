@@ -189,6 +189,10 @@ namespace MechaCyberpunk.UI.Hud
         private void Awake()
         {
             KitUI.FijarEstilo(estilo);
+            if (GetComponent<Hitmarker>() == null)
+            {
+                gameObject.AddComponent<Hitmarker>();
+            }
             if (config == null || grupoVida == null || grupoMira == null || grupoArma == null || grupoCancion == null
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
                 || grupoObjetivo == null || textoObjetivo == null

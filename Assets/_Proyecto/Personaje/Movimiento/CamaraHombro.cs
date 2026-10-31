@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private float fov;
         private bool iniciada;
         private ZoomSniper zoom;
+        private SensacionDisparo sensacion;
 
         public float DistanciaActual => distancia;
 
@@ -74,7 +75,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 fov = Mathf.Lerp(fov, objetivoFov, paso);
             }
 
-            Quaternion giro = Quaternion.Euler(controlador.Inclinacion - (zoom != null ? zoom.Sacudida : 0f), controlador.GiroCamara, 0f);
+            if (sensacion == null)
+            {
+                sensacion = controlador.GetComponent<SensacionDisparo>();
+            }
+            float patada = sensacion != null ? sensacion.Patada : 0f;
+            float desvio = sensacion != null ? sensacion.Desvio : 0f;
+            Quaternion giro = Quaternion.Euler(controlador.Inclinacion - (zoom != null ? zoom.Sacudida : 0f) - patada, controlador.GiroCamara + desvio, 0f);
             Quaternion giroHorizontal = Quaternion.Euler(0f, controlador.GiroCamara, 0f);
             Vector3 pivote = controlador.transform.position + Vector3.up * altura + giroHorizontal * (Vector3.right * lateral);
             Vector3 deseada = pivote - giro * Vector3.forward * distancia;
