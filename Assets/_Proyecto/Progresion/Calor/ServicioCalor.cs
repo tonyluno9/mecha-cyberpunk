@@ -74,6 +74,10 @@ namespace MechaCyberpunk.Progresion
             {
                 Sonidos.Reproducir("CAL_SUBE_NIVEL");
             }
+            else if (nivel < nivelAnterior)
+            {
+                Sonidos.Reproducir("CAL_BAJA_NIVEL");
+            }
             nivelAnterior = nivel;
             NivelCambio?.Invoke(nivel);
         }
