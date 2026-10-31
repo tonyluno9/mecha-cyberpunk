@@ -321,3 +321,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-447 Día y noche
 - De día la calle tiene más gente caminando (14 peatones) y solo 1 de cada 3 pandilleros de cada grupo; al anochecer salen los demás y quedan pocos peatones (6). Espera a que cambie la hora (o usa el salto de hora de pruebas) y compara.
 - Observa: ¿se nota el cambio?, ¿aparecen o desaparecen pandilleros a la vista?
+
+### T-448 Tu guarida sube de nivel
+- Dentro de tu casa, junto a la cama, hay tres postes con letrero turquesa: ARMERO, GARAJE y CAMA. Acércate y pulsa E para estrenar o mejorar cada uno (tres niveles, con Biits).
+- ARMERO: tus armas de fuego pegan más. GARAJE: aparece tu carro fuera de la casa y con más nivel aguanta más. CAMA: al dormir despiertas curado y con menos calor.
+- Observa: ¿se encuentran los postes?, ¿los precios son justos?, ¿dónde sale el carro del garaje?
