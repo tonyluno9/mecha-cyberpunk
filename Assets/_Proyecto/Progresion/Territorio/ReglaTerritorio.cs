@@ -79,5 +79,14 @@ namespace MechaCyberpunk.Progresion
                 respeto[zona] = Math.Max(0, respeto[zona] - PorCaida);
             }
         }
+
+        /// <summary>Sube o baja el respeto de una zona (T-427: premio o castigo de un ataque rival), de 0 a el tope.</summary>
+        public void Ajustar(int zona, int delta)
+        {
+            if (zona >= 0 && zona < respeto.Length)
+            {
+                respeto[zona] = Math.Max(0, Math.Min(Maximo, respeto[zona] + delta));
+            }
+        }
     }
 }
