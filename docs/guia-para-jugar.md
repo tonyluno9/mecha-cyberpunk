@@ -246,3 +246,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Cuando termines la historia (o con F6 en pruebas), el TABLERO DE ENCARGOS junto a la puerta de tu casa (poste cian) ofrece con E: COBRAR CUOTA (3 locales, a veces uno se resiste), DEFENDER ZONA (oleada de 4 rivales en SUBURBIOS) y ROBAR CARRO (llévalo a CANEPA). Cada uno marca su objetivo en el minimapa y el mapa, paga Biits y sube el respeto.
 - Tras terminar uno hay enfriamiento antes de repetirlo (5 min; 1 min si fallas o cancelas con E en el tablero). Durante la historia el tablero no ofrece nada.
 - Observa: ¿se entiende a dónde ir?, ¿el premio vale el esfuerzo?, ¿la oleada es muy fácil o muy difícil? (Escoltar aliado y carreras faltan.)
+
+### T-427 ataques a tus zonas
+- En el juego libre, con EL TIANGUIS o NEÓN ALTO conquistados, cada cierto tiempo sale "¡LOS SNAKES ATACAN EL TIANGUIS!" (o los SKULLS a Neón): la zona se marca en el minimapa y el mapa y tienes 2 min y medio para llegar y vencer a 4 rivales. Ganas Biits y respeto; si no llegas o pierdes la zona baja de respeto y, si queda muy baja, pasa al rival.
+- SUBURBIOS no se ataca, y no ocurre durante la historia ni durante un encargo del tablero.
+- Observa: ¿el aviso se nota?, ¿llegas a tiempo?, ¿es muy seguido o muy raro?

@@ -179,6 +179,29 @@ namespace MechaCyberpunk.Progresion
             Avisar(antes);
         }
 
+        /// <summary>Sube o baja el respeto de una zona (T-427: premio o castigo de un ataque rival).</summary>
+        public void AjustarRespeto(string zona, int delta)
+        {
+            Asegurar();
+            int[] antes = Foto();
+            regla.Ajustar(Indice(zona), delta);
+            Avisar(antes);
+        }
+
+        /// <summary>Cambia el dueño de una zona y su respeto (T-427: un rival te quita una zona). No avisa de conquista.</summary>
+        public void Ceder(string zona, IdPandilla nuevoDueno, int nuevoRespeto)
+        {
+            Asegurar();
+            int i = Indice(zona);
+            if (i < 0)
+            {
+                return;
+            }
+            int[] antes = Foto();
+            regla.Poner(i, nuevoRespeto, (int)nuevoDueno);
+            Avisar(antes);
+        }
+
         // Respeto y dueño de todas las zonas, para avisar solo de las que cambiaron.
         private int[] Foto()
         {
