@@ -297,7 +297,7 @@ namespace MechaCyberpunk.Arte.Editor
             return new Bounds(pivote + Vector3.up * medio.y, ext * 2f);
         }
 
-        private static string bloqueo;
+        internal static string bloqueo;
 
         internal static bool Libre(Bounds caja)
         {
