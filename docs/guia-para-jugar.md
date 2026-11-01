@@ -344,3 +344,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-451 Tráfico de calle
 - Por las calles del barrio andan carros civiles de colores (6 de día, 3 de noche). Párate enfrente de uno: frena y, si no te quitas, pita. Dispara cerca: se detienen y pitan una vez. Choca con uno desde tu carro: ambos rebotan y tu carro se daña.
 - Observa: ¿frenan a tiempo?, ¿se atoran en las esquinas o salen de la calle?
+
+### T-500 Importar (paso 0)
+- No cambia lo que se ve en la demo. Abre Assets/Arte/Calle/Prefabs/N01 (y N02 a N08 en sus zonas) y los FBX de Assets/Arte/Personajes/man, woman y woman2: se ven con textura y traen animaciones.
+- Observa: docs/capturas/T-500-1.png con los 9 modelos en fila.
