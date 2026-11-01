@@ -197,3 +197,4 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 - Pendiente de las 10 prioridades: solo la parte de sonido que sigue sin gancho (ver T-450), llamar a tu pandilla desde el teléfono y conectar los visuales 3D de Mixamo (T-473, no hay FBX todavía).
 - Pruebas rojas viejas, sin cambios: Progresion 5, Progresion.Implantes 7, Personaje 2, Vehiculos 2-3 (solas pasan), y ArmasPruebas.ComprarYUsarEscopeta azarosa. EditMode completo 1286/1286.
 | T-500 | Paso 0 importar: N01-N08, man/woman/woman2 y piezas de UI en Assets/Arte | hecha, EditMode 2/2, captura T-500-1 |
+| T-501 | Paso A1 Suburbios: cables, lámparas N01, neón, charcos, niebla azul, tinacos, 48 torres de horizonte | hecha, EditMode 9/9, PlayMode 3/3, Suburbios 463 fps (Medio) / 329 (Ultra), capturas ref-suburbios-noche, ref-cruce-dia-lluvia, ref-azotea |
