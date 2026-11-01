@@ -10,7 +10,7 @@ namespace MechaCyberpunk.Personaje.Jugador
     /// Pasa el estado del jugador al Animator del modelo (T-400): Velocidad, EnPiso, Apuntando, Arma, KO y los disparadores
     /// Golpe, Disparo y Recarga. El modelo final se cambia sin tocar código mientras conserve esos nombres.
     /// </summary>
-    public class AnimacionJugador : MonoBehaviour
+    public class AnimacionJugador : MonoBehaviour, IModeloCambiable
     {
         private static readonly int IdVelocidad = Animator.StringToHash("Velocidad");
         private static readonly int IdEnPiso = Animator.StringToHash("EnPiso");
@@ -47,6 +47,12 @@ namespace MechaCyberpunk.Personaje.Jugador
                 Debug.LogError("[Personaje] Falta el Animator del modelo en AnimacionJugador de " + name, this);
                 enabled = false;
             }
+        }
+
+        public void AlCambiarModelo(Animator nuevo)
+        {
+            animador = nuevo;
+            enabled = nuevo != null;
         }
 
         private void OnEnable()

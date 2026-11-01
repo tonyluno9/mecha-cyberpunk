@@ -7420,8 +7420,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Titulo.PantallaCreacionPandilla
   modelos:
-  - {fileID: 6923790833252205609, guid: ed10bb78e9c4d33438fcd9c13a6afd76, type: 3}
-  - {fileID: 5377193653349304320, guid: ea70b569381e2714cb63ec8c30edc3e4, type: 3}
+  - {fileID: 7146404556939082291, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
+  - {fileID: 5083024976931515990, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
   texturaVista: {x: 512, y: 768}
   giro: 30
   distanciaCamara: 3.2

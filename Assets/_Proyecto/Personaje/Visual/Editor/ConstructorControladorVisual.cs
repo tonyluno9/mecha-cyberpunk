@@ -17,6 +17,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         /// <summary>Crea el controlador en la ruta o lo vacía y lo rearma si ya existe (conserva su GUID). Devuelve la lista de clips que faltaron.</summary>
         public static AnimatorController Construir(string ruta, IDictionary<ClipVisual, AnimationClip> clips, out List<ClipVisual> faltan)
         {
+            return Construir(ruta, clips, out faltan, ReglasVisual.UmbralCorrer);
+        }
+
+        /// <summary>Igual, con el umbral (m/s) a partir del cual pasa de Caminar a Correr (T-520: sale de la velocidad de los clips).</summary>
+        public static AnimatorController Construir(string ruta, IDictionary<ClipVisual, AnimationClip> clips, out List<ClipVisual> faltan, float umbralCorrer)
+        {
             AnimatorController c = AssetDatabase.LoadAssetAtPath<AnimatorController>(ruta);
             if (c == null)
             {
@@ -56,8 +62,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             // Locomoción por Velocidad.
             Unir(idle, caminar, false, 0f, Mayor(ReglasVisual.Velocidad, ReglasVisual.UmbralCaminar));
             Unir(caminar, idle, false, 0f, Menor(ReglasVisual.Velocidad, ReglasVisual.UmbralCaminar));
-            Unir(caminar, correr, false, 0f, Mayor(ReglasVisual.Velocidad, ReglasVisual.UmbralCorrer));
-            Unir(correr, caminar, false, 0f, Menor(ReglasVisual.Velocidad, ReglasVisual.UmbralCorrer));
+            Unir(caminar, correr, false, 0f, Mayor(ReglasVisual.Velocidad, umbralCorrer));
+            Unir(correr, caminar, false, 0f, Menor(ReglasVisual.Velocidad, umbralCorrer));
 
             // Saltar: sale del suelo y vuelve al tocarlo.
             foreach (AnimatorState s in suelo)
@@ -100,6 +106,11 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             AnimatorStateTransition aCubrir = m.AddAnyStateTransition(e[ClipVisual.Cubrirse]);
             Configurar(aCubrir, false, 0f, false, Bool(ReglasVisual.Cubierto, true), Bool(ReglasVisual.Caer, false));
             Unir(e[ClipVisual.Cubrirse], idle, false, 0f, Bool(ReglasVisual.Cubierto, false));
+
+            // T-520: el IK de los brazos para apuntar (ApuntadoIK) corre en la capa base.
+            AnimatorControllerLayer[] capas = c.layers;
+            capas[0].iKPass = true;
+            c.layers = capas;
 
             EditorUtility.SetDirty(c);
             AssetDatabase.SaveAssets();

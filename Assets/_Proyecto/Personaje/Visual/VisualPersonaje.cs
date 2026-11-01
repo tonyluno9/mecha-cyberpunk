@@ -18,6 +18,26 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("Suavizado de la velocidad que ve el Animator (1/s). 0 = sin suavizar.")]
         [Min(0f)] [SerializeField] private float suavizadoVelocidad = 12f;
 
+        [Header("Pies sin deslizarse (T-520)")]
+        [Tooltip("Velocidad (m/s) a la que avanza el clip Caminar tal como viene. 0 = no ajustar la rapidez de la animación.")]
+        [Min(0f)] [SerializeField] private float velocidadClipCaminar;
+        [Tooltip("Velocidad (m/s) a la que avanza el clip Correr tal como viene. 0 = no ajustar la rapidez de la animación.")]
+        [Min(0f)] [SerializeField] private float velocidadClipCorrer;
+        [Tooltip("Rapidez mínima de la animación al ajustarla a la velocidad real (1 = normal).")]
+        [Min(0.1f)] [SerializeField] private float rapidezMinima = 0.6f;
+        [Tooltip("Rapidez máxima de la animación al ajustarla a la velocidad real (1 = normal).")]
+        [Min(1f)] [SerializeField] private float rapidezMaxima = 2.2f;
+        [Header("Caída (sin animación de caer)")]
+        [Tooltip("Tiempo que tarda el cuerpo en tumbarse al quedar KO (s). 0 = no se tumba.")]
+        [Min(0f)] [SerializeField] private float segundosTumbarse = 0.35f;
+        [Tooltip("Cuánto sube el cuerpo al estar tumbado para no hundirse en el piso (m).")]
+        [Min(0f)] [SerializeField] private float alturaTumbado = 0.15f;
+
+        // El modelo de Tripo mira a -Z local (nodo Giro de 180°): cae de espaldas con +90° sobre su eje X.
+        private const float GradosTumbado = 90f;
+        private const float VelocidadVerticalEnAire = 1.5f;
+        private static readonly int HashCaminar = Animator.StringToHash("Caminar");
+        private static readonly int HashCorrer = Animator.StringToHash("Correr");
         private static readonly int IdVelocidad = Animator.StringToHash(ReglasVisual.Velocidad);
         private static readonly int IdEnSuelo = Animator.StringToHash(ReglasVisual.EnSuelo);
         private static readonly int IdApuntando = Animator.StringToHash(ReglasVisual.Apuntando);
@@ -38,6 +58,16 @@ namespace MechaCyberpunk.Personaje.Visual
 
         public Animator Animador => animador;
         public bool LeerDelPadre { get => leerDelPadre; set => leerDelPadre = value; }
+
+        /// <summary>0 = de pie, 1 = tumbado (KO).</summary>
+        public float Tumbado => tumbado;
+
+        /// <summary>Para los creadores: las velocidades de los clips tal como vienen (m/s).</summary>
+        public void ConfigurarClips(float caminar, float correr)
+        {
+            velocidadClipCaminar = caminar;
+            velocidadClipCorrer = correr;
+        }
 
         /// <summary>Rapidez horizontal en m/s. Se escribe a mano o la calcula este componente si LeerDelPadre está activo.</summary>
         public float Velocidad
@@ -81,6 +111,10 @@ namespace MechaCyberpunk.Personaje.Visual
         private TipoArmaVisual tipoArma;
         private bool cubierto;
         private bool caido;
+        private float tumbado;
+        private bool ejeGuardado;
+        private Quaternion rotacionBase;
+        private Vector3 posicionBase;
 
         private void Awake()
         {
@@ -113,6 +147,39 @@ namespace MechaCyberpunk.Personaje.Visual
                 LeerEstadoDelPadre(Time.deltaTime);
             }
             Aplicar();
+            AjustarRapidez();
+        }
+
+        private void LateUpdate()
+        {
+            float objetivo = caido && segundosTumbarse > 0f ? 1f : 0f;
+            if (Mathf.Approximately(tumbado, objetivo) || animador == null)
+            {
+                return;
+            }
+            tumbado = segundosTumbarse > 0f ? Mathf.MoveTowards(tumbado, objetivo, Time.deltaTime / segundosTumbarse) : objetivo;
+            // Se tumba el nodo Giro (padre del Modelo) y no el Modelo: CubiertaYRodada reescribe la rotación del Modelo cada cuadro.
+            Transform eje = animador.transform.parent != null && animador.transform.parent != transform ? animador.transform.parent : animador.transform;
+            if (!ejeGuardado)
+            {
+                ejeGuardado = true;
+                rotacionBase = eje.localRotation;
+                posicionBase = eje.localPosition;
+            }
+            eje.localRotation = rotacionBase * Quaternion.Euler(GradosTumbado * tumbado, 0f, 0f);
+            eje.localPosition = posicionBase + new Vector3(0f, alturaTumbado * tumbado, 0f);
+        }
+
+        /// <summary>Acelera o frena Caminar y Correr para que los pies sigan el suelo a la velocidad real.</summary>
+        private void AjustarRapidez()
+        {
+            if (animador == null || (velocidadClipCaminar <= 0f && velocidadClipCorrer <= 0f))
+            {
+                return;
+            }
+            int estado = animador.GetCurrentAnimatorStateInfo(0).shortNameHash;
+            float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
+            animador.speed = referencia > 0f ? Mathf.Clamp(velocidad / referencia, rapidezMinima, rapidezMaxima) : 1f;
         }
 
         private void LeerEstadoDelPadre(float dt)
@@ -123,7 +190,8 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 Vector3 v = controlador.velocity;
                 objetivo = ReglasVisual.VelocidadHorizontal(v.x, v.z);
-                enSuelo = controlador.isGrounded;
+                // Un CharacterController quieto que no recibe Move cada cuadro reporta isGrounded falso: solo cuenta como aire si de verdad sube o cae.
+                enSuelo = controlador.isGrounded || Mathf.Abs(v.y) < VelocidadVerticalEnAire;
             }
             else if (cuerpo != null)
             {

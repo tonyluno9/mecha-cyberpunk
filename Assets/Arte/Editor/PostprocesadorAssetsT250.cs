@@ -24,14 +24,27 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
 
+            if (assetPath.StartsWith(CarpetaAnimacionesPersonajes))
+            {
+                // T-520: animaciones de Mixamo (solo el movimiento) para los personajes Humanoid; CreadorVisualTripo las configura.
+                ModelImporter animacion = (ModelImporter)assetImporter;
+                animacion.importAnimation = true;
+                animacion.animationType = ModelImporterAnimationType.Human;
+                animacion.materialImportMode = ModelImporterMaterialImportMode.None;
+                return;
+            }
+
             if (assetPath.StartsWith("Assets/Arte/Personajes/man/") || assetPath.StartsWith("Assets/Arte/Personajes/woman/")
                 || assetPath.StartsWith("Assets/Arte/Personajes/woman2/"))
             {
-                // T-500: personajes de Tripo con esqueleto y animaciones: se conservan (el rig Humanoid es del paso B1).
+                // T-500: personajes de Tripo con esqueleto y animaciones: se conservan (T-520: Humanoid con el avatar de su propio esqueleto).
                 ModelImporter personaje = (ModelImporter)assetImporter;
                 personaje.importAnimation = true;
-                personaje.animationType = ModelImporterAnimationType.Generic;
+                personaje.animationType = ModelImporterAnimationType.Human;
+                personaje.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
                 personaje.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
+                // T-520: la escala que lleva el modelo a 1.8 m se guarda en userData ("escala=1.41"); PostprocesadorArte la deja en 1.
+                personaje.globalScale = EscalaPersonaje(personaje.userData);
                 return;
             }
 
@@ -46,6 +59,21 @@ namespace MechaCyberpunk.Arte.Editor
             modelo.importBlendShapes = false;
             modelo.materialImportMode = ModelImporterMaterialImportMode.None;
             modelo.isReadable = false;
+        }
+
+        public const string CarpetaAnimacionesPersonajes = "Assets/Arte/Personajes/Animaciones/";
+        public const string PrefijoEscalaPersonaje = "escala=";
+
+        /// <summary>Escala guardada en el userData de un personaje; 1 si no hay.</summary>
+        public static float EscalaPersonaje(string userData)
+        {
+            if (!string.IsNullOrEmpty(userData) && userData.StartsWith(PrefijoEscalaPersonaje)
+                && float.TryParse(userData.Substring(PrefijoEscalaPersonaje.Length), System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out float escala) && escala > 0f)
+            {
+                return escala;
+            }
+            return 1f;
         }
 
         private void OnPreprocessTexture()

@@ -1,0 +1,259 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1735684096858673473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2652572571420802749}
+  m_Layer: 0
+  m_Name: ManoDer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2652572571420802749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735684096858673473}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 578569993641206966}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5026565480811221630
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6156313807315804924}
+  m_Layer: 0
+  m_Name: Giro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6156313807315804924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5026565480811221630}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1555199813682994143}
+  m_Father: {fileID: 4650585124823810269}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5083024976931515990
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4650585124823810269}
+  - component: {fileID: 7497603936835048967}
+  m_Layer: 0
+  m_Name: Visual_man
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4650585124823810269
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5083024976931515990}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6156313807315804924}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7497603936835048967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5083024976931515990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64614fc9ceff8544eb32b24b803e0183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VisualPersonaje
+  animador: {fileID: 4860792649028321701}
+  leerDelPadre: 1
+  suavizadoVelocidad: 12
+  velocidadClipCaminar: 0.80157554
+  velocidadClipCorrer: 2.9332922
+  rapidezMinima: 0.6
+  rapidezMaxima: 2.2
+  segundosTumbarse: 0.35
+  alturaTumbado: 0.15
+--- !u!1001 &1305925698194078772
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6156313807315804924}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7268485945958788000, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ddfdafe1dfea24f419029e09639fdb70, type: 2}
+    - target: {fileID: 919132149155446097, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_Name
+      value: Modelo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3786458744446125345, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.10504112
+      objectReference: {fileID: 0}
+    - target: {fileID: 3786458744446125345, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7796056
+      objectReference: {fileID: 0}
+    - target: {fileID: 3786458744446125345, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.53842294
+      objectReference: {fileID: 0}
+    - target: {fileID: 3786458744446125345, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.30212948
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: fdde68f2708bab9499c748c86a4695f5, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8576860333349079697, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.031141108
+      objectReference: {fileID: 0}
+    - target: {fileID: 8576860333349079697, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.011010946
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -7342860975314937726, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2652572571420802749}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 70630010010346077}
+  m_SourcePrefab: {fileID: 100100000, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+--- !u!4 &578569993641206966 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7342860975314937726, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+  m_PrefabInstance: {fileID: 1305925698194078772}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1555199813682994143 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+  m_PrefabInstance: {fileID: 1305925698194078772}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2224493791306596709 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+  m_PrefabInstance: {fileID: 1305925698194078772}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &70630010010346077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2224493791306596709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e84ec2391b9c36b4da3aeadecae3d2e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.ApuntadoIK
+  visual: {fileID: 0}
+  alcancePistola: 0.5
+  alcanceArmaLarga: 0.62
+  separacionManos: 0.1
+  alturaManos: 0.06
+  rapidez: 10
+  socketArma: {fileID: 2652572571420802749}
+  inclinacionBajada: 60
+  manosPorIK: 1
+--- !u!95 &4860792649028321701 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 24da429703934394e9c436c55c1881e8, type: 3}
+  m_PrefabInstance: {fileID: 1305925698194078772}
+  m_PrefabAsset: {fileID: 0}

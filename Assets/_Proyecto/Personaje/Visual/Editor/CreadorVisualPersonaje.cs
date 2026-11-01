@@ -172,7 +172,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
         }
 
-        private static void ConfigurarAnimacion(string ruta, ClipVisual tipo, Avatar avatar)
+        public static void ConfigurarAnimacion(string ruta, ClipVisual tipo, Avatar avatar)
         {
             ModelImporter importador = (ModelImporter)AssetImporter.GetAtPath(ruta);
             importador.animationType = ModelImporterAnimationType.Human;
@@ -209,7 +209,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             return null;
         }
 
-        private static AnimationClip CargarClip(string ruta)
+        public static AnimationClip CargarClip(string ruta)
         {
             foreach (UnityEngine.Object o in AssetDatabase.LoadAllAssetsAtPath(ruta))
             {
