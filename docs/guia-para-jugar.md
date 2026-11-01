@@ -373,3 +373,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: abre el juego (título), NUEVA PARTIDA; en la calle pulsa Esc (pausa), entra a GUARDAR y OPCIONES, M para el mapa, y habla con El Mercado y el CIC.
 - Observa: todos con el marco naranja/teal, botones angulares que se iluminan al elegirlos, el título con el arte de la ciudad y el logo CYBERFIX a la izquierda; el aviso de zona conquistada en un marco; la zona arriba a la derecha legible y el minimapa oscuro con calles.
 - Compara: docs/capturas/T-522-comparacion-menu.png y T-522-comparacion-hud.png (mockup arriba, juego abajo).
+
+### T-503 El Tianguis (paso A3)
+- Haz: ve a la calle principal de noche (hora 23) entre x -37 y 37.
+- Observa: puestos con lona a las orillas, focos calidos en zigzag sobre la calle, vapor en los puestos de comida, expendedoras con luz y hologramas de comida; el centro de la calle sigue libre.
+- Compara: docs/capturas/ref-tianguis-noche-comparacion.png (referencia a la izquierda, juego a la derecha).
