@@ -383,3 +383,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: ve de noche (hora 23) al callejón de El Mercado (x -22, z de 10 a 30) y camina hasta el portón.
 - Observa: luz naranja que sale del portón, papel picado de colores colgando de lado a lado, barreras con franja turquesa, servidor, puesto de implantes y cámaras; el camino al portón sigue libre y E abre la tienda.
 - Compara: docs/capturas/ref-entrada-mercado-noche-comparacion.png (referencia a la izquierda, juego a la derecha).
+
+### T-505 Neón Alto por fuera (paso A5)
+- Haz: ve de noche (hora 23) a la calle cruzada de Neón Alto (x 47, z de 10 a 80) y camina hasta la puerta de VivaCoin (x 55.5, z 47).
+- Observa: autopista elevada que cruza por arriba, anuncios y pantallas con brillo en las fachadas, foquitos y neón en la entrada del casino, niebla verde, lluvia y torres de fondo; la puerta y el camino a EL HACKER siguen libres.
+- Compara: docs/capturas/ref-neon-alto-noche-comparacion.png (referencia, antes, después).
