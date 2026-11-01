@@ -1,0 +1,16 @@
+gpu=NVIDIA GeForce RTX 5070 Laptop GPU api=Direct3D12 pantalla=2560x1600 calidad=Medio meshLod=4 vsync=0 hora=23
+calle: fps_promedio=185.2 ms_promedio=5.40 fps_1pct_bajo=156.8 fotogramas=1112 cpu_ms=5.40 gpu_ms=5.07 llamadas=4519 lotes=3856 setpass=229 triangulos=10923044 jugador=(-30.0, 0.1, -2.0) hora=23
+callejon: fps_promedio=349.8 ms_promedio=2.86 fps_1pct_bajo=228.7 fotogramas=2099 cpu_ms=2.86 gpu_ms=1.70 llamadas=1082 lotes=945 setpass=124 triangulos=3049796 jugador=(-53.0, 0.1, -59.0) hora=23
+tianguis: fps_promedio=182.5 ms_promedio=5.48 fps_1pct_bajo=113.6 fotogramas=1096 cpu_ms=5.48 gpu_ms=4.44 llamadas=4770 lotes=4058 setpass=306 triangulos=9460133 jugador=(38.0, 0.1, 0.5) hora=23
+neon: fps_promedio=253.3 ms_promedio=3.95 fps_1pct_bajo=196.1 fotogramas=1520 cpu_ms=3.95 gpu_ms=3.41 llamadas=1782 lotes=1606 setpass=117 triangulos=4733388 jugador=(50.0, 0.1, -4.0) hora=23
+neon_calle: fps_promedio=248.8 ms_promedio=4.02 fps_1pct_bajo=186.1 fotogramas=1493 cpu_ms=4.02 gpu_ms=3.62 llamadas=2156 lotes=2023 setpass=147 triangulos=5024967 jugador=(47.0, 0.1, 12.0) hora=23
+vivacoin: fps_promedio=295.3 ms_promedio=3.39 fps_1pct_bajo=202.4 fotogramas=1773 cpu_ms=3.39 gpu_ms=1.98 llamadas=1590 lotes=1496 setpass=130 triangulos=3294938 jugador=(44.0, 0.1, 36.0) hora=23
+mercado: fps_promedio=251.8 ms_promedio=3.97 fps_1pct_bajo=195.5 fotogramas=1511 cpu_ms=3.97 gpu_ms=3.37 llamadas=2698 lotes=2539 setpass=163 triangulos=4945330 jugador=(-22.0, 0.3, 11.0) hora=23
+mercado_puerta: fps_promedio=291.3 ms_promedio=3.43 fps_1pct_bajo=198.9 fotogramas=1748 cpu_ms=3.43 gpu_ms=2.28 llamadas=2155 lotes=2012 setpass=157 triangulos=4195100 jugador=(-21.5, 0.3, 19.0) hora=23
+clandestino: fps_promedio=221.3 ms_promedio=4.52 fps_1pct_bajo=172.6 fotogramas=1328 cpu_ms=4.52 gpu_ms=4.14 llamadas=3422 lotes=3106 setpass=200 triangulos=6674178 jugador=(0.0, 0.1, -1.5) hora=23
+casa: fps_promedio=340.4 ms_promedio=2.94 fps_1pct_bajo=162.3 fotogramas=2043 cpu_ms=2.94 gpu_ms=1.50 llamadas=359 lotes=340 setpass=61 triangulos=1258796 jugador=(-61.8, 0.3, -77.6) hora=23
+taller: fps_promedio=267.1 ms_promedio=3.74 fps_1pct_bajo=195.4 fotogramas=1603 cpu_ms=3.75 gpu_ms=2.94 llamadas=1688 lotes=1495 setpass=144 triangulos=5330933 jugador=(-61.8, 0.3, -76.4) hora=23
+carros: fps_promedio=177.4 ms_promedio=5.64 fps_1pct_bajo=133.2 fotogramas=1066 cpu_ms=5.64 gpu_ms=4.81 llamadas=4558 lotes=3851 setpass=246 triangulos=10800688 jugador=(-30.0, 0.1, -2.0) hora=23
+tiroteo: fps_promedio=238.9 ms_promedio=4.19 fps_1pct_bajo=119.0 fotogramas=1434 cpu_ms=4.19 gpu_ms=1.32 llamadas=3076 lotes=2727 setpass=188 triangulos=7162970 jugador=(-45.0, 0.1, 85.0) hora=23
+gradas: fps_promedio=179.9 ms_promedio=5.56 fps_1pct_bajo=148.6 fotogramas=1080 cpu_ms=5.56 gpu_ms=5.28 llamadas=3375 lotes=2880 setpass=195 triangulos=9395866 jugador=(0.0, 0.1, -1.5) hora=23
+suburbios: fps_promedio=280.9 ms_promedio=3.56 fps_1pct_bajo=197.9 fotogramas=1686 cpu_ms=3.56 gpu_ms=2.68 llamadas=931 lotes=815 setpass=117 triangulos=2602215 jugador=(-80.0, 0.1, 3.0) hora=23

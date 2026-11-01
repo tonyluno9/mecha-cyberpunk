@@ -388,3 +388,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: ve de noche (hora 23) a la calle cruzada de Neón Alto (x 47, z de 10 a 80) y camina hasta la puerta de VivaCoin (x 55.5, z 47).
 - Observa: autopista elevada que cruza por arriba, anuncios y pantallas con brillo en las fachadas, foquitos y neón en la entrada del casino, niebla verde, lluvia y torres de fondo; la puerta y el camino a EL HACKER siguen libres.
 - Compara: docs/capturas/ref-neon-alto-noche-comparacion.png (referencia, antes, después).
+
+### T-506 Sin greybox (pulido 1)
+- Haz: de noche camina la calle principal (El Tianguis), el callejón, El Mercado, la casa y Neón Alto.
+- Observa: edificios con ventanas y textura, mesas de madera con huacales y tambos en los puestos, ya no hay cajas café lisas, lona verde gigante ni vigas naranjas lisas.
+- Compara: docs/capturas/T-506-<lugar>-antes.png y -despues.png.
