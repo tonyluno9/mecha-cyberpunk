@@ -378,3 +378,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: ve a la calle principal de noche (hora 23) entre x -37 y 37.
 - Observa: puestos con lona a las orillas, focos calidos en zigzag sobre la calle, vapor en los puestos de comida, expendedoras con luz y hologramas de comida; el centro de la calle sigue libre.
 - Compara: docs/capturas/ref-tianguis-noche-comparacion.png (referencia a la izquierda, juego a la derecha).
+
+### T-504 Entrada de El Mercado (paso A4)
+- Haz: ve de noche (hora 23) al callejón de El Mercado (x -22, z de 10 a 30) y camina hasta el portón.
+- Observa: luz naranja que sale del portón, papel picado de colores colgando de lado a lado, barreras con franja turquesa, servidor, puesto de implantes y cámaras; el camino al portón sigue libre y E abre la tienda.
+- Compara: docs/capturas/ref-entrada-mercado-noche-comparacion.png (referencia a la izquierda, juego a la derecha).
