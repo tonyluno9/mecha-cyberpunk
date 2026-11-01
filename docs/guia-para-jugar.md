@@ -354,6 +354,11 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Observa: cables colgando entre fachadas, lámparas cálidas junto a las puertas, letreros de neón, niebla azul al fondo y torres con ventanas en el horizonte; desde una azotea se ven las torres y las antenas rojas.
 - Compara: docs/capturas/ref-suburbios-noche-comparacion.png, ref-cruce-dia-lluvia-comparacion.png y ref-azotea-comparacion.png.
 
+### T-502 Callejón (paso A2)
+- Haz: de noche, maneja a casa y entra a pie al callejón de la emboscada (x -59 a -87).
+- Observa: luz magenta y turquesa, tuberías y ventilas con vapor rosa, contenedor, llantas y tambos a los lados, escalera al fondo, charcos de neón y niebla rosa; el camino del centro sigue libre.
+- Compara: docs/capturas/ref-callejon-noche-comparacion.png.
+
 ### T-520 Personajes (paso B1)
 - Haz: NUEVA PARTIDA, elige MUJER u HOMBRE en la creación, camina, corre (Shift) y apunta con el clic derecho; reúnete con tu aliado y entra a El Tianguis.
 - Observa: tu personaje (mujer o hombre de Tripo) camina y corre sin deslizarse y levanta los brazos al apuntar; los SKULLS son negros con franjas magenta y su jefe es más grande y con brillo; los peatones salen en 4 colores; DOC, INVENTOR y HACKER tienen su color.
