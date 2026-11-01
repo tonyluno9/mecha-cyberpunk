@@ -201,6 +201,19 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 | T-502 | Paso A2 Callejón: tuberías N04, ventilas N05 con vapor, contenedor, llantas, tambos, escalera, neón magenta, niebla rosa | hecha, EditMode 7/7, PlayMode 2/2, callejón 443 fps (Medio, antes 436), capturas ref-callejon-noche |
 | T-503 | Paso A3 El Tianguis: puestos N03a/N03b, focos en zigzag, vapor, expendedoras CY06, proyectores CY01 y hologramas de comida; arreglo del PerfilSuburbios | hecha, EditMode 8/8, PlayMode 3/3, tianguis 213 fps (Medio, antes 214), capturas ref-tianguis-noche |
 | T-504 | Paso A4 Entrada de El Mercado: luz naranja del portón, papel picado, barreras C18 con franja turquesa, cámaras, servidor, implantes, plataforma de dron | hecha, EditMode 8/8, PlayMode 3/3, mercado_puerta 301 fps (Medio, antes 301), capturas ref-entrada-mercado-noche |
+| T-505 | Paso A5 Neón Alto por fuera: autopista elevada N02, vallas N07, anuncios N08 y CY02, pantallas E03, entrada del casino con foquitos y tubos, torres de fondo, niebla verde y posproceso verde de noche; cierre de la Parte A (tabla de FPS abajo) | hecha, EditMode 10/10, PlayMode 4/4, neon_calle 281 fps (Medio, antes 360), capturas ref-neon-alto-noche |
 | T-520 | Paso B1 personajes: woman/man/woman2 Humanoid a 1.8 m en jugador, aliado, SKULLS y jefes, peatones, vecina, vendedor y apoyos; apuntar por IK; animaciones que faltan en docs/animaciones-faltan.md | hecha, EditMode 16 nuevas + verdes, PlayMode JugadorVisualPruebas 4/4, calle 210 fps / Tianguis 244 / tiroteo 313 / Suburbios 394 (Medio), capturas T-520-1 a T-520-13 |
 | T-521 | Paso B2 (mitad 1): piezas de UI sin fondo y recortadas, fuentes Teko y Rajdhani, HUD a pie como el mockup (vida turquesa a rojo, calor, Biits con símbolo, panel de arma de 5 casillas, aliados junto al minimapa, zona con respeto) | hecha, PlayMode HudCyberfixPruebas 3/3 + HUD existentes verdes, capturas T-521-1, -1-1440 y -comparacion |
 | T-522 | Paso B2 (mitad 2): menús (título con UI13/UI14, pausa, ranuras, opciones, creación, tienda El Mercado y CIC, mapa, créditos, aviso de zona) con el marco y los botones de las piezas; pulido del HUD (zona legible, minimapa oscuro con calles, contorno en texto, capturas sin posproceso); TuPandilla y TituloCreacion actualizadas a T-520 | hecho | PlayMode MenusCyberfixPruebas 3/3 + 67 de HUD y menús verdes, RecorridoDemoPruebas 2/2 (FPS de noche 42 a 274), capturas T-522-* |
+
+## Cierre de la Parte A (ciudad como las referencias): FPS de noche por zona
+Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x1080, calidad Medio, hora 23, Logs/med505-despues/medicion.txt). Meta: 60.
+| Zona | Punto de medición | FPS promedio | FPS 1% bajo | Comparación lado a lado |
+| --- | --- | --- | --- | --- |
+| Suburbios | suburbios | 375.2 | 264.6 | [ref-suburbios-noche-comparacion](capturas/ref-suburbios-noche-comparacion.png), [ref-cruce-dia-lluvia-comparacion](capturas/ref-cruce-dia-lluvia-comparacion.png), [ref-azotea-comparacion](capturas/ref-azotea-comparacion.png) |
+| Callejón | callejon | 407.8 | 297.9 | [ref-callejon-noche-comparacion](capturas/ref-callejon-noche-comparacion.png) |
+| El Tianguis | tianguis | 206.0 | 149.0 | [ref-tianguis-noche-comparacion](capturas/ref-tianguis-noche-comparacion.png) |
+| Entrada de El Mercado | mercado_puerta | 359.3 | 257.9 | [ref-entrada-mercado-noche-comparacion](capturas/ref-entrada-mercado-noche-comparacion.png) |
+| Neón Alto | neon_calle | 281.3 | 172.0 | [ref-neon-alto-noche-comparacion](capturas/ref-neon-alto-noche-comparacion.png) |
+| Calle principal | calle | 206.9 | 115.4 | (sin referencia propia) |
+La zona más lenta es la calle principal con 206.9 fps; las seis pasan 60 por mucho. En cada imagen la referencia va a la izquierda y el juego a la derecha (en Neón Alto: referencia, antes, después).
