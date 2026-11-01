@@ -36,7 +36,7 @@ namespace MechaCyberpunk.UI.Opciones
 
         [Header("Medidas (px a 1920x1080)")]
         [Tooltip("Separación entre filas (px); menos que la de los botones para que las 12 quepan en 1080.")]
-        [Min(0f)] [SerializeField] private float separacionFilas = 8f;
+        [Min(0f)] [SerializeField] private float separacionFilas = 2f;
         [Tooltip("Opacidad del fondo del panel (0 a 1): opaco, porque va encima de la pausa y sus letras se leían a través.")]
         [Range(0f, 1f)] [SerializeField] private float alfaPanel = 1f;
 

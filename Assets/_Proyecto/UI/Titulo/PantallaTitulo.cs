@@ -47,9 +47,21 @@ namespace MechaCyberpunk.UI.Titulo
         [Tooltip("Corrimiento de la sombra magenta del nombre (px).")]
         [SerializeField] private Vector2 sombraLogo = new Vector2(5f, -5f);
 
+        [Header("Arte de UI13 y UI14 (T-522, px a 1920x1080)")]
+        [Tooltip("Margen del logo y del menú al borde izquierdo.")]
+        [SerializeField] private float margenIzquierda = 110f;
+        [Tooltip("Distancia del logo al borde de arriba.")]
+        [SerializeField] private float margenLogoArte = 130f;
+        [SerializeField] private Vector2 tamanoLogoArte = new Vector2(780f, 214f);
+        [Tooltip("Cuánto baja el panel del centro de la pantalla.")]
+        [SerializeField] private float bajarPanelArte = 170f;
+        [Tooltip("Ancho de la franja oscura detrás del menú y su opacidad máxima.")]
+        [SerializeField] private float anchoFranja = 1100f;
+        [Range(0f, 1f)] [SerializeField] private float alfaFranja = 0.92f;
+
         [Header("Medidas (px a 1920x1080)")]
         [Tooltip("Ancho del panel del menú (el resumen de CONTINUAR cabe en él).")]
-        [Min(0f)] [SerializeField] private float anchoPanel = 760f;
+        [Min(0f)] [SerializeField] private float anchoPanel = 640f;
         [Tooltip("Alto del renglón del resumen bajo CONTINUAR.")]
         [Min(0f)] [SerializeField] private float altoResumen = 30f;
         [Tooltip("Cuánto baja el panel del centro de la pantalla (px).")]
@@ -108,27 +120,55 @@ namespace MechaCyberpunk.UI.Titulo
             Vector2 boton = e.TamanoBotonMenu;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasTitulo", OrdenCanvas);
             contenido = canvas.gameObject;
+            // T-522: el arte de UI14 a pantalla completa y, encima, una franja oscura a la izquierda para leer el menú.
+            PiezasUI piezas = PiezasUI.Actual;
+            bool conArte = piezas != null && piezas.FondoMenu != null;
+            if (conArte)
+            {
+                Image arte = KitUI.CrearImagenSprite(canvas.transform, "FondoMenu", piezas.FondoMenu, false);
+                KitUI.Estirar(arte.rectTransform);
+                Image franja = KitUI.CrearImagenSprite(canvas.transform, "FranjaOscura", KitUI.SpriteDegradadoHorizontal(), false);
+                franja.color = new Color(0.02f, 0.02f, 0.05f, alfaFranja);
+                KitUI.Colocar(franja.rectTransform, new Vector2(0f, 0.5f), Vector2.zero, new Vector2(anchoFranja, KitUI.AltoReferencia));
+            }
             Image velo = KitUI.CrearFondoPantalla(canvas.transform, "Velo");
             Color colorVelo = velo.color;
-            colorVelo.a = alfaVelo;
+            colorVelo.a = conArte ? 0.12f : alfaVelo;
             velo.color = colorVelo;
 
+            // T-522: el logo y el menú van a la izquierda, como el mockup.
+            Vector2 anclaLogo = conArte ? new Vector2(0f, 1f) : new Vector2(0.5f, 1f);
+            Vector2 posLogo = conArte ? new Vector2(margenIzquierda, -margenLogoArte) : new Vector2(0f, -margenLogo);
+            Vector2 medidaLogo = conArte ? tamanoLogoArte : tamanoLogo;
             nombre = KitUI.CrearTexto(canvas.transform, "Nombre", RolTexto.Titulo, TextAnchor.MiddleCenter);
-            KitUI.Colocar(nombre.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -margenLogo), tamanoLogo);
+            KitUI.Colocar(nombre.rectTransform, anclaLogo, posLogo, medidaLogo);
             nombre.text = NombreJuego.Nombre;
             nombre.color = e.Naranja;
             Shadow magenta = nombre.gameObject.AddComponent<Shadow>();
             magenta.effectColor = e.Magenta;
             magenta.effectDistance = sombraLogo;
             imagenLogo = KitUI.CrearImagen(canvas.transform, "Logo", Color.white);
-            KitUI.Colocar(imagenLogo.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -margenLogo), tamanoLogo);
+            KitUI.Colocar(imagenLogo.rectTransform, anclaLogo, posLogo, medidaLogo);
             imagenLogo.preserveAspect = true;
             imagenLogo.gameObject.SetActive(false);
+            if (conArte && piezas.Logo != null)
+            {
+                imagenLogo.sprite = piezas.Logo;
+                imagenLogo.gameObject.SetActive(true);
+                nombre.gameObject.SetActive(false);
+            }
 
             float altoBotones = CantidadBotones * boton.y + (CantidadBotones - 1) * separacion + altoResumen;
             Vector2 tamanoPanel = new Vector2(anchoPanel, relleno + altoBotones + e.SeparacionBloques + e.AltoFilaHud + relleno);
             RectTransform panel = KitUI.CrearPanel(canvas.transform, "Panel", tamanoPanel);
-            panel.anchoredPosition = new Vector2(0f, -bajarPanel);
+            if (conArte)
+            {
+                KitUI.Colocar(panel, new Vector2(0f, 0.5f), new Vector2(margenIzquierda, -bajarPanelArte), tamanoPanel);
+            }
+            else
+            {
+                panel.anchoredPosition = new Vector2(0f, -bajarPanel);
+            }
             Image fondo = panel.GetComponent<Image>();
             Color colorPanel = fondo.color;
             colorPanel.a = Mathf.Max(colorPanel.a, alfaPanel);
@@ -158,8 +198,8 @@ namespace MechaCyberpunk.UI.Titulo
         {
             EstiloCyberfix e = KitUI.Estilo;
             BotonCyberfix b = KitUI.CrearBoton(panel, texto, null);
-            b.Texto.alignment = TextAnchor.MiddleCenter;
-            KitUI.Colocar((RectTransform)b.transform, new Vector2(0.5f, 1f), new Vector2(0f, y), e.TamanoBotonMenu);
+            b.Texto.alignment = PiezasUI.Actual != null && PiezasUI.Actual.FondoMenu != null ? TextAnchor.MiddleLeft : TextAnchor.MiddleCenter;
+            KitUI.Colocar((RectTransform)b.transform, new Vector2(0.5f, 1f), new Vector2(0f, y), new Vector2(panel.sizeDelta.x - 2f * e.Relleno, e.TamanoBotonMenu.y));
             y -= e.TamanoBotonMenu.y + e.SeparacionBotones;
             return b;
         }
@@ -200,9 +240,10 @@ namespace MechaCyberpunk.UI.Titulo
             propios.Add(transform);
             if (creacion != null) propios.Add(creacion.transform);
             if (pantallaOpciones != null) propios.Add(pantallaOpciones.transform);
-            if (logo != null)
+            Sprite arteLogo = logo != null ? logo : PiezasUI.Actual != null ? PiezasUI.Actual.Logo : null;
+            if (arteLogo != null)
             {
-                imagenLogo.sprite = logo;
+                imagenLogo.sprite = arteLogo;
                 imagenLogo.gameObject.SetActive(true);
                 nombre.gameObject.SetActive(false);
             }

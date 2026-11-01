@@ -24,10 +24,11 @@ namespace MechaCyberpunk.UI.Mapa
 
         [Tooltip("Metros del mundo del centro al borde del círculo (m).")]
         [Min(5f)] [SerializeField] private float radioMetros = 60f;
-        [Tooltip("Opacidad del color del dueño sobre el negro en las manzanas (0 a 1).")]
-        [Range(0f, 1f)] [SerializeField] private float alfaManzanas = 0.55f;
-        [Tooltip("Opacidad del fondo negro del círculo (0 a 1).")]
-        [Range(0f, 1f)] [SerializeField] private float alfaFondo = 0.85f;
+        // T-522: las manzanas solo se tiñen un poco del color del dueño (antes 55 %: una zona magenta se veía como un relleno plano) y el
+        // fondo es azul muy oscuro, para que se lean las calles como en el mockup. Constantes: el valor viejo seguía guardado en la escena.
+        private const float AlfaManzanas = 0.22f;
+        private const float AlfaFondo = 0.9f;
+        private static readonly Color FondoOscuro = new Color(0.03f, 0.04f, 0.08f, 1f);
         [Tooltip("Lado de los iconos de lugar (px a 1920x1080).")]
         [Min(8f)] [SerializeField] private float ladoIcono = 30f;
         [Tooltip("Lado de la flecha del jugador (px).")]
@@ -100,18 +101,18 @@ namespace MechaCyberpunk.UI.Mapa
             RanuraHud ranura = DisposicionHud.Minimapa;
             KitUI.Colocar(raiz, ranura, DisposicionHud.LadoMinimapa);
 
-            Image mascara = KitUI.CrearImagen(raiz, "Mascara", new Color(0f, 0f, 0f, alfaFondo));
+            Image mascara = KitUI.CrearImagen(raiz, "Mascara", new Color(FondoOscuro.r, FondoOscuro.g, FondoOscuro.b, AlfaFondo));
             mascara.sprite = IconosMapa.Circulo;
             KitUI.Estirar(mascara.rectTransform);
             mascara.gameObject.AddComponent<Mask>().showMaskGraphic = true;
 
             mundo = Centrado(mascara.transform, "Mundo");
             desplazado = Centrado(mundo, "Desplazado");
-            calles = KitUI.CrearImagen(desplazado, "Calles", e.Calles);
+            calles = KitUI.CrearImagen(desplazado, "Calles", Color.Lerp(e.Calles, e.Turquesa, 0.3f));
             manzanas = new Image[GeometriaBarrio.Cantidad];
             for (int i = 0; i < manzanas.Length; i++)
             {
-                manzanas[i] = KitUI.CrearImagen(desplazado, "Manzana_" + (i + 1), Color.black);
+                manzanas[i] = KitUI.CrearImagen(desplazado, "Manzana_" + (i + 1), FondoOscuro);
             }
 
             capaMarcas = Centrado(mascara.transform, "Marcas");
@@ -214,7 +215,7 @@ namespace MechaCyberpunk.UI.Mapa
             {
                 string zona = GeometriaBarrio.Zona(i, territorio);
                 Color dueno = zona.Length > 0 ? FormatoTerritorio.ColorDe(territorio.Dueno(zona)) : KitUI.Estilo.Desactivado;
-                manzanas[i].color = Color.Lerp(Color.black, dueno, alfaManzanas);
+                manzanas[i].color = Color.Lerp(FondoOscuro, dueno, AlfaManzanas);
                 RectTransform rect = manzanas[i].rectTransform;
                 rect.anchoredPosition = GeometriaBarrio.Centros[i] * escala;
                 rect.sizeDelta = Vector2.one * lado;
