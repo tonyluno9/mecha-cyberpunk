@@ -5,12 +5,12 @@ using UnityEngine;
 namespace MechaCyberpunk.UI.Editor
 {
     /// <summary>
-    /// T-408: crea UI/Datos/EstiloCyberfix_Base.asset (los valores de docs/diseno/ui-cyberfix.md) y rehace HudAPie.prefab con el kit.
+    /// T-408: crea UI/Resources/EstiloCyberfix_Base.asset (los valores de docs/diseno/ui-cyberfix.md) y rehace HudAPie.prefab con el kit.
     /// Batchmode: -executeMethod MechaCyberpunk.UI.Editor.CreadorKitUI.Crear
     /// </summary>
     public static class CreadorKitUI
     {
-        public const string RutaEstilo = "Assets/_Proyecto/UI/Datos/EstiloCyberfix_Base.asset";
+        public const string RutaEstilo = "Assets/_Proyecto/UI/Resources/EstiloCyberfix_Base.asset";
 
         [MenuItem("Mecha Cyberpunk/Crear T-408 Kit de UI")]
         public static void Crear()

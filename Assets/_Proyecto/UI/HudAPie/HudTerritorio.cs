@@ -14,7 +14,7 @@ namespace MechaCyberpunk.UI.Hud
     public class HudTerritorio : MonoBehaviour
     {
         public const int OrdenCanvas = 10;
-        private const float AnchoZona = 900f;
+        private const float MaximoRespeto = 100f;
         private const float AnchoAviso = 1400f;
 
         [Tooltip("Segundos que dura el aviso de conquista (s).")]
@@ -24,6 +24,9 @@ namespace MechaCyberpunk.UI.Hud
 
         private Text textoZona;
         private Text textoAviso;
+        private RectTransform panelZona;
+        private Image insignia;
+        private Image rellenoRespeto;
         private ITerritorio territorio;
         private ServicioNegocios negocios;
         private string zonaPrevia;
@@ -37,8 +40,25 @@ namespace MechaCyberpunk.UI.Hud
         {
             // T-408: el kit y las ranuras de DisposicionHud (zona bajo la radio y la renta; aviso bajo el objetivo).
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasTerritorio", OrdenCanvas);
-            textoZona = KitUI.CrearTexto(canvas.transform, "Zona", RolTexto.Hud, TextAnchor.MiddleLeft);
-            KitUI.Colocar(textoZona.rectTransform, DisposicionHud.Zona, AnchoZona);
+            // T-521: la zona va en un panel arriba a la derecha: el texto de siempre, tu respeto en una barra y la insignia del dueño.
+            Image marco = KitUI.CrearPanelMarco(canvas.transform, "PanelZona");
+            panelZona = marco.rectTransform;
+            KitUI.Colocar(panelZona, DisposicionHud.Zona, DisposicionHud.AnchoZona);
+            insignia = KitUI.CrearImagenSprite(panelZona, "Insignia", null);
+            KitUI.Colocar(insignia.rectTransform, new Vector2(1f, 0.5f), new Vector2(-18f, 0f), new Vector2(60f, 74f));
+            textoZona = KitUI.CrearTexto(panelZona, "Zona", RolTexto.Hud, TextAnchor.MiddleLeft);
+            textoZona.rectTransform.anchorMin = new Vector2(0f, 0.42f);
+            textoZona.rectTransform.anchorMax = new Vector2(1f, 0.92f);
+            textoZona.rectTransform.offsetMin = new Vector2(30f, 0f);
+            textoZona.rectTransform.offsetMax = new Vector2(-88f, 0f);
+            Image huecoRespeto = KitUI.CrearImagen(panelZona, "HuecoRespeto", new Color(0f, 0f, 0f, 0.45f));
+            huecoRespeto.rectTransform.anchorMin = new Vector2(0f, 0.2f);
+            huecoRespeto.rectTransform.anchorMax = new Vector2(1f, 0.34f);
+            huecoRespeto.rectTransform.offsetMin = new Vector2(30f, 0f);
+            huecoRespeto.rectTransform.offsetMax = new Vector2(-88f, 0f);
+            rellenoRespeto = KitUI.CrearImagen(huecoRespeto.transform, "Respeto", Color.white);
+            KitUI.Estirar(rellenoRespeto.rectTransform);
+            panelZona.gameObject.SetActive(false);
             textoAviso = KitUI.CrearTexto(canvas.transform, "Aviso", RolTexto.Encabezado, TextAnchor.MiddleCenter);
             KitUI.Colocar(textoAviso.rectTransform, DisposicionHud.AvisoZona, AnchoAviso);
             textoZona.text = string.Empty;
@@ -109,11 +129,21 @@ namespace MechaCyberpunk.UI.Hud
             if (zona.Length == 0)
             {
                 textoZona.text = string.Empty;
+                panelZona.gameObject.SetActive(false);
             }
             else
             {
+                IdPandilla dueno = territorio.Dueno(zona);
+                Color colorDueno = FormatoTerritorio.ColorDe(dueno);
                 textoZona.text = FormatoTerritorio.Linea(territorio, zona);
-                textoZona.color = FormatoTerritorio.ColorDe(territorio.Dueno(zona));
+                textoZona.color = colorDueno;
+                panelZona.gameObject.SetActive(true);
+                PiezasUI piezas = PiezasUI.Actual;
+                insignia.sprite = piezas != null ? piezas.Insignia(dueno) : null;
+                insignia.enabled = insignia.sprite != null;
+                rellenoRespeto.color = colorDueno;
+                RectTransform rr = rellenoRespeto.rectTransform;
+                rr.anchorMax = new Vector2(Mathf.Clamp01(territorio.Respeto(zona) / MaximoRespeto), 1f);
             }
             if (textoAviso.text.Length > 0 && Time.unscaledTime >= finAviso)
             {
