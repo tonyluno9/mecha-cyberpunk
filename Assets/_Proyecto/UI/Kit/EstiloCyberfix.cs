@@ -4,15 +4,17 @@ namespace MechaCyberpunk.UI.Kit
 {
     /// <summary>
     /// Estilo de toda la UI de CYBERFIX (D-tony-238, D-tony-239): fuente, los 6 colores, los 7 tamaños, márgenes y medidas de botón de
-    /// docs/diseno/ui-cyberfix.md. El asset es UI/Datos/EstiloCyberfix_Base.asset; <see cref="KitUI"/> lo usa para todo lo que crea.
+    /// docs/diseno/ui-cyberfix.md. El asset es UI/Resources/EstiloCyberfix_Base.asset; <see cref="KitUI"/> lo usa para todo lo que crea.
     /// </summary>
     [CreateAssetMenu(menuName = "Mecha Cyberpunk/Estilo CYBERFIX", fileName = "EstiloCyberfix_Nuevo")]
     public class EstiloCyberfix : ScriptableObject
     {
         public const string NombreFuenteIntegrada = "LegacyRuntime.ttf";
 
-        [Tooltip("Fuente de todo el juego. Vacía = la integrada de Unity (LegacyRuntime.ttf).")]
+        [Tooltip("Fuente del texto corrido, botones y ayudas (Rajdhani, T-521). Vacía = la integrada de Unity (LegacyRuntime.ttf).")]
         [SerializeField] private Font fuente;
+        [Tooltip("Fuente de títulos, encabezados y números del HUD (Teko, T-521). Vacía = la de texto.")]
+        [SerializeField] private Font fuenteTitulos;
 
         [Header("Colores")]
         [Tooltip("Tú, el foco, el objetivo y los títulos (#FF801A).")]
@@ -87,6 +89,13 @@ namespace MechaCyberpunk.UI.Kit
                 }
                 return fuente;
             }
+        }
+
+        /// <summary>Teko para títulos, encabezados y HUD (números); Rajdhani para el resto (T-521).</summary>
+        public Font FuenteDe(RolTexto rol)
+        {
+            bool titulo = rol == RolTexto.Titulo || rol == RolTexto.Encabezado || rol == RolTexto.Hud;
+            return titulo && fuenteTitulos != null ? fuenteTitulos : Fuente;
         }
 
         public Color Naranja => naranja;

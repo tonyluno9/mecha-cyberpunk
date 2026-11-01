@@ -53,9 +53,16 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private Text textoCalor;
         [SerializeField] private Image[] marcasCalor;
 
+        [Header("Panel del arma (T-521)")]
+        [SerializeField] private Image iconoArma;
+        [SerializeField] private Image[] casillasArma;
+        [SerializeField] private Image resalteArma;
+
         [Header("Dinero y renta (T-110; solo a pie)")]
         [SerializeField] private GameObject grupoDinero;
         [SerializeField] private Text textoDinero;
+        [Tooltip("Cifra que se ve junto al símbolo de Biits (T-521): el mismo dinero sin la Ƀ de texto. textoDinero queda apagado como fuente del dato.")]
+        [SerializeField] private Text cifraDinero;
         [SerializeField] private GameObject grupoAvisoDinero;
         [SerializeField] private Text textoAvisoDinero;
         [SerializeField] private GameObject grupoRenta;
@@ -165,6 +172,11 @@ namespace MechaCyberpunk.UI.Hud
             }
         }
 
+        public Image IconoArma => iconoArma;
+        public Image[] CasillasArma => casillasArma;
+        public Image ResalteArma => resalteArma;
+        public Text CifraDinero => cifraDinero;
+
         public GameObject GrupoDinero => grupoDinero;
         public Text TextoDinero => textoDinero;
         public GameObject GrupoAvisoDinero => grupoAvisoDinero;
@@ -234,7 +246,7 @@ namespace MechaCyberpunk.UI.Hud
             {
                 hueco.color = config.ColorHueco;
             }
-            textoVida.color = config.ColorVida;
+            textoVida.color = KitUI.Estilo.Contorno;
             textoArma.color = config.ColorTexto;
             textoCancion.color = config.ColorTexto;
             textoObjetivo.color = KitUI.Estilo.Naranja;
@@ -592,7 +604,7 @@ namespace MechaCyberpunk.UI.Hud
             relleno.fillAmount = FormatoHud.Fraccion(vida.Actual, vida.Maxima);
             relleno.color = FormatoHud.EsVidaBaja(vida.Actual, vida.Maxima, config.UmbralVidaBaja) ? config.ColorVidaBaja : config.ColorVida;
             textoVida.text = FormatoHud.TextoVida(vida.Actual, config);
-            textoVida.color = relleno.color;
+            textoVida.color = KitUI.Estilo.Contorno; // oscuro sobre la barra turquesa o roja
         }
 
         private void ActualizarArma()
@@ -605,6 +617,39 @@ namespace MechaCyberpunk.UI.Hud
             textoArma.text = FormatoHud.TextoArma(armas.ArmaActiva, armas.Nivel, armas.Balas, armas.TamanoCargador, armas.Recargando, config);
             bool aviso = armas.ArmaActiva != ArmaAPie.Punos && (armas.Recargando || armas.Balas <= 0);
             textoArma.color = aviso ? config.ColorAviso : config.ColorTexto;
+            ActualizarPanelArma();
+        }
+
+        // T-521: el icono del arma activa y las 5 casillas (puños, pistola, escopeta, fusil, sniper); la activa lleva el marco naranja.
+        private void ActualizarPanelArma()
+        {
+            PiezasUI piezas = PiezasUI.Actual;
+            if (piezas == null || armas == null)
+            {
+                return;
+            }
+            int activa = (int)armas.ArmaActiva;
+            if (iconoArma != null)
+            {
+                iconoArma.sprite = piezas.Arma(activa);
+                iconoArma.enabled = iconoArma.sprite != null;
+            }
+            if (casillasArma == null)
+            {
+                return;
+            }
+            for (int i = 0; i < casillasArma.Length; i++)
+            {
+                bool tiene = armas.TieneArma((ArmaAPie)i);
+                casillasArma[i].color = new Color(1f, 1f, 1f, tiene ? 1f : 0.25f);
+                if (i == activa && resalteArma != null)
+                {
+                    resalteArma.rectTransform.anchorMin = casillasArma[i].rectTransform.anchorMin;
+                    resalteArma.rectTransform.anchorMax = casillasArma[i].rectTransform.anchorMax;
+                    resalteArma.rectTransform.offsetMin = Vector2.zero;
+                    resalteArma.rectTransform.offsetMax = Vector2.zero;
+                }
+            }
         }
 
         // ---- Subir de liga ----
@@ -995,6 +1040,11 @@ namespace MechaCyberpunk.UI.Hud
             }
             textoDinero.text = FormatoDinero.Texto(cartera.Dinero);
             textoDinero.color = cartera.Dinero < 0 ? config.ColorDeuda : config.ColorTexto;
+            if (cifraDinero != null)
+            {
+                cifraDinero.text = textoDinero.text.Replace(Moneda.Simbolo, string.Empty);
+                cifraDinero.color = textoDinero.color;
+            }
         }
 
         private void ActualizarAvisoDinero()
