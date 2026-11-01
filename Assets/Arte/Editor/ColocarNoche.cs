@@ -52,9 +52,9 @@ namespace MechaCyberpunk.Arte.Editor
             public bool SinSombra;
         }
 
-        private static List<Bounds> obstaculos;
-        private static List<Vector3> puertas;
-        private static List<Vector3> personajes;
+        internal static List<Bounds> obstaculos;
+        internal static List<Vector3> puertas;
+        internal static List<Vector3> personajes;
 
         // ------------------------------------------------------------------ entrada
 
@@ -111,7 +111,7 @@ namespace MechaCyberpunk.Arte.Editor
             return lista;
         }
 
-        private static void ReunirObstaculos()
+        internal static void ReunirObstaculos()
         {
             obstaculos = new List<Bounds>();
             puertas = new List<Vector3>();
@@ -222,13 +222,13 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        private static Vector3 Tamano(string codigo)
+        internal static Vector3 Tamano(string codigo)
         {
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ArteNoche.Buscar(codigo).RutaPrefab);
             return prefab.GetComponent<BoxCollider>().size;
         }
 
-        private static float GiroHacia(Vector3 frente)
+        internal static float GiroHacia(Vector3 frente)
         {
             return Mathf.Atan2(-frente.x, -frente.z) * Mathf.Rad2Deg;
         }
@@ -276,7 +276,7 @@ namespace MechaCyberpunk.Arte.Editor
             return true;
         }
 
-        private static float Suelo(Vector3 punto)
+        internal static float Suelo(Vector3 punto)
         {
             if (Physics.Raycast(punto + Vector3.up * 3f, Vector3.down, out RaycastHit golpe, 4f, ~0, QueryTriggerInteraction.Ignore) && golpe.point.y < 0.5f)
             {
@@ -286,7 +286,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Caja del mundo de un modelo con pivote en la base (tam: ancho, alto, fondo) girado en Y.</summary>
-        private static Bounds CajaGirada(Vector3 tam, Vector3 pivote, float giro, Vector3? escala = null)
+        internal static Bounds CajaGirada(Vector3 tam, Vector3 pivote, float giro, Vector3? escala = null)
         {
             Vector3 e = escala ?? Vector3.one;
             Vector3 medio = Vector3.Scale(tam, e) * 0.5f;
@@ -299,7 +299,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static string bloqueo;
 
-        private static bool Libre(Bounds caja)
+        internal static bool Libre(Bounds caja)
         {
             Bounds holgada = caja;
             holgada.Expand(0.2f);
