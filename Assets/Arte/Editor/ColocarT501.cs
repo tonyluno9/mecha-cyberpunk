@@ -843,17 +843,47 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ------------------------------------------------------------------ posproceso local
 
-        private static void CrearVolumen()
+        /// <summary>Crea el perfil si no existe, o lo rehace en su lugar (mismo GUID: la escena sigue apuntando a él). Los overrides van como sub-assets.</summary>
+        internal static VolumeProfile CrearPerfil()
         {
-            AssetDatabase.DeleteAsset(RutaPerfil);
-            VolumeProfile perfil = ScriptableObject.CreateInstance<VolumeProfile>();
+            VolumeProfile perfil = AssetDatabase.LoadAssetAtPath<VolumeProfile>(RutaPerfil);
+            if (perfil == null)
+            {
+                perfil = ScriptableObject.CreateInstance<VolumeProfile>();
+                AssetDatabase.CreateAsset(perfil, RutaPerfil);
+            }
+            foreach (Object viejo in AssetDatabase.LoadAllAssetsAtPath(RutaPerfil))
+            {
+                if (viejo is VolumeComponent)
+                {
+                    Object.DestroyImmediate(viejo, true);
+                }
+            }
+            perfil.components.Clear();
             ColorAdjustments ca = perfil.Add<ColorAdjustments>(true);
             ca.postExposure.Override(-0.25f);
             ca.saturation.Override(4f);
             ca.colorFilter.Override(new Color(0.85f, 0.95f, 1.1f));
             Vignette vi = perfil.Add<Vignette>(true);
             vi.intensity.Override(0.22f);
-            AssetDatabase.CreateAsset(perfil, RutaPerfil);
+            AssetDatabase.AddObjectToAsset(ca, perfil);
+            AssetDatabase.AddObjectToAsset(vi, perfil);
+            EditorUtility.SetDirty(perfil);
+            AssetDatabase.SaveAssets();
+            return perfil;
+        }
+
+        /// <summary>Solo regenera el perfil de Suburbios (sin tocar la escena).</summary>
+        [MenuItem("Mecha Cyberpunk/T-501/Regenerar perfil de Suburbios")]
+        public static void RegenerarPerfil()
+        {
+            VolumeProfile p = CrearPerfil();
+            Debug.Log("[Arte] PerfilSuburbios: " + p.components.Count + " componentes");
+        }
+
+        private static void CrearVolumen()
+        {
+            VolumeProfile perfil = CrearPerfil();
 
             GameObject go = new GameObject("VolumenSuburbios");
             go.transform.SetParent(raiz, false);
