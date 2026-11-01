@@ -196,3 +196,4 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 - T-450 (más ganchos de sonido) y T-451 (tráfico de calle que frena y pita: carros civiles por el grafo de calles, frenan a 14 m del jugador u otro carro, pitan bloqueados y al oír disparos, 6 de día y 3 de noche) también están en main con push, Builds/Juego regenerado y 3 líneas en la guía cada una. Con T-451 la prioridad 5 de docs/sesion-A.md queda completa.
 - Pendiente de las 10 prioridades: solo la parte de sonido que sigue sin gancho (ver T-450), llamar a tu pandilla desde el teléfono y conectar los visuales 3D de Mixamo (T-473, no hay FBX todavía).
 - Pruebas rojas viejas, sin cambios: Progresion 5, Progresion.Implantes 7, Personaje 2, Vehiculos 2-3 (solas pasan), y ArmasPruebas.ComprarYUsarEscopeta azarosa. EditMode completo 1286/1286.
+| T-500 | Paso 0 importar: N01-N08, man/woman/woman2 y piezas de UI en Assets/Arte | hecha, EditMode 2/2, captura T-500-1 |
