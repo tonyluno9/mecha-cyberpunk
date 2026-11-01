@@ -17,3 +17,4 @@ Muy por encima de 60.
 
 ## Bitácora
 - 2026-11-01: hecho; 17 de 20 piezas caben (las que no, chocaban con paneles y cajas existentes); el callejón sigue más ancho (9.8 m) que la referencia: no se angosta para no tocar la ruta de la emboscada.
+- 2026-11-01: RecorridoDemoPruebas 1/2: el bot cae KO en la pelea con pistola de los SKULLS del Tianguis (el mismo fallo de T-501); los tramos anteriores (incluida la casa y el callejón) pasan igual.
