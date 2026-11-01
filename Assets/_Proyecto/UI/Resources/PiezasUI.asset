@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9299e223c31e4514d920ae0336573d28, type: 3}
+  m_Name: PiezasUI
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Kit.PiezasUI
+  marcoPanel: {fileID: 21300000, guid: f323e32a0af5a024891bd2b9fb47a084, type: 3}
+  botonNormal: {fileID: 21300000, guid: 90858210b77d8b146abd12798cdc584d, type: 3}
+  botonResaltado: {fileID: 21300000, guid: 0101bcdbeaa685a469a0919e7a155b5e, type: 3}
+  botonPulsado: {fileID: 21300000, guid: 68923b8356ec1334ab68b4892b759ab2, type: 3}
+  barraVida: {fileID: 21300000, guid: d4cc50facb4718c4aa06d29d0803e957, type: 3}
+  barraCalor3: {fileID: 21300000, guid: a0fbc3d16e9aa0c45a5898d3ef8da711, type: 3}
+  calorRelleno: {fileID: 21300000, guid: a9a3629d73a6e9e44930a469a69294b7, type: 3}
+  simboloBiits: {fileID: 21300000, guid: 6284fcdb90af7bb4e960c0a8d4fec041, type: 3}
+  marcoMinimapa: {fileID: 21300000, guid: 6fb620b3cf8ae2542a5e753a04600efa, type: 3}
+  panelArma: {fileID: 21300000, guid: 5d18fc86b75887b4fbf7551726db7c00, type: 3}
+  armas:
+  - {fileID: 21300000, guid: 4d8421c097bf54248bd3bbc81bd4cd8b, type: 3}
+  - {fileID: 21300000, guid: 7c7781d440e9795419ad651faa9e1408, type: 3}
+  - {fileID: 21300000, guid: e34375f2f457714438a0f3cb650ce430, type: 3}
+  - {fileID: 21300000, guid: e26c68692f8590c42bc492333494a2cb, type: 3}
+  - {fileID: 21300000, guid: db8b5fe3031ea3740b76f1d721730f72, type: 3}
+  insigniaSkulls: {fileID: 21300000, guid: b3843837b98d99e4ca0a00e94be1158d, type: 3}
+  insigniaSnakes: {fileID: 21300000, guid: c36a4a41b5ef5f54b8bf7916180f63ce, type: 3}
+  insigniaJugador: {fileID: 21300000, guid: 075fb3bece25d524c962fe7428b4dc10, type: 3}
+  estados:
+  - {fileID: 21300000, guid: 252870776071f6043b6fed0b60605884, type: 3}
+  - {fileID: 21300000, guid: b4a13abe65e2348498d12ad417aa9770, type: 3}
+  - {fileID: 21300000, guid: 70216626992861741ad39a250ea9c57f, type: 3}
+  - {fileID: 21300000, guid: 98250d19cf90fb941a34e255dd3ba9dd, type: 3}
+  - {fileID: 21300000, guid: 435b1b8016e7f4140a976e7b86894d2c, type: 3}
+  - {fileID: 21300000, guid: d4fd396539c02f64eabf6d1b5eed23d6, type: 3}
+  iconosMapa:
+  - {fileID: 21300000, guid: d7aa4fcfa977fb347a988ceb8974f248, type: 3}
+  - {fileID: 21300000, guid: fd535020d653c3842b6176163c6a5e3c, type: 3}
+  - {fileID: 21300000, guid: 989cacad365041449a20701d55abb543, type: 3}
+  - {fileID: 21300000, guid: d88597fcbf30b3243892a0a28b4566c3, type: 3}
+  - {fileID: 21300000, guid: 03089695255d6ce47aa012b1e3aa69f7, type: 3}
+  - {fileID: 21300000, guid: 3438dac0b95696e4e9f2c46390595313, type: 3}
+  - {fileID: 21300000, guid: d762591923c114f4eae150c96b9d7295, type: 3}
+  reticulas:
+  - {fileID: 21300000, guid: da6ddc30cb0389b4896546b28aee48cd, type: 3}
+  - {fileID: 21300000, guid: f9add3bd9150cfb408619c7652c92083, type: 3}
+  - {fileID: 21300000, guid: ff6f71273e75f764fa6ea8e733df986d, type: 3}
+  logo: {fileID: 21300000, guid: 99655d2a25f767345b84dab796ab8765, type: 3}
+  fondoMenu: {fileID: 21300000, guid: 7c3c8c3708fff56448a8a69e4b8dc2e5, type: 3}

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: ConfigHudAPie_Base
   m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigHudAPie
   colorVida: {r: 0.102, g: 0.902, b: 0.902, a: 1}
-  colorVidaBaja: {r: 1, g: 0.102, b: 0.8, a: 1}
+  colorVidaBaja: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorTexto: {r: 0.102, g: 0.902, b: 0.902, a: 1}
+  colorMiraBlanco: {r: 1, g: 0.15, b: 0.2, a: 1}
   colorAviso: {r: 1, g: 0.502, b: 0.102, a: 1}
   colorHueco: {r: 0.05, g: 0.08, b: 0.12, a: 0.6}
   umbralVidaBaja: 0.3
@@ -39,7 +40,7 @@ MonoBehaviour:
   duracionAvisoLlamado: 2.5
   textoCalor: CALOR
   colorCalor: {r: 1, g: 0.502, b: 0.102, a: 1}
-  colorMarcaCalorApagada: {r: 0.3, g: 0.2, b: 0.1, a: 0.5}
+  colorMarcaCalorApagada: {r: 1, g: 1, b: 1, a: 0}
   anchoMarcaCalor: 28
   altoMarcaCalor: 12
   colorDeuda: {r: 1, g: 0.102, b: 0.8, a: 1}

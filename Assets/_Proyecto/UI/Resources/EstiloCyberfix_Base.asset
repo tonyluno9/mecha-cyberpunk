@@ -12,13 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea44efc6afee07e40a78ad03dc0193f7, type: 3}
   m_Name: EstiloCyberfix_Base
   m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Kit.EstiloCyberfix
-  fuente: {fileID: 0}
+  fuente: {fileID: 12800000, guid: 0b4d38a77cb4dbd4e83013c4305a1b27, type: 3}
+  fuenteTitulos: {fileID: 12800000, guid: 08a72b2a357a2f3439051ace598852fe, type: 3}
   naranja: {r: 1, g: 0.502, b: 0.102, a: 1}
   turquesa: {r: 0.102, g: 0.902, b: 0.902, a: 1}
   magenta: {r: 1, g: 0.102, b: 0.8, a: 1}
   fondo: {r: 0.039, g: 0.039, b: 0.071, a: 0.851}
   texto: {r: 0.949, g: 0.949, b: 0.949, a: 1}
   desactivado: {r: 0.478, g: 0.478, b: 0.522, a: 1}
+  fondoPantalla: {r: 0, g: 0, b: 0, a: 0.651}
+  contorno: {r: 0.039, g: 0.039, b: 0.071, a: 0.9}
+  grosorContorno: 4
+  enemigo: {r: 1, g: 0.2, b: 0.2, a: 1}
+  calles: {r: 0.32, g: 0.32, b: 0.36, a: 1}
   sombra: {r: 0, g: 0, b: 0, a: 0.85}
   distanciaSombra: {x: 1.5, y: -1.5}
   tamanoTitulo: 96

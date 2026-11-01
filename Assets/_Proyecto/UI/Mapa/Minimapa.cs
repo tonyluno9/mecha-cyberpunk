@@ -17,6 +17,10 @@ namespace MechaCyberpunk.UI.Mapa
     public class Minimapa : MonoBehaviour
     {
         public const int OrdenCanvas = 25;
+        /// <summary>Lado (px) del anillo de UI11: su hueco mide 365 de 512, y se quiere de 232 px.</summary>
+        private const float LadoAnillo = 325f;
+        // El hueco del arte no está centrado en la imagen: se corrige para que quede sobre el mapa.
+        private static readonly Vector2 DesplazamientoAnillo = new Vector2(-5.7f, -7.3f);
 
         [Tooltip("Metros del mundo del centro al borde del círculo (m).")]
         [Min(5f)] [SerializeField] private float radioMetros = 60f;
@@ -119,6 +123,15 @@ namespace MechaCyberpunk.UI.Mapa
             Image borde = KitUI.CrearImagen(raiz, "Borde", e.Turquesa);
             borde.sprite = IconosMapa.BordeMinimapa;
             KitUI.Estirar(borde.rectTransform);
+            // T-521: el anillo de UI11 alrededor del círculo (su hueco, de 232 px, queda sobre el borde del mapa); el borde turquesa liso baja a un hilo.
+            borde.color = new Color(e.Turquesa.r, e.Turquesa.g, e.Turquesa.b, 0.25f);
+            Sprite anillo = PiezasUI.Actual != null ? PiezasUI.Actual.MarcoMinimapa : null;
+            if (anillo != null)
+            {
+                Image ring = KitUI.CrearImagenSprite(raiz, "Anillo", anillo, false);
+                KitUI.Colocar(ring.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(DesplazamientoAnillo.x, DesplazamientoAnillo.y), new Vector2(LadoAnillo, LadoAnillo));
+                ring.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            }
             flecha = (RectTransform)KitUI.CrearTriangulo(raiz, "Jugador", ladoFlecha, Color.white).rectTransform.parent;
             textoPunto = KitUI.CrearTexto(raiz, "DistanciaPunto", RolTexto.Hud, TextAnchor.MiddleLeft);
             KitUI.Colocar(textoPunto.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(DisposicionHud.LadoMinimapa, KitUI.Estilo.AltoFilaHud));

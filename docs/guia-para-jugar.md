@@ -359,3 +359,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Observa: tu personaje (mujer o hombre de Tripo) camina y corre sin deslizarse y levanta los brazos al apuntar; los SKULLS son negros con franjas magenta y su jefe es más grande y con brillo; los peatones salen en 4 colores; DOC, INVENTOR y HACKER tienen su color.
 - Compara: docs/capturas/T-520-1.png a T-520-13.png. Las animaciones de disparar, recargar, golpear y caer siguen sin clip: docs/animaciones-faltan.md.
 
+### T-521 HUD nuevo (paso B2, mitad 1)
+- Haz: NUEVA PARTIDA y sal a la calle; recluta a un aliado, cambia de arma con 1 a 5, recibe daño hasta bajar de 30 % de vida y entra a una zona.
+- Observa: arriba a la izquierda vida (turquesa, roja al bajar), calor, y Biits con su símbolo; arriba a la derecha la zona con tu respeto e insignia; abajo a la izquierda el minimapa con anillo y tus aliados al lado; abajo a la derecha el panel del arma con 5 casillas; letras Teko y Rajdhani.
+- Compara: docs/capturas/T-521-comparacion.png (mockup arriba, juego abajo).

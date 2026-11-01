@@ -18,6 +18,7 @@ namespace MechaCyberpunk.UI.Kit
         public const float AltoReferencia = 1080f;
         public const float MezclaAnchoAlto = 0.5f;
         private const int LadoTriangulo = 64;
+        public const string NombreEstiloBase = "EstiloCyberfix_Base";
         private const float RaizDeDos = 1.41421356f;
         private const float GradosRombo = 45f;
 
@@ -36,6 +37,11 @@ namespace MechaCyberpunk.UI.Kit
         {
             get
             {
+                if (estilo == null)
+                {
+                    // T-521: el asset vive en UI/Resources para que cualquier texto creado antes de que el HUD fije el estilo ya tenga Teko y Rajdhani.
+                    estilo = Resources.Load<EstiloCyberfix>(NombreEstiloBase);
+                }
                 if (estilo == null)
                 {
                     estilo = ScriptableObject.CreateInstance<EstiloCyberfix>();
@@ -93,6 +99,33 @@ namespace MechaCyberpunk.UI.Kit
             return rect;
         }
 
+        /// <summary>
+        /// Panel con el marco 9-slice de UI01 (T-521): esquinas cortadas y línea naranja, relleno oscuro translúcido. <paramref name="alfa"/> es la
+        /// opacidad de todo el marco (los paneles del HUD usan 0.8). Sin las piezas devuelve un panel liso del estilo. Es la base de los menús (T-522).
+        /// </summary>
+        public static Image CrearPanelMarco(Transform padre, string nombre, float alfa = 0.8f)
+        {
+            Sprite marco = PiezasUI.Actual != null ? PiezasUI.Actual.MarcoPanel : null;
+            Image imagen = CrearImagen(padre, nombre, marco != null ? new Color(1f, 1f, 1f, alfa) : Estilo.Fondo);
+            if (marco != null)
+            {
+                imagen.sprite = marco;
+                imagen.type = Image.Type.Sliced;
+                imagen.pixelsPerUnitMultiplier = 3f;
+            }
+            return imagen;
+        }
+
+        /// <summary>Imagen con un sprite de las piezas; sin sprite queda apagada.</summary>
+        public static Image CrearImagenSprite(Transform padre, string nombre, Sprite sprite, bool proporcion = true)
+        {
+            Image imagen = CrearImagen(padre, nombre, Color.white);
+            imagen.sprite = sprite;
+            imagen.preserveAspect = proporcion;
+            imagen.enabled = sprite != null;
+            return imagen;
+        }
+
         /// <summary>Texto del rol dado con la fuente, el color de texto y la sombra de la guía. Estira a su padre hasta que lo coloques.</summary>
         public static Text CrearTexto(Transform padre, string nombre, RolTexto rol, TextAnchor alineacion = TextAnchor.MiddleLeft)
         {
@@ -100,7 +133,7 @@ namespace MechaCyberpunk.UI.Kit
             objeto.transform.SetParent(padre, false);
             Estirar((RectTransform)objeto.transform);
             Text texto = objeto.AddComponent<Text>();
-            texto.font = Estilo.Fuente;
+            texto.font = Estilo.FuenteDe(rol);
             texto.fontSize = Estilo.Tamano(rol);
             texto.alignment = alineacion;
             texto.color = Estilo.Texto;
@@ -127,8 +160,9 @@ namespace MechaCyberpunk.UI.Kit
         /// <summary>Aplica fuente, tamaño y sombra de la guía a un texto que ya existe (los del HUD hecho antes del kit).</summary>
         public static void AplicarEstilo(Text texto, RolTexto rol)
         {
-            texto.font = Estilo.Fuente;
+            texto.font = Estilo.FuenteDe(rol);
             texto.fontSize = Estilo.Tamano(rol);
+            texto.fontStyle = FontStyle.Normal; // T-521: Teko y Rajdhani ya vienen en SemiBold; el negrita sintético las ensucia
             Sombrear(texto);
         }
 

@@ -8,14 +8,18 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// Fila de aliados abajo a la derecha, sobre el arma (T-405; T-408 la movió para no encimarse con la vida y los Biits): "CHATO II ▮▮▮▯" con su vida, y "¡CHATO SUBIÓ A NIVEL II!" 3 s al subir.
+    /// Fila de aliados abajo a la derecha, sobre el arma (T-405; T-408 la movió para no encimarse con la vida y los Biits): con su nombre, nivel y barra de vida, y "¡CHATO SUBIÓ A NIVEL II!" 3 s al subir.
     /// Lee <see cref="IPandillaJugador"/>; crea su propio canvas.
     /// </summary>
     public class HudAliados : MonoBehaviour
     {
-        private const int Barras = 4;
-        private const float AnchoFila = 440f;
+        private const int MaximoFilas = 5;
         private const float AnchoAviso = 1400f;
+        private const float AltoFila = 34f;
+        private const float AltoCabecera = 30f;
+        private const float RellenoPanel = 12f;
+        private const float AnchoBarra = 120f;
+        private const float AltoBarra = 10f;
         private static readonly string[] Romanos = { "I", "II", "III" };
 
         [Tooltip("Segundos que dura el aviso de nivel (s).")]
@@ -23,24 +27,46 @@ namespace MechaCyberpunk.UI.Hud
 
         private Text textoFila;
         private Text textoAviso;
+        private RectTransform panel;
+        private Text[] nombres;
+        private Image[] rellenos;
         private IPandillaJugador pandilla;
         private float finAviso;
         private int ultimaCantidad = -1;
         private readonly StringBuilder constructor = new StringBuilder();
 
+        /// <summary>La cabecera del panel ("PANDILLA · TE SIGUEN (F)"); vacía si no hay aliados.</summary>
         public Text TextoFila => textoFila;
         public Text TextoAviso => textoAviso;
+        /// <summary>Filas de aliados que se ven ahora (T-521).</summary>
+        public int FilasVisibles { get; private set; }
+        public RectTransform Panel => panel;
 
         private void Awake()
         {
-            // T-408: el kit y las ranuras de DisposicionHud: la pandilla abajo a la derecha sobre el arma (crece hacia arriba) y el aviso bajo el de zona.
+            // T-521: aliados compactos junto al minimapa (abajo a la izquierda): un panel con la cabecera y una fila por aliado (nombre, nivel y barra de vida).
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasAliados", HudTerritorio.OrdenCanvas);
-            textoFila = KitUI.CrearTexto(canvas.transform, "Aliados", RolTexto.Hud, TextAnchor.LowerRight);
-            KitUI.Colocar(textoFila.rectTransform, DisposicionHud.Pandilla, AnchoFila);
+            Image marco = KitUI.CrearPanelMarco(canvas.transform, "PanelAliados", 0.7f);
+            panel = marco.rectTransform;
+            KitUI.Colocar(panel, DisposicionHud.Pandilla, DisposicionHud.AnchoAliados);
+            textoFila = KitUI.CrearTexto(panel, "Cabecera", RolTexto.Ayuda, TextAnchor.MiddleLeft);
+            nombres = new Text[MaximoFilas];
+            rellenos = new Image[MaximoFilas];
+            for (int i = 0; i < MaximoFilas; i++)
+            {
+                nombres[i] = KitUI.CrearTexto(panel, "Aliado" + i, RolTexto.Hud, TextAnchor.MiddleLeft);
+                Image hueco = KitUI.CrearImagen(panel, "Vida" + i, new Color(0f, 0f, 0f, 0.5f));
+                rellenos[i] = KitUI.CrearImagen(hueco.transform, "Relleno", KitUI.Estilo.Turquesa);
+                KitUI.Estirar(rellenos[i].rectTransform);
+                rellenos[i].rectTransform.pivot = new Vector2(0f, 0.5f);
+                nombres[i].gameObject.SetActive(false);
+                hueco.gameObject.SetActive(false);
+            }
             textoAviso = KitUI.CrearTexto(canvas.transform, "AvisoNivel", RolTexto.Boton, TextAnchor.MiddleCenter);
             KitUI.Colocar(textoAviso.rectTransform, DisposicionHud.AvisoAliados, AnchoAviso);
             textoFila.text = string.Empty;
             textoAviso.text = string.Empty;
+            panel.gameObject.SetActive(false);
         }
 
         private void OnDisable() => Desvincular();
@@ -83,19 +109,53 @@ namespace MechaCyberpunk.UI.Hud
                 finAviso = Time.unscaledTime + segundosAviso;
             }
             ultimaCantidad = pandilla != null ? pandilla.Cantidad : -1;
-            constructor.Clear();
-            if (pandilla != null && pandilla.Cantidad > 0)
+            int cantidad = pandilla != null ? Mathf.Min(pandilla.Cantidad, MaximoFilas) : 0;
+            FilasVisibles = cantidad;
+            panel.gameObject.SetActive(cantidad > 0);
+            if (cantidad > 0)
             {
-                constructor.Append("PANDILLA · ").Append(pandilla.Siguiendo ? "TE SIGUEN" : "ESPERAN").Append(" (F)\n");
-                for (int i = 0; i < pandilla.Cantidad; i++)
+                textoFila.text = "PANDILLA · " + (pandilla.Siguiendo ? "TE SIGUEN" : "ESPERAN") + " (F)";
+                textoFila.color = colorPandilla;
+                float alto = RellenoPanel * 2f + AltoCabecera + cantidad * AltoFila;
+                panel.sizeDelta = new Vector2(DisposicionHud.AnchoAliados, alto);
+                RectTransform cab = textoFila.rectTransform;
+                cab.anchorMin = new Vector2(0f, 1f);
+                cab.anchorMax = new Vector2(1f, 1f);
+                cab.pivot = new Vector2(0.5f, 1f);
+                cab.offsetMin = new Vector2(RellenoPanel + 10f, -RellenoPanel - AltoCabecera);
+                cab.offsetMax = new Vector2(-RellenoPanel, -RellenoPanel);
+                for (int i = 0; i < MaximoFilas; i++)
                 {
+                    bool hay = i < cantidad;
+                    nombres[i].gameObject.SetActive(hay);
+                    rellenos[i].transform.parent.gameObject.SetActive(hay);
+                    if (!hay)
+                    {
+                        continue;
+                    }
+                    float arriba = -RellenoPanel - AltoCabecera - i * AltoFila;
                     string nombre = pandilla.Nombre(i).Replace("EL ", string.Empty).Replace("LA ", string.Empty);
-                    int llenas = Mathf.CeilToInt(pandilla.Vida(i) * Barras);
-                    constructor.Append(nombre).Append(' ').Append(Romanos[pandilla.Nivel(i) - 1]).Append(' ');
-                    constructor.Append('▮', llenas).Append('▯', Barras - llenas).Append('\n');
+                    nombres[i].text = nombre + " " + Romanos[pandilla.Nivel(i) - 1];
+                    nombres[i].color = KitUI.Estilo.Texto;
+                    RectTransform rn = nombres[i].rectTransform;
+                    rn.anchorMin = new Vector2(0f, 1f);
+                    rn.anchorMax = new Vector2(1f, 1f);
+                    rn.pivot = new Vector2(0.5f, 1f);
+                    rn.offsetMin = new Vector2(RellenoPanel + 10f, arriba - AltoFila);
+                    rn.offsetMax = new Vector2(-RellenoPanel - AnchoBarra - 10f, arriba);
+                    RectTransform rb = (RectTransform)rellenos[i].transform.parent;
+                    rb.anchorMin = rb.anchorMax = rb.pivot = new Vector2(1f, 1f);
+                    rb.sizeDelta = new Vector2(AnchoBarra, AltoBarra);
+                    rb.anchoredPosition = new Vector2(-RellenoPanel - 6f, arriba - (AltoFila - AltoBarra) * 0.5f);
+                    float vida = Mathf.Clamp01(pandilla.Vida(i));
+                    rellenos[i].rectTransform.anchorMax = new Vector2(vida, 1f);
+                    rellenos[i].color = vida <= 0.3f ? KitUI.Estilo.Enemigo : KitUI.Estilo.Turquesa;
                 }
             }
-            textoFila.text = constructor.ToString().TrimEnd('\n');
+            else
+            {
+                textoFila.text = string.Empty;
+            }
             if (textoAviso.text.Length > 0 && Time.unscaledTime >= finAviso)
             {
                 textoAviso.text = string.Empty;

@@ -41,13 +41,13 @@ namespace MechaCyberpunk.UI.Editor
 
                 Ubicar(raiz, "Cancion", DisposicionHud.Cancion, AnchoEsquina, RolTexto.Hud);
                 Ubicar(raiz, "Renta", DisposicionHud.Renta, AnchoEsquina, RolTexto.Hud);
-                Ubicar(raiz, "Calor", DisposicionHud.Calor, AnchoEsquina, RolTexto.Hud);
+                Ubicar(raiz, "Calor", DisposicionHud.Calor, DisposicionHud.AnchoCalor, RolTexto.Hud);
                 Ubicar(raiz, "Objetivo", DisposicionHud.Objetivo, AnchoCentro, RolTexto.Texto);
-                Ubicar(raiz, "Vida", DisposicionHud.Vida, config.AnchoBarra, RolTexto.Hud);
-                Ubicar(raiz, "Dinero", DisposicionHud.Dinero, AnchoEsquina, RolTexto.Hud);
+                Ubicar(raiz, "Vida", DisposicionHud.Vida, DisposicionHud.AnchoVida, RolTexto.Hud);
+                Ubicar(raiz, "Dinero", DisposicionHud.Dinero, DisposicionHud.AnchoDinero, RolTexto.Hud);
                 Ubicar(raiz, "AvisoDinero", DisposicionHud.AvisoDinero, AnchoEsquina, RolTexto.Hud);
                 Ubicar(raiz, "Ayuda", DisposicionHud.AyudaControles, DisposicionHud.AnchoAyudaControles, RolTexto.Ayuda);
-                Ubicar(raiz, "Arma", DisposicionHud.Arma, AnchoEsquina, RolTexto.Hud);
+                Ubicar(raiz, "Arma", DisposicionHud.Arma, DisposicionHud.AnchoArma, RolTexto.Hud);
                 Ubicar(raiz, "Interaccion", DisposicionHud.Interaccion, DisposicionHud.AnchoCentroAbajo, RolTexto.Texto);
                 Ubicar(raiz, "Llamado", DisposicionHud.Llamado, DisposicionHud.AnchoCentroAbajo, RolTexto.Texto);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
@@ -88,7 +88,7 @@ namespace MechaCyberpunk.UI.Editor
         {
             SerializedObject so = new SerializedObject(config);
             so.FindProperty("colorVida").colorValue = estilo.Turquesa;
-            so.FindProperty("colorVidaBaja").colorValue = estilo.Magenta;
+            so.FindProperty("colorVidaBaja").colorValue = estilo.Enemigo; // T-521: la vida baja pasa a rojo
             so.FindProperty("colorTexto").colorValue = estilo.Turquesa;
             so.FindProperty("colorAviso").colorValue = estilo.Naranja;
             so.FindProperty("colorRegresa").colorValue = estilo.Magenta;
