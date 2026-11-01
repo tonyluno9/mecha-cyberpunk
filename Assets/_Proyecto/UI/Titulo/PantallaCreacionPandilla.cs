@@ -33,7 +33,7 @@ namespace MechaCyberpunk.UI.Titulo
         public const string TextoAviso = "SE REEMPLAZA EL AUTOGUARDADO";
         public const string TextoSi = "SÍ";
         public const string TextoNo = "NO";
-        public static readonly string[] Personajes = { "CHAMARRA", "MÁSCARA" };
+        public static readonly string[] Personajes = { "MUJER", "HOMBRE" };
         private const string TextoNombreVacio = "SIN NOMBRE";
         private const int CantidadFilas = 4;
         private const int CantidadBotones = 2;

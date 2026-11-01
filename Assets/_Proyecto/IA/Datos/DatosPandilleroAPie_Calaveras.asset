@@ -48,7 +48,23 @@ MonoBehaviour:
   segundosReaparicion: 40
   distanciaReaparicion: 30
   siempre: 1
-  colorNormal: {r: 1, g: 0.1, b: 0.8, a: 1}
+  fraccionDeDia: 0.34
+  radioPatrulla: 6
+  velocidadPatrulla: 1.6
+  esperaPatrullaMinima: 1.5
+  esperaPatrullaMaxima: 5
+  segundosAtascoPatrulla: 2
+  fraccionHuida: 0.25
+  distanciaAcorralado: 3
+  distanciaHuida: 45
+  radioCubierta: 12
+  segundosCubierto: 1.8
+  segundosAsomado: 2
+  arcoRodeo: 240
+  giroRodeo: 8
+  radioRefuerzos: 40
+  segundosRefuerzo: 8
+  colorNormal: {r: 0.13, g: 0.12, b: 0.16, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   colorAviso: {r: 1, g: 0.55, b: 0.1, a: 1}

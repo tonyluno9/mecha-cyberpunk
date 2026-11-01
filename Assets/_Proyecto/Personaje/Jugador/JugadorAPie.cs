@@ -16,7 +16,7 @@ namespace MechaCyberpunk.Personaje.Jugador
     /// punto de bajada junto al carro. Al cargar en la misma escena se coloca ahí, sobre el piso, y la aparición por id ya no lo mueve.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class JugadorAPie : MonoBehaviour, IJugador, IGuardable
+    public class JugadorAPie : MonoBehaviour, IJugador, IGuardable, IModeloCambiable
     {
         public const string Clave = "jugador";
 
@@ -61,6 +61,12 @@ namespace MechaCyberpunk.Personaje.Jugador
             Animator animador = GetComponentInChildren<Animator>(true);
             modelo = animador != null ? animador.gameObject : null;
             camaraActual = camara;
+        }
+
+        /// <summary>T-520: el modelo del jugador cambió (mujer u hombre); lo que se oculta en el carro es el del nuevo.</summary>
+        public void AlCambiarModelo(Animator nuevo)
+        {
+            modelo = nuevo != null ? nuevo.gameObject : null;
         }
 
         private void OnEnable()

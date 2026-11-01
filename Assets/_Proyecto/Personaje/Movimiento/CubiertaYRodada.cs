@@ -12,7 +12,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
     /// Los números salen de <see cref="DatosCubierta"/> (Resources/DatosCubierta).
     /// </summary>
     [DefaultExecutionOrder(-10)]
-    public class CubiertaYRodada : MonoBehaviour
+    public class CubiertaYRodada : MonoBehaviour, IModeloCambiable
     {
         private const int Direcciones = 8;
         private const float AlturaRayo = 0.5f;
@@ -61,6 +61,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
             modelo = animador != null ? animador.transform : null;
             accionCubrirse = new InputAction("Cubrirse", InputActionType.Button, "<Keyboard>/q");
             accionRodar = new InputAction("Rodar", InputActionType.Button, "<Keyboard>/leftCtrl");
+        }
+
+        public void AlCambiarModelo(Animator nuevo)
+        {
+            modelo = nuevo != null ? nuevo.transform : null;
         }
 
         private readonly SeguidorImplantes implantes = new SeguidorImplantes();

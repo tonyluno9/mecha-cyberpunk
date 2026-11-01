@@ -92,7 +92,7 @@ namespace MechaCyberpunk.Tests
             yield return null;
             yield return null;
             yield return new WaitForSeconds(0.3f);
-            Assert.AreEqual(1, v.Animador.GetInteger("TipoArma"));
+            Assert.AreEqual(1, v.Animador.GetInteger(ReglasVisual.TipoArma));
             Assert.IsTrue(v.Animador.GetBool("Apuntando"));
             Assert.IsTrue(v.Animador.GetCurrentAnimatorStateInfo(0).IsName("ApuntarPistola"));
 

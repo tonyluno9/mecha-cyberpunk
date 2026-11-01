@@ -34,15 +34,16 @@ namespace MechaCyberpunk.Personaje.Visual
     /// <summary>Nombres de parámetros y estados del Animator visual, y cómo se reconoce cada clip por el nombre del archivo. Lógica pura.</summary>
     public static class ReglasVisual
     {
+        // T-520: los nombres de parámetros son los del muñeco de T-400 (EnPiso, Arma, KO, Disparo, Recarga) para que AnimacionJugador, PandilleroAPie y AliadoAPie funcionen sin cambios.
         public const string Velocidad = "Velocidad";
-        public const string EnSuelo = "EnSuelo";
+        public const string EnSuelo = "EnPiso";
         public const string Apuntando = "Apuntando";
-        public const string TipoArma = "TipoArma";
-        public const string Disparar = "Disparar";
-        public const string Recargar = "Recargar";
+        public const string TipoArma = "Arma";
+        public const string Disparar = "Disparo";
+        public const string Recargar = "Recarga";
         public const string Golpe = "Golpe";
         public const string Herido = "Herido";
-        public const string Caer = "Caer";
+        public const string Caer = "KO";
         public const string Cubierto = "Cubierto";
         public const string Rodar = "Rodar";
 

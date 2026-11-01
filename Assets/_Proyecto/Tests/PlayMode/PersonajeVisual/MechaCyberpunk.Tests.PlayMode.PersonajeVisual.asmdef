@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Tests.PlayMode.PersonajeVisual",
     "rootNamespace": "MechaCyberpunk.Tests",
-    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "MechaCyberpunk.Personaje.Visual"],
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Core"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
