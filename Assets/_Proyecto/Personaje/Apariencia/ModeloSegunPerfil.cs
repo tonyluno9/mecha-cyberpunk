@@ -1,21 +1,25 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Jugador;
 using UnityEngine;
 
 namespace MechaCyberpunk.Personaje.Apariencia
 {
     /// <summary>
-    /// Viste al muñeco del jugador según <see cref="AparienciaJugador.Cara"/> del perfil (T-413, D-tony-246): 0 es A "CHAMARRA"
-    /// (ModeloJugador) y 1 es B "MÁSCARA" (ModeloJugador_B). No cambia el modelo (el Animator y la mano del arma siguen): copia los
-    /// materiales del prefab elegido por ruta y prende solo las piezas que ese prefab trae (el cabello de A, la máscara de B).
+    /// Pone al jugador el modelo de su personaje (T-520, antes T-413): <see cref="AparienciaJugador.Cara"/> 0 es la mujer (Visual_woman, la que trae
+    /// el prefab) y 1 es el hombre (Visual_man). Al cambiar, instancia el visual elegido en lugar del actual, pasa las armas de la mano al nuevo
+    /// y avisa a los <see cref="IModeloCambiable"/> del jugador (animación, ocultar en el carro, agacharse y rodar).
     /// Va en la escena (GTA_T413) y se repinta con <see cref="IPerfilJugador.Cambio"/>.
     /// </summary>
     public class ModeloSegunPerfil : MonoBehaviour
     {
         public const string NombreModelo = "ModeloJugador";
+        public const string NombreMano = "ManoDer";
 
-        [Tooltip("Un prefab por personaje, en el orden de Apariencia.Cara (0 = A CHAMARRA, 1 = B MÁSCARA).")]
+        [Tooltip("Un prefab Visual_<nombre> por personaje, en el orden de Apariencia.Cara (0 = mujer, 1 = hombre). El prefab del jugador ya trae el 0.")]
         [SerializeField] private GameObject[] modelos = new GameObject[0];
+
+        private int indiceActual;
 
         private IPerfilJugador perfil;
         private IJugador jugador;
@@ -77,72 +81,53 @@ namespace MechaCyberpunk.Personaje.Apariencia
             }
         }
 
-        /// <summary>Viste ahora al muñeco del jugador con el modelo de su cara.</summary>
+        /// <summary>Pone ahora al jugador el modelo de su cara.</summary>
         public void Aplicar()
         {
             if (perfil == null || jugador == null || jugador.Raiz == null || modelos.Length == 0)
             {
                 return;
             }
-            GameObject fuente = modelos[Indice(perfil.Apariencia.Cara, modelos.Length)];
-            Transform modelo = Buscar(jugador.Raiz, NombreModelo);
-            if (fuente == null || modelo == null)
+            int indice = Indice(perfil.Apariencia.Cara, modelos.Length);
+            GameObject fuente = modelos[indice];
+            Transform actual = Buscar(jugador.Raiz, NombreModelo);
+            if (fuente == null || actual == null || indice == indiceActual)
             {
                 return;
             }
-            Vestir(modelo, fuente.transform);
-        }
-
-        /// <summary>
-        /// Copia a <paramref name="modelo"/> los materiales de cada malla de <paramref name="fuente"/> (por su ruta); la que falta se copia
-        /// y la que la fuente no trae se apaga.
-        /// </summary>
-        public static void Vestir(Transform modelo, Transform fuente)
-        {
-            HashSet<string> rutas = new HashSet<string>();
-            foreach (MeshRenderer origen in fuente.GetComponentsInChildren<MeshRenderer>(true))
+            Animator animadorViejo = actual.GetComponentInChildren<Animator>(true);
+            bool visible = animadorViejo == null || animadorViejo.gameObject.activeSelf;
+            GameObject nuevo = Instantiate(fuente, actual.parent);
+            nuevo.name = NombreModelo;
+            nuevo.transform.SetPositionAndRotation(actual.position, actual.rotation);
+            Animator animadorNuevo = nuevo.GetComponentInChildren<Animator>(true);
+            if (animadorNuevo != null)
             {
-                string ruta = Ruta(origen.transform, fuente);
-                rutas.Add(ruta);
-                Transform destino = modelo.Find(ruta);
-                if (destino == null)
-                {
-                    Transform padre = origen.transform.parent == fuente ? modelo : modelo.Find(Ruta(origen.transform.parent, fuente));
-                    if (padre == null)
-                    {
-                        continue;
-                    }
-                    GameObject copia = Instantiate(origen.gameObject, padre);
-                    copia.name = origen.name;
-                    copia.transform.localPosition = origen.transform.localPosition;
-                    copia.transform.localRotation = origen.transform.localRotation;
-                    copia.transform.localScale = origen.transform.localScale;
-                    destino = copia.transform;
-                }
-                destino.gameObject.SetActive(origen.gameObject.activeSelf);
-                MeshRenderer render = destino.GetComponent<MeshRenderer>();
-                if (render != null)
-                {
-                    render.sharedMaterials = origen.sharedMaterials;
-                }
+                animadorNuevo.gameObject.SetActive(visible);
             }
-            foreach (MeshRenderer render in modelo.GetComponentsInChildren<MeshRenderer>(true))
+            PasarArmas(actual, nuevo.transform);
+            actual.gameObject.SetActive(false);
+            Destroy(actual.gameObject);
+            indiceActual = indice;
+            foreach (IModeloCambiable c in jugador.Raiz.GetComponentsInChildren<IModeloCambiable>(true))
             {
-                if (!rutas.Contains(Ruta(render.transform, modelo)))
-                {
-                    render.gameObject.SetActive(false);
-                }
+                c.AlCambiarModelo(animadorNuevo);
             }
         }
 
-        private static string Ruta(Transform t, Transform raiz)
+        /// <summary>Mueve lo que cuelga de la mano derecha del modelo viejo (las armas) a la mano del nuevo, conservando su posición local.</summary>
+        public static void PasarArmas(Transform viejo, Transform nuevo)
         {
-            string ruta = t.name;
-            for (Transform p = t.parent; p != null && p != raiz; p = p.parent)
+            Transform desde = Buscar(viejo, NombreMano);
+            Transform hacia = Buscar(nuevo, NombreMano);
+            if (desde == null || hacia == null)
             {
-                ruta = p.name + "/" + ruta;
+                return;
             }
-            return ruta;
+            for (int i = desde.childCount - 1; i >= 0; i--)
+            {
+                desde.GetChild(i).SetParent(hacia, false);
+            }
         }
 
         private static Transform Buscar(Transform raiz, string nombre)

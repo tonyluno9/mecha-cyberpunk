@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Personaje.Visual.Editor",
     "rootNamespace": "MechaCyberpunk.Personaje.Visual.Editor",
-    "references": ["MechaCyberpunk.Personaje.Visual"],
+    "references": ["MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

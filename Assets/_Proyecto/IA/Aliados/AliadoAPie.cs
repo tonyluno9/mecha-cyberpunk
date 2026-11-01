@@ -31,6 +31,7 @@ namespace MechaCyberpunk.IA.Aliados
         private const float AciertoLejos = 0.3f;
         private const float DistCerca = 10f;
         private const float DistLejos = 30f;
+        private const float MezclaColorPandilla = 0.55f;
         private static readonly int IdColor = Shader.PropertyToID("_BaseColor");
         private static readonly int IdVelocidad = Animator.StringToHash("Velocidad");
         private static readonly int IdEnPiso = Animator.StringToHash("EnPiso");
@@ -331,7 +332,8 @@ namespace MechaCyberpunk.IA.Aliados
 
         private void Pintar()
         {
-            Color color = ColoresPandilla.Color(perfil != null ? perfil.ColorPandilla : ColoresPandilla.Predeterminado);
+            // T-520: el modelo tiene textura; el color de la pandilla se mezcla con blanco para teñirlo sin tapar la cara ni la ropa.
+            Color color = Color.Lerp(Color.white, ColoresPandilla.Color(perfil != null ? perfil.ColorPandilla : ColoresPandilla.Predeterminado), MezclaColorPandilla);
             MaterialPropertyBlock bloque = new MaterialPropertyBlock();
             foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
             {
