@@ -194,7 +194,17 @@ namespace MechaCyberpunk.UI.Kit
             {
                 borde.SetActive(marcado);
             }
-            fondo.color = !activo ? e.Fondo : EstaPulsado ? e.FondoPulsado : marcado ? e.FondoElegido : e.Fondo;
+            PiezasUI piezas = PiezasUI.Actual;
+            if (fondo.sprite != null && piezas != null && piezas.BotonNormal != null)
+            {
+                // T-522: el botón de UI02 con sus tres estados; desactivado es el normal apagado.
+                fondo.sprite = !activo ? piezas.BotonNormal : EstaPulsado ? piezas.BotonPulsado : marcado ? piezas.BotonResaltado : piezas.BotonNormal;
+                fondo.color = activo ? Color.white : new Color(1f, 1f, 1f, 0.45f);
+            }
+            else
+            {
+                fondo.color = !activo ? e.Fondo : EstaPulsado ? e.FondoPulsado : marcado ? e.FondoElegido : e.Fondo;
+            }
             texto.color = !activo ? e.Desactivado : marcado ? e.Naranja : e.Texto;
             texto.text = marcado ? PrefijoElegido + etiqueta : etiqueta;
             if (textoValor != null)

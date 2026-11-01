@@ -2,6 +2,7 @@ using System.IO;
 using System.Collections.Generic;
 using MechaCyberpunk.UI.Hud;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace MechaCyberpunk.Tests.UI
 {
@@ -27,6 +28,12 @@ namespace MechaCyberpunk.Tests.UI
         {
             Canvas[] canvases = Object.FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             List<Canvas> cambiados = new List<Canvas>();
+            // T-522: sin suavizado temporal ni bloom la interfaz sale nítida como el Overlay del juego (con ellos, los textos se ven borrosos solo en la foto).
+            UniversalAdditionalCameraData datos = camara.GetUniversalAdditionalCameraData();
+            bool posprocesoAntes = datos.renderPostProcessing;
+            AntialiasingMode suavizadoAntes = datos.antialiasing;
+            datos.renderPostProcessing = false;
+            datos.antialiasing = AntialiasingMode.None;
             foreach (Canvas c in canvases)
             {
                 if (c.isRootCanvas && c.renderMode == RenderMode.ScreenSpaceOverlay)
@@ -67,6 +74,8 @@ namespace MechaCyberpunk.Tests.UI
             }
             finally
             {
+                datos.renderPostProcessing = posprocesoAntes;
+                datos.antialiasing = suavizadoAntes;
                 camara.targetTexture = anteriorObjetivo;
                 camara.ResetAspect();
                 RenderTexture.active = activa;

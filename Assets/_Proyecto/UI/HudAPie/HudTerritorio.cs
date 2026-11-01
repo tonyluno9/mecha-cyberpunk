@@ -16,6 +16,8 @@ namespace MechaCyberpunk.UI.Hud
         public const int OrdenCanvas = 10;
         private const float MaximoRespeto = 100f;
         private const float AnchoAviso = 1400f;
+        private const float AnchoPanelAviso = 1000f;
+        private const float AltoExtraAviso = 24f;
 
         [Tooltip("Segundos que dura el aviso de conquista (s).")]
         [Min(0.5f)] [SerializeField] private float segundosConquista = 3f;
@@ -25,6 +27,7 @@ namespace MechaCyberpunk.UI.Hud
         private Text textoZona;
         private Text textoAviso;
         private RectTransform panelZona;
+        private RectTransform panelAviso;
         private Image insignia;
         private Image rellenoRespeto;
         private ITerritorio territorio;
@@ -44,6 +47,11 @@ namespace MechaCyberpunk.UI.Hud
             Image marco = KitUI.CrearPanelMarco(canvas.transform, "PanelZona");
             panelZona = marco.rectTransform;
             KitUI.Colocar(panelZona, DisposicionHud.Zona, DisposicionHud.AnchoZona);
+            // T-522: un fondo oscuro semitransparente detrás del texto, para que el color del dueño (magenta, verde) se lea sobre una pared del mismo color.
+            Image oscuro = KitUI.CrearImagen(panelZona, "FondoOscuro", new Color(0.02f, 0.02f, 0.05f, 0.82f));
+            KitUI.Estirar(oscuro.rectTransform);
+            oscuro.rectTransform.offsetMin = new Vector2(14f, 12f);
+            oscuro.rectTransform.offsetMax = new Vector2(-14f, -12f);
             insignia = KitUI.CrearImagenSprite(panelZona, "Insignia", null);
             KitUI.Colocar(insignia.rectTransform, new Vector2(1f, 0.5f), new Vector2(-18f, 0f), new Vector2(60f, 74f));
             textoZona = KitUI.CrearTexto(panelZona, "Zona", RolTexto.Hud, TextAnchor.MiddleLeft);
@@ -59,6 +67,11 @@ namespace MechaCyberpunk.UI.Hud
             rellenoRespeto = KitUI.CrearImagen(huecoRespeto.transform, "Respeto", Color.white);
             KitUI.Estirar(rellenoRespeto.rectTransform);
             panelZona.gameObject.SetActive(false);
+            // T-522: el aviso ("ES DE TU PANDILLA", "EL JEFE TE BUSCA") va dentro de un marco oscuro.
+            panelAviso = KitUI.CrearPanelMarco(canvas.transform, "PanelAviso", 0.92f).rectTransform;
+            RanuraHud ranuraAviso = DisposicionHud.AvisoZona;
+            KitUI.Colocar(panelAviso, ranuraAviso.Ancla, ranuraAviso.Posicion + new Vector2(0f, AltoExtraAviso * 0.5f), new Vector2(AnchoPanelAviso, ranuraAviso.Alto + AltoExtraAviso));
+            panelAviso.gameObject.SetActive(false);
             textoAviso = KitUI.CrearTexto(canvas.transform, "Aviso", RolTexto.Encabezado, TextAnchor.MiddleCenter);
             KitUI.Colocar(textoAviso.rectTransform, DisposicionHud.AvisoZona, AnchoAviso);
             textoZona.text = string.Empty;
@@ -148,6 +161,11 @@ namespace MechaCyberpunk.UI.Hud
             if (textoAviso.text.Length > 0 && Time.unscaledTime >= finAviso)
             {
                 textoAviso.text = string.Empty;
+            }
+            bool hayAviso = textoAviso.text.Length > 0;
+            if (panelAviso.gameObject.activeSelf != hayAviso)
+            {
+                panelAviso.gameObject.SetActive(hayAviso);
             }
         }
 

@@ -78,6 +78,11 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(esperado.b, real.b, Tolerancia, que + " (b)");
         }
 
+        // T-520: el modelo de Tripo lleva textura, así que AliadoAPie mezcla el color de la pandilla con blanco al 55 % (no es el color puro).
+        private const float MezclaColorPandilla = 0.55f;
+
+        private static Color Tinte(Color pandilla) => Color.Lerp(Color.white, pandilla, MezclaColorPandilla);
+
         private static Color RopaDe(AliadoAPie aliado)
         {
             Renderer r = null;
@@ -136,13 +141,13 @@ namespace MechaCyberpunk.Tests.UI
             AliadoAPie chato = AliadoAPie.Activos[0];
             yield return EsperarHasta(() => hudAliados.TextoAviso.text.Length > 0, "el aviso de reclutar", 5f);
             Assert.AreEqual("EL CHATO SE UNE A LOS DE SUBURBIOS", hudAliados.TextoAviso.text);
-            AssertColor(ColoresPandilla.Color(0), RopaDe(chato), "el CHATO empieza naranja");
+            AssertColor(Tinte(ColoresPandilla.Color(0)), RopaDe(chato), "el CHATO empieza naranja");
 
             // Cambias la pandilla: todo se repinta sin recargar la escena.
             perfil.FijarPandilla("los neón", 3);
             Assert.AreEqual("LOS NEÓN", perfil.NombrePandilla);
             Assert.AreEqual(3, perfil.ColorPandilla);
-            AssertColor(ColoresPandilla.Color(3), RopaDe(chato), "el CHATO pasa a azul");
+            AssertColor(Tinte(ColoresPandilla.Color(3)), RopaDe(chato), "el CHATO pasa a azul");
 
             jugador.Colocar(new Pose(new Vector3(XSuburbios, 0.5f, 0f), Quaternion.LookRotation(Vector3.right)));
             Press(teclado.wKey);
@@ -166,7 +171,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             yield return null;
             AssertColor(ColoresPandilla.Color(2), ManzanaDe(mapa, "SUBURBIOS"), "SUBURBIOS en el mapa pasa a amarillo");
-            AssertColor(ColoresPandilla.Color(2), RopaDe(chato), "el CHATO pasa a amarillo");
+            AssertColor(Tinte(ColoresPandilla.Color(2)), RopaDe(chato), "el CHATO pasa a amarillo");
             perfil.FijarPandilla("los neón", 3);
             yield return Pulsar(teclado.mKey);
             yield return EsperarHasta(() => !mapa.Abierto, "cerrar el mapa con M", 5f);
@@ -178,7 +183,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(ServicioGuardado.Actual.Cargar());
             Assert.AreEqual("LOS NEÓN", perfil.NombrePandilla);
             Assert.AreEqual(3, perfil.ColorPandilla);
-            AssertColor(ColoresPandilla.Color(3), RopaDe(chato), "el CHATO vuelve a azul");
+            AssertColor(Tinte(ColoresPandilla.Color(3)), RopaDe(chato), "el CHATO vuelve a azul");
         }
     }
 }
