@@ -348,3 +348,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 ### T-500 Importar (paso 0)
 - No cambia lo que se ve en la demo. Abre Assets/Arte/Calle/Prefabs/N01 (y N02 a N08 en sus zonas) y los FBX de Assets/Arte/Personajes/man, woman y woman2: se ven con textura y traen animaciones.
 - Observa: docs/capturas/T-500-1.png con los 9 modelos en fila.
+
+### T-501 Suburbios (paso A1)
+- Haz: despierta en Suburbios de noche y camina la calle principal hacia el oeste.
+- Observa: cables colgando entre fachadas, lámparas cálidas junto a las puertas, letreros de neón, niebla azul al fondo y torres con ventanas en el horizonte; desde una azotea se ven las torres y las antenas rojas.
+- Compara: docs/capturas/ref-suburbios-noche-comparacion.png, ref-cruce-dia-lluvia-comparacion.png y ref-azotea-comparacion.png.
