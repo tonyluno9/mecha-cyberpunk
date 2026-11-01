@@ -24,6 +24,17 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
 
+            if (assetPath.StartsWith("Assets/Arte/Personajes/man/") || assetPath.StartsWith("Assets/Arte/Personajes/woman/")
+                || assetPath.StartsWith("Assets/Arte/Personajes/woman2/"))
+            {
+                // T-500: personajes de Tripo con esqueleto y animaciones: se conservan (el rig Humanoid es del paso B1).
+                ModelImporter personaje = (ModelImporter)assetImporter;
+                personaje.importAnimation = true;
+                personaje.animationType = ModelImporterAnimationType.Generic;
+                personaje.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
+                return;
+            }
+
             ModelImporter modelo = (ModelImporter)assetImporter;
             modelo.useFileScale = true;
             modelo.globalScale = 1f;

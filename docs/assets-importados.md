@@ -145,3 +145,4 @@ y se renombró al copiar. Solo traen basecolor: el material no lleva normal map.
 | T08_RepisaTaller | TallerCasa/Prefabs/T08_RepisaTaller | Taller, en el lugar de Estante0-2 y Piezas (apagados, sus colliders quedan) | 3.2×2.45×0.5 | 5 264 | Estirada a los 3.2 m de los estantes |
 
 Kit de pisos (T-419, 4b): 98 fachadas (83 Lado_* y 15 caras lisas al aire), 3433 piezas, cada fachada con LODGroup (LOD0 el kit hasta 9 por ciento de pantalla; LOD1 el decal de ventanas y la cornisa viejos). Medido a 2560x1600 Ultra, noche con lluvia: calle principal 121.9 FPS promedio (1 por ciento bajo 117.2), el punto más bajo; ver docs/capturas/noche-medicion-despues.txt.
+| N01-N08 | Calle, Callejon, Exteriores | T-500: ver docs/tareas/hechas/T-500-importar.md | | | |

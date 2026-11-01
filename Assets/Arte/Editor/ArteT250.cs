@@ -101,6 +101,10 @@ namespace MechaCyberpunk.Arte.Editor
 
         public static string ZonaDe(string codigo)
         {
+            if (codigo[0] == 'N')
+            {
+                return ZonaDeNuevos(codigo);
+            }
             switch (codigo[0])
             {
                 case 'C': return "Calle";
@@ -113,6 +117,20 @@ namespace MechaCyberpunk.Arte.Editor
                 case 'X': return "Exos";
                 case 'P': return "Personajes";
                 default: return "SinClasificar";
+            }
+        }
+
+        /// <summary>T-500: N01-N08 (plan de ciudad) van a la zona donde se usan.</summary>
+        private static string ZonaDeNuevos(string codigo)
+        {
+            switch (codigo)
+            {
+                case "N04":
+                case "N05": return "Callejon";
+                case "N02":
+                case "N07":
+                case "N08": return "Exteriores";
+                default: return "Calle";
             }
         }
 
