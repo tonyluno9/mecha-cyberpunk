@@ -36,6 +36,8 @@ namespace MechaCyberpunk.Tests.UI
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string VariableCaptura = "CAPTURAR_T413";
+        // La malla del hombre de Tripo (como en JugadorVisualPruebas).
+        private const string MallaHombre = "0f9d95ea";
         private const string Nombre = "TONY";
         private const string Pandilla = "LOS NEÓN";
         private const int Azul = 3;
@@ -320,9 +322,18 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1, perfil.Apariencia.Cara, "Personaje B");
             Assert.AreEqual(Pandilla, perfil.NombrePandilla);
             Assert.AreEqual(Azul, perfil.ColorPandilla);
-            Transform mascara = Buscar(Registro<IJugador>.Actual.Raiz, "Mascara");
-            Assert.IsNotNull(mascara, "El jugador lleva la máscara de B");
-            Assert.IsTrue(mascara.gameObject.activeInHierarchy);
+            // T-520: el personaje B es el hombre de Tripo (Visual_man), ya no el muñeco con máscara.
+            Transform hombre = null;
+            foreach (SkinnedMeshRenderer malla in Registro<IJugador>.Actual.Raiz.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                if (malla.name.Contains(MallaHombre))
+                {
+                    hombre = malla.transform;
+                    break;
+                }
+            }
+            Assert.IsNotNull(hombre, "El jugador lleva el visual del hombre (B)");
+            Assert.IsTrue(hombre.gameObject.activeInHierarchy);
             Transform cabello = Buscar(Registro<IJugador>.Actual.Raiz, "Cabello");
             Assert.IsTrue(cabello == null || !cabello.gameObject.activeSelf, "Sin el cabello de A");
             PantallaTitulo tituloNuevo = UnityEngine.Object.FindFirstObjectByType<PantallaTitulo>();

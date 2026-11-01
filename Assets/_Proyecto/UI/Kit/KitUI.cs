@@ -19,17 +19,24 @@ namespace MechaCyberpunk.UI.Kit
         public const float MezclaAnchoAlto = 0.5f;
         private const int LadoTriangulo = 64;
         public const string NombreEstiloBase = "EstiloCyberfix_Base";
+        /// <summary>Opacidad del marco de los paneles de menú (T-522).</summary>
+        public const float AlfaPanelMenu = 0.94f;
+        /// <summary>Los 9-slice de los botones se dibujan a un tercio de su tamaño en el PNG.</summary>
+        public const float EscalaBotones = 3f;
+        private const float FraccionContorno = 0.67f;
         private const float RaizDeDos = 1.41421356f;
         private const float GradosRombo = 45f;
 
         private static EstiloCyberfix estilo;
         private static Sprite triangulo;
+        private static Sprite degradado;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Limpiar()
         {
             estilo = null;
             triangulo = null;
+            degradado = null;
         }
 
         /// <summary>El estilo en uso. Lo fija <see cref="FijarEstilo"/> (el HUD lo hace con EstiloCyberfix_Base.asset).</summary>
@@ -89,13 +96,20 @@ namespace MechaCyberpunk.UI.Kit
             return canvas;
         }
 
-        /// <summary>Panel negro translúcido con borde turquesa al 60 % de 2 px, del tamaño dado y centrado en su padre.</summary>
+        /// <summary>
+        /// Panel de menú (T-522): con las piezas usa el marco 9-slice de UI01 (esquinas cortadas, línea naranja); sin ellas, el panel negro
+        /// translúcido con borde turquesa al 60 % de 2 px de la guía. Del tamaño dado y centrado en su padre.
+        /// </summary>
         public static RectTransform CrearPanel(Transform padre, string nombre, Vector2 tamano)
         {
-            Image fondo = CrearImagen(padre, nombre, Estilo.Fondo);
+            bool conPiezas = PiezasUI.Actual != null && PiezasUI.Actual.MarcoPanel != null;
+            Image fondo = conPiezas ? CrearPanelMarco(padre, nombre, AlfaPanelMenu) : CrearImagen(padre, nombre, Estilo.Fondo);
             RectTransform rect = fondo.rectTransform;
             Colocar(rect, new Vector2(0.5f, 0.5f), Vector2.zero, tamano);
-            CrearBorde(rect, Estilo.BordePanel, Estilo.BordeDePanel);
+            if (!conPiezas)
+            {
+                CrearBorde(rect, Estilo.BordePanel, Estilo.BordeDePanel);
+            }
             return rect;
         }
 
@@ -145,16 +159,20 @@ namespace MechaCyberpunk.UI.Kit
             return texto;
         }
 
-        /// <summary>Le pone (o corrige) la sombra de la guía a un texto que ya existe.</summary>
+        /// <summary>
+        /// Le pone (o corrige) el contorno oscuro de la guía a un texto que ya existe (T-522: contorno de 1.5 px en las cuatro diagonales en vez
+        /// de una sombra a un lado, para que se lea sobre paredes claras o de colores).
+        /// </summary>
         public static void Sombrear(Text texto)
         {
             Shadow sombra = texto.GetComponent<Shadow>();
             if (sombra == null)
             {
-                sombra = texto.gameObject.AddComponent<Shadow>();
+                sombra = texto.gameObject.AddComponent<Outline>();
             }
             sombra.effectColor = Estilo.Sombra;
-            sombra.effectDistance = Estilo.DistanciaSombra;
+            // El contorno se dibuja en las cuatro diagonales: con la distancia entera de la sombra engordaría las letras.
+            sombra.effectDistance = sombra is Outline ? Estilo.DistanciaSombra * FraccionContorno : Estilo.DistanciaSombra;
         }
 
         /// <summary>Aplica fuente, tamaño y sombra de la guía a un texto que ya existe (los del HUD hecho antes del kit).</summary>
@@ -361,7 +379,20 @@ namespace MechaCyberpunk.UI.Kit
             Image fondo = objeto.AddComponent<Image>();
             fondo.color = Estilo.Fondo;
             fondo.raycastTarget = true;
-            GameObject borde = CrearBorde(rect, Estilo.BordeElegido, Estilo.Naranja);
+            // T-522: con las piezas el fondo es el botón de UI02 (9-slice; normal, resaltado y pulsado los cambia BotonCyberfix); sin ellas, el borde liso.
+            PiezasUI piezas = PiezasUI.Actual;
+            GameObject borde = null;
+            if (piezas != null && piezas.BotonNormal != null)
+            {
+                fondo.sprite = piezas.BotonNormal;
+                fondo.type = Image.Type.Sliced;
+                fondo.pixelsPerUnitMultiplier = EscalaBotones;
+                fondo.color = Color.white;
+            }
+            else
+            {
+                borde = CrearBorde(rect, Estilo.BordeElegido, Estilo.Naranja);
+            }
             Text texto = CrearTexto(rect, "Etiqueta", RolTexto.Boton, TextAnchor.MiddleLeft);
             texto.rectTransform.offsetMin = new Vector2(Estilo.Relleno, 0f);
             texto.rectTransform.offsetMax = new Vector2(-Estilo.Relleno, 0f);
@@ -376,6 +407,35 @@ namespace MechaCyberpunk.UI.Kit
             T control = objeto.AddComponent<T>();
             control.Iniciar(etiqueta, texto, valor, fondo, borde);
             return control;
+        }
+
+        /// <summary>Sprite de 256x1 hecho por código: opaco a la izquierda y transparente a la derecha (fondo oscuro detrás de un menú, T-522).</summary>
+        public static Sprite SpriteDegradadoHorizontal()
+        {
+            if (degradado != null)
+            {
+                return degradado;
+            }
+            const int ancho = 256;
+            Texture2D textura = new Texture2D(ancho, 1, TextureFormat.RGBA32, false)
+            {
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                name = "KitUI_Degradado",
+                hideFlags = HideFlags.DontSave,
+            };
+            Color32[] pixeles = new Color32[ancho];
+            for (int x = 0; x < ancho; x++)
+            {
+                float t = 1f - (float)x / (ancho - 1);
+                float alfa = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / 0.6f));
+                pixeles[x] = new Color32(255, 255, 255, (byte)Mathf.RoundToInt(alfa * 255f));
+            }
+            textura.SetPixels32(pixeles);
+            textura.Apply();
+            degradado = Sprite.Create(textura, new Rect(0f, 0f, ancho, 1f), new Vector2(0.5f, 0.5f));
+            degradado.hideFlags = HideFlags.DontSave;
+            return degradado;
         }
 
         /// <summary>Sprite de triángulo hecho por código (sin asset), con la punta arriba. Se comparte.</summary>

@@ -363,3 +363,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: NUEVA PARTIDA y sal a la calle; recluta a un aliado, cambia de arma con 1 a 5, recibe daño hasta bajar de 30 % de vida y entra a una zona.
 - Observa: arriba a la izquierda vida (turquesa, roja al bajar), calor, y Biits con su símbolo; arriba a la derecha la zona con tu respeto e insignia; abajo a la izquierda el minimapa con anillo y tus aliados al lado; abajo a la derecha el panel del arma con 5 casillas; letras Teko y Rajdhani.
 - Compara: docs/capturas/T-521-comparacion.png (mockup arriba, juego abajo).
+
+### T-522 Menús nuevos (paso B2, mitad 2)
+- Haz: abre el juego (título), NUEVA PARTIDA; en la calle pulsa Esc (pausa), entra a GUARDAR y OPCIONES, M para el mapa, y habla con El Mercado y el CIC.
+- Observa: todos con el marco naranja/teal, botones angulares que se iluminan al elegirlos, el título con el arte de la ciudad y el logo CYBERFIX a la izquierda; el aviso de zona conquistada en un marco; la zona arriba a la derecha legible y el minimapa oscuro con calles.
+- Compara: docs/capturas/T-522-comparacion-menu.png y T-522-comparacion-hud.png (mockup arriba, juego abajo).
