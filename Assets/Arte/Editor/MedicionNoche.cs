@@ -30,6 +30,7 @@ namespace MechaCyberpunk.Arte.Editor
             ("callejon", new Vector3(-53f, 0.2f, -59f), new Vector3(-1f, -0.02f, 0f), 0, false),
             ("tianguis", new Vector3(38f, 0.2f, 0.5f), new Vector3(-1f, -0.05f, 0f), 0, false),
             ("neon", new Vector3(50f, 0.2f, -4f), new Vector3(1f, 0.02f, 0.25f), 0, false),
+            ("neon_calle", new Vector3(47f, 0.2f, 12f), new Vector3(0f, 0.12f, 1f), 0, false),
             ("vivacoin", new Vector3(44f, 0.2f, 36f), new Vector3(0.75f, 0.05f, 0.65f), 0, false),
             ("mercado", new Vector3(-22f, 0.2f, 11f), new Vector3(-0.15f, 0.02f, 1f), 0, false),
             ("mercado_puerta", new Vector3(-21.5f, 0.2f, 19f), new Vector3(-0.45f, 0.05f, 1f), 0, false),
