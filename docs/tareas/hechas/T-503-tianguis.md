@@ -16,3 +16,4 @@ Muy por encima de 60.
 
 ## Bitácora
 - 2026-11-01: hecho; los puestos van a las orillas y el carril central queda libre.
+- 2026-11-01: RecorridoDemoPruebas 2/2 (el bot no cayo KO esta vez; los puestos van a las orillas).
