@@ -17,17 +17,16 @@ namespace MechaCyberpunk.UI.Hud
         public const string SonidoNuevo = "UI_OBJETIVO_NUEVO";
         public const string SonidoCumplido = "UI_OBJETIVO_CUMPLIDO";
         private const float GradosArriba = 90f;
+        // T-523: marcador discreto. Constantes (no serializadas): los valores viejos (36, 40, 34) seguían guardados en el prefab.
+        private const float diagonalRombo = 26f;
+        private const float ladoFlecha = 26f;
+        private const float separacionDistancia = 24f;
+        private const float OpacidadDistancia = 0.85f;
 
         [Tooltip("Altura del rombo sobre el objetivo (m).")]
         [Min(0f)] [SerializeField] private float alturaSobreObjetivo = 2.2f;
-        [Tooltip("Tamaño del rombo de punta a punta (px a 1920x1080).")]
-        [Min(4f)] [SerializeField] private float diagonalRombo = 36f;
         [Tooltip("Distancia de la flecha al borde de la pantalla (px a 1920x1080).")]
         [Min(0f)] [SerializeField] private float margenBorde = 64f;
-        [Tooltip("Lado de la flecha del borde (px a 1920x1080).")]
-        [Min(4f)] [SerializeField] private float ladoFlecha = 40f;
-        [Tooltip("Separación entre el rombo o la flecha y su distancia (px a 1920x1080).")]
-        [Min(0f)] [SerializeField] private float separacionDistancia = 34f;
         [Tooltip("Más cerca que esto el marcador se apaga (m).")]
         [Min(0f)] [SerializeField] private float distanciaApagado = 3f;
 
@@ -85,8 +84,9 @@ namespace MechaCyberpunk.UI.Hud
 
         private static Text TextoDistanciaEn(RectTransform padre, Vector2 posicion)
         {
-            Text texto = KitUI.CrearTexto(padre, "Distancia", RolTexto.Hud, TextAnchor.MiddleCenter);
-            texto.color = KitUI.Estilo.Turquesa;
+            Text texto = KitUI.CrearTexto(padre, "Distancia", RolTexto.Ayuda, TextAnchor.MiddleCenter);
+            Color turquesa = KitUI.Estilo.Turquesa;
+            texto.color = new Color(turquesa.r, turquesa.g, turquesa.b, OpacidadDistancia);
             RectTransform rect = texto.rectTransform;
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = posicion;
