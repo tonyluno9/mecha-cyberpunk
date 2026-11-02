@@ -222,3 +222,8 @@ Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x108
 | Neón Alto | neon_calle | 281.3 | 172.0 | [ref-neon-alto-noche-comparacion](capturas/ref-neon-alto-noche-comparacion.png) |
 | Calle principal | calle | 206.9 | 115.4 | (sin referencia propia) |
 La zona más lenta es la calle principal con 206.9 fps; las seis pasan 60 por mucho. En cada imagen la referencia va a la izquierda y el juego a la derecha (en Neón Alto: referencia, antes, después).
+
+### Detenido por Tony (2026-11-01, noche)
+- A medias: **T-509** (cierre del pulido) en `tony/T-509-cierre-pulido`, commit WIP 425edce con push. Hecho: Neón Alto más verde (perfil, niebla, charcos, pantallas), sin capturas ni pruebas. Falta: reemplazar el greybox del puesto de tacos del pasillo de El Mercado (trompos de bloques naranjas, garrafón blanco, mostrador gris, bancos rosas, caja gris colgante; ver docs/capturas/T-506-mercado-despues.png), terminar ColocarT509.cs (a medio escribir), ampliar SinGreyboxT506 para materiales sin textura, capturas, FPS, RecorridoDemoPruebas, Builds/Demo y merge.
+- Sin importar: los modelos nuevos de imageassets/modelos3d del 1-nov (V02, V03, V04, V05, V06, V08, SkullHombre, RobotHombre, Hacker, Doctor, Inventor, Mecanico, GuardiaNova; hay copias duplicadas "- copia"). Siguiente: importarlos con el flujo de T-500/T-520 y cambiar los NPC (jefe SKULLS, DOC, INVENTOR, HACKER) y los carros.
+- Conocido: RecorridoDemoPruebas da 1/2 casi siempre (el bot cae KO en la pelea con pistola del Tianguis; tramos 01-09 pasan). Hay archivos .whl de Python sueltos en la raíz del repo (los dejó una tarea de interfaz al instalar rembg): no se suben; se pueden borrar.
