@@ -18,6 +18,8 @@ namespace MechaCyberpunk.Trafico.Calle
 
         [SerializeField] private ConfigTraficoCalle config;
         [SerializeField] private CarroTrafico prefabCarro;
+        [Tooltip("T-511: los carros con modelo real; si hay, cada carro del tráfico usa uno de estos (en orden y repitiendo) en vez de prefabCarro.")]
+        [SerializeField] private List<CarroTrafico> prefabsCarro = new List<CarroTrafico>();
         [Tooltip("Opcional: el padre de las manzanas (hijos Manzana_). Sin él se usa el del GestorPersecucion del barrio.")]
         [SerializeField] private Transform barrio;
 
@@ -35,7 +37,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 int cuenta = 0;
                 foreach (CarroTrafico c in carros)
                 {
-                    cuenta += c != null && c.gameObject.activeSelf ? 1 : 0;
+                    cuenta += c != null && !c.Robado && c.gameObject.activeSelf ? 1 : 0;
                 }
                 return cuenta;
             }
@@ -49,9 +51,17 @@ namespace MechaCyberpunk.Trafico.Calle
             barrio = padreDeManzanas;
         }
 
+        /// <summary>T-511: igual, pero con varios modelos de carro (cada carro de la calle usa uno).</summary>
+        public void Configurar(ConfigTraficoCalle numeros, IEnumerable<CarroTrafico> prefabs, Transform padreDeManzanas = null)
+        {
+            config = numeros;
+            prefabsCarro = new List<CarroTrafico>(prefabs);
+            barrio = padreDeManzanas;
+        }
+
         private void Start()
         {
-            if (config == null || prefabCarro == null)
+            if (config == null || (prefabCarro == null && prefabsCarro.Count == 0))
             {
                 Debug.LogError("[Trafico] TraficoCalle necesita la config y el prefab del carro.", this);
                 enabled = false;
@@ -69,7 +79,8 @@ namespace MechaCyberpunk.Trafico.Calle
             System.Random azar = new System.Random(Semilla);
             for (int i = 0; i < config.Maximo; i++)
             {
-                CarroTrafico carro = Instantiate(prefabCarro, transform);
+                CarroTrafico molde = prefabsCarro.Count > 0 ? prefabsCarro[i % prefabsCarro.Count] : prefabCarro;
+                CarroTrafico carro = Instantiate(molde, transform);
                 carro.name = "CarroTrafico_" + (i + 1);
                 carro.Preparar(config, calles, ElegirNodo(azar), new System.Random(azar.Next()), PosicionDelJugador);
                 carro.gameObject.SetActive(false);
@@ -86,9 +97,15 @@ namespace MechaCyberpunk.Trafico.Calle
             }
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
             int objetivo = config.Cantidad(reloj != null && reloj.EsDeNoche);
+            int lugares = objetivo;
             for (int i = 0; i < carros.Count; i++)
             {
-                bool debeEstar = i < objetivo;
+                if (carros[i] == null || carros[i].Robado)
+                {
+                    continue;
+                }
+                bool debeEstar = lugares > 0;
+                lugares--;
                 if (carros[i].gameObject.activeSelf != debeEstar)
                 {
                     carros[i].gameObject.SetActive(debeEstar);

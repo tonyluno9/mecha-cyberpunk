@@ -14,6 +14,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
     {
         public const string RaizT451 = "GTA_T451";
         private const string RutaPrefabCarroTrafico = "Assets/_Proyecto/Trafico/Prefabs/CarroTrafico.prefab";
+        private const string CarpetaTrafico = "Assets/_Proyecto/Trafico/Prefabs/";
+        private static readonly string[] CodigosCarrosReales = { "V01a", "V01b", "V02", "V03", "V04", "V05", "V06", "V08" };
         private const string RutaConfigTrafico = "Assets/_Proyecto/Trafico/Datos/ConfigTraficoCalle_Trafico.asset";
 
         [MenuItem("Mecha Cyberpunk/Pandillas/T-451 Tráfico de calle")]
@@ -45,6 +47,18 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             SerializedObject so = new SerializedObject(trafico);
             so.FindProperty("config").objectReferenceValue = config;
             so.FindProperty("prefabCarro").objectReferenceValue = prefab.GetComponent(tipoCarro);
+            // T-511: los carros del tráfico usan los 8 modelos reales (CreadorTraficoT511.Crear los crea).
+            SerializedProperty lista = so.FindProperty("prefabsCarro");
+            lista.ClearArray();
+            foreach (string codigo in CodigosCarrosReales)
+            {
+                GameObject real = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaTrafico + "CarroTrafico_" + codigo + ".prefab");
+                if (real != null)
+                {
+                    lista.InsertArrayElementAtIndex(lista.arraySize);
+                    lista.GetArrayElementAtIndex(lista.arraySize - 1).objectReferenceValue = real.GetComponent(tipoCarro);
+                }
+            }
             so.ApplyModifiedPropertiesWithoutUndo();
             Debug.Log("[T-451] TraficoCalle creado.");
         }

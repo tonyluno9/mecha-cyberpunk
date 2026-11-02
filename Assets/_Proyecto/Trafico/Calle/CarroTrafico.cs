@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
+using MechaCyberpunk.Trafico.Peatones;
 using MechaCyberpunk.Trafico.Persecucion;
 using UnityEngine;
 
@@ -44,6 +45,17 @@ namespace MechaCyberpunk.Trafico.Calle
             new Color(0.85f, 0.85f, 0.88f), new Color(0.3f, 0.3f, 0.35f), new Color(0.75f, 0.35f, 0.7f),
         };
 
+        [Tooltip("Altura (m) a la que va la raíz del carro sobre la calle: 0.45 el carro de cubos, 0.3 los carros manejables con modelo real.")]
+        [Min(0f)] [SerializeField] private float alturaRaiz = 0.45f;
+        [Tooltip("T-511: persona que se baja huyendo cuando le roban el carro (el prefab Peaton).")]
+        [SerializeField] private GameObject prefabConductor;
+
+        private IMontable montable;
+        private Rigidbody cuerpo;
+
+        /// <summary>True si el jugador ya se llevó este carro (T-511): deja de ser tráfico y es un carro suyo.</summary>
+        public bool Robado { get; private set; }
+
         public float Velocidad => calculo != null ? calculo.Velocidad : 0f;
         public bool EnPanico => calculo != null && calculo.EnPanico;
         public bool Bloqueado => calculo != null && calculo.Bloqueado;
@@ -79,7 +91,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 Transform hijo = transform.Find("Carroceria");
                 carroceria = hijo != null ? hijo.GetComponent<Renderer>() : null;
             }
-            if (carroceria == null)
+            if (carroceria == null || !carroceria.enabled)
             {
                 return;
             }
@@ -102,16 +114,67 @@ namespace MechaCyberpunk.Trafico.Calle
             }
         }
 
+        private void Awake()
+        {
+            montable = GetComponent<IMontable>();
+            cuerpo = GetComponent<Rigidbody>();
+        }
+
         private void OnEnable()
         {
             Activos.Add(this);
             EventosRuido.Disparo += AlOirDisparo;
+            if (montable != null)
+            {
+                montable.OcupadoCambio += AlCambiarOcupado;
+            }
         }
 
         private void OnDisable()
         {
             Activos.Remove(this);
             EventosRuido.Disparo -= AlOirDisparo;
+            if (montable != null)
+            {
+                montable.OcupadoCambio -= AlCambiarOcupado;
+            }
+        }
+
+        // T-511: el jugador subió (solo puede si el carro está detenido): el conductor se baja huyendo y el carro pasa a ser suyo (el calor lo suma CarroEstacionado).
+        private void AlCambiarOcupado(bool ocupado)
+        {
+            if (!ocupado || Robado)
+            {
+                return;
+            }
+            Robado = true;
+            Vector3 puerta = montable.PuntoSubida;
+            Vector3? jugador = posicionJugador?.Invoke();
+            if (cuerpo != null)
+            {
+                cuerpo.isKinematic = false;
+                cuerpo.linearVelocity = Vector3.zero;
+                cuerpo.angularVelocity = Vector3.zero;
+            }
+            Sonidos.ReproducirEn("VEH_CLAXON_TRAFICO", transform.position);
+            SacarConductor(puerta, jugador ?? transform.position);
+            enabled = false;
+        }
+
+        private void SacarConductor(Vector3 puerta, Vector3 amenaza)
+        {
+            if (prefabConductor == null)
+            {
+                return;
+            }
+            GameObject conductor = Instantiate(prefabConductor, puerta, Quaternion.identity);
+            conductor.name = "ConductorHuyendo";
+            PeatonMundo peaton = conductor.GetComponent<PeatonMundo>();
+            if (peaton != null)
+            {
+                Destroy(peaton);
+            }
+            conductor.AddComponent<ConductorHuye>().Iniciar(amenaza);
         }
 
         /// <summary>Un disparo: si está cerca el carro se asusta (se detiene y pita).</summary>
@@ -174,7 +237,7 @@ namespace MechaCyberpunk.Trafico.Calle
             transform.SetPositionAndRotation(Posicion(), Quaternion.RotateTowards(transform.rotation, meta, config.GiroMaximo * dt));
         }
 
-        private Vector3 Posicion() => new Vector3(eje.x + desvio.x, AlturaDelCentro, eje.z + desvio.z);
+        private Vector3 Posicion() => new Vector3(eje.x + desvio.x, alturaRaiz, eje.z + desvio.z);
 
         private Vector3 DireccionA(int nodo)
         {
