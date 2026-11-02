@@ -15,6 +15,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const int MaxImpactos = 8;
 
         [SerializeField] private ConfigCamaraCarro config;
+        [Tooltip("T-511: altura (m) del punto que mira la cámara en tercera persona; 0 usa la de la config. Cada modelo pone la suya según su altura.")]
+        [Min(0f)] [SerializeField] private float alturaFocoPropia;
+        [Tooltip("T-511: distancia (m) detrás del carro en tercera persona; 0 usa la de la config. Se ajusta al largo del modelo.")]
+        [Min(0f)] [SerializeField] private float distanciaAtrasPropia;
 
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
         private CarroViejo carro;
@@ -32,6 +36,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         /// <summary>True si la vista actual es tercera persona.</summary>
         public bool EsTerceraPersona { get; private set; } = true;
+
+        /// <summary>Altura del foco de la tercera persona (la propia del modelo o la de la config).</summary>
+        public float AlturaFocoActual => alturaFocoPropia > 0f ? alturaFocoPropia : config.AlturaFoco;
+
+        /// <summary>Distancia detrás del carro en tercera persona (la propia del modelo o la de la config).</summary>
+        public float DistanciaAtrasActual => distanciaAtrasPropia > 0f ? distanciaAtrasPropia : config.DistanciaAtras;
 
         /// <summary>La cámara de este objeto.</summary>
         public Camera Camara
@@ -207,9 +217,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void ColocarTercera(bool deGolpe)
         {
             Transform t = carro.transform;
-            Vector3 foco = t.position + Vector3.up * config.AlturaFoco;
+            Vector3 foco = t.position + Vector3.up * AlturaFocoActual;
             float kmh = cuerpo != null ? cuerpo.linearVelocity.magnitude * 3.6f : 0f;
-            float distanciaOrbita = CalculoCamaraCarro.DistanciaPorRapidez(config.DistanciaAtras, config.DistanciaExtraVelocidad, kmh, config.KmhDistanciaExtra);
+            float distanciaOrbita = CalculoCamaraCarro.DistanciaPorRapidez(DistanciaAtrasActual, config.DistanciaExtraVelocidad, kmh, config.KmhDistanciaExtra);
             Vector3 ideal = CalculoCamaraCarro.PosicionOrbita(foco, t.forward, distanciaOrbita, yawOrbita, inclinacionOrbita);
             float paso = deGolpe ? 1f : 1f - Mathf.Exp(-config.Suavidad * Time.deltaTime);
             posicionTercera = deGolpe ? ideal : Vector3.Lerp(posicionTercera, ideal, paso);

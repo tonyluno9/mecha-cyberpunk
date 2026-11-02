@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5641537594778522723
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6063366347015013906, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099072287468405013, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8796588003076424182, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_Name
+      value: CarroTrafico_V02
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8796588003076424182, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4508625025849302551}
+  m_SourcePrefab: {fileID: 100100000, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+--- !u!1 &3772053463624340885 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8796588003076424182, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+  m_PrefabInstance: {fileID: 5641537594778522723}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4508625025849302551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3772053463624340885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4a0a1c6b3efd85459fb9bcc9d00804a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Calle.CarroTrafico
+  alturaRaiz: 0.3
+  prefabConductor: {fileID: 5461681330256039366, guid: 0154505b46b16984badf095bcd2efefe, type: 3}
