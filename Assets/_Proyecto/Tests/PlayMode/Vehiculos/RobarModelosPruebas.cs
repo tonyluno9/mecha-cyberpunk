@@ -34,7 +34,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
             base.Setup();
             Registros.LimpiarTodos();
             teclado = InputSystem.AddDevice<Keyboard>();
-            InputSystem.AddDevice<Mouse>();
+            Mouse raton = InputSystem.AddDevice<Mouse>();
+            MapasDePruebaVehiculos.Reiniciar(teclado, raton);
             piso = GameObject.CreatePrimitive(PrimitiveType.Cube);
             piso.transform.position = new Vector3(0f, -0.5f, 0f);
             piso.transform.localScale = new Vector3(400f, 1f, 400f);
@@ -46,7 +47,9 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Object.Destroy(jugadorObjeto);
             Object.Destroy(piso);
             Registros.LimpiarTodos();
+            MapasDePruebaVehiculos.AntesDelTearDown();
             base.TearDown();
+            MapasDePruebaVehiculos.DespuesDelTearDown();
         }
 
         private IEnumerator Preparar(string codigo, bool conJugador)

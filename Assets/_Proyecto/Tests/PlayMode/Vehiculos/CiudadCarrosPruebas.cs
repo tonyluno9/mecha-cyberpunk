@@ -24,19 +24,47 @@ namespace MechaCyberpunk.Tests.Vehiculos
         private const string RutaCiudad = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string PatronAdorno = @"^Carro_\d+$";
         private const string PrefijoRobable = "CarroRobable_";
-        private const int MinimoDeEstacionados = 17;
+        private const int MinimoDeEstacionados = 16;
         private const float DistanciaAlSubir = 1.5f;
         private const float MetrosParaSalir = 4f;
         private const float SegundosDeManejo = 2f;
+        private const float GradosPorPixelInicial = 0.1f;
+        private const int IntentosDeGiro = 12;
+        private const float ToleranciaDeGiro = 5f;
+        private const int CuadrosParaAsentar = 3;
+        private const int IntentosDeTecla = 5;
+        private const float SegundosParaFrenar = 6f;
         private const float LimiteCarga = 30f;
 
         private Keyboard teclado;
+        private Mouse raton;
 
         public override void Setup()
         {
             base.Setup();
             teclado = InputSystem.AddDevice<Keyboard>();
-            InputSystem.AddDevice<Mouse>();
+            raton = InputSystem.AddDevice<Mouse>();
+            MapasDePruebaVehiculos.Reiniciar(teclado, raton);
+        }
+
+        public override void TearDown()
+        {
+            Time.timeScale = 1f;
+            MapasDePruebaVehiculos.AntesDelTearDown(teclado, raton);
+            base.TearDown();
+            MapasDePruebaVehiculos.DespuesDelTearDown();
+        }
+
+        // La ciudad no se queda cargada: las pruebas que siguen arman su carro en la escena activa.
+        [UnityTearDown]
+        public IEnumerator DescargarCiudad()
+        {
+            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                Object.Destroy(raiz);
+            }
+            Registros.LimpiarTodos();
+            yield return null;
         }
 
         private static IEnumerator CargarCiudad()
@@ -61,8 +89,57 @@ namespace MechaCyberpunk.Tests.Vehiculos
 
         private static string ModeloDe(GameObject carro)
         {
-            GameObject origen = PrefabUtility.GetCorrespondingObjectFromOriginalSource(carro);
-            return origen != null ? origen.name : carro.name;
+            // El modelo se reconoce por el material de su visual (V02, V03, V01a_CarroViejito...).
+            Transform visual = carro.transform.Find("Visual_T511");
+            Renderer r = visual != null ? visual.GetComponentInChildren<Renderer>(true) : null;
+            return r != null ? r.sharedMaterial.name : carro.name;
+        }
+
+        // La cámara de hombro no gira con Colocar: se gira con el ratón, midiendo cuántos grados da cada píxel, hasta mirar al yaw pedido.
+        private IEnumerator MirarHacia(IJugador jugador, Mouse raton, float yawObjetivo)
+        {
+            float gradosPorPixel = GradosPorPixelInicial;
+            for (int i = 0; i < IntentosDeGiro; i++)
+            {
+                // La cámara se acomoda en LateUpdate: se mide ya asentada.
+                for (int f = 0; f < CuadrosParaAsentar; f++)
+                {
+                    yield return null;
+                }
+                float antes = jugador.Camara.transform.eulerAngles.y;
+                float error = Mathf.DeltaAngle(antes, yawObjetivo);
+                if (Mathf.Abs(error) < ToleranciaDeGiro)
+                {
+                    yield break;
+                }
+                float pixeles = error / gradosPorPixel;
+                Set(raton.delta, new Vector2(pixeles, 0f));
+                yield return null;
+                Set(raton.delta, Vector2.zero);
+                for (int f = 0; f < CuadrosParaAsentar; f++)
+                {
+                    yield return null;
+                }
+                float cambio = Mathf.DeltaAngle(antes, jugador.Camara.transform.eulerAngles.y);
+                if (Mathf.Abs(cambio) > 0.5f && Mathf.Abs(pixeles) > 0.5f)
+                {
+                    gradosPorPixel = Mathf.Max(0.001f, cambio / pixeles);
+                }
+            }
+        }
+
+        private static string Candidato(IJugador jugador)
+        {
+            foreach (MonoBehaviour m in ((Component)jugador).GetComponentsInChildren<MonoBehaviour>())
+            {
+                System.Reflection.PropertyInfo p = m.GetType().GetProperty("MontableCandidato");
+                if (p != null)
+                {
+                    object c = p.GetValue(m);
+                    return c is Component comp ? comp.name : (c == null ? "ninguno" : c.ToString());
+                }
+            }
+            return "?";
         }
 
         private static IEnumerator Esperar(float segundos)
@@ -70,6 +147,27 @@ namespace MechaCyberpunk.Tests.Vehiculos
             float fin = Time.time + segundos;
             while (Time.time < fin)
             {
+                yield return null;
+            }
+        }
+
+        // Suelta y vuelve a pulsar: una acción de botón solo ve el cambio de estado, no una tecla que ya estaba abajo.
+        private IEnumerator Sostener(KeyControl tecla)
+        {
+            yield return Soltar(tecla);
+            for (int i = 0; i < IntentosDeTecla && !tecla.isPressed; i++)
+            {
+                Press(tecla);
+                yield return null;
+            }
+        }
+
+        // Repite hasta que la tecla quede arriba de verdad (con varias cargas de carro seguidas un Release suelto a veces no se aplica).
+        private IEnumerator Soltar(KeyControl tecla)
+        {
+            for (int i = 0; i < IntentosDeTecla && (i == 0 || tecla.isPressed); i++)
+            {
+                Release(tecla);
                 yield return null;
             }
         }
@@ -144,9 +242,12 @@ namespace MechaCyberpunk.Tests.Vehiculos
             List<CarroEstacionado> estacionados = Estacionados();
             Assert.GreaterOrEqual(estacionados.Count, MinimoDeEstacionados);
             List<string> atorados = new List<string>();
+            Dictionary<CarroEstacionado, Pose> lugares = estacionados.ToDictionary(c => c, c => new Pose(c.transform.position, c.transform.rotation));
             foreach (CarroEstacionado estacionado in estacionados)
             {
                 CarroViejo carro = estacionado.GetComponent<CarroViejo>();
+                // Cada carro se prueba sin el calor del anterior (con calor alto la policía tumba al jugador y le quita el control).
+                calor.Borrar();
                 // Junto a la puerta del conductor, mirándola.
                 Vector3 punto = carro.PuntoSubida;
                 Vector3 posicion = punto - carro.transform.right * DistanciaAlSubir;
@@ -154,32 +255,58 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Vector3 mirada = punto - posicion;
                 mirada.y = 0f;
                 jugador.Colocar(new Pose(posicion, Quaternion.LookRotation(mirada.normalized, Vector3.up)));
+                yield return MirarHacia(jugador, raton, Quaternion.LookRotation(mirada.normalized, Vector3.up).eulerAngles.y);
                 yield return Esperar(0.4f);
                 float antes = calor.Valor;
 
                 yield return Tecla(teclado.eKey);
-                if (jugador.Modo != ModoJugador.Carro)
+                if (jugador.Modo != ModoJugador.Carro || !carro.Ocupado)
                 {
-                    atorados.Add(estacionado.name + " no dejó subir");
+                    atorados.Add(estacionado.name + " no dejó subir (modo " + jugador.Modo + ", ocupado " + carro.Ocupado + ", candidato " + Candidato(jugador) + ", puedeSubir " + carro.PuedeSubir + ", jugador " + ((Component)jugador).transform.position.ToString("F1") + " cam " + jugador.Camara.transform.eulerAngles.y.ToString("F0") + " punto " + carro.PuntoSubida.ToString("F1") + ")");
+                    if (jugador.Modo != ModoJugador.APie)
+                    {
+                        yield return Tecla(teclado.eKey);
+                    }
                     continue;
                 }
-                Assert.GreaterOrEqual(calor.Valor, antes + 25f, estacionado.name + ": robarlo sube el calor");
+                Assert.GreaterOrEqual(calor.Valor, antes + 25f, estacionado.name + ": robarlo sube el calor (antes " + antes + ", ahora " + calor.Valor + ")");
                 yield return Esperar(0.4f);
                 Vector3 inicio = carro.transform.position;
-                Press(teclado.wKey);
+                yield return Sostener(teclado.wKey);
                 yield return Esperar(SegundosDeManejo);
-                Release(teclado.wKey);
+                string estado = " [ctrl " + carro.TieneControl + " acel " + carro.EntradaActual.Acelerar + " w " + teclado.wKey.isPressed + " ruedas " + carro.RuedasEnPiso + " dormido " + carro.EstaDormido + " kin " + carro.GetComponent<Rigidbody>().isKinematic + " v " + carro.Velocidad + "]";
+                yield return Soltar(teclado.wKey);
                 float recorrido = Vector3.Distance(inicio, carro.transform.position);
                 if (recorrido < MetrosParaSalir)
                 {
-                    atorados.Add(estacionado.name + " (" + ModeloDe(estacionado.gameObject) + ") solo avanzó " + recorrido.ToString("F1") + " m en " + estacionado.transform.position.ToString("F0"));
+                    atorados.Add(estacionado.name + " (" + ModeloDe(estacionado.gameObject) + ") solo avanzó " + recorrido.ToString("F1") + " m en " + estacionado.transform.position.ToString("F0") + estado);
                 }
-                // Baja para seguir con el siguiente.
-                carro.PermitirBajarYa();
+                // Frena y baja (E) para seguir con el siguiente.
+                yield return Sostener(teclado.sKey);
+                float tope = Time.time + SegundosParaFrenar;
+                while (!carro.PuedeBajar && Time.time < tope)
+                {
+                    yield return null;
+                }
+                yield return Soltar(teclado.sKey);
                 yield return Tecla(teclado.eKey);
+                // Todos de vuelta a su lugar: el carro manejado puede empujar a otro estacionado más adelante en la calle.
+                if (jugador.Modo == ModoJugador.APie)
+                {
+                    foreach (KeyValuePair<CarroEstacionado, Pose> lugar in lugares)
+                    {
+                        Rigidbody cuerpo = lugar.Key.GetComponent<Rigidbody>();
+                        cuerpo.linearVelocity = Vector3.zero;
+                        cuerpo.angularVelocity = Vector3.zero;
+                        lugar.Key.transform.SetPositionAndRotation(lugar.Value.position, lugar.Value.rotation);
+                    }
+                    Physics.SyncTransforms();
+                }
                 if (jugador.Modo != ModoJugador.APie)
                 {
-                    atorados.Add(estacionado.name + " no dejó bajar");
+                    atorados.Add(estacionado.name + " no dejó bajar (acel " + carro.EntradaActual.Acelerar + " frena " + carro.EntradaActual.Frenar + " w " + teclado.wKey.isPressed + " s " + teclado.sKey.isPressed + " v " + carro.Velocidad.ToString("F2") + ", puedeBajar " + carro.PuedeBajar + " en " + carro.transform.position.ToString("F1") + ")");
+                    carro.PermitirBajarYa();
+                    yield return Tecla(teclado.eKey);
                 }
             }
             Assert.IsEmpty(atorados, "Carros atorados:\n" + string.Join("\n", atorados));

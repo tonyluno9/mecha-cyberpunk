@@ -34,6 +34,8 @@ namespace MechaCyberpunk.Arte.Editor
         private const float AlturaSobreElPiso = 0.45f;
         private const float AlturaBusqueda = 6f;
         private const float XCalleVertical = 47f;
+        private const float AlturaDelBarrido = 1.2f;
+        private const float DistanciaLibreAdelante = 10f;
 
         [MenuItem("Mecha Cyberpunk/T-511/Carros estacionados manejables")]
         public static void Aplicar()
@@ -66,21 +68,81 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     visual.gameObject.SetActive(false);
                 }
-                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaCarros + baraja[i] + ".prefab");
-                GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(prefab, raiz.transform);
-                carro.name = PrefijoCarro + (i + 1);
                 if (Physics.Raycast(new Vector3(posicion.x, AlturaBusqueda, posicion.z), Vector3.down, out RaycastHit piso, AlturaBusqueda * 2f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 {
                     posicion.y = piso.point.y + AlturaSobreElPiso;
                 }
-                carro.transform.SetPositionAndRotation(posicion, Quaternion.Euler(0f, giro, 0f));
-                Debug.Log("[Arte] T-511: " + carro.name + " = " + baraja[i] + " en " + posicion.ToString("F1") + " giro " + giro);
+                GameObject carro = ColocarQueCabe(raiz.transform, PrefijoCarro + (i + 1), baraja[i], posicion, giro, adorno.rotation.eulerAngles.y);
+                if (carro == null)
+                {
+                    continue;
+                }
+                Debug.Log("[Arte] T-511: " + carro.name + " = " + NombreModelo(carro) + " en " + carro.transform.position.ToString("F1") + " giro " + carro.transform.eulerAngles.y.ToString("F0"));
             }
             ConectarTrafico();
             Debug.Log("[Arte] T-511: " + adornos.Count + " carros estacionados manejables en " + NombreRaiz + ".");
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
             AssetDatabase.SaveAssets();
+        }
+
+        // Prueba, en orden, el modelo que tocó y luego los demás por tamaño, cada uno mirando al sentido del carril y al contrario, y corrido a lo largo de la calle
+        // si hace falta. Se queda con el primero que no choca con nada (barreras, postes, otros carros) y que tiene 10 m libres hacia adelante.
+        private static GameObject ColocarQueCabe(Transform raiz, string nombre, string modeloAsignado, Vector3 posicion, float giro, float giroDelAdorno)
+        {
+            List<string> orden = new List<string> { modeloAsignado };
+            orden.AddRange(Codigos.Where(c => c != modeloAsignado).OrderBy(c => c == "V08" ? 0 : 1).ThenBy(c => c));
+            float[] corrimientos = { 0f, 1.5f, -1.5f, 3f, -3f, 4.5f, -4.5f, 6f, -6f, 9f, -9f };
+            foreach (float corrimiento in corrimientos)
+            {
+                foreach (string codigo in orden)
+                {
+                    foreach (float vuelta in new[] { 0f, 180f })
+                    {
+                        float g = giro + vuelta;
+                        Vector3 p = posicion + Quaternion.Euler(0f, g, 0f) * Vector3.forward * corrimiento;
+                        GameObject prueba = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaCarros + codigo + ".prefab"), raiz);
+                        prueba.name = nombre;
+                        prueba.transform.SetPositionAndRotation(p, Quaternion.Euler(0f, g, 0f));
+                        Physics.SyncTransforms();
+                        if (Cabe(prueba))
+                        {
+                            return prueba;
+                        }
+                        Object.DestroyImmediate(prueba);
+                    }
+                }
+            }
+            Debug.LogWarning("[Arte] T-511: " + nombre + " en " + posicion.ToString("F1") + " no cabe en ningún modelo (barreras del retén); ese lugar queda sin carro.");
+            return null;
+        }
+
+        private static bool Cabe(GameObject carro)
+        {
+            foreach (string cuerpo in new[] { "Carroceria", "Cabina" })
+            {
+                BoxCollider caja = carro.transform.Find(cuerpo).GetComponent<BoxCollider>();
+                Vector3 centro = caja.transform.TransformPoint(caja.center);
+                Vector3 medio = Vector3.Scale(caja.size, caja.transform.lossyScale) * 0.5f;
+                foreach (Collider otro in Physics.OverlapBox(centro, medio, caja.transform.rotation, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                {
+                    if (!otro.transform.IsChildOf(carro.transform))
+                    {
+                        return false;
+                    }
+                }
+            }
+            // Diez metros libres hacia adelante (que no arranque contra una barrera).
+            BoxCollider cuerpoCaja = carro.transform.Find("Carroceria").GetComponent<BoxCollider>();
+            Vector3 origen = carro.transform.position + Vector3.up * AlturaDelBarrido + carro.transform.forward * (cuerpoCaja.size.z * cuerpoCaja.transform.lossyScale.z * 0.5f);
+            Vector3 medioBarrido = new Vector3(cuerpoCaja.size.x * cuerpoCaja.transform.lossyScale.x * 0.5f, AlturaDelBarrido * 0.5f, 0.1f);
+            return !Physics.BoxCast(origen, medioBarrido, carro.transform.forward, carro.transform.rotation, DistanciaLibreAdelante, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        }
+
+        private static string NombreModelo(GameObject carro)
+        {
+            Renderer r = carro.transform.Find("Visual_T511").GetComponentInChildren<Renderer>(true);
+            return r.sharedMaterial.name;
         }
 
         /// <summary>Los carros de adorno del barrio (los de la autopista elevada no cuentan), incluso los que ya estaban apagados.</summary>
