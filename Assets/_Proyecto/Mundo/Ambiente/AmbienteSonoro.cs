@@ -69,7 +69,9 @@ namespace MechaCyberpunk.Mundo.Ambiente
             bool hayLluvia = CalculoLluvia.DebeLlover(LluviaSigueJugador.Activa, false, deNoche, configLluvia.LluviaDeDia);
             Objetivo = CalculoAmbienteSonoro.Calcular(EnInterior(), deNoche, hayLluvia, config.Niveles);
             float dt = Time.unscaledDeltaTime;
-            volLluvia = CalculoAmbienteSonoro.Acercar(volLluvia, Objetivo.Lluvia, dt, config.SegundosCambio);
+            // T-512: de día la lluvia es ligera y suena menos.
+            float objetivoLluvia = Objetivo.Lluvia * CalculoLluvia.Intensidad(deNoche, configLluvia.FraccionDeDia);
+            volLluvia = CalculoAmbienteSonoro.Acercar(volLluvia, objetivoLluvia, dt, config.SegundosCambio);
             volNeon = CalculoAmbienteSonoro.Acercar(volNeon, Objetivo.Neon, dt, config.SegundosCambio);
             volTrafico = CalculoAmbienteSonoro.Acercar(volTrafico, Objetivo.Trafico, dt, config.SegundosCambio);
             volMusica = CalculoAmbienteSonoro.Acercar(volMusica, Objetivo.Musica, dt, config.SegundosCambio);

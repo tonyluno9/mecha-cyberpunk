@@ -76,10 +76,12 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Ambiente_AMediodia_NoHayLluviaNiNeon_SoloTrafico()
+        public IEnumerator Ambiente_AMediodia_LluviaLigeraSinNeon_YTrafico()
         {
             yield return Preparar(EscenaLugares.HoraMediodia);
-            Assert.AreEqual(0f, ambiente.VolumenLluvia, Margen);
+            // T-512: de día llueve ligero, así que la lluvia suena bajito.
+            Assert.Greater(ambiente.VolumenLluvia, Margen, "De día llueve ligero");
+            Assert.Less(ambiente.VolumenLluvia, 0.5f, "Más bajo que de noche");
             Assert.AreEqual(0f, ambiente.VolumenNeon, Margen);
             Assert.AreEqual(0f, ambiente.VolumenMusica, Margen);
             Assert.Greater(ambiente.VolumenTrafico, Margen);

@@ -427,3 +427,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: de noche entra al pasillo de El Mercado; luego vence a los SKULLS con DOÑA LUPE hasta que suelten la pistola; después camina por Neón Alto.
 - Observa: los puestos de tacos del pasillo son el modelo de arte (sin trompos de bloques, bancos rosas ni garrafón blanco) y ya no cuelga una caja gris a media altura; la pistola tirada gira y flota con una lucecita turquesa y el HUD dice "E · Recoger la pistola"; Neón Alto se ve verde azulado con acentos magenta, como la referencia.
 - Compara: docs/capturas/T-509-neon-alto-comparacion.png (referencia | antes | después) y T-509-mercado-comparacion.png.
+
+### T-512 Iluminación por zona
+- Haz: de noche entra al callejón de la emboscada y al pasillo de El Mercado, recorre El Tianguis por la calle principal, sube a una azotea; luego pon el reloj de día y sal a la calle.
+- Observa: lámparas cálidas y neón magenta en los muros (se ven los objetos y sigue oscuro), el portón de El Mercado más naranja, puestos en hileras a las dos orillas del Tianguis sin tapar el carril, techos con luz de luna y lluvia ligera también de día.
+- Compara: docs/capturas/T-512-<zona>-comparacion.png (callejon, entrada-mercado, tianguis, azotea, dia-lluvia, mercado-pasillo).

@@ -10,6 +10,9 @@ namespace MechaCyberpunk.Mundo.Datos
         [Tooltip("Si es verdadero llueve también de día; si no, solo de noche.")]
         [SerializeField] private bool lluviaDeDia;
 
+        [Tooltip("Fracción de las gotas y la niebla que caen de día (0 a 1): de día la lluvia es ligera (T-512).")]
+        [SerializeField, Range(0f, 1f)] private float fraccionDeDia = 0.3f;
+
         [Header("Gotas")]
         [Tooltip("Lado (m) de la caja de lluvia alrededor del jugador.")]
         [SerializeField, Min(5f)] private float ladoCaja = 30f;
@@ -58,6 +61,7 @@ namespace MechaCyberpunk.Mundo.Datos
         [SerializeField, Min(1)] private int maximoNubes = 80;
 
         public bool LluviaDeDia => lluviaDeDia;
+        public float FraccionDeDia => fraccionDeDia;
         public float LadoCaja => ladoCaja;
         public float AltoCaja => altoCaja;
         public float GotasPorSegundo => gotasPorSegundo;
