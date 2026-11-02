@@ -78,6 +78,8 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Torres_SonDe30A60ConAntenasYSinColliders()
         {
             Transform horizonte = raiz.Find("Horizonte");
+            // T-513: el fondo lejano (matte painting) las cubre y quedan apagadas; siguen en la escena.
+            Assert.IsFalse(horizonte.gameObject.activeSelf, "Apagadas por el fondo de T-513");
             Assert.GreaterOrEqual(horizonte.childCount, 30);
             Assert.LessOrEqual(horizonte.childCount, 60);
             Assert.AreEqual(0, horizonte.GetComponentsInChildren<Collider>().Length, "el horizonte no estorba la física");
