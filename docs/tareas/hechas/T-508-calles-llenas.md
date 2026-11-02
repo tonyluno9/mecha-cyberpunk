@@ -26,3 +26,4 @@ Todos muy por encima de 60 (T-507: tianguis 157, calle 161: sin costo medible).
 
 ## Bitácora
 - 2026-11-01: hecho; capturas revisadas con Read. Queda: callejón y mercado muy oscuros, los toldos casi no se ven desde el centro de la calle (se ven al caminar por la banqueta).
+- 2026-11-01: orquestador corrió RecorridoDemoPruebas (1/2: tramos 01-09 pasan, KO intermitente del bot en El Tianguis, ya conocido) y regeneró Builds/Demo (Build Finished, Result: Success).
