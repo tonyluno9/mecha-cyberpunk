@@ -170,6 +170,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             base.Setup();
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
+            MapasDePruebaVehiculos.Reiniciar(teclado, raton);
             sensibilidad = AssetDatabase.LoadAssetAtPath<ConfigCamaraLibre>(RutaConfigCamara).Sensibilidad;
             errores.Clear();
             Application.logMessageReceived += RecibirLog;
@@ -178,7 +179,21 @@ namespace MechaCyberpunk.Tests.Vehiculos
         public override void TearDown()
         {
             Application.logMessageReceived -= RecibirLog;
+            MapasDePruebaVehiculos.AntesDelTearDown(teclado, raton);
             base.TearDown();
+            MapasDePruebaVehiculos.DespuesDelTearDown();
+        }
+
+        // La escena del recorrido no se queda cargada: las pruebas que siguen arman su carro en la escena activa.
+        [UnityTearDown]
+        public IEnumerator DescargarEscena()
+        {
+            foreach (GameObject raiz in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                Object.Destroy(raiz);
+            }
+            Registros.LimpiarTodos();
+            yield return null;
         }
 
         private void RecibirLog(string mensaje, string pila, LogType tipo)

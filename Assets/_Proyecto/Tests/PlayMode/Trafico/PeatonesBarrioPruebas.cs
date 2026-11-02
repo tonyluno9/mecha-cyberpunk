@@ -115,7 +115,7 @@ namespace MechaCyberpunk.Tests.Trafico
                     for (float d = 0f; d <= largo; d += PasoMuestreo)
                     {
                         Vector3 punto = barrio.transform.TransformPoint(Vector3.Lerp(ruta[i], ruta[i + 1], d / largo));
-                        Collider[] choques = Physics.OverlapCapsule(punto + Vector3.up * AlturaInferior, punto + Vector3.up * AlturaSuperior, RadioCuerpo);
+                        Collider[] choques = Physics.OverlapCapsule(punto + Vector3.up * AlturaInferior, punto + Vector3.up * AlturaSuperior, RadioCuerpo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
                         foreach (Collider c in choques) { problemas.Add(c.name + "@" + punto.x.ToString("F0") + "," + punto.z.ToString("F0")); }
                     }
                 }
@@ -150,7 +150,7 @@ namespace MechaCyberpunk.Tests.Trafico
                     Vector3 local = barrio.transform.InverseTransformPoint(p.transform.position);
                     if (DistanciaARutas(local, rutas) > 0.05f) { problemas.Add(p.name + " fuera de ruta @" + local.x.ToString("F1") + "," + local.z.ToString("F1")); }
                     if (Mathf.Abs(local.y - AlturaBanqueta) > 0.05f) { problemas.Add(p.name + " fuera de la banqueta (y=" + local.y.ToString("F2") + ")"); }
-                    Collider[] choques = Physics.OverlapCapsule(p.transform.position + Vector3.up * AlturaInferior, p.transform.position + Vector3.up * AlturaSuperior, RadioCuerpo);
+                    Collider[] choques = Physics.OverlapCapsule(p.transform.position + Vector3.up * AlturaInferior, p.transform.position + Vector3.up * AlturaSuperior, RadioCuerpo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
                     foreach (Collider c in choques) { problemas.Add(p.name + " dentro de " + c.name); }
                 }
             }
