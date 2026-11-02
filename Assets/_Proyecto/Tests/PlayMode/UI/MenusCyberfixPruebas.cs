@@ -242,12 +242,13 @@ namespace MechaCyberpunk.Tests.UI
 
             // Aviso de zona conquistada.
             MethodInfo avisar = typeof(HudTerritorio).GetMethod("Avisar", BindingFlags.NonPublic | BindingFlags.Instance);
-            avisar.Invoke(zona, new object[] { "EL TIANGUIS ES DE TU PANDILLA", FormatoTerritorio.ColorDe(IdPandilla.Jugador), 30f });
+            avisar.Invoke(zona, new object[] { "EL TIANGUIS ES DE TU PANDILLA", FormatoTerritorio.ColorDe(IdPandilla.Jugador), 30f, MechaCyberpunk.UI.Hud.TipoAviso.Pandilla });
             yield return null;
             yield return null;
-            Assert.IsTrue(zona.transform.Find("CanvasTerritorio/PanelAviso").gameObject.activeSelf, "El aviso lleva su marco");
+            Assert.IsTrue(MechaCyberpunk.UI.Hud.ColaAvisos.Actual.Visible, "T-523: el aviso de zona sale por la cola del centro");
+            StringAssert.Contains("TIANGUIS", zona.TextoAviso.text);
             Capturar("aviso-zona", camara);
-            avisar.Invoke(zona, new object[] { string.Empty, Color.white, 0f });
+            avisar.Invoke(zona, new object[] { string.Empty, Color.white, 0f, MechaCyberpunk.UI.Hud.TipoAviso.Neutro });
 
             // Mapa.
             PantallaMapa mapa = UnityEngine.Object.FindFirstObjectByType<PantallaMapa>();

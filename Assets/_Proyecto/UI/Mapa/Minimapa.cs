@@ -26,15 +26,16 @@ namespace MechaCyberpunk.UI.Mapa
         [Min(5f)] [SerializeField] private float radioMetros = 60f;
         // T-522: las manzanas solo se tiñen un poco del color del dueño (antes 55 %: una zona magenta se veía como un relleno plano) y el
         // fondo es azul muy oscuro, para que se lean las calles como en el mockup. Constantes: el valor viejo seguía guardado en la escena.
-        private const float AlfaManzanas = 0.22f;
+        private const float AlfaManzanas = 0.14f;
+        // T-523: las calles claras (gris azulado con un toque de turquesa) y las manzanas casi negras, para que se lean las calles como en el mockup.
+        private static readonly Color ColorCalles = new Color(0.66f, 0.82f, 0.84f, 1f);
         private const float AlfaFondo = 0.9f;
         private static readonly Color FondoOscuro = new Color(0.03f, 0.04f, 0.08f, 1f);
         [Tooltip("Lado de los iconos de lugar (px a 1920x1080).")]
         [Min(8f)] [SerializeField] private float ladoIcono = 30f;
-        [Tooltip("Lado de la flecha del jugador (px).")]
-        [Min(4f)] [SerializeField] private float ladoFlecha = 22f;
-        [Tooltip("Rombo del objetivo de punta a punta (px).")]
-        [Min(4f)] [SerializeField] private float diagonalRombo = 24f;
+        // T-523: el jugador y el objetivo, más grandes que antes (22 y 24) para verse sobre las calles claras; constantes por el valor viejo del prefab.
+        private const float ladoFlecha = 28f;
+        private const float diagonalRombo = 30f;
         [Tooltip("Lado del punto marcado (px).")]
         [Min(4f)] [SerializeField] private float ladoPunto = 22f;
         [Tooltip("Lo que se pega al borde queda a esta distancia de él, hacia dentro (px).")]
@@ -108,7 +109,7 @@ namespace MechaCyberpunk.UI.Mapa
 
             mundo = Centrado(mascara.transform, "Mundo");
             desplazado = Centrado(mundo, "Desplazado");
-            calles = KitUI.CrearImagen(desplazado, "Calles", Color.Lerp(e.Calles, e.Turquesa, 0.3f));
+            calles = KitUI.CrearImagen(desplazado, "Calles", ColorCalles);
             manzanas = new Image[GeometriaBarrio.Cantidad];
             for (int i = 0; i < manzanas.Length; i++)
             {

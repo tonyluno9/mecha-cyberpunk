@@ -2,6 +2,7 @@ using System.Collections;
 using System.IO;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Hud;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -156,7 +157,7 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator Aviso_ConAvisoDeDineroYRenta_NoSeEncimanConElDeLiga()
+        public IEnumerator Aviso_ConAvisoDeDineroYRenta_SalenPorLaColaYNoSeDibujanEnSuSitio()
         {
             yield return Preparar();
             ligas.Poner(Sotano, RivalesPorLiga, 0);
@@ -164,14 +165,12 @@ namespace MechaCyberpunk.Tests.UI
             Registro<ICartera>.Actual?.Abonar(Premio, MotivoDinero.Premio);
             yield return null;
 
-            Assert.IsTrue(hud.GrupoAvisoLiga.activeSelf);
-            Rect liga = RectEnPantalla(hud.GrupoAvisoLiga);
-            Rect objetivo = RectEnPantalla(hud.GrupoObjetivo);
-            Rect renta = RectEnPantalla(hud.GrupoRenta);
-            Assert.IsFalse(liga.Overlaps(renta), "No tapa la línea de renta");
-            Assert.IsFalse(liga.Overlaps(RectEnPantalla(hud.GrupoAvisoDinero)), "No tapa el aviso de dinero");
-            Assert.IsFalse(liga.Overlaps(RectEnPantalla(hud.GrupoDinero)), "No tapa el dinero");
-            Assert.IsFalse(liga.Overlaps(objetivo), "No tapa el objetivo");
+            // T-523: el aviso de liga y el de dinero ya no se dibujan en su sitio (no hay con qué encimarse): salen por la cola del centro, de a uno.
+            Assert.IsTrue(hud.GrupoAvisoLiga.activeSelf, "el estado del aviso se conserva");
+            Assert.AreEqual(0f, hud.GrupoAvisoLiga.GetComponent<CanvasGroup>().alpha, "no se dibuja en su sitio");
+            Assert.AreEqual(0f, hud.GrupoAvisoDinero.GetComponent<CanvasGroup>().alpha, "no se dibuja en su sitio");
+            Assert.IsTrue(ColaAvisos.Actual.Visible);
+            Assert.LessOrEqual(ColaAvisos.Actual.EnEspera, 1, "uno a la vez: lo demás espera");
         }
 
         [UnityTest]

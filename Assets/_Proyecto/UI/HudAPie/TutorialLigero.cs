@@ -13,7 +13,7 @@ namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
     /// Tutorial ligero (T-441): la primera vez que el jugador puede hacer cada acción (moverse, apuntar, disparar, recargar, cubrirse,
-    /// rodar, subir al carro, robar, mapa y misiones) sale un aviso corto arriba. Se va al hacer la acción o a los pocos segundos y no
+    /// rodar, subir al carro, robar, mapa y misiones) sale un aviso corto abajo, al centro y pequeño (T-523). Se va al hacer la acción o a los pocos segundos y no
     /// vuelve. Lo visto se guarda en las opciones; la opción TUTORIAL lo apaga. Las reglas están en <see cref="ReglaTutorial"/>.
     /// Lo agrega <see cref="HudAPie"/>; construye su propio canvas.
     /// </summary>
@@ -30,10 +30,10 @@ namespace MechaCyberpunk.UI.Hud
         [Min(0f)] [SerializeField] private float segundosPausa = 1.5f;
 
         [Header("Medidas (px a 1920x1080)")]
-        [Tooltip("Distancia desde el borde de arriba a la que sale el aviso (px).")]
-        [Min(0f)] [SerializeField] private float margenArriba = 150f;
+        [Tooltip("Distancia desde el borde de abajo a la que sale el aviso (px). T-523: abajo al centro, pequeño.")]
+        [Min(0f)] [SerializeField] private float margenAbajo = 40f;
         [Tooltip("Tamaño del cuadro del aviso (px).")]
-        [SerializeField] private Vector2 tamanoCuadro = new Vector2(1100f, 64f);
+        [SerializeField] private Vector2 tamanoCuadro = new Vector2(760f, 40f);
 
         private ReglaTutorial regla;
         private GameObject cuadro;
@@ -55,10 +55,10 @@ namespace MechaCyberpunk.UI.Hud
         {
             regla = new ReglaTutorial(segundosAviso, segundosPausa);
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasTutorial", OrdenCanvas);
-            RectTransform panel = KitUI.CrearPanel(canvas.transform, "Aviso", tamanoCuadro);
-            KitUI.Colocar(panel, new Vector2(0.5f, 1f), new Vector2(0f, -margenArriba), tamanoCuadro);
+            RectTransform panel = KitUI.CrearImagen(canvas.transform, "Aviso", new Color(0.02f, 0.02f, 0.05f, 0.55f)).rectTransform;
+            KitUI.Colocar(panel, new Vector2(0.5f, 0f), new Vector2(0f, margenAbajo), tamanoCuadro);
             cuadro = panel.gameObject;
-            texto = KitUI.CrearTexto(panel, "Texto", RolTexto.Hud, TextAnchor.MiddleCenter);
+            texto = KitUI.CrearTexto(panel, "Texto", RolTexto.Ayuda, TextAnchor.MiddleCenter);
             KitUI.Estirar(texto.rectTransform);
             texto.color = KitUI.Estilo.Turquesa;
             cuadro.SetActive(false);

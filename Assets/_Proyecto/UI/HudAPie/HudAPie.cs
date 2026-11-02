@@ -100,6 +100,7 @@ namespace MechaCyberpunk.UI.Hud
         private string nivelBarrioAviso = string.Empty;
         private string nivelCorporacionesAviso = string.Empty;
         private float avisoReputacionRestante;
+        private bool reputacionPorPublicar;
         private ServicioMisiones misiones;
         private string avisoMision = string.Empty;
         private bool avisoMisionCumplida;
@@ -215,6 +216,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<AvisoMensaje>();
             }
+            if (GetComponent<ColaAvisos>() == null)
+            {
+                gameObject.AddComponent<ColaAvisos>();
+            }
             if (GetComponent<HudImplantes>() == null)
             {
                 gameObject.AddComponent<HudImplantes>();
@@ -266,8 +271,29 @@ namespace MechaCyberpunk.UI.Hud
             }
             textoCancion.text = config.TextoCancionEspera;
 
+            // T-523: los avisos de dinero, liga, reputación y misión ya no se dibujan en su sitio: salen por la cola del centro. Los grupos siguen
+            // llevando el estado (texto y tiempo) para quien lo lea, pero sin dibujarse.
+            NoDibujar(grupoAvisoDinero);
+            NoDibujar(grupoAvisoLiga);
+            NoDibujar(grupoAvisoReputacion);
+            NoDibujar(grupoAvisoMision);
+
             listo = true;
             OcultarTodo();
+        }
+
+        private static void NoDibujar(GameObject grupo)
+        {
+            if (grupo == null)
+            {
+                return;
+            }
+            CanvasGroup lienzo = grupo.GetComponent<CanvasGroup>();
+            if (lienzo == null)
+            {
+                lienzo = grupo.AddComponent<CanvasGroup>();
+            }
+            lienzo.alpha = 0f;
         }
 
         private void OnEnable()
@@ -364,9 +390,14 @@ namespace MechaCyberpunk.UI.Hud
             DesvincularLlamado();
         }
 
+        /// <summary>Cambió la canción de la radio: queda en el texto (sin dibujarse, T-523) y sale un aviso breve en la cola.</summary>
         public void MostrarCancion(string titulo)
         {
             textoCancion.text = string.IsNullOrEmpty(titulo) ? config.TextoCancionEspera : titulo;
+            if (!string.IsNullOrEmpty(titulo))
+            {
+                ColaAvisos.Publicar("♪ " + titulo, PrioridadAviso.Baja, TipoAviso.Neutro);
+            }
         }
 
         private void AlAgregarJugador(IJugador nuevo) => Vincular(nuevo);
@@ -484,7 +515,7 @@ namespace MechaCyberpunk.UI.Hud
             grupoVida.SetActive(aPie);
             grupoMira.SetActive(aPie && MiraVisible());
             grupoArma.SetActive(aPie);
-            grupoCancion.SetActive(modo != ModoJugador.Mecha);
+            grupoCancion.SetActive(false); // T-523: sin línea fija de radio
             RefrescarObjetivo();
             RefrescarCalor();
             RefrescarDinero();
@@ -692,6 +723,11 @@ namespace MechaCyberpunk.UI.Hud
             }
             ligaPendiente = liga;
             avisoLigaRestante = config.SegundosAvisoLiga;
+            if (ligas != null)
+            {
+                (string linea1, string linea2) = FormatoHud.AvisoLiga(liga, ligas, config);
+                ColaAvisos.Publicar(linea2.Length > 0 ? linea1 + " · " + linea2 : linea1, PrioridadAviso.Alta, TipoAviso.Bueno, config.SegundosAvisoLiga);
+            }
             RefrescarAvisoLiga();
         }
 
@@ -849,6 +885,7 @@ namespace MechaCyberpunk.UI.Hud
 
         private void IniciarAvisoReputacion()
         {
+            reputacionPorPublicar = true;
             if (avisoReputacionRestante <= 0f)
             {
                 deltaBarrioAviso = 0;
@@ -875,6 +912,12 @@ namespace MechaCyberpunk.UI.Hud
             {
                 string corporaciones = FormatoHud.TextoNivel(TipoReputacion.Corporaciones, nivelCorporacionesAviso, config);
                 segunda = segunda.Length > 0 ? segunda + config.SeparadorAviso + corporaciones : corporaciones;
+            }
+            if (reputacionPorPublicar && avisoReputacionRestante > 0f && primera.Length + segunda.Length > 0)
+            {
+                reputacionPorPublicar = false;
+                ColaAvisos.Publicar(segunda.Length > 0 ? primera + " · " + segunda : primera, PrioridadAviso.Normal, TipoAviso.Neutro,
+                    config.SegundosAvisoReputacion, "reputacion");
             }
             textoAvisoReputacion.text = primera;
             textoAvisoReputacion.color = config.ColorAvisoReputacion;
@@ -925,6 +968,7 @@ namespace MechaCyberpunk.UI.Hud
             avisoMision = FormatoHud.TextoMisionTerminada(cumplida, resumen, config);
             avisoMisionCumplida = cumplida;
             avisoMisionRestante = config.SegundosAvisoMision;
+            ColaAvisos.Publicar(avisoMision, PrioridadAviso.Alta, cumplida ? TipoAviso.Bueno : TipoAviso.Malo, config.SegundosAvisoMision);
             RefrescarAvisosMision();
         }
 
@@ -938,6 +982,7 @@ namespace MechaCyberpunk.UI.Hud
             avisoMision = string.Format(formatoAvisoImplante, nombre);
             avisoMisionCumplida = true;
             avisoMisionRestante = config.SegundosAvisoMision;
+            ColaAvisos.Publicar(avisoMision, PrioridadAviso.Alta, TipoAviso.Bueno, config.SegundosAvisoMision);
             RefrescarAvisosMision();
         }
 
@@ -1022,6 +1067,7 @@ namespace MechaCyberpunk.UI.Hud
             {
                 return;
             }
+            ColaAvisos.Publicar(aviso, PrioridadAviso.Baja, diferencia > 0 ? TipoAviso.Dinero : TipoAviso.Malo, config.SegundosAvisoDinero);
             textoAvisoDinero.text = aviso;
             textoAvisoDinero.color = diferencia > 0 ? config.ColorTexto : config.ColorAviso;
             avisoDineroRestante = config.SegundosAvisoDinero;

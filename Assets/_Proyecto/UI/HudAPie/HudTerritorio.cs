@@ -16,8 +16,6 @@ namespace MechaCyberpunk.UI.Hud
         public const int OrdenCanvas = 10;
         private const float MaximoRespeto = 100f;
         private const float AnchoAviso = 1400f;
-        private const float AnchoPanelAviso = 1000f;
-        private const float AltoExtraAviso = 24f;
 
         [Tooltip("Segundos que dura el aviso de conquista (s).")]
         [Min(0.5f)] [SerializeField] private float segundosConquista = 3f;
@@ -27,7 +25,6 @@ namespace MechaCyberpunk.UI.Hud
         private Text textoZona;
         private Text textoAviso;
         private RectTransform panelZona;
-        private RectTransform panelAviso;
         private Image insignia;
         private Image rellenoRespeto;
         private ITerritorio territorio;
@@ -67,15 +64,12 @@ namespace MechaCyberpunk.UI.Hud
             rellenoRespeto = KitUI.CrearImagen(huecoRespeto.transform, "Respeto", Color.white);
             KitUI.Estirar(rellenoRespeto.rectTransform);
             panelZona.gameObject.SetActive(false);
-            // T-522: el aviso ("ES DE TU PANDILLA", "EL JEFE TE BUSCA") va dentro de un marco oscuro.
-            panelAviso = KitUI.CrearPanelMarco(canvas.transform, "PanelAviso", 0.92f).rectTransform;
-            RanuraHud ranuraAviso = DisposicionHud.AvisoZona;
-            KitUI.Colocar(panelAviso, ranuraAviso.Ancla, ranuraAviso.Posicion + new Vector2(0f, AltoExtraAviso * 0.5f), new Vector2(AnchoPanelAviso, ranuraAviso.Alto + AltoExtraAviso));
-            panelAviso.gameObject.SetActive(false);
             textoAviso = KitUI.CrearTexto(canvas.transform, "Aviso", RolTexto.Encabezado, TextAnchor.MiddleCenter);
             KitUI.Colocar(textoAviso.rectTransform, DisposicionHud.AvisoZona, AnchoAviso);
             textoZona.text = string.Empty;
             textoAviso.text = string.Empty;
+            // T-523: los avisos de zona salen por la cola del centro; aquí solo queda el texto como dato, sin dibujarse.
+            textoAviso.enabled = false;
         }
 
         private void OnDisable()
@@ -90,7 +84,7 @@ namespace MechaCyberpunk.UI.Hud
 
         // T-429: lo que pagaron tus negocios al cambiar el día.
         private void AlPagarNegocios(int total) =>
-            Avisar(FormatoTerritorio.Cortar(ServicioNegocios.TextoPago(total)), FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista);
+            Avisar(FormatoTerritorio.Cortar(ServicioNegocios.TextoPago(total)), FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista, TipoAviso.Dinero);
 
         private void Desvincular()
         {
@@ -162,11 +156,6 @@ namespace MechaCyberpunk.UI.Hud
             {
                 textoAviso.text = string.Empty;
             }
-            bool hayAviso = textoAviso.text.Length > 0;
-            if (panelAviso.gameObject.activeSelf != hayAviso)
-            {
-                panelAviso.gameObject.SetActive(hayAviso);
-            }
         }
 
         private void AlCambiar(string zona)
@@ -177,20 +166,21 @@ namespace MechaCyberpunk.UI.Hud
             }
             else if (jefesAvisados.Add(zona))
             {
-                Avisar(FormatoTerritorio.Cortar("¡EL JEFE DE " + territorio.Nombre(zona) + " TE BUSCA!"), FormatoTerritorio.ColorDe(territorio.Dueno(zona)), segundosJefe);
+                Avisar(FormatoTerritorio.Cortar("¡EL JEFE DE " + territorio.Nombre(zona) + " TE BUSCA!"), FormatoTerritorio.ColorDe(territorio.Dueno(zona)), segundosJefe, TipoAviso.Malo);
             }
         }
 
         private void AlConquistar(string zona, IdPandilla anterior)
         {
-            Avisar(FormatoTerritorio.Cortar(territorio.Nombre(zona) + " ES DE " + FormatoTerritorio.NombreDe(IdPandilla.Jugador)), FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista);
+            Avisar(FormatoTerritorio.Cortar(territorio.Nombre(zona) + " ES DE " + FormatoTerritorio.NombreDe(IdPandilla.Jugador)), FormatoTerritorio.ColorDe(IdPandilla.Jugador), segundosConquista, TipoAviso.Pandilla);
         }
 
-        private void Avisar(string texto, Color color, float segundos)
+        private void Avisar(string texto, Color color, float segundos, TipoAviso tipo)
         {
             textoAviso.text = texto;
             textoAviso.color = color;
             finAviso = Time.unscaledTime + segundos;
+            ColaAvisos.Publicar(texto, PrioridadAviso.Alta, tipo, segundos);
         }
     }
 }
