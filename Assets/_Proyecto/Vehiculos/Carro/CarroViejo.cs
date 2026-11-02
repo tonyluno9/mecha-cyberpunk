@@ -30,6 +30,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const string AccionGirar = "Girar";
         private const string AccionFrenoMano = "FrenoMano";
         private const int RuedasTotales = 4;
+        private const float UmbralReposo = 0.05f;
+        private const float SegundosParaDormir = 1.5f;
         private const int RuedasMinimasParaGirar = 2;
         private const int MaxImpactosPorRayo = 8;
         private const float CompresionMaximaPermitida = 0.8f;
@@ -71,6 +73,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private InputAction frenoMano;
         private ParametrosManejo parametros;
         private bool listo;
+        private float segundosEnReposo;
+        private float velocidadEnTrafico;
+        private Vector3 posicionAnterior;
         private bool salidaForzada;
         private readonly RaycastHit[] impactosSalida = new RaycastHit[MaxImpactosSalida];
 
@@ -79,6 +84,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         /// <summary>Rapidez sin signo (m/s).</summary>
         public float Rapidez => cuerpo != null ? cuerpo.linearVelocity.magnitude : 0f;
+
+        /// <summary>True mientras el carro anda por la calle como tráfico (T-511): cuerpo cinemático que mueve otro script; no maneja su física.</summary>
+        public bool EstaEnTrafico => cuerpo != null && cuerpo.isKinematic;
+
+        /// <summary>True si el cuerpo está dormido (carro estacionado en reposo: no gasta física).</summary>
+        public bool EstaDormido => cuerpo != null && cuerpo.IsSleeping();
 
         /// <summary>Cuántas de las 4 ruedas tocan el piso en este momento.</summary>
         public int RuedasEnPiso { get; private set; }
@@ -152,7 +163,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public string Nombre => "Carro viejo";
         public Vector3 PuntoSubida => puntoSubida.position;
         public bool Ocupado { get; private set; }
-        public bool PuedeSubir => listo && !Ocupado;
+        public bool PuedeSubir => listo && !Ocupado && (!EstaEnTrafico || velocidadEnTrafico < config.RapidezMaximaParaBajar);
         public Transform Asiento => asiento;
         public Camera Camara => camaraCarro.Camara;
         public event Action<bool> OcupadoCambio;
@@ -254,6 +265,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public void TomarControl(bool tomar)
         {
             TieneControl = tomar;
+            if (tomar && cuerpo != null && !cuerpo.isKinematic)
+            {
+                cuerpo.WakeUp();
+                segundosEnReposo = 0f;
+            }
             if (!tomar)
             {
                 EntradaActual = default;
@@ -308,6 +324,17 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
 
             float dt = Time.fixedDeltaTime;
+            if (cuerpo.isKinematic)
+            {
+                // Tráfico: otro script lo mueve; solo se estima su rapidez (para saber si está detenido y se puede subir).
+                velocidadEnTrafico = (transform.position - posicionAnterior).magnitude / dt;
+                posicionAnterior = transform.position;
+                return;
+            }
+            if (!TieneControl && cuerpo.IsSleeping())
+            {
+                return;
+            }
             Transform t = transform;
             Vector3 arriba = t.up;
             Vector3 adelante = t.forward;
@@ -336,9 +363,23 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 AplicarManejo(puntos, enPiso, centroMasa, adelante, derecha, arriba, dt);
             }
             AplicarAntivuelco(arriba);
+            DormirSiEstaQuieto(dt);
         }
 
         private readonly Vector3[] puntosPiso = new Vector3[RuedasTotales];
+
+        // T-511: un carro sin conductor que lleva un rato quieto sobre sus ruedas se duerme: dormido no cuesta física (hay decenas estacionados).
+        private void DormirSiEstaQuieto(float dt)
+        {
+            bool quieto = !TieneControl && !Ocupado && RuedasEnPiso >= RuedasMinimasParaGirar
+                && cuerpo.linearVelocity.sqrMagnitude < UmbralReposo * UmbralReposo && cuerpo.angularVelocity.sqrMagnitude < UmbralReposo * UmbralReposo;
+            segundosEnReposo = quieto ? segundosEnReposo + dt : 0f;
+            if (segundosEnReposo >= SegundosParaDormir)
+            {
+                cuerpo.Sleep();
+                segundosEnReposo = 0f;
+            }
+        }
 
         private bool AplicarSuspension(Transform rueda, Vector3 arriba, out Vector3 puntoContacto)
         {
