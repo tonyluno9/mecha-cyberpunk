@@ -212,6 +212,7 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 | T-524 | Pulido 5: título con degradado suave (bug del sprite en el prefab), barra de calor siempre visible, panel de zona con nombre grande y RESPETO | hecha | [T-524](tareas/hechas/T-524-menu-degradado.md) |
 | T-510 | Personajes nuevos: SkullHombre (jefe SKULLS), Doctor, Inventor, Hacker, RobotHombre (peatones y gente), GuardiaNova (3 guardias en Neón Alto); man con su textura (antes negro) y en colores por pandilla; gente de banqueta con vida (camina, platica, respira) | hecha | [T-510](tareas/hechas/T-510-personajes-nuevos.md) |
 | T-511 | Carros reales y todos robables: V02-V08 importados, 16 carros estacionados manejables y robables de los 8 modelos (sin carros de adorno), tráfico con modelos reales que se roba detenido (el conductor huye), ruedas de greybox ocultas y cámara por modelo | hecha | [T-511](tareas/hechas/T-511-carros-reales.md) |
+| T-509 | Cierre del pulido: puestos de tacos del pasillo de El Mercado con el modelo C12 y sin caja colgada, ningún modelo con material liso, pistola tirada que gira y brilla ("E · Recoger la pistola"), Neón Alto verde azulado como la referencia | hecha | [T-509](tareas/hechas/T-509-cierre-pulido.md) |
 
 ## Cierre de la Parte A (ciudad como las referencias): FPS de noche por zona
 Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x1080, calidad Medio, hora 23, Logs/med505-despues/medicion.txt). Meta: 60.

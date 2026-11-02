@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Caja de Neón Alto (x, z) para las luces y farolas verdes.</summary>
         public static readonly Vector2 ZonaMin = new Vector2(34f, 3f);
         public static readonly Vector2 ZonaMax = new Vector2(60f, 93f);
-        public static readonly Color FarolaVerde = new Color(0.62f, 1f, 0.8f);
+        public static readonly Color FarolaVerde = new Color(0.55f, 1f, 0.85f);
 
         private static readonly StringBuilder Informe = new StringBuilder();
 
@@ -60,6 +60,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform raiz = new GameObject(NombreRaiz).transform;
 
             PonerPuestosTacos();
+            QuitarCajaColgada();
             RetexturarModelos();
             NeonAltoVerde(raiz);
 
@@ -102,6 +103,24 @@ namespace MechaCyberpunk.Arte.Editor
                 n++;
             }
             Informe.AppendLine("Puestos de tacos cambiados por C12: " + n);
+        }
+
+        public const string NombreCajaColgada = "CY07a_PlataformaDron_T504";
+
+        // La plataforma de dron que T-504 colgó a media altura en el pasillo de El Mercado se lee como una caja gris colgando: se apaga.
+        private static void QuitarCajaColgada()
+        {
+            int n = 0;
+            foreach (Transform t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (t.name == NombreCajaColgada && t.gameObject.activeSelf)
+                {
+                    t.gameObject.SetActive(false);
+                    EditorUtility.SetDirty(t.gameObject);
+                    n++;
+                }
+            }
+            Informe.AppendLine("Caja colgada del pasillo (plataforma de dron) apagada: " + n);
         }
 
         // ------------------------------------------------------------------ resto de modelos lisos del kit
@@ -154,23 +173,23 @@ namespace MechaCyberpunk.Arte.Editor
             }
             perfil.components.Clear();
             ColorAdjustments ca = perfil.Add<ColorAdjustments>(true);
-            ca.postExposure.Override(0.45f);
-            ca.saturation.Override(26f);
+            ca.postExposure.Override(0.3f);
+            ca.saturation.Override(12f);
             ca.contrast.Override(8f);
-            ca.colorFilter.Override(new Color(0.55f, 1.15f, 0.72f));
+            ca.colorFilter.Override(new Color(0.82f, 1.04f, 0.95f));
             WhiteBalance wb = perfil.Add<WhiteBalance>(true);
-            wb.temperature.Override(-18f);
-            wb.tint.Override(-80f);
+            wb.temperature.Override(-12f);
+            wb.tint.Override(-28f);
             ShadowsMidtonesHighlights smh = perfil.Add<ShadowsMidtonesHighlights>(true);
-            smh.shadows.Override(new Vector4(0.55f, 1.0f, 0.85f, -0.15f));
-            smh.midtones.Override(new Vector4(0.8f, 1.1f, 0.85f, 0f));
-            smh.highlights.Override(new Vector4(1.05f, 0.85f, 1.05f, 0f));
+            smh.shadows.Override(new Vector4(0.75f, 1.0f, 0.95f, -0.1f));
+            smh.midtones.Override(new Vector4(0.92f, 1.03f, 0.97f, 0f));
+            smh.highlights.Override(new Vector4(1.08f, 0.9f, 1.04f, 0f));
             Vignette vi = perfil.Add<Vignette>(true);
             vi.intensity.Override(0.24f);
             foreach (VolumeComponent c in new VolumeComponent[] { ca, wb, smh, vi }) { AssetDatabase.AddObjectToAsset(c, perfil); }
             EditorUtility.SetDirty(perfil);
             AssetDatabase.SaveAssets();
-            Informe.AppendLine("Perfil de Neón Alto: filtro verde, balance verde (tinte -80), sombras verde azulado, luces altas magenta");
+            Informe.AppendLine("Perfil de Neón Alto: filtro verde azulado suave, tinte -28, sombras verde azulado, luces altas magenta (los acentos magenta y amarillos conservan su color)");
 
             // Farolas de la zona: verde frío en vez de naranja.
             int farolas = 0;
@@ -189,7 +208,7 @@ namespace MechaCyberpunk.Arte.Editor
             Material niebla = Mat("Niebla_Verde");
             if (niebla != null)
             {
-                niebla.SetColor("_BaseColor", new Color(0.14f, 0.75f, 0.38f, 0.34f));
+                niebla.SetColor("_BaseColor", new Color(0.2f, 0.55f, 0.48f, 0.3f));
                 EditorUtility.SetDirty(niebla);
             }
 
@@ -211,7 +230,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Material m = Mat(n);
                 if (m == null) { continue; }
-                m.SetColor("_EmissionColor", new Color(0.7f, 1.3f, 0.85f) * (n.Contains("E03") ? 1.3f : 2.2f));
+                m.SetColor("_EmissionColor", new Color(0.85f, 1.15f, 0.95f) * (n.Contains("E03") ? 1.3f : 2.2f));
                 EditorUtility.SetDirty(m);
             }
 
@@ -221,12 +240,12 @@ namespace MechaCyberpunk.Arte.Editor
             float[] zs = { 10f, 18f, 26f, 34f, 42f, 50f, 58f, 66f, 74f, 82f };
             for (int i = 0; i < zs.Length; i++)
             {
-                bool magenta = i % 4 == 3;
+                bool magenta = i % 3 == 2;
                 Light l = new GameObject(magenta ? "Luz_Magenta_" + i : "Luz_Verde_" + i).AddComponent<Light>();
                 l.transform.SetParent(g, false);
                 l.transform.position = new Vector3(i % 2 == 0 ? 43.5f : 50.5f, 4.2f, zs[i]);
                 l.type = LightType.Point;
-                l.color = magenta ? new Color(1f, 0.15f, 0.8f) : new Color(0.35f, 1f, 0.45f);
+                l.color = magenta ? new Color(1f, 0.15f, 0.8f) : new Color(0.3f, 1f, 0.7f);
                 l.intensity = magenta ? 55f : 80f;
                 l.range = 14f;
                 l.shadows = LightShadows.None;

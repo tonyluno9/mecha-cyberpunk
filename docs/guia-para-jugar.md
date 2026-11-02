@@ -422,3 +422,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: camina por la calle principal y las cruzadas; acércate a cualquier carro estacionado, pulsa E y manéjalo. Asusta al tráfico con un disparo y roba uno que se haya detenido.
 - Observa: ya no hay carros de adorno: los 16 estacionados son de los 8 modelos nuevos, suenan la alarma y suben el calor al robarlos; el conductor del tráfico se baja y huye; no se ven ruedas de cilindro y la cámara queda a la altura de cada carro.
 - Compara: docs/capturas/T-511-modelos.png (los 8 modelos).
+
+### T-509 Cierre del pulido
+- Haz: de noche entra al pasillo de El Mercado; luego vence a los SKULLS con DOÑA LUPE hasta que suelten la pistola; después camina por Neón Alto.
+- Observa: los puestos de tacos del pasillo son el modelo de arte (sin trompos de bloques, bancos rosas ni garrafón blanco) y ya no cuelga una caja gris a media altura; la pistola tirada gira y flota con una lucecita turquesa y el HUD dice "E · Recoger la pistola"; Neón Alto se ve verde azulado con acentos magenta, como la referencia.
+- Compara: docs/capturas/T-509-neon-alto-comparacion.png (referencia | antes | después) y T-509-mercado-comparacion.png.
