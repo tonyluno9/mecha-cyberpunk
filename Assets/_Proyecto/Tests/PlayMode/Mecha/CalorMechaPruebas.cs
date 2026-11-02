@@ -218,7 +218,7 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.AreEqual(alBajar - 20f, calor.Valor, 1.5f, "Tras 10 s de retraso, 4 s enfriando a 5 por segundo");
 
             HudAPie hud = Object.FindFirstObjectByType<HudAPie>();
-            Assert.AreEqual(calor.Nivel > 0, hud.GrupoCalor.activeSelf, "A pie, el HUD muestra el calor solo si hay nivel");
+            Assert.IsTrue(hud.GrupoCalor.activeSelf, "A pie, el HUD muestra siempre la barra de calor (T-524)");
         }
 
         [UnityTest]
