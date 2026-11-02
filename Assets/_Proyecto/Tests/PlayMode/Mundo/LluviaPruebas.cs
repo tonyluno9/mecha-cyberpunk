@@ -55,11 +55,16 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Lluvia_AMediodia_NoCae()
+        public IEnumerator Lluvia_AMediodia_CaeLigera()
         {
+            // T-512: también llueve de día, pero solo una fracción de las gotas de la noche.
             yield return Preparar(EscenaLugares.HoraMediodia);
-            Assert.IsFalse(lluvia.EstaLloviendo);
-            Assert.IsFalse(lluvia.Gotas.isEmitting);
+            Assert.IsTrue(lluvia.EstaLloviendo);
+            Assert.IsTrue(lluvia.Gotas.isEmitting);
+            Assert.Less(lluvia.Intensidad, 0.5f, "Lluvia ligera");
+            Assert.Greater(lluvia.Intensidad, 0f);
+            float deNoche = UnityEditor.AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Mundo.Datos.ConfigLluvia>("Assets/_Proyecto/Mundo/Datos/ConfigLluvia_Mundo.asset").GotasPorSegundo;
+            Assert.Less(lluvia.Gotas.emission.rateOverTime.constant, 0.5f * deNoche, "Menos gotas que de noche");
         }
 
         [UnityTest]

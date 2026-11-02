@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4229091d67ad0ea49bb78f61b3684619, type: 3}
   m_Name: ConfigLluvia_Mundo
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Datos.ConfigLluvia
-  lluviaDeDia: 0
+  lluviaDeDia: 1
+  fraccionDeDia: 0.3
   ladoCaja: 30
   altoCaja: 15
   gotasPorSegundo: 1500

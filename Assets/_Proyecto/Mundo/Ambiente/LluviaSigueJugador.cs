@@ -22,9 +22,13 @@ namespace MechaCyberpunk.Mundo.Ambiente
         private ParticleSystem niebla;
         private ZonaInterior[] zonas;
         private bool llueve;
+        private float intensidad = -1f;
 
         /// <summary>Interruptor global de la lluvia.</summary>
         public static bool Activa { get; set; } = true;
+
+        /// <summary>Qué tanto llueve ahora (0 a 1; de día, la fracción de la config).</summary>
+        public float Intensidad => intensidad;
 
         /// <summary>True si la lluvia está cayendo ahora.</summary>
         public bool EstaLloviendo => llueve;
@@ -66,6 +70,16 @@ namespace MechaCyberpunk.Mundo.Ambiente
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
             bool deNoche = reloj == null || reloj.EsDeNoche;
             bool debe = CalculoLluvia.DebeLlover(Activa, EnInterior(), deNoche, config.LluviaDeDia) && objetivo != null;
+            float nueva = CalculoLluvia.Intensidad(deNoche, config.FraccionDeDia);
+            if (!Mathf.Approximately(nueva, intensidad))
+            {
+                // De día cae menos (lluvia ligera); de noche, toda.
+                intensidad = nueva;
+                ParticleSystem.EmissionModule emisionGotas = gotas.emission;
+                emisionGotas.rateOverTime = config.GotasPorSegundo * intensidad;
+                ParticleSystem.EmissionModule emisionNiebla = niebla.emission;
+                emisionNiebla.rateOverTime = config.NubesPorSegundo * intensidad;
+            }
             if (debe != llueve)
             {
                 llueve = debe;
