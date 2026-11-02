@@ -67,6 +67,7 @@ namespace MechaCyberpunk.UI.Hud
             textoFila.text = string.Empty;
             textoAviso.text = string.Empty;
             panel.gameObject.SetActive(false);
+            textoAviso.enabled = false; // T-523: el aviso sale por la cola del centro; aquí queda solo como dato
         }
 
         private void OnDisable() => Desvincular();
@@ -85,6 +86,7 @@ namespace MechaCyberpunk.UI.Hud
             string nombre = pandilla.Nombre(indice).Replace("EL ", string.Empty).Replace("LA ", string.Empty);
             textoAviso.text = "¡" + nombre + " SUBIÓ A NIVEL " + Romanos[pandilla.Nivel(indice) - 1] + "!";
             finAviso = Time.unscaledTime + segundosAviso;
+            ColaAvisos.Publicar(textoAviso.text, PrioridadAviso.Normal, TipoAviso.Pandilla, segundosAviso);
         }
 
         private void Update()
@@ -107,6 +109,7 @@ namespace MechaCyberpunk.UI.Hud
             {
                 textoAviso.text = FormatoTerritorio.Cortar(pandilla.Nombre(pandilla.Cantidad - 1) + " SE UNE A " + FormatoTerritorio.NombreDe(IdPandilla.Jugador));
                 finAviso = Time.unscaledTime + segundosAviso;
+                ColaAvisos.Publicar(textoAviso.text, PrioridadAviso.Alta, TipoAviso.Pandilla, segundosAviso);
             }
             ultimaCantidad = pandilla != null ? pandilla.Cantidad : -1;
             int cantidad = pandilla != null ? Mathf.Min(pandilla.Cantidad, MaximoFilas) : 0;

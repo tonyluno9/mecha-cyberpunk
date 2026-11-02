@@ -403,3 +403,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: de noche camina Suburbios, la calle principal con El Tianguis, el callejón, la entrada de El Mercado y Neón Alto.
 - Observa: toldos de colores sucios sobre puertas, letreros salientes con texto (FARMACIA, TACOS, CIBER...), balcones con barandal, macetas, tambos y huacales en las orillas, gente parada o platicando en las banquetas, y charcos chicos y sutiles (no discos de color).
 - Compara: docs/capturas/pulido3-<zona>-comparacion.png (referencia, antes, después).
+
+### T-523 HUD limpio (pulido 4)
+- Haz: empieza en Suburbios, camina a El Tianguis y a Neón Alto, recluta al CHATO y gana dinero.
+- Observa: un solo aviso a la vez en el centro, tutorial pequeño abajo, sin lista de controles ni "RADIO", panel de zona arriba a la derecha que cambia al cruzar, minimapa con calles claras sobre manzanas oscuras.
+- Compara: docs/capturas/T-523-comparacion-hud.png (mockup, antes, después).

@@ -246,16 +246,16 @@ namespace MechaCyberpunk.Tests.UI
             JugadorFalso falso = RegistrarFalso(ModoJugador.APie);
             yield return Calentar();
             // T-400: con los puños en la mano la retícula no se ve.
-            AssertGrupos(true, false, true, true);
+            AssertGrupos(true, false, true);
 
             falso.CambiarModo(ModoJugador.Mecha);
-            AssertGrupos(false, false, false, false);
+            AssertGrupos(false, false, false);
 
             falso.CambiarModo(ModoJugador.Carro);
-            AssertGrupos(false, false, false, true);
+            AssertGrupos(false, false, false);
 
             falso.CambiarModo(ModoJugador.APie);
-            AssertGrupos(true, false, true, true);
+            AssertGrupos(true, false, true);
         }
 
         [UnityTest]
@@ -264,7 +264,7 @@ namespace MechaCyberpunk.Tests.UI
             CrearHud();
             yield return Calentar();
 
-            AssertGrupos(false, false, false, false);
+            AssertGrupos(false, false, false);
         }
 
         [UnityTest]
@@ -272,23 +272,23 @@ namespace MechaCyberpunk.Tests.UI
         {
             CrearHud();
             yield return Calentar();
-            AssertGrupos(false, false, false, false);
+            AssertGrupos(false, false, false);
 
             CrearJugadorSinHud();
             yield return null;
 
-            AssertGrupos(true, false, true, true);   // T-400: con los puños la retícula no se ve
+            AssertGrupos(true, false, true);   // T-400: con los puños la retícula no se ve
             Assert.AreEqual("VIDA " + Mathf.CeilToInt(vida.Maxima), hud.TextoVida.text);
             vida.RecibirDanio(new InfoDanio(25f, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
             Assert.AreEqual("VIDA 75", hud.TextoVida.text);
         }
 
-        private void AssertGrupos(bool vidaActiva, bool miraActiva, bool armaActiva, bool cancionActiva)
+        private void AssertGrupos(bool vidaActiva, bool miraActiva, bool armaActiva)
         {
             Assert.AreEqual(vidaActiva, hud.GrupoVida.activeInHierarchy, "vida");
             Assert.AreEqual(miraActiva, hud.GrupoMira.activeInHierarchy, "mira");
             Assert.AreEqual(armaActiva, hud.GrupoArma.activeInHierarchy, "arma");
-            Assert.AreEqual(cancionActiva, hud.GrupoCancion.activeInHierarchy, "canción");
+            Assert.IsFalse(hud.GrupoCancion.activeInHierarchy, "T-523: la línea fija de radio no se ve en ningún modo");
         }
     }
 }

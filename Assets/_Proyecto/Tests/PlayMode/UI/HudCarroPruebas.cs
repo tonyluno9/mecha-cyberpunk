@@ -75,7 +75,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(ModoJugador.Carro, jugador.GetComponent<JugadorAPie>().Modo);
             Assert.IsTrue(hud.GrupoObjetivo.activeSelf, "El objetivo se ve en el carro");
             Assert.AreEqual("Ve al bar", hud.TextoObjetivo.text);
-            Assert.IsTrue(hud.GrupoCancion.activeSelf, "La canción se ve en el carro");
+            Assert.IsFalse(hud.GrupoCancion.activeSelf, "T-523: la línea de radio ya no se ve ni en el carro");
             Assert.IsFalse(hud.GrupoVida.activeSelf);
             Assert.IsFalse(hud.GrupoMira.activeSelf);
             Assert.IsFalse(hud.GrupoArma.activeSelf);

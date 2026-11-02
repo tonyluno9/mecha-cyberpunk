@@ -56,6 +56,8 @@ namespace MechaCyberpunk.UI.Historia
         {
             ayuda = texto;
             finAyuda = Time.unscaledTime + segundos;
+            // T-523: la ayuda sale por la cola de avisos del centro (de a una y por poco tiempo); aquí queda como dato.
+            MechaCyberpunk.UI.Hud.ColaAvisos.Publicar(texto, MechaCyberpunk.UI.Hud.PrioridadAviso.Normal, MechaCyberpunk.UI.Hud.TipoAviso.Neutro, segundos);
             Refrescar();
         }
 
@@ -150,8 +152,8 @@ namespace MechaCyberpunk.UI.Historia
             {
                 textoAyuda.text = ayu;
             }
-            // T-409: con el mapa abierto la ayuda quedaba tenue detrás de su título; se esconde mientras tanto (sigue contando su tiempo).
-            bool verAyuda = !MechaCyberpunk.UI.Mapa.PantallaMapa.HayAbierto;
+            // T-523: la ayuda ya no se dibuja aquí (sale por ColaAvisos); el texto queda como dato.
+            bool verAyuda = false;
             if (textoAyuda.enabled != verAyuda)
             {
                 textoAyuda.enabled = verAyuda;
