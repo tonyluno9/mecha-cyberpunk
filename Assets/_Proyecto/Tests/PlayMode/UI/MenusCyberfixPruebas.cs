@@ -186,6 +186,10 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsNotNull(fondo, "El título trae el fondo UI14");
             Assert.AreSame(PiezasUI.Actual.FondoMenu, fondo.GetComponent<Image>().sprite);
             Assert.IsNotNull(titulo.transform.Find("CanvasTitulo/FranjaOscura"), "Hay una franja oscura detrás del menú");
+            // T-524: la franja usa el degradado (alfa que baja a 0 hacia el centro), no un bloque sólido con corte vertical.
+            Image franjaOscura = titulo.transform.Find("CanvasTitulo/FranjaOscura").GetComponent<Image>();
+            Assert.AreSame(KitUI.SpriteDegradadoHorizontal(), franjaOscura.sprite, "La franja lleva el sprite del degradado");
+            Assert.IsTrue(franjaOscura.enabled, "La franja se dibuja");
             Image logo = titulo.transform.Find("CanvasTitulo/Logo").GetComponent<Image>();
             Assert.IsTrue(logo.gameObject.activeInHierarchy, "El logo UI13 se ve");
             Assert.AreSame(PiezasUI.Actual.Logo, logo.sprite);

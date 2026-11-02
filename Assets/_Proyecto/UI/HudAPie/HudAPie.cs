@@ -48,7 +48,7 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private GameObject grupoLlamado;
         [SerializeField] private Text textoLlamado;
 
-        [Header("Calor policial (arriba a la derecha; solo con nivel mayor que 0)")]
+        [Header("Calor policial (bajo la vida; siempre visible, vacío con nivel 0)")]
         [SerializeField] private GameObject grupoCalor;
         [SerializeField] private Text textoCalor;
         [SerializeField] private Image[] marcasCalor;
@@ -1177,11 +1177,11 @@ namespace MechaCyberpunk.UI.Hud
 
         private void AlCambiarNivelCalor(int nivel) => RefrescarCalor();
 
-        // El calor se ve a pie y en carro, y solo si hay (nivel mayor que 0); en el mecha lo muestra la cabina.
+        // T-524: el calor se ve siempre a pie y en carro (vacío con nivel 0); en el mecha lo muestra la cabina.
         private void RefrescarCalor()
         {
             int nivel = calor != null ? calor.Nivel : 0;
-            bool visible = jugador != null && jugador.Modo != ModoJugador.Mecha && nivel > 0;
+            bool visible = jugador != null && jugador.Modo != ModoJugador.Mecha;
             grupoCalor.SetActive(visible);
             if (!visible)
             {

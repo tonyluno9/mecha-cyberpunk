@@ -17,7 +17,7 @@ namespace MechaCyberpunk.UI.Kit
         public const float AnchoDinero = 300f;
         public const float AltoDinero = 56f;
         public const float AnchoZona = 540f;
-        public const float AltoZona = 96f;
+        public const float AltoZona = 116f;
         public const float AnchoArma = 380f;
         public const float AltoArma = 260f;
         public const float AnchoAliados = 360f;

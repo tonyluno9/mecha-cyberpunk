@@ -23,6 +23,9 @@ namespace MechaCyberpunk.UI.Hud
         [Min(0.5f)] [SerializeField] private float segundosJefe = 4f;
 
         private Text textoZona;
+        private Text nombreZona;
+        private Text etiquetaRespeto;
+        private const int TamanoNombreZona = 46;
         private Text textoAviso;
         private RectTransform panelZona;
         private Image insignia;
@@ -34,6 +37,8 @@ namespace MechaCyberpunk.UI.Hud
         private readonly System.Collections.Generic.HashSet<string> jefesAvisados = new System.Collections.Generic.HashSet<string>();
 
         public Text TextoZona => textoZona;
+        public Text NombreZona => nombreZona;
+        public Text EtiquetaRespeto => etiquetaRespeto;
         public Text TextoAviso => textoAviso;
 
         private void Awake()
@@ -51,15 +56,32 @@ namespace MechaCyberpunk.UI.Hud
             oscuro.rectTransform.offsetMax = new Vector2(-14f, -12f);
             insignia = KitUI.CrearImagenSprite(panelZona, "Insignia", null);
             KitUI.Colocar(insignia.rectTransform, new Vector2(1f, 0.5f), new Vector2(-18f, 0f), new Vector2(60f, 74f));
+            // T-524: el nombre de la zona grande (Teko) y debajo RESPETO con su barra, como el mockup. El texto "Zona" queda como dato
+            // (línea completa: zona, dueño y respeto) sin dibujarse; lo que se ve es NombreZona y EtiquetaRespeto.
             textoZona = KitUI.CrearTexto(panelZona, "Zona", RolTexto.Hud, TextAnchor.MiddleLeft);
-            textoZona.rectTransform.anchorMin = new Vector2(0f, 0.42f);
-            textoZona.rectTransform.anchorMax = new Vector2(1f, 0.92f);
+            textoZona.rectTransform.anchorMin = new Vector2(0f, 0.45f);
+            textoZona.rectTransform.anchorMax = new Vector2(1f, 0.97f);
             textoZona.rectTransform.offsetMin = new Vector2(30f, 0f);
             textoZona.rectTransform.offsetMax = new Vector2(-88f, 0f);
+            textoZona.enabled = false;
+            nombreZona = KitUI.CrearTexto(panelZona, "NombreZona", RolTexto.Titulo, TextAnchor.MiddleLeft);
+            nombreZona.fontSize = TamanoNombreZona;
+            nombreZona.rectTransform.anchorMin = textoZona.rectTransform.anchorMin;
+            nombreZona.rectTransform.anchorMax = textoZona.rectTransform.anchorMax;
+            nombreZona.rectTransform.offsetMin = textoZona.rectTransform.offsetMin;
+            nombreZona.rectTransform.offsetMax = textoZona.rectTransform.offsetMax;
+            nombreZona.horizontalOverflow = HorizontalWrapMode.Overflow;
+            etiquetaRespeto = KitUI.CrearTexto(panelZona, "EtiquetaRespeto", RolTexto.Texto, TextAnchor.MiddleLeft);
+            etiquetaRespeto.fontSize = KitUI.Estilo.Tamano(RolTexto.Minimo);
+            etiquetaRespeto.text = "RESPETO";
+            etiquetaRespeto.rectTransform.anchorMin = new Vector2(0f, 0.1f);
+            etiquetaRespeto.rectTransform.anchorMax = new Vector2(0f, 0.4f);
+            etiquetaRespeto.rectTransform.offsetMin = new Vector2(30f, 0f);
+            etiquetaRespeto.rectTransform.offsetMax = new Vector2(130f, 0f);
             Image huecoRespeto = KitUI.CrearImagen(panelZona, "HuecoRespeto", new Color(0f, 0f, 0f, 0.45f));
-            huecoRespeto.rectTransform.anchorMin = new Vector2(0f, 0.2f);
-            huecoRespeto.rectTransform.anchorMax = new Vector2(1f, 0.34f);
-            huecoRespeto.rectTransform.offsetMin = new Vector2(30f, 0f);
+            huecoRespeto.rectTransform.anchorMin = new Vector2(0f, 0.18f);
+            huecoRespeto.rectTransform.anchorMax = new Vector2(1f, 0.32f);
+            huecoRespeto.rectTransform.offsetMin = new Vector2(136f, 0f);
             huecoRespeto.rectTransform.offsetMax = new Vector2(-88f, 0f);
             rellenoRespeto = KitUI.CrearImagen(huecoRespeto.transform, "Respeto", Color.white);
             KitUI.Estirar(rellenoRespeto.rectTransform);
@@ -136,6 +158,7 @@ namespace MechaCyberpunk.UI.Hud
             if (zona.Length == 0)
             {
                 textoZona.text = string.Empty;
+                nombreZona.text = string.Empty;
                 panelZona.gameObject.SetActive(false);
             }
             else
@@ -144,6 +167,8 @@ namespace MechaCyberpunk.UI.Hud
                 Color colorDueno = FormatoTerritorio.ColorDe(dueno);
                 textoZona.text = FormatoTerritorio.Linea(territorio, zona);
                 textoZona.color = colorDueno;
+                nombreZona.text = territorio.Nombre(zona);
+                nombreZona.color = colorDueno;
                 panelZona.gameObject.SetActive(true);
                 PiezasUI piezas = PiezasUI.Actual;
                 insignia.sprite = piezas != null ? piezas.Insignia(dueno) : null;

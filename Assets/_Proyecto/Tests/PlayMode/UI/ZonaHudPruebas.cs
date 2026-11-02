@@ -102,6 +102,28 @@ namespace MechaCyberpunk.Tests.UI
             }
         }
 
+        /// <summary>T-524: el panel de zona dibuja el nombre grande (Teko, 40 px o más) y debajo RESPETO con su barra.</summary>
+        [UnityTest]
+        public IEnumerator Zona_PanelConNombreGrandeYRespetoConBarra()
+        {
+            yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
+            yield return null;
+            yield return EsperarHasta(() =>
+            {
+                DirectorPandillas director = UnityEngine.Object.FindFirstObjectByType<DirectorPandillas>();
+                return director != null && director.Iniciado && Registro<IJugador>.Actual != null;
+            }, "el director arrancó", 30f);
+            Registro<IJugador>.Actual.Colocar(new Pose(EnTianguis, Quaternion.identity));
+            HudTerritorio zona = UnityEngine.Object.FindFirstObjectByType<HudTerritorio>();
+            yield return EsperarHasta(() => zona.NombreZona.text == "EL TIANGUIS", "el nombre de la zona", 10f);
+            Assert.GreaterOrEqual(zona.NombreZona.fontSize, 40, "El nombre de la zona es grande");
+            Assert.IsTrue(zona.NombreZona.enabled, "El nombre se dibuja");
+            Assert.IsFalse(zona.TextoZona.enabled, "La línea larga queda solo como dato");
+            Assert.AreEqual("RESPETO", zona.EtiquetaRespeto.text);
+            Assert.IsNotNull(zona.TextoZona.transform.parent.Find("HuecoRespeto/Respeto"), "La barra de respeto existe");
+            Assert.AreEqual(zona.NombreZona.font, zona.TextoZona.font, "El nombre usa la fuente Teko del HUD");
+        }
+
         /// <summary>Con CAPTURAR_T523=1 guarda docs/capturas/T-523-hud.png (1080p) y T-523-hud-1440.png con el HUD en juego en Suburbios.</summary>
         [UnityTest]
         public IEnumerator Captura_HudEnSuburbios()
@@ -130,6 +152,43 @@ namespace MechaCyberpunk.Tests.UI
             Camera camara = jugador.Camara;
             CapturaUI.Capturar("docs/capturas/T-523-hud.png", camara);
             CapturaUI.Capturar2K("docs/capturas/T-523-hud-1440.png", camara);
+        }
+
+        /// <summary>Con CAPTURAR_T524=1 guarda docs/capturas/T-524-hud.png (1080p) y T-524-hud-1440.png con el HUD en juego en Suburbios.</summary>
+        [UnityTest]
+        public IEnumerator Captura_HudT524()
+        {
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T524") != "1")
+            {
+                Assert.Ignore("Solo con CAPTURAR_T524=1");
+            }
+            yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
+            yield return null;
+            yield return EsperarHasta(() =>
+            {
+                DirectorPandillas director = UnityEngine.Object.FindFirstObjectByType<DirectorPandillas>();
+                return director != null && director.Iniciado && Registro<IJugador>.Actual != null && Registro<IPandillaJugador>.Actual != null;
+            }, "el director arrancó", 30f);
+            IJugador jugador = Registro<IJugador>.Actual;
+            foreach (PandillaAPie grupo in UnityEngine.Object.FindObjectsByType<PandillaAPie>(FindObjectsSortMode.None))
+            {
+                grupo.gameObject.SetActive(false);
+            }
+            jugador.Colocar(new Pose(new Vector3(-80f, 0.5f, 0f), Quaternion.LookRotation(Vector3.right)));
+            Registro<ICartera>.Actual.Abonar(1250, MotivoDinero.Premio);
+            yield return new WaitForSecondsRealtime(1.2f);
+            ColaAvisos.Publicar("SALIR A LA CALLE CUMPLIDO", PrioridadAviso.Alta, TipoAviso.Bueno, 30f);
+            yield return new WaitForSecondsRealtime(0.5f);
+            foreach (Text t in UnityEngine.Object.FindObjectsByType<Text>(FindObjectsSortMode.None))
+            {
+                if (t.enabled && t.gameObject.activeInHierarchy && t.text.Length > 0 && t.canvas != null && t.canvas.enabled)
+                {
+                    Debug.Log("T524-TEXTO " + t.transform.parent.name + "/" + t.name + " = " + t.text);
+                }
+            }
+            Camera camara = jugador.Camara;
+            CapturaUI.Capturar("docs/capturas/T-524-hud.png", camara);
+            CapturaUI.Capturar2K("docs/capturas/T-524-hud-1440.png", camara);
         }
     }
 }
