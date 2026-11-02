@@ -437,3 +437,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: de noche sube a una azotea de Suburbios y gira la cámara alrededor; camina hasta el fondo de la calle del oeste; luego pon el reloj de día.
 - Observa: al este el skyline de Neón Alto con pantallas verdes y magenta, al norte la torre de Nova con sus haces de luz, al sur y al oeste más Suburbios; arriba la pintura se funde con el cielo; de día se ve como ciudad lejana con calima. Ya no hay torres de bloques sueltas a lo lejos (las de Neón Alto cercanas siguen).
 - Compara: docs/capturas/T-513-azotea-este-comparacion.png, -azotea-norte, -suburbios-oeste y -azotea-este-dia.
+
+### T-514 Bot del recorrido
+- Haz: nada en el juego (el cambio es de la prueba automática RecorridoDemoPruebas); juega la demo completa si quieres comparar.
+- Observa: la dificultad de El Tianguis y del jefe es la misma de antes; la prueba ahora recorre la demo de principio a fin (El Tianguis, el jefe, EL HACKER y CONTINUARÁ) sin matar enemigos por el bot.
+- Compara: Logs/t474-tiempos.txt (línea TOTAL: muertes 0, bugs 0, rescate False).
