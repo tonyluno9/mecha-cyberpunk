@@ -16,7 +16,19 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
     {
         public const string Carpeta = CreadorVisualPersonaje.CarpetaPersonajes;
         public const float AlturaObjetivo = 1.8f;
-        public static readonly string[] Nombres = { "woman", "man", "woman2" };
+        public static readonly string[] Nombres = { "woman", "man", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova" };
+
+        /// <summary>T-510: altura (m) de los que no miden 1.8: el jefe SKULLS y los dos de armadura.</summary>
+        public static float AlturaDe(string nombre)
+        {
+            switch (nombre)
+            {
+                case "SkullHombre": return 1.95f;
+                case "RobotHombre":
+                case "GuardiaNova": return 1.85f;
+                default: return AlturaObjetivo;
+            }
+        }
 
         private const int CuadrosIdle = 2;
         private const int CuadrosInicioIdle = 0;
@@ -53,7 +65,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             imp.userData = "escala=1";
             imp.SaveAndReimport();
             float alto = AltoDelModelo(ruta);
-            float escala = alto > 0.01f ? AlturaObjetivo / alto : 1f;
+            float escala = alto > 0.01f ? AlturaDe(nombre) / alto : 1f;
             // PostprocesadorAssetsT250 aplica esta escala al importar (PostprocesadorArte fuerza globalScale a 1).
             if (!imp.generateMeshLods && CuentaTriangulos(ruta) > TriangulosParaMeshLod)
             {
@@ -63,12 +75,16 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
             // 2) Clips: los de la toma, renombrados; Idle = primeros cuadros de "agree".
             ModelImporterClipAnimation[] porDefecto = imp.defaultClipAnimations;
+            var tomas = new List<string>();
+            foreach (ModelImporterClipAnimation d in porDefecto) { tomas.Add(d.takeName); }
+            Debug.Log("[Personaje] T-510 " + nombre + " trae las tomas: " + string.Join(", ", tomas));
             var lista = new List<ModelImporterClipAnimation>();
             foreach (ModelImporterClipAnimation d in porDefecto)
             {
                 ModelImporterClipAnimation c = Ajustar(d, d.takeName.StartsWith("agree") ? NombreIdle : null);
                 if (d.takeName.StartsWith("walk")) { c.name = ClipVisual.Caminar.ToString(); c.loopTime = true; lista.Add(c); }
                 else if (d.takeName.StartsWith("run")) { c.name = ClipVisual.Correr.ToString(); c.loopTime = true; lista.Add(c); }
+                else if (d.takeName.StartsWith("angry")) { c.name = ClipEnojo; c.loopTime = true; lista.Add(c); }
                 else if (d.takeName.StartsWith("afraid")) { c.name = ClipVisual.Cubrirse.ToString(); c.loopTime = true; lista.Add(c); }
                 else if (d.takeName.StartsWith("agree"))
                 {
@@ -77,7 +93,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                     {
                         if (otro.takeName == d.takeName)
                         {
-                            ModelImporterClipAnimation completo = Ajustar(otro, "AcuerdoCompleto");
+                            ModelImporterClipAnimation completo = Ajustar(otro, ClipAcuerdo);
+                            completo.loopTime = true; // T-510: la gente de banqueta platica en bucle
                             lista.Add(completo);
                         }
                     }
@@ -105,6 +122,14 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 Debug.LogError("[Personaje] " + nombre + ": no se generó un Avatar Humanoid válido.");
                 return null;
+            }
+            // T-510: los modelos nuevos (SkullHombre, Doctor...) no traen animaciones: toman las de woman2/woman (los clips Humanoid sirven a todos).
+            foreach (ClipVisual tipo in new[] { ClipVisual.Idle, ClipVisual.Caminar, ClipVisual.Correr, ClipVisual.Cubrirse })
+            {
+                if (!clips.ContainsKey(tipo) && ClipDeDonante(tipo, nombre, out AnimationClip prestado))
+                {
+                    clips[tipo] = prestado;
+                }
             }
             // Animaciones de Mixamo (docs/animaciones-faltan.md) en Assets/Arte/Personajes/Animaciones/: valen para los tres personajes.
             Dictionary<ClipVisual, AnimationClip> extras = AnimacionesExtra(nombre == Nombres[0] ? avatar : AvatarDe(Nombres[0]));
@@ -145,6 +170,39 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Debug.Log("[Personaje] T-520 Visual_" + nombre + ": alto " + alto + " m -> escala " + escala + ", Caminar " + vCaminar.ToString("0.00") + " m/s, Correr " + vCorrer.ToString("0.00") + " m/s, umbral " + umbral.ToString("0.00"));
             return prefab;
         }
+
+        /// <summary>Los que traen sus clips en el FBX (T-520); los demás toman prestados los de estos.</summary>
+        public static bool TraeClipsPropios(string nombre) => nombre == "woman" || nombre == "man" || nombre == "woman2";
+
+        private static bool ClipDeDonante(ClipVisual tipo, string nombre, out AnimationClip clip)
+        {
+            clip = null;
+            if (TraeClipsPropios(nombre))
+            {
+                return false;
+            }
+            string donante = tipo == ClipVisual.Cubrirse ? "woman" : "woman2";
+            return ClipDeModelo(donante, tipo.ToString(), out clip);
+        }
+
+        /// <summary>Un clip por nombre de un FBX de Tripo ya importado (por ejemplo "AcuerdoCompleto" de woman2).</summary>
+        public static bool ClipDeModelo(string modelo, string nombreClip, out AnimationClip clip)
+        {
+            clip = null;
+            foreach (Object o in AssetDatabase.LoadAllAssetsAtPath(RutaModelo(modelo)))
+            {
+                if (o is AnimationClip c && c.name == nombreClip && !c.name.StartsWith("__preview__"))
+                {
+                    clip = c;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>Clips extra de la gente de fondo (T-510): "agree" completo (asienta con la cabeza) y "angry" (discute).</summary>
+        public const string ClipAcuerdo = "AcuerdoCompleto";
+        public const string ClipEnojo = "Enojo";
 
         public const string NombreSocket = "ManoDer";
         private const string NombreIdle = "Idle";
@@ -294,18 +352,46 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
                 AssetDatabase.CreateAsset(m, ruta);
             }
-            Texture2D textura = null;
-            foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { Carpeta + "/" + nombre }))
-            {
-                textura = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath(guid));
-                break;
-            }
+            Texture2D textura = TexturaDeColor(nombre);
             m.SetTexture("_BaseMap", textura);
             m.SetColor("_BaseColor", Color.white);
             m.SetFloat("_Smoothness", 0.25f);
             m.SetFloat("_Metallic", 0f);
             EditorUtility.SetDirty(m);
             return m;
+        }
+
+        /// <summary>
+        /// La textura de color (albedo) del .fbm. T-510: "man" salía negro porque se tomaba la primera textura de la carpeta, que era el mapa
+        /// metálico; el .fbm trae también rugosidad y normales, que no son color. El albedo es el jpg "tripo_image_*_0_0" o "tripo_rgb_*".
+        /// </summary>
+        public static Texture2D TexturaDeColor(string nombre)
+        {
+            Texture2D mejor = null;
+            foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { Carpeta + "/" + nombre }))
+            {
+                string ruta = AssetDatabase.GUIDToAssetPath(guid);
+                if (!EsTexturaDeColor(Path.GetFileName(ruta)))
+                {
+                    continue;
+                }
+                Texture2D t = AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
+                if (mejor == null || ruta.Contains("_0_0") || ruta.Contains("tripo_rgb"))
+                {
+                    mejor = t;
+                }
+            }
+            return mejor;
+        }
+
+        public static bool EsTexturaDeColor(string archivo)
+        {
+            string n = archivo.ToLowerInvariant();
+            if (n.Contains("metallic") || n.Contains("roughness") || n.Contains("normal") || n.EndsWith("_0_3.jpg") || n.EndsWith("_0_1.jpg") || n.EndsWith("_0_2.jpg"))
+            {
+                return false;
+            }
+            return n.StartsWith("tripo_image") || n.StartsWith("tripo_rgb") || n.StartsWith("tripo_");
         }
 
         private static void AjustarPrefab(GameObject prefab, Material material, float vCaminar, float vCorrer, bool apuntarDeVerdad)

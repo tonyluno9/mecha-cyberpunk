@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Arte.Editor",
     "rootNamespace": "MechaCyberpunk.Arte.Editor",
-    "references": ["Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime"],
+    "references": ["Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje.Visual.Editor"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
