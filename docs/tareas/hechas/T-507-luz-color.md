@@ -22,3 +22,4 @@ Todos muy por encima de 60.
 
 ## Bitácora
 - 2026-11-01: hecho (ver pruebas de arriba).
+- 2026-11-01: RecorridoDemoPruebas 1/2: NavMesh_LugaresDeLaHistoria_TienenCamino pasa y DemoDePrincipioAFin se queda en el paso Tianguis; en el log el jugador cae KO en la pelea con pistola de los SKULLS (x -37, z 77 a 80), el fallo intermitente ya conocido de T-501/T-504/T-505 (bugs 2 a 7 son consecuencia). PlayMode Mundo antes del arreglo de moon: 15 fallos de 186, de los que 5 eran míos o de mi luna (CicloDiaNoche: la luna 1.6 pasaba al sol de mediodía, ahora 1.0; 4 de LuzColorT507PlayPruebas por VolumeManager sin inicializar en batch, ahora mezcla a mano) y 10 de otros temas (CamaraLibre, Lugares, Puertas, EntradasNeon) que no revisé contra la rama base. Después: LuzColorT507PlayPruebas 5/5 y CicloDiaNochePruebas pasan.
