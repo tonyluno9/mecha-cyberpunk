@@ -393,3 +393,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: de noche camina la calle principal (El Tianguis), el callejón, El Mercado, la casa y Neón Alto.
 - Observa: edificios con ventanas y textura, mesas de madera con huacales y tambos en los puestos, ya no hay cajas café lisas, lona verde gigante ni vigas naranjas lisas.
 - Compara: docs/capturas/T-506-<lugar>-antes.png y -despues.png.
+
+### T-507 Luz y color (pulido 2)
+- Haz: de noche (hora 23) camina Suburbios, el callejón, El Tianguis, la entrada de El Mercado y Neón Alto; de día camina la calle principal.
+- Observa: fachadas terracota, turquesa y crema sucios (no lavadas), charcos de luz naranja bajo los postes con sombra y tramos oscuros entre ellos, color cálido en Suburbios, magenta en callejón y Tianguis, verde en Neón Alto con transición suave.
+- Compara: docs/capturas/pulido-<zona>-comparacion.png (referencia, antes, después) y pulido-dia-calle-despues.png.
