@@ -214,6 +214,7 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 | T-511 | Carros reales y todos robables: V02-V08 importados, 16 carros estacionados manejables y robables de los 8 modelos (sin carros de adorno), tráfico con modelos reales que se roba detenido (el conductor huye), ruedas de greybox ocultas y cámara por modelo | hecha | [T-511](tareas/hechas/T-511-carros-reales.md) |
 | T-509 | Cierre del pulido: puestos de tacos del pasillo de El Mercado con el modelo C12 y sin caja colgada, ningún modelo con material liso, pistola tirada que gira y brilla ("E · Recoger la pistola"), Neón Alto verde azulado como la referencia | hecha | [T-509](tareas/hechas/T-509-cierre-pulido.md) |
 | T-512 | Iluminación por zona: callejón y pasillo de El Mercado con lámparas N01 y neón magenta, portón más naranja, 18 puestos nuevos en hileras en El Tianguis, luz de luna sobre las azoteas y lluvia ligera de día | hecha | [T-512](tareas/hechas/T-512-luz-por-zona.md) |
+| T-513 | Fondo de la ciudad: pinturas de Suburbios (sur y oeste), Neón Alto (este) y Nova (norte) en un cilindro de 560 m sin luces ni niebla, fundido con el cielo; 48 torres lejanas apagadas | hecha | [T-513](tareas/hechas/T-513-fondo-ciudad.md) |
 
 ## Cierre de la Parte A (ciudad como las referencias): FPS de noche por zona
 Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x1080, calidad Medio, hora 23, Logs/med505-despues/medicion.txt). Meta: 60.
