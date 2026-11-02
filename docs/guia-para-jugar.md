@@ -398,3 +398,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: de noche (hora 23) camina Suburbios, el callejón, El Tianguis, la entrada de El Mercado y Neón Alto; de día camina la calle principal.
 - Observa: fachadas terracota, turquesa y crema sucios (no lavadas), charcos de luz naranja bajo los postes con sombra y tramos oscuros entre ellos, color cálido en Suburbios, magenta en callejón y Tianguis, verde en Neón Alto con transición suave.
 - Compara: docs/capturas/pulido-<zona>-comparacion.png (referencia, antes, después) y pulido-dia-calle-despues.png.
+
+### T-508 Calles llenas (pulido 3)
+- Haz: de noche camina Suburbios, la calle principal con El Tianguis, el callejón, la entrada de El Mercado y Neón Alto.
+- Observa: toldos de colores sucios sobre puertas, letreros salientes con texto (FARMACIA, TACOS, CIBER...), balcones con barandal, macetas, tambos y huacales en las orillas, gente parada o platicando en las banquetas, y charcos chicos y sutiles (no discos de color).
+- Compara: docs/capturas/pulido3-<zona>-comparacion.png (referencia, antes, después).
