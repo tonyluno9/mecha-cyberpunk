@@ -412,3 +412,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: abre el juego en la pantalla de título y empieza una partida en Suburbios.
 - Observa: el fondo oscuro del título se desvanece suave hacia la ciudad, sin corte vertical; la barra de CALOR está bajo la vida aunque esté vacía; el panel de zona (arriba a la derecha) trae el nombre grande y RESPETO con su barra.
 - Compara: docs/capturas/T-524-comparacion-menu.png y T-524-comparacion-hud.png (mockup, antes, después).
+
+### T-510 Personajes nuevos
+- Haz: de noche camina por la calle principal y las cruzadas, sube a Neón Alto, visita al DOC, al INVENTOR y a EL HACKER, y llega al jefe de los SKULLS en El Tianguis.
+- Observa: el jefe SKULLS es un hombre de sudadera negra con calavera magenta (más alto); los pandilleros SKULLS se ven con su textura y los SNAKES y NOVA con otro color; DOC, INVENTOR y HACKER ya no son la mujer teñida; 1 de cada 4 peatones es un robot; la gente de banqueta camina de ida y vuelta, platica asintiendo o respira de pie; 3 guardias blancos (GuardiaNova) parados en Neón Alto sin estorbar.
+- Compara: docs/capturas/T-510-nuevos-idle.png (todos) y T-510-man-colores.png (man en cinco colores).

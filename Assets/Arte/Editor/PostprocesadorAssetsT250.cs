@@ -34,8 +34,7 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
 
-            if (assetPath.StartsWith("Assets/Arte/Personajes/man/") || assetPath.StartsWith("Assets/Arte/Personajes/woman/")
-                || assetPath.StartsWith("Assets/Arte/Personajes/woman2/"))
+            if (EsPersonajeDeTripo(assetPath))
             {
                 // T-500: personajes de Tripo con esqueleto y animaciones: se conservan (T-520: Humanoid con el avatar de su propio esqueleto).
                 ModelImporter personaje = (ModelImporter)assetImporter;
@@ -59,6 +58,24 @@ namespace MechaCyberpunk.Arte.Editor
             modelo.importBlendShapes = false;
             modelo.materialImportMode = ModelImporterMaterialImportMode.None;
             modelo.isReadable = false;
+        }
+
+        /// <summary>Personajes de Tripo con esqueleto: man, woman, woman2 (T-500) y los siete de T-510.</summary>
+        public static readonly string[] PersonajesDeTripo =
+        {
+            "man", "woman", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Mecanico",
+        };
+
+        public static bool EsPersonajeDeTripo(string ruta)
+        {
+            foreach (string n in PersonajesDeTripo)
+            {
+                if (ruta.StartsWith("Assets/Arte/Personajes/" + n + "/"))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public const string CarpetaAnimacionesPersonajes = "Assets/Arte/Personajes/Animaciones/";

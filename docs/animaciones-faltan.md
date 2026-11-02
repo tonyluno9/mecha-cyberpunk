@@ -33,3 +33,6 @@ Los clips son Humanoid: UNO de cada sirve para los tres personajes.
 4. Cada clip se importa Humanoid, en el sitio, con bucle donde toca (Idle, Caminar, Correr, ApuntarPistola, ApuntarLarga, Cubrirse), y se mete en el
    controlador de los tres personajes. Si traes **ApuntarPistola y ApuntarLarga**, las manos dejan de ir por IK solas (`ApuntadoIK.ManosPorIK`).
 5. Revisa en `Logs/crear520.log` que no salga "Animación ignorada (nombre no reconocido)". Los prefabs del juego no cambian: ya usan estos controladores.
+
+## T-510
+Los siete modelos nuevos (SkullHombre, Doctor, Inventor, Hacker, RobotHombre, GuardiaNova, Mecanico) no traen ningún clip en su FBX. Usan los de woman2 y woman, así que los clips de Mixamo de arriba también les sirven. Al 2-nov-2026 no hay clips de Mixamo en `Assets/Arte/Personajes/Animaciones/` (la carpeta no existe): no se corrió la conexión. Hay además dos clips de la gente de fondo que salen de los FBX: "AcuerdoCompleto" (agree, asentir) y "Enojo" (angry, de man y woman).
