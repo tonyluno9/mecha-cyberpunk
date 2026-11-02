@@ -73,6 +73,22 @@ namespace MechaCyberpunk.Tests.Demo
         private float ultimoGiro;
         private bool hayUltimo;
         private int muertes;
+        // T-514: ventaja solo de la prueba (el juego no cambia) en las peleas con pistola del Tianguis y del jefe: si la vida baja de
+        // UmbralVentaja, se cura. El bot sigue cubriéndose al 50 % como un jugador; esto solo evita el KO que le quita respeto.
+        private const float UmbralVentaja = 0.45f;
+        private bool ventajaDePrueba;
+        private int curasDePrueba;
+        private bool rescateUsado;
+        // T-514: un blanco que se esconde tras una cubierta no se persigue de frente para siempre: se le flanquea y, si sigue sin verse, se deja un rato.
+        private const float SegundosSinVistaParaDejar = 8f;
+        private const float SegundosBlancoDejado = 10f;
+        private const float DistanciaFlanqueo = 8f;
+        private const float GradosFlanqueo = 70f;
+        private readonly Dictionary<PandilleroAPie, float> dejadosHasta = new Dictionary<PandilleroAPie, float>();
+        private PandilleroAPie sinVistaDe;
+        private float sinVistaDesde;
+        private float flancoSigno = 1f;
+        private float proximoCambioFlanco;
         private int trazasMirada;
         private float finRumbo;
         private float finE;
@@ -93,6 +109,11 @@ namespace MechaCyberpunk.Tests.Demo
         public override void Setup()
         {
             base.Setup();
+            ventajaDePrueba = false;
+            curasDePrueba = 0;
+            rescateUsado = false;
+            dejadosHasta.Clear();
+            sinVistaDe = null;
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
             DescartarEstadoDeMapas(new InputDevice[] { teclado, raton });
@@ -1061,6 +1082,10 @@ namespace MechaCyberpunk.Tests.Demo
                 {
                     continue;
                 }
+                if (dejadosHasta.TryGetValue(p, out float hasta) && Time.realtimeSinceStartup < hasta)
+                {
+                    continue;
+                }
                 float d = Plano(p.transform.position, pos);
                 float puntos = d + (d < 25f && LineaDeVista(p, out Vector3 _) ? 0f : 1000f) + (p == blanco ? -4f : 0f);
                 if (puntos < mejorPuntos)
@@ -1077,6 +1102,23 @@ namespace MechaCyberpunk.Tests.Demo
         private bool CercaDelMarcador(PandilleroAPie p)
         {
             return Plano(p.transform.position, zonaCentro) < 60f;
+        }
+
+        // T-514: en la pelea del Tianguis el jefe todavía no es el objetivo (VENCE A LOS SKULLS cuenta a los pandilleros): el bot no le gasta balas.
+        private bool PandilleroCercaSinJefe(PandilleroAPie p)
+        {
+            if (!CercaDelMarcador(p))
+            {
+                return false;
+            }
+            foreach (JefePandilla j in Object.FindObjectsByType<JefePandilla>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (j.Jefe == p)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         // Sin enemigos de la zona: el grupo vencido reaparece a los 40 s si el jugador está a más de 30 m, así que se espera a 50 m (también si el objetivo dice "VUELVE A CASA" tras un KO).
@@ -1155,6 +1197,11 @@ namespace MechaCyberpunk.Tests.Demo
                     yield break;
                 }
                 yield return EsperarConVida();
+                if (ventajaDePrueba && vida != null && !vida.EstaKO && vida.Maxima > 0f && vida.Actual < vida.Maxima * UmbralVentaja)
+                {
+                    vida.CurarTodo();
+                    curasDePrueba++;
+                }
                 PandilleroAPie e = ElegirBlancoTiro(filtro);
                 Vector3 pos = Jugador.Raiz.position;
                 float fraccionVida = vida != null && vida.Maxima > 0f ? vida.Actual / vida.Maxima : 1f;
@@ -1219,8 +1266,34 @@ namespace MechaCyberpunk.Tests.Demo
                 if (e != null)
                 {
                     float d = Plano(e.transform.position, pos);
-                    bool ve = LineaDeVista(e, out Vector3 pecho) || d < 5f;
-                    if (!ve || d > 14f)
+                    bool ve = LineaDeVista(e, out Vector3 pecho) || d < 2.5f;
+                    float ahora = Time.realtimeSinceStartup;
+                    if (ve || sinVistaDe != e)
+                    {
+                        sinVistaDe = ve ? null : e;
+                        sinVistaDesde = ahora;
+                    }
+                    else if (ahora - sinVistaDesde > SegundosSinVistaParaDejar)
+                    {
+                        // Lleva rato escondido: se deja y se busca otro blanco.
+                        dejadosHasta[e] = ahora + SegundosBlancoDejado;
+                        sinVistaDe = null;
+                    }
+                    if (!ve && d < 12f)
+                    {
+                        // Escondido cerca: rodearlo hacia un costado para verlo, como haría un jugador.
+                        if (ahora >= proximoCambioFlanco)
+                        {
+                            flancoSigno = -flancoSigno;
+                            proximoCambioFlanco = ahora + 3f;
+                        }
+                        Vector3 desdeEnemigo = pos - e.transform.position;
+                        desdeEnemigo.y = 0f;
+                        Vector3 flanco = Quaternion.Euler(0f, GradosFlanqueo * flancoSigno, 0f) * desdeEnemigo.normalized * DistanciaFlanqueo;
+                        AvanzarConAtasco(e.transform.position + flanco, true);
+                        Soltar(raton.leftButton);
+                    }
+                    else if (!ve || d > 14f)
                     {
                         AvanzarConAtasco(e.transform.position, true);
                         Soltar(raton.rightButton);
@@ -1714,9 +1787,11 @@ namespace MechaCyberpunk.Tests.Demo
             {
                 PosicionMarcador(out zonaCentro);
                 retirada = zonaCentro + (Jugador.Raiz.position - zonaCentro).normalized * 50f;
-                yield return PelearConPistola(() => director.Paso != PasoHistoria.Tianguis, CercaDelMarcador, 240f, "los SKULLS del Tianguis");
+                ventajaDePrueba = true;
+                yield return PelearConPistola(() => director.Paso != PasoHistoria.Tianguis, PandilleroCercaSinJefe, 300f, "los SKULLS del Tianguis");
                 if (director.Paso == PasoHistoria.Tianguis)
                 {
+                    rescateUsado = true;
                     // Rescate: los SKULLS restantes caen por daño para poder probar al jefe.
                     foreach (PandilleroAPie p in new List<PandilleroAPie>(Enemigos()))
                     {
@@ -1725,7 +1800,8 @@ namespace MechaCyberpunk.Tests.Demo
                     yield return Segundos(2f);
                 }
             }
-            TerminarTramo("respeto tianguis " + territorio.Respeto("tianguis"));
+            ventajaDePrueba = false;
+            TerminarTramo("respeto tianguis " + territorio.Respeto("tianguis") + ", curas de prueba " + curasDePrueba);
 
             if (Environment.GetEnvironmentVariable("T474_HASTA") == "10")
             {
@@ -1738,9 +1814,12 @@ namespace MechaCyberpunk.Tests.Demo
             {
                 PosicionMarcador(out zonaCentro);
                 retirada = zonaCentro + (Jugador.Raiz.position - zonaCentro).normalized * 50f;
+                ventajaDePrueba = true;
                 yield return PelearConPistola(() => director.Paso != PasoHistoria.Jefe, CercaDelMarcador, 180f, "el jefe de los SKULLS");
+                ventajaDePrueba = false;
                 if (director.Paso == PasoHistoria.Jefe)
                 {
+                    rescateUsado = true;
                     foreach (JefePandilla j in Object.FindObjectsByType<JefePandilla>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                     {
                         if (j.Zona == "tianguis" && j.Jefe != null)
@@ -1794,9 +1873,10 @@ namespace MechaCyberpunk.Tests.Demo
             }
             TerminarTramo();
 
-            tiempos.Add("TOTAL | " + (Time.realtimeSinceStartupAsDouble - inicioTotal).ToString("F0") + " s | muertes del jugador " + muertes + " | bugs " + numeroBug);
+            tiempos.Add("TOTAL | " + (Time.realtimeSinceStartupAsDouble - inicioTotal).ToString("F0") + " s | muertes del jugador " + muertes + " | bugs " + numeroBug + " | curas de prueba " + curasDePrueba + " | rescate " + rescateUsado);
             GuardarSalidas();
             Assert.AreEqual(PasoHistoria.Libre, director.Paso, "El recorrido llegó al juego libre (bugs anotados: " + numeroBug + ")");
+            Assert.IsFalse(rescateUsado, "El bot venció a los SKULLS y al jefe sin que la prueba los matara (curas de prueba " + curasDePrueba + ")");
         }
     }
 }
