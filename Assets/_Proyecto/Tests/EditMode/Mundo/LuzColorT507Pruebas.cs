@@ -102,7 +102,10 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.GreaterOrEqual(luces.Length, 40);
             Assert.IsTrue(luces.All(l => l.type == LightType.Spot), "todas son focos");
             Assert.IsTrue(luces.All(l => l.transform.forward.y < -0.95f), "apuntan hacia abajo");
-            Assert.IsTrue(luces.All(l => l.color.r > l.color.g && l.color.g > l.color.b), "naranja");
+            // T-509: las de Neón Alto (x 34..60, z 3..93) son verde frío; las demás, naranja.
+            bool EnNeonAlto(Light l) => l.transform.position.x >= 34f && l.transform.position.x <= 60f && l.transform.position.z >= 3f && l.transform.position.z <= 93f;
+            Assert.IsTrue(luces.Where(l => !EnNeonAlto(l)).All(l => l.color.r > l.color.g && l.color.g > l.color.b), "naranja");
+            Assert.IsTrue(luces.Where(EnNeonAlto).All(l => l.color.g > l.color.r), "verde en Neón Alto");
             Light[] conSombra = luces.Where(l => l.shadows != LightShadows.None).ToArray();
             Assert.GreaterOrEqual(conSombra.Length, SombrasMinimas);
             Assert.LessOrEqual(conSombra.Length, SombrasMaximas, "pocas sombras por rendimiento");

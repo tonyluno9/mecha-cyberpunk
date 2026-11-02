@@ -67,7 +67,7 @@ namespace MechaCyberpunk.Tests.Mundo
             return false;
         }
 
-        private List<string> Greybox()
+        private List<string> Greybox(bool soloPrimitivas = true)
         {
             var lista = new List<string>();
             foreach (Renderer r in renderers)
@@ -76,7 +76,7 @@ namespace MechaCyberpunk.Tests.Mundo
                 Vector3 tam = r.bounds.size;
                 if (Mathf.Min(tam.x, Mathf.Min(tam.y, tam.z)) < GrosorDecal) { continue; }
                 MeshFilter mf = r.GetComponent<MeshFilter>();
-                if (mf == null || mf.sharedMesh == null || !MallasPrimitivas.Contains(mf.sharedMesh.name)) { continue; }
+                if (mf == null || mf.sharedMesh == null || (soloPrimitivas && !MallasPrimitivas.Contains(mf.sharedMesh.name))) { continue; }
                 foreach (Material m in r.sharedMaterials)
                 {
                     if (m == null) { lista.Add(r.name + " (sin material)"); break; }
@@ -92,6 +92,55 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             List<string> quedan = Greybox();
             Assert.IsEmpty(quedan, "Greybox visible (" + quedan.Count + "): " + string.Join("; ", quedan.Take(15)));
+        }
+
+        // T-509: tampoco quedan modelos del kit (cualquier malla, no solo primitivas) con material liso: tinacos, letreros, mobiliario.
+        [Test]
+        public void Zonas_NoQuedaNingunaMallaConMaterialLisoVisible()
+        {
+            List<string> quedan = Greybox(false);
+            Assert.IsEmpty(quedan, "Malla sin arte visible (" + quedan.Count + "): " + string.Join("; ", quedan.Take(15)));
+        }
+
+        // T-509: los puestos de tacos del pasillo de El Mercado (trompos de bloques, mostrador, bancos y garrafón lisos) son el modelo C12.
+        [Test]
+        public void PuestosDeTacos_SinMallaDeBloques_YConElModeloC12()
+        {
+            int conModelo = 0;
+            foreach (Renderer r in renderers)
+            {
+                MeshFilter mf = r.GetComponent<MeshFilter>();
+                if (mf != null && mf.sharedMesh != null && mf.sharedMesh.name == "puesto_tacos")
+                {
+                    Assert.IsFalse(r.enabled, "Sigue visible el puesto de bloques: " + r.transform.parent.name);
+                    Transform visual = r.transform.parent.Find("Visual_T509");
+                    if (visual != null)
+                    {
+                        Assert.IsTrue(visual.GetComponentsInChildren<Renderer>().Any(x => x.enabled), r.transform.parent.name + ": el C12 se ve");
+                        conModelo++;
+                    }
+                }
+            }
+            Assert.GreaterOrEqual(conModelo, 4, "Los cuatro puestos de tacos del pasillo");
+            // Y ya no cuelga la plataforma de dron (la "caja gris") a media altura en el pasillo.
+            Transform caja = escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>(true)).FirstOrDefault(t => t.name == "CY07a_PlataformaDron_T504");
+            Assert.IsTrue(caja == null || !caja.gameObject.activeInHierarchy, "La caja colgada del pasillo sigue visible");
+        }
+
+        // T-509: Neón Alto verde azulado como la referencia, sin volverse monocromo (los acentos magenta conservan su color).
+        [Test]
+        public void NeonAlto_PerfilVerdeAzulado_SinSaturarDeMas()
+        {
+            var perfil = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Rendering.VolumeProfile>("Assets/Arte/Exteriores/PerfilNeonAlto.asset");
+            Assert.IsNotNull(perfil);
+            Assert.IsTrue(perfil.TryGet(out UnityEngine.Rendering.Universal.ColorAdjustments ajustes), "Tiene ajustes de color");
+            Color filtro = ajustes.colorFilter.value;
+            Assert.Greater(filtro.g, filtro.r, "Filtro hacia el verde");
+            Assert.GreaterOrEqual(filtro.b, filtro.r, "Verde azulado, no amarillo");
+            Assert.Less(filtro.g / Mathf.Max(0.01f, filtro.r), 1.4f, "Sin filtro verde puro (la imagen se volvía monocroma)");
+            Assert.Less(ajustes.saturation.value, 20f, "Saturación moderada");
+            Assert.IsTrue(perfil.TryGet(out UnityEngine.Rendering.Universal.ShadowsMidtonesHighlights smh), "Tiene sombras, medios y luces altas");
+            Assert.Greater(smh.highlights.value.x, smh.highlights.value.y, "Luces altas hacia el magenta");
         }
 
         [Test]

@@ -70,12 +70,13 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Trae_CamarasServidorImplantesYPlataformaDeDron()
+        public void Trae_CamarasServidorEImplantes_SinPlataformaDeDronColgada()
         {
             Assert.GreaterOrEqual(Contar("CY08_CamaraCorporativa_T504"), 2);
             Assert.GreaterOrEqual(Contar("CY05_ServidorCallejero_T504"), 1);
             Assert.GreaterOrEqual(Contar("CY09_PuestoImplantes_T504"), 1);
-            Assert.GreaterOrEqual(Contar("CY07a_PlataformaDron_T504"), 1);
+            // T-509: la plataforma de dron colgada a media altura en el pasillo se leía como caja gris y se apagó.
+            Assert.AreEqual(0, Contar("CY07a_PlataformaDron_T504"), "La plataforma de dron del pasillo está apagada (T-509)");
         }
 
         [Test]
