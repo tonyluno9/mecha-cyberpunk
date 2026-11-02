@@ -141,9 +141,9 @@ namespace MechaCyberpunk.Tests
             Color e = franja.GetColor("_EmissionColor");
             Assert.Greater(e.r, e.g * 5f, "Franja magenta (rojo y azul altos, verde bajo)");
             Assert.Greater(e.b, e.g * 5f);
-            Material jefe = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Personajes/Materiales/man_JefeSkulls.mat");
+            Material jefe = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Personajes/Materiales/SkullHombre_JefeSkulls.mat");
             Assert.IsNotNull(jefe);
-            Assert.Greater(jefe.GetColor("_EmissionColor").r, 0f, "El jefe brilla magenta (emisión mínima; la luz y las franjas hacen el resto)");
+            Assert.Greater(jefe.GetColor("_EmissionColor").r, 0f, "El jefe (SkullHombre, T-510) brilla magenta (emisión mínima; la luz hace el resto)");
         }
 
         [Test]

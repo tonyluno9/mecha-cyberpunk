@@ -26,6 +26,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         private const float MezclaApoyo = 0.75f;
         private const float AlturaDesdeLaQueBuscaPiso = 0.4f;
 
+        public static readonly Color ColorCuerpoSkulls = new Color(0.78f, 0.72f, 0.82f);
         public static readonly Color ColorSkulls = new Color(0.13f, 0.12f, 0.16f);
         public static readonly Color ColorApagadoVecina = new Color(0.66f, 0.6f, 0.52f);
         public static readonly Color ColorApagadoVendedor = new Color(0.52f, 0.62f, 0.62f);
@@ -61,7 +62,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
         // ---------- Materiales ----------
 
-        public static Material Variante(string cuerpo, string nombre, Color color, Color emision = default)
+        public static Material Variante(string cuerpo, string nombre, Color color, Color emision = default, Texture textura = null)
         {
             string ruta = CarpetaMateriales + "/" + cuerpo + "_" + nombre + ".mat";
             Directory.CreateDirectory(CarpetaMateriales);
@@ -77,6 +78,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 m.CopyPropertiesFromMaterial(baseMat);
             }
             m.SetColor("_BaseColor", color);
+            if (textura != null)
+            {
+                m.SetTexture("_BaseMap", textura);
+            }
             if (emision.maxColorComponent > 0f)
             {
                 m.EnableKeyword("_EMISSION");
@@ -284,7 +289,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 raiz.localScale = Vector3.one * EscalaJefe;
             }
             Transform modelo = raiz.Find("Modelo");
-            if (modelo == null || !skulls)
+            if (modelo == null)
             {
                 return;
             }
@@ -293,13 +298,20 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 v = modelo.gameObject.AddComponent<VarianteVisual>();
             }
-            Material cuerpo = jefe
-                ? Variante("man", "JefeSkulls", ColorSkulls, new Color(0.03f, 0f, 0.02f))
-                : Variante("man", "Skulls", ColorSkulls);
-            v.Configurar(new[] { cuerpo }, 0, franja);
-            if (jefe && datosNombre.Contains("Calaveras"))
+            // T-510: man ya tiene su textura (antes salía negro). SKULLS: la textura natural (negro con magenta) un poco más oscura y con franjas;
+            // SNAKES y NOVA: la misma textura con el magenta cambiado a verde o azul.
+            if (skulls)
             {
-                v.ConfigurarLuz(new Color(1f, 0.1f, 0.8f, 1f), 3f, 6f);
+                Material cuerpo = Variante("man", "Skulls", ColorCuerpoSkulls);
+                v.Configurar(new[] { cuerpo }, 0, franja);
+            }
+            else if (datosNombre.Contains("Viboras"))
+            {
+                v.Configurar(new[] { Variante("man", "Viboras", Color.white, default, ConectarVisualesT510.TexturaMan("verde")) }, 0, null);
+            }
+            else if (datosNombre.Contains("Nova"))
+            {
+                v.Configurar(new[] { Variante("man", "Nova", Color.white, default, ConectarVisualesT510.TexturaMan("azul")) }, 0, null);
             }
             EditorUtility.SetDirty(v);
         }
@@ -310,12 +322,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ReemplazarModeloSuelto(raiz, "Modelo", cuerpo, null);
         }
 
-        /// <summary>Cuerpo y color de cada personaje de apoyo: DOC azul médico, INVENTOR naranja, HACKER turquesa, DIRECTOR violeta y MECÁNICO amarillo apagado.</summary>
+        /// <summary>Cuerpo y color de cada personaje de apoyo: DOC, INVENTOR y HACKER con su modelo (T-510), DIRECTOR violeta y MECÁNICO amarillo apagado.</summary>
         public static readonly (string id, string cuerpo, Color color)[] ApoyosDeLaDemo =
         {
-            ("doc", "woman2", new Color(0.55f, 0.8f, 1f)),
-            ("inventor", "woman", new Color(1f, 0.6f, 0.2f)),
-            ("hacker", "woman2", new Color(0.3f, 1f, 0.8f)),
+            ("doc", "Doctor", Color.white),
+            ("inventor", "Inventor", Color.white),
+            ("hacker", "Hacker", Color.white),
             ("director", "woman", new Color(0.8f, 0.62f, 1f)),
             ("mecanico", "woman2", new Color(0.9f, 0.85f, 0.4f)),
         };
@@ -329,14 +341,14 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 if (idApoyo == id)
                 {
-                    // El color propio, mezclado con blanco para que se vea la textura. El cuerpo de man es negro de textura y no admite color.
+                    // T-510: DOC, INVENTOR y HACKER tienen su propio modelo (con su textura, sin tinte); los demás, el color propio mezclado con blanco.
                     ColocarSobreElPiso(raiz, cuerpo, Variante(cuerpo, "Apoyo_" + id, Color.Lerp(Color.white, color, MezclaApoyo)), new[] { "Cuerpo", "Visor" });
                 }
             }
         }
 
         /// <summary>Quita las piezas de cubo, pone el visual de <paramref name="cuerpo"/> con el material y lo apoya en el piso.</summary>
-        private static void ColocarSobreElPiso(Transform raiz, string cuerpo, Material material, string[] quitar)
+        public static void ColocarSobreElPiso(Transform raiz, string cuerpo, Material material, string[] quitar)
         {
             if (raiz.GetComponentInChildren<VisualPersonaje>(true) != null)
             {
