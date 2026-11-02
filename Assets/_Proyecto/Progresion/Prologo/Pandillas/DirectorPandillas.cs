@@ -561,18 +561,49 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 return;
             }
             Vector3 punto = hayCaida ? ultimaCaida : (donaLupe != null ? donaLupe.position : transform.position);
-            GameObject objeto = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            objeto.name = "PistolaEnPiso";
-            Destroy(objeto.GetComponent<Collider>());
-            objeto.transform.position = punto + Vector3.up * 0.15f;
-            objeto.transform.localScale = new Vector3(0.12f, 0.12f, 0.3f);
-            Renderer r = objeto.GetComponent<Renderer>();
-            if (r != null)
-            {
-                r.material.color = new Color(1f, 0.85f, 0.2f);
-            }
+            GameObject objeto = new GameObject("PistolaEnPiso");
+            objeto.transform.position = punto + Vector3.up * 0.1f;
+            objeto.transform.rotation = Quaternion.Euler(0f, 35f, 0f);
+            ArmarModeloPistola(objeto.transform);
             arma = objeto.AddComponent<ArmaEnPiso>();
             arma.Tomada += AlTomarArma;
+        }
+
+        private const float LargoCorredera = 0.26f;
+        private const float EmisionPistola = 2.5f;
+
+        /// <summary>T-507: pistola de piezas (corredera, cañón, empuñadura y tira de neón) con material de arma, en vez de un cubo amarillo.</summary>
+        private static void ArmarModeloPistola(Transform raiz)
+        {
+            Shader sombreador = Shader.Find("Universal Render Pipeline/Lit");
+            Material metal = new Material(sombreador) { name = "PistolaMetal" };
+            metal.SetColor("_BaseColor", new Color(0.14f, 0.15f, 0.18f));
+            metal.SetFloat("_Metallic", 0.85f);
+            metal.SetFloat("_Smoothness", 0.7f);
+            Material grip = new Material(sombreador) { name = "PistolaEmpunadura" };
+            grip.SetColor("_BaseColor", new Color(0.22f, 0.13f, 0.09f));
+            grip.SetFloat("_Smoothness", 0.3f);
+            Material neon = new Material(sombreador) { name = "PistolaNeon" };
+            neon.SetColor("_BaseColor", new Color(0.05f, 0.4f, 0.4f));
+            neon.EnableKeyword("_EMISSION");
+            neon.SetColor("_EmissionColor", new Color(0.1f, 0.9f, 0.85f) * EmisionPistola);
+
+            AgregarPieza(raiz, PrimitiveType.Cube, "Corredera", new Vector3(0f, 0.07f, 0.02f), new Vector3(0.05f, 0.055f, LargoCorredera), Vector3.zero, metal);
+            AgregarPieza(raiz, PrimitiveType.Cylinder, "Canon", new Vector3(0f, 0.065f, LargoCorredera * 0.5f + 0.04f), new Vector3(0.025f, 0.04f, 0.025f), new Vector3(90f, 0f, 0f), metal);
+            AgregarPieza(raiz, PrimitiveType.Cube, "Empunadura", new Vector3(0f, 0.0f, -0.07f), new Vector3(0.045f, 0.13f, 0.06f), new Vector3(-14f, 0f, 0f), grip);
+            AgregarPieza(raiz, PrimitiveType.Cube, "TiraNeon", new Vector3(0.027f, 0.075f, 0.02f), new Vector3(0.006f, 0.012f, LargoCorredera * 0.8f), Vector3.zero, neon);
+        }
+
+        private static void AgregarPieza(Transform raiz, PrimitiveType tipo, string nombre, Vector3 pos, Vector3 escala, Vector3 giro, Material material)
+        {
+            GameObject pieza = GameObject.CreatePrimitive(tipo);
+            pieza.name = nombre;
+            Destroy(pieza.GetComponent<Collider>());
+            pieza.transform.SetParent(raiz, false);
+            pieza.transform.localPosition = pos;
+            pieza.transform.localEulerAngles = giro;
+            pieza.transform.localScale = escala;
+            pieza.GetComponent<Renderer>().sharedMaterial = material;
         }
 
         private void AlTomarArma(ArmaEnPiso tomada)

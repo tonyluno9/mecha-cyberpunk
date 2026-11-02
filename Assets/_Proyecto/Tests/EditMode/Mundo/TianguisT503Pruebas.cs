@@ -124,10 +124,11 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             VolumeProfile perfil = AssetDatabase.LoadAssetAtPath<VolumeProfile>(RutaPerfilSuburbios);
             Assert.IsNotNull(perfil);
-            Assert.AreEqual(2, perfil.components.Count);
+            Assert.AreEqual(3, perfil.components.Count, "T-507 agregó WhiteBalance");
             Assert.IsTrue(perfil.components.All(c => c != null));
             Assert.IsTrue(perfil.TryGet(out ColorAdjustments _));
             Assert.IsTrue(perfil.TryGet(out Vignette _));
+            Assert.IsTrue(perfil.TryGet(out WhiteBalance _));
         }
     }
 }
