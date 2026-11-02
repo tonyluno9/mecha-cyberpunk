@@ -210,6 +210,13 @@ namespace MechaCyberpunk.UI.Titulo
             {
                 Armar();
             }
+            // T-524: el sprite del degradado se hace por código y no sobrevive al prefab: sin esto la franja salía sólida (corte duro).
+            Transform franja = contenido.transform.Find("FranjaOscura");
+            if (franja != null && franja.TryGetComponent(out Image imagenFranja))
+            {
+                imagenFranja.sprite = KitUI.SpriteDegradadoHorizontal();
+                imagenFranja.enabled = true;
+            }
             nueva.AlPulsar.AddListener(AbrirCreacion);
             continuar.AlPulsar.AddListener(ContinuarPartida);
             opciones.AlPulsar.AddListener(AbrirOpciones);

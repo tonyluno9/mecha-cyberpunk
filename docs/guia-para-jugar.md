@@ -408,3 +408,7 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: empieza en Suburbios, camina a El Tianguis y a Neón Alto, recluta al CHATO y gana dinero.
 - Observa: un solo aviso a la vez en el centro, tutorial pequeño abajo, sin lista de controles ni "RADIO", panel de zona arriba a la derecha que cambia al cruzar, minimapa con calles claras sobre manzanas oscuras.
 - Compara: docs/capturas/T-523-comparacion-hud.png (mockup, antes, después).
+### T-524 Menú con degradado y retoques del HUD
+- Haz: abre el juego en la pantalla de título y empieza una partida en Suburbios.
+- Observa: el fondo oscuro del título se desvanece suave hacia la ciudad, sin corte vertical; la barra de CALOR está bajo la vida aunque esté vacía; el panel de zona (arriba a la derecha) trae el nombre grande y RESPETO con su barra.
+- Compara: docs/capturas/T-524-comparacion-menu.png y T-524-comparacion-hud.png (mockup, antes, después).

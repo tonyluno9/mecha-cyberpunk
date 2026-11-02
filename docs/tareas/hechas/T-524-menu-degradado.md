@@ -1,0 +1,7 @@
+# T-524 Pulido visual, punto 5: menú con degradado y retoques del HUD
+Dueño: Tony | Rama: tony/T-524-menu-degradado | Modelo: Sonnet 5.5 | Pasada de pulido (Logs/reglas-plan-ciudad.md)
+Hecho: el corte vertical del título venía de un bug: el sprite del degradado se genera por código y no sobrevive al prefab, así que la franja salía como un bloque sólido. PantallaTitulo.Awake le vuelve a poner KitUI.SpriteDegradadoHorizontal() (oscuro a la izquierda, transparente hacia el centro, sin bandas). Pausa, ranuras, opciones, créditos y creación usan un velo uniforme a pantalla completa: no tenían el corte. HUD: la barra de CALOR se ve siempre a pie y en carro (vacía con calor 0; en el mecha sigue la cabina). El "EL TIANGUIS" bajo el aviso del centro no es HUD: es el letrero 3D del arco de El Tianguis (x=-46.5) que se ve al fondo de la calle desde Suburbios; se deja. Panel de zona: el nombre grande (Teko 46) y debajo RESPETO con su barra (la línea larga ZONA · DUEÑO · RESPETO n sigue como dato sin dibujarse); AltoZona 96 a 116.
+Pruebas: EditMode DegradadoMenuPruebas 2 (alfa 1 a 0 sin escalones); PlayMode nuevas: franja del título con el degradado, ZonaHudPruebas.Zona_PanelConNombreGrandeYRespetoConBarra, calor visible con 0 (HudCalor, CalorMecha actualizadas).
+Capturas: docs/capturas/T-524-titulo.png, -1440, T-524-hud.png, -1440, T-524-comparacion-menu.png y T-524-comparacion-hud.png (mockup | antes | después).
+## Bitácora
+- 2026-11-01: hecho.

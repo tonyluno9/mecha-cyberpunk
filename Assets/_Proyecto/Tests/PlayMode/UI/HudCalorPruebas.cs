@@ -18,11 +18,12 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator Calor_EnCero_GrupoOculto()
+        public IEnumerator Calor_EnCero_BarraVisibleYVacia()
         {
             yield return Preparar();
             Assert.IsNotNull(Registro<ICalor>.Actual, "El jugador trae el servicio de calor");
-            Assert.IsFalse(hud.GrupoCalor.activeSelf);
+            Assert.IsTrue(hud.GrupoCalor.activeSelf, "T-524: la barra de calor se ve siempre a pie");
+            Assert.AreEqual(0, hud.MarcasCalorLlenas, "Con calor 0 está vacía");
         }
 
         [UnityTest]
@@ -50,7 +51,7 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator Calor_AlBorrar_VuelveAOcultarse()
+        public IEnumerator Calor_AlBorrar_VuelveAVaciarse()
         {
             yield return Preparar();
             Registro<ICalor>.Actual.Sumar(80f, MotivoCalor.Otro);
@@ -58,7 +59,8 @@ namespace MechaCyberpunk.Tests.UI
             Registro<ICalor>.Actual.Borrar();
             yield return null;
 
-            Assert.IsFalse(hud.GrupoCalor.activeSelf);
+            Assert.IsTrue(hud.GrupoCalor.activeSelf);
+            Assert.AreEqual(0, hud.MarcasCalorLlenas);
         }
 
         [UnityTest]
