@@ -246,7 +246,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             yield return null;
             Assert.IsTrue(MechaCyberpunk.UI.Hud.ColaAvisos.Actual.Visible, "T-523: el aviso de zona sale por la cola del centro");
-            StringAssert.Contains("TIANGUIS", MechaCyberpunk.UI.Hud.ColaAvisos.Actual.Texto);
+            StringAssert.Contains("TIANGUIS", zona.TextoAviso.text);
             Capturar("aviso-zona", camara);
             avisar.Invoke(zona, new object[] { string.Empty, Color.white, 0f, MechaCyberpunk.UI.Hud.TipoAviso.Neutro });
 
