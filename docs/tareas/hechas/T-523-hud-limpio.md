@@ -4,4 +4,4 @@ Hecho: cola de avisos del centro (ColaAvisos + ReglaColaAvisos pura): uno a la v
 Pruebas: EditMode ReglaColaAvisosPruebas 9; PlayMode nuevas ColaAvisosPruebas (1 aviso a la vez y en orden, premio por la cola, sin controles ni RADIO) y ZonaHudPruebas (el panel cambia Suburbios, Tianguis, Neón Alto con el color del dueño; sin cartel MEGALOPOLIS suelto). Actualizadas HudAPie, HudCarro y AvisoLiga; borrada AyudasControlesPruebas (la ayuda ya no existe).
 Capturas: docs/capturas/T-523-hud.png, T-523-hud-1440.png y T-523-comparacion-hud.png (mockup | antes | después).
 ## Bitácora
-- 2026-11-01: hecho.
+- 2026-11-01: hecho. RecorridoDemoPruebas 1/2: el bot cae KO en El Tianguis (tramo 10, el fallo conocido); tramos 1 a 9 pasan. UI: 72+ pruebas verdes (Pausa tuvo un fallo de tiempo suelto que pasó al repetir).
