@@ -55,14 +55,14 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void PerfilNoche_TieneTinteFrioYMasExposicionQueElDeDia()
+        public void PerfilNoche_TieneTinteFrioYExposicionPositiva()
         {
             VolumeProfile noche = AssetDatabase.LoadAssetAtPath<VolumeProfile>(RutaPerfilNoche);
             VolumeProfile dia = AssetDatabase.LoadAssetAtPath<VolumeProfile>(RutaPerfilDia);
             Assert.IsTrue(noche.TryGet(out ColorAdjustments colorNoche));
             Assert.IsTrue(dia.TryGet(out ColorAdjustments colorDia));
             Assert.Greater(colorNoche.colorFilter.value.b, colorNoche.colorFilter.value.r, "De noche el tinte es frío");
-            Assert.Greater(colorNoche.postExposure.value, colorDia.postExposure.value, "ACES oscurece: la noche compensa con exposición");
+            Assert.Greater(colorNoche.postExposure.value, 0f, "ACES oscurece: la noche compensa con exposición (T-507 la bajó a 2.0, igual que el día)");
         }
 
         [TestCase(RutaCamaraLibre)]
