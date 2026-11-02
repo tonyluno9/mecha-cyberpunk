@@ -244,6 +244,9 @@ namespace MechaCyberpunk.Arte.Editor
             return Clase.Metal;
         }
 
+        /// <summary>T-509: material con textura para el original liso (el mismo que usa Colocar).</summary>
+        public static Material ArteDe(Material original) { return MaterialConArte(original); }
+
         private static Material MaterialConArte(Material original)
         {
             string nombre = "T506_" + original.name;
