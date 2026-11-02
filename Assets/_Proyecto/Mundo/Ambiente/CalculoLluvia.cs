@@ -8,5 +8,11 @@ namespace MechaCyberpunk.Mundo.Ambiente
         {
             return interruptorActivo && !jugadorEnInterior && (esDeNoche || lluviaDeDia);
         }
+
+        /// <summary>T-512: qué tanto llueve (0 a 1): de noche toda la lluvia; de día solo la fracción de la config (lluvia ligera).</summary>
+        public static float Intensidad(bool esDeNoche, float fraccionDeDia)
+        {
+            return esDeNoche ? 1f : (fraccionDeDia < 0f ? 0f : (fraccionDeDia > 1f ? 1f : fraccionDeDia));
+        }
     }
 }

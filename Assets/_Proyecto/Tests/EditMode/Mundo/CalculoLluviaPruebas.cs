@@ -34,5 +34,18 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             Assert.IsFalse(CalculoLluvia.DebeLlover(false, false, true, true));
         }
+    
+        [Test]
+        public void Intensidad_DeNoche_Toda()
+        {
+            Assert.AreEqual(1f, CalculoLluvia.Intensidad(true, 0.3f));
+        }
+
+        [Test]
+        public void Intensidad_DeDia_LaFraccionLigera()
+        {
+            Assert.AreEqual(0.3f, CalculoLluvia.Intensidad(false, 0.3f), 1e-5f);
+            Assert.AreEqual(1f, CalculoLluvia.Intensidad(false, 4f), "Se recorta a 1");
+        }
     }
 }
