@@ -432,3 +432,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: de noche entra al callejón de la emboscada y al pasillo de El Mercado, recorre El Tianguis por la calle principal, sube a una azotea; luego pon el reloj de día y sal a la calle.
 - Observa: lámparas cálidas y neón magenta en los muros (se ven los objetos y sigue oscuro), el portón de El Mercado más naranja, puestos en hileras a las dos orillas del Tianguis sin tapar el carril, techos con luz de luna y lluvia ligera también de día.
 - Compara: docs/capturas/T-512-<zona>-comparacion.png (callejon, entrada-mercado, tianguis, azotea, dia-lluvia, mercado-pasillo).
+
+### T-513 Fondo de la ciudad
+- Haz: de noche sube a una azotea de Suburbios y gira la cámara alrededor; camina hasta el fondo de la calle del oeste; luego pon el reloj de día.
+- Observa: al este el skyline de Neón Alto con pantallas verdes y magenta, al norte la torre de Nova con sus haces de luz, al sur y al oeste más Suburbios; arriba la pintura se funde con el cielo; de día se ve como ciudad lejana con calima. Ya no hay torres de bloques sueltas a lo lejos (las de Neón Alto cercanas siguen).
+- Compara: docs/capturas/T-513-azotea-este-comparacion.png, -azotea-norte, -suburbios-oeste y -azotea-este-dia.
