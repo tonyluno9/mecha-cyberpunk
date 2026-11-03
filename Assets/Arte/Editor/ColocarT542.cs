@@ -139,7 +139,8 @@ namespace MechaCyberpunk.Arte.Editor
             }
             m.SetTexture("_EmissionMap", t);
             m.SetColor("_EmissionColor", Color.white * brillo);
-            m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
+            // T-546: con None el postprocesador de materiales de URP quita _EMISSION al reimportar (solo la deja si el GI es emisivo).
+            m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
             m.SetKeyword(new UnityEngine.Rendering.LocalKeyword(m.shader, "_EMISSION"), true);
             m.EnableKeyword("_EMISSION");
             EditorUtility.SetDirty(m);
