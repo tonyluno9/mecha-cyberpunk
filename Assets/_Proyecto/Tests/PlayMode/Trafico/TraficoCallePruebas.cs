@@ -175,6 +175,43 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [UnityTest]
+        public IEnumerator Carro_FrenaAnteUnCarroEstacionadoEnSuCarril_SinChocar()
+        {
+            // T-532: antes solo veía al jugador y a otros carros del tráfico; ahora cualquier cosa sólida en su carril.
+            CarroTrafico carro = CrearCarro(7, () => null);
+            yield return null;
+            GameObject estacionado = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            extras.Add(estacionado);
+            estacionado.transform.localScale = new Vector3(2f, 1.5f, 4.5f);
+            estacionado.transform.rotation = carro.transform.rotation;
+            estacionado.transform.position = carro.transform.position + carro.transform.forward * 16f + Vector3.up * 0.3f;
+            yield return new WaitForSeconds(6f);
+            Assert.Less(carro.Velocidad, 0.3f, "Se detuvo");
+            float hueco = Vector3.Distance(carro.transform.position, estacionado.transform.position);
+            Assert.Greater(hueco, 4.5f, "Sin chocar con el carro estacionado");
+        }
+
+        [UnityTest]
+        public IEnumerator Carro_AlLlegarAlFinalDeLasAfueras_ReapareceLejosDelJugador()
+        {
+            // T-532: las calles siguen a las afueras y el carro desaparece al final para salir en otro final, lejos del jugador.
+            List<Vector2> centros = new List<Vector2> { new Vector2(0f, 0f), new Vector2(80f, 0f), new Vector2(0f, 80f), new Vector2(80f, 80f) };
+            GrafoCalles calles = GrafoCalles.DeManzanas(centros, 80f, 0.2f);
+            int antes = calles.Cantidad;
+            TraficoCalle.AlargarHaciaLasAfueras(calles);
+            Assert.Greater(calles.Cantidad, antes, "Hay tramos hacia las afueras");
+            Vector3 jugador = new Vector3(40f, 0f, 40f);
+            CarroTrafico carro = Object.Instantiate(prefab);
+            extras.Add(carro.gameObject);
+            carro.Preparar(config, calles, calles.MasCercano(jugador), new System.Random(3), () => jugador);
+            yield return null;
+            Assert.IsTrue(carro.Reaparecer(true));
+            Vector3 p = carro.transform.position;
+            Assert.Greater(Vector3.Distance(new Vector3(p.x, 0f, p.z), jugador), 45f, "Sale lejos del jugador");
+            Assert.Greater(Mathf.Max(Mathf.Abs(p.x - 40f), Mathf.Abs(p.z - 40f)), 80f + TraficoCalle.LargoAfueras * 0.5f, "En un final de las afueras");
+        }
+
+        [UnityTest]
         public IEnumerator Carro_ConUnDisparoCerca_SeAsustaPitaYSeDetiene()
         {
             CarroTrafico carro = CrearCarro(7, () => null);

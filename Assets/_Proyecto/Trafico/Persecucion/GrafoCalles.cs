@@ -55,6 +55,19 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return grafo;
         }
 
+        /// <summary>
+        /// T-532: alarga el grafo con un tramo nuevo de <paramref name="desde"/> a <paramref name="punto"/> (las calles de las afueras). Devuelve el índice
+        /// del nodo nuevo.
+        /// </summary>
+        public int AgregarTramo(int desde, Vector3 punto)
+        {
+            nodos.Add(punto);
+            vecinos.Add(new List<int> { desde });
+            int nuevo = nodos.Count - 1;
+            vecinos[desde].Add(nuevo);
+            return nuevo;
+        }
+
         /// <summary>Índice del nodo más cercano a un punto (en el plano, ignorando la altura).</summary>
         public int MasCercano(Vector3 punto)
         {

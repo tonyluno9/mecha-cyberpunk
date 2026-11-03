@@ -42,6 +42,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         [Header("Datos")]
         [Tooltip("Valores de física y sensación del carro.")]
         [SerializeField] private ConfigCarro config;
+        [Tooltip("T-532: nombre del modelo para el HUD (\"Sedán viejo\", \"Patrulla\"...). Vacío: \"Carro viejo\".")]
+        [SerializeField] private string nombreModelo = "";
         [Tooltip("Controles del carro (ControlesCarro.inputactions).")]
         [SerializeField] private InputActionAsset controles;
 
@@ -160,7 +162,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         }
 
         public ModoJugador Modo => ModoJugador.Carro;
-        public string Nombre => "Carro viejo";
+        public string Nombre => string.IsNullOrEmpty(nombreModelo) ? "Carro viejo" : nombreModelo;
         public Vector3 PuntoSubida => puntoSubida.position;
         public bool Ocupado { get; private set; }
         public bool PuedeSubir => listo && !Ocupado && (!EstaEnTrafico || velocidadEnTrafico < config.RapidezMaximaParaBajar);

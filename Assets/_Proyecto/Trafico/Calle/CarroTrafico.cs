@@ -21,6 +21,19 @@ namespace MechaCyberpunk.Trafico.Calle
         private const float VelocidadMinimaPasaCerca = 4f;
         private const float SegundosEntrePasaCerca = 4f;
         private const float AlturaDelCentro = 0.45f;
+        // T-532: los cruces (nodos con 3 o más calles) se ceden: un carro espera afuera mientras otro que cruza en otra dirección está adentro.
+        private const float RadioCruce = 8f;
+        private const float DistanciaAvisoCruce = 16f;
+        private const float CruceSeCruza = 0.6f;
+        // T-532: lo que no es tráfico (carros estacionados o robados, patrullas, gente, puestos) se ve con un rayo en caja a la altura del cofre.
+        private const float AlturaRayo = 0.9f;
+        private const int MaxChoques = 8;
+        // T-532: aparece y desaparece lejos y fuera de la vista.
+        private const float DistanciaOculta = 45f;
+        private const float MargenVista = 0.1f;
+        private const float AlcanceVista = 160f;
+        private static readonly Vector3 MitadRayo = new Vector3(0.95f, 0.35f, 0.1f);
+        private readonly RaycastHit[] choques = new RaycastHit[MaxChoques];
 
         /// <summary>Los carros de tráfico que andan ahora (para que se vean entre sí).</summary>
         public static readonly List<CarroTrafico> Activos = new List<CarroTrafico>();
@@ -222,6 +235,10 @@ namespace MechaCyberpunk.Trafico.Calle
             if (haciaNodo.magnitude <= config.MargenNodo)
             {
                 int llegado = nodoDestino;
+                if (calles.Vecinos(llegado).Count == 1 && Reaparecer(true))
+                {
+                    return;
+                }
                 nodoDestino = ElegirSiguiente(llegado, nodoAnterior);
                 nodoAnterior = llegado;
                 haciaNodo = calles.Nodo(nodoDestino) - eje;
@@ -285,7 +302,109 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 menor = Mathf.Min(menor, DistanciaDelante(jugador.Value, adelante, derecha));
             }
+            menor = Mathf.Min(menor, DistanciaAlCruce());
+            menor = Mathf.Min(menor, DistanciaFisica(adelante));
             return menor;
+        }
+
+        // T-532: cede el cruce si otro carro que va en otra dirección ya está adentro o llega antes.
+        private float DistanciaAlCruce()
+        {
+            if (calles.Vecinos(nodoDestino).Count < 3)
+            {
+                return float.MaxValue;
+            }
+            Vector3 cruce = calles.Nodo(nodoDestino);
+            float mia = Distancia(transform.position, cruce);
+            if (mia <= RadioCruce || mia > DistanciaAvisoCruce)
+            {
+                return float.MaxValue;
+            }
+            for (int i = 0; i < Activos.Count; i++)
+            {
+                CarroTrafico otro = Activos[i];
+                if (otro == this || Mathf.Abs(Vector3.Dot(otro.transform.forward, transform.forward)) > CruceSeCruza)
+                {
+                    continue;
+                }
+                float suya = Distancia(otro.transform.position, cruce);
+                bool adentro = suya <= RadioCruce;
+                bool llegaAntes = otro.nodoDestino == nodoDestino && suya < mia;
+                if (adentro || llegaAntes)
+                {
+                    return Mathf.Max(0f, mia - RadioCruce);
+                }
+            }
+            return float.MaxValue;
+        }
+
+        // T-532: carros estacionados, robados, patrullas, gente o puestos en el carril (todo lo que tenga collider y no sea este carro).
+        private float DistanciaFisica(Vector3 adelante)
+        {
+            Vector3 centro = transform.position + Vector3.up * (AlturaRayo - alturaRaiz) + adelante * (LargoCarro * 0.5f);
+            int n = Physics.BoxCastNonAlloc(centro, MitadRayo, adelante, choques, transform.rotation, config.DistanciaFrenado, ~0, QueryTriggerInteraction.Ignore);
+            float menor = float.MaxValue;
+            for (int i = 0; i < n; i++)
+            {
+                Collider c = choques[i].collider;
+                if (c == null || c.transform.root == transform.root || choques[i].distance <= 0f)
+                {
+                    continue;
+                }
+                menor = Mathf.Min(menor, choques[i].distance);
+            }
+            return menor;
+        }
+
+        /// <summary>
+        /// T-532: vuelve a salir en un nodo lejos del jugador y fuera de la vista de la cámara (con <paramref name="soloFinales"/>, solo en los finales
+        /// de las calles de las afueras). Devuelve false si no encontró dónde.
+        /// </summary>
+        public bool Reaparecer(bool soloFinales)
+        {
+            if (calles == null || azar == null)
+            {
+                return false;
+            }
+            Vector3? jugador = posicionJugador?.Invoke();
+            Camera camara = Camera.main;
+            int elegido = -1;
+            int intentos = calles.Cantidad * 3;
+            for (int i = 0; i < intentos && elegido < 0; i++)
+            {
+                int nodo = azar.Next(calles.Cantidad);
+                if (soloFinales && calles.Vecinos(nodo).Count != 1)
+                {
+                    continue;
+                }
+                Vector3 p = calles.Nodo(nodo);
+                if (jugador.HasValue && Distancia(p, jugador.Value) < DistanciaOculta)
+                {
+                    continue;
+                }
+                if (camara != null && SeVe(camara, p))
+                {
+                    continue;
+                }
+                elegido = nodo;
+            }
+            if (elegido < 0)
+            {
+                return false;
+            }
+            eje = calles.Nodo(elegido);
+            nodoAnterior = elegido;
+            nodoDestino = ElegirSiguiente(elegido, -1);
+            direccion = DireccionA(nodoDestino);
+            desvio = Derecha(direccion) * config.SeparacionCarril;
+            transform.SetPositionAndRotation(Posicion(), Quaternion.LookRotation(direccion, Vector3.up));
+            return true;
+        }
+
+        private static bool SeVe(Camera camara, Vector3 punto)
+        {
+            Vector3 v = camara.WorldToViewportPoint(punto + Vector3.up);
+            return v.z > 0f && v.z < AlcanceVista && v.x > -MargenVista && v.x < 1f + MargenVista && v.y > -MargenVista && v.y < 1f + MargenVista;
         }
 
         private float DistanciaDelante(Vector3 punto, Vector3 adelante, Vector3 derecha)

@@ -24,6 +24,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const float ImpulsoVerticalExplosion = 4f;
         private static readonly Color ColorArmazon = new Color(0.06f, 0.06f, 0.07f, 1f);
 
+        /// <summary>Aviso al conductor cuando el carro se prende (T-532).</summary>
+        public const string TextoIncendio = "¡Bájate, se va a quemar!";
+
         [SerializeField] private ConfigDanioCarro config;
 
         private CarroViejo carro;
@@ -159,6 +162,15 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             ActualizarEfectos(ahora);
             EstadoCambio?.Invoke(ahora);
+            if (ahora == EstadoCarro.Fuego)
+            {
+                // T-532: con alguien adentro, aviso para que se baje antes de que explote.
+                IMontable montable = GetComponent<IMontable>();
+                if (montable != null && montable.Ocupado)
+                {
+                    EventosMontaje.PublicarAviso(montable, TextoIncendio);
+                }
+            }
             if (ahora == EstadoCarro.Destruido && !Explotado)
             {
                 Explotar();

@@ -298,6 +298,7 @@ namespace MechaCyberpunk.UI.Hud
 
         private void OnEnable()
         {
+            EventosMontaje.Aviso += AlAvisoMontable;
             if (!listo)
             {
                 return;
@@ -354,6 +355,7 @@ namespace MechaCyberpunk.UI.Hud
 
         private void OnDisable()
         {
+            EventosMontaje.Aviso -= AlAvisoMontable;
             if (!listo)
             {
                 return;
@@ -973,6 +975,12 @@ namespace MechaCyberpunk.UI.Hud
         }
 
         /// <summary>Avisa "IMPLANTE INSTALADO: nombre" en el aviso de misión, el mismo tiempo que ese aviso (T-193).</summary>
+        // T-532: el carro en el que vas se prende: aviso grande y rojo para bajarse.
+        private static void AlAvisoMontable(IMontable montable, string texto)
+        {
+            ColaAvisos.Publicar(texto, PrioridadAviso.Alta, TipoAviso.Malo, 4f, "montable");
+        }
+
         public void MostrarAvisoImplante(string nombre)
         {
             if (grupoAvisoMision == null || textoAvisoMision == null)
