@@ -8241,6 +8241,7 @@ MonoBehaviour:
   respetoJefe: 70
   radioSalida: 4
   segundosContinuara: 4
+  modeloPistola: {fileID: 7161985598469708661, guid: 044d9534a465b114eae6d2cb68408715, type: 3}
 --- !u!4 &45034310
 Transform:
   m_ObjectHideFlags: 0

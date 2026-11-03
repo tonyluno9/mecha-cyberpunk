@@ -453,3 +453,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Observa: torres corporativas de 6 a 20 pisos con pantallas de anuncios que cambian, postes nuevos con luz blanca, letreros 3D que brillan de noche (VivaCoin, Hotel, El Mercado, I+D+I, CIC) y la moto de reparto que se maneja.
 - Compara: docs/capturas/prueba2-neon-alto-torres.png, -torres-pantallas, -casino-vivacoin, -letreros-idi-cic, -hotel-y-moto y -modelos-nuevos.
 
+### Paso 3 del 3-nov (T-545): pistola W01
+- Haz: vence al SKULL del Tianguis, recoge la pistola que suelta, dispara y recarga (R).
+- Observa: la pistola nueva (21 cm) en tu mano y en la de los SKULLS; al disparar la corredera va atrás y regresa; al recargar sale el cargador y entra otro.
+- Compara: docs/capturas/prueba2-pistola-w01.png.
+
