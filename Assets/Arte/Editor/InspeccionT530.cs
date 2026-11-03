@@ -176,6 +176,57 @@ namespace MechaCyberpunk.Arte.Editor
             return "guardado " + ruta;
         }
 
+        /// <summary>En Play: pone al jugador en (x, z) mirando hacia (hx, hz) y deja que la cámara del juego lo siga.</summary>
+        public static string PonerJugador(float x, float y, float z, float hx, float hz)
+        {
+            GameObject jugador = GameObject.Find("JugadorAPie");
+            if (jugador == null)
+            {
+                return "sin jugador";
+            }
+            CharacterController cc = jugador.GetComponent<CharacterController>();
+            if (cc != null) { cc.enabled = false; }
+            jugador.transform.position = new Vector3(x, y, z);
+            jugador.transform.rotation = Quaternion.LookRotation(new Vector3(hx - x, 0f, hz - z));
+            if (cc != null) { cc.enabled = true; }
+            foreach (MonoBehaviour m in jugador.GetComponentsInChildren<MonoBehaviour>())
+            {
+                // El giro de la cámara del hombro sigue al cuerpo (ControladorAPie.GiroCamara).
+                System.Reflection.PropertyInfo p = m.GetType().GetProperty("GiroCamara");
+                System.Reflection.FieldInfo f = m.GetType().GetField("giroCamara", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (p != null && f != null)
+                {
+                    f.SetValue(m, jugador.transform.eulerAngles.y);
+                }
+            }
+            return "ok";
+        }
+
+        /// <summary>En Play: foto con la cámara del juego (Camera.main), 1600x900.</summary>
+        public static string FotoJuego(string ruta)
+        {
+            Camera cam = Camera.main;
+            if (cam == null)
+            {
+                return "sin cámara";
+            }
+            RenderTexture rt = new RenderTexture(1600, 900, 24, RenderTextureFormat.ARGB32);
+            RenderTexture antes = cam.targetTexture;
+            cam.targetTexture = rt;
+            cam.Render();
+            cam.targetTexture = antes;
+            RenderTexture.active = rt;
+            Texture2D foto = new Texture2D(1600, 900, TextureFormat.RGB24, false);
+            foto.ReadPixels(new Rect(0, 0, 1600, 900), 0, 0);
+            foto.Apply();
+            File.WriteAllBytes(ruta, foto.EncodeToPNG());
+            RenderTexture.active = null;
+            Object.DestroyImmediate(foto);
+            rt.Release();
+            Object.DestroyImmediate(rt);
+            return "guardado " + ruta;
+        }
+
         /// <summary>Foto ortográfica desde arriba centrada en (cx, cz) que cubre 'lado' m, a 'ruta' (png 2048x2048). Luz de día plana.</summary>
         public static string FotoArriba(float cx, float cz, float lado, string ruta)
         {
