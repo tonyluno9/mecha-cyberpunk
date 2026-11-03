@@ -83,7 +83,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             float desvio = sensacion != null ? sensacion.Desvio : 0f;
             Quaternion giro = Quaternion.Euler(controlador.Inclinacion - (zoom != null ? zoom.Sacudida : 0f) - patada, controlador.GiroCamara + desvio, 0f);
             Quaternion giroHorizontal = Quaternion.Euler(0f, controlador.GiroCamara, 0f);
-            Vector3 pivote = controlador.transform.position + Vector3.up * (altura - controlador.AjusteAlturaCamara) + giroHorizontal * (Vector3.right * lateral);
+            Vector3 cabeza = controlador.transform.position + Vector3.up * (altura - controlador.AjusteAlturaCamara);
+            // T-530: el hombro (pivote) puede quedar dentro de un muro si el jugador está pegado a él; el rayo de la cámara saldría de adentro
+            // y no lo vería. Se acerca el pivote a la cabeza hasta antes del muro.
+            Vector3 pivote = cabeza + giroHorizontal * (Vector3.right * Recortar(cabeza, giroHorizontal * Vector3.right, lateral));
             Vector3 deseada = pivote - giro * Vector3.forward * distancia;
             Vector3 posicion = deseada;
 
@@ -107,6 +110,29 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
             transform.SetPositionAndRotation(posicion, giro);
             camara.fieldOfView = zoom != null ? Mathf.Lerp(fov, config.FovSniper, zoom.Mezcla) : fov;
+        }
+
+        /// <summary>Distancia libre (hasta 'largo') desde 'origen' en 'direccion' antes de chocar con algo que no sea el jugador, menos el radio de la cámara.</summary>
+        private float Recortar(Vector3 origen, Vector3 direccion, float largo)
+        {
+            float signo = Mathf.Sign(largo);
+            float abs = Mathf.Abs(largo);
+            if (abs < 0.001f)
+            {
+                return largo;
+            }
+            int cantidad = Physics.SphereCastNonAlloc(origen, config.RadioColision, direccion * signo, choques, abs, ~0, QueryTriggerInteraction.Ignore);
+            float minima = abs;
+            for (int i = 0; i < cantidad; i++)
+            {
+                RaycastHit choque = choques[i];
+                if (choque.collider.transform.root == controlador.transform.root)
+                {
+                    continue;
+                }
+                minima = Mathf.Min(minima, Mathf.Max(0f, choque.distance));
+            }
+            return minima * signo;
         }
     }
 }

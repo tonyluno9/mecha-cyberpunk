@@ -177,7 +177,8 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsNotNull(raiz, "Falta la raíz T506_SinGreybox (Mecha Cyberpunk/T-506/Quitar greybox)");
             Assert.AreEqual(1, escena.GetRootGameObjects().Count(g => g.name == "T506_SinGreybox"));
             Assert.AreEqual(0, raiz.GetComponentsInChildren<Collider>(true).Length, "Los props son solo visuales");
-            Assert.GreaterOrEqual(raiz.GetComponentsInChildren<Renderer>().Length, 30);
+            // T-530: en El Tianguis se quitaron las cajas de los puestos que quedaban encimados (antes 30 o más).
+            Assert.GreaterOrEqual(raiz.GetComponentsInChildren<Renderer>().Length, 15);
         }
 
         [Test]
