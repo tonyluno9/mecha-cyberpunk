@@ -230,6 +230,7 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 | T-543 | Paso 2: moto de reparto V07 manejable y robable en Suburbios y El Tianguis | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
 | T-544 | Paso 2: 52 pantallas LED con anuncios que cambian y parpadean | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
 | T-545 | Paso 3: pistola W01 en la mano del jugador y de los SKULLS y en el piso; corredera y cargador animados con las curvas de los .blend | hecha | [T-545](tareas/hechas/T-545-pistola-w01.md) |
+| T-546 | Paso 4: cinco interiores con assets existentes (habitación, consultorio del Doc, taller de Tino, casino, entrada de armas del Mercado) y emisión de los letreros L10-L14 que se perdía al reimportar | hecha | [T-546](tareas/hechas/T-546-interiores.md) |
 
 ## Cierre de la Parte A (ciudad como las referencias): FPS de noche por zona
 Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x1080, calidad Medio, hora 23, Logs/med505-despues/medicion.txt). Meta: 60.
@@ -254,3 +255,18 @@ Los 6 pasos de docs/plan-personajes-carros.md están en main con push (un merge 
 - Capturas: docs/capturas/T-511-*, T-509-*-comparacion, T-512-<zona>-comparacion, T-513-<vista>-comparacion.
 - FPS de noche (build de medición, 1920x1080, Medio): la zona más lenta tras el paso 5 es "carros" con 155.2 (1 % bajo 88.2); calle 162.3, tianguis 162.8, suburbios 347.7. Todo muy por encima de 60.
 - Qué falta o es raro: V05 y V06 son la misma patrulla y V08 una moto, y salen como estacionados de civiles (D-tony-338); el techo de lámina del frente de la azotea sigue oscuro; costura visible del fondo en el noreste (Nova y Neón Alto); PlayMode Mundo tiene 11 rojas ajenas a estos pasos (horario del mercado de 24 h, cámara libre de Alan), no comprobadas en main; MontableCarroPruebas.Camara_PrimeraPersona sigue roja desde antes; no hay clips de Mixamo todavía (docs/animaciones-faltan.md).
+
+## Reporte del plan de la noche 3-nov (docs/plan-noche-03nov.md), pasos 1 a 4: terminado
+
+- Paso 1 (T-530 a T-537), arreglos de la prueba del 2-nov: en main (0b7c759).
+- Paso 2 (T-540 a T-544), assets nuevos: en main (37afd9f). FPS de noche arriba de 60 en todos los puntos (lo más bajo, la calle: 161, 1 % bajo 88).
+- Paso 3 (T-545), pistola W01 animada: en main (f1ec404).
+- Paso 4 (T-546), interiores: en main con este commit. Cinco interiores armados con lo que había y comparados con su referencia
+  (docs/capturas/interior-*-comparacion.png); lo que falta, en docs/interiores-faltan.md. FPS de noche dentro: de 229 a 489.
+- Hallazgo: los materiales URP/Lit hechos por código con GI None pierden la emisión al reimportarse. Los letreros L10-L14 ya
+  están arreglados; otros creadores viejos (Mundo, Arena, Casino) también usan None (ver docs/interiores-faltan.md, nota técnica).
+- Builds/Demo y Builds/Juego regenerados al final. Guía: docs/guia-para-jugar.md, pasos 1 a 4 del 3-nov.
+- Siguen en rojo, como antes del plan: MercadoNegro 24 h/Lugares, RecorridoAPie (entrada del Bar), MontableCarro.Camara_PrimeraPersona.
+- Para que lo veas tú: la habitación todavía es la caja grande del greybox. Para parecerse a la referencia hay que achicar las paredes de la casa
+  (decídelo tú: es la escena del prólogo).
+
