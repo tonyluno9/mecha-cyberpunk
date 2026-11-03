@@ -92,7 +92,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Puerta_SinNadieEnElUmbral_SeCierraSolaYNoDejaPasar()
+        public IEnumerator Puerta_SinNadieEnElUmbral_SeCierraSola_YAlVolverSeAbreSola()
         {
             yield return Preparar(EscenaLugares.HoraNoche, IdLugar.Bar);
             IPuerta puerta = EscenaLugares.Puerta(IdLugar.Bar);
@@ -103,11 +103,58 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return EscenaLugares.Esperar(SegundosEsperaCierre);
             Assert.IsFalse(puerta.EstaAbierta, "Sin nadie en el umbral la puerta se cierra sola");
 
+            // T-536: la cámara de la prueba es el jugador (IJugador): desde la calle, al acercarse, la puerta cerrada se abre sola y entra.
             camara.Colocar(new Pose(EscenaLugares.Lugar(IdLugar.Bar).PosicionEntrada + Vector3.up * 0.05f,
                 Quaternion.LookRotation(EscenaLugares.HaciaLaPuerta(IdLugar.Bar), Vector3.up)));
             yield return null;
             yield return Caminar(SegundosIntentoCerrada);
-            Assert.Less(EscenaLugares.MetrosDentro(camara, IdLugar.Bar), MetrosMaximosEnLaCalle, "Cerrada, la puerta no deja pasar");
+            Assert.Greater(EscenaLugares.MetrosDentro(camara, IdLugar.Bar), 0f, "La puerta se abrió sola al acercarse y entró");
+        }
+
+        private sealed class JugadorDoble : IJugador
+        {
+            public Transform Raiz { get; set; }
+            public ModoJugador Modo => ModoJugador.APie;
+            public Camera Camara => null;
+#pragma warning disable 67
+            public event System.Action<ModoJugador> ModoCambio;
+#pragma warning restore 67
+            public void Colocar(Pose pose) => Raiz.SetPositionAndRotation(pose.position, pose.rotation);
+        }
+
+        [UnityTest]
+        public IEnumerator Puerta_JugadorAPieSeAcercaDesdeLaCalle_SeAbreSola()
+        {
+            // T-536: no hay que presionar E para entrar: la puerta del local abierto se abre al acercarte y se ve el interior.
+            yield return Preparar(EscenaLugares.HoraNoche, IdLugar.Bar);
+            IPuerta puerta = EscenaLugares.Puerta(IdLugar.Bar);
+            Assert.IsFalse(puerta.EstaAbierta);
+            GameObject cuerpo = new GameObject("JugadorDoble");
+            JugadorDoble doble = new JugadorDoble { Raiz = cuerpo.transform };
+            IJugador antes = Registro<IJugador>.Actual;
+            if (antes != null)
+            {
+                Registro<IJugador>.Quitar(antes);
+            }
+            Registro<IJugador>.Agregar(doble);
+            try
+            {
+                cuerpo.transform.position = puerta.Posicion - EscenaLugares.HaciaLaPuerta(IdLugar.Bar).normalized * 6f;
+                yield return EscenaLugares.Esperar(1f);
+                Assert.IsFalse(puerta.EstaAbierta, "Lejos no se abre");
+                cuerpo.transform.position = puerta.Posicion - EscenaLugares.HaciaLaPuerta(IdLugar.Bar).normalized * 2f;
+                yield return EscenaLugares.Esperar(1f);
+                Assert.IsTrue(puerta.EstaAbierta, "Cerca, desde la calle, se abre sola");
+            }
+            finally
+            {
+                Registro<IJugador>.Quitar(doble);
+                Object.Destroy(cuerpo);
+                if (antes != null)
+                {
+                    Registro<IJugador>.Agregar(antes);
+                }
+            }
         }
 
         [UnityTest]
