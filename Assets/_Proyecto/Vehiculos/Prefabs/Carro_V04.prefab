@@ -358,6 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CarroViejo
   config: {fileID: 11400000, guid: be12119c0d5410843b242b43d263cd34, type: 2}
+  nombreModelo: Combi vieja
   controles: {fileID: -944628639613478452, guid: b5fa29afc835fca468cb94b057897ac9, type: 3}
   asiento: {fileID: 8596576978070759725}
   puntoSubida: {fileID: 5436462625953371574}

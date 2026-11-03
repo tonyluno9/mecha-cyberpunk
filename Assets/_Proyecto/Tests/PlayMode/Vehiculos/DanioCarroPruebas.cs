@@ -131,6 +131,26 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [UnityTest]
+        public IEnumerator Fuego_ConAlguienAdentro_AvisaQueSeBaje()
+        {
+            // T-532: "¡Bájate, se va a quemar!" cuando el carro en el que vas se prende.
+            yield return Calentar();
+            string aviso = null;
+            EventosMontaje.Aviso += (montable, texto) => aviso = ReferenceEquals(montable, carro) ? texto : null;
+            Pegar(danio.VidaMaxima * 0.85f);
+            Assert.AreEqual(EstadoCarro.Fuego, danio.Estado);
+            Assert.IsNull(aviso, "Sin nadie adentro no hay a quién avisar");
+            Object.DestroyImmediate(carroObjeto);
+            carroObjeto = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab), new Vector3(0f, 0.3f, 0f), Quaternion.identity);
+            carro = carroObjeto.GetComponent<CarroViejo>();
+            danio = carroObjeto.GetComponent<DanioCarro>();
+            yield return Calentar();
+            Assert.IsTrue(carro.IntentarSubir(null));
+            Pegar(danio.VidaMaxima * 0.85f);
+            Assert.AreEqual(DanioCarro.TextoIncendio, aviso);
+        }
+
+        [UnityTest]
         public IEnumerator Explosion_DanaLoCercano_NoLoLejano_YSacaALaPersona()
         {
             yield return Calentar();

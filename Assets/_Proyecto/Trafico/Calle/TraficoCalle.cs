@@ -16,6 +16,9 @@ namespace MechaCyberpunk.Trafico.Calle
         private const float DistanciaMinimaAlJugador = 25f;
         private const int IntentosDeNodo = 12;
 
+        /// <summary>Largo (m) que siguen las calles fuera del barrio (las afueras de T-530 miden 100 m).</summary>
+        public const float LargoAfueras = 92f;
+
         [SerializeField] private ConfigTraficoCalle config;
         [SerializeField] private CarroTrafico prefabCarro;
         [Tooltip("T-511: los carros con modelo real; si hay, cada carro del tráfico usa uno de estos (en orden y repitiendo) en vez de prefabCarro.")]
@@ -76,6 +79,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 enabled = false;
                 return;
             }
+            AlargarHaciaLasAfueras(calles);
             System.Random azar = new System.Random(Semilla);
             for (int i = 0; i < config.Maximo; i++)
             {
@@ -108,8 +112,36 @@ namespace MechaCyberpunk.Trafico.Calle
                 lugares--;
                 if (carros[i].gameObject.activeSelf != debeEstar)
                 {
+                    // T-532: el que entra aparece lejos y fuera de la vista.
+                    if (debeEstar)
+                    {
+                        carros[i].Reaparecer(false);
+                    }
                     carros[i].gameObject.SetActive(debeEstar);
                 }
+            }
+        }
+
+        /// <summary>
+        /// T-532: las calles que llegan a la orilla del barrio siguen <see cref="LargoAfueras"/> m (las calles de las afueras de T-530); los carros
+        /// entran y salen de la ciudad por ahí y desaparecen al final, lejos de la vista.
+        /// </summary>
+        public static void AlargarHaciaLasAfueras(GrafoCalles grafo)
+        {
+            int cantidad = grafo.Cantidad;
+            for (int i = 0; i < cantidad; i++)
+            {
+                if (grafo.Vecinos(i).Count != 1)
+                {
+                    continue;
+                }
+                Vector3 hacia = grafo.Nodo(i) - grafo.Nodo(grafo.Vecinos(i)[0]);
+                hacia.y = 0f;
+                if (hacia.sqrMagnitude < 0.01f)
+                {
+                    continue;
+                }
+                grafo.AgregarTramo(i, grafo.Nodo(i) + hacia.normalized * LargoAfueras);
             }
         }
 
