@@ -158,11 +158,12 @@ namespace MechaCyberpunk.Tests
                 string nombre = pandilla.name;
                 SerializedObject so = new SerializedObject(v);
                 Material m = (Material)so.FindProperty("materiales").GetArrayElementAtIndex(0).objectReferenceValue;
-                if (nombre.StartsWith("Pandilla_Calaveras") && m.name == "man_Skulls") { skulls++; }
+                // T-533: los SKULLS usan el modelo SkullHombre (Tony, prueba del 2-nov), no man.
+                if (nombre.StartsWith("Pandilla_Calaveras") && m.name.StartsWith("SkullHombre")) { skulls++; }
                 if (nombre.StartsWith("Pandilla_Viboras") && m.name == "man_Viboras") { viboras++; }
                 if (nombre.StartsWith("Pandilla_Nova") && m.name == "man_Nova") { nova++; }
             }
-            Assert.Greater(skulls, 0, "Pandilleros SKULLS con man_Skulls");
+            Assert.Greater(skulls, 0, "Pandilleros SKULLS con SkullHombre");
             Assert.Greater(viboras, 0, "Pandilleros SNAKES con man_Viboras");
             Assert.Greater(nova, 0, "Pandilleros NOVA con man_Nova");
         }
@@ -275,7 +276,11 @@ namespace MechaCyberpunk.Tests
             {
                 StringAssert.Contains("/GuardiaNova/", Controlador(g));
                 Assert.IsNull(g.GetComponentInChildren<Collider>(true), "No tapan el paso");
-                Assert.AreEqual(ModoGente.Quieto, g.GetComponent<GenteDeBanqueta>().Modo, "Parados, sin pelear");
+                // T-533: patrullan su tramo de banqueta y vigilan (GuardiaNova), sin pelear.
+                Assert.AreEqual(ModoGente.Caminar, g.GetComponent<GenteDeBanqueta>().Modo, "Patrullan su tramo");
+                Assert.IsNotNull(g.GetComponent<GuardiaNova>(), "Vigilan y reaccionan");
+                Vector3 b = g.GetComponent<GenteDeBanqueta>().PuntoB;
+                Assert.Greater(DistanciaASegmento(b, new Vector3(47f, 0f, 47f), hacker), 7f, "Su tramo no pasa por la ruta del Casino");
                 Assert.IsNull(g.GetComponent("PandilleroAPie"), "Ambiente: no pelean");
                 Assert.Greater(Vector3.Distance(new Vector3(g.position.x, 0f, g.position.z), casino), 7f, "Lejos de la puerta del Casino");
                 Assert.Greater(Vector3.Distance(new Vector3(g.position.x, 0f, g.position.z), hacker), 7f, "Lejos de EL HACKER");

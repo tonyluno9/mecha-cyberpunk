@@ -120,15 +120,16 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.AreEqual(0, gestor.Drones);
             Assert.AreEqual(0, gestor.Patrullas);
 
+            // T-533: una patrulla viene desde el nivel 1 (antes solo en el 3); en el 3 son tres.
             calor.Poner(1);
             yield return EsperarFrames();
             Assert.AreEqual(1, gestor.Drones);
-            Assert.AreEqual(0, gestor.Patrullas);
+            Assert.AreEqual(1, gestor.Patrullas);
 
             calor.Poner(3);
             yield return EsperarFrames();
             Assert.AreEqual(2, gestor.Drones);
-            Assert.AreEqual(1, gestor.Patrullas);
+            Assert.AreEqual(3, gestor.Patrullas);
 
             calor.Poner(0);
             yield return EsperarFrames();
@@ -143,7 +144,7 @@ namespace MechaCyberpunk.Tests.Trafico
         {
             calor.Poner(3);
             yield return EsperarFrames();
-            Assert.AreEqual(3, gestor.Drones + gestor.Patrullas);
+            Assert.AreEqual(5, gestor.Drones + gestor.Patrullas);
 
             EventosLugares.PublicarEntro(IdLugar.Bar);
             yield return EsperarFrames();

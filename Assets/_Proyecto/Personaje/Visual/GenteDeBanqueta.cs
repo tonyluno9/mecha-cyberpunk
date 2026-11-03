@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
@@ -41,6 +42,13 @@ namespace MechaCyberpunk.Personaje.Visual
         [SerializeField] private Transform mover;
 
         private const float GradosPorSegundoGiro = 220f;
+        // T-534: te voltea a ver extrañado si te quedas cerca y quieto (o siempre, a más distancia, si vigila: los guardias de Nova).
+        private const float RadioMirarNormal = 3.5f;
+        private const float SegundosQuietoNormal = 1f;
+        private const float RapidezQuieto = 0.35f;
+        private const float GradosPorSegundoMirar = 160f;
+        private const float InclinacionExtranado = 12f;
+        private const float SegundosParaVolver = 2f;
         private const float AmplitudPecho = 1.6f;
         private const float AmplitudCabeza = 2.2f;
         private const float AmplitudCadera = 1.2f;
@@ -55,6 +63,14 @@ namespace MechaCyberpunk.Personaje.Visual
         private bool haciaB = true;
         private float espera;
         private float t;
+        private Transform girar;
+        private Quaternion giroOriginal;
+        private Vector3 ultimaJugador;
+        private float jugadorQuieto;
+        private float sinMirar;
+        private bool mirando;
+        private float radioMirar = RadioMirarNormal;
+        private float segundosQuieto = SegundosQuietoNormal;
 
         public ModoGente Modo => modo;
         public float Velocidad => velocidad;
@@ -64,6 +80,19 @@ namespace MechaCyberpunk.Personaje.Visual
         public float Ritmo => ritmo;
         public AnimationClip ClipPlatica => clipPlatica;
         public bool Platicando => hayGrafo;
+
+        /// <summary>T-534: true mientras voltea a ver al jugador (se detiene si caminaba).</summary>
+        public bool Mirando => mirando;
+
+        /// <summary>T-533: un vigilante mira desde más lejos y sin esperar a que el jugador se quede quieto.</summary>
+        public void ConfigurarMirada(float radio, float segundosQuietoAntes)
+        {
+            radioMirar = Mathf.Max(0.5f, radio);
+            segundosQuieto = Mathf.Max(0f, segundosQuietoAntes);
+        }
+
+        /// <summary>T-533: obliga a mirar hacia un punto (un guardia que oyó un disparo); null lo suelta.</summary>
+        public Vector3? MirarA { get; set; }
 
         /// <summary>Para los creadores de escena.</summary>
         public void Configurar(ModoGente nuevoModo, float nuevaFase, float nuevoRitmo, AnimationClip clip, Vector3 a, Vector3 b, float rapidez, float pausaExtremos, Transform quienSeMueve)
@@ -93,6 +122,9 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 mover = transform.parent;
             }
+            // Se gira el envoltorio solo si es de esta persona (no la raíz de un grupo de gente).
+            girar = mover != null && mover.GetComponentsInChildren<GenteDeBanqueta>(true).Length == 1 ? mover : transform;
+            giroOriginal = girar.rotation;
             if (animador != null && animador.isHuman)
             {
                 pecho = animador.GetBoneTransform(HumanBodyBones.Chest);
@@ -160,10 +192,69 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void Update()
         {
+            float dt = Time.deltaTime;
+            if (Mirar(dt))
+            {
+                return;
+            }
             if (modo == ModoGente.Caminar && mover != null)
             {
-                Caminar(Time.deltaTime);
+                Caminar(dt);
             }
+        }
+
+        // T-534: si el jugador está cerca y quieto un momento, se voltea hacia él; al irse, vuelve a lo suyo. Devuelve true mientras mira.
+        private bool Mirar(float dt)
+        {
+            Vector3? objetivo = MirarA;
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (!objetivo.HasValue && jugador != null && jugador.Raiz != null && jugador.Modo == ModoJugador.APie)
+            {
+                Vector3 p = jugador.Raiz.position;
+                float movido = Vector3.Distance(p, ultimaJugador);
+                ultimaJugador = p;
+                jugadorQuieto = dt > 0f && movido / dt < RapidezQuieto ? jugadorQuieto + dt : 0f;
+                Vector3 d = p - girar.position;
+                d.y = 0f;
+                if (d.magnitude <= radioMirar && jugadorQuieto >= segundosQuieto)
+                {
+                    objetivo = p;
+                }
+            }
+            if (objetivo.HasValue)
+            {
+                Vector3 d = objetivo.Value - girar.position;
+                d.y = 0f;
+                if (d.sqrMagnitude > 0.01f)
+                {
+                    if (!mirando && modo != ModoGente.Caminar)
+                    {
+                        giroOriginal = girar.rotation;
+                    }
+                    mirando = true;
+                    sinMirar = 0f;
+                    girar.rotation = Quaternion.RotateTowards(girar.rotation, Quaternion.LookRotation(d.normalized, Vector3.up), GradosPorSegundoMirar * dt);
+                    return true;
+                }
+            }
+            if (mirando)
+            {
+                sinMirar += dt;
+                if (sinMirar < SegundosParaVolver)
+                {
+                    return true;
+                }
+                if (modo != ModoGente.Caminar)
+                {
+                    girar.rotation = Quaternion.RotateTowards(girar.rotation, giroOriginal, GradosPorSegundoMirar * dt);
+                    if (Quaternion.Angle(girar.rotation, giroOriginal) > 1f)
+                    {
+                        return true;
+                    }
+                }
+                mirando = false;
+            }
+            return false;
         }
 
         private void Caminar(float dt)
@@ -195,6 +286,11 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void LateUpdate()
         {
+            if (mirando && cabeza != null)
+            {
+                // Extrañado: ladea la cabeza.
+                cabeza.localRotation *= Quaternion.Euler(0f, 0f, InclinacionExtranado);
+            }
             if (modo != ModoGente.Quieto || animador == null || cuerpo == null || (!cuerpo.isVisible && animador.cullingMode != AnimatorCullingMode.AlwaysAnimate))
             {
                 return;

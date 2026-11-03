@@ -179,6 +179,11 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 Sonidos.Reproducir("ARM_PIS_SACAR");
             }
+            if (arma != ArmaAPie.Punos)
+            {
+                // T-533: los guardias de Nova (y quien escuche) ven que sacaste un arma.
+                EventosRuido.PublicarArmaSacada(transform.position);
+            }
             Cambio?.Invoke();
         }
 
