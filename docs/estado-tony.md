@@ -8,6 +8,10 @@ Quedó en el **primer interior (habitación), paso 2 de 4**. Compila; no se han 
 - Sin probar: cruce ida y vuelta, JugadorDentro dentro del cuarto, luz aislada con Light Layers; orientación, luz y escala de la habitación sin revisar en captura.
 - Sigue: 1) pruebas PlayMode del cruce y arreglar las que se rompen (InterioresT546Pruebas, recorridos que caminan a Lugar_Casa); 2) captura docs/capturas/cuarto-habitacion-comparacion.png y corregir; 3) sección de la habitación en docs/interiores-faltan.md y docs/tareas/hechas/T-550-cuartos-habitacion.md; 4) RecorridoDemoPruebas y merge a main; 5) después casino, consultorio del Doc, entrada de armas del Mercado y taller de Tino con el mismo sistema; 6) Builds/Demo.
 
+- **Límite vencido (3-nov-2026, 23:41 hora de México):** la sesión con límite a las 21:45 arrancó ya pasada la hora, así que no se empezó nada nuevo.
+  No hubo merge a main ni se regeneró Builds/Demo. T-550 sigue como WIP en tony/T-550-cuartos: solo está la habitación, sin probar.
+  Faltan casino, consultorio del Doc, entrada de armas de El Mercado y taller de Tino. Para seguir, empieza por el punto 1 de "Sigue".
+
 ## Fase G: juego de pandillas (T-400 a T-406; D-tony-202 a D-tony-224) — ACTUAL
 Concepto nuevo (2026-10-29): sin mechas, GTA de un jugador en tercera persona en Ciudad_Prologo (docs/diseno/pandillas.md).
 Rama de integración: tony/fase-g. MODO RÁPIDO: sin revisor ni verificador, 1 o 2 pruebas nuevas por tarea y al final de cada una
