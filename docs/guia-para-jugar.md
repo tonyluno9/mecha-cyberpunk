@@ -458,3 +458,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Observa: la pistola nueva (21 cm) en tu mano y en la de los SKULLS; al disparar la corredera va atrás y regresa; al recargar sale el cargador y entra otro.
 - Compara: docs/capturas/prueba2-pistola-w01.png.
 
+
+### Paso 4 del 3-nov (T-546): interiores
+- Haz: de noche entra a tu cuarto, al I+D+I del Doc, al CIC de Tino, al Casino y a la entrada de armas de El Mercado.
+- Observa: cuarto con foco cálido, pósters y neón por la ventana; consultorio turquesa con El Doc junto a la camilla; Tino junto a su banco con drones colgando; casino con alfombra roja estampada, hileras de tragamonedas y papel picado; mercado con mostrador, tambos y series de focos.
+- Compara: docs/capturas/interior-*-comparacion.png con la referencia, y lo que falta en docs/interiores-faltan.md.

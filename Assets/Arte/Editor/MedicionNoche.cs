@@ -41,6 +41,10 @@ namespace MechaCyberpunk.Arte.Editor
             ("tiroteo", new Vector3(-30f, 0.2f, -2f), new Vector3(1f, 0f, 0f), 0, true),
             ("gradas", new Vector3(0f, 0.2f, -1.5f), new Vector3(1f, 0.2f, 0.2f), 0, false),
             ("suburbios", new Vector3(-80f, 0.2f, 3f), new Vector3(-1f, -0.02f, -0.15f), 0, false),
+            // T-546: los interiores armados en el paso 4.
+            ("casino_dentro", new Vector3(62.2f, 0.25f, 44f), new Vector3(1f, -0.08f, 0.3f), 0, false),
+            ("consultorio", new Vector3(-97f, 0.2f, -13f), new Vector3(-1f, -0.1f, 0f), 0, false),
+            ("tino", new Vector3(-70f, 0.2f, 13f), new Vector3(-1f, -0.1f, 0f), 0, false),
         };
 
         [MenuItem("Mecha Cyberpunk/T-419/Construir build de medición de noche")]
