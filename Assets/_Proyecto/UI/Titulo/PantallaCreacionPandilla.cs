@@ -435,6 +435,7 @@ namespace MechaCyberpunk.UI.Titulo
             if (perfil == null)
             {
                 Debug.LogWarning("[UI] Creación sin ServicioPerfil: la partida empieza con el perfil por defecto.", this);
+                PantallaCargando.Mostrar();
                 FlujoPartida.IrANuevaPartida();
                 return;
             }
@@ -446,6 +447,7 @@ namespace MechaCyberpunk.UI.Titulo
             Dictionary<string, string> piezas = new Dictionary<string, string> { { perfil.ClaveGuardado, perfil.Guardar() } };
             menuConfirmar.enabled = false;
             menu.enabled = false;
+            PantallaCargando.Mostrar();
             FlujoPartida.IrANuevaPartida(piezas);
         }
     }

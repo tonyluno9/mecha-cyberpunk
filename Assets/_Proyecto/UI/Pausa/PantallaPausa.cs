@@ -372,6 +372,7 @@ namespace MechaCyberpunk.UI.MenuPausa
         private void SalirAlTitulo()
         {
             Cerrar();
+            MechaCyberpunk.UI.Titulo.PantallaCargando.Mostrar();
             FlujoPartida.IrAlTitulo();
         }
     }

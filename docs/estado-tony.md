@@ -216,6 +216,14 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 | T-512 | Iluminación por zona: callejón y pasillo de El Mercado con lámparas N01 y neón magenta, portón más naranja, 18 puestos nuevos en hileras en El Tianguis, luz de luna sobre las azoteas y lluvia ligera de día | hecha | [T-512](tareas/hechas/T-512-luz-por-zona.md) |
 | T-513 | Fondo de la ciudad: pinturas de Suburbios (sur y oeste), Neón Alto (este) y Nova (norte) en un cilindro de 560 m sin luces ni niebla, fundido con el cielo; 48 torres lejanas apagadas | hecha | [T-513](tareas/hechas/T-513-fondo-ciudad.md) |
 | T-514 | Bot del recorrido: RecorridoDemoPruebas 2/2 tres veces seguidas sin rescate (no le tira al jefe antes de tiempo, flanquea, ventaja de curación solo en la prueba) | hecha | [T-514](tareas/hechas/T-514-bot-recorrido.md) |
+| T-530 | Paso 1 (prueba 2-nov): escala y cámara más cerca, cámara que no entra a la pared, ciudad que sigue sin muros ni ALTO, barrido del Tianguis y de flotantes, puentes de Neón Alto, robots de Nova a 2.2 m | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-531 | Paso 1: habitación sin estación del mecha ni LA GÜERA; locales nuevos CIC de Tino (junto al MECÁNICO) e I+D+I del Doc | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-532 | Paso 1: tráfico que frena, cede cruces y entra/sale lejos; freno firme; aviso de incendio; nombre por modelo; motos manejables; patrulla V05 | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-533 | Paso 1: patrullas desde nivel 1 con sirena y radio, guardias de Nova que vigilan y reaccionan, SKULLS con SkullHombre | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-534 | Paso 1: NPC que te voltean a ver; peatones que no atraviesan muros | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-535 | Paso 1: asfalto mojado con detalle, lluvia que llega al piso, luces que se apagan poco a poco, farolas con luz en el foco, luz por puesto | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-536 | Paso 1: puertas a escala que se abren solas, sin pared negra, entrada del Casino abierta | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-537 | Paso 1: hora en el HUD, panel de armas como el mockup, título con la ciudad en movimiento, CARGANDO al recargar | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
 
 ## Cierre de la Parte A (ciudad como las referencias): FPS de noche por zona
 Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x1080, calidad Medio, hora 23, Logs/med505-despues/medicion.txt). Meta: 60.

@@ -52,6 +52,20 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [UnityTest]
+        public IEnumerator Muro_EnSuCamino_SeDaLaVueltaSinAtravesarlo()
+        {
+            // T-534: los peatones ya no atraviesan ni se quedan pegados a lo que les tapa la banqueta.
+            PeatonMundo peaton = CrearPeaton(50f);
+            GameObject muro = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            muro.transform.SetParent(raiz.transform, false);
+            muro.transform.position = new Vector3(54f, 1f, 0f);
+            muro.transform.localScale = new Vector3(0.5f, 2f, 3f);
+            yield return new WaitForSeconds(6f);
+            Assert.GreaterOrEqual(peaton.Vueltas, 1, "Se dio la vuelta (está en " + peaton.transform.position + ", mira " + peaton.transform.forward + ")");
+            Assert.Less(peaton.transform.position.x, 53.75f, "No atravesó el muro");
+        }
+
+        [UnityTest]
         public IEnumerator Disparo_DetrasDelPeaton_LoHaceCorrerHaciaDelanteMasRapido()
         {
             PeatonMundo peaton = CrearPeaton(50f);

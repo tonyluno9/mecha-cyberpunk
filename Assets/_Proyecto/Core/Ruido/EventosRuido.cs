@@ -15,10 +15,16 @@ namespace MechaCyberpunk.Core
 
         public static void PublicarDisparo(Vector3 posicion) => Disparo?.Invoke(posicion);
 
+        /// <summary>T-533: el jugador sacó un arma de fuego en esta posición (los guardias de Nova reaccionan). Lo publica Personaje.</summary>
+        public static event Action<Vector3> ArmaSacada;
+
+        public static void PublicarArmaSacada(Vector3 posicion) => ArmaSacada?.Invoke(posicion);
+
         /// <summary>Quita a todos los suscriptores. Para pruebas y para limpiar al entrar a Play.</summary>
         public static void LimpiarSuscriptores()
         {
             Disparo = null;
+            ArmaSacada = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

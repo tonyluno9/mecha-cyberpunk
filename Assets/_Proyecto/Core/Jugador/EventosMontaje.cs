@@ -14,10 +14,16 @@ namespace MechaCyberpunk.Core
 
         public static void PublicarSalidaForzada(IMontable montable) => SalidaForzada?.Invoke(montable);
 
+        /// <summary>T-532: el montable avisa algo urgente a quien lo ocupa (el carro que se incendia: "¡Bájate, se va a quemar!"). Lo muestra el HUD.</summary>
+        public static event Action<IMontable, string> Aviso;
+
+        public static void PublicarAviso(IMontable montable, string texto) => Aviso?.Invoke(montable, texto);
+
         /// <summary>Quita a todos los suscriptores. Para pruebas y para limpiar al entrar a Play.</summary>
         public static void LimpiarSuscriptores()
         {
             SalidaForzada = null;
+            Aviso = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

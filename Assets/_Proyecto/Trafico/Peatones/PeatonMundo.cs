@@ -14,8 +14,18 @@ namespace MechaCyberpunk.Trafico.Peatones
     public class PeatonMundo : MonoBehaviour
     {
         private const float VelocidadGiroGradosPorSegundo = 360f;
-        private const float DistanciaMinimaParaMirar = 0.001f;
+        private const float DistanciaMinimaParaMirar = 0.00000001f; // T-534: antes 0.001 (a 60 fps o más el paso de un cuadro no llegaba y no giraba)
         private const float DesplazamientoMinimoParaDecidir = 0.00000001f;
+        // T-534: si algo sólido le tapa el paso (muro, puesto, carro), se da la vuelta en lugar de atravesarlo o quedarse pegado.
+        private const float AlturaPecho = 1.1f;
+        private const float RadioCuerpo = 0.25f;
+        private const float DistanciaVer = 0.7f;
+        private const float SegundosEntreVueltas = 1.5f;
+        private float proximaVuelta;
+        private Vector3 haciaDonde;
+
+        /// <summary>Vueltas que dio por encontrarse algo en el camino (T-534).</summary>
+        public int Vueltas { get; private set; }
 
         private Vector3[] puntos;
         private CalculoPeaton calculo;
@@ -94,10 +104,21 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Detenido = false;
+            if (Time.time >= proximaVuelta && Tapado())
+            {
+                proximaVuelta = Time.time + SegundosEntreVueltas;
+                calculo.InvertirSentido();
+                haciaDonde = -haciaDonde;
+                Vueltas++;
+            }
             Vector3 antes = transform.position;
             calculo.Avanzar(Time.deltaTime);
             Colocar();
             Vector3 desplazamiento = transform.position - antes;
+            if (desplazamiento.sqrMagnitude > DesplazamientoMinimoParaDecidir)
+            {
+                haciaDonde = desplazamiento.normalized;
+            }
             if (huyendo && !sentidoDecidido && desplazamiento.sqrMagnitude > DesplazamientoMinimoParaDecidir)
             {
                 DecidirSentido(desplazamiento);
@@ -117,6 +138,25 @@ namespace MechaCyberpunk.Trafico.Peatones
                 calculo.InvertirSentido();
                 Colocar();
             }
+        }
+
+        private bool Tapado()
+        {
+            Vector3 adelante = haciaDonde;
+            adelante.y = 0f;
+            if (adelante.sqrMagnitude < 0.01f)
+            {
+                return false;
+            }
+            Vector3 origen = transform.position + Vector3.up * AlturaPecho - adelante.normalized * RadioCuerpo;
+            foreach (RaycastHit h in Physics.SphereCastAll(origen, RadioCuerpo, adelante.normalized, DistanciaVer + RadioCuerpo, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (!h.collider.transform.IsChildOf(transform) && h.distance > 0f && h.collider.GetComponentInParent<PeatonMundo>() == null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void Calmar()

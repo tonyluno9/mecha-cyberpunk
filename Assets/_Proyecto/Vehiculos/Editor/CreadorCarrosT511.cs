@@ -66,10 +66,14 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Debug.Log("[Vehiculos] T-511:\n" + informe);
         }
 
-        private static string CrearUno(string codigo, string arte, float giro, float largo)
+        /// <summary>T-532: las motos (C19 del kit de calle, V07 de reparto, V08 de patrulla) se montan como el V08: asiento al centro.</summary>
+        public static bool EsMoto(string codigo) => codigo == "V08" || codigo == "C19" || codigo == "V07";
+
+        public static string CrearUno(string codigo, string arte, float giro, float largo)
         {
             GameObject baseCarro = AssetDatabase.LoadAssetAtPath<GameObject>(RutaBase);
-            GameObject arteAsset = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Prefabs/" + arte + ".prefab");
+            GameObject arteAsset = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Prefabs/" + arte + ".prefab")
+                ?? AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Calle/Prefabs/" + arte + ".prefab");
             ConfigCamaraCarro configCamara = AssetDatabase.LoadAssetAtPath<ConfigCamaraCarro>(RutaConfigCamara);
             if (baseCarro == null || arteAsset == null || configCamara == null)
             {
@@ -109,6 +113,12 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Object.DestroyImmediate(copiaArte);
             envoltorio.transform.localRotation = Quaternion.Euler(0f, giro, 0f);
             Bounds b = Limites(raiz);
+            if (b.size.x > b.size.z * 1.3f)
+            {
+                // T-532: modelo acostado a lo ancho (las motos del kit): se gira para que el largo vaya hacia adelante.
+                envoltorio.transform.localRotation = Quaternion.Euler(0f, giro + 90f, 0f);
+                b = Limites(raiz);
+            }
             if (largo > 0f)
             {
                 envoltorio.transform.localScale = Vector3.one * (largo / b.size.z);
@@ -134,7 +144,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Rueda(raiz, "Rueda_TD", via, -eje);
 
             // Asiento, punto de subida y cámara a la altura del modelo.
-            bool moto = codigo == "V08";
+            bool moto = EsMoto(codigo);
             float asientoX = moto ? 0f : -W * 0.22f;
             float asientoZ = -L * 0.03f;
             Transform asiento = raiz.transform.Find("Asiento");

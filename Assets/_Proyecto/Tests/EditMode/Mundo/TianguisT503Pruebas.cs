@@ -53,17 +53,17 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void Trae_PuestosDeLosDosModelosExpendedorasYProyectores()
         {
-            Assert.GreaterOrEqual(Contar("N03a_T503") + Contar("N03b_T503"), PuestosMinimos);
-            Assert.GreaterOrEqual(Contar("N03a_T503"), 1);
-            Assert.GreaterOrEqual(Contar("N03b_T503"), 1);
-            Assert.GreaterOrEqual(Contar("CY06_Expendedora_T503"), 1);
-            Assert.GreaterOrEqual(Contar("CY01_ProyectorHolo_T503"), 1);
+            // T-530 (prueba de Tony 2-nov): los puestos encimados se quitaron (quedan los de T-512 en su lugar) y los proyectores de relleno también.
+            Assert.GreaterOrEqual(Contar("N03a_T503") + Contar("N03b_T503") + Contar("CY06_Expendedora_T503"), 2);
+            Assert.AreEqual(0, Contar("CY01_ProyectorHolo_T503"));
         }
 
         [Test]
-        public void Trae_HologramasDeComidaConTextura()
+        public void Trae_HologramasDeComidaConTextura_ApagadosEnT530()
         {
-            Transform[] holos = raiz.GetComponentsInChildren<Transform>().Where(t => t.name.StartsWith("Holograma_") || t.name.StartsWith("HoloPuesto_")).ToArray();
+            // T-530: Tony pidió quitar los "carteles 3D raros": los hologramas siguen en la escena con su textura, apagados.
+            Assert.AreEqual(0, raiz.GetComponentsInChildren<Transform>().Count(t => t.name.StartsWith("Holograma_") || t.name.StartsWith("HoloPuesto_")));
+            Transform[] holos = raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("Holograma_") || t.name.StartsWith("HoloPuesto_")).ToArray();
             Assert.GreaterOrEqual(holos.Length, 3);
             foreach (Transform h in holos)
             {

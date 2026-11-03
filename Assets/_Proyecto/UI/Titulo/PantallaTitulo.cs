@@ -58,6 +58,8 @@ namespace MechaCyberpunk.UI.Titulo
         [Tooltip("Ancho de la franja oscura detrás del menú y su opacidad máxima.")]
         [SerializeField] private float anchoFranja = 1100f;
         [Range(0f, 1f)] [SerializeField] private float alfaFranja = 0.92f;
+        [Tooltip("T-537: sin la imagen fija de UI14: detrás del menú se ve la ciudad en cámara lenta (CamaraTitulo recorre las calles).")]
+        [SerializeField] private bool fondoAnimado = true;
 
         [Header("Medidas (px a 1920x1080)")]
         [Tooltip("Ancho del panel del menú (el resumen de CONTINUAR cabe en él).")]
@@ -125,8 +127,11 @@ namespace MechaCyberpunk.UI.Titulo
             bool conArte = piezas != null && piezas.FondoMenu != null;
             if (conArte)
             {
-                Image arte = KitUI.CrearImagenSprite(canvas.transform, "FondoMenu", piezas.FondoMenu, false);
-                KitUI.Estirar(arte.rectTransform);
+                if (!fondoAnimado)
+                {
+                    Image arte = KitUI.CrearImagenSprite(canvas.transform, "FondoMenu", piezas.FondoMenu, false);
+                    KitUI.Estirar(arte.rectTransform);
+                }
                 Image franja = KitUI.CrearImagenSprite(canvas.transform, "FranjaOscura", KitUI.SpriteDegradadoHorizontal(), false);
                 franja.color = new Color(0.02f, 0.02f, 0.05f, alfaFranja);
                 KitUI.Colocar(franja.rectTransform, new Vector2(0f, 0.5f), Vector2.zero, new Vector2(anchoFranja, KitUI.AltoReferencia));
@@ -209,6 +214,12 @@ namespace MechaCyberpunk.UI.Titulo
             if (contenido == null || menu == null || nueva == null || continuar == null || opciones == null || creditos == null || salir == null)
             {
                 Armar();
+            }
+            // T-537: con fondo animado, la imagen fija del prefab se apaga y se ve la ciudad que recorre CamaraTitulo.
+            Transform fijo = contenido.transform.Find("FondoMenu");
+            if (fijo != null)
+            {
+                fijo.gameObject.SetActive(!fondoAnimado);
             }
             // T-524: el sprite del degradado se hace por código y no sobrevive al prefab: sin esto la franja salía sólida (corte duro).
             Transform franja = contenido.transform.Find("FranjaOscura");
@@ -404,6 +415,8 @@ namespace MechaCyberpunk.UI.Titulo
             }
             Debug.Log("[UI] CONTINUAR carga " + FormatoRanura.Nombre(ranuraContinuar) + ".");
             menu.enabled = false;
+            // T-537: mientras se recarga la ciudad, "CARGANDO…" (antes la pantalla se quedaba vacía y parecía que todo desaparecía).
+            PantallaCargando.Mostrar();
             FlujoPartida.IrACargar(ranuraContinuar);
         }
 
