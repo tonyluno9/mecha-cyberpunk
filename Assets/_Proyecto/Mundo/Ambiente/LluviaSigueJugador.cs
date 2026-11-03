@@ -17,6 +17,18 @@ namespace MechaCyberpunk.Mundo.Ambiente
         [SerializeField] private Material materialNiebla;
 
         private const float VelocidadDeriva = 0.3f;     // m/s a la que se mueven las nubes de niebla
+        // T-535: las gotas salen en todo el alto de la caja (también cerca del piso, donde se ven) y mueren al tocar el piso con una salpicadura.
+        private const float MargenVida = 1.15f;
+        private const float AlturaRayoPiso = 2f;
+        private const float LargoRayoPiso = 6f;
+        private const float ProbabilidadSalpicadura = 0.35f;
+        private const int MaximoSalpicaduras = 600;
+
+        private Transform suelo;
+        private ParticleSystem salpicaduras;
+
+        public ParticleSystem Salpicaduras => salpicaduras;
+        public Transform Suelo => suelo;
 
         private ParticleSystem gotas;
         private ParticleSystem niebla;
@@ -64,7 +76,11 @@ namespace MechaCyberpunk.Mundo.Ambiente
             Transform objetivo = BuscarObjetivo();
             if (objetivo != null)
             {
-                gotas.transform.position = objetivo.position + Vector3.up * config.AltoCaja;
+                gotas.transform.position = objetivo.position + Vector3.up * (config.AltoCaja * 0.5f);
+                Vector3 desde = objetivo.position + Vector3.up * AlturaRayoPiso;
+                float piso = Physics.Raycast(desde, Vector3.down, out RaycastHit golpe, LargoRayoPiso, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
+                    ? golpe.point.y : objetivo.position.y;
+                suelo.position = new Vector3(objetivo.position.x, piso, objetivo.position.z);
                 niebla.transform.position = objetivo.position + Vector3.up * (config.AltoNiebla / 2f);
             }
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
@@ -135,7 +151,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
             main.playOnAwake = false;
             main.cullingMode = ParticleSystemCullingMode.AlwaysSimulate;     // si no, se pausa cuando sus límites (vacíos al empezar) no se ven
             main.simulationSpace = ParticleSystemSimulationSpace.World;
-            main.startLifetime = config.AltoCaja / config.VelocidadCaida;
+            main.startLifetime = config.AltoCaja / config.VelocidadCaida * MargenVida;
             main.startSpeed = 0f;
             main.startSize = config.AnchoGota;
             main.startColor = config.ColorGota;
@@ -144,7 +160,23 @@ namespace MechaCyberpunk.Mundo.Ambiente
             emision.rateOverTime = config.GotasPorSegundo;
             ParticleSystem.ShapeModule forma = sistema.shape;
             forma.shapeType = ParticleSystemShapeType.Box;
-            forma.scale = new Vector3(config.LadoCaja, 0.1f, config.LadoCaja);
+            forma.scale = new Vector3(config.LadoCaja, config.AltoCaja, config.LadoCaja);
+            // T-535: chocan con el plano del piso (sigue al jugador): ahí mueren y salpican.
+            suelo = new GameObject("PisoLluvia").transform;
+            suelo.SetParent(transform, false);
+            suelo.rotation = Quaternion.identity;
+            ParticleSystem.CollisionModule choque = sistema.collision;
+            choque.enabled = true;
+            choque.type = ParticleSystemCollisionType.Planes;
+            choque.SetPlane(0, suelo);
+            choque.lifetimeLoss = 1f;
+            choque.bounce = 0f;
+            choque.dampen = 1f;
+            choque.radiusScale = 0.1f;
+            salpicaduras = CrearSalpicaduras(sistema);
+            ParticleSystem.SubEmittersModule sub = sistema.subEmitters;
+            sub.enabled = true;
+            sub.AddSubEmitter(salpicaduras, ParticleSystemSubEmitterType.Collision, ParticleSystemSubEmitterProperties.InheritNothing, ProbabilidadSalpicadura);
             ParticleSystem.VelocityOverLifetimeModule velocidad = sistema.velocityOverLifetime;
             velocidad.enabled = true;
             velocidad.space = ParticleSystemSimulationSpace.World;
@@ -155,6 +187,37 @@ namespace MechaCyberpunk.Mundo.Ambiente
             render.renderMode = ParticleSystemRenderMode.Stretch;
             render.lengthScale = config.LargoGota;
             render.velocityScale = 0f;
+            render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            render.receiveShadows = false;
+            return sistema;
+        }
+
+        // Salpicadura chiquita donde cae cada gota (2 gotitas que saltan y caen).
+        private ParticleSystem CrearSalpicaduras(ParticleSystem gotasPadre)
+        {
+            GameObject go = new GameObject("SalpicadurasGotas");
+            go.transform.SetParent(gotasPadre.transform, false);
+            ParticleSystem sistema = go.AddComponent<ParticleSystem>();
+            sistema.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            ParticleSystem.MainModule main = sistema.main;
+            main.loop = false;
+            main.playOnAwake = false;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.15f, 0.3f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.8f, 1.8f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.03f, 0.06f);
+            main.startColor = config.ColorGota;
+            main.gravityModifier = 1.2f;
+            main.maxParticles = MaximoSalpicaduras;
+            ParticleSystem.EmissionModule emision = sistema.emission;
+            emision.rateOverTime = 0f;
+            emision.SetBursts(new[] { new ParticleSystem.Burst(0f, 2) });
+            ParticleSystem.ShapeModule forma = sistema.shape;
+            forma.shapeType = ParticleSystemShapeType.Hemisphere;
+            forma.radius = 0.05f;
+            ParticleSystemRenderer render = go.GetComponent<ParticleSystemRenderer>();
+            render.sharedMaterial = materialGota;
+            render.renderMode = ParticleSystemRenderMode.Billboard;
             render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             render.receiveShadows = false;
             return sistema;
