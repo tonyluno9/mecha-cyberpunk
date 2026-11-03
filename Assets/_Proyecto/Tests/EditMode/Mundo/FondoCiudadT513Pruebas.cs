@@ -96,9 +96,10 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             Transform horizonte = escena.GetRootGameObjects().First(g => g.name == "T501_Suburbios").transform.Find("Horizonte");
             Assert.IsFalse(horizonte.gameObject.activeSelf);
+            // T-541: las torres de bloques de Neón Alto se cambiaron por torres del kit T20-T23 (T541_Torres).
             Transform neon = escena.GetRootGameObjects().First(g => g.name == "T505_NeonAlto").transform.Find("Torres");
-            Assert.IsTrue(neon.gameObject.activeInHierarchy);
-            Assert.GreaterOrEqual(neon.childCount, 10);
+            Assert.IsFalse(neon.gameObject.activeInHierarchy);
+            Assert.GreaterOrEqual(escena.GetRootGameObjects().First(g => g.name == "T541_Torres").transform.childCount, 10);
         }
     }
 }

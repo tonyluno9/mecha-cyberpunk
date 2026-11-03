@@ -447,3 +447,9 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: juega la demo de noche; acércate a las puertas (se abren solas), maneja hasta el fondo de cualquier calle, sube el calor (roba una patrulla) y quédate quieto junto a la gente; visita el CIC de Tino (calle principal de Suburbios, junto al MECÁNICO) y el I+D+I del Doc (enfrente, del lado sur).
 - Observa: cámara más cerca y sin meterse a las paredes, la ciudad sigue sin muros ni ALTO, el Tianguis sin poste ni puestos encimados, tráfico que frena y cede, patrullas con sirena que llegan directo, radio de la policía, lluvia que llega al piso, asfalto mojado, la hora en el HUD y el título con la ciudad en movimiento.
 - Compara: docs/capturas/prueba2-*.png (antes | después) y docs/tareas/hechas/T-530-paso1-prueba-tony.md (FPS y lo que falta).
+
+### Paso 2 del 3-nov (T-540 a T-544): assets nuevos
+- Haz: de noche camina por la calle de Neón Alto y sube a una azotea; mira la entrada del Casino, el local de Tino (CIC) y el del Doc (I+D+I); roba la moto de reparto roja del Tianguis.
+- Observa: torres corporativas de 6 a 20 pisos con pantallas de anuncios que cambian, postes nuevos con luz blanca, letreros 3D que brillan de noche (VivaCoin, Hotel, El Mercado, I+D+I, CIC) y la moto de reparto que se maneja.
+- Compara: docs/capturas/prueba2-neon-alto-torres.png, -torres-pantallas, -casino-vivacoin, -letreros-idi-cic, -hotel-y-moto y -modelos-nuevos.
+

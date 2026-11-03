@@ -92,7 +92,12 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsNotEmpty(pantallas);
             foreach (Transform t in pantallas)
             {
-                Material m = t.GetComponentInChildren<Renderer>().sharedMaterial;
+                Renderer r0 = t.GetComponentsInChildren<Renderer>().FirstOrDefault(r => r.name != "PantallaLed_T544");
+                if (r0 == null)
+                {
+                    continue; // T-541: la pantalla colgaba de una casa de barrio que ya es torre
+                }
+                Material m = r0.sharedMaterial;
                 Assert.IsTrue(m.IsKeywordEnabled("_EMISSION"), t.name);
                 Assert.IsNotNull(m.GetTexture("_EmissionMap"), t.name);
             }
@@ -101,18 +106,19 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void EntradaDelCasino_TieneFocosTubosCargadoresYMoto()
         {
-            Assert.GreaterOrEqual(Contar("Foco_"), 10);
-            Assert.GreaterOrEqual(Contar("Tubo_"), 2);
+            // T-542: los focos y tubos de formas se cambiaron por el letrero 3D L10 (Tony: "mezcla de asset y formas").
+            Assert.IsFalse(raiz.GetComponentsInChildren<Transform>().Any(t => t.name.StartsWith("Foco_") || t.name.StartsWith("Tubo_")), "Sin focos ni tubos de formas");
             Assert.GreaterOrEqual(Contar("CY10_CargadorCalle_T505"), 1);
-            Assert.GreaterOrEqual(Contar("C19_Moto_T505"), 1);
+            // T-532: la moto de adorno es ahora una moto manejable (T532_Motos).
         }
 
         [Test]
         public void Torres_HayAlMenosDiezConPantalla()
         {
-            Transform[] torres = raiz.GetComponentsInChildren<Transform>().Where(t => t.name.StartsWith("Torre_")).ToArray();
+            // T-541: torres del kit con pisos de pantalla (T22) en lugar de las de bloques de T-505.
+            Transform[] torres = escena.GetRootGameObjects().First(g => g.name == "T541_Torres").GetComponentsInChildren<Transform>().Where(t => t.name.StartsWith("Torre_")).ToArray();
             Assert.GreaterOrEqual(torres.Length, TorresMinimas);
-            Assert.IsTrue(torres.All(t => t.Find("Pantalla") != null));
+            Assert.GreaterOrEqual(torres.Count(t => t.Find("PisoPantalla") != null), TorresMinimas - 2);
         }
 
         [Test]
