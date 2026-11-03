@@ -275,6 +275,14 @@ namespace MechaCyberpunk.Personaje.Visual
                 return;
             }
             Vector3 dir = hacia / distancia;
+            if (Physics.SphereCast(mover.position + Vector3.up * 1.1f - dir * 0.25f, 0.25f, dir, out RaycastHit tapa, 0.95f, ~0, QueryTriggerInteraction.Ignore)
+                && !tapa.collider.transform.IsChildOf(mover) && tapa.distance > 0f)
+            {
+                // T-534: algo sólido en el camino: se regresa en lugar de atorarse.
+                haciaB = !haciaB;
+                espera = pausa;
+                return;
+            }
             Quaternion mira = Quaternion.LookRotation(dir, Vector3.up);
             mover.rotation = Quaternion.RotateTowards(mover.rotation, mira, GradosPorSegundoGiro * dt);
             if (Quaternion.Angle(mover.rotation, mira) > 40f)
