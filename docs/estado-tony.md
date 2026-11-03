@@ -224,6 +224,11 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 | T-535 | Paso 1: asfalto mojado con detalle, lluvia que llega al piso, luces que se apagan poco a poco, farolas con luz en el foco, luz por puesto | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
 | T-536 | Paso 1: puertas a escala que se abren solas, sin pared negra, entrada del Casino abierta | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
 | T-537 | Paso 1: hora en el HUD, panel de armas como el mockup, título con la ciudad en movimiento, CARGANDO al recargar | hecha | [T-530 a T-537](tareas/hechas/T-530-paso1-prueba-tony.md) |
+| T-540 | Paso 2: importar T20-T23, N09, L10-L14 y V07 (flujo de T-250) | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
+| T-541 | Paso 2: 13 torres del kit en Neón Alto (6 a 20 pisos) y postes N09 con luz fría | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
+| T-542 | Paso 2: letreros 3D VivaCoin, Hotel, El Mercado, I+D+I y CIC que brillan de noche | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
+| T-543 | Paso 2: moto de reparto V07 manejable y robable en Suburbios y El Tianguis | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
+| T-544 | Paso 2: 52 pantallas LED con anuncios que cambian y parpadean | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
 
 ## Cierre de la Parte A (ciudad como las referencias): FPS de noche por zona
 Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x1080, calidad Medio, hora 23, Logs/med505-despues/medicion.txt). Meta: 60.

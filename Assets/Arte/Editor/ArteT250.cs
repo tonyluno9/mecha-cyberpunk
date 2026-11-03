@@ -105,6 +105,11 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 return ZonaDeNuevos(codigo);
             }
+            // T-540: el kit de torres (T20-T23) y los letreros 3D (L10-L14) van con los exteriores, no con el taller ni el callejón.
+            if (codigo.StartsWith("T2") || codigo.StartsWith("L1"))
+            {
+                return "Exteriores";
+            }
             switch (codigo[0])
             {
                 case 'C': return "Calle";
