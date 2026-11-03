@@ -259,6 +259,7 @@ namespace MechaCyberpunk.UI.Guardado
             if (modo == ModoRanuras.Cargar)
             {
                 Cerrar();
+                MechaCyberpunk.UI.Titulo.PantallaCargando.Mostrar();
                 FlujoPartida.IrACargar(ranura);
                 return;
             }

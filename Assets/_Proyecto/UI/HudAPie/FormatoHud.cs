@@ -97,6 +97,14 @@ namespace MechaCyberpunk.UI.Hud
         public const string SignoMenos = "−";
 
         /// <summary>"+8", "−5" (con el signo menos tipográfico) o "0".</summary>
+        /// <summary>T-537: la hora del juego para el HUD ("21:05"). <paramref name="hora"/> en [0, 24).</summary>
+        public static string TextoHora(float hora)
+        {
+            float h = hora - 24f * (float)System.Math.Floor(hora / 24f);
+            int minutos = (int)System.Math.Floor(h * 60f + 0.0001f);
+            return (minutos / 60).ToString("00") + ":" + (minutos % 60).ToString("00");
+        }
+
         public static string Firmado(int valor)
         {
             if (valor > 0)

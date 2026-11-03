@@ -526291,15 +526291,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.Partida.CamaraTitulo
   puntos:
-  - {x: -115, y: 0, z: -3}
-  - {x: 115, y: 0, z: -3}
-  - {x: 115, y: 0, z: 3}
-  - {x: -115, y: 0, z: 3}
-  velocidad: 2
-  altura: 12
-  mirarAdelante: 25
-  mirarAbajo: 9
-  suavidadGiro: 1.5
+  - {x: -110, y: 0, z: -2.5}
+  - {x: -47, y: 0, z: -2.5}
+  - {x: 0, y: 0, z: -2.5}
+  - {x: 44.5, y: 0, z: -2.5}
+  - {x: 44.5, y: 0, z: 40}
+  - {x: 44.5, y: 0, z: 80}
+  - {x: 49.5, y: 0, z: 80}
+  - {x: 49.5, y: 0, z: 40}
+  - {x: 49.5, y: 0, z: 2.5}
+  - {x: 0, y: 0, z: 2.5}
+  - {x: -47, y: 0, z: 2.5}
+  - {x: -110, y: 0, z: 2.5}
+  velocidad: 3
+  altura: 3.4
+  mirarAdelante: 18
+  mirarAbajo: 1.2
+  suavidadGiro: 1
 --- !u!20 &2045565766
 Camera:
   m_ObjectHideFlags: 0

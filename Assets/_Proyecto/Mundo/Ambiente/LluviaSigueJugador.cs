@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Mundo.Ambiente
         private const float VelocidadDeriva = 0.3f;     // m/s a la que se mueven las nubes de niebla
         // T-535: las gotas salen en todo el alto de la caja (también cerca del piso, donde se ven) y mueren al tocar el piso con una salpicadura.
         private const float MargenVida = 1.15f;
+        private const float AlturaTecho = 2.2f;
+        private const float LargoRayoTecho = 8f;
         private const float AlturaRayoPiso = 2f;
         private const float LargoRayoPiso = 6f;
         private const float ProbabilidadSalpicadura = 0.35f;
@@ -85,7 +87,9 @@ namespace MechaCyberpunk.Mundo.Ambiente
             }
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
             bool deNoche = reloj == null || reloj.EsDeNoche;
-            bool debe = CalculoLluvia.DebeLlover(Activa, EnInterior(), deNoche, config.LluviaDeDia) && objetivo != null;
+            // T-537: bajo techo (los locales nuevos sin ZonaInterior, toldos, puentes) tampoco llueve.
+            bool techo = objetivo != null && Physics.Raycast(objetivo.position + Vector3.up * AlturaTecho, Vector3.up, LargoRayoTecho, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            bool debe = CalculoLluvia.DebeLlover(Activa, EnInterior() || techo, deNoche, config.LluviaDeDia) && objetivo != null;
             float nueva = CalculoLluvia.Intensidad(deNoche, config.FraccionDeDia);
             if (!Mathf.Approximately(nueva, intensidad))
             {
