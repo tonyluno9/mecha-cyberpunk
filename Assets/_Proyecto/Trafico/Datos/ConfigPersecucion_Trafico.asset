@@ -12,12 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f06db2ba86932847a3fc9e2badce8d0, type: 3}
   m_Name: ConfigPersecucion_Trafico
   m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Datos.ConfigPersecucion
-  dronesPorNivel: 010000000200000002000000
-  patrullasPorNivel: 000000000000000001000000
+  dronesPorNivel: 010000000100000002000000
+  patrullasPorNivel: 010000000200000003000000
   velocidadDron: 9
-  velocidadPatrulla: 12
+  velocidadPatrulla: 15
   distanciaSeguimiento: 6
   distanciaCaptura: 3
   alturaDron: 7
   distanciaAparicionDron: 40
   periodoSirena: 0.4
+  nivelDisparoDron: 2
+  segundosEntreTirosDron: 1.5
+  danioDron: 4
+  aciertoDron: 0.7
+  avisoDron: 0.3

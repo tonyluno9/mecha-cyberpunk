@@ -16,6 +16,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float LadoManzana = 80f;          // medida del barrio (CreadorBarrio, m)
         private const float AlturaCalles = 0.2f;        // sobre la banqueta (m)
         private const float GradosPorVuelta = 360f;
+        public const float DistanciaSalidaPatrulla = 80f;
 
         [SerializeField] private ConfigPersecucion config;
         [SerializeField] private DronMundo prefabDron;
@@ -142,11 +143,30 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             Vector3 centro = PosicionDelJugador() ?? transform.position;
             PatrullaMundo patrulla = Instantiate(prefabPatrulla, transform);
-            patrulla.Preparar(calculo, config, calles, calles.MasLejano(centro), PosicionDelJugador);
+            patrulla.Preparar(calculo, config, calles, NodoDeSalida(centro), PosicionDelJugador);
             patrullas.Add(patrulla);
         }
 
         /// <summary>Arma el grafo de calles con las manzanas (hijos "Manzana_") de un barrio (T-451: el tráfico de calle lo comparte).</summary>
+        /// <summary>T-533: la patrulla sale en el nodo más cercano a <see cref="DistanciaSalidaPatrulla"/> m del jugador (no al otro lado del barrio).</summary>
+        private int NodoDeSalida(Vector3 centro)
+        {
+            int mejor = calles.MasLejano(centro);
+            float error = float.MaxValue;
+            for (int i = 0; i < calles.Cantidad; i++)
+            {
+                Vector3 d = calles.Nodo(i) - centro;
+                d.y = 0f;
+                float e = Mathf.Abs(d.magnitude - DistanciaSalidaPatrulla);
+                if (e < error)
+                {
+                    error = e;
+                    mejor = i;
+                }
+            }
+            return mejor;
+        }
+
         public static GrafoCalles ArmarCallesDe(Transform barrio)
         {
             List<Vector2> centros = new List<Vector2>();

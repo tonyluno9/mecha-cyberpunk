@@ -119,6 +119,96 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &283175
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1264904615}
+    m_Modifications:
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8204053418188176659, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_Name
+      value: Visual
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8204053418188176659, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 283178}
+  m_SourcePrefab: {fileID: 100100000, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+--- !u!4 &283176 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+  m_PrefabInstance: {fileID: 283175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &283177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8204053418188176659, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+  m_PrefabInstance: {fileID: 283175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &283178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f630e102248a05348b2783799e9bdf0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
+  materiales:
+  - {fileID: 2100000, guid: 06a743e4ead21214a92e5ad6b48a6d4a, type: 2}
+  indice: 0
+  materialFranja: {fileID: 0}
+  grosorFranja: 0.14
+  colorLuz: {r: 0, g: 0, b: 0, a: 0}
+  intensidadLuz: 2.5
+  alcanceLuz: 5
 --- !u!1 &778826
 GameObject:
   m_ObjectHideFlags: 0
@@ -50401,7 +50491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 54.432198
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -50409,7 +50499,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 56
+      value: 46
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -50461,6 +50551,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 173977237}
+    - targetCorrespondingSourceObject: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 173977239}
   m_SourcePrefab: {fileID: 100100000, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
 --- !u!4 &173977234 stripped
 Transform:
@@ -50489,15 +50582,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5564f92951c1dc748b6a5fbea5930749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.GenteDeBanqueta
-  modo: 0
+  modo: 2
   clipPlatica: {fileID: 0}
-  puntoA: {x: 0, y: 0, z: 0}
-  puntoB: {x: 0, y: 0, z: 0}
-  velocidad: 1
-  pausa: 0
-  ritmo: 0.9
-  fase: 0.7984
-  mover: {fileID: 0}
+  puntoA: {x: 38, y: 0.2, z: 46}
+  puntoB: {x: 38, y: 0.2, z: 56}
+  velocidad: 1.1
+  pausa: 3
+  ritmo: 1
+  fase: 0.15
+  mover: {fileID: 173977234}
 --- !u!205 &173977238
 LODGroup:
   m_ObjectHideFlags: 0
@@ -50517,6 +50610,23 @@ LODGroup:
     renderers:
     - renderer: {fileID: 173977235}
   m_Enabled: 1
+--- !u!114 &173977239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173977236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84221dc1c2d0d164095c662cf61ac685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.GuardiaNova
+  radioVigila: 9
+  radioArma: 15
+  radioDisparo: 40
+  calorAlReaccionar: 30
+  segundosAlerta: 12
 --- !u!1 &174678906
 GameObject:
   m_ObjectHideFlags: 0
@@ -141843,6 +141953,96 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 417219873}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &418130961
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1852945303}
+    m_Modifications:
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8204053418188176659, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      propertyPath: m_Name
+      value: Visual
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8204053418188176659, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 418130964}
+  m_SourcePrefab: {fileID: 100100000, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+--- !u!4 &418130962 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5859554425735941184, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+  m_PrefabInstance: {fileID: 418130961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &418130963 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8204053418188176659, guid: a1a561bfa79490b48b77bac1fe4a8859, type: 3}
+  m_PrefabInstance: {fileID: 418130961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &418130964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418130963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f630e102248a05348b2783799e9bdf0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
+  materiales:
+  - {fileID: 2100000, guid: 06a743e4ead21214a92e5ad6b48a6d4a, type: 2}
+  indice: 0
+  materialFranja: {fileID: 0}
+  grosorFranja: 0.14
+  colorLuz: {r: 0, g: 0, b: 0, a: 0}
+  intensidadLuz: 2.5
+  alcanceLuz: 5
 --- !u!1 &418965763
 GameObject:
   m_ObjectHideFlags: 0
@@ -256976,66 +257176,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1999177658}
     m_Modifications:
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.9000015
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.97660327
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0.21504897
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 829063162}
-  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
 --- !u!4 &829063160 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 829063159}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &829063161 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 829063159}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &829063162
@@ -257051,9 +257251,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
   materiales:
-  - {fileID: 2100000, guid: 7a0bbc162a5b4494e9d1add45bb48b1d, type: 2}
+  - {fileID: 2100000, guid: 06a743e4ead21214a92e5ad6b48a6d4a, type: 2}
   indice: 0
-  materialFranja: {fileID: 2100000, guid: ce5624e524090e8488d2f8a46956989a, type: 2}
+  materialFranja: {fileID: 0}
   grosorFranja: 0.14
   colorLuz: {r: 0, g: 0, b: 0, a: 0}
   intensidadLuz: 2.5
@@ -274856,66 +275056,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1999177658}
     m_Modifications:
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.9000015
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9774777
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0.21103884
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 900758966}
-  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
 --- !u!4 &900758964 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 900758963}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &900758965 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 900758963}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &900758966
@@ -274931,9 +275131,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
   materiales:
-  - {fileID: 2100000, guid: 7a0bbc162a5b4494e9d1add45bb48b1d, type: 2}
+  - {fileID: 2100000, guid: 06a743e4ead21214a92e5ad6b48a6d4a, type: 2}
   indice: 0
-  materialFranja: {fileID: 2100000, guid: ce5624e524090e8488d2f8a46956989a, type: 2}
+  materialFranja: {fileID: 0}
   grosorFranja: 0.14
   colorLuz: {r: 0, g: 0, b: 0, a: 0}
   intensidadLuz: 2.5
@@ -288470,66 +288670,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 523302621}
     m_Modifications:
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.7999992
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 3.2
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.2077004
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0.9781925
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 949870472}
-  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
 --- !u!4 &949870470 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 949870469}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &949870471 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 949870469}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &949870472
@@ -288545,9 +288745,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
   materiales:
-  - {fileID: 2100000, guid: 7a0bbc162a5b4494e9d1add45bb48b1d, type: 2}
+  - {fileID: 2100000, guid: 06a743e4ead21214a92e5ad6b48a6d4a, type: 2}
   indice: 0
-  materialFranja: {fileID: 2100000, guid: ce5624e524090e8488d2f8a46956989a, type: 2}
+  materialFranja: {fileID: 0}
   grosorFranja: 0.14
   colorLuz: {r: 0, g: 0, b: 0, a: 0}
   intensidadLuz: 2.5
@@ -351405,6 +351605,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2241614505567095087, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3300833673881191967, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
       propertyPath: m_Name
       value: CalaveraPunos_2
@@ -351413,9 +351617,20 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7136719930498168248, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331121769312601545, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 319675388740399363, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 283176}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
 --- !u!114 &1264904614 stripped
@@ -398137,66 +398352,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 523302621}
     m_Modifications:
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.6199996
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.19897738
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0.98000413
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1516930811}
-  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
 --- !u!4 &1516930809 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 1516930808}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1516930810 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 1516930808}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1516930811
@@ -398212,9 +398427,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
   materiales:
-  - {fileID: 2100000, guid: 7a0bbc162a5b4494e9d1add45bb48b1d, type: 2}
+  - {fileID: 2100000, guid: 06a743e4ead21214a92e5ad6b48a6d4a, type: 2}
   indice: 0
-  materialFranja: {fileID: 2100000, guid: ce5624e524090e8488d2f8a46956989a, type: 2}
+  materialFranja: {fileID: 0}
   grosorFranja: 0.14
   colorLuz: {r: 0, g: 0, b: 0, a: 0}
   intensidadLuz: 2.5
@@ -446805,66 +447020,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 523302621}
     m_Modifications:
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.7999992
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.19010451
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0.9817639
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1722921169}
-  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
 --- !u!4 &1722921167 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 1722921166}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1722921168 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1747596708753312118, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
   m_PrefabInstance: {fileID: 1722921166}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1722921169
@@ -446880,9 +447095,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
   materiales:
-  - {fileID: 2100000, guid: 7a0bbc162a5b4494e9d1add45bb48b1d, type: 2}
+  - {fileID: 2100000, guid: 06a743e4ead21214a92e5ad6b48a6d4a, type: 2}
   indice: 0
-  materialFranja: {fileID: 2100000, guid: ce5624e524090e8488d2f8a46956989a, type: 2}
+  materialFranja: {fileID: 0}
   grosorFranja: 0.14
   colorLuz: {r: 0, g: 0, b: 0, a: 0}
   intensidadLuz: 2.5
@@ -469251,6 +469466,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2241614505567095087, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3300833673881191967, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
       propertyPath: m_Name
       value: CalaveraPunos_1
@@ -469259,9 +469478,20 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7136719930498168248, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331121769312601545, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 319675388740399363, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 418130962}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e18a09370c231948956b7d2c729b902, type: 3}
 --- !u!114 &1852945302 stripped
@@ -508080,15 +508310,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 53.399998
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 32
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -508140,6 +508370,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2008723592}
+    - targetCorrespondingSourceObject: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2008723594}
   m_SourcePrefab: {fileID: 100100000, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
 --- !u!4 &2008723589 stripped
 Transform:
@@ -508168,15 +508401,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5564f92951c1dc748b6a5fbea5930749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.GenteDeBanqueta
-  modo: 0
+  modo: 2
   clipPlatica: {fileID: 0}
-  puntoA: {x: 0, y: 0, z: 0}
-  puntoB: {x: 0, y: 0, z: 0}
-  velocidad: 1
-  pausa: 0
-  ritmo: 0.9
-  fase: 0.5603
-  mover: {fileID: 0}
+  puntoA: {x: 56, y: 0.2, z: 17}
+  puntoB: {x: 56, y: 0.2, z: 27}
+  velocidad: 1.1
+  pausa: 3
+  ritmo: 1
+  fase: 0.3
+  mover: {fileID: 2008723589}
 --- !u!205 &2008723593
 LODGroup:
   m_ObjectHideFlags: 0
@@ -508196,6 +508429,23 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2008723590}
   m_Enabled: 1
+--- !u!114 &2008723594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008723591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84221dc1c2d0d164095c662cf61ac685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.GuardiaNova
+  radioVigila: 9
+  radioArma: 15
+  radioDisparo: 40
+  calorAlReaccionar: 30
+  segundosAlerta: 12
 --- !u!1 &2008865236
 GameObject:
   m_ObjectHideFlags: 0
@@ -526034,15 +526284,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 40.467804
+      value: 38.5
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 52
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: 2231768469520285989, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -526094,6 +526344,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2077620164}
+    - targetCorrespondingSourceObject: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2077620166}
   m_SourcePrefab: {fileID: 100100000, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
 --- !u!4 &2077620161 stripped
 Transform:
@@ -526122,15 +526375,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5564f92951c1dc748b6a5fbea5930749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.GenteDeBanqueta
-  modo: 0
+  modo: 2
   clipPlatica: {fileID: 0}
-  puntoA: {x: 0, y: 0, z: 0}
-  puntoB: {x: 0, y: 0, z: 0}
-  velocidad: 1
-  pausa: 0
-  ritmo: 0.9
-  fase: 0.0841
-  mover: {fileID: 0}
+  puntoA: {x: 38.5, y: 0.2, z: 43}
+  puntoB: {x: 38.5, y: 0.2, z: 33}
+  velocidad: 1.1
+  pausa: 3
+  ritmo: 1
+  fase: 0
+  mover: {fileID: 2077620161}
 --- !u!205 &2077620165
 LODGroup:
   m_ObjectHideFlags: 0
@@ -526150,6 +526403,23 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2077620162}
   m_Enabled: 1
+--- !u!114 &2077620166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077620163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84221dc1c2d0d164095c662cf61ac685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.GuardiaNova
+  radioVigila: 9
+  radioArma: 15
+  radioDisparo: 40
+  calorAlReaccionar: 30
+  segundosAlerta: 12
 --- !u!1 &2077848909
 GameObject:
   m_ObjectHideFlags: 0

@@ -907,7 +907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CarroEstacionado
   segundosAlarma: 3
-  calorAlRobar: 30
+  calorAlRobar: 55
   parpadeoSegundos: 0.25
   sonidoAlarma: {fileID: 0}
   tinte: {r: 0, g: 0, b: 0, a: 0}

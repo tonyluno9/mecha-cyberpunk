@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
 using UnityEngine;
 
@@ -14,6 +15,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
     {
         private const float GradosPorSegundoGiro = 360f;
         private const float DistanciaMinimaDeNodo = 0.01f;
+        // T-533: de cerca deja la calle y va directo hacia el jugador (como en GTA), y por el megáfono le grita cada tanto.
+        private const float DistanciaDirecta = 28f;
+        private const float DistanciaMegafono = 35f;
+        private const float SegundosEntreMegafono = 7f;
+        private int bucleSirena = Sonidos.SinBucle;
+        private float proximoMegafono;
 
         [Tooltip("Luces de la sirena: la primera es roja y la segunda azul; alternan.")]
         [SerializeField] private Light luzRoja;
@@ -40,6 +47,19 @@ namespace MechaCyberpunk.Trafico.Persecucion
             indiceEnCamino = 0;
             nodoMeta = nodoInicial;
             transform.position = posicion;
+            if (bucleSirena == Sonidos.SinBucle)
+            {
+                bucleSirena = Sonidos.ReproducirBucle("CAL_PATRULLA_SIRENA", transform);
+            }
+        }
+
+        /// <summary>True si va directo al jugador (ya dejó la calle).</summary>
+        public bool VaDirecto { get; private set; }
+
+        private void OnDisable()
+        {
+            Sonidos.DetenerBucle(bucleSirena);
+            bucleSirena = Sonidos.SinBucle;
         }
 
         private void Update()
@@ -54,12 +74,44 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
+            float distancia = DistanciaPlano(posicion, jugador.Value);
+            if (distancia <= DistanciaMegafono && Time.time >= proximoMegafono)
+            {
+                proximoMegafono = Time.time + SegundosEntreMegafono;
+                Sonidos.ReproducirEn("CAL_PATRULLA_MEGAFONO", transform.position);
+            }
+            VaDirecto = distancia <= DistanciaDirecta;
+            if (VaDirecto)
+            {
+                Directo(jugador.Value, Time.deltaTime);
+                return;
+            }
             int nuevaMeta = calles.MasCercano(jugador.Value);
-            if (nuevaMeta != nodoMeta)
+            if (nuevaMeta != nodoMeta || indiceEnCamino >= camino.Count)
             {
                 Replanear(nuevaMeta);
             }
             Avanzar(jugador.Value, Time.deltaTime);
+        }
+
+        // De cerca: directo hacia el jugador hasta la distancia de seguimiento. Al alejarse vuelve a la calle por el nodo más cercano.
+        private void Directo(Vector3 jugador, float dt)
+        {
+            float paso = calculo.Paso(false, DistanciaPlano(posicion, jugador), dt);
+            Vector3 hacia = jugador - posicion;
+            hacia.y = 0f;
+            if (hacia.sqrMagnitude > 0.0001f)
+            {
+                Vector3 direccion = hacia.normalized;
+                posicion += direccion * paso;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), GradosPorSegundoGiro * dt);
+            }
+            transform.position = posicion;
+            int cercano = calles.MasCercano(posicion);
+            camino.Clear();
+            camino.Add(cercano);
+            indiceEnCamino = 0;
+            nodoMeta = -1;
         }
 
         // La patrulla puede estar a medio tramo: el camino nuevo parte del nodo al que iba (o del último nodo si ya iba para atrás).

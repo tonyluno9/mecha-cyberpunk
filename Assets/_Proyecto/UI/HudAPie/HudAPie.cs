@@ -1183,7 +1183,24 @@ namespace MechaCyberpunk.UI.Hud
             calor = null;
         }
 
-        private void AlCambiarNivelCalor(int nivel) => RefrescarCalor();
+        private void AlCambiarNivelCalor(int nivel)
+        {
+            // T-533: al subir el calor, la radio de la policía: "Unidades, sospechoso en <zona>".
+            if (nivel > nivelCalorAnterior && nivel >= 1)
+            {
+                HudTerritorio territorio = FindFirstObjectByType<HudTerritorio>();
+                string zona = territorio != null && territorio.NombreZona != null && !string.IsNullOrEmpty(territorio.NombreZona.text)
+                    ? territorio.NombreZona.text : "el barrio";
+                ColaAvisos.Publicar(TextoRadioPolicia(zona), PrioridadAviso.Alta, TipoAviso.Malo, 4f, "radio-policia");
+            }
+            nivelCalorAnterior = nivel;
+            RefrescarCalor();
+        }
+
+        private int nivelCalorAnterior;
+
+        /// <summary>Aviso de la radio de la policía al subir el calor (T-533).</summary>
+        public static string TextoRadioPolicia(string zona) => "RADIO · Unidades, sospechoso en " + zona;
 
         // T-524: el calor se ve siempre a pie y en carro (vacío con nivel 0); en el mecha lo muestra la cabina.
         private void RefrescarCalor()
