@@ -46,6 +46,16 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
+        public void TextoHora_HoraDelJuego_EnFormato24h()
+        {
+            // T-537: la hora del juego en el HUD.
+            Assert.AreEqual("21:30", FormatoHud.TextoHora(21.5f));
+            Assert.AreEqual("06:05", FormatoHud.TextoHora(6f + 5f / 60f));
+            Assert.AreEqual("00:00", FormatoHud.TextoHora(0f));
+            Assert.AreEqual("23:59", FormatoHud.TextoHora(23.999f));
+        }
+
+        [Test]
         public void EsVidaBaja_EnElUmbralYDebajoEsBaja_ArribaNo()
         {
             Assert.IsTrue(FormatoHud.EsVidaBaja(30f, 100f, 0.3f), "En el umbral cuenta como baja");

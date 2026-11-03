@@ -343,6 +343,7 @@ namespace MechaCyberpunk.UI.Hud
                 ActualizarVida();
                 ActualizarArma();
             }
+            ActualizarHora();
             ActualizarMira();
             ActualizarAngulo();
             ActualizarInteraccion();
@@ -666,6 +667,9 @@ namespace MechaCyberpunk.UI.Hud
             {
                 iconoArma.sprite = piezas.Arma(activa);
                 iconoArma.enabled = iconoArma.sprite != null;
+                // T-537: como el mockup: arma en naranja sobre un fondo azul muy oscuro.
+                iconoArma.color = KitUI.Estilo.Naranja;
+                PonerFondoArma(iconoArma.transform.parent);
             }
             if (casillasArma == null)
             {
@@ -674,7 +678,8 @@ namespace MechaCyberpunk.UI.Hud
             for (int i = 0; i < casillasArma.Length; i++)
             {
                 bool tiene = armas.TieneArma((ArmaAPie)i);
-                casillasArma[i].color = new Color(1f, 1f, 1f, tiene ? 1f : 0.25f);
+                // T-537: la activa en naranja, las que tienes en turquesa, las que no en gris tenue.
+                casillasArma[i].color = i == activa ? KitUI.Estilo.Naranja : tiene ? KitUI.Estilo.Turquesa : new Color(0.6f, 0.65f, 0.7f, 0.25f);
                 if (i == activa && resalteArma != null)
                 {
                     resalteArma.rectTransform.anchorMin = casillasArma[i].rectTransform.anchorMin;
@@ -683,6 +688,24 @@ namespace MechaCyberpunk.UI.Hud
                     resalteArma.rectTransform.offsetMax = Vector2.zero;
                 }
             }
+        }
+
+        private const string NombreFondoArma = "FondoArma_T537";
+        private static readonly Color ColorFondoArma = new Color(0.02f, 0.04f, 0.09f, 0.82f);
+
+        private static void PonerFondoArma(Transform grupo)
+        {
+            if (grupo == null || grupo.Find(NombreFondoArma) != null)
+            {
+                return;
+            }
+            Image fondo = KitUI.CrearFondoPantalla(grupo, NombreFondoArma);
+            fondo.color = ColorFondoArma;
+            fondo.raycastTarget = false;
+            KitUI.Estirar(fondo.rectTransform);
+            fondo.rectTransform.offsetMin = new Vector2(10f, 10f);
+            fondo.rectTransform.offsetMax = new Vector2(-10f, -10f);
+            fondo.transform.SetAsFirstSibling();
         }
 
         // ---- Subir de liga ----
@@ -979,6 +1002,41 @@ namespace MechaCyberpunk.UI.Hud
         private static void AlAvisoMontable(IMontable montable, string texto)
         {
             ColaAvisos.Publicar(texto, PrioridadAviso.Alta, TipoAviso.Malo, 4f, "montable");
+        }
+
+        // T-537: la hora del juego bajo los Biits (se arma sola la primera vez, junto a la cifra del dinero).
+        private Text textoHora;
+        private float proximaHora;
+        private const float SegundosEntreHoras = 0.5f;
+        public Text TextoHora => textoHora;
+
+        private void ActualizarHora()
+        {
+            if (Time.unscaledTime < proximaHora)
+            {
+                return;
+            }
+            proximaHora = Time.unscaledTime + SegundosEntreHoras;
+            IRelojMundo reloj = Registro<IRelojMundo>.Actual;
+            if (textoHora == null)
+            {
+                if (cifraDinero == null || cifraDinero.transform.parent == null)
+                {
+                    return;
+                }
+                RectTransform grupo = (RectTransform)cifraDinero.transform.parent;
+                textoHora = KitUI.CrearTexto(grupo.parent, "Hora", RolTexto.Hud, TextAnchor.MiddleLeft);
+                RectTransform r = textoHora.rectTransform;
+                r.anchorMin = grupo.anchorMin;
+                r.anchorMax = grupo.anchorMax;
+                r.pivot = grupo.pivot;
+                r.sizeDelta = new Vector2(grupo.sizeDelta.x, grupo.rect.height * 0.7f);
+                r.anchoredPosition = grupo.anchoredPosition + Vector2.down * (grupo.rect.height + 6f) + Vector2.right * (grupo.rect.width * 0.08f);
+                textoHora.fontSize = Mathf.RoundToInt(cifraDinero.fontSize * 0.8f);
+                textoHora.color = KitUI.Estilo.Turquesa;
+            }
+            textoHora.text = reloj != null ? FormatoHud.TextoHora(reloj.Hora) : string.Empty;
+            textoHora.gameObject.SetActive(reloj != null && cifraDinero.gameObject.activeInHierarchy);
         }
 
         public void MostrarAvisoImplante(string nombre)
