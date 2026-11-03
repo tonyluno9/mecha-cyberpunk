@@ -80,6 +80,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private readonly MaquinaHistoriaPandillas maquina = new MaquinaHistoriaPandillas();
         private PantallaHistoriaPandillas pantalla;
         private ArmaEnPiso arma;
+        [Tooltip("T-545: modelo de la pistola que suelta el SKULL (W01_Pistola); vacío arma una de piezas.")]
+        [SerializeField] private GameObject modeloPistola;
         private Vector3 ultimaCaida;
         private bool hayCaida;
         private float proteccionHasta = -1f;
@@ -564,7 +566,18 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             GameObject objeto = new GameObject("PistolaEnPiso");
             objeto.transform.position = punto + Vector3.up * 0.1f;
             objeto.transform.rotation = Quaternion.Euler(0f, 35f, 0f);
-            ArmarModeloPistola(objeto.transform);
+            if (modeloPistola != null)
+            {
+                // T-545: la pistola W01 de Tony, acostada de lado en el piso.
+                GameObject w = Instantiate(modeloPistola, objeto.transform);
+                w.name = "W01";
+                w.transform.localPosition = Vector3.up * 0.03f;
+                w.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            }
+            else
+            {
+                ArmarModeloPistola(objeto.transform);
+            }
             arma = objeto.AddComponent<ArmaEnPiso>();
             arma.Tomada += AlTomarArma;
         }

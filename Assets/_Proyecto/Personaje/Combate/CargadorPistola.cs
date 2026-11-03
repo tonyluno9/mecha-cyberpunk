@@ -28,6 +28,9 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>Multiplica el tiempo de recarga al empezarla (T-430, implante SINAPSIS). 1 = normal.</summary>
         public float FactorRecarga { get; set; } = 1f;
 
+        /// <summary>T-545: cuánto dura una recarga con el factor actual (s); la animación de la pistola se ajusta a esto.</summary>
+        public float TiempoRecarga => tiempoRecarga * FactorRecarga;
+
         public int Tamano { get; }
         public int Balas { get; private set; }
         public bool Recargando { get; private set; }

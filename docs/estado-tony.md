@@ -229,6 +229,7 @@ Archivos de la Sesión B que NO se tocaron: docs/bugs.md (los tres bugs de la Se
 | T-542 | Paso 2: letreros 3D VivaCoin, Hotel, El Mercado, I+D+I y CIC que brillan de noche | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
 | T-543 | Paso 2: moto de reparto V07 manejable y robable en Suburbios y El Tianguis | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
 | T-544 | Paso 2: 52 pantallas LED con anuncios que cambian y parpadean | hecha | [T-540 a T-544](tareas/hechas/T-540-paso2-assets-nuevos.md) |
+| T-545 | Paso 3: pistola W01 en la mano del jugador y de los SKULLS y en el piso; corredera y cargador animados con las curvas de los .blend | hecha | [T-545](tareas/hechas/T-545-pistola-w01.md) |
 
 ## Cierre de la Parte A (ciudad como las referencias): FPS de noche por zona
 Todos medidos en el mismo build final (MedicionNoche con T-501 a T-505, 1920x1080, calidad Medio, hora 23, Logs/med505-despues/medicion.txt). Meta: 60.
