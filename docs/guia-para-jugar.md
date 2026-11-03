@@ -442,3 +442,8 @@ Escena para probarlos: `Pruebas_Implantes` (Play, de día a las 10:00; hay pista
 - Haz: nada en el juego (el cambio es de la prueba automática RecorridoDemoPruebas); juega la demo completa si quieres comparar.
 - Observa: la dificultad de El Tianguis y del jefe es la misma de antes; la prueba ahora recorre la demo de principio a fin (El Tianguis, el jefe, EL HACKER y CONTINUARÁ) sin matar enemigos por el bot.
 - Compara: Logs/t474-tiempos.txt (línea TOTAL: muertes 0, bugs 0, rescate False).
+
+### Paso 1 del 3-nov (T-530 a T-537): arreglos de tu prueba
+- Haz: juega la demo de noche; acércate a las puertas (se abren solas), maneja hasta el fondo de cualquier calle, sube el calor (roba una patrulla) y quédate quieto junto a la gente; visita el CIC de Tino (calle principal de Suburbios, junto al MECÁNICO) y el I+D+I del Doc (enfrente, del lado sur).
+- Observa: cámara más cerca y sin meterse a las paredes, la ciudad sigue sin muros ni ALTO, el Tianguis sin poste ni puestos encimados, tráfico que frena y cede, patrullas con sirena que llegan directo, radio de la policía, lluvia que llega al piso, asfalto mojado, la hora en el HUD y el título con la ciudad en movimiento.
+- Compara: docs/capturas/prueba2-*.png (antes | después) y docs/tareas/hechas/T-530-paso1-prueba-tony.md (FPS y lo que falta).

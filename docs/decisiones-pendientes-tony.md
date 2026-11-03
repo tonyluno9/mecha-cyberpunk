@@ -1107,3 +1107,9 @@ Una línea por decisión. Todas son propuesta hasta que Tony las apruebe en la r
 - D-tony-346 (T-513): el fondo lejano es un cilindro de 560 m (no más: algunas cámaras tienen plano lejano de 600 m) en 4 tramos de 90° (con 8 de 45° el horizonte de la pintura quedaba a ~7° y lo tapaban los edificios); arriba es transparente para fundirse con el cielo real; de día la pintura (de noche) se aclara y se mezcla con bruma
 - D-tony-347 (T-513): las 48 torres de horizonte de T-501 quedan apagadas (el fondo las cubre); las 14 de Neón Alto se quedan
 - D-tony-348 (T-514): el bot de RecorridoDemoPruebas no le dispara al jefe mientras el objetivo es vencer a los SKULLS, flanquea a quien se esconde tras una cubierta y lo deja si no lo ve en 8 s; como ventaja solo de la prueba se cura bajo 45 % de vida en las peleas del Tianguis y del jefe. La prueba falla si tiene que matar enemigos por el bot. No se tocó la dificultad del juego
+
+## D-tony-349 (3-nov, paso 1) CONTINUAR "desaparece todo"
+No se reprodujo en el editor: CONTINUAR carga la ranura, coloca al jugador y el HUD sigue. Se agregó una pantalla CARGANDO… durante la recarga (en el build tardaba y la pantalla quedaba vacía). Si en el build sigue pasando, anotar qué se ve (negro, sin HUD, sin ciudad) y en qué ranura.
+
+## D-tony-350 (3-nov, paso 1) Clínica del Doc en la jerarquía de El Mercado
+El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero siguen colgando del prefab de El Mercado (no se puede cambiar de padre dentro de un prefab). Funciona igual; si se quiere separar del todo, hay que desempacar el prefab del Mercado.
