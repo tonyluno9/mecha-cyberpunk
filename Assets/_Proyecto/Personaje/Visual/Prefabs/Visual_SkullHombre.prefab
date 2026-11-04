@@ -111,10 +111,12 @@ MonoBehaviour:
   animador: {fileID: 3383877608705758792}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 0.86347127
-  velocidadClipCorrer: 3.1598094
+  velocidadClipCaminar: 1.1755382
+  velocidadClipCorrer: 2.1075106
   rapidezMinima: 0.6
   rapidezMaxima: 2.2
+  rapidezCapaArriba: 8
+  suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
 --- !u!1001 &9196182661923515353
@@ -176,7 +178,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2d7d8bf03261103438644862f7c015c3, type: 2}
+      objectReference: {fileID: 22100000, guid: c64b423d8f8085340b3c69ac4937e543, type: 2}
     - target: {fileID: 5866666021909216657, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -191,6 +193,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7614113484794065178}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 32660561500520336}
   m_SourcePrefab: {fileID: 100100000, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
 --- !u!95 &3383877608705758792 stripped
 Animator:
@@ -227,7 +232,31 @@ MonoBehaviour:
   rapidez: 10
   socketArma: {fileID: 7715629392474268116}
   inclinacionBajada: 60
-  manosPorIK: 1
+  manosPorIK: 0
+--- !u!114 &32660561500520336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8313098152882443912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5ed43a73d7ab147b028ff2c699c13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.IKPiesYMirada
+  pies: 1
+  alturaRayo: 0.6
+  alcanceRayo: 1.1
+  rapidezPies: 10
+  objetivo: {fileID: 0}
+  mirarAlJugador: 1
+  distanciaMirada: 7
+  anguloMirada: 100
+  retardoMirada: 1
+  rapidezMirada: 4
+  pesoCuerpo: 0.2
+  alturaObjetivo: 1.5
 --- !u!4 &8653066441562770482 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}

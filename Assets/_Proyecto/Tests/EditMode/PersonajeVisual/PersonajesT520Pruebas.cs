@@ -33,10 +33,10 @@ namespace MechaCyberpunk.Tests
             Assert.IsNotNull(animador.avatar);
             Assert.IsTrue(animador.avatar.isValid && animador.avatar.isHuman, "Avatar Humanoid válido");
             Assert.IsFalse(animador.applyRootMotion, "Sin movimiento de raíz: lo mueve el juego");
-            AnimatorController c = animador.runtimeAnimatorController as AnimatorController;
+            AnimatorController c = (animador.runtimeAnimatorController as AnimatorOverrideController)?.runtimeAnimatorController as AnimatorController;
             Assert.IsNotNull(c);
             string[] estados = c.layers[0].stateMachine.states.Select(s => s.state.name).ToArray();
-            foreach (string e in ReglasVisual.Estados)
+            foreach (string e in ReglasAnimacion.EstadosBase)
             {
                 CollectionAssert.Contains(estados, e);
             }
@@ -87,7 +87,8 @@ namespace MechaCyberpunk.Tests
             VisualPersonaje visual = prefab.GetComponentInChildren<VisualPersonaje>(true);
             Assert.IsNotNull(visual, ruta + " tiene VisualPersonaje");
             Animator animador = visual.GetComponentInChildren<Animator>(true);
-            Assert.AreEqual(CreadorVisualPersonaje.RutaControlador(cuerpo), AssetDatabase.GetAssetPath(animador.runtimeAnimatorController), "Controlador de " + cuerpo);
+            string papel = System.Array.Find(ConectarControladorBase.Reparto, r => r.Modelo == cuerpo).Papel;
+            Assert.AreEqual(ConstructorControladorBase.RutaOverride(papel), AssetDatabase.GetAssetPath(animador.runtimeAnimatorController), "Override de " + cuerpo);
             foreach (Transform t in prefab.GetComponentsInChildren<Transform>(true))
             {
                 Assert.AreNotEqual("Cadera", t.name, "El muñeco de cubos ya no está en " + ruta);

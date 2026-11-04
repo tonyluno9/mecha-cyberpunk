@@ -34,7 +34,7 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = Visual();
             Assert.IsNotNull(visual, "El jugador trae el visual de Tripo");
             Animator animador = visual.Animador;
-            yield return Esperar(0.4f);
+            yield return Esperar(1.5f);
             Assert.AreEqual("Idle", Estado(animador), "Quieto");
             Assert.AreEqual(1f, animador.speed, 0.001f, "Quieto no se acelera");
 
@@ -98,14 +98,20 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(0f, ik.Peso, 0.05f, "Arma abajo");
             Assert.Less(Vector3.Dot(-ik.SocketArma.up, visual.transform.forward), 0.8f, "Con el arma abajo el cañón se inclina");
 
+            // T-561: con el controlador base el KO usa las animaciones de muerte y levantarse; el cuerpo ya no se gira a mano.
+            // Sin ventana de juego el Animator se duerme fuera de cámara y los huesos no se mueven: se le pide que anime siempre.
+            visual.Animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             visual.Caido = true;
-            yield return Esperar(0.6f);
-            Assert.AreEqual(1f, visual.Tumbado, 0.01f, "KO: el cuerpo se tumba");
+            yield return Esperar(2.5f);
+            Assert.AreEqual(0f, visual.Tumbado, 0.01f, "KO con clip de muerte: no se tumba a mano");
             Transform cabeza = visual.Animador.GetBoneTransform(HumanBodyBones.Head);
             Assert.Less(cabeza.position.y, 0.6f, "La cabeza queda cerca del piso (m)");
             visual.Caido = false;
-            yield return Esperar(0.6f);
-            Assert.AreEqual(0f, visual.Tumbado, 0.01f);
+            float fin = Time.time + 12f;
+            while (cabeza.position.y <= 1.1f && Time.time < fin)
+            {
+                yield return null;
+            }
             Assert.Greater(cabeza.position.y, 1.1f, "De pie otra vez (el hueso de la cabeza queda a ~1.24 m en este modelo)");
         }
 

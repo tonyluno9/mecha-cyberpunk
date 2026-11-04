@@ -48,10 +48,12 @@ MonoBehaviour:
   animador: {fileID: 4800265712515182006}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 1.010513
-  velocidadClipCorrer: 3.6979015
+  velocidadClipCaminar: 1.1755382
+  velocidadClipCorrer: 2.1075106
   rapidezMinima: 0.6
   rapidezMaxima: 2.2
+  rapidezCapaArriba: 8
+  suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
 --- !u!1 &4545910302101853862
@@ -171,16 +173,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3786458744446125345, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0057978244
+      value: -0.005797825
       objectReference: {fileID: 0}
     - target: {fileID: 3786458744446125345, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.1959865
+      value: 0.19598651
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: b768c9a08d177704b8b9c8d14caf0187, type: 2}
+      objectReference: {fileID: 22100000, guid: 873ba6372315276458cf0b6c68c46c29, type: 2}
     - target: {fileID: 5866666021909216657, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -199,6 +201,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7040070203320337658}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5528468394237905917}
   m_SourcePrefab: {fileID: 100100000, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}
 --- !u!4 &715939620582492325 stripped
 Transform:
@@ -235,7 +240,31 @@ MonoBehaviour:
   rapidez: 10
   socketArma: {fileID: 5565808718058650499}
   inclinacionBajada: 60
-  manosPorIK: 1
+  manosPorIK: 0
+--- !u!114 &5528468394237905917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2248989752180731254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5ed43a73d7ab147b028ff2c699c13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.IKPiesYMirada
+  pies: 1
+  alturaRayo: 0.6
+  alcanceRayo: 1.1
+  rapidezPies: 10
+  objetivo: {fileID: 0}
+  mirarAlJugador: 1
+  distanciaMirada: 7
+  anguloMirada: 100
+  retardoMirada: 1
+  rapidezMirada: 4
+  pesoCuerpo: 0.2
+  alturaObjetivo: 1.5
 --- !u!95 &4800265712515182006 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 0eafa620721af6b428ebc89cea99f937, type: 3}

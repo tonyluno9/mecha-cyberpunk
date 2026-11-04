@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
 namespace MechaCyberpunk.IA.Aliados
@@ -44,6 +45,7 @@ namespace MechaCyberpunk.IA.Aliados
         private CharacterController controlador;
         private PistolaPandillero pistola;
         private Animator animador;
+        private VisualPersonaje visual;
         private ModeloVida modelo;
         private int nivel = 1;
         private float velocidadVertical;
@@ -99,6 +101,7 @@ namespace MechaCyberpunk.IA.Aliados
                 pistola = gameObject.AddComponent<PistolaPandillero>();
             }
             animador = GetComponentInChildren<Animator>(true);
+            visual = GetComponentInChildren<VisualPersonaje>(true);
             PonerNivel(1);
             Pintar();
         }
@@ -268,8 +271,16 @@ namespace MechaCyberpunk.IA.Aliados
             {
                 animador.SetFloat(IdVelocidad, deseada.magnitude);
                 animador.SetBool(IdEnPiso, true);
-                animador.SetBool(IdApuntando, disparando);
-                animador.SetInteger(IdArma, 1);
+                if (visual != null)
+                {
+                    visual.Apuntando = disparando;
+                    visual.TipoArma = TipoArmaVisual.Pistola;
+                }
+                else
+                {
+                    animador.SetBool(IdApuntando, disparando);
+                    animador.SetInteger(IdArma, 1);
+                }
             }
         }
 
@@ -297,7 +308,11 @@ namespace MechaCyberpunk.IA.Aliados
             bool estabaKO = objetivo.EstaKO;
             float p = PistolaPandillero.ProbabilidadAcierto(distancia, DistCerca, DistLejos, AciertoCerca, AciertoLejos);
             pistola.Disparar(boca, pecho, objetivo, ReglaAliado.Danio(nivel), p, true);
-            if (animador != null)
+            if (visual != null)
+            {
+                visual.Disparar();
+            }
+            else if (animador != null)
             {
                 animador.SetTrigger(IdDisparo);
             }
