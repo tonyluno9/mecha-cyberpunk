@@ -28,7 +28,6 @@ namespace MechaCyberpunk.Tests.Mundo
             EditorSceneManager.CloseScene(escena, true);
         }
 
-        [TestCase("Habitacion")]
         [TestCase("ConsultorioDoc")]
         [TestCase("TallerTino")]
         [TestCase("Casino")]
@@ -42,16 +41,17 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Habitacion_PosteresConTexturaYFocoCalidoDeCuartoNoDeBodega()
+        public void Habitacion_ViveEnSuCuartoAparte_PosteresConTexturaYFocoCalido()
         {
-            Transform h = raiz.Find("Habitacion");
+            Assert.IsNull(raiz.Find("Habitacion"), "T-550: la habitación ya es un cuarto aparte (T550_Cuartos)");
+            Transform h = escena.GetRootGameObjects().First(g => g.name == "T550_Cuartos").transform.Find("Cuarto_Habitacion");
             for (int i = 1; i <= 3; i++)
             {
                 Renderer r = h.Find("Poster_" + i).GetComponent<Renderer>();
                 Assert.AreEqual("T546_Poster_" + i, r.sharedMaterial.mainTexture.name);
             }
-            Assert.Less(h.Find("A05_LamparaColgante").localScale.x, 0.6f, "Foco chico de cuarto");
-            Light foco = h.Find("FocoColgante").GetComponent<Light>();
+            Assert.Less(h.Find("FocoColgante").localScale.x, 0.6f, "Foco chico de cuarto");
+            Light foco = h.Find("Luces/FocoColgante_Luz").GetComponent<Light>();
             Assert.Greater(foco.color.r, foco.color.b, "Luz cálida");
         }
 

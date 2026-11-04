@@ -86,13 +86,16 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject cama = Poner(r, Taller + "H02_Cama.prefab", Vector3.zero, 0f);
             cama.transform.localScale = Vector3.one * 0.85f;
             cama.name = "H02_Cama";
-            cama.transform.SetPositionAndRotation(new Vector3(-0.8f, 0f, 1.15f), Quaternion.Euler(0f, 90f, 0f)); // cabecera contra la pared del fondo
+            cama.transform.SetPositionAndRotation(r.position, Quaternion.Euler(0f, 270f, 0f));
+            Bounds bc = ArteT250.Limites(cama);
+            Vector3 centroCama = r.TransformPoint(new Vector3(-0.8f, 0f, 1.15f));   // pegada a la pared izquierda, cabecera hacia el fondo
+            cama.transform.position += new Vector3(centroCama.x - bc.center.x, r.position.y - bc.min.y, centroCama.z - bc.center.z);
             Pieza(r, "I04", new Vector3(0.1f, 0.95f, 2f), Vector3.back, 0f);                        // ventana con barrotes, pared del fondo
             GameObject buro = Poner(r, Taller + "H11_Buro.prefab", new Vector3(0.22f, 0f, 1.78f), 0f);
             buro.name = "H11_Buro";
             Pieza(r, "I02", new Vector3(1.5f, 0f, 1.15f), Vector3.left, 0f);                        // escritorio con CRT, pared derecha
             Libre(r, "I03", new Vector3(0.3f, 0f, 1.15f), 270f);                                     // silla mirando al escritorio
-            Libre(r, "I05", new Vector3(1.1f, 0f, 0.05f), 200f);                                    // mochila junto al escritorio
+            Libre(r, "I05", new Vector3(1.1f, 0f, 0.05f), 200f, 0.5f);          // mochila (el modelo mide 1 m: se achica a una mochila)                                    // mochila junto al escritorio
 
             // Pósters planos de T-546 en la pared (izquierda sobre la cama y fondo).
             Cuadro(r, "Poster_1", new Vector3(-1.49f, 1.75f, 0.9f), Vector3.right, new Vector2(0.62f, 0.87f));
@@ -103,11 +106,11 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject foco = Poner(r, "Assets/Arte/Clandestino/Prefabs/A05_LamparaColgante.prefab", new Vector3(0f, 2.7f, 0.2f), 0f, colgar: true);
             Escalar(foco, 0.4f);
             foco.name = "FocoColgante";
-            Foco(r, "FocoColgante_Luz", new Vector3(0f, 2.05f, 0.2f), Calido, 2.6f, 6f, c.Luces);
-            Foco(r, "Relleno_Calido", new Vector3(0f, 1.3f, -1.2f), Calido, 0.8f, 5f, c.Luces);
+            Foco(r, "FocoColgante_Luz", new Vector3(0f, 2.05f, 0.2f), Calido, 1.2f, 6f, c.Luces);
+            Foco(r, "Relleno_Calido", new Vector3(0f, 1.3f, -1.2f), Calido, 0.5f, 5f, c.Luces);
             Foco(r, "Lampara_Buro", new Vector3(0.22f, 0.95f, 1.78f), Calido, 1.4f, 2.5f, c.Luces);
-            Foco(r, "NeonVentana_Magenta", new Vector3(-0.25f, 1.7f, 2.4f), Magenta, 2.4f, 4f, c.Luces);
-            Foco(r, "NeonVentana_Turquesa", new Vector3(0.55f, 1.7f, 2.4f), Turquesa, 2.2f, 4f, c.Luces);
+            Foco(r, "NeonVentana_Magenta", new Vector3(-0.25f, 1.7f, 2.4f), Magenta, 1.4f, 4f, c.Luces);
+            Foco(r, "NeonVentana_Turquesa", new Vector3(0.55f, 1.7f, 2.4f), Turquesa, 1.3f, 4f, c.Luces);
             Foco(r, "BrilloCRT", new Vector3(1.0f, 1.1f, 1.15f), Turquesa, 0.9f, 2.2f, c.Luces);
             Lampara(r, new Vector3(0.22f, 0.62f, 1.78f));
             Tubo(r, madera, new Vector3(-1.46f, 1.35f, -1.96f), 2.7f);
@@ -134,6 +137,9 @@ namespace MechaCyberpunk.Arte.Editor
             float l = medidas.z * 0.5f;
             float h = medidas.y;
             Material pared = AssetDatabase.LoadAssetAtPath<Material>(ImportarT550.RutaMaterialPared(mosaicoPared));
+            pared.SetColor("_BaseColor", new Color(0.62f, 0.58f, 0.55f)); // el mosaico X0n es muy claro: se oscurece para que la luz c�lida no lo queme
+            EditorUtility.SetDirty(pared);
+            AssetDatabase.SaveAssetIfDirty(pared);
             Material techo = Mat("T550_Techo_X0" + mosaicoTecho, new Color(0.55f, 0.5f, 0.45f), ImportarT550.RutaMaterialPared(mosaicoTecho));
             Material piso = Mat("T550_Piso_X0" + mosaicoPared, new Color(0.42f, 0.4f, 0.38f) * colorPiso, ImportarT550.RutaMaterialPared(mosaicoPared));
             Vector3 p(float x, float y, float z) => r.position + new Vector3(x, y, z);
@@ -251,6 +257,17 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 col.enabled = false; // el collider de la cama ahora es el del modelo H02
             }
+            // Donde despierta el jugador (y El Doc lo deja) ahora es junto a la cama del cuarto, mirando a la cama.
+            GameObject despertar = GameObject.Find("Casa_Cama");
+            if (despertar != null)
+            {
+                despertar.transform.SetPositionAndRotation(cama.transform.position, Quaternion.identity);
+            }
+            Transform zonaVieja = casa.Find("Interior/ZonaInterior");
+            if (zonaVieja != null && !zonaVieja.gameObject.activeSelf)
+            {
+                return; // la mudanza ya se hizo (esto vuelve a armar el cuarto sin mover otra vez el espejo ni el taller)
+            }
             Component espejo = Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).First(m => m != null && m.GetType().Name == "EspejoJugador");
             // El marco queda 1.5 m al -X de la raíz: con -90° de giro queda 1.5 m al -Z, contra la pared sur.
             espejo.transform.SetPositionAndRotation(r.position + new Vector3(-0.2f, 0.2f - 0f, -2f + 1.5f + 0.05f), Quaternion.Euler(0f, espejo.transform.eulerAngles.y - 90f, 0f));
@@ -267,7 +284,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Mover(mecha.transform, delta);
             }
             // El interior viejo ya no se pisa: su zona y sus luces se apagan.
-            Transform zonaVieja = interior.Find("ZonaInterior");
+            zonaVieja = interior.Find("ZonaInterior");
             if (zonaVieja != null)
             {
                 zonaVieja.gameObject.SetActive(false);
@@ -428,7 +445,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Pone un mueble I## en el piso, con su centro en planta en 'centroLocal' y girado 'yaw' grados.
-        private static void Libre(Transform r, string codigo, Vector3 centroLocal, float yaw)
+        private static void Libre(Transform r, string codigo, Vector3 centroLocal, float yaw, float escala = 1f)
         {
             GameObject g = Poner(r, Interiores + codigo + ".prefab", Vector3.zero, yaw);
             if (g == null)
@@ -436,6 +453,7 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             g.name = codigo;
+            g.transform.localScale *= escala;
             Vector3 centro = r.TransformPoint(centroLocal);
             Bounds b = ArteT250.Limites(g);
             g.transform.position = new Vector3(centro.x - (b.center.x - g.transform.position.x), r.position.y + centroLocal.y, centro.z - (b.center.z - g.transform.position.z));

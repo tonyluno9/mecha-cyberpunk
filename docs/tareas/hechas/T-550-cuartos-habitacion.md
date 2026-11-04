@@ -1,0 +1,9 @@
+# T-550 Interiores a tamaño real: sistema de cuartos aparte y la habitación (primer interior)
+Dueño: Tony | Rama: tony/T-550-cuartos | Modelo: Sonnet 5.5
+- Sistema de cuartos (reutilizable): Progresion/Prologo/Cuartos (CuartoInterior: lugar y dos puntos; PuertaCuarto: trigger con fundido a negro, afuera entra y adentro sale) y Assets/Arte/Editor/ColocarT550.cs (CrearCuarto: piso, techo y 4 paredes con UV en metros, colliders, ZonaInterior y CuartoInterior; ConectarPuertas: puerta de afuera detrás de la hoja de la calle y puerta interior). Los cuartos van en fila a 1000 m de la ciudad, uno cada 20 m en X; Light Layers aíslan al sol y la luna.
+- Habitación: 3 x 4 x 2.7 m con I01 ropero, I02 escritorio con CRT, I03 silla, I04 ventana con barrotes, I05 mochila, cama H02, buró H11, paredes X01, foco cálido y neón magenta y turquesa por la ventana. Se quitó el banco de taller (el mecha y el banco pasaron a la banqueta de la casa). Sin cubos de greybox salvo la puerta del cuarto y los tubos.
+- Al cruzar la puerta de afuera: fundido y apareces dentro junto a la puerta; al salir, quedas frente a la puerta de la calle mirando a la calle. La cama que guarda y el espejo se mudaron al cuarto.
+- Arreglos de paso en ColocarT550: la cama H02 se colocaba en coordenadas del mundo y no del cuarto (quedaba a 1000 m); la mudanza ya no se repite al volver a correr el script; paredes oscurecidas y luces bajadas para que la luz cálida no queme el mosaico; mochila a 0.5 m.
+- Captura: Assets/Arte/Editor/CapturaT550.cs (batchmode, `-executeMethod MechaCyberpunk.Arte.Editor.CapturaT550.Habitacion`) hace docs/capturas/cuarto-habitacion-comparacion.png (izquierda referencia, derecha juego).
+- Lo que falta respecto a la referencia: docs/interiores-faltan.md, sección Habitación.
+- Pruebas: PlayMode CuartosPruebas (Progresion): medidas y escala, muebles dentro y sin flotar, cruce de entrada y de ida y vuelta.

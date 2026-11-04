@@ -2,11 +2,14 @@
 
 Rama de integración actual: tony/fase-g (fase G, abajo). Antes: tony/fase-7, bloques 1 a 4 de T-F7 hechos (economía, ligas, piezas, habilidades; T-140 a T-180).
 
-## EN PAUSA (3-nov-2026, 16:50): interiores a tamaño real — T-550, rama tony/T-550-cuartos (WIP, sin merge a main)
-Quedó en el **primer interior (habitación), paso 2 de 4**. Compila; no se han corrido pruebas.
-- Hecho: paso 1, importación de I01-I21 (Assets/Arte/Interiores/Ixx, color y normal, zona 'I' en ArteT250) y X01-X05 sin costura (Fuentes~/hacer_seamless_interiores.py, materiales X0n_Pared con mosaico de 2 m). Sistema de cuartos aparte escrito (Progresion/Prologo/Cuartos: CuartoInterior, PuertaCuarto con fundido; ColocarT550.CrearCuarto/ConectarPuertas). Habitación armada en (1000,0,1000) con la cama que guarda y el espejo mudados; se borró T546_Interiores/Habitacion.
-- Sin probar: cruce ida y vuelta, JugadorDentro dentro del cuarto, luz aislada con Light Layers; orientación, luz y escala de la habitación sin revisar en captura.
-- Sigue: 1) pruebas PlayMode del cruce y arreglar las que se rompen (InterioresT546Pruebas, recorridos que caminan a Lugar_Casa); 2) captura docs/capturas/cuarto-habitacion-comparacion.png y corregir; 3) sección de la habitación en docs/interiores-faltan.md y docs/tareas/hechas/T-550-cuartos-habitacion.md; 4) RecorridoDemoPruebas y merge a main; 5) después casino, consultorio del Doc, entrada de armas del Mercado y taller de Tino con el mismo sistema; 6) Builds/Demo.
+## EN PAUSA (3-nov-2026, 19:45): interiores a tamaño real — T-550, rama tony/T-550-cuartos (WIP, sin merge a main)
+Quedó en el **primer interior (habitación), paso 4 de 5** (falta cerrar pruebas y hacer el merge). Se pausó a pedido de Tony.
+- Hecho: importación de I01-I21 y X01-X05; sistema de cuartos (CuartoInterior, PuertaCuarto con fundido, ColocarT550). Habitación ajustada.
+  Pruebas nuevas en CuartosPruebas (cruce ida y vuelta, 4/4 pasan). También pasan las EditMode tocadas (12/12) y CasinoInterior, Tragamonedas, PrologoMundo y MercadoT504.
+  Captura en docs/capturas/cuarto-habitacion-comparacion.png (falta revisarla contra la referencia), sección en docs/interiores-faltan.md y docs/tareas/hechas/T-550-cuartos-habitacion.md.
+- A medias: RecorridoPrologoCiudadPruebas quedó cortada al pausar (se ajustó el recorrido a Lugar_Casa, sin resultado). PrologoCiudadPruebas también se modificó y no tiene resultado registrado.
+- Sigue: 1) correr RecorridoPrologoCiudadPruebas y PrologoCiudadPruebas, y arreglar lo que falle; 2) revisar la captura y corregir; 3) RecorridoDemoPruebas, merge a main con push; 4) casino, consultorio del Doc, entrada de armas del Mercado y taller de Tino; 5) Builds/Demo.
+- Basura sin subir: Assets/_Recovery y Assets/Logs, que salieron al cortar Unity. Se pueden borrar.
 
 ## Fase G: juego de pandillas (T-400 a T-406; D-tony-202 a D-tony-224) — ACTUAL
 Concepto nuevo (2026-10-29): sin mechas, GTA de un jugador en tercera persona en Ciudad_Prologo (docs/diseno/pandillas.md).

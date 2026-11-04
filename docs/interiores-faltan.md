@@ -4,21 +4,19 @@ Los cinco interiores se armaron solo con assets que ya había (`Assets/Arte/Edit
 en Ciudad_Prologo). Lo que no había se dejó como hueco limpio, sin cubos. Comparaciones con cada referencia en
 `docs/capturas/interior-<nombre>-comparacion.png` (izquierda la referencia, derecha el juego).
 
-## Habitación (referencia: docs/referencias-interiores/habitacion.png)
+## Habitación (referencia: docs/referencias-interiores/habitacion.png) - T-550, cuarto aparte
 
-Hay: cama H02, buró H11 con su lámpara, foco colgante cálido (la A05 del clandestino a 0.4), luz de neón magenta y turquesa por la
-ventana, tres pósters planos con textura generada y la tele H06 sobre el banco de trabajo, que hace de escritorio. Se quitaron cocina,
-sofá, mesa y tubos de taller; el techo bajó a 3 m.
+Hecha como cuarto aparte de 3 x 4 x 2.7 m (Cuarto_Habitacion en `T550_Cuartos`, a 1000 m de la ciudad). Hay: ropero I01, escritorio con CRT I02,
+silla I03, ventana con barrotes I04, mochila I05 (achicada a 0.5 m), cama H02, buró H11 con lámpara, paredes X01 sin costura, foco colgante cálido,
+neón magenta y turquesa por la ventana, tres pósters y dos tubos de esquina. Captura: docs/capturas/cuarto-habitacion-comparacion.png.
 
-Falta:
-- **El cuarto es mucho más grande que el de la referencia** (es la caja del greybox): la referencia es un cuarto chico de 3 × 4 m.
-  Achicarlo pide mover las paredes de la casa; con eso se vería como la referencia.
-- Ropero de madera (alto, dos puertas).
-- Escritorio de verdad con computadora vieja (monitor CRT y teclado). El banco de trabajo con tablero de herramientas que hace de
-  escritorio todavía se ve de taller.
-- Silla de escritorio.
-- Ventana con barrotes (la luz de neón entra, pero no hay marco ni barrotes).
-- Mochila, ropa tirada.
+Falta respecto a la referencia:
+- El ropero queda a la izquierda, junto a la puerta; en la referencia está a la derecha, enorme y con la caja eléctrica y tuberías encima.
+- Cables colgando del foco por el techo, foco de vidrio con filamento (hay la lámpara A05 chica) y tuberías gruesas en las paredes.
+- Caja eléctrica en la pared, grietas y manchas de humedad propias (las paredes son un mosaico de X01 que se ve más sucio y repetido).
+- Cama con sábanas revueltas y cobija (hay el colchón rayado del H02), ropa sobre la silla, latas, basura y papeles en el piso.
+- Pósters de la referencia (hay tres generados) y cuadro grande junto a la ventana.
+- Persiana o cortina arriba de la ventana y el letrero de neón visible al otro lado de los barrotes.
 
 ## Consultorio del Doc (I+D+I) (referencia: consultorio-doc.png)
 
