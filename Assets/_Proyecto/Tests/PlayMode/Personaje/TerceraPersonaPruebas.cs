@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Transform camara = controlador.Camara;
             float distancia = DistanciaHorizontal(camara.position, jugador.transform.position);
-            Assert.That(distancia, Is.InRange(2.5f, 4f), "La cámara queda entre 2.5 y 4 m del jugador");
+            Assert.That(distancia, Is.InRange(1.6f, 4f), "T-585: la cámara queda entre 1.6 y 4 m del jugador");
             Vector3 relativa = camara.position - jugador.transform.position;
             Assert.Less(Vector3.Dot(relativa, haciaDondeMira), 0f, "La cámara queda atrás");
             Assert.Greater(Vector3.Dot(relativa, Vector3.Cross(Vector3.up, haciaDondeMira)), 0f, "La cámara queda a la derecha");

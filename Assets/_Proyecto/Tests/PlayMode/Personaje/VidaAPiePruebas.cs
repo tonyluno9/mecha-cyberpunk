@@ -161,7 +161,7 @@ namespace MechaCyberpunk.Tests.Personaje
             herramientas.SetActive(true);
             yield return null;
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Press(teclado.hKey);
                 yield return null;

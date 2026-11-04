@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ad443089387bd348a0b5c26ac95b9ea, type: 3}
   m_Name: ConfigCamaraHombro_Base
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigCamaraHombro
-  lateralNormal: 0.5
+  lateralNormal: 0.45
   alturaNormal: 1.6
-  distanciaNormal: 2.6
-  fovNormal: 60
-  lateralApuntando: 0.7
+  distanciaNormal: 1.9
+  fovNormal: 50
+  lateralApuntando: 0.6
   alturaApuntando: 1.5
-  distanciaApuntando: 1.6
-  fovApuntando: 48
+  distanciaApuntando: 1.2
+  fovApuntando: 40
   fovSniper: 15
   duracionZoom: 0.15
   sensibilidadZoom: 0.35
