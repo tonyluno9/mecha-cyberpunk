@@ -99,7 +99,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
         private const int MinimoGolpesMedidos = 3;
         private const int CuadrosSobreLaCaja = 4;
         private const int DineroDeLaCaida = 300;
-        private const int DeudaEsperada = -200;
+        private const int DineroTrasCobro = 0;
         private const int DineroParaMejorar = 20000;
         private const int DineroDePrueba = 777;
         private const int PrecioPiernasMasBrazos = 4000;
@@ -917,8 +917,8 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             CapturarHudEn(RutaCaptura3);
             Assert.IsTrue(vioNegro, "la pantalla se fue a negro");
             Assert.IsTrue(vioSinControl, "durante la secuencia no hay control");
-            Assert.AreEqual(DeudaEsperada, DineroDeLaCaida - datosDoctor.Cobro, "300 − 500 = −200 según los assets");
-            Assert.AreEqual(DeudaEsperada, cartera.Dinero, "dinero después del cobro");
+            Assert.AreEqual(DineroDeLaCaida, ReglaDoctor.CobroPosible(DineroDeLaCaida, datosDoctor.Cobro), "T-586: 300 < 500, cobra lo que hay");
+            Assert.AreEqual(DineroTrasCobro, cartera.Dinero, "dinero después del cobro");
             Assert.AreEqual(0f, Registro<ICalor>.Actual.Valor, 0.001f, "calor borrado");
             float horaEsperada = ReglaDoctor.HoraDeDespertar(HoraCaida, datosDoctor.HorasInconsciente);
             Assert.AreEqual(5f, horaEsperada, 0.001f, "los assets dicen que despierta a las 05:00");

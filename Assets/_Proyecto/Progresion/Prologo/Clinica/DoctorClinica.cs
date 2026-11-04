@@ -24,6 +24,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
     public class DoctorClinica : MonoBehaviour
     {
         [SerializeField] private DatosDoctor datos;
+        [Tooltip("PantallasHistoria.prefab: se instancia una vez si la escena no trae pantalla de fundido activa (en la ciudad vive dentro del DirectorPrologo apagado).")]
+        [SerializeField] private GameObject prefabPantallas;
 
         private VidaAPie vidaJugador;
         private VidaMecha vidaMecha;
@@ -194,7 +196,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             Debug.Log("[Progresion] El doctor atiende una caída en la calle.");
             yield return EsperarSinEscala(datos.SegundosEspera);
 
-            PantallaFundido fundido = PantallaFundido.Actual;
+            PantallaFundido fundido = ObtenerFundido();
             if (fundido != null)
             {
                 yield return fundido.Fundir(1f, fundido.Config.SegundosSalida);
@@ -220,9 +222,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             }
             yield return EsperarSinEscala(datos.SegundosNegro);
 
-            int dineroDespues = Cobrar();
+            bool cobroCompleto = Cobrar();
             FijarObjetivoCasa();
-            MostrarSubtitulo(ReglaDoctor.TextoDoctor(dineroDespues, datos.TextoDoctor, datos.TextoDeuda));
+            MostrarSubtitulo(ReglaDoctor.TextoDoctor(cobroCompleto, datos.TextoDoctor, datos.TextoDeuda));
             if (fundido != null)
             {
                 yield return fundido.Fundir(0f, fundido.Config.SegundosEntrada);
@@ -233,6 +235,23 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             }
             Ocupado = false;
             Terminada?.Invoke();
+        }
+
+        // T-586: la pantalla de fundido de la escena, o una propia (se instancia una vez) si no hay ninguna activa.
+        private PantallaFundido ObtenerFundido()
+        {
+            if (PantallaFundido.Actual != null)
+            {
+                return PantallaFundido.Actual;
+            }
+            if (prefabPantallas == null)
+            {
+                Debug.LogWarning("[Progresion] El doctor no tiene pantalla de fundido: despierta sin fundido.", this);
+                return null;
+            }
+            GameObject nuevas = Instantiate(prefabPantallas);
+            nuevas.name = prefabPantallas.name;
+            return nuevas.GetComponentInChildren<PantallaFundido>(true);
         }
 
         private static IEnumerator EsperarSinEscala(float segundos)
@@ -319,19 +338,21 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             jugador.Colocar(punto.Pose);
         }
 
-        private int Cobrar()
+        // T-586: cobra lo que alcance (nunca deja deuda ni bloquea). Devuelve true si cobró todo.
+        private bool Cobrar()
         {
             ICartera cartera = Registro<ICartera>.Actual;
             if (cartera == null)
             {
                 Debug.LogWarning("[Progresion] El doctor no encontró la cartera: no cobra.", this);
-                return 0;
+                return true;
             }
-            if (datos.Cobro > 0)
+            int cobro = ReglaDoctor.CobroPosible(cartera.Dinero, datos.Cobro);
+            if (cobro > 0)
             {
-                cartera.CargarDeuda(datos.Cobro, MotivoDinero.Clinica);
+                cartera.IntentarPagar(cobro, MotivoDinero.Clinica);
             }
-            return cartera.Dinero;
+            return cobro >= datos.Cobro;
         }
 
         private void FijarObjetivoCasa()
