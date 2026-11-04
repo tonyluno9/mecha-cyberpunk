@@ -393,7 +393,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(zoom.Activo, "Con el fusil no hay zoom del sniper");
             Press(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.5f);
-            Assert.AreEqual(48f, camara.fieldOfView, 1f, "Con el fusil, clic derecho sigue apuntando a FOV 48");
+            Assert.AreEqual(40f, camara.fieldOfView, 1f, "Con el fusil, clic derecho sigue apuntando a FOV 40 (T-585)");
             Assert.IsFalse(mira.Visible, "El fusil no usa la mira del sniper");
             Release(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.4f);
