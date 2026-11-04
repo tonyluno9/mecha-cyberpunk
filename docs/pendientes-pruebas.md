@@ -40,17 +40,17 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 - [A] Interior del consultorio del Doc.
 
 ## Carros y tráfico
-- [C] Los carros del tráfico se estrellan mucho: carriles, distancia de seguimiento, frenar ante obstáculos y otros carros, acomodarse.
-- [C] Que la ciudad tenga más calle más allá de lo jugable: los carros aparecen y desaparecen lejos y fuera de la vista; sin muros visibles al final; límites lejanos con niebla.
+- [x] Los carros del tráfico se estrellan mucho: carriles, distancia de seguimiento, frenar ante obstáculos y otros carros, acomodarse. (T-532 carriles, frenado y cruces; T-588 destrabe de atorones y sin salir encimados: TraficoFluidoT588Pruebas)
+- [x] Que la ciudad tenga más calle más allá de lo jugable: los carros aparecen y desaparecen lejos y fuera de la vista; sin muros visibles al final; límites lejanos con niebla. (T-513 fondo lejano, T-530 afueras sin muro, T-532 aparecer y desaparecer fuera de la vista; T-588 lo prueba)
 - [C] Manejo: que frene y se detenga con inercia (no que se resbale); freno firme.
 - [C] Aviso cuando el carro se está incendiando ("¡Bájate, se va a quemar!").
 - [C] Motos: poder subirse y manejarlas.
-- [C] Quitar la patrulla vieja fea; solo las patrullas nuevas (V05/V06/V08).
+- [x] Quitar la patrulla vieja fea; solo las patrullas nuevas (V05/V06/V08). (T-532: Patrulla.prefab usa V05 y el tráfico no lleva patrullas)
 - [D] Ruedas separadas.
 
 ## Calor y policía
-- [C] Al robar una patrulla o subir el calor: sonido de sirena y aviso de radio ("Unidades, sospechoso en…"), y que las patrullas vengan por ti y te persigan de verdad, como en GTA.
-- [C] Seguridad de Nova sin inteligencia: que patrullen, te vigilen y reaccionen si sacas el arma o disparas.
+- [x] Al robar una patrulla o subir el calor: sonido de sirena y aviso de radio ("Unidades, sospechoso en…"), y que las patrullas vengan por ti y te persigan de verdad, como en GTA. (T-533 sirena y radio; T-587 persecución por calles, corte de paso y pérdida de vista: PersecucionRealistaT587Pruebas)
+- [x] Seguridad de Nova sin inteligencia: que patrullen, te vigilen y reaccionen si sacas el arma o disparas. (T-533: GuardiaNova)
 
 ## NPC
 - [C] Los NPC quietos: después de ~1 s de que estés cerca y quieto, te voltean a ver extrañados.
@@ -86,7 +86,7 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 - [A] Postes distintos para la zona rica.
 - [A] Contenido para las pantallas LED (anuncios animados) y acomodo con estilo.
 - [C] Los puentes atraviesan los edificios: moverlos.
-- [C] Límite de la ciudad: no debe haber muro; más carretera y el límite lejos.
+- [x] Límite de la ciudad: no debe haber muro; más carretera y el límite lejos. (T-530 y T-513)
 
 ## Casino VivaCoin
 - [A] Letrero y entrada del casino generados (hoy es mezcla de asset y formas).
@@ -128,13 +128,13 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 - [x] Bug: se pueden atravesar los coches (colisiones jugador–carro y carro–carro). (T-580: ColisionCoches/CiudadT580Pruebas)
 - [C] Prender y apagar las luces del carro (tecla), y faros encendidos de noche en el tráfico.
 - [C] Explosión con efectos (fuego, humo, chispas, onda, sonido) cuando el carro revienta.
-- [C] Tráfico fluido (otra vez): sin choques tontos ni atorones.
+- [x] Tráfico fluido (otra vez): sin choques tontos ni atorones. (T-588)
 - [C] Motos: ocultar el reposapié/caballete expuesto al manejar. Subirse necesita la animación [A].
 
 ## Policía
-- [C] Persecución realista: patrullas que te siguen por las calles, cortan el paso, sirena, radio, se pierden si te escondes.
+- [x] Persecución realista: patrullas que te siguen por las calles, cortan el paso, sirena, radio, se pierden si te escondes. (T-587)
 - [x] Las patrullas no deben atravesar paredes ni desaparecer de la nada. (T-581: PatrullaParedT581Pruebas)
-- [C] Que aparezcan y se vayan con lógica: llegan desde fuera de la vista cuando hay peligro (calor, disparos) y se retiran fuera de la vista cuando baja el calor.
+- [x] Que aparezcan y se vayan con lógica: llegan desde fuera de la vista cuando hay peligro (calor, disparos) y se retiran fuera de la vista cuando baja el calor. (T-587: salen fuera de la vista y se retiran por la calle; más patrullas a más calor)
 
 ## NPC y aliados
 - [C] Mejorar la inteligencia de los NPC (rutas, reacción a disparos y al jugador, no chocar).
