@@ -39,6 +39,33 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(0.05f)] [Tooltip("Aviso antes del disparo, con la luz del dron en rojo (s).")]
         [SerializeField] private float avisoDron = 0.3f;
 
+        [Header("Vista y retirada de las patrullas (T-587)")]
+        [Min(5f)] [Tooltip("Desde aquí una patrulla te ve si no hay una pared en medio (m).")]
+        [SerializeField] private float radioVista = 70f;
+        [Min(1f)] [Tooltip("Segundos sin que ninguna patrulla te vea para que te den por perdido y el calor baje de más (s).")]
+        [SerializeField] private float segundosParaPerder = 12f;
+        [Min(0f)] [Tooltip("Calor que baja por segundo, además del enfriamiento normal, mientras te han perdido (puntos/s).")]
+        [SerializeField] private float enfriamientoSinVista = 6f;
+        [Min(0f)] [Tooltip("Las patrullas que cortan el paso van a donde estarás en estos segundos si corres (s).")]
+        [SerializeField] private float segundosAdelantoCorte = 3f;
+        [Min(0f)] [Tooltip("Velocidad mínima del jugador para que lo intenten cortar (m/s).")]
+        [SerializeField] private float velocidadMinimaCorte = 3f;
+        [Min(10f)] [Tooltip("Una patrulla nueva sale al menos a esta distancia del jugador y fuera de la vista de la cámara (m).")]
+        [SerializeField] private float distanciaMinimaSalida = 60f;
+        [Min(1f)] [Tooltip("Una patrulla que se retira desaparece solo fuera de la vista y a más de esta distancia del jugador (m).")]
+        [SerializeField] private float distanciaRetiro = 60f;
+        [Min(1f)] [Tooltip("Si tras tantos segundos de retirada sigue a la vista, desaparece de todos modos (s).")]
+        [SerializeField] private float segundosMaximosRetiro = 60f;
+
+        public float RadioVista => radioVista;
+        public float SegundosParaPerder => segundosParaPerder;
+        public float EnfriamientoSinVista => enfriamientoSinVista;
+        public float SegundosAdelantoCorte => segundosAdelantoCorte;
+        public float VelocidadMinimaCorte => velocidadMinimaCorte;
+        public float DistanciaMinimaSalida => distanciaMinimaSalida;
+        public float DistanciaRetiro => distanciaRetiro;
+        public float SegundosMaximosRetiro => segundosMaximosRetiro;
+
         public int NivelDisparoDron => nivelDisparoDron;
         public float SegundosEntreTirosDron => segundosEntreTirosDron;
         public float DanioDron => danioDron;

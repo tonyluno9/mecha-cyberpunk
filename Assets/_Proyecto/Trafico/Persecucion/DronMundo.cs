@@ -90,10 +90,49 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
+        /// <summary>True si ya se va: sube y se aleja del jugador hasta salir de la vista (T-587).</summary>
+        public bool Retirando { get; private set; }
+
+        /// <summary>T-587: deja de perseguir; desaparece cuando ya no se ve y está lejos (o tras <see cref="ConfigPersecucion.SegundosMaximosRetiro"/> s).</summary>
+        public void Retirar()
+        {
+            Retirando = true;
+            segundosRetirandose = 0f;
+            finAviso = -1f;
+            PonerLuces(false);
+        }
+
+        private float segundosRetirandose;
+
+        private void Retirada(Vector3? jugador, float dt)
+        {
+            segundosRetirandose += dt;
+            Vector3 lejos = jugador.HasValue ? transform.position - jugador.Value : transform.forward;
+            lejos.y = 0f;
+            Vector3 direccion = (lejos.sqrMagnitude > 0.001f ? lejos.normalized : transform.forward) + Vector3.up * 0.25f;
+            transform.position += direccion.normalized * (calculo.Paso(true, float.MaxValue, dt));
+            bool distante = !jugador.HasValue || Vector3.Distance(transform.position, jugador.Value) >= config.DistanciaRetiro;
+            if ((distante && !ReglaVistaPolicia.LoVe(Camera.main, transform.position, RetiroAlcanceCamara)) || segundosRetirandose >= config.SegundosMaximosRetiro)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private const float RetiroAlcanceCamara = 400f;
+
         private void Update()
         {
             Vector3? jugador = posicionJugador?.Invoke();
-            if (calculo == null || !jugador.HasValue)
+            if (calculo == null)
+            {
+                return;
+            }
+            if (Retirando)
+            {
+                Retirada(jugador, Time.deltaTime);
+                return;
+            }
+            if (!jugador.HasValue)
             {
                 return;
             }

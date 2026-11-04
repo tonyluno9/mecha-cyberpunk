@@ -135,6 +135,15 @@ namespace MechaCyberpunk.Tests.Trafico
             yield return EsperarFrames();
             Assert.AreEqual(0, gestor.Drones);
             Assert.AreEqual(0, gestor.Patrullas);
+            // T-587: no desaparecen de golpe: se van y se borran solos al salir de la vista.
+            Assert.AreEqual(5, gestor.Retirandose);
+            Time.timeScale = EscalaDeTiempo;
+            float limite = Time.time + SegundosDeJuego;
+            while (Time.time < limite && gestor.Retirandose > 0)
+            {
+                yield return null;
+            }
+            Assert.AreEqual(0, gestor.Retirandose);
             Assert.AreEqual(0, gestor.GetComponentsInChildren<DronMundo>().Length);
             Assert.AreEqual(0, gestor.GetComponentsInChildren<PatrullaMundo>().Length);
         }
@@ -189,6 +198,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 .Where(t => t.name.StartsWith("Manzana_"))
                 .Select(t => new Vector2(t.position.x, t.position.z)).ToList();
             GrafoCalles calles = GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles);
+            MechaCyberpunk.Trafico.Calle.TraficoCalle.AlargarHaciaLasAfueras(calles); // T-587: las patrullas también salen por las afueras
 
             Vector3 inicio = patrulla.transform.position;
             float recorrido = 0f;
