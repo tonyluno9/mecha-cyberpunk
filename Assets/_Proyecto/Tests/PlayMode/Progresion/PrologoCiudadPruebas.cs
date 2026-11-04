@@ -43,7 +43,10 @@ namespace MechaCyberpunk.Tests.Progresion
         private const float RadioParada = 5f;
         private const float RadioPuerta = 0.5f;
         private const float MetrosAntesDeLaPuerta = 3f;
-        private const float MetrosDelPasilloALaCama = -0.25f;
+        private const float MetrosDeLaCamaX = 0.55f;   // el punto de la cama queda a los pies; se espera junto a ella, del lado de la puerta
+        private const float MetrosDeLaCamaZ = -0.35f;
+        private const float SegundosDelFundido = 1.5f;
+        private const float DistanciaAlCuarto = 5f;
         private const float SegundosPuertaAbriendo = 1.5f;
         private const float MaxSegundosManejo = 90f;
         private const float MaxSegundosParaBajar = 10f;
@@ -308,9 +311,8 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Tecla(teclado.eKey);
             yield return EsperarSegundos(SegundosPuertaAbriendo);
             Assert.IsTrue(puerta.EstaAbierta, "E frente a la puerta de la casa la abre");
-            Vector3 centroCasa = GameObject.Find("Lugar_Casa").transform.position;
-            centroCasa.y = AlturaJugador;
-            yield return CaminarA(centroCasa, DistanciaLlegada, "el centro de la casa", () => Historia.Etapa == EtapaPrologo.Dormir);
+            // T-550: la habitación es un cuarto aparte; al cruzar la puerta del cuarto (detrás de la hoja) hay un fundido y apareces adentro.
+            yield return CaminarA(PuntoDe("PuertaCuarto_Lugar_Casa"), DistanciaLlegada, "la puerta del cuarto", () => Historia.Etapa == EtapaPrologo.Dormir);
             yield return EsperarHasta(() => Historia.Etapa == EtapaPrologo.Dormir, 3f, "entrar a la casa lleva a dormir");
             yield return null;
             Vigilar();
@@ -321,16 +323,29 @@ namespace MechaCyberpunk.Tests.Progresion
             AnotarTramo("d) regreso a casa", inicio);
         }
 
-        // La mesa y los bancos quedan a un lado: se rodea por el pasillo entre los bancos y los pies de la cama.
+        private static Vector3 PuntoDe(string nombre)
+        {
+            Vector3 p = GameObject.Find(nombre).transform.position;
+            p.y = AlturaJugador;
+            return p;
+        }
+
+        private bool EstaEnElCuarto()
+        {
+            return Vector3.Distance(jugador.Raiz.position, GameObject.Find("Cuarto_Habitacion").transform.position) < DistanciaAlCuarto;
+        }
+
+        private static bool PuertaEnCruce()
+        {
+            return MechaCyberpunk.Progresion.Prologo.Cuartos.PuertaCuarto.HayCruce;
+        }
+
+        // T-550: el cuarto es chico: de la puerta interior se camina a los pies de la cama.
         protected override IEnumerator IrALaCama()
         {
             CamaJugador cama = Object.FindFirstObjectByType<CamaJugador>();
-            
-            Vector3 pasillo = new Vector3(cama.Posicion.x + MetrosDelPasilloALaCama, AlturaJugador, Aparicion(IdPuerta).Pose.position.z);
-            yield return CaminarA(pasillo, RadioPuerta, "el pasillo de la cama");
-            Vector3 haciaCama = cama.Posicion - pasillo;
-            haciaCama.y = 0f;
-            yield return CaminarA(cama.Posicion - haciaCama.normalized * DistanciaCamaraDeLaCama, RadioPuerta, "junto a la cama");
+            yield return EsperarSegundos(SegundosDelFundido);
+            yield return CaminarA(cama.Posicion + new Vector3(MetrosDeLaCamaX, 0f, MetrosDeLaCamaZ) + Vector3.up * AlturaJugador, RadioPuerta, "junto a la cama");
             yield return MirarA(cama.Posicion, "la cama");
             Debug.Log("[Prueba T-136] Frente a la cama: jugador " + jugador.Raiz.position + ", cama " + cama.Posicion + ", candidato " + interaccion.TipoCandidato);
             Capturar(jugador.Camara, RutaCapturaCiudad3);
@@ -360,8 +375,9 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.Greater(persistente.Danio, 0f, "El mecha despertó dañado");
             
             Vector3 punto = banco.Posicion;
-            Vector3 pasillo = new Vector3(cama.Pose.position.x + MetrosDelPasilloALaCama, AlturaJugador, Aparicion(IdPuerta).Pose.position.z);
-            yield return CaminarA(pasillo, RadioPuerta, "el pasillo de la cama");
+            // T-550: el banco quedó en la banqueta de la casa; se sale por la puerta del cuarto (fundido) y se camina al banco.
+            yield return CaminarA(PuntoDe("PuertaCuarto_Interior"), RadioPuerta, "la puerta del cuarto por dentro", () => !EstaEnElCuarto());
+            yield return EsperarHasta(() => !EstaEnElCuarto() && !PuertaEnCruce(), MaxSegundosEstado, "salir del cuarto a la calle");
             yield return CaminarA(punto, DistanciaAlBanco, "el banco del taller");
             yield return MirarA(punto, "el banco del taller");
             yield return EsperarHasta(() => interaccion.TipoCandidato == TipoCandidatoAPie.Interactuable, 3f, "la interacción ofrece el banco");
@@ -377,17 +393,6 @@ namespace MechaCyberpunk.Tests.Progresion
             // Al clandestino a pie, por la puerta de la casa y las dos esquinas: sin atajos.
             float inicioCasera = Time.time;
             Assert.AreEqual(TextoClandestino, Objetivos.Actual.Texto, "Antes de entrar el objetivo es el clandestino");
-            IPuerta puertaCasa = Buscar(Registro<IPuerta>.Todos, p => p.Lugar == IdLugar.Casa, "la puerta de la casa");
-            Vector3 entradaCasa = Aparicion(IdPuerta).Pose.position;
-            yield return CaminarA(pasillo, RadioPuerta, "el pasillo de la casa");
-            yield return CaminarA(new Vector3(entradaCasa.x - MetrosAntesDeLaPuerta, AlturaJugador, entradaCasa.z), RadioPuerta, "frente a la puerta por dentro");
-            yield return MirarA(puertaCasa.Posicion, "la puerta de la casa");
-            if (!puertaCasa.EstaAbierta)
-            {
-                yield return Tecla(teclado.eKey);
-                yield return EsperarSegundos(SegundosPuertaAbriendo);
-            }
-            yield return CaminarA(entradaCasa, RadioPuerta, "la salida de la casa");
             yield return CaminarA(PuntoHistoria(IdEsquina2).Pose.position, DistanciaLlegada, "la esquina 2");
             yield return CaminarA(PuntoHistoria(IdEsquina1).Pose.position, DistanciaLlegada, "la esquina 1");
             IPuerta puertaClandestino = Buscar(Registro<IPuerta>.Todos, p => p.Lugar == IdLugar.Clandestino, "la puerta del clandestino");

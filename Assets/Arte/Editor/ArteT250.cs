@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float SeparacionFila = 2f;
         private const float DistanciaEntreFilas = 30f;
 
-        public static readonly string[] Zonas = { "Calle", "Clandestino", "Callejon", "TallerCasa", "Vehiculos", "Exteriores", "Exos", "Personajes", "SinClasificar" };
+        public static readonly string[] Zonas = { "Calle", "Clandestino", "Callejon", "TallerCasa", "Vehiculos", "Exteriores", "Exos", "Personajes", "Interiores", "SinClasificar" };
 
         public enum Eje
         {
@@ -120,6 +120,7 @@ namespace MechaCyberpunk.Arte.Editor
                 case 'V': return "Vehiculos";
                 case 'E': return "Exteriores";
                 case 'X': return "Exos";
+                case 'I': return "Interiores"; // T-550
                 case 'P': return "Personajes";
                 default: return "SinClasificar";
             }

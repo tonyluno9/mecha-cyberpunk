@@ -2,6 +2,17 @@
 
 Rama de integración actual: tony/fase-g (fase G, abajo). Antes: tony/fase-7, bloques 1 a 4 de T-F7 hechos (economía, ligas, piezas, habilidades; T-140 a T-180).
 
+## T-550 interiores a tamaño real (3-nov-2026, cerrado a las 21:15 por la hora límite): solo la habitación
+- Hecho y en main: sistema de cuartos (CuartoInterior, PuertaCuarto con fundido, ColocarT550) y la habitación a escala real (3 x 4 x 2.7 m),
+  luz cálida, X01, I01-I05; captura revisada en docs/capturas/cuarto-habitacion-comparacion.png. Importados I01-I21 y X01-X05.
+- Pruebas: CuartosPruebas 4/4, PrologoCiudadPruebas.Regreso (cuarto y cama) pasa. RecorridoPrologoCiudadPruebas tramo 7 (clandestino al carro)
+  rozaba la esquina del CarroViejo: ahora rodea por un punto intermedio (7a). Corrida final (21:15): RecorridoPrologoCiudadPruebas 2/2 y RecorridoDemoPruebas 3/3 pasan (Logs/res-t550b.xml).
+- PrologoCiudadPruebas.Prologo_DeLaCreacionAContinuara falla ("Pruebas_Prologo trae el director del prólogo"): ya fallaba antes de T-550
+  (Logs/base-414.xml del 30-oct); no es de esta tarea.
+- Falta (no hubo tiempo): consultorio del Doc con el brazo I06, entrada de armas de El Mercado, taller de Tino y casino como cuartos aparte.
+  Cómo seguir: docs/interiores-faltan.md, sección "Pendiente de T-550".
+- Basura sin subir: Assets/_Recovery y Assets/Logs (de cortar Unity); se pueden borrar a mano.
+
 ## Fase G: juego de pandillas (T-400 a T-406; D-tony-202 a D-tony-224) — ACTUAL
 Concepto nuevo (2026-10-29): sin mechas, GTA de un jugador en tercera persona en Ciudad_Prologo (docs/diseno/pandillas.md).
 Rama de integración: tony/fase-g. MODO RÁPIDO: sin revisor ni verificador, 1 o 2 pruebas nuevas por tarea y al final de cada una

@@ -33,8 +33,9 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float RadioParada = 5f;
         private const float RadioFrenteALaPuerta = 0.5f;
         private const float MetrosAntesDeLaPuerta = 3f;
-        private const float MetrosDelPasilloALaCama = -0.25f;
-        private const float MetrosDelPasilloAlSur = -1.5f;   // la grúa de motor del taller (T-419) ocupa el pasillo en el centro
+        private const float MetrosAlCuarto = 5f;
+        private const float MetrosDeRodeoDelCarro = 3.5f;
+        private const float SegundosDelFundido = 1.5f;
         private const float SegundosPuertaAbriendo = 1.5f;
         private const float MaxSegundosPorTramoAPie = 60f;
         private const float MaxSegundosPorTramoCarro = 60f;
@@ -196,7 +197,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         // Camina con W hacia el destino girando la raíz del jugador hacia él; falla si no llega, si se queda trabado o si da un salto de posición.
-        private IEnumerator Caminar(string tramo, Vector3 destino, float radio = RadioLlegadaAPie)
+        private IEnumerator Caminar(string tramo, Vector3 destino, float radio = RadioLlegadaAPie, System.Func<bool> cruzoUnaPuerta = null)
         {
             Transform raiz = Jugador().Raiz;
             Stopwatch reloj = Stopwatch.StartNew();
@@ -206,7 +207,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Orientar(Plano(destino) - Plano(raiz.position));
             yield return null;
             Press(teclado.wKey);
-            while (Vector3.Distance(Plano(raiz.position), Plano(destino)) > radio)
+            while (Vector3.Distance(Plano(raiz.position), Plano(destino)) > radio && (cruzoUnaPuerta == null || !cruzoUnaPuerta()))
             {
                 Assert.Less(Time.time - inicio, MaxSegundosPorTramoAPie, tramo + ": no llegó a " + destino + "; quedó en " + raiz.position + " (¿muro o estorbo en el camino?)");
                 Vector3 hacia = Plano(destino) - Plano(raiz.position);
@@ -222,7 +223,10 @@ namespace MechaCyberpunk.Tests.Mundo
             Release(teclado.wKey);
             yield return null;
             float media = recorrido / Mathf.Max(Time.time - inicio, 0.01f);
-            Assert.Less(media, MetrosPorSegundoMediosMaximoAPie, tramo + ": la velocidad media delata un salto (¿se atravesó algo?)");
+            if (cruzoUnaPuerta == null || !cruzoUnaPuerta()) // un cruce de puerta teletransporta: ahí la velocidad media no cuenta
+            {
+                Assert.Less(media, MetrosPorSegundoMediosMaximoAPie, tramo + ": la velocidad media delata un salto (¿se atravesó algo?)");
+            }
             Debug.Log("[Mundo] T-093 " + tramo + ": " + (Time.time - inicio).ToString("F1") + " s de juego, " + reloj.Elapsed.TotalSeconds.ToString("F1") + " s reales, velocidad media " + media.ToString("F1") + " m/s");
         }
 
@@ -282,6 +286,9 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return Caminar("4 de vuelta a la calle", new Vector3(esquina2.x, 0f, anclaje.z));
             yield return Caminar("5 calle al cruce (Esquina_1)", esquina1);
             yield return Caminar("6 cruce al clandestino (Clandestino_Salida)", salida);
+            // La línea recta del clandestino al punto de subida roza la esquina del CarroViejo: se rodea por su lado de la calle.
+            Vector3 rodeo = new Vector3(carro.x + MetrosDeRodeoDelCarro, 0f, carro.z);
+            yield return Caminar("7a clandestino al lado del carro", rodeo);
             yield return Caminar("7 clandestino al carro", carro);
             Assert.AreEqual(ModoJugador.APie, Jugador().Modo);
             Assert.AreEqual(0, erroresEnConsola, "Errores en consola; el primero: " + primerError);
@@ -369,13 +376,15 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return null;
             yield return new WaitForSeconds(SegundosPuertaAbriendo);
             Assert.IsTrue(puertaCasa.EstaAbierta, "E frente a la puerta de la casa la abre");
-            Vector3 centroDeLaCasa = EnEscena("Lugar_Casa").transform.position;
-            yield return Caminar("12 puerta al centro de la casa", centroDeLaCasa);
-            // La mesa con sus bancos queda a un lado: se rodea por el pasillo entre los bancos y los pies de la cama.
+            // T-550: la habitación es un cuarto aparte: al cruzar la puerta del cuarto (detrás de la hoja) hay un fundido y apareces adentro.
+            Vector3 puertaDelCuarto = EnEscena("PuertaCuarto_Lugar_Casa").transform.position;
+            puertaDelCuarto.y = 0f;
+            Transform cuarto = EnEscena("Cuarto_Habitacion").transform;
+            yield return Caminar("12 puerta de la casa a la puerta del cuarto", puertaDelCuarto, RadioFrenteALaPuerta, () => Vector3.Distance(Jugador().Raiz.position, cuarto.position) < MetrosAlCuarto);
+            yield return new WaitUntil(() => Vector3.Distance(Jugador().Raiz.position, cuarto.position) < MetrosAlCuarto);
+            yield return new WaitForSeconds(SegundosDelFundido);
             Vector3 cama = Aparicion(IdAparicionCama).Pose.position;
-            Vector3 pasillo = new Vector3(cama.x + MetrosDelPasilloALaCama, 0f, centroDeLaCasa.z + MetrosDelPasilloAlSur);
-            yield return Caminar("13 centro de la casa al pasillo de la cama", pasillo, RadioFrenteALaPuerta);
-            yield return Caminar("14 pasillo a los pies de la cama", cama, RadioFrenteALaPuerta);
+            yield return Caminar("13 puerta interior a los pies de la cama", cama + new Vector3(0.55f, 0f, -0.35f), RadioFrenteALaPuerta);
             Assert.AreEqual(0, erroresEnConsola, "Errores en consola; el primero: " + primerError);
         }
     }
