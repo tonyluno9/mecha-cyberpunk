@@ -61,6 +61,18 @@ namespace MechaCyberpunk.Mundo.Ambiente
             }
         }
 
+        private static bool EsDeLetrero(Transform t)
+        {
+            for (; t != null; t = t.parent)
+            {
+                if (t.name.StartsWith("Letrero"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static bool Elegible(MeshRenderer r)
         {
             if (r == null || !r.enabled || r.GetComponent<TextMesh>() != null || r.GetComponent<LODGroup>() != null)
@@ -69,6 +81,11 @@ namespace MechaCyberpunk.Mundo.Ambiente
             }
             MeshFilter filtro = r.GetComponent<MeshFilter>();
             if (filtro == null || filtro.sharedMesh == null)
+            {
+                return false;
+            }
+            // T-582: un letrero se ve de lejos y entero; si sus tubos y su marco se cortaran cada uno a su distancia, "se buguearía" al manejar.
+            if (r.GetComponentInParent<ParpadeoNeon>(true) != null || EsDeLetrero(r.transform))
             {
                 return false;
             }

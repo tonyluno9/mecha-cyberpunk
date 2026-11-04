@@ -47,6 +47,35 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.Less(altura, 0.05f);
         }
 
+        // T-582: las piezas de un letrero no se cortan una por una (tubos y marco desaparecían cada una a su distancia).
+        [UnityTest]
+        public IEnumerator NoCortaLasPiezasDeUnLetrero()
+        {
+            raiz = new GameObject("RaizPrueba");
+            GameObject letrero = new GameObject("Letrero_Prueba");
+            letrero.transform.SetParent(raiz.transform);
+            GameObject tubo = Cubo("Tubo", 1f);
+            tubo.transform.SetParent(letrero.transform);
+            GameObject neon = new GameObject("LetreroSinNombreDeLetrero");
+            neon.transform.SetParent(raiz.transform);
+            // El ParpadeoNeon sin config se queja al despertar; aquí solo importa que marca la pieza como letrero.
+            UnityEngine.TestTools.LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("ParpadeoNeon en .* necesita su config"));
+            neon.AddComponent<ParpadeoNeon>();
+            GameObject marco = Cubo("Marco", 1f);
+            marco.transform.SetParent(neon.transform);
+            GameObject banca = Cubo("Banca", 1f);
+            yield return null;
+
+            CulingDecorado culing = new GameObject("CulingPrueba").AddComponent<CulingDecorado>();
+            culing.transform.SetParent(raiz.transform);
+            yield return null;
+            culing.Aplicar();
+
+            Assert.IsNull(tubo.GetComponent<LODGroup>(), "el tubo de un Letrero_ no se corta");
+            Assert.IsNull(marco.GetComponent<LODGroup>(), "la pieza bajo un ParpadeoNeon no se corta");
+            Assert.IsNotNull(banca.GetComponent<LODGroup>(), "el decorado normal sigue cortándose");
+        }
+
         private GameObject Cubo(string nombre, float lado)
         {
             GameObject cubo = GameObject.CreatePrimitive(PrimitiveType.Cube);

@@ -19,6 +19,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float DistanciaDirecta = 28f;
         private const float DistanciaMegafono = 35f;
         private const float SegundosEntreMegafono = 7f;
+        // T-581: de cerca solo va directo si no hay una pared en medio; si no, regresa por donde vino hasta la calle.
+        private const float AlturaVista = 1f;
+        private const float MargenAlJugador = 3f;
+        private const float DistanciaEntreMigas = 2f;
+        private const float LlegadaAMiga = 0.3f;
+        private const float MargenDelante = 1.5f;
+        private const int MaximoDeMigas = 60;
         private int bucleSirena = Sonidos.SinBucle;
         private float proximoMegafono;
 
@@ -34,6 +41,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private int indiceEnCamino;
         private int nodoMeta = -1;
         private Vector3 posicion;
+        private readonly List<Vector3> rastro = new List<Vector3>();
 
         public void Preparar(CalculoPersecucion reglas, ConfigPersecucion numeros, GrafoCalles grafo, int nodoInicial, Func<Vector3?> dondeEstaElJugador)
         {
@@ -46,6 +54,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             camino.Add(nodoInicial);
             indiceEnCamino = 0;
             nodoMeta = nodoInicial;
+            rastro.Clear();
             transform.position = posicion;
             if (bucleSirena == Sonidos.SinBucle)
             {
@@ -80,10 +89,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 proximoMegafono = Time.time + SegundosEntreMegafono;
                 Sonidos.ReproducirEn("CAL_PATRULLA_MEGAFONO", transform.position);
             }
-            VaDirecto = distancia <= DistanciaDirecta;
+            VaDirecto = distancia <= DistanciaDirecta && CaminoLibre(jugador.Value, distancia);
             if (VaDirecto)
             {
                 Directo(jugador.Value, Time.deltaTime);
+                return;
+            }
+            if (rastro.Count > 0)
+            {
+                Regresar(Time.deltaTime);
                 return;
             }
             int nuevaMeta = calles.MasCercano(jugador.Value);
@@ -101,6 +115,54 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3 hacia = jugador - posicion;
             hacia.y = 0f;
             if (hacia.sqrMagnitude > 0.0001f)
+            {
+                Vector3 direccion = hacia.normalized;
+                if (rastro.Count == 0 || Vector3.Distance(rastro[rastro.Count - 1], posicion) >= DistanciaEntreMigas)
+                {
+                    if (rastro.Count >= MaximoDeMigas)
+                    {
+                        rastro.RemoveAt(0);
+                    }
+                    rastro.Add(posicion);
+                }
+                posicion += direccion * paso;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), GradosPorSegundoGiro * dt);
+            }
+            transform.position = posicion;
+            int cercano = calles.MasCercano(posicion);
+            camino.Clear();
+            camino.Add(cercano);
+            indiceEnCamino = 0;
+            nodoMeta = -1;
+        }
+
+        // T-581: nada sólido entre la patrulla y el jugador (se queda MargenAlJugador antes de él: si va en un carro, el carro no cuenta).
+        private bool CaminoLibre(Vector3 jugador, float distancia)
+        {
+            float largo = distancia - MargenAlJugador;
+            if (largo <= MargenDelante)
+            {
+                return true;
+            }
+            Vector3 origen = posicion + Vector3.up * AlturaVista;
+            Vector3 destino = new Vector3(jugador.x, origen.y, jugador.z);
+            Vector3 direccion = (destino - origen).normalized;
+            return !Physics.Raycast(origen, direccion, largo, ~0, QueryTriggerInteraction.Ignore);
+        }
+
+        // T-581: de vuelta a la calle por las migas que dejó al ir directo (nunca en línea recta por donde no sabe qué hay).
+        private void Regresar(float dt)
+        {
+            Vector3 miga = rastro[rastro.Count - 1];
+            Vector3 hacia = miga - posicion;
+            hacia.y = 0f;
+            float paso = calculo.Paso(false, float.MaxValue, dt);
+            if (hacia.magnitude <= Mathf.Max(paso, LlegadaAMiga))
+            {
+                posicion = new Vector3(miga.x, posicion.y, miga.z);
+                rastro.RemoveAt(rastro.Count - 1);
+            }
+            else
             {
                 Vector3 direccion = hacia.normalized;
                 posicion += direccion * paso;

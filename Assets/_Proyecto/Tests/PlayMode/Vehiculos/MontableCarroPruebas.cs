@@ -370,6 +370,33 @@ namespace MechaCyberpunk.Tests.Vehiculos
             }
         }
 
+        // T-584: la cámara en tercera persona (la de arranque) no atraviesa un muro detrás del carro ni asoma el plano cercano dentro de él.
+        [UnityTest]
+        public IEnumerator Camara_TerceraPersonaConMuroDetras_NoAtraviesaNiTocaElMuro()
+        {
+            yield return Preparar(Vector3.zero);
+            // Muro de 1 m de grueso detrás del carro: su cara cercana está en z = -3.
+            Caja("MuroAtras", new Vector3(0f, 4f, -3.5f), new Vector3(30f, 8f, 1f));
+            carro.IntentarSubir(jugador);
+            yield return null;
+            yield return null;
+            yield return Simular(1f);
+
+            CamaraCarro camaraCarro = carro.CamaraDelCarro;
+            Assert.IsTrue(camaraCarro.EsTerceraPersona, "Arranca en tercera persona");
+            Vector3 camara = camaraCarro.transform.position;
+            Assert.Greater(camara.z, -3f, "La cámara quedó detrás del muro: z = " + camara.z);
+            Collider[] cerca = Physics.OverlapSphere(camara, camaraCarro.Camara.nearClipPlane + 0.05f, ~0, QueryTriggerInteraction.Ignore);
+            foreach (Collider c in cerca)
+            {
+                if (c.gameObject == piso)
+                {
+                    continue;
+                }
+                Assert.AreEqual(cuerpo, c.attachedRigidbody, "El plano cercano de la cámara toca " + c.name);
+            }
+        }
+
         [UnityTest]
         public IEnumerator Camara_PrimeraPersona_MiraHastaElLimiteYVuelveAlFrenteTrasLaEspera()
         {

@@ -22486,6 +22486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuertaLocal
   lugar: {fileID: 4514213547591631739}
   hoja: {fileID: 8906131900031622147}
+  abrirAlAcercarse: 1
 --- !u!1 &983721551242100487
 GameObject:
   m_ObjectHideFlags: 0
@@ -56438,6 +56439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuertaLocal
   lugar: {fileID: 811815485439385894}
   hoja: {fileID: 4359310278272273780}
+  abrirAlAcercarse: 1
 --- !u!1 &2303840818808394045
 GameObject:
   m_ObjectHideFlags: 0
@@ -152704,6 +152706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuertaLocal
   lugar: {fileID: 3974227916835006716}
   hoja: {fileID: 7135144276649098832}
+  abrirAlAcercarse: 1
 --- !u!1 &5966689572957538068
 GameObject:
   m_ObjectHideFlags: 0
@@ -186184,6 +186187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuertaLocal
   lugar: {fileID: 7642513728906701127}
   hoja: {fileID: 5324469593258572062}
+  abrirAlAcercarse: 1
 --- !u!1 &7229870050036464597
 GameObject:
   m_ObjectHideFlags: 0
@@ -214483,6 +214487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Lugares.PuertaLocal
   lugar: {fileID: 3193795578104971496}
   hoja: {fileID: 2118559184338754370}
+  abrirAlAcercarse: 1
 --- !u!1 &8415083229921687269
 GameObject:
   m_ObjectHideFlags: 0
@@ -579077,8 +579082,37 @@ PrefabInstance:
     - {fileID: 8282567308145776389, guid: 68b33fd4e64d5c44baf198f698b8f8d8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4428538363337902527, guid: 68b33fd4e64d5c44baf198f698b8f8d8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5526556172456390906}
   m_SourcePrefab: {fileID: 100100000, guid: 68b33fd4e64d5c44baf198f698b8f8d8, type: 3}
+--- !u!1 &6679510561927073430 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4428538363337902527, guid: 68b33fd4e64d5c44baf198f698b8f8d8, type: 3}
+  m_PrefabInstance: {fileID: 7045661005922174761}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &5526556172456390906
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6679510561927073430}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6.663965, y: 5.000001, z: 3.7556643}
+  m_Center: {x: 0.00019931793, y: 2.5000005, z: -0.00003385544}
 --- !u!4 &8457800129773200539 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1488179311192204210, guid: 68b33fd4e64d5c44baf198f698b8f8d8, type: 3}

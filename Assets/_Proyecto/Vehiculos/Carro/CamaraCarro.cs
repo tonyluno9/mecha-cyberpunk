@@ -13,6 +13,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
     public class CamaraCarro : MonoBehaviour
     {
         private const int MaxImpactos = 8;
+        // T-584: con un rayo fino la cámara asomaba la pared por los lados; con esta esfera (m) el plano cercano no atraviesa muros.
+        private const float RadioCamara = 0.3f;
 
         [SerializeField] private ConfigCamaraCarro config;
         [Tooltip("T-511: altura (m) del punto que mira la cámara en tercera persona; 0 usa la de la config. Cada modelo pone la suya según su altura.")]
@@ -224,17 +226,17 @@ namespace MechaCyberpunk.Vehiculos.Carro
             float paso = deGolpe ? 1f : 1f - Mathf.Exp(-config.Suavidad * Time.deltaTime);
             posicionTercera = deGolpe ? ideal : Vector3.Lerp(posicionTercera, ideal, paso);
 
-            // El muro manda: el rayo del foco a la posición suavizada no puede chocar con nada que no sea el carro.
+            // El muro manda: la esfera del foco a la posición suavizada no puede chocar con nada que no sea el carro.
             Vector3 hacia = posicionTercera - foco;
             float distancia = hacia.magnitude;
             Vector3 direccion = distancia > 0.0001f ? hacia / distancia : Vector3.back;
             float distanciaMuro = float.MaxValue;
-            int cantidad = Physics.RaycastNonAlloc(foco, direccion, impactos, distancia, Physics.DefaultRaycastLayers,
+            int cantidad = Physics.SphereCastNonAlloc(foco, RadioCamara, direccion, impactos, distancia, Physics.DefaultRaycastLayers,
                 QueryTriggerInteraction.Ignore);
             for (int i = 0; i < cantidad; i++)
             {
                 RaycastHit impacto = impactos[i];
-                if (EsDelCarro(impacto.collider))
+                if (impacto.distance <= 0f || EsDelCarro(impacto.collider))
                 {
                     continue;
                 }
