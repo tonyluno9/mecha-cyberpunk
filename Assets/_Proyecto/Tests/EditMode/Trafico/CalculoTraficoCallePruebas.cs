@@ -7,6 +7,15 @@ namespace MechaCyberpunk.Tests.Trafico
     /// <summary>T-451: el carro de la calle acelera hasta su crucero, frena si hay algo adelante, se detiene, pita bloqueado y se asusta con un disparo.</summary>
     public class CalculoTraficoCallePruebas
     {
+        [Test]
+        public void DebeDestrabarse_FueraDeLaVistaAlUmbral_ConVistaSoloAlForzado()
+        {
+            Assert.IsFalse(CalculoTraficoCalle.DebeDestrabarse(9f, false, 10f, 30f));
+            Assert.IsTrue(CalculoTraficoCalle.DebeDestrabarse(10f, false, 10f, 30f));
+            Assert.IsFalse(CalculoTraficoCalle.DebeDestrabarse(29f, true, 10f, 30f), "Si lo ven espera");
+            Assert.IsTrue(CalculoTraficoCalle.DebeDestrabarse(30f, true, 10f, 30f), "Pero no para siempre");
+        }
+
         private const float Crucero = 8f;
         private const float Frenado = 10f;
         private const float DistanciaFrenado = 14f;

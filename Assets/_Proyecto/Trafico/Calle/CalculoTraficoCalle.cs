@@ -51,6 +51,17 @@ namespace MechaCyberpunk.Trafico.Calle
         /// <summary>True mientras se detuvo por un susto (un disparo).</summary>
         public bool EnPanico => panicoRestante > 0f;
 
+        /// <summary>Segundos seguidos que lleva detenido por un obstáculo (0 si se mueve o no hay nada adelante).</summary>
+        public float SegundosBloqueado => bloqueado;
+
+        /// <summary>
+        /// T-588: si ya es hora de sacar de ahí a un carro atorado: pasado <paramref name="segundosFuera"/> s si nadie lo ve, o pasado <paramref name="segundosForzado"/> s de todos modos.
+        /// </summary>
+        public static bool DebeDestrabarse(float segundosBloqueado, bool seVe, float segundosFuera, float segundosForzado)
+        {
+            return segundosBloqueado >= segundosForzado || (!seVe && segundosBloqueado >= segundosFuera);
+        }
+
         /// <summary>True si hay un obstáculo muy cerca y no se mueve.</summary>
         public bool Bloqueado => bloqueado > 0f;
 
