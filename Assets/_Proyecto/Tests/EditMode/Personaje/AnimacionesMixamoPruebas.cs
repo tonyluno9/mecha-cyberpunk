@@ -58,7 +58,8 @@ namespace MechaCyberpunk.Tests
                 Assert.AreEqual(1, clips.Length, ruta);
                 Assert.AreEqual((string)e[1], clips[0].name, ruta);
                 Assert.AreEqual((bool)e[2], clips[0].loopTime, "bucle " + ruta);
-                Assert.IsTrue(clips[0].lockRootPositionXZ && clips[0].lockRootRotation, "In place " + ruta);
+                Assert.IsFalse(clips[0].lockRootPositionXZ || clips[0].lockRootRotation, "En el sitio: sin bake de la raíz, la raíz se ignora " + ruta);
+                Assert.IsTrue(clips[0].lockRootHeightY, "La altura va en la pose (muertes y levantarse) " + ruta);
                 Assert.IsNotNull(BuscarClip(ruta), "clip " + ruta);
             }
         }

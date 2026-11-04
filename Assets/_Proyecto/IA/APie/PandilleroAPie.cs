@@ -4,6 +4,7 @@ using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.Datos;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
 namespace MechaCyberpunk.IA.APie
@@ -47,6 +48,7 @@ namespace MechaCyberpunk.IA.APie
         private bool pintadoAviso;
         private PistolaPandillero pistola;
         private Animator animador;
+        private VisualPersonaje visual;
         private Renderer[] piezasModelo;
         private int lado = 1;
         private float proximoCambioLado;
@@ -202,6 +204,7 @@ namespace MechaCyberpunk.IA.APie
                     pistola = gameObject.AddComponent<PistolaPandillero>();
                 }
                 animador = GetComponentInChildren<Animator>(true);
+                visual = GetComponentInChildren<VisualPersonaje>(true);
                 piezasModelo = GetComponentsInChildren<Renderer>(true);
             }
             else
@@ -270,7 +273,11 @@ namespace MechaCyberpunk.IA.APie
             desaparicion = -1f;
             finParpadeo = -1f;
             velocidadVertical = 0f;
-            if (animador != null)
+            if (visual != null)
+            {
+                visual.Caido = false;
+            }
+            else if (animador != null)
             {
                 animador.SetBool(IdKO, false);
             }
@@ -288,6 +295,10 @@ namespace MechaCyberpunk.IA.APie
             {
                 return ResultadoDanio.Ignorado;
             }
+            if (visual != null)
+            {
+                visual.RegistrarGolpe(info.Direccion); // antes de aplicar: si este golpe lo deja KO, decide cómo cae
+            }
             float aplicado = modelo.Aplicar(info.Cantidad);
             if (datos.UsaPistola && !modelo.EstaKO && Grupo != null)
             {
@@ -298,6 +309,10 @@ namespace MechaCyberpunk.IA.APie
             if (!modelo.EstaKO)
             {
                 finParpadeo = Time.time + datos.DuracionParpadeo;
+                if (visual != null)
+                {
+                    visual.Herir(info.Direccion);
+                }
                 PintarCuerpo(datos.ColorGolpe);
                 Sonidos.ReproducirEn("PAN_RIVAL_DANIO", transform.position);
             }
@@ -448,7 +463,11 @@ namespace MechaCyberpunk.IA.APie
                 {
                     pistola.Disparar(boca, pecho, recibe, datos.DanioDisparo, probabilidad);
                 }
-                if (animador != null)
+                if (visual != null)
+                {
+                    visual.Disparar();
+                }
+                else if (animador != null)
                 {
                     animador.SetTrigger(IdDisparo);
                 }
@@ -513,8 +532,16 @@ namespace MechaCyberpunk.IA.APie
             {
                 animador.SetFloat(IdVelocidad, deseada.magnitude);
                 animador.SetBool(IdEnPiso, true);
-                animador.SetBool(IdApuntando, apuntando);
-                animador.SetInteger(IdArma, ArmaPistola);
+                if (visual != null)
+                {
+                    visual.Apuntando = apuntando;
+                    visual.TipoArma = TipoArmaVisual.Pistola;
+                }
+                else
+                {
+                    animador.SetBool(IdApuntando, apuntando);
+                    animador.SetInteger(IdArma, ArmaPistola);
+                }
             }
         }
 
@@ -757,7 +784,11 @@ namespace MechaCyberpunk.IA.APie
             if (datos.UsaPistola)
             {
                 pistola.QuitarAviso();
-                if (animador != null)
+                if (visual != null)
+                {
+                    visual.Caido = true;
+                }
+                else if (animador != null)
                 {
                     animador.SetBool(IdKO, true);
                 }
