@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6219582321425914089}
   - component: {fileID: 8923368972187473761}
+  - component: {fileID: 2405107740149723965}
   m_Layer: 0
   m_Name: Visual_RobotHombre
   m_TagString: Untagged
@@ -48,14 +49,27 @@ MonoBehaviour:
   animador: {fileID: 508961633258610385}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 1.1755382
-  velocidadClipCorrer: 2.1075106
+  velocidadClipCaminar: 1.28
+  velocidadClipCorrer: 2.79
   rapidezMinima: 0.6
-  rapidezMaxima: 2.2
+  rapidezMaxima: 2.8
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
+--- !u!114 &2405107740149723965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088303782623855087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f23fcd447cfcc64489465ee2d969f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VariacionNPC
+  semilla: 0
 --- !u!1 &2605280010382111538
 GameObject:
   m_ObjectHideFlags: 0

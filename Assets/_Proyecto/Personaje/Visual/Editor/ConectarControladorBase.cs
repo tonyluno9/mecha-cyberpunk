@@ -23,14 +23,27 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public static void Conectar()
         {
             ConstructorControladorBase.Construir();
-            float caminar = Medir("Loco_Caminar");
-            float correr = Medir("Loco_Correr");
-            Debug.Log("[Personaje] T-561: velocidad medida de los clips Mixamo: caminar " + caminar.ToString("F2") + " m/s, correr " + correr.ToString("F2") + " m/s.");
+            // T-562: velocidades medidas con MedicionClips (el pie apoyado respecto de la cadera), no con el Medir viejo que daba 1.18 y 2.11.
+            float caminar = ReglasAnimacion.VelocidadClipCaminar;
+            float correr = ReglasAnimacion.VelocidadClipCorrer;
+            FijarEscalaAgachado();
             foreach ((string modelo, string papel, bool mira) in Reparto)
             {
                 ConectarPrefab(modelo, papel, mira, caminar, correr);
             }
             AssetDatabase.SaveAssets();
+        }
+
+        private const string RutaDatosCubierta = "Assets/_Proyecto/Personaje/Datos/Resources/DatosCubierta.asset";
+
+        /// <summary>T-562: Cobertura_Entrar ya trae la pose agachada; aplanar el modelo encima la deformaba.</summary>
+        public static void FijarEscalaAgachado()
+        {
+            Object datos = AssetDatabase.LoadAssetAtPath<Object>(RutaDatosCubierta);
+            var so = new SerializedObject(datos);
+            so.FindProperty("escalaAgachado").floatValue = 1f;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(datos);
         }
 
         private static void ConectarPrefab(string modelo, string papel, bool mira, float caminar, float correr)
@@ -53,7 +66,11 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                     ik = animador.gameObject.AddComponent<IKPiesYMirada>();
                 }
                 ik.MirarAlJugador = mira;
-                contenido.GetComponent<VisualPersonaje>().ConfigurarClips(caminar, correr);
+                contenido.GetComponent<VisualPersonaje>().ConfigurarClips(caminar, correr, ReglasAnimacion.RapidezMaximaLocomocion);
+                if (modelo != "woman" && contenido.GetComponent<VariacionNPC>() == null)
+                {
+                    contenido.AddComponent<VariacionNPC>();
+                }
                 PrefabUtility.SaveAsPrefabAsset(contenido, ruta);
             }
             finally

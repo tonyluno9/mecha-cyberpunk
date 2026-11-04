@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("Ángulo máximo respecto al frente en el que mira al jugador (°).")]
         [Range(10f, 180f)] [SerializeField] private float anguloMirada = 100f;
         [Tooltip("Tiempo que el jugador debe estar en rango antes de que voltee (s).")]
-        [Min(0f)] [SerializeField] private float retardoMirada = 1f;
+        [Min(0f)] [SerializeField] private float retardoMirada = ReglasAnimacion.RetardoMirada;
         [Tooltip("Rapidez con la que el peso de la mirada sube o baja (1/s).")]
         [Min(0.1f)] [SerializeField] private float rapidezMirada = 4f;
         [Tooltip("Cuánto del cuerpo acompaña a la cabeza (0 a 1).")]
@@ -95,8 +95,8 @@ namespace MechaCyberpunk.Personaje.Visual
             Vector3 plano = new Vector3(hacia.x, 0f, hacia.z);
             bool enRango = plano.magnitude <= distanciaMirada
                 && Vector3.Angle(referencia.forward, plano) <= anguloMirada;
-            tiempoEnRango = enRango ? tiempoEnRango + dt : 0f;
-            if (!enRango || (objetivo == null && tiempoEnRango < retardoMirada))
+            tiempoEnRango = ReglasAnimacion.AvanzarMirada(tiempoEnRango, enRango, dt);
+            if (!enRango || (objetivo == null && !ReglasAnimacion.MiradaLista(tiempoEnRango, retardoMirada)))
             {
                 return false;
             }

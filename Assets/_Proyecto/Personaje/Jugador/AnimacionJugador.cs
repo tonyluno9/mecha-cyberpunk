@@ -30,6 +30,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         private const float FraccionDanoFuerte = 0.25f;
 
         [SerializeField] private Animator animador;
+        [Tooltip("Segundos que el jugador sigue tumbado después de despertar, antes de levantarse (s).")]
+        [Min(0f)] [SerializeField] private float retardoLevantarse = ReglasAnimacion.RetardoLevantarse;
 
         private ControladorAPie controlador;
         private GolpeAPie golpe;
@@ -42,6 +44,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private bool recargandoAntes;
         private TipoArmaVisual tipoArmaAntes;
         private bool koAntes;
+        private float segundosSinKO;
         private bool apuntandoAntes;
         private bool cubiertoAntes;
 
@@ -117,7 +120,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 bool apuntando = controlador.Apuntando;
                 if (apuntando != apuntandoAntes) { visual.Apuntando = apuntando; apuntandoAntes = apuntando; }
                 if (tipoArma != tipoArmaAntes) { visual.TipoArma = tipoArma; tipoArmaAntes = tipoArma; }
-                if (ko != koAntes) { visual.Caido = ko; koAntes = ko; }
+                ActualizarCaido(ko, Time.deltaTime);
                 if (cubierto != cubiertoAntes) { visual.Cubierto = cubierto; cubiertoAntes = cubierto; }
             }
 
@@ -141,6 +144,23 @@ namespace MechaCyberpunk.Personaje.Jugador
                 animador.SetTrigger(IdRecarga);
             }
             recargandoAntes = recargando;
+        }
+
+        // Cae al instante (clip de muerte); al despertar (la clínica restaura la vida con la pantalla en negro) sigue tumbado un momento
+        // y luego se levanta con Dano_Levantarse (T-562), para que se vea al abrirse el fundido.
+        private void ActualizarCaido(bool ko, float dt)
+        {
+            segundosSinKO = ko ? 0f : segundosSinKO + dt;
+            if (ko && !koAntes)
+            {
+                koAntes = true;
+                visual.Caido = true;
+            }
+            else if (koAntes && ReglasAnimacion.DebeLevantarse(ko, segundosSinKO, retardoLevantarse))
+            {
+                koAntes = false;
+                visual.Caido = false;
+            }
         }
 
         private void AlDisparar()

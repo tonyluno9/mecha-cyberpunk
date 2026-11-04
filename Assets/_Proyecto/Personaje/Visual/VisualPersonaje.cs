@@ -43,6 +43,7 @@ namespace MechaCyberpunk.Personaje.Visual
         // El modelo de Tripo mira a -Z local (nodo Giro de 180°): cae de espaldas con +90° sobre su eje X.
         private const float GradosTumbado = 90f;
         private const float VelocidadVerticalEnAire = 1.5f;
+        private static readonly int HashIdle = Animator.StringToHash("Idle");
         private static readonly int HashCaminar = Animator.StringToHash("Caminar");
         private static readonly int HashCorrer = Animator.StringToHash("Correr");
         private static readonly int IdVelocidad = Animator.StringToHash(ReglasVisual.Velocidad);
@@ -86,6 +87,30 @@ namespace MechaCyberpunk.Personaje.Visual
             velocidadClipCaminar = caminar;
             velocidadClipCorrer = correr;
         }
+
+        /// <summary>Para los creadores: las velocidades de los clips y la rapidez máxima de la animación (T-562).</summary>
+        public void ConfigurarClips(float caminar, float correr, float rapidezMax)
+        {
+            ConfigurarClips(caminar, correr);
+            rapidezMaxima = Mathf.Max(1f, rapidezMax);
+        }
+
+        /// <summary>
+        /// Variación de un NPC (T-562): salta el idle a <paramref name="desfase"/> (fracción del ciclo, 0 a 1) y lo juega a esa rapidez (1 = normal).
+        /// Solo afecta al estado Idle: al caminar la rapidez sigue a la velocidad real.
+        /// </summary>
+        public void Variar(float desfase, float rapidez)
+        {
+            rapidezIdle = Mathf.Clamp(rapidez, 0.5f, 1.5f);
+            if (animador != null && animador.runtimeAnimatorController != null && animador.GetCurrentAnimatorStateInfo(0).shortNameHash == HashIdle)
+            {
+                animador.Play(HashIdle, 0, Mathf.Repeat(desfase, 1f));
+                animador.Update(0f);
+            }
+        }
+
+        /// <summary>Rapidez con la que se juega el idle de este personaje.</summary>
+        public float RapidezIdle => rapidezIdle;
 
         /// <summary>Rapidez horizontal en m/s. Se escribe a mano o la calcula este componente si LeerDelPadre está activo.</summary>
         public float Velocidad
@@ -186,6 +211,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velZ;
         private float velY;
         private float giro;
+        private float rapidezIdle = 1f;
         private float pesoArriba = 1f;
         private float velocidadAnterior;
         private float yawAnterior;
@@ -286,11 +312,16 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Acelera o frena Caminar y Correr para que los pies sigan el suelo a la velocidad real.</summary>
         private void AjustarRapidez()
         {
-            if (animador == null || (velocidadClipCaminar <= 0f && velocidadClipCorrer <= 0f))
+            if (animador == null || (velocidadClipCaminar <= 0f && velocidadClipCorrer <= 0f && Mathf.Approximately(rapidezIdle, 1f)))
             {
                 return;
             }
             int estado = animador.GetCurrentAnimatorStateInfo(0).shortNameHash;
+            if (estado == HashIdle)
+            {
+                animador.speed = rapidezIdle;
+                return;
+            }
             float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
             animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia, rapidezMinima, rapidezMaxima);
         }
