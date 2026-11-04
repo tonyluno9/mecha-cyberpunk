@@ -32,6 +32,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private const float DistanciaOculta = 45f;
         private const float MargenVista = 0.1f;
         private const float AlcanceVista = 160f;
+        private const float SeparacionAlAparecer = 14f;
         private static readonly Vector3 MitadRayo = new Vector3(0.95f, 0.35f, 0.1f);
         private readonly RaycastHit[] choques = new RaycastHit[MaxChoques];
 
@@ -75,6 +76,9 @@ namespace MechaCyberpunk.Trafico.Calle
         /// <summary>Cuántas veces ha pitado.</summary>
         public int Pitidos => pitidos;
         public int NodoDestino => nodoDestino;
+
+        /// <summary>Qué lo detiene ahora ("libre", "carro X", "jugador", "cruce" o "fisico"): para depurar atorones (T-588).</summary>
+        public string Causa { get; private set; } = "libre";
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar() => Activos.Clear();
@@ -214,6 +218,10 @@ namespace MechaCyberpunk.Trafico.Calle
             float dt = Time.deltaTime;
             Vector3? jugador = posicionJugador?.Invoke();
             float velocidad = calculo.Avanzar(dt, DistanciaAlObstaculo(jugador));
+            if (calculo.SegundosBloqueado > 0f && Causa != "jugador" && Destrabar())
+            {
+                return;
+            }
             Mover(velocidad, dt);
             if (calculo.TomarPitido())
             {
@@ -226,6 +234,19 @@ namespace MechaCyberpunk.Trafico.Calle
                 proximoPasaCerca = Time.time + SegundosEntrePasaCerca;
                 Sonidos.ReproducirEn("VEH_PASA_CERCA", transform.position);
             }
+        }
+
+        // T-588: atorado mucho rato (detrás de algo fijo, un carro parado o un cruce sin salida): vuelve a salir en otra calle, de preferencia fuera de la vista.
+        private bool Destrabar()
+        {
+            bool seVe = SeVe(Camera.main, transform.position);
+            bool sale = CalculoTraficoCalle.DebeDestrabarse(calculo.SegundosBloqueado, seVe, config.SegundosParaDestrabar, config.SegundosDestrabarForzado)
+                && Reaparecer(false);
+            if (sale)
+            {
+                Causa = "libre";
+            }
+            return sale;
         }
 
         private void Mover(float velocidad, float dt)
@@ -288,6 +309,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private float DistanciaAlObstaculo(Vector3? jugador)
         {
             float menor = float.MaxValue;
+            Causa = "libre";
             Vector3 adelante = transform.forward;
             Vector3 derecha = transform.right;
             for (int i = 0; i < Activos.Count; i++)
@@ -295,16 +317,26 @@ namespace MechaCyberpunk.Trafico.Calle
                 CarroTrafico otro = Activos[i];
                 if (otro != this)
                 {
-                    menor = Mathf.Min(menor, DistanciaDelante(otro.transform.position, adelante, derecha));
+                    Anotar(ref menor, DistanciaDelante(otro.transform.position, adelante, derecha), "carro " + otro.name);
                 }
             }
             if (jugador.HasValue)
             {
-                menor = Mathf.Min(menor, DistanciaDelante(jugador.Value, adelante, derecha));
+                Anotar(ref menor, DistanciaDelante(jugador.Value, adelante, derecha), "jugador");
             }
-            menor = Mathf.Min(menor, DistanciaAlCruce());
-            menor = Mathf.Min(menor, DistanciaFisica(adelante));
+            Anotar(ref menor, DistanciaAlCruce(), "cruce");
+            Anotar(ref menor, DistanciaFisica(adelante), "fisico");
             return menor;
+        }
+
+        // T-588: guarda también qué es lo que lo detiene (para depurar atorones).
+        private void Anotar(ref float menor, float distancia, string causa)
+        {
+            if (distancia < menor)
+            {
+                menor = distancia;
+                Causa = causa;
+            }
         }
 
         // T-532: cede el cruce si otro carro que va en otra dirección ya está adentro o llega antes.
@@ -386,6 +418,10 @@ namespace MechaCyberpunk.Trafico.Calle
                 {
                     continue;
                 }
+                if (HayCarroCerca(p))
+                {
+                    continue; // T-588: no sale encimado a otro
+                }
                 elegido = nodo;
             }
             if (elegido < 0)
@@ -401,8 +437,24 @@ namespace MechaCyberpunk.Trafico.Calle
             return true;
         }
 
+        private bool HayCarroCerca(Vector3 punto)
+        {
+            for (int i = 0; i < Activos.Count; i++)
+            {
+                if (Activos[i] != this && Distancia(Activos[i].transform.position, punto) < SeparacionAlAparecer)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static bool SeVe(Camera camara, Vector3 punto)
         {
+            if (camara == null)
+            {
+                return false;
+            }
             Vector3 v = camara.WorldToViewportPoint(punto + Vector3.up);
             return v.z > 0f && v.z < AlcanceVista && v.x > -MargenVista && v.x < 1f + MargenVista && v.y > -MargenVista && v.y < 1f + MargenVista;
         }
