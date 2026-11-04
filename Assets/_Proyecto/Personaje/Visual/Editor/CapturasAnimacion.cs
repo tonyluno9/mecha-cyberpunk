@@ -37,6 +37,17 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Dano_Frente", 0.4f), ("Dano_Espalda", 0.4f), ("Muerte_Adelante", 1f), ("Muerte_Atras", 1f),
                 ("Muerte_Desmayo", 1f), ("Dano_Levantarse_BocaArriba", 0.5f),
             });
+            // Paso 4 de la noche B: los estados que faltaban en las hojas (giros, frenar y salto; y la muerte del jugador hasta levantarse en I+D+I).
+            Hoja("anim-giros-salto", new (string, float)[]
+            {
+                ("Loco_GirarDer", 0.5f), ("Loco_GirarIzq", 0.5f), ("Loco_Frenar", 0.4f), ("Loco_SaltoInicio", 0.6f),
+                ("Loco_SaltoAterrizaje", 0.2f), ("Loco_CaminarAtras", 0.25f),
+            });
+            Hoja("anim-muerte-levantarse", new (string, float)[]
+            {
+                ("Dano_Fuerte", 0.4f), ("Muerte_Atras", 0.5f), ("Muerte_Atras", 1f), ("Dano_Levantarse_BocaArriba", 0.2f),
+                ("Dano_Levantarse_BocaArriba", 0.6f), ("Dano_Levantarse_BocaAbajo", 0.6f),
+            });
             Debug.Log("[Personaje] T-561: capturas guardadas en docs/capturas/anim-*.png");
         }
 

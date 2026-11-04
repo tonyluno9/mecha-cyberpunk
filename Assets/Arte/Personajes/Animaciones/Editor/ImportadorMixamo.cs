@@ -14,6 +14,8 @@ namespace MechaCyberpunk.Arte.Editor
         const string Carpeta = "Assets/Arte/Personajes/Animaciones/";
 
         // Con bucle: idle, caminar/correr (cualquier variante), apuntar, guardia, agachado, aire y caída.
+        // Clips nuevos con otro nombre (NPC, gestos, vehículos): con bucle si el archivo termina en "_Bucle" (docs/animaciones-faltan.md).
+        const string SufijoBucle = "_Bucle";
         static readonly Regex NombreConBucle = new Regex(
             @"^(Idle|Caminar\w*|Correr|Apuntar\w*|Guardia|AgachadoCaminar|SaltoAire|Caida)$");
 
@@ -21,7 +23,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             int i = nombreArchivo.IndexOf('_');
             string raiz = i >= 0 ? nombreArchivo.Substring(i + 1) : nombreArchivo;
-            return NombreConBucle.IsMatch(raiz);
+            return NombreConBucle.IsMatch(raiz) || nombreArchivo.EndsWith(SufijoBucle);
         }
 
         void OnPreprocessModel()
