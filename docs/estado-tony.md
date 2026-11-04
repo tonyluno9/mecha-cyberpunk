@@ -11,7 +11,10 @@ Rama de integración actual: tony/fase-g (fase G, abajo). Antes: tony/fase-7, bl
   (Logs/base-414.xml del 30-oct); no es de esta tarea.
 - Falta (no hubo tiempo): consultorio del Doc con el brazo I06, entrada de armas de El Mercado, taller de Tino y casino como cuartos aparte.
   Cómo seguir: docs/interiores-faltan.md, sección "Pendiente de T-550".
-- Basura sin subir: Assets/_Recovery y Assets/Logs (de cortar Unity); se pueden borrar a mano.
+- En main (merge a2a4e3b, con push). Builds/Demo/Cyberfix.exe regenerado a las 21:21 (Logs/build-demo-t550.log: Build Finished, Result: Success).
+- Basura sin subir: Assets/_Recovery y Assets/Logs (de cortar Unity); se pueden borrar a mano. Cambios que Unity hizo solo al correr/construir
+  (materiales T20-T22, T546_PapelPicado, Jaula_Pantalla, T-474-bug-2.png) quedaron en `git stash` "t550-efectos-unity"; los de Assets/Settings y
+  ProjectSettings (m_BuildTargetBatching) del build quedaron sin subir.
 
 ## Fase G: juego de pandillas (T-400 a T-406; D-tony-202 a D-tony-224) — ACTUAL
 Concepto nuevo (2026-10-29): sin mechas, GTA de un jugador en tercera persona en Ciudad_Prologo (docs/diseno/pandillas.md).
