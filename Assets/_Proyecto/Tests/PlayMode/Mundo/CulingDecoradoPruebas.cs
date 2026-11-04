@@ -58,6 +58,8 @@ namespace MechaCyberpunk.Tests.Mundo
             tubo.transform.SetParent(letrero.transform);
             GameObject neon = new GameObject("LetreroSinNombreDeLetrero");
             neon.transform.SetParent(raiz.transform);
+            // El ParpadeoNeon sin config se queja al despertar; aquí solo importa que marca la pieza como letrero.
+            UnityEngine.TestTools.LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("ParpadeoNeon en .* necesita su config"));
             neon.AddComponent<ParpadeoNeon>();
             GameObject marco = Cubo("Marco", 1f);
             marco.transform.SetParent(neon.transform);

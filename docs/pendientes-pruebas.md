@@ -15,7 +15,7 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 ## Pantallas
 - [A] Logo nuevo: el juego probablemente se llamará CYBER STREET (por confirmar).
 - [C] Pantalla de título con fondo animado (vistas de calles, cámara lenta por la ciudad) en vez de imagen fija.
-- [C] Bug: al dar CONTINUAR desaparece todo.
+- [x] Bug: al dar CONTINUAR desaparece todo. (T-537: CARGANDO… al continuar)
 - [A] Creación de personaje: rediseñar al 100% (primero mockup).
 - [C] Menú de armas del HUD: iconos, fondo y colores como el mockup.
 - [C] HUD: mostrar la hora del juego.
@@ -67,7 +67,7 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 - [C] Lluvia: que las gotas lleguen al suelo con salpicaduras (ahora parecen quedarse en el cielo).
 - [C] Asfalto más realista: textura de calle mojada con detalle (grietas, parches, líneas gastadas).
 - [C] Día y noche: las luces no deben apagarse de golpe; que sigan prendidas un rato y se apaguen poco a poco.
-- [C] Colisiones: no poder meterse en las paredes (callejón y en general); la cámara no debe atravesar edificios.
+- [x] Colisiones: no poder meterse en las paredes (callejón y en general); la cámara no debe atravesar edificios. (T-583/T-584: ParedesSolidasT583Pruebas, cámara con esfera)
 
 ## El Tianguis
 - [C] Puestos encimados unos con otros: acomodar sin traslapes.
@@ -125,7 +125,7 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 - [C] En el CIC poder mejorar las armas cuerpo a cuerpo / los puños. [?] confirmar si "armas manuales" es eso o mejorar a mano.
 
 ## Carros y motos
-- [C] Bug: se pueden atravesar los coches (colisiones jugador–carro y carro–carro).
+- [x] Bug: se pueden atravesar los coches (colisiones jugador–carro y carro–carro). (T-580: ColisionCoches/CiudadT580Pruebas)
 - [C] Prender y apagar las luces del carro (tecla), y faros encendidos de noche en el tráfico.
 - [C] Explosión con efectos (fuego, humo, chispas, onda, sonido) cuando el carro revienta.
 - [C] Tráfico fluido (otra vez): sin choques tontos ni atorones.
@@ -133,7 +133,7 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 
 ## Policía
 - [C] Persecución realista: patrullas que te siguen por las calles, cortan el paso, sirena, radio, se pierden si te escondes.
-- [C] Las patrullas no deben atravesar paredes ni desaparecer de la nada.
+- [x] Las patrullas no deben atravesar paredes ni desaparecer de la nada. (T-581: PatrullaParedT581Pruebas)
 - [C] Que aparezcan y se vayan con lógica: llegan desde fuera de la vista cuando hay peligro (calor, disparos) y se retiran fuera de la vista cuando baja el calor.
 
 ## NPC y aliados
@@ -143,7 +143,7 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 ## Mundo y ciudad
 - [C] Las gotas de lluvia deben caer al suelo (otra vez): salpicaduras en el piso.
 - [C] Puestos ajustados al tamaño real (escala con la persona).
-- [C] Letreros y carteles que se buguean en acción (parpadean, desaparecen o se mueven al pelear o manejar): revisar.
+- [x] Letreros y carteles que se buguean en acción (parpadean, desaparecen o se mueven al pelear o manejar): revisar. (T-582: el culing no corta letreros)
 - [C] Texturas en el cielo (nubes, estrellas, brillo de la ciudad en las nubes) de día y de noche.
 - [C] Cambiar la iluminación de día (más natural, menos plana).
 - [?] El mapa no debe ser cuadrado y debe tener muchas… (la frase quedó cortada: ¿muchas calles, curvas, niveles?). Por ahora: calles con curvas, diagonales y callejones para que no se vea como cuadrícula.
