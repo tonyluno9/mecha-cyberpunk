@@ -57,6 +57,16 @@
                     "priority": 0
                 },
                 {
+                    "name": "Luces",
+                    "type": "Button",
+                    "id": "8a2e4c91-1b3d-4f67-a0c5-92d7e6f1b385",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "Mirar",
                     "type": "Value",
                     "id": "17687387-961e-46b2-a47f-0c924df60043",
@@ -197,6 +207,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "CambiarCamara",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3c1f6a52-7d4e-4b8a-9a21-5e0d8f7b6c14",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Luces",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -29,6 +29,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const string AccionFrenar = "Frenar";
         private const string AccionGirar = "Girar";
         private const string AccionFrenoMano = "FrenoMano";
+        private const string AccionLuces = "Luces";
         private const int RuedasTotales = 4;
         private const float UmbralReposo = 0.05f;
         private const float SegundosParaDormir = 1.5f;
@@ -73,6 +74,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private InputAction frenar;
         private InputAction girar;
         private InputAction frenoMano;
+        private InputAction luces;
+        private LucesCarro lucesCarro;
         private ParametrosManejo parametros;
         private bool listo;
         private float segundosEnReposo;
@@ -112,6 +115,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 gameObject.AddComponent<DanioCarro>();
             }
+            if (GetComponent<LucesCarro>() == null)
+            {
+                gameObject.AddComponent<LucesCarro>();
+            }
             if (config == null || controles == null || asiento == null || puntoSubida == null || camaraCarro == null
                 || ruedaDelanteraIzquierda == null || ruedaDelanteraDerecha == null
                 || ruedaTraseraIzquierda == null || ruedaTraseraDerecha == null)
@@ -138,7 +145,18 @@ namespace MechaCyberpunk.Vehiculos.Carro
             frenar = mapa.FindAction(AccionFrenar);
             girar = mapa.FindAction(AccionGirar);
             frenoMano = mapa.FindAction(AccionFrenoMano);
+            luces = mapa.FindAction(AccionLuces);
+            lucesCarro = GetComponent<LucesCarro>();
             listo = true;
+        }
+
+        // La tecla de luces (L) solo la lee quien maneja.
+        private void Update()
+        {
+            if (listo && TieneControl && luces != null && lucesCarro != null && luces.WasPressedThisFrame())
+            {
+                lucesCarro.Alternar();
+            }
         }
 
         private void OnEnable()
