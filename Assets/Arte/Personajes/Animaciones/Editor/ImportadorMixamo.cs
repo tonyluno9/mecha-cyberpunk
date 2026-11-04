@@ -5,7 +5,8 @@ namespace MechaCyberpunk.Arte.Editor
 {
     /// <summary>
     /// Importa los FBX de Mixamo de Assets/Arte/Personajes/Animaciones/ como Humanoid, sin materiales,
-    /// con el clip llamado como el archivo, bucle según el nombre y In Place (bake into pose XZ y rotación Y).
+    /// con el clip llamado como el archivo, bucle según el nombre y en el sitio. T-561: sin "bake into pose" en XZ ni rotación Y: los clips de Mixamo
+    /// traen el avance en la raíz, y con bake se veía al personaje deslizarse 1.35 m por ciclo; sin bake la raíz se ignora (Apply Root Motion apagado) y queda en el sitio.
     /// Todos quedan In Place, también caídas y muertes (decisión: el controlador mueve al personaje).
     /// </summary>
     public class ImportadorMixamo : AssetPostprocessor
@@ -13,6 +14,8 @@ namespace MechaCyberpunk.Arte.Editor
         const string Carpeta = "Assets/Arte/Personajes/Animaciones/";
 
         // Con bucle: idle, caminar/correr (cualquier variante), apuntar, guardia, agachado, aire y caída.
+        // Clips nuevos con otro nombre (NPC, gestos, vehículos): con bucle si el archivo termina en "_Bucle" (docs/animaciones-faltan.md).
+        const string SufijoBucle = "_Bucle";
         static readonly Regex NombreConBucle = new Regex(
             @"^(Idle|Caminar\w*|Correr|Apuntar\w*|Guardia|AgachadoCaminar|SaltoAire|Caida)$");
 
@@ -20,7 +23,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             int i = nombreArchivo.IndexOf('_');
             string raiz = i >= 0 ? nombreArchivo.Substring(i + 1) : nombreArchivo;
-            return NombreConBucle.IsMatch(raiz);
+            return NombreConBucle.IsMatch(raiz) || nombreArchivo.EndsWith(SufijoBucle);
         }
 
         void OnPreprocessModel()
@@ -55,8 +58,10 @@ namespace MechaCyberpunk.Arte.Editor
             var clip = clips[0];
             clip.name = nombre;
             clip.loopTime = TieneBucle(nombre);
-            clip.lockRootPositionXZ = true;
-            clip.lockRootRotation = true;
+            clip.lockRootPositionXZ = false;
+            clip.lockRootRotation = false;
+            // La altura sí va en la pose: sin eso las muertes y los levantarse no bajan el cuerpo al piso.
+            clip.lockRootHeightY = true;
             importer.clipAnimations = new[] { clip };
             return true;
         }

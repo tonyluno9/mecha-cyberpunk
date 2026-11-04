@@ -1,7 +1,9 @@
 using MechaCyberpunk.Combate.Golpe;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
 namespace MechaCyberpunk.Personaje.Jugador
@@ -21,15 +23,30 @@ namespace MechaCyberpunk.Personaje.Jugador
         private static readonly int IdDisparo = Animator.StringToHash("Disparo");
         private static readonly int IdRecarga = Animator.StringToHash("Recarga");
 
+        // Un impacto cuenta como del jugador si cae a esta distancia de su centro (m); el evento no dice a quién le pegaron.
+        private const float DistanciaImpacto = 2.2f;
+        private const float AlturaCentro = 1f;
+        // Un golpe de esta fracción de la vida máxima o más se muestra como daño fuerte.
+        private const float FraccionDanoFuerte = 0.25f;
+
         [SerializeField] private Animator animador;
+        [Tooltip("Segundos que el jugador sigue tumbado después de despertar, antes de levantarse (s).")]
+        [Min(0f)] [SerializeField] private float retardoLevantarse = ReglasAnimacion.RetardoLevantarse;
 
         private ControladorAPie controlador;
         private GolpeAPie golpe;
         private PistolaAPie pistola;
         private ArmasAPie armas;
         private VidaAPie vida;
+        private CubiertaYRodada cubierta;
+        private VisualPersonaje visual;
         private FaseGolpe faseAnterior = FaseGolpe.Listo;
         private bool recargandoAntes;
+        private TipoArmaVisual tipoArmaAntes;
+        private bool koAntes;
+        private float segundosSinKO;
+        private bool apuntandoAntes;
+        private bool cubiertoAntes;
 
         private void Awake()
         {
@@ -38,6 +55,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             pistola = GetComponent<PistolaAPie>();
             armas = GetComponent<ArmasAPie>();
             vida = GetComponent<VidaAPie>();
+            cubierta = GetComponent<CubiertaYRodada>();
+            visual = GetComponentInChildren<VisualPersonaje>(true);
             if (animador == null)
             {
                 animador = GetComponentInChildren<Animator>(true);
@@ -52,6 +71,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         public void AlCambiarModelo(Animator nuevo)
         {
             animador = nuevo;
+            visual = nuevo != null ? nuevo.GetComponentInParent<VisualPersonaje>() : null;
             enabled = nuevo != null;
         }
 
@@ -61,6 +81,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 pistola.Disparo += AlDisparar;
             }
+            EventosPelea.ImpactoRecibido += AlRecibirImpacto;
         }
 
         private void OnDisable()
@@ -69,6 +90,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 pistola.Disparo -= AlDisparar;
             }
+            EventosPelea.ImpactoRecibido -= AlRecibirImpacto;
         }
 
         private void Update()
@@ -79,14 +101,40 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
             animador.SetFloat(IdVelocidad, controlador.Velocidad.magnitude);
             animador.SetBool(IdEnPiso, controlador.EnPiso);
-            animador.SetBool(IdApuntando, controlador.Apuntando);
-            animador.SetInteger(IdArma, armas != null && armas.ArmaActiva != ArmaAPie.Punos ? 1 : 0);
-            animador.SetBool(IdKO, vida != null && vida.EstaKO);
+            if (visual == null)
+            {
+                animador.SetBool(IdApuntando, controlador.Apuntando);
+            }
+            bool desarmado = armas == null || armas.ArmaActiva == ArmaAPie.Punos;
+            TipoArmaVisual tipoArma = ReglasAnimacion.TipoPorArma(desarmado, !desarmado && armas.ArmaActiva == ArmaAPie.Pistola);
+            bool ko = vida != null && vida.EstaKO;
+            if (visual == null)
+            {
+                animador.SetInteger(IdArma, (int)tipoArma);
+                animador.SetBool(IdKO, ko);
+            }
+            if (visual != null)
+            {
+                // Solo al cambiar: así otras pruebas o herramientas pueden manejar el visual sin que este script lo pise cada cuadro.
+                bool cubierto = cubierta != null && cubierta.Cubierto;
+                bool apuntando = controlador.Apuntando;
+                if (apuntando != apuntandoAntes) { visual.Apuntando = apuntando; apuntandoAntes = apuntando; }
+                if (tipoArma != tipoArmaAntes) { visual.TipoArma = tipoArma; tipoArmaAntes = tipoArma; }
+                ActualizarCaido(ko, Time.deltaTime);
+                if (cubierto != cubiertoAntes) { visual.Cubierto = cubierto; cubiertoAntes = cubierto; }
+            }
 
             FaseGolpe fase = golpe != null ? golpe.Fase : FaseGolpe.Listo;
             if (fase == FaseGolpe.Preparando && faseAnterior != FaseGolpe.Preparando)
             {
-                animador.SetTrigger(IdGolpe);
+                if (visual != null)
+                {
+                    visual.Golpear(false);
+                }
+                else
+                {
+                    animador.SetTrigger(IdGolpe);
+                }
             }
             faseAnterior = fase;
 
@@ -98,12 +146,46 @@ namespace MechaCyberpunk.Personaje.Jugador
             recargandoAntes = recargando;
         }
 
+        // Cae al instante (clip de muerte); al despertar (la clínica restaura la vida con la pantalla en negro) sigue tumbado un momento
+        // y luego se levanta con Dano_Levantarse (T-562), para que se vea al abrirse el fundido.
+        private void ActualizarCaido(bool ko, float dt)
+        {
+            segundosSinKO = ko ? 0f : segundosSinKO + dt;
+            if (ko && !koAntes)
+            {
+                koAntes = true;
+                visual.Caido = true;
+            }
+            else if (koAntes && ReglasAnimacion.DebeLevantarse(ko, segundosSinKO, retardoLevantarse))
+            {
+                koAntes = false;
+                visual.Caido = false;
+            }
+        }
+
         private void AlDisparar()
         {
-            if (animador.gameObject.activeInHierarchy)
+            if (!animador.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+            if (visual != null)
+            {
+                visual.Disparar();
+            }
+            else
             {
                 animador.SetTrigger(IdDisparo);
             }
+        }
+
+        private void AlRecibirImpacto(IPeleador objetivo, InfoDanio info, ResultadoDanio resultado)
+        {
+            if (visual == null || objetivo != null || vida == null || (info.Punto - (transform.position + Vector3.up * AlturaCentro)).sqrMagnitude > DistanciaImpacto * DistanciaImpacto)
+            {
+                return;
+            }
+            visual.Herir(info.Direccion, vida.Maxima > 0f && info.Cantidad >= vida.Maxima * FraccionDanoFuerte);
         }
     }
 }

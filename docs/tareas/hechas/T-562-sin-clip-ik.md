@@ -11,3 +11,7 @@ Carpetas permitidas: las de T-561. No tocar la lógica de manejo de motos ni car
 
 ## Hecho cuando
 Compila y las pruebas nuevas y tocadas pasan.
+
+## Arreglos que dejó T-561 (van en esta tarea)
+- Sin patinar: T-561 midió caminar 1.18 m/s y correr 2.11 m/s en los clips y el jugador va a 4.5 y 7.5 m/s, con la animación topada a 2.2x: patina. Re-medir la velocidad real de los clips (desplazamiento de la cadera o del root en el clip sin hornear; un correr de Mixamo suele ir a ~3.5-4 m/s), ajustar los umbrales del blend tree para que a 4.5 m/s ya mezcle hacia correr, y que la escala no tope antes de igualar. Prueba EditMode con los valores medidos.
+- Cobertura: CubiertaYRodada aplana el modelo con EscalaAgachado 0.65 encima de la pose agachada de Cobertura_Entrar. Poner EscalaAgachado = 1 en Assets/_Proyecto/Personaje/Datos/Resources/DatosCubierta.asset (con código de editor o SerializedObject, no YAML a mano) y ajustar la prueba que lo espere.

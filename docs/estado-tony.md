@@ -2,6 +2,26 @@
 
 Rama de integración actual: tony/fase-g (fase G, abajo). Antes: tony/fase-7, bloques 1 a 4 de T-F7 hechos (economía, ligas, piezas, habilidades; T-140 a T-180).
 
+## Noche B 3→4 nov: animaciones (docs/noche-B-tony.md, T-560 a T-562) — HECHA, en main
+- Paso 0: planes en main (fdc2616). T-550 ya estaba mezclada.
+- Paso 1, T-560: 46 clips de Mixamo en Assets/Arte/Personajes/Animaciones/<Grupo>/. Los importa ImportadorMixamo: Humanoid, en el sitio y con bucle según el nombre.
+- Paso 2, T-561: ControladorBase con override por papel (Jugador, Aliados, NPC, SKULLS, SNAKES, Guardias, Robots, Profes; por ahora iguales).
+  Tiene locomoción con blend 2D, giros, frenar, salto en 3 fases y caída; capa de torso por arma (puños, pistola, arma larga); cobertura y agachado;
+  daño y muerte según la dirección; IK de pies y mirada. ManosPorIK quedó apagado. PandilleroAPie y AliadoAPie ya animan apuntar, disparar, daño y caer.
+- Paso 3, T-562: sin patinar (clips medidos: caminar 1.28 m/s, correr 2.79 m/s) y cobertura sin aplanar (EscalaAgachado 1).
+  Variación de idle por NPC; el jugador muere, despierta en I+D+I y se levanta con Dano_Levantarse.
+  Moto: PoseMoto y PuntosMoto (pose sentado inclinado, IK de manos y pies, esconde el caballete). **No hay moto en el repo**: la Sesión A debe llamar
+  PoseMoto.Montar(PuntosMoto) y Bajar() desde su manejo y poner PuntosMoto en el prefab de la moto. Rodar sigue con el giro de siempre.
+- Paso 4: docs/animaciones-faltan.md (lista para bajar de Mixamo; el sufijo _Bucle hace bucle). Capturas en docs/capturas/anim-*.png
+  (locomocion, giros-salto, pistola, rifle, cobertura-punos, dano-muerte, muerte-levantarse). La moto no tiene captura; la cubre PoseMotoPruebas.
+- Pruebas: EditMode PersonajeVisual 102/102, AnimacionesMixamoPruebas 2/2; PlayMode PoseMoto 2/2, MuerteJugadorAnimada 1/1,
+  ControladorBase y Cubierta 20/20, CaerEnLaCalle 5/5, RecorridoDemoPruebas 2/2 (solo).
+- Ojo:
+  - RecorridoDemoPruebas falló 2 veces corrida junto con las pruebas del jugador (contaminación de orden); sola pasa.
+  - VencerlosPagaYTraeDrones (IA) falla por una ArgumentException en Trafico/Persecucion/GrafoCalles.cs, que es de Alan.
+  - Correr a 2.79 m/s es menos que lo típico de Mixamo; si se ve lento, volver a medir con MedicionClips.
+- Efectos de las pruebas guardados en git stash ("t561-efectos-pruebas", "t562-efectos-pruebas"). Assets/Settings y ProjectSettings siguen sin subir.
+
 ## T-550 interiores a tamaño real (3-nov-2026, cerrado a las 21:15 por la hora límite): solo la habitación
 - Hecho y en main: sistema de cuartos (CuartoInterior, PuertaCuarto con fundido, ColocarT550) y la habitación a escala real (3 x 4 x 2.7 m),
   luz cálida, X01, I01-I05; captura revisada en docs/capturas/cuarto-habitacion-comparacion.png. Importados I01-I21 y X01-X05.

@@ -38,7 +38,8 @@ namespace MechaCyberpunk.Tests
         private static string Controlador(Component c)
         {
             Animator a = c.GetComponentInChildren<Animator>(true);
-            return a != null && a.runtimeAnimatorController != null ? AssetDatabase.GetAssetPath(a.runtimeAnimatorController) : string.Empty;
+            // T-561: el controlador es el base con un override por papel; el modelo se reconoce por su Avatar (Assets/Arte/Personajes/<Modelo>/).
+            return a != null && a.avatar != null ? AssetDatabase.GetAssetPath(a.avatar) : string.Empty;
         }
 
         private IEnumerable<GenteDeBanqueta> Gente() =>
@@ -54,7 +55,7 @@ namespace MechaCyberpunk.Tests
             Assert.IsNotNull(prefab.GetComponent<VisualPersonaje>());
             Animator animador = prefab.GetComponentInChildren<Animator>(true);
             Assert.IsTrue(animador.avatar.isValid && animador.avatar.isHuman, "Avatar Humanoid válido");
-            AnimatorController c = (AnimatorController)animador.runtimeAnimatorController;
+            AnimatorController c = (AnimatorController)((AnimatorOverrideController)animador.runtimeAnimatorController).runtimeAnimatorController;
             foreach (string estado in new[] { "Idle", "Caminar", "Correr" })
             {
                 ChildAnimatorState e = c.layers[0].stateMachine.states.First(s => s.state.name == estado);

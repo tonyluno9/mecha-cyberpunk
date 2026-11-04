@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MechaCyberpunk.Personaje.Visual
@@ -27,6 +28,12 @@ namespace MechaCyberpunk.Personaje.Visual
         [Min(0.1f)] [SerializeField] private float rapidezMinima = 0.6f;
         [Tooltip("Rapidez máxima de la animación al ajustarla a la velocidad real (1 = normal).")]
         [Min(1f)] [SerializeField] private float rapidezMaxima = 2.2f;
+        [Header("Controlador base (T-561)")]
+        [Tooltip("Rapidez con la que la capa de arriba (torso) se apaga al cubrirse, agacharse o caer (1/s).")]
+        [Min(0.1f)] [SerializeField] private float rapidezCapaArriba = 8f;
+        [Tooltip("Suavizado de la dirección local y del giro (1/s).")]
+        [Min(0.1f)] [SerializeField] private float suavizadoDireccion = 14f;
+
         [Header("Caída (sin animación de caer)")]
         [Tooltip("Tiempo que tarda el cuerpo en tumbarse al quedar KO (s). 0 = no se tumba.")]
         [Min(0f)] [SerializeField] private float segundosTumbarse = 0.35f;
@@ -36,6 +43,7 @@ namespace MechaCyberpunk.Personaje.Visual
         // El modelo de Tripo mira a -Z local (nodo Giro de 180°): cae de espaldas con +90° sobre su eje X.
         private const float GradosTumbado = 90f;
         private const float VelocidadVerticalEnAire = 1.5f;
+        private static readonly int HashIdle = Animator.StringToHash("Idle");
         private static readonly int HashCaminar = Animator.StringToHash("Caminar");
         private static readonly int HashCorrer = Animator.StringToHash("Correr");
         private static readonly int IdVelocidad = Animator.StringToHash(ReglasVisual.Velocidad);
@@ -49,6 +57,17 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdCaer = Animator.StringToHash(ReglasVisual.Caer);
         private static readonly int IdCubierto = Animator.StringToHash(ReglasVisual.Cubierto);
         private static readonly int IdRodar = Animator.StringToHash(ReglasVisual.Rodar);
+        private static readonly int IdVelX = Animator.StringToHash(ReglasAnimacion.VelX);
+        private static readonly int IdVelZ = Animator.StringToHash(ReglasAnimacion.VelZ);
+        private static readonly int IdVelY = Animator.StringToHash(ReglasAnimacion.VelY);
+        private static readonly int IdGiro = Animator.StringToHash(ReglasAnimacion.Giro);
+        private static readonly int IdAgachado = Animator.StringToHash(ReglasAnimacion.Agachado);
+        private static readonly int IdDanoTipo = Animator.StringToHash(ReglasAnimacion.DanoTipo);
+        private static readonly int IdMuerteTipo = Animator.StringToHash(ReglasAnimacion.MuerteTipo);
+        private static readonly int IdGolpeTipo = Animator.StringToHash(ReglasAnimacion.GolpeTipo);
+        private static readonly int IdCoberturaTipo = Animator.StringToHash(ReglasAnimacion.CoberturaTipo);
+        private static readonly int IdDisparoCobertura = Animator.StringToHash(ReglasAnimacion.DisparoCobertura);
+        private static readonly int IdFrenar = Animator.StringToHash(ReglasAnimacion.Frenar);
 
         private CharacterController controlador;
         private Rigidbody cuerpo;
@@ -68,6 +87,30 @@ namespace MechaCyberpunk.Personaje.Visual
             velocidadClipCaminar = caminar;
             velocidadClipCorrer = correr;
         }
+
+        /// <summary>Para los creadores: las velocidades de los clips y la rapidez máxima de la animación (T-562).</summary>
+        public void ConfigurarClips(float caminar, float correr, float rapidezMax)
+        {
+            ConfigurarClips(caminar, correr);
+            rapidezMaxima = Mathf.Max(1f, rapidezMax);
+        }
+
+        /// <summary>
+        /// Variación de un NPC (T-562): salta el idle a <paramref name="desfase"/> (fracción del ciclo, 0 a 1) y lo juega a esa rapidez (1 = normal).
+        /// Solo afecta al estado Idle: al caminar la rapidez sigue a la velocidad real.
+        /// </summary>
+        public void Variar(float desfase, float rapidez)
+        {
+            rapidezIdle = Mathf.Clamp(rapidez, 0.5f, 1.5f);
+            if (animador != null && animador.runtimeAnimatorController != null && animador.GetCurrentAnimatorStateInfo(0).shortNameHash == HashIdle)
+            {
+                animador.Play(HashIdle, 0, Mathf.Repeat(desfase, 1f));
+                animador.Update(0f);
+            }
+        }
+
+        /// <summary>Rapidez con la que se juega el idle de este personaje.</summary>
+        public float RapidezIdle => rapidezIdle;
 
         /// <summary>Rapidez horizontal en m/s. Se escribe a mano o la calcula este componente si LeerDelPadre está activo.</summary>
         public float Velocidad
@@ -100,13 +143,84 @@ namespace MechaCyberpunk.Personaje.Visual
             set { cubierto = value; Aplicar(); }
         }
 
-        /// <summary>Tirado en el suelo (KO).</summary>
+        /// <summary>Tirado en el suelo (KO). Al caer elige cómo según de dónde vino el último golpe (<see cref="Herir"/>).</summary>
         public bool Caido
         {
             get => caido;
-            set { caido = value; Aplicar(); }
+            set
+            {
+                if (value && !caido)
+                {
+                    ElegirMuerte();
+                }
+                caido = value;
+                Aplicar();
+            }
         }
 
+        /// <summary>Agachado caminando (con rifle).</summary>
+        public bool Agachado
+        {
+            get => agachado;
+            set { agachado = value; Aplicar(); }
+        }
+
+        /// <summary>Cómo cayó (o caerá) el personaje.</summary>
+        public MuerteVisual Muerte { get; private set; }
+
+        /// <summary>Fuente del azar (0 a menos de 1) para elegir la muerte entre las válidas. Para pruebas.</summary>
+        public void InyectarAzar(Func<float> fuente) => azar = fuente ?? (() => UnityEngine.Random.value);
+
+        /// <summary>Elige la muerte entre las válidas para la dirección del último golpe y la deja lista en el Animator.</summary>
+        public MuerteVisual ElegirMuerte()
+        {
+            Muerte = ReglasAnimacion.ElegirMuerte(ultimaDireccionGolpe, transform.forward, azar());
+            if (animador != null && Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int))
+            {
+                animador.SetInteger(IdMuerteTipo, (int)Muerte);
+            }
+            return Muerte;
+        }
+
+        /// <summary>Reacción al daño: de frente, de espalda o fuerte según la dirección del golpe (del atacante al personaje).</summary>
+        public void Herir(Vector3 direccionGolpe, bool fuerte = false)
+        {
+            ultimaDireccionGolpe = direccionGolpe;
+            if (animador != null && Tiene(IdDanoTipo, AnimatorControllerParameterType.Int))
+            {
+                animador.SetInteger(IdDanoTipo, (int)ReglasAnimacion.ElegirDano(direccionGolpe, transform.forward, fuerte));
+            }
+            Disparo(IdHerido);
+        }
+
+        /// <summary>Guarda de dónde vino el último golpe sin mostrar reacción (el golpe que mata: decide cómo cae).</summary>
+        public void RegistrarGolpe(Vector3 direccionGolpe) => ultimaDireccionGolpe = direccionGolpe;
+
+        /// <summary>Golpe de puños: alterna izquierda y derecha, o fuerte.</summary>
+        public void Golpear(bool fuerte)
+        {
+            golpeAlterno = fuerte ? 2 : 1 - golpeAlterno % 2;
+            if (animador != null && Tiene(IdGolpeTipo, AnimatorControllerParameterType.Int))
+            {
+                animador.SetInteger(IdGolpeTipo, golpeAlterno);
+            }
+            Disparo(IdGolpe);
+        }
+
+        private float velX;
+        private float velZ;
+        private float velY;
+        private float giro;
+        private float rapidezIdle = 1f;
+        private float pesoArriba = 1f;
+        private float velocidadAnterior;
+        private float yawAnterior;
+        private int capaArriba = -2;
+        private bool agachado;
+        private int golpeAlterno = 1;
+        private int coberturaAlterna;
+        private Vector3 ultimaDireccionGolpe;
+        private Func<float> azar = () => UnityEngine.Random.value;
         private bool apuntando;
         private TipoArmaVisual tipoArma;
         private bool cubierto;
@@ -148,11 +262,34 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             Aplicar();
             AjustarRapidez();
+            ActualizarCapas(Time.deltaTime);
         }
+
+        private void ActualizarCapas(float dt)
+        {
+            if (animador == null || animador.runtimeAnimatorController == null)
+            {
+                return;
+            }
+            if (capaArriba == -2)
+            {
+                capaArriba = animador.GetLayerIndex(ReglasAnimacion.CapaArriba);
+            }
+            if (capaArriba < 0)
+            {
+                return;
+            }
+            float objetivo = cubierto || caido || agachado ? 0f : 1f;
+            pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
+            animador.SetLayerWeight(capaArriba, pesoArriba);
+        }
+
+        /// <summary>Peso actual de la capa de arriba (torso), de 0 a 1.</summary>
+        public float PesoCapaArriba => pesoArriba;
 
         private void LateUpdate()
         {
-            float objetivo = caido && segundosTumbarse > 0f ? 1f : 0f;
+            float objetivo = caido && segundosTumbarse > 0f && !TieneMuerteAnimada() ? 1f : 0f;
             if (Mathf.Approximately(tumbado, objetivo) || animador == null)
             {
                 return;
@@ -170,25 +307,34 @@ namespace MechaCyberpunk.Personaje.Visual
             eje.localPosition = posicionBase + new Vector3(0f, alturaTumbado * tumbado, 0f);
         }
 
+        private bool TieneMuerteAnimada() => animador != null && Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int);
+
         /// <summary>Acelera o frena Caminar y Correr para que los pies sigan el suelo a la velocidad real.</summary>
         private void AjustarRapidez()
         {
-            if (animador == null || (velocidadClipCaminar <= 0f && velocidadClipCorrer <= 0f))
+            if (animador == null || (velocidadClipCaminar <= 0f && velocidadClipCorrer <= 0f && Mathf.Approximately(rapidezIdle, 1f)))
             {
                 return;
             }
             int estado = animador.GetCurrentAnimatorStateInfo(0).shortNameHash;
+            if (estado == HashIdle)
+            {
+                animador.speed = rapidezIdle;
+                return;
+            }
             float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
-            animador.speed = referencia > 0f ? Mathf.Clamp(velocidad / referencia, rapidezMinima, rapidezMaxima) : 1f;
+            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia, rapidezMinima, rapidezMaxima);
         }
 
         private void LeerEstadoDelPadre(float dt)
         {
             Transform padre = transform.parent != null ? transform.parent : transform;
             float objetivo;
+            Vector3 mundo = Vector3.zero;
             if (controlador != null && controlador.enabled)
             {
                 Vector3 v = controlador.velocity;
+                mundo = v;
                 objetivo = ReglasVisual.VelocidadHorizontal(v.x, v.z);
                 // Un CharacterController quieto que no recibe Move cada cuadro reporta isGrounded falso: solo cuenta como aire si de verdad sube o cae.
                 enSuelo = controlador.isGrounded || Mathf.Abs(v.y) < VelocidadVerticalEnAire;
@@ -196,26 +342,56 @@ namespace MechaCyberpunk.Personaje.Visual
             else if (cuerpo != null)
             {
                 Vector3 v = cuerpo.linearVelocity;
+                mundo = v;
                 objetivo = ReglasVisual.VelocidadHorizontal(v.x, v.z);
                 enSuelo = Mathf.Abs(v.y) < 0.5f;
             }
             else
             {
                 Vector3 delta = padre.position - posicionAnterior;
+                mundo = dt > 0f ? delta / dt : Vector3.zero;
                 objetivo = dt > 0f ? ReglasVisual.VelocidadHorizontal(delta.x, delta.z) / dt : 0f;
                 enSuelo = true;
             }
             posicionAnterior = padre.position;
+            float paso = dt > 0f ? 1f - Mathf.Exp(-suavizadoDireccion * dt) : 1f;
+            Vector2 local = ReglasAnimacion.DireccionLocal(mundo, transform.forward);
+            velX = Mathf.Lerp(velX, local.x, paso);
+            velZ = Mathf.Lerp(velZ, local.y, paso);
+            velY = mundo.y;
+            float yaw = transform.eulerAngles.y;
+            float grados = dt > 0f ? Mathf.DeltaAngle(yawAnterior, yaw) / dt : 0f;
+            yawAnterior = yaw;
+            giro = Mathf.Lerp(giro, grados, paso);
             velocidad = suavizadoVelocidad > 0f && dt > 0f
                 ? Mathf.Lerp(velocidad, objetivo, 1f - Mathf.Exp(-suavizadoVelocidad * dt))
                 : objetivo;
+            if (enSuelo && ReglasAnimacion.DebeFrenar(velocidadAnterior, velocidad))
+            {
+                Disparo(IdFrenar);
+            }
+            velocidadAnterior = velocidad;
         }
 
-        public void Disparar() => Disparo(IdDisparar);
+        /// <summary>Disparo: desde cobertura usa la animación de asomarse a disparar (alterna las dos).</summary>
+        public void Disparar()
+        {
+            if (cubierto && animador != null && Tiene(IdDisparoCobertura, AnimatorControllerParameterType.Trigger))
+            {
+                coberturaAlterna = 1 - coberturaAlterna;
+                if (Tiene(IdCoberturaTipo, AnimatorControllerParameterType.Int))
+                {
+                    animador.SetInteger(IdCoberturaTipo, coberturaAlterna);
+                }
+                animador.SetTrigger(IdDisparoCobertura);
+                return;
+            }
+            Disparo(IdDisparar);
+        }
 
         public void Recargar() => Disparo(IdRecargar);
 
-        public void Golpear() => Disparo(IdGolpe);
+        public void Golpear() => Golpear(false);
 
         public void Herir() => Disparo(IdHerido);
 
@@ -241,6 +417,14 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdTipoArma, (int)tipoArma);
             Poner(IdCaer, caido);
             Poner(IdCubierto, cubierto);
+            Poner(IdAgachado, agachado);
+            if (leerDelPadre)
+            {
+                Poner(IdVelX, velX);
+                Poner(IdVelZ, velZ);
+                Poner(IdVelY, velY);
+                Poner(IdGiro, giro);
+            }
         }
 
         private void Poner(int id, float valor)

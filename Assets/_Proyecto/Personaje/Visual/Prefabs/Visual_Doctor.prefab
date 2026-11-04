@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2722320106036607156}
   - component: {fileID: 3731179519726274316}
+  - component: {fileID: 36957360433776215}
   m_Layer: 0
   m_Name: Visual_Doctor
   m_TagString: Untagged
@@ -48,12 +49,27 @@ MonoBehaviour:
   animador: {fileID: 8581129974040509301}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 0.75320995
-  velocidadClipCorrer: 2.7563162
+  velocidadClipCaminar: 1.28
+  velocidadClipCorrer: 2.79
   rapidezMinima: 0.6
-  rapidezMaxima: 2.2
+  rapidezMaxima: 2.8
+  rapidezCapaArriba: 8
+  suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
+--- !u!114 &36957360433776215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898281404665104597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f23fcd447cfcc64489465ee2d969f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VariacionNPC
+  semilla: 0
 --- !u!1 &3435178034010084625
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +192,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: b9d4a5fd82e3c2f4dbdc37de2642935f, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: c5c04835511bc34408947b709231bfce, type: 2}
+      objectReference: {fileID: 22100000, guid: 376c1eeada4a54444b163cca75ab4e54, type: 2}
     - target: {fileID: 5866666021909216657, guid: b9d4a5fd82e3c2f4dbdc37de2642935f, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -191,6 +207,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b9d4a5fd82e3c2f4dbdc37de2642935f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5995010733323883733}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b9d4a5fd82e3c2f4dbdc37de2642935f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2761779801570371173}
   m_SourcePrefab: {fileID: 100100000, guid: b9d4a5fd82e3c2f4dbdc37de2642935f, type: 3}
 --- !u!4 &2447250012763709711 stripped
 Transform:
@@ -222,7 +241,31 @@ MonoBehaviour:
   rapidez: 10
   socketArma: {fileID: 7423708222586402114}
   inclinacionBajada: 60
-  manosPorIK: 1
+  manosPorIK: 0
+--- !u!114 &2761779801570371173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3079811540219182005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5ed43a73d7ab147b028ff2c699c13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.IKPiesYMirada
+  pies: 1
+  alturaRayo: 0.6
+  alcanceRayo: 1.1
+  rapidezPies: 10
+  objetivo: {fileID: 0}
+  mirarAlJugador: 1
+  distanciaMirada: 7
+  anguloMirada: 100
+  retardoMirada: 1
+  rapidezMirada: 4
+  pesoCuerpo: 0.2
+  alturaObjetivo: 1.5
 --- !u!4 &4351659550091435622 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7342860975314937726, guid: b9d4a5fd82e3c2f4dbdc37de2642935f, type: 3}

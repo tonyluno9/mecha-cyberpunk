@@ -42,6 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4559933546589122663}
   - component: {fileID: 5573725563313447354}
+  - component: {fileID: 2225564256068706170}
   m_Layer: 0
   m_Name: Visual_woman2
   m_TagString: Untagged
@@ -80,12 +81,27 @@ MonoBehaviour:
   animador: {fileID: 7632306514294726979}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 0.877437
-  velocidadClipCorrer: 3.2109191
+  velocidadClipCaminar: 1.28
+  velocidadClipCorrer: 2.79
   rapidezMinima: 0.6
-  rapidezMaxima: 2.2
+  rapidezMaxima: 2.8
+  rapidezCapaArriba: 8
+  suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
+--- !u!114 &2225564256068706170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6473915207903942225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f23fcd447cfcc64489465ee2d969f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VariacionNPC
+  semilla: 0
 --- !u!1 &8999206816097479702
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,19 +191,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2958403316127738320, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.101449065
+      value: -0.10144907
       objectReference: {fileID: 0}
     - target: {fileID: -2958403316127738320, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.06404981
+      value: -0.06404982
       objectReference: {fileID: 0}
     - target: {fileID: 646400424639184015, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.106822245
+      value: 0.10682223
       objectReference: {fileID: 0}
     - target: {fileID: 646400424639184015, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.090549
+      value: -0.09054899
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       propertyPath: m_Name
@@ -200,7 +216,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2420b5a170b101d4e98527c0efb8194a, type: 2}
+      objectReference: {fileID: 22100000, guid: 88f55cf423305b8499fa65c7ce51d4c5, type: 2}
     - target: {fileID: 5866666021909216657, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -215,6 +231,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5503804032649153066}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4303099658046340251}
   m_SourcePrefab: {fileID: 100100000, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
 --- !u!4 &2493051525797577808 stripped
 Transform:
@@ -246,7 +265,31 @@ MonoBehaviour:
   rapidez: 10
   socketArma: {fileID: 1901058478823164129}
   inclinacionBajada: 60
-  manosPorIK: 1
+  manosPorIK: 0
+--- !u!114 &4303099658046340251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3765178812294390147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5ed43a73d7ab147b028ff2c699c13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.IKPiesYMirada
+  pies: 1
+  alturaRayo: 0.6
+  alcanceRayo: 1.1
+  rapidezPies: 10
+  objetivo: {fileID: 0}
+  mirarAlJugador: 1
+  distanciaMirada: 7
+  anguloMirada: 100
+  retardoMirada: 1
+  rapidezMirada: 4
+  pesoCuerpo: 0.2
+  alturaObjetivo: 1.5
 --- !u!4 &4542806574763227961 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a0f3afdab45ec7040b5b2c8ad140ec15, type: 3}
