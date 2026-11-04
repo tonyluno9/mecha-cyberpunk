@@ -7,9 +7,10 @@ using UnityEngine;
 namespace MechaCyberpunk.Trafico.Persecucion
 {
     /// <summary>
-    /// Una patrulla (T-341): recorre el <see cref="GrafoCalles"/> hacia el cruce más cercano al jugador, siempre sobre el eje de las calles,
-    /// y se queda donde la distancia de seguimiento se lo permita. Sus luces rojas y azules alternan con <see cref="ConfigPersecucion.PeriodoSirena"/>.
-    /// Sin colliders.
+    /// Una patrulla (T-341, T-587): recorre el <see cref="GrafoCalles"/> hacia el cruce más cercano al jugador, siempre sobre el eje de las calles.
+    /// Solo sabe dónde estás mientras te ve (a menos de <see cref="ConfigPersecucion.RadioVista"/> m y sin pared en medio); si te pierde de vista va a donde
+    /// te vio por última vez. Las que "cortan el paso" se adelantan al cruce hacia donde corres. Al bajar el calor <see cref="Retirar"/> la manda por la calle
+    /// hasta salir de la vista, donde desaparece. Sus luces rojas y azules alternan con <see cref="ConfigPersecucion.PeriodoSirena"/>. Sin colliders.
     /// </summary>
     public class PatrullaMundo : MonoBehaviour
     {
@@ -21,11 +22,17 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float SegundosEntreMegafono = 7f;
         // T-581: de cerca solo va directo si no hay una pared en medio; si no, regresa por donde vino hasta la calle.
         private const float AlturaVista = 1f;
+        private const float AlturaOjos = 2.2f;
         private const float MargenAlJugador = 3f;
         private const float DistanciaEntreMigas = 2f;
         private const float LlegadaAMiga = 0.3f;
         private const float MargenDelante = 1.5f;
         private const int MaximoDeMigas = 60;
+        // T-587: velocidad del jugador suavizada y alcance de la cámara para saber si la patrulla se ve.
+        private const float SuavizadoVelocidad = 5f;
+        private const float VelocidadImposible = 80f;
+        private const float AlcanceCamara = 400f;
+        private const float SegundosMinimosDeRetiro = 1f;
         private int bucleSirena = Sonidos.SinBucle;
         private float proximoMegafono;
 
@@ -42,6 +49,29 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private int nodoMeta = -1;
         private Vector3 posicion;
         private readonly List<Vector3> rastro = new List<Vector3>();
+        private Vector3 ultimaVista;
+        private Vector3 velocidadJugador;
+        private Vector3? jugadorAnterior;
+        private int nodoRetiro = -1;
+        private float segundosRetirandose;
+
+        /// <summary>True si va directo al jugador (ya dejó la calle).</summary>
+        public bool VaDirecto { get; private set; }
+
+        /// <summary>True mientras ve al jugador (cerca y sin pared en medio).</summary>
+        public bool VeAlJugador { get; private set; }
+
+        /// <summary>Donde vio al jugador por última vez (a donde va si lo pierde).</summary>
+        public Vector3 UltimaVista => ultimaVista;
+
+        /// <summary>Nodo del grafo al que se dirige por la calle (-1 si va directo o regresa).</summary>
+        public int NodoMeta => nodoMeta;
+
+        /// <summary>True si esta patrulla se adelanta al cruce hacia donde corre el jugador (en vez de ir a donde está).</summary>
+        public bool Intercepta { get; set; }
+
+        /// <summary>True si ya se está yendo: ignora al jugador y sale de la vista por la calle.</summary>
+        public bool Retirando { get; private set; }
 
         public void Preparar(CalculoPersecucion reglas, ConfigPersecucion numeros, GrafoCalles grafo, int nodoInicial, Func<Vector3?> dondeEstaElJugador)
         {
@@ -55,6 +85,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
             indiceEnCamino = 0;
             nodoMeta = nodoInicial;
             rastro.Clear();
+            Retirando = false;
+            VeAlJugador = false;
+            jugadorAnterior = null;
+            velocidadJugador = Vector3.zero;
+            // La policía sabe por la radio dónde fue el aviso: ahí va primero.
+            ultimaVista = posicionJugador?.Invoke() ?? posicion;
             transform.position = posicion;
             if (bucleSirena == Sonidos.SinBucle)
             {
@@ -62,8 +98,24 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
-        /// <summary>True si va directo al jugador (ya dejó la calle).</summary>
-        public bool VaDirecto { get; private set; }
+        /// <summary>T-587: deja de perseguir y se va por la calle al nodo más lejano del jugador; desaparece cuando ya no se ve.</summary>
+        public void Retirar()
+        {
+            if (Retirando || calles == null)
+            {
+                return;
+            }
+            Retirando = true;
+            VaDirecto = false;
+            VeAlJugador = false;
+            segundosRetirandose = 0f;
+            Vector3 referencia = posicionJugador?.Invoke() ?? ultimaVista;
+            nodoRetiro = calles.MasLejano(referencia);
+            nodoMeta = -1;
+            Sonidos.DetenerBucle(bucleSirena);
+            bucleSirena = Sonidos.SinBucle;
+            PonerLuces(false, false);
+        }
 
         private void OnDisable()
         {
@@ -77,35 +129,92 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
-            Sirena();
             Vector3? jugador = posicionJugador?.Invoke();
+            if (Retirando)
+            {
+                Retirada(jugador, Time.deltaTime);
+                return;
+            }
+            Sirena();
             if (!jugador.HasValue)
             {
                 return;
             }
-            float distancia = DistanciaPlano(posicion, jugador.Value);
-            if (distancia <= DistanciaMegafono && Time.time >= proximoMegafono)
+            float dt = Time.deltaTime;
+            float distanciaReal = DistanciaPlano(posicion, jugador.Value);
+            bool libre = CaminoLibre(jugador.Value, distanciaReal, AlturaVista);
+            VeAlJugador = distanciaReal <= config.RadioVista && CaminoLibre(jugador.Value, distanciaReal, AlturaOjos);
+            MedirVelocidad(jugador.Value, dt);
+            if (VeAlJugador)
+            {
+                ultimaVista = jugador.Value;
+            }
+            Vector3 objetivo = ultimaVista;
+            float distancia = DistanciaPlano(posicion, objetivo);
+            if (VeAlJugador && distancia <= DistanciaMegafono && Time.time >= proximoMegafono)
             {
                 proximoMegafono = Time.time + SegundosEntreMegafono;
                 Sonidos.ReproducirEn("CAL_PATRULLA_MEGAFONO", transform.position);
             }
-            VaDirecto = distancia <= DistanciaDirecta && CaminoLibre(jugador.Value, distancia);
+            VaDirecto = VeAlJugador && distancia <= DistanciaDirecta && libre;
             if (VaDirecto)
             {
-                Directo(jugador.Value, Time.deltaTime);
+                Directo(objetivo, dt);
                 return;
             }
             if (rastro.Count > 0)
             {
-                Regresar(Time.deltaTime);
+                Regresar(dt);
                 return;
             }
-            int nuevaMeta = calles.MasCercano(jugador.Value);
+            Vector3 destino = Intercepta && VeAlJugador
+                ? ReglaVistaPolicia.PuntoDeCorte(objetivo, velocidadJugador, config.SegundosAdelantoCorte, config.VelocidadMinimaCorte)
+                : objetivo;
+            int nuevaMeta = calles.MasCercano(destino);
             if (nuevaMeta != nodoMeta || indiceEnCamino >= camino.Count)
             {
                 Replanear(nuevaMeta);
             }
-            Avanzar(jugador.Value, Time.deltaTime);
+            Avanzar(distancia, dt);
+        }
+
+        // Velocidad del jugador suavizada (m/s): con ella las patrullas que cortan el paso saben hacia dónde corre.
+        private void MedirVelocidad(Vector3 jugador, float dt)
+        {
+            if (jugadorAnterior.HasValue && dt > 0f)
+            {
+                Vector3 instantanea = (jugador - jugadorAnterior.Value) / dt;
+                instantanea.y = 0f;
+                if (instantanea.magnitude < VelocidadImposible)
+                {
+                    velocidadJugador = Vector3.Lerp(velocidadJugador, instantanea, 1f - Mathf.Exp(-SuavizadoVelocidad * dt));
+                }
+            }
+            jugadorAnterior = jugador;
+        }
+
+        // T-587: de camino a la salida de la ciudad; desaparece solo fuera de la vista de la cámara y lejos del jugador.
+        private void Retirada(Vector3? jugador, float dt)
+        {
+            segundosRetirandose += dt;
+            if (rastro.Count > 0)
+            {
+                Regresar(dt);
+            }
+            else
+            {
+                if (nodoMeta != nodoRetiro)
+                {
+                    Replanear(nodoRetiro);
+                }
+                Avanzar(float.MaxValue, dt);
+            }
+            bool lejos = !jugador.HasValue || DistanciaPlano(posicion, jugador.Value) >= config.DistanciaRetiro;
+            bool sinVerse = lejos && !ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara);
+            if ((sinVerse && segundosRetirandose >= SegundosMinimosDeRetiro) || segundosRetirandose >= config.SegundosMaximosRetiro)
+            {
+                Destroy(gameObject);
+            }
         }
 
         // De cerca: directo hacia el jugador hasta la distancia de seguimiento. Al alejarse vuelve a la calle por el nodo más cercano.
@@ -137,14 +246,14 @@ namespace MechaCyberpunk.Trafico.Persecucion
         }
 
         // T-581: nada sólido entre la patrulla y el jugador (se queda MargenAlJugador antes de él: si va en un carro, el carro no cuenta).
-        private bool CaminoLibre(Vector3 jugador, float distancia)
+        private bool CaminoLibre(Vector3 jugador, float distancia, float altura)
         {
             float largo = distancia - MargenAlJugador;
             if (largo <= MargenDelante)
             {
                 return true;
             }
-            Vector3 origen = posicion + Vector3.up * AlturaVista;
+            Vector3 origen = posicion + Vector3.up * altura;
             Vector3 destino = new Vector3(jugador.x, origen.y, jugador.z);
             Vector3 direccion = (destino - origen).normalized;
             return !Physics.Raycast(origen, direccion, largo, ~0, QueryTriggerInteraction.Ignore);
@@ -191,9 +300,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
             nodoMeta = meta;
         }
 
-        private void Avanzar(Vector3 jugador, float dt)
+        private void Avanzar(float distanciaAlObjetivo, float dt)
         {
-            float restante = calculo.Paso(false, DistanciaPlano(posicion, jugador), dt);
+            float restante = calculo.Paso(false, distanciaAlObjetivo, dt);
             while (restante > 0f && indiceEnCamino < camino.Count)
             {
                 Vector3 nodo = calles.Nodo(camino[indiceEnCamino]);
@@ -217,13 +326,18 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private void Sirena()
         {
             bool rojaPrendida = Mathf.FloorToInt(Time.time / config.PeriodoSirena) % 2 == 0;
+            PonerLuces(rojaPrendida, !rojaPrendida);
+        }
+
+        private void PonerLuces(bool roja, bool azul)
+        {
             if (luzRoja != null)
             {
-                luzRoja.enabled = rojaPrendida;
+                luzRoja.enabled = roja;
             }
             if (luzAzul != null)
             {
-                luzAzul.enabled = !rojaPrendida;
+                luzAzul.enabled = azul;
             }
         }
 

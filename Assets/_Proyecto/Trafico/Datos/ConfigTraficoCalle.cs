@@ -42,6 +42,10 @@ namespace MechaCyberpunk.Trafico.Datos
         [SerializeField] private float segundosSusto = 3f;
         [Min(1f)] [Tooltip("Un carro que pasa a menos de esta distancia del jugador a buena velocidad hace el sonido de pasar cerca (m).")]
         [SerializeField] private float distanciaPasaCerca = 6f;
+        [Min(1f)] [Tooltip("T-588: un carro atorado tanto tiempo (por algo fijo o por otro carro) vuelve a salir en otra calle si nadie lo ve (s).")]
+        [SerializeField] private float segundosParaDestrabar = 10f;
+        [Min(1f)] [Tooltip("T-588: atorado tanto tiempo vuelve a salir en otra calle aunque se vea (s).")]
+        [SerializeField] private float segundosDestrabarForzado = 30f;
 
         public int CarrosDeDia => carrosDeDia;
         public int CarrosDeNoche => carrosDeNoche;
@@ -55,6 +59,8 @@ namespace MechaCyberpunk.Trafico.Datos
         public float RadioSusto => radioSusto;
         public float SegundosSusto => segundosSusto;
         public float DistanciaPasaCerca => distanciaPasaCerca;
+        public float SegundosParaDestrabar => segundosParaDestrabar;
+        public float SegundosDestrabarForzado => segundosDestrabarForzado;
 
         /// <summary>Arma las reglas de manejo de un carro con estos números.</summary>
         public CalculoTraficoCalle Crear()
