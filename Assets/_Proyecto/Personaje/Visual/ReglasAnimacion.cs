@@ -42,8 +42,23 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string CapaBase = "Base";
         public const string CapaArriba = "Arriba";
 
-        /// <summary>Velocidad (m/s) a partir de la cual el controlador base pasa de Caminar a Correr (entre 4.5 y 7.5 del jugador).</summary>
-        public const float UmbralCorrer = 6f;
+        /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Caminar tal como viene, medida con MedicionClips (T-562).</summary>
+        public const float VelocidadClipCaminar = 1.28f;
+        /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Correr tal como viene, medida con MedicionClips (T-562).</summary>
+        public const float VelocidadClipCorrer = 2.79f;
+        /// <summary>Rapidez máxima de la animación: deja que Correr iguale los 7.5 m/s del jugador sin toparse (7.5 / 2.79 = 2.69).</summary>
+        public const float RapidezMaximaLocomocion = 2.8f;
+        /// <summary>Rapidez máxima de Caminar antes de pasar a Correr (a 2.2x el clip aún no se ve acelerado de más).</summary>
+        public const float RapidezMaximaCaminar = 2.2f;
+        /// <summary>
+        /// Velocidad (m/s) a partir de la cual el controlador base pasa de Caminar a Correr: donde Caminar ya va a su rapidez máxima
+        /// (1.28 x 2.2 = 2.8). Así 4.5 m/s del jugador ya corre (a 1.6x) y 7.5 m/s no topa la rapidez.
+        /// </summary>
+        public const float UmbralCorrer = 2.8f;
+        /// <summary>Segundos de mirada al jugador en rango antes de que la cabeza voltee.</summary>
+        public const float RetardoMirada = 1f;
+        /// <summary>Segundos que el jugador queda boca arriba o abajo después de despertar, antes de levantarse (el fundido a negro dura ~1 s).</summary>
+        public const float RetardoLevantarse = 0.8f;
         /// <summary>Caída más rápida que esto (m/s hacia abajo) se muestra como Caida y no como salto.</summary>
         public const float VelocidadCaidaLibre = 7f;
         /// <summary>Giro (°/s) a partir del cual el personaje quieto gira en el sitio.</summary>
@@ -178,5 +193,46 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             return esPistola ? TipoArmaVisual.Pistola : TipoArmaVisual.ArmaLarga;
         }
+    
+        // ---------- Variación de NPC (T-562) ----------
+
+        /// <summary>Rapidez del idle más lenta y más rápida entre NPC (1 = normal).</summary>
+        public const float RapidezIdleMinima = 0.9f;
+        public const float RapidezIdleMaxima = 1.1f;
+
+        private static uint Mezclar(int semilla, uint sal)
+        {
+            unchecked
+            {
+                uint h = (uint)semilla * 2654435761u + sal;
+                h ^= h >> 15;
+                h *= 2246822519u;
+                h ^= h >> 13;
+                h *= 3266489917u;
+                h ^= h >> 16;
+                return h;
+            }
+        }
+
+        /// <summary>Desfase de tiempo del idle (0 a menos de 1, fracción del ciclo) para que dos NPC no respiren al unísono. Determinista por semilla.</summary>
+        public static float DesfaseIdle(int semilla) => (Mezclar(semilla, 17u) & 0xFFFFFF) / (float)0x1000000;
+
+        /// <summary>Rapidez del idle de este NPC, entre <see cref="RapidezIdleMinima"/> y <see cref="RapidezIdleMaxima"/>. Determinista por semilla.</summary>
+        public static float RapidezIdle(int semilla)
+        {
+            float u = (Mezclar(semilla, 91u) & 0xFFFFFF) / (float)0x1000000;
+            return Mathf.Lerp(RapidezIdleMinima, RapidezIdleMaxima, u);
+        }
+
+        /// <summary>Temporizador de mirar al jugador: suma mientras está en rango y se reinicia al salir.</summary>
+        public static float AvanzarMirada(float tiempoEnRango, bool enRango, float dt) => enRango ? tiempoEnRango + dt : 0f;
+
+        /// <summary>True cuando ya pasó el retardo y la cabeza debe voltear.</summary>
+        public static bool MiradaLista(float tiempoEnRango, float retardo = RetardoMirada) => tiempoEnRango >= retardo;
+
+        /// <summary>
+        /// El jugador despierta: el visual sigue tumbado hasta que pasa el retardo desde que dejó de estar en KO, y entonces se levanta.
+        /// </summary>
+        public static bool DebeLevantarse(bool enKO, float segundosSinKO, float retardo = RetardoLevantarse) => !enKO && segundosSinKO >= retardo;
     }
 }

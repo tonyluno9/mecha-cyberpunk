@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2231768469520285989}
   - component: {fileID: 50318138247693280}
+  - component: {fileID: 3555019770160066972}
   m_Layer: 0
   m_Name: Visual_GuardiaNova
   m_TagString: Untagged
@@ -48,14 +49,27 @@ MonoBehaviour:
   animador: {fileID: 4800265712515182006}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 1.1755382
-  velocidadClipCorrer: 2.1075106
+  velocidadClipCaminar: 1.28
+  velocidadClipCorrer: 2.79
   rapidezMinima: 0.6
-  rapidezMaxima: 2.2
+  rapidezMaxima: 2.8
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
+--- !u!114 &3555019770160066972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048966988714943168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f23fcd447cfcc64489465ee2d969f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VariacionNPC
+  semilla: 0
 --- !u!1 &4545910302101853862
 GameObject:
   m_ObjectHideFlags: 0
