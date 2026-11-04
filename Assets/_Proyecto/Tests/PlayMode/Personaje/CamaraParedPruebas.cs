@@ -33,8 +33,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Vector3 p = jugador.GetComponentInChildren<CamaraHombro>().transform.position;
             Vector3 local = jugador.transform.InverseTransformPoint(p);
             Assert.Greater(local.x, 0.3f, "Al hombro derecho");
-            Assert.Less(local.z, -2f, "Atrás del jugador");
-            Assert.Greater(local.z, -3f, "Más cerca que antes (3.2 m)");
+            Assert.Less(local.z, -1.5f, "Atrás del jugador");
+            Assert.Greater(local.z, -2.3f, "T-585: más pegada al hombro que antes (2.6 m)");
         }
     }
 }
