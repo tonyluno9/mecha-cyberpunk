@@ -34,6 +34,7 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float RadioFrenteALaPuerta = 0.5f;
         private const float MetrosAntesDeLaPuerta = 3f;
         private const float MetrosAlCuarto = 5f;
+        private const float MetrosDeRodeoDelCarro = 3.5f;
         private const float SegundosDelFundido = 1.5f;
         private const float SegundosPuertaAbriendo = 1.5f;
         private const float MaxSegundosPorTramoAPie = 60f;
@@ -285,6 +286,9 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return Caminar("4 de vuelta a la calle", new Vector3(esquina2.x, 0f, anclaje.z));
             yield return Caminar("5 calle al cruce (Esquina_1)", esquina1);
             yield return Caminar("6 cruce al clandestino (Clandestino_Salida)", salida);
+            // La línea recta del clandestino al punto de subida roza la esquina del CarroViejo: se rodea por su lado de la calle.
+            Vector3 rodeo = new Vector3(carro.x + MetrosDeRodeoDelCarro, 0f, carro.z);
+            yield return Caminar("7a clandestino al lado del carro", rodeo);
             yield return Caminar("7 clandestino al carro", carro);
             Assert.AreEqual(ModoJugador.APie, Jugador().Modo);
             Assert.AreEqual(0, erroresEnConsola, "Errores en consola; el primero: " + primerError);

@@ -18,6 +18,13 @@ Falta respecto a la referencia:
 - Pósters de la referencia (hay tres generados) y cuadro grande junto a la ventana.
 - Persiana o cortina arriba de la ventana y el letrero de neón visible al otro lado de los barrotes.
 
+## Pendiente de T-550 (se acabó el tiempo el 3-nov a las 21:15)
+
+Solo la habitación pasó a cuarto aparte a tamaño real. El consultorio del Doc (con el brazo I06), la entrada de armas de El Mercado,
+el taller de Tino y el casino siguen como los dejó T-546 (dentro de la ciudad, sin fundido ni cuarto propio). Para cada uno toca:
+`CrearCuarto` + `ConectarPuertas` de ColocarT550 con índice 1 a 4, muebles I06-I21 y paredes X02-X05, luz cálida, captura lado a lado.
+Lo que les falta respecto a su referencia es lo de abajo.
+
 ## Consultorio del Doc (I+D+I) (referencia: consultorio-doc.png)
 
 Hay: luz turquesa, camilla (la cama H02 rayada hace de camilla), monitores, estantes, El Doc junto a la camilla, servidor.
