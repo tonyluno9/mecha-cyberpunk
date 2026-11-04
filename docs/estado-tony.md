@@ -304,3 +304,10 @@ Los 6 pasos de docs/plan-personajes-carros.md están en main con push (un merge 
 - Para que lo veas tú: la habitación todavía es la caja grande del greybox. Para parecerse a la referencia hay que achicar las paredes de la casa
   (decídelo tú: es la escena del prólogo).
 
+## Cierre de sesión A — 2026-11-04
+
+- Bloque 1: hecho e integrado en `main`: T-580 a T-584, commit `7936572d`.
+- Bloque 2: ninguna tarea verificada ni integrada en `main` en este corte. T-585 tiene trabajo local WIP en `wip/tony-fase-g-20261104` (`c61d045a`), sin pruebas ni integración; queda a medias.
+- Stashes recuperados y publicados como WIP independientes: `wip/stash-tony-fase-g-ajustes`, `wip/stash-alan-fase6-capturas`, `wip/stash-alan-fase5-subproductos`, `wip/stash-alan-t093-antiguo` y `wip/stash-alan-t080-temporales`.
+- No se mezcló ningún WIP a `main`. Este cierre no declara pruebas nuevas aprobadas.
+
