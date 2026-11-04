@@ -116,9 +116,9 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 - [C] Conectarlas en cuanto estén en Assets/Arte/Personajes/Animaciones/.
 
 ## Jugador y cámara
-- [C] Field of view y cámara raros al caminar: cámara más pegada al personaje (hombro), FOV más cerrado, sin flotar.
-- [C] Más vida al personaje (subir la vida base o la regeneración). [?] confirmar si es más vida/salud o más "vida" en movimiento.
-- [C] Al morir: cinemática corta (cae, fundido, despiertas en I+D+I con El Doc al lado) en vez de reaparecer de golpe.
+- [x] Field of view y cámara raros al caminar: cámara más pegada al personaje (hombro), FOV más cerrado, sin flotar. (T-585)
+- [x] Más vida al personaje (subir la vida base o la regeneración). [?] confirmar si es más vida/salud o más "vida" en movimiento. (T-585: vida 150, regen 8/s tras 4 s)
+- [x] Al morir: cinemática corta (cae, fundido, despiertas en I+D+I con El Doc al lado) en vez de reaparecer de golpe. (T-586: MuerteReapareceEnClinicaPruebas)
 - [C] Teléfono: interfaz con animación de sacarlo y guardarlo (antes estaba descartado para la demo; vuelve).
 
 ## Armas y CIC

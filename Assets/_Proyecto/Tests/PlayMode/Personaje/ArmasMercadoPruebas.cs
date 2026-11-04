@@ -321,7 +321,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(5, armas.TamanoCargador, "SNIPER I: cargador de 5");
             Assert.AreEqual(5, armas.Balas);
             Assert.IsFalse(mira.Visible, "Sin clic derecho no hay mira");
-            Assert.AreEqual(60f, camara.fieldOfView, 1f, "FOV normal 60");
+            Assert.AreEqual(50f, camara.fieldOfView, 1f, "FOV normal 50 (T-585)");
 
             // Sin zoom, a 80 m casi todo falla (dispersión 8°, semilla fija).
             UnityEngine.Random.InitState(1234);
@@ -371,7 +371,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             // Soltar el clic derecho devuelve todo.
             Release(raton.rightButton);
-            yield return EsperarHasta(() => Mathf.Abs(camara.fieldOfView - 60f) <= 0.5f, "FOV 60", 2f);
+            yield return EsperarHasta(() => Mathf.Abs(camara.fieldOfView - 50f) <= 0.5f, "FOV 50", 2f);
             Assert.IsFalse(mira.Visible, "Al soltar se apaga la mira");
             Assert.AreEqual(1f, controlador.FactorSensibilidad, 0.01f);
 
@@ -393,7 +393,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(zoom.Activo, "Con el fusil no hay zoom del sniper");
             Press(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.5f);
-            Assert.AreEqual(48f, camara.fieldOfView, 1f, "Con el fusil, clic derecho sigue apuntando a FOV 48");
+            Assert.AreEqual(40f, camara.fieldOfView, 1f, "Con el fusil, clic derecho sigue apuntando a FOV 40 (T-585)");
             Assert.IsFalse(mira.Visible, "El fusil no usa la mira del sniper");
             Release(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.4f);

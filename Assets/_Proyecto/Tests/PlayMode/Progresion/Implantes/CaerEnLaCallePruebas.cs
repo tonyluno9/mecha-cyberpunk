@@ -46,7 +46,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
         private const float ToleranciaHora = 0.05f;
         private const float SegundosEntreClics = 0.25f;
         private const float CalorInicial = 40f;
-        private const int CobroEsperadoDeuda = -200;
+        private const int DineroTrasCobro = 0;
         private const int DineroInicial = 300;
 
         private static readonly Vector3 InicioCerca = new Vector3(20f, AlturaOjos, -6f);
@@ -64,6 +64,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
         private bool vioNegro;
         private bool vioSinControl;
         private bool vioAvisoCobro;
+        private int cobroEsperadoHud = 500;
         private bool capturaHecha;
         private readonly System.Collections.Generic.List<string> medidas = new System.Collections.Generic.List<string>();
 
@@ -187,10 +188,10 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             PantallaFundido fundido = PantallaFundido.Actual;
             if (fundido != null && fundido.Opaco) vioNegro = true;
             if (doctor.Ocupado && !controlador.ControlActivo) vioSinControl = true;
-            if (hud.TextoAvisoDinero.gameObject.activeInHierarchy && hud.TextoAvisoDinero.text.Contains("500")) vioAvisoCobro = true;
+            if (hud.TextoAvisoDinero.gameObject.activeInHierarchy && hud.TextoAvisoDinero.text.Contains(cobroEsperadoHud.ToString(CultureInfo.InvariantCulture))) vioAvisoCobro = true;
         }
 
-        private void VerificarDespertar(int dineroEsperado, float horaEsperada)
+        private void VerificarDespertar(int dineroEsperado, bool cobroCompleto, float horaEsperada)
         {
             Assert.IsTrue(vioNegro, "la pantalla se fue a negro");
             Assert.IsTrue(vioSinControl, "durante la secuencia no hay control");
@@ -214,7 +215,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.IsTrue(objetivos.HayObjetivo, "hay objetivo");
             Assert.AreEqual(datos.TextoObjetivo, objetivos.Actual.Texto, "objetivo de volver a casa");
             Assert.AreEqual(IdLugar.Casa, objetivos.Actual.Lugar, "el objetivo apunta a la casa");
-            string esperado = ReglaDoctor.TextoDoctor(dineroEsperado, datos.TextoDoctor, datos.TextoDeuda);
+            string esperado = ReglaDoctor.TextoDoctor(cobroCompleto, datos.TextoDoctor, datos.TextoDeuda);
             Assert.AreEqual(esperado, doctor.UltimoTexto, "lo que dice el doctor");
             PantallaSubtitulos subtitulos = Object.FindFirstObjectByType<PantallaSubtitulos>();
             Assert.AreEqual(esperado, subtitulos.Subtitulo, "el subtítulo está en pantalla");
@@ -223,10 +224,11 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
         // ---- Pruebas ----
 
         [UnityTest]
-        public IEnumerator Pandilla_TumbaAlJugadorDeNoche_DespiertaEnLaCamillaConDeudaYVuelveACasa()
+        public IEnumerator Pandilla_TumbaAlJugadorDeNoche_DespiertaEnLaCamillaSinFondosEn0YVuelveACasa()
         {
             yield return Preparar(true);
             PonerDinero(DineroInicial);
+            cobroEsperadoHud = ReglaDoctor.CobroPosible(DineroInicial, datos.Cobro);
             Registro<ICalor>.Actual.Sumar(CalorInicial, MotivoCalor.Otro);
             atajos.Add("Calor sumado por código: " + CalorInicial);
             Assert.Greater(Registro<ICalor>.Actual.Valor, 0f, "hay calor antes de caer");
@@ -244,12 +246,12 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.Greater(Registro<ICalor>.Actual.Valor, 0f, "al caer todavía hay calor (el doctor es quien lo borra)");
             yield return EsperarDoctor(true);
 
-            int esperado = DineroInicial - datos.Cobro;
-            Assert.AreEqual(CobroEsperadoDeuda, esperado, "300 - 500 = -200");
-            VerificarDespertar(esperado, ReglaDoctor.HoraDeDespertar(HoraCaida, datos.HorasInconsciente));
+            int esperado = DineroInicial - ReglaDoctor.CobroPosible(DineroInicial, datos.Cobro);
+            Assert.AreEqual(DineroTrasCobro, esperado, "T-586: 300 < 500, cobra lo que hay y queda en 0");
+            VerificarDespertar(esperado, false, ReglaDoctor.HoraDeDespertar(HoraCaida, datos.HorasInconsciente));
             Assert.AreEqual(vidaMechaAntes, vidaMecha.Actual, 0.01f, "el mecha en el taller no cambió");
             Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado, "sigue en el taller");
-            Assert.IsTrue(hud.TextoDinero.text.Contains("200"), "el HUD dice la deuda: " + hud.TextoDinero.text);
+            Assert.GreaterOrEqual(cartera.Dinero, 0, "T-586: nunca queda deuda");
             medidas.Add("dinero " + cartera.Dinero + ", hora " + Normalizar(reloj.Hora).ToString("F2", CultureInfo.InvariantCulture));
 
             // Vuelve a casa por su cuenta: al entrar a Casa se quita el objetivo.

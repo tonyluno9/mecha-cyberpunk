@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 502d97f4c3aa99346a70dc97b35576d6, type: 3}
   m_Name: DatosPersonaje_Base
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosPersonaje
-  vidaMaxima: 100
+  vidaMaxima: 150
   velocidadCaminar: 4.5
   velocidadCorrer: 7.5
   alturaSalto: 1.1
@@ -21,6 +21,8 @@ MonoBehaviour:
   radioGolpe: 0.3
   preparacionGolpe: 0.12
   recargaGolpe: 0.45
+  regeneracionPorSegundo: 8
+  segundosParaRegenerar: 4
   alturaCamaraKO: 0.4
   ladeoCamaraKO: 40
   velocidadCaidaKO: 6
