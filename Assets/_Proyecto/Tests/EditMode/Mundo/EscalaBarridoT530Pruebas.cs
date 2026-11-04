@@ -151,7 +151,7 @@ namespace MechaCyberpunk.Tests.Mundo
         public void CamaraHombro_MasCerca()
         {
             SerializedObject so = new SerializedObject(AssetDatabase.LoadMainAssetAtPath("Assets/_Proyecto/Personaje/Datos/ConfigCamaraHombro_Base.asset"));
-            Assert.That(so.FindProperty("distanciaNormal").floatValue, Is.InRange(2.2f, 2.8f));
+            Assert.That(so.FindProperty("distanciaNormal").floatValue, Is.InRange(1.6f, 2.8f));
         }
     }
 }

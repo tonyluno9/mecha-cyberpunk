@@ -1113,3 +1113,5 @@ No se reprodujo en el editor: CONTINUAR carga la ranura, coloca al jugador y el 
 
 ## D-tony-350 (3-nov, paso 1) Clínica del Doc en la jerarquía de El Mercado
 El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero siguen colgando del prefab de El Mercado (no se puede cambiar de padre dentro de un prefab). Funciona igual; si se quiere separar del todo, hay que desempacar el prefab del Mercado.
+
+- T-585 (4-nov, Opus): cámara de hombro 1.9 m / FOV 50 (apuntando 1.2 m / FOV 40), vida a pie 150 y regeneración 8/s tras 4 s. Las pruebas que asumían 60 de FOV, 2.6 m o 100 de vida se ajustaron a los valores nuevos.
