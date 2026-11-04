@@ -40,13 +40,13 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             return Mathf.Repeat(horaActual + horasInconsciente, HorasPorDia);
         }
 
-        /// <summary>True si, después de cobrar, el dinero quedó en negativo (la deuda con el doctor).</summary>
-        public static bool QuedoDebiendo(int dineroDespuesDeCobrar) => dineroDespuesDeCobrar < 0;
+        /// <summary>Cuánto cobra el doctor (T-586): el cobro completo si alcanza, o lo que haya; nunca más que el dinero ni menos de 0.</summary>
+        public static int CobroPosible(int dinero, int cobro) => Mathf.Max(0, Mathf.Min(cobro, dinero));
 
-        /// <summary>Lo que dice el doctor: el texto normal, o el texto normal y el de la deuda si el dinero quedó en negativo.</summary>
-        public static string TextoDoctor(int dineroDespuesDeCobrar, string texto, string textoDeuda)
+        /// <summary>Lo que dice el doctor: el texto normal, o el texto normal y el de "no traes todo" si el cobro quedó incompleto.</summary>
+        public static string TextoDoctor(bool cobroCompleto, string texto, string textoIncompleto)
         {
-            return QuedoDebiendo(dineroDespuesDeCobrar) ? texto + " " + textoDeuda : texto;
+            return cobroCompleto ? texto : texto + " " + textoIncompleto;
         }
     }
 }

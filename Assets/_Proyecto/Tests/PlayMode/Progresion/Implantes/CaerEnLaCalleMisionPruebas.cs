@@ -183,7 +183,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.AreEqual(EstadoLlamado.EnTaller, llamado.Estado, "el mecha volvió al taller");
             Assert.IsFalse(vidaMecha.EstaKO, "el mecha ya no está en KO");
             Assert.GreaterOrEqual(vidaMecha.Actual / vidaMecha.Maxima, 0.15f - ToleranciaFraccion, "no baja del piso de emergencia");
-            Assert.AreEqual(dinero - datosDoctor.Cobro, cartera.Dinero, "el doctor cobró");
+            Assert.AreEqual(dinero - ReglaDoctor.CobroPosible(dinero, datosDoctor.Cobro), cartera.Dinero, "el doctor cobró lo que alcanzó");
             Assert.IsFalse(peleas.HayPelea, "la emboscada se retiró");
             Assert.AreEqual(datosDoctor.TextoObjetivo, objetivos.Actual.Texto, "objetivo de volver a casa");
             Debug.Log("[T-196] c) vida del mecha " + vidaMecha.Actual / vidaMecha.Maxima + ", barrio " + barrio + " -> "

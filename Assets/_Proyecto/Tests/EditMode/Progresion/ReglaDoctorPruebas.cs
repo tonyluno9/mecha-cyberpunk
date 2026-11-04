@@ -74,13 +74,20 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         [Test]
-        public void TextoDoctor_ConYSinDeuda()
+        public void TextoDoctor_CobroCompletoOIncompleto()
         {
-            Assert.AreEqual("hola", ReglaDoctor.TextoDoctor(0, "hola", "debes"));
-            Assert.AreEqual("hola", ReglaDoctor.TextoDoctor(300, "hola", "debes"));
-            Assert.AreEqual("hola debes", ReglaDoctor.TextoDoctor(-200, "hola", "debes"));
-            Assert.IsTrue(ReglaDoctor.QuedoDebiendo(-1));
-            Assert.IsFalse(ReglaDoctor.QuedoDebiendo(0));
+            Assert.AreEqual("hola", ReglaDoctor.TextoDoctor(true, "hola", "no traes todo"));
+            Assert.AreEqual("hola no traes todo", ReglaDoctor.TextoDoctor(false, "hola", "no traes todo"));
+        }
+
+        [Test]
+        public void CobroPosible_NuncaPasaDelDineroNiBajaDeCero()
+        {
+            Assert.AreEqual(500, ReglaDoctor.CobroPosible(800, 500));
+            Assert.AreEqual(500, ReglaDoctor.CobroPosible(500, 500));
+            Assert.AreEqual(300, ReglaDoctor.CobroPosible(300, 500));
+            Assert.AreEqual(0, ReglaDoctor.CobroPosible(0, 500));
+            Assert.AreEqual(0, ReglaDoctor.CobroPosible(-200, 500), "sin dinero (o con deuda vieja) no se cobra más");
         }
 
         [Test]
