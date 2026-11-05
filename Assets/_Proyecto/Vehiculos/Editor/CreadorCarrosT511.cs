@@ -163,6 +163,11 @@ namespace MechaCyberpunk.Vehiculos.Editor
             }
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab(codigo));
             Object.DestroyImmediate(raiz);
+            if (moto)
+            {
+                // T-592: las motos llevan su config, la inclinación en curvas y la malla sin caballete.
+                CreadorMotosT592.Preparar(codigo);
+            }
             return string.Format("{0}\tlargo {1:F2}\tancho {2:F2}\talto {3:F2}", codigo, L, W, H);
         }
 
