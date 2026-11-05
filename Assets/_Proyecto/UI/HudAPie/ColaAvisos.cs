@@ -15,6 +15,9 @@ namespace MechaCyberpunk.UI.Hud
     {
         public const int OrdenCanvas = 14;
 
+        /// <summary>T-594: el sonido sutil de un aviso nuevo.</summary>
+        public const string SonidoTexto = "UI_TEXTO";
+
         [Header("Tiempos")]
         [Tooltip("Lo menos que se ve un aviso (s).")]
         [Min(0.5f)] [SerializeField] private float segundosMinimos = 2f;
@@ -102,6 +105,7 @@ namespace MechaCyberpunk.UI.Hud
             {
                 textoMostrado = nuevo;
                 texto.text = nuevo;
+                Sonidos.Reproducir(SonidoTexto);
                 float ancho = texto.preferredWidth + relleno * 2f;
                 franja.sizeDelta = new Vector2(ancho, altoFranja);
             }

@@ -108,7 +108,7 @@ namespace MechaCyberpunk.Progresion
             {
                 recibidos.RemoveAt(0);
             }
-            Sonidos.Reproducir("UI_TELEFONO");
+            Sonidos.Reproducir("UI_TEXTO");
             Recibido?.Invoke(id);
             Cambio?.Invoke();
             return true;

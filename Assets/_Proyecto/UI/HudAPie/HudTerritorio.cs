@@ -148,11 +148,7 @@ namespace MechaCyberpunk.UI.Hud
             string zona = territorio != null && jugador != null && jugador.Raiz != null ? territorio.ZonaEn(jugador.Raiz.position) : string.Empty;
             if (zona != zonaPrevia)
             {
-                // T-450: al cruzar a otra zona suena distinto si es tuya o de otra pandilla.
-                if (zona.Length > 0 && zonaPrevia != null)
-                {
-                    Sonidos.Reproducir(territorio.Dueno(zona) == IdPandilla.Jugador ? "ZON_ENTRAR_PROPIA" : "ZON_ENTRAR_RIVAL");
-                }
+                // T-594: al cruzar de zona ya no suena nada (el piano de entrar a la zona se repetía en cada cruce y no va con el contexto).
                 zonaPrevia = zona;
             }
             if (zona.Length == 0)

@@ -569,6 +569,10 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 2970461df29fd8641bc02f6c43fed510, type: 3}
     provisionales: []
+  - id: UI_TEXTO
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 3e260d509722e8d43af9ae44b6cd0b93, type: 3}
   - id: UI_TITULO_INICIO
     finales:
     - {fileID: 8300000, guid: 3fc01afb578ab57479f69ef6710e2f79, type: 3}
