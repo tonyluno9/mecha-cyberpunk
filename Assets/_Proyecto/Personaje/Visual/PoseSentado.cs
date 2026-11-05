@@ -6,7 +6,7 @@ namespace MechaCyberpunk.Personaje.Visual
     /// Pose de persona sentada escribiendo, sin clip (T-639): en LateUpdate baja la cadera a la altura de la silla, pone los muslos hacia el frente,
     /// las pantorrillas hacia abajo y los brazos hacia el teclado, con un vaivén corto de manos y cabeza al teclear.
     /// Va en el mismo objeto que el Animator (el pose se aplica encima de lo que haga). Cada hueso se orienta por la dirección hacia su hijo,
-    /// así que no depende de los ejes locales del rig. El frente es el forward de este objeto.
+    /// así que no depende de los ejes locales del rig. El frente es el forward del VisualPersonaje (o de este objeto si no hay).
     /// </summary>
     [RequireComponent(typeof(Animator))]
     public class PoseSentado : MonoBehaviour
@@ -19,6 +19,7 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private Animator animador;
         private Vector3 piso;
+        private Transform raizVisual;
 
         /// <summary>Altura de la cadera sobre el piso en la pose (m).</summary>
         public float AlturaCadera => alturaCadera;
@@ -26,6 +27,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private void Awake()
         {
             animador = GetComponent<Animator>();
+            VisualPersonaje visual = GetComponentInParent<VisualPersonaje>();
+            raizVisual = visual != null ? visual.transform : transform;
         }
 
         private void Start()
@@ -39,7 +42,7 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 return;
             }
-            Vector3 frente = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+            Vector3 frente = Vector3.ProjectOnPlane(raizVisual.forward, Vector3.up).normalized;
             float t = Time.time;
             float tecla = Mathf.Sin(t * 14f) * vaiven;
             float tecla2 = Mathf.Sin(t * 11f + 1.7f) * vaiven;

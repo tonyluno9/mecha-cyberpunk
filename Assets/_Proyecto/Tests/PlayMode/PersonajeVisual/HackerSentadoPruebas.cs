@@ -38,7 +38,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             float cabeza = animador.GetBoneTransform(HumanBodyBones.Head).position.y;
             Assert.Greater(cabeza, mesa.position.y + 0.1f, "cabeza sobre la mesa");
             Vector3 haciaMesa = Vector3.ProjectOnPlane(mesa.position - animador.GetBoneTransform(HumanBodyBones.Hips).position, Vector3.up).normalized;
-            Assert.Greater(Vector3.Dot(pose.transform.forward, haciaMesa), 0.9f, "mira a la mesa");
+            Assert.Greater(Vector3.Dot(pose.GetComponentInParent<VisualPersonaje>().transform.forward, haciaMesa), 0.9f, "mira a la mesa");
             Assert.IsNotNull(GameObject.Find("Laptop_Pantalla"));
         }
 
