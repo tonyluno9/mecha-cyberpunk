@@ -1,3 +1,5 @@
+using MechaCyberpunk.Core;
+using MechaCyberpunk.UI.Hud;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +34,7 @@ namespace MechaCyberpunk.UI.Historia
         {
             textoSubtitulo.text = texto;
             textoSubtitulo.gameObject.SetActive(true);
+            Sonidos.Reproducir(ColaAvisos.SonidoTexto);
         }
 
         public void Ocultar()
@@ -43,6 +46,7 @@ namespace MechaCyberpunk.UI.Historia
         {
             textoAviso.text = texto;
             textoAviso.gameObject.SetActive(!string.IsNullOrEmpty(texto));
+            if (!string.IsNullOrEmpty(texto)) Sonidos.Reproducir(ColaAvisos.SonidoTexto);
         }
     }
 }

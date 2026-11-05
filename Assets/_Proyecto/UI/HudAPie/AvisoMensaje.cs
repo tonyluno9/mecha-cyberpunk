@@ -80,6 +80,7 @@ namespace MechaCyberpunk.UI.Hud
             if (!Visible && puedeVerse && cola.Count > 0)
             {
                 texto.text = cola.Dequeue();
+                Sonidos.Reproducir(ColaAvisos.SonidoTexto);
                 fin = Time.unscaledTime + segundosVisible;
                 cuadro.SetActive(true);
             }

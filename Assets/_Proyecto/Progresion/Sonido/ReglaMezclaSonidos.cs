@@ -25,6 +25,11 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 return Arma(id);
             }
+            if (id == "UI_TEXTO")
+            {
+                // T-594: el tic de un aviso o línea de diálogo: bajito, con un poco de variación y sin repetirse como metralleta.
+                return new PoliticaSonido("texto", 1, 0.5f, 0.05f, 0.12f);
+            }
             return SinPolitica;
         }
 

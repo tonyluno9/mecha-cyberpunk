@@ -49,7 +49,7 @@ namespace MechaCyberpunk.Progresion.Editor
             R("ECO_COMPRA", Tipo.Tono, 0.25f, 1320f, 0.4f), R("ECO_SIN_DINERO", Tipo.Tono, 0.25f, 180f, 0.5f),
             R("ECO_ARMA_RECOGER", Tipo.Golpe, 0.2f, 1000f, 0.5f), R("ECO_CLINICA_DESPERTAR", Tipo.Tono, 0.6f, 880f, 0.3f),
             R("UI_MOVER", Tipo.Tono, 0.05f, 1200f, 0.3f), R("UI_ACEPTAR", Tipo.Tono, 0.12f, 1600f, 0.35f),
-            R("UI_CANCELAR", Tipo.Tono, 0.12f, 800f, 0.35f),
+            R("UI_CANCELAR", Tipo.Tono, 0.12f, 800f, 0.35f), R("UI_TEXTO", Tipo.Tono, 0.07f, 1900f, 0.22f),
             R("UI_ERROR", Tipo.Tono, 0.2f, 220f, 0.4f), R("UI_OBJETIVO_NUEVO", Tipo.Fanfarria, 0.5f, 660f, 0.35f),
             R("UI_OBJETIVO_CUMPLIDO", Tipo.Fanfarria, 0.8f, 523f, 0.4f),
             R("ARM_SNI_DISPARO", Tipo.Disparo, 0.8f, 0f, 1f), R("ARM_SNI_RECARGA", Tipo.Golpe, 0.4f, 500f, 0.5f),
