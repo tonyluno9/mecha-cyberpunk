@@ -1172,3 +1172,11 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - Arreglo: borradas las 61 (más 2 versionadas), `/Assets/InitTestScene*` en .gitignore, y `LimpiarEscenasDePrueba` ([InitializeOnLoad] en Personaje/Visual/Editor) borra al abrir el editor las de más de 1 hora (las recientes podrían ser de una corrida viva).
 - Assets/Logs/ (de un -projectPath mal puesto) y Assets/_Recovery/ (escenas de recuperación de Unity) son basura: solo se ignoran en .gitignore, no se borran.
 - Aviso: otra sesión (S2) comparte la carpeta mecha-cyberpunk y cambia de rama ahí; la sesión S1 trabaja en un worktree aparte (../mecha-s1, con su propia copia de Library) para no pisarse.
+
+## T-652 velocidades de animación
+- Medido con los huesos: los clips de Mixamo traen mucha espera antes y después de la acción. Subir al carro 5.5 s y bajar 5.8 s; abrir puerta 6.4 s (la mano llega a la puerta a los 3.5 s); botón 3.2 s; recoger 3.4 s; levantarse del KO 8.3 s; golpes de puños 1.8 a 2.2 s con el impacto a los 0.5 a 1.1 s, cuando el golpe del juego conecta a los 0.12 s y termina a los 0.57 s; despegue del salto 0.83 s con 0.4 s de agacharse (el juego despega al instante); daño 2.4 a 2.7 s.
+- Rapidez (ReglasAnimacion.VelocidadEstado, tabla única que usan el constructor del controlador y AnimacionCarro): carro entrar y salir x3 (1.8 s), abrir puerta x4, botón y recoger x2.5, despegue x2.5, aterrizaje x2, giro en el sitio y disparo de cobertura x1.5, levantarse x2.5, daño x1.8. Disparo y recarga siguen en 1 (Tony los aprobó).
+- Puños: solo el jugador acelera (x3.3) con el parámetro RapidezGolpe (speedParameter de los 3 estados; default 1 para los enemigos, que usan Nova_Punch/Jefe_Ataque con su propio ritmo). Los puños del jugador conectan a 0.15 a 0.33 s y terminan a 0.55 a 0.67 s.
+- Teléfono (Inter_Telefono, 37 s): no se tocó; es un clip largo de texting que la pantalla del teléfono no espera. Si se quiere, se corta con un tiempo de salida fijo.
+- Los clips de caminar y correr no se tocan (T-640).
+- Pruebas de PlayMode que corren juntas a veces fallan por tiempos de cuadro (Quieto / cabeza al piso); solas pasan.

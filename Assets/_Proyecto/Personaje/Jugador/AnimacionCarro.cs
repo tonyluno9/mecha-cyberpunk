@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             Vector3 frente = Vector3.ProjectOnPlane(frentePrevio, Vector3.up);
             inicioYaw = frente.sqrMagnitude > 1e-4f ? Vector3.SignedAngle(montable.Asiento.forward, frente, Vector3.up) : 0f;
             ApagarIK(true);
-            duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Entrar"));
+            duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Entrar") / ReglasAnimacion.VelocidadEstado("CarroEntrar"));
             transcurrido = 0f;
             Fase = FaseCarro.Entrando;
             visual.Manejando = true;
@@ -93,7 +93,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             asientoMundo = raizVisual.position;
             visual.Manejando = false;
             visual.Gestear(GestoVisual.CarroSalir);
-            duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Salir"));
+            duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Salir") / ReglasAnimacion.VelocidadEstado("CarroSalir"));
             transcurrido = 0f;
             Fase = FaseCarro.Saliendo;
             RestaurarCabeza();

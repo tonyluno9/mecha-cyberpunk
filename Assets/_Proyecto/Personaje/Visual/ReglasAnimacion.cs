@@ -97,6 +97,37 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Velocidad desde la que soltar el avance se muestra como frenar.</summary>
         public const float VelocidadFrenar = 5f;
 
+        // ---------- Rapidez de los estados (T-652) ----------
+
+        /// <summary>Parámetro de rapidez de los golpes de puños del jugador (los enemigos no lo cambian, se quedan en 1).</summary>
+        public const string RapidezGolpe = "RapidezGolpe";
+        /// <summary>
+        /// Rapidez de los tres clips de puños del jugador (x). El golpe del juego conecta a los 0.12 s y se recupera a los 0.57 s; los clips de Mixamo
+        /// tardan 1.8 a 2.2 s y conectan a los 0.5 a 1.1 s. Con 3.3 conectan a 0.15 a 0.33 s y terminan a 0.55 a 0.67 s.
+        /// </summary>
+        public const float RapidezGolpeJugador = 3.3f;
+
+        /// <summary>
+        /// Rapidez (x) del estado del controlador base con ese nombre; 1 si no se acelera. Los clips de Mixamo traen mucha espera antes y después de la acción:
+        /// subir al carro dura 5.5 s en el clip y en el juego es un momento. Disparo y recarga de arma no se tocan.
+        /// </summary>
+        public static float VelocidadEstado(string estado)
+        {
+            switch (estado)
+            {
+                case "CarroEntrar": case "CarroSalir": return 3f;
+                case "AbrirPuerta": return 4f;
+                case "Boton": case "Recoger": return 2.5f;
+                case "SaltoInicio": return 2.5f;
+                case "SaltoAterrizaje": return 2f;
+                case "GirarDer": case "GirarIzq": return 1.5f;
+                case "CoberturaDisparo1": case "CoberturaDisparo2": return 1.5f;
+                case "LevantarseBocaArriba": case "LevantarseBocaAbajo": return 2.5f;
+                case "DanoFrente": case "DanoEspalda": case "DanoFuerte": return 1.8f;
+                default: return 1f;
+            }
+        }
+
         /// <summary>Estados de la capa base del controlador base (el nombre es el del estado).</summary>
         public static readonly string[] EstadosBase =
         {
@@ -114,7 +145,7 @@ namespace MechaCyberpunk.Personaje.Visual
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
-        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura };
+        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe };
         public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono };
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
         public static readonly string[] ParametrosTrigger =

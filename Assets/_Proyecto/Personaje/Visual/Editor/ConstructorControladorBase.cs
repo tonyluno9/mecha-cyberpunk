@@ -210,6 +210,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 if (p.name == ReglasVisual.EnSuelo) { p.defaultBool = true; }
                 if (p.name == ReglasAnimacion.VelZ) { p.defaultFloat = 1f; }
                 if (p.name == ReglasAnimacion.PoseCobertura) { p.defaultFloat = 0.999f; }
+                if (p.name == ReglasAnimacion.RapidezGolpe) { p.defaultFloat = 1f; }
             }
             c.parameters = lista;
         }
@@ -224,7 +225,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 AnimatorState s = m.AddState(nombre);
                 if (clip != null) { s.motion = Clip(clip); }
-                s.speed = velocidad;
+                s.speed = velocidad * ReglasAnimacion.VelocidadEstado(nombre);
                 e[nombre] = s;
                 return s;
             }
@@ -442,15 +443,20 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 AnimatorState s = m.AddState(nombre);
                 s.motion = motion;
+                s.speed = ReglasAnimacion.VelocidadEstado(nombre);
                 e[nombre] = s;
                 return s;
             }
 
             Estado("Vacio", null);
             m.defaultState = e["Vacio"];
-            Estado("GolpeIzq", Clip("Punos_GolpeIzq"));
-            Estado("GolpeDer", Clip("Punos_GolpeDer"));
-            Estado("GolpeFuerte", Clip("Punos_Fuerte"));
+            // T-652: solo el jugador acelera sus puños (RapidezGolpe); los enemigos dejan el parámetro en 1 y conservan su tiempo.
+            foreach (string golpe in new[] { "GolpeIzq", "GolpeDer", "GolpeFuerte" })
+            {
+                AnimatorState g = Estado(golpe, Clip(golpe == "GolpeIzq" ? "Punos_GolpeIzq" : golpe == "GolpeDer" ? "Punos_GolpeDer" : "Punos_Fuerte"));
+                g.speedParameterActive = true;
+                g.speedParameter = ReglasAnimacion.RapidezGolpe;
+            }
             Estado("DanoFrente", Clip("Dano_Frente"));
             Estado("DanoEspalda", Clip("Dano_Espalda"));
             Estado("DanoFuerte", Clip("Dano_Fuerte"));
