@@ -3185,6 +3185,7 @@ MonoBehaviour:
   ritmo: 0.81015
   fase: 0.4823
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &14076172
 LODGroup:
   m_ObjectHideFlags: 0
@@ -54156,6 +54157,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.15
   mover: {fileID: 173977234}
+  fraccionCelular: 0.15
 --- !u!205 &173977238
 LODGroup:
   m_ObjectHideFlags: 0
@@ -54192,6 +54194,9 @@ MonoBehaviour:
   radioDisparo: 40
   calorAlReaccionar: 30
   segundosAlerta: 12
+  segundosEntrePresumir: 25
+  radioGolpe: 2.2
+  segundosEntreGolpes: 1.5
 --- !u!1 &174678906
 GameObject:
   m_ObjectHideFlags: 0
@@ -72126,6 +72131,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 97a31bd4d8a94f44ca48f0c34957c29a, type: 2}
+    - target: {fileID: 204832693289409506, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 204832693289409506, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 204832693289409506, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.72
+      objectReference: {fileID: 0}
     - target: {fileID: 205645362504732483, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -80626,6 +80643,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9b28606fa3a214d40b4e43abb73dbeb3, type: 2}
+    - target: {fileID: 3092846006141527194, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092846006141527194, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092846006141527194, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.72
+      objectReference: {fileID: 0}
     - target: {fileID: 3096486352753130467, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -86674,6 +86703,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 81653cc44feb93f4ebe2847e60c93342, type: 2}
+    - target: {fileID: 5239630683381123180, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5239630683381123180, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5239630683381123180, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.72
+      objectReference: {fileID: 0}
     - target: {fileID: 5240884002945683805, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -87330,6 +87371,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 392dd7a3e6c05f545b1564952e6b6d41, type: 2}
+    - target: {fileID: 5504097349124524477, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5504097349124524477, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5504097349124524477, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.72
+      objectReference: {fileID: 0}
     - target: {fileID: 5505615562481149208, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -94894,6 +94947,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 375e36ad54da67340a94ba9b16bea752, type: 2}
+    - target: {fileID: 8032987128642246244, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032987128642246244, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032987128642246244, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.72
+      objectReference: {fileID: 0}
     - target: {fileID: 8033075613262719269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -96502,6 +96567,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: b24504bf89937f942b00618b66a66940, type: 2}
+    - target: {fileID: 8572135176497434790, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572135176497434790, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572135176497434790, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.72
+      objectReference: {fileID: 0}
     - target: {fileID: 8572902967894985062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -98434,6 +98511,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: afd9b86c74c4574408a196169b09040d, type: 2}
+    - target: {fileID: 9204348405865369237, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204348405865369237, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204348405865369237, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.72
+      objectReference: {fileID: 0}
     - target: {fileID: 9211957921469559639, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -100069,6 +100158,7 @@ MonoBehaviour:
   ritmo: 1.22045
   fase: 0.4893
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &236263981
 LODGroup:
   m_ObjectHideFlags: 0
@@ -110455,6 +110545,7 @@ MonoBehaviour:
   ritmo: 0.7989
   fase: 0.4006
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &287623135
 GameObject:
   m_ObjectHideFlags: 0
@@ -123554,6 +123645,7 @@ MonoBehaviour:
   ritmo: 1.1529
   fase: 0.1966
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &325634910
 GameObject:
   m_ObjectHideFlags: 0
@@ -156027,6 +156119,7 @@ MonoBehaviour:
   ritmo: 0.8507
   fase: 0.7642
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &440311700
 GameObject:
   m_ObjectHideFlags: 0
@@ -160634,7 +160727,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4642333096024366272, guid: 57b0c83b85bb4a2469b2717e9ff9ad48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30.720108
+      value: 31.58493
       objectReference: {fileID: 0}
     - target: {fileID: 4642333096024366272, guid: 57b0c83b85bb4a2469b2717e9ff9ad48, type: 3}
       propertyPath: m_LocalPosition.y
@@ -173103,6 +173196,7 @@ MonoBehaviour:
   ritmo: 0.8167
   fase: 0.9466
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &483253617
 GameObject:
   m_ObjectHideFlags: 0
@@ -176049,6 +176143,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.5422
   mover: {fileID: 1473300994}
+  fraccionCelular: 0.15
 --- !u!1 &494114512
 GameObject:
   m_ObjectHideFlags: 0
@@ -180039,6 +180134,7 @@ MonoBehaviour:
   ritmo: 0.9781
   fase: 0.5582
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &513673870
 GameObject:
   m_ObjectHideFlags: 0
@@ -218848,6 +218944,7 @@ MonoBehaviour:
   ritmo: 0.84045
   fase: 0.1565
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &649353076
 LODGroup:
   m_ObjectHideFlags: 0
@@ -223321,6 +223418,7 @@ MonoBehaviour:
   ritmo: 0.98775
   fase: 0.7791
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &672917816
 LODGroup:
   m_ObjectHideFlags: 0
@@ -237867,6 +237965,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.1051
   mover: {fileID: 357152598}
+  fraccionCelular: 0.15
 --- !u!1 &695428603
 GameObject:
   m_ObjectHideFlags: 0
@@ -247258,6 +247357,7 @@ MonoBehaviour:
   ritmo: 1.1478
   fase: 0.2408
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &717895956
 GameObject:
   m_ObjectHideFlags: 0
@@ -267318,6 +267418,7 @@ MonoBehaviour:
   ritmo: 1.18955
   fase: 0.0859
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &792908141
 GameObject:
   m_ObjectHideFlags: 0
@@ -273414,6 +273515,7 @@ MonoBehaviour:
   ritmo: 0.9508
   fase: 0.146
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &822830778
 GameObject:
   m_ObjectHideFlags: 0
@@ -308407,6 +308509,7 @@ MonoBehaviour:
   ritmo: 1.20455
   fase: 0.1159
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &946380503
 GameObject:
   m_ObjectHideFlags: 0
@@ -319353,6 +319456,7 @@ MonoBehaviour:
   ritmo: 0.76575
   fase: 0.4671
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &996755112
 LODGroup:
   m_ObjectHideFlags: 0
@@ -323215,6 +323319,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.9887
   mover: {fileID: 1106162758}
+  fraccionCelular: 0.15
 --- !u!1 &1018140982
 GameObject:
   m_ObjectHideFlags: 0
@@ -327494,6 +327599,7 @@ MonoBehaviour:
   ritmo: 1.12955
   fase: 0.6051
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1036381679
 GameObject:
   m_ObjectHideFlags: 0
@@ -332085,6 +332191,7 @@ MonoBehaviour:
   ritmo: 1.2111499
   fase: 0.4707
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &1061137559
 LODGroup:
   m_ObjectHideFlags: 0
@@ -350511,6 +350618,7 @@ MonoBehaviour:
   ritmo: 0.78975
   fase: 0.0359
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &1153188488
 LODGroup:
   m_ObjectHideFlags: 0
@@ -356864,6 +356972,7 @@ MonoBehaviour:
   ritmo: 1.061
   fase: 0.1712
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1181291438
 GameObject:
   m_ObjectHideFlags: 0
@@ -377701,6 +377810,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.5422
   mover: {fileID: 220001762}
+  fraccionCelular: 0.15
 --- !u!1 &1262513782
 GameObject:
   m_ObjectHideFlags: 0
@@ -388575,6 +388685,7 @@ MonoBehaviour:
   ritmo: 0.9174
   fase: 0.9712
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1311972263
 GameObject:
   m_ObjectHideFlags: 0
@@ -392421,6 +392532,7 @@ MonoBehaviour:
   ritmo: 1.0726
   fase: 0.368
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1333144001
 GameObject:
   m_ObjectHideFlags: 0
@@ -397500,6 +397612,7 @@ MonoBehaviour:
   ritmo: 0.79305
   fase: 0.6193
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1001 &1357821448
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -399753,6 +399866,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.9887
   mover: {fileID: 423975720}
+  fraccionCelular: 0.15
 --- !u!205 &1368482048
 LODGroup:
   m_ObjectHideFlags: 0
@@ -400543,6 +400657,7 @@ MonoBehaviour:
   ritmo: 0.9096
   fase: 0.8484
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1373690932
 GameObject:
   m_ObjectHideFlags: 0
@@ -415805,6 +415920,7 @@ MonoBehaviour:
   ritmo: 1.1138
   fase: 0.2128
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1001 &1449338656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -425685,6 +425801,7 @@ MonoBehaviour:
   ritmo: 1.1815
   fase: 0.7218
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1495084466
 GameObject:
   m_ObjectHideFlags: 0
@@ -427788,6 +427905,7 @@ MonoBehaviour:
   ritmo: 0.88594997
   fase: 0.2243
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &1505165010
 LODGroup:
   m_ObjectHideFlags: 0
@@ -439228,6 +439346,7 @@ MonoBehaviour:
   ritmo: 0.7628
   fase: 0.778
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1569754946
 GameObject:
   m_ObjectHideFlags: 0
@@ -440127,6 +440246,7 @@ MonoBehaviour:
   ritmo: 1.161
   fase: 0.78
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1574431511
 GameObject:
   m_ObjectHideFlags: 0
@@ -463022,7 +463142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5981379584410498763, guid: ce61324a2ab6c0643ae0b6d40c6c47b3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -29.715836
+      value: -29.015842
       objectReference: {fileID: 0}
     - target: {fileID: 5981379584410498763, guid: ce61324a2ab6c0643ae0b6d40c6c47b3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -471574,6 +471694,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.068
   mover: {fileID: 575494820}
+  fraccionCelular: 0.15
 --- !u!1 &1660608120
 GameObject:
   m_ObjectHideFlags: 0
@@ -479908,6 +480029,7 @@ MonoBehaviour:
   ritmo: 1.16
   fase: 0.6236
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1698277178
 GameObject:
   m_ObjectHideFlags: 0
@@ -482705,6 +482827,7 @@ MonoBehaviour:
   ritmo: 1.20865
   fase: 0.8097
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!205 &1713434712
 LODGroup:
   m_ObjectHideFlags: 0
@@ -484960,6 +485083,7 @@ MonoBehaviour:
   ritmo: 1.16745
   fase: 0.3329
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1725330944
 GameObject:
   m_ObjectHideFlags: 0
@@ -494594,6 +494718,7 @@ MonoBehaviour:
   ritmo: 1.1356
   fase: 0.1884
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1001 &1781009906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -511977,6 +512102,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.068
   mover: {fileID: 1217663223}
+  fraccionCelular: 0.15
 --- !u!205 &1867959806
 LODGroup:
   m_ObjectHideFlags: 0
@@ -512238,6 +512364,7 @@ MonoBehaviour:
   ritmo: 0.8465
   fase: 0.0046
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &1869503221
 GameObject:
   m_ObjectHideFlags: 0
@@ -550555,6 +550682,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0.3
   mover: {fileID: 2008723589}
+  fraccionCelular: 0.15
 --- !u!205 &2008723593
 LODGroup:
   m_ObjectHideFlags: 0
@@ -550591,6 +550719,9 @@ MonoBehaviour:
   radioDisparo: 40
   calorAlReaccionar: 30
   segundosAlerta: 12
+  segundosEntrePresumir: 25
+  radioGolpe: 2.2
+  segundosEntreGolpes: 1.5
 --- !u!1 &2008865236
 GameObject:
   m_ObjectHideFlags: 0
@@ -558666,6 +558797,7 @@ MonoBehaviour:
   ritmo: 1.03425
   fase: 0.3969
   mover: {fileID: 0}
+  fraccionCelular: 0.15
 --- !u!1 &2022297962
 GameObject:
   m_ObjectHideFlags: 0
@@ -569795,6 +569927,7 @@ MonoBehaviour:
   ritmo: 1
   fase: 0
   mover: {fileID: 2077620161}
+  fraccionCelular: 0.15
 --- !u!205 &2077620165
 LODGroup:
   m_ObjectHideFlags: 0
@@ -569831,6 +569964,9 @@ MonoBehaviour:
   radioDisparo: 40
   calorAlReaccionar: 30
   segundosAlerta: 12
+  segundosEntrePresumir: 25
+  radioGolpe: 2.2
+  segundosEntreGolpes: 1.5
 --- !u!1 &2077848909
 GameObject:
   m_ObjectHideFlags: 0
