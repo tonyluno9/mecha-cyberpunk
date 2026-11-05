@@ -316,3 +316,11 @@ Audios que faltan o están flojos en Assets/Arte/Audio (todo lo demás ya suena 
 - Motor: no hay manera de mezclar VEH_VIEJO_MOTOR_ACELERA con el ralentí ni de arrancar el bucle en un punto al azar sin cambiar Core/ISonidos (volumen por bucle y desfase); VEH_MOTO_MOTOR y VEH_PRO_MOTOR_* siguen sin clase que los toque.
 - Pasos: mojado solo por nombre de material ("mojad", "charco", "wet"); falta que Mundo nombre así la calle mojada o un contrato de clima en Core.
 - Pisadas por evento de animación: no hay eventos en los clips; los pasos van por distancia (1.4 m caminando, 2 m corriendo en ControladorAPie). Si la Sesión B agrega eventos "Paso", se llama al mismo punto y se quita la zancada.
+
+## Sesión del 4 al 5-nov (Opus orquesta, Sonnet implementa): detenida por Tony
+- Bloque 4 (carros y motos) en main: T-590 luces con L, T-591 explosión con efectos (estruendo provisional), T-592 manejo de moto e inclinación, caballete oculto al manejar.
+- Bloque 5 (sonido) en main: T-593 armas sin encimarse, T-594 sin piano al cruzar zona y tic de texto sutil, T-595 claxon y motor con variación y distancia, T-596 pasos por zancada y piso, T-597 voces por género (con tono mientras faltan los audios _F/_M, lista arriba). RecorridoDemoPruebas 2/2 tras cada bloque.
+- A medias: **T-598** (rama tony/T-598-patrulla-sin-calles, commit WIP con push): PandillaArmadaPruebas.VencerlosPagaYTraeDrones fallaba porque GestorPersecucion armaba calles sin manzanas (viene de antes de T-587). Arreglo hecho y sin probar: correr PandillaArmadaPruebas, Persecucion y PatrullaParedT581Pruebas; si pasan, mezclar a fase-g y main.
+- Rojas ya conocidas: MontableCarroPruebas.Camara_PrimeraPersona, AmbientePruebas.Asfalto_EsOscuroYLiso, SinGreyboxT506Pruebas x2, PersonajesT520Pruebas.ListaDeAnimacionesQueFaltan_Existe (docs/animaciones-faltan.md lo reescribió la Sesión B), RecorridoAPie; inestables: JugadorVisualPruebas.Caminar_SinPatinar y ArmasPruebas.ComprarYUsarEscopeta.
+- Sigue: terminar T-598; bloques 6 (NPC y aliados), 7 (mundo) y 8 (interfaz) de docs/noche-A-alan.md; luego los [C] sin marcar de docs/pendientes-pruebas.md; al final regenerar Builds/Demo y Builds/Juego (no se regeneraron en esta sesión).
+- Cambios del editor de tony/anim-noche guardados en el stash "churn-editor-anim-noche-20261104".

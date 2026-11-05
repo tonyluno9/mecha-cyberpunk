@@ -101,13 +101,13 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero (Tony), [?] falta confirmar qué se quiere. Los que repiten algo de la lista del 2-nov dicen "(otra vez)".
 
 ## Sonido
-- [C] Sonidos raros al disparar y recargar: revisar que cada arma use su ID correcto (ARM_PIS/ESC/FUS/SNI), volumen y que no se encimen.
-- [C] Quitar el sonido de piano repetitivo (no va con el contexto).
-- [C] Cambiar el sonido de texto (avisos/diálogos) por uno mejor (UI más sutil).
-- [C] Quitar los sonidos repetitivos de los carros (motor/claxon en bucle sin variar): más variación, distancia y menos repetición.
-- [C] Pasos más precisos: que suenen sincronizados con la pisada y según el piso (asfalto, mojado, interior, metal).
-- [C] Sonido de agitación (jadeo al correr, esfuerzo, daño) según el personaje y su género. [A] si faltan voces femeninas/masculinas en Audio/JUG.
-- [C] Mejorar los sonidos de muerte (jugador, pandilleros, aliados; variantes por género).
+- [x] (T-593) Sonidos raros al disparar y recargar: revisar que cada arma use su ID correcto (ARM_PIS/ESC/FUS/SNI), volumen y que no se encimen.
+- [x] (T-594) Quitar el sonido de piano repetitivo (no va con el contexto).
+- [x] (T-594, tic provisional) Cambiar el sonido de texto (avisos/diálogos) por uno mejor (UI más sutil).
+- [x] (T-595) Quitar los sonidos repetitivos de los carros (motor/claxon en bucle sin variar): más variación, distancia y menos repetición.
+- [x] (T-596, por zancada) Pasos más precisos: que suenen sincronizados con la pisada y según el piso (asfalto, mojado, interior, metal).
+- [x] (T-597, faltan voces _F/_M) Sonido de agitación (jadeo al correr, esfuerzo, daño) según el personaje y su género. [A] si faltan voces femeninas/masculinas en Audio/JUG.
+- [x] (T-597, faltan voces _F/_M) Mejorar los sonidos de muerte (jugador, pandilleros, aliados; variantes por género).
 
 ## Animaciones (Mixamo — las baja Tony, ver docs/animaciones-faltan.md)
 - [A] Caminar, correr, saltar, caer y quieto con animación propia (no solo los clips de Tripo).
