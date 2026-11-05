@@ -17,9 +17,9 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float UmbralEmision = 0.3f;
         // Raíces fuera de la demo (arena, creador de personaje, negocios y guarida descartados).
         private static readonly string[] RaicesExcluidas = { "JaulaClandestino", "Greybox_Apariencia", "GTA_T429", "GTA_T448" };
-        // Charcos, gente de bulto de la arena y carteles con textura; la pintura plana del piso (rayas, cebras, grietas) se salta por grosor.
+        // T-635: Tragamonedas, Madera_Oscura y Metal_Oscuro (interiores T-546, cuerpo de color liso a propósito: lleva luces y pantalla). Charcos, gente de bulto de la arena y carteles con textura; la pintura plana del piso (rayas, cebras, grietas) se salta por grosor.
         private const float GrosorDecal = 0.12f;
-        private static readonly string[] MaterialesDecal = { "Charco", "Publico", "Grafiti" };
+        private static readonly string[] MaterialesDecal = { "Charco", "Publico", "Grafiti", "Tragamonedas", "Madera_Oscura", "Metal_Oscuro" };
         private static readonly string[] MallasPrimitivas = { "Cube", "Sphere", "Capsule", "Cylinder", "Plane", "Quad" };
 
         private Scene escena;
