@@ -222,6 +222,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 calles = ArmarCalles();
             }
+            if (calles == null)
+            {
+                return; // T-598: sin manzanas (escena de prueba sin barrio) no hay calles por donde salga una patrulla; los drones sí salen
+            }
             Vector3 centro = PosicionDelJugador() ?? transform.position;
             PatrullaMundo patrulla = Instantiate(prefabPatrulla, transform);
             patrulla.Preparar(calculo, config, calles, NodoDeSalida(centro), PosicionDelJugador);
@@ -298,6 +302,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 {
                     centros.Add(new Vector2(hijo.position.x, hijo.position.z));
                 }
+            }
+            if (centros.Count == 0)
+            {
+                return null;
             }
             GrafoCalles grafo = GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles);
             TraficoCalle.AlargarHaciaLasAfueras(grafo); // T-587: las patrullas llegan y se van por las calles de las afueras, lejos de la vista
