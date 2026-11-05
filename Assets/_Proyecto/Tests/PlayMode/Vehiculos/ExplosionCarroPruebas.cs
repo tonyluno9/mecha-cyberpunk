@@ -95,8 +95,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.Greater(e.Onda.particleCount, 0, "onda expansiva");
             Assert.IsTrue(e.Luz.enabled);
             Assert.Greater(e.Luz.intensity, 2f, "la luz destella fuerte");
-            Assert.IsNotNull(e.Fuente.clip, "estruendo");
-            Assert.Greater(e.Fuente.clip.length, 0.5f);
+            Assert.Contains("VEH_EXPLOSION", sonidos.Ids, "el estruendo pasa por el gestor (T-620)");
             Assert.Contains("VEH_CHOQUE_FUERTE", sonidos.Ids, "y suena por el gestor");
             yield return Esperar(0.6f);
             Assert.Less(e.Luz.intensity, 1f, "el destello se apaga");

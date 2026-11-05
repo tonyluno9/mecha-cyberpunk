@@ -18,6 +18,8 @@ namespace MechaCyberpunk.Mundo.Ambiente
         [SerializeField] private AudioClip clipNeon;
         [SerializeField] private AudioClip clipTrafico;
         [SerializeField] private AudioClip clipMusica;
+        [Tooltip("T-620: apagado por defecto (el juego solo deja los sonidos necesarios). Enciendelo para oir lluvia, neon, trafico y musica.")]
+        [SerializeField] private bool capasEncendidas;
 
         private AudioSource lluvia;
         private AudioSource neon;
@@ -77,10 +79,10 @@ namespace MechaCyberpunk.Mundo.Ambiente
             volMusica = CalculoAmbienteSonoro.Acercar(volMusica, Objetivo.Musica, dt, config.SegundosCambio);
             if (sonando)
             {
-                lluvia.volume = volLluvia;
-                neon.volume = volNeon;
-                trafico.volume = volTrafico;
-                musica.volume = volMusica;
+                lluvia.volume = capasEncendidas ? volLluvia : 0f;
+                neon.volume = capasEncendidas ? volNeon : 0f;
+                trafico.volume = capasEncendidas ? volTrafico : 0f;
+                musica.volume = capasEncendidas ? volMusica : 0f;
             }
         }
 

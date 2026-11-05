@@ -22,8 +22,44 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private static readonly PoliticaSonido SinPolitica = new PoliticaSonido(null, 0, 1f, 0f, 0f);
 
-        /// <summary>Política del ID (sin etiqueta de voz). Un ID sin regla suena normal: sin límite, volumen 1 y tono 1.</summary>
+        /// <summary>T-620: voces puntuales y bucles que pueden sonar a la vez entre todos los IDs.</summary>
+        public const int MaxVocesTotal = 12;
+
+        /// <summary>T-620: un mismo ID no se repite antes de este tiempo (s).</summary>
+        public const float SegundosMinimosPorId = 0.1f;
+
+        /// <summary>T-620: volumen relativo parejo de todos los sonidos encendidos.</summary>
+        public const float VolumenParejo = 0.8f;
+
+        public const string IdExplosion = "VEH_EXPLOSION";
+
+        /// <summary>T-620: los unicos IDs que suenan por defecto; el resto se prende uno por uno en los interruptores del CatalogoSonidos.</summary>
+        public static readonly string[] IdsEncendidos =
+        {
+            "ARM_PIS_DISPARO", "ARM_ESC_DISPARO", "ARM_FUS_DISPARO", "ARM_SNI_DISPARO", "ARM_PIS_RECARGA", "ARM_ESC_RECARGA_CARTUCHO",
+            "ARM_FUS_RECARGA", "ARM_SNI_RECARGA", "ARM_VACIO", "ARM_BALA_IMPACTO_CARNE", "PUN_GOLPE_CARNE", "JUG_DANIO", "JUG_CAE_DERROTADO",
+            "VEH_VIEJO_MOTOR_RALENTI", "VEH_VIEJO_MOTOR_ACELERA", "VEH_CHOQUE_LEVE", "VEH_ALARMA_ROBO", IdExplosion, "CAL_PATRULLA_SIRENA",
+            "UI_MOVER", "UI_ACEPTAR", "UI_CANCELAR", "ZON_CONQUISTADA", "ECO_COMPRA",
+        };
+
+        /// <summary>Si el ID es de los que suenan por defecto.</summary>
+        public static bool EncendidoPorDefecto(string id) => Array.IndexOf(IdsEncendidos, id) >= 0;
+
+        /// <summary>Si el mismo ID se pidio muy pronto despues de la vez anterior (<paramref name="antes"/>).</summary>
+        public static bool Repite(float ahora, float antes, float segundosMinimosPolitica)
+        {
+            return ahora - antes < Math.Max(segundosMinimosPolitica, SegundosMinimosPorId);
+        }
+
+        /// <summary>Politica del ID (sin etiqueta de voz). Un ID sin regla suena normal: sin limite, volumen 1 y tono 1. Los encendidos suenan parejos.</summary>
         public static PoliticaSonido Para(string id)
+        {
+            PoliticaSonido p = ParaBase(id);
+            if (!EncendidoPorDefecto(id)) return p;
+            return new PoliticaSonido(p.Grupo, p.MaxVoces, VolumenParejo, p.VariacionTono, p.SegundosMinimos, p.DistanciaMaxima);
+        }
+
+        private static PoliticaSonido ParaBase(string id)
         {
             if (string.IsNullOrEmpty(id)) return SinPolitica;
             if (id.StartsWith("ARM_", StringComparison.Ordinal))

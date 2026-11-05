@@ -36,7 +36,7 @@ namespace MechaCyberpunk.Tests.Sonido
         [Test]
         public void UnIdSinReglaSuenaNormal()
         {
-            PoliticaSonido p = ReglaMezclaSonidos.Para("UI_ACEPTAR");
+            PoliticaSonido p = ReglaMezclaSonidos.Para("UI_ERROR");
             Assert.AreEqual(0, p.MaxVoces);
             Assert.AreEqual(1f, p.Volumen);
             Assert.AreEqual(0f, p.VariacionTono);

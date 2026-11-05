@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using UnityEngine;
 
 namespace MechaCyberpunk.Vehiculos.Carro
@@ -13,12 +14,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const float SegundosDestello = 0.35f;
         private const float IntensidadDestello = 14f;
         private const int LadoTextura = 64;
-        private const int FrecuenciaSonido = 22050;
-        private const float SegundosSonido = 1.6f;
 
         private static Texture2D texturaPunto;
         private static Texture2D texturaAnillo;
-        private static AudioClip clipEstruendo;
 
         private Light luz;
         private float inicio;
@@ -28,7 +26,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public ParticleSystem Chispas { get; private set; }
         public ParticleSystem Onda { get; private set; }
         public Light Luz => luz;
-        public AudioSource Fuente { get; private set; }
 
         /// <summary>Crea la explosión en <paramref name="centro"/>; <paramref name="radio"/> es hasta donde llega la onda.</summary>
         public static ExplosionCarro Crear(Vector3 centro, float radio)
@@ -64,13 +61,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             luz.intensity = IntensidadDestello;
             luz.shadows = LightShadows.None;
 
-            Fuente = gameObject.AddComponent<AudioSource>();
-            Fuente.clip = ClipEstruendo();
-            Fuente.spatialBlend = 1f;
-            Fuente.minDistance = 8f;
-            Fuente.maxDistance = 120f;
-            Fuente.volume = 1f;
-            Fuente.Play();
+            // T-620: el estruendo pasa por el gestor (interruptor VEH_EXPLOSION y limite de voces).
+            Sonidos.ReproducirEn("VEH_EXPLOSION", transform.position);
 
             Fuego.Play();
             Humo.Play();
@@ -175,30 +167,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
             t.SetPixels32(pixeles);
             t.Apply(false, true);
             return t;
-        }
-
-        /// <summary>Estruendo provisional: ruido con caída exponencial y golpe grave al inicio. Cambiar por un archivo de Arte/Audio cuando exista.</summary>
-        public static AudioClip ClipEstruendo()
-        {
-            if (clipEstruendo != null)
-            {
-                return clipEstruendo;
-            }
-            int muestras = (int)(FrecuenciaSonido * SegundosSonido);
-            float[] datos = new float[muestras];
-            System.Random azar = new System.Random(591);
-            float filtro = 0f;
-            for (int i = 0; i < muestras; i++)
-            {
-                float t = i / (float)FrecuenciaSonido;
-                float ruido = (float)(azar.NextDouble() * 2.0 - 1.0);
-                filtro += (ruido - filtro) * Mathf.Lerp(0.5f, 0.04f, Mathf.Clamp01(t * 2f));
-                float grave = Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(90f, 35f, Mathf.Clamp01(t * 1.5f)) * t);
-                datos[i] = Mathf.Clamp((filtro * 1.8f + grave * 0.7f) * Mathf.Exp(-t * 3.2f), -1f, 1f);
-            }
-            clipEstruendo = AudioClip.Create("Explosion_Provisional", muestras, 1, FrecuenciaSonido, false);
-            clipEstruendo.SetData(datos, 0);
-            return clipEstruendo;
         }
     }
 }
