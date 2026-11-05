@@ -40,8 +40,8 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("Cuánto sube el cuerpo al estar tumbado para no hundirse en el piso (m).")]
         [Min(0f)] [SerializeField] private float alturaTumbado = 0.15f;
 
-        // El modelo de Tripo mira a -Z local (nodo Giro de 180°): cae de espaldas con +90° sobre su eje X.
-        private const float GradosTumbado = 90f;
+        // T-640: el modelo de Tripo ya mira a +Z local (el nodo Giro quedó en 0°): cae de espaldas con -90° sobre su eje X.
+        private const float GradosTumbado = -90f;
         private const float VelocidadVerticalEnAire = 1.5f;
         private static readonly int HashIdle = Animator.StringToHash("Idle");
         private static readonly int HashCaminar = Animator.StringToHash("Caminar");
@@ -402,7 +402,9 @@ namespace MechaCyberpunk.Personaje.Visual
                 return;
             }
             float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
-            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia, rapidezMinima, rapidezMaxima);
+            // T-640: caminar normal (4.5 m/s) ya no es Correr: Caminar se acelera menos que Correr para no verse apresurado.
+            float tope = estado == HashCaminar ? Mathf.Min(rapidezMaxima, ReglasAnimacion.RapidezMaximaCaminar) : rapidezMaxima;
+            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia, rapidezMinima, tope);
         }
 
         private void LeerEstadoDelPadre(float dt)

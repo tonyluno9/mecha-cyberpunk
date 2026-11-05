@@ -1159,3 +1159,10 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - docs/plan-noche-05nov.md (0658f6c, en disco y en origin/main) no tiene "Paso 4".
   - Se tomó como Paso 4 su línea final: builds, reporte y Unity cerrado.
   - Si Tony escribió otro Paso 4, no quedó guardado en el repo.
+
+## T-640 animaciones (caminaba de espaldas, caminar = correr)
+- Causa (a): el nodo Giro de los 9 visuales de Tripo estaba a 180° Y; con el Avatar Humanoid el modelo ya mira a +Z, así que el giro lo dejaba de espaldas al movimiento. Medido con los huesos (dot -0.998). Giro a 0° en todos los prefabs Visual_* (jugador, aliados, NPC, SKULLS, jefe, guardias Nova) y en CreadorVisualTripo. GradosTumbado pasa a -90 para que el cuerpo caído siga cayendo de espaldas.
+- Causa (b): no era el signo del árbol (Caminar +Y, Atrás -Y, Der +X, Izq -X ya estaban bien y VelX/VelZ ya salen del frente local). El problema era el umbral Caminar->Correr en 2.8 m/s: caminar normal (4.5) ya era Correr. Ahora UmbralCorrer = 5.5 (entre 4.5 y 7.5, con histéresis 0.9) y los árboles de pistola/rifle mezclan Caminar a 4.5 y Correr a 7.5. Caminar se acelera máximo 2.2x (Correr hasta 2.8x). Sin Shift el cuerpo gira hacia donde camina (ControladorAPie), por eso S sin apuntar es darse la vuelta; Atrás/Izq/Der se ven al apuntar (clic derecho).
+- Causa (c): los clips de locomoción no horneaban la rotación de la raíz. CorregirAnimacionesT640 hornea la rotación (Bake Into Pose, orientación del cuerpo, no "original": con "original" el clip traía 180° propios y el personaje volvía a caminar de espaldas) en Loco_/Pistola_/Rifle_/Nova_/Skull_/Jefe_, excepto Girar, Salto, Caida y Frenar (giran el cuerpo a propósito; SaltoInicio torcía 32° la pelvis horneado). XZ no se hornea (los clips ya están en el sitio) y Y ya estaba.
+- Sí existen todos los clips Correr (Loco_Correr, Pistola_Correr, Rifle_Correr, Nova_Correr); Skull/Jefe no tienen Correr y usan el de Loco_Correr por override.
+- ReglasEnsambladosPruebas.ProyectoReal_NoTieneErrores falla desde antes (UI referencia Trafico): no es de esta tarea.
