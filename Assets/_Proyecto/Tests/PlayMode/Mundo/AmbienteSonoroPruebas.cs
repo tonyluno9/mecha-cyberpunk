@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Tests.Mundo
         [TearDown]
         public void TearDown()
         {
+            LluviaSigueJugador.Activa = false;
             if (camaraObjeto != null)
             {
                 Object.DestroyImmediate(camaraObjeto);
@@ -33,6 +34,8 @@ namespace MechaCyberpunk.Tests.Mundo
 
         private IEnumerator Preparar(float hora)
         {
+            // S2: el juego no tiene lluvia; aquí se prende el interruptor para probar la mezcla de capas.
+            LluviaSigueJugador.Activa = true;
             yield return EscenaLugares.CargarCiudad();
             EscenaLugares.RelojPausado().AvanzarHasta(hora);
             ambiente = Object.FindFirstObjectByType<AmbienteSonoro>();

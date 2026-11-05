@@ -60616,7 +60616,6 @@ Transform:
   - {fileID: 4892153659715583644}
   - {fileID: 6412869035803688645}
   - {fileID: 864765062398919168}
-  - {fileID: 7572895023836988332}
   - {fileID: 2467941070032548605}
   - {fileID: 6526925904296774590}
   - {fileID: 4229586905496709626}
@@ -160264,53 +160263,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &6204041354858616563
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7572895023836988332}
-  - component: {fileID: 2761620210918128900}
-  m_Layer: 0
-  m_Name: Lluvia
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7572895023836988332
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6204041354858616563}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6870228419915894630}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2761620210918128900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6204041354858616563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45310b287b3055a45be316bd4619507c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Ambiente.LluviaSigueJugador
-  config: {fileID: 11400000, guid: c7e8f7b7814de0343903bd70519d113b, type: 2}
-  materialGota: {fileID: 2100000, guid: 17329561c7fef6f4fb32de743f361e12, type: 2}
-  materialNiebla: {fileID: 2100000, guid: 9a2c1f6106afca4439eb28f14a2b10be, type: 2}
 --- !u!1 &6206500590068277251
 GameObject:
   m_ObjectHideFlags: 0
@@ -200675,6 +200627,7 @@ MonoBehaviour:
   clipNeon: {fileID: 8300000, guid: 241bef907f624ef488c3a7d2a2f77f1e, type: 3}
   clipTrafico: {fileID: 8300000, guid: 1084a943540786942b0dcb017d42d680, type: 3}
   clipMusica: {fileID: 8300000, guid: 4030aaa94761d5a42bd77165015eaa5a, type: 3}
+  capasEncendidas: 0
 --- !u!1 &7795118098962289767
 GameObject:
   m_ObjectHideFlags: 0

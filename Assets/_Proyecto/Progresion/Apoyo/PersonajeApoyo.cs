@@ -27,6 +27,9 @@ namespace MechaCyberpunk.Progresion.Apoyo
         [SerializeField] private MostradorTienda mostrador;
 
         private Canvas letrero;
+
+        [Tooltip("S2 (playtest 5-nov): sin textos flotantes en el mundo; el nombre y lo que hace salen en el aviso del HUD al acercarse. Enciéndelo solo para pruebas.")]
+        [SerializeField] private bool mostrarLetrero;
         private int ultimaFrase = -1;
         private Action regalo;
         private bool registrado;
@@ -100,7 +103,10 @@ namespace MechaCyberpunk.Progresion.Apoyo
                 enabled = false;
                 return;
             }
-            letrero = CrearLetrero();
+            if (mostrarLetrero)
+            {
+                letrero = CrearLetrero();
+            }
         }
 
         private void OnEnable()

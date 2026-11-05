@@ -94,9 +94,9 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Letreros_Charcos_Niebla_Existen()
+        public void SinLetrerosPlanos_CharcosYNiebla_Existen()
         {
-            Assert.Greater(raiz.Find("Letreros").childCount, 8);
+            Assert.IsNull(raiz.Find("Letreros"), "S2: los letreros planos de suburbios se quitaron");
             Assert.Greater(raiz.Find("Charcos").childCount, 8);
             Assert.Greater(raiz.Find("Niebla").childCount, 3);
             Assert.Greater(raiz.Find("Orillas").childCount, 5);

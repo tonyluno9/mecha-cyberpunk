@@ -12,7 +12,6 @@ namespace MechaCyberpunk.Tests.Mundo
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string NombreRaiz = "T508_CallesLlenas";
         private const int ToldosMinimos = 30;
-        private const int LetrerosMinimos = 30;
         private const int BalconesMinimos = 20;
         private const int MacetasMinimas = 10;
         private const int GenteMinima = 25;
@@ -46,25 +45,16 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Raiz_TraeToldosLetrerosBalconesMacetasYGente()
         {
             Assert.GreaterOrEqual(Contar("Toldo_"), ToldosMinimos, "toldos");
-            Assert.GreaterOrEqual(Contar("Letrero_"), LetrerosMinimos, "letreros");
             Assert.GreaterOrEqual(Contar("Balcon"), BalconesMinimos, "balcones");
             Assert.GreaterOrEqual(Contar("Maceta"), MacetasMinimas, "macetas");
             Assert.That(Contar("Gente_"), Is.InRange(GenteMinima, GenteMaxima), "gente en banquetas");
         }
 
         [Test]
-        public void Letreros_TienenTextoEnEspanolEnDosCaras()
+        public void Letreros_DePrimitivos_YaNoEstan()
         {
-            Transform[] letreros = raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("Letrero_")).ToArray();
-            Assert.IsNotEmpty(letreros);
-            foreach (Transform l in letreros)
-            {
-                Transform[] caras = l.Cast<Transform>().Where(c => c.name == "Texto").ToArray();
-                Assert.AreEqual(2, caras.Length, l.name + " debe tener texto en las dos caras");
-                Assert.IsNotNull(caras[0].GetComponent<Renderer>().sharedMaterial.GetTexture("_BaseMap"), l.name + " texto sin imagen");
-            }
-            string[] palabras = { "FARMACIA", "TACOS", "ABARROTES", "CIBER", "TAQUERIA", "TORTILLERIA", "FONDA", "CANTINA", "PULQUERIA", "HOTEL", "IMPLANTES", "LOTERIA", "ELOTES" };
-            Assert.That(letreros.Select(l => l.name).Any(n => palabras.Any(p => n.Contains(p))), "textos de la ciudad");
+            // S2 (playtest 5-nov): los letreros de cubos y planos con texto (CAFÉ, CANTINA, ABARROTES...) se quitaron; solo quedan los modelos L10-L14.
+            Assert.AreEqual(0, Contar("Letrero_"), "letreros hechos con primitivos");
         }
 
         [Test]
