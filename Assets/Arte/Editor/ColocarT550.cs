@@ -330,14 +330,14 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- Ayudas
 
-        private static Transform Buscar(string ruta)
+        public static Transform Buscar(string ruta)
         {
             int i = ruta.IndexOf('/');
             GameObject r = GameObject.Find(i < 0 ? ruta : ruta.Substring(0, i));
             return r == null ? null : i < 0 ? r.transform : r.transform.Find(ruta.Substring(i + 1));
         }
 
-        private static Material Mat(string nombre, Color color, string copiarTexturaDe = null)
+        public static Material Mat(string nombre, Color color, string copiarTexturaDe = null)
         {
             string ruta = Materiales + nombre + ".mat";
             Material m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
@@ -360,7 +360,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Superficie plana con UV en metros, mirando hacia 'dentro'. Collider: caja delgada hacia el lado contrario ('grosor' con signo en la dirección de dentro).
-        private static void Superficie(Transform padre, string nombre, Material m, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 dentro, float grosor)
+        public static void Superficie(Transform padre, string nombre, Material m, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 dentro, float grosor)
         {
             Mesh mesh = new Mesh { name = nombre };
             Vector3[] vs = { p0, p1, p2, p3 };
@@ -394,7 +394,7 @@ namespace MechaCyberpunk.Arte.Editor
             caja.center = b.center - loc * 0.1f;
         }
 
-        private static GameObject Poner(Transform padre, string ruta, Vector3 posLocal, float giro, bool colgar = false)
+        public static GameObject Poner(Transform padre, string ruta, Vector3 posLocal, float giro, bool colgar = false)
         {
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
             if (prefab == null)
@@ -417,7 +417,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Escala sin mover la parte de arriba (lo que cuelga del techo).
-        private static void Escalar(GameObject g, float factor)
+        public static void Escalar(GameObject g, float factor)
         {
             Bounds antes = ArteT250.Limites(g);
             g.transform.localScale *= factor;
@@ -426,7 +426,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Pone un mueble I## contra la pared: 'sobre' es el punto de la pared a lo largo de la que va (el mueble se separa hacia 'frente' lo que mide de fondo), mirando hacia 'frente'.
-        private static void Pieza(Transform r, string codigo, Vector3 sobre, Vector3 frente, float separacion)
+        public static void Pieza(Transform r, string codigo, Vector3 sobre, Vector3 frente, float separacion)
         {
             GameObject g = Poner(r, Interiores + codigo + ".prefab", Vector3.zero, 0f);
             if (g == null)
@@ -445,7 +445,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Pone un mueble I## en el piso, con su centro en planta en 'centroLocal' y girado 'yaw' grados.
-        private static void Libre(Transform r, string codigo, Vector3 centroLocal, float yaw, float escala = 1f)
+        public static void Libre(Transform r, string codigo, Vector3 centroLocal, float yaw, float escala = 1f)
         {
             GameObject g = Poner(r, Interiores + codigo + ".prefab", Vector3.zero, yaw);
             if (g == null)
@@ -460,7 +460,7 @@ namespace MechaCyberpunk.Arte.Editor
             Informe.AppendLine("  " + codigo + " en " + r.InverseTransformPoint(g.transform.position).ToString("F2") + " tam " + ArteT250.Limites(g).size.ToString("F2"));
         }
 
-        private static void Foco(Transform r, string nombre, Vector3 posLocal, Color color, float intensidad, float alcance, Transform carpeta)
+        public static void Foco(Transform r, string nombre, Vector3 posLocal, Color color, float intensidad, float alcance, Transform carpeta)
         {
             GameObject go = new GameObject(nombre);
             go.transform.SetParent(carpeta, false);
@@ -473,7 +473,7 @@ namespace MechaCyberpunk.Arte.Editor
             l.shadows = LightShadows.None;
         }
 
-        private static void Lampara(Transform r, Vector3 posLocal)
+        public static void Lampara(Transform r, Vector3 posLocal)
         {
             GameObject cil = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             cil.name = "Lampara_Buro_Pantalla";
@@ -490,7 +490,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Tubería vertical de esquina (como en la referencia).
-        private static void Tubo(Transform r, Material m, Vector3 posLocal, float alto)
+        public static void Tubo(Transform r, Material m, Vector3 posLocal, float alto)
         {
             GameObject cil = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             cil.name = "Tuberia";
@@ -502,7 +502,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Puerta del cuarto: marco y hoja de madera pegados a la pared sur, hacia dentro del cuarto.
-        private static void Puerta(Transform r, Material madera, Vector3 posLocal, float giro)
+        public static void Puerta(Transform r, Material madera, Vector3 posLocal, float giro)
         {
             Transform p = new GameObject("PuertaInterior").transform;
             p.SetParent(r, false);
@@ -515,7 +515,7 @@ namespace MechaCyberpunk.Arte.Editor
             Cubo(p, "Perilla", Mat("T550_Perilla", new Color(0.8f, 0.7f, 0.3f)), new Vector3(0.32f, 1.0f, 0.1f), new Vector3(0.08f, 0.08f, 0.08f));
         }
 
-        private static void Cubo(Transform padre, string nombre, Material m, Vector3 posLocal, Vector3 tam)
+        public static void Cubo(Transform padre, string nombre, Material m, Vector3 posLocal, Vector3 tam)
         {
             GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             go.name = nombre;
@@ -527,7 +527,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // Cuadro plano (póster) pegado a la pared, mirando hacia 'frente'.
-        private static void Cuadro(Transform r, string nombre, Vector3 posLocal, Vector3 frente, Vector2 tam)
+        public static void Cuadro(Transform r, string nombre, Vector3 posLocal, Vector3 frente, Vector2 tam)
         {
             GameObject q = GameObject.CreatePrimitive(PrimitiveType.Quad);
             q.name = nombre;

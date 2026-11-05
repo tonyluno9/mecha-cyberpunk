@@ -90,6 +90,74 @@ namespace MechaCyberpunk.Arte.Editor
             Guardar("s2-limpieza");
         }
 
+        // ---------------------------------------------------------------- Zona 2: escala
+
+        /// <summary>
+        /// Altura medida (m) de cada Visual_* de pie en Idle, con la malla animada horneada (Play, 5-nov), y la del jugador con el mismo método.
+        /// Los avatares de Tripo tienen piernas cortas y la animación los deja más bajos que su pose de reposo (1.80 en el editor).
+        /// </summary>
+        public const float AlturaJugador = 1.40f;
+        public static readonly (string prefab, float medida, float relativa)[] Personajes =
+        {
+            ("Visual_Doctor", 1.17f, 1.00f),
+            ("Visual_Inventor", 1.18f, 0.98f),
+            ("Visual_Hacker", 1.43f, 1.00f),
+            ("Visual_man", 1.30f, 1.00f),
+            ("Visual_RobotHombre", 1.28f, 1.00f),
+            ("Visual_SkullHombre", 1.33f, 1.00f),
+            ("Visual_GuardiaNova", 1.49f, 1.25f),   // los robots de Nova son más altos que una persona (T-530)
+            ("Visual_woman", 1.40f, 1.00f),
+            ("Visual_woman2", 1.12f, 0.97f),
+        };
+        private const string RutaVisuales = "Assets/_Proyecto/Personaje/Visual/Prefabs/";
+
+        [MenuItem("Mecha Cyberpunk/S2/2 Escala de personajes y props")]
+        public static void Escala()
+        {
+            Informe.Clear();
+            foreach ((string prefab, float medida, float relativa) in Personajes)
+            {
+                string ruta = RutaVisuales + prefab + ".prefab";
+                GameObject raiz = PrefabUtility.LoadPrefabContents(ruta);
+                Transform modelo = raiz.transform.Find("Giro/Modelo");
+                float factor = AlturaJugador * relativa / medida;
+                modelo.localScale = Vector3.one * factor;
+                PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
+                PrefabUtility.UnloadPrefabContents(raiz);
+                Informe.AppendLine(prefab + ": " + medida.ToString("F2") + " m -> " + (AlturaJugador * relativa).ToString("F2") + " m (escala " + factor.ToString("F3") + ")");
+            }
+            Abrir();
+            // Los guardias de T-510 se habían agrandado 1.19 en la escena: con el prefab ya a la medida, van a 1.
+            Transform guardias = Buscar("T510_Guardias");
+            if (guardias != null)
+            {
+                foreach (Transform g in guardias)
+                {
+                    if (g.localScale.x > 1.05f)
+                    {
+                        Informe.AppendLine("  guardia " + g.name + " escala " + g.localScale.x.ToString("F2") + " -> 1");
+                        g.localScale = Vector3.one;
+                    }
+                    // El Modelo toma la escala del prefab Visual_GuardiaNova: sin override en la escena.
+                    foreach (Animator an in g.GetComponentsInChildren<Animator>(true))
+                    {
+                        if (PrefabUtility.IsPartOfPrefabInstance(an.transform))
+                        {
+                            SerializedObject so = new SerializedObject(an.transform);
+                            PrefabUtility.RevertPropertyOverride(so.FindProperty("m_LocalScale"), InteractionMode.AutomatedAction);
+                        }
+                    }
+                }
+            }
+            EscalaProps();
+            Guardar("s2-escala");
+        }
+
+        /// <summary>Props fuera de escala contra el jugador (se llena con lo que salga en las capturas).</summary>
+        public static void EscalaProps()
+        {
+        }
+
         // ---------------------------------------------------------------- Postes
 
         /// <summary>Lleva la luz de cada farola a la cabeza de su lámpara (punta del brazo), apuntando hacia abajo. Devuelve cuántas movió.</summary>
