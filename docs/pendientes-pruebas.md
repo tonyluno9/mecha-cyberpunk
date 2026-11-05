@@ -44,7 +44,7 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 - [x] Que la ciudad tenga más calle más allá de lo jugable: los carros aparecen y desaparecen lejos y fuera de la vista; sin muros visibles al final; límites lejanos con niebla. (T-513 fondo lejano, T-530 afueras sin muro, T-532 aparecer y desaparecer fuera de la vista; T-588 lo prueba)
 - [C] Manejo: que frene y se detenga con inercia (no que se resbale); freno firme.
 - [C] Aviso cuando el carro se está incendiando ("¡Bájate, se va a quemar!").
-- [C] Motos: poder subirse y manejarlas.
+- [x] Motos: poder subirse y manejarlas. (T-532 subir; T-592 manejo de moto con inclinación y freno con inercia: ManejoMotoPruebas)
 - [x] Quitar la patrulla vieja fea; solo las patrullas nuevas (V05/V06/V08). (T-532: Patrulla.prefab usa V05 y el tráfico no lleva patrullas)
 - [D] Ruedas separadas.
 
@@ -126,10 +126,10 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 
 ## Carros y motos
 - [x] Bug: se pueden atravesar los coches (colisiones jugador–carro y carro–carro). (T-580: ColisionCoches/CiudadT580Pruebas)
-- [C] Prender y apagar las luces del carro (tecla), y faros encendidos de noche en el tráfico.
-- [C] Explosión con efectos (fuego, humo, chispas, onda, sonido) cuando el carro revienta.
+- [x] Prender y apagar las luces del carro (tecla), y faros encendidos de noche en el tráfico. (T-590: tecla L, LucesCarroPruebas)
+- [x] Explosión con efectos (fuego, humo, chispas, onda, sonido) cuando el carro revienta. (T-591: ExplosionCarroPruebas; estruendo provisional, falta audio real)
 - [x] Tráfico fluido (otra vez): sin choques tontos ni atorones. (T-588)
-- [C] Motos: ocultar el reposapié/caballete expuesto al manejar. Subirse necesita la animación [A].
+- [x] Motos: ocultar el reposapié/caballete expuesto al manejar. (T-592: malla sin caballete al manejar.) Subirse necesita la animación [A].
 
 ## Policía
 - [x] Persecución realista: patrullas que te siguen por las calles, cortan el paso, sirena, radio, se pierden si te escondes. (T-587)
