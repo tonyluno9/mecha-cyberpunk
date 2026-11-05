@@ -64,7 +64,8 @@ namespace MechaCyberpunk.Tests
                 {
                     if (total.HasValue) { Bounds b = total.Value; b.Encapsulate(r.bounds); total = b; } else { total = r.bounds; }
                 }
-                Assert.AreEqual(AlturaEsperada, total.Value.size.y, Tolerancia, "Altura del modelo (m)");
+                // S2 (playtest 5-nov): el Modelo se escala para que la altura animada iguale la del jugador; la pose de reposo crece igual.
+                Assert.AreEqual(AlturaEsperada * instancia.transform.Find("Giro/Modelo").localScale.y, total.Value.size.y, Tolerancia, "Altura del modelo (m)");
                 Assert.AreEqual(Vector3.one, instancia.transform.localScale, "La raíz no se escala");
                 Assert.IsNotNull(instancia.GetComponentInChildren<ApuntadoIK>(true), "ApuntadoIK para apuntar sin animación");
                 Assert.IsNotNull(instancia.GetComponentInChildren<ApuntadoIK>(true).SocketArma, "Socket de la mano para las armas");

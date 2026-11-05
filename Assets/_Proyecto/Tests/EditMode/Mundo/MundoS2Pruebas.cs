@@ -100,5 +100,24 @@ namespace MechaCyberpunk.Tests.Mundo
             }
             Assert.Greater(revisadas, 40);
         }
+
+        [Test]
+        public void Personajes_AnimadosQuedanALaAlturaDelJugador()
+        {
+            // Alturas de pie medidas en Play con la malla animada (ColocarS2.Personajes): la escala del Modelo las lleva a la del jugador.
+            foreach ((string prefab, float medida, float relativa) in MechaCyberpunk.Arte.Editor.ColocarS2.Personajes)
+            {
+                GameObject go = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Personaje/Visual/Prefabs/" + prefab + ".prefab");
+                Assert.IsNotNull(go, prefab);
+                float altura = medida * go.transform.Find("Giro/Modelo").localScale.y;
+                Assert.AreEqual(MechaCyberpunk.Arte.Editor.ColocarS2.AlturaJugador * relativa, altura, 0.03f, prefab + " fuera de escala contra el jugador");
+                Assert.That(relativa, Is.InRange(0.95f, 1.3f), prefab + ": ningún adulto enano ni gigante");
+            }
+            Transform guardias = escena.GetRootGameObjects().First(g => g.name == "T510_Guardias").transform;
+            foreach (Animator a in guardias.GetComponentsInChildren<Animator>(true))
+            {
+                Assert.AreEqual(1.4f * 1.25f / 1.49f, a.transform.lossyScale.y, 0.02f, "los guardias ya no se agrandan en la escena");
+            }
+        }
     }
 }

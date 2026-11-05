@@ -75,7 +75,8 @@ namespace MechaCyberpunk.Tests
                 {
                     if (total.HasValue) { Bounds b = total.Value; b.Encapsulate(r.bounds); total = b; } else { total = r.bounds; }
                 }
-                float esperada = CreadorVisualTripo.AlturaDe(nombre);
+                // S2 (playtest 5-nov): el Modelo se escala para que la altura animada iguale la del jugador (ColocarS2.Personajes); la pose de reposo crece igual.
+                float esperada = CreadorVisualTripo.AlturaDe(nombre) * instancia.transform.Find("Giro/Modelo").localScale.y;
                 Assert.AreEqual(esperada, total.Value.size.y, Tolerancia, nombre + ": altura (m)");
             }
             finally
