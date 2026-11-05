@@ -115,6 +115,11 @@ namespace MechaCyberpunk.IA.APie
                 if (value && !alerta)
                 {
                     Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
+                    // T-624: se burla al verte (Skull_Burla; el jefe, Jefe_Burla).
+                    if (visual != null)
+                    {
+                        visual.Burlar();
+                    }
                 }
                 alerta = value;
             }

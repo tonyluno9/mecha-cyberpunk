@@ -22,6 +22,19 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("Tiempo que se queda alerta mirando hacia el ruido (s).")]
         [Min(0.1f)] [SerializeField] private float segundosAlerta = 12f;
 
+        [Header("Presumir y amenazar (T-624)")]
+        [Tooltip("Cada cuántos segundos presume (Nova_Flexing) si estás a la vista y no hay alerta (s).")]
+        [Min(1f)] [SerializeField] private float segundosEntrePresumir = 25f;
+        [Tooltip("En alerta, a esta distancia o menos amenaza con golpes (Nova_Punch y Nova_Barrido) (m).")]
+        [Min(0.5f)] [SerializeField] private float radioGolpe = 2.2f;
+        [Tooltip("Segundos entre un golpe y el siguiente (s).")]
+        [Min(0.2f)] [SerializeField] private float segundosEntreGolpes = 1.5f;
+
+        private const float VariacionPresumir = 0.25f;
+        private VisualPersonaje visual;
+        private float proximoPresumir;
+        private float proximoGolpe;
+        private int golpesDados;
         private GenteDeBanqueta gente;
         private float finAlerta;
         private float proximaLlamada;
@@ -30,10 +43,23 @@ namespace MechaCyberpunk.Personaje.Visual
         public bool Alerta => Time.time < finAlerta;
         public float RadioVigila => radioVigila;
 
+        /// <summary>Cuántos golpes de amenaza ha lanzado (cada tercero es la barrida).</summary>
+        public int GolpesDados => golpesDados;
+
+        /// <summary>Para las pruebas y los creadores: tiempos de presumir y de golpear.</summary>
+        public void ConfigurarGestos(float entrePresumir, float entreGolpes)
+        {
+            segundosEntrePresumir = Mathf.Max(1f, entrePresumir);
+            segundosEntreGolpes = Mathf.Max(0.2f, entreGolpes);
+            proximoPresumir = Time.time + segundosEntrePresumir;
+        }
+
         private void Awake()
         {
             gente = GetComponent<GenteDeBanqueta>();
             gente.ConfigurarMirada(radioVigila, 0f);
+            visual = GetComponent<VisualPersonaje>();
+            proximoPresumir = Time.time + segundosEntrePresumir * Random.Range(0.2f, 1f);
         }
 
         private void OnEnable()
@@ -80,6 +106,35 @@ namespace MechaCyberpunk.Personaje.Visual
             if (!Alerta && gente.MirarA.HasValue)
             {
                 gente.MirarA = null;
+            }
+            AmenazarOPresumir();
+        }
+    
+        // Alerta y el jugador cerca: golpes de amenaza (el tercero es la barrida). Sin alerta y a la vista: presume de vez en cuando.
+        private void AmenazarOPresumir()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (visual == null || jugador == null || jugador.Raiz == null || jugador.Modo != ModoJugador.APie)
+            {
+                return;
+            }
+            Vector3 d = jugador.Raiz.position - transform.position;
+            d.y = 0f;
+            float distancia = d.magnitude;
+            if (Alerta)
+            {
+                if (distancia <= radioGolpe && Time.time >= proximoGolpe)
+                {
+                    proximoGolpe = Time.time + segundosEntreGolpes;
+                    golpesDados++;
+                    visual.Golpear(golpesDados % 3 == 0);
+                }
+                return;
+            }
+            if (distancia <= radioVigila && Time.time >= proximoPresumir)
+            {
+                proximoPresumir = Time.time + segundosEntrePresumir * (1f + Random.Range(-VariacionPresumir, VariacionPresumir));
+                visual.Presumir();
             }
         }
     }
