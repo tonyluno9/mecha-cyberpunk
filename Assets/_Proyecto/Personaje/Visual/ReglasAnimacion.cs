@@ -19,6 +19,21 @@ namespace MechaCyberpunk.Personaje.Visual
         Fuerte = 2,
     }
 
+    /// <summary>Gestos de una sola vez de la capa base (parámetro GestoTipo): carro, interacción y burla/presumir de enemigos (T-622 a T-624).</summary>
+    public enum GestoVisual
+    {
+        Ninguno = 0,
+        CarroEntrar = 1,
+        CarroSalir = 2,
+        Pitar = 3,
+        AbrirPuerta = 4,
+        Boton = 5,
+        Recoger = 6,
+        Telefono = 7,
+        Burla = 8,
+        Presumir = 9,
+    }
+
     /// <summary>
     /// Nombres y reglas del controlador base humanoide (T-561). Lógica pura, sin Animator: la usan VisualPersonaje, el constructor de editor
     /// y las pruebas. Los parámetros de ReglasVisual (Velocidad, EnPiso, Arma, KO...) se conservan; aquí están los nuevos.
@@ -38,6 +53,16 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string Frenar = "Frenar";
         /// <summary>Tiempo normalizado fijo del estado CoberturaMantener (la última pose de entrar).</summary>
         public const string PoseCobertura = "PoseCobertura";
+
+        /// <summary>Trigger que lanza un gesto; el tipo va en GestoTipo (<see cref="GestoVisual"/>).</summary>
+        public const string Gesto = "Gesto";
+        public const string GestoTipo = "GestoTipo";
+        /// <summary>Sentado al volante (estado CarroManejar). Se pone junto con el gesto CarroEntrar y se quita al bajar.</summary>
+        public const string Manejando = "Manejando";
+        /// <summary>Viendo el celular de pie (estado VerTelefono, en bucle).</summary>
+        public const string ViendoTelefono = "ViendoTelefono";
+        /// <summary>Etiqueta de los estados de la capa base que apagan el torso (gestos, manejar, celular).</summary>
+        public const string EtiquetaGesto = "Gesto";
 
         public const string CapaBase = "Base";
         public const string CapaArriba = "Arriba";
@@ -72,6 +97,7 @@ namespace MechaCyberpunk.Personaje.Visual
             "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "SaltoInicio", "SaltoAire", "SaltoAterrizaje", "Caida",
             "AgachadoCaminar", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2",
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
+            "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
         };
 
         /// <summary>Estados de la capa de arriba (torso).</summary>
@@ -79,15 +105,15 @@ namespace MechaCyberpunk.Personaje.Visual
         {
             "Vacio", "GolpeIzq", "GolpeDer", "GolpeFuerte", "DanoFrente", "DanoEspalda", "DanoFuerte",
             "PistolaIdle", "PistolaApuntar", "PistolaDisparo", "PistolaRecargar", "PistolaRecargarCaminar",
-            "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar",
+            "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
         public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura };
-        public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado };
-        public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo };
+        public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono };
+        public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
         public static readonly string[] ParametrosTrigger =
         {
-            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar,
+            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto,
         };
 
         /// <summary>
