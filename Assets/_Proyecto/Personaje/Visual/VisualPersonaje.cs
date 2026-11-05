@@ -65,6 +65,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdDanoTipo = Animator.StringToHash(ReglasAnimacion.DanoTipo);
         private static readonly int IdMuerteTipo = Animator.StringToHash(ReglasAnimacion.MuerteTipo);
         private static readonly int IdGolpeTipo = Animator.StringToHash(ReglasAnimacion.GolpeTipo);
+        private static readonly int IdRapidezGolpe = Animator.StringToHash(ReglasAnimacion.RapidezGolpe);
         private static readonly int IdCoberturaTipo = Animator.StringToHash(ReglasAnimacion.CoberturaTipo);
         private static readonly int IdDisparoCobertura = Animator.StringToHash(ReglasAnimacion.DisparoCobertura);
         private static readonly int IdFrenar = Animator.StringToHash(ReglasAnimacion.Frenar);
@@ -81,6 +82,11 @@ namespace MechaCyberpunk.Personaje.Visual
 
         public Animator Animador => animador;
         public bool LeerDelPadre { get => leerDelPadre; set => leerDelPadre = value; }
+
+        private float rapidezGolpes = 1f;
+
+        /// <summary>Rapidez de los golpes de puños (1 = la del clip). El jugador la sube para que la animación siga el ritmo del golpe del juego (T-652).</summary>
+        public float RapidezGolpes { get => rapidezGolpes; set => rapidezGolpes = Mathf.Max(0.1f, value); }
 
         /// <summary>0 = de pie, 1 = tumbado (KO).</summary>
         public float Tumbado => tumbado;
@@ -501,6 +507,7 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdAgachado, agachado);
             Poner(IdManejando, manejando);
             Poner(IdViendoTelefono, viendoTelefono);
+            Poner(IdRapidezGolpe, rapidezGolpes);
             if (leerDelPadre)
             {
                 Poner(IdVelX, velX);
