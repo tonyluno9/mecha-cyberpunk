@@ -113,7 +113,7 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 - [A] Caminar, correr, saltar, caer y quieto con animación propia (no solo los clips de Tripo).
 - [A] Subir y bajar de la moto y manejarla (por eso hoy no se puede subir).
 - [A] Más animaciones para NPC: platicar, ver el celular, recargarse en la pared, voltear a ver, asustarse/huir, sentarse.
-- [C] Conectarlas en cuanto estén en Assets/Arte/Personajes/Animaciones/.
+- [x] Conectarlas en cuanto estén en Assets/Arte/Personajes/Animaciones/. (T-560 a T-562 base; T-621 a T-624 carros, interacción, SKULLS, jefe y Nova; lo que falta en docs/animaciones-faltan.md)
 
 ## Jugador y cámara
 - [x] Field of view y cámara raros al caminar: cámara más pegada al personaje (hombro), FOV más cerrado, sin flotar. (T-585)
