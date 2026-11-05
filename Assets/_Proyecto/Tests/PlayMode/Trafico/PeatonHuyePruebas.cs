@@ -115,5 +115,55 @@ namespace MechaCyberpunk.Tests.Trafico
             float recorrido = peaton.transform.position.x - x;
             Assert.AreEqual(0.5f * config.Velocidad, recorrido, 0.15f, "Vuelve a caminar a su velocidad");
         }
+
+        // T-631: un peatón que alcanza a otro quieto, delante y en el mismo sentido, se frena sin atravesarlo.
+        [UnityTest]
+        public IEnumerator Peaton_AlcanzaAOtroQueVaDelante_SeFrenaSinAtravesarlo()
+        {
+            // El de adelante camina muy despacio (0,05 m/s): el de atrás lo alcanza.
+            ConfigPeatones lenta = ScriptableObject.CreateInstance<ConfigPeatones>();
+            typeof(ConfigPeatones).GetField("velocidad", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .SetValue(lenta, 0.05f);
+            GameObject objetoLento = new GameObject("PeatonLento");
+            objetoLento.transform.SetParent(raiz.transform, false);
+            objetoLento.SetActive(false);
+            PeatonMundo adelante = objetoLento.AddComponent<PeatonMundo>();
+            adelante.Preparar(Ruta, lenta, new System.Random(1), () => (Vector3?)null, 52f / 0.05f);
+            objetoLento.SetActive(true);
+            PeatonMundo atras = CrearPeaton(48f);
+            yield return new WaitForSeconds(3.5f);
+            Assert.IsTrue(atras.Frenado, "Se frena detrás del otro");
+            float separacion = Mathf.Abs(adelante.transform.position.x - atras.transform.position.x);
+            Assert.Greater(separacion, 0.5f, "No lo atraviesa");
+            Assert.Less(separacion, 1.2f, "Se quedó cerca pero sin chocar");
+            Object.Destroy(lenta);
+        }
+
+        // T-631: dos peatones que se cruzan en sentidos opuestos pasan cada uno por su derecha, sin encimarse.
+        [UnityTest]
+        public IEnumerator Peatones_EnSentidosOpuestos_SeCruzanSinEncimarse()
+        {
+            PeatonMundo ida = CrearPeaton(50f);
+            GameObject objeto = new GameObject("PeatonVuelta");
+            objeto.transform.SetParent(raiz.transform, false);
+            objeto.SetActive(false);
+            PeatonMundo vuelta = objeto.AddComponent<PeatonMundo>();
+            Vector3[] reves = { Ruta[1], Ruta[0] };
+            vuelta.Preparar(reves, config, new System.Random(2), () => (Vector3?)null, 140f / config.Velocidad);
+            objeto.SetActive(true);
+            float minima = float.MaxValue;
+            float fin = Time.time + 6f;
+            bool seCruzaron = false;
+            while (Time.time < fin)
+            {
+                yield return null;
+                Vector3 d = ida.transform.position - vuelta.transform.position;
+                minima = Mathf.Min(minima, d.magnitude);
+                seCruzaron |= ida.transform.position.x > vuelta.transform.position.x;
+            }
+            Assert.IsTrue(seCruzaron, "Se cruzaron");
+            Assert.Greater(minima, 0.45f, "Nunca se encimaron (distancia mínima " + minima + ")");
+            Assert.IsFalse(ida.Frenado || vuelta.Frenado, "Los que van en sentidos opuestos no se frenan");
+        }
     }
 }
