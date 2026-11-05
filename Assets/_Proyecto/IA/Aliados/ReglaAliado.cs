@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MechaCyberpunk.Core;
 using UnityEngine;
 
 namespace MechaCyberpunk.IA.Aliados
@@ -15,6 +16,45 @@ namespace MechaCyberpunk.IA.Aliados
 
         private static readonly float[] Vidas = { 80f, 110f, 140f };
         private static readonly float[] Danios = { 6f, 8f, 10f };
+
+        /// <summary>Distancia a pie a la que, si te alejas, el aliado se te teletransporta cerca (m).</summary>
+        public const float DistanciaAlcanzar = 40f;
+
+        /// <summary>Qué hace el aliado según tu modo, la orden y tu distancia (T-630).</summary>
+        public enum Accion
+        {
+            Esperar,
+            Caminar,
+            Correr,
+            /// <summary>Va contigo dentro del carro o el mecha: se oculta y viaja a tu posición.</summary>
+            IrAbordo,
+            /// <summary>Quedó muy lejos: reaparece cerca de ti.</summary>
+            Alcanzar
+        }
+
+        public static Accion Decidir(bool siguiendo, ModoJugador modo, float distancia)
+        {
+            if (!siguiendo)
+            {
+                return Accion.Esperar;
+            }
+            if (modo != ModoJugador.APie)
+            {
+                return Accion.IrAbordo;
+            }
+            if (distancia > DistanciaAlcanzar)
+            {
+                return Accion.Alcanzar;
+            }
+            if (distancia > DistanciaMax)
+            {
+                return distancia > DistanciaCorrer ? Accion.Correr : Accion.Caminar;
+            }
+            return Accion.Esperar;
+        }
+
+        public const float DistanciaMax = 5f;
+        public const float DistanciaCorrer = 8f;
 
         public static int Nivel(int vencidos)
         {

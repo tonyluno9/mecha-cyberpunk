@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Aliados;
 using NUnit.Framework;
 using UnityEngine;
@@ -25,6 +26,19 @@ namespace MechaCyberpunk.Tests.IA
             Assert.AreEqual(0, ReglaAliado.ElegirObjetivo(jugador, rivales, 0), "El que te disparó (15 m).");
             rivales.Add(new Vector3(0f, 0f, 25f));
             Assert.AreEqual(-1, ReglaAliado.ElegirObjetivo(jugador, new List<Vector3> { new Vector3(0f, 0f, 25f) }, 0), "Fuera de 20 m no ataca.");
+        }
+
+        [Test]
+        public void Decidir_SiguiendoYModos_ElAliadoSigueSeSubeOAlcanza()
+        {
+            Assert.AreEqual(ReglaAliado.Accion.Esperar, ReglaAliado.Decidir(false, ModoJugador.APie, 20f), "Con espera no se mueve.");
+            Assert.AreEqual(ReglaAliado.Accion.Esperar, ReglaAliado.Decidir(false, ModoJugador.Carro, 20f), "Con espera tampoco se sube.");
+            Assert.AreEqual(ReglaAliado.Accion.Esperar, ReglaAliado.Decidir(true, ModoJugador.APie, 3f));
+            Assert.AreEqual(ReglaAliado.Accion.Caminar, ReglaAliado.Decidir(true, ModoJugador.APie, 6f));
+            Assert.AreEqual(ReglaAliado.Accion.Correr, ReglaAliado.Decidir(true, ModoJugador.APie, 15f));
+            Assert.AreEqual(ReglaAliado.Accion.Alcanzar, ReglaAliado.Decidir(true, ModoJugador.APie, 60f));
+            Assert.AreEqual(ReglaAliado.Accion.IrAbordo, ReglaAliado.Decidir(true, ModoJugador.Carro, 3f));
+            Assert.AreEqual(ReglaAliado.Accion.IrAbordo, ReglaAliado.Decidir(true, ModoJugador.Mecha, 100f));
         }
     }
 }
