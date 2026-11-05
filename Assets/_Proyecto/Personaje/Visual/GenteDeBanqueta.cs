@@ -14,6 +14,8 @@ namespace MechaCyberpunk.Personaje.Visual
         Platicar,
         /// <summary>Camina de un punto a otro de la banqueta y vuelve (se detiene un momento en cada extremo).</summary>
         Caminar,
+        /// <summary>De pie viendo el celular (Inter_VerTelefono en bucle, T-623).</summary>
+        Celular,
     }
 
     /// <summary>
@@ -40,6 +42,9 @@ namespace MechaCyberpunk.Personaje.Visual
         [Range(0f, 1f)] [SerializeField] private float fase;
         [Tooltip("Quien se mueve al caminar (el objeto que envuelve al visual); vacío = el padre.")]
         [SerializeField] private Transform mover;
+
+        [Tooltip("Quieto: fracción de la gente (0 a 1, según su fase) que está viendo el celular.")]
+        [Range(0f, 1f)] [SerializeField] private float fraccionCelular = 0.15f;
 
         private const float GradosPorSegundoGiro = 220f;
         // T-534: te voltea a ver extrañado si te quedas cerca y quieto (o siempre, a más distancia, si vigila: los guardias de Nova).
@@ -73,6 +78,9 @@ namespace MechaCyberpunk.Personaje.Visual
         private float segundosQuieto = SegundosQuietoNormal;
 
         public ModoGente Modo => modo;
+
+        /// <summary>True si esta persona ve el celular: modo Celular, o una parte de la gente quieta (por su fase).</summary>
+        public bool ViendoCelular => modo == ModoGente.Celular || (modo == ModoGente.Quieto && fase >= 1f - fraccionCelular);
         public float Velocidad => velocidad;
         public Vector3 PuntoA => puntoA;
         public Vector3 PuntoB => puntoB;
@@ -140,6 +148,11 @@ namespace MechaCyberpunk.Personaje.Visual
         private void OnEnable()
         {
             t = fase * 40f;
+            VisualPersonaje visualCelular = GetComponent<VisualPersonaje>();
+            if (visualCelular != null && ViendoCelular)
+            {
+                visualCelular.ViendoTelefono = true;
+            }
             if (modo == ModoGente.Platicar)
             {
                 IniciarPlatica();
@@ -299,7 +312,7 @@ namespace MechaCyberpunk.Personaje.Visual
                 // Extrañado: ladea la cabeza.
                 cabeza.localRotation *= Quaternion.Euler(0f, 0f, InclinacionExtranado);
             }
-            if (modo != ModoGente.Quieto || animador == null || cuerpo == null || (!cuerpo.isVisible && animador.cullingMode != AnimatorCullingMode.AlwaysAnimate))
+            if ((modo != ModoGente.Quieto && modo != ModoGente.Celular) || animador == null || cuerpo == null || (!cuerpo.isVisible && animador.cullingMode != AnimatorCullingMode.AlwaysAnimate))
             {
                 return;
             }

@@ -159,6 +159,12 @@ namespace MechaCyberpunk.UI.Misiones
                 return;
             }
             congela.Congelar();
+            // T-623: el jugador saca el teléfono (Inter_Telefono).
+            JugadorAPie jugadorGesto = Registro<IJugador>.Actual as JugadorAPie;
+            if (jugadorGesto != null)
+            {
+                jugadorGesto.GetComponent<GestosJugador>()?.SacarTelefono();
+            }
             abierto = true;
             confirmando = false;
             pestana = PestanaTelefono.Contratos;
