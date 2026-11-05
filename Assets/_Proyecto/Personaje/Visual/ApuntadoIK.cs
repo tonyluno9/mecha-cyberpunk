@@ -33,6 +33,28 @@ namespace MechaCyberpunk.Personaje.Visual
         private Animator animador;
         private float peso;
 
+        [Header("Arma en la mano (S1)")]
+        [Tooltip("Máximo que se gira la mano derecha al apuntar para que el cañón mire al frente (°).")]
+        [Range(0f, 90f)] [SerializeField] private float maximoCorreccionCanon = 45f;
+        [Tooltip("Inclinación del cañón de las armas largas (°, positiva hacia arriba): siempre se llevan listas al frente, no cruzadas sobre el pecho como en la animación.")]
+        [Range(-45f, 45f)] [SerializeField] private float inclinacionArmaLarga = -5f;
+        [Tooltip("Máximo que se gira el arma larga para dejarla al frente (°).")]
+        [Range(0f, 180f)] [SerializeField] private float maximoCorreccionArmaLarga = 120f;
+        [Tooltip("Rapidez con la que la mano izquierda se pega al arma o se suelta (1/s).")]
+        [Min(0.1f)] [SerializeField] private float rapidezManoIzquierda = 8f;
+
+        private static readonly int HashRecargarPistola = Animator.StringToHash("PistolaRecargar");
+        private static readonly int HashRecargarPistolaCaminar = Animator.StringToHash("PistolaRecargarCaminar");
+        private static readonly int HashRecargarLarga = Animator.StringToHash("LargaRecargar");
+        private int capaArriba = -2;
+        private float pesoIzquierda;
+        private float pesoCorreccion;
+        private Transform armaActiva;
+        private Transform agarreIzquierdo;
+
+        /// <summary>Qué tanto está pegada la mano izquierda al arma (0 a 1).</summary>
+        public float PesoManoIzquierda => pesoIzquierda;
+
         /// <summary>Qué tanto está levantada el arma, de 0 (bajada) a 1.</summary>
         public float Peso => peso;
 
@@ -60,11 +82,13 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             bool arriba = visual.Apuntando && visual.TipoArma != TipoArmaVisual.Ninguna && !visual.Caido;
             peso = Mathf.MoveTowards(peso, arriba ? 1f : 0f, rapidez * Time.deltaTime);
+            ActualizarManoIzquierda();
         }
+
 
         private void LateUpdate()
         {
-            if (socketArma == null || visual == null)
+            if (socketArma == null || visual == null || !manosPorIK)
             {
                 return;
             }
@@ -76,6 +100,92 @@ namespace MechaCyberpunk.Personaje.Visual
             socketArma.rotation = Quaternion.LookRotation(canon, Vector3.up) * Quaternion.Euler(-90f, 0f, 0f);
         }
 
+        // El arma que se ve en la mano (hija del socket y activa) y su punto de agarre de la mano izquierda.
+        private void BuscarArmaActiva()
+        {
+            armaActiva = null;
+            agarreIzquierdo = null;
+            if (socketArma == null)
+            {
+                return;
+            }
+            foreach (Transform hijo in socketArma)
+            {
+                if (hijo.gameObject.activeInHierarchy && hijo.Find(AgarresArmas.NombreAgarreIzquierdo) != null)
+                {
+                    armaActiva = hijo;
+                    agarreIzquierdo = hijo.Find(AgarresArmas.NombreAgarreIzquierdo);
+                    return;
+                }
+            }
+        }
+
+        private bool Recargando()
+        {
+            if (capaArriba == -2)
+            {
+                capaArriba = animador.GetLayerIndex(ReglasAnimacion.CapaArriba);
+            }
+            if (capaArriba < 0)
+            {
+                return false;
+            }
+            AnimatorStateInfo actual = animador.GetCurrentAnimatorStateInfo(capaArriba);
+            AnimatorStateInfo siguiente = animador.GetNextAnimatorStateInfo(capaArriba);
+            bool EsRecarga(AnimatorStateInfo s) => s.shortNameHash == HashRecargarPistola || s.shortNameHash == HashRecargarPistolaCaminar || s.shortNameHash == HashRecargarLarga;
+            return EsRecarga(actual) || (animador.IsInTransition(capaArriba) && EsRecarga(siguiente));
+        }
+
+        // Pistola a dos manos al apuntar; arma larga a dos manos y al frente siempre; recargando la mano izquierda trabaja sola (T-650).
+        private void ActualizarManoIzquierda()
+        {
+            float objetivo = 0f;
+            float objetivoCorreccion = 0f;
+            if (!manosPorIK && animador != null && !visual.Caido && visual.TipoArma != TipoArmaVisual.Ninguna && !Recargando())
+            {
+                bool larga = visual.TipoArma == TipoArmaVisual.ArmaLarga;
+                objetivo = larga ? 1f : peso;
+                objetivoCorreccion = larga ? 1f : peso;
+            }
+            pesoIzquierda = Mathf.MoveTowards(pesoIzquierda, objetivo, rapidezManoIzquierda * Time.deltaTime);
+            pesoCorreccion = Mathf.MoveTowards(pesoCorreccion, objetivoCorreccion, rapidezManoIzquierda * Time.deltaTime);
+        }
+
+        private void AplicarIKConArma()
+        {
+            BuscarArmaActiva();
+            if (armaActiva == null)
+            {
+                return;
+            }
+            Transform manoDerecha = animador.GetBoneTransform(HumanBodyBones.RightHand);
+            Transform manoIzquierda = animador.GetBoneTransform(HumanBodyBones.LeftHand);
+            if (manoDerecha == null || manoIzquierda == null)
+            {
+                return;
+            }
+            // Dentro de OnAnimatorIK los huesos traen la pose de la animación de este cuadro, sin IK. Las metas de IK de las manos no están en
+            // el hueso (llevan un giro y una distancia propios), así que se mueven en relación con ellas: meta nueva = meta animada + lo que hay que mover el hueso.
+            // Al apuntar el cañón mira al frente: se gira la mano derecha por IK (la animación apunta algo a un lado) y la izquierda la sigue.
+            bool larga = visual.TipoArma == TipoArmaVisual.ArmaLarga;
+            Quaternion correccion = AgarresArmas.CorreccionDeArma(armaActiva.rotation, visual.transform.forward, pesoCorreccion,
+                larga ? maximoCorreccionArmaLarga : maximoCorreccionCanon, larga ? inclinacionArmaLarga : float.NaN);
+            if (pesoCorreccion > 0.001f)
+            {
+                animador.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+                animador.SetIKRotation(AvatarIKGoal.RightHand, correccion * animador.GetIKRotation(AvatarIKGoal.RightHand));
+            }
+            if (pesoIzquierda > 0.001f && agarreIzquierdo != null)
+            {
+                Vector3 destino = manoDerecha.position + correccion * (agarreIzquierdo.position - manoDerecha.position);
+                Quaternion giroDestino = correccion * agarreIzquierdo.rotation;
+                animador.SetIKPositionWeight(AvatarIKGoal.LeftHand, pesoIzquierda);
+                animador.SetIKRotationWeight(AvatarIKGoal.LeftHand, pesoIzquierda);
+                animador.SetIKPosition(AvatarIKGoal.LeftHand, animador.GetIKPosition(AvatarIKGoal.LeftHand) + (destino - manoIzquierda.position));
+                animador.SetIKRotation(AvatarIKGoal.LeftHand, giroDestino * Quaternion.Inverse(manoIzquierda.rotation) * animador.GetIKRotation(AvatarIKGoal.LeftHand));
+            }
+        }
+
         private void OnAnimatorIK(int capa)
         {
             if (animador == null || visual == null)
@@ -84,6 +194,10 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             if (!manosPorIK)
             {
+                if (capa == 0)
+                {
+                    AplicarIKConArma();
+                }
                 return;
             }
             Transform pecho = animador.GetBoneTransform(HumanBodyBones.UpperChest);

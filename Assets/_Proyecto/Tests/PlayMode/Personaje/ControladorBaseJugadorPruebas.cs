@@ -36,7 +36,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Animator a = Visual().Animador;
             Assert.IsInstanceOf<AnimatorOverrideController>(a.runtimeAnimatorController);
             Assert.AreEqual("Override_Jugador", a.runtimeAnimatorController.name);
-            Assert.AreEqual(2, a.layerCount);
+            Assert.AreEqual(3, a.layerCount, "Base, Arriba y Piernas (arma)");
             Assert.AreEqual("Base", a.GetLayerName(0));
             Assert.AreEqual("Arriba", a.GetLayerName(1));
         }

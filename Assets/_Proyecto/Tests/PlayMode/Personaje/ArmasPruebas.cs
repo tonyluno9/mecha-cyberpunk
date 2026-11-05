@@ -123,7 +123,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             objetivo = GameObject.CreatePrimitive(PrimitiveType.Cube);
             objetivo.transform.position = new Vector3(0f, 4f, DistanciaMuneco);
-            objetivo.transform.localScale = new Vector3(1f, 8f, 1f);
+            objetivo.transform.localScale = new Vector3(4f, 8f, 1f); // ancho: la cámara al hombro apunta 0.45 m a un lado y los perdigones se abren, así el daño no depende del azar
             MunecoAPie muneco = objetivo.AddComponent<MunecoAPie>();
             Physics.SyncTransforms();
             float antes = muneco.Actual;

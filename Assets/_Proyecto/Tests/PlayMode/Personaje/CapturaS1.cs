@@ -8,6 +8,14 @@ namespace MechaCyberpunk.Tests.Personaje
     {
         public static bool Activa => System.Environment.GetEnvironmentVariable("CAPTURAR_S1") == "1";
 
+        /// <summary>Foto de cerca de un punto del mundo, desde una dirección en coordenadas locales del jugador a <paramref name="distancia"/> metros.</summary>
+        public static void FotoMira(string nombre, Transform jugador, Vector3 objetivo, Vector3 direccionLocal, float distancia, float fov = 30f, int tamano = 600)
+        {
+            if (!Activa) return;
+            Vector3 camara = objetivo + jugador.TransformDirection(direccionLocal.normalized) * distancia;
+            Foto(nombre, jugador, jugador.InverseTransformPoint(camara), jugador.InverseTransformPoint(objetivo), fov, tamano, tamano);
+        }
+
         /// <summary>Foto del objetivo desde un punto en coordenadas locales del jugador (x derecha, y arriba, z adelante), mirando a <paramref name="mira"/> (también local).</summary>
         public static void Foto(string nombre, Transform jugador, Vector3 camaraLocal, Vector3 miraLocal, float fov = 40f, int ancho = 900, int alto = 900)
         {
