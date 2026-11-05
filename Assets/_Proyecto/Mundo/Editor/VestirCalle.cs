@@ -18,6 +18,8 @@ namespace MechaCyberpunk.Mundo.Editor
         private const string RutaHule = "Assets/Arte/Materiales/Hule_Negro.mat";
         private const float AltoBanqueta = 0.2f;
         private const float DistanciaPoste = 39.4f;
+        /// <summary>T-637: el puesto del kit medía 3.49 m con letrero; a esta escala mide ~2.5 m y el mostrador queda cerca de 1 m (persona de 1.8 m).</summary>
+        internal const float EscalaPuestoTacos = 0.72f;
         private const float DistanciaPuesto = 39.35f;
         private const float DistanciaBasurero = 39.3f;
         private const float SeparacionTransformador = 4f;
@@ -274,7 +276,8 @@ namespace MechaCyberpunk.Mundo.Editor
 
         private static void PuestoTacos(Transform padre, Vector3 posicion, Quaternion rotacion, string nombre)
         {
-            Pieza("Puesto_Tacos", padre, posicion, rotacion, nombre, true, new Vector3(0f, 0.85f, 0f), new Vector3(3.1f, 1.7f, 1.2f));
+            GameObject puesto = Pieza("Puesto_Tacos", padre, posicion, rotacion, nombre, true, new Vector3(0f, 0.85f, 0f), new Vector3(3.1f, 1.7f, 1.2f));
+            puesto.transform.localScale = Vector3.one * EscalaPuestoTacos;
         }
 
         /// <summary>Los puestos del mercado negro, pegados al muro este del callejón (x = -19.9 local de Manzana_2) y de frente al callejón.</summary>
