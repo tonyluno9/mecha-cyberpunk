@@ -171,13 +171,28 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void ListaDeAnimacionesQueFaltan_Existe()
+        public void ListaDeAnimacionesQueFaltan_PideLoQueDeVerdadFalta()
         {
             Assert.IsTrue(System.IO.File.Exists("docs/animaciones-faltan.md"));
             string texto = System.IO.File.ReadAllText("docs/animaciones-faltan.md");
-            foreach (string clip in new[] { "ApuntarPistola", "DispararPistola", "ApuntarLarga", "DispararLarga", "Recargar", "Golpe", "RecibirGolpe", "Caer", "Cubrirse", "Rodar" })
+            // Lo que sigue faltando (T-625).
+            foreach (string archivo in new[] { "Loco_Rodar.fbx", "NPC_SentadoEscribiendo_Bucle.fbx", "NPC_Platicar1_Bucle.fbx", "NPC_RecargadoPared_Bucle.fbx", "NPC_Aterrado_Bucle.fbx", "Moto_Subir.fbx" })
             {
-                StringAssert.Contains(clip, texto);
+                StringAssert.Contains(archivo, texto);
+            }
+            // Cada archivo de la tabla debe faltar de verdad: no puede haber ya un FBX con ese nombre en Animaciones/.
+            var existentes = new System.Collections.Generic.HashSet<string>();
+            foreach (string ruta in System.IO.Directory.GetFiles("Assets/Arte/Personajes/Animaciones", "*.fbx", System.IO.SearchOption.AllDirectories))
+            {
+                existentes.Add(System.IO.Path.GetFileName(ruta));
+            }
+            foreach (string linea in texto.Split('\n'))
+            {
+                if (!linea.StartsWith("|") || linea.StartsWith("| ---") || linea.StartsWith("| Para qué")) continue;
+                foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(linea, @"\w+\.fbx"))
+                {
+                    Assert.IsFalse(existentes.Contains(m.Value), m.Value + " ya está importado: quítalo de docs/animaciones-faltan.md");
+                }
             }
         }
     }
