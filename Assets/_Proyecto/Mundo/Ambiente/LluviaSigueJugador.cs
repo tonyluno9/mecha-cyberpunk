@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
         private float intensidad = -1f;
 
         /// <summary>Interruptor global de la lluvia.</summary>
-        public static bool Activa { get; set; } = true;
+        public static bool Activa { get; set; } = false; // S2 (playtest 5-nov): sin lluvia en el juego; las pruebas la prenden a mano
 
         /// <summary>Qué tanto llueve ahora (0 a 1; de día, la fracción de la config).</summary>
         public float Intensidad => intensidad;
@@ -53,7 +53,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
         {
-            Activa = true;
+            Activa = false;
         }
 
         private void Awake()
