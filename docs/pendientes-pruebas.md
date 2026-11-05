@@ -92,7 +92,7 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 - [A] Letrero y entrada del casino generados (hoy es mezcla de asset y formas).
 - [x] Entradas y salidas de todos los edificios: se ven rotas y hay una pared negra al cruzar; que la puerta abra y se vea el interior. (T-536)
 - [A] Interior del casino: imagen de referencia + mesas y assets; hoy se ve vacío.
-- [C] El Hacker (SERGIO) sentado en una mesa programando (necesita animación de sentado de Mixamo) y a escala.
+- [x] El Hacker (SERGIO) sentado en una mesa programando (necesita animación de sentado de Mixamo) y a escala. (T-639 pose procedural)
 - Comprar fichas primero: gustó, se queda.
 
 ---

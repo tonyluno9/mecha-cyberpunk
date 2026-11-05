@@ -1146,3 +1146,16 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - T-637 (5-nov, Sonnet): puestos de tacos del kit (3.49 m con letrero) escalados a 0.72 (~2.5 m) en VestirCalle.PuestoTacos (generador) y en Ciudad y Ciudad_Prologo con Mundo/Editor/EscalarPuestosT637.Aplicar (idempotente; tambien separa 2 puestos N03 que se traslapaban con Puesto_2 moviendolos en X). Los puestos de mesa ya median mostrador ~1.0 m. Pruebas EscalaPuestosT637Pruebas (3): alto 1.8 a 2.9 m, mostrador 0.8 a 1.1 m, sin traslape de bounds en las dos escenas. Sin captura. Toque Mundo/Editor y 2 escenas de Alan por encargo explicito de Tony.
 
 - T-638 (5-nov, Sonnet): los menus, HUD y mapa ya usaban el kit del mockup (T-521/522). Lo que faltaba eran las pantallas hechas antes (tienda, telefono, misiones, clinica, taller, apuesta, cartelera): KitUI.VestirPantalla les pone el marco 9-slice de UI01 (con la opacidad de ConfigPantalla.ColorFondo), Teko en textos grandes, Rajdhani en el resto y el contorno de la guia; se llama donde antes se hacia fondo.color = config.ColorFondo. Las pantallas de cabina quedaron igual (son 3D en la cabina). Prueba EditMode VestirPantallaT638Pruebas; captura docs/capturas/T-638-telefono.png (CAPTURAR_T638=1 en TelefonoMensajesPruebas). Sin captura de la tienda.
+
+## T-639: EL HACKER sentado con pose procedural
+- No existe un clip de sentado (NPC_SentadoEscribiendo_Bucle.fbx). Se usa `PoseSentado` (Personaje/Visual): en LateUpdate baja la cadera a 0.5 m y orienta muslos, pantorrillas, brazos y cabeza por la dirección hacia el hueso hijo, con vaivén de manos al teclear.
+- Silla, mesa y laptop son cubos con materiales propios (Personaje/Visual/Materiales) bajo `Set_Hacker`, creados con `ColocarHackerT639`. Cuando exista el clip, se cambia el componente por el Animator y se conserva el set.
+- La escala ya era 1.8 m (medida con los renderers); no se cambió.
+
+- Calles con curvas y diagonales (pendiente [?], noche 5-nov): no se hicieron.
+  - La frase del pendiente quedó cortada ("muchas…"), así que no se sabe exactamente qué se pedía.
+  - Hacerlo es rehacer la cuadrícula de la ciudad (GeometriaBarrio, Mundo/, área de Alan). Eso rompe el tráfico, la ruta GPS de T-632 y muchas pruebas, y no cabía antes del corte de las 15:00 UTC.
+  - Queda para una tarea propia con Alan, cuando la frase esté completa.
+- docs/plan-noche-05nov.md (0658f6c, en disco y en origin/main) no tiene "Paso 4".
+  - Se tomó como Paso 4 su línea final: builds, reporte y Unity cerrado.
+  - Si Tony escribió otro Paso 4, no quedó guardado en el repo.

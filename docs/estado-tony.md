@@ -350,7 +350,7 @@ Opus orquestó y Sonnet implementó. Cada paso se mezcló a main con push.
   - T-634: prueba de la lluvia que llega al piso.
   - T-635: cielo con nubes y estrellas, y luz de día cálida. Se arreglaron las pruebas Asfalto y SinGreyboxT506.
   - En docs/pendientes-pruebas.md se marcaron 38 [x] (T-530 a T-537 y T-630 a T-635).
-- **Paso 4**: Builds/Demo (MechaCyberpunk.exe) y Builds/Juego regenerados otra vez a las 14:03 UTC con main 65f6d0c (incluye T-636 a T-638), ambos con "Result: Success" y Unity cerrado.
+- **Paso 4**: Builds/Demo (MechaCyberpunk.exe) y Builds/Juego regenerados por última vez a las 14:45 UTC con T-636 a T-639, ambos con "Result: Success" y Unity cerrado.
 
 **Qué sigue:**
 - Segunda tanda del paso 3, a pedido del hook de meta, porque el corte de las 13:15 UTC era mío y no del plan:
@@ -358,10 +358,15 @@ Opus orquestó y Sonnet implementó. Cada paso se mezcló a main con push.
   - T-637 (3435c4f): puestos de tacos a escala 0,72, unos 2,5 m. En Ciudad y Ciudad_Prologo se separaron 2 puestos que se traslapaban. Pruebas 3/3 más 44 de mundo.
   - T-638 (a36e285): KitUI.VestirPantalla pone marco UI01 y fuentes Teko/Rajdhani en tienda, teléfono, misiones, clínica, banco, taller, apuesta y cartelera. Captura: T-638-telefono.png.
   - RecorridoDemoPruebas 2/2.
-- Calles con curvas: no se hicieron. El pendiente es [?] porque la frase quedó cortada.
+- T-639 (a07c7f1): Hacker SERGIO sentado a una mesa con laptop, en pose procedural (PoseSentado) hasta que exista NPC_SentadoEscribiendo_Bucle.fbx.
+  - HackerSentadoPruebas 3/3; captura revisada.
+  - La mesa y la silla no tienen colisión.
+  - RecorridoDemoPruebas con T-639: la corrida final de las 14:35 UTC no dio resultado. Unity se cayó (crash handler) y se cortó a los 600 s.
+    - Antes del ajuste de orientación pasó 2/2. Las builds de las 14:45 UTC salieron con "Result: Success".
+    - Repetir RecorridoDemoPruebas es lo primero de la próxima sesión.
+- Calles con curvas: no se hicieron (razón en decisiones-pendientes-tony.md). El pendiente es [?] porque la frase quedó cortada.
 - Abiertos:
   - Agacharse de los NPC.
-  - Hacker sentado (falta la animación).
 - Faltan audios y animaciones, listados en docs/sonidos-sugerencias.md y docs/animaciones-faltan.md.
 - La ruta GPS usa el grafo de las 6 manzanas de GeometriaBarrio, no la ciudad completa.
 - Pruebas que siguen rojas, conocidas y sin perseguir:
