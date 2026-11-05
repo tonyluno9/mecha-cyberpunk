@@ -64,6 +64,8 @@ namespace MechaCyberpunk.Progresion.Sonido
         public int Pedidos(string id) => conteo.TryGetValue(id, out int n) ? n : 0;
 
         /// <summary>Tono, volumen relativo y clip del último sonido puntual que sonó (para las pruebas).</summary>
+        public float UltimaDistanciaMaxima => fuentes != null && UltimaFuente != null ? UltimaFuente.maxDistance : 0f;
+        private AudioSource UltimaFuente;
         public float UltimoTono { get; private set; } = 1f;
         public float UltimoVolumenRelativo { get; private set; } = 1f;
         public AudioClip UltimoClip { get; private set; }
@@ -215,10 +217,12 @@ namespace MechaCyberpunk.Progresion.Sonido
             f.clip = clip;
             f.loop = false;
             f.pitch = tono;
+            f.maxDistance = politica.DistanciaMaxima > 0f ? politica.DistanciaMaxima : distanciaMaxima;
             f.volume = VolumenFinal(seccion) * politica.Volumen;
             UltimoTono = tono;
             UltimoVolumenRelativo = politica.Volumen;
             UltimoClip = clip;
+            UltimaFuente = f;
             if (politica.MaxVoces > 0)
             {
                 voces.Add(new VozActiva { fuente = f, grupo = politica.Grupo, inicio = ahora, fin = ahora + clip.length / Mathf.Max(0.1f, tono) });
