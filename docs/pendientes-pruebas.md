@@ -14,36 +14,36 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 
 ## Pantallas
 - [A] Logo nuevo: el juego probablemente se llamará CYBER STREET (por confirmar).
-- [C] Pantalla de título con fondo animado (vistas de calles, cámara lenta por la ciudad) en vez de imagen fija.
+- [x] Pantalla de título con fondo animado (vistas de calles, cámara lenta por la ciudad) en vez de imagen fija. (T-537: ciudad en cámara lenta detrás del menú)
 - [x] Bug: al dar CONTINUAR desaparece todo. (T-537: CARGANDO… al continuar)
 - [A] Creación de personaje: rediseñar al 100% (primero mockup).
-- [C] Menú de armas del HUD: iconos, fondo y colores como el mockup.
-- [C] HUD: mostrar la hora del juego.
+- [x] Menú de armas del HUD: iconos, fondo y colores como el mockup. (T-537: panel de armas como el mockup)
+- [x] HUD: mostrar la hora del juego. (T-537: hora bajo los Biits)
 - [D] Teléfono con animación al sacarlo (se descartó para la demo).
 
 ## Escala y cámara (general)
-- [C] El personaje se ve muy pequeño frente al mundo (muros, puertas, mesas, objetos). Revisar la escala de TODO contra una persona de 1.8 m (puerta 2.1 m, mesa 0.75 m, banca 0.45 m, muro de piso 3 m) y acercar un poco la cámara. NPC y profes a la misma escala que el jugador. Robot de Nova más grande que una persona (2.1–2.3 m).
+- [x] El personaje se ve muy pequeño frente al mundo (muros, puertas, mesas, objetos). Revisar la escala de TODO contra una persona de 1.8 m (puerta 2.1 m, mesa 0.75 m, banca 0.45 m, muro de piso 3 m) y acercar un poco la cámara. NPC y profes a la misma escala que el jugador. Robot de Nova más grande que una persona (2.1–2.3 m). (T-530: personajes a 1.8 m, mundo y puertas a escala, Nova a 2.2 m)
 
 ## Tu habitación (inicio de la demo)
-- [C] Quitar la estación del mecha (T02) y dejar solo un banco de trabajo; no debe parecer taller.
-- [C] Quitar a la mujer NPC que está dentro de la habitación.
-- [C] Arreglar la puerta y la entrada de la habitación.
+- [x] Quitar la estación del mecha (T02) y dejar solo un banco de trabajo; no debe parecer taller. (T-531)
+- [x] Quitar a la mujer NPC que está dentro de la habitación. (T-531: LA GÜERA sale a la banqueta)
+- [x] Arreglar la puerta y la entrada de la habitación. (T-536 y T-550)
 - [A] Imagen de referencia de la habitación + assets nuevos para amueblarla bien.
 
 ## Calle de inicio y personajes
-- [C] El carro de enfrente dice "CARRO VIEJO" pero es moderno: nombre según el modelo.
-- [C] Los enemigos SKULLS deben usar el modelo SkullHombre (no el genérico).
+- [x] El carro de enfrente dice "CARRO VIEJO" pero es moderno: nombre según el modelo. (T-532: nombre por modelo)
+- [x] Los enemigos SKULLS deben usar el modelo SkullHombre (no el genérico). (T-533)
 - [A] Modelo de la pistola que suelta el SKULL (falta el archivo).
-- [C] Tino el Inventor no va enfrente de tu casa: va en la calle de al lado (donde están la peluquería, elotes, etc.), con su local junto al taller mecánico.
+- [x] Tino el Inventor no va enfrente de tu casa: va en la calle de al lado (donde están la peluquería, elotes, etc.), con su local junto al taller mecánico. (T-531: CIC junto al MECÁNICO)
 - [A] Interior propio para el taller de Tino y el taller mecánico (imagen de referencia + assets).
-- [C] El Doc no va junto a El Mercado: necesita su propia área (I+D+I aparte).
+- [x] El Doc no va junto a El Mercado: necesita su propia área (I+D+I aparte). (T-531: I+D+I aparte)
 - [A] Interior del consultorio del Doc.
 
 ## Carros y tráfico
 - [x] Los carros del tráfico se estrellan mucho: carriles, distancia de seguimiento, frenar ante obstáculos y otros carros, acomodarse. (T-532 carriles, frenado y cruces; T-588 destrabe de atorones y sin salir encimados: TraficoFluidoT588Pruebas)
 - [x] Que la ciudad tenga más calle más allá de lo jugable: los carros aparecen y desaparecen lejos y fuera de la vista; sin muros visibles al final; límites lejanos con niebla. (T-513 fondo lejano, T-530 afueras sin muro, T-532 aparecer y desaparecer fuera de la vista; T-588 lo prueba)
-- [C] Manejo: que frene y se detenga con inercia (no que se resbale); freno firme.
-- [C] Aviso cuando el carro se está incendiando ("¡Bájate, se va a quemar!").
+- [x] Manejo: que frene y se detenga con inercia (no que se resbale); freno firme. (T-532: freno firme)
+- [x] Aviso cuando el carro se está incendiando ("¡Bájate, se va a quemar!"). (T-532)
 - [x] Motos: poder subirse y manejarlas. (T-532 subir; T-592 manejo de moto con inclinación y freno con inercia: ManejoMotoPruebas)
 - [x] Quitar la patrulla vieja fea; solo las patrullas nuevas (V05/V06/V08). (T-532: Patrulla.prefab usa V05 y el tráfico no lleva patrullas)
 - [D] Ruedas separadas.
@@ -53,31 +53,31 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 - [x] Seguridad de Nova sin inteligencia: que patrullen, te vigilen y reaccionen si sacas el arma o disparas. (T-533: GuardiaNova)
 
 ## NPC
-- [C] Los NPC quietos: después de ~1 s de que estés cerca y quieto, te voltean a ver extrañados.
-- [C] Los NPC que caminan chocan con paredes y se quedan atorados: NavMesh / evitar obstáculos / destrabarse.
+- [x] Los NPC quietos: después de ~1 s de que estés cerca y quieto, te voltean a ver extrañados. (T-534: GenteMira)
+- [x] Los NPC que caminan chocan con paredes y se quedan atorados: NavMesh / evitar obstáculos / destrabarse. (T-631)
 - [D] Diálogos ("¿Qué haces aquí?").
 
 ## Ciudad y props
-- [C] Quitar el pedazo de poste cutre en medio de la calle antes de El Tianguis.
-- [C] Luces de los postes: la luz sale de otro lado; debe salir del foco.
-- [C] Barrido de todo el mapa: assets rotos, cámaras en el suelo, cosas y focos flotando, proyectores repetidos de relleno, objetos encimados. Quitar o acomodar uno por uno (lo revisa Claude, no Tony).
-- [C] Quitar los letreros planos de lugares (HOTEL, etc.) que se ven mal.
+- [x] Quitar el pedazo de poste cutre en medio de la calle antes de El Tianguis. (T-530: era el pilar del arco)
+- [x] Luces de los postes: la luz sale de otro lado; debe salir del foco. (T-535: la luz sale del foco)
+- [x] Barrido de todo el mapa: assets rotos, cámaras en el suelo, cosas y focos flotando, proyectores repetidos de relleno, objetos encimados. Quitar o acomodar uno por uno (lo revisa Claude, no Tony). (T-530: InspeccionT530)
+- [x] Quitar los letreros planos de lugares (HOTEL, etc.) que se ven mal. (T-530)
 - [A] Letreros 3D reales para los lugares.
-- [C] Quitar el letrero/barrera "ALTO CONTROL CORPORATIVO".
-- [C] Lluvia: que las gotas lleguen al suelo con salpicaduras (ahora parecen quedarse en el cielo).
-- [C] Asfalto más realista: textura de calle mojada con detalle (grietas, parches, líneas gastadas).
-- [C] Día y noche: las luces no deben apagarse de golpe; que sigan prendidas un rato y se apaguen poco a poco.
+- [x] Quitar el letrero/barrera "ALTO CONTROL CORPORATIVO". (T-530)
+- [x] Lluvia: que las gotas lleguen al suelo con salpicaduras (ahora parecen quedarse en el cielo). (T-634)
+- [x] Asfalto más realista: textura de calle mojada con detalle (grietas, parches, líneas gastadas). (T-535)
+- [x] Día y noche: las luces no deben apagarse de golpe; que sigan prendidas un rato y se apaguen poco a poco. (T-535)
 - [x] Colisiones: no poder meterse en las paredes (callejón y en general); la cámara no debe atravesar edificios. (T-583/T-584: ParedesSolidasT583Pruebas, cámara con esfera)
 
 ## El Tianguis
-- [C] Puestos encimados unos con otros: acomodar sin traslapes.
-- [C] Cajas y assets flotando: bajarlos al piso.
-- [C] Quitar los carteles 3D raros.
-- [C] Cada puesto con su propia luz pequeña según lo que vende.
-- [C] Quitar las dos barricadas en la zona de los licuados y el pastor.
+- [x] Puestos encimados unos con otros: acomodar sin traslapes. (T-530)
+- [x] Cajas y assets flotando: bajarlos al piso. (T-530)
+- [x] Quitar los carteles 3D raros. (T-530: hologramas y proyectores de relleno fuera)
+- [x] Cada puesto con su propia luz pequeña según lo que vende. (T-535: 32 luces)
+- [x] Quitar las dos barricadas en la zona de los licuados y el pastor. (T-530)
 
 ## El Mercado
-- [C] Quitar el letrero "EL MERCADO 24 HORAS ABIERTO".
+- [x] Quitar el letrero "EL MERCADO 24 HORAS ABIERTO". (T-530)
 - [A] Entrada especial de tienda de armas.
 - [D] El sótano/clandestino vacío: para después de la demo (quizá en una animación).
 
@@ -85,12 +85,12 @@ Todo lo que Tony encontró jugando Builds/Demo, ordenado. [C] = lo arregla Claud
 - [A] Edificios reales (kit de torres T20–T23): las casas siguen siendo las del barrio.
 - [A] Postes distintos para la zona rica.
 - [A] Contenido para las pantallas LED (anuncios animados) y acomodo con estilo.
-- [C] Los puentes atraviesan los edificios: moverlos.
+- [x] Los puentes atraviesan los edificios: moverlos. (T-530)
 - [x] Límite de la ciudad: no debe haber muro; más carretera y el límite lejos. (T-530 y T-513)
 
 ## Casino VivaCoin
 - [A] Letrero y entrada del casino generados (hoy es mezcla de asset y formas).
-- [C] Entradas y salidas de todos los edificios: se ven rotas y hay una pared negra al cruzar; que la puerta abra y se vea el interior.
+- [x] Entradas y salidas de todos los edificios: se ven rotas y hay una pared negra al cruzar; que la puerta abra y se vea el interior. (T-536)
 - [A] Interior del casino: imagen de referencia + mesas y assets; hoy se ve vacío.
 - [C] El Hacker (SERGIO) sentado en una mesa programando (necesita animación de sentado de Mixamo) y a escala.
 - Comprar fichas primero: gustó, se queda.
@@ -119,7 +119,7 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 - [x] Field of view y cámara raros al caminar: cámara más pegada al personaje (hombro), FOV más cerrado, sin flotar. (T-585)
 - [x] Más vida al personaje (subir la vida base o la regeneración). [?] confirmar si es más vida/salud o más "vida" en movimiento. (T-585: vida 150, regen 8/s tras 4 s)
 - [x] Al morir: cinemática corta (cae, fundido, despiertas en I+D+I con El Doc al lado) en vez de reaparecer de golpe. (T-586: MuerteReapareceEnClinicaPruebas)
-- [C] Teléfono: interfaz con animación de sacarlo y guardarlo (antes estaba descartado para la demo; vuelve).
+- [x] Teléfono: interfaz con animación de sacarlo y guardarlo (antes estaba descartado para la demo; vuelve). (T-633)
 
 ## Armas y CIC
 - [C] En el CIC poder mejorar las armas cuerpo a cuerpo / los puños. [?] confirmar si "armas manuales" es eso o mejorar a mano.
@@ -137,17 +137,17 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 - [x] Que aparezcan y se vayan con lógica: llegan desde fuera de la vista cuando hay peligro (calor, disparos) y se retiran fuera de la vista cuando baja el calor. (T-587: salen fuera de la vista y se retiran por la calle; más patrullas a más calor)
 
 ## NPC y aliados
-- [C] Mejorar la inteligencia de los NPC (rutas, reacción a disparos y al jugador, no chocar).
-- [C] Los aliados no se deben quedar quietos: que te sigan siempre (salvo que les digas "espera" con F) y peleen.
+- [x] Mejorar la inteligencia de los NPC (rutas, reacción a disparos y al jugador, no chocar). (T-631)
+- [x] Los aliados no se deben quedar quietos: que te sigan siempre (salvo que les digas "espera" con F) y peleen. (T-630)
 
 ## Mundo y ciudad
-- [C] Las gotas de lluvia deben caer al suelo (otra vez): salpicaduras en el piso.
+- [x] Las gotas de lluvia deben caer al suelo (otra vez): salpicaduras en el piso. (T-634)
 - [C] Puestos ajustados al tamaño real (escala con la persona).
 - [x] Letreros y carteles que se buguean en acción (parpadean, desaparecen o se mueven al pelear o manejar): revisar. (T-582: el culing no corta letreros)
-- [C] Texturas en el cielo (nubes, estrellas, brillo de la ciudad en las nubes) de día y de noche.
-- [C] Cambiar la iluminación de día (más natural, menos plana).
+- [x] Texturas en el cielo (nubes, estrellas, brillo de la ciudad en las nubes) de día y de noche. (T-635)
+- [x] Cambiar la iluminación de día (más natural, menos plana). (T-635)
 - [?] El mapa no debe ser cuadrado y debe tener muchas… (la frase quedó cortada: ¿muchas calles, curvas, niveles?). Por ahora: calles con curvas, diagonales y callejones para que no se vea como cuadrícula.
 
 ## Minimapa e interfaz
-- [C] El minimapa marca solo el objetivo: debe mostrar la ruta (línea por las calles hasta el objetivo, como GPS).
+- [x] El minimapa marca solo el objetivo: debe mostrar la ruta (línea por las calles hasta el objetivo, como GPS). (T-632)
 - [C] Interfaces más atractivas (otra vez): HUD, menús, tienda, mapa y teléfono con el estilo del mockup.

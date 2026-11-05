@@ -8,8 +8,7 @@ using UnityEngine;
 namespace MechaCyberpunk.IA.Aliados
 {
     /// <summary>
-    /// Aliado a pie (T-405): muñeco naranja con pistola. Te sigue a 3 a 5 m (corre si te alejas más de 8 m), espera donde está si
-    /// te subes a un carro o si le ordenas esperar, y dispara al rival que elige <see cref="ReglaAliado"/> con aviso láser y recarga.
+    /// Aliado a pie (T-405): muñeco naranja con pistola. Te sigue a 3 a 5 m (corre si te alejas más de 8 m), se sube contigo si te subes a un carro o mecha, espera si le ordenas esperar, y dispara al rival que elige <see cref="ReglaAliado"/> con aviso láser y recarga.
     /// Si cae, se desactiva y <see cref="PandillaJugador"/> lo trae de vuelta a los 45 s.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
@@ -21,8 +20,6 @@ namespace MechaCyberpunk.IA.Aliados
         private const float AlturaBoca = 1.4f;
         private const float AlturaPecho = 1.2f;
         private const float AdelanteBoca = 0.4f;
-        private const float DistanciaMax = 5f;
-        private const float DistanciaCorrer = 8f;
         private const float VelocidadCaminar = 4.5f;
         private const float VelocidadCorrer = 7.5f;
         private const float GiroGrados = 540f;
@@ -49,6 +46,7 @@ namespace MechaCyberpunk.IA.Aliados
         private ModeloVida modelo;
         private int nivel = 1;
         private float velocidadVertical;
+        private bool abordo;
         private float finAviso = -1f;
         private float finRecarga;
         private readonly RaycastHit[] impactos = new RaycastHit[16];
@@ -58,6 +56,8 @@ namespace MechaCyberpunk.IA.Aliados
 
         public int Nivel => nivel;
         public bool Siguiendo { get; set; } = true;
+        /// <summary>Va dentro de tu carro o mecha (oculto) (T-630).</summary>
+        public bool Abordo => abordo;
         public float Actual => modelo.Actual;
         public float Maxima => modelo.Maxima;
         public bool EstaKO => modelo.EstaKO;
@@ -77,7 +77,7 @@ namespace MechaCyberpunk.IA.Aliados
             float menor = maxima;
             foreach (AliadoAPie a in Activos)
             {
-                if (a.EstaKO)
+                if (a.EstaKO || a.abordo)
                 {
                     continue;
                 }
@@ -173,7 +173,7 @@ namespace MechaCyberpunk.IA.Aliados
         {
             controlador.enabled = false;
             transform.position = posicion;
-            controlador.enabled = true;
+            controlador.enabled = !abordo;
             velocidadVertical = 0f;
         }
 
@@ -188,6 +188,25 @@ namespace MechaCyberpunk.IA.Aliados
         }
 
         private void AlCambiar() => Cambio?.Invoke();
+
+        private void PonerAbordo(bool valor)
+        {
+            if (abordo == valor)
+            {
+                return;
+            }
+            abordo = valor;
+            controlador.enabled = !valor;
+            foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
+            {
+                r.enabled = !valor;
+            }
+            if (valor)
+            {
+                pistola.QuitarAviso();
+                finAviso = -1f;
+            }
+        }
 
         private void AlLlegarAKO()
         {
@@ -211,6 +230,12 @@ namespace MechaCyberpunk.IA.Aliados
                 return;
             }
             Vector3 posJugador = jugador.Raiz.position;
+            if (ReglaAliado.Decidir(Siguiendo, jugador.Modo, 0f) == ReglaAliado.Accion.IrAbordo)
+            {
+                PonerAbordo(true);
+                Colocar(posJugador);
+                return;
+            }
             BuscarObjetivo(jugador.Raiz);
 
             Vector3 boca = transform.position + Vector3.up * AlturaBoca + transform.forward * AdelanteBoca;
@@ -251,9 +276,20 @@ namespace MechaCyberpunk.IA.Aliados
             Vector3 haciaJugador = posJugador - transform.position;
             haciaJugador.y = 0f;
             float dist = haciaJugador.magnitude;
-            if (Siguiendo && jugador.Modo == ModoJugador.APie && dist > DistanciaMax)
+            ReglaAliado.Accion accion = ReglaAliado.Decidir(Siguiendo, jugador.Modo, dist);
+            if (abordo)
             {
-                deseada = haciaJugador.normalized * (dist > DistanciaCorrer ? VelocidadCorrer : VelocidadCaminar);
+                // Bajaste del carro: aparece a tu lado.
+                PonerAbordo(false);
+                Colocar(posJugador + jugador.Raiz.right * 1.5f);
+            }
+            else if (accion == ReglaAliado.Accion.Alcanzar)
+            {
+                Colocar(posJugador - jugador.Raiz.forward * 3f + jugador.Raiz.right * 1.5f);
+            }
+            else if (accion == ReglaAliado.Accion.Caminar || accion == ReglaAliado.Accion.Correr)
+            {
+                deseada = haciaJugador.normalized * (accion == ReglaAliado.Accion.Correr ? VelocidadCorrer : VelocidadCaminar);
             }
             Vector3 mirada = objetivo != null && puedeTirar ? objetivo.transform.position - transform.position : deseada;
             mirada.y = 0f;

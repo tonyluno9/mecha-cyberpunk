@@ -38,6 +38,7 @@ namespace MechaCyberpunk.UI.Misiones
     {
         private const int Pestanas = 5;
         private const int BarrasReputacion = 2;
+        private const float MinimoDeslizamiento = 600f;
 
         [SerializeField] private ConfigPantallaMisiones config;
         [SerializeField] private GameObject contenido;
@@ -74,8 +75,21 @@ namespace MechaCyberpunk.UI.Misiones
         private int mensajesMostrados = -1;
         private int barrioMostrado = int.MinValue;
         private int corporacionesMostrado = int.MinValue;
+        // T-633: el teléfono sube desde abajo al sacarlo y baja al guardarlo; arriba a la derecha lleva la hora del juego.
+        private RectTransform rectContenido;
+        private Vector2 posicionBase;
+        private float avanceAnimacion = 1f;
+        private bool guardando;
+        private Text textoHora;
+        private string horaMostrada = string.Empty;
 
         public bool Abierto => abierto;
+        /// <summary>El teléfono se está deslizando (sacándose o guardándose).</summary>
+        public bool Deslizando => avanceAnimacion < 1f;
+        /// <summary>Cuánto está desplazado hacia abajo ahora (px del canvas): 0 cuando ya está en su sitio.</summary>
+        public float DesplazamientoY => rectContenido != null ? posicionBase.y - rectContenido.anchoredPosition.y : 0f;
+        /// <summary>La hora del juego que muestra (HH:MM).</summary>
+        public string Hora => textoHora != null ? textoHora.text : string.Empty;
         public PestanaTelefono Pestana => pestana;
         public EstadoContratos EstadoContratos => estadoContratos;
         public bool Confirmando => confirmando;
@@ -102,6 +116,27 @@ namespace MechaCyberpunk.UI.Misiones
                 return;
             }
             contenido.SetActive(false);
+            rectContenido = contenido.GetComponent<RectTransform>();
+            posicionBase = rectContenido.anchoredPosition;
+            CrearTextoHora();
+        }
+
+        private void CrearTextoHora()
+        {
+            GameObject objeto = new GameObject("Hora", typeof(RectTransform));
+            objeto.transform.SetParent(contenido.transform, false);
+            RectTransform rect = (RectTransform)objeto.transform;
+            rect.anchorMin = new Vector2(1f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(1f, 1f);
+            rect.anchoredPosition = new Vector2(-24f, -16f);
+            rect.sizeDelta = new Vector2(220f, 48f);
+            textoHora = objeto.AddComponent<Text>();
+            textoHora.font = textoTitulo.font;
+            textoHora.fontSize = Mathf.Max(24, textoTitulo.fontSize);
+            textoHora.color = textoTitulo.color;
+            textoHora.alignment = TextAnchor.MiddleRight;
+            textoHora.raycastTarget = false;
         }
 
         private void OnEnable()
@@ -166,6 +201,9 @@ namespace MechaCyberpunk.UI.Misiones
                 jugadorGesto.GetComponent<GestosJugador>()?.SacarTelefono();
             }
             abierto = true;
+            guardando = false;
+            avanceAnimacion = 0f;
+            AplicarDesplazamiento();
             confirmando = false;
             pestana = PestanaTelefono.Contratos;
             fondo.color = config.ColorFondo;
@@ -174,6 +212,7 @@ namespace MechaCyberpunk.UI.Misiones
             confirmar.Enable();
             salir.Enable();
             contenido.SetActive(true);
+            ActualizarHora();
             Pintar();
         }
 
@@ -191,7 +230,15 @@ namespace MechaCyberpunk.UI.Misiones
             {
                 lista.Ocultar();
             }
-            contenido.SetActive(false);
+            if (isActiveAndEnabled && contenido.activeSelf)
+            {
+                guardando = true;
+                avanceAnimacion = 0f;
+            }
+            else
+            {
+                contenido.SetActive(false);
+            }
             // El control vuelve un cuadro después, para que la tecla que cierra no llegue al jugador.
             if (isActiveAndEnabled)
             {
@@ -209,8 +256,50 @@ namespace MechaCyberpunk.UI.Misiones
             congela.Liberar();
         }
 
+        private void ActualizarAnimacion()
+        {
+            if (avanceAnimacion >= 1f)
+            {
+                return;
+            }
+            float segundos = guardando ? config.SegundosGuardarTelefono : config.SegundosSacarTelefono;
+            avanceAnimacion = Mathf.Min(1f, avanceAnimacion + Time.unscaledDeltaTime / Mathf.Max(0.01f, segundos));
+            AplicarDesplazamiento();
+            if (avanceAnimacion >= 1f && guardando)
+            {
+                guardando = false;
+                if (!abierto)
+                {
+                    contenido.SetActive(false);
+                }
+            }
+        }
+
+        private void AplicarDesplazamiento()
+        {
+            float fuera = Mathf.Max(rectContenido.rect.height, MinimoDeslizamiento);
+            float quedaFuera = guardando ? CalculoTelefono.Deslizamiento(avanceAnimacion) : 1f - CalculoTelefono.Deslizamiento(avanceAnimacion);
+            rectContenido.anchoredPosition = posicionBase - new Vector2(0f, fuera * quedaFuera);
+        }
+
+        private void ActualizarHora()
+        {
+            IRelojMundo reloj = Registro<IRelojMundo>.Actual;
+            string texto = reloj != null ? CalculoTelefono.FormatoHora(reloj.Hora) : "--:--";
+            if (texto != horaMostrada)
+            {
+                horaMostrada = texto;
+                textoHora.text = texto;
+            }
+        }
+
         private void Update()
         {
+            ActualizarAnimacion();
+            if (abierto)
+            {
+                ActualizarHora();
+            }
             bool pulsoT = telefono.action.WasPressedThisFrame();
             if (!abierto)
             {

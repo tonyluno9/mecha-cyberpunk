@@ -138,5 +138,69 @@ namespace MechaCyberpunk.Tests.IA
             }
             Assert.Less(rival.Actual, vidaAntes, "El aliado le dispara al pandillero.");
         }
+
+        private class JugadorEnvuelto : IJugador
+        {
+            private readonly IJugador real;
+            public ModoJugador ModoFalso = ModoJugador.APie;
+            public JugadorEnvuelto(IJugador real) { this.real = real; }
+            public Transform Raiz => real.Raiz;
+            public ModoJugador Modo => ModoFalso;
+            public Camera Camara => real.Camara;
+            public event Action<ModoJugador> ModoCambio { add { } remove { } }
+            public void Colocar(Pose pose) => real.Colocar(pose);
+        }
+
+        // T-630: con F esperan, con F otra vez siguen, y al subirte a un carro van contigo (ocultos) y bajan a tu lado.
+        [UnityTest]
+        public IEnumerator EsperarSeguirYSubirseAlCarro()
+        {
+            yield return Esperar(0.5f);
+            PressAndRelease(teclado.eKey);
+            yield return Esperar(0.5f);
+            IPandillaJugador pandilla = Registro<IPandillaJugador>.Actual;
+            Assert.AreEqual(1, pandilla.Cantidad);
+            IJugador real = Registro<IJugador>.Actual;
+            Transform raiz = real.Raiz;
+            AliadoAPie aliado = AliadoAPie.Activos[0];
+
+            PressAndRelease(teclado.fKey);
+            yield return Esperar(0.3f);
+            Assert.IsFalse(pandilla.Siguiendo, "F lo manda a esperar.");
+            Vector3 donde = aliado.transform.position;
+            raiz.GetComponent<CharacterController>().enabled = false;
+            raiz.position += new Vector3(0f, 0f, 20f);
+            raiz.GetComponent<CharacterController>().enabled = true;
+            yield return Esperar(1.5f);
+            Assert.Less((aliado.transform.position - donde).magnitude, 0.5f, "Esperando no se mueve aunque te alejes.");
+
+            PressAndRelease(teclado.fKey);
+            yield return Esperar(4f);
+            Assert.IsTrue(pandilla.Siguiendo, "F otra vez: sígueme.");
+            Vector3 d = aliado.transform.position - raiz.position;
+            d.y = 0f;
+            Assert.Less(d.magnitude, 8f, "Te alcanza.");
+
+            JugadorEnvuelto falso = new JugadorEnvuelto(real) { ModoFalso = ModoJugador.Carro };
+            Registro<IJugador>.Quitar(real);
+            Registro<IJugador>.Agregar(falso);
+            raiz.GetComponent<CharacterController>().enabled = false;
+            raiz.position += new Vector3(30f, 0f, 0f);
+            raiz.GetComponent<CharacterController>().enabled = true;
+            yield return Esperar(0.5f);
+            Assert.IsTrue(aliado.Abordo, "Al subirte al carro, se sube contigo.");
+            d = aliado.transform.position - raiz.position;
+            d.y = 0f;
+            Assert.Less(d.magnitude, 1f, "Va en tu posición dentro del carro.");
+
+            falso.ModoFalso = ModoJugador.APie;
+            yield return Esperar(0.5f);
+            Assert.IsFalse(aliado.Abordo, "Al bajar, aparece.");
+            d = aliado.transform.position - raiz.position;
+            d.y = 0f;
+            Assert.Less(d.magnitude, 5f, "Baja a tu lado.");
+            Registro<IJugador>.Quitar(falso);
+            Registro<IJugador>.Agregar(real);
+        }
     }
 }

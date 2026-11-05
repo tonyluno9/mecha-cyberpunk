@@ -108,7 +108,12 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             Material asfalto = AssetDatabase.LoadAssetAtPath<Material>(CarpetaMateriales + "/Barrio_Asfalto.mat");
             Assert.GreaterOrEqual(asfalto.GetFloat("_Smoothness"), SuavidadMinimaAsfalto, "El asfalto mojado es liso");
-            Assert.Less(asfalto.GetColor("_BaseColor").grayscale, BrilloMaximoAsfalto, "El asfalto mojado es oscuro");
+            // T-535: el asfalto lleva textura oscura (el color base es blanco y la textura lo oscurece); sin textura, el color debe ser oscuro.
+            Texture mapa = asfalto.HasProperty("_BaseMap") ? asfalto.GetTexture("_BaseMap") : null;
+            if (mapa == null)
+            {
+                Assert.Less(asfalto.GetColor("_BaseColor").grayscale, BrilloMaximoAsfalto, "El asfalto mojado es oscuro");
+            }
         }
     }
 }

@@ -109,5 +109,69 @@ namespace MechaCyberpunk.Tests.UI
             }
             yield return Pulsar(teclado.tKey);
         }
+
+        private class RelojFalso : IRelojMundo
+        {
+            public float Hora { get; set; }
+            public int Dia => 1;
+            public FranjaDia Franja => FranjaDia.Dia;
+            public bool EsDeNoche => false;
+            public float HoraAmanecer => 6f;
+            public float HoraAnochecer => 20f;
+            public bool Pausado => false;
+            public event Action<int> HoraEnteraCambio { add { } remove { } }
+            public event Action<FranjaDia> FranjaCambio { add { } remove { } }
+            public event Action<int> DiaCambio { add { } remove { } }
+            public void Pausar(bool pausado) { }
+            public void AvanzarHasta(float hora) { Hora = hora; }
+        }
+
+        // T-633: el teléfono sube desde abajo al sacarlo, baja al guardarlo y muestra la hora del juego.
+        [UnityTest]
+        public IEnumerator Telefono_SeDeslizaYMuestraLaHora()
+        {
+            yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
+            yield return null;
+            PantallaTelefono telefono = null;
+            yield return EsperarHasta(() =>
+            {
+                telefono = UnityEngine.Object.FindFirstObjectByType<PantallaTelefono>(FindObjectsInactive.Include);
+                return telefono != null && Registro<IJugador>.Actual != null;
+            }, "el teléfono", 30f);
+            yield return new WaitForSecondsRealtime(1f);
+            RelojFalso reloj = new RelojFalso { Hora = 14.75f };
+            Registro<IRelojMundo>.Agregar(reloj);
+
+            Press(teclado.tKey);
+            yield return null;
+            Release(teclado.tKey);
+            Assert.IsTrue(telefono.Abierto);
+            Assert.IsTrue(telefono.Deslizando, "Al sacarlo se desliza");
+            Assert.Greater(telefono.DesplazamientoY, 100f, "Sale desde abajo de la pantalla");
+            float primero = telefono.DesplazamientoY;
+            yield return new WaitForSecondsRealtime(0.1f);
+            Assert.Less(telefono.DesplazamientoY, primero, "Va subiendo");
+            yield return new WaitForSecondsRealtime(0.5f);
+            Assert.IsFalse(telefono.Deslizando);
+            Assert.AreEqual(0f, telefono.DesplazamientoY, 0.5f, "Queda en su sitio");
+            Assert.AreEqual("14:45", telefono.Hora, "Muestra la hora del juego");
+            reloj.Hora = 15.5f;
+            yield return null;
+            yield return null;
+            Assert.AreEqual("15:30", telefono.Hora, "La hora se actualiza con el teléfono abierto");
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T633") == "1")
+            {
+                CapturaUI.Capturar("docs/capturas/T-633-telefono-hora.png", Registro<IJugador>.Actual.Camara);
+            }
+
+            Press(teclado.tKey);
+            yield return null;
+            Release(teclado.tKey);
+            Assert.IsFalse(telefono.Abierto);
+            Assert.IsTrue(telefono.Deslizando, "Al guardarlo baja");
+            yield return new WaitForSecondsRealtime(0.5f);
+            Assert.IsFalse(telefono.Deslizando);
+            Registro<IRelojMundo>.Quitar(reloj);
+        }
     }
 }

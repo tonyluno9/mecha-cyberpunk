@@ -171,6 +171,15 @@ namespace MechaCyberpunk.UI
         [Min(10f)] [SerializeField] private float anchoBarra = 760f;
         [Min(2f)] [SerializeField] private float altoBarra = 34f;
 
+        [Header("Teléfono (T-633)")]
+        [Tooltip("Segundos que tarda el teléfono en subir desde abajo al sacarlo (s).")]
+        [Min(0.05f)] [SerializeField] private float segundosSacarTelefono = 0.28f;
+
+        [Tooltip("Segundos que tarda el teléfono en bajar al guardarlo (s).")]
+        [Min(0.05f)] [SerializeField] private float segundosGuardarTelefono = 0.2f;
+
+        public float SegundosSacarTelefono => segundosSacarTelefono;
+        public float SegundosGuardarTelefono => segundosGuardarTelefono;
         public Color ColorElegido => colorElegido;
         public Color ColorNormal => colorNormal;
         public Color ColorApagado => colorApagado;
