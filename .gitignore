@@ -58,3 +58,10 @@ Desktop.ini
 
 # Capturas del modo video (T-472)
 /Capturas/
+
+# Restos de pruebas caídas del Test Framework (T-653) y basura del editor
+/Assets/InitTestScene*
+/Assets/Logs/
+/Assets/Logs.meta
+/Assets/_Recovery/
+/Assets/_Recovery.meta
