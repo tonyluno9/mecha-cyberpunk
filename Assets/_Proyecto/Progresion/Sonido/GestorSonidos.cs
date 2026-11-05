@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Progresion.Sonido
 {
     /// <summary>
-    /// Toca los sonidos por su ID de la LISTA 1 (T-407). 16 fuentes reutilizables; 3D con distancia 2 a 40 m; volumen = general x sección.
+    /// Toca los sonidos por su ID de la LISTA 1 (T-407). 24 fuentes reutilizables; 3D con distancia 2 a 40 m; volumen = general x sección.
     /// Ambiente y Música arrancan en 0 (silencio por defecto, plan de la noche). Un ID sin archivo no suena y avisa una vez (CatalogoSonidos).
     /// Ambientes (T-470, ver ReglaAmbienteZona): por lugar y por zona del jugador, de noche o de día, con cruce de 1 s.
     /// La mezcla (ganancia por sección) vive en el CatalogoSonidos.
@@ -18,7 +18,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         public const string IdAmbienteTianguis = ReglaAmbienteZona.Tianguis;
 
         [SerializeField] private CatalogoSonidos catalogo;
-        [Min(1)] [SerializeField] private int cantidadFuentes = 16;
+        [Min(1)] [SerializeField] private int cantidadFuentes = 24;
         [Min(0f)] [Tooltip("Distancia mínima del sonido 3D (m).")] [SerializeField] private float distanciaMinima = 2f;
         [Min(0f)] [Tooltip("Distancia máxima del sonido 3D (m).")] [SerializeField] private float distanciaMaxima = 40f;
         [Min(0.01f)] [Tooltip("Duración del cruce entre ambientes (s).")] [SerializeField] private float segundosCruce = 1f;
@@ -37,6 +37,19 @@ namespace MechaCyberpunk.Progresion.Sonido
         private int siguienteBucle;
         private float proximaRevision;
 
+        // T-593: una voz es un sonido puntual que sigue sonando; sirve para limitar cuántas del mismo grupo suenan juntas (por tiempo, no por isPlaying).
+        private struct VozActiva
+        {
+            public AudioSource fuente;
+            public string grupo;
+            public float inicio;
+            public float fin;
+        }
+
+        private readonly List<VozActiva> voces = new List<VozActiva>();
+        private readonly Dictionary<string, float> ultimoPedido = new Dictionary<string, float>();
+        private System.Random azarTono = new System.Random();
+
         private class Bucle
         {
             public AudioSource fuente;
@@ -49,6 +62,29 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         /// <summary>Cuántas veces se pidió el ID (hubiera o no archivo). Es el contador de las pruebas.</summary>
         public int Pedidos(string id) => conteo.TryGetValue(id, out int n) ? n : 0;
+
+        /// <summary>Tono, volumen relativo y clip del último sonido puntual que sonó (para las pruebas).</summary>
+        public float UltimaDistanciaMaxima => fuentes != null && UltimaFuente != null ? UltimaFuente.maxDistance : 0f;
+        private AudioSource UltimaFuente;
+        public float UltimoTono { get; private set; } = 1f;
+        public float UltimoVolumenRelativo { get; private set; } = 1f;
+        public AudioClip UltimoClip { get; private set; }
+        public string UltimoIdClip { get; private set; }
+
+        /// <summary>Semilla del azar del tono, para pruebas.</summary>
+        public void FijarSemillaTono(int semilla) => azarTono = new System.Random(semilla);
+
+        /// <summary>Cuántas voces del grupo siguen sonando ahora (por la duración de su clip).</summary>
+        public int VocesActivas(string grupo)
+        {
+            PodarVoces();
+            int n = 0;
+            foreach (VozActiva v in voces)
+            {
+                if (v.grupo == grupo) n++;
+            }
+            return n;
+        }
 
         public CatalogoSonidos Catalogo { get => catalogo; set => catalogo = value; }
 
@@ -116,7 +152,37 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 if (!f.isPlaying) return f;
             }
-            return fuentes[0];
+            // Todas ocupadas: se cede la que está más cerca de terminar.
+            AudioSource masCerca = fuentes[0];
+            float menor = float.MaxValue;
+            foreach (AudioSource f in fuentes)
+            {
+                float resta = f.clip != null ? f.clip.length - f.time : 0f;
+                if (resta < menor)
+                {
+                    menor = resta;
+                    masCerca = f;
+                }
+            }
+            return masCerca;
+        }
+
+        private void PodarVoces()
+        {
+            float ahora = Time.unscaledTime;
+            voces.RemoveAll(v => v.fin <= ahora || v.fuente == null);
+        }
+
+        private void CortarMasVieja(string grupo)
+        {
+            int indice = -1;
+            for (int i = 0; i < voces.Count; i++)
+            {
+                if (voces[i].grupo == grupo && (indice < 0 || voces[i].inicio < voces[indice].inicio)) indice = i;
+            }
+            if (indice < 0) return;
+            if (voces[indice].fuente != null) voces[indice].fuente.Stop();
+            voces.RemoveAt(indice);
         }
 
         private AudioClip Preparar(string id)
@@ -133,15 +199,53 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private void Tocar(string id, bool? en3D, Vector3 posicion)
         {
-            AudioClip clip = Preparar(id);
+            // T-597: "ID@F" pide la voz del género; si hay clip propio (ID_F) se usa, si no el normal con otro tono.
+            id = ReglaVozGenero.Separar(id, out string etiqueta);
+            float tonoGenero = 1f;
+            string idClip = id;
+            if (etiqueta.Length > 0)
+            {
+                string idGenero = ReglaVozGenero.IdDelGenero(id, etiqueta);
+                if (catalogo != null && catalogo.Tiene(idGenero))
+                {
+                    idClip = idGenero;
+                }
+                else
+                {
+                    tonoGenero = ReglaVozGenero.TonoDeGenero(etiqueta);
+                }
+            }
+            AudioClip clip = Preparar(idClip);
+            if (idClip != id) conteo[id] = Pedidos(id) + 1;
             if (clip == null) return;
             SeccionSonido seccion = ReglaCatalogoSonidos.SeccionDe(id);
+            PoliticaSonido politica = ReglaMezclaSonidos.Para(id);
+            float ahora = Time.unscaledTime;
+            if (politica.SegundosMinimos > 0f && ultimoPedido.TryGetValue(id, out float antes) && ahora - antes < politica.SegundosMinimos) return;
+            ultimoPedido[id] = ahora;
+            PodarVoces();
+            if (politica.MaxVoces > 0)
+            {
+                while (VocesActivas(politica.Grupo) >= politica.MaxVoces) CortarMasVieja(politica.Grupo);
+            }
             AudioSource f = FuenteLibre();
             f.Stop();
+            voces.RemoveAll(v => v.fuente == f);
+            float tono = ReglaMezclaSonidos.Tono(politica.VariacionTono, (float)azarTono.NextDouble()) * tonoGenero;
             f.clip = clip;
             f.loop = false;
-            f.pitch = 1f;
-            f.volume = VolumenFinal(seccion);
+            f.pitch = tono;
+            f.maxDistance = politica.DistanciaMaxima > 0f ? politica.DistanciaMaxima : distanciaMaxima;
+            f.volume = VolumenFinal(seccion) * politica.Volumen;
+            UltimoTono = tono;
+            UltimoVolumenRelativo = politica.Volumen;
+            UltimoClip = clip;
+            UltimoIdClip = idClip;
+            UltimaFuente = f;
+            if (politica.MaxVoces > 0)
+            {
+                voces.Add(new VozActiva { fuente = f, grupo = politica.Grupo, inicio = ahora, fin = ahora + clip.length / Mathf.Max(0.1f, tono) });
+            }
             f.ignoreListenerPause = seccion == SeccionSonido.Interfaz;
             f.spatialBlend = en3D == true ? 1f : 0f;
             if (en3D == true) f.transform.position = posicion;

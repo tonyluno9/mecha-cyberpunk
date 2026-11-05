@@ -316,6 +316,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const float TonoMinimoMotor = 0.8f;
         private const float TonoMaximoMotor = 2f;
         private const float MetrosPorSegundoPorTono = 20f;
+        private const float AmplitudOscilacionMotor = 0.04f;
+        private const float FrecuenciaOscilacionMotor = 0.6f;
+        private const float RangoFaseMotor = 100f;
+        private float faseMotor = -1f;
         private int bucleMotor = Sonidos.SinBucle;
 
         // Motor en marcha mínima mientras alguien maneja; el tono sube con la rapidez.
@@ -332,7 +336,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             if (bucleMotor != Sonidos.SinBucle)
             {
-                Sonidos.FijarTono(bucleMotor, Mathf.Clamp(TonoMinimoMotor + Rapidez / MetrosPorSegundoPorTono, TonoMinimoMotor, TonoMaximoMotor));
+                if (faseMotor < 0f)
+                {
+                    faseMotor = UnityEngine.Random.value * RangoFaseMotor;
+                }
+                Sonidos.FijarTono(bucleMotor, ReglaMotorSonido.Tono(Rapidez, Time.time, faseMotor, TonoMinimoMotor, TonoMaximoMotor,
+                    MetrosPorSegundoPorTono, AmplitudOscilacionMotor, FrecuenciaOscilacionMotor));
             }
         }
 

@@ -319,13 +319,15 @@ namespace MechaCyberpunk.Personaje.Combate
         private const float EsperaClicVacio = 0.3f;
         private float finEsperaVacio;
 
-        private static string IdDisparo(ArmaAPie arma)
+        /// <summary>T-593: el ID de sonido del disparo de cada arma (ARM_PIS/ESC/FUS/SNI).</summary>
+        public static string IdDisparo(ArmaAPie arma)
         {
             return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Fusil ? "ARM_FUS_DISPARO"
                 : arma == ArmaAPie.Sniper ? "ARM_SNI_DISPARO" : "ARM_PIS_DISPARO";
         }
 
-        private static string IdRecarga(ArmaAPie arma)
+        /// <summary>T-593: el ID de sonido de la recarga de cada arma.</summary>
+        public static string IdRecarga(ArmaAPie arma)
         {
             return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Fusil ? "ARM_FUS_RECARGA"
                 : arma == ArmaAPie.Sniper ? "ARM_SNI_RECARGA" : "ARM_PIS_RECARGA";
