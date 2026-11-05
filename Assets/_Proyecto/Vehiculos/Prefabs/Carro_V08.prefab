@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8932789827719117019}
   - component: {fileID: 1576001796094165155}
   - component: {fileID: 5983947558866491203}
+  - component: {fileID: 3037910007721734967}
   m_Layer: 0
   m_Name: Carro_V08
   m_TagString: Untagged
@@ -83,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69cd942f70bafdf42b282d7c03d0ea1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CarroViejo
-  config: {fileID: 11400000, guid: be12119c0d5410843b242b43d263cd34, type: 2}
+  config: {fileID: 11400000, guid: 87317f18a44af96479629be6cce4b97c, type: 2}
   nombreModelo: Moto de patrulla
   controles: {fileID: -944628639613478452, guid: b5fa29afc835fca468cb94b057897ac9, type: 3}
   asiento: {fileID: 3443573912769777467}
@@ -111,6 +112,26 @@ MonoBehaviour:
   sonidoAlarma: {fileID: 0}
   tinte: {r: 0, g: 0, b: 0, a: 0}
   esTuyo: 0
+--- !u!114 &3037910007721734967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64994209925352435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982dc76942f7c60459b0bac8d3c18bb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.ManejoMoto
+  envoltorioVisual: {fileID: 6431606869070072763}
+  factorInclinacion: 1
+  maximoGrados: 32
+  respuestaInclinacion: 7
+  filtroModelo: {fileID: 2801298007286832646}
+  mallaCompleta: {fileID: -8502362637905633491, guid: e369311ba71ded34a9af2eadb34d7c59, type: 3}
+  mallaSinCaballete: {fileID: 4300000, guid: 1df74c706d7b6544c824c3c64a9be21a, type: 2}
+  bajarAlOcultar: 0
 --- !u!1 &1382386736854336368
 GameObject:
   m_ObjectHideFlags: 0

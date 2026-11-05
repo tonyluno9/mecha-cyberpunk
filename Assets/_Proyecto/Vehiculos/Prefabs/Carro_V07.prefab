@@ -522,6 +522,7 @@ GameObject:
   - component: {fileID: 4443135542529895650}
   - component: {fileID: 5347729669505348862}
   - component: {fileID: 9075330660419842375}
+  - component: {fileID: 8816399242298606081}
   m_Layer: 0
   m_Name: Carro_V07
   m_TagString: Untagged
@@ -593,7 +594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69cd942f70bafdf42b282d7c03d0ea1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CarroViejo
-  config: {fileID: 11400000, guid: be12119c0d5410843b242b43d263cd34, type: 2}
+  config: {fileID: 11400000, guid: 87317f18a44af96479629be6cce4b97c, type: 2}
   nombreModelo: Moto de reparto
   controles: {fileID: -944628639613478452, guid: b5fa29afc835fca468cb94b057897ac9, type: 3}
   asiento: {fileID: 3975456681815143428}
@@ -621,6 +622,26 @@ MonoBehaviour:
   sonidoAlarma: {fileID: 0}
   tinte: {r: 0, g: 0, b: 0, a: 0}
   esTuyo: 0
+--- !u!114 &8816399242298606081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4679553231517129401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982dc76942f7c60459b0bac8d3c18bb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.ManejoMoto
+  envoltorioVisual: {fileID: 7484330596729006515}
+  factorInclinacion: 1
+  maximoGrados: 32
+  respuestaInclinacion: 7
+  filtroModelo: {fileID: 7593224003902227042}
+  mallaCompleta: {fileID: 7487749684646778900, guid: c4bc598e66000c348932f623c451f503, type: 3}
+  mallaSinCaballete: {fileID: 4300000, guid: dd85f264237c3174bbe6b73ca9a9eaac, type: 2}
+  bajarAlOcultar: 0.006660352
 --- !u!1 &5445332990391179302
 GameObject:
   m_ObjectHideFlags: 0
