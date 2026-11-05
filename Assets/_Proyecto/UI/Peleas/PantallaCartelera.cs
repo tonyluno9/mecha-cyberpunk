@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -120,7 +121,7 @@ namespace MechaCyberpunk.UI.Peleas
             filas.AddRange(nuevasFilas);
             seleccion = new SeleccionCartelera(filas);
 
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             textoEncabezado.text = encabezado;
             textoEncabezado.color = config.ColorEncabezado;
             textoEncabezado.fontSize = config.TamanoEncabezado;

@@ -164,6 +164,11 @@ namespace MechaCyberpunk.Tests.UI
                 CapturaUI.Capturar("docs/capturas/T-633-telefono-hora.png", Registro<IJugador>.Actual.Camara);
             }
 
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T638") == "1")
+            {
+                CapturaUI.Capturar("docs/capturas/T-638-telefono.png", Registro<IJugador>.Actual.Camara);
+            }
+
             Press(teclado.tKey);
             yield return null;
             Release(teclado.tKey);

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -104,7 +105,7 @@ namespace MechaCyberpunk.UI.Misiones
             textoAviso.color = config.ColorAviso;
             textoAviso.fontSize = config.TamanoTexto;
             textoAviso.gameObject.SetActive(false);
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             Pintar();
             visible = true;
             contenido.SetActive(true);

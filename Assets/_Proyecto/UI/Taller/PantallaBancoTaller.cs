@@ -5,6 +5,7 @@ using MechaCyberpunk.Economia;
 using MechaCyberpunk.Mecha.Taller;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -104,7 +105,7 @@ namespace MechaCyberpunk.UI.Taller
             opciones.AddRange(nuevas);
             indice = 0;
 
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             Preparar(textoTitulo, config.TextoTitulo, config.ColorElegido, config.TamanoTitulo);
             Preparar(textoVida, string.Empty, config.ColorNormal, config.TamanoTexto);
             Preparar(textoDinero, string.Empty, config.ColorDinero, config.TamanoTexto);

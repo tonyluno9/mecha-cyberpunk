@@ -3,6 +3,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje.Apariencia;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -97,7 +98,7 @@ namespace MechaCyberpunk.UI.Clinica
             this.alSalir = alSalir;
             indice = 0;
             confirmando = false;
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             Preparar(textoTitulo, config.TextoTitulo, config.ColorElegido, config.TamanoTitulo);
             Preparar(textoAyuda, config.TextoAyuda, config.ColorNormal, config.TamanoAyuda);
             textoAviso.gameObject.SetActive(false);

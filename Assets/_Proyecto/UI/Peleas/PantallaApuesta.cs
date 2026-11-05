@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -102,7 +103,7 @@ namespace MechaCyberpunk.UI.Peleas
             this.alSalir = alSalir;
             seleccion = new SeleccionApuesta(montos, puedeApostar);
 
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             Preparar(textoTitulo, config.TextoTitulo, config.ColorElegido, config.TamanoTitulo);
             Preparar(textoRival, string.Format(config.FormatoRival, rival), config.ColorNormal, config.TamanoTexto);
             Preparar(textoPremio, string.Format(config.FormatoPremio, FormatoDinero.Texto(premio)), config.ColorPremio, config.TamanoTexto);

@@ -5,6 +5,7 @@ using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI.Hud;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -206,7 +207,7 @@ namespace MechaCyberpunk.UI.Misiones
             AplicarDesplazamiento();
             confirmando = false;
             pestana = PestanaTelefono.Contratos;
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             izquierda.Enable();
             derecha.Enable();
             confirmar.Enable();

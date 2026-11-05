@@ -9,6 +9,7 @@ using MechaCyberpunk.Mecha.Taller;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.UI.Cabina;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -147,7 +148,7 @@ namespace MechaCyberpunk.UI.Taller
             aviso = string.Empty;
             frameApertura = Time.frameCount;
 
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             Preparar(textoTitulo, config.TextoTitulo, config.ColorTitulo, config.TamanoTitulo);
             Preparar(textoSubtitulo, string.Empty, config.ColorTexto, config.TamanoSubtitulo);
             Preparar(textoDinero, string.Empty, config.ColorDinero, config.TamanoDinero);
