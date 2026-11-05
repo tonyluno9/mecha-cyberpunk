@@ -54,6 +54,17 @@ namespace MechaCyberpunk.UI.Mapa
         private Text textoPunto;
         private Image[] manzanas;
         private Image calles;
+        // T-632: ruta tipo GPS por las calles hasta el objetivo; se recalcula al moverte más de MetrosParaRecalcular o si el objetivo cambia.
+        private const float MetrosParaRecalcular = 2f;
+        private const float GrosorRutaPx = 4f;
+        private static readonly Color ColorRuta = new Color(1f, 0.55f, 0.1f, 0.95f);
+        private RectTransform capaRuta;
+        private readonly List<Image> segmentosRuta = new List<Image>();
+        private List<Vector3> ruta = new List<Vector3>();
+        private Vector3 origenRuta;
+        private Vector3 destinoRuta;
+        private bool rutaCalculada;
+        private int recalculosRuta;
         private readonly List<Image> marcas = new List<Image>();
         private readonly List<TipoMarcaMapa> tiposMarcas = new List<TipoMarcaMapa>();
         private readonly List<Image> aliados = new List<Image>();
@@ -78,6 +89,12 @@ namespace MechaCyberpunk.UI.Mapa
         /// <summary>Cuántos puntos de aliado hay creados (los que no salen están apagados).</summary>
         public int AliadosCreados => aliados.Count;
         public Image Aliado(int indice) => aliados[indice];
+        /// <summary>Puntos de la ruta GPS (mundo), vacía si no hay objetivo.</summary>
+        public IReadOnlyList<Vector3> Ruta => ruta;
+        /// <summary>Cuántos tramos de la ruta se dibujan ahora.</summary>
+        public int SegmentosRutaVisibles { get; private set; }
+        /// <summary>Cuántas veces se calculó la ruta.</summary>
+        public int RecalculosRuta => recalculosRuta;
 
         /// <summary>La marca dibujada de <paramref name="marca"/>, o null si no sale ahora.</summary>
         public Image MarcaDe(IMarcaMapa marca)
@@ -116,6 +133,7 @@ namespace MechaCyberpunk.UI.Mapa
                 manzanas[i] = KitUI.CrearImagen(desplazado, "Manzana_" + (i + 1), FondoOscuro);
             }
 
+            capaRuta = Centrado(desplazado, "RutaGps");
             capaMarcas = Centrado(mascara.transform, "Marcas");
             rombo = (RectTransform)KitUI.CrearRombo(capaMarcas, "Objetivo", diagonalRombo, e.Naranja).rectTransform.parent;
             rombo.gameObject.SetActive(false);
@@ -189,6 +207,7 @@ namespace MechaCyberpunk.UI.Mapa
             hayObjetivo = hayObjetivo && CalculoMinimapa.Ubicar(centro, rumbo, destino, escala, radioPegado, true, out px);
             Mostrar(rombo.gameObject, hayObjetivo);
             rombo.anchoredPosition = px;
+            ActualizarRuta(centro, hayObjetivo, destino);
 
             // El punto marcado en el mapa grande, también pegado al borde, con su distancia.
             bool hayPunto = PuntoMarcadoMapa.Hay
@@ -206,6 +225,49 @@ namespace MechaCyberpunk.UI.Mapa
             DibujarAliados(centro, rumbo, radio);
             rombo.SetAsLastSibling();
             punto.rectTransform.SetAsLastSibling();
+        }
+
+        private void ActualizarRuta(Vector3 centro, bool hayObjetivo, Vector3 destino)
+        {
+            if (!hayObjetivo)
+            {
+                rutaCalculada = false;
+                ruta.Clear();
+            }
+            else if (!rutaCalculada || CalculoMinimapa.DistanciaPlana(centro, origenRuta) > MetrosParaRecalcular
+                || CalculoMinimapa.DistanciaPlana(destino, destinoRuta) > 0.5f)
+            {
+                ruta = CalculoRutaGps.Ruta(centro, destino);
+                origenRuta = centro;
+                destinoRuta = destino;
+                rutaCalculada = true;
+                recalculosRuta++;
+            }
+            int tramos = Mathf.Max(0, ruta.Count - 1);
+            while (segmentosRuta.Count < tramos)
+            {
+                Image seg = KitUI.CrearImagen(capaRuta, "Tramo_" + segmentosRuta.Count, ColorRuta);
+                KitUI.Colocar(seg.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one);
+                seg.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                segmentosRuta.Add(seg);
+            }
+            for (int i = 0; i < segmentosRuta.Count; i++)
+            {
+                bool usar = i < tramos;
+                Mostrar(segmentosRuta[i].gameObject, usar);
+                if (!usar)
+                {
+                    continue;
+                }
+                Vector2 a = GeometriaBarrio.AMapa(ruta[i]) * escala;
+                Vector2 b = GeometriaBarrio.AMapa(ruta[i + 1]) * escala;
+                Vector2 d = b - a;
+                RectTransform rect = segmentosRuta[i].rectTransform;
+                rect.anchoredPosition = (a + b) * 0.5f;
+                rect.sizeDelta = new Vector2(d.magnitude + GrosorRutaPx * 0.5f, GrosorRutaPx);
+                rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+            }
+            SegmentosRutaVisibles = tramos;
         }
 
         private void PintarManzanas()
