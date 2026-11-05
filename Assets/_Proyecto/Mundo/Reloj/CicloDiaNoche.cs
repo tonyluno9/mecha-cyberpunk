@@ -33,6 +33,10 @@ namespace MechaCyberpunk.Mundo.Reloj
         private IRelojMundo reloj;
         private Camera camara;
         private Material cieloEnEjecucion;
+        private CieloTexturizado cieloTextura;
+
+        /// <summary>Las nubes y estrellas con textura (T-635); null si falta su shader.</summary>
+        public CieloTexturizado CieloTextura => cieloTextura;
 
         public Volume VolumeNoche => volumeNoche;
         public Volume VolumeDia => volumeDia;
@@ -48,6 +52,7 @@ namespace MechaCyberpunk.Mundo.Reloj
 
         private void Start()
         {
+            cieloTextura = CieloTexturizado.Crear();
             reloj = Registro<IRelojMundo>.Actual;
             if (reloj != null)
             {
@@ -70,11 +75,16 @@ namespace MechaCyberpunk.Mundo.Reloj
         /// <summary>Pone luz, ambiente y niebla como corresponden a esa hora.</summary>
         public void Aplicar(float hora)
         {
-            luz.color = config.ColorLuz(hora);
+            float pesoNoche = config.PesoNoche(hora);
+            // T-635: de día el sol es cálido y proyecta sombras suaves (menos plano que un solo color de ambiente).
+            luz.color = CalculoCieloTextura.LuzCalida(config.ColorLuz(hora), pesoNoche);
             luz.intensity = config.IntensidadLuz(hora);
+            if (luz.shadows == LightShadows.None)
+            {
+                luz.shadows = LightShadows.Soft;
+            }
             luz.transform.rotation = Quaternion.Euler(config.Elevacion(hora), config.Giro, 0f);
 
-            float pesoNoche = config.PesoNoche(hora);
             if (volumeNoche != null)
             {
                 volumeNoche.weight = pesoNoche;
@@ -84,14 +94,24 @@ namespace MechaCyberpunk.Mundo.Reloj
                 volumeDia.weight = 1f - pesoNoche;
             }
 
-            RenderSettings.ambientMode = AmbientMode.Flat;
+            CalculoCieloTextura.Ambiente(config.ColorAmbiente(hora), config.ColorCielo(hora), pesoNoche,
+                out Color arriba, out Color horizonte, out Color suelo);
             RenderSettings.ambientLight = config.ColorAmbiente(hora);
+            RenderSettings.ambientMode = AmbientMode.Trilight;
+            RenderSettings.ambientSkyColor = arriba;
+            RenderSettings.ambientEquatorColor = horizonte;
+            RenderSettings.ambientGroundColor = suelo;
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
             RenderSettings.fogColor = config.ColorNiebla(hora);
             RenderSettings.fogDensity = config.DensidadNiebla(hora);
 
             AplicarCielo(hora);
+            if (camara == null)
+            {
+                camara = Camera.main;
+            }
+            cieloTextura?.Actualizar(camara, pesoNoche);
 
             // Sin skybox, el fondo de la cámara es del color de la niebla: así el cielo se funde con el horizonte.
             if (camara == null)
@@ -126,8 +146,17 @@ namespace MechaCyberpunk.Mundo.Reloj
             RenderSettings.skybox = cieloEnEjecucion;
         }
 
+        private void LateUpdate()
+        {
+            if (cieloTextura != null && camara != null)
+            {
+                cieloTextura.Actualizar(camara, config.PesoNoche(reloj != null ? reloj.Hora : 0f));
+            }
+        }
+
         private void OnDestroy()
         {
+            cieloTextura?.Destruir();
             if (cieloEnEjecucion != null)
             {
                 Destroy(cieloEnEjecucion);
