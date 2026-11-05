@@ -122,7 +122,7 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 - [x] Teléfono: interfaz con animación de sacarlo y guardarlo (antes estaba descartado para la demo; vuelve). (T-633)
 
 ## Armas y CIC
-- [C] En el CIC poder mejorar las armas cuerpo a cuerpo / los puños. [?] confirmar si "armas manuales" es eso o mejorar a mano.
+- [x] En el CIC poder mejorar las armas cuerpo a cuerpo / los puños. [?] confirmar si "armas manuales" es eso o mejorar a mano. (T-636)
 
 ## Carros y motos
 - [x] Bug: se pueden atravesar los coches (colisiones jugador–carro y carro–carro). (T-580: ColisionCoches/CiudadT580Pruebas)
@@ -142,7 +142,7 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 
 ## Mundo y ciudad
 - [x] Las gotas de lluvia deben caer al suelo (otra vez): salpicaduras en el piso. (T-634)
-- [C] Puestos ajustados al tamaño real (escala con la persona).
+- [x] Puestos ajustados al tamaño real (escala con la persona). (T-637)
 - [x] Letreros y carteles que se buguean en acción (parpadean, desaparecen o se mueven al pelear o manejar): revisar. (T-582: el culing no corta letreros)
 - [x] Texturas en el cielo (nubes, estrellas, brillo de la ciudad en las nubes) de día y de noche. (T-635)
 - [x] Cambiar la iluminación de día (más natural, menos plana). (T-635)
@@ -150,4 +150,4 @@ Mismas marcas: [C] lo arregla Claude Code, [A] necesita arte/animaciones primero
 
 ## Minimapa e interfaz
 - [x] El minimapa marca solo el objetivo: debe mostrar la ruta (línea por las calles hasta el objetivo, como GPS). (T-632)
-- [C] Interfaces más atractivas (otra vez): HUD, menús, tienda, mapa y teléfono con el estilo del mockup.
+- [x] Interfaces más atractivas (otra vez): HUD, menús, tienda, mapa y teléfono con el estilo del mockup. (T-638)
