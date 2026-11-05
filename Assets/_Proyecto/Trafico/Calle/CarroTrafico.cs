@@ -51,6 +51,9 @@ namespace MechaCyberpunk.Trafico.Calle
         private Vector3 direccion = Vector3.forward;
         private float proximoPasaCerca;
         private int pitidos;
+        private const float SegundosMinimosEntreClaxon = 1.5f;
+        private const float SegundosMaximosEntreClaxon = 4f;
+        private float proximoClaxon;
         private Renderer carroceria;
 
         private static readonly Color[] ColoresCarroceria =
@@ -226,7 +229,12 @@ namespace MechaCyberpunk.Trafico.Calle
             if (calculo.TomarPitido())
             {
                 pitidos++;
-                Sonidos.ReproducirEn("VEH_CLAXON_TRAFICO", transform.position);
+                // T-595: cada carro deja pasar un tiempo al azar antes de volver a sonar el claxon (no todos pitan igual ni a la vez).
+                if (Time.time >= proximoClaxon)
+                {
+                    proximoClaxon = Time.time + UnityEngine.Random.Range(SegundosMinimosEntreClaxon, SegundosMaximosEntreClaxon);
+                    Sonidos.ReproducirEn("VEH_CLAXON_TRAFICO", transform.position);
+                }
             }
             if (jugador.HasValue && velocidad >= VelocidadMinimaPasaCerca && Time.time >= proximoPasaCerca
                 && Distancia(jugador.Value, transform.position) <= config.DistanciaPasaCerca)

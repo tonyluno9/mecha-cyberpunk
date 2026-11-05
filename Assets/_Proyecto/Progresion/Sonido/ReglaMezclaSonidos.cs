@@ -11,6 +11,8 @@ namespace MechaCyberpunk.Progresion.Sonido
         /// <summary>Grupo de lo que hace el arma activa: disparo, recarga, cambio, vacío, cola de ráfaga. Una sola voz: lo nuevo corta lo anterior.</summary>
         public const string GrupoArma = "arma";
 
+        public const string GrupoClaxon = "claxon";
+
         public const string GrupoArmaAccesorio = "arma-accesorio";
         public const string GrupoImpacto = "arma-impacto";
         public const string GrupoArmaEnemiga = "arma-enemiga";
@@ -25,12 +27,31 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 return Arma(id);
             }
+            if (id.StartsWith("VEH_", StringComparison.Ordinal))
+            {
+                return Vehiculo(id);
+            }
             if (id == "UI_TEXTO")
             {
                 // T-594: el tic de un aviso o línea de diálogo: bajito, con un poco de variación y sin repetirse como metralleta.
                 return new PoliticaSonido("texto", 1, 0.5f, 0.05f, 0.12f);
             }
             return SinPolitica;
+        }
+
+        // T-595: el claxon y el paso de los carros duran de 3 a 5 s; con tráfico sonaban todos a la vez, siempre igual y se oían de lejos.
+        private static PoliticaSonido Vehiculo(string id)
+        {
+            switch (id)
+            {
+                case "VEH_CLAXON_TRAFICO": return new PoliticaSonido(GrupoClaxon, 2, 0.6f, 0.12f, 0.8f, 25f);
+                case "VEH_CLAXON_VIEJO": return new PoliticaSonido(GrupoClaxon, 2, 0.7f, 0.08f, 0.2f, 35f);
+                case "VEH_PASA_CERCA": return new PoliticaSonido("pasa-cerca", 1, 0.8f, 0.06f, 1.5f, 30f);
+                case "VEH_VIEJO_ARRANQUE": return new PoliticaSonido("arranque", 1, 0.8f, 0.04f, 0f, 30f);
+                case "VEH_CHOQUE_LEVE":
+                case "VEH_CHOQUE_FUERTE": return new PoliticaSonido("choque", 2, 0.85f, 0.05f, 0.15f);
+                default: return SinPolitica;
+            }
         }
 
         private static PoliticaSonido Arma(string id)

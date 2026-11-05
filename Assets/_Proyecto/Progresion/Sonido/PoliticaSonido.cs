@@ -6,13 +6,14 @@ namespace MechaCyberpunk.Progresion.Sonido
     /// </summary>
     public readonly struct PoliticaSonido
     {
-        public PoliticaSonido(string grupo, int maxVoces, float volumen, float variacionTono, float segundosMinimos)
+        public PoliticaSonido(string grupo, int maxVoces, float volumen, float variacionTono, float segundosMinimos, float distanciaMaxima = 0f)
         {
             Grupo = grupo;
             MaxVoces = maxVoces;
             Volumen = volumen;
             VariacionTono = variacionTono;
             SegundosMinimos = segundosMinimos;
+            DistanciaMaxima = distanciaMaxima;
         }
 
         /// <summary>Nombre del grupo que comparte el límite de voces.</summary>
@@ -29,5 +30,8 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         /// <summary>Si el mismo ID se pide antes de este tiempo (s) se ignora; 0 = sin mínimo.</summary>
         public float SegundosMinimos { get; }
+
+        /// <summary>Distancia (m) a la que el sonido 3D ya no se oye; 0 = la del gestor.</summary>
+        public float DistanciaMaxima { get; }
     }
 }
