@@ -126,7 +126,7 @@ namespace MechaCyberpunk.UI.Tiendas
             pestana = PestanaTienda.Comprar;
             indice = 0;
 
-            fondo.color = config.ColorFondo;
+            KitUI.VestirPantalla(fondo, config.ColorFondo);
             Preparar(textoTitulo, string.Format(config.FormatoTitulo, tienda.Nombre.ToUpperInvariant()), config.ColorElegido, config.TamanoTitulo);
             Preparar(textoAviso, string.Empty, config.ColorAviso, config.TamanoTexto);
             textoAviso.gameObject.SetActive(false);
