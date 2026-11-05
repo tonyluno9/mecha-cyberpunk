@@ -79,6 +79,7 @@ namespace MechaCyberpunk.Tests.Sonido
                 minimo = Mathf.Min(minimo, g.UltimoTono);
                 maximo = Mathf.Max(maximo, g.UltimoTono);
                 Assert.Less(g.UltimoVolumenRelativo, 1f);
+                yield return new WaitForSecondsRealtime(0.11f); // T-620: el mismo ID no se repite antes de 0.1 s
             }
             Assert.GreaterOrEqual(minimo, 0.969f);
             Assert.LessOrEqual(maximo, 1.031f);
