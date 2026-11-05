@@ -330,3 +330,41 @@ Audios que faltan o están flojos en Assets/Arte/Audio (todo lo demás ya suena 
 - Paso 1, **T-620** (sonido mínimo por interruptores en CatalogoSonidos.asset) y **T-598** (patrulla sin manzanas) están mezcladas en tony/fase-g con push, **sin pasar a main**: EditMode de sonido 50/50; el PlayMode dirigido (SonidoMinimoT620Pruebas con el minuto simulado, ExplosionCarroPruebas, PandillaArmadaPruebas, PersecucionRealistaT587Pruebas, PatrullaParedT581Pruebas, Sonido, RecorridoDemoPruebas) quedó corriendo al detener; su resultado sale en Logs/r-t620-play.xml.
 - La corrida completa de PlayMode por área de T-620 la mató el sistema por falta de memoria: correr por filtro o área por área.
 - Sigue: revisar Logs/r-t620-play.xml; si pasa, merge de tony/fase-g a main (cierra el Paso 1). Luego Paso 2 (animaciones de imageassets/animaciones: Carros e interaccion.zip y Enemigos y jefe.zip, IDs T-621+) y Paso 3 (bloques 6 a 8 de docs/noche-A-alan.md y [C] sin marcar). Builds/Demo y Builds/Juego sin regenerar.
+
+## Noche 5-nov (docs/plan-noche-05nov.md), pasos 0 a 4: terminado
+
+Opus orquestó y Sonnet implementó. Cada paso se mezcló a main con push.
+
+- **Paso 0**: Unity cerrado y sin candado; tony/fase-g al día con origin/main.
+- **Paso 1** (794e21b): T-620 sonido mínimo y T-598 patrulla sin calles.
+  - Interruptores en CatalogoSonidos: 24 de 130 IDs encendidos.
+  - Límites: 1 voz por ID, 12 en total y 0,1 s entre repeticiones.
+  - En un minuto simulado: 12 voces como máximo y 0 repeticiones.
+- **Paso 2** (c1a0366): T-621 a T-625, animaciones de carros (subir, bajar, manejar, claxon), gestos, teléfono de NPC, SKULLS, jefe y Nova.
+  - Las animaciones que faltan están en docs/animaciones-faltan.md.
+- **Paso 3** (f90990e):
+  - T-630: aliados que te siguen, suben al vehículo y reaparecen si se quedan atrás.
+  - T-631: NPC que no se atraviesan y se destraban.
+  - T-632: minimapa con ruta GPS.
+  - T-633: teléfono con animación y hora.
+  - T-634: prueba de la lluvia que llega al piso.
+  - T-635: cielo con nubes y estrellas, y luz de día cálida. Se arreglaron las pruebas Asfalto y SinGreyboxT506.
+  - En docs/pendientes-pruebas.md se marcaron 38 [x] (T-530 a T-537 y T-630 a T-635).
+- **Paso 4**: Builds/Demo (MechaCyberpunk.exe) y Builds/Juego regenerados a las 13:10 UTC, ambos con "Result: Success" y Unity cerrado.
+
+**Qué sigue:**
+- Del paso 3 no se hicieron:
+  - T-636: mejoras cuerpo a cuerpo en el CIC (la tienda es grande y no alcanzó el tiempo).
+  - T-637: escala de los puestos.
+  - T-638: interfaces más atractivas.
+  - Calles con curvas.
+- Abiertos:
+  - Agacharse de los NPC.
+  - Hacker sentado (falta la animación).
+- Faltan audios y animaciones, listados en docs/sonidos-sugerencias.md y docs/animaciones-faltan.md.
+- La ruta GPS usa el grafo de las 6 manzanas de GeometriaBarrio, no la ciudad completa.
+- Pruebas que siguen rojas, conocidas y sin perseguir:
+  - MontableCarroPruebas.Camara_PrimeraPersona.
+  - RecorridoAPie.
+  - Inestables: JugadorVisualPruebas.Caminar_SinPatinar y ArmasPruebas.ComprarYUsarEscopeta.
+- Las capturas T-635 de cielo miran a una pared y apenas muestran el cielo; hay que repetirlas.
