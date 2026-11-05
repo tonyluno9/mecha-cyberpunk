@@ -34,6 +34,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private GameObject modelo;
         private Camera camaraActual;
         private bool avisoDuplicadoDado;
+        private AnimacionCarro animacionCarro;
 
         public Transform Raiz => transform;
         public ModoJugador Modo { get; private set; } = ModoJugador.APie;
@@ -61,6 +62,15 @@ namespace MechaCyberpunk.Personaje.Jugador
             Animator animador = GetComponentInChildren<Animator>(true);
             modelo = animador != null ? animador.gameObject : null;
             camaraActual = camara;
+            animacionCarro = GetComponent<AnimacionCarro>();
+            if (animacionCarro == null)
+            {
+                animacionCarro = gameObject.AddComponent<AnimacionCarro>();
+            }
+            if (GetComponent<GestosJugador>() == null)
+            {
+                gameObject.AddComponent<GestosJugador>();
+            }
         }
 
         /// <summary>T-520: el modelo del jugador cambió (mujer u hombre); lo que se oculta en el carro es el del nuevo.</summary>
@@ -225,6 +235,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return false;
             }
+            Vector3 posicionPrevia = transform.position;
+            Vector3 frentePrevio = transform.forward;
             // El oído propio se apaga antes de que el montable prenda el suyo: Unity avisa si hay dos prendidos a la vez.
             bool oyenteEstabaPrendido = oyente != null && oyente.enabled;
             if (oyenteEstabaPrendido)
@@ -253,7 +265,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 oyente.enabled = false;
             }
-            if (modelo != null)
+            // T-622: en carro el modelo se queda y maneja (Carro_Entrar/Manejar); en el mecha se oculta.
+            bool animaCarro = montable.Modo == ModoJugador.Carro && animacionCarro != null && animacionCarro.Subir(montable, posicionPrevia, frentePrevio);
+            if (modelo != null && !animaCarro)
             {
                 modelo.SetActive(false);
             }
@@ -278,6 +292,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
 
             MontableActual = null;
+            if (animacionCarro != null)
+            {
+                animacionCarro.Bajar();
+            }
             Colocar(salida);
             controladorAPie.enabled = true;
             controladorAPie.ActivarControl(true);

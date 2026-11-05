@@ -68,6 +68,10 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdCoberturaTipo = Animator.StringToHash(ReglasAnimacion.CoberturaTipo);
         private static readonly int IdDisparoCobertura = Animator.StringToHash(ReglasAnimacion.DisparoCobertura);
         private static readonly int IdFrenar = Animator.StringToHash(ReglasAnimacion.Frenar);
+        private static readonly int IdGesto = Animator.StringToHash(ReglasAnimacion.Gesto);
+        private static readonly int IdGestoTipo = Animator.StringToHash(ReglasAnimacion.GestoTipo);
+        private static readonly int IdManejando = Animator.StringToHash(ReglasAnimacion.Manejando);
+        private static readonly int IdViendoTelefono = Animator.StringToHash(ReglasAnimacion.ViendoTelefono);
 
         private CharacterController controlador;
         private Rigidbody cuerpo;
@@ -164,6 +168,74 @@ namespace MechaCyberpunk.Personaje.Visual
             get => agachado;
             set { agachado = value; Aplicar(); }
         }
+
+        /// <summary>Sentado al volante de un carro (T-622): el estado CarroManejar. Quitarlo lo para de nuevo.</summary>
+        public bool Manejando
+        {
+            get => manejando;
+            set { manejando = value; Aplicar(); }
+        }
+
+        /// <summary>De pie viendo el celular (T-623), en bucle.</summary>
+        public bool ViendoTelefono
+        {
+            get => viendoTelefono;
+            set { viendoTelefono = value; Aplicar(); }
+        }
+
+        /// <summary>
+        /// Lanza un gesto de una vez (carro, interacción, burla...). No hace nada si el personaje está caído o el Animator no tiene el gesto.
+        /// Mientras dura apaga la capa de arriba (torso) para que no se encime un arma.
+        /// </summary>
+        public void Gestear(GestoVisual gesto)
+        {
+            if (caido || gesto == GestoVisual.Ninguno || animador == null || !Tiene(IdGesto, AnimatorControllerParameterType.Trigger))
+            {
+                return;
+            }
+            if (Tiene(IdGestoTipo, AnimatorControllerParameterType.Int))
+            {
+                animador.SetInteger(IdGestoTipo, (int)gesto);
+            }
+            animador.SetTrigger(IdGesto);
+            if (gesto == GestoVisual.Pitar)
+            {
+                segundosPitarPendiente = 0.15f;
+            }
+            else
+            {
+                segundosGestoPendiente = 0.15f;
+            }
+        }
+
+        public void Pitar() => Gestear(GestoVisual.Pitar);
+
+        public void Burlar() => Gestear(GestoVisual.Burla);
+
+        public void Presumir() => Gestear(GestoVisual.Presumir);
+
+        /// <summary>True mientras la capa base juega un gesto, manejar o el celular (los estados con la etiqueta Gesto).</summary>
+        public bool EnGesto
+        {
+            get
+            {
+                if (animador == null || animador.runtimeAnimatorController == null)
+                {
+                    return false;
+                }
+                return segundosGestoPendiente > 0f || animador.GetCurrentAnimatorStateInfo(0).IsTag(ReglasAnimacion.EtiquetaGesto)
+                    || (animador.IsInTransition(0) && animador.GetNextAnimatorStateInfo(0).IsTag(ReglasAnimacion.EtiquetaGesto));
+            }
+        }
+
+        /// <summary>True mientras suena el claxon (la capa de arriba juega Pitar).</summary>
+        public bool Pitando => animador != null && capaArriba >= 0 && (segundosPitarPendiente > 0f || animador.GetCurrentAnimatorStateInfo(capaArriba).IsName("Pitar")
+            || (animador.IsInTransition(capaArriba) && animador.GetNextAnimatorStateInfo(capaArriba).IsName("Pitar")));
+
+        private float segundosPitarPendiente;
+        private float segundosGestoPendiente;
+        private bool manejando;
+        private bool viendoTelefono;
 
         /// <summary>Cómo cayó (o caerá) el personaje.</summary>
         public MuerteVisual Muerte { get; private set; }
@@ -279,7 +351,14 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 return;
             }
-            float objetivo = cubierto || caido || agachado ? 0f : 1f;
+            segundosGestoPendiente = Mathf.Max(0f, segundosGestoPendiente - dt);
+            segundosPitarPendiente = Mathf.Max(0f, segundosPitarPendiente - dt);
+            // Sentado al volante la capa de arriba solo se usa para pitar (los brazos al claxon); si no, taparía el volante con la pose del arma.
+            float objetivo = cubierto || caido || agachado || viendoTelefono || EnGesto ? 0f : 1f;
+            if (manejando)
+            {
+                objetivo = Pitando ? 1f : 0f;
+            }
             pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
             animador.SetLayerWeight(capaArriba, pesoArriba);
         }
@@ -418,6 +497,8 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdCaer, caido);
             Poner(IdCubierto, cubierto);
             Poner(IdAgachado, agachado);
+            Poner(IdManejando, manejando);
+            Poner(IdViendoTelefono, viendoTelefono);
             if (leerDelPadre)
             {
                 Poner(IdVelX, velX);
