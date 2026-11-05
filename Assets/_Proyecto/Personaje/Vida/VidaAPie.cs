@@ -102,7 +102,7 @@ namespace MechaCyberpunk.Personaje.Vida
             float aplicado = modelo.Aplicar(cantidad);
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             EventosPelea.PublicarImpacto(null, info, resultado);
-            Sonidos.ReproducirEn("JUG_DANIO", transform.position);
+            Sonidos.ReproducirEn(VozJugador.Id("JUG_DANIO"), transform.position);
             return resultado;
         }
 
@@ -174,7 +174,7 @@ namespace MechaCyberpunk.Personaje.Vida
         private void AlLlegarAKO()
         {
             controlador.ActivarControl(false);
-            Sonidos.ReproducirEn("JUG_CAE_DERROTADO", transform.position);
+            Sonidos.ReproducirEn(VozJugador.Id("JUG_CAE_DERROTADO"), transform.position);
             Debug.Log("[Personaje] KO a pie");
             KO?.Invoke();
         }

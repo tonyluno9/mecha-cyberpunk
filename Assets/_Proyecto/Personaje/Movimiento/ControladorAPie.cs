@@ -212,7 +212,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 EfectosAPie.AlturaSalto(datos, implantes.Efectos), config.Gravedad);
             if (enPiso && quiereSaltar && vertical > 0f)
             {
-                Sonidos.Reproducir("JUG_SALTO");
+                Sonidos.Reproducir(VozJugador.Id("JUG_SALTO"));
             }
 
             // Tercera persona: el movimiento es relativo a la cámara; el cuerpo gira hacia donde camina, o hacia donde mira si apunta.
@@ -233,7 +233,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 proximaRespira = Time.time + SegundosEntreRespiras;
                 tiempoCorriendo = 0f;
-                Sonidos.Reproducir("JUG_CORRER_RESPIRA");
+                Sonidos.Reproducir(VozJugador.Id("JUG_CORRER_RESPIRA"));
             }
             bool moviendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso;
             if (moviendo && !estabaMoviendo)

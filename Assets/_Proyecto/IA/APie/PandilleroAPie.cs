@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Combate.Lectura;
+using MechaCyberpunk.Combate.Voces;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.Datos;
@@ -113,7 +114,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 if (value && !alerta)
                 {
-                    Sonidos.ReproducirEn("PAN_RIVAL_ALERTA", transform.position);
+                    Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
                 }
                 alerta = value;
             }
@@ -314,7 +315,7 @@ namespace MechaCyberpunk.IA.APie
                     visual.Herir(info.Direccion);
                 }
                 PintarCuerpo(datos.ColorGolpe);
-                Sonidos.ReproducirEn("PAN_RIVAL_DANIO", transform.position);
+                Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_DANIO"), transform.position);
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
             return resultado;
@@ -773,6 +774,14 @@ namespace MechaCyberpunk.IA.APie
 
         private void AlCambiar() => Cambio?.Invoke();
 
+        // T-597: la voz del pandillero según su género; una de cada cuatro es femenina, repartida por el número de instancia (estable).
+        private const int PandillerosPorCadaFemenina = 4;
+
+        /// <summary>El género de la voz de este pandillero.</summary>
+        public GeneroVoz Voz => EtiquetaVoz.PorSemilla(GetInstanceID(), PandillerosPorCadaFemenina);
+
+        private string VozPandillero(string id) => EtiquetaVoz.De(id, Voz);
+
         private void AlLlegarAKO()
         {
             turnos?.Soltar(this);
@@ -802,7 +811,7 @@ namespace MechaCyberpunk.IA.APie
             PonerBrazo(0f);
             PintarBrazo(datos.ColorKO);
             pintadoAviso = false;
-            Sonidos.ReproducirEn("PAN_RIVAL_CAE", transform.position);
+            Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_CAE"), transform.position);
             KO?.Invoke();
             Vencido?.Invoke(this);
         }

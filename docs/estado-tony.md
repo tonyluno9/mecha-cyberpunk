@@ -304,3 +304,15 @@ Los 6 pasos de docs/plan-personajes-carros.md están en main con push (un merge 
 - Para que lo veas tú: la habitación todavía es la caja grande del greybox. Para parecerse a la referencia hay que achicar las paredes de la casa
   (decídelo tú: es la escena del prólogo).
 
+
+## Sesión A: falta para Sesión B/Tony (sonido, bloque 5 del 4-nov)
+
+Audios que faltan o están flojos en Assets/Arte/Audio (todo lo demás ya suena con lo que hay):
+- Voces por género: no hay JUG_DANIO_F / _M, JUG_CAE_DERROTADO_F / _M, JUG_CORRER_RESPIRA_F / _M, JUG_SALTO_F / _M (esfuerzo), PAN_RIVAL_DANIO_F / _M, PAN_RIVAL_CAE_F / _M, PAN_RIVAL_ALERTA_F / _M, PAN_ALIADO_RECLUTA_F / _M, PAN_ALIADO_CAE_F / _M. Hoy suena la voz única con tono +20 % (mujer) o -5 % (hombre). Cuando llegue un archivo con ese nombre (por ejemplo JUG_DANIO_F_01.wav, y correr CreadorCatalogoSonidos.Crear) se usa solo.
+- Esfuerzo de golpe o patada (JUG_ESFUERZO) y gemido de pandillero/aliado herido distinto del KO: no existen.
+- Casi mudos (pico menor a 0.1): ARM_SNI_ZOOM_01 y _02, ARM_BALA_IMPACTO_METAL_01 y _02, JUG_REGENERA_01, UI_MOVER_01 (el gestor no normaliza; conviene renormalizar el WAV). JUG_CORRER_RESPIRA_01 sale bajito (pico 0.1).
+- ZON_ENTRAR_PROPIA_01 y ZON_ENTRAR_RIVAL_01 (piano) quedaron sin uso; si se quieren, un tic corto en vez del piano.
+- UI_TEXTO es provisional (generado por código); falta uno final y sutil.
+- Motor: no hay manera de mezclar VEH_VIEJO_MOTOR_ACELERA con el ralentí ni de arrancar el bucle en un punto al azar sin cambiar Core/ISonidos (volumen por bucle y desfase); VEH_MOTO_MOTOR y VEH_PRO_MOTOR_* siguen sin clase que los toque.
+- Pasos: mojado solo por nombre de material ("mojad", "charco", "wet"); falta que Mundo nombre así la calle mojada o un contrato de clima en Core.
+- Pisadas por evento de animación: no hay eventos en los clips; los pasos van por distancia (1.4 m caminando, 2 m corriendo en ControladorAPie). Si la Sesión B agrega eventos "Paso", se llama al mismo punto y se quita la zancada.

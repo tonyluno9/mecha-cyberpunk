@@ -63,6 +63,21 @@ namespace MechaCyberpunk.Progresion.Sonido
         /// <summary>Semilla del azar, para pruebas.</summary>
         public void FijarSemilla(int semilla) => azar = new System.Random(semilla);
 
+        /// <summary>Si el ID tiene algún clip. No avisa ni consume variantes.</summary>
+        public bool Tiene(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return false;
+            if (porId.Count == 0)
+            {
+                foreach (Entrada e in entradas)
+                {
+                    if (e != null && !string.IsNullOrEmpty(e.id)) porId[e.id] = e;
+                }
+            }
+            if (!porId.TryGetValue(id, out Entrada entrada)) return false;
+            return ReglaCatalogoSonidos.Efectivos<AudioClip>(entrada.finales, entrada.provisionales).Count > 0;
+        }
+
         /// <summary>Un clip del ID (variante al azar sin repetir la última), o null si el ID no tiene archivos.</summary>
         public AudioClip Elegir(string id)
         {

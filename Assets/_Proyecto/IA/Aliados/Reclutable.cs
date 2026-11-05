@@ -1,3 +1,4 @@
+using MechaCyberpunk.Combate.Voces;
 using MechaCyberpunk.Core;
 using UnityEngine;
 
@@ -103,7 +104,7 @@ namespace MechaCyberpunk.IA.Aliados
                 return;
             }
             Pandilla.Reclutar(nombre);
-            Sonidos.ReproducirEn("PAN_ALIADO_RECLUTA", transform.position);
+            Sonidos.ReproducirEn(EtiquetaVoz.De("PAN_ALIADO_RECLUTA", EtiquetaVoz.PorSemilla(GetInstanceID(), 2)), transform.position);
         }
 
         private void Update()
