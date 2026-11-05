@@ -46,6 +46,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public float Vida => calculo != null ? calculo.Actual : 0f;
         public float VidaMaxima => calculo != null ? calculo.Maxima : 0f;
         public bool Explotado { get; private set; }
+        /// <summary>Los efectos del último estallido (T-591), o null si no ha explotado.</summary>
+        public ExplosionCarro UltimaExplosion { get; private set; }
         public ConfigDanioCarro Config => config;
         public ParticleSystem Humo => humo;
         public ParticleSystem Fuego => fuego;
@@ -225,6 +227,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
 
             Sonidos.ReproducirEn("VEH_CHOQUE_FUERTE", centro);
+            UltimaExplosion = ExplosionCarro.Crear(centro, config.RadioExplosion);
             EmitirRafaga(fuego, ParticulasExplosion, 7f);
             EmitirRafaga(humo, ParticulasHumoExplosion, 4f);
             DanarAlrededor(centro);
