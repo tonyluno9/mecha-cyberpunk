@@ -30,6 +30,19 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 return Arma(id);
             }
+            switch (id)
+            {
+                // T-597: voces del jugador y de los pandilleros; cada una corta la anterior de su tipo y varía un poco.
+                case "JUG_DANIO": return new PoliticaSonido("voz-jugador", 1, 0.9f, 0.04f, 0.12f, 30f);
+                case "JUG_CAE_DERROTADO": return new PoliticaSonido("voz-jugador", 1, 1f, 0.03f, 0f, 30f);
+                case "JUG_CORRER_RESPIRA": return new PoliticaSonido("voz-jugador", 1, 1f, 0.03f, 2f, 15f);
+                case "JUG_SALTO": return new PoliticaSonido("voz-jugador", 1, 0.8f, 0.05f, 0.2f, 20f);
+                case "PAN_RIVAL_DANIO": return new PoliticaSonido("voz-rival-danio", 2, 0.85f, 0.08f, 0.1f, 35f);
+                case "PAN_RIVAL_CAE": return new PoliticaSonido("voz-rival-cae", 3, 0.9f, 0.08f, 0f, 35f);
+                case "PAN_RIVAL_ALERTA": return new PoliticaSonido("voz-rival-alerta", 2, 0.85f, 0.08f, 0.3f, 35f);
+                case "PAN_ALIADO_RECLUTA":
+                case "PAN_ALIADO_CAE": return new PoliticaSonido("voz-aliado", 1, 0.9f, 0.05f, 0f, 30f);
+            }
             if (id.StartsWith(PrefijoPaso, StringComparison.Ordinal))
             {
                 // T-596: pasos bajos, con tono distinto cada vez, y de poco alcance.

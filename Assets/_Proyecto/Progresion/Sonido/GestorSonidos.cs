@@ -69,6 +69,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         public float UltimoTono { get; private set; } = 1f;
         public float UltimoVolumenRelativo { get; private set; } = 1f;
         public AudioClip UltimoClip { get; private set; }
+        public string UltimoIdClip { get; private set; }
 
         /// <summary>Semilla del azar del tono, para pruebas.</summary>
         public void FijarSemillaTono(int semilla) => azarTono = new System.Random(semilla);
@@ -198,7 +199,24 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private void Tocar(string id, bool? en3D, Vector3 posicion)
         {
-            AudioClip clip = Preparar(id);
+            // T-597: "ID@F" pide la voz del género; si hay clip propio (ID_F) se usa, si no el normal con otro tono.
+            id = ReglaVozGenero.Separar(id, out string etiqueta);
+            float tonoGenero = 1f;
+            string idClip = id;
+            if (etiqueta.Length > 0)
+            {
+                string idGenero = ReglaVozGenero.IdDelGenero(id, etiqueta);
+                if (catalogo != null && catalogo.Tiene(idGenero))
+                {
+                    idClip = idGenero;
+                }
+                else
+                {
+                    tonoGenero = ReglaVozGenero.TonoDeGenero(etiqueta);
+                }
+            }
+            AudioClip clip = Preparar(idClip);
+            if (idClip != id) conteo[id] = Pedidos(id) + 1;
             if (clip == null) return;
             SeccionSonido seccion = ReglaCatalogoSonidos.SeccionDe(id);
             PoliticaSonido politica = ReglaMezclaSonidos.Para(id);
@@ -213,7 +231,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             AudioSource f = FuenteLibre();
             f.Stop();
             voces.RemoveAll(v => v.fuente == f);
-            float tono = ReglaMezclaSonidos.Tono(politica.VariacionTono, (float)azarTono.NextDouble());
+            float tono = ReglaMezclaSonidos.Tono(politica.VariacionTono, (float)azarTono.NextDouble()) * tonoGenero;
             f.clip = clip;
             f.loop = false;
             f.pitch = tono;
@@ -222,6 +240,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             UltimoTono = tono;
             UltimoVolumenRelativo = politica.Volumen;
             UltimoClip = clip;
+            UltimoIdClip = idClip;
             UltimaFuente = f;
             if (politica.MaxVoces > 0)
             {
