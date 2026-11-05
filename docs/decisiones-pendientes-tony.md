@@ -1166,3 +1166,9 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - Causa (c): los clips de locomoción no horneaban la rotación de la raíz. CorregirAnimacionesT640 hornea la rotación (Bake Into Pose, orientación del cuerpo, no "original": con "original" el clip traía 180° propios y el personaje volvía a caminar de espaldas) en Loco_/Pistola_/Rifle_/Nova_/Skull_/Jefe_, excepto Girar, Salto, Caida y Frenar (giran el cuerpo a propósito; SaltoInicio torcía 32° la pelvis horneado). XZ no se hornea (los clips ya están en el sitio) y Y ya estaba.
 - Sí existen todos los clips Correr (Loco_Correr, Pistola_Correr, Rifle_Correr, Nova_Correr); Skull/Jefe no tienen Correr y usan el de Loco_Correr por override.
 - ReglasEnsambladosPruebas.ProyectoReal_NoTieneErrores falla desde antes (UI referencia Trafico): no es de esta tarea.
+
+## T-653 InitTestScene sueltas
+- Causa: el Test Framework de PlayMode crea Assets/InitTestScene<guid>.unity al arrancar la corrida y la borra al terminar. Si Unity se mata (timeout del script de áreas con taskkill, caída, cierre forzado) la escena se queda. Dos estaban incluso versionadas.
+- Arreglo: borradas las 61 (más 2 versionadas), `/Assets/InitTestScene*` en .gitignore, y `LimpiarEscenasDePrueba` ([InitializeOnLoad] en Personaje/Visual/Editor) borra al abrir el editor las de más de 1 hora (las recientes podrían ser de una corrida viva).
+- Assets/Logs/ (de un -projectPath mal puesto) y Assets/_Recovery/ (escenas de recuperación de Unity) son basura: solo se ignoran en .gitignore, no se borran.
+- Aviso: otra sesión (S2) comparte la carpeta mecha-cyberpunk y cambia de rama ahí; la sesión S1 trabaja en un worktree aparte (../mecha-s1, con su propia copia de Library) para no pisarse.
