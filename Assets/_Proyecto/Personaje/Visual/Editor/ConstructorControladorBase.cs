@@ -287,7 +287,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["Idle"], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, UmbralCaminar));
             Unir(e["Caminar"], e["Idle"], false, 0f, Mezcla, Menor(ReglasVisual.Velocidad, UmbralCaminar));
             Unir(e["Caminar"], e["Correr"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer));
-            Unir(e["Correr"], e["Caminar"], false, 0f, Mezcla, Menor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer));
+            Unir(e["Correr"], e["Caminar"], false, 0f, Mezcla, Menor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer * ReglasAnimacion.HisteresisCorrer));
             Unir(e["Frenar"], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer * 0.5f));
 
             // Giro en el sitio.
@@ -456,7 +456,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Estado("DanoFuerte", Clip("Dano_Fuerte"));
             Estado("PistolaIdle", Arbol1D(c, "PistolaIdle", ReglasVisual.Velocidad, new (string, float)[]
             {
-                ("Pistola_Idle", 0f), ("Pistola_Caminar", 3f), ("Pistola_Correr", 7f),
+                ("Pistola_Idle", 0f), ("Pistola_Caminar", ReglasAnimacion.VelocidadAndar), ("Pistola_Correr", ReglasAnimacion.VelocidadCarrera),
             }));
             Estado("PistolaApuntar", Arbol1D(c, "PistolaApuntar", ReglasAnimacion.VelX, new (string, float)[]
             {
@@ -467,11 +467,11 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Estado("PistolaRecargarCaminar", Clip("Pistola_RecargarCaminar"));
             Estado("LargaIdle", Arbol1D(c, "LargaIdle", ReglasVisual.Velocidad, new (string, float)[]
             {
-                ("Rifle_Idle", 0f), ("Rifle_Caminar", 3f), ("Rifle_Correr", 7f),
+                ("Rifle_Idle", 0f), ("Rifle_Caminar", ReglasAnimacion.VelocidadAndar), ("Rifle_Correr", ReglasAnimacion.VelocidadCarrera),
             }));
             Estado("LargaApuntar", Arbol1D(c, "LargaApuntar", ReglasVisual.Velocidad, new (string, float)[]
             {
-                ("Rifle_Apuntar", 0f), ("Rifle_ApuntarCaminar", 3f), ("Rifle_ApuntarCorrer", 7f),
+                ("Rifle_Apuntar", 0f), ("Rifle_ApuntarCaminar", ReglasAnimacion.VelocidadAndar), ("Rifle_ApuntarCorrer", ReglasAnimacion.VelocidadCarrera),
             }));
             Estado("LargaDisparo", Clip("Rifle_DisparoCaminar"));
             Estado("LargaRecargar", Clip("Rifle_Recargar"));

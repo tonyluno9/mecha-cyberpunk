@@ -21,23 +21,22 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void Locomocion_ElJugadorACuatroYMedioYaCorre_SinTopeDeRapidez()
+        public void Locomocion_ElJugadorACuatroYMedioCaminaYSoloCorreAlCorrer_T640()
         {
-            Assert.Greater(VelocidadCaminarJugador, ReglasAnimacion.UmbralCorrer, "a 4.5 m/s ya mezcla hacia correr");
-            foreach (float v in new[] { VelocidadCaminarJugador, VelocidadCorrerJugador })
-            {
-                float sinTope = v / ReglasAnimacion.VelocidadClipCorrer;
-                float escala = ReglasAnimacion.EscalaVelocidad(v, ReglasAnimacion.VelocidadClipCorrer, 0.6f, ReglasAnimacion.RapidezMaximaLocomocion);
-                Assert.AreEqual(sinTope, escala, 0.001f, "la escala no topa a " + v + " m/s");
-            }
+            Assert.Less(VelocidadCaminarJugador, ReglasAnimacion.UmbralCorrer, "caminar normal (4.5 m/s) es Caminar");
+            Assert.Greater(VelocidadCorrerJugador, ReglasAnimacion.UmbralCorrer, "con Shift (7.5 m/s) es Correr");
+            Assert.Less(VelocidadCaminarJugador, ReglasAnimacion.UmbralCorrer * ReglasAnimacion.HisteresisCorrer, "de Correr se vuelve a Caminar a 4.5");
+            float sinTope = VelocidadCorrerJugador / ReglasAnimacion.VelocidadClipCorrer;
+            float escala = ReglasAnimacion.EscalaVelocidad(VelocidadCorrerJugador, ReglasAnimacion.VelocidadClipCorrer, 0.6f, ReglasAnimacion.RapidezMaximaLocomocion);
+            Assert.AreEqual(sinTope, escala, 0.001f, "Correr no topa a 7.5 m/s");
         }
 
         [Test]
-        public void Locomocion_CaminarNoSeAceleraMasDeLoPermitidoAntesDeCorrer()
+        public void Locomocion_CaminarSeAceleraMenosQueCorrer_T640()
         {
-            float escala = ReglasAnimacion.UmbralCorrer / ReglasAnimacion.VelocidadClipCaminar;
-            Assert.LessOrEqual(escala, ReglasAnimacion.RapidezMaximaCaminar + 0.01f);
-            Assert.LessOrEqual(ReglasAnimacion.UmbralCorrer, ReglasAnimacion.VelocidadClipCorrer + 0.1f, "correr no arranca más lento que su clip");
+            Assert.Less(ReglasAnimacion.RapidezMaximaCaminar, ReglasAnimacion.RapidezMaximaLocomocion);
+            Assert.AreEqual(ReglasAnimacion.VelocidadAndar, VelocidadCaminarJugador, 0.001f);
+            Assert.AreEqual(ReglasAnimacion.VelocidadCarrera, VelocidadCorrerJugador, 0.001f);
         }
 
         [Test]
