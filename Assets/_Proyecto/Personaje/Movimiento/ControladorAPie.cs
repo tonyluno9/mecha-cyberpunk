@@ -12,10 +12,19 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private const float PendienteMaxima = 45f;
         private const float EscalonMaximo = 0.35f;
         private const float UmbralPaso = 0.5f;
-        private const float SegundosPasoCaminar = 0.5f;
-        private const float SegundosPasoCorrer = 0.32f;
+        // T-596: los pasos suenan por distancia recorrida (zancada), no por temporizador.
+        private const float MetrosPorPasoCaminar = 1.4f;
+        private const float MetrosPorPasoCorrer = 2f;
+        private const float FraccionPrimerPaso = 0.5f;
+        private const float AlcanceRayoPiso = 1.6f;
+        private readonly ReglaZancada zancada = new ReglaZancada(MetrosPorPasoCaminar, MetrosPorPasoCorrer);
+        private IdLugar lugarActual = IdLugar.Calle;
+        private bool estabaMoviendo;
+
+        /// <summary>Pasos dados (para pruebas) y el ID del último paso que sonó.</summary>
+        public int PasosDados => zancada.Pasos;
+        public string UltimoIdPaso { get; private set; }
         private const float SegundosMinimosAire = 0.25f;
-        private float proximoPaso;
         // T-442: la respiración se oye tras correr este rato seguido y no más seguido que cada tanto.
         private const float SegundosParaRespirar = 4f;
         private const float SegundosEntreRespiras = 10f;
@@ -90,8 +99,35 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
         }
 
+        // El piso: el lugar donde está el jugador (interior) y el material del suelo bajo los pies.
+        private string IdPasoDelPiso()
+        {
+            string nombre = null;
+            bool montable = false;
+            if (Physics.Raycast(transform.position + Vector3.up * 0.2f, Vector3.down, out RaycastHit golpe, AlcanceRayoPiso, ~0, QueryTriggerInteraction.Ignore))
+            {
+                montable = golpe.collider.GetComponentInParent<IMontable>() != null;
+                nombre = golpe.collider.sharedMaterial != null ? golpe.collider.sharedMaterial.name : null;
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    Renderer r = golpe.collider.GetComponent<Renderer>();
+                    nombre = r != null && r.sharedMaterial != null ? r.sharedMaterial.name : golpe.collider.name;
+                }
+            }
+            return ReglaSuperficiePaso.IdPaso(lugarActual, nombre, montable);
+        }
+
+        private void AlEntrarLugar(IdLugar lugar) => lugarActual = lugar;
+
+        private void AlSalirLugar(IdLugar lugar)
+        {
+            if (lugarActual == lugar) lugarActual = IdLugar.Calle;
+        }
+
         private void OnEnable()
         {
+            EventosLugares.JugadorEntro += AlEntrarLugar;
+            EventosLugares.JugadorSalio += AlSalirLugar;
             mover.action.Enable();
             mirar.action.Enable();
             correr.action.Enable();
@@ -104,6 +140,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
         private void OnDisable()
         {
+            EventosLugares.JugadorEntro -= AlEntrarLugar;
+            EventosLugares.JugadorSalio -= AlSalirLugar;
             mover.action.Disable();
             mirar.action.Disable();
             correr.action.Disable();
@@ -197,10 +235,16 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 tiempoCorriendo = 0f;
                 Sonidos.Reproducir("JUG_CORRER_RESPIRA");
             }
-            if (enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && Time.time >= proximoPaso)
+            bool moviendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso;
+            if (moviendo && !estabaMoviendo)
             {
-                proximoPaso = Time.time + (correr.action.IsPressed() ? SegundosPasoCorrer : SegundosPasoCaminar);
-                Sonidos.ReproducirEn("JUG_PASO_ASFALTO", transform.position);
+                zancada.Reiniciar(MetrosPorPasoCaminar * FraccionPrimerPaso);
+            }
+            estabaMoviendo = moviendo;
+            if (moviendo && zancada.Avanzar(new Vector2(horizontal.x, horizontal.z).magnitude * dt, correr.action.IsPressed(), enPiso) > 0)
+            {
+                UltimoIdPaso = IdPasoDelPiso();
+                Sonidos.ReproducirEn(UltimoIdPaso, transform.position);
             }
         }
 

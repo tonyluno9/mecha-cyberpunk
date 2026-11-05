@@ -27,6 +27,11 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 return Arma(id);
             }
+            if (id.StartsWith("JUG_PASO_", StringComparison.Ordinal))
+            {
+                // T-596: pasos bajos, con tono distinto cada vez, y de poco alcance.
+                return new PoliticaSonido("paso", 2, 0.7f, 0.06f, 0.1f, 20f);
+            }
             if (id.StartsWith("VEH_", StringComparison.Ordinal))
             {
                 return Vehiculo(id);
