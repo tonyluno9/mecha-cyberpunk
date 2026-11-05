@@ -279,7 +279,11 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 while (VocesActivas(politica.Grupo) >= politica.MaxVoces) CortarMasVieja(politica.Grupo);
             }
-            // T-620: máximo 1 voz por ID y 12 en total.
+            // T-620: máximo 1 voz por ID y 12 en total; si ya suena un bucle de ese ID (motor, sirena), no se encima.
+            foreach (Bucle b in bucles.Values)
+            {
+                if (b.id == id) return;
+            }
             CortarVoz(id);
             if (!HacerEspacio()) return;
             AudioSource f = FuenteLibre();
