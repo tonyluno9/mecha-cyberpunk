@@ -324,3 +324,9 @@ Audios que faltan o están flojos en Assets/Arte/Audio (todo lo demás ya suena 
 - Rojas ya conocidas: MontableCarroPruebas.Camara_PrimeraPersona, AmbientePruebas.Asfalto_EsOscuroYLiso, SinGreyboxT506Pruebas x2, PersonajesT520Pruebas.ListaDeAnimacionesQueFaltan_Existe (docs/animaciones-faltan.md lo reescribió la Sesión B), RecorridoAPie; inestables: JugadorVisualPruebas.Caminar_SinPatinar y ArmasPruebas.ComprarYUsarEscopeta.
 - Sigue: terminar T-598; bloques 6 (NPC y aliados), 7 (mundo) y 8 (interfaz) de docs/noche-A-alan.md; luego los [C] sin marcar de docs/pendientes-pruebas.md; al final regenerar Builds/Demo y Builds/Juego (no se regeneraron en esta sesión).
 - Cambios del editor de tony/anim-noche guardados en el stash "churn-editor-anim-noche-20261104".
+
+## Noche 5-nov (docs/plan-noche-05nov.md): detenida por Tony en el Paso 1
+- Paso 0 hecho: plan y docs/sonidos-sugerencias.md en commit, origin/main mezclado.
+- Paso 1, **T-620** (sonido mínimo por interruptores en CatalogoSonidos.asset) y **T-598** (patrulla sin manzanas) están mezcladas en tony/fase-g con push, **sin pasar a main**: EditMode de sonido 50/50; el PlayMode dirigido (SonidoMinimoT620Pruebas con el minuto simulado, ExplosionCarroPruebas, PandillaArmadaPruebas, PersecucionRealistaT587Pruebas, PatrullaParedT581Pruebas, Sonido, RecorridoDemoPruebas) quedó corriendo al detener; su resultado sale en Logs/r-t620-play.xml.
+- La corrida completa de PlayMode por área de T-620 la mató el sistema por falta de memoria: correr por filtro o área por área.
+- Sigue: revisar Logs/r-t620-play.xml; si pasa, merge de tony/fase-g a main (cierra el Paso 1). Luego Paso 2 (animaciones de imageassets/animaciones: Carros e interaccion.zip y Enemigos y jefe.zip, IDs T-621+) y Paso 3 (bloques 6 a 8 de docs/noche-A-alan.md y [C] sin marcar). Builds/Demo y Builds/Juego sin regenerar.

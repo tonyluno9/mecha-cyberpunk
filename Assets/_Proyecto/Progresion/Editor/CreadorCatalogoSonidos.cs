@@ -37,6 +37,7 @@ namespace MechaCyberpunk.Progresion.Editor
                 AssetDatabase.CreateAsset(catalogo, RutaCatalogo);
             }
             catalogo.Fijar(new List<CatalogoSonidos.Entrada>(entradas.Values));
+            catalogo.SincronizarInterruptores();
             EditorUtility.SetDirty(catalogo);
             AssetDatabase.SaveAssets();
             Debug.Log("[Sonido] CreadorCatalogoSonidos: " + entradas.Count + " IDs en " + RutaCatalogo + ".");
