@@ -1180,3 +1180,9 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - Teléfono (Inter_Telefono, 37 s): no se tocó; es un clip largo de texting que la pantalla del teléfono no espera. Si se quiere, se corta con un tiempo de salida fijo.
 - Los clips de caminar y correr no se tocan (T-640).
 - Pruebas de PlayMode que corren juntas a veces fallan por tiempos de cuadro (Quieto / cabeza al piso); solas pasan.
+
+## T-651 caminar y correr con arma
+- Causa: el torso (capa Arriba, máscara de torso) ya jugaba Pistola_/Rifle_Caminar y Correr al llevar arma, pero las piernas seguían en la capa base con Loco_Caminar/Correr (el controlador solo cambiaba el arma al apuntar para el resto del cuerpo). Y la rapidez de la animación se calculaba con la velocidad del clip normal, no la del clip del arma, así que el torso y las piernas no iban a la par.
+- Arreglo: nueva capa "Piernas" (máscara solo de piernas, peso 0) con un árbol por velocidad Caminar@4.5 / Correr@7.5 por arma (Pistola_Caminar/Correr, Rifle_Caminar/Correr). VisualPersonaje le da peso 1 con ReglasAnimacion.UsaPiernasDeArma (arma en mano, sin apuntar, en el piso, moviéndose, sin cobertura/agachado/caído/gesto/manejando). Al apuntar se queda la locomoción de la base, que sí tiene dirección (VelX/VelZ). Las velocidades 4.5 y 7.5 y el umbral 5.5 de T-640 no se tocan.
+- Rapidez: con piernas de arma, Animator.speed = velocidad real / velocidad medida del clip del arma (1.72, 1.84, 0.80, 2.68 m/s, medidas con MedicionClips), con tope 2.8. Rifle_Caminar avanza solo 0.8 m/s, así que a 4.5 m/s llega al tope y los pies patinan un poco.
+- La capa Arriba ahora también tiene IK Pass (para la mano izquierda, T-650).
