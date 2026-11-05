@@ -130,6 +130,40 @@ namespace MechaCyberpunk.UI.Kit
             return imagen;
         }
 
+        /// <summary>
+        /// T-638: viste una pantalla hecha antes del kit (tienda, teléfono, misiones, clínica, taller, peleas) con el estilo del mockup:
+        /// el marco 9-slice de UI01 en el fondo (conserva la opacidad de <paramref name="color"/>), Rajdhani en los textos y Teko en los
+        /// grandes, con el contorno oscuro de la guía. Idempotente. Sin las piezas solo pinta el fondo liso.
+        /// </summary>
+        public static void VestirPantalla(Image fondo, Color color)
+        {
+            if (fondo == null)
+            {
+                return;
+            }
+            Sprite marco = PiezasUI.Actual != null ? PiezasUI.Actual.MarcoPanel : null;
+            if (marco == null)
+            {
+                fondo.color = color;
+                return;
+            }
+            fondo.sprite = marco;
+            fondo.type = Image.Type.Sliced;
+            fondo.pixelsPerUnitMultiplier = 3f;
+            fondo.color = new Color(1f, 1f, 1f, Mathf.Clamp01(color.a));
+            Canvas canvas = fondo.GetComponentInParent<Canvas>();
+            if (canvas == null)
+            {
+                return;
+            }
+            foreach (Text texto in canvas.GetComponentsInChildren<Text>(true))
+            {
+                bool grande = texto.fontSize >= Estilo.Tamano(RolTexto.Encabezado) * 0.9f;
+                texto.font = Estilo.FuenteDe(grande ? RolTexto.Encabezado : RolTexto.Texto);
+                Sombrear(texto);
+            }
+        }
+
         /// <summary>Imagen con un sprite de las piezas; sin sprite queda apagada.</summary>
         public static Image CrearImagenSprite(Transform padre, string nombre, Sprite sprite, bool proporcion = true)
         {

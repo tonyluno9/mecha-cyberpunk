@@ -353,11 +353,12 @@ Opus orquestó y Sonnet implementó. Cada paso se mezcló a main con push.
 - **Paso 4**: Builds/Demo (MechaCyberpunk.exe) y Builds/Juego regenerados a las 13:10 UTC, ambos con "Result: Success" y Unity cerrado.
 
 **Qué sigue:**
-- Del paso 3 no se hicieron:
-  - T-636: mejoras cuerpo a cuerpo en el CIC (la tienda es grande y no alcanzó el tiempo).
-  - T-637: escala de los puestos.
-  - T-638: interfaces más atractivas.
-  - Calles con curvas.
+- Segunda tanda del paso 3, a pedido del hook de meta, porque el corte de las 13:15 UTC era mío y no del plan:
+  - T-636 (acc2319): los puños I a III del CIC ya existían. Solo se agregó una prueba (2/2).
+  - T-637 (3435c4f): puestos de tacos a escala 0,72, unos 2,5 m. En Ciudad y Ciudad_Prologo se separaron 2 puestos que se traslapaban. Pruebas 3/3 más 44 de mundo.
+  - T-638 (a36e285): KitUI.VestirPantalla pone marco UI01 y fuentes Teko/Rajdhani en tienda, teléfono, misiones, clínica, banco, taller, apuesta y cartelera. Captura: T-638-telefono.png.
+  - RecorridoDemoPruebas 2/2.
+- Calles con curvas: no se hicieron. El pendiente es [?] porque la frase quedó cortada.
 - Abiertos:
   - Agacharse de los NPC.
   - Hacker sentado (falta la animación).
