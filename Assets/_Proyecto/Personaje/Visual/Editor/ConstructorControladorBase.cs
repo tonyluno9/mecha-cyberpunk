@@ -20,7 +20,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public const string CarpetaOverrides = Carpeta + "/Overrides";
 
         /// <summary>Papeles con override. El nombre del archivo es Override_&lt;Papel&gt;.overrideController.</summary>
-        public static readonly string[] Papeles = { "Jugador", "Aliados", "NPC", "SKULLS", "SNAKES", "Guardias", "Robots", "Profes" };
+        public static readonly string[] Papeles = { "Jugador", "Aliados", "NPC", "SKULLS", "SNAKES", "Guardias", "Robots", "Profes", "Jefe" };
 
         private const float Mezcla = 0.12f;
         private const float MezclaCorta = 0.06f;
@@ -66,6 +66,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             EditorUtility.SetDirty(c);
             AssetDatabase.SaveAssets();
             CrearOverrides(c);
+            AplicarClipsPorPapel();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[Personaje] T-561: controlador base y " + Papeles.Length + " overrides listos.");
@@ -119,6 +120,48 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 for (int i = 0; i < pares.Count; i++)
                 {
                     pares[i] = new KeyValuePair<AnimationClip, AnimationClip>(pares[i].Key, pares[i].Key);
+                }
+                o.ApplyOverrides(pares);
+                EditorUtility.SetDirty(o);
+            }
+        }
+
+        /// <summary>
+        /// T-624: clips propios de cada papel (clip del controlador base -> clip del papel). SKULLS, su jefe y los guardias de Nova usan los
+        /// clips de Enemigos y jefe; el resto de los papeles se queda con los de la base.
+        /// </summary>
+        public static readonly Dictionary<string, (string Base, string Papel)[]> ClipsPorPapel = new Dictionary<string, (string, string)[]>
+        {
+            ["SKULLS"] = new[] { ("Loco_Idle", "Skull_Idle"), ("Loco_Caminar", "Skull_Caminar") },
+            ["Jefe"] = new[]
+            {
+                ("Loco_Idle", "Jefe_Idle"), ("Loco_Caminar", "Jefe_Caminar"), ("Skull_Burla", "Jefe_Burla"), ("Pistola_Disparo", "Jefe_Ataque"),
+                ("Muerte_Adelante", "Jefe_Muerte"), ("Muerte_Atras", "Jefe_Muerte"), ("Muerte_Desmayo", "Jefe_Muerte"),
+            },
+            ["Guardias"] = new[]
+            {
+                ("Loco_Idle", "Nova_Idle"), ("Loco_Caminar", "Nova_Caminar"), ("Loco_Correr", "Nova_Correr"),
+                ("Punos_GolpeIzq", "Nova_Punch"), ("Punos_GolpeDer", "Nova_Punch"), ("Punos_Fuerte", "Nova_Barrido"),
+                ("Muerte_Adelante", "Nova_Muerte"), ("Muerte_Atras", "Nova_Muerte"), ("Muerte_Desmayo", "Nova_Muerte"),
+            },
+        };
+
+        private static void AplicarClipsPorPapel()
+        {
+            foreach (KeyValuePair<string, (string Base, string Papel)[]> papel in ClipsPorPapel)
+            {
+                AnimatorOverrideController o = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(RutaOverride(papel.Key));
+                var pares = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+                o.GetOverrides(pares);
+                foreach ((string clipBase, string clipPapel) in papel.Value)
+                {
+                    for (int i = 0; i < pares.Count; i++)
+                    {
+                        if (pares[i].Key != null && pares[i].Key.name == clipBase)
+                        {
+                            pares[i] = new KeyValuePair<AnimationClip, AnimationClip>(pares[i].Key, Clip(clipPapel));
+                        }
+                    }
                 }
                 o.ApplyOverrides(pares);
                 EditorUtility.SetDirty(o);
@@ -220,6 +263,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Estado("MuerteDesmayo", "Muerte_Desmayo");
             Estado("LevantarseBocaArriba", "Dano_Levantarse_BocaArriba");
             Estado("LevantarseBocaAbajo", "Dano_Levantarse_BocaAbajo");
+            ConstruirGestos(m, e, Estado);
             m.defaultState = e["Idle"];
 
             string[] suelo = { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "AgachadoCaminar" };
@@ -308,6 +352,45 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             c.layers = capas;
         }
 
+        /// <summary>Clip por defecto de cada estado de gesto (un clip propio por estado, para que los overrides de papel no se pisen).</summary>
+        public static readonly (string Estado, string Clip, GestoVisual Gesto)[] ClipsGestos =
+        {
+            ("CarroEntrar", "Carro_Entrar", GestoVisual.CarroEntrar), ("CarroSalir", "Carro_Salir", GestoVisual.CarroSalir),
+            ("AbrirPuerta", "Inter_AbrirPuerta", GestoVisual.AbrirPuerta), ("Boton", "Inter_Boton", GestoVisual.Boton),
+            ("Recoger", "Inter_Recoger", GestoVisual.Recoger), ("Telefono", "Inter_Telefono", GestoVisual.Telefono),
+            ("Burla", "Skull_Burla", GestoVisual.Burla), ("Presumir", "Nova_Flexing", GestoVisual.Presumir),
+        };
+
+        // T-622 a T-624: gestos de una vez (trigger Gesto + GestoTipo, desde cualquier estado menos las muertes), manejar y ver el celular.
+        private static void ConstruirGestos(AnimatorStateMachine m, Dictionary<string, AnimatorState> e, System.Func<string, string, float, AnimatorState> estado)
+        {
+            foreach ((string nombre, string clip, GestoVisual _) in ClipsGestos)
+            {
+                estado(nombre, clip, 1f).tag = ReglasAnimacion.EtiquetaGesto;
+            }
+            estado("CarroManejar", "Carro_Manejar_Bucle", 1f).tag = ReglasAnimacion.EtiquetaGesto;
+            estado("VerTelefono", "Inter_VerTelefono_Bucle", 1f).tag = ReglasAnimacion.EtiquetaGesto;
+
+            for (int i = 0; i < ClipsGestos.Length; i++)
+            {
+                AnimatorStateTransition t = m.AddAnyStateTransition(e[ClipsGestos[i].Estado]);
+                Configurar(t, false, 0f, MezclaCorta, true, Disparador(ReglasAnimacion.Gesto), Entero(ReglasAnimacion.GestoTipo, (int)ClipsGestos[i].Gesto));
+                if (ClipsGestos[i].Estado == "CarroEntrar")
+                {
+                    // Sube y se queda al volante; si Manejando ya se quitó, vuelve a pararse.
+                    Unir(e["CarroEntrar"], e["CarroManejar"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Manejando, true));
+                }
+                Unir(e[ClipsGestos[i].Estado], e["Idle"], true, SalidaUnaVez, Mezcla);
+            }
+            Unir(e["CarroManejar"], e["Idle"], false, 0f, Mezcla, Bool(ReglasAnimacion.Manejando, false));
+            foreach (string s in new[] { "Idle", "Caminar", "GirarDer", "GirarIzq" })
+            {
+                Unir(e[s], e["VerTelefono"], false, 0f, Mezcla, Bool(ReglasAnimacion.ViendoTelefono, true), Menor(ReglasVisual.Velocidad, UmbralCaminar));
+            }
+            Unir(e["VerTelefono"], e["Idle"], false, 0f, Mezcla, Bool(ReglasAnimacion.ViendoTelefono, false));
+            Unir(e["VerTelefono"], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, UmbralCaminar));
+        }
+
         private static BlendTree Arbol2D(AnimatorController c, string nombre, (string clip, Vector2 pos)[] hijos)
         {
             var arbol = new BlendTree
@@ -392,6 +475,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }));
             Estado("LargaDisparo", Clip("Rifle_DisparoCaminar"));
             Estado("LargaRecargar", Clip("Rifle_Recargar"));
+            // T-622: tocar el claxon sentado al volante: solo los brazos (la capa de arriba) se mueven.
+            Estado("Pitar", Clip("Carro_Pitar"));
 
             int pistola = (int)TipoArmaVisual.Pistola;
             int larga = (int)TipoArmaVisual.ArmaLarga;
@@ -432,6 +517,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 AnyA(m, e[golpes[i]], MezclaCorta, true, Disparador(ReglasVisual.Golpe), Entero(ReglasAnimacion.GolpeTipo, i));
                 Unir(e[golpes[i]], e["Vacio"], true, SalidaUnaVez, Mezcla);
             }
+
+            AnyA(m, e["Pitar"], MezclaCorta, true, Disparador(ReglasAnimacion.Gesto), Entero(ReglasAnimacion.GestoTipo, (int)GestoVisual.Pitar));
+            Unir(e["Pitar"], e["Vacio"], true, SalidaUnaVez, Mezcla);
 
             // Daño de frente, de espalda o fuerte.
             string[] danos = { "DanoFrente", "DanoEspalda", "DanoFuerte" };
