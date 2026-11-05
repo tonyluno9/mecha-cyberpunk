@@ -350,7 +350,7 @@ Opus orquestó y Sonnet implementó. Cada paso se mezcló a main con push.
   - T-634: prueba de la lluvia que llega al piso.
   - T-635: cielo con nubes y estrellas, y luz de día cálida. Se arreglaron las pruebas Asfalto y SinGreyboxT506.
   - En docs/pendientes-pruebas.md se marcaron 38 [x] (T-530 a T-537 y T-630 a T-635).
-- **Paso 4**: Builds/Demo (MechaCyberpunk.exe) y Builds/Juego regenerados a las 13:10 UTC, ambos con "Result: Success" y Unity cerrado.
+- **Paso 4**: Builds/Demo (MechaCyberpunk.exe) y Builds/Juego regenerados otra vez a las 14:03 UTC con main 65f6d0c (incluye T-636 a T-638), ambos con "Result: Success" y Unity cerrado.
 
 **Qué sigue:**
 - Segunda tanda del paso 3, a pedido del hook de meta, porque el corte de las 13:15 UTC era mío y no del plan:
