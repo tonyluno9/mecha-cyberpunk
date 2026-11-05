@@ -172,7 +172,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Retirar(drones, dronesPedidos);
             while (patrullas.Count < patrullasPedidas)
             {
-                CrearPatrulla();
+                if (!CrearPatrulla())
+                {
+                    break; // T-598: sin calles no hay patrulla; sin este corte el ciclo no terminaba
+                }
             }
             Retirar(patrullas, patrullasPedidas);
         }
@@ -216,7 +219,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             drones.Add(dron);
         }
 
-        private void CrearPatrulla()
+        private bool CrearPatrulla()
         {
             if (calles == null)
             {
@@ -224,13 +227,14 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             if (calles == null)
             {
-                return; // T-598: sin manzanas (escena de prueba sin barrio) no hay calles por donde salga una patrulla; los drones sí salen
+                return false; // T-598: sin manzanas (escena de prueba sin barrio) no hay calles por donde salga una patrulla; los drones sí salen
             }
             Vector3 centro = PosicionDelJugador() ?? transform.position;
             PatrullaMundo patrulla = Instantiate(prefabPatrulla, transform);
             patrulla.Preparar(calculo, config, calles, NodoDeSalida(centro), PosicionDelJugador);
             patrulla.Intercepta = patrullas.Count % 2 == 1; // T-587: cada segunda patrulla corta el paso
             patrullas.Add(patrulla);
+            return true;
         }
 
         /// <summary>Arma el grafo de calles con las manzanas (hijos "Manzana_") de un barrio (T-451: el tráfico de calle lo comparte).</summary>
