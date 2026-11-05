@@ -1,0 +1,64 @@
+using System;
+
+namespace MechaCyberpunk.Progresion.Sonido
+{
+    /// <summary>
+    /// Reglas puras de mezcla por ID (T-593 y siguientes): límite de voces, volumen y variación de tono. Los sonidos largos de las armas
+    /// (colas de 1 a 5 s) se cortaban unos a otros mal y se encimaban; aquí cada arma comparte un grupo de una sola voz.
+    /// </summary>
+    public static class ReglaMezclaSonidos
+    {
+        /// <summary>Grupo de lo que hace el arma activa: disparo, recarga, cambio, vacío, cola de ráfaga. Una sola voz: lo nuevo corta lo anterior.</summary>
+        public const string GrupoArma = "arma";
+
+        public const string GrupoArmaAccesorio = "arma-accesorio";
+        public const string GrupoImpacto = "arma-impacto";
+        public const string GrupoArmaEnemiga = "arma-enemiga";
+
+        private static readonly PoliticaSonido SinPolitica = new PoliticaSonido(null, 0, 1f, 0f, 0f);
+
+        /// <summary>Política del ID (sin etiqueta de voz). Un ID sin regla suena normal: sin límite, volumen 1 y tono 1.</summary>
+        public static PoliticaSonido Para(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return SinPolitica;
+            if (id.StartsWith("ARM_", StringComparison.Ordinal))
+            {
+                return Arma(id);
+            }
+            return SinPolitica;
+        }
+
+        private static PoliticaSonido Arma(string id)
+        {
+            if (id == "ARM_DISPARO_LEJANO") return new PoliticaSonido(GrupoArmaEnemiga, 3, 0.6f, 0.05f, 0.05f);
+            if (id.EndsWith("_DISPARO", StringComparison.Ordinal))
+            {
+                return new PoliticaSonido(GrupoArma, 1, id == "ARM_SNI_DISPARO" ? 0.9f : 0.8f, 0.03f, 0f);
+            }
+            if (id.EndsWith("_RECARGA", StringComparison.Ordinal) || id == "ARM_ESC_RECARGA_CARTUCHO")
+            {
+                return new PoliticaSonido(GrupoArma, 1, 0.7f, 0.02f, 0f);
+            }
+            switch (id)
+            {
+                case "ARM_FUS_RAFAGA_COLA": return new PoliticaSonido(GrupoArma, 1, 0.5f, 0f, 0f);
+                case "ARM_CAMBIAR":
+                case "ARM_PIS_SACAR": return new PoliticaSonido(GrupoArma, 1, 0.6f, 0.03f, 0f);
+                case "ARM_VACIO": return new PoliticaSonido(GrupoArma, 1, 0.5f, 0.03f, 0f);
+                case "ARM_CASQUILLO": return new PoliticaSonido(GrupoArmaAccesorio, 2, 0.4f, 0.1f, 0.04f);
+                case "ARM_ESC_BOMBEO":
+                case "ARM_SNI_CERROJO": return new PoliticaSonido(GrupoArmaAccesorio, 2, 0.7f, 0.02f, 0f);
+                case "ARM_BALA_IMPACTO_CARNE":
+                case "ARM_BALA_IMPACTO_CONCRETO":
+                case "ARM_BALA_IMPACTO_METAL": return new PoliticaSonido(GrupoImpacto, 2, 0.7f, 0.06f, 0f);
+                default: return SinPolitica;
+            }
+        }
+
+        /// <summary>Tono para un valor al azar en [0, 1): entre 1 - variacion y 1 + variacion.</summary>
+        public static float Tono(float variacion, float azar)
+        {
+            return 1f + (azar * 2f - 1f) * variacion;
+        }
+    }
+}
