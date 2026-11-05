@@ -17,7 +17,18 @@ namespace MechaCyberpunk.Progresion.Sonido
             public AudioClip[] provisionales = new AudioClip[0];
         }
 
+        /// <summary>T-620: interruptor de un ID. Apagado = el gestor no lo toca (el pedido se sigue contando).</summary>
+        [Serializable]
+        public class Interruptor
+        {
+            public string id;
+            public bool encendido;
+        }
+
         [SerializeField] private List<Entrada> entradas = new List<Entrada>();
+
+        [Header("Interruptores por ID (T-620): marca encendido para prender un sonido. Lista vacia = todo suena.")]
+        [SerializeField] private List<Interruptor> interruptores = new List<Interruptor>();
 
         [Header("Mezcla (T-470): voces y disparos por encima, ambientes bajos")]
         [Range(0f, 1f)] [SerializeField] private float gananciaEfectos = 1f;
@@ -34,6 +45,52 @@ namespace MechaCyberpunk.Progresion.Sonido
         private System.Random azar = new System.Random();
 
         public IReadOnlyList<Entrada> Entradas => entradas;
+
+        public IReadOnlyList<Interruptor> Interruptores => interruptores;
+
+        /// <summary>Si el ID puede sonar. Sin interruptores configurados suena todo; con ellos, un ID que no esta en la lista no suena.</summary>
+        public bool Encendido(string id)
+        {
+            if (interruptores.Count == 0) return true;
+            foreach (Interruptor i in interruptores)
+            {
+                if (i != null && i.id == id) return i.encendido;
+            }
+            return false;
+        }
+
+        /// <summary>Prende o apaga el ID (lo agrega a la lista si no estaba; para pruebas).</summary>
+        public void FijarEncendido(string id, bool encendido)
+        {
+            foreach (Interruptor i in interruptores)
+            {
+                if (i != null && i.id == id)
+                {
+                    i.encendido = encendido;
+                    return;
+                }
+            }
+            interruptores.Add(new Interruptor { id = id, encendido = encendido });
+        }
+
+        /// <summary>Deja un interruptor por cada ID del catalogo (y por cada encendido por defecto). Conserva lo ya puesto; lo nuevo usa el valor por defecto.</summary>
+        public void SincronizarInterruptores()
+        {
+            HashSet<string> ids = new HashSet<string>();
+            foreach (Entrada e in entradas)
+            {
+                if (e != null && !string.IsNullOrEmpty(e.id)) ids.Add(e.id);
+            }
+            foreach (string id in ReglaMezclaSonidos.IdsEncendidos) ids.Add(id);
+            interruptores.RemoveAll(i => i == null || !ids.Contains(i.id));
+            HashSet<string> tienen = new HashSet<string>();
+            foreach (Interruptor i in interruptores) tienen.Add(i.id);
+            foreach (string id in ids)
+            {
+                if (!tienen.Contains(id)) interruptores.Add(new Interruptor { id = id, encendido = ReglaMezclaSonidos.EncendidoPorDefecto(id) });
+            }
+            interruptores.Sort((a, b) => string.CompareOrdinal(a.id, b.id));
+        }
 
         public float PisoOpcionAmbiente => pisoOpcionAmbiente;
 

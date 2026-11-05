@@ -41,6 +41,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         private struct VozActiva
         {
             public AudioSource fuente;
+            public string id;
             public string grupo;
             public float inicio;
             public float fin;
@@ -55,6 +56,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             public AudioSource fuente;
             public Transform sigue;
             public SeccionSonido seccion;
+            public string id;
         }
 
         public string UltimoId { get; private set; }
@@ -185,11 +187,60 @@ namespace MechaCyberpunk.Progresion.Sonido
             voces.RemoveAt(indice);
         }
 
+        // T-620: corta la voz puntual mas vieja que cumpla el filtro (id null = cualquiera). Devuelve si cortó alguna.
+        private bool CortarVoz(string id)
+        {
+            int indice = -1;
+            for (int i = 0; i < voces.Count; i++)
+            {
+                if ((id == null || voces[i].id == id) && (indice < 0 || voces[i].inicio < voces[indice].inicio)) indice = i;
+            }
+            if (indice < 0) return false;
+            if (voces[indice].fuente != null) voces[indice].fuente.Stop();
+            voces.RemoveAt(indice);
+            return true;
+        }
+
+        // T-620: deja espacio para una voz o bucle nuevo: 12 en total (puntuales + bucles). false si todo son bucles.
+        private bool HacerEspacio()
+        {
+            PodarVoces();
+            while (voces.Count + bucles.Count >= ReglaMezclaSonidos.MaxVocesTotal)
+            {
+                if (!CortarVoz(null)) return false;
+            }
+            return true;
+        }
+
+        /// <summary>Cuántas voces puntuales y bucles suenan ahora (para las pruebas; máximo 12).</summary>
+        public int VocesTotales
+        {
+            get
+            {
+                PodarVoces();
+                return voces.Count + bucles.Count;
+            }
+        }
+
+        /// <summary>IDs que suenan ahora (voces puntuales y bucles), para las pruebas.</summary>
+        public List<string> IdsSonando()
+        {
+            PodarVoces();
+            List<string> ids = new List<string>();
+            foreach (VozActiva v in voces) ids.Add(v.id);
+            foreach (Bucle b in bucles.Values) ids.Add(b.id);
+            return ids;
+        }
+
+        /// <summary>T-620: si el interruptor del ID (en el CatalogoSonidos) lo deja sonar.</summary>
+        public bool Encendido(string id) => catalogo == null || catalogo.Encendido(id);
+
         private AudioClip Preparar(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
             UltimoId = id;
             conteo[id] = Pedidos(id) + 1;
+            if (!Encendido(id)) return null;
             return catalogo != null ? catalogo.Elegir(id) : null;
         }
 
@@ -221,13 +272,16 @@ namespace MechaCyberpunk.Progresion.Sonido
             SeccionSonido seccion = ReglaCatalogoSonidos.SeccionDe(id);
             PoliticaSonido politica = ReglaMezclaSonidos.Para(id);
             float ahora = Time.unscaledTime;
-            if (politica.SegundosMinimos > 0f && ultimoPedido.TryGetValue(id, out float antes) && ahora - antes < politica.SegundosMinimos) return;
+            if (ultimoPedido.TryGetValue(id, out float antes) && ReglaMezclaSonidos.Repite(ahora, antes, politica.SegundosMinimos)) return;
             ultimoPedido[id] = ahora;
             PodarVoces();
             if (politica.MaxVoces > 0)
             {
                 while (VocesActivas(politica.Grupo) >= politica.MaxVoces) CortarMasVieja(politica.Grupo);
             }
+            // T-620: máximo 1 voz por ID y 12 en total.
+            CortarVoz(id);
+            if (!HacerEspacio()) return;
             AudioSource f = FuenteLibre();
             f.Stop();
             voces.RemoveAll(v => v.fuente == f);
@@ -242,10 +296,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             UltimoClip = clip;
             UltimoIdClip = idClip;
             UltimaFuente = f;
-            if (politica.MaxVoces > 0)
-            {
-                voces.Add(new VozActiva { fuente = f, grupo = politica.Grupo, inicio = ahora, fin = ahora + clip.length / Mathf.Max(0.1f, tono) });
-            }
+            voces.Add(new VozActiva { fuente = f, id = id, grupo = politica.MaxVoces > 0 ? politica.Grupo : null, inicio = ahora, fin = ahora + clip.length / Mathf.Max(0.1f, tono) });
             f.ignoreListenerPause = seccion == SeccionSonido.Interfaz;
             f.spatialBlend = en3D == true ? 1f : 0f;
             if (en3D == true) f.transform.position = posicion;
@@ -256,6 +307,12 @@ namespace MechaCyberpunk.Progresion.Sonido
         {
             AudioClip clip = Preparar(id);
             if (clip == null) return Sonidos.SinBucle;
+            // T-620: un bucle por ID y cabe en las 12 voces.
+            foreach (Bucle otro in bucles.Values)
+            {
+                if (otro.id == id) return Sonidos.SinBucle;
+            }
+            if (!HacerEspacio()) return Sonidos.SinBucle;
             SeccionSonido seccion = ReglaCatalogoSonidos.SeccionDe(id);
             AudioSource f = CrearFuente("Bucle_" + id);
             f.clip = clip;
@@ -265,7 +322,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             if (sigue != null) f.transform.position = sigue.position;
             f.Play();
             int numero = siguienteBucle++;
-            bucles[numero] = new Bucle { fuente = f, sigue = sigue, seccion = seccion };
+            bucles[numero] = new Bucle { fuente = f, sigue = sigue, seccion = seccion, id = id };
             return numero;
         }
 

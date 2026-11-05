@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using MechaCyberpunk.Progresion.Sonido;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace MechaCyberpunk.Progresion.Editor
         public const string Carpeta = "Assets/Arte/Audio/Provisional";
         public const int Frecuencia = 44100;
 
-        private enum Tipo { Disparo, Golpe, Paso, Impacto, Tono, Bucle, Barrido, Fanfarria, Voz }
+        private enum Tipo { Disparo, Golpe, Paso, Impacto, Tono, Bucle, Barrido, Fanfarria, Voz, Explosion }
 
         private struct Receta
         {
@@ -53,6 +54,7 @@ namespace MechaCyberpunk.Progresion.Editor
             R("UI_ERROR", Tipo.Tono, 0.2f, 220f, 0.4f), R("UI_OBJETIVO_NUEVO", Tipo.Fanfarria, 0.5f, 660f, 0.35f),
             R("UI_OBJETIVO_CUMPLIDO", Tipo.Fanfarria, 0.8f, 523f, 0.4f),
             R("ARM_SNI_DISPARO", Tipo.Disparo, 0.8f, 0f, 1f), R("ARM_SNI_RECARGA", Tipo.Golpe, 0.4f, 500f, 0.5f),
+            R(ReglaMezclaSonidos.IdExplosion, Tipo.Explosion, 1.6f, 0f, 1f),
             R("ARM_SNI_ZOOM", Tipo.Golpe, 0.08f, 1800f, 0.35f),
         };
 
@@ -120,6 +122,12 @@ namespace MechaCyberpunk.Progresion.Editor
                     case Tipo.Fanfarria:
                         float nota = r.Frecuencia * (progreso < 0.33f ? 1f : progreso < 0.66f ? 1.25f : 1.5f);
                         valor = Mathf.Sin(2f * Mathf.PI * nota * t) * (1f - progreso);
+                        break;
+                    case Tipo.Explosion:
+                        // Ruido con caida exponencial y golpe grave al inicio (el estruendo de T-591).
+                        filtro += (ruido - filtro) * Mathf.Lerp(0.5f, 0.04f, Mathf.Clamp01(t * 2f));
+                        float grave = Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(90f, 35f, Mathf.Clamp01(t * 1.5f)) * t);
+                        valor = (filtro * 1.8f + grave * 0.7f) * Mathf.Exp(-t * 3.2f);
                         break;
                     default: // Voz: tono con vibrato que baja
                         valor = Mathf.Sin(2f * Mathf.PI * r.Frecuencia * (1f - 0.3f * progreso) * t + Mathf.Sin(t * 40f)) * 0.7f

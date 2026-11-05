@@ -603,6 +603,10 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: b8b908335ded46c499d4ca8b1f9aafa2, type: 3}
     provisionales: []
+  - id: VEH_EXPLOSION
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 32d7b293a3ee0464884ab77b42557a47, type: 3}
   - id: VEH_FORZAR_PUERTA
     finales:
     - {fileID: 8300000, guid: 9fa4205e5147c6248bba14f39e963516, type: 3}
@@ -674,6 +678,265 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 851663d10a9f98e4483091a5cffb3ea2, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 1ad537206dbcb4148bba664150b55ce0, type: 3}
+  interruptores:
+  - id: AMB_BAR
+    encendido: 0
+  - id: AMB_CALLEJON
+    encendido: 0
+  - id: AMB_CALLE_DIA
+    encendido: 0
+  - id: AMB_CALLE_NOCHE
+    encendido: 0
+  - id: AMB_CASINO
+    encendido: 0
+  - id: AMB_CLANDESTINO
+    encendido: 0
+  - id: AMB_CLINICA
+    encendido: 0
+  - id: AMB_INTERIOR_CASA
+    encendido: 0
+  - id: AMB_LLUVIA_SUAVE
+    encendido: 0
+  - id: AMB_MERCADO
+    encendido: 0
+  - id: AMB_NEON_ALTO
+    encendido: 0
+  - id: AMB_TIANGUIS
+    encendido: 0
+  - id: ARM_BALA_IMPACTO_CARNE
+    encendido: 1
+  - id: ARM_BALA_IMPACTO_CONCRETO
+    encendido: 0
+  - id: ARM_BALA_IMPACTO_METAL
+    encendido: 0
+  - id: ARM_BALA_ZUMBIDO
+    encendido: 0
+  - id: ARM_CAMBIAR
+    encendido: 0
+  - id: ARM_CASQUILLO
+    encendido: 0
+  - id: ARM_DISPARO_LEJANO
+    encendido: 0
+  - id: ARM_ESC_BOMBEO
+    encendido: 0
+  - id: ARM_ESC_DISPARO
+    encendido: 1
+  - id: ARM_ESC_RECARGA_CARTUCHO
+    encendido: 1
+  - id: ARM_FUS_DISPARO
+    encendido: 1
+  - id: ARM_FUS_RAFAGA_COLA
+    encendido: 0
+  - id: ARM_FUS_RECARGA
+    encendido: 1
+  - id: ARM_LASER_AVISO
+    encendido: 0
+  - id: ARM_MEJORA
+    encendido: 0
+  - id: ARM_PIS_DISPARO
+    encendido: 1
+  - id: ARM_PIS_RECARGA
+    encendido: 1
+  - id: ARM_PIS_SACAR
+    encendido: 0
+  - id: ARM_SNI_CERROJO
+    encendido: 0
+  - id: ARM_SNI_DISPARO
+    encendido: 1
+  - id: ARM_SNI_RECARGA
+    encendido: 1
+  - id: ARM_SNI_ZOOM
+    encendido: 0
+  - id: ARM_SUB_DISPARO
+    encendido: 0
+  - id: ARM_SUB_RECARGA
+    encendido: 0
+  - id: ARM_VACIO
+    encendido: 1
+  - id: CAL_BAJA_NIVEL
+    encendido: 0
+  - id: CAL_DRON_DISPARO
+    encendido: 0
+  - id: CAL_DRON_ESCANEO
+    encendido: 0
+  - id: CAL_DRON_ZUMBIDO
+    encendido: 0
+  - id: CAL_PATRULLA_MEGAFONO
+    encendido: 0
+  - id: CAL_PATRULLA_SIRENA
+    encendido: 1
+  - id: CAL_SUBE_NIVEL
+    encendido: 0
+  - id: ECO_ARMA_RECOGER
+    encendido: 0
+  - id: ECO_CASINO_TRAGAMONEDAS
+    encendido: 0
+  - id: ECO_CLINICA_DESPERTAR
+    encendido: 0
+  - id: ECO_COMPRA
+    encendido: 1
+  - id: ECO_DINERO_RECOGER
+    encendido: 0
+  - id: ECO_SIN_DINERO
+    encendido: 0
+  - id: JUG_CAER
+    encendido: 0
+  - id: JUG_CAE_DERROTADO
+    encendido: 1
+  - id: JUG_CORRER_RESPIRA
+    encendido: 0
+  - id: JUG_DANIO
+    encendido: 1
+  - id: JUG_PASO_ASFALTO
+    encendido: 0
+  - id: JUG_PASO_ASFALTO_MOJADO
+    encendido: 0
+  - id: JUG_PASO_INTERIOR
+    encendido: 0
+  - id: JUG_PASO_METAL
+    encendido: 0
+  - id: JUG_REGENERA
+    encendido: 0
+  - id: JUG_ROPA_MOVER
+    encendido: 0
+  - id: JUG_SALTO
+    encendido: 0
+  - id: JUG_VIDA_BAJA
+    encendido: 0
+  - id: MUN_AIRE_ACONDICIONADO
+    encendido: 0
+  - id: MUN_BASURERO_GOLPE
+    encendido: 0
+  - id: MUN_CAMA
+    encendido: 0
+  - id: MUN_CHISPAS_ELECTRICAS
+    encendido: 0
+  - id: MUN_CORTINA_METALICA
+    encendido: 0
+  - id: MUN_GENERADOR
+    encendido: 0
+  - id: MUN_HOLOGRAMA
+    encendido: 0
+  - id: MUN_NEON_ZUMBIDO
+    encendido: 0
+  - id: MUN_PERRO_LADRA
+    encendido: 0
+  - id: MUN_PUERTA_CASA_ABRIR
+    encendido: 0
+  - id: MUN_PUERTA_CASA_CERRAR
+    encendido: 0
+  - id: MUN_REJA
+    encendido: 0
+  - id: MUN_SOLDADORA
+    encendido: 0
+  - id: MUN_VIDRIO_ROTO
+    encendido: 0
+  - id: PAN_ALIADO_CAE
+    encendido: 0
+  - id: PAN_ALIADO_ESPERA
+    encendido: 0
+  - id: PAN_ALIADO_RECLUTA
+    encendido: 0
+  - id: PAN_ALIADO_SIGUE
+    encendido: 0
+  - id: PAN_ALIADO_SUBE_NIVEL
+    encendido: 0
+  - id: PAN_JEFE_CAE
+    encendido: 0
+  - id: PAN_JEFE_ENTRADA
+    encendido: 0
+  - id: PAN_RIVAL_ALERTA
+    encendido: 0
+  - id: PAN_RIVAL_CAE
+    encendido: 0
+  - id: PAN_RIVAL_DANIO
+    encendido: 0
+  - id: PAN_RIVAL_PROVOCA
+    encendido: 0
+  - id: PAN_SILBIDO_LLAMAR
+    encendido: 0
+  - id: PAN_VECINO_AUXILIO
+    encendido: 0
+  - id: PUN_BLOQUEO
+    encendido: 0
+  - id: PUN_GOLPE_AIRE
+    encendido: 0
+  - id: PUN_GOLPE_CARNE
+    encendido: 1
+  - id: PUN_GOLPE_FUERTE
+    encendido: 0
+  - id: PUN_PATADA
+    encendido: 0
+  - id: UI_ACEPTAR
+    encendido: 1
+  - id: UI_CANCELAR
+    encendido: 1
+  - id: UI_CONTINUARA
+    encendido: 0
+  - id: UI_ERROR
+    encendido: 0
+  - id: UI_GUARDADO
+    encendido: 0
+  - id: UI_MAPA_ABRIR
+    encendido: 0
+  - id: UI_MAPA_CERRAR
+    encendido: 0
+  - id: UI_MOVER
+    encendido: 1
+  - id: UI_OBJETIVO_CUMPLIDO
+    encendido: 0
+  - id: UI_OBJETIVO_NUEVO
+    encendido: 0
+  - id: UI_TELEFONO
+    encendido: 0
+  - id: UI_TEXTO
+    encendido: 0
+  - id: UI_TITULO_INICIO
+    encendido: 0
+  - id: VEH_ALARMA_ROBO
+    encendido: 1
+  - id: VEH_CHOQUE_FUERTE
+    encendido: 0
+  - id: VEH_CHOQUE_LEVE
+    encendido: 1
+  - id: VEH_CLAXON_TRAFICO
+    encendido: 0
+  - id: VEH_CLAXON_VIEJO
+    encendido: 0
+  - id: VEH_EXPLOSION
+    encendido: 1
+  - id: VEH_FORZAR_PUERTA
+    encendido: 0
+  - id: VEH_FRENO_DERRAPE
+    encendido: 0
+  - id: VEH_LLANTAS_MOJADO
+    encendido: 0
+  - id: VEH_MOTO_MOTOR
+    encendido: 0
+  - id: VEH_PASA_CERCA
+    encendido: 0
+  - id: VEH_PRO_MOTOR_ACELERA
+    encendido: 0
+  - id: VEH_PRO_MOTOR_RALENTI
+    encendido: 0
+  - id: VEH_PUERTA_ABRIR
+    encendido: 0
+  - id: VEH_PUERTA_CERRAR
+    encendido: 0
+  - id: VEH_VIEJO_ARRANQUE
+    encendido: 0
+  - id: VEH_VIEJO_MOTOR_ACELERA
+    encendido: 1
+  - id: VEH_VIEJO_MOTOR_RALENTI
+    encendido: 1
+  - id: ZON_CONQUISTADA
+    encendido: 1
+  - id: ZON_ENTRAR_PROPIA
+    encendido: 0
+  - id: ZON_ENTRAR_RIVAL
+    encendido: 0
+  - id: ZON_RESPETO_SUBE
+    encendido: 0
   gananciaEfectos: 1
   gananciaVoces: 1
   gananciaAmbiente: 0.3
