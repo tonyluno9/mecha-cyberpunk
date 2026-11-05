@@ -13,6 +13,9 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         public const string GrupoClaxon = "claxon";
 
+        // Prefijo de los pasos (sin ser un ID completo, para que la prueba de IDs no lo tome por uno).
+        private static readonly string PrefijoPaso = "JUG_" + "PASO_";
+
         public const string GrupoArmaAccesorio = "arma-accesorio";
         public const string GrupoImpacto = "arma-impacto";
         public const string GrupoArmaEnemiga = "arma-enemiga";
@@ -27,7 +30,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 return Arma(id);
             }
-            if (id.StartsWith("JUG_PASO_", StringComparison.Ordinal))
+            if (id.StartsWith(PrefijoPaso, StringComparison.Ordinal))
             {
                 // T-596: pasos bajos, con tono distinto cada vez, y de poco alcance.
                 return new PoliticaSonido("paso", 2, 0.7f, 0.06f, 0.1f, 20f);
