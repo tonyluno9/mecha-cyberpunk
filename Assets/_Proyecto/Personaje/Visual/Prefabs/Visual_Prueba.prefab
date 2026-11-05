@@ -52,6 +52,8 @@ MonoBehaviour:
   velocidadClipCorrer: 0
   rapidezMinima: 0.6
   rapidezMaxima: 2.2
+  rapidezCapaArriba: 8
+  suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
 --- !u!1001 &1397192790405002936

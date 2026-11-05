@@ -75,11 +75,17 @@ namespace MechaCyberpunk.Personaje.Visual
         public const float RapidezMaximaLocomocion = 2.8f;
         /// <summary>Rapidez máxima de Caminar antes de pasar a Correr (a 2.2x el clip aún no se ve acelerado de más).</summary>
         public const float RapidezMaximaCaminar = 2.2f;
+        /// <summary>Velocidad (m/s) normal de caminar del jugador y los aliados (Caminar en los árboles de arma).</summary>
+        public const float VelocidadAndar = 4.5f;
+        /// <summary>Velocidad (m/s) de correr (Shift) del jugador y los aliados (Correr en los árboles de arma).</summary>
+        public const float VelocidadCarrera = 7.5f;
         /// <summary>
-        /// Velocidad (m/s) a partir de la cual el controlador base pasa de Caminar a Correr: donde Caminar ya va a su rapidez máxima
-        /// (1.28 x 2.2 = 2.8). Así 4.5 m/s del jugador ya corre (a 1.6x) y 7.5 m/s no topa la rapidez.
+        /// Velocidad (m/s) a partir de la cual el controlador base pasa de Caminar a Correr (T-640): entre andar (4.5) y correr (7.5),
+        /// para que caminar normal sea Caminar y solo Shift sea Correr.
         /// </summary>
-        public const float UmbralCorrer = 2.8f;
+        public const float UmbralCorrer = 5.5f;
+        /// <summary>Fracción del umbral con la que se vuelve de Correr a Caminar (evita parpadeo en el umbral).</summary>
+        public const float HisteresisCorrer = 0.9f;
         /// <summary>Segundos de mirada al jugador en rango antes de que la cabeza voltee.</summary>
         public const float RetardoMirada = 1f;
         /// <summary>Segundos que el jugador queda boca arriba o abajo después de despertar, antes de levantarse (el fundido a negro dura ~1 s).</summary>

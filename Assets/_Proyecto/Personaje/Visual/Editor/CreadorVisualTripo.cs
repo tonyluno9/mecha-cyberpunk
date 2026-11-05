@@ -419,13 +419,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 }
                 apuntado.ConfigurarSocket(socket);
                 apuntado.ManosPorIK = !apuntarDeVerdad;
-                // El modelo de Tripo mira a -Z: un nodo Giro de 180° lo deja mirando al frente de la raíz (el Modelo conserva su rotación local).
+                // T-640: el modelo de Tripo con su Avatar Humanoid ya mira a +Z (medido con los huesos): el nodo Giro va sin giro (antes 180° y caminaba de espaldas).
                 Transform giro = contenido.transform.Find("Giro");
                 if (giro == null)
                 {
                     giro = new GameObject("Giro").transform;
                     giro.SetParent(contenido.transform, false);
-                    giro.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                    giro.localRotation = Quaternion.identity;
                     animador.transform.SetParent(giro, false);
                 }
                 contenido.GetComponent<VisualPersonaje>().ConfigurarClips(vCaminar, vCorrer);
