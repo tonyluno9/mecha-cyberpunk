@@ -17,11 +17,13 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         private static string[] Estados(AnimatorStateMachine m) => m.states.Select(s => s.state.name).ToArray();
 
         [Test]
-        public void Controlador_TieneLasDosCapasConLaMascaraDelTorso()
+        public void Controlador_TieneLasTresCapasConLaMascaraDelTorsoYLaDePiernas()
         {
             AnimatorController c = Base();
             Assert.IsNotNull(c);
-            Assert.AreEqual(2, c.layers.Length);
+            Assert.AreEqual(3, c.layers.Length);
+            Assert.AreEqual(ReglasAnimacion.CapaPiernas, c.layers[2].name);
+            Assert.IsTrue(c.layers[1].iKPass, "IK Pass también en la capa de arriba (mano izquierda al arma)");
             Assert.AreEqual(ReglasAnimacion.CapaBase, c.layers[0].name);
             Assert.AreEqual(ReglasAnimacion.CapaArriba, c.layers[1].name);
             Assert.IsTrue(c.layers[0].iKPass, "IK Pass para pies y mirada");
@@ -78,7 +80,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             {
                 var transiciones = new List<AnimatorStateTransition>(capa.stateMachine.anyStateTransitions);
                 foreach (ChildAnimatorState s in capa.stateMachine.states) { transiciones.AddRange(s.state.transitions); }
-                Assert.Greater(transiciones.Count, 10);
+                Assert.Greater(transiciones.Count, capa.name == ReglasAnimacion.CapaPiernas ? 3 : 10);
                 foreach (AnimatorStateTransition t in transiciones)
                 {
                     foreach (AnimatorCondition cond in t.conditions)

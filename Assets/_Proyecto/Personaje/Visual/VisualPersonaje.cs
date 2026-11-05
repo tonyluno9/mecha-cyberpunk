@@ -294,6 +294,11 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velocidadAnterior;
         private float yawAnterior;
         private int capaArriba = -2;
+        private int capaPiernas = -2;
+        private float pesoPiernas;
+
+        /// <summary>Peso actual de la capa de piernas con arma (T-651), de 0 a 1.</summary>
+        public float PesoPiernasArma => pesoPiernas;
         private bool agachado;
         private int golpeAlterno = 1;
         private int coberturaAlterna;
@@ -367,8 +372,25 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
             animador.SetLayerWeight(capaArriba, pesoArriba);
+            ActualizarPiernasDeArma(dt);
         }
 
+
+        // T-651: con arma en la mano (sin apuntar) las piernas juegan Pistola_Caminar/Correr o Rifle_Caminar/Correr en la capa Piernas.
+        private void ActualizarPiernasDeArma(float dt)
+        {
+            if (capaPiernas == -2)
+            {
+                capaPiernas = animador.GetLayerIndex(ReglasAnimacion.CapaPiernas);
+            }
+            if (capaPiernas < 0)
+            {
+                return;
+            }
+            bool usa = ReglasAnimacion.UsaPiernasDeArma(tipoArma, enSuelo, apuntando, agachado, cubierto, caido, EnGesto, manejando, velocidad);
+            pesoPiernas = Mathf.MoveTowards(pesoPiernas, usa ? 1f : 0f, rapidezCapaArriba * dt);
+            animador.SetLayerWeight(capaPiernas, pesoPiernas);
+        }
         /// <summary>Peso actual de la capa de arriba (torso), de 0 a 1.</summary>
         public float PesoCapaArriba => pesoArriba;
 
@@ -410,6 +432,12 @@ namespace MechaCyberpunk.Personaje.Visual
             float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
             // T-640: caminar normal (4.5 m/s) ya no es Correr: Caminar se acelera menos que Correr para no verse apresurado.
             float tope = estado == HashCaminar ? Mathf.Min(rapidezMaxima, ReglasAnimacion.RapidezMaximaCaminar) : rapidezMaxima;
+            if (pesoPiernas > 0.5f && (estado == HashCaminar || estado == HashCorrer))
+            {
+                // T-651: las piernas (y el torso) juegan los clips del arma, que avanzan a otra velocidad que Loco_Caminar y Loco_Correr.
+                referencia = ReglasAnimacion.VelocidadClipArma(tipoArma, velocidad);
+                tope = rapidezMaxima;
+            }
             animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia, rapidezMinima, tope);
         }
 

@@ -63,6 +63,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Parametros(c);
             ConstruirBase(c);
             ConstruirArriba(c, mascara);
+            ConstruirPiernas(c, CrearMascaraPiernas());
             EditorUtility.SetDirty(c);
             AssetDatabase.SaveAssets();
             CrearOverrides(c);
@@ -427,6 +428,62 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             return arbol;
         }
 
+        // ---------- Capa de piernas con arma (T-651) ----------
+
+        public const string RutaMascaraPiernas = Carpeta + "/MascaraPiernas.mask";
+
+        private static AvatarMask CrearMascaraPiernas()
+        {
+            AvatarMask m = AssetDatabase.LoadAssetAtPath<AvatarMask>(RutaMascaraPiernas);
+            if (m == null)
+            {
+                m = new AvatarMask();
+                AssetDatabase.CreateAsset(m, RutaMascaraPiernas);
+            }
+            foreach (AvatarMaskBodyPart parte in System.Enum.GetValues(typeof(AvatarMaskBodyPart)))
+            {
+                if (parte == AvatarMaskBodyPart.LastBodyPart)
+                {
+                    continue;
+                }
+                m.SetHumanoidBodyPartActive(parte, parte == AvatarMaskBodyPart.LeftLeg || parte == AvatarMaskBodyPart.RightLeg);
+            }
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
+        /// <summary>
+        /// Capa de piernas con máscara de piernas: con arma en la mano y sin apuntar, VisualPersonaje le da peso y las piernas juegan
+        /// Pistola_Caminar/Correr o Rifle_Caminar/Correr mezclados por Velocidad (en sincronía con el torso de la capa de arriba).
+        /// </summary>
+        private static void ConstruirPiernas(AnimatorController c, AvatarMask mascara)
+        {
+            c.AddLayer(ReglasAnimacion.CapaPiernas);
+            AnimatorControllerLayer[] capas = c.layers;
+            capas[2].avatarMask = mascara;
+            capas[2].blendingMode = AnimatorLayerBlendingMode.Override;
+            capas[2].defaultWeight = 0f;
+            c.layers = capas;
+            AnimatorStateMachine m = c.layers[2].stateMachine;
+            AnimatorState vacio = m.AddState("Vacio");
+            m.defaultState = vacio;
+            int pistola = (int)TipoArmaVisual.Pistola;
+            int larga = (int)TipoArmaVisual.ArmaLarga;
+            foreach ((string nombre, string caminar, string correr, int arma) in new[]
+            {
+                ("PistolaPiernas", "Pistola_Caminar", "Pistola_Correr", pistola), ("LargaPiernas", "Rifle_Caminar", "Rifle_Correr", larga),
+            })
+            {
+                AnimatorState s = m.AddState(nombre);
+                s.motion = Arbol1D(c, nombre, ReglasVisual.Velocidad, new (string, float)[]
+                {
+                    (caminar, ReglasAnimacion.VelocidadAndar), (correr, ReglasAnimacion.VelocidadCarrera),
+                });
+                Unir(vacio, s, false, 0f, Mezcla, Entero(ReglasVisual.TipoArma, arma));
+                Unir(s, vacio, false, 0f, Mezcla, Distinto(ReglasVisual.TipoArma, arma));
+            }
+        }
+
         // ---------- Capa de arriba ----------
 
         private static void ConstruirArriba(AnimatorController c, AvatarMask mascara)
@@ -436,6 +493,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             capas[1].avatarMask = mascara;
             capas[1].blendingMode = AnimatorLayerBlendingMode.Override;
             capas[1].defaultWeight = 1f;
+            capas[1].iKPass = true;
             c.layers = capas;
             AnimatorStateMachine m = c.layers[1].stateMachine;
             var e = new Dictionary<string, AnimatorState>();
