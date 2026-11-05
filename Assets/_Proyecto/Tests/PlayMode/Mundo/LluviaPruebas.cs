@@ -104,6 +104,41 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsTrue(lluvia.EstaLloviendo, "Afuera vuelve a llover");
         }
 
+        // T-634: la lluvia llega al suelo y ahí salpica (colisión con el plano del piso + sub-emisor de salpicadura).
+        [UnityTest]
+        public IEnumerator Lluvia_LlegaAlSueloYSalpica()
+        {
+            yield return Preparar(EscenaLugares.HoraNoche);
+            yield return EscenaLugares.Esperar(SegundosCalentar);
+            Assert.IsTrue(lluvia.Gotas.collision.enabled, "Las gotas chocan con el piso");
+            Assert.AreEqual(ParticleSystemCollisionType.Planes, lluvia.Gotas.collision.type);
+            Assert.IsTrue(lluvia.Gotas.subEmitters.enabled);
+            Assert.AreEqual(lluvia.Salpicaduras, lluvia.Gotas.subEmitters.GetSubEmitterSystem(0), "El sub-emisor de colisión es la salpicadura");
+            Assert.AreEqual(ParticleSystemSubEmitterType.Collision, lluvia.Gotas.subEmitters.GetSubEmitterType(0));
+
+            ParticleSystem.Particle[] gotas = new ParticleSystem.Particle[lluvia.Gotas.main.maxParticles];
+            float pisoY = lluvia.Suelo.position.y;
+            float masBajo = float.MaxValue;
+            float masAlto = float.MinValue;
+            int salpicadurasMaximas = 0;
+            float inicio = Time.time;
+            while (Time.time - inicio < SegundosMedicion)
+            {
+                yield return null;
+                int n = lluvia.Gotas.GetParticles(gotas);
+                for (int i = 0; i < n; i++)
+                {
+                    masBajo = Mathf.Min(masBajo, gotas[i].position.y);
+                    masAlto = Mathf.Max(masAlto, gotas[i].position.y);
+                }
+                salpicadurasMaximas = Mathf.Max(salpicadurasMaximas, lluvia.Salpicaduras.particleCount);
+            }
+            Assert.Greater(masAlto - pisoY, 2f, "Caen desde arriba");
+            Assert.GreaterOrEqual(masBajo, pisoY - 0.35f, "Ninguna gota atraviesa el piso (la más baja a " + (masBajo - pisoY) + " m del piso)");
+            Assert.Less(masBajo - pisoY, 0.6f, "Las gotas bajan hasta el piso");
+            Assert.Greater(salpicadurasMaximas, 0, "Al tocar el piso salpican");
+        }
+
         [UnityTest]
         public IEnumerator Lluvia_NoCuestaFotogramas_NingunFrameDeMasDe100Ms()
         {
