@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
 using UnityEngine;
@@ -21,11 +22,30 @@ namespace MechaCyberpunk.Trafico.Peatones
         private const float RadioCuerpo = 0.25f;
         private const float DistanciaVer = 0.7f;
         private const float SegundosEntreVueltas = 1.5f;
+        // T-631: no se atraviesan entre sí. Cada quien camina por su derecha (los que van en sentidos opuestos se cruzan sin chocar) y el que
+        // alcanza a otro que va delante en el mismo sentido se frena; si se traba más de SegundosParaDestrabar, da la vuelta.
+        private const float DesvioLateral = 0.3f;
+        private const float VelocidadDesvio = 1f;
+        private const float DistanciaSeparacion = 0.9f;
+        private const float AnchoSeparacion = 0.5f;
+        private const float SegundosParaDestrabar = 3f;
+        private static readonly List<PeatonMundo> ActivosLista = new List<PeatonMundo>();
+        private Vector3 desvio;
+        private Vector3 posRuta;
+        private float segundosFrenado;
         private float proximaVuelta;
         private Vector3 haciaDonde;
 
         /// <summary>Vueltas que dio por encontrarse algo en el camino (T-534).</summary>
         public int Vueltas { get; private set; }
+
+        /// <summary>Lo frenó otro peatón que va delante (T-631).</summary>
+        public bool Frenado { get; private set; }
+
+        public static IReadOnlyList<PeatonMundo> Activos => ActivosLista;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Limpiar() => ActivosLista.Clear();
 
         private Vector3[] puntos;
         private CalculoPeaton calculo;
@@ -54,11 +74,13 @@ namespace MechaCyberpunk.Trafico.Peatones
         private void OnEnable()
         {
             EventosRuido.Disparo += AlOirDisparo;
+            ActivosLista.Add(this);
         }
 
         private void OnDisable()
         {
             EventosRuido.Disparo -= AlOirDisparo;
+            ActivosLista.Remove(this);
             Calmar();
         }
 
@@ -111,10 +133,25 @@ namespace MechaCyberpunk.Trafico.Peatones
                 haciaDonde = -haciaDonde;
                 Vueltas++;
             }
-            Vector3 antes = transform.position;
+            Frenado = HayPeatonAdelante();
+            if (Frenado)
+            {
+                segundosFrenado += Time.deltaTime;
+                if (segundosFrenado > SegundosParaDestrabar)
+                {
+                    segundosFrenado = 0f;
+                    calculo.InvertirSentido();
+                    haciaDonde = -haciaDonde;
+                    Vueltas++;
+                }
+                Colocar();
+                return;
+            }
+            segundosFrenado = 0f;
+            Vector3 antes = posRuta;
             calculo.Avanzar(Time.deltaTime);
             Colocar();
-            Vector3 desplazamiento = transform.position - antes;
+            Vector3 desplazamiento = transform.parent != null ? transform.parent.TransformVector(posRuta - antes) : posRuta - antes;
             if (desplazamiento.sqrMagnitude > DesplazamientoMinimoParaDecidir)
             {
                 haciaDonde = desplazamiento.normalized;
@@ -138,6 +175,40 @@ namespace MechaCyberpunk.Trafico.Peatones
                 calculo.InvertirSentido();
                 Colocar();
             }
+        }
+
+        // Otro peatón a menos de DistanciaSeparacion, delante y en mi carril, que camina en el mismo sentido que yo.
+        private bool HayPeatonAdelante()
+        {
+            Vector3 adelante = haciaDonde;
+            adelante.y = 0f;
+            if (adelante.sqrMagnitude < 0.01f)
+            {
+                return false;
+            }
+            adelante.Normalize();
+            foreach (PeatonMundo otro in ActivosLista)
+            {
+                if (otro == this)
+                {
+                    continue;
+                }
+                Vector3 hacia = otro.transform.position - transform.position;
+                hacia.y = 0f;
+                float delante = Vector3.Dot(hacia, adelante);
+                if (delante <= 0f || delante > DistanciaSeparacion)
+                {
+                    continue;
+                }
+                float lado = (hacia - adelante * delante).magnitude;
+                Vector3 suyo = otro.haciaDonde;
+                suyo.y = 0f;
+                if (lado < AnchoSeparacion && Vector3.Dot(suyo, adelante) >= 0f)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool Tapado()
@@ -171,7 +242,17 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         private void Colocar()
         {
-            transform.localPosition = RutasBanqueta.Posicion(puntos, calculo);
+            posRuta = RutasBanqueta.Posicion(puntos, calculo);
+            Vector3 mundo = haciaDonde;
+            mundo.y = 0f;
+            if (mundo.sqrMagnitude > 0.01f && transform.parent != null)
+            {
+                // Camina por su derecha, en espacio local del padre.
+                Vector3 derecha = transform.parent.InverseTransformDirection(Vector3.Cross(Vector3.up, mundo.normalized));
+                derecha.y = 0f;
+                desvio = Vector3.MoveTowards(desvio, derecha.normalized * DesvioLateral, VelocidadDesvio * Time.deltaTime);
+            }
+            transform.localPosition = posRuta + desvio;
         }
 
         private void Mirar(Vector3 direccion)
