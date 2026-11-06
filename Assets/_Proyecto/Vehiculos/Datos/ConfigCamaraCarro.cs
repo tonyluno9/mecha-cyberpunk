@@ -45,12 +45,15 @@ namespace MechaCyberpunk.Vehiculos
         [Min(0f)] [SerializeField] private float distanciaExtraVelocidad = 2f;
         [Tooltip("Rapidez a la que la distancia extra llega a su máximo (km/h).")]
         [Min(1f)] [SerializeField] private float kmhDistanciaExtra = 80f;
+        [Tooltip("T-658: qué tanto se atrasa la cámara en seguir hacia dónde apunta el carro al girar (s); evita que la vista se arremoline al maniobrar o dar reversa.")]
+        [Min(0f)] [SerializeField] private float tiempoRumbo = 0.2f;
 
         public float InclinacionMinOrbita => inclinacionMinOrbita;
         public float InclinacionMaxOrbita => inclinacionMaxOrbita;
         public float InclinacionReposo => inclinacionReposo;
         public float DistanciaExtraVelocidad => distanciaExtraVelocidad;
         public float KmhDistanciaExtra => kmhDistanciaExtra;
+        public float TiempoRumbo => tiempoRumbo;
         public float AlturaOjos => alturaOjos;
         public float LimiteLados => limiteLados;
         public float LimiteVertical => limiteVertical;
