@@ -187,21 +187,12 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // a. Exactamente 5 personajes, sobre el piso y cerca de su lugar.
             Assert.AreEqual(5, Object.FindObjectsByType<PersonajeApoyo>(FindObjectsSortMode.None).Length, "Hay 5 personajes de apoyo");
-            Transform casa = Buscar("Casa_Puerta");
-            Transform carro = null;
-            float mejor = float.MaxValue;
-            foreach (MonoBehaviour mb in Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
-            {
-                if (mb.GetType().Name == "CarroEstacionado" && (mb.transform.position - casa.position).sqrMagnitude < mejor)
-                {
-                    mejor = (mb.transform.position - casa.position).sqrMagnitude;
-                    carro = mb.transform;
-                }
-            }
             var lugares = new Dictionary<string, Transform>
             {
+                // T-546: EL HACKER atiende en su mesa al fondo del casino (se comprueba abajo que está dentro del casino).
+                // T-804: CANEPA atiende dentro de su taller (Lugar_TallerMecanico), ya no junto al carro más cercano a la casa.
                 { "inventor", Buscar("Lugar_CIC") }, { "doc", Buscar("EntradaClinica") }, { "hacker", Buscar("Lugar_Casino") },
-                { "mecanico", carro }, { "director", Buscar("Lugar_Bar") }
+                { "mecanico", Buscar("Lugar_TallerMecanico") }, { "director", Buscar("Lugar_Bar") }
             };
             foreach (KeyValuePair<string, Transform> par in lugares)
             {
@@ -211,6 +202,13 @@ namespace MechaCyberpunk.Tests.Progresion
                 Assert.IsNotEmpty(p.Datos.Titulo);
                 Assert.IsNotEmpty(p.Datos.Nombre);
                 Assert.IsTrue(Physics.Raycast(p.transform.position + Vector3.up * 0.3f, Vector3.down, 0.6f), par.Key + " está sobre el piso");
+                if (par.Key == "hacker")
+                {
+                    Bounds casino = par.Value.Find("Interior/ZonaInterior").GetComponent<Collider>().bounds;
+                    Vector3 enAltura = new Vector3(p.transform.position.x, casino.center.y, p.transform.position.z);
+                    Assert.IsTrue(casino.Contains(enAltura), "hacker está dentro del casino (" + p.transform.position + ")");
+                    continue;
+                }
                 Assert.Less(Vector3.Distance(p.transform.position, par.Value.position), 3f, par.Key + " está a menos de 3 m de su lugar");
             }
 
