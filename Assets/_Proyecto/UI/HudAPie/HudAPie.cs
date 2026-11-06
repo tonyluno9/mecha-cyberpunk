@@ -668,9 +668,9 @@ namespace MechaCyberpunk.UI.Hud
                 // T-816: la imagen holográfica (H01-H04) si la hay, teñida con el material del holograma; los puños, su icono.
                 PonerIconoArma(iconoArma, piezas, activa);
                 iconoArma.enabled = iconoArma.sprite != null;
-                // T-537: como el mockup: arma en naranja sobre un fondo azul muy oscuro.
+                // T-852: el holograma flota sin cuadro detrás (Tony): ya no se pone el fondo azul oscuro de T-537.
                 iconoArma.color = KitUI.Estilo.Naranja;
-                PonerFondoArma(iconoArma.transform.parent);
+                QuitarFondoArma(iconoArma.transform.parent);
             }
             if (casillasArma == null)
             {
@@ -708,21 +708,15 @@ namespace MechaCyberpunk.UI.Hud
         }
 
         private const string NombreFondoArma = "FondoArma_T537";
-        private static readonly Color ColorFondoArma = new Color(0.02f, 0.04f, 0.09f, 0.82f);
 
-        private static void PonerFondoArma(Transform grupo)
+        // Por si un prefab o una partida vieja trae el fondo de T-537: se apaga.
+        private static void QuitarFondoArma(Transform grupo)
         {
-            if (grupo == null || grupo.Find(NombreFondoArma) != null)
+            Transform fondo = grupo != null ? grupo.Find(NombreFondoArma) : null;
+            if (fondo != null && fondo.gameObject.activeSelf)
             {
-                return;
+                fondo.gameObject.SetActive(false);
             }
-            Image fondo = KitUI.CrearFondoPantalla(grupo, NombreFondoArma);
-            fondo.color = ColorFondoArma;
-            fondo.raycastTarget = false;
-            KitUI.Estirar(fondo.rectTransform);
-            fondo.rectTransform.offsetMin = new Vector2(10f, 10f);
-            fondo.rectTransform.offsetMax = new Vector2(-10f, -10f);
-            fondo.transform.SetAsFirstSibling();
         }
 
         // ---- Subir de liga ----
