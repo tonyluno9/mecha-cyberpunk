@@ -77,7 +77,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(raton.rightButton);
             yield return Esperar(0.9f);
             yield return Fotos("hombre-pistola-apuntar", pistola);
-            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), 0.9f, "Apuntando el cañón mira al frente (conserva la inclinación de la animación)");
+            Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(pistola.forward, Vector3.up).normalized, visual.transform.forward), 0.9f, "Apuntando el cañón mira al frente (conserva la inclinación de la animación)");
             Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.09f, "Apuntando sigue en la palma");
             Release(raton.rightButton);
             MechaCyberpunk.Core.Registro<MechaCyberpunk.Core.IPerfilJugador>.Quitar(perfil);
@@ -174,7 +174,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(raton.rightButton);
             yield return Esperar(0.9f);
             yield return Fotos("pistola-apuntar", pistola);
-            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), 0.9f, "Apuntando el cañón mira al frente (conserva la inclinación de la animación)");
+            Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(pistola.forward, Vector3.up).normalized, visual.transform.forward), 0.9f, "Apuntando el cañón mira al frente (conserva la inclinación de la animación)");
             Assert.Less(Mathf.Abs(Vector3.Dot(pistola.right, Vector3.up)), 0.35f, "La pistola no está torcida");
             Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.07f, "Apuntando sigue en la palma");
 

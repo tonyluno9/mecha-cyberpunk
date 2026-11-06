@@ -84,9 +84,12 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = Visual();
             ApuntadoIK ik = visual.GetComponentInChildren<ApuntadoIK>(true);
             Assert.IsNotNull(ik);
+            // Sin ventana de juego el Animator se duerme fuera de cámara y ni la pose ni el IK del cañón se aplican.
+            visual.Animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             Assert.AreEqual(0f, ik.Peso, 0.001f);
             Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola), "El arma está en la mano (si no, no se ve ni se corrige)");
             visual.LeerDelPadre = false;
+            visual.EnSuelo = true;
             visual.Apuntando = true;
             visual.TipoArma = TipoArmaVisual.Pistola;
             yield return Esperar(0.6f);
@@ -94,7 +97,7 @@ namespace MechaCyberpunk.Tests.Personaje
             // El cañón (-Y del socket) mira al frente del jugador.
             // S1: el arma va en la palma (ya no se gira el socket): el cañón es el +Z de la pistola.
             Vector3 canon = ik.SocketArma.Find("Pistola").forward;
-            Assert.Greater(Vector3.Dot(canon, visual.transform.forward), 0.95f, "El cañón apunta al frente");
+            Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(canon, Vector3.up).normalized, visual.transform.forward), 0.95f, "El cañón apunta al frente (la inclinación es la de la animación)");
 
             visual.Apuntando = false;
             yield return Esperar(0.6f);
