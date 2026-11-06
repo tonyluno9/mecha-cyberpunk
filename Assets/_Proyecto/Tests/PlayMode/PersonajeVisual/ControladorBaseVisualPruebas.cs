@@ -153,7 +153,11 @@ namespace MechaCyberpunk.Tests
         public IEnumerator Pistola_IdleApuntarDisparoYRecarga_EnLaCapaDeArriba()
         {
             visual.TipoArma = TipoArmaVisual.Pistola;
-            yield return Hasta(() => Arriba("PistolaIdle"), "PistolaIdle");
+            yield return Hasta(() => Arriba("Vacio"), "T-671: sin apuntar, la pistola no usa pose de arma");
+            visual.Apuntando = true;
+            yield return Hasta(() => Arriba("PistolaApuntar"), "PistolaApuntar");
+            visual.Apuntando = false;
+            yield return Hasta(() => Arriba("Vacio"), "Vacio otra vez al soltar", 5f);
             visual.Apuntando = true;
             yield return Hasta(() => Arriba("PistolaApuntar"), "PistolaApuntar");
             visual.Disparar();
@@ -174,7 +178,11 @@ namespace MechaCyberpunk.Tests
         public IEnumerator ArmaLarga_IdleApuntarDisparoYRecarga()
         {
             visual.TipoArma = TipoArmaVisual.ArmaLarga;
-            yield return Hasta(() => Arriba("LargaIdle"), "LargaIdle");
+            yield return Hasta(() => Arriba("Vacio"), "T-671: sin apuntar, el arma larga no usa pose de arma");
+            visual.Apuntando = true;
+            yield return Hasta(() => Arriba("LargaApuntar"), "LargaApuntar");
+            visual.Apuntando = false;
+            yield return Hasta(() => Arriba("Vacio"), "Vacio otra vez al soltar", 5f);
             visual.Apuntando = true;
             yield return Hasta(() => Arriba("LargaApuntar"), "LargaApuntar");
             visual.Disparar();
