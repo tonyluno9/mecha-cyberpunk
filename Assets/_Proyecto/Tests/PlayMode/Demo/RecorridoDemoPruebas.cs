@@ -1788,7 +1788,7 @@ namespace MechaCyberpunk.Tests.Demo
                 PosicionMarcador(out zonaCentro);
                 retirada = zonaCentro + (Jugador.Raiz.position - zonaCentro).normalized * 50f;
                 ventajaDePrueba = true;
-                yield return PelearConPistola(() => director.Paso != PasoHistoria.Tianguis, PandilleroCercaSinJefe, 300f, "los SKULLS del Tianguis");
+                yield return PelearConPistola(() => director.Paso != PasoHistoria.Tianguis, PandilleroCercaSinJefe, 200f, "los SKULLS del Tianguis"); // T-802: menos de 200 s
                 if (director.Paso == PasoHistoria.Tianguis)
                 {
                     rescateUsado = true;
