@@ -8,8 +8,8 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Personaje
 {
-    /// <summary>T-672: al apuntar el personaje queda centrado en horizontal y la mira (centro de la pantalla) queda arriba de su cabeza.</summary>
-    public class CamaraApuntarT672Pruebas : BaseJugadorAPie
+    /// <summary>T-682: al apuntar la cámara conserva el encuadre de caminar (misma altura y distancia, personaje centrado en horizontal) y solo hace zoom (FOV menor).</summary>
+    public class CamaraApuntarT682Pruebas : BaseJugadorAPie
     {
         private Camera Camara() => jugador.GetComponentInChildren<CamaraHombro>().GetComponent<Camera>();
 
@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Apuntar_PersonajeCentradoYMiraArribaDeLaCabeza()
+        public IEnumerator Apuntar_MismoEncuadreQueCaminando_CentradoYConZoom()
         {
             Caja(new Vector3(0f, 1f, 12f), new Vector3(6f, 2f, 0.5f)); // un blanco al frente
             yield return Calentar();
@@ -44,25 +44,26 @@ namespace MechaCyberpunk.Tests.Personaje
             Camera camara = Camara();
             Vector3 normal = jugador.transform.InverseTransformPoint(camara.transform.position);
             Assert.Greater(normal.x, 0.3f, "Sin apuntar la cámara va al hombro");
+            float fovNormal = camara.fieldOfView;
+            Captura(camara, "s1t-T-682-caminando");
 
             Press(raton.rightButton);
             yield return Esperar(1.2f);
             Vector3 local = jugador.transform.InverseTransformPoint(camara.transform.position);
             Assert.AreEqual(0f, local.x, 0.05f, "Apuntando la cámara queda centrada detrás del personaje");
-            Assert.Less(local.z, -1.5f, "Detrás");
-            Assert.Greater(local.y, 1.9f, "Un poco más alta que la cabeza");
-            Vector3 pies = camara.WorldToViewportPoint(jugador.transform.position);
+            Assert.AreEqual(normal.y, local.y, 0.05f, "Apuntar no sube la cámara (misma altura que caminando)");
+            Assert.AreEqual(normal.z, local.z, 0.05f, "Misma distancia que caminando");
+            Assert.Less(camara.fieldOfView, fovNormal - 5f, "Apuntando hace zoom (FOV menor)");
             Vector3 cabeza = camara.WorldToViewportPoint(jugador.transform.position + Vector3.up * 1.8f);
             Assert.AreEqual(0.5f, cabeza.x, 0.03f, "El personaje queda centrado en horizontal");
-            Assert.Less(cabeza.y, 0.5f, "La mira (centro de la pantalla) queda arriba de la cabeza");
-            Assert.Greater(cabeza.y, 0.2f, "El personaje no se sale por abajo");
-            Captura(camara, "s1n-T-672-apuntando");
+            Assert.Greater(cabeza.y, 0.3f, "El personaje no se sale por abajo");
+            Captura(camara, "s1t-T-682-apuntando");
 
             Press(raton.leftButton);
             yield return null;
             Release(raton.leftButton);
             yield return Esperar(0.08f);
-            Captura(camara, "s1n-T-672-disparando");
+            Captura(camara, "s1t-T-682-disparando");
             Release(raton.rightButton);
             yield return Esperar(1.2f);
             Vector3 suelta = jugador.transform.InverseTransformPoint(camara.transform.position);
