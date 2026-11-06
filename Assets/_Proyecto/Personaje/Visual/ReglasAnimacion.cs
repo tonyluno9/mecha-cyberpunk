@@ -123,7 +123,7 @@ namespace MechaCyberpunk.Personaje.Visual
                 case "GirarDer": case "GirarIzq": return 1.5f;
                 case "CoberturaDisparo1": case "CoberturaDisparo2": return 1.5f;
                 case "LevantarseBocaArriba": case "LevantarseBocaAbajo": return 2.5f;
-                case "DanoFrente": case "DanoEspalda": case "DanoFuerte": return 1.8f;
+                case "DanoFrente": case "DanoEspalda": case "DanoFuerte": return 2.6f;
                 default: return 1f;
             }
         }

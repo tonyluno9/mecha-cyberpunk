@@ -4,6 +4,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,6 +33,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private VidaAPie vida;
         private CicloGolpe ciclo;
         private ArsenalJugador arsenal;
+        private VisualPersonaje visual;
         private float recargaActual;
         private readonly SeguidorImplantes implantes = new SeguidorImplantes();
         private Vector3 posicionReposo;
@@ -91,7 +93,8 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 AjustarRecarga();
             }
-            if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos)
+            // T-675: sin spam; el siguiente golpe espera a que termine la animación del anterior.
+            if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos && !AnimacionOcupada())
             {
                 ciclo.IntentarGolpear();
             }
@@ -100,6 +103,15 @@ namespace MechaCyberpunk.Personaje.Combate
                 Impactar();
             }
             MoverPuno();
+        }
+
+        private bool AnimacionOcupada()
+        {
+            if (visual == null)
+            {
+                visual = GetComponentInChildren<VisualPersonaje>(true);
+            }
+            return visual != null && visual.gameObject.activeInHierarchy && visual.GolpeEnCurso;
         }
 
         // T-403: los puños usan el daño y la recarga de su nivel. Sin arsenal, los de DatosPersonaje.

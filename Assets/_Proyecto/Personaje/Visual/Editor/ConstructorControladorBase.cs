@@ -25,6 +25,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         private const float Mezcla = 0.12f;
         private const float MezclaCorta = 0.06f;
         private const float SalidaUnaVez = 0.88f;
+        // T-675: la reacción al daño es corta (se corta a la mitad del clip).
+        private const float SalidaDano = 0.55f;
         private const float UmbralCaminar = ReglasVisual.UmbralCaminar;
 
         public static string RutaOverride(string papel) => CarpetaOverrides + "/Override_" + papel + ".overrideController";
@@ -533,7 +535,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             for (int i = 0; i < danos.Length; i++)
             {
                 AnyA(m, e[danos[i]], MezclaCorta, true, Disparador(ReglasVisual.Herido), Entero(ReglasAnimacion.DanoTipo, i));
-                Unir(e[danos[i]], e["Vacio"], true, SalidaUnaVez, Mezcla);
+                Unir(e[danos[i]], e["Vacio"], true, SalidaDano, MezclaCorta);
             }
         }
 
