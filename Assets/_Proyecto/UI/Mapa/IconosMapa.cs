@@ -103,6 +103,32 @@ namespace MechaCyberpunk.UI.Mapa
             return fondo;
         }
 
+        /// <summary>El icono de un lugar del catálogo (T-667): el círculo de los lugares con su símbolo (o la casita) y, si se pide, su nombre debajo.</summary>
+        public static Image CrearDestino(Transform padre, DestinoMapa destino, float lado, bool conNombre)
+        {
+            EstiloCyberfix e = KitUI.Estilo;
+            Image fondo = Pieza(padre, "Destino_" + destino.Id, Circulo, e.Contorno, lado);
+            Outline borde = fondo.gameObject.AddComponent<Outline>();
+            borde.effectColor = e.Texto;
+            borde.effectDistance = Vector2.one;
+            if (destino.Id == IdDestinoMapa.Casa)
+            {
+                Pieza(fondo.transform, "Casa", Casa, e.Texto, lado * FraccionSimbolo);
+            }
+            else
+            {
+                Simbolo(fondo.transform, destino.Simbolo, lado * FraccionSimbolo);
+            }
+            if (conNombre)
+            {
+                Text nombre = KitUI.CrearTexto(fondo.transform, "Nombre", RolTexto.Minimo, TextAnchor.MiddleCenter);
+                KitUI.Colocar(nombre.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, lado * (destino.EtiquetaArriba ? 0.85f : -0.85f)), new Vector2(lado * 5f, lado * 0.5f));
+                nombre.text = destino.Nombre;
+                nombre.color = e.Texto;
+            }
+            return fondo;
+        }
+
         /// <summary>Un aliado: un círculo del color dado con contorno oscuro.</summary>
         public static Image CrearAliado(Transform padre, float lado, Color color)
         {
