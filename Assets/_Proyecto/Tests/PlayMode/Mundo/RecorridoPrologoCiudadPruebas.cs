@@ -35,7 +35,6 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float MetrosAntesDeLaPuerta = 3f;
         private const float MetrosAlCuarto = 5f;
         private const float MetrosDeRodeoDelCarro = 3.5f;
-        private const float SegundosDelFundido = 1.5f;
         private const float SegundosPuertaAbriendo = 1.5f;
         private const float MaxSegundosPorTramoAPie = 60f;
         private const float MaxSegundosPorTramoCarro = 60f;
@@ -364,7 +363,10 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(ModoJugador.APie, jugador.Modo);
 
             // De la calle a la cama por la puerta de la casa.
-            IPuerta puertaCasa = Buscar(Registro<IPuerta>.Todos, p => p.Lugar == IdLugar.Casa, "la puerta de la casa");
+            // T-804: la casa tiene dos puertas reales; la de la calle es la que no está junto al cuarto.
+            Transform cuarto = EnEscena("Cuarto_Habitacion").transform;
+            IPuerta puertaCuarto = Buscar(Registro<IPuerta>.Todos, p => p.Lugar == IdLugar.Casa && Vector3.Distance(p.Posicion, cuarto.position) < MetrosAlCuarto, "la puerta del cuarto");
+            IPuerta puertaCasa = Buscar(Registro<IPuerta>.Todos, p => p.Lugar == IdLugar.Casa && p != puertaCuarto, "la puerta de la casa");
             Vector3 entradaCasa = Aparicion(IdAparicionPuerta).Pose.position;
             Vector3 ejeDeLaPuerta = Plano(puertaCasa.Posicion - entradaCasa).normalized;
             yield return Caminar("11a calle al eje de la puerta", entradaCasa - ejeDeLaPuerta * MetrosAntesDeLaPuerta, RadioFrenteALaPuerta);
@@ -376,13 +378,17 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return null;
             yield return new WaitForSeconds(SegundosPuertaAbriendo);
             Assert.IsTrue(puertaCasa.EstaAbierta, "E frente a la puerta de la casa la abre");
-            // T-550: la habitación es un cuarto aparte: al cruzar la puerta del cuarto (detrás de la hoja) hay un fundido y apareces adentro.
-            Vector3 puertaDelCuarto = EnEscena("PuertaCuarto_Lugar_Casa").transform.position;
-            puertaDelCuarto.y = 0f;
-            Transform cuarto = EnEscena("Cuarto_Habitacion").transform;
-            yield return Caminar("12 puerta de la casa a la puerta del cuarto", puertaDelCuarto, RadioFrenteALaPuerta, () => Vector3.Distance(Jugador().Raiz.position, cuarto.position) < MetrosAlCuarto);
-            yield return new WaitUntil(() => Vector3.Distance(Jugador().Raiz.position, cuarto.position) < MetrosAlCuarto);
-            yield return new WaitForSeconds(SegundosDelFundido);
+            // T-804: la habitación está dentro de la casa (antes era un cuarto aparte con fundido): pasillo, E en la puerta del cuarto y adentro.
+            yield return Caminar("12a la puerta de la casa al pasillo", puertaCasa.Posicion + Vector3.left * 1.2f, RadioFrenteALaPuerta);
+            yield return Caminar("12b pasillo al frente de la puerta del cuarto", puertaCuarto.Posicion + Vector3.back * 1.1f, RadioFrenteALaPuerta);
+            Orientar(puertaCuarto.Posicion - Jugador().Raiz.position);
+            yield return null;
+            yield return null;
+            PressAndRelease(teclado.eKey);   // la puerta del cuarto también abre con E
+            yield return null;
+            yield return new WaitForSeconds(SegundosPuertaAbriendo);
+            Assert.IsTrue(puertaCuarto.EstaAbierta, "E frente a la puerta del cuarto la abre");
+            yield return Caminar("12c cruzar la puerta del cuarto", puertaCuarto.Posicion + Vector3.forward * 1.1f, RadioFrenteALaPuerta);
             Vector3 cama = Aparicion(IdAparicionCama).Pose.position;
             yield return Caminar("13 puerta interior a los pies de la cama", cama + new Vector3(0.55f, 0f, -0.35f), RadioFrenteALaPuerta);
             Assert.AreEqual(0, erroresEnConsola, "Errores en consola; el primero: " + primerError);

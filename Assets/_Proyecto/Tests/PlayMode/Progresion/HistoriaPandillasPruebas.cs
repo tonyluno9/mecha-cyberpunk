@@ -151,22 +151,18 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(arsenal);
             Assert.IsFalse(arsenal.Tiene(ArmaAPie.Pistola), "Al inicio solo tienes los puños.");
 
-            // a. Salir de la casa caminando (W) hacia la puerta.
-            Transform puerta = GameObject.Find("Casa_Puerta").transform;
-            Vector3 dirPuerta = puerta.position - jugador.Raiz.position;
-            dirPuerta.y = 0f;
-            Debug.Log("[Prueba] cama " + jugador.Raiz.position + " puerta " + puerta.position);
-            jugador.Colocar(new Pose(jugador.Raiz.position, Quaternion.LookRotation(dirPuerta.normalized, Vector3.up)));
-            yield return null;
-            Press(teclado.wKey);
-            float finCamino = Time.realtimeSinceStartup + 20f;
+            // a. Salir de la casa caminando. T-804: la casa tiene puertas reales (antes se cruzaba un trigger de fundido): se abren como la E
+            // y se cruzan caminando (atajos anotados en SalidaCasaPruebas).
+            Debug.Log("[Prueba] cama " + jugador.Raiz.position);
+            yield return SalidaCasaPruebas.Salir(() => director.Paso != PasoHistoria.Despierta);
+            float finCamino = Time.realtimeSinceStartup + 5f;
             while (director.Paso == PasoHistoria.Despierta && Time.realtimeSinceStartup < finCamino)
             {
                 yield return null;
             }
             Release(teclado.wKey);
             Debug.Log("[Prueba] fin camino " + jugador.Raiz.position);
-            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso, "Caminar hacia la puerta saca de la casa.");
+            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso, "Salir caminando por las puertas saca de la casa.");
 
             // b. La primera pelea: clics sobre los Calaveras hasta vencerlos.
             float finPelea = Time.realtimeSinceStartup + 90f;

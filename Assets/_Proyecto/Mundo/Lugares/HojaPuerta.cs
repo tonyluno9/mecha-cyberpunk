@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Mundo.Datos;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace MechaCyberpunk.Mundo.Lugares
 {
     /// <summary>
     /// Hoja de una puerta: sube hacia el dintel al abrir y baja al cerrar. Abierta, su collider deja pasar.
+    /// T-804: con <see cref="ConBisagra"/> gira sobre su orilla (la bisagra) los grados de <see cref="ConfigPuertas.GradosBisagra"/>, hacia el lado
+    /// contrario de quien abre (el jugador registrado o el punto de <see cref="AbrirDesde"/>), como una puerta de casa.
     /// Se cierra sola tras unos segundos si nadie está en el umbral (la caja del umbral, medida sin trigger para no estorbar a los rayos).
     /// </summary>
     public class HojaPuerta : MonoBehaviour
@@ -20,9 +23,16 @@ namespace MechaCyberpunk.Mundo.Lugares
         [SerializeField] private Transform umbral;
         [Tooltip("Tamaño de la caja del umbral (m).")]
         [SerializeField] private Vector3 tamanoUmbral = new Vector3(3f, 3f, 2.4f);
+        [Tooltip("T-804: gira sobre su bisagra en lugar de subir al dintel.")]
+        [SerializeField] private bool conBisagra;
+        [Tooltip("T-804: punto de la bisagra en el espacio local de la hoja, antes de su escala (para un cubo, (0.5, 0, 0) es su orilla +X).")]
+        [SerializeField] private Vector3 bisagraLocal = new Vector3(0.5f, 0f, 0f);
 
         private readonly Collider[] ocupantes = new Collider[MaximoOcupantes];
         private Vector3 posicionCerrada;
+        private Quaternion rotacionCerrada;
+        private Vector3 bisagraPadre;
+        private float sentido = 1f;
         private float progreso;
         private float segundosSinNadie;
         private bool abierta;
@@ -36,6 +46,15 @@ namespace MechaCyberpunk.Mundo.Lugares
         /// <summary>Cuántos cuerpos (con CharacterController o Rigidbody) están ahora en el umbral, sin usar un trigger para no estorbar a los rayos de otros.</summary>
         public int OcupantesEnUmbral => ContarOcupantes();
 
+        /// <summary>T-804: true si la hoja gira sobre una bisagra.</summary>
+        public bool ConBisagra => conBisagra;
+
+        /// <summary>T-804: ángulo actual de la hoja con bisagra (°, con signo); 0 cerrada.</summary>
+        public float AnguloActual => conBisagra ? sentido * config.GradosBisagra * Suavizar(progreso) : 0f;
+
+        /// <summary>T-804: la bisagra en el mundo (m).</summary>
+        public Vector3 BisagraMundo => transform.parent != null ? transform.parent.TransformPoint(bisagraPadre) : bisagraPadre;
+
         private void Awake()
         {
             if (config == null || colliderHoja == null || umbral == null)
@@ -45,13 +64,50 @@ namespace MechaCyberpunk.Mundo.Lugares
                 return;
             }
             posicionCerrada = transform.localPosition;
+            rotacionCerrada = transform.localRotation;
+            bisagraPadre = posicionCerrada + rotacionCerrada * Vector3.Scale(bisagraLocal, transform.localScale);
         }
 
+        /// <summary>Abre; con bisagra, hacia el lado contrario del jugador registrado (si no hay, hacia su lado positivo).</summary>
         public void Abrir()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador != null && jugador.Raiz != null)
+            {
+                AbrirDesde(jugador.Raiz.position);
+                return;
+            }
+            AbrirConSentido(1f);
+        }
+
+        /// <summary>T-804: abre alejándose de 'desde' (quien abre), para que la hoja no le pegue.</summary>
+        public void AbrirDesde(Vector3 desde)
+        {
+            AbrirConSentido(SentidoLejosDe(desde));
+        }
+
+        /// <summary>T-804: sentido de giro (+1 o -1) que aleja la orilla libre de la hoja del punto 'desde'.</summary>
+        public float SentidoLejosDe(Vector3 desde)
+        {
+            Vector3 bisagra = BisagraMundo;
+            Vector3 libre = transform.position - bisagra;
+            libre.y = 0f;
+            // Con giro positivo en Y la orilla libre avanza hacia up x libre.
+            Vector3 avance = Vector3.Cross(Vector3.up, libre);
+            Vector3 haciaQuien = desde - transform.position;
+            haciaQuien.y = 0f;
+            return Vector3.Dot(avance, haciaQuien) > 0f ? -1f : 1f;
+        }
+
+        private void AbrirConSentido(float nuevoSentido)
         {
             if (abierta)
             {
                 return;
+            }
+            if (progreso <= 0f)
+            {
+                sentido = nuevoSentido; // a medio cerrar sigue hacia el mismo lado
             }
             abierta = true;
             segundosSinNadie = 0f;
@@ -72,9 +128,18 @@ namespace MechaCyberpunk.Mundo.Lugares
 
         private void Update()
         {
-            float paso = Time.deltaTime / config.DuracionApertura;
+            float paso = Time.deltaTime / (conBisagra ? config.DuracionBisagra : config.DuracionApertura);
             progreso = Mathf.Clamp01(progreso + (abierta ? paso : -paso));
-            transform.localPosition = posicionCerrada + Vector3.up * (config.Desplazamiento * progreso);
+            if (conBisagra)
+            {
+                Quaternion giro = Quaternion.AngleAxis(AnguloActual, Vector3.up);
+                transform.localPosition = bisagraPadre + giro * (posicionCerrada - bisagraPadre);
+                transform.localRotation = giro * rotacionCerrada;
+            }
+            else
+            {
+                transform.localPosition = posicionCerrada + Vector3.up * (config.Desplazamiento * progreso);
+            }
 
             if (!abierta)
             {
@@ -90,6 +155,12 @@ namespace MechaCyberpunk.Mundo.Lugares
             {
                 Cerrar();
             }
+        }
+
+        // Arranca y frena suave (la hoja de bisagra no gira a velocidad constante).
+        private static float Suavizar(float t)
+        {
+            return t * t * (3f - 2f * t);
         }
 
         private int ContarOcupantes()

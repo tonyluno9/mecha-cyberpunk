@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Arte.Editor
     /// <summary>
     /// S2 zona 3 (docs/playtest-05nov.md): el consultorio del Doc (I+D+I) y el taller de Tino (CIC) se arman en su propio local (están en la ruta de la
     /// demo: el Doc y Tino no se mueven) según docs/referencias-interiores/consultorio-doc.png y taller-tino.png; el taller del mecánico (Canepa, frente a
-    /// la casa) es un cuarto aparte con fundido, como la habitación (taller-mecanico.png). Idempotente: rehace la raíz S2_Interiores y el cuarto.
+    /// la casa) lo arma ColocarS2nPuertas dentro del Edificio_45 (T-804; antes era un cuarto aparte con fundido). Idempotente: rehace la raíz S2_Interiores y el cuarto.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ColocarS2Interiores.Colocar
     /// </summary>
     public static class ColocarS2Interiores
@@ -25,7 +25,6 @@ namespace MechaCyberpunk.Arte.Editor
         private const string C = "Assets/Arte/Calle/Prefabs/";
         private const string L = "Assets/Arte/Callejon/Prefabs/";
         private const string V = "Assets/Arte/Vehiculos/Prefabs/";
-        private const string RutaDatosTaller = "Assets/_Proyecto/Mundo/Datos/DatosLugar_Taller.asset";
         private static readonly Color Calido = new Color(1f, 0.72f, 0.42f);
         private static readonly Color Turquesa = new Color(0.3f, 1f, 0.9f);
         private static readonly Color Magenta = new Color(1f, 0.25f, 0.8f);
@@ -41,7 +40,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform raiz = new GameObject(NombreRaiz).transform;
             Consultorio(raiz);
             TallerTino(raiz);
-            TallerMecanico();
+            ColocarS2nPuertas.TallerMecanico(); // T-804: el taller ya no es un cuarto aparte: va dentro del Edificio_45
             ColocarT550.AislarDelSol();
             ColocarS2.Guardar("s2-interiores");
         }
@@ -162,134 +161,6 @@ namespace MechaCyberpunk.Arte.Editor
             OcultarCascaron("T531_Locales/CIC");
             Luz(luces, "Relleno_Fondo", new Vector3(-72.0f, 2.4f, 15.0f), Calido, 1.6f, 5f);
             ColocarS2.Informe.AppendLine("Taller de Tino: " + r.childCount + " piezas" + (dron == null ? " (FALTA dron)" : ""));
-        }
-
-        // ---------------------------------------------------------------- Taller del mecánico (cuarto aparte)
-
-        private static void TallerMecanico()
-        {
-            Transform cuartos = ColocarS2.Buscar(ColocarT550.NombreRaiz);
-            foreach (string viejo in new[] { NombreTallerMecanico, "PuertaCuarto_Lugar_TallerMecanico" })
-            {
-                Transform t = cuartos.Find(viejo);
-                if (t != null)
-                {
-                    Object.DestroyImmediate(t.gameObject);
-                }
-            }
-            Object.DestroyImmediate(GameObject.Find("Lugar_TallerMecanico"));
-
-            ColocarT550.Cuarto c = ColocarT550.CrearCuarto(cuartos, NombreTallerMecanico, 1, new Vector3(9f, 4.4f, 8f), 3, 5, 0.55f, IdLugar.Taller);
-            Transform r = c.Raiz;
-            Vector3 P(float x, float z) => r.TransformPoint(new Vector3(x, 0f, z));
-            float piso = r.position.y;
-            float techo = piso + 4.4f;
-            // Puerta interior en la pared sur (por donde se entra): la hoja se ve de este lado.
-            ColocarT550.Puerta(r, ColocarT550.Mat("T550_Madera", new Color(0.30f, 0.18f, 0.09f)), new Vector3(3.5f, 0f, -4f), 0f);
-            // Al fondo, la cortina de la cochera (una fachada de local con su cortina, vista desde dentro).
-            Modelo(r, C + "C01_FachadaLocal_cy", P(0f, 3.85f), 0f, piso, escala: 1.15f, sinCollider: true);
-            // El carro del cliente con el cofre hacia la grúa, la grúa de motor amarilla y lo de un taller.
-            Modelo(r, V + "V01a_CarroViejito", P(-0.6f, 0.6f), 90f, piso, sinCollider: false);
-            Modelo(r, T + "T07_GruaMotor", P(2.0f, 1.6f), 270f, piso);
-            Modelo(r, T + "T04_GabineteHerramientas", P(-3.9f, -1.6f), 90f, piso);
-            Modelo(r, T + "T01_ParedTaller", P(-4.4f, 1.4f), 90f, piso, escala: 0.75f);
-            Modelo(r, T + "T03_BancoTrabajo", P(4.0f, 1.8f), 270f, piso);
-            Modelo(r, T + "T06_Soldadora", P(4.0f, -0.2f), 270f, piso);
-            Modelo(r, T + "T05_Generador", P(-3.8f, 3.0f), 90f, piso);
-            Modelo(r, L + "L04_Llantas", P(3.7f, 3.2f), 0f, piso);
-            Modelo(r, L + "L04_Llantas", P(1.4f, -3.5f), 40f, piso);
-            Modelo(r, C + "C16_Tambo", P(-3.9f, -3.4f), 0f, piso);
-            Modelo(r, C + "C16_Tambo", P(-3.3f, -3.5f), 0f, piso);
-            Modelo(r, C + "C16_Tambo", P(2.9f, 3.4f), 0f, piso);
-            Modelo(r, C + "CY03_MazoCables", P(-4.45f, -0.4f), 90f, piso + 1.4f, sinCollider: true);
-            Modelo(r, C + "CY03_MazoCables", P(4.45f, 0.8f), 270f, piso + 1.4f, sinCollider: true);
-            Luz(c.Luces, "Tubo_Calido_1", P(-1.5f, -0.5f) + Vector3.up * (techo - 0.3f), Calido, 2.6f, 8f);
-            Luz(c.Luces, "Tubo_Calido_2", P(1.8f, 2.4f) + Vector3.up * (techo - 0.3f), Calido, 2.4f, 8f);
-            Luz(c.Luces, "Neon_Magenta", P(-4.2f, 1.4f) + Vector3.up * 2.4f, Magenta, 1.2f, 3.5f);
-            Luz(c.Luces, "Neon_Turquesa", P(4.2f, -0.2f) + Vector3.up * 2.4f, Turquesa, 1.2f, 3.5f);
-            Luz(c.Luces, "Relleno", P(0f, -3f) + Vector3.up * 2.2f, Calido, 0.8f, 6f);
-
-            // Afuera: la puerta del taller en la fachada detrás de Canepa (Edificio_45, cara oeste x -37.4), con su LugarMundo.
-            Vector3 puertaCalle = new Vector3(-37.35f, 0.22f, -70.2f);
-            GameObject lugarGo = new GameObject("Lugar_TallerMecanico");
-            lugarGo.transform.position = puertaCalle;
-            Transform entrada = new GameObject("Entrada").transform;
-            entrada.SetParent(lugarGo.transform, false);
-            entrada.position = puertaCalle + new Vector3(-1.6f, 0f, 0f);
-            LugarMundo lugar = lugarGo.AddComponent<LugarMundo>();
-            SerializedObject lo = new SerializedObject(lugar);
-            lo.FindProperty("datos").objectReferenceValue = DatosTaller();
-            lo.FindProperty("entrada").objectReferenceValue = entrada;
-            lo.ApplyModifiedPropertiesWithoutUndo();
-            GameObject fachada = Modelo(lugarGo.transform, T + "H01a_ParedPuerta", puertaCalle + new Vector3(-0.12f, 0f, 0f), 270f, puertaCalle.y, sinCollider: true);
-            if (fachada != null)
-            {
-                fachada.name = "PuertaTaller";
-            }
-
-            SerializedObject zo = new SerializedObject(r.Find("ZonaInterior").GetComponent<ZonaInterior>());
-            zo.FindProperty("lugar").objectReferenceValue = lugar;
-            Light[] luces = c.Luces.GetComponentsInChildren<Light>(true);
-            SerializedProperty arr = zo.FindProperty("luces");
-            arr.arraySize = luces.Length;
-            for (int i = 0; i < luces.Length; i++)
-            {
-                arr.GetArrayElementAtIndex(i).objectReferenceValue = luces[i];
-            }
-            zo.ApplyModifiedPropertiesWithoutUndo();
-            Transform salida = r.Find("SalidaExterior");
-            salida.SetPositionAndRotation(entrada.position, Quaternion.LookRotation(Vector3.left, Vector3.up));
-
-            GameObject prefabPantallas = PantallasDeLaCasa();
-            GameObject fuera = new GameObject("PuertaCuarto_Lugar_TallerMecanico");
-            fuera.transform.SetParent(cuartos, false);
-            fuera.transform.SetPositionAndRotation(puertaCalle + new Vector3(-0.3f, 1.1f, 0f), Quaternion.LookRotation(Vector3.left, Vector3.up));
-            BoxCollider cf = fuera.AddComponent<BoxCollider>();
-            cf.isTrigger = true;
-            cf.size = new Vector3(1.4f, 2.2f, 0.5f);
-            Configurar(fuera.AddComponent<PuertaCuarto>(), c.Datos, false, prefabPantallas);
-
-            GameObject dentro = new GameObject("PuertaCuarto_Interior");
-            dentro.transform.SetParent(r, false);
-            dentro.transform.localPosition = new Vector3(3.5f, 1.1f, -4f + 0.3f);
-            BoxCollider cd = dentro.AddComponent<BoxCollider>();
-            cd.isTrigger = true;
-            cd.size = new Vector3(1.0f, 2.2f, 0.5f);
-            Configurar(dentro.AddComponent<PuertaCuarto>(), c.Datos, true, prefabPantallas);
-            c.Aparicion.localPosition = new Vector3(3.5f, 0.05f, -4f + 1.4f);
-            ColocarS2.Informe.AppendLine("Taller del mecánico: cuarto 9 x 4.4 x 8 m en " + r.position + "; puerta de la calle en " + puertaCalle);
-        }
-
-        private static DatosLugar DatosTaller()
-        {
-            DatosLugar d = AssetDatabase.LoadAssetAtPath<DatosLugar>(RutaDatosTaller);
-            if (d == null)
-            {
-                d = ScriptableObject.CreateInstance<DatosLugar>();
-                AssetDatabase.CreateAsset(d, RutaDatosTaller);
-            }
-            SerializedObject so = new SerializedObject(d);
-            so.FindProperty("id").enumValueIndex = (int)IdLugar.Taller;
-            so.FindProperty("nombre").stringValue = "Taller de Canepa";
-            so.FindProperty("horario").FindPropertyRelative("siempreAbierto").boolValue = true;
-            so.ApplyModifiedPropertiesWithoutUndo();
-            AssetDatabase.SaveAssetIfDirty(d);
-            return d;
-        }
-
-        private static GameObject PantallasDeLaCasa()
-        {
-            PuertaCuarto casa = Object.FindObjectsByType<PuertaCuarto>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(p => p.name == "PuertaCuarto_Lugar_Casa");
-            return casa == null ? null : new SerializedObject(casa).FindProperty("prefabPantallas").objectReferenceValue as GameObject;
-        }
-
-        private static void Configurar(PuertaCuarto puerta, CuartoInterior datos, bool esSalida, GameObject prefabPantallas)
-        {
-            SerializedObject so = new SerializedObject(puerta);
-            so.FindProperty("cuarto").objectReferenceValue = datos;
-            so.FindProperty("esSalida").boolValue = esSalida;
-            so.FindProperty("prefabPantallas").objectReferenceValue = prefabPantallas;
-            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         // ---------------------------------------------------------------- Ayudas
