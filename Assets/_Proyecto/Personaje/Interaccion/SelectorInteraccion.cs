@@ -18,6 +18,16 @@ namespace MechaCyberpunk.Personaje.Interaccion
         /// </summary>
         public static int Elegir(Vector3 posicion, Vector3 direccionVista, IReadOnlyList<Vector3> puntos, float alcance, float anguloMaximo)
         {
+            return Elegir(posicion, direccionVista, puntos, alcance, anguloMaximo, null);
+        }
+
+        /// <summary>
+        /// Igual que la otra, pero los puntos marcados en <paramref name="sinAngulo"/> (las puertas de un carro, T-655) se eligen sin importar
+        /// hacia dónde mira el jugador: solo cuenta la distancia.
+        /// </summary>
+        public static int Elegir(Vector3 posicion, Vector3 direccionVista, IReadOnlyList<Vector3> puntos, float alcance, float anguloMaximo,
+            IReadOnlyList<bool> sinAngulo)
+        {
             if (puntos == null || puntos.Count == 0) return -1;
 
             Vector2 vista = new Vector2(direccionVista.x, direccionVista.z);
@@ -36,7 +46,8 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 // Encima del jugador: cuenta como centrado.
                 float angulo = 0f;
                 if (distancia > DistanciaMinima && hayVista) angulo = Vector2.Angle(vista, hacia);
-                if (angulo > anguloMaximo) continue;
+                bool ignoraAngulo = sinAngulo != null && i < sinAngulo.Count && sinAngulo[i];
+                if (!ignoraAngulo && angulo > anguloMaximo) continue;
 
                 bool mas = mejor < 0
                     || distancia < mejorDistancia - ToleranciaDistancia

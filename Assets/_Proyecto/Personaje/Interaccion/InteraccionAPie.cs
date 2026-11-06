@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 namespace MechaCyberpunk.Personaje.Interaccion
 {
     /// <summary>
-    /// Interacción del jugador con la tecla E: a pie elige la puerta cerrada o el montable libre más cercano y de frente
+    /// Interacción del jugador con la tecla E: a pie elige la puerta cerrada más cercana y de frente, o el montable libre más cercano a cualquiera de sus puertas sin importar hacia dónde mira (T-655)
     /// (buscando en Registro&lt;IPuerta&gt; y Registro&lt;IMontable&gt;, sin asumir nada de su jerarquía) y lo usa (también los IInteractuable de Registro&lt;IInteractuable&gt;); dentro de un
     /// montable, la E lo baja. Este componente sigue prendido en carro y mecha porque es el que lee la E.
     /// </summary>
@@ -28,6 +28,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
         private readonly List<IMontable> montables = new List<IMontable>();
         private readonly List<IInteractuable> interactuables = new List<IInteractuable>();
         private readonly List<Vector3> puntos = new List<Vector3>();
+        private readonly List<bool> sinAngulo = new List<bool>();
 
         /// <summary>La puerta que E intentaría abrir ahora, o null.</summary>
         public IPuerta PuertaCandidata { get; private set; }
@@ -147,6 +148,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
             montables.Clear();
             interactuables.Clear();
             puntos.Clear();
+            sinAngulo.Clear();
             IReadOnlyList<IPuerta> todasPuertas = Registro<IPuerta>.Todos;
             for (int i = 0; i < todasPuertas.Count; i++)
             {
@@ -155,6 +157,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 montables.Add(null);
                 interactuables.Add(null);
                 puntos.Add(todasPuertas[i].Posicion);
+                sinAngulo.Add(false);
             }
             IReadOnlyList<IMontable> todosMontables = Registro<IMontable>.Todos;
             for (int i = 0; i < todosMontables.Count; i++)
@@ -164,6 +167,16 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 montables.Add(todosMontables[i]);
                 interactuables.Add(null);
                 puntos.Add(todosMontables[i].PuntoSubida);
+                sinAngulo.Add(todosMontables[i].Modo == ModoJugador.Carro);
+                // T-655: cuenta cada puerta del carro (la del conductor y la del lado opuesto), sin importar hacia dónde mira el jugador.
+                if (PuertasMontable.TryEspejo(todosMontables[i], out Vector3 puertaOpuesta))
+                {
+                    puertas.Add(null);
+                    montables.Add(todosMontables[i]);
+                    interactuables.Add(null);
+                    puntos.Add(puertaOpuesta);
+                    sinAngulo.Add(true);
+                }
             }
             IReadOnlyList<IInteractuable> todosInteractuables = Registro<IInteractuable>.Todos;
             for (int i = 0; i < todosInteractuables.Count; i++)
@@ -172,10 +185,11 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 montables.Add(null);
                 interactuables.Add(todosInteractuables[i]);
                 puntos.Add(todosInteractuables[i].Posicion);
+                sinAngulo.Add(false);
             }
 
             int indice = SelectorInteraccion.Elegir(transform.position, jugador.Camara.transform.forward, puntos,
-                config.Alcance, config.AnguloMaximo);
+                config.Alcance, config.AnguloMaximo, sinAngulo);
             if (indice < 0)
             {
                 return;

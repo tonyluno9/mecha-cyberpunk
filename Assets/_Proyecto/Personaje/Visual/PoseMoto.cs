@@ -8,6 +8,7 @@ namespace MechaCyberpunk.Personaje.Visual
     /// (con IK Pass en la capa base), bajo VisualPersonaje. No maneja la moto: quien la maneje llama a <see cref="Montar"/>,
     /// <see cref="Bajar"/> y alimenta <see cref="Giro"/> y <see cref="Velocidad"/>. Al bajar, el visual vuelve a su sitio de a pie.
     /// </summary>
+    [DefaultExecutionOrder(100)]
     [RequireComponent(typeof(Animator))]
     public class PoseMoto : MonoBehaviour
     {
@@ -20,6 +21,9 @@ namespace MechaCyberpunk.Personaje.Visual
         private float alturaCadera;
         private Vector3 localAntes;
         private Quaternion rotacionAntes;
+        private bool usaInicioFijo;
+        private Vector3 inicioMundo;
+        private Quaternion giroInicioMundo;
 
         /// <summary>Giro normalizado del manubrio (-1 izquierda, 1 derecha).</summary>
         public float Giro { get; set; }
@@ -44,8 +48,11 @@ namespace MechaCyberpunk.Personaje.Visual
             raizVisual = visual != null ? visual.transform : transform;
         }
 
-        /// <summary>Sube a la moto. Devuelve false si a la moto le faltan puntos.</summary>
-        public bool Montar(PuntosMoto destino)
+        /// <summary>
+        /// Sube a la moto. Devuelve false si a la moto le faltan puntos. Con <paramref name="desdeMundo"/> el fundido de subir arranca en ese punto del mundo
+        /// (donde estaba parado el jugador) aunque la raíz del jugador ya haya saltado a la moto (S1, T-660).
+        /// </summary>
+        public bool Montar(PuntosMoto destino, Vector3? desdeMundo = null)
         {
             if (destino == null || !destino.Completo)
             {
@@ -62,6 +69,9 @@ namespace MechaCyberpunk.Personaje.Visual
             alturaCadera = huesoCadera != null ? Mathf.Max(0f, (huesoCadera.position - raizVisual.position).y) : 0f;
             localAntes = raizVisual.localPosition;
             rotacionAntes = raizVisual.localRotation;
+            usaInicioFijo = desdeMundo.HasValue;
+            inicioMundo = desdeMundo ?? raizVisual.position;
+            giroInicioMundo = raizVisual.rotation;
             if (moto.Caballete != null)
             {
                 moto.Caballete.SetActive(false);
@@ -88,10 +98,15 @@ namespace MechaCyberpunk.Personaje.Visual
             float t = ReglasMoto.Suave(avance);
             inclinacion = Mathf.Lerp(inclinacion, ReglasMoto.Inclinacion(Giro, Velocidad), 1f - Mathf.Exp(-8f * Time.deltaTime));
             Transform asiento = moto.Asiento;
-            Quaternion rotMoto = asiento.rotation * Quaternion.Euler(ReglasMoto.InclinacionAdelante, 0f, -inclinacion);
+            Quaternion rotMoto = asiento.rotation * Quaternion.Euler(moto.InclinacionTorso, 0f, -inclinacion);
             Transform padre = raizVisual.parent;
             Vector3 mundoAntes = padre != null ? padre.TransformPoint(localAntes) : localAntes;
             Quaternion giroAntes = padre != null ? padre.rotation * rotacionAntes : rotacionAntes;
+            if (usaInicioFijo && !bajando)
+            {
+                mundoAntes = inicioMundo;
+                giroAntes = giroInicioMundo;
+            }
             raizVisual.SetPositionAndRotation(Vector3.Lerp(mundoAntes, asiento.position - rotMoto * (Vector3.up * alturaCadera), t), Quaternion.Slerp(giroAntes, rotMoto, t));
             if (bajando && avance <= 0f)
             {

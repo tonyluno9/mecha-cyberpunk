@@ -109,5 +109,27 @@ namespace MechaCyberpunk.Tests.Personaje
             int indice = SelectorInteraccion.Elegir(jugador, Adelante, new[] { new Vector3(10f, 0f, 11.5f), new Vector3(0f, 0f, 1.5f) }, Alcance, Angulo);
             Assert.AreEqual(0, indice);
         }
+
+        [Test]
+        public void Elegir_PuntoSinAngulo_SeEligeAunqueEsteDetras()
+        {
+            var puntos = new[] { new Vector3(0f, 0f, -2f) };
+            Assert.AreEqual(-1, SelectorInteraccion.Elegir(Origen, Adelante, puntos, Alcance, Angulo), "Con ángulo no entra");
+            Assert.AreEqual(0, SelectorInteraccion.Elegir(Origen, Adelante, puntos, Alcance, Angulo, new[] { true }), "Sin ángulo entra");
+        }
+
+        [Test]
+        public void Elegir_PuntoSinAngulo_SigueRespetandoElAlcance()
+        {
+            var puntos = new[] { new Vector3(0f, 0f, -Alcance - 0.1f) };
+            Assert.AreEqual(-1, SelectorInteraccion.Elegir(Origen, Adelante, puntos, Alcance, Angulo, new[] { true }));
+        }
+
+        [Test]
+        public void Elegir_PuntoSinAnguloMasCercano_GanaAlDeFrenteMasLejano()
+        {
+            var puntos = new[] { new Vector3(0f, 0f, 2f), new Vector3(0f, 0f, -1f) };
+            Assert.AreEqual(1, SelectorInteraccion.Elegir(Origen, Adelante, puntos, Alcance, Angulo, new[] { false, true }));
+        }
     }
 }

@@ -53,5 +53,15 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Vector3 mirandoAbajo = new Vector3(0f, -0.9f, 1f);
             Assert.IsTrue(CalculoCamaraLibre.EnRangoDeSubida(new Vector3(0f, 1.6f, 0f), mirandoAbajo, new Vector3(0f, 0f, 1.5f), 2.5f, 60f));
         }
+
+        [Test]
+        public void Elegir4_DosPuertasBloqueadas_ProbarAtrasYLuegoArriba()
+        {
+            Assert.AreEqual(LadoSalida.Conductor, CalculoSalida.Elegir(true, true, true, true));
+            Assert.AreEqual(LadoSalida.Copiloto, CalculoSalida.Elegir(false, true, true, true));
+            Assert.AreEqual(LadoSalida.Atras, CalculoSalida.Elegir(false, false, true, true));
+            Assert.AreEqual(LadoSalida.Arriba, CalculoSalida.Elegir(false, false, false, true));
+            Assert.AreEqual(LadoSalida.Ninguno, CalculoSalida.Elegir(false, false, false, false));
+        }
     }
 }
