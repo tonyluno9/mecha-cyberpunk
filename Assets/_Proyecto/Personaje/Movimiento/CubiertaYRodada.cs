@@ -31,6 +31,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private Vector3 normal;
         private Vector3 direccionRodada;
         private Transform modelo;
+        private Vector3 escalaBase = Vector3.one;
         private float alturaOriginal;
         private Vector3 centroOriginal;
         private float ajusteCamara;
@@ -59,6 +60,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             centroOriginal = cuerpo.center;
             Animator animador = GetComponentInChildren<Animator>(true);
             modelo = animador != null ? animador.transform : null;
+            escalaBase = modelo != null ? modelo.localScale : Vector3.one;
             accionCubrirse = new InputAction("Cubrirse", InputActionType.Button, "<Keyboard>/q");
             accionRodar = new InputAction("Rodar", InputActionType.Button, "<Keyboard>/leftCtrl");
         }
@@ -66,6 +68,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public void AlCambiarModelo(Animator nuevo)
         {
             modelo = nuevo != null ? nuevo.transform : null;
+            escalaBase = modelo != null ? modelo.localScale : Vector3.one;
         }
 
         private readonly SeguidorImplantes implantes = new SeguidorImplantes();
@@ -297,7 +300,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             ajusteCamara = 0f;
             if (modelo != null)
             {
-                modelo.localScale = Vector3.one;
+                modelo.localScale = escalaBase;
                 modelo.localRotation = Quaternion.identity;
                 modelo.localPosition = Vector3.zero;
             }
@@ -316,7 +319,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 return;
             }
             escalaActual = Mathf.Lerp(escalaActual, agachado ? datos.EscalaAgachado : 1f, paso);
-            modelo.localScale = new Vector3(1f, escalaActual, 1f);
+            modelo.localScale = new Vector3(escalaBase.x, escalaBase.y * escalaActual, escalaBase.z);
             if (rodada.Activa)
             {
                 Vector3 centro = new Vector3(0f, datos.AlturaRodando / 2f, 0f);

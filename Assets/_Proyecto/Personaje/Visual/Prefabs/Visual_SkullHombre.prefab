@@ -143,15 +143,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.0526315
+      value: 1.294964
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.0526315
+      value: 1.294964
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.0526315
+      value: 1.294964
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e97b41cdc542f5489a66e6ab68f42e8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -259,6 +259,10 @@ MonoBehaviour:
   socketArma: {fileID: 7715629392474268116}
   inclinacionBajada: 60
   manosPorIK: 0
+  maximoCorreccionCanon: 45
+  inclinacionArmaLarga: -5
+  maximoCorreccionArmaLarga: 120
+  rapidezManoIzquierda: 8
 --- !u!114 &32660561500520336
 MonoBehaviour:
   m_ObjectHideFlags: 0

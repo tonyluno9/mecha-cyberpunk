@@ -416,6 +416,9 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private bool TieneMuerteAnimada() => animador != null && Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int);
 
+        /// <summary>Escala del modelo contra la que se midieron las velocidades de los clips (1 = el clip tal como viene): el paso crece con el modelo (T-670).</summary>
+        public float EscalaClips => animador != null ? Mathf.Max(0.1f, animador.transform.lossyScale.y) : 1f;
+
         /// <summary>Acelera o frena Caminar y Correr para que los pies sigan el suelo a la velocidad real.</summary>
         private void AjustarRapidez()
         {
@@ -438,7 +441,7 @@ namespace MechaCyberpunk.Personaje.Visual
                 referencia = ReglasAnimacion.VelocidadClipArma(tipoArma, velocidad);
                 tope = rapidezMaxima;
             }
-            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia, rapidezMinima, tope);
+            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia * EscalaClips, rapidezMinima, tope);
         }
 
         private void LeerEstadoDelPadre(float dt)
