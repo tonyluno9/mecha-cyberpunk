@@ -60,8 +60,8 @@ namespace MechaCyberpunk.Arte.Editor
             new Entrada("imageassets/calle/M02_CrucePeatonal.png", TexturaCebra, Accion.MascaraCalle, () => Rayas(512, 256, Color.white, Enumerable.Range(0, 8).Select(i => (i / 8f + 0.015f, i / 8f + 0.085f)).ToArray(), true, 202)),
             new Entrada(null, TexturaBlanca, Accion.MascaraCalle, () => Rayas(64, 256, new Color(0.92f, 0.92f, 0.9f), new[] { (0.3f, 0.7f) }, false, 303)),
             // T-810: carros nuevos del tráfico (largo y giro en ImportarS2nCarros.Medidas).
-            new Entrada("imageassets/modelos3d/V09_Taxi.zip", ImportarS2nCarros.CarpetaVehiculos + "V09/V09.fbx", Accion.CarroTripo, null),
-            new Entrada("imageassets/modelos3d/V10_Pickup.zip", ImportarS2nCarros.CarpetaVehiculos + "V10/V10.fbx", Accion.CarroTripo, null),
+            new Entrada("imageassets/modelos3d/V09.zip", ImportarS2nCarros.CarpetaVehiculos + "V09/V09.fbx", Accion.CarroTripo, null),
+            new Entrada("imageassets/modelos3d/V10.zip", ImportarS2nCarros.CarpetaVehiculos + "V10/V10.fbx", Accion.CarroTripo, null),
             new Entrada("imageassets/modelos3d/V11_Van.zip", ImportarS2nCarros.CarpetaVehiculos + "V11/V11.fbx", Accion.CarroTripo, null),
         };
 

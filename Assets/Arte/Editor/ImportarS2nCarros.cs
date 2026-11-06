@@ -26,8 +26,8 @@ namespace MechaCyberpunk.Arte.Editor
         /// el frente a +Z (los Tripo de V05 y V06 venían con el frente a -Z). Si al llegar un modelo sale de lado o de reversa, cambia aquí su giro.</summary>
         public static readonly (string codigo, float largo, float giro)[] Medidas =
         {
-            ("V09", 4.5f, 180f),
-            ("V10", 5f, 180f),
+            ("V09", 4.5f, 180f), // T-850: V09 y V10 llegaron con la raíz del FBX girada 90° en X (se conserva) y la pickup con el largo en X.
+            ("V10", 5f, 90f),
             ("V11", 4.7f, 180f),
         };
 
@@ -127,7 +127,10 @@ namespace MechaCyberpunk.Arte.Editor
             Transform visual = raiz.transform.Find("Visual");
             visual.localScale = Vector3.one;
             visual.localPosition = Vector3.zero;
-            visual.localRotation = Quaternion.Euler(0f, giro, 0f);
+            // Los Tripo nuevos (V09, V10) traen la raíz del FBX girada 90° en X (conversión de ejes): ese giro se conserva debajo del giro en Y.
+            GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(modelo.RutaFbx);
+            Quaternion giroFbx = fbx != null ? fbx.transform.localRotation : Quaternion.identity;
+            visual.localRotation = Quaternion.Euler(0f, giro, 0f) * giroFbx;
             Bounds b = ImportarT511.LimitesExactos(raiz);
             visual.localScale = Vector3.one * (modelo.Medida / b.size.z);
             b = ImportarT511.LimitesExactos(raiz);

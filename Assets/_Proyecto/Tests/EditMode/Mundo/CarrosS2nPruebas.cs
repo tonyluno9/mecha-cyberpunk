@@ -56,6 +56,46 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        public void TaxiYPickup_EstanEnElTraficoYDerechos()
+        {
+            // T-850: V09 y V10 llegaron con la raíz del FBX girada 90° en X; si se pierde ese giro el carro queda de punta o de lado.
+            foreach (string codigo in new[] { "V09", "V10" })
+            {
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaTrafico + "CarroTrafico_" + codigo + ".prefab");
+                Assert.IsNotNull(prefab, codigo + ": tiene su prefab de tráfico");
+                GameObject copia = Object.Instantiate(prefab);
+                try
+                {
+                    Bounds b = ImportarT511.LimitesExactos(copia.transform.Find("Visual_T511").gameObject);
+                    float largo = ImportarS2nCarros.Medidas.First(m => m.codigo == codigo).largo;
+                    Assert.AreEqual(largo, b.size.z, 0.05f, codigo + ": el largo va en Z");
+                    Assert.Less(b.size.y, 2.5f, codigo + ": no queda de punta");
+                    Assert.Less(b.size.x, 2.6f, codigo + ": no queda de lado");
+                    Assert.AreEqual(0f, b.min.y, 0.05f, codigo + ": las llantas en el piso");
+                }
+                finally
+                {
+                    Object.DestroyImmediate(copia);
+                }
+            }
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Additive);
+            try
+            {
+                Component trafico = escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>(true))
+                    .Select(t => t.GetComponent("TraficoCalle")).First(c => c != null);
+                SerializedProperty lista = new SerializedObject(trafico).FindProperty("prefabsCarro");
+                string[] nombres = Enumerable.Range(0, lista.arraySize).Select(i => lista.GetArrayElementAtIndex(i).objectReferenceValue)
+                    .Where(o => o != null).Select(o => o.name).ToArray();
+                CollectionAssert.Contains(nombres, "CarroTrafico_V09");
+                CollectionAssert.Contains(nombres, "CarroTrafico_V10");
+            }
+            finally
+            {
+                EditorSceneManager.CloseScene(escena, true);
+            }
+        }
+
+        [Test]
         public void Trafico_TraeVariantesDeColorCiviles()
         {
             Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Additive);
