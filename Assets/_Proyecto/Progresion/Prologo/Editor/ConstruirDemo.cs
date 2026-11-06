@@ -101,9 +101,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 
         public const string CarpetaJuego = "Builds/Juego";
         public const string EscenaJuego = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
+        /// <summary>La pantalla de inicio (UI/Inicio): escena 0 de los builds de pandillas; carga la ciudad de forma asíncrona.</summary>
+        public const string EscenaInicio = "Assets/_Proyecto/Escenas/Inicio.unity";
 
         /// <summary>
-        /// Build del juego de pandillas (T-400, D-tony-207): solo Ciudad_Prologo como escena 0, en Builds/Juego/MechaCyberpunk.exe.
+        /// Build del juego de pandillas (T-400, D-tony-207): Inicio.unity como escena 0 y Ciudad_Prologo, en Builds/Juego/MechaCyberpunk.exe.
         /// No cambia EditorBuildSettings ni PlayerSettings. En batchmode sale con 0 si el build salió bien.
         /// Batchmode: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.ConstruirJuego
         /// </summary>
@@ -114,7 +116,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             PrepararBuildCyberfix(CarpetaJuego);
             BuildPlayerOptions opciones = new BuildPlayerOptions
             {
-                scenes = new[] { EscenaJuego },
+                scenes = new[] { EscenaInicio, EscenaJuego },
                 locationPathName = Path.Combine(CarpetaJuego, NombreEjecutableJuego),
                 target = BuildTarget.StandaloneWindows64,
                 targetGroup = BuildTargetGroup.Standalone,
@@ -140,7 +142,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             PrepararBuildCyberfix(CarpetaBuild);
             BuildPlayerOptions opciones = new BuildPlayerOptions
             {
-                scenes = new[] { EscenaJuego },
+                scenes = new[] { EscenaInicio, EscenaJuego },
                 locationPathName = Path.Combine(CarpetaBuild, NombreEjecutableJuego),
                 target = BuildTarget.StandaloneWindows64,
                 targetGroup = BuildTargetGroup.Standalone,
