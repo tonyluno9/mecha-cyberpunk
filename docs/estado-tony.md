@@ -404,3 +404,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-670 (06-nov noche): jugador y NPC a 1.80 m; ColocarS2.Escala con alturas medidas por BakeMesh; CubiertaYRodada conserva la escala del Modelo; pasos escalan con el modelo. Rama tony/T-670-escala-jugador.
 - T-671 (06-nov noche): arma equipada sin apuntar = caminar/correr normal y arma abajo; poses de arma solo al apuntar; capa Piernas (T-651) quitada. Rama tony/T-671-arma-sin-apuntar.
 - T-672 (06-nov noche): al apuntar cámara centrada (lateral 0), altura 2.0 y distancia 2.0, FOV 45; mira arriba de la cabeza. Rama tony/T-672-camara-apuntar.
+- T-673 (06-nov noche): CTRL agacha/levanta (alterna), lento, SHIFT agachado más rápido, agachado+ESPACIO rueda y sin agacharse no rueda; enemigos pierden vista tras cobertura baja (pecho según cápsula). Rama tony/T-673-agacharse.
