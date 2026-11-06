@@ -408,3 +408,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-674 (S1 noche): agachado con pose procedural (PoseAgachado): cadera baja, rodillas dobladas, torso recto; quieto, caminando y apuntando.
 - T-675 (S1 noche): sin spam de golpes (espera la animacion), reaccion al dano corta y cortable con golpe o esquive.
 - T-676 (S1 noche): destello chico, disparo siempre igual sin sonidos de impacto, trazo finisimo, sin linea de vista no hay disparo (jugador, SKULLS, dron).
+- T-677 (S1 noche): headshot x3 (hueso de cabeza o 15 % de arriba del collider) a enemigos, aliados y civiles; ImpactoBala.Cabeza.
