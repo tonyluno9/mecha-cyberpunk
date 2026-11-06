@@ -95,7 +95,7 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Guardar("s2-calles");
         }
 
-        private static int Vestir(Transform kit, bool ejeX, Vector3 dir, float cara, float a0, float a1, float techo, System.Random azar)
+        internal static int Vestir(Transform kit, bool ejeX, Vector3 dir, float cara, float a0, float a1, float techo, System.Random azar)
         {
             int n = 0;
             float ancho = a1 - a0;
@@ -168,7 +168,7 @@ namespace MechaCyberpunk.Arte.Editor
             return true;
         }
 
-        private static int Azotea(Transform kit, Bounds b, System.Random azar)
+        internal static int Azotea(Transform kit, Bounds b, System.Random azar)
         {
             int n = 0;
             string[] cosas = { "C09_Tinaco", "C09_Tinaco", "C10_AireAcondicionado", "CY04_AntenaAzotea" };
