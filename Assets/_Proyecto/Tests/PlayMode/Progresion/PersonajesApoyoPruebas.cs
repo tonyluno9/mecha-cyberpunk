@@ -224,6 +224,12 @@ namespace MechaCyberpunk.Tests.Progresion
             SillaClinica silla = SillaClinica.Actual;
             if (silla != null && silla.isActiveAndEnabled)
             {
+                // La E a veces cae en un cuadro sin candidato (el jugador recién colocado): se pulsa otra vez, hasta dos más.
+                for (int intento = 0; intento < 2 && !silla.EnSecuencia && !doc.UltimoTexto.Contains(silla.Config.FraseDoc); intento++)
+                {
+                    yield return new WaitForSecondsRealtime(0.2f);
+                    yield return Pulsar(teclado.eKey);
+                }
                 // Frente al Doc, la silla (a ~1 m) puede ganar la E: entonces ya empezó a curar.
                 if (!silla.EnSecuencia)
                 {

@@ -56,6 +56,40 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.LadoALado("docs/referencias-interiores/taller-tino.png", "Logs/s2n-cic-juego.png", "docs/capturas/s2n-cic-tino.png");
         }
 
+        /// <summary>Desde la entrada del consultorio, como la referencia (sillón al centro, repisa al fondo, monitores a la derecha).</summary>
+        public static readonly Vector3 OjoConsultorio = new Vector3(-98.4f, 1.9f, -10.65f);
+        public static readonly Vector3 MiraConsultorio = new Vector3(-102.3f, 0.95f, -14.5f);
+        public const string PrefabDoc = "Visual_Doctor";
+
+        /// <summary>T-812: el Doc más grande, el consultorio rehecho (sin encimados y menos verde), la silla otra vez, revisión y foto lado a lado.</summary>
+        [MenuItem("Mecha Cyberpunk/S2n/I+D+I del Doc (T-812)")]
+        public static void ColocarConsultorio()
+        {
+            EscalarDoc();
+            ColocarS2.Informe.Clear();
+            ColocarS2.Abrir();
+            ColocarS2Interiores.RehacerConsultorio();
+            ColocarS2.Guardar("s2n-consultorio");
+            ColocarS2nSillaClinica.Colocar();
+            Revisar();
+            ColocarS2.Foto(OjoConsultorio, MiraConsultorio, "Logs/s2n-consultorio-juego.png", 72f, 60f);
+            ColocarS2.LadoALado("docs/referencias-interiores/consultorio-doc.png", "Logs/s2n-consultorio-juego.png", "docs/capturas/s2n-consultorio-doc.png");
+        }
+
+        /// <summary>Lo de ColocarS2.Escala solo para el prefab del Doc (con su factor de la tabla ColocarS2.Personajes): no toca a nadie más.</summary>
+        public static void EscalarDoc()
+        {
+            (string prefab, float medida, float relativa) doc = ColocarS2.Personajes.First(p => p.prefab == PrefabDoc);
+            string ruta = "Assets/_Proyecto/Personaje/Visual/Prefabs/" + PrefabDoc + ".prefab";
+            GameObject raiz = PrefabUtility.LoadPrefabContents(ruta);
+            Transform modelo = raiz.transform.Find("Giro/Modelo");
+            float factor = ColocarS2.AlturaJugador * doc.relativa / doc.medida;
+            modelo.localScale = Vector3.one * factor;
+            PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
+            PrefabUtility.UnloadPrefabContents(raiz);
+            Debug.Log("[Arte] " + PrefabDoc + ": escala " + factor.ToString("F3"));
+        }
+
         [MenuItem("Mecha Cyberpunk/S2n/Interiores: revisar encimados y flotantes")]
         public static void Revisar()
         {

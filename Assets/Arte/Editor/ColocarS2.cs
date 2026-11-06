@@ -99,7 +99,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float AlturaJugador = 1.80f;
         public static readonly (string prefab, float medida, float relativa)[] Personajes =
         {
-            ("Visual_Doctor", 1.17f, 1.00f),
+            ("Visual_Doctor", 1.17f, 1.09f),       // El Doc un poco más grande (playtest del 6-nov, T-812)
             ("Visual_Inventor", 1.18f, 0.98f),
             ("Visual_Hacker", 1.43f, 1.00f),
             ("Visual_man", 1.35f, 1.00f),
