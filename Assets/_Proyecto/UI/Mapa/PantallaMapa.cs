@@ -65,6 +65,7 @@ namespace MechaCyberpunk.UI.Mapa
         private Text titulo;
         private RectTransform romboObjetivo;
         private Image puntoMarcado;
+        private CirculoBusquedaMapa circuloBusqueda;
         private GameObject fondoPantalla;
         private ControladorAPie controlCongelado;
         private Text nombrePandilla;
@@ -101,6 +102,8 @@ namespace MechaCyberpunk.UI.Mapa
         public bool RomboObjetivoVisible => romboObjetivo != null && romboObjetivo.gameObject.activeSelf;
         public float PixelesPorMetro => pixelesPorMetro;
         public RectTransform PuntoMarcado => puntoMarcado != null ? puntoMarcado.rectTransform : null;
+        /// <summary>El círculo de búsqueda de la policía (T-665).</summary>
+        public CirculoBusquedaMapa CirculoBusqueda => circuloBusqueda;
 
         /// <summary>Dónde se ve en la pantalla (px) un punto del mundo, con el zoom de ahora.</summary>
         public Vector2 PantallaDe(Vector3 mundo)
@@ -165,6 +168,7 @@ namespace MechaCyberpunk.UI.Mapa
                 etiquetas[i].GetComponent<Shadow>().enabled = false;
             }
 
+            circuloBusqueda = new CirculoBusquedaMapa(contenido);
             puntoMarcado = IconosMapa.CrearPuntoMarcado(contenido, ladoIcono);
             puntoMarcado.gameObject.SetActive(false);
             romboObjetivo = (RectTransform)KitUI.CrearRombo(contenido, "Objetivo", diagonalRombo, e.Naranja).rectTransform.parent;
@@ -429,6 +433,7 @@ namespace MechaCyberpunk.UI.Mapa
             puntoMarcado.rectTransform.anchoredPosition = GeometriaBarrio.AMapa(PuntoMarcadoMapa.Posicion) * pixelesPorMetro;
             puntoMarcado.rectTransform.localScale = contraZoom;
 
+            circuloBusqueda.Actualizar(pixelesPorMetro);
             RefrescarNegocios();
             DibujarMarcas(contraZoom);
             DibujarAliados(tuColor, contraZoom);

@@ -98,6 +98,10 @@ namespace MechaCyberpunk.Trafico.Datos
         public float SegundosArresto => segundosArresto;
         public float VelocidadArresto => velocidadArresto;
 
+        [Min(5f)] [Tooltip("Un dron te ve desde aquí, sin contar paredes (vuela por encima) (m).")]
+        [SerializeField] private float radioVistaDron = 45f;
+        public float RadioVistaDron => radioVistaDron;
+
         public float RadioVista => radioVista;
         public float SegundosParaPerder => segundosParaPerder;
         public float EnfriamientoSinVista => enfriamientoSinVista;

@@ -40,6 +40,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private ICalor calor;
         private System.Random azar;
         private TestigosDelito testigos;
+        private ReglaBusquedaPolicial busqueda;
+        private ReglaArresto arresto;
+        private ZonaBusqueda zona;
+        private Vector3? jugadorAnterior;
 
         public int Drones => drones.Count;
         public int Patrullas => patrullas.Count;
@@ -50,7 +54,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>Segundos que lleva la policía sin verte desde la última vez que te vio (T-587).</summary>
         public float SegundosSinVer { get; private set; }
 
-        /// <summary>True si ya te dieron por perdido (el calor baja más rápido).</summary>
+        /// <summary>Segundos seguidos que llevas fuera de su vista y del círculo de búsqueda (T-665).</summary>
+        public float SegundosFueraDeLaZona => busqueda != null ? busqueda.SegundosFuera : 0f;
+
+        /// <summary>True si ya te dieron por perdido (T-587).</summary>
         public bool Perdido => config != null && ReglaVistaPolicia.Perdido(SegundosSinVer, config.SegundosParaPerder) && huboContacto;
 
         /// <summary>Lo usan el creador de editor y las pruebas, antes de que el gestor se active.</summary>
@@ -73,6 +80,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
             azar = new System.Random(341);
             testigos = gameObject.AddComponent<TestigosDelito>(); // T-661: sin testigos no hay calor
             testigos.Configurar(config);
+            busqueda = new ReglaBusquedaPolicial(config.RadioBusqueda, config.SegundosParaEscapar);
+            arresto = new ReglaArresto(config.DistanciaArresto, config.SegundosArresto, config.VelocidadArresto);
+            zona = new ZonaBusqueda(busqueda);
         }
 
         private void Start() => ColocarCamaras();
@@ -112,6 +122,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Registro<ICalor>.Agregado += Enlazar;
             Registro<ICalor>.Quitado += Desenlazar;
             EventosLugares.JugadorEntro += AlEntrarALugar;
+            if (zona != null)
+            {
+                Registro<IZonaBusqueda>.Agregar(zona);
+            }
             if (Registro<ICalor>.Actual != null)
             {
                 Enlazar(Registro<ICalor>.Actual);
@@ -123,6 +137,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Registro<ICalor>.Agregado -= Enlazar;
             Registro<ICalor>.Quitado -= Desenlazar;
             EventosLugares.JugadorEntro -= AlEntrarALugar;
+            if (zona != null)
+            {
+                Registro<IZonaBusqueda>.Quitar(zona);
+            }
+            busqueda?.Detener();
             Desenlazar(calor);
             Reconciliar(0);
             // Apagado el gestor ya no hay quien vea irse a los que se retiraban: se quitan de golpe.
@@ -136,7 +155,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             retirandose.Clear();
         }
 
-        // T-587: si ninguna patrulla te ve durante un rato (y antes alguna te vio), te dan por perdido y el calor baja más rápido.
+        // T-665: mientras te buscan la policía no se va sola. Te persigue hasta arrestarte o hasta que salgas de su vista Y del círculo de búsqueda
+        // el tiempo suficiente; entonces escapas y se retira. El calor no baja solo mientras tanto (CalorConTestigos).
         private void Update()
         {
             retirandose.RemoveAll(c => c == null);
@@ -145,9 +165,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 SegundosSinVer = 0f;
                 huboContacto = false;
                 valorAnterior = calor != null ? calor.Valor : 0f;
+                jugadorAnterior = null;
+                arresto.Reiniciar();
                 return;
             }
-            reintentoSalida -= Time.deltaTime;
+            float dt = Time.deltaTime;
+            reintentoSalida -= dt;
             if (reintentoSalida <= 0f)
             {
                 reintentoSalida = SegundosReintentoSalida;
@@ -156,30 +179,89 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     Reconciliar(calor.Nivel); // T-664: las patrullas que no pudieron salir sin verse lo intentan de nuevo
                 }
             }
-            bool ve = false;
+            Vector3? jugador = PosicionDelJugador();
+            bool patrullaVe = false;
+            float cercana = float.MaxValue;
             foreach (PatrullaMundo p in patrullas)
             {
-                ve |= p != null && p.VeAlJugador;
+                if (p != null && p.VeAlJugador)
+                {
+                    patrullaVe = true;
+                    if (jugador.HasValue)
+                    {
+                        cercana = Mathf.Min(cercana, DistanciaPlano(p.transform.position, jugador.Value));
+                    }
+                }
             }
-            if (ve)
+            bool teVen = patrullaVe || (jugador.HasValue && (LoVeUnDron(jugador.Value) || testigos.CamaraQueVe(jugador.Value) != null));
+            if (teVen)
             {
                 huboContacto = true;
                 SegundosSinVer = 0f;
             }
             else if (huboContacto)
             {
-                SegundosSinVer += Time.deltaTime;
+                SegundosSinVer += dt;
             }
             if (calor.Valor > valorAnterior + 0.01f)
             {
                 SegundosSinVer = 0f; // un delito nuevo: la policía vuelve a estar encima
-            }
-            float extra = ReglaVistaPolicia.Enfriamiento(SegundosSinVer, config.SegundosParaPerder, config.EnfriamientoSinVista, Time.deltaTime);
-            if (extra > 0f)
-            {
-                calor.Enfriar(extra);
+                if (jugador.HasValue)
+                {
+                    busqueda.Recentrar(jugador.Value);
+                }
             }
             valorAnterior = calor.Valor;
+            if (!jugador.HasValue)
+            {
+                return;
+            }
+            float velocidad = jugadorAnterior.HasValue && dt > 0f ? DistanciaPlano(jugador.Value, jugadorAnterior.Value) / dt : 0f;
+            jugadorAnterior = jugador;
+            if (arresto.Avanzar(patrullaVe, cercana, velocidad, dt))
+            {
+                Arrestar();
+                return;
+            }
+            if (busqueda.Avanzar(jugador.Value, teVen, dt))
+            {
+                Escapar();
+            }
+        }
+
+        /// <summary>Una patrulla cerca te arrestó (T-665): el calor se borra, la policía se retira y se avisa en <see cref="EventosPolicia"/>.</summary>
+        private void Arrestar()
+        {
+            Debug.Log("[Trafico] El jugador fue arrestado.");
+            EventosPolicia.PublicarArresto();
+            calor.Borrar();
+        }
+
+        /// <summary>Saliste de la vista y del círculo de búsqueda el tiempo suficiente (T-665): ya no te buscan.</summary>
+        private void Escapar()
+        {
+            Debug.Log("[Trafico] El jugador escapó de la policía.");
+            EventosPolicia.PublicarEscape();
+            calor.Borrar();
+        }
+
+        // Un dron te ve si está cerca (vuela por encima de las paredes).
+        private bool LoVeUnDron(Vector3 jugador)
+        {
+            foreach (DronMundo d in drones)
+            {
+                if (d != null && DistanciaPlano(d.transform.position, jugador) <= config.RadioVistaDron)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static float DistanciaPlano(Vector3 a, Vector3 b)
+        {
+            a.y = b.y;
+            return Vector3.Distance(a, b);
         }
 
         private void Enlazar(ICalor nuevo)
@@ -212,9 +294,27 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
+        // T-665: al empezar el calor nace el círculo de búsqueda donde estás; al volver a 0 se apaga.
+        private void ActualizarBusqueda(int nivel)
+        {
+            if (busqueda == null)
+            {
+                return;
+            }
+            if (nivel <= 0)
+            {
+                busqueda.Detener();
+            }
+            else if (!busqueda.Activa)
+            {
+                busqueda.Iniciar(PosicionDelJugador() ?? transform.position);
+            }
+        }
+
         // Deja exactamente las cantidades que pide el nivel: crea las que faltan y retira las que sobran.
         private void Reconciliar(int nivel)
         {
+            ActualizarBusqueda(nivel);
             int dronesPedidos = calculo == null ? 0 : calculo.Drones(nivel);
             int patrullasPedidas = calculo == null ? 0 : calculo.Patrullas(nivel);
             while (drones.Count < dronesPedidos)

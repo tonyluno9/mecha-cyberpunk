@@ -79,6 +79,10 @@ namespace MechaCyberpunk.Tests.Trafico
             EventosLugares.LimpiarSuscriptores();
             escalaAnterior = Time.timeScale;
             barrio = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaBarrio));
+            foreach (GestorPersecucion propio in barrio.GetComponentsInChildren<GestorPersecucion>())
+            {
+                propio.enabled = false; // T-665: la prueba trae su propio gestor (sin arresto); el del barrio arrestaría al jugador quieto
+            }
             jugadorObjeto = new GameObject("JugadorDePrueba");
             jugadorObjeto.transform.position = new Vector3(-47f, AlturaCalles, 0f);
             Registro<IJugador>.Agregar(new JugadorDoble { Raiz = jugadorObjeto.transform });
@@ -89,7 +93,7 @@ namespace MechaCyberpunk.Tests.Trafico
             objeto.SetActive(false);
             objeto.transform.SetParent(barrio.transform, false);
             gestor = objeto.AddComponent<GestorPersecucion>();
-            gestor.Configurar(AssetDatabase.LoadAssetAtPath<ConfigPersecucion>(RutaConfig),
+            gestor.Configurar(ConfigPersecucionPrueba.SinArresto(),
                 AssetDatabase.LoadAssetAtPath<GameObject>(RutaDron).GetComponent<DronMundo>(),
                 AssetDatabase.LoadAssetAtPath<GameObject>(RutaPatrulla).GetComponent<PatrullaMundo>());
             objeto.SetActive(true);
