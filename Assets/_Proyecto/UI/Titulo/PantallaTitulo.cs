@@ -7,6 +7,7 @@ using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.UI.Guardado;
+using MechaCyberpunk.UI.Inicio;
 using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Opciones;
 using UnityEngine;
@@ -111,6 +112,14 @@ namespace MechaCyberpunk.UI.Titulo
         /// (ensamblado aparte que depende de UI) se engancha desde fuera para no hacer un ciclo de ensamblados (T-440).
         /// </summary>
         public static event System.Action<System.Action> PidioCreditos;
+        /// <summary>Abre los créditos desde fuera del título (la pantalla de inicio usa el mismo enlace).</summary>
+        public static void PedirCreditosExterno(System.Action alCerrar)
+        {
+            PidioCreditos?.Invoke(alCerrar);
+        }
+
+        public static bool HayEnlaceCreditos => PidioCreditos != null;
+
         public int RanuraContinuar => ranuraContinuar;
         public Canvas Canvas => contenido != null ? contenido.GetComponent<Canvas>() : null;
 
@@ -241,6 +250,14 @@ namespace MechaCyberpunk.UI.Titulo
             if (!FlujoPartida.EnTitulo)
             {
                 enabled = false;
+                return;
+            }
+            // Si el build trae la pantalla de inicio (Inicio.unity), el título de la ciudad ya no se usa: se vuelve a ella.
+            if (EscenaInicio.DebeVolverAlInicio)
+            {
+                enabled = false;
+                contenido.SetActive(false);
+                PantallaCargando.Mostrar().Asignar(EscenaInicio.CargarAsincrono(EscenaInicio.Ruta));
                 return;
             }
             activo = true;
