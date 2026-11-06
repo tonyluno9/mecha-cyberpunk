@@ -29,8 +29,13 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly Color Calido = new Color(1f, 0.72f, 0.42f);
         private static readonly Color Turquesa = new Color(0.3f, 1f, 0.9f);
         private static readonly Color Magenta = new Color(1f, 0.25f, 0.8f);
-        private static readonly Color Cian = new Color(0.45f, 0.85f, 1f);
-        private static readonly Color Fluorescente = new Color(0.85f, 1f, 0.95f);
+        private static readonly Color Cian = new Color(0.4f, 0.88f, 0.95f);
+        private static readonly Color Fluorescente = new Color(0.88f, 0.96f, 1f);
+        /// <summary>Tinte del azulejo gris del consultorio (pared) y de su piso, un poco más oscuro.</summary>
+        private static readonly Color AzulejoConsultorio = new Color(0.66f, 0.86f, 0.88f);
+        private static readonly Color PisoConsultorio = new Color(0.3f, 0.38f, 0.4f);
+        /// <summary>Cuánto del color del azulejo X02 se queda en su copia gris (0 = gris puro).</summary>
+        private const float ColorQueQueda = 0.15f;
 
         [MenuItem("Mecha Cyberpunk/S2/3 Interiores (Doc, Tino, mecánico)")]
         public static void Colocar()
@@ -70,34 +75,44 @@ namespace MechaCyberpunk.Arte.Editor
             Transform r = Grupo(raiz, "ConsultorioDoc");
             // Local de T-531: x -104 a -96, fondo z -16, frente z -10.2 (hacia la calle, +Z), piso 0.22, techo 3.75.
             Caja caja = new Caja(-103.9f, -96.1f, -15.9f, -10.45f, 0.22f, 3.72f);
-            Forrar(r, caja, 2, 5, 2, 0.45f, frenteHaciaMasZ: true, centroVano: -100f, anchoVano: 2.6f);
+            // T-812: el azulejo X02 es verde; el consultorio va con su copia gris azulada (como la referencia: blanco-gris con luz cian).
+            Material azulejo = ColocarT550.Mat("S2_Pared_Consultorio", AzulejoConsultorio);
+            azulejo.SetTexture("_BaseMap", TexturaGris(2));
+            azulejo.SetTextureScale("_BaseMap", AssetDatabase.LoadAssetAtPath<Material>(ImportarT550.RutaMaterialPared(2)).GetTextureScale("_BaseMap"));
+            EditorUtility.SetDirty(azulejo);
+            Material piso = ColocarT550.Mat("S2_Piso_Consultorio", PisoConsultorio);
+            piso.SetTexture("_BaseMap", azulejo.GetTexture("_BaseMap"));
+            piso.SetTextureScale("_BaseMap", azulejo.GetTextureScale("_BaseMap"));
+            EditorUtility.SetDirty(piso);
+            AssetDatabase.SaveAssets();
+            Forrar(r, caja, 2, 5, 2, 0.45f, frenteHaciaMasZ: true, centroVano: -100f, anchoVano: 2.6f, paredPropia: azulejo, pisoPropio: piso);
 
             GameObject sillon = Modelo(r, I + "I07", new Vector3(-102.1f, 0f, -13.4f), 0f, caja.Piso, ejeLargoEnZ: true);
             Modelo(r, I + "I06", new Vector3(-102.1f, 0f, -13.4f), 0f, caja.Techo, colgar: true);
-            Modelo(r, I + "I08", new Vector3(-103.6f, 0f, -11.7f), 90f, caja.Piso);              // vitrina de implantes, pared izquierda
-            Modelo(r, I + "I08", new Vector3(-96.4f, 0f, -11.7f), 270f, caja.Piso);              // y en la derecha
-            Modelo(r, I + "I09", new Vector3(-103.7f, 0f, -14.6f), 90f, caja.Piso);              // lavabos
-            Modelo(r, I + "I09", new Vector3(-96.3f, 0f, -13.5f), 270f, caja.Piso);
-            Modelo(r, T + "T08_RepisaTaller", new Vector3(-102.1f, 0f, -15.7f), 180f, caja.Piso, escala: 0.85f);   // repisa de medicinas al fondo
-            Modelo(r, C + "CY05_ServidorCallejero", new Vector3(-96.9f, 0f, -15.5f), 180f, caja.Piso);
-            GameObject gab = Modelo(r, T + "T04_GabineteHerramientas", new Vector3(-98.9f, 0f, -15.5f), 180f, caja.Piso, escala: 0.8f);
-            float sobre = gab != null ? ArteT250.Limites(gab).max.y : caja.Piso + 1f;
-            Modelo(r, I + "I10", new Vector3(-99.3f, 0f, -15.45f), 200f, sobre, sinCollider: true);   // monitores de signos vitales
-            Modelo(r, I + "I10", new Vector3(-98.5f, 0f, -15.45f), 165f, sobre, sinCollider: true);
-            Modelo(r, C + "C17_Huacales", new Vector3(-103.2f, 0f, -10.9f), 10f, caja.Piso);
-            Modelo(r, C + "C16_Tambo", new Vector3(-96.7f, 0f, -10.9f), 0f, caja.Piso);
-            Modelo(r, C + "CY03_MazoCables", new Vector3(-103.85f, 0f, -13.0f), 90f, caja.Piso + 1.1f, sinCollider: true);
-            Modelo(r, C + "CY03_MazoCables", new Vector3(-97.8f, 0f, -15.85f), 180f, caja.Piso + 1.1f, sinCollider: true);
+            // T-812: las vitrinas iban 12 cm dentro de las paredes y encima de los huacales y del tambo; los monitores de ruedas iban sobre el gabinete.
+            Modelo(r, I + "I08", new Vector3(-103.45f, 0f, -12.35f), 90f, caja.Piso);            // vitrina de implantes, pared izquierda
+            Modelo(r, I + "I08", new Vector3(-96.55f, 0f, -12.35f), 270f, caja.Piso);            // y en la derecha
+            Modelo(r, I + "I09", new Vector3(-103.6f, 0f, -14.6f), 90f, caja.Piso);              // lavabos
+            Modelo(r, I + "I09", new Vector3(-96.4f, 0f, -13.8f), 270f, caja.Piso);
+            Modelo(r, T + "T08_RepisaTaller", new Vector3(-102.1f, 0f, -15.55f), 180f, caja.Piso, escala: 0.85f);  // repisa de medicinas al fondo
+            Modelo(r, C + "CY05_ServidorCallejero", new Vector3(-96.95f, 0f, -15.4f), 180f, caja.Piso);
+            Modelo(r, T + "T04_GabineteHerramientas", new Vector3(-98.9f, 0f, -15.45f), 180f, caja.Piso, escala: 0.8f);
+            Modelo(r, I + "I10", new Vector3(-100.8f, 0f, -14.95f), 200f, caja.Piso, escala: 1.35f);   // monitores de signos vitales, de pie junto al sillón
+            Modelo(r, I + "I10", new Vector3(-99.9f, 0f, -15.2f), 165f, caja.Piso, escala: 1.35f);
+            Modelo(r, C + "C17_Huacales", new Vector3(-103.25f, 0f, -10.95f), 10f, caja.Piso, escala: 0.8f);
+            Modelo(r, C + "C16_Tambo", new Vector3(-96.75f, 0f, -10.85f), 0f, caja.Piso);
+            Modelo(r, C + "CY03_MazoCables", new Vector3(-103.85f, 0f, -13.9f), 90f, caja.Piso + 1.1f, sinCollider: true);
+            Modelo(r, C + "CY03_MazoCables", new Vector3(-97.95f, 0f, -15.85f), 180f, caja.Piso + 1.1f, sinCollider: true);
 
             Transform luces = Grupo(r, "Luces");
             Luz(luces, "Tubo_Cian_1", new Vector3(-101.5f, caja.Techo - 0.2f, -12.4f), Cian, 6f, 8f);
             Luz(luces, "Tubo_Cian_2", new Vector3(-98.5f, caja.Techo - 0.2f, -14.2f), Cian, 5.5f, 8f);
             Luz(luces, "Tubo_Fluorescente", new Vector3(-100f, caja.Techo - 0.2f, -11.2f), Fluorescente, 4f, 7f);
             Luz(luces, "Relleno_Fondo", new Vector3(-100f, 2.2f, -15.2f), Cian, 2.5f, 6f);
-            Luz(luces, "Vitrina_Izq", new Vector3(-103.3f, 1.4f, -11.7f), Turquesa, 1.5f, 2f);
-            Luz(luces, "Vitrina_Der", new Vector3(-96.7f, 1.4f, -11.7f), Turquesa, 1.5f, 2f);
+            Luz(luces, "Vitrina_Izq", new Vector3(-103.1f, 1.4f, -12.35f), Cian, 1.5f, 2f);
+            Luz(luces, "Vitrina_Der", new Vector3(-96.9f, 1.4f, -12.35f), Cian, 1.5f, 2f);
             Luz(luces, "Foco_Calido_Pared", new Vector3(-103.5f, 2.6f, -12.8f), Calido, 1.6f, 4f);
-            Luz(luces, "Brillo_Monitores", new Vector3(-98.9f, sobre + 0.3f, -15.0f), Turquesa, 1.2f, 2.5f);
+            Luz(luces, "Brillo_Monitores", new Vector3(-100.35f, caja.Piso + 1.3f, -14.7f), Cian, 1.2f, 2.5f);
             Foco(luces, "Lampara_Cirugia", new Vector3(-102.1f, caja.Techo - 1.1f, -13.4f), Calido, 9f, 4.5f, 55f);
             ApagarLuzDelLocal("T531_Locales/IDI/Luz_IDI");
             OcultarCascaron("T531_Locales/IDI");
@@ -105,6 +120,58 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // ---------------------------------------------------------------- Taller de Tino (CIC)
+
+        /// <summary>Rehace solo el consultorio del Doc dentro de S2_Interiores (T-812). Después hay que volver a poner la silla (ColocarS2nSillaClinica).</summary>
+        public static void RehacerConsultorio()
+        {
+            Transform raiz = ColocarS2.Buscar(NombreRaiz);
+            if (raiz == null)
+            {
+                raiz = new GameObject(NombreRaiz).transform;
+            }
+            Transform viejo = raiz.Find("ConsultorioDoc");
+            if (viejo != null)
+            {
+                Object.DestroyImmediate(viejo.gameObject);
+            }
+            Consultorio(raiz);
+        }
+
+        /// <summary>
+        /// Copia gris (casi sin color, con <see cref="ColorQueQueda"/>) de la textura del kit X0n, en Assets/Arte/Interiores/Texturas/X0n_Gris.png.
+        /// Se rehace con código de editor desde el PNG original (no hace falta que la textura se pueda leer).
+        /// </summary>
+        public static Texture2D TexturaGris(int n)
+        {
+            string origen = "Assets/Arte/Interiores/Texturas/X0" + n + ".png";
+            string destino = "Assets/Arte/Interiores/Texturas/X0" + n + "_Gris.png";
+            if (!System.IO.File.Exists(destino))
+            {
+                Texture2D t = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                t.LoadImage(System.IO.File.ReadAllBytes(origen));
+                Color[] px = t.GetPixels();
+                for (int i = 0; i < px.Length; i++)
+                {
+                    float g = px[i].grayscale;
+                    px[i] = Color.Lerp(new Color(g, g, g, px[i].a), px[i], ColorQueQueda);
+                }
+                t.SetPixels(px);
+                t.Apply();
+                System.IO.File.WriteAllBytes(destino, t.EncodeToPNG());
+                Object.DestroyImmediate(t);
+                AssetDatabase.ImportAsset(destino);
+                TextureImporter imp = (TextureImporter)AssetImporter.GetAtPath(origen);
+                TextureImporter nuevo = (TextureImporter)AssetImporter.GetAtPath(destino);
+                if (imp != null && nuevo != null)
+                {
+                    nuevo.wrapMode = imp.wrapMode;
+                    nuevo.maxTextureSize = imp.maxTextureSize;
+                    nuevo.mipmapEnabled = imp.mipmapEnabled;
+                    nuevo.SaveAndReimport();
+                }
+            }
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(destino);
+        }
 
         /// <summary>Rehace solo el taller de Tino dentro de S2_Interiores (T-811), sin tocar el consultorio ni el taller del mecánico.</summary>
         public static void RehacerTallerTino()
@@ -295,11 +362,12 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Paredes, techo y piso del kit X por dentro del local, y el frente cerrado con un vano de entrada (ladrillo X03 por fuera).</summary>
-        private static void Forrar(Transform r, Caja k, int pared, int techo, int piso, float oscuroPiso, bool frenteHaciaMasZ, float centroVano, float anchoVano)
+        private static void Forrar(Transform r, Caja k, int pared, int techo, int piso, float oscuroPiso, bool frenteHaciaMasZ, float centroVano, float anchoVano,
+            Material paredPropia = null, Material pisoPropio = null)
         {
-            Material mp = ColocarT550.Mat("S2_Pared_X0" + pared, new Color(0.62f, 0.6f, 0.58f), ImportarT550.RutaMaterialPared(pared));
+            Material mp = paredPropia != null ? paredPropia : ColocarT550.Mat("S2_Pared_X0" + pared, new Color(0.62f, 0.6f, 0.58f), ImportarT550.RutaMaterialPared(pared));
             Material mt = ColocarT550.Mat("S2_Techo_X0" + techo, new Color(0.5f, 0.47f, 0.44f), ImportarT550.RutaMaterialPared(techo));
-            Material mf = ColocarT550.Mat("S2_Piso_X0" + piso, new Color(0.42f, 0.4f, 0.38f) * oscuroPiso * 2f, ImportarT550.RutaMaterialPared(piso));
+            Material mf = pisoPropio != null ? pisoPropio : ColocarT550.Mat("S2_Piso_X0" + piso, new Color(0.42f, 0.4f, 0.38f) * oscuroPiso * 2f, ImportarT550.RutaMaterialPared(piso));
             Material ladrillo = ColocarT550.Mat("S2_Pared_X03", new Color(0.62f, 0.6f, 0.58f), ImportarT550.RutaMaterialPared(3));
             Transform f = Grupo(r, "Forro");
             float y0 = k.Piso + 0.012f, y1 = k.Techo;

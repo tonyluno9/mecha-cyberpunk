@@ -191,6 +191,46 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.Greater(pizarron.position.z, 15.9f - 0.08f, "El pizarrón pegado a la pared");
         }
 
+        /// <summary>T-811 y T-812: lo que está en el piso de cada local no se encima con otra pieza del piso ni se mete en las paredes.</summary>
+        [Test]
+        public void Interiores_LoDelPisoNoSeEncimaNiAtraviesaParedes([Values("TallerTino", "ConsultorioDoc")] string local)
+        {
+            Transform r = GameObject.Find("S2_Interiores/" + local).transform;
+            // Las cajas de ColocarS2Interiores (por dentro del forro).
+            Rect caja = local == "TallerTino" ? Rect.MinMaxRect(-77.2f, 10.45f, -69.4f, 15.9f) : Rect.MinMaxRect(-103.9f, -15.9f, -96.1f, -10.45f);
+            const float Piso = 0.22f;
+            const float Tolerancia = 0.04f;
+            System.Collections.Generic.List<(string, Bounds)> piezas = new System.Collections.Generic.List<(string, Bounds)>();
+            foreach (Transform t in r)
+            {
+                if (t.name == "Forro" || t.name == "Luces" || t.name == "SerieFocos" || t.GetComponentsInChildren<Renderer>().Length == 0)
+                {
+                    continue;
+                }
+                Bounds b = Limites(t);
+                if (b.min.y > Piso + Tolerancia)
+                {
+                    continue;
+                }
+                Assert.GreaterOrEqual(b.min.x, caja.xMin - Tolerancia, t.name + " se mete en la pared izquierda");
+                Assert.LessOrEqual(b.max.x, caja.xMax + Tolerancia, t.name + " se mete en la pared derecha");
+                Assert.GreaterOrEqual(b.min.z, caja.yMin - Tolerancia, t.name + " se mete en la pared del frente o del fondo");
+                Assert.LessOrEqual(b.max.z, caja.yMax + Tolerancia, t.name + " se mete en la pared del frente o del fondo");
+                piezas.Add((t.name, b));
+            }
+            Assert.Greater(piezas.Count, 8, "El local trae sus muebles");
+            for (int i = 0; i < piezas.Count; i++)
+            {
+                for (int j = i + 1; j < piezas.Count; j++)
+                {
+                    Bounds a = piezas[i].Item2, b = piezas[j].Item2;
+                    float x = Mathf.Min(a.max.x, b.max.x) - Mathf.Max(a.min.x, b.min.x);
+                    float z = Mathf.Min(a.max.z, b.max.z) - Mathf.Max(a.min.z, b.min.z);
+                    Assert.IsFalse(x > Tolerancia && z > Tolerancia, piezas[i].Item1 + " se encima con " + piezas[j].Item1);
+                }
+            }
+        }
+
         private static Bounds Limites(Transform t)
         {
             Renderer[] rs = t.GetComponentsInChildren<Renderer>();
