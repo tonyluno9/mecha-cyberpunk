@@ -215,6 +215,13 @@ namespace MechaCyberpunk.Progresion.Apoyo
 
         private void Curar()
         {
+            // T-813: si el consultorio tiene la silla, EL DOC te manda a sentarte; la silla cobra y cura.
+            SillaClinica silla = SillaClinica.Actual;
+            if (silla != null && silla.isActiveAndEnabled)
+            {
+                Decir(silla.Config.FraseDoc);
+                return;
+            }
             VidaAPie vida = VidaDelJugador();
             if (vida == null || !Registro<ICartera>.Actual.IntentarPagar(datos.Costo, MotivoDinero.Clinica))
             {

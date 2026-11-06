@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7556611465c4dc543be1a98cc2ae6c51, type: 3}
+  m_Name: ConfigSillaClinica_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Apoyo::MechaCyberpunk.Progresion.Apoyo.ConfigSillaClinica
+  costo: 50
+  fraseDoc: "Si\xE9ntate en la silla y te curo."
+  fraseFin: "Listo, como nuevo. Ten m\xE1s cuidado, mijo."
+  formatoAviso: "SENTARTE \xB7 CURARTE {0}"
+  textoSano: "SILLA DEL DOC \xB7 EST\xC1S SANO"
+  textoSinDinero: "SILLA DEL DOC \xB7 NO TE ALCANZA"
+  textoBarra: CURANDO
+  nombreDoc: "EL DOC \xB7 JOEL"
+  segundosSentarse: 0.5
+  segundosBajarBrazo: 0.8
+  segundosCurar: 2
+  segundosSubirBrazo: 0.6
+  segundosLevantarse: 0.3
+  segundosSubtitulo: 3
+  bajadaBrazo: 0.35
+  posicionCamara: {x: 1.1, y: 1.25, z: 1.9}
+  alturaMira: 0.35
+  campoVision: 50
+  colorLuz: {r: 0.3, g: 1, b: 0.75, a: 1}
+  intensidadLuz: 3
+  alcanceLuz: 3
+  pulsoLuz: 2.5
+  alturaCadera: 0.05
+  recostado: 0.35
+  colorBarra: {r: 0.35, g: 1, b: 0.55, a: 1}
