@@ -665,7 +665,8 @@ namespace MechaCyberpunk.UI.Hud
             int activa = (int)armas.ArmaActiva;
             if (iconoArma != null)
             {
-                iconoArma.sprite = piezas.Arma(activa);
+                // T-816: la imagen holográfica (H01-H04) si la hay, teñida con el material del holograma; los puños, su icono.
+                PonerIconoArma(iconoArma, piezas, activa);
                 iconoArma.enabled = iconoArma.sprite != null;
                 // T-537: como el mockup: arma en naranja sobre un fondo azul muy oscuro.
                 iconoArma.color = KitUI.Estilo.Naranja;
@@ -678,6 +679,7 @@ namespace MechaCyberpunk.UI.Hud
             for (int i = 0; i < casillasArma.Length; i++)
             {
                 bool tiene = armas.TieneArma((ArmaAPie)i);
+                PonerIconoArma(casillasArma[i], piezas, i);
                 // T-537: la activa en naranja, las que tienes en turquesa, las que no en gris tenue.
                 casillasArma[i].color = i == activa ? KitUI.Estilo.Naranja : tiene ? KitUI.Estilo.Turquesa : new Color(0.6f, 0.65f, 0.7f, 0.25f);
                 if (i == activa && resalteArma != null)
@@ -687,6 +689,21 @@ namespace MechaCyberpunk.UI.Hud
                     resalteArma.rectTransform.offsetMin = Vector2.zero;
                     resalteArma.rectTransform.offsetMax = Vector2.zero;
                 }
+            }
+        }
+
+        // Solo cambia sprite y material si son otros (cambiarlos reconstruye la Image).
+        private static void PonerIconoArma(Image imagen, PiezasUI piezas, int arma)
+        {
+            Sprite sprite = piezas.ArmaHud(arma);
+            Material material = piezas.MaterialArmaHud(arma);
+            if (imagen.sprite != sprite)
+            {
+                imagen.sprite = sprite;
+            }
+            if (imagen.material != (material != null ? material : imagen.defaultMaterial))
+            {
+                imagen.material = material;
             }
         }
 

@@ -28,6 +28,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e34375f2f457714438a0f3cb650ce430, type: 3}
   - {fileID: 21300000, guid: e26c68692f8590c42bc492333494a2cb, type: 3}
   - {fileID: 21300000, guid: db8b5fe3031ea3740b76f1d721730f72, type: 3}
+  armasHolograma:
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 78a3a9ec19abe614cb4a80456949cc47, type: 3}
+  - {fileID: 21300000, guid: d1f5247d030608a4ab1ec0a84cf6734e, type: 3}
+  - {fileID: 21300000, guid: 32722ccdc9e41d04a8727a47938357ba, type: 3}
+  - {fileID: 21300000, guid: f9690ea2b9cb87d4a81b8646ed066d1a, type: 3}
+  materialHolograma: {fileID: 2100000, guid: 7cc67bb4b9aa541499a3bfe2f6d79d04, type: 2}
   insigniaSkulls: {fileID: 21300000, guid: b3843837b98d99e4ca0a00e94be1158d, type: 3}
   insigniaSnakes: {fileID: 21300000, guid: c36a4a41b5ef5f54b8bf7916180f63ce, type: 3}
   insigniaJugador: {fileID: 21300000, guid: 075fb3bece25d524c962fe7428b4dc10, type: 3}
