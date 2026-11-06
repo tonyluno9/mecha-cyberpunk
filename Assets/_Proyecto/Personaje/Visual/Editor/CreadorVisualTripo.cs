@@ -16,7 +16,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
     {
         public const string Carpeta = CreadorVisualPersonaje.CarpetaPersonajes;
         public const float AlturaObjetivo = 1.8f;
-        public static readonly string[] Nombres = { "woman", "man", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova" };
+        public static readonly string[] Nombres = { "woman", "man", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Policia" };
 
         /// <summary>T-510: altura (m) de los que no miden 1.8: el jefe SKULLS y los dos de armadura.</summary>
         public static float AlturaDe(string nombre)
@@ -25,7 +25,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 case "SkullHombre": return 1.95f;
                 case "RobotHombre":
-                case "GuardiaNova": return 1.85f;
+                case "GuardiaNova":
+                case "Policia": return 1.85f;
                 default: return AlturaObjetivo;
             }
         }

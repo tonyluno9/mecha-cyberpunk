@@ -63,7 +63,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Personajes de Tripo con esqueleto: man, woman, woman2 (T-500) y los siete de T-510.</summary>
         public static readonly string[] PersonajesDeTripo =
         {
-            "man", "woman", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Mecanico",
+            "man", "woman", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Mecanico", "Policia",
         };
 
         public static bool EsPersonajeDeTripo(string ruta)

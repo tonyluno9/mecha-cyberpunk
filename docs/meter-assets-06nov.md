@@ -62,3 +62,37 @@ Hoy M01 y M02 ya están en `imageassets/calle/` y son los que se usan.
   `Assets/Arte/Vehiculos/Variantes/` y están en el tráfico.
 - El tráfico queda con 11 modelos: V01a, V01b, V02, V03, V04 y las 6 variantes.
 - La moto de reparto V07 no se agregó: el tráfico no tiene motos y su prueba no las cubre.
+
+## Sesión 1 (jugador, armas, policía)
+
+El importador es `Assets/Arte/Editor/ImportarS1n.cs`. No toca las filas de ImportarS2n. Mete cada archivo solo cuando aparece y correrlo otra vez no cambia nada
+(lo comprueba `ImportarS1nPruebas.Importador_DosVeces_LaSegundaNoCopiaNada`).
+
+**Cómo correrlo**
+- En Unity: menú **Mecha Cyberpunk > S1n > Meter assets nuevos**.
+- Con Unity cerrado (Bash, desde la raíz del repo):
+  `"/c/Program Files/Unity/Hub/Editor/6000.3.25f1/Editor/Unity.exe" -batchmode -quit -projectPath . -executeMethod MechaCyberpunk.Arte.Editor.ImportarS1n.MeterTodo -logFile Logs/s1n-importar.log`
+  (lo que hizo queda en `Logs/s1n-importar.txt`).
+- Busca los archivos en `imageassets/` del proyecto y, si no, en `../mecha-cyberpunk/imageassets/` (el worktree mecha-s1 no tiene la suya).
+
+**Qué hace con cada archivo**
+
+| Archivo en imageassets/ | Destino | Qué se arma después |
+| --- | --- | --- |
+| `modelos3d/W02.zip` escopeta, `W03.zip` fusil, `W04.zip` francotirador | `Assets/Arte/Armas/Wxx_Nombre/` (`.fbx` y `Texturas/`, como W01_Pistola) | `ColocarS1nArmas` (T-679): material, prefab de mano (`Wxx_Nombre.prefab`, cañón a +Z, empuñadura en el origen, hijo Boca), prefab de piso (`..._Piso.prefab` con ArmaEnPiso) y el modelo en la mano del jugador (JugadorAPie.prefab) |
+| `modelos3d/C01.zip` policía | `Assets/Arte/Personajes/Policia/` (`Policia.fbx`, `Policia.fbm/`) | `ColocarS1nPolicia` (T-680): visual humanoide `Visual_Policia` y prefab `IA/Prefabs/PoliciaAPie.prefab` |
+| `vfx/F01_Destello.png` | `Assets/Arte/VFX/F01_Destello.png` | Se asigna a `DatosSensacion.texturaDestello` |
+| `ui/hologramas/H01-H04` | Ya los metió la sesión 2 (T-816) en `Assets/Arte/UI/Hologramas/` | El importador solo lo comprueba; si faltan llama a `ImportarS2nHologramas` |
+
+Si un archivo no ha llegado, lo anota en el informe y sigue con los demás.
+
+**C01 policía: sí trae esqueleto.** El .fbx trae 78 huesos y un Avatar Humanoid válido (igual que man). Tripo lo entrega sin importarlo como Humanoid hasta que
+`PostprocesadorAssetsT250` lo reconoce ("Policia" está en `PersonajesDeTripo` y en `CreadorVisualTripo.Nombres`, mide 1.85 m). `PoliciaAPie` usa sus animaciones
+humanoides. Si algún día llega un C01 sin esqueleto, el importador detecta que no hay huesos y arma `PoliciaAPie` con el modelo man y un material azul
+marino (`man_PoliciaMarino.mat`); cuando vuelva a llegar uno con esqueleto lo cambia solo. En ese caso hay que pasar el modelo por Mixamo.
+
+**Qué falta**
+- Los modelos nuevos de las armas son una sola malla: en el banco de Tino se muestra la imagen holográfica (H02-H04), no el modelo 3D con piezas que se separan.
+- La lógica de que el policía se baje de la patrulla y dispare va en un lote posterior. `PoliciaAPie` ya tiene vida, colisión, pistola W01 e IA a pie, pero no hay
+  ninguno colocado en la ciudad.
+- Si alguien corre `CreadorArmas.Crear` o `CreadorJugadorAPie.RegenerarPrefabTerceraPersona`, el prefab del jugador vuelve a las cajas: correr después el importador.

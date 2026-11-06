@@ -205,6 +205,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             ColocarS1nArmas.Colocar();
             Informe.AppendLine(File.ReadAllText("Logs/s1n-armas.txt"));
+            ColocarS1nPolicia.Colocar();
         }
     }
 }
