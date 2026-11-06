@@ -119,5 +119,80 @@ namespace MechaCyberpunk.Tests.Mundo
                 Assert.AreEqual(1.4f * 1.25f / 1.49f, a.transform.lossyScale.y, 0.02f, "los guardias ya no se agrandan en la escena");
             }
         }
+
+        [Test]
+        public void Interiores_ConsultorioYTallerDeTino_SegunSuReferencia()
+        {
+            Transform raiz = escena.GetRootGameObjects().First(g => g.name == "S2_Interiores").transform;
+            Transform doc = raiz.Find("ConsultorioDoc");
+            foreach (string pieza in new[] { "I06", "I07", "I08", "I09", "I10", "T08_RepisaTaller", "CY05_ServidorCallejero" })
+            {
+                Assert.IsNotNull(doc.Find(pieza), "Consultorio: " + pieza);
+            }
+            Transform tino = raiz.Find("TallerTino");
+            foreach (string pieza in new[] { "T03_BancoTrabajo", "I21", "I20", "I02", "CY07b_Dron", "SerieFocos", "Pizarron" })
+            {
+                Assert.IsNotNull(tino.Find(pieza), "Taller de Tino: " + pieza);
+            }
+            // El Doc y Tino no se movieron (ruta de la demo) y quedan dentro de su local, con el vano de entrada libre.
+            Transform joel = escena.GetRootGameObjects().First(g => g.name == "GTA_T417").transform.Find("Apoyo_JOEL");
+            Assert.That(joel.position.x, Is.InRange(-104f, -96f));
+            Assert.That(joel.position.z, Is.InRange(-16f, -10.2f));
+            foreach (Transform local in new[] { doc, tino })
+            {
+                Assert.IsNotNull(local.Find("Forro/Frente_Izq_Dentro"), local.name + " con frente cerrado");
+                Assert.IsNotNull(local.Find("Forro/Pared_Fondo"), local.name + " con su pared del kit X");
+            }
+            Transform tablero = todos.FirstOrDefault(t => t.name == "Letrero" && t.parent != null && t.parent.name == "MostradorClinica");
+            Assert.IsTrue(tablero == null || !tablero.GetComponent<Renderer>().enabled, "sin el letrero de cubos de la clínica");
+        }
+
+        [Test]
+        public void Casa_FachadaDelKit_TableroSinCuboBlanco_Y_CuartoSegunLaReferencia()
+        {
+            Transform casa = escena.GetRootGameObjects().First(g => g.name == "S2_Casa").transform;
+            Assert.GreaterOrEqual(casa.Find("Fachada").childCount, 12, "fachada armada con el kit");
+            Transform lugar = escena.GetRootGameObjects().First(g => g.name == "Barrio").transform.Find("Manzana_4/Lugar_Casa");
+            Assert.IsFalse(lugar.Find("FachadaIzquierda").GetComponent<Renderer>().enabled, "el cubo de la fachada ya no se ve");
+            Assert.IsTrue(lugar.Find("FachadaIzquierda").GetComponent<Collider>().enabled, "pero sigue chocando");
+            Transform tablero = escena.GetRootGameObjects().First(g => g.name == "GTA_T426").transform.Find("TableroEncargos");
+            Assert.IsFalse(tablero.GetComponent<Renderer>().enabled, "sin el cubo blanco del tablero");
+            Assert.IsNotNull(casa.Find("Tablero/Tablero_CY10"));
+
+            Transform cuarto = escena.GetRootGameObjects().First(g => g.name == "T550_Cuartos").transform.Find("Cuarto_Habitacion");
+            Bounds Limites(Transform t) => t.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((a, b) => { a.Encapsulate(b); return a; });
+            Bounds mochila = Limites(cuarto.Find("I05"));
+            Assert.That(mochila.size.y, Is.InRange(0.4f, 0.65f), "mochila de tamaño real");
+            Assert.Greater(cuarto.InverseTransformPoint(Limites(cuarto.Find("I01")).center).x, 0.5f, "ropero a la derecha, como en la referencia");
+            Assert.IsFalse(Limites(cuarto.Find("I01")).Contains(cuarto.Find("Aparicion").position + Vector3.up), "el jugador no aparece dentro del ropero");
+            Bounds puerta = Limites(cuarto.Find("S2_Cuarto/Puerta_L02"));
+            Assert.That(puerta.size.y, Is.InRange(2f, 2.3f), "puerta de verdad de unos 2.1 m");
+            Assert.LessOrEqual(puerta.size.x, 1.2f);
+            Assert.IsNotNull(cuarto.Find("S2_Cuarto/Foco_Pelon"));
+            foreach (MonoBehaviour p in todos.SelectMany(x => x.GetComponents<MonoBehaviour>()).Where(m => m != null && m.GetType().Name == "PuertaCuarto"))
+            {
+                UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(p);
+                float total = so.FindProperty("segundosAlNegro").floatValue + so.FindProperty("segundosEnNegro").floatValue + so.FindProperty("segundosDesdeNegro").floatValue;
+                Assert.LessOrEqual(total, 0.7f, p.name + ": fundido corto y limpio");
+            }
+        }
+
+        [Test]
+        public void Callejon_PuertasConLamparaYCosasPegadasALosMuros()
+        {
+            Transform c = escena.GetRootGameObjects().First(g => g.name == "S2_Callejon").transform;
+            Assert.GreaterOrEqual(c.GetComponentsInChildren<Transform>().Count(t => t.name == "N01"), 2, "lámparas de jaula sobre las puertas");
+            Assert.IsNotNull(c.Find("L02_PuertaTrasera"));
+            foreach (Transform t in c)
+            {
+                if (t.name == "Luces")
+                {
+                    continue;
+                }
+                Bounds b = t.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((a, x) => { a.Encapsulate(x); return a; });
+                bool pegado = b.min.z < MechaCyberpunk.Arte.Editor.ColocarS2Callejon.MuroSur + 1.3f || b.max.z > MechaCyberpunk.Arte.Editor.ColocarS2Callejon.MuroNorte - 1.3f;
+                Assert.IsTrue(pegado, t.name + " estorba en el centro del callejón (ruta de la demo)");
+            }
+        }
     }
 }
