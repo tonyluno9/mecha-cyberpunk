@@ -195,6 +195,7 @@ namespace MechaCyberpunk.Tests
             {
                 GameObject p = Object.Instantiate(prefabPeaton, origen + jugador.right * (1.6f * i), Quaternion.LookRotation(frente));
                 p.name = "PeatonCaptura" + i;
+                p.GetComponent<MechaCyberpunk.Personaje.Visual.PeatonVariado>().Elegir(false); // sin azar: siempre la persona, no el robot
                 MechaCyberpunk.Personaje.Visual.VarianteVisual v = p.GetComponentInChildren<MechaCyberpunk.Personaje.Visual.VarianteVisual>();
                 var materiales = new Material[4];
                 for (int k = 0; k < 4; k++) { materiales[k] = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Personajes/Materiales/woman2_Peaton" + (k + 1) + ".mat"); }

@@ -93,21 +93,21 @@ namespace MechaCyberpunk.Arte.Editor
         // ---------------------------------------------------------------- Zona 2: escala
 
         /// <summary>
-        /// Altura medida (m) de cada Visual_* de pie en Idle, con la malla animada horneada (Play, 5-nov), y la del jugador con el mismo método.
+        /// Altura medida (m) de cada Visual_* de pie en Idle, con la malla animada horneada (BakeMesh en Play, EscalaJugadorT670Pruebas), y la del jugador con el mismo método.
         /// Los avatares de Tripo tienen piernas cortas y la animación los deja más bajos que su pose de reposo (1.80 en el editor).
         /// </summary>
-        public const float AlturaJugador = 1.40f;
+        public const float AlturaJugador = 1.80f;
         public static readonly (string prefab, float medida, float relativa)[] Personajes =
         {
             ("Visual_Doctor", 1.17f, 1.00f),
             ("Visual_Inventor", 1.18f, 0.98f),
             ("Visual_Hacker", 1.43f, 1.00f),
-            ("Visual_man", 1.30f, 1.00f),
+            ("Visual_man", 1.35f, 1.00f),
             ("Visual_RobotHombre", 1.28f, 1.00f),
-            ("Visual_SkullHombre", 1.33f, 1.00f),
-            ("Visual_GuardiaNova", 1.49f, 1.25f),   // los robots de Nova son más altos que una persona (T-530)
-            ("Visual_woman", 1.40f, 1.00f),
-            ("Visual_woman2", 1.12f, 0.97f),
+            ("Visual_SkullHombre", 1.39f, 1.00f),
+            ("Visual_GuardiaNova", 1.36f, 1.25f),   // los robots de Nova son más altos que una persona (T-530)
+            ("Visual_woman", 1.41f, 1.00f),
+            ("Visual_woman2", 1.35f, 0.97f),
         };
         private const string RutaVisuales = "Assets/_Proyecto/Personaje/Visual/Prefabs/";
 
