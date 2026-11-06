@@ -28,8 +28,7 @@ namespace MechaCyberpunk.Tests.Mundo
             EditorSceneManager.CloseScene(escena, true);
         }
 
-        [TestCase("ConsultorioDoc")]
-        [TestCase("TallerTino")]
+        // S2 (playtest 5-nov): el consultorio y el taller de Tino se rehicieron en S2_Interiores (MundoS2Pruebas); los de T-546 quedan apagados.
         [TestCase("Casino")]
         [TestCase("EntradaArmasMercado")]
         public void CadaInterior_TieneCosasYLuz(string nombre)

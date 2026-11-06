@@ -119,5 +119,32 @@ namespace MechaCyberpunk.Tests.Mundo
                 Assert.AreEqual(1.4f * 1.25f / 1.49f, a.transform.lossyScale.y, 0.02f, "los guardias ya no se agrandan en la escena");
             }
         }
+
+        [Test]
+        public void Interiores_ConsultorioYTallerDeTino_SegunSuReferencia()
+        {
+            Transform raiz = escena.GetRootGameObjects().First(g => g.name == "S2_Interiores").transform;
+            Transform doc = raiz.Find("ConsultorioDoc");
+            foreach (string pieza in new[] { "I06", "I07", "I08", "I09", "I10", "T08_RepisaTaller", "CY05_ServidorCallejero" })
+            {
+                Assert.IsNotNull(doc.Find(pieza), "Consultorio: " + pieza);
+            }
+            Transform tino = raiz.Find("TallerTino");
+            foreach (string pieza in new[] { "T03_BancoTrabajo", "I21", "I20", "I02", "CY07b_Dron", "SerieFocos", "Pizarron" })
+            {
+                Assert.IsNotNull(tino.Find(pieza), "Taller de Tino: " + pieza);
+            }
+            // El Doc y Tino no se movieron (ruta de la demo) y quedan dentro de su local, con el vano de entrada libre.
+            Transform joel = escena.GetRootGameObjects().First(g => g.name == "GTA_T417").transform.Find("Apoyo_JOEL");
+            Assert.That(joel.position.x, Is.InRange(-104f, -96f));
+            Assert.That(joel.position.z, Is.InRange(-16f, -10.2f));
+            foreach (Transform local in new[] { doc, tino })
+            {
+                Assert.IsNotNull(local.Find("Forro/Frente_Izq_Dentro"), local.name + " con frente cerrado");
+                Assert.IsNotNull(local.Find("Forro/Pared_Fondo"), local.name + " con su pared del kit X");
+            }
+            Transform tablero = todos.FirstOrDefault(t => t.name == "Letrero" && t.parent != null && t.parent.name == "MostradorClinica");
+            Assert.IsTrue(tablero == null || !tablero.GetComponent<Renderer>().enabled, "sin el letrero de cubos de la clínica");
+        }
     }
 }

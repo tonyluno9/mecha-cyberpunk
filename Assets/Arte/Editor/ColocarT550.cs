@@ -307,7 +307,7 @@ namespace MechaCyberpunk.Arte.Editor
         // ---------------------------------------------------------------- Luz: el sol y la luna no entran a los cuartos
 
         // Light Layers de URP: los cuartos usan la capa de render 4 y las luces direccionales de la ciudad la excluyen.
-        private static void AislarDelSol()
+        public static void AislarDelSol()
         {
             uint capa = 1u << CapaRenderCuartos;
             foreach (Renderer rend in GameObject.Find(NombreRaiz).GetComponentsInChildren<Renderer>(true))
