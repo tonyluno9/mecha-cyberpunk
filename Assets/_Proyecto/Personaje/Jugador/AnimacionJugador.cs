@@ -48,6 +48,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private bool apuntandoAntes;
         private bool cubiertoAntes;
         private bool agachadoAntes;
+        private bool rodandoAntes;
 
         private void Awake()
         {
@@ -129,6 +130,14 @@ namespace MechaCyberpunk.Personaje.Jugador
                 ActualizarCaido(ko, Time.deltaTime);
                 if (cubierto != cubiertoAntes) { visual.Cubierto = cubierto; cubiertoAntes = cubierto; }
             }
+
+            // T-675: el esquive corta la reacción al golpe recibido.
+            bool rodando = cubierta != null && cubierta.Rodando;
+            if (rodando && !rodandoAntes && visual != null)
+            {
+                visual.CortarReaccion();
+            }
+            rodandoAntes = rodando;
 
             FaseGolpe fase = golpe != null ? golpe.Fase : FaseGolpe.Listo;
             if (fase == FaseGolpe.Preparando && faseAnterior != FaseGolpe.Preparando)

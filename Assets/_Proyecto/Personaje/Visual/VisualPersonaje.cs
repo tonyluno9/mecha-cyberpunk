@@ -299,12 +299,96 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Golpe de puños: alterna izquierda y derecha, o fuerte.</summary>
         public void Golpear(bool fuerte)
         {
+            ultimoGolpe = Time.time;
             golpeAlterno = fuerte ? 2 : 1 - golpeAlterno % 2;
             if (animador != null && Tiene(IdGolpeTipo, AnimatorControllerParameterType.Int))
             {
                 animador.SetInteger(IdGolpeTipo, golpeAlterno);
             }
             Disparo(IdGolpe);
+        }
+
+        // T-675: el siguiente golpe espera a que acabe la animación del anterior; la reacción al daño se corta con un golpe o un esquive.
+        private const float EsperaDisparador = 0.08f;
+        private const float DuracionMaximaGolpe = 1.5f;
+        private static readonly int HashVacio = Animator.StringToHash("Vacio");
+        private float ultimoGolpe = float.NegativeInfinity;
+
+        private int IndiceCapaArriba()
+        {
+            if (animador == null || animador.runtimeAnimatorController == null)
+            {
+                return -1;
+            }
+            if (capaArriba == -2)
+            {
+                capaArriba = animador.GetLayerIndex(ReglasAnimacion.CapaArriba);
+            }
+            return capaArriba;
+        }
+
+        private static bool EsGolpe(AnimatorStateInfo e) => e.IsName("GolpeIzq") || e.IsName("GolpeDer") || e.IsName("GolpeFuerte");
+
+        private static bool EsDano(AnimatorStateInfo e) => e.IsName("DanoFrente") || e.IsName("DanoEspalda") || e.IsName("DanoFuerte");
+
+        /// <summary>True mientras suena la animación de un golpe de puños (desde que se pidió hasta que termina, con un tope de seguridad).</summary>
+        public bool GolpeEnCurso
+        {
+            get
+            {
+                float desde = Time.time - ultimoGolpe;
+                if (desde > DuracionMaximaGolpe)
+                {
+                    return false;
+                }
+                if (desde < EsperaDisparador)
+                {
+                    return true;
+                }
+                int capa = IndiceCapaArriba();
+                if (capa < 0)
+                {
+                    return false;
+                }
+                if (animador.IsInTransition(capa))
+                {
+                    return EsGolpe(animador.GetNextAnimatorStateInfo(capa));
+                }
+                AnimatorStateInfo actual = animador.GetCurrentAnimatorStateInfo(capa);
+                return EsGolpe(actual) && actual.normalizedTime < 1f;
+            }
+        }
+
+        /// <summary>True mientras suena la reacción a un golpe recibido.</summary>
+        public bool ReaccionEnCurso
+        {
+            get
+            {
+                int capa = IndiceCapaArriba();
+                if (capa < 0)
+                {
+                    return false;
+                }
+                return EsDano(animador.GetCurrentAnimatorStateInfo(capa)) || (animador.IsInTransition(capa) && EsDano(animador.GetNextAnimatorStateInfo(capa)));
+            }
+        }
+
+        /// <summary>Corta la reacción al daño al instante (esquive): el torso vuelve a su pose normal.</summary>
+        public void CortarReaccion()
+        {
+            int capa = IndiceCapaArriba();
+            if (capa < 0)
+            {
+                return;
+            }
+            if (Tiene(IdHerido, AnimatorControllerParameterType.Trigger))
+            {
+                animador.ResetTrigger(IdHerido);
+            }
+            if (ReaccionEnCurso)
+            {
+                animador.CrossFadeInFixedTime(HashVacio, 0.06f, capa);
+            }
         }
 
         private float velX;

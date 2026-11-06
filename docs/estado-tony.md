@@ -406,3 +406,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-672 (06-nov noche): al apuntar cámara centrada (lateral 0), altura 2.0 y distancia 2.0, FOV 45; mira arriba de la cabeza. Rama tony/T-672-camara-apuntar.
 - T-673 (06-nov noche): CTRL agacha/levanta (alterna), lento, SHIFT agachado más rápido, agachado+ESPACIO rueda y sin agacharse no rueda; enemigos pierden vista tras cobertura baja (pecho según cápsula). Rama tony/T-673-agacharse.
 - T-674 (S1 noche): agachado con pose procedural (PoseAgachado): cadera baja, rodillas dobladas, torso recto; quieto, caminando y apuntando.
+- T-675 (S1 noche): sin spam de golpes (espera la animacion), reaccion al dano corta y cortable con golpe o esquive.
