@@ -86,9 +86,44 @@ namespace MechaCyberpunk.UI.Armas
             return sube != MenorEsMejor(estadistica) ? 1 : -1;
         }
 
-        /// <summary>La tabla antes/después en el orden de <see cref="OrdenEstadisticas"/>, con la estadística de la pieza resaltada.</summary>
+        /// <summary>
+        /// La estadística que se resalta: la de la pieza si cambia con esa mejora; si no cambia (la mira de la pistola no toca la dispersión),
+        /// la que más mejora en proporción, para no resaltar un "0 → 0". Si nada mejora, la de la pieza.
+        /// </summary>
+        public static EstadisticaArma Resaltada(EstadisticasArma antes, EstadisticasArma despues, EstadisticaArma preferida)
+        {
+            if (Cambio(preferida, antes.Valor(preferida), despues.Valor(preferida)) != 0)
+            {
+                return preferida;
+            }
+            const float Minimo = 0.0001f;
+            EstadisticaArma mejor = preferida;
+            float mayor = 0f;
+            foreach (EstadisticaArma estadistica in Orden)
+            {
+                float a = antes.Valor(estadistica);
+                float d = despues.Valor(estadistica);
+                if (Cambio(estadistica, a, d) <= 0)
+                {
+                    continue;
+                }
+                float proporcion = Math.Abs(d - a) / Math.Max(Math.Abs(a), Minimo);
+                if (proporcion > mayor)
+                {
+                    mayor = proporcion;
+                    mejor = estadistica;
+                }
+            }
+            return mejor;
+        }
+
+        /// <summary>
+        /// La tabla antes/después en el orden de <see cref="OrdenEstadisticas"/>, con la estadística de la pieza resaltada (o la que de verdad
+        /// cambia: <see cref="Resaltada"/>).
+        /// </summary>
         public static void Comparar(EstadisticasArma antes, EstadisticasArma despues, EstadisticaArma resaltada, List<FilaEstadistica> filas)
         {
+            resaltada = Resaltada(antes, despues, resaltada);
             filas.Clear();
             foreach (EstadisticaArma estadistica in Orden)
             {

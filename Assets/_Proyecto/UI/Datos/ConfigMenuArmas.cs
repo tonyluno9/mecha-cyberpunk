@@ -89,6 +89,8 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string formatoLetrero = "{0}";
         [SerializeField] private string textoAviso = "MEJORAR ARMAS";
         [SerializeField] private string[] nombresEstadisticas = { "DAÑO", "CARGADOR", "RECARGA", "CADENCIA", "DISPERSIÓN" };
+        [Tooltip("Lo que mejora la pieza cuando su estadística no cambia en esa arma y se resalta otra; {0} = la estadística (RECARGA).")]
+        [SerializeField] private string formatoMejoraReal = "MEJORA {0}";
 
         [Header("Sonidos (ids de GestorSonidos)")]
         [SerializeField] private string sonidoMover = "UI_MOVER";
@@ -141,6 +143,7 @@ namespace MechaCyberpunk.UI
         public string TextoLetrero => textoLetrero;
         public string FormatoLetrero => formatoLetrero;
         public string TextoAviso => textoAviso;
+        public string FormatoMejoraReal => formatoMejoraReal;
         public string SonidoMover => sonidoMover;
         public string SonidoAceptar => sonidoAceptar;
         public string SonidoCancelar => sonidoCancelar;
