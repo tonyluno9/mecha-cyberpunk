@@ -122,6 +122,18 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreSame(piezas.Arma(0), hud.CasillasArma[0].sprite, "la casilla de los puños, su icono");
             Assert.AreNotSame(piezas.MaterialArmaHud(1), hud.CasillasArma[0].material, "y su material de siempre");
 
+            // T-852: sin cuadro detrás del holograma: ni el fondo de T-537 ni el relleno del marco.
+            Transform grupo = hud.IconoArma.transform.parent;
+            Transform fondo = grupo.Find("FondoArma_T537");
+            Assert.IsTrue(fondo == null || !fondo.gameObject.activeInHierarchy, "no hay fondo oscuro detrás del arma");
+            UnityEngine.UI.Image marco = grupo.Find("Marco").GetComponent<UnityEngine.UI.Image>();
+            Assert.AreEqual("panel_arma_lineas", marco.sprite.name, "el marco del arma es solo líneas");
+            string ruta = AssetDatabase.GetAssetPath(marco.sprite.texture);
+            Texture2D copia = new Texture2D(2, 2);
+            copia.LoadImage(System.IO.File.ReadAllBytes(ruta));
+            Assert.Less(copia.GetPixel(copia.width / 2, copia.height * 2 / 3).a, 0.05f, "el centro del marco (donde va el holograma) es transparente");
+            Object.Destroy(copia);
+
             if (Environment.GetEnvironmentVariable(VariableCaptura) == "1")
             {
                 Camera camara = jugadorGo.GetComponentInChildren<Camera>();

@@ -45,7 +45,8 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             Transform taller = Buscar("Lugar_Casa").Find("Interior/Taller");
             Assert.IsFalse(taller.Find("T02_EstacionExo_Visual_T250").gameObject.activeSelf, "Sin la estación del mecha");
-            Assert.AreEqual(1, taller.GetComponentsInChildren<Transform>().Count(t => t.name == "T03_BancoTrabajo"), "Un solo banco de trabajo");
+            // T-853 (playtest 6-nov tarde): Tony pidió quitar el banco de trabajo de junto a la casa.
+            Assert.AreEqual(0, taller.GetComponentsInChildren<Transform>().Count(t => t.name == "T03_BancoTrabajo"), "Sin banco de trabajo junto a la casa");
             Bounds casa = new Bounds(new Vector3(-63f, 2f, -77f), new Vector3(11f, 6f, 13f));
             Transform guera = escena.GetRootGameObjects().First(g => g.name == "GTA_T405").transform.Cast<Transform>().First(t => t.name.StartsWith("Reclutable_LA G"));
             Assert.IsFalse(casa.Contains(guera.position), "LA GÜERA ya no está en la habitación");

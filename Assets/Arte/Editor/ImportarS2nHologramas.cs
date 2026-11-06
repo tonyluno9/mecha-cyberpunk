@@ -1,7 +1,9 @@
 using System.IO;
+using System.Linq;
 using MechaCyberpunk.UI.Kit;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MechaCyberpunk.Arte.Editor
 {
@@ -90,6 +92,81 @@ namespace MechaCyberpunk.Arte.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.SaveAssets();
             Debug.Log("[Arte] HUD: " + puestos + " armas con icono holográfico");
+            MarcoSinFondo();
+        }
+
+        public const string RutaPanelArma = "Assets/Arte/UI/Sprites/Marcos/panel_arma.png";
+        public const string RutaPanelArmaLineas = "Assets/Arte/UI/Sprites/Marcos/panel_arma_lineas.png";
+        public const string RutaHud = "Assets/_Proyecto/UI/Prefabs/HudAPie.prefab";
+        // T-852: brillo (el canal más alto) desde el que una línea del marco se ve; el relleno azul oscuro queda debajo y se vuelve transparente.
+        private const float BrilloSinLinea = 0.22f;
+        private const float BrilloLinea = 0.42f;
+
+        /// <summary>
+        /// T-852: el holograma del arma flota sin cuadro detrás. Hace panel_arma_lineas.png (el marco del panel del arma con solo sus líneas
+        /// turquesa y naranja; el relleno azul oscuro, transparente) y lo pone en Arma/Marco de HudAPie.prefab. Idempotente.
+        /// </summary>
+        public static void MarcoSinFondo()
+        {
+            if (!File.Exists(RutaPanelArma))
+            {
+                Debug.LogError("[Arte] Falta " + RutaPanelArma);
+                return;
+            }
+            if (!File.Exists(RutaPanelArmaLineas))
+            {
+                Texture2D fuente = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                fuente.LoadImage(File.ReadAllBytes(RutaPanelArma));
+                Color[] p = fuente.GetPixels();
+                for (int i = 0; i < p.Length; i++)
+                {
+                    float brillo = Mathf.Max(p[i].r, Mathf.Max(p[i].g, p[i].b));
+                    p[i].a *= Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(BrilloSinLinea, BrilloLinea, brillo));
+                }
+                fuente.SetPixels(p);
+                fuente.Apply();
+                File.WriteAllBytes(RutaPanelArmaLineas, fuente.EncodeToPNG());
+                Object.DestroyImmediate(fuente);
+                AssetDatabase.ImportAsset(RutaPanelArmaLineas);
+            }
+            TextureImporter imp = AssetImporter.GetAtPath(RutaPanelArmaLineas) as TextureImporter;
+            TextureImporter original = AssetImporter.GetAtPath(RutaPanelArma) as TextureImporter;
+            if (imp != null && (imp.textureType != TextureImporterType.Sprite || !imp.alphaIsTransparency))
+            {
+                imp.textureType = TextureImporterType.Sprite;
+                imp.spriteImportMode = SpriteImportMode.Single;
+                imp.alphaIsTransparency = true;
+                imp.mipmapEnabled = false;
+                if (original != null)
+                {
+                    imp.spriteBorder = original.spriteBorder;
+                    imp.spritePixelsPerUnit = original.spritePixelsPerUnit;
+                }
+                imp.SaveAndReimport();
+            }
+            Sprite lineas = AssetDatabase.LoadAssetAtPath<Sprite>(RutaPanelArmaLineas);
+            GameObject hud = PrefabUtility.LoadPrefabContents(RutaHud);
+            try
+            {
+                Transform marco = hud.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(t => t.name == "Marco" && t.parent != null && t.parent.name == "Arma");
+                if (marco == null)
+                {
+                    Debug.LogError("[Arte] Falta Arma/Marco en " + RutaHud);
+                    return;
+                }
+                Image imagen = marco.GetComponent<Image>();
+                if (imagen.sprite != lineas)
+                {
+                    imagen.sprite = lineas;
+                    PrefabUtility.SaveAsPrefabAsset(hud, RutaHud);
+                    Debug.Log("[Arte] HUD: el marco del arma queda sin fondo");
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(hud);
+            }
         }
 
         /// <summary>La textura del holograma de esa posición (0 = pistola), o null si no se ha metido.</summary>
