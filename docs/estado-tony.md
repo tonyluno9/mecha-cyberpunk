@@ -413,3 +413,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-679 (S1 noche): escopeta, fusil y francotirador con su modelo en la mano, en el piso (prefabs _Piso) y registrados; destello F01 más grande.
 - T-680 (S1 noche): C01 trae esqueleto: Visual_Policia y prefab PoliciaAPie (pistola W01, datos propios); reemplazo man azul marino listo.
 - T-681: el cañón de las 4 armas apunta al punto de mira al apuntar y disparar (torso + IK de la mano). Pruebas: CanonAlPuntoDeMiraT681Pruebas, AgarresArmasT681Pruebas.
+- T-682: al apuntar la cámara conserva altura y distancia de caminar, centrada, con zoom (FOV 40). Pruebas: CamaraApuntarT682Pruebas.
