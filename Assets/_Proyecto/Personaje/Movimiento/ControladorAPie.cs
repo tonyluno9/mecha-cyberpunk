@@ -76,6 +76,12 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public Vector3 DesplazamientoExterno { get; set; }
         /// <summary>Cuánto baja la cámara de hombro (m), por agacharse (T-421).</summary>
         public float AjusteAlturaCamara { get; set; }
+
+        /// <summary>True mientras se mantiene SHIFT (correr).</summary>
+        public bool PidiendoCorrer => correr != null && correr.action.IsPressed();
+
+        /// <summary>Con true el espacio no salta (agachado el espacio rueda, T-673).</summary>
+        public bool SaltoBloqueado { get; set; }
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
 
@@ -207,7 +213,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             Vector2 entrada = mover.action.ReadValue<Vector2>();
             Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, correr.action.IsPressed(),
                 enPiso, dt, datos.VelocidadCaminar, EfectosAPie.VelocidadCorrer(datos, implantes.Efectos), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
-            bool quiereSaltar = saltar.action.WasPressedThisFrame();
+            bool quiereSaltar = !SaltoBloqueado && saltar.action.WasPressedThisFrame();
             float vertical = movimiento.ActualizarVertical(enPiso, quiereSaltar, dt,
                 EfectosAPie.AlturaSalto(datos, implantes.Efectos), config.Gravedad);
             if (enPiso && quiereSaltar && vertical > 0f)

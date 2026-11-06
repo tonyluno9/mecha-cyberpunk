@@ -93,6 +93,8 @@ namespace MechaCyberpunk.IA.APie
         private static readonly int IdDisparo = Animator.StringToHash("Disparo");
         private const float AlturaBoca = 1.4f;
         private const float AlturaPecho = 1.2f;
+        private const float AlturaCuerpoDePie = 1.8f;
+        private CharacterController cuerpoJugador;
         private const float AdelanteBoca = 0.4f;
         private const int ArmaPistola = 1;
 
@@ -384,6 +386,16 @@ namespace MechaCyberpunk.IA.APie
 
         // ---- Pandillero armado (T-402) ----
 
+        /// <summary>Altura del pecho del jugador: la normal escalada por lo que mide su cápsula (agachado o rodando baja).</summary>
+        private float AlturaPechoJugador()
+        {
+            if (cuerpoJugador == null && raizJugador != null)
+            {
+                cuerpoJugador = raizJugador.GetComponent<CharacterController>();
+            }
+            return cuerpoJugador != null ? ReglaPandilleroAPie.AlturaPechoSegunCuerpo(AlturaPecho, cuerpoJugador.height, AlturaCuerpoDePie) : AlturaPecho;
+        }
+
         private void ActualizarArmado()
         {
             bool atacable = Alerta && EsAtacable();
@@ -402,7 +414,8 @@ namespace MechaCyberpunk.IA.APie
                 }
             }
             float distancia = DistanciaPlana(transform.position, posicionJugador);
-            Vector3 pecho = posicionJugador + Vector3.up * AlturaPecho;
+            // T-673: si el jugador se agacha su pecho baja con su cápsula y una cobertura baja le tapa la línea de vista.
+            Vector3 pecho = posicionJugador + Vector3.up * (ObjetivoActual == raizJugador ? AlturaPechoJugador() : AlturaPecho);
             Vector3 boca = transform.position + Vector3.up * AlturaBoca + transform.forward * AdelanteBoca;
             bool puedeTirar = false;
             if (atacable && distancia <= datos.DistanciaMaxTiro)
@@ -576,7 +589,7 @@ namespace MechaCyberpunk.IA.APie
             tieneCubierta = false;
             int cantidad = Physics.OverlapSphereNonAlloc(transform.position, datos.RadioCubierta, candidatosCubierta, ~0,
                 QueryTriggerInteraction.Ignore);
-            Vector3 pechoJugador = posicionJugador + Vector3.up * AlturaPecho;
+            Vector3 pechoJugador = posicionJugador + Vector3.up * AlturaPechoJugador();
             float mejor = float.MaxValue;
             for (int i = 0; i < cantidad; i++)
             {

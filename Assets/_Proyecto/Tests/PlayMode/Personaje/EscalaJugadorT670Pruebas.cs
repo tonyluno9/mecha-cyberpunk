@@ -80,6 +80,7 @@ namespace MechaCyberpunk.Tests.Personaje
             MechaCyberpunk.Personaje.Movimiento.CubiertaYRodada cubierta = jugador.GetComponent<MechaCyberpunk.Personaje.Movimiento.CubiertaYRodada>();
             float escala = visual.Animador.transform.localScale.y;
             Assert.Greater(escala, 1.1f, "El Modelo del jugador va escalado para medir 1.80 m");
+            cubierta.AlternarAgachado(); // sin agacharse no se rueda (T-673)
             Assert.IsTrue(cubierta.Rodar());
             yield return Esperar(cubierta.Datos.DuracionRodada + 0.3f);
             Assert.AreEqual(escala, visual.Animador.transform.localScale.y, 0.001f, "Tras rodar vuelve a su escala, no a 1");

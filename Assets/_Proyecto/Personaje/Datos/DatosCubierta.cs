@@ -28,6 +28,12 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Rapidez con la que se pega a la cubierta (m/s).")]
         [Min(0.1f)] [SerializeField] private float rapidezPegarse = 3f;
 
+        [Header("Agachado libre (CTRL)")]
+        [Tooltip("Velocidad agachado caminando, como fracción de la normal.")]
+        [Range(0.05f, 1f)] [SerializeField] private float factorAgachado = 0.35f;
+        [Tooltip("Velocidad agachado con SHIFT (camina agachado más rápido), como fracción de la velocidad de correr.")]
+        [Range(0.05f, 1f)] [SerializeField] private float factorAgachadoCorriendo = 0.45f;
+
         [Header("Rodada")]
         [Tooltip("Distancia que recorre la rodada (m).")]
         [Min(0.5f)] [SerializeField] private float distanciaRodada = 4f;
@@ -46,6 +52,8 @@ namespace MechaCyberpunk.Personaje
         public float BajadaCamara => bajadaCamara;
         public float EscalaAgachado => escalaAgachado;
         public float FactorVelocidad => factorVelocidad;
+        public float FactorAgachado => factorAgachado;
+        public float FactorAgachadoCorriendo => factorAgachadoCorriendo;
         public float CosenoSalida => cosenoSalida;
         public float CosenoProteccion => cosenoProteccion;
         public float DanioCubierto => danioCubierto;

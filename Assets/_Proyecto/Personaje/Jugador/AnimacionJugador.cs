@@ -47,6 +47,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         private float segundosSinKO;
         private bool apuntandoAntes;
         private bool cubiertoAntes;
+        private bool agachadoAntes;
+        private const float VelocidadAgachadoQuieto = 0.3f;
 
         private void Awake()
         {
@@ -119,6 +121,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 // Solo al cambiar: así otras pruebas o herramientas pueden manejar el visual sin que este script lo pise cada cuadro.
                 bool cubierto = cubierta != null && cubierta.Cubierto;
+                // T-673: agachado (CTRL) sin moverse usa la pose de cubierta (no hay clip de agachado quieto); caminando, AgachadoCaminar.
+                bool agachado = cubierta != null && cubierta.AgachadoLibre;
+                if (agachado != agachadoAntes) { visual.Agachado = agachado; agachadoAntes = agachado; }
+                cubierto |= agachado && !cubierta.Rodando && controlador.Velocidad.magnitude < VelocidadAgachadoQuieto;
                 bool apuntando = controlador.Apuntando;
                 if (apuntando != apuntandoAntes) { visual.Apuntando = apuntando; apuntandoAntes = apuntando; }
                 if (tipoArma != tipoArmaAntes) { visual.TipoArma = tipoArma; tipoArmaAntes = tipoArma; }

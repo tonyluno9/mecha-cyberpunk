@@ -77,7 +77,13 @@ namespace MechaCyberpunk.Tests.Personaje
             VidaAPie vida = jugador.GetComponent<VidaAPie>();
             Vector3 inicio = jugador.transform.position;
 
-            InputSystem.QueueStateEvent(teclado, new KeyboardState(Key.LeftCtrl));
+            InputSystem.QueueStateEvent(teclado, new KeyboardState(Key.LeftCtrl)); // CTRL agacha (T-673)
+            yield return null;
+            InputSystem.QueueStateEvent(teclado, new KeyboardState());
+            yield return null;
+            Assert.IsTrue(cubierta.AgachadoLibre, "CTRL agacha");
+            Assert.IsFalse(cubierta.Rodando, "CTRL solo no rueda");
+            InputSystem.QueueStateEvent(teclado, new KeyboardState(Key.Space));
             yield return null;
             InputSystem.QueueStateEvent(teclado, new KeyboardState());
             yield return null;
