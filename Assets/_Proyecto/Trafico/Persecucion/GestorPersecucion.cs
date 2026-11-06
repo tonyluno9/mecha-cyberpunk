@@ -43,6 +43,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private ReglaBusquedaPolicial busqueda;
         private ReglaArresto arresto;
         private ZonaBusqueda zona;
+        private RutaCallesBarrio rutaPropia;
         private Vector3? jugadorAnterior;
 
         public int Drones => drones.Count;
@@ -126,9 +127,25 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 Registro<IZonaBusqueda>.Agregar(zona);
             }
+            RegistrarRutaDeCalles();
             if (Registro<ICalor>.Actual != null)
             {
                 Enlazar(Registro<ICalor>.Actual);
+            }
+        }
+
+        // T-669: las calles de este barrio (sus manzanas) sirven también para la ruta GPS del mapa; solo si nadie más la trae ya registrada.
+        private void RegistrarRutaDeCalles()
+        {
+            if (Registro<IRutaCalles>.Actual != null)
+            {
+                return;
+            }
+            GrafoCalles grafo = ArmarCallesDe(transform.parent != null ? transform.parent : transform);
+            if (grafo != null)
+            {
+                rutaPropia = new RutaCallesBarrio(grafo);
+                Registro<IRutaCalles>.Agregar(rutaPropia);
             }
         }
 
@@ -140,6 +157,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (zona != null)
             {
                 Registro<IZonaBusqueda>.Quitar(zona);
+            }
+            if (rutaPropia != null)
+            {
+                Registro<IRutaCalles>.Quitar(rutaPropia);
+                rutaPropia = null;
             }
             busqueda?.Detener();
             Desenlazar(calor);

@@ -69,6 +69,7 @@ namespace MechaCyberpunk.UI.Mapa
         private readonly List<Image> marcas = new List<Image>();
         private readonly List<TipoMarcaMapa> tiposMarcas = new List<TipoMarcaMapa>();
         private readonly List<Image> aliados = new List<Image>();
+        private readonly List<Image> destinos = new List<Image>();
         private int aliadosVisibles;
         private float escala;
 
@@ -212,7 +213,12 @@ namespace MechaCyberpunk.UI.Mapa
             hayObjetivo = hayObjetivo && CalculoMinimapa.Ubicar(centro, rumbo, destino, escala, radioPegado, true, out px);
             Mostrar(rombo.gameObject, hayObjetivo);
             rombo.anchoredPosition = px;
-            ActualizarRuta(centro, hayObjetivo, destino);
+            // T-668: lo que marcaste manda sobre el objetivo de la misión; la ruta GPS va a uno o a otro. Al llegar a lo marcado se quita.
+            if (PuntoMarcadoMapa.Llego(centro))
+            {
+                PuntoMarcadoMapa.Quitar();
+            }
+            ActualizarRuta(centro, PuntoMarcadoMapa.Hay || hayObjetivo, PuntoMarcadoMapa.Hay ? PuntoMarcadoMapa.Posicion : destino);
 
             // El punto marcado en el mapa grande, también pegado al borde, con su distancia.
             bool hayPunto = PuntoMarcadoMapa.Hay
@@ -227,6 +233,7 @@ namespace MechaCyberpunk.UI.Mapa
             }
 
             DibujarMarcas(centro, rumbo, radio);
+            DibujarDestinos(centro, rumbo, radio);
             DibujarAliados(centro, rumbo, radio);
             rombo.SetAsLastSibling();
             punto.rectTransform.SetAsLastSibling();
@@ -320,6 +327,44 @@ namespace MechaCyberpunk.UI.Mapa
             {
                 Mostrar(marcas[i].gameObject, false);
             }
+        }
+
+        // T-667: los lugares a los que se puede ir (casa, El Doc, Tino, mecánico, tianguis, casino, mercado, misiones), solo los que caen dentro del círculo.
+        // Los que ya dibuja una marca de lugar de T-409 (casa, El Doc, mercado) no se repiten.
+        private void DibujarDestinos(Vector3 centro, float rumbo, float radio)
+        {
+            IReadOnlyList<DestinoMapa> catalogo = CatalogoDestinosMapa.Todos;
+            while (destinos.Count < catalogo.Count)
+            {
+                Image icono = IconosMapa.CrearDestino(capaMarcas, catalogo[destinos.Count], ladoIcono, false);
+                icono.gameObject.SetActive(false);
+                destinos.Add(icono);
+            }
+            for (int i = 0; i < catalogo.Count; i++)
+            {
+                Vector2 px = Vector2.zero;
+                bool dentro = !CatalogoDestinosMapa.LoDibujaUnaMarca(catalogo[i].Id)
+                    && CatalogoDestinosMapa.Posicion(catalogo[i].Id, out Vector3 donde)
+                    && CalculoMinimapa.Ubicar(centro, rumbo, donde, escala, radio, false, out px);
+                Mostrar(destinos[i].gameObject, dentro);
+                if (dentro)
+                {
+                    destinos[i].rectTransform.anchoredPosition = px;
+                }
+            }
+        }
+
+        /// <summary>El icono del lugar del catálogo si sale ahora en el minimapa (T-667), o null.</summary>
+        public Image IconoDestino(IdDestinoMapa id)
+        {
+            for (int i = 0; i < destinos.Count; i++)
+            {
+                if (CatalogoDestinosMapa.Todos[i].Id == id)
+                {
+                    return destinos[i].gameObject.activeSelf ? destinos[i] : null;
+                }
+            }
+            return null;
         }
 
         private void DibujarAliados(Vector3 centro, float rumbo, float radio)

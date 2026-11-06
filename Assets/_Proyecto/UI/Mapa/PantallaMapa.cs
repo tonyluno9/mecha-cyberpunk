@@ -19,7 +19,7 @@ namespace MechaCyberpunk.UI.Mapa
     {
         /// <summary>Título del mapa (documento del juego, 29-oct).</summary>
         public const string NombreCiudad = "MEGALOPOLIS";
-        public const string TextoAyuda = "M O ESC PARA CERRAR · RUEDA: ZOOM · CLIC: MARCAR UN PUNTO";
+        public const string TextoAyuda = "M O ESC PARA CERRAR · RUEDA: ZOOM · CLIC: MARCAR UN PUNTO O UN LUGAR";
         public const int OrdenCanvas = 40;
         public const float ZoomMinimo = 1f;
         public const float ZoomMaximo = 3f;
@@ -66,6 +66,17 @@ namespace MechaCyberpunk.UI.Mapa
         private RectTransform romboObjetivo;
         private Image puntoMarcado;
         private CirculoBusquedaMapa circuloBusqueda;
+        private readonly List<Image> destinos = new List<Image>();
+        // T-668: la ruta GPS naranja hasta lo marcado, por las calles (como en el minimapa).
+        private const float MetrosParaRecalcularRuta = 2f;
+        private const float GrosorRutaPx = 4f;
+        private static readonly Color ColorRuta = new Color(1f, 0.55f, 0.1f, 0.95f);
+        private RectTransform capaRuta;
+        private readonly List<Image> segmentosRuta = new List<Image>();
+        private List<Vector3> ruta = new List<Vector3>();
+        private Vector3 origenRuta;
+        private Vector3 destinoRuta;
+        private bool rutaCalculada;
         private GameObject fondoPantalla;
         private ControladorAPie controlCongelado;
         private Text nombrePandilla;
@@ -104,6 +115,10 @@ namespace MechaCyberpunk.UI.Mapa
         public RectTransform PuntoMarcado => puntoMarcado != null ? puntoMarcado.rectTransform : null;
         /// <summary>El círculo de búsqueda de la policía (T-665).</summary>
         public CirculoBusquedaMapa CirculoBusqueda => circuloBusqueda;
+        /// <summary>Puntos de la ruta GPS dibujada en el mapa grande (mundo), vacía si no hay nada marcado ni objetivo.</summary>
+        public IReadOnlyList<Vector3> Ruta => ruta;
+        /// <summary>Cuántos tramos de la ruta se dibujan ahora.</summary>
+        public int SegmentosRutaVisibles { get; private set; }
 
         /// <summary>Dónde se ve en la pantalla (px) un punto del mundo, con el zoom de ahora.</summary>
         public Vector2 PantallaDe(Vector3 mundo)
@@ -169,6 +184,10 @@ namespace MechaCyberpunk.UI.Mapa
             }
 
             circuloBusqueda = new CirculoBusquedaMapa(contenido);
+            capaRuta = new GameObject("RutaGps", typeof(RectTransform)).GetComponent<RectTransform>();
+            capaRuta.SetParent(contenido, false);
+            KitUI.Colocar(capaRuta, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            capaRuta.pivot = new Vector2(0.5f, 0.5f);
             puntoMarcado = IconosMapa.CrearPuntoMarcado(contenido, ladoIcono);
             puntoMarcado.gameObject.SetActive(false);
             romboObjetivo = (RectTransform)KitUI.CrearRombo(contenido, "Objetivo", diagonalRombo, e.Naranja).rectTransform.parent;
@@ -316,6 +335,13 @@ namespace MechaCyberpunk.UI.Mapa
             if (enVista && raton.leftButton.wasPressedThisFrame)
             {
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(contenido, pantalla, null, out Vector2 local);
+                // T-668: un clic sobre el icono de un lugar lo marca (o, si ya era el marcado, lo quita); el GPS traza la ruta hasta él.
+                DestinoMapa lugar = CatalogoDestinosMapa.MasCercano(GeometriaBarrio.AMundo(local / pixelesPorMetro), radioQuitar / (pixelesPorMetro * zoom));
+                if (lugar != null && CatalogoDestinosMapa.Posicion(lugar.Id, out Vector3 sitio))
+                {
+                    PuntoMarcadoMapa.AlternarDestino(lugar.Id, sitio);
+                    return;
+                }
                 Vector2 marcado = GeometriaBarrio.AMapa(PuntoMarcadoMapa.Posicion) * pixelesPorMetro;
                 if (PuntoMarcadoMapa.Hay && (local - marcado).magnitude * zoom <= radioQuitar)
                 {
@@ -434,12 +460,113 @@ namespace MechaCyberpunk.UI.Mapa
             puntoMarcado.rectTransform.localScale = contraZoom;
 
             circuloBusqueda.Actualizar(pixelesPorMetro);
+            ActualizarRuta(contraZoom);
+            DibujarDestinos(contraZoom);
             RefrescarNegocios();
             DibujarMarcas(contraZoom);
             DibujarAliados(tuColor, contraZoom);
             puntoMarcado.rectTransform.SetAsLastSibling();
             romboObjetivo.SetAsLastSibling();
             puntoJugador.SetAsLastSibling();
+        }
+
+        // T-667: los lugares del catálogo, cada uno con su icono y su nombre debajo; los que ya dibuja una marca de lugar de T-409 no se repiten.
+        private void DibujarDestinos(Vector3 contraZoom)
+        {
+            IReadOnlyList<DestinoMapa> catalogo = CatalogoDestinosMapa.Todos;
+            while (destinos.Count < catalogo.Count)
+            {
+                Image icono = IconosMapa.CrearDestino(contenido, catalogo[destinos.Count], ladoIcono, true);
+                icono.gameObject.SetActive(false);
+                destinos.Add(icono);
+            }
+            for (int i = 0; i < catalogo.Count; i++)
+            {
+                bool hay = !CatalogoDestinosMapa.LoDibujaUnaMarca(catalogo[i].Id) && CatalogoDestinosMapa.Posicion(catalogo[i].Id, out Vector3 donde);
+                if (destinos[i].gameObject.activeSelf != hay)
+                {
+                    destinos[i].gameObject.SetActive(hay);
+                }
+                if (hay)
+                {
+                    CatalogoDestinosMapa.Posicion(catalogo[i].Id, out donde);
+                    destinos[i].rectTransform.anchoredPosition = GeometriaBarrio.AMapa(donde) * pixelesPorMetro;
+                    destinos[i].rectTransform.localScale = contraZoom;
+                }
+            }
+        }
+
+        /// <summary>El icono del lugar del catálogo si sale ahora en el mapa grande (T-667), o null.</summary>
+        public Image IconoDestino(IdDestinoMapa id)
+        {
+            for (int i = 0; i < destinos.Count; i++)
+            {
+                if (CatalogoDestinosMapa.Todos[i].Id == id)
+                {
+                    return destinos[i].gameObject.activeSelf ? destinos[i] : null;
+                }
+            }
+            return null;
+        }
+
+        // T-668: la ruta GPS naranja hasta lo que marcaste (o, si no hay nada marcado, hasta el objetivo), por las calles. Se recalcula al moverte.
+        private void ActualizarRuta(Vector3 contraZoom)
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            Vector3 destino = PuntoMarcadoMapa.Posicion;
+            bool hayDestino = PuntoMarcadoMapa.Hay;
+            if (!hayDestino)
+            {
+                IObjetivos objetivos = Registro<IObjetivos>.Actual;
+                hayDestino = objetivos != null && objetivos.HayObjetivo && UbicacionObjetivo.Resolver(objetivos.Actual, Registro<ILugar>.Todos, out destino);
+            }
+            bool hayRuta = hayDestino && jugador != null && jugador.Raiz != null;
+            if (!hayRuta)
+            {
+                ruta.Clear();
+                rutaCalculada = false;
+            }
+            else
+            {
+                Vector3 desde = jugador.Raiz.position;
+                if (!rutaCalculada || CalculoMinimapa.DistanciaPlana(desde, origenRuta) > MetrosParaRecalcularRuta
+                    || CalculoMinimapa.DistanciaPlana(destino, destinoRuta) > 0.5f)
+                {
+                    ruta = CalculoRutaGps.Ruta(desde, destino);
+                    origenRuta = desde;
+                    destinoRuta = destino;
+                    rutaCalculada = true;
+                }
+            }
+            int tramos = Mathf.Max(0, ruta.Count - 1);
+            while (segmentosRuta.Count < tramos)
+            {
+                Image seg = KitUI.CrearImagen(capaRuta, "Tramo_" + segmentosRuta.Count, ColorRuta);
+                KitUI.Colocar(seg.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one);
+                seg.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                segmentosRuta.Add(seg);
+            }
+            float grosor = GrosorRutaPx / zoom;
+            for (int i = 0; i < segmentosRuta.Count; i++)
+            {
+                bool usar = i < tramos;
+                if (segmentosRuta[i].gameObject.activeSelf != usar)
+                {
+                    segmentosRuta[i].gameObject.SetActive(usar);
+                }
+                if (!usar)
+                {
+                    continue;
+                }
+                Vector2 a = GeometriaBarrio.AMapa(ruta[i]) * pixelesPorMetro;
+                Vector2 b = GeometriaBarrio.AMapa(ruta[i + 1]) * pixelesPorMetro;
+                Vector2 d = b - a;
+                RectTransform rect = segmentosRuta[i].rectTransform;
+                rect.anchoredPosition = (a + b) * 0.5f;
+                rect.sizeDelta = new Vector2(d.magnitude + grosor * 0.5f, grosor);
+                rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+            }
+            SegmentosRutaVisibles = tramos;
         }
 
         // Enemigos, jefes y lugares: siempre en el mapa mientras estén visibles.
