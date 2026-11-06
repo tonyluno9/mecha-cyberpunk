@@ -224,6 +224,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<HudImplantes>();
             }
+            if (GetComponent<HudEscudo>() == null)
+            {
+                gameObject.AddComponent<HudEscudo>();
+            }
             if (config == null || grupoVida == null || grupoMira == null || grupoArma == null || grupoCancion == null
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
                 || grupoObjetivo == null || textoObjetivo == null

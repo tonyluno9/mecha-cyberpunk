@@ -43,6 +43,36 @@ namespace MechaCyberpunk.Personaje.Vida
             modelo = new ModeloVidaRegenerable(datos.VidaMaxima, datos.RegeneracionPorSegundo, datos.SegundosParaRegenerar);
             modelo.Cambio += AlCambiar;
             modelo.KO += AlLlegarAKO;
+            // T-684: el escudo vive en el mismo objeto; se crea aquí para no tocar el prefab.
+            escudo = GetComponent<EscudoJugador>();
+            if (escudo == null)
+            {
+                escudo = gameObject.AddComponent<EscudoJugador>();
+            }
+            escudo.Iniciar(datos.EscudoMaximo, datos.EscudoRecargaPorSegundo, datos.EscudoSegundosParaRecargar);
+        }
+
+        private EscudoJugador escudo;
+        private float invulnerableHasta = -1f;
+
+        public EscudoJugador Escudo => escudo;
+
+        /// <summary>Segundos que le quedan sin recibir daño (bebida energética, T-685).</summary>
+        public float InvulnerableRestante => Mathf.Max(0f, invulnerableHasta - Time.time);
+
+        /// <summary>No recibe daño durante estos segundos. Si ya tenía más tiempo, se queda con el mayor.</summary>
+        public void DarInvulnerabilidad(float segundos)
+        {
+            if (segundos > 0f)
+            {
+                invulnerableHasta = Mathf.Max(invulnerableHasta, Time.time + segundos);
+            }
+        }
+
+        /// <summary>Cura vida sin pasar del máximo y devuelve lo que curó (T-685).</summary>
+        public float Curar(float puntos)
+        {
+            return modelo != null ? modelo.Curar(puntos) : 0f;
         }
 
         private void OnDestroy()
@@ -68,6 +98,8 @@ namespace MechaCyberpunk.Personaje.Vida
                 return;
             }
             modelo.Restaurar();
+            escudo?.Restaurar();
+            invulnerableHasta = -1f;
             controlador.ActivarControl(true);
         }
 
@@ -98,6 +130,15 @@ namespace MechaCyberpunk.Personaje.Vida
                         return ResultadoDanio.Ignorado;
                     }
                 }
+            }
+            if (Time.time < invulnerableHasta)
+            {
+                return ResultadoDanio.Ignorado;
+            }
+            // T-684: el escudo absorbe primero; lo que sobra pasa a la vida.
+            if (escudo != null)
+            {
+                cantidad = escudo.Absorber(cantidad);
             }
             float aplicado = modelo.Aplicar(cantidad);
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
