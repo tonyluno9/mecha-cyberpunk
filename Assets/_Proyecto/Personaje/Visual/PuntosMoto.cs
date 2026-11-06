@@ -15,6 +15,8 @@ namespace MechaCyberpunk.Personaje.Visual
         [SerializeField] private Transform estriboDerecho;
         [Tooltip("Objeto de la moto que se esconde mientras alguien maneja (el caballete). Opcional.")]
         [SerializeField] private GameObject caballete;
+        [Tooltip("Cuánto se echa el torso del conductor hacia adelante (°): poco en una moto de reparto, más en una deportiva.")]
+        [Range(0f, 45f)] [SerializeField] private float inclinacionTorso = ReglasMoto.InclinacionAdelante;
 
         public Transform Asiento => asiento;
         public Transform ManubrioIzquierdo => manubrioIzquierdo;
@@ -22,6 +24,7 @@ namespace MechaCyberpunk.Personaje.Visual
         public Transform EstriboIzquierdo => estriboIzquierdo;
         public Transform EstriboDerecho => estriboDerecho;
         public GameObject Caballete => caballete;
+        public float InclinacionTorso => inclinacionTorso;
 
         public bool Completo => asiento != null && manubrioIzquierdo != null && manubrioDerecho != null
             && estriboIzquierdo != null && estriboDerecho != null;
