@@ -47,6 +47,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         private float segundosSinKO;
         private bool apuntandoAntes;
         private bool cubiertoAntes;
+        private bool agachadoAntes;
+        private bool rodandoAntes;
 
         private void Awake()
         {
@@ -119,12 +121,23 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 // Solo al cambiar: así otras pruebas o herramientas pueden manejar el visual sin que este script lo pise cada cuadro.
                 bool cubierto = cubierta != null && cubierta.Cubierto;
+                // T-674: agachado (CTRL) usa PoseAgachado (cadera baja y rodillas dobladas) sobre el idle o AgachadoCaminar.
+                bool agachado = cubierta != null && cubierta.AgachadoLibre;
+                if (agachado != agachadoAntes) { visual.Agachado = agachado; agachadoAntes = agachado; }
                 bool apuntando = controlador.Apuntando;
                 if (apuntando != apuntandoAntes) { visual.Apuntando = apuntando; apuntandoAntes = apuntando; }
                 if (tipoArma != tipoArmaAntes) { visual.TipoArma = tipoArma; tipoArmaAntes = tipoArma; }
                 ActualizarCaido(ko, Time.deltaTime);
                 if (cubierto != cubiertoAntes) { visual.Cubierto = cubierto; cubiertoAntes = cubierto; }
             }
+
+            // T-675: el esquive corta la reacción al golpe recibido.
+            bool rodando = cubierta != null && cubierta.Rodando;
+            if (rodando && !rodandoAntes && visual != null)
+            {
+                visual.CortarReaccion();
+            }
+            rodandoAntes = rodando;
 
             FaseGolpe fase = golpe != null ? golpe.Fase : FaseGolpe.Listo;
             if (fase == FaseGolpe.Preparando && faseAnterior != FaseGolpe.Preparando)

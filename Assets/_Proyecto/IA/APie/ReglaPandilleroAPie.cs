@@ -8,6 +8,16 @@ namespace MechaCyberpunk.IA.APie
     /// </summary>
     public class ReglaPandilleroAPie
     {
+        /// <summary>Altura del pecho (m) a la que se apunta: la normal escalada por la altura de la cápsula del objetivo contra la de pie (T-673).</summary>
+        public static float AlturaPechoSegunCuerpo(float alturaPecho, float alturaCuerpo, float alturaDePie)
+        {
+            if (alturaDePie <= 0f)
+            {
+                return alturaPecho;
+            }
+            return alturaPecho * Math.Min(1f, Math.Max(0.3f, alturaCuerpo / alturaDePie));
+        }
+
         /// <summary>A dónde se mueve en este paso.</summary>
         public enum Orden
         {

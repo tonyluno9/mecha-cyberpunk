@@ -36,18 +36,18 @@ namespace MechaCyberpunk.Personaje
         [SerializeField] private AjusteSensacion[] armas =
         {
             new AjusteSensacion(0.9f, 0.5f, 0f, 0),
-            new AjusteSensacion(1.0f, 0.25f, 0.30f, 6),
-            new AjusteSensacion(3.2f, 0.5f, 0.55f, 4),
-            new AjusteSensacion(0.6f, 0.35f, 0.32f, 5),
-            new AjusteSensacion(4.5f, 0.3f, 0.45f, 10),
+            new AjusteSensacion(1.0f, 0.25f, 0.14f, 6),
+            new AjusteSensacion(3.2f, 0.5f, 0.26f, 4),
+            new AjusteSensacion(0.6f, 0.35f, 0.16f, 5),
+            new AjusteSensacion(4.5f, 0.3f, 0.22f, 10),
         };
 
         [Tooltip("Cuánto tarda la patada en volver a cero (s).")]
         [Min(0.02f)] [SerializeField] private float duracionPatada = 0.18f;
         [Tooltip("Tope de patada acumulada en ráfaga (°).")]
         [Min(0f)] [SerializeField] private float topePatada = 5f;
-        [Tooltip("Cuánto dura el destello del cañón (s).")]
-        [Min(0.01f)] [SerializeField] private float duracionDestello = 0.05f;
+        [Tooltip("Cuánto dura el destello del cañón (s). Unos 2 o 3 cuadros.")]
+        [Min(0.01f)] [SerializeField] private float duracionDestello = 0.04f;
         [Tooltip("Cuánto dura una partícula de chispa o sangre (s).")]
         [Min(0.05f)] [SerializeField] private float vidaParticula = 0.35f;
         [Tooltip("Cuánto dura la marca en la retícula al pegar (s).")]
@@ -56,6 +56,8 @@ namespace MechaCyberpunk.Personaje
         [Min(0.02f)] [SerializeField] private float duracionHitmarkerMuerte = 0.35f;
         [Tooltip("Material sin luz con textura y color por vértice (Sprites/Default). Sin él se busca ese shader por nombre.")]
         [SerializeField] private Material materialEfecto;
+        [Tooltip("T-676: textura del destello del cañón (imageassets/vfx/F01_Destello.png cuando se importe). Sin ella se dibuja una chispa procedural. El menú Mecha Cyberpunk > Ajustar T-676 destello F01 la asigna sola si ya está en el proyecto.")]
+        [SerializeField] private Texture2D texturaDestello;
 
         public float DuracionPatada => duracionPatada;
         public float TopePatada => topePatada;
@@ -64,6 +66,7 @@ namespace MechaCyberpunk.Personaje
         public float DuracionHitmarker => duracionHitmarker;
         public float DuracionHitmarkerMuerte => duracionHitmarkerMuerte;
         public Material MaterialEfecto => materialEfecto;
+        public Texture2D TexturaDestello => texturaDestello;
 
         public AjusteSensacion Ajuste(ArmaAPie arma)
         {

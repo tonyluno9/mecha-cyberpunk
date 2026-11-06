@@ -147,6 +147,20 @@ namespace MechaCyberpunk.Personaje.Visual
             set { tipoArma = value; Aplicar(); }
         }
 
+        /// <summary>Segundos que el arma sigue "levantada" (pose de arma en el torso) tras disparar o recargar sin apuntar (T-671).</summary>
+        public const float SegundosArmaTrasAccion = 1.5f;
+
+        private float armaLevantadaHasta;
+
+        /// <summary>El tipo de arma que ve el Animator: solo al apuntar (o justo después de disparar o recargar) se usan las poses de arma; si no, camina y corre normal (T-671).</summary>
+        public TipoArmaVisual TipoArmaAnimador => apuntando || Time.time < armaLevantadaHasta ? tipoArma : TipoArmaVisual.Ninguna;
+
+        private void LevantarArma()
+        {
+            armaLevantadaHasta = Time.time + SegundosArmaTrasAccion;
+            Aplicar();
+        }
+
         public bool Cubierto
         {
             get => cubierto;
@@ -172,7 +186,15 @@ namespace MechaCyberpunk.Personaje.Visual
         public bool Agachado
         {
             get => agachado;
-            set { agachado = value; Aplicar(); }
+            set
+            {
+                agachado = value;
+                if (value && animador != null && animador.isHuman && animador.GetComponent<PoseAgachado>() == null)
+                {
+                    animador.gameObject.AddComponent<PoseAgachado>();
+                }
+                Aplicar();
+            }
         }
 
         /// <summary>Sentado al volante de un carro (T-622): el estado CarroManejar. Quitarlo lo para de nuevo.</summary>
@@ -277,12 +299,96 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Golpe de puños: alterna izquierda y derecha, o fuerte.</summary>
         public void Golpear(bool fuerte)
         {
+            ultimoGolpe = Time.time;
             golpeAlterno = fuerte ? 2 : 1 - golpeAlterno % 2;
             if (animador != null && Tiene(IdGolpeTipo, AnimatorControllerParameterType.Int))
             {
                 animador.SetInteger(IdGolpeTipo, golpeAlterno);
             }
             Disparo(IdGolpe);
+        }
+
+        // T-675: el siguiente golpe espera a que acabe la animación del anterior; la reacción al daño se corta con un golpe o un esquive.
+        private const float EsperaDisparador = 0.08f;
+        private const float DuracionMaximaGolpe = 1.5f;
+        private static readonly int HashVacio = Animator.StringToHash("Vacio");
+        private float ultimoGolpe = float.NegativeInfinity;
+
+        private int IndiceCapaArriba()
+        {
+            if (animador == null || animador.runtimeAnimatorController == null)
+            {
+                return -1;
+            }
+            if (capaArriba == -2)
+            {
+                capaArriba = animador.GetLayerIndex(ReglasAnimacion.CapaArriba);
+            }
+            return capaArriba;
+        }
+
+        private static bool EsGolpe(AnimatorStateInfo e) => e.IsName("GolpeIzq") || e.IsName("GolpeDer") || e.IsName("GolpeFuerte");
+
+        private static bool EsDano(AnimatorStateInfo e) => e.IsName("DanoFrente") || e.IsName("DanoEspalda") || e.IsName("DanoFuerte");
+
+        /// <summary>True mientras suena la animación de un golpe de puños (desde que se pidió hasta que termina, con un tope de seguridad).</summary>
+        public bool GolpeEnCurso
+        {
+            get
+            {
+                float desde = Time.time - ultimoGolpe;
+                if (desde > DuracionMaximaGolpe)
+                {
+                    return false;
+                }
+                if (desde < EsperaDisparador)
+                {
+                    return true;
+                }
+                int capa = IndiceCapaArriba();
+                if (capa < 0)
+                {
+                    return false;
+                }
+                if (animador.IsInTransition(capa))
+                {
+                    return EsGolpe(animador.GetNextAnimatorStateInfo(capa));
+                }
+                AnimatorStateInfo actual = animador.GetCurrentAnimatorStateInfo(capa);
+                return EsGolpe(actual) && actual.normalizedTime < 1f;
+            }
+        }
+
+        /// <summary>True mientras suena la reacción a un golpe recibido.</summary>
+        public bool ReaccionEnCurso
+        {
+            get
+            {
+                int capa = IndiceCapaArriba();
+                if (capa < 0)
+                {
+                    return false;
+                }
+                return EsDano(animador.GetCurrentAnimatorStateInfo(capa)) || (animador.IsInTransition(capa) && EsDano(animador.GetNextAnimatorStateInfo(capa)));
+            }
+        }
+
+        /// <summary>Corta la reacción al daño al instante (esquive): el torso vuelve a su pose normal.</summary>
+        public void CortarReaccion()
+        {
+            int capa = IndiceCapaArriba();
+            if (capa < 0)
+            {
+                return;
+            }
+            if (Tiene(IdHerido, AnimatorControllerParameterType.Trigger))
+            {
+                animador.ResetTrigger(IdHerido);
+            }
+            if (ReaccionEnCurso)
+            {
+                animador.CrossFadeInFixedTime(HashVacio, 0.06f, capa);
+            }
         }
 
         private float velX;
@@ -294,11 +400,6 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velocidadAnterior;
         private float yawAnterior;
         private int capaArriba = -2;
-        private int capaPiernas = -2;
-        private float pesoPiernas;
-
-        /// <summary>Peso actual de la capa de piernas con arma (T-651), de 0 a 1.</summary>
-        public float PesoPiernasArma => pesoPiernas;
         private bool agachado;
         private int golpeAlterno = 1;
         private int coberturaAlterna;
@@ -365,31 +466,13 @@ namespace MechaCyberpunk.Personaje.Visual
             segundosGestoPendiente = Mathf.Max(0f, segundosGestoPendiente - dt);
             segundosPitarPendiente = Mathf.Max(0f, segundosPitarPendiente - dt);
             // Sentado al volante la capa de arriba solo se usa para pitar (los brazos al claxon); si no, taparía el volante con la pose del arma.
-            float objetivo = cubierto || caido || agachado || viendoTelefono || EnGesto ? 0f : 1f;
+            float objetivo = cubierto || caido || (agachado && !apuntando) || viendoTelefono || EnGesto ? 0f : 1f;
             if (manejando)
             {
                 objetivo = Pitando ? 1f : 0f;
             }
             pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
             animador.SetLayerWeight(capaArriba, pesoArriba);
-            ActualizarPiernasDeArma(dt);
-        }
-
-
-        // T-651: con arma en la mano (sin apuntar) las piernas juegan Pistola_Caminar/Correr o Rifle_Caminar/Correr en la capa Piernas.
-        private void ActualizarPiernasDeArma(float dt)
-        {
-            if (capaPiernas == -2)
-            {
-                capaPiernas = animador.GetLayerIndex(ReglasAnimacion.CapaPiernas);
-            }
-            if (capaPiernas < 0)
-            {
-                return;
-            }
-            bool usa = ReglasAnimacion.UsaPiernasDeArma(tipoArma, enSuelo, apuntando, agachado, cubierto, caido, EnGesto, manejando, velocidad);
-            pesoPiernas = Mathf.MoveTowards(pesoPiernas, usa ? 1f : 0f, rapidezCapaArriba * dt);
-            animador.SetLayerWeight(capaPiernas, pesoPiernas);
         }
         /// <summary>Peso actual de la capa de arriba (torso), de 0 a 1.</summary>
         public float PesoCapaArriba => pesoArriba;
@@ -416,6 +499,9 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private bool TieneMuerteAnimada() => animador != null && Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int);
 
+        /// <summary>Escala del modelo contra la que se midieron las velocidades de los clips (1 = el clip tal como viene): el paso crece con el modelo (T-670).</summary>
+        public float EscalaClips => animador != null ? Mathf.Max(0.1f, animador.transform.lossyScale.y) : 1f;
+
         /// <summary>Acelera o frena Caminar y Correr para que los pies sigan el suelo a la velocidad real.</summary>
         private void AjustarRapidez()
         {
@@ -432,13 +518,7 @@ namespace MechaCyberpunk.Personaje.Visual
             float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
             // T-640: caminar normal (4.5 m/s) ya no es Correr: Caminar se acelera menos que Correr para no verse apresurado.
             float tope = estado == HashCaminar ? Mathf.Min(rapidezMaxima, ReglasAnimacion.RapidezMaximaCaminar) : rapidezMaxima;
-            if (pesoPiernas > 0.5f && (estado == HashCaminar || estado == HashCorrer))
-            {
-                // T-651: las piernas (y el torso) juegan los clips del arma, que avanzan a otra velocidad que Loco_Caminar y Loco_Correr.
-                referencia = ReglasAnimacion.VelocidadClipArma(tipoArma, velocidad);
-                tope = rapidezMaxima;
-            }
-            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia, rapidezMinima, tope);
+            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia * EscalaClips, rapidezMinima, tope);
         }
 
         private void LeerEstadoDelPadre(float dt)
@@ -501,10 +581,15 @@ namespace MechaCyberpunk.Personaje.Visual
                 animador.SetTrigger(IdDisparoCobertura);
                 return;
             }
+            LevantarArma();
             Disparo(IdDisparar);
         }
 
-        public void Recargar() => Disparo(IdRecargar);
+        public void Recargar()
+        {
+            LevantarArma();
+            Disparo(IdRecargar);
+        }
 
         public void Golpear() => Golpear(false);
 
@@ -529,7 +614,7 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdVelocidad, velocidad);
             Poner(IdEnSuelo, enSuelo);
             Poner(IdApuntando, apuntando);
-            Poner(IdTipoArma, (int)tipoArma);
+            Poner(IdTipoArma, (int)TipoArmaAnimador);
             Poner(IdCaer, caido);
             Poner(IdCubierto, cubierto);
             Poner(IdAgachado, agachado);

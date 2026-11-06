@@ -73,7 +73,7 @@ namespace MechaCyberpunk.UI.Hud
                 case AccionTutorial.Disparar: return "CLIC IZQUIERDO DISPARA";
                 case AccionTutorial.Recargar: return "R RECARGA EL ARMA";
                 case AccionTutorial.Cubrirse: return "Q TE CUBRE DETRÁS DE UNA CAJA O MURO";
-                case AccionTutorial.Rodar: return "CTRL RUEDA PARA ESQUIVAR";
+                case AccionTutorial.Rodar: return "AGACHADO (CTRL) + ESPACIO RUEDA PARA ESQUIVAR";
                 case AccionTutorial.SubirAlCarro: return "E TE SUBE AL CARRO";
                 case AccionTutorial.Robar: return "ROBA EL CARRO MARCADO CON E Y LLÉVALO A SALVO";
                 case AccionTutorial.Mapa: return "M ABRE EL MAPA";

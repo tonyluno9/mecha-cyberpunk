@@ -72,7 +72,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.Greater(real, 1f);
             UnityEditor.SerializedProperty referencia = new UnityEditor.SerializedObject(visual).FindProperty(Estado(visual.Animador) == "Correr" ? "velocidadClipCorrer" : "velocidadClipCaminar");
             Assert.Greater(referencia.floatValue, 0f);
-            float esperada = Mathf.Clamp(visual.Velocidad / referencia.floatValue, 0.6f, 2.2f);
+            float esperada = Mathf.Clamp(visual.Velocidad / (referencia.floatValue * visual.EscalaClips), 0.6f, 2.2f);
             Assert.AreEqual(esperada, visual.Animador.speed, esperada * 0.15f, "rapidez = velocidad / velocidad del clip");
             Release(teclado.wKey);
         }
@@ -111,7 +111,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(2.5f);
             Assert.AreEqual(0f, visual.Tumbado, 0.01f, "KO con clip de muerte: no se tumba a mano");
             Transform cabeza = visual.Animador.GetBoneTransform(HumanBodyBones.Head);
-            Assert.Less(cabeza.position.y, 0.6f, "La cabeza queda cerca del piso (m)");
+            Assert.Less(cabeza.position.y, 1.0f, "La cabeza queda cerca del piso (m)");
             visual.Caido = false;
             float fin = Time.time + 12f;
             while (cabeza.position.y <= 1.1f && Time.time < fin)

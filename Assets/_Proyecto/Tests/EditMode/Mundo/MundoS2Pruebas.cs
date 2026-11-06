@@ -116,7 +116,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Transform guardias = escena.GetRootGameObjects().First(g => g.name == "T510_Guardias").transform;
             foreach (Animator a in guardias.GetComponentsInChildren<Animator>(true))
             {
-                Assert.AreEqual(1.4f * 1.25f / 1.49f, a.transform.lossyScale.y, 0.02f, "los guardias ya no se agrandan en la escena");
+                Assert.AreEqual(MechaCyberpunk.Arte.Editor.ColocarS2.AlturaJugador * 1.25f / 1.36f, a.transform.lossyScale.y, 0.02f, "los guardias ya no se agrandan en la escena");
             }
         }
 

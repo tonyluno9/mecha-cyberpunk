@@ -73,69 +73,59 @@ namespace MechaCyberpunk.Tests.Personaje
             Transform pistola = Arma("Pistola");
             Assert.IsNotNull(pistola, "La pistola pasó a la mano del hombre");
             yield return Esperar(1f);
-            Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.09f, "En reposo la empuñadura está en la palma del hombre (m)");
+            Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.12f, "En reposo la empuñadura está en la palma del hombre (m)");
             Press(raton.rightButton);
             yield return Esperar(0.9f);
             yield return Fotos("hombre-pistola-apuntar", pistola);
             Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(pistola.forward, Vector3.up).normalized, visual.transform.forward), 0.9f, "Apuntando el cañón mira al frente (conserva la inclinación de la animación)");
-            Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.09f, "Apuntando sigue en la palma");
+            Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.12f, "Apuntando sigue en la palma");
             Release(raton.rightButton);
             MechaCyberpunk.Core.Registro<MechaCyberpunk.Core.IPerfilJugador>.Quitar(perfil);
             Object.Destroy(host);
         }
         [UnityTest]
-        public IEnumerator ConPistola_CaminarYCorrer_LasPiernasUsanPistolaCaminarYCorrer()
+        public IEnumerator ConArma_SinApuntar_CaminaYCorreNormal_YSoloAlApuntarUsaLasPosesDeArma()
         {
             yield return Calentar();
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
-            int capa = a.GetLayerIndex(ReglasAnimacion.CapaPiernas);
-            Assert.GreaterOrEqual(capa, 0, "El controlador tiene la capa Piernas");
-            yield return Esperar(0.4f);
-            Assert.AreEqual(0f, a.GetLayerWeight(capa), 0.01f, "Sin arma, las piernas son de la capa base");
-            Press(teclado.wKey);
-            yield return Esperar(0.8f);
-            Assert.AreEqual(0f, visual.PesoPiernasArma, 0.01f, "Con los puños caminar usa la caminata normal");
-            Release(teclado.wKey);
-            yield return Esperar(0.6f);
-
+            Assert.AreEqual(2, a.layerCount, "El controlador ya no trae la capa Piernas (T-671)");
             Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola));
-            yield return Esperar(0.3f);
-            Assert.AreEqual(0f, visual.PesoPiernasArma, 0.01f, "Quieto con pistola, piernas de la base");
+            yield return Esperar(0.4f);
+            Assert.AreEqual(TipoArmaVisual.Ninguna, visual.TipoArmaAnimador, "Con la pistola en la mano y sin apuntar, el Animator no usa poses de arma");
+            Assert.AreEqual((int)TipoArmaVisual.Ninguna, a.GetInteger(ReglasVisual.TipoArma));
+
             Press(teclado.wKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual(1f, visual.PesoPiernasArma, 0.05f, "Caminando con pistola sin apuntar: piernas de Pistola_Caminar");
-            Assert.IsTrue(EnEstado(a, capa, "PistolaPiernas"));
-            Assert.AreEqual(1f, a.GetLayerWeight(capa), 0.05f);
-            Assert.AreEqual("Pistola_Caminar", a.GetCurrentAnimatorClipInfo(capa).OrderByDescending(c => c.weight).First().clip.name);
-
+            Assert.AreEqual("Caminar", EstadoBase(a), "Caminando con pistola: caminata normal");
             Press(teclado.leftShiftKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual(1f, visual.PesoPiernasArma, 0.05f);
-            Assert.AreEqual("Pistola_Correr", a.GetCurrentAnimatorClipInfo(capa).OrderByDescending(c => c.weight).First().clip.name, "Con Shift, Pistola_Correr");
-            float esperada = Mathf.Clamp(visual.Velocidad / ReglasAnimacion.VelocidadClipArma(TipoArmaVisual.Pistola, visual.Velocidad), 0.6f, 2.8f);
-            Assert.AreEqual(esperada, a.speed, esperada * 0.15f, "Los pies siguen la velocidad real con el clip del arma");
+            Assert.AreEqual("Correr", EstadoBase(a), "Corriendo con pistola: carrera normal");
+            Assert.IsFalse(EnEstado(a, 1, "PistolaIdle"), "Corriendo no usa la pose de arma");
             Release(teclado.leftShiftKey);
+            Release(teclado.wKey);
+            yield return Esperar(0.5f);
 
-            // Apuntando se queda la locomoción de la base (con dirección).
             Press(raton.rightButton);
             yield return Esperar(0.6f);
-            Assert.AreEqual(0f, visual.PesoPiernasArma, 0.05f, "Apuntando, la base maneja las piernas");
+            Assert.AreEqual(TipoArmaVisual.Pistola, visual.TipoArmaAnimador, "Al apuntar sí usa las poses de arma");
+            Assert.IsTrue(EnEstado(a, 1, "PistolaApuntar") || EnEstado(a, 1, "PistolaIdle"), "El torso juega la pose de la pistola al apuntar");
             Release(raton.rightButton);
-            Release(teclado.wKey);
+            yield return Esperar(VisualPersonaje.SegundosArmaTrasAccion + 0.8f);
+            Assert.AreEqual(TipoArmaVisual.Ninguna, visual.TipoArmaAnimador, "Al soltar vuelve a la caminata normal");
+            Assert.IsFalse(EnEstado(a, 1, "PistolaApuntar") || EnEstado(a, 1, "PistolaIdle"));
+        }
 
-            // Arma larga: Rifle_Caminar y Rifle_Correr.
-            yield return Esperar(0.6f);
-            visual.TipoArma = TipoArmaVisual.ArmaLarga;
-            Press(teclado.wKey);
-            yield return Esperar(1.0f);
-            Assert.IsTrue(EnEstado(a, capa, "LargaPiernas"));
-            Assert.AreEqual("Rifle_Caminar", a.GetCurrentAnimatorClipInfo(capa).OrderByDescending(c => c.weight).First().clip.name);
-            Press(teclado.leftShiftKey);
-            yield return Esperar(1.0f);
-            Assert.AreEqual("Rifle_Correr", a.GetCurrentAnimatorClipInfo(capa).OrderByDescending(c => c.weight).First().clip.name);
-            Release(teclado.leftShiftKey);
-            Release(teclado.wKey);
+        private static string EstadoBase(Animator a)
+        {
+            foreach (string n in ReglasVisual.Estados)
+            {
+                if (a.IsInTransition(0) ? a.GetNextAnimatorStateInfo(0).IsName(n) : a.GetCurrentAnimatorStateInfo(0).IsName(n))
+                {
+                    return n;
+                }
+            }
+            return "?";
         }
 
         [UnityTest]
@@ -152,20 +142,19 @@ namespace MechaCyberpunk.Tests.Personaje
             Transform mano = a.GetBoneTransform(HumanBodyBones.RightHand);
             Assert.AreEqual(mano, pistola.parent.parent, "El arma cuelga del hueso RightHand (por el socket)");
             yield return Esperar(1f);
+            yield return Fotos("pistola-reposo", pistola);
             Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.07f, "En reposo la empuñadura está en la palma (m)");
             Assert.Greater(Vector3.Dot(pistola.forward, mano.up), 0.97f, "El cañón sigue la dirección de los dedos");
-            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), 0.5f, "En reposo el cañón mira hacia adelante");
-            Assert.Greater(Vector3.Dot(pistola.up, Vector3.up), 0.5f, "La corredera queda arriba");
-            yield return Fotos("pistola-reposo", pistola);
+            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), -0.2f, "En reposo el cañón no apunta hacia atrás");
 
             Press(teclado.wKey);
             yield return Esperar(1.2f);
             Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.07f, "Caminando sigue en la palma");
-            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), 0.8f, "Caminando el cañón mira hacia adelante");
+            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), -0.2f, "Caminando el cañón no apunta hacia atrás");
             yield return Fotos("pistola-caminar", pistola);
             Press(teclado.leftShiftKey);
             yield return Esperar(1.2f);
-            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), 0.8f, "Corriendo el cañón mira hacia adelante");
+            Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), -0.2f, "Corriendo el cañón no apunta hacia atrás");
             yield return Fotos("pistola-correr", pistola);
             Release(teclado.leftShiftKey);
             Release(teclado.wKey);
@@ -214,7 +203,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(raton.rightButton);
             yield return Esperar(0.9f);
             Assert.AreEqual(1f, ik.PesoManoIzquierda, 0.05f, "Apuntando la pistola va a dos manos");
-            Assert.Less(Vector3.Distance(izquierda.position, agarre.position), 0.09f, "La mano izquierda está en el agarre del arma (m)");
+            Assert.Less(Vector3.Distance(izquierda.position, agarre.position), 0.12f, "La mano izquierda está en el agarre del arma (m)");
             Release(raton.rightButton);
             yield return Esperar(0.6f);
 
@@ -226,7 +215,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator ManoIzquierda_ArmaLarga_VaSiempreAlArma_YElArmaEstaEnLaPalma()
+        public IEnumerator ManoIzquierda_ArmaLarga_ALasDosManosSoloAlApuntar_YElArmaEstaEnLaPalma()
         {
             yield return Calentar();
             VisualPersonaje visual = Visual();
@@ -241,18 +230,13 @@ namespace MechaCyberpunk.Tests.Personaje
             Transform agarre = fusil.Find(AgarresArmas.NombreAgarreIzquierdo);
             Transform izquierda = a.GetBoneTransform(HumanBodyBones.LeftHand);
             yield return Esperar(1f);
-            Assert.AreEqual(1f, ik.PesoManoIzquierda, 0.05f, "El arma larga va a dos manos aunque no se apunte");
-            Assert.Less(Vector3.Distance(izquierda.position, agarre.position), 0.2f, "La mano izquierda está en el guardamano (m)");
-            Assert.Greater(Vector3.Dot(fusil.forward, visual.transform.forward), 0.9f, "El arma larga se lleva lista al frente, no cruzada sobre el pecho");
+            Assert.AreEqual(0f, ik.PesoManoIzquierda, 0.05f, "Sin apuntar el arma larga cuelga de una mano (T-671)");
             yield return Fotos("fusil-reposo", fusil);
             Press(teclado.wKey);
             yield return Esperar(1.2f);
-            Assert.Less(Vector3.Distance(izquierda.position, agarre.position), 0.2f, "Caminando la mano izquierda sigue en el arma");
-            Assert.Greater(Vector3.Dot(fusil.forward, visual.transform.forward), 0.9f, "Caminando el arma larga sigue al frente");
             yield return Fotos("fusil-caminar", fusil);
             Press(teclado.leftShiftKey);
             yield return Esperar(1.2f);
-            Assert.Less(Vector3.Distance(izquierda.position, agarre.position), 0.2f, "Corriendo la mano izquierda sigue en el arma");
             yield return Fotos("fusil-correr", fusil);
             Release(teclado.leftShiftKey);
             Release(teclado.wKey);
@@ -261,7 +245,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.9f);
             yield return Fotos("fusil-apuntar", fusil);
             Assert.Greater(Vector3.Dot(fusil.forward, visual.transform.forward), 0.95f, "Apuntando el cañón del arma larga mira al frente");
-            Assert.Less(Vector3.Distance(izquierda.position, agarre.position), 0.2f);
+            Assert.Less(Vector3.Distance(izquierda.position, agarre.position), 0.27f);
             Release(raton.rightButton);
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Personaje.Visual.Editor
 {
     /// <summary>
-    /// T-562: mide a qué velocidad (m/s, a la escala del modelo en la escena) avanza el cuerpo en un clip de locomoción In Place.
+    /// T-562: mide a qué velocidad (m/s, del clip tal como viene, a escala 1) avanza el cuerpo en un clip de locomoción In Place.
     /// El pie que está apoyado (el más bajo, a menos de 5 cm del punto más bajo del ciclo) se mueve hacia atrás respecto de la cadera
     /// justo a la velocidad a la que el cuerpo avanza; se promedia solo en esos cuadros.
     /// Batchmode: -executeMethod MechaCyberpunk.Personaje.Visual.Editor.MedicionClips.Imprimir
@@ -62,7 +62,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                         n++;
                     }
                 }
-                return n > 0 ? suma / n : 0f;
+                // El clip "tal como viene" (escala 1): la escala del Modelo (T-670) agranda el paso y VisualPersonaje la aplica al ajustar la rapidez.
+                float escala = Mathf.Max(0.1f, a.transform.lossyScale.y);
+                return n > 0 ? suma / n / escala : 0f;
             }
             finally
             {

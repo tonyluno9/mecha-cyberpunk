@@ -401,3 +401,11 @@ se quedó en 299 s de 300; al repetir pasó. Esa pelea va justa desde que entrar
 
 Pendiente: medir FPS de las salidas en el build de medición; tono del consultorio más verde que la referencia; la falla previa
 ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
+- T-670 (06-nov noche): jugador y NPC a 1.80 m; ColocarS2.Escala con alturas medidas por BakeMesh; CubiertaYRodada conserva la escala del Modelo; pasos escalan con el modelo. Rama tony/T-670-escala-jugador.
+- T-671 (06-nov noche): arma equipada sin apuntar = caminar/correr normal y arma abajo; poses de arma solo al apuntar; capa Piernas (T-651) quitada. Rama tony/T-671-arma-sin-apuntar.
+- T-672 (06-nov noche): al apuntar cámara centrada (lateral 0), altura 2.0 y distancia 2.0, FOV 45; mira arriba de la cabeza. Rama tony/T-672-camara-apuntar.
+- T-673 (06-nov noche): CTRL agacha/levanta (alterna), lento, SHIFT agachado más rápido, agachado+ESPACIO rueda y sin agacharse no rueda; enemigos pierden vista tras cobertura baja (pecho según cápsula). Rama tony/T-673-agacharse.
+- T-674 (S1 noche): agachado con pose procedural (PoseAgachado): cadera baja, rodillas dobladas, torso recto; quieto, caminando y apuntando.
+- T-675 (S1 noche): sin spam de golpes (espera la animacion), reaccion al dano corta y cortable con golpe o esquive.
+- T-676 (S1 noche): destello chico, disparo siempre igual sin sonidos de impacto, trazo finisimo, sin linea de vista no hay disparo (jugador, SKULLS, dron).
+- T-677 (S1 noche): headshot x3 (hueso de cabeza o 15 % de arriba del collider) a enemigos, aliados y civiles; ImpactoBala.Cabeza.

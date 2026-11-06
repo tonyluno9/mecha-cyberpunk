@@ -97,41 +97,6 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Velocidad desde la que soltar el avance se muestra como frenar.</summary>
         public const float VelocidadFrenar = 5f;
 
-        // ---------- Caminar y correr con arma (T-651) ----------
-
-        public const string CapaPiernas = "Piernas";
-        /// <summary>Velocidad (m/s) a la que avanza el clip Pistola_Caminar tal como viene, medida con MedicionClips (S1).</summary>
-        public const float VelocidadClipPistolaCaminar = 1.72f;
-        /// <summary>Velocidad (m/s) a la que avanza el clip Pistola_Correr tal como viene, medida con MedicionClips (S1).</summary>
-        public const float VelocidadClipPistolaCorrer = 1.84f;
-        /// <summary>Velocidad (m/s) a la que avanza el clip Rifle_Caminar tal como viene, medida con MedicionClips (S1).</summary>
-        public const float VelocidadClipRifleCaminar = 0.80f;
-        /// <summary>Velocidad (m/s) a la que avanza el clip Rifle_Correr tal como viene, medida con MedicionClips (S1).</summary>
-        public const float VelocidadClipRifleCorrer = 2.68f;
-        /// <summary>Velocidad (m/s) mínima para que las piernas pasen a las del arma; por debajo se queda la capa base (arranque e idle).</summary>
-        public const float VelocidadPiernasArma = 0.5f;
-
-        /// <summary>
-        /// True cuando las piernas deben jugar Pistola_Caminar/Correr o Rifle_Caminar/Correr: con arma en la mano, sin apuntar, en el piso,
-        /// moviéndose y sin estar en cobertura, agachado, caído, en un gesto o manejando. Al apuntar se queda la locomoción de la base (con dirección).
-        /// </summary>
-        public static bool UsaPiernasDeArma(TipoArmaVisual arma, bool enSuelo, bool apuntando, bool agachado, bool cubierto, bool caido, bool enGesto, bool manejando, float velocidad)
-        {
-            return arma != TipoArmaVisual.Ninguna && enSuelo && !apuntando && !agachado && !cubierto && !caido && !enGesto && !manejando
-                && velocidad > VelocidadPiernasArma;
-        }
-
-        /// <summary>
-        /// Velocidad (m/s) a la que avanza el clip del arma a esta velocidad real: entre Caminar (a <see cref="VelocidadAndar"/>) y Correr
-        /// (a <see cref="VelocidadCarrera"/>), igual que el árbol de mezcla de las capas de arma.
-        /// </summary>
-        public static float VelocidadClipArma(TipoArmaVisual arma, float velocidadReal)
-        {
-            float caminar = arma == TipoArmaVisual.Pistola ? VelocidadClipPistolaCaminar : VelocidadClipRifleCaminar;
-            float correr = arma == TipoArmaVisual.Pistola ? VelocidadClipPistolaCorrer : VelocidadClipRifleCorrer;
-            return Mathf.Lerp(caminar, correr, Mathf.InverseLerp(VelocidadAndar, VelocidadCarrera, velocidadReal));
-        }
-
         // ---------- Rapidez de los estados (T-652) ----------
 
         /// <summary>Parámetro de rapidez de los golpes de puños del jugador (los enemigos no lo cambian, se quedan en 1).</summary>
@@ -158,7 +123,7 @@ namespace MechaCyberpunk.Personaje.Visual
                 case "GirarDer": case "GirarIzq": return 1.5f;
                 case "CoberturaDisparo1": case "CoberturaDisparo2": return 1.5f;
                 case "LevantarseBocaArriba": case "LevantarseBocaAbajo": return 2.5f;
-                case "DanoFrente": case "DanoEspalda": case "DanoFuerte": return 1.8f;
+                case "DanoFrente": case "DanoEspalda": case "DanoFuerte": return 2.6f;
                 default: return 1f;
             }
         }

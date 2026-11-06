@@ -128,6 +128,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 2280327877223252596}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2765957
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2765957
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2765957
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -231,6 +243,10 @@ MonoBehaviour:
   socketArma: {fileID: 3411651565987644706}
   inclinacionBajada: 60
   manosPorIK: 0
+  maximoCorreccionCanon: 45
+  inclinacionArmaLarga: -5
+  maximoCorreccionArmaLarga: 120
+  rapidezManoIzquierda: 8
 --- !u!114 &1858069311914486051
 MonoBehaviour:
   m_ObjectHideFlags: 0

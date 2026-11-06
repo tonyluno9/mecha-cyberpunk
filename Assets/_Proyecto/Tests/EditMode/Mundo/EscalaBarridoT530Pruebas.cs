@@ -143,7 +143,8 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             foreach (Transform g in Raiz("T510_Guardias").Cast<Transform>())
             {
-                Assert.That(Caja(g).size.y, Is.InRange(2.1f, 2.3f), g.name);
+                // Bounds estáticos (más altos que el modelo animado): el jugador mide 1.80 m (T-670), el robot 25 % más.
+                Assert.That(Caja(g).size.y, Is.InRange(2.7f, 3.2f), g.name);
             }
         }
 

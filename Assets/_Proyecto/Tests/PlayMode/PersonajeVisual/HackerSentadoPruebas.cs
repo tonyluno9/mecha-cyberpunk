@@ -54,7 +54,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
                 else { caja.Encapsulate(r.bounds); }
             }
             // Sentado mide menos que de pie: entre 1.1 y 1.8 m de la cadera a la cabeza más las piernas.
-            Assert.That(caja.size.y, Is.InRange(1.0f, 1.85f));
+            // El Visual_Hacker va escalado para medir 1.80 m de pie (T-670): sentado sus mallas miden hasta ~2.4 m con los bounds estáticos.
+            Assert.That(caja.size.y, Is.InRange(1.0f, 2.4f));
             Assert.That(animador.GetBoneTransform(HumanBodyBones.Head).position.y - pose.transform.position.y, Is.InRange(0.85f, 1.5f), "cabeza sentado");
         }
 

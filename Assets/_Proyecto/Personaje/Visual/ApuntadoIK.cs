@@ -136,16 +136,15 @@ namespace MechaCyberpunk.Personaje.Visual
             return EsRecarga(actual) || (animador.IsInTransition(capaArriba) && EsRecarga(siguiente));
         }
 
-        // Pistola a dos manos al apuntar; arma larga a dos manos y al frente siempre; recargando la mano izquierda trabaja sola (T-650).
+        // Arma a dos manos solo al apuntar (sin apuntar el jugador camina normal con el arma colgando, T-671); recargando la mano izquierda trabaja sola (T-650).
         private void ActualizarManoIzquierda()
         {
             float objetivo = 0f;
             float objetivoCorreccion = 0f;
             if (!manosPorIK && animador != null && !visual.Caido && visual.TipoArma != TipoArmaVisual.Ninguna && !Recargando())
             {
-                bool larga = visual.TipoArma == TipoArmaVisual.ArmaLarga;
-                objetivo = larga ? 1f : peso;
-                objetivoCorreccion = larga ? 1f : peso;
+                objetivo = peso;
+                objetivoCorreccion = peso;
             }
             pesoIzquierda = Mathf.MoveTowards(pesoIzquierda, objetivo, rapidezManoIzquierda * Time.deltaTime);
             pesoCorreccion = Mathf.MoveTowards(pesoCorreccion, objetivoCorreccion, rapidezManoIzquierda * Time.deltaTime);
