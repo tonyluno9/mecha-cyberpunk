@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Tests.EditMode.PersonajeVisual",
     "rootNamespace": "MechaCyberpunk.Tests",
-    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje.Visual.Editor"],
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje.Visual.Editor", "MechaCyberpunk.Core", "MechaCyberpunk.Arte.Editor", "MechaCyberpunk.Personaje", "MechaCyberpunk.Economia", "MechaCyberpunk.UI", "UnityEngine.UI"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

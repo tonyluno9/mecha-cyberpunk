@@ -34,7 +34,8 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string NombreAgarreIzquierdo = "AgarreIzq";
 
         private static readonly Vector3 GiroEnMano = new Vector3(-90f, 0f, 0f);
-        private static readonly Vector3 PosicionArmaLarga = new Vector3(-0.025f, 0.12f, -0.03f);
+        // T-679: los modelos W02-W04 llevan la empuñadura (la palma) en su origen, igual que la pistola W01.
+        private static readonly Vector3 PosicionArmaLarga = new Vector3(-0.025f, 0.06f, -0.035f);
         private static readonly Vector3 GiroManoIzquierdaLarga = new Vector3(316f, 88f, 179f);
 
         /// <summary>El agarre de un arma por su nombre en el socket (Pistola, Fusil, Escopeta, Sniper); false si no se conoce.</summary>
@@ -46,13 +47,13 @@ namespace MechaCyberpunk.Personaje.Visual
                     agarre = new AgarreArma(new Vector3(-0.025f, 0.06f, -0.035f), GiroEnMano, new Vector3(-0.12f, -0.06f, -0.08f), new Vector3(9f, 84f, 96f));
                     return true;
                 case "Fusil":
-                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.16f), GiroManoIzquierdaLarga);
+                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.36f), GiroManoIzquierdaLarga);
                     return true;
                 case "Escopeta":
-                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.22f), GiroManoIzquierdaLarga);
+                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.36f), GiroManoIzquierdaLarga);
                     return true;
                 case "Sniper":
-                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.24f), GiroManoIzquierdaLarga);
+                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.38f), GiroManoIzquierdaLarga);
                     return true;
                 default:
                     agarre = default;
