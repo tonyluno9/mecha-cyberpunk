@@ -33305,8 +33305,6 @@ MonoBehaviour:
   colliderHoja: {fileID: 5814998171268528571}
   umbral: {fileID: 2855023026840406221}
   tamanoUmbral: {x: 3, y: 3, z: 2.4}
-  conBisagra: 0
-  bisagraLocal: {x: 0.5, y: 0, z: 0}
 --- !u!1 &1410693940632870829
 GameObject:
   m_ObjectHideFlags: 0
@@ -49578,8 +49576,6 @@ MonoBehaviour:
   colliderHoja: {fileID: 4897363319871829056}
   umbral: {fileID: 2735059252211286801}
   tamanoUmbral: {x: 3, y: 3, z: 2.4}
-  conBisagra: 0
-  bisagraLocal: {x: 0.5, y: 0, z: 0}
 --- !u!1 &2009760533205393912
 GameObject:
   m_ObjectHideFlags: 0
@@ -84500,8 +84496,6 @@ MonoBehaviour:
   colliderHoja: {fileID: 4616380557854715665}
   umbral: {fileID: 4947595139039586242}
   tamanoUmbral: {x: 3, y: 3, z: 2.4}
-  conBisagra: 0
-  bisagraLocal: {x: 0.5, y: 0, z: 0}
 --- !u!1 &3455641178624160066
 GameObject:
   m_ObjectHideFlags: 0
@@ -153750,8 +153744,6 @@ MonoBehaviour:
   colliderHoja: {fileID: 3140882819506072965}
   umbral: {fileID: 5894608048673049252}
   tamanoUmbral: {x: 3, y: 3, z: 2.4}
-  conBisagra: 0
-  bisagraLocal: {x: 0.5, y: 0, z: 0}
 --- !u!1 &5994315860997782638
 GameObject:
   m_ObjectHideFlags: 0
@@ -191056,8 +191048,6 @@ MonoBehaviour:
   colliderHoja: {fileID: 2490586862323737280}
   umbral: {fileID: 2024053127122113539}
   tamanoUmbral: {x: 3, y: 3, z: 2.4}
-  conBisagra: 0
-  bisagraLocal: {x: 0.5, y: 0, z: 0}
 --- !u!1 &7391511210462082057
 GameObject:
   m_ObjectHideFlags: 0
@@ -579072,7 +579062,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 6.663965, y: 5.000001, z: 3.7556643}
   m_Center: {x: 0.00019931793, y: 2.5000005, z: -0.00003385544}
