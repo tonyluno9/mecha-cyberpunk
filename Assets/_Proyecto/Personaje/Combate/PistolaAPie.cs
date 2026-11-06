@@ -476,7 +476,8 @@ namespace MechaCyberpunk.Personaje.Combate
                 if (visuales[i] != null)
                 {
                     float t = dispara ? Mathf.Clamp01((Time.time - inicioRetroceso) / duracionRetroceso) : 1f;
-                    visuales[i].localPosition = reposos[i] - Vector3.forward * (retroceso * (1f - t));
+                    // S1: el cañón va por el +Z del arma (en la mano, el arma ya no cuelga en -Y); el retroceso va hacia atrás por ese eje.
+                    visuales[i].localPosition = reposos[i] - visuales[i].localRotation * Vector3.forward * (retroceso * (1f - t));
                 }
             }
             if (marcas == null)

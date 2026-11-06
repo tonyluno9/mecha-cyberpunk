@@ -107,6 +107,22 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Hasta(() => anim.Fase == AnimacionCarro.FaseCarro.Fuera, "termina de salir", 8f);
             yield return Hasta(() => EnEstado(a, 0, "Idle"), "vuelve a Idle", 5f);
         }
+
+        [UnityTest]
+        public IEnumerator Subir_Y_Bajar_T652_LaAnimacionDuraUnMomentoYNoLos5Segundos()
+        {
+            yield return Calentar();
+            CrearCarro();
+            AnimacionCarro anim = jugador.GetComponent<AnimacionCarro>();
+            Assert.IsTrue(jugadorAPie.Subir(montable));
+            float t0 = Time.time;
+            yield return Hasta(() => anim.Fase == AnimacionCarro.FaseCarro.Dentro, "termina de entrar", 8f);
+            Assert.Less(Time.time - t0, 2.2f, "Subir al carro toma menos de 2.2 s (el clip original dura 5.5 s)");
+            Assert.IsTrue(jugadorAPie.Bajar());
+            t0 = Time.time;
+            yield return Hasta(() => anim.Fase == AnimacionCarro.FaseCarro.Fuera, "termina de salir", 8f);
+            Assert.Less(Time.time - t0, 2.2f, "Bajar del carro toma menos de 2.2 s (el clip original dura 5.8 s)");
+        }
     
         public static IEnumerator Capturar(Camera camara, string ruta)
         {
