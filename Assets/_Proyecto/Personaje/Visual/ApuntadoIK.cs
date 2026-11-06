@@ -7,6 +7,7 @@ namespace MechaCyberpunk.Personaje.Visual
     /// en la mano lleva las manos al frente del pecho por IK de Animator (necesita la capa base con IK Pass). Va en el mismo objeto que el Animator.
     /// </summary>
     [RequireComponent(typeof(Animator))]
+    [DefaultExecutionOrder(10)]
     public class ApuntadoIK : MonoBehaviour
     {
         [Tooltip("Visual del que se lee Apuntando y TipoArma. Si está vacío se busca en los padres.")]
@@ -33,6 +34,9 @@ namespace MechaCyberpunk.Personaje.Visual
         private Animator animador;
         private float peso;
 
+        // T-681: máximo que se gira el torso al apuntar para que el cañón dé justo en el punto de mira (°).
+        private const float MaximoGiroTorso = 30f;
+
         [Header("Arma en la mano (S1)")]
         [Tooltip("Máximo que se gira la mano derecha al apuntar para que el cañón mire al frente (°).")]
         [Range(0f, 90f)] [SerializeField] private float maximoCorreccionCanon = 45f;
@@ -51,12 +55,25 @@ namespace MechaCyberpunk.Personaje.Visual
         private float pesoCorreccion;
         private Transform armaActiva;
         private Transform agarreIzquierdo;
+        private Transform bocaActiva;
+        private bool hayMira;
+        private Vector3 puntoMira;
 
         /// <summary>Qué tanto está pegada la mano izquierda al arma (0 a 1).</summary>
         public float PesoManoIzquierda => pesoIzquierda;
 
         /// <summary>Qué tanto está levantada el arma, de 0 (bajada) a 1.</summary>
         public float Peso => peso;
+
+        /// <summary>T-681: el punto del mundo al que apunta la mira (el centro de la cámara de juego). Mientras haya uno el cañón se lleva exactamente hacia él; sin punto mira al frente del cuerpo.</summary>
+        public void PonerPuntoMira(Vector3 punto)
+        {
+            puntoMira = punto;
+            hayMira = true;
+        }
+
+        /// <summary>T-681: quita el punto de mira; el cañón vuelve a mirar al frente del cuerpo.</summary>
+        public void QuitarPuntoMira() => hayMira = false;
 
         private void Awake()
         {
@@ -86,8 +103,26 @@ namespace MechaCyberpunk.Personaje.Visual
         }
 
 
+        // T-681: lo que el IK de la muñeca no alcanza (la muñeca tiene límites) se termina girando el torso entero, con los brazos, el arma y las manos juntos.
+        private void AjustarTorsoAlPuntoDeMira()
+        {
+            if (manosPorIK || !hayMira || armaActiva == null || pesoCorreccion <= 0.001f || animador == null || !animador.isHuman)
+            {
+                return;
+            }
+            Transform columna = animador.GetBoneTransform(HumanBodyBones.Spine);
+            if (columna == null)
+            {
+                return;
+            }
+            Vector3 boca = bocaActiva != null ? bocaActiva.position : armaActiva.position;
+            Quaternion resto = AgarresArmas.CorreccionHaciaDireccion(armaActiva.rotation, puntoMira - boca, pesoCorreccion, MaximoGiroTorso);
+            columna.rotation = resto * columna.rotation;
+        }
+
         private void LateUpdate()
         {
+            AjustarTorsoAlPuntoDeMira();
             if (socketArma == null || visual == null || !manosPorIK)
             {
                 return;
@@ -105,6 +140,7 @@ namespace MechaCyberpunk.Personaje.Visual
         {
             armaActiva = null;
             agarreIzquierdo = null;
+            bocaActiva = null;
             if (socketArma == null)
             {
                 return;
@@ -115,6 +151,7 @@ namespace MechaCyberpunk.Personaje.Visual
                 {
                     armaActiva = hijo;
                     agarreIzquierdo = hijo.Find(AgarresArmas.NombreAgarreIzquierdo);
+                    bocaActiva = hijo.Find("Boca");
                     return;
                 }
             }
@@ -167,8 +204,8 @@ namespace MechaCyberpunk.Personaje.Visual
             // el hueso (llevan un giro y una distancia propios), así que se mueven en relación con ellas: meta nueva = meta animada + lo que hay que mover el hueso.
             // Al apuntar el cañón mira al frente: se gira la mano derecha por IK (la animación apunta algo a un lado) y la izquierda la sigue.
             bool larga = visual.TipoArma == TipoArmaVisual.ArmaLarga;
-            Quaternion correccion = AgarresArmas.CorreccionDeArma(armaActiva.rotation, visual.transform.forward, pesoCorreccion,
-                larga ? maximoCorreccionArmaLarga : maximoCorreccionCanon, larga ? inclinacionArmaLarga : float.NaN);
+            float maximo = larga ? maximoCorreccionArmaLarga : maximoCorreccionCanon;
+            Quaternion correccion = CorreccionDelCanon(manoDerecha.position, larga, maximo);
             if (pesoCorreccion > 0.001f)
             {
                 animador.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
@@ -183,6 +220,20 @@ namespace MechaCyberpunk.Personaje.Visual
                 animador.SetIKPosition(AvatarIKGoal.LeftHand, animador.GetIKPosition(AvatarIKGoal.LeftHand) + (destino - manoIzquierda.position));
                 animador.SetIKRotation(AvatarIKGoal.LeftHand, giroDestino * Quaternion.Inverse(manoIzquierda.rotation) * animador.GetIKRotation(AvatarIKGoal.LeftHand));
             }
+        }
+
+        // T-681: con punto de mira el cañón va de la boca a ese punto (se afina una vez con la boca ya girada); sin él, al frente del cuerpo.
+        private Quaternion CorreccionDelCanon(Vector3 posicionMano, bool larga, float maximo)
+        {
+            if (!hayMira)
+            {
+                return AgarresArmas.CorreccionDeArma(armaActiva.rotation, visual.transform.forward, pesoCorreccion, maximo, larga ? inclinacionArmaLarga : float.NaN);
+            }
+            Vector3 boca = bocaActiva != null ? bocaActiva.position : armaActiva.position;
+            Quaternion giro = AgarresArmas.CorreccionHaciaDireccion(armaActiva.rotation, puntoMira - boca, 1f, maximo);
+            Vector3 bocaGirada = posicionMano + giro * (boca - posicionMano);
+            giro = AgarresArmas.CorreccionHaciaDireccion(armaActiva.rotation, puntoMira - bocaGirada, 1f, maximo);
+            return Quaternion.Slerp(Quaternion.identity, giro, pesoCorreccion);
         }
 
         private void OnAnimatorIK(int capa)
