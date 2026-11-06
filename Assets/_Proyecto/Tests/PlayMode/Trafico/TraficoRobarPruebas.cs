@@ -268,6 +268,11 @@ namespace MechaCyberpunk.Tests.Trafico
             CarroViejo carro = objetivo.GetComponent<CarroViejo>();
             JugadorJuntoALaPuerta(jugador, carro);
             yield return Esperar(0.3f);
+            // T-661: robar un carro solo sube el calor si alguien lo ve; aquí lo ve una cámara de seguridad.
+            GameObject testigo = new GameObject("CamaraTestigo");
+            testigo.transform.position = jugador.Raiz.position + new Vector3(0f, 6f, 0f) + jugador.Raiz.right * 5f;
+            testigo.transform.rotation = Quaternion.LookRotation(jugador.Raiz.position - testigo.transform.position, Vector3.up);
+            testigo.AddComponent<MechaCyberpunk.Trafico.Testigos.CamaraSeguridad>().Configurar(60f, 80f);
             float antes = calor.Valor;
             Assert.IsTrue(carro.PuedeSubir, "Detenido, se puede subir");
             yield return Tecla(teclado.eKey);
@@ -275,6 +280,7 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.IsTrue(objetivo.Robado);
             Assert.IsNotNull(GameObject.Find(NombreConductor), "El conductor huye");
             Assert.IsTrue(calor.Valor >= antes + 25f || calor.Valor >= 100f, "Sube el calor");
+            Object.Destroy(testigo);
             Assert.AreEqual(trafico.Carros.Count(c => c.gameObject.activeSelf && !c.Robado), trafico.Vivos, "El carro robado ya no cuenta como tráfico");
         }
     }

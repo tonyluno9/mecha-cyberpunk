@@ -33,6 +33,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float VelocidadImposible = 80f;
         private const float AlcanceCamara = 400f;
         private const float SegundosMinimosDeRetiro = 1f;
+        private static readonly List<PatrullaMundo> ActivasLista = new List<PatrullaMundo>();
         private int bucleSirena = Sonidos.SinBucle;
         private float proximoMegafono;
 
@@ -54,6 +55,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private Vector3? jugadorAnterior;
         private int nodoRetiro = -1;
         private float segundosRetirandose;
+
+        public static IReadOnlyList<PatrullaMundo> Activas => ActivasLista;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Limpiar() => ActivasLista.Clear();
 
         /// <summary>True si va directo al jugador (ya dejó la calle).</summary>
         public bool VaDirecto { get; private set; }
@@ -117,10 +123,23 @@ namespace MechaCyberpunk.Trafico.Persecucion
             PonerLuces(false, false);
         }
 
+        private void OnEnable() => ActivasLista.Add(this);
+
         private void OnDisable()
         {
+            ActivasLista.Remove(this);
             Sonidos.DetenerBucle(bucleSirena);
             bucleSirena = Sonidos.SinBucle;
+        }
+
+        /// <summary>T-661: true si esta patrulla (que no se está yendo) ve el punto: a menos de <see cref="ConfigPersecucion.RadioVista"/> m y sin pared en medio.</summary>
+        public bool VeElPunto(Vector3 punto)
+        {
+            if (Retirando || config == null)
+            {
+                return false;
+            }
+            return DistanciaPlano(posicion, punto) <= config.RadioVista && Testigos.LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, punto);
         }
 
         private void Update()

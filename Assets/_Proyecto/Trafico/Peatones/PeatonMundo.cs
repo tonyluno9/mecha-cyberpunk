@@ -12,7 +12,7 @@ namespace MechaCyberpunk.Trafico.Peatones
     /// T-443: si oye un disparo a menos de <see cref="ConfigPeatones.RadioOirDisparo"/> (<see cref="EventosRuido"/>) sale corriendo por
     /// su ruta, en el sentido que se aleja del disparo, durante <see cref="ConfigPeatones.SegundosHuida"/>; mientras corre no se detiene por el jugador.
     /// </summary>
-    public class PeatonMundo : MonoBehaviour
+    public class PeatonMundo : MonoBehaviour, IRecibeDanio
     {
         private const float VelocidadGiroGradosPorSegundo = 360f;
         private const float DistanciaMinimaParaMirar = 0.00000001f; // T-534: antes 0.001 (a 60 fps o más el paso de un cuadro no llegaba y no giraba)
@@ -47,6 +47,120 @@ namespace MechaCyberpunk.Trafico.Peatones
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Limpiar() => ActivosLista.Clear();
 
+        // T-663: un civil que vio un delito se queda parado con el teléfono (icono encima) hasta terminar la llamada; si lo matan, cae y no llama.
+        private const float AlturaCapsula = 1.8f;
+        private const float RadioCapsula = 0.3f;
+        private const float SegundosCuerpo = 10f;
+        private const float MargenIcono = 0.35f;
+        private float vida;
+        private float segundosMuerto;
+        private IndicadorLlamada indicador;
+        private CapsuleCollider capsula;
+        private Renderer[] visuales;
+
+        /// <summary>True mientras está llamando a la policía (parado, con el teléfono).</summary>
+        public bool Llamando { get; private set; }
+
+        /// <summary>True si ya lo mataron: queda tirado un rato y no hace nada.</summary>
+        public bool Muerto { get; private set; }
+
+        /// <summary>Se avisa al morir un peatón.</summary>
+        public static event Action<PeatonMundo> Murio;
+
+        /// <summary>Empieza a llamar: deja de huir y de caminar y muestra el icono del teléfono.</summary>
+        public void IniciarLlamada()
+        {
+            if (Muerto)
+            {
+                return;
+            }
+            Llamando = true;
+            Calmar();
+            if (indicador == null)
+            {
+                indicador = IndicadorLlamada.Crear(transform, MargenIcono);
+            }
+            indicador.gameObject.SetActive(true);
+        }
+
+        /// <summary>Termina o cancela la llamada: quita el icono y sigue su camino.</summary>
+        public void TerminarLlamada()
+        {
+            Llamando = false;
+            if (indicador != null)
+            {
+                indicador.gameObject.SetActive(false);
+            }
+        }
+
+        public ResultadoDanio RecibirDanio(InfoDanio info)
+        {
+            if (Muerto || info.Cantidad <= 0f)
+            {
+                return ResultadoDanio.Ignorado;
+            }
+            float antes = vida;
+            vida -= info.Cantidad;
+            bool mato = vida <= 0f;
+            if (mato)
+            {
+                Matar();
+            }
+            return new ResultadoDanio(Mathf.Min(antes, info.Cantidad), TipoBloqueo.Ninguno, mato);
+        }
+
+        /// <summary>Lo mata: cae, queda tirado <see cref="SegundosCuerpo"/> s y se esconde. Cancela cualquier llamada.</summary>
+        public void Matar()
+        {
+            if (Muerto)
+            {
+                return;
+            }
+            Muerto = true;
+            TerminarLlamada();
+            Calmar();
+            segundosMuerto = 0f;
+            if (capsula != null)
+            {
+                capsula.enabled = false;
+            }
+            transform.rotation = Quaternion.Euler(90f, transform.eulerAngles.y, 0f);
+            transform.position += Vector3.up * RadioCapsula;
+            Murio?.Invoke(this);
+        }
+
+        private void Awake()
+        {
+            visuales = GetComponentsInChildren<Renderer>(true);
+            capsula = GetComponent<CapsuleCollider>();
+            if (capsula == null)
+            {
+                capsula = gameObject.AddComponent<CapsuleCollider>();
+                capsula.height = AlturaCapsula;
+                capsula.radius = RadioCapsula;
+                capsula.center = new Vector3(0f, AlturaCapsula / 2f, 0f);
+            }
+        }
+
+        private void RestablecerSiMuerto()
+        {
+            if (!Muerto)
+            {
+                return;
+            }
+            Muerto = false;
+            vida = config != null ? config.VidaPeaton : vida;
+            if (capsula != null)
+            {
+                capsula.enabled = true;
+            }
+            foreach (Renderer r in visuales)
+            {
+                r.enabled = true;
+            }
+            transform.rotation = Quaternion.identity;
+        }
+
         private Vector3[] puntos;
         private CalculoPeaton calculo;
         private ConfigPeatones config;
@@ -67,6 +181,7 @@ namespace MechaCyberpunk.Trafico.Peatones
             config = numeros;
             posicionJugador = dondeEstaElJugador;
             calculo = numeros.Crear(RutasBanqueta.Largos(ruta), azar);
+            vida = numeros.VidaPeaton;
             calculo.Avanzar(segundosPrevios);
             Colocar();
         }
@@ -75,11 +190,13 @@ namespace MechaCyberpunk.Trafico.Peatones
         {
             EventosRuido.Disparo += AlOirDisparo;
             ActivosLista.Add(this);
+            RestablecerSiMuerto();
         }
 
         private void OnDisable()
         {
             EventosRuido.Disparo -= AlOirDisparo;
+            TerminarLlamada();
             ActivosLista.Remove(this);
             Calmar();
         }
@@ -87,7 +204,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         /// <summary>Un disparo en <paramref name="posicion"/>: si está dentro del radio de oído, el peatón huye.</summary>
         public void AlOirDisparo(Vector3 posicion)
         {
-            if (calculo == null || config == null || !isActiveAndEnabled)
+            if (calculo == null || config == null || !isActiveAndEnabled || Llamando || Muerto)
             {
                 return;
             }
@@ -106,6 +223,28 @@ namespace MechaCyberpunk.Trafico.Peatones
         {
             if (calculo == null)
             {
+                return;
+            }
+            if (Muerto)
+            {
+                segundosMuerto += Time.deltaTime;
+                if (segundosMuerto >= SegundosCuerpo)
+                {
+                    foreach (Renderer r in visuales)
+                    {
+                        r.enabled = false;
+                    }
+                }
+                return;
+            }
+            if (Llamando)
+            {
+                Detenido = true;
+                Vector3? aQuien = posicionJugador?.Invoke();
+                if (aQuien.HasValue)
+                {
+                    Mirar(aQuien.Value - transform.position);
+                }
                 return;
             }
             bool huyendo = huidaRestante > 0f;

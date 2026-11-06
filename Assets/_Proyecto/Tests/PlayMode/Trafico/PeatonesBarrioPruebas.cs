@@ -151,7 +151,10 @@ namespace MechaCyberpunk.Tests.Trafico
                     if (DistanciaARutas(local, rutas) > 0.35f) { problemas.Add(p.name + " fuera de ruta @" + local.x.ToString("F1") + "," + local.z.ToString("F1")); }
                     if (Mathf.Abs(local.y - AlturaBanqueta) > 0.05f) { problemas.Add(p.name + " fuera de la banqueta (y=" + local.y.ToString("F2") + ")"); }
                     Collider[] choques = Physics.OverlapCapsule(p.transform.position + Vector3.up * AlturaInferior, p.transform.position + Vector3.up * AlturaSuperior, RadioCuerpo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
-                    foreach (Collider c in choques) { problemas.Add(p.name + " dentro de " + c.name); }
+                    foreach (Collider c in choques)
+                    {
+                        if (c.GetComponentInParent<PeatonMundo>() == null) { problemas.Add(p.name + " dentro de " + c.name); } // T-663: su propia cápsula no cuenta
+                    }
                 }
             }
             Debug.Log("[T-331] muestras en 60 s: " + muestras + ", problemas distintos: " + problemas.Distinct().Count());

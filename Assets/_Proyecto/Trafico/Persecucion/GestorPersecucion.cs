@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Calle;
 using MechaCyberpunk.Trafico.Datos;
+using MechaCyberpunk.Trafico.Testigos;
 using UnityEngine;
 
 namespace MechaCyberpunk.Trafico.Persecucion
@@ -14,6 +15,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
     public class GestorPersecucion : MonoBehaviour
     {
         private const string PrefijoManzana = "Manzana_";
+        private const string NombreCamara = "CamaraSeguridad";
         private const float LadoManzana = 80f;          // medida del barrio (CreadorBarrio, m)
         private const float AlturaCalles = 0.2f;        // sobre la banqueta (m)
         private const float GradosPorVuelta = 360f;
@@ -35,6 +37,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private GrafoCalles calles;
         private ICalor calor;
         private System.Random azar;
+        private TestigosDelito testigos;
 
         public int Drones => drones.Count;
         public int Patrullas => patrullas.Count;
@@ -66,6 +69,40 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             calculo = config.Crear();
             azar = new System.Random(341);
+            testigos = gameObject.AddComponent<TestigosDelito>(); // T-661: sin testigos no hay calor
+            testigos.Configurar(config);
+        }
+
+        private void Start() => ColocarCamaras();
+
+        /// <summary>Cuántas cámaras de seguridad puso el gestor en las esquinas (T-662).</summary>
+        public int Camaras { get; private set; }
+
+        // T-662: cámaras de seguridad en postes, en las esquinas de los cruces de las calles del barrio. Son testigos del delito (TestigosDelito).
+        private void ColocarCamaras()
+        {
+            if (config.CamarasPorCruce <= 0)
+            {
+                return;
+            }
+            if (calles == null)
+            {
+                calles = ArmarCalles();
+            }
+            GameObject molde = Resources.Load<GameObject>(NombreCamara);
+            if (calles == null || molde == null)
+            {
+                return;
+            }
+            Transform contenedor = new GameObject("CamarasSeguridad").transform;
+            contenedor.SetParent(transform, false);
+            foreach (CalculoCamaras.Colocacion c in CalculoCamaras.Colocaciones(calles, config.CamarasPorCruce, config.DesfaseEsquinaCamara))
+            {
+                GameObject poste = Instantiate(molde, c.Posicion, Quaternion.Euler(0f, c.Giro, 0f), contenedor);
+                poste.name = "CamaraSeguridad_" + (Camaras + 1);
+                poste.GetComponent<CamaraSeguridad>().Configurar(config.AlcanceCamara, config.SemiAnguloCamara);
+                Camaras++;
+            }
         }
 
         private void OnEnable()
@@ -136,6 +173,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private void Enlazar(ICalor nuevo)
         {
+            if (!ReferenceEquals(nuevo, Registro<ICalor>.Actual))
+            {
+                return; // T-661: el calor real queda detrás de CalorConTestigos, que es el último del registro
+            }
             Desenlazar(calor);
             calor = nuevo;
             calor.NivelCambio += Reconciliar;
