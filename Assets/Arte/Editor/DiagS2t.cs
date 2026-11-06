@@ -199,6 +199,62 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/s2t-diag-n09.txt", sb.ToString());
         }
 
+        public static void Taller()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (string r in new[] { "GTA_T417/Apoyo_CANEPA", "S2n_TallerMecanico/Fachada", "GTA_T417/Apoyo_TINO" })
+            {
+                Transform t = ColocarS2.Buscar(r);
+                sb.AppendLine("== " + r + (t == null ? " FALTA" : " p" + t.position.ToString("F2") + " r" + t.eulerAngles.ToString("F0")));
+                if (t == null) continue;
+                foreach (Transform h in t.GetComponentsInChildren<Transform>(true).Take(40))
+                {
+                    Renderer rd = h.GetComponent<Renderer>();
+                    sb.AppendLine("  " + Ruta(h).Substring(r.Length) + (h.gameObject.activeInHierarchy ? "" : " [apagado]") + " p" + h.position.ToString("F2") + " s" + h.lossyScale.ToString("F2")
+                        + (rd != null ? " b" + rd.bounds.size.ToString("F2") : "") + " " + Fuente(h.gameObject) + " " + string.Join(",", h.GetComponents<MonoBehaviour>().Where(m => m != null).Select(m => m.GetType().Name)));
+                }
+            }
+            sb.AppendLine("== Letreros cerca del taller (x -40..-24, z -80..-60)");
+            foreach (Transform t in ColocarS2.Todos().Where(t => t.gameObject.activeInHierarchy && (t.name.Contains("Letrero") || t.name.StartsWith("C15") || t.name.StartsWith("L1") || t.GetComponent<Canvas>() != null)
+                && t.position.x > -40f && t.position.x < -24f && t.position.z > -80f && t.position.z < -60f))
+            {
+                sb.AppendLine("  " + Ruta(t) + " p" + t.position.ToString("F2") + " r" + t.eulerAngles.ToString("F0") + " " + Fuente(t.gameObject));
+            }
+            File.WriteAllText("Logs/s2t-diag-taller.txt", sb.ToString());
+        }
+
+        public static void Nombres()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (var g in ColocarS2.Todos().Where(t => t.gameObject.activeInHierarchy && t.GetComponent<Renderer>() != null && t.GetComponent<Renderer>().enabled)
+                .GroupBy(t => string.Join("/", Ruta(t).Split('/').Take(2)) + " | " + (t.GetComponent<Renderer>().sharedMaterial != null ? t.GetComponent<Renderer>().sharedMaterial.name : "-"))
+                .Where(g => g.Key.ToLowerInvariant().Contains("tej") || g.Key.ToLowerInvariant().Contains("techo") || g.Key.ToLowerInvariant().Contains("azotea") || g.Key.ToLowerInvariant().Contains("teja") || g.Key.ToLowerInvariant().Contains("lamina") || g.Key.ToLowerInvariant().Contains("losa")))
+            {
+                Transform e = g.First();
+                sb.AppendLine(g.Count() + "x " + g.Key + " ej " + Ruta(e) + " c" + e.GetComponent<Renderer>().bounds.center.ToString("F0") + " s" + e.GetComponent<Renderer>().bounds.size.ToString("F1"));
+            }
+            File.WriteAllText("Logs/s2t-diag-nombres.txt", sb.ToString());
+            ColocarS2t.FotoHora(13f, new Vector3(-80f, 45f, -110f), new Vector3(-50f, 0f, -75f), ColocarS2t.CarpetaCapturas + "s2t-recorrido-alto-casa.png", 70f);
+            ColocarS2t.FotoHora(13f, new Vector3(-20f, 45f, -40f), new Vector3(-50f, 0f, -90f), ColocarS2t.CarpetaCapturas + "s2t-recorrido-alto-casa2.png", 70f);
+        }
+
+        public static void FotosSur()
+        {
+            ColocarS2.Abrir();
+            var tomas = new[] {
+                ("sur-1", new Vector3(-47f, 1.7f, -88f), new Vector3(-30f, 4f, -98f)),
+                ("sur-2", new Vector3(-20f, 1.7f, -85f), new Vector3(-30f, 5f, -98f)),
+                ("sur-3", new Vector3(-47f, 1.7f, -100f), new Vector3(-65f, 4f, -100f)),
+                ("sur-4", new Vector3(-30f, 25f, -70f), new Vector3(-30f, 0f, -100f)) };
+            foreach (var (n, d, h) in tomas)
+            {
+                ColocarS2t.FotoHora(13f, d, h, ColocarS2t.CarpetaCapturas + "s2t-recorrido-" + n + ".png", 70f);
+            }
+            File.WriteAllText("Logs/s2t-diag-sur.txt", "== cerca de (-30,-98)" + System.Environment.NewLine + string.Join(System.Environment.NewLine, ColocarS2.Todos().Where(t => t.parent != null && t.parent.parent == null && t.gameObject.activeInHierarchy).SelectMany(r => r.Cast<Transform>()).Where(t => new Vector2(t.position.x + 35f, t.position.z + 98f).magnitude < 20f).Select(t => Ruta(t) + " p" + t.position.ToString("F0"))));
+        }
+
         public static void Todo()
         {
             Postes();
