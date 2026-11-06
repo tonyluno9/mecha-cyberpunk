@@ -5,6 +5,7 @@ using System.IO;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
+using MechaCyberpunk.UI.Armas;
 using MechaCyberpunk.UI.Historia;
 using MechaCyberpunk.UI.Tiendas;
 using NUnit.Framework;
@@ -234,25 +235,38 @@ namespace MechaCyberpunk.Tests.Progresion
             // d. EL INVENTOR: la tienda con 15 mejoras y ninguna arma; Esc la cierra.
             PersonajeApoyo inventor = Personaje("inventor");
             yield return PonerFrente(jugador, inventor, 2.2f);
-            MostradorTienda cic = null;
-            foreach (MostradorTienda m in Object.FindObjectsByType<MostradorTienda>(FindObjectsSortMode.None))
+            // T-814: con el banco de armas en el CIC (ColocarS2nBancoArmas), Tino ya no abre la tienda: te manda al banco.
+            BancoArmas bancoArmas = Object.FindFirstObjectByType<BancoArmas>();
+            if (bancoArmas != null)
             {
-                cic = m.name == "MostradorCIC" ? m : cic;
+                Assert.AreEqual("HABLAR CON TINO", inventor.Texto);
+                yield return Pulsar(teclado.eKey);
+                StringAssert.Contains("banco de trabajo", inventor.UltimoTexto, "Tino te manda al banco");
+                Assert.Less(Vector3.Distance(bancoArmas.Posicion, Buscar("Lugar_CIC").position), 8f, "El banco está en el CIC");
+                yield return new WaitForSecondsRealtime(0.3f);
             }
-            Assert.IsNotNull(cic, "Existe el mostrador del CIC");
-            PantallaTienda pantalla = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
-            Assert.IsNotNull(pantalla, "El mostrador del CIC trae su pantalla");
-            yield return Pulsar(teclado.eKey);
-            yield return EsperarHasta(() => cic.PantallaAbierta && pantalla.Visible, "abrir la tienda del CIC con E", 5f);
-            Assert.AreEqual(15, cic.EnVenta.Count, "El CIC vende 15 mejoras");
-            for (int i = 0; i < pantalla.CantidadFilas; i++)
+            else
             {
-                string fila = pantalla.TextoFila(i).ToUpperInvariant();
-                Assert.IsTrue(fila.Contains(" I"), "Solo mejoras, no armas: " + fila);
+                MostradorTienda cic = null;
+                foreach (MostradorTienda m in Object.FindObjectsByType<MostradorTienda>(FindObjectsSortMode.None))
+                {
+                    cic = m.name == "MostradorCIC" ? m : cic;
+                }
+                Assert.IsNotNull(cic, "Existe el mostrador del CIC");
+                PantallaTienda pantalla = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+                Assert.IsNotNull(pantalla, "El mostrador del CIC trae su pantalla");
+                yield return Pulsar(teclado.eKey);
+                yield return EsperarHasta(() => cic.PantallaAbierta && pantalla.Visible, "abrir la tienda del CIC con E", 5f);
+                Assert.AreEqual(15, cic.EnVenta.Count, "El CIC vende 15 mejoras");
+                for (int i = 0; i < pantalla.CantidadFilas; i++)
+                {
+                    string fila = pantalla.TextoFila(i).ToUpperInvariant();
+                    Assert.IsTrue(fila.Contains(" I"), "Solo mejoras, no armas: " + fila);
+                }
+                yield return Pulsar(teclado.escapeKey);
+                yield return EsperarHasta(() => !cic.PantallaAbierta, "cerrar la tienda con Esc", 5f);
+                yield return new WaitForSecondsRealtime(0.3f);
             }
-            yield return Pulsar(teclado.escapeKey);
-            yield return EsperarHasta(() => !cic.PantallaAbierta, "cerrar la tienda con Esc", 5f);
-            yield return new WaitForSecondsRealtime(0.3f);
 
             // e. EL HACKER y EL DIRECTOR sacan un subtítulo.
             PantallaHistoriaPandillas subtitulos = null;
