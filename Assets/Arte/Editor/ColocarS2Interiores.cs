@@ -88,8 +88,6 @@ namespace MechaCyberpunk.Arte.Editor
             Modelo(r, C + "C16_Tambo", new Vector3(-96.7f, 0f, -10.9f), 0f, caja.Piso);
             Modelo(r, C + "CY03_MazoCables", new Vector3(-103.85f, 0f, -13.0f), 90f, caja.Piso + 1.1f, sinCollider: true);
             Modelo(r, C + "CY03_MazoCables", new Vector3(-97.8f, 0f, -15.85f), 180f, caja.Piso + 1.1f, sinCollider: true);
-            PapelPicado(r, new Vector3(-103.8f, caja.Techo - 0.35f, -12.2f), new Vector3(-96.2f, caja.Techo - 0.45f, -12.2f));
-            PapelPicado(r, new Vector3(-103.8f, caja.Techo - 0.4f, -14.6f), new Vector3(-96.2f, caja.Techo - 0.3f, -14.6f));
 
             Transform luces = Grupo(r, "Luces");
             Luz(luces, "Tubo_Cian_1", new Vector3(-101.5f, caja.Techo - 0.2f, -12.4f), Cian, 6f, 8f);
@@ -205,8 +203,6 @@ namespace MechaCyberpunk.Arte.Editor
             Modelo(r, C + "C16_Tambo", P(2.9f, 3.4f), 0f, piso);
             Modelo(r, C + "CY03_MazoCables", P(-4.45f, -0.4f), 90f, piso + 1.4f, sinCollider: true);
             Modelo(r, C + "CY03_MazoCables", P(4.45f, 0.8f), 270f, piso + 1.4f, sinCollider: true);
-            PapelPicado(r, P(-4.4f, -1f) + Vector3.up * (techo - 0.5f), P(4.4f, -1f) + Vector3.up * (techo - 0.6f));
-            PapelPicado(r, P(-4.4f, 2.2f) + Vector3.up * (techo - 0.6f), P(4.4f, 2.2f) + Vector3.up * (techo - 0.5f));
             Luz(c.Luces, "Tubo_Calido_1", P(-1.5f, -0.5f) + Vector3.up * (techo - 0.3f), Calido, 2.6f, 8f);
             Luz(c.Luces, "Tubo_Calido_2", P(1.8f, 2.4f) + Vector3.up * (techo - 0.3f), Calido, 2.4f, 8f);
             Luz(c.Luces, "Neon_Magenta", P(-4.2f, 1.4f) + Vector3.up * 2.4f, Magenta, 1.2f, 3.5f);
@@ -444,33 +440,6 @@ namespace MechaCyberpunk.Arte.Editor
             l.shadows = LightShadows.Soft;
         }
 
-        // Tira de papel picado: banderitas planas con la textura de T-546 colgando entre dos puntos.
-        private static void PapelPicado(Transform padre, Vector3 a, Vector3 b)
-        {
-            Material m = MaterialPapelPicado();
-            if (m == null)
-            {
-                return;
-            }
-            Transform tira = Grupo(padre, "PapelPicado");
-            int n = Mathf.Max(2, Mathf.RoundToInt(Vector3.Distance(a, b) / 0.45f));
-            Vector3 dir = (b - a).normalized;
-            for (int i = 0; i < n; i++)
-            {
-                float t = (i + 0.5f) / n;
-                Vector3 pos = Vector3.Lerp(a, b, t) + Vector3.down * (Mathf.Sin(t * Mathf.PI) * 0.25f + 0.15f);
-                GameObject q = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                Object.DestroyImmediate(q.GetComponent<Collider>());
-                q.name = "Bandera";
-                q.transform.SetParent(tira, false);
-                q.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(Vector3.Cross(dir, Vector3.up), Vector3.up));
-                q.transform.localScale = new Vector3(0.34f, 0.3f, 1f);
-                Renderer rend = q.GetComponent<Renderer>();
-                rend.sharedMaterial = m;
-                rend.shadowCastingMode = ShadowCastingMode.Off;
-            }
-        }
-
         // Serie de focos colgando en curva entre dos puntos del techo: cable negro (LineRenderer) y focos cálidos emisivos.
         private static void SerieFocos(Transform padre, Vector3 a, Vector3 b, int focos)
         {
@@ -504,35 +473,6 @@ namespace MechaCyberpunk.Arte.Editor
                 rend.sharedMaterial = foco;
                 rend.shadowCastingMode = ShadowCastingMode.Off;
             }
-        }
-
-        // El de T-546 es Unlit (brilla como tira de LED): este es Lit, con recorte de alfa y de dos caras.
-        private static Material MaterialPapelPicado()
-        {
-            const string ruta = "Assets/Arte/Interiores/Materiales/S2_PapelPicado.mat";
-            Material origen = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Interiores/Materiales/T546_PapelPicado.mat");
-            if (origen == null)
-            {
-                return null;
-            }
-            Material m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
-            if (m == null)
-            {
-                m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                AssetDatabase.CreateAsset(m, ruta);
-            }
-            Texture tex = origen.HasProperty("_BaseMap") ? origen.GetTexture("_BaseMap") : origen.mainTexture;
-            m.SetTexture("_BaseMap", tex);
-            m.SetColor("_BaseColor", Color.white * 0.9f);
-            m.SetFloat("_Smoothness", 0.05f);
-            m.SetFloat("_AlphaClip", 1f);
-            m.SetFloat("_Cutoff", 0.4f);
-            m.EnableKeyword("_ALPHATEST_ON");
-            m.SetFloat("_Cull", 0f);
-            m.doubleSidedGI = true;
-            EditorUtility.SetDirty(m);
-            AssetDatabase.SaveAssetIfDirty(m);
-            return m;
         }
 
         private static void Cuadro(Transform padre, string nombre, string rutaMaterial, Vector3 pos, Vector3 frente, Vector2 tam)

@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Mundo
 {
-    /// <summary>T-504 en juego: una cápsula del tamaño del jugador llega de la boca del callejón al punto de la puerta de El Mercado sin chocar con T504, y las banderas y luces están vivas.</summary>
+    /// <summary>T-504 en juego: una cápsula del tamaño del jugador llega de la boca del callejón al punto de la puerta de El Mercado sin chocar con T504, sin papel picado (T-803) y con sus luces vivas.</summary>
     public class MercadoT504PlayPruebas
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
@@ -52,13 +52,14 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator PapelPicadoYLucesNaranjas_EstanActivosEnJuego()
+        public IEnumerator SinPapelPicado_YLucesNaranjasActivasEnJuego()
         {
             yield return null;
             GameObject raiz = GameObject.Find(NombreRaiz);
             Assert.IsNotNull(raiz);
             Assert.IsTrue(raiz.activeInHierarchy);
-            Assert.GreaterOrEqual(raiz.GetComponentsInChildren<MeshRenderer>().Count(r => r.name.StartsWith("Papel_") && r.enabled), 40);
+            // T-803: sin papel picado (Tony nunca lo pidió): antes se exigían 40 banderas vivas, ahora ninguna.
+            Assert.AreEqual(0, raiz.GetComponentsInChildren<MeshRenderer>().Count(r => r.name.StartsWith("Papel_") && r.enabled));
             Assert.IsTrue(raiz.GetComponentsInChildren<Light>().Any(l => l.enabled && l.color.r > 0.9f && l.color.b < 0.3f));
         }
 

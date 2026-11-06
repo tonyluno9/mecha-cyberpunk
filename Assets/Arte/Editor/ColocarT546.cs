@@ -245,11 +245,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             GameObject barra = Poner(grupo, "Assets/_Proyecto/Mundo/Prefabs/Kit/Prop_Barra.prefab", new Vector3(81.6f, 0.2f, 51f), -90f);
             GameObject mesaHacker = Poner(grupo, "Assets/_Proyecto/Mundo/Prefabs/Kit/Prop_Mesa.prefab", new Vector3(80.2f, 0.2f, 40.5f), 0f);
-            Material papel = Material("T546_PapelPicado", "T546_PapelPicado", true, new Vector2(4f, 1f));
-            foreach (float z in new[] { 38.5f, 44f, 50f, 55.5f })
-            {
-                Tira(grupo, papel, new Vector3(72f, 4.75f, z), 21f, 1.1f);
-            }
+            // T-803: sin papel picado (Tony nunca lo pidió).
             foreach (Vector3 p in new[] { new Vector3(66f, 4.6f, 42f), new Vector3(78f, 4.6f, 42f), new Vector3(66f, 4.6f, 52f), new Vector3(78f, 4.6f, 52f) })
             {
                 Luz(grupo, "Luz_Dorada", p, Dorado, 5f, 10f);
@@ -261,7 +257,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 hacker.SetPositionAndRotation(new Vector3(81.4f, 0.2f, 40.5f), Quaternion.LookRotation(Vector3.left));
             }
-            Informe.AppendLine("Casino: alfombra estampada, " + maquinas + " tragamonedas en hileras, barra, mesa del Hacker al fondo, papel picado, luces doradas y magenta"
+            Informe.AppendLine("Casino: alfombra estampada, " + maquinas + " tragamonedas en hileras, barra, mesa del Hacker al fondo, luces doradas y magenta"
                 + (barra == null ? " (FALTA Prop_Barra)" : ""));
         }
 
@@ -329,12 +325,9 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Escalar(reja, 0.45f);
             }
-            Material papel = Material("T546_PapelPicado", "T546_PapelPicado", true, new Vector2(2f, 1f));
-            Tira(grupo, papel, new Vector3(-31.3f, 3.85f, 23.6f), 10f, 0.9f);
-            Tira(grupo, papel, new Vector3(-31.3f, 3.85f, 28.4f), 10f, 0.9f);
             Serie(grupo, new Vector3(-36.2f, 3.95f, 26f), new Vector3(-26.4f, 3.95f, 26f), 14);
             Luz(grupo, "Luz_Serie", new Vector3(-31.3f, 3.5f, 26f), Calido, 1.8f, 6f);
-            Informe.AppendLine("Entrada de armas de El Mercado: mostrador (banco), tableros de herramientas en las paredes, repisas, gabinete, huacales, tambos, reja, papel picado y serie de focos");
+            Informe.AppendLine("Entrada de armas de El Mercado: mostrador (banco), tableros de herramientas en las paredes, repisas, gabinete, huacales, tambos, reja, serie de focos");
         }
 
         // ---------------------------------------------------------------- Utilidades
@@ -433,20 +426,6 @@ namespace MechaCyberpunk.Arte.Editor
             q.transform.localScale = new Vector3(tam.x, tam.y, 1f);
             Renderer r = q.GetComponent<Renderer>();
             r.sharedMaterial = Material("T546_" + nombre.Split('_')[0] + "_" + textura, textura, false, Vector2.one);
-            r.shadowCastingMode = ShadowCastingMode.Off;
-        }
-
-        // Tira de papel picado a lo ancho (en X), con las dos caras.
-        private static void Tira(Transform padre, Material m, Vector3 centro, float largo, float alto)
-        {
-            GameObject q = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            q.name = "PapelPicado";
-            Object.DestroyImmediate(q.GetComponent<Collider>());
-            q.transform.SetParent(padre, false);
-            q.transform.SetPositionAndRotation(centro, Quaternion.identity);
-            q.transform.localScale = new Vector3(largo, alto, 1f);
-            Renderer r = q.GetComponent<Renderer>();
-            r.sharedMaterial = m;
             r.shadowCastingMode = ShadowCastingMode.Off;
         }
 

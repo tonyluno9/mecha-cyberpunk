@@ -86,7 +86,7 @@ namespace MechaCyberpunk.Arte.Editor
             PonerCamaras(piezas);
             PonerBasura(piezas);
             PonerLuces();
-            CrearPapelPicado();
+            // T-803: sin papel picado (Tony nunca lo pidió; playtest del 6-nov).
             CrearCharcos();
 
             UnityEngine.SceneManagement.Scene escena = EditorSceneManager.GetActiveScene();
@@ -398,115 +398,6 @@ namespace MechaCyberpunk.Arte.Editor
             imp.mipmapEnabled = true;
             imp.SaveAndReimport();
             return AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
-        }
-
-        /// <summary>Bandera de papel picado de 64x64 en blanco: borde inferior en dientes de sierra y agujeros (rombo, círculos, cortes del borde).</summary>
-        private static Texture2D TexturaPapel()
-        {
-            const int n = 64;
-            Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, false);
-            for (int y = 0; y < n; y++)
-            {
-                for (int x = 0; x < n; x++)
-                {
-                    float u = x / (n - 1f);
-                    float v = y / (n - 1f);
-                    float dientes = 0.14f * Mathf.Abs(Mathf.Repeat(u * 5f, 1f) * 2f - 1f);
-                    bool dentro = v > dientes;
-                    bool agujero = false;
-                    if (v < 0.86f)
-                    {
-                        float cu = u - 0.5f;
-                        float cv = v - 0.5f;
-                        agujero |= Mathf.Abs(cu) + Mathf.Abs(cv) < 0.2f && Mathf.Abs(cu) + Mathf.Abs(cv) > 0.1f;
-                        agujero |= Mathf.Sqrt(cu * cu + cv * cv) < 0.05f;
-                        foreach (float ox in new[] { 0.2f, 0.8f })
-                        {
-                            agujero |= Mathf.Sqrt((u - ox) * (u - ox) + (v - 0.68f) * (v - 0.68f)) < 0.07f;
-                            agujero |= Mathf.Sqrt((u - ox) * (u - ox) + (v - 0.32f) * (v - 0.32f)) < 0.05f;
-                        }
-                        agujero |= Mathf.Repeat(u * 8f, 1f) < 0.35f && v > 0.74f && v < 0.82f;
-                    }
-                    t.SetPixel(x, y, new Color(1f, 1f, 1f, dentro && !agujero ? 1f : 0f));
-                }
-            }
-            t.Apply();
-            return GuardarTextura("PapelPicado", t);
-        }
-
-        // ------------------------------------------------------------------ papel picado
-
-        /// <summary>Hileras de banderas que cuelgan de un hilo de muro a muro, a más de 5.5 m de altura (encima del letrero y del portón).</summary>
-        private static void CrearPapelPicado()
-        {
-            Transform g = Grupo("PapelPicado");
-            Texture2D textura = AssetDatabase.LoadAssetAtPath<Texture2D>(CarpetaTexturas + "/PapelPicado.png") ?? TexturaPapel();
-            Color[] colores =
-            {
-                new Color(1f, 0.15f, 0.75f), new Color(0.1f, 0.9f, 0.8f), new Color(1f, 0.55f, 0.1f),
-                new Color(0.45f, 0.95f, 0.2f), new Color(1f, 0.85f, 0.15f), new Color(0.55f, 0.35f, 1f),
-            };
-            Material[] materiales = new Material[colores.Length];
-            for (int i = 0; i < colores.Length; i++)
-            {
-                Color c = colores[i];
-                materiales[i] = Material("Papel_" + i, "Universal Render Pipeline/Unlit", m =>
-                {
-                    m.SetTexture("_BaseMap", textura);
-                    m.SetColor("_BaseColor", new Color(c.r * 0.7f, c.g * 0.7f, c.b * 0.7f, 1f));
-                    Transparente(m, true);
-                });
-            }
-            Material hilo = Material("Hilo_Papel", "Universal Render Pipeline/Unlit", m => m.SetColor("_BaseColor", new Color(0.08f, 0.08f, 0.1f)));
-            System.Random azar = new System.Random(504);
-            int hilos = 0;
-            int banderas = 0;
-            foreach (float z in new[] { 12.6f, 16.2f, 19.8f, 23.4f, 27.0f, 30.6f, 34.2f })
-            {
-                Vector3 a = new Vector3(XMuro(z, -1) + 0.1f, 6.9f, z);
-                Vector3 b = new Vector3(XMuro(z, 1) - 0.1f, 6.5f, z);
-                GameObject go = new GameObject("Hilo_" + hilos);
-                go.transform.SetParent(g, false);
-                const int tramos = 20;
-                const float caida = 0.7f;
-                LineRenderer lr = go.AddComponent<LineRenderer>();
-                lr.useWorldSpace = true;
-                lr.positionCount = tramos + 1;
-                lr.widthMultiplier = 0.015f;
-                lr.sharedMaterial = hilo;
-                lr.shadowCastingMode = ShadowCastingMode.Off;
-                lr.receiveShadows = false;
-                for (int i = 0; i <= tramos; i++)
-                {
-                    lr.SetPosition(i, PuntoDelHilo(a, b, i / (float)tramos, caida));
-                }
-                int cantidad = Mathf.RoundToInt(Vector3.Distance(a, b) / 0.55f);
-                for (int i = 1; i < cantidad; i++)
-                {
-                    Vector3 p = PuntoDelHilo(a, b, i / (float)cantidad, caida);
-                    GameObject q = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    Object.DestroyImmediate(q.GetComponent<Collider>());
-                    q.name = "Papel_" + banderas;
-                    q.transform.SetParent(go.transform, false);
-                    q.transform.position = p + Vector3.down * 0.2f;
-                    q.transform.rotation = Quaternion.Euler(0f, (float)(azar.NextDouble() * 24 - 12), (float)(azar.NextDouble() * 12 - 6));
-                    q.transform.localScale = new Vector3(0.46f, 0.4f, 1f);
-                    MeshRenderer r = q.GetComponent<MeshRenderer>();
-                    r.sharedMaterial = materiales[(banderas + hilos) % materiales.Length];
-                    r.shadowCastingMode = ShadowCastingMode.Off;
-                    r.receiveShadows = false;
-                    banderas++;
-                }
-                hilos++;
-            }
-            Informe.AppendLine("Hilos de papel picado: " + hilos + ", banderas: " + banderas);
-        }
-
-        private static Vector3 PuntoDelHilo(Vector3 a, Vector3 b, float t, float caida)
-        {
-            Vector3 p = Vector3.Lerp(a, b, t);
-            p.y -= caida * 4f * t * (1f - t);
-            return p;
         }
 
         // ------------------------------------------------------------------ charcos
