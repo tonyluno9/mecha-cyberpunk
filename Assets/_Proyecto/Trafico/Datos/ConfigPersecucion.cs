@@ -57,6 +57,51 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(1f)] [Tooltip("Si tras tantos segundos de retirada sigue a la vista, desaparece de todos modos (s).")]
         [SerializeField] private float segundosMaximosRetiro = 60f;
 
+        [Header("Testigos del delito (T-661)")]
+        [Min(5f)] [Tooltip("Desde aquí una cámara de seguridad te ve si no hay pared en medio (m).")]
+        [SerializeField] private float alcanceCamara = 45f;
+        [Range(5f, 90f)] [Tooltip("Medio ángulo de visión de una cámara de seguridad (°).")]
+        [SerializeField] private float semiAnguloCamara = 40f;
+        [Range(1, 4)] [Tooltip("Cuántas cámaras de seguridad hay en cada cruce de calles (en esquinas opuestas primero).")]
+        [SerializeField] private int camarasPorCruce = 2;
+        [Min(1f)] [Tooltip("Lo que se aleja el poste de una cámara del centro del cruce, en X y en Z (m): mitad de la calle más la banqueta.")]
+        [SerializeField] private float desfaseEsquinaCamara = 8.5f;
+        [Min(5f)] [Tooltip("Desde aquí un civil ve el delito si no hay pared en medio (m).")]
+        [SerializeField] private float radioVistaCivil = 28f;
+        [Min(0.5f)] [Tooltip("Lo que tarda un civil asustado en llamar a la policía (s).")]
+        [SerializeField] private float segundosLlamadaCivil = 4f;
+        [Min(5f)] [Tooltip("Si el civil queda más lejos del jugador que esto antes de llamar, huyó y no llama (m).")]
+        [SerializeField] private float radioAbandonoCivil = 60f;
+
+        [Header("Búsqueda y arresto (T-665)")]
+        [Min(10f)] [Tooltip("Radio del círculo de búsqueda, centrado donde te vieron por última vez (m).")]
+        [SerializeField] private float radioBusqueda = 90f;
+        [Min(1f)] [Tooltip("Segundos fuera de su vista y del círculo de búsqueda para que te den por escapado (s).")]
+        [SerializeField] private float segundosParaEscapar = 10f;
+        [Min(1f)] [Tooltip("Una patrulla a menos de esta distancia que te ve puede arrestarte (m).")]
+        [SerializeField] private float distanciaArresto = 10f;
+        [Min(0.5f)] [Tooltip("Segundos seguidos, cerca de una patrulla y casi quieto, para que te arresten (s).")]
+        [SerializeField] private float segundosArresto = 4f;
+        [Min(0f)] [Tooltip("Por debajo de esta velocidad cuentas como quieto para el arresto (m/s).")]
+        [SerializeField] private float velocidadArresto = 2f;
+
+        public float AlcanceCamara => alcanceCamara;
+        public float SemiAnguloCamara => semiAnguloCamara;
+        public int CamarasPorCruce => camarasPorCruce;
+        public float DesfaseEsquinaCamara => desfaseEsquinaCamara;
+        public float RadioVistaCivil => radioVistaCivil;
+        public float SegundosLlamadaCivil => segundosLlamadaCivil;
+        public float RadioAbandonoCivil => radioAbandonoCivil;
+        public float RadioBusqueda => radioBusqueda;
+        public float SegundosParaEscapar => segundosParaEscapar;
+        public float DistanciaArresto => distanciaArresto;
+        public float SegundosArresto => segundosArresto;
+        public float VelocidadArresto => velocidadArresto;
+
+        [Min(5f)] [Tooltip("Un dron te ve desde aquí, sin contar paredes (vuela por encima) (m).")]
+        [SerializeField] private float radioVistaDron = 45f;
+        public float RadioVistaDron => radioVistaDron;
+
         public float RadioVista => radioVista;
         public float SegundosParaPerder => segundosParaPerder;
         public float EnfriamientoSinVista => enfriamientoSinVista;

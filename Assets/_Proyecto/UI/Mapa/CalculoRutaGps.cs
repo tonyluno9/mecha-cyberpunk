@@ -1,92 +1,26 @@
 using System.Collections.Generic;
-using MechaCyberpunk.Trafico.Persecucion;
+using MechaCyberpunk.Core;
 using UnityEngine;
 
 namespace MechaCyberpunk.UI.Mapa
 {
     /// <summary>
-    /// La ruta tipo GPS del minimapa (T-632): del jugador al objetivo por las calles del barrio. Sin Unity en escena: usa
-    /// <see cref="GrafoCalles"/> (el mismo de las patrullas) armado con las manzanas de <see cref="GeometriaBarrio"/>. Fuera de las calles,
-    /// el primer y el último tramo son rectos hasta el punto de calle más cercano.
+    /// La ruta tipo GPS del minimapa (T-632): del jugador al objetivo por las calles del barrio. UI no conoce las calles: se las pide a quien esté
+    /// registrado como <see cref="IRutaCalles"/> (Trafico, T-669). Sin ninguno, o si no encuentra camino, traza una recta.
     /// </summary>
     public static class CalculoRutaGps
     {
-        private static GrafoCalles grafo;
-
-        /// <summary>Las calles del barrio (se arman una vez).</summary>
-        public static GrafoCalles Calles => grafo ?? (grafo = GrafoCalles.DeManzanas(GeometriaBarrio.Centros, GeometriaBarrio.LadoManzana, 0f));
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void Limpiar() => grafo = null;
-
         /// <summary>
-        /// Puntos de la ruta (plano XZ, y = 0): empieza en <paramref name="origen"/>, termina en <paramref name="destino"/>, y entre los dos va por las
-        /// calles. Vacía si no hay camino.
+        /// Puntos de la ruta (plano XZ, y = 0): empieza en <paramref name="origen"/>, termina en <paramref name="destino"/> y entre los dos va por las
+        /// calles si hay quien las trace.
         /// </summary>
-        public static List<Vector3> Ruta(Vector3 origen, Vector3 destino) => Ruta(Calles, origen, destino);
-
-        public static List<Vector3> Ruta(GrafoCalles calles, Vector3 origen, Vector3 destino)
+        public static List<Vector3> Ruta(Vector3 origen, Vector3 destino)
         {
             origen.y = 0f;
             destino.y = 0f;
-            Calle desdeCalle = MasCercana(calles, origen);
-            Calle hastaCalle = MasCercana(calles, destino);
-            List<Vector3> ruta = new List<Vector3> { origen };
-            if (desdeCalle.A == hastaCalle.A && desdeCalle.B == hastaCalle.B)
-            {
-                ruta.Add(desdeCalle.Punto);
-                ruta.Add(hastaCalle.Punto);
-                ruta.Add(destino);
-                return ruta;
-            }
-            List<int> mejor = null;
-            float menor = float.MaxValue;
-            int[] salidas = { desdeCalle.A, desdeCalle.B };
-            int[] llegadas = { hastaCalle.A, hastaCalle.B };
-            foreach (int salida in salidas)
-            {
-                foreach (int llegada in llegadas)
-                {
-                    List<int> camino = calles.Camino(salida, llegada);
-                    if (camino.Count == 0)
-                    {
-                        continue;
-                    }
-                    float largo = Distancia(desdeCalle.Punto, Plano(calles.Nodo(salida))) + Distancia(Plano(calles.Nodo(llegada)), hastaCalle.Punto);
-                    for (int i = 1; i < camino.Count; i++)
-                    {
-                        largo += Distancia(Plano(calles.Nodo(camino[i - 1])), Plano(calles.Nodo(camino[i])));
-                    }
-                    if (largo < menor)
-                    {
-                        menor = largo;
-                        mejor = camino;
-                    }
-                }
-            }
-            if (mejor == null)
-            {
-                return new List<Vector3>();
-            }
-            // Si el camino sale por el otro extremo de la calle, no regreses por el primero.
-            if (mejor.Count > 1 && (mejor[0] == desdeCalle.A || mejor[0] == desdeCalle.B)
-                && (mejor[1] == desdeCalle.A || mejor[1] == desdeCalle.B))
-            {
-                mejor.RemoveAt(0);
-            }
-            if (mejor.Count > 1 && (mejor[mejor.Count - 1] == hastaCalle.A || mejor[mejor.Count - 1] == hastaCalle.B)
-                && (mejor[mejor.Count - 2] == hastaCalle.A || mejor[mejor.Count - 2] == hastaCalle.B))
-            {
-                mejor.RemoveAt(mejor.Count - 1);
-            }
-            ruta.Add(desdeCalle.Punto);
-            foreach (int nodo in mejor)
-            {
-                ruta.Add(Plano(calles.Nodo(nodo)));
-            }
-            ruta.Add(hastaCalle.Punto);
-            ruta.Add(destino);
-            return ruta;
+            IRutaCalles calles = Registro<IRutaCalles>.Actual;
+            List<Vector3> ruta = calles != null ? calles.Calcular(origen, destino) : null;
+            return ruta != null && ruta.Count > 0 ? ruta : new List<Vector3> { origen, destino };
         }
 
         /// <summary>Largo (m) de una ruta.</summary>
@@ -95,49 +29,9 @@ namespace MechaCyberpunk.UI.Mapa
             float total = 0f;
             for (int i = 1; i < ruta.Count; i++)
             {
-                total += Distancia(ruta[i - 1], ruta[i]);
+                total += Vector3.Distance(ruta[i - 1], ruta[i]);
             }
             return total;
         }
-
-        private struct Calle
-        {
-            public int A;
-            public int B;
-            public Vector3 Punto;
-        }
-
-        // El tramo de calle (arista) cuyo punto más cercano al punto dado está más cerca, con ese punto.
-        private static Calle MasCercana(GrafoCalles calles, Vector3 punto)
-        {
-            Calle mejor = new Calle { A = 0, B = 0, Punto = Plano(calles.Nodo(0)) };
-            float menor = float.MaxValue;
-            for (int a = 0; a < calles.Cantidad; a++)
-            {
-                foreach (int b in calles.Vecinos(a))
-                {
-                    if (b < a)
-                    {
-                        continue;
-                    }
-                    Vector3 pa = Plano(calles.Nodo(a));
-                    Vector3 pb = Plano(calles.Nodo(b));
-                    Vector3 ab = pb - pa;
-                    float t = ab.sqrMagnitude > 0f ? Mathf.Clamp01(Vector3.Dot(punto - pa, ab) / ab.sqrMagnitude) : 0f;
-                    Vector3 cerca = pa + ab * t;
-                    float d = Distancia(punto, cerca);
-                    if (d < menor)
-                    {
-                        menor = d;
-                        mejor = new Calle { A = a, B = b, Punto = cerca };
-                    }
-                }
-            }
-            return mejor;
-        }
-
-        private static Vector3 Plano(Vector3 v) => new Vector3(v.x, 0f, v.z);
-
-        private static float Distancia(Vector3 a, Vector3 b) => Vector3.Distance(a, b);
     }
 }

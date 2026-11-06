@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.UI.Mapa;
@@ -19,6 +20,16 @@ namespace MechaCyberpunk.Tests.UI
             public Camera Camara { get; set; }
             public event Action<ModoJugador> ModoCambio { add { } remove { } }
             public void Colocar(Pose pose) { Raiz.position = pose.position; }
+        }
+
+        // T-669: UI ya no ve Trafico; esta ruta de dos esquinas hace de las calles (mitad del camino en cada eje).
+        private class RutaDeCallesFalsa : IRutaCalles
+        {
+            public List<Vector3> Calcular(Vector3 origen, Vector3 destino)
+            {
+                float medio = (origen.z + destino.z) * 0.5f;
+                return new List<Vector3> { origen, new Vector3(origen.x, 0f, medio), new Vector3(destino.x, 0f, medio), destino };
+            }
         }
 
         private class ObjetivosFalso : IObjetivos
@@ -57,6 +68,7 @@ namespace MechaCyberpunk.Tests.UI
             ObjetivosFalso objetivos = new ObjetivosFalso { Objetivo = new Objetivo("IR AL TIANGUIS", new Vector3(47f, 0f, 60f)) };
             Registro<IJugador>.Agregar(jugador);
             Registro<IObjetivos>.Agregar(objetivos);
+            Registro<IRutaCalles>.Agregar(new RutaDeCallesFalsa());
             minimapaObjeto = new GameObject("Minimapa");
             Minimapa minimapa = minimapaObjeto.AddComponent<Minimapa>();
             yield return null;
@@ -65,10 +77,8 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(minimapa.Visible);
             Assert.GreaterOrEqual(minimapa.Ruta.Count, 4, "Hay ruta con esquinas");
             Assert.AreEqual(minimapa.Ruta.Count - 1, minimapa.SegmentosRutaVisibles, "Un tramo dibujado por cada par de puntos");
-            foreach (Vector3 p in minimapa.Ruta)
-            {
-                Assert.LessOrEqual(CalculoRutaGps.Calles.DistanciaALaCalle(p), 0.01f, "La ruta va por la calle: " + p);
-            }
+            Assert.AreEqual(new Vector3(-47f, 0f, -60f), minimapa.Ruta[0], "La ruta sale de donde estás");
+            Assert.AreEqual(new Vector3(47f, 0f, 60f), minimapa.Ruta[minimapa.Ruta.Count - 1], "y llega al objetivo");
             int antes = minimapa.RecalculosRuta;
             Vector3 primero = minimapa.Ruta[0];
 

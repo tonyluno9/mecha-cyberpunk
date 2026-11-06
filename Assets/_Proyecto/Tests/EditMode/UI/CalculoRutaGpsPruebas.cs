@@ -1,49 +1,65 @@
+using System.Collections.Generic;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.UI.Mapa;
 using NUnit.Framework;
 using UnityEngine;
 
 namespace MechaCyberpunk.Tests.UI
 {
-    /// <summary>T-632: la ruta GPS del minimapa va por las calles del barrio de principio a fin.</summary>
+    /// <summary>T-632 y T-669: la ruta GPS del minimapa se la pide a quien trace rutas por las calles (IRutaCalles) y, sin nadie, va en recta.</summary>
     public class CalculoRutaGpsPruebas
     {
-        [Test]
-        public void Ruta_DeUnaCalleAOtra_VaPorLasCallesSinCortarManzanas()
+        private sealed class RutaEnLDoble : IRutaCalles
         {
-            Vector3 origen = new Vector3(-47f, 0f, -60f);
-            Vector3 destino = new Vector3(47f, 0f, 60f);
-            var ruta = CalculoRutaGps.Ruta(origen, destino);
-            Assert.GreaterOrEqual(ruta.Count, 4, "Hay curvas por las esquinas");
-            Assert.AreEqual(origen, ruta[0]);
-            Assert.AreEqual(destino, ruta[ruta.Count - 1]);
-            foreach (Vector3 p in ruta)
+            public int Llamadas;
+
+            public List<Vector3> Calcular(Vector3 origen, Vector3 destino)
             {
-                Assert.LessOrEqual(CalculoRutaGps.Calles.DistanciaALaCalle(p), 0.01f, "Todo punto está sobre una calle: " + p);
+                Llamadas++;
+                return new List<Vector3> { origen, new Vector3(origen.x, 0f, destino.z), destino };
             }
-            for (int i = 1; i < ruta.Count; i++)
-            {
-                Vector3 d = ruta[i] - ruta[i - 1];
-                Assert.IsTrue(Mathf.Abs(d.x) < 0.01f || Mathf.Abs(d.z) < 0.01f, "Cada tramo sigue una calle recta: " + ruta[i - 1] + " a " + ruta[i]);
-            }
-            // La ruta por calles mide más que la recta pero no el doble de la distancia Manhattan.
-            Assert.GreaterOrEqual(CalculoRutaGps.Largo(ruta), Vector3.Distance(origen, destino));
-            Assert.LessOrEqual(CalculoRutaGps.Largo(ruta), 94f + 120f + 60f + 60f + 1f, "Es la ruta corta: 60 m al sur-norte, 94 m al este y 60 m al norte");
+        }
+
+        private sealed class ProveedorVacio : IRutaCalles
+        {
+            public List<Vector3> Calcular(Vector3 origen, Vector3 destino) => new List<Vector3>();
+        }
+
+        [SetUp]
+        public void Preparar() => Registros.LimpiarTodos();
+
+        [TearDown]
+        public void Limpiar() => Registros.LimpiarTodos();
+
+        [Test]
+        public void Ruta_ConUnProveedorRegistrado_EsLaQueElTraza()
+        {
+            RutaEnLDoble calles = new RutaEnLDoble();
+            Registro<IRutaCalles>.Agregar(calles);
+            Vector3 origen = new Vector3(-47f, 3f, -60f);
+            Vector3 destino = new Vector3(47f, 2f, 60f);
+            List<Vector3> ruta = CalculoRutaGps.Ruta(origen, destino);
+            Assert.AreEqual(1, calles.Llamadas);
+            Assert.AreEqual(3, ruta.Count);
+            Assert.AreEqual(new Vector3(-47f, 0f, -60f), ruta[0], "Empieza en el origen, a la altura 0");
+            Assert.AreEqual(new Vector3(-47f, 0f, 60f), ruta[1], "Pasa por la esquina que trazó el proveedor");
+            Assert.AreEqual(new Vector3(47f, 0f, 60f), ruta[2], "Termina en el destino, a la altura 0");
         }
 
         [Test]
-        public void Ruta_DentroDeLaMismaCalle_EsUnaLinea()
+        public void Ruta_SinProveedor_EsUnaRecta()
         {
-            var ruta = CalculoRutaGps.Ruta(new Vector3(-47f, 0f, -30f), new Vector3(-47f, 0f, 30f));
-            Assert.AreEqual(60f, CalculoRutaGps.Largo(ruta), 0.5f);
+            List<Vector3> ruta = CalculoRutaGps.Ruta(new Vector3(0f, 0f, 0f), new Vector3(30f, 5f, 40f));
+            Assert.AreEqual(2, ruta.Count);
+            Assert.AreEqual(50f, CalculoRutaGps.Largo(ruta), 0.01f);
         }
 
         [Test]
-        public void Ruta_OrigenFueraDeLaCalle_EmpiezaConUnTramoAlaCalle()
+        public void Ruta_SiElProveedorNoEncuentraCamino_CaeAUnaRecta()
         {
-            Vector3 origen = new Vector3(0f, 0f, 20f); // en el centro de una manzana
-            var ruta = CalculoRutaGps.Ruta(origen, new Vector3(47f, 0f, 60f));
-            Assert.AreEqual(origen, ruta[0]);
-            Assert.LessOrEqual(CalculoRutaGps.Calles.DistanciaALaCalle(ruta[1]), 0.01f, "El segundo punto ya está en la calle");
+            Registro<IRutaCalles>.Agregar(new ProveedorVacio());
+            List<Vector3> ruta = CalculoRutaGps.Ruta(Vector3.zero, new Vector3(0f, 0f, 10f));
+            Assert.AreEqual(2, ruta.Count);
         }
     }
 }

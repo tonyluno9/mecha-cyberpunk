@@ -33,6 +33,11 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(1f)] [Tooltip("Cuántas veces su velocidad normal corre al huir (multiplicador).")]
         [SerializeField] private float multiplicadorHuida = 2.6f;
 
+        [Header("Vida y llamada (T-663)")]
+        [Min(1f)] [Tooltip("Vida de un peatón (puntos); a 0 cae y ya no llama a la policía.")]
+        [SerializeField] private float vidaPeaton = 15f;
+
+        public float VidaPeaton => vidaPeaton;
         public float RadioOirDisparo => radioOirDisparo;
         public float SegundosHuida => segundosHuida;
         public float MultiplicadorHuida => multiplicadorHuida;

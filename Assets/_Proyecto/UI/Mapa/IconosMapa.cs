@@ -34,6 +34,7 @@ namespace MechaCyberpunk.UI.Mapa
 
         private static Sprite circulo;
         private static Sprite anillo;
+        private static Sprite anilloFino;
         private static Sprite bordeMinimapa;
         private static Sprite engrane;
         private static Sprite casa;
@@ -43,12 +44,16 @@ namespace MechaCyberpunk.UI.Mapa
         {
             circulo = null;
             anillo = null;
+            anilloFino = null;
             bordeMinimapa = null;
             engrane = null;
             casa = null;
         }
 
         public static Sprite Circulo => circulo != null ? circulo : circulo = CrearSprite("Mapa_Circulo", (x, y) => x * x + y * y <= 1f);
+
+        /// <summary>Un anillo delgado (5 % del radio) para bordes de zonas grandes.</summary>
+        public static Sprite AnilloFino => anilloFino != null ? anilloFino : anilloFino = CrearSprite("Mapa_AnilloFino", (x, y) => EnAnillo(x, y, 0.05f));
 
         public static Sprite Anillo => anillo != null ? anillo : anillo = CrearSprite("Mapa_Anillo", (x, y) => EnAnillo(x, y, GrosorAnillo));
 
@@ -94,6 +99,32 @@ namespace MechaCyberpunk.UI.Mapa
                 case TipoMarcaMapa.Casa:
                     Pieza(fondo.transform, "Casa", Casa, e.Texto, simbolo);
                     break;
+            }
+            return fondo;
+        }
+
+        /// <summary>El icono de un lugar del catálogo (T-667): el círculo de los lugares con su símbolo (o la casita) y, si se pide, su nombre debajo.</summary>
+        public static Image CrearDestino(Transform padre, DestinoMapa destino, float lado, bool conNombre)
+        {
+            EstiloCyberfix e = KitUI.Estilo;
+            Image fondo = Pieza(padre, "Destino_" + destino.Id, Circulo, e.Contorno, lado);
+            Outline borde = fondo.gameObject.AddComponent<Outline>();
+            borde.effectColor = e.Texto;
+            borde.effectDistance = Vector2.one;
+            if (destino.Id == IdDestinoMapa.Casa)
+            {
+                Pieza(fondo.transform, "Casa", Casa, e.Texto, lado * FraccionSimbolo);
+            }
+            else
+            {
+                Simbolo(fondo.transform, destino.Simbolo, lado * FraccionSimbolo);
+            }
+            if (conNombre)
+            {
+                Text nombre = KitUI.CrearTexto(fondo.transform, "Nombre", RolTexto.Minimo, TextAnchor.MiddleCenter);
+                KitUI.Colocar(nombre.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, lado * (destino.EtiquetaArriba ? 0.85f : -0.85f)), new Vector2(lado * 5f, lado * 0.5f));
+                nombre.text = destino.Nombre;
+                nombre.color = e.Texto;
             }
             return fondo;
         }
