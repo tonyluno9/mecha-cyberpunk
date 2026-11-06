@@ -391,19 +391,22 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 return;
             }
             escalaActual = Mathf.Lerp(escalaActual, agachado ? datos.EscalaAgachado : 1f, paso);
-            modelo.localScale = new Vector3(escalaBase.x, escalaBase.y * escalaActual, escalaBase.z);
             if (rodada.Activa)
             {
+                // T-683: rueda hecho bola (se encoge) para no hundirse en el piso, con arranque y final suaves; el giro termina antes de acabar
+                // la rodada y el resto es reacomodarse agachado.
+                float avance = Mathf.Clamp01(rodada.Progreso / datos.FraccionGiroRodada);
+                float encogido = Mathf.Lerp(1f, datos.EscalaRodando, Mathf.Sin(avance * Mathf.PI));
+                modelo.localScale = new Vector3(escalaBase.x, escalaBase.y * escalaActual * encogido, escalaBase.z);
                 Vector3 centro = new Vector3(0f, datos.AlturaRodando / 2f, 0f);
-                Quaternion giro = Quaternion.Euler(rodada.Progreso * 360f, 0f, 0f);
+                Quaternion giro = Quaternion.Euler(Mathf.SmoothStep(0f, 1f, avance) * 360f, 0f, 0f);
                 modelo.localRotation = giro;
                 modelo.localPosition = centro - giro * centro;
+                return;
             }
-            else
-            {
-                modelo.localRotation = Quaternion.identity;
-                modelo.localPosition = Vector3.zero;
-            }
+            modelo.localScale = new Vector3(escalaBase.x, escalaBase.y * escalaActual, escalaBase.z);
+            modelo.localRotation = Quaternion.identity;
+            modelo.localPosition = Vector3.zero;
         }
     }
 }

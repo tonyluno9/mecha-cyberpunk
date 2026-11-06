@@ -17,11 +17,16 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         private static string[] Estados(AnimatorStateMachine m) => m.states.Select(s => s.state.name).ToArray();
 
         [Test]
-        public void Controlador_TieneLasDosCapasConLaMascaraDelTorso()
+        public void Controlador_TieneLasCapasBaseArribaYBrazosConLaMascaraDelTorso()
         {
             AnimatorController c = Base();
             Assert.IsNotNull(c);
-            Assert.AreEqual(2, c.layers.Length, "T-671: sin capa Piernas (caminar y correr con arma es la caminata normal)");
+            Assert.AreEqual(3, c.layers.Length, "T-671: sin capa Piernas; T-683: capa Brazos para agachado");
+            Assert.AreEqual(ReglasAnimacion.CapaBrazos, c.layers[2].name);
+            Assert.AreEqual(0f, c.layers[2].defaultWeight, 0.001f, "La capa Brazos nace apagada");
+            Assert.AreEqual(AnimatorLayerBlendingMode.Override, c.layers[2].blendingMode);
+            CollectionAssert.AreEqual(ReglasAnimacion.EstadosBrazos, c.layers[2].stateMachine.states.Select(s => s.state.name).ToArray());
+            Assert.IsNotNull(c.layers[2].stateMachine.states[0].state.motion, "Los brazos sueltos usan Loco_Idle");
             Assert.IsTrue(c.layers[1].iKPass, "IK Pass también en la capa de arriba (mano izquierda al arma)");
             Assert.AreEqual(ReglasAnimacion.CapaBase, c.layers[0].name);
             Assert.AreEqual(ReglasAnimacion.CapaArriba, c.layers[1].name);
@@ -79,7 +84,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             {
                 var transiciones = new List<AnimatorStateTransition>(capa.stateMachine.anyStateTransitions);
                 foreach (ChildAnimatorState s in capa.stateMachine.states) { transiciones.AddRange(s.state.transitions); }
-                Assert.Greater(transiciones.Count, 10);
+                if (capa.name != ReglasAnimacion.CapaBrazos)
+                {
+                    Assert.Greater(transiciones.Count, 10);
+                }
                 foreach (AnimatorStateTransition t in transiciones)
                 {
                     foreach (AnimatorCondition cond in t.conditions)
