@@ -162,6 +162,35 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(vida.Maxima, vida.Actual, 0.01f, "Curado");
         }
 
+        [Test]
+        public void Cic_TinoNoAtraviesaMueblesYLosBancosSonDeMesaDeTrabajo()
+        {
+            Transform tino = GameObject.Find("GTA_T417/Apoyo_TINO").transform;
+            Transform taller = GameObject.Find("S2_Interiores/TallerTino").transform;
+            Vector3 pie = tino.position;
+            foreach (Collider c in Physics.OverlapCapsule(pie + Vector3.up * 0.35f, pie + Vector3.up * 1.2f, 0.28f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                Assert.IsFalse(c.transform.IsChildOf(taller), "Tino atraviesa " + c.name + " (" + c.transform.parent.name + ")");
+            }
+            int bancos = 0;
+            foreach (Transform t in taller)
+            {
+                if (t.name != "T03_BancoTrabajo")
+                {
+                    continue;
+                }
+                bancos++;
+                Bounds b = Limites(t);
+                Assert.AreEqual(2.0f, Mathf.Max(b.size.x, b.size.z), 0.25f, "Banco de ~2 m de largo: " + b.size);
+                Vector3 enTino = new Vector3(pie.x, b.center.y, pie.z);
+                Assert.Greater(Mathf.Sqrt(b.SqrDistance(enTino)), 0.25f, "Tino no está dentro del banco " + b.min + ".." + b.max);
+            }
+            Assert.AreEqual(2, bancos, "Dos bancos de trabajo");
+            Transform pizarron = taller.Find("Pizarron");
+            Assert.Less(pizarron.position.z, 15.9f - 0.01f, "El pizarrón despegado de la pared (sin encimarse)");
+            Assert.Greater(pizarron.position.z, 15.9f - 0.08f, "El pizarrón pegado a la pared");
+        }
+
         private static Bounds Limites(Transform t)
         {
             Renderer[] rs = t.GetComponentsInChildren<Renderer>();

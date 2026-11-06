@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Mundo.Datos;
@@ -105,6 +106,26 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- Taller de Tino (CIC)
 
+        /// <summary>Rehace solo el taller de Tino dentro de S2_Interiores (T-811), sin tocar el consultorio ni el taller del mecánico.</summary>
+        public static void RehacerTallerTino()
+        {
+            Transform raiz = ColocarS2.Buscar(NombreRaiz);
+            if (raiz == null)
+            {
+                raiz = new GameObject(NombreRaiz).transform;
+            }
+            Transform viejo = raiz.Find("TallerTino");
+            if (viejo != null)
+            {
+                Object.DestroyImmediate(viejo.gameObject);
+            }
+            TallerTino(raiz);
+        }
+
+        // T-811 (playtest del 6-nov): Tino (de pie en -74.5, 13.5, mirando a la calle) ya no atraviesa un banco; los bancos van a escala de una
+        // mesa de trabajo (cubierta a ~0.8 m y ~2 m de largo, contra el jugador animado de 1.40 m); el pizarrón va pegado a la pared sin encimarse;
+        // la lámpara, el dron y el monitor se apoyan en su cubierta real (no en lo alto del tablero perforado). Como la referencia: serie de focos
+        // cálidos, tablero con herramientas, repisas con cajas, monitores, drones colgando de cables, tambos, llantas y cables.
         private static void TallerTino(Transform raiz)
         {
             Apagar("T546_Interiores/TallerTino");
@@ -126,41 +147,140 @@ namespace MechaCyberpunk.Arte.Editor
             Caja caja = new Caja(-77.2f, -69.4f, 10.45f, 15.9f, 0.22f, 3.72f);
             Forrar(r, caja, 3, 5, 1, 0.38f, frenteHaciaMasZ: false, centroVano: -73.3f, anchoVano: 2.6f);
 
-            Modelo(r, T + "T08_RepisaTaller", new Vector3(-75.6f, 0f, 15.6f), 180f, caja.Piso, escala: 0.8f);    // repisa con cajas y piezas
-            Modelo(r, C + "C17_Huacales", new Vector3(-76.6f, 0f, 13.2f), 80f, caja.Piso);
-            Cuadro(r, "Pizarron", "Assets/Arte/Interiores/Materiales/T546_Pizarron_T546_Pizarron.mat", new Vector3(-71.6f, 2.05f, 15.9f), Vector3.back, new Vector2(2.0f, 1.25f));
-            GameObject banco1 = Modelo(r, T + "T03_BancoTrabajo", new Vector3(-72.55f, 0f, 13.4f), 0f, caja.Piso);
-            Modelo(r, T + "T03_BancoTrabajo", new Vector3(-74.05f, 0f, 13.4f), 0f, caja.Piso);
-            float mesa = banco1 != null ? ArteT250.Limites(banco1).max.y : caja.Piso + 0.9f;
-            Modelo(r, I + "I21", new Vector3(-72.2f, 0f, 13.5f), 210f, mesa, sinCollider: true);              // lámpara de brazo
-            GameObject dron = Modelo(r, C + "CY07b_Dron", new Vector3(-73.0f, 0f, 13.35f), 30f, mesa, escala: 0.35f, sinCollider: true);
-            Modelo(r, I + "I20", new Vector3(-76.9f, 0f, 14.4f), 90f, caja.Piso);                            // estante de drones
-            Modelo(r, T + "T08_RepisaTaller", new Vector3(-77.0f, 0f, 11.9f), 90f, caja.Piso, escala: 0.7f);
-            GameObject escritorio = Modelo(r, I + "I02", new Vector3(-69.8f, 0f, 14.6f), 270f, caja.Piso);    // compu con monitores
+            // Banco principal (el de BancoArmas), a la derecha de Tino; el otro, contra la pared izquierda (su tablero perforado trae las herramientas).
+            GameObject banco = Mesa(r, T + "T03_BancoTrabajo", CentroBancoTino, 0f, caja.Piso);
+            float cubierta = banco != null ? Cubierta(banco) : caja.Piso + CubiertaMesa;
+            Mesa(r, T + "T03_BancoTrabajo", new Vector3(-76.62f, 0f, 13.1f), 270f, caja.Piso);       // el tablero perforado contra la pared
+            Modelo(r, T + "T06_Soldadora", new Vector3(-71.05f, 0f, 12.15f), 200f, caja.Piso, escala: 0.8f);
+            Modelo(r, I + "I21", new Vector3(-72.05f, 0f, 13.75f), 210f, cubierta, escala: 0.8f, sinCollider: true);       // lámpara de brazo
+            Modelo(r, C + "CY07b_Dron", new Vector3(-73.2f, 0f, 13.3f), 30f, cubierta, escala: 0.35f, sinCollider: true);  // el dron en reparación
+
+            // Fondo: repisas con cajas, gabinete con monitor, el pizarrón pegado a la pared y la compu en la esquina derecha.
+            Modelo(r, T + "T08_RepisaTaller", new Vector3(-75.25f, 0f, 15.58f), 180f, caja.Piso, escala: 0.95f);
+            GameObject drones = Modelo(r, I + "I20", new Vector3(-76.7f, 0f, 15.15f), 90f, caja.Piso);                       // estante de drones
+            GameObject gabinete = Modelo(r, T + "T04_GabineteHerramientas", new Vector3(-73.75f, 0f, 15.52f), 180f, caja.Piso, escala: 0.8f);
+            Modelo(r, I + "I10", new Vector3(-73.75f, 0f, 15.5f), 170f, gabinete != null ? Cubierta(gabinete) : caja.Piso + 0.9f, escala: 0.8f, sinCollider: true);
+            Cuadro(r, "Pizarron", "Assets/Arte/Interiores/Materiales/T546_Pizarron_T546_Pizarron.mat", new Vector3(-71.6f, 2.0f, caja.Z1 - SeparacionPared), Vector3.back, new Vector2(2.0f, 1.25f));
+            GameObject escritorio = Modelo(r, I + "I02", new Vector3(-69.85f, 0f, 14.55f), 270f, caja.Piso);                 // compu con monitores
             float tablero = escritorio != null ? ArteT250.Limites(escritorio).max.y : caja.Piso + 1f;
-            Modelo(r, I + "I10", new Vector3(-69.7f, 0f, 12.9f), 260f, caja.Piso + 0.95f, sinCollider: true);
-            Modelo(r, I + "I03", new Vector3(-70.6f, 0f, 14.3f), 100f, caja.Piso);
-            Modelo(r, T + "T05_Generador", new Vector3(-76.5f, 0f, 10.9f), 20f, caja.Piso);
-            Modelo(r, L + "L04_Llantas", new Vector3(-69.9f, 0f, 11.0f), 0f, caja.Piso);
-            Modelo(r, C + "C16_Tambo", new Vector3(-70.0f, 0f, 15.5f), 0f, caja.Piso);
-            Modelo(r, T + "T04_GabineteHerramientas", new Vector3(-74.0f, 0f, 15.55f), 180f, caja.Piso, escala: 0.7f);
-            Modelo(r, C + "CY07b_Dron", new Vector3(-75.2f, 0f, 12.3f), 0f, caja.Techo - 0.9f, escala: 0.5f, sinCollider: true);
-            Modelo(r, C + "CY07b_Dron", new Vector3(-71.4f, 0f, 12.0f), 140f, caja.Techo - 1.0f, escala: 0.5f, sinCollider: true);
-            Modelo(r, C + "CY03_MazoCables", new Vector3(-69.45f, 0f, 11.9f), 270f, caja.Piso + 1.1f, sinCollider: true);
+            Modelo(r, I + "I03", new Vector3(-70.75f, 0f, 14.2f), 100f, caja.Piso);                                         // su silla
+            Modelo(r, C + "C16_Tambo", new Vector3(-70.95f, 0f, 15.45f), 0f, caja.Piso);
+            Modelo(r, C + "C16_Tambo", new Vector3(-69.85f, 0f, 12.75f), 30f, caja.Piso);
+
+            // Frente: generador y huacales a la izquierda del vano, llantas a la derecha.
+            Modelo(r, T + "T05_Generador", new Vector3(-76.35f, 0f, 11.3f), 0f, caja.Piso, escala: 0.9f);
+            Modelo(r, C + "C17_Huacales", new Vector3(-75.25f, 0f, 10.95f), 10f, caja.Piso, escala: 0.8f);
+            Modelo(r, L + "L04_Llantas", new Vector3(-70.2f, 0f, 11.15f), 0f, caja.Piso);
+
+            // Drones colgando del techo con su cable, y el mazo de cables de la pared derecha.
+            Colgado(r, C + "CY07b_Dron", new Vector3(-75.0f, 0f, 12.2f), 0f, caja.Techo, 0.85f, 0.5f);
+            Colgado(r, C + "CY07b_Dron", new Vector3(-71.3f, 0f, 12.1f), 140f, caja.Techo, 1.0f, 0.5f);
+            Modelo(r, C + "CY03_MazoCables", new Vector3(-69.45f, 0f, 13.6f), 270f, caja.Piso + 1.1f, sinCollider: true);
 
             Transform luces = Grupo(r, "Luces");
             SerieFocos(r, new Vector3(-77.1f, caja.Techo - 0.15f, 11.0f), new Vector3(-69.5f, caja.Techo - 0.2f, 14.8f), 16);
             SerieFocos(r, new Vector3(-77.1f, caja.Techo - 0.2f, 15.5f), new Vector3(-69.5f, caja.Techo - 0.15f, 11.6f), 16);
-            Luz(luces, "Serie_1", new Vector3(-75.0f, caja.Techo - 0.6f, 12.5f), Calido, 1.2f, 5f);
-            Luz(luces, "Serie_2", new Vector3(-71.5f, caja.Techo - 0.6f, 14.0f), Calido, 1.2f, 5f);
-            Luz(luces, "Tubo_Calido_Pared", new Vector3(-75.4f, 2.9f, 15.4f), Calido, 2.2f, 6f);
-            Foco(luces, "Lampara_Banco", new Vector3(-72.4f, mesa + 0.6f, 13.5f), Calido, 6f, 3.5f, 70f);
-            Luz(luces, "Brillo_Monitores", new Vector3(-70.2f, tablero + 0.2f, 14.0f), Turquesa, 1.4f, 3f);
-            Luz(luces, "Relleno", new Vector3(-73.3f, 2.6f, 11.5f), Calido, 1.0f, 6f);
+            Luz(luces, "Serie_1", new Vector3(-75.0f, caja.Techo - 0.6f, 12.5f), Calido, 2.4f, 6f);
+            Luz(luces, "Serie_2", new Vector3(-71.5f, caja.Techo - 0.6f, 14.0f), Calido, 2.4f, 6f);
+            Luz(luces, "Tubo_Calido_Pared", new Vector3(-76.7f, 2.7f, 13.1f), Calido, 2.4f, 5f);   // sobre el tablero de herramientas
+            Foco(luces, "Lampara_Banco", new Vector3(-72.4f, cubierta + 0.9f, 13.5f), Calido, 6f, 3.5f, 70f);
+            Luz(luces, "Brillo_Monitores", new Vector3(-70.2f, tablero + 0.2f, 14.3f), Turquesa, 1.6f, 3f);
+            Luz(luces, "Relleno", new Vector3(-73.3f, 2.6f, 11.5f), Calido, 2.0f, 7f);
             ApagarLuzDelLocal("T531_Locales/CIC/Luz_CIC");
             OcultarCascaron("T531_Locales/CIC");
-            Luz(luces, "Relleno_Fondo", new Vector3(-72.0f, 2.4f, 15.0f), Calido, 1.6f, 5f);
-            ColocarS2.Informe.AppendLine("Taller de Tino: " + r.childCount + " piezas" + (dron == null ? " (FALTA dron)" : ""));
+            Luz(luces, "Relleno_Fondo", new Vector3(-72.0f, 2.4f, 15.0f), Calido, 2.4f, 6f);
+            ColocarS2.Informe.AppendLine("Taller de Tino: " + r.childCount + " piezas; cubierta del banco a " + (cubierta - caja.Piso).ToString("F2") + " m"
+                + (drones == null ? " (FALTA I20)" : ""));
+        }
+
+        /// <summary>Centro del banco principal del CIC (el de BancoArmas): a la derecha de Tino, que está en (-74.5, 13.5).</summary>
+        public static readonly Vector3 CentroBancoTino = new Vector3(-72.75f, 0.22f, 13.45f);
+        /// <summary>Alto de la cubierta de una mesa de trabajo sobre el piso (m), contra el jugador animado de 1.40 m.</summary>
+        public const float CubiertaMesa = 0.8f;
+        /// <summary>Lo que se despega de la pared un cuadro (m): sin encimarse con ella.</summary>
+        private const float SeparacionPared = 0.03f;
+
+        /// <summary>Largo de una mesa de trabajo (m).</summary>
+        public const float LargoMesa = 2.0f;
+
+        /// <summary>Un banco o mesa escalado para que su cubierta (la superficie horizontal más grande y alta) quede a <see cref="CubiertaMesa"/>
+        /// y su lado largo mida a lo más <see cref="LargoMesa"/> (escala en planta y en alto por separado).</summary>
+        private static GameObject Mesa(Transform padre, string ruta, Vector3 centro, float yaw, float piso)
+        {
+            GameObject g = Modelo(padre, ruta, centro, yaw, piso);
+            if (g == null)
+            {
+                return null;
+            }
+            float alto = Cubierta(g) - piso;
+            if (alto > 0.1f)
+            {
+                float fy = CubiertaMesa / alto;
+                Bounds b0 = ArteT250.Limites(g);
+                float fxz = Mathf.Min(fy, LargoMesa / Mathf.Max(b0.size.x, b0.size.z));
+                g.transform.localScale = Vector3.Scale(g.transform.localScale, new Vector3(fxz, fy, fxz));
+                Bounds b = ArteT250.Limites(g);
+                g.transform.position += new Vector3(centro.x - b.center.x, piso - b.min.y, centro.z - b.center.z);
+            }
+            return g;
+        }
+
+        /// <summary>
+        /// Alto (m, mundo) de la cubierta de un mueble: de sus caras que miran hacia arriba, la más alta cuya área es al menos la mitad de la mayor
+        /// (en un banco con tablero perforado es la mesa, no el canto del tablero).
+        /// </summary>
+        public static float Cubierta(GameObject g)
+        {
+            Dictionary<int, float> areas = new Dictionary<int, float>();
+            const float Tramo = 0.02f;
+            foreach (MeshFilter mf in g.GetComponentsInChildren<MeshFilter>())
+            {
+                Mesh m = mf.sharedMesh;
+                if (m == null)
+                {
+                    continue;
+                }
+                Vector3[] v = m.vertices;
+                int[] t = m.triangles;
+                for (int i = 0; i + 2 < t.Length; i += 3)
+                {
+                    Vector3 a = mf.transform.TransformPoint(v[t[i]]);
+                    Vector3 b = mf.transform.TransformPoint(v[t[i + 1]]);
+                    Vector3 c = mf.transform.TransformPoint(v[t[i + 2]]);
+                    Vector3 n = Vector3.Cross(b - a, c - a);
+                    float area = n.magnitude * 0.5f;
+                    if (area < 1e-6f || Mathf.Abs(n.normalized.y) < 0.9f)
+                    {
+                        continue;
+                    }
+                    int k = Mathf.RoundToInt((a.y + b.y + c.y) / 3f / Tramo);
+                    areas[k] = (areas.TryGetValue(k, out float ya) ? ya : 0f) + area;
+                }
+            }
+            if (areas.Count == 0)
+            {
+                return ArteT250.Limites(g).max.y;
+            }
+            float mayor = areas.Values.Max();
+            return areas.Where(p => p.Value >= mayor * 0.5f).Max(p => p.Key) * Tramo;
+        }
+
+        /// <summary>Un modelo colgando del techo con su cable (LineRenderer negro) hasta la tapa.</summary>
+        private static void Colgado(Transform padre, string ruta, Vector3 centro, float yaw, float techo, float bajada, float escala)
+        {
+            GameObject g = Modelo(padre, ruta, centro, yaw, techo - bajada, escala: escala, colgar: true);
+            if (g == null)
+            {
+                return;
+            }
+            Bounds b = ArteT250.Limites(g);
+            LineRenderer lr = new GameObject("Cable").AddComponent<LineRenderer>();
+            lr.transform.SetParent(g.transform, true);
+            lr.positionCount = 2;
+            lr.SetPositions(new[] { new Vector3(b.center.x, techo, b.center.z), new Vector3(b.center.x, b.max.y - 0.02f, b.center.z) });
+            lr.widthMultiplier = 0.015f;
+            lr.sharedMaterial = ColocarT550.Mat("S2_Cable", new Color(0.04f, 0.04f, 0.045f));
+            lr.shadowCastingMode = ShadowCastingMode.Off;
         }
 
         // ---------------------------------------------------------------- Ayudas

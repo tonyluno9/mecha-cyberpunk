@@ -26,8 +26,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const string NombreMostradorCic = "MostradorCIC";
         public const string RutaInventor = "Assets/_Proyecto/Progresion/Apoyo/Datos/DatosPersonajeApoyo_inventor.asset";
         public const string FraseBanco = "Acércate al banco de trabajo para mejorar tu arma.";
-        /// <summary>Centro del banco de T-811 (ColocarS2Interiores.TallerTino), por si el modelo no está.</summary>
-        public static readonly Vector3 CentroBanco = new Vector3(-72.55f, 0.22f, 13.4f);
+        /// <summary>Centro del banco principal de T-811 (ColocarS2Interiores.TallerTino), por si el modelo no está.</summary>
+        public static readonly Vector3 CentroBanco = ColocarS2Interiores.CentroBancoTino;
         /// <summary>El punto de uso queda frente al banco, hacia la calle (-Z), a esta distancia del borde (m).</summary>
         private const float FrenteBanco = 0.45f;
 
