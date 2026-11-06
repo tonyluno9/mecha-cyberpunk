@@ -409,3 +409,6 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-675 (S1 noche): sin spam de golpes (espera la animacion), reaccion al dano corta y cortable con golpe o esquive.
 - T-676 (S1 noche): destello chico, disparo siempre igual sin sonidos de impacto, trazo finisimo, sin linea de vista no hay disparo (jugador, SKULLS, dron).
 - T-677 (S1 noche): headshot x3 (hueso de cabeza o 15 % de arriba del collider) a enemigos, aliados y civiles; ImpactoBala.Cabeza.
+- T-678 (S1 noche): ImportarS1n mete W02-W04, C01 y F01 solo cuando aparecen (idempotente); H02-H04 ya estaban.
+- T-679 (S1 noche): escopeta, fusil y francotirador con su modelo en la mano, en el piso (prefabs _Piso) y registrados; destello F01 más grande.
+- T-680 (S1 noche): C01 trae esqueleto: Visual_Policia y prefab PoliciaAPie (pistola W01, datos propios); reemplazo man azul marino listo.
