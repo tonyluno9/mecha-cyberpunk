@@ -147,6 +147,20 @@ namespace MechaCyberpunk.Personaje.Visual
             set { tipoArma = value; Aplicar(); }
         }
 
+        /// <summary>Segundos que el arma sigue "levantada" (pose de arma en el torso) tras disparar o recargar sin apuntar (T-671).</summary>
+        public const float SegundosArmaTrasAccion = 1.5f;
+
+        private float armaLevantadaHasta;
+
+        /// <summary>El tipo de arma que ve el Animator: solo al apuntar (o justo después de disparar o recargar) se usan las poses de arma; si no, camina y corre normal (T-671).</summary>
+        public TipoArmaVisual TipoArmaAnimador => apuntando || Time.time < armaLevantadaHasta ? tipoArma : TipoArmaVisual.Ninguna;
+
+        private void LevantarArma()
+        {
+            armaLevantadaHasta = Time.time + SegundosArmaTrasAccion;
+            Aplicar();
+        }
+
         public bool Cubierto
         {
             get => cubierto;
@@ -294,11 +308,6 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velocidadAnterior;
         private float yawAnterior;
         private int capaArriba = -2;
-        private int capaPiernas = -2;
-        private float pesoPiernas;
-
-        /// <summary>Peso actual de la capa de piernas con arma (T-651), de 0 a 1.</summary>
-        public float PesoPiernasArma => pesoPiernas;
         private bool agachado;
         private int golpeAlterno = 1;
         private int coberturaAlterna;
@@ -372,24 +381,6 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
             animador.SetLayerWeight(capaArriba, pesoArriba);
-            ActualizarPiernasDeArma(dt);
-        }
-
-
-        // T-651: con arma en la mano (sin apuntar) las piernas juegan Pistola_Caminar/Correr o Rifle_Caminar/Correr en la capa Piernas.
-        private void ActualizarPiernasDeArma(float dt)
-        {
-            if (capaPiernas == -2)
-            {
-                capaPiernas = animador.GetLayerIndex(ReglasAnimacion.CapaPiernas);
-            }
-            if (capaPiernas < 0)
-            {
-                return;
-            }
-            bool usa = ReglasAnimacion.UsaPiernasDeArma(tipoArma, enSuelo, apuntando, agachado, cubierto, caido, EnGesto, manejando, velocidad);
-            pesoPiernas = Mathf.MoveTowards(pesoPiernas, usa ? 1f : 0f, rapidezCapaArriba * dt);
-            animador.SetLayerWeight(capaPiernas, pesoPiernas);
         }
         /// <summary>Peso actual de la capa de arriba (torso), de 0 a 1.</summary>
         public float PesoCapaArriba => pesoArriba;
@@ -435,12 +426,6 @@ namespace MechaCyberpunk.Personaje.Visual
             float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
             // T-640: caminar normal (4.5 m/s) ya no es Correr: Caminar se acelera menos que Correr para no verse apresurado.
             float tope = estado == HashCaminar ? Mathf.Min(rapidezMaxima, ReglasAnimacion.RapidezMaximaCaminar) : rapidezMaxima;
-            if (pesoPiernas > 0.5f && (estado == HashCaminar || estado == HashCorrer))
-            {
-                // T-651: las piernas (y el torso) juegan los clips del arma, que avanzan a otra velocidad que Loco_Caminar y Loco_Correr.
-                referencia = ReglasAnimacion.VelocidadClipArma(tipoArma, velocidad);
-                tope = rapidezMaxima;
-            }
             animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia * EscalaClips, rapidezMinima, tope);
         }
 
@@ -504,10 +489,15 @@ namespace MechaCyberpunk.Personaje.Visual
                 animador.SetTrigger(IdDisparoCobertura);
                 return;
             }
+            LevantarArma();
             Disparo(IdDisparar);
         }
 
-        public void Recargar() => Disparo(IdRecargar);
+        public void Recargar()
+        {
+            LevantarArma();
+            Disparo(IdRecargar);
+        }
 
         public void Golpear() => Golpear(false);
 
@@ -532,7 +522,7 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdVelocidad, velocidad);
             Poner(IdEnSuelo, enSuelo);
             Poner(IdApuntando, apuntando);
-            Poner(IdTipoArma, (int)tipoArma);
+            Poner(IdTipoArma, (int)TipoArmaAnimador);
             Poner(IdCaer, caido);
             Poner(IdCubierto, cubierto);
             Poner(IdAgachado, agachado);

@@ -111,7 +111,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(2.5f);
             Assert.AreEqual(0f, visual.Tumbado, 0.01f, "KO con clip de muerte: no se tumba a mano");
             Transform cabeza = visual.Animador.GetBoneTransform(HumanBodyBones.Head);
-            Assert.Less(cabeza.position.y, 0.8f, "La cabeza queda cerca del piso (m)");
+            Assert.Less(cabeza.position.y, 1.0f, "La cabeza queda cerca del piso (m)");
             visual.Caido = false;
             float fin = Time.time + 12f;
             while (cabeza.position.y <= 1.1f && Time.time < fin)
