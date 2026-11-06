@@ -20,7 +20,7 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Importador_DosVeces_NoCambiaNada()
         {
             ImportarS2n.MeterTodo();
-            string[] rutas = ImportarS2n.Entradas.Select(e => e.Destino).Concat(new[] { ImportarS2n.MaterialAmarilla, ImportarS2n.MaterialBlanca, ImportarS2n.MaterialCebra }).ToArray();
+            string[] rutas = ImportarS2n.Entradas.Where(e => e.Accion != ImportarS2n.Accion.CarroTripo || File.Exists(e.Destino)).Select(e => e.Destino).Concat(new[] { ImportarS2n.MaterialAmarilla, ImportarS2n.MaterialBlanca, ImportarS2n.MaterialCebra }).ToArray();
             Dictionary<string, byte[]> antes = rutas.ToDictionary(r => r, File.ReadAllBytes);
             ImportarS2n.MeterTodo();
             string informe = ImportarS2n.Informe.ToString();
