@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // En el juego VolumenSigueNoche (los volúmenes de zona, como el cálido de Suburbios) copia el peso de noche en LateUpdate;
         // en el editor no corre, y la foto de día salía con el tinte de noche de la zona.
-        private static void SeguirNoche()
+        internal static void SeguirNoche()
         {
             foreach (Mundo.Ambiente.VolumenSigueNoche sigue in Object.FindObjectsByType<Mundo.Ambiente.VolumenSigueNoche>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
