@@ -25,7 +25,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Cuartos
         [Tooltip("PantallasHistoria.prefab: se instancia una vez si la escena no trae pantalla de fundido.")]
         [SerializeField] private GameObject prefabPantallas;
         [Tooltip("Tiempo que se queda en negro con el jugador ya movido (s).")]
-        [Min(0f)] [SerializeField] private float segundosEnNegro = 0.15f;
+        [Min(0f)] [SerializeField] private float segundosEnNegro = 0.08f;
+        [Tooltip("S2 (playtest 5-nov): fundido corto propio de las puertas, no el de las pantallas de historia (s). Hacia negro.")]
+        [Min(0f)] [SerializeField] private float segundosAlNegro = 0.2f;
+        [Tooltip("Desde negro (s).")]
+        [Min(0f)] [SerializeField] private float segundosDesdeNegro = 0.3f;
 
         private static float proximoCruce;
         private static bool cruzando;
@@ -108,8 +112,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Cuartos
             PantallaFundido fundido = ObtenerFundido();
             if (fundido != null)
             {
-                float salida = fundido.Config != null ? fundido.Config.SegundosSalida : 0f;
-                yield return fundido.Fundir(1f, salida);
+                yield return fundido.Fundir(1f, segundosAlNegro);
             }
             jugador.Colocar(destino);
             for (int i = 0; i < CuadrosDeFisica; i++)
@@ -119,8 +122,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Cuartos
             yield return new WaitForSecondsRealtime(segundosEnNegro);
             if (fundido != null)
             {
-                float entrada = fundido.Config != null ? fundido.Config.SegundosEntrada : 0f;
-                yield return fundido.Fundir(0f, entrada);
+                yield return fundido.Fundir(0f, segundosDesdeNegro);
             }
             if (controlCongelado != null)
             {

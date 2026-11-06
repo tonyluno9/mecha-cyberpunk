@@ -49,7 +49,8 @@ namespace MechaCyberpunk.Tests.Mundo
                 Renderer r = h.Find("Poster_" + i).GetComponent<Renderer>();
                 Assert.AreEqual("T546_Poster_" + i, r.sharedMaterial.mainTexture.name);
             }
-            Assert.Less(h.Find("FocoColgante").localScale.x, 0.6f, "Foco chico de cuarto");
+            // S2 (playtest 5-nov): el foco es pelón y cuelga de su cable, como en habitacion.png.
+            Assert.Less(h.Find("S2_Cuarto/Foco_Pelon").lossyScale.y, 0.2f, "Foco chico de cuarto");
             Light foco = h.Find("Luces/FocoColgante_Luz").GetComponent<Light>();
             Assert.Greater(foco.color.r, foco.color.b, "Luz cálida");
         }
