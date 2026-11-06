@@ -8,6 +8,7 @@ using MechaCyberpunk.Personaje.Combate;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
@@ -20,7 +21,7 @@ namespace MechaCyberpunk.Tests.Personaje
     /// con el carro; en una persona ninguno. La pistola del jugador queda escuchada y el cubito MarcaImpacto (Greybox_Marca) ya no se ve.
     /// Con CAPTURAR_S2N_HUECOS=1 guarda docs/capturas/s2n-huecos-bala.png.
     /// </summary>
-    public class HuecosBalaPruebas
+    public class HuecosBalaPruebas : InputTestFixture
     {
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaMarca = "Assets/_Proyecto/Personaje/Materiales/Greybox_Marca.mat";
@@ -28,13 +29,26 @@ namespace MechaCyberpunk.Tests.Personaje
         private const string VariableCaptura = "CAPTURAR_S2N_HUECOS";
 
         private readonly HashSet<GameObject> raices = new HashSet<GameObject>();
+        private Keyboard teclado;
+        private Mouse raton;
 
-        [SetUp]
-        public void Preparar()
+        // El jugador trae sus acciones: como en BaseJugadorAPie, con teclado y ratón de prueba de InputTestFixture
+        // (si no, sus acciones quedan atadas y rompen las pruebas que siguen).
+        public override void Setup()
         {
+            base.Setup();
             Registros.LimpiarTodos();
+            teclado = InputSystem.AddDevice<Keyboard>();
+            raton = InputSystem.AddDevice<Mouse>();
             raices.Clear();
             raices.UnionWith(SceneManager.GetActiveScene().GetRootGameObjects());
+        }
+
+        public override void TearDown()
+        {
+            Time.timeScale = 1f;
+            Registros.LimpiarTodos();
+            base.TearDown();
         }
 
         [UnityTearDown]
