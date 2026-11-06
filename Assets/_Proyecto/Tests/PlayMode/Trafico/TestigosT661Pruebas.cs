@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Tests.Trafico
         {
             public float Valor { get; private set; }
             public float Maximo => 100f;
-            public int Nivel => Valor >= 10f ? (Valor >= 40f ? 2 : 1) : 0;
+            public int Nivel => Valor >= 70f ? 3 : (Valor >= 40f ? 2 : (Valor >= 10f ? 1 : 0));
             public event Action<float> ValorCambio;
             public event Action<int> NivelCambio;
 

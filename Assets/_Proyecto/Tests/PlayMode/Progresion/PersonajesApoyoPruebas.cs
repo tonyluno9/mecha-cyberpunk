@@ -181,7 +181,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(40f, vida.Actual, 0.5f, "Vida 40");
             for (int i = 0; i < 200 && calor.Nivel < 2; i++)
             {
-                calor.Sumar(5f, MotivoCalor.Otro);
+                calor.Sumar(5f, MotivoCalor.Mision); // T-661: sin testigos un delito no suma calor; una misión sí
             }
             Assert.AreEqual(2, calor.Nivel, "Calor nivel 2");
 
