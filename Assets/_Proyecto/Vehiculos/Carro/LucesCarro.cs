@@ -4,12 +4,14 @@ using UnityEngine;
 namespace MechaCyberpunk.Vehiculos.Carro
 {
     /// <summary>
-    /// Faros y calaveras del carro (T-590). Dos faros delanteros (reflectores blancos) y dos luces rojas atrás, con sus lentes visibles.
+    /// Faros y calaveras del carro (T-590). Dos faros delanteros (reflectores blancos) y dos luces rojas atrás. T-659: ya no llevan lentes
+    /// (los cuadros que fingían los faros): solo las luces; el modelo del carro es una sola malla con una sola textura y no tiene faros aparte.
     /// Quién las prende:
     /// - El conductor con la tecla L (acción "Luces" de ControlesCarro): <see cref="Alternar"/>. Al bajarse vuelve al modo automático.
     /// - Automático: de noche (reloj del mundo, <see cref="IRelojMundo.EsDeNoche"/>) se prenden en el tráfico y en el carro que alguien maneja;
     ///   un carro estacionado vacío las lleva apagadas. Un carro explotado no las prende.
     /// El brillo sube y baja en ~1 s (no de golpe) y las luces reales solo existen cerca de la cámara (decenas de carros a la vez).
+    /// Las motos no las llevan (T-660).
     /// Lo agrega <see cref="CarroViejo"/> al nacer; mide las luces con las cajas de choque del carro.
     /// </summary>
     [RequireComponent(typeof(CarroViejo))]
@@ -24,7 +26,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const float IntensidadFaros = 12f;
         private const float RangoCalaveras = 4f;
         private const float IntensidadCalaveras = 2f;
-        private const float LadoLente = 0.22f;
         private const float SegundosDeFundido = 1f;
         private const float SegundosEntreRevisiones = 0.4f;
         private const float DistanciaMaximaLuces = 80f;
@@ -35,10 +36,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private CarroViejo carro;
         private DanioCarro danio;
         private Light[] luces;
-        private Renderer[] lentes;
         private Color[] colores;
         private float[] intensidadMaxima;
-        private Material materialLente;
         private float brillo;
         private float proximaRevision;
         private bool cercaDeCamara = true;
@@ -61,14 +60,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
             danio = GetComponent<DanioCarro>();
             CrearLuces();
             Aplicar(0f);
-        }
-
-        private void OnDestroy()
-        {
-            if (materialLente != null)
-            {
-                Destroy(materialLente);
-            }
         }
 
         /// <summary>La tecla de luces: pasa a modo manual y cambia el estado de ahora. Un carro explotado no las prende.</summary>
@@ -120,7 +111,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             Aplicar(brillo);
         }
 
-        // Solo se encienden las luces reales cerca de la cámara; las demás se ven por el lente.
+        // Solo se encienden las luces reales cerca de la cámara.
         private void RevisarCamara()
         {
             if (Time.time < proximaRevision)
@@ -140,8 +131,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 luces[i].enabled = visible && cercaDeCamara;
                 luces[i].intensity = intensidadMaxima[i] * valor;
-                lentes[i].enabled = visible;
-                lentes[i].material.color = colores[i] * Mathf.Lerp(0.15f, 1f, valor);
             }
         }
 
@@ -154,11 +143,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             float x = ancho * FraccionSeparacionFaros;
             float y = Mathf.Max(AlturaFaros, caja.min.y + caja.size.y * 0.35f);
             luces = new Light[4];
-            lentes = new Renderer[4];
             colores = new Color[4];
             intensidadMaxima = new float[4];
-            Shader shader = Shader.Find("Sprites/Default");
-            materialLente = shader != null ? new Material(shader) : null;
             Crear(0, "Faro_I", new Vector3(-x, y, adelante), true);
             Crear(1, "Faro_D", new Vector3(x, y, adelante), true);
             Crear(2, "Calavera_I", new Vector3(-x, y, atras), false);
@@ -183,20 +169,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
             luces[indice] = luz;
             intensidadMaxima[indice] = faro ? IntensidadFaros : IntensidadCalaveras;
             colores[indice] = faro ? ColorFaro : ColorCalavera;
-
-            GameObject lente = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            lente.name = nombre + "_Lente";
-            Destroy(lente.GetComponent<Collider>());
-            lente.transform.SetParent(objeto.transform, false);
-            lente.transform.localScale = new Vector3(LadoLente, LadoLente * 0.6f, 0.04f);
-            Renderer render = lente.GetComponent<Renderer>();
-            render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            if (materialLente != null)
-            {
-                render.sharedMaterial = materialLente;
-                render.material = new Material(materialLente);
-            }
-            lentes[indice] = render;
         }
 
         // Cajas de choque del carro, en el espacio local del carro (el visual cambia de modelo a modelo, las cajas están a la medida).

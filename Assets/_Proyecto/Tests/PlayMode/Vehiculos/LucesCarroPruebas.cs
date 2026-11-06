@@ -214,5 +214,78 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Object.DestroyImmediate(pared);
             Assert.IsTrue(System.IO.File.Exists(RutaCaptura));
         }
+
+        [UnityTest]
+        public IEnumerator T659_LasLucesNoTienenCuadrosFalsos()
+        {
+            CrearCarro("Assets/_Proyecto/Vehiculos/Prefabs/Carro_V02.prefab");
+            yield return Esperar(0.2f);
+            Assert.AreEqual(4, luces.Luces.Length);
+            foreach (Light luz in luces.Luces)
+            {
+                Assert.AreEqual(0, luz.GetComponentsInChildren<Renderer>(true).Length, "La luz " + luz.name + " no lleva lentes ni cuadros");
+            }
+            foreach (Transform t in carroObjeto.GetComponentsInChildren<Transform>(true))
+            {
+                Assert.IsFalse(t.name.Contains("Lente"), "Sobra un lente: " + t.name);
+            }
+            foreach (MeshFilter mf in carroObjeto.GetComponentsInChildren<MeshFilter>(true))
+            {
+                Renderer dibujo = mf.GetComponent<Renderer>();
+                if (dibujo == null || !dibujo.enabled)
+                {
+                    continue;
+                }
+                string malla = mf.sharedMesh != null ? mf.sharedMesh.name : "";
+                Assert.IsFalse(malla == "Cube" || malla == "Quad", "Sobra una primitiva (" + malla + ") en " + mf.name + " que simula un faro");
+            }
+        }
+
+        // Las luces de fuego y de explosión (daño) existen aparte; aquí solo cuentan faros y calaveras.
+        private int CuantasLucesDeFaros()
+        {
+            return carroObjeto.GetComponentsInChildren<Light>(true).Count(l => l.name.StartsWith("Faro") || l.name.StartsWith("Calavera"));
+        }
+
+        [UnityTest]
+        public IEnumerator T660_LaMotoNoLlevaLuces()
+        {
+            reloj.Noche = true;
+            CrearCarro("Assets/_Proyecto/Vehiculos/Prefabs/Carro_V07.prefab");
+            yield return Esperar(0.3f);
+            Assert.IsNull(carroObjeto.GetComponent<LucesCarro>(), "La moto no lleva LucesCarro");
+            Assert.AreEqual(0, CuantasLucesDeFaros(), "Ni faros ni calaveras");
+            Assert.IsTrue(carro.IntentarSubir(null));
+            yield return Esperar(1.5f);
+            Assert.AreEqual(0, CuantasLucesDeFaros(), "Tampoco de noche y con conductor");
+        }
+
+        [UnityTest]
+        public IEnumerator Captura_S1_LucesDelCarroDeNoche()
+        {
+            reloj.Noche = true;
+            RenderSettings.ambientLight = new Color(0.04f, 0.05f, 0.09f);
+            CrearCarro("Assets/_Proyecto/Vehiculos/Prefabs/Carro_V02.prefab");
+            carroObjeto.transform.position = new Vector3(0f, 0.3f, 0f);
+            Assert.IsTrue(carro.IntentarSubir(null));
+            yield return Esperar(1.5f);
+            GameObject camObj = new GameObject("CamCaptura");
+            Camera cam = camObj.AddComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.02f, 0.03f, 0.07f);
+            cam.transform.position = new Vector3(-4f, 1.6f, 6.5f);
+            cam.transform.LookAt(new Vector3(0f, 0.7f, 1.5f));
+            GameObject pared = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            pared.transform.position = new Vector3(0f, 2f, 14f);
+            pared.transform.localScale = new Vector3(14f, 4f, 0.5f);
+            yield return Esperar(0.3f);
+            CapturaPruebasVehiculos.Tomar(cam, "docs/capturas/s1-luces-carro-noche.png");
+            cam.transform.position = new Vector3(3.5f, 1.4f, -6.5f);
+            cam.transform.LookAt(new Vector3(0f, 0.8f, -1.5f));
+            yield return Esperar(0.2f);
+            CapturaPruebasVehiculos.Tomar(cam, "docs/capturas/s1-luces-carro-noche-atras.png");
+            Object.DestroyImmediate(camObj);
+            Object.DestroyImmediate(pared);
+        }
     }
 }
