@@ -38,32 +38,33 @@ namespace MechaCyberpunk.Mundo.Datos
 
         [Tooltip("Color de la niebla según la hora del día.")]
         [SerializeField] private Gradient colorNiebla = Crear(
-            (0f, new Color(0.12f, 0.09f, 0.26f)), (0.27f, new Color(0.13f, 0.1f, 0.28f)), (0.31f, new Color(0.45f, 0.38f, 0.45f)),
-            (0.4f, new Color(0.5f, 0.6f, 0.82f)), (0.54f, new Color(0.52f, 0.62f, 0.86f)), (0.75f, new Color(0.62f, 0.45f, 0.58f)),
+            (0f, new Color(0.12f, 0.09f, 0.26f)), (0.27f, new Color(0.13f, 0.1f, 0.28f)), (0.31f, new Color(0.62f, 0.48f, 0.5f)),
+            (0.4f, new Color(0.5f, 0.62f, 0.7f)), (0.54f, new Color(0.5f, 0.62f, 0.72f)), (0.75f, new Color(0.7f, 0.52f, 0.55f)),
             (0.82f, new Color(0.2f, 0.12f, 0.3f)), (0.88f, new Color(0.12f, 0.09f, 0.26f)));
-
         [Tooltip("Densidad de la niebla (exponencial al cuadrado) según la hora (h).")]
         [SerializeField] private AnimationCurve densidadNiebla = new AnimationCurve(
             new Keyframe(0f, 0.02f), new Keyframe(6f, 0.02f), new Keyframe(8f, 0.008f), new Keyframe(13f, 0.006f),
             new Keyframe(18f, 0.008f), new Keyframe(20f, 0.02f), new Keyframe(24f, 0.02f));
 
         [Header("Cielo")]
-        [Tooltip("Tinte del cielo (skybox procedural) según la hora del día. De noche es el color de la niebla, para no cambiar la noche.")]
+        [Tooltip("Color del cénit del cielo según la hora del día (el horizonte es el color de la niebla). De noche es el de la niebla.")]
         [SerializeField] private Gradient colorCielo = Crear(
-            (0f, new Color(0.12f, 0.09f, 0.26f)), (0.27f, new Color(0.13f, 0.1f, 0.28f)), (0.31f, new Color(0.9f, 0.5f, 0.45f)),
-            (0.4f, new Color(0.3f, 0.5f, 0.95f)), (0.54f, new Color(0.25f, 0.45f, 0.95f)), (0.75f, new Color(0.9f, 0.45f, 0.5f)),
-            (0.82f, new Color(0.3f, 0.15f, 0.4f)), (0.88f, new Color(0.12f, 0.09f, 0.26f)));
-
-        [Tooltip("Exposición del cielo según la hora (h).")]
+            (0f, new Color(0.12f, 0.09f, 0.26f)), (0.27f, new Color(0.13f, 0.1f, 0.28f)), (0.31f, new Color(0.42f, 0.4f, 0.6f)),
+            (0.4f, new Color(0.28f, 0.5f, 0.68f)), (0.54f, new Color(0.26f, 0.48f, 0.68f)), (0.75f, new Color(0.4f, 0.4f, 0.62f)),
+            (0.82f, new Color(0.14f, 0.09f, 0.28f)), (0.88f, new Color(0.12f, 0.09f, 0.26f)));
+        [Tooltip("Exposición del cénit del cielo según la hora (h); el horizonte queda del color de la niebla.")]
         [SerializeField] private AnimationCurve exposicionCielo = new AnimationCurve(
-            new Keyframe(0f, 0.6f), new Keyframe(6.5f, 0.6f), new Keyframe(8f, 1.1f), new Keyframe(18f, 1.1f),
-            new Keyframe(19.5f, 0.6f), new Keyframe(24f, 0.6f));
-
+            new Keyframe(0f, 2.4f), new Keyframe(6.5f, 2.4f), new Keyframe(8f, 0.5f), new Keyframe(18f, 0.5f),
+            new Keyframe(19.5f, 2.4f), new Keyframe(24f, 2.4f));
         [Tooltip("Tamaño del disco del sol según la hora (h). 0 de noche: la luna no se dibuja.")]
         [SerializeField] private AnimationCurve discoSol = new AnimationCurve(
             new Keyframe(0f, 0f), new Keyframe(6.5f, 0f), new Keyframe(8f, 0.04f), new Keyframe(18f, 0.04f),
             new Keyframe(19.5f, 0f), new Keyframe(24f, 0f));
 
+        [Tooltip("T-806: color del brillo de la ciudad que sube del horizonte en el cielo de noche.")]
+        [SerializeField] private Color colorBrilloCiudad = new Color(0.5f, 0.16f, 0.42f);
+        [Tooltip("T-806: fuerza del brillo de la ciudad en el cielo de noche (0 a 1). Se multiplica por el peso de noche: de día no se ve.")]
+        [SerializeField, Range(0f, 1f)] private float fuerzaBrilloCiudad = 0.35f;
         [Header("Posproceso")]
         [Tooltip("Peso del Volume de noche según la hora (h): 1 es noche completa, 0 es día. El de día es 1 menos este.")]
         [SerializeField] private AnimationCurve pesoNoche = new AnimationCurve(
@@ -71,6 +72,13 @@ namespace MechaCyberpunk.Mundo.Datos
             new Keyframe(19.5f, 1f), new Keyframe(24f, 1f));
 
         public Color ColorCielo(float hora) => colorCielo.Evaluate(Fraccion(hora));
+        /// <summary>Brillo de la ciudad en el cielo a esa hora: rgb es el color y a la fuerza (0 de día).</summary>
+        public Color BrilloCiudad(float hora)
+        {
+            Color c = colorBrilloCiudad;
+            c.a = fuerzaBrilloCiudad * PesoNoche(hora);
+            return c;
+        }
         public float ExposicionCielo(float hora) => exposicionCielo.Evaluate(Horas(hora));
         public float DiscoSol(float hora) => Mathf.Max(0f, discoSol.Evaluate(Horas(hora)));
         public float PesoNoche(float hora) => Mathf.Clamp01(pesoNoche.Evaluate(Horas(hora)));

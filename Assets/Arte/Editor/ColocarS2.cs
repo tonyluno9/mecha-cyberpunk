@@ -228,13 +228,13 @@ namespace MechaCyberpunk.Arte.Editor
         // ---------------------------------------------------------------- Capturas
 
         /// <summary>Captura con posproceso desde 'desde' mirando a 'hacia' (ruta relativa al proyecto).</summary>
-        public static void Foto(Vector3 desde, Vector3 hacia, string ruta, float campo = 60f)
+        public static void Foto(Vector3 desde, Vector3 hacia, string ruta, float campo = 60f, float lejos = 400f)
         {
             GameObject go = new GameObject("CamaraS2");
             Camera cam = go.AddComponent<Camera>();
             go.AddComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().renderPostProcessing = true;
             cam.nearClipPlane = 0.05f;
-            cam.farClipPlane = 400f;
+            cam.farClipPlane = lejos;
             cam.fieldOfView = campo;
             cam.transform.position = desde;
             cam.transform.LookAt(hacia);

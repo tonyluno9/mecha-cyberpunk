@@ -37,3 +37,28 @@ Hoy M01 y M02 ya están en `imageassets/calle/` y son los que se usan.
 - Agrega una fila a `Entradas` con `new Entrada(origen, destino, Accion.X, respaldo)`.
 - Si hace falta otro tipo de importación (por ejemplo un modelo .zip o .fbx), agrega un valor a `Accion` y su caso en `Ajustes`. No cambies
   las filas de otros.
+
+**Carros V09-V11 (T-810)**
+- Filas `Accion.CarroTripo` en `Entradas`: `imageassets/modelos3d/V09_Taxi.zip`, `V10_Pickup.zip` y `V11_Van.zip` van a
+  `Assets/Arte/Vehiculos/V09/V09.fbx` (igual con V10 y V11). El trabajo lo hace `Assets/Arte/Editor/ImportarS2nCarros.cs`.
+- Si el zip no está, no hace nada: anota en `Logs/s2n-importar.txt` "falta V09_Taxi.zip ..." y no abre la escena. Lo comprueba
+  `CarrosS2nPruebas.Importador_SinZip_NoHaceNadaYAnotaQueFalta`.
+- Cuando llega el zip, la siguiente pasada del importador hace esto:
+  1. Desempaca el `.fbx` como `V09.fbx`. La textura de color (`*basecolor*` o la `tripo_image_*_0_0.jpg`) queda como `V09_basecolor.jpg`
+     y la normal (`*normal*` o `*_0_3.jpg`) como `V09_normal.jpg`. Es la misma convención de V02-V08.
+  2. Arma el prefab del arte con el flujo de T-250, como `ImportarT511`: frente a +Z, el largo real y los pies en y = 0. Los largos
+     son taxi 4.5 m (como el sedán V02), pickup 5 m (como V03) y van 4.7 m (como la combi V04).
+  3. Arma el carro manejable con `CreadorCarrosT511.CrearUno`. Las ruedas de greybox quedan invisibles, como en los otros carros de Tripo.
+  4. Arma `Trafico/Prefabs/CarroTrafico_V09.prefab`, igual que `CreadorTraficoT511`.
+  5. Lo agrega a `TraficoCalle.prefabsCarro` de Ciudad_Prologo.
+- Si un modelo sale de lado o de reversa, cambia su giro en `ImportarS2nCarros.Medidas` (hoy 180°, como V05 y V06) y vuelve a
+  correr el importador. Revisa la hoja `Logs/s2n-carros.png`.
+- Para correrlo todo, carros y variantes: menú **Mecha Cyberpunk > S2n > 8 Variedad de carros del trafico**
+  (`ColocarS2nCarros.Colocar`), que llama al importador.
+
+**Variantes de color (T-810, hoy)**
+- `ColocarS2nCarros` hace dos variantes de color de cada carro civil: V02 rojo y azul, V03 verde y gris, V04 naranja y turquesa.
+  Cada una es una copia del material con otro tinte y una variante del prefab CarroTrafico (mismo comportamiento). Quedan en
+  `Assets/Arte/Vehiculos/Variantes/` y están en el tráfico.
+- El tráfico queda con 11 modelos: V01a, V01b, V02, V03, V04 y las 6 variantes.
+- La moto de reparto V07 no se agregó: el tráfico no tiene motos y su prueba no las cubre.
