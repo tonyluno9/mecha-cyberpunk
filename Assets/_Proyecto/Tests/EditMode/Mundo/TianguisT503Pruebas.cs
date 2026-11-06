@@ -16,7 +16,6 @@ namespace MechaCyberpunk.Tests.Mundo
         private const string NombreRaiz = "T503_Tianguis";
         private const string RutaPerfilSuburbios = "Assets/Arte/Suburbios/PerfilSuburbios.asset";
         private const int PuestosMinimos = 6;
-        private const int FocosMinimos = 60;
         private const int LucesMaximas = 14;
         private const int ParticulasMaximas = 20;
         private const float MitadCarril = 3.4f;
@@ -72,15 +71,14 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Focos_SonEmisivosYLasLucesSonPocasYSinSombra()
+        public void SinSeriesDeFocos_YLasLucesSonPocasYSinSombra()
         {
-            MeshRenderer[] focos = raiz.GetComponentsInChildren<MeshRenderer>().Where(r => r.name.StartsWith("Foco_")).ToArray();
-            Assert.GreaterOrEqual(focos.Length, FocosMinimos);
-            Assert.IsTrue(focos[0].sharedMaterial.IsKeywordEnabled("_EMISSION"));
+            // S2 (playtest 5-nov): sin series de focos colgadas en sogas sobre el tianguis.
+            Assert.IsEmpty(raiz.GetComponentsInChildren<MeshRenderer>().Where(r => r.name.StartsWith("Foco_")), "focos colgados");
+            Assert.IsEmpty(raiz.GetComponentsInChildren<LineRenderer>(), "sogas de focos");
             Light[] luces = raiz.GetComponentsInChildren<Light>();
             Assert.LessOrEqual(luces.Length, LucesMaximas);
             Assert.IsTrue(luces.All(l => l.shadows == LightShadows.None));
-            Assert.GreaterOrEqual(raiz.GetComponentsInChildren<LineRenderer>().Length, 4, "series de focos en zigzag");
         }
 
         [Test]

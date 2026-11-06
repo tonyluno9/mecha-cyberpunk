@@ -354,14 +354,13 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Casino_Ambiente_DentroSuenaMusicaYBajaLaLluvia_YAlSalirSeVaLaMusica()
+        public IEnumerator Casino_Ambiente_DentroSuenaMusica_SinLluvia_YAlSalirSeVaLaMusica()
         {
             yield return Preparar(EscenaLugares.HoraNoche);
             AmbienteSonoro ambiente = Object.FindFirstObjectByType<AmbienteSonoro>();
             Assert.IsNotNull(ambiente, "El barrio trae el AmbienteSonoro");
             yield return EscenaLugares.Esperar(SegundosMezcla);
-            float lluviaAfuera = ambiente.VolumenLluvia;
-            Assert.Greater(lluviaAfuera, Margen, "De noche afuera llueve");
+            Assert.AreEqual(0f, ambiente.VolumenLluvia, Margen, "S2: el juego no tiene lluvia");
             Assert.AreEqual(0f, ambiente.VolumenMusica, Margen, "Sin música afuera");
             Vector3 afuera = camara.transform.position;
 
@@ -369,7 +368,7 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return EscenaLugares.Esperar(SegundosMezcla);
             Assert.IsTrue(zona.JugadorDentro);
             Assert.Greater(ambiente.VolumenMusica, Margen, "Dentro suena la música");
-            Assert.Less(ambiente.VolumenLluvia, lluviaAfuera - Margen, "Dentro baja la lluvia");
+            Assert.AreEqual(0f, ambiente.VolumenLluvia, Margen, "Dentro tampoco suena lluvia");
             Assert.AreEqual(0f, ambiente.VolumenNeon, Margen, "Dentro no se oye el neón");
 
             camara.Colocar(new Pose(afuera, Quaternion.identity));
