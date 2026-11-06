@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Arte.Editor",
     "rootNamespace": "MechaCyberpunk.Arte.Editor",
-    "references": ["Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje.Visual.Editor", "MechaCyberpunk.Core", "MechaCyberpunk.Mundo", "MechaCyberpunk.Progresion.Prologo", "UnityEngine.UI"],
+    "references": ["Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje.Visual.Editor", "MechaCyberpunk.Core", "MechaCyberpunk.Mundo", "MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Progresion.Apoyo", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Editor", "UnityEngine.UI"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

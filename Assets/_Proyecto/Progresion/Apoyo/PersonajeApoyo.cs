@@ -52,8 +52,9 @@ namespace MechaCyberpunk.Progresion.Apoyo
         {
             get
             {
-                if (regalo != null)
+                if (regalo != null || (datos.Servicio == ServicioApoyo.Mejoras && mostrador == null))
                 {
+                    // T-814: sin tienda, EL INVENTOR solo platica: te manda a su banco de trabajo.
                     return new ReglaPersonajeApoyo.Aviso("HABLAR CON " + datos.Nombre, true);
                 }
                 VidaAPie vida = VidaDelJugador();
@@ -181,6 +182,11 @@ namespace MechaCyberpunk.Progresion.Apoyo
                         if (mostrador != null)
                         {
                             mostrador.Usar();
+                        }
+                        else
+                        {
+                            // T-814: las mejoras se compran en el banco de trabajo (BancoArmas); su primera frase lo dice.
+                            Decir(datos.Frases.Length > 0 ? datos.Frases[0] : "Acércate al banco de trabajo para mejorar tu arma.");
                         }
                         break;
                     case ServicioApoyo.Curar:
