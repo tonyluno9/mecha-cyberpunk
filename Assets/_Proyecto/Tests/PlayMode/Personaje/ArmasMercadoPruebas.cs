@@ -34,7 +34,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private const int Dinero = 3000;
         private const float DistanciaBlanco = 80f;
         private const float VidaBlanco = 60f;
-        private const float LateralApuntando = 0.7f;
+        private const float LateralApuntando = 0f; // T-672: al apuntar la cámara queda centrada
 
         private Keyboard teclado;
         private Mouse raton;
@@ -213,8 +213,8 @@ namespace MechaCyberpunk.Tests.Personaje
                 Object.Destroy(blanco);
             }
             blanco = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            blanco.transform.localScale = new Vector3(0.8f, 0.9f, 0.8f);
-            blanco.transform.position = posicion + Vector3.up * 0.9f;
+            blanco.transform.localScale = new Vector3(0.8f, 1.3f, 0.8f); // 2.6 m: la cámara al apuntar va a 2 m de altura (T-672)
+            blanco.transform.position = posicion + Vector3.up * 1.3f;
             Physics.SyncTransforms();
             return blanco.AddComponent<BlancoDeTiro>();
         }
@@ -393,7 +393,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(zoom.Activo, "Con el fusil no hay zoom del sniper");
             Press(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.5f);
-            Assert.AreEqual(40f, camara.fieldOfView, 1f, "Con el fusil, clic derecho sigue apuntando a FOV 40 (T-585)");
+            Assert.AreEqual(45f, camara.fieldOfView, 1f, "Con el fusil, clic derecho sigue apuntando a FOV 45 (T-672)");
             Assert.IsFalse(mira.Visible, "El fusil no usa la mira del sniper");
             Release(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.4f);
