@@ -26,9 +26,9 @@ MonoBehaviour:
   segundosSubirBrazo: 0.6
   segundosLevantarse: 0.3
   segundosSubtitulo: 3
-  bajadaBrazo: 0.35
+  bajadaBrazo: 0.12491924
   posicionCamara: {x: 1.1, y: 1.25, z: 1.9}
-  alturaMira: 0.35
+  alturaMira: 0.6
   campoVision: 50
   colorLuz: {r: 0.3, g: 1, b: 0.75, a: 1}
   intensidadLuz: 3

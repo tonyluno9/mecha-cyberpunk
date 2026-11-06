@@ -110,6 +110,7 @@ MonoBehaviour:
   - RECARGA
   - CADENCIA
   - "DISPERSI\xD3N"
+  formatoMejoraReal: MEJORA {0}
   sonidoMover: UI_MOVER
   sonidoAceptar: UI_ACEPTAR
   sonidoCancelar: UI_CANCELAR
