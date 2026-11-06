@@ -190,10 +190,12 @@ namespace MechaCyberpunk.Tests.UI
             yield return Pulsar(teclado.escapeKey);
             yield return EsperarHasta(() => !mostrador.PantallaAbierta, "cerrar la tienda con Esc", 5f);
 
-            // b. Las otras puertas: I+D+I, El Fox y VivaCoin; los modelos viejos están apagados.
+            // b. Las otras puertas: I+D+I y VivaCoin; los modelos viejos están apagados. El letrero flotante de El Fox se quitó a
+            // pedido de Tony (S2, textos flotantes): ya no se exige.
             Assert.IsTrue(HayLetrero("I+D+I", null), "Hay un letrero I+D+I.");
-            Assert.IsTrue(HayLetrero("El Fox", null), "Hay un letrero El Fox.");
-            Assert.IsTrue(HayLetrero("VivaCoin", null), "Hay un letrero VivaCoin.");
+            // T-542: el letrero de VivaCoin es el modelo 3D L10 sobre la entrada del Casino (ya no un texto plano).
+            Transform vivaCoin = Buscar("L10");
+            Assert.IsTrue(vivaCoin != null && vivaCoin.gameObject.activeInHierarchy, "Hay un letrero VivaCoin (L10).");
             Assert.IsFalse(Buscar("Letrero_Cantina").gameObject.activeInHierarchy, "El modelo viejo de la cantina está apagado.");
             Assert.IsFalse(Buscar("Letrero_Casino").gameObject.activeInHierarchy, "El modelo viejo del casino está apagado.");
 
@@ -224,14 +226,15 @@ namespace MechaCyberpunk.Tests.UI
             yield return Pulsar(teclado.mKey);
             yield return EsperarHasta(() => !mapa.Abierto, "cerrar el mapa con M", 5f);
 
-            // e. Frente a El Fox: captura 1 (letrero y HUD con Ƀ).
-            Transform neon = Buscar("LetreroElFox");
-            Assert.IsNotNull(neon, "Está el letrero de neón de El Fox.");
-            Vector3 afuera = -neon.forward;
+            // e. Frente a El Fox (su puerta; el letrero flotante ya no está): captura 1 (fachada y HUD con Ƀ).
+            Transform bar = Buscar("Lugar_Bar");
+            Transform puertaBar = bar.Find("Puerta");
+            Assert.IsNotNull(puertaBar, "El Fox tiene su puerta.");
+            Vector3 afuera = bar.Find("Entrada").position - puertaBar.position;
             afuera.y = 0f;
-            Vector3 frente = neon.position + afuera.normalized * DistanciaFox;
-            frente.y = Buscar("Lugar_Bar").position.y + AlturaOjos;
-            jugador.Colocar(Mirando(frente, neon.position));
+            Vector3 frente = puertaBar.position + afuera.normalized * DistanciaFox;
+            frente.y = bar.position.y + AlturaOjos;
+            jugador.Colocar(Mirando(frente, puertaBar.position));
             yield return new WaitForSecondsRealtime(0.8f);
             Capturar("T-414-1.png");
         }

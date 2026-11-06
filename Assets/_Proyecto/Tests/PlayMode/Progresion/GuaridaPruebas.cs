@@ -155,7 +155,7 @@ namespace MechaCyberpunk.Tests.Progresion
             vida.RecibirDanio(new InfoDanio(vida.Maxima * 0.6f, TipoDanio.Disparo, jugador.Raiz.position, Vector3.forward, null));
             Assert.Less(vida.Actual, vida.Maxima - 1f);
             ICalor calor = Registro<ICalor>.Actual;
-            calor.Sumar(40f, MotivoCalor.Pelea);
+            calor.Sumar(40f, MotivoCalor.Mision); // T-661 (S1): dentro de la casa no hay testigos y un delito no suma calor; una misión sí
             float calorAntes = calor.Valor;
             Assert.Greater(calorAntes, 0f);
             Assert.IsTrue(camaJugador.PuedeUsar, "Libre: se puede dormir");

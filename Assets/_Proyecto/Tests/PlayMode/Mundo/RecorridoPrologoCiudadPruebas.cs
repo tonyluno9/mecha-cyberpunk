@@ -50,7 +50,7 @@ namespace MechaCyberpunk.Tests.Mundo
         private const float CentroCalleX = -16f;
         private const float SegundosDeLaCama = 0.5f;
         private const string NombreDirectorHistoria = "DirectorPandillas";
-        private const string PrefijoCalaveras = "Calavera";
+        private const string PrefijoCalaveras = "CalaveraPunos"; // solo los de la historia: las calaveras (luces traseras) de los carros también empiezan con "Calavera"
         private const float GradosParaReorientar = 15f;
 
         private Keyboard teclado;
@@ -387,11 +387,31 @@ namespace MechaCyberpunk.Tests.Mundo
             PressAndRelease(teclado.eKey);   // la puerta del cuarto también abre con E
             yield return null;
             yield return new WaitForSeconds(SegundosPuertaAbriendo);
-            Assert.IsTrue(puertaCuarto.EstaAbierta, "E frente a la puerta del cuarto la abre");
+            Assert.IsTrue(puertaCuarto.EstaAbierta, "E frente a la puerta del cuarto la abre (" + CandidatosE() + ")");
             yield return Caminar("12c cruzar la puerta del cuarto", puertaCuarto.Posicion + Vector3.forward * 1.1f, RadioFrenteALaPuerta);
             Vector3 cama = Aparicion(IdAparicionCama).Pose.position;
             yield return Caminar("13 puerta interior a los pies de la cama", cama + new Vector3(0.55f, 0f, -0.35f), RadioFrenteALaPuerta);
             Assert.AreEqual(0, erroresEnConsola, "Errores en consola; el primero: " + primerError);
+        }
+
+        // Lo que la E ofrece ahora (InteraccionAPie vive en Personaje, que Mundo no referencia): para los mensajes de falla.
+        private static string CandidatosE()
+        {
+            foreach (MonoBehaviour m in Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+            {
+                if (m.GetType().Name != "InteraccionAPie")
+                {
+                    continue;
+                }
+                string texto = "jugador en " + m.transform.position + ", mira " + m.transform.forward;
+                foreach (string nombre in new[] { "PuertaCandidata", "MontableCandidato", "InteractuableCandidato" })
+                {
+                    object valor = m.GetType().GetProperty(nombre)?.GetValue(m);
+                    texto += ", " + nombre + " " + (valor is Component c ? c.name + " " + c.transform.position : valor == null ? "-" : valor.ToString());
+                }
+                return texto;
+            }
+            return "sin InteraccionAPie";
         }
     }
 }
