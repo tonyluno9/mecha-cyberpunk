@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Arte.Editor
     /// <summary>
     /// S2 zona 3 (docs/playtest-05nov.md): el consultorio del Doc (I+D+I) y el taller de Tino (CIC) se arman en su propio local (están en la ruta de la
     /// demo: el Doc y Tino no se mueven) según docs/referencias-interiores/consultorio-doc.png y taller-tino.png; el taller del mecánico (Canepa, frente a
-    /// la casa) es un cuarto aparte con fundido, como la habitación (taller-mecanico.png). Idempotente: rehace la raíz S2_Interiores y el cuarto.
+    /// la casa) lo arma ColocarS2nPuertas dentro del Edificio_45 (T-804; antes era un cuarto aparte con fundido). Idempotente: rehace la raíz S2_Interiores y el cuarto.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ColocarS2Interiores.Colocar
     /// </summary>
     public static class ColocarS2Interiores
@@ -25,7 +25,6 @@ namespace MechaCyberpunk.Arte.Editor
         private const string C = "Assets/Arte/Calle/Prefabs/";
         private const string L = "Assets/Arte/Callejon/Prefabs/";
         private const string V = "Assets/Arte/Vehiculos/Prefabs/";
-        private const string RutaDatosTaller = "Assets/_Proyecto/Mundo/Datos/DatosLugar_Taller.asset";
         private static readonly Color Calido = new Color(1f, 0.72f, 0.42f);
         private static readonly Color Turquesa = new Color(0.3f, 1f, 0.9f);
         private static readonly Color Magenta = new Color(1f, 0.25f, 0.8f);
@@ -41,7 +40,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform raiz = new GameObject(NombreRaiz).transform;
             Consultorio(raiz);
             TallerTino(raiz);
-            TallerMecanico();
+            ColocarS2nPuertas.TallerMecanico(); // T-804: el taller ya no es un cuarto aparte: va dentro del Edificio_45
             ColocarT550.AislarDelSol();
             ColocarS2.Guardar("s2-interiores");
         }
@@ -88,8 +87,6 @@ namespace MechaCyberpunk.Arte.Editor
             Modelo(r, C + "C16_Tambo", new Vector3(-96.7f, 0f, -10.9f), 0f, caja.Piso);
             Modelo(r, C + "CY03_MazoCables", new Vector3(-103.85f, 0f, -13.0f), 90f, caja.Piso + 1.1f, sinCollider: true);
             Modelo(r, C + "CY03_MazoCables", new Vector3(-97.8f, 0f, -15.85f), 180f, caja.Piso + 1.1f, sinCollider: true);
-            PapelPicado(r, new Vector3(-103.8f, caja.Techo - 0.35f, -12.2f), new Vector3(-96.2f, caja.Techo - 0.45f, -12.2f));
-            PapelPicado(r, new Vector3(-103.8f, caja.Techo - 0.4f, -14.6f), new Vector3(-96.2f, caja.Techo - 0.3f, -14.6f));
 
             Transform luces = Grupo(r, "Luces");
             Luz(luces, "Tubo_Cian_1", new Vector3(-101.5f, caja.Techo - 0.2f, -12.4f), Cian, 6f, 8f);
@@ -164,136 +161,6 @@ namespace MechaCyberpunk.Arte.Editor
             OcultarCascaron("T531_Locales/CIC");
             Luz(luces, "Relleno_Fondo", new Vector3(-72.0f, 2.4f, 15.0f), Calido, 1.6f, 5f);
             ColocarS2.Informe.AppendLine("Taller de Tino: " + r.childCount + " piezas" + (dron == null ? " (FALTA dron)" : ""));
-        }
-
-        // ---------------------------------------------------------------- Taller del mecánico (cuarto aparte)
-
-        private static void TallerMecanico()
-        {
-            Transform cuartos = ColocarS2.Buscar(ColocarT550.NombreRaiz);
-            foreach (string viejo in new[] { NombreTallerMecanico, "PuertaCuarto_Lugar_TallerMecanico" })
-            {
-                Transform t = cuartos.Find(viejo);
-                if (t != null)
-                {
-                    Object.DestroyImmediate(t.gameObject);
-                }
-            }
-            Object.DestroyImmediate(GameObject.Find("Lugar_TallerMecanico"));
-
-            ColocarT550.Cuarto c = ColocarT550.CrearCuarto(cuartos, NombreTallerMecanico, 1, new Vector3(9f, 4.4f, 8f), 3, 5, 0.55f, IdLugar.Taller);
-            Transform r = c.Raiz;
-            Vector3 P(float x, float z) => r.TransformPoint(new Vector3(x, 0f, z));
-            float piso = r.position.y;
-            float techo = piso + 4.4f;
-            // Puerta interior en la pared sur (por donde se entra): la hoja se ve de este lado.
-            ColocarT550.Puerta(r, ColocarT550.Mat("T550_Madera", new Color(0.30f, 0.18f, 0.09f)), new Vector3(3.5f, 0f, -4f), 0f);
-            // Al fondo, la cortina de la cochera (una fachada de local con su cortina, vista desde dentro).
-            Modelo(r, C + "C01_FachadaLocal_cy", P(0f, 3.85f), 0f, piso, escala: 1.15f, sinCollider: true);
-            // El carro del cliente con el cofre hacia la grúa, la grúa de motor amarilla y lo de un taller.
-            Modelo(r, V + "V01a_CarroViejito", P(-0.6f, 0.6f), 90f, piso, sinCollider: false);
-            Modelo(r, T + "T07_GruaMotor", P(2.0f, 1.6f), 270f, piso);
-            Modelo(r, T + "T04_GabineteHerramientas", P(-3.9f, -1.6f), 90f, piso);
-            Modelo(r, T + "T01_ParedTaller", P(-4.4f, 1.4f), 90f, piso, escala: 0.75f);
-            Modelo(r, T + "T03_BancoTrabajo", P(4.0f, 1.8f), 270f, piso);
-            Modelo(r, T + "T06_Soldadora", P(4.0f, -0.2f), 270f, piso);
-            Modelo(r, T + "T05_Generador", P(-3.8f, 3.0f), 90f, piso);
-            Modelo(r, L + "L04_Llantas", P(3.7f, 3.2f), 0f, piso);
-            Modelo(r, L + "L04_Llantas", P(1.4f, -3.5f), 40f, piso);
-            Modelo(r, C + "C16_Tambo", P(-3.9f, -3.4f), 0f, piso);
-            Modelo(r, C + "C16_Tambo", P(-3.3f, -3.5f), 0f, piso);
-            Modelo(r, C + "C16_Tambo", P(2.9f, 3.4f), 0f, piso);
-            Modelo(r, C + "CY03_MazoCables", P(-4.45f, -0.4f), 90f, piso + 1.4f, sinCollider: true);
-            Modelo(r, C + "CY03_MazoCables", P(4.45f, 0.8f), 270f, piso + 1.4f, sinCollider: true);
-            PapelPicado(r, P(-4.4f, -1f) + Vector3.up * (techo - 0.5f), P(4.4f, -1f) + Vector3.up * (techo - 0.6f));
-            PapelPicado(r, P(-4.4f, 2.2f) + Vector3.up * (techo - 0.6f), P(4.4f, 2.2f) + Vector3.up * (techo - 0.5f));
-            Luz(c.Luces, "Tubo_Calido_1", P(-1.5f, -0.5f) + Vector3.up * (techo - 0.3f), Calido, 2.6f, 8f);
-            Luz(c.Luces, "Tubo_Calido_2", P(1.8f, 2.4f) + Vector3.up * (techo - 0.3f), Calido, 2.4f, 8f);
-            Luz(c.Luces, "Neon_Magenta", P(-4.2f, 1.4f) + Vector3.up * 2.4f, Magenta, 1.2f, 3.5f);
-            Luz(c.Luces, "Neon_Turquesa", P(4.2f, -0.2f) + Vector3.up * 2.4f, Turquesa, 1.2f, 3.5f);
-            Luz(c.Luces, "Relleno", P(0f, -3f) + Vector3.up * 2.2f, Calido, 0.8f, 6f);
-
-            // Afuera: la puerta del taller en la fachada detrás de Canepa (Edificio_45, cara oeste x -37.4), con su LugarMundo.
-            Vector3 puertaCalle = new Vector3(-37.35f, 0.22f, -70.2f);
-            GameObject lugarGo = new GameObject("Lugar_TallerMecanico");
-            lugarGo.transform.position = puertaCalle;
-            Transform entrada = new GameObject("Entrada").transform;
-            entrada.SetParent(lugarGo.transform, false);
-            entrada.position = puertaCalle + new Vector3(-1.6f, 0f, 0f);
-            LugarMundo lugar = lugarGo.AddComponent<LugarMundo>();
-            SerializedObject lo = new SerializedObject(lugar);
-            lo.FindProperty("datos").objectReferenceValue = DatosTaller();
-            lo.FindProperty("entrada").objectReferenceValue = entrada;
-            lo.ApplyModifiedPropertiesWithoutUndo();
-            GameObject fachada = Modelo(lugarGo.transform, T + "H01a_ParedPuerta", puertaCalle + new Vector3(-0.12f, 0f, 0f), 270f, puertaCalle.y, sinCollider: true);
-            if (fachada != null)
-            {
-                fachada.name = "PuertaTaller";
-            }
-
-            SerializedObject zo = new SerializedObject(r.Find("ZonaInterior").GetComponent<ZonaInterior>());
-            zo.FindProperty("lugar").objectReferenceValue = lugar;
-            Light[] luces = c.Luces.GetComponentsInChildren<Light>(true);
-            SerializedProperty arr = zo.FindProperty("luces");
-            arr.arraySize = luces.Length;
-            for (int i = 0; i < luces.Length; i++)
-            {
-                arr.GetArrayElementAtIndex(i).objectReferenceValue = luces[i];
-            }
-            zo.ApplyModifiedPropertiesWithoutUndo();
-            Transform salida = r.Find("SalidaExterior");
-            salida.SetPositionAndRotation(entrada.position, Quaternion.LookRotation(Vector3.left, Vector3.up));
-
-            GameObject prefabPantallas = PantallasDeLaCasa();
-            GameObject fuera = new GameObject("PuertaCuarto_Lugar_TallerMecanico");
-            fuera.transform.SetParent(cuartos, false);
-            fuera.transform.SetPositionAndRotation(puertaCalle + new Vector3(-0.3f, 1.1f, 0f), Quaternion.LookRotation(Vector3.left, Vector3.up));
-            BoxCollider cf = fuera.AddComponent<BoxCollider>();
-            cf.isTrigger = true;
-            cf.size = new Vector3(1.4f, 2.2f, 0.5f);
-            Configurar(fuera.AddComponent<PuertaCuarto>(), c.Datos, false, prefabPantallas);
-
-            GameObject dentro = new GameObject("PuertaCuarto_Interior");
-            dentro.transform.SetParent(r, false);
-            dentro.transform.localPosition = new Vector3(3.5f, 1.1f, -4f + 0.3f);
-            BoxCollider cd = dentro.AddComponent<BoxCollider>();
-            cd.isTrigger = true;
-            cd.size = new Vector3(1.0f, 2.2f, 0.5f);
-            Configurar(dentro.AddComponent<PuertaCuarto>(), c.Datos, true, prefabPantallas);
-            c.Aparicion.localPosition = new Vector3(3.5f, 0.05f, -4f + 1.4f);
-            ColocarS2.Informe.AppendLine("Taller del mecánico: cuarto 9 x 4.4 x 8 m en " + r.position + "; puerta de la calle en " + puertaCalle);
-        }
-
-        private static DatosLugar DatosTaller()
-        {
-            DatosLugar d = AssetDatabase.LoadAssetAtPath<DatosLugar>(RutaDatosTaller);
-            if (d == null)
-            {
-                d = ScriptableObject.CreateInstance<DatosLugar>();
-                AssetDatabase.CreateAsset(d, RutaDatosTaller);
-            }
-            SerializedObject so = new SerializedObject(d);
-            so.FindProperty("id").enumValueIndex = (int)IdLugar.Taller;
-            so.FindProperty("nombre").stringValue = "Taller de Canepa";
-            so.FindProperty("horario").FindPropertyRelative("siempreAbierto").boolValue = true;
-            so.ApplyModifiedPropertiesWithoutUndo();
-            AssetDatabase.SaveAssetIfDirty(d);
-            return d;
-        }
-
-        private static GameObject PantallasDeLaCasa()
-        {
-            PuertaCuarto casa = Object.FindObjectsByType<PuertaCuarto>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(p => p.name == "PuertaCuarto_Lugar_Casa");
-            return casa == null ? null : new SerializedObject(casa).FindProperty("prefabPantallas").objectReferenceValue as GameObject;
-        }
-
-        private static void Configurar(PuertaCuarto puerta, CuartoInterior datos, bool esSalida, GameObject prefabPantallas)
-        {
-            SerializedObject so = new SerializedObject(puerta);
-            so.FindProperty("cuarto").objectReferenceValue = datos;
-            so.FindProperty("esSalida").boolValue = esSalida;
-            so.FindProperty("prefabPantallas").objectReferenceValue = prefabPantallas;
-            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         // ---------------------------------------------------------------- Ayudas
@@ -444,33 +311,6 @@ namespace MechaCyberpunk.Arte.Editor
             l.shadows = LightShadows.Soft;
         }
 
-        // Tira de papel picado: banderitas planas con la textura de T-546 colgando entre dos puntos.
-        private static void PapelPicado(Transform padre, Vector3 a, Vector3 b)
-        {
-            Material m = MaterialPapelPicado();
-            if (m == null)
-            {
-                return;
-            }
-            Transform tira = Grupo(padre, "PapelPicado");
-            int n = Mathf.Max(2, Mathf.RoundToInt(Vector3.Distance(a, b) / 0.45f));
-            Vector3 dir = (b - a).normalized;
-            for (int i = 0; i < n; i++)
-            {
-                float t = (i + 0.5f) / n;
-                Vector3 pos = Vector3.Lerp(a, b, t) + Vector3.down * (Mathf.Sin(t * Mathf.PI) * 0.25f + 0.15f);
-                GameObject q = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                Object.DestroyImmediate(q.GetComponent<Collider>());
-                q.name = "Bandera";
-                q.transform.SetParent(tira, false);
-                q.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(Vector3.Cross(dir, Vector3.up), Vector3.up));
-                q.transform.localScale = new Vector3(0.34f, 0.3f, 1f);
-                Renderer rend = q.GetComponent<Renderer>();
-                rend.sharedMaterial = m;
-                rend.shadowCastingMode = ShadowCastingMode.Off;
-            }
-        }
-
         // Serie de focos colgando en curva entre dos puntos del techo: cable negro (LineRenderer) y focos cálidos emisivos.
         private static void SerieFocos(Transform padre, Vector3 a, Vector3 b, int focos)
         {
@@ -504,35 +344,6 @@ namespace MechaCyberpunk.Arte.Editor
                 rend.sharedMaterial = foco;
                 rend.shadowCastingMode = ShadowCastingMode.Off;
             }
-        }
-
-        // El de T-546 es Unlit (brilla como tira de LED): este es Lit, con recorte de alfa y de dos caras.
-        private static Material MaterialPapelPicado()
-        {
-            const string ruta = "Assets/Arte/Interiores/Materiales/S2_PapelPicado.mat";
-            Material origen = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Interiores/Materiales/T546_PapelPicado.mat");
-            if (origen == null)
-            {
-                return null;
-            }
-            Material m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
-            if (m == null)
-            {
-                m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                AssetDatabase.CreateAsset(m, ruta);
-            }
-            Texture tex = origen.HasProperty("_BaseMap") ? origen.GetTexture("_BaseMap") : origen.mainTexture;
-            m.SetTexture("_BaseMap", tex);
-            m.SetColor("_BaseColor", Color.white * 0.9f);
-            m.SetFloat("_Smoothness", 0.05f);
-            m.SetFloat("_AlphaClip", 1f);
-            m.SetFloat("_Cutoff", 0.4f);
-            m.EnableKeyword("_ALPHATEST_ON");
-            m.SetFloat("_Cull", 0f);
-            m.doubleSidedGI = true;
-            EditorUtility.SetDirty(m);
-            AssetDatabase.SaveAssetIfDirty(m);
-            return m;
         }
 
         private static void Cuadro(Transform padre, string nombre, string rutaMaterial, Vector3 pos, Vector3 frente, Vector2 tam)

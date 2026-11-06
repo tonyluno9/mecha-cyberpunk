@@ -5,29 +5,33 @@ using MechaCyberpunk.Progresion.Prologo.Cuartos;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Progresion
 {
     /// <summary>
-    /// S2 (playtest 5-nov): el taller del mecánico (Canepa, frente a la casa) es un cuarto aparte con fundido, como la habitación. Ida y vuelta por su
-    /// puerta de la calle, y que Canepa sigue afuera, junto a la puerta.
+    /// S2 / T-804: el taller del mecánico (Canepa). Hasta T-804 era un cuarto aparte con fundido; ahora está dentro de la planta baja del Edificio_45,
+    /// frente a la casa, con el portón abierto. Se comprueba lo que tiene (carro en el elevador, grúa, herramientas, luz cálida, letrero del kit), que se ve
+    /// desde la calle frente a la casa, que el mapa apunta a su portón, que Canepa atiende ahí y que se entra caminando (sin PuertaCuarto).
     /// </summary>
-    public class TallerMecanicoS2Pruebas
+    public class TallerMecanicoS2Pruebas : InputTestFixture
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
-        private const string NombreCuarto = "Cuarto_TallerMecanico";
-        private const float SegundosMaximosDeCruce = 6f;
-        private const float DistanciaMaximaAfuera = 1.5f;
-        private const float GradosMaximosHaciaLaCalle = 45f;
-        private const float SegundosEntreCruces = 1f;
-        private const float AlturaMinimaDelCuarto = 2.5f;
+        private const string NombreTaller = "S2n_TallerMecanico";
 
+        private Keyboard teclado;
         private IJugador jugador;
-        private PuertaCuarto puertaAfuera;
-        private PuertaCuarto puertaAdentro;
-        private Bounds volumenCuarto;
+        private Transform taller;
+        private Bounds zona;
+
+        public override void Setup()
+        {
+            base.Setup();
+            teclado = InputSystem.AddDevice<Keyboard>();
+            InputSystem.AddDevice<Mouse>();
+        }
 
         [UnitySetUp]
         public IEnumerator Cargar()
@@ -39,84 +43,76 @@ namespace MechaCyberpunk.Tests.Progresion
             }
             jugador = Registro<IJugador>.Actual;
             Assert.IsNotNull(jugador, "Ciudad_Prologo trae al jugador");
-            PuertaCuarto[] puertas = Object.FindObjectsByType<PuertaCuarto>(FindObjectsSortMode.None);
-            puertaAfuera = puertas.Single(p => !p.EsSalida && p.Cuarto.Lugar == IdLugar.Taller);
-            puertaAdentro = puertas.Single(p => p.EsSalida && p.Cuarto.Lugar == IdLugar.Taller);
-            Transform cuarto = puertaAdentro.Cuarto.transform;
-            Assert.AreEqual(NombreCuarto, cuarto.name);
-            volumenCuarto = new Bounds(cuarto.position, Vector3.zero);
-            foreach (Renderer r in cuarto.GetComponentsInChildren<Renderer>())
-            {
-                volumenCuarto.Encapsulate(r.bounds);
-            }
+            taller = GameObject.Find(NombreTaller).transform;
+            zona = taller.Find("ZonaInterior").GetComponent<BoxCollider>().bounds;
         }
 
         [Test]
-        public void Taller_TieneCarroGruaHerramientasYLuzCalida_YCanepaSigueAfuera()
+        public void Taller_TieneCarroEnElElevadorGruaHerramientasLetreroYLuzCalida_YCanepaAtiendeAhi()
         {
-            Transform cuarto = puertaAdentro.Cuarto.transform;
-            foreach (string pieza in new[] { "V01a_CarroViejito", "T07_GruaMotor", "T04_GabineteHerramientas", "L04_Llantas", "C16_Tambo", "C01_FachadaLocal_cy" })
+            Transform muebles = taller.Find("Muebles");
+            foreach (string pieza in new[] { "Elevador/V01a_CarroViejito", "T07_GruaMotor", "T04_GabineteHerramientas", "T01_ParedTaller", "L04_Llantas", "C16_Tambo" })
             {
-                Assert.IsNotNull(cuarto.Find(pieza), pieza);
+                Assert.IsNotNull(muebles.Find(pieza), pieza);
             }
-            Assert.IsTrue(cuarto.Find("Luces").GetComponentsInChildren<Light>().Any(l => l.color.r > l.color.b && l.intensity > 1f), "Tubos cálidos");
+            Bounds carro = Limites(muebles.Find("Elevador/V01a_CarroViejito"));
+            Assert.Greater(carro.min.y, 1.2f, "El carro está levantado en el elevador");
+            Assert.IsTrue(zona.Contains(carro.center), "El carro está dentro del taller");
+            Assert.IsNotNull(taller.Find("Fachada/Letrero_Taller"), "Letrero de asset sobre el portón");
+            Assert.IsTrue(taller.Find("Luces").GetComponentsInChildren<Light>().Any(l => l.enabled && l.color.r > l.color.b && l.intensity > 1f), "Tubos cálidos");
             Transform canepa = GameObject.Find("GTA_T417/Apoyo_CANEPA").transform;
-            Assert.Less(Vector3.Distance(canepa.position, puertaAfuera.transform.position), 4f, "Canepa atiende junto a la puerta de su taller");
-            Assert.IsFalse(volumenCuarto.Contains(canepa.position), "Canepa sigue en la calle (arregla el carro afuera)");
+            Assert.IsTrue(zona.Contains(canepa.position + Vector3.up), "Canepa atiende dentro de su taller: " + canepa.position);
+            Transform lugar = GameObject.Find("Lugar_TallerMecanico").transform;
+            Assert.Less(Vector3.Distance(Plano(lugar.position), Plano(new Vector3(zona.min.x, 0f, zona.center.z))), 1.5f, "El destino MECÁNICO del mapa apunta al portón");
+            Assert.IsFalse(Object.FindObjectsByType<PuertaCuarto>(FindObjectsInactive.Include, FindObjectsSortMode.None).Any(p => p.Cuarto != null && p.Cuarto.Lugar == IdLugar.Taller), "Sin cuarto aparte ni fundido");
         }
 
-        private IEnumerator Cruzar(PuertaCuarto puerta)
+        [Test]
+        public void Taller_SeVeDesdeLaCalleFrenteALaCasa()
         {
-            yield return new WaitForSecondsRealtime(SegundosEntreCruces); // la puerta no deja cruzar dos veces seguidas (cooldown de 0.75 s)
-            BoxCollider caja = puerta.GetComponent<BoxCollider>();
-            jugador.Colocar(new Pose(caja.bounds.center - Vector3.up * (caja.bounds.extents.y - 0.1f), jugador.Raiz.rotation));
-            float limite = Time.realtimeSinceStartup + SegundosMaximosDeCruce;
-            yield return new WaitForFixedUpdate();
+            ILugar casa = Registro<ILugar>.Todos.First(l => l.Id == IdLugar.Casa);
+            Vector3 ojo = casa.PosicionEntrada + Vector3.up * 1.6f;
+            foreach (Vector3 punto in new[] { new Vector3(zona.center.x, 1.5f, zona.center.z), Limites(taller.Find("Muebles/Elevador/V01a_CarroViejito")).center })
+            {
+                bool tapado = Physics.Linecast(ojo, punto, out RaycastHit golpe, ~0, QueryTriggerInteraction.Ignore) && !golpe.collider.transform.IsChildOf(taller);
+                Assert.IsFalse(tapado, "Desde la puerta de la casa se ve el interior del taller (" + punto + "); lo tapa " + (tapado ? golpe.collider.name : ""));
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Entrar_CaminandoPorElPortonAbierto_MarcaAlJugadorDentro()
+        {
+            // El director de la historia pone al jugador en la cama al arrancar: se espera a que lo haga antes de moverlo.
+            float espera = Time.realtimeSinceStartup + 20f;
+            MechaCyberpunk.Progresion.Prologo.Pandillas.DirectorPandillas director = null;
+            while ((director == null || !director.Iniciado) && Time.realtimeSinceStartup < espera)
+            {
+                director = Object.FindFirstObjectByType<MechaCyberpunk.Progresion.Prologo.Pandillas.DirectorPandillas>();
+                yield return null;
+            }
+            yield return new WaitForSecondsRealtime(0.5f);
+            ILugar lugar = Registro<ILugar>.Todos.First(l => l.Id == IdLugar.Taller);
+            Vector3 desde = lugar.PosicionEntrada + Vector3.up * 0.05f;
+            Vector3 hacia = new Vector3(zona.center.x - 1.5f, desde.y, zona.max.z - 1.2f);
+            jugador.Colocar(new Pose(desde, Quaternion.LookRotation(Plano(hacia - desde).normalized, Vector3.up)));
             yield return null;
-            while (Time.realtimeSinceStartup < limite && !PuertaCuarto.HayCruce)
-            {
-                yield return null;
-            }
-            while (Time.realtimeSinceStartup < limite && PuertaCuarto.HayCruce)
-            {
-                yield return null;
-            }
-            Assert.IsFalse(PuertaCuarto.HayCruce, "El cruce terminó");
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
+            yield return null;
+            Assert.IsFalse(lugar.JugadorDentro, "Empieza en la calle");
+            // Se camina con el CharacterController del jugador (atajo anotado en SalidaCasaPruebas): el portón abierto deja pasar.
+            yield return SalidaCasaPruebas.Caminar(jugador, hacia, () => lugar.JugadorDentro);
+            Assert.IsTrue(lugar.JugadorDentro, "Caminando por el portón entra al taller (" + jugador.Raiz.position + ")");
+            Assert.IsFalse(PuertaCuarto.HayCruce, "Sin fundido");
         }
 
-        private ILugar Taller()
+        private static Vector3 Plano(Vector3 v)
         {
-            return Registro<ILugar>.Todos.First(l => l.Id == IdLugar.Taller);
+            v.y = 0f;
+            return v;
         }
 
-        [UnityTest]
-        public IEnumerator Cruzar_AlEntrar_ElJugadorQuedaDentroDelCuarto()
+        private static Bounds Limites(Transform t)
         {
-            Assert.IsFalse(volumenCuarto.Contains(jugador.Raiz.position), "Empieza afuera");
-            yield return Cruzar(puertaAfuera);
-            Vector3 p = jugador.Raiz.position;
-            Assert.That(volumenCuarto.Contains(p), "Dentro del volumen del cuarto: " + p + " vs " + volumenCuarto);
-            Assert.Less(Vector3.Distance(p, puertaAdentro.Cuarto.PoseInterior.position), 0.6f, "Junto a su puerta interior");
-            Assert.IsTrue(Taller().JugadorDentro, "El lugar marca al jugador dentro");
-            Assert.Greater(volumenCuarto.size.y, AlturaMinimaDelCuarto);
-        }
-
-        [UnityTest]
-        public IEnumerator Cruzar_IdaYVuelta_AlSalirQuedaFrenteALaPuertaDeAfuera()
-        {
-            yield return Cruzar(puertaAfuera);
-            Assert.IsTrue(Taller().JugadorDentro);
-            yield return Cruzar(puertaAdentro);
-            Pose afuera = puertaAdentro.Cuarto.PoseExterior;
-            Vector3 p = jugador.Raiz.position;
-            Vector3 plano = p - afuera.position;
-            plano.y = 0f;
-            Assert.Less(plano.magnitude, DistanciaMaximaAfuera, "Frente a la puerta de la calle: " + p + " vs " + afuera.position);
-            Assert.IsFalse(volumenCuarto.Contains(p), "Ya no está dentro del cuarto");
-            Assert.IsFalse(Taller().JugadorDentro, "El lugar ya no lo marca dentro");
-            Assert.Less(Vector3.Angle(Vector3.ProjectOnPlane(jugador.Raiz.forward, Vector3.up), Vector3.ProjectOnPlane(afuera.rotation * Vector3.forward, Vector3.up)), GradosMaximosHaciaLaCalle, "Mira hacia la calle");
+            return t.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((a, b) => { a.Encapsulate(b); return a; });
         }
     }
 }
