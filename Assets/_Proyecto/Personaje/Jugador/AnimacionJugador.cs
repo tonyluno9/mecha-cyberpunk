@@ -49,6 +49,10 @@ namespace MechaCyberpunk.Personaje.Jugador
         private bool cubiertoAntes;
         private bool agachadoAntes;
         private bool rodandoAntes;
+        private ApuntadoIK apuntadoIK;
+
+        // T-681: hasta dónde se busca el punto de mira para llevarle el cañón (m).
+        private const float AlcanceMiraVisual = 80f;
 
         private void Awake()
         {
@@ -60,6 +64,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             cubierta = GetComponent<CubiertaYRodada>();
             visual = GetComponentInChildren<VisualPersonaje>(true);
             if (visual != null) { visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador; }
+            apuntadoIK = visual != null ? visual.GetComponentInChildren<ApuntadoIK>(true) : null;
             if (animador == null)
             {
                 animador = GetComponentInChildren<Animator>(true);
@@ -76,6 +81,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             animador = nuevo;
             visual = nuevo != null ? nuevo.GetComponentInParent<VisualPersonaje>() : null;
             if (visual != null) { visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador; }
+            apuntadoIK = nuevo != null ? nuevo.GetComponent<ApuntadoIK>() : null;
             enabled = nuevo != null;
         }
 
@@ -125,6 +131,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 bool agachado = cubierta != null && cubierta.AgachadoLibre;
                 if (agachado != agachadoAntes) { visual.Agachado = agachado; agachadoAntes = agachado; }
                 bool apuntando = controlador.Apuntando;
+                ActualizarMira(apuntando);
                 if (apuntando != apuntandoAntes) { visual.Apuntando = apuntando; apuntandoAntes = apuntando; }
                 if (tipoArma != tipoArmaAntes) { visual.TipoArma = tipoArma; tipoArmaAntes = tipoArma; }
                 ActualizarCaido(ko, Time.deltaTime);
@@ -159,6 +166,23 @@ namespace MechaCyberpunk.Personaje.Jugador
                 animador.SetTrigger(IdRecarga);
             }
             recargandoAntes = recargando;
+        }
+
+        // T-681: al apuntar, el cañón del arma en la mano mira al punto que marca el centro de la cámara de juego.
+        private void ActualizarMira(bool apuntando)
+        {
+            if (apuntadoIK == null)
+            {
+                return;
+            }
+            if (apuntando && pistola != null && controlador.Camara != null)
+            {
+                apuntadoIK.PonerPuntoMira(pistola.PuntoDeMira(AlcanceMiraVisual));
+            }
+            else
+            {
+                apuntadoIK.QuitarPuntoMira();
+            }
         }
 
         // Cae al instante (clip de muerte); al despertar (la clínica restaura la vida con la pantalla en negro) sigue tumbado un momento
