@@ -1,6 +1,7 @@
 using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Apariencia;
+using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Visual;
 using NUnit.Framework;
 using UnityEngine;
@@ -83,20 +84,25 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = Visual();
             ApuntadoIK ik = visual.GetComponentInChildren<ApuntadoIK>(true);
             Assert.IsNotNull(ik);
+            // Sin ventana de juego el Animator se duerme fuera de cámara y ni la pose ni el IK del cañón se aplican.
+            visual.Animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             Assert.AreEqual(0f, ik.Peso, 0.001f);
+            Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola), "El arma está en la mano (si no, no se ve ni se corrige)");
             visual.LeerDelPadre = false;
+            visual.EnSuelo = true;
             visual.Apuntando = true;
             visual.TipoArma = TipoArmaVisual.Pistola;
             yield return Esperar(0.6f);
             Assert.AreEqual(1f, ik.Peso, 0.05f, "Arma arriba");
             // El cañón (-Y del socket) mira al frente del jugador.
-            Vector3 canon = -ik.SocketArma.up;
-            Assert.Greater(Vector3.Dot(canon, visual.transform.forward), 0.95f, "El cañón apunta al frente");
+            // S1: el arma va en la palma (ya no se gira el socket): el cañón es el +Z de la pistola.
+            Vector3 canon = ik.SocketArma.Find("Pistola").forward;
+            Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(canon, Vector3.up).normalized, visual.transform.forward), 0.95f, "El cañón apunta al frente (la inclinación es la de la animación)");
 
             visual.Apuntando = false;
             yield return Esperar(0.6f);
             Assert.AreEqual(0f, ik.Peso, 0.05f, "Arma abajo");
-            Assert.Less(Vector3.Dot(-ik.SocketArma.up, visual.transform.forward), 0.8f, "Con el arma abajo el cañón se inclina");
+            Assert.Less(ik.Peso, 0.05f, "Con el arma abajo no se corrige el cañón");
 
             // T-561: con el controlador base el KO usa las animaciones de muerte y levantarse; el cuerpo ya no se gira a mano.
             // Sin ventana de juego el Animator se duerme fuera de cámara y los huesos no se mueven: se le pide que anime siempre.

@@ -36,7 +36,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Animator a = Visual().Animador;
             Assert.IsInstanceOf<AnimatorOverrideController>(a.runtimeAnimatorController);
             Assert.AreEqual("Override_Jugador", a.runtimeAnimatorController.name);
-            Assert.AreEqual(2, a.layerCount);
+            Assert.AreEqual(3, a.layerCount, "Base, Arriba y Piernas (arma)");
             Assert.AreEqual("Base", a.GetLayerName(0));
             Assert.AreEqual("Arriba", a.GetLayerName(1));
         }
@@ -47,8 +47,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
-            yield return Esperar(0.4f);
-            Assert.IsTrue(EnEstado(a, 0, "Idle"), "Quieto");
+            // El jugador nace a 5 cm del piso y aterriza (el salto de aterrizaje dura un momento): se espera a que llegue a Idle.
+            yield return Hasta(() => EnEstado(a, 0, "Idle"), "Quieto", 5f);
 
             Press(teclado.wKey);
             yield return Hasta(() => EnEstado(a, 0, "Caminar") || EnEstado(a, 0, "Correr"), "Caminar al pulsar W");
