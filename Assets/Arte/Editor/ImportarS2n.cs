@@ -22,6 +22,8 @@ namespace MechaCyberpunk.Arte.Editor
         {
             /// <summary>Textura de pintura sobre el asfalto: fondo negro = transparente (alfa desde el gris), repetida, con mipmaps.</summary>
             MascaraCalle,
+            /// <summary>T-810: carro de Tripo en .zip (fbx y texturas). Lo desempaca y arma <see cref="ImportarS2nCarros"/>; sin zip no hace nada.</summary>
+            CarroTripo,
         }
 
         public readonly struct Entrada
@@ -57,6 +59,10 @@ namespace MechaCyberpunk.Arte.Editor
             new Entrada("imageassets/calle/M01_LineasAmarillas.png", TexturaAmarilla, Accion.MascaraCalle, () => Rayas(256, 512, new Color(0.95f, 0.78f, 0.12f), new[] { (0.385f, 0.47f), (0.53f, 0.615f) }, false, 101)),
             new Entrada("imageassets/calle/M02_CrucePeatonal.png", TexturaCebra, Accion.MascaraCalle, () => Rayas(512, 256, Color.white, Enumerable.Range(0, 8).Select(i => (i / 8f + 0.015f, i / 8f + 0.085f)).ToArray(), true, 202)),
             new Entrada(null, TexturaBlanca, Accion.MascaraCalle, () => Rayas(64, 256, new Color(0.92f, 0.92f, 0.9f), new[] { (0.3f, 0.7f) }, false, 303)),
+            // T-810: carros nuevos del tráfico (largo y giro en ImportarS2nCarros.Medidas).
+            new Entrada("imageassets/modelos3d/V09_Taxi.zip", ImportarS2nCarros.CarpetaVehiculos + "V09/V09.fbx", Accion.CarroTripo, null),
+            new Entrada("imageassets/modelos3d/V10_Pickup.zip", ImportarS2nCarros.CarpetaVehiculos + "V10/V10.fbx", Accion.CarroTripo, null),
+            new Entrada("imageassets/modelos3d/V11_Van.zip", ImportarS2nCarros.CarpetaVehiculos + "V11/V11.fbx", Accion.CarroTripo, null),
         };
 
         public static readonly StringBuilder Informe = new StringBuilder();
@@ -75,6 +81,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Ajustes(e);
             }
             Materiales();
+            ImportarS2nCarros.Armar(Entradas.Where(e => e.Accion == Accion.CarroTripo).ToArray());
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/s2n-importar.txt", Informe.ToString());
@@ -84,6 +91,11 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Copia el archivo si llegó y es distinto del que ya está; si no llegó y no hay nada, hace el respaldo.</summary>
         private static void Meter(Entrada e)
         {
+            if (e.Accion == Accion.CarroTripo)
+            {
+                ImportarS2nCarros.Meter(e);
+                return;
+            }
             Directory.CreateDirectory(Path.GetDirectoryName(e.Destino));
             if (e.Origen != null && File.Exists(e.Origen))
             {
