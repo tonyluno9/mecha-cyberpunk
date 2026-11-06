@@ -31,6 +31,10 @@ namespace MechaCyberpunk.UI.Kit
         [Header("Iconos")]
         [Tooltip("En el orden de ArmaAPie: puños, pistola, escopeta, fusil, sniper.")]
         [SerializeField] private Sprite[] armas = new Sprite[5];
+        [Tooltip("T-816: imagen holográfica del arma (H01-H04) en el orden de ArmaAPie; vacía = se usa la de armas (los puños no tienen).")]
+        [SerializeField] private Sprite[] armasHolograma = new Sprite[5];
+        [Tooltip("T-816: material de las imágenes holográficas en el HUD (UIHologramaHud: suma el brillo teñido, sin el fondo negro).")]
+        [SerializeField] private Material materialHolograma;
         [SerializeField] private Sprite insigniaSkulls;
         [SerializeField] private Sprite insigniaSnakes;
         [SerializeField] private Sprite insigniaJugador;
@@ -79,6 +83,16 @@ namespace MechaCyberpunk.UI.Kit
 
         /// <summary>Icono del arma en el orden de ArmaAPie (0 a 4), o null.</summary>
         public Sprite Arma(int indice) => indice >= 0 && indice < armas.Length ? armas[indice] : null;
+
+        /// <summary>T-816: true si el arma tiene imagen holográfica y material para dibujarla en el HUD.</summary>
+        public bool EsHolograma(int indice) =>
+            materialHolograma != null && armasHolograma != null && indice >= 0 && indice < armasHolograma.Length && armasHolograma[indice] != null;
+
+        /// <summary>T-816: el icono del arma en el HUD: la holográfica si la hay, si no la de siempre.</summary>
+        public Sprite ArmaHud(int indice) => EsHolograma(indice) ? armasHolograma[indice] : Arma(indice);
+
+        /// <summary>T-816: el material del icono del arma en el HUD (null = el de siempre).</summary>
+        public Material MaterialArmaHud(int indice) => EsHolograma(indice) ? materialHolograma : null;
 
         /// <summary>Insignia de la pandilla; null para Ninguna y NOVA (no tienen).</summary>
         public Sprite Insignia(IdPandilla pandilla)
