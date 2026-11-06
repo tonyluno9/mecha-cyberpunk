@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Arte.Editor
     {
         public const string NombreRaiz = "S2n_SillaClinica";
         public const string RutaConsultorio = "S2_Interiores/ConsultorioDoc";
+        public const string RutaDoc = "GTA_T417/Apoyo_JOEL";
         public const string RutaConfig = "Assets/_Proyecto/Progresion/Apoyo/Datos/ConfigSillaClinica_Base.asset";
         /// <summary>Centro del sillón de ColocarS2Interiores.Consultorio, por si el modelo no está.</summary>
         public static readonly Vector3 CentroSillon = new Vector3(-102.1f, 0.22f, -13.4f);
@@ -102,6 +103,14 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Informe.AppendLine("Silla del Doc en " + asiento.position.ToString("F2")
                 + (sillon != null ? " sobre " + ColocarS2.Ruta(sillon) : " (FALTA el sillón I07: posición fija)")
                 + (brazo != null ? ", brazo " + ColocarS2.Ruta(brazo) : ", sin brazo I06"));
+            // EL DOC (T-546 lo dejó mirando al sillón, -X): de frente a la entrada (+Z), que es por donde llegas; lo de enfrente de él queda libre
+            // (antes "frente al Doc" era encima del sillón). No se mueve de su lugar.
+            Transform doc = ColocarS2.Buscar(RutaDoc);
+            if (doc != null)
+            {
+                doc.rotation = Quaternion.LookRotation(Vector3.forward);
+                ColocarS2.Informe.AppendLine("EL DOC mira a la entrada desde " + doc.position.ToString("F2"));
+            }
             ColocarS2.Guardar("s2n-silla-clinica");
         }
 

@@ -5,6 +5,7 @@ using System.IO;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.UI.Armas;
 using MechaCyberpunk.UI.Historia;
 using MechaCyberpunk.UI.Tiendas;
@@ -34,12 +35,23 @@ namespace MechaCyberpunk.Tests.Progresion
         private const float DistanciaFrente = 1.6f;
 
         private Keyboard teclado;
+        private Mouse raton;
 
+        // MapasDeAccionesDePrueba: si otra prueba de la escena corrió antes, los .inputactions se quedan con su teclado y aquí no se ve la E.
         public override void Setup()
         {
+            InputSystem.DisableAllEnabledActions();
             base.Setup();
             teclado = InputSystem.AddDevice<Keyboard>();
-            InputSystem.AddDevice<Mouse>();
+            raton = InputSystem.AddDevice<Mouse>();
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
+        }
+
+        public override void TearDown()
+        {
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
+            base.TearDown();
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]
@@ -112,9 +124,9 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         // El jugador aparece frente al personaje (donde mira el personaje), mirándolo, y espera un momento.
-        private IEnumerator PonerFrente(IJugador jugador, PersonajeApoyo p, float distancia = DistanciaFrente, Vector3? direccion = null)
+        private IEnumerator PonerFrente(IJugador jugador, PersonajeApoyo p, float distancia = DistanciaFrente)
         {
-            Vector3 frente = p.transform.position + (direccion ?? p.transform.forward) * distancia;
+            Vector3 frente = p.transform.position + p.transform.forward * distancia;
             if (Physics.Raycast(frente + Vector3.up * 3f, Vector3.down, out RaycastHit piso, 6f))
             {
                 frente = piso.point;
@@ -215,26 +227,21 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // b. EL DOC: vida 40 y Ƀ500 -> vida máxima y Ƀ450 (Ƀ50 de cobro).
             PersonajeApoyo doc = Personaje("doc");
-            // T-812a: frente al Doc está la silla (I07): el jugador se para a su lado, donde el Doc queda más cerca que la silla.
-            yield return PonerFrente(jugador, doc, DistanciaFrente, doc.transform.right);
+            yield return PonerFrente(jugador, doc);
             Assert.IsTrue(doc.PuedeUsar);
             StringAssert.Contains("CURARTE", doc.Texto);
             yield return Pulsar(teclado.eKey);
             // T-813: con la silla en el consultorio (ColocarS2nSillaClinica), EL DOC te manda a sentarte y la silla cobra y cura.
             SillaClinica silla = SillaClinica.Actual;
-            if (silla != null && silla.isActiveAndEnabled)
+            // Si la historia dejó un regalo en EL DOC, la E lo cura gratis; si no, te manda a la silla.
+            if (silla != null && silla.isActiveAndEnabled && vida.Actual < vida.Maxima)
             {
-                // La E a veces cae en un cuadro sin candidato (el jugador recién colocado): se pulsa otra vez, hasta dos más.
-                for (int intento = 0; intento < 2 && !silla.EnSecuencia && !doc.UltimoTexto.Contains(silla.Config.FraseDoc); intento++)
-                {
-                    yield return new WaitForSecondsRealtime(0.2f);
-                    yield return Pulsar(teclado.eKey);
-                }
                 // Frente al Doc, la silla (a ~1 m) puede ganar la E: entonces ya empezó a curar.
                 if (!silla.EnSecuencia)
                 {
                     StringAssert.Contains(silla.Config.FraseDoc, doc.UltimoTexto, "El Doc te manda a la silla (jugador en " + jugador.Raiz.position
-                        + ", candidato " + ((Component)jugador).GetComponentInChildren<MechaCyberpunk.Personaje.Interaccion.InteraccionAPie>().InteractuableCandidato + ")");
+                        + ", candidato " + ((Component)jugador).GetComponentInChildren<MechaCyberpunk.Personaje.Interaccion.InteraccionAPie>().InteractuableCandidato
+                        + ", regalo " + doc.TieneRegalo + ", aviso del Doc '" + doc.Texto + "' " + doc.PuedeUsar + ", silla '" + silla.Texto + "', vida " + vida.Actual + ")");
                     Assert.Less(vida.Actual, vida.Maxima, "De palabra ya no cura");
                     Assert.IsTrue(silla.PuedeUsar, "La silla se ofrece");
                     silla.Usar();

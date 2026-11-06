@@ -4,6 +4,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.Tests.UI;
 using MechaCyberpunk.UI.Armas;
 using NUnit.Framework;
@@ -57,11 +58,25 @@ namespace MechaCyberpunk.Tests.Progresion
 
         private IJugador jugador;
 
+        private Keyboard teclado;
+        private Mouse raton;
+
+        // MapasDeAccionesDePrueba: sin él, los .inputactions de la escena se quedan con el teclado de esta prueba y la siguiente no ve su E.
         public override void Setup()
         {
+            InputSystem.DisableAllEnabledActions();
             base.Setup();
-            InputSystem.AddDevice<Keyboard>();
-            InputSystem.AddDevice<Mouse>();
+            teclado = InputSystem.AddDevice<Keyboard>();
+            raton = InputSystem.AddDevice<Mouse>();
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
+        }
+
+        public override void TearDown()
+        {
+            Registros.LimpiarTodos();
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
+            base.TearDown();
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnitySetUp]
@@ -83,6 +98,18 @@ namespace MechaCyberpunk.Tests.Progresion
                 yield return null;
             }
             yield return new WaitForSecondsRealtime(0.5f);
+        }
+
+        // Como las demás pruebas de la escena real: nada de esta escena ni de sus registros pasa a la prueba siguiente.
+        [UnityTearDown]
+        public IEnumerator DescargarEscena()
+        {
+            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                UnityEngine.Object.Destroy(raiz);
+            }
+            Registros.LimpiarTodos();
+            yield return null;
         }
 
         [UnityTest]

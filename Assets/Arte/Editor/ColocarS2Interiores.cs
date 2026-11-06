@@ -219,8 +219,8 @@ namespace MechaCyberpunk.Arte.Editor
             float cubierta = banco != null ? Cubierta(banco) : caja.Piso + CubiertaMesa;
             Mesa(r, T + "T03_BancoTrabajo", new Vector3(-76.62f, 0f, 13.1f), 270f, caja.Piso);       // el tablero perforado contra la pared
             Modelo(r, T + "T06_Soldadora", new Vector3(-71.05f, 0f, 12.15f), 200f, caja.Piso, escala: 0.8f);
-            Modelo(r, I + "I21", new Vector3(-72.05f, 0f, 13.75f), 210f, cubierta, escala: 0.8f, sinCollider: true);       // lámpara de brazo
-            Modelo(r, C + "CY07b_Dron", new Vector3(-73.2f, 0f, 13.3f), 30f, cubierta, escala: 0.35f, sinCollider: true);  // el dron en reparación
+            Modelo(r, I + "I21", new Vector3(-71.75f, 0f, 13.75f), 210f, cubierta, escala: 0.8f, sinCollider: true);       // lámpara de brazo
+            Modelo(r, C + "CY07b_Dron", new Vector3(-72.75f, 0f, 13.3f), 30f, cubierta, escala: 0.35f, sinCollider: true);  // el dron en reparación
 
             // Fondo: repisas con cajas, gabinete con monitor, el pizarrón pegado a la pared y la compu en la esquina derecha.
             Modelo(r, T + "T08_RepisaTaller", new Vector3(-75.25f, 0f, 15.58f), 180f, caja.Piso, escala: 0.95f);
@@ -250,7 +250,7 @@ namespace MechaCyberpunk.Arte.Editor
             Luz(luces, "Serie_1", new Vector3(-75.0f, caja.Techo - 0.6f, 12.5f), Calido, 2.4f, 6f);
             Luz(luces, "Serie_2", new Vector3(-71.5f, caja.Techo - 0.6f, 14.0f), Calido, 2.4f, 6f);
             Luz(luces, "Tubo_Calido_Pared", new Vector3(-76.7f, 2.7f, 13.1f), Calido, 2.4f, 5f);   // sobre el tablero de herramientas
-            Foco(luces, "Lampara_Banco", new Vector3(-72.4f, cubierta + 0.9f, 13.5f), Calido, 6f, 3.5f, 70f);
+            Foco(luces, "Lampara_Banco", new Vector3(-71.95f, cubierta + 0.9f, 13.5f), Calido, 6f, 3.5f, 70f);
             Luz(luces, "Brillo_Monitores", new Vector3(-70.2f, tablero + 0.2f, 14.3f), Turquesa, 1.6f, 3f);
             Luz(luces, "Relleno", new Vector3(-73.3f, 2.6f, 11.5f), Calido, 2.0f, 7f);
             ApagarLuzDelLocal("T531_Locales/CIC/Luz_CIC");
@@ -260,8 +260,9 @@ namespace MechaCyberpunk.Arte.Editor
                 + (drones == null ? " (FALTA I20)" : ""));
         }
 
-        /// <summary>Centro del banco principal del CIC (el de BancoArmas): a la derecha de Tino, que está en (-74.5, 13.5).</summary>
-        public static readonly Vector3 CentroBancoTino = new Vector3(-72.75f, 0.22f, 13.45f);
+        /// <summary>Centro del banco principal del CIC (el de BancoArmas): a la derecha de Tino, que está en (-74.5, 13.5), y lo bastante lejos para que
+        /// frente a Tino (hasta ~2.2 m) la E sea de él y no del punto de uso del banco.</summary>
+        public static readonly Vector3 CentroBancoTino = new Vector3(-72.3f, 0.22f, 13.45f);
         /// <summary>Alto de la cubierta de una mesa de trabajo sobre el piso (m), contra el jugador animado de 1.40 m.</summary>
         public const float CubiertaMesa = 0.8f;
         /// <summary>Lo que se despega de la pared un cuadro (m): sin encimarse con ella.</summary>
