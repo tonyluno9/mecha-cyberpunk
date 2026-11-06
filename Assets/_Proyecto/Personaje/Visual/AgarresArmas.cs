@@ -75,6 +75,25 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             float arriba = float.IsNaN(inclinacionGrados) ? Mathf.Clamp(canon.y, -1f, 1f) : Mathf.Sin(inclinacionGrados * Mathf.Deg2Rad);
             Vector3 deseado = (horizontal.normalized * Mathf.Sqrt(1f - arriba * arriba) + Vector3.up * arriba).normalized;
+            return GirarHacia(armaRotacion, deseado, peso, maximoGrados);
+        }
+
+        /// <summary>
+        /// T-681: giro que lleva el cañón del arma exactamente hacia <paramref name="direccion"/> (por ejemplo, de la boca al punto de mira), con la corredera arriba.
+        /// Con <paramref name="peso"/> 0 no gira; el giro del cañón y el del ladeo se limitan a <paramref name="maximoGrados"/>.
+        /// </summary>
+        public static Quaternion CorreccionHaciaDireccion(Quaternion armaRotacion, Vector3 direccion, float peso, float maximoGrados)
+        {
+            if (direccion.sqrMagnitude < 1e-6f || peso <= 0f)
+            {
+                return Quaternion.identity;
+            }
+            return GirarHacia(armaRotacion, direccion.normalized, peso, maximoGrados);
+        }
+
+        private static Quaternion GirarHacia(Quaternion armaRotacion, Vector3 deseado, float peso, float maximoGrados)
+        {
+            Vector3 canon = armaRotacion * Vector3.forward;
             Quaternion giroCanon = Quaternion.FromToRotation(canon, deseado);
             giroCanon.ToAngleAxis(out float grados, out Vector3 eje);
             if (grados > 180f) { grados -= 360f; }

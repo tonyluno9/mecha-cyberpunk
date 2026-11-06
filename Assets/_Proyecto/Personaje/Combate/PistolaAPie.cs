@@ -383,6 +383,13 @@ namespace MechaCyberpunk.Personaje.Combate
             return distancia > 0.01f && BuscarImpacto(cuerpoCentro, hacia / distancia, distancia, out tapa);
         }
 
+        /// <summary>T-681: el punto del mundo que marca el centro de la cámara (donde pegaría una bala sin dispersión), o el punto a <paramref name="alcance"/> m si no hay nada.</summary>
+        public Vector3 PuntoDeMira(float alcance)
+        {
+            Transform camara = controlador.Camara;
+            return BuscarImpacto(camara.position, camara.forward, alcance, out RaycastHit centro) ? centro.point : camara.position + camara.forward * alcance;
+        }
+
         private void Disparar(ArmaAPie arma, DatosArma d)
         {
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.

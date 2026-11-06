@@ -29,6 +29,101 @@ namespace MechaCyberpunk.Arte.Editor
             }, CarpetaCapturas + "s2t-carros-nuevos.png");
         }
 
+        /// <summary>Foto con el ciclo de día y noche puesto en esa hora (sin guardar la escena), como las de ColocarS2nCielo.</summary>
+        public static void FotoHora(float hora, Vector3 desde, Vector3 hacia, string ruta, float campo = 60f)
+        {
+            Mundo.Reloj.CicloDiaNoche ciclo = Object.FindFirstObjectByType<Mundo.Reloj.CicloDiaNoche>(FindObjectsInactive.Include);
+            if (ciclo != null)
+            {
+                ciclo.Aplicar(hora);
+                ColocarS2nCielo.SeguirNoche();
+            }
+            ColocarS2.Foto(desde, hacia, ruta, campo);
+        }
+
+        /// <summary>Fotos de revisión de la sesión: (nombre, desde, hacia) de día (13 h) y de noche (22 h), en docs/capturas/s2t-&lt;nombre&gt;-dia|noche.png.</summary>
+        public static void Fotos(params (string nombre, Vector3 desde, Vector3 hacia)[] tomas)
+        {
+            ColocarS2.Abrir();
+            foreach (var t in tomas)
+            {
+                FotoHora(13f, t.desde, t.hacia, CarpetaCapturas + "s2t-" + t.nombre + "-dia.png");
+                FotoHora(22f, t.desde, t.hacia, CarpetaCapturas + "s2t-" + t.nombre + "-noche.png");
+            }
+            EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single);
+        }
+
+        [MenuItem("Mecha Cyberpunk/S2t/Fotos de la casa")]
+        public static void FotosCasa()
+        {
+            Fotos(("casa-frente", new Vector3(-44f, 1.7f, -77f), new Vector3(-57f, 2.5f, -77f)),
+                ("casa-sur", new Vector3(-47f, 2.5f, -92f), new Vector3(-56f, 2f, -76f)),
+                ("casa-norte", new Vector3(-47f, 2.5f, -62f), new Vector3(-56f, 2f, -78f)));
+        }
+
+        public static void FotosCuarto()
+        {
+            Fotos(("cuarto-piso", new Vector3(-62.3f, 1.7f, -75.2f), new Vector3(-63.4f, 0.2f, -72.6f)),
+                ("cuarto-pasillo", new Vector3(-63.6f, 1.6f, -77.0f), new Vector3(-60.5f, 1.4f, -78.4f)),
+                ("cuarto-cama", new Vector3(-61.8f, 1.6f, -75.0f), new Vector3(-64f, 1.0f, -72f)));
+        }
+
+        /// <summary>Texto en el mundo (Canvas World Space con uGUI Text), con su cara hacia 'haciaDonde' (de donde se lee).</summary>
+        public static GameObject TextoMundo(Transform padre, string nombre, string texto, Vector3 centro, Vector2 tam, Vector3 haciaDonde, Color color)
+        {
+            GameObject go = new GameObject(nombre, typeof(RectTransform), typeof(Canvas));
+            go.transform.SetParent(padre, false);
+            go.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+            RectTransform rt = go.GetComponent<RectTransform>();
+            const float PixelesPorMetro = 100f;
+            rt.sizeDelta = tam * PixelesPorMetro;
+            rt.localScale = Vector3.one / PixelesPorMetro;
+            // Un texto de uGUI se lee mirando por su +Z: el +Z va contrario a donde está quien lo lee.
+            rt.SetPositionAndRotation(centro, Quaternion.LookRotation(-haciaDonde, Vector3.up));
+            GameObject t = new GameObject("Texto", typeof(RectTransform), typeof(UnityEngine.UI.Text));
+            t.transform.SetParent(go.transform, false);
+            RectTransform trt = t.GetComponent<RectTransform>();
+            trt.anchorMin = Vector2.zero;
+            trt.anchorMax = Vector2.one;
+            trt.offsetMin = Vector2.zero;
+            trt.offsetMax = Vector2.zero;
+            UnityEngine.UI.Text txt = t.GetComponent<UnityEngine.UI.Text>();
+            txt.text = texto;
+            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            txt.fontStyle = FontStyle.Bold;
+            txt.alignment = TextAnchor.MiddleCenter;
+            txt.resizeTextForBestFit = true;
+            txt.resizeTextMinSize = 10;
+            txt.resizeTextMaxSize = 200;
+            txt.color = color;
+            return go;
+        }
+
+        public const string RutaLugarCasino = "Assets/_Proyecto/Mundo/Datos/DatosLugar_Casino.asset";
+
+        /// <summary>T-863: el casino VivaCoin abre las 24 horas (Tony: "siempre abierto, se puede entrar"). Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/S2t/Casino siempre abierto")]
+        public static void CasinoSiempreAbierto()
+        {
+            Object datos = AssetDatabase.LoadMainAssetAtPath(RutaLugarCasino);
+            if (datos == null)
+            {
+                Debug.LogError("[Arte] Falta " + RutaLugarCasino);
+                return;
+            }
+            SerializedObject so = new SerializedObject(datos);
+            SerializedProperty siempre = so.FindProperty("horario.siempreAbierto");
+            SerializedProperty demo = so.FindProperty("cerradoEnDemo");
+            if (!siempre.boolValue || demo.boolValue)
+            {
+                siempre.boolValue = true;
+                demo.boolValue = false;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                AssetDatabase.SaveAssets();
+            }
+            Debug.Log("[Arte] Casino VivaCoin: 24 horas");
+        }
+
         /// <summary>
         /// Pone cada prefab en fila mirando a +Z (su frente, si está bien orientado) con una flecha roja hacia +Z en el piso y lo retrata desde
         /// adelante a 3/4. Arriba: vista desde el frente-derecha; abajo: de lado. Abre otra vez Ciudad_Prologo al terminar.
