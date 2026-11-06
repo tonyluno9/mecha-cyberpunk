@@ -268,13 +268,13 @@ namespace MechaCyberpunk.Mundo.Editor
             return material;
         }
 
-        // T-310: skybox procedural; CicloDiaNoche le pone tinte, exposición y sol según la hora en una copia en ejecución.
+        // T-310: cielo (desde T-806 con el shader MechaCyberpunk/CieloGradiente); CicloDiaNoche le pone tinte, exposición y sol según la hora en una copia en ejecución.
         private static void CrearMaterialCielo()
         {
             Material material = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialCielo);
             if (material == null)
             {
-                material = new Material(Shader.Find("Skybox/Procedural"));
+                material = new Material(Shader.Find("MechaCyberpunk/CieloGradiente"));
                 AssetDatabase.CreateAsset(material, RutaMaterialCielo);
             }
             material.SetFloat("_AtmosphereThickness", GrosorAtmosferaCielo);

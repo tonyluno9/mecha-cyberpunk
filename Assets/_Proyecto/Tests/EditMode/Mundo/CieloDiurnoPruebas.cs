@@ -1,3 +1,4 @@
+using System.IO;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -70,11 +71,34 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void MaterialCielo_UsaElSkyboxProcedural()
+        public void MaterialCielo_UsaElCieloGradiente()
         {
             Material material = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialCielo);
             Assert.IsNotNull(material, "Falta Cielo_Procedural.mat: corre Mecha Cyberpunk/Crear T-079");
-            Assert.AreEqual("Skybox/Procedural", material.shader.name);
+            Assert.AreEqual("MechaCyberpunk/CieloGradiente", material.shader.name, "T-806 cambió el Skybox/Procedural (morado a mediodía)");
+        }
+
+        [Test]
+        public void CieloDeDia_CenitMasAzulQueElHorizonte_YSinBrilloDeCiudad()
+        {
+            ConfigCicloDia config = Config();
+            Color cenit = config.ColorCielo(HoraMediodia);
+            Color horizonte = config.ColorNiebla(HoraMediodia);
+            Assert.Greater(cenit.b - cenit.r, horizonte.b - horizonte.r, "El cénit es más azul que la bruma del horizonte");
+            Assert.Greater(horizonte.grayscale, cenit.grayscale, "La bruma del horizonte es más clara que el cénit");
+            Assert.Greater(cenit.g, cenit.r, "Azul verdoso, no morado (T-806)");
+            Assert.AreEqual(0f, config.BrilloCiudad(HoraMediodia).a, Tolerancia, "De día no hay brillo de la ciudad en el cielo");
+            Assert.Greater(config.BrilloCiudad(HoraNoche).a, 0.1f, "De noche la ciudad ilumina el horizonte");
+        }
+
+        [Test]
+        public void CapasDelCielo_SeProyectanSobreUnPlano_YVanEnElPlanoLejano()
+        {
+            string capas = File.ReadAllText("Assets/_Proyecto/Mundo/Resources/Shaders/CieloTextura.shader");
+            string domo = File.ReadAllText("Assets/_Proyecto/Mundo/Ambiente/Shaders/NubesNoche.shader");
+            StringAssert.Contains("d.xz / (arriba", capas, "T-806: sin las uv de la esfera, que juntaban las nubes en el cénit");
+            StringAssert.Contains("UNITY_RAW_FAR_CLIP_VALUE", capas, "Las nubes nunca quedan delante de un edificio lejano");
+            StringAssert.Contains("UNITY_RAW_FAR_CLIP_VALUE", domo, "El domo de noche tampoco");
         }
     }
 }
