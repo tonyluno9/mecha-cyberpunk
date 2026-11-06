@@ -22,13 +22,16 @@ namespace MechaCyberpunk.Mundo.Reloj
         [Tooltip("Volume global del posproceso de día (peso 1 de día, 0 de noche).")]
         [SerializeField] private Volume volumeDia;
 
-        [Tooltip("Material Skybox/Procedural del cielo. Si falta, el fondo es de color sólido (el de la niebla).")]
+        [Tooltip("Material del cielo (MechaCyberpunk/CieloGradiente desde T-806). Si falta, el fondo es de color sólido (el de la niebla).")]
         [SerializeField] private Material cielo;
 
         private static readonly int IdTinteCielo = Shader.PropertyToID("_SkyTint");
         private static readonly int IdColorSuelo = Shader.PropertyToID("_GroundColor");
         private static readonly int IdExposicion = Shader.PropertyToID("_Exposure");
         private static readonly int IdTamanoSol = Shader.PropertyToID("_SunSize");
+        private static readonly int IdColorHorizonte = Shader.PropertyToID("_ColorHorizonte");
+        private static readonly int IdColorBrillo = Shader.PropertyToID("_ColorBrillo");
+        private static readonly int IdColorSol = Shader.PropertyToID("_ColorSol");
 
         private IRelojMundo reloj;
         private Camera camara;
@@ -128,7 +131,7 @@ namespace MechaCyberpunk.Mundo.Reloj
             }
         }
 
-        // El cielo procedural usa una copia del material para no tocar el asset al cambiar la hora.
+        // El cielo usa una copia del material para no tocar el asset al cambiar la hora.
         private void AplicarCielo(float hora)
         {
             if (cielo == null)
@@ -143,6 +146,10 @@ namespace MechaCyberpunk.Mundo.Reloj
             cieloEnEjecucion.SetColor(IdColorSuelo, config.ColorNiebla(hora));
             cieloEnEjecucion.SetFloat(IdExposicion, config.ExposicionCielo(hora));
             cieloEnEjecucion.SetFloat(IdTamanoSol, config.DiscoSol(hora));
+            // T-806 (CieloGradiente): el horizonte es el color de la niebla, para que lo lejano se funda con el cielo sin una raya.
+            cieloEnEjecucion.SetColor(IdColorHorizonte, config.ColorNiebla(hora));
+            cieloEnEjecucion.SetColor(IdColorBrillo, config.BrilloCiudad(hora));
+            cieloEnEjecucion.SetColor(IdColorSol, luz.color);
             RenderSettings.skybox = cieloEnEjecucion;
         }
 

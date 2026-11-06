@@ -41,12 +41,34 @@ namespace MechaCyberpunk.Mundo.Ambiente
             {
                 camara = Camera.main;
             }
-            if (camara != null)
-            {
-                transform.position = camara.transform.position;
-            }
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
-            float peso = reloj != null ? ciclo.PesoNoche(reloj.Hora) : 1f;
+            Colocar(camara, reloj != null ? (float?)reloj.Hora : null);
+        }
+
+        /// <summary>
+        /// Pone el domo en la cámara con la opacidad de esa hora (sin hora: noche completa). Lo usa LateUpdate y, en el editor,
+        /// las capturas del cielo (S2n), que no corren Awake.
+        /// </summary>
+        public void Colocar(Camera camaraDomo, float? hora)
+        {
+            if (domo == null)
+            {
+                domo = GetComponent<MeshRenderer>();
+            }
+            if (config == null || ciclo == null || domo == null)
+            {
+                return;
+            }
+            if (bloque == null)
+            {
+                bloque = new MaterialPropertyBlock();
+                transform.localScale = Vector3.one * (config.RadioDomo * 2f);
+            }
+            if (camaraDomo != null)
+            {
+                transform.position = camaraDomo.transform.position;
+            }
+            float peso = hora.HasValue ? ciclo.PesoNoche(hora.Value) : 1f;
             float opacidad = config.OpacidadNubes * peso;
             domo.enabled = opacidad > OpacidadMinima;
             domo.GetPropertyBlock(bloque);

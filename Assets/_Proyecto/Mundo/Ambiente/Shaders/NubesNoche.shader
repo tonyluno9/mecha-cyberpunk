@@ -17,7 +17,7 @@ Shader "MechaCyberpunk/NubesNoche"
     }
     SubShader
     {
-        Tags { "RenderType" = "Transparent" "Queue" = "Transparent-100" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" }
+        Tags { "RenderType" = "Transparent" "Queue" = "Transparent-150" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" }
         Pass
         {
             Name "Nubes"
@@ -62,6 +62,8 @@ Shader "MechaCyberpunk/NubesNoche"
                 Variables salida;
                 float3 mundo = TransformObjectToWorld(entrada.posicion.xyz);
                 salida.posicion = TransformWorldToHClip(mundo);
+                // T-806: en el plano lejano, para que el domo nunca quede delante de un edificio lejano ni del fondo pintado.
+                salida.posicion.z = UNITY_RAW_FAR_CLIP_VALUE * salida.posicion.w;
                 salida.direccion = mundo - GetCameraPositionWS();
                 return salida;
             }
