@@ -29,7 +29,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
         private static string EstadoAgachado(Animator a)
         {
-            foreach (string n in new[] { "CoberturaEntrar", "CoberturaMantener", "AgachadoCaminar", "Idle", "Caminar", "Correr" })
+            foreach (string n in new[] { "CoberturaEntrar", "CoberturaMantener", "AgachadoCaminar", "AgachadoQuieto", "Idle", "Caminar", "Correr" })
             {
                 if (a.IsInTransition(0) ? a.GetNextAnimatorStateInfo(0).IsName(n) : a.GetCurrentAnimatorStateInfo(0).IsName(n))
                 {
@@ -138,7 +138,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Agachado_QuietoUsaIdleConPoseAgachada_YCaminandoAgachadoCaminar()
+        public IEnumerator Agachado_QuietoUsaAgachadoQuieto_YCaminandoAgachadoCaminar()
         {
             yield return Calentar();
             VisualPersonaje visual = jugador.GetComponentInChildren<VisualPersonaje>(true);
@@ -146,7 +146,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Pulsar(teclado.leftCtrlKey);
             yield return Esperar(1.0f);
             Assert.IsTrue(visual.Agachado, "El visual sabe que está agachado");
-            Assert.AreEqual("Idle", EstadoAgachado(visual.Animador), "Quieto agachado usa el idle con la pose agachada procedural (T-674)");
+            Assert.AreEqual("AgachadoQuieto", EstadoAgachado(visual.Animador), "Quieto agachado usa la pose agachada del clip de cobertura (T-683)");
             Press(teclado.wKey);
             yield return Esperar(1.0f);
             Assert.AreEqual("AgachadoCaminar", EstadoAgachado(visual.Animador), "Caminando agachado usa AgachadoCaminar");

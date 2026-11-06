@@ -45,6 +45,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private const float VelocidadVerticalEnAire = 1.5f;
         private static readonly int HashIdle = Animator.StringToHash("Idle");
         private static readonly int HashCaminar = Animator.StringToHash("Caminar");
+        private static readonly int HashAgachadoCaminar = Animator.StringToHash("AgachadoCaminar");
         private static readonly int HashCorrer = Animator.StringToHash("Correr");
         private static readonly int IdVelocidad = Animator.StringToHash(ReglasVisual.Velocidad);
         private static readonly int IdEnSuelo = Animator.StringToHash(ReglasVisual.EnSuelo);
@@ -189,10 +190,6 @@ namespace MechaCyberpunk.Personaje.Visual
             set
             {
                 agachado = value;
-                if (value && animador != null && animador.isHuman && animador.GetComponent<PoseAgachado>() == null)
-                {
-                    animador.gameObject.AddComponent<PoseAgachado>();
-                }
                 Aplicar();
             }
         }
@@ -396,6 +393,9 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velY;
         private float giro;
         private float rapidezIdle = 1f;
+        private bool rapidezAgachadoAplicada;
+        private int capaBrazos = -2;
+        private float pesoBrazos;
         private float pesoArriba = 1f;
         private float velocidadAnterior;
         private float yawAnterior;
@@ -473,7 +473,22 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
             animador.SetLayerWeight(capaArriba, pesoArriba);
+
+            // T-683: agachado sin apuntar, los brazos quedan sueltos (los clips de agachado traen la pose de rifle); apuntando manda la capa de arriba.
+            if (capaBrazos == -2)
+            {
+                capaBrazos = animador.GetLayerIndex(ReglasAnimacion.CapaBrazos);
+            }
+            if (capaBrazos >= 0)
+            {
+                bool sueltos = agachado && !apuntando && !cubierto && !caido && !manejando && !viendoTelefono && !EnGesto;
+                pesoBrazos = Mathf.MoveTowards(pesoBrazos, sueltos ? 1f : 0f, rapidezCapaArriba * dt);
+                animador.SetLayerWeight(capaBrazos, pesoBrazos);
+            }
         }
+
+        /// <summary>Peso actual de la capa de brazos sueltos (agachado sin apuntar), de 0 a 1.</summary>
+        public float PesoCapaBrazos => pesoBrazos;
         /// <summary>Peso actual de la capa de arriba (torso), de 0 a 1.</summary>
         public float PesoCapaArriba => pesoArriba;
 
@@ -505,6 +520,18 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Acelera o frena Caminar y Correr para que los pies sigan el suelo a la velocidad real.</summary>
         private void AjustarRapidez()
         {
+            // T-683: agachado caminando la rapidez del clip sube con la velocidad (con Shift los pies van más rápido, no solo deslizan).
+            if (animador != null && animador.GetCurrentAnimatorStateInfo(0).shortNameHash == HashAgachadoCaminar)
+            {
+                animador.speed = ReglasAnimacion.RapidezAgachado(velocidad, EscalaClips);
+                rapidezAgachadoAplicada = true;
+                return;
+            }
+            if (rapidezAgachadoAplicada && animador != null)
+            {
+                animador.speed = 1f;
+                rapidezAgachadoAplicada = false;
+            }
             if (animador == null || (velocidadClipCaminar <= 0f && velocidadClipCorrer <= 0f && Mathf.Approximately(rapidezIdle, 1f)))
             {
                 return;

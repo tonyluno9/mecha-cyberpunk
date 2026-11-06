@@ -8,7 +8,9 @@ El importador (ImportadorMixamo) los deja solos como Humanoid y sin materiales. 
 
 | Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
 | --- | --- | --- | --- |
-| Rodar con CTRL | Forward Roll | Loco_Rodar.fbx | Locomocion |
+| Rodar (agachado + ESPACIO) | Forward Roll (o Rifle Roll, Dive Roll) | Loco_Rodar.fbx | Locomocion |
+| Agachado quieto sin arma (hoy: pose baja de Cobertura_Entrar, T-683) | Crouch Idle (o Crouching Idle) | Loco_AgachadoIdle_Bucle.fbx | Locomocion |
+| Agachado caminando sin arma (hoy: Rifle_AgachadoCaminar con los brazos sueltos, T-683) | Crouched Walking (o Sneaking, Crouch Walk) | Loco_AgachadoCaminar_Bucle.fbx | Locomocion |
 | El Hacker sentado programando en la compu (y NPC escribiendo) | Sitting Typing | NPC_SentadoEscribiendo_Bucle.fbx | NPC |
 | Hablar por teléfono | Talking On Phone | NPC_TelefonoHablar_Bucle.fbx | NPC |
 | Profes y NPC platicando (dos distintas) | Talking | NPC_Platicar1_Bucle.fbx, NPC_Platicar2_Bucle.fbx | NPC |

@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 // Solo al cambiar: así otras pruebas o herramientas pueden manejar el visual sin que este script lo pise cada cuadro.
                 bool cubierto = cubierta != null && cubierta.Cubierto;
-                // T-674: agachado (CTRL) usa PoseAgachado (cadera baja y rodillas dobladas) sobre el idle o AgachadoCaminar.
+                // T-683: agachado (CTRL) usa los clips de agachado (AgachadoQuieto y AgachadoCaminar) con los brazos sueltos.
                 bool agachado = cubierta != null && cubierta.AgachadoLibre;
                 if (agachado != agachadoAntes) { visual.Agachado = agachado; agachadoAntes = agachado; }
                 bool apuntando = controlador.Apuntando;

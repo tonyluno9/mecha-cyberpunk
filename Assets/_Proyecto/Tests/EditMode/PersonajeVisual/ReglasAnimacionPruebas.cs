@@ -93,6 +93,17 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
+        public void RapidezAgachado_SubeConLaVelocidad_YSeLimita()
+        {
+            float lento = ReglasAnimacion.RapidezAgachado(1.6f, 1f);
+            float rapido = ReglasAnimacion.RapidezAgachado(3.4f, 1f);
+            Assert.Greater(lento, 1f, "Agachado el clip va más rápido de lo que viene (el jugador va más rápido que el clip)");
+            Assert.Greater(rapido, lento * 1.4f, "Con Shift los pies van bastante más rápido");
+            Assert.AreEqual(ReglasAnimacion.RapidezMinimaAgachado, ReglasAnimacion.RapidezAgachado(0f, 1f), 0.0001f, "Parado no se congela");
+            Assert.AreEqual(ReglasAnimacion.RapidezMaximaAgachado, ReglasAnimacion.RapidezAgachado(30f, 1f), 0.0001f, "Se limita");
+        }
+
+        [Test]
         public void EscalaVelocidad_SigueLaVelocidadRealYSeLimita()
         {
             Assert.AreEqual(1.5f, ReglasAnimacion.EscalaVelocidad(3f, 2f, 0.6f, 2.2f), 0.0001f);
