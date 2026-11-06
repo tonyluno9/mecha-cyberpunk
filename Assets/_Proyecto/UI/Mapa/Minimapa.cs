@@ -59,6 +59,7 @@ namespace MechaCyberpunk.UI.Mapa
         private const float GrosorRutaPx = 4f;
         private static readonly Color ColorRuta = new Color(1f, 0.55f, 0.1f, 0.95f);
         private RectTransform capaRuta;
+        private CirculoBusquedaMapa circuloBusqueda;
         private readonly List<Image> segmentosRuta = new List<Image>();
         private List<Vector3> ruta = new List<Vector3>();
         private Vector3 origenRuta;
@@ -79,6 +80,8 @@ namespace MechaCyberpunk.UI.Mapa
         public RectTransform RomboObjetivo => rombo;
         public bool RomboVisible => rombo != null && rombo.gameObject.activeSelf;
         public RectTransform PuntoMarcado => punto != null ? punto.rectTransform : null;
+        /// <summary>El círculo de búsqueda de la policía (T-665).</summary>
+        public CirculoBusquedaMapa CirculoBusqueda => circuloBusqueda;
         public bool PuntoVisible => punto != null && punto.gameObject.activeSelf;
         public Text TextoPunto => textoPunto;
         public float RadioPx => DisposicionHud.LadoMinimapa * 0.5f;
@@ -133,6 +136,7 @@ namespace MechaCyberpunk.UI.Mapa
                 manzanas[i] = KitUI.CrearImagen(desplazado, "Manzana_" + (i + 1), FondoOscuro);
             }
 
+            circuloBusqueda = new CirculoBusquedaMapa(desplazado);
             capaRuta = Centrado(desplazado, "RutaGps");
             capaMarcas = Centrado(mascara.transform, "Marcas");
             rombo = (RectTransform)KitUI.CrearRombo(capaMarcas, "Objetivo", diagonalRombo, e.Naranja).rectTransform.parent;
@@ -197,6 +201,7 @@ namespace MechaCyberpunk.UI.Mapa
             desplazado.anchoredPosition = -GeometriaBarrio.AMapa(centro) * escala;
             calles.rectTransform.sizeDelta = GeometriaBarrio.TamanoConCalles * escala;
             PintarManzanas();
+            circuloBusqueda.Actualizar(escala);
 
             // El objetivo (rombo naranja), pegado al borde si está lejos.
             IObjetivos objetivos = Registro<IObjetivos>.Actual;

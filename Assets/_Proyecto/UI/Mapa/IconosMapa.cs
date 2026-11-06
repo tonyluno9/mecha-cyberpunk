@@ -34,6 +34,7 @@ namespace MechaCyberpunk.UI.Mapa
 
         private static Sprite circulo;
         private static Sprite anillo;
+        private static Sprite anilloFino;
         private static Sprite bordeMinimapa;
         private static Sprite engrane;
         private static Sprite casa;
@@ -43,12 +44,16 @@ namespace MechaCyberpunk.UI.Mapa
         {
             circulo = null;
             anillo = null;
+            anilloFino = null;
             bordeMinimapa = null;
             engrane = null;
             casa = null;
         }
 
         public static Sprite Circulo => circulo != null ? circulo : circulo = CrearSprite("Mapa_Circulo", (x, y) => x * x + y * y <= 1f);
+
+        /// <summary>Un anillo delgado (5 % del radio) para bordes de zonas grandes.</summary>
+        public static Sprite AnilloFino => anilloFino != null ? anilloFino : anilloFino = CrearSprite("Mapa_AnilloFino", (x, y) => EnAnillo(x, y, 0.05f));
 
         public static Sprite Anillo => anillo != null ? anillo : anillo = CrearSprite("Mapa_Anillo", (x, y) => EnAnillo(x, y, GrosorAnillo));
 

@@ -88,6 +88,9 @@ namespace MechaCyberpunk.Tests.Trafico
             piso.transform.localScale = new Vector3(900f, 1f, 900f);
             extras.Add(piso);
             config = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ConfigPersecucion>(RutaConfig));
+            Poner("segundosArresto", 9999f); // T-665: estas pruebas miran la persecución, no el arresto
+            Poner("radioVistaDron", 1f);     // y los drones y las cámaras no deben ver a través de las paredes de prueba
+            Poner("camarasPorCruce", 0f);
         }
 
         [TearDown]
@@ -118,7 +121,15 @@ namespace MechaCyberpunk.Tests.Trafico
         private void Poner(string campo, float valor)
         {
             SerializedObject so = new SerializedObject(config);
-            so.FindProperty(campo).floatValue = valor;
+            SerializedProperty propiedad = so.FindProperty(campo);
+            if (propiedad.propertyType == SerializedPropertyType.Integer)
+            {
+                propiedad.intValue = (int)valor;
+            }
+            else
+            {
+                propiedad.floatValue = valor;
+            }
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -247,7 +258,7 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [UnityTest]
-        public IEnumerator SinVerAlJugador_ElCalorBajaDeMas_YConVistaNo()
+        public IEnumerator SinVerAlJugador_SeDaPorPerdido_PeroElCalorNoBajaDeMas()
         {
             Poner("segundosParaPerder", 4f);
             Poner("enfriamientoSinVista", 10f);
@@ -298,7 +309,7 @@ namespace MechaCyberpunk.Tests.Trafico
             {
                 yield return null;
             }
-            Assert.Greater(calor.Enfriado - antes, 20f, "Ya perdido, el calor baja de más (10 puntos por segundo)");
+            Assert.AreEqual(0f, calor.Enfriado - antes, 0.0001f, "T-665: ya no baja de más; la policía no se va sola, solo escapando de su vista y del círculo");
         }
 
         private void Encerrar(Vector3 centro)
