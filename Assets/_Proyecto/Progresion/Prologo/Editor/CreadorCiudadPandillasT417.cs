@@ -43,7 +43,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private static readonly DefinicionApoyo[] PersonajesT417 =
         {
             new DefinicionApoyo { Id = "inventor", Titulo = "EL INVENTOR", Nombre = "TINO", Funcion = "MEJORA TUS ARMAS", Color = new Color(1f, 0.5f, 0.1f),
-                Servicio = ServicioApoyo.Mejoras, Frases = new[] { "Dame fierro y te lo dejo mejor.", "Un arma buena es una amiga.", "Todo se puede mejorar, mijo." } },
+                Servicio = ServicioApoyo.Mejoras, Frases = new[] { "Acércate al banco de trabajo para mejorar tu arma.", "Dame fierro y te lo dejo mejor.", "Un arma buena es una amiga.", "Todo se puede mejorar, mijo." } },
             new DefinicionApoyo { Id = "doc", Titulo = "EL DOC", Nombre = "JOEL", Funcion = "TE CURA", Color = Color.white,
                 Servicio = ServicioApoyo.Curar, Costo = 50, Frases = new[] { "Listo, como nuevo. Los implantes: pronto.", "Ten más cuidado, mijo.", "Vuelve cuando quieras." } },
             new DefinicionApoyo { Id = "hacker", Titulo = "EL HACKER", Nombre = "SERGIO", Funcion = "TE DA INFORMACIÓN", Color = new Color(0.1f, 0.9f, 0.85f),

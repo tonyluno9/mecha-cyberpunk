@@ -50,3 +50,61 @@ MonoBehaviour:
   segundosSubtitulo: 3
   horasOperacion: 2
   textoSubtitulo: 'EL DOC: Listo. No lo andes presumiendo.'
+  materialHolograma: {fileID: 2100000, guid: 69ea14587beb0494a8834a8fd40fb745, type: 2}
+  materialAditivoUI: {fileID: 2100000, guid: 6083e842561a4074299ae892acf54820, type: 2}
+  cuerpos:
+  - {fileID: 4300000, guid: 45304fe5138279b45b8e6c6bcd841c51, type: 2}
+  - {fileID: 4300000, guid: cce525755bbee4743b7f2c45c0b7bee6, type: 2}
+  posicionSet: {x: 40, y: -500, z: 0}
+  anchoTextura: 768
+  altoTextura: 800
+  campoVision: 30
+  alturaCuerpo: 1.8
+  distancia: 4.1
+  distanciaMinima: 1.6
+  distanciaMaxima: 5.5
+  pasoRueda: 0.35
+  sensibilidad: 0.35
+  inclinacionMaxima: 25
+  giroSolo: 16
+  esperaGiroSolo: 2.5
+  enfoqueEspacio: 0.3
+  rapidezEnfoque: 5
+  pulsoEspacio: 1.4
+  duracionDestello: 0.8
+  colorHolograma: {r: 0.15, g: 0.85, b: 1, a: 1}
+  colorEspacio: {r: 1, g: 0.45, b: 0.08, a: 1}
+  colorInstalado: {r: 0.35, g: 1, b: 0.55, a: 1}
+  colorPeor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  colorFondoMenu: {r: 0.012, g: 0.02, b: 0.04, a: 1}
+  subtitulo: IMPLANTES DEL DOC
+  encabezadoEspacios: TU CUERPO
+  encabezadoImplante: IMPLANTE
+  encabezadoEfectos: "ANTES  \u2192  DESPU\xC9S"
+  etiquetaDinero: TU DINERO
+  formatoNivel: NIVEL {0}
+  textoSinImplante: SIN IMPLANTE
+  textoInstalado: INSTALADO
+  formatoEtiquetaLiga: LIGA {0}
+  formatoBoton: "ENTER \xB7 INSTALAR  {0}"
+  textoInstalando: "INSTALANDO\u2026"
+  textoAyudaRaton: "ARRASTRA PARA GIRAR \xB7 RUEDA PARA ACERCAR"
+  textoSi: "S\xCD"
+  textoNo: NO
+  nombresEfectos:
+  - GOLPE A PIE
+  - CORRER
+  - SALTO
+  - ESPERA EN EL MECHA
+  - VIDA DEL RIVAL
+  - "VIDA EN N\xDAMEROS"
+  - AVISO DE ATAQUE
+  - ALCANCE AL APUNTAR
+  - RETROCESO
+  - ESPERA DE RODADA
+  - RECARGA
+  sonidoMover: UI_MOVER
+  sonidoAceptar: UI_ACEPTAR
+  sonidoCancelar: UI_CANCELAR
+  sonidoCompra: ECO_COMPRA
+  sonidoSinDinero: ECO_SIN_DINERO

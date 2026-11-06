@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0670a2a836ed92d43ae1a7f3f14f536a, type: 3}
+  m_Name: ConfigMenuArmas_Base
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigMenuArmas
+  armas:
+  - arma: 1
+    nombre: PISTOLA
+    icono: {fileID: 2800000, guid: 78a3a9ec19abe614cb4a80456949cc47, type: 3}
+    modelo: {fileID: 7161985598469708661, guid: 044d9534a465b114eae6d2cb68408715, type: 3}
+    imagen: {fileID: 2800000, guid: 78a3a9ec19abe614cb4a80456949cc47, type: 3}
+    piezaCargador: Bateria
+    piezaCanon: Corredera
+    piezaMira: 
+  - arma: 2
+    nombre: ESCOPETA
+    icono: {fileID: 2800000, guid: d1f5247d030608a4ab1ec0a84cf6734e, type: 3}
+    modelo: {fileID: 0}
+    imagen: {fileID: 2800000, guid: d1f5247d030608a4ab1ec0a84cf6734e, type: 3}
+    piezaCargador: Bateria
+    piezaCanon: Corredera
+    piezaMira: 
+  - arma: 3
+    nombre: FUSIL
+    icono: {fileID: 2800000, guid: 32722ccdc9e41d04a8727a47938357ba, type: 3}
+    modelo: {fileID: 0}
+    imagen: {fileID: 2800000, guid: 32722ccdc9e41d04a8727a47938357ba, type: 3}
+    piezaCargador: Bateria
+    piezaCanon: Corredera
+    piezaMira: 
+  - arma: 4
+    nombre: FRANCOTIRADOR
+    icono: {fileID: 2800000, guid: f9690ea2b9cb87d4a81b8646ed066d1a, type: 3}
+    modelo: {fileID: 0}
+    imagen: {fileID: 2800000, guid: f9690ea2b9cb87d4a81b8646ed066d1a, type: 3}
+    piezaCargador: Bateria
+    piezaCanon: Corredera
+    piezaMira: 
+  piezas:
+  - pieza: 0
+    nombre: CARGADOR
+    mejora: "M\xC1S BALAS"
+    estadistica: 1
+    separacion: 0.55
+  - pieza: 1
+    nombre: "CA\xD1\xD3N"
+    mejora: "M\xC1S DA\xD1O"
+    estadistica: 0
+    separacion: 0.3
+  - pieza: 2
+    nombre: MIRA
+    mejora: "M\xC1S PRECISI\xD3N"
+    estadistica: 4
+    separacion: 0.16
+  materialHolograma: {fileID: 2100000, guid: 69ea14587beb0494a8834a8fd40fb745, type: 2}
+  materialAditivoUI: {fileID: 2100000, guid: 6083e842561a4074299ae892acf54820, type: 2}
+  posicionSet: {x: 0, y: -500, z: 0}
+  anchoTextura: 1152
+  altoTextura: 720
+  campoVision: 28
+  distancia: 2.9
+  distanciaMinima: 1.5
+  distanciaMaxima: 4
+  pasoRueda: 0.25
+  sensibilidad: 0.35
+  inclinacionMaxima: 55
+  giroSolo: 14
+  esperaGiroSolo: 2.5
+  rapidezPieza: 7
+  duracionDestello: 0.9
+  duracionNumeros: 0.7
+  duracionLetrero: 2.2
+  colorHolograma: {r: 0.15, g: 0.85, b: 1, a: 1}
+  colorMejora: {r: 0.35, g: 1, b: 0.55, a: 1}
+  colorPeor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  colorFondo: {r: 0.012, g: 0.02, b: 0.04, a: 1}
+  titulo: BANCO DE TINO
+  subtitulo: MEJORA DE ARMAS
+  encabezadoArmas: TUS ARMAS
+  encabezadoPiezas: PIEZAS
+  encabezadoEstadisticas: "ANTES  \u2192  DESPU\xC9S"
+  formatoNivel: NIVEL {0}
+  textoBase: BASE
+  textoInstalada: INSTALADA
+  formatoBloqueada: PRIMERO EL {0}
+  formatoMejorar: "ENTER \xB7 MEJORAR  {0}"
+  textoNoAlcanza: NO TE ALCANZA
+  textoAlMaximo: "ARMA AL M\xC1XIMO"
+  textoNoDisponible: NO DISPONIBLE
+  formatoComprado: '{0} INSTALADO EN TU {1}'
+  textoAyuda: "\u2190 \u2192 ARMA     \u2191 \u2193 PIEZA     ENTER MEJORAR     ESC
+    SALIR"
+  textoAyudaRaton: "ARRASTRA PARA GIRAR \xB7 RUEDA PARA ACERCAR"
+  textoSinArmas: NO TRAES ARMAS DE FUEGO
+  textoLetrero: ARMA MEJORADA
+  formatoLetrero: '{0}'
+  textoAviso: MEJORAR ARMAS
+  nombresEstadisticas:
+  - "DA\xD1O"
+  - CARGADOR
+  - RECARGA
+  - CADENCIA
+  - "DISPERSI\xD3N"
+  sonidoMover: UI_MOVER
+  sonidoAceptar: UI_ACEPTAR
+  sonidoCancelar: UI_CANCELAR
+  sonidoCompra: ECO_COMPRA
+  sonidoSinDinero: ECO_SIN_DINERO

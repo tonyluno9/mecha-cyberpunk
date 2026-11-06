@@ -106,6 +106,144 @@ namespace MechaCyberpunk.UI
         public float HorasOperacion => horasOperacion;
         public string TextoSubtitulo => textoSubtitulo;
 
+        [Header("Holograma del cuerpo (T-815)")]
+        [Tooltip("El shader holográfico del banco de armas (HologramaArma.mat).")]
+        [SerializeField] private Material materialHolograma;
+        [Tooltip("Material aditivo de la UI (UIAditivo.mat): el holograma se suma sobre el fondo oscuro.")]
+        [SerializeField] private Material materialAditivoUI;
+        [Tooltip("Cuerpo horneado por personaje, en el orden de Apariencia.Cara (0 = mujer, 1 = hombre); 4 submallas en el orden de EspacioImplante.")]
+        [SerializeField] private Mesh[] cuerpos = new Mesh[0];
+        [Tooltip("Dónde se arma el set del holograma, lejos de la ciudad (m). Distinto del banco de armas.")]
+        [SerializeField] private Vector3 posicionSet = new Vector3(40f, -500f, 0f);
+        [Tooltip("Ancho de la RenderTexture (px).")]
+        [Min(64)] [SerializeField] private int anchoTextura = 768;
+        [Tooltip("Alto de la RenderTexture (px).")]
+        [Min(64)] [SerializeField] private int altoTextura = 800;
+        [Tooltip("Campo de visión de la cámara del holograma (°).")]
+        [Range(10f, 60f)] [SerializeField] private float campoVision = 30f;
+        [Tooltip("Altura del cuerpo en el holograma (m).")]
+        [Min(0.5f)] [SerializeField] private float alturaCuerpo = 1.8f;
+        [Tooltip("Distancia inicial de la cámara (m).")]
+        [Min(0.5f)] [SerializeField] private float distancia = 4.1f;
+        [Tooltip("Lo más cerca con la rueda (m).")]
+        [Min(0.5f)] [SerializeField] private float distanciaMinima = 1.6f;
+        [Tooltip("Lo más lejos con la rueda (m).")]
+        [Min(0.5f)] [SerializeField] private float distanciaMaxima = 5.5f;
+        [Tooltip("Cuánto se acerca cada paso de la rueda (m).")]
+        [Min(0f)] [SerializeField] private float pasoRueda = 0.35f;
+        [Tooltip("Giro por píxel arrastrado (°/px).")]
+        [Min(0f)] [SerializeField] private float sensibilidad = 0.35f;
+        [Tooltip("Lo más que se inclina con el arrastre (°).")]
+        [Range(0f, 60f)] [SerializeField] private float inclinacionMaxima = 25f;
+        [Tooltip("Giro solo cuando no se toca (°/s).")]
+        [Min(0f)] [SerializeField] private float giroSolo = 16f;
+        [Tooltip("Espera tras soltar antes de volver a girar solo (s).")]
+        [Min(0f)] [SerializeField] private float esperaGiroSolo = 2.5f;
+        [Tooltip("Cuánto se va la mira de la cámara hacia el espacio elegido (0 = el centro del cuerpo, 1 = el espacio).")]
+        [Range(0f, 1f)] [SerializeField] private float enfoqueEspacio = 0.3f;
+        [Tooltip("Rapidez con que la cámara sigue al espacio elegido (1/s).")]
+        [Min(0.1f)] [SerializeField] private float rapidezEnfoque = 5f;
+        [Tooltip("Pulsos por segundo del espacio elegido (Hz).")]
+        [Min(0f)] [SerializeField] private float pulsoEspacio = 1.4f;
+        [Tooltip("Lo que dura el destello al instalar; la pantalla se queda así de tiempo antes de irse (s).")]
+        [Min(0.05f)] [SerializeField] private float duracionDestello = 0.8f;
+        [Tooltip("Cian del holograma.")]
+        [SerializeField] private Color colorHolograma = new Color(0.15f, 0.85f, 1f, 1f);
+        [Tooltip("Espacio elegido en el cuerpo (naranja).")]
+        [SerializeField] private Color colorEspacio = new Color(1f, 0.45f, 0.08f, 1f);
+        [Tooltip("Espacio con implante instalado en el cuerpo y mejoras en la tabla (verde).")]
+        [SerializeField] private Color colorInstalado = new Color(0.35f, 1f, 0.55f, 1f);
+        [Tooltip("Lo que empeora en la tabla (rojo).")]
+        [SerializeField] private Color colorPeor = new Color(1f, 0.3f, 0.3f, 1f);
+        [Tooltip("Fondo de toda la pantalla (tapa la ciudad).")]
+        [SerializeField] private Color colorFondoMenu = new Color(0.012f, 0.02f, 0.04f, 1f);
+        [SerializeField] private string subtitulo = "IMPLANTES DEL DOC";
+        [SerializeField] private string encabezadoEspacios = "TU CUERPO";
+        [SerializeField] private string encabezadoImplante = "IMPLANTE";
+        [SerializeField] private string encabezadoEfectos = "ANTES  →  DESPUÉS";
+        [SerializeField] private string etiquetaDinero = "TU DINERO";
+        [Tooltip("{0} = nivel en romanos (I).")]
+        [SerializeField] private string formatoNivel = "NIVEL {0}";
+        [SerializeField] private string textoSinImplante = "SIN IMPLANTE";
+        [SerializeField] private string textoInstalado = "INSTALADO";
+        [Tooltip("{0} = liga.")]
+        [SerializeField] private string formatoEtiquetaLiga = "LIGA {0}";
+        [Tooltip("{0} = precio con Ƀ.")]
+        [SerializeField] private string formatoBoton = "ENTER · INSTALAR  {0}";
+        [SerializeField] private string textoInstalando = "INSTALANDO…";
+        [SerializeField] private string textoAyudaRaton = "ARRASTRA PARA GIRAR · RUEDA PARA ACERCAR";
+        [SerializeField] private string textoSi = "SÍ";
+        [SerializeField] private string textoNo = "NO";
+        [Tooltip("Nombre de cada efecto, en el orden de EfectoImplante.")]
+        [SerializeField] private string[] nombresEfectos =
+        {
+            "GOLPE A PIE", "CORRER", "SALTO", "ESPERA EN EL MECHA", "VIDA DEL RIVAL", "VIDA EN NÚMEROS", "AVISO DE ATAQUE",
+            "ALCANCE AL APUNTAR", "RETROCESO", "ESPERA DE RODADA", "RECARGA"
+        };
+        [Header("Sonidos de la pantalla (ids de GestorSonidos)")]
+        [SerializeField] private string sonidoMover = "UI_MOVER";
+        [SerializeField] private string sonidoAceptar = "UI_ACEPTAR";
+        [SerializeField] private string sonidoCancelar = "UI_CANCELAR";
+        [SerializeField] private string sonidoCompra = "ECO_COMPRA";
+        [SerializeField] private string sonidoSinDinero = "ECO_SIN_DINERO";
+
+        public Material MaterialHolograma => materialHolograma;
+        public Material MaterialAditivoUI => materialAditivoUI;
+        public Vector3 PosicionSet => posicionSet;
+        public int AnchoTextura => anchoTextura;
+        public int AltoTextura => altoTextura;
+        public float CampoVision => campoVision;
+        public float AlturaCuerpo => alturaCuerpo;
+        public float Distancia => distancia;
+        public float DistanciaMinima => distanciaMinima;
+        public float DistanciaMaxima => distanciaMaxima;
+        public float PasoRueda => pasoRueda;
+        public float Sensibilidad => sensibilidad;
+        public float InclinacionMaxima => inclinacionMaxima;
+        public float GiroSolo => giroSolo;
+        public float EsperaGiroSolo => esperaGiroSolo;
+        public float EnfoqueEspacio => enfoqueEspacio;
+        public float RapidezEnfoque => rapidezEnfoque;
+        public float PulsoEspacio => pulsoEspacio;
+        public float DuracionDestello => duracionDestello;
+        public Color ColorHolograma => colorHolograma;
+        public Color ColorEspacio => colorEspacio;
+        public Color ColorInstalado => colorInstalado;
+        public Color ColorPeor => colorPeor;
+        public Color ColorFondoMenu => colorFondoMenu;
+        public string Subtitulo => subtitulo;
+        public string EncabezadoEspacios => encabezadoEspacios;
+        public string EncabezadoImplante => encabezadoImplante;
+        public string EncabezadoEfectos => encabezadoEfectos;
+        public string EtiquetaDinero => etiquetaDinero;
+        public string FormatoNivel => formatoNivel;
+        public string TextoSinImplante => textoSinImplante;
+        public string TextoInstalado => textoInstalado;
+        public string FormatoEtiquetaLiga => formatoEtiquetaLiga;
+        public string FormatoBoton => formatoBoton;
+        public string TextoInstalando => textoInstalando;
+        public string TextoAyudaRaton => textoAyudaRaton;
+        public string TextoSi => textoSi;
+        public string TextoNo => textoNo;
+        public string SonidoMover => sonidoMover;
+        public string SonidoAceptar => sonidoAceptar;
+        public string SonidoCancelar => sonidoCancelar;
+        public string SonidoCompra => sonidoCompra;
+        public string SonidoSinDinero => sonidoSinDinero;
+
+        /// <summary>El cuerpo horneado para esa cara (fuera de rango, el primero); null si no hay ninguno.</summary>
+        public Mesh Cuerpo(int cara)
+        {
+            if (cuerpos == null || cuerpos.Length == 0)
+            {
+                return null;
+            }
+            return cara >= 0 && cara < cuerpos.Length && cuerpos[cara] != null ? cuerpos[cara] : cuerpos[0];
+        }
+
+        /// <summary>Nombre del efecto en la tabla (GOLPE A PIE).</summary>
+        public string NombreEfecto(int efecto) => nombresEfectos != null && efecto >= 0 && efecto < nombresEfectos.Length ? nombresEfectos[efecto] : string.Empty;
+
         /// <summary>Nombre del espacio por su número en <c>EspacioImplante</c>; vacío si no hay.</summary>
         public string NombreEspacio(int espacio) => nombresEspacio != null && espacio >= 0 && espacio < nombresEspacio.Length ? nombresEspacio[espacio] : string.Empty;
     }
