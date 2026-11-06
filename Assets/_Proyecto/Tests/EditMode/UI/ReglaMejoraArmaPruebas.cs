@@ -107,6 +107,28 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
+        public void Resaltada_MiraDePistolaSinCambioDeDispersion_ResaltaLaQueMasMejora()
+        {
+            // Pistola II → III (DatosArma_pistola_2/3): la dispersión queda en 0, el cargador sube 25 %, el daño 22 % y la recarga baja 20 %.
+            var antes = new EstadisticasArma(36f, 12, 1f, 4f, 0f);
+            var despues = new EstadisticasArma(44f, 15, 0.8f, 4f, 0f);
+            Assert.AreEqual(EstadisticaArma.Cargador, ReglaMejoraArma.Resaltada(antes, despues, EstadisticaArma.Dispersion));
+            var filas = new List<FilaEstadistica>();
+            ReglaMejoraArma.Comparar(antes, despues, EstadisticaArma.Dispersion, filas);
+            Assert.IsFalse(filas[4].Resaltada, "No se resalta la dispersión 0 → 0");
+            Assert.IsTrue(filas[1].Resaltada, "Se resalta lo que de verdad mejora");
+        }
+
+        [Test]
+        public void Resaltada_LaDeLaPiezaCambia_SeQuedaLaDeLaPieza()
+        {
+            var antes = new EstadisticasArma(9f, 4, 2.4f, 1.1f, 6f);
+            var despues = new EstadisticasArma(9f, 4, 2.4f, 1.1f, 4f);
+            Assert.AreEqual(EstadisticaArma.Dispersion, ReglaMejoraArma.Resaltada(antes, despues, EstadisticaArma.Dispersion));
+            Assert.AreEqual(EstadisticaArma.Recarga, ReglaMejoraArma.Resaltada(antes, antes, EstadisticaArma.Recarga), "Si nada cambia, la de la pieza");
+        }
+
+        [Test]
         public void EstadisticasDe_Escopeta_SumaLosPerdigonesAlDanio()
         {
             DatosArma escopeta = DatosArma.Crear("e0", "Escopeta", ArmaAPie.Escopeta, 0, 350, 9f, 8, 4, 2.4f, 0.9f, false, 6f, 4f, 20f);

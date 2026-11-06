@@ -517,7 +517,7 @@ namespace MechaCyberpunk.UI.Armas
                 estados[(PiezaArma)i] = hay ? ReglaMejoraArma.Estado((PiezaArma)i, nivel) : EstadoPieza.Bloqueada;
             }
             EntradaPiezaMenu datosPieza = config.Pieza(pieza);
-            textoPiezaElegida.text = hay ? Romanos[ReglaMejoraArma.NivelDe(pieza)] + " · " + datosPieza.Nombre + " · " + datosPieza.Mejora : string.Empty;
+            textoPiezaElegida.text = hay ? Romanos[ReglaMejoraArma.NivelDe(pieza)] + " · " + datosPieza.Nombre + " · " + TextoMejora(pieza) : string.Empty;
             PintarPiezas(nivel);
             PintarTabla(nivel);
             PintarBoton(nivel, cartera);
@@ -525,6 +525,23 @@ namespace MechaCyberpunk.UI.Armas
             {
                 vista.ElegirPieza(pieza, estados);
             }
+        }
+
+        /// <summary>
+        /// Lo que mejora la pieza en el arma elegida: su texto (MÁS PRECISIÓN) si su estadística cambia; si no (la mira de la pistola), la
+        /// estadística que de verdad mejora con ese nivel (MEJORA DAÑO), con los números de <see cref="DatosArma"/>.
+        /// </summary>
+        public string TextoMejora(PiezaArma p)
+        {
+            EntradaPiezaMenu datos = config.Pieza(p);
+            if (armas.Count == 0)
+            {
+                return datos.Mejora;
+            }
+            int nivelPieza = ReglaMejoraArma.NivelDe(p);
+            EstadisticaArma real = ReglaMejoraArma.Resaltada(EstadisticasArma.De(DatosNivel(nivelPieza - 1)), EstadisticasArma.De(DatosNivel(nivelPieza)),
+                datos.Estadistica);
+            return real == datos.Estadistica ? datos.Mejora : string.Format(config.FormatoMejoraReal, config.NombreEstadistica(real));
         }
 
         private string TextoNivel(int nivel) => nivel <= 0 ? config.TextoBase : string.Format(config.FormatoNivel, Romanos[Mathf.Min(nivel, ReglaMejoraArma.NivelMaximo)]);
@@ -567,7 +584,7 @@ namespace MechaCyberpunk.UI.Armas
                 f.Numeral.color = estado == EstadoPieza.Instalada ? estilo.Turquesa : estado == EstadoPieza.Bloqueada ? estilo.Desactivado : colorFila;
                 f.Nombre.text = datos.Nombre;
                 f.Nombre.color = estado == EstadoPieza.Bloqueada && !elegida ? estilo.Desactivado : colorFila;
-                f.Detalle.text = datos.Mejora;
+                f.Detalle.text = TextoMejora(p);
                 f.Detalle.color = estado == EstadoPieza.Bloqueada ? estilo.Desactivado : new Color(estilo.Texto.r, estilo.Texto.g, estilo.Texto.b, 0.75f);
                 switch (estado)
                 {
@@ -744,8 +761,9 @@ namespace MechaCyberpunk.UI.Armas
             textoSubtitulo.fontSize = estilo.Tamano(RolTexto.Texto);
             Image tiraCabecera = KitUI.CrearImagen(canvas.transform, "TiraCabecera", new Color(estilo.Naranja.r, estilo.Naranja.g, estilo.Naranja.b, 0.6f));
             KitUI.Colocar(tiraCabecera.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -AltoCabecera + 6f), new Vector2(1920f - 2f * Margen, 2f));
+            // La etiqueta va abajo del número, en la línea del subtítulo: encima se veía como un dígito fantasma detrás de la cifra.
             Texto(canvas.transform, "EtiquetaDinero", RolTexto.Ayuda, TextAnchor.UpperRight, new Vector2(1f, 1f),
-                new Vector2(-Margen, -Margen * 0.5f - 6f), new Vector2(400f, 30f), "TU DINERO", estilo.Desactivado);
+                new Vector2(-Margen - 4f, -Margen * 0.5f - 92f), new Vector2(400f, 30f), "TU DINERO", estilo.Desactivado);
             textoDinero = Texto(canvas.transform, "Dinero", RolTexto.Titulo, TextAnchor.UpperRight, new Vector2(1f, 1f),
                 new Vector2(-Margen, -Margen * 0.5f + 0f), new Vector2(500f, 110f), string.Empty, estilo.Turquesa);
             textoDinero.fontSize = TamanoTituloGrande;
