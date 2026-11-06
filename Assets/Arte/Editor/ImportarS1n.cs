@@ -203,6 +203,8 @@ namespace MechaCyberpunk.Arte.Editor
         // Lo que se arma con lo importado (T-679 armas, T-680 policía a pie); cada uno se salta solo si no llegó su archivo.
         private static void ArmarDespues()
         {
+            ColocarS1nArmas.Colocar();
+            Informe.AppendLine(File.ReadAllText("Logs/s1n-armas.txt"));
         }
     }
 }

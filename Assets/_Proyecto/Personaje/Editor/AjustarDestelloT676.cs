@@ -11,8 +11,8 @@ namespace MechaCyberpunk.Personaje.Editor
     public static class AjustarDestelloT676
     {
         private const string RutaDatos = "Assets/_Proyecto/Personaje/Datos/Resources/DatosSensacion.asset";
-        // En orden: Puños, Pistola, Escopeta, Fusil, Sniper (m).
-        private static readonly float[] Tamanos = { 0f, 0.14f, 0.26f, 0.16f, 0.22f };
+        // En orden: Puños, Pistola, Escopeta, Fusil, Sniper (m). T-678: con F01_Destello (la llama ocupa menos de la mitad de la imagen) el quad es el doble de grande.
+        private static readonly float[] Tamanos = { 0f, 0.26f, 0.5f, 0.3f, 0.4f };
 
         [MenuItem("Mecha Cyberpunk/Ajustar T-676 destello F01")]
         public static void Ajustar()

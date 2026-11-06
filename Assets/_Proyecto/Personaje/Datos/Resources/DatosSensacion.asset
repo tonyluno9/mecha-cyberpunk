@@ -19,19 +19,19 @@ MonoBehaviour:
     particulas: 0
   - patada: 1
     desvio: 0.25
-    destello: 0.14
+    destello: 0.26
     particulas: 6
   - patada: 3.2
     desvio: 0.5
-    destello: 0.26
+    destello: 0.5
     particulas: 4
   - patada: 0.6
     desvio: 0.35
-    destello: 0.16
+    destello: 0.3
     particulas: 5
   - patada: 4.5
     desvio: 0.3
-    destello: 0.22
+    destello: 0.4
     particulas: 10
   duracionPatada: 0.18
   topePatada: 5
