@@ -6,18 +6,15 @@ namespace MechaCyberpunk.Arte.Editor
 {
     /// <summary>
     /// T-801 (noche 6-nov, sesión 2): arreglos del mundo para las pruebas de distancias de la ciudad. Idempotente.
-    /// La estación de exoesqueleto T02 de la cochera de la casa (Barrio.prefab) va sin collider, como la pidió T-250 (SinCollider):
-    /// el mecha se estaciona dentro de ella y su caja de 6 x 4.6 x 3.4 m tapaba el cilindro libre de 2 m x 5 m del Estacionamiento
-    /// (ITallerMecha) en Ciudad y Pruebas_Alan.
+    /// (La estación T02 de la cochera de Barrio.prefab conserva su collider: T-583 exige paredes sólidas y su centro es el Estacionamiento
+    /// del prefab; conflicto anotado para decidir. En Ciudad_Prologo el Estacionamiento ya se movió con T-550 y está libre.)
     /// En Ciudad_Prologo, el poste de la guarida "cama" (el buró H11) quedaba en el pasillo pegado al vano de la puerta del cuarto: desde el
     /// pasillo la E ofrecía el buró en vez de la puerta. Ahora va dentro del cuarto, junto a la cama, lejos de la puerta.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ColocarS2nDistancias.Colocar
     /// </summary>
     public static class ColocarS2nDistancias
     {
-        private const string RutaEstacion = "Manzana_4/Lugar_Casa/Interior/Taller/T02_EstacionExo_Visual_T250";
-
-        private const string RutaPosteCama = "GTA_T448/Guarida_cama";
+                private const string RutaPosteCama = "GTA_T448/Guarida_cama";
         private const string PuntoCama = "Barrio/PuntosAparicion/Casa_Cama";
         /// <summary>Lejos del centro del vano de la puerta del cuarto (m) para que la E de la puerta no lo prefiera.</summary>
         private const float LejosDeLaPuerta = 1.8f;
@@ -26,10 +23,9 @@ namespace MechaCyberpunk.Arte.Editor
         private const float PasoBusqueda = 0.1f;
         private static readonly Vector3 MitadBuro = new Vector3(0.3f, 0.35f, 0.3f);
 
-        [MenuItem("Mecha Cyberpunk/S2n/3 Distancias (estación T02 sin collider, buró de la guarida)")]
+        [MenuItem("Mecha Cyberpunk/S2n/3 Distancias (buró de la guarida)")]
         public static void Colocar()
         {
-            EstacionSinCollider();
             ColocarS2.Informe.Clear();
             ColocarS2.Abrir();
             PosteCama();
@@ -83,34 +79,5 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         private static Vector3 Plano(Vector3 v) => new Vector3(v.x, 0f, v.z);
-
-        private static void EstacionSinCollider()
-        {
-            GameObject raiz = PrefabUtility.LoadPrefabContents(ColocarS2.RutaBarrio);
-            Transform estacion = raiz.transform.Find(RutaEstacion);
-            int apagados = 0;
-            if (estacion == null)
-            {
-                Debug.LogWarning("[Arte] T-801: no está " + RutaEstacion + " en Barrio.prefab.");
-            }
-            else
-            {
-                foreach (Collider c in estacion.GetComponentsInChildren<Collider>(true))
-                {
-                    if (!c.isTrigger && c.enabled)
-                    {
-                        c.enabled = false;
-                        apagados++;
-                    }
-                }
-            }
-            if (apagados > 0)
-            {
-                PrefabUtility.SaveAsPrefabAsset(raiz, ColocarS2.RutaBarrio);
-            }
-            PrefabUtility.UnloadPrefabContents(raiz);
-            AssetDatabase.SaveAssets();
-            Debug.Log("[Arte] T-801: colliders apagados en la estación T02 de la casa: " + apagados);
-        }
     }
 }
