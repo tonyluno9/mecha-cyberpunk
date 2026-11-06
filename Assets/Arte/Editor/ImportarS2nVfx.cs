@@ -25,9 +25,14 @@ namespace MechaCyberpunk.Arte.Editor
         public const string ShaderInvisible = "MechaCyberpunk/Personaje/Invisible";
         public static readonly string[] Archivos = { "D01_HuecoConcreto.png", "D02_HuecoMetal.png" };
         private const int Lado = 256;
-        private const float GananciaAlfa = 2.2f;
-        private const float BordeInterior = 0.40f;
-        private const float BordeExterior = 0.49f;
+        // T-851: qué tan oscuro (1 − el canal más bajo) es el contorno del cráter, el halo gris y una piedrita suelta.
+        private const float UmbralContorno = 0.33f;
+        private const float UmbralHalo = 0.15f;
+        private const float UmbralPiedritaMin = 0.30f;
+        private const float UmbralPiedritaMax = 0.55f;
+        private const int Engorde = 2;
+        private const float BordeInterior = 0.46f;
+        private const float BordeExterior = 0.50f;
         // Las imágenes traen el hueco al centro con mucho blanco alrededor: se toma el 70 % del medio.
         private const float Recorte = 0.15f;
 
@@ -41,7 +46,7 @@ namespace MechaCyberpunk.Arte.Editor
                 string destino = CarpetaDestino + Archivos[i];
                 if (File.Exists(origen))
                 {
-                    if (!File.Exists(destino) || File.GetLastWriteTimeUtc(origen) > File.GetLastWriteTimeUtc(destino))
+                    if (!File.Exists(destino) || File.GetLastWriteTimeUtc(origen) > File.GetLastWriteTimeUtc(destino) || !EsDeEstaVersion(destino))
                     {
                         File.WriteAllBytes(destino, QuitarBlanco(File.ReadAllBytes(origen)).EncodeToPNG());
                     }
@@ -83,14 +88,59 @@ namespace MechaCyberpunk.Arte.Editor
             Debug.Log("[Arte] Huecos de bala listos en " + CarpetaDestino + " y " + RutaConfig);
         }
 
-        // Baja a 256 px promediando y quita el fondo blanco: c = a·x + (1 − a)·blanco ⇒ x = (c − (1 − a)) / a.
-        private static Texture2D QuitarBlanco(byte[] png)
+        /// <summary>
+        /// T-851: baja a 256 px y quita el fondo blanco y su halo gris. El contorno oscuro de las astillas encierra el cráter: se rellena desde la
+        /// orilla por lo que no es oscuro (con el contorno engordado <see cref="Engorde"/> px para cerrar huecos); lo que no se alcanza es el
+        /// cráter y queda opaco con su color tal cual (antes las astillas claras salían medio transparentes y el halo como un disco). Afuera solo
+        /// se queda lo bien oscuro (las piedritas), y la orilla se suaviza. Pública para las pruebas.
+        /// </summary>
+        public static Texture2D QuitarBlanco(byte[] png)
         {
             Texture2D fuente = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             fuente.LoadImage(png);
+            Color[] c = Reducir(fuente);
+            Object.DestroyImmediate(fuente);
+            int n = Lado * Lado;
+            float[] oscuro = new float[n];
+            bool[] borde = new bool[n];
+            for (int i = 0; i < n; i++)
+            {
+                oscuro[i] = 1f - Mathf.Min(c[i].r, Mathf.Min(c[i].g, c[i].b));
+                borde[i] = oscuro[i] > UmbralContorno;
+            }
+            bool[] cerrado = Engordar(borde, Engorde);
+            bool[] fuera = RellenarDesdeOrilla(cerrado);
+            bool[] cercaDeFuera = Engordar(fuera, Engorde);
+            Color[] pixeles = new Color[n];
+            for (int i = 0; i < n; i++)
+            {
+                float alfa;
+                if (!fuera[i] && (!cercaDeFuera[i] || borde[i]))
+                {
+                    alfa = 1f;
+                }
+                else if (!fuera[i])
+                {
+                    alfa = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(UmbralHalo, UmbralContorno, oscuro[i]));
+                }
+                else
+                {
+                    alfa = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(UmbralPiedritaMin, UmbralPiedritaMax, oscuro[i]));
+                }
+                alfa *= Redondo(i % Lado, i / Lado);
+                pixeles[i] = alfa > 0.001f ? new Color(c[i].r, c[i].g, c[i].b, alfa) : new Color(0f, 0f, 0f, 0f);
+            }
             Texture2D salida = new Texture2D(Lado, Lado, TextureFormat.RGBA32, true);
+            salida.SetPixels(pixeles);
+            salida.Apply();
+            return salida;
+        }
+
+        // El 70 % del centro, a 256 px, promediando cada bloque.
+        private static Color[] Reducir(Texture2D fuente)
+        {
             int paso = Mathf.Max(1, Mathf.RoundToInt(fuente.width * (1f - 2f * Recorte) / Lado));
-            Color[] pixeles = new Color[Lado * Lado];
+            Color[] salida = new Color[Lado * Lado];
             for (int y = 0; y < Lado; y++)
             {
                 for (int x = 0; x < Lado; x++)
@@ -107,23 +157,89 @@ namespace MechaCyberpunk.Arte.Editor
                             cuantos++;
                         }
                     }
-                    Color c = suma / cuantos;
-                    float blanco = Mathf.Min(c.r, Mathf.Min(c.g, c.b));
-                    float alfa = Mathf.Clamp01((1f - blanco) * GananciaAlfa) * Redondo(x, y);
-                    Color color = alfa > 0.001f
-                        ? new Color(Despegar(c.r, alfa), Despegar(c.g, alfa), Despegar(c.b, alfa), alfa)
-                        : new Color(0f, 0f, 0f, 0f);
-                    pixeles[y * Lado + x] = color;
+                    salida[y * Lado + x] = suma / cuantos;
                 }
             }
-            salida.SetPixels(pixeles);
-            salida.Apply();
-            Object.DestroyImmediate(fuente);
             return salida;
         }
 
-        private static float Despegar(float canal, float alfa) => Mathf.Clamp01((canal - (1f - alfa)) / alfa);
+        private static bool[] Engordar(bool[] mascara, int radio)
+        {
+            bool[] salida = new bool[mascara.Length];
+            for (int y = 0; y < Lado; y++)
+            {
+                for (int x = 0; x < Lado; x++)
+                {
+                    if (!mascara[y * Lado + x])
+                    {
+                        continue;
+                    }
+                    for (int yy = Mathf.Max(0, y - radio); yy <= Mathf.Min(Lado - 1, y + radio); yy++)
+                    {
+                        for (int xx = Mathf.Max(0, x - radio); xx <= Mathf.Min(Lado - 1, x + radio); xx++)
+                        {
+                            salida[yy * Lado + xx] = true;
+                        }
+                    }
+                }
+            }
+            return salida;
+        }
 
+        // Lo que se alcanza desde la orilla de la imagen sin cruzar la máscara.
+        private static bool[] RellenarDesdeOrilla(bool[] muro)
+        {
+            bool[] fuera = new bool[muro.Length];
+            var cola = new System.Collections.Generic.Queue<int>();
+            for (int k = 0; k < Lado; k++)
+            {
+                foreach (int i in new[] { k, (Lado - 1) * Lado + k, k * Lado, k * Lado + Lado - 1 })
+                {
+                    if (!muro[i] && !fuera[i])
+                    {
+                        fuera[i] = true;
+                        cola.Enqueue(i);
+                    }
+                }
+            }
+            while (cola.Count > 0)
+            {
+                int i = cola.Dequeue();
+                int x = i % Lado;
+                int y = i / Lado;
+                Vecino(x + 1, y);
+                Vecino(x - 1, y);
+                Vecino(x, y + 1);
+                Vecino(x, y - 1);
+            }
+            return fuera;
+
+            void Vecino(int x, int y)
+            {
+                if (x < 0 || y < 0 || x >= Lado || y >= Lado)
+                {
+                    return;
+                }
+                int j = y * Lado + x;
+                if (!muro[j] && !fuera[j])
+                {
+                    fuera[j] = true;
+                    cola.Enqueue(j);
+                }
+            }
+        }
+
+        // T-851: los huecos de antes (con el halo) tienen alfa a media distancia entre el cráter y la orilla; los nuevos no. Si es de antes, se rehace.
+        private static bool EsDeEstaVersion(string destino)
+        {
+            Texture2D t = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            t.LoadImage(File.ReadAllBytes(destino));
+            bool nueva = t.width == Lado && t.GetPixel(Lado / 10, Lado / 2).a < 0.05f && t.GetPixel(Lado / 2, Lado / 2).a > 0.95f;
+            Object.DestroyImmediate(t);
+            return nueva;
+        }
+
+        // Se apaga hacia la orilla del cuadro: nunca se ve la esquina del quad.
         private static float Redondo(int x, int y)
         {
             float dx = (x + 0.5f) / Lado - 0.5f;
