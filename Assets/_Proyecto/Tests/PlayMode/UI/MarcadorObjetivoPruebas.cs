@@ -22,6 +22,11 @@ namespace MechaCyberpunk.Tests.UI
     /// </summary>
     public class MarcadorObjetivoPruebas : InputTestFixture
     {
+        private const float FrenteCuarto = 0.55f;
+        private const float SegundosApertura = 1.1f;
+        private const float SegundosTramo = 12f;
+        private const float LlegadaTramo = 0.3f;
+        private const float VelocidadSalida = 2.5f;
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string VariableCaptura = "CAPTURAR_T408";
         private const float AlturaRombo = 2.2f;
@@ -200,23 +205,58 @@ namespace MechaCyberpunk.Tests.UI
             yield return Pulsar(teclado.mKey);
             Assert.IsFalse(mapa.Abierto, "M lo cierra");
 
-            // d. Vuelve a mirar la puerta y sale caminando: el texto cambia a DEFIENDE A DOÑA LUPE.
-            hacia = puerta - jugador.Raiz.position;
-            hacia.y = 0f;
-            jugador.Colocar(new Pose(jugador.Raiz.position, Quaternion.LookRotation(hacia.normalized, Vector3.up)));
-            yield return null;
-            Press(teclado.wKey);
-            finCamino = Time.realtimeSinceStartup + 20f;
-            while (director.Paso == PasoHistoria.Despierta && Time.realtimeSinceStartup < finCamino)
-            {
-                yield return null;
-            }
-            Release(teclado.wKey);
+            // d. Sale caminando por las puertas reales (T-804: puerta del cuarto, pasillo y puerta de la calle, cada una con E):
+            // el texto cambia a DEFIENDE A DOÑA LUPE.
+            yield return SalirDeLaCasa(jugador, () => director.Paso != PasoHistoria.Despierta);
             yield return null;
             yield return null;
             Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso, "Salió de la casa");
             Assert.AreEqual(DirectorPandillas.TextoDefender, hud.TextoObjetivo.text, "El texto cambia a DEFIENDE A DOÑA LUPE");
             Assert.IsTrue(marcador.RomboVisible || marcador.FlechaVisible, "El marcador ahora señala a DOÑA LUPE");
+        }
+
+        // T-804: del cuarto a la banqueta por las dos puertas de la casa, como SalidaCasaPruebas (Progresion): camina con el
+        // CharacterController del jugador y abre cada puerta con IntentarAbrir, que es lo que hace la E.
+        private static IEnumerator SalirDeLaCasa(IJugador jugador, System.Func<bool> listo)
+        {
+            Vector3 cuarto = GameObject.Find("Cuarto_Habitacion").transform.position;
+            IPuerta[] puertas = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.OrderBy(
+                System.Linq.Enumerable.Where(Registro<IPuerta>.Todos, p => p.Lugar == IdLugar.Casa), p => Vector3.Distance(p.Posicion, cuarto)));
+            Assert.AreEqual(2, puertas.Length, "La casa tiene la puerta del cuarto y la de la calle");
+            IPuerta delCuarto = puertas[0];
+            IPuerta calle = puertas[1];
+            Vector3[] tramo1 = { delCuarto.Posicion + Vector3.forward * FrenteCuarto + Vector3.left * 0.9f, delCuarto.Posicion + Vector3.forward * FrenteCuarto };
+            Vector3[] tramo2 = { delCuarto.Posicion + Vector3.back, calle.Posicion + Vector3.left * 1.1f };
+            Vector3[] tramo3 = { calle.Posicion + Vector3.right * 2.5f };
+            foreach ((Vector3[] puntos, IPuerta puerta) paso in new[] { (tramo1, delCuarto), (tramo2, calle), (tramo3, (IPuerta)null) })
+            {
+                foreach (Vector3 destino in paso.puntos)
+                {
+                    yield return CaminarHasta(jugador, destino, listo);
+                }
+                if (listo() || paso.puerta == null)
+                {
+                    yield break;
+                }
+                Assert.AreEqual(ResultadoPuerta.Abierta, paso.puerta.IntentarAbrir(), "Abre la puerta de la casa");
+                yield return new WaitForSeconds(SegundosApertura);
+            }
+        }
+
+        private static IEnumerator CaminarHasta(IJugador jugador, Vector3 destino, System.Func<bool> listo)
+        {
+            CharacterController cc = ((Component)jugador).GetComponent<CharacterController>();
+            float fin = Time.time + SegundosTramo;
+            Vector3 falta = destino - jugador.Raiz.position;
+            falta.y = 0f;
+            while (falta.magnitude > LlegadaTramo && !listo())
+            {
+                Assert.Less(Time.time, fin, "No llegó caminando a " + destino + " (está en " + jugador.Raiz.position + ")");
+                cc.Move(Vector3.ClampMagnitude(falta.normalized * VelocidadSalida * Time.deltaTime, falta.magnitude) + Vector3.down * Time.deltaTime);
+                yield return null;
+                falta = destino - jugador.Raiz.position;
+                falta.y = 0f;
+            }
         }
     }
 }

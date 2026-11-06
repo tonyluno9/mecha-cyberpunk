@@ -57,7 +57,11 @@ namespace MechaCyberpunk.Mundo.Reloj
         {
             GameObject esfera = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             esfera.name = nombre;
-            Object.Destroy(esfera.GetComponent<Collider>());
+            // Se apaga antes de destruirlo: Destroy espera al final del cuadro y en ese cuadro la esfera de 350 m empujaba
+            // fuera de ella al CharacterController de la cámara (la cámara libre empezaba 350 m bajo el piso).
+            Collider colision = esfera.GetComponent<Collider>();
+            colision.enabled = false;
+            Object.Destroy(colision);
             esfera.transform.SetParent(raiz.transform, false);
             esfera.transform.localScale = Vector3.one * radio * 2f;
             MeshRenderer render = esfera.GetComponent<MeshRenderer>();

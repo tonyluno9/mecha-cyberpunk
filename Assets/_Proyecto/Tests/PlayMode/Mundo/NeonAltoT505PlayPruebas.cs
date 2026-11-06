@@ -81,7 +81,11 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsTrue(raiz.activeInHierarchy);
             Assert.GreaterOrEqual(raiz.GetComponentsInChildren<Light>().Count(l => l.enabled), 5);
             Assert.GreaterOrEqual(raiz.GetComponentsInChildren<MeshRenderer>().Count(r => r.enabled && r.name.StartsWith("Niebla_")), 5);
-            Assert.GreaterOrEqual(raiz.GetComponentsInChildren<Renderer>().Count(r => r.enabled && r.transform.root == raiz.transform && r.name == "Pantalla"), 10);
+            // T-541 cambió las torres de bloques de T-505 (con sus quads "Pantalla") por torres del kit con pisos T22 de pantalla.
+            int pantallasT505 = raiz.GetComponentsInChildren<Renderer>().Count(r => r.enabled && r.transform.root == raiz.transform && r.name == "Pantalla");
+            GameObject torres = GameObject.Find("T541_Torres");
+            int pisosPantalla = torres == null ? 0 : torres.GetComponentsInChildren<Transform>().Count(t => t.name.StartsWith("PisoPantalla"));
+            Assert.GreaterOrEqual(pantallasT505 + pisosPantalla, 10, "Pantallas de Neón Alto (T-505 + pisos de pantalla de T-541)");
         }
 
         [UnityTest]
