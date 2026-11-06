@@ -407,3 +407,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-673 (06-nov noche): CTRL agacha/levanta (alterna), lento, SHIFT agachado más rápido, agachado+ESPACIO rueda y sin agacharse no rueda; enemigos pierden vista tras cobertura baja (pecho según cápsula). Rama tony/T-673-agacharse.
 - T-674 (S1 noche): agachado con pose procedural (PoseAgachado): cadera baja, rodillas dobladas, torso recto; quieto, caminando y apuntando.
 - T-675 (S1 noche): sin spam de golpes (espera la animacion), reaccion al dano corta y cortable con golpe o esquive.
+- T-676 (S1 noche): destello chico, disparo siempre igual sin sonidos de impacto, trazo finisimo, sin linea de vista no hay disparo (jugador, SKULLS, dron).

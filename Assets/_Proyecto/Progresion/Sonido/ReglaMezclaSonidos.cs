@@ -116,7 +116,8 @@ namespace MechaCyberpunk.Progresion.Sonido
             if (id == "ARM_DISPARO_LEJANO") return new PoliticaSonido(GrupoArmaEnemiga, 3, 0.6f, 0.05f, 0.05f);
             if (id.EndsWith("_DISPARO", StringComparison.Ordinal))
             {
-                return new PoliticaSonido(GrupoArma, 1, id == "ARM_SNI_DISPARO" ? 0.9f : 0.8f, 0.03f, 0f);
+                // T-676: el disparo suena siempre igual (sin variación de tono; el catálogo también elige siempre el mismo clip).
+                return new PoliticaSonido(GrupoArma, 1, id == "ARM_SNI_DISPARO" ? 0.9f : 0.8f, 0f, 0f);
             }
             if (id.EndsWith("_RECARGA", StringComparison.Ordinal) || id == "ARM_ESC_RECARGA_CARTUCHO")
             {

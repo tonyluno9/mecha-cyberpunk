@@ -19,24 +19,25 @@ MonoBehaviour:
     particulas: 0
   - patada: 1
     desvio: 0.25
-    destello: 0.3
+    destello: 0.14
     particulas: 6
   - patada: 3.2
     desvio: 0.5
-    destello: 0.55
+    destello: 0.26
     particulas: 4
   - patada: 0.6
     desvio: 0.35
-    destello: 0.32
+    destello: 0.16
     particulas: 5
   - patada: 4.5
     desvio: 0.3
-    destello: 0.45
+    destello: 0.22
     particulas: 10
   duracionPatada: 0.18
   topePatada: 5
-  duracionDestello: 0.05
+  duracionDestello: 0.04
   vidaParticula: 0.35
   duracionHitmarker: 0.15
   duracionHitmarkerMuerte: 0.35
   materialEfecto: {fileID: 2100000, guid: 03cb8ae5caa706f41b324ee0d55e0453, type: 2}
+  texturaDestello: {fileID: 0}

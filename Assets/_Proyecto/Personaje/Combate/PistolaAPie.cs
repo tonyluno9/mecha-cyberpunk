@@ -68,6 +68,9 @@ namespace MechaCyberpunk.Personaje.Combate
         private ArsenalJugador arsenal;
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
         private float inicioRetroceso = -100f;
+        private const float PuntaDelArma = 0.5f;
+        private const float MaximaIntensidadLuzBoca = 1.2f;
+        private const float MaximoAlcanceLuzBoca = 2.5f;
         private float finLuz = -1f;
         private ArmaAPie armaRetroceso = ArmaAPie.Pistola;
         private Transform[] marcas;
@@ -132,6 +135,9 @@ namespace MechaCyberpunk.Personaje.Combate
                 if (luces[i] != null)
                 {
                     luces[i].enabled = false;
+                    // T-676: la luz del cañón es apenas un toque (antes bañaba de naranja al personaje).
+                    luces[i].intensity = Mathf.Min(luces[i].intensity, MaximaIntensidadLuzBoca);
+                    luces[i].range = Mathf.Min(luces[i].range, MaximoAlcanceLuzBoca);
                 }
             }
             RevisarArmas();
@@ -365,13 +371,20 @@ namespace MechaCyberpunk.Personaje.Combate
             }
         }
 
-        // Metal: lo que se puede montar (carros) suena distinto al concreto.
-        private static string IdImpactoSinCarne(Collider collider, IRecibeDanio objetivo) =>
-            objetivo is IObjetoInerte || collider.GetComponentInParent<IMontable>() != null ? "ARM_BALA_IMPACTO_METAL" : "ARM_BALA_IMPACTO_CONCRETO";
+        // T-676: sin línea de vista no hay disparo. Si entre el cuerpo del jugador y la boca del arma hay un muro o una barricada
+        // (el arma asoma por el otro lado), la bala pega ahí y no sale.
+        private bool BocaTapada(Vector3 origen, out RaycastHit tapa)
+        {
+            tapa = default;
+            // A la altura de la boca: así agachado tras una cobertura baja se puede disparar por encima de ella.
+            Vector3 cuerpoCentro = new Vector3(transform.position.x, origen.y, transform.position.z);
+            Vector3 hacia = origen - cuerpoCentro;
+            float distancia = hacia.magnitude;
+            return distancia > 0.01f && BuscarImpacto(cuerpoCentro, hacia / distancia, distancia, out tapa);
+        }
 
         private void Disparar(ArmaAPie arma, DatosArma d)
         {
-            bool sonoImpacto = false;
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
             // La escopeta lanza varios perdigones en un cono; la dispersión es el semiángulo del cono.
             Transform camara = desdeCarro && jugadorApie.Camara != null ? jugadorApie.Camara.transform : controlador.Camara;
@@ -400,7 +413,14 @@ namespace MechaCyberpunk.Personaje.Combate
             float multiplicadorGuarida = 1f + (guarida != null ? guarida.BonoDanioArmas : 0f);
             Sonidos.ReproducirEn(IdDisparo(arma), origen);
             EventosRuido.PublicarDisparo(origen);
-            for (int i = 0; i < d.Perdigones; i++)
+            RaycastHit tapa = default;
+            bool tapada = !desdeCarro && BocaTapada(origen, out tapa);
+            if (tapada)
+            {
+                Vector3 haciaTapa = (origen - tapa.point).normalized;
+                Impactar(arma, d.Danio * multiplicadorGuarida, tapa, haciaTapa);
+            }
+            for (int i = 0; i < (tapada ? 0 : d.Perdigones); i++)
             {
                 Vector3 direccion = direccionBase;
                 if (cono > 0f)
@@ -413,20 +433,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 if (BuscarImpacto(origen, direccion, d.Alcance, out RaycastHit mejor))
                 {
-                    IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
-                    bool mato = false;
-                    bool esCarne = objetivo != null && !(objetivo is IObjetoInerte);
-                    if (objetivo != null)
-                    {
-                        mato = objetivo.RecibirDanio(new InfoDanio(d.Danio * multiplicadorGuarida, TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
-                    }
-                    BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato));
-                    if (!sonoImpacto)
-                    {
-                        sonoImpacto = true;
-                        Sonidos.ReproducirEn(esCarne ? "ARM_BALA_IMPACTO_CARNE" : IdImpactoSinCarne(mejor.collider, objetivo), mejor.point);
-                    }
-                    PonerMarca(mejor.point, mejor.normal);
+                    Impactar(arma, d.Danio * multiplicadorGuarida, mejor, direccion);
                 }
             }
 
@@ -435,8 +442,24 @@ namespace MechaCyberpunk.Personaje.Combate
             inicioRetroceso = Time.time;
             armaRetroceso = arma;
             finLuz = Time.time + duracionLuz;
-            Fogonazo?.Invoke(arma, origen);
+            // El destello sale en la punta del arma (la luz del cañón queda un poco más adelante que el arma en la mano).
+            Vector3 puntaArma = !desdeCarro && visualArma != null && luz != null ? Vector3.Lerp(visualArma.position, luz.transform.position, PuntaDelArma) : origen;
+            Fogonazo?.Invoke(arma, puntaArma);
             Disparo?.Invoke();
+        }
+
+        // Daño, efectos y marca de una bala que pegó. T-676: no suena nada al impactar (el disparo suena siempre igual).
+        private void Impactar(ArmaAPie arma, float danio, RaycastHit mejor, Vector3 direccion)
+        {
+            IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
+            bool mato = false;
+            bool esCarne = objetivo != null && !(objetivo is IObjetoInerte);
+            if (objetivo != null)
+            {
+                mato = objetivo.RecibirDanio(new InfoDanio(danio, TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
+            }
+            BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato));
+            PonerMarca(mejor.point, mejor.normal);
         }
 
         // El primer collider que no sea del propio jugador; los triggers se ignoran.

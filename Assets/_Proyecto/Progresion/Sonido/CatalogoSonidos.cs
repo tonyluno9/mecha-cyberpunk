@@ -170,6 +170,8 @@ namespace MechaCyberpunk.Progresion.Sonido
                 clips = ReglaCatalogoSonidos.Efectivos<AudioClip>(entrada.finales, entrada.provisionales);
             }
             if (clips == null || clips.Count == 0) return null;
+            // T-676: el disparo de cada arma es siempre el mismo clip.
+            if (id.EndsWith("_DISPARO", System.StringComparison.Ordinal)) return clips[0];
             int previo = ultimo.TryGetValue(id, out int guardado) ? guardado : -1;
             int indice = ReglaCatalogoSonidos.ElegirVariante(clips.Count, previo, () => (float)azar.NextDouble());
             ultimo[id] = indice;
