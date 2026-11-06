@@ -112,9 +112,9 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         // El jugador aparece frente al personaje (donde mira el personaje), mirándolo, y espera un momento.
-        private IEnumerator PonerFrente(IJugador jugador, PersonajeApoyo p, float distancia = DistanciaFrente)
+        private IEnumerator PonerFrente(IJugador jugador, PersonajeApoyo p, float distancia = DistanciaFrente, Vector3? direccion = null)
         {
-            Vector3 frente = p.transform.position + p.transform.forward * distancia;
+            Vector3 frente = p.transform.position + (direccion ?? p.transform.forward) * distancia;
             if (Physics.Raycast(frente + Vector3.up * 3f, Vector3.down, out RaycastHit piso, 6f))
             {
                 frente = piso.point;
@@ -215,7 +215,8 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // b. EL DOC: vida 40 y Ƀ500 -> vida máxima y Ƀ450 (Ƀ50 de cobro).
             PersonajeApoyo doc = Personaje("doc");
-            yield return PonerFrente(jugador, doc);
+            // T-812a: frente al Doc está la silla (I07): el jugador se para a su lado, donde el Doc queda más cerca que la silla.
+            yield return PonerFrente(jugador, doc, DistanciaFrente, doc.transform.right);
             Assert.IsTrue(doc.PuedeUsar);
             StringAssert.Contains("CURARTE", doc.Texto);
             yield return Pulsar(teclado.eKey);
@@ -226,7 +227,8 @@ namespace MechaCyberpunk.Tests.Progresion
                 // Frente al Doc, la silla (a ~1 m) puede ganar la E: entonces ya empezó a curar.
                 if (!silla.EnSecuencia)
                 {
-                    StringAssert.Contains(silla.Config.FraseDoc, doc.UltimoTexto, "El Doc te manda a la silla");
+                    StringAssert.Contains(silla.Config.FraseDoc, doc.UltimoTexto, "El Doc te manda a la silla (jugador en " + jugador.Raiz.position
+                        + ", candidato " + ((Component)jugador).GetComponentInChildren<MechaCyberpunk.Personaje.Interaccion.InteraccionAPie>().InteractuableCandidato + ")");
                     Assert.Less(vida.Actual, vida.Maxima, "De palabra ya no cura");
                     Assert.IsTrue(silla.PuedeUsar, "La silla se ofrece");
                     silla.Usar();
@@ -253,7 +255,8 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // d. EL INVENTOR: la tienda con 15 mejoras y ninguna arma; Esc la cierra.
             PersonajeApoyo inventor = Personaje("inventor");
-            yield return PonerFrente(jugador, inventor, 2.2f);
+            // T-811: frente a Tino (1.3 m), más cerca que el punto de uso del banco que tiene a su derecha.
+            yield return PonerFrente(jugador, inventor, 1.3f);
             // T-814: con el banco de armas en el CIC (ColocarS2nBancoArmas), Tino ya no abre la tienda: te manda al banco.
             BancoArmas bancoArmas = Object.FindFirstObjectByType<BancoArmas>();
             if (bancoArmas != null)

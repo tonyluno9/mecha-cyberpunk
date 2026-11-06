@@ -38,6 +38,24 @@ namespace MechaCyberpunk.Arte.Editor
             FotosMenus();
         }
 
+        /// <summary>Desde la entrada del CIC, como la referencia (vano al frente, pizarrón al fondo, tablero de herramientas a la izquierda).</summary>
+        public static readonly Vector3 OjoCic = new Vector3(-72.4f, 1.95f, 10.5f);
+        public static readonly Vector3 MiraCic = new Vector3(-73.6f, 1.05f, 15.6f);
+
+        /// <summary>T-811: rehace el CIC de Tino, vuelve a poner el banco de armas, revisa y saca la foto lado a lado.</summary>
+        [MenuItem("Mecha Cyberpunk/S2n/CIC de Tino (T-811)")]
+        public static void ColocarCic()
+        {
+            ColocarS2.Informe.Clear();
+            ColocarS2.Abrir();
+            ColocarS2Interiores.RehacerTallerTino();
+            ColocarS2.Guardar("s2n-cic");
+            ColocarS2nBancoArmas.Colocar();
+            Revisar();
+            ColocarS2.Foto(OjoCic, MiraCic, "Logs/s2n-cic-juego.png", 78f, 60f);
+            ColocarS2.LadoALado("docs/referencias-interiores/taller-tino.png", "Logs/s2n-cic-juego.png", "docs/capturas/s2n-cic-tino.png");
+        }
+
         [MenuItem("Mecha Cyberpunk/S2n/Interiores: revisar encimados y flotantes")]
         public static void Revisar()
         {
@@ -249,7 +267,7 @@ namespace MechaCyberpunk.Arte.Editor
             hacia.y = 0f;
             GameObject jugador = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugador));
             jugador.transform.SetPositionAndRotation(punto, Quaternion.LookRotation(hacia.sqrMagnitude > 0.001f ? hacia.normalized : Vector3.forward));
-            Vector3 camara = punto - hacia.normalized * 2.2f + Vector3.up * 1.7f + Vector3.Cross(Vector3.up, hacia.normalized) * 1.2f;
+            Vector3 camara = punto - hacia.normalized * 1.5f + Vector3.up * 1.65f + Vector3.Cross(Vector3.up, hacia.normalized) * 0.9f;
             ColocarS2.Foto(camara, banco.transform.position, ruta, 60f, 50f);
             Debug.Log("[Arte] banco: punto de uso " + punto.ToString("F2") + " banco " + banco.transform.position.ToString("F2"));
             Object.DestroyImmediate(jugador);
