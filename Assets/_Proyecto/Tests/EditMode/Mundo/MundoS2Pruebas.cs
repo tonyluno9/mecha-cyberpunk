@@ -194,5 +194,24 @@ namespace MechaCyberpunk.Tests.Mundo
                 Assert.IsTrue(pegado, t.name + " estorba en el centro del callejón (ruta de la demo)");
             }
         }
+
+        [Test]
+        public void CallesDeSalida_CadaEdificioVestidoConElKit_ConLodYSinTocarLaCalle()
+        {
+            Transform afueras = escena.GetRootGameObjects().First(g => g.name == "T530_Afueras").transform;
+            Transform calles = escena.GetRootGameObjects().First(g => g.name == "S2_Calles").transform;
+            int edificios = afueras.GetComponentsInChildren<Transform>(true).Count(t => t.name == "Edificio");
+            LODGroup[] kits = calles.GetComponentsInChildren<LODGroup>(true);
+            Assert.AreEqual(edificios, kits.Length, "cada cubo de las salidas lleva su kit");
+            foreach (LODGroup lod in kits)
+            {
+                LOD[] lods = lod.GetLODs();
+                Assert.AreEqual(2, lods.Length, lod.name);
+                Assert.Greater(lods[0].renderers.Length, 5, lod.name + ": de cerca se ve el kit (planta baja, pisos, cornisa)");
+                Assert.IsTrue(lods[0].renderers.Any(r => r.name.StartsWith("C0") || r.transform.parent.name.StartsWith("C0")), lod.name + " con locales o viviendas en la planta baja");
+            }
+            Assert.IsEmpty(calles.GetComponentsInChildren<Collider>(true), "el kit no estorba: las calles y colisiones son las de T-530");
+            Assert.Greater(calles.GetComponentsInChildren<LineRenderer>(true).Length, 20, "cables cruzando las calles");
+        }
     }
 }
