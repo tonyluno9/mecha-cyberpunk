@@ -401,3 +401,4 @@ se quedó en 299 s de 300; al repetir pasó. Esa pelea va justa desde que entrar
 
 Pendiente: medir FPS de las salidas en el build de medición; tono del consultorio más verde que la referencia; la falla previa
 ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
+- T-670 (06-nov noche): jugador y NPC a 1.80 m; ColocarS2.Escala con alturas medidas por BakeMesh; CubiertaYRodada conserva la escala del Modelo; pasos escalan con el modelo. Rama tony/T-670-escala-jugador.
