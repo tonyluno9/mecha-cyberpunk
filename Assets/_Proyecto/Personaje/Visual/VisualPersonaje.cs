@@ -186,7 +186,15 @@ namespace MechaCyberpunk.Personaje.Visual
         public bool Agachado
         {
             get => agachado;
-            set { agachado = value; Aplicar(); }
+            set
+            {
+                agachado = value;
+                if (value && animador != null && animador.isHuman && animador.GetComponent<PoseAgachado>() == null)
+                {
+                    animador.gameObject.AddComponent<PoseAgachado>();
+                }
+                Aplicar();
+            }
         }
 
         /// <summary>Sentado al volante de un carro (T-622): el estado CarroManejar. Quitarlo lo para de nuevo.</summary>
@@ -374,7 +382,7 @@ namespace MechaCyberpunk.Personaje.Visual
             segundosGestoPendiente = Mathf.Max(0f, segundosGestoPendiente - dt);
             segundosPitarPendiente = Mathf.Max(0f, segundosPitarPendiente - dt);
             // Sentado al volante la capa de arriba solo se usa para pitar (los brazos al claxon); si no, taparía el volante con la pose del arma.
-            float objetivo = cubierto || caido || agachado || viendoTelefono || EnGesto ? 0f : 1f;
+            float objetivo = cubierto || caido || (agachado && !apuntando) || viendoTelefono || EnGesto ? 0f : 1f;
             if (manejando)
             {
                 objetivo = Pitando ? 1f : 0f;
