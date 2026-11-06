@@ -146,6 +146,59 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/s2t-diag-cables.txt", sb.ToString());
         }
 
+        public static void Espejo()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (MonoBehaviour m in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(m => m != null && m.GetType().Name == "EspejoJugador"))
+            {
+                sb.AppendLine("EspejoJugador: " + Ruta(m.transform) + " activo " + m.gameObject.activeInHierarchy + " p" + m.transform.position.ToString("F2") + " r" + m.transform.eulerAngles.ToString("F0"));
+                foreach (Renderer r in m.GetComponentsInChildren<Renderer>(true))
+                {
+                    sb.AppendLine("   " + Ruta(r.transform) + " en " + r.enabled + " c" + r.bounds.center.ToString("F2") + " s" + r.bounds.size.ToString("F2") + " " + (r.sharedMaterial != null ? r.sharedMaterial.name : "-"));
+                }
+            }
+            foreach (Transform t in ColocarS2.Todos().Where(t => t.name.Contains("H03") || t.name.Contains("Espejo")))
+            {
+                Renderer r = t.GetComponentInChildren<Renderer>();
+                sb.AppendLine(Ruta(t) + " activo " + t.gameObject.activeInHierarchy + " p" + t.position.ToString("F2") + " r" + t.eulerAngles.ToString("F0") + (r != null ? " c" + r.bounds.center.ToString("F2") + " s" + r.bounds.size.ToString("F2") : ""));
+            }
+            File.WriteAllText("Logs/s2t-diag-espejo.txt", sb.ToString());
+        }
+
+        public static void LucesPostes()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (Transform p in PostesS2t.Postes().Where(p => p.name.StartsWith("N09")).Take(3).Concat(PostesS2t.Postes().Take(2)))
+            {
+                MeshFilter mf = PostesS2t.ModeloVisible(p);
+                var cab = PostesS2t.Cabezas(mf.sharedMesh, mf.transform.localToWorldMatrix);
+                sb.AppendLine(Ruta(p) + " modelo " + AssetDatabase.GetAssetPath(mf.sharedMesh) + " cabezas " + string.Join(" ", cab.Select(c => c.ToString("F2"))));
+                foreach (Light l in p.GetComponentsInChildren<Light>(true))
+                {
+                    var d = l.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalLightData>();
+                    sb.AppendLine("   luz " + l.name + " en " + l.enabled + "/" + l.gameObject.activeInHierarchy + " " + l.type + " p" + l.transform.position.ToString("F2") + " r" + l.transform.eulerAngles.ToString("F0")
+                        + " int " + l.intensity + " rango " + l.range + " ang " + l.spotAngle + " sombras " + l.shadows + " modo " + l.lightmapBakeType + " capas " + (d != null ? ((uint)d.renderingLayers).ToString("X") : "-")
+                        + " culling " + l.cullingMask + " comps " + string.Join(",", l.GetComponents<MonoBehaviour>().Select(m => m.GetType().Name)));
+                }
+            }
+            File.WriteAllText("Logs/s2t-diag-lucespostes.txt", sb.ToString());
+        }
+
+        public static void N09()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (Transform t in ColocarS2.Todos().Where(t => t.name.StartsWith("N09")))
+            {
+                MeshFilter mf = t.GetComponentInChildren<MeshFilter>(true);
+                Renderer r = mf != null ? mf.GetComponent<Renderer>() : null;
+                sb.AppendLine(Ruta(t) + " activo " + t.gameObject.activeInHierarchy + " malla " + (mf != null && mf.sharedMesh != null ? AssetDatabase.GetAssetPath(mf.sharedMesh) : "-") + " render " + (r != null && r.enabled));
+            }
+            File.WriteAllText("Logs/s2t-diag-n09.txt", sb.ToString());
+        }
+
         public static void Todo()
         {
             Postes();

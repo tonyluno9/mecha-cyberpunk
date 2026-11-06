@@ -38,6 +38,16 @@ namespace MechaCyberpunk.Arte.Editor
                 ciclo.Aplicar(hora);
                 ColocarS2nCielo.SeguirNoche();
             }
+            // En el juego LuzNocturna prende de noche las farolas y los letreros; en el editor no corre: se prenden para la foto.
+            bool noche = hora >= 19f || hora < 6f;
+            foreach (Mundo.Reloj.LuzNocturna ln in Object.FindObjectsByType<Mundo.Reloj.LuzNocturna>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                Light l = new SerializedObject(ln).FindProperty("luz").objectReferenceValue as Light;
+                if (l != null)
+                {
+                    l.enabled = noche;
+                }
+            }
             ColocarS2.Foto(desde, hacia, ruta, campo);
         }
 
