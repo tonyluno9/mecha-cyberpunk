@@ -59,7 +59,8 @@ namespace MechaCyberpunk.Progresion.Apoyo
             Vector3 muslo = frente + arriba * 0.08f;
             Orientar(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg, muslo);
             Orientar(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg, muslo);
-            Vector3 pierna = frente * 0.85f + abajo * 0.35f;
+            // Las espinillas casi horizontales: en el sillón I07 el cojín sigue bajo los pies y una pierna caída lo atraviesa.
+            Vector3 pierna = frente * 0.95f + abajo * 0.12f;
             Orientar(HumanBodyBones.LeftLowerLeg, HumanBodyBones.LeftFoot, pierna);
             Orientar(HumanBodyBones.RightLowerLeg, HumanBodyBones.RightFoot, pierna);
             Vector3 brazo = abajo * 0.85f + frente * 0.3f;

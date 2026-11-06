@@ -5,6 +5,7 @@ using System.IO;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
+using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.UI.Armas;
 using MechaCyberpunk.UI.Historia;
 using MechaCyberpunk.UI.Tiendas;
@@ -34,12 +35,23 @@ namespace MechaCyberpunk.Tests.Progresion
         private const float DistanciaFrente = 1.6f;
 
         private Keyboard teclado;
+        private Mouse raton;
 
+        // MapasDeAccionesDePrueba: si otra prueba de la escena corrió antes, los .inputactions se quedan con su teclado y aquí no se ve la E.
         public override void Setup()
         {
+            InputSystem.DisableAllEnabledActions();
             base.Setup();
             teclado = InputSystem.AddDevice<Keyboard>();
-            InputSystem.AddDevice<Mouse>();
+            raton = InputSystem.AddDevice<Mouse>();
+            MapasDeAccionesDePrueba.Reiniciar(teclado, raton);
+        }
+
+        public override void TearDown()
+        {
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado, raton);
+            base.TearDown();
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         [UnityTearDown]
@@ -219,6 +231,28 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsTrue(doc.PuedeUsar);
             StringAssert.Contains("CURARTE", doc.Texto);
             yield return Pulsar(teclado.eKey);
+            // T-813: con la silla en el consultorio (ColocarS2nSillaClinica), EL DOC te manda a sentarte y la silla cobra y cura.
+            SillaClinica silla = SillaClinica.Actual;
+            // Si la historia dejó un regalo en EL DOC, la E lo cura gratis; si no, te manda a la silla.
+            if (silla != null && silla.isActiveAndEnabled && vida.Actual < vida.Maxima)
+            {
+                // Frente al Doc, la silla (a ~1 m) puede ganar la E: entonces ya empezó a curar.
+                if (!silla.EnSecuencia)
+                {
+                    StringAssert.Contains(silla.Config.FraseDoc, doc.UltimoTexto, "El Doc te manda a la silla (jugador en " + jugador.Raiz.position
+                        + ", candidato " + ((Component)jugador).GetComponentInChildren<MechaCyberpunk.Personaje.Interaccion.InteraccionAPie>().InteractuableCandidato
+                        + ", regalo " + doc.TieneRegalo + ", aviso del Doc '" + doc.Texto + "' " + doc.PuedeUsar + ", silla '" + silla.Texto + "', vida " + vida.Actual + ")");
+                    Assert.Less(vida.Actual, vida.Maxima, "De palabra ya no cura");
+                    Assert.IsTrue(silla.PuedeUsar, "La silla se ofrece");
+                    silla.Usar();
+                }
+                float finSilla = Time.realtimeSinceStartup + silla.Config.Duracion + 5f;
+                while ((silla.EnSecuencia || vida.Actual < vida.Maxima) && Time.realtimeSinceStartup < finSilla)
+                {
+                    yield return null;
+                }
+                yield return null;
+            }
             Assert.AreEqual(vida.Maxima, vida.Actual, 0.5f, "El Doc deja la vida al máximo");
             Assert.AreEqual(450, cartera.Dinero, "El Doc cobra Ƀ50");
             Assert.AreEqual("ESTÁS BIEN, MIJO", doc.Texto, "Con la vida llena dice que estás bien");
@@ -234,7 +268,8 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // d. EL INVENTOR: la tienda con 15 mejoras y ninguna arma; Esc la cierra.
             PersonajeApoyo inventor = Personaje("inventor");
-            yield return PonerFrente(jugador, inventor, 2.2f);
+            // T-811: frente a Tino (1.3 m), más cerca que el punto de uso del banco que tiene a su derecha.
+            yield return PonerFrente(jugador, inventor, 1.3f);
             // T-814: con el banco de armas en el CIC (ColocarS2nBancoArmas), Tino ya no abre la tienda: te manda al banco.
             BancoArmas bancoArmas = Object.FindFirstObjectByType<BancoArmas>();
             if (bancoArmas != null)
