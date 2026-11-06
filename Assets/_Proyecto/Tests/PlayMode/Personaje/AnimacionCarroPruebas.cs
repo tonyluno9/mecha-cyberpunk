@@ -117,7 +117,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(jugadorAPie.Subir(montable));
             float t0 = Time.time;
             yield return Hasta(() => anim.Fase == AnimacionCarro.FaseCarro.Dentro, "termina de entrar", 8f);
-            Assert.Less(Time.time - t0, 2.2f, "Subir al carro toma menos de 2.2 s (el clip original dura 5.5 s)");
+            Assert.Less(Time.time - t0, 2.6f, "Subir al carro toma menos de 2.6 s (acercarse a la puerta + el clip, que originalmente dura 5.5 s)");
             Assert.IsTrue(jugadorAPie.Bajar());
             t0 = Time.time;
             yield return Hasta(() => anim.Fase == AnimacionCarro.FaseCarro.Fuera, "termina de salir", 8f);

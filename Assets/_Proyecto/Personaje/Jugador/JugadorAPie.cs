@@ -294,7 +294,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             MontableActual = null;
             if (animacionCarro != null)
             {
-                animacionCarro.Bajar();
+                animacionCarro.Bajar(montable, salida);
             }
             Colocar(salida);
             controladorAPie.enabled = true;

@@ -20,5 +20,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public float AgarreLateral;
         public float FactorAgarreFrenoMano;
         public float GananciaEstacionamiento;
+        /// <summary>Segundos que se queda parado el carro al cambiar de sentido (de adelante a atrás o al revés) antes de empujar (s). 0 desactiva la espera.</summary>
+        public float EsperaCambioSentido;
+        /// <summary>Segundos que tarda el motor en llegar a toda su fuerza al arrancar en reversa o tras cambiar de sentido (s). 0 desactiva la rampa.</summary>
+        public float RampaMarcha;
     }
 }

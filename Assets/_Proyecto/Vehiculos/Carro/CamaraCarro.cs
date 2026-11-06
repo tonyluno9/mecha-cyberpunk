@@ -35,6 +35,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private Vector3 posicionTercera;
         private float yawOrbita;
         private float inclinacionOrbita;
+        private float rumbo;
+        private float velocidadRumbo;
 
         /// <summary>True si la vista actual es tercera persona.</summary>
         public bool EsTerceraPersona { get; private set; } = true;
@@ -220,9 +222,17 @@ namespace MechaCyberpunk.Vehiculos.Carro
         {
             Transform t = carro.transform;
             Vector3 foco = t.position + Vector3.up * AlturaFocoActual;
+            // T-658: el rumbo con el que se coloca la cámara sigue al del carro con un pequeño retraso (no gira de golpe al dar reversa o maniobrar).
+            float rumboCarro = t.eulerAngles.y;
+            rumbo = deGolpe ? rumboCarro : Mathf.SmoothDampAngle(rumbo, rumboCarro, ref velocidadRumbo, config.TiempoRumbo, Mathf.Infinity, Time.deltaTime);
+            if (deGolpe)
+            {
+                velocidadRumbo = 0f;
+            }
+            Vector3 frenteCamara = Quaternion.Euler(0f, rumbo, 0f) * Vector3.forward;
             float kmh = cuerpo != null ? cuerpo.linearVelocity.magnitude * 3.6f : 0f;
             float distanciaOrbita = CalculoCamaraCarro.DistanciaPorRapidez(DistanciaAtrasActual, config.DistanciaExtraVelocidad, kmh, config.KmhDistanciaExtra);
-            Vector3 ideal = CalculoCamaraCarro.PosicionOrbita(foco, t.forward, distanciaOrbita, yawOrbita, inclinacionOrbita);
+            Vector3 ideal = CalculoCamaraCarro.PosicionOrbita(foco, frenteCamara, distanciaOrbita, yawOrbita, inclinacionOrbita);
             float paso = deGolpe ? 1f : 1f - Mathf.Exp(-config.Suavidad * Time.deltaTime);
             posicionTercera = deGolpe ? ideal : Vector3.Lerp(posicionTercera, ideal, paso);
 
