@@ -163,7 +163,7 @@ namespace MechaCyberpunk.Tests.Trafico
                     anterior[i] = p;
                 }
             }
-            Assert.LessOrEqual(maximoPorCuadro, config.Crear().Paso(false, 1000f, 1f) * 1.3f + 1f, "Nunca se mueve más rápido que su velocidad: viene manejando");
+            Assert.LessOrEqual(maximoPorCuadro, config.Crear().Paso(false, 1000f, 1f) * 1.7f, "Nunca se mueve mucho más rápido que su velocidad (con el cambio de carril en las esquinas): viene manejando, no aparece de golpe");
             float cerca = float.MaxValue;
             for (int i = 0; i < patrullas.Length; i++)
             {

@@ -27,7 +27,7 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float AlturaCalles = 0.2f;
         private const float SegundosDeJuego = 60f;
         private const float EscalaDeTiempo = 5f;
-        private const float ToleranciaDeCalle = 0.05f;
+        private const float ToleranciaDeCalle = 2f; // T-666: va por su carril, a 1.6 m del eje de la calle (la calle mide 14 m)
         private const float MetrosMinimosRecorridos = 20f;
         private const int FramesDeEspera = 3;
         private const float DistanciaDeCaptura = 25f;

@@ -34,6 +34,21 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float AlcanceCamara = 400f;
         private const float SegundosMinimosDeRetiro = 1f;
         private static readonly List<PatrullaMundo> ActivasLista = new List<PatrullaMundo>();
+        // T-666: conducción natural: carril a la derecha, esquiva obstáculos y no se encima con otras patrullas.
+        private const float AnchoCarril = 1.6f;
+        private const float VelocidadCarril = 4.5f;
+        private const float DistanciaObstaculo = 14f;
+        private const float RadioObstaculo = 0.7f;
+        private const float AlturaObstaculo = 1.4f;
+        private const float DistanciaFrenoPatrullas = 12f;
+        private const float DistanciaMinimaEntrePatrullas = 5f;
+        private const float AnchoDePasoPatrullas = 2.8f;
+        private const float FactorObstaculoTotal = 0.15f;
+        private const float RapidezDeFreno = 3f;
+        private static readonly float[] GradosParaEsquivar = { 35f, -35f, 70f, -70f, 105f, -105f };
+        private static readonly RaycastHit[] impactos = new RaycastHit[16];
+        private float factorVelocidad = 1f;
+        private float desvioCarril;
         private int bucleSirena = Sonidos.SinBucle;
         private float proximoMegafono;
 
@@ -142,7 +157,20 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return DistanciaPlano(posicion, punto) <= config.RadioVista && Testigos.LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, punto);
         }
 
+        // T-666: frena si hay otra patrulla delante o un obstáculo cerrando los dos carriles; Conducir usa ese factor como si el tiempo corriera más lento.
         private void Update()
+        {
+            if (calculo == null)
+            {
+                return;
+            }
+            float dtReal = Time.deltaTime;
+            factorVelocidad = Mathf.MoveTowards(factorVelocidad, FactorDeFreno(), RapidezDeFreno * dtReal);
+            Conducir();
+            AplicarCarril(dtReal);
+        }
+
+        private void Conducir()
         {
             if (calculo == null)
             {
@@ -151,7 +179,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3? jugador = posicionJugador?.Invoke();
             if (Retirando)
             {
-                Retirada(jugador, Time.deltaTime);
+                Retirada(jugador, Time.deltaTime * factorVelocidad);
                 return;
             }
             Sirena();
@@ -159,11 +187,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
-            float dt = Time.deltaTime;
+            float dt = Time.deltaTime * factorVelocidad;
             float distanciaReal = DistanciaPlano(posicion, jugador.Value);
             bool libre = CaminoLibre(jugador.Value, distanciaReal, AlturaVista);
             VeAlJugador = distanciaReal <= config.RadioVista && CaminoLibre(jugador.Value, distanciaReal, AlturaOjos);
-            MedirVelocidad(jugador.Value, dt);
+            MedirVelocidad(jugador.Value, Time.deltaTime);
             if (VeAlJugador)
             {
                 ultimaVista = jugador.Value;
@@ -244,7 +272,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             hacia.y = 0f;
             if (hacia.sqrMagnitude > 0.0001f)
             {
-                Vector3 direccion = hacia.normalized;
+                Vector3 direccion = Esquivar(hacia.normalized); // T-666: rodea lo que le tapa el paso
                 if (rastro.Count == 0 || Vector3.Distance(rastro[rastro.Count - 1], posicion) >= DistanciaEntreMigas)
                 {
                     if (rastro.Count >= MaximoDeMigas)
@@ -340,6 +368,120 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 restante = 0f;
             }
             transform.position = posicion;
+        }
+
+        // ---- T-666: conducción más natural ----
+
+        // Va por su carril (a la derecha de la calle), lo cambia al otro lado si algo le tapa el carril y no se encima con otras patrullas.
+        private void AplicarCarril(float dt)
+        {
+            bool enCalle = !VaDirecto && rastro.Count == 0;
+            float meta = enCalle ? ElegirCarril() : 0f;
+            if (!enCalle)
+            {
+                ObstaculoTotal = false;
+            }
+            desvioCarril = Mathf.MoveTowards(desvioCarril, meta, VelocidadCarril * dt);
+            transform.position = posicion + transform.right * desvioCarril;
+        }
+
+        /// <summary>Metros que se separa de la línea central de la calle: positivo a la derecha, negativo a la izquierda.</summary>
+        public float DesvioCarril => desvioCarril;
+
+        /// <summary>True si algo tapa los dos carriles y la patrulla frena.</summary>
+        public bool ObstaculoTotal { get; private set; }
+
+        private float ElegirCarril()
+        {
+            Vector3 adelante = transform.forward;
+            adelante.y = 0f;
+            if (adelante.sqrMagnitude < 0.01f)
+            {
+                return AnchoCarril;
+            }
+            adelante.Normalize();
+            Vector3 derecha = transform.right;
+            bool libreDerecha = !HayObstaculo(posicion + derecha * AnchoCarril, adelante, DistanciaObstaculo);
+            bool libreIzquierda = !HayObstaculo(posicion - derecha * AnchoCarril, adelante, DistanciaObstaculo);
+            ObstaculoTotal = !libreDerecha && !libreIzquierda;
+            return libreDerecha || ObstaculoTotal ? AnchoCarril : -AnchoCarril;
+        }
+
+        // Un cilindro de RadioObstaculo m hacia delante; no cuentan los triggers, el jugador, los peatones ni las patrullas.
+        private bool HayObstaculo(Vector3 desde, Vector3 direccion, float distancia)
+        {
+            Vector3 origen = desde + Vector3.up * AlturaObstaculo;
+            int cuantos = Physics.SphereCastNonAlloc(origen, RadioObstaculo, direccion, impactos, distancia, ~0, QueryTriggerInteraction.Ignore);
+            IJugador jugador = Registro<IJugador>.Actual;
+            Transform raizJugador = jugador != null ? jugador.Raiz : null;
+            for (int i = 0; i < cuantos; i++)
+            {
+                Collider c = impactos[i].collider;
+                if (c.GetComponentInParent<PatrullaMundo>() != null || c.GetComponentInParent<Peatones.PeatonMundo>() != null
+                    || (raizJugador != null && c.transform.IsChildOf(raizJugador)))
+                {
+                    continue;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        // De cerca y fuera de la calle: si algo le tapa la línea al jugador, prueba hacia los lados hasta encontrar paso.
+        private Vector3 Esquivar(Vector3 direccion)
+        {
+            if (!HayObstaculo(posicion, direccion, DistanciaObstaculo))
+            {
+                return direccion;
+            }
+            foreach (float grados in GradosParaEsquivar)
+            {
+                Vector3 candidata = Quaternion.AngleAxis(grados, Vector3.up) * direccion;
+                if (!HayObstaculo(posicion, candidata, DistanciaObstaculo))
+                {
+                    return candidata;
+                }
+            }
+            return direccion;
+        }
+
+        // 1 si puede ir a toda velocidad; menos si hay otra patrulla delante (la de atrás frena y se queda a DistanciaMinimaEntrePatrullas)
+        // o, en un cruce de caminos, la que tiene menos prioridad cede; 0.15 si un obstáculo le cierra los dos carriles.
+        private float FactorDeFreno()
+        {
+            float factor = ObstaculoTotal ? FactorObstaculoTotal : 1f;
+            Vector3 adelante = transform.forward;
+            adelante.y = 0f;
+            for (int i = 0; i < ActivasLista.Count; i++)
+            {
+                PatrullaMundo otra = ActivasLista[i];
+                if (otra == null || otra == this)
+                {
+                    continue;
+                }
+                Vector3 d = otra.transform.position - transform.position;
+                d.y = 0f;
+                float distancia = d.magnitude;
+                if (distancia > DistanciaFrenoPatrullas)
+                {
+                    continue;
+                }
+                Vector3 haciaOtra = distancia > 0.001f ? d / distancia : adelante;
+                bool delante = Vector3.Dot(haciaOtra, adelante) > 0.2f;
+                float cruce = Vector3.Dot(adelante, otra.transform.forward);
+                bool mismoSentido = cruce > 0.3f;
+                bool tieneLaPrioridad = otra.GetInstanceID() < GetInstanceID();
+                float lado = Mathf.Abs(Vector3.Dot(d, transform.right));
+                bool enMiCamino = delante && lado < AnchoDePasoPatrullas;
+                bool cruceDeCaminos = Mathf.Abs(cruce) <= 0.3f;
+                bool cede = (enMiCamino && mismoSentido) || (cruceDeCaminos && distancia < DistanciaMinimaEntrePatrullas * 1.6f && tieneLaPrioridad);
+                if (cede)
+                {
+                    float t = Mathf.Clamp01((distancia - DistanciaMinimaEntrePatrullas) / (DistanciaFrenoPatrullas - DistanciaMinimaEntrePatrullas));
+                    factor = Mathf.Min(factor, t);
+                }
+            }
+            return factor;
         }
 
         private void Sirena()
