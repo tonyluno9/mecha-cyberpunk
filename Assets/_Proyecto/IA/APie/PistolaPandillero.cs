@@ -19,10 +19,12 @@ namespace MechaCyberpunk.IA.APie
         [SerializeField] private LineRenderer laser;
         [Tooltip("Material del láser (rojo, sin sombras).")]
         [SerializeField] private Material materialLaser;
-        [Tooltip("Cuánto dura el trazo después de un disparo (s).")]
-        [Min(0.01f)] [SerializeField] private float duracionTrazo = 0.08f;
-        [Tooltip("Grosor del láser (m).")]
-        [Min(0.005f)] [SerializeField] private float grosor = 0.03f;
+        // T-676: sin rayos láser. El aviso y el trazo de la bala son un hilo finísimo y cortísimo.
+        private const float DuracionTrazo = 0.03f;
+        private const float Grosor = 0.006f;
+        private const float LargoTrazo = 6f;
+        private static readonly Color ColorAviso = new Color(1f, 0.2f, 0.15f, 0.35f);
+        private static readonly Color ColorTrazo = new Color(1f, 0.9f, 0.6f, 0.9f);
 
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
         private float finTrazo = -1f;
@@ -55,17 +57,32 @@ namespace MechaCyberpunk.IA.APie
             laser = objeto.AddComponent<LineRenderer>();
             laser.positionCount = 2;
             laser.useWorldSpace = true;
-            laser.startWidth = grosor;
-            laser.endWidth = grosor;
+            laser.startWidth = Grosor;
+            laser.endWidth = Grosor;
             laser.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             laser.receiveShadows = false;
             if (materialLaser != null)
             {
                 laser.sharedMaterial = materialLaser;
             }
-            laser.startColor = Color.red;
-            laser.endColor = Color.red;
+            else
+            {
+                Shader sprite = Shader.Find("Sprites/Default");
+                if (sprite != null)
+                {
+                    laser.sharedMaterial = new Material(sprite);
+                }
+            }
+            PonerColor(ColorAviso);
             laser.enabled = false;
+        }
+
+        private void PonerColor(Color color)
+        {
+            laser.startColor = color;
+            laser.endColor = color;
+            laser.startWidth = Grosor;
+            laser.endWidth = Grosor;
         }
 
         private void Update()
@@ -85,8 +102,14 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
-        /// <summary>Muestra el láser de aviso desde la boca hasta el objetivo.</summary>
-        public void Apuntar(Vector3 origen, Vector3 objetivo)
+        /// <summary>Fracción final del aviso en la que se ve el destello del hilo (T-676: un destello breve justo antes del tiro, no una línea que se queda).</summary>
+        public const float ProgresoDestelloAviso = 0.8f;
+
+        /// <summary>
+        /// Aviso de disparo: suena al empezar y, solo en el último tramo (<paramref name="progreso"/> de 0 a 1 desde <see cref="ProgresoDestelloAviso"/>),
+        /// muestra un hilo finísimo de la boca al objetivo.
+        /// </summary>
+        public void Apuntar(Vector3 origen, Vector3 objetivo, float progreso = 1f)
         {
             AsegurarLaser();
             if (!avisando)
@@ -94,6 +117,12 @@ namespace MechaCyberpunk.IA.APie
                 Sonidos.ReproducirEn("ARM_LASER_AVISO", origen);
             }
             avisando = true;
+            if (progreso < ProgresoDestelloAviso)
+            {
+                laser.enabled = Time.time < finTrazo;
+                return;
+            }
+            PonerColor(ColorAviso);
             laser.SetPosition(0, origen);
             laser.SetPosition(1, objetivo);
             laser.enabled = true;
@@ -135,10 +164,12 @@ namespace MechaCyberpunk.IA.APie
                 punto = puntoCubierta;
             }
             bool acierta = libre && Azar() <= probabilidad;
+            // Trazo finísimo y cortísimo: solo un tramo corto desde la boca.
+            PonerColor(ColorTrazo);
             laser.SetPosition(0, origen);
-            laser.SetPosition(1, punto);
+            laser.SetPosition(1, origen + direccion * Mathf.Min(LargoTrazo, Mathf.Max(0.1f, (punto - origen).magnitude)));
             laser.enabled = true;
-            finTrazo = Time.time + duracionTrazo;
+            finTrazo = Time.time + DuracionTrazo;
             if (!acierta)
             {
                 return false;
@@ -152,6 +183,23 @@ namespace MechaCyberpunk.IA.APie
         public bool HayLinea(Vector3 origen, Vector3 direccion, float distancia, IRecibeDanio objetivo, out Vector3 punto)
         {
             punto = origen + direccion * distancia;
+            // T-676: si la boca quedó dentro o detrás de un muro (el tirador pegado a él), el rayo que sale de ahí no lo ve: se revisa también del cuerpo a la boca.
+            Vector3 cuerpo = new Vector3(transform.position.x, origen.y, transform.position.z);
+            Vector3 haciaBoca = origen - cuerpo;
+            if (haciaBoca.sqrMagnitude > 0.0001f)
+            {
+                int n = Physics.RaycastNonAlloc(cuerpo, haciaBoca.normalized, impactos, haciaBoca.magnitude, ~0, QueryTriggerInteraction.Ignore);
+                for (int i = 0; i < n; i++)
+                {
+                    Collider c = impactos[i].collider;
+                    if (c.transform.IsChildOf(transform) || c.GetComponentInParent<PandilleroAPie>() != null)
+                    {
+                        continue;
+                    }
+                    punto = impactos[i].point;
+                    return false;
+                }
+            }
             int cantidad = Physics.RaycastNonAlloc(origen, direccion, impactos, distancia + 0.5f, ~0, QueryTriggerInteraction.Ignore);
             float mejor = float.MaxValue;
             bool llegaAlJugador = true;

@@ -322,7 +322,6 @@ namespace MechaCyberpunk.IA.APie
                     visual.Herir(info.Direccion);
                 }
                 PintarCuerpo(datos.ColorGolpe);
-                Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_DANIO"), transform.position);
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
             return resultado;
@@ -464,16 +463,17 @@ namespace MechaCyberpunk.IA.APie
                 turnos?.Soltar(this);
             }
 
-            bool apuntando = regla.Estado == EstadoPandillero.Preparando && atacable && !huyendo;
+            // T-676: sin línea de vista no hay aviso ni disparo (barricadas y muros).
+            bool apuntando = regla.Estado == EstadoPandillero.Preparando && atacable && !huyendo && puedeTirar;
             if (apuntando)
             {
-                pistola.Apuntar(boca, pecho);
+                pistola.Apuntar(boca, pecho, regla.ProgresoAviso);
             }
             else
             {
                 pistola.QuitarAviso();
             }
-            if (salida.Impacto && atacable && !huyendo)
+            if (salida.Impacto && atacable && !huyendo && puedeTirar)
             {
                 disparoReciente = true;
                 float probabilidad = PistolaPandillero.ProbabilidadAcierto(distancia, datos.DistanciaAciertoCerca,

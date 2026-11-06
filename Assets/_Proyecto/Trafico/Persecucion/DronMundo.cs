@@ -58,6 +58,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 PonerLuces(false);
                 return;
             }
+            if (!HayLineaDeVista(jugador.Raiz))
+            {
+                // T-676: sin línea de vista (muro, barricada, techo) no avisa ni dispara.
+                finAviso = -1f;
+                PonerLuces(false);
+                return;
+            }
             if (finAviso < 0f)
             {
                 if (Time.time >= proximoTiro)
@@ -80,6 +87,31 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 Vector3 direccion = (pecho - transform.position).normalized;
                 objetivo.RecibirDanio(new InfoDanio(config.DanioDron, TipoDanio.Disparo, pecho, direccion, null));
             }
+        }
+
+        private readonly RaycastHit[] impactosLinea = new RaycastHit[16];
+
+        // True si el primer obstáculo entre el dron y el pecho del jugador es el propio jugador (o nada).
+        private bool HayLineaDeVista(Transform raizJugador)
+        {
+            Vector3 pecho = raizJugador.position + Vector3.up * AlturaPecho;
+            Vector3 hacia = pecho - transform.position;
+            float distancia = hacia.magnitude;
+            if (distancia < 0.01f)
+            {
+                return true;
+            }
+            int cantidad = Physics.RaycastNonAlloc(transform.position, hacia / distancia, impactosLinea, distancia, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < cantidad; i++)
+            {
+                Collider c = impactosLinea[i].collider;
+                if (c.transform.IsChildOf(raizJugador) || c.transform.IsChildOf(transform) || c.transform.root == raizJugador.root)
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
         }
 
         private void PonerLuces(bool rojo)

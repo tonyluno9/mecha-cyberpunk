@@ -28,6 +28,9 @@ namespace MechaCyberpunk.Personaje.Combate
         private ParticleSystem sangre;
         private Texture2D textura;
         private Material material;
+        private Texture2D texturaChispa;
+        private Material materialDestello;
+        private float giroDestello;
 
         /// <summary>Se dispara cuando un tiro o un golpe pega a una persona; el argumento es si la dejó en KO.</summary>
         public event Action<bool> Conecto;
@@ -113,6 +116,14 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 Destroy(material);
             }
+            if (texturaChispa != null)
+            {
+                Destroy(texturaChispa);
+            }
+            if (materialDestello != null)
+            {
+                Destroy(materialDestello);
+            }
         }
 
         private void Update()
@@ -128,7 +139,7 @@ namespace MechaCyberpunk.Personaje.Combate
             if (destello != null && destello.gameObject.activeSelf && Camera.main != null)
             {
                 // El quad mira hacia la cámara (su cara visible es la de -Z).
-                destello.rotation = Quaternion.LookRotation(destello.position - Camera.main.transform.position);
+                destello.rotation = Quaternion.LookRotation(destello.position - Camera.main.transform.position) * Quaternion.Euler(0f, 0f, giroDestello);
             }
         }
 
@@ -150,7 +161,8 @@ namespace MechaCyberpunk.Personaje.Combate
             if (destello != null && ajuste.destello > 0f)
             {
                 destello.position = boca;
-                destello.localScale = Vector3.one * ajuste.destello;
+                destello.localScale = Vector3.one * ajuste.destello * UnityEngine.Random.Range(0.8f, 1.2f);
+                giroDestello = UnityEngine.Random.Range(0f, 360f);
                 destello.gameObject.SetActive(true);
                 finDestello = Time.time + datos.DuracionDestello;
             }
@@ -210,11 +222,17 @@ namespace MechaCyberpunk.Personaje.Combate
             material.mainTexture = textura;
             material.color = new Color(1f, 0.85f, 0.4f, 1f);
 
+            // T-676: destello chico y brevísimo (un quad aditivo de 2 o 3 cuadros), con F01_Destello si está asignada.
+            materialDestello = CrearMaterialAditivo(baseMat);
+            texturaChispa = datos.TexturaDestello != null ? null : CrearTexturaChispa();
+            materialDestello.mainTexture = datos.TexturaDestello != null ? datos.TexturaDestello : texturaChispa;
+            materialDestello.color = new Color(1f, 0.8f, 0.45f, 1f);
+
             GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             quad.name = "DestelloCanon";
             Destroy(quad.GetComponent<Collider>());
             MeshRenderer render = quad.GetComponent<MeshRenderer>();
-            render.sharedMaterial = material;
+            render.sharedMaterial = materialDestello;
             render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             render.receiveShadows = false;
             destello = quad.transform;
@@ -222,6 +240,51 @@ namespace MechaCyberpunk.Personaje.Combate
 
             chispas = CrearParticulas("ChispasImpacto", new Color(1f, 0.85f, 0.35f, 1f), 0.05f, 0.6f);
             sangre = CrearParticulas("SalpicaduraImpacto", new Color(0.8f, 0.05f, 0.05f, 1f), 0.07f, 1.6f);
+        }
+
+        // Material sin luz de mezcla aditiva (URP Particles/Unlit); si no existe, el material de efectos normal.
+        private static Material CrearMaterialAditivo(Material respaldo)
+        {
+            Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+            if (shader == null)
+            {
+                return new Material(respaldo);
+            }
+            Material m = new Material(shader);
+            m.SetFloat("_Surface", 1f);
+            m.SetFloat("_Blend", 2f);
+            m.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+            m.SetFloat("_ZWrite", 0f);
+            m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            m.SetOverrideTag("RenderType", "Transparent");
+            return m;
+        }
+
+        // Chispa de cuatro puntas con núcleo brillante.
+        private static Texture2D CrearTexturaChispa()
+        {
+            const int lado = 64;
+            var t = new Texture2D(lado, lado, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, name = "SensacionDisparo_Chispa" };
+            float c = (lado - 1) * 0.5f;
+            var pixeles = new Color32[lado * lado];
+            for (int y = 0; y < lado; y++)
+            {
+                for (int x = 0; x < lado; x++)
+                {
+                    float dx = Mathf.Abs(x - c) / c;
+                    float dy = Mathf.Abs(y - c) / c;
+                    float r = Mathf.Sqrt(dx * dx + dy * dy);
+                    float nucleo = Mathf.Clamp01(1f - r * 2.2f);
+                    float cruz = Mathf.Clamp01(1f - Mathf.Max(dx, dy)) * Mathf.Clamp01(1f - Mathf.Min(dx, dy) * 9f);
+                    byte a = (byte)Mathf.RoundToInt(Mathf.Clamp01(nucleo + cruz) * 255f);
+                    pixeles[y * lado + x] = new Color32(255, 255, 255, a);
+                }
+            }
+            t.SetPixels32(pixeles);
+            t.Apply();
+            return t;
         }
 
         private ParticleSystem CrearParticulas(string nombre, Color color, float tamano, float gravedad)

@@ -259,7 +259,7 @@ namespace MechaCyberpunk.IA.Aliados
                 if (finAviso >= 0f)
                 {
                     disparando = true;
-                    pistola.Apuntar(boca, pecho);
+                    pistola.Apuntar(boca, pecho, 1f - Mathf.Clamp01((finAviso - Time.time) / AvisoTiro));
                     if (Time.time >= finAviso)
                     {
                         Disparar(boca, pecho, distObjetivo);

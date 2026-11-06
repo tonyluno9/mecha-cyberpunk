@@ -22,7 +22,7 @@ namespace MechaCyberpunk.Tests.Progresion
             AudioClip a = Clip("a"), b = Clip("b"), c = Clip("c"), final = Clip("final"), prov = Clip("prov");
             catalogo.Fijar(new List<CatalogoSonidos.Entrada>
             {
-                new CatalogoSonidos.Entrada { id = "ARM_PIS_DISPARO", finales = new[] { a, b, c } },
+                new CatalogoSonidos.Entrada { id = "UI_VARIANTES", finales = new[] { a, b, c } },
                 new CatalogoSonidos.Entrada { id = "ECO_COMPRA", finales = new[] { final }, provisionales = new[] { prov } },
                 new CatalogoSonidos.Entrada { id = "UI_MOVER", provisionales = new[] { prov } },
             });
@@ -31,7 +31,7 @@ namespace MechaCyberpunk.Tests.Progresion
             AudioClip anterior = null;
             for (int i = 0; i < 60; i++)
             {
-                AudioClip actual = catalogo.Elegir("ARM_PIS_DISPARO");
+                AudioClip actual = catalogo.Elegir("UI_VARIANTES");
                 Assert.IsNotNull(actual);
                 Assert.AreNotSame(anterior, actual, "No repite la variante dos veces seguidas.");
                 usados.Add(actual);
