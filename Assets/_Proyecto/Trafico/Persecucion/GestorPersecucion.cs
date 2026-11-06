@@ -23,6 +23,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const int IntentosDeSalidaDron = 8;
         private const float SeparacionDeSalida = 20f;
         private const float AlcanceCamara = 400f;
+        private const float SegundosReintentoSalida = 0.5f;
 
         [SerializeField] private ConfigPersecucion config;
         [SerializeField] private DronMundo prefabDron;
@@ -32,6 +33,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private readonly List<PatrullaMundo> patrullas = new List<PatrullaMundo>();
         private readonly List<Component> retirandose = new List<Component>();
         private bool huboContacto;
+        private float reintentoSalida;
         private float valorAnterior;
         private CalculoPersecucion calculo;
         private GrafoCalles calles;
@@ -144,6 +146,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 huboContacto = false;
                 valorAnterior = calor != null ? calor.Valor : 0f;
                 return;
+            }
+            reintentoSalida -= Time.deltaTime;
+            if (reintentoSalida <= 0f)
+            {
+                reintentoSalida = SegundosReintentoSalida;
+                if (patrullas.Count < calculo.Patrullas(calor.Nivel))
+                {
+                    Reconciliar(calor.Nivel); // T-664: las patrullas que no pudieron salir sin verse lo intentan de nuevo
+                }
             }
             bool ve = false;
             foreach (PatrullaMundo p in patrullas)
@@ -271,8 +282,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return false; // T-598: sin manzanas (escena de prueba sin barrio) no hay calles por donde salga una patrulla; los drones sí salen
             }
             Vector3 centro = PosicionDelJugador() ?? transform.position;
+            int salida = NodoDeSalida(centro);
+            if (salida < 0)
+            {
+                return false; // T-664: ahora no hay por dónde salir sin que se vea; se reintenta en Update
+            }
             PatrullaMundo patrulla = Instantiate(prefabPatrulla, transform);
-            patrulla.Preparar(calculo, config, calles, NodoDeSalida(centro), PosicionDelJugador);
+            patrulla.Preparar(calculo, config, calles, salida, PosicionDelJugador);
             patrulla.Intercepta = patrullas.Count % 2 == 1; // T-587: cada segunda patrulla corta el paso
             patrullas.Add(patrulla);
             return true;
@@ -282,30 +298,24 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>T-533: la patrulla sale en el nodo más cercano a <see cref="DistanciaSalidaPatrulla"/> m del jugador (no al otro lado del barrio).</summary>
         private int NodoDeSalida(Vector3 centro)
         {
-            // T-587: de preferencia un nodo a más de DistanciaMinimaSalida m y fuera de la vista de la cámara; si no hay, el más cercano a la distancia de salida.
+            // T-664: la patrulla solo sale en un nodo a más de DistanciaMinimaSalida m del jugador, fuera de la vista de la cámara y sin otra patrulla encima;
+            // de esos, el más cercano a la distancia de salida. Si no hay ninguno devuelve -1 y la patrulla espera (nunca aparece a la vista).
             Camera camara = Camera.main;
-            int mejor = calles.MasLejano(centro);
+            int mejor = -1;
             float error = float.MaxValue;
-            for (int pasada = 0; pasada < 2 && error == float.MaxValue; pasada++)
+            for (int i = 0; i < calles.Cantidad; i++)
             {
-                for (int i = 0; i < calles.Cantidad; i++)
+                Vector3 d = calles.Nodo(i) - centro;
+                d.y = 0f;
+                if (d.magnitude < config.DistanciaMinimaSalida || ReglaVistaPolicia.LoVe(camara, calles.Nodo(i), AlcanceCamara) || HayPatrullaCerca(calles.Nodo(i)))
                 {
-                    Vector3 d = calles.Nodo(i) - centro;
-                    d.y = 0f;
-                    if (pasada == 0 && (d.magnitude < config.DistanciaMinimaSalida || ReglaVistaPolicia.LoVe(camara, calles.Nodo(i), AlcanceCamara)))
-                    {
-                        continue;
-                    }
-                    if (pasada == 0 && HayPatrullaCerca(calles.Nodo(i)))
-                    {
-                        continue; // no salen dos patrullas encimadas
-                    }
-                    float e = Mathf.Abs(d.magnitude - DistanciaSalidaPatrulla);
-                    if (e < error)
-                    {
-                        error = e;
-                        mejor = i;
-                    }
+                    continue;
+                }
+                float e = Mathf.Abs(d.magnitude - DistanciaSalidaPatrulla);
+                if (e < error)
+                {
+                    error = e;
+                    mejor = i;
                 }
             }
             return mejor;
