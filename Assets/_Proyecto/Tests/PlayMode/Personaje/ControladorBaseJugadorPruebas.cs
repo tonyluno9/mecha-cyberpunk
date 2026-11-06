@@ -75,11 +75,13 @@ namespace MechaCyberpunk.Tests.Personaje
             Animator a = visual.Animador;
             ArmasAPie armas = jugador.GetComponent<ArmasAPie>();
             Assert.IsTrue(armas.Equipar(ArmaAPie.Pistola), "El jugador saca la pistola");
-            yield return Hasta(() => EnEstado(a, 1, "PistolaIdle"), "PistolaIdle con la pistola en la mano");
-            Assert.AreEqual(1, a.GetInteger(ReglasVisual.TipoArma));
+            // T-671: sin apuntar el torso no usa la pose de arma; solo al apuntar.
+            yield return Esperar(0.4f);
+            Assert.AreEqual(0, a.GetInteger(ReglasVisual.TipoArma), "Sin apuntar el Animator no usa poses de arma");
 
             Press(raton.rightButton);
             yield return Hasta(() => EnEstado(a, 1, "PistolaApuntar"), "PistolaApuntar con clic derecho");
+            Assert.AreEqual(1, a.GetInteger(ReglasVisual.TipoArma));
 
             Press(raton.leftButton);
             yield return Hasta(() => EnEstado(a, 1, "PistolaDisparo"), "PistolaDisparo con clic izquierdo");

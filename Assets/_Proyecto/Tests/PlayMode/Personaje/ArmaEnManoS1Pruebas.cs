@@ -89,7 +89,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
-            Assert.AreEqual(2, a.layerCount, "El controlador ya no trae la capa Piernas (T-671)");
+            Assert.AreEqual(3, a.layerCount, "El controlador trae Base, Arriba y Brazos (T-683); ya no trae la capa Piernas (T-671)");
             Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola));
             yield return Esperar(0.4f);
             Assert.AreEqual(TipoArmaVisual.Ninguna, visual.TipoArmaAnimador, "Con la pistola en la mano y sin apuntar, el Animator no usa poses de arma");

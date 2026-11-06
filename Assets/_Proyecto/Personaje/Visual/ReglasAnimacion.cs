@@ -66,6 +66,29 @@ namespace MechaCyberpunk.Personaje.Visual
 
         public const string CapaBase = "Base";
         public const string CapaArriba = "Arriba";
+        /// <summary>T-683: capa de solo brazos que se prende agachado sin apuntar: los brazos quedan sueltos y no se ve la pose de rifle de los clips de agachado.</summary>
+        public const string CapaBrazos = "Brazos";
+        /// <summary>T-683: momento (fracción del clip Cobertura_Entrar, 0 a 1) en que está más agachado: es la pose de agachado quieto.</summary>
+        public const string PoseAgachadoQuieto = "PoseAgachadoQuieto";
+        /// <summary>T-683: fracción de Cobertura_Entrar usada como pose de agachado quieto (la más baja del clip, con las rodillas dobladas).</summary>
+        public const float FraccionAgachadoQuieto = 0.25f;
+
+        /// <summary>T-683: velocidad (m/s) a la que avanza Rifle_AgachadoCaminar tal como viene, medida con MedicionClips.</summary>
+        public const float VelocidadClipAgachado = 0.41f;
+        /// <summary>T-683: cuánto más rápido que el clip se deja deslizar a los pies al caminar agachado (el jugador va a 1.6 m/s y el clip a 0.4: sin este tope los pies correrían).</summary>
+        public const float DeslizamientoAgachado = 2.5f;
+        /// <summary>T-683: rapidez mínima y máxima (x) del clip de caminar agachado.</summary>
+        public const float RapidezMinimaAgachado = 0.8f;
+        public const float RapidezMaximaAgachado = 2.8f;
+
+        /// <summary>
+        /// T-683: rapidez (x) de Rifle_AgachadoCaminar para la velocidad real: sube con ella, así con Shift los pies se mueven más rápido y no solo deslizan.
+        /// <paramref name="escalaClips"/> es la escala del modelo contra la que se midió el clip.
+        /// </summary>
+        public static float RapidezAgachado(float velocidadReal, float escalaClips)
+        {
+            return EscalaVelocidad(velocidadReal, VelocidadClipAgachado * DeslizamientoAgachado * Mathf.Max(0.1f, escalaClips), RapidezMinimaAgachado, RapidezMaximaAgachado);
+        }
 
         /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Caminar tal como viene, medida con MedicionClips (T-562).</summary>
         public const float VelocidadClipCaminar = 1.28f;
@@ -132,10 +155,13 @@ namespace MechaCyberpunk.Personaje.Visual
         public static readonly string[] EstadosBase =
         {
             "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "SaltoInicio", "SaltoAire", "SaltoAterrizaje", "Caida",
-            "AgachadoCaminar", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2",
+            "AgachadoCaminar", "AgachadoQuieto", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2",
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
         };
+
+        /// <summary>Estados de la capa de brazos (T-683).</summary>
+        public static readonly string[] EstadosBrazos = { "BrazosSueltos" };
 
         /// <summary>Estados de la capa de arriba (torso).</summary>
         public static readonly string[] EstadosArriba =
@@ -145,7 +171,7 @@ namespace MechaCyberpunk.Personaje.Visual
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
-        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe };
+        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, PoseAgachadoQuieto, RapidezGolpe };
         public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono };
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
         public static readonly string[] ParametrosTrigger =

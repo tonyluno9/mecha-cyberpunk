@@ -45,6 +45,10 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float enfriamientoRodada = 1.2f;
         [Tooltip("Altura de la cápsula al rodar (m).")]
         [Min(0.5f)] [SerializeField] private float alturaRodando = 0.9f;
+        [Tooltip("Cuánto se encoge el muñeco al rodar, en el punto más cerrado (1 = nada; 0.7 = a 70% de su altura): rueda hecho bola y no se hunde en el piso.")]
+        [Range(0.4f, 1f)] [SerializeField] private float escalaRodando = 0.7f;
+        [Tooltip("Fracción de la rodada (0 a 1) que dura el giro; el resto es reacomodarse agachado.")]
+        [Range(0.3f, 1f)] [SerializeField] private float fraccionGiroRodada = 0.85f;
 
         public float DistanciaBuscar => distanciaBuscar;
         public float AlturaMinimaCubierta => alturaMinimaCubierta;
@@ -63,6 +67,8 @@ namespace MechaCyberpunk.Personaje
         public float Invulnerabilidad => invulnerabilidad;
         public float EnfriamientoRodada => Mathf.Max(enfriamientoRodada, duracionRodada);
         public float AlturaRodando => alturaRodando;
+        public float EscalaRodando => escalaRodando;
+        public float FraccionGiroRodada => fraccionGiroRodada;
         public float RapidezRodada => distanciaRodada / duracionRodada;
     }
 }
