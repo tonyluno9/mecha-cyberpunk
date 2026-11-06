@@ -41,6 +41,16 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Segundos sin recibir daño antes de empezar a regenerar (s).")]
         [Min(0f)] [SerializeField] private float segundosParaRegenerar = 6f;
 
+        [Header("Escudo de energía (T-684)")]
+        [Tooltip("Escudo base: absorbe el daño antes que la vida (puntos). 0 = sin escudo.")]
+        [Min(0f)] [SerializeField] private float escudoMaximo = 30f;
+
+        [Tooltip("Escudo que recupera por segundo cuando pasó la espera sin recibir daño (puntos/s).")]
+        [Min(0f)] [SerializeField] private float escudoRecargaPorSegundo = 12f;
+
+        [Tooltip("Segundos sin recibir daño antes de que el escudo empiece a recargarse (s).")]
+        [Min(0f)] [SerializeField] private float escudoSegundosParaRecargar = 4f;
+
         [Header("KO a pie")]
         [Tooltip("Altura de la cámara sobre el piso cuando el jugador cae en KO (m).")]
         [Min(0.05f)] [SerializeField] private float alturaCamaraKO = 0.4f;
@@ -54,6 +64,9 @@ namespace MechaCyberpunk.Personaje
         public float VidaMaxima => vidaMaxima;
         public float RegeneracionPorSegundo => regeneracionPorSegundo;
         public float SegundosParaRegenerar => segundosParaRegenerar;
+        public float EscudoMaximo => escudoMaximo;
+        public float EscudoRecargaPorSegundo => escudoRecargaPorSegundo;
+        public float EscudoSegundosParaRecargar => escudoSegundosParaRecargar;
         public float DanioGolpe => danioGolpe;
         public float AlcanceGolpe => alcanceGolpe;
         public float RadioGolpe => radioGolpe;

@@ -92,9 +92,16 @@ namespace MechaCyberpunk.Tests.UI
         /// Instancia el jugador con el HUD y los servicios que ya trae anidados (desde T-059). Con <paramref name="conHud"/> en falso
         /// quita el HUD anidado, para pruebas que lo crean después con <see cref="CrearHud"/>.
         /// </summary>
+        /// <summary>T-684: las pruebas del HUD miden la vida; el escudo solo se deja en las de EscudoT684Pruebas.</summary>
+        protected virtual bool QuitarEscudo => true;
+
         protected void CrearJugador(bool conHud = true)
         {
             jugador = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugador), new Vector3(0f, 0.05f, 0f), Quaternion.identity);
+            if (QuitarEscudo)
+            {
+                jugador.GetComponent<MechaCyberpunk.Personaje.Vida.EscudoJugador>()?.Iniciar(0f, 0f, 0f);
+            }
             if (!conHud)
             {
                 foreach (HudAPie propio in jugador.GetComponentsInChildren<HudAPie>(true))

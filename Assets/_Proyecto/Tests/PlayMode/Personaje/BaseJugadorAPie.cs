@@ -40,6 +40,8 @@ namespace MechaCyberpunk.Tests.Personaje
             jugador = Object.Instantiate(prefab, new Vector3(0f, 0.05f, 0f), Quaternion.identity);
             controlador = jugador.GetComponent<ControladorAPie>();
             jugadorAPie = jugador.GetComponent<JugadorAPie>();
+            // T-684: las pruebas de daño de Personaje miden la vida; el escudo se prueba aparte (EscudoT684Pruebas).
+            jugador.GetComponent<MechaCyberpunk.Personaje.Vida.EscudoJugador>()?.Iniciar(0f, 0f, 0f);
 
             // Datos propios de la prueba para no tocar el asset del proyecto.
             datos = ScriptableObject.CreateInstance<DatosPersonaje>();
