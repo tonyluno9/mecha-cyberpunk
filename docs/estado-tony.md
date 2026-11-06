@@ -374,3 +374,30 @@ Opus orquestó y Sonnet implementó. Cada paso se mezcló a main con push.
   - RecorridoAPie.
   - Inestables: JugadorVisualPruebas.Caminar_SinPatinar y ArmasPruebas.ComprarYUsarEscopeta.
 - Las capturas T-635 de cielo miran a una pared y apenas muestran el cielo; hay que repetirlas.
+
+## Sesión 2 del playtest 5-nov (mundo y arte), rama tony/s2-mundo
+
+Todo por código de editor e idempotente: `Assets/Arte/Editor/ColocarS2*.cs` (menú Mecha Cyberpunk/S2). No se regeneró Barrio.prefab (solo se le quitó
+el objeto Lluvia) ni se corrió CreadorTodo. Capturas lado a lado en `docs/capturas/s2-*.png`. Pruebas nuevas: `MundoS2Pruebas` (EditMode, 9) y
+`TallerMecanicoS2Pruebas` (PlayMode, 3). RecorridoDemoPruebas 2/2 tras las zonas 3 y 4-5 (una corrida intermedia falló en la pelea con pistola del tianguis:
+se quedó en 299 s de 300; al repetir pasó. Esa pelea va justa desde que entraron T-650 a T-652 de la sesión 1).
+
+- **Zona 1** (`ColocarS2.Limpieza`): sin lluvia (objeto Lluvia fuera de Barrio.prefab, salpicaduras apagadas, `LluviaSigueJugador.Activa` empieza en false;
+  se quitó LluviaPruebas). Fuera los letreros de primitivos de T-508/T-501/T-502, el arco y las series de focos del tianguis, los textos flotantes
+  (letrero de PersonajeApoyo apagado con `mostrarLetrero`, EL FOX, VENDEDOR, ARMAS, I+D+I, EL MERCADO, ENCARGOS) y los halos/luces de neones planos.
+  La luz de cada farola va bajo la cabeza de la lámpara y no ilumina su poste (capa de render 5).
+- **Zona 2** (`ColocarS2.Escala`): los personajes de Tripo miden 1.80 en reposo pero mucho menos animados (medido con BakeMesh en Play: jugador 1.40,
+  Doc 1.17, Tino 1.18, woman2 1.12). Se escaló Giro/Modelo de cada Visual_* para igualar al jugador (robots de Nova 1.25x). **El jugador también se ve de
+  1.40 m contra una vara de 1.8 m**: no se tocó (prefab de la sesión 1); si se escala, volver a correr `ColocarS2.Escala` con la nueva `AlturaJugador`.
+- **Zona 3** (`ColocarS2Interiores`): consultorio (I+D+I) y taller de Tino (CIC) en su local, con forro del kit X, frente con vano y muebles I06-I21;
+  el Doc y Tino no se movieron. El taller del mecánico es un cuarto aparte (1020, 0, 1000) con fundido, puerta en la fachada de enfrente de la casa
+  (Edificio_45) y `DatosLugar_Taller`; Canepa sigue afuera.
+- **Zona 4** (`ColocarS2Casa`): fachada de la casa con el kit (cubos viejos solo como colisión), tablero de encargos como kiosco CY10, cuarto según
+  habitacion.png (ropero a la derecha, foco pelón con cables, mochila de 50 cm, más pósters, caja eléctrica, puerta L02), aparición movida para no caer
+  en el ropero. Las puertas de cuarto tienen su fundido propio (0.2 + 0.08 + 0.3 s) en lugar del de las pantallas de historia (0.6 + 0.15 + 0.6).
+- **Zona 5** (`ColocarS2Callejon`): puertas con lámpara a los dos lados, medidores, cajas, tambos, llantas, basura y cables, pegados a los muros.
+- **Zona 6** (`ColocarS2Calles`): los 102 cubos de las 6 calles de salida de T-530 vestidos con el kit (4761 piezas sin collider ni sombra, LODGroup
+  kit/cubo viejo), azoteas con tinacos, aires y antenas, cables cruzando. FPS sin medir en build (en batch no hay estadísticas de render).
+
+Pendiente: medir FPS de las salidas en el build de medición; tono del consultorio más verde que la referencia; la falla previa
+ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.

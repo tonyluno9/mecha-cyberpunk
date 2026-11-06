@@ -342,6 +342,36 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 rend.shadowCastingMode = ShadowCastingMode.Off;
             }
+            // El NavMesh se horneó con el local abierto: el frente nuevo talla su hueco para que la IA no camine a través de él.
+            foreach (Transform t in f.Cast<Transform>().Where(t => t.name.StartsWith("Frente_") && t.name.EndsWith("_Dentro")))
+            {
+                Obstaculo(t.gameObject);
+            }
+        }
+
+        /// <summary>Obstáculo de navegación que talla el NavMesh horneado, con la medida de su BoxCollider (un poco más grueso).</summary>
+        public static void Obstaculo(GameObject g)
+        {
+            BoxCollider caja = g.GetComponent<BoxCollider>();
+            UnityEngine.AI.NavMeshObstacle o = g.GetComponent<UnityEngine.AI.NavMeshObstacle>();
+            if (o == null)
+            {
+                o = g.AddComponent<UnityEngine.AI.NavMeshObstacle>(); // sin ??: el null de Unity no es null de C#
+            }
+            o.shape = UnityEngine.AI.NavMeshObstacleShape.Box;
+            if (caja != null)
+            {
+                o.center = caja.center;
+                o.size = caja.size + new Vector3(0.1f, 0f, 0.1f);
+            }
+            else
+            {
+                Bounds b = ArteT250.Limites(g);
+                o.center = g.transform.InverseTransformPoint(b.center);
+                o.size = new Vector3(b.size.x / Mathf.Max(g.transform.lossyScale.x, 0.01f), b.size.y / Mathf.Max(g.transform.lossyScale.y, 0.01f), b.size.z / Mathf.Max(g.transform.lossyScale.z, 0.01f));
+            }
+            o.carving = true;
+            o.carveOnlyStationary = true;
         }
 
         /// <summary>Pone un prefab con su centro en planta en 'centro' (x, z del mundo o local del cuarto ya convertido), girado 'yaw', apoyado en 'y'

@@ -82,7 +82,11 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static void Suelo(Transform r, string ruta, float x, float z, float yaw, float escala)
         {
-            ColocarS2Interiores.Modelo(r, ruta, new Vector3(x, 0f, z), yaw, Piso, escala);
+            GameObject g = ColocarS2Interiores.Modelo(r, ruta, new Vector3(x, 0f, z), yaw, Piso, escala);
+            if (g != null)
+            {
+                ColocarS2Interiores.Obstaculo(g);   // el NavMesh no los conoce: tallan su hueco
+            }
         }
 
         private static void Luz(Transform padre, string nombre, Vector3 pos, Color color, float intensidad, float alcance)
