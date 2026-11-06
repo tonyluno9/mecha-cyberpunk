@@ -17,7 +17,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
     ///   2.5 m o menos de <see cref="PuntoSubida"/> y 60° o menos de hacia dónde mira.
     /// - Bajar: <see cref="PuedeBajar"/> es true solo si está ocupado, su rapidez es menor que 0.5 m/s
     ///   (<see cref="ConfigCarro.RapidezMaximaParaBajar"/>) y hay una salida libre: junto a <see cref="PuntoSubida"/>
-    ///   (lado del conductor) o, si ahí choca una cápsula de persona de 0.4 m de radio y 1.8 m de alto, del lado del copiloto.
+    ///   (lado del conductor) o, si ahí choca una cápsula de persona de 0.4 m de radio y 1.8 m de alto, del lado del copiloto, por atrás
+    ///   y, como último recurso (T-657), sobre el techo.
     ///   Con el carro en marcha <c>IntentarBajar</c> devuelve false y no avisa nada.
     /// - Al bajar entrega una pose en el piso mirando como el carro.
     /// </summary>
@@ -39,6 +40,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const int MaxImpactosSalida = 8;
         private const float AlturaRayoSalida = 1.5f;
         private const float LargoRayoSalida = 4f;
+        private const float SeparacionSalidaAtras = 1f;
+        private const float MargenTecho = 0.05f;
+        private const int MaxCercanosSalida = 16;
 
         [Header("Datos")]
         [Tooltip("Valores de física y sensación del carro.")]
@@ -83,6 +87,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private Vector3 posicionAnterior;
         private bool salidaForzada;
         private readonly RaycastHit[] impactosSalida = new RaycastHit[MaxImpactosSalida];
+        private readonly CalculoMarcha marcha = new CalculoMarcha();
+        private float volante;
+        private readonly Collider[] cercanosSalida = new Collider[MaxCercanosSalida];
+        private Bounds limitesLocales;
+        private bool limitesListos;
 
         /// <summary>Velocidad hacia adelante (m/s), negativa en reversa.</summary>
         public float Velocidad { get; private set; }
@@ -115,7 +124,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 gameObject.AddComponent<DanioCarro>();
             }
-            if (GetComponent<LucesCarro>() == null)
+            // T-660: las motos no llevan faros ni calaveras (se veían raras).
+            if (GetComponent<LucesCarro>() == null && GetComponent<ManejoMoto>() == null)
             {
                 gameObject.AddComponent<LucesCarro>();
             }
@@ -192,7 +202,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public CamaraCarro CamaraDelCarro => camaraCarro;
 
         public bool PuedeBajar => Ocupado && CalculoSalida.VaLentoParaBajar(Rapidez, config.RapidezMaximaParaBajar)
-            && CalculoSalida.Elegir(SalidaLibre(LadoSalida.Conductor, out _), SalidaLibre(LadoSalida.Copiloto, out _)) != LadoSalida.Ninguno;
+            && BuscarSalida(out _) != LadoSalida.Ninguno;
 
         public bool IntentarSubir(IJugador jugador)
         {
@@ -215,17 +225,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 return false;
             }
-            LadoSalida lado = CalculoSalida.Elegir(SalidaLibre(LadoSalida.Conductor, out Pose conductor),
-                SalidaLibre(LadoSalida.Copiloto, out Pose copiloto));
-            if (lado == LadoSalida.Ninguno && salidaForzada)
-            {
-                lado = LadoSalida.Conductor;
-            }
-            if (lado == LadoSalida.Ninguno)
+            LadoSalida lado = BuscarSalida(out Pose pose);
+            if (lado == LadoSalida.Ninguno && !salidaForzada)
             {
                 return false;
             }
-            salida = lado == LadoSalida.Conductor ? conductor : copiloto;
+            salida = pose;
             salidaForzada = false;
             Ocupado = false;
             camaraCarro.Encender(false);
@@ -234,9 +239,70 @@ namespace MechaCyberpunk.Vehiculos.Carro
             return true;
         }
 
-        // Pose en el piso junto al carro (lado del conductor o espejo del lado del copiloto) y si cabe una persona ahí.
+        // Elige por dónde baja (T-657): conductor, copiloto, atrás y, al final, desde arriba. Devuelve el lado y su pose.
+        private LadoSalida BuscarSalida(out Pose pose)
+        {
+            bool conductor = SalidaLibre(LadoSalida.Conductor, out Pose poseConductor);
+            bool copiloto = SalidaLibre(LadoSalida.Copiloto, out Pose poseCopiloto);
+            bool atras = SalidaLibre(LadoSalida.Atras, out Pose poseAtras);
+            bool arriba = SalidaLibre(LadoSalida.Arriba, out Pose poseArriba);
+            LadoSalida lado = CalculoSalida.Elegir(conductor, copiloto, atras, arriba);
+            switch (lado)
+            {
+                case LadoSalida.Copiloto: pose = poseCopiloto; break;
+                case LadoSalida.Atras: pose = poseAtras; break;
+                case LadoSalida.Arriba: pose = poseArriba; break;
+                default: pose = poseConductor; break;
+            }
+            return lado;
+        }
+
+        // Cajas de choque del carro en su espacio local (se miden una vez: el modelo no cambia).
+        private Bounds LimitesLocales()
+        {
+            if (limitesListos)
+            {
+                return limitesLocales;
+            }
+            bool hay = false;
+            foreach (BoxCollider c in GetComponentsInChildren<BoxCollider>(true))
+            {
+                if (c.isTrigger)
+                {
+                    continue;
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector3 esquina = c.center + Vector3.Scale(c.size * 0.5f,
+                        new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f));
+                    Vector3 local = transform.InverseTransformPoint(c.transform.TransformPoint(esquina));
+                    if (!hay)
+                    {
+                        limitesLocales = new Bounds(local, Vector3.zero);
+                        hay = true;
+                    }
+                    else
+                    {
+                        limitesLocales.Encapsulate(local);
+                    }
+                }
+            }
+            if (!hay)
+            {
+                limitesLocales = new Bounds(Vector3.up, new Vector3(2f, 2f, 4f));
+            }
+            limitesListos = true;
+            return limitesLocales;
+        }
+
+        // Pose en el piso junto al carro (lado del conductor, espejo del copiloto o detrás) o sobre el techo, y si cabe una persona ahí.
         private bool SalidaLibre(LadoSalida lado, out Pose pose)
         {
+            Quaternion mirada = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            if (lado == LadoSalida.Arriba)
+            {
+                return SalidaEnTecho(mirada, out pose);
+            }
             Vector3 punto = puntoSubida.position;
             if (lado == LadoSalida.Copiloto)
             {
@@ -244,7 +310,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 local.x = -local.x;
                 punto = transform.TransformPoint(local);
             }
-            Quaternion mirada = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            else if (lado == LadoSalida.Atras)
+            {
+                Bounds caja = LimitesLocales();
+                punto = transform.TransformPoint(new Vector3(caja.center.x, 0f, caja.min.z - SeparacionSalidaAtras));
+            }
             pose = new Pose(punto, mirada);
 
             Vector3 origen = punto + Vector3.up * AlturaRayoSalida;
@@ -275,6 +345,27 @@ namespace MechaCyberpunk.Vehiculos.Carro
             return !Physics.CheckCapsule(abajo, arriba, radio, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
         }
 
+        // T-657, último recurso: de pie sobre el techo del carro (la cápsula de persona no debe chocar con nada que no sea el propio carro).
+        private bool SalidaEnTecho(Quaternion mirada, out Pose pose)
+        {
+            Bounds caja = LimitesLocales();
+            Vector3 punto = transform.TransformPoint(new Vector3(caja.center.x, caja.max.y + MargenTecho, caja.center.z));
+            pose = new Pose(punto, mirada);
+            float radio = config.RadioSalida;
+            Vector3 abajo = punto + Vector3.up * (config.HolguraSalida + radio);
+            Vector3 arriba = punto + Vector3.up * (config.AlturaSalida - radio);
+            int cantidad = Physics.OverlapCapsuleNonAlloc(abajo, arriba, radio, cercanosSalida, Physics.DefaultRaycastLayers,
+                QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < cantidad; i++)
+            {
+                if (!cercanosSalida[i].transform.IsChildOf(transform))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>La siguiente <see cref="IntentarBajar"/> ignora la rapidez y el lugar libre (el carro explota y hay que salir ya) (T-444).</summary>
         public void PermitirBajarYa()
         {
@@ -293,6 +384,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             if (!tomar)
             {
                 EntradaActual = default;
+                marcha.Reiniciar();
+                volante = 0f;
             }
             ActualizarMapa();
         }
@@ -455,7 +548,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             if (TieneControl)
             {
                 EntradaCarro e = EntradaActual;
-                fuerzaAdelante = CalculoManejo.FuerzaLongitudinal(parametros, e.Acelerar, e.Frenar, e.FrenoMano, vAdelante, dt);
+                float factorMarcha = marcha.Factor(parametros, e.Acelerar, e.Frenar, vAdelante, dt);
+                fuerzaAdelante = CalculoManejo.FuerzaLongitudinal(parametros, e.Acelerar, e.Frenar, e.FrenoMano, vAdelante, dt, factorMarcha);
                 fuerzaLateral = CalculoManejo.FuerzaLateral(parametros, vLateral, e.FrenoMano, dt);
                 if (enPiso >= RuedasMinimasParaGirar)
                 {
@@ -491,10 +585,13 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         private EntradaCarro LeerEntrada()
         {
+            // T-658: el volante sigue a la tecla a una velocidad limitada (sin saltos de un lado al otro).
+            volante = CalculoDireccion.Suavizar(volante, Mathf.Clamp(girar.ReadValue<float>(), -1f, 1f), Time.fixedDeltaTime,
+                config.VelocidadVolante, config.VelocidadCentradoVolante);
             return new EntradaCarro(
                 Mathf.Clamp01(acelerar.ReadValue<float>()),
                 Mathf.Clamp01(frenar.ReadValue<float>()),
-                Mathf.Clamp(girar.ReadValue<float>(), -1f, 1f),
+                volante,
                 Mathf.Clamp01(frenoMano.ReadValue<float>()));
         }
     }
