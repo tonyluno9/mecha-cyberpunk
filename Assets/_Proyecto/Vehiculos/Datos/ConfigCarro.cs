@@ -52,6 +52,14 @@ namespace MechaCyberpunk.Vehiculos
         [Range(0f, 1f)] [SerializeField] private float factorAgarreFrenoMano = 0.25f;
         [Tooltip("Qué tan rápido el carro alcanza la velocidad de giro pedida (1/s).")]
         [Min(0.1f)] [SerializeField] private float respuestaGiro = 8f;
+        [Tooltip("T-658: qué tan rápido gira el volante hacia la tecla (1/s); 4 tarda 0.25 s en ir de centro a tope.")]
+        [Min(0f)] [SerializeField] private float velocidadVolante = 4f;
+        [Tooltip("T-658: qué tan rápido vuelve el volante al centro al soltar la tecla (1/s).")]
+        [Min(0f)] [SerializeField] private float velocidadCentradoVolante = 6f;
+        [Tooltip("T-658: segundos que se queda parado el carro al cambiar de adelante a atrás (o al revés) antes de empujar (s).")]
+        [Min(0f)] [SerializeField] private float esperaCambioSentido = 0.25f;
+        [Tooltip("T-658: segundos que tarda el motor en llegar a toda su fuerza al arrancar en reversa o tras un cambio de sentido (s).")]
+        [Min(0f)] [SerializeField] private float rampaMarcha = 0.5f;
 
         [Header("Suspensión")]
         [Tooltip("Distancia del anclaje a la rueda con el carro en reposo (m).")]
@@ -76,6 +84,8 @@ namespace MechaCyberpunk.Vehiculos
         [Min(0f)] [SerializeField] private float holguraSalida = 0.05f;
 
         public float RapidezMaximaParaBajar => rapidezMaximaParaBajar;
+        public float VelocidadVolante => velocidadVolante;
+        public float VelocidadCentradoVolante => velocidadCentradoVolante;
         public float RadioSalida => radioSalida;
         public float AlturaSalida => alturaSalida;
         public float HolguraSalida => holguraSalida;
@@ -110,6 +120,8 @@ namespace MechaCyberpunk.Vehiculos
             AgarreLateral = agarreLateral,
             FactorAgarreFrenoMano = factorAgarreFrenoMano,
             GananciaEstacionamiento = gananciaEstacionamiento,
+            EsperaCambioSentido = esperaCambioSentido,
+            RampaMarcha = rampaMarcha,
         };
     }
 }

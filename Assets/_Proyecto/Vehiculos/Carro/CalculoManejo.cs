@@ -13,9 +13,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
         /// Fuerza (N) a lo largo del carro; positiva es hacia adelante.
         /// Acelerar empuja (se corta al llegar a la velocidad máxima); frenar frena si el carro va hacia adelante
         /// y da reversa solo con el carro casi detenido.
+        /// <paramref name="factorMarcha"/> (0 a 1, de <see cref="CalculoMarcha"/>) multiplica el motor: con 0 el carro se mantiene frenado (T-658).
         /// </summary>
         public static float FuerzaLongitudinal(in ParametrosManejo p, float acelerar, float frenar, float frenoMano,
-            float velocidadAdelante, float dt)
+            float velocidadAdelante, float dt, float factorMarcha = 1f)
         {
             acelerar = Math.Clamp(acelerar, 0f, 1f);
             frenar = Math.Clamp(frenar, 0f, 1f);
@@ -26,7 +27,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 fuerza = velocidadAdelante < -p.UmbralReversa
                     ? FuerzaOpuesta(p.FuerzaFreno * acelerar, velocidadAdelante, p.Masa, dt)
-                    : p.FuerzaMotor * acelerar * Math.Max(0f, 1f - Math.Max(0f, velocidadAdelante) / p.VelocidadMaxima);
+                    : (factorMarcha > 0f
+                        ? p.FuerzaMotor * acelerar * factorMarcha * Math.Max(0f, 1f - Math.Max(0f, velocidadAdelante) / p.VelocidadMaxima)
+                        : FuerzaOpuesta(p.FuerzaFreno * acelerar, velocidadAdelante, p.Masa, dt));
             }
             else if (frenar > 0f)
             {
@@ -37,7 +40,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 else
                 {
                     float fraccion = Math.Max(0f, 1f - Math.Max(0f, -velocidadAdelante) / p.VelocidadReversa);
-                    fuerza = -p.FuerzaReversa * frenar * fraccion;
+                    fuerza = factorMarcha > 0f
+                        ? -p.FuerzaReversa * frenar * fraccion * factorMarcha
+                        : FuerzaOpuesta(p.FuerzaFreno * frenar, velocidadAdelante, p.Masa, dt);
                 }
             }
             else
