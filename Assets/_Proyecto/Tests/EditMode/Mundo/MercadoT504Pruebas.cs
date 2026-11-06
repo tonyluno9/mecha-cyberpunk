@@ -12,10 +12,7 @@ namespace MechaCyberpunk.Tests.Mundo
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string NombreRaiz = "T504_Mercado";
-        private const int BanderasMinimas = 40;
-        private const int HilosMinimos = 5;
         private const int LucesMaximas = 10;
-        private const float AlturaMinimaHilos = 5.5f;
         private const float RadioPuerta = 2.2f;
         private const float AnchoCarril = 2.4f;
         private const float XCarril = -22.9f;
@@ -79,22 +76,16 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(0, Contar("CY07a_PlataformaDron_T504"), "La plataforma de dron del pasillo está apagada (T-509)");
         }
 
+        // T-803 (playtest 6-nov): Tony nunca pidió papel picado y lo quiere fuera de todos lados. Antes esta prueba exigía 40 banderas o más;
+        // ahora exige cero en toda la escena (mercado, casino, entrada de armas, consultorio, taller), activas o por nombre o material.
         [Test]
-        public void PapelPicado_BanderasConTexturaEnHilerasAltas()
+        public void PapelPicado_NoHayEnNingunLadoDeLaEscena()
         {
-            MeshRenderer[] banderas = raiz.GetComponentsInChildren<MeshRenderer>().Where(r => r.name.StartsWith("Papel_")).ToArray();
-            Assert.GreaterOrEqual(banderas.Length, BanderasMinimas);
-            Assert.IsTrue(banderas.All(b => b.sharedMaterial.GetTexture("_BaseMap") != null));
-            Assert.GreaterOrEqual(banderas.Select(b => b.sharedMaterial).Distinct().Count(), 4, "colores distintos");
-            LineRenderer[] hilos = raiz.GetComponentsInChildren<LineRenderer>();
-            Assert.GreaterOrEqual(hilos.Length, HilosMinimos);
-            foreach (LineRenderer h in hilos)
-            {
-                for (int i = 0; i < h.positionCount; i++)
-                {
-                    Assert.Greater(h.GetPosition(i).y, AlturaMinimaHilos, h.name + " muy bajo");
-                }
-            }
+            string[] materiales = { "Papel_0", "Papel_1", "Papel_2", "Papel_3", "Papel_4", "Papel_5", "Hilo_Papel", "T546_PapelPicado", "S2_PapelPicado" };
+            Renderer[] papel = escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Renderer>())
+                .Where(r => r.enabled && (r.name == "PapelPicado" || r.name == "Bandera" || r.name.StartsWith("Papel_") || r.sharedMaterials.Any(m => m != null && materiales.Contains(m.name))))
+                .ToArray();
+            Assert.IsEmpty(papel, "Papel picado en: " + string.Join(", ", papel.Take(5).Select(r => r.transform.parent != null ? r.transform.parent.name + "/" + r.name : r.name)));
         }
 
         [Test]

@@ -184,19 +184,11 @@ namespace MechaCyberpunk.Arte.Editor
                 aparicion.localPosition = new Vector3(0.3f, 0.05f, -1.15f);
                 aparicion.localRotation = Quaternion.identity;
             }
-            // Mochila: a su tamaño (unos 50 cm de alto), parada junto al escritorio.
+            // T-803: mochila derecha (el modelo I05 ya viene parado, 50 cm de alto), en el piso y recargada en la pared izquierda, junto a la puerta.
             Transform mochila = r.Find("I05");
             if (mochila != null)
             {
-                mochila.localScale = Vector3.one;
-                // El modelo viene acostado (su alto queda en Z): se para.
-                mochila.rotation = Quaternion.Euler(0f, 200f, 0f) * Quaternion.Euler(-90f, 0f, 0f);
-                Bounds b = ArteT250.Limites(mochila.gameObject);
-                float factor = 0.5f / Mathf.Max(b.size.y, 0.01f);
-                mochila.localScale = Vector3.one * factor;
-                b = ArteT250.Limites(mochila.gameObject);
-                Vector3 c = P(0.5f, 0f, 0.3f);
-                mochila.position += new Vector3(c.x - b.center.x, piso - b.min.y, c.z - b.center.z);
+                ColocarS2nLimpieza.PararMochila(r, mochila);
             }
             // Ventana más grande y centrada en la pared del fondo, con su barra de cortina.
             Transform ventana = r.Find("I04");
@@ -240,7 +232,6 @@ namespace MechaCyberpunk.Arte.Editor
             Poster(r, s2, "Poster_1", new Vector3(-1.48f, 1.25f, 0.5f), Vector3.right, new Vector2(0.36f, 0.5f), -5f);
             Poster(r, s2, "Poster_2", new Vector3(-0.95f, 1.6f, 1.99f), Vector3.back, new Vector2(0.7f, 0.95f), 0f);
             ColocarS2Interiores.Modelo(s2, C + "C14_RegistroMedidores", P(1.42f, 0f, 1.55f), 270f, piso + 1.55f, 0.45f, sinCollider: true);
-            ColocarS2Interiores.Modelo(s2, C + "N06", P(-0.1f, 0f, -0.6f), 30f, piso, 0.35f, sinCollider: true);   // basura y latas en el piso
 
             // Puerta del cuarto: una de verdad (L02) en lugar de la hoja de cubos.
             Transform vieja = r.Find("PuertaInterior");
