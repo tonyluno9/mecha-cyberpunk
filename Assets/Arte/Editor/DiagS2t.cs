@@ -302,6 +302,63 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/s2t-diag-l03-alturas.txt", sb.ToString());
         }
 
+        public static void FotosRamales()
+        {
+            ColocarS2.Abrir();
+            var tomas = new[] {
+                ("callejon-fondo", new Vector3(-60f, 1.7f, -60f), new Vector3(-90f, 2f, -60f)),
+                ("callejon-alto", new Vector3(-60f, 30f, -45f), new Vector3(-80f, 0f, -62f)),
+                ("ramal-x25", new Vector3(-25f, 1.7f, 6f), new Vector3(-25f, 2f, 45f)),
+                ("ramal-x25-alto", new Vector3(-5f, 30f, 20f), new Vector3(-25f, 0f, 35f)) };
+            foreach (var (n, d, h) in tomas)
+            {
+                ColocarS2t.FotoHora(13f, d, h, ColocarS2t.CarpetaCapturas + "s2t-" + n + ".png", 70f);
+            }
+        }
+
+        public static void Pasillos()
+        {
+            ColocarS2.Abrir();
+            Physics.SyncTransforms();
+            StringBuilder sb = new StringBuilder();
+            foreach (var (n, caja) in new[] {
+                ("callejon -> oeste", new Bounds(new Vector3(-110f, 2f, -60f), new Vector3(50f, 3f, 5f))),
+                ("ramal x-25 -> norte", new Bounds(new Vector3(-25f, 2f, 65f), new Vector3(5f, 3f, 40f))),
+                ("ramal x-25 -> oeste", new Bounds(new Vector3(-45f, 2f, 40f), new Vector3(40f, 3f, 5f))) })
+            {
+                sb.AppendLine("== " + n + " " + caja.min.ToString("F0") + ".." + caja.max.ToString("F0"));
+                foreach (Collider c in Physics.OverlapBox(caja.center, caja.extents, Quaternion.identity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
+                    .GroupBy(c => c.transform).Select(g => g.First()))
+                {
+                    sb.AppendLine("  " + Ruta(c.transform) + " b" + c.bounds.min.ToString("F0") + ".." + c.bounds.max.ToString("F0"));
+                }
+            }
+            File.WriteAllText("Logs/s2t-diag-pasillos.txt", sb.ToString());
+        }
+
+        public static void Edificios()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (string r in new[] { "Barrio/Manzana_2/Edificios/Edificio_13", "Barrio/Manzana_2/Edificios/Edificio_14", "Barrio/Manzana_4/Edificios/Edificio_39", "Barrio/Manzana_4/Edificios/Edificio_40" })
+            {
+                Transform t = ColocarS2.Buscar(r);
+                sb.AppendLine("== " + r + " hijos " + (t == null ? "FALTA" : t.childCount.ToString()));
+                if (t == null) continue;
+                foreach (var g in t.GetComponentsInChildren<Transform>(true).Where(h => h != t).GroupBy(h => h.parent == t ? h.name.Split('_')[0] : "(nieto)"))
+                    sb.AppendLine("   " + g.Count() + "x " + g.Key);
+            }
+            // Lo que vive fuera del edificio pero sobre su huella (fachadas del kit de T-501/T-530, pisos de ArteNoche, letreros...).
+            foreach (var (n, caja) in new[] { ("huella 13+14", new Bounds(new Vector3(-22f, 10f, 64.5f), new Vector3(6.4f, 30f, 39.5f))) })
+            {
+                sb.AppendLine("== " + n);
+                foreach (var g in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(r => r.enabled && caja.Contains(r.bounds.center))
+                    .GroupBy(r => string.Join("/", Ruta(r.transform).Split('/').Take(3))))
+                    sb.AppendLine("   " + g.Count() + "x " + g.Key);
+            }
+            File.WriteAllText("Logs/s2t-diag-edificios.txt", sb.ToString());
+        }
+
         public static void Todo()
         {
             Postes();
