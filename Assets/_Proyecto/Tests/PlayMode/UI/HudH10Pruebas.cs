@@ -276,14 +276,14 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(0f, h10.AlfaRellenoParte(ZonaCuerpoH10.Torso), 0.001f);
 
             Vector3 pies = jugador.transform.position;
-            EventosPelea.PublicarImpacto(null, Bala(10f, pies + Vector3.up * 0.4f), default);
+            EventosPelea.PublicarImpacto(null, Bala(10f, pies + Vector3.up * 0.4f), new ResultadoDanio(10f, TipoBloqueo.Ninguno, false));
             yield return null;
             Color piernas = h10.ColorLineaParte(ZonaCuerpoH10.Piernas);
             Color brazos = h10.ColorLineaParte(ZonaCuerpoH10.Brazos);
             Assert.Greater(piernas.r - piernas.g, 0.4f, "La parte golpeada se pone roja");
             Assert.Less(brazos.r, 0.6f, "Las demás siguen turquesa");
 
-            EventosPelea.PublicarImpacto(null, Bala(10f, pies + Vector3.up * 1.7f), default);
+            EventosPelea.PublicarImpacto(null, Bala(10f, pies + Vector3.up * 1.7f), new ResultadoDanio(10f, TipoBloqueo.Ninguno, false));
             yield return null;
             Color cabeza = h10.ColorLineaParte(ZonaCuerpoH10.Cabeza);
             Assert.Greater(cabeza.r - cabeza.g, 0.4f, "Un tiro a la cabeza pone roja la cabeza");

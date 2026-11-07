@@ -3,6 +3,8 @@ using System.Collections;
 using System.IO;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.Progresion.Opciones;
 using MechaCyberpunk.UI.Misiones;
 using NUnit.Framework;
 using UnityEditor;
@@ -24,12 +26,41 @@ namespace MechaCyberpunk.Tests.UI
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string VariableCaptura = "CAPTURAR_T449";
         private Keyboard teclado;
+        private string carpeta;
 
+        // T-702: cada prueba juega una partida nueva en una carpeta temporal. Sin esto leían y escribían el guardado real de la máquina, y según lo que
+        // hubiera dejado otra prueba (o el propio juego) el jugador arrancaba dormido o con mensajes ya entregados, y la T no abría el teléfono.
         public override void Setup()
         {
             base.Setup();
             teclado = InputSystem.AddDevice<Keyboard>();
             InputSystem.AddDevice<Mouse>();
+            carpeta = Path.Combine(Path.GetTempPath(), "t449_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(carpeta);
+            ServicioGuardado.RutaForzada = Path.Combine(carpeta, "partida.json");
+            ServicioOpciones.FijarRuta(Path.Combine(carpeta, ServicioOpciones.NombreArchivo));
+        }
+
+        public override void TearDown()
+        {
+            ServicioGuardado.RutaForzada = null;
+            ServicioOpciones.FijarRuta(null);
+            Pausa.Fijar(false);
+            AudioListener.pause = false;
+            try
+            {
+                Directory.Delete(carpeta, true);
+            }
+            catch (IOException)
+            {
+            }
+            base.TearDown();
+        }
+
+        // Espera a que el jugador tenga el control (a pie, sin otra pantalla): la T solo abre el teléfono entonces.
+        private static IEnumerator EsperarControl(PantallaTelefono telefono)
+        {
+            yield return EsperarHasta(() => telefono.PuedeAbrir(), "que el jugador tenga el control", 20f);
         }
 
         [UnityTearDown]
@@ -75,6 +106,7 @@ namespace MechaCyberpunk.Tests.UI
                 return telefono != null && Registro<IJugador>.Actual != null && Registro<ServicioMensajes>.Actual != null;
             }, "el teléfono y los mensajes", 30f);
             yield return new WaitForSecondsRealtime(1f);
+            yield return EsperarControl(telefono);
             ServicioMensajes mensajes = Registro<ServicioMensajes>.Actual;
 
             // Sin mensajes: la pestaña lo dice.
@@ -139,6 +171,7 @@ namespace MechaCyberpunk.Tests.UI
                 return telefono != null && Registro<IJugador>.Actual != null;
             }, "el teléfono", 30f);
             yield return new WaitForSecondsRealtime(1f);
+            yield return EsperarControl(telefono);
             RelojFalso reloj = new RelojFalso { Hora = 14.75f };
             Registro<IRelojMundo>.Agregar(reloj);
 

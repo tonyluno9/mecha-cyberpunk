@@ -240,7 +240,10 @@ namespace MechaCyberpunk.Tests.Progresion
                 // Frente al Doc, la silla (a ~1 m) puede ganar la E: entonces ya empezó a curar.
                 if (!silla.EnSecuencia)
                 {
-                    StringAssert.Contains(silla.Config.FraseDoc, doc.UltimoTexto, "El Doc te manda a la silla (jugador en " + jugador.Raiz.position
+                    // T-702: sin implantes, EL DOC regala uno y dice la frase del regalo (RegaloImplanteDoc); si no, manda a la silla.
+                    RegaloImplanteDoc regaloDoc = Object.FindFirstObjectByType<RegaloImplanteDoc>();
+                    string fraseDoc = regaloDoc != null && regaloDoc.Regalado ? regaloDoc.Frase : silla.Config.FraseDoc;
+                    StringAssert.Contains(fraseDoc, doc.UltimoTexto, "El Doc te manda a la silla (jugador en " + jugador.Raiz.position
                         + ", candidato " + ((Component)jugador).GetComponentInChildren<MechaCyberpunk.Personaje.Interaccion.InteraccionAPie>().InteractuableCandidato
                         + ", regalo " + doc.TieneRegalo + ", aviso del Doc '" + doc.Texto + "' " + doc.PuedeUsar + ", silla '" + silla.Texto + "', vida " + vida.Actual + ")");
                     Assert.Less(vida.Actual, vida.Maxima, "De palabra ya no cura");
@@ -277,7 +280,8 @@ namespace MechaCyberpunk.Tests.Progresion
             {
                 Assert.AreEqual("HABLAR CON TINO", inventor.Texto);
                 yield return Pulsar(teclado.eKey);
-                StringAssert.Contains("banco de trabajo", inventor.UltimoTexto, "Tino te manda al banco");
+                // T-702: la frase de Tino sale de sus datos (su primera frase manda al banco), no se copia.
+                StringAssert.Contains(inventor.Datos.Frases[0], inventor.UltimoTexto, "Tino te manda al banco");
                 Assert.Less(Vector3.Distance(bancoArmas.Posicion, Buscar("Lugar_CIC").position), 8f, "El banco está en el CIC");
                 yield return new WaitForSecondsRealtime(0.3f);
             }

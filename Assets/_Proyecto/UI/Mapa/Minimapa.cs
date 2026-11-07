@@ -23,18 +23,15 @@ namespace MechaCyberpunk.UI.Mapa
 
         [Tooltip("Metros del mundo del centro al borde del círculo (m).")]
         [Min(5f)] [SerializeField] private float radioMetros = 60f;
-        // T-522: las manzanas solo se tiñen un poco del color del dueño (antes 55 %: una zona magenta se veía como un relleno plano) y el
-        // fondo es azul muy oscuro, para que se lean las calles como en el mockup. Constantes: el valor viejo seguía guardado en la escena.
-        private const float AlfaManzanas = 0.08f;
-        // T-523: las calles claras (gris azulado con un toque de turquesa) y las manzanas casi negras, para que se lean las calles como en el mockup.
-        private static readonly Color ColorCalles = new Color(0.50f, 0.85f, 0.86f, 0.20f);
-        private const float AlfaFondo = 0.55f;
+        // El fondo es azul muy oscuro y translúcido, para que se lean las líneas de las calles.
+        private const float AlfaFondo = 0.7f;
         private static readonly Color FondoOscuro = new Color(0.03f, 0.04f, 0.08f, 1f);
-        [Tooltip("Lado de los iconos de lugar (px a 1920x1080).")]
-        [Min(8f)] [SerializeField] private float ladoIcono = 30f;
+        // T-701: iconos de lugar más chicos (era 30 serializado). Constante: el valor viejo seguía guardado.
+        private const float ladoIcono = 22f;
         // T-523: el jugador y el objetivo, más grandes que antes (22 y 24) para verse sobre las calles claras; constantes por el valor viejo del prefab.
-        private const float ladoFlecha = 28f;
-        private const float diagonalRombo = 30f;
+        private const float ladoFlecha = 24f;
+        private const float diagonalRombo = 22f;
+        private const float SeparacionIconos = 0.9f;
         [Tooltip("Lado del punto marcado (px).")]
         [Min(4f)] [SerializeField] private float ladoPunto = 22f;
         [Tooltip("Lo que se pega al borde queda a esta distancia de él, hacia dentro (px).")]
@@ -51,8 +48,14 @@ namespace MechaCyberpunk.UI.Mapa
         private RectTransform rombo;
         private Image punto;
         private Text textoPunto;
-        private Image[] manzanas;
-        private Image calles;
+        // T-701: las calles salen de la escena viva (contornos de manzanas), como líneas finas claras; el barrio viejo (GeometriaBarrio) ya no se usa aquí.
+        private RectTransform capaCalles;
+        private readonly List<Image> lineasCalles = new List<Image>();
+        private static readonly Color ColorLineaCalle = new Color(0.72f, 0.95f, 0.95f, 0.7f);
+        private const float GrosorLineaCallePx = 1.6f;
+        private const float MetrosCalles = 105f;
+        /// <summary>Cuántas líneas de calle se dibujan ahora.</summary>
+        public int LineasCallesVisibles { get; private set; }
         // T-632: ruta tipo GPS por las calles hasta el objetivo; se recalcula al moverte más de MetrosParaRecalcular o si el objetivo cambia.
         private const float MetrosParaRecalcular = 2f;
         private const float GrosorRutaPx = 4f;
@@ -130,12 +133,7 @@ namespace MechaCyberpunk.UI.Mapa
 
             mundo = Centrado(mascara.transform, "Mundo");
             desplazado = Centrado(mundo, "Desplazado");
-            calles = KitUI.CrearImagen(desplazado, "Calles", ColorCalles);
-            manzanas = new Image[GeometriaBarrio.Cantidad];
-            for (int i = 0; i < manzanas.Length; i++)
-            {
-                manzanas[i] = KitUI.CrearImagen(desplazado, "Manzana_" + (i + 1), FondoOscuro);
-            }
+            capaCalles = Centrado(desplazado, "Calles");
 
             circuloBusqueda = new CirculoBusquedaMapa(desplazado);
             capaRuta = Centrado(desplazado, "RutaGps");
@@ -199,8 +197,7 @@ namespace MechaCyberpunk.UI.Mapa
 
             mundo.localRotation = Quaternion.Euler(0f, 0f, rumbo);
             desplazado.anchoredPosition = -GeometriaBarrio.AMapa(centro) * escala;
-            calles.rectTransform.sizeDelta = GeometriaBarrio.TamanoConCalles * escala;
-            PintarManzanas();
+            DibujarCalles(centro);
             circuloBusqueda.Actualizar(escala);
 
             // El objetivo (rombo naranja), pegado al borde si está lejos.
@@ -234,6 +231,7 @@ namespace MechaCyberpunk.UI.Mapa
             DibujarMarcas(centro, rumbo, radio);
             DibujarDestinos(centro, rumbo, radio);
             DibujarAliados(centro, rumbo, radio);
+            QuitarEncimados();
             rombo.SetAsLastSibling();
             punto.rectTransform.SetAsLastSibling();
         }
@@ -288,18 +286,73 @@ namespace MechaCyberpunk.UI.Mapa
             SegmentosRutaVisibles = tramos;
         }
 
-        private void PintarManzanas()
+        // Las líneas de las calles que caen cerca del jugador (las demás no se dibujan).
+        private void DibujarCalles(Vector3 centro)
         {
-            ITerritorio territorio = Registro<ITerritorio>.Actual;
-            float lado = GeometriaBarrio.LadoManzana * escala;
-            for (int i = 0; i < manzanas.Length; i++)
+            IReadOnlyList<CalculoCallesMapa.Tramo> tramos = CatalogoCallesMapa.Tramos;
+            Vector2 c = GeometriaBarrio.AMapa(centro);
+            int usadas = 0;
+            for (int i = 0; i < tramos.Count; i++)
             {
-                string zona = GeometriaBarrio.Zona(i, territorio);
-                Color dueno = zona.Length > 0 ? FormatoTerritorio.ColorDe(territorio.Dueno(zona)) : KitUI.Estilo.Desactivado;
-                manzanas[i].color = Color.Lerp(FondoOscuro, dueno, AlfaManzanas);
-                RectTransform rect = manzanas[i].rectTransform;
-                rect.anchoredPosition = GeometriaBarrio.Centros[i] * escala;
-                rect.sizeDelta = Vector2.one * lado;
+                CalculoCallesMapa.Tramo t = tramos[i];
+                if (CalculoCallesMapa.DistanciaATramo(c, t) > MetrosCalles)
+                {
+                    continue;
+                }
+                if (usadas == lineasCalles.Count)
+                {
+                    Image linea = KitUI.CrearImagen(capaCalles, "Linea_" + usadas, ColorLineaCalle);
+                    KitUI.Colocar(linea.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one);
+                    linea.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                    linea.raycastTarget = false;
+                    lineasCalles.Add(linea);
+                }
+                Image imagen = lineasCalles[usadas];
+                Mostrar(imagen.gameObject, true);
+                Vector2 d = t.B - t.A;
+                RectTransform rect = imagen.rectTransform;
+                rect.anchoredPosition = (t.A + t.B) * 0.5f * escala;
+                rect.sizeDelta = new Vector2(d.magnitude * escala + GrosorLineaCallePx, GrosorLineaCallePx);
+                rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+                usadas++;
+            }
+            for (int i = usadas; i < lineasCalles.Count; i++)
+            {
+                Mostrar(lineasCalles[i].gameObject, false);
+            }
+            LineasCallesVisibles = usadas;
+        }
+
+        // T-701: los íconos que quedan encimados (entre sí o sobre la flecha del jugador) se esconden; se queda el primero.
+        private readonly List<Image> iconos = new List<Image>();
+        private readonly List<Vector2> posicionesIconos = new List<Vector2>();
+        private readonly List<bool> visiblesIconos = new List<bool>();
+
+        private void QuitarEncimados()
+        {
+            iconos.Clear();
+            posicionesIconos.Clear();
+            visiblesIconos.Clear();
+            Reunir(marcas);
+            Reunir(destinos);
+            Reunir(aliados);
+            bool[] quedan = CalculoCallesMapa.SinEncimar(posicionesIconos, visiblesIconos, ladoIcono * SeparacionIconos, ladoFlecha + ladoIcono * 0.5f);
+            for (int i = 0; i < iconos.Count; i++)
+            {
+                if (visiblesIconos[i] && !quedan[i])
+                {
+                    Mostrar(iconos[i].gameObject, false);
+                }
+            }
+        }
+
+        private void Reunir(List<Image> lista)
+        {
+            for (int i = 0; i < lista.Count; i++)
+            {
+                iconos.Add(lista[i]);
+                posicionesIconos.Add(lista[i].rectTransform.anchoredPosition);
+                visiblesIconos.Add(lista[i].gameObject.activeSelf);
             }
         }
 

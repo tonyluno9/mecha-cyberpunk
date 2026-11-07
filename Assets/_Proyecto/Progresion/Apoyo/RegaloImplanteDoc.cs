@@ -17,6 +17,9 @@ namespace MechaCyberpunk.Progresion.Apoyo
         [Tooltip("Lo que dice al regalarlo.")]
         [SerializeField] private string frase = "Toma, mijo, va por la casa: te puse un exo de piernas. Para lo demás, siéntate en la silla.";
 
+        /// <summary>Lo que dice al regalar el implante (T-702: las pruebas lo leen de aquí en vez de copiar el texto).</summary>
+        public string Frase => frase;
+
         /// <summary>True si ya lo regaló en esta partida (para las pruebas).</summary>
         public bool Regalado { get; private set; }
 

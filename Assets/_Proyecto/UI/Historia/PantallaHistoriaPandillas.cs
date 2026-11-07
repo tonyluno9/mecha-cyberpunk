@@ -57,8 +57,17 @@ namespace MechaCyberpunk.UI.Historia
             ayuda = texto;
             finAyuda = Time.unscaledTime + segundos;
             // T-523: la ayuda sale por la cola de avisos del centro (de a una y por poco tiempo); aquí queda como dato.
-            MechaCyberpunk.UI.Hud.ColaAvisos.Publicar(texto, MechaCyberpunk.UI.Hud.PrioridadAviso.Normal, MechaCyberpunk.UI.Hud.TipoAviso.Neutro, segundos);
+            // T-701: el nombre de la zona ("MEGALOPOLIS · SUBURBIOS") va chico arriba al centro y se desvanece, no en la cola.
+            if (!(MechaCyberpunk.UI.Hud.ReglaTituloZonaH10.EsTituloDeZona(texto) && MechaCyberpunk.UI.Hud.HudH10.MostrarTitulo(texto, segundos)))
+            {
+                PublicarEnCola(texto, segundos);
+            }
             Refrescar();
+        }
+
+        private static void PublicarEnCola(string texto, float segundos)
+        {
+            MechaCyberpunk.UI.Hud.ColaAvisos.Publicar(texto, MechaCyberpunk.UI.Hud.PrioridadAviso.Normal, MechaCyberpunk.UI.Hud.TipoAviso.Neutro, segundos);
         }
 
         public void MostrarContinuara()

@@ -18,10 +18,11 @@ namespace MechaCyberpunk.UI.Hud
         public const string SonidoCumplido = "UI_OBJETIVO_CUMPLIDO";
         private const float GradosArriba = 90f;
         // T-523: marcador discreto. Constantes (no serializadas): los valores viejos (36, 40, 34) seguían guardados en el prefab.
-        private const float diagonalRombo = 26f;
-        private const float ladoFlecha = 26f;
-        private const float separacionDistancia = 24f;
-        private const float OpacidadDistancia = 0.85f;
+        private const float diagonalRombo = 14f;
+        private const float ladoFlecha = 18f;
+        private const float separacionDistancia = 18f;
+        private const float OpacidadDistancia = 0.7f;
+        private const int TamanoDistancia = 18;
 
         [Tooltip("Altura del rombo sobre el objetivo (m).")]
         [Min(0f)] [SerializeField] private float alturaSobreObjetivo = 2.2f;
@@ -87,6 +88,13 @@ namespace MechaCyberpunk.UI.Hud
             Text texto = KitUI.CrearTexto(padre, "Distancia", RolTexto.Ayuda, TextAnchor.MiddleCenter);
             Color turquesa = KitUI.Estilo.Turquesa;
             texto.color = new Color(turquesa.r, turquesa.g, turquesa.b, OpacidadDistancia);
+            // T-701: chico y fino (Rajdhani del HUD nuevo); la distancia grande ya sale en la línea del objetivo.
+            ConfigHudH10 estiloH10 = ConfigHudH10.Actual;
+            if (estiloH10 != null && estiloH10.Fuente != null)
+            {
+                texto.font = estiloH10.Fuente;
+            }
+            texto.fontSize = TamanoDistancia;
             RectTransform rect = texto.rectTransform;
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = posicion;
