@@ -36,6 +36,20 @@ namespace MechaCyberpunk.IA.APie
         public TurnosPandillaAPie Turnos => turnos;
         public PandilleroAPie[] Pandilleros => pandilleros;
 
+        /// <summary>
+        /// T-713: grupo de una misión. Salen todos los del grupo a la vez (de día o de noche), no se retiran al amanecer, y los que caen no vuelven a
+        /// aparecer (ni por esperar, ni por irte y regresar). Hay que ponerlo antes de prender el grupo.
+        /// </summary>
+        public bool ModoMision { get; set; }
+
+        /// <summary>T-713: cuántos de este grupo ya cayeron en modo misión (no vuelven).</summary>
+        public int Vencidos => vencidos.Count;
+
+        /// <summary>T-713: True si en modo misión ya cayeron todos los del grupo.</summary>
+        public bool TodosVencidos => pandilleros != null && pandilleros.Length > 0 && vencidos.Count >= pandilleros.Length;
+
+        private readonly System.Collections.Generic.HashSet<PandilleroAPie> vencidos = new System.Collections.Generic.HashSet<PandilleroAPie>();
+
         /// <summary>Cuántos pandilleros hay en pie ahora.</summary>
         public int Presentes
         {
@@ -229,7 +243,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 return;
             }
-            if (Time.time - vacioDesde >= datos.SegundosReaparicion && distancia > datos.DistanciaReaparicion)
+            if (!ModoMision && Time.time - vacioDesde >= datos.SegundosReaparicion && distancia > datos.DistanciaReaparicion)
             {
                 vacioDesde = -1f;
                 Aparecer(CuantosAhora(reloj));
@@ -291,7 +305,7 @@ namespace MechaCyberpunk.IA.APie
             if (datos.Siempre)
             {
                 Aparecer(CuantosAhora(reloj));
-                retiroParcialPendiente = !reloj.EsDeNoche;
+                retiroParcialPendiente = !ModoMision && !reloj.EsDeNoche;
             }
             else if (reloj.EsDeNoche)
             {
@@ -316,6 +330,10 @@ namespace MechaCyberpunk.IA.APie
                 retiroParcialPendiente = false;
                 Aparecer(pandilleros.Length);
             }
+            else if (ModoMision)
+            {
+                // T-713: un grupo de misión no se retira al amanecer.
+            }
             else if (datos.Siempre)
             {
                 // De día se quedan algunos y el resto se retira cuando no esté peleando.
@@ -330,7 +348,7 @@ namespace MechaCyberpunk.IA.APie
         // T-447: cuántos pandilleros del grupo hay ahora: todos de noche (o sin reloj) y, de día, la fracción de los datos (al menos uno).
         private int CuantosAhora(IRelojMundo relojActual)
         {
-            if (relojActual == null || relojActual.EsDeNoche)
+            if (ModoMision || relojActual == null || relojActual.EsDeNoche)
             {
                 return pandilleros.Length;
             }
@@ -342,6 +360,11 @@ namespace MechaCyberpunk.IA.APie
             for (int i = 0; i < pandilleros.Length && i < cuantos; i++)
             {
                 PandilleroAPie p = pandilleros[i];
+                // T-713: en modo misión el que ya cayó no vuelve.
+                if (ModoMision && vencidos.Contains(p))
+                {
+                    continue;
+                }
                 // Un pandillero que sigue en pie de la noche anterior no se reinicia a media pelea.
                 if (p.gameObject.activeSelf && !p.EstaKO)
                 {
@@ -386,6 +409,10 @@ namespace MechaCyberpunk.IA.APie
 
         private void AlVencerUno(PandilleroAPie vencido)
         {
+            if (ModoMision)
+            {
+                vencidos.Add(vencido);
+            }
             // T-686: el dinero ya no se abona solo; cada pandillero lo suelta al caer y el jugador lo recoge.
             if (datos.CalorAlVencer > 0f)
             {
