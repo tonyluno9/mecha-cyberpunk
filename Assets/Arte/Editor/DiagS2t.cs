@@ -379,6 +379,14 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/s2t-diag-brumas.txt", sb.ToString());
         }
 
+        public static void FotosTaller()
+        {
+            ColocarS2.Abrir();
+            ColocarS2t.FotoHora(13f, new Vector3(-48f, 2f, -71f), new Vector3(-37f, 4f, -71.2f), ColocarS2t.CarpetaCapturas + "s2t-taller-fachada-dia.png", 65f);
+            ColocarS2t.FotoHora(22f, new Vector3(-48f, 2f, -71f), new Vector3(-37f, 4f, -71.2f), ColocarS2t.CarpetaCapturas + "s2t-taller-fachada-noche.png", 65f);
+            ColocarS2t.FotoHora(22f, new Vector3(-38.5f, 1.7f, -72f), new Vector3(-33f, 1.2f, -70.5f), ColocarS2t.CarpetaCapturas + "s2t-taller-dentro.png", 70f);
+        }
+
         public static void Todo()
         {
             Postes();
