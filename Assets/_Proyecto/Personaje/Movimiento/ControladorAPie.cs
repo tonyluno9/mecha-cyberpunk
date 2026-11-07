@@ -72,6 +72,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public float FactorSensibilidad { get; set; } = 1f;
         /// <summary>Multiplica la velocidad de caminar (T-421: agachado en cubierta, 0 al rodar). 1 = normal.</summary>
         public float FactorVelocidad { get; set; } = 1f;
+        /// <summary>Multiplicador extra de velocidad que no pisa la cubierta (T-685: el café). 1 = normal.</summary>
+        public float FactorExtraVelocidad { get; set; } = 1f;
         /// <summary>Velocidad horizontal extra en el mundo (m/s), la usa la rodada y el pegarse a la cubierta (T-421).</summary>
         public Vector3 DesplazamientoExterno { get; set; }
         /// <summary>Cuánto baja la cámara de hombro (m), por agacharse (T-421).</summary>
@@ -224,7 +226,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             // Tercera persona: el movimiento es relativo a la cámara; el cuerpo gira hacia donde camina, o hacia donde mira si apunta.
             Quaternion marco = Quaternion.Euler(0f, giroCamara, 0f);
             Vector3 horizontal = marco * new Vector3(velocidad.x, 0f, velocidad.y);
-            horizontal = horizontal * FactorVelocidad + DesplazamientoExterno;
+            horizontal = horizontal * FactorVelocidad * FactorExtraVelocidad + DesplazamientoExterno;
             GirarCuerpo(dt, horizontal);
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
