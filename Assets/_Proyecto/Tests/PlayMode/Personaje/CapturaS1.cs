@@ -8,6 +8,26 @@ namespace MechaCyberpunk.Tests.Personaje
     {
         public static bool Activa => System.Environment.GetEnvironmentVariable("CAPTURAR_S1") == "1";
 
+        /// <summary>Foto de lo que ve una cámara del juego (por ejemplo la del jugador). Deja la cámara como estaba.</summary>
+        public static void FotoCamara(string nombre, Camera camara, int ancho = 1280, int alto = 720)
+        {
+            if (!Activa || camara == null) return;
+            RenderTexture previa = camara.targetTexture;
+            RenderTexture rt = new RenderTexture(ancho, alto, 24);
+            camara.targetTexture = rt;
+            camara.Render();
+            RenderTexture.active = rt;
+            Texture2D foto = new Texture2D(ancho, alto, TextureFormat.RGB24, false);
+            foto.ReadPixels(new Rect(0, 0, ancho, alto), 0, 0);
+            foto.Apply();
+            RenderTexture.active = null;
+            camara.targetTexture = previa;
+            Directory.CreateDirectory("docs/capturas");
+            File.WriteAllBytes("docs/capturas/" + nombre + ".png", foto.EncodeToPNG());
+            Object.Destroy(rt);
+            Object.Destroy(foto);
+        }
+
         /// <summary>Foto de un canvas de pantalla (HUD o menú) sobre fondo oscuro. Lo deja como estaba.</summary>
         public static void FotoCanvas(string nombre, Canvas canvas, int ancho = 1280, int alto = 720)
         {

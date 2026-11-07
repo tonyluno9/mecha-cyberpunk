@@ -71,6 +71,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 gameObject.AddComponent<GestosJugador>();
             }
+            if (GetComponent<ApuntarDesdeVehiculo>() == null)
+            {
+                gameObject.AddComponent<ApuntarDesdeVehiculo>();
+            }
             if (GetComponent<ConsumiblesJugador>() == null)
             {
                 gameObject.AddComponent<ConsumiblesJugador>();
