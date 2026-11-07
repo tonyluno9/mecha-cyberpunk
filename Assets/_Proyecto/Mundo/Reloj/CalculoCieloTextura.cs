@@ -10,7 +10,7 @@ namespace MechaCyberpunk.Mundo.Reloj
     public static class CalculoCieloTextura
     {
         private static readonly Color NubesDia = new Color(1f, 1f, 1f, 0.6f);
-        private static readonly Color NubesNoche = new Color(0.85f, 0.4f, 0.6f, 0.5f);
+        private static readonly Color NubesNoche = new Color(0.42f, 0.4f, 0.56f, 0.3f); // S2c: azul grisáceo con un poco del brillo de la ciudad, como K01
         private static readonly Color CalidoSol = new Color(1f, 0.88f, 0.68f, 1f);
         private const float OpacidadMaximaEstrellas = 0.95f;
         private const float CalidezSol = 0.45f;
