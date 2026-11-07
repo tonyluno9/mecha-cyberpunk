@@ -106,6 +106,30 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             TextoSalir, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
         };
 
+        /// <summary>T-716: el lugar de Core al que apunta el objetivo si el destino de la escena falta. Nunca una coordenada fija.</summary>
+        public const IdLugar LugarRespaldo = IdLugar.Casa;
+
+        /// <summary>T-716: la frase del objetivo de un paso (vacía en Continuara y Libre, que no llevan objetivo). El Tianguis usa <see cref="TextoTianguis"/>.</summary>
+        public static string TextoDelPaso(PasoHistoria paso)
+        {
+            switch (paso)
+            {
+                case PasoHistoria.Despierta: return TextoSalir;
+                case PasoHistoria.PrimeraPelea: return TextoDefender;
+                case PasoHistoria.Pistola: return TextoPistola;
+                case PasoHistoria.Chato: return TextoChato;
+                case PasoHistoria.Doc: return TextoDoc;
+                case PasoHistoria.Inventor: return TextoInventor;
+                case PasoHistoria.Tianguis: return TextoTianguis(0, 7);
+                case PasoHistoria.Jefe: return TextoJefe;
+                case PasoHistoria.NeonAlto: return TextoHacker;
+                default: return string.Empty;
+            }
+        }
+
+        /// <summary>T-716: true si el paso lleva objetivo en el HUD y los mapas (todos menos Continuara y Libre).</summary>
+        public static bool LlevaObjetivo(PasoHistoria paso) => TextoDelPaso(paso).Length > 0;
+
         private void Awake()
         {
             pantalla = gameObject.AddComponent<PantallaHistoriaPandillas>();
@@ -387,7 +411,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     return;
                 }
             }
-            Vector3 punto = PosicionTianguis();
+            TryPosicionTianguis(out Vector3 punto);
             int seguridad = 20;
             while (!territorio.JefeDisponible(zona) && territorio.Dueno(zona) != IdPandilla.Jugador && seguridad-- > 0)
             {
@@ -402,20 +426,22 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             if (respeto != respetoMostrado)
             {
                 respetoMostrado = respeto;
-                FijarObjetivo(TextoTianguis(respeto / RespetoPorSkull, respetoJefe / RespetoPorSkull), PosicionTianguis());
+                FijarObjetivo(TextoTianguis(respeto / RespetoPorSkull, respetoJefe / RespetoPorSkull), TryPosicionTianguis(out Vector3 tianguis), tianguis);
             }
         }
 
-        private Vector3 PosicionTianguis()
+        private bool TryPosicionTianguis(out Vector3 posicion)
         {
             foreach (GameObject g in gruposTianguis)
             {
                 if (g != null)
                 {
-                    return g.transform.position;
+                    posicion = g.transform.position;
+                    return true;
                 }
             }
-            return Vector3.zero;
+            posicion = Vector3.zero;
+            return false;
         }
 
         // ---------- Avance ----------
@@ -527,35 +553,35 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             switch (paso)
             {
                 case PasoHistoria.Despierta:
-                    FijarObjetivo(TextoSalir, puertaCasa != null ? puertaCasa.position : Vector3.zero);
+                    FijarObjetivo(TextoSalir, puertaCasa != null, puertaCasa != null ? puertaCasa.position : default);
                     break;
                 case PasoHistoria.PrimeraPelea:
-                    FijarObjetivo(TextoDefender, donaLupe != null ? donaLupe.position : Vector3.zero);
+                    FijarObjetivo(TextoDefender, donaLupe != null, donaLupe != null ? donaLupe.position : default);
                     pantalla.MostrarSubtitulo("—¡Ya déjenla!", 4f);
                     break;
                 case PasoHistoria.Pistola:
                     SoltarPistola();
-                    FijarObjetivo(TextoPistola, arma != null ? arma.transform.position : Vector3.zero);
+                    FijarObjetivo(TextoPistola, arma != null, arma != null ? arma.transform.position : default);
                     break;
                 case PasoHistoria.Chato:
                     pantalla.MostrarAyuda("CLIC DERECHO APUNTA · CLIC IZQUIERDO DISPARA", 8f);
-                    FijarObjetivo(TextoChato, chato != null ? chato.Posicion : Vector3.zero);
+                    FijarObjetivo(TextoChato, chato != null, chato != null ? chato.Posicion : default);
                     break;
                 case PasoHistoria.Doc:
-                    FijarObjetivo(TextoDoc, doc != null ? doc.Posicion : Vector3.zero);
+                    FijarObjetivo(TextoDoc, doc != null, doc != null ? doc.Posicion : default);
                     break;
                 case PasoHistoria.Inventor:
-                    FijarObjetivo(TextoInventor, inventor != null ? inventor.Posicion : Vector3.zero);
+                    FijarObjetivo(TextoInventor, inventor != null, inventor != null ? inventor.Posicion : default);
                     break;
                 case PasoHistoria.Tianguis:
                     textosTianguisPendientes = true;
                     ActualizarRespeto();
                     break;
                 case PasoHistoria.Jefe:
-                    FijarObjetivo(TextoJefe, PosicionJefe());
+                    FijarObjetivo(TextoJefe, TryPosicionJefe(out Vector3 jefe), jefe);
                     break;
                 case PasoHistoria.NeonAlto:
-                    FijarObjetivo(TextoHacker, hacker != null ? hacker.Posicion : Vector3.zero);
+                    FijarObjetivo(TextoHacker, hacker != null, hacker != null ? hacker.Posicion : default);
                     break;
                 default:
                     QuitarObjetivo();
@@ -574,16 +600,17 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             }
         }
 
-        private Vector3 PosicionJefe()
+        private bool TryPosicionJefe(out Vector3 posicion)
         {
             foreach (JefePandilla j in FindObjectsByType<JefePandilla>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 if (j.Zona == zona)
                 {
-                    return j.transform.position;
+                    posicion = j.transform.position;
+                    return true;
                 }
             }
-            return PosicionTianguis();
+            return TryPosicionTianguis(out posicion);
         }
 
         private void SoltarPistola()
@@ -655,9 +682,12 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             Avisar(AvisoHistoria.PistolaTomada);
         }
 
-        private static void FijarObjetivo(string texto, Vector3 posicion)
+        // T-716: el destino sale de la escena; si falta, el objetivo apunta al lugar de Core de respaldo, nunca a (0, 0, 0).
+        private static void FijarObjetivo(string texto, bool hayPosicion, Vector3 posicion)
         {
-            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(new Objetivo(texto, posicion));
+            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(hayPosicion
+                ? new Objetivo(texto, posicion)
+                : new Objetivo(texto, LugarRespaldo));
         }
 
         private static void QuitarObjetivo()

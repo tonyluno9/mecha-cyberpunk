@@ -56,6 +56,9 @@ namespace MechaCyberpunk.Progresion.Prologo
 
         /// <summary>El mostrador de peleas del clandestino (T-133).</summary>
         Mostrador,
+
+        /// <summary>T-716: durante la pelea del tutorial, el lugar del clandestino (la arena).</summary>
+        Arena,
     }
 
     /// <summary>El objetivo a mostrar: su texto y a dónde apunta.</summary>
@@ -87,10 +90,12 @@ namespace MechaCyberpunk.Progresion.Prologo
         private readonly int pasosRuta;
         private readonly string textoClandestino;
         private readonly string textoMostrador;
+        private readonly string textoPelea;
 
         public MaquinaPrologo(string textoCarro, string textoRegreso, string textoCama, int pasosRuta,
-            string textoClandestino = "", string textoMostrador = "")
+            string textoClandestino = "", string textoMostrador = "", string textoPelea = "")
         {
+            this.textoPelea = textoPelea;
             this.textoClandestino = textoClandestino;
             this.textoMostrador = textoMostrador;
             this.textoCarro = textoCarro;
@@ -195,6 +200,10 @@ namespace MechaCyberpunk.Progresion.Prologo
             {
                 switch (Etapa)
                 {
+                    case EtapaPrologo.PeleaTutorial:
+                        return string.IsNullOrEmpty(textoPelea)
+                            ? new ObjetivoPrologo(string.Empty, DestinoObjetivo.Ninguno, 0)
+                            : new ObjetivoPrologo(textoPelea, DestinoObjetivo.Arena, 0);
                     case EtapaPrologo.SalidaClandestino:
                         return new ObjetivoPrologo(textoCarro, DestinoObjetivo.Carro, 0);
                     case EtapaPrologo.RegresoACasa:

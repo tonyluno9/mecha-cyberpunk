@@ -45,6 +45,8 @@ namespace MechaCyberpunk.Progresion.Prologo
         [Min(0.5f)] [SerializeField] private float segundosAvisoDespertar = 6f;
         [SerializeField] private string textoIrAlClandestino = "Ve al clandestino: tu primera pelea casera";
         [SerializeField] private string textoHablarEncargado = "Habla con el encargado (E)";
+        [Tooltip("T-716: objetivo durante la pelea del tutorial en la arena (frase corta).")]
+        [SerializeField] private string textoGanarPelea = "Gana tu pelea";
         [Tooltip("Lugar al que va el jugador a su primera pelea casera.")]
         [SerializeField] private IdLugar lugarClandestino = IdLugar.Clandestino;
 
@@ -64,6 +66,7 @@ namespace MechaCyberpunk.Progresion.Prologo
         public float SegundosAvisoDespertar => segundosAvisoDespertar;
         public string TextoIrAlClandestino => textoIrAlClandestino;
         public string TextoHablarEncargado => textoHablarEncargado;
+        public string TextoGanarPelea => textoGanarPelea;
         public IdLugar LugarClandestino => lugarClandestino;
     }
 }

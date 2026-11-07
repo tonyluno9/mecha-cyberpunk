@@ -224,7 +224,7 @@ namespace MechaCyberpunk.Pelea.Emboscada
             {
                 return;
             }
-            Objetivo deseado = modo == ModoJugador.Mecha ? new Objetivo(datos.TextoDerrotar, IdLugar.Ninguno) : ObjetivoDeSubida();
+            Objetivo deseado = modo == ModoJugador.Mecha ? new Objetivo(datos.TextoDerrotar, transform.position) : ObjetivoDeSubida();
             FijarObjetivo(deseado);
         }
 
@@ -255,7 +255,7 @@ namespace MechaCyberpunk.Pelea.Emboscada
             }
             return cercano != null
                 ? new Objetivo(datos.TextoLlamar, cercano.Llegada.position)
-                : new Objetivo(datos.TextoLlamar, IdLugar.Ninguno);
+                : new Objetivo(datos.TextoLlamar, IdLugar.Taller); // T-716: sin punto de llamado, apunta al taller (Core), nunca sin destino
         }
 
         // El mecha "llegó" cuando está junto a la llegada de algún punto de llamado (en el taller no cuenta, aunque se pueda subir).
