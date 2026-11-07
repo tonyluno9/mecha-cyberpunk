@@ -53,7 +53,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(ResultadoImplante.Instalado, r);
             Assert.AreEqual(10000 - 2000, cartera.Dinero);
             Assert.AreEqual(1, servicio.Nivel(EspacioImplante.Brazos));
-            Assert.AreEqual("BRAZOS DE PISTÓN", servicio.Nombre(EspacioImplante.Brazos));
+            Assert.AreEqual("EXO DE BRAZOS I", servicio.Nombre(EspacioImplante.Brazos));
             Assert.AreEqual(1, servicio.Cantidad);
             Assert.AreEqual(1, instalados);
             Assert.AreEqual(1, cambios);

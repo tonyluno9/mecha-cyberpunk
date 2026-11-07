@@ -187,6 +187,10 @@ namespace MechaCyberpunk.Tests.UI
             yield return new WaitForSecondsRealtime(0.3f);
             Assert.AreEqual(config.TextoAviso, banco.Texto);
             Assert.IsTrue(banco.PuedeUsar, "El banco se puede usar a pie");
+            // T-865: la pantalla ya está armada (escondida) antes del primer E: abre al instante.
+            Assert.IsNotNull(banco.Pantalla, "la pantalla se arma al entrar");
+            Assert.IsNotNull(banco.Pantalla.Canvas, "con su lienzo ya construido");
+            Assert.IsFalse(banco.Pantalla.Visible, "pero escondida");
 
             // E abre el menú y congela al jugador.
             yield return Pulsar(teclado.eKey);
