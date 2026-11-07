@@ -284,6 +284,12 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.IsFalse(PersonaChoca(pose.position));
         }
 
+        private static Bounds Encapsular(Bounds a, Bounds b)
+        {
+            a.Encapsulate(b);
+            return a;
+        }
+
         [UnityTest]
         public IEnumerator Bajar_ConMurosEnLosDosLados_NoPuedeBajar()
         {
@@ -291,6 +297,19 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Vector3 puerta = carro.PuntoSubida;
             Caja("MuroConductor", puerta + new Vector3(-0.2f, 1f, 0f), new Vector3(0.5f, 2f, 3f));
             Caja("MuroCopiloto", new Vector3(-puerta.x + 0.2f, 1f, puerta.z), new Vector3(0.5f, 2f, 3f));
+            // T-657: sin puertas todavía queda salir por atrás y por el techo: también se tapan.
+            Bounds cajaCarro = default;
+            bool hay = false;
+            foreach (BoxCollider c in carroObjeto.GetComponentsInChildren<BoxCollider>())
+            {
+                if (!c.isTrigger)
+                {
+                    cajaCarro = hay ? Encapsular(cajaCarro, c.bounds) : c.bounds;
+                    hay = true;
+                }
+            }
+            Caja("MuroAtras", new Vector3(cajaCarro.center.x, 1f, cajaCarro.min.z - 1f), new Vector3(4f, 2f, 0.5f));
+            Caja("Techo", new Vector3(cajaCarro.center.x, cajaCarro.max.y + 1f, cajaCarro.center.z), new Vector3(8f, 0.2f, 10f));
             carro.IntentarSubir(jugador);
             int avisos = 0;
             carro.OcupadoCambio += _ => avisos++;
@@ -403,6 +422,10 @@ namespace MechaCyberpunk.Tests.Vehiculos
             yield return Preparar(Vector3.zero);
             carro.IntentarSubir(jugador);
             CamaraCarro camara = carro.CamaraDelCarro;
+            // La cámara arranca en tercera persona: la C pasa a primera persona (la que mira hasta el límite).
+            PressAndRelease(teclado.cKey);
+            yield return null;
+            Assert.IsFalse(camara.EsTerceraPersona, "La C debe pasar a primera persona");
 
             Set(raton.delta, new Vector2(100000f, 0f));
             yield return null;
