@@ -117,6 +117,21 @@ namespace MechaCyberpunk.Progresion
             return ResultadoImplante.Instalado;
         }
 
+        /// <summary>
+        /// T-864: lo instala sin cobrar ni pedir liga (el Doc te lo regala al empezar). Si ya tienes ese nivel o uno mayor, no cambia nada.
+        /// </summary>
+        public ResultadoImplante Regalar(DatosImplante implante)
+        {
+            if (implante == null) return ResultadoImplante.NoMejora;
+            int actual = Nivel(implante.Espacio);
+            if (actual == implante.Nivel) return ResultadoImplante.YaInstalado;
+            if (actual > implante.Nivel) return ResultadoImplante.NoMejora;
+            Lista[(int)implante.Espacio] = implante;
+            Instalado?.Invoke(implante.Espacio, implante.Nivel);
+            Cambio?.Invoke();
+            return ResultadoImplante.Instalado;
+        }
+
         /// <summary>Solo para pruebas y herramientas: quita todo sin devolver dinero.</summary>
         public void QuitarTodos()
         {
