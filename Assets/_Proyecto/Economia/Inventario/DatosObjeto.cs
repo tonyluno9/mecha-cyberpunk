@@ -42,6 +42,9 @@ namespace MechaCyberpunk.Economia
             maximo = Mathf.Max(1, maximoNuevo);
         }
 
+        /// <summary>Para clases hijas: fija la oferta de tienda (T-720).</summary>
+        protected void FijarOferta(DatosOferta ofertaNueva) => oferta = ofertaNueva;
+
         /// <summary>Crea un objeto en memoria (para pruebas y herramientas).</summary>
         public static DatosObjeto Crear(string id, string nombre, TipoObjeto tipo, int valorVenta, int maximo, DatosOferta oferta = null)
         {

@@ -77,7 +77,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 StringAssert.DoesNotContain("subfusil", oferta.Id.ToLowerInvariant());
             }
             Assert.AreEqual(19, ofertasArmas, "4 armas y 15 mejoras");
-            Assert.AreEqual(19 + 6, tienda.Ofertas.Count, "Además del kit, las 4 municiones y el brazo");
+            Assert.AreEqual(19 + 6 + 3, tienda.Ofertas.Count, "Además del kit, las 4 municiones y el brazo y las 3 balas de arma (T-720)");
 
             DatosArma sniper = catalogo.Buscar(ArmaAPie.Sniper, 0);
             Assert.AreEqual(4, sniper.Cargador, "Sniper base: 4 balas");

@@ -113,7 +113,7 @@ namespace MechaCyberpunk.Tests
             var celdas = Oferta("MunicionCeldas", 40, TipoOferta.Municion);
             var cargas = Oferta("MunicionCargas", 50, TipoOferta.Municion);
 
-            Tienda("MercadoNegro", IdLugar.MercadoNegro, 19, kit, misil, brazo, combustible, celdas, cargas);
+            Tienda("MercadoNegro", IdLugar.MercadoNegro, 22, kit, misil, brazo, combustible, celdas, cargas);
             Tienda("Clinica", IdLugar.Clinica, ojos);
             Tienda("Bar", IdLugar.Bar, bebida);
         }

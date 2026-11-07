@@ -34,9 +34,9 @@ namespace MechaCyberpunk.UI.Editor
         private const float YDinero = 290f;
         private const float YPestanas = 190f;
         private const float XPestanas = 260f;
-        private const float YLista = 20f;
+        private const float YLista = 0f;
         private const float AltoLista = 330f;
-        private const float YAviso = -230f;
+        private const float YAviso = -400f;
         private const float YAyuda = -450f;
         private const float YFavor = -400f;
         private const float AltoFavor = 50f;

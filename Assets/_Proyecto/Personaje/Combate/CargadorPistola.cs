@@ -4,7 +4,7 @@ namespace MechaCyberpunk.Personaje.Combate
 {
     /// <summary>
     /// Lógica pura del cargador de la pistola: balas, cadencia y recarga. No depende de Unity; el tiempo entra por
-    /// <see cref="Avanzar"/>. La reserva de balas es infinita en esta fase.
+    /// <see cref="Avanzar"/>. Sin <see cref="Fuente"/> la reserva es infinita (la pistola); con ella cada recarga gasta balas de la fuente (T-720).
     /// </summary>
     public class CargadorPistola
     {
@@ -30,6 +30,9 @@ namespace MechaCyberpunk.Personaje.Combate
 
         /// <summary>T-545: cuánto dura una recarga con el factor actual (s); la animación de la pistola se ajusta a esto.</summary>
         public float TiempoRecarga => tiempoRecarga * FactorRecarga;
+
+        /// <summary>T-720: de dónde salen las balas al recargar. Null: infinitas.</summary>
+        public IFuenteBalas Fuente { get; set; }
 
         public int Tamano { get; }
         public int Balas { get; private set; }
@@ -67,7 +70,7 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>Empieza la recarga. No hace nada si el cargador está lleno o ya recarga.</summary>
         public bool EmpezarRecarga()
         {
-            if (Recargando || Balas >= Tamano)
+            if (Recargando || Balas >= Tamano || (Fuente != null && Fuente.Disponibles <= 0))
             {
                 return false;
             }
@@ -91,7 +94,7 @@ namespace MechaCyberpunk.Personaje.Combate
             if (recargaRestante <= 0f)
             {
                 Recargando = false;
-                Balas = Tamano;
+                Balas = Fuente != null ? Balas + Fuente.Tomar(Tamano - Balas) : Tamano;
                 RecargaTerminada?.Invoke();
             }
         }
