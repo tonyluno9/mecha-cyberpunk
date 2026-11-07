@@ -112,6 +112,20 @@ namespace MechaCyberpunk.UI.Historia
             visibilidad = 1f;
         }
 
+        /// <summary>Se apaga hasta quedar invisible y se destruye.</summary>
+        public IEnumerator Desvanecer(float segundos)
+        {
+            float inicio = visibilidad;
+            float transcurrido = 0f;
+            while (transcurrido < segundos)
+            {
+                transcurrido += Time.unscaledDeltaTime;
+                visibilidad = Mathf.Lerp(inicio, 0f, Mathf.Clamp01(transcurrido / Mathf.Max(0.01f, segundos)));
+                yield return null;
+            }
+            Cerrar();
+        }
+
         /// <summary>Ya visible del todo, sin animación de entrada.</summary>
         public void MostrarYa() => visibilidad = 1f;
 

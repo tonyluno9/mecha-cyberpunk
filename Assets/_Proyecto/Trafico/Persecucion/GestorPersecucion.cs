@@ -14,6 +14,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
     /// </summary>
     public class GestorPersecucion : MonoBehaviour
     {
+        /// <summary>Mensaje de Unity que recibe el jugador al ser arrestado (T-690).</summary>
+        public const string MensajeArresto = "AlSerArrestado";
         private const string PrefijoManzana = "Manzana_";
         private const string NombreCamara = "CamaraSeguridad";
         private const float LadoManzana = 80f;          // medida del barrio (CreadorBarrio, m)
@@ -257,6 +259,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Debug.Log("[Trafico] El jugador fue arrestado.");
             EventosPolicia.PublicarArresto();
             calor.Borrar();
+            // T-690: las consecuencias (pantalla ARRESTADO, multa, casa) las hace el jugador (Progresion): Trafico no conoce esas áreas.
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador != null && jugador.Raiz != null)
+            {
+                jugador.Raiz.gameObject.SendMessage(MensajeArresto, SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         /// <summary>Saliste de la vista y del círculo de búsqueda el tiempo suficiente (T-665): ya no te buscan.</summary>
