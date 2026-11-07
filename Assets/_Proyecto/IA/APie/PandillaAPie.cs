@@ -386,14 +386,13 @@ namespace MechaCyberpunk.IA.APie
 
         private void AlVencerUno(PandilleroAPie vencido)
         {
-            ICartera cartera = Registro<ICartera>.Actual;
-            cartera?.Abonar(datos.Dinero, MotivoDinero.Otro);
+            // T-686: el dinero ya no se abona solo; cada pandillero lo suelta al caer y el jugador lo recoge.
             if (datos.CalorAlVencer > 0f)
             {
                 Registro<ICalor>.Actual?.Sumar(datos.CalorAlVencer, MotivoCalor.Pelea);
             }
             Registro<ITerritorio>.Actual?.RegistrarVencido(vencido.transform.position, idPandilla, false);
-            Debug.Log("[IA] Pandillero vencido: +" + datos.Dinero);
+            Debug.Log("[IA] Pandillero vencido: suelta " + datos.Dinero);
         }
     }
 }
