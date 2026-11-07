@@ -28,6 +28,9 @@ namespace MechaCyberpunk.Trafico.Calle
         // T-532: lo que no es tráfico (carros estacionados o robados, patrullas, gente, puestos) se ve con un rayo en caja a la altura del cofre.
         private const float AlturaRayo = 0.9f;
         private const int MaxChoques = 8;
+        // T-705: el conductor al que le roban el carro pierde de vista al jugador (y cancela su llamada) a esta distancia.
+        public const string NombreConductorRobado = "ConductorRobado";
+        public const float RadioAbandonoConductor = 25f;
         // T-532: aparece y desaparece lejos y fuera de la vista.
         private const float DistanciaOculta = 45f;
         // T-704: nace y se borra solo fuera del frustum de la cámara (con este margen en metros alrededor del carro) y lejos del jugador.
@@ -337,8 +340,6 @@ namespace MechaCyberpunk.Trafico.Calle
                 return;
             }
             Robado = true;
-            Vector3 puerta = montable.PuntoSubida;
-            Vector3? jugador = posicionJugador?.Invoke();
             if (cuerpo != null)
             {
                 cuerpo.isKinematic = false;
@@ -346,24 +347,40 @@ namespace MechaCyberpunk.Trafico.Calle
                 cuerpo.angularVelocity = Vector3.zero;
             }
             Sonidos.ReproducirEn("VEH_CLAXON_TRAFICO", transform.position);
-            SacarConductor(puerta, jugador ?? transform.position);
+            SacarConductorRobado();
             enabled = false;
         }
 
-        private void SacarConductor(Vector3 puerta, Vector3 amenaza)
+        /// <summary>T-705: True mientras el jugador ya subió y el carro todavía no lo sabe (el conductor aún está adentro).</summary>
+        public bool EstaSiendoRobado => !Robado && montable != null && montable.Ocupado;
+
+        /// <summary>T-705: el conductor que sacaron del carro (null si no hay o aún no sale).</summary>
+        public PeatonMundo ConductorSacado { get; private set; }
+
+        /// <summary>
+        /// T-705: el conductor sale del asiento (lo sacan), cae al suelo y se levanta asustado; es un testigo (<see cref="PeatonMundo"/>) que
+        /// puede llamar a la policía. Se puede llamar antes que el aviso del robo (lo hace <c>TestigosDelito</c> para que cuente como testigo); la
+        /// segunda vez no hace nada. Devuelve el conductor.
+        /// </summary>
+        public PeatonMundo SacarConductorRobado()
         {
-            if (prefabConductor == null)
+            if (ConductorSacado != null || prefabConductor == null || montable == null)
             {
-                return;
+                return ConductorSacado;
             }
-            GameObject conductor = Instantiate(prefabConductor, puerta, Quaternion.identity);
-            conductor.name = "ConductorHuyendo";
+            Vector3 asiento = montable.Asiento != null ? montable.Asiento.position : transform.position;
+            Vector3? jugador = posicionJugador?.Invoke();
+            GameObject conductor = Instantiate(prefabConductor, asiento, Quaternion.identity);
+            conductor.name = NombreConductorRobado;
             PeatonMundo peaton = conductor.GetComponent<PeatonMundo>();
-            if (peaton != null)
+            if (peaton == null)
             {
-                Destroy(peaton);
+                peaton = conductor.AddComponent<PeatonMundo>();
             }
-            conductor.AddComponent<ConductorHuye>().Iniciar(amenaza);
+            peaton.RadioAbandonoPropio = RadioAbandonoConductor;
+            conductor.AddComponent<ConductorRobado>().Iniciar(asiento, montable.PuntoSubida, jugador ?? transform.position);
+            ConductorSacado = peaton;
+            return peaton;
         }
 
         // T-703: lo chocó otro carro (el del jugador, una patrulla): reacciona según qué tan fuerte fue.

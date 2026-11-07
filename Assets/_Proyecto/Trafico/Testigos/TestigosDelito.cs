@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Trafico.Calle;
 using MechaCyberpunk.Trafico.Datos;
 using MechaCyberpunk.Trafico.Peatones;
 using MechaCyberpunk.Trafico.Persecucion;
@@ -109,6 +110,7 @@ namespace MechaCyberpunk.Trafico.Testigos
             {
                 return ResultadoTestigos.Pasa;
             }
+            SacarConductoresDeCarrosRobados();
             IniciarLlamadas(jugador.Value);
             if (llamadas.Count > 0)
             {
@@ -144,6 +146,18 @@ namespace MechaCyberpunk.Trafico.Testigos
                 }
             }
             return null;
+        }
+
+        // T-705: el conductor del carro que le están robando es testigo desde ya (el carro puede avisar del robo antes o después que este calor).
+        private static void SacarConductoresDeCarrosRobados()
+        {
+            for (int i = 0; i < CarroTrafico.Activos.Count; i++)
+            {
+                if (CarroTrafico.Activos[i].EstaSiendoRobado)
+                {
+                    CarroTrafico.Activos[i].SacarConductorRobado();
+                }
+            }
         }
 
         private void IniciarLlamadas(Vector3 punto)
@@ -218,7 +232,8 @@ namespace MechaCyberpunk.Trafico.Testigos
                 {
                     Vector3 d = jugador.Value - l.Civil.transform.position;
                     d.y = 0f;
-                    sigue = d.magnitude <= config.RadioAbandonoCivil;
+                    float radio = l.Civil.RadioAbandonoPropio > 0f ? l.Civil.RadioAbandonoPropio : config.RadioAbandonoCivil;
+                    sigue = d.magnitude <= radio;
                 }
                 if (!sigue)
                 {
