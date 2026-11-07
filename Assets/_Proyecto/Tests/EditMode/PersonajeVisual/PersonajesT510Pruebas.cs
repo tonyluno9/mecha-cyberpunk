@@ -95,10 +95,11 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void Mecanico_SeImportaPeroNoSeUsa()
+        public void Mecanico_TieneSuVisual()
         {
+            // T-862 (playtest 6-nov tarde): Canepa usa el modelo del Mecánico.
             Assert.IsNotNull(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Personajes/Mecanico/Mecanico.fbx"), "Mecanico importado");
-            Assert.IsNull(AssetDatabase.LoadAssetAtPath<GameObject>(CreadorVisualPersonaje.RutaPrefab("Mecanico")), "Sin visual");
+            Assert.IsNotNull(AssetDatabase.LoadAssetAtPath<GameObject>(CreadorVisualPersonaje.RutaPrefab("Mecanico")), "Con su visual");
         }
 
         // ---------- man deja de salir negro ----------

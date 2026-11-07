@@ -10,7 +10,8 @@ namespace MechaCyberpunk.Arte.Editor
     /// <summary>
     /// T-856 (playtest 6-nov tarde): fuera lo inventado con primitivos que Tony no hizo. Se apagan (no se borran: otros scripts pueden
     /// referenciarlos) los balcones, toldos, macetas y plantas de cubo de T508_CallesLlenas, los "tejados" (las Lamina cafés de las azoteas del
-    /// barrio), los puentes de cubos de S2n_Puentes (T-857 pone el modelo de puente de Tony) y el set de cubos del hacker. Las banquetas pasan a la
+    /// barrio), y los puentes de cubos de S2n_Puentes (T-857 pone el modelo de puente de Tony). El set del hacker
+    /// (silla, mesa y laptop de T-639) se queda: sin él el hacker se sienta en el aire. Las banquetas pasan a la
     /// textura T01_Banqueta (imageassets/calle), con el tamaño de losa parejo en todas (un material por tamaño de banqueta).
     /// Lo que se queda: los edificios del barrio y sus fachadas del kit, y todo lo hecho con los assets de Tony. Idempotente.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ColocarS2tLimpieza.Colocar
@@ -60,14 +61,18 @@ namespace MechaCyberpunk.Arte.Editor
             }
             ColocarS2.Informe.AppendLine("tejados (Lamina) apagados: " + tejados);
 
-            foreach (string r in new[] { RaizPuentes, RutaSetHacker })
+            Transform puentes = ColocarS2.Buscar(RaizPuentes);
+            if (puentes != null)
             {
-                Transform t = ColocarS2.Buscar(r);
-                if (t != null)
-                {
-                    t.gameObject.SetActive(false);
-                }
-                ColocarS2.Informe.AppendLine((t != null ? "apagado " : "FALTA ") + r);
+                puentes.gameObject.SetActive(false);
+            }
+            ColocarS2.Informe.AppendLine((puentes != null ? "apagado " : "FALTA ") + RaizPuentes);
+            // El set del hacker se queda: es la silla, la mesa y la laptop del hacker sentado de T-639 (sin él se sienta en el aire).
+            Transform hacker = ColocarS2.Buscar(RutaSetHacker);
+            if (hacker != null && !hacker.gameObject.activeSelf)
+            {
+                hacker.gameObject.SetActive(true);
+                ColocarS2.Informe.AppendLine("prendido otra vez " + RutaSetHacker + " (lo usa T-639)");
             }
 
             Banquetas();
