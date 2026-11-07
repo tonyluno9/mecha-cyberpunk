@@ -418,3 +418,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 
 - T-684 escudo de energia: IEscudo (Core), EscudoJugador, barra en el HUD con destello; mejorable por IEscudo. 12 EditMode + 6 PlayMode.
 - T-685 expendedoras: 5 consumibles (bebida, papitas, venda, cafe, bateria), Tab/F/6-0, expendedora con E en casa, tianguis y Nova colocadas en ejecucion. 5 EditMode + 9 PlayMode.
+- T-686 botin de enemigos: los pandilleros sueltan dinero (se recoge al pasar) y arma (ArmaEnPiso); el jefe una escopeta. EventosBotin en Core. 2 EditMode + 3 PlayMode.

@@ -83,6 +83,9 @@ namespace MechaCyberpunk.Tests.IA
         public override void TearDown()
         {
             PistolaPandillero.Azar = azarAnterior;
+            // T-686: el botín de los pandilleros caídos no pasa a la prueba siguiente.
+            foreach (MechaCyberpunk.Personaje.Combate.DineroEnPiso d in Object.FindObjectsByType<MechaCyberpunk.Personaje.Combate.DineroEnPiso>(FindObjectsSortMode.None)) Object.Destroy(d.gameObject);
+            foreach (MechaCyberpunk.Personaje.Combate.ArmaEnPiso a in Object.FindObjectsByType<MechaCyberpunk.Personaje.Combate.ArmaEnPiso>(FindObjectsSortMode.None)) Object.Destroy(a.gameObject);
             Object.Destroy(gestorObjeto);
             Object.Destroy(grupo);
             Object.Destroy(jugador);
@@ -182,6 +185,14 @@ namespace MechaCyberpunk.Tests.IA
             foreach (PandilleroAPie p in pandilla.Pandilleros)
             {
                 p.RecibirDanio(new InfoDanio(DanoMatar, TipoDanio.Disparo, p.transform.position, Vector3.forward, null));
+            }
+            // T-686: el dinero no se abona solo; queda en el piso y se recoge al pasar.
+            Assert.AreEqual(dineroAntes, cartera.Dinero, "El dinero ya no se abona al caer");
+            yield return null;
+            foreach (MechaCyberpunk.Personaje.Combate.DineroEnPiso suelto in Object.FindObjectsByType<MechaCyberpunk.Personaje.Combate.DineroEnPiso>(FindObjectsSortMode.None))
+            {
+                Registro<IJugador>.Actual.Colocar(new Pose(suelto.transform.position, Quaternion.identity));
+                yield return Esperar(0.9f);
             }
             Assert.AreEqual(dineroAntes + DineroEsperado, cartera.Dinero);
 
