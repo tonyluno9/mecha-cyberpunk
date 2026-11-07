@@ -109,6 +109,34 @@ namespace MechaCyberpunk.Arte.Editor
             return go;
         }
 
+        /// <summary>Recorrido de revisión (de día): zonas con piezas hechas con primitivos. docs/capturas/s2t-recorrido-&lt;nombre&gt;.png</summary>
+        public static readonly (string nombre, Vector3 desde, Vector3 hacia)[] Recorrido =
+        {
+            ("tianguis", new Vector3(-20f, 1.7f, -2f), new Vector3(-40f, 5f, -10f)),
+            ("cruzada", new Vector3(-46f, 1.7f, 2f), new Vector3(-38f, 5f, 18f)),
+            ("suburbios", new Vector3(-110f, 1.7f, 0f), new Vector3(-125f, 5f, -10f)),
+            ("callejon", new Vector3(-80f, 1.7f, -50f), new Vector3(-85f, 5f, -62f)),
+            ("neon", new Vector3(45f, 1.7f, 25f), new Vector3(57f, 5f, 35f)),
+            ("calle-nueva", new Vector3(-40f, 1.7f, -120f), new Vector3(-20f, 6f, -108f)),
+            ("puente-sur", new Vector3(30f, 1.7f, 30f), new Vector3(38f, 9f, 42f)),
+            ("puente-nova", new Vector3(48f, 1.7f, 58f), new Vector3(56f, 9f, 68f)),
+            ("autopista", new Vector3(10f, 1.7f, 85f), new Vector3(0f, 10f, 103f)),
+            ("salida-norte", new Vector3(-55f, 1.7f, 80f), new Vector3(-62f, 6f, 98f)),
+            ("salida-este", new Vector3(125f, 1.7f, 15f), new Vector3(145f, 6f, 21f)),
+            ("alto-oeste", new Vector3(-60f, 60f, -60f), new Vector3(-40f, 0f, -20f)),
+        };
+
+        [MenuItem("Mecha Cyberpunk/S2t/Fotos del recorrido")]
+        public static void FotosRecorrido()
+        {
+            ColocarS2.Abrir();
+            foreach (var t in Recorrido)
+            {
+                FotoHora(13f, t.desde, t.hacia, CarpetaCapturas + "s2t-recorrido-" + t.nombre + ".png", 70f);
+            }
+            EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single);
+        }
+
         public const string RutaLugarCasino = "Assets/_Proyecto/Mundo/Datos/DatosLugar_Casino.asset";
 
         /// <summary>T-863: el casino VivaCoin abre las 24 horas (Tony: "siempre abierto, se puede entrar"). Idempotente.</summary>

@@ -199,6 +199,186 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/s2t-diag-n09.txt", sb.ToString());
         }
 
+        public static void Taller()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (string r in new[] { "GTA_T417/Apoyo_CANEPA", "S2n_TallerMecanico/Fachada", "GTA_T417/Apoyo_TINO" })
+            {
+                Transform t = ColocarS2.Buscar(r);
+                sb.AppendLine("== " + r + (t == null ? " FALTA" : " p" + t.position.ToString("F2") + " r" + t.eulerAngles.ToString("F0")));
+                if (t == null) continue;
+                foreach (Transform h in t.GetComponentsInChildren<Transform>(true).Take(40))
+                {
+                    Renderer rd = h.GetComponent<Renderer>();
+                    sb.AppendLine("  " + Ruta(h).Substring(r.Length) + (h.gameObject.activeInHierarchy ? "" : " [apagado]") + " p" + h.position.ToString("F2") + " s" + h.lossyScale.ToString("F2")
+                        + (rd != null ? " b" + rd.bounds.size.ToString("F2") : "") + " " + Fuente(h.gameObject) + " " + string.Join(",", h.GetComponents<MonoBehaviour>().Where(m => m != null).Select(m => m.GetType().Name)));
+                }
+            }
+            sb.AppendLine("== Letreros cerca del taller (x -40..-24, z -80..-60)");
+            foreach (Transform t in ColocarS2.Todos().Where(t => t.gameObject.activeInHierarchy && (t.name.Contains("Letrero") || t.name.StartsWith("C15") || t.name.StartsWith("L1") || t.GetComponent<Canvas>() != null)
+                && t.position.x > -40f && t.position.x < -24f && t.position.z > -80f && t.position.z < -60f))
+            {
+                sb.AppendLine("  " + Ruta(t) + " p" + t.position.ToString("F2") + " r" + t.eulerAngles.ToString("F0") + " " + Fuente(t.gameObject));
+            }
+            File.WriteAllText("Logs/s2t-diag-taller.txt", sb.ToString());
+        }
+
+        public static void Nombres()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (var g in ColocarS2.Todos().Where(t => t.gameObject.activeInHierarchy && t.GetComponent<Renderer>() != null && t.GetComponent<Renderer>().enabled)
+                .GroupBy(t => string.Join("/", Ruta(t).Split('/').Take(2)) + " | " + (t.GetComponent<Renderer>().sharedMaterial != null ? t.GetComponent<Renderer>().sharedMaterial.name : "-"))
+                .Where(g => g.Key.ToLowerInvariant().Contains("tej") || g.Key.ToLowerInvariant().Contains("techo") || g.Key.ToLowerInvariant().Contains("azotea") || g.Key.ToLowerInvariant().Contains("teja") || g.Key.ToLowerInvariant().Contains("lamina") || g.Key.ToLowerInvariant().Contains("losa")))
+            {
+                Transform e = g.First();
+                sb.AppendLine(g.Count() + "x " + g.Key + " ej " + Ruta(e) + " c" + e.GetComponent<Renderer>().bounds.center.ToString("F0") + " s" + e.GetComponent<Renderer>().bounds.size.ToString("F1"));
+            }
+            File.WriteAllText("Logs/s2t-diag-nombres.txt", sb.ToString());
+            ColocarS2t.FotoHora(13f, new Vector3(-80f, 45f, -110f), new Vector3(-50f, 0f, -75f), ColocarS2t.CarpetaCapturas + "s2t-recorrido-alto-casa.png", 70f);
+            ColocarS2t.FotoHora(13f, new Vector3(-20f, 45f, -40f), new Vector3(-50f, 0f, -90f), ColocarS2t.CarpetaCapturas + "s2t-recorrido-alto-casa2.png", 70f);
+        }
+
+        public static void FotosSur()
+        {
+            ColocarS2.Abrir();
+            var tomas = new[] {
+                ("sur-1", new Vector3(-47f, 1.7f, -88f), new Vector3(-30f, 4f, -98f)),
+                ("sur-2", new Vector3(-20f, 1.7f, -85f), new Vector3(-30f, 5f, -98f)),
+                ("sur-3", new Vector3(-47f, 1.7f, -100f), new Vector3(-65f, 4f, -100f)),
+                ("sur-4", new Vector3(-30f, 25f, -70f), new Vector3(-30f, 0f, -100f)) };
+            foreach (var (n, d, h) in tomas)
+            {
+                ColocarS2t.FotoHora(13f, d, h, ColocarS2t.CarpetaCapturas + "s2t-recorrido-" + n + ".png", 70f);
+            }
+            File.WriteAllText("Logs/s2t-diag-sur.txt", "== cerca de (-30,-98)" + System.Environment.NewLine + string.Join(System.Environment.NewLine, ColocarS2.Todos().Where(t => t.parent != null && t.parent.parent == null && t.gameObject.activeInHierarchy).SelectMany(r => r.Cast<Transform>()).Where(t => new Vector2(t.position.x + 35f, t.position.z + 98f).magnitude < 20f).Select(t => Ruta(t) + " p" + t.position.ToString("F0"))));
+        }
+
+        public static void Elevados()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (Rigidbody rb in Object.FindObjectsByType<Rigidbody>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(r => r.position.y > 4f))
+            {
+                sb.AppendLine("cuerpo alto: " + Ruta(rb.transform) + " p" + rb.position.ToString("F1"));
+            }
+            foreach (Transform t in ColocarS2.Todos().Where(t => t.gameObject.activeInHierarchy && (t.name.StartsWith("N02") || t.name.Contains("Autopista"))))
+            {
+                Renderer r = t.GetComponentInChildren<Renderer>();
+                sb.AppendLine(Ruta(t) + " p" + t.position.ToString("F1") + (r != null ? " b" + r.bounds.center.ToString("F1") + " s" + r.bounds.size.ToString("F1") : ""));
+            }
+            File.WriteAllText("Logs/s2t-diag-elevados.txt", sb.ToString());
+        }
+
+        public static void FotoL03()
+        {
+            GameObject p = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Callejon/Prefabs/L03_EscaleraEmergencia.prefab");
+            GameObject i = (GameObject)PrefabUtility.InstantiatePrefab(p);
+            Bounds b = ArteT250.Limites(i);
+            File.WriteAllText("Logs/s2t-diag-l03.txt", "L03 limites " + b.center.ToString("F2") + " " + b.size.ToString("F2") + " colliders " + string.Join(",", i.GetComponentsInChildren<Collider>().Select(c => c.GetType().Name + " " + c.bounds.size.ToString("F2"))));
+            Object.DestroyImmediate(i);
+            ColocarS2t.FotoPrefabs(new[] { "Assets/Arte/Callejon/Prefabs/L03_EscaleraEmergencia.prefab", "Assets/Arte/Calle/Prefabs/N02.prefab" }, ColocarS2t.CarpetaCapturas + "s2t-l03-n02.png");
+        }
+
+        public static void AlturasL03()
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            GameObject i = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Callejon/Prefabs/L03_EscaleraEmergencia.prefab"));
+            foreach (Collider c in i.GetComponentsInChildren<Collider>()) Object.DestroyImmediate(c);
+            foreach (MeshFilter mf in i.GetComponentsInChildren<MeshFilter>()) mf.gameObject.AddComponent<MeshCollider>().sharedMesh = mf.sharedMesh;
+            Physics.SyncTransforms();
+            Bounds b = ArteT250.Limites(i);
+            StringBuilder sb = new StringBuilder("L03 " + b.min.ToString("F2") + " .. " + b.max.ToString("F2") + "  filas z de max a min, columnas x de min a max (alto en dm)" + System.Environment.NewLine);
+            for (float z = b.max.z; z >= b.min.z; z -= 0.25f)
+            {
+                sb.Append(z.ToString("F2").PadLeft(6) + " ");
+                for (float x = b.min.x; x <= b.max.x; x += 0.25f)
+                {
+                    sb.Append(Physics.Raycast(new Vector3(x, b.max.y + 1f, z), Vector3.down, out RaycastHit h, 10f) ? ((int)(h.point.y * 10f)).ToString().PadLeft(3) : "  .");
+                }
+                sb.AppendLine();
+            }
+            File.WriteAllText("Logs/s2t-diag-l03-alturas.txt", sb.ToString());
+        }
+
+        public static void FotosRamales()
+        {
+            ColocarS2.Abrir();
+            var tomas = new[] {
+                ("callejon-fondo", new Vector3(-60f, 1.7f, -60f), new Vector3(-90f, 2f, -60f)),
+                ("callejon-alto", new Vector3(-60f, 30f, -45f), new Vector3(-80f, 0f, -62f)),
+                ("ramal-x25", new Vector3(-25f, 1.7f, 6f), new Vector3(-25f, 2f, 45f)),
+                ("ramal-x25-alto", new Vector3(-5f, 30f, 20f), new Vector3(-25f, 0f, 35f)) };
+            foreach (var (n, d, h) in tomas)
+            {
+                ColocarS2t.FotoHora(13f, d, h, ColocarS2t.CarpetaCapturas + "s2t-" + n + ".png", 70f);
+            }
+        }
+
+        public static void Pasillos()
+        {
+            ColocarS2.Abrir();
+            Physics.SyncTransforms();
+            StringBuilder sb = new StringBuilder();
+            foreach (var (n, caja) in new[] {
+                ("callejon -> oeste", new Bounds(new Vector3(-110f, 2f, -60f), new Vector3(50f, 3f, 5f))),
+                ("ramal x-25 -> norte", new Bounds(new Vector3(-25f, 2f, 65f), new Vector3(5f, 3f, 40f))),
+                ("ramal x-25 -> oeste", new Bounds(new Vector3(-45f, 2f, 40f), new Vector3(40f, 3f, 5f))) })
+            {
+                sb.AppendLine("== " + n + " " + caja.min.ToString("F0") + ".." + caja.max.ToString("F0"));
+                foreach (Collider c in Physics.OverlapBox(caja.center, caja.extents, Quaternion.identity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
+                    .GroupBy(c => c.transform).Select(g => g.First()))
+                {
+                    sb.AppendLine("  " + Ruta(c.transform) + " b" + c.bounds.min.ToString("F0") + ".." + c.bounds.max.ToString("F0"));
+                }
+            }
+            File.WriteAllText("Logs/s2t-diag-pasillos.txt", sb.ToString());
+        }
+
+        public static void Edificios()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (string r in new[] { "Barrio/Manzana_2/Edificios/Edificio_13", "Barrio/Manzana_2/Edificios/Edificio_14", "Barrio/Manzana_4/Edificios/Edificio_39", "Barrio/Manzana_4/Edificios/Edificio_40" })
+            {
+                Transform t = ColocarS2.Buscar(r);
+                sb.AppendLine("== " + r + " hijos " + (t == null ? "FALTA" : t.childCount.ToString()));
+                if (t == null) continue;
+                foreach (var g in t.GetComponentsInChildren<Transform>(true).Where(h => h != t).GroupBy(h => h.parent == t ? h.name.Split('_')[0] : "(nieto)"))
+                    sb.AppendLine("   " + g.Count() + "x " + g.Key);
+            }
+            // Lo que vive fuera del edificio pero sobre su huella (fachadas del kit de T-501/T-530, pisos de ArteNoche, letreros...).
+            foreach (var (n, caja) in new[] { ("huella 13+14", new Bounds(new Vector3(-22f, 10f, 64.5f), new Vector3(6.4f, 30f, 39.5f))) })
+            {
+                sb.AppendLine("== " + n);
+                foreach (var g in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(r => r.enabled && caja.Contains(r.bounds.center))
+                    .GroupBy(r => string.Join("/", Ruta(r.transform).Split('/').Take(3))))
+                    sb.AppendLine("   " + g.Count() + "x " + g.Key);
+            }
+            File.WriteAllText("Logs/s2t-diag-edificios.txt", sb.ToString());
+        }
+
+        public static void Brumas()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (UnityEngine.Rendering.Volume v in Object.FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                Collider c = v.GetComponent<Collider>();
+                sb.AppendLine("volumen " + Ruta(v.transform) + " global " + v.isGlobal + " peso " + v.weight + " perfil " + (v.sharedProfile != null ? v.sharedProfile.name + " [" + string.Join(",", v.sharedProfile.components.Select(x => x.GetType().Name)) + "]" : "-") + (c != null ? " caja " + c.bounds.center.ToString("F0") + " " + c.bounds.size.ToString("F0") : ""));
+            }
+            foreach (ParticleSystem ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(p => new Vector2(p.transform.position.x + 85f, p.transform.position.z + 60f).magnitude < 40f))
+            {
+                sb.AppendLine("particulas " + Ruta(ps.transform) + " p" + ps.transform.position.ToString("F0"));
+            }
+            foreach (Renderer r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(r => r.enabled && r.sharedMaterial != null && (r.sharedMaterial.name.ToLowerInvariant().Contains("niebla") || r.sharedMaterial.name.ToLowerInvariant().Contains("bruma") || r.sharedMaterial.name.ToLowerInvariant().Contains("vapor") || r.sharedMaterial.name.ToLowerInvariant().Contains("humo"))))
+            {
+                sb.AppendLine("malla de bruma " + Ruta(r.transform) + " c" + r.bounds.center.ToString("F0") + " s" + r.bounds.size.ToString("F0") + " " + r.sharedMaterial.name);
+            }
+            File.WriteAllText("Logs/s2t-diag-brumas.txt", sb.ToString());
+        }
+
         public static void Todo()
         {
             Postes();
