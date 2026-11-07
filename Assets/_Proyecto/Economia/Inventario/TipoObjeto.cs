@@ -7,6 +7,8 @@ namespace MechaCyberpunk.Economia
         Chatarra,
         KitReparacion,
         Municion,
-        Arma
+        Arma,
+        /// <summary>Se usa con una tecla y da un efecto (T-685).</summary>
+        Consumible
     }
 }

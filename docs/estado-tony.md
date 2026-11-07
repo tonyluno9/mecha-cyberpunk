@@ -417,3 +417,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-683: agachado con animación real (AgachadoQuieto, AgachadoCaminar, capa Brazos), pies más rápidos con Shift, rodada lenta de 0.8 s que no se hunde y termina agachado. Faltan en Mixamo: Crouch Idle, Crouched Walking, Forward Roll (docs/animaciones-faltan.md). Pruebas: AgachadoAnimadoT683Pruebas.
 
 - T-684 escudo de energia: IEscudo (Core), EscudoJugador, barra en el HUD con destello; mejorable por IEscudo. 12 EditMode + 6 PlayMode.
+- T-685 expendedoras: 5 consumibles (bebida, papitas, venda, cafe, bateria), Tab/F/6-0, expendedora con E en casa, tianguis y Nova colocadas en ejecucion. 5 EditMode + 9 PlayMode.

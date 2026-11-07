@@ -52,7 +52,7 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Noche_ConservaLosValoresDeAntes()
         {
             ConfigCicloDia config = Config();
-            Assert.AreEqual(0.02f, config.DensidadNiebla(HoraNoche), Tolerancia);
+            Assert.AreEqual(0.009f, config.DensidadNiebla(HoraNoche), Tolerancia, "T-860: menos niebla de noche (antes 0.02 tapaba la ciudad junto al callejón)");
             Assert.AreEqual(0.12f, config.ColorNiebla(HoraNoche).r, Tolerancia);
             Assert.AreEqual(0.26f, config.ColorNiebla(HoraNoche).b, Tolerancia);
             Assert.AreEqual(0.38f, config.ColorAmbiente(HoraNoche).r, Tolerancia, "T-507 bajó el ambiente de noche (antes 0.27 con más azul)");

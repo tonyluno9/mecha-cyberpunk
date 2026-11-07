@@ -71,6 +71,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 gameObject.AddComponent<GestosJugador>();
             }
+            if (GetComponent<ConsumiblesJugador>() == null)
+            {
+                gameObject.AddComponent<ConsumiblesJugador>();
+            }
         }
 
         /// <summary>T-520: el modelo del jugador cambió (mujer u hombre); lo que se oculta en el carro es el del nuevo.</summary>

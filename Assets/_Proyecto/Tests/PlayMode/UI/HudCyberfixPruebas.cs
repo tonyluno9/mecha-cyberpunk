@@ -181,7 +181,8 @@ namespace MechaCyberpunk.Tests.UI
                 CapturaUI.Capturar2K("docs/capturas/T-521-1-1440.png", camara);
             }
 
-            // La vida baja (debajo del 30 %) pasa a rojo.
+            // La vida baja (debajo del 30 %) pasa a rojo. T-684: sin escudo, para medir solo la vida.
+            jugador.Raiz.GetComponent<MechaCyberpunk.Personaje.Vida.EscudoJugador>()?.Iniciar(0f, 0f, 0f);
             vida.RecibirDanio(new InfoDanio(vida.Maxima * 0.75f, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
             yield return null;
             Assert.AreEqual(KitUI.Estilo.Enemigo, hud.Relleno.color, "la vida baja va roja");
