@@ -657,7 +657,7 @@ namespace MechaCyberpunk.UI.Hud
             string balas = string.Empty;
             if (fuego)
             {
-                balas = armas.Balas + "<size=40><color=#8fdcdacc> | " + armas.TamanoCargador + "</color></size>";
+                balas = armas.Balas + "<size=40><color=#8fdcdacc> | " + (armas.Reserva >= 0 ? armas.Reserva : armas.TamanoCargador) + "</color></size>"; // T-720: con reserva, la segunda cifra son las balas que quedan
             }
             Poner(textoBalas, balas);
         }

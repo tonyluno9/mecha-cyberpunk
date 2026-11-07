@@ -27,7 +27,8 @@ namespace MechaCyberpunk.UI.Tiendas
     public class PantallaTienda : MonoBehaviour
     {
         private const int FilasQueCaben = 5;
-        private const float MinimoEscalaFilas = 0.3f;
+        private const float FilasConAviso = 4.5f;
+        private const float MinimoEscalaFilas = 0.25f;
         private const int MinimoLetraFilas = 12;
 
         [SerializeField] private ConfigPantallaTienda config;
@@ -62,6 +63,7 @@ namespace MechaCyberpunk.UI.Tiendas
         private int indice;
         private bool visible;
         private bool aceptaFavorDescuento;
+        private float espaciadoBase = -1f;
 
         public bool Visible => visible;
         public PestanaTienda Pestana => pestana;
@@ -236,6 +238,11 @@ namespace MechaCyberpunk.UI.Tiendas
                 {
                     continue;
                 }
+                // T-720: las balas de un arma solo se ofrecen a quien ya la tiene.
+                if (objeto is DatosMunicionArma balas && (arsenal == null || !arsenal.Tiene(balas.Arma)))
+                {
+                    continue;
+                }
                 objetos.Add(objeto);
             }
             indice = Mathf.Clamp(indice, 0, Mathf.Max(0, objetos.Count - 1));
@@ -260,7 +267,11 @@ namespace MechaCyberpunk.UI.Tiendas
             {
                 MostrarAviso(config.TextoNoDisponible);
             }
-            else if (!inventario.PuedeAgregar(objeto, 1))
+            else if (objeto is DatosMunicionArma && Registro<ReservaBalas>.Actual == null)
+            {
+                MostrarAviso(config.TextoNoDisponible);
+            }
+            else if (objeto is DatosMunicionArma pide ? Registro<ReservaBalas>.Actual.Espacio(pide.Arma) <= 0 : !inventario.PuedeAgregar(objeto, 1))
             {
                 MostrarAviso(config.TextoMaximo);
             }
@@ -278,7 +289,15 @@ namespace MechaCyberpunk.UI.Tiendas
                             // El favor se gasta solo si se cobró.
                             Registro<ServicioFavores>.Actual.Gastar(TipoFavor.Descuento);
                         }
-                        inventario.Agregar(objeto, 1);
+                        if (objeto is DatosMunicionArma compradas)
+                        {
+                            // T-720: las balas van a la reserva del arma, no al inventario.
+                            Registro<ReservaBalas>.Actual.Agregar(compradas.Arma, compradas.BalasPorPaquete);
+                        }
+                        else
+                        {
+                            inventario.Agregar(objeto, 1);
+                        }
                         Sonidos.Reproducir("ECO_COMPRA");
                         Refiltrar();
                         MostrarAviso(string.Format(config.FormatoComprado, objeto.Nombre.ToUpperInvariant()));
@@ -382,6 +401,11 @@ namespace MechaCyberpunk.UI.Tiendas
             {
                 DatosObjeto objeto = objetos[i];
                 int lleva = inventario != null ? inventario.Cantidad(objeto) : 0;
+                if (objeto is DatosMunicionArma balasArma)
+                {
+                    ReservaBalas reserva = Registro<ReservaBalas>.Actual;
+                    lleva = reserva != null ? reserva.Cantidad(balasArma.Arma) : 0;
+                }
                 string precio = FormatoDinero.Texto(objeto.Oferta.Precio);
                 float rebaja = RebajaPara(objeto.Oferta);
                 if (rebaja > 0f)
@@ -443,13 +467,20 @@ namespace MechaCyberpunk.UI.Tiendas
         {
             LayoutElement plantilla = plantillaFila.GetComponent<LayoutElement>();
             VerticalLayoutGroup grupo = listaFilas.GetComponent<VerticalLayoutGroup>();
+            if (grupo != null)
+            {
+                espaciadoBase = espaciadoBase < 0f ? grupo.spacing : espaciadoBase;
+                grupo.spacing = espaciadoBase;
+            }
             if (plantilla == null || grupo == null || cantidad <= FilasQueCaben)
             {
                 return 1f;
             }
             float necesario = cantidad * plantilla.preferredHeight + (cantidad - 1) * grupo.spacing;
-            float disponible = FilasQueCaben * plantilla.preferredHeight + (FilasQueCaben - 1) * grupo.spacing;
-            return Mathf.Clamp(disponible / necesario, MinimoEscalaFilas, 1f);
+            float disponible = FilasConAviso * plantilla.preferredHeight + (FilasConAviso - 1f) * grupo.spacing; // deja sitio al aviso debajo
+            float escala = Mathf.Clamp(disponible / necesario, MinimoEscalaFilas, 1f);
+            grupo.spacing = espaciadoBase * escala; // T-720: el espacio entre filas también se achica, si no 13 filas se salen de la lista
+            return escala;
         }
 
         private void AgregarFila(string contenidoFila, Color color)

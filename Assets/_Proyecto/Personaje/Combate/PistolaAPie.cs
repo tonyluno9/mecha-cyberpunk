@@ -66,6 +66,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private readonly Vector3[] reposos = new Vector3[CantidadArmas];
         private DatosArma pistolaBase;
         private ArsenalJugador arsenal;
+        private ReservaBalas reserva;
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
         private float inicioRetroceso = -100f;
         private const float PuntaDelArma = 0.5f;
@@ -85,6 +86,8 @@ namespace MechaCyberpunk.Personaje.Combate
         public CargadorPistola Cargador => cargador;
         public int Balas => cargador != null ? cargador.Balas : 0;
         public int TamanoCargador => cargador != null ? cargador.Tamano : 0;
+        /// <summary>T-720: balas de reserva del arma en la mano; -1 si son infinitas (pistola).</summary>
+        public int Reserva => cargador != null && cargador.Fuente != null ? cargador.Fuente.Disponibles : -1;
         public bool Recargando => cargador != null && cargador.Recargando;
         /// <summary>Datos del arma de fuego en la mano (T-403).</summary>
         public DatosArma DatosActuales => datosArmas[Indice(armas != null ? armas.ArmaActiva : ArmaAPie.Pistola)];
@@ -115,6 +118,11 @@ namespace MechaCyberpunk.Personaje.Combate
                 Debug.LogError("[Personaje] Faltan referencias en PistolaAPie de " + name, this);
                 enabled = false;
                 return;
+            }
+            reserva = GetComponent<ReservaBalas>();
+            if (reserva == null)
+            {
+                reserva = gameObject.AddComponent<ReservaBalas>();
             }
             pistolaBase = DatosArma.Crear("pistola_base", "Pistola", ArmaAPie.Pistola, 0, 0, datos.Danio, 1, datos.BalasPorCargador,
                 datos.TiempoRecarga, datos.TiempoEntreDisparos, false, 0f, 0f, datos.Alcance);
@@ -174,6 +182,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     continue;
                 }
                 CargadorPistola c = new CargadorPistola(nuevos.Cargador, nuevos.TiempoEntreDisparos, nuevos.Recarga);
+                c.Fuente = reserva != null ? reserva.Fuente(arma) : null;
                 c.Disparo += AlCambiar;
                 c.RecargaIniciada += AlCambiar;
                 c.RecargaTerminada += AlCambiar;
@@ -244,9 +253,16 @@ namespace MechaCyberpunk.Personaje.Combate
             bool puede = actual != null && !vida.EstaKO && (controlador.ControlActivo || enCarro);
             if (puede)
             {
-                if (recargar.action.WasPressedThisFrame() && actual.EmpezarRecarga())
+                if (recargar.action.WasPressedThisFrame())
                 {
-                    Sonidos.Reproducir(IdRecarga(activa));
+                    if (actual.EmpezarRecarga())
+                    {
+                        Sonidos.Reproducir(IdRecarga(activa));
+                    }
+                    else if (actual.Fuente != null && actual.Fuente.Disponibles <= 0 && actual.Balas < actual.Tamano && !actual.Recargando)
+                    {
+                        Sonidos.Reproducir("ARM_VACIO"); // T-720: sin balas de reserva
+                    }
                 }
                 DatosArma d = datosArmas[(int)activa];
                 bool pidio = d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame();

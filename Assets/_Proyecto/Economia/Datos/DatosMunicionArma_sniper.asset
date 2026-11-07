@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543bbc1c48749034888dab06ef5543b9, type: 3}
+  m_Name: DatosMunicionArma_sniper
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosMunicionArma
+  id: municion_arma_sniper
+  nombre: Balas de sniper
+  tipo: 3
+  valorVenta: 0
+  maximo: 40
+  oferta: {fileID: 11400000, guid: bf5949f1f82159c47a4c70af7a696173, type: 2}
+  arma: 4
+  balasPorPaquete: 10
+  balasIniciales: 20

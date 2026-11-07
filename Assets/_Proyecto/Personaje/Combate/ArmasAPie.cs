@@ -53,6 +53,8 @@ namespace MechaCyberpunk.Personaje.Combate
         }
         public int Balas => pistola != null ? pistola.Balas : 0;
         public int TamanoCargador => pistola != null ? pistola.TamanoCargador : 0;
+        /// <summary>T-720: balas de reserva del arma en la mano; -1 si son infinitas.</summary>
+        public int Reserva => pistola != null ? pistola.Reserva : -1;
         public bool Recargando => pistola != null && pistola.Recargando;
 
         /// <summary>Se dispara al cambiar de arma y cuando cambian las balas o la recarga del arma de fuego.</summary>
