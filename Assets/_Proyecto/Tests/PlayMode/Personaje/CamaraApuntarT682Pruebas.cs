@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Personaje
 {
-    /// <summary>T-682: al apuntar la cámara conserva el encuadre de caminar (misma altura y distancia, personaje centrado en horizontal) y solo hace zoom (FOV menor).</summary>
+    /// <summary>T-682 (T-699: caminando también centrada): al apuntar la cámara conserva el encuadre de caminar (misma altura y distancia, personaje centrado en horizontal) y solo hace zoom (FOV menor).</summary>
     public class CamaraApuntarT682Pruebas : BaseJugadorAPie
     {
         private Camera Camara() => jugador.GetComponentInChildren<CamaraHombro>().GetComponent<Camera>();
@@ -43,7 +43,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola));
             Camera camara = Camara();
             Vector3 normal = jugador.transform.InverseTransformPoint(camara.transform.position);
-            Assert.Greater(normal.x, 0.3f, "Sin apuntar la cámara va al hombro");
+            Assert.AreEqual(0f, normal.x, 0.05f, "T-699: sin apuntar la cámara también va centrada");
             float fovNormal = camara.fieldOfView;
             Captura(camara, "s1t-T-682-caminando");
 
@@ -56,7 +56,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.Less(camara.fieldOfView, fovNormal - 5f, "Apuntando hace zoom (FOV menor)");
             Vector3 cabeza = camara.WorldToViewportPoint(jugador.transform.position + Vector3.up * 1.8f);
             Assert.AreEqual(0.5f, cabeza.x, 0.03f, "El personaje queda centrado en horizontal");
-            Assert.Greater(cabeza.y, 0.3f, "El personaje no se sale por abajo");
+            Assert.Greater(cabeza.y, 0.15f, "El personaje no se sale por abajo (T-699: queda en la parte baja de la pantalla)");
             Captura(camara, "s1t-T-682-apuntando");
 
             Press(raton.leftButton);
@@ -67,7 +67,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(raton.rightButton);
             yield return Esperar(1.2f);
             Vector3 suelta = jugador.transform.InverseTransformPoint(camara.transform.position);
-            Assert.Greater(suelta.x, 0.3f, "Al soltar vuelve al hombro");
+            Assert.AreEqual(normal.x, suelta.x, 0.05f, "Al soltar vuelve al encuadre de caminar");
         }
     }
 }

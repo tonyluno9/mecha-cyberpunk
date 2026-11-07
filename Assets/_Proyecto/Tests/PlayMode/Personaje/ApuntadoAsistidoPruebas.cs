@@ -55,8 +55,8 @@ namespace MechaCyberpunk.Tests.Personaje
         private float AnguloAlEnemigo()
         {
             Camera camara = jugador.GetComponentInChildren<Camera>();
-            // Desde el pecho del jugador y no desde la cámara: apuntar mueve la cámara (T-672) y eso no es un jalón del asistido.
-            Vector3 hacia = enemigo.transform.position + Vector3.up * 1.2f - (jugador.transform.position + Vector3.up * 1.5f);
+            // T-699: la cámara va 7 m detrás y alta, y el asistido apunta desde ella: el ángulo se mide desde la cámara (que apuntar ya no mueve).
+            Vector3 hacia = enemigo.transform.position + Vector3.up * 1.2f - camara.transform.position;
             return Vector3.Angle(camara.transform.forward, hacia);
         }
 

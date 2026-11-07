@@ -21,7 +21,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string NombreEjecutableJuego = NombreJuego.Ejecutable;
         private const string ExeViejo = "MechaCyberpunk.exe";
         private const string DatosViejo = "MechaCyberpunk_Data";
-        public const string NombreProducto = "Mecha Cyberpunk (demo)";
+        private const string ExeCyberfix = "Cyberfix.exe";
+        private const string DatosCyberfix = "Cyberfix_Data";
+        public const string NombreProducto = "CYBERCITY";
 
         /// <summary>Las escenas de la demo en el orden de Build Settings: la de índice 0 es con la que arranca el build.</summary>
         public static string[] EscenasDemo()
@@ -54,7 +56,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         // Pantalla completa a la resolución nativa; Alt+Enter pasa a ventana (T-137, punto 2).
         private static void AplicarPantalla()
         {
-            PlayerSettings.productName = NombreProducto;
+            PlayerSettings.productName = NombreJuego.Nombre;
             PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
             PlayerSettings.defaultIsNativeResolution = true;
             PlayerSettings.resizableWindow = true;
@@ -93,6 +95,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             if (File.Exists(exeViejo)) File.Delete(exeViejo);
             string datosViejo = Path.Combine(carpeta, DatosViejo);
             if (Directory.Exists(datosViejo)) Directory.Delete(datosViejo, true);
+            // T-698: el nombre anterior (Cyberfix) tampoco se queda junto al CyberCity.exe nuevo.
+            string exeCyberfix = Path.Combine(carpeta, ExeCyberfix);
+            if (File.Exists(exeCyberfix)) File.Delete(exeCyberfix);
+            string datosCyberfix = Path.Combine(carpeta, DatosCyberfix);
+            if (Directory.Exists(datosCyberfix)) Directory.Delete(datosCyberfix, true);
             foreach (string viejo in Directory.GetDirectories(carpeta, "*_BurstDebugInformation_DoNotShip"))
             {
                 Directory.Delete(viejo, true);

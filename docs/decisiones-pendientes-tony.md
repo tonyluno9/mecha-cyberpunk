@@ -1226,3 +1226,8 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - La moto no se hace 20 % más chica: 06nov-b dice que a Tony le gusta cómo se ve (manda sobre 06nov). Se calibró aceleración, frenado, conductor y humo.
 - La moto de reparto (V07) tiene su propia config (ConfigCarro_MotoReparto): 5.4 m/s² y tope 18 m/s, frente a 7.8 m/s² y 26 m/s de las otras motos.
 - T-696: escala de carros revisada contra el jugador de 1.80: no se ajustó nada, no hay aviso para la sesión 2. Aviso de fuego usa MUN_CHISPAS_ELECTRICAS (existente), nada para arte. Cristales de V02-V10 son opacos (ver T-694).
+
+## T-698 / T-699 (S1, noche 07-nov)
+- Logo: sigue el texto provisional CYBERCITY con glitch. Para usar una propuesta (imageassets/logo/LG01 a LG06): importar el PNG como Sprite en Assets/_Proyecto/UI/Resources/LogoCybercity.png (sin más código; el menú y la carga lo usan solos). Tony debe elegir cuál.
+- Cámara H10: altura 3.4 m, 7 m atrás, FOV 65 (pies al 10 % del borde de abajo, no al 5 % de la imagen: más bajo pedía una cámara aún más alta). Apuntando FOV 45. Con la cámara tan atrás, el asistido de apuntado y la mira calculan desde la cámara; los blancos lejanos quedan a la altura de la mira (3.4 m) si no se baja el ratón.
+- Junto al jugador aparece otro personaje en la calle frente a la casa (NPC de la sesión 2), no es parte de esta tarea.

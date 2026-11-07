@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(c.Valor("alturaNormal"), c.Valor("alturaApuntando"), 0.001f, "Sin subir la cámara");
             Assert.AreEqual(c.Valor("distanciaNormal"), c.Valor("distanciaApuntando"), 0.001f, "Misma distancia");
             Assert.Less(c.Valor("fovApuntando"), c.Valor("fovNormal") - 5f, "Apuntando hace zoom (FOV menor)");
-            Assert.Greater(c.Valor("lateralNormal"), 0.3f, "Sin apuntar sigue al hombro");
+            Assert.AreEqual(0f, c.Valor("lateralNormal"), 0.001f, "T-699: sin apuntar también va centrada");
         }
 
         private class ConfigCamaraHombroLector

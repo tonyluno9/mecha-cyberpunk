@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI.Inicio;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
@@ -96,7 +97,7 @@ namespace MechaCyberpunk.UI.Titulo
             grupo.blocksRaycasts = false;
             grupo.interactable = false;
             FondoCarga.Crear(canvas.transform);
-            LogoInicio logo = LogoInicio.Crear(canvas.transform, "CYBERFIX", 130, new Vector2(110f, -90f));
+            LogoInicio logo = LogoInicio.Crear(canvas.transform, NombreJuego.Nombre, 130, new Vector2(110f, -90f));
             logo.name = "LogoCarga";
 
             titulo = UIInicio.Texto(canvas.transform, "Titulo", TextoCargando, UIInicio.FuenteTitulos, 64, UIInicio.Blanco, TextAnchor.LowerLeft);

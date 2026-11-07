@@ -12,6 +12,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
     public class CamaraHombro : MonoBehaviour
     {
         private const int MaxChoques = 16;
+        private const float AlturaCabeza = 1.7f;
 
         [SerializeField] private ConfigCamaraHombro config;
         [SerializeField] private ControladorAPie controlador;
@@ -83,7 +84,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             float desvio = sensacion != null ? sensacion.Desvio : 0f;
             Quaternion giro = Quaternion.Euler(controlador.Inclinacion - (zoom != null ? zoom.Sacudida : 0f) - patada, controlador.GiroCamara + desvio, 0f);
             Quaternion giroHorizontal = Quaternion.Euler(0f, controlador.GiroCamara, 0f);
-            Vector3 cabeza = controlador.transform.position + Vector3.up * (altura - controlador.AjusteAlturaCamara);
+            Vector3 cabeza = controlador.transform.position + Vector3.up * LibreArriba(altura - controlador.AjusteAlturaCamara);
             // T-530: el hombro (pivote) puede quedar dentro de un muro si el jugador está pegado a él; el rayo de la cámara saldría de adentro
             // y no lo vería. Se acerca el pivote a la cabeza hasta antes del muro.
             Vector3 pivote = cabeza + giroHorizontal * (Vector3.right * Recortar(cabeza, giroHorizontal * Vector3.right, lateral));
@@ -110,6 +111,32 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
             transform.SetPositionAndRotation(posicion, giro);
             camara.fieldOfView = zoom != null ? Mathf.Lerp(fov, config.FovSniper, zoom.Mezcla) : fov;
+        }
+
+        /// <summary>
+        /// T-699: la cámara va alta (más que la cabeza); bajo un techo (casas, túneles) el pivote no puede pasar el techo: se recorta la altura
+        /// hasta antes de lo que haya encima del jugador.
+        /// </summary>
+        private float LibreArriba(float alturaDeseada)
+        {
+            if (alturaDeseada <= AlturaCabeza)
+            {
+                return alturaDeseada;
+            }
+            Vector3 desde = controlador.transform.position + Vector3.up * AlturaCabeza;
+            float largo = alturaDeseada - AlturaCabeza;
+            int cantidad = Physics.SphereCastNonAlloc(desde, config.RadioColision, Vector3.up, choques, largo, ~0, QueryTriggerInteraction.Ignore);
+            float minima = largo;
+            for (int i = 0; i < cantidad; i++)
+            {
+                RaycastHit choque = choques[i];
+                if (choque.collider.transform.root == controlador.transform.root || choque.distance <= 0f)
+                {
+                    continue;
+                }
+                minima = Mathf.Min(minima, choque.distance);
+            }
+            return AlturaCabeza + minima;
         }
 
         /// <summary>Distancia libre (hasta 'largo') desde 'origen' en 'direccion' antes de chocar con algo que no sea el jugador, menos el radio de la cámara.</summary>

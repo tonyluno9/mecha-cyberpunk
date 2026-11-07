@@ -10,6 +10,9 @@ namespace MechaCyberpunk.UI.Inicio
     /// </summary>
     public class LogoInicio : MonoBehaviour
     {
+        /// <summary>T-698: ruta en Resources del PNG del logo (opcional). Para usarlo: importar el PNG como Sprite en
+        /// Assets/_Proyecto/UI/Resources/LogoCybercity.png; sin él se usa el texto provisional con glitch.</summary>
+        public const string RecursoLogo = "LogoCybercity";
         public const string Lema = "SOBREVIVE A LA NOCHE";
         private const int CantidadCortes = 4;
         private const float SegundosEncendido = 1.1f;
@@ -29,11 +32,45 @@ namespace MechaCyberpunk.UI.Inicio
         [SerializeField] private Image linea;
         [SerializeField] private Image[] cortes = new Image[0];
 
+        [Tooltip("PNG del logo (opcional). Si está asignado, reemplaza al texto provisional.")]
+        [SerializeField] private Image logoPng;
+
         private RelojGlitch reloj;
         private float tiempo;
         private System.Random azar;
 
         public Text Principal => principal;
+        public Image LogoPng => logoPng;
+
+        /// <summary>Pone el PNG del logo en lugar del texto con glitch (lo llama Crear si existe Resources/LogoCybercity).</summary>
+        public void AsignarSprite(Sprite sprite)
+        {
+            if (sprite == null)
+            {
+                return;
+            }
+            if (logoPng == null)
+            {
+                logoPng = UIInicio.Imagen(transform, "LogoPng", Color.white, sprite);
+                RectTransform r = logoPng.rectTransform;
+                r.anchorMin = new Vector2(0f, 0f);
+                r.anchorMax = new Vector2(0f, 1f);
+                r.pivot = new Vector2(0f, 0.5f);
+                r.anchoredPosition = Vector2.zero;
+                r.sizeDelta = new Vector2(1000f, 0f);
+                logoPng.preserveAspect = true;
+                logoPng.raycastTarget = false;
+            }
+            logoPng.sprite = sprite;
+            foreach (Text t in new[] { halo, copiaMagenta, copiaCian, principal })
+            {
+                t.enabled = false;
+            }
+            foreach (Image corte in cortes)
+            {
+                corte.enabled = false;
+            }
+        }
         public bool EnRafaga => reloj != null && reloj.EnRafaga;
         public float Intensidad => reloj != null ? reloj.Intensidad : 0f;
         public bool Encendido => tiempo >= SegundosEncendido;
@@ -80,6 +117,7 @@ namespace MechaCyberpunk.UI.Inicio
             UIInicio.Punto(logo.linea.rectTransform, new Vector2(0f, 0f), new Vector2(8f, -6f), new Vector2(0f, 5f));
             logo.lema = UIInicio.Texto(raiz, "Lema", Lema, UIInicio.FuenteTexto, 30, UIInicio.TextoSuave, TextAnchor.UpperLeft);
             UIInicio.Punto(logo.lema.rectTransform, new Vector2(0f, 0f), new Vector2(10f, -64f), new Vector2(800f, 40f));
+            logo.AsignarSprite(Resources.Load<Sprite>(RecursoLogo));
             return logo;
         }
 

@@ -151,7 +151,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.Greater(menu.Fondo.Vehiculos, 20, "Hay tráfico");
             Assert.IsTrue(RenderSettings.fog, "Hay niebla");
             Assert.IsNotNull(menu.Logo.Principal);
-            Assert.AreEqual("CYBERFIX", menu.Logo.Principal.text);
+            Assert.AreEqual("CYBERCITY", menu.Logo.Principal.text);
             Assert.IsFalse(menu.HayPartida);
             Assert.IsFalse(menu.Continuar.gameObject.activeSelf, "Sin partida no se ofrece CONTINUAR");
             Assert.AreEqual(MenuInicio.TextoJugar, menu.Nueva.Etiqueta);
