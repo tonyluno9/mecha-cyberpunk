@@ -1,0 +1,536 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "H20",
+   "archivo": "H20_BarrasVida",
+   "fase": 1,
+   "salida": "imageassets/ui/hud/H20_BarrasVida.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the game's HUD: match its thin minimalist line style, thin clean typography and colors exactly; the second image is the game's overall look. Original design of our own: do not copy graphics, fonts or icons from any existing game. Draw ONLY the single UI element described, flat, straight from the front, no perspective, centered with empty space around it, on a PURE BLACK (#000000) flat background, nothing else in the image, no scene, no other HUD elements. Thin lines, crisp edges, soft glow only on lit parts. Element: a health and shield block, with NO words (no \"VIDA\", no \"ESCUDO\", no labels): on the left a small original emblem icon (a minimal angular hexagon with a stylized heart-pulse line inside, thin turquoise line); to its right, on top, a short thin shield bar; below it, a long thin health bar with a thin frame, and the number \"143\" in thin digits right after the health bar. Both bars completely FULL: the shield bar filled in glowing turquoise, the health bar filled in glowing red-pink."
+  },
+  {
+   "id": "H21",
+   "archivo": "H21_BarrasVacias",
+   "fase": 1,
+   "salida": "imageassets/ui/hud/H21_BarrasVacias.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the game's HUD: match its thin minimalist line style, thin clean typography and colors exactly; the second image is the game's overall look. Original design of our own: do not copy graphics, fonts or icons from any existing game. Draw ONLY the single UI element described, flat, straight from the front, no perspective, centered with empty space around it, on a PURE BLACK (#000000) flat background, nothing else in the image, no scene, no other HUD elements. Thin lines, crisp edges, soft glow only on lit parts. Element: a health and shield block, with NO words (no \"VIDA\", no \"ESCUDO\", no labels): on the left a small original emblem icon (a minimal angular hexagon with a stylized heart-pulse line inside, thin turquoise line); to its right, on top, a short thin shield bar; below it, a long thin health bar with a thin frame, and the number \"143\" in thin digits right after the health bar. Both bars completely EMPTY: only their thin frames and a very dark dim inner track are visible, no fill color, so they can be filled in later; the emblem and the number stay the same."
+  },
+  {
+   "id": "H22",
+   "archivo": "H22_MarcoMinimapa",
+   "fase": 1,
+   "salida": "imageassets/ui/hud/H22_MarcoMinimapa.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the game's HUD: match its thin minimalist line style, thin clean typography and colors exactly; the second image is the game's overall look. Original design of our own: do not copy graphics, fonts or icons from any existing game. Draw ONLY the single UI element described, flat, straight from the front, no perspective, centered with empty space around it, on a PURE BLACK (#000000) flat background, nothing else in the image, no scene, no other HUD elements. Thin lines, crisp edges, soft glow only on lit parts. Element: a SQUARE minimap frame made of a single thin turquoise line, with slightly thicker L-shaped corner brackets marking the four corners and a tiny north tick at the top center; the inside of the square is completely empty pure black."
+  },
+  {
+   "id": "H23",
+   "archivo": "H23_IconosObjetos",
+   "fase": 1,
+   "salida": "imageassets/ui/hud/H23_IconosObjetos.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the game's HUD: match its thin minimalist line style, thin clean typography and colors exactly; the second image is the game's overall look. Original design of our own: do not copy graphics, fonts or icons from any existing game. Draw ONLY the single UI element described, flat, straight from the front, no perspective, centered with empty space around it, on a PURE BLACK (#000000) flat background, nothing else in the image, no scene, no other HUD elements. Thin lines, crisp edges, soft glow only on lit parts. Element: a sheet of 6 separate item icons arranged in a clean grid of 3 columns and 2 rows with plenty of black space between them, each icon drawn in a single thin turquoise line, same line weight, same size, no text: an energy drink can, a bag of chips, a rolled bandage, a coffee cup with steam, a battery, a hand grenade."
+  },
+  {
+   "id": "H24",
+   "archivo": "H24_Munequito",
+   "fase": 1,
+   "salida": "imageassets/ui/hud/H24_Munequito.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the game's HUD: match its thin minimalist line style, thin clean typography and colors exactly; the second image is the game's overall look. Original design of our own: do not copy graphics, fonts or icons from any existing game. Draw ONLY the single UI element described, flat, straight from the front, no perspective, centered with empty space around it, on a PURE BLACK (#000000) flat background, nothing else in the image, no scene, no other HUD elements. Thin lines, crisp edges, soft glow only on lit parts. Element: a full-body human silhouette seen from the front, standing straight with arms slightly away from the body, drawn as a thin cyan outline, divided into separate outlined parts with tiny gaps between them: head, torso, left arm, right arm, left leg, right leg, so each part can be colored separately. No face details, no text."
+  },
+  {
+   "id": "H25",
+   "archivo": "H25_Estrella",
+   "fase": 1,
+   "salida": "imageassets/ui/hud/H25_Estrella.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the game's HUD: match its thin minimalist line style, thin clean typography and colors exactly; the second image is the game's overall look. Original design of our own: do not copy graphics, fonts or icons from any existing game. Draw ONLY the single UI element described, flat, straight from the front, no perspective, centered with empty space around it, on a PURE BLACK (#000000) flat background, nothing else in the image, no scene, no other HUD elements. Thin lines, crisp edges, soft glow only on lit parts. Element: two wanted-level stars side by side with space between them, same size, simple clean five-pointed star with slightly sharp geometric points: on the left a FILLED glowing turquoise star, on the right an EMPTY star drawn only as a thin turquoise outline."
+  },
+  {
+   "id": "H26",
+   "archivo": "H26_CasillaObjeto",
+   "fase": 1,
+   "salida": "imageassets/ui/hud/H26_CasillaObjeto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the game's HUD: match its thin minimalist line style, thin clean typography and colors exactly; the second image is the game's overall look. Original design of our own: do not copy graphics, fonts or icons from any existing game. Draw ONLY the single UI element described, flat, straight from the front, no perspective, centered with empty space around it, on a PURE BLACK (#000000) flat background, nothing else in the image, no scene, no other HUD elements. Thin lines, crisp edges, soft glow only on lit parts. Element: one empty square item slot drawn with a thin turquoise outline and slightly thicker corner marks, with a small separate square tab attached at its top-left corner where the key number will go; the slot and the tab are empty, no icon, no text, no numbers."
+  },
+  {
+   "id": "R10",
+   "archivo": "R10_Cuarto",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/R10_Cuarto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of the game: match its illustrated painted art style, blue night light, neon colors, materials and level of detail EXACTLY. The second image is the old version of this room: use it only as a content idea, redesign it. No rain, no people, no text, no logos. Scene: the player's bedroom in a poor Mexican cyberpunk neighborhood, larger than before (about 5 by 4 meters), seen from the doorway at eye height: a single bed with a messy blanket, a desk with an old chunky computer with a glowing screen, a worn wardrobe, a window with security bars letting in magenta and turquoise neon light from the street, a full-length mirror on the wall, a few posters with abstract designs, clothes on a chair and on the floor, a backpack, and the room door visible at one side. A bare hanging bulb with warm light mixing with the cold neon."
+  },
+  {
+   "id": "K07",
+   "archivo": "K07_PuenteNova",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/K07_PuenteNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Match EXACTLY the art style and the look of the Nova district in the FIRST attached image (same buildings, cold white and blue lights, blue fog, illustrated painted style); the second image is the game's overall look. No rain, no HUD, no text, no logos. Scene: the same kind of wide clean Nova street at night, with a pedestrian footbridge crossing over the street from one sidewalk to the other: on each sidewalk a straight staircase climbs up to the bridge deck, the deck spans the whole street at about 5 meters high so vehicles pass under it, with solid side railings and cold white light strips along the railings, a few people walking on it. It must clearly connect both sidewalks. The huge white Nova tower in the far background."
+  },
+  {
+   "id": "PJ01",
+   "archivo": "PJ01_Protagonista",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/PJ01_Protagonista.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/personajes/BaseHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the FIRST attached image for the art style of the game (illustrated painted look, colors, level of detail) and the SECOND attached image only for the body proportions, the character sheet framing and the T-pose. Draw a new, original character. Rig-friendly design: clothes fitted close to the body, nothing hanging loose, no capes, no long dangling straps or chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms facing down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: the young male protagonist, about 19 years old, Mexican, medium brown skin, medium-short curly black hair on top with a taper fade on the sides, two thin shaved lines on the RIGHT side of the head, confident neutral face. A fitted sleeveless dark grey shirt with a thin turquoise trim, slightly toned arms, olive cargo pants with flat pockets, chunky sneakers in white and orange.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.75 m de alto"
+  },
+  {
+   "id": "AL10",
+   "archivo": "AL10_Aliado1",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/AL10_Aliado1.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/personajes/BaseHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the FIRST attached image for the art style of the game (illustrated painted look, colors, level of detail) and the SECOND attached image only for the body proportions, the character sheet framing and the T-pose. Draw a new, original character. Rig-friendly design: clothes fitted close to the body, nothing hanging loose, no capes, no long dangling straps or chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms facing down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a male neighborhood ally, about 20 years old, Mexican, a fitted hoodie with the hood DOWN, a padded vest over it zipped closed, a cap worn forward, fitted joggers, sneakers, a small turquoise LED detail on the vest.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.72 m de alto"
+  },
+  {
+   "id": "AL11",
+   "archivo": "AL11_Aliado2",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/AL11_Aliado2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the FIRST attached image for the art style of the game (illustrated painted look, colors, level of detail) and the SECOND attached image only for the body proportions, the character sheet framing and the T-pose. Draw a new, original character. Rig-friendly design: clothes fitted close to the body, nothing hanging loose, no capes, no long dangling straps or chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms facing down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a female neighborhood ally, about 20 years old, Mexican, two braids tied close to the back of the head ending at the shoulders (not loose), a short cropped jacket fitted and zipped, a fitted top, fitted pants, sturdy boots, small orange earring studs.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.65 m de alto"
+  },
+  {
+   "id": "AL12",
+   "archivo": "AL12_Aliado3",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/AL12_Aliado3.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/personajes/BaseHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the FIRST attached image for the art style of the game (illustrated painted look, colors, level of detail) and the SECOND attached image only for the body proportions, the character sheet framing and the T-pose. Draw a new, original character. Rig-friendly design: clothes fitted close to the body, nothing hanging loose, no capes, no long dangling straps or chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms facing down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an older, big and heavy male ally, about 50 years old, Mexican, short grey hair and a thick moustache, a plain fitted t-shirt, a simple chunky robotic left arm in gunmetal with an orange light at the elbow, a fitted leather workshop apron tied close to the body, work pants, work boots.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.85 m de alto · corpulento"
+  },
+  {
+   "id": "TK01",
+   "archivo": "TK01_BaseTinaco",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/TK01_BaseTinaco.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a rooftop water tank base: a low rectangular platform made of worn red bricks with chipped mortar and a few patches of grey cement, flat top, one thick grey PVC pipe coming out of one side and running down. No tank on it. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1.5 × 1.9 m · 0.7 m de alto"
+  },
+  {
+   "id": "NE01a",
+   "archivo": "NE01_NeonBandera_magenta",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/NE01_NeonBandera_magenta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a small projecting blade sign that sticks out from a wall: a black metal box with a thick mounting bracket on its back edge, on its face a glowing MAGENTA neon tube forming a simple abstract design (a wave line and a lightning bolt), no letters. View: 3/4 view from the front so both the face and the side bracket are visible.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.6 × 0.8 m · fondo 0.15 m"
+  },
+  {
+   "id": "NE01b",
+   "archivo": "NE01_NeonBandera_turquesa",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/NE01_NeonBandera_turquesa.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a small projecting blade sign that sticks out from a wall: a black metal box with a thick mounting bracket on its back edge, on its face a glowing TURQUOISE neon tube forming a simple abstract design (a wave line and a lightning bolt), no letters. View: 3/4 view from the front so both the face and the side bracket are visible.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.6 × 0.8 m · fondo 0.15 m"
+  },
+  {
+   "id": "NE02",
+   "archivo": "NE02_NeonPared",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/NE02_NeonPared.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a flat rectangular wall neon sign: a thin black backing plate with small mounting clips, a glowing turquoise neon tube drawing three simple icons side by side (a coffee cup, a light bulb, an eye), no letters. The back is flat. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.9 × 0.5 m · fondo 0.08 m"
+  },
+  {
+   "id": "AL01",
+   "archivo": "AL01_Alcantarilla",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/AL01_Alcantarilla.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a rectangular cast iron storm drain grate set into a small piece of sidewalk next to the curb edge: thick parallel iron bars, a heavy iron frame, rust and dirt in the slots, a bit of the concrete curb. View: 3/4 view from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.9 × 0.4 m"
+  },
+  {
+   "id": "BS01",
+   "archivo": "BS01_Basura",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/BS01_Basura.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. A small set of separate loose objects, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a set of small street litter pieces laid out separately with space between them: three crumpled paper balls, one crushed soda can, one paper cup lying on its side, a flattened cardboard piece and a few dry leaves. View: 3/4 view from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "piezas de 5 a 30 cm"
+  },
+  {
+   "id": "MT01",
+   "archivo": "MT01_MuroTrasero",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/MT01_MuroTrasero.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: the back wall of a house facing an alley: a flat wall section with dirty cracked plaster in a faded color, a small window with security bars, two thick drain pipes running down, an electricity meter box with a thick cable, a caged bulb glowing warm orange, stains and grime. The back is flat. View: straight from the front with a very slight angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "4 m ancho × 6 m alto · fondo 0.3 m"
+  },
+  {
+   "id": "TL01",
+   "archivo": "TL01_Toldo",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/TL01_Toldo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a small awning for a house doorway: a sloped sheet of corrugated metal painted yellow, worn and slightly dented, held by two thick angled metal brackets fixed to a flat wall plate. The back is flat to fix to a wall. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "2.5 m ancho · sale 1 m"
+  },
+  {
+   "id": "ES01",
+   "archivo": "ES01_Semaforo",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/ES01_Semaforo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a Mexican street corner traffic light: a thick grey metal pole on a concrete base, a horizontal arm reaching out with a black traffic light box with three lights (red lit, amber and green dim), and a blank white street name sign plate on the pole with NO text. View: 3/4 view from the front.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "5 m de alto · brazo de 3 m"
+  },
+  {
+   "id": "FA01",
+   "archivo": "FA01_Farmacia",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/FA01_Farmacia.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, worn Mexican cyberpunk neighborhood); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a pharmacy neon sign for a street corner: a dark metal sign box with the word \"FARMACIA\" in glowing white neon letters and, on the left, a big glowing green neon cross. The back has two thick wall brackets. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2.4 × 0.7 m · fondo 0.2 m"
+  },
+  {
+   "id": "NV01",
+   "archivo": "NV01_FachadaOficinas",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/NV01_FachadaOficinas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, the clean corporate Nova district); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a stackable facade module of an office building, one floor tall: a flat wall section with a row of dark glass panels in a grey metal frame, a thin cold white light strip running along the top edge, the top and bottom edges perfectly flat and straight so modules stack, the side edges flat so modules sit side by side. Very clean, almost no wear. View: from the front with a slight 3/4 angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "6 m ancho × 3.5 m alto · fondo 0.4 m"
+  },
+  {
+   "id": "NV02",
+   "archivo": "NV02_PlantaBajaNova",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/NV02_PlantaBajaNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, the clean corporate Nova district); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. The only text allowed is \"NOVA\", spelled exactly like that. Subject: the ground floor facade module of a Nova office: a tall glass entrance door in the center with a grey metal frame, a glowing turquoise light outlining the door frame, dark glass panels on both sides, a small clean \"NOVA\" logo in thin white letters above the door, a thin cold white light strip on top. The top and side edges are flat so it lines up with the office facade modules above. View: from the front with a slight 3/4 angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "6 m ancho × 4 m alto · fondo 0.4 m"
+  },
+  {
+   "id": "BL01",
+   "archivo": "BL01_Bolardo",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/BL01_Bolardo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, the clean corporate Nova district); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a steel bollard: a thick brushed steel cylinder with a rounded top and a reflective white band near the top, on a small round base plate. View: 3/4 view from the front.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.9 m alto · 0.2 m diámetro"
+  },
+  {
+   "id": "BT01",
+   "archivo": "BT01_BoteBasura",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/BT01_BoteBasura.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, the clean corporate Nova district); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars and pipes are thick and chunky. No text, no letters, no numbers, no logos. Subject: a round metal public trash bin of a corporate sidewalk: a brushed steel cylinder with vertical slots, a domed lid with a front opening, a thin turquoise light ring under the lid, on a short base. View: 3/4 view from the front.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1 m alto · 0.5 m diámetro"
+  },
+  {
+   "id": "PJ01b",
+   "archivo": "PJ01_Protagonista_v2",
+   "fase": 8,
+   "salida": "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Edit the attached character image. Keep EXACTLY the same character: same face, same curly hair with taper fade, the two shaved lines on the RIGHT side of the head, same body, same art style, same strict T-pose, same framing and the same plain flat pure white background. Change ONLY these things: 1) a slightly LIGHTER skin tone (light-medium tan instead of medium brown), keeping the same face; 2) a small silver hoop earring in his RIGHT ear, the same side as the shaved lines; 3) the sleeveless shirt is now plain BLACK (fitted sleeveless shirt, no print, no logo); 4) BLACK cargo pants with a relaxed, loose straight fit (not tight, not skinny), with flat side pockets, the hems resting on the shoes; 5) white high-top retro basketball sneakers with a canvas-leather look, a white rubber sole and a bold BLUE curved stripe on the side of each shoe (an original stripe shape, not a real brand logo). No text, no brand logos. Nothing hanging loose.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.75 m de alto"
+  }
+ ]
+}

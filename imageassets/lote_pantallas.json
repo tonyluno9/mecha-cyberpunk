@@ -1,0 +1,86 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/pantallas",
+ "trabajos": [
+  {
+   "id": "pantalla-h-nova",
+   "archivo": "pantalla-h-nova",
+   "salida": "imageassets/pantallas/pantalla-h-nova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the color mood and style; do not copy the scene. Flat full-frame 2D digital advertisement artwork for a giant LED screen in a cyberpunk city, filling the entire image edge to edge, no frame, no border, no bezel, no screen device, no background around it. Bold simple graphic design, strong shapes, high contrast, glowing colors in acid green, magenta and teal on dark background, slightly stylized like the game style references. Invented brands only, no real logos. Any text must be spelled EXACTLY as written, in big bold simple letters, and no other text anywhere. Subject: an advertisement for the NOVA corporation: an enormous clean white monolithic tower with a vertical stripe of white light in the center rising into a dark sky, cold blue and teal glow, the word \"NOVA\" in huge thin elegant white letters on the right side."
+  },
+  {
+   "id": "pantalla-h-bebida",
+   "archivo": "pantalla-h-bebida",
+   "salida": "imageassets/pantallas/pantalla-h-bebida.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the color mood and style; do not copy the scene. Flat full-frame 2D digital advertisement artwork for a giant LED screen in a cyberpunk city, filling the entire image edge to edge, no frame, no border, no bezel, no screen device, no background around it. Bold simple graphic design, strong shapes, high contrast, glowing colors in acid green, magenta and teal on dark background, slightly stylized like the game style references. Invented brands only, no real logos. Any text must be spelled EXACTLY as written, in big bold simple letters, and no other text anywhere. Subject: an advertisement for an energy drink: a big tall can glowing acid green with lightning bolts bursting around it, splashes of green liquid, magenta sparks, the word \"RAYO\" in huge bold slanted letters next to the can."
+  },
+  {
+   "id": "pantalla-h-casino",
+   "archivo": "pantalla-h-casino",
+   "salida": "imageassets/pantallas/pantalla-h-casino.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the color mood and style; do not copy the scene. Flat full-frame 2D digital advertisement artwork for a giant LED screen in a cyberpunk city, filling the entire image edge to edge, no frame, no border, no bezel, no screen device, no background around it. Bold simple graphic design, strong shapes, high contrast, glowing colors in acid green, magenta and teal on dark background, slightly stylized like the game style references. Invented brands only, no real logos. Any text must be spelled EXACTLY as written, in big bold simple letters, and no other text anywhere. Subject: an advertisement for the VivaCoin casino: a cascade of big gold coins, a slot machine showing three sevens, magenta and gold light rays, the word \"VIVACOIN\" in huge bold gold letters."
+  },
+  {
+   "id": "pantalla-v-implantes",
+   "archivo": "pantalla-v-implantes",
+   "salida": "imageassets/pantallas/pantalla-v-implantes.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the color mood and style; do not copy the scene. Flat full-frame 2D digital advertisement artwork for a giant LED screen in a cyberpunk city, filling the entire image edge to edge, no frame, no border, no bezel, no screen device, no background around it. Bold simple graphic design, strong shapes, high contrast, glowing colors in acid green, magenta and teal on dark background, slightly stylized like the game style references. Invented brands only, no real logos. Any text must be spelled EXACTLY as written, in big bold simple letters, and no other text anywhere. Subject: a vertical advertisement for cybernetic implants: a stylized human profile head with a glowing teal circuit pattern and a chrome robotic arm below it, magenta highlights, the text \"CROMO+\" in huge bold letters at the top."
+  },
+  {
+   "id": "pantalla-v-ramen",
+   "archivo": "pantalla-v-ramen",
+   "salida": "imageassets/pantallas/pantalla-v-ramen.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the color mood and style; do not copy the scene. Flat full-frame 2D digital advertisement artwork for a giant LED screen in a cyberpunk city, filling the entire image edge to edge, no frame, no border, no bezel, no screen device, no background around it. Bold simple graphic design, strong shapes, high contrast, glowing colors in acid green, magenta and teal on dark background, slightly stylized like the game style references. Invented brands only, no real logos. Any text must be spelled EXACTLY as written, in big bold simple letters, and no other text anywhere. Subject: a vertical advertisement for a ramen shop: a big steaming bowl of ramen with noodles lifted by chopsticks, egg and green onions, glowing magenta and acid green steam, the text \"RAMEN 24H\" in big bold letters at the top."
+  },
+  {
+   "id": "pantalla-v-robot",
+   "archivo": "pantalla-v-robot",
+   "salida": "imageassets/pantallas/pantalla-v-robot.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the color mood and style; do not copy the scene. Flat full-frame 2D digital advertisement artwork for a giant LED screen in a cyberpunk city, filling the entire image edge to edge, no frame, no border, no bezel, no screen device, no background around it. Bold simple graphic design, strong shapes, high contrast, glowing colors in acid green, magenta and teal on dark background, slightly stylized like the game style references. Invented brands only, no real logos. Any text must be spelled EXACTLY as written, in big bold simple letters, and no other text anywhere. Subject: a vertical advertisement showing the big friendly face of a robot smiling: a rounded chrome head with two big glowing teal eyes and a wide happy LED smile, magenta and acid green background shapes, the word \"HOLA\" in big bold letters at the bottom."
+  }
+ ]
+}

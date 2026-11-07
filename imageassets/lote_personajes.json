@@ -1,0 +1,375 @@
+{
+ "version": 1,
+ "nota": "Fase 1 = frentes (11). Fase 2 = espaldas (11). 1-nov: rehechos BaseHombre, BaseMujer y SkullHombre (más cyberpunk / capucha con calavera holográfica); SkullMujer cancelada.",
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "trabajos": [
+  {
+   "id": "PJ01-frente",
+   "archivo": "BaseHombre_frente",
+   "salida": "imageassets/personajes/BaseHombre_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/referencias/man.png",
+    "imageassets/personajes/referencias/woman.png",
+    "imageassets/personajes/referencias/woman2.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "STYLE IS THE TOP PRIORITY: draw this character in EXACTLY the same art style as the attached stylized game character reference images, as if made by the same artist for the same game: the same rendering and shading, the same hand-painted texture finish, the same line work, the same head-to-body proportions, the same eye and face style, the same level of detail and saturation. Copy only the style, not their faces, hair or clothes. Character: a generic young adult Mexican man from a cyberpunk megacity, base NPC character: medium brown skin, short neat black hair with one shaved side line, neutral face. Cyberpunk look made of solid, durable parts only: no jackets, no coats, no loose layers, nothing that can flap or tear. He wears a fitted light grey techwear long-sleeve top with thin glowing teal seam lines painted on it, fitted light grey cargo-style pants with a few flat pockets, chunky light grey sneakers with small teal light strips; his left arm is a sleek chrome-and-dark-grey robotic prosthetic from the shoulder to the hand with visible joints and a small glowing teal core at the elbow, and a small chrome data port implant on the side of his neck. All fabric clothing in neutral light grey so it can be recolored later. Rig-friendly design: clothes fitted close to the body, a single top garment, nothing hanging loose: no open jackets, no capes, no loose hoods, no long loose hair, no dangling chains, cords or straps. Small details like chains, logos, tattoos and patterns are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.80 m",
+   "tipo": "npc"
+  },
+  {
+   "id": "PJ01-espalda",
+   "archivo": "BaseHombre_espalda",
+   "salida": "imageassets/personajes/BaseHombre_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/BaseHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.80 m",
+   "tipo": "npc"
+  },
+  {
+   "id": "PJ02-frente",
+   "archivo": "BaseMujer_frente",
+   "salida": "imageassets/personajes/BaseMujer_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/referencias/man.png",
+    "imageassets/personajes/referencias/woman.png",
+    "imageassets/personajes/referencias/woman2.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "STYLE IS THE TOP PRIORITY: draw this character in EXACTLY the same art style as the attached stylized game character reference images, as if made by the same artist for the same game: the same rendering and shading, the same hand-painted texture finish, the same line work, the same head-to-body proportions, the same eye and face style, the same level of detail and saturation. Copy only the style, not their faces, hair or clothes. Character: a generic young adult Mexican woman from a cyberpunk megacity, base NPC character: medium brown skin, black hair pulled back in a tight bun with a small undercut on one side, neutral face, thin glowing teal circuit tattoo lines on one cheek. Cyberpunk look made of solid, durable parts only: no jackets, no coats, no loose layers, nothing that can flap or tear. She wears a fitted light grey techwear sleeveless high-neck top with thin glowing teal seam lines painted on it, fitted light grey cargo-style pants, chunky light grey sneakers with small teal light strips; her right forearm and hand are a sleek chrome-and-dark-grey robotic prosthetic with visible joints and a small glowing teal core, and a small chrome implant plate behind one ear. All fabric clothing in neutral light grey so it can be recolored later. Rig-friendly design: clothes fitted close to the body, a single top garment, nothing hanging loose: no open jackets, no capes, no loose hoods, no long loose hair, no dangling chains, cords or straps. Small details like chains, logos, tattoos and patterns are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.68 m",
+   "tipo": "npc"
+  },
+  {
+   "id": "PJ02-espalda",
+   "archivo": "BaseMujer_espalda",
+   "salida": "imageassets/personajes/BaseMujer_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.68 m",
+   "tipo": "npc"
+  },
+  {
+   "id": "PJ03-frente",
+   "archivo": "JefeSkulls_frente",
+   "salida": "imageassets/personajes/JefeSkulls_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/referencias/man.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Match the art style of the attached stylized game character reference images: stylized 3D rendered game character, chunky simplified shapes, soft hand-painted gradients, soft 3D shading, slightly exaggerated proportions, no photorealism, no thick black ink outlines. Do not copy their faces, hair or clothes. Character: the tall, broad-shouldered, imposing leader of the SKULLS street gang in a Mexican cyberpunk city: an elegant fitted black catrin suit with a short closed buttoned jacket (no coat tails), black shirt and a thin magenta tie, a black wide-brimmed hat fitted tight to the head, his whole face painted on the skin like a Day of the Dead sugar skull in white and black with magenta details around the eyes, black leather gloves, polished black boots, thin glowing magenta lines painted along the suit seams, a silver skull ring. Proud, menacing expression. Rig-friendly design: clothes fitted close to the body, a single top garment, nothing hanging loose: no open jackets, no capes, no loose hoods, no long loose hair, no dangling chains, cords or straps. Small details like chains, logos, tattoos and patterns are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.95 m",
+   "tipo": "villano"
+  },
+  {
+   "id": "PJ03-espalda",
+   "archivo": "JefeSkulls_espalda",
+   "salida": "imageassets/personajes/JefeSkulls_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/JefeSkulls_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.95 m",
+   "tipo": "villano"
+  },
+  {
+   "id": "PJ04-frente",
+   "archivo": "SkullHombre_frente",
+   "salida": "imageassets/personajes/SkullHombre_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/referencias/man.png",
+    "imageassets/personajes/referencias/woman.png",
+    "imageassets/personajes/referencias/woman2.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "STYLE IS THE TOP PRIORITY: draw this character in EXACTLY the same art style as the attached stylized game character reference images, as if made by the same artist for the same game: the same rendering and shading, the same hand-painted texture finish, the same line work, the same head-to-body proportions, the same eye and face style, the same level of detail and saturation. Copy only the style, not their faces, hair or clothes. Character: a member of the SKULLS street gang in a Mexican cyberpunk city, a man with an athletic build. He wears a fitted black hoodie with the hood UP and snug around his head (not loose), zipped closed, with thin glowing magenta lines painted on the seams and a small magenta skull symbol painted on the chest. His face is completely hidden: inside the hood there is only a dark smooth face mask that projects a glowing magenta holographic skull as his face (a sugar-skull-shaped hologram with glowing eye sockets), lighting the inside of the hood. Fitted black cargo pants with magenta stitching, heavy black boots, black fingerless gloves with metal knuckle plates. Menacing, anonymous look. Rig-friendly design: clothes fitted close to the body, a single top garment, nothing hanging loose: no open jackets, no capes, no loose hoods, no long loose hair, no dangling chains, cords or straps. Small details like chains, logos, tattoos and patterns are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.80 m",
+   "tipo": "villano"
+  },
+  {
+   "id": "PJ04-espalda",
+   "archivo": "SkullHombre_espalda",
+   "salida": "imageassets/personajes/SkullHombre_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/SkullHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.80 m",
+   "tipo": "villano"
+  },
+  {
+   "id": "PJ06-frente",
+   "archivo": "Doc_frente",
+   "salida": "imageassets/personajes/Doc_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/profes/joel-doc.png",
+    "imageassets/personajes/referencias/man.png",
+    "imageassets/personajes/referencias/woman.png",
+    "imageassets/personajes/referencias/woman2.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The first attached image(s) are photos of a real person: use them ONLY to copy his facial features, face shape, hairline, facial hair, skin tone and body build so he is clearly recognizable, transformed into a stylized cyberpunk game character. Do not copy his clothes, the background or anything written on his clothes. The last attached image is only the art style reference. STYLE IS THE TOP PRIORITY: draw this character in EXACTLY the same art style as the attached stylized game character reference images, as if made by the same artist for the same game: the same rendering and shading, the same hand-painted texture finish, the same line work, the same head-to-body proportions, the same eye and face style, the same level of detail and saturation. Copy only the style, not their faces, hair or clothes. Character: the neighborhood doctor, a man in his fifties with the same face as the person in the photo (wavy dark messy hair, short greying beard and mustache, slim build, medium brown skin). Casual cyberpunk street-doctor styling, NOT a lab coat: a fitted dark slate-blue polo shirt with a thin teal stripe painted on the collar, fitted dark jeans, dark sneakers, round goggles with glowing teal lenses pushed up on top of his head, teal medical gloves, a chunky medical scanner device strapped tight to his left forearm with a glowing teal screen showing a heartbeat line, and a small boxy med-kit pouch fixed tight on his belt. Warm, kind smile. Accessories are allowed but every accessory is fixed tight to the body or head, nothing dangling or flapping, no long loose hair, no open coat flaps; small details are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.75 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ06-espalda",
+   "archivo": "Doc_espalda",
+   "salida": "imageassets/personajes/Doc_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/Doc_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.75 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ07-frente",
+   "archivo": "Inventor_frente",
+   "salida": "imageassets/personajes/Inventor_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/profes/inventor-justino.png",
+    "imageassets/personajes/referencias/man.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The first attached image(s) are photos of a real person: use them ONLY to copy his facial features, face shape, hairline, facial hair, skin tone and body build so he is clearly recognizable, transformed into a stylized cyberpunk game character. Do not copy his clothes, the background or anything written on his clothes. The last attached image is only the art style reference. Match the art style of the attached stylized game character reference images: stylized 3D rendered game character, chunky simplified shapes, soft hand-painted gradients, soft 3D shading, slightly exaggerated proportions, no photorealism, no thick black ink outlines. Do not copy their faces, hair or clothes. Character: the eccentric inventor, an older man in his sixties with the same face as the person in the photo (mostly bald on top with short grey hair on the sides, glasses, grey mustache, heavy build with a round belly, light brown skin). Cyberpunk inventor styling: a closed grey-blue work overall with a short brown leather apron, brass welding goggles pushed up on his forehead above his glasses, his right arm entirely a chunky iron robotic arm with pistons, rivets and a glowing amber joint from shoulder to hand, small tool pouches tight on the belt. Clever, cheerful expression. Accessories are allowed but every accessory is fixed tight to the body or head, nothing dangling or flapping, no long loose hair, no open coat flaps; small details are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.72 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ07-espalda",
+   "archivo": "Inventor_espalda",
+   "salida": "imageassets/personajes/Inventor_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/Inventor_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.72 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ08-frente",
+   "archivo": "Mecanico_frente",
+   "salida": "imageassets/personajes/Mecanico_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/profes/canepa-mecanico.png",
+    "imageassets/personajes/profes/canepa2-mecanico.png",
+    "imageassets/personajes/referencias/man.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The first attached image(s) are photos of a real person: use them ONLY to copy his facial features, face shape, hairline, facial hair, skin tone and body build so he is clearly recognizable, transformed into a stylized cyberpunk game character. Do not copy his clothes, the background or anything written on his clothes. The last attached image is only the art style reference. Match the art style of the attached stylized game character reference images: stylized 3D rendered game character, chunky simplified shapes, soft hand-painted gradients, soft 3D shading, slightly exaggerated proportions, no photorealism, no thick black ink outlines. Do not copy their faces, hair or clothes. Character: the neighborhood mechanic, a man in his thirties with the same face as the person in the photos (messy short black hair, full dark beard, round face, wide warm smile, light-medium brown skin, sturdy build). Cyberpunk mechanic styling: a fitted dark green work shirt with the sleeves rolled to the elbows, grey cargo work pants, heavy work boots, a black cap worn backwards, grease smudges, a tool belt tight on the waist with a few chunky wrenches, a chunky cyber gauntlet on his left forearm with a small glowing teal screen. Friendly, confident expression. Accessories are allowed but every accessory is fixed tight to the body or head, nothing dangling or flapping, no long loose hair, no open coat flaps; small details are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.75 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ08-espalda",
+   "archivo": "Mecanico_espalda",
+   "salida": "imageassets/personajes/Mecanico_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/Mecanico_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.75 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ09-frente",
+   "archivo": "Hacker_frente",
+   "salida": "imageassets/personajes/Hacker_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/profes/sergio-hacker.jpg",
+    "imageassets/personajes/referencias/man.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The first attached image(s) are photos of a real person: use them ONLY to copy his facial features, face shape, hairline, facial hair, skin tone and body build so he is clearly recognizable, transformed into a stylized cyberpunk game character. Do not copy his clothes, the background or anything written on his clothes. The last attached image is only the art style reference. Match the art style of the attached stylized game character reference images: stylized 3D rendered game character, chunky simplified shapes, soft hand-painted gradients, soft 3D shading, slightly exaggerated proportions, no photorealism, no thick black ink outlines. Do not copy their faces, hair or clothes. Character: the hacker, a young man in his twenties with the same face as the person in the photo (short dark hair, rectangular glasses, clean-shaven, light-medium brown skin, slim build). Cyberpunk hacker styling: a fitted dark charcoal hoodie zipped closed with the hood UP and snug around his head, glowing teal circuit lines painted on the hoodie, chunky headphones over the hood, a slim glowing teal AR visor over his glasses, short thick data cables plugged into the back of his neck and fixed tight along the collar, fitted black pants, black sneakers, black fingerless gloves. Focused, slightly smug expression. Accessories are allowed but every accessory is fixed tight to the body or head, nothing dangling or flapping, no long loose hair, no open coat flaps; small details are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.75 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ09-espalda",
+   "archivo": "Hacker_espalda",
+   "salida": "imageassets/personajes/Hacker_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/Hacker_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.75 m",
+   "tipo": "profe"
+  },
+  {
+   "id": "PJ10-frente",
+   "archivo": "RobotHombre_frente",
+   "salida": "imageassets/personajes/RobotHombre_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/referencias/man.png",
+    "imageassets/personajes/referencias/woman2.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Match the art style of the attached stylized game character reference images: stylized 3D rendered game character, chunky simplified shapes, soft hand-painted gradients, soft 3D shading, slightly exaggerated proportions, no photorealism, no thick black ink outlines. Do not copy their faces, hair or clothes. Character: a humanoid service android with male body proportions: a body of smooth white and light grey armor plates with visible dark grey mechanical joints at the neck, shoulders, elbows, wrists, hips and knees, thin glowing teal light lines along the limbs and chest, and a simple head with a smooth black face screen showing two glowing teal dot eyes. Clean, friendly, no clothes, no weapons. Rig-friendly design: clothes fitted close to the body, a single top garment, nothing hanging loose: no open jackets, no capes, no loose hoods, no long loose hair, no dangling chains, cords or straps. Small details like chains, logos, tattoos and patterns are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.85 m",
+   "tipo": "robot"
+  },
+  {
+   "id": "PJ10-espalda",
+   "archivo": "RobotHombre_espalda",
+   "salida": "imageassets/personajes/RobotHombre_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/RobotHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.85 m",
+   "tipo": "robot"
+  },
+  {
+   "id": "PJ11-frente",
+   "archivo": "RobotMujer_frente",
+   "salida": "imageassets/personajes/RobotMujer_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/referencias/woman.png",
+    "imageassets/personajes/referencias/woman2.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Match the art style of the attached stylized game character reference images: stylized 3D rendered game character, chunky simplified shapes, soft hand-painted gradients, soft 3D shading, slightly exaggerated proportions, no photorealism, no thick black ink outlines. Do not copy their faces, hair or clothes. Character: a humanoid service android with female body proportions, slimmer than a male android: a body of smooth white and light grey armor plates with visible dark grey mechanical joints at the neck, shoulders, elbows, wrists, hips and knees, thin glowing teal light lines along the limbs and chest, and a simple head with a smooth white mask face with two glowing teal eye slits. Clean, elegant, no clothes, no weapons. Rig-friendly design: clothes fitted close to the body, a single top garment, nothing hanging loose: no open jackets, no capes, no loose hoods, no long loose hair, no dangling chains, cords or straps. Small details like chains, logos, tattoos and patterns are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.85 m",
+   "tipo": "robot"
+  },
+  {
+   "id": "PJ11-espalda",
+   "archivo": "RobotMujer_espalda",
+   "salida": "imageassets/personajes/RobotMujer_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/RobotMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.85 m",
+   "tipo": "robot"
+  },
+  {
+   "id": "PJ12-frente",
+   "archivo": "GuardiaNova_frente",
+   "salida": "imageassets/personajes/GuardiaNova_frente.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/referencias/man.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Match the art style of the attached stylized game character reference images: stylized 3D rendered game character, chunky simplified shapes, soft hand-painted gradients, soft 3D shading, slightly exaggerated proportions, no photorealism, no thick black ink outlines. Do not copy their faces, hair or clothes. Character: an armored security robot of a cold villain megacorporation: bulky white and black armor plates, heavy rounded shoulders, thick armored chest and limbs, black mechanical joints, small cold white light strips on the armor, a helmet-like head with a single horizontal glowing red visor slit, empty open hands. Intimidating and sterile, no weapons, no text, no logos. Rig-friendly design: clothes fitted close to the body, a single top garment, nothing hanging loose: no open jackets, no capes, no loose hoods, no long loose hair, no dangling chains, cords or straps. Small details like chains, logos, tattoos and patterns are painted flat on the texture. Pose: strict T-pose, arms straight out horizontally to the sides, palms facing down, fingers straight and slightly apart, legs straight with feet shoulder-width apart, standing straight, looking forward, perfectly symmetrical. Straight front orthographic view, full body visible from head to feet with empty space around, plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.85 m",
+   "tipo": "robot"
+  },
+  {
+   "id": "PJ12-espalda",
+   "archivo": "GuardiaNova_espalda",
+   "salida": "imageassets/personajes/GuardiaNova_espalda.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/GuardiaNova_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference. Draw the exact same character, identical body proportions, face shape, skin, hair, clothes, colors, materials, accessories and art style, now seen from directly BEHIND: strict straight back orthographic view, camera at chest height, zero perspective, the same T-pose with arms straight out horizontally, palms down, fingers apart, feet shoulder-width apart, perfectly symmetrical. Same height and same size in the frame as the reference, full body visible from head to feet. The face is not visible. Plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no other people.",
+   "altura": "1.85 m",
+   "tipo": "robot"
+  }
+ ]
+}

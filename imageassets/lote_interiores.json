@@ -1,0 +1,92 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "docs/referencias-interiores",
+ "trabajos": [
+  {
+   "id": "habitacion",
+   "archivo": "habitacion",
+   "salida": "docs/referencias-interiores/habitacion.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "docs/referencias-ciudad/calle-suburbios-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and lighting; do not copy their scenes. Stylized low-poly 3D game environment render: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Interior concept for a Mexican cyberpunk video game, used as a layout guide to model the room and its props. Camera at eye height (1.6 m), wide view showing most of the room, clear readable layout with props well separated. No people, no characters, no animals. No readable text, no letters, no logos: signs and screens show only abstract shapes and colors. Subject: a small bedroom of a young man in a poor Mexican cyberpunk neighborhood: a single bed with a wrinkled blanket, a small nightstand with a lamp, a worn wooden wardrobe, a desk with an old chunky computer with a glowing screen and a cheap chair, a poster on the wall with abstract shapes, a window with magenta and teal neon light from the street coming in, a bare bulb hanging from the ceiling with warm light, cracked plaster walls painted a faded color, light mess: clothes on the chair, a backpack on the floor, cans on the desk. It is a bedroom, NOT a workshop: no tools, no workbench."
+  },
+  {
+   "id": "casino-interior",
+   "archivo": "casino-interior",
+   "salida": "docs/referencias-interiores/casino-interior.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png",
+    "docs/referencias-ciudad/entrada-mercado-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and lighting; do not copy their scenes. Stylized low-poly 3D game environment render: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Interior concept for a Mexican cyberpunk video game, used as a layout guide to model the room and its props. Camera at eye height (1.6 m), wide view showing most of the room, clear readable layout with props well separated. No people, no characters, no animals. No readable text, no letters, no logos: signs and screens show only abstract shapes and colors. Subject: inside a flashy cyberpunk casino: long rows of chunky slot machines with glowing screens showing abstract symbols, several green card tables with chairs, a long bar with stools and glowing bottles behind it, a loud patterned carpet in dark red and gold, gold and magenta lights everywhere, a ceiling with rows of lights and a big chandelier-like light fixture, empty of people."
+  },
+  {
+   "id": "consultorio-doc",
+   "archivo": "consultorio-doc",
+   "salida": "docs/referencias-interiores/consultorio-doc.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "docs/referencias-ciudad/entrada-mercado-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and lighting; do not copy their scenes. Stylized low-poly 3D game environment render: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Interior concept for a Mexican cyberpunk video game, used as a layout guide to model the room and its props. Camera at eye height (1.6 m), wide view showing most of the room, clear readable layout with props well separated. No people, no characters, no animals. No readable text, no letters, no logos: signs and screens show only abstract shapes and colors. Subject: a clandestine underground street clinic: a padded medical bed in the center, a big robotic surgery arm hanging from the ceiling over the bed, several monitors on stands showing abstract graphs, metal shelves with medicine boxes, jars and cybernetic implants (robotic hands, eyes, chips) in glass cases, a small sink, tiled walls a bit dirty, cold teal lighting with a few warm spots, cables bundled thick along the walls."
+  },
+  {
+   "id": "taller-tino",
+   "archivo": "taller-tino",
+   "salida": "docs/referencias-interiores/taller-tino.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/tianguis-noche.png",
+    "docs/referencias-ciudad/callejon-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and lighting; do not copy their scenes. Stylized low-poly 3D game environment render: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Interior concept for a Mexican cyberpunk video game, used as a layout guide to model the room and its props. Camera at eye height (1.6 m), wide view showing most of the room, clear readable layout with props well separated. No people, no characters, no animals. No readable text, no letters, no logos: signs and screens show only abstract shapes and colors. Subject: the workshop of an inventor: big wooden and metal workbenches covered with disassembled weapons, tools and parts, half-built drones on the tables and hanging from hooks, a pegboard full of tools, chalkboards and whiteboards covered with blueprint drawings of machines (abstract lines, no text), shelves with boxes of parts, a desk lamp, warm orange workshop lighting with a few teal accents."
+  },
+  {
+   "id": "taller-mecanico",
+   "archivo": "taller-mecanico",
+   "salida": "docs/referencias-interiores/taller-mecanico.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "docs/referencias-ciudad/tianguis-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and lighting; do not copy their scenes. Stylized low-poly 3D game environment render: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Interior concept for a Mexican cyberpunk video game, used as a layout guide to model the room and its props. Camera at eye height (1.6 m), wide view showing most of the room, clear readable layout with props well separated. No people, no characters, no animals. No readable text, no letters, no logos: signs and screens show only abstract shapes and colors. Subject: a neighborhood car mechanic garage: an old car lifted on a hydraulic jack in the middle, a stack of tires against the wall, a red tool cabinet and tools on the walls, an engine hoist crane holding an engine, oil stains on the concrete floor, a roll-up metal door half open to the street at night, warm work lights and a few neon accents."
+  },
+  {
+   "id": "entrada-armas-mercado",
+   "archivo": "entrada-armas-mercado",
+   "salida": "docs/referencias-interiores/entrada-armas-mercado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/entrada-mercado-noche.png",
+    "docs/referencias-ciudad/tianguis-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and lighting; do not copy their scenes. Stylized low-poly 3D game environment render: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Interior concept for a Mexican cyberpunk video game, used as a layout guide to model the room and its props. Camera at eye height (1.6 m), wide view showing most of the room, clear readable layout with props well separated. No people, no characters, no animals. No readable text, no letters, no logos: signs and screens show only abstract shapes and colors. Subject: the entrance of a clandestine gun shop hidden inside a market: a heavy metal security grille gate open to the side, behind it a counter with glass display cases full of pistols and rifles, more rifles on wall racks, stacks of ammunition boxes and crates, a cash register, dim amber light and a flickering magenta neon, cramped and rough."
+  }
+ ]
+}

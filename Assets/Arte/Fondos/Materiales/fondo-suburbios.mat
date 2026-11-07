@@ -30,13 +30,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _BrilloDia: 0.7
-    - _BrilloNoche: 2
+    - _BrilloNoche: 0.3
     - _BrumaDia: 0.45
-    - _BrumaNoche: 0.1
+    - _BrumaNoche: 0.92
     - _FinCielo: 0.85
     - _InicioCielo: 0.55
     m_Colors:
     - _ColorBrumaDia: {r: 0.36, g: 0.45, b: 0.62, a: 1}
-    - _ColorBrumaNoche: {r: 0.02, g: 0.03, b: 0.08, a: 1}
+    - _ColorBrumaNoche: {r: 0.014, g: 0.022, b: 0.051999997, a: 0.4}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

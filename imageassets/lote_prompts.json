@@ -1,0 +1,690 @@
+{
+ "version": 2,
+ "generado": "2026-10-29",
+ "carpeta_salida": "generadas",
+ "trabajos": [
+  {
+   "id": "CY01",
+   "archivo": "CY01_ProyectorHolo",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Proyector de anuncio holográfico",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a wall-mounted holographic advertisement projector, as a separate object with no wall behind it: a wide rectangular open frame made of thick dark gunmetal metal beams with beveled edges, the inside of the frame completely empty and open (the hologram will be added later). Along the bottom beam, a row of four chunky projector emitters with glowing teal lenses pointing up; at the four corners, chunky bolted brackets with small glowing magenta status lights; a boxy black power unit with cooling vents and an amber indicator attached to one side, connected by a thick ribbed conduit running along the frame. A flat thick mounting plate at the back of the bottom beam to attach it to a wall. Everything thick and solid. View: front view rotated about 25 degrees to the left, slightly from below, as seen from the street, the whole piece visible.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY02",
+   "archivo": "CY02_PantallaVertical",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Pantalla publicitaria vertical",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a tall vertical wall-mounted LED advertising screen, as a separate object with no wall behind it: a thick dark gunmetal frame with beveled edges around a flat smooth matte black screen surface (the screen is OFF, plain black, no image, no text). Chunky bolted mounting brackets on the back at the top and bottom, a boxy black control unit with cooling vents and small teal and amber status lights under the frame, a thick ribbed conduit running from the control unit up one side. A glowing magenta LED strip along the outer edge of the frame. View: front view rotated about 25 degrees to the left, slightly from below, the whole piece visible.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY03",
+   "archivo": "CY03_MazoCables",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Mazo de cables vertical (apilable)",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a vertical bundle of thick cables and conduits for a building facade, as a separate object with no wall behind it: six thick rubber cables and ribbed conduits of different thickness in black, dark grey, one teal and one burnt orange, running perfectly straight and parallel from the top edge to the bottom edge, held together by three chunky metal wall clamps bolted to a flat back strip, one small boxy junction box with a glowing amber light in the middle. The cables are cut flat and clean at the top and bottom so the piece can be stacked vertically and continue seamlessly. Thick and solid, no thin wires. View: straight front view rotated about 20 degrees to the left, the whole piece visible.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 3000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY04",
+   "archivo": "CY04_AntenaAzotea",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Antena repetidora de azotea",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a rooftop telecom repeater mast for a cyberpunk slum: a thick square dark gunmetal pole on a heavy bolted base plate with two concrete ballast blocks, three chunky rectangular panel antennas mounted around the top, one small satellite dish on a thick arm halfway up, a boxy equipment cabinet strapped to the pole with cooling vents and teal status lights, a red aviation light on the very top, a thick ribbed conduit running down the pole into the cabinet. All parts thick and chunky, no lattice, no thin wires. View: 3/4 view from slightly below. The whole mast must fit inside the image with plenty of empty space above the red light on top and below the base: the top of the mast and the red light are fully visible, nothing is cut off at the edges.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY05",
+   "archivo": "CY05_ServidorCallejero",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Caja de servidor callejero (pared)",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a wall-mounted street server cabinet hacked into the neighborhood network, as a separate object with no wall behind it: a boxy dark gunmetal metal cabinet with beveled edges and a closed door with a vented grille, two big round cooling fans on the side with a faint teal glow, a row of small teal, magenta and amber status lights, a small cracked screen showing a glowing teal bar graph with no text, a sticker shown as a plain magenta rectangle, a heavy padlock, rust and scratches, three thick ribbed conduits coming out of the top and cut flat at the top edge, a flat mounting plate on the back. View: 3/4 view from the front left, at chest height.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY06",
+   "archivo": "CY06_Expendedora",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Máquina expendedora cyber",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a cyberpunk street vending machine for a Mexican slum: a tall boxy dark charcoal machine with beveled edges, a large front display window with chunky shelves of simple colorful snack and drink packages (plain colors, no text, no logos), a glowing teal touch screen and a payment scanner with an amber light on the side panel, a magenta neon strip around the front edge, a chunky dispensing slot at the bottom, dents and scratches, stickers shown as plain colored shapes, a thick power conduit going out the back. View: 3/4 view from the front left, at chest height.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY07a",
+   "archivo": "CY07a_PlataformaDron",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Plataforma de dron de reparto (pared)",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a wall-mounted delivery drone docking pad, as a separate object with no wall behind it: a thick square dark gunmetal landing platform cantilevered on two chunky triangular brackets, with a glowing teal landing circle marking painted on top, small amber lights on the corners, a boxy charging unit with a magenta light at the back edge and a flat mounting plate at the back. Empty pad, no drone. View: 3/4 view from the front left, slightly from above so the landing pad top is visible.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY07b",
+   "archivo": "CY07b_Dron",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Dron de reparto",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a chunky cyberpunk delivery drone: a boxy dark charcoal body with beveled edges, four thick short arms with round protective rotor rings, the rotors shown as solid flat discs, a boxy burnt-orange cargo box fixed tight under the body, a glowing teal front sensor, small red and green navigation lights, scratches. Compact and chunky, no thin parts. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY08",
+   "archivo": "CY08_CamaraCorporativa",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Cámara de vigilancia corporativa",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a corporate surveillance camera for a cyberpunk city, mounted on a short thick arm with a square wall plate: a sleek boxy black camera housing with a chrome visor, a big dark lens with a glowing red ring, a small antenna stub, a magenta LED line along its side, a blank plate shown as a plain white rectangle. Chunky and solid. The back of the wall plate is flat. View: 3/4 view from slightly below.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 3000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY09",
+   "archivo": "CY09_PuestoImplantes",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Puesto de reparación de implantes",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a street stall for repairing cybernetic implants in a Mexican cyberpunk slum, shaped like a street food cart: a boxy dark charcoal and burnt-orange metal counter on small chunky wheels, a thick tight canopy roof made of a magenta and teal striped tarp on a thick metal frame, with a blank flat sign board on the front edge of the canopy (no text). On the counter: a chunky cybernetic arm being repaired lying on a padded mat, a boxy diagnostic machine with a glowing teal screen, a swing-arm magnifier lamp with a warm amber glow, a tray of chunky tools, a small stack of boxy spare parts. Under the counter a boxy battery generator with an amber light. Everything chunky, nothing thin or dangling. View: 3/4 view from slightly above, the front of the counter facing the camera at an angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "CY10",
+   "archivo": "CY10_CargadorCalle",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Cargador eléctrico de calle",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a street electric vehicle charging post for a cyberpunk slum: a tall boxy dark gunmetal pillar with beveled edges on a small concrete base, a glowing teal vertical charge indicator bar, a small screen showing a simple teal battery icon with no text, a thick charging cable coiled tight on a hook on the side ending in a chunky connector plug, scratches, a sticker shown as a plain orange rectangle, a magenta LED strip on top. View: 3/4 view from the front left, at chest height.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C18",
+   "archivo": "C18_BarreraCalle",
+   "parte": "Parte 1 — Capa cyberpunk de la calle",
+   "titulo": "Barrera de banqueta con LED",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a street barrier block for a cyberpunk slum sidewalk: a heavy concrete jersey-style barrier with beveled edges, painted with faded black-and-amber hazard stripes, scratches and grime, a thick glowing teal LED light strip embedded along the top edge, a small boxy warning beacon with an amber light bolted on one end, a few abstract colorful graffiti splashes with no letters. Flat ends so several can line up. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C20acy",
+   "archivo": "C20a_PisoVentana_cy",
+   "parte": "Parte 2 — Retrofit cyberpunk del kit de edificios (endpoint edit)",
+   "titulo": "C20a con tecnología",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C20a_PisoVentana.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Use the attached image as the exact base. Keep EXACTLY the same object: same shape, silhouette, size, proportions, edges, pilasters, camera angle, framing and background, and keep its existing colors and wear. Only ADD cheap futuristic cyberpunk technology bolted onto it, in the same stylized 3D game art style with soft hand-painted gradients: a thin glowing teal LED strip around the window frame; a small flat black advertising screen panel (screen off, plain black) bolted to the wall next to the window; a vertical bundle of three thick black and teal cables running from the top edge to the bottom edge near one pilaster, held by chunky clamps; a small boxy cyber air conditioner with a magenta light under the window. All additions are thick, chunky and flat against the surface, nothing sticks out more than 30 cm, nothing thin or dangling, no text, no letters, no logos. The left, right, top and bottom edges stay exactly where they are, straight and flat, so the piece still tiles with the original. Plain flat light grey background, soft even studio lighting, no cast shadow, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C20bcy",
+   "archivo": "C20b_PisoDosVentanas_cy",
+   "parte": "Parte 2 — Retrofit cyberpunk del kit de edificios (endpoint edit)",
+   "titulo": "C20b con tecnología",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C20b_PisoDosVentanas_v2.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Use the attached image as the exact base. Keep EXACTLY the same object: same shape, silhouette, size, proportions, edges, pilasters, camera angle, framing and background, and keep its existing colors and wear. Only ADD cheap futuristic cyberpunk technology bolted onto it, in the same stylized 3D game art style with soft hand-painted gradients: thin glowing magenta LED strips along the windowsills; a small boxy network router with a short thick antenna and blinking teal lights mounted between the windows next to the electrical box; abstract neon-painted graffiti shapes in teal and magenta on the lower part of the wall, no letters. All additions are thick, chunky and flat against the surface, nothing sticks out more than 30 cm, nothing thin or dangling, no text, no letters, no logos. The left, right, top and bottom edges stay exactly where they are, straight and flat, so the piece still tiles with the original. Plain flat light grey background, soft even studio lighting, no cast shadow, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C21cy",
+   "archivo": "C21_PisoLiso_cy",
+   "parte": "Parte 2 — Retrofit cyberpunk del kit de edificios (endpoint edit)",
+   "titulo": "C21 con tecnología",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C21_PisoLiso.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Use the attached image as the exact base. Keep EXACTLY the same object: same shape, silhouette, size, proportions, edges, pilasters, camera angle, framing and background, and keep its existing colors and wear. Only ADD cheap futuristic cyberpunk technology bolted onto it, in the same stylized 3D game art style with soft hand-painted gradients: a large flat black advertising screen panel (screen off, plain black) with a thick gunmetal frame and a magenta LED edge mounted on the center of the wall; two thick black cables running down from the screen into a boxy junction box with an amber light; abstract neon-painted graffiti shapes in teal and magenta near the bottom, no letters. All additions are thick, chunky and flat against the surface, nothing sticks out more than 30 cm, nothing thin or dangling, no text, no letters, no logos. The left, right, top and bottom edges stay exactly where they are, straight and flat, so the piece still tiles with the original. Plain flat light grey background, soft even studio lighting, no cast shadow, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C01cy",
+   "archivo": "C01_FachadaLocal_cy",
+   "parte": "Parte 2 — Retrofit cyberpunk del kit de edificios (endpoint edit)",
+   "titulo": "C01 con tecnología",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C01_FachadaLocal.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Use the attached image as the exact base. Keep EXACTLY the same object: same shape, silhouette, size, proportions, edges, pilasters, camera angle, framing and background, and keep its existing colors and wear. Only ADD cheap futuristic cyberpunk technology bolted onto it, in the same stylized 3D game art style with soft hand-painted gradients: a glowing teal LED strip along the top of the roll-up shutter frame; a small boxy card-reader security panel with a magenta light next to the shutter; a short thick vertical bundle of cables from the top edge into a junction box; the blank sign panel gets a thin glowing amber LED border (the panel stays blank, no text). All additions are thick, chunky and flat against the surface, nothing sticks out more than 30 cm, nothing thin or dangling, no text, no letters, no logos. The left, right, top and bottom edges stay exactly where they are, straight and flat, so the piece still tiles with the original. Plain flat light grey background, soft even studio lighting, no cast shadow, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C02cy",
+   "archivo": "C02_FachadaVivienda_cy",
+   "parte": "Parte 2 — Retrofit cyberpunk del kit de edificios (endpoint edit)",
+   "titulo": "C02 con tecnología",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C02_FachadaVivienda.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Use the attached image as the exact base. Keep EXACTLY the same object: same shape, silhouette, size, proportions, edges, pilasters, camera angle, framing and background, and keep its existing colors and wear. Only ADD cheap futuristic cyberpunk technology bolted onto it, in the same stylized 3D game art style with soft hand-painted gradients: a smart lock panel with a glowing teal keypad screen next to the door; a thin magenta LED strip around the window bars; a small boxy security camera with a red light above the door; a short thick bundle of cables running from the top edge to the electric meter. All additions are thick, chunky and flat against the surface, nothing sticks out more than 30 cm, nothing thin or dangling, no text, no letters, no logos. The left, right, top and bottom edges stay exactly where they are, straight and flat, so the piece still tiles with the original. Plain flat light grey background, soft even studio lighting, no cast shadow, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C03cy",
+   "archivo": "C03_FachadaPisoAlto_cy",
+   "parte": "Parte 2 — Retrofit cyberpunk del kit de edificios (endpoint edit)",
+   "titulo": "C03 con tecnología",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C03_FachadaPisoAlto.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Use the attached image as the exact base. Keep EXACTLY the same object: same shape, silhouette, size, proportions, edges, pilasters, camera angle, framing and background, and keep its existing colors and wear. Only ADD cheap futuristic cyberpunk technology bolted onto it, in the same stylized 3D game art style with soft hand-painted gradients: the old air conditioner becomes a boxy modern cyber cooling unit with a glowing teal fan ring; thin amber LED strips along the window frames; a small satellite dish with a magenta light mounted flat on the wall; a vertical bundle of thick cables along one pilaster from the top edge to the bottom edge. All additions are thick, chunky and flat against the surface, nothing sticks out more than 30 cm, nothing thin or dangling, no text, no letters, no logos. The left, right, top and bottom edges stay exactly where they are, straight and flat, so the piece still tiles with the original. Plain flat light grey background, soft even studio lighting, no cast shadow, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C22cy",
+   "archivo": "C22_Cornisa_cy",
+   "parte": "Parte 2 — Retrofit cyberpunk del kit de edificios (endpoint edit)",
+   "titulo": "C22 con tecnología",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C22_Cornisa.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "1k",
+   "prompt": "Use the attached image as the exact base. Keep EXACTLY the same object: same shape, silhouette, size, proportions, edges, pilasters, camera angle, framing and background, and keep its existing colors and wear. Only ADD cheap futuristic cyberpunk technology bolted onto it, in the same stylized 3D game art style with soft hand-painted gradients: a thin glowing teal LED strip along the underside of the concrete cap; a small chunky antenna array and a compact satellite dish on top; a boxy power unit with an amber light on the parapet. All additions are thick, chunky and flat against the surface, nothing sticks out more than 30 cm, nothing thin or dangling, no text, no letters, no logos. The left, right, top and bottom edges stay exactly where they are, straight and flat, so the piece still tiles with the original. Plain flat light grey background, soft even studio lighting, no cast shadow, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C16",
+   "archivo": "C16_Tambo",
+   "parte": "Parte 3 — Pendientes del barrio",
+   "titulo": "Tambo",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a standard metal oil drum barrel, faded burnt-orange paint with two thick raised rings around the body, a closed flat lid with a small round cap, a wide hand-painted ochre stripe, chipped paint and rust patches near the bottom rim, a small dent on one side, a small glowing teal tracking tag bolted on the side. No text, no hazard symbols. View: 3/4 view from slightly above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 3000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C17",
+   "archivo": "C17_Huacales",
+   "parte": "Parte 3 — Pendientes del barrio",
+   "titulo": "Pila de huacales",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a small stack of three wooden produce crates (Mexican huacales), two crates on the bottom side by side and one on top slightly rotated, made of fewer, thick chunky wooden slats in warm faded beige and light brown with narrow gaps, every slat thick and solid. A few chunky round oranges and limes visible inside the top crate. The crates touch each other as one compact group sitting flat on the ground. View: 3/4 view from slightly above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 3000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C20d",
+   "archivo": "C20d_Macetas",
+   "parte": "Parte 3 — Pendientes del barrio",
+   "titulo": "Macetas en repisa",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C20a_PisoVentana.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Use the attached image ONLY as the reference for the art style, colors, materials and level of wear. Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a small wall-mounted window planter shelf, as a separate object with no wall behind it: a sturdy rectangular dark charcoal metal shelf frame with a thick front rail and two thick L-shaped wall brackets at the back, chipped paint and rust. On the shelf, a row of four mismatched chunky pots touching each other: two round terracotta clay pots, one bright turquoise painted metal can and one cut plastic container in faded yellow, each with simple bold chunky plants (a spiky aloe, a round cactus with a pink flower, a bushy green geranium with red flowers, a small leafy herb). Plants as solid chunky shapes, no thin leaves or stems. The back side is flat and straight to mount against a wall. View: 3/4 view from the front left and slightly from below, as seen from the street.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 3000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C23",
+   "archivo": "C23_Franja",
+   "parte": "Parte 3 — Pendientes del barrio",
+   "titulo": "Franja entre pisos",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "C20a_PisoVentana.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Use the attached image as the exact reference for width, materials, level of wear and art style. Subject: a long thin modular horizontal concrete molding band for a building facade, the same width as the reference and about thirteen times wider than tall, like a thick decorative ledge between floors: a chunky protruding concrete ledge with a beveled top slope and a small groove underneath, weathered grey concrete with dark rain stains, rust streaks dripping from it and a few chipped spots, and a thin glowing teal LED strip tucked under the ledge. Short thick block ends on the left and right, aligned with the pilasters of the reference. Left and right ends straight and flat so it tiles; the back side flat. Nothing sticks out more than 30 cm. View: front view rotated about 20 degrees to the left, camera slightly below. Isolated on a plain flat light grey background, soft even studio lighting, no cast shadow, no text, no letters, no logos, no people.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 2000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "A11a",
+   "archivo": "A11a_PortalSotano",
+   "parte": "Parte 4 — Clandestino",
+   "titulo": "Entrada del clandestino: portal con cortina enrollada",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a heavy entrance portal for an underground exoskeleton fight club, as a separate object with no wall around it: a thick dark gunmetal metal frame with beveled edges and diagonal amber-and-black hazard stripes on the sides, a big roll-up shutter box at the top with the steel shutter fully rolled up inside it, so the opening below is completely empty and open, thick bolts, two chunky caged floodlights with a warm amber glow on the upper corners, a boxy security panel with a magenta light on one side, a blank flat sign panel above the shutter box (no text), magenta LED strips along the inner edges of the opening. View: straight front view rotated about 20 degrees to the left, at chest height.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "A11b",
+   "archivo": "A11b_EscaleraSotano",
+   "parte": "Parte 4 — Clandestino",
+   "titulo": "Entrada del clandestino: escalera al sótano",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a solid block of concrete stairs going down into an underground basement, as a separate object: six thick concrete steps descending, enclosed by two short solid side walls, worn amber-and-black hazard stripes on each step edge, a thick metal pipe handrail fixed on both side walls, small amber LED strips along each step edge, grime and stains, everything solid and closed underneath. View: 3/4 view from above, looking down the stairs from the top.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "A08",
+   "archivo": "A08_Marcador",
+   "parte": "Parte 4 — Clandestino",
+   "titulo": "Marcador colgante",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a hanging scoreboard for an underground exoskeleton fight club: a chunky four-sided box made of dark gunmetal metal with beveled edges, each side with a big flat black screen (screens off, plain black), thick bolts, amber and magenta LED strips around the bottom edge, a heavy mounting frame on top with four short thick mounting rods (no chains), small caged spotlights on the bottom corners. Chunky and solid. View: 3/4 view from slightly below.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "E01",
+   "archivo": "E01_EntradaCasino",
+   "parte": "Parte 5 — Exteriores especiales y extras de calle",
+   "titulo": "Entrada del casino",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: the grand entrance facade section of a flashy cyberpunk casino in a Mexican megacity, as a flat wall slab: a wide entrance with tall dark tinted glass double doors (opaque, no reflections), a huge chunky gold-and-black art deco frame around the doors, a big glowing marquee canopy above them with rows of round amber bulbs and thick magenta neon bands, a large blank flat sign panel above the canopy (no text), polished black stone walls with gold trim, two chunky gold pillars, a few red carpeted steps. Straight flat edges; it is a thin wall, not a whole building. View: straight front view rotated about 20 degrees to the left, from street level.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "4K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "E02",
+   "archivo": "E02_PortonMercadoNegro",
+   "parte": "Parte 5 — Exteriores especiales y extras de calle",
+   "titulo": "Portón del mercado negro",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: the gated entrance of a black market in a Mexican cyberpunk slum: a big improvised arch made of stacked shipping container pieces and welded metal plates, a heavy sliding metal gate half open (the opening is empty), a thick bar of amber lights along the arch, stacked boxes and crates on both sides, a blank magenta neon sign frame on top (no text), two boxy security cameras with red lights, graffiti shown as abstract shapes with no letters. Chunky, no thin wires. View: front view rotated about 20 degrees to the left, from street level.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "E03",
+   "archivo": "E03_PantallaGigante",
+   "parte": "Parte 5 — Exteriores especiales y extras de calle",
+   "titulo": "Marco de pantalla gigante",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a giant building-mounted advertising screen: a huge thick dark gunmetal frame with beveled edges around a flat matte black screen (off, plain black), chunky structural brackets and beams on the back that bolt to a building, a maintenance catwalk platform with a solid railing along the bottom, small amber warning lights on the corners, thick conduits running into a boxy power unit. View: 3/4 view from below, from the street.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C13",
+   "archivo": "C13_PuestoCiber",
+   "parte": "Parte 5 — Exteriores especiales y extras de calle",
+   "titulo": "Puesto de electrónica/ciber",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a street stall selling used electronics in a Mexican cyberpunk slum, shaped like a street food cart: a boxy dark charcoal and teal metal counter on small chunky wheels, a thick tight canopy made of an orange and black striped tarp on a thick metal frame with a blank flat sign board (no text), on the counter chunky stacks of old phones, boxy tablets, coiled thick cables tied in bundles, a small box of glowing chips, a glowing teal screen showing a simple price bar with no text, two small glowing magenta speakers. Everything chunky. View: 3/4 view from slightly above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "C19",
+   "archivo": "C19_Moto",
+   "parte": "Parte 5 — Exteriores especiales y extras de calle",
+   "titulo": "Moto cyber estacionada (prop)",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized 3D game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic textures, no fine noise. Gritty Mexican cyberpunk slum: cheap futuristic technology bolted onto old worn materials. Color palette: dark charcoal, gunmetal grey, black plastic and worn chrome, with bright glowing neon accents in teal, magenta and amber, and small touches of burnt orange. Light wear: scratches, grime, a few rust streaks. No thin dangling cables or wires: all cables are thick bundled conduits fixed to surfaces. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a parked cyberpunk street motorcycle, original design that does not resemble any real brand, low aggressive faceted bodywork in dark charcoal with burnt-orange panels and glowing teal light strips, chunky thick wheels with glowing teal rims, a boxy battery pack, a boxy cargo box on the back, scratches and patched panels, standing on its side kickstand. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "H11",
+   "archivo": "H11_Buro",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Buró / mesa de noche",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a small humble bedside nightstand: a chunky wooden box with one drawer with a round knob, faded light blue paint with chipped edges, on top a chunky old alarm clock with an amber glowing face, a small clay cup and a cheap phone charger dock with a teal light. View: 3/4 view from slightly above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 3000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "H06",
+   "archivo": "H06_TeleVieja",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Tele vieja sobre mueble",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: an old boxy CRT television on a low wooden TV cabinet in a humble home, the screen is flat dark grey (off, no image), a chunky antenna on top, a small boxy cyber streaming box with a teal light next to it, a doily under the TV, the cabinet with two doors. View: 3/4 view from slightly above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "H07",
+   "archivo": "H07_Sofa",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Sofá",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a humble worn three-seat sofa covered by a thick striped Mexican sarape blanket in burnt orange, cream and teal tucked over the back as one solid shape, two chunky cushions, short thick wooden legs. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "H08",
+   "archivo": "H08_EstufaTarja",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Estufa y tarja",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a humble kitchen counter unit: an old cream enamel stove with four burners and a dented clay pot on top, joined to a small concrete sink counter with a chunky faucet and a stack of plates, a small shelf with spice jars as plain colored shapes, a tiled backsplash in teal and white. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "H09",
+   "archivo": "H09_RepisaVeladoras",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Repisa con veladoras",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a small wooden wall shelf with a row of chunky glass votive candles with warm amber glowing flames, small clay pots with simple marigold flowers, a few plain picture frames showing only soft abstract colors, and a small string of chunky paper decorations shown as solid colored shapes. The back is flat to mount on a wall. View: 3/4 view from the front left.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "T06",
+   "archivo": "T06_Soldadora",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Soldadora con carrete",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a chunky portable welding machine on small wheels: a boxy red metal body with a big round dial and an amber light, a thick coiled welding cable wound tight on a side hook ending in a chunky welding torch clipped to the body, a welding helmet resting on top. View: 3/4 view from slightly above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 5000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "T07",
+   "archivo": "T07_GruaMotor",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Grúa de motor",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a mechanic engine hoist crane: a thick yellow-ochre steel boom arm on a heavy base with four chunky caster wheels, a thick hydraulic piston, a short thick chain with a chunky hook at the end of the boom, chipped paint and oil stains. View: 3/4 view from the side, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  },
+  {
+   "id": "T08",
+   "archivo": "T08_RepisaTaller",
+   "parte": "Parte 7 — Interiores extra (casa y taller)",
+   "titulo": "Repisa del taller",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "prompt": "Stylized low-poly 3D game asset in the style of a cozy industrial sci-fi prop kit: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Color palette: worn ochre yellow, burnt orange, cream and warm beige panels, dark charcoal grey, red accents on pipes and handles, small glowing teal screens and amber indicator lights. Light wear: chipped paint on edges, a few rust streaks, readable from a distance. Working-class Mexican cyberpunk neighborhood feel. No thin dangling objects, no loose hanging cables. Single object, centered, fully visible, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no logos, no people. Subject: a sturdy metal garage shelving unit with three thick shelves holding chunky boxes, oil cans as plain colored shapes, a coil of thick hose, spare exoskeleton parts like a chunky metal hand and a piston, a small radio with an amber dial. Everything chunky, touching the shelves. View: 3/4 view from the front left.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "1K"
+   },
+   "variantes": 1
+  }
+ ],
+ "resolution": "1k",
+ "variantes_por_defecto": 1
+}

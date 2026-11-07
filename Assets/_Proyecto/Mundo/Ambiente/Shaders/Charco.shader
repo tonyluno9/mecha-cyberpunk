@@ -1,17 +1,22 @@
 // Charco que refleja (docs/plan-look-ciudad.md §2.3). Cada punto del charco se proyecta en la cámara del reflejo planar (ReflejoCharcos,
 // _ReflejoCharcosVP) y toma ese color de _ReflejoCharcosTex. Fresnel: de lejos y rasante refleja casi todo; mirando hacia abajo se ve el
 // asfalto mojado oscuro. La forma sale de la máscara (canal R) y de un poco de ruido para que la orilla no se vea recortada.
+// T-882: el canal G de la máscara es el borde mojado (más ancho que el charco): oscurece el asfalto alrededor y refleja poco. Las ondas
+// varían con ruido (no es un espejo plano) y el reflejo sale a resolución completa (ConfigCharcos), más nítido.
 Shader "MechaCyberpunk/Mundo/Charco"
 {
     Properties
     {
-        _Mascara ("Forma (R)", 2D) = "white" {}
+        _Mascara ("Forma (R) y borde mojado (G)", 2D) = "white" {}
         _ColorFondo ("Asfalto mojado", Color) = (0.03, 0.035, 0.045, 1)
         _Intensidad ("Intensidad del reflejo", Range(0, 2)) = 0.95
         _FresnelMin ("Reflejo mirando hacia abajo", Range(0, 1)) = 0.45
         _FresnelPotencia ("Potencia del fresnel", Range(0.5, 8)) = 3
         _Opacidad ("Opacidad", Range(0, 1)) = 0.92
         _Ondas ("Distorsión de las ondas", Range(0, 0.02)) = 0.003
+        _ColorBorde ("Borde mojado", Color) = (0.02, 0.022, 0.03, 1)
+        _OpacidadBorde ("Opacidad del borde mojado", Range(0, 1)) = 0.55
+        _ReflejoBorde ("Reflejo en el borde mojado", Range(0, 1)) = 0.25
     }
 
     SubShader
@@ -48,6 +53,9 @@ Shader "MechaCyberpunk/Mundo/Charco"
                 half _FresnelPotencia;
                 half _Opacidad;
                 half _Ondas;
+                half4 _ColorBorde;
+                half _OpacidadBorde;
+                half _ReflejoBorde;
             CBUFFER_END
 
             struct Entrada
@@ -76,16 +84,24 @@ Shader "MechaCyberpunk/Mundo/Charco"
 
             half4 frag(Salida salida) : SV_Target
             {
-                half forma = SAMPLE_TEXTURE2D(_Mascara, sampler_Mascara, salida.uv).r;
-                float2 ondas = float2(sin(salida.mundo.x * 3.1 + salida.mundo.z * 1.7), cos(salida.mundo.z * 2.9 - salida.mundo.x * 1.3)) * _Ondas;
+                half2 mascara = SAMPLE_TEXTURE2D(_Mascara, sampler_Mascara, salida.uv).rg;
+                half forma = mascara.r;
+                half mojado = mascara.g;
+                // Ondas de dos escalas con su fuerza variando por el charco: unas partes casi quietas y otras rizadas.
+                float2 p = salida.mundo.xz;
+                float fuerza = 0.5 + 0.5 * sin(p.x * 0.9 + 1.7 * sin(p.y * 0.7));
+                float2 ondas = (float2(sin(p.x * 3.1 + p.y * 1.7), cos(p.y * 2.9 - p.x * 1.3))
+                              + 0.5 * float2(sin(p.x * 11.3 - p.y * 7.1), cos(p.y * 9.7 + p.x * 5.3))) * _Ondas * fuerza;
                 float4 c = mul(_ReflejoCharcosVP, float4(salida.mundo, 1.0));
                 float2 uv = c.xy / max(c.w, 1e-5) * 0.5 + 0.5 + ondas;
                 half3 reflejo = SAMPLE_TEXTURE2D(_ReflejoCharcosTex, sampler_ReflejoCharcosTex, uv).rgb * _ReflejoCharcosHay;
                 half3 vista = normalize(GetWorldSpaceViewDir(salida.mundo));
                 half fresnel = lerp(_FresnelMin, 1.0, pow(1.0 - saturate(vista.y), _FresnelPotencia));
-                half3 color = lerp(_ColorFondo.rgb, reflejo * _Intensidad, fresnel);
+                half3 charco = lerp(_ColorFondo.rgb, reflejo * _Intensidad, fresnel);
+                half3 borde = _ColorBorde.rgb + reflejo * _Intensidad * fresnel * _ReflejoBorde;
+                half3 color = lerp(borde, charco, saturate(forma * 2.0));
                 color = MixFog(color, salida.niebla);
-                return half4(color, saturate(forma * _Opacidad));
+                return half4(color, max(saturate(forma * _Opacidad), mojado * _OpacidadBorde));
             }
             ENDHLSL
         }

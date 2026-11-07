@@ -1,0 +1,104 @@
+{
+ "version": 1,
+ "nota": "Cancelados 31-oct: T24a/b/c (Nova) y RF01–RF07 (refinería). T21 se regenera (la v1 salió rectangular). Fase 2 (T20, T22, T23) solo cuando T21 nueva esté aprobada.",
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "trabajos": [
+  {
+   "id": "T21",
+   "archivo": "T21",
+   "salida": "imageassets/torres/T21.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: antennas, railings, ladders and cables are thick and chunky. Rich cyberpunk business district: clean dark charcoal and gunmetal grey structure with polished dark blue-black glass, small glowing acid green and magenta accents, thin teal light strips. Very light wear, clean and expensive-looking. Modular building section for a game kit, shaped as a box with a perfectly square footprint (equal width and depth). The top face and the bottom face are perfectly flat and horizontal so identical modules stack exactly on top of each other. Thick square corner pillars at all four corners. Windows are flat smooth opaque dark blue-black glass panels: no reflections, no interiors, no curtains, no light behind them. Nothing protrudes more than a hand's width from the facade unless stated. Subject: one single floor module of a rich corporate office tower, a low block with a perfectly SQUARE footprint (the front face and the side face are exactly the same width), each face three times wider than tall: on each of the four sides the same glass curtain wall grid of exactly 4 equal tall window panels separated by thick charcoal vertical mullions, a thick charcoal horizontal band along the top edge and the bottom edge, and a thin glowing teal light strip running along the top and bottom edges of every face. All four sides identical: the front face and the right face both show exactly 4 window panels and look exactly the same width. View: exact 3/4 corner view at 45 degrees so the front face and the right face look the same size, camera at the height of the module, slight perspective.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "12 × 12 m de planta, 4 m de alto"
+  },
+  {
+   "id": "T22",
+   "archivo": "T22",
+   "salida": "imageassets/torres/T22.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/torres/T21.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference for the footprint width and depth, corner pillars, window grid position and spacing, materials, colors and art style, so this module stacks perfectly with it. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: antennas, railings, ladders and cables are thick and chunky. Rich cyberpunk business district: clean dark charcoal and gunmetal grey structure with polished dark blue-black glass, small glowing acid green and magenta accents, thin teal light strips. Very light wear, clean and expensive-looking. Modular building section for a game kit, shaped as a box with a perfectly square footprint (equal width and depth). The top face and the bottom face are perfectly flat and horizontal so identical modules stack exactly on top of each other. Thick square corner pillars at all four corners. Windows are flat smooth opaque dark blue-black glass panels: no reflections, no interiors, no curtains, no light behind them. Nothing protrudes more than a hand's width from the facade unless stated. Subject: the same office tower floor module as the reference, identical on three sides, but on the front face a large flat matte black advertising screen (screen OFF, plain black, no image) covering most of the face, flush with the facade, with a thick gunmetal frame and a thin glowing magenta LED edge. View: 3/4 view at 45 degrees showing the front face and the right face equally, camera at the height of the module, slight perspective.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "12 × 12 m de planta, 4 m de alto"
+  },
+  {
+   "id": "T20",
+   "archivo": "T20",
+   "salida": "imageassets/torres/T20.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/torres/T21.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference for the footprint width and depth, corner pillars, window grid position and spacing, materials, colors and art style, so this module stacks perfectly with it. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: antennas, railings, ladders and cables are thick and chunky. Rich cyberpunk business district: clean dark charcoal and gunmetal grey structure with polished dark blue-black glass, small glowing acid green and magenta accents, thin teal light strips. Very light wear, clean and expensive-looking. Modular building section for a game kit, shaped as a box with a perfectly square footprint (equal width and depth). The top face and the bottom face are perfectly flat and horizontal so identical modules stack exactly on top of each other. Thick square corner pillars at all four corners. Windows are flat smooth opaque dark blue-black glass panels: no reflections, no interiors, no curtains, no light behind them. Nothing protrudes more than a hand's width from the facade unless stated. Subject: the ground floor base module of the same rich office tower, one and a half times taller than the reference: same corner pillars and same window grid on the sides and back; on the front face a tall glass entrance with double glass doors in the center between two thick dark columns, a thick cantilevered canopy marquee over the entrance with an acid green glowing edge (the canopy may stick out about a quarter of the width), and a blank flat sign panel above the canopy (no text). A dark stone plinth along the bottom. Bottom face flat. View: 3/4 view at 45 degrees showing the front face and the right face equally, camera at the height of the module, slight perspective.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "12 × 12 m de planta, 6 m de alto (marquesina sale hasta 3 m)"
+  },
+  {
+   "id": "T23",
+   "archivo": "T23",
+   "salida": "imageassets/torres/T23.png",
+   "fase": 2,
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/torres/T21.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image as the exact reference for the footprint width and depth, corner pillars, window grid position and spacing, materials, colors and art style, so this module stacks perfectly with it. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: antennas, railings, ladders and cables are thick and chunky. Rich cyberpunk business district: clean dark charcoal and gunmetal grey structure with polished dark blue-black glass, small glowing acid green and magenta accents, thin teal light strips. Very light wear, clean and expensive-looking. Subject: the roof crown module of the same rich office tower: same square footprint and corner pillars as the reference; a short band of the same window grid at the bottom, then a solid charcoal parapet; on the flat roof a circular landing pad with a simple painted acid green ring (no letters), three boxy air-conditioning units with big fans, a boxy water tank, and one thick tall antenna mast with a glowing red light on top (the mast may rise well above the roof). The bottom face is flat to sit on top of the floor modules. View: 3/4 view at 45 degrees from slightly above so the roof is visible, the whole antenna inside the image.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "12 × 12 m de planta, 5 m de cuerpo + antena ~6 m arriba"
+  },
+  {
+   "id": "T25",
+   "archivo": "T25",
+   "salida": "imageassets/torres/T25.png",
+   "fase": 1,
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "referencias": [],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: antennas, railings, ladders and cables are thick and chunky. Middle-class Mexican cyberpunk neighborhood: painted concrete in faded teal and warm cream with some newer dark grey metal panels, a few small glowing teal and magenta accents, light wear. Subject: a medium three-story apartment building with a square footprint, the visual bridge between a poor neighborhood and a rich district: painted concrete facades, rows of windows mixing barred old windows and newer dark blue-black glass windows, small balconies with thick solid railings and a couple of plants, a ground floor with two rolled-down metal shutters and an entrance door, a few boxy air conditioners, thin glowing teal light strips on the balcony edges, a flat roof with a low parapet and a water tank. Bottom face flat. View: 3/4 view at 45 degrees showing the front and right facades, camera at mid height.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "12 × 12 m de planta, ~10 m de alto (3 pisos); balcones salen hasta 1 m"
+  }
+ ]
+}

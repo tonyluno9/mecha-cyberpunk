@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: ConfigCharcos_Mundo
   m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Datos.ConfigCharcos
   alturaPlano: 0.02
-  escalaResolucion: 0.5
+  pisoMinimo: -0.5
+  pisoMaximo: 0.6
+  buscarPiso: 8
+  escalaResolucion: 1
   lejos: 120
   margenCampo: 6
   separacionCorte: 0.02

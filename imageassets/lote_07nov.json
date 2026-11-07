@@ -1,0 +1,137 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "K01",
+   "archivo": "K01_Barrio_HUDnuevo",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Keep the attached image EXACTLY the same: the same street, houses, lights, character, camera and composition, change nothing in the scene. Only rearrange the HUD on top into this new layout, in the same thin minimalist style: Minimalist HUD on top, thin lines, thin clean sans-serif text, NO panels, NO boxes, NO frames: top-left a circular minimap made of thin lines with a small mission objective in thin text below it; top-right the money \"$ 12,450\" and a row of turquoise wanted-level stars; bottom-left two thin bars labeled \"VIDA\" (red-pink) and \"ESCUDO\" (turquoise); bottom-right a small cyan weapon hologram of a pistol with the ammo \"12 / 48\". The player character is seen from behind in third person like GTA, centered at the bottom of the screen, about one quarter of the screen height. All HUD text in Spanish, spelled EXACTLY as written, no other HUD text. The mission objective under the minimap reads \"Ve con el Doc · 120 m\"."
+  },
+  {
+   "id": "K02",
+   "archivo": "K02_Tianguis",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K02_Tianguis.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png",
+    "docs/referencias-ciudad/tianguis-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of the whole game: match its art style EXACTLY, as if it were another screenshot of the same game: the same illustrated painted rendering, the same blue night lighting with fog, the same wet reflective ground, the same house shapes, materials, colors and level of detail, and the same thin minimalist HUD typography and line style. The second image is only for the idea of the market stalls. Scene: the El Mercado neighborhood at night: a street closed to cars and filled with tianguis market stalls with colorful tarp roofs (pink, orange, turquoise, yellow) and strings of warm bulbs, piles of goods, many people walking and shopping as small stylized figures, a small plaza visible at the end of the street, and on one side a gun shop front behind a heavy metal grille with a dim amber light. Short city blocks: the next street corner is visible ahead, never an endless corridor. Thick cables strung between utility poles, puddles reflecting the lights. Minimalist HUD on top, thin lines, thin clean sans-serif text, NO panels, NO boxes, NO frames: top-left a circular minimap made of thin lines with a small mission objective in thin text below it; top-right the money \"$ 12,450\" and a row of turquoise wanted-level stars; bottom-left two thin bars labeled \"VIDA\" (red-pink) and \"ESCUDO\" (turquoise); bottom-right a small cyan weapon hologram of a pistol with the ammo \"12 / 48\". The player character is seen from behind in third person like GTA, centered at the bottom of the screen, about one quarter of the screen height. All HUD text in Spanish, spelled EXACTLY as written, no other HUD text. The mission objective under the minimap reads \"Compra en el mercado · 60 m\"."
+  },
+  {
+   "id": "K03",
+   "archivo": "K03_NeonAlto",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K03_NeonAlto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png",
+    "imageassets/letreros/L10_LetreroVivaCoin.png",
+    "imageassets/carros/V09_Taxi.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of the whole game: match its art style EXACTLY, as if it were another screenshot of the same game: the same illustrated painted rendering, the same blue night lighting with fog, the same wet reflective ground, the same house shapes, materials, colors and level of detail, and the same thin minimalist HUD typography and line style. The second image is the casino sign and the third is the city taxi: include both in the scene, redrawn in the style of the first image. Scene: the Neon Alto district at night: a street intersection with the VivaCoin casino on the corner, its big gold and magenta sign glowing, buildings of 4 to 6 floors with big glowing screens with abstract images, much more magenta and turquoise neon than the poor neighborhood, two pink and white taxis on the street, a few people on the sidewalks. Short city blocks: the next street corner is visible ahead, never an endless corridor. Thick cables strung between utility poles, puddles reflecting the lights. Minimalist HUD on top, thin lines, thin clean sans-serif text, NO panels, NO boxes, NO frames: top-left a circular minimap made of thin lines with a small mission objective in thin text below it; top-right the money \"$ 12,450\" and a row of turquoise wanted-level stars; bottom-left two thin bars labeled \"VIDA\" (red-pink) and \"ESCUDO\" (turquoise); bottom-right a small cyan weapon hologram of a pistol with the ammo \"12 / 48\". The player character is seen from behind in third person like GTA, centered at the bottom of the screen, about one quarter of the screen height. All HUD text in Spanish, spelled EXACTLY as written, no other HUD text. The mission objective under the minimap reads \"Entra al casino\"."
+  },
+  {
+   "id": "K04",
+   "archivo": "K04_Barrio_Dia",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K04_Barrio_Dia.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Keep the same street, houses, camera, character and composition as the attached image, in the same illustrated art style, but change the time to a late sunny afternoon: warm low sun, long soft shadows across the street, a blue sky with a few white clouds, no fog, all neon signs and lights turned off, the ground dry with only one small puddle. Same HUD as the attached image, in the new layout: Minimalist HUD on top, thin lines, thin clean sans-serif text, NO panels, NO boxes, NO frames: top-left a circular minimap made of thin lines with a small mission objective in thin text below it; top-right the money \"$ 12,450\" and a row of turquoise wanted-level stars; bottom-left two thin bars labeled \"VIDA\" (red-pink) and \"ESCUDO\" (turquoise); bottom-right a small cyan weapon hologram of a pistol with the ammo \"12 / 48\". The player character is seen from behind in third person like GTA, centered at the bottom of the screen, about one quarter of the screen height. All HUD text in Spanish, spelled EXACTLY as written, no other HUD text. The mission objective under the minimap reads \"Ve con el Doc · 120 m\"."
+  },
+  {
+   "id": "B01",
+   "archivo": "B01_Lineas",
+   "fase": 1,
+   "salida": "imageassets/ui/barras/B01_Lineas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Show only the bottom-left corner of the game screen: a 16:9 close crop of the bottom-left part of the street from the attached image (wet ground, fog, lights, same illustrated style), with only the health and shield HUD element in the bottom-left, large enough to see its design clearly, no other HUD elements, no character. Same thin minimalist style as the HUD in the attached image, no panels, no boxes. Health is red-pink and labeled \"VIDA\", shield is turquoise and labeled \"ESCUDO\"; all text spelled exactly as written. Design: two long thin horizontal lines, the health line on top of the shield line, each with its small thin label \"VIDA\" or \"ESCUDO\" just above its left end, the health line 70% full and the shield line 40% full, the empty part as a faint dim line."
+  },
+  {
+   "id": "B02",
+   "archivo": "B02_Segmentos",
+   "fase": 1,
+   "salida": "imageassets/ui/barras/B02_Segmentos.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Show only the bottom-left corner of the game screen: a 16:9 close crop of the bottom-left part of the street from the attached image (wet ground, fog, lights, same illustrated style), with only the health and shield HUD element in the bottom-left, large enough to see its design clearly, no other HUD elements, no character. Same thin minimalist style as the HUD in the attached image, no panels, no boxes. Health is red-pink and labeled \"VIDA\", shield is turquoise and labeled \"ESCUDO\"; all text spelled exactly as written. Design: two bars made of 10 short separate segments each (each segment is 10 points), health with 7 lit segments and shield with 4 lit segments, unlit segments dim, a thin number next to each bar (\"70\" and \"40\") and small labels \"VIDA\" and \"ESCUDO\"."
+  },
+  {
+   "id": "B03",
+   "archivo": "B03_Arco",
+   "fase": 1,
+   "salida": "imageassets/ui/barras/B03_Arco.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Show only the bottom-left corner of the game screen: a 16:9 close crop of the bottom-left part of the street from the attached image (wet ground, fog, lights, same illustrated style), with only the health and shield HUD element in the bottom-left, large enough to see its design clearly, no other HUD elements, no character. Same thin minimalist style as the HUD in the attached image, no panels, no boxes. Health is red-pink and labeled \"VIDA\", shield is turquoise and labeled \"ESCUDO\"; all text spelled exactly as written. Design: a small circular icon with a thin outline of the player's head silhouette, surrounded by two thin concentric arcs: the inner red-pink health arc 70% full and the outer turquoise shield arc 40% full, small labels \"VIDA\" and \"ESCUDO\" next to the arcs."
+  },
+  {
+   "id": "B04",
+   "archivo": "B04_Diagonal",
+   "fase": 1,
+   "salida": "imageassets/ui/barras/B04_Diagonal.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Show only the bottom-left corner of the game screen: a 16:9 close crop of the bottom-left part of the street from the attached image (wet ground, fog, lights, same illustrated style), with only the health and shield HUD element in the bottom-left, large enough to see its design clearly, no other HUD elements, no character. Same thin minimalist style as the HUD in the attached image, no panels, no boxes. Health is red-pink and labeled \"VIDA\", shield is turquoise and labeled \"ESCUDO\"; all text spelled exactly as written. Design: two slanted bars leaning slightly to the right, with both ends cut on a diagonal, health 70% full and shield 40% full, a big thin number next to each bar (\"70\" and \"40\") and small labels \"VIDA\" and \"ESCUDO\"."
+  },
+  {
+   "id": "M10",
+   "archivo": "M10_MapaCiudad",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/M10_MapaCiudad.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/hud-opciones/HUD_A_minimalista.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of the whole game: match its art style EXACTLY, as if it were another screenshot of the same game: the same illustrated painted rendering, the same blue night lighting with fog, the same wet reflective ground, the same house shapes, materials, colors and level of detail, and the same thin minimalist typography. Draw the full-screen city map of the game, seen from directly above, illustrated like the pause-menu map of a GTA-style game, at night colors with the same fog-blue mood. A compact city of short blocks (about 60 by 80 meters each) with streets that bend, small plazas, one roundabout, short alleys, and an elevated highway along one edge. Four districts tinted in different colors: bottom-left SUBURBIOS in orange (small low houses), bottom-right EL MERCADO in yellow (market stalls and a plaza), top-right NEÓN ALTO in magenta (the casino and tall buildings), top-left NOVA in cold blue (towers and a refinery). Each district name written once in thin capital letters inside its area. Small round map icons with a thin label each, spelled exactly: \"Casa\", \"I+D+I\", \"CIC\", \"Taller El Canepa\", \"Tianguis\", \"Mercado de armas\", \"Casino VivaCoin\", \"Torre Nova\". No other text anywhere, no legend, no compass text."
+  }
+ ]
+}
