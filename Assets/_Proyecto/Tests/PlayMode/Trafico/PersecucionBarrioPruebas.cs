@@ -196,7 +196,7 @@ namespace MechaCyberpunk.Tests.Trafico
             yield return null;
             PatrullaMundo patrulla = gestor.GetComponentInChildren<PatrullaMundo>();
             Assert.IsNotNull(patrulla);
-            Assert.AreEqual(0, patrulla.GetComponentsInChildren<Collider>().Length, "La patrulla no lleva colliders");
+            Assert.Greater(patrulla.GetComponentsInChildren<Collider>().Count(c => !c.isTrigger), 0, "T-707: la patrulla es un carro sólido, lleva colliders");
 
             List<Vector2> centros = barrio.transform.Cast<Transform>()
                 .Where(t => t.name.StartsWith("Manzana_"))

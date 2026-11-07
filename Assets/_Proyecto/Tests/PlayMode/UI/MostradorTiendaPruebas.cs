@@ -47,7 +47,7 @@ namespace MechaCyberpunk.Tests.UI
         private const int FilasNoArmas = 5;
         private const int FilasDeArmas = 5; // T-416: de cada arma solo se ofrece la siguiente (escopeta, fusil, sniper, PISTOLA I y PUÑOS I)
         private const int FilasDelMercado = FilasNoArmas + FilasDeArmas;
-        private const int OfertasDelMercado = 6 + 19;
+        private const int OfertasDelMercado = 6 + 19 + 3;
         private const int MaximoMisiles = 6;
         private const int MaximoKits = 3;
         private const float HoraAbre = 9f;
@@ -482,7 +482,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(IdLugar.MercadoNegro, tienda.Lugar, "Es la del mercado negro");
             Assert.AreEqual(OfertasDelMercado, tienda.Ofertas.Count, "La tienda vende kit, 4 municiones y el brazo");
 
-            Assert.AreEqual(FilasNoArmas + 19, mostrador.EnVenta.Count, "El brazo no tiene objeto de inventario");
+            Assert.AreEqual(FilasNoArmas + 19 + 3, mostrador.EnVenta.Count, "El brazo no tiene objeto de inventario");
             Assert.AreSame(kit, mostrador.EnVenta[0]);
             yield return IrAlMostradorConW();
             yield return AbrirPantalla();

@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public const string Clave = "historia_pandillas";
         public const string TextoSalir = "SAL A LA CALLE";
         public const string TextoDefender = "DEFIENDE A DOÑA LUPE";
-        public const string TextoPistola = "RECOGE LA PISTOLA (E)";
+        public const string TextoPistola = "RECOGE LA PISTOLA"; // T-718: sin la tecla escrita: el HUD muestra la real en el aviso de interacción
         public const string TextoChato = "HABLA CON EL CHATO";
         public const string TextoJefe = "VENCE AL JEFE DE LOS SKULLS";
         public const string TextoDoc = "VE CON EL DOC A I+D+I";
@@ -91,6 +91,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private int respetoMostrado = -1;
         private bool arrancado;
         private bool cargadoAntes;
+        private AsaltoDinero asalto;
+        private int dineroRobadoGuardado;
 
         public PasoHistoria Paso => maquina.Paso;
         public bool Iniciado => arrancado;
@@ -103,18 +105,51 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         /// <summary>Todos los objetivos de la historia, para revisar que quepan en <see cref="LargoMaximoObjetivo"/> (D-tony-240).</summary>
         public static string[] TextosObjetivo => new[]
         {
-            TextoSalir, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
+            TextoSalir, AsaltoDinero.TextoPerseguir, AsaltoDinero.TextoRecuperar, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
         };
+
+        /// <summary>T-716: el lugar de Core al que apunta el objetivo si el destino de la escena falta. Nunca una coordenada fija.</summary>
+        public const IdLugar LugarRespaldo = IdLugar.Casa;
+
+        /// <summary>T-716: la frase del objetivo de un paso (vacía en Continuara y Libre, que no llevan objetivo). El Tianguis usa <see cref="TextoTianguis"/>.</summary>
+        public static string TextoDelPaso(PasoHistoria paso)
+        {
+            switch (paso)
+            {
+                case PasoHistoria.Despierta: return TextoSalir;
+                case PasoHistoria.Asalto: return AsaltoDinero.TextoPerseguir;
+                case PasoHistoria.PrimeraPelea: return TextoDefender;
+                case PasoHistoria.Pistola: return TextoPistola;
+                case PasoHistoria.Chato: return TextoChato;
+                case PasoHistoria.Doc: return TextoDoc;
+                case PasoHistoria.Inventor: return TextoInventor;
+                case PasoHistoria.Tianguis: return TextoTianguis(0, 7);
+                case PasoHistoria.Jefe: return TextoJefe;
+                case PasoHistoria.NeonAlto: return TextoHacker;
+                default: return string.Empty;
+            }
+        }
+
+        /// <summary>T-716: true si el paso lleva objetivo en el HUD y los mapas (todos menos Continuara y Libre).</summary>
+        public static bool LlevaObjetivo(PasoHistoria paso) => TextoDelPaso(paso).Length > 0;
 
         private void Awake()
         {
             pantalla = gameObject.AddComponent<PantallaHistoriaPandillas>();
             pantalla.ContinuaraCerrada += AlCerrarContinuara;
+            asalto = gameObject.AddComponent<AsaltoDinero>(); // T-717: la historia del dinero
+            asalto.Configurar(pantalla);
+            asalto.Terminado += AlTerminarAsalto;
             foreach (GameObject grupo in gruposTianguis)
             {
                 if (grupo != null)
                 {
                     grupo.SetActive(false);
+                    PandillaAPie pandilla = grupo.GetComponent<PandillaAPie>();
+                    if (pandilla != null)
+                    {
+                        pandilla.ModoMision = true; // T-713: salen todos a la vez, no reaparecen
+                    }
                 }
             }
             foreach (GameObject grupo in gruposNeon)
@@ -175,6 +210,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             if (pantalla != null)
             {
                 pantalla.ContinuaraCerrada -= AlCerrarContinuara;
+            }
+            if (asalto != null)
+            {
+                asalto.Terminado -= AlTerminarAsalto;
             }
             if (arma != null)
             {
@@ -280,6 +319,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     }
                     ActualizarRespeto();
                     ITerritorio territorio = Registro<ITerritorio>.Actual;
+                    CompletarRespetoSiCayeronTodos(territorio);
                     if (territorio != null && territorio.JefeDisponible(zona))
                     {
                         Avisar(AvisoHistoria.JefeDisponible);
@@ -365,6 +405,30 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             hayCaida = true;
         }
 
+        // T-713: si ya cayeron todos los SKULLS del Tianguis (en modo misión no reaparecen) y el respeto no llegó al umbral del jefe (alguno cayó fuera de la
+        // zona, o hay menos que 7), se completa: la misión no se puede trabar por falta de SKULLS.
+        private void CompletarRespetoSiCayeronTodos(ITerritorio territorio)
+        {
+            if (territorio == null || gruposTianguis.Length == 0)
+            {
+                return;
+            }
+            foreach (GameObject g in gruposTianguis)
+            {
+                PandillaAPie pandilla = g != null ? g.GetComponent<PandillaAPie>() : null;
+                if (pandilla == null || !pandilla.ModoMision || !pandilla.TodosVencidos)
+                {
+                    return;
+                }
+            }
+            TryPosicionTianguis(out Vector3 punto);
+            int seguridad = 20;
+            while (!territorio.JefeDisponible(zona) && territorio.Dueno(zona) != IdPandilla.Jugador && seguridad-- > 0)
+            {
+                territorio.RegistrarVencido(punto, IdPandilla.Calaveras, false);
+            }
+        }
+
         private void ActualizarRespeto()
         {
             ITerritorio territorio = Registro<ITerritorio>.Actual;
@@ -372,20 +436,22 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             if (respeto != respetoMostrado)
             {
                 respetoMostrado = respeto;
-                FijarObjetivo(TextoTianguis(respeto / RespetoPorSkull, respetoJefe / RespetoPorSkull), PosicionTianguis());
+                FijarObjetivo(TextoTianguis(respeto / RespetoPorSkull, respetoJefe / RespetoPorSkull), TryPosicionTianguis(out Vector3 tianguis), tianguis);
             }
         }
 
-        private Vector3 PosicionTianguis()
+        private bool TryPosicionTianguis(out Vector3 posicion)
         {
             foreach (GameObject g in gruposTianguis)
             {
                 if (g != null)
                 {
-                    return g.transform.position;
+                    posicion = g.transform.position;
+                    return true;
                 }
             }
-            return Vector3.zero;
+            posicion = Vector3.zero;
+            return false;
         }
 
         // ---------- Avance ----------
@@ -399,6 +465,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         }
 
         private void AlCerrarContinuara() => Avisar(AvisoHistoria.ContinuaraCerrado);
+
+        private void AlTerminarAsalto() => Avisar(AvisoHistoria.DineroRecuperado);
+
+        /// <summary>T-717: el asalto de la historia del dinero (para las pruebas).</summary>
+        public AsaltoDinero Asalto => asalto;
 
         // El profe ya hizo su regalo (si tocaba); aquí solo avanza el paso que le toca.
         private void AlUsarProfe(string id)
@@ -463,6 +534,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         {
             PasoHistoria paso = maquina.Paso;
             respetoMostrado = -1;
+            if (paso != PasoHistoria.Asalto && asalto != null)
+            {
+                asalto.Cancelar(); // otro paso: se quita la cinemática y el dinero vuelve si seguía en manos del ladrón
+            }
             foreach (PandilleroAPie c in calaveras)
             {
                 if (c != null)
@@ -497,35 +572,40 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             switch (paso)
             {
                 case PasoHistoria.Despierta:
-                    FijarObjetivo(TextoSalir, puertaCasa != null ? puertaCasa.position : Vector3.zero);
+                    FijarObjetivo(TextoSalir, puertaCasa != null, puertaCasa != null ? puertaCasa.position : default);
+                    break;
+                case PasoHistoria.Asalto:
+                    int reponer = dineroRobadoGuardado; // una partida guardada a medio asalto: el dinero vuelve y el asalto empieza de nuevo
+                    dineroRobadoGuardado = 0;
+                    asalto.Iniciar(reponer); // pone su propio objetivo (el asaltante y luego el carro)
                     break;
                 case PasoHistoria.PrimeraPelea:
-                    FijarObjetivo(TextoDefender, donaLupe != null ? donaLupe.position : Vector3.zero);
+                    FijarObjetivo(TextoDefender, donaLupe != null, donaLupe != null ? donaLupe.position : default);
                     pantalla.MostrarSubtitulo("—¡Ya déjenla!", 4f);
                     break;
                 case PasoHistoria.Pistola:
                     SoltarPistola();
-                    FijarObjetivo(TextoPistola, arma != null ? arma.transform.position : Vector3.zero);
+                    FijarObjetivo(TextoPistola, arma != null, arma != null ? arma.transform.position : default);
                     break;
                 case PasoHistoria.Chato:
-                    pantalla.MostrarAyuda("CLIC DERECHO APUNTA · CLIC IZQUIERDO DISPARA", 8f);
-                    FijarObjetivo(TextoChato, chato != null ? chato.Posicion : Vector3.zero);
+                    pantalla.MostrarAyuda(AyudaApuntarYDisparar(), 8f);
+                    FijarObjetivo(TextoChato, chato != null, chato != null ? chato.Posicion : default);
                     break;
                 case PasoHistoria.Doc:
-                    FijarObjetivo(TextoDoc, doc != null ? doc.Posicion : Vector3.zero);
+                    FijarObjetivo(TextoDoc, doc != null, doc != null ? doc.Posicion : default);
                     break;
                 case PasoHistoria.Inventor:
-                    FijarObjetivo(TextoInventor, inventor != null ? inventor.Posicion : Vector3.zero);
+                    FijarObjetivo(TextoInventor, inventor != null, inventor != null ? inventor.Posicion : default);
                     break;
                 case PasoHistoria.Tianguis:
                     textosTianguisPendientes = true;
                     ActualizarRespeto();
                     break;
                 case PasoHistoria.Jefe:
-                    FijarObjetivo(TextoJefe, PosicionJefe());
+                    FijarObjetivo(TextoJefe, TryPosicionJefe(out Vector3 jefe), jefe);
                     break;
                 case PasoHistoria.NeonAlto:
-                    FijarObjetivo(TextoHacker, hacker != null ? hacker.Posicion : Vector3.zero);
+                    FijarObjetivo(TextoHacker, hacker != null, hacker != null ? hacker.Posicion : default);
                     break;
                 default:
                     QuitarObjetivo();
@@ -544,16 +624,17 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             }
         }
 
-        private Vector3 PosicionJefe()
+        private bool TryPosicionJefe(out Vector3 posicion)
         {
             foreach (JefePandilla j in FindObjectsByType<JefePandilla>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 if (j.Zona == zona)
                 {
-                    return j.transform.position;
+                    posicion = j.transform.position;
+                    return true;
                 }
             }
-            return PosicionTianguis();
+            return TryPosicionTianguis(out posicion);
         }
 
         private void SoltarPistola()
@@ -625,9 +706,20 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             Avisar(AvisoHistoria.PistolaTomada);
         }
 
-        private static void FijarObjetivo(string texto, Vector3 posicion)
+        // T-716: el destino sale de la escena; si falta, el objetivo apunta al lugar de Core de respaldo, nunca a (0, 0, 0).
+        /// <summary>T-718: "CLIC DER. APUNTA · CLIC DISPARA" con las teclas reales del Input System (si el jugador las cambió, ve las suyas).</summary>
+        public static string AyudaApuntarYDisparar()
         {
-            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(new Objetivo(texto, posicion));
+            string apuntar = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Apuntar"), "Clic der.");
+            string disparar = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Atacar"), "Clic");
+            return (apuntar + " APUNTA · " + disparar + " DISPARA").ToUpperInvariant();
+        }
+
+        private static void FijarObjetivo(string texto, bool hayPosicion, Vector3 posicion)
+        {
+            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(hayPosicion
+                ? new Objetivo(texto, posicion)
+                : new Objetivo(texto, LugarRespaldo));
         }
 
         private static void QuitarObjetivo()
@@ -641,9 +733,22 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private class DatosGuardados
         {
             public string paso = nameof(PasoHistoria.Despierta);
+            public int dineroRobado; // T-717: dinero que tiene el asaltante en un guardado a medio asalto (solo se escribe si hay)
         }
 
-        public string Guardar() => JsonUtility.ToJson(new DatosGuardados { paso = maquina.Paso.ToString() });
+        [System.Serializable]
+        private class DatosPaso
+        {
+            public string paso;
+        }
+
+        public string Guardar()
+        {
+            // El formato de siempre ({"paso":"X"}); el dinero robado solo se agrega si hay un asalto a medias.
+            int robado = maquina.Paso == PasoHistoria.Asalto && asalto != null && asalto.DineroEnManosDelLadron ? asalto.DineroRobado : 0;
+            string texto = JsonUtility.ToJson(new DatosPaso { paso = maquina.Paso.ToString() });
+            return robado > 0 ? texto.Substring(0, texto.Length - 1) + ",\"dineroRobado\":" + robado + "}" : texto;
+        }
 
         public void Cargar(string datos)
         {
@@ -668,6 +773,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 paso = PasoHistoria.Despierta;
             }
             maquina.Iniciar(paso);
+            dineroRobadoGuardado = paso == PasoHistoria.Asalto ? Mathf.Max(0, leidos.dineroRobado) : 0;
             cargadoAntes = true;
             if (arrancado)
             {

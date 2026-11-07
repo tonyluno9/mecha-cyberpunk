@@ -72,6 +72,20 @@ namespace MechaCyberpunk.Progresion
             PosicionResuelta = true;
         }
 
+        /// <summary>T-717: el mismo objetivo se movió un poco (un carro que huye): cambia la posición y vuelve a medir la mejor distancia, pero conserva la distancia actual.</summary>
+        public void Reubicar(Vector3 posicion)
+        {
+            posicionObjetivo = posicion;
+            PosicionResuelta = true;
+            hayMejor = false;
+            tiempoAlejandose = 0f;
+            if (SeAleja)
+            {
+                SeAleja = false;
+                SeAlejaCambio?.Invoke(false);
+            }
+        }
+
         /// <summary>El objetivo ya no se puede ubicar (por ejemplo su lugar salió del registro). No avanza hasta que vuelva.</summary>
         public void PerderPosicion()
         {

@@ -224,6 +224,11 @@ namespace MechaCyberpunk.UI.Titulo
             {
                 Armar();
             }
+            // T-702: el prefab guardaba el nombre viejo (CYBERFIX); el nombre sale siempre de la constante única.
+            if (nombre != null)
+            {
+                nombre.text = NombreJuego.Nombre;
+            }
             // T-537: con fondo animado, la imagen fija del prefab se apaga y se ve la ciudad que recorre CamaraTitulo.
             Transform fijo = contenido.transform.Find("FondoMenu");
             if (fijo != null)

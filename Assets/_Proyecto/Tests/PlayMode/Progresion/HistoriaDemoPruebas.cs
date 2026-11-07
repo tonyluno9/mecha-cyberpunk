@@ -13,6 +13,7 @@ using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
 using MechaCyberpunk.UI.Historia;
+using MechaCyberpunk.Progresion.Guardado;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -43,9 +44,15 @@ namespace MechaCyberpunk.Tests.Progresion
 
         private Keyboard teclado;
 
+        private string carpetaGuardado;
+
         public override void Setup()
         {
             base.Setup();
+            // El autoguardado de la ciudad va a una carpeta temporal: la historia siempre empieza de cero y no pisa la partida real.
+            carpetaGuardado = System.IO.Path.Combine(Application.temporaryCachePath, "historia_" + Guid.NewGuid().ToString("N"));
+            System.IO.Directory.CreateDirectory(carpetaGuardado);
+            ServicioGuardado.RutaForzada = System.IO.Path.Combine(carpetaGuardado, "partida.json");
             teclado = InputSystem.AddDevice<Keyboard>();
             InputSystem.AddDevice<Mouse>();
         }
@@ -53,6 +60,11 @@ namespace MechaCyberpunk.Tests.Progresion
         public override void TearDown()
         {
             Time.timeScale = 1f;
+            ServicioGuardado.RutaForzada = null;
+            if (carpetaGuardado != null && System.IO.Directory.Exists(carpetaGuardado))
+            {
+                System.IO.Directory.Delete(carpetaGuardado, true);
+            }
             base.TearDown();
         }
 
@@ -264,7 +276,9 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Inventor, "usar a EL DOC", 5f);
             Assert.AreEqual(vida.Maxima, vida.Actual, 0.5f, "EL DOC te deja la vida al máximo");
             Assert.AreEqual(500, cartera.Dinero, "EL DOC no cobra en la historia");
-            StringAssert.Contains("Aguanta, mijo", pantalla.Subtitulo);
+            // T-702: sin implantes, EL DOC dice la frase del regalo (RegaloImplanteDoc); si no hubo regalo, la de curar de la historia.
+            RegaloImplanteDoc regaloDoc = Object.FindFirstObjectByType<RegaloImplanteDoc>();
+            StringAssert.Contains(regaloDoc != null && regaloDoc.Regalado ? regaloDoc.Frase : DirectorPandillas.SubtituloDoc, pantalla.Subtitulo);
             Assert.AreEqual("VE CON EL INVENTOR AL CIC", Objetivo);
             Assert.IsFalse(doc.TieneRegalo, "Fuera del paso Doc vuelve a cobrar");
 

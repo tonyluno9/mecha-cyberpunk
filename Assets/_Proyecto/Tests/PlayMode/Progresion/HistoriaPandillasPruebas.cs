@@ -6,6 +6,7 @@ using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
+using MechaCyberpunk.Progresion.Guardado;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -28,9 +29,15 @@ namespace MechaCyberpunk.Tests.Progresion
         private Keyboard teclado;
         private Mouse raton;
 
+        private string carpetaGuardado;
+
         public override void Setup()
         {
             base.Setup();
+            // El autoguardado de la ciudad va a una carpeta temporal: la historia siempre empieza de cero y no pisa la partida real.
+            carpetaGuardado = System.IO.Path.Combine(Application.temporaryCachePath, "historia_" + Guid.NewGuid().ToString("N"));
+            System.IO.Directory.CreateDirectory(carpetaGuardado);
+            ServicioGuardado.RutaForzada = System.IO.Path.Combine(carpetaGuardado, "partida.json");
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
         }
@@ -38,6 +45,11 @@ namespace MechaCyberpunk.Tests.Progresion
         public override void TearDown()
         {
             Time.timeScale = 1f;
+            ServicioGuardado.RutaForzada = null;
+            if (carpetaGuardado != null && System.IO.Directory.Exists(carpetaGuardado))
+            {
+                System.IO.Directory.Delete(carpetaGuardado, true);
+            }
             base.TearDown();
         }
 
@@ -51,7 +63,7 @@ namespace MechaCyberpunk.Tests.Progresion
             AvisoHistoria[] avisos = (AvisoHistoria[])Enum.GetValues(typeof(AvisoHistoria));
             PasoHistoria[] esperados =
             {
-                PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Doc, PasoHistoria.Inventor, PasoHistoria.Tianguis,
+                PasoHistoria.Asalto, PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Doc, PasoHistoria.Inventor, PasoHistoria.Tianguis,
                 PasoHistoria.Jefe, PasoHistoria.NeonAlto, PasoHistoria.Continuara, PasoHistoria.Libre
             };
             for (int i = 0; i < avisos.Length; i++)
@@ -162,7 +174,11 @@ namespace MechaCyberpunk.Tests.Progresion
             }
             Release(teclado.wKey);
             Debug.Log("[Prueba] fin camino " + jugador.Raiz.position);
-            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso, "Salir caminando por las puertas saca de la casa.");
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "Salir caminando por las puertas saca de la casa y empieza el asalto (T-717).");
+            // T-717: el asalto tiene su propia prueba (AsaltoDineroT717Pruebas); aquí se pasa a la primera pelea como al recuperar el dinero.
+            director.Cargar("{\"paso\":\"PrimeraPelea\"}");
+            yield return null;
+            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso);
 
             // b. La primera pelea: clics sobre los Calaveras hasta vencerlos.
             float finPelea = Time.realtimeSinceStartup + 90f;
@@ -202,7 +218,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Chato, "recoger la pistola", 5f);
             Assert.IsTrue(arsenal.Tiene(ArmaAPie.Pistola));
-            StringAssert.Contains("CLIC DERECHO APUNTA", director.Pantalla.Ayuda);
+            Assert.AreEqual(DirectorPandillas.AyudaApuntarYDisparar(), director.Pantalla.Ayuda, "T-718: la ayuda usa las teclas reales");
 
             // d. El CHATO: E.
             Reclutable chato = null;

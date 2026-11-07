@@ -113,7 +113,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 yield return null;
                 for (int i = 0; i < 25; i++)
                 {
-                    Assert.IsTrue(carro.Reaparecer(false), "Encuentra dónde salir");
+                    Assert.IsTrue(carro.Reaparecer(false, true), "Encuentra dónde salir");
                     Vector3 p = carro.transform.position;
                     Assert.IsFalse(MechaCyberpunk.Trafico.Persecucion.ReglaVistaPolicia.LoVe(cam, p, 160f), "Salió a la vista en " + p);
                     Vector3 d = p - jugador;

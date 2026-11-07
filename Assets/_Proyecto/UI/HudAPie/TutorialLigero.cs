@@ -1,6 +1,8 @@
+using MechaCyberpunk.Combate.Golpe;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion.Opciones;
 using MechaCyberpunk.Progresion.Partida;
@@ -45,6 +47,10 @@ namespace MechaCyberpunk.UI.Hud
         private PistolaAPie pistola;
         private CubiertaYRodada cubierta;
         private InteraccionAPie interaccion;
+        private ConsumiblesJugador consumibles;
+        private GolpeAPie golpe;
+        private ArmasAPie armas;
+        private IEscudo escudo;
         private int vistasGuardadas;
 
         public ReglaTutorial Regla => regla;
@@ -110,6 +116,60 @@ namespace MechaCyberpunk.UI.Hud
             pistola = raizCacheada.GetComponentInChildren<PistolaAPie>();
             cubierta = raizCacheada.GetComponentInChildren<CubiertaYRodada>();
             interaccion = raizCacheada.GetComponentInChildren<InteraccionAPie>();
+            consumibles = raizCacheada.GetComponentInChildren<ConsumiblesJugador>();
+            golpe = raizCacheada.GetComponentInChildren<GolpeAPie>();
+            armas = raizCacheada.GetComponentInChildren<ArmasAPie>();
+            IEscudo nuevoEscudo = Registro<IEscudo>.Actual;
+            if (nuevoEscudo != escudo)
+            {
+                if (escudo != null)
+                {
+                    escudo.Absorbio -= AlAbsorberEscudo;
+                }
+                escudo = nuevoEscudo;
+                if (escudo != null)
+                {
+                    escudo.Absorbio += AlAbsorberEscudo;
+                }
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (escudo != null)
+            {
+                escudo.Absorbio -= AlAbsorberEscudo;
+                escudo = null;
+            }
+        }
+
+        // El escudo absorbió un golpe o una bala: ya vio para qué sirve.
+        private void AlAbsorberEscudo(float cantidad) => regla.Hecha(AccionTutorial.Escudo);
+
+        /// <summary>
+        /// T-718: la tecla real de cada acción del aviso, con GetBindingDisplayString del Input System (nunca un texto fijo): lo que el jugador cambió en sus controles es lo que ve.
+        /// Lo que no es de una acción del mapa APie (agacharse, cubrirse, objetos, mapa) sale de la acción o la tecla que usa el componente.
+        /// </summary>
+        public string TeclaReal(string nombre)
+        {
+            string omision = ReglaTutorial.TeclaPorOmision(nombre);
+            switch (nombre)
+            {
+                case ReglaTutorial.TeclaMover:
+                    return TeclasHud.TextoMover(TeclasHud.Buscar("Mover"), omision);
+                case ReglaTutorial.TeclaAgacharse:
+                    return TeclasHud.Texto(cubierta != null ? cubierta.AccionAgachar : null, omision);
+                case ReglaTutorial.TeclaCubrirse:
+                    return TeclasHud.Texto(cubierta != null ? cubierta.AccionCubrirse : null, omision);
+                case ReglaTutorial.TeclaConsumibleSiguiente:
+                    return TeclasHud.Texto(consumibles != null ? consumibles.AccionSiguiente : null, omision);
+                case ReglaTutorial.TeclaConsumibleUsar:
+                    return TeclasHud.Texto(consumibles != null ? consumibles.AccionUsar : null, omision);
+                case ReglaTutorial.TeclaMapa:
+                    return Keyboard.current != null ? TeclasHud.Nombre(Keyboard.current.mKey.displayName) : omision;
+                default:
+                    return TeclasHud.Texto(TeclasHud.Buscar(nombre), omision);
+            }
         }
 
         // Lo que la persona hizo este cuadro: se da por visto aunque el aviso no estuviera en pantalla.
@@ -120,6 +180,10 @@ namespace MechaCyberpunk.UI.Hud
             if (jugador.Modo == ModoJugador.Carro)
             {
                 regla.Hecha(AccionTutorial.SubirAlCarro);
+                if (MontableOcupadoEsMoto())
+                {
+                    regla.Hecha(AccionTutorial.Moto);
+                }
                 if (ObjetivoDeRobar())
                 {
                     regla.Hecha(AccionTutorial.Robar);
@@ -145,13 +209,31 @@ namespace MechaCyberpunk.UI.Hud
                     regla.Hecha(AccionTutorial.Misiones);
                 }
             }
-            if (raton != null && raton.leftButton.wasPressedThisFrame)
+            // T-718: el clic con los puños es un golpe, no un disparo: Disparar solo cuenta con un arma de fuego en la mano.
+            if (raton != null && raton.leftButton.wasPressedThisFrame && ArmaDeFuegoEnLaMano())
             {
                 regla.Hecha(AccionTutorial.Disparar);
             }
             if (controlador != null && controlador.Apuntando)
             {
                 regla.Hecha(AccionTutorial.Apuntar);
+            }
+            if (controlador != null && controlador.PidiendoCorrer && teclado != null
+                && (teclado.wKey.isPressed || teclado.aKey.isPressed || teclado.sKey.isPressed || teclado.dKey.isPressed))
+            {
+                regla.Hecha(AccionTutorial.Correr);
+            }
+            if (cubierta != null && cubierta.AgachadoLibre)
+            {
+                regla.Hecha(AccionTutorial.Agacharse);
+            }
+            if (golpe != null && golpe.Fase != FaseGolpe.Listo)
+            {
+                regla.Hecha(AccionTutorial.Golpear);
+            }
+            if (consumibles != null && (consumibles.AccionSiguiente.WasPressedThisFrame() || consumibles.AccionUsar.WasPressedThisFrame()))
+            {
+                regla.Hecha(AccionTutorial.Consumibles);
             }
             if (pistola != null && pistola.Recargando)
             {
@@ -180,17 +262,63 @@ namespace MechaCyberpunk.UI.Hud
                     return HayCarroCerca();
                 case AccionTutorial.Robar:
                     return HayCarroCerca() && ObjetivoDeRobar();
+                case AccionTutorial.Moto:
+                    return HayMotoCerca();
                 case AccionTutorial.Cubrirse:
                 case AccionTutorial.Rodar:
+                case AccionTutorial.Agacharse:
                     return cubierta != null;
+                case AccionTutorial.Golpear:
+                    return golpe != null;
+                case AccionTutorial.Correr:
+                    return controlador != null;
+                case AccionTutorial.Consumibles:
+                    return consumibles != null && consumibles.Disponibles.Count > 0;
+                case AccionTutorial.Escudo:
+                    return escudo != null && escudo.Maximo > 0f;
                 case AccionTutorial.Apuntar:
                 case AccionTutorial.Disparar:
                 case AccionTutorial.Recargar:
-                    return pistola != null;
+                    return pistola != null && ArmaDeFuegoEnLaMano();
                 default:
                     return true;
             }
         }
+
+        // Sin arma de fuego en la mano (puños) no tiene caso decir cómo apuntar, disparar o recargar.
+        private bool ArmaDeFuegoEnLaMano() => armas == null || armas.ArmaActiva != ArmaAPie.Punos;
+
+        private const float MetrosMotoCerca = 5f;
+        private const string PalabraMoto = "moto";
+
+        // T-718: la moto que se puede abordar a pie está a pocos metros.
+        private bool HayMotoCerca()
+        {
+            foreach (IMontable montable in Registro<IMontable>.Todos)
+            {
+                if (montable != null && !montable.Ocupado && montable.Modo == ModoJugador.Carro && EsMoto(montable)
+                    && (montable.PuntoSubida - jugador.Raiz.position).sqrMagnitude <= MetrosMotoCerca * MetrosMotoCerca)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool MontableOcupadoEsMoto()
+        {
+            foreach (IMontable montable in Registro<IMontable>.Todos)
+            {
+                if (montable != null && montable.Ocupado && montable.Modo == ModoJugador.Carro && EsMoto(montable))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool EsMoto(IMontable montable) =>
+            montable.Nombre != null && montable.Nombre.IndexOf(PalabraMoto, System.StringComparison.OrdinalIgnoreCase) >= 0;
 
         private bool HayCarroCerca() => interaccion != null && interaccion.TipoCandidato == TipoCandidatoAPie.Montable;
 
@@ -207,13 +335,13 @@ namespace MechaCyberpunk.UI.Hud
             {
                 if (regla.HayAviso)
                 {
-                    texto.text = ReglaTutorial.Texto(regla.Aviso);
+                    texto.text = ReglaTutorial.Texto(regla.Aviso, TeclaReal);
                 }
                 return;
             }
             if (regla.HayAviso)
             {
-                texto.text = ReglaTutorial.Texto(regla.Aviso);
+                texto.text = ReglaTutorial.Texto(regla.Aviso, TeclaReal);
             }
             cuadro.SetActive(regla.HayAviso);
         }

@@ -58,6 +58,50 @@ namespace MechaCyberpunk.Trafico.Peatones
         private CapsuleCollider capsula;
         private Renderer[] visuales;
 
+        // T-705: mientras llama saca el teléfono (Inter_Telefono) y lo vuelve a sacar cada vez que termina el gesto. El gesto lo juega VisualPersonaje
+        // (otro ensamblado que Trafico no referencia): se le manda el mensaje "Telefonear" con BroadcastMessage y se mira el Animator del modelo activo.
+        private const float SegundosEntreTelefono = 0.4f;
+        private const string EstadoTelefono = "Telefono";
+        private Animator animadorActivo;
+        private float proximoTelefono;
+
+        /// <summary>T-705: cuántas veces sacó el teléfono al llamar (para pruebas).</summary>
+        public int GestosTelefono { get; private set; }
+
+        /// <summary>T-705: True mientras está tirado en el piso (el conductor al que le roban el carro): no saca el teléfono.</summary>
+        public bool Tumbado { get; set; }
+
+        /// <summary>
+        /// T-705: si es mayor que 0, la distancia al jugador (m) a la que este testigo pierde de vista al jugador y cancela su llamada, en lugar
+        /// del radio general de <see cref="ConfigPersecucion.RadioAbandonoCivil"/>. El conductor al que le roban el carro usa uno corto.
+        /// </summary>
+        public float RadioAbandonoPropio { get; set; }
+
+        private void MantenerTelefono()
+        {
+            if (!Llamando || Muerto || Tumbado || Time.time < proximoTelefono)
+            {
+                return;
+            }
+            // El prefab trae dos modelos (persona y robot, solo uno activo): el Animator es el del modelo activo.
+            if (animadorActivo == null || !animadorActivo.isActiveAndEnabled)
+            {
+                animadorActivo = GetComponentInChildren<Animator>(false);
+            }
+            if (animadorActivo == null || animadorActivo.runtimeAnimatorController == null)
+            {
+                return;
+            }
+            if (animadorActivo.GetCurrentAnimatorStateInfo(0).IsName(EstadoTelefono)
+                || (animadorActivo.IsInTransition(0) && animadorActivo.GetNextAnimatorStateInfo(0).IsName(EstadoTelefono)))
+            {
+                return;
+            }
+            proximoTelefono = Time.time + SegundosEntreTelefono;
+            GestosTelefono++;
+            BroadcastMessage("Telefonear", SendMessageOptions.DontRequireReceiver);
+        }
+
         /// <summary>True mientras está llamando a la policía (parado, con el teléfono).</summary>
         public bool Llamando { get; private set; }
 
@@ -75,6 +119,7 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Llamando = true;
+            proximoTelefono = 0f;
             Calmar();
             if (indicador == null)
             {
@@ -221,6 +266,7 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         private void Update()
         {
+            MantenerTelefono();
             if (calculo == null)
             {
                 return;

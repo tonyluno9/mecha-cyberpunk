@@ -9,6 +9,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
     public enum PasoHistoria
     {
         Despierta,
+        Asalto,
         PrimeraPelea,
         Pistola,
         Chato,
@@ -25,6 +26,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
     public enum AvisoHistoria
     {
         SalioDeCasa,
+        DineroRecuperado,
         PeleaGanada,
         PistolaTomada,
         ChatoUnido,

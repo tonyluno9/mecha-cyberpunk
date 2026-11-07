@@ -32,6 +32,13 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>True si en este modo puede pedir turno y disparar.</summary>
         public bool PuedeDisparar => Actual == Modo.Rodear || Actual == Modo.Asomado;
 
+        /// <summary>T-709: pasa directo a cubrirse (el policía que se baja de la patrulla se esconde primero).</summary>
+        public void ForzarCubrirse()
+        {
+            Actual = Modo.Cubrirse;
+            temporizador = 0f;
+        }
+
         public void Reiniciar()
         {
             Actual = Modo.Rodear;

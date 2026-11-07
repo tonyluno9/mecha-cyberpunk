@@ -1,5 +1,6 @@
 using System;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.UI.Guardado;
@@ -40,7 +41,7 @@ namespace MechaCyberpunk.UI.Inicio
         public const string TextoSinPartida = "SIN PARTIDA GUARDADA";
         public const string AyudaTeclado = "↑ ↓ ELEGIR     ENTER ACEPTAR     ESC VOLVER";
         public const string AyudaControl = "↑ ↓ ELEGIR     A ACEPTAR     B VOLVER";
-        public const string Version = "DEMO  ·  CYBERFIX";
+        public const string Version = "DEMO  ·  CYBERCITY";
         public const string SonidoInicio = "UI_TITULO_INICIO";
 
         private const float SegundosEntrada = 1.7f;
@@ -163,7 +164,7 @@ namespace MechaCyberpunk.UI.Inicio
             UIInicio.Estirar(lineas.rectTransform);
             ArmarMarco(c);
 
-            logo = LogoInicio.Crear(c, "CYBERFIX", 210, new Vector2(MargenIzquierdo - 6f, -100f));
+            logo = LogoInicio.Crear(c, NombreJuego.Nombre, 210, new Vector2(MargenIzquierdo - 6f, -100f));
 
             raizPrincipal = UIInicio.Nodo(c, "Principal");
             UIInicio.Estirar(raizPrincipal);

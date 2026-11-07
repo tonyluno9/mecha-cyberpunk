@@ -69,7 +69,26 @@ namespace MechaCyberpunk.Progresion
         /// <summary>Quita el objetivo.</summary>
         public void Quitar() => modelo.Quitar();
 
-        private void AlCambiarObjetivo(Objetivo objetivo) => seguimiento.Reiniciar();
+        // T-717: un objetivo que se mueve (el carro del asaltante) se vuelve a fijar muchas veces por segundo con el mismo texto. Si solo cambió la posición
+        // (poco, y todavía no llegaste), la posición se mueve sin borrar la distancia: el marcador y los metros del HUD no parpadean.
+        private const float MetrosMaximosDeUnCambioQueSigue = 25f;
+        private string textoAnterior;
+        private bool conPosicionAnterior;
+
+        private void AlCambiarObjetivo(Objetivo objetivo)
+        {
+            bool sigue = conPosicionAnterior && objetivo.TienePosicion && objetivo.Texto == textoAnterior
+                && seguimiento.PosicionResuelta && !seguimiento.Llego
+                && (seguimiento.Posicion - objetivo.Posicion).sqrMagnitude <= MetrosMaximosDeUnCambioQueSigue * MetrosMaximosDeUnCambioQueSigue;
+            textoAnterior = objetivo.Texto;
+            conPosicionAnterior = objetivo.TienePosicion;
+            if (sigue)
+            {
+                seguimiento.Reubicar(objetivo.Posicion);
+                return;
+            }
+            seguimiento.Reiniciar();
+        }
 
         private void AlEntrarLugar(IdLugar lugar)
         {

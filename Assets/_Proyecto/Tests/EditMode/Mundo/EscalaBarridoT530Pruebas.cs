@@ -152,7 +152,7 @@ namespace MechaCyberpunk.Tests.Mundo
         public void CamaraHombro_MasCerca()
         {
             SerializedObject so = new SerializedObject(AssetDatabase.LoadMainAssetAtPath("Assets/_Proyecto/Personaje/Datos/ConfigCamaraHombro_Base.asset"));
-            Assert.That(so.FindProperty("distanciaNormal").floatValue, Is.InRange(1.6f, 2.8f));
+            Assert.That(so.FindProperty("distanciaNormal").floatValue, Is.InRange(1.6f, 7.5f)); // T-699: la cámara va a 7 m como H10
         }
     }
 }

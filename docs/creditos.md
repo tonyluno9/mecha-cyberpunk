@@ -33,6 +33,11 @@ Los roles de cada quien están por confirmar: ni el documento del juego ni las l
 - Mixamo: personajes y animaciones
 - Freesound: sonidos
 
+## TIPOGRAFÍAS
+
+- Rajdhani (Indian Type Foundry): números y etiquetas del HUD y texto de la interfaz. Licencia SIL Open Font License 1.1 (assets en Assets/_Proyecto/UI/Fuentes/ con su OFL.txt y en Assets/Arte/UI/Fuentes/).
+- Teko (Indian Type Foundry): títulos. Licencia SIL Open Font License 1.1.
+
 ## LICENCIAS DE MODELOS 3D
 
 - Modelos 3D de ciudad, props, interiores y clandestino: generados con Tripo (lote de T-250 y de la noche, 39 modelos más).

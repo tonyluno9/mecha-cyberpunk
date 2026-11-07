@@ -83,6 +83,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             azar = new System.Random(341);
             testigos = gameObject.AddComponent<TestigosDelito>(); // T-661: sin testigos no hay calor
             testigos.Configurar(config);
+            gameObject.AddComponent<GestorRefuerzos>().Configurar(config); // T-714: los SKULLS llaman refuerzos en carro
+            gameObject.AddComponent<AsaltoMundo>(); // T-717: el carro del asaltante de la historia del dinero
             busqueda = new ReglaBusquedaPolicial(config.RadioBusqueda, config.SegundosParaEscapar);
             arresto = new ReglaArresto(config.DistanciaArresto, config.SegundosArresto, config.VelocidadArresto);
             zona = new ZonaBusqueda(busqueda);
@@ -183,7 +185,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // el tiempo suficiente; entonces escapas y se retira. El calor no baja solo mientras tanto (CalorConTestigos).
         private void Update()
         {
-            retirandose.RemoveAll(c => c == null);
+            retirandose.RemoveAll(c => c == null || (c is PatrullaMundo robada && robada.Robada));
+            patrullas.RemoveAll(p => p == null || p.Robada); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
             if (calor == null || calor.Nivel <= 0 || config == null)
             {
                 SegundosSinVer = 0f;
@@ -217,7 +220,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     }
                 }
             }
-            bool teVen = patrullaVe || (jugador.HasValue && (LoVeUnDron(jugador.Value) || testigos.CamaraQueVe(jugador.Value) != null));
+            bool teVen = patrullaVe || PatrullaMundo.JugadorEnPatrulla || (jugador.HasValue && (LoVeUnDron(jugador.Value) || testigos.CamaraQueVe(jugador.Value) != null));
             if (teVen)
             {
                 huboContacto = true;
@@ -344,6 +347,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // Deja exactamente las cantidades que pide el nivel: crea las que faltan y retira las que sobran.
         private void Reconciliar(int nivel)
         {
+            patrullas.RemoveAll(p => p == null || p.Robada); // T-707
             ActualizarBusqueda(nivel);
             int dronesPedidos = calculo == null ? 0 : calculo.Drones(nivel);
             int patrullasPedidas = calculo == null ? 0 : calculo.Patrullas(nivel);
@@ -431,23 +435,20 @@ namespace MechaCyberpunk.Trafico.Persecucion
             // T-664: la patrulla solo sale en un nodo a más de DistanciaMinimaSalida m del jugador, fuera de la vista de la cámara y sin otra patrulla encima;
             // de esos, el más cercano a la distancia de salida. Si no hay ninguno devuelve -1 y la patrulla espera (nunca aparece a la vista).
             Camera camara = Camera.main;
-            int mejor = -1;
-            float error = float.MaxValue;
+            // T-708: la salida se elige por el tiempo real que tarda en llegar por las calles; y fuera de la vista con margen, como el pool del tráfico (T-704).
+            int destino = calles.MasCercano(centro);
+            List<float> metros = new List<float>(calles.Cantidad);
+            List<bool> permitido = new List<bool>(calles.Cantidad);
             for (int i = 0; i < calles.Cantidad; i++)
             {
                 Vector3 d = calles.Nodo(i) - centro;
                 d.y = 0f;
-                if (d.magnitude < config.DistanciaMinimaSalida || ReglaVistaPolicia.LoVe(camara, calles.Nodo(i), AlcanceCamara) || HayPatrullaCerca(calles.Nodo(i)))
-                {
-                    continue;
-                }
-                float e = Mathf.Abs(d.magnitude - DistanciaSalidaPatrulla);
-                if (e < error)
-                {
-                    error = e;
-                    mejor = i;
-                }
+                bool vale = d.magnitude >= config.DistanciaMinimaSalida && !ReglaVistaPolicia.LoVe(camara, calles.Nodo(i), AlcanceCamara)
+                    && !CarroTrafico.PuntoEnVista(camara, calles.Nodo(i)) && !HayPatrullaCerca(calles.Nodo(i));
+                permitido.Add(vale);
+                metros.Add(vale ? CalculoLlegadaPatrulla.MetrosDeRuta(calles, i, destino) : float.MaxValue);
             }
+            int mejor = CalculoLlegadaPatrulla.Elegir(metros, permitido, config.VelocidadPatrulla, config.SegundosLlegadaPatrulla, config.SegundosMinimosLlegadaPatrulla);
             return mejor;
         }
 

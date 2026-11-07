@@ -19,13 +19,22 @@ MonoBehaviour:
   posiciones:
   - escena: Ciudad_Prologo
     nota: frente a la casa
-    posicion: {x: -55.5, y: 0.2, z: -71}
+    marcador: Marcador_Expendedora_Casa
+    lugar: 2
+    desplazamiento: {x: 0, y: 0, z: 6}
+    posicion: {x: 0, y: 0, z: 0}
     giro: 270
   - escena: Ciudad_Prologo
     nota: entrada del tianguis
-    posicion: {x: -36, y: 0.2, z: -8}
+    marcador: Marcador_Expendedora_Tianguis
+    lugar: 4
+    desplazamiento: {x: -36, y: 0, z: 0.49}
+    posicion: {x: 0, y: 0, z: 0}
     giro: 180
   - escena: Ciudad_Prologo
     nota: calle de Nova
-    posicion: {x: 64, y: 0.2, z: -8.5}
+    marcador: Marcador_Expendedora_Nova
+    lugar: 4
+    desplazamiento: {x: 64, y: 0, z: -0.01}
+    posicion: {x: 0, y: 0, z: 0}
     giro: 180

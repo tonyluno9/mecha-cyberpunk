@@ -39,10 +39,16 @@ namespace MechaCyberpunk.UI.Kit
         /// <summary>El aviso "+Ƀ600 · PREMIO": a la derecha del panel de Biits.</summary>
         public static RanuraHud AvisoDinero => new RanuraHud(EsquinaHud.ArribaIzquierda, Dinero.DesdeBorde + 10f, F, M + AnchoDinero + Hueco * 2f);
         public static RanuraHud Cancion => new RanuraHud(EsquinaHud.ArribaIzquierda, Dinero.Fin + Hueco * 2f, F, M);
-        public static RanuraHud Renta => new RanuraHud(EsquinaHud.ArribaIzquierda, Cancion.Fin, F, M);
+        // T-700: la renta baja bajo el dinero y la hora del HUD nuevo (HudH10), que ocupan hasta ~330 px.
+        public static RanuraHud Renta => new RanuraHud(EsquinaHud.ArribaIzquierda, 340f, F, M);
 
-        // Arriba a la derecha: la zona, con el dueño y tu respeto.
-        public static RanuraHud Zona => new RanuraHud(EsquinaHud.ArribaDerecha, M, AltoZona, M);
+        /// <summary>T-700: márgenes del HUD nuevo, medidos de H10_HUD.png a 1920x1080.</summary>
+        public const float MargenH10 = 63f;
+        public const float MargenSuperiorH10 = 59f;
+
+        // Arriba a la derecha: la zona, con el dueño y tu respeto, a la izquierda del minimapa cuadrado (T-700).
+        public static RanuraHud Zona => new RanuraHud(EsquinaHud.ArribaDerecha, MargenSuperiorH10, AltoZona, MargenH10 + LadoMinimapa + SeparacionBloquesH10);
+        private const float SeparacionBloquesH10 = 24f;
 
         // T-430: los iconos de implantes, debajo de la zona.
         public static RanuraHud Implantes => new RanuraHud(EsquinaHud.ArribaDerecha, Zona.Fin + Hueco, 40f, M);
@@ -54,15 +60,15 @@ namespace MechaCyberpunk.UI.Kit
         public static RanuraHud AvisoAliados => new RanuraHud(EsquinaHud.ArribaCentro, AvisoZona.Fin + Hueco, AltoAvisoMediano, 0f);
         public static RanuraHud AyudaHistoria => new RanuraHud(EsquinaHud.ArribaCentro, AvisoAliados.Fin + Hueco, AltoAyudaHistoria, 0f);
 
-        /// <summary>Lado (px) del minimapa redondo (T-409).</summary>
+        /// <summary>Lado (px) del minimapa (T-409; cuadrado desde T-700).</summary>
         public const float LadoMinimapa = 260f;
 
-        // Abajo a la izquierda (T-409): el minimapa en la esquina y arriba de él la ayuda de controles.
-        public static RanuraHud Minimapa => new RanuraHud(EsquinaHud.AbajoIzquierda, M, LadoMinimapa, M);
-        public static float JuntoAlMinimapa => M + LadoMinimapa + KitUI.Estilo.SeparacionBloques;
-        public static RanuraHud AyudaControles => new RanuraHud(EsquinaHud.AbajoIzquierda, Minimapa.Fin + KitUI.Estilo.SeparacionBloques, FilasAyuda * F, M);
-        /// <summary>T-521: los aliados, compactos, a la derecha del minimapa y pegados abajo (la fila crece hacia arriba).</summary>
-        public static RanuraHud Pandilla => new RanuraHud(EsquinaHud.AbajoIzquierda, M, AltoAliados, JuntoAlMinimapa);
+        // T-700: el minimapa cuadrado arriba a la derecha (como H10). Abajo a la izquierda van las casillas de objetos (114 px a 62 px del borde),
+        // con su línea de efectos encima; la ayuda de controles y los aliados suben sobre ellas.
+        public static RanuraHud Minimapa => new RanuraHud(EsquinaHud.ArribaDerecha, MargenSuperiorH10, LadoMinimapa, MargenH10);
+        public static RanuraHud AyudaControles => new RanuraHud(EsquinaHud.AbajoIzquierda, 232f, FilasAyuda * F, MargenH10);
+        /// <summary>T-521: los aliados, compactos, sobre la ayuda de controles (la fila crece hacia arriba).</summary>
+        public static RanuraHud Pandilla => new RanuraHud(EsquinaHud.AbajoIzquierda, AyudaControles.Fin + Hueco * 2f, AltoAliados, MargenH10);
 
         // Abajo a la derecha: el panel del arma.
         public static RanuraHud Arma => new RanuraHud(EsquinaHud.AbajoDerecha, M, AltoArma, M);

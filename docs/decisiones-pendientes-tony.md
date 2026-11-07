@@ -1226,3 +1226,26 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - La moto no se hace 20 % más chica: 06nov-b dice que a Tony le gusta cómo se ve (manda sobre 06nov). Se calibró aceleración, frenado, conductor y humo.
 - La moto de reparto (V07) tiene su propia config (ConfigCarro_MotoReparto): 5.4 m/s² y tope 18 m/s, frente a 7.8 m/s² y 26 m/s de las otras motos.
 - T-696: escala de carros revisada contra el jugador de 1.80: no se ajustó nada, no hay aviso para la sesión 2. Aviso de fuego usa MUN_CHISPAS_ELECTRICAS (existente), nada para arte. Cristales de V02-V10 son opacos (ver T-694).
+
+## T-698 / T-699 (S1, noche 07-nov)
+- Logo: sigue el texto provisional CYBERCITY con glitch. Para usar una propuesta (imageassets/logo/LG01 a LG06): importar el PNG como Sprite en Assets/_Proyecto/UI/Resources/LogoCybercity.png (sin más código; el menú y la carga lo usan solos). Tony debe elegir cuál.
+- Cámara H10: altura 3.4 m, 7 m atrás, FOV 65 (pies al 10 % del borde de abajo, no al 5 % de la imagen: más bajo pedía una cámara aún más alta). Apuntando FOV 45. Con la cámara tan atrás, el asistido de apuntado y la mira calculan desde la cámara; los blancos lejanos quedan a la altura de la mira (3.4 m) si no se baja el ratón.
+- Junto al jugador aparece otro personaje en la calle frente a la casa (NPC de la sesión 2), no es parte de esta tarea.
+
+## T-700 (S1, noche 07-nov)
+- Dinero: el HUD dice "$ 12,450" como H10; la moneda del juego sigue siendo Biits (Ƀ) en tiendas y avisos. Tony decide si el HUD debe decir Ƀ.
+- Balas: no hay reserva de munición en el juego; "9 | 10" es balas en el cargador | tamaño del cargador.
+- Estrellas: el calor tiene 3 niveles y el HUD 5 estrellas; se muestran max(nivel, quintos del calor).
+- Minimapa: dibuja las calles de GeometriaBarrio (mapa viejo, T-409); con la ciudad nueva de la sesión 2 hay que regenerar esa geometría para que las calles coincidan.
+- Ayuda "Golpe" solo con los puños (con arma de fuego el clic dispara). Con la pistola sale solo "Recargar" cuando falta munición.
+- Expendedoras de T-685 siguen con coordenadas fijas (pendiente de pasarlas a marcadores de la escena).
+- T-703: el choque leve (3 a 9 m/s) deja al carro 4 s quieto y el fuerte (9 o más) 9 s con el conductor afuera enojado. Tony puede cambiar los tiempos en ReglaChoqueTrafico.
+- T-704: un carro atorado que se ve ya no se reubica a los 30 s (sería nacer a la vista): da media vuelta. Y las velocidades de tráfico pasaron de 7 fija a 8 a 12 m/s por carro (ConfigTraficoCalle).
+- T-705: el conductor robado solo llama a la policía si el jugador se queda a menos de 25 m hasta que termina la llamada (4 s); manejando se pierde de vista y no hay persecución.
+- T-706: el aliado va oculto dentro del carro (no sentado a la vista); una plaza = moto; los demás carros llevan un solo aliado (copiloto).
+- Pruebas rojas que no son de estas tareas (ya fallaban en tony/s1-07nov antes de T-703): HeadshotPandilleroT677Pruebas.Pandillero_TiroALaCabezaHaceTresVecesElDelPecho (IA) y PersecucionBarrioPruebas.Patrulla_EnSesentaSegundos_NoSaleDeLaCalle_YSeMueve (la patrulla ya lleva colliders desde T-692; la prueba pide 0). PeatonHuyePruebas.Peaton_AlcanzaAOtro... es inestable (falló una vez, pasó otras).
+
+## T-719 (S1, noche 07-nov) Expendedoras sin coordenadas fijas: para la sesión 2
+- Las tres expendedoras de T-685 (casa, tianguis y Nova) ya no llevan coordenadas: cada una se mide desde un lugar de Core (entrada del lugar + desplazamiento): casa = Lugar_Casa + (0, 0, 6); tianguis = Lugar_Bar + (-36, 0, 0.49); Nova = Lugar_Bar + (64, 0, -0.01). Son las mismas posiciones de antes (medidas en Ciudad_Prologo).
+- En la escena de la ciudad no había marcadores para ellas, así que no se tocó: **si la sesión 2 mueve la calle, el bar o la casa, las máquinas se mueven con el lugar** (el tianguis y Nova cuelgan de Lugar_Bar, que es lo más cercano que Core tiene en la avenida). Para ponerlas exactas, basta con agregar a la escena objetos vacíos con estos nombres y la máquina va ahí sin tocar código ni datos: `Marcador_Expendedora_Casa`, `Marcador_Expendedora_Tianguis`, `Marcador_Expendedora_Nova` (el giro sigue saliendo de los datos: 270, 180 y 180).
+- Si falta el lugar (y no hay marcador) la máquina no se coloca y avisa con un warning, no cae a coordenadas fijas.

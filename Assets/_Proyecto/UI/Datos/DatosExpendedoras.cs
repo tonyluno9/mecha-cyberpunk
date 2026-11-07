@@ -21,7 +21,13 @@ namespace MechaCyberpunk.UI.Datos
             public string escena;
             [Tooltip("Para qué sirve este lugar (texto), por ejemplo 'frente a la casa'.")]
             public string nota;
-            [Tooltip("Posición en el mundo (m). La y es la altura de la banqueta.")]
+            [Tooltip("T-719: nombre de un objeto de la escena (un marcador) donde va la máquina. Si existe, manda: la máquina va en su posición. Vacío = no se usa.")]
+            public string marcador;
+            [Tooltip("T-719: lugar de Core (Casa, Bar...) de donde se mide la posición. Si está en Ninguno y no hay marcador se usa la posición fija de abajo (solo pruebas).")]
+            public IdLugar lugar;
+            [Tooltip("T-719: metros del mundo desde la entrada del lugar a la máquina (x al oriente, z al norte). Solo con un lugar.")]
+            public Vector3 desplazamiento;
+            [Tooltip("Posición fija en el mundo (m). Solo para pruebas y escenas sin lugares: las máquinas de la ciudad usan un marcador o un lugar. La y es la altura de la banqueta.")]
             public Vector3 posicion;
             [Tooltip("Giro en y (°): giro del objeto; el frente del modelo CY06 mira a -Z, así que es el giro de la calle más 180°.")]
             public float giro;

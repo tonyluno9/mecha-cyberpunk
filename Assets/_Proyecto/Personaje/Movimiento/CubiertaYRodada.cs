@@ -42,6 +42,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private float escalaActual = 1f;
 
         public DatosCubierta Datos => datos;
+        /// <summary>T-718: la acción de cubrirse y la de agacharse, para que el tutorial muestre la tecla real (GetBindingDisplayString).</summary>
+        public InputAction AccionCubrirse => accionCubrirse;
+
+        public InputAction AccionAgachar => accionAgachar;
+
         public bool Cubierto => cubierta != null;
         /// <summary>True si está pegado a la cubierta y agachado (no asomado).</summary>
         public bool Agachado => agachadoLibre || (Cubierto && !controlador.Apuntando);

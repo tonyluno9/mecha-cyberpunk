@@ -19,6 +19,7 @@ using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.Tests.UI;
 using MechaCyberpunk.UI.Creditos;
 using MechaCyberpunk.UI.Guardado;
+using MechaCyberpunk.UI.Hud;
 using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.MenuPausa;
 using MechaCyberpunk.UI.Titulo;
@@ -1549,6 +1550,112 @@ namespace MechaCyberpunk.Tests.Demo
             {
                 yield break;
             }
+
+            // 3b. T-717: el asalto. Te roban el dinero (Enter salta la cinemática), el carro huye, se detiene (llanta, fin de la ruta o atorón) y vences al asaltante.
+            IniciarTramo("03b Asalto: te roban el dinero y huyen en carro");
+            if (director.Paso == PasoHistoria.Asalto)
+            {
+                if (TextoObjetivo != AsaltoDinero.TextoPerseguir)
+                {
+                    Bug("Objetivo del asalto incorrecto", "dice \"" + TextoObjetivo + "\"", "A", true);
+                }
+                yield return Segundos(1.5f);
+                Presionar(teclado.enterKey);
+                yield return null;
+                Soltar(teclado.enterKey);
+                float finAsalto = Time.realtimeSinceStartup + 100f;
+                while (director.Asalto.Fase != FaseAsalto.Enfrentando && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
+                {
+                    yield return null;
+                }
+                if (director.Paso == PasoHistoria.Asalto)
+                {
+                    yield return PelearAPunos(() => director.Paso != PasoHistoria.Asalto, p => p.name == AsaltoDinero.NombreAsaltante, 90f, "el asaltante");
+                }
+                if (director.Paso == PasoHistoria.Asalto)
+                {
+                    Bug("El asalto no terminó", "fase " + director.Asalto.Fase, "A", true);
+                    director.Cargar("{\"paso\":\"PrimeraPelea\"}"); // se rescata para probar lo que sigue
+                    yield return Segundos(1f);
+                }
+            }
+            else
+            {
+                Bug("Salir de casa no lleva al asalto", "el paso es " + director.Paso, "A", true);
+            }
+            TerminarTramo();
+
+            // 3c. T-718: el tutorial con las teclas reales. Lo que el bot ya hizo caminando (moverse) cuenta como visto; lo demás se ofrece, muestra la tecla real y se hace.
+            IniciarTramo("03c Tutorial: correr, agacharse y golpear con las teclas reales");
+            TutorialLigero tutorialLigero = Object.FindFirstObjectByType<TutorialLigero>();
+            if (tutorialLigero == null)
+            {
+                Bug("No hay tutorial en la ciudad", "TutorialLigero no está en la escena", "A", true);
+            }
+            else
+            {
+                // El bot ya presionó esas teclas en los tramos anteriores (caminar, correr, agacharse, golpear, mapa): el tutorial las dio por vistas (Regla.Serializar).
+                Debug.Log("[T718] tutorial activo " + tutorialLigero.Regla.Activo + ", vistas " + tutorialLigero.Regla.Serializar());
+                foreach (AccionTutorial accion in new[] { AccionTutorial.Moverse, AccionTutorial.Correr, AccionTutorial.Agacharse, AccionTutorial.Golpear })
+                {
+                    float finAviso = Time.realtimeSinceStartup + 30f;
+                    while (!tutorialLigero.Regla.Vista(accion) && !(tutorialLigero.Visible && tutorialLigero.Regla.Aviso == accion) && Time.realtimeSinceStartup < finAviso)
+                    {
+                        if (accion == AccionTutorial.Moverse)
+                        {
+                            Presionar(teclado.wKey);
+                            yield return null;
+                            Soltar(teclado.wKey);
+                        }
+                        yield return null;
+                    }
+                    if (tutorialLigero.Regla.Vista(accion) && !(tutorialLigero.Visible && tutorialLigero.Regla.Aviso == accion))
+                    {
+                        continue; // ya lo había hecho caminando o peleando
+                    }
+                    if (!(tutorialLigero.Visible && tutorialLigero.Regla.Aviso == accion))
+                    {
+                        Bug("El tutorial no ofrece " + accion, "no salió el aviso en 30 s", "A", true);
+                        continue;
+                    }
+                    string esperada = ReglaTutorial.Texto(accion, tutorialLigero.TeclaReal);
+                    if (tutorialLigero.Texto.text != esperada)
+                    {
+                        Bug("El aviso de " + accion + " no muestra las teclas reales", "dice \"" + tutorialLigero.Texto.text + "\", esperaba \"" + esperada + "\"", "A", true);
+                    }
+                    switch (accion)
+                    {
+                        case AccionTutorial.Moverse:
+                            Presionar(teclado.wKey);
+                            yield return null;
+                            Soltar(teclado.wKey);
+                            break;
+                        case AccionTutorial.Correr:
+                            Presionar(teclado.wKey);
+                            Presionar(teclado.leftShiftKey);
+                            yield return Segundos(0.4f);
+                            Soltar(teclado.leftShiftKey);
+                            Soltar(teclado.wKey);
+                            break;
+                        case AccionTutorial.Agacharse:
+                            yield return Pulsar(teclado.leftCtrlKey);
+                            yield return Segundos(0.3f);
+                            yield return Pulsar(teclado.leftCtrlKey); // se levanta
+                            break;
+                        case AccionTutorial.Golpear:
+                            Presionar(raton.leftButton);
+                            yield return Segundos(0.2f);
+                            Soltar(raton.leftButton);
+                            break;
+                    }
+                    yield return null;
+                    if (!tutorialLigero.Regla.Vista(accion))
+                    {
+                        Bug("El tutorial no dio por hecho " + accion, "la acción se hizo con la tecla real y el aviso sigue", "A", true);
+                    }
+                }
+            }
+            TerminarTramo();
 
             // 4. Primera pelea a puños.
             IniciarTramo("04 Primera pelea (2 SKULLS a golpes)");

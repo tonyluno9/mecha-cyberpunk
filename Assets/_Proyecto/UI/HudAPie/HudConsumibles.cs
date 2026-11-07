@@ -2,20 +2,23 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// Línea del consumible elegido (T-685), abajo a la izquierda: "[TAB] PAPITAS x2 · F USAR". Si hay un efecto
-    /// activo (bebida, venda, café) muestra cuánto le queda. Se arma en código y lo agrega
-    /// <see cref="HudAPie"/> al nacer.
+    /// Línea de efectos de los consumibles (T-685), abajo a la izquierda, justo arriba de las casillas de objetos del HUD nuevo (T-700):
+    /// mientras un efecto está activo (bebida, venda, café) muestra cuánto le queda. Los objetos y sus teclas los dibuja <see cref="HudH10"/>.
+    /// Se arma en código y lo agrega <see cref="HudAPie"/> al nacer.
     /// </summary>
     public class HudConsumibles : MonoBehaviour
     {
-        private const float Alto = 44f;
-        private const float Margen = 32f;
+        private const float Alto = 36f;
+        private const float Margen = HudH10.Margen;
+        // Arriba de las casillas de objetos: 62 de margen + 114 de casilla + 10 de aire.
+        private const float DesdeAbajo = 186f;
 
         private HudAPie hud;
         private Text texto;
@@ -40,13 +43,14 @@ namespace MechaCyberpunk.UI.Hud
             rect.SetParent(transform, false);
             rect.anchorMin = rect.anchorMax = new Vector2(0f, 0f);
             rect.pivot = new Vector2(0f, 0f);
-            rect.sizeDelta = new Vector2(640f, Alto);
-            rect.anchoredPosition = new Vector2(Margen, Margen);
+            rect.sizeDelta = new Vector2(900f, Alto);
+            rect.anchoredPosition = new Vector2(Margen, DesdeAbajo);
             texto = objeto.AddComponent<Text>();
-            texto.font = hud.TextoVida != null ? hud.TextoVida.font : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            texto.fontSize = 32;
+            ConfigHudH10 estilo = ConfigHudH10.Actual;
+            texto.font = estilo != null && estilo.Fuente != null ? estilo.Fuente : KitUI.Estilo.Fuente;
+            texto.fontSize = 24;
             texto.alignment = TextAnchor.LowerLeft;
-            texto.color = new Color(1f, 0.55f, 0.15f, 1f);
+            texto.color = new Color(0.55f, 0.88f, 0.88f, 0.95f);
             texto.raycastTarget = false;
             texto.horizontalOverflow = HorizontalWrapMode.Overflow;
             texto.text = string.Empty;
@@ -76,12 +80,6 @@ namespace MechaCyberpunk.UI.Hud
         private string Linea()
         {
             var partes = new System.Collections.Generic.List<string>();
-            DatosConsumible c = consumibles.Seleccionado;
-            if (c != null)
-            {
-                int n = Registro<ServicioInventario>.Actual != null ? Registro<ServicioInventario>.Actual.Cantidad(c) : 0;
-                partes.Add("[TAB] " + c.Nombre.ToUpperInvariant() + " x" + n + " · F USAR");
-            }
             if (vida != null && vida.InvulnerableRestante > 0f)
             {
                 partes.Add("SIN DAÑO " + vida.InvulnerableRestante.ToString("0.0") + "s");
