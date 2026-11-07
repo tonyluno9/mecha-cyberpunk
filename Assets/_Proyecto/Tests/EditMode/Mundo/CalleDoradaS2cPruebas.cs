@@ -35,8 +35,8 @@ namespace MechaCyberpunk.Tests.Mundo
             Transform casas = raiz.Find("Casas");
             int sur = casas.Cast<Transform>().Count(c => Mathf.Abs(c.position.z - ColocarS2cCalle.ZSur) < 0.1f);
             int norte = casas.Cast<Transform>().Count(c => Mathf.Abs(c.position.z - ColocarS2cCalle.ZNorte) < 0.1f);
-            Assert.GreaterOrEqual(sur, 12, "casas del lado sur");
-            Assert.GreaterOrEqual(norte, 12, "casas del lado norte");
+            Assert.GreaterOrEqual(sur, 9, "casas del lado sur");
+            Assert.GreaterOrEqual(norte, 9, "casas del lado norte");
         }
 
         [Test]

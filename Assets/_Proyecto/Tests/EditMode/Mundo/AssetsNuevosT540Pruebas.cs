@@ -51,7 +51,8 @@ namespace MechaCyberpunk.Tests.Mundo
             }
             Transform barrio = Raiz("Barrio");
             Assert.IsFalse(barrio.Find("Manzana_3/Edificios/Edificio_25").gameObject.activeSelf, "Las casas de barrio de Neón Alto se fueron");
-            Assert.IsTrue(barrio.Find("Manzana_1/Edificios/Edificio_7") != null && barrio.Find("Manzana_4/Edificios/Edificio_41").gameObject.activeSelf, "Suburbios sigue con casas");
+            // S2c (7-nov): en la Manzana_4 las casas son las del kit (S2c_Suburbios) en lugar de los edificios greybox.
+            Assert.IsTrue(barrio.Find("Manzana_1/Edificios/Edificio_7") != null && Raiz("S2c_Suburbios").GetComponentsInChildren<Transform>().Any(t => t.name.StartsWith("Casa_")), "Suburbios sigue con casas");
             Assert.IsFalse(Raiz("T505_NeonAlto").Find("Torres").gameObject.activeSelf, "Sin las torres de bloques de código");
         }
 
