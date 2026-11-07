@@ -41,6 +41,11 @@ namespace MechaCyberpunk.Personaje.Jugador
         /// <summary>Los consumibles que lleva ahora, en orden del catálogo.</summary>
         public IReadOnlyList<DatosConsumible> Disponibles => disponibles;
 
+        /// <summary>T-718: las acciones de elegir y usar un objeto, para que el tutorial muestre la tecla real.</summary>
+        public InputAction AccionSiguiente => siguiente;
+
+        public InputAction AccionUsar => usar;
+
         /// <summary>
         /// La tecla real que usa directo a <paramref name="c"/> (6, 7, 8, 9, 0 según su lugar en el catálogo), leída de la acción
         /// con GetBindingDisplayString; vacía si no está en el catálogo (T-700: el HUD muestra la tecla verdadera).

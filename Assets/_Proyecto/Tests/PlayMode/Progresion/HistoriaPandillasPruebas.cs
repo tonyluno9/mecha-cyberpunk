@@ -218,7 +218,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Chato, "recoger la pistola", 5f);
             Assert.IsTrue(arsenal.Tiene(ArmaAPie.Pistola));
-            StringAssert.Contains("CLIC DERECHO APUNTA", director.Pantalla.Ayuda);
+            Assert.AreEqual(DirectorPandillas.AyudaApuntarYDisparar(), director.Pantalla.Ayuda, "T-718: la ayuda usa las teclas reales");
 
             // d. El CHATO: E.
             Reclutable chato = null;
