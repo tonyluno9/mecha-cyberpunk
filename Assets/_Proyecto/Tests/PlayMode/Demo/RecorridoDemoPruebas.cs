@@ -1550,6 +1550,40 @@ namespace MechaCyberpunk.Tests.Demo
                 yield break;
             }
 
+            // 3b. T-717: el asalto. Te roban el dinero (Enter salta la cinemática), el carro huye, se detiene (llanta, fin de la ruta o atorón) y vences al asaltante.
+            IniciarTramo("03b Asalto: te roban el dinero y huyen en carro");
+            if (director.Paso == PasoHistoria.Asalto)
+            {
+                if (TextoObjetivo != AsaltoDinero.TextoPerseguir)
+                {
+                    Bug("Objetivo del asalto incorrecto", "dice \"" + TextoObjetivo + "\"", "A", true);
+                }
+                yield return Segundos(1.5f);
+                Presionar(teclado.enterKey);
+                yield return null;
+                Soltar(teclado.enterKey);
+                float finAsalto = Time.realtimeSinceStartup + 100f;
+                while (director.Asalto.Fase != FaseAsalto.Enfrentando && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
+                {
+                    yield return null;
+                }
+                if (director.Paso == PasoHistoria.Asalto)
+                {
+                    yield return PelearAPunos(() => director.Paso != PasoHistoria.Asalto, p => p.name == AsaltoDinero.NombreAsaltante, 90f, "el asaltante");
+                }
+                if (director.Paso == PasoHistoria.Asalto)
+                {
+                    Bug("El asalto no terminó", "fase " + director.Asalto.Fase, "A", true);
+                    director.Cargar("{\"paso\":\"PrimeraPelea\"}"); // se rescata para probar lo que sigue
+                    yield return Segundos(1f);
+                }
+            }
+            else
+            {
+                Bug("Salir de casa no lleva al asalto", "el paso es " + director.Paso, "A", true);
+            }
+            TerminarTramo();
+
             // 4. Primera pelea a puños.
             IniciarTramo("04 Primera pelea (2 SKULLS a golpes)");
             if (director.Paso == PasoHistoria.PrimeraPelea)

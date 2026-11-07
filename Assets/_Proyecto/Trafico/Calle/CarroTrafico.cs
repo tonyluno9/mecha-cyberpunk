@@ -401,6 +401,15 @@ namespace MechaCyberpunk.Trafico.Calle
         public NivelChoque AlChocar(float rapidez, Vector3 donde)
         {
             NivelChoque nivel = ReglaChoqueTrafico.Nivel(rapidez);
+            if (EnHuida)
+            {
+                // T-717: el carro del asaltante no se para a reclamar: un choque fuerte le ponchaba una llanta.
+                if (nivel == NivelChoque.Fuerte)
+                {
+                    Ponchar();
+                }
+                return nivel == NivelChoque.Fuerte ? nivel : NivelChoque.Ninguno;
+            }
             if (nivel == NivelChoque.Ninguno || calculo == null || Robado || !ReglaChoqueTrafico.PuedeReaccionar(Time.time, ultimoChoque))
             {
                 return NivelChoque.Ninguno;
@@ -439,7 +448,7 @@ namespace MechaCyberpunk.Trafico.Calle
         /// <summary>Un disparo: si está cerca el carro se asusta (se detiene y pita).</summary>
         public void AlOirDisparo(Vector3 posicion)
         {
-            if (calculo == null || config == null || !isActiveAndEnabled)
+            if (EnHuida || calculo == null || config == null || !isActiveAndEnabled)
             {
                 return;
             }
@@ -464,7 +473,17 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 return; // T-714: ya llegó y está estacionado
             }
-            if (EnRefuerzo && jugador.HasValue && Distancia(jugador.Value, transform.position) <= DistanciaLlegadaRefuerzo)
+            if (Ponchado)
+            {
+                // T-717: llanta ponchada: frena fuerte hasta quedarse quieto (no hace falta el cálculo de tráfico).
+                velocidadPonchado = Mathf.MoveTowards(velocidadPonchado, 0f, FrenadoPonchado * dt);
+                if (velocidadPonchado > 0.05f)
+                {
+                    Mover(velocidadPonchado, dt);
+                }
+                return;
+            }
+            if (EnRefuerzo && !EnHuida && jugador.HasValue && Distancia(jugador.Value, transform.position) <= DistanciaLlegadaRefuerzo)
             {
                 EstacionarRefuerzo(); // T-714: ya está junto al jugador (no sigue hasta el nodo si él está en medio de la calle)
                 return;
@@ -633,6 +652,8 @@ namespace MechaCyberpunk.Trafico.Calle
                 return false;
             }
             EnRefuerzo = true;
+            EnHuida = false;
+            Ponchado = false;
             RefuerzoLlego = false;
             if (velocidad > 0f)
             {
@@ -663,6 +684,87 @@ namespace MechaCyberpunk.Trafico.Calle
             calculo.ReiniciarBloqueo();
             return true;
         }
+
+        // ---- El carro del asaltante (T-717) ----
+
+        private const float FrenadoPonchado = 12f;
+        private float velocidadPonchado;
+
+        /// <summary>T-717: True si este carro es el del asaltante y va huyendo por su ruta (no se estaciona cerca del jugador, no reacciona a disparos).</summary>
+        public bool EnHuida { get; private set; }
+
+        /// <summary>T-717: True si le ponchaste una llanta (disparo a la rueda o choque fuerte): frena y se queda quieto.</summary>
+        public bool Ponchado { get; private set; }
+
+        /// <summary>T-717: avisa una vez cuando se le ponchó una llanta.</summary>
+        public event Action<CarroTrafico> AlPonchar;
+
+        /// <summary>T-717: rapidez actual en m/s (la del cálculo de tráfico o la del frenado de la llanta ponchada).</summary>
+        public float VelocidadActual => Ponchado ? velocidadPonchado : Velocidad;
+
+        /// <summary>T-717: el nodo de la calle al que va (o donde terminó su ruta).</summary>
+        public int NodoActual => nodoDestino;
+
+        /// <summary>T-717: le pone una llanta ponchada: frena y se queda quieto. Una sola vez.</summary>
+        public void Ponchar()
+        {
+            if (Ponchado)
+            {
+                return;
+            }
+            Ponchado = true;
+            velocidadPonchado = Mathf.Max(0f, Velocidad);
+            Sonidos.ReproducirEn("MUN_CHISPAS_ELECTRICAS", transform.position);
+            AlPonchar?.Invoke(this);
+        }
+
+        /// <summary>
+        /// T-717: desde donde está estacionado (el último nodo de su ruta de refuerzo) sale huyendo por las calles a <paramref name="nodoLlegada"/>, a
+        /// <paramref name="velocidad"/> m/s. Al llegar al final se estaciona y avisa <see cref="AlLlegarRefuerzo"/>. False si no puede (sin calles, sin ruta).
+        /// </summary>
+        public bool IniciarHuida(int nodoLlegada, float velocidad)
+        {
+            if (!EnRefuerzo || calles == null || calculo == null || nodoLlegada < 0 || Ponchado)
+            {
+                return false;
+            }
+            List<int> camino = calles.Camino(nodoDestino, nodoLlegada);
+            if (camino == null || camino.Count < 2)
+            {
+                return false;
+            }
+            EnHuida = true;
+            RefuerzoLlego = false;
+            VelocidadPropia = velocidad;
+            calculo = config.Crear(velocidad);
+            rutaRefuerzo.Clear();
+            for (int i = 1; i < camino.Count; i++)
+            {
+                rutaRefuerzo.Add(camino[i]);
+            }
+            nodoAnterior = nodoDestino;
+            nodoDestino = rutaRefuerzo[0];
+            rutaRefuerzo.RemoveAt(0);
+            direccion = DireccionA(nodoDestino);
+            calculo.ReiniciarBloqueo();
+            return true;
+        }
+
+        /// <summary>T-717: metros de calle del nodo actual a otro (para elegir a dónde huye). float.MaxValue si no hay camino.</summary>
+        public float MetrosHasta(int nodo)
+        {
+            if (calles == null)
+            {
+                return float.MaxValue;
+            }
+            return CalculoLlegadaPatrulla.MetrosDeRuta(calles, nodoDestino, nodo);
+        }
+
+        /// <summary>T-717: cuántos nodos tiene la red de calles.</summary>
+        public int NodosDeCalle => calles != null ? calles.Cantidad : 0;
+
+        /// <summary>T-717: posición de un nodo de la red de calles.</summary>
+        public Vector3 PosicionNodo(int nodo) => calles.Nodo(nodo);
 
         private void EstacionarRefuerzo()
         {

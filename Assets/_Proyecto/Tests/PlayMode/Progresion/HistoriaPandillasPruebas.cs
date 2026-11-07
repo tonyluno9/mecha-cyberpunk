@@ -63,7 +63,7 @@ namespace MechaCyberpunk.Tests.Progresion
             AvisoHistoria[] avisos = (AvisoHistoria[])Enum.GetValues(typeof(AvisoHistoria));
             PasoHistoria[] esperados =
             {
-                PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Doc, PasoHistoria.Inventor, PasoHistoria.Tianguis,
+                PasoHistoria.Asalto, PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Doc, PasoHistoria.Inventor, PasoHistoria.Tianguis,
                 PasoHistoria.Jefe, PasoHistoria.NeonAlto, PasoHistoria.Continuara, PasoHistoria.Libre
             };
             for (int i = 0; i < avisos.Length; i++)
@@ -174,7 +174,11 @@ namespace MechaCyberpunk.Tests.Progresion
             }
             Release(teclado.wKey);
             Debug.Log("[Prueba] fin camino " + jugador.Raiz.position);
-            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso, "Salir caminando por las puertas saca de la casa.");
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "Salir caminando por las puertas saca de la casa y empieza el asalto (T-717).");
+            // T-717: el asalto tiene su propia prueba (AsaltoDineroT717Pruebas); aquí se pasa a la primera pelea como al recuperar el dinero.
+            director.Cargar("{\"paso\":\"PrimeraPelea\"}");
+            yield return null;
+            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso);
 
             // b. La primera pelea: clics sobre los Calaveras hasta vencerlos.
             float finPelea = Time.realtimeSinceStartup + 90f;

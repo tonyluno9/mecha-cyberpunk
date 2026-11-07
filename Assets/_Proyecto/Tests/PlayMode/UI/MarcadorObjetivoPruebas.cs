@@ -210,9 +210,9 @@ namespace MechaCyberpunk.Tests.UI
             yield return SalirDeLaCasa(jugador, () => director.Paso != PasoHistoria.Despierta);
             yield return null;
             yield return null;
-            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso, "Salió de la casa");
-            Assert.AreEqual(DirectorPandillas.TextoDefender, hud.TextoObjetivo.text, "El texto cambia a DEFIENDE A DOÑA LUPE");
-            Assert.IsTrue(marcador.RomboVisible || marcador.FlechaVisible, "El marcador ahora señala a DOÑA LUPE");
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "Salió de la casa");
+            Assert.AreEqual(AsaltoDinero.TextoPerseguir, hud.TextoObjetivo.text, "T-717: el texto cambia a PERSIGUE AL ASALTANTE");
+            Assert.IsTrue(marcador.RomboVisible || marcador.FlechaVisible, "El marcador ahora señala al asaltante");
         }
 
         // T-804: del cuarto a la banqueta por las dos puertas de la casa, como SalidaCasaPruebas (Progresion): camina con el

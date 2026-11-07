@@ -11,17 +11,17 @@ namespace MechaCyberpunk.Tests.Progresion
         {
             PasoHistoria[] pasos =
             {
-                PasoHistoria.Despierta, PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Doc, PasoHistoria.Inventor,
+                PasoHistoria.Despierta, PasoHistoria.Asalto, PasoHistoria.PrimeraPelea, PasoHistoria.Pistola, PasoHistoria.Chato, PasoHistoria.Doc, PasoHistoria.Inventor,
                 PasoHistoria.Tianguis, PasoHistoria.Jefe, PasoHistoria.NeonAlto, PasoHistoria.Continuara, PasoHistoria.Libre
             };
             AvisoHistoria[] avisos =
             {
-                AvisoHistoria.SalioDeCasa, AvisoHistoria.PeleaGanada, AvisoHistoria.PistolaTomada, AvisoHistoria.ChatoUnido, AvisoHistoria.DocUsado,
+                AvisoHistoria.SalioDeCasa, AvisoHistoria.DineroRecuperado, AvisoHistoria.PeleaGanada, AvisoHistoria.PistolaTomada, AvisoHistoria.ChatoUnido, AvisoHistoria.DocUsado,
                 AvisoHistoria.InventorUsado, AvisoHistoria.JefeDisponible, AvisoHistoria.TianguisConquistado, AvisoHistoria.HackerUsado,
                 AvisoHistoria.ContinuaraCerrado
             };
-            Assert.AreEqual(11, System.Enum.GetValues(typeof(PasoHistoria)).Length, "La historia tiene 11 pasos.");
-            Assert.AreEqual(10, System.Enum.GetValues(typeof(AvisoHistoria)).Length, "Un aviso por paso, menos Libre.");
+            Assert.AreEqual(12, System.Enum.GetValues(typeof(PasoHistoria)).Length, "La historia tiene 12 pasos.");
+            Assert.AreEqual(11, System.Enum.GetValues(typeof(AvisoHistoria)).Length, "Un aviso por paso, menos Libre.");
 
             MaquinaHistoriaPandillas m = new MaquinaHistoriaPandillas();
             for (int i = 0; i < avisos.Length; i++)
