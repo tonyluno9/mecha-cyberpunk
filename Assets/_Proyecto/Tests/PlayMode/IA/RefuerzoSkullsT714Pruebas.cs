@@ -62,7 +62,7 @@ namespace MechaCyberpunk.Tests.IA
         private TerritorioDoble territorio;
         private Camera camara;
         private Func<float> azarAnterior;
-        private float escalaAnterior;
+        private float escalaAnterior = 1f;
         private Vector3 puntoJugador;
 
         public override void Setup()
@@ -70,6 +70,14 @@ namespace MechaCyberpunk.Tests.IA
             base.Setup();
             InputSystem.AddDevice<Keyboard>();
             InputSystem.AddDevice<Mouse>();
+        }
+
+        // El mundo se arma dentro de la prueba, despues de dejar pasar dos cuadros: las pruebas anteriores destruyen su jugador con Destroy diferido y el suyo,
+        // al irse, no debe llevarse los registros del jugador nuevo.
+        private IEnumerator Construir()
+        {
+            yield return null;
+            yield return null;
             Registros.LimpiarTodos();
             EventosLugares.LimpiarSuscriptores();
             EventosPelea.LimpiarSuscriptores();
@@ -130,7 +138,10 @@ namespace MechaCyberpunk.Tests.IA
         public override void TearDown()
         {
             Time.timeScale = escalaAnterior;
-            PistolaPandillero.Azar = azarAnterior;
+            if (azarAnterior != null)
+            {
+                PistolaPandillero.Azar = azarAnterior;
+            }
             foreach (PandilleroAPie p in Object.FindObjectsByType<PandilleroAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 Object.DestroyImmediate(p.gameObject);
@@ -182,6 +193,7 @@ namespace MechaCyberpunk.Tests.IA
         [UnityTest]
         public IEnumerator TresSkullsVencidos_MandanUnCarro_QueSaleOculto_LlegaManejando_YDeLasPuertasBajanDosSkulls_QuePelean()
         {
+            yield return Construir();
             yield return null;
             yield return null;
             Assert.IsNotNull(refuerzos, "El gestor de persecución trae el de refuerzos");
@@ -263,6 +275,7 @@ namespace MechaCyberpunk.Tests.IA
         [UnityTest]
         public IEnumerator SoloUnCarroALaVez_YConEnfriamiento()
         {
+            yield return Construir();
             yield return null;
             yield return null;
             VencerSkulls(3);

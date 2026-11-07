@@ -9,7 +9,7 @@ Los SKULLS se cubren agachados detrás de algo sólido (muro, carro, contenedor)
 - PandilleroAPie: al llegar a su puesto de cobertura (modo Cubrirse) pone VisualPersonaje.Agachado (estado AgachadoQuieto con la pose baja de Cobertura_Entrar, de T-683); al asomarse (Asomado) se para, apunta y dispara; tras disparar vuelve a esconderse. Corriendo hacia la cobertura va de pie.
 - Los SKULLS armados (no el jefe) corren a cubrirse en cuanto ven al jugador y tienen una cobertura cerca (antes solo después del primer disparo; los policías ya lo hacían).
 - La cobertura debe medir 1.3 m o más: agachado la cabeza llega a 1.33 m (medido con la malla horneada), así que un muro de 1.4 m lo tapa y uno de 1 m no (no se agacha en campo abierto).
-- Cada uno toma su propio puesto detrás de la cobertura (T-711).
+- Cada uno toma su propio puesto detrás de la cobertura (T-711), y solo uno desde el que alcance a disparar al jugador (a 12 m o menos): si no, se quedaba escondido sin pelear (lo vio la prueba de T-714 con el carro estacionado a 12 m).
 
 ## Criterios
 - [x] Corre a la cobertura del lado contrario al jugador
