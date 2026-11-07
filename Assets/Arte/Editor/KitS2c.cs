@@ -29,6 +29,8 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly Color Turquesa = new Color(0.1f, 0.95f, 0.88f);
         public static readonly Color Sodio = new Color(1f, 0.6f, 0.22f);
         public static readonly Color Calido = new Color(1f, 0.72f, 0.42f);
+        /// <summary>Luz fría de Nova (K06): blanca azulada.</summary>
+        public static readonly Color Fria = new Color(0.72f, 0.86f, 1f);
         /// <summary>Luz de sodio de un poste en una calle angosta (las farolas de las avenidas de 14 m usan 700).</summary>
         /// <summary>Las piezas C del kit miden 4 m de planta baja; las casas de K01 son un poco más bajas (planta de ~3.5 m).</summary>
         public const float EscalaAlto = 0.88f;
@@ -566,7 +568,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// Poste C07 con el brazo hacia la calle, su luz de sodio desde la cabeza de la lámpara (como T-855), el halo en la niebla, la mica que
         /// brilla y, si toca, transformador. Devuelve la punta del poste (para los cables).
         /// </summary>
-        public static Vector3 Poste(Obra o, Transform padre, Vector3 pie, Vector3 haciaCalle, float piso, bool transformador)
+        public static Vector3 Poste(Obra o, Transform padre, Vector3 pie, Vector3 haciaCalle, float piso, bool transformador, Color? color = null)
         {
             o.Postes++;
             haciaCalle.y = 0f;
@@ -590,10 +592,10 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 r.renderingLayerMask = 1u << ColocarS2.CapaPostes;
             }
-            Light l = Luz(poste.transform, cabeza, LightType.Spot, Sodio, IntensidadPoste, 20f, 112f, Vector3.down);
+            Light l = Luz(poste.transform, cabeza, LightType.Spot, color ?? Sodio, IntensidadPoste, 20f, 112f, Vector3.down);
             UniversalAdditionalLightData datosLuz = l.GetUniversalAdditionalLightData();
             datosLuz.renderingLayers = uint.MaxValue & ~(1u << ColocarS2.CapaPostes);
-            Halo(o, poste.transform, cabeza, piso, Sodio);
+            Halo(o, poste.transform, cabeza, piso, color ?? Sodio);
             if (transformador)
             {
                 Vector3 atras = -haciaCalle;
@@ -610,7 +612,7 @@ namespace MechaCyberpunk.Arte.Editor
             h.transform.position = new Vector3(cabeza.x, piso, cabeza.z);
             h.AddComponent<MeshFilter>().sharedMesh = MallaCono();
             MeshRenderer mr = h.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = Mat("S2c_Halo", () =>
+            mr.sharedMaterial = Mat(color == Sodio ? "S2c_Halo" : "S2c_Halo_Frio", () =>
             {
                 Material m = new Material(Shader.Find("MechaCyberpunk/Mundo/HaloLuz"));
                 m.SetColor("_Color", color);
@@ -1042,7 +1044,7 @@ namespace MechaCyberpunk.Arte.Editor
             return Guardar(nombre, t, true, TextureWrapMode.Clamp);
         }
 
-        private static Texture2D TexOvalo()
+        public static Texture2D TexOvalo()
         {
             const string nombre = "S2c_Ovalo";
             Texture2D ya = Cargar(nombre);

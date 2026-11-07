@@ -69,7 +69,6 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Informe.Clear();
             ColocarS2.Abrir();
             Apagar();
-            KitS2c.OlvidarMateriales("S2c_");
             KitS2c.Obra o = KitS2c.Empezar(Raiz, Semilla);
             float suelo = KitS2c.Suelo(new Vector3(-95f, 0f, ZCentro), 0.2f);
             float arroyo = suelo + 0.02f;
