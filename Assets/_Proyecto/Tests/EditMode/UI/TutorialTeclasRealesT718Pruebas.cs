@@ -90,6 +90,16 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
+        public void Nombre_ControlSeVeCtrl()
+        {
+            Assert.AreEqual("Ctrl", TeclasHud.Nombre("Left Control"));
+            Assert.AreEqual("Shift", TeclasHud.Nombre("Left Shift"));
+            InputAction agachar = new InputAction("Agacharse", InputActionType.Button, "<Keyboard>/leftCtrl");
+            Assert.AreEqual("Ctrl", TeclasHud.Texto(agachar, "?"), "La tecla real de agacharse se ve Ctrl");
+            agachar.Dispose();
+        }
+
+        [Test]
         public void TextoMover_SaleDeLasCuatroTeclasDeLaAccion()
         {
             InputAction mover = new InputAction("Mover");

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MechaCyberpunk.Core;
 using MechaCyberpunk.UI.Datos;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -68,12 +69,19 @@ namespace MechaCyberpunk.UI.Tiendas
             SceneManager.MoveGameObjectToScene(raiz, escena);
             PantallaTienda pantalla = Object.Instantiate(datos.Pantalla, raiz.transform);
             pantalla.name = "PantallaExpendedoras";
+            int numero = 0;
             for (int i = 0; i < lugares.Count; i++)
             {
                 DatosExpendedoras.Posicion p = lugares[i];
-                var maquina = new GameObject("Expendedora_" + (i + 1));
+                if (!ResolverPosicion(p, escena, out Vector3 donde))
+                {
+                    Debug.LogWarning("[UI] Expendedora '" + p.nota + "': no hay marcador '" + p.marcador + "' ni el lugar " + p.lugar + " en la escena " + escena.name + "; no se coloca.");
+                    continue;
+                }
+                numero++;
+                var maquina = new GameObject("Expendedora_" + numero);
                 maquina.transform.SetParent(raiz.transform, false);
-                maquina.transform.SetPositionAndRotation(p.posicion, Quaternion.Euler(0f, p.giro, 0f));
+                maquina.transform.SetPositionAndRotation(donde, Quaternion.Euler(0f, p.giro, 0f));
                 GameObject modelo = Object.Instantiate(datos.Modelo, maquina.transform);
                 modelo.name = "Modelo";
                 modelo.transform.localPosition = Vector3.zero;
@@ -87,6 +95,59 @@ namespace MechaCyberpunk.UI.Tiendas
                 maquina.AddComponent<Expendedora>().Iniciar(datos.Tienda, datos.Catalogo, pantalla);
             }
             return raiz.transform;
+        }
+
+        /// <summary>
+        /// T-719: de dónde sale la posición de una máquina: el marcador de la escena (por nombre), si existe; si no, la entrada del lugar de Core más su desplazamiento;
+        /// y solo si no hay ni marcador ni lugar en los datos, la posición fija (pruebas). False si hay un marcador o un lugar pedido y no se encuentra.
+        /// </summary>
+        public static bool ResolverPosicion(DatosExpendedoras.Posicion p, Scene escena, out Vector3 posicion)
+        {
+            posicion = Vector3.zero;
+            bool pideMarcador = !string.IsNullOrEmpty(p.marcador);
+            if (pideMarcador)
+            {
+                Transform marcador = BuscarMarcador(escena, p.marcador);
+                if (marcador != null)
+                {
+                    posicion = marcador.position;
+                    return true;
+                }
+            }
+            if (p.lugar != IdLugar.Ninguno)
+            {
+                IReadOnlyList<ILugar> lugares = Registro<ILugar>.Todos;
+                for (int i = 0; i < lugares.Count; i++)
+                {
+                    if (lugares[i] != null && lugares[i].Id == p.lugar)
+                    {
+                        posicion = lugares[i].PosicionEntrada + p.desplazamiento;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            if (pideMarcador)
+            {
+                return false;
+            }
+            posicion = p.posicion;
+            return true;
+        }
+
+        private static Transform BuscarMarcador(Scene escena, string nombre)
+        {
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name == nombre)
+                    {
+                        return t;
+                    }
+                }
+            }
+            return null;
         }
     }
 }
