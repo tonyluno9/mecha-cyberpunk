@@ -28,7 +28,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const float SegundosGraciaInicial = 1.5f;
         private const float SegundosGraciaEmpuje = 1.2f;
         private const float UpwardsExplosion = 0.3f;
-        public const string IdAvisoFuego = "VEH_ALARMA_ROBO";
+        // T-696: el aviso de fuego es chisporroteo (antes la alarma de robo, que ya no suena).
+        public const string IdAvisoFuego = "MUN_CHISPAS_ELECTRICAS";
         public const string MensajeExplosion = "AlExplotarVehiculo";
         private static readonly Color ColorArmazon = new Color(0.06f, 0.06f, 0.07f, 1f);
 
@@ -85,13 +86,13 @@ namespace MechaCyberpunk.Vehiculos.Carro
         }
 
         /// <summary>Daño de un choque con esa rapidez relativa; 0 si no cuenta (T-692). Tope por choque y nada con rapideces imposibles.</summary>
-        public static float DanioDeChoque(float rapidez, float umbral, float danioPorMetro, float vidaMaxima)
+        public static float DanioDeChoque(float rapidez, float umbral, float danioPorMetro, float vidaMaxima, float danioMaximo = float.PositiveInfinity)
         {
             if (rapidez > RapidezChoqueImposible)
             {
                 return 0f;
             }
-            return Mathf.Min(CalculoDanioCarro.DanioPorChoque(rapidez, umbral, danioPorMetro), vidaMaxima * FraccionMaximaPorChoque);
+            return Mathf.Min(CalculoDanioCarro.DanioPorChoque(rapidez, umbral, danioPorMetro), vidaMaxima * FraccionMaximaPorChoque, danioMaximo);
         }
 
         private void OnDestroy()
@@ -139,13 +140,14 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 return;
             }
             float rapidez = colision.relativeVelocity.magnitude;
+            LanzarAlConductorDeLaMoto(rapidez);
             if (rapidez <= config.UmbralChoque)
             {
                 return;
             }
             proximoChoque = Time.time + config.SegundosEntreChoques;
             Sonidos.ReproducirEn(rapidez >= config.UmbralChoqueFuerte ? "VEH_CHOQUE_FUERTE" : "VEH_CHOQUE_LEVE", transform.position);
-            float danio = DanioDeChoque(rapidez, config.UmbralChoque, config.DanioPorChoque, calculo.Maxima);
+            float danio = DanioDeChoque(rapidez, config.UmbralChoque, config.DanioPorChoque, calculo.Maxima, config.DanioMaximoPorChoque);
             if (danio <= 0f)
             {
                 return;
@@ -153,6 +155,17 @@ namespace MechaCyberpunk.Vehiculos.Carro
             EstadoCarro antes = calculo.Estado;
             calculo.Aplicar(danio);
             Revisar(antes);
+        }
+
+        // T-696: un choque fuerte en moto avienta al conductor: sale de golpe (el jugador lo recoge con SalidaForzada y cae).
+        private void LanzarAlConductorDeLaMoto(float rapidez)
+        {
+            if (carro == null || !carro.Ocupado || GetComponent<ManejoMoto>() == null || rapidez < config.RapidezLanzaConductor || rapidez > RapidezChoqueImposible)
+            {
+                return;
+            }
+            carro.PermitirBajarYa();
+            EventosMontaje.PublicarSalidaForzada(carro);
         }
 
         private void Update()
@@ -196,7 +209,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             EstadoCambio?.Invoke(ahora);
             if (ahora == EstadoCarro.Fuego)
             {
-                // T-692: aviso claro antes de explotar: ya salen humo y fuego; además suena una alarma.
+                // T-692: aviso claro antes de explotar: ya salen humo y fuego; además chisporrotea (T-696).
                 Sonidos.ReproducirEn(IdAvisoFuego, transform.position);
                 // T-532: con alguien adentro, aviso para que se baje antes de que explote.
                 IMontable montable = GetComponent<IMontable>();

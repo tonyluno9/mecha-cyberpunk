@@ -75,6 +75,9 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         public FaseCarro Fase { get; private set; }
 
+        /// <summary>True si el modelo va en una moto (T-696).</summary>
+        public bool EnMoto => modoMoto;
+
         /// <summary>True mientras el modelo es visible dentro del carro (entrando, manejando o saliendo).</summary>
         public bool ModeloVisible => Fase != FaseCarro.Fuera;
 

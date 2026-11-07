@@ -810,7 +810,7 @@ MonoBehaviour:
   - id: MUN_CAMA
     encendido: 0
   - id: MUN_CHISPAS_ELECTRICAS
-    encendido: 0
+    encendido: 1
   - id: MUN_CORTINA_METALICA
     encendido: 0
   - id: MUN_GENERADOR
@@ -894,7 +894,7 @@ MonoBehaviour:
   - id: UI_TITULO_INICIO
     encendido: 0
   - id: VEH_ALARMA_ROBO
-    encendido: 1
+    encendido: 0
   - id: VEH_CHOQUE_FUERTE
     encendido: 0
   - id: VEH_CHOQUE_LEVE

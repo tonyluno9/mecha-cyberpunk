@@ -63,11 +63,13 @@ namespace MechaCyberpunk.Vehiculos.Editor
             SerializedObject so = new SerializedObject(AssetDatabase.LoadMainAssetAtPath(RutaConfig));
             // Freno: 9000 N (8 m/s²) a 12500 N (11 m/s²). Rodadura: 500 N (se deslizaba 35 s) a 900 N (se detiene en ~20 s de 16 m/s sin frenar).
             // Con 1700 N el piloto de RecorridoCarroPruebas ya no daba la vuelta en el cruce (probado): 900 es el máximo que se dejó.
-            so.FindProperty("fuerzaFreno").floatValue = 12500f;
+            // T-696: el freno sube a 20000 N y el motor a 8800 N (CalibrarCarrosT696): si se vuelve a correr esto, no se deshace.
+            so.FindProperty("fuerzaFreno").floatValue = CalibrarCarrosT696.FuerzaFreno;
+            so.FindProperty("fuerzaMotor").floatValue = CalibrarCarrosT696.FuerzaMotor;
             so.FindProperty("resistenciaRodadura").floatValue = 900f;
             so.FindProperty("agarreLateral").floatValue = 11f;
             so.ApplyModifiedPropertiesWithoutUndo();
-            Informe.AppendLine("Manejo: freno 12500 N, rodadura 900 N, agarre lateral 11");
+            Informe.AppendLine("Manejo: freno 20000 N, motor 8800 N, rodadura 900 N, agarre lateral 11");
         }
 
         private static void NombresEnPrefabs()

@@ -1225,3 +1225,4 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 ## T-695 (S1, noche 06-nov)
 - La moto no se hace 20 % más chica: 06nov-b dice que a Tony le gusta cómo se ve (manda sobre 06nov). Se calibró aceleración, frenado, conductor y humo.
 - La moto de reparto (V07) tiene su propia config (ConfigCarro_MotoReparto): 5.4 m/s² y tope 18 m/s, frente a 7.8 m/s² y 26 m/s de las otras motos.
+- T-696: escala de carros revisada contra el jugador de 1.80: no se ajustó nada, no hay aviso para la sesión 2. Aviso de fuego usa MUN_CHISPAS_ELECTRICAS (existente), nada para arte. Cristales de V02-V10 son opacos (ver T-694).
