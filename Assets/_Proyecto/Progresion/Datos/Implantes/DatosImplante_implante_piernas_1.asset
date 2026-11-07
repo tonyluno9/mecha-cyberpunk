@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: DatosImplante_implante_piernas_1
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
   id: implante_piernas_1
-  nombre: PIERNAS DE RESORTE
+  nombre: EXO DE PIERNAS I
   espacio: 2
   nivel: 1
   precio: 2000
   ligaMinima: 1
-  descripcion: "CORRES, SALTAS Y RUEDAS M\xC1S"
+  descripcion: "EXOESQUELETO DE CADERA A TOBILLO: CORRES, SALTAS Y RUEDAS M\xC1S"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1.2

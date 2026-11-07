@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: DatosImplante_implante_piernas_2
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
   id: implante_piernas_2
-  nombre: "PIERNAS DE CHAPUL\xCDN"
+  nombre: EXO DE PIERNAS II
   espacio: 2
   nivel: 2
   precio: 5000
   ligaMinima: 3
-  descripcion: "CORRES, SALTAS Y RUEDAS MUCHO M\xC1S"
+  descripcion: "EL EXO COMPLETO: CORRES, SALTAS Y RUEDAS MUCHO M\xC1S"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1.35
