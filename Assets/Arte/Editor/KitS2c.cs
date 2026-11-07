@@ -627,16 +627,7 @@ namespace MechaCyberpunk.Arte.Editor
             mr.shadowCastingMode = ShadowCastingMode.Off;
             mr.receiveShadows = false;
             h.transform.localScale = new Vector3(alto * 0.62f, alto, alto * 0.62f);
-            // Mica de la lámpara: un óvalo que brilla debajo de la cabeza.
-            GameObject mica = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Object.DestroyImmediate(mica.GetComponent<Collider>());
-            mica.name = "Mica";
-            mica.transform.SetParent(padre, true);
-            mica.transform.position = cabeza + Vector3.up * 0.06f;
-            mica.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
-            mica.transform.localScale = new Vector3(0.42f, 0.3f, 1f);
-            mica.GetComponent<MeshRenderer>().sharedMaterial = Mat("S2c_Mica", () => Emision(new Color(4f, 2.6f, 1.2f), TexOvalo()));
-            mica.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+            // T-881: sin la "Mica" de primitivo bajo la cabeza (se veía como un hueco): brilla el cristal del modelo (ColocarS2oPostes).
         }
 
         private static Mesh cono;
@@ -952,10 +943,11 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static float Ruido(float x, float y) => Mathf.PerlinNoise(x, y);
 
-        public static Texture2D TexCharco(int forma)
+        /// <param name="rehacer">T-882: vuelve a escribir el PNG en la misma ruta (mismo GUID) aunque ya exista.</param>
+        public static Texture2D TexCharco(int forma, bool rehacer = false)
         {
             string nombre = "S2c_Charco_" + forma;
-            Texture2D ya = Cargar(nombre);
+            Texture2D ya = rehacer ? null : Cargar(nombre);
             if (ya != null)
             {
                 return ya;
@@ -978,7 +970,9 @@ namespace MechaCyberpunk.Arte.Editor
                     campo += (Ruido(u * 9f + forma * 7f, v * 9f) - 0.5f) * 0.45f;
                     float borde = Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v)) * 8f;
                     float a = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((campo - 0.55f) * 5f)) * Mathf.Clamp01(borde);
-                    t.SetPixel(x, y, new Color(a, a, a, a));
+                    // T-882: G = el borde mojado alrededor del charco (más ancho y suave).
+                    float mojado = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((campo - 0.32f) * 3f)) * Mathf.Clamp01(borde * 0.8f);
+                    t.SetPixel(x, y, new Color(a, Mathf.Max(a, mojado), a, a));
                 }
             }
             t.Apply();

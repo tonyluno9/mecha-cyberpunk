@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 1140404115}
+  m_SkyboxMaterial: {fileID: 621232458}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -9808,7 +9808,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20005597}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -98324,7 +98324,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &165630745
 Transform:
   m_ObjectHideFlags: 0
@@ -130656,7 +130656,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &220685055
 Transform:
   m_ObjectHideFlags: 0
@@ -133914,12 +133914,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 228023142}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.42, a: 1}
-  m_Intensity: 4.5
-  m_Range: 6.5
+  m_Intensity: 1.6
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -169322,12 +169322,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 232852215}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.42, a: 1}
-  m_Intensity: 4.5
-  m_Range: 6.5
+  m_Intensity: 1.6
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -169509,7 +169509,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &233403584
 Transform:
   m_ObjectHideFlags: 0
@@ -183650,7 +183650,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 262154146}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -222269,7 +222269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &322952081
 Transform:
   m_ObjectHideFlags: 0
@@ -234853,7 +234853,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &336754061
 Transform:
   m_ObjectHideFlags: 0
@@ -277803,7 +277803,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &417167284
 Transform:
   m_ObjectHideFlags: 0
@@ -352467,7 +352467,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &536828292
 Transform:
   m_ObjectHideFlags: 0
@@ -407009,6 +407009,49 @@ Transform:
   - {fileID: 82825345}
   m_Father: {fileID: 142138956}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &621232458
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Cielo_Procedural (hora)
+  m_Shader: {fileID: 4800000, guid: e500bf0be3d0d5047bb04dbf90fe33b4, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _SUNDISK_HIGH_QUALITY
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _AltoBrillo: 0.25
+    - _AtmosphereThickness: 0.6
+    - _Bruma: 0.07
+    - _Curva: 0.3
+    - _Exposure: 1
+    - _HaloSol: 0.35
+    - _SunDisk: 2
+    - _SunSize: 0
+    - _SunSizeConvergence: 5
+    m_Colors:
+    - _ColorBrillo: {r: 0.2, g: 0.24, b: 0.32, a: 0.12}
+    - _ColorHorizonte: {r: 0.2, g: 0.24, b: 0.32, a: 1}
+    - _ColorSol: {r: 0.45, g: 0.55, b: 1, a: 1}
+    - _GroundColor: {r: 0.2, g: 0.24, b: 0.32, a: 1}
+    - _SkyTint: {r: 0.034999996, g: 0.055, b: 0.13, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &621242528
 GameObject:
   m_ObjectHideFlags: 0
@@ -446035,7 +446078,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &688216201
 Transform:
   m_ObjectHideFlags: 0
@@ -470741,7 +470784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &723659079
 Transform:
   m_ObjectHideFlags: 0
@@ -475852,7 +475895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &734216047
 Transform:
   m_ObjectHideFlags: 0
@@ -489640,7 +489683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &758967667
 Transform:
   m_ObjectHideFlags: 0
@@ -541839,7 +541882,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &851792098
 Transform:
   m_ObjectHideFlags: 0
@@ -552674,7 +552717,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 872229357}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -578895,12 +578938,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927580736}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.42, a: 1}
-  m_Intensity: 4.5
-  m_Range: 6.5
+  m_Intensity: 1.6
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -592697,7 +592740,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &944443766
 Transform:
   m_ObjectHideFlags: 0
@@ -593772,7 +593815,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &946265343
 Transform:
   m_ObjectHideFlags: 0
@@ -618994,7 +619037,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992249272}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -667680,7 +667723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1082232908
 Transform:
   m_ObjectHideFlags: 0
@@ -677144,12 +677187,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1103577258}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.42, a: 1}
-  m_Intensity: 4.5
-  m_Range: 6.5
+  m_Intensity: 1.6
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -697403,49 +697446,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3931708492605836167, guid: 2d349d8c2d9b61849a31dac6fda83732, type: 3}
   m_PrefabInstance: {fileID: 1140315419}
   m_PrefabAsset: {fileID: 0}
---- !u!21 &1140404115
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Cielo_Procedural (hora)
-  m_Shader: {fileID: 4800000, guid: e500bf0be3d0d5047bb04dbf90fe33b4, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _SUNDISK_HIGH_QUALITY
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _AltoBrillo: 0.25
-    - _AtmosphereThickness: 0.6
-    - _Bruma: 0.07
-    - _Curva: 0.3
-    - _Exposure: 1
-    - _HaloSol: 0.35
-    - _SunDisk: 2
-    - _SunSize: 0
-    - _SunSizeConvergence: 5
-    m_Colors:
-    - _ColorBrillo: {r: 0.2, g: 0.24, b: 0.32, a: 0.12}
-    - _ColorHorizonte: {r: 0.2, g: 0.24, b: 0.32, a: 1}
-    - _ColorSol: {r: 0.45, g: 0.55, b: 1, a: 1}
-    - _GroundColor: {r: 0.2, g: 0.24, b: 0.32, a: 1}
-    - _SkyTint: {r: 0.034999996, g: 0.055, b: 0.13, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1001 &1140770905
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -707048,7 +707048,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1156008273
 Transform:
   m_ObjectHideFlags: 0
@@ -745515,7 +745515,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1221504468
 Transform:
   m_ObjectHideFlags: 0
@@ -769137,7 +769137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1264017850
 Transform:
   m_ObjectHideFlags: 0
@@ -780716,7 +780716,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1284744062
 Transform:
   m_ObjectHideFlags: 0
@@ -803415,7 +803415,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1327581212}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.2, b: 0.78, a: 1}
@@ -807037,7 +807037,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1333604085
 Transform:
   m_ObjectHideFlags: 0
@@ -807411,12 +807411,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334454621}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.42, a: 1}
-  m_Intensity: 4.5
-  m_Range: 6.5
+  m_Intensity: 1.6
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -826587,7 +826587,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1367867538
 Transform:
   m_ObjectHideFlags: 0
@@ -858132,7 +858132,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1426045820}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.2, b: 0.78, a: 1}
@@ -958444,12 +958444,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600161814}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.42, a: 1}
-  m_Intensity: 4.5
-  m_Range: 6.5
+  m_Intensity: 1.6
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -959782,7 +959782,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603013045}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -962442,7 +962442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1608420138
 Transform:
   m_ObjectHideFlags: 0
@@ -971135,7 +971135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1624815042
 Transform:
   m_ObjectHideFlags: 0
@@ -996225,7 +996225,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656037237}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -1010240,7 +1010240,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683858873}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -1133822,7 +1133822,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1914360675
 Transform:
   m_ObjectHideFlags: 0
@@ -1139103,7 +1139103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1925259604
 Transform:
   m_ObjectHideFlags: 0
@@ -1153490,7 +1153490,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951908534}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
@@ -1240228,12 +1240228,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091037041}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.42, a: 1}
-  m_Intensity: 4.5
-  m_Range: 6.5
+  m_Intensity: 1.6
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -1245624,7 +1245624,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2100511350
 Transform:
   m_ObjectHideFlags: 0
@@ -1252367,7 +1252367,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2117103852}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 0.1, g: 0.95, b: 0.88, a: 1}
