@@ -83,6 +83,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             }
         }
 
+        // El punto de x = -24 va más al sur (z = 1.4) para esquivar el puesto de implantes (x -23 a -21, z 3.8 a 5.6) que se puso junto a la calle.
         // De la cochera al centro de la calle norte-sur, al norte, vuelta a la derecha y al este hasta la puerta del clandestino.
         private static readonly Paso[] Ruta =
         {
@@ -91,7 +92,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             new Paso(-47f, -9f, 6f),
             new Paso(-43f, -2f, 5f),
             new Paso(-34f, 1.5f, 8f),
-            new Paso(-24f, 3.2f, 10f),
+            new Paso(-24f, 1.4f, 10f),
             new Paso(-10f, 3.2f, 6f),
             new Paso(0f, 3.2f, 0f)
         };
@@ -300,6 +301,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             private bool d;
 
             public int Paso;
+            public string UltimoObstaculo;
             public float GiroAcumulado;
             private float yawAnterior = float.NaN;
 
@@ -366,6 +368,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 {
                     if (!impactos[i].collider.transform.IsChildOf(t))
                     {
+                        UltimoObstaculo = impactos[i].collider.name + " " + impactos[i].collider.bounds + " a " + impactos[i].distance.ToString("F1") + " m";
                         return true;
                     }
                 }
@@ -376,8 +379,11 @@ namespace MechaCyberpunk.Tests.Vehiculos
             {
                 Cambiar(prueba, Key.W, ref w, nuevoW);
                 Cambiar(prueba, Key.S, ref s, nuevoS);
-                Cambiar(prueba, Key.A, ref a, nuevoA);
-                Cambiar(prueba, Key.D, ref d, nuevoD);
+                // Soltar una tecla de giro y apretar la contraria en el mismo cuadro deja a la acción sin leer la nueva (quedó sin control activo):
+                // primero se suelta y la contraria se aprieta en el cuadro siguiente.
+                bool cambiaDeLado = (a && nuevoD) || (d && nuevoA);
+                Cambiar(prueba, Key.A, ref a, nuevoA && !cambiaDeLado);
+                Cambiar(prueba, Key.D, ref d, nuevoD && !cambiaDeLado);
             }
 
             private static void Cambiar(RecorridoCarroPruebas prueba, Key tecla, ref bool actual, bool nuevo)
@@ -445,7 +451,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             float segundos = Time.time - inicio;
             piloto.Soltar(this);
             Debug.Log("[Medicion] T-078 casa al clandestino con el piloto: " + segundos.ToString("F1") + " s, giro " + piloto.GiroAcumulado.ToString("F0") + " grados");
-            Assert.IsTrue(llego, "El carro no llegó detenido a menos de 6 m del clandestino en " + LimiteManejo + " s (paso " + piloto.Paso + ", a "
+            Assert.IsTrue(llego, "El carro no llegó detenido a menos de 6 m del clandestino en " + LimiteManejo + " s (paso " + piloto.Paso + ", obstáculo " + piloto.UltimoObstaculo + ", a "
                 + Vector3.Distance(carro.transform.position, puertaClandestino).ToString("F1") + " m)");
             Assert.GreaterOrEqual(piloto.GiroAcumulado, GiroMinimo, "No dio la vuelta");
             Assert.Less(carro.transform.position.y, AlturaMaximaEnCalle, "El carro se subió a la banqueta");
