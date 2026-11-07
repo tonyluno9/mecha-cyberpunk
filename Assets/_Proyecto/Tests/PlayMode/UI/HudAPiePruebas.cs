@@ -77,6 +77,8 @@ namespace MechaCyberpunk.Tests.UI
         {
             jugador = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugador), new Vector3(0f, 0.05f, 0f), Quaternion.identity);
             vida = jugador.GetComponent<VidaAPie>();
+            // T-684: estas pruebas miden la vida; el escudo se prueba en EscudoT684Pruebas.
+            jugador.GetComponent<MechaCyberpunk.Personaje.Vida.EscudoJugador>()?.Iniciar(0f, 0f, 0f);
             armas = jugador.GetComponent<ArmasAPie>();
         }
 

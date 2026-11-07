@@ -55,6 +55,19 @@ namespace MechaCyberpunk.Personaje.Vida
             return restado;
         }
 
+        /// <summary>Cura hasta la máxima y devuelve lo que curó. No revive ni reinicia la espera de la regeneración.</summary>
+        public float Curar(float cantidad)
+        {
+            if (EstaKO || cantidad <= 0f || Actual >= Maxima)
+            {
+                return 0f;
+            }
+            float curado = Math.Min(cantidad, Maxima - Actual);
+            Actual += curado;
+            Cambio?.Invoke();
+            return curado;
+        }
+
         /// <summary>Pasa el tiempo: si ya esperó lo suficiente, cura hasta la máxima.</summary>
         public void Avanzar(float dt)
         {
