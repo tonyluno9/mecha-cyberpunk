@@ -34,7 +34,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Luz de sodio de un poste en una calle angosta (las farolas de las avenidas de 14 m usan 700).</summary>
         /// <summary>Las piezas C del kit miden 4 m de planta baja; las casas de K01 son un poco más bajas (planta de ~3.5 m).</summary>
         public const float EscalaAlto = 0.88f;
-        public const float IntensidadPoste = 520f;
+        public const float IntensidadPoste = 340f;
 
         /// <summary>Colores de los pisos altos (sobre el C03 crema): terracota, turquesa apagado, crema y verde agua (§1).</summary>
         public static readonly (string nombre, Color color)[] ColoresPiso =
@@ -1038,6 +1038,31 @@ namespace MechaCyberpunk.Arte.Editor
                     float c = Mathf.Max(Tubo(marco), Mathf.Abs(u) < 0.62f && Mathf.Abs(v) < 0.62f ? Tubo(glifo) : 0f);
                     float fondo = 0.03f;
                     t.SetPixel(x, y, new Color(Mathf.Max(c, fondo), Mathf.Max(c, fondo), Mathf.Max(c, fondo), 1f));
+                }
+            }
+            t.Apply();
+            return Guardar(nombre, t, true, TextureWrapMode.Clamp);
+        }
+
+        /// <summary>Cruz de farmacia de neón (tubo con halo) sobre negro.</summary>
+        public static Texture2D TexCruz()
+        {
+            const string nombre = "S2c_Cruz";
+            Texture2D ya = Cargar(nombre);
+            if (ya != null)
+            {
+                return ya;
+            }
+            const int n = 128;
+            Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, true);
+            for (int y = 0; y < n; y++)
+            {
+                for (int x = 0; x < n; x++)
+                {
+                    float u = x / (float)n * 2f - 1f, v = y / (float)n * 2f - 1f;
+                    float brazo = Mathf.Min(Mathf.Max(Mathf.Abs(u) - 0.8f, Mathf.Abs(v) - 0.26f), Mathf.Max(Mathf.Abs(u) - 0.26f, Mathf.Abs(v) - 0.8f));
+                    float c = Mathf.Clamp01(1f - Mathf.Abs(brazo) / 0.06f) + 0.35f * Mathf.Clamp01(1f - Mathf.Max(brazo, 0f) / 0.2f) * (brazo < 0f ? 1f : 0.5f);
+                    t.SetPixel(x, y, new Color(c, c, c, 1f));
                 }
             }
             t.Apply();

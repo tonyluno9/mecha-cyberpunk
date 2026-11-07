@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Arte.Editor
             StringBuilder s = new StringBuilder();
             var grupos = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
                 .Where(r => r.bounds.center.x >= c[0] && r.bounds.center.x <= c[1] && r.bounds.center.z >= c[2] && r.bounds.center.z <= c[3])
-                .GroupBy(r => Nivel(r.transform, 3));
+                .GroupBy(r => Nivel(r.transform, 8));
             foreach (var g in grupos.OrderBy(g => g.Key))
             {
                 Bounds b = g.First().bounds;

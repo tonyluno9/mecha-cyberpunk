@@ -54,6 +54,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private const float SegundosMinimosEntreClaxon = 1.5f;
         private const float SegundosMaximosEntreClaxon = 4f;
         private float proximoClaxon;
+        private float ultimoChoque = -100f;
         private Renderer carroceria;
 
         private static readonly Color[] ColoresCarroceria =
@@ -72,6 +73,21 @@ namespace MechaCyberpunk.Trafico.Calle
 
         /// <summary>True si el jugador ya se llevó este carro (T-511): deja de ser tráfico y es un carro suyo.</summary>
         public bool Robado { get; private set; }
+
+        /// <summary>T-703: su velocidad normal de crucero (m/s), distinta en cada carro.</summary>
+        public float VelocidadPropia { get; private set; }
+
+        /// <summary>T-703: True mientras sigue detenido por un choque.</summary>
+        public bool Chocado => calculo != null && calculo.Chocado;
+
+        /// <summary>T-703: cuántos choques ha tenido que lo hicieron reaccionar.</summary>
+        public int Choques { get; private set; }
+
+        /// <summary>T-703: cómo fue el último choque.</summary>
+        public NivelChoque UltimoChoque { get; private set; }
+
+        /// <summary>T-703: el conductor enojado que se bajó tras un choque fuerte (null si no hay).</summary>
+        public ConductorEnojado ConductorAfuera { get; private set; }
 
         public float Velocidad => calculo != null ? calculo.Velocidad : 0f;
         public bool EnPanico => calculo != null && calculo.EnPanico;
@@ -93,7 +109,9 @@ namespace MechaCyberpunk.Trafico.Calle
             calles = grafo;
             azar = azarCarro;
             posicionJugador = dondeEstaElJugador;
-            calculo = numeros.Crear();
+            // T-703: cada carro anda a su propia velocidad normal, dentro del rango de la config (antes todos iban a 7 m/s, muy lento).
+            VelocidadPropia = ReglaChoqueTrafico.VelocidadDeCarro(numeros.VelocidadMinima, numeros.VelocidadMaxima, azarCarro.NextDouble());
+            calculo = numeros.Crear(VelocidadPropia);
             eje = grafo.Nodo(nodoInicial);
             nodoAnterior = nodoInicial;
             nodoDestino = ElegirSiguiente(nodoInicial, -1);
@@ -195,6 +213,59 @@ namespace MechaCyberpunk.Trafico.Calle
                 Destroy(peaton);
             }
             conductor.AddComponent<ConductorHuye>().Iniciar(amenaza);
+        }
+
+        // T-703: lo chocó otro carro (el del jugador, una patrulla): reacciona según qué tan fuerte fue.
+        private void OnCollisionEnter(Collision colision)
+        {
+            if (Robado || colision.collider == null || colision.collider.transform.root == transform.root)
+            {
+                return;
+            }
+            Vector3 donde = colision.contactCount > 0 ? colision.GetContact(0).point : colision.collider.transform.position;
+            AlChocar(colision.relativeVelocity.magnitude, donde);
+        }
+
+        /// <summary>
+        /// T-703: un choque de rapidez relativa <paramref name="rapidez"/> (m/s) contra algo en <paramref name="donde"/>. Si es más que un roce,
+        /// el carro se detiene (leve o fuerte), pita y, en uno fuerte, el conductor se baja enojado a reclamar. Devuelve cómo fue.
+        /// </summary>
+        public NivelChoque AlChocar(float rapidez, Vector3 donde)
+        {
+            NivelChoque nivel = ReglaChoqueTrafico.Nivel(rapidez);
+            if (nivel == NivelChoque.Ninguno || calculo == null || Robado || !ReglaChoqueTrafico.PuedeReaccionar(Time.time, ultimoChoque))
+            {
+                return NivelChoque.Ninguno;
+            }
+            ultimoChoque = Time.time;
+            Choques++;
+            UltimoChoque = nivel;
+            calculo.Detener(ReglaChoqueTrafico.SegundosDetenido(nivel));
+            proximoClaxon = 0f; // el claxon del choque suena de inmediato, sin esperar el descanso al azar
+            if (ReglaChoqueTrafico.ConductorSeBaja(nivel) && ConductorAfuera == null)
+            {
+                ConductorAfuera = BajarConductorEnojado(donde);
+            }
+            return nivel;
+        }
+
+        private ConductorEnojado BajarConductorEnojado(Vector3 haciaQuien)
+        {
+            if (prefabConductor == null)
+            {
+                return null;
+            }
+            Vector3 puerta = montable != null ? montable.PuntoSubida : transform.position - transform.right * 1.5f;
+            GameObject conductor = Instantiate(prefabConductor, puerta, Quaternion.identity);
+            conductor.name = "ConductorEnojado";
+            PeatonMundo peaton = conductor.GetComponent<PeatonMundo>();
+            if (peaton != null)
+            {
+                Destroy(peaton);
+            }
+            ConductorEnojado enojado = conductor.AddComponent<ConductorEnojado>();
+            enojado.Iniciar(haciaQuien, ReglaChoqueTrafico.SegundosConductorAfuera);
+            return enojado;
         }
 
         /// <summary>Un disparo: si está cerca el carro se asusta (se detiene y pita).</summary>
