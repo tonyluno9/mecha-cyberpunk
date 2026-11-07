@@ -123,12 +123,62 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Segundos que los avisados siguen en alerta aunque el jugador esté fuera del territorio (s).")]
         [Min(0f)] [SerializeField] private float segundosRefuerzo = 8f;
 
+        [Header("Jefe cuerpo a cuerpo (T-693)")]
+        [Tooltip("Si es true pelea a golpes con un patrón: telegrafía, golpea en área corta, se recupera y cada tantos golpes carga (el robot jefe de Nova).")]
+        [SerializeField] private bool jefeCuerpoACuerpo;
+        [Min(0.5f)] [Tooltip("Distancia a la que empieza a telegrafiar el golpe (m).")]
+        [SerializeField] private float alcanceJefe = 2.6f;
+        [Min(0.1f)] [Tooltip("Pausa con brillo antes del golpe: aquí se esquiva (s).")]
+        [SerializeField] private float telegrafiaGolpeJefe = 0.8f;
+        [Min(0f)] [Tooltip("Daño del golpe de área (puntos).")]
+        [SerializeField] private float danioGolpeJefe = 22f;
+        [Min(0.5f)] [Tooltip("Radio del golpe de área, delante de él (m).")]
+        [SerializeField] private float radioGolpeJefe = 2.8f;
+        [Min(0.1f)] [Tooltip("Tiempo que se queda recuperándose tras el golpe: se le puede castigar (s).")]
+        [SerializeField] private float recuperaGolpeJefe = 1.8f;
+        [Min(1)] [Tooltip("Cada cuántos golpes hace una carga.")]
+        [SerializeField] private int golpesPorCarga = 3;
+        [Min(0.1f)] [Tooltip("Pausa con brillo antes de la carga (s).")]
+        [SerializeField] private float telegrafiaCarga = 1.1f;
+        [Min(1f)] [Tooltip("Velocidad de la carga (m/s).")]
+        [SerializeField] private float velocidadCarga = 11f;
+        [Min(0.1f)] [Tooltip("Duración de la carga (s).")]
+        [SerializeField] private float duracionCarga = 0.7f;
+        [Min(0f)] [Tooltip("Daño de la carga si te alcanza (puntos).")]
+        [SerializeField] private float danioCarga = 35f;
+        [Min(0.3f)] [Tooltip("Radio de contacto de la carga (m).")]
+        [SerializeField] private float radioCarga = 1.6f;
+        [Min(0.1f)] [Tooltip("Tiempo que se queda recuperándose tras la carga (s).")]
+        [SerializeField] private float recuperaCarga = 2.6f;
+        [Min(0f)] [Tooltip("Solo carga si el jugador está al menos a esta distancia (m).")]
+        [SerializeField] private float distanciaMinCarga = 4f;
+        [Min(1f)] [Tooltip("Solo carga si el jugador está a esta distancia o menos (m).")]
+        [SerializeField] private float distanciaMaxCarga = 14f;
+        [Min(1f)] [Tooltip("El daño que recibe mientras se recupera se multiplica por esto.")]
+        [SerializeField] private float multiplicadorCastigo = 1.5f;
+
         [Header("Colores")]
         [SerializeField] private Color colorNormal = new Color(0.55f, 0.15f, 0.65f);
         [SerializeField] private Color colorGolpe = new Color(1f, 0.2f, 0.2f);
         [SerializeField] private Color colorKO = new Color(0.2f, 0.2f, 0.2f);
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f);
 
+        public bool JefeCuerpoACuerpo => jefeCuerpoACuerpo;
+        public float AlcanceJefe => alcanceJefe;
+        public float TelegrafiaGolpeJefe => telegrafiaGolpeJefe;
+        public float DanioGolpeJefe => danioGolpeJefe;
+        public float RadioGolpeJefe => radioGolpeJefe;
+        public float RecuperaGolpeJefe => recuperaGolpeJefe;
+        public int GolpesPorCarga => golpesPorCarga;
+        public float TelegrafiaCarga => telegrafiaCarga;
+        public float VelocidadCarga => velocidadCarga;
+        public float DuracionCarga => duracionCarga;
+        public float DanioCarga => danioCarga;
+        public float RadioCarga => radioCarga;
+        public float RecuperaCarga => recuperaCarga;
+        public float DistanciaMinCarga => distanciaMinCarga;
+        public float DistanciaMaxCarga => distanciaMaxCarga;
+        public float MultiplicadorCastigo => multiplicadorCastigo;
         public float FraccionHuida => fraccionHuida;
         public float DistanciaAcorralado => distanciaAcorralado;
         public float DistanciaHuida => distanciaHuida;

@@ -48,6 +48,12 @@ namespace MechaCyberpunk.IA.APie
         private IRecibeDanio recibeJugador;
         private bool pintadoAviso;
         private PistolaPandillero pistola;
+        // T-693: el jefe cuerpo a cuerpo
+        private ReglaJefeNova reglaJefe;
+        private Light brilloJefe;
+        private Vector3 direccionCarga;
+        private bool cargaGolpeo;
+        private int pasoBrillo = -1;
         private Animator animador;
         private VisualPersonaje visual;
         private Renderer[] piezasModelo;
@@ -105,6 +111,15 @@ namespace MechaCyberpunk.IA.APie
         public Transform ObjetivoActual { get; private set; }
 
         public DatosPandilleroAPie Datos => datos;
+
+        /// <summary>Fase del patrón del jefe cuerpo a cuerpo (T-693); Acecho si no lo es.</summary>
+        public ReglaJefeNova.Fase FaseJefe => reglaJefe != null ? reglaJefe.Actual : ReglaJefeNova.Fase.Acecho;
+
+        /// <summary>True mientras el jefe se recupera de un golpe o una carga: el momento de castigarlo (T-693).</summary>
+        public bool Castigable => reglaJefe != null && reglaJefe.Vulnerable;
+
+        /// <summary>Cuántos golpes de área ha dado desde su última carga (T-693).</summary>
+        public int GolpesDesdeCarga => reglaJefe != null ? reglaJefe.GolpesDesdeCarga : 0;
         public EstadoPandillero Estado => regla != null ? regla.Estado : EstadoPandillero.Esperando;
         public bool EnPelea => regla != null && !EstaKO && regla.EnPelea;
         public Vector3 Hogar => hogar;
@@ -182,7 +197,7 @@ namespace MechaCyberpunk.IA.APie
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
-            if (datos == null || (!datos.UsaPistola && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
+            if (datos == null || (!datos.UsaPistola && !datos.JefeCuerpoACuerpo && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
             {
                 Debug.LogError("[IA] Faltan referencias en PandilleroAPie de " + name, this);
                 enabled = false;
@@ -211,6 +226,17 @@ namespace MechaCyberpunk.IA.APie
                 {
                     pistola = gameObject.AddComponent<PistolaPandillero>();
                 }
+                animador = GetComponentInChildren<Animator>(true);
+                visual = GetComponentInChildren<VisualPersonaje>(true);
+                piezasModelo = GetComponentsInChildren<Renderer>(true);
+            }
+            else if (datos.JefeCuerpoACuerpo)
+            {
+                // T-693: la pandilla no decide; el jefe usa su patrón (ReglaJefeNova) y la alerta la pone JefePandilla.
+                regla = new ReglaPandilleroAPie(GranDistancia, GranDistancia, datos.AlcanceJefe, datos.PreparacionGolpe,
+                    datos.RecargaGolpe, datos.MargenLlegada);
+                reglaJefe = new ReglaJefeNova(datos.AlcanceJefe, datos.TelegrafiaGolpeJefe, datos.RecuperaGolpeJefe, datos.GolpesPorCarga,
+                    datos.TelegrafiaCarga, datos.DuracionCarga, datos.RecuperaCarga, datos.DistanciaMinCarga, datos.DistanciaMaxCarga);
                 animador = GetComponentInChildren<Animator>(true);
                 visual = GetComponentInChildren<VisualPersonaje>(true);
                 piezasModelo = GetComponentsInChildren<Renderer>(true);
@@ -272,6 +298,8 @@ namespace MechaCyberpunk.IA.APie
             Iniciar();
             modelo.Restaurar();
             regla.Reiniciar();
+            reglaJefe?.Reiniciar();
+            ApagarBrillo();
             tactica?.Reiniciar();
             patrulla?.Reiniciar();
             tieneCubierta = false;
@@ -307,7 +335,8 @@ namespace MechaCyberpunk.IA.APie
             {
                 visual.RegistrarGolpe(info.Direccion); // antes de aplicar: si este golpe lo deja KO, decide cómo cae
             }
-            float aplicado = modelo.Aplicar(info.Cantidad);
+            float cantidad = info.Cantidad * (Castigable ? datos.MultiplicadorCastigo : 1f); // T-693: recuperándose, recibe más
+            float aplicado = modelo.Aplicar(cantidad);
             if (datos.UsaPistola && !modelo.EstaKO && Grupo != null)
             {
                 // T-423: pide refuerzos a su grupo.
@@ -350,6 +379,11 @@ namespace MechaCyberpunk.IA.APie
 
             ActualizarGrito();
             BuscarJugador();
+            if (datos.JefeCuerpoACuerpo)
+            {
+                ActualizarJefeNova();
+                return;
+            }
             if (datos.UsaPistola)
             {
                 ActualizarArmado();
@@ -563,6 +597,134 @@ namespace MechaCyberpunk.IA.APie
                 }
             }
         }
+
+        // ---- Jefe cuerpo a cuerpo (T-693) ----
+
+        private void ActualizarJefeNova()
+        {
+            bool atacable = Alerta && EsAtacable();
+            Vector3 posicionJugador = raizJugador != null ? raizJugador.position : hogar;
+            float distancia = atacable ? DistanciaPlana(transform.position, posicionJugador) : float.MaxValue;
+            ObjetivoActual = atacable ? raizJugador : null;
+            ReglaJefeNova.Salida salida = reglaJefe.Avanzar(Time.deltaTime, atacable, distancia);
+            Vector3 haciaJugador = posicionJugador - transform.position;
+            haciaJugador.y = 0f;
+            if (salida.InicioCarga)
+            {
+                direccionCarga = haciaJugador.sqrMagnitude > 0.0001f ? haciaJugador.normalized : transform.forward;
+                cargaGolpeo = false;
+                Gritar("¡¡¡AAARGH!!!");
+            }
+            Vector3 deseada = Vector3.zero;
+            if (salida.Orden == ReglaJefeNova.Orden.Acercarse && haciaJugador.sqrMagnitude > 0.0001f)
+            {
+                deseada = haciaJugador.normalized * datos.Velocidad;
+            }
+            else if (salida.Orden == ReglaJefeNova.Orden.Cargar)
+            {
+                deseada = direccionCarga * datos.VelocidadCarga;
+            }
+            bool cargando = reglaJefe.Actual == ReglaJefeNova.Fase.Carga;
+            Vector3 mirada = cargando ? direccionCarga : haciaJugador;
+            mirada.y = 0f;
+            if (!reglaJefe.Vulnerable && mirada.sqrMagnitude > 0.0001f)
+            {
+                Quaternion meta = Quaternion.LookRotation(mirada.normalized, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, meta, datos.VelocidadGiro * Time.deltaTime);
+            }
+            if (salida.Impacto)
+            {
+                GolpeDeArea(posicionJugador);
+            }
+            if (cargando && !cargaGolpeo && atacable && distancia <= datos.RadioCarga)
+            {
+                cargaGolpeo = true;
+                Vector3 puntoCarga = posicionJugador + Vector3.up * AlturaCentroImpacto;
+                recibeJugador.RecibirDanio(new InfoDanio(datos.DanioCarga, TipoDanio.Golpe, puntoCarga, direccionCarga, null));
+                Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
+            }
+            MostrarBrillo(reglaJefe.ProgresoAviso, reglaJefe.Actual == ReglaJefeNova.Fase.TelegrafiaCarga);
+            velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
+            Vector3 mover = deseada;
+            mover.y = velocidadVertical;
+            controlador.Move(mover * Time.deltaTime);
+            if (animador != null)
+            {
+                animador.SetFloat(IdVelocidad, deseada.magnitude);
+                animador.SetBool(IdEnPiso, true);
+            }
+        }
+
+        // Golpe en área corta delante del jefe: conecta si el jugador está a su radio y dentro del arco frontal. Rodar (invulnerable) lo esquiva.
+        private void GolpeDeArea(Vector3 posicionJugador)
+        {
+            if (visual != null)
+            {
+                visual.Golpear(true);
+            }
+            Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
+            if (!EsAtacable())
+            {
+                return;
+            }
+            Vector3 hacia = posicionJugador - transform.position;
+            hacia.y = 0f;
+            if (hacia.magnitude > datos.RadioGolpeJefe || (hacia.sqrMagnitude > 0.0001f && Vector3.Angle(transform.forward, hacia) > AnguloAreaJefe))
+            {
+                return;
+            }
+            Vector3 punto = posicionJugador + Vector3.up * AlturaCentroImpacto;
+            recibeJugador.RecibirDanio(new InfoDanio(datos.DanioGolpeJefe, TipoDanio.Golpe, punto, transform.forward, null));
+        }
+
+        private const float AnguloAreaJefe = 80f;
+
+        // Brillo del aviso: el cuerpo y una luz suben de naranja (golpe) o rojo (carga) mientras avisa.
+        private void MostrarBrillo(float progreso, bool esCarga)
+        {
+            int paso = Mathf.RoundToInt(progreso * 10f) + (esCarga ? 100 : 0);
+            if (paso == pasoBrillo)
+            {
+                return;
+            }
+            pasoBrillo = paso;
+            if (progreso <= 0f)
+            {
+                PintarCuerpo(datos.ColorNormal);
+                if (brilloJefe != null)
+                {
+                    brilloJefe.enabled = false;
+                }
+                return;
+            }
+            Color tinte = Color.Lerp(datos.ColorNormal, esCarga ? datos.ColorGolpe : datos.ColorAviso, progreso);
+            PintarCuerpo(tinte);
+            if (brilloJefe == null)
+            {
+                GameObject objeto = new GameObject("BrilloJefe");
+                objeto.transform.SetParent(transform, false);
+                objeto.transform.localPosition = Vector3.up * 1.3f;
+                brilloJefe = objeto.AddComponent<Light>();
+                brilloJefe.type = LightType.Point;
+                brilloJefe.range = 7f;
+                brilloJefe.shadows = LightShadows.None;
+            }
+            brilloJefe.color = esCarga ? datos.ColorGolpe : datos.ColorAviso;
+            brilloJefe.intensity = 6f * progreso;
+            brilloJefe.enabled = true;
+        }
+
+        private void ApagarBrillo()
+        {
+            pasoBrillo = -1;
+            if (brilloJefe != null)
+            {
+                brilloJefe.enabled = false;
+            }
+        }
+
+        /// <summary>Luz del brillo del aviso (T-693); null si todavía no avisó.</summary>
+        public Light BrilloJefe => brilloJefe;
 
         // ---- Táctica (T-423) ----
 
@@ -808,9 +970,13 @@ namespace MechaCyberpunk.IA.APie
                 Sonidos.ReproducirEn("PAN_JEFE_CAE", transform.position);
             }
             controlador.enabled = false;
-            if (datos.UsaPistola)
+            ApagarBrillo();
+            if (datos.UsaPistola || datos.JefeCuerpoACuerpo)
             {
-                pistola.QuitarAviso();
+                if (pistola != null)
+                {
+                    pistola.QuitarAviso();
+                }
                 if (visual != null)
                 {
                     visual.Caido = true;

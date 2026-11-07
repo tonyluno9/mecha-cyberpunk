@@ -64,6 +64,22 @@ MonoBehaviour:
   giroRodeo: 8
   radioRefuerzos: 40
   segundosRefuerzo: 8
+  jefeCuerpoACuerpo: 0
+  alcanceJefe: 2.6
+  telegrafiaGolpeJefe: 0.8
+  danioGolpeJefe: 22
+  radioGolpeJefe: 2.8
+  recuperaGolpeJefe: 1.8
+  golpesPorCarga: 3
+  telegrafiaCarga: 1.1
+  velocidadCarga: 11
+  duracionCarga: 0.7
+  danioCarga: 35
+  radioCarga: 1.6
+  recuperaCarga: 2.6
+  distanciaMinCarga: 4
+  distanciaMaxCarga: 14
+  multiplicadorCastigo: 1.5
   colorNormal: {r: 0.25, g: 0.5, b: 1, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}
