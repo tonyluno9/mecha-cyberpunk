@@ -171,8 +171,9 @@ namespace MechaCyberpunk.Tests.UI
             vida.RecibirDanio(new InfoDanio(25f, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
             yield return null;
 
-            Assert.AreEqual("VIDA 75", hud.TextoVida.text);
-            Assert.AreEqual(0.75f, hud.Relleno.fillAmount, 0.01f);
+            // T-688: la vida máxima es 150 desde T-585, no 100; se calcula con la máxima real.
+            Assert.AreEqual("VIDA " + Mathf.CeilToInt(vida.Maxima - 25f), hud.TextoVida.text);
+            Assert.AreEqual((vida.Maxima - 25f) / vida.Maxima, hud.Relleno.fillAmount, 0.01f);
             Assert.AreEqual(config.ColorVida, hud.Relleno.color);
         }
 
@@ -282,7 +283,7 @@ namespace MechaCyberpunk.Tests.UI
             AssertGrupos(true, false, true);   // T-400: con los puños la retícula no se ve
             Assert.AreEqual("VIDA " + Mathf.CeilToInt(vida.Maxima), hud.TextoVida.text);
             vida.RecibirDanio(new InfoDanio(25f, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
-            Assert.AreEqual("VIDA 75", hud.TextoVida.text);
+            Assert.AreEqual("VIDA " + Mathf.CeilToInt(vida.Maxima - 25f), hud.TextoVida.text);
         }
 
         private void AssertGrupos(bool vidaActiva, bool miraActiva, bool armaActiva)
