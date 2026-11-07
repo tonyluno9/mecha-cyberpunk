@@ -125,6 +125,7 @@ namespace MechaCyberpunk.Arte.Editor
             SerializedObject so = new SerializedObject(datos);
             so.FindProperty("nombre").stringValue = "POLICÍA";
             so.FindProperty("colorNormal").colorValue = new Color(0.25f, 0.5f, 1f);
+            so.FindProperty("esPolicia").boolValue = true; // T-709
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(datos);
         }

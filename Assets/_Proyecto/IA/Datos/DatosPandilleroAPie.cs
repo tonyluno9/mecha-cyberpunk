@@ -45,6 +45,14 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Cuánto sube el brazo en el aviso del golpe (°).")]
         [Range(0f, 180f)] [SerializeField] private float anguloBrazoAviso = 130f;
 
+        [Header("Policía (T-709)")]
+        [Tooltip("Si es un policía: siempre está en alerta contra el jugador, empieza cubierto y dispararle sube la búsqueda.")]
+        [SerializeField] private bool esPolicia;
+        [Min(0f)] [Tooltip("Calor que suma cada bala que le pega al policía (puntos).")]
+        [SerializeField] private float calorAlGolpear = 8f;
+        [Min(0f)] [Tooltip("Calor que suma matar a un policía (puntos).")]
+        [SerializeField] private float calorAlMatar = 30f;
+
         [Header("Pandilla")]
         [Tooltip("Cuántos pandilleros trae el grupo (el prefab arma tantos).")]
         [Min(1)] [SerializeField] private int tamanoPandilla = 3;
@@ -190,6 +198,9 @@ namespace MechaCyberpunk.IA.Datos
         public float RadioRefuerzos => radioRefuerzos;
         public float SegundosRefuerzo => segundosRefuerzo;
         public bool UsaPistola => usaPistola;
+        public bool EsPolicia => esPolicia;
+        public float CalorAlGolpear => calorAlGolpear;
+        public float CalorAlMatar => calorAlMatar;
         public int Perdigones => perdigones;
         public float DanioDisparo => danioDisparo;
         public float DistanciaMinTiro => distanciaMinTiro;
