@@ -8,8 +8,8 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Mapa
 {
     /// <summary>
-    /// El minimapa redondo abajo a la izquierda (T-409, canvas propio de orden 25): un círculo de 260 px a 48 px de la esquina, con máscara
-    /// redonda y borde turquesa, que muestra 60 m a la redonda y gira con la cámara (arriba es hacia donde miras). Calles en gris sobre negro,
+    /// El minimapa (T-409, canvas propio de orden 25). Desde T-700 es CUADRADO, de 260 px, arriba a la derecha como H10_HUD.png, con borde turquesa
+    /// fino, la ruta punteada al objetivo y el cono de vista del jugador; muestra 60 m a la redonda y gira con la cámara (arriba es hacia donde miras). Calles en gris sobre negro,
     /// manzanas del color de su dueño al 55 %, tú como flecha blanca fija en el centro, el objetivo como rombo naranja (pegado al borde si está
     /// lejos), enemigos en rojo (el jefe más grande), aliados del color de tu pandilla, los iconos de los lugares y el punto marcado en el mapa
     /// grande con su distancia. Se esconde en el mecha y con el mapa grande abierto. Las cuentas están en <see cref="CalculoMinimapa"/>.
@@ -17,19 +17,18 @@ namespace MechaCyberpunk.UI.Mapa
     public class Minimapa : MonoBehaviour
     {
         public const int OrdenCanvas = 25;
-        /// <summary>Lado (px) del anillo de UI11: su hueco mide 365 de 512, y se quiere de 232 px.</summary>
-        private const float LadoAnillo = 325f;
-        // El hueco del arte no está centrado en la imagen: se corrige para que quede sobre el mapa.
-        private static readonly Vector2 DesplazamientoAnillo = new Vector2(-5.7f, -7.3f);
+        /// <summary>Lado (px) del cono de vista del jugador (T-700): la punta queda en el centro y el cono sube.</summary>
+        private const float LadoCono = 150f;
+        private const float GrosorBordePx = 2f;
 
         [Tooltip("Metros del mundo del centro al borde del círculo (m).")]
         [Min(5f)] [SerializeField] private float radioMetros = 60f;
         // T-522: las manzanas solo se tiñen un poco del color del dueño (antes 55 %: una zona magenta se veía como un relleno plano) y el
         // fondo es azul muy oscuro, para que se lean las calles como en el mockup. Constantes: el valor viejo seguía guardado en la escena.
-        private const float AlfaManzanas = 0.14f;
+        private const float AlfaManzanas = 0.08f;
         // T-523: las calles claras (gris azulado con un toque de turquesa) y las manzanas casi negras, para que se lean las calles como en el mockup.
-        private static readonly Color ColorCalles = new Color(0.66f, 0.82f, 0.84f, 1f);
-        private const float AlfaFondo = 0.9f;
+        private static readonly Color ColorCalles = new Color(0.50f, 0.85f, 0.86f, 0.20f);
+        private const float AlfaFondo = 0.55f;
         private static readonly Color FondoOscuro = new Color(0.03f, 0.04f, 0.08f, 1f);
         [Tooltip("Lado de los iconos de lugar (px a 1920x1080).")]
         [Min(8f)] [SerializeField] private float ladoIcono = 30f;
@@ -57,7 +56,8 @@ namespace MechaCyberpunk.UI.Mapa
         // T-632: ruta tipo GPS por las calles hasta el objetivo; se recalcula al moverte más de MetrosParaRecalcular o si el objetivo cambia.
         private const float MetrosParaRecalcular = 2f;
         private const float GrosorRutaPx = 4f;
-        private static readonly Color ColorRuta = new Color(1f, 0.55f, 0.1f, 0.95f);
+        // T-700: la ruta va punteada y turquesa clara, como en H10.
+        private static readonly Color ColorRuta = new Color(0.62f, 1f, 0.97f, 0.95f);
         private RectTransform capaRuta;
         private CirculoBusquedaMapa circuloBusqueda;
         private readonly List<Image> segmentosRuta = new List<Image>();
@@ -124,7 +124,7 @@ namespace MechaCyberpunk.UI.Mapa
             KitUI.Colocar(raiz, ranura, DisposicionHud.LadoMinimapa);
 
             Image mascara = KitUI.CrearImagen(raiz, "Mascara", new Color(FondoOscuro.r, FondoOscuro.g, FondoOscuro.b, AlfaFondo));
-            mascara.sprite = IconosMapa.Circulo;
+            // T-700: sin sprite la máscara es el cuadrado entero.
             KitUI.Estirar(mascara.rectTransform);
             mascara.gameObject.AddComponent<Mask>().showMaskGraphic = true;
 
@@ -145,18 +145,17 @@ namespace MechaCyberpunk.UI.Mapa
             punto = IconosMapa.CrearPuntoMarcado(capaMarcas, ladoPunto);
             punto.gameObject.SetActive(false);
 
-            Image borde = KitUI.CrearImagen(raiz, "Borde", e.Turquesa);
-            borde.sprite = IconosMapa.BordeMinimapa;
-            KitUI.Estirar(borde.rectTransform);
-            // T-521: el anillo de UI11 alrededor del círculo (su hueco, de 232 px, queda sobre el borde del mapa); el borde turquesa liso baja a un hilo.
-            borde.color = new Color(e.Turquesa.r, e.Turquesa.g, e.Turquesa.b, 0.25f);
-            Sprite anillo = PiezasUI.Actual != null ? PiezasUI.Actual.MarcoMinimapa : null;
-            if (anillo != null)
+            // T-700: el cono de vista (la punta en el centro, hacia donde miras) bajo la flecha del jugador, y el borde fino cuadrado.
+            ConfigHudH10 estilo = ConfigHudH10.Actual;
+            if (estilo != null && estilo.ConoMinimapa != null)
             {
-                Image ring = KitUI.CrearImagenSprite(raiz, "Anillo", anillo, false);
-                KitUI.Colocar(ring.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(DesplazamientoAnillo.x, DesplazamientoAnillo.y), new Vector2(LadoAnillo, LadoAnillo));
-                ring.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                Image cono = KitUI.CrearImagenSprite(raiz, "ConoVista", estilo.ConoMinimapa, false);
+                KitUI.Colocar(cono.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(LadoCono, LadoCono));
+                cono.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                cono.color = new Color(e.Turquesa.r, e.Turquesa.g, e.Turquesa.b, 0.9f);
+                cono.raycastTarget = false;
             }
+            KitUI.CrearBorde(raiz, GrosorBordePx, new Color(e.Turquesa.r, e.Turquesa.g, e.Turquesa.b, 0.9f));
             flecha = (RectTransform)KitUI.CrearTriangulo(raiz, "Jugador", ladoFlecha, Color.white).rectTransform.parent;
             textoPunto = KitUI.CrearTexto(raiz, "DistanciaPunto", RolTexto.Hud, TextAnchor.MiddleLeft);
             KitUI.Colocar(textoPunto.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(DisposicionHud.LadoMinimapa, KitUI.Estilo.AltoFilaHud));
@@ -259,6 +258,13 @@ namespace MechaCyberpunk.UI.Mapa
             while (segmentosRuta.Count < tramos)
             {
                 Image seg = KitUI.CrearImagen(capaRuta, "Tramo_" + segmentosRuta.Count, ColorRuta);
+                ConfigHudH10 estilo = ConfigHudH10.Actual;
+                if (estilo != null && estilo.PuntoRuta != null)
+                {
+                    // Punteado: el sprite de un punto se repite a lo largo del tramo.
+                    seg.sprite = estilo.PuntoRuta;
+                    seg.type = Image.Type.Tiled;
+                }
                 KitUI.Colocar(seg.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one);
                 seg.rectTransform.pivot = new Vector2(0.5f, 0.5f);
                 segmentosRuta.Add(seg);

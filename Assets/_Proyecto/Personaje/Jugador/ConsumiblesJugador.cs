@@ -41,6 +41,16 @@ namespace MechaCyberpunk.Personaje.Jugador
         /// <summary>Los consumibles que lleva ahora, en orden del catálogo.</summary>
         public IReadOnlyList<DatosConsumible> Disponibles => disponibles;
 
+        /// <summary>
+        /// La tecla real que usa directo a <paramref name="c"/> (6, 7, 8, 9, 0 según su lugar en el catálogo), leída de la acción
+        /// con GetBindingDisplayString; vacía si no está en el catálogo (T-700: el HUD muestra la tecla verdadera).
+        /// </summary>
+        public string TextoTecla(DatosConsumible c)
+        {
+            int lugar = c != null ? catalogo.IndexOf(c) : -1;
+            return lugar >= 0 && lugar < directas.Length ? directas[lugar].GetBindingDisplayString() : string.Empty;
+        }
+
         /// <summary>El objeto elegido con Tab, o null si no lleva ninguno.</summary>
         public DatosConsumible Seleccionado => indice >= 0 && indice < disponibles.Count ? disponibles[indice] : null;
 

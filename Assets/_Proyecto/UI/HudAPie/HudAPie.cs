@@ -232,6 +232,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<HudConsumibles>();
             }
+            if (GetComponent<HudH10>() == null)
+            {
+                gameObject.AddComponent<HudH10>();
+            }
             if (config == null || grupoVida == null || grupoMira == null || grupoArma == null || grupoCancion == null
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
                 || grupoObjetivo == null || textoObjetivo == null
@@ -1484,6 +1488,14 @@ namespace MechaCyberpunk.UI.Hud
                 && interaccion.InteractuableCandidato != null && !interaccion.InteractuableCandidato.PuedeUsar;
             textoInteraccion.color = negado ? config.ColorAviso : config.ColorTexto;
             grupoInteraccion.SetActive(texto.Length > 0);
+            // T-700: lo que hace la tecla con lo que hay enfrente (subir, abrir, usar) ahora sale como ayuda de botón abajo a la derecha (HudH10);
+            // aquí solo se sigue dibujando el aviso temporal (puerta cerrada, "Frena para bajar") y lo que no se puede usar.
+            CanvasGroup lienzoInteraccion = grupoInteraccion.GetComponent<CanvasGroup>();
+            if (lienzoInteraccion == null)
+            {
+                lienzoInteraccion = grupoInteraccion.AddComponent<CanvasGroup>();
+            }
+            lienzoInteraccion.alpha = avisoRestante > 0f || negado ? 1f : 0f;
         }
 
         private string TextoCandidato()
