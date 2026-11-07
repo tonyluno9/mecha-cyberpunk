@@ -43,6 +43,7 @@ namespace MechaCyberpunk.IA.Aliados
         private PistolaPandillero pistola;
         private Animator animador;
         private VisualPersonaje visual;
+        private AliadoEnCarro enCarro;
         private ModeloVida modelo;
         private int nivel = 1;
         private float velocidadVertical;
@@ -102,6 +103,11 @@ namespace MechaCyberpunk.IA.Aliados
             }
             animador = GetComponentInChildren<Animator>(true);
             visual = GetComponentInChildren<VisualPersonaje>(true);
+            enCarro = GetComponent<AliadoEnCarro>();
+            if (enCarro == null)
+            {
+                enCarro = gameObject.AddComponent<AliadoEnCarro>();
+            }
             PonerNivel(1);
             Pintar();
         }
@@ -189,7 +195,7 @@ namespace MechaCyberpunk.IA.Aliados
 
         private void AlCambiar() => Cambio?.Invoke();
 
-        private void PonerAbordo(bool valor)
+        internal void PonerAbordo(bool valor)
         {
             if (abordo == valor)
             {
@@ -230,7 +236,35 @@ namespace MechaCyberpunk.IA.Aliados
                 return;
             }
             Vector3 posJugador = jugador.Raiz.position;
-            if (ReglaAliado.Decidir(Siguiendo, jugador.Modo, 0f) == ReglaAliado.Accion.IrAbordo)
+            // T-706: en un carro se sube por la puerta del copiloto con animación (AliadoEnCarro) y baja contigo; si no puede (moto, sin lugar,
+            // lejos, carro en marcha) te sigue a pie. El mecha, y un carro que no se puede encontrar, siguen como antes: va contigo oculto.
+            ModoJugador modoParaSeguir = jugador.Modo;
+            if (enCarro.Controla)
+            {
+                enCarro.Avanzar(jugador.Modo, Time.deltaTime);
+                return;
+            }
+            if (jugador.Modo == ModoJugador.Carro && Siguiendo)
+            {
+                IMontable carro = AliadoEnCarro.MontableDelJugador();
+                if (carro != null)
+                {
+                    if (enCarro.Fase == AliadoEnCarro.FaseCarro.Fuera && enCarro.PuedeSubir(carro, Siguiendo))
+                    {
+                        enCarro.IniciarAcercar(carro);
+                    }
+                    if (enCarro.Fase == AliadoEnCarro.FaseCarro.Acercando && enCarro.AvanzarAcercando(Time.deltaTime))
+                    {
+                        return;
+                    }
+                    modoParaSeguir = ModoJugador.APie;
+                }
+            }
+            else if (enCarro.Fase == AliadoEnCarro.FaseCarro.Acercando)
+            {
+                enCarro.Reiniciar(); // bajaste antes de que llegara a la puerta
+            }
+            if (ReglaAliado.Decidir(Siguiendo, modoParaSeguir, 0f) == ReglaAliado.Accion.IrAbordo)
             {
                 PonerAbordo(true);
                 Colocar(posJugador);
@@ -276,7 +310,15 @@ namespace MechaCyberpunk.IA.Aliados
             Vector3 haciaJugador = posJugador - transform.position;
             haciaJugador.y = 0f;
             float dist = haciaJugador.magnitude;
-            ReglaAliado.Accion accion = ReglaAliado.Decidir(Siguiendo, jugador.Modo, dist);
+            ReglaAliado.Accion accion = ReglaAliado.Decidir(Siguiendo, modoParaSeguir, dist);
+            if (enCarro.Fase == AliadoEnCarro.FaseCarro.Acercando)
+            {
+                // Camina (corriendo) a la puerta del copiloto, no hacia ti.
+                Vector3 haciaPuerta = enCarro.PuertaMundo - transform.position;
+                haciaPuerta.y = 0f;
+                haciaJugador = haciaPuerta;
+                accion = ReglaAliado.Accion.Correr;
+            }
             if (abordo)
             {
                 // Bajaste del carro: aparece a tu lado.

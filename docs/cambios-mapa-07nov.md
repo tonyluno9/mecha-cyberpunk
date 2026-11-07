@@ -54,3 +54,15 @@ que tráfico, policía, peatones, misiones y el mapa lo sepan. Coordenadas del m
   las fachadas de los dos lados, cables de fachada a fachada a 7–11 m y charcos que reflejan. No se movió ni se apagó ningún edificio.
 - Las luces verdes del barrio (T-507) pasaron a magenta y turquesa (M11: Neón Alto es magenta). El volumen de zona de Neón Alto ahora tiene
   menos exposición, más saturación y un tinte hacia el magenta. No cambian ni el tráfico, ni el casino, ni sus puertas.
+
+## T-875: Nova (K06), lo mínimo para la demo
+- La Manzana_6 (sureste, sin lugares de la historia) tiene una calle ancha de Nova **sin tráfico** en el eje de la calle de K01: z = -43, de
+  x = 54 a 134 (arroyo de 10 m, banquetas de 4 m, fachadas en z = -52 y z = -34). Torres T20–T23 a los dos lados, bolardos, cámaras, botes y
+  luz fría. Cruce pintado en la calle de x = 141.
+- Edificios greybox apagados: 54, 57, 60 (fila de en medio) y 55, 58, 61 (fila del norte, que tapaban las torres).
+- La calle de K01, la de Suburbios y la de Nova van en el mismo eje (z = -43) de x = -134 a 134, cortadas solo por las tres calles con tráfico
+  (x = -47, 47 y 141), donde hay cruces pintados.
+
+## Colliders de las casas nuevas (para peatones y policía)
+- Las piezas de fachada del kit ya no chocan. Lo que choca es el cuerpo de cada casa, que empieza en su línea de fachada. Así las rutas de
+  banqueta de los peatones (a 2.4 m de la orilla de la manzana) no pegan con toldos, marcos ni tubos (PeatonesBarrioPruebas en verde).

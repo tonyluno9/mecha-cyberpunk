@@ -258,6 +258,18 @@ namespace MechaCyberpunk.Personaje.Visual
 
         public void Presumir() => Gestear(GestoVisual.Presumir);
 
+        // T-705: los NPC de Trafico (que no pueden referenciar este ensamblado) mandan estos mensajes con BroadcastMessage("Tumbar" / "Levantar" /
+        // "Telefonear" / "Burlar"); solo llega al modelo activo. Son lo que un personaje hace al caer, levantarse y llamar por teléfono.
+
+        /// <summary>Lo tira al suelo (igual que <see cref="Caido"/> = true).</summary>
+        public void Tumbar() => Caido = true;
+
+        /// <summary>Lo levanta (igual que <see cref="Caido"/> = false).</summary>
+        public void Levantar() => Caido = false;
+
+        /// <summary>Saca el teléfono (gesto Inter_Telefono).</summary>
+        public void Telefonear() => Gestear(GestoVisual.Telefono);
+
         /// <summary>True mientras la capa base juega un gesto, manejar o el celular (los estados con la etiqueta Gesto).</summary>
         public bool EnGesto
         {

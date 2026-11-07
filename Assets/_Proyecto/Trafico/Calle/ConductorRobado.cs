@@ -1,4 +1,3 @@
-using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Trafico.Peatones;
 using UnityEngine;
 
@@ -35,12 +34,11 @@ namespace MechaCyberpunk.Trafico.Calle
         private Vector3 amenaza;
         private float t;
         private PeatonMundo peaton;
-        private VisualPersonaje visual;
 
         public FaseConductor Fase { get; private set; } = FaseConductor.Sacado;
 
-        /// <summary>El visual (para pruebas): True mientras está tirado en el piso.</summary>
-        public bool Tirado => visual != null && visual.Caido;
+        /// <summary>True mientras está tirado en el piso (lo sacan y cae, hasta que empieza a levantarse).</summary>
+        public bool Tirado => peaton != null && !peaton.Muerto && (Fase == FaseConductor.Sacado || Fase == FaseConductor.Caido);
 
         /// <summary>
         /// Lo saca de <paramref name="asiento"/> a <paramref name="puerta"/> (en el piso) y lo deja caer. <paramref name="haciaQuien"/> es el jugador:
@@ -49,7 +47,6 @@ namespace MechaCyberpunk.Trafico.Calle
         public void Iniciar(Vector3 asiento, Vector3 puerta, Vector3 haciaQuien)
         {
             peaton = GetComponent<PeatonMundo>();
-            visual = GetComponentInChildren<VisualPersonaje>(false); // el modelo activo (el prefab trae persona y robot)
             amenaza = haciaQuien;
             hasta = PegarAlPiso(puerta);
             desde = new Vector3(asiento.x, hasta.y, asiento.z);
@@ -60,10 +57,12 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 transform.rotation = Quaternion.LookRotation(afuera.normalized, Vector3.up);
             }
-            if (visual != null)
+            if (peaton != null)
             {
-                visual.Caido = true;
+                peaton.Tumbado = true; // tirado no saca el teléfono
             }
+            // Mensajes de Unity: los atiende VisualPersonaje del modelo activo (Trafico no referencia ese ensamblado).
+            BroadcastMessage("Tumbar", SendMessageOptions.DontRequireReceiver);
         }
 
         private void Update()
@@ -91,16 +90,17 @@ namespace MechaCyberpunk.Trafico.Calle
                     if (t >= SegundosCaido)
                     {
                         Fase = FaseConductor.Levantandose;
-                        if (visual != null)
-                        {
-                            visual.Caido = false;
-                        }
+                        BroadcastMessage("Levantar", SendMessageOptions.DontRequireReceiver);
                     }
                     break;
                 case FaseConductor.Levantandose:
                     if (t >= SegundosCaido + SegundosLevantarse)
                     {
                         Fase = FaseConductor.Asustado;
+                        if (peaton != null)
+                        {
+                            peaton.Tumbado = false;
+                        }
                     }
                     break;
                 case FaseConductor.Asustado:

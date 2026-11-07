@@ -350,19 +350,20 @@ namespace MechaCyberpunk.Arte.Editor
 
             Medida mb = Medir(e.PlantaBaja);
             float altoBaja = mb.Caja.size.y * EscalaAlto;
-            GameObject baja = Pieza(casa.transform, e.PlantaBaja, centro + normal * mb.Muro, giro, new Vector3(ancho / mb.Caja.size.x, EscalaAlto, 1f));
+            GameObject baja = Pieza(casa.transform, e.PlantaBaja, centro + normal * mb.Muro, giro, new Vector3(ancho / mb.Caja.size.x, EscalaAlto, 1f), false);
             Ventanas(o, baja.transform, mb, e.LucesVentanas * 0.5f, 1.2f);
 
             Medida ma = Medir(e.PisoAlto);
             bool panel = ma.Caja.size.z < 1.2f;
             float altoAlto = ma.Caja.size.y * EscalaAlto;
             Vector3 baseAlto = centro + Vector3.up * altoBaja;
-            GameObject alto = Pieza(casa.transform, e.PisoAlto, baseAlto + normal * ma.Muro, giro, new Vector3(ancho / ma.Caja.size.x, EscalaAlto, 1f));
+            GameObject alto = Pieza(casa.transform, e.PisoAlto, baseAlto + normal * ma.Muro, giro, new Vector3(ancho / ma.Caja.size.x, EscalaAlto, 1f), false);
             Pintar(alto, e.ColorPiso);
             Ventanas(o, alto.transform, ma, e.LucesVentanas, 0f);
             float azotea = altoBaja + altoAlto;
 
-            // Cuerpo detrás de las piezas: llena el fondo de la cuadra (de atrás y de arriba es lo que se ve).
+            // Cuerpo detrás de las piezas: llena el fondo de la cuadra (de atrás y de arriba es lo que se ve). Su caja es la que choca: empieza
+            // en la línea de fachada, así lo que sale de las piezas (toldos, marcos, tubos) no estorba en la banqueta a los peatones.
             Vector3 cuerpoCentro = centro - normal * (fondo * 0.5f + 0.02f) + Vector3.up * (azotea - 0.02f) * 0.5f;
             Losa(o, casa.transform, "Cuerpo", cuerpoCentro, giro, new Vector3(ancho - 0.04f, azotea - 0.02f, fondo - 0.04f),
                 MatCuerpo(e.ColorPiso), 3f, true);

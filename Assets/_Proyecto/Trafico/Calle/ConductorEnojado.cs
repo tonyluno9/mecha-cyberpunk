@@ -1,4 +1,3 @@
-using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
 namespace MechaCyberpunk.Trafico.Calle
@@ -16,7 +15,6 @@ namespace MechaCyberpunk.Trafico.Calle
         private Vector3 puntoAmenaza;
         private float restante;
         private float proximoGesto;
-        private VisualPersonaje visual;
         private int gestos;
 
         /// <summary>Cuántos gestos de enojo hizo.</summary>
@@ -30,7 +28,6 @@ namespace MechaCyberpunk.Trafico.Calle
         {
             puntoAmenaza = haciaQuien;
             restante = Mathf.Max(0.1f, segundos);
-            visual = GetComponentInChildren<VisualPersonaje>(true);
             proximoGesto = Time.time + 0.3f;
             PegarAlPiso();
             Girar(1000f);
@@ -49,10 +46,7 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 proximoGesto = Time.time + SegundosEntreGestos;
                 gestos++;
-                if (visual != null)
-                {
-                    visual.Gestear(GestoVisual.Burla);
-                }
+                BroadcastMessage("Burlar", SendMessageOptions.DontRequireReceiver); // lo atiende VisualPersonaje del modelo activo (Trafico no lo referencia)
             }
         }
 
