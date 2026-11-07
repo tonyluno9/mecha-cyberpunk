@@ -91,6 +91,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private int respetoMostrado = -1;
         private bool arrancado;
         private bool cargadoAntes;
+        private AsaltoDinero asalto;
+        private int dineroRobadoGuardado;
 
         public PasoHistoria Paso => maquina.Paso;
         public bool Iniciado => arrancado;
@@ -103,7 +105,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         /// <summary>Todos los objetivos de la historia, para revisar que quepan en <see cref="LargoMaximoObjetivo"/> (D-tony-240).</summary>
         public static string[] TextosObjetivo => new[]
         {
-            TextoSalir, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
+            TextoSalir, AsaltoDinero.TextoPerseguir, AsaltoDinero.TextoRecuperar, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
         };
 
         /// <summary>T-716: el lugar de Core al que apunta el objetivo si el destino de la escena falta. Nunca una coordenada fija.</summary>
@@ -115,6 +117,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             switch (paso)
             {
                 case PasoHistoria.Despierta: return TextoSalir;
+                case PasoHistoria.Asalto: return AsaltoDinero.TextoPerseguir;
                 case PasoHistoria.PrimeraPelea: return TextoDefender;
                 case PasoHistoria.Pistola: return TextoPistola;
                 case PasoHistoria.Chato: return TextoChato;
@@ -134,6 +137,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         {
             pantalla = gameObject.AddComponent<PantallaHistoriaPandillas>();
             pantalla.ContinuaraCerrada += AlCerrarContinuara;
+            asalto = gameObject.AddComponent<AsaltoDinero>(); // T-717: la historia del dinero
+            asalto.Configurar(pantalla);
+            asalto.Terminado += AlTerminarAsalto;
             foreach (GameObject grupo in gruposTianguis)
             {
                 if (grupo != null)
@@ -204,6 +210,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             if (pantalla != null)
             {
                 pantalla.ContinuaraCerrada -= AlCerrarContinuara;
+            }
+            if (asalto != null)
+            {
+                asalto.Terminado -= AlTerminarAsalto;
             }
             if (arma != null)
             {
@@ -456,6 +466,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private void AlCerrarContinuara() => Avisar(AvisoHistoria.ContinuaraCerrado);
 
+        private void AlTerminarAsalto() => Avisar(AvisoHistoria.DineroRecuperado);
+
+        /// <summary>T-717: el asalto de la historia del dinero (para las pruebas).</summary>
+        public AsaltoDinero Asalto => asalto;
+
         // El profe ya hizo su regalo (si tocaba); aquí solo avanza el paso que le toca.
         private void AlUsarProfe(string id)
         {
@@ -519,6 +534,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         {
             PasoHistoria paso = maquina.Paso;
             respetoMostrado = -1;
+            if (paso != PasoHistoria.Asalto && asalto != null)
+            {
+                asalto.Cancelar(); // otro paso: se quita la cinemática y el dinero vuelve si seguía en manos del ladrón
+            }
             foreach (PandilleroAPie c in calaveras)
             {
                 if (c != null)
@@ -554,6 +573,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 case PasoHistoria.Despierta:
                     FijarObjetivo(TextoSalir, puertaCasa != null, puertaCasa != null ? puertaCasa.position : default);
+                    break;
+                case PasoHistoria.Asalto:
+                    int reponer = dineroRobadoGuardado; // una partida guardada a medio asalto: el dinero vuelve y el asalto empieza de nuevo
+                    dineroRobadoGuardado = 0;
+                    asalto.Iniciar(reponer); // pone su propio objetivo (el asaltante y luego el carro)
                     break;
                 case PasoHistoria.PrimeraPelea:
                     FijarObjetivo(TextoDefender, donaLupe != null, donaLupe != null ? donaLupe.position : default);
@@ -701,9 +725,22 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private class DatosGuardados
         {
             public string paso = nameof(PasoHistoria.Despierta);
+            public int dineroRobado; // T-717: dinero que tiene el asaltante en un guardado a medio asalto (solo se escribe si hay)
         }
 
-        public string Guardar() => JsonUtility.ToJson(new DatosGuardados { paso = maquina.Paso.ToString() });
+        [System.Serializable]
+        private class DatosPaso
+        {
+            public string paso;
+        }
+
+        public string Guardar()
+        {
+            // El formato de siempre ({"paso":"X"}); el dinero robado solo se agrega si hay un asalto a medias.
+            int robado = maquina.Paso == PasoHistoria.Asalto && asalto != null && asalto.DineroEnManosDelLadron ? asalto.DineroRobado : 0;
+            string texto = JsonUtility.ToJson(new DatosPaso { paso = maquina.Paso.ToString() });
+            return robado > 0 ? texto.Substring(0, texto.Length - 1) + ",\"dineroRobado\":" + robado + "}" : texto;
+        }
 
         public void Cargar(string datos)
         {
@@ -728,6 +765,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 paso = PasoHistoria.Despierta;
             }
             maquina.Iniciar(paso);
+            dineroRobadoGuardado = paso == PasoHistoria.Asalto ? Mathf.Max(0, leidos.dineroRobado) : 0;
             cargadoAntes = true;
             if (arrancado)
             {
