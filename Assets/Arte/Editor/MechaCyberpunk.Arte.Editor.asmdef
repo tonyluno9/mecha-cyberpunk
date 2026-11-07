@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Arte.Editor",
     "rootNamespace": "MechaCyberpunk.Arte.Editor",
-    "references": ["Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje.Visual.Editor", "MechaCyberpunk.Core", "MechaCyberpunk.Mundo", "MechaCyberpunk.Progresion.Prologo", "UnityEngine.UI", "MechaCyberpunk.Trafico", "MechaCyberpunk.Trafico.Editor", "MechaCyberpunk.Vehiculos", "MechaCyberpunk.Vehiculos.Editor", "MechaCyberpunk.Personaje", "MechaCyberpunk.Progresion.Apoyo", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Editor"],
+    "references": ["Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Personaje.Visual.Editor", "MechaCyberpunk.Core", "MechaCyberpunk.Mundo", "MechaCyberpunk.Progresion.Prologo", "UnityEngine.UI", "MechaCyberpunk.Trafico", "MechaCyberpunk.Trafico.Editor", "MechaCyberpunk.Vehiculos", "MechaCyberpunk.Vehiculos.Editor", "MechaCyberpunk.Personaje", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Apoyo", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Editor"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

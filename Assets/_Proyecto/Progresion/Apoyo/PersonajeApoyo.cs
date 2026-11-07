@@ -278,7 +278,8 @@ namespace MechaCyberpunk.Progresion.Apoyo
                 zona.Length > 0 ? territorio.Respeto(zona) : 0, ReglaTerritorio.UmbralJefe, zona.Length > 0 && territorio.Dueno(zona) == IdPandilla.Jugador, frase);
         }
 
-        private void Decir(string texto)
+        /// <summary>Su subtítulo ("EL DOC · JOEL: ..."); también lo usan otros (T-864: el regalo del implante).</summary>
+        public void Decir(string texto)
         {
             UltimoTexto = texto;
             PantallaHistoriaPandillas pantalla = FindFirstObjectByType<PantallaHistoriaPandillas>();

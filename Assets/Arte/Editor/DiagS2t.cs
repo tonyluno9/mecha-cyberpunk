@@ -387,6 +387,34 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2t.FotoHora(22f, new Vector3(-38.5f, 1.7f, -72f), new Vector3(-33f, 1.2f, -70.5f), ColocarS2t.CarpetaCapturas + "s2t-taller-dentro.png", 70f);
         }
 
+        public static void Consultorio()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (string r in new[] { "GTA_T417/Apoyo_JOEL", "S2_Interiores/ConsultorioDoc", "T531_Locales/IDI" })
+            {
+                Transform t = ColocarS2.Buscar(r);
+                if (t == null) { sb.AppendLine("FALTA " + r); continue; }
+                Renderer[] rs = t.GetComponentsInChildren<Renderer>();
+                Bounds b = rs.Length > 0 ? rs[0].bounds : new Bounds(t.position, Vector3.zero);
+                foreach (Renderer x in rs) b.Encapsulate(x.bounds);
+                sb.AppendLine(r + " p" + t.position.ToString("F1") + " limites " + b.min.ToString("F1") + ".." + b.max.ToString("F1"));
+                foreach (Transform h in t.Cast<Transform>()) sb.AppendLine("   " + h.name + (h.gameObject.activeSelf ? "" : " [apagado]"));
+            }
+            Transform forro = ColocarS2.Buscar("S2_Interiores/ConsultorioDoc/Forro");
+            if (forro != null)
+                foreach (Renderer x in forro.GetComponentsInChildren<Renderer>()) sb.AppendLine("  forro " + x.name + " c" + x.bounds.center.ToString("F2") + " s" + x.bounds.size.ToString("F2") + (x.GetComponent<Collider>() != null ? " con collider" : ""));
+            Physics.SyncTransforms();
+            Bounds caja = new Bounds(new Vector3(-100f, 2f, -13.1f), new Vector3(8f, 4f, 5.8f));
+            foreach (Vector3 d in new[] { Vector3.left, Vector3.right, Vector3.forward, Vector3.back })
+            {
+                Vector3 o = caja.center - d * 10f;
+                bool pega = Physics.Raycast(o, d, out RaycastHit h, 10f - Mathf.Abs(Vector3.Dot(caja.extents, d)) + 0.2f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+                sb.AppendLine("desde " + (-d) + ": " + (pega ? "pega en " + Ruta(h.collider.transform) + " a " + h.point.ToString("F1") : "NADA (lado abierto)"));
+            }
+            File.WriteAllText("Logs/s2t-diag-consultorio.txt", sb.ToString());
+        }
+
         public static void Todo()
         {
             Postes();

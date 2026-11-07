@@ -11,7 +11,8 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.Progresion.Apoyo
 {
     /// <summary>
-    /// La silla del Doc (T-813): un <see cref="IInteractuable"/>. Herido y con dinero, E te sienta (cobra lo mismo que EL DOC), congela el control,
+    /// La silla del Doc (T-813): un <see cref="IInteractuable"/>. Herido y con dinero, E te sienta (cobra lo mismo que EL DOC); sano, te sienta
+    /// gratis a una revisión (T-864). Congela el control,
     /// te pone en el asiento con <see cref="IJugador.Colocar"/> y una pose de sentado por huesos (<see cref="PoseSillaClinica"/>, sin tocar el
     /// Animator Controller), prende una cámara cercana, baja el brazo robótico (I06) con su luz latiendo, llena una barra de vida mientras te cura
     /// (<see cref="VidaAPie.CurarTodo"/> al final, el mismo modelo que el Curar del Doc), sube el brazo, te levanta, devuelve el control y la cámara
@@ -135,7 +136,8 @@ namespace MechaCyberpunk.Progresion.Apoyo
             }
             JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;
             VidaAPie vida = jugador.GetComponentInChildren<VidaAPie>();
-            if (!Registro<ICartera>.Actual.IntentarPagar(config.Costo, MotivoDinero.Clinica))
+            bool sano = vida.Actual >= vida.Maxima;
+            if (!sano && !Registro<ICartera>.Actual.IntentarPagar(config.Costo, MotivoDinero.Clinica))
             {
                 return;
             }
@@ -342,8 +344,9 @@ namespace MechaCyberpunk.Progresion.Apoyo
             }
             if (vida.Actual >= vida.Maxima)
             {
+                // T-864 (Tony): sano también te sientas (el Doc te revisa, sin cobrar).
                 texto = config.TextoSano;
-                return false;
+                return true;
             }
             if (!cartera.PuedePagar(config.Costo))
             {

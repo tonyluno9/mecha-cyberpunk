@@ -87039,6 +87039,7 @@ GameObject:
   - component: {fileID: 176475870}
   - component: {fileID: 176475872}
   - component: {fileID: 176475871}
+  - component: {fileID: 176475873}
   m_Layer: 0
   m_Name: MuroFondo
   m_TagString: Untagged
@@ -87068,7 +87069,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 176475869}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -87118,6 +87119,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 176475869}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &176475873
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176475869}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &176573988
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -364654,6 +364676,7 @@ GameObject:
   - component: {fileID: 672430943}
   - component: {fileID: 672430945}
   - component: {fileID: 672430944}
+  - component: {fileID: 672430946}
   m_Layer: 0
   m_Name: MuroDer
   m_TagString: Untagged
@@ -364683,7 +364706,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 672430942}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -364733,6 +364756,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 672430942}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &672430946
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672430942}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &672617211
 GameObject:
   m_ObjectHideFlags: 0
@@ -519571,6 +519615,7 @@ GameObject:
   - component: {fileID: 986767107}
   - component: {fileID: 986767109}
   - component: {fileID: 986767108}
+  - component: {fileID: 986767110}
   m_Layer: 0
   m_Name: MuroIzq
   m_TagString: Untagged
@@ -519600,7 +519645,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986767106}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -519650,6 +519695,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986767106}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &986767110
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986767106}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &987162943
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -732758,6 +732824,7 @@ GameObject:
   - component: {fileID: 1461437441}
   - component: {fileID: 1461437443}
   - component: {fileID: 1461437442}
+  - component: {fileID: 1461437444}
   m_Layer: 0
   m_Name: Techo
   m_TagString: Untagged
@@ -732787,7 +732854,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1461437440}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -732837,6 +732904,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1461437440}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1461437444
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461437440}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1461769700
 GameObject:
   m_ObjectHideFlags: 0
@@ -954777,6 +954865,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1945107206}
   - component: {fileID: 1945107207}
+  - component: {fileID: 1945107208}
   m_Layer: 0
   m_Name: Apoyo_JOEL
   m_TagString: Untagged
@@ -954815,6 +954904,22 @@ MonoBehaviour:
   datos: {fileID: 11400000, guid: 9ffe02012f993dd45bf21fb88afb779c, type: 2}
   mostrador: {fileID: 0}
   mostrarLetrero: 0
+--- !u!114 &1945107208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945107205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59241e7be4e55eb4db113bb69f98f9e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Apoyo::MechaCyberpunk.Progresion.Apoyo.RegaloImplanteDoc
+  doc: {fileID: 1945107207}
+  regalo: {fileID: 11400000, guid: a7ad202f4eb2cf24da54d7b5d30e9976, type: 2}
+  frase: "Toma, mijo, va por la casa: te puse un exo de piernas. Para lo dem\xE1s,
+    si\xE9ntate en la silla."
 --- !u!1001 &1945148953
 PrefabInstance:
   m_ObjectHideFlags: 0

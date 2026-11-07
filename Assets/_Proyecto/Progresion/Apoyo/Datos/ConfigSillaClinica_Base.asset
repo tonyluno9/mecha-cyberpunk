@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: ConfigSillaClinica_Base
   m_EditorClassIdentifier: MechaCyberpunk.Progresion.Apoyo::MechaCyberpunk.Progresion.Apoyo.ConfigSillaClinica
   costo: 50
-  fraseDoc: "Si\xE9ntate en la silla y te curo."
+  fraseDoc: "Si\xE9ntate en la silla, mijo; ah\xED te reviso."
   fraseFin: "Listo, como nuevo. Ten m\xE1s cuidado, mijo."
   formatoAviso: "SENTARTE \xB7 CURARTE {0}"
-  textoSano: "SILLA DEL DOC \xB7 EST\xC1S SANO"
+  textoSano: "SENTARTE \xB7 REVISI\xD3N GRATIS"
   textoSinDinero: "SILLA DEL DOC \xB7 NO TE ALCANZA"
   textoBarra: CURANDO
   nombreDoc: "EL DOC \xB7 JOEL"

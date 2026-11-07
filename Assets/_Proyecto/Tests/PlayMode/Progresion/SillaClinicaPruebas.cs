@@ -20,7 +20,7 @@ namespace MechaCyberpunk.Tests.Progresion
     /// <summary>
     /// T-813: la silla del Doc en una escena armada aquí (piso, JugadorAPie.prefab, una silla y un brazo de cubos). Herido, E en la silla te sienta
     /// (pose puesta, control congelado, cámara cercana encima de la del jugador), el brazo baja, la barra se llena y al terminar tienes la vida
-    /// llena, pagaste Ƀ50, te levantaste y el control volvió. Sano, la silla no se ofrece. Con CAPTURAR_S2N_SILLA=1 guarda
+    /// llena, pagaste Ƀ50, te levantaste y el control volvió. Sano, la silla se ofrece como revisión gratis (T-864). Con CAPTURAR_S2N_SILLA=1 guarda
     /// docs/capturas/s2n-silla-clinica.png.
     /// </summary>
     public class SillaClinicaPruebas : InputTestFixture
@@ -171,8 +171,8 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(controlador);
             Assert.AreSame(silla, SillaClinica.Actual, "EL DOC encuentra la silla");
 
-            // Sano: la silla no se ofrece.
-            Assert.IsFalse(silla.PuedeUsar, "sano no te sientas");
+            // T-864: sano también te sientas (revisión gratis), sin cobrar.
+            Assert.IsTrue(silla.PuedeUsar, "sano también te sientas");
             Assert.AreEqual(config.TextoSano, silla.Texto);
 
             vida.RecibirDanio(new InfoDanio(vida.Maxima * 0.5f, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
@@ -210,7 +210,9 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
             Assert.IsTrue(controlador.ControlActivo, "el control volvió");
             Assert.Less(Vector3.Distance(jugadorGo.transform.position, new Vector3(0.9f, 0.05f, 2.2f)), 0.3f, "quedó parado junto a la silla");
-            Assert.IsFalse(silla.PuedeUsar, "ya sano, no se ofrece otra vez");
+            // T-864: ya sano, la silla se ofrece como revisión gratis.
+            Assert.IsTrue(silla.PuedeUsar, "ya sano, se ofrece la revisión");
+            Assert.AreEqual(config.TextoSano, silla.Texto);
         }
     }
 }
