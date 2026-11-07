@@ -39,6 +39,12 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(0.05f)] [Tooltip("Aviso antes del disparo, con la luz del dron en rojo (s).")]
         [SerializeField] private float avisoDron = 0.3f;
 
+        [Header("Policías a pie (T-709)")]
+        [Min(0)] [Tooltip("Cuántos policías se bajan de cada patrulla al llegar.")]
+        [SerializeField] private int policiasPorPatrulla = 2;
+        [Min(0f)] [Tooltip("La patrulla baja a sus policías cuando queda a esta distancia extra de la de seguimiento (m).")]
+        [SerializeField] private float margenParaBajarPolicias = 1.5f;
+
         [Header("Vista y retirada de las patrullas (T-587)")]
         [Min(5f)] [Tooltip("Desde aquí una patrulla te ve si no hay una pared en medio (m).")]
         [SerializeField] private float radioVista = 70f;
@@ -52,6 +58,10 @@ namespace MechaCyberpunk.Trafico.Datos
         [SerializeField] private float velocidadMinimaCorte = 3f;
         [Min(10f)] [Tooltip("Una patrulla nueva sale al menos a esta distancia del jugador y fuera de la vista de la cámara (m).")]
         [SerializeField] private float distanciaMinimaSalida = 60f;
+        [Min(1f)] [Tooltip("T-708: una patrulla nueva sale de modo que tarde al menos estos segundos en llegar por las calles (s).")]
+        [SerializeField] private float segundosMinimosLlegadaPatrulla = 7f;
+        [Min(1f)] [Tooltip("T-708: tiempo de llegada que busca al elegir dónde sale (s).")]
+        [SerializeField] private float segundosLlegadaPatrulla = 12f;
         [Min(1f)] [Tooltip("Una patrulla que se retira desaparece solo fuera de la vista y a más de esta distancia del jugador (m).")]
         [SerializeField] private float distanciaRetiro = 60f;
         [Min(1f)] [Tooltip("Si tras tantos segundos de retirada sigue a la vista, desaparece de todos modos (s).")]
@@ -109,6 +119,11 @@ namespace MechaCyberpunk.Trafico.Datos
         public float VelocidadMinimaCorte => velocidadMinimaCorte;
         public float DistanciaMinimaSalida => distanciaMinimaSalida;
         public float DistanciaRetiro => distanciaRetiro;
+        public float SegundosMinimosLlegadaPatrulla => segundosMinimosLlegadaPatrulla;
+        public float SegundosLlegadaPatrulla => segundosLlegadaPatrulla;
+        public float VelocidadPatrulla => velocidadPatrulla;
+        public int PoliciasPorPatrulla => policiasPorPatrulla;
+        public float DistanciaParaBajarPolicias => distanciaSeguimiento + margenParaBajarPolicias;
         public float SegundosMaximosRetiro => segundosMaximosRetiro;
 
         public int NivelDisparoDron => nivelDisparoDron;

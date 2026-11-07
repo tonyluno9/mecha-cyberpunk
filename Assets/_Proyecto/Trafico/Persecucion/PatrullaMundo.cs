@@ -10,7 +10,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
     /// Una patrulla (T-341, T-587): recorre el <see cref="GrafoCalles"/> hacia el cruce más cercano al jugador, siempre sobre el eje de las calles.
     /// Solo sabe dónde estás mientras te ve (a menos de <see cref="ConfigPersecucion.RadioVista"/> m y sin pared en medio); si te pierde de vista va a donde
     /// te vio por última vez. Las que "cortan el paso" se adelantan al cruce hacia donde corres. Al bajar el calor <see cref="Retirar"/> la manda por la calle
-    /// hasta salir de la vista, donde desaparece. Sus luces rojas y azules alternan con <see cref="ConfigPersecucion.PeriodoSirena"/>. Sin colliders.
+    /// hasta salir de la vista, donde desaparece. Sus luces rojas y azules alternan con <see cref="ConfigPersecucion.PeriodoSirena"/>.
+    /// T-707: es un carro de verdad (el de Vehiculos, con cuerpo cinemático y colliders, igual que los del tráfico): es sólido y se puede robar. Al subir el
+    /// jugador deja de ser patrulla (pasa a ser carro suyo) y, mientras vaya en ella, la policía lo ubica siempre (GPS).
     /// </summary>
     public class PatrullaMundo : MonoBehaviour
     {
@@ -52,6 +54,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private int bucleSirena = Sonidos.SinBucle;
         private float proximoMegafono;
 
+        [Tooltip("T-707: altura (m) a la que va la raíz sobre la calle si no se puede medir el modelo.")]
+        [Min(0f)] [SerializeField] private float alturaRaiz = 0.3f;
+        [Tooltip("T-709: el policía a pie que se baja al llegar (IA/Prefabs/PoliciaAPie). Sin él no se baja nadie.")]
+        [SerializeField] private GameObject prefabPolicia;
         [Tooltip("Luces de la sirena: la primera es roja y la segunda azul; alternan.")]
         [SerializeField] private Light luzRoja;
         [SerializeField] private Light luzAzul;
@@ -73,8 +79,212 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         public static IReadOnlyList<PatrullaMundo> Activas => ActivasLista;
 
+        // T-707: las patrullas robadas con el jugador adentro (mientras haya una, la policía lo ubica con el GPS).
+        private static readonly List<PatrullaMundo> ConJugadorLista = new List<PatrullaMundo>();
+
+        /// <summary>T-707: True mientras el jugador va dentro de una patrulla robada: la policía siempre sabe dónde está.</summary>
+        public static bool JugadorEnPatrulla => ConJugadorLista.Count > 0;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void Limpiar() => ActivasLista.Clear();
+        private static void Limpiar()
+        {
+            ActivasLista.Clear();
+            ConJugadorLista.Clear();
+        }
+
+        /// <summary>T-707: True si el jugador ya se la robó: deja de ser de la policía y es un carro suyo.</summary>
+        public bool Robada { get; private set; }
+
+        /// <summary>T-707: True mientras el jugador va adentro.</summary>
+        public bool ConJugador => montable != null && montable.Ocupado;
+
+        private Rigidbody cuerpo;
+        private IMontable montable;
+        private Renderer[] visuales;
+        private float raizABajo = -1f;
+        private float alturaSuelo;
+        private float objetivoSuelo;
+        private float proximoRayoSuelo;
+        private readonly RaycastHit[] golpesSuelo = new RaycastHit[8];
+        private readonly RaycastHit[] golpesRayo = new RaycastHit[16];
+        private const float SegundosEntreRayosSuelo = 0.3f;
+        private const float VelocidadAjusteSuelo = 6f;
+        private const float AltoRayoSuelo = 2f;
+        private const float LargoRayoSuelo = 10f;
+        private const float MinimoRaizABajo = 0.05f;
+        private const float MaximoRaizABajo = 1.2f;
+
+        /// <summary>T-707: qué tan abajo de la raíz quedan las ruedas (m).</summary>
+        public float RaizABajo => raizABajo >= 0f ? raizABajo : alturaRaiz;
+
+        private void Awake()
+        {
+            cuerpo = GetComponent<Rigidbody>();
+            montable = GetComponent<IMontable>();
+            List<Renderer> mallas = new List<Renderer>();
+            foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
+            {
+                if (r is MeshRenderer || r is SkinnedMeshRenderer)
+                {
+                    mallas.Add(r);
+                }
+            }
+            visuales = mallas.ToArray();
+            raizABajo = MedirRaizABajo();
+            if (montable != null)
+            {
+                montable.OcupadoCambio += AlCambiarOcupado;
+            }
+        }
+
+        /// <summary>T-709: los policías que se bajaron de esta patrulla.</summary>
+        public IReadOnlyList<GameObject> Policias => policias;
+
+        /// <summary>T-709: True si ya bajó a sus policías (lo hace una sola vez, al llegar).</summary>
+        public bool PoliciasBajaron { get; private set; }
+
+        private readonly List<GameObject> policias = new List<GameObject>();
+        private const float SeparacionPuerta = 1.9f;
+        private const float SeparacionEntrePolicias = 0.9f;
+        private const float AlturaSobreSuelo = 0.05f;
+
+        /// <summary>T-709: al llegar junto al jugador, los policías abren la puerta y se bajan, uno por cada lado de la patrulla.</summary>
+        public void BajarPolicias()
+        {
+            if (PoliciasBajaron || prefabPolicia == null || config == null || Robada)
+            {
+                return;
+            }
+            PoliciasBajaron = true;
+            Vector3? jugador = posicionJugador?.Invoke();
+            for (int i = 0; i < config.PoliciasPorPatrulla; i++)
+            {
+                float lado = i % 2 == 0 ? 1f : -1f;
+                Vector3 punto = transform.position + transform.right * (lado * SeparacionPuerta) - transform.forward * (SeparacionEntrePolicias * (i / 2));
+                punto.y = BuscarSuelo(punto, transform.position.y, transform.position.y - RaizABajo) + AlturaSobreSuelo;
+                Vector3 mirada = (jugador ?? transform.position + transform.forward) - punto;
+                mirada.y = 0f;
+                Quaternion giro = mirada.sqrMagnitude > 0.01f ? Quaternion.LookRotation(mirada) : transform.rotation;
+                GameObject policia = Instantiate(prefabPolicia, punto, giro);
+                policia.name = "Policia_" + (i + 1);
+                policias.Add(policia);
+            }
+            Sonidos.ReproducirEn("VEH_PUERTA_ABRIR", transform.position);
+        }
+
+        private void OnDestroy()
+        {
+            if (!Robada)
+            {
+                foreach (GameObject policia in policias)
+                {
+                    if (policia != null)
+                    {
+                        Destroy(policia);
+                    }
+                }
+            }
+            ConJugadorLista.Remove(this);
+            if (montable != null)
+            {
+                montable.OcupadoCambio -= AlCambiarOcupado;
+            }
+        }
+
+        private float MedirRaizABajo()
+        {
+            bool hay = false;
+            float bajo = float.MaxValue;
+            foreach (Renderer r in visuales)
+            {
+                if (r.enabled)
+                {
+                    bajo = Mathf.Min(bajo, r.bounds.min.y);
+                    hay = true;
+                }
+            }
+            return hay ? Mathf.Clamp(transform.position.y - bajo, MinimoRaizABajo, MaximoRaizABajo) : alturaRaiz;
+        }
+
+        // T-707: el jugador subió (solo puede si la patrulla está detenida): pasa a ser un carro suyo, con física completa.
+        private void AlCambiarOcupado(bool ocupado)
+        {
+            if (!ocupado)
+            {
+                ConJugadorLista.Remove(this);
+                return;
+            }
+            if (!ConJugadorLista.Contains(this))
+            {
+                ConJugadorLista.Add(this);
+            }
+            if (Robada)
+            {
+                return;
+            }
+            Robada = true;
+            VeAlJugador = false;
+            VaDirecto = false;
+            // Ya es un carro suelto del jugador: su suspensión y sus choques ignoran lo que comparta su raíz, y colgada del barrio compartiría la del suelo.
+            transform.SetParent(null, true);
+            if (cuerpo != null)
+            {
+                cuerpo.isKinematic = false;
+                cuerpo.interpolation = RigidbodyInterpolation.Interpolate;
+                cuerpo.linearVelocity = Vector3.zero;
+                cuerpo.angularVelocity = Vector3.zero;
+            }
+            PonerLuces(false, false);
+            enabled = false; // OnDisable apaga la sirena y la quita de las activas
+        }
+
+        // Rayo hacia abajo desde un poco arriba de la patrulla: el suelo es lo primero sólido que no sea ella, otro carro ni gente.
+        private float BuscarSuelo(Vector3 xz, float desdeY, float respaldo)
+        {
+            Vector3 origen = new Vector3(xz.x, desdeY + AltoRayoSuelo, xz.z);
+            int n = Physics.RaycastNonAlloc(origen, Vector3.down, golpesSuelo, LargoRayoSuelo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            float menor = float.MaxValue;
+            float y = respaldo;
+            for (int i = 0; i < n; i++)
+            {
+                Collider c = golpesSuelo[i].collider;
+                if (c == null || c.transform.IsChildOf(transform) || c.attachedRigidbody != null || c.GetComponentInParent<Peatones.PeatonMundo>() != null)
+                {
+                    continue;
+                }
+                if (golpesSuelo[i].distance < menor)
+                {
+                    menor = golpesSuelo[i].distance;
+                    y = golpesSuelo[i].point.y;
+                }
+            }
+            return y;
+        }
+
+        private void SeguirElSuelo(float dt)
+        {
+            if (Time.time >= proximoRayoSuelo)
+            {
+                proximoRayoSuelo = Time.time + SegundosEntreRayosSuelo;
+                objetivoSuelo = BuscarSuelo(posicion, alturaSuelo, objetivoSuelo);
+            }
+            alturaSuelo = Mathf.MoveTowards(alturaSuelo, objetivoSuelo, VelocidadAjusteSuelo * dt);
+        }
+
+        // Nada sólido en el rayo (el de la propia patrulla no cuenta: su origen puede quedar dentro de su carrocería).
+        private bool RayoLibre(Vector3 origen, Vector3 direccion, float largo)
+        {
+            int n = Physics.RaycastNonAlloc(origen, direccion, golpesRayo, largo, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                Collider c = golpesRayo[i].collider;
+                if (c != null && !c.transform.IsChildOf(transform))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         /// <summary>True si va directo al jugador (ya dejó la calle).</summary>
         public bool VaDirecto { get; private set; }
@@ -112,7 +322,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
             velocidadJugador = Vector3.zero;
             // La policía sabe por la radio dónde fue el aviso: ahí va primero.
             ultimaVista = posicionJugador?.Invoke() ?? posicion;
-            transform.position = posicion;
+            alturaSuelo = BuscarSuelo(posicion, posicion.y, posicion.y);
+            objetivoSuelo = alturaSuelo;
+            proximoRayoSuelo = Time.time + SegundosEntreRayosSuelo;
+            transform.position = new Vector3(posicion.x, alturaSuelo + RaizABajo, posicion.z);
+            if (cuerpo != null)
+            {
+                cuerpo.isKinematic = true;
+                cuerpo.interpolation = RigidbodyInterpolation.None; // la mueve este script con el transform: la interpolación del cuerpo lo contradice
+            }
             if (bucleSirena == Sonidos.SinBucle)
             {
                 bucleSirena = Sonidos.ReproducirBucle("CAL_PATRULLA_SIRENA", transform);
@@ -122,7 +340,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>T-587: deja de perseguir y se va por la calle al nodo más lejano del jugador; desaparece cuando ya no se ve.</summary>
         public void Retirar()
         {
-            if (Retirando || calles == null)
+            if (Retirando || calles == null || Robada)
             {
                 return;
             }
@@ -176,6 +394,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return;
             }
             float dtReal = Time.deltaTime;
+            SeguirElSuelo(dtReal);
             factorVelocidad = Mathf.MoveTowards(factorVelocidad, FactorDeFreno(), RapidezDeFreno * dtReal);
             Conducir();
             AplicarCarril(dtReal);
@@ -201,7 +420,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             float dt = Time.deltaTime * factorVelocidad;
             float distanciaReal = DistanciaPlano(posicion, jugador.Value);
             bool libre = CaminoLibre(jugador.Value, distanciaReal, AlturaVista);
-            VeAlJugador = distanciaReal <= config.RadioVista && CaminoLibre(jugador.Value, distanciaReal, AlturaOjos);
+            // T-707: con el jugador en una patrulla robada la policía lo ubica siempre (GPS), esté donde esté.
+            VeAlJugador = JugadorEnPatrulla || (distanciaReal <= config.RadioVista && CaminoLibre(jugador.Value, distanciaReal, AlturaOjos));
             MedirVelocidad(jugador.Value, Time.deltaTime);
             if (VeAlJugador)
             {
@@ -215,6 +435,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 Sonidos.ReproducirEn("CAL_PATRULLA_MEGAFONO", transform.position);
             }
             VaDirecto = VeAlJugador && distancia <= DistanciaDirecta && libre;
+            if (!PoliciasBajaron && VaDirecto && distancia <= config.DistanciaParaBajarPolicias)
+            {
+                BajarPolicias();
+            }
             if (VaDirecto)
             {
                 Directo(objetivo, dt);
@@ -314,7 +538,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3 origen = posicion + Vector3.up * altura;
             Vector3 destino = new Vector3(jugador.x, origen.y, jugador.z);
             Vector3 direccion = (destino - origen).normalized;
-            return !Physics.Raycast(origen, direccion, largo, ~0, QueryTriggerInteraction.Ignore);
+            return RayoLibre(origen, direccion, largo);
         }
 
         // T-581: de vuelta a la calle por las migas que dejó al ir directo (nunca en línea recta por donde no sabe qué hay).
@@ -393,7 +617,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 ObstaculoTotal = false;
             }
             desvioCarril = Mathf.MoveTowards(desvioCarril, meta, VelocidadCarril * dt);
-            transform.position = posicion + transform.right * desvioCarril;
+            Vector3 sobreLaCalle = posicion + transform.right * desvioCarril;
+            sobreLaCalle.y = alturaSuelo + RaizABajo;
+            transform.position = sobreLaCalle;
         }
 
         /// <summary>Metros que se separa de la línea central de la calle: positivo a la derecha, negativo a la izquierda.</summary>

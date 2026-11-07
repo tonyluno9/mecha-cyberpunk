@@ -41,8 +41,10 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Patrulla_ConElModeloV05_SinLosCubos()
         {
             GameObject patrulla = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Trafico/Prefabs/Patrulla.prefab");
-            Assert.IsNotNull(patrulla.transform.Find("Visual_T532"), "Modelo nuevo");
-            Assert.IsFalse(patrulla.transform.Find("Carroceria").GetComponent<Renderer>().enabled, "Sin la carrocería de cubos");
+            // T-707: la patrulla es el carro V05 de Vehiculos (su modelo va en Visual_T511); ya no lleva el cuerpo de cubos.
+            Assert.IsNotNull(patrulla.transform.Find("Visual_T511"), "Modelo nuevo");
+            Renderer cubos = patrulla.transform.Find("Carroceria").GetComponent<Renderer>();
+            Assert.IsFalse(cubos != null && cubos.enabled, "Sin la carrocería de cubos");
         }
 
         [Test]
