@@ -25,6 +25,8 @@ namespace MechaCyberpunk.IA.APie
         private static readonly int IdColor = Shader.PropertyToID("_BaseColor");
 
         [SerializeField] private DatosPandilleroAPie datos;
+        [Tooltip("T-714: siempre en alerta contra el jugador (los SKULLS de refuerzo que bajan del carro), aunque no tengan un grupo con territorio.")]
+        [SerializeField] private bool siempreAlerta;
         [Tooltip("Cuerpo que parpadea al recibir daño.")]
         [SerializeField] private Renderer cuerpo;
         [Tooltip("Pivote del hombro del brazo que golpea. Sube durante el aviso.")]
@@ -141,7 +143,7 @@ namespace MechaCyberpunk.IA.APie
                         visual.Burlar();
                     }
                 }
-                alerta = value || (datos != null && datos.EsPolicia);
+                alerta = value || siempreAlerta || (datos != null && datos.EsPolicia);
             }
         }
 
@@ -252,7 +254,7 @@ namespace MechaCyberpunk.IA.APie
             }
             patrulla = new CalculoPatrullaPandillero(datos.RadioPatrulla, datos.EsperaPatrullaMinima, datos.EsperaPatrullaMaxima,
                 datos.MargenLlegada, datos.SegundosAtascoPatrulla, () => UnityEngine.Random.value);
-            alerta = datos.EsPolicia; // T-709: el policía siempre está en alerta contra el jugador
+            alerta = datos.EsPolicia || siempreAlerta; // T-709: el policía siempre está en alerta contra el jugador; T-714: y el refuerzo de los SKULLS
             bloque = new MaterialPropertyBlock();
             if (!tieneHogar)
             {
