@@ -48,3 +48,9 @@ que tráfico, policía, peatones, misiones y el mapa lo sepan. Coordenadas del m
 - Se quedan igual: el clandestino (Lugar_Clandestino), el bar (Lugar_Bar), el callejón del mercado de armas (PuestosCallejon) y todos los
   puestos del tianguis. Sin focos colgando. Hay cables que cruzan la avenida de casa a casa (a ~6 m de alto) y charcos en el arroyo.
 - La avenida, sus banquetas y el tráfico no cambian.
+
+## T-874: Neón Alto (K03)
+- La calle del casino (x = 47, de z = 10 a 86) lleva unos 30 letreros de neón chicos (magenta y turquesa, con luz que se prende de noche) en
+  las fachadas de los dos lados, cables de fachada a fachada a 7–11 m y charcos que reflejan. No se movió ni se apagó ningún edificio.
+- Las luces verdes del barrio (T-507) pasaron a magenta y turquesa (M11: Neón Alto es magenta). El volumen de zona de Neón Alto ahora tiene
+  menos exposición, más saturación y un tinte hacia el magenta. No cambian ni el tráfico, ni el casino, ni sus puertas.

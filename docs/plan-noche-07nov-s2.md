@@ -27,5 +27,5 @@ con la sesión 1 (T-69x).
 | T-871 | Kit de manzanas: frentes de cuadra A–F (prefabs), esquina como K05 (semáforo, cruces, negocios, FARMACIA) y variante Nova como K06 | hecha |
 | T-872 | Suburbios con el kit (ruta de la demo): calle de norte a sur con el cruce de K05, calle de K01 hasta x = 47, casas del kit en la manzana de la casa | hecha |
 | T-873 | El Mercado: el tianguis de la avenida entre casas con locales del kit (K02), cables que cruzan, charcos, sin focos colgando | hecha |
-| T-874 | Neón Alto | |
+| T-874 | Neón Alto: neones magenta y turquesa en la calle del casino, cables, charcos, luces sin verde (K03) | hecha |
 | T-875 | Nova | |
