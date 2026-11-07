@@ -1,0 +1,92 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/logo",
+ "trabajos": [
+  {
+   "id": "LG07",
+   "archivo": "LG07_DosTonos",
+   "fase": 1,
+   "salida": "imageassets/logo/LG07_DosTonos.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/logo/LG05_Minimal.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo as the starting point and keep its base exactly: the same thin, clean, geometric, modern sans-serif capital letters with wide letter spacing, the same soft white glow, the same proportions and placement, centered on a PURE BLACK (#000000) flat background with nothing else. The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and perfectly legible, no extra letters, no other words, no tagline. Only change this: two tones: the letters \"CYBER\" in white and the letters \"CITY\" in turquoise with a soft turquoise glow, the same thin weight for all letters, and the thin turquoise light line appears only under \"CITY\", not under \"CYBER\"."
+  },
+  {
+   "id": "LG08",
+   "archivo": "LG08_Cortes",
+   "fase": 1,
+   "salida": "imageassets/logo/LG08_Cortes.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/logo/LG05_Minimal.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo as the starting point and keep its base exactly: the same thin, clean, geometric, modern sans-serif capital letters with wide letter spacing, the same soft white glow, the same proportions and placement, centered on a PURE BLACK (#000000) flat background with nothing else. The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and perfectly legible, no extra letters, no other words, no tagline. Only change this: add a few fine precision cuts to the letters, like a tech brand wordmark: a thin diagonal cut through each C, the Y drawn with its two arms not touching the stem (an open Y), and the middle bar of the E separated from its spine by a small gap. Keep only a few cuts so it stays clean and readable. Keep the thin turquoise line below."
+  },
+  {
+   "id": "LG09",
+   "archivo": "LG09_Skyline",
+   "fase": 1,
+   "salida": "imageassets/logo/LG09_Skyline.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/logo/LG05_Minimal.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo as the starting point and keep its base exactly: the same thin, clean, geometric, modern sans-serif capital letters with wide letter spacing, the same soft white glow, the same proportions and placement, centered on a PURE BLACK (#000000) flat background with nothing else. The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and perfectly legible, no extra letters, no other words, no tagline. Only change this: the thin turquoise line under the word turns into a minimal city skyline drawn with a single very thin 1 pixel turquoise line: low houses with small water tanks on their roofs, utility poles with sagging cables between them, and one tall slim tower rising near the middle with a tiny light at its top, the line fading out at both ends."
+  },
+  {
+   "id": "LG10",
+   "archivo": "LG10_Glitch",
+   "fase": 1,
+   "salida": "imageassets/logo/LG10_Glitch.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/logo/LG05_Minimal.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo as the starting point and keep its base exactly: the same thin, clean, geometric, modern sans-serif capital letters with wide letter spacing, the same soft white glow, the same proportions and placement, centered on a PURE BLACK (#000000) flat background with nothing else. The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and perfectly legible, no extra letters, no other words, no tagline. Only change this: a very subtle glitch only: one thin horizontal slice through the word shifted a little to the side, and a slight magenta and cyan color offset on only two or three letters. Everything else stays exactly like the attached logo, including the thin turquoise line below."
+  },
+  {
+   "id": "LG11",
+   "archivo": "LG11_Peso",
+   "fase": 1,
+   "salida": "imageassets/logo/LG11_Peso.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/logo/LG05_Minimal.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo as the starting point and keep its base exactly: the same thin, clean, geometric, modern sans-serif capital letters with wide letter spacing, the same soft white glow, the same proportions and placement, centered on a PURE BLACK (#000000) flat background with nothing else. The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and perfectly legible, no extra letters, no other words, no tagline. Only change this: contrast of weights in a single line: \"CYBER\" stays in the same thin weight in white, and \"CITY\" becomes a bold heavy weight of the same geometric typeface in white, with a turquoise glow only around \"CITY\". Keep the thin turquoise line below the whole word."
+  },
+  {
+   "id": "LG12",
+   "archivo": "LG12_Firma",
+   "fase": 1,
+   "salida": "imageassets/logo/LG12_Firma.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/logo/LG05_Minimal.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo as the starting point and keep its base exactly: the same thin, clean, geometric, modern sans-serif capital letters with wide letter spacing, the same soft white glow, the same proportions and placement, centered on a PURE BLACK (#000000) flat background with nothing else. The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and perfectly legible, no extra letters, no other words, no tagline. Only change this: one signature detail: the letter I in \"CITY\" becomes a slim street light pole drawn in the same thin white line, with a small lamp head curving over the top that glows warm orange and casts a soft orange glow; the I must still read clearly as the letter I. Keep the thin turquoise line below."
+  }
+ ]
+}

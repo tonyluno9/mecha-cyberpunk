@@ -1,0 +1,202 @@
+{
+ "version": 1,
+ "rutas_relativas_a": "raíz del repo mecha-cyberpunk",
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "trabajos": [
+  {
+   "id": "UI01_MarcoPanel",
+   "archivo": "UI01_MarcoPanel",
+   "salida": "imageassets/ui/UI01_MarcoPanel.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Single empty video game UI panel frame, front view, perfectly flat 2D, centered, isolated on a plain flat medium grey background. Rectangular frame with cut 45-degree corners on the top-left and bottom-right, thick dark charcoal border with a thin neon orange inner line and small teal accent ticks on the corners, dark navy translucent-looking fill, subtle scanlines. Cyberpunk street style, clean vector-like edges, hand-painted feel. Designed to be stretched as a 9-slice: the straight edges must be uniform and the decoration only on the corners. No text, no letters, no icons, no logos. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI02_Botones",
+   "archivo": "UI02_Botones",
+   "salida": "imageassets/ui/UI02_Botones.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Sheet of three identical video game UI menu buttons stacked vertically, perfectly flat 2D front view, isolated on a plain flat medium grey background, evenly spaced. Each is a wide horizontal button with cut 45-degree corners. Top: normal state, dark navy fill with a thin pale teal border. Middle: hover state, same with a brighter neon orange border and a short orange underline at the bottom-left. Bottom: pressed state, filled with dark orange and a glowing orange border. Cyberpunk street style, clean edges, hand-painted feel. Empty, no text, no letters, no icons. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI03_BarraVida",
+   "archivo": "UI03_BarraVida",
+   "salida": "imageassets/ui/UI03_BarraVida.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Single empty video game health bar frame, perfectly flat 2D front view, centered, isolated on a plain flat medium grey background. Long horizontal bar with angled cut ends, thick dark charcoal border with thin teal inner line, empty dark inside (the fill is added later), and on the left end a small square badge with a bold white heart icon. Cyberpunk street style, clean edges, hand-painted feel. No text, no letters, no numbers. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI04_BarraCalor",
+   "archivo": "UI04_BarraCalor",
+   "salida": "imageassets/ui/UI04_BarraCalor.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Single empty video game wanted-level heat meter, perfectly flat 2D front view, centered, isolated on a plain flat medium grey background. A small badge with a bold flame icon on the left, followed by five separate slanted parallelogram segments in a row, all empty with dark fill and thin neon orange borders. Cyberpunk street style, clean edges, hand-painted feel. No text, no letters, no numbers. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI05_SimboloBiits",
+   "archivo": "UI05_SimboloBiits",
+   "salida": "imageassets/ui/UI05_SimboloBiits.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Single currency symbol icon for a video game, perfectly flat 2D front view, centered, isolated on a plain flat medium grey background. A bold stylized capital letter B with two short horizontal bars crossing it, like a digital coin symbol, inside a small hexagonal coin shape. Neon teal with a soft glow and a dark outline. Cyberpunk street style, clean edges. Only that symbol, no other text. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI06_IconosArmas",
+   "archivo": "UI06_IconosArmas",
+   "salida": "imageassets/ui/UI06_IconosArmas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Sheet of five weapon silhouette icons for a video game HUD, perfectly flat 2D side view, isolated on a plain flat medium grey background, evenly spaced in one row, same scale style and line weight: a clenched fist, a pistol, a pump shotgun, an assault rifle, and a long sniper rifle with scope. Solid neon orange fill with a thin dark outline, all pointing right. Cyberpunk street style, clean vector-like shapes. No text, no letters, no numbers. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI07_IconosEstado",
+   "archivo": "UI07_IconosEstado",
+   "salida": "imageassets/ui/UI07_IconosEstado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Sheet of six small status icons for a video game HUD, perfectly flat 2D, isolated on a plain flat medium grey background, evenly spaced in one row, same size and line weight: a raised fist (respect), a flame (heat), three small person silhouettes (allies), a cybernetic eye (implants), a diamond-shaped target marker (objective), and a smartphone (phone). Solid white with a teal accent and thin dark outline. Cyberpunk street style, clean vector-like shapes. No text, no letters. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI08_IconosMapa",
+   "archivo": "UI08_IconosMapa",
+   "salida": "imageassets/ui/UI08_IconosMapa.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Sheet of seven round map marker icons for a video game minimap, perfectly flat 2D, isolated on a plain flat medium grey background, evenly spaced in one row, each a small circle badge with a dark fill and a colored ring: a house (orange ring), a crate with a gun (black market, magenta ring), a medical cross with a circuit (clinic, teal ring), a wrench and gear (workshop, orange ring), a cocktail glass (bar, purple ring), a casino chip (casino, green ring), an exclamation mark (mission, yellow ring). White symbols, clean vector-like shapes. No text, no letters. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI09_InsigniasPandillas",
+   "archivo": "UI09_InsigniasPandillas",
+   "salida": "imageassets/ui/UI09_InsigniasPandillas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Sheet of three gang emblem badges for a video game, perfectly flat 2D, isolated on a plain flat medium grey background, evenly spaced in one row, same size, each inside an angular shield shape with cut corners: first, a sugar-skull style skull glowing neon magenta; second, a coiled snake head glowing acid green; third, a neutral emblem of a raised fist with a lightning bolt glowing neon orange. Thick dark outlines, cyberpunk street graffiti style, clean shapes. No text, no letters. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI10_Reticulas",
+   "archivo": "UI10_Reticulas",
+   "salida": "imageassets/ui/UI10_Reticulas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Sheet of three aiming reticles for a video game, perfectly flat 2D, isolated on a plain flat dark charcoal background, evenly spaced in one row: first, a small minimal crosshair of four short teal lines with a center dot; second, a sniper scope reticle, a thin circle with fine cross lines and range ticks; third, a hit marker of four short white diagonal lines forming an X. Thin crisp glowing lines. No text, no letters, no numbers. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI11_MarcoMinimapa",
+   "archivo": "UI11_MarcoMinimapa",
+   "salida": "imageassets/ui/UI11_MarcoMinimapa.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Single empty round minimap frame for a video game HUD, perfectly flat 2D front view, centered, isolated on a plain flat medium grey background. A thick circular ring in dark charcoal with a neon orange outer line, small teal tick marks around it like a compass, a small north triangle at the top, and an empty transparent-looking dark center (the map is added later). Cyberpunk street style, clean edges. No text, no letters. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI12_PanelArma",
+   "archivo": "UI12_PanelArma",
+   "salida": "imageassets/ui/UI12_PanelArma.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-hud.png",
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Single empty weapon panel for a video game HUD, perfectly flat 2D front view, centered, isolated on a plain flat medium grey background. A panel with cut corners and a thick teal border: a large empty area at the top for the weapon icon and ammo, and below it a row of five small empty square slots with thin borders, the first one highlighted in neon orange. Dark navy fill, cyberpunk street style, clean edges. No text, no letters, no numbers, no icons. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI13_Logo",
+   "archivo": "UI13_Logo",
+   "salida": "imageassets/ui/UI13_Logo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Video game logo reading \"CYBERFIX\", centered, isolated on a plain flat dark charcoal background. Bold aggressive condensed italic futuristic letters in neon orange with a soft outer glow and a thin dark outline, a subtle teal edge highlight, clean and sharp with no glitch distortion. Only the word CYBERFIX, spelled exactly C-Y-B-E-R-F-I-X, no other text. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  },
+  {
+   "id": "UI14_FondoMenu",
+   "archivo": "UI14_FondoMenu",
+   "salida": "imageassets/ui/UI14_FondoMenu.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/mockup-menu.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D game key art, cinematic night view from a rooftop over a poor Mexican cyberpunk neighborhood: rooftop water tanks on stilts, antennas and sagging power cables in the foreground, a narrow street market glowing magenta with tarp-covered stalls below, and on the horizon tall towers with giant acid green screens and red antenna lights, light rain and colored fog. The left third of the image is darker and calmer to leave room for a menu. Chunky simplified shapes, soft hand-painted gradients, no photorealism. No text, no letters, no logos, no UI. Match exactly the UI style of the attached reference images: same frame shapes with cut corners, same line thickness, same neon orange, teal and magenta colors, same glow and same hand-painted finish. Use the references only for style; create only the single element described, isolated on the background described."
+  }
+ ]
+}

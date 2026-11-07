@@ -1,0 +1,30 @@
+﻿PAQUETE 4 — CLANDESTINO, EXTERIORES ESPECIALES E INTERIORES · LISTO PARA TRIPO
+
+Configuración común: Image to 3D · Delight apagado · PBR apagado · triángulos · sin rig · exportar FBX (preset Unity).
+Nombre del FBX = nombre de la imagen sin '.png' (ej. A08_Marcador.fbx).
+
+#   ARCHIVO (imagen)               MODO              CARAS  TEXTURA  FBX A EXPORTAR
+----------------------------------------------------------------------------------------------------
+1   A11a_PortalSotano.png          HD                8,000  2K       A11a_PortalSotano.fbx
+2   A11b_EscaleraSotano.png        HD                6,000  2K       A11b_EscaleraSotano.fbx
+3   A08_Marcador.png               Smart Mesh P2     6,000  2K       A08_Marcador.fbx
+4   E01_EntradaCasino.png          HD               12,000  4K       E01_EntradaCasino.fbx
+5   E02_PortonMercadoNegro.png     HD               12,000  2K       E02_PortonMercadoNegro.fbx
+6   E03_PantallaGigante.png        Smart Mesh P2     8,000  2K       E03_PantallaGigante.fbx
+7   C13_PuestoCiber.png            HD               10,000  2K       C13_PuestoCiber.fbx
+8   C19_Moto.png                   HD               10,000  2K       C19_Moto.fbx
+9   H11_Buro.png                   Smart Mesh P2     3,000  1K       H11_Buro.fbx
+10  H06_TeleVieja.png              Smart Mesh P2     5,000  1K       H06_TeleVieja.fbx
+11  H07_Sofa.png                   Smart Mesh P2     5,000  1K       H07_Sofa.fbx
+12  H08_EstufaTarja.png            Smart Mesh P2     6,000  1K       H08_EstufaTarja.fbx
+13  H09_RepisaVeladoras.png        Smart Mesh P2     4,000  1K       H09_RepisaVeladoras.fbx
+14  T06_Soldadora.png              Smart Mesh P2     5,000  1K       T06_Soldadora.fbx
+15  T07_GruaMotor.png              Smart Mesh P2     6,000  1K       T07_GruaMotor.fbx
+16  T08_RepisaTaller.png           Smart Mesh P2     6,000  1K       T08_RepisaTaller.fbx
+
+Notas:
+- A11b_EscaleraSotano: En Unity se gira 180° para que baje al sótano.
+- T06_Soldadora: Si el cable que cuelga sale roto, se recorta en Blender.
+- CY04_AntenaAzotea: pendiente de regenerar (correr --ids CY04 sin --saltar-hechos).
+
+Prompts de Claude Code para meter cada uno en Unity: PROMPTS_ASSETS.md (Partes 4, 5 y 7).

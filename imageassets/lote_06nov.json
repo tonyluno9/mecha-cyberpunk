@@ -1,0 +1,270 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "W02",
+   "archivo": "W02_Escopeta",
+   "fase": 1,
+   "salida": "imageassets/armas/W02_Escopeta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached pistol image as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set as that pistol. Do not copy the pistol's shape. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape wrapped on the grip, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling: straps, sights and rails are thick and chunky. View: 3/4 view from the side, slightly from the front, showing the full length of the weapon. Subject: a pump-action shotgun: a thick short barrel with a magazine tube under it, a chunky ribbed pump grip in sand-beige polymer, a boxy receiver in gunmetal with a teal shell counter light, a solid stock with a rubber butt pad, red tape on the grip, a short thick rail on top.",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png"
+   ],
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.0 m de largo"
+  },
+  {
+   "id": "W03",
+   "archivo": "W03_Fusil",
+   "fase": 1,
+   "salida": "imageassets/armas/W03_Fusil.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached pistol image as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set as that pistol. Do not copy the pistol's shape. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape wrapped on the grip, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling: straps, sights and rails are thick and chunky. View: 3/4 view from the side, slightly from the front, showing the full length of the weapon. Subject: a compact assault rifle: a short barrel with a chunky muzzle brake, a boxy handguard with thick vents in sand-beige, a curved box magazine in burnt orange, a gunmetal receiver, a compact red dot sight on top with a glowing red dot lens, a collapsible stock, a small teal ammo counter on the side.",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png"
+   ],
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "0.8 m de largo"
+  },
+  {
+   "id": "W04",
+   "archivo": "W04_Francotirador",
+   "fase": 1,
+   "salida": "imageassets/armas/W04_Francotirador.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached pistol image as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set as that pistol. Do not copy the pistol's shape. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape wrapped on the grip, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling: straps, sights and rails are thick and chunky. View: 3/4 view from the side, slightly from the front, showing the full length of the weapon. Subject: a bolt-action sniper rifle: a long thick barrel with a chunky suppressor-like muzzle, a big long scope with thick rings and a teal glowing lens, a chunky bolt handle, a boxy magazine, a sand-beige stock with a cheek rest and red tape, a folded bipod under the front of the barrel (legs folded flat along the barrel).",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png"
+   ],
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.25 m de largo"
+  },
+  {
+   "id": "H01",
+   "archivo": "H01_Pistola",
+   "fase": 2,
+   "salida": "imageassets/ui/hologramas/H01_Pistola.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions as the attached image, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the image width. Hologram look: translucent cyan-turquoise glowing body, bright glowing outlines and edge lines on every part, faint inner wireframe lines, thin horizontal scan lines across the whole weapon, a slight digital glitch offset on one or two horizontal slices, soft cyan glow around it. The background is PURE BLACK (#000000) everywhere, completely flat, no gradient, no floor, no grid, no particles outside the weapon, no text, no letters, no numbers, no logos, no hands.",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png"
+   ],
+   "uso": "UI, mezcla aditiva (no va a Tripo)"
+  },
+  {
+   "id": "H02",
+   "archivo": "H02_Escopeta",
+   "fase": 2,
+   "salida": "imageassets/ui/hologramas/H02_Escopeta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions as the attached image, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the image width. Hologram look: translucent cyan-turquoise glowing body, bright glowing outlines and edge lines on every part, faint inner wireframe lines, thin horizontal scan lines across the whole weapon, a slight digital glitch offset on one or two horizontal slices, soft cyan glow around it. The background is PURE BLACK (#000000) everywhere, completely flat, no gradient, no floor, no grid, no particles outside the weapon, no text, no letters, no numbers, no logos, no hands.",
+   "referencias": [
+    "imageassets/armas/W02_Escopeta.png"
+   ],
+   "uso": "UI, mezcla aditiva (no va a Tripo)"
+  },
+  {
+   "id": "H03",
+   "archivo": "H03_Fusil",
+   "fase": 2,
+   "salida": "imageassets/ui/hologramas/H03_Fusil.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions as the attached image, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the image width. Hologram look: translucent cyan-turquoise glowing body, bright glowing outlines and edge lines on every part, faint inner wireframe lines, thin horizontal scan lines across the whole weapon, a slight digital glitch offset on one or two horizontal slices, soft cyan glow around it. The background is PURE BLACK (#000000) everywhere, completely flat, no gradient, no floor, no grid, no particles outside the weapon, no text, no letters, no numbers, no logos, no hands.",
+   "referencias": [
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "uso": "UI, mezcla aditiva (no va a Tripo)"
+  },
+  {
+   "id": "H04",
+   "archivo": "H04_Francotirador",
+   "fase": 2,
+   "salida": "imageassets/ui/hologramas/H04_Francotirador.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions as the attached image, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the image width. Hologram look: translucent cyan-turquoise glowing body, bright glowing outlines and edge lines on every part, faint inner wireframe lines, thin horizontal scan lines across the whole weapon, a slight digital glitch offset on one or two horizontal slices, soft cyan glow around it. The background is PURE BLACK (#000000) everywhere, completely flat, no gradient, no floor, no grid, no particles outside the weapon, no text, no letters, no numbers, no logos, no hands.",
+   "referencias": [
+    "imageassets/armas/W04_Francotirador.png"
+   ],
+   "uso": "UI, mezcla aditiva (no va a Tripo)"
+  },
+  {
+   "id": "F01",
+   "archivo": "F01_Destello",
+   "fase": 3,
+   "salida": "imageassets/vfx/F01_Destello.png",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "A single small compact muzzle flash of a pistol shot for a video game particle effect, seen from the side with the flash pointing to the right: a tight bright white-yellow core with a short burst of 4 to 5 sharp orange-yellow flame petals, very brief and compact, NOT a big explosion, NO smoke, NO sparks trailing far, no gun visible. Centered, filling about 60% of the image. Stylized and clean, soft glow. The background is PURE BLACK (#000000) everywhere, flat, no gradient. No text, no logos.",
+   "uso": "Sprite aditivo"
+  },
+  {
+   "id": "D01",
+   "archivo": "D01_HuecoConcreto",
+   "fase": 3,
+   "salida": "imageassets/vfx/D01_HuecoConcreto.png",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "A bullet hole decal in a concrete wall, seen perfectly straight on (orthographic, flat, no perspective): a small dark round crater in the center with chipped broken concrete edges, a few short radial cracks and scattered grey dust and chips around it, fading out softly to nothing toward the edges. Stylized hand-painted game texture, clean. Everything outside the damage is PURE WHITE (#FFFFFF), flat, no wall texture beyond the fading damage, no shadow, no text.",
+   "uso": "Decal (no va a Tripo)"
+  },
+  {
+   "id": "D02",
+   "archivo": "D02_HuecoMetal",
+   "fase": 3,
+   "salida": "imageassets/vfx/D02_HuecoMetal.png",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "A bullet hole decal in a painted car body metal sheet, seen perfectly straight on (orthographic, flat, no perspective): a small dark hole in the center with the metal dented inward, a dark burnt ring around it, chipped and peeled paint flakes showing bare silver metal around the hole, small scratches, fading out softly toward the edges. Stylized hand-painted game texture, clean. Everything outside the damage is PURE WHITE (#FFFFFF), flat, no shadow, no text.",
+   "uso": "Decal (no va a Tripo)"
+  },
+  {
+   "id": "M01",
+   "archivo": "M01_LineasAmarillas",
+   "fase": 4,
+   "salida": "imageassets/calle/M01_LineasAmarillas.png",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Top-down orthographic view of road paint only: a double continuous yellow center line running vertically from the very top edge to the very bottom edge of the image, two parallel solid yellow stripes with a small gap between them, centered horizontally, worn and faded paint with chips, cracks and dirt so some dark spots show through. The pattern must tile seamlessly from top to bottom: the stripes are perfectly straight and identical at the top and bottom edges. Everything that is not paint is PURE BLACK (#000000), flat: no asphalt, no texture, no shadows, no text.",
+   "uso": "Máscara sobre el asfalto"
+  },
+  {
+   "id": "M02",
+   "archivo": "M02_CrucePeatonal",
+   "fase": 4,
+   "salida": "imageassets/calle/M02_CrucePeatonal.png",
+   "endpoint": "google/nano-banana-2.1/text-to-image",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Top-down orthographic view of road paint only: a zebra pedestrian crosswalk, 8 thick parallel white stripes of equal width and equal spacing, running vertically across the image side by side, worn and faded paint with chips, cracks and dirt so some dark spots show through. Everything that is not paint is PURE BLACK (#000000), flat: no asphalt, no texture, no shadows, no text.",
+   "uso": "Máscara sobre el asfalto"
+  },
+  {
+   "id": "C01",
+   "archivo": "C01_Policia",
+   "fase": 5,
+   "salida": "imageassets/personajes/C01_Policia.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "STYLE IS THE TOP PRIORITY: draw this character in EXACTLY the same art style as the attached stylized game character reference images, as if made by the same artist for the same game: same rendering, shading, hand-painted finish, head-to-body proportions and face style. Copy only the style, not their face or clothes. Character: an adult city police officer of a Mexican cyberpunk megacity, medium brown skin, short black hair, serious neutral face. Navy blue tactical uniform fitted close to the body, a light fitted ballistic vest in dark navy with reflective turquoise stripes, a thick utility belt with flat pouches, knee pads, black tactical boots, a navy cap with a visor fitted to the head. Hands empty and open, no weapon, no holster with a gun, no radio cords. No text, no badges with letters, no numbers, no logos: the chest patch is a plain blank shield shape. Rig-friendly design: nothing hanging loose, no capes, no dangling straps. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms facing down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow.",
+   "referencias": [
+    "imageassets/personajes/BaseHombre_frente.png",
+    "imageassets/personajes/referencias/man.png"
+   ],
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.78 m de alto"
+  },
+  {
+   "id": "V09",
+   "archivo": "V09_Taxi",
+   "fase": 5,
+   "salida": "imageassets/carros/V09_Taxi.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Poor gritty Mexican cyberpunk megacity vehicle: old and dented, mismatched replacement panels, rust streaks, scratches, a few cheap futuristic add-ons with small glowing teal and orange lights. The four wheels are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Windows are dark tinted solid glass, no interior visible. Nothing thin: mirrors, antennas and bars are thick and chunky. The whole vehicle fully visible, single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: an old compact 4-door taxi sedan painted pink and white (pink lower body and doors, white roof and hood), dented doors and a crumpled bumper, a boxy taxi sign on the roof glowing warm white with NO text on it, a small teal LED strip in the grille.",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.2 m de largo"
+  },
+  {
+   "id": "V10",
+   "archivo": "V10_Pickup",
+   "fase": 5,
+   "salida": "imageassets/carros/V10_Pickup.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Poor gritty Mexican cyberpunk megacity vehicle: old and dented, mismatched replacement panels, rust streaks, scratches, a few cheap futuristic add-ons with small glowing teal and orange lights. The four wheels are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Windows are dark tinted solid glass, no interior visible. Nothing thin: mirrors, antennas and bars are thick and chunky. The whole vehicle fully visible, single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: an old 2-door pickup truck in faded washed-out turquoise paint with heavy rust patches, a dented tailgate, the open rear bed loaded with stacked wooden produce crates (huacales) tied with a thick strap, a chunky black tube bumper, an orange glowing light on the cab roof.",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.8 m de largo"
+  },
+  {
+   "id": "V11",
+   "archivo": "V11_Van",
+   "fase": 5,
+   "salida": "imageassets/carros/V11_Van.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Poor gritty Mexican cyberpunk megacity vehicle: old and dented, mismatched replacement panels, rust streaks, scratches, a few cheap futuristic add-ons with small glowing teal and orange lights. The four wheels are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Windows are dark tinted solid glass, no interior visible. Nothing thin: mirrors, antennas and bars are thick and chunky. The whole vehicle fully visible, single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: a square boxy delivery van with a flat front and a tall box body, painted cream on top and orange on the lower half, dents along the side, a big sliding side door slightly open showing only darkness, a small roof rack, an orange LED strip on the front, plain colored panels with no text.",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "5 m de largo"
+  }
+ ]
+}

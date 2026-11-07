@@ -1,0 +1,14 @@
+﻿PARTE 3 — PENDIENTES DEL BARRIO · LISTO PARA TRIPO
+
+Configuración común: Image to 3D · Delight apagado · PBR apagado · triángulos · sin rig · exportar FBX (preset Unity).
+Nombre del FBX = nombre de la imagen sin '.png' (ej. C16_Tambo.fbx).
+
+#  ARCHIVO (imagen)      MODO              CARAS  TEXTURA  MEDIDA          FBX A EXPORTAR
+-----------------------------------------------------------------------------------------------
+1  C16_Tambo.png         Smart Mesh P2     3,000  1K       0.9 m de alto   C16_Tambo.fbx
+2  C17_Huacales.png      Smart Mesh P2     3,000  1K       1.0 m de alto   C17_Huacales.fbx
+3  C20d_Macetas.png      Smart Mesh P2     3,000  1K       1.4 × 0.5 m     C20d_Macetas.fbx
+4  C23_Franja.png        Smart Mesh P2     2,000  1K       4.0 × 0.3 m     C23_Franja.fbx
+
+Revisar en Tripo: base plana, nada flotando; en C20d las plantas pegadas a las macetas y atrás plano; en C23 extremos rectos.
+Prompts de Claude Code para meter cada uno en Unity: PROMPTS_ASSETS.md (Parte 3).

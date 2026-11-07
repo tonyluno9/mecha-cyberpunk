@@ -1,0 +1,21 @@
+﻿PARTE 1 — CAPA CYBERPUNK · LISTO PARA TRIPO
+
+Configuración común: Image to 3D · Delight apagado · PBR apagado · triángulos · sin rig · exportar FBX (preset Unity).
+Nombre del FBX = nombre de la imagen sin '.png' (ej. CY02_PantallaVertical.fbx).
+
+#  ARCHIVO (imagen)                MODO              CARAS  TEXTURA FBX A EXPORTAR
+----------------------------------------------------------------------------------------------------
+1  CY01_ProyectorHolo.png          Smart Mesh P2     5,000  2K      CY01_ProyectorHolo.fbx
+2  CY02_PantallaVertical.png       Smart Mesh P2     4,000  2K      CY02_PantallaVertical.fbx
+3  CY03_MazoCables.png             Smart Mesh P2     3,000  1K      CY03_MazoCables.fbx
+4  CY05_ServidorCallejero.png      Smart Mesh P2     4,000  1K      CY05_ServidorCallejero.fbx
+5  CY06_Expendedora.png            Smart Mesh P2     6,000  2K      CY06_Expendedora.fbx
+6  CY07a_PlataformaDron.png        Smart Mesh P2     4,000  1K      CY07a_PlataformaDron.fbx
+7  CY07b_Dron.png                  Smart Mesh P2     5,000  1K      CY07b_Dron.fbx
+8  CY08_CamaraCorporativa.png      Smart Mesh P2     3,000  1K      CY08_CamaraCorporativa.fbx
+9  CY09_PuestoImplantes.png        HD               10,000  2K      CY09_PuestoImplantes.fbx
+10 CY10_CargadorCalle.png          Smart Mesh P2     4,000  1K      CY10_CargadorCalle.fbx
+11 C18_BarreraCalle.png            Smart Mesh P2     4,000  1K      C18_BarreraCalle.fbx
+12 CY04_AntenaAzotea.png           Smart Mesh P2     5,000  2K      CY04_AntenaAzotea.fbx
+
+Prompts de Claude Code para meter cada uno en Unity: PROMPTS_ASSETS.md (Parte 1).

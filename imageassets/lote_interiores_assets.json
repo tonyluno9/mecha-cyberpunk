@@ -1,0 +1,477 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/interiores",
+ "trabajos": [
+  {
+   "id": "I01",
+   "archivo": "I01_Ropero",
+   "salida": "imageassets/interiores/I01.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a tall old wooden wardrobe with two doors, worn brown wood with chipped edges, chunky round knobs, a few colorful stickers on the doors shown as simple shapes (stars, a skull, a lightning bolt, a plain magenta circle), a small mirror panel on one door, a cardboard box on top. Doors closed. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1 × 0.55 × 2 m"
+  },
+  {
+   "id": "I02",
+   "archivo": "I02_EscritorioPC",
+   "salida": "imageassets/interiores/I02.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a cheap metal desk with a thick grey metal frame and a scratched laminate top, one drawer unit on the side, on top an old chunky CRT computer monitor with a glowing teal screen showing abstract shapes, a chunky beige keyboard, a mouse, two soda cans and a small pile of papers. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "1.2 × 0.6 × 0.75 m (monitor sube a 1.2 m)"
+  },
+  {
+   "id": "I03",
+   "archivo": "I03_SillaRopa",
+   "salida": "imageassets/interiores/I03.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a simple metal desk chair with a padded seat and backrest in worn dark vinyl, thick tube legs, a hoodie and a pair of jeans thrown over the backrest as soft chunky draped shapes. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.5 × 0.5 × 0.9 m"
+  },
+  {
+   "id": "I04",
+   "archivo": "I04_VentanaBarrotes",
+   "salida": "imageassets/interiores/I04.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a window for an interior wall seen from the inside: a thick worn painted metal frame with two glass panes (flat dark blue glass with a faint magenta and teal glow, no scene visible through it), thick vertical security bars in front of it, a wide windowsill with a small potted plant. The back is flat so it fits into a wall opening. View: straight from the front with a very slight angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1.6 × 1.2 m · fondo 0.25 m"
+  },
+  {
+   "id": "I05",
+   "archivo": "I05_MochilaRopa",
+   "salida": "imageassets/interiores/I05.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a small pile on the floor: a worn backpack in dark grey with a teal stripe, slumped, next to a crumpled t-shirt, a pair of sneakers and a cap, all chunky and simplified, grouped as one object. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.9 × 0.6 × 0.4 m"
+  },
+  {
+   "id": "I06",
+   "archivo": "I06_BrazoCirugia",
+   "salida": "imageassets/interiores/I06.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/consultorio-doc.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a robotic surgery arm that hangs from the ceiling: a round flat ceiling mount plate at the top, a thick jointed industrial arm with three segments in white and gunmetal, chunky joints with teal glowing rings, at the end a surgical head with a ring light and three chunky tool tips (a drill, a laser, a gripper), thick bundled cables along the arm. Hanging pose, folded slightly downward. The top plate is flat. View: 3/4 view from the front, slightly from below.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2 m de largo · plato de 0.6 m"
+  },
+  {
+   "id": "I07",
+   "archivo": "I07_SillonCirugia",
+   "salida": "imageassets/interiores/I07.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/consultorio-doc.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a reclining surgery chair for an underground clinic: a padded medical chair in worn teal-grey vinyl, reclined almost flat, with thick leather restraint straps with buckles on the arms and legs, a chunky hydraulic base with a pedal, an adjustable headrest, small scuffs and a stain. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2 × 0.7 × 1 m"
+  },
+  {
+   "id": "I08",
+   "archivo": "I08_VitrinaImplantes",
+   "salida": "imageassets/interiores/I08.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/consultorio-doc.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a wall-mounted glass display cabinet with a thick gunmetal frame and three shelves, teal LED light inside, holding cybernetic implants: two chrome robotic hands, three robotic eyes with glowing teal irises in small stands, a chrome jaw piece and a few chips. The back is flat to hang on a wall. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "1.2 × 0.35 × 1.4 m"
+  },
+  {
+   "id": "I09",
+   "archivo": "I09_Lavabo",
+   "salida": "imageassets/interiores/I09.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/consultorio-doc.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: an old wall-mounted sink: a chunky white ceramic basin with chips and rust stains, a thick old metal faucet with two cross handles, a chunky drain pipe under it going into the wall, a small cracked mirror above with a thick frame. The back is flat to fit on a wall. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.6 × 0.45 m · espejo arriba, total 1.6 m"
+  },
+  {
+   "id": "I10",
+   "archivo": "I10_MonitorMedico",
+   "salida": "imageassets/interiores/I10.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/consultorio-doc.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a medical monitor on a rolling stand: a thick pole on a five-wheel base, a chunky boxy monitor on top with a glowing screen showing abstract green heart-rate lines and teal bars, a small basket and a coiled thick cable. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.5 × 0.5 × 1.6 m"
+  },
+  {
+   "id": "I11",
+   "archivo": "I11_MesaBlackjack",
+   "salida": "imageassets/interiores/I11.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/casino-interior.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a casino blackjack table: a half-moon shaped table with green felt top, a padded dark red leather rail around the curved edge, a dark wood base, a chip tray on the straight side with stacks of colorful chips, a few cards face down, gold trim and a thin magenta light strip under the edge. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2 × 1.1 × 0.8 m"
+  },
+  {
+   "id": "I12",
+   "archivo": "I12_SillaCasino",
+   "salida": "imageassets/interiores/I12.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/casino-interior.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a casino chair: a padded round-back chair in dark red velvet with gold trim, chunky gold metal legs with a foot ring. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.55 × 0.55 × 1 m"
+  },
+  {
+   "id": "I13",
+   "archivo": "I13_CandilNeon",
+   "salida": "imageassets/interiores/I13.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/casino-interior.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a big tiered ceiling chandelier made of neon: three stacked rings getting smaller toward the bottom, made of thick gold metal bands with glowing magenta and warm gold light tubes, hanging from a flat round ceiling plate by three thick rods. View: 3/4 view from slightly below.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2 m de diámetro · 1.5 m de alto"
+  },
+  {
+   "id": "I14",
+   "archivo": "I14_BarraBar",
+   "salida": "imageassets/interiores/I14.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/casino-interior.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a straight section of a casino bar counter: a solid counter with a dark polished top and a glowing front panel in magenta and gold with a geometric pattern, a gold foot rail, and behind it a back shelf unit with three shelves full of glowing bottles of different colors and a mirror back. The two side ends are flat and clean so sections can be placed side by side. View: 3/4 view from the front left.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "3 m de tramo · barra 1.1 m alta · estante 2.4 m"
+  },
+  {
+   "id": "I15",
+   "archivo": "I15_BancoBarra",
+   "salida": "imageassets/interiores/I15.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/casino-interior.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a tall bar stool: a round padded seat in dark red velvet, a thick gold pole, a gold foot ring and a round heavy base. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.45 × 0.45 × 0.8 m"
+  },
+  {
+   "id": "I16",
+   "archivo": "I16_ArcoDorado",
+   "salida": "imageassets/interiores/I16.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/casino-interior.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a grand casino entrance arch: two thick gold columns with geometric art-deco details and magenta light strips, joined at the top by a thick decorated gold beam with a stepped crown shape and a row of round warm bulbs, the opening empty. Both faces look the same. View: 3/4 view from the front.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "3 × 3.5 m · fondo 0.6 m"
+  },
+  {
+   "id": "I17",
+   "archivo": "I17_VitrinaPistolas",
+   "salida": "imageassets/interiores/I17.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/entrada-armas-mercado.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a gun shop display counter: a long counter with a thick scratched metal frame and glass top and front, inside on dark felt several pistols and a few magazines displayed in rows, a weak amber light inside, a cash tray on top, dents and grime. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2 × 0.6 × 1 m"
+  },
+  {
+   "id": "I18",
+   "archivo": "I18_TableroRifles",
+   "salida": "imageassets/interiores/I18.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/entrada-armas-mercado.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a wall rack for rifles: a big metal pegboard panel with a thick frame, four rifles and two shotguns hanging horizontally on chunky hooks, a few boxes of ammunition on a small shelf at the bottom, a weak amber light strip on top. The back is flat to hang on a wall. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2 × 1.2 m · fondo 0.3 m"
+  },
+  {
+   "id": "I19",
+   "archivo": "I19_RejaTijera",
+   "salida": "imageassets/interiores/I19.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/entrada-armas-mercado.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a sliding scissor security gate (collapsible gate) fully extended: a diamond lattice of thick flat steel bars with chunky rivets at every joint, a thick top track and bottom track, a heavy padlock on one side, scratches and rust. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 2.2 m · fondo 0.15 m"
+  },
+  {
+   "id": "I20",
+   "archivo": "I20_EstanteDrones",
+   "salida": "imageassets/interiores/I20.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/taller-tino.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a metal shelving unit in a workshop with four shelves holding half-built drones: open drone frames with exposed chunky parts, loose propellers, motors, battery packs, a toolbox and a coil of thick cable, one drone with a glowing teal eye. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.2 × 0.5 × 2 m"
+  },
+  {
+   "id": "I21",
+   "archivo": "I21_LamparaBrazo",
+   "salida": "imageassets/interiores/I21.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/taller-tino.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, lighting mood and level of wear; do not copy the room or its layout. Draw only the single object described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Mexican cyberpunk video game interior prop. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, straps, bars and handles are thick and chunky; cables are thick bundled conduits. Subject: a desk lamp with an articulated arm for a workbench: a heavy clamp base, two thick arm segments with chunky springs and a round metal shade glowing warm orange. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.7 m extendida"
+  },
+  {
+   "id": "X01",
+   "archivo": "X01_ConcretoDescascarado",
+   "salida": "imageassets/interiores/X01.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, colors and level of wear; do not copy the room. A seamless tileable texture: a perfectly flat surface seen straight on, orthographic, filling the entire square image edge to edge, even and flat lighting with no shadows, no vignette, no perspective, no objects in front, no text, no letters, no logos. The left and right edges and the top and bottom edges must continue seamlessly so the image repeats without visible seams. Stylized hand-painted game texture, chunky simple shapes, soft painted gradients, no photorealistic noise. Subject: a concrete wall with peeling faded paint, patches of bare grey concrete, water stains and dark grime streaks running down.",
+   "uso": "Textura que se repite (no va a Tripo)"
+  },
+  {
+   "id": "X02",
+   "archivo": "X02_AzulejoHospital",
+   "salida": "imageassets/interiores/X02.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/consultorio-doc.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, colors and level of wear; do not copy the room. A seamless tileable texture: a perfectly flat surface seen straight on, orthographic, filling the entire square image edge to edge, even and flat lighting with no shadows, no vignette, no perspective, no objects in front, no text, no letters, no logos. The left and right edges and the top and bottom edges must continue seamlessly so the image repeats without visible seams. Stylized hand-painted game texture, chunky simple shapes, soft painted gradients, no photorealistic noise. Subject: a wall of square aqua green ceramic tiles in a regular grid with dirty grout lines, some cracked tiles, light stains and grime.",
+   "uso": "Textura que se repite (no va a Tripo)"
+  },
+  {
+   "id": "X03",
+   "archivo": "X03_LadrilloYeso",
+   "salida": "imageassets/interiores/X03.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/taller-tino.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, colors and level of wear; do not copy the room. A seamless tileable texture: a perfectly flat surface seen straight on, orthographic, filling the entire square image edge to edge, even and flat lighting with no shadows, no vignette, no perspective, no objects in front, no text, no letters, no logos. The left and right edges and the top and bottom edges must continue seamlessly so the image repeats without visible seams. Stylized hand-painted game texture, chunky simple shapes, soft painted gradients, no photorealistic noise. Subject: an old red brick wall in a regular running bond pattern, with patches of fallen white plaster partly covering the bricks, chips and stains.",
+   "uso": "Textura que se repite (no va a Tripo)"
+  },
+  {
+   "id": "X04",
+   "archivo": "X04_ParedCasino",
+   "salida": "imageassets/interiores/X04.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/casino-interior.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, colors and level of wear; do not copy the room. A seamless tileable texture: a perfectly flat surface seen straight on, orthographic, filling the entire square image edge to edge, even and flat lighting with no shadows, no vignette, no perspective, no objects in front, no text, no letters, no logos. The left and right edges and the top and bottom edges must continue seamlessly so the image repeats without visible seams. Stylized hand-painted game texture, chunky simple shapes, soft painted gradients, no photorealistic noise. Subject: a dark red casino wall panel with an elegant repeating art-deco golden fret pattern (greek key) as a border band and a subtle damask pattern in the red area, polished.",
+   "uso": "Textura que se repite (no va a Tripo)"
+  },
+  {
+   "id": "X05",
+   "archivo": "X05_TechoVigasTubos",
+   "salida": "imageassets/interiores/X05.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/taller-tino.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, colors and level of wear; do not copy the room. A seamless tileable texture: a perfectly flat surface seen straight on, orthographic, filling the entire square image edge to edge, even and flat lighting with no shadows, no vignette, no perspective, no objects in front, no text, no letters, no logos. The left and right edges and the top and bottom edges must continue seamlessly so the image repeats without visible seams. Stylized hand-painted game texture, chunky simple shapes, soft painted gradients, no photorealistic noise. Subject: a ceiling seen from below: parallel dark wooden beams running across, with grey metal pipes and a thick bundled conduit running between them along the beams, dark plaster between.",
+   "uso": "Textura que se repite (no va a Tripo)"
+  }
+ ]
+}

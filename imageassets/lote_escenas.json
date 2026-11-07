@@ -1,0 +1,166 @@
+{
+ "version": 1,
+ "carpeta_salida": "docs/referencias-ciudad",
+ "rutas_relativas_a": "raíz del repo mecha-cyberpunk",
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "trabajos": [
+  {
+   "id": "calle-suburbios-noche",
+   "archivo": "calle-suburbios-noche",
+   "salida": "docs/referencias-ciudad/calle-suburbios-noche.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C01_FachadaLocal.png",
+    "imageassets/C02_FachadaVivienda.png",
+    "imageassets/C20a_PisoVentana.png",
+    "imageassets/C09_Tinaco.png",
+    "imageassets/C07_PosteLuz.png",
+    "imageassets/C08_Transformador.png",
+    "imageassets/generadas/CY03_MazoCables_v1.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, third-person view from behind and slightly above a character at eye level, standing in the middle of a narrow working-class street in a Mexican cyberpunk neighborhood at night. Both sides lined with two- and three-story painted concrete buildings in terracotta, faded teal and cream: ground floors with rolled-down metal shutters and small shop doors, upper floors with barred windows, some windows glowing warm amber and others dark, air-conditioning units and flower pots on ledges, water tanks on the rooftops. Wooden power poles with transformers and thick sagging bundles of cables crossing the street overhead. A rusty old orange hatchback parked at the curb. Lighting: dark blue night sky with low clouds, cold blue moonlight, warm orange sodium streetlights making pools of light on wet asphalt, a few small flat neon signs in magenta and teal reflected as long streaks in puddles, light fog in the distance turning the far end of the street blue. Chunky simplified shapes, large clean bevels, soft hand-painted gradients, cinematic contrast, no photorealism. No text, no letters, no logos, no people besides a dark silhouette of the player. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  },
+  {
+   "id": "callejon-noche",
+   "archivo": "callejon-noche",
+   "salida": "docs/referencias-ciudad/callejon-noche.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C21_PisoLiso.png",
+    "imageassets/L01_Contenedor.png",
+    "imageassets/L02_PuertaTrasera.png",
+    "imageassets/L03_EscaleraEmergencia.png",
+    "imageassets/L04_Llantas.png",
+    "imageassets/L05_RejaPorton.png",
+    "imageassets/C14_RegistroMedidores.png",
+    "imageassets/generadas/C16_Tambo_v1.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, eye-level view down a narrow back alley in a Mexican cyberpunk city at night. Tall plain concrete walls with back doors, utility meter boxes, pipes and air-conditioning units, a large green dumpster, stacked old tires, metal drums and wooden crates, a fire-escape platform with stairs on one wall, graffiti in purple and teal on the walls, a chain-link gate closing the far end. Lighting: very dark, a single magenta neon sign and one flickering teal light over a back door, steam rising from a vent, wet ground with puddles reflecting the neon, thick low fog lit pink and teal, deep shadows. Chunky simplified shapes, soft hand-painted gradients, moody cinematic lighting, no photorealism. No text, no letters, no logos, no people. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  },
+  {
+   "id": "tianguis-noche",
+   "archivo": "tianguis-noche",
+   "salida": "docs/referencias-ciudad/tianguis-noche.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C12_PuestoTacos.png",
+    "imageassets/generadas/C13_PuestoCiber_v1.png",
+    "imageassets/generadas/CY01_ProyectorHolo_v1.png",
+    "imageassets/generadas/CY06_Expendedora_v1.png",
+    "imageassets/generadas/C17_Huacales_v1.png",
+    "imageassets/generadas/C16_Tambo_v1.png",
+    "imageassets/C02_FachadaVivienda.png",
+    "imageassets/C09_Tinaco.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, third-person view entering a crowded night street market in a Mexican cyberpunk city. Rows of stalls with colored tarp roofs in magenta, orange and teal, taco stands with steam rising, a stall selling old electronics and screens, wooden crates of goods, metal drums, hanging strings of warm light bulbs zigzagging over the street, small holographic projectors floating glowing advertisements shapes, a vending machine glowing teal. Painted concrete buildings behind with lit windows and rooftop water tanks. Lighting: warm orange bulbs under the tarps, strong magenta neon accents, wet ground with colorful reflections, light haze catching the light, dark blue sky. Chunky simplified shapes, soft hand-painted gradients, rich cinematic color, no photorealism. No text, no letters, no logos, no people. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  },
+  {
+   "id": "entrada-mercado-noche",
+   "archivo": "entrada-mercado-noche",
+   "salida": "docs/referencias-ciudad/entrada-mercado-noche.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/generadas/E02_PortonMercadoNegro_v1.png",
+    "imageassets/generadas/CY08_CamaraCorporativa_v1.png",
+    "imageassets/generadas/CY05_ServidorCallejero_v1.png",
+    "imageassets/generadas/C18_BarreraCalle_v1.png",
+    "imageassets/generadas/C16_Tambo_v1.png",
+    "imageassets/generadas/CY09_PuestoImplantes_v1.png",
+    "imageassets/generadas/CY07a_PlataformaDron_v1.png",
+    "imageassets/C15a_LetreroHorizontal.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, eye-level view of the entrance of an underground black market in a Mexican cyberpunk city at night: a heavy reinforced metal gate half open in a dark concrete wall, an empty flat neon sign panel above glowing magenta, a security camera, a street server cabinet with blinking lights, metal barriers and drums by the door, a stall with cybernetic implants on display next to it, a small drone landing platform on the corner. Lighting: strong magenta and teal neon from the entrance spilling onto wet ground, warm orange light from inside the gate, cold blue moonlight elsewhere, fog. Chunky simplified shapes, soft hand-painted gradients, cinematic, no photorealism. No text, no letters, no logos, no people. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  },
+  {
+   "id": "neon-alto-noche",
+   "archivo": "neon-alto-noche",
+   "salida": "docs/referencias-ciudad/neon-alto-noche.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/generadas/E01_EntradaCasino_v1.png",
+    "imageassets/generadas/CY02_PantallaVertical_v1.png",
+    "imageassets/generadas/E03_PantallaGigante_v1.png",
+    "imageassets/generadas/CY01_ProyectorHolo_v1.png",
+    "imageassets/V01b_CarroPro.png",
+    "imageassets/generadas/C19_Moto_v1.png",
+    "imageassets/generadas/CY10_CargadorCalle_v1.png",
+    "imageassets/generadas/CY08_CamaraCorporativa_v1.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, third-person view of a wide street in the rich district of a Mexican cyberpunk city at night: tall clean towers with many lit windows, a flashy casino entrance with a golden arch and glowing lights, a huge vertical screen and a giant billboard screen glowing acid green and magenta, holographic projectors, a sleek futuristic car and a motorcycle parked, electric vehicle chargers, corporate security cameras on poles, street barriers. Lighting: dominated by acid green and magenta neon with teal accents, bright bloom on screens, glossy wet asphalt reflecting everything, light rain, haze glowing green in the distance. Chunky simplified shapes, soft hand-painted gradients, high contrast cinematic lighting, no photorealism. No text, no letters, no logos, no people. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  },
+  {
+   "id": "refineria-nova-noche",
+   "archivo": "refineria-nova-noche",
+   "salida": "docs/referencias-ciudad/refineria-nova-noche.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/generadas/C18_BarreraCalle_v1.png",
+    "imageassets/generadas/CY08_CamaraCorporativa_v1.png",
+    "imageassets/generadas/CY07b_Dron_v1.png",
+    "imageassets/generadas/C16_Tambo_v1.png",
+    "imageassets/generadas/C17_Huacales_v1.png",
+    "imageassets/generadas/CY04_AntenaAzotea_v2.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, eye-level view of an industrial corporate zone at night: a refinery with large white and grey tanks, pipes and catwalks, a tall corporate tower in the background with a cold white light strip, a security checkpoint with metal barriers, corporate cameras and a drone flying, stacked shipping crates and metal drums. Lighting: cold white and pale blue floodlights, red warning beacons, thick fog and smoke from chimneys lit from below, wet concrete ground. Feels sterile and hostile compared to the warm neighborhood. Chunky simplified shapes, soft hand-painted gradients, cinematic, no photorealism. No text, no letters, no logos, no people. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  },
+  {
+   "id": "azotea-vista-ciudad",
+   "archivo": "azotea-vista-ciudad",
+   "salida": "docs/referencias-ciudad/azotea-vista-ciudad.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C09_Tinaco.png",
+    "imageassets/generadas/CY04_AntenaAzotea_v2.png",
+    "imageassets/C10_AireAcondicionado.png",
+    "imageassets/C22_Cornisa.png",
+    "imageassets/C20a_PisoVentana.png",
+    "imageassets/C07_PosteLuz.png",
+    "imageassets/generadas/E03_PantallaGigante_v1.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, view from a rooftop in a poor Mexican cyberpunk neighborhood at night looking over the city: in the foreground rooftop water tanks, an antenna, air-conditioning units and a low parapet; below, a grid of narrow streets with warm orange streetlights and sagging power cables; in the middle distance a street market glowing magenta; on the horizon the rich district with tall towers and giant screens glowing acid green, and a cold white corporate tower. Lighting: deep blue night sky with clouds lit from below by the city, fog layers between districts, each district with its own color (orange, magenta, green, white). Chunky simplified shapes, soft hand-painted gradients, cinematic, no photorealism. No text, no letters, no logos, no people. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  },
+  {
+   "id": "cruce-dia-lluvia",
+   "archivo": "cruce-dia-lluvia",
+   "salida": "docs/referencias-ciudad/cruce-dia-lluvia.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/generadas/C01_FachadaLocal_cy_v1.png",
+    "imageassets/C02_FachadaVivienda.png",
+    "imageassets/C12_PuestoTacos.png",
+    "imageassets/V01a_CarroViejito.png",
+    "imageassets/V01b_CarroPro.png",
+    "imageassets/C07_PosteLuz.png",
+    "imageassets/C08_Transformador.png",
+    "imageassets/generadas/CY01_ProyectorHolo_v1.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Stylized low-poly 3D video game screenshot, third-person view at a street intersection in a Mexican cyberpunk neighborhood on a cloudy rainy afternoon: painted concrete buildings with shop shutters open, a taco stand with steam, an old orange hatchback and a futuristic car waiting at the corner, power poles with transformers and cable bundles, flat neon signs turned off or faintly glowing, a holographic advertisement faintly visible, puddles on the asphalt. Lighting: soft grey overcast daylight with a cool teal tint, everything wet and reflective, light rain, mist in the distance. Chunky simplified shapes, soft hand-painted gradients, calm cinematic mood, no photorealism. No text, no letters, no logos, no people besides a dark silhouette of the player. Use the attached reference images as the exact design, shape, colors and proportions of the props and buildings; arrange them into this scene and only add the lighting, fog, rain and reflections described."
+  }
+ ]
+}

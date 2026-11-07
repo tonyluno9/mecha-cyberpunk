@@ -1,0 +1,20 @@
+﻿PARTE 2 — RETROFIT CYBERPUNK DEL KIT DE EDIFICIOS · LISTO PARA TRIPO
+
+Configuración común: Image to 3D · Delight apagado · PBR apagado · triángulos · sin rig · exportar FBX (preset Unity).
+Nombre del FBX = nombre de la imagen sin '.png' (ej. C20a_PisoVentana_cy.fbx).
+Son variantes de piezas que ya existen: mismas medidas, pivote y materiales que el original; se mezclan con él (~40% versión _cy).
+
+#  ARCHIVO (imagen)                 MODO              CARAS  TEXTURA  MEDIDA          FBX A EXPORTAR
+--------------------------------------------------------------------------------------------------------------
+1  C20a_PisoVentana_cy.png          Smart Mesh P2     5,000  2K       4.0 × 3.0 m     C20a_PisoVentana_cy.fbx
+2  C20b_PisoDosVentanas_cy.png      Smart Mesh P2     5,000  2K       4.0 × 3.0 m     C20b_PisoDosVentanas_cy.fbx
+3  C21_PisoLiso_cy.png              Smart Mesh P2     4,000  2K       4.0 × 3.0 m     C21_PisoLiso_cy.fbx
+4  C01_FachadaLocal_cy.png          Smart Mesh P2     8,000  2K       igual que C01   C01_FachadaLocal_cy.fbx
+5  C02_FachadaVivienda_cy.png       Smart Mesh P2     8,000  2K       igual que C02   C02_FachadaVivienda_cy.fbx
+6  C03_FachadaPisoAlto_cy.png       Smart Mesh P2     8,000  2K       igual que C03   C03_FachadaPisoAlto_cy.fbx
+7  C22_Cornisa_cy.png               Smart Mesh P2     4,000  2K       4.0 × 0.8 m     C22_Cornisa_cy.fbx
+
+Revisar en Tripo: bordes izquierdo, derecho, superior e inferior rectos; agregados pegados a la pared; atrás plano.
+C03_FachadaPisoAlto_cy: el mazo de cables derecho queda pegado al borde, revisar que no sobresalga.
+C22_Cornisa_cy: si las antenitas de arriba salen rotas, se quitan en Blender.
+Prompts de Claude Code para meter cada uno en Unity: PROMPTS_ASSETS.md (Parte 2).

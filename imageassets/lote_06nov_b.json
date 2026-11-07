@@ -1,0 +1,312 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "HUD_A",
+   "archivo": "HUD_A_minimalista",
+   "fase": 1,
+   "salida": "imageassets/ui/hud-opciones/HUD_A_minimalista.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "imageassets/ui/hologramas/H01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the game world: use it as the 3D scene behind the interface (a third-person view at night on a street of a Mexican cyberpunk megacity, keep its art style), with a player character seen from behind in the lower center holding a pistol. The SECOND attached image is the weapon hologram used in the game: use it, small, as the weapon icon in the weapon panel. Draw a full 16:9 video game screenshot with a modern, polished heads-up display on top, like a high-budget commercial game. HUD elements: health bar labeled \"VIDA\", energy shield bar labeled \"ESCUDO\", money counter \"$ 12,450\", a police wanted level shown as 3 out of 5 lit icons, a weapon panel with the pistol hologram and the ammo count \"12 / 48\", a minimap in a corner, and a mission objective \"Ve con el Doc\" with a small distance \"120 m\". All HUD text must be in Spanish and spelled EXACTLY as written, no other words, no logos. The HUD keeps the center of the screen clear; elements sit in the corners and edges. HUD style: MINIMALIST: very thin white and soft turquoise lines, lots of empty space, small clean sans-serif text, tiny bars, no heavy panels or boxes, only the essentials, subtle and elegant."
+  },
+  {
+   "id": "HUD_B",
+   "archivo": "HUD_B_holografico",
+   "fase": 1,
+   "salida": "imageassets/ui/hud-opciones/HUD_B_holografico.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "imageassets/ui/hologramas/H01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the game world: use it as the 3D scene behind the interface (a third-person view at night on a street of a Mexican cyberpunk megacity, keep its art style), with a player character seen from behind in the lower center holding a pistol. The SECOND attached image is the weapon hologram used in the game: use it, small, as the weapon icon in the weapon panel. Draw a full 16:9 video game screenshot with a modern, polished heads-up display on top, like a high-budget commercial game. HUD elements: health bar labeled \"VIDA\", energy shield bar labeled \"ESCUDO\", money counter \"$ 12,450\", a police wanted level shown as 3 out of 5 lit icons, a weapon panel with the pistol hologram and the ammo count \"12 / 48\", a minimap in a corner, and a mission objective \"Ve con el Doc\" with a small distance \"120 m\". All HUD text must be in Spanish and spelled EXACTLY as written, no other words, no logos. The HUD keeps the center of the screen clear; elements sit in the corners and edges. HUD style: HOLOGRAPHIC: translucent cyan glass panels with glowing edges, faint horizontal scan lines, a subtle digital glitch on a few edges, slightly angled panels as if projected in front of the camera, soft cyan glow."
+  },
+  {
+   "id": "HUD_C",
+   "archivo": "HUD_C_tactico",
+   "fase": 1,
+   "salida": "imageassets/ui/hud-opciones/HUD_C_tactico.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "imageassets/ui/hologramas/H01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the game world: use it as the 3D scene behind the interface (a third-person view at night on a street of a Mexican cyberpunk megacity, keep its art style), with a player character seen from behind in the lower center holding a pistol. The SECOND attached image is the weapon hologram used in the game: use it, small, as the weapon icon in the weapon panel. Draw a full 16:9 video game screenshot with a modern, polished heads-up display on top, like a high-budget commercial game. HUD elements: health bar labeled \"VIDA\", energy shield bar labeled \"ESCUDO\", money counter \"$ 12,450\", a police wanted level shown as 3 out of 5 lit icons, a weapon panel with the pistol hologram and the ammo count \"12 / 48\", a minimap in a corner, and a mission objective \"Ve con el Doc\" with a small distance \"120 m\". All HUD text must be in Spanish and spelled EXACTLY as written, no other words, no logos. The HUD keeps the center of the screen clear; elements sit in the corners and edges. HUD style: TACTICAL: military-tech look, bars split into angular segments, big bold condensed numbers for ammo and money, corner brackets, small hazard ticks, dark grey panels with turquoise and orange accents, precise and readable."
+  },
+  {
+   "id": "HUD_D",
+   "archivo": "HUD_D_neon_callejero",
+   "fase": 1,
+   "salida": "imageassets/ui/hud-opciones/HUD_D_neon_callejero.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "imageassets/ui/hologramas/H01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the game world: use it as the 3D scene behind the interface (a third-person view at night on a street of a Mexican cyberpunk megacity, keep its art style), with a player character seen from behind in the lower center holding a pistol. The SECOND attached image is the weapon hologram used in the game: use it, small, as the weapon icon in the weapon panel. Draw a full 16:9 video game screenshot with a modern, polished heads-up display on top, like a high-budget commercial game. HUD elements: health bar labeled \"VIDA\", energy shield bar labeled \"ESCUDO\", money counter \"$ 12,450\", a police wanted level shown as 3 out of 5 lit icons, a weapon panel with the pistol hologram and the ammo count \"12 / 48\", a minimap in a corner, and a mission objective \"Ve con el Doc\" with a small distance \"120 m\". All HUD text must be in Spanish and spelled EXACTLY as written, no other words, no logos. The HUD keeps the center of the screen clear; elements sit in the corners and edges. HUD style: STREET NEON: elegant Mexican street neon signage look, glowing magenta and orange neon tube outlines, a bold stylized display font inspired by hand-painted Mexican street signs but clean and premium, small papel-picado-inspired geometric cut details on panel edges, dark backgrounds behind the text for readability."
+  },
+  {
+   "id": "P10",
+   "archivo": "P10_PuertaCuarto",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/P10_PuertaCuarto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-interiores/habitacion.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. No text, no letters, no numbers, no logos. Subject: an interior apartment door of a poor building, with its door frame: painted wood with peeling faded turquoise paint and scratches, a dented round metal knob and a lock, colorful stickers shown as simple shapes (a star, a skull, a lightning bolt, a plain orange circle), a small scuff at the bottom. Door closed. The back of the frame is flat to fit in a wall. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.9 × 2.1 m · marco 1.05 × 2.2 m · fondo 0.15 m"
+  },
+  {
+   "id": "P11",
+   "archivo": "P11_EntradaCasa",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/P11_EntradaCasa.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "docs/referencias-ciudad/callejon-noche.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. No text, no letters, no numbers, no logos. Subject: the street entrance of a cheap apartment building: a thick concrete door frame set in a short piece of painted wall, a metal grille security door with a thick lattice and a padlock, three worn concrete steps in front, a row of small dented metal mailboxes on the wall beside the door, a caged bulb above the door glowing warm orange, a thick cable conduit running up the wall, a small turquoise LED doorbell panel. The back is flat to fit against a building facade. View: 3/4 view from the front left.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.2 m ancho × 3 m alto · escalones salen 1 m"
+  },
+  {
+   "id": "P12",
+   "archivo": "P12_FachadaConsultorio",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/P12_FachadaConsultorio.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "imageassets/letreros/L13_LetreroIDI.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. No text, no letters, no numbers, no logos. Subject: the ground floor facade module of a clandestine street clinic: a stained concrete wall section, a heavy reinforced metal door with rivets and a small speaker grille, a window covered from inside with metal sheets and taped cardboard, a glowing turquoise light strip and a small medical cross shape (plain, no letters) above the door, thick bundled cables and conduits running across the wall to a small junction box, an air conditioning unit, grime and rust streaks. Leave an empty flat area above the door for a separate sign. The back is flat. View: from the front with a slight 3/4 angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "6 m ancho × 4.5 m alto · fondo 0.6 m"
+  },
+  {
+   "id": "L15",
+   "archivo": "L15_LetreroCanepa",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/L15_LetreroCanepa.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "imageassets/letreros/L14_LetreroCIC.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a hand-painted metal sheet workshop sign of a Mexican neighborhood car mechanic: a rectangular steel sheet with a thick welded frame, painted in bright colors with a hand-painted Mexican sign-painter (rotulista) style, on the top line the words \"EL CANEPA\" in huge bold letters, below it a smaller line \"TALLER MECÁNICO\" (with the accent on the A), a painted wrench and a gear as simple shapes, a row of round warm bulbs along the top edge, rust spots, chipped paint, two thick wall brackets on the back. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "3 × 1.5 m · fondo 0.3 m"
+  },
+  {
+   "id": "R01",
+   "archivo": "R01_MeseraRobot",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/R01_MeseraRobot.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/RobotMujer_frente.png",
+    "imageassets/letreros/L10_LetreroVivaCoin.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "STYLE IS THE TOP PRIORITY: draw this character in EXACTLY the same art style as the first attached robot character image, as if made by the same artist for the same game; the second image is only for the casino gold and magenta colors. Character: a stylized feminine waitress robot of the VivaCoin casino: sleek glossy white shell plating with gold trim and gold joints, a small magenta glowing light on the chest, an elegant smooth face plate with two soft turquoise glowing eyes and no mouth, a small gold bow-tie shape on the neck and a short stylized white and gold skirt-shaped hip plate fitted close to the body, holding a round gold serving tray flat in its right hand. No text, no logos. Rig-friendly: everything fitted close to the body, nothing hanging loose. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, the tray held flat on the right palm, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo); la charola puede salir pegada a la mano"
+   },
+   "medida": "1.70 m de alto"
+  },
+  {
+   "id": "IMP01",
+   "archivo": "IMP01_ExoPiernas",
+   "fase": 9,
+   "salida": "imageassets/modelos-nuevos/IMP01_ExoPiernas_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/BaseHombre_frente.png",
+    "imageassets/personajes/RobotHombre_frente.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. No text, no letters, no numbers, no logos. The attached characters show the style of the game's chrome and grey cyber parts. Subject: a MINIMALIST wearable leg exoskeleton implant shown on its own with nobody wearing it, standing upright as if worn by an invisible person: only a slim hip belt around the waist, and from each side of the belt one single straight rod running down the OUTSIDE of each leg to the ankle, two rods in total, each rod with one small round knee joint with a tiny turquoise glowing core and ending in a small ankle cuff. Nothing else: no thigh plates, no shin plates, no foot plates, no pistons, no armor. Gunmetal and chrome, light wear. The rods are slim-looking but solid and chunky enough for 3D (about the thickness of a thumb). Empty space where the legs would be. View: from the front with a slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "1 m de alto (cadera a tobillo)"
+  },
+  {
+   "id": "IMP02",
+   "archivo": "IMP02_ExoBrazos",
+   "fase": 9,
+   "salida": "imageassets/modelos-nuevos/IMP02_ExoBrazos_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/BaseHombre_frente.png",
+    "imageassets/personajes/RobotHombre_frente.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. No text, no letters, no numbers, no logos. The attached characters show the style of the game's chrome and grey cyber parts. Subject: a MINIMALIST wearable upper-body exoskeleton implant shown on its own with nobody wearing it, as if worn by an invisible person in a slight A-pose: a slim spine piece running down the back with a small turquoise power core, connected at the top to two small shoulder joints, and from each shoulder one single straight rod running along the OUTSIDE of each arm down to the wrist, with one small round elbow joint and a thin wrist cuff. Nothing else: no chest plate, no shoulder pads, no arm armor, no pistons. Gunmetal and chrome, light wear. The rods are slim-looking but solid and chunky enough for 3D (about the thickness of a thumb). Empty space where the body and arms would be. View: 3/4 view from the back left, so the spine piece and both arm rods are visible.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "0.8 m de ancho (hombro a hombro con brazos)"
+  },
+  {
+   "id": "IMP03",
+   "archivo": "IMP03_VisorCabeza",
+   "fase": 9,
+   "salida": "imageassets/modelos-nuevos/IMP03_VisorCabeza_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/BaseHombre_frente.png",
+    "imageassets/personajes/RobotHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. No text, no letters, no numbers, no logos. The attached characters show the style of the game's chrome and grey cyber parts. Subject: a cybernetic monocle implant for ONE eye only, shown on its own: a single round lens with a glowing turquoise iris and a thin targeting ring, set in a chunky round chrome housing, attached to a small curved gunmetal piece that would rest on the temple and cheekbone beside one eye, with a small orange status light and a short thick connector going back toward the ear. Nothing covers the other eye: no band around the head, no visor. View: 3/4 view from the front left.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "6 cm de lente · 10 cm total"
+  },
+  {
+   "id": "O01",
+   "archivo": "O01_BebidaRayo",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/O01_BebidaRayo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/pantallas/pantalla-h-bebida.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. Use the attached advertisement to copy the brand design of the drink. Subject: a single standard drink can of the energy drink, standing upright: glowing acid green and black design with a big lightning bolt, the word \"RAYO\" spelled exactly like that in bold slanted letters, and no other text, a metal pull tab on top. View: 3/4 view from the front, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "12 cm de alto · 6.6 cm de diámetro"
+  },
+  {
+   "id": "O02",
+   "archivo": "O02_Papitas",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/O02_Papitas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/tianguis-noche.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. Subject: a single bag of potato chips of an invented brand, standing upright, puffy foil bag with crimped top and bottom edges, bright orange and turquoise design with a big cartoon chili pepper and a few chips drawn on it, the word \"CRUNCHI\" spelled exactly like that in big bold letters, and no other text. View: 3/4 view from the front.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "25 cm de alto · 18 cm de ancho"
+  },
+  {
+   "id": "DR01",
+   "archivo": "DR01_Dron",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/DR01_Dron.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V05_PatrullaSedan.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes or shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise. Worn Mexican cyberpunk megacity, small turquoise and orange accents. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling: cables, bars, handles and straps are thick and chunky; cables are thick bundled conduits fixed to surfaces. No text, no letters, no numbers, no logos. Use the attached police car only for the police colors (navy blue and off-white with a teal stripe and red and blue lights). Subject: a police surveillance drone: a compact armored central body in navy blue and off-white, four thick arms each ending in a round propeller guard ring with a chunky propeller inside, the four propeller units clearly separated from the body by visible gaps at the end of each arm so they can be cut as separate pieces, a small red and blue light block on top, a glowing teal camera eye in front, and a small compact gun turret hanging under the body. View: 3/4 view from the front, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K",
+    "nota": "Activar segmentación por partes si está disponible; si no, separar hélices en Blender"
+   },
+   "medida": "0.9 m de ancho"
+  },
+  {
+   "id": "T01B",
+   "archivo": "T01_Banqueta",
+   "fase": 3,
+   "salida": "imageassets/calle/T01_Banqueta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style and colors. A seamless tileable texture of a concrete sidewalk seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge: square concrete slabs in a regular grid (2 by 2 slabs) separated by dark joint lines, grey worn concrete with oil and gum stains, a few cracks and a small chipped corner, dirt in the joints. Even flat lighting, no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise.",
+   "uso": "Textura que se repite (no va a Tripo)"
+  }
+ ]
+}
