@@ -24,3 +24,10 @@ MonoBehaviour:
   suavidad: 8
   margenMuro: 0.3
   distanciaMinima: 1.2
+  alturaMira: 1
+  inclinacionMinOrbita: -10
+  inclinacionMaxOrbita: 40
+  inclinacionReposo: 15
+  distanciaExtraVelocidad: 2
+  kmhDistanciaExtra: 80
+  tiempoRumbo: 0.2

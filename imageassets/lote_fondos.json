@@ -1,0 +1,53 @@
+{
+ "version": 1,
+ "resolution": "4k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/fondos",
+ "trabajos": [
+  {
+   "id": "fondo-suburbios",
+   "archivo": "fondo-suburbios",
+   "salida": "imageassets/fondos/fondo-suburbios.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "docs/referencias-ciudad/azotea-vista-ciudad.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "4k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, color mood and lighting; do not copy their scenes or camera angles. Stylized painted 3D game look matching the references: simplified chunky shapes, soft hand-painted gradients, no photorealistic noise. This is a distant skyline matte painting for a video game horizon backdrop. Show ONLY the far-away horizon: no foreground, no street, no nearby rooftops, no characters, no vehicles close to the camera. Camera at eye level looking straight at the horizon. The horizon line sits at one third of the image height from the bottom. The bottom third is filled edge to edge with dark building silhouettes that fade into atmospheric haze toward the horizon, with no empty gaps at the left or right edges. The upper two thirds are a smooth, plain, dark blue night sky with only a few faint soft clouds and an even gradient, getting slightly lighter near the horizon, so it blends seamlessly with a game skybox. No moon, no stars clusters, no lens flare. No text, no letters, no numbers, no logos, no readable signs anywhere; screens and signs show only abstract shapes and color. Wide panoramic composition. Subject: kilometers of a poor Mexican cyberpunk neighborhood seen from far away: an endless sea of low houses and small concrete buildings with water tanks and antennas on their roofs drawn as small silhouettes, thousands of tiny warm orange lit windows, rows of street lamps with orange light, warm orange haze rising from the streets, one or two distant magenta glowing signs, the city stretching to the edges of the image.",
+   "uso": "Fondo de horizonte (no va a Tripo)"
+  },
+  {
+   "id": "fondo-neon-alto",
+   "archivo": "fondo-neon-alto",
+   "salida": "imageassets/fondos/fondo-neon-alto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png",
+    "docs/referencias-ciudad/azotea-vista-ciudad.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "4k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, color mood and lighting; do not copy their scenes or camera angles. Stylized painted 3D game look matching the references: simplified chunky shapes, soft hand-painted gradients, no photorealistic noise. This is a distant skyline matte painting for a video game horizon backdrop. Show ONLY the far-away horizon: no foreground, no street, no nearby rooftops, no characters, no vehicles close to the camera. Camera at eye level looking straight at the horizon. The horizon line sits at one third of the image height from the bottom. The bottom third is filled edge to edge with dark building silhouettes that fade into atmospheric haze toward the horizon, with no empty gaps at the left or right edges. The upper two thirds are a smooth, plain, dark blue night sky with only a few faint soft clouds and an even gradient, getting slightly lighter near the horizon, so it blends seamlessly with a game skybox. No moon, no stars clusters, no lens flare. No text, no letters, no numbers, no logos, no readable signs anywhere; screens and signs show only abstract shapes and color. Wide panoramic composition. Subject: the rich downtown district seen from far away: tall tightly packed cyberpunk skyscrapers with many lit windows, a few giant glowing screens in acid green and magenta showing abstract shapes, small blinking red lights on top of the antennas, a long elevated highway crossing the lower part with lines of white and red car lights, acid green haze around the base of the towers.",
+   "uso": "Fondo de horizonte (no va a Tripo)"
+  },
+  {
+   "id": "fondo-nova",
+   "archivo": "fondo-nova",
+   "salida": "imageassets/fondos/fondo-nova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/refineria-nova-noche.png",
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "4k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, color mood and lighting; do not copy their scenes or camera angles. Stylized painted 3D game look matching the references: simplified chunky shapes, soft hand-painted gradients, no photorealistic noise. This is a distant skyline matte painting for a video game horizon backdrop. Show ONLY the far-away horizon: no foreground, no street, no nearby rooftops, no characters, no vehicles close to the camera. Camera at eye level looking straight at the horizon. The horizon line sits at one third of the image height from the bottom. The bottom third is filled edge to edge with dark building silhouettes that fade into atmospheric haze toward the horizon, with no empty gaps at the left or right edges. The upper two thirds are a smooth, plain, dark blue night sky with only a few faint soft clouds and an even gradient, getting slightly lighter near the horizon, so it blends seamlessly with a game skybox. No moon, no stars clusters, no lens flare. No text, no letters, no numbers, no logos, no readable signs anywhere; screens and signs show only abstract shapes and color. Wide panoramic composition. Subject: a cold corporate zone seen from far away: one enormous clean white monolithic tower in the center, much taller than everything else, with a single vertical stripe of bright white light running up its face, lower boxy corporate buildings around it with cool white and pale blue windows, several searchlight beams pointing up into the sky from the base, cold blue haze around the buildings, a clean and sterile mood contrasting with the rest of the city.",
+   "uso": "Fondo de horizonte (no va a Tripo)"
+  }
+ ]
+}

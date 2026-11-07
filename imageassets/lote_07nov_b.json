@@ -1,0 +1,66 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/referencias/look",
+ "trabajos": [
+  {
+   "id": "H10",
+   "archivo": "H10_HUD",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/H10_HUD.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Keep the attached image EXACTLY the same: the same street, houses, lights, character, camera and composition, change nothing in the scene, and keep it without rain. Remove the old HUD completely and draw only this new HUD on top: HUD with an original design of our own (do not copy graphics, fonts or icons from any existing game), thin lines, thin clean sans-serif text, NO background panels, NO boxes, all text in Spanish spelled EXACTLY as written and no other HUD text: TOP-LEFT: a short thin turquoise shield bar labeled \"ESCUDO\"; below it a long thin red-pink health bar labeled \"VIDA\" with the number \"143 / 204\"; below that a row of 5 small turquoise wanted stars with 3 lit, and the money \"$ 12,450\". TOP-RIGHT: a SQUARE minimap drawn with thin lines showing streets and a dotted route line, and below it the objective text \"Ve con el Doc · 120 m\". BOTTOM-LEFT: 3 small square item slots drawn with thin outlines: an energy drink can, a bag of chips and a bandage, each with its key \"[1]\", \"[2]\", \"[3]\" and a small quantity \"x2\", \"x1\", \"x3\". BOTTOM-RIGHT: a cyan hologram of the pistol seen from the side, the big thin ammo count \"12 | 48\", a small body silhouette icon next to it, and above them two small button hints \"[R] Recargar\" and \"[F] Golpe\". "
+  },
+  {
+   "id": "K05",
+   "archivo": "K05_EsquinaBarrio",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K05_EsquinaBarrio.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of the whole game: match its art style EXACTLY, as if it were another screenshot of the same game: the same illustrated painted rendering, the same blue night lighting with soft fog, the same wet reflective ground, the same house shapes, materials, colors and level of detail. NO rain, no falling raindrops, no rain streaks; the ground is wet with puddles but it is not raining. Scene with NO HUD, no interface, no text overlays, no player character: an intersection of two streets of the same poor neighborhood at night, seen from one corner at eye height. On the four corners, two-story houses painted in different faded colors with small businesses on the ground floor: a corner shop with a rolled-down metal shutter, a taco stand with a glowing grill and stools, a small pharmacy with a green glowing cross. Utility poles with orange street lamps and thick cables crossing diagonally over the intersection, a traffic light, a street name sign on a pole with no readable text, painted zebra crosswalks on the asphalt, puddles reflecting the lights, a few parked old cars. The next block clearly starts about 70 meters away down each street (short blocks, never an endless corridor)."
+  },
+  {
+   "id": "K06",
+   "archivo": "K06_CalleNova",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/K06_CalleNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/H10_HUD.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of the whole game: match its art style EXACTLY, as if it were another screenshot of the same game: the same illustrated painted rendering, the same blue night lighting with soft fog, the same wet reflective ground, the same house shapes, materials, colors and level of detail. NO rain, no falling raindrops, no rain streaks; the ground is wet with puddles but it is not raining. The SECOND attached image shows the exact HUD design to draw on top: copy that HUD layout and style exactly. Scene: a wider, cleaner street of the district of the Nova corporation at night: office buildings of 6 to 10 floors with dark glass facades and cold white and blue light strips, wide clean sidewalks with metal bollards, security cameras on poles and walls, very few neon signs, cold blue fog, and at the end of the street the huge white Nova tower rising above everything with a bright light at its top. The player character seen from behind in third person, centered at the bottom, about one quarter of the screen height. Same HUD as the second image, with the objective \"Llega a la torre Nova\"."
+  },
+  {
+   "id": "M11",
+   "archivo": "M11_MapaCiudad",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/M11_MapaCiudad.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/M10_MapaCiudad.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the FIRST attached image for the art style and the color mood of the game, and the SECOND attached image (the previous city map) for the illustrated top-down map style, but FIX its layout: there must be NO four square zones and NO district borders or boxes. Draw the full-screen city map of the game, seen from directly above, illustrated like the pause-menu map of a GTA-style game. One single continuous city of short blocks (about 60 by 80 meters each) across the whole map, streets that bend, short alleys, 2 or 3 small plazas, one roundabout, and an elevated highway along one edge. The neighborhoods are told apart ONLY by the color of their lights and the type of buildings, blending gradually into each other at the edges: Suburbios in warm orange (small low houses), El Mercado in yellow (one street of market stalls, no hanging bulbs), Neón Alto in magenta (the casino and taller buildings), Nova in cold blue (office towers and the big Nova tower, with only a small refinery in one corner, not half of the district). NO big district names written on the map. Small round map icons with a thin label each, spelled exactly and no other text anywhere: \"Casa\"; \"Taller El Canepa\" right across the street from Casa; \"I+D+I\" and \"CIC\" each one or two blocks from Casa, inside the orange Suburbios area; \"Tianguis\"; \"Mercado de armas\"; \"Casino VivaCoin\"; \"Torre Nova\". No legend, no compass text."
+  }
+ ]
+}

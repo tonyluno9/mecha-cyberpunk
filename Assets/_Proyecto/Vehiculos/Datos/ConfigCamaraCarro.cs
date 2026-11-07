@@ -34,6 +34,9 @@ namespace MechaCyberpunk.Vehiculos
         [Tooltip("Distancia mínima al foco cuando hay un muro pegado (m).")]
         [Min(0.1f)] [SerializeField] private float distanciaMinima = 1.2f;
 
+        [Tooltip("T-723: cuánto sube (m) el punto al que mira la cámara sobre el foco: el vehículo queda más abajo en la pantalla, como CAM03_Carro.png. 0 mira justo al foco.")]
+        [Min(0f)] [SerializeField] private float alturaMira = 0f;
+
         [Header("Órbita en tercera persona (T-401)")]
         [Tooltip("Inclinación mínima de la órbita (°); negativo es por debajo del horizonte del foco.")]
         [Range(-45f, 0f)] [SerializeField] private float inclinacionMinOrbita = -10f;
@@ -48,6 +51,7 @@ namespace MechaCyberpunk.Vehiculos
         [Tooltip("T-658: qué tanto se atrasa la cámara en seguir hacia dónde apunta el carro al girar (s); evita que la vista se arremoline al maniobrar o dar reversa.")]
         [Min(0f)] [SerializeField] private float tiempoRumbo = 0.2f;
 
+        public float AlturaMira => alturaMira;
         public float InclinacionMinOrbita => inclinacionMinOrbita;
         public float InclinacionMaxOrbita => inclinacionMaxOrbita;
         public float InclinacionReposo => inclinacionReposo;

@@ -1,0 +1,143 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/carros",
+ "trabajos": [
+  {
+   "id": "V02",
+   "archivo": "V02_SedanViejo",
+   "salida": "imageassets/carros/V02_SedanViejo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Poor gritty Mexican cyberpunk slum car: a cheap old car kept alive with mismatched replacement panels, riveted patches, rust streaks and scratches, with a few cheap futuristic add-ons bolted on. Wheels are big, chunky and clearly separated from the body with visible dark wheel arches. Windows are dark tinted solid glass, no interior visible. No thin parts: antennas, mirrors and bars are thick and chunky. Single vehicle, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: a boxy old 4-door compact sedan from the 1990s with a short square trunk and flat hood, faded pale blue paint with one rear door in primer grey and the trunk lid in dull white, a dented bumper held with a thick strap, a thin glowing teal LED strip replacing one broken headlight while the other is an old round yellowish lamp, a chunky boxy battery pack bolted on the roof rack, small amber light on the roof pack, rust along the bottom edges.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 20000,
+    "textura": "2K"
+   },
+   "medida": "4.3 m largo"
+  },
+  {
+   "id": "V03",
+   "archivo": "V03_PickupTrabajo",
+   "salida": "imageassets/carros/V03_PickupTrabajo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Poor gritty Mexican cyberpunk slum car: a cheap old car kept alive with mismatched replacement panels, riveted patches, rust streaks and scratches, with a few cheap futuristic add-ons bolted on. Wheels are big, chunky and clearly separated from the body with visible dark wheel arches. Windows are dark tinted solid glass, no interior visible. No thin parts: antennas, mirrors and bars are thick and chunky. Single vehicle, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: a small old 2-door work pickup truck with a short cab and an open rear cargo bed, faded dull green paint with a mismatched rust-orange front fender and a sun-bleached hood, a chunky black tube bull bar, the cargo bed holds two plastic crates and a tied tarp bundle shaped as simple blocks, a thick boxy glowing magenta light bar on the cab roof, a chunky side exhaust pipe, mud and rust on the lower sides.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 20000,
+    "textura": "2K"
+   },
+   "medida": "4.8 m largo"
+  },
+  {
+   "id": "V04",
+   "archivo": "V04_CombiVieja",
+   "salida": "imageassets/carros/V04_CombiVieja.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Poor gritty Mexican cyberpunk slum car: a cheap old car kept alive with mismatched replacement panels, riveted patches, rust streaks and scratches, with a few cheap futuristic add-ons bolted on. Wheels are big, chunky and clearly separated from the body with visible dark wheel arches. Windows are dark tinted solid glass, no interior visible. No thin parts: antennas, mirrors and bars are thick and chunky. Single vehicle, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: an old rounded boxy minivan like a classic cheap passenger van with a flat front, sliding side door and small windows, two-tone paint of faded cream on top and worn dull red on the bottom with a primer grey replacement front panel, a big cheap roof rack holding a chunky square cargo box, a glowing amber LED strip across the front grille, a hand-painted stripe shown as a plain teal band along the side (no text), rust spots and dents.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 20000,
+    "textura": "2K"
+   },
+   "medida": "4.6 m largo"
+  },
+  {
+   "id": "V05",
+   "archivo": "V05_PatrullaSedan",
+   "salida": "imageassets/carros/V05_PatrullaSedan.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Poor gritty Mexican cyberpunk slum car: a cheap old car kept alive with mismatched replacement panels, riveted patches, rust streaks and scratches, with a few cheap futuristic add-ons bolted on. Wheels are big, chunky and clearly separated from the body with visible dark wheel arches. Windows are dark tinted solid glass, no interior visible. No thin parts: antennas, mirrors and bars are thick and chunky. Single vehicle, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: Police patrol vehicle of a fictional cyberpunk Mexican city police: better maintained than the slum cars, only light wear and a few scratches, two-tone livery of dark navy blue and off-white, a thick chunky glowing light bar with red and blue blocks, a thick push bumper, NO text, NO words, NO numbers, NO badges or emblems: the doors carry only a plain diagonal teal stripe and a plain white blank shield shape. a boxy mid-size 4-door police sedan with a straight hood and short trunk, the navy and off-white livery, roof light bar, a chunky front push bumper with two small spotlights, a short thick antenna, a small boxy cyber scanner pod on the roof next to the light bar glowing teal.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 20000,
+    "textura": "2K"
+   },
+   "medida": "4.6 m largo"
+  },
+  {
+   "id": "V06",
+   "archivo": "V06_PatrullaCamioneta",
+   "salida": "imageassets/carros/V06_PatrullaCamioneta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference image ONLY for the art style, rendering, colors, proportions of the wheels and level of wear; do not copy its car shape. Draw only the single vehicle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Poor gritty Mexican cyberpunk slum car: a cheap old car kept alive with mismatched replacement panels, riveted patches, rust streaks and scratches, with a few cheap futuristic add-ons bolted on. Wheels are big, chunky and clearly separated from the body with visible dark wheel arches. Windows are dark tinted solid glass, no interior visible. No thin parts: antennas, mirrors and bars are thick and chunky. Single vehicle, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: Police patrol vehicle of a fictional cyberpunk Mexican city police: better maintained than the slum cars, only light wear and a few scratches, two-tone livery of dark navy blue and off-white, a thick chunky glowing light bar with red and blue blocks, a thick push bumper, NO text, NO words, NO numbers, NO badges or emblems: the doors carry only a plain diagonal teal stripe and a plain white blank shield shape. a big boxy 4-door police pickup truck with a tall cab and an open rear bed with a thick roll bar, the navy and off-white livery, a long light bar on the cab roof, a chunky front push bumper, big off-road tires, two boxy equipment lockers in the bed, a teal glowing strip under the roll bar.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 20000,
+    "textura": "2K"
+   },
+   "medida": "5.0 m largo"
+  },
+  {
+   "id": "V07",
+   "archivo": "V07_MotoReparto",
+   "salida": "imageassets/carros/V07_MotoReparto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png",
+    "imageassets/generadas/C19_Moto_v1.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors, proportions and level of wear; do not copy its shape. Draw only the single motorcycle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Poor gritty Mexican cyberpunk slum car: a cheap old motorcycle kept alive with mismatched replacement panels, riveted patches, rust streaks and scratches, with a few cheap futuristic add-ons bolted on. Wheels are big, chunky and clearly separated from the body. No thin parts: antennas, mirrors and bars are thick and chunky. Single vehicle, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: a cheap small delivery motorcycle (underbone scooter style) used by street food couriers, original design that does not resemble any real brand, faded red plastic body panels with one replacement panel in primer grey, a big boxy insulated delivery box on a rear rack with a plain amber stripe and no text, a round old headlight plus a thin teal LED strip, thick chunky wheels, a small boxy battery bolted under the seat, standing on its side kickstand.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.9 m largo"
+  },
+  {
+   "id": "V08",
+   "archivo": "V08_MotoPatrulla",
+   "salida": "imageassets/carros/V08_MotoPatrulla.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png",
+    "imageassets/generadas/C19_Moto_v1.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors, proportions and level of wear; do not copy its shape. Draw only the single motorcycle described. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Wheels are big, chunky and clearly separated from the body. No thin parts: antennas, mirrors and bars are thick and chunky. Single vehicle, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no license plate text, no logos, no people. View: 3/4 view from the front left, slightly from above. Subject: Police patrol vehicle of a fictional cyberpunk Mexican city police: better maintained than the slum cars, only light wear and a few scratches, two-tone livery of dark navy blue and off-white, a thick chunky glowing light bar with red and blue blocks, a thick push bumper, NO text, NO words, NO numbers, NO badges or emblems: the doors carry only a plain diagonal teal stripe and a plain white blank shield shape. a big heavy police patrol motorcycle, original design that does not resemble any real brand, chunky faceted fairing in the navy and off-white livery, a windshield of dark tinted solid glass, red and blue light blocks on the front and on two short thick rear poles, two boxy side cases with plain white blank shield shapes, thick chunky wheels with glowing teal rims, standing on its side kickstand.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.2 m largo"
+  }
+ ]
+}

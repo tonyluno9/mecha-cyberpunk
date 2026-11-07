@@ -1,0 +1,188 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/ciudad2",
+ "trabajos": [
+  {
+   "id": "N01",
+   "archivo": "N01",
+   "salida": "imageassets/ciudad2/N01.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "docs/referencias-ciudad/calle-suburbios-noche.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a wall-mounted caged lamp: a short thick dark charcoal metal arm coming out of a square wall plate, holding a chunky round protective cage made of a few thick bars around a big warm amber glowing bulb, a small boxy junction cap, rust spots. The back of the wall plate is flat. View: 3/4 view from the side and slightly from below.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "1K"
+   },
+   "medida": "40 cm (brazo + jaula)"
+  },
+  {
+   "id": "N02",
+   "archivo": "N02",
+   "salida": "imageassets/ciudad2/N02.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png",
+    "docs/referencias-ciudad/azotea-vista-ciudad.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a straight section of an elevated concrete highway overpass: a thick flat concrete road deck with beveled edges, two very thick concrete columns underneath with wide capitals, a thick solid concrete safety barrier with a chunky metal top rail along both edges of the deck, a glowing teal light strip running along the underside edge of the deck, dark rain stains and a few abstract neon graffiti shapes on the columns with no letters. Both ends of the deck are cut perfectly flat so identical sections line up end to end. View: 3/4 view from the front left, from below at street level.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 20000,
+    "textura": "2K"
+   },
+   "medida": "12 m de largo × 8 m de alto (incluye columnas)"
+  },
+  {
+   "id": "N03a",
+   "archivo": "N03a",
+   "salida": "imageassets/ciudad2/N03a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/tianguis-noche.png",
+    "docs/referencias-ciudad/entrada-mercado-noche.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a Mexican street market stall (tianguis): a sturdy frame of thick grey metal tubes holding a tight flat roof made of a plain solid magenta tarp as one thick smooth shape, a long wooden table with a few stacks of chunky boxes of goods and a crate under it, a plastic stool, a small warm amber bulb hanging tight under the tarp. Everything thick and solid, nothing flapping. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "3 × 2 m de planta, ~2.4 m de alto"
+  },
+  {
+   "id": "N03b",
+   "archivo": "N03b",
+   "salida": "imageassets/ciudad2/N03b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/tianguis-noche.png",
+    "docs/referencias-ciudad/entrada-mercado-noche.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a Mexican street market stall (tianguis): a sturdy frame of thick grey metal tubes holding a tight flat roof made of a tarp with bold orange and white stripes as one thick smooth shape, a long wooden table with a few stacks of chunky boxes of goods and a crate under it, a plastic stool, a small warm amber bulb hanging tight under the tarp. Everything thick and solid, nothing flapping. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "3 × 2 m de planta, ~2.4 m de alto"
+  },
+  {
+   "id": "N04",
+   "archivo": "N04",
+   "salida": "imageassets/ciudad2/N04.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "docs/referencias-ciudad/entrada-mercado-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a wall-mounted pipe section: two thick parallel horizontal pipes (one rusty orange, one dark grey) with two chunky elbow bends going up at one end, a big red valve wheel, thick metal clamps bolting them to a flat back strip, rust and grime. Pipes cut flat at the ends so sections can continue. The back side is flat to mount against a wall. View: front view rotated about 25 degrees to the left.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "1K"
+   },
+   "medida": "3 m de largo"
+  },
+  {
+   "id": "N05",
+   "archivo": "N05",
+   "salida": "imageassets/ciudad2/N05.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "docs/referencias-ciudad/calle-suburbios-noche.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a rectangular wall exhaust vent: a chunky dark gunmetal metal box with a thick louvered grille on the front, a short thick square duct coming out of one side, bolts, rust streaks and a faint teal indicator light. The back side is flat to mount against a wall. View: 3/4 view from the front left.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "1K"
+   },
+   "medida": "1 m de ancho"
+  },
+  {
+   "id": "N06",
+   "archivo": "N06",
+   "salida": "imageassets/ciudad2/N06.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "docs/referencias-ciudad/tianguis-noche.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a pile of trash on the ground: several chunky black plastic garbage bags tied at the top, piled together with a few flattened and folded cardboard boxes and one crushed boxy can, all touching as one compact group sitting flat on the ground. Glossy black bags with soft highlights so the shapes read clearly. View: 3/4 view from slightly above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "1K"
+   },
+   "medida": "1.5 m de ancho"
+  },
+  {
+   "id": "N07",
+   "archivo": "N07",
+   "salida": "imageassets/ciudad2/N07.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png",
+    "docs/referencias-ciudad/cruce-dia-lluvia.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a section of sturdy metal sidewalk fence: two thick dark charcoal square posts on small base plates, a thick top rail and bottom rail, and a few thick vertical bars between them, with a thin glowing teal accent strip along the top rail, scratches. Both ends end in posts so sections line up. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "1K"
+   },
+   "medida": "3 m de largo, ~1.1 m de alto"
+  },
+  {
+   "id": "N08",
+   "archivo": "N08",
+   "salida": "imageassets/ciudad2/N08.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png",
+    "docs/referencias-ciudad/tianguis-noche.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy the scenes. Draw only the single object described, isolated on a plain flat light grey background. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, no fine noise, readable from a distance. Gritty Mexican cyberpunk city. Single object, centered, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow on the ground, no text, no letters, no numbers, no logos, no people. Nothing thin or dangling: railings, wires, tubes and brackets are thick and chunky. View: 3/4 view from the front, slightly from above unless stated. Subject: a vertical advertising sign on a pole: a thick dark gunmetal pole on a bolted base plate holding a tall vertical frame with a flat smooth dark screen (OFF, plain dark, no image), the frame edged with a glowing magenta light strip, a boxy control unit on the pole with a teal light. View: 3/4 view from the front left, slightly from below, the whole sign inside the image.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "pantalla 1 × 3 m sobre poste (total ~5 m)"
+  }
+ ]
+}

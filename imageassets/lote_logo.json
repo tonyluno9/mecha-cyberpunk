@@ -1,0 +1,93 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/logo",
+ "trabajos": [
+  {
+   "id": "LG01",
+   "archivo": "LG01_Neon",
+   "fase": 1,
+   "salida": "imageassets/logo/LG01_Neon.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and color palette of the game (illustrated painted look, blue night, magenta and turquoise neon, orange sodium light, Mexican cyberpunk neighborhood); do not copy the scene. Design a video game title logo. The logo text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and legible, no extra letters, no other words, no tagline, no subtitle. The logo alone, centered, filling about 70% of the image width, on a PURE BLACK (#000000) flat background with nothing else around it: no scene, no frame, no gradient background, no watermark. A soft glow is allowed only right around the logo. Style: a real neon tube sign: the letters made of glowing bent glass tubes in two colors, \"CYBER\" in magenta and \"CITY\" in turquoise, thin dark metal mounting rails and small clips behind the tubes, one letter's tube flickering dimmer than the others, realistic neon glow halo."
+  },
+  {
+   "id": "LG02",
+   "archivo": "LG02_Glitch",
+   "fase": 1,
+   "salida": "imageassets/logo/LG02_Glitch.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and color palette of the game (illustrated painted look, blue night, magenta and turquoise neon, orange sodium light, Mexican cyberpunk neighborhood); do not copy the scene. Design a video game title logo. The logo text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and legible, no extra letters, no other words, no tagline, no subtitle. The logo alone, centered, filling about 70% of the image width, on a PURE BLACK (#000000) flat background with nothing else around it: no scene, no frame, no gradient background, no watermark. A soft glow is allowed only right around the logo. Style: thick bold modern sans-serif capital letters in white, sliced by a few horizontal glitch cuts with the slices shifted sideways, cyan and magenta chromatic offset copies peeking out behind the letters, a few thin digital scan lines, energetic but the word stays perfectly readable."
+  },
+  {
+   "id": "LG03",
+   "archivo": "LG03_Skyline",
+   "fase": 1,
+   "salida": "imageassets/logo/LG03_Skyline.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and color palette of the game (illustrated painted look, blue night, magenta and turquoise neon, orange sodium light, Mexican cyberpunk neighborhood); do not copy the scene. Design a video game title logo. The logo text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and legible, no extra letters, no other words, no tagline, no subtitle. The logo alone, centered, filling about 70% of the image width, on a PURE BLACK (#000000) flat background with nothing else around it: no scene, no frame, no gradient background, no watermark. A soft glow is allowed only right around the logo. Style: bold capital letters in warm off-white with a soft orange glow, and growing out of the top edge of the letters a dark silhouette of the city: small houses with water tanks on their roofs, utility poles with sagging cables between them, a few antennas, and one tall slim tower rising above the middle of the word with a small light at its top; a few tiny magenta and turquoise lit windows in the silhouette."
+  },
+  {
+   "id": "LG04",
+   "archivo": "LG04_Barrio",
+   "fase": 1,
+   "salida": "imageassets/logo/LG04_Barrio.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and color palette of the game (illustrated painted look, blue night, magenta and turquoise neon, orange sodium light, Mexican cyberpunk neighborhood); do not copy the scene. Design a video game title logo. The logo text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and legible, no extra letters, no other words, no tagline, no subtitle. The logo alone, centered, filling about 70% of the image width, on a PURE BLACK (#000000) flat background with nothing else around it: no scene, no frame, no gradient background, no watermark. A soft glow is allowed only right around the logo. Style: Mexican hand-painted sign-painter (rotulista) lettering with bold rounded shadowed letters in bright colors (yellow, red and turquoise with a dark drop shadow), mixed with neon: a thin magenta neon tube outlining the word, and beside the word a short utility pole with a street lamp glowing orange and two cables running from it across the top of the logo."
+  },
+  {
+   "id": "LG05",
+   "archivo": "LG05_Minimal",
+   "fase": 1,
+   "salida": "imageassets/logo/LG05_Minimal.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/H10_HUD.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and color palette of the game (illustrated painted look, blue night, magenta and turquoise neon, orange sodium light, Mexican cyberpunk neighborhood); do not copy the scene. Design a video game title logo. The logo text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and legible, no extra letters, no other words, no tagline, no subtitle. The logo alone, centered, filling about 70% of the image width, on a PURE BLACK (#000000) flat background with nothing else around it: no scene, no frame, no gradient background, no watermark. A soft glow is allowed only right around the logo. Style: (the second attached image shows the game's HUD: copy its thin typography style) a thin, clean geometric sans-serif in white with wide letter spacing, very elegant and minimal, with a single thin horizontal line of turquoise light passing under the word and fading out at both ends."
+  },
+  {
+   "id": "LG06",
+   "archivo": "LG06_Emblema",
+   "fase": 1,
+   "salida": "imageassets/logo/LG06_Emblema.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and color palette of the game (illustrated painted look, blue night, magenta and turquoise neon, orange sodium light, Mexican cyberpunk neighborhood); do not copy the scene. Design a video game title logo. The logo text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter clear and legible, no extra letters, no other words, no tagline, no subtitle. The logo alone, centered, filling about 70% of the image width, on a PURE BLACK (#000000) flat background with nothing else around it: no scene, no frame, no gradient background, no watermark. A soft glow is allowed only right around the logo. Style: a game emblem badge: a bold angular shield shape with a dark metal frame and turquoise and magenta edge lights, inside the shield a large stylized monogram of the two letters \"CC\" interlocked, and below the shield the word \"CYBERCITY\" in bold clean capital letters. The only letters allowed are the monogram \"CC\" and the word \"CYBERCITY\". Works as an app icon."
+  }
+ ]
+}

@@ -11,7 +11,8 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Estrellas_DeDiaNoSeVenYDeNocheSi()
         {
             Assert.AreEqual(0f, CalculoCieloTextura.OpacidadEstrellas(0f), 0.0001f);
-            Assert.Greater(CalculoCieloTextura.OpacidadEstrellas(1f), 0.9f);
+            Assert.Greater(CalculoCieloTextura.OpacidadEstrellas(1f), 0.1f, "De noche hay estrellas");
+            Assert.Less(CalculoCieloTextura.OpacidadEstrellas(1f), 0.3f, "T-880: pocas, el cielo de noche es liso como K01");
             Assert.Less(CalculoCieloTextura.OpacidadEstrellas(0.5f), CalculoCieloTextura.OpacidadEstrellas(1f));
         }
 
@@ -23,6 +24,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(1f, dia.b, 0.001f, "De día son blancas");
             Assert.Greater(noche.r, noche.g, "De noche el brillo de la ciudad las tiñe de rosa");
             Assert.Greater(dia.a, 0.3f);
+            Assert.Less(noche.a, 0.1f, "T-880: de noche el cielo es liso, casi sin nubes");
         }
 
         [Test]

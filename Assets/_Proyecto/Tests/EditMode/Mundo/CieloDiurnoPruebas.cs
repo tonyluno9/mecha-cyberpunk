@@ -52,22 +52,22 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Noche_ConservaLosValoresDeAntes()
         {
             ConfigCicloDia config = Config();
-            Assert.AreEqual(0.02f, config.DensidadNiebla(HoraNoche), Tolerancia, "S2c (7-nov): niebla azul de K01 que da profundidad (T-860 la había bajado a 0.009)");
-            Assert.AreEqual(0.12f, config.ColorNiebla(HoraNoche).r, Tolerancia);
-            Assert.AreEqual(0.3f, config.ColorNiebla(HoraNoche).b, Tolerancia, "S2c: azul de K01");
-            Assert.AreEqual(0.36f, config.ColorAmbiente(HoraNoche).r, Tolerancia, "S2c (7-nov): ambiente de noche de K01, menos azul (T-507 lo tenía en 0.38 con más azul)");
+            Assert.AreEqual(0.036f, config.DensidadNiebla(HoraNoche), Tolerancia, "T-880 (7-nov): niebla azul más espesa para que el fondo de la calle se pierda, como K01 (S2c la tenía en 0.02)");
+            Assert.AreEqual(0.2f, config.ColorNiebla(HoraNoche).r, Tolerancia);
+            Assert.AreEqual(0.32f, config.ColorNiebla(HoraNoche).b, Tolerancia, "T-880: azul grisáceo de K01");
+            Assert.AreEqual(0.4f, config.ColorAmbiente(HoraNoche).r, Tolerancia, "T-880: ambiente de noche de K01 (sin el APV viejo, la ciudad entera lo recibe)");
             Assert.AreEqual(0f, config.DiscoSol(HoraNoche), Tolerancia, "La luna no se dibuja como disco");
         }
 
         [Test]
-        public void CieloDeNoche_EsElColorDeLaNiebla()
+        public void CieloDeNoche_AzulMarinoMasOscuroQueLaNiebla()
         {
+            // T-880: el cielo de K01 es azul marino liso y la niebla azul grisácea más clara; el horizonte del cielo sí es la niebla.
             ConfigCicloDia config = Config();
             Color cielo = config.ColorCielo(HoraNoche);
             Color niebla = config.ColorNiebla(HoraNoche);
-            Assert.AreEqual(niebla.r, cielo.r, Tolerancia);
-            Assert.AreEqual(niebla.g, cielo.g, Tolerancia);
-            Assert.AreEqual(niebla.b, cielo.b, Tolerancia);
+            Assert.Less(cielo.grayscale, niebla.grayscale, "el cénit más oscuro que la niebla");
+            Assert.Greater(cielo.b, cielo.r * 2f, "azul marino");
         }
 
         [Test]

@@ -1,0 +1,108 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/letreros",
+ "trabajos": [
+  {
+   "id": "L10",
+   "archivo": "L10_LetreroVivaCoin",
+   "salida": "imageassets/letreros/L10_LetreroVivaCoin.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png",
+    "docs/referencias-ciudad/entrada-mercado-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, readable from a distance. A single 3D sign object, centered, seen straight from the front with a very slight angle so its depth is visible, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow, no people, no wall behind it, no extra text other than the text requested. The letters are thick, raised, chunky 3D letters, very bold and simple, and must be spelled EXACTLY as written, letter by letter. Subject: a big flashy casino marquee sign: a wide rectangular box with a thick gold frame and magenta panels, rows of round warm white light bulbs all around the border, in the center the word \"VIVACOIN\" in huge thick gold letters with a magenta glow, a big round gold coin shape on the left of the word, a curved crown-like top edge.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "6 × 2.5 m · fondo 0.6 m"
+  },
+  {
+   "id": "L11",
+   "archivo": "L11_LetreroHotel",
+   "salida": "imageassets/letreros/L11_LetreroHotel.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/neon-alto-noche.png",
+    "docs/referencias-ciudad/callejon-noche.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, readable from a distance. A single 3D sign object, centered, seen straight from the front with a very slight angle so its depth is visible, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow, no people, no wall behind it, no extra text other than the text requested. The letters are thick, raised, chunky 3D letters, very bold and simple, and must be spelled EXACTLY as written, letter by letter. Subject: a tall vertical blade sign of a cheap city hotel: a narrow tall dark metal box with a thick frame and two thick mounting brackets on its back edge, the word \"HOTEL\" written vertically with one letter under the other (H, O, T, E, L), in glowing pink-magenta neon tube letters, small teal neon stars between the letters, a few bulbs at the top.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "1.2 × 5 m · fondo 0.4 m"
+  },
+  {
+   "id": "L12",
+   "archivo": "L12_LetreroElMercado",
+   "salida": "imageassets/letreros/L12_LetreroElMercado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/entrada-mercado-noche.png",
+    "docs/referencias-ciudad/tianguis-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, readable from a distance. A single 3D sign object, centered, seen straight from the front with a very slight angle so its depth is visible, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow, no people, no wall behind it, no extra text other than the text requested. The letters are thick, raised, chunky 3D letters, very bold and simple, and must be spelled EXACTLY as written, letter by letter. Subject: a rough, tough sign for a clandestine gun shop: a heavy rusted steel plate with welded edges and big bolts, hung by two thick short chains from a thick bar, the words \"EL MERCADO\" in thick stencil-style dark letters with a weak amber glow behind them, and a big flat silhouette of a pistol next to the text, glowing faintly in amber, scratches and rust.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "3 × 1.2 m · fondo 0.2 m"
+  },
+  {
+   "id": "L13",
+   "archivo": "L13_LetreroIDI",
+   "salida": "imageassets/letreros/L13_LetreroIDI.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/callejon-noche.png",
+    "docs/referencias-ciudad/neon-alto-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, readable from a distance. A single 3D sign object, centered, seen straight from the front with a very slight angle so its depth is visible, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow, no people, no wall behind it, no extra text other than the text requested. The letters are thick, raised, chunky 3D letters, very bold and simple, and must be spelled EXACTLY as written, letter by letter. Subject: a sign for an underground street clinic: a rounded rectangular light box with a dark gunmetal frame, on the left a big medical cross in glowing teal made of a cross shape filled with circuit board lines, on the right the text \"I+D+I\" in thick white letters with a teal glow, small bolts and light wear.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1.8 × 1 m · fondo 0.3 m"
+  },
+  {
+   "id": "L14",
+   "archivo": "L14_LetreroCIC",
+   "salida": "imageassets/letreros/L14_LetreroCIC.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "docs/referencias-ciudad/calle-suburbios-noche.png",
+    "docs/referencias-ciudad/callejon-noche.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached reference images ONLY for the art style, rendering, colors and level of wear; do not copy their scenes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures, readable from a distance. A single 3D sign object, centered, seen straight from the front with a very slight angle so its depth is visible, fully visible with empty space around it, isolated on a plain flat light grey background, soft even studio lighting, no cast shadow, no people, no wall behind it, no extra text other than the text requested. The letters are thick, raised, chunky 3D letters, very bold and simple, and must be spelled EXACTLY as written, letter by letter. Subject: a sign for a neighborhood mechanic workshop: a sturdy rectangular steel sign with a thick orange and charcoal frame, on the left a big chunky gear shape glowing amber, on the right the letters \"CIC\" in huge thick white letters with an orange glow, a few rivets, light grime and scratches.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 1.2 m · fondo 0.3 m"
+  }
+ ]
+}

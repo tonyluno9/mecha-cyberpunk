@@ -254,7 +254,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             float libre = CalculoCamaraCarro.DistanciaLibre(distancia, distanciaMuro, config.MargenMuro, config.DistanciaMinima);
             transform.position = foco + direccion * libre;
-            transform.rotation = Quaternion.LookRotation(foco - transform.position, Vector3.up);
+            transform.rotation = Quaternion.LookRotation(foco + Vector3.up * config.AlturaMira - transform.position, Vector3.up);
         }
 
         private bool EsDelCarro(Collider colisionador)
