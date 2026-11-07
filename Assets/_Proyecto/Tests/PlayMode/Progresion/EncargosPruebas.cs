@@ -233,7 +233,12 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
             yield return null;
             yield return new WaitForSecondsRealtime(0.4f);
-            yield return Pulsar(teclado.eKey);
+            // T-688: si la E cae antes de que el carro esté al alcance no pasa nada; se repite hasta que sube (antes era intermitente).
+            for (int intento = 0; intento < 5 && Objetivo != DirectorEncargos.TextoEntregar; intento++)
+            {
+                yield return Pulsar(teclado.eKey);
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
             yield return EsperarHasta(() => Objetivo == DirectorEncargos.TextoEntregar, "llevarlo con CANEPA", 5f);
 
             // Lo lleva al taller (el carro se coloca junto a CANEPA).

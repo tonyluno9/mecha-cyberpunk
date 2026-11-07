@@ -219,12 +219,14 @@ namespace MechaCyberpunk.Tests.Personaje
             return blanco.AddComponent<BlancoDeTiro>();
         }
 
-        // T-688: las expendedoras de la calle (T-685) no son parte de este recorrido y estorban al caminar hacia El Mercado.
+        // T-688: T-685 puso en la calle una raiz "Expendedoras" con su propia PantallaTienda; FindFirstObjectByType<PantallaTienda>
+        // podia devolver esa y no la de El Mercado. Aqui no se prueban las expendedoras: se quita la raiz entera.
         private static void QuitarExpendedoras()
         {
-            foreach (Expendedora e in Object.FindObjectsByType<Expendedora>(FindObjectsSortMode.None))
+            GameObject raiz = GameObject.Find(ColocadorExpendedoras.NombreRaiz);
+            if (raiz != null)
             {
-                Object.Destroy(e.gameObject);
+                Object.DestroyImmediate(raiz);
             }
         }
 
