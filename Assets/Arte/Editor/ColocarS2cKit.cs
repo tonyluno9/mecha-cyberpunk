@@ -301,7 +301,10 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 KitS2c.Poste(o, raiz, a + direccion * x + normal * (anchoBanqueta - 0.8f) + Vector3.up * banqueta, normal, piso, false, KitS2c.Fria);
                 KitS2c.Pieza(raiz, "CY08_CamaraCorporativa", a + direccion * (x + 3f) + normal * 0.25f + Vector3.up * (banqueta + 3.6f), Quaternion.LookRotation(normal), Vector3.one, false);
-                KitS2c.Pieza(raiz, "C11_Basurero", a + direccion * (x + 6f) + normal * 0.8f + Vector3.up * banqueta, Quaternion.LookRotation(normal), Vector3.one);
+                if (x + 6f < largo - 1f)
+                {
+                    KitS2c.Pieza(raiz, "C11_Basurero", a + direccion * (x + 6f) + normal * 0.8f + Vector3.up * banqueta, Quaternion.LookRotation(normal), Vector3.one);
+                }
             }
         }
 
