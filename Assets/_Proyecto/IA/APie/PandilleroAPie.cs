@@ -75,7 +75,7 @@ namespace MechaCyberpunk.IA.APie
         private const float PeriodoBusquedaCubierta = 1.5f;
         private const float EnfriamientoGrito = 4f;
         private const float SegundosGrito = 1.5f;
-        private const float AlturaMinCubierta = 1.2f;
+        private const float AlturaMinCubierta = 1.3f; // T-712: agachado la cabeza llega a 1.33 m (medido): tiene que taparlo un muro, carro o contenedor
         private const float TamanoMaxCubierta = 30f;
         private const float MargenCubierta = 0.8f;
         private const float LlegadaCubierta = 0.5f;
@@ -89,6 +89,9 @@ namespace MechaCyberpunk.IA.APie
 
         /// <summary>True si eligió un punto de cubierta (T-423).</summary>
         public bool TieneCubierta => tieneCubierta;
+
+        /// <summary>T-712: True mientras está agachado detrás de su cubierta.</summary>
+        public bool EstaAgachado => visual != null && visual.Agachado;
         public Vector3 PuntoCubierta => puntoCubierta;
 
         private static readonly int IdVelocidad = Animator.StringToHash("Velocidad");
@@ -313,6 +316,7 @@ namespace MechaCyberpunk.IA.APie
             velocidadVertical = 0f;
             if (visual != null)
             {
+                visual.Agachado = false;
                 visual.Caido = false;
             }
             else if (animador != null)
@@ -487,7 +491,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 Gritar("¡Me largo!");
             }
-            if (datos.EsPolicia && !policiaYaSeCubrio && tieneCubierta && modo == ReglaTacticaPandillero.Modo.Rodear)
+            if ((datos.EsPolicia || (datos.UsaPistola && !esJefe)) && !policiaYaSeCubrio && tieneCubierta && modo == ReglaTacticaPandillero.Modo.Rodear)
             {
                 // T-709: al bajarse de la patrulla corre a cubrirse detrás de ella antes de disparar.
                 policiaYaSeCubrio = true;
@@ -601,6 +605,9 @@ namespace MechaCyberpunk.IA.APie
                 animador.SetBool(IdEnPiso, true);
                 if (visual != null)
                 {
+                    // T-712: detrás de la cubierta, ya llegado, se agacha (Cobertura_Entrar); al asomarse se para y apunta.
+                    visual.Agachado = tieneCubierta && modo == ReglaTacticaPandillero.Modo.Cubrirse && !huyendo
+                        && DistanciaPlana(transform.position, puntoCubierta) <= LlegadaCubierta + 0.5f;
                     visual.Apuntando = apuntando;
                     visual.TipoArma = TipoArmaVisual.Pistola;
                 }
@@ -1074,6 +1081,7 @@ namespace MechaCyberpunk.IA.APie
                 }
                 if (visual != null)
                 {
+                    visual.Agachado = false;
                     visual.Caido = true;
                 }
                 else if (animador != null)

@@ -6,24 +6,26 @@ using System.Linq;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.IA.Datos;
+using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Trafico.Datos;
 using MechaCyberpunk.Trafico.Persecucion;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
-namespace MechaCyberpunk.Tests.IA
+namespace MechaCyberpunk.Tests.Progresion
 {
     /// <summary>
     /// T-711: en la escena Ciudad real (Ciudad_Prologo), las balas de los pandilleros SKULLS, los policías y el dron no atraviesan paredes, las casas
     /// nuevas del kit, los carros ni cajas: sin línea de vista no hay disparo ni daño; con línea libre sí. Las posiciones salen de la propia escena
     /// (los colliders reales, el volumen del callejón), no de coordenadas fijas.
     /// </summary>
-    public class BalasCiudadT711Pruebas
+    public class BalasCiudadT711Pruebas : InputTestFixture
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string RutaPandillero = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab";
@@ -44,14 +46,53 @@ namespace MechaCyberpunk.Tests.IA
         }
 
 
+        public override void Setup()
+        {
+            base.Setup();
+            InputSystem.AddDevice<Keyboard>();
+            InputSystem.AddDevice<Mouse>();
+        }
+
         private readonly List<GameObject> extras = new List<GameObject>();
         private readonly List<Object> extrasConfig = new List<Object>();
+        private string carpetaGuardado;
         private Func<float> azarPistola;
         private Func<float> azarDron;
 
-        [UnitySetUp]
+        // Lo que la ciudad deja vivo entre escenas (HuecosBala, VisorRayosX, ModoVideo): se guarda lo que había y se borra lo nuevo al terminar,
+        // para que las pruebas que siguen en la misma corrida no hereden objetos de la ciudad.
+        private readonly HashSet<GameObject> persistentesAntes = new HashSet<GameObject>();
+
+        private void AnotarPersistentes()
+        {
+            persistentesAntes.Clear();
+            foreach (GameObject g in Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (g.scene.name == "DontDestroyOnLoad" && g.transform.parent == null)
+                {
+                    persistentesAntes.Add(g);
+                }
+            }
+        }
+
+        private void BorrarPersistentesNuevos()
+        {
+            foreach (GameObject g in Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (g.scene.name == "DontDestroyOnLoad" && g.transform.parent == null && !persistentesAntes.Contains(g))
+                {
+                    Object.DestroyImmediate(g);
+                }
+            }
+        }
+
         public IEnumerator CargarCiudad()
         {
+            AnotarPersistentes();
+            // El autoguardado de la ciudad va a una carpeta temporal: ni pisa la partida real ni le deja su estado a las pruebas que siguen.
+            carpetaGuardado = Path.Combine(Application.temporaryCachePath, "balas_ciudad_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(carpetaGuardado);
+            ServicioGuardado.RutaForzada = Path.Combine(carpetaGuardado, "partida.json");
             yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             float fin = Time.realtimeSinceStartup + 40f;
@@ -77,7 +118,7 @@ namespace MechaCyberpunk.Tests.IA
             {
                 if (extra != null)
                 {
-                    Object.Destroy(extra);
+                    Object.DestroyImmediate(extra);
                 }
             }
             extras.Clear();
@@ -85,10 +126,15 @@ namespace MechaCyberpunk.Tests.IA
             extrasConfig.Clear();
             foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
             {
-                Object.Destroy(raiz);
+                Object.DestroyImmediate(raiz);
             }
             Registros.LimpiarTodos();
-            EventosLugares.LimpiarSuscriptores();
+            BorrarPersistentesNuevos();
+            ServicioGuardado.RutaForzada = null;
+            if (carpetaGuardado != null && Directory.Exists(carpetaGuardado))
+            {
+                Directory.Delete(carpetaGuardado, true);
+            }
             yield return null;
         }
 
@@ -194,6 +240,7 @@ namespace MechaCyberpunk.Tests.IA
         [UnityTest]
         public IEnumerator LasBalas_NoAtraviesanNadaDeLaCiudadReal_ParedesCasasCarrosYCajas()
         {
+            yield return CargarCiudad();
             Physics.SyncTransforms();
             GameObject tirador = new GameObject("TiradorPrueba");
             extras.Add(tirador);
@@ -494,6 +541,7 @@ namespace MechaCyberpunk.Tests.IA
         [UnityTest]
         public IEnumerator EnElCallejonDeLosSkulls_LaParedDeCasasNuevasParaLasBalas()
         {
+            yield return CargarCiudad();
             Transform volumen = Buscar("T502_Callejon/VolumenCallejon");
             Assert.IsNotNull(volumen, "El volumen del callejón existe en la escena");
             Bounds callejon = volumen.GetComponent<Collider>().bounds;
@@ -515,6 +563,7 @@ namespace MechaCyberpunk.Tests.IA
         [UnityTest]
         public IEnumerator ConUnCarroDeLaCiudad_EnMedio_LasBalasNoPasan()
         {
+            yield return CargarCiudad();
             Physics.SyncTransforms();
             // El carro más grande de los que hay sueltos en la ciudad (los hay del tamaño de una moto).
             Transform carro = Hijos("GTA_T511", 100).Concat(Hijos("GTA_T451", 100)).Where(t => t.name.StartsWith("Carro")).OrderByDescending(t => CajaDeColliders(t).size.sqrMagnitude).FirstOrDefault();
