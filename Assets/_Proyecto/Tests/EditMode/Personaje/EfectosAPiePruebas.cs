@@ -103,7 +103,8 @@ namespace MechaCyberpunk.Tests.Personaje
                 Assert.AreEqual(espacio == EspacioImplante.Ojos, EfectosAPie.FactorAlcanceApuntado(e) > 1f, espacio + " alcance");
                 Assert.AreEqual(espacio == EspacioImplante.Brazos, EfectosAPie.FactorRetroceso(e) < 1f, espacio + " retroceso");
                 Assert.AreEqual(espacio == EspacioImplante.Piernas, EfectosAPie.EnfriamientoRodada(2f, e) < 2f, espacio + " rodada");
-                Assert.AreEqual(espacio == EspacioImplante.SistemaNervioso, EfectosAPie.FactorRecarga(e) < 1f, espacio + " recarga");
+                // T-866: el EXO DE BRAZOS también recarga más rápido (Tony, 6-nov tarde).
+                Assert.AreEqual(espacio == EspacioImplante.SistemaNervioso || espacio == EspacioImplante.Brazos, EfectosAPie.FactorRecarga(e) < 1f, espacio + " recarga");
             }
         }
 

@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: DatosImplante_implante_brazos_2
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
   id: implante_brazos_2
-  nombre: BRAZOS DE PRENSA
+  nombre: EXO DE BRAZOS II
   espacio: 1
   nivel: 2
   precio: 5000
   ligaMinima: 3
-  descripcion: "TUS PU\xD1OS PEGAN EL DOBLE Y LA PISTOLA CASI NO PATEA"
+  descripcion: "EL EXO COMPLETO: RECARGAS VOLANDO, PU\xD1OS AL DOBLE Y EL ARMA CASI
+    NO PATEA"
   efectos:
     multiplicadorGolpeAPie: 2
     multiplicadorCorrer: 1
@@ -30,4 +31,4 @@ MonoBehaviour:
     bonusAlcanceApuntado: 0
     reduccionRetroceso: 0.5
     reduccionEnfriamientoRodada: 0
-    reduccionRecarga: 0
+    reduccionRecarga: 0.45

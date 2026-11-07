@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: DatosImplante_implante_ojos_1
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
   id: implante_ojos_1
-  nombre: OJOS DE LECHUZA
+  nombre: VISOR I
   espacio: 0
   nivel: 1
   precio: 2500
   ligaMinima: 1
-  descripcion: "VES LA VIDA DEL RIVAL, APUNTAS DE M\xC1S LEJOS A PIE"
+  descripcion: "VISOR DE CABEZA: VES A LOS ENEMIGOS A TRAV\xC9S DE LAS PAREDES Y
+    SU VIDA"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1

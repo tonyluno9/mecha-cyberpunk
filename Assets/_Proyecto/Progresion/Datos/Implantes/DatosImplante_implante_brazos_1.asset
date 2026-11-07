@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: DatosImplante_implante_brazos_1
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
   id: implante_brazos_1
-  nombre: "BRAZOS DE PIST\xD3N"
+  nombre: EXO DE BRAZOS I
   espacio: 1
   nivel: 1
   precio: 2000
   ligaMinima: 1
-  descripcion: "TUS PU\xD1OS PEGAN M\xC1S Y LA PISTOLA PATEA MENOS"
+  descripcion: "EXO DE HOMBROS Y BRAZOS: RECARGAS M\xC1S R\xC1PIDO, PEGAS M\xC1S
+    Y EL ARMA PATEA MENOS"
   efectos:
     multiplicadorGolpeAPie: 1.5
     multiplicadorCorrer: 1
@@ -30,4 +31,4 @@ MonoBehaviour:
     bonusAlcanceApuntado: 0
     reduccionRetroceso: 0.3
     reduccionEnfriamientoRodada: 0
-    reduccionRecarga: 0
+    reduccionRecarga: 0.25

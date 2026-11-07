@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: DatosImplante_implante_ojos_2
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosImplante
   id: implante_ojos_2
-  nombre: "OJOS DE \xC1GUILA"
+  nombre: VISOR II
   espacio: 0
   nivel: 2
   precio: 6000
   ligaMinima: 3
-  descripcion: "LA VIDA EN N\xDAMEROS Y APUNTADO A PIE MUCHO M\xC1S LEJOS"
+  descripcion: "VISOR COMPLETO: ENEMIGOS A TRAV\xC9S DE LAS PAREDES, SU VIDA EN N\xDAMEROS
+    Y APUNTAS M\xC1S LEJOS"
   efectos:
     multiplicadorGolpeAPie: 1
     multiplicadorCorrer: 1
