@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using MechaCyberpunk.Vehiculos.Carro;
 using UnityEditor;
@@ -16,6 +17,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
     public static class CreadorMotosT592
     {
         public const string RutaConfig = "Assets/_Proyecto/Vehiculos/Datos/ConfigCarro_Moto.asset";
+        public const string RutaConfigReparto = "Assets/_Proyecto/Vehiculos/Datos/ConfigCarro_MotoReparto.asset";
         public const string CarpetaMallas = "Assets/_Proyecto/Vehiculos/Datos/";
         public static readonly string[] Motos = { "V07", "V08", "C19" };
 
@@ -43,16 +45,16 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 existente = AssetDatabase.LoadAssetAtPath<ConfigCarro>(RutaConfig);
             }
             SerializedObject so = new SerializedObject(existente);
-            // Una moto de unos 230 kg: arranca fuerte, llega a ~28 m/s, gira cerrado, frena con inercia y no se vuelca.
+            // Una moto de unos 230 kg. T-695: arranca a ~7.8 m/s² (antes 11), llega a ~26 m/s, gira cerrado y frena casi de golpe (28 m/s², antes 6.5).
             Fijar(so, "masa", 230f);
             Fijar(so, "alturaCentroMasa", 0.4f);
             Fijar(so, "fuerzaAntivuelco", 1400f);
-            Fijar(so, "velocidadMaxima", 28f);
+            Fijar(so, "velocidadMaxima", 26f);
             Fijar(so, "velocidadReversa", 3f);
-            Fijar(so, "fuerzaMotor", 2600f);
+            Fijar(so, "fuerzaMotor", 1800f);
             Fijar(so, "fuerzaReversa", 600f);
-            Fijar(so, "fuerzaFreno", 1500f);
-            Fijar(so, "fuerzaFrenoMano", 900f);
+            Fijar(so, "fuerzaFreno", 6400f);
+            Fijar(so, "fuerzaFrenoMano", 3000f);
             Fijar(so, "resistenciaRodadura", 140f);
             Fijar(so, "gananciaEstacionamiento", 40f);
             Fijar(so, "anguloDireccionParado", 40f);
@@ -69,6 +71,31 @@ namespace MechaCyberpunk.Vehiculos.Editor
             return existente;
         }
 
+        /// <summary>T-695: la moto de reparto (V07) es más lenta que las otras: menos motor (5.4 m/s²) y tope de 18 m/s. El giro y el frenado son los de la moto.</summary>
+        public static ConfigCarro CrearConfigReparto()
+        {
+            ConfigCarro baseMoto = CrearConfig();
+            AssetDatabase.SaveAssets();
+            ConfigCarro reparto = AssetDatabase.LoadAssetAtPath<ConfigCarro>(RutaConfigReparto);
+            if (reparto == null)
+            {
+                AssetDatabase.CopyAsset(RutaConfig, RutaConfigReparto);
+                reparto = AssetDatabase.LoadAssetAtPath<ConfigCarro>(RutaConfigReparto);
+            }
+            SerializedObject so = new SerializedObject(reparto);
+            foreach (SerializedProperty p in new[] { "masa", "alturaCentroMasa", "fuerzaAntivuelco", "velocidadReversa", "fuerzaReversa", "fuerzaFreno", "fuerzaFrenoMano",
+                "resistenciaRodadura", "gananciaEstacionamiento", "anguloDireccionParado", "anguloDireccionMaximo", "exponenteDireccion", "distanciaEntreEjes",
+                "aceleracionLateralMaxima", "agarreLateral", "respuestaGiro", "rigidez", "amortiguamiento" }.Select(n => so.FindProperty(n)))
+            {
+                p.floatValue = new SerializedObject(baseMoto).FindProperty(p.name).floatValue;
+            }
+            Fijar(so, "velocidadMaxima", 18f);
+            Fijar(so, "fuerzaMotor", 1250f);
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(reparto);
+            return reparto;
+        }
+
         private static void Fijar(SerializedObject so, string nombre, float valor)
         {
             so.FindProperty(nombre).floatValue = valor;
@@ -81,7 +108,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             {
                 return codigo + "\tFALTA el prefab";
             }
-            ConfigCarro config = CrearConfig();
+            ConfigCarro config = codigo == "V07" ? CrearConfigReparto() : CrearConfig();
             GameObject raiz = PrefabUtility.LoadPrefabContents(ruta);
             string resultado;
             try

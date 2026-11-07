@@ -17,7 +17,6 @@ namespace MechaCyberpunk.Tests.Personaje
     public class AsientoCarroT694Pruebas : BaseJugadorAPie
     {
         private const string Carpeta = "Assets/_Proyecto/Vehiculos/Prefabs/";
-        private const string RutaConfigCamara = "Assets/_Proyecto/Vehiculos/Datos/ConfigCamaraCarro_Viejo.asset";
         private const float MargenCabezaSobreCinturon = 0.12f;
         private const float MargenCabezaBajoTecho = 0.08f;
         private const float TopeDeLaCabeza = 0.12f;
@@ -71,15 +70,15 @@ namespace MechaCyberpunk.Tests.Personaje
                 if (!c.isTrigger && c.name == "Carroceria") cinturon = c.bounds.max.y - raiz.position.y;
             }
             float alturaCabeza = raiz.InverseTransformPoint(cabeza.position).y;
-            float ojos = montable.Asiento.localPosition.y + AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Vehiculos.ConfigCamaraCarro>(RutaConfigCamara).AlturaOjos;
-            Debug.Log("[T694] " + nombre + " cabeza " + alturaCabeza.ToString("F2") + " ojos " + ojos.ToString("F2") + " cinturon " + cinturon.ToString("F2") + " techo " + techo.ToString("F2"));
+            float ojos = alturaCabeza + 0.1f;
+            Debug.Log("[T694] " + nombre + " cabeza " + alturaCabeza.ToString("F2") + " cinturon " + cinturon.ToString("F2") + " techo " + techo.ToString("F2"));
 
             // Fotos de lado (lado del conductor) y desde atrás, con la cabeza visible.
             jugadorAPie.Camara.enabled = false;
-            Vector3 centro = new Vector3(montable.Asiento.localPosition.x, ojos * 0.85f, 0f);
-            CapturaS1.Foto("s1t-T-694-" + nombre + "-lado", raiz, new Vector3(-4.5f, ojos * 0.95f, 0f), centro, 32f, 900, 600);
+            Vector3 centro = new Vector3(montable.Asiento.localPosition.x, alturaCabeza, 0f);
+            CapturaS1.Foto("s1t-T-694-" + nombre + "-lado", raiz, new Vector3(-4.5f, alturaCabeza, 0f), centro, 32f, 900, 600);
             CapturaS1.Foto("s1t-T-694-" + nombre + "-cerca", raiz, new Vector3(-2.6f, alturaCabeza + 0.1f, 0.4f), new Vector3(montable.Asiento.localPosition.x, alturaCabeza - 0.05f, 0f), 30f, 900, 600);
-            CapturaS1.Foto("s1t-T-694-" + nombre + "-atras", raiz, new Vector3(montable.Asiento.localPosition.x * 0.4f, ojos * 1.15f, -5.5f), centro, 32f, 900, 600);
+            CapturaS1.Foto("s1t-T-694-" + nombre + "-atras", raiz, new Vector3(montable.Asiento.localPosition.x * 0.4f, alturaCabeza + 0.5f, -5.5f), centro, 32f, 900, 600);
 
             Assert.Greater(alturaCabeza, cinturon + MargenCabezaSobreCinturon, nombre + ": la cabeza queda por encima de la línea de la carrocería");
             Assert.Less(alturaCabeza + TopeDeLaCabeza, techo - MargenCabezaBajoTecho, nombre + ": la cabeza no pasa del techo");

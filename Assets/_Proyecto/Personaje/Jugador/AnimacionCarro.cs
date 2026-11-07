@@ -44,6 +44,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private PoseMoto poseMoto;
         private IMontable montableActual;
         private bool modoMoto;
+        private bool leerDelPadrePrevio = true;
         private ApuntadoIK apuntado;
         private bool apuntadoPrevio;
         private readonly RaycastHit[] impactosPiso = new RaycastHit[MaxImpactosPiso];
@@ -153,6 +154,12 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
             modoMoto = true;
             montableActual = montable;
+            // T-695: sobre la moto el cuerpo va quieto. Sin esto el Animator lee la rapidez de la moto y juega Correr (saltitos y tambaleo del conductor).
+            leerDelPadrePrevio = visual.LeerDelPadre;
+            visual.LeerDelPadre = false;
+            visual.Velocidad = 0f;
+            visual.EnSuelo = true;
+            visual.Congelado = true;
             Fase = FaseCarro.Dentro;
             return true;
         }
@@ -341,6 +348,11 @@ namespace MechaCyberpunk.Personaje.Jugador
                 Fase = FaseCarro.Dentro;
                 visual.Manejando = true;
                 return;
+            }
+            if (modoMoto)
+            {
+                visual.LeerDelPadre = leerDelPadrePrevio;
+                visual.Congelado = false;
             }
             modoMoto = false;
             if (apuntado != null)

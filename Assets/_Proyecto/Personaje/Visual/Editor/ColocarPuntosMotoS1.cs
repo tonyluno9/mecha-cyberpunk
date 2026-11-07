@@ -22,6 +22,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         private struct Medidas
         {
             public float AsientoZ, AsientoY, ManubrioZ, ManubrioY, ManubrioX, EstriboZ, EstriboY, EstriboX, Torso;
+            /// <summary>T-695: asiento y muñecas en metros del espacio de la moto (z al frente, y desde el piso); si no, valen las fracciones de arriba. La muñeca queda ~0.12 m detrás del puño: la palma pasa de ahí.</summary>
+            public Vector3? AsientoMetros, MunecaMetros;
         }
 
         private static Medidas Para(string codigo)
@@ -39,10 +41,19 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 // Moto de reparto con caja: se maneja casi derecho.
                 m.AsientoZ = 0.38f;
                 m.Torso = 12f;
+                m.AsientoMetros = new Vector3(0f, 0.78f, -0.33f);
+                m.MunecaMetros = new Vector3(0.28f, 1.24f, 0.2f);
             }
             else if (codigo == "C19")
             {
                 m.Torso = 22f;
+                m.AsientoMetros = new Vector3(0f, 0.8f, -0.3f);
+                m.MunecaMetros = new Vector3(0.26f, 1.05f, 0.15f);
+            }
+            else
+            {
+                m.AsientoMetros = new Vector3(0f, 0.82f, -0.32f);
+                m.MunecaMetros = new Vector3(0.28f, 1.15f, 0.2f);
             }
             return m;
         }
@@ -91,9 +102,11 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 float y0 = caja.min.y;
                 float largo = caja.size.z;
                 float alto = caja.size.y;
-                Transform asiento = Punto(raiz.transform, visual, Prefijos[0], new Vector3(x, y0 + alto * m.AsientoY, z0 + largo * m.AsientoZ));
-                Transform manoI = Punto(raiz.transform, visual, Prefijos[1], new Vector3(x - m.ManubrioX, y0 + alto * m.ManubrioY, z0 + largo * m.ManubrioZ));
-                Transform manoD = Punto(raiz.transform, visual, Prefijos[2], new Vector3(x + m.ManubrioX, y0 + alto * m.ManubrioY, z0 + largo * m.ManubrioZ));
+                Vector3 puntoAsiento = m.AsientoMetros ?? new Vector3(x, y0 + alto * m.AsientoY, z0 + largo * m.AsientoZ);
+                Vector3 muneca = m.MunecaMetros ?? new Vector3(m.ManubrioX, y0 + alto * m.ManubrioY, z0 + largo * m.ManubrioZ);
+                Transform asiento = Punto(raiz.transform, visual, Prefijos[0], puntoAsiento);
+                Transform manoI = Punto(raiz.transform, visual, Prefijos[1], new Vector3(x - muneca.x, muneca.y, muneca.z));
+                Transform manoD = Punto(raiz.transform, visual, Prefijos[2], new Vector3(x + muneca.x, muneca.y, muneca.z));
                 Transform pieI = Punto(raiz.transform, visual, Prefijos[3], new Vector3(x - m.EstriboX, y0 + alto * m.EstriboY, z0 + largo * m.EstriboZ));
                 Transform pieD = Punto(raiz.transform, visual, Prefijos[4], new Vector3(x + m.EstriboX, y0 + alto * m.EstriboY, z0 + largo * m.EstriboZ));
 

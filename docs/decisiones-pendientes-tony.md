@@ -1221,3 +1221,7 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - Mano izquierda de las armas largas: 0.36-0.38 m delante de la empuñadura (más lejos no alcanza el brazo del modelo).
 
 - D-tony-T690: multa de arresto 25 % del dinero (ReglaMultaArresto.PorcentajePorDefecto); apareces en Casa_Puerta (respaldo Casa_Cama); sin contrato de Core, el aviso va por SendMessage "AlSerArrestado" porque Trafico (Alan) no puede referenciar Tony. Ideal: un contrato en Core (tarea de Core).
+
+## T-695 (S1, noche 06-nov)
+- La moto no se hace 20 % más chica: 06nov-b dice que a Tony le gusta cómo se ve (manda sobre 06nov). Se calibró aceleración, frenado, conductor y humo.
+- La moto de reparto (V07) tiene su propia config (ConfigCarro_MotoReparto): 5.4 m/s² y tope 18 m/s, frente a 7.8 m/s² y 26 m/s de las otras motos.

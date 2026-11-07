@@ -17,6 +17,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const int LadoTextura = 32;
         private const float AlturaMotor = 0.9f;
         private const float AdelanteMotor = 1.4f;
+        private const float FraccionAlturaMotorMoto = 0.4f;
         private const int ParticulasExplosion = 60;
         private const int ParticulasHumoExplosion = 30;
         private const float SegundosDestelloExplosion = 0.25f;
@@ -360,6 +361,43 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
+        /// <summary>
+        /// Dónde está el motor, en el espacio del vehículo (T-695): el carro lo lleva al frente (bajo el cofre); la moto, en el centro de la moto
+        /// (a media altura del modelo, a media longitud), no en el aire delante de la rueda.
+        /// </summary>
+        public Vector3 PuntoMotor()
+        {
+            if (GetComponent<ManejoMoto>() == null)
+            {
+                return new Vector3(0f, AlturaMotor, AdelanteMotor);
+            }
+            bool hay = false;
+            Bounds caja = default;
+            foreach (Renderer render in GetComponentsInChildren<Renderer>(true))
+            {
+                if (render is ParticleSystemRenderer)
+                {
+                    continue;
+                }
+                Bounds b = render.bounds;
+                caja = hay ? CajaUnida(caja, b) : b;
+                hay = true;
+            }
+            if (!hay)
+            {
+                return new Vector3(0f, FraccionAlturaMotorMoto, 0f);
+            }
+            Vector3 centro = transform.InverseTransformPoint(caja.center);
+            float bajo = transform.InverseTransformPoint(new Vector3(caja.center.x, caja.min.y, caja.center.z)).y;
+            return new Vector3(0f, bajo + caja.size.y * FraccionAlturaMotorMoto, centro.z);
+        }
+
+        private static Bounds CajaUnida(Bounds a, Bounds b)
+        {
+            a.Encapsulate(b);
+            return a;
+        }
+
         private void CrearEfectos()
         {
             Shader shader = Shader.Find("Sprites/Default");
@@ -369,11 +407,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             textura = CrearTextura();
             material = new Material(shader) { mainTexture = textura, color = Color.white };
-            humo = CrearParticulas("HumoCarro", new Color(0.18f, 0.18f, 0.2f, 0.85f), 0.7f, 3f, 2.2f, -0.05f);
-            fuego = CrearParticulas("FuegoCarro", new Color(1f, 0.5f, 0.1f, 0.95f), 0.45f, 0.8f, 1.6f, -0.2f);
+            Vector3 puntoMotor = PuntoMotor();
+            humo = CrearParticulas("HumoCarro", new Color(0.18f, 0.18f, 0.2f, 0.85f), 0.7f, 3f, 2.2f, -0.05f, puntoMotor);
+            fuego = CrearParticulas("FuegoCarro", new Color(1f, 0.5f, 0.1f, 0.95f), 0.45f, 0.8f, 1.6f, -0.2f, puntoMotor);
             GameObject objetoLuz = new GameObject("LuzFuegoCarro");
             objetoLuz.transform.SetParent(transform, false);
-            objetoLuz.transform.localPosition = new Vector3(0f, AlturaMotor, AdelanteMotor);
+            objetoLuz.transform.localPosition = puntoMotor;
             luz = objetoLuz.AddComponent<Light>();
             luz.type = LightType.Point;
             luz.color = new Color(1f, 0.55f, 0.15f);
@@ -383,11 +422,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
             luz.enabled = false;
         }
 
-        private ParticleSystem CrearParticulas(string nombre, Color color, float tamano, float vida, float velocidad, float gravedad)
+        private ParticleSystem CrearParticulas(string nombre, Color color, float tamano, float vida, float velocidad, float gravedad, Vector3 posicionLocal)
         {
             GameObject objeto = new GameObject(nombre);
             objeto.transform.SetParent(transform, false);
-            objeto.transform.localPosition = new Vector3(0f, AlturaMotor, AdelanteMotor);
+            objeto.transform.localPosition = posicionLocal;
             ParticleSystem sistema = objeto.AddComponent<ParticleSystem>();
             sistema.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             ParticleSystem.MainModule main = sistema.main;
