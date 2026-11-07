@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3d1e9628b8c6f344a2b4c3e5a0c7f9b, type: 3}
+  m_Name: DatosBotin_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosBotin
+  modeloPistola: {fileID: 7161985598469708661, guid: 044d9534a465b114eae6d2cb68408715, type: 3}
+  prefabEscopeta: {fileID: 6783129033764802248, guid: d5ecf72cdab6cfd4e83c37848398b29a, type: 3}
+  segundosEnPiso: 120
+  separacion: 1
+  distanciaArmaRepetida: 1.8

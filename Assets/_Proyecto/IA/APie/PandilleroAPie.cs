@@ -832,6 +832,9 @@ namespace MechaCyberpunk.IA.APie
             Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_CAE"), transform.position);
             KO?.Invoke();
             Vencido?.Invoke(this);
+            // T-686: suelta su dinero y su arma (el jefe, una escopeta); el jugador los recoge.
+            EventosBotin.Publicar(new InfoBotin(transform.position, datos.Dinero,
+                esJefe ? ArmaBotin.Escopeta : (datos.UsaPistola ? ArmaBotin.Pistola : ArmaBotin.Ninguna)));
         }
 
         private void PintarCuerpo(Color color)
