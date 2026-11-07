@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 711c25d98af48f84b9c708972e754793, type: 3}
+  m_Name: ConfigCarro_MotoReparto
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.ConfigCarro
+  masa: 230
+  alturaCentroMasa: 0.4
+  fuerzaAntivuelco: 1400
+  velocidadMaxima: 18
+  velocidadReversa: 3
+  umbralReversa: 0.5
+  fuerzaMotor: 1250
+  fuerzaReversa: 600
+  fuerzaFreno: 6400
+  fuerzaFrenoMano: 3000
+  resistenciaRodadura: 140
+  gananciaEstacionamiento: 40
+  anguloDireccionParado: 40
+  anguloDireccionMaximo: 16
+  exponenteDireccion: 0.6
+  distanciaEntreEjes: 1.4
+  aceleracionLateralMaxima: 11
+  agarreLateral: 11
+  factorAgarreFrenoMano: 0.25
+  respuestaGiro: 10
+  velocidadVolante: 4
+  velocidadCentradoVolante: 6
+  esperaCambioSentido: 0.25
+  rampaMarcha: 0.5
+  largoReposo: 0.35
+  largoMaximo: 0.5
+  radioRueda: 0.35
+  rigidez: 3800
+  amortiguamiento: 800
+  rapidezMaximaParaBajar: 0.5
+  radioSalida: 0.4
+  alturaSalida: 1.8
+  holguraSalida: 0.05

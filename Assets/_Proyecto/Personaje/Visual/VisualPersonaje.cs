@@ -201,6 +201,25 @@ namespace MechaCyberpunk.Personaje.Visual
             set { manejando = value; Aplicar(); }
         }
 
+        /// <summary>
+        /// T-695: congela la animación en el cuadro actual (la pose se sigue moviendo por IK y por quien la coloque). Para el conductor de una moto,
+        /// que va quieto: el idle respira y mueve la cabeza unos centímetros, y eso se veía como tambaleo.
+        /// </summary>
+        public bool Congelado
+        {
+            get => congelado;
+            set
+            {
+                congelado = value;
+                if (!value && animador != null)
+                {
+                    animador.speed = 1f;
+                }
+            }
+        }
+
+        private bool congelado;
+
         /// <summary>De pie viendo el celular (T-623), en bucle.</summary>
         public bool ViendoTelefono
         {
@@ -445,7 +464,14 @@ namespace MechaCyberpunk.Personaje.Visual
                 LeerEstadoDelPadre(Time.deltaTime);
             }
             Aplicar();
-            AjustarRapidez();
+            if (congelado)
+            {
+                animador.speed = 0f;
+            }
+            else
+            {
+                AjustarRapidez();
+            }
             ActualizarCapas(Time.deltaTime);
         }
 
