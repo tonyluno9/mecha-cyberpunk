@@ -32,7 +32,7 @@ MonoBehaviour:
   tamanoPandilla: 3
   maxAtacando: 1
   radioFormacion: 2.5
-  usaPistola: 1
+  usaPistola: 0
   perdigones: 8
   danioDisparo: 8
   distanciaMinTiro: 6
@@ -48,6 +48,12 @@ MonoBehaviour:
   segundosReaparicion: 40
   distanciaReaparicion: 30
   siempre: 1
+  fraccionDeDia: 0.34
+  radioPatrulla: 6
+  velocidadPatrulla: 1.6
+  esperaPatrullaMinima: 1.5
+  esperaPatrullaMaxima: 5
+  segundosAtascoPatrulla: 2
   fraccionHuida: 0.25
   distanciaAcorralado: 3
   distanciaHuida: 45
@@ -58,6 +64,22 @@ MonoBehaviour:
   giroRodeo: 8
   radioRefuerzos: 40
   segundosRefuerzo: 8
+  jefeCuerpoACuerpo: 1
+  alcanceJefe: 2.6
+  telegrafiaGolpeJefe: 0.8
+  danioGolpeJefe: 22
+  radioGolpeJefe: 2.8
+  recuperaGolpeJefe: 1.8
+  golpesPorCarga: 3
+  telegrafiaCarga: 1.1
+  velocidadCarga: 11
+  duracionCarga: 0.7
+  danioCarga: 35
+  radioCarga: 1.6
+  recuperaCarga: 2.6
+  distanciaMinCarga: 4
+  distanciaMaxCarga: 14
+  multiplicadorCastigo: 1.5
   colorNormal: {r: 0.62, g: 0.4, b: 1, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}
