@@ -138,6 +138,17 @@ namespace MechaCyberpunk.Trafico.Persecucion
             PonerLuces(false, false);
         }
 
+        /// <summary>T-692: la patrulla explotó (lo avisa DanioCarro con un mensaje de Unity); deja de manejar, ver y sonar.</summary>
+        public bool Destruida { get; private set; }
+
+        private void AlExplotarVehiculo()
+        {
+            Destruida = true;
+            VeAlJugador = false;
+            PonerLuces(false, false);
+            enabled = false;
+        }
+
         private void OnEnable() => ActivasLista.Add(this);
 
         private void OnDisable()
@@ -150,7 +161,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>T-661: true si esta patrulla (que no se está yendo) ve el punto: a menos de <see cref="ConfigPersecucion.RadioVista"/> m y sin pared en medio.</summary>
         public bool VeElPunto(Vector3 punto)
         {
-            if (Retirando || config == null)
+            if (Retirando || config == null || Destruida)
             {
                 return false;
             }

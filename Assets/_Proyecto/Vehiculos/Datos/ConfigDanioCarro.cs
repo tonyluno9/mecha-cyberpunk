@@ -31,8 +31,8 @@ namespace MechaCyberpunk.Vehiculos.Datos
         [SerializeField] private float radioExplosion = 7f;
         [Min(0f)] [Tooltip("Daño de la explosión en el centro; baja hasta 0 en el borde (puntos).")]
         [SerializeField] private float danioExplosion = 90f;
-        [Min(0f)] [Tooltip("Fuerza con la que la explosión empuja lo que se mueve (N).")]
-        [SerializeField] private float fuerzaExplosion = 1400f;
+        [Min(0f)] [Tooltip("Cambio de velocidad que la explosión le da a lo que se mueve en el centro; baja hasta 0 en el borde (m/s).")]
+        [SerializeField] private float fuerzaExplosion = 12f;
         [Min(0f)] [Tooltip("Calor policial si el jugador está cerca de la explosión.")]
         [SerializeField] private float calorExplosion = 25f;
         [Min(0f)] [Tooltip("A qué distancia del carro cuenta que el jugador lo hizo explotar para el calor (m).")]
