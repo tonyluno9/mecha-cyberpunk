@@ -35,15 +35,17 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Transform camara = controlador.Camara;
             float distancia = DistanciaHorizontal(camara.position, jugador.transform.position);
-            Assert.That(distancia, Is.InRange(1.6f, 4f), "T-585: la cámara queda entre 1.6 y 4 m del jugador");
+            Assert.That(distancia, Is.InRange(1.6f, 4f), "T-723: la cámara queda entre 1.6 y 4 m del jugador");
             Vector3 relativa = camara.position - jugador.transform.position;
             Assert.Less(Vector3.Dot(relativa, haciaDondeMira), 0f, "La cámara queda atrás");
-            Assert.Greater(Vector3.Dot(relativa, Vector3.Cross(Vector3.up, haciaDondeMira)), 0f, "La cámara queda a la derecha");
+            Assert.AreEqual(0f, Vector3.Dot(relativa, Vector3.Cross(Vector3.up, haciaDondeMira)), 0.05f, "T-699/T-723: la cámara queda centrada detrás del jugador");
+            Camera principal = camara.GetComponent<Camera>();
+            float fovNormal = principal.fieldOfView;
 
             Press(raton.rightButton);
             yield return Esperar(0.7f);
             Assert.IsTrue(controlador.Apuntando);
-            Assert.Less(DistanciaHorizontal(camara.position, jugador.transform.position), 2f, "Apuntando la cámara se acerca");
+            Assert.Less(principal.fieldOfView, fovNormal - 5f, "T-682: apuntando hace zoom (el encuadre es el mismo)");
             Release(raton.rightButton);
         }
 
