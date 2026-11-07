@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e59fb86c16ddc6a42b957c20f7f62d4b, type: 3}
+  m_Name: ConfigCharcos_Mundo
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Datos.ConfigCharcos
+  alturaPlano: 0.02
+  escalaResolucion: 0.5
+  lejos: 120
+  margenCampo: 6
+  separacionCorte: 0.02

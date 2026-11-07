@@ -49,13 +49,18 @@ namespace MechaCyberpunk.UI.Hud
         private GameObject grupoObjetivo;
         private GameObject grupoObjetos;
         private GameObject grupoArma;
+        private Text textoTitulo;
+        private string tituloActual = string.Empty;
+        private float inicioTitulo = float.MinValue;
+        private float duracionTitulo;
+        private string zonaPrevia;
+        private ITerritorio territorioVisto;
 
         private RectTransform barraEscudo;
         private Image rellenoEscudo;
         private Image rellenoVida;
         private Text textoVida;
         private Text textoDinero;
-        private Text textoHora;
         private Image[] estrellas;
         private Text textoObjetivo;
         private RanuraObjeto[] ranuras;
@@ -75,11 +80,11 @@ namespace MechaCyberpunk.UI.Hud
         private bool buscando;
         private ZonaCuerpoH10 ultimaZona;
         private float segundosGolpe = float.MaxValue;
+        private bool horaEscondida;
         private InputAction accionRecargar;
         private InputAction accionGolpe;
         private InputAction accionInteractuar;
         private float proximaBusquedaAcciones;
-        private bool horaEscondida;
 
         private sealed class RanuraObjeto
         {
@@ -102,6 +107,12 @@ namespace MechaCyberpunk.UI.Hud
         public Text TextoObjetivo => textoObjetivo;
         public Text TextoBalas => textoBalas;
         public Image IconoArma => iconoArma;
+        /// <summary>El HUD nuevo vivo (null si no hay).</summary>
+        public static HudH10 Actual { get; private set; }
+
+        /// <summary>El nombre de zona de arriba al centro: lo que dice ahora y si se ve (alfa mayor que 0).</summary>
+        public string TituloZona => tituloActual;
+        public bool TituloVisible => textoTitulo != null && textoTitulo.color.a > 0.01f;
         public int EstrellasLlenas => estrellasLlenas;
         public bool Buscando => buscando;
         public Image Estrella(int indice) => estrellas[indice];
@@ -124,6 +135,8 @@ namespace MechaCyberpunk.UI.Hud
         public float AlfaRellenoParte(ZonaCuerpoH10 zona) => cuerpoRelleno[(int)zona].color.a;
         public Color ColorRellenoParte(ZonaCuerpoH10 zona) => cuerpoRelleno[(int)zona].color;
 
+        private void Awake() => Actual = this;
+
         private void Start()
         {
             hud = GetComponent<HudAPie>();
@@ -141,6 +154,30 @@ namespace MechaCyberpunk.UI.Hud
         private void OnDestroy()
         {
             EventosPelea.ImpactoRecibido -= AlImpacto;
+            if (Actual == this)
+            {
+                Actual = null;
+            }
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarEstatico() => Actual = null;
+
+        /// <summary>
+        /// El nombre de la zona, chico y delgado arriba al centro unos segundos y luego se desvanece (T-701). False si no hay HUD nuevo armado
+        /// (quien lo pide puede usar la cola de avisos).
+        /// </summary>
+        public static bool MostrarTitulo(string texto, float segundos)
+        {
+            HudH10 h = Actual;
+            if (h == null || string.IsNullOrEmpty(texto))
+            {
+                return false;
+            }
+            h.tituloActual = texto;
+            h.duracionTitulo = Mathf.Max(ReglaTituloZonaH10.SegundosDesvanecer, segundos);
+            h.inicioTitulo = Time.unscaledTime;
+            return true;
         }
 
         // ---- Armado ----
@@ -159,6 +196,9 @@ namespace MechaCyberpunk.UI.Hud
             grupoObjetos = Grupo("Objetos");
             Vineta(grupoObjetos.transform, "VinetaAbajoIzquierda", new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(860f, 340f), false, false);
             grupoArma = Grupo("Arma");
+            textoTitulo = Texto(canvas.transform, "TituloZona", new Vector2(0.5f, 1f), new Vector2(0f, -70f), new Vector2(900f, 44f), 30, TurquesaSuave, TextAnchor.MiddleCenter);
+            textoTitulo.rectTransform.pivot = new Vector2(0.5f, 1f);
+            textoTitulo.color = new Color(TurquesaSuave.r, TurquesaSuave.g, TurquesaSuave.b, 0f);
             ArmarEscudoYVida();
             ArmarEstrellas();
             ArmarObjetivo();
@@ -276,20 +316,19 @@ namespace MechaCyberpunk.UI.Hud
         {
             Transform g = grupoIzquierda.transform;
             Vector2 tl = new Vector2(0f, 1f);
-            Text etiquetaEscudo = Texto(g, "EtiquetaEscudo", tl, new Vector2(Margen, -54f), new Vector2(110f, 32f), 24, TurquesaSuave, TextAnchor.MiddleLeft);
+            Text etiquetaEscudo = Texto(g, "EtiquetaEscudo", tl, new Vector2(Margen, -52f), new Vector2(110f, 36f), 32, TurquesaSuave, TextAnchor.MiddleLeft);
             etiquetaEscudo.text = "ESCUDO";
-            barraEscudo = Nuevo(g, "BarraEscudo", tl, new Vector2(175f, -57f), new Vector2(194f, 26f));
+            barraEscudo = Nuevo(g, "BarraEscudo", tl, new Vector2(180f, -57f), new Vector2(194f, 26f));
             rellenoEscudo = BarraFina(barraEscudo, Turquesa, 4f);
 
-            Text etiquetaVida = Texto(g, "EtiquetaVida", tl, new Vector2(Margen, -123f), new Vector2(70f, 36f), 24, RosaSuave, TextAnchor.MiddleLeft);
+            Text etiquetaVida = Texto(g, "EtiquetaVida", tl, new Vector2(Margen, -122f), new Vector2(75f, 40f), 32, RosaSuave, TextAnchor.MiddleLeft);
             etiquetaVida.text = "VIDA";
-            RectTransform barraVida = Nuevo(g, "BarraVida", tl, new Vector2(133f, -122f), new Vector2(443f, 36f));
+            RectTransform barraVida = Nuevo(g, "BarraVida", tl, new Vector2(140f, -122f), new Vector2(436f, 36f));
             rellenoVida = BarraFina(barraVida, Rosa, 4f);
-            textoVida = Texto(barraVida, "TextoVida", new Vector2(1f, 0.5f), new Vector2(-10f, 0f), new Vector2(200f, 32f), 25, new Color(1f, 0.90f, 0.92f, 0.95f), TextAnchor.MiddleRight, true);
+            textoVida = Texto(barraVida, "TextoVida", new Vector2(1f, 0.5f), new Vector2(-12f, 0f), new Vector2(240f, 36f), 34, new Color(1f, 0.90f, 0.92f, 0.95f), TextAnchor.MiddleRight, true);
             textoVida.rectTransform.pivot = new Vector2(1f, 0.5f);
 
             textoDinero = Texto(g, "Dinero", tl, new Vector2(Margen, -238f), new Vector2(420f, 60f), 46, Blanco, TextAnchor.MiddleLeft, true);
-            textoHora = Texto(g, "Hora", tl, new Vector2(Margen + 2f, -300f), new Vector2(200f, 28f), 22, TurquesaSuave, TextAnchor.MiddleLeft, true);
         }
 
         private void ArmarEstrellas()
@@ -420,6 +459,7 @@ namespace MechaCyberpunk.UI.Hud
             Activar(grupoObjetivo, (aPie || carro) && hud.GrupoObjetivo != null && hud.GrupoObjetivo.activeSelf);
             Activar(grupoObjetos, aPie);
             Activar(grupoArma, aPie);
+            ActualizarTitulo(aPie || carro);
             if (!aPie && !carro)
             {
                 return;
@@ -437,6 +477,34 @@ namespace MechaCyberpunk.UI.Hud
             ActualizarArma();
             ActualizarAyudas();
             ActualizarCuerpo();
+        }
+
+        // Al cruzar a otra zona sale su nombre unos segundos; el texto se desvanece solo.
+        private void ActualizarTitulo(bool puedeVerse)
+        {
+            ITerritorio territorio = Registro<ITerritorio>.Actual;
+            string zona = territorio != null && jugador != null && jugador.Raiz != null ? territorio.ZonaEn(jugador.Raiz.position) : null;
+            if (!ReferenceEquals(territorio, territorioVisto))
+            {
+                territorioVisto = territorio;
+                zonaPrevia = zona;
+            }
+            else if (zona != null && zona != zonaPrevia)
+            {
+                zonaPrevia = zona;
+                string nombre = zona.Length > 0 ? territorio.Nombre(zona) : string.Empty;
+                if (nombre.Length > 0)
+                {
+                    MostrarTitulo(ReglaTituloZonaH10.Texto(nombre), ReglaTituloZonaH10.SegundosVisible);
+                }
+            }
+            float alfa = puedeVerse ? ReglaTituloZonaH10.Alfa(Time.unscaledTime - inicioTitulo, duracionTitulo) : 0f;
+            Poner(textoTitulo, alfa > 0f ? tituloActual : string.Empty);
+            Color c = textoTitulo.color;
+            if (!Mathf.Approximately(c.a, alfa))
+            {
+                textoTitulo.color = new Color(c.r, c.g, c.b, alfa);
+            }
         }
 
         private static void Activar(GameObject objeto, bool ver)
@@ -497,13 +565,13 @@ namespace MechaCyberpunk.UI.Hud
         {
             ICartera cartera = Registro<ICartera>.Actual;
             Poner(textoDinero, cartera != null ? TextoDineroH10(cartera.Dinero) : string.Empty);
+            // T-701: la hora ya no sale en el HUD a pie (H10 no la lleva); HudAPie sigue llevándola, escondida.
             Text hora = hud.TextoHora;
             if (hora != null && !horaEscondida)
             {
                 horaEscondida = true;
                 Esconder(hora.gameObject);
             }
-            Poner(textoHora, hora != null && hora.gameObject.activeInHierarchy ? hora.text : string.Empty);
         }
 
         /// <summary>"$ 12,450": el dinero con separador de miles.</summary>
@@ -658,7 +726,7 @@ namespace MechaCyberpunk.UI.Hud
 
         private void AlImpacto(IPeleador objetivo, InfoDanio info, ResultadoDanio resultado)
         {
-            if (objetivo != null || jugador == null || jugador.Raiz == null || info.Cantidad <= 0f)
+            if (objetivo != null || jugador == null || jugador.Raiz == null || info.Cantidad <= 0f || resultado.DanioAplicado <= 0f)
             {
                 return;
             }
@@ -692,7 +760,7 @@ namespace MechaCyberpunk.UI.Hud
                 bool implante = implantes != null && ImplanteDe(implantes, zona) > 0;
                 Color linea = Color.Lerp(new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.85f), Rojo, rojo);
                 cuerpoLinea[z].color = linea;
-                float alfaRelleno = Mathf.Max(implante ? 0.30f : 0f, rojo * 0.6f);
+                float alfaRelleno = Mathf.Max(implante ? 0.30f : 0f, rojo * 0.45f);
                 cuerpoRelleno[z].color = new Color(linea.r, linea.g, linea.b, alfaRelleno);
             }
         }

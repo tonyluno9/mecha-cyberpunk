@@ -38,7 +38,7 @@ namespace MechaCyberpunk.Tests.Mundo
             }
             for (int i = 0; i < animadores.Length; i++)
             {
-                Assert.Less(Vector3.Distance(antes[i], animadores[i].transform.position), MovimientoMaximo, "la gente de la banqueta no camina");
+                Assert.Less(Vector3.Distance(antes[i], animadores[i].transform.position), MovimientoMaximo, "la gente de la banqueta no camina: " + animadores[i].transform.parent.name + "/" + animadores[i].name);
                 Assert.IsTrue(animadores[i].enabled);
                 Assert.IsNotNull(animadores[i].runtimeAnimatorController);
             }

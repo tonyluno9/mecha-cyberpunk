@@ -86,6 +86,8 @@ namespace MechaCyberpunk.UI.Hud
             rellenoRespeto = KitUI.CrearImagen(huecoRespeto.transform, "Respeto", Color.white);
             KitUI.Estirar(rellenoRespeto.rectTransform);
             panelZona.gameObject.SetActive(false);
+            // T-701: el panel viejo de zona/respeto ya no se dibuja en la pantalla normal (H10 no lo lleva); sigue llevando sus datos.
+            panelZona.gameObject.AddComponent<CanvasGroup>().alpha = 0f;
             textoAviso = KitUI.CrearTexto(canvas.transform, "Aviso", RolTexto.Encabezado, TextAnchor.MiddleCenter);
             KitUI.Colocar(textoAviso.rectTransform, DisposicionHud.AvisoZona, AnchoAviso);
             textoZona.text = string.Empty;
