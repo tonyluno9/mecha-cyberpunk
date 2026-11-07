@@ -31,13 +31,14 @@ namespace MechaCyberpunk.Arte.Editor
             ("Assets/Arte/Suburbios/PerfilSuburbios.asset", new Color(1f, 0.94f, 0.86f)),
             ("Assets/Arte/Callejon/PerfilCallejon.asset", new Color(1f, 0.9f, 0.98f)),
             ("Assets/Arte/Tianguis/PerfilTianguis.asset", new Color(1f, 0.92f, 0.97f)),
-            ("Assets/Arte/Exteriores/PerfilNeonAlto.asset", new Color(0.94f, 1f, 0.95f)),
+            ("Assets/Arte/Exteriores/PerfilNeonAlto.asset", new Color(0.985f, 1f, 0.99f)),
         };
 
         /// <summary>Niebla de noche (exponencial al cuadrado): a ~60 m la calle ya se ve azul y a ~120 m se pierde, como en K01.</summary>
         public const float DensidadNieblaNoche = 0.02f;
         public static readonly Color ColorNieblaNoche = new Color(0.12f, 0.17f, 0.3f);
         public const float HoraFoto = 23f;
+        public const float ExposicionNeonAlto = 0.8f;
         /// <summary>Para revisar: guarda la textura del reflejo de los charcos de cada foto en Logs/reflejo-*.png.</summary>
         public static bool GuardarReflejo = true;
         public static readonly Color AmbienteNoche = new Color(0.36f, 0.37f, 0.44f);
@@ -113,13 +114,24 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     ca.colorFilter.Override(filtro);
                     ca.postExposure.overrideState = false;
-                    ca.saturation.Override(Mathf.Clamp(ca.saturation.value, 0f, 8f));
+                    if (ruta.Contains("NeonAlto"))
+                    {
+                        // Neón Alto ya trae muchas luces blancas: con la exposición de toda la ciudad se quema. Más oscuro y más saturado (K03).
+                        ca.postExposure.Override(ExposicionNeonAlto);
+                    }
+                    ca.saturation.Override(ruta.Contains("NeonAlto") ? 10f : Mathf.Clamp(ca.saturation.value, 0f, 8f));
                     ca.contrast.overrideState = false;
                 }
                 if (p.TryGet(out WhiteBalance wb))
                 {
                     wb.temperature.Override(Mathf.Clamp(wb.temperature.value, -8f, 8f));
                     wb.tint.Override(Mathf.Clamp(wb.tint.value, -6f, 6f));
+                    if (ruta.Contains("NeonAlto"))
+                    {
+                        // Neón Alto magenta (M11): tinte hacia el magenta y un poco frío.
+                        wb.temperature.Override(-4f);
+                        wb.tint.Override(8f);
+                    }
                 }
                 if (p.TryGet(out Vignette v))
                 {

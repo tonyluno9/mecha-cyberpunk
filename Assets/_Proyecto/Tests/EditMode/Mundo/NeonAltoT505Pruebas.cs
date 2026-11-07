@@ -127,7 +127,8 @@ namespace MechaCyberpunk.Tests.Mundo
             Light[] luces = raiz.GetComponentsInChildren<Light>();
             Assert.LessOrEqual(luces.Length, LucesMaximas);
             Assert.IsTrue(luces.All(l => l.shadows == LightShadows.None));
-            Assert.IsTrue(luces.Any(l => l.color.g > 0.9f && l.color.b < 0.4f), "verde ácido");
+            // S2c (7-nov): Neón Alto es magenta con turquesa (M11, K03); el verde ácido de T-505 pasó a turquesa.
+            Assert.IsTrue(luces.Any(l => l.color.g > 0.8f && l.color.b > 0.7f && l.color.r < 0.3f), "turquesa");
             Assert.IsTrue(luces.Any(l => l.color.r > 0.9f && l.color.b > 0.7f && l.color.g < 0.3f), "magenta");
         }
 

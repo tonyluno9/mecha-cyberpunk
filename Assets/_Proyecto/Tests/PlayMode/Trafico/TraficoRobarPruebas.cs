@@ -25,7 +25,7 @@ namespace MechaCyberpunk.Tests.Trafico
         private const string RutaPrefabTrafico = "Assets/_Proyecto/Trafico/Prefabs/CarroTrafico_V02.prefab";
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaCiudad = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
-        private const string NombreConductor = "ConductorHuyendo";
+        private const string NombreConductor = "ConductorRobado";
         private const int FramesEstables = 10;
         private const int MaxFramesCalentamiento = 1000;
         private const float DeltaTimeEstable = 0.05f;
@@ -175,6 +175,11 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.GreaterOrEqual(calor.Valor, antes + 25f, "Robarlo sube el calor");
             GameObject conductor = GameObject.Find(NombreConductor);
             Assert.IsNotNull(conductor, "El conductor se baja");
+            // T-705: primero lo sacan y cae al suelo, luego se levanta asustado, y recién entonces sale corriendo.
+            yield return Esperar(0.6f);
+            Assert.IsTrue(conductor.GetComponent<ConductorRobado>().Tirado, "Cae al suelo");
+            yield return Esperar(3.2f);
+            Assert.IsFalse(conductor.GetComponent<ConductorRobado>().Tirado, "Se levantó");
             Vector3 salida = conductor.transform.position;
             yield return Esperar(1.5f);
             Assert.IsNotNull(conductor, "Sigue huyendo");
