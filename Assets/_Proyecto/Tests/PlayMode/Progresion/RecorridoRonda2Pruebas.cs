@@ -258,7 +258,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return new WaitForSecondsRealtime(0.5f);
 
             // b. E abre la tienda; ↓ hasta la ESCOPETA y Enter compra; Esc cierra.
-            PantallaTienda pantalla = UnityEngine.Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+            PantallaTienda pantalla = System.Linq.Enumerable.FirstOrDefault(UnityEngine.Object.FindObjectsByType<PantallaTienda>(FindObjectsInactive.Include, FindObjectsSortMode.None), p => p.transform.root.name != ColocadorExpendedoras.NombreRaiz) /* T-688: no la de las expendedoras (T-685) */;
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => mostrador.PantallaAbierta && pantalla.Visible, "abrir la tienda con E", 5f);
             int filaEscopeta = -1;

@@ -219,6 +219,17 @@ namespace MechaCyberpunk.Tests.Personaje
             return blanco.AddComponent<BlancoDeTiro>();
         }
 
+        // T-688: T-685 puso en la calle una raiz "Expendedoras" con su propia PantallaTienda; FindFirstObjectByType<PantallaTienda>
+        // podia devolver esa y no la de El Mercado. Aqui no se prueban las expendedoras: se quita la raiz entera.
+        private static void QuitarExpendedoras()
+        {
+            GameObject raiz = GameObject.Find(ColocadorExpendedoras.NombreRaiz);
+            if (raiz != null)
+            {
+                Object.DestroyImmediate(raiz);
+            }
+        }
+
         [UnityTest]
         public IEnumerator RecorridoFusilYSniper()
         {
@@ -237,6 +248,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(mira, "La escena trae la mira del sniper");
             Camera camara = jugador.Camara;
             yield return new WaitForSecondsRealtime(1f);
+            QuitarExpendedoras();
 
             cartera.Abonar(Dinero - cartera.Dinero, MotivoDinero.Otro);
             Assert.AreEqual(Dinero, cartera.Dinero);

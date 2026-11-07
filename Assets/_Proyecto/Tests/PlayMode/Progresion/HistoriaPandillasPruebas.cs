@@ -155,7 +155,7 @@ namespace MechaCyberpunk.Tests.Progresion
             // y se cruzan caminando (atajos anotados en SalidaCasaPruebas).
             Debug.Log("[Prueba] cama " + jugador.Raiz.position);
             yield return SalidaCasaPruebas.Salir(() => director.Paso != PasoHistoria.Despierta);
-            float finCamino = Time.realtimeSinceStartup + 5f;
+            float finCamino = Time.realtimeSinceStartup + 20f; // T-688: 5 s fallaba a veces con la máquina cargada
             while (director.Paso == PasoHistoria.Despierta && Time.realtimeSinceStartup < finCamino)
             {
                 yield return null;

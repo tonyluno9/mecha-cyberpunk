@@ -255,6 +255,7 @@ namespace MechaCyberpunk.Tests.Progresion
             // b. EL DOC con vida 50: E te deja al máximo sin cobrar.
             PersonajeApoyo doc = Profe(DirectorPandillas.IdDoc);
             Assert.IsNotNull(doc);
+            vida.Escudo?.Iniciar(0f, 0f, 0f); // T-688: el escudo de T-684 absorbería parte del daño y la vida no bajaría a 50
             vida.RecibirDanio(new InfoDanio(vida.Actual - 50f, TipoDanio.Disparo, Vector3.zero, Vector3.forward, null));
             Assert.AreEqual(50f, vida.Actual, 0.5f, "Vida 50");
             yield return PonerFrente(jugador, doc.transform);

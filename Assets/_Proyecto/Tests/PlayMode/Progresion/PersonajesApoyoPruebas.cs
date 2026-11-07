@@ -190,6 +190,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return new WaitForSecondsRealtime(1f);
 
             cartera.Abonar(500 - cartera.Dinero, MotivoDinero.Otro);
+            vida.Escudo?.Iniciar(0f, 0f, 0f); // T-688: sin el escudo de T-684 la vida baja de verdad a 40
             vida.RecibirDanio(new InfoDanio(vida.Maxima - 40f, TipoDanio.Disparo, Vector3.zero, Vector3.forward, null));
             Assert.AreEqual(40f, vida.Actual, 0.5f, "Vida 40");
             for (int i = 0; i < 200 && calor.Nivel < 2; i++)
@@ -288,7 +289,7 @@ namespace MechaCyberpunk.Tests.Progresion
                     cic = m.name == "MostradorCIC" ? m : cic;
                 }
                 Assert.IsNotNull(cic, "Existe el mostrador del CIC");
-                PantallaTienda pantalla = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+                PantallaTienda pantalla = System.Linq.Enumerable.FirstOrDefault(UnityEngine.Object.FindObjectsByType<PantallaTienda>(FindObjectsInactive.Include, FindObjectsSortMode.None), p => p.transform.root.name != ColocadorExpendedoras.NombreRaiz) /* T-688: no la de las expendedoras (T-685) */;
                 Assert.IsNotNull(pantalla, "El mostrador del CIC trae su pantalla");
                 yield return Pulsar(teclado.eKey);
                 yield return EsperarHasta(() => cic.PantallaAbierta && pantalla.Visible, "abrir la tienda del CIC con E", 5f);

@@ -47,10 +47,11 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(AlturaEsperada, AlturaAnimada(visual.gameObject), Tolerancia, "El jugador animado mide 1.80 m");
         }
 
+        // Excepcion documentada (T-688): el Doc (Visual_Doctor) mide 1.10 veces al jugador a proposito (T-812, sesion 2).
         // Alturas relativas al jugador de cada personaje que comparte escala con él (ColocarS2.Personajes): nadie enano ni gigante.
         private static readonly (string prefab, float relativa)[] Personajes =
         {
-            ("Visual_man", 1.00f), ("Visual_woman", 1.00f), ("Visual_Doctor", 1.00f), ("Visual_Inventor", 0.98f), ("Visual_Hacker", 1.00f),
+            ("Visual_man", 1.00f), ("Visual_woman", 1.00f), ("Visual_Doctor", 1.10f), ("Visual_Inventor", 0.98f), ("Visual_Hacker", 1.00f),
             ("Visual_RobotHombre", 1.00f), ("Visual_SkullHombre", 1.00f), ("Visual_woman2", 0.97f), ("Visual_GuardiaNova", 1.25f),
         };
 

@@ -420,3 +420,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-685 expendedoras: 5 consumibles (bebida, papitas, venda, cafe, bateria), Tab/F/6-0, expendedora con E en casa, tianguis y Nova colocadas en ejecucion. 5 EditMode + 9 PlayMode.
 - T-686 botin de enemigos: los pandilleros sueltan dinero (se recoge al pasar) y arma (ArmaEnPiso); el jefe una escopeta. EventosBotin en Core. 2 EditMode + 3 PlayMode.
 - T-687 disparar desde el carro y la moto: clic derecho apunta libre y la pistola sale (moto con una mano); 3 PlayMode.
+- T-688 pruebas rojas: HudAPie (vida 150), Mercado/Nombres (pantalla de expendedoras T-685), Doc 1.10 en escala, escudo en Historia/Apoyo, intermitentes endurecidas; quedan rojas las de S2 (Doc, ambiente, CarrosS2n) y previas (Bar, Vehiculos). Ver docs/tareas/hechas/T-688-pruebas-rojas.md

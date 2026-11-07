@@ -171,7 +171,7 @@ namespace MechaCyberpunk.Tests.UI
             }
             Release(teclado.wKey);
             yield return new WaitForSecondsRealtime(0.3f);
-            PantallaTienda pantalla = UnityEngine.Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+            PantallaTienda pantalla = System.Linq.Enumerable.FirstOrDefault(UnityEngine.Object.FindObjectsByType<PantallaTienda>(FindObjectsInactive.Include, FindObjectsSortMode.None), p => p.transform.root.name != ColocadorExpendedoras.NombreRaiz) /* T-688: no la de las expendedoras (T-685) */;
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => mostrador.PantallaAbierta && pantalla.Visible, "abrir la tienda con E", 5f);
             Assert.AreEqual("EL MERCADO", pantalla.Titulo);
