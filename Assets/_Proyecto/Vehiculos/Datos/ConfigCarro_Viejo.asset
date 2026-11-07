@@ -18,10 +18,10 @@ MonoBehaviour:
   velocidadMaxima: 16
   velocidadReversa: 5
   umbralReversa: 0.5
-  fuerzaMotor: 6200
+  fuerzaMotor: 8800
   fuerzaReversa: 3500
-  fuerzaFreno: 12500
-  fuerzaFrenoMano: 6000
+  fuerzaFreno: 20000
+  fuerzaFrenoMano: 9000
   resistenciaRodadura: 900
   gananciaEstacionamiento: 40
   anguloDireccionParado: 32
@@ -32,6 +32,10 @@ MonoBehaviour:
   agarreLateral: 11
   factorAgarreFrenoMano: 0.25
   respuestaGiro: 8
+  velocidadVolante: 4
+  velocidadCentradoVolante: 6
+  esperaCambioSentido: 0.25
+  rampaMarcha: 0.5
   largoReposo: 0.35
   largoMaximo: 0.5
   radioRueda: 0.35

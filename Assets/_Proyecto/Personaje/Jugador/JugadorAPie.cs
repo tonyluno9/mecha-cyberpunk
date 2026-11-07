@@ -35,6 +35,9 @@ namespace MechaCyberpunk.Personaje.Jugador
         private Camera camaraActual;
         private bool avisoDuplicadoDado;
         private AnimacionCarro animacionCarro;
+        private LanzamientoMoto lanzamientoMoto;
+        private Rigidbody cuerpoMontable;
+        private Vector3 ultimaVelocidadMontable;
 
         public Transform Raiz => transform;
         public ModoJugador Modo { get; private set; } = ModoJugador.APie;
@@ -79,6 +82,11 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 gameObject.AddComponent<ConsumiblesJugador>();
             }
+            lanzamientoMoto = GetComponent<LanzamientoMoto>();
+            if (lanzamientoMoto == null)
+            {
+                lanzamientoMoto = gameObject.AddComponent<LanzamientoMoto>();
+            }
         }
 
         /// <summary>T-520: el modelo del jugador cambió (mujer u hombre); lo que se oculta en el carro es el del nuevo.</summary>
@@ -111,7 +119,13 @@ namespace MechaCyberpunk.Personaje.Jugador
         {
             if (montable != null && ReferenceEquals(montable, MontableActual))
             {
-                Bajar();
+                // T-696: en moto y rápido, la salida forzada es un choque: el conductor sale volando (la velocidad es la de antes del choque).
+                bool enMoto = animacionCarro != null && animacionCarro.EnMoto;
+                Vector3 velocidad = ultimaVelocidadMontable;
+                if (Bajar() && enMoto && lanzamientoMoto != null)
+                {
+                    lanzamientoMoto.Lanzar(velocidad);
+                }
             }
         }
 
@@ -209,6 +223,15 @@ namespace MechaCyberpunk.Personaje.Jugador
             return resultado;
         }
 
+        // Se guarda la velocidad del montable en cada paso de física, antes de que corra la física: es la de antes de un choque.
+        private void FixedUpdate()
+        {
+            if (MontableActual != null && cuerpoMontable != null)
+            {
+                ultimaVelocidadMontable = cuerpoMontable.linearVelocity;
+            }
+        }
+
         private void LateUpdate()
         {
             if (MontableActual == null || MontableActual.Asiento == null)
@@ -261,6 +284,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
 
             MontableActual = montable;
+            cuerpoMontable = montable.Asiento != null ? montable.Asiento.GetComponentInParent<Rigidbody>() : null;
+            ultimaVelocidadMontable = Vector3.zero;
             controladorAPie.ActivarControl(false);
             controladorAPie.enabled = false;
             if (armas != null)

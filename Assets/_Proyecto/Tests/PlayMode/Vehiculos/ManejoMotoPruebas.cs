@@ -162,8 +162,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
             yield return Simular(0.2f);
             Press(teclado.sKey);
             yield return Simular(0.8f);
-            Assert.Greater(moto.Velocidad, 8f, "Un segundo de freno no la para en seco (inercia): " + moto.Velocidad);
-            Assert.Less(moto.Velocidad, 19f, "pero sí frena: " + moto.Velocidad);
+            // T-695: la moto frena casi de golpe (28 m/s²): en 0.8 s ya casi paró.
+            Assert.Less(moto.Velocidad, 2f, "Frena casi de golpe: " + moto.Velocidad);
             // Con el freno sostenido llega a cero (después daría reversa); se suelta al detenerse y se queda parada.
             float inicio = Time.fixedTime;
             while (moto.Velocidad > 0.5f && Time.fixedTime - inicio < 10f)
@@ -173,7 +173,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             float segundosParaParar = Time.fixedTime - inicio;
             Release(teclado.sKey);
             Assert.Less(moto.Velocidad, 0.6f, "Con el freno sostenido se detiene: " + moto.Velocidad);
-            Assert.Greater(segundosParaParar, 1.5f, "y tarda (inercia): " + segundosParaParar);
+            Assert.Less(segundosParaParar, 1.5f, "y para pronto: " + segundosParaParar);
             Assert.Less(segundosParaParar, 9f, "pero para: " + segundosParaParar);
             yield return Simular(1.5f);
             Assert.Less(Mathf.Abs(moto.Velocidad), 0.8f, "Ya sin tocar nada se queda quieta: " + moto.Velocidad);

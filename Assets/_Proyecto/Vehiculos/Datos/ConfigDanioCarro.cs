@@ -18,11 +18,15 @@ namespace MechaCyberpunk.Vehiculos.Datos
 
         [Header("Choques")]
         [Min(0f)] [Tooltip("Rapidez relativa hasta la que un golpe no hace daño (m/s).")]
-        [SerializeField] private float umbralChoque = 6f;
+        [SerializeField] private float umbralChoque = 8f;
         [Min(0f)] [Tooltip("Rapidez relativa desde la que el choque suena fuerte (m/s).")]
         [SerializeField] private float umbralChoqueFuerte = 14f;
-        [Min(0f)] [Tooltip("Daño por cada m/s por encima del umbral (puntos).")]
-        [SerializeField] private float danioPorChoque = 7f;
+        [Min(0f)] [Tooltip("Daño por cada m/s por encima del umbral (puntos). T-696: antes 7; un choque duele menos que un disparo.")]
+        [SerializeField] private float danioPorChoque = 1.2f;
+        [Min(0f)] [Tooltip("T-696: lo más que quita un solo choque (puntos). Siempre menos que un disparo de pistola (25).")]
+        [SerializeField] private float danioMaximoPorChoque = 15f;
+        [Min(0f)] [Tooltip("T-696: rapidez de choque desde la que una moto avienta al conductor (m/s).")]
+        [SerializeField] private float rapidezLanzaConductor = 11f;
         [Min(0f)] [Tooltip("Tiempo mínimo entre dos choques que cuentan (s).")]
         [SerializeField] private float segundosEntreChoques = 0.4f;
 
@@ -47,6 +51,8 @@ namespace MechaCyberpunk.Vehiculos.Datos
         public float UmbralChoque => umbralChoque;
         public float UmbralChoqueFuerte => umbralChoqueFuerte;
         public float DanioPorChoque => danioPorChoque;
+        public float DanioMaximoPorChoque => danioMaximoPorChoque;
+        public float RapidezLanzaConductor => rapidezLanzaConductor;
         public float SegundosEntreChoques => segundosEntreChoques;
         public float RadioExplosion => radioExplosion;
         public float DanioExplosion => danioExplosion;
