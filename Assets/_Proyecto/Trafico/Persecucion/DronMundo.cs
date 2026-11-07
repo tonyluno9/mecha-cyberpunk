@@ -7,7 +7,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
 {
     /// <summary>
     /// Un dron de la policía (T-341): vuela sobre el jugador y se le acerca hasta la distancia de seguimiento, con su luz apuntando hacia abajo.
-    /// Sin colliders: no estorba ni empuja nada. El daño y la captura quedan fuera de la tarea.
+    /// Sin colliders: no estorba ni empuja nada. T-710: dispara de verdad: suena el disparo, deja un trazo finísimo y cortísimo (como T-676), si falla y la bala
+    /// pasa cerca del jugador suena el silbido de la bala rozando, y si acierta hace daño real por <see cref="IRecibeDanio"/>.
     /// </summary>
     public class DronMundo : MonoBehaviour
     {
@@ -17,6 +18,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
         public static Func<float> Azar = () => UnityEngine.Random.value;
 
         private const float AlturaPecho = 1.2f;
+        // T-710: trazo de la bala (hilo finísimo y cortísimo, como el del pandillero) y silbido de la bala que pasa cerca.
+        public const string IdDisparo = "ARM_PIS_DISPARO";
+        public const string IdRoce = "ARM_BALA_ROZA";
+        private const float DuracionTrazo = 0.03f;
+        private const float GrosorTrazo = 0.006f;
+        private const float LargoTrazo = 6f;
+        private const float BajoElDron = 0.2f;
+        private static readonly Color ColorTrazo = new Color(1f, 0.9f, 0.6f, 0.9f);
+        private LineRenderer trazo;
+        private float finTrazo = -1f;
 
         private Light[] luces;
         private Color[] coloresLuces;
@@ -81,12 +92,81 @@ namespace MechaCyberpunk.Trafico.Persecucion
             finAviso = -1f;
             PonerLuces(false);
             proximoTiro = Time.time + config.SegundosEntreTirosDron;
-            if (Azar() <= config.AciertoDron)
+            Disparos++;
+            Vector3 origen = transform.position + Vector3.down * BajoElDron;
+            Vector3 pecho = jugador.Raiz.position + Vector3.up * AlturaPecho;
+            Vector3 direccion = (pecho - origen).normalized;
+            EventosRuido.PublicarDisparo(origen);
+            Sonidos.ReproducirEn(IdDisparo, origen);
+            bool acierta = Azar() <= config.AciertoDron;
+            // T-421: si el jugador está agachado tras una cubierta, la bala pega en ella y no le llega.
+            if (acierta && objetivo is IProtegeDeBalas protegido && protegido.ProtegeDe(origen, out Vector3 puntoCubierta))
             {
-                Vector3 pecho = jugador.Raiz.position + Vector3.up * AlturaPecho;
-                Vector3 direccion = (pecho - transform.position).normalized;
-                objetivo.RecibirDanio(new InfoDanio(config.DanioDron, TipoDanio.Disparo, pecho, direccion, null));
+                acierta = false;
+                direccion = (puntoCubierta - origen).normalized;
             }
+            else if (!acierta)
+            {
+                // Falla: la bala pasa a un metro o menos del jugador (de ahí el silbido).
+                Vector3 lado = Vector3.Cross(direccion, Vector3.up).normalized;
+                float desvio = (Azar() < 0.5f ? -1f : 1f) * (0.4f + 0.8f * Azar());
+                direccion = (pecho + lado * desvio - origen).normalized;
+            }
+            DibujarTrazo(origen, direccion, Vector3.Distance(origen, pecho));
+            if (acierta)
+            {
+                Aciertos++;
+                objetivo.RecibirDanio(new InfoDanio(config.DanioDron, TipoDanio.Disparo, pecho, direccion, null));
+                return;
+            }
+            float cerca = CalculoTiroDron.DistanciaALaBala(origen, direccion, pecho, out Vector3 masCercano);
+            if (CalculoTiroDron.Roza(cerca, CalculoTiroDron.RadioRoce))
+            {
+                Rozaduras++;
+                Sonidos.ReproducirEn(IdRoce, masCercano);
+            }
+        }
+
+        /// <summary>T-710: cuántos disparos ha hecho.</summary>
+        public int Disparos { get; private set; }
+
+        /// <summary>T-710: cuántos le pegaron al jugador.</summary>
+        public int Aciertos { get; private set; }
+
+        /// <summary>T-710: cuántas balas pasaron lo bastante cerca del jugador como para silbar.</summary>
+        public int Rozaduras { get; private set; }
+
+        /// <summary>T-710: True mientras se ve el trazo del último disparo.</summary>
+        public bool TrazoVisible => trazo != null && trazo.enabled;
+
+        /// <summary>T-710: el trazo del último disparo (para pruebas).</summary>
+        public LineRenderer Trazo => trazo;
+
+        private void DibujarTrazo(Vector3 origen, Vector3 direccion, float distancia)
+        {
+            if (trazo == null)
+            {
+                GameObject objeto = new GameObject("Trazo");
+                objeto.transform.SetParent(transform, false);
+                trazo = objeto.AddComponent<LineRenderer>();
+                trazo.positionCount = 2;
+                trazo.useWorldSpace = true;
+                trazo.startWidth = GrosorTrazo;
+                trazo.endWidth = GrosorTrazo;
+                trazo.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                trazo.receiveShadows = false;
+                Shader sprite = Shader.Find("Sprites/Default");
+                if (sprite != null)
+                {
+                    trazo.sharedMaterial = new Material(sprite);
+                }
+                trazo.startColor = ColorTrazo;
+                trazo.endColor = ColorTrazo;
+            }
+            trazo.SetPosition(0, origen);
+            trazo.SetPosition(1, origen + direccion * Mathf.Min(LargoTrazo, Mathf.Max(0.1f, distancia)));
+            trazo.enabled = true;
+            finTrazo = Time.time + DuracionTrazo;
         }
 
         private readonly RaycastHit[] impactosLinea = new RaycastHit[16];
@@ -154,6 +234,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private void Update()
         {
+            if (trazo != null && trazo.enabled && Time.time >= finTrazo)
+            {
+                trazo.enabled = false;
+            }
             Vector3? jugador = posicionJugador?.Invoke();
             if (calculo == null)
             {

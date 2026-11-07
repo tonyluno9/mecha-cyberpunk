@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Progresion.Editor
             R("ARM_ESC_RECARGA_CARTUCHO", Tipo.Golpe, 0.2f, 700f, 0.5f), R("ARM_SUB_RECARGA", Tipo.Golpe, 0.3f, 800f, 0.5f),
             R("ARM_VACIO", Tipo.Golpe, 0.08f, 1500f, 0.5f), R("ARM_CAMBIAR", Tipo.Golpe, 0.12f, 600f, 0.4f),
             R("ARM_BALA_IMPACTO_CONCRETO", Tipo.Impacto, 0.15f, 2500f, 0.5f), R("ARM_BALA_IMPACTO_CARNE", Tipo.Impacto, 0.15f, 600f, 0.6f),
-            R("ARM_LASER_AVISO", Tipo.Tono, 0.15f, 2200f, 0.4f), R("PUN_GOLPE_AIRE", Tipo.Barrido, 0.18f, 1200f, 0.3f),
+            R("ARM_LASER_AVISO", Tipo.Tono, 0.15f, 2200f, 0.4f), R("ARM_BALA_ROZA", Tipo.Barrido, 0.14f, 3200f, 0.45f), R("PUN_GOLPE_AIRE", Tipo.Barrido, 0.18f, 1200f, 0.3f),
             R("PUN_GOLPE_CARNE", Tipo.Golpe, 0.18f, 300f, 0.9f), R("JUG_PASO_ASFALTO", Tipo.Paso, 0.12f, 400f, 0.4f),
             R("JUG_SALTO", Tipo.Barrido, 0.2f, 500f, 0.3f), R("JUG_CAER", Tipo.Golpe, 0.2f, 200f, 0.7f),
             R("JUG_DANIO", Tipo.Voz, 0.25f, 220f, 0.6f), R("PAN_RIVAL_ALERTA", Tipo.Voz, 0.3f, 330f, 0.5f),
