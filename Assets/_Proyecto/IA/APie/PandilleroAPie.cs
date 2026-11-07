@@ -835,7 +835,8 @@ namespace MechaCyberpunk.IA.APie
             foreach (float candidato in desvios)
             {
                 Vector3 propuesta = puntoBase + lateral * candidato;
-                if (PuestoOcupado(propuesta))
+                // T-714: un puesto desde el que no alcanza a disparar al jugador no sirve (se quedaría escondido sin pelear): tiene que estar dentro del tiro.
+                if (DistanciaPlana(propuesta, pechoJugador) > datos.DistanciaMaxTiro || PuestoOcupado(propuesta))
                 {
                     continue;
                 }

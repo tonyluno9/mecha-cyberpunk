@@ -87,6 +87,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandilleroAPie
   datos: {fileID: 11400000, guid: e9f81334b83615341b553f2b61a3a79e, type: 2}
+  siempreAlerta: 0
   cuerpo: {fileID: 0}
   brazo: {fileID: 0}
   piezasBrazo: []

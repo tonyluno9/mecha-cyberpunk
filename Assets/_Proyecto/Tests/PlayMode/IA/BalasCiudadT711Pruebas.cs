@@ -18,7 +18,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
-namespace MechaCyberpunk.Tests.Progresion
+namespace MechaCyberpunk.Tests.IA
 {
     /// <summary>
     /// T-711: en la escena Ciudad real (Ciudad_Prologo), las balas de los pandilleros SKULLS, los policías y el dron no atraviesan paredes, las casas
