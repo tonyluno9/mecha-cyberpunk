@@ -137,6 +137,35 @@ namespace MechaCyberpunk.Arte.Editor
             EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single);
         }
 
+        /// <summary>Referencia | juego de las zonas tocadas en la sesión: docs/capturas/s2t-ref-&lt;zona&gt;.png.</summary>
+        public static readonly (string zona, string referencia, string juego)[] Comparaciones =
+        {
+            ("callejon", "docs/referencias-ciudad/callejon-noche.png", "s2t-niebla-callejon-despues.png"),
+            ("suburbios", "docs/referencias-ciudad/calle-suburbios-noche.png", "s2t-poste-noche-despues-0.png"),
+            ("cruce", "docs/referencias-ciudad/cruce-dia-lluvia.png", "s2t-calles-2.png"),
+            ("azotea", "docs/referencias-ciudad/azotea-vista-ciudad.png", "s2t-recorrido-alto-oeste.png"),
+            ("habitacion", "docs/referencias-interiores/habitacion.png", "s2t-cuarto-cama-noche.png"),
+            ("taller-mecanico", "docs/referencias-interiores/taller-mecanico.png", "s2t-taller-dentro.png"),
+            ("taller-tino", "docs/referencias-interiores/taller-tino.png", "s2t-tino.png"),
+            ("consultorio", "docs/referencias-interiores/consultorio-doc.png", "s2t-doc-dentro.png"),
+        };
+
+        [MenuItem("Mecha Cyberpunk/S2t/Comparar con las referencias")]
+        public static void Comparar()
+        {
+            ColocarS2.Abrir();
+            FotoHora(22f, new Vector3(-97f, 1.6f, -11f), new Vector3(-102f, 1.0f, -14.5f), CarpetaCapturas + "s2t-doc-dentro.png", 70f);
+            foreach (var c in Comparaciones)
+            {
+                string juego = CarpetaCapturas + c.juego;
+                if (File.Exists(c.referencia) && File.Exists(juego))
+                {
+                    ColocarS2.LadoALado(c.referencia, juego, CarpetaCapturas + "s2t-ref-" + c.zona + ".png");
+                }
+            }
+            EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single);
+        }
+
         public const string RutaLugarCasino = "Assets/_Proyecto/Mundo/Datos/DatosLugar_Casino.asset";
 
         /// <summary>T-863: el casino VivaCoin abre las 24 horas (Tony: "siempre abierto, se puede entrar"). Idempotente.</summary>
