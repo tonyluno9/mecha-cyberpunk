@@ -29,15 +29,29 @@ namespace MechaCyberpunk.Personaje.Visual
         [Min(0.5f)] [SerializeField] private float radioGolpe = 2.2f;
         [Tooltip("Segundos entre un golpe y el siguiente (s).")]
         [Min(0.2f)] [SerializeField] private float segundosEntreGolpes = 1.5f;
+        [Header("Daño de verdad (T-715)")]
+        [Tooltip("Segundos de aviso (luz roja y brazo atrás) antes de que el golpe conecte (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosAviso = 0.6f;
+        [Tooltip("Daño del puñetazo.")]
+        [Min(0f)] [SerializeField] private float danioGolpe = 12f;
+        [Tooltip("Daño de la barrida (cada tercer golpe).")]
+        [Min(0f)] [SerializeField] private float danioBarrida = 20f;
+        [Tooltip("El golpe solo conecta si el jugador sigue a esta distancia o menos al llegar el impacto (m): alejarse a tiempo lo esquiva.")]
+        [Min(0.5f)] [SerializeField] private float alcanceImpacto = 2.6f;
+        [Tooltip("Ángulo frente al guardia donde conecta el puñetazo (grados totales); la barrida abre más.")]
+        [Range(30f, 360f)] [SerializeField] private float anguloImpacto = 110f;
 
         private const float VariacionPresumir = 0.25f;
         private VisualPersonaje visual;
         private float proximoPresumir;
-        private float proximoGolpe;
         private int golpesDados;
         private GenteDeBanqueta gente;
         private float finAlerta;
         private float proximaLlamada;
+        private ReglaGolpeGuardia reglaGolpe;
+        private Light luzAviso;
+        private int impactosDados;
+        private float danioHecho;
 
         /// <summary>True mientras está alerta (sacaste un arma o hubo disparos cerca).</summary>
         public bool Alerta => Time.time < finAlerta;
@@ -46,11 +60,22 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Cuántos golpes de amenaza ha lanzado (cada tercero es la barrida).</summary>
         public int GolpesDados => golpesDados;
 
+        /// <summary>True mientras avisa el golpe (luz roja): todavía no hace daño (T-715).</summary>
+        public bool AvisandoGolpe => reglaGolpe != null && reglaGolpe.Actual == ReglaGolpeGuardia.Fase.Aviso;
+
+        /// <summary>Cuántos golpes conectaron al jugador y el daño total que hicieron (T-715).</summary>
+        public int Impactos => impactosDados;
+        public float DanioHecho => danioHecho;
+
+        /// <summary>La luz roja del aviso (null si todavía no avisó nunca).</summary>
+        public Light LuzAviso => luzAviso;
+
         /// <summary>Para las pruebas y los creadores: tiempos de presumir y de golpear.</summary>
         public void ConfigurarGestos(float entrePresumir, float entreGolpes)
         {
             segundosEntrePresumir = Mathf.Max(1f, entrePresumir);
             segundosEntreGolpes = Mathf.Max(0.2f, entreGolpes);
+            reglaGolpe = null;
             proximoPresumir = Time.time + segundosEntrePresumir;
         }
 
@@ -71,6 +96,11 @@ namespace MechaCyberpunk.Personaje.Visual
         private void OnDisable()
         {
             EventosRuido.Disparo -= AlOirDisparo;
+            reglaGolpe?.Reiniciar();
+            if (luzAviso != null)
+            {
+                luzAviso.enabled = false;
+            }
             EventosRuido.ArmaSacada -= AlVerArma;
             if (gente != null)
             {
@@ -121,14 +151,26 @@ namespace MechaCyberpunk.Personaje.Visual
             Vector3 d = jugador.Raiz.position - transform.position;
             d.y = 0f;
             float distancia = d.magnitude;
+            // T-715: el golpe tiene aviso (luz roja y brazo atrás), luego conecta y hace daño de verdad; alejarte a tiempo lo esquiva.
+            if (reglaGolpe == null)
+            {
+                reglaGolpe = new ReglaGolpeGuardia(segundosAviso, Mathf.Max(0.1f, segundosEntreGolpes - segundosAviso));
+            }
+            ReglaGolpeGuardia.Salida golpe = reglaGolpe.Avanzar(Time.deltaTime, Alerta, distancia <= radioGolpe);
+            if (golpe.InicioAviso)
+            {
+                golpesDados++;
+                gente.MirarA = jugador.Raiz.position;
+                visual.Golpear(reglaGolpe.Fuerte);
+                Sonidos.ReproducirEn("ARM_LASER_AVISO", transform.position + Vector3.up * AlturaAviso);
+            }
+            ActualizarLuzAviso();
+            if (golpe.Impacto)
+            {
+                Pegar(jugador, golpe.Fuerte);
+            }
             if (Alerta)
             {
-                if (distancia <= radioGolpe && Time.time >= proximoGolpe)
-                {
-                    proximoGolpe = Time.time + segundosEntreGolpes;
-                    golpesDados++;
-                    visual.Golpear(golpesDados % 3 == 0);
-                }
                 return;
             }
             if (distancia <= radioVigila && Time.time >= proximoPresumir)
@@ -136,6 +178,55 @@ namespace MechaCyberpunk.Personaje.Visual
                 proximoPresumir = Time.time + segundosEntrePresumir * (1f + Random.Range(-VariacionPresumir, VariacionPresumir));
                 visual.Presumir();
             }
+        }
+
+        private const float AlturaAviso = 1.5f;
+
+        // Luz roja sobre el pecho del guardia que sube mientras avisa y se apaga al golpear o al cancelarse.
+        private void ActualizarLuzAviso()
+        {
+            bool avisando = AvisandoGolpe;
+            if (luzAviso == null)
+            {
+                if (!avisando)
+                {
+                    return;
+                }
+                GameObject objeto = new GameObject("LuzAvisoGolpe");
+                objeto.transform.SetParent(transform, false);
+                objeto.transform.localPosition = Vector3.up * AlturaAviso;
+                luzAviso = objeto.AddComponent<Light>();
+                luzAviso.type = LightType.Point;
+                luzAviso.color = new Color(1f, 0.1f, 0.05f);
+                luzAviso.range = 4f;
+                luzAviso.shadows = LightShadows.None;
+            }
+            luzAviso.enabled = avisando;
+            if (avisando)
+            {
+                luzAviso.intensity = 2f + 10f * reglaGolpe.ProgresoAviso;
+            }
+        }
+
+        // El golpe llegó: conecta si el jugador sigue al alcance (y al frente, salvo la barrida, que pega alrededor).
+        private void Pegar(IJugador jugador, bool fuerte)
+        {
+            IRecibeDanio objetivo = jugador.Raiz != null ? jugador.Raiz.GetComponentInChildren<IRecibeDanio>() : null;
+            if (objetivo == null)
+            {
+                return;
+            }
+            Vector3 haciaJugador = jugador.Raiz.position - transform.position;
+            haciaJugador.y = 0f;
+            float alcance = alcanceImpacto + (fuerte ? 0.5f : 0f);
+            if (haciaJugador.magnitude > alcance || (!fuerte && Vector3.Angle(transform.forward, haciaJugador) > anguloImpacto * 0.5f))
+            {
+                return;
+            }
+            Vector3 punto = jugador.Raiz.position + Vector3.up * 1.2f;
+            ResultadoDanio resultado = objetivo.RecibirDanio(new InfoDanio(fuerte ? danioBarrida : danioGolpe, TipoDanio.Golpe, punto, haciaJugador.normalized, null));
+            impactosDados++;
+            danioHecho += resultado.DanioAplicado;
         }
     }
 }
