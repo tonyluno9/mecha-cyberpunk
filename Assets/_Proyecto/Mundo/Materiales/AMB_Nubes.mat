@@ -35,8 +35,8 @@ Material:
     - _Opacidad: 1
     - _Suavidad: 0.25
     m_Colors:
-    - _ColorBrillo: {r: 0.62, g: 0.24, b: 0.52, a: 1}
-    - _ColorNubes: {r: 0.1, g: 0.09, b: 0.17, a: 1}
+    - _ColorBrillo: {r: 0.24, g: 0.3, b: 0.42, a: 1}
+    - _ColorNubes: {r: 0.06, g: 0.08, b: 0.14, a: 1}
     - _Velocidad: {r: 0.004, g: 0.002, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
