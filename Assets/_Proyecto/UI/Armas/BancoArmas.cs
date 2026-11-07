@@ -55,6 +55,27 @@ namespace MechaCyberpunk.UI.Armas
             }
         }
 
+        // T-865: la pantalla (lienzo, lista y holograma) se arma al entrar a la escena y no al primer E: así abre al instante.
+        private void Start()
+        {
+            if (config != null)
+            {
+                CrearPantalla();
+                pantalla.Precargar();
+            }
+        }
+
+        private void CrearPantalla()
+        {
+            if (pantalla == null)
+            {
+                GameObject go = new GameObject("PantallaMejoraArmas");
+                go.transform.SetParent(transform, false);
+                pantalla = go.AddComponent<PantallaMejoraArmas>();
+            }
+            pantalla.Configurar(config);
+        }
+
         private void OnEnable()
         {
             Registro<IInteractuable>.Agregar(this);
@@ -80,13 +101,7 @@ namespace MechaCyberpunk.UI.Armas
             {
                 return;
             }
-            if (pantalla == null)
-            {
-                GameObject go = new GameObject("PantallaMejoraArmas");
-                go.transform.SetParent(transform, false);
-                pantalla = go.AddComponent<PantallaMejoraArmas>();
-            }
-            pantalla.Configurar(config);
+            CrearPantalla();
             abierta = true;
             pantalla.Mostrar(AlSalir);
             JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;

@@ -191,6 +191,15 @@ namespace MechaCyberpunk.UI.Armas
             DesactivarEntrada();
         }
 
+        /// <summary>T-865: arma la pantalla escondida (para que el primer Mostrar no tarde). Sin config no hace nada.</summary>
+        public void Precargar()
+        {
+            if (config != null)
+            {
+                Construir();
+            }
+        }
+
         /// <summary>Abre el menú con las armas que traes. <paramref name="alSalirMenu"/> avisa Esc.</summary>
         public void Mostrar(Action alSalirMenu)
         {
