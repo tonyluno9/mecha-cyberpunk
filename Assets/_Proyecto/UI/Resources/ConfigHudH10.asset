@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db129f40fb7fe9d46894d7ad71498e90, type: 3}
+  m_Name: ConfigHudH10
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Hud.ConfigHudH10
+  fuente: {fileID: 12800000, guid: 449d32f24a791ad47853b1b251ca3c0b, type: 3}
+  fuenteNumeros: {fileID: 12800000, guid: 9f074b92f03b1764b9544b15717affbc, type: 3}
+  estrellaContorno: {fileID: 21300000, guid: e8b4a3718dc6c3e49a04fe4000631bc2, type: 3}
+  estrellaLlena: {fileID: 21300000, guid: ed27a1e9d132df844ad707b2352a2792, type: 3}
+  cuerpoLinea:
+  - {fileID: 21300000, guid: 110f44bcb2e6a4a4092c771ae11ec492, type: 3}
+  - {fileID: 21300000, guid: 603e09154934ed04b995acdf43dcfeee, type: 3}
+  - {fileID: 21300000, guid: ec4fadc0b172649458fe3964ad3a5c16, type: 3}
+  - {fileID: 21300000, guid: 6d33b85ec7bfb6c458ce01929ede8804, type: 3}
+  cuerpoRelleno:
+  - {fileID: 21300000, guid: 9629901318195764182089fb311cdd78, type: 3}
+  - {fileID: 21300000, guid: 48fd99a8304c1114f8ae904a45a4cf99, type: 3}
+  - {fileID: 21300000, guid: 246cca04fc5e3734b923c7561e660058, type: 3}
+  - {fileID: 21300000, guid: b46dcf99d6bf1c74592cff3d1cc415c6, type: 3}
+  idsObjeto:
+  - bebida_energetica
+  - papitas
+  - venda
+  - cafe
+  - bateria_escudo
+  iconosObjeto:
+  - {fileID: 21300000, guid: 7e59611b88d904d44871549f2d109006, type: 3}
+  - {fileID: 21300000, guid: 1e20df60f0a73944194f0c73c5b457ec, type: 3}
+  - {fileID: 21300000, guid: 37000426544be4a44a415a7297ea610d, type: 3}
+  - {fileID: 21300000, guid: c5c025894af39bc4e882ccb580dfbb70, type: 3}
+  - {fileID: 21300000, guid: 23066e6a2ab247b4c9a98e4bc2e4c574, type: 3}
+  conoMinimapa: {fileID: 21300000, guid: e94ac695dceda0b4ab1e52aa4ea695d7, type: 3}
+  puntoRuta: {fileID: 21300000, guid: 1e33cab5c441fd84cb017d5b6fb74828, type: 3}

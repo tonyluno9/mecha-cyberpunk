@@ -1231,3 +1231,11 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - Logo: sigue el texto provisional CYBERCITY con glitch. Para usar una propuesta (imageassets/logo/LG01 a LG06): importar el PNG como Sprite en Assets/_Proyecto/UI/Resources/LogoCybercity.png (sin más código; el menú y la carga lo usan solos). Tony debe elegir cuál.
 - Cámara H10: altura 3.4 m, 7 m atrás, FOV 65 (pies al 10 % del borde de abajo, no al 5 % de la imagen: más bajo pedía una cámara aún más alta). Apuntando FOV 45. Con la cámara tan atrás, el asistido de apuntado y la mira calculan desde la cámara; los blancos lejanos quedan a la altura de la mira (3.4 m) si no se baja el ratón.
 - Junto al jugador aparece otro personaje en la calle frente a la casa (NPC de la sesión 2), no es parte de esta tarea.
+
+## T-700 (S1, noche 07-nov)
+- Dinero: el HUD dice "$ 12,450" como H10; la moneda del juego sigue siendo Biits (Ƀ) en tiendas y avisos. Tony decide si el HUD debe decir Ƀ.
+- Balas: no hay reserva de munición en el juego; "9 | 10" es balas en el cargador | tamaño del cargador.
+- Estrellas: el calor tiene 3 niveles y el HUD 5 estrellas; se muestran max(nivel, quintos del calor).
+- Minimapa: dibuja las calles de GeometriaBarrio (mapa viejo, T-409); con la ciudad nueva de la sesión 2 hay que regenerar esa geometría para que las calles coincidan.
+- Ayuda "Golpe" solo con los puños (con arma de fuego el clic dispara). Con la pistola sale solo "Recargar" cuando falta munición.
+- Expendedoras de T-685 siguen con coordenadas fijas (pendiente de pasarlas a marcadores de la escena).

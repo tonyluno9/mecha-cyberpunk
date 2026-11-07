@@ -41,7 +41,8 @@ namespace MechaCyberpunk.UI.Hud
         {
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasAvisoMensaje", OrdenCanvas);
             RectTransform panel = KitUI.CrearPanel(canvas.transform, "Aviso", tamanoCuadro);
-            KitUI.Colocar(panel, new Vector2(1f, 1f), new Vector2(-margen - tamanoCuadro.x / 2f, -margen - tamanoCuadro.y / 2f), tamanoCuadro);
+            // T-700: arriba a la derecha ahora va el minimapa cuadrado con el objetivo; el aviso baja debajo de ellos, pegado al margen derecho.
+            KitUI.Colocar(panel, new Vector2(1f, 1f), new Vector2(-DisposicionHud.MargenH10, -(DisposicionHud.Minimapa.Fin + 76f)), tamanoCuadro);
             cuadro = panel.gameObject;
             texto = KitUI.CrearTexto(panel, "Texto", RolTexto.Ayuda, TextAnchor.MiddleLeft);
             KitUI.Estirar(texto.rectTransform);
