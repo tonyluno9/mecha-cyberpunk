@@ -786,24 +786,81 @@ namespace MechaCyberpunk.IA.APie
                 }
                 d.Normalize();
                 float extension = Mathf.Abs(d.x) * caja.extents.x + Mathf.Abs(d.z) * caja.extents.z;
-                Vector3 punto = centroCaja + d * (extension + MargenCubierta);
+                Vector3 puntoBase = centroCaja + d * (extension + MargenCubierta);
+                if (DistanciaPlana(transform.position, puntoBase) - caja.extents.magnitude >= mejor)
+                {
+                    continue;
+                }
+                Vector3 lateral = Vector3.Cross(Vector3.up, d);
+                float extensionLateral = Mathf.Abs(lateral.x) * caja.extents.x + Mathf.Abs(lateral.z) * caja.extents.z;
+                // T-711: cada uno toma su propio puesto detrás de la cubierta (los policías, una esquina cada uno).
+                if (!ElegirPuesto(puntoBase, lateral, extensionLateral, pechoJugador, c, out Vector3 punto, out float desvio))
+                {
+                    continue;
+                }
                 float distancia = DistanciaPlana(transform.position, punto);
                 if (distancia >= mejor)
                 {
                     continue;
                 }
-                Vector3 pecho = punto + Vector3.up * AlturaPecho;
-                if (!Physics.Linecast(pechoJugador, pecho, out RaycastHit golpe, ~0, QueryTriggerInteraction.Ignore) || !MismaCubierta(golpe.collider, c))
+                mejor = distancia;
+                puntoCubierta = punto;
+                lado = desvio < 0f ? -1 : 1;
+                puntoAsomo = centroCaja + lateral * lado * (extensionLateral + MargenCubierta);
+                tieneCubierta = true;
+            }
+        }
+
+        private const float BordeEsquina = 0.15f;
+        private const float AlturaPechoAgachado = 0.8f;
+        private static readonly List<float> desvios = new List<float>(16);
+
+        // T-711: busca el puesto libre a lo largo de la cubierta: los policías prefieren las esquinas (la más cercana a su lado primero) y los demás
+        // el centro y luego a los lados. Un puesto está libre si nadie más tiene el suyo a menos de PuestosDeCubierta.Separacion y la cubierta lo tapa del jugador.
+        private bool ElegirPuesto(Vector3 puntoBase, Vector3 lateral, float extensionLateral, Vector3 pechoJugador, Collider cubierta,
+            out Vector3 punto, out float desvio)
+        {
+            float tope = Mathf.Max(0f, extensionLateral - BordeEsquina);
+            float haciaMi = Vector3.Dot(transform.position - puntoBase, lateral) >= 0f ? 1f : -1f;
+            PuestosDeCubierta.Ordenar(desvios, tope, haciaMi, datos != null && datos.EsPolicia);
+            foreach (float candidato in desvios)
+            {
+                Vector3 propuesta = puntoBase + lateral * candidato;
+                if (PuestoOcupado(propuesta))
                 {
                     continue;
                 }
-                Vector3 lateral = Vector3.Cross(Vector3.up, d) * lado;
-                float extensionLateral = Mathf.Abs(lateral.x) * caja.extents.x + Mathf.Abs(lateral.z) * caja.extents.z;
-                mejor = distancia;
-                puntoCubierta = punto;
-                puntoAsomo = centroCaja + lateral * (extensionLateral + MargenCubierta);
-                tieneCubierta = true;
+                // Agachado el pecho queda a AlturaPechoAgachado. La esquina de un policía junto a su patrulla vale sin revisar la línea: el collider
+                // de un carro es bajo en las puntas, pero el carro entero es su cubierta.
+                bool esquina = datos != null && datos.EsPolicia && Mathf.Abs(candidato) >= tope - 0.01f && tope > 0.1f && cubierta.attachedRigidbody != null;
+                Vector3 pecho = propuesta + Vector3.up * AlturaPechoAgachado;
+                if (!esquina && (!Physics.Linecast(pechoJugador, pecho, out RaycastHit golpe, ~0, QueryTriggerInteraction.Ignore) || !MismaCubierta(golpe.collider, cubierta)))
+                {
+                    continue;
+                }
+                punto = propuesta;
+                desvio = candidato;
+                return true;
             }
+            punto = puntoBase;
+            desvio = 0f;
+            return false;
+        }
+
+        private bool PuestoOcupado(Vector3 punto)
+        {
+            foreach (PandilleroAPie otro in Activos)
+            {
+                if (otro == this || otro == null || !otro.tieneCubierta || otro.EstaKO)
+                {
+                    continue;
+                }
+                if (DistanciaPlana(otro.puntoCubierta, punto) < PuestosDeCubierta.Separacion)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         // T-709: un carro (varios colliders en un cuerpo) cubre como un solo bulto: sus colliders sueltos son bajitos, juntos tapan a una persona.
