@@ -31,6 +31,10 @@ namespace MechaCyberpunk.UI.Hud
                 case "Left Shift":
                 case "Shift":
                     return "Shift";
+                case "Left Control":
+                case "Left Ctrl":
+                case "Control":
+                    return "Ctrl";
                 default:
                     return display;
             }

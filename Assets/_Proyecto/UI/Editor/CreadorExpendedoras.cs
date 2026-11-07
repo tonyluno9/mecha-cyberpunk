@@ -38,12 +38,14 @@ namespace MechaCyberpunk.UI.Editor
             new Item { id = "bateria_escudo", nombre = "Batería de escudo", descripcion = "Recarga 40 de escudo", precio = 75, maximo = 3, escudo = 40f },
         };
 
-        // El frente del modelo CY06 mira a -Z local: el giro es el de la calle más 180°. Calle frente a la casa, a la entrada del tianguis y en el cruce de Nova: banqueta libre medida en Ciudad_Prologo (y = 0.2).
-        private static readonly (string nota, Vector3 pos, float giro)[] Lugares =
+        // El frente del modelo CY06 mira a -Z local: el giro es el de la calle más 180°.
+        // T-719: ya no llevan coordenadas fijas: cada una se mide desde un lugar de Core (la entrada del lugar más un desplazamiento) y, si la sesión 2 pone en la ciudad un marcador con
+        // el nombre de la columna "marcador", la máquina va ahí. Los desplazamientos reproducen las posiciones medidas en Ciudad_Prologo (banqueta libre, y = 0.2).
+        private static readonly (string nota, string marcador, IdLugar lugar, Vector3 desplazamiento, float giro)[] Lugares =
         {
-            ("frente a la casa", new Vector3(-55.5f, 0.2f, -71f), 270f),
-            ("entrada del tianguis", new Vector3(-36f, 0.2f, -8f), 180f),
-            ("calle de Nova", new Vector3(64f, 0.2f, -8.5f), 180f),
+            ("frente a la casa", "Marcador_Expendedora_Casa", IdLugar.Casa, new Vector3(0f, 0f, 6f), 270f),
+            ("entrada del tianguis", "Marcador_Expendedora_Tianguis", IdLugar.Bar, new Vector3(-36f, 0f, 0.49f), 180f),
+            ("calle de Nova", "Marcador_Expendedora_Nova", IdLugar.Bar, new Vector3(64f, 0f, -0.01f), 180f),
         };
 
         [MenuItem("Mecha Cyberpunk/Crear T-685 expendedoras")]
@@ -130,7 +132,10 @@ namespace MechaCyberpunk.UI.Editor
                 SerializedProperty e = pos.GetArrayElementAtIndex(i);
                 e.FindPropertyRelative("escena").stringValue = "Ciudad_Prologo";
                 e.FindPropertyRelative("nota").stringValue = Lugares[i].nota;
-                e.FindPropertyRelative("posicion").vector3Value = Lugares[i].pos;
+                e.FindPropertyRelative("marcador").stringValue = Lugares[i].marcador;
+                e.FindPropertyRelative("lugar").enumValueIndex = (int)Lugares[i].lugar;
+                e.FindPropertyRelative("desplazamiento").vector3Value = Lugares[i].desplazamiento;
+                e.FindPropertyRelative("posicion").vector3Value = Vector3.zero; // sin coordenadas fijas
                 e.FindPropertyRelative("giro").floatValue = Lugares[i].giro;
             }
             soD.ApplyModifiedPropertiesWithoutUndo();
