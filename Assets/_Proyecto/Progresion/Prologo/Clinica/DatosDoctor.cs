@@ -18,6 +18,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
         [Header("Tiempos")]
         [Tooltip("Segundos que se ve caer al jugador antes de que empiece el fundido (s).")]
         [Min(0f)] [SerializeField] private float segundosEspera = 3f;
+        [Tooltip("Segundos que se queda la pantalla HAS MUERTO una vez encendida; 0 = sin pantalla (T-689).")]
+        [Min(0f)] [SerializeField] private float segundosPantallaMuerte = 2.6f;
+        [Tooltip("Segundos que tarda en encenderse la pantalla HAS MUERTO (s).")]
+        [Min(0.05f)] [SerializeField] private float segundosEntradaMuerte = 0.9f;
         [Tooltip("Segundos que la pantalla se queda en negro antes de despertar (s).")]
         [Min(0f)] [SerializeField] private float segundosNegro = 1f;
         [Tooltip("Segundos que se ve el subtítulo del doctor al despertar (s).")]
@@ -28,6 +32,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
         [Header("Textos")]
         [SerializeField] private string textoDoctor = "EL DOC: Otra vez tú. Son quinientos, mijo.";
         [SerializeField] private string textoDeuda = "No traes todo, mijo. Hoy te lo perdono.";
+        [SerializeField] private string textoMuerte = "HAS MUERTO";
+        [SerializeField] private string detalleMuerte = "DESPERTARÁS EN LA CLÍNICA";
         [SerializeField] private string textoObjetivo = "VUELVE A CASA";
 
         [Header("Puntos del mundo")]
@@ -42,6 +48,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
         public float HorasInconsciente => horasInconsciente;
         public float FraccionVidaMecha => fraccionVidaMecha;
         public float SegundosEspera => segundosEspera;
+        public float SegundosPantallaMuerte => segundosPantallaMuerte;
+        public float SegundosEntradaMuerte => segundosEntradaMuerte;
+        public string TextoMuerte => textoMuerte;
+        public string DetalleMuerte => detalleMuerte;
         public float SegundosNegro => segundosNegro;
         public float SegundosSubtitulo => segundosSubtitulo;
         public float SegundosBusqueda => segundosBusqueda;

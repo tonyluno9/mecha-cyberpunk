@@ -9,6 +9,7 @@ using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.UI.Historia;
+using MechaCyberpunk.UI.Inicio;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -49,6 +50,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
 
         public DatosDoctor Datos => datos;
 
+        /// <summary>La pantalla HAS MUERTO mientras está en pantalla (T-689); null fuera de la secuencia.</summary>
+        public PantallaAviso PantallaMuerte { get; private set; }
+
         /// <summary>Se avisa cuando termina cada secuencia (el jugador ya despertó y tiene el control).</summary>
         public event Action Terminada;
 
@@ -81,6 +85,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
                 misionesSuscritas = null;
             }
             StopAllCoroutines();
+            if (PantallaMuerte != null)
+            {
+                PantallaMuerte.Cerrar();
+                PantallaMuerte = null;
+            }
             Ocupado = false;
             rutinaSubtitulo = null;
         }
@@ -196,10 +205,25 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             Debug.Log("[Progresion] El doctor atiende una caída en la calle.");
             yield return EsperarSinEscala(datos.SegundosEspera);
 
+            // T-689: tras la caída, la pantalla HAS MUERTO (Teko, neón y glitch) antes del fundido hacia la clínica.
+            PantallaAviso aviso = null;
+            if (datos.SegundosPantallaMuerte > 0f)
+            {
+                aviso = PantallaAviso.Crear(datos.TextoMuerte, datos.DetalleMuerte, UIInicio.Magenta);
+                PantallaMuerte = aviso;
+                yield return aviso.Aparecer(datos.SegundosEntradaMuerte);
+                yield return EsperarSinEscala(datos.SegundosPantallaMuerte);
+            }
+
             PantallaFundido fundido = ObtenerFundido();
             if (fundido != null)
             {
                 yield return fundido.Fundir(1f, fundido.Config.SegundosSalida);
+            }
+            if (aviso != null)
+            {
+                aviso.Cerrar();
+                PantallaMuerte = null;
             }
 
             // Con la pantalla en negro.
