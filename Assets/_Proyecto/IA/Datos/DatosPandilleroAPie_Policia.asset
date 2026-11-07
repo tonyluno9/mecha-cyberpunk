@@ -29,6 +29,9 @@ MonoBehaviour:
   segundosParaDesaparecer: 4
   duracionParpadeo: 0.12
   anguloBrazoAviso: 130
+  esPolicia: 1
+  calorAlGolpear: 8
+  calorAlMatar: 30
   tamanoPandilla: 3
   maxAtacando: 2
   radioFormacion: 2.5

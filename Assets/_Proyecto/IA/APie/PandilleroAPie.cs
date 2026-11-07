@@ -138,12 +138,13 @@ namespace MechaCyberpunk.IA.APie
                         visual.Burlar();
                     }
                 }
-                alerta = value;
+                alerta = value || (datos != null && datos.EsPolicia);
             }
         }
 
         private bool alerta;
         private bool esJefe;
+        private bool policiaYaSeCubrio;
 
         /// <summary>True si es el pandillero de un <see cref="JefePandilla"/>: sale más grande en el minimapa (T-409).</summary>
         public bool EsJefe => esJefe;
@@ -248,6 +249,7 @@ namespace MechaCyberpunk.IA.APie
             }
             patrulla = new CalculoPatrullaPandillero(datos.RadioPatrulla, datos.EsperaPatrullaMinima, datos.EsperaPatrullaMaxima,
                 datos.MargenLlegada, datos.SegundosAtascoPatrulla, () => UnityEngine.Random.value);
+            alerta = datos.EsPolicia; // T-709: el policía siempre está en alerta contra el jugador
             bloque = new MaterialPropertyBlock();
             if (!tieneHogar)
             {
@@ -351,6 +353,11 @@ namespace MechaCyberpunk.IA.APie
                     visual.Herir(info.Direccion);
                 }
                 PintarCuerpo(datos.ColorGolpe);
+            }
+            if (datos.EsPolicia)
+            {
+                // T-709: dispararle a la policía sube la búsqueda; matarla, mucho más.
+                Registro<ICalor>.Actual?.Sumar(modelo.EstaKO ? datos.CalorAlMatar : datos.CalorAlGolpear, MotivoCalor.Pelea);
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
             return resultado;
@@ -479,6 +486,13 @@ namespace MechaCyberpunk.IA.APie
             if (modo == ReglaTacticaPandillero.Modo.Huir && modoAnterior != ReglaTacticaPandillero.Modo.Huir)
             {
                 Gritar("¡Me largo!");
+            }
+            if (datos.EsPolicia && !policiaYaSeCubrio && tieneCubierta && modo == ReglaTacticaPandillero.Modo.Rodear)
+            {
+                // T-709: al bajarse de la patrulla corre a cubrirse detrás de ella antes de disparar.
+                policiaYaSeCubrio = true;
+                tactica.ForzarCubrirse();
+                modo = ReglaTacticaPandillero.Modo.Cubrirse;
             }
             modoAnterior = modo;
             bool huyendo = modo == ReglaTacticaPandillero.Modo.Huir;
@@ -756,7 +770,7 @@ namespace MechaCyberpunk.IA.APie
             for (int i = 0; i < cantidad; i++)
             {
                 Collider c = candidatosCubierta[i];
-                Bounds caja = c.bounds;
+                Bounds caja = CajaDeCubierta(c);
                 if (caja.size.y < AlturaMinCubierta || Mathf.Max(caja.size.x, caja.size.z) > TamanoMaxCubierta
                     || c.GetComponentInParent<CharacterController>() != null)
                 {
@@ -779,7 +793,7 @@ namespace MechaCyberpunk.IA.APie
                     continue;
                 }
                 Vector3 pecho = punto + Vector3.up * AlturaPecho;
-                if (!Physics.Linecast(pechoJugador, pecho, out RaycastHit golpe, ~0, QueryTriggerInteraction.Ignore) || golpe.collider != c)
+                if (!Physics.Linecast(pechoJugador, pecho, out RaycastHit golpe, ~0, QueryTriggerInteraction.Ignore) || !MismaCubierta(golpe.collider, c))
                 {
                     continue;
                 }
@@ -790,6 +804,30 @@ namespace MechaCyberpunk.IA.APie
                 puntoAsomo = centroCaja + lateral * (extensionLateral + MargenCubierta);
                 tieneCubierta = true;
             }
+        }
+
+        // T-709: un carro (varios colliders en un cuerpo) cubre como un solo bulto: sus colliders sueltos son bajitos, juntos tapan a una persona.
+        private static Bounds CajaDeCubierta(Collider c)
+        {
+            Rigidbody cuerpoDelCarro = c.attachedRigidbody;
+            if (cuerpoDelCarro == null)
+            {
+                return c.bounds;
+            }
+            Bounds caja = c.bounds;
+            foreach (Collider otro in cuerpoDelCarro.GetComponentsInChildren<Collider>())
+            {
+                if (otro.enabled && !otro.isTrigger)
+                {
+                    caja.Encapsulate(otro.bounds);
+                }
+            }
+            return caja;
+        }
+
+        private static bool MismaCubierta(Collider golpeado, Collider cubierta)
+        {
+            return golpeado == cubierta || (cubierta.attachedRigidbody != null && golpeado.attachedRigidbody == cubierta.attachedRigidbody);
         }
 
         /// <summary>Muestra un grito corto sobre la cabeza (T-423). Tiene enfriamiento.</summary>
