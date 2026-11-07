@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Linq;
 using MechaCyberpunk.Core;
+using System.IO;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
@@ -25,6 +27,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private const int Total = 7;
         private Keyboard teclado;
         private Func<float> azarAnterior;
+        private string carpetaGuardado;
 
         public override void Setup()
         {
@@ -48,9 +51,14 @@ namespace MechaCyberpunk.Tests.Progresion
         {
             foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects())
             {
-                Object.Destroy(raiz);
+                Object.DestroyImmediate(raiz); // inmediato: el jugador comparte las acciones de entrada y un Destroy diferido las apagaría para la prueba que sigue
             }
             Registros.LimpiarTodos();
+            ServicioGuardado.RutaForzada = null;
+            if (carpetaGuardado != null && Directory.Exists(carpetaGuardado))
+            {
+                Directory.Delete(carpetaGuardado, true);
+            }
             yield return null;
         }
 
@@ -103,6 +111,9 @@ namespace MechaCyberpunk.Tests.Progresion
         private IEnumerator EmpezarEnElTianguis(bool deDia)
         {
             yield return null;
+            carpetaGuardado = Path.Combine(Application.temporaryCachePath, "skulls_tianguis_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(carpetaGuardado);
+            ServicioGuardado.RutaForzada = Path.Combine(carpetaGuardado, "partida.json");
             yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             azarAnterior = PistolaPandillero.Azar;

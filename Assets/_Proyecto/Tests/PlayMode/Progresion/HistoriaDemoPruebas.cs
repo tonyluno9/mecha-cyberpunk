@@ -13,6 +13,7 @@ using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
 using MechaCyberpunk.UI.Historia;
+using MechaCyberpunk.Progresion.Guardado;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -43,9 +44,15 @@ namespace MechaCyberpunk.Tests.Progresion
 
         private Keyboard teclado;
 
+        private string carpetaGuardado;
+
         public override void Setup()
         {
             base.Setup();
+            // El autoguardado de la ciudad va a una carpeta temporal: la historia siempre empieza de cero y no pisa la partida real.
+            carpetaGuardado = System.IO.Path.Combine(Application.temporaryCachePath, "historia_" + Guid.NewGuid().ToString("N"));
+            System.IO.Directory.CreateDirectory(carpetaGuardado);
+            ServicioGuardado.RutaForzada = System.IO.Path.Combine(carpetaGuardado, "partida.json");
             teclado = InputSystem.AddDevice<Keyboard>();
             InputSystem.AddDevice<Mouse>();
         }
@@ -53,6 +60,11 @@ namespace MechaCyberpunk.Tests.Progresion
         public override void TearDown()
         {
             Time.timeScale = 1f;
+            ServicioGuardado.RutaForzada = null;
+            if (carpetaGuardado != null && System.IO.Directory.Exists(carpetaGuardado))
+            {
+                System.IO.Directory.Delete(carpetaGuardado, true);
+            }
             base.TearDown();
         }
 

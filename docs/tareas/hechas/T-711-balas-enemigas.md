@@ -18,7 +18,7 @@ Comprobar en la escena Ciudad real (Ciudad_Prologo, no una escena vacía) que la
 
 ## Pruebas
 - EditMode IA: PuestosDeCubiertaT711Pruebas (5)
-- PlayMode IA: BalasCiudadT711Pruebas (3), PoliciasT709Pruebas (3, con la regla de esquinas)
+- PlayMode Progresion: BalasCiudadT711Pruebas (3, en Progresion porque carga la ciudad y deja objetos entre escenas), PoliciasT709Pruebas (3, con la regla de esquinas)
 
 ## Fuera de alcance
 - Cambiar los colliders de los carros (son de Vehiculos)
