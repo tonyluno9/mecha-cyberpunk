@@ -359,6 +359,26 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/s2t-diag-edificios.txt", sb.ToString());
         }
 
+        public static void Brumas()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (UnityEngine.Rendering.Volume v in Object.FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                Collider c = v.GetComponent<Collider>();
+                sb.AppendLine("volumen " + Ruta(v.transform) + " global " + v.isGlobal + " peso " + v.weight + " perfil " + (v.sharedProfile != null ? v.sharedProfile.name + " [" + string.Join(",", v.sharedProfile.components.Select(x => x.GetType().Name)) + "]" : "-") + (c != null ? " caja " + c.bounds.center.ToString("F0") + " " + c.bounds.size.ToString("F0") : ""));
+            }
+            foreach (ParticleSystem ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(p => new Vector2(p.transform.position.x + 85f, p.transform.position.z + 60f).magnitude < 40f))
+            {
+                sb.AppendLine("particulas " + Ruta(ps.transform) + " p" + ps.transform.position.ToString("F0"));
+            }
+            foreach (Renderer r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(r => r.enabled && r.sharedMaterial != null && (r.sharedMaterial.name.ToLowerInvariant().Contains("niebla") || r.sharedMaterial.name.ToLowerInvariant().Contains("bruma") || r.sharedMaterial.name.ToLowerInvariant().Contains("vapor") || r.sharedMaterial.name.ToLowerInvariant().Contains("humo"))))
+            {
+                sb.AppendLine("malla de bruma " + Ruta(r.transform) + " c" + r.bounds.center.ToString("F0") + " s" + r.bounds.size.ToString("F0") + " " + r.sharedMaterial.name);
+            }
+            File.WriteAllText("Logs/s2t-diag-brumas.txt", sb.ToString());
+        }
+
         public static void Todo()
         {
             Postes();
