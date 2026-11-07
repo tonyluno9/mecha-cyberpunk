@@ -90,6 +90,9 @@ namespace MechaCyberpunk.Trafico.Calle
             pitidoPendiente = true;
         }
 
+        /// <summary>T-704: deja de contar el atorón (el carro dio la vuelta para salir de él).</summary>
+        public void ReiniciarBloqueo() => bloqueado = 0f;
+
         /// <summary>T-703: un choque. Se queda parado en seco <paramref name="segundos"/> y pita una vez.</summary>
         public void Detener(float segundos)
         {

@@ -112,13 +112,26 @@ namespace MechaCyberpunk.Trafico.Calle
                 lugares--;
                 if (carros[i].gameObject.activeSelf != debeEstar)
                 {
-                    // T-532: el que entra aparece lejos y fuera de la vista.
-                    if (debeEstar)
-                    {
-                        carros[i].Reaparecer(false);
-                    }
-                    carros[i].gameObject.SetActive(debeEstar);
+                    CambiarEstado(carros[i], debeEstar);
                 }
+            }
+        }
+
+        // T-704: ciclo normal de un pool. Un carro solo entra donde la cámara no lo ve y lejos del jugador (si no hay sitio así, espera al siguiente
+        // cuadro) y solo sale si la cámara no lo ve (si se ve, sigue su camino y sale cuando se aleje o dé la vuelta a la esquina).
+        private static void CambiarEstado(CarroTrafico carro, bool debeEstar)
+        {
+            if (debeEstar)
+            {
+                if (carro.Reaparecer(false, true))
+                {
+                    carro.gameObject.SetActive(true);
+                }
+                return;
+            }
+            if (!carro.EnVista(Camera.main))
+            {
+                carro.gameObject.SetActive(false);
             }
         }
 

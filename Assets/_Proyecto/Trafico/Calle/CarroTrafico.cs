@@ -30,9 +30,25 @@ namespace MechaCyberpunk.Trafico.Calle
         private const int MaxChoques = 8;
         // T-532: aparece y desaparece lejos y fuera de la vista.
         private const float DistanciaOculta = 45f;
-        private const float MargenVista = 0.1f;
-        private const float AlcanceVista = 160f;
+        // T-704: nace y se borra solo fuera del frustum de la cámara (con este margen en metros alrededor del carro) y lejos del jugador.
+        private const float MargenVistaMetros = 3f;
+        private const float MitadCarroAncho = 1.2f;
+        private const float MitadCarroLargo = 2.5f;
+        // T-704: se pega al suelo con un rayo: al nacer y cada tanto, para que no flote ni se hunda.
+        private const float SegundosEntreRayosSuelo = 0.3f;
+        private const float VelocidadAjusteSuelo = 6f;
+        private const float AltoRayoSuelo = 2f;
+        private const float LargoRayoSuelo = 10f;
+        private const float MinimoRaizABajo = 0.05f;
+        private const float MaximoRaizABajo = 1.2f;
         private const float SeparacionAlAparecer = 14f;
+        private static readonly Plane[] PlanosVista = new Plane[6];
+        private readonly RaycastHit[] golpesSuelo = new RaycastHit[8];
+        private Renderer[] visuales;
+        private float raizABajo = -1f;
+        private float alturaSuelo;
+        private float objetivoSuelo;
+        private float proximoRayoSuelo;
         private static readonly Vector3 MitadRayo = new Vector3(0.95f, 0.35f, 0.1f);
         private readonly RaycastHit[] choques = new RaycastHit[MaxChoques];
 
@@ -117,6 +133,7 @@ namespace MechaCyberpunk.Trafico.Calle
             nodoDestino = ElegirSiguiente(nodoInicial, -1);
             direccion = DireccionA(nodoDestino);
             desvio = Derecha(direccion) * config.SeparacionCarril;
+            PegarAlSuelo();
             transform.SetPositionAndRotation(Posicion(), Quaternion.LookRotation(direccion, Vector3.up));
             PintarCarroceria();
         }
@@ -156,6 +173,140 @@ namespace MechaCyberpunk.Trafico.Calle
         {
             montable = GetComponent<IMontable>();
             cuerpo = GetComponent<Rigidbody>();
+            List<Renderer> mallas = new List<Renderer>();
+            foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
+            {
+                if (r is MeshRenderer || r is SkinnedMeshRenderer)
+                {
+                    mallas.Add(r);
+                }
+            }
+            visuales = mallas.ToArray();
+            raizABajo = MedirRaizABajo();
+        }
+
+        // T-704: qué tan abajo de la raíz quedan las ruedas (la parte más baja del modelo); así la raíz se pone justo sobre el suelo, flote o se hunda el prefab.
+        private float MedirRaizABajo()
+        {
+            bool hay = false;
+            float bajo = float.MaxValue;
+            foreach (Renderer r in visuales)
+            {
+                if (r.enabled)
+                {
+                    bajo = Mathf.Min(bajo, r.bounds.min.y);
+                    hay = true;
+                }
+            }
+            if (!hay)
+            {
+                return alturaRaiz;
+            }
+            return Mathf.Clamp(transform.position.y - bajo, MinimoRaizABajo, MaximoRaizABajo);
+        }
+
+        /// <summary>T-704: qué tan abajo de la raíz quedan las ruedas (m). La raíz va a esta altura sobre el suelo.</summary>
+        public float RaizABajo => raizABajo >= 0f ? raizABajo : alturaRaiz;
+
+        /// <summary>T-704: la altura del suelo (m) bajo el carro, la última que le dio el rayo.</summary>
+        public float AlturaSuelo => alturaSuelo;
+
+        // Rayo hacia abajo desde un poco arriba del carro: el suelo es lo primero sólido que no sea él mismo, otro carro ni gente.
+        private float BuscarSuelo(Vector3 xz, float desdeY, float respaldo)
+        {
+            Vector3 origen = new Vector3(xz.x, desdeY + AltoRayoSuelo, xz.z);
+            int n = Physics.RaycastNonAlloc(origen, Vector3.down, golpesSuelo, LargoRayoSuelo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            float menor = float.MaxValue;
+            float y = respaldo;
+            for (int i = 0; i < n; i++)
+            {
+                Collider c = golpesSuelo[i].collider;
+                if (c == null || c.transform.IsChildOf(transform) || c.attachedRigidbody != null || c.GetComponentInParent<PeatonMundo>() != null)
+                {
+                    continue;
+                }
+                if (golpesSuelo[i].distance < menor)
+                {
+                    menor = golpesSuelo[i].distance;
+                    y = golpesSuelo[i].point.y;
+                }
+            }
+            return y;
+        }
+
+        /// <summary>T-704: lo pega al suelo de inmediato con un rayo (al nacer, al reaparecer).</summary>
+        public void PegarAlSuelo()
+        {
+            if (calles == null)
+            {
+                return;
+            }
+            alturaSuelo = BuscarSuelo(new Vector3(eje.x + desvio.x, 0f, eje.z + desvio.z), eje.y, eje.y);
+            objetivoSuelo = alturaSuelo;
+            proximoRayoSuelo = Time.time + SegundosEntreRayosSuelo;
+        }
+
+        private void SeguirElSuelo(float dt)
+        {
+            if (Time.time >= proximoRayoSuelo)
+            {
+                proximoRayoSuelo = Time.time + SegundosEntreRayosSuelo;
+                objetivoSuelo = BuscarSuelo(new Vector3(eje.x + desvio.x, 0f, eje.z + desvio.z), alturaSuelo, objetivoSuelo);
+            }
+            alturaSuelo = Mathf.MoveTowards(alturaSuelo, objetivoSuelo, VelocidadAjusteSuelo * dt);
+        }
+
+        // T-704: los límites del carro (sus mallas) en el mundo, con un margen alrededor.
+        private Bounds LimitesConMargen()
+        {
+            bool primero = true;
+            Bounds b = new Bounds(transform.position, Vector3.zero);
+            foreach (Renderer r in visuales)
+            {
+                if (!r.enabled)
+                {
+                    continue;
+                }
+                if (primero)
+                {
+                    b = r.bounds;
+                    primero = false;
+                }
+                else
+                {
+                    b.Encapsulate(r.bounds);
+                }
+            }
+            if (primero)
+            {
+                b = new Bounds(transform.position + Vector3.up * 0.8f, new Vector3(MitadCarroAncho * 2f, 1.6f, MitadCarroLargo * 2f));
+            }
+            b.Expand(MargenVistaMetros * 2f);
+            return b;
+        }
+
+        /// <summary>T-704: True si el carro (con un margen) está dentro de lo que ve la cámara.</summary>
+        public bool EnVista(Camera camara)
+        {
+            return camara != null && DentroDelFrustum(camara, LimitesConMargen());
+        }
+
+        /// <summary>T-704: True si un carro parado en <paramref name="centro"/> (en el piso) se vería (con un margen).</summary>
+        public static bool PuntoEnVista(Camera camara, Vector3 centro)
+        {
+            if (camara == null)
+            {
+                return false;
+            }
+            Bounds b = new Bounds(centro + Vector3.up * 0.8f, new Vector3(MitadCarroLargo * 2f, 1.6f, MitadCarroLargo * 2f));
+            b.Expand(MargenVistaMetros * 2f);
+            return DentroDelFrustum(camara, b);
+        }
+
+        private static bool DentroDelFrustum(Camera camara, Bounds limites)
+        {
+            GeometryUtility.CalculateFrustumPlanes(camara, PlanosVista);
+            return GeometryUtility.TestPlanesAABB(PlanosVista, limites);
         }
 
         private void OnEnable()
@@ -291,6 +442,7 @@ namespace MechaCyberpunk.Trafico.Calle
             }
             float dt = Time.deltaTime;
             Vector3? jugador = posicionJugador?.Invoke();
+            SeguirElSuelo(dt);
             float velocidad = calculo.Avanzar(dt, DistanciaAlObstaculo(jugador));
             if (calculo.SegundosBloqueado > 0f && Causa != "jugador" && Destrabar())
             {
@@ -316,17 +468,43 @@ namespace MechaCyberpunk.Trafico.Calle
         }
 
         // T-588: atorado mucho rato (detrás de algo fijo, un carro parado o un cruce sin salida): vuelve a salir en otra calle, de preferencia fuera de la vista.
+        // T-704: si se ve, no desaparece: tras el tiempo forzado da la vuelta en su carril para salir del atorón.
         private bool Destrabar()
         {
-            bool seVe = SeVe(Camera.main, transform.position);
-            bool sale = CalculoTraficoCalle.DebeDestrabarse(calculo.SegundosBloqueado, seVe, config.SegundosParaDestrabar, config.SegundosDestrabarForzado)
-                && Reaparecer(false);
-            if (sale)
+            bool seVe = EnVista(Camera.main);
+            if (!CalculoTraficoCalle.DebeDestrabarse(calculo.SegundosBloqueado, seVe, config.SegundosParaDestrabar, config.SegundosDestrabarForzado))
+            {
+                return false;
+            }
+            if (Reaparecer(false))
             {
                 Causa = "libre";
+                return true;
             }
-            return sale;
+            if (seVe && calculo.SegundosBloqueado >= config.SegundosDestrabarForzado)
+            {
+                DarVuelta();
+            }
+            return false;
         }
+
+        /// <summary>T-704: da media vuelta en su carril (sigue por donde venía). Cuenta como salir del atorón.</summary>
+        public void DarVuelta()
+        {
+            if (calles == null || nodoAnterior < 0 || nodoAnterior == nodoDestino)
+            {
+                return;
+            }
+            int nodo = nodoDestino;
+            nodoDestino = nodoAnterior;
+            nodoAnterior = nodo;
+            direccion = DireccionA(nodoDestino);
+            calculo.ReiniciarBloqueo();
+            Vueltas++;
+        }
+
+        /// <summary>T-704: cuántas veces dio la vuelta para salir de un atorón a la vista.</summary>
+        public int Vueltas { get; private set; }
 
         private void Mover(float velocidad, float dt)
         {
@@ -354,7 +532,7 @@ namespace MechaCyberpunk.Trafico.Calle
             transform.SetPositionAndRotation(Posicion(), Quaternion.RotateTowards(transform.rotation, meta, config.GiroMaximo * dt));
         }
 
-        private Vector3 Posicion() => new Vector3(eje.x + desvio.x, alturaRaiz, eje.z + desvio.z);
+        private Vector3 Posicion() => new Vector3(eje.x + desvio.x, alturaSuelo + RaizABajo, eje.z + desvio.z);
 
         private Vector3 DireccionA(int nodo)
         {
@@ -452,7 +630,7 @@ namespace MechaCyberpunk.Trafico.Calle
         // T-532: carros estacionados, robados, patrullas, gente o puestos en el carril (todo lo que tenga collider y no sea este carro).
         private float DistanciaFisica(Vector3 adelante)
         {
-            Vector3 centro = transform.position + Vector3.up * (AlturaRayo - alturaRaiz) + adelante * (LargoCarro * 0.5f);
+            Vector3 centro = transform.position + Vector3.up * (AlturaRayo - RaizABajo) + adelante * (LargoCarro * 0.5f);
             int n = Physics.BoxCastNonAlloc(centro, MitadRayo, adelante, choques, transform.rotation, config.DistanciaFrenado, ~0, QueryTriggerInteraction.Ignore);
             float menor = float.MaxValue;
             for (int i = 0; i < n; i++)
@@ -468,10 +646,10 @@ namespace MechaCyberpunk.Trafico.Calle
         }
 
         /// <summary>
-        /// T-532: vuelve a salir en un nodo lejos del jugador y fuera de la vista de la cámara (con <paramref name="soloFinales"/>, solo en los finales
+        /// T-532: vuelve a salir en un nodo lejos del jugador y fuera de la vista de la cámara; T-704: y solo si el carro tampoco se ve ahora (con <paramref name="soloFinales"/>, solo en los finales
         /// de las calles de las afueras). Devuelve false si no encontró dónde.
         /// </summary>
-        public bool Reaparecer(bool soloFinales)
+        public bool Reaparecer(bool soloFinales, bool desdeInactivo = false)
         {
             if (calles == null || azar == null)
             {
@@ -479,6 +657,10 @@ namespace MechaCyberpunk.Trafico.Calle
             }
             Vector3? jugador = posicionJugador?.Invoke();
             Camera camara = Camera.main;
+            if (!desdeInactivo && EnVista(camara))
+            {
+                return false; // T-704: no desaparece a la vista de la cámara
+            }
             int elegido = -1;
             int intentos = calles.Cantidad * 3;
             for (int i = 0; i < intentos && elegido < 0; i++)
@@ -493,7 +675,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 {
                     continue;
                 }
-                if (camara != null && SeVe(camara, p))
+                if (PuntoEnVista(camara, p))
                 {
                     continue;
                 }
@@ -512,6 +694,7 @@ namespace MechaCyberpunk.Trafico.Calle
             nodoDestino = ElegirSiguiente(elegido, -1);
             direccion = DireccionA(nodoDestino);
             desvio = Derecha(direccion) * config.SeparacionCarril;
+            PegarAlSuelo();
             transform.SetPositionAndRotation(Posicion(), Quaternion.LookRotation(direccion, Vector3.up));
             return true;
         }
@@ -526,16 +709,6 @@ namespace MechaCyberpunk.Trafico.Calle
                 }
             }
             return false;
-        }
-
-        private static bool SeVe(Camera camara, Vector3 punto)
-        {
-            if (camara == null)
-            {
-                return false;
-            }
-            Vector3 v = camara.WorldToViewportPoint(punto + Vector3.up);
-            return v.z > 0f && v.z < AlcanceVista && v.x > -MargenVista && v.x < 1f + MargenVista && v.y > -MargenVista && v.y < 1f + MargenVista;
         }
 
         private float DistanciaDelante(Vector3 punto, Vector3 adelante, Vector3 derecha)
