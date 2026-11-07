@@ -219,6 +219,15 @@ namespace MechaCyberpunk.Tests.Personaje
             return blanco.AddComponent<BlancoDeTiro>();
         }
 
+        // T-688: las expendedoras de la calle (T-685) no son parte de este recorrido y estorban al caminar hacia El Mercado.
+        private static void QuitarExpendedoras()
+        {
+            foreach (Expendedora e in Object.FindObjectsByType<Expendedora>(FindObjectsSortMode.None))
+            {
+                Object.Destroy(e.gameObject);
+            }
+        }
+
         [UnityTest]
         public IEnumerator RecorridoFusilYSniper()
         {
@@ -237,6 +246,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(mira, "La escena trae la mira del sniper");
             Camera camara = jugador.Camara;
             yield return new WaitForSecondsRealtime(1f);
+            QuitarExpendedoras();
 
             cartera.Abonar(Dinero - cartera.Dinero, MotivoDinero.Otro);
             Assert.AreEqual(Dinero, cartera.Dinero);
