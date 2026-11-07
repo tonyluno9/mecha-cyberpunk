@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private float bloqueado;
         private float desdeUltimoPitido;
         private float panicoRestante;
+        private float detenidoRestante;
         private bool pitidoPendiente;
 
         /// <param name="velocidadCrucero">Velocidad normal (m/s).</param>
@@ -48,6 +49,9 @@ namespace MechaCyberpunk.Trafico.Calle
 
         public float Velocidad { get; private set; }
 
+        /// <summary>T-703: True mientras sigue detenido por un choque.</summary>
+        public bool Chocado => detenidoRestante > 0f;
+
         /// <summary>True mientras se detuvo por un susto (un disparo).</summary>
         public bool EnPanico => panicoRestante > 0f;
 
@@ -68,7 +72,7 @@ namespace MechaCyberpunk.Trafico.Calle
         /// <summary>La velocidad a la que quiere ir según el obstáculo de enfrente (<see cref="float.MaxValue"/> si no hay).</summary>
         public float VelocidadObjetivo(float distanciaAlObstaculo)
         {
-            if (panicoRestante > 0f || distanciaAlObstaculo <= distanciaParada)
+            if (panicoRestante > 0f || detenidoRestante > 0f || distanciaAlObstaculo <= distanciaParada)
             {
                 return 0f;
             }
@@ -86,6 +90,14 @@ namespace MechaCyberpunk.Trafico.Calle
             pitidoPendiente = true;
         }
 
+        /// <summary>T-703: un choque. Se queda parado en seco <paramref name="segundos"/> y pita una vez.</summary>
+        public void Detener(float segundos)
+        {
+            detenidoRestante = Math.Max(detenidoRestante, segundos);
+            Velocidad = 0f;
+            pitidoPendiente = true;
+        }
+
         /// <summary>Avanza el reloj y devuelve la velocidad nueva (m/s).</summary>
         public float Avanzar(float dt, float distanciaAlObstaculo)
         {
@@ -93,12 +105,16 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 panicoRestante = Math.Max(0f, panicoRestante - dt);
             }
+            if (detenidoRestante > 0f)
+            {
+                detenidoRestante = Math.Max(0f, detenidoRestante - dt);
+            }
             float objetivo = VelocidadObjetivo(distanciaAlObstaculo);
             Velocidad = objetivo > Velocidad
                 ? Math.Min(objetivo, Velocidad + aceleracion * dt)
                 : Math.Max(objetivo, Velocidad - frenado * dt);
             desdeUltimoPitido += dt;
-            bool detenidoPorObstaculo = Velocidad < 0.3f && distanciaAlObstaculo < distanciaFrenado && panicoRestante <= 0f;
+            bool detenidoPorObstaculo = Velocidad < 0.3f && distanciaAlObstaculo < distanciaFrenado && panicoRestante <= 0f && detenidoRestante <= 0f;
             bloqueado = detenidoPorObstaculo ? bloqueado + dt : 0f;
             if (bloqueado >= segundosParaPitar && bloqueado > 0f && desdeUltimoPitido >= segundosEntrePitidos)
             {

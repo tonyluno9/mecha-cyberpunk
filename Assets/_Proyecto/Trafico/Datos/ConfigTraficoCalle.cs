@@ -14,8 +14,10 @@ namespace MechaCyberpunk.Trafico.Datos
         [SerializeField] private int carrosDeNoche = 3;
 
         [Header("Manejo")]
-        [Min(1f)] [Tooltip("Velocidad normal (m/s).")]
-        [SerializeField] private float velocidadCrucero = 7f;
+        [Min(1f)] [Tooltip("T-703: velocidad normal más baja de un carro (m/s). 8 m/s son unos 29 km/h.")]
+        [SerializeField] private float velocidadMinima = 8f;
+        [Min(1f)] [Tooltip("T-703: velocidad normal más alta de un carro (m/s). 12 m/s son unos 43 km/h. Cada carro toma una al azar entre las dos.")]
+        [SerializeField] private float velocidadMaxima = 12f;
         [Min(0.5f)] [Tooltip("Aceleración al librarse (m/s²).")]
         [SerializeField] private float aceleracion = 3f;
         [Min(0.5f)] [Tooltip("Frenado (m/s²).")]
@@ -51,7 +53,10 @@ namespace MechaCyberpunk.Trafico.Datos
         public int CarrosDeNoche => carrosDeNoche;
         public int Maximo => Mathf.Max(carrosDeDia, carrosDeNoche);
         public int Cantidad(bool esDeNoche) => esDeNoche ? carrosDeNoche : carrosDeDia;
-        public float VelocidadCrucero => velocidadCrucero;
+        public float VelocidadMinima => velocidadMinima;
+        public float VelocidadMaxima => velocidadMaxima;
+        /// <summary>La velocidad media del rango (m/s).</summary>
+        public float VelocidadCrucero => (velocidadMinima + velocidadMaxima) * 0.5f;
         public float SeparacionCarril => separacionCarril;
         public float GiroMaximo => giroMaximo;
         public float MargenNodo => margenNodo;
@@ -65,7 +70,13 @@ namespace MechaCyberpunk.Trafico.Datos
         /// <summary>Arma las reglas de manejo de un carro con estos números.</summary>
         public CalculoTraficoCalle Crear()
         {
-            return new CalculoTraficoCalle(velocidadCrucero, aceleracion, frenado, distanciaFrenado, distanciaParada, segundosParaPitar, segundosEntrePitidos);
+            return Crear(VelocidadCrucero);
+        }
+
+        /// <summary>T-703: igual, con la velocidad de crucero propia de ese carro.</summary>
+        public CalculoTraficoCalle Crear(float velocidadDelCarro)
+        {
+            return new CalculoTraficoCalle(velocidadDelCarro, aceleracion, frenado, distanciaFrenado, distanciaParada, segundosParaPitar, segundosEntrePitidos);
         }
     }
 }

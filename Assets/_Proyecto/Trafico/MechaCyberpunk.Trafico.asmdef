@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Trafico",
     "rootNamespace": "MechaCyberpunk.Trafico",
-    "references": ["MechaCyberpunk.Core"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Personaje.Visual"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

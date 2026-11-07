@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Datos.ConfigTraficoCalle
   carrosDeDia: 6
   carrosDeNoche: 3
-  velocidadCrucero: 7
+  velocidadMinima: 8
+  velocidadMaxima: 12
   aceleracion: 3
   frenado: 9
   distanciaFrenado: 14
