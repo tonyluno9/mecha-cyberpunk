@@ -12,7 +12,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
     /// daña lo que tenga cerca (también a quien lo maneja, que sale de golpe) y queda como un armazón negro que sigue ardiendo un rato.
     /// Lo agrega <see cref="CarroViejo"/> al nacer; los números salen de <see cref="ConfigDanioCarro"/> (sin asset usa los de por defecto).
     /// </summary>
-    [RequireComponent(typeof(CarroViejo))]
     public class DanioCarro : MonoBehaviour, IRecibeDanio, IObjetoInerte
     {
         private const int LadoTextura = 32;
@@ -22,6 +21,14 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const int ParticulasHumoExplosion = 30;
         private const float SegundosDestelloExplosion = 0.25f;
         private const float ImpulsoVerticalExplosion = 4f;
+        // T-692: los choques que cuentan. Una rapidez imposible es un glitch de física (carro lanzado, penetración), no un choque real.
+        private const float RapidezChoqueImposible = 45f;
+        private const float FraccionMaximaPorChoque = 0.3f;
+        private const float SegundosGraciaInicial = 1.5f;
+        private const float SegundosGraciaEmpuje = 1.2f;
+        private const float UpwardsExplosion = 0.3f;
+        public const string IdAvisoFuego = "VEH_ALARMA_ROBO";
+        public const string MensajeExplosion = "AlExplotarVehiculo";
         private static readonly Color ColorArmazon = new Color(0.06f, 0.06f, 0.07f, 1f);
 
         /// <summary>Aviso al conductor cuando el carro se prende (T-532).</summary>
@@ -38,6 +45,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private Material material;
         private Texture2D textura;
         private float proximoChoque;
+        private float ignorarChoquesHasta;
         private float finArdiendo;
         private float finDestello;
         private bool ardiendo;
@@ -66,6 +74,23 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             calculo = new CalculoDanioCarro(config.VidaMaxima, config.FraccionHumo, config.FraccionFuego);
             CrearEfectos();
+            ignorarChoquesHasta = Time.time + SegundosGraciaInicial;
+        }
+
+        /// <summary>No cuenta los choques durante unos segundos (el carro acaba de ser empujado por una explosión: ya recibió su daño).</summary>
+        public void IgnorarChoques(float segundos)
+        {
+            ignorarChoquesHasta = Mathf.Max(ignorarChoquesHasta, Time.time + segundos);
+        }
+
+        /// <summary>Daño de un choque con esa rapidez relativa; 0 si no cuenta (T-692). Tope por choque y nada con rapideces imposibles.</summary>
+        public static float DanioDeChoque(float rapidez, float umbral, float danioPorMetro, float vidaMaxima)
+        {
+            if (rapidez > RapidezChoqueImposible)
+            {
+                return 0f;
+            }
+            return Mathf.Min(CalculoDanioCarro.DanioPorChoque(rapidez, umbral, danioPorMetro), vidaMaxima * FraccionMaximaPorChoque);
         }
 
         private void OnDestroy()
@@ -108,7 +133,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         private void OnCollisionEnter(Collision colision)
         {
-            if (calculo == null || calculo.Destruido || Time.time < proximoChoque)
+            if (calculo == null || calculo.Destruido || Time.time < proximoChoque || Time.time < ignorarChoquesHasta)
             {
                 return;
             }
@@ -119,7 +144,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             proximoChoque = Time.time + config.SegundosEntreChoques;
             Sonidos.ReproducirEn(rapidez >= config.UmbralChoqueFuerte ? "VEH_CHOQUE_FUERTE" : "VEH_CHOQUE_LEVE", transform.position);
-            float danio = CalculoDanioCarro.DanioPorChoque(rapidez, config.UmbralChoque, config.DanioPorChoque);
+            float danio = DanioDeChoque(rapidez, config.UmbralChoque, config.DanioPorChoque, calculo.Maxima);
+            if (danio <= 0f)
+            {
+                return;
+            }
             EstadoCarro antes = calculo.Estado;
             calculo.Aplicar(danio);
             Revisar(antes);
@@ -166,6 +195,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             EstadoCambio?.Invoke(ahora);
             if (ahora == EstadoCarro.Fuego)
             {
+                // T-692: aviso claro antes de explotar: ya salen humo y fuego; además suena una alarma.
+                Sonidos.ReproducirEn(IdAvisoFuego, transform.position);
                 // T-532: con alguien adentro, aviso para que se baje antes de que explote.
                 IMontable montable = GetComponent<IMontable>();
                 if (montable != null && montable.Ocupado)
@@ -225,6 +256,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 carro.TomarControl(false);
             }
+            gameObject.SendMessage(MensajeExplosion, SendMessageOptions.DontRequireReceiver); // T-692: las patrullas dejan de manejar
 
             Sonidos.ReproducirEn("VEH_CHOQUE_FUERTE", centro);
             UltimaExplosion = ExplosionCarro.Crear(centro, config.RadioExplosion);
@@ -234,7 +266,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             SumarCalorSiEstaCerca(centro);
             if (cuerpo != null)
             {
-                cuerpo.AddForce(Vector3.up * cuerpo.mass * ImpulsoVerticalExplosion, ForceMode.Impulse);
+                cuerpo.AddForce(Vector3.up * ImpulsoVerticalExplosion * 0.5f, ForceMode.VelocityChange);
             }
             Ennegrecer();
             if (carro != null)
@@ -247,7 +279,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void DanarAlrededor(Vector3 centro)
         {
             float radio = config.RadioExplosion;
-            Collider[] cercanos = Physics.OverlapSphere(centro, radio, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            Collider[] cercanos = Physics.OverlapSphere(centro, radio, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide);
             HashSet<IRecibeDanio> vistos = new HashSet<IRecibeDanio>();
             HashSet<Rigidbody> empujados = new HashSet<Rigidbody>();
             foreach (Collider c in cercanos)
@@ -256,18 +288,26 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 {
                     continue;
                 }
+                // T-692: un trigger solo cuenta si es la zona de daño de algo que recibe daño (patrullas); los demás triggers se ignoran.
+                if (c.isTrigger && c.GetComponentInParent<IRecibeDanio>() == null)
+                {
+                    continue;
+                }
                 float distancia = Vector3.Distance(centro, c.ClosestPoint(centro));
                 float factor = Mathf.Clamp01(1f - distancia / radio);
                 IRecibeDanio victima = c.GetComponentInParent<IRecibeDanio>();
                 if (victima != null && !ReferenceEquals(victima, this) && vistos.Add(victima))
                 {
+                    c.GetComponentInParent<DanioCarro>()?.IgnorarChoques(SegundosGraciaEmpuje);
                     Vector3 direccion = (c.bounds.center - centro).normalized;
                     victima.RecibirDanio(new InfoDanio(config.DanioExplosion * factor, TipoDanio.Explosion, c.ClosestPoint(centro), direccion, null));
                 }
                 Rigidbody rb = c.attachedRigidbody;
-                if (rb != null && rb != cuerpo && empujados.Add(rb))
+                if (!c.isTrigger && rb != null && rb != cuerpo && empujados.Add(rb))
                 {
-                    rb.AddExplosionForce(config.FuerzaExplosion * rb.mass, centro, radio, 1f, ForceMode.Impulse);
+                    // T-692: la fuerza es un cambio de velocidad (m/s) con caída lineal. Antes era un impulso de 1400 x masa y mandaba todo al cielo.
+                    rb.AddExplosionForce(config.FuerzaExplosion, centro, radio, UpwardsExplosion, ForceMode.VelocityChange);
+                    rb.GetComponent<DanioCarro>()?.IgnorarChoques(SegundosGraciaEmpuje);
                 }
             }
         }
