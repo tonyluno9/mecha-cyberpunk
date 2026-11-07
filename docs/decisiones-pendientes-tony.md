@@ -1239,3 +1239,8 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - Minimapa: dibuja las calles de GeometriaBarrio (mapa viejo, T-409); con la ciudad nueva de la sesión 2 hay que regenerar esa geometría para que las calles coincidan.
 - Ayuda "Golpe" solo con los puños (con arma de fuego el clic dispara). Con la pistola sale solo "Recargar" cuando falta munición.
 - Expendedoras de T-685 siguen con coordenadas fijas (pendiente de pasarlas a marcadores de la escena).
+- T-703: el choque leve (3 a 9 m/s) deja al carro 4 s quieto y el fuerte (9 o más) 9 s con el conductor afuera enojado. Tony puede cambiar los tiempos en ReglaChoqueTrafico.
+- T-704: un carro atorado que se ve ya no se reubica a los 30 s (sería nacer a la vista): da media vuelta. Y las velocidades de tráfico pasaron de 7 fija a 8 a 12 m/s por carro (ConfigTraficoCalle).
+- T-705: el conductor robado solo llama a la policía si el jugador se queda a menos de 25 m hasta que termina la llamada (4 s); manejando se pierde de vista y no hay persecución.
+- T-706: el aliado va oculto dentro del carro (no sentado a la vista); una plaza = moto; los demás carros llevan un solo aliado (copiloto).
+- Pruebas rojas que no son de estas tareas (ya fallaban en tony/s1-07nov antes de T-703): HeadshotPandilleroT677Pruebas.Pandillero_TiroALaCabezaHaceTresVecesElDelPecho (IA) y PersecucionBarrioPruebas.Patrulla_EnSesentaSegundos_NoSaleDeLaCalle_YSeMueve (la patrulla ya lleva colliders desde T-692; la prueba pide 0). PeatonHuyePruebas.Peaton_AlcanzaAOtro... es inestable (falló una vez, pasó otras).

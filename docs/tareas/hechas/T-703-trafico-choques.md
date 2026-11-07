@@ -9,7 +9,7 @@ Los carros del tráfico que chocan se quedan detenidos unos segundos y el conduc
 - Leve: se para en seco, pita de inmediato, 4 s quieto y sigue. Fuerte: igual, pero 9 s quieto, y el conductor (prefab Peaton) se baja, mira a quien chocó y le reclama con el gesto Burla cada ~2 s; a los 6 s vuelve al carro (desaparece) y el carro arranca poco después. Elegí "se baja enojado" (no "huye") porque huir es del robo.
 - Un choque no cuenta como atorón (no dispara Destrabar/Reaparecer) y el mismo golpe no reacciona dos veces (1.5 s de descanso).
 - Velocidades: antes todos iban a 7 m/s (25 km/h) y frenaban al pie de cualquier cosa. Ahora ConfigTraficoCalle trae velocidadMinima 8 y velocidadMaxima 12 m/s (29 a 43 km/h) y cada carro toma una al azar (CarroTrafico.VelocidadPropia). La aceleración, el frenado y la distancia de parada no cambian.
-- Trafico.asmdef ahora referencia MechaCyberpunk.Personaje.Visual (mismo dueño) para el gesto del conductor.
+- Trafico no puede referenciar Personaje.Visual (regla de ensamblados: dueños distintos). El gesto de burla se manda con BroadcastMessage("Burlar") y lo atiende VisualPersonaje del modelo activo.
 
 ## Criterios
 - [x] Un choque leve deja al carro quieto unos segundos, pita y luego sigue (PlayMode)

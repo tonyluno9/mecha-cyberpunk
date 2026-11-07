@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Trafico.Calle;
 using MechaCyberpunk.Trafico.Datos;
 using MechaCyberpunk.Trafico.Peatones;
@@ -226,8 +225,8 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.IsTrue(Robar());
             PeatonMundo peaton = GameObject.Find(CarroTrafico.NombreConductorRobado).GetComponent<PeatonMundo>();
             Assert.IsTrue(peaton.Llamando, "Es testigo y llama");
-            VisualPersonaje visual = peaton.GetComponentInChildren<VisualPersonaje>(false);
-            Assert.IsNotNull(visual, "Tiene modelo animado");
+            Animator animador = peaton.GetComponentInChildren<Animator>(false);
+            Assert.IsNotNull(animador, "Tiene modelo animado");
             string recorrido = "";
             float t0 = Time.time;
             string ultimo = "";
@@ -236,14 +235,14 @@ namespace MechaCyberpunk.Tests.Trafico
             while (Time.time < fin)
             {
                 yield return null;
-                AnimatorStateInfo estadoAhora = visual.Animador.GetCurrentAnimatorStateInfo(0);
+                AnimatorStateInfo estadoAhora = animador.GetCurrentAnimatorStateInfo(0);
                 string nombreAhora = estadoAhora.IsName("Telefono") ? "Telefono" : estadoAhora.IsName("Idle") ? "Idle" : estadoAhora.IsName("LevantarseBocaArriba") ? "LevantarseArriba" : estadoAhora.IsName("LevantarseBocaAbajo") ? "LevantarseAbajo" : "otro" + estadoAhora.shortNameHash;
                 if (nombreAhora != ultimo)
                 {
                     ultimo = nombreAhora;
                     recorrido += nombreAhora + "@" + (Time.time - t0).ToString("F1") + " ";
                 }
-                vioElTelefono |= visual.Animador.GetCurrentAnimatorStateInfo(0).IsName("Telefono");
+                vioElTelefono |= animador.GetCurrentAnimatorStateInfo(0).IsName("Telefono");
             }
             Assert.IsTrue(vioElTelefono, "Usa la animación Inter_Telefono al llamar (estados: " + recorrido + ", gestos " + peaton.GestosTelefono + ", llamando " + peaton.Llamando + ")");
             Assert.GreaterOrEqual(peaton.GestosTelefono, 1);
@@ -295,14 +294,14 @@ namespace MechaCyberpunk.Tests.Trafico
             c.transform.LookAt(new Vector3(10f, 1f, 10f));
             yield return null;
             civil.IniciarLlamada();
-            VisualPersonaje visual = civil.GetComponentInChildren<VisualPersonaje>(false);
-            Assert.IsNotNull(visual);
+            Animator animador = civil.GetComponentInChildren<Animator>(false);
+            Assert.IsNotNull(animador);
             bool vioElTelefono = false;
             float fin = Time.time + 2.5f;
             while (Time.time < fin)
             {
                 yield return null;
-                vioElTelefono |= visual.Animador.GetCurrentAnimatorStateInfo(0).IsName("Telefono");
+                vioElTelefono |= animador.GetCurrentAnimatorStateInfo(0).IsName("Telefono");
             }
             Assert.IsTrue(vioElTelefono, "El civil que llama juega Inter_Telefono");
             Assert.GreaterOrEqual(civil.GestosTelefono, 1);
