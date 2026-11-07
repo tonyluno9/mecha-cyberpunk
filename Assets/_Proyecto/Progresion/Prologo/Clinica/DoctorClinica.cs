@@ -8,6 +8,7 @@ using MechaCyberpunk.Mecha.Montaje;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.Progresion.Prologo.Policia;
 using MechaCyberpunk.UI.Historia;
 using MechaCyberpunk.UI.Inicio;
 using UnityEngine;
@@ -129,6 +130,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
                 vidaJugador.KO -= AlCaerElJugador;
             }
             vidaJugador = vida;
+            if (vida != null && vida.GetComponent<ConsecuenciaArresto>() == null)
+            {
+                vida.gameObject.AddComponent<ConsecuenciaArresto>(); // T-690: el arresto lo avisa Trafico con un mensaje de Unity
+            }
             controladorJugador = vida != null ? vida.GetComponent<ControladorAPie>() : null;
             if (vidaJugador != null)
             {

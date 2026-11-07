@@ -1219,3 +1219,5 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - El prefab se llama `PoliciaAPie` (sin acento, por los nombres de archivo).
 - Destello del cañón: tamaños al doble (pistola 0.26, escopeta 0.5, fusil 0.3, francotirador 0.4 m) porque la llama de F01 ocupa menos de la mitad de la imagen.
 - Mano izquierda de las armas largas: 0.36-0.38 m delante de la empuñadura (más lejos no alcanza el brazo del modelo).
+
+- D-tony-T690: multa de arresto 25 % del dinero (ReglaMultaArresto.PorcentajePorDefecto); apareces en Casa_Puerta (respaldo Casa_Cama); sin contrato de Core, el aviso va por SendMessage "AlSerArrestado" porque Trafico (Alan) no puede referenciar Tony. Ideal: un contrato en Core (tarea de Core).

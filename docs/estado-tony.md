@@ -422,3 +422,4 @@ ReglasEnsambladosPruebas (UI referencia a Trafico) no es de esta sesión.
 - T-687 disparar desde el carro y la moto: clic derecho apunta libre y la pistola sale (moto con una mano); 3 PlayMode.
 - T-688 pruebas rojas: HudAPie (vida 150), Mercado/Nombres (pantalla de expendedoras T-685), Doc 1.10 en escala, escudo en Historia/Apoyo, intermitentes endurecidas; quedan rojas las de S2 (Doc, ambiente, CarrosS2n) y previas (Bar, Vehiculos). Ver docs/tareas/hechas/T-688-pruebas-rojas.md
 - T-689 pantalla HAS MUERTO (PantallaAviso: Teko, neón, glitch) tras la caída y antes del fundido a la clínica; PlayMode HasMuertoT689Pruebas. Ver docs/tareas/hechas/T-689-has-muerto.md
+- T-690 arresto con consecuencia: pantalla ARRESTADO, multa 25 % del dinero, apareces en casa (ConsecuenciaArresto en Progresion/Prologo/Policia, mensaje desde Trafico); EditMode ReglaMultaArresto y PlayMode ArrestoT690Pruebas. Ver docs/tareas/hechas/T-690-arresto.md
