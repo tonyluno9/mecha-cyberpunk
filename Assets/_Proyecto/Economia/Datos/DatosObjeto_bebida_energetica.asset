@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54f60b1e0edfb0b4ba16a9414b1d6926, type: 3}
+  m_Name: DatosObjeto_bebida_energetica
+  m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.DatosConsumible
+  id: bebida_energetica
+  nombre: "Bebida energ\xE9tica"
+  tipo: 5
+  valorVenta: 0
+  maximo: 5
+  oferta: {fileID: 11400000, guid: 546e095db4eb589488a3f291a6865980, type: 2}
+  descripcion: "Cura 25 y 5 s sin recibir da\xF1o"
+  curacion: 25
+  segundosCuracion: 0
+  segundosSinDanio: 5
+  escudo: 0
+  factorVelocidad: 1
+  segundosVelocidad: 0

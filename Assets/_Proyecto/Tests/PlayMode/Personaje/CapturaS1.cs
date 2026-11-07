@@ -8,6 +8,37 @@ namespace MechaCyberpunk.Tests.Personaje
     {
         public static bool Activa => System.Environment.GetEnvironmentVariable("CAPTURAR_S1") == "1";
 
+        /// <summary>Foto de un canvas de pantalla (HUD o menú) sobre fondo oscuro. Lo deja como estaba.</summary>
+        public static void FotoCanvas(string nombre, Canvas canvas, int ancho = 1280, int alto = 720)
+        {
+            if (!Activa || canvas == null) return;
+            GameObject go = new GameObject("CamCanvasS1");
+            Camera c = go.AddComponent<Camera>();
+            c.clearFlags = CameraClearFlags.SolidColor;
+            c.backgroundColor = new Color(0.12f, 0.14f, 0.2f);
+            RenderTexture rt = new RenderTexture(ancho, alto, 24);
+            c.targetTexture = rt;
+            RenderMode modo = canvas.renderMode;
+            Camera previa = canvas.worldCamera;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = c;
+            canvas.planeDistance = 1f;
+            Canvas.ForceUpdateCanvases();
+            c.Render();
+            RenderTexture.active = rt;
+            Texture2D foto = new Texture2D(ancho, alto, TextureFormat.RGB24, false);
+            foto.ReadPixels(new Rect(0, 0, ancho, alto), 0, 0);
+            foto.Apply();
+            RenderTexture.active = null;
+            Directory.CreateDirectory("docs/capturas");
+            File.WriteAllBytes("docs/capturas/" + nombre + ".png", foto.EncodeToPNG());
+            canvas.renderMode = modo;
+            canvas.worldCamera = previa;
+            Object.Destroy(go);
+            Object.Destroy(rt);
+            Object.Destroy(foto);
+        }
+
         /// <summary>Foto de cerca de un punto del mundo, desde una dirección en coordenadas locales del jugador a <paramref name="distancia"/> metros.</summary>
         public static void FotoMira(string nombre, Transform jugador, Vector3 objetivo, Vector3 direccionLocal, float distancia, float fov = 30f, int tamano = 600)
         {

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54f60b1e0edfb0b4ba16a9414b1d6926, type: 3}
+  m_Name: DatosObjeto_cafe
+  m_EditorClassIdentifier: MechaCyberpunk.Economia::MechaCyberpunk.Economia.DatosConsumible
+  id: cafe
+  nombre: "Caf\xE9"
+  tipo: 5
+  valorVenta: 0
+  maximo: 5
+  oferta: {fileID: 11400000, guid: fe3c7d12b3d9182479e208232ac9d6e8, type: 2}
+  descripcion: "Corres 35% m\xE1s r\xE1pido por 20 s"
+  curacion: 0
+  segundosCuracion: 0
+  segundosSinDanio: 0
+  escudo: 0
+  factorVelocidad: 1.35
+  segundosVelocidad: 20
