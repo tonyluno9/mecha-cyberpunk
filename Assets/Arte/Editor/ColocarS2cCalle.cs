@@ -30,6 +30,13 @@ namespace MechaCyberpunk.Arte.Editor
         public const float Banqueta = 2f;
         public const float AltoBanqueta = 0.15f;
         public const float XMedio = -87f;       // donde cambia el fondo de las cuadras (callejón de los SKULLS al oriente)
+        /// <summary>T-872: la calle de norte a sur que cruza la calle de prueba (el cruce de K05), con su eje en x y su media anchura.</summary>
+        public const float XCruce = -110.5f;
+        public const float MedioCruce = 5.75f;
+        /// <summary>Lo que ocupa la casa de esquina del kit (ColocarS2cKit.Esquina) desde la línea de fachada de la otra calle.</summary>
+        public const float LadoEsquina = 6f;
+        public static float XCruceOriente => XCruce + MedioCruce;
+        public static float XCrucePoniente => XCruce - MedioCruce;
 
         public static float ZSur => ZCentro - MedioAncho;
         public static float ZNorte => ZCentro + MedioAncho;
@@ -54,7 +61,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>La cara norte del callejón: el muro de atrás de las casas del sur.</summary>
         public const float ZMuroCallejon = ZCentro - MedioAncho - FondoSurCallejon;
 
-        private static readonly string[] RaicesDeAdorno = { "Barrio", "T501_Suburbios", "T512_LuzZonas", "T508_CallesLlenas", "AMB_Noche", "T509_Pulido", "T542_Letreros", "S2t_Calles" };
+        private static readonly string[] RaicesDeAdorno = { "Barrio", "T501_Suburbios", "T512_LuzZonas", "T508_CallesLlenas", "AMB_Noche", "T509_Pulido", "S2t_Calles" };
         private static readonly string[] NoTocar = { "Lugar_", "PuntosAparicion", "PuntosHistoria", "Peatones", "Persecucion", "/Calles", "Banqueta", "AmbienteSonoro", "Callejon" };
 
         // Toma de K01: el jugador en medio de la calle mirando al poniente, la cámara 3.8 m atrás a la altura del hombro un poco alta.
@@ -84,18 +91,29 @@ namespace MechaCyberpunk.Arte.Editor
             float zArroyoSur = ZSur + Banqueta, zArroyoNorte = ZNorte - Banqueta;
             KitS2c.Losa(o, piso, "Arroyo", new Vector3((XBordeOriente + XBordePoniente) * 0.5f, arroyo - 0.05f, ZCentro), Quaternion.identity,
                 new Vector3(XBordeOriente - XBordePoniente, 0.1f, zArroyoNorte - zArroyoSur), KitS2c.MatAsfalto(), 8f, true);
+            // Banquetas en dos tramos: el cruce con la calle de norte a sur las corta (las esquinas de 2 x 2 son de esta calle).
+            (float x0, float x1)[] tramosBanqueta = { (XOriente, XCruceOriente - Banqueta), (XCrucePoniente + Banqueta, XPoniente) };
             foreach ((string n, float z0, float z1) in new[] { ("BanquetaSur", ZSur - 0.3f, zArroyoSur), ("BanquetaNorte", zArroyoNorte, ZNorte + 0.3f) })
             {
-                KitS2c.Losa(o, piso, n, new Vector3((XOriente + XPoniente) * 0.5f, banqueta - (AltoBanqueta + 0.1f) * 0.5f, (z0 + z1) * 0.5f), Quaternion.identity,
-                    new Vector3(XOriente - XPoniente, AltoBanqueta + 0.1f, z1 - z0), KitS2c.MatBanqueta(), 2f, true);
+                for (int k = 0; k < tramosBanqueta.Length; k++)
+                {
+                    (float x0, float x1) = tramosBanqueta[k];
+                    KitS2c.Losa(o, piso, k == 0 ? n : n + "_" + k, new Vector3((x0 + x1) * 0.5f, banqueta - (AltoBanqueta + 0.1f) * 0.5f, (z0 + z1) * 0.5f), Quaternion.identity,
+                        new Vector3(x0 - x1, AltoBanqueta + 0.1f, z1 - z0), KitS2c.MatBanqueta(), 2f, true);
+                }
             }
             for (float x = XOriente - 1f; x > XPoniente + 1f; x -= 4f)
             {
+                if (x - 1.6f < XCruceOriente && x > XCrucePoniente)
+                {
+                    continue;
+                }
                 KitS2c.Linea(piso, new Vector3(x, arroyo, ZCentro), new Vector3(x - 1.6f, arroyo, ZCentro), 0.12f, arroyo);
             }
             foreach (float z in new[] { zArroyoSur + 0.35f, zArroyoNorte - 0.35f })
             {
-                KitS2c.Linea(piso, new Vector3(XOriente, arroyo, z), new Vector3(XPoniente, arroyo, z), 0.1f, arroyo);
+                KitS2c.Linea(piso, new Vector3(XOriente, arroyo, z), new Vector3(XCruceOriente, arroyo, z), 0.1f, arroyo);
+                KitS2c.Linea(piso, new Vector3(XCrucePoniente, arroyo, z), new Vector3(XPoniente, arroyo, z), 0.1f, arroyo);
             }
 
             // ---- Casas. La primera de cada lado (la que se ve junto a la cámara en K01) va como en la imagen.
@@ -109,25 +127,28 @@ namespace MechaCyberpunk.Arte.Editor
                 : KitS2c.EstiloAlAzar(o);
             List<Vector3> altosSur = KitS2c.Frente(o, casas, new Vector3(XOriente, banqueta, ZSur), new Vector3(XMedio, banqueta, ZSur), Vector3.forward, FondoSurCallejon, Sur);
             int ya = altosSur.Count;
-            altosSur.AddRange(KitS2c.Frente(o, casas, new Vector3(XMedio, banqueta, ZSur), new Vector3(XPoniente, banqueta, ZSur), Vector3.forward, 10.2f, i => Sur(i + ya)));
+            altosSur.AddRange(KitS2c.Frente(o, casas, new Vector3(XMedio, banqueta, ZSur), new Vector3(XCruceOriente + LadoEsquina, banqueta, ZSur), Vector3.forward, 10.2f, i => Sur(i + ya)));
+            int yc = altosSur.Count;
+            altosSur.AddRange(KitS2c.Frente(o, casas, new Vector3(XCrucePoniente - LadoEsquina, banqueta, ZSur), new Vector3(XPoniente, banqueta, ZSur), Vector3.forward, 10.2f, i => Sur(i + yc)));
             List<Vector3> altosNorte = KitS2c.Frente(o, casas, new Vector3(XOriente, banqueta, ZNorte), new Vector3(XMedio, banqueta, ZNorte), Vector3.back, 5.25f, Norte);
             int yb = altosNorte.Count;
-            altosNorte.AddRange(KitS2c.Frente(o, casas, new Vector3(XMedio, banqueta, ZNorte), new Vector3(XPoniente, banqueta, ZNorte), Vector3.back, 3f, i => Norte(i + yb)));
+            altosNorte.AddRange(KitS2c.Frente(o, casas, new Vector3(XMedio, banqueta, ZNorte), new Vector3(XCruceOriente + LadoEsquina, banqueta, ZNorte), Vector3.back, 3f, i => Norte(i + yb)));
+            int yd = altosNorte.Count;
+            altosNorte.AddRange(KitS2c.Frente(o, casas, new Vector3(XCrucePoniente - LadoEsquina, banqueta, ZNorte), new Vector3(XPoniente, banqueta, ZNorte), Vector3.back, 3f, i => Norte(i + yd)));
             // Esquinas sobre la calle de la casa y la del poniente (donde estaban los edificios apagados).
             KitS2c.Frente(o, casas, new Vector3(XOriente, suelo, -54f), new Vector3(XOriente, suelo, ZSur), Vector3.right, 5.25f, i => KitS2c.EstiloAlAzar(o));
             KitS2c.Frente(o, casas, new Vector3(XOriente, suelo, ZNorte), new Vector3(XOriente, suelo, -32f), Vector3.right, 5.25f, i => KitS2c.EstiloAlAzar(o));
             KitS2c.Frente(o, casas, new Vector3(XPoniente, suelo, ZSur), new Vector3(XPoniente, suelo, -59f), Vector3.left, 6f, i => KitS2c.EstiloAlAzar(o));
-            KitS2c.Losa(o, casas, "EsquinaNoroeste", new Vector3(XPoniente + 1.5f, suelo + 3.6f, (ZNorte - 35f) * 0.5f), Quaternion.identity,
-                new Vector3(3f, 7.2f, -35f - ZNorte), KitS2c.MatCuerpo(1), 3f, true);
 
             // ---- Postes con su luz y halo, alternando lados; cables entre postes, hacia las casas y cruzando la calle.
             List<Vector3> puntasNorte = new List<Vector3>();
             List<Vector3> puntasSur = new List<Vector3>();
-            for (float x = -68f; x > XPoniente + 4f; x -= 24f)
+            // Postes alternados, fuera del cruce (ahí cada esquina del kit trae el suyo).
+            foreach (float x in new[] { -68f, -92f, -126f })
             {
                 puntasNorte.Add(KitS2c.Poste(o, postes, new Vector3(x, banqueta, zArroyoNorte + 0.45f), Vector3.back, arroyo, true));
             }
-            for (float x = -80f; x > XPoniente + 4f; x -= 24f)
+            foreach (float x in new[] { -80f, -128f })
             {
                 puntasSur.Add(KitS2c.Poste(o, postes, new Vector3(x, banqueta, zArroyoSur - 0.45f), Vector3.forward, arroyo, o.Chance(0.4f)));
             }
@@ -156,7 +177,7 @@ namespace MechaCyberpunk.Arte.Editor
                 KitS2c.Charco(o, piso, new Vector3(o.Rango(-62f, XPoniente + 3f), banqueta, (i % 2 == 0 ? ZSur + 1f : ZNorte - 1f)), o.Rango(0.8f, 1.4f), o.Rango(0.6f, 1f), o.Rango(0f, 180f));
             }
             Copiar(cosas, "Tapa", new[] { new Vector3(-73f, arroyo, zArroyoNorte - 0.35f), new Vector3(-97f, arroyo, zArroyoSur + 0.35f), new Vector3(-118f, arroyo, zArroyoNorte - 0.35f) });
-            Copiar(cosas, "Bolsas1", new[] { new Vector3(-69.5f, banqueta, ZSur + 0.5f), new Vector3(-104f, banqueta, ZNorte - 0.5f) });
+            Copiar(cosas, "Bolsas1", new[] { new Vector3(-69.5f, banqueta, ZSur + 0.5f), new Vector3(-99f, banqueta, ZNorte - 0.5f) });
             Copiar(cosas, "Bolsas2", new[] { new Vector3(-88f, banqueta, ZSur + 0.5f) });
             KitS2c.Pieza(cosas, "C16_Tambo", new Vector3(-61.8f, banqueta, ZNorte - 0.6f), Quaternion.identity, Vector3.one);
             KitS2c.Pieza(cosas, "C11_Basurero", new Vector3(-92f, banqueta, ZNorte - 0.6f), Quaternion.LookRotation(Vector3.back), Vector3.one);
@@ -254,16 +275,48 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Apaga los edificios de la fila de en medio y lo que estaba encima de ellos dentro de la franja.</summary>
         private static void Apagar()
         {
+            int n = ApagarEdificios(Edificios);
+            n += ApagarEn(new[] { Franja }, true);
+            ColocarS2.Informe.AppendLine("Franja de la calle nueva: " + n + " objetos fuera");
+        }
+
+        public static int ApagarEdificios(IEnumerable<string> rutas)
+        {
             HashSet<Object> referidos = ColocarS2.Referidos();
             int n = 0;
-            foreach (string e in Edificios)
+            foreach (string e in rutas)
             {
                 Transform t = ColocarS2.Buscar(e);
                 if (t != null && t.gameObject.activeSelf)
                 {
                     n += ColocarS2.Quitar(t.gameObject, referidos);
                 }
+                // Las piezas de fachada de noche de ese edificio (Barrio/ArteNoche/<grupo>/<Edificio>_<cara>) se van con él.
+                string nombre = e.Substring(e.LastIndexOf('/') + 1) + "_";
+                Transform arte = ColocarS2.Buscar("Barrio/ArteNoche");
+                if (arte != null)
+                {
+                    foreach (Transform grupo in arte)
+                    {
+                        foreach (Transform cara in grupo.Cast<Transform>().Where(c => c.name.StartsWith(nombre) && c.gameObject.activeSelf).ToList())
+                        {
+                            n += ColocarS2.Quitar(cara.gameObject, referidos);
+                        }
+                    }
+                }
             }
+            return n;
+        }
+
+        /// <summary>
+        /// Apaga los adornos de la ciudad (barrio, T-50x, S2t) que quedan enteros dentro de alguna de las cajas (y las luces sueltas que caen
+        /// en ellas). Con <paramref name="callejon"/>, también lo que colgaba arriba de las azoteas nuevas en la cara norte del callejón.
+        /// </summary>
+        public static int ApagarEn(IEnumerable<Bounds> cajas, bool callejon)
+        {
+            Bounds[] lista = cajas.ToArray();
+            HashSet<Object> referidos = ColocarS2.Referidos();
+            int n = 0;
             List<GameObject> fuera = new List<GameObject>();
             foreach (Transform t in ColocarS2.Todos().ToList())
             {
@@ -279,8 +332,8 @@ namespace MechaCyberpunk.Arte.Editor
                 Renderer r = t.GetComponent<Renderer>();
                 Light l = t.GetComponent<Light>();
                 // Lo que colgaba de la cara norte del callejón (los edificios apagados) y queda arriba de las azoteas nuevas.
-                bool flotaEnCallejon = r != null && CaraCallejon.Contains(new Vector3(r.bounds.center.x, 0f, r.bounds.center.z)) && r.bounds.max.y > AzoteaCasas;
-                if (r != null && (Contiene(Franja, r.bounds) || flotaEnCallejon) || l != null && r == null && Franja.Contains(t.position))
+                bool flotaEnCallejon = callejon && r != null && CaraCallejon.Contains(new Vector3(r.bounds.center.x, 0f, r.bounds.center.z)) && r.bounds.max.y > AzoteaCasas;
+                if (r != null && (lista.Any(c => Contiene(c, r.bounds)) || flotaEnCallejon) || l != null && r == null && lista.Any(c => c.Contains(t.position)))
                 {
                     fuera.Add(t.gameObject);
                 }
@@ -292,7 +345,7 @@ namespace MechaCyberpunk.Arte.Editor
                     n += ColocarS2.Quitar(g, referidos);
                 }
             }
-            ColocarS2.Informe.AppendLine("Franja de la calle nueva: " + n + " objetos fuera");
+            return n;
         }
 
         /// <summary>Lo que cuelga en la cara norte del callejón y quedó separado del muro nuevo (lámparas, medidores) se pega a él.</summary>

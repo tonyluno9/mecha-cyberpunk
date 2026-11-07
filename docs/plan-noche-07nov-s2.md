@@ -24,8 +24,8 @@ con la sesión 1 (T-69x).
 | ID | Qué | Estado |
 | --- | --- | --- |
 | T-870 | Calle de prueba K01: posproceso (ACES, bloom, sombras azules y luces naranjas), niebla azul, contornos de pantalla completa, piso mojado con charcos que reflejan (reflejo planar), halo bajo cada lámpara, neones con su luz, ventanas cálidas al azar, cables colgantes; capturas s2c-calle-prueba-*; pedido docs/pedido-arte-08nov.md | hecha |
-| T-871 | Kit de manzanas: frentes de cuadra A–F (prefabs), esquina como K05 (semáforo, cruces, negocios, FARMACIA) y variante Nova como K06 | |
-| T-872 | Suburbios con el kit (ruta de la demo): frentes de las calles de la casa, cuadras cortas, sin calles infinitas | |
+| T-871 | Kit de manzanas: frentes de cuadra A–F (prefabs), esquina como K05 (semáforo, cruces, negocios, FARMACIA) y variante Nova como K06 | hecha |
+| T-872 | Suburbios con el kit (ruta de la demo): calle de norte a sur con el cruce de K05, calle de K01 hasta x = 47, casas del kit en la manzana de la casa | hecha |
 | T-873 | El Mercado: tianguis sin focos colgando, plaza | |
 | T-874 | Neón Alto | |
 | T-875 | Nova | |

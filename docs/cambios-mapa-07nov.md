@@ -25,3 +25,19 @@ que tráfico, policía, peatones, misiones y el mapa lo sepan. Coordenadas del m
 - **Reflejo de los charcos**: `S2c_Look` tiene `ReflejoCharcos` (Mundo/Ambiente), que pinta una cámara extra cada cuadro desde el ojo de la
   cámara principal reflejado en el piso. Los charcos van en la capa integrada Water (4), que esa cámara no ve. Si una prueba cuenta cámaras
   prendidas, ahí hay una más (`CamaraReflejoCharcos`, oculta).
+
+## T-872: Suburbios en cuadras cortas
+- **Calle nueva de norte a sur sin tráfico** en la Manzana_4: eje x = -110.5, de z = -87 (calle del sur) a z = -7 (avenida). Arroyo de 7.5 m
+  (x de -114.25 a -106.75) a 0.22 m. Cruza la calle de prueba en (-110.5, -43): ahí están las cuatro esquinas de K05 (semáforos con micas que
+  no cambian de color, cruces pintados; la esquina noreste es la farmacia con letrero FARMACIA). También cruza el andador que sale del
+  callejón de los SKULLS al poniente (z de -64 a -59), que sigue abierto.
+- **La calle de K01 sigue al oriente** cruzando la calle de la casa: de x = -40 a x = 40 por la fila de en medio de la Manzana_5 (z = -43,
+  mismas medidas). Llega a la calle de x = 47. En las dos calles con tráfico hay cruce peatonal pintado (x = -47 y x = 47, z de -44.5 a -41.5).
+  Los carros de esas calles no cambian; si hace falta que se detengan ahí, es cosa del tráfico.
+- **Edificios greybox apagados**: Manzana_4 → 35, 36, 38, 39, 41 y 44; Manzana_5 → 46, 49 y 51 (con sus piezas de fachada de noche y lo que
+  tenían encima). En su lugar hay ~80 casas de 2 pisos del kit con colliders, en todas las calles de esas cuadras.
+- **Se quedan igual**: la casa (Lugar_Casa, cuarto y baño), el I+D+I del Doc y su letrero, el callejón de los SKULLS con sus muros (edificios 33 y 42),
+  el taller El Canepa (edificio 45), el bar (Lugar_Bar) y el CIC de Tino (Manzana_1).
+- **Peatones**: las rutas de banqueta del contorno de cada manzana no cambian. Las calles nuevas no tienen peatones; si la sesión 1 quiere
+  ponerles, los contornos nuevos son las cuadras de 14.75 × 20 m, 17.75 × 20 m, etc. (ver `ColocarS2cSuburbios.cs`).
+- **Mapa / minimapa**: conviene dibujar las dos calles nuevas (rectángulos x -114.25..-106.75, z -87..-7 y x -134..40, z -46.75..-39.25).

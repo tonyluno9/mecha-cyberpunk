@@ -176,7 +176,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// la casa de esquina queda en el cuadrante +X +Z. Lleva farmacia y tienda, banqueta en L, semáforo, letrero de nombre de calle, poste con
         /// cables en diagonal y cruces peatonales pintados en los dos arroyos (<paramref name="ancho"/> es el ancho de cada arroyo).
         /// </summary>
-        public static void Esquina(KitS2c.Obra o, Transform padre, Vector3 esquina, float piso, Quaternion giro, float ancho = 7.5f, bool farmacia = true)
+        public static void Esquina(KitS2c.Obra o, Transform padre, Vector3 esquina, float piso, Quaternion giro, float ancho = 7.5f, bool farmacia = true, bool conBanqueta = true)
         {
             Transform raiz = new GameObject("Esquina_K05").transform;
             raiz.SetParent(padre, false);
@@ -185,9 +185,12 @@ namespace MechaCyberpunk.Arte.Editor
             Vector3 D(Vector3 v) => giro * v;
             float banqueta = piso + ColocarS2cCalle.AltoBanqueta;
             float alto = ColocarS2cCalle.AltoBanqueta + 0.1f;
-            KitS2c.Losa(o, raiz, "Banqueta_X", P(6f, banqueta - 0.125f, -Banqueta * 0.5f), giro, new Vector3(12f, alto, Banqueta), KitS2c.MatBanqueta(), 2f, true);
-            KitS2c.Losa(o, raiz, "Banqueta_Z", P(-Banqueta * 0.5f, banqueta - 0.125f, 6f), giro, new Vector3(Banqueta, alto, 12f), KitS2c.MatBanqueta(), 2f, true);
-            KitS2c.Losa(o, raiz, "Banqueta_Esquina", P(-Banqueta * 0.5f, banqueta - 0.125f, -Banqueta * 0.5f), giro, new Vector3(Banqueta, alto, Banqueta), KitS2c.MatBanqueta(), 2f, true);
+            if (conBanqueta)
+            {
+                KitS2c.Losa(o, raiz, "Banqueta_X", P(6f, banqueta - 0.125f, -Banqueta * 0.5f), giro, new Vector3(12f, alto, Banqueta), KitS2c.MatBanqueta(), 2f, true);
+                KitS2c.Losa(o, raiz, "Banqueta_Z", P(-Banqueta * 0.5f, banqueta - 0.125f, 6f), giro, new Vector3(Banqueta, alto, 12f), KitS2c.MatBanqueta(), 2f, true);
+                KitS2c.Losa(o, raiz, "Banqueta_Esquina", P(-Banqueta * 0.5f, banqueta - 0.125f, -Banqueta * 0.5f), giro, new Vector3(Banqueta, alto, Banqueta), KitS2c.MatBanqueta(), 2f, true);
+            }
             Transform casas = new GameObject("Casas").transform;
             casas.SetParent(raiz, false);
             KitS2c.Estilo eFarmacia = new KitS2c.Estilo { PlantaBaja = "C02_FachadaVivienda_cy", ColorPiso = 2, Neon = null, Foco = true, Tinaco = true };
@@ -212,19 +215,32 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        /// <summary>El letrero de FARMACIA con su cruz verde (modelo del kit urbano), con luz verde que se prende de noche.</summary>
+        /// <summary>
+        /// El letrero de FARMACIA de K05: el letrero horizontal C15a con el texto FARMACIA en verde y una cruz verde de neón a un lado, con luz
+        /// verde que se prende de noche. (El letrero_farmacia del kit urbano viejo es de bloques sin textura.)
+        /// </summary>
         private static void LetreroFarmacia(KitS2c.Obra o, Transform padre, Vector3 p, Vector3 haciaCalle)
         {
-            GameObject m = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Mundo/KitUrbano/letrero_farmacia.fbx");
-            if (m == null)
-            {
-                ColocarS2.Informe.AppendLine("  falta letrero_farmacia.fbx");
-                return;
-            }
-            GameObject l = (GameObject)PrefabUtility.InstantiatePrefab(m, padre);
-            l.name = "LetreroFarmacia";
-            l.transform.SetPositionAndRotation(p, Quaternion.LookRotation(-haciaCalle));
-            KitS2c.Luz(l.transform, p + haciaCalle * 0.6f, LightType.Point, new Color(0.3f, 1f, 0.45f), 1.6f, 5f, 0f);
+            haciaCalle.y = 0f;
+            haciaCalle.Normalize();
+            Vector3 lado = Vector3.Cross(Vector3.up, haciaCalle).normalized;
+            GameObject raiz = new GameObject("LetreroFarmacia");
+            raiz.transform.SetParent(padre, false);
+            raiz.transform.position = p;
+            Quaternion giro = Quaternion.LookRotation(-haciaCalle);
+            GameObject caja = KitS2c.Pieza(raiz.transform, "C15a_LetreroHorizontal", p - Vector3.up * 0.45f + lado * 0.4f, giro, new Vector3(0.85f, 0.8f, 0.6f), false);
+            caja.name = "Caja";
+            KitS2c.Medida m = KitS2c.Medir("C15a_LetreroHorizontal");
+            Vector3 cara = p + lado * 0.4f + haciaCalle * (-m.Muro * 0.6f + 0.02f) - Vector3.up * 0.45f + Vector3.up * (m.Caja.size.y * 0.8f * 0.5f);
+            ColocarS2t.TextoMundo(raiz.transform, "Texto", "FARMACIA", cara, new Vector2(2.2f, 0.6f), haciaCalle, new Color(0.45f, 1f, 0.62f));
+            GameObject cruz = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            Object.DestroyImmediate(cruz.GetComponent<Collider>());
+            cruz.name = "Cruz";
+            cruz.transform.SetParent(raiz.transform, false);
+            cruz.transform.SetPositionAndRotation(cara - lado * 1.75f + haciaCalle * 0.05f, giro);
+            cruz.transform.localScale = Vector3.one * 0.75f;
+            cruz.GetComponent<MeshRenderer>().sharedMaterial = KitS2c.Mat("S2c_CruzFarmacia", () => KitS2c.Emision(new Color(0.4f, 2.6f, 0.9f), KitS2c.TexCruz()));
+            KitS2c.Luz(raiz.transform, cara + haciaCalle * 0.6f, LightType.Point, new Color(0.3f, 1f, 0.45f), 1.4f, 5f, 0f);
         }
 
         /// <summary>
