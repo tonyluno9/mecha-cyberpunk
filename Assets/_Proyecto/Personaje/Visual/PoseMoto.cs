@@ -26,6 +26,9 @@ namespace MechaCyberpunk.Personaje.Visual
         private Quaternion giroInicioMundo;
 
         /// <summary>Giro normalizado del manubrio (-1 izquierda, 1 derecha).</summary>
+        /// <summary>T-687: la mano derecha suelta el manubrio (saca la pistola); la izquierda sigue en el manubrio.</summary>
+        public bool ManoDerechaLibre { get; set; }
+
         public float Giro { get; set; }
 
         /// <summary>Velocidad de la moto (m/s).</summary>
@@ -135,7 +138,10 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             float peso = ReglasMoto.Suave(avance);
             Poner(AvatarIKGoal.LeftHand, moto.ManubrioIzquierdo, peso);
-            Poner(AvatarIKGoal.RightHand, moto.ManubrioDerecho, peso);
+            if (!ManoDerechaLibre)
+            {
+                Poner(AvatarIKGoal.RightHand, moto.ManubrioDerecho, peso);
+            }
             Poner(AvatarIKGoal.LeftFoot, moto.EstriboIzquierdo, peso);
             Poner(AvatarIKGoal.RightFoot, moto.EstriboDerecho, peso);
         }
