@@ -134,7 +134,7 @@ namespace MechaCyberpunk.Progresion.Prologo
             }
 
             maquina = new MaquinaPrologo(datos.TextoIrAlCarro, datos.TextoRegresarACasa, datos.TextoDormir, datos.PasosRuta.Count,
-                datos.TextoIrAlClandestino, datos.TextoHablarEncargado);
+                datos.TextoIrAlClandestino, datos.TextoHablarEncargado, datos.TextoGanarPelea);
             maquina.Iniciar(etapa, reanudar);
             if (!maquina.Activa)
             {
@@ -484,6 +484,7 @@ namespace MechaCyberpunk.Progresion.Prologo
                     }
                     break;
                 case DestinoObjetivo.Clandestino:
+                case DestinoObjetivo.Arena:
                     servicio.Fijar(new Objetivo(deseado.Texto, datos.LugarClandestino));
                     break;
                 case DestinoObjetivo.Mostrador:
