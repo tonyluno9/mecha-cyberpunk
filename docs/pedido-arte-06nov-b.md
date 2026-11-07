@@ -36,3 +36,9 @@ Textos del HUD en español (VIDA, ESCUDO, $). Que se vean modernos y de juego co
 ## Nota
 - Las balas de los enemigos y del dron no necesitan modelo: el trazo y el sonido de bala rozando se hacen en Unity.
 - Los carros por partes (ruedas, puertas, sin cristal) los saca Tony en Tripo de los modelos que ya tiene.
+
+## 4. Agregado por la sesión 2 (6-nov noche) → imageassets/modelos-nuevos/
+| Archivo | Qué es |
+| --- | --- |
+| E01_EscaleraPuente.png | Escalera recta de acero para subir de la banqueta a un paso elevado de 8.4 m: un solo tramo largo y angosto (1.2 m de ancho, para pegarse a la banqueta), con descanso a la mitad, barandales gruesos y apoyos al piso. Fondo blanco, 3/4, para Tripo. Sin ella los puentes N02 quedan de adorno (sin subir). |
+| T02_EntradaCasa (ya pedida como P11) | El hueco de la entrada de la casa está listo: marcador Hueco_Entrada_P11 (3 m de ancho, 3.2 m de alto). |

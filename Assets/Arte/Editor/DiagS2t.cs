@@ -255,6 +255,53 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/s2t-diag-sur.txt", "== cerca de (-30,-98)" + System.Environment.NewLine + string.Join(System.Environment.NewLine, ColocarS2.Todos().Where(t => t.parent != null && t.parent.parent == null && t.gameObject.activeInHierarchy).SelectMany(r => r.Cast<Transform>()).Where(t => new Vector2(t.position.x + 35f, t.position.z + 98f).magnitude < 20f).Select(t => Ruta(t) + " p" + t.position.ToString("F0"))));
         }
 
+        public static void Elevados()
+        {
+            ColocarS2.Abrir();
+            StringBuilder sb = new StringBuilder();
+            foreach (Rigidbody rb in Object.FindObjectsByType<Rigidbody>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(r => r.position.y > 4f))
+            {
+                sb.AppendLine("cuerpo alto: " + Ruta(rb.transform) + " p" + rb.position.ToString("F1"));
+            }
+            foreach (Transform t in ColocarS2.Todos().Where(t => t.gameObject.activeInHierarchy && (t.name.StartsWith("N02") || t.name.Contains("Autopista"))))
+            {
+                Renderer r = t.GetComponentInChildren<Renderer>();
+                sb.AppendLine(Ruta(t) + " p" + t.position.ToString("F1") + (r != null ? " b" + r.bounds.center.ToString("F1") + " s" + r.bounds.size.ToString("F1") : ""));
+            }
+            File.WriteAllText("Logs/s2t-diag-elevados.txt", sb.ToString());
+        }
+
+        public static void FotoL03()
+        {
+            GameObject p = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Callejon/Prefabs/L03_EscaleraEmergencia.prefab");
+            GameObject i = (GameObject)PrefabUtility.InstantiatePrefab(p);
+            Bounds b = ArteT250.Limites(i);
+            File.WriteAllText("Logs/s2t-diag-l03.txt", "L03 limites " + b.center.ToString("F2") + " " + b.size.ToString("F2") + " colliders " + string.Join(",", i.GetComponentsInChildren<Collider>().Select(c => c.GetType().Name + " " + c.bounds.size.ToString("F2"))));
+            Object.DestroyImmediate(i);
+            ColocarS2t.FotoPrefabs(new[] { "Assets/Arte/Callejon/Prefabs/L03_EscaleraEmergencia.prefab", "Assets/Arte/Calle/Prefabs/N02.prefab" }, ColocarS2t.CarpetaCapturas + "s2t-l03-n02.png");
+        }
+
+        public static void AlturasL03()
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            GameObject i = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Callejon/Prefabs/L03_EscaleraEmergencia.prefab"));
+            foreach (Collider c in i.GetComponentsInChildren<Collider>()) Object.DestroyImmediate(c);
+            foreach (MeshFilter mf in i.GetComponentsInChildren<MeshFilter>()) mf.gameObject.AddComponent<MeshCollider>().sharedMesh = mf.sharedMesh;
+            Physics.SyncTransforms();
+            Bounds b = ArteT250.Limites(i);
+            StringBuilder sb = new StringBuilder("L03 " + b.min.ToString("F2") + " .. " + b.max.ToString("F2") + "  filas z de max a min, columnas x de min a max (alto en dm)" + System.Environment.NewLine);
+            for (float z = b.max.z; z >= b.min.z; z -= 0.25f)
+            {
+                sb.Append(z.ToString("F2").PadLeft(6) + " ");
+                for (float x = b.min.x; x <= b.max.x; x += 0.25f)
+                {
+                    sb.Append(Physics.Raycast(new Vector3(x, b.max.y + 1f, z), Vector3.down, out RaycastHit h, 10f) ? ((int)(h.point.y * 10f)).ToString().PadLeft(3) : "  .");
+                }
+                sb.AppendLine();
+            }
+            File.WriteAllText("Logs/s2t-diag-l03-alturas.txt", sb.ToString());
+        }
+
         public static void Todo()
         {
             Postes();
