@@ -40,11 +40,96 @@ namespace MechaCyberpunk.Trafico.Calle
                 int cuenta = 0;
                 foreach (CarroTrafico c in carros)
                 {
-                    cuenta += c != null && !c.Robado && c.gameObject.activeSelf ? 1 : 0;
+                    cuenta += c != null && !c.Robado && !c.EnRefuerzo && c.gameObject.activeSelf ? 1 : 0;
                 }
                 return cuenta;
             }
         }
+
+        /// <summary>
+        /// T-714: manda un carro del pool a <paramref name="destino"/> como refuerzo. Sale en el nodo de calle (fuera de la vista de la cámara con margen y a más de
+        /// <paramref name="distanciaMinima"/> m del destino, sin otro carro encima) cuya ruta por las calles tarda lo más cerca de <paramref name="segundosObjetivo"/> a
+        /// <paramref name="velocidad"/> (al menos <paramref name="segundosMinimos"/>), como las patrullas de T-708. Devuelve el carro, o null si no hay carro libre o
+        /// no hay por dónde salir sin que se vea.
+        /// </summary>
+        public CarroTrafico EnviarRefuerzo(Vector3 destino, float velocidad, float segundosObjetivo, float segundosMinimos, float distanciaMinima)
+        {
+            if (!listo || calles == null)
+            {
+                return null;
+            }
+            CarroTrafico carro = CarroLibreParaRefuerzo(destino);
+            if (carro == null)
+            {
+                return null;
+            }
+            Camera camara = Camera.main;
+            int llegada = calles.MasCercano(destino);
+            List<float> metros = new List<float>(calles.Cantidad);
+            List<bool> permitido = new List<bool>(calles.Cantidad);
+            for (int i = 0; i < calles.Cantidad; i++)
+            {
+                Vector3 nodo = calles.Nodo(i);
+                Vector3 d = nodo - destino;
+                d.y = 0f;
+                bool vale = d.magnitude >= distanciaMinima && !CarroTrafico.PuntoEnVista(camara, nodo) && !HayCarroEn(nodo);
+                permitido.Add(vale);
+                metros.Add(vale ? CalculoLlegadaPatrulla.MetrosDeRuta(calles, i, llegada) : float.MaxValue);
+            }
+            int salida = CalculoLlegadaPatrulla.Elegir(metros, permitido, velocidad, segundosObjetivo, segundosMinimos);
+            if (salida < 0 || !carro.IniciarRefuerzo(salida, llegada, velocidad))
+            {
+                return null;
+            }
+            return carro;
+        }
+
+        private static bool HayCarroEn(Vector3 punto)
+        {
+            foreach (CarroTrafico c in CarroTrafico.Activos)
+            {
+                Vector3 d = c.transform.position - punto;
+                d.y = 0f;
+                if (d.magnitude < SeparacionAlSalir)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private const float SeparacionAlSalir = 14f;
+
+        /// <summary>
+        /// T-714: el carro del pool que se manda de refuerzo: de preferencia uno apagado (sin usar); si todos andan, uno que no se vea en la cámara y esté a más de
+        /// <see cref="DistanciaMinimaDelRefuerzo"/> m de <paramref name="destino"/> (se recicla sin que nadie lo vea desaparecer, como T-704). Nunca uno robado ni ya de refuerzo; null si no hay.
+        /// </summary>
+        public CarroTrafico CarroLibreParaRefuerzo(Vector3? destino = null)
+        {
+            CarroTrafico oculto = null;
+            Camera camara = Camera.main;
+            foreach (CarroTrafico c in carros)
+            {
+                if (c == null || c.Robado || c.EnRefuerzo || c.EstaSiendoRobado)
+                {
+                    continue;
+                }
+                if (!c.gameObject.activeSelf)
+                {
+                    return c;
+                }
+                Vector3 d = destino.HasValue ? c.transform.position - destino.Value : Vector3.zero;
+                d.y = 0f;
+                if (oculto == null && !c.EnVista(camara) && (!destino.HasValue || d.magnitude >= DistanciaMinimaDelRefuerzo))
+                {
+                    oculto = c;
+                }
+            }
+            return oculto;
+        }
+
+        /// <summary>T-714: a esta distancia (m) del destino debe estar un carro que anda para poder reciclarlo como refuerzo.</summary>
+        public const float DistanciaMinimaDelRefuerzo = 45f;
 
         /// <summary>Lo usan el creador de editor y las pruebas; debe llamarse antes de que arranque el tráfico.</summary>
         public void Configurar(ConfigTraficoCalle numeros, CarroTrafico prefab, Transform padreDeManzanas = null)
@@ -104,7 +189,7 @@ namespace MechaCyberpunk.Trafico.Calle
             int lugares = objetivo;
             for (int i = 0; i < carros.Count; i++)
             {
-                if (carros[i] == null || carros[i].Robado)
+                if (carros[i] == null || carros[i].Robado || carros[i].EnRefuerzo)
                 {
                     continue;
                 }

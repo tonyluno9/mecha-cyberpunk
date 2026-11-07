@@ -460,8 +460,22 @@ namespace MechaCyberpunk.Trafico.Calle
             float dt = Time.deltaTime;
             Vector3? jugador = posicionJugador?.Invoke();
             SeguirElSuelo(dt);
+            if (EnRefuerzo && RefuerzoLlego)
+            {
+                return; // T-714: ya llegó y está estacionado
+            }
+            if (EnRefuerzo && jugador.HasValue && Distancia(jugador.Value, transform.position) <= DistanciaLlegadaRefuerzo)
+            {
+                EstacionarRefuerzo(); // T-714: ya está junto al jugador (no sigue hasta el nodo si él está en medio de la calle)
+                return;
+            }
             float velocidad = calculo.Avanzar(dt, DistanciaAlObstaculo(jugador));
-            if (calculo.SegundosBloqueado > 0f && Causa != "jugador" && Destrabar())
+            if (EnRefuerzo)
+            {
+                // T-714: frena suave al acercarse al último nodo (no se clava de golpe).
+                velocidad = Mathf.Min(velocidad, Mathf.Max(FrenadoMinimoRefuerzo, MetrosPorRecorrer * FactorFrenadoRefuerzo));
+            }
+            if (!EnRefuerzo && calculo.SegundosBloqueado > 0f && Causa != "jugador" && Destrabar())
             {
                 return;
             }
@@ -530,14 +544,31 @@ namespace MechaCyberpunk.Trafico.Calle
             if (haciaNodo.magnitude <= config.MargenNodo)
             {
                 int llegado = nodoDestino;
-                if (calles.Vecinos(llegado).Count == 1 && Reaparecer(true))
+                if (EnRefuerzo)
                 {
-                    return;
+                    // T-714: va por su ruta; en el último nodo se estaciona y avisa que llegó.
+                    if (rutaRefuerzo.Count == 0)
+                    {
+                        EstacionarRefuerzo();
+                        return;
+                    }
+                    nodoDestino = rutaRefuerzo[0];
+                    rutaRefuerzo.RemoveAt(0);
+                    nodoAnterior = llegado;
+                    haciaNodo = calles.Nodo(nodoDestino) - eje;
+                    haciaNodo.y = 0f;
                 }
-                nodoDestino = ElegirSiguiente(llegado, nodoAnterior);
-                nodoAnterior = llegado;
-                haciaNodo = calles.Nodo(nodoDestino) - eje;
-                haciaNodo.y = 0f;
+                else
+                {
+                    if (calles.Vecinos(llegado).Count == 1 && Reaparecer(true))
+                    {
+                        return;
+                    }
+                    nodoDestino = ElegirSiguiente(llegado, nodoAnterior);
+                    nodoAnterior = llegado;
+                    haciaNodo = calles.Nodo(nodoDestino) - eje;
+                    haciaNodo.y = 0f;
+                }
             }
             if (haciaNodo.sqrMagnitude > 0.0001f)
             {
@@ -547,6 +578,97 @@ namespace MechaCyberpunk.Trafico.Calle
             desvio = Vector3.MoveTowards(desvio, Derecha(direccion) * config.SeparacionCarril, VelocidadCambioCarril * dt);
             Quaternion meta = Quaternion.LookRotation(direccion, Vector3.up);
             transform.SetPositionAndRotation(Posicion(), Quaternion.RotateTowards(transform.rotation, meta, config.GiroMaximo * dt));
+        }
+
+        // ---- Refuerzo de los SKULLS en carro (T-714) ----
+
+        private readonly List<int> rutaRefuerzo = new List<int>();
+        private const float DistanciaLlegadaRefuerzo = 12f;
+        private const float FrenadoMinimoRefuerzo = 1.5f;
+        private const float FactorFrenadoRefuerzo = 0.8f;
+
+        /// <summary>T-714: True mientras este carro del pool va de refuerzo (o ya llegó): deja de ser tráfico normal, no lo apaga el pool ni sigue calles al azar.</summary>
+        public bool EnRefuerzo { get; private set; }
+
+        /// <summary>T-714: True si ya llegó al último nodo de su ruta y está estacionado.</summary>
+        public bool RefuerzoLlego { get; private set; }
+
+        /// <summary>T-714: avisa cuando el carro de refuerzo llega y se estaciona (de ahí se bajan los pasajeros).</summary>
+        public event Action<CarroTrafico> AlLlegarRefuerzo;
+
+        /// <summary>T-714: metros que le faltan por la ruta hasta el último nodo.</summary>
+        public float MetrosPorRecorrer
+        {
+            get
+            {
+                if (!EnRefuerzo || calles == null || RefuerzoLlego)
+                {
+                    return 0f;
+                }
+                Vector3 actual = new Vector3(eje.x, 0f, eje.z);
+                float metros = Vector3.Distance(actual, new Vector3(calles.Nodo(nodoDestino).x, 0f, calles.Nodo(nodoDestino).z));
+                Vector3 anterior = calles.Nodo(nodoDestino);
+                foreach (int nodo in rutaRefuerzo)
+                {
+                    metros += Vector3.Distance(new Vector3(anterior.x, 0f, anterior.z), new Vector3(calles.Nodo(nodo).x, 0f, calles.Nodo(nodo).z));
+                    anterior = calles.Nodo(nodo);
+                }
+                return metros;
+            }
+        }
+
+        /// <summary>
+        /// T-714: saca este carro del pool y lo manda de refuerzo: nace en <paramref name="nodoSalida"/> (fuera de la vista, lo elige quien lo llama) y va por las calles al nodo
+        /// <paramref name="nodoLlegada"/>, donde se estaciona. Devuelve false si ya es refuerzo, lo robaron o no tiene calles.
+        /// </summary>
+        public bool IniciarRefuerzo(int nodoSalida, int nodoLlegada, float velocidad = 0f)
+        {
+            if (EnRefuerzo || Robado || calles == null || azar == null || nodoSalida < 0 || nodoLlegada < 0)
+            {
+                return false;
+            }
+            List<int> camino = calles.Camino(nodoSalida, nodoLlegada);
+            if (camino == null || camino.Count == 0)
+            {
+                return false;
+            }
+            EnRefuerzo = true;
+            RefuerzoLlego = false;
+            if (velocidad > 0f)
+            {
+                VelocidadPropia = velocidad; // T-714: la ruta se eligió para que llegue en un tiempo, a esta velocidad
+                calculo = config.Crear(velocidad);
+            }
+            rutaRefuerzo.Clear();
+            for (int i = 1; i < camino.Count; i++)
+            {
+                rutaRefuerzo.Add(camino[i]);
+            }
+            eje = calles.Nodo(nodoSalida);
+            nodoAnterior = nodoSalida;
+            if (rutaRefuerzo.Count > 0)
+            {
+                nodoDestino = rutaRefuerzo[0];
+                rutaRefuerzo.RemoveAt(0);
+            }
+            else
+            {
+                nodoDestino = nodoSalida;
+            }
+            direccion = DireccionA(nodoDestino);
+            desvio = Derecha(direccion) * config.SeparacionCarril;
+            PegarAlSuelo();
+            transform.SetPositionAndRotation(Posicion(), Quaternion.LookRotation(direccion, Vector3.up));
+            gameObject.SetActive(true);
+            calculo.ReiniciarBloqueo();
+            return true;
+        }
+
+        private void EstacionarRefuerzo()
+        {
+            RefuerzoLlego = true;
+            Sonidos.ReproducirEn("VEH_PUERTA_ABRIR", transform.position);
+            AlLlegarRefuerzo?.Invoke(this);
         }
 
         private Vector3 Posicion() => new Vector3(eje.x + desvio.x, alturaSuelo + RaizABajo, eje.z + desvio.z);

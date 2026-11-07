@@ -83,6 +83,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             azar = new System.Random(341);
             testigos = gameObject.AddComponent<TestigosDelito>(); // T-661: sin testigos no hay calor
             testigos.Configurar(config);
+            gameObject.AddComponent<GestorRefuerzos>().Configurar(config); // T-714: los SKULLS llaman refuerzos en carro
             busqueda = new ReglaBusquedaPolicial(config.RadioBusqueda, config.SegundosParaEscapar);
             arresto = new ReglaArresto(config.DistanciaArresto, config.SegundosArresto, config.VelocidadArresto);
             zona = new ZonaBusqueda(busqueda);
