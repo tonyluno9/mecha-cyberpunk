@@ -62,7 +62,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float ZMuroCallejon = ZCentro - MedioAncho - FondoSurCallejon;
 
         private static readonly string[] RaicesDeAdorno = { "Barrio", "T501_Suburbios", "T512_LuzZonas", "T508_CallesLlenas", "AMB_Noche", "T509_Pulido", "S2t_Calles" };
-        private static readonly string[] NoTocar = { "Lugar_", "PuntosAparicion", "PuntosHistoria", "Peatones", "Persecucion", "/Calles", "Banqueta", "AmbienteSonoro", "Callejon" };
+        private static readonly string[] NoTocar = { "Lugar_", "PuntosAparicion", "PuntosHistoria", "Peatones", "Persecucion", "/Calles", "Banqueta", "AmbienteSonoro", "Callejon", "Puestos" };
 
         // Toma de K01: el jugador en medio de la calle mirando al poniente, la cámara 3.8 m atrás a la altura del hombro un poco alta.
         public static readonly Vector3 JugadorFoto = new Vector3(-64f, 0f, ZCentro - 0.2f);

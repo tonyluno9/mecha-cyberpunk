@@ -41,3 +41,10 @@ que tráfico, policía, peatones, misiones y el mapa lo sepan. Coordenadas del m
 - **Peatones**: las rutas de banqueta del contorno de cada manzana no cambian. Las calles nuevas no tienen peatones; si la sesión 1 quiere
   ponerles, los contornos nuevos son las cuadras de 14.75 × 20 m, 17.75 × 20 m, etc. (ver `ColocarS2cSuburbios.cs`).
 - **Mapa / minimapa**: conviene dibujar las dos calles nuevas (rectángulos x -114.25..-106.75, z -87..-7 y x -134..40, z -46.75..-39.25).
+
+## T-873: El Mercado (tianguis de la avenida, K02)
+- Los edificios greybox que daban al tianguis se cambiaron por casas de 2 pisos con locales del kit: Manzana_2 → 10 y 15; Manzana_5 → 47 y 52.
+  Las casas tienen su frente en z = 10 (norte) y z = -10 (sur), con esquinas a la calle de la casa (x = -37) y a la de x = 47 (x = 37).
+- Se quedan igual: el clandestino (Lugar_Clandestino), el bar (Lugar_Bar), el callejón del mercado de armas (PuestosCallejon) y todos los
+  puestos del tianguis. Sin focos colgando. Hay cables que cruzan la avenida de casa a casa (a ~6 m de alto) y charcos en el arroyo.
+- La avenida, sus banquetas y el tráfico no cambian.
