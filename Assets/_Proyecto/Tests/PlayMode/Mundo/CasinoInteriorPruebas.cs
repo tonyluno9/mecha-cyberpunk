@@ -210,21 +210,19 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [UnityTest]
-        public IEnumerator Casino_A12NoAbreYA22Abre()
+        public IEnumerator Casino_A12YA22Abre()
         {
+            // T-863 (Tony, 6-nov tarde): el casino VivaCoin está siempre abierto.
             yield return Preparar(EscenaLugares.HoraMediodia);
-            Assert.IsFalse(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "A las 12:00 el casino está cerrado");
+            Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "A las 12:00 el casino está abierto");
             yield return PresionarE();
-            Assert.AreEqual(ResultadoPuerta.CerradaPorHorario, camara.UltimoResultadoPuerta, "A las 12:00 la puerta no abre");
-            Assert.IsFalse(EscenaLugares.Puerta(IdLugar.Casino).EstaAbierta);
+            Assert.AreEqual(ResultadoPuerta.Abierta, camara.UltimoResultadoPuerta, "A las 12:00 la puerta abre");
+            Assert.IsTrue(EscenaLugares.Puerta(IdLugar.Casino).EstaAbierta);
 
             reloj.AvanzarHasta(EscenaLugares.HoraNoche);
             yield return null;
             yield return null;
             Assert.IsTrue(EscenaLugares.Lugar(IdLugar.Casino).EstaAbierto, "A las 22:00 el casino está abierto");
-            yield return PresionarE();
-            Assert.AreEqual(ResultadoPuerta.Abierta, camara.UltimoResultadoPuerta, "A las 22:00 la puerta abre");
-            Assert.IsTrue(EscenaLugares.Puerta(IdLugar.Casino).EstaAbierta);
         }
 
         [UnityTest]
