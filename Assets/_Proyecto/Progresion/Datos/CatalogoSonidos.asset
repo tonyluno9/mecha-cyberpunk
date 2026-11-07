@@ -84,6 +84,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 7b8a6c7b6b7a76a41ab6c73082aaa248, type: 3}
     - {fileID: 8300000, guid: a922d99fe0a7cec429bfb553f8740e83, type: 3}
     provisionales: []
+  - id: ARM_BALA_ROZA
+    finales: []
+    provisionales:
+    - {fileID: 8300000, guid: 4aaa419e966463149ac96b4d3c015432, type: 3}
   - id: ARM_BALA_ZUMBIDO
     finales:
     - {fileID: 8300000, guid: a9b30f1c90e6bcc4e901630d83fed0ee, type: 3}
@@ -709,6 +713,8 @@ MonoBehaviour:
     encendido: 0
   - id: ARM_BALA_IMPACTO_METAL
     encendido: 0
+  - id: ARM_BALA_ROZA
+    encendido: 1
   - id: ARM_BALA_ZUMBIDO
     encendido: 0
   - id: ARM_CAMBIAR
