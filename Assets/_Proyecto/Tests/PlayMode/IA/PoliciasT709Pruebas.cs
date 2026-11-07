@@ -200,10 +200,26 @@ namespace MechaCyberpunk.Tests
             Assert.Less(Vector3.Distance(cubierto.PuntoCubierta, patrulla.transform.position), 6f, "El punto de cubierta está junto a la patrulla");
             Assert.Greater(Vector3.Distance(cubierto.PuntoCubierta, jug), Vector3.Distance(patrulla.transform.position, jug) - 0.5f,
                 "Se esconde del lado contrario al jugador");
+            // T-711: cada policía va a una esquina distinta de la patrulla (no se encimen).
+            Time.timeScale = EscalaDeTiempo;
+            float limiteEsquinas = Time.time + 30f;
+            while (Time.time < limiteEsquinas && !policias.All(p => p.TieneCubierta && Vector3.Distance(p.transform.position, p.PuntoCubierta) < 0.8f))
+            {
+                yield return null;
+            }
+            Time.timeScale = 1f;
+            Debug.Log("[T-711] patrulla " + patrulla.transform.position + " fwd " + patrulla.transform.forward + " jugador " + jugador.transform.position + " puestos " + policias[0].PuntoCubierta + " / " + policias[1].PuntoCubierta + " cuerpos " + string.Join(";", patrulla.GetComponentsInChildren<Collider>().Select(c => c.bounds.ToString())));
+            Assert.IsTrue(policias.All(p => p.TieneCubierta), "Los dos tienen su puesto de cubierta");
+            Assert.GreaterOrEqual(Vector3.Distance(policias[0].PuntoCubierta, policias[1].PuntoCubierta), 1.8f, "Cada policía tiene su puesto: no es el mismo punto");
+            Assert.GreaterOrEqual(Vector3.Distance(policias[0].transform.position, policias[1].transform.position), 1.5f, "Y ya parados no están encimados");
+            Vector3 ejePatrulla = patrulla.transform.forward;
+            float a = Vector3.Dot(policias[0].PuntoCubierta - patrulla.transform.position, ejePatrulla);
+            float b = Vector3.Dot(policias[1].PuntoCubierta - patrulla.transform.position, ejePatrulla);
+            Debug.Log("[T-711] Puestos de los policías sobre el largo de la patrulla: " + a.ToString("F2") + " y " + b.ToString("F2"));
 
             if (Environment.GetEnvironmentVariable("CAPTURAR_S1") == "1")
             {
-                yield return Captura(patrulla, "s1c-T-709-policias.png");
+                yield return Captura(patrulla, "s1c-T-711-policias.png");
             }
         }
 
