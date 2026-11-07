@@ -115,6 +115,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 if (grupo != null)
                 {
                     grupo.SetActive(false);
+                    PandillaAPie pandilla = grupo.GetComponent<PandillaAPie>();
+                    if (pandilla != null)
+                    {
+                        pandilla.ModoMision = true; // T-713: salen todos a la vez, no reaparecen
+                    }
                 }
             }
             foreach (GameObject grupo in gruposNeon)
@@ -280,6 +285,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     }
                     ActualizarRespeto();
                     ITerritorio territorio = Registro<ITerritorio>.Actual;
+                    CompletarRespetoSiCayeronTodos(territorio);
                     if (territorio != null && territorio.JefeDisponible(zona))
                     {
                         Avisar(AvisoHistoria.JefeDisponible);
@@ -363,6 +369,30 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         {
             ultimaCaida = vencido.transform.position;
             hayCaida = true;
+        }
+
+        // T-713: si ya cayeron todos los SKULLS del Tianguis (en modo misión no reaparecen) y el respeto no llegó al umbral del jefe (alguno cayó fuera de la
+        // zona, o hay menos que 7), se completa: la misión no se puede trabar por falta de SKULLS.
+        private void CompletarRespetoSiCayeronTodos(ITerritorio territorio)
+        {
+            if (territorio == null || gruposTianguis.Length == 0)
+            {
+                return;
+            }
+            foreach (GameObject g in gruposTianguis)
+            {
+                PandillaAPie pandilla = g != null ? g.GetComponent<PandillaAPie>() : null;
+                if (pandilla == null || !pandilla.ModoMision || !pandilla.TodosVencidos)
+                {
+                    return;
+                }
+            }
+            Vector3 punto = PosicionTianguis();
+            int seguridad = 20;
+            while (!territorio.JefeDisponible(zona) && territorio.Dueno(zona) != IdPandilla.Jugador && seguridad-- > 0)
+            {
+                territorio.RegistrarVencido(punto, IdPandilla.Calaveras, false);
+            }
         }
 
         private void ActualizarRespeto()
