@@ -8,8 +8,7 @@ namespace MechaCyberpunk.Personaje.Jugador
 {
     /// <summary>
     /// T-622: el modelo del jugador sube, maneja y baja de un carro con los clips de Mixamo. T-656: al subir primero se acomoda en el punto
-    /// de la puerta más cercana (pegado al carro), luego juega Carro_Entrar y se desliza al asiento; sentado juega Carro_Manejar (visible por la ventana, sin cabeza para no estorbar la cámara
-    /// de primera persona); al bajar juega Carro_Salir del asiento a la puerta y de ahí al piso. Con H suena el claxon (Honking Horn en los brazos).
+    /// de la puerta más cercana (pegado al carro), luego juega Carro_Entrar y se desliza al asiento; sentado juega Carro_Manejar (visible por la ventana; la cabeza solo se esconde en primera persona); al bajar juega Carro_Salir del asiento a la puerta y de ahí al piso. Con H suena el claxon (Honking Horn en los brazos).
     /// Lo agrega JugadorAPie solo; no maneja el carro ni mueve la raíz del jugador (esa sigue al asiento).
     /// </summary>
     public class AnimacionCarro : MonoBehaviour
@@ -21,6 +20,12 @@ namespace MechaCyberpunk.Personaje.Jugador
             Dentro,
             Saliendo,
         }
+
+        // T-694: la cabeza del conductor queda a esta fracción de la ventana (0 = línea de la carrocería, 1 = caja más alta, que incluye rejillas y luces): el techo visible está cerca de 0.45.
+        private const float FraccionVentanaCabeza = 0.22f;
+        private const float MinimoCabezaSobreCinturon = 0.2f;
+        private const float MinimoCabezaBajoTecho = 0.25f;
+        private const float MaximaSubidaAsiento = 1f;
 
         // Cuánto cae la cadera sentada respecto del punto del asiento del carro (m) y cuánto se echa para atrás.
         private const float CaidaCadera = 0.2f;
@@ -37,7 +42,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private const int MaxImpactosPiso = 8;
 
         private PoseMoto poseMoto;
-        private IMontable montableMoto;
+        private IMontable montableActual;
         private bool modoMoto;
         private ApuntadoIK apuntado;
         private bool apuntadoPrevio;
@@ -94,7 +99,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return SubirMoto(puntosMoto, montable, posicionPrevia);
             }
+            montableActual = montable;
             asientoLocal = CalcularAsientoLocal();
+            asientoLocal.y += SubidaAlAsiento(montable.Asiento, asientoLocal);
             // La raíz del jugador saltará al asiento en LateUpdate: todo se mide respecto del asiento (y el carro lo lleva consigo).
             Transform asiento = montable.Asiento;
             inicioLocal = asiento.InverseTransformPoint(posicionPrevia);
@@ -145,7 +152,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 return false;
             }
             modoMoto = true;
-            montableMoto = montable;
+            montableActual = montable;
             Fase = FaseCarro.Dentro;
             return true;
         }
@@ -288,10 +295,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 raizVisual.localPosition = asientoLocal;
                 raizVisual.localRotation = Quaternion.identity;
-                if (cabeza != null)
-                {
-                    cabeza.localScale = Vector3.zero;
-                }
+                // T-694: la cabeza se ve por la ventana (tercera persona); solo se esconde si la cámara está metida en ella (primera persona).
+                OcultarCabezaSiLaCamaraEstaDentro();
             }
         }
 
@@ -370,6 +375,54 @@ namespace MechaCyberpunk.Personaje.Jugador
             return new Vector3(-cadera.x, -cadera.y - CaidaCadera, -cadera.z - RetrasoCadera);
         }
 
+        // T-694: cuánto hay que subir al modelo sentado (m) para que su cabeza quede a media ventana del carro: por encima de la línea de la carrocería
+        // y por debajo del techo. La línea sale de la caja "Carroceria" y el techo de la más alta de las cajas de choque del carro.
+        private float SubidaAlAsiento(Transform asiento, Vector3 asientoLocalModelo)
+        {
+            Transform carro = asiento.GetComponentInParent<Rigidbody>() != null ? asiento.GetComponentInParent<Rigidbody>().transform : asiento.parent;
+            Transform hueso = animador.GetBoneTransform(HumanBodyBones.Head);
+            AnimationClip manejar = BuscarClip("Carro_Manejar_Bucle");
+            if (carro == null || hueso == null || manejar == null)
+            {
+                return 0f;
+            }
+            float cinturon = float.NaN;
+            float techo = float.NegativeInfinity;
+            foreach (BoxCollider caja in carro.GetComponentsInChildren<BoxCollider>(true))
+            {
+                if (caja.isTrigger)
+                {
+                    continue;
+                }
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector3 esquina = caja.center + new Vector3(0f, (i == 0 ? 0.5f : -0.5f) * caja.size.y, 0f);
+                    float y = carro.InverseTransformPoint(caja.transform.TransformPoint(esquina)).y;
+                    techo = Mathf.Max(techo, y);
+                    if (caja.name == "Carroceria" && i == 0)
+                    {
+                        cinturon = y;
+                    }
+                }
+            }
+            if (float.IsNaN(cinturon) || techo <= cinturon)
+            {
+                return 0f;
+            }
+            // Altura de la cabeza en el clip, con el modelo en el origen.
+            Vector3 respaldo = raizVisual.localPosition;
+            Quaternion giro = raizVisual.localRotation;
+            raizVisual.localPosition = Vector3.zero;
+            raizVisual.localRotation = Quaternion.identity;
+            manejar.SampleAnimation(animador.gameObject, 0f);
+            float cabezaSobreModelo = transform.InverseTransformPoint(hueso.position).y;
+            raizVisual.localPosition = respaldo;
+            raizVisual.localRotation = giro;
+            float cabezaAhora = carro.InverseTransformPoint(asiento.position).y + asientoLocalModelo.y + cabezaSobreModelo;
+            float cabezaDeseada = Mathf.Min(Mathf.Max(Mathf.Lerp(cinturon, techo, FraccionVentanaCabeza), cinturon + MinimoCabezaSobreCinturon), techo - MinimoCabezaBajoTecho);
+            return Mathf.Clamp(cabezaDeseada - cabezaAhora, 0f, MaximaSubidaAsiento);
+        }
+
         private AnimationClip BuscarClip(string nombre)
         {
             foreach (AnimationClip c in animador.runtimeAnimatorController.animationClips)
@@ -394,7 +447,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
-            Camera camara = montableMoto != null ? montableMoto.Camara : null;
+            Camera camara = montableActual != null ? montableActual.Camara : null;
             bool dentro = camara != null && camara.enabled && Vector3.Distance(camara.transform.position, cabeza.position) < DistanciaOcultarCabeza;
             cabeza.localScale = dentro ? Vector3.zero : Vector3.one;
         }
