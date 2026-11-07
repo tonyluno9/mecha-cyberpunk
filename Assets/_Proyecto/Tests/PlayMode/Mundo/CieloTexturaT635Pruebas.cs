@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return Preparar(EscenaLugares.HoraNoche);
             Assert.IsNotNull(ciclo.CieloTextura, "Se crearon las capas del cielo");
             Assert.IsTrue(ciclo.CieloTextura.Activo);
-            Assert.Greater(ciclo.CieloTextura.ColorEstrellas.a, 0.5f, "De noche se ven las estrellas");
+            Assert.Greater(ciclo.CieloTextura.ColorEstrellas.a, 0.1f, "De noche se ven las estrellas (pocas: T-880, cielo liso)");
             Color nubes = ciclo.CieloTextura.ColorNubes;
             Assert.Greater(nubes.r, nubes.g, "Nubes con el brillo de la ciudad");
             Assert.AreEqual(AmbientMode.Trilight, RenderSettings.ambientMode, "Ambiente por gradiente");

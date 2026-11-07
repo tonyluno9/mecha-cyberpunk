@@ -20,6 +20,6 @@ MonoBehaviour:
   colorSalpicadura: {r: 0.8, g: 0.88, b: 1, a: 0.7}
   maximoSalpicaduras: 600
   alturaSalpicadura: 0.04
-  opacidadNubes: 0.85
+  opacidadNubes: 0
   velocidadNubes: {x: 0.004, y: 0.0015}
   radioDomo: 700
