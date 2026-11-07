@@ -43,10 +43,15 @@ namespace MechaCyberpunk.UI.Hud
         {
             switch (accion)
             {
+                case AccionTutorial.Correr:
+                case AccionTutorial.Golpear:
                 case AccionTutorial.Apuntar:
                 case AccionTutorial.SubirAlCarro:
                 case AccionTutorial.Mapa:
+                case AccionTutorial.Consumibles:
                     return AccionTutorial.Moverse;
+                case AccionTutorial.Agacharse:
+                    return AccionTutorial.Correr;
                 case AccionTutorial.Disparar:
                     return AccionTutorial.Apuntar;
                 case AccionTutorial.Recargar:
@@ -55,29 +60,82 @@ namespace MechaCyberpunk.UI.Hud
                 case AccionTutorial.Rodar:
                     return AccionTutorial.Cubrirse;
                 case AccionTutorial.Robar:
+                case AccionTutorial.Moto:
                     return AccionTutorial.SubirAlCarro;
                 case AccionTutorial.Misiones:
                     return AccionTutorial.Mapa;
+                case AccionTutorial.Escudo:
+                    return AccionTutorial.Consumibles;
                 default:
                     return null;
             }
         }
 
-        /// <summary>El texto del aviso, con la tecla de la acción.</summary>
-        public static string Texto(AccionTutorial accion)
+        /// <summary>Los nombres de las teclas que usan los avisos (T-718): <see cref="Texto(AccionTutorial, Func{string, string})"/> los pide con estos nombres.</summary>
+        public const string TeclaMover = "Mover";
+        public const string TeclaCorrer = "Correr";
+        public const string TeclaSaltar = "Saltar";
+        public const string TeclaAgacharse = "Agacharse";
+        public const string TeclaCubrirse = "Cubrirse";
+        public const string TeclaGolpe = "Atacar";
+        public const string TeclaApuntar = "Apuntar";
+        public const string TeclaRecargar = "Recargar";
+        public const string TeclaInteractuar = "Interactuar";
+        public const string TeclaMapa = "Mapa";
+        public const string TeclaTelefono = "Telefono";
+        public const string TeclaConsumibleSiguiente = "ConsumibleSiguiente";
+        public const string TeclaConsumibleUsar = "ConsumibleUsar";
+
+        /// <summary>Las teclas de siempre, para cuando no hay Input System que preguntar (pruebas y respaldo).</summary>
+        public static string TeclaPorOmision(string nombre)
         {
+            switch (nombre)
+            {
+                case TeclaMover: return "W A S D";
+                case TeclaCorrer: return "Shift";
+                case TeclaSaltar: return "Espacio";
+                case TeclaAgacharse: return "Ctrl";
+                case TeclaCubrirse: return "Q";
+                case TeclaGolpe: return "Clic";
+                case TeclaApuntar: return "Clic der.";
+                case TeclaRecargar: return "R";
+                case TeclaInteractuar: return "E";
+                case TeclaMapa: return "M";
+                case TeclaTelefono: return "T";
+                case TeclaConsumibleSiguiente: return "Tab";
+                case TeclaConsumibleUsar: return "F";
+                default: return nombre;
+            }
+        }
+
+        /// <summary>El texto del aviso con las teclas de siempre.</summary>
+        public static string Texto(AccionTutorial accion) => Texto(accion, TeclaPorOmision);
+
+        /// <summary>
+        /// El texto del aviso. Las teclas no están escritas aquí: salen de <paramref name="tecla"/>, que contesta con la tecla real (Input System) de cada nombre
+        /// (<see cref="TeclaMover"/>, <see cref="TeclaCorrer"/>...). El jugador que cambió una tecla ve la suya.
+        /// </summary>
+        public static string Texto(AccionTutorial accion, Func<string, string> tecla)
+        {
+            Func<string, string> k = nombre => (tecla != null ? tecla(nombre) : TeclaPorOmision(nombre)).ToUpperInvariant();
             switch (accion)
             {
-                case AccionTutorial.Moverse: return "W A S D TE MUEVEN · MAYÚS CORRE · ESPACIO SALTA";
-                case AccionTutorial.Apuntar: return "CLIC DERECHO APUNTA";
-                case AccionTutorial.Disparar: return "CLIC IZQUIERDO DISPARA";
-                case AccionTutorial.Recargar: return "R RECARGA EL ARMA";
-                case AccionTutorial.Cubrirse: return "Q TE CUBRE DETRÁS DE UNA CAJA O MURO";
-                case AccionTutorial.Rodar: return "AGACHADO (CTRL) + ESPACIO RUEDA PARA ESQUIVAR";
-                case AccionTutorial.SubirAlCarro: return "E TE SUBE AL CARRO";
-                case AccionTutorial.Robar: return "ROBA EL CARRO MARCADO CON E Y LLÉVALO A SALVO";
-                case AccionTutorial.Mapa: return "M ABRE EL MAPA";
-                case AccionTutorial.Misiones: return "T ABRE EL TELÉFONO Y TUS MISIONES";
+                case AccionTutorial.Moverse: return k(TeclaMover) + " TE MUEVEN · " + k(TeclaSaltar) + " SALTA";
+                case AccionTutorial.Correr: return "MANTÉN " + k(TeclaCorrer) + " PARA CORRER";
+                case AccionTutorial.Agacharse: return k(TeclaAgacharse) + " TE AGACHA · " + k(TeclaAgacharse) + " + " + k(TeclaSaltar) + " RUEDA";
+                case AccionTutorial.Golpear: return k(TeclaGolpe) + " GOLPEA";
+                case AccionTutorial.Apuntar: return k(TeclaApuntar) + " APUNTA";
+                case AccionTutorial.Disparar: return k(TeclaGolpe) + " DISPARA";
+                case AccionTutorial.Recargar: return k(TeclaRecargar) + " RECARGA EL ARMA";
+                case AccionTutorial.Cubrirse: return k(TeclaCubrirse) + " TE CUBRE DETRÁS DE UNA CAJA O MURO";
+                case AccionTutorial.Rodar: return "AGACHADO (" + k(TeclaAgacharse) + ") + " + k(TeclaSaltar) + " RUEDA PARA ESQUIVAR";
+                case AccionTutorial.SubirAlCarro: return k(TeclaInteractuar) + " TE SUBE AL CARRO";
+                case AccionTutorial.Robar: return "ROBA EL CARRO MARCADO CON " + k(TeclaInteractuar) + " Y LLÉVALO A SALVO";
+                case AccionTutorial.Moto: return k(TeclaInteractuar) + " TE SUBE A LA MOTO · " + k(TeclaMover) + " ACELERA, FRENA Y GIRA";
+                case AccionTutorial.Mapa: return k(TeclaMapa) + " ABRE EL MAPA";
+                case AccionTutorial.Misiones: return k(TeclaTelefono) + " ABRE EL TELÉFONO Y TUS MISIONES";
+                case AccionTutorial.Consumibles: return k(TeclaConsumibleSiguiente) + " ELIGE UN OBJETO · " + k(TeclaConsumibleUsar) + " LO USA";
+                case AccionTutorial.Escudo: return "TU ESCUDO ABSORBE BALAS Y SE RECARGA SOLO";
                 default: return string.Empty;
             }
         }

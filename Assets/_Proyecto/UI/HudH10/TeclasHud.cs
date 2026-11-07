@@ -63,6 +63,34 @@ namespace MechaCyberpunk.UI.Hud
             return string.IsNullOrEmpty(general) ? respaldo : Nombre(general);
         }
 
+        /// <summary>
+        /// T-718: las cuatro teclas de una acción de movimiento compuesta (arriba, izquierda, abajo, derecha), cada una con su nombre visible: "W A S D". Si la acción
+        /// no existe o no tiene teclas devuelve <paramref name="respaldo"/>.
+        /// </summary>
+        public static string TextoMover(InputAction accion, string respaldo = "")
+        {
+            if (accion == null)
+            {
+                return respaldo;
+            }
+            string[] orden = { "up", "left", "down", "right" };
+            System.Collections.Generic.List<string> partes = new System.Collections.Generic.List<string>();
+            foreach (string parte in orden)
+            {
+                for (int i = 0; i < accion.bindings.Count; i++)
+                {
+                    InputBinding binding = accion.bindings[i];
+                    if (binding.isPartOfComposite && string.Equals(binding.name, parte, System.StringComparison.OrdinalIgnoreCase)
+                        && !string.IsNullOrEmpty(binding.path) && binding.path.StartsWith("<Keyboard>", System.StringComparison.Ordinal))
+                    {
+                        partes.Add(Nombre(accion.GetBindingDisplayString(i)));
+                        break;
+                    }
+                }
+            }
+            return partes.Count > 0 ? string.Join(" ", partes) : respaldo;
+        }
+
         /// <summary>La acción <paramref name="nombre"/> del mapa "APie" que cargó algún objeto de la escena (los componentes del jugador la referencian), o null.</summary>
         public static InputAction Buscar(string nombre)
         {

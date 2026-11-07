@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public const string Clave = "historia_pandillas";
         public const string TextoSalir = "SAL A LA CALLE";
         public const string TextoDefender = "DEFIENDE A DOÑA LUPE";
-        public const string TextoPistola = "RECOGE LA PISTOLA (E)";
+        public const string TextoPistola = "RECOGE LA PISTOLA"; // T-718: sin la tecla escrita: el HUD muestra la real en el aviso de interacción
         public const string TextoChato = "HABLA CON EL CHATO";
         public const string TextoJefe = "VENCE AL JEFE DE LOS SKULLS";
         public const string TextoDoc = "VE CON EL DOC A I+D+I";
@@ -588,7 +588,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     FijarObjetivo(TextoPistola, arma != null, arma != null ? arma.transform.position : default);
                     break;
                 case PasoHistoria.Chato:
-                    pantalla.MostrarAyuda("CLIC DERECHO APUNTA · CLIC IZQUIERDO DISPARA", 8f);
+                    pantalla.MostrarAyuda(AyudaApuntarYDisparar(), 8f);
                     FijarObjetivo(TextoChato, chato != null, chato != null ? chato.Posicion : default);
                     break;
                 case PasoHistoria.Doc:
@@ -707,6 +707,14 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         }
 
         // T-716: el destino sale de la escena; si falta, el objetivo apunta al lugar de Core de respaldo, nunca a (0, 0, 0).
+        /// <summary>T-718: "CLIC DER. APUNTA · CLIC DISPARA" con las teclas reales del Input System (si el jugador las cambió, ve las suyas).</summary>
+        public static string AyudaApuntarYDisparar()
+        {
+            string apuntar = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Apuntar"), "Clic der.");
+            string disparar = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Atacar"), "Clic");
+            return (apuntar + " APUNTA · " + disparar + " DISPARA").ToUpperInvariant();
+        }
+
         private static void FijarObjetivo(string texto, bool hayPosicion, Vector3 posicion)
         {
             (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(hayPosicion

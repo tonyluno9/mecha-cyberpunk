@@ -27,7 +27,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsFalse(regla.HayAviso, "Hay una pausa entre avisos");
             regla.Avanzar(0.6f, Todo);
             regla.Avanzar(0.1f, Todo);
-            Assert.AreEqual(AccionTutorial.Apuntar, regla.Aviso);
+            Assert.AreEqual(AccionTutorial.Correr, regla.Aviso, "T-718: tras moverse se ofrece correr");
         }
 
         [Test]

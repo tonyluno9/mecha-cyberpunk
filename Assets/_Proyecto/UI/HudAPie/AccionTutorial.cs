@@ -6,6 +6,9 @@ namespace MechaCyberpunk.UI.Hud
     public enum AccionTutorial
     {
         Moverse,
+        Correr,
+        Agacharse,
+        Golpear,
         Apuntar,
         Disparar,
         Recargar,
@@ -13,7 +16,10 @@ namespace MechaCyberpunk.UI.Hud
         Rodar,
         SubirAlCarro,
         Robar,
+        Moto,
         Mapa,
-        Misiones
+        Misiones,
+        Consumibles,
+        Escudo
     }
 }
