@@ -50,9 +50,33 @@ namespace MechaCyberpunk.Personaje.Vida
                 escudo = gameObject.AddComponent<EscudoJugador>();
             }
             escudo.Iniciar(datos.EscudoMaximo, datos.EscudoRecargaPorSegundo, datos.EscudoSegundosParaRecargar);
+            // T-691: el fuego del jugador, también creado aquí.
+            quemadura = GetComponent<QuemaduraJugador>();
+            if (quemadura == null)
+            {
+                quemadura = gameObject.AddComponent<QuemaduraJugador>();
+            }
+            quemadura.Iniciar(this);
+        }
+
+        public QuemaduraJugador Quemadura => quemadura;
+
+        /// <summary>Daño del fuego (T-691): lo absorbe el escudo primero, como cualquier daño; devuelve lo que bajó la vida. Sin sonido de golpe.</summary>
+        public float AplicarQuemadura(float cantidad)
+        {
+            if (modelo == null || modelo.EstaKO || cantidad <= 0f || Time.time < invulnerableHasta)
+            {
+                return 0f;
+            }
+            if (escudo != null)
+            {
+                cantidad = escudo.Absorber(cantidad);
+            }
+            return cantidad > 0f ? modelo.Aplicar(cantidad) : 0f;
         }
 
         private EscudoJugador escudo;
+        private QuemaduraJugador quemadura;
         private float invulnerableHasta = -1f;
 
         public EscudoJugador Escudo => escudo;
@@ -99,6 +123,7 @@ namespace MechaCyberpunk.Personaje.Vida
             }
             modelo.Restaurar();
             escudo?.Restaurar();
+            quemadura?.Apagar();
             invulnerableHasta = -1f;
             controlador.ActivarControl(true);
         }
@@ -141,6 +166,10 @@ namespace MechaCyberpunk.Personaje.Vida
                 cantidad = escudo.Absorber(cantidad);
             }
             float aplicado = modelo.Aplicar(cantidad);
+            if (info.Tipo == TipoDanio.Explosion && quemadura != null && !modelo.EstaKO)
+            {
+                quemadura.Prender(info.Punto); // T-691: una explosión te prende fuego
+            }
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             EventosPelea.PublicarImpacto(null, info, resultado);
             Sonidos.ReproducirEn(VozJugador.Id("JUG_DANIO"), transform.position);
