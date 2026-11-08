@@ -10,6 +10,7 @@ namespace MechaCyberpunk.Mundo.Lugares
     /// T-804: con <see cref="ConBisagra"/> gira sobre su orilla (la bisagra) los grados de <see cref="ConfigPuertas.GradosBisagra"/>, hacia el lado
     /// contrario de quien abre (el jugador registrado o el punto de <see cref="AbrirDesde"/>), como una puerta de casa.
     /// Se cierra sola tras unos segundos si nadie está en el umbral (la caja del umbral, medida sin trigger para no estorbar a los rayos).
+    /// T-884: con <see cref="Corrediza"/> se desliza de lado (<see cref="DesplazamientoCorredizo"/>), como la puerta de cristal de una tienda.
     /// </summary>
     public class HojaPuerta : MonoBehaviour
     {
@@ -27,6 +28,10 @@ namespace MechaCyberpunk.Mundo.Lugares
         [SerializeField] private bool conBisagra;
         [Tooltip("T-804: punto de la bisagra en el espacio local de la hoja, antes de su escala (para un cubo, (0.5, 0, 0) es su orilla +X).")]
         [SerializeField] private Vector3 bisagraLocal = new Vector3(0.5f, 0f, 0f);
+        [Tooltip("T-884: se desliza de lado (puerta de cristal de tienda) en lugar de subir al dintel.")]
+        [SerializeField] private bool corrediza;
+        [Tooltip("T-884: hacia dónde y cuánto se desliza al abrir, en el espacio del padre (m).")]
+        [SerializeField] private Vector3 desplazamientoCorredizo = new Vector3(0f, 0f, 2.5f);
 
         private readonly Collider[] ocupantes = new Collider[MaximoOcupantes];
         private Vector3 posicionCerrada;
@@ -46,6 +51,10 @@ namespace MechaCyberpunk.Mundo.Lugares
         /// <summary>Cuántos cuerpos (con CharacterController o Rigidbody) están ahora en el umbral, sin usar un trigger para no estorbar a los rayos de otros.</summary>
         public int OcupantesEnUmbral => ContarOcupantes();
 
+        /// <summary>T-884: true si la hoja se desliza de lado.</summary>
+        public bool Corrediza => corrediza;
+        /// <summary>T-884: lo que se desliza al abrir del todo, en el espacio del padre (m).</summary>
+        public Vector3 DesplazamientoCorredizo => desplazamientoCorredizo;
         /// <summary>T-804: true si la hoja gira sobre una bisagra.</summary>
         public bool ConBisagra => conBisagra;
 
@@ -135,6 +144,10 @@ namespace MechaCyberpunk.Mundo.Lugares
                 Quaternion giro = Quaternion.AngleAxis(AnguloActual, Vector3.up);
                 transform.localPosition = bisagraPadre + giro * (posicionCerrada - bisagraPadre);
                 transform.localRotation = giro * rotacionCerrada;
+            }
+            else if (corrediza)
+            {
+                transform.localPosition = posicionCerrada + desplazamientoCorredizo * Suavizar(progreso);
             }
             else
             {
