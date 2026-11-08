@@ -195,6 +195,7 @@ namespace MechaCyberpunk.UI.MenuPausa
             {
                 Armar();
             }
+            KitUI.VestirTurquesa(contenido.transform); // T-897: también la pausa ya guardada en el prefab
             continuar.AlPulsar.AddListener(Cerrar);
             guardar.AlPulsar.AddListener(() => AbrirRanuras(ModoRanuras.Guardar, guardar));
             cargar.AlPulsar.AddListener(() => AbrirRanuras(ModoRanuras.Cargar, cargar));

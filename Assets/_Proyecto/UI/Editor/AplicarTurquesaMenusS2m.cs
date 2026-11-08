@@ -11,6 +11,7 @@ namespace MechaCyberpunk.UI.Editor
     public static class AplicarTurquesaMenusS2m
     {
         private const string RutaConfigArmas = "Assets/_Proyecto/UI/Datos/ConfigMenuArmas_Base.asset";
+        private const string RutaConfigTienda = "Assets/_Proyecto/UI/Datos/ConfigPantallaTienda_Base.asset";
         private const string RutaConfigClinica = "Assets/_Proyecto/UI/Datos/ConfigPantallaClinica_Base.asset";
         private static readonly Color EspacioTurquesa = new Color(0.55f, 1f, 0.92f, 1f);
         private static readonly Color FondoTurquesa = new Color(0.008f, 0.05f, 0.06f, 1f);
@@ -30,6 +31,12 @@ namespace MechaCyberpunk.UI.Editor
             so.FindProperty("colorFondoMenu").colorValue = FondoTurquesa;
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(clinica);
+
+            ConfigPantallaTienda tienda = AssetDatabase.LoadAssetAtPath<ConfigPantallaTienda>(RutaConfigTienda);
+            SerializedObject soTienda = new SerializedObject(tienda);
+            soTienda.FindProperty("colorElegido").colorValue = EspacioTurquesa;
+            soTienda.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(tienda);
             AssetDatabase.SaveAssets();
         }
     }

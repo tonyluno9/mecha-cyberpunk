@@ -129,6 +129,7 @@ namespace MechaCyberpunk.UI.Tiendas
             indice = 0;
 
             KitUI.VestirPantalla(fondo, config.ColorFondo);
+            KitUI.VestirTurquesa(fondo.canvas.transform);
             Preparar(textoTitulo, string.Format(config.FormatoTitulo, tienda.Nombre.ToUpperInvariant()), config.ColorElegido, config.TamanoTitulo);
             Preparar(textoAviso, string.Empty, config.ColorAviso, config.TamanoTexto);
             textoAviso.gameObject.SetActive(false);

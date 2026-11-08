@@ -14,6 +14,8 @@ namespace MechaCyberpunk.UI.Kit
     /// </summary>
     public static class KitUI
     {
+        private const string NombreMarcoH10 = "MarcoH10";
+        private static readonly Color FondoPanelH10 = new Color(0.01f, 0.03f, 0.05f, 0.55f);
         private const float AlfaLineaPanelH10 = 0.55f;
         private const float GrosorLineaPanelH10 = 1.5f;
         private const float LargoEscuadraH10 = 46f;
@@ -140,15 +142,60 @@ namespace MechaCyberpunk.UI.Kit
         /// </summary>
         public static Image CrearPanelH10(Transform padre, string nombre, Color color)
         {
-            Image panel = CrearImagen(padre, nombre, new Color(0.01f, 0.03f, 0.05f, 0.55f));
+            Image panel = CrearImagen(padre, nombre, FondoPanelH10);
             panel.raycastTarget = false;
+            PonerMarcoH10(panel, color);
+            return panel;
+        }
+
+        /// <summary>
+        /// T-897: pasa una pantalla ya armada al estilo turquesa: los paneles del marco UI01 se vuelven paneles H10, los botones usan el acento
+        /// turquesa y lo naranja de los textos pasa a turquesa. Se puede llamar cada vez que se abre.
+        /// </summary>
+        public static void VestirTurquesa(Transform raiz)
+        {
+            Color turquesa = Estilo.Turquesa;
+            Sprite marco = PiezasUI.Actual != null ? PiezasUI.Actual.MarcoPanel : null;
+            foreach (Image imagen in raiz.GetComponentsInChildren<Image>(true))
+            {
+                if (marco != null && imagen.sprite == marco)
+                {
+                    imagen.sprite = null;
+                    imagen.type = Image.Type.Simple;
+                    imagen.color = new Color(FondoPanelH10.r, FondoPanelH10.g, FondoPanelH10.b, Mathf.Max(FondoPanelH10.a, imagen.color.a));
+                    PonerMarcoH10(imagen, turquesa);
+                }
+            }
+            foreach (BotonCyberfix boton in raiz.GetComponentsInChildren<BotonCyberfix>(true))
+            {
+                boton.UsarAcento(turquesa);
+            }
+            foreach (Text texto in raiz.GetComponentsInChildren<Text>(true))
+            {
+                if (texto.color == Estilo.Naranja)
+                {
+                    texto.color = turquesa;
+                }
+            }
+        }
+
+        private static void PonerMarcoH10(Image panel, Color color)
+        {
+            if (panel.transform.Find(NombreMarcoH10) != null)
+            {
+                return;
+            }
+            RectTransform marco = new GameObject(NombreMarcoH10, typeof(RectTransform)).GetComponent<RectTransform>();
+            marco.SetParent(panel.transform, false);
+            Estirar(marco);
+            marco.SetAsFirstSibling();
             Color linea = new Color(color.r, color.g, color.b, AlfaLineaPanelH10);
             Vector2[] anclas = { new Vector2(0.5f, 1f), new Vector2(0.5f, 0f), new Vector2(0f, 0.5f), new Vector2(1f, 0.5f) };
             for (int i = 0; i < anclas.Length; i++)
             {
                 bool horizontal = i < 2;
                 Vector2 ancla = anclas[i];
-                RectTransform r = CrearImagen(panel.transform, "Linea", linea).rectTransform;
+                RectTransform r = CrearImagen(marco, "Linea", linea).rectTransform;
                 r.anchorMin = horizontal ? new Vector2(0f, ancla.y) : new Vector2(ancla.x, 0f);
                 r.anchorMax = horizontal ? new Vector2(1f, ancla.y) : new Vector2(ancla.x, 1f);
                 r.pivot = ancla;
@@ -157,10 +204,9 @@ namespace MechaCyberpunk.UI.Kit
             }
             foreach (Vector2 e in new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f) })
             {
-                Colocar(CrearImagen(panel.transform, "Escuadra", color).rectTransform, e, Vector2.zero, new Vector2(LargoEscuadraH10, GrosorEscuadraH10));
-                Colocar(CrearImagen(panel.transform, "Escuadra", color).rectTransform, e, Vector2.zero, new Vector2(GrosorEscuadraH10, LargoEscuadraH10));
+                Colocar(CrearImagen(marco, "Escuadra", color).rectTransform, e, Vector2.zero, new Vector2(LargoEscuadraH10, GrosorEscuadraH10));
+                Colocar(CrearImagen(marco, "Escuadra", color).rectTransform, e, Vector2.zero, new Vector2(GrosorEscuadraH10, LargoEscuadraH10));
             }
-            return panel;
         }
 
         /// <summary>
