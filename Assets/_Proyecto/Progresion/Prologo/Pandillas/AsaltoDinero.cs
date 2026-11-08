@@ -12,22 +12,27 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 {
     /// <summary>
-    /// T-717: la historia del dinero. Al salir de casa por primera vez hay una cinemática corta: un asaltante (SKULL) te quita todo el dinero, corre a su carro
-    /// (un carro del pool del tráfico, por el punto de historia <c>Historia_Asalto</c> que pone <c>AsaltoMundo</c> de Trafico) y huye. Sigues el carro con el objetivo y el
-    /// marcador moviéndose con él. Si le ponchas una llanta (disparo a las ruedas o choque), llega al final de su ruta o se atora, el carro se detiene: el asaltante baja
-    /// y pelea. Al vencerlo, el dinero vuelve a tu cartera. Enter salta la cinemática (el robo y la huida pasan igual). Nunca deja la historia trabada: sin carro o sin
-    /// tráfico en la escena, el asalto se cancela, el dinero vuelve y la historia sigue. Lo mueve <see cref="DirectorPandillas"/>; las reglas puras están en <see cref="ReglaAsalto"/>.
+    /// T-728 (rehecho sobre T-717): la historia del dinero. Al salir de casa por primera vez hay una cinemática corta: un asaltante (SKULL) asalta a una persona de afuera
+    /// (NO a ti: no te quitan dinero), corre a su carro (un carro del pool del tráfico, por el punto de historia <c>Historia_Asalto</c> que pone <c>AsaltoMundo</c> de Trafico) y
+    /// huye. Tú quedas quieto durante la cinemática. Después el objetivo es "RÓBATE UN CARRO" y, ya en uno, "PERSÍGUELOS" (el marcador se mueve con el carro). Si le ponchas una
+    /// llanta (disparo a las ruedas o choque), llega al final de su ruta o se atora, el carro se detiene: el asaltante baja y pelea. Al vencerlo la víctima te da una parte de lo
+    /// robado. Enter salta la cinemática. Nunca deja la historia trabada: sin carro o sin tráfico en la escena, el asalto se cancela y la historia sigue.
+    /// Lo mueve <see cref="DirectorPandillas"/>; las reglas puras están en <see cref="ReglaAsalto"/>.
     /// </summary>
     public class AsaltoDinero : MonoBehaviour
     {
-        public const string TextoPerseguir = "PERSIGUE AL ASALTANTE";
-        public const string TextoRecuperar = "RECUPERA TU DINERO";
-        public const string PrefijoRobo = "TE ROBARON ";
-        public const string PrefijoRecuperado = "RECUPERASTE ";
-        public const string SubtituloRobo = "—¡La lana! ¡Toda, mijo!";
+        public const string TextoPerseguir = "PERSÍGUELOS";
+        public const string TextoRobarCarro = "RÓBATE UN CARRO";
+        public const string TextoRecuperar = "ATRAPA AL ASALTANTE";
+        public const string PrefijoRobo = "ASALTAN A UNA PERSONA: ";
+        public const string PrefijoRecuperado = "LA VÍCTIMA TE DA ";
+        public const string SubtituloRobo = "—¡La lana! ¡Toda, mija!";
         public const string SubtituloHuida = "—¡Gracias por la lana!";
         public const string TeclaSaltar = "ENTER: SALTAR";
         public const string NombreAsaltante = "Asaltante";
+        public const string NombreVictima = "VictimaAsalto";
+        public const string RecursoVictima = "VictimaAsalto";
+        public const string IdEscena = "Historia_Asalto_Escena";
         public const string RecursoAsaltante = "SkullRefuerzo";
         public const int OrdenCanvas = 30;
 
@@ -48,6 +53,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private PantallaHistoriaPandillas pantalla;
         private GameObject prefabAsaltante;
         private GameObject asaltante;
+        private GameObject victima;
+        private PuntoEscena puntoEscena;
         private PandilleroAPie pandillero;
         private Camera camaraCinematica;
         private Canvas canvasBarras;
@@ -61,6 +68,13 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public int DineroRobado => regla.DineroRobado;
         public bool DineroEnManosDelLadron => regla.DineroEnManosDelLadron;
         public GameObject Asaltante => asaltante;
+
+        /// <summary>La persona de afuera a la que asaltan (null fuera del asalto).</summary>
+        public GameObject Victima => victima;
+
+        /// <summary>El objetivo que toca ahora según la fase y si vas en un vehículo (para el HUD y las pruebas).</summary>
+        public string ObjetivoActual => ReglaAsalto.TextoObjetivo(regla.Fase, JugadorEnVehiculo());
+
         public bool CinematicaVisible => canvasBarras != null && canvasBarras.gameObject.activeSelf;
 
         /// <summary>Avisa una sola vez cuando el asalto terminó (dinero recuperado, o cancelado por falta de carro): la historia sigue.</summary>
@@ -77,10 +91,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         // ---------- Arranque y cancelación ----------
 
-        /// <summary>Empieza el asalto desde cero. <paramref name="reponer"/> es dinero que se quitó en una partida guardada a medio asalto: vuelve a la cartera antes de empezar.</summary>
+        /// <summary>Empieza el asalto desde cero. <paramref name="reponer"/> es dinero que un guardado viejo (T-717) le había quitado al jugador a medio asalto: vuelve a la cartera.</summary>
         public void Iniciar(int reponer = 0)
         {
-            reponer += regla.Cancelar(); // si ya había un asalto a medias, el dinero que tenía el ladrón vuelve antes de empezar de nuevo
+            regla.Cancelar();
             Limpiar();
             ICartera cartera = Registro<ICartera>.Actual;
             if (reponer > 0 && cartera != null)
@@ -92,7 +106,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             if (jugador == null || jugador.Raiz == null || punto == null)
             {
                 Debug.LogWarning("[Progresion] AsaltoDinero: falta " + (punto == null ? "el carro del asaltante (Trafico)" : "el jugador") + "; no hay asalto y la historia sigue.", this);
-                regla.Iniciar(0);
+                regla.Iniciar();
                 Terminar();
                 return;
             }
@@ -103,30 +117,26 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             if (prefabAsaltante == null)
             {
                 Debug.LogWarning("[Progresion] AsaltoDinero: falta el prefab " + RecursoAsaltante + "; no hay asalto y la historia sigue.", this);
-                regla.Iniciar(0);
+                regla.Iniciar();
                 Terminar();
                 return;
             }
-            regla.Iniciar(cartera != null ? cartera.Dinero : 0);
+            regla.Iniciar();
             controlador = jugador.Raiz.GetComponentInChildren<ControladorAPie>();
-            punto.Activar(true); // el carro sale hacia ti
-            PonerAsaltante(jugador);
-            PonerObjetivo(asaltante.transform.position);
+            PonerEscena(jugador);
+            punto.Activar(true); // el carro sale hacia donde asaltan a la víctima
+            PonerObjetivo(PosicionObjetivoPersecucion(jugador)); // "RÓBATE UN CARRO" desde el principio (el HUD sigue oculto durante la cinemática)
             cinematica = StartCoroutine(Cinematica(jugador, punto));
         }
 
-        /// <summary>Quita el asalto del mundo (otro paso de la historia): suelta al jugador y repone el dinero si te lo habían quitado.</summary>
+        /// <summary>Quita el asalto del mundo (otro paso de la historia): suelta al jugador. No hay dinero tuyo que reponer.</summary>
         public void Cancelar()
         {
             if (regla.Fase == FaseAsalto.Inactivo)
             {
                 return;
             }
-            int devuelto = regla.Cancelar();
-            if (devuelto > 0)
-            {
-                Registro<ICartera>.Actual?.Abonar(devuelto, MotivoDinero.Otro);
-            }
+            regla.Cancelar();
             Limpiar();
         }
 
@@ -147,6 +157,21 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 asaltante = null;
                 pandillero = null;
             }
+            QuitarVictima();
+        }
+
+        private void QuitarVictima()
+        {
+            if (puntoEscena != null)
+            {
+                Registro<IPuntoHistoria>.Quitar(puntoEscena);
+                puntoEscena = null;
+            }
+            if (victima != null)
+            {
+                Destroy(victima);
+                victima = null;
+            }
         }
 
         private void Terminar()
@@ -161,25 +186,24 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         {
             Congelar(jugador);
             PonerCinematica(jugador);
-            ICartera cartera = Registro<ICartera>.Actual;
-            Vector3 mirada = asaltante.transform.position;
 
-            // 1. El asaltante camina hacia ti.
-            while (!saltar && Distancia(asaltante.transform.position, jugador.Raiz.position) > DistanciaRobo)
+            // 1. El asaltante camina hacia la víctima (una persona de afuera; tú solo miras).
+            while (!saltar && Distancia(asaltante.transform.position, victima.transform.position) > DistanciaRobo)
             {
-                Mover(asaltante.transform, jugador.Raiz.position, RapidezCaminar);
-                SeguirConLaCamara(jugador, asaltante.transform.position);
-                PonerObjetivo(asaltante.transform.position);
+                Mover(asaltante.transform, victima.transform.position, RapidezCaminar);
+                SeguirConLaCamara(jugador, victima.transform.position);
                 LeerSalto();
                 yield return null;
             }
 
-            // 2. El robo.
-            Robar(cartera);
+            // 2. El robo: se encaran un momento.
+            Robar();
+            Encarar(victima.transform, asaltante.transform.position);
+            Encarar(asaltante.transform, victima.transform.position);
             float fin = Time.unscaledTime + 1.6f;
             while (!saltar && Time.unscaledTime < fin)
             {
-                SeguirConLaCamara(jugador, asaltante.transform.position);
+                SeguirConLaCamara(jugador, victima.transform.position);
                 LeerSalto();
                 yield return null;
             }
@@ -211,7 +235,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 {
                     SeguirConLaCamara(jugador, asaltante.transform.position);
                 }
-                PonerObjetivo(asaltante.transform.position);
                 LeerSalto();
                 yield return null;
             }
@@ -223,27 +246,24 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             QuitarCinematica();
             cinematica = null;
             BuscarPunto(AsaltoMundoId.Principal)?.Activar(false);
-            PonerObjetivo(BuscarPunto(AsaltoMundoId.Principal) != null ? BuscarPunto(AsaltoMundoId.Principal).Pose.position : jugador.Raiz.position);
+            QuitarVictima(); // la víctima ya no hace falta en la escena
+            PonerObjetivo(PosicionObjetivoPersecucion(jugador));
         }
 
-        private void Robar(ICartera cartera)
+        private void Robar()
         {
-            int cobrado = regla.Robar();
-            if (cobrado > 0 && cartera != null)
+            int robado = regla.Robar();
+            if (robado <= 0)
             {
-                cartera.IntentarPagar(cobrado, MotivoDinero.Otro);
+                return;
             }
             pantalla?.MostrarSubtitulo(SubtituloRobo, 3f);
-            pantalla?.MostrarAyuda(PrefijoRobo + "$" + regla.DineroRobado, 4f);
+            pantalla?.MostrarAyuda(PrefijoRobo + "$" + robado, 4f);
         }
 
         private void CancelarPorFalloYSeguir()
         {
-            int devuelto = regla.Cancelar();
-            if (devuelto > 0)
-            {
-                Registro<ICartera>.Actual?.Abonar(devuelto, MotivoDinero.Otro);
-            }
+            regla.Cancelar();
             Terminar();
         }
 
@@ -253,7 +273,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 saltar = true;
                 // El salto hace el robo ya, para que lo que sigue sea igual.
-                Robar(Registro<ICartera>.Actual);
+                Robar();
             }
         }
 
@@ -281,8 +301,50 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             }
             if (Time.time >= proximoObjetivo && principal != null)
             {
-                PonerObjetivo(principal.Pose.position);
+                IJugador jugador = Registro<IJugador>.Actual;
+                PonerObjetivo(PosicionObjetivoPersecucion(jugador));
             }
+        }
+
+        private static bool JugadorEnVehiculo()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            return jugador != null && jugador.Modo == ModoJugador.Carro;
+        }
+
+        /// <summary>
+        /// Adonde apunta el marcador en la persecución: al carro de los asaltantes si ya vas en un vehículo; si no, al carro que se puede robar más cercano (si no hay,
+        /// al carro de los asaltantes para no dejar el marcador sin sitio).
+        /// </summary>
+        private static Vector3 PosicionObjetivoPersecucion(IJugador jugador)
+        {
+            IPuntoHistoria principal = BuscarPunto(AsaltoMundoId.Principal);
+            Vector3 deLosAsaltantes = principal != null ? principal.Pose.position : (jugador != null && jugador.Raiz != null ? jugador.Raiz.position : default);
+            if (jugador == null || jugador.Raiz == null || jugador.Modo == ModoJugador.Carro)
+            {
+                return deLosAsaltantes;
+            }
+            Vector3? cercano = null;
+            float mejor = float.MaxValue;
+            foreach (IMontable montable in Registro<IMontable>.Todos)
+            {
+                if (montable == null || montable.Modo != ModoJugador.Carro || !montable.PuedeSubir || montable.Ocupado)
+                {
+                    continue;
+                }
+                Vector3 donde = montable.PuntoSubida;
+                if (principal != null && Distancia(donde, deLosAsaltantes) < 4f)
+                {
+                    continue; // el carro de los asaltantes no cuenta como carro por robar
+                }
+                float d = Distancia(donde, jugador.Raiz.position);
+                if (d < mejor)
+                {
+                    mejor = d;
+                    cercano = donde;
+                }
+            }
+            return cercano ?? deLosAsaltantes;
         }
 
         private void BajarAlAsaltante(Pose carro)
@@ -327,16 +389,18 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 pandillero.Vencido -= AlVencerAsaltante;
             }
-            int devuelto = regla.AsaltanteVencido();
+            int premio = regla.AsaltanteVencido();
             if (regla.Fase != FaseAsalto.Terminado)
             {
                 return;
             }
-            if (devuelto > 0)
+            if (premio > 0)
             {
-                Registro<ICartera>.Actual?.Abonar(devuelto, MotivoDinero.Otro);
-                pantalla?.MostrarAyuda(PrefijoRecuperado + "$" + devuelto, 4f);
+                // T-728: la víctima te da una parte de lo que le robaron.
+                Registro<ICartera>.Actual?.Abonar(premio, MotivoDinero.Otro);
+                pantalla?.MostrarAyuda(PrefijoRecuperado + "$" + premio, 4f);
             }
+            QuitarVictima();
             QuitarObjetivo();
             // El asaltante vencido se queda en el piso (cayó); solo se avisa que la historia sigue.
             asaltante = null;
@@ -346,31 +410,96 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         // ---------- Mundo ----------
 
-        private void PonerAsaltante(IJugador jugador)
+        /// <summary>
+        /// Arma la escena a unos metros del jugador: la víctima (una persona de afuera) parada y el asaltante unos metros más allá, de frente a ella. Registra el punto
+        /// <c>Historia_Asalto_Escena</c> para que el carro de Trafico llegue ahí.
+        /// </summary>
+        private void PonerEscena(IJugador jugador)
         {
             Transform t = jugador.Raiz;
             Vector3[] direcciones = { t.forward, t.right, -t.right, -t.forward };
-            Vector3 punto = t.position + t.forward * DistanciaAparicion;
+            Vector3 puntoVictima = t.position + t.forward * DistanciaAparicion;
+            Vector3 haciaFuera = t.forward;
             foreach (Vector3 d in direcciones)
             {
                 Vector3 candidato = t.position + d * DistanciaAparicion;
-                if (Physics.Raycast(candidato + Vector3.up * 3f, Vector3.down, out RaycastHit golpe, 8f, ~0, QueryTriggerInteraction.Ignore)
-                    && !Physics.CheckSphere(golpe.point + Vector3.up * 1f, 0.4f, ~0, QueryTriggerInteraction.Ignore))
+                Vector3 atras = candidato + d * DistanciaAsaltanteAtras;
+                if (SueloLibre(candidato, out Vector3 sueloVictima) && SueloLibre(atras, out _))
                 {
-                    punto = golpe.point + Vector3.up * AlturaSobreSuelo;
+                    puntoVictima = sueloVictima;
+                    haciaFuera = d;
                     break;
                 }
             }
-            Vector3 hacia = t.position - punto;
-            hacia.y = 0f;
-            Quaternion giro = hacia.sqrMagnitude > 0.01f ? Quaternion.LookRotation(hacia) : Quaternion.identity;
-            asaltante = Instantiate(prefabAsaltante, punto, giro);
+            SueloLibre(puntoVictima + haciaFuera * DistanciaAsaltanteAtras, out Vector3 puntoAsaltante);
+            if (Distancia(puntoAsaltante, puntoVictima) < 1f)
+            {
+                puntoAsaltante = puntoVictima + haciaFuera * DistanciaAsaltanteAtras;
+            }
+
+            if (victima == null)
+            {
+                GameObject prefabVictima = Resources.Load<GameObject>(RecursoVictima);
+                Quaternion giroVictima = Quaternion.LookRotation(Plano(puntoAsaltante - puntoVictima, haciaFuera));
+                victima = prefabVictima != null ? Instantiate(prefabVictima, puntoVictima, giroVictima) : new GameObject(NombreVictima);
+                victima.transform.SetPositionAndRotation(puntoVictima, giroVictima);
+                victima.name = NombreVictima;
+            }
+            puntoEscena = new PuntoEscena(new Pose(puntoVictima, victima.transform.rotation));
+            Registro<IPuntoHistoria>.Agregar(puntoEscena);
+
+            Quaternion giro = Quaternion.LookRotation(Plano(puntoVictima - puntoAsaltante, -haciaFuera));
+            asaltante = Instantiate(prefabAsaltante, puntoAsaltante, giro);
             asaltante.name = NombreAsaltante;
             pandillero = asaltante.GetComponent<PandilleroAPie>();
             if (pandillero != null)
             {
                 pandillero.enabled = false; // en la cinemática no pelea; sigue quieto hasta que se detenga el carro
             }
+        }
+
+        private const float DistanciaAsaltanteAtras = 5f;
+
+        // Un punto del suelo bajo "candidato" sin nada sólido encima (para pararse). False si no hay suelo o hay un muro.
+        private static bool SueloLibre(Vector3 candidato, out Vector3 suelo)
+        {
+            suelo = candidato;
+            if (Physics.Raycast(candidato + Vector3.up * 3f, Vector3.down, out RaycastHit golpe, 8f, ~0, QueryTriggerInteraction.Ignore)
+                && !Physics.CheckSphere(golpe.point + Vector3.up * 1f, 0.4f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                suelo = golpe.point + Vector3.up * AlturaSobreSuelo;
+                return true;
+            }
+            return false;
+        }
+
+        private static Vector3 Plano(Vector3 v, Vector3 respaldo)
+        {
+            v.y = 0f;
+            if (v.sqrMagnitude > 0.01f)
+            {
+                return v;
+            }
+            respaldo.y = 0f;
+            return respaldo.sqrMagnitude > 0.01f ? respaldo : Vector3.forward;
+        }
+
+        private static void Encarar(Transform quien, Vector3 haciaDonde)
+        {
+            Vector3 d = haciaDonde - quien.position;
+            d.y = 0f;
+            if (d.sqrMagnitude > 0.01f)
+            {
+                quien.rotation = Quaternion.LookRotation(d);
+            }
+        }
+
+        private sealed class PuntoEscena : IPuntoHistoria
+        {
+            public PuntoEscena(Pose pose) => Pose = pose;
+            public string Id => IdEscena;
+            public Pose Pose { get; }
+            public void Activar(bool activo) { }
         }
 
         private static void Mover(Transform t, Vector3 destino, float rapidez)
@@ -440,7 +569,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private void PonerObjetivo(Vector3 posicion)
         {
             proximoObjetivo = Time.time + SegundosEntreObjetivos;
-            string texto = ReglaAsalto.TextoObjetivo(regla.Fase);
+            string texto = ReglaAsalto.TextoObjetivo(regla.Fase, JugadorEnVehiculo());
             if (texto.Length == 0)
             {
                 return;
@@ -478,7 +607,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 camaraCinematica.CopyFrom(jugador.Camara);
                 camaraCinematica.depth = jugador.Camara.depth + 5f;
                 camaraCinematica.targetTexture = null;
-                SeguirConLaCamara(jugador, asaltante.transform.position, true);
+                SeguirConLaCamara(jugador, victima != null ? victima.transform.position : asaltante.transform.position, true);
             }
             EstiloCyberfix e = KitUI.Estilo;
             canvasBarras = KitUI.CrearCanvas(transform, "CanvasAsalto", OrdenCanvas);
@@ -510,7 +639,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 return;
             }
             Vector3 jugadorPos = jugador.Raiz.position;
-            Vector3 centro = (jugadorPos + haciaDonde) * 0.5f + Vector3.up * 1.4f;
+            Vector3 centro = haciaDonde + Vector3.up * 1.4f; // la escena (víctima y asaltante) al centro; el jugador solo mira
             Vector3 eje = haciaDonde - jugadorPos;
             eje.y = 0f;
             Vector3 lado = eje.sqrMagnitude > 0.01f ? Vector3.Cross(Vector3.up, eje.normalized) : jugador.Raiz.right;

@@ -45,3 +45,13 @@ de Movimiento_base tal como vienen, a rapidez 1 y sin IK de pies. Lo que hoy se 
 - Agachado quieto y cobertura mantenida: son una pose congelada de Cobertura_Entrar; faltan Crouch Idle y un clip de cobertura mantenida (Cover Idle).
 - Ritmo de los pies: Loco_Caminar avanza 1.28 m/s y Loco_Correr 2.79 m/s tal como vienen y el jugador va a 4.5 y 7.5 m/s, así que los pies se deslizan. Si se ve mal, hay que
   bajar de Mixamo versiones más rápidas (o decidir la velocidad del cuerpo); no se aceleran los clips por código.
+
+## Asalto a un tercero, 8-nov (T-728)
+
+La cinemática del asalto usa Idle y Caminar/Correr de Skull (asaltante) y el Idle de la víctima. Faltan, de Mixamo, para que se vea el robo:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| La víctima levanta las manos al ser asaltada | Hands Up (o Surrender, Being Robbed) | NPC_ManosArriba_Bucle.fbx | NPC |
+| El asaltante apunta o amenaza con el arma | Pistol Aim / Threatening | Skull_Amenazar_Bucle.fbx | Skull |
+| La víctima se asusta y retrocede | Terrified (ya está en la tabla de arriba como NPC_Aterrado_Bucle) | NPC_Aterrado_Bucle.fbx | NPC |

@@ -1551,11 +1551,11 @@ namespace MechaCyberpunk.Tests.Demo
                 yield break;
             }
 
-            // 3b. T-717: el asalto. Te roban el dinero (Enter salta la cinemática), el carro huye, se detiene (llanta, fin de la ruta o atorón) y vences al asaltante.
-            IniciarTramo("03b Asalto: te roban el dinero y huyen en carro");
+            // 3b. T-728: el asalto. Asaltan a una persona (Enter salta la cinemática), el carro huye, se detiene (llanta, fin de la ruta o atorón) y vences al asaltante.
+            IniciarTramo("03b Asalto: asaltan a una persona y huyen en carro");
             if (director.Paso == PasoHistoria.Asalto)
             {
-                if (TextoObjetivo != AsaltoDinero.TextoPerseguir)
+                if (TextoObjetivo != AsaltoDinero.TextoRobarCarro)
                 {
                     Bug("Objetivo del asalto incorrecto", "dice \"" + TextoObjetivo + "\"", "A", true);
                 }
