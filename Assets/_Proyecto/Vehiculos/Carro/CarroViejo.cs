@@ -111,6 +111,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         /// <summary>Si el carro está leyendo la entrada del conductor.</summary>
         public bool TieneControl { get; private set; }
 
+        /// <summary>Posición del volante (-1 a 1, suavizada): para que las ruedas delanteras doblen (T-742).</summary>
+        public float Volante => volante;
+
         /// <summary>Última entrada leída (para las ruedas visuales).</summary>
         public EntradaCarro EntradaActual { get; private set; }
 
