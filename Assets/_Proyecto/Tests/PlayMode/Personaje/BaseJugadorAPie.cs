@@ -3,6 +3,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -66,6 +67,12 @@ namespace MechaCyberpunk.Tests.Personaje
             Registros.LimpiarTodos();
             EventosLugares.LimpiarSuscriptores();
             base.TearDown();
+        }
+
+        /// <summary>T-737: el jugador ya no usa las correcciones de ApuntadoIK (se ve el clip puro). Las pruebas que miden esas correcciones (cañón a la mira, mano izquierda al arma) las encienden con esto.</summary>
+        protected void ConIKDeApuntadoEncendido()
+        {
+            foreach (ApuntadoIK ik in jugador.GetComponentsInChildren<ApuntadoIK>(true)) { ik.ClipPuro = false; }
         }
 
         protected GameObject Caja(Vector3 centro, Vector3 tamano)

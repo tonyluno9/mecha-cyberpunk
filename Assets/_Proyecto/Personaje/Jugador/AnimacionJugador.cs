@@ -93,6 +93,12 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 ik.Pies = false;
             }
+            // T-737: al apuntar se ve el clip tal cual: ni torso girado a la mira, ni mano derecha corregida, ni mano izquierda pegada al arma por IK.
+            ApuntadoIK apuntado = visual.GetComponentInChildren<ApuntadoIK>(true);
+            if (apuntado != null)
+            {
+                apuntado.ClipPuro = true;
+            }
         }
 
         public void AlCambiarModelo(Animator nuevo)

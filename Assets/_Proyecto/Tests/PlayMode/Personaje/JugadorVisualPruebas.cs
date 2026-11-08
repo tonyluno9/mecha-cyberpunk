@@ -77,6 +77,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Apuntar_ConPistola_LevantaElArmaPorIKYElCuerpoCaidoSeTumba()
         {
             yield return Calentar();
+            ConIKDeApuntadoEncendido(); // T-737: mide las correcciones de ApuntadoIK, que el jugador ya no usa
             VisualPersonaje visual = Visual();
             ApuntadoIK ik = visual.GetComponentInChildren<ApuntadoIK>(true);
             Assert.IsNotNull(ik);

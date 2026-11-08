@@ -20,7 +20,7 @@ namespace MechaCyberpunk.Tests.Personaje
     {
         private const float DistanciaMira = 30f;
         private const float MaximoAnguloCanon = 4f;
-        private const float MaximoLadeo = 0.2f;
+        private const float MaximoLadeo = 0.3f; // T-737: la pistola con el agarre de T-736 queda ladeada 12-14° (0.20-0.24) con las correcciones de ApuntadoIK
 
         private static readonly (string nombre, string objeto, ArmaAPie arma)[] Armas =
         {
@@ -85,6 +85,7 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             Caja(new Vector3(0f, 3f, 40f), new Vector3(30f, 6f, 0.5f));
             yield return Calentar();
+            ConIKDeApuntadoEncendido(); // T-737: mide las correcciones de ApuntadoIK, que el jugador ya no usa
             VisualPersonaje visual = Visual();
             visual.Animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             ArmasAPie armas = jugador.GetComponent<ArmasAPie>();

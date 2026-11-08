@@ -1,0 +1,109 @@
+AGARRE DE LA PISTOLA W01 EN LA MANO DERECHA DE PJ01 (CyberCity)
+Personaje: PJ01 (Downloads\PJ01\tripo_convert_b5fb242c-....fbx), rig de Tripo de 78 huesos.
+Hueso padre: R_Hand  (no existe "mixamorig:RightHand" en PJ01; R_Hand es el que Unity asigna como RightHand en el Humanoid).
+Modelo del arma: W01_Pistola_agarre.fbx (pivote en la empuñadura, metros, Y arriba, cañón hacia +Z).
+
+Valores locales de W01_Pistola respecto a R_Hand (Inspector de Unity):
+
+CASO A — PJ01 importado a 1.80 m con el Scale Factor del importador (la mano tiene lossyScale 1):
+  Position (m):        (0.0129, 0.1181, 0.0080)
+  Rotation (Euler °):  (-80.74, 115.55, 48.50)
+  Scale:               (1, 1, 1)
+
+CASO B — PJ01 importado a escala 1 (0.98 m) y agrandado con localScale 1.8367 en su objeto (la mano tiene lossyScale ≈ 1.84):
+  Position:            (0.0070, 0.0643, 0.0043)
+  Rotation (Euler °):  (-80.74, 115.55, 48.50)      (la misma)
+  Scale:               (0.5444, 0.5444, 0.5444)   (para que la pistola siga midiendo 21 cm)
+
+Para saber cuál usar: en Play, mira R_Hand.lossyScale. ≈1 → caso A; ≈1.84 → caso B.
+
+Quaternion (x, y, z, w): (-0.05021, 0.72950, 0.66647, 0.14534)
+En código (caso A):
+  pistola.localPosition = new Vector3(0.0129f, 0.1181f, 0.0080f);
+  pistola.localRotation = new Quaternion(-0.05021f, 0.72950f, 0.66647f, 0.14534f);
+Si la pistola cuelga de un socket intermedio (ManoDer) con posición 0, rotación 0 y escala 1, estos mismos valores van en la pistola.
+
+Con este agarre: palma en la empuñadura, índice en el gatillo, cañón al frente y corredera arriba.
+Comprobado en Blender con los 9 clips pasados a PJ01 (cañón respecto al frente / ladeo de la corredera):
+  Pistola_Apuntar              0-1°, ladeo <2°                       sin cambios
+  Pistola_Caminar              ±4°, ladeo <5.5°                      sin cambios
+  Pistola_Idle                 arma baja apuntando al piso al frente  sin cambios
+  Pistola_Recargar             arma levantada; la mano izq. jala la corredera   sin cambios
+  Pistola_RecargarCaminar      igual que Recargar                     sin cambios
+  Pistola_Correr               CORREGIDO: venía 5° a la izq. y ladeada 8° → ahora <1.5°
+  Pistola_Disparo              CORREGIDO: venía 14° a la izq., 13° arriba y ladeada 7° → ahora 0° (solo sube en el retroceso)
+  Pistola_ApuntarCaminar_Derecha    CORREGIDO (mismo problema) → sigue a la cabeza a 3-6°, sin ladeo
+  Pistola_ApuntarCaminar_Izquierda  CORREGIDO (igual)
+Los 4 corregidos están en esta carpeta con el mismo nombre y la misma toma que Unity espera
+(mixamo.com, W1_Stand_Fire_Single, W1_Stand_Aim_Turn_In_Place_R_Loop, W1_Stand_Aim_Turn_In_Place_L_Loop),
+con esqueleto mixamorig (65 huesos), para reemplazar los de Assets/Arte/Personajes/Animaciones/Pistola/.
+Nota: Disparo y los dos ApuntarCaminar venían de otro esqueleto (MotusMan); ahora van en mixamorig. Además,
+los dos "ApuntarCaminar" en realidad son giros en el lugar con el arma apuntando (45° a cada lado), no caminatas.
+
+CLIPS NUEVOS DE AGACHADO (no había ninguno con pistola; armados con clips existentes, sin animar a mano):
+  Pistola_AgachadoCaminar.fbx  60 fotogramas, en bucle. Piernas, cadera y torso de Rifle_AgachadoCaminar (Mixamo, "Rifle Crouch Walk");
+                               brazos y manos de Pistola_Apuntar. Avanza ~1.07 m por ciclo (movimiento de raíz, como los demás).
+                               Cañón al frente (±4°) y un poco hacia el piso (~25°) porque el torso va inclinado; corredera ladeada ~10°.
+  Pistola_AgachadoIdle.fbx     40 fotogramas, en bucle. Postura quieta tomada de un momento de la misma caminata con los dos pies en el piso,
+                               centrada en su lugar; los brazos respiran con Pistola_Apuntar. Mismo ángulo del arma que al caminar agachado.
+  Toma: mixamo.com. Esqueleto mixamorig (65 huesos). Son archivos nuevos: en Unity van en Assets/Arte/Personajes/Animaciones/Pistola/
+  como Humanoid, con Loop Time activado.
+  Loco_AgachadoCaminar.fbx     60 fotogramas, en bucle. Caminar agachado SIN pistola: piernas y cadera de Rifle_AgachadoCaminar,
+                               torso siguiendo a la cadera (hombros nivelados), cabeza adelantada en la línea de la espalda, mirando al frente un poco abajo, hombros un poco arriba, codo izq. a 45° y codo der. a 60° hacia atrás (siguen el giro del torso), manos al frente,
+                               abiertas hacia afuera y levantadas, listo para lanzarse (vaivén pequeño) y dedos semicerrados. Avanza ~1.07 m por ciclo. Toma mixamo.com.
+                               En Unity: Animaciones/Locomocion/ (Humanoid, Loop Time).
+  Loco_AgachadoIdle.fbx        80 fotogramas, en bucle. Agachado quieto SIN pistola con la MISMA postura que Loco_AgachadoCaminar
+                               (brazos listos para lanzarse, cabeza adelantada), los dos pies en el piso y respiración suave. Toma mixamo.com.
+                               En Unity: Animaciones/Locomocion/ (Humanoid, Loop Time).
+  Loco_Agacharse.fbx           20 fotogramas, SIN bucle. De parado (Loco_Idle) a agachado (termina igual que Loco_AgachadoIdle):
+                               el pie derecho da un paso al frente y el izquierdo uno atrás mientras baja; sin resbalar. Toma mixamo.com.
+  Loco_Pararse.fbx             20 fotogramas, SIN bucle. Lo mismo al revés: de Loco_AgachadoIdle a parado (termina como Loco_Idle).
+                               En Unity: Animaciones/Locomocion/ (Humanoid, Loop Time desactivado).
+
+CAMINAR APUNTANDO (nuevos, reciclando caminatas existentes; brazos/torso/cabeza = Pistola_Apuntar, el arma apunta 0° al frente):
+  Pistola_ApuntarLateral_Derecha.fbx    32 fotogramas, bucle. Piernas de Loco_CaminarDer. Avanza ~1.6 m a la derecha.
+  Pistola_ApuntarLateral_Izquierda.fbx  32 fotogramas, bucle. La misma caminata al revés (así el torso no se tuerce de más). ~1.6 m a la izquierda.
+  Pistola_ApuntarAtras.fbx              37 fotogramas, bucle. Piernas de Loco_CaminarAtras. Retrocede ~1.2 m.
+  Toma mixamo.com. En Unity: Animaciones/Pistola/ (Humanoid, Loop Time). Para apuntar caminando de frente sigue siendo Pistola_Caminar.
+
+SACAR Y GUARDAR LA PISTOLA (sin funda: la pistola solo existe mientras apunta):
+  Pistola_Sacar.fbx    26 fotogramas a 30 fps (0.87 s), SIN bucle. Empieza como Loco_Idle y termina como Pistola_Apuntar.
+                       La mano baja a la cadera derecha y sube a apuntar; los pies dan un paso cada uno a la postura de tiro.
+                       Fotograma 10 (t = 0.30 s): ACTIVAR la pistola en la mano (en ese momento la mano está en la cadera).
+  Pistola_Guardar.fbx  26 fotogramas (0.87 s), SIN bucle. Lo mismo al revés: de Pistola_Apuntar a Loco_Idle.
+                       Fotograma 17 (t = 0.53 s): DESACTIVAR la pistola (la mano llega a la cadera).
+  Toma mixamo.com. En Unity: Animaciones/Pistola/ (Humanoid, Loop Time desactivado). Animation Event en esos tiempos
+  para activar/desactivar el objeto de la pistola (o simplemente mostrarla desde el inicio de Pistola_Sacar si se prefiere).
+
+CAMINAR AGACHADO DE LADO Y HACIA ATRÁS (sin pistola; reciclados: pasos de Loco_CaminarDer / Loco_CaminarAtras con la cadera
+13 cm más baja y al doble de lento; torso, brazos y cabeza = Loco_AgachadoIdle):
+  Loco_AgachadoLateral_Derecha.fbx    63 fotogramas, bucle. ~1.6 m a la derecha por ciclo.
+  Loco_AgachadoLateral_Izquierda.fbx  63 fotogramas, bucle. La derecha al revés. ~1.6 m a la izquierda.
+  Loco_AgachadoAtras.fbx              73 fotogramas, bucle. Retrocede ~1.2 m.
+  Toma mixamo.com. En Unity: Animaciones/Locomocion/ (Humanoid, Loop Time).
+
+RECIBIR DAÑO CON LA PISTOLA EN LA MANO (estremecimiento corto, sigue apuntando):
+  14 fotogramas a 30 fps (0.47 s), SIN bucle. Empiezan y terminan exactamente en Pistola_Apuntar.
+  Golpe en el fotograma 4 (0.1 s) y regreso a apuntar en 0.35 s. Pies fijos en el piso.
+  Pistola_Dano_Frente.fbx   golpe de frente (cabeza atrás). La pistola se desvía como máximo ~10°.
+  Pistola_Dano_Espalda.fbx  golpe por la espalda (se encoge hacia adelante). Máximo ~19° hacia abajo.
+  Pistola_Dano_Fuerte.fbx   golpe más fuerte. Máximo ~17°.
+  Se reproducen encima de apuntar (Unity: Animaciones/Dano/, Humanoid, Loop Time desactivado); se pueden poner en una
+  capa del Animator para que el jugador siga disparando.
+
+RODAR (hecho a mano por poses clave, sin pistola):
+  Loco_Rodar.fbx  30 fotogramas a 30 fps (1.0 s), SIN bucle. Empieza como Loco_Idle y termina como Loco_AgachadoIdle.
+    1-6 se agacha, 7-11 se impulsa en bolita (salto de ~9 cm), 10-24 vuelta completa hacia adelante tocando el piso,
+    24-30 abre y queda agachado. Avanza ~2.2 m (movimiento de raíz).
+    Al terminar: Loco_AgachadoIdle / Loco_AgachadoCaminar, o Loco_Pararse para levantarse.
+  Toma mixamo.com. En Unity: Animaciones/Locomocion/ (Humanoid, Loop Time desactivado, Apply Root Motion o mover el
+  controlador 2.2 m en 1 s).
+
+CAMINAR AJUSTADO (reemplaza Animaciones/Locomocion/Loco_Caminar.fbx, conserva su .meta; toma "mixamo.com"):
+  Loco_Caminar.fbx  Misma caminata con hombros 10° más arriba, brazos 12° más separados del cuerpo y pecho al frente
+                    (columna 6° hacia atrás, cabeza compensada para seguir mirando igual). Los brazos ya no atraviesan
+                    el cuerpo ni el exoesqueleto IMP01. Piernas y pasos sin cambios.
+
+CORRER AJUSTADO (reemplaza Animaciones/Locomocion/Loco_Correr.fbx, conserva su .meta; toma "mixamo.com"):
+  Loco_Correr.fbx  Mismo ajuste que Loco_Caminar: hombros 10° arriba, brazos 12° separados, pecho al frente.
+                   Los antebrazos ya no cruzan el cuerpo ni atraviesan el exoesqueleto.

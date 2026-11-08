@@ -75,6 +75,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator ModeloHombre_ConPistola_AgarreEnLaPalmaYCanonAlFrente()
         {
             yield return Calentar();
+            ConIKDeApuntadoEncendido(); // T-737: mide las correcciones de ApuntadoIK, que el jugador ya no usa
             GameObject host = new GameObject("ModeloSegunPerfilS1");
             var perfil = new PerfilHombre();
             MechaCyberpunk.Core.Registro<MechaCyberpunk.Core.IPerfilJugador>.Agregar(perfil);
@@ -86,6 +87,7 @@ namespace MechaCyberpunk.Tests.Personaje
             });
             yield return null;
             yield return null;
+            ConIKDeApuntadoEncendido(); // T-737: el modelo nuevo vuelve a llevar el clip puro
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
             Assert.IsTrue(visual.GetComponentInChildren<SkinnedMeshRenderer>().name.Contains("0f9d95ea"), "Es el hombre");
@@ -153,6 +155,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Pistola_AgarreEnLaPalma_CanonAlFrente_EnReposoCaminarYApuntar()
         {
             yield return Calentar();
+            ConIKDeApuntadoEncendido(); // T-737: mide las correcciones de ApuntadoIK, que el jugador ya no usa
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
             a.cullingMode = AnimatorCullingMode.AlwaysAnimate;
@@ -210,6 +213,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator ManoIzquierda_PistolaALasDosManosAlApuntar_YSueltaAlRecargar()
         {
             yield return Calentar();
+            ConIKDeApuntadoEncendido(); // T-737: mide las correcciones de ApuntadoIK, que el jugador ya no usa
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
             a.cullingMode = AnimatorCullingMode.AlwaysAnimate;
@@ -240,6 +244,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator ManoIzquierda_ArmaLarga_ALasDosManosSoloAlApuntar_YElArmaEstaEnLaPalma()
         {
             yield return Calentar();
+            ConIKDeApuntadoEncendido(); // T-737: mide las correcciones de ApuntadoIK, que el jugador ya no usa
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
             a.cullingMode = AnimatorCullingMode.AlwaysAnimate;
