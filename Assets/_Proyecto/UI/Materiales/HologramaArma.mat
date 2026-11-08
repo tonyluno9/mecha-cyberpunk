@@ -31,6 +31,9 @@ Material:
     m_Floats:
     - _Alfa: 1
     - _BandaAncha: 0.6
+    - _BarridoAncho: 0.06
+    - _BarridoFuerza: 0
+    - _BarridoPos: 0
     - _Base: 0.22
     - _Borde: 1.4
     - _BrilloLineas: 0.45
@@ -43,10 +46,12 @@ Material:
     - _Parpadeo: 0.12
     - _PotenciaBorde: 2.2
     - _Resalte: 0
+    - _Revelar: 0
     - _VelocidadLineas: 0.35
     m_Colors:
+    - _BarridoDir: {r: 1, g: 0, b: 0, a: 0}
     - _Color: {r: 0.15, g: 0.85, b: 1, a: 1}
     - _ColorBorde: {r: 0.6, g: 1, b: 1, a: 1}
-    - _ColorResalte: {r: 1, g: 0.5, b: 0.1, a: 1}
+    - _ColorResalte: {r: 0.82500005, g: 1.5, b: 1.38, a: 1.5}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
