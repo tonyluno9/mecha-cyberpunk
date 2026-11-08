@@ -112,7 +112,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.3f);
             Debug.Log("[T724] caminando: " + Volcado(a));
             Assert.AreEqual("Caminar", Estado(a));
-            AfirmarSoloLocomocionDeTony(a, "Loco_Caminar");
+            AfirmarSoloLocomocionDeTony(a, "Loco_Caminar_SinImplante");
             AfirmarSinProcedurales(visual);
             Capturar("s1d-T-724-caminar");
             Release(teclado.wKey);
@@ -131,7 +131,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.6f);
             Debug.Log("[T724] corriendo: " + Volcado(a));
             Assert.AreEqual("Correr", Estado(a));
-            AfirmarSoloLocomocionDeTony(a, "Loco_Correr");
+            AfirmarSoloLocomocionDeTony(a, "Loco_Correr_SinImplante");
             AfirmarSinProcedurales(visual);
             Capturar("s1d-T-724-correr");
             Release(teclado.leftShiftKey);
@@ -150,7 +150,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.wKey);
             yield return Esperar(1.3f);
             Debug.Log("[T724] caminando con pistola: " + Volcado(a));
-            AfirmarSoloLocomocionDeTony(a, "Loco_Caminar");
+            AfirmarSoloLocomocionDeTony(a, "Loco_Caminar_SinImplante");
             AfirmarSinProcedurales(visual);
             Release(teclado.wKey);
         }
