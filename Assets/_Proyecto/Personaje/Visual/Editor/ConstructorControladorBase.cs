@@ -18,6 +18,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public const string RutaControlador = Carpeta + "/ControladorBase.controller";
         public const string RutaMascara = Carpeta + "/MascaraTorso.mask";
         public const string CarpetaOverrides = Carpeta + "/Overrides";
+        /// <summary>T-749: los clips de Blender ya aplicados al esqueleto de PJ01 (PJ01_*.fbx); el jugador los usa en lugar de los de Mixamo.</summary>
+        public const string CarpetaClipsPJ01 = "Assets/Arte/Personajes/PJ01/Clips";
+        public const string PrefijoClipPJ01 = "PJ01_";
 
         /// <summary>Papeles con override. El nombre del archivo es Override_&lt;Papel&gt;.overrideController.</summary>
         public static readonly string[] Papeles = { "Jugador", "Aliados", "NPC", "SKULLS", "SNAKES", "Guardias", "Robots", "Profes", "Jefe" };
@@ -33,7 +36,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
         public static AnimationClip Clip(string nombre)
         {
-            foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", new[] { Carpeta }))
+            string carpeta = nombre.StartsWith(PrefijoClipPJ01) ? CarpetaClipsPJ01 : Carpeta;
+            foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", new[] { carpeta }))
             {
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
                 if (Path.GetFileNameWithoutExtension(ruta) != nombre)
@@ -48,7 +52,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                     }
                 }
             }
-            Debug.LogError("[Personaje] Falta el clip " + nombre + " en " + Carpeta);
+            Debug.LogError("[Personaje] Falta el clip " + nombre + " en " + carpeta);
             return null;
         }
 
@@ -130,13 +134,35 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         }
 
         /// <summary>
+        /// T-749: clip del controlador base -> clip PJ01_* de Assets/Arte/Personajes/PJ01/Clips. Quedan fuera PJ01_Pistola_ApuntarCaminar_Derecha e Izquierda: son giros en el sitio
+        /// con el arma apuntando (agarre.txt de Tony), no hay un estado que los pida. Los clips que no vinieron de Blender (carro, moto, interacciones, puños, muertes, cobertura,
+        /// rifle, gestos) siguen con los de Mixamo: ver docs/pedido-blender-10nov.md.
+        /// </summary>
+        public static readonly (string Base, string Papel)[] ClipsDeJugadorPJ01 =
+        {
+            ("Loco_Caminar", "PJ01_Caminar_SinImplante"), ("Loco_Correr", "PJ01_Correr_SinImplante"),
+            ("Loco_Caminar_ConImplante", "PJ01_Caminar_ConImplante"), ("Loco_Correr_ConImplante", "PJ01_Correr_ConImplante"),
+            ("Loco_AgachadoIdle", "PJ01_Loco_AgachadoIdle"), ("Loco_AgachadoCaminar", "PJ01_Loco_AgachadoCaminar"), ("Loco_AgachadoAtras", "PJ01_Loco_AgachadoAtras"),
+            ("Loco_AgachadoLateral_Derecha", "PJ01_Loco_AgachadoLateral_Derecha"), ("Loco_AgachadoLateral_Izquierda", "PJ01_Loco_AgachadoLateral_Izquierda"),
+            ("Loco_Agacharse", "PJ01_Loco_Agacharse"), ("Loco_Pararse", "PJ01_Loco_Pararse"), ("Loco_Rodar", "PJ01_Loco_Rodar"),
+            ("Pistola_Idle", "PJ01_Pistola_Idle"), ("Pistola_Caminar", "PJ01_Pistola_Caminar"), ("Pistola_Correr", "PJ01_Pistola_Correr"),
+            ("Pistola_Sacar", "PJ01_Pistola_Sacar"), ("Pistola_Guardar", "PJ01_Pistola_Guardar"), ("Pistola_Apuntar", "PJ01_Pistola_Apuntar"),
+            ("Pistola_ApuntarAtras", "PJ01_Pistola_ApuntarAtras"), ("Pistola_ApuntarLateral_Derecha", "PJ01_Pistola_ApuntarLateral_Derecha"),
+            ("Pistola_ApuntarLateral_Izquierda", "PJ01_Pistola_ApuntarLateral_Izquierda"), ("Pistola_Disparo", "PJ01_Pistola_Disparo"),
+            ("Pistola_Recargar", "PJ01_Pistola_Recargar"), ("Pistola_RecargarCaminar", "PJ01_Pistola_RecargarCaminar"),
+            ("Pistola_AgachadoIdle", "PJ01_Pistola_AgachadoIdle"), ("Pistola_AgachadoCaminar", "PJ01_Pistola_AgachadoCaminar"),
+            ("Pistola_Dano_Frente", "PJ01_Pistola_Dano_Frente"), ("Pistola_Dano_Espalda", "PJ01_Pistola_Dano_Espalda"), ("Pistola_Dano_Fuerte", "PJ01_Pistola_Dano_Fuerte"),
+        };
+
+        /// <summary>
         /// T-624: clips propios de cada papel (clip del controlador base -> clip del papel). SKULLS, su jefe y los guardias de Nova usan los
         /// clips de Enemigos y jefe; el resto de los papeles se queda con los de la base.
         /// </summary>
         public static readonly Dictionary<string, (string Base, string Papel)[]> ClipsPorPapel = new Dictionary<string, (string, string)[]>
         {
             // T-739: el jugador sin implante camina y corre con los clips SinImplante; con implante, el árbol usa los ConImplante (parámetro ConImplante).
-            ["Jugador"] = new[] { ("Loco_Caminar", "Loco_Caminar_SinImplante"), ("Loco_Correr", "Loco_Correr_SinImplante") },
+            // T-749: todos son los clips de Blender ya aplicados a PJ01 (Humanoid, sin retargeting entre esqueletos distintos); ver ClipsDeJugadorPJ01.
+            ["Jugador"] = ClipsDeJugadorPJ01,
             ["SKULLS"] = new[] { ("Loco_Idle", "Skull_Idle"), ("Loco_Caminar", "Skull_Caminar") },
             ["Jefe"] = new[]
             {
