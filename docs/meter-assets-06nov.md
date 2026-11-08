@@ -103,3 +103,4 @@ marino (`man_PoliciaMarino.mat`); cuando vuelva a llegar uno con esqueleto lo ca
   `Assets/Arte/Vehiculos/Piezas/<V01a|V01b|V05|RU01>/` (`<código>_Carroceria.fbx`, `_Puerta_Izq.fbx`, `_Puerta_Der.fbx`, `RU01.fbx` y sus `_basecolor.jpg`/`_normal.jpg`).
   Las puertas traen su textura incrustada en el .fbx: se extrae una vez a `<código>_Puerta_basecolor.jpg` y `_normal.jpg`. Los de más de 15 mil caras llevan Mesh LOD. Correrlo dos veces no cambia nada.
 - Después `CreadorCarrosPiezasT742.ArmarTodos` arma los tres carros y `CreadorPatrullaPiezasT742.Armar` la patrulla (RU02 y C19CUERPO de las motos son B2).
+- T-743: `ImportarS1nPiezas` también mete `RU02MOTO.zip` (`Piezas/RU02/RU02.fbx`) y `C19CUERPO.zip` (`Piezas/C19/C19_Cuerpo.fbx`); `CreadorMotosPiezasT743.ArmarTodas` arma las tres motos.
