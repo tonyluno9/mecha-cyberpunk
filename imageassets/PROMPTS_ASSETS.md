@@ -2668,3 +2668,50 @@ Use the attached menu reference ONLY for the general style of the item icons (il
 ```
 Use the attached menu reference ONLY for the general line style. Original icons of our own. A single row of 8 category icons evenly spaced on a PURE BLACK (#000000) flat background, each drawn in a single thin coral red (#FF5A4E) line, same line weight and size, no slots, no text: a pistol, a shotgun, an assault rifle, a sniper rifle with scope, a combat knife, a consumable (a drink can and a small box), an implant (a robotic arm segment), a weapon part (a gear with a bullet).
 ```
+
+
+# Parte 22b — Pedido 09-nov b: logo pintado (LG24–LG26) e íconos H33–H34
+
+Lote: `lote_09nov_b.json` · script: `generar_09nov_b.ps1`.
+
+## LG24 — LG24_Pintado_Amarillo
+- **Salida:** `imageassets/referencias-privadas/logo/LG24_Pintado_Amarillo.png` · 16:9 · **Adjuntar:** `LG20_Amarillo.png`
+
+```
+Use the attached logo ONLY as a reference for the composition: the word slanted to the right, the fast underline stroke, the small street light pole at the right end of the underline and the faint tower silhouette behind the letters. Redraw the lettering with our OWN letterforms (do not copy the letter shapes of the attached logo or of any existing game logo). The text must read exactly "CYBERCITY": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Strongly painted street style: thick spray paint and wide brush strokes, visible paint texture as if painted on a wall, rough dry-brush edges, small paint splatters and specks around the letters, "CYBER" sharp and aggressive, "CITY" even more painted and expressive. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, no wall visible, nothing else. Color: electric yellow paint, with paint drips running down from the bottom of the letters of "CITY".
+```
+
+## LG25 — LG25_Pintado_Turquesa
+- **Salida:** `imageassets/referencias-privadas/logo/LG25_Pintado_Turquesa.png` · 16:9 · **Adjuntar:** `LG20_Amarillo.png`
+
+```
+Use the attached logo ONLY as a reference for the composition: the word slanted to the right, the fast underline stroke, the small street light pole at the right end of the underline and the faint tower silhouette behind the letters. Redraw the lettering with our OWN letterforms (do not copy the letter shapes of the attached logo or of any existing game logo). The text must read exactly "CYBERCITY": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Strongly painted street style: thick spray paint and wide brush strokes, visible paint texture as if painted on a wall, rough dry-brush edges, small paint splatters and specks around the letters, "CYBER" sharp and aggressive, "CITY" even more painted and expressive. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, no wall visible, nothing else. Color: turquoise paint with a coral red (#FF5A4E) outline stroke around the letters.
+```
+
+## LG26 — LG26_Pintado_Blanco
+- **Salida:** `imageassets/referencias-privadas/logo/LG26_Pintado_Blanco.png` · 16:9 · **Adjuntar:** `LG20_Amarillo.png`
+
+```
+Use the attached logo ONLY as a reference for the composition: the word slanted to the right, the fast underline stroke, the small street light pole at the right end of the underline and the faint tower silhouette behind the letters. Redraw the lettering with our OWN letterforms (do not copy the letter shapes of the attached logo or of any existing game logo). The text must read exactly "CYBERCITY": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Strongly painted street style: thick spray paint and wide brush strokes, visible paint texture as if painted on a wall, rough dry-brush edges, small paint splatters and specks around the letters, "CYBER" sharp and aggressive, "CITY" even more painted and expressive. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, no wall visible, nothing else. Color: white paint with a turquoise shadow copy offset down and to the right, and extra white and turquoise splatters.
+```
+
+## H33 — H33_Implantes_Nivel2
+- **Salida:** `imageassets/ui/menus/H33_Implantes_Nivel2.png` · 21:9 · **Adjuntar:** `H30_IconosImplantes.png`, `IMP01_ExoPiernas_v2.png`, `IMP02_ExoBrazos_v2.png`, `IMP03_VisorCabeza_v2.png`
+
+```
+The FIRST attached image is our icon sheet: match its icon style EXACTLY (illustrated, slightly glowing, centered in dark square slots with thin rarity-colored borders, same lighting and rendering). PURE BLACK (#000000) flat background, slots the same size with even spacing, no text, no labels, no numbers. Draw 3 implant icons in a single row, all with BLUE rarity borders (level II). Each icon must show EXACTLY the implant in its attached image, with the same shape, parts, colors and details, only simplified into the icon style: 1) the leg exoskeleton from the second attached image, 2) the arm exoskeleton from the third attached image, 3) the head visor from the fourth attached image. Show each one at a 3/4 angle, filling its slot.
+```
+
+## H34 — H34_PiezasArma
+- **Salida:** `imageassets/ui/menus/H34_PiezasArma.png` · 3:2 · **Adjuntar:** `H30_IconosImplantes.png`, `W01_Pistola.png`
+
+```
+The FIRST attached image is our icon sheet: match its icon style EXACTLY (illustrated, slightly glowing, centered in dark square slots with thin rarity-colored borders, same lighting and rendering). PURE BLACK (#000000) flat background, slots the same size with even spacing, no text, no labels, no numbers. The SECOND attached image is our pistol W01. Draw 6 weapon part icons in a grid of 3 columns by 2 rows, each one a single part of THIS pistol, with exactly the same design, colors (dark gunmetal, sand-beige, burnt orange, red tape) and wear as the pistol: 1) the magazine, 2) the slide (the top dark gunmetal part with its vents), 3) the barrel with its orange muzzle tip, 4) the small rear and front sights, 5) the grip wrapped in red tape, 6) the frame (the sand-beige lower body with the trigger guard). Each part shown alone at a 3/4 angle, filling its slot. Slot borders in rarity colors: green, green, blue, blue, purple, orange.
+```
+
+
+### H33b — H33_Implantes_Nivel2_v2 (fase 3): nivel 2 con los implantes completos (IMP01/02/03 originales, sin _v2)
+
+```
+The FIRST attached image is our icon sheet: match its icon style EXACTLY (illustrated, slightly glowing, centered in dark square slots with thin rarity-colored borders, same lighting and rendering). PURE BLACK (#000000) flat background, 3 slots the same size in a single row with even spacing, no text, no labels, no numbers. These are LEVEL II implants, all with BLUE rarity borders: they must look clearly BIGGER, HEAVIER and MORE COMPLETE than the level I versions (which are only thin rods), filling most of their slot. Each icon shows EXACTLY the implant in its attached image, same parts, colors and details, simplified into the icon style, at a 3/4 angle: 1) from the second attached image: the FULL leg exoskeleton with a hip belt, armored thigh plates, chunky knee joints, shin plates and foot trays; 2) from the third attached image: the FULL upper-body exoskeleton with a chest and back plate, big shoulder pads, hinged elbow joints and forearm gauntlets; 3) from the fourth attached image: the goggle-style visor that wraps around the head over both eyes with a wide glowing turquoise lens.
+```

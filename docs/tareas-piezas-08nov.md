@@ -44,3 +44,19 @@ que no quede Unity.exe, borrar Temp/UnityLockfile y repetirlo si vuelve.
 
 ## Pendiente de Tony (no esperar)
 - Carrocería y puertas de V02, V03, V04, V06, V09 y V10; cuerpos de V07 y V08.
+
+## B5. Piezas de calle (llegaron 8-nov 01:45) → imageassets/modelos3d/calle/
+TK01 base de tinaco · NE01 y NE01B neón de bandera (magenta / turquesa) · NE02 neón de pared · AL01 alcantarilla (rejilla) · MT01 muro
+trasero de callejón · TL01 toldo de lámina · FA01 letrero FARMACIA · NV01 fachada de oficinas de Nova · NV02 planta baja de Nova ·
+BL01 bolardo · BT01 bote de basura de Nova.
+- Sustituir en `KitS2c` (Assets/Arte/Editor/KitS2c.cs) lo que hoy está hecho en código por estos modelos (base de tinaco, neones,
+  alcantarilla, muro trasero, toldo en puertas de vivienda, farmacia de la esquina K05) y el frente de Nova (NV01 apilado, NV02, BL01,
+  BT01). Volver a correr las colocaciones S2c (Suburbios, Mercado, Neón Alto, Nova) y comparar con K01, K05 y K06.
+- Faltan todavía ES01 semáforo y BS01 basura: se quedan los actuales.
+
+## B6. Personajes con rig de Tripo → imageassets/modelos3d/personajes/ y R01
+- AL10 (aliado 1, sudadera y gorra) y AL11 (aliada 2) en `personajes/AL10/`, `personajes/AL11/`; R01 mesera robot en
+  `modelos3d/R01.zip`. Los tres traen esqueleto de Tripo (como PJ01): importar como Humanoid y probar con los clips de Mixamo; si alguno
+  se ve torcido, avisar a Tony para pasarlo por Mixamo.
+- AL10 y AL11 reemplazan el modelo de los aliados que te siguen (AL12 aún no llega: el tercero queda como está).
+- R01: 2–3 meseras en el casino caminando entre las mesas con charola (Idle y caminar).
