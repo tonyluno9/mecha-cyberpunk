@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Combate.Efectos;
 using MechaCyberpunk.Core;
 using UnityEngine;
 
@@ -19,12 +20,9 @@ namespace MechaCyberpunk.IA.APie
         [SerializeField] private LineRenderer laser;
         [Tooltip("Material del láser (rojo, sin sombras).")]
         [SerializeField] private Material materialLaser;
-        // T-676: sin rayos láser. El aviso y el trazo de la bala son un hilo finísimo y cortísimo.
-        private const float DuracionTrazo = 0.03f;
+        // T-676: sin rayos láser; el aviso es un hilo finísimo. T-745: el trazo de la bala lo dibuja TrazadorBala.
         private const float Grosor = 0.006f;
-        private const float LargoTrazo = 6f;
         private static readonly Color ColorAviso = new Color(1f, 0.2f, 0.15f, 0.35f);
-        private static readonly Color ColorTrazo = new Color(1f, 0.9f, 0.6f, 0.9f);
 
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
         private float finTrazo = -1f;
@@ -164,12 +162,15 @@ namespace MechaCyberpunk.IA.APie
                 punto = puntoCubierta;
             }
             bool acierta = libre && Azar() <= probabilidad;
-            // Trazo finísimo y cortísimo: solo un tramo corto desde la boca.
-            PonerColor(ColorTrazo);
-            laser.SetPosition(0, origen);
-            laser.SetPosition(1, origen + direccion * Mathf.Min(LargoTrazo, Mathf.Max(0.1f, (punto - origen).magnitude)));
-            laser.enabled = true;
-            finTrazo = Time.time + DuracionTrazo;
+            // T-745: el trazo termina donde pega la bala. Si falla en campo abierto sigue hasta el muro o el alcance máximo.
+            if (libre && !acierta)
+            {
+                TrazadorBala.TrazarDireccion(origen, direccion, transform);
+            }
+            else
+            {
+                TrazadorBala.Trazar(origen, punto, true);
+            }
             if (!acierta)
             {
                 return false;

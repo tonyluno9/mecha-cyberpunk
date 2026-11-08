@@ -89,10 +89,11 @@ namespace MechaCyberpunk.Tests.Vehiculos
             yield return null;
             ExplosionCarro e = danio.UltimaExplosion;
             Assert.IsNotNull(e, "Al reventar se crea la explosión");
+            yield return Esperar(0.25f); // T-745: los flipbook del Particle Pack empiezan a emitir con un pequeño retraso
             Assert.Greater(e.Fuego.particleCount, 0, "fuego");
             Assert.Greater(e.Humo.particleCount, 0, "humo");
             Assert.Greater(e.Chispas.particleCount, 0, "chispas");
-            Assert.Greater(e.Onda.particleCount, 0, "onda expansiva");
+            Assert.IsNotNull(e.Onda, "onda expansiva (la dibuja el pack)");
             Assert.IsTrue(e.Luz.enabled);
             Assert.Greater(e.Luz.intensity, 2f, "la luz destella fuerte");
             Assert.Contains("VEH_EXPLOSION", sonidos.Ids, "el estruendo pasa por el gestor (T-620)");
