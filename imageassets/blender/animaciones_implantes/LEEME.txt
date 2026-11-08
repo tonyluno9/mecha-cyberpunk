@@ -1,0 +1,22 @@
+ANIMACIONES PARA PJ01 CON Y SIN IMPLANTES (CyberCity)
+Esqueleto mixamorig (65 huesos), 30 fps, toma mixamo.com. En Unity: Humanoid, Loop Time activado.
+
+Caminar_SinImplante.fbx  = Loco_Caminar original (Movimiento_base).
+Caminar_ConImplante.fbx  = hombros 10° arriba, brazos 12° separados y pecho al frente, para que los brazos no atraviesen
+                           el exoesqueleto de piernas (IMP01). Es el mismo que imageassets/blender/pistola/Loco_Caminar.fbx.
+Correr_SinImplante.fbx   = Loco_Correr original.
+Correr_ConImplante.fbx   = mismo ajuste que caminar. Igual a imageassets/blender/pistola/Loco_Correr.fbx.
+
+Uso: con implante de piernas puesto, el Animator usa las versiones ConImplante; sin implante, las SinImplante.
+
+IMPLANTE 01 (piernas) - compatibilidad:
+  IMP01_LVL1 (anillo + muslos + estribos) -> usar las versiones ConImplante.
+  IMP01_LVL2 (exoesqueleto completo)      -> usar las mismas ConImplante. Probadas: caminar 0 choques de brazos,
+                                             correr solo un roce minimo de la mano con el cinturon en 2 cuadros.
+  La suela del LVL2 queda a ras de piso (el zapato entra en la bandeja), asi que NO hace falta subir al personaje.
+
+IMPLANTE 02 (brazos) - compatibilidad:
+  IMP02_LVL1 (columna + yugo de hombros + barras de brazo + brazaletes) -> usar las versiones ConImplante.
+                                             Caminar: 0 choques. Correr: roces minimos del codo/brazalete izquierdo en 5 cuadros.
+  IMP02_LVL2 (peto + hombreras + bisagra de codo + guantelete) -> usar las versiones ConImplante.
+                                             El guantelete se corto en 3 piezas (tubo de muneca, placa, copa del codo) para que quepa en el antebrazo grueso.

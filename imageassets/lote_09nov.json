@@ -1,0 +1,157 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "M20",
+   "archivo": "M20_MenuInicio",
+   "fase": 1,
+   "salida": "imageassets/referencias/menus/M20_MenuInicio.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuInicio.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The attached screenshots marked as menu references are ONLY a style guide: take their general visual language (dark panels with thin red lines, corners cut on a diagonal, cyan accents for active elements, slots with colored borders by rarity, thin condensed uppercase typography, lots of empty space, a hologram in the center). Do NOT copy anything specific from them: no logos, no names, no icons, no texts, no layouts copied one to one. This is an ORIGINAL menu design for our own game CYBERCITY. Palette: coral red (#FF5A4E) for lines and titles, cyan (#3FE3E0) for active and selected elements, an almost black reddish background, rarity colors green, blue, purple and orange. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game menu screen, crisp and readable, like a polished commercial game. The second attached image is our game's city: use it, softly blurred and darkened, as the background. Screen: the main menu. On the left a tall vertical translucent dark red panel with thin coral red edge lines and a diagonal cut corner; at the top of the panel the game logo text \"CYBERCITY\" (spelled exactly C-Y-B-E-R-C-I-T-Y) in aggressive slanted brush-like letters; below it a vertical list of options in thin condensed uppercase: \"CONTINUAR\" (highlighted in cyan with a small marker, as selected), \"NUEVA PARTIDA\", \"CARGAR\", \"OPCIONES\", \"CRÉDITOS\", \"SALIR\". In the bottom-left corner a tiny version number \"v0.9\". The rest of the screen shows the blurred night street."
+  },
+  {
+   "id": "M21",
+   "archivo": "M21_MejoraArmas",
+   "fase": 1,
+   "salida": "imageassets/referencias/menus/M21_MejoraArmas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuArmas1.png",
+    "imageassets/referencias/menus/REF_MenuArmas2.png",
+    "imageassets/ui/hologramas/H01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The attached screenshots marked as menu references are ONLY a style guide: take their general visual language (dark panels with thin red lines, corners cut on a diagonal, cyan accents for active elements, slots with colored borders by rarity, thin condensed uppercase typography, lots of empty space, a hologram in the center). Do NOT copy anything specific from them: no logos, no names, no icons, no texts, no layouts copied one to one. This is an ORIGINAL menu design for our own game CYBERCITY. Palette: coral red (#FF5A4E) for lines and titles, cyan (#3FE3E0) for active and selected elements, an almost black reddish background, rarity colors green, blue, purple and orange. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game menu screen, crisp and readable, like a polished commercial game. The third attached image is our pistol hologram: use it as the big hologram in the center. Screen: the weapon upgrade bench of Tino. Top: two tabs \"MEJORAS\" (active, cyan underline) and \"ARMAS\". Left side: a column of small category icons in thin red line, and next to it a grid of weapon slots with colored borders by rarity (green, blue, purple, orange), each showing a small weapon silhouette. Center: the pistol as a large glowing cyan hologram seen from the side, with its magazine pulled slightly out below it and glowing brighter, as the selected part. Right side: the weapon name \"PISTOLA W01\", the rarity \"RARA\" in blue, and three stats with before and after values: \"DAÑO 24 → 30\", \"CADENCIA 3.0 → 3.0\", \"CARGADOR 12 → 16\", the improved values in cyan. Bottom: a row of 4 part slots labeled \"CARGADOR\" (selected, cyan border), \"CAÑÓN\", \"MIRA\", \"EMPUÑADURA\", each with a small cost like \"$ 1,200\", and a button \"MEJORAR\" with a cut corner."
+  },
+  {
+   "id": "M22",
+   "archivo": "M22_ClinicaImplantes",
+   "fase": 1,
+   "salida": "imageassets/referencias/menus/M22_ClinicaImplantes.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuImplantes.png",
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/modelos-nuevos/IMP01_ExoPiernas_v2.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The attached screenshots marked as menu references are ONLY a style guide: take their general visual language (dark panels with thin red lines, corners cut on a diagonal, cyan accents for active elements, slots with colored borders by rarity, thin condensed uppercase typography, lots of empty space, a hologram in the center). Do NOT copy anything specific from them: no logos, no names, no icons, no texts, no layouts copied one to one. This is an ORIGINAL menu design for our own game CYBERCITY. Palette: coral red (#FF5A4E) for lines and titles, cyan (#3FE3E0) for active and selected elements, an almost black reddish background, rarity colors green, blue, purple and orange. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game menu screen, crisp and readable, like a polished commercial game. The second attached image is our protagonist and the third is a leg exoskeleton implant: use them. Screen: the implant clinic of the Doc. Center: the full body of the protagonist standing as a hologram in red and orange tones with glowing vein-like light lines, a slightly see-through hologram, a thin glowing leg exoskeleton outlined on his legs. Thin lines go out from the body to groups of square implant slots on both sides: top-left group labeled \"CABEZA / OJOS\" with 2 slots, middle-left group \"BRAZOS\" with 3 slots, middle-right group \"PIERNAS\" with 3 slots (one selected with a cyan border), lower-right group \"PIEL / ESCUDO\" with 2 slots; slots have rarity-colored borders and small implant icons, some empty. A detail box for the selected implant: title \"EXO DE PIERNAS II\", a short description \"Salto más alto y menos daño por caída.\", the cost \"$ 4,500\" and a button \"INSTALAR\". Top-right corner: \"I+D+I · CLÍNICA DEL DOC\" and the money \"$ 12,450\"."
+  },
+  {
+   "id": "LG20",
+   "archivo": "LG20_Amarillo",
+   "fase": 2,
+   "salida": "imageassets/logo/LG20_Amarillo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuInicio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: electric yellow letters with a thin cyan outline."
+  },
+  {
+   "id": "LG21",
+   "archivo": "LG21_Rojo",
+   "fase": 2,
+   "salida": "imageassets/logo/LG21_Rojo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuInicio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: coral red (#FF5A4E) letters with a soft red glow."
+  },
+  {
+   "id": "LG22",
+   "archivo": "LG22_Cian",
+   "fase": 2,
+   "salida": "imageassets/logo/LG22_Cian.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuInicio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: cyan (#3FE3E0) letters with a slight red glitch offset on a few strokes."
+  },
+  {
+   "id": "LG23",
+   "archivo": "LG23_Blanco",
+   "fase": 2,
+   "salida": "imageassets/logo/LG23_Blanco.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuInicio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: white letters with a coral red shadow copy offset down and to the right."
+  },
+  {
+   "id": "H30",
+   "archivo": "H30_IconosImplantes",
+   "fase": 3,
+   "salida": "imageassets/ui/menus/H30_IconosImplantes.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuImplantes.png",
+    "imageassets/modelos-nuevos/IMP01_ExoPiernas_v2.png",
+    "imageassets/modelos-nuevos/IMP02_ExoBrazos_v2.png",
+    "imageassets/modelos-nuevos/IMP03_VisorCabeza_v2.png"
+   ],
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached menu reference ONLY for the general style of the item icons (illustrated, slightly glowing, in dark square slots with thin colored borders). Original icons of our own, do not copy any icon from the reference. A clean icon sheet on a PURE BLACK (#000000) flat background: each icon centered inside its own square slot, slots in a neat grid with even spacing, all slots the same size, no text, no labels, no numbers. The other attached images are our implants: base the icons on them. 6 illustrated implant icons in a grid of 3 columns by 2 rows, slot borders by rarity: 1) leg exoskeleton level I (simple rods, green border), 2) leg exoskeleton level II (the same with extra glowing parts, blue border), 3) arm exoskeleton level I (green border), 4) arm exoskeleton level II (blue border), 5) a bionic eye monocle (purple border), 6) a goggles visor for the eyes (orange border)."
+  },
+  {
+   "id": "H31",
+   "archivo": "H31_IconosPiezasArma",
+   "fase": 3,
+   "salida": "imageassets/ui/menus/H31_IconosPiezasArma.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuArmas1.png",
+    "imageassets/ui/hologramas/H01_Pistola.png"
+   ],
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached menu reference ONLY for the general style of the item icons (illustrated, slightly glowing, in dark square slots with thin colored borders). Original icons of our own, do not copy any icon from the reference. A clean icon sheet on a PURE BLACK (#000000) flat background: each icon centered inside its own square slot, slots in a neat grid with even spacing, all slots the same size, no text, no labels, no numbers. 6 illustrated weapon part icons in a grid of 3 columns by 2 rows, slot borders in rarity colors (green, green, blue, blue, purple, orange): a pistol magazine, a gun barrel, a small scope sight, a pistol grip, a suppressor, a small glowing damage chip."
+  },
+  {
+   "id": "H32",
+   "archivo": "H32_IconosCategorias",
+   "fase": 3,
+   "salida": "imageassets/ui/menus/H32_IconosCategorias.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/REF_MenuArmas2.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached menu reference ONLY for the general line style. Original icons of our own. A single row of 8 category icons evenly spaced on a PURE BLACK (#000000) flat background, each drawn in a single thin coral red (#FF5A4E) line, same line weight and size, no slots, no text: a pistol, a shotgun, an assault rifle, a sniper rifle with scope, a combat knife, a consumable (a drink can and a small box), an implant (a robotic arm segment), a weapon part (a gear with a bullet)."
+  }
+ ]
+}

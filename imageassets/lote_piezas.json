@@ -1,0 +1,671 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/modelos-nuevos/piezas",
+ "trabajos": [
+  {
+   "id": "RU01",
+   "archivo": "RU01_LlantaCarro",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/piezas/RU01_LlantaCarro.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png",
+    "imageassets/carros/V05_PatrullaSedan.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached cars ONLY for the art style, wheel size and the look of their tires and rims; draw a generic wheel that fits all of them. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONE single car wheel on its own: a chunky dark rubber tire with simple tread and a simple plain steel rim in dark gunmetal with a few round holes and a center cap, light wear and dust. Show the same wheel twice side by side with space between them: on the left seen straight from the side (looking directly at the rim), on the right in a 3/4 view showing the tread and thickness.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "0.65 m de diámetro · 0.22 m de ancho"
+  },
+  {
+   "id": "RU02",
+   "archivo": "RU02_LlantaMoto",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/piezas/RU02_LlantaMoto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V07_MotoReparto.png",
+    "imageassets/generadas/C19_Moto_v1.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached motorcycles ONLY for the art style, wheel size and look; draw a generic wheel that fits all of them. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONE single motorcycle wheel on its own: a chunky dark rubber tire with simple tread and a spoked rim with thick chunky spokes (about 12) and a small hub in dark gunmetal, light wear. Show the same wheel twice side by side with space between them: on the left seen straight from the side, on the right in a 3/4 view showing the tread and thickness.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "0.55 m de diámetro · 0.12 m de ancho"
+  },
+  {
+   "id": "V01a-C",
+   "archivo": "V01a_Carroceria",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/piezas/V01a_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.2 × 1.95 × 2.3 m (sin ruedas)"
+  },
+  {
+   "id": "V01a-P",
+   "archivo": "V01a_Puerta",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/piezas/V01a_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V05-C",
+   "archivo": "V05_Carroceria",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/piezas/V05_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V05_PatrullaSedan.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.6 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V05-P",
+   "archivo": "V05_Puerta",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/piezas/V05_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V05_PatrullaSedan.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V09-C",
+   "archivo": "V09_Carroceria",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/piezas/V09_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V09_Taxi.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.2 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V09-P",
+   "archivo": "V09_Puerta",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/piezas/V09_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V09_Taxi.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V01b-C",
+   "archivo": "V01b_Carroceria",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V01b_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01b_CarroPro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.5 × 1.5 × 2.4 m (sin ruedas)"
+  },
+  {
+   "id": "V01b-P",
+   "archivo": "V01b_Puerta",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V01b_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/V01b_CarroPro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V02-C",
+   "archivo": "V02_Carroceria",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V02_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V02_SedanViejo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.3 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V02-P",
+   "archivo": "V02_Puerta",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V02_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V02_SedanViejo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V03-C",
+   "archivo": "V03_Carroceria",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V03_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V03_PickupTrabajo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.8 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V03-P",
+   "archivo": "V03_Puerta",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V03_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V03_PickupTrabajo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V04-C",
+   "archivo": "V04_Carroceria",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V04_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V04_CombiVieja.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.6 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V04-P",
+   "archivo": "V04_Puerta",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V04_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V04_CombiVieja.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V06-C",
+   "archivo": "V06_Carroceria",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V06_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V06_PatrullaCamioneta.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "5.0 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V06-P",
+   "archivo": "V06_Puerta",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V06_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V06_PatrullaCamioneta.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "V10-C",
+   "archivo": "V10_Carroceria",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V10_Carroceria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V10_Pickup.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.8 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V10-P",
+   "archivo": "V10_Puerta",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/piezas/V10_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V10_Pickup.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "puerta delantera izq. (~1.1 × 1.1 m)"
+  },
+  {
+   "id": "C01F",
+   "archivo": "C01_Fachada_SinPuerta_v2",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/piezas/C01_Fachada_SinPuerta_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C01_FachadaLocal.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the door opening (the shop entrance with its rolling shutter) is now completely EMPTY: keep the door frame and the shutter box above it, but remove the shutter and any door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "igual que C01"
+  },
+  {
+   "id": "C02F",
+   "archivo": "C02_Fachada_SinPuerta_v2",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/piezas/C02_Fachada_SinPuerta_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C02_FachadaVivienda.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the house door opening is now completely EMPTY: keep the door frame, but remove the door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "igual que C02"
+  },
+  {
+   "id": "C03F",
+   "archivo": "C03_Fachada_SinPuerta_v2",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/piezas/C03_Fachada_SinPuerta_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C03_FachadaPisoAlto.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that any ground floor door opening is now completely EMPTY: keep the door frame, but remove the door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "igual que C03"
+  },
+  {
+   "id": "P11F",
+   "archivo": "P11_EntradaCasa_SinPuerta_v2",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/piezas/P11_EntradaCasa_SinPuerta_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/P11_EntradaCasa.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the entrance opening is now completely EMPTY: keep the thick concrete door frame, the steps, the mailboxes, the bulb and the conduit, but remove the metal grille gate and any door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2.2 × 3 m"
+  },
+  {
+   "id": "P12F",
+   "archivo": "P12_FachadaConsultorio_SinPuerta_v2",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/piezas/P12_FachadaConsultorio_SinPuerta_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/P12_FachadaConsultorio.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the door opening is now completely EMPTY: keep the door frame, the light strip and the cross above it, but remove the heavy metal door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. ",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "6 × 4.5 m"
+  },
+  {
+   "id": "PU01",
+   "archivo": "PU01_PuertaVivienda",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/piezas/PU01_PuertaVivienda.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C02_FachadaVivienda.png",
+    "imageassets/C01_FachadaLocal.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: a single house front door on its own, closed, seen straight from the front with a very slight angle so its thickness shows: painted wood and metal sheet panels in a faded color, a chunky round knob and a lock, a small vent grille, scuffs and chipped paint. No frame, only the door leaf.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "0.9 × 2.1 m · 5 cm de grueso"
+  },
+  {
+   "id": "PU02",
+   "archivo": "PU02_CortinaMetalica",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/piezas/PU02_CortinaMetalica.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C01_FachadaLocal.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: a single rolling metal shop shutter on its own, fully closed (rolled down): horizontal corrugated metal slats in grey with a faded paint, a thick bottom bar with a handle and a padlock loop, the rolled drum box on top, dents and grime. Seen straight from the front with a very slight angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "2.4 × 2.4 m (ajustar al hueco de C01)"
+  },
+  {
+   "id": "PU03",
+   "archivo": "PU03_RejaEntrada",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/piezas/PU03_RejaEntrada.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/P11_EntradaCasa.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the metal grille security gate of that building entrance, on its own, closed: a thick metal frame with the same lattice of chunky bars, a padlock and a handle, the same paint and rust. Only the gate leaf, no wall, no frame. Seen straight from the front with a very slight angle.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1.1 × 2.2 m · 6 cm de grueso"
+  },
+  {
+   "id": "PU04",
+   "archivo": "PU04_PuertaMetalica",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/piezas/PU04_PuertaMetalica.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/P12_FachadaConsultorio.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the heavy reinforced metal door of that clinic, on its own, closed: thick riveted steel plate, the small speaker grille, a chunky handle and lock, the same paint, grime and rust. Only the door leaf, no wall, no frame. Seen straight from the front with a very slight angle.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "1 × 2.2 m · 8 cm de grueso"
+  },
+  {
+   "id": "V07-B",
+   "archivo": "V07_Cuerpo",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/piezas/V07_Cuerpo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V07_MotoReparto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached motorcycle as the exact reference: keep EXACTLY the same design, shape, colors, panels, lights, cargo, details, wear and art style. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the same motorcycle WITHOUT its two wheels: the front fork and the rear swingarm stay, with their empty axle ends where the wheels would go, nothing inside them; the motorcycle stands upright as if on an invisible stand. Show it twice side by side with space between them: on the left straight from the side, on the right in a 3/4 front view.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.9 m de largo (sin ruedas)"
+  },
+  {
+   "id": "V08-B",
+   "archivo": "V08_Cuerpo",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/piezas/V08_Cuerpo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/carros/V08_MotoPatrulla.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached motorcycle as the exact reference: keep EXACTLY the same design, shape, colors, panels, lights, cargo, details, wear and art style. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the same motorcycle WITHOUT its two wheels: the front fork and the rear swingarm stay, with their empty axle ends where the wheels would go, nothing inside them; the motorcycle stands upright as if on an invisible stand. Show it twice side by side with space between them: on the left straight from the side, on the right in a 3/4 front view.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.2 m de largo (sin ruedas)"
+  },
+  {
+   "id": "C19-B",
+   "archivo": "C19_Cuerpo",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/piezas/C19_Cuerpo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/generadas/C19_Moto_v1.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached motorcycle as the exact reference: keep EXACTLY the same design, shape, colors, panels, lights, cargo, details, wear and art style. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the same motorcycle WITHOUT its two wheels: the front fork and the rear swingarm stay, with their empty axle ends where the wheels would go, nothing inside them; the motorcycle stands upright as if on an invisible stand. Show it twice side by side with space between them: on the left straight from the side, on the right in a 3/4 front view.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.0 m de largo (sin ruedas)"
+  },
+  {
+   "id": "PU02b",
+   "archivo": "PU02_CortinaMetalica_v2",
+   "fase": 7,
+   "salida": "imageassets/modelos-nuevos/piezas/PU02_CortinaMetalica_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/C01_FachadaLocal.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached facade ONLY to match the style, colors and wear. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the slatted curtain sheet of a rolling metal shop shutter, on its own, as a flat rectangular panel: horizontal corrugated dark grey metal slats from top to bottom, a thick bottom bar with a small handle and a padlock loop, faded paint, dents and grime. NO frame, NO side guide rails, NO roll drum, NO box on top, NO wall: the top edge of the panel is just the last slat, straight and clean. Seen straight from the front with a very slight angle so its thin thickness is visible.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 4000,
+    "textura": "2K"
+   },
+   "medida": "2.4 × 2.4 m · 4 cm de grueso (ajustar al hueco de C01)"
+  }
+ ]
+}
