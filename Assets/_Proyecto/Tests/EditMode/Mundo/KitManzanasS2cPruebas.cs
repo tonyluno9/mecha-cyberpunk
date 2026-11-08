@@ -76,7 +76,7 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Nova_EdificiosAltosYLuzFria()
         {
             GameObject p = Cargar("Frente_Nova");
-            int torres = p.GetComponentsInChildren<Transform>().Count(t => t.parent == p.transform.GetChild(0) && t.name.StartsWith("T2"));
+            int torres = p.GetComponentsInChildren<Transform>().Count(t => t.parent == p.transform.GetChild(0) && t.name.StartsWith("Edificio_"));
             Assert.GreaterOrEqual(torres, 2, "edificios de oficinas");
             Light[] postes = p.GetComponentsInChildren<Light>(true).Where(l => l.type == LightType.Spot).ToArray();
             Assert.GreaterOrEqual(postes.Length, 2);

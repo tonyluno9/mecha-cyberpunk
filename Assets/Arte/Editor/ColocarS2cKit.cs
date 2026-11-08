@@ -215,32 +215,23 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        /// <summary>
-        /// El letrero de FARMACIA de K05: el letrero horizontal C15a con el texto FARMACIA en verde y una cruz verde de neón a un lado, con luz
-        /// verde que se prende de noche. (El letrero_farmacia del kit urbano viejo es de bloques sin textura.)
-        /// </summary>
+        /// <summary>T-891: el letrero FA01 de K05 (FARMACIA a lo largo del muro y la cruz verde en la punta), con luz verde de noche.</summary>
         private static void LetreroFarmacia(KitS2c.Obra o, Transform padre, Vector3 p, Vector3 haciaCalle)
         {
+            const string codigo = "FA01_Farmacia";
+            const float escala = 0.7f;
             haciaCalle.y = 0f;
             haciaCalle.Normalize();
-            Vector3 lado = Vector3.Cross(Vector3.up, haciaCalle).normalized;
             GameObject raiz = new GameObject("LetreroFarmacia");
             raiz.transform.SetParent(padre, false);
             raiz.transform.position = p;
-            Quaternion giro = Quaternion.LookRotation(-haciaCalle);
-            GameObject caja = KitS2c.Pieza(raiz.transform, "C15a_LetreroHorizontal", p - Vector3.up * 0.45f + lado * 0.4f, giro, new Vector3(0.85f, 0.8f, 0.6f), false);
-            caja.name = "Caja";
-            KitS2c.Medida m = KitS2c.Medir("C15a_LetreroHorizontal");
-            Vector3 cara = p + lado * 0.4f + haciaCalle * (-m.Muro * 0.6f + 0.02f) - Vector3.up * 0.45f + Vector3.up * (m.Caja.size.y * 0.8f * 0.5f);
-            ColocarS2t.TextoMundo(raiz.transform, "Texto", "FARMACIA", cara, new Vector2(2.2f, 0.6f), haciaCalle, new Color(0.45f, 1f, 0.62f));
-            GameObject cruz = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Object.DestroyImmediate(cruz.GetComponent<Collider>());
-            cruz.name = "Cruz";
-            cruz.transform.SetParent(raiz.transform, false);
-            cruz.transform.SetPositionAndRotation(cara - lado * 1.75f + haciaCalle * 0.05f, giro);
-            cruz.transform.localScale = Vector3.one * 0.75f;
-            cruz.GetComponent<MeshRenderer>().sharedMaterial = KitS2c.Mat("S2c_CruzFarmacia", () => KitS2c.Emision(new Color(0.4f, 2.6f, 0.9f), KitS2c.TexCruz()));
-            KitS2c.Luz(raiz.transform, cara + haciaCalle * 0.6f, LightType.Point, new Color(0.3f, 1f, 0.45f), 1.4f, 5f, 0f);
+            KitS2c.Medida m = KitS2c.Medir(codigo);
+            // El modelo trae las ménsulas hacia -X: su +X local va hacia la calle.
+            Quaternion giro = Quaternion.LookRotation(Vector3.Cross(haciaCalle, Vector3.up));
+            Vector3 muro = p - haciaCalle * 0.55f;
+            Vector3 centro = muro + haciaCalle * (m.Caja.size.x * escala * 0.5f + 0.02f);
+            KitS2c.Pieza(raiz.transform, codigo, centro - Vector3.up * (m.Caja.size.y * escala * 0.5f), giro, Vector3.one * escala, false).name = "Letrero";
+            KitS2c.Luz(raiz.transform, centro + haciaCalle * 0.9f, LightType.Point, new Color(0.3f, 1f, 0.45f), 1.4f, 5f, 0f);
         }
 
         /// <summary>
@@ -295,7 +286,7 @@ namespace MechaCyberpunk.Arte.Editor
             float cubierto = NovaEdificios(o, raiz, a, direccion, normal, largo, banqueta);
             for (float x = 2f; x < largo - 1f; x += 3f)
             {
-                KitS2c.Pieza(raiz, "C18_BarreraCalle", a + direccion * x + normal * (anchoBanqueta - 0.35f) + Vector3.up * banqueta, Quaternion.LookRotation(direccion), new Vector3(0.14f, 0.9f, 0.3f));
+                KitS2c.Pieza(raiz, "BL01_Bolardo", a + direccion * x + normal * (anchoBanqueta - 0.35f) + Vector3.up * banqueta, Quaternion.LookRotation(direccion), new Vector3(EscalaBolardo, 1f, EscalaBolardo));
             }
             for (float x = 10f; x < largo - 3f; x += 20f)
             {
@@ -307,41 +298,59 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 if (x + 6f < largo - 1f)
                 {
-                    KitS2c.Pieza(raiz, "C11_Basurero", a + direccion * (x + 6f) + normal * 0.8f + Vector3.up * banqueta, Quaternion.LookRotation(normal), Vector3.one);
+                    KitS2c.Pieza(raiz, "BT01_BoteBasura", a + direccion * (x + 6f) + normal * 0.8f + Vector3.up * banqueta, Quaternion.LookRotation(normal), Vector3.one);
                 }
             }
         }
 
         public const float SeparacionTorres = 0.02f;
+        private const float EscalaBolardo = 0.42f;
+        private const string ModuloOficinas = "NV01_FachadaOficinas";
+        private const string PlantaBajaNova = "NV02_PlantaBajaNova";
+        private const float AnchoModulo = 6f;
+        private const float FondoEdificioNova = 14f;
+        private const int PisosConModulo = 5;
+        private const int PisosMinimos = 7;
+        private const int PisosMaximos = 12;
 
-        /// <returns>Hasta dónde llegan las torres a lo largo del frente (m).</returns>
+        /// <summary>
+        /// T-891: edificios de oficinas de módulos NV01 sobre una planta baja con NV02 al centro. Arriba de <see cref="PisosConModulo"/> pisos sigue
+        /// solo el cuerpo oscuro, que ya se pierde en la niebla. El cuerpo es el que choca. T-888: van juntos, sin rendijas.
+        /// </summary>
+        /// <returns>Hasta dónde llegan los edificios a lo largo del frente (m).</returns>
         private static float NovaEdificios(KitS2c.Obra o, Transform raiz, Vector3 a, Vector3 direccion, Vector3 normal, float largo, float banqueta)
         {
-            string[] torres = { "T20", "T21", "T22", "T23" };
+            KitS2c.Medida mo = KitS2c.Medir(ModuloOficinas);
+            KitS2c.Medida mb = KitS2c.Medir(PlantaBajaNova);
+            Quaternion giro = Quaternion.LookRotation(-normal);
+            Material cuerpo = KitS2c.MatNovaCuerpo();
             float x = 0f;
-            int i = 0;
-            while (x < largo - 4f)
+            int n = 0;
+            while (largo - x >= AnchoModulo)
             {
-                string codigo = torres[i % torres.Length];
-                GameObject p = KitS2c.Prefab(codigo);
-                if (p == null)
+                int modulos = Mathf.Min(2 + o.Azar.Next(3), Mathf.FloorToInt((largo - x) / AnchoModulo));
+                int pisos = o.Azar.Next(PisosMinimos, PisosMaximos + 1);
+                float ancho = modulos * AnchoModulo;
+                float alto = mb.Caja.size.y + (pisos - 1) * mo.Caja.size.y;
+                Transform edificio = new GameObject("Edificio_" + n).transform;
+                edificio.SetParent(raiz, false);
+                for (int m = 0; m < modulos; m++)
                 {
-                    break;
+                    Vector3 pie = a + direccion * (x + (m + 0.5f) * AnchoModulo) + Vector3.up * banqueta;
+                    bool entrada = m == modulos / 2;
+                    KitS2c.Medida mPlanta = entrada ? mb : mo;
+                    // Un NV01 de planta baja se estira a la altura del NV02 para que el piso de arriba empiece parejo.
+                    KitS2c.Pieza(edificio, entrada ? PlantaBajaNova : ModuloOficinas, pie + normal * mPlanta.Muro, giro,
+                        new Vector3(1f, mb.Caja.size.y / mPlanta.Caja.size.y, 1f), false);
+                    for (int p = 1; p < Mathf.Min(pisos, PisosConModulo); p++)
+                    {
+                        KitS2c.Pieza(edificio, ModuloOficinas, pie + normal * mo.Muro + Vector3.up * (mb.Caja.size.y + (p - 1) * mo.Caja.size.y), giro, Vector3.one, false);
+                    }
                 }
-                GameObject t = KitS2c.Pieza(raiz, codigo, Vector3.zero, Quaternion.LookRotation(-normal), Vector3.one);
-                Bounds b = Limites(t);
-                float ancho = Vector3.Scale(b.size, new Vector3(Mathf.Abs(direccion.x), 0f, Mathf.Abs(direccion.z))).magnitude;
-                if (ancho < 1f)
-                {
-                    ancho = Mathf.Max(b.size.x, b.size.z);
-                }
-                float fondo = Vector3.Scale(b.size, new Vector3(Mathf.Abs(normal.x), 0f, Mathf.Abs(normal.z))).magnitude;
-                Vector3 centro = a + direccion * (x + ancho * 0.5f) - normal * (fondo * 0.5f) + Vector3.up * banqueta;
-                t.transform.position += centro - new Vector3(b.center.x, b.min.y, b.center.z);
-                // T-888 (playtest 7-nov): sin hueco entre torres. Con 1.5 m quedaban rendijas que parecían callejones y no llevaban a
-                // ningún lado (o terminaban en una bolsa sin salida).
+                Vector3 centro = a + direccion * (x + ancho * 0.5f) - normal * (FondoEdificioNova * 0.5f + 0.02f) + Vector3.up * (banqueta + alto * 0.5f);
+                KitS2c.Losa(o, edificio, "Cuerpo", centro, giro, new Vector3(ancho - SeparacionTorres, alto, FondoEdificioNova - 0.04f), cuerpo, 3f, true);
                 x += ancho + SeparacionTorres;
-                i++;
+                n++;
             }
             return x;
         }
@@ -397,17 +406,6 @@ namespace MechaCyberpunk.Arte.Editor
             UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ColocarS2.RutaEscena, UnityEditor.SceneManagement.OpenSceneMode.Single);
             AssetDatabase.DeleteAsset(KitS2c.CarpetaMallas + "/S2cKit_Muestrario.asset");
             Debug.Log("[Arte] Fotos del kit S2c listas");
-        }
-
-        private static Bounds Limites(GameObject g)
-        {
-            Renderer[] rs = g.GetComponentsInChildren<Renderer>();
-            Bounds b = rs[0].bounds;
-            foreach (Renderer r in rs)
-            {
-                b.Encapsulate(r.bounds);
-            }
-            return b;
         }
     }
 }

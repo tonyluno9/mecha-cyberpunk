@@ -212,6 +212,14 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2cKit.Fotos();
         }
 
+        /// <summary>Batchmode de T-891: importa las piezas de calle, rehace las calles y saca las comparaciones con K01, K05 y K06.</summary>
+        public static void TodoCalle()
+        {
+            ImportarS2p.ImportarCalle();
+            RehacerCalles();
+            Comparar();
+        }
+
         /// <summary>Batchmode de toda la tarea: calles, fachadas de P11 y P12, y fotos.</summary>
         public static void Todo()
         {

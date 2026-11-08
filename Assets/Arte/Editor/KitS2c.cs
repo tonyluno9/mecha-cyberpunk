@@ -45,6 +45,23 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Grueso de una puerta en su vano (m): los modelos de Tripo vienen muy abultados.</summary>
         public const float GruesoPuerta = 0.12f;
 
+        // T-891: piezas de imageassets/modelos3d/calle/ que sustituyen lo hecho en código.
+        public const string BaseTinaco = "TK01_BaseTinaco";
+        public const string CodigoToldo = "TL01_Toldo";
+        public const string NeonMagenta = "NE01_NeonBandera";
+        public const string NeonTurquesa = "NE01B_NeonBandera";
+        public const string NeonPared = "NE02_NeonPared";
+        private const float AnchoBaseTinaco = 1.5f;
+        private const float AltoBaseTinaco = 0.7f;
+        private const float ProbabilidadToldo = 0.5f;
+        private const float HolguraToldo = 0.5f;
+        private const float BajaToldo = 0.1f;
+        private const float EscalaNeonPared = 1.25f;
+        private const float EscalaNeonBandera = 1.35f;
+        /// <summary>Los NE01 traen su placa contra el muro y la cara al frente: se giran para que se lean desde la calle.</summary>
+        private const float GiroNeonBandera = 32f;
+        private const float SalidaNeonBandera = 0.34f;
+
         /// <summary>Colores de los pisos altos (sobre el C03 crema): terracota, turquesa apagado, crema y verde agua (§1).</summary>
         public static readonly (string nombre, Color color)[] ColoresPiso =
         {
@@ -417,6 +434,10 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject baja = Pieza(casa.transform, e.PlantaBaja, centro + normal * mb.Muro, giro, new Vector3(ancho / mb.Caja.size.x, EscalaAlto, 1f), false);
             Ventanas(o, baja.transform, mb, e.LucesVentanas * 0.5f, AltoMinimoVentanaBaja);
             PuertaCerrada(baja.transform, mb, e.PlantaBaja);
+            if (e.PlantaBaja == PlantaVivienda && mb.Vano.HasValue && o.Chance(ProbabilidadToldo))
+            {
+                Toldo(casa.transform, baja.transform, mb, normal, giro);
+            }
 
             Medida ma = Medir(e.PisoAlto);
             bool panel = e.PisoAlto.StartsWith("C20");
@@ -452,7 +473,8 @@ namespace MechaCyberpunk.Arte.Editor
                 float a = o.Rango(-0.3f, 0.3f) * ancho;
                 float f = Mathf.Min(fondo - 1.2f, o.Rango(1.4f, 2.4f));
                 Vector3 p = centro + lado * a - normal * f + Vector3.up * azotea;
-                Losa(o, casa.transform, "BaseTinaco", p + Vector3.up * 0.35f, giro, new Vector3(1.5f, 0.7f, 1.9f), MatLadrillo(), 1f, false);
+                Medida mt = Medir(BaseTinaco);
+                Pieza(casa.transform, BaseTinaco, p, giro, new Vector3(AnchoBaseTinaco / mt.Caja.size.x, AltoBaseTinaco / mt.Caja.size.y, 1f), false).name = "BaseTinaco";
                 Pieza(casa.transform, "C09_Tinaco", p + Vector3.up * 0.7f, giro * Quaternion.Euler(0f, o.Rango(0f, 360f), 0f), Vector3.one * o.Rango(1.05f, 1.25f), false);
             }
             if (e.AireAzotea)
@@ -536,6 +558,17 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        /// <summary>T-891: toldo TL01 sobre la puerta de una vivienda, con sus soportes pegados al muro.</summary>
+        private static void Toldo(Transform padre, Transform baja, Medida m, Vector3 normal, Quaternion giro)
+        {
+            Medida mt = Medir(CodigoToldo);
+            Rect v = m.Vano.Value;
+            float ancho = v.width * baja.localScale.x + HolguraToldo;
+            float e = ancho / mt.Caja.size.x;
+            Vector3 dintel = baja.TransformPoint(new Vector3(v.center.x, v.yMax, m.Muro));
+            Pieza(padre, CodigoToldo, dintel - Vector3.up * BajaToldo + normal * (mt.Caja.size.z * e * 0.5f), giro, Vector3.one * e, false).name = "Toldo";
+        }
+
         /// <summary>T-890: las ventanas de planta baja empiezan a esta altura (m); más abajo son zócalos y puertas.</summary>
         private const float AltoMinimoVentanaBaja = 1f;
 
@@ -607,24 +640,17 @@ namespace MechaCyberpunk.Arte.Editor
             o.Neones++;
             GameObject raiz = new GameObject("Neon");
             raiz.transform.SetParent(padre, false);
-            Quaternion giro = bandera ? Quaternion.LookRotation(lado) : Quaternion.LookRotation(-normal);
-            Vector3 centro = bandera ? p + normal * 0.62f : p + normal * 0.16f;
-            raiz.transform.SetPositionAndRotation(centro, giro);
-            GameObject caja = Pieza(raiz.transform, "C15b_LetreroBandera", centro - Vector3.up * 0.42f, giro, new Vector3(0.75f, 0.62f, 1f), false);
-            caja.name = "Caja";
-            Material cara = MatNeon(color, o.Azar.Next(3));
-            foreach (float s in bandera ? new[] { -1f, 1f } : new[] { -1f })
+            string codigo = !bandera ? NeonPared : color == Magenta ? NeonMagenta : NeonTurquesa;
+            Medida m = Medir(codigo);
+            float escala = bandera ? EscalaNeonBandera : EscalaNeonPared;
+            Quaternion giro = Quaternion.LookRotation(-normal);
+            if (bandera)
             {
-                GameObject q = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                Object.DestroyImmediate(q.GetComponent<Collider>());
-                q.name = "Cara";
-                q.transform.SetParent(raiz.transform, false);
-                q.transform.localPosition = new Vector3(0f, -0.05f, s * 0.16f);
-                q.transform.localRotation = s < 0f ? Quaternion.identity : Quaternion.Euler(0f, 180f, 0f);
-                q.transform.localScale = new Vector3(0.52f, 0.6f, 1f);
-                q.GetComponent<MeshRenderer>().sharedMaterial = cara;
-                q.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+                giro *= Quaternion.Euler(0f, o.Chance(0.5f) ? GiroNeonBandera : -GiroNeonBandera, 0f);
             }
+            Vector3 centro = p + normal * (bandera ? SalidaNeonBandera : m.Caja.size.z * escala * 0.5f + 0.01f);
+            raiz.transform.SetPositionAndRotation(centro, giro);
+            Pieza(raiz.transform, codigo, centro - Vector3.up * (m.Caja.size.y * escala * 0.5f), giro, Vector3.one * escala, false).name = "Letrero";
             Luz(raiz.transform, centro + normal * 0.45f, LightType.Point, color, 0.35f, 3.5f, 0f);
         }
 
@@ -995,29 +1021,19 @@ namespace MechaCyberpunk.Arte.Editor
             });
         }
 
+        /// <summary>T-891: el cuerpo oscuro de los edificios de oficinas de Nova, arriba y atrás de los módulos.</summary>
+        public static Material MatNovaCuerpo() => Mat("S2p_NovaCuerpo", () => Lit(new Color(0.16f, 0.19f, 0.25f), 0.35f, TexMuro()));
+
         public static Material MatCuerpo(int color)
         {
             (string nombre, Color c) = ColoresPiso[color];
             return Mat("S2c_Cuerpo_" + nombre, () => Lit(new Color(c.r * 0.78f, c.g * 0.78f, c.b * 0.78f), 0.15f, TexMuro()));
         }
 
-        public static Material MatLadrillo() => Mat("S2c_Ladrillo", () => Lit(Color.white, 0.12f, TexLadrillo()));
-
         private static Material MatVentana(int variante)
         {
             Color[] colores = { new Color(2.6f, 1.55f, 0.7f), new Color(2.2f, 1.6f, 0.95f), new Color(2.9f, 1.4f, 0.55f) };
             return Mat("S2c_Ventana_" + variante, () => Emision(colores[variante], TexVentana(variante)));
-        }
-
-        private static Material MatNeon(Color color, int forma)
-        {
-            string nombre = color == Magenta ? "Magenta" : "Turquesa";
-            return Mat("S2c_Neon_" + nombre + "_" + forma, () =>
-            {
-                Material m = Emision(color * 1.7f, TexNeon(forma));
-                m.SetColor("_ColorDia", new Color(0.12f, 0.12f, 0.14f));
-                return m;
-            });
         }
 
         // ---- texturas que se dibujan en código (se guardan como PNG y se importan)
@@ -1108,59 +1124,6 @@ namespace MechaCyberpunk.Arte.Editor
             return Guardar(nombre, t, true, TextureWrapMode.Clamp);
         }
 
-        private static Texture2D TexNeon(int forma)
-        {
-            string nombre = "S2c_Neon_" + forma;
-            Texture2D ya = Cargar(nombre);
-            if (ya != null)
-            {
-                return ya;
-            }
-            const int n = 128;
-            Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, true);
-            float Tubo(float d) => Mathf.Clamp01(1f - Mathf.Abs(d) / 0.035f) + 0.25f * Mathf.Clamp01(1f - Mathf.Abs(d) / 0.12f);
-            for (int y = 0; y < n; y++)
-            {
-                for (int x = 0; x < n; x++)
-                {
-                    float u = x / (float)n * 2f - 1f, v = y / (float)n * 2f - 1f;
-                    // Marco redondeado y un glifo sin letras (onda, rayo o círculo).
-                    float marco = Mathf.Max(Mathf.Abs(u), Mathf.Abs(v)) - 0.82f;
-                    float glifo = forma == 0 ? v - 0.35f * Mathf.Sin(u * 5f) : forma == 1 ? Mathf.Abs(u) + Mathf.Abs(v) * 0.6f - 0.5f : new Vector2(u, v).magnitude - 0.45f;
-                    float c = Mathf.Max(Tubo(marco), Mathf.Abs(u) < 0.62f && Mathf.Abs(v) < 0.62f ? Tubo(glifo) : 0f);
-                    float fondo = 0.03f;
-                    t.SetPixel(x, y, new Color(Mathf.Max(c, fondo), Mathf.Max(c, fondo), Mathf.Max(c, fondo), 1f));
-                }
-            }
-            t.Apply();
-            return Guardar(nombre, t, true, TextureWrapMode.Clamp);
-        }
-
-        /// <summary>Cruz de farmacia de neón (tubo con halo) sobre negro.</summary>
-        public static Texture2D TexCruz()
-        {
-            const string nombre = "S2c_Cruz";
-            Texture2D ya = Cargar(nombre);
-            if (ya != null)
-            {
-                return ya;
-            }
-            const int n = 128;
-            Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, true);
-            for (int y = 0; y < n; y++)
-            {
-                for (int x = 0; x < n; x++)
-                {
-                    float u = x / (float)n * 2f - 1f, v = y / (float)n * 2f - 1f;
-                    float brazo = Mathf.Min(Mathf.Max(Mathf.Abs(u) - 0.8f, Mathf.Abs(v) - 0.26f), Mathf.Max(Mathf.Abs(u) - 0.26f, Mathf.Abs(v) - 0.8f));
-                    float c = Mathf.Clamp01(1f - Mathf.Abs(brazo) / 0.06f) + 0.35f * Mathf.Clamp01(1f - Mathf.Max(brazo, 0f) / 0.2f) * (brazo < 0f ? 1f : 0.5f);
-                    t.SetPixel(x, y, new Color(c, c, c, 1f));
-                }
-            }
-            t.Apply();
-            return Guardar(nombre, t, true, TextureWrapMode.Clamp);
-        }
-
         public static Texture2D TexOvalo()
         {
             const string nombre = "S2c_Ovalo";
@@ -1182,39 +1145,6 @@ namespace MechaCyberpunk.Arte.Editor
             }
             t.Apply();
             return Guardar(nombre, t, true, TextureWrapMode.Clamp);
-        }
-
-        private static Texture2D TexLadrillo()
-        {
-            const string nombre = "S2c_Ladrillo";
-            Texture2D ya = Cargar(nombre);
-            if (ya != null)
-            {
-                return ya;
-            }
-            const int n = 256;
-            Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, true);
-            System.Random r = new System.Random(7);
-            Color[] tonos = Enumerable.Range(0, 64).Select(i => Color.Lerp(new Color(0.52f, 0.24f, 0.16f), new Color(0.68f, 0.36f, 0.24f), (float)r.NextDouble())).ToArray();
-            const int filas = 8;
-            for (int y = 0; y < n; y++)
-            {
-                int fila = y * filas / n;
-                float fy = (y * filas / (float)n) % 1f;
-                for (int x = 0; x < n; x++)
-                {
-                    float desplaza = fila % 2 == 0 ? 0f : 0.5f;
-                    float bx = (x / (float)n * 4f + desplaza);
-                    int col = Mathf.FloorToInt(bx);
-                    float fx = bx % 1f;
-                    bool junta = fy < 0.1f || fx < 0.05f;
-                    Color c = junta ? new Color(0.55f, 0.52f, 0.48f) : tonos[(fila * 7 + col) % tonos.Length] * (0.88f + 0.24f * Ruido(x * 0.08f, y * 0.08f));
-                    c.a = 1f;
-                    t.SetPixel(x, y, c);
-                }
-            }
-            t.Apply();
-            return Guardar(nombre, t, true, TextureWrapMode.Repeat);
         }
 
         private static Texture2D TexMuro()
