@@ -32,3 +32,16 @@ Notas:
   conserva el giro de siempre hasta que llegue Loco_Rodar. Mixamo no dio "Walking While Texting" ni "Taking Phone Out": el NPC con celular usa Inter_VerTelefono.
 - Después de bajarlos, alguien (Claude) tiene que engancharlos en ControladorBase y en el override de cada papel. No se
   conectan solos al Animator.
+
+## Revisión del jugador, 8-nov (T-724)
+
+El jugador usa solo clips de Tony (carpeta Assets/Arte/Personajes/Animaciones, sin override propio ni clips de Tripo). Caminar y correr son Loco_Caminar y Loco_Correr
+de Movimiento_base tal como vienen, a rapidez 1 y sin IK de pies. Lo que hoy se resuelve con código (procedural) y no con un clip, y qué bajar de Mixamo:
+
+- Correr hacia atrás y a los lados: hoy Correr mezcla Loco_CaminarAtras/Der/Izq. Busca "Run Backward", "Left Strafe Run" y "Right Strafe Run" (Loco_CorrerAtras, Loco_CorrerDer, Loco_CorrerIzq, carpeta Locomocion).
+- Rodar (ESPACIO agachado): `CubiertaYRodada` gira el modelo por código; falta Loco_Rodar (ya está en la tabla de arriba).
+- Moto: el conductor se coloca por IK (`PoseMoto`); faltan Moto_Subir y Moto_Manejar_Bucle (tabla de arriba).
+- Apuntar con la pistola: los brazos se llevan por IK (`ApuntadoIK`); según el playtest de 7-nov Tony lo arregla en Blender.
+- Agachado quieto y cobertura mantenida: son una pose congelada de Cobertura_Entrar; faltan Crouch Idle y un clip de cobertura mantenida (Cover Idle).
+- Ritmo de los pies: Loco_Caminar avanza 1.28 m/s y Loco_Correr 2.79 m/s tal como vienen y el jugador va a 4.5 y 7.5 m/s, así que los pies se deslizan. Si se ve mal, hay que
+  bajar de Mixamo versiones más rápidas (o decidir la velocidad del cuerpo); no se aceleran los clips por código.
