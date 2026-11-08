@@ -80,9 +80,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Vector3 medida = Medida(pistola);
             Assert.AreEqual(0.21f, medida.z, 0.025f, "La pistola mide unos 21 cm de largo (" + medida.z.ToString("F3") + ")");
             Assert.Less(Vector3.Distance(pistola.position, Palma(anim)), 0.07f, "La empunadura esta en la palma");
-            // T-737: el clip va puro (sin IK de la mano), asi que el canon queda como lo deja Humanoid con Pistola_Apuntar (medido: unos 23 grados a un lado y 19 arriba;
-            // en Blender sale a 0-1 grados: pendiente, ver docs/pedido-blender-09nov.md). Solo se pide que mire hacia delante.
-            Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(pistola.forward, Vector3.up).normalized, visual.transform.forward), 0.7f, "Apuntando el canon mira hacia delante");
+            // T-738: AgarrePistolaPJ01 compensa en el agarre lo que Humanoid mueve la mano (el clip va puro, T-737).
+            Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(pistola.forward, Vector3.up).normalized, visual.transform.forward), 0.93f, "Apuntando el canon mira al frente");
+            Assert.Less(Mathf.Abs(Vector3.Dot(pistola.right, Vector3.up)), 0.3f, "La corredera queda arriba, sin ladearse");
             Fotos("pistola-apuntando", pistola);
             Release(raton.rightButton);
         }

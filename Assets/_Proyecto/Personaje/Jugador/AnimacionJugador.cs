@@ -98,6 +98,13 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (apuntado != null)
             {
                 apuntado.ClipPuro = true;
+                // T-738: la pistola de PJ01 se compensa en el agarre (no en los huesos) para apuntar al frente con el clip puro. Solo con el rig de PJ01 (R_Hand).
+                Animator a = apuntado.GetComponent<Animator>();
+                Transform mano = a != null && a.avatar != null && a.isHuman ? a.GetBoneTransform(HumanBodyBones.RightHand) : null;
+                if (mano != null && mano.name == AgarresArmas.ManoDerechaPJ01 && apuntado.GetComponent<AgarrePistolaPJ01>() == null)
+                {
+                    apuntado.gameObject.AddComponent<AgarrePistolaPJ01>();
+                }
             }
         }
 
