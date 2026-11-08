@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float DistanciaParaSubir = 9f;
         private const int FramesDeEspera = 3;
 
-        private sealed class CalorDoble : ICalor
+        internal sealed class CalorDoble : ICalor
         {
             public float Valor { get; private set; }
             public float Maximo => 100f;
@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Tests.Trafico
             public void Borrar() => Poner(0);
         }
 
-        private sealed class JugadorDoble : IJugador
+        internal sealed class JugadorDoble : IJugador
         {
             public Transform Raiz { get; set; }
             public ModoJugador Modo => ModoJugador.APie;

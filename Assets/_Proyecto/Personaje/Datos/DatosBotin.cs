@@ -21,6 +21,10 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Distancia mínima a otra arma igual en el piso para soltar la propia (m); evita duplicar la pistola de la historia.")]
         [Min(0f)] [SerializeField] private float distanciaArmaRepetida = 1.8f;
 
+        [Tooltip("Probabilidad (0 a 1) de que un enemigo suelte también balas (T-746), si el jugador tiene un arma que las use.")]
+        [Range(0f, 1f)] [SerializeField] private float probabilidadMunicion = 0.6f;
+
+        public float ProbabilidadMunicion => probabilidadMunicion;
         public GameObject ModeloPistola => modeloPistola;
         public GameObject PrefabEscopeta => prefabEscopeta;
         public float SegundosEnPiso => segundosEnPiso;

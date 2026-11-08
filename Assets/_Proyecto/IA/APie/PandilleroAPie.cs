@@ -276,6 +276,7 @@ namespace MechaCyberpunk.IA.APie
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
+            Cuerpos.Remove(this);
             ObjetivoActual = null;
         }
 
@@ -284,6 +285,7 @@ namespace MechaCyberpunk.IA.APie
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
+            Cuerpos.Remove(this);
             if (modelo != null)
             {
                 modelo.Cambio -= AlCambiar;
@@ -314,6 +316,7 @@ namespace MechaCyberpunk.IA.APie
             modoAnterior = ReglaTacticaPandillero.Modo.Rodear;
             turnos?.Soltar(this);
             desaparicion = -1f;
+            Cuerpos.Remove(this);
             finParpadeo = -1f;
             velocidadVertical = 0f;
             if (visual != null)
@@ -1117,6 +1120,41 @@ namespace MechaCyberpunk.IA.APie
 
         private string VozPandillero(string id) => EtiquetaVoz.De(id, Voz);
 
+        /// <summary>T-746: cuántos cuerpos caídos se quedan tirados a la vez; al pasar el tope se retira el más viejo (de preferencia fuera de cámara).</summary>
+        public const int MaximoCuerpos = 12;
+
+        private static readonly List<PandilleroAPie> Cuerpos = new List<PandilleroAPie>();
+
+        /// <summary>Los cuerpos que están tirados ahora (del más viejo al más nuevo).</summary>
+        public static IReadOnlyList<PandilleroAPie> CuerposTirados => Cuerpos;
+
+        private void RegistrarCuerpo()
+        {
+            Cuerpos.Remove(this);
+            Cuerpos.Add(this);
+            while (Cuerpos.Count > MaximoCuerpos)
+            {
+                int quitar = 0;
+                Camera camara = Camera.main;
+                if (camara != null)
+                {
+                    for (int i = 0; i < Cuerpos.Count - 1; i++)
+                    {
+                        Vector3 v = camara.WorldToViewportPoint(Cuerpos[i].transform.position);
+                        if (v.z < 0f || v.x < 0f || v.x > 1f || v.y < 0f || v.y > 1f)
+                        {
+                            quitar = i;
+                            break;
+                        }
+                    }
+                }
+                PandilleroAPie viejo = Cuerpos[quitar];
+                Cuerpos.RemoveAt(quitar);
+                viejo.desaparicion = -1f;
+                viejo.gameObject.SetActive(false);
+            }
+        }
+
         private void AlLlegarAKO()
         {
             turnos?.Soltar(this);
@@ -1147,6 +1185,7 @@ namespace MechaCyberpunk.IA.APie
                 transform.rotation = Quaternion.Euler(-GradosKO, transform.eulerAngles.y, 0f);
             }
             desaparicion = Time.time + datos.SegundosParaDesaparecer;
+            RegistrarCuerpo();
             PintarCuerpo(datos.ColorKO);
             PonerBrazo(0f);
             PintarBrazo(datos.ColorKO);

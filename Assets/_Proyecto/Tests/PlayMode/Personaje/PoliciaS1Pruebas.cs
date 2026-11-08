@@ -24,6 +24,26 @@ namespace MechaCyberpunk.Tests.Personaje
             Object.Destroy(skull);
         }
 
+        private static float AlturaAnimada(GameObject raiz)
+        {
+            float min = float.MaxValue;
+            float max = float.MinValue;
+            Mesh malla = new Mesh();
+            foreach (SkinnedMeshRenderer r in raiz.GetComponentsInChildren<SkinnedMeshRenderer>(false))
+            {
+                if (!r.enabled || r.sharedMesh == null) continue;
+                r.BakeMesh(malla, true);
+                foreach (Vector3 v in malla.vertices)
+                {
+                    float y = r.transform.TransformPoint(v).y;
+                    min = Mathf.Min(min, y);
+                    max = Mathf.Max(max, y);
+                }
+            }
+            Object.Destroy(malla);
+            return max - min;
+        }
+
         [UnityTest]
         public IEnumerator Policia_SeVeConUniforme_MideComoPersona_ConPistola()
         {
@@ -38,8 +58,11 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return new WaitForSeconds(0.15f);
             SkinnedMeshRenderer cuerpo = policia.GetComponentInChildren<SkinnedMeshRenderer>();
             Assert.IsTrue(cuerpo.name.Contains("df8dc0e4"), "Es el modelo C01");
-            float alto = cuerpo.bounds.size.y;
-            Assert.That(alto, Is.InRange(1.6f, 2.1f), "Mide como persona (m)");
+            foreach (Animator animado in policia.GetComponentsInChildren<Animator>(true)) animado.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            yield return new WaitForSeconds(0.5f);
+            // T-746: se mide la malla animada horneada (BakeMesh); los bounds del renderer de piel no son la altura real.
+            float alto = AlturaAnimada(policia);
+            Assert.That(alto, Is.InRange(1.74f, 1.86f), "Mide 1.80 m animado (mide " + alto + ")");
             Assert.IsNotNull(policia.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "W01"), "Pistola en la mano");
             Animator a = policia.GetComponentInChildren<Animator>();
             Assert.IsTrue(a.isHuman && a.avatar.isValid, "Humanoide con avatar propio");
