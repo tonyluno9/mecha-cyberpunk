@@ -34,21 +34,21 @@ namespace MechaCyberpunk.Arte.Editor
             switch (frente)
             {
                 case "A": // Vivienda: casi todo C02 con ventanas y macetas, colores suaves, pocos neones.
-                    e.PlantaBaja = o.Chance(0.85f) ? "C02_FachadaVivienda_cy" : "C01_FachadaLocal_cy";
+                    e.PlantaBaja = o.Chance(0.85f) ? KitS2c.PlantaVivienda : KitS2c.PlantaLocal;
                     e.Neon = o.Chance(0.15f) ? KitS2c.Turquesa : (Color?)null;
                     e.ColorPiso = i % 2 == 0 ? 0 : 2 + o.Azar.Next(2);
                     e.Foco = true;
                     break;
                 case "B": // Locales: cortinas y toldos, neón cada 2 casas.
-                    e.PlantaBaja = o.Chance(0.85f) ? "C01_FachadaLocal_cy" : "C02_FachadaVivienda_cy";
+                    e.PlantaBaja = o.Chance(0.85f) ? KitS2c.PlantaLocal : KitS2c.PlantaVivienda;
                     e.Neon = i % 2 == 0 ? (o.Chance(0.5f) ? KitS2c.Magenta : KitS2c.Turquesa) : (Color?)null;
                     break;
                 case "C": // Mixta, como la calle de K01.
-                    e.PlantaBaja = i % 2 == 0 ? "C01_FachadaLocal_cy" : "C02_FachadaVivienda_cy";
+                    e.PlantaBaja = i % 2 == 0 ? KitS2c.PlantaLocal : KitS2c.PlantaVivienda;
                     e.Neon = i % 3 == 1 ? KitS2c.Magenta : i % 3 == 2 ? KitS2c.Turquesa : (Color?)null;
                     break;
                 case "D": // Talleres y bodegas: cortinas, casas más anchas, sin neón, antenas y aires.
-                    e.PlantaBaja = "C01_FachadaLocal_cy";
+                    e.PlantaBaja = KitS2c.PlantaLocal;
                     e.Neon = null;
                     e.Antena = o.Chance(0.4f);
                     e.AireAzotea = true;
@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Arte.Editor
                     e.LucesVentanas = 0.65f;
                     break;
                 case "F": // Popular con piso de C20 (macetas, dos ventanas) y tinaco siempre.
-                    e.PisoAlto = o.Chance(0.5f) ? "C20b_PisoDosVentanas_cy" : "C03_FachadaPisoAlto_cy";
+                    e.PisoAlto = o.Chance(0.5f) ? "C20b_PisoDosVentanas_cy" : KitS2c.PisoFachada;
                     e.Tinaco = true;
                     e.ColorPiso = o.Azar.Next(KitS2c.ColoresPiso.Length);
                     break;
@@ -193,8 +193,8 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Transform casas = new GameObject("Casas").transform;
             casas.SetParent(raiz, false);
-            KitS2c.Estilo eFarmacia = new KitS2c.Estilo { PlantaBaja = "C02_FachadaVivienda_cy", ColorPiso = 2, Neon = null, Foco = true, Tinaco = true };
-            KitS2c.Estilo eTienda = new KitS2c.Estilo { PlantaBaja = "C01_FachadaLocal_cy", ColorPiso = 1, Neon = null, Foco = true, Tinaco = false };
+            KitS2c.Estilo eFarmacia = new KitS2c.Estilo { PlantaBaja = KitS2c.PlantaVivienda, ColorPiso = 2, Neon = null, Foco = true, Tinaco = true };
+            KitS2c.Estilo eTienda = new KitS2c.Estilo { PlantaBaja = KitS2c.PlantaLocal, ColorPiso = 1, Neon = null, Foco = true, Tinaco = false };
             KitS2c.Casa(o, casas, P(3f, banqueta, 0f), D(Vector3.back), 6f, 6f, farmacia ? eFarmacia : KitS2c.EstiloAlAzar(o));
             KitS2c.Casa(o, casas, P(0f, banqueta, 3f), D(Vector3.left), 6f, 6f, eTienda);
             if (farmacia)
