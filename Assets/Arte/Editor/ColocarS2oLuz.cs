@@ -343,7 +343,7 @@ namespace MechaCyberpunk.Arte.Editor
             float x = ColocarS2cCalle.XBordePoniente - 0.2f;
             KitS2c.Estilo Fondo(int i) => new KitS2c.Estilo
             {
-                PlantaBaja = i % 2 == 0 ? "C01_FachadaLocal_cy" : "C02_FachadaVivienda_cy",
+                PlantaBaja = i % 2 == 0 ? KitS2c.PlantaLocal : KitS2c.PlantaVivienda,
                 ColorPiso = (i + 1) % KitS2c.ColoresPiso.Length,
                 Neon = i == 1 ? KitS2c.Magenta : i == 2 ? KitS2c.Turquesa : (Color?)null,
                 NeonBandera = false,
@@ -356,7 +356,7 @@ namespace MechaCyberpunk.Arte.Editor
             atras.SetParent(casas, false);
             float alto = altos.Count > 0 ? altos.Max(a => a.y) + 0.4f - suelo : 6.2f;
             KitS2c.Frente(o, atras, new Vector3(x - 6.5f, suelo + alto, z1 - 2f), new Vector3(x - 6.5f, suelo + alto, z0 + 2f), Vector3.right, 6f,
-                i => new KitS2c.Estilo { PlantaBaja = "C03_FachadaPisoAlto_cy", ColorPiso = i % KitS2c.ColoresPiso.Length, Tinaco = i % 2 == 0, LucesVentanas = 0.5f, Neon = i == 0 ? KitS2c.Turquesa : (Color?)null });
+                i => new KitS2c.Estilo { PlantaBaja = KitS2c.PisoFachada, ColorPiso = i % KitS2c.ColoresPiso.Length, Tinaco = i % 2 == 0, LucesVentanas = 0.5f, Neon = i == 0 ? KitS2c.Turquesa : (Color?)null });
 
             // Más neones en las fachadas (K01 tiene uno o dos por casa) y más charcos, sobre todo a media calle.
             Neones(o, cosas, banqueta);

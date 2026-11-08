@@ -101,6 +101,10 @@ namespace MechaCyberpunk.Arte.Editor
 
         public static string ZonaDe(string codigo)
         {
+            if (codigo.StartsWith("PU"))
+            {
+                return "Calle"; // T-890: puertas sueltas de las fachadas, no personajes
+            }
             if (codigo[0] == 'N')
             {
                 return ZonaDeNuevos(codigo);

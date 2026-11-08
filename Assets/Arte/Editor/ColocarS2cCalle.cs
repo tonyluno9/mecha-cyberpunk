@@ -118,12 +118,12 @@ namespace MechaCyberpunk.Arte.Editor
 
             // ---- Casas. La primera de cada lado (la que se ve junto a la cámara en K01) va como en la imagen.
             // La casa 0 de cada lado queda junto a la cámara de la toma; de la 1 en adelante es lo que se ve en K01.
-            KitS2c.Estilo Sur(int i) => i == 1 ? new KitS2c.Estilo { PlantaBaja = "C01_FachadaLocal_cy", ColorPiso = 1, Neon = null, Foco = true }
-                : i == 2 ? new KitS2c.Estilo { PlantaBaja = "C02_FachadaVivienda_cy", ColorPiso = 0, Neon = KitS2c.Magenta, NeonBandera = false }
-                : i == 3 ? new KitS2c.Estilo { PlantaBaja = "C01_FachadaLocal_cy", ColorPiso = 2, Neon = KitS2c.Turquesa }
+            KitS2c.Estilo Sur(int i) => i == 1 ? new KitS2c.Estilo { PlantaBaja = KitS2c.PlantaLocal, ColorPiso = 1, Neon = null, Foco = true }
+                : i == 2 ? new KitS2c.Estilo { PlantaBaja = KitS2c.PlantaVivienda, ColorPiso = 0, Neon = KitS2c.Magenta, NeonBandera = false }
+                : i == 3 ? new KitS2c.Estilo { PlantaBaja = KitS2c.PlantaLocal, ColorPiso = 2, Neon = KitS2c.Turquesa }
                 : KitS2c.EstiloAlAzar(o);
-            KitS2c.Estilo Norte(int i) => i == 1 ? new KitS2c.Estilo { PlantaBaja = "C02_FachadaVivienda_cy", ColorPiso = 2, Foco = true }
-                : i == 2 ? new KitS2c.Estilo { PlantaBaja = "C01_FachadaLocal_cy", ColorPiso = 0, Neon = KitS2c.Turquesa, NeonBandera = false }
+            KitS2c.Estilo Norte(int i) => i == 1 ? new KitS2c.Estilo { PlantaBaja = KitS2c.PlantaVivienda, ColorPiso = 2, Foco = true }
+                : i == 2 ? new KitS2c.Estilo { PlantaBaja = KitS2c.PlantaLocal, ColorPiso = 0, Neon = KitS2c.Turquesa, NeonBandera = false }
                 : KitS2c.EstiloAlAzar(o);
             List<Vector3> altosSur = KitS2c.Frente(o, casas, new Vector3(XOriente, banqueta, ZSur), new Vector3(XMedio, banqueta, ZSur), Vector3.forward, FondoSurCallejon, Sur);
             int ya = altosSur.Count;
