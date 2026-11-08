@@ -79,6 +79,7 @@ namespace MechaCyberpunk.UI.Hud
         private ConsumiblesJugador consumibles;
         private int armaMostrada = -1;
         private int estrellasLlenas;
+        private float segundosSinVer;
         private bool buscando;
         private ZonaCuerpoH10 ultimaZona;
         private float segundosGolpe = float.MaxValue;
@@ -641,7 +642,10 @@ namespace MechaCyberpunk.UI.Hud
             ICalor calor = Registro<ICalor>.Actual;
             estrellasLlenas = calor != null ? ReglaEstrellasH10.Llenas(calor.Nivel, calor.Valor, calor.Maximo) : 0;
             IZonaBusqueda zona = Registro<IZonaBusqueda>.Actual;
-            buscando = estrellasLlenas > 0 && zona != null && zona.Activa;
+            bool conBusqueda = estrellasLlenas > 0 && zona != null && zona.Activa;
+            // T-729: cuánto llevas sin que te vea la policía (la zona dice si te ven ahora); parpadean solo cuando te están por perder.
+            segundosSinVer = conBusqueda && !zona.Visto ? segundosSinVer + Time.unscaledDeltaTime : 0f;
+            buscando = ReglaEstrellasH10.DebeParpadear(conBusqueda, conBusqueda && zona.Visto, segundosSinVer);
             float alfa = ReglaEstrellasH10.Alfa(Time.unscaledTime, buscando);
             for (int i = 0; i < estrellas.Length; i++)
             {

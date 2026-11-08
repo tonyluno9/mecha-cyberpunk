@@ -72,7 +72,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 Vector3 nodo = calles.Nodo(i);
                 Vector3 d = nodo - destino;
                 d.y = 0f;
-                bool vale = d.magnitude >= distanciaMinima && !CarroTrafico.PuntoEnVista(camara, nodo) && !HayCarroEn(nodo);
+                bool vale = d.magnitude >= distanciaMinima && !CarroTrafico.PuntoEnVista(camara, nodo) && !HayCarroEn(nodo) && EspacioLibre.Libre(nodo, carro.transform);
                 permitido.Add(vale);
                 metros.Add(vale ? CalculoLlegadaPatrulla.MetrosDeRuta(calles, i, llegada) : float.MaxValue);
             }

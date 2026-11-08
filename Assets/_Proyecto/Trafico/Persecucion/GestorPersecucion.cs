@@ -444,7 +444,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 Vector3 d = calles.Nodo(i) - centro;
                 d.y = 0f;
                 bool vale = d.magnitude >= config.DistanciaMinimaSalida && !ReglaVistaPolicia.LoVe(camara, calles.Nodo(i), AlcanceCamara)
-                    && !CarroTrafico.PuntoEnVista(camara, calles.Nodo(i)) && !HayPatrullaCerca(calles.Nodo(i));
+                    && !CarroTrafico.PuntoEnVista(camara, calles.Nodo(i)) && !HayPatrullaCerca(calles.Nodo(i))
+                    && EspacioLibre.Libre(calles.Nodo(i)); // T-728: nunca encima de otro vehículo
                 permitido.Add(vale);
                 metros.Add(vale ? CalculoLlegadaPatrulla.MetrosDeRuta(calles, i, destino) : float.MaxValue);
             }

@@ -1249,3 +1249,8 @@ El mostrador de implantes y la camilla ya están físicamente en el I+D+I, pero 
 - Las tres expendedoras de T-685 (casa, tianguis y Nova) ya no llevan coordenadas: cada una se mide desde un lugar de Core (entrada del lugar + desplazamiento): casa = Lugar_Casa + (0, 0, 6); tianguis = Lugar_Bar + (-36, 0, 0.49); Nova = Lugar_Bar + (64, 0, -0.01). Son las mismas posiciones de antes (medidas en Ciudad_Prologo).
 - En la escena de la ciudad no había marcadores para ellas, así que no se tocó: **si la sesión 2 mueve la calle, el bar o la casa, las máquinas se mueven con el lugar** (el tianguis y Nova cuelgan de Lugar_Bar, que es lo más cercano que Core tiene en la avenida). Para ponerlas exactas, basta con agregar a la escena objetos vacíos con estos nombres y la máquina va ahí sin tocar código ni datos: `Marcador_Expendedora_Casa`, `Marcador_Expendedora_Tianguis`, `Marcador_Expendedora_Nova` (el giro sigue saliendo de los datos: 270, 180 y 180).
 - Si falta el lugar (y no hay marcador) la máquina no se coloca y avisa con un warning, no cae a coordenadas fijas.
+
+## T-728 (S1, noche 08-nov) El asalto a un tercero
+- Recompensa: la víctima te da la mitad de lo que le robaron (150 de 300) al detener al asaltante. Cambiar `ReglaAsalto.FraccionRecompensa` si se quiere otra cosa.
+- La víctima usa el modelo Visual_woman2 (prefab Resources/VictimaAsalto); si prefieres otro, se cambia la ruta en CreadorVictimaAsaltoT728.
+- Velocidad de huida 14 m/s (el carro del jugador llega a 16): se le da alcance, no es imposible.

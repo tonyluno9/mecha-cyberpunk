@@ -211,8 +211,8 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             yield return null;
             Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "Salió de la casa");
-            Assert.AreEqual(AsaltoDinero.TextoPerseguir, hud.TextoObjetivo.text, "T-717: el texto cambia a PERSIGUE AL ASALTANTE");
-            Assert.IsTrue(marcador.RomboVisible || marcador.FlechaVisible, "El marcador ahora señala al asaltante");
+            Assert.AreEqual(AsaltoDinero.TextoRobarCarro, hud.TextoObjetivo.text, "T-728: el texto cambia a RÓBATE UN CARRO");
+            Assert.IsTrue(marcador.RomboVisible || marcador.FlechaVisible, "El marcador ahora señala un carro por robar");
         }
 
         // T-804: del cuarto a la banqueta por las dos puertas de la casa, como SalidaCasaPruebas (Progresion): camina con el

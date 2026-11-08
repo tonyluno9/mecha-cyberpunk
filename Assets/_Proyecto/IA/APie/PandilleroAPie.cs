@@ -350,6 +350,10 @@ namespace MechaCyberpunk.IA.APie
                 // T-423: pide refuerzos a su grupo.
                 Grupo.Avisar(this, "¡Refuerzos!", true);
             }
+            if (DanioDeLaPolicia && modelo.EstaKO && !datos.EsPolicia)
+            {
+                CayoPorLaPolicia = true;
+            }
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             if (!modelo.EstaKO)
             {
@@ -432,6 +436,38 @@ namespace MechaCyberpunk.IA.APie
 
         // ---- Pandillero armado (T-402) ----
 
+        private const float FactorAlcanceCriminal = 1.5f;
+
+        /// <summary>T-729: True solo mientras un policía dispara (el daño que recibe un criminal en ese momento viene de la policía, no del jugador).</summary>
+        public static bool DanioDeLaPolicia { get; private set; }
+
+        /// <summary>T-729: True si este pandillero cayó por un disparo de la policía: no suma búsqueda al jugador.</summary>
+        public bool CayoPorLaPolicia { get; private set; }
+
+        /// <summary>
+        /// T-729: el criminal más cercano para la policía: un pandillero que no es policía, está vivo y apunta ahora mismo a alguien (al jugador o a un aliado), dentro de
+        /// una vez y media el alcance de tiro. Null si no hay.
+        /// </summary>
+        public PandilleroAPie CriminalMasCercano()
+        {
+            PandilleroAPie mejor = null;
+            float menor = datos.DistanciaMaxTiro * FactorAlcanceCriminal;
+            foreach (PandilleroAPie otro in Activos)
+            {
+                if (otro == null || otro == this || !otro.isActiveAndEnabled || otro.datos == null || otro.datos.EsPolicia || otro.EstaKO || otro.ObjetivoActual == null)
+                {
+                    continue;
+                }
+                float d = DistanciaPlana(transform.position, otro.transform.position);
+                if (d < menor)
+                {
+                    menor = d;
+                    mejor = otro;
+                }
+            }
+            return mejor;
+        }
+
         /// <summary>Altura del pecho del jugador: la normal escalada por lo que mide su cápsula (agachado o rodando baja).</summary>
         private float AlturaPechoJugador()
         {
@@ -457,6 +493,18 @@ namespace MechaCyberpunk.IA.APie
                     recibe = aliado;
                     posicionJugador = aliado.transform.position;
                     ObjetivoActual = aliado.transform;
+                }
+            }
+            // T-729: la policía ataca primero a quien comete el delito (un SKULL que está disparando al jugador o a sus aliados, el asaltante), no al jugador.
+            if (datos.EsPolicia)
+            {
+                PandilleroAPie criminal = CriminalMasCercano();
+                if (criminal != null)
+                {
+                    atacable = true;
+                    recibe = criminal;
+                    posicionJugador = criminal.transform.position;
+                    ObjetivoActual = criminal.transform;
                 }
             }
             float distancia = DistanciaPlana(transform.position, posicionJugador);
@@ -532,10 +580,12 @@ namespace MechaCyberpunk.IA.APie
                 disparoReciente = true;
                 float probabilidad = PistolaPandillero.ProbabilidadAcierto(distancia, datos.DistanciaAciertoCerca,
                     datos.DistanciaAciertoLejos, datos.AciertoCerca, datos.AciertoLejos);
+                DanioDeLaPolicia = datos.EsPolicia; // T-729: lo que caiga por este disparo no suma búsqueda al jugador
                 for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
                 {
                     pistola.Disparar(boca, pecho, recibe, datos.DanioDisparo, probabilidad);
                 }
+                DanioDeLaPolicia = false;
                 if (visual != null)
                 {
                     visual.Disparar();

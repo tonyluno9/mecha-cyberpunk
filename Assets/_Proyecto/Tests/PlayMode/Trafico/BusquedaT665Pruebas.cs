@@ -66,7 +66,9 @@ namespace MechaCyberpunk.Tests.Trafico
             EventosPolicia.JugadorEscapo += AlEscapar;
             config = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ConfigPersecucion>(RutaConfig));
             Poner(config, "radioBusqueda", RadioBusqueda);
-            Poner(config, "segundosParaEscapar", SegundosEscapar);
+            // T-729: sin que te vean dejas de ser buscado; las pruebas de arresto esperan a la patrulla quietas, así que ahí no hay escape.
+            bool prueba_arresto = NUnit.Framework.TestContext.CurrentContext.Test.Name.Contains("Arresta") || NUnit.Framework.TestContext.CurrentContext.Test.Name.Contains("SiCorres");
+            Poner(config, "segundosParaEscapar", prueba_arresto ? 9999f : SegundosEscapar);
             Poner(config, "segundosArresto", SegundosArresto);
             Poner(config, "distanciaArresto", 12f);
             Poner(config, "radioVistaDron", 1f);
@@ -167,24 +169,32 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [UnityTest]
-        public IEnumerator DentroDelCirculoYSinQueTeVean_NoSeVan_YElCalorNoBajaSolo()
+        public IEnumerator SinQueTeVeaNadie_AunDentroDelCirculo_TrasLosSegundosDejanDeBuscarte_YElCalorNoBajaSolo()
         {
+            // T-729: antes de que pasen los segundos sin que te vean, el calor no baja solo; pasados, te dan por escapado aunque sigas en el círculo.
             yield return null;
             Encerrar(jugador.transform.position);
             Registro<ICalor>.Actual.Sumar(60f, MotivoCalor.Mision);
             yield return null;
             Time.timeScale = EscalaDeTiempo;
             float valor = calor.Valor;
-            float fin = Time.time + 12f;
+            float fin = Time.time + SegundosEscapar * 0.6f;
             while (Time.time < fin)
             {
                 calor.Enfriar(3f * Time.deltaTime); // el enfriamiento natural del servicio de calor
                 yield return null;
             }
-            Assert.Greater(calor.Nivel, 0, "No te sueltan: sigues dentro del círculo");
+            Assert.Greater(calor.Nivel, 0, "Todavía no pasaron los segundos: te siguen buscando");
             Assert.GreaterOrEqual(calor.Valor, valor - 0.5f, "El calor no baja solo mientras te buscan");
             Assert.Greater(gestor.Patrullas, 0, "Las patrullas siguen ahí");
             Assert.AreEqual(0, escapes);
+            fin = Time.time + SegundosEscapar;
+            while (Time.time < fin)
+            {
+                yield return null;
+            }
+            Assert.AreEqual(0, calor.Nivel, "Nadie te vio durante los segundos: ya no te buscan, aunque sigas dentro del círculo");
+            Assert.AreEqual(1, escapes);
         }
 
         [UnityTest]

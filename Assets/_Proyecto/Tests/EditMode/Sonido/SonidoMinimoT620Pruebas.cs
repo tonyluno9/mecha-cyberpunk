@@ -49,7 +49,7 @@ namespace MechaCyberpunk.Tests.Sonido
         {
             CatalogoSonidos c = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogo);
             Assert.IsNotNull(c);
-            Assert.AreEqual(25, ReglaMezclaSonidos.IdsEncendidos.Length); // T-710: más el silbido de la bala rozando
+            Assert.AreEqual(24, ReglaMezclaSonidos.IdsEncendidos.Length); // T-729: sin el silbido de la bala rozando (el silbato de la policía)
             int encendidos = 0;
             foreach (CatalogoSonidos.Interruptor i in c.Interruptores)
             {
@@ -98,6 +98,15 @@ namespace MechaCyberpunk.Tests.Sonido
             Assert.IsFalse(ReglaMezclaSonidos.Repite(10.11f, 10f, 0f));
             Assert.IsTrue(ReglaMezclaSonidos.Repite(10.5f, 10f, 1f), "la politica propia puede pedir mas");
             Assert.AreEqual(12, ReglaMezclaSonidos.MaxVocesTotal);
+        }
+
+        [Test]
+        public void T729_ElSilbidoDeLaBalaQueRoza_EstaApagadoEnElCatalogo()
+        {
+            CatalogoSonidos c = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogo);
+            Assert.IsNotNull(c);
+            Assert.IsFalse(c.Encendido("ARM_BALA_ROZA"), "T-729: el silbato de la policía (el silbido de la bala que roza) ya no suena");
+            Assert.IsTrue(c.Encendido("CAL_PATRULLA_SIRENA"), "La sirena sigue");
         }
     }
 }
