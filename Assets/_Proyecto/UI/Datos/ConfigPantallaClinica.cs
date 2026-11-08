@@ -113,6 +113,14 @@ namespace MechaCyberpunk.UI
         [SerializeField] private Material materialAditivoUI;
         [Tooltip("Cuerpo horneado por personaje, en el orden de Apariencia.Cara (0 = mujer, 1 = hombre); 4 submallas en el orden de EspacioImplante.")]
         [SerializeField] private Mesh[] cuerpos = new Mesh[0];
+        [Tooltip("T-896: la malla de cada implante de PJ01 por espacio y nivel, horneada en el mismo espacio que el cuerpo.")]
+        [SerializeField] private MechaCyberpunk.UI.Clinica.MallaImplanteHolograma[] mallasImplante = new MechaCyberpunk.UI.Clinica.MallaImplanteHolograma[0];
+        [Min(0.05f)] [Tooltip("Lo que tarda el barrido en revelar un implante de abajo hacia arriba (s).")]
+        [SerializeField] private float duracionRevelar = 0.7f;
+        [Min(0.05f)] [Tooltip("Lo que tarda el implante en ensamblarse al instalarlo (s).")]
+        [SerializeField] private float duracionEnsamble = 0.9f;
+        [Min(0f)] [Tooltip("Qué tan lejos del cuerpo empieza el implante al ensamblarse (m).")]
+        [SerializeField] private float distanciaEnsamble = 0.45f;
         [Tooltip("Dónde se arma el set del holograma, lejos de la ciudad (m). Distinto del banco de armas.")]
         [SerializeField] private Vector3 posicionSet = new Vector3(40f, -500f, 0f);
         [Tooltip("Ancho de la RenderTexture (px).")]
@@ -186,6 +194,23 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string sonidoCancelar = "UI_CANCELAR";
         [SerializeField] private string sonidoCompra = "ECO_COMPRA";
         [SerializeField] private string sonidoSinDinero = "ECO_SIN_DINERO";
+
+        public float DuracionRevelar => duracionRevelar;
+        public float DuracionEnsamble => duracionEnsamble;
+        public float DistanciaEnsamble => distanciaEnsamble;
+
+        /// <summary>La malla horneada del implante (null si ese espacio y nivel no tienen pieza visible).</summary>
+        public Mesh MallaImplante(MechaCyberpunk.Core.EspacioImplante espacio, int nivel)
+        {
+            foreach (MechaCyberpunk.UI.Clinica.MallaImplanteHolograma m in mallasImplante)
+            {
+                if (m.Espacio == espacio && m.Nivel == nivel)
+                {
+                    return m.Malla;
+                }
+            }
+            return null;
+        }
 
         public Material MaterialHolograma => materialHolograma;
         public Material MaterialAditivoUI => materialAditivoUI;

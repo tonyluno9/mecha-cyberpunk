@@ -6,6 +6,7 @@ using MechaCyberpunk.Personaje.Apariencia;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -43,8 +44,13 @@ namespace MechaCyberpunk.UI.Clinica
         private const float LargoMarca = 46f;
         private const float AlfaFilaElegida = 0.22f;
         private const float AlfaFilaNormal = 0.06f;
+        private const float AlfaIconoSinInstalar = 0.55f;
         private const float AlfaDestelloPantalla = 0.6f;
         private const float LargoLineaMarcador = 120f;
+        private const float LadoIconoEspacio = 120f;
+        private const float XTextoEspacio = 140f;
+        private const float GrosorConector = 2f;
+        private const string RutaIconos = "Menus/Implante_";
         private const float TamanoRombo = 22f;
         private const int TamanoTituloGrande = 84;
         private const int TamanoNombreImplante = 52;
@@ -55,6 +61,7 @@ namespace MechaCyberpunk.UI.Clinica
         {
             public Image Fondo;
             public GameObject Borde;
+            public Image Icono;
             public Text Nombre;
             public Text Instalado;
             public Text Etiqueta;
@@ -104,6 +111,7 @@ namespace MechaCyberpunk.UI.Clinica
         private readonly List<FilaTabla> filasTabla = new List<FilaTabla>();
         private readonly List<FilaEfectoImplante> efectos = new List<FilaEfectoImplante>();
         private readonly bool[] conImplante = new bool[Espacios];
+        private readonly int[] nivelesInstalados = new int[Espacios];
 
         private ServicioImplantes servicio;
         private Action<DatosImplante> alInstalar;
@@ -121,6 +129,7 @@ namespace MechaCyberpunk.UI.Clinica
         private RawImage imagenHolo;
         private Image destelloHolo;
         private RectTransform marcador;
+        private RectTransform conector;
         private Text textoMarcador;
         private Text textoHoloDinero;
         private Text textoEspacioElegido;
@@ -172,6 +181,17 @@ namespace MechaCyberpunk.UI.Clinica
 
         /// <summary>La posición del marcador del espacio elegido sobre el holograma (px del área, centro = 0).</summary>
         public Vector2 PosicionMarcador => marcador != null ? marcador.anchoredPosition : Vector2.zero;
+
+        /// <summary>T-896: los extremos de la línea de luz y los puntos que debe unir (casilla elegida y marcador), en el mundo del lienzo.</summary>
+        public (Vector3 inicio, Vector3 fin, Vector3 casilla, Vector3 punto) Conector
+        {
+            get
+            {
+                RectTransform fila = filasEspacio[indice].Fondo.rectTransform;
+                return (conector.position, conector.TransformPoint(new Vector3(conector.rect.width, 0f, 0f)),
+                    fila.TransformPoint(new Vector3(fila.rect.xMax, fila.rect.center.y, 0f)), marcador.position);
+            }
+        }
 
         /// <summary>Filas de la tabla antes/después que se ven.</summary>
         public int FilasEfectos => efectos.Count;
@@ -275,11 +295,18 @@ namespace MechaCyberpunk.UI.Clinica
                 if (instalando && isActiveAndEnabled && lienzo != null)
                 {
                     desvanecer = config.DuracionDestello;
-                    textoInstalando.gameObject.SetActive(true);
                     marcador.gameObject.SetActive(false);
                     // Lo recién instalado ya se ve en verde y el dinero ya bajó mientras se desvanece.
                     EspacioImplante elegido = (EspacioImplante)indice;
                     PintarHolograma(servicio.Opcion(elegido), servicio.ImplanteInstalado(elegido));
+                    // T-896: el implante se ensambla, destella y entonces la pantalla se va.
+                    desvanecer += config.DuracionEnsamble;
+                    conector.gameObject.SetActive(false);
+                    holograma.Ensamblar(elegido, nivelesInstalados, () =>
+                    {
+                        destello = 1f;
+                        textoInstalando.gameObject.SetActive(true);
+                    });
                 }
                 else
                 {
@@ -362,8 +389,6 @@ namespace MechaCyberpunk.UI.Clinica
                 {
                     // El destello va antes de avisar: si se instala, quien abrió cierra la pantalla y esta se desvanece destellando.
                     instalando = true;
-                    destello = 1f;
-                    holograma.Destellar();
                     Sonidos.Reproducir(config.SonidoCompra);
                     alInstalar?.Invoke(oferta.Implante);
                 }
@@ -546,6 +571,20 @@ namespace MechaCyberpunk.UI.Clinica
             Vector3 vp = holograma.Camara.WorldToViewportPoint(holograma.CentroEspacio(holograma.Elegido));
             marcador.gameObject.SetActive(vp.z > 0f);
             marcador.anchoredPosition = new Vector2((vp.x - 0.5f) * AnchoHolo, (vp.y - 0.5f) * AltoHolo);
+            ColocarConector();
+        }
+
+        // T-896: la línea de luz que une la casilla elegida con su lugar en el cuerpo.
+        private void ColocarConector()
+        {
+            RectTransform raiz = (RectTransform)lienzo.transform;
+            RectTransform fila = filasEspacio[indice].Fondo.rectTransform;
+            Vector3 casilla = fila.TransformPoint(new Vector3(fila.rect.xMax, fila.rect.center.y, 0f));
+            Vector2 tramo = raiz.InverseTransformPoint(marcador.position) - raiz.InverseTransformPoint(casilla);
+            conector.gameObject.SetActive(marcador.gameObject.activeSelf);
+            conector.position = casilla;
+            conector.sizeDelta = new Vector2(tramo.magnitude, GrosorConector);
+            conector.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(tramo.y, tramo.x) * Mathf.Rad2Deg);
         }
 
         private void PintarHolograma(OfertaImplante oferta, DatosImplante mostrado)
@@ -564,10 +603,16 @@ namespace MechaCyberpunk.UI.Clinica
                 bool elegida = i == indice;
                 int nivel = servicio.Nivel(espacio);
                 conImplante[i] = nivel > 0;
-                f.Fondo.color = elegida ? new Color(estilo.Naranja.r, estilo.Naranja.g, estilo.Naranja.b, AlfaFilaElegida) : new Color(1f, 1f, 1f, AlfaFilaNormal);
+                nivelesInstalados[i] = nivel;
+                f.Fondo.color = elegida ? new Color(estilo.Turquesa.r, estilo.Turquesa.g, estilo.Turquesa.b, AlfaFilaElegida) : new Color(1f, 1f, 1f, AlfaFilaNormal);
                 f.Borde.SetActive(elegida);
+                OfertaImplante ofertaFila = servicio.Opcion(espacio);
+                int nivelIcono = Mathf.Max(nivel, ofertaFila.Implante != null ? ofertaFila.Implante.Nivel : 0);
+                f.Icono.sprite = Resources.Load<Sprite>(RutaIconos + espacio + "_" + Mathf.Clamp(nivelIcono, 1, NivelesImplante));
+                f.Icono.enabled = f.Icono.sprite != null;
+                f.Icono.color = nivel > 0 ? Color.white : new Color(1f, 1f, 1f, AlfaIconoSinInstalar);
                 f.Nombre.text = config.NombreEspacio(i);
-                f.Nombre.color = elegida ? estilo.Naranja : estilo.Texto;
+                f.Nombre.color = elegida ? estilo.Turquesa : estilo.Texto;
                 f.Instalado.text = nivel > 0 ? servicio.Nombre(espacio) : config.TextoSinImplante;
                 f.Instalado.color = nivel > 0 ? config.ColorInstalado : estilo.Desactivado;
                 for (int m = 0; m < f.Marcas.Length; m++)
@@ -582,7 +627,7 @@ namespace MechaCyberpunk.UI.Clinica
             textoMarcador.text = nombreEspacio;
             textoEspacioElegido.text = nombreEspacio + " · " + (mostrado != null ? mostrado.Nombre : config.TextoSinImplante);
             textoNombreImplante.text = mostrado != null ? mostrado.Nombre : config.TextoSinImplante;
-            textoNombreImplante.color = oferta.Estado == EstadoOfertaImplante.LigaBaja ? estilo.Desactivado : estilo.Naranja;
+            textoNombreImplante.color = oferta.Estado == EstadoOfertaImplante.LigaBaja ? estilo.Desactivado : estilo.Turquesa;
             textoNivelImplante.text = mostrado != null
                 ? string.Format(config.FormatoNivel, Romanos[Mathf.Clamp(mostrado.Nivel, 0, Romanos.Length - 1)])
                     + (oferta.Estado == EstadoOfertaImplante.YaLoMejor ? " · " + config.TextoInstalado : string.Empty)
@@ -611,13 +656,15 @@ namespace MechaCyberpunk.UI.Clinica
                 Color cambio = apagada ? estilo.Desactivado : fila.Cambio > 0 ? config.ColorInstalado : fila.Cambio < 0 ? config.ColorPeor : estilo.Desactivado;
                 f.Nombre.color = apagada ? estilo.Desactivado : estilo.Texto;
                 f.Antes.color = new Color(estilo.Texto.r, estilo.Texto.g, estilo.Texto.b, 0.7f);
-                f.Flecha.color = fila.Cambio != 0 && !apagada ? estilo.Naranja : estilo.Desactivado;
+                f.Flecha.color = fila.Cambio != 0 && !apagada ? estilo.Turquesa : estilo.Desactivado;
                 f.Despues.color = fila.Cambio != 0 ? cambio : f.Antes.color;
                 f.Diferencia.color = cambio;
             }
             PintarAviso();
             PintarBoton();
             holograma.Elegir(elegido, conImplante);
+            int nivelPrueba = oferta.Estado != EstadoOfertaImplante.YaLoMejor && oferta.Implante != null ? oferta.Implante.Nivel : 0;
+            holograma.MostrarImplantes(nivelesInstalados, elegido, nivelPrueba);
         }
 
         private void PintarEtiqueta(Text etiqueta, OfertaImplante oferta, ICartera cartera)
@@ -639,7 +686,7 @@ namespace MechaCyberpunk.UI.Clinica
                     break;
                 default:
                     etiqueta.text = FormatoDinero.Texto(oferta.Costo);
-                    etiqueta.color = cartera != null && cartera.PuedePagar(oferta.Costo) ? estilo.Naranja : estilo.Magenta;
+                    etiqueta.color = cartera != null && cartera.PuedePagar(oferta.Costo) ? estilo.Turquesa : estilo.Magenta;
                     break;
             }
         }
@@ -669,7 +716,7 @@ namespace MechaCyberpunk.UI.Clinica
             {
                 case EstadoOfertaImplante.Instalar:
                     textoBoton.text = string.Format(config.FormatoBoton, FormatoDinero.Texto(oferta.Costo));
-                    color = estilo.Naranja;
+                    color = estilo.Turquesa;
                     break;
                 case EstadoOfertaImplante.SinDinero:
                     textoBoton.text = config.TextoAvisoSinDinero;
@@ -713,12 +760,12 @@ namespace MechaCyberpunk.UI.Clinica
 
             // Cabecera: título, subtítulo, dinero y su etiqueta (abajo del número, no encima).
             Text titulo = Texto(lienzo.transform, "Titulo", RolTexto.Titulo, TextAnchor.UpperLeft, new Vector2(0f, 1f),
-                new Vector2(Margen, -Margen * 0.5f), new Vector2(900f, 100f), config.TextoTitulo, estilo.Naranja);
+                new Vector2(Margen, -Margen * 0.5f), new Vector2(900f, 100f), config.TextoTitulo, estilo.Turquesa);
             titulo.fontSize = TamanoTituloGrande;
             Text subtitulo = Texto(lienzo.transform, "Subtitulo", RolTexto.Encabezado, TextAnchor.UpperLeft, new Vector2(0f, 1f),
                 new Vector2(Margen + 4f, -Margen * 0.5f - 88f), new Vector2(900f, 50f), config.Subtitulo, estilo.Turquesa);
             subtitulo.fontSize = estilo.Tamano(RolTexto.Texto);
-            Image tiraCabecera = KitUI.CrearImagen(lienzo.transform, "TiraCabecera", new Color(estilo.Naranja.r, estilo.Naranja.g, estilo.Naranja.b, 0.6f));
+            Image tiraCabecera = KitUI.CrearImagen(lienzo.transform, "TiraCabecera", new Color(estilo.Turquesa.r, estilo.Turquesa.g, estilo.Turquesa.b, 0.6f));
             KitUI.Colocar(tiraCabecera.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -AltoCabecera + 6f), new Vector2(1920f - 2f * Margen, 2f));
             textoHoloDinero = Texto(lienzo.transform, "Dinero", RolTexto.Titulo, TextAnchor.UpperRight, new Vector2(1f, 1f),
                 new Vector2(-Margen, -Margen * 0.5f), new Vector2(600f, 110f), string.Empty, estilo.Turquesa);
@@ -736,7 +783,7 @@ namespace MechaCyberpunk.UI.Clinica
             KitUI.Colocar(tiraPie.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 80f), new Vector2(1920f - 2f * Margen, 2f));
 
             textoInstalando = Texto(lienzo.transform, "Instalando", RolTexto.Titulo, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f),
-                Vector2.zero, new Vector2(1400f, 140f), config.TextoInstalando, estilo.Naranja);
+                Vector2.zero, new Vector2(1400f, 140f), config.TextoInstalando, estilo.Turquesa);
             textoInstalando.fontSize = TamanoInstalando;
             textoInstalando.gameObject.SetActive(false);
             lienzo.gameObject.SetActive(false);
@@ -744,11 +791,11 @@ namespace MechaCyberpunk.UI.Clinica
 
         private void ConstruirEspacios(EstiloCyberfix estilo)
         {
-            Image panel = KitUI.CrearPanelMarco(lienzo.transform, "PanelEspacios", 0.85f);
+            Image panel = KitUI.CrearPanelH10(lienzo.transform, "PanelEspacios", estilo.Turquesa);
             KitUI.Colocar(panel.rectTransform, new Vector2(0f, 0f), new Vector2(Margen, AbajoLateral), new Vector2(AnchoLateral, AltoLateral));
             float ancho = AnchoLateral - 40f;
             Texto(panel.transform, "Encabezado", RolTexto.Encabezado, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(28f, -14f),
-                new Vector2(ancho, 56f), config.EncabezadoEspacios, estilo.Naranja);
+                new Vector2(ancho, 56f), config.EncabezadoEspacios, estilo.Turquesa);
             float y = -84f;
             for (int i = 0; i < Espacios; i++)
             {
@@ -760,18 +807,27 @@ namespace MechaCyberpunk.UI.Clinica
                 Button boton = f.Fondo.gameObject.AddComponent<Button>();
                 boton.transition = Selectable.Transition.None;
                 boton.onClick.AddListener(() => ElegirFila(fila));
-                f.Borde = KitUI.CrearBorde(f.Fondo.rectTransform, estilo.BordeElegido, estilo.Naranja);
-                f.Nombre = Texto(f.Fondo.transform, "Nombre", RolTexto.Encabezado, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(24f, 36f),
-                    new Vector2(ancho * 0.6f, 56f), string.Empty, estilo.Texto);
-                f.Instalado = Texto(f.Fondo.transform, "Instalado", RolTexto.Texto, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(24f, -14f),
-                    new Vector2(ancho - 48f, 40f), string.Empty, estilo.Texto);
+                f.Borde = KitUI.CrearBorde(f.Fondo.rectTransform, estilo.BordeElegido, estilo.Turquesa);
+                // T-896: el ícono H30 (nivel 1) o H33 (nivel 2) del implante; al pasar el ratón se elige la casilla.
+                EventTrigger disparador = f.Fondo.gameObject.AddComponent<EventTrigger>();
+                EventTrigger.Entry entrar = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+                entrar.callback.AddListener(_ => ElegirFila(fila));
+                disparador.triggers.Add(entrar);
+                f.Icono = KitUI.CrearImagen(f.Fondo.transform, "Icono", Color.white);
+                f.Icono.preserveAspect = true;
+                f.Icono.raycastTarget = false;
+                KitUI.Colocar(f.Icono.rectTransform, new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(LadoIconoEspacio, LadoIconoEspacio));
+                f.Nombre = Texto(f.Fondo.transform, "Nombre", RolTexto.Encabezado, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(XTextoEspacio, 36f),
+                    new Vector2(ancho * 0.45f, 56f), string.Empty, estilo.Texto);
+                f.Instalado = Texto(f.Fondo.transform, "Instalado", RolTexto.Texto, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(XTextoEspacio, -14f),
+                    new Vector2(ancho - XTextoEspacio - 24f, 40f), string.Empty, estilo.Texto);
                 f.Etiqueta = Texto(f.Fondo.transform, "Etiqueta", RolTexto.Texto, TextAnchor.MiddleRight, new Vector2(1f, 0.5f), new Vector2(-20f, 36f),
-                    new Vector2(ancho * 0.5f, 44f), string.Empty, estilo.Naranja);
+                    new Vector2(ancho * 0.5f, 44f), string.Empty, estilo.Turquesa);
                 f.Marcas = new Image[NivelesImplante];
                 for (int m = 0; m < f.Marcas.Length; m++)
                 {
                     f.Marcas[m] = KitUI.CrearImagen(f.Fondo.transform, "Marca_" + m, Color.white);
-                    KitUI.Colocar(f.Marcas[m].rectTransform, new Vector2(0f, 0.5f), new Vector2(24f + m * 40f, -54f), new Vector2(32f, 8f));
+                    KitUI.Colocar(f.Marcas[m].rectTransform, new Vector2(0f, 0.5f), new Vector2(XTextoEspacio + m * 40f, -54f), new Vector2(32f, 8f));
                 }
                 filasEspacio[i] = f;
                 y -= AltoFilaEspacio + 12f;
@@ -806,15 +862,23 @@ namespace MechaCyberpunk.UI.Clinica
             marcador = (RectTransform)m.transform;
             marcador.anchorMin = marcador.anchorMax = new Vector2(0.5f, 0.5f);
             marcador.sizeDelta = Vector2.zero;
-            KitUI.CrearRombo(marcador, "Rombo", TamanoRombo, estilo.Naranja);
-            Image linea = KitUI.CrearImagen(marcador, "Linea", new Color(estilo.Naranja.r, estilo.Naranja.g, estilo.Naranja.b, 0.8f));
+            KitUI.CrearRombo(marcador, "Rombo", TamanoRombo, estilo.Turquesa);
+            Image lineaConector = KitUI.CrearImagen(lienzo.transform, "Conector", new Color(estilo.Turquesa.r, estilo.Turquesa.g, estilo.Turquesa.b, 0.75f));
+            lineaConector.raycastTarget = false;
+            conector = lineaConector.rectTransform;
+            conector.anchorMin = conector.anchorMax = new Vector2(0.5f, 0.5f);
+            conector.pivot = new Vector2(0f, 0.5f);
+            Image linea = KitUI.CrearImagen(marcador, "Linea", new Color(estilo.Turquesa.r, estilo.Turquesa.g, estilo.Turquesa.b, 0.8f));
             Anclar(linea.rectTransform, new Vector2(TamanoRombo * 0.5f, 0f), new Vector2(LargoLineaMarcador, 2f));
             textoMarcador = KitUI.CrearTexto(marcador, "Nombre", RolTexto.Boton, TextAnchor.MiddleLeft);
             Anclar(textoMarcador.rectTransform, new Vector2(TamanoRombo * 0.5f + LargoLineaMarcador + 8f, 0f), new Vector2(260f, 44f));
-            textoMarcador.color = estilo.Naranja;
+            textoMarcador.color = estilo.Turquesa;
+            // T-896: el conector a la casilla sustituye a la etiqueta, que se salía sobre el panel de la derecha; el texto queda como modelo.
+            textoMarcador.enabled = false;
+            linea.enabled = false;
 
             textoEspacioElegido = Texto(areaHolo, "EspacioElegido", RolTexto.Encabezado, TextAnchor.UpperCenter, new Vector2(0.5f, 0f), new Vector2(0f, -14f),
-                new Vector2(AnchoHolo + 200f, 56f), string.Empty, estilo.Naranja);
+                new Vector2(AnchoHolo + 200f, 56f), string.Empty, estilo.Turquesa);
             textoEspacioElegido.rectTransform.pivot = new Vector2(0.5f, 1f);
             Text ayudaRaton = Texto(areaHolo, "AyudaRaton", RolTexto.Ayuda, TextAnchor.UpperCenter, new Vector2(0.5f, 0f), new Vector2(0f, -66f),
                 new Vector2(AnchoHolo, 30f), config.TextoAyudaRaton, estilo.Desactivado);
@@ -832,13 +896,13 @@ namespace MechaCyberpunk.UI.Clinica
 
         private void ConstruirImplante(EstiloCyberfix estilo)
         {
-            Image panel = KitUI.CrearPanelMarco(lienzo.transform, "PanelImplante", 0.85f);
+            Image panel = KitUI.CrearPanelH10(lienzo.transform, "PanelImplante", estilo.Turquesa);
             KitUI.Colocar(panel.rectTransform, new Vector2(1f, 0f), new Vector2(-Margen, AbajoLateral), new Vector2(AnchoLateral, AltoLateral));
             float ancho = AnchoLateral - 56f;
             Texto(panel.transform, "Encabezado", RolTexto.Encabezado, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(28f, -14f),
-                new Vector2(ancho, 56f), config.EncabezadoImplante, estilo.Naranja);
+                new Vector2(ancho, 56f), config.EncabezadoImplante, estilo.Turquesa);
             textoNombreImplante = Texto(panel.transform, "Nombre", RolTexto.Titulo, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(28f, -84f),
-                new Vector2(ancho, 70f), string.Empty, estilo.Naranja);
+                new Vector2(ancho, 70f), string.Empty, estilo.Turquesa);
             textoNombreImplante.fontSize = TamanoNombreImplante;
             textoNivelImplante = Texto(panel.transform, "Nivel", RolTexto.Texto, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(30f, -152f),
                 new Vector2(ancho, 36f), string.Empty, estilo.Turquesa);

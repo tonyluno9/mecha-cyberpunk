@@ -135,6 +135,11 @@ namespace MechaCyberpunk.UI.Clinica
         private IEnumerator Operar(DatosImplante implante)
         {
             operando = true;
+            // T-896: el ensamblado del implante se ve completo antes de irse a negro.
+            while (pantalla.Destellando)
+            {
+                yield return null;
+            }
             PantallaFundido fundido = PantallaFundido.Actual;
             if (fundido != null)
             {
