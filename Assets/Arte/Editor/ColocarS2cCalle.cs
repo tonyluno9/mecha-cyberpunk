@@ -176,7 +176,11 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 KitS2c.Charco(o, piso, new Vector3(o.Rango(-62f, XPoniente + 3f), banqueta, (i % 2 == 0 ? ZSur + 1f : ZNorte - 1f)), o.Rango(0.8f, 1.4f), o.Rango(0.6f, 1f), o.Rango(0f, 180f));
             }
-            Copiar(cosas, "Tapa", new[] { new Vector3(-73f, arroyo, zArroyoNorte - 0.35f), new Vector3(-97f, arroyo, zArroyoSur + 0.35f), new Vector3(-118f, arroyo, zArroyoNorte - 0.35f) });
+            foreach (Vector3 a in new[] { new Vector3(-73f, arroyo, zArroyoNorte - 0.5f), new Vector3(-97f, arroyo, zArroyoSur + 0.5f), new Vector3(-118f, arroyo, zArroyoNorte - 0.5f) })
+            {
+                // T-891: rejilla AL01 embutida en el arroyo (solo se asoman 4 cm de su marco).
+                KitS2c.Pieza(cosas, "AL01_Alcantarilla", a - Vector3.up * (KitS2c.Medir("AL01_Alcantarilla").Caja.size.y - 0.04f), Quaternion.identity, Vector3.one, false).name = "Alcantarilla";
+            }
             Copiar(cosas, "Bolsas1", new[] { new Vector3(-69.5f, banqueta, ZSur + 0.5f), new Vector3(-99f, banqueta, ZNorte - 0.5f) });
             Copiar(cosas, "Bolsas2", new[] { new Vector3(-88f, banqueta, ZSur + 0.5f) });
             KitS2c.Pieza(cosas, "C16_Tambo", new Vector3(-61.8f, banqueta, ZNorte - 0.6f), Quaternion.identity, Vector3.one);
@@ -185,6 +189,7 @@ namespace MechaCyberpunk.Arte.Editor
             Carro(cosas, new Vector3(-71.5f, arroyo, zArroyoSur + 1.1f), arroyo);
 
             PegarAlCallejon();
+            MuroTrasero(o);
             SacarGenteDeLasCasas(o.Raiz);
             KitS2c.Terminar(o);
             ColocarS2.Informe.AppendLine("Calle de prueba: " + o.Casas + " casas, " + o.Ventanas + " ventanas cálidas, " + o.Neones + " neones, " + o.Postes + " postes, "
@@ -346,6 +351,23 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             return n;
+        }
+
+        /// <summary>T-891: la cara norte del callejón con MT01 (aplanado sucio, ventanita, tubos y medidor) en lugar del muro liso.</summary>
+        private static void MuroTrasero(KitS2c.Obra o)
+        {
+            const string codigo = "MT01_MuroTrasero";
+            KitS2c.Medida m = KitS2c.Medir(codigo);
+            float x0 = CaraCallejon.min.x, largo = CaraCallejon.size.x;
+            int n = Mathf.RoundToInt(largo / m.Caja.size.x);
+            float ancho = largo / n;
+            const float piso = 0.2f; // el callejón es la banqueta de la Manzana_4 (un rayo desde arriba daría la azotea)
+            Transform raiz = new GameObject("MuroTrasero").transform;
+            raiz.SetParent(o.Raiz, false);
+            for (int i = 0; i < n; i++)
+            {
+                KitS2c.Pieza(raiz, codigo, new Vector3(x0 + (i + 0.5f) * ancho, piso, ZMuroCallejon - 0.02f + m.Muro * -1f), Quaternion.identity, new Vector3(ancho / m.Caja.size.x, 1f, 1f), false);
+            }
         }
 
         /// <summary>Lo que cuelga en la cara norte del callejón y quedó separado del muro nuevo (lámparas, medidores) se pega a él.</summary>

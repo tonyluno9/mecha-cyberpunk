@@ -340,7 +340,8 @@ namespace MechaCyberpunk.Arte.Editor
             // El fondo: la calle llegaba al muro del borde de la ciudad (x = -134) y de ahí al vacío. Casas del kit de frente, pegadas
             // al muro, a lo ancho de la calle y un poco más, con dos pisos más arriba para que tape el horizonte.
             float z0 = ColocarS2cCalle.ZSur - 4f, z1 = ColocarS2cCalle.ZNorte + 4f;
-            float x = ColocarS2cCalle.XBordePoniente - 0.2f;
+            // T-891: 1.2 m detrás del borde: lo que sale de la fachada (toldos, tejaditos) no debe pasar de la línea de la calle.
+            float x = ColocarS2cCalle.XBordePoniente - 1.2f;
             KitS2c.Estilo Fondo(int i) => new KitS2c.Estilo
             {
                 PlantaBaja = i % 2 == 0 ? KitS2c.PlantaLocal : KitS2c.PlantaVivienda,

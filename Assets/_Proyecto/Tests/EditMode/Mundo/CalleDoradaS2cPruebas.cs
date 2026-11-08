@@ -153,8 +153,8 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void Neones_YVentanasCalidas_SoloDeNoche()
         {
-            Renderer[] caras = raiz.GetComponentsInChildren<Renderer>().Where(r => r.name == "Cara" || r.name == "VentanaCalida").ToArray();
-            Assert.GreaterOrEqual(caras.Count(r => r.name == "Cara"), 8, "letreros de neón chicos");
+            Assert.GreaterOrEqual(raiz.GetComponentsInChildren<Transform>().Count(t => t.name == "Letrero" && t.parent.name == "Neon"), 8, "letreros de neón chicos");
+            Renderer[] caras = raiz.GetComponentsInChildren<Renderer>().Where(r => r.name == "VentanaCalida").ToArray();
             Assert.GreaterOrEqual(caras.Count(r => r.name == "VentanaCalida"), 15, "ventanas cálidas al azar");
             Assert.IsTrue(caras.All(r => r.sharedMaterial.shader.name == "MechaCyberpunk/Mundo/EmisionNoche"));
         }

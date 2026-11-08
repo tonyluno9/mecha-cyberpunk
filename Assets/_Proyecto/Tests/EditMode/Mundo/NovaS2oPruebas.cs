@@ -19,7 +19,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsNotNull(nova);
             foreach (Transform frente in nova.GetComponentsInChildren<Transform>().Where(t => t.name == "Frente_Nova"))
             {
-                Bounds[] torres = frente.Cast<Transform>().Where(t => t.name.StartsWith("T2")).Select(t => ArteT250.Limites(t.gameObject)).OrderBy(b => b.center.x).ToArray();
+                Bounds[] torres = frente.Cast<Transform>().Where(t => t.name.StartsWith("Edificio_")).Select(t => ArteT250.Limites(t.gameObject)).OrderBy(b => b.center.x).ToArray();
                 Assert.GreaterOrEqual(torres.Length, 3, frente.name);
                 for (int i = 1; i < torres.Length; i++)
                 {

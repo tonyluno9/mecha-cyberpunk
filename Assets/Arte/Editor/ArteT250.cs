@@ -101,9 +101,9 @@ namespace MechaCyberpunk.Arte.Editor
 
         public static string ZonaDe(string codigo)
         {
-            if (codigo.StartsWith("PU"))
+            if (codigo.StartsWith("PU") || ImportarS2p.EsDeCalle(codigo))
             {
-                return "Calle"; // T-890: puertas sueltas de las fachadas, no personajes
+                return "Calle"; // T-890 y T-891: puertas sueltas y piezas de calle (imageassets/modelos3d/calle/)
             }
             if (codigo[0] == 'N')
             {
