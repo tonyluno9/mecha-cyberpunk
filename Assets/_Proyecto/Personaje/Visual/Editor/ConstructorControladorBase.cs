@@ -25,8 +25,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         private const float Mezcla = 0.12f;
         private const float MezclaCorta = 0.06f;
         private const float SalidaUnaVez = 0.88f;
-        // T-675: la reacción al daño es corta (se corta a la mitad del clip).
-        private const float SalidaDano = 0.55f;
+        // T-735: los Pistola_Dano_* duran 0.47 s y terminan en la pose de apuntar: se dejan completos (la capa es aditiva).
+        private const float SalidaDano = 0.95f;
         private const float UmbralCaminar = ReglasVisual.UmbralCaminar;
 
         public static string RutaOverride(string papel) => CarpetaOverrides + "/Override_" + papel + ".overrideController";
@@ -65,6 +65,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Parametros(c);
             ConstruirBase(c);
             ConstruirArriba(c, mascara);
+            ConstruirDano(c, mascara);
             EditorUtility.SetDirty(c);
             AssetDatabase.SaveAssets();
             CrearOverrides(c);
@@ -485,9 +486,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 g.speedParameterActive = true;
                 g.speedParameter = ReglasAnimacion.RapidezGolpe;
             }
-            Estado("DanoFrente", Clip("Dano_Frente"));
-            Estado("DanoEspalda", Clip("Dano_Espalda"));
-            Estado("DanoFuerte", Clip("Dano_Fuerte"));
             Estado("PistolaIdle", Arbol1D(c, "PistolaIdle", ReglasVisual.Velocidad, new (string, float)[]
             {
                 ("Pistola_Idle", 0f), ("Pistola_Caminar", ReglasAnimacion.VelocidadAndar), ("Pistola_Correr", ReglasAnimacion.VelocidadCarrera),
@@ -578,12 +576,35 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             AnyA(m, e["Pitar"], MezclaCorta, true, Disparador(ReglasAnimacion.Gesto), Entero(ReglasAnimacion.GestoTipo, (int)GestoVisual.Pitar));
             Unir(e["Pitar"], e["Vacio"], true, SalidaUnaVez, Mezcla);
 
-            // Daño de frente, de espalda o fuerte.
-            string[] danos = { "DanoFrente", "DanoEspalda", "DanoFuerte" };
-            for (int i = 0; i < danos.Length; i++)
+        }
+
+        // ---------- Capa de daño (T-735) ----------
+
+        // Aditiva, con la máscara del torso: Pistola_Dano_Frente, Espalda y Fuerte (0.47 s, empiezan y terminan en Pistola_Apuntar, su pose de referencia)
+        // suman el estremecimiento a lo que juegue la capa de arriba, así el jugador sigue apuntando y disparando mientras lo golpean. Un solo estado a la vez:
+        // un golpe nuevo reemplaza al anterior y no se encima.
+        private static void ConstruirDano(AnimatorController c, AvatarMask mascara)
+        {
+            c.AddLayer(ReglasAnimacion.CapaDano);
+            AnimatorControllerLayer[] capas = c.layers;
+            int i = capas.Length - 1;
+            capas[i].avatarMask = mascara;
+            capas[i].blendingMode = AnimatorLayerBlendingMode.Additive;
+            capas[i].defaultWeight = 1f;
+            c.layers = capas;
+            AnimatorStateMachine m = c.layers[i].stateMachine;
+            AnimatorState vacio = m.AddState("Vacio");
+            m.defaultState = vacio;
+            string[] clips = { "Pistola_Dano_Frente", "Pistola_Dano_Espalda", "Pistola_Dano_Fuerte" };
+            string[] estados = { "DanoFrente", "DanoEspalda", "DanoFuerte" };
+            for (int k = 0; k < estados.Length; k++)
             {
-                AnyA(m, e[danos[i]], MezclaCorta, true, Disparador(ReglasVisual.Herido), Entero(ReglasAnimacion.DanoTipo, i));
-                Unir(e[danos[i]], e["Vacio"], true, SalidaDano, MezclaCorta);
+                AnimatorState s = m.AddState(estados[k]);
+                s.motion = Clip(clips[k]);
+                s.speed = ReglasAnimacion.VelocidadEstado(estados[k]);
+                AnimatorStateTransition entrada = m.AddAnyStateTransition(s);
+                Configurar(entrada, false, 0f, MezclaCorta, true, Disparador(ReglasVisual.Herido), Entero(ReglasAnimacion.DanoTipo, k));
+                Unir(s, vacio, true, SalidaDano, MezclaCorta);
             }
         }
 

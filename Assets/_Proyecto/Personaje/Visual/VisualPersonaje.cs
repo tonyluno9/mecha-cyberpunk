@@ -377,6 +377,7 @@ namespace MechaCyberpunk.Personaje.Visual
         public void Golpear(bool fuerte)
         {
             ultimoGolpe = Time.time;
+            CortarReaccion(); // T-675 con la capa aditiva de T-735: un golpe de puños corta el estremecimiento, no se encima
             golpeAlterno = fuerte ? 2 : 1 - golpeAlterno % 2;
             if (animador != null && Tiene(IdGolpeTipo, AnimatorControllerParameterType.Int))
             {
@@ -436,12 +437,29 @@ namespace MechaCyberpunk.Personaje.Visual
             }
         }
 
+        // T-735: la reacción al daño vive en su propia capa aditiva, no en la de arriba.
+        private int IndiceCapaDano()
+        {
+            if (animador == null || animador.runtimeAnimatorController == null)
+            {
+                return -1;
+            }
+            if (capaDano == -2)
+            {
+                capaDano = animador.GetLayerIndex(ReglasAnimacion.CapaDano);
+            }
+            return capaDano;
+        }
+
+        /// <summary>Peso actual de la capa aditiva de daño (0 si está caído o manejando), de 0 a 1.</summary>
+        public float PesoCapaDano => pesoDano;
+
         /// <summary>True mientras suena la reacción a un golpe recibido.</summary>
         public bool ReaccionEnCurso
         {
             get
             {
-                int capa = IndiceCapaArriba();
+                int capa = IndiceCapaDano();
                 if (capa < 0)
                 {
                     return false;
@@ -453,7 +471,7 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Corta la reacción al daño al instante (esquive): el torso vuelve a su pose normal.</summary>
         public void CortarReaccion()
         {
-            int capa = IndiceCapaArriba();
+            int capa = IndiceCapaDano();
             if (capa < 0)
             {
                 return;
@@ -478,6 +496,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velocidadAnterior;
         private float yawAnterior;
         private int capaArriba = -2;
+        private int capaDano = -2;
+        private float pesoDano = 1f;
         private bool agachado;
         private int golpeAlterno = 1;
         private int coberturaAlterna;
@@ -548,6 +568,13 @@ namespace MechaCyberpunk.Personaje.Visual
             if (capaArriba == -2)
             {
                 capaArriba = animador.GetLayerIndex(ReglasAnimacion.CapaArriba);
+            }
+            // T-735: la capa aditiva de daño va con peso 1; solo se apaga caído (la muerte manda) o manejando (el volante manda).
+            int dano = IndiceCapaDano();
+            if (dano >= 0)
+            {
+                pesoDano = Mathf.MoveTowards(pesoDano, caido || manejando ? 0f : 1f, rapidezCapaArriba * dt);
+                animador.SetLayerWeight(dano, pesoDano);
             }
             if (capaArriba < 0)
             {
