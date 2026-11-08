@@ -23,6 +23,18 @@ namespace MechaCyberpunk.UI.Hud
         [SerializeField] private Sprite[] iconosObjeto = new Sprite[0];
         [SerializeField] private Sprite conoMinimapa;
         [SerializeField] private Sprite puntoRuta;
+        [Header("Gráficos del chat de arte (T-725)")]
+        [SerializeField] private Sprite marcoEscudo;
+        [SerializeField] private Sprite marcoVida;
+        [SerializeField] private Sprite rellenoEscudo;
+        [SerializeField] private Sprite rellenoVida;
+        [SerializeField] private Sprite emblemaVida;
+        [SerializeField] private Sprite marcoMinimapa;
+        [SerializeField] private Sprite casillaObjeto;
+        [Tooltip("Segundos que la parte perdida de la barra se queda antes de bajar (s).")]
+        [Min(0f)] [SerializeField] private float segundosEsperaPerdida = 0.45f;
+        [Tooltip("Segundos que tarda la parte perdida en bajar hasta la vida actual (s).")]
+        [Min(0.01f)] [SerializeField] private float segundosBajaPerdida = 0.6f;
 
         private static ConfigHudH10 actual;
 
@@ -44,6 +56,15 @@ namespace MechaCyberpunk.UI.Hud
         public Sprite EstrellaLlena => estrellaLlena;
         public Sprite ConoMinimapa => conoMinimapa;
         public Sprite PuntoRuta => puntoRuta;
+        public Sprite MarcoEscudo => marcoEscudo;
+        public Sprite MarcoVida => marcoVida;
+        public Sprite RellenoEscudo => rellenoEscudo;
+        public Sprite RellenoVida => rellenoVida;
+        public Sprite EmblemaVida => emblemaVida;
+        public Sprite MarcoMinimapa => marcoMinimapa;
+        public Sprite CasillaObjeto => casillaObjeto;
+        public float SegundosEsperaPerdida => segundosEsperaPerdida;
+        public float SegundosBajaPerdida => segundosBajaPerdida;
 
         public Sprite CuerpoLinea(ZonaCuerpoH10 zona) => Elegir(cuerpoLinea, (int)zona);
 
@@ -78,6 +99,18 @@ namespace MechaCyberpunk.UI.Hud
             iconosObjeto = iconos;
             conoMinimapa = cono;
             puntoRuta = punto;
+        }
+
+        /// <summary>Solo para el creador del editor: los gráficos de las barras, el marco del minimapa y la casilla.</summary>
+        public void LlenarGraficos(Sprite marcoE, Sprite marcoV, Sprite rellenoE, Sprite rellenoV, Sprite emblema, Sprite marcoMini, Sprite casilla)
+        {
+            marcoEscudo = marcoE;
+            marcoVida = marcoV;
+            rellenoEscudo = rellenoE;
+            rellenoVida = rellenoV;
+            emblemaVida = emblema;
+            marcoMinimapa = marcoMini;
+            casillaObjeto = casilla;
         }
 #endif
     }

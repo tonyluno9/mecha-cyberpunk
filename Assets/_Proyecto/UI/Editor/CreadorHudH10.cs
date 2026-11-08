@@ -54,23 +54,29 @@ namespace MechaCyberpunk.UI.Editor
             Sprite[] relleno = new Sprite[Partes.Length];
             for (int i = 0; i < Partes.Length; i++)
             {
-                linea[i] = Sprite_("Cuerpo_" + Partes[i] + "_Linea");
-                relleno[i] = Sprite_("Cuerpo_" + Partes[i] + "_Relleno");
+                linea[i] = Nuevo("Cuerpo_" + Partes[i] + "_Linea") ?? Sprite_("Cuerpo_" + Partes[i] + "_Linea");
+                relleno[i] = Nuevo("Cuerpo_" + Partes[i] + "_Relleno") ?? Sprite_("Cuerpo_" + Partes[i] + "_Relleno");
             }
             Sprite[] iconos = new Sprite[Archivos.Length];
             for (int i = 0; i < Archivos.Length; i++)
             {
-                iconos[i] = Sprite_(Archivos[i]);
+                iconos[i] = Nuevo(Archivos[i]) ?? Sprite_(Archivos[i]);
             }
             config.Llenar(
                 AssetDatabase.LoadAssetAtPath<Font>(CarpetaFuentes + "Rajdhani-Regular.ttf"),
                 AssetDatabase.LoadAssetAtPath<Font>(CarpetaFuentes + "Rajdhani-Medium.ttf"),
-                Sprite_("Estrella_Contorno"), Sprite_("Estrella_Llena"), linea, relleno, Ids, iconos,
+                Nuevo("Estrella_Contorno") ?? Sprite_("Estrella_Contorno"), Nuevo("Estrella_Llena") ?? Sprite_("Estrella_Llena"), linea, relleno, Ids, iconos,
                 Sprite_("Minimapa_Cono"), Sprite_("Ruta_Punto"));
+            // T-725: los gráficos del chat de arte. Si falta alguno, ese rincón del HUD sigue con su dibujo de código.
+            config.LlenarGraficos(Nuevo("Barra_MarcoEscudo"), Nuevo("Barra_MarcoVida"), Nuevo("Barra_RellenoEscudo"), Nuevo("Barra_RellenoVida"),
+                Nuevo("Barra_Emblema"), Nuevo("Minimapa_Marco"), Nuevo("Casilla_Objeto"));
             EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
             Debug.Log("[UI] T-700 creada: " + RutaConfig);
         }
+
+        // El sprite de UI/Iconos/H10/ (T-725), o null si no está.
+        private static Sprite Nuevo(string nombre) => AssetDatabase.LoadAssetAtPath<Sprite>(ImportadorGraficosH10.Carpeta + nombre + ".png");
 
         private static Sprite Sprite_(string nombre)
         {

@@ -95,15 +95,24 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator Vida_ElNumeroYLasEtiquetasSonDeTamanoNormal()
+        public IEnumerator Vida_ElNumeroVaAlLadoDeLaBarraYSinPalabrasVidaNiEscudo()
         {
             yield return Preparar();
             Assert.GreaterOrEqual(h10.TextoVida.fontSize, 32, "El número de vida es de texto normal (como H10)");
-            Assert.AreEqual(TextAnchor.MiddleRight, h10.TextoVida.alignment, "A la derecha");
             RectTransform barra = (RectTransform)h10.GrupoIzquierda.transform.Find("BarraVida");
-            Assert.IsTrue(h10.TextoVida.transform.IsChildOf(barra), "Dentro del marco de la barra");
-            Assert.GreaterOrEqual(h10.GrupoIzquierda.transform.Find("EtiquetaEscudo").GetComponent<Text>().fontSize, 30, "ESCUDO grande");
-            Assert.GreaterOrEqual(h10.GrupoIzquierda.transform.Find("EtiquetaVida").GetComponent<Text>().fontSize, 30, "VIDA grande");
+            RectTransform escudo = (RectTransform)h10.GrupoIzquierda.transform.Find("BarraEscudo");
+            Assert.IsFalse(h10.TextoVida.transform.IsChildOf(barra), "El número va al lado, no dentro del marco");
+            Assert.GreaterOrEqual(h10.TextoVida.rectTransform.anchoredPosition.x, barra.anchoredPosition.x + barra.sizeDelta.x, "A la derecha de la barra");
+            Assert.Greater(escudo.sizeDelta.x, 0f);
+            Assert.Less(escudo.sizeDelta.x, barra.sizeDelta.x, "El escudo es corto y la vida larga");
+            Assert.Greater(escudo.anchoredPosition.y, barra.anchoredPosition.y, "El escudo va arriba de la vida");
+            Assert.IsNull(h10.GrupoIzquierda.transform.Find("EtiquetaEscudo"), "Sin la palabra ESCUDO");
+            Assert.IsNull(h10.GrupoIzquierda.transform.Find("EtiquetaVida"), "Sin la palabra VIDA");
+            foreach (Text texto in h10.GrupoIzquierda.GetComponentsInChildren<Text>(true))
+            {
+                Assert.AreNotEqual("VIDA", texto.text);
+                Assert.AreNotEqual("ESCUDO", texto.text);
+            }
         }
 
         [UnityTest]

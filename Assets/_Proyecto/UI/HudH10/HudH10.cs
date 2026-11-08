@@ -57,8 +57,10 @@ namespace MechaCyberpunk.UI.Hud
         private ITerritorio territorioVisto;
 
         private RectTransform barraEscudo;
-        private Image rellenoEscudo;
-        private Image rellenoVida;
+        private BarraConPerdida barraEscudoPerdida;
+        private BarraConPerdida barraVida;
+        private Color colorVidaNormal = Rosa;
+        private Image emblemaVida;
         private Text textoVida;
         private Text textoDinero;
         private Image[] estrellas;
@@ -100,8 +102,15 @@ namespace MechaCyberpunk.UI.Hud
         public bool Armado => canvas != null;
         public Canvas Canvas => canvas;
         public Text TextoVida => textoVida;
-        public Image RellenoVida => rellenoVida;
-        public Image RellenoEscudo => rellenoEscudo;
+        public Image RellenoVida => barraVida.Relleno;
+        public Image RellenoEscudo => barraEscudoPerdida.Relleno;
+        /// <summary>T-725: la capa de la parte perdida (se queda un momento y baja con DOTween).</summary>
+        public Image PerdidaVida => barraVida.Perdida;
+        public Image PerdidaEscudo => barraEscudoPerdida.Perdida;
+        public bool PerdidaBajando => barraVida.Bajando || barraEscudoPerdida.Bajando;
+        public Image EmblemaVida => emblemaVida;
+        /// <summary>Tinte del relleno de vida con la vida baja.</summary>
+        public static Color ColorVidaBaja => Rojo;
         public GameObject BarraEscudo => barraEscudo != null ? barraEscudo.gameObject : null;
         public Text TextoDinero => textoDinero;
         public Text TextoObjetivo => textoObjetivo;
@@ -153,6 +162,8 @@ namespace MechaCyberpunk.UI.Hud
 
         private void OnDestroy()
         {
+            barraVida?.Detener();
+            barraEscudoPerdida?.Detener();
             EventosPelea.ImpactoRecibido -= AlImpacto;
             if (Actual == this)
             {
@@ -294,39 +305,65 @@ namespace MechaCyberpunk.UI.Hud
             return Sprite.Create(blanco, new Rect(0f, 0f, blanco.width, blanco.height), new Vector2(0.5f, 0.5f));
         }
 
-        // Barra de línea fina: borde de 2 px y relleno que se llena de izquierda a derecha, dentro del borde.
-        private static Image BarraFina(RectTransform barra, Color color, float relleno)
+        // Barra del HUD: fondo, parte perdida, relleno y marco encima. Con los gráficos del chat de arte (marco y relleno) el relleno lleva su
+        // color propio (tinte blanco); sin ellos queda la barra de línea fina de código (borde de 2 px y relleno liso).
+        private BarraConPerdida ArmarBarra(RectTransform barra, Sprite marco, Sprite sprRelleno, Color colorSinGrafico, Color colorPerdida, Vector2 margen)
         {
-            KitUI.CrearBorde(barra, Linea, new Color(color.r, color.g, color.b, 0.9f));
             Image fondo = KitUI.CrearImagen(barra, "Fondo", new Color(0f, 0f, 0f, 0.28f));
             KitUI.Estirar(fondo.rectTransform);
-            fondo.rectTransform.SetAsFirstSibling();
-            Image fill = KitUI.CrearImagen(barra, "Relleno", color);
-            fill.sprite = Blanco1x1();
+            fondo.rectTransform.offsetMin = margen;
+            fondo.rectTransform.offsetMax = -margen;
+            Image perdida = RellenoFilled(barra, "Perdida", sprRelleno, colorPerdida, margen);
+            Image fill = RellenoFilled(barra, "Relleno", sprRelleno, sprRelleno != null ? Color.white : colorSinGrafico, margen);
+            if (marco != null)
+            {
+                Image m = KitUI.CrearImagen(barra, "Marco", Color.white);
+                m.sprite = marco;
+                KitUI.Estirar(m.rectTransform);
+            }
+            else
+            {
+                KitUI.CrearBorde(barra, Linea, new Color(colorSinGrafico.r, colorSinGrafico.g, colorSinGrafico.b, 0.9f));
+            }
+            return new BarraConPerdida(fill, perdida, cfg != null ? cfg.SegundosEsperaPerdida : 0.45f, cfg != null ? cfg.SegundosBajaPerdida : 0.6f);
+        }
+
+        private static Image RellenoFilled(RectTransform barra, string nombre, Sprite sprite, Color color, Vector2 margen)
+        {
+            Image fill = KitUI.CrearImagen(barra, nombre, color);
+            fill.sprite = sprite != null ? sprite : Blanco1x1();
             fill.type = Image.Type.Filled;
             fill.fillMethod = Image.FillMethod.Horizontal;
             fill.fillOrigin = (int)Image.OriginHorizontal.Left;
             KitUI.Estirar(fill.rectTransform);
-            fill.rectTransform.offsetMin = new Vector2(relleno, relleno);
-            fill.rectTransform.offsetMax = new Vector2(-relleno, -relleno);
+            fill.rectTransform.offsetMin = margen;
+            fill.rectTransform.offsetMax = -margen;
             return fill;
         }
 
+        // T-725: sin las palabras VIDA ni ESCUDO. Emblema a la izquierda, escudo delgado y corto arriba, vida larga abajo con su número al lado.
         private void ArmarEscudoYVida()
         {
             Transform g = grupoIzquierda.transform;
             Vector2 tl = new Vector2(0f, 1f);
-            Text etiquetaEscudo = Texto(g, "EtiquetaEscudo", tl, new Vector2(Margen, -52f), new Vector2(110f, 36f), 32, TurquesaSuave, TextAnchor.MiddleLeft);
-            etiquetaEscudo.text = "ESCUDO";
-            barraEscudo = Nuevo(g, "BarraEscudo", tl, new Vector2(180f, -57f), new Vector2(194f, 26f));
-            rellenoEscudo = BarraFina(barraEscudo, Turquesa, 4f);
+            const float xBarras = Margen + 90f;
+            Sprite emblema = cfg != null ? cfg.EmblemaVida : null;
+            if (emblema != null)
+            {
+                RectTransform re = Nuevo(g, "Emblema", tl, new Vector2(Margen, -48f), new Vector2(72f, 82f));
+                emblemaVida = re.gameObject.AddComponent<Image>();
+                emblemaVida.sprite = emblema;
+                emblemaVida.preserveAspect = true;
+                emblemaVida.raycastTarget = false;
+                emblemaVida.color = Color.white;
+            }
+            barraEscudo = Nuevo(g, "BarraEscudo", tl, new Vector2(xBarras, -46f), new Vector2(215f, 29f));
+            barraEscudoPerdida = ArmarBarra(barraEscudo, cfg != null ? cfg.MarcoEscudo : null, cfg != null ? cfg.RellenoEscudo : null, Turquesa, new Color(0.80f, 1f, 1f, 0.9f), new Vector2(4f, 4f));
 
-            Text etiquetaVida = Texto(g, "EtiquetaVida", tl, new Vector2(Margen, -122f), new Vector2(75f, 40f), 32, RosaSuave, TextAnchor.MiddleLeft);
-            etiquetaVida.text = "VIDA";
-            RectTransform barraVida = Nuevo(g, "BarraVida", tl, new Vector2(140f, -122f), new Vector2(436f, 36f));
-            rellenoVida = BarraFina(barraVida, Rosa, 4f);
-            textoVida = Texto(barraVida, "TextoVida", new Vector2(1f, 0.5f), new Vector2(-12f, 0f), new Vector2(240f, 36f), 34, new Color(1f, 0.90f, 0.92f, 0.95f), TextAnchor.MiddleRight, true);
-            textoVida.rectTransform.pivot = new Vector2(1f, 0.5f);
+            RectTransform marcoVida = Nuevo(g, "BarraVida", tl, new Vector2(xBarras, -98f), new Vector2(460f, 43f));
+            barraVida = ArmarBarra(marcoVida, cfg != null ? cfg.MarcoVida : null, cfg != null ? cfg.RellenoVida : null, Rosa, new Color(1f, 0.86f, 0.88f, 0.9f), new Vector2(5f, 5f));
+            colorVidaNormal = barraVida.Relleno.color;
+            textoVida = Texto(g, "TextoVida", tl, new Vector2(xBarras + 476f, -98f), new Vector2(240f, 43f), 34, new Color(1f, 0.90f, 0.92f, 0.95f), TextAnchor.MiddleLeft, true);
 
             textoDinero = Texto(g, "Dinero", tl, new Vector2(Margen, -238f), new Vector2(420f, 60f), 46, Blanco, TextAnchor.MiddleLeft, true);
         }
@@ -359,10 +396,22 @@ namespace MechaCyberpunk.UI.Hud
                 RanuraObjeto r = new RanuraObjeto();
                 RectTransform raiz = Nuevo(grupoObjetos.transform, "Objeto" + i, new Vector2(0f, 0f), new Vector2(Margen + i * (LadoRanura + HuecoRanura), 62f), new Vector2(LadoRanura, LadoRanura));
                 r.Raiz = raiz.gameObject;
+                Sprite casilla = cfg != null ? cfg.CasillaObjeto : null;
                 r.Fondo = raiz.gameObject.AddComponent<Image>();
                 r.Fondo.color = FondoCasilla;
                 r.Fondo.raycastTarget = false;
-                r.Borde = KitUI.CrearBorde(raiz, Linea, new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.85f));
+                if (casilla != null)
+                {
+                    // T-725: el gráfico de la casilla va encima del fondo (su cuadrito de tecla queda arriba a la izquierda).
+                    Image marco = KitUI.CrearImagen(raiz, "Casilla", Color.white);
+                    marco.sprite = casilla;
+                    KitUI.Estirar(marco.rectTransform);
+                    r.Borde = marco.gameObject;
+                }
+                else
+                {
+                    r.Borde = KitUI.CrearBorde(raiz, Linea, new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.85f));
+                }
                 RectTransform ri = Nuevo(raiz, "Icono", new Vector2(0.5f, 0.5f), new Vector2(0f, 2f), new Vector2(80f, 80f));
                 ri.pivot = new Vector2(0.5f, 0.5f);
                 r.Icono = ri.gameObject.AddComponent<Image>();
@@ -371,11 +420,21 @@ namespace MechaCyberpunk.UI.Hud
                 r.Icono.color = Turquesa;
                 r.Nombre = Texto(raiz, "Nombre", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(LadoRanura, 40f), 20, TurquesaSuave, TextAnchor.MiddleCenter);
                 r.Nombre.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-                r.Tecla = Texto(raiz, "Tecla", new Vector2(1f, 1f), new Vector2(-8f, -4f), new Vector2(70f, 26f), 20, new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.9f), TextAnchor.MiddleRight, true);
+                r.Tecla = casilla != null
+                    ? TeclaEnCuadrito(raiz)
+                    : Texto(raiz, "Tecla", new Vector2(1f, 1f), new Vector2(-8f, -4f), new Vector2(70f, 26f), 20, new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.9f), TextAnchor.MiddleRight, true);
                 r.Cantidad = Texto(raiz, "Cantidad", new Vector2(1f, 0f), new Vector2(-9f, 4f), new Vector2(80f, 34f), 28, Blanco, TextAnchor.MiddleRight, true);
                 r.Raiz.SetActive(false);
                 ranuras[i] = r;
             }
+        }
+
+        // T-725: la tecla va dentro del cuadrito de la casilla (H26), sin corchetes y sin contorno para que se lea a ese tamaño.
+        private Text TeclaEnCuadrito(RectTransform raiz)
+        {
+            Text t = Texto(raiz, "Tecla", new Vector2(0f, 1f), new Vector2(1f, -1f), new Vector2(LadoRanura * 0.25f, LadoRanura * 0.25f), 20, TurquesaSuave, TextAnchor.MiddleCenter, true);
+            t.GetComponent<Outline>().enabled = false;
+            return t;
         }
 
         private void ArmarArma()
@@ -544,8 +603,8 @@ namespace MechaCyberpunk.UI.Hud
                 return;
             }
             float actual = Mathf.Max(0f, vida.Actual);
-            rellenoVida.fillAmount = FormatoHud.Fraccion(actual, vida.Maxima);
-            rellenoVida.color = FormatoHud.EsVidaBaja(actual, vida.Maxima, UmbralVidaBaja) ? Rojo : Rosa;
+            barraVida.Poner(FormatoHud.Fraccion(actual, vida.Maxima));
+            barraVida.Relleno.color = FormatoHud.EsVidaBaja(actual, vida.Maxima, UmbralVidaBaja) ? Rojo : colorVidaNormal;
             Poner(textoVida, Mathf.CeilToInt(actual) + " / " + Mathf.CeilToInt(vida.Maxima));
         }
 
@@ -558,7 +617,7 @@ namespace MechaCyberpunk.UI.Hud
             {
                 return;
             }
-            rellenoEscudo.fillAmount = FormatoHud.Fraccion(escudo.Actual, escudo.Maximo);
+            barraEscudoPerdida.Poner(FormatoHud.Fraccion(escudo.Actual, escudo.Maximo));
         }
 
         private void ActualizarDinero()
@@ -629,7 +688,8 @@ namespace MechaCyberpunk.UI.Hud
                 r.Icono.enabled = icono != null;
                 Poner(r.Nombre, icono == null ? c.Nombre : string.Empty);
                 string tecla = consumibles.TextoTecla(c);
-                Poner(r.Tecla, tecla.Length > 0 ? "[" + tecla + "]" : string.Empty);
+                bool enCuadrito = r.Borde != null && r.Borde.name == "Casilla";
+                Poner(r.Tecla, tecla.Length > 0 ? (enCuadrito ? tecla : "[" + tecla + "]") : string.Empty);
                 Poner(r.Cantidad, "x" + inventario.Cantidad(c));
                 bool sel = c == elegido;
                 r.Fondo.color = sel ? new Color(0.10f, 0.32f, 0.34f, 0.55f) : FondoCasilla;
