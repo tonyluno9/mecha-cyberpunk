@@ -48,6 +48,7 @@ namespace MechaCyberpunk.Tests.Personaje
             int cuantos = 0;
             foreach (SkinnedMeshRenderer r in Visual().GetComponentsInChildren<SkinnedMeshRenderer>(true))
             {
+                if (r.GetComponentInParent<MechaCyberpunk.Personaje.Visual.ImplantesVisiblesPJ01>(true) != null) { continue; } // T-740: las piezas de implantes llevan solo textura de color (ver su prueba)
                 Material m = r.sharedMaterial;
                 Assert.IsNotNull(m, r.name);
                 Assert.AreEqual("Universal Render Pipeline/Lit", m.shader.name, r.name);
