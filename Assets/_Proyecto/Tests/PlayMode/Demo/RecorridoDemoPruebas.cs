@@ -1151,6 +1151,13 @@ namespace MechaCyberpunk.Tests.Demo
         }
 
         // Apunta la cámara al punto con el ratón (giro e inclinación); devuelve el error mayor en grados.
+        private static bool AtacarHabilitada(PistolaAPie p)
+        {
+            var campo = typeof(PistolaAPie).GetField("atacar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var r = campo != null ? campo.GetValue(p) as UnityEngine.InputSystem.InputActionReference : null;
+            return r != null && r.action.enabled;
+        }
+
         private float ApuntarA(Vector3 punto, float fraccion)
         {
             Vector3 origen = Controlador.Camara.position;
@@ -1177,6 +1184,10 @@ namespace MechaCyberpunk.Tests.Demo
                 yield return Pulsar(teclado.digit2Key);
             }
             sinE = true;
+            float errorT741 = -1f;
+            int disparosT741 = 0, impactosT741 = 0;
+            if (pistola != null) { pistola.Disparo += () => disparosT741++; pistola.BalaImpacto += (a, i) => impactosT741++; }
+            float proximoEquipo = 0f;
             float proximaRecarga = 0f;
             bool volcado = false;
             bool cubriendo = false;
@@ -1196,6 +1207,13 @@ namespace MechaCyberpunk.Tests.Demo
                     Bug("La pelea con pistola no termina: " + que, "tras " + maximo.ToString("F0") + " s sigue \"" + TextoObjetivo + "\"; enemigos vivos "
                         + CuentaEnemigos(), "B", true);
                     yield break;
+                }
+                // T-741: si la pistola no quedo en la mano (la tecla 2 se pierde mientras un golpe esta en curso, o tras cargar la partida), se vuelve a pedir; con punos el clic solo golpea y el bot no dispara jamas.
+                if (armas != null && armas.ArmaActiva != ArmaAPie.Pistola && Time.realtimeSinceStartup >= proximoEquipo)
+                {
+                    proximoEquipo = Time.realtimeSinceStartup + 1f;
+                    Debug.Log("[T-741] arma activa " + armas.ArmaActiva + ", tiene pistola " + armas.TieneArma(ArmaAPie.Pistola) + "; pulsa 2");
+                    yield return Pulsar(teclado.digit2Key);
                 }
                 yield return EsperarConVida();
                 if (ventajaDePrueba && vida != null && !vida.EstaKO && vida.Maxima > 0f && vida.Actual < vida.Maxima * UmbralVentaja)
@@ -1219,7 +1237,7 @@ namespace MechaCyberpunk.Tests.Demo
                     }
                     Debug.Log("[T-476] pistola: pos " + pos + " vida " + (vida != null ? vida.Actual.ToString("F0") : "?") + " balas " + (pistola != null ? pistola.Balas : -1) + " enemigo "
                         + (e != null ? e.name + " d " + Plano(e.transform.position, pos).ToString("F1") + " estado " + e.Estado + " vista " + LineaDeVista(e, out Vector3 _) : "ninguno")
-                        + " vivos " + CuentaEnemigos() + " cubriendo " + cubriendo + " apuntando " + Controlador.Apuntando);
+                        + " vivos " + CuentaEnemigos() + " cubriendo " + cubriendo + " apuntando " + Controlador.Apuntando + " | T-741 error " + errorT741.ToString("F1") + " disparos " + disparosT741 + " impactos " + impactosT741 + " armas.Balas " + (armas != null ? armas.Balas : -1) + " agachado " + (cubiertaJ != null && cubiertaJ.AgachadoLibre) + " arma activa " + (armas != null ? armas.ArmaActiva.ToString() : "?") + " clicIzq " + raton.leftButton.isPressed + " atacarHabilitada " + AtacarHabilitada(pistola) + " control " + (Controlador != null && Controlador.ControlActivo));
                 }
                 if (cubriendo)
                 {
@@ -1310,6 +1328,7 @@ namespace MechaCyberpunk.Tests.Demo
                         Soltar(teclado.leftShiftKey);
                         Presionar(raton.rightButton);
                         float error = ApuntarA(pecho, 0.8f);
+                        errorT741 = error;
                         if (Time.realtimeSinceStartup >= proximoCambioLado)
                         {
                             lado = -lado;
