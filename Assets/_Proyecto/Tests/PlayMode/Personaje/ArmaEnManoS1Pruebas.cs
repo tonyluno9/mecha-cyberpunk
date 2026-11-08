@@ -89,7 +89,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
-            Assert.AreEqual(3, a.layerCount, "El controlador trae Base, Arriba y Brazos (T-683); ya no trae la capa Piernas (T-671)");
+            Assert.AreEqual(2, a.layerCount, "El controlador trae Base y Arriba (T-733: sin capa Brazos ni Piernas)");
             Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola));
             yield return Esperar(0.4f);
             Assert.AreEqual(TipoArmaVisual.Ninguna, visual.TipoArmaAnimador, "Con la pistola en la mano y sin apuntar, el Animator no usa poses de arma");
@@ -109,7 +109,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(raton.rightButton);
             yield return Esperar(0.6f);
             Assert.AreEqual(TipoArmaVisual.Pistola, visual.TipoArmaAnimador, "Al apuntar sí usa las poses de arma");
-            Assert.IsTrue(EnEstado(a, 1, "PistolaApuntar") || EnEstado(a, 1, "PistolaIdle"), "El torso juega la pose de la pistola al apuntar");
+            Assert.IsTrue(EnEstado(a, 1, "PistolaSacar") || EnEstado(a, 1, "PistolaApuntar") || EnEstado(a, 1, "PistolaIdle"), "El torso juega la pose de la pistola al apuntar (T-733: primero Pistola_Sacar)");
             Release(raton.rightButton);
             yield return Esperar(VisualPersonaje.SegundosArmaTrasAccion + 0.8f);
             Assert.AreEqual(TipoArmaVisual.Ninguna, visual.TipoArmaAnimador, "Al soltar vuelve a la caminata normal");

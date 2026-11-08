@@ -15,8 +15,6 @@ namespace MechaCyberpunk.Personaje
         [Min(0.5f)] [SerializeField] private float alturaAgachado = 1.0f;
         [Tooltip("Cuánto baja la cámara al agacharse (m).")]
         [Min(0f)] [SerializeField] private float bajadaCamara = 0.7f;
-        [Tooltip("Escala vertical del muñeco agachado (1 = de pie).")]
-        [Range(0.3f, 1f)] [SerializeField] private float escalaAgachado = 0.65f;
         [Tooltip("Velocidad al moverse a lo largo de la cubierta, como fracción de la normal.")]
         [Range(0.05f, 1f)] [SerializeField] private float factorVelocidad = 0.4f;
         [Tooltip("Coseno del ángulo con el que se sale: al caminar con más que esto hacia afuera de la cubierta, se suelta.")]
@@ -35,26 +33,21 @@ namespace MechaCyberpunk.Personaje
         [Range(0.05f, 1f)] [SerializeField] private float factorAgachadoCorriendo = 0.45f;
 
         [Header("Rodada")]
-        [Tooltip("Distancia que recorre la rodada (m).")]
-        [Min(0.5f)] [SerializeField] private float distanciaRodada = 4f;
-        [Tooltip("Duración de la rodada (s).")]
-        [Min(0.1f)] [SerializeField] private float duracionRodada = 0.45f;
+        [Tooltip("Distancia que recorre la rodada (m): la de Loco_Rodar (T-733).")]
+        [Min(0.5f)] [SerializeField] private float distanciaRodada = 2.2f;
+        [Tooltip("Duración de la rodada (s): la de Loco_Rodar (T-733).")]
+        [Min(0.1f)] [SerializeField] private float duracionRodada = 1f;
         [Tooltip("Segundos de invulnerabilidad desde que empieza la rodada.")]
         [Min(0f)] [SerializeField] private float invulnerabilidad = 0.3f;
         [Tooltip("Espera para volver a rodar, contada desde que empieza la rodada (s).")]
         [Min(0.1f)] [SerializeField] private float enfriamientoRodada = 1.2f;
         [Tooltip("Altura de la cápsula al rodar (m).")]
         [Min(0.5f)] [SerializeField] private float alturaRodando = 0.9f;
-        [Tooltip("Cuánto se encoge el muñeco al rodar, en el punto más cerrado (1 = nada; 0.7 = a 70% de su altura): rueda hecho bola y no se hunde en el piso.")]
-        [Range(0.4f, 1f)] [SerializeField] private float escalaRodando = 0.7f;
-        [Tooltip("Fracción de la rodada (0 a 1) que dura el giro; el resto es reacomodarse agachado.")]
-        [Range(0.3f, 1f)] [SerializeField] private float fraccionGiroRodada = 0.85f;
 
         public float DistanciaBuscar => distanciaBuscar;
         public float AlturaMinimaCubierta => alturaMinimaCubierta;
         public float AlturaAgachado => alturaAgachado;
         public float BajadaCamara => bajadaCamara;
-        public float EscalaAgachado => escalaAgachado;
         public float FactorVelocidad => factorVelocidad;
         public float FactorAgachado => factorAgachado;
         public float FactorAgachadoCorriendo => factorAgachadoCorriendo;
@@ -67,8 +60,6 @@ namespace MechaCyberpunk.Personaje
         public float Invulnerabilidad => invulnerabilidad;
         public float EnfriamientoRodada => Mathf.Max(enfriamientoRodada, duracionRodada);
         public float AlturaRodando => alturaRodando;
-        public float EscalaRodando => escalaRodando;
-        public float FraccionGiroRodada => fraccionGiroRodada;
         public float RapidezRodada => distanciaRodada / duracionRodada;
     }
 }

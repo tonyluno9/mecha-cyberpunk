@@ -163,6 +163,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (rodando && !rodandoAntes && visual != null)
             {
                 visual.CortarReaccion();
+                visual.Rodar(); // T-733: Loco_Rodar (1 s); la cápsula avanza 2.2 m en ese segundo
             }
             rodandoAntes = rodando;
 
