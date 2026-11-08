@@ -31,6 +31,9 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("Llevar las manos al frente por IK. Se apaga cuando el controlador ya trae las animaciones ApuntarPistola y ApuntarLarga de verdad.")]
         [SerializeField] private bool manosPorIK = true;
 
+        [Tooltip("T-737: no tocar ningún hueso al apuntar (sin giro de torso, sin IK de manos): se ve el clip tal cual. El jugador lo enciende desde AnimacionJugador.")]
+        [SerializeField] private bool clipPuro;
+
         private Animator animador;
         private float peso;
 
@@ -91,6 +94,12 @@ namespace MechaCyberpunk.Personaje.Visual
 
         public bool ManosPorIK { get => manosPorIK; set => manosPorIK = value; }
 
+        /// <summary>
+        /// T-737: con el clip puro este componente no escribe ningún hueso: ni el torso girado al punto de mira, ni la mano derecha corregida, ni la mano izquierda pegada al arma (AgarreIzq),
+        /// ni las manos por IK. El jugador se ve exactamente como el clip de Tony (medido: 0.0° de diferencia en torso, brazos y cabeza). El punto de mira sigue guardado para quien lo lea.
+        /// </summary>
+        public bool ClipPuro { get => clipPuro; set => clipPuro = value; }
+
         private void Update()
         {
             if (visual == null)
@@ -106,7 +115,7 @@ namespace MechaCyberpunk.Personaje.Visual
         // T-681: lo que el IK de la muñeca no alcanza (la muñeca tiene límites) se termina girando el torso entero, con los brazos, el arma y las manos juntos.
         private void AjustarTorsoAlPuntoDeMira()
         {
-            if (manosPorIK || !hayMira || armaActiva == null || pesoCorreccion <= 0.001f || animador == null || !animador.isHuman)
+            if (clipPuro || manosPorIK || !hayMira || armaActiva == null || pesoCorreccion <= 0.001f || animador == null || !animador.isHuman)
             {
                 return;
             }
@@ -123,7 +132,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private void LateUpdate()
         {
             AjustarTorsoAlPuntoDeMira();
-            if (socketArma == null || visual == null || !manosPorIK)
+            if (clipPuro || socketArma == null || visual == null || !manosPorIK)
             {
                 return;
             }
@@ -178,7 +187,7 @@ namespace MechaCyberpunk.Personaje.Visual
         {
             float objetivo = 0f;
             float objetivoCorreccion = 0f;
-            if (!manosPorIK && animador != null && !visual.Caido && visual.TipoArma != TipoArmaVisual.Ninguna && !Recargando())
+            if (!clipPuro && !manosPorIK && animador != null && !visual.Caido && visual.TipoArma != TipoArmaVisual.Ninguna && !Recargando())
             {
                 objetivo = peso;
                 objetivoCorreccion = peso;
@@ -238,7 +247,7 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void OnAnimatorIK(int capa)
         {
-            if (animador == null || visual == null)
+            if (animador == null || visual == null || clipPuro)
             {
                 return;
             }
