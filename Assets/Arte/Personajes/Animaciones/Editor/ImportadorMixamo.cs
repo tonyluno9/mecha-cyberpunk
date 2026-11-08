@@ -17,7 +17,7 @@ namespace MechaCyberpunk.Arte.Editor
         // Clips nuevos con otro nombre (NPC, gestos, vehículos): con bucle si el archivo termina en "_Bucle" (docs/animaciones-faltan.md).
         const string SufijoBucle = "_Bucle";
         static readonly Regex NombreConBucle = new Regex(
-            @"^(Idle|Caminar\w*|Correr|Apuntar\w*|Guardia|AgachadoCaminar|SaltoAire|Caida)$");
+            @"^(Idle|Caminar\w*|Correr|Apuntar\w*|Guardia|Agachado(?:Idle|Caminar|Atras|Lateral_\w+)|SaltoAire|Caida)$");
 
         public static bool TieneBucle(string nombreArchivo)
         {
@@ -76,6 +76,30 @@ namespace MechaCyberpunk.Arte.Editor
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
                 var importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
                 if (importer != null && AjustarClips(importer, ruta)) importer.SaveAndReimport();
+            }
+        }
+
+        /// <summary>
+        /// T-731: un FBX reemplazado conserva el esqueleto guardado en su .meta; si el esqueleto cambió el avatar falla ("Transform 'Hips' not found").
+        /// Se apaga y se vuelve a crear el avatar desde el modelo para que lea el esqueleto nuevo. Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ImportadorMixamo.RehacerAvatares
+        /// </summary>
+        public static void RehacerAvatares()
+        {
+            string[] rutas =
+            {
+                Carpeta + "Pistola/Pistola_Disparo.fbx", Carpeta + "Pistola/Pistola_Correr.fbx",
+                Carpeta + "Pistola/Pistola_ApuntarCaminar_Derecha.fbx", Carpeta + "Pistola/Pistola_ApuntarCaminar_Izquierda.fbx",
+            };
+            foreach (var ruta in rutas)
+            {
+                var importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
+                if (importer == null) continue;
+                importer.humanDescription = new UnityEngine.HumanDescription();
+                importer.avatarSetup = ModelImporterAvatarSetup.NoAvatar;
+                importer.SaveAndReimport();
+                importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
+                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                importer.SaveAndReimport();
             }
         }
     }
