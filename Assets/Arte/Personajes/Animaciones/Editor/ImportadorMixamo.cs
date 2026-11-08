@@ -18,7 +18,7 @@ namespace MechaCyberpunk.Arte.Editor
         // Clips nuevos con otro nombre (NPC, gestos, vehículos): con bucle si el archivo termina en "_Bucle" (docs/animaciones-faltan.md).
         const string SufijoBucle = "_Bucle";
         static readonly Regex NombreConBucle = new Regex(
-            @"^(Idle|Caminar\w*|Correr|Apuntar\w*|Guardia|Agachado(?:Idle|Caminar|Atras|Lateral_\w+)|SaltoAire|Caida)$");
+            @"^(Idle|Caminar\w*|Correr\w*|Apuntar\w*|Guardia|Agachado(?:Idle|Caminar|Atras|Lateral_\w+)|SaltoAire|Caida)$");
 
         public static bool TieneBucle(string nombreArchivo)
         {
@@ -104,6 +104,18 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (string nombre in new[] { "Pistola_Sacar", "Pistola_Guardar" })
             {
                 string ruta = Carpeta + "Pistola/" + nombre + ".fbx";
+                var importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
+                if (importer != null && AjustarClips(importer, ruta)) importer.SaveAndReimport();
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>T-739: vuelve a aplicar nombre y bucle a los clips de caminar y correr con y sin implante. Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ImportadorMixamo.AplicarLocomocionImplantes</summary>
+        public static void AplicarLocomocionImplantes()
+        {
+            foreach (string nombre in new[] { "Loco_Caminar_SinImplante", "Loco_Correr_SinImplante", "Loco_Caminar_ConImplante", "Loco_Correr_ConImplante" })
+            {
+                string ruta = Carpeta + "Locomocion/" + nombre + ".fbx";
                 var importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
                 if (importer != null && AjustarClips(importer, ruta)) importer.SaveAndReimport();
             }

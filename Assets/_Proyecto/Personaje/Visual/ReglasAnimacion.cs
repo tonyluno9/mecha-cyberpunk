@@ -79,6 +79,8 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>T-733: dirección local con la que se apunta caminando (el árbol 2D de la capa de arriba). Es VelX/VelZ de quien calcula la dirección y 0 en quien no.</summary>
         public const string ApuntarX = "ApuntarX";
         public const string ApuntarZ = "ApuntarZ";
+        /// <summary>T-739: 0 = caminar y correr sin implante (Loco_*_SinImplante en el jugador), 1 = con implante de piernas o brazos (Loco_*_ConImplante). Los demás papeles lo dejan en 0 y siguen con Loco_Caminar y Loco_Correr.</summary>
+        public const string ConImplante = "ConImplante";
         /// <summary>T-733: dispara la rodada (Loco_Rodar, 1 s). La distancia (2.2 m) la mueve el controlador del jugador.</summary>
         public const string Rodar = ReglasVisual.Rodar;
         /// <summary>T-733: velocidad (m/s) a la que se mezcla del clip de pistola agachada quieta al de caminando (la del jugador agachado, ~1.6).</summary>
@@ -110,6 +112,8 @@ namespace MechaCyberpunk.Personaje.Visual
         public const float VelocidadClipCorrer = 2.51f;
         /// <summary>Rapidez máxima de la animación: deja que Correr iguale los 7.5 m/s del jugador sin toparse (7.5 / 2.51 = 2.99).</summary>
         public const float RapidezMaximaLocomocion = 3f;
+        /// <summary>T-739: velocidad (m/s) a la que avanzan Loco_Caminar_SinImplante / ConImplante y Loco_Correr_SinImplante / ConImplante tal como vienen, medida con MedicionClips (la del jugador va con Animator.speed 1, T-724).</summary>
+        public const float VelocidadClipCaminarSinImplante = 1.293f, VelocidadClipCaminarConImplante = 1.284f, VelocidadClipCorrerSinImplante = 3.19f, VelocidadClipCorrerConImplante = 3.052f;
         /// <summary>Rapidez máxima de Caminar antes de pasar a Correr (a 2.2x el clip aún no se ve acelerado de más).</summary>
         public const float RapidezMaximaCaminar = 2.2f;
         /// <summary>Velocidad (m/s) normal de caminar del jugador y los aliados (Caminar en los árboles de arma).</summary>
@@ -184,7 +188,7 @@ namespace MechaCyberpunk.Personaje.Visual
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
-        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, ApuntarX, ApuntarZ };
+        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, ApuntarX, ApuntarZ, ConImplante };
         public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono };
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
         public static readonly string[] ParametrosTrigger =

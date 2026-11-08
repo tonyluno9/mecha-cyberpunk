@@ -101,6 +101,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             AnimatorState caminar = Base().layers[0].stateMachine.states.First(s => s.state.name == "Caminar").state;
             BlendTree arbol = caminar.motion as BlendTree;
             Assert.IsNotNull(arbol);
+            // T-739: la raiz es un arbol 1D sin/con implante; cada hijo es el arbol 2D de direcciones.
+            Assert.AreEqual(BlendTreeType.Simple1D, arbol.blendType);
+            arbol = (BlendTree)arbol.children[0].motion;
             Assert.AreEqual(BlendTreeType.SimpleDirectional2D, arbol.blendType);
             Assert.AreEqual("VelX", arbol.blendParameter);
             Assert.AreEqual("VelZ", arbol.blendParameterY);
