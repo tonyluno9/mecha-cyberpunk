@@ -21,13 +21,17 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         public enum Fase { Inactivo, Llegando, Esperando, Huyendo, Detenido }
 
-        public const float VelocidadLlegada = 14f;
-        public const float VelocidadHuida = 10f;
-        public const float MetrosHuidaMinimos = 120f;
-        public const float MetrosHuidaIdeales = 180f;
-        public const float MetrosHuidaMaximos = 240f;
+        public const string IdEscena = "Historia_Asalto_Escena";
+
+        public const float VelocidadLlegada = 16f;
+        /// <summary>T-728: velocidad real de persecución (m/s, 50 km/h): por encima del tráfico (8 a 12) y un poco por debajo del carro del jugador (16), así se le puede dar alcance.</summary>
+        public const float VelocidadHuida = 14f;
+        public const float MetrosHuidaMinimos = 200f;
+        public const float MetrosHuidaIdeales = 320f;
+        public const float MetrosHuidaMaximos = 500f;
+        public const float MetrosHuidaDeRespaldo = 100f;
         public const float DistanciaMinimaSalida = 50f;
-        public const float SegundosMaximosHuida = 60f;
+        public const float SegundosMaximosHuida = 90f;
         public const float SegundosAtorado = 6f;
         private const float SegundosReintento = 0.5f;
         private const float SegundosMaximosBuscandoCarro = 10f;
@@ -124,7 +128,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
-            CarroTrafico nuevo = trafico.EnviarRefuerzo(jugador.Raiz.position, VelocidadLlegada, 8f, 5f, DistanciaMinimaSalida);
+            // T-728: el carro llega adonde asaltan a la víctima (el punto de escena que pone la historia); sin él, junto al jugador.
+            Vector3 destino = jugador.Raiz.position;
+            foreach (IPuntoHistoria punto in Registro<IPuntoHistoria>.Todos)
+            {
+                if (punto != null && punto.Id == IdEscena)
+                {
+                    destino = punto.Pose.position;
+                }
+            }
+            CarroTrafico nuevo = trafico.EnviarRefuerzo(destino, VelocidadLlegada, 8f, 5f, DistanciaMinimaSalida);
             if (nuevo == null)
             {
                 return;
@@ -225,6 +238,23 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 if (e < error)
                 {
                     error = e;
+                    mejor = i;
+                }
+            }
+            if (mejor >= 0)
+            {
+                return mejor;
+            }
+            // Respaldo: la red de calles es chica; si ninguna ruta llega a lo ideal, el nodo más lejano por la calle que esté lejos del jugador.
+            float masMetros = MetrosHuidaDeRespaldo;
+            for (int i = 0; i < carro.NodosDeCalle; i++)
+            {
+                float metros = carro.MetrosHasta(i);
+                Vector3 d = carro.PosicionNodo(i) - jugador;
+                d.y = 0f;
+                if (metros != float.MaxValue && metros > masMetros && d.magnitude >= MetrosHuidaDeRespaldo * 0.6f)
+                {
+                    masMetros = metros;
                     mejor = i;
                 }
             }

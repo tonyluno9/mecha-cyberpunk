@@ -167,6 +167,12 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 apuntando = false;
                 movimiento.Reiniciar();
+                // T-728: el CharacterController guarda la velocidad del último Move. Sin esto el visual del jugador seguía "caminando" quieto durante una
+                // cinemática (lee controlador.velocity): un Move en cero la deja en cero y el muñeco queda en reposo.
+                if (controlador != null && controlador.enabled && controlador.gameObject.activeInHierarchy)
+                {
+                    controlador.Move(Vector3.zero);
+                }
             }
         }
 

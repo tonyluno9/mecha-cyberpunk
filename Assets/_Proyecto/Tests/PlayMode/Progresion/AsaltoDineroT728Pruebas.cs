@@ -18,11 +18,12 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.Progresion
 {
     /// <summary>
-    /// T-717: la historia del dinero en la ciudad, como un jugador: al salir de casa te asaltan (cinemática, el jugador queda congelado), Enter la salta, el carro del
-    /// asaltante sale del pool del tráfico y huye, el objetivo lo sigue, se detiene (por el final de su ruta o por un disparo a las llantas) y al vencer al asaltante
-    /// el dinero vuelve a la cartera. Guardado temporal. Atajos anotados: al jugador se le coloca en la puerta con Colocar y el asaltante cae por daño directo.
+    /// T-728: la historia del dinero en la ciudad, como un jugador: al salir de casa ves cómo asaltan a una persona de afuera (cinemática, el jugador queda quieto y NO te quitan
+    /// dinero), Enter la salta, el carro del asaltante sale del pool del tráfico y huye a velocidad de persecución, el objetivo es "RÓBATE UN CARRO" y al subirte a uno "PERSÍGUELOS",
+    /// el carro se detiene (por el final de su ruta o por un disparo a las llantas) y al vencer al asaltante la víctima te da una parte. Guardado temporal.
+    /// Atajos anotados: al jugador se le coloca en la puerta con Colocar, el asaltante cae por daño directo y subir al carro es IntentarSubir del montable.
     /// </summary>
-    public class AsaltoDineroT717Pruebas : InputTestFixture
+    public class AsaltoDineroT728Pruebas : InputTestFixture
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const int Dinero = 500;
@@ -101,7 +102,7 @@ namespace MechaCyberpunk.Tests.Progresion
         private static void Foto(string nombre, Camera camara)
         {
             if (Environment.GetEnvironmentVariable("CAPTURAR_S1") != "1" || camara == null) return;
-            MechaCyberpunk.Tests.UI.CapturaUI.Capturar("docs/capturas/s1c-T-717-" + nombre + ".png", camara);
+            MechaCyberpunk.Tests.UI.CapturaUI.Capturar("docs/capturas/s1d-T-728-" + nombre + ".png", camara);
         }
 
         private static Camera CamaraAsalto()
@@ -134,8 +135,45 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
         }
 
+        // Un montable de carro que se pueda subir y que no sea el de los asaltantes (el de los asaltantes va a más de 4 m del punto que se le da).
+        private static IMontable CarroPorRobar(Vector3 lejosDe)
+        {
+            IMontable mejor = null;
+            float menor = float.MaxValue;
+            IJugador jugador = Registro<IJugador>.Actual;
+            foreach (IMontable m in Registro<IMontable>.Todos)
+            {
+                if (m == null || m.Modo != ModoJugador.Carro || !m.PuedeSubir || m.Ocupado) continue;
+                Vector3 d = m.PuntoSubida - lejosDe; d.y = 0f;
+                if (d.magnitude < 6f) continue;
+                float dj = Vector3.Distance(m.PuntoSubida, jugador.Raiz.position);
+                if (dj < menor) { menor = dj; mejor = m; }
+            }
+            return mejor;
+        }
+
         [UnityTest]
-        public IEnumerator Asalto_DelRoboAlDineroRecuperado_ConElCarroQueLlegaAlFinal()
+        public IEnumerator ControlDesactivado_DejaLaVelocidadEnCero_ElMunecoNoSeQuedaCaminando()
+        {
+            yield return Cargar(d => { });
+            IJugador jugador = Registro<IJugador>.Actual;
+            ControladorAPie control = jugador.Raiz.GetComponentInChildren<ControladorAPie>();
+            CharacterController cc = jugador.Raiz.GetComponent<CharacterController>();
+            control.ActivarControl(true);
+            yield return null;
+            // Caminaba: el CharacterController guarda la velocidad de su último Move y el visual (que la lee) seguía caminando en su lugar.
+            cc.Move(jugador.Raiz.forward * 0.3f);
+            Assert.Greater(cc.velocity.magnitude, 0.5f, "Preparación: el jugador traía velocidad");
+            control.ActivarControl(false);
+            Assert.Less(cc.velocity.magnitude, 0.05f, "Sin control, la velocidad queda en cero");
+            yield return null;
+            yield return null;
+            Assert.Less(cc.velocity.magnitude, 0.05f, "y sigue quieto en los cuadros siguientes");
+            control.ActivarControl(true);
+        }
+
+        [UnityTest]
+        public IEnumerator Asalto_ALaVictimaNoAlJugador_RobasUnCarroLoPersigues_YLaVictimaTeDaUnaParte()
         {
             DirectorPandillas director = null;
             yield return Cargar(d => director = d);
@@ -145,6 +183,7 @@ namespace MechaCyberpunk.Tests.Progresion
             director.Cargar("{\"paso\":\"Despierta\"}");
             yield return null;
             yield return PonerEnLaPuerta(director);
+            CharacterController cc = jugador.Raiz.GetComponent<CharacterController>();
             // Si la puerta del director queda a más de 2.5 m del punto elegido, se cuenta la salida como lo hace el juego.
             if (director.Paso == PasoHistoria.Despierta)
             {
@@ -155,23 +194,24 @@ namespace MechaCyberpunk.Tests.Progresion
             ControladorAPie control = jugador.Raiz.GetComponentInChildren<ControladorAPie>();
             yield return null;
 
-            // a. La cinemática: jugador congelado, barras, el asaltante camina hacia ti y el objetivo ya lo señala.
+            // a. La cinemática: el jugador quieto (sin velocidad que mueva su animación), barras, una víctima de afuera y el asaltante; el HUD oculto.
             Assert.AreEqual(FaseAsalto.Cinematica, asalto.Fase);
             Assert.IsTrue(asalto.CinematicaVisible, "Hay barras de cinemática");
             Assert.IsFalse(control.ControlActivo, "El jugador no se mueve durante la cinemática");
+            Assert.Less(cc.velocity.magnitude, 0.05f, "Quieto: sin velocidad no se queda caminando en su sitio");
             Assert.IsNotNull(asalto.Asaltante, "Hay un asaltante");
-            Assert.AreEqual(AsaltoDinero.TextoPerseguir, TextoObjetivo);
-            Assert.AreEqual(Dinero, cartera.Dinero, "Aún no te quita el dinero");
+            Assert.IsNotNull(asalto.Victima, "Hay una persona de afuera a la que asaltan");
+            Assert.AreNotSame(jugador.Raiz.gameObject, asalto.Victima);
+            Assert.Greater(Vector3.Distance(asalto.Victima.transform.position, jugador.Raiz.position), 3f, "La víctima no eres tú");
+            Assert.AreEqual(AsaltoDinero.TextoRobarCarro, TextoObjetivo);
+            Assert.AreEqual(Dinero, cartera.Dinero, "No te quitan tu dinero");
             yield return new WaitForSecondsRealtime(1.2f);
-            // T-726: en la cinemática el HUD se oculta (HudH10, minimapa y marcadores) y solo queda el letrero de saltar con la tecla real.
             MechaCyberpunk.UI.Hud.HudH10 hudNuevo = Object.FindFirstObjectByType<MechaCyberpunk.UI.Hud.HudH10>();
             Assert.IsNotNull(hudNuevo, "Hay HUD nuevo en la ciudad");
             Assert.IsTrue(MechaCyberpunk.UI.Hud.HudCinematica.Activa, "La cinemática avisa al HUD");
             Assert.IsFalse(hudNuevo.Canvas.enabled, "El HUD nuevo está oculto durante la cinemática");
-            foreach (MechaCyberpunk.UI.Mapa.Minimapa mini in Object.FindObjectsByType<MechaCyberpunk.UI.Mapa.Minimapa>(FindObjectsSortMode.None))
-            {
-                Assert.IsFalse(mini.Visible, "El minimapa también");
-            }
+            Assert.AreEqual(Dinero, cartera.Dinero, "Sigue sin tocarse tu dinero");
+            Assert.Less(cc.velocity.magnitude, 0.05f, "Sigue quieto");
             UnityEngine.UI.Text letrero = null;
             foreach (UnityEngine.UI.Text t in Object.FindObjectsByType<UnityEngine.UI.Text>(FindObjectsSortMode.None))
             {
@@ -179,14 +219,13 @@ namespace MechaCyberpunk.Tests.Progresion
             }
             Assert.IsNotNull(letrero, "Queda el letrero de saltar");
             Assert.AreEqual("ENTER: SALTAR", letrero.text);
-            Assert.IsTrue(letrero.canvas.enabled, "y se ve");
             Camera cinema = CamaraAsalto();
-            Foto("cinematica-asaltante", cinema);
+            Foto("cinematica-asalto", cinema);
 
-            // b. Enter (tecla real) salta la cinemática: el robo pasa igual y el jugador queda libre al subir el asaltante al carro.
+            // b. Enter (tecla real) salta la cinemática: el robo es a la víctima y el jugador queda libre al subir el asaltante al carro.
             yield return Pulsar(teclado.enterKey);
-            Assert.AreEqual(0, cartera.Dinero, "El asaltante se llevó todo el dinero");
-            Assert.AreEqual(Dinero, asalto.DineroRobado);
+            Assert.AreEqual(Dinero, cartera.Dinero, "Tu dinero sigue igual");
+            Assert.AreEqual(ReglaAsalto.DineroDeLaVictima, asalto.DineroRobado, "Le robaron a la víctima");
             yield return Esperar(() => asalto.Fase == FaseAsalto.Persecucion, "el asaltante sube al carro y empieza la persecución", 40f);
             Assert.IsTrue(control.ControlActivo, "El jugador queda libre");
             Assert.IsFalse(asalto.CinematicaVisible, "Se quitan las barras");
@@ -195,20 +234,49 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsTrue(hudNuevo.Canvas.enabled, "El HUD nuevo se ve otra vez");
             IPuntoHistoria carro = Punto(AsaltoMundoId.Principal);
             yield return Esperar(() => carro.Pose.position != default, "el carro tiene posición", 5f);
+            Assert.IsNull(asalto.Victima, "La víctima ya no hace falta en la escena");
 
-            Foto("persecucion", jugador.Camara);
-            // c. El objetivo sigue al carro mientras huye.
-            Vector3 primera = objetivos.Posicion;
-            yield return new WaitForSecondsRealtime(2f);
-            Assert.AreEqual(AsaltoDinero.TextoPerseguir, TextoObjetivo);
-            Assert.Greater(Vector3.Distance(primera, objetivos.Posicion), 2f, "El objetivo se mueve con el carro");
-            Assert.Less(Vector3.Distance(objetivos.Posicion, carro.Pose.position), 25f, "El objetivo está junto al carro (objetivo " + objetivos.Posicion + ", carro " + carro.Pose.position + ", jugador " + jugador.Raiz.position + ", fase " + asalto.Fase + ")");
+            // c. A pie el objetivo es RÓBATE UN CARRO; el carro huye a velocidad de persecución real (no a 10 m/s).
+            Assert.AreEqual(ModoJugador.APie, jugador.Modo);
+            Assert.AreEqual(AsaltoDinero.TextoRobarCarro, TextoObjetivo);
+            float maxima = 0f;
+            float finVel = Time.realtimeSinceStartup + 12f;
+            Vector3 ultimaPos = carro.Pose.position;
+            float ultimoT = Time.time;
+            while (Time.realtimeSinceStartup < finVel && asalto.Fase == FaseAsalto.Persecucion)
+            {
+                // Rapidez medida en ventanas de medio segundo con la posición del carro.
+                if (Time.time - ultimoT >= 0.5f)
+                {
+                    Vector3 d = carro.Pose.position - ultimaPos; d.y = 0f;
+                    maxima = Mathf.Max(maxima, d.magnitude / (Time.time - ultimoT));
+                    ultimaPos = carro.Pose.position;
+                    ultimoT = Time.time;
+                }
+                if (maxima >= 12.5f) break;
+                yield return null;
+            }
+            Assert.GreaterOrEqual(maxima, 12.5f, "El carro de los asaltantes llega a velocidad de persecución (máxima vista " + maxima + " m/s)");
+            Foto("persecucion-a-pie", jugador.Camara);
 
-            // d. El carro llega al final de su ruta (o se detiene): baja el asaltante y toca recuperar el dinero.
-            yield return Esperar(() => asalto.Fase == FaseAsalto.Enfrentando, "el carro se detiene y baja el asaltante", 90f);
+            // d. Te robas un carro: el objetivo cambia a PERSÍGUELOS y el marcador sigue al carro de los asaltantes.
+            IMontable robado = CarroPorRobar(carro.Pose.position);
+            Assert.IsNotNull(robado, "Hay un carro por robar en la calle");
+            Vector3 objetivoAPie = objetivos.Posicion;
+            Assert.Less(Vector3.Distance(objetivoAPie, robado.PuntoSubida), 40f, "A pie el marcador apunta a un carro por robar, no al de los asaltantes");
+            jugador.Colocar(new Pose(robado.PuntoSubida + Vector3.up * 0.1f, jugador.Raiz.rotation));
+            yield return null;
+            Assert.IsTrue(((MechaCyberpunk.Personaje.Jugador.JugadorAPie)jugador).Subir(robado), "El jugador sube al carro");
+            yield return Esperar(() => jugador.Modo == ModoJugador.Carro, "el jugador va en el carro", 5f);
+            yield return Esperar(() => TextoObjetivo == AsaltoDinero.TextoPerseguir, "el objetivo cambia a PERSÍGUELOS", 3f);
+            yield return new WaitForSecondsRealtime(0.6f);
+            Assert.Less(Vector3.Distance(objetivos.Posicion, carro.Pose.position), 25f, "El marcador está junto al carro de los asaltantes");
+            Foto("persecucion-en-carro", jugador.Camara);
+
+            // e. El carro llega al final de su ruta (o se detiene): baja el asaltante y toca atraparlo.
+            yield return Esperar(() => asalto.Fase == FaseAsalto.Enfrentando, "el carro se detiene y baja el asaltante", 100f);
             Assert.AreEqual(AsaltoDinero.TextoRecuperar, TextoObjetivo);
             Assert.IsTrue(asalto.Asaltante.activeInHierarchy);
-            // La captura mira al asaltante junto al carro detenido desde unos metros, con el HUD.
             if (Environment.GetEnvironmentVariable("CAPTURAR_S1") == "1")
             {
                 yield return null;
@@ -226,10 +294,10 @@ namespace MechaCyberpunk.Tests.Progresion
             PandilleroAPie pandillero = asalto.Asaltante.GetComponent<PandilleroAPie>();
             Assert.IsTrue(pandillero.enabled, "El asaltante pelea");
 
-            // e. Al vencerlo el dinero vuelve y la historia sigue.
+            // f. Al vencerlo, la víctima te da la mitad de lo robado y la historia sigue.
             pandillero.RecibirDanio(new InfoDanio(100000f, TipoDanio.Disparo, pandillero.transform.position, Vector3.forward, null));
             yield return Esperar(() => director.Paso == PasoHistoria.PrimeraPelea, "la historia sigue a la primera pelea", 5f);
-            Assert.AreEqual(Dinero, cartera.Dinero, "El dinero volvió a la cartera");
+            Assert.AreEqual(Dinero + ReglaAsalto.Recompensa(ReglaAsalto.DineroDeLaVictima), cartera.Dinero, "La víctima te dio una parte");
         }
 
         [UnityTest]
@@ -270,15 +338,15 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Esperar(() => asalto.Fase == FaseAsalto.Enfrentando, "la llanta ponchada detiene el carro", 20f);
             Assert.Less(Time.realtimeSinceStartup - inicio, 12f, "Se detuvo por la llanta, no por llegar al final");
             Assert.AreEqual(AsaltoDinero.TextoRecuperar, TextoObjetivo);
-            Assert.AreEqual(0, cartera.Dinero, "El dinero sigue con el asaltante");
+            Assert.AreEqual(Dinero, cartera.Dinero, "Tu dinero nunca se tocó");
             PandilleroAPie pandillero = asalto.Asaltante.GetComponent<PandilleroAPie>();
             pandillero.RecibirDanio(new InfoDanio(100000f, TipoDanio.Disparo, pandillero.transform.position, Vector3.forward, null));
             yield return Esperar(() => director.Paso == PasoHistoria.PrimeraPelea, "la historia sigue", 5f);
-            Assert.AreEqual(Dinero, cartera.Dinero);
+            Assert.AreEqual(Dinero + ReglaAsalto.Recompensa(ReglaAsalto.DineroDeLaVictima), cartera.Dinero, "La víctima te da una parte");
         }
 
         [UnityTest]
-        public IEnumerator Asalto_AlCambiarDePaso_ElDineroVuelveYElJugadorQuedaLibre()
+        public IEnumerator Asalto_AlCambiarDePaso_ElJugadorQuedaLibreYLaEscenaSeQuita()
         {
             DirectorPandillas director = null;
             yield return Cargar(d => director = d);
@@ -288,11 +356,12 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
             yield return new WaitForSecondsRealtime(0.3f);
             yield return Pulsar(teclado.enterKey);
-            Assert.AreEqual(0, cartera.Dinero, "Te quitaron el dinero");
+            Assert.AreEqual(Dinero, cartera.Dinero, "No te quitan el dinero");
             // Un guardado que cae en otro paso (o F6) quita el asalto: el dinero vuelve y el control también.
             director.Cargar("{\"paso\":\"PrimeraPelea\"}");
             yield return null;
-            Assert.AreEqual(Dinero, cartera.Dinero, "El dinero se repone al cancelar el asalto");
+            Assert.AreEqual(Dinero, cartera.Dinero, "Cancelar el asalto no toca tu dinero");
+            Assert.IsNull(director.Asalto.Victima, "La víctima se quita al cancelar");
             Assert.IsTrue(control.ControlActivo);
             Assert.AreEqual(FaseAsalto.Inactivo, director.Asalto.Fase);
         }

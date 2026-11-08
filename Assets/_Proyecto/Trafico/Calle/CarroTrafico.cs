@@ -688,6 +688,7 @@ namespace MechaCyberpunk.Trafico.Calle
         // ---- El carro del asaltante (T-717) ----
 
         private const float FrenadoPonchado = 12f;
+        private const float AceleracionHuida = 7f; // T-728: arranca como quien huye, no como el tráfico (3 m/s²)
         private float velocidadPonchado;
 
         /// <summary>T-717: True si este carro es el del asaltante y va huyendo por su ruta (no se estaciona cerca del jugador, no reacciona a disparos).</summary>
@@ -736,7 +737,7 @@ namespace MechaCyberpunk.Trafico.Calle
             EnHuida = true;
             RefuerzoLlego = false;
             VelocidadPropia = velocidad;
-            calculo = config.Crear(velocidad);
+            calculo = config.Crear(velocidad, AceleracionHuida);
             rutaRefuerzo.Clear();
             for (int i = 1; i < camino.Count; i++)
             {
@@ -919,6 +920,10 @@ namespace MechaCyberpunk.Trafico.Calle
                 if (PuntoEnVista(camara, p))
                 {
                     continue;
+                }
+                if (!EspacioLibre.Libre(p, transform))
+                {
+                    continue; // T-728: ni encima de una moto, un carro robado o estacionado, el jugador o lo que haya
                 }
                 if (HayCarroCerca(p))
                 {

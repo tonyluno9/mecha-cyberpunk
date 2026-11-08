@@ -73,6 +73,12 @@ namespace MechaCyberpunk.Trafico.Datos
             return Crear(VelocidadCrucero);
         }
 
+        /// <summary>T-728: igual, pero con una aceleración propia (al menos la del tráfico): un carro que huye arranca fuerte en vez de tardar 5 s en alcanzar su velocidad.</summary>
+        public CalculoTraficoCalle Crear(float velocidadDelCarro, float aceleracionMinima)
+        {
+            return new CalculoTraficoCalle(velocidadDelCarro, Mathf.Max(aceleracion, aceleracionMinima), frenado, distanciaFrenado, distanciaParada, segundosParaPitar, segundosEntrePitidos);
+        }
+
         /// <summary>T-703: igual, con la velocidad de crucero propia de ese carro.</summary>
         public CalculoTraficoCalle Crear(float velocidadDelCarro)
         {
