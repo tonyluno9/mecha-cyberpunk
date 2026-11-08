@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Proyecto/Escenas/Inicio.unity
+    guid: d10424deaf3e91c4691b20e13f16744a
+  - enabled: 1
+    path: Assets/_Proyecto/Escenas/Menu_Calles.unity
+    guid: 69674a23489a297499f0f146b931d3c2
+  - enabled: 1
     path: Assets/_Proyecto/Escenas/Tony/CreacionPersonaje.unity
     guid: 26c1e2e60ad04ba4f8e0a39527b5d29d
   - enabled: 1
