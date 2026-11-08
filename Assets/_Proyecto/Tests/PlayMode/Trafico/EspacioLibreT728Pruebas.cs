@@ -28,6 +28,15 @@ namespace MechaCyberpunk.Tests.Trafico
             objetos.Clear();
         }
 
+        // La prueba de la ciudad deja la escena cargada: se descarga para no contaminar las pruebas que siguen en la misma corrida.
+        [UnityTearDown]
+        public IEnumerator DescargarEscena()
+        {
+            foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects()) Object.Destroy(raiz);
+            Registros.LimpiarTodos();
+            yield return null;
+        }
+
         private GameObject Caja(string nombre, Vector3 centro, Vector3 tamano, bool trigger = false)
         {
             GameObject o = new GameObject(nombre);

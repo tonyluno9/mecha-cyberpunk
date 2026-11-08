@@ -86,8 +86,8 @@ namespace MechaCyberpunk.Trafico.Datos
         [Header("Búsqueda y arresto (T-665)")]
         [Min(10f)] [Tooltip("Radio del círculo de búsqueda, centrado donde te vieron por última vez (m).")]
         [SerializeField] private float radioBusqueda = 90f;
-        [Min(1f)] [Tooltip("Segundos fuera de su vista y del círculo de búsqueda para que te den por escapado (s).")]
-        [SerializeField] private float segundosParaEscapar = 10f;
+        [Min(1f)] [Tooltip("T-729: segundos seguidos sin que te vea la policía (patrulla, dron o cámara) para que dejes de ser buscado (s). Los últimos 8 las estrellas parpadean (45 s: 37 sin que te vean y empiezan a parpadear).")]
+        [SerializeField] private float segundosParaEscapar = 45f;
         [Min(1f)] [Tooltip("Una patrulla a menos de esta distancia que te ve puede arrestarte (m).")]
         [SerializeField] private float distanciaArresto = 10f;
         [Min(0.5f)] [Tooltip("Segundos seguidos, cerca de una patrulla y casi quieto, para que te arresten (s).")]
@@ -111,6 +111,14 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(5f)] [Tooltip("Un dron te ve desde aquí, sin contar paredes (vuela por encima) (m).")]
         [SerializeField] private float radioVistaDron = 45f;
         public float RadioVistaDron => radioVistaDron;
+
+        [Header("Dron derribable (T-730)")]
+        [Min(1f)] [Tooltip("Puntos de daño que aguanta el dron antes de caer. Una pistola hace 10 a 20 por bala.")]
+        [SerializeField] private float vidaDron = 40f;
+        [Min(0f)] [Tooltip("Cuánto baja la búsqueda (puntos de calor) cada vez que derribas un dron. 25 es un nivel.")]
+        [SerializeField] private float calorAlDerribarDron = 25f;
+        public float VidaDron => vidaDron;
+        public float CalorAlDerribarDron => calorAlDerribarDron;
 
         public float RadioVista => radioVista;
         public float SegundosParaPerder => segundosParaPerder;
