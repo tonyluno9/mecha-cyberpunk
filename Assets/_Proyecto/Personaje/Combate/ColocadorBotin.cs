@@ -28,6 +28,9 @@ namespace MechaCyberpunk.Personaje.Combate
             AlArrancar();
         }
 
+        /// <summary>Número de 0 a 1 que decide si suelta balas; las pruebas lo fijan.</summary>
+        public static System.Func<float> Azar = () => Random.value;
+
         private static void Colocar(InfoBotin info)
         {
             DatosBotin datos = Resources.Load<DatosBotin>(NombreDatos);
@@ -39,6 +42,12 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 DineroEnPiso dinero = DineroEnPiso.Crear(piso - lado * 0.5f, info.Dinero);
                 Object.Destroy(dinero.gameObject, vida);
+            }
+            float probabilidad = datos != null ? datos.ProbabilidadMunicion : 0.6f;
+            if (MunicionEnPiso.ArmaDestino() != null && Azar() < probabilidad)
+            {
+                MunicionEnPiso municion = MunicionEnPiso.Crear(piso + Vector3.forward * separacion * 0.9f);
+                Object.Destroy(municion.gameObject, vida);
             }
             if (info.Arma != ArmaBotin.Ninguna && datos != null)
             {

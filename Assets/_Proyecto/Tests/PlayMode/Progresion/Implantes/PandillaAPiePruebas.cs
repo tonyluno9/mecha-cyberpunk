@@ -692,7 +692,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
                 yield return Vencer(siguiente, false);
                 ronda++;
             }
-            yield return Esperar(datos.SegundosParaDesaparecer + 1f);
+            yield return Esperar(1f); // T-746: los vencidos se quedan tirados (KO); ya no desaparecen a los 4 s
             Assert.AreEqual(0, pandilla.Presentes, "vencidos los 3 no queda nadie en pie");
             int ganado = cartera.Dinero - dineroInicial;
             medidas.Add("dinero ganado=" + ganado + " esperado=" + 3 * datos.Dinero + " (3 x " + datos.Dinero + ")");
@@ -700,8 +700,8 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.AreEqual(3 * datos.Dinero, ganado, "vencer a los 3 paga 3 veces su dinero");
 
             int activos = 0;
-            foreach (PandilleroAPie p in pandilla.Pandilleros) activos += p.gameObject.activeSelf ? 1 : 0;
-            Assert.AreEqual(0, activos, "los vencidos desaparecen y esa noche no vuelven");
+            foreach (PandilleroAPie p in pandilla.Pandilleros) activos += p.gameObject.activeSelf && !p.EstaKO ? 1 : 0;
+            Assert.AreEqual(0, activos, "los vencidos quedan tirados (KO) y esa noche no vuelven");
 
             reloj.AvanzarHasta(HoraDia);
             atajos.Add("Reloj avanzado a las 8:00 del día siguiente");
