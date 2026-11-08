@@ -1,0 +1,47 @@
+{
+    "version": 1,
+    "name": "ControlesInterfaz",
+    "maps": [
+        {
+            "name": "Interfaz",
+            "id": "5dc2c91f-7098-49e7-b9ed-383b0cf90556",
+            "actions": [
+                {
+                    "name": "SaltarCinematica",
+                    "type": "Button",
+                    "id": "1f1bb262-57f1-46f0-bc5a-87d01bb99cdc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1dab5046-0f87-4dc8-bc80-df86bee0cfab",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SaltarCinematica",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f91f8fe4-10da-4b2b-bfc1-3ba16676c0bb",
+                    "path": "<Keyboard>/numpadEnter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SaltarCinematica",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

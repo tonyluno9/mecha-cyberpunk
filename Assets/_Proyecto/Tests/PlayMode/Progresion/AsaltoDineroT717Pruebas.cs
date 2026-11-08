@@ -163,6 +163,23 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(AsaltoDinero.TextoPerseguir, TextoObjetivo);
             Assert.AreEqual(Dinero, cartera.Dinero, "Aún no te quita el dinero");
             yield return new WaitForSecondsRealtime(1.2f);
+            // T-726: en la cinemática el HUD se oculta (HudH10, minimapa y marcadores) y solo queda el letrero de saltar con la tecla real.
+            MechaCyberpunk.UI.Hud.HudH10 hudNuevo = Object.FindFirstObjectByType<MechaCyberpunk.UI.Hud.HudH10>();
+            Assert.IsNotNull(hudNuevo, "Hay HUD nuevo en la ciudad");
+            Assert.IsTrue(MechaCyberpunk.UI.Hud.HudCinematica.Activa, "La cinemática avisa al HUD");
+            Assert.IsFalse(hudNuevo.Canvas.enabled, "El HUD nuevo está oculto durante la cinemática");
+            foreach (MechaCyberpunk.UI.Mapa.Minimapa mini in Object.FindObjectsByType<MechaCyberpunk.UI.Mapa.Minimapa>(FindObjectsSortMode.None))
+            {
+                Assert.IsFalse(mini.Visible, "El minimapa también");
+            }
+            UnityEngine.UI.Text letrero = null;
+            foreach (UnityEngine.UI.Text t in Object.FindObjectsByType<UnityEngine.UI.Text>(FindObjectsSortMode.None))
+            {
+                if (t.name == "TeclaSaltar") letrero = t;
+            }
+            Assert.IsNotNull(letrero, "Queda el letrero de saltar");
+            Assert.AreEqual("ENTER: SALTAR", letrero.text);
+            Assert.IsTrue(letrero.canvas.enabled, "y se ve");
             Camera cinema = CamaraAsalto();
             Foto("cinematica-asaltante", cinema);
 
@@ -173,6 +190,9 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Esperar(() => asalto.Fase == FaseAsalto.Persecucion, "el asaltante sube al carro y empieza la persecución", 40f);
             Assert.IsTrue(control.ControlActivo, "El jugador queda libre");
             Assert.IsFalse(asalto.CinematicaVisible, "Se quitan las barras");
+            Assert.IsFalse(MechaCyberpunk.UI.Hud.HudCinematica.Activa, "Acabó la cinemática: el HUD vuelve");
+            yield return null;
+            Assert.IsTrue(hudNuevo.Canvas.enabled, "El HUD nuevo se ve otra vez");
             IPuntoHistoria carro = Punto(AsaltoMundoId.Principal);
             yield return Esperar(() => carro.Pose.position != default, "el carro tiene posición", 5f);
 
