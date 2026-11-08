@@ -26,24 +26,11 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             // T-562: velocidades medidas con MedicionClips (el pie apoyado respecto de la cadera), no con el Medir viejo que daba 1.18 y 2.11.
             float caminar = ReglasAnimacion.VelocidadClipCaminar;
             float correr = ReglasAnimacion.VelocidadClipCorrer;
-            FijarEscalaAgachado();
             foreach ((string modelo, string papel, bool mira) in Reparto)
             {
                 ConectarPrefab(modelo, papel, mira, caminar, correr);
             }
             AssetDatabase.SaveAssets();
-        }
-
-        private const string RutaDatosCubierta = "Assets/_Proyecto/Personaje/Datos/Resources/DatosCubierta.asset";
-
-        /// <summary>T-562: Cobertura_Entrar ya trae la pose agachada; aplanar el modelo encima la deformaba.</summary>
-        public static void FijarEscalaAgachado()
-        {
-            Object datos = AssetDatabase.LoadAssetAtPath<Object>(RutaDatosCubierta);
-            var so = new SerializedObject(datos);
-            so.FindProperty("escalaAgachado").floatValue = 1f;
-            so.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(datos);
         }
 
         private static void ConectarPrefab(string modelo, string papel, bool mira, float caminar, float correr)

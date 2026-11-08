@@ -72,8 +72,7 @@ namespace MechaCyberpunk.Tests
         public IEnumerator Quieto_EmpiezaEnIdleYTrae3CapasConLaDeArribaVacia()
         {
             yield return new WaitForSeconds(0.3f);
-            Assert.AreEqual(3, animador.layerCount, "Base, Arriba y Brazos (T-683)");
-            Assert.AreEqual(0f, visual.PesoCapaBrazos, 0.01f, "De pie los brazos sueltos están apagados");
+            Assert.AreEqual(2, animador.layerCount, "Base y Arriba (T-733: sin capa Brazos)");
             Assert.IsTrue(Base("Idle"));
             Assert.IsTrue(Arriba("Vacio"));
             Assert.AreEqual(1f, visual.PesoCapaArriba, 0.01f);

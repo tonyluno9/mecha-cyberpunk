@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEngine;
 
 namespace MechaCyberpunk.Arte.Editor
 {
@@ -88,7 +89,7 @@ namespace MechaCyberpunk.Arte.Editor
             string[] rutas =
             {
                 Carpeta + "Pistola/Pistola_Disparo.fbx", Carpeta + "Pistola/Pistola_Correr.fbx",
-                Carpeta + "Pistola/Pistola_ApuntarCaminar_Derecha.fbx", Carpeta + "Pistola/Pistola_ApuntarCaminar_Izquierda.fbx",
+                Carpeta + "Pistola/Pistola_ApuntarCaminar_Derecha.fbx", Carpeta + "Pistola/Pistola_ApuntarCaminar_Izquierda.fbx", Carpeta + "Locomocion/Loco_Caminar.fbx",
             };
             foreach (var ruta in rutas)
             {
@@ -101,6 +102,25 @@ namespace MechaCyberpunk.Arte.Editor
                 importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
                 importer.SaveAndReimport();
             }
+        }
+
+        /// <summary>
+        /// T-733: Loco_AgachadoIdle y Loco_AgachadoCaminar de Tony salen de Blender con otra escala en el esqueleto: su propio avatar da humanScale 24 y el
+        /// cuerpo sale 30 cm arriba (los pies en el aire). Toman la descripción humanoide (esqueleto y mapeo) de Loco_Pararse, que viene del mismo
+        /// esqueleto bien escalado, y siguen creando su avatar desde su propio modelo. Se guarda en sus .meta; se puede repetir.
+        /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ImportadorMixamo.UsarAvatarDeLocoPararse
+        /// </summary>
+        public static void UsarAvatarDeLocoPararse()
+        {
+            var origen = (ModelImporter)AssetImporter.GetAtPath(Carpeta + "Locomocion/Loco_Pararse.fbx");
+            HumanDescription descripcion = origen.humanDescription;
+            foreach (string nombre in new[] { "Loco_AgachadoIdle", "Loco_AgachadoCaminar" })
+            {
+                var importer = (ModelImporter)AssetImporter.GetAtPath(Carpeta + "Locomocion/" + nombre + ".fbx");
+                importer.humanDescription = descripcion;
+                importer.SaveAndReimport();
+            }
+            AssetDatabase.SaveAssets();
         }
     }
 }

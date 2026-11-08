@@ -51,6 +51,7 @@ namespace MechaCyberpunk.Personaje.Combate
         [Min(0.01f)] [SerializeField] private float tamanoMarca = 0.08f;
 
         private ControladorAPie controlador;
+        private CubiertaYRodada cubierta;
         private VidaAPie vida;
         private ArmasAPie armas;
         private JugadorAPie jugadorApie;
@@ -110,6 +111,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private void Awake()
         {
             controlador = GetComponent<ControladorAPie>();
+            cubierta = GetComponent<CubiertaYRodada>();
             vida = GetComponent<VidaAPie>();
             armas = GetComponent<ArmasAPie>();
             jugadorApie = GetComponent<JugadorAPie>();
@@ -271,6 +273,13 @@ namespace MechaCyberpunk.Personaje.Combate
                     Sonidos.ReproducirEn("ARM_FUS_RAFAGA_COLA", transform.position);
                 }
                 disparabaAutomatica = pidio && d.Automatica;
+                // T-733: agachado no se dispara; para disparar se para (la siguiente pulsación ya dispara).
+                bool agachado = !enCarro && cubierta != null && cubierta.AgachadoLibre;
+                if (pidio && agachado)
+                {
+                    cubierta.AlternarAgachado();
+                    pidio = false;
+                }
                 if (pidio && actual.IntentarDisparar())
                 {
                     Disparar(activa, d);

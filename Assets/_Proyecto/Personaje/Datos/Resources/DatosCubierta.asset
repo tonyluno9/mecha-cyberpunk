@@ -16,7 +16,6 @@ MonoBehaviour:
   alturaMinimaCubierta: 0.9
   alturaAgachado: 1
   bajadaCamara: 0.7
-  escalaAgachado: 1
   factorVelocidad: 0.4
   cosenoSalida: 0.6
   cosenoProteccion: 0.3
@@ -24,10 +23,8 @@ MonoBehaviour:
   rapidezPegarse: 3
   factorAgachado: 0.35
   factorAgachadoCorriendo: 0.45
-  distanciaRodada: 3.2
-  duracionRodada: 0.8
+  distanciaRodada: 2.2
+  duracionRodada: 1
   invulnerabilidad: 0.5
-  enfriamientoRodada: 1.2
+  enfriamientoRodada: 1.5
   alturaRodando: 0.9
-  escalaRodando: 0.7
-  fraccionGiroRodada: 0.85

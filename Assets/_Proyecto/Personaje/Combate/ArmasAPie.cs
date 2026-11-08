@@ -4,6 +4,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,6 +41,8 @@ namespace MechaCyberpunk.Personaje.Combate
         private VidaAPie vida;
         private ArsenalJugador arsenal;
         private ArmaAPie armaActiva = ArmaAPie.Punos;
+        private VisualPersonaje visualJugador;
+        private bool pistolaVisible;
 
         public ArmaAPie ArmaActiva => armaActiva;
         /// <summary>Nivel del arma en la mano (0 a 3; 0 si no hay arsenal).</summary>
@@ -95,6 +98,22 @@ namespace MechaCyberpunk.Personaje.Combate
             armaSniper?.action.Disable();
             cambiarArma?.action.Disable();
             pistola.Cambio -= AlCambiarPistola;
+        }
+
+        // T-733: la pistola no se ve aunque esté seleccionada; solo aparece mientras se apunta (o justo después de disparar o recargar),
+        // que es cuando el Animator juega Pistola_Sacar. Las demás armas se ven siempre que están en la mano.
+        private void LateUpdate()
+        {
+            if (visualJugador == null)
+            {
+                visualJugador = GetComponentInChildren<VisualPersonaje>(true);
+            }
+            bool visible = visualJugador == null || visualJugador.ArmaLevantada;
+            if (visible != pistolaVisible)
+            {
+                pistolaVisible = visible;
+                Mostrar(visualPistola, ArmaAPie.Pistola, pistolaVisible);
+            }
         }
 
         private void Update()
@@ -193,17 +212,17 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             golpe.ArmaActiva = armaActiva;
             Mostrar(visualPunos, ArmaAPie.Punos);
-            Mostrar(visualPistola, ArmaAPie.Pistola);
+            Mostrar(visualPistola, ArmaAPie.Pistola, pistolaVisible);
             Mostrar(visualEscopeta, ArmaAPie.Escopeta);
             Mostrar(visualFusil, ArmaAPie.Fusil);
             Mostrar(visualSniper, ArmaAPie.Sniper);
         }
 
-        private void Mostrar(GameObject visual, ArmaAPie arma)
+        private void Mostrar(GameObject visual, ArmaAPie arma, bool permitido = true)
         {
             if (visual != null)
             {
-                visual.SetActive(armaActiva == arma);
+                visual.SetActive(armaActiva == arma && permitido);
             }
         }
 

@@ -9,7 +9,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
     /// Cubrirse y rodar a pie (T-421). Lo crea <see cref="ControladorAPie"/>. Q pega al jugador a la cubierta más cercana (pared, carro, caja) y lo
     /// deja agachado; al apuntar se asoma (de pie, sin protección) y puede disparar; sale con Q o caminando lejos de ella. CTRL agacha y levanta (alterna,
     /// T-673): agachado camina lento, con SHIFT más rápido y con ESPACIO rueda en la dirección del movimiento con unos segundos de invulnerabilidad y un
-    /// enfriamiento; de pie no se rueda. Baja la cápsula y la cámara y gira el muñeco al rodar.
+    /// enfriamiento; de pie no se rueda. Baja la cápsula y la cámara.
+    /// T-733: el cuerpo ya no se encoge ni se gira a mano: agacharse, quedarse agachado y rodar son clips (Loco_Agacharse, Loco_AgachadoIdle,
+    /// Loco_Rodar); aquí solo se mueve la cápsula y la rodada avanza 2.2 m en 1 s.
     /// Los números salen de <see cref="DatosCubierta"/> (Resources/DatosCubierta).
     /// </summary>
     [DefaultExecutionOrder(-10)]
@@ -34,12 +36,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private Collider cubierta;
         private Vector3 normal;
         private Vector3 direccionRodada;
-        private Transform modelo;
-        private Vector3 escalaBase = Vector3.one;
         private float alturaOriginal;
         private Vector3 centroOriginal;
         private float ajusteCamara;
-        private float escalaActual = 1f;
 
         public DatosCubierta Datos => datos;
         /// <summary>T-718: la acción de cubrirse y la de agacharse, para que el tutorial muestre la tecla real (GetBindingDisplayString).</summary>
@@ -69,9 +68,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
             alturaOriginal = cuerpo.height;
             centroOriginal = cuerpo.center;
-            Animator animador = GetComponentInChildren<Animator>(true);
-            modelo = animador != null ? animador.transform : null;
-            escalaBase = modelo != null ? modelo.localScale : Vector3.one;
             accionCubrirse = new InputAction("Cubrirse", InputActionType.Button, "<Keyboard>/q");
             accionAgachar = new InputAction("Agacharse", InputActionType.Button, "<Keyboard>/leftCtrl");
             accionRodar = new InputAction("Rodar", InputActionType.Button, "<Keyboard>/space");
@@ -79,8 +75,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
         public void AlCambiarModelo(Animator nuevo)
         {
-            modelo = nuevo != null ? nuevo.transform : null;
-            escalaBase = modelo != null ? modelo.localScale : Vector3.one;
+            // T-733: no guarda nada del modelo: el visual se anima solo con sus clips.
         }
 
         private readonly SeguidorImplantes implantes = new SeguidorImplantes();
@@ -375,43 +370,15 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 controlador.SaltoBloqueado = false;
             }
             ajusteCamara = 0f;
-            if (modelo != null)
-            {
-                modelo.localScale = escalaBase;
-                modelo.localRotation = Quaternion.identity;
-                modelo.localPosition = Vector3.zero;
-            }
-            escalaActual = 1f;
         }
 
-        // Cámara y muñeco: baja la cámara y encoge el muñeco agachado; al rodar lo gira hacia adelante alrededor de su centro.
+        // Cámara: baja agachado o rodando. El cuerpo lo anima el Animator (T-733).
         private void ActualizarVisual(float dt)
         {
             float paso = 1f - Mathf.Exp(-SuavizadoVisual * dt);
             bool agachado = Agachado || rodada.Activa;
             ajusteCamara = Mathf.Lerp(ajusteCamara, agachado ? datos.BajadaCamara : 0f, paso);
             controlador.AjusteAlturaCamara = ajusteCamara;
-            if (modelo == null)
-            {
-                return;
-            }
-            escalaActual = Mathf.Lerp(escalaActual, agachado ? datos.EscalaAgachado : 1f, paso);
-            if (rodada.Activa)
-            {
-                // T-683: rueda hecho bola (se encoge) para no hundirse en el piso, con arranque y final suaves; el giro termina antes de acabar
-                // la rodada y el resto es reacomodarse agachado.
-                float avance = Mathf.Clamp01(rodada.Progreso / datos.FraccionGiroRodada);
-                float encogido = Mathf.Lerp(1f, datos.EscalaRodando, Mathf.Sin(avance * Mathf.PI));
-                modelo.localScale = new Vector3(escalaBase.x, escalaBase.y * escalaActual * encogido, escalaBase.z);
-                Vector3 centro = new Vector3(0f, datos.AlturaRodando / 2f, 0f);
-                Quaternion giro = Quaternion.Euler(Mathf.SmoothStep(0f, 1f, avance) * 360f, 0f, 0f);
-                modelo.localRotation = giro;
-                modelo.localPosition = centro - giro * centro;
-                return;
-            }
-            modelo.localScale = new Vector3(escalaBase.x, escalaBase.y * escalaActual, escalaBase.z);
-            modelo.localRotation = Quaternion.identity;
-            modelo.localPosition = Vector3.zero;
         }
     }
 }

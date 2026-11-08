@@ -66,15 +66,19 @@ namespace MechaCyberpunk.Personaje.Visual
 
         public const string CapaBase = "Base";
         public const string CapaArriba = "Arriba";
-        /// <summary>T-683: capa de solo brazos que se prende agachado sin apuntar: los brazos quedan sueltos y no se ve la pose de rifle de los clips de agachado.</summary>
-        public const string CapaBrazos = "Brazos";
-        /// <summary>T-683: momento (fracción del clip Cobertura_Entrar, 0 a 1) en que está más agachado: es la pose de agachado quieto.</summary>
-        public const string PoseAgachadoQuieto = "PoseAgachadoQuieto";
-        /// <summary>T-683: fracción de Cobertura_Entrar usada como pose de agachado quieto (la más baja del clip, con las rodillas dobladas).</summary>
-        public const float FraccionAgachadoQuieto = 0.25f;
+        /// <summary>T-733: dirección local con la que se apunta caminando (el árbol 2D de la capa de arriba). Es VelX/VelZ de quien calcula la dirección y 0 en quien no.</summary>
+        public const string ApuntarX = "ApuntarX";
+        public const string ApuntarZ = "ApuntarZ";
+        /// <summary>T-733: dispara la rodada (Loco_Rodar, 1 s). La distancia (2.2 m) la mueve el controlador del jugador.</summary>
+        public const string Rodar = ReglasVisual.Rodar;
+        /// <summary>T-733: velocidad (m/s) a la que se mezcla del clip de pistola agachada quieta al de caminando (la del jugador agachado, ~1.6).</summary>
+        public const float VelocidadAgachadoCaminando = 1.6f;
+        /// <summary>T-733: duración (s) y distancia (m) de la rodada: son las de Loco_Rodar.</summary>
+        public const float DuracionRodada = 1f;
+        public const float DistanciaRodada = 2.2f;
 
-        /// <summary>T-683: velocidad (m/s) a la que avanza Rifle_AgachadoCaminar tal como viene, medida con MedicionClips.</summary>
-        public const float VelocidadClipAgachado = 0.41f;
+        /// <summary>T-733: velocidad (m/s) a la que avanza Loco_AgachadoCaminar tal como viene (1.07 m en un ciclo de 2 s, agarre.txt).</summary>
+        public const float VelocidadClipAgachado = 0.535f;
         /// <summary>T-683: cuánto más rápido que el clip se deja deslizar a los pies al caminar agachado (el jugador va a 1.6 m/s y el clip a 0.4: sin este tope los pies correrían).</summary>
         public const float DeslizamientoAgachado = 2.5f;
         /// <summary>T-683: rapidez mínima y máxima (x) del clip de caminar agachado.</summary>
@@ -90,8 +94,8 @@ namespace MechaCyberpunk.Personaje.Visual
             return EscalaVelocidad(velocidadReal, VelocidadClipAgachado * DeslizamientoAgachado * Mathf.Max(0.1f, escalaClips), RapidezMinimaAgachado, RapidezMaximaAgachado);
         }
 
-        /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Caminar tal como viene, medida con MedicionClips (T-562).</summary>
-        public const float VelocidadClipCaminar = 1.28f;
+        /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Caminar tal como viene, medida con MedicionClips (T-562; T-733: el Loco_Caminar ajustado de Tony mide 0.997).</summary>
+        public const float VelocidadClipCaminar = 0.997f;
         /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Correr tal como viene, medida con MedicionClips (T-562).</summary>
         public const float VelocidadClipCorrer = 2.79f;
         /// <summary>Rapidez máxima de la animación: deja que Correr iguale los 7.5 m/s del jugador sin toparse (7.5 / 2.79 = 2.69).</summary>
@@ -155,28 +159,25 @@ namespace MechaCyberpunk.Personaje.Visual
         public static readonly string[] EstadosBase =
         {
             "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "SaltoInicio", "SaltoAire", "SaltoAterrizaje", "Caida",
-            "AgachadoCaminar", "AgachadoQuieto", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2",
+            "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "Rodar", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2",
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
         };
-
-        /// <summary>Estados de la capa de brazos (T-683).</summary>
-        public static readonly string[] EstadosBrazos = { "BrazosSueltos" };
 
         /// <summary>Estados de la capa de arriba (torso).</summary>
         public static readonly string[] EstadosArriba =
         {
             "Vacio", "GolpeIzq", "GolpeDer", "GolpeFuerte", "DanoFrente", "DanoEspalda", "DanoFuerte",
-            "PistolaIdle", "PistolaApuntar", "PistolaDisparo", "PistolaRecargar", "PistolaRecargarCaminar",
+            "PistolaIdle", "PistolaSacar", "PistolaGuardar", "PistolaApuntar", "PistolaAgachado", "PistolaDisparo", "PistolaRecargar", "PistolaRecargarCaminar",
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
-        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, PoseAgachadoQuieto, RapidezGolpe };
+        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, ApuntarX, ApuntarZ };
         public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono };
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
         public static readonly string[] ParametrosTrigger =
         {
-            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto,
+            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto, Rodar,
         };
 
         /// <summary>

@@ -79,8 +79,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>Cuánto baja la cámara de hombro (m), por agacharse (T-421).</summary>
         public float AjusteAlturaCamara { get; set; }
 
-        /// <summary>True mientras se mantiene SHIFT (correr).</summary>
-        public bool PidiendoCorrer => correr != null && correr.action.IsPressed();
+        /// <summary>True mientras se mantiene SHIFT (correr). T-733: apuntando no se corre (correr es solo Loco_Correr, sin pistola).</summary>
+        public bool PidiendoCorrer => correr != null && correr.action.IsPressed() && !apuntando;
 
         /// <summary>Con true el espacio no salta (agachado el espacio rueda, T-673).</summary>
         public bool SaltoBloqueado { get; set; }
@@ -219,7 +219,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
             apuntando = apuntar != null && apuntar.action.IsPressed();
 
             Vector2 entrada = mover.action.ReadValue<Vector2>();
-            Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, correr.action.IsPressed(),
+            bool quiereCorrer = correr.action.IsPressed() && !apuntando;
+            Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, quiereCorrer,
                 enPiso, dt, datos.VelocidadCaminar, EfectosAPie.VelocidadCorrer(datos, implantes.Efectos), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
             bool quiereSaltar = !SaltoBloqueado && saltar.action.WasPressedThisFrame();
             float vertical = movimiento.ActualizarVertical(enPiso, quiereSaltar, dt,
@@ -241,7 +242,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 Sonidos.ReproducirEn("JUG_CAER", transform.position);
             }
             tiempoAire = enPiso ? 0f : tiempoAire + dt;
-            bool corriendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && correr.action.IsPressed();
+            bool corriendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && quiereCorrer;
             tiempoCorriendo = corriendo ? tiempoCorriendo + dt : 0f;
             if (tiempoCorriendo >= SegundosParaRespirar && Time.time >= proximaRespira)
             {
@@ -255,7 +256,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 zancada.Reiniciar(MetrosPorPasoCaminar * FraccionPrimerPaso);
             }
             estabaMoviendo = moviendo;
-            if (moviendo && zancada.Avanzar(new Vector2(horizontal.x, horizontal.z).magnitude * dt, correr.action.IsPressed(), enPiso) > 0)
+            if (moviendo && zancada.Avanzar(new Vector2(horizontal.x, horizontal.z).magnitude * dt, quiereCorrer, enPiso) > 0)
             {
                 UltimoIdPaso = IdPasoDelPiso();
                 Sonidos.ReproducirEn(UltimoIdPaso, transform.position);

@@ -49,13 +49,6 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void Cobertura_ElDatoYaNoAplanaElModelo()
-        {
-            var so = new SerializedObject(AssetDatabase.LoadAssetAtPath<Object>("Assets/_Proyecto/Personaje/Datos/Resources/DatosCubierta.asset"));
-            Assert.AreEqual(1f, so.FindProperty("escalaAgachado").floatValue, 0.0001f);
-        }
-
-        [Test]
         public void Idle_DesfaseYRapidez_SonDeterministasYEstanEnRango()
         {
             for (int s = 1; s < 200; s++)
