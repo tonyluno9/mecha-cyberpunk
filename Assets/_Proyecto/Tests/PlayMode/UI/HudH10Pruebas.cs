@@ -202,10 +202,10 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsFalse(h10.RanuraVisible(2));
             Assert.AreEqual("x1", h10.CantidadRanura(0));
             Assert.AreEqual("x2", h10.CantidadRanura(1));
-            Assert.AreEqual("[" + consumibles.TextoTecla(bebida) + "]", h10.TeclaRanura(0), "La tecla sale de la acción real");
-            Assert.AreEqual("[" + consumibles.TextoTecla(papitas) + "]", h10.TeclaRanura(1));
-            Assert.AreEqual("[6]", h10.TeclaRanura(0), "La bebida se usa con el 6");
-            Assert.AreEqual("[7]", h10.TeclaRanura(1), "Las papitas con el 7");
+            Assert.AreEqual(consumibles.TextoTecla(bebida), h10.TeclaRanura(0), "La tecla sale de la acción real (en el cuadrito de la casilla, sin corchetes)");
+            Assert.AreEqual(consumibles.TextoTecla(papitas), h10.TeclaRanura(1));
+            Assert.AreEqual("6", h10.TeclaRanura(0), "La bebida se usa con el 6");
+            Assert.AreEqual("7", h10.TeclaRanura(1), "Las papitas con el 7");
             Assert.IsNotNull(h10.IconoRanura(0), "Ícono de la bebida");
             Assert.IsNotNull(h10.IconoRanura(1), "Ícono de las papitas");
             Assert.AreNotSame(h10.IconoRanura(0), h10.IconoRanura(1));
@@ -300,10 +300,8 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             Color torso = h10.ColorLineaParte(ZonaCuerpoH10.Torso);
             Assert.Greater(torso.r - torso.g, 0.3f, "Con la vida baja todo el muñequito se pone rojo");
-            Assert.AreEqual(Rojo(), h10.RellenoVida.color, "La barra de vida también");
+            Assert.AreEqual(HudH10.ColorVidaBaja, h10.RellenoVida.color, "La barra de vida también");
         }
-
-        private static Color Rojo() => new Color(1f, 0.22f, 0.28f, 1f);
 
         [UnityTest]
         public IEnumerator Modos_EnElCarroSoloEstrellasYObjetivo_EnElMechaNada()
@@ -349,7 +347,10 @@ namespace MechaCyberpunk.Tests.UI
                 Assert.IsNull(mascara.sprite, "La máscara no es un círculo: es el cuadrado entero");
                 Assert.IsNotNull(minimapa.Raiz.Find("ConoVista"), "Lleva el cono de vista del jugador");
                 Assert.IsNull(minimapa.Raiz.Find("Anillo"), "Sin el anillo redondo viejo");
-                Assert.IsNotNull(minimapa.Raiz.Find("Borde/Arriba"), "Borde fino cuadrado");
+                Transform marco = minimapa.Raiz.Find("Marco");
+                Assert.IsNotNull(marco, "T-725: lleva el marco del chat de arte");
+                Assert.AreSame(ConfigHudH10.Actual.MarcoMinimapa, marco.GetComponent<Image>().sprite);
+                Assert.AreEqual(Image.Type.Sliced, marco.GetComponent<Image>().type, "9-slice: las esquinas no se estiran");
                 Assert.Greater(minimapa.SegmentosRutaVisibles, 0, "Hay ruta al objetivo");
                 Image tramo = minimapa.Raiz.Find("Mascara/Mundo/Desplazado/RutaGps/Tramo_0").GetComponent<Image>();
                 Assert.AreEqual(Image.Type.Tiled, tramo.type, "La ruta va punteada (el punto se repite)");

@@ -20,8 +20,9 @@ namespace MechaCyberpunk.Tests.Mundo
             try
             {
                 Transform[] activos = escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>()).Where(t => t.gameObject.activeInHierarchy).ToArray();
+                // T-885 (playtest 7-nov): los N02 atravesaban de un edificio al otro sin sentido; se quitaron hasta que llegue la pasarela PS01.
                 Transform[] puentes = activos.Where(t => t.name == "N02_T505").ToArray();
-                Assert.AreEqual(2, puentes.Length, "los dos puentes N02 de Neón Alto");
+                Assert.AreEqual(0, puentes.Length, "sin los puentes N02 que atravesaban edificios");
                 Assert.IsFalse(activos.Any(t => t.name == ColocarS2tLimpieza.RaizPuentes), "sin la escalera de cubos de T-809");
                 foreach (Transform p in puentes)
                 {
