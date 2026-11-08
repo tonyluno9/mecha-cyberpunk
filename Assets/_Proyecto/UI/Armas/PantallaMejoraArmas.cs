@@ -34,7 +34,13 @@ namespace MechaCyberpunk.UI.Armas
         private const float AltoFilaEstadistica = 48f;
         private const float AltoBoton = 70f;
         private const float AnchoHolo = 900f;
-        private const float AltoHolo = 562f;
+        // T-887: el holograma más bajo (y recortado arriba y abajo, sin deformar) para que la tabla de estadísticas quepa debajo, al centro.
+        private const float AltoHolo = 380f;
+        private const float SubeHolo = 120f;
+        private const float AltoPanelTabla = 262f;
+        private const float AltoFilaTabla = 40f;
+        private const float SobreHolo = 70f;
+        private const float GrosorLinea = 1.5f;
         private const float GrosorMarca = 3f;
         private const float LargoMarca = 46f;
         private const float AlfaFilaElegida = 0.22f;
@@ -104,6 +110,7 @@ namespace MechaCyberpunk.UI.Armas
         private readonly Dictionary<PiezaArma, EstadoPieza> estados = new Dictionary<PiezaArma, EstadoPieza>();
 
         private Canvas canvas;
+        private Color Acento => config.ColorAcento;
         private GameObject contenido;
         private RectTransform listaArmas;
         private RectTransform areaHolo;
@@ -562,10 +569,10 @@ namespace MechaCyberpunk.UI.Armas
             EstiloCyberfix estilo = KitUI.Estilo;
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             int nivel = arsenal != null ? arsenal.Nivel(armas[i].Arma) : 0;
-            f.Fondo.color = elegida ? new Color(estilo.Naranja.r, estilo.Naranja.g, estilo.Naranja.b, AlfaFilaElegida)
+            f.Fondo.color = elegida ? new Color(Acento.r, Acento.g, Acento.b, AlfaFilaElegida)
                 : new Color(1f, 1f, 1f, AlfaFilaNormal);
             f.Borde.SetActive(elegida);
-            f.Nombre.color = elegida ? estilo.Naranja : estilo.Texto;
+            f.Nombre.color = estilo.Texto; // T-887: blanco también elegida (turquesa sobre turquesa no se leía)
             f.Nivel.text = TextoNivel(nivel);
             for (int m = 0; m < f.Marcas.Length; m++)
             {
@@ -585,8 +592,8 @@ namespace MechaCyberpunk.UI.Armas
                 bool elegida = p == pieza && armas.Count > 0;
                 EntradaPiezaMenu datos = config.Pieza(p);
                 float brillo = elegida && destello > 0f ? destello : 0f;
-                Color colorFila = elegida ? estilo.Naranja : estilo.Texto;
-                f.Fondo.color = elegida ? new Color(estilo.Naranja.r, estilo.Naranja.g, estilo.Naranja.b, AlfaFilaElegida + brillo * 0.2f)
+                Color colorFila = estilo.Texto; // T-887: el acento va en el borde y el fondo de la fila
+                f.Fondo.color = elegida ? new Color(Acento.r, Acento.g, Acento.b, AlfaFilaElegida + brillo * 0.2f)
                     : new Color(1f, 1f, 1f, AlfaFilaNormal);
                 f.Borde.SetActive(elegida);
                 f.Numeral.text = Romanos[ReglaMejoraArma.NivelDe(p)];
@@ -605,7 +612,7 @@ namespace MechaCyberpunk.UI.Armas
                     case EstadoPieza.Disponible:
                         int precio = ReglaMejoraArma.Precio(DatosNivel(ReglaMejoraArma.NivelDe(p)));
                         f.Etiqueta.text = FormatoDinero.Texto(precio);
-                        f.Etiqueta.color = cartera != null && cartera.PuedePagar(precio) ? estilo.Naranja : estilo.Magenta;
+                        f.Etiqueta.color = cartera != null && cartera.PuedePagar(precio) ? Acento : estilo.Magenta;
                         f.Etiqueta.fontSize = estilo.Tamano(RolTexto.Texto);
                         break;
                     default:
@@ -647,7 +654,7 @@ namespace MechaCyberpunk.UI.Armas
                 f.Despues.text = ReglaMejoraArma.Texto(fila.Estadistica, mostrado);
                 f.Diferencia.text = ReglaMejoraArma.TextoDiferencia(fila.Estadistica, fila.Antes, fila.Despues);
                 Color colorCambio = fila.Cambio > 0 ? config.ColorMejora : fila.Cambio < 0 ? config.ColorPeor : estilo.Desactivado;
-                Color colorNombre = fila.Resaltada ? estilo.Naranja : estilo.Texto;
+                Color colorNombre = fila.Resaltada ? Acento : estilo.Texto;
                 if (bloqueada)
                 {
                     colorCambio = estilo.Desactivado;
@@ -655,14 +662,14 @@ namespace MechaCyberpunk.UI.Armas
                 }
                 f.Nombre.color = colorNombre;
                 f.Antes.color = bloqueada ? estilo.Desactivado : new Color(estilo.Texto.r, estilo.Texto.g, estilo.Texto.b, 0.7f);
-                f.Flecha.color = fila.Resaltada ? estilo.Naranja : estilo.Desactivado;
+                f.Flecha.color = fila.Resaltada ? Acento : estilo.Desactivado;
                 f.Despues.color = fila.Cambio != 0 ? colorCambio : f.Antes.color;
                 f.Diferencia.color = colorCambio;
                 float fa = ReglaMejoraArma.Fraccion(fila.Estadistica, fila.Antes, r.Valor(fila.Estadistica));
                 float fd = ReglaMejoraArma.Fraccion(fila.Estadistica, mostrado, r.Valor(fila.Estadistica));
                 Llenar(f.BarraAntes, Mathf.Min(fa, fd));
                 Llenar(f.BarraDespues, Mathf.Max(fa, fd));
-                Color barra = fila.Resaltada ? estilo.Naranja : config.ColorHolograma;
+                Color barra = fila.Resaltada ? Acento : config.ColorHolograma;
                 f.BarraAntes.color = new Color(barra.r, barra.g, barra.b, AlfaBarraAntes);
                 f.BarraDespues.color = fila.Cambio != 0 && !bloqueada ? colorCambio : new Color(barra.r, barra.g, barra.b, AlfaBarraAntes);
             }
@@ -693,7 +700,7 @@ namespace MechaCyberpunk.UI.Armas
             {
                 int precio = ReglaMejoraArma.Precio(DatosNivel(ReglaMejoraArma.NivelDe(pieza)));
                 textoBoton.text = string.Format(config.FormatoMejorar, FormatoDinero.Texto(precio));
-                color = cartera != null && cartera.PuedePagar(precio) ? estilo.Naranja : estilo.Magenta;
+                color = cartera != null && cartera.PuedePagar(precio) ? Acento : estilo.Magenta;
             }
             else if (estado == EstadoPieza.Instalada)
             {
@@ -763,13 +770,13 @@ namespace MechaCyberpunk.UI.Armas
 
             // Cabecera
             textoTitulo = Texto(canvas.transform, "Titulo", RolTexto.Titulo, TextAnchor.UpperLeft, new Vector2(0f, 1f),
-                new Vector2(Margen, -Margen * 0.5f), new Vector2(900f, 100f), config.Titulo, estilo.Naranja);
+                new Vector2(Margen, -Margen * 0.5f), new Vector2(900f, 100f), config.Titulo, estilo.Texto);
             textoTitulo.fontSize = TamanoTituloGrande;
             textoSubtitulo = Texto(canvas.transform, "Subtitulo", RolTexto.Encabezado, TextAnchor.UpperLeft, new Vector2(0f, 1f),
                 new Vector2(Margen + 4f, -Margen * 0.5f - 88f), new Vector2(900f, 50f), config.Subtitulo, estilo.Turquesa);
             textoSubtitulo.fontSize = estilo.Tamano(RolTexto.Texto);
-            Image tiraCabecera = KitUI.CrearImagen(canvas.transform, "TiraCabecera", new Color(estilo.Naranja.r, estilo.Naranja.g, estilo.Naranja.b, 0.6f));
-            KitUI.Colocar(tiraCabecera.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -AltoCabecera + 6f), new Vector2(1920f - 2f * Margen, 2f));
+            Image tiraCabecera = KitUI.CrearImagen(canvas.transform, "TiraCabecera", new Color(Acento.r, Acento.g, Acento.b, 0.45f));
+            KitUI.Colocar(tiraCabecera.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -AltoCabecera + 6f), new Vector2(1920f - 2f * Margen, GrosorLinea));
             // La etiqueta va abajo del número, en la línea del subtítulo: encima se veía como un dígito fantasma detrás de la cifra.
             Texto(canvas.transform, "EtiquetaDinero", RolTexto.Ayuda, TextAnchor.UpperRight, new Vector2(1f, 1f),
                 new Vector2(-Margen - 4f, -Margen * 0.5f - 92f), new Vector2(400f, 30f), "TU DINERO", estilo.Desactivado);
@@ -780,6 +787,7 @@ namespace MechaCyberpunk.UI.Armas
             ConstruirLista(estilo);
             ConstruirHolograma(estilo);
             ConstruirPiezas(estilo);
+            ConstruirTabla(estilo);
 
             textoAyuda = Texto(canvas.transform, "Ayuda", RolTexto.Ayuda, TextAnchor.MiddleCenter, new Vector2(0.5f, 0f),
                 new Vector2(0f, 34f), new Vector2(1400f, 36f), config.TextoAyuda, estilo.Texto);
@@ -787,15 +795,57 @@ namespace MechaCyberpunk.UI.Armas
             KitUI.Colocar(tiraPie.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 80f), new Vector2(1920f - 2f * Margen, 2f));
 
             ConstruirLetrero(estilo);
+            PonerFuentesH10();
             contenido.SetActive(false);
+        }
+
+        // T-887: la letra del HUD H10 (Rajdhani) en todo el menú y su letrero; la mediana en títulos y números grandes.
+        private void PonerFuentesH10()
+        {
+            if (config.FuenteTexto == null)
+            {
+                return;
+            }
+            foreach (Canvas c in new[] { canvas, canvasLetrero })
+            {
+                foreach (Text t in c.GetComponentsInChildren<Text>(true))
+                {
+                    bool grande = t.fontSize >= TamanoNombreArma - 20;
+                    t.font = grande && config.FuenteTitulo != null ? config.FuenteTitulo : config.FuenteTexto;
+                    t.fontStyle = FontStyle.Normal;
+                }
+            }
+        }
+
+        // T-887: panel como el HUD H10: fondo oscuro casi transparente y un marco de línea fina turquesa con esquinas marcadas.
+        private Image PanelH10(Transform padre, string nombre)
+        {
+            Image panel = KitUI.CrearImagen(padre, nombre, new Color(0.01f, 0.03f, 0.05f, 0.55f));
+            panel.raycastTarget = false;
+            Color linea = new Color(Acento.r, Acento.g, Acento.b, 0.55f);
+            Vector2[] anclas = { new Vector2(0.5f, 1f), new Vector2(0.5f, 0f), new Vector2(0f, 0.5f), new Vector2(1f, 0.5f) };
+            for (int i = 0; i < anclas.Length; i++)
+            {
+                bool horizontal = i < 2;
+                Vector2 ancla = anclas[i];
+                Image l = KitUI.CrearImagen(panel.transform, "Linea", linea);
+                RectTransform r = l.rectTransform;
+                r.anchorMin = horizontal ? new Vector2(0f, ancla.y) : new Vector2(ancla.x, 0f);
+                r.anchorMax = horizontal ? new Vector2(1f, ancla.y) : new Vector2(ancla.x, 1f);
+                r.pivot = ancla;
+                r.sizeDelta = horizontal ? new Vector2(0f, GrosorLinea) : new Vector2(GrosorLinea, 0f);
+                r.anchoredPosition = Vector2.zero;
+            }
+            Marcas((RectTransform)panel.transform, Acento);
+            return panel;
         }
 
         private void ConstruirLista(EstiloCyberfix estilo)
         {
-            Image panel = KitUI.CrearPanelMarco(canvas.transform, "PanelArmas", 0.85f);
+            Image panel = PanelH10(canvas.transform, "PanelArmas");
             KitUI.Colocar(panel.rectTransform, new Vector2(0f, 0f), new Vector2(Margen, AbajoLateral), new Vector2(AnchoLateral, AltoLateral));
             Texto(panel.transform, "Encabezado", RolTexto.Encabezado, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(28f, -14f),
-                new Vector2(AnchoLateral - 56f, 56f), config.EncabezadoArmas, estilo.Naranja);
+                new Vector2(AnchoLateral - 56f, 56f), config.EncabezadoArmas, Acento);
             GameObject lista = new GameObject("Lista", typeof(RectTransform));
             lista.transform.SetParent(panel.transform, false);
             listaArmas = (RectTransform)lista.transform;
@@ -825,7 +875,7 @@ namespace MechaCyberpunk.UI.Armas
                 Button boton = f.Fondo.gameObject.AddComponent<Button>();
                 boton.transition = Selectable.Transition.None;
                 boton.onClick.AddListener(() => ElegirArma(indice, true));
-                f.Borde = KitUI.CrearBorde(f.Fondo.rectTransform, estilo.BordeElegido, estilo.Naranja);
+                f.Borde = KitUI.CrearBorde(f.Fondo.rectTransform, estilo.BordeElegido, Acento);
                 RawImage icono = new GameObject("Icono", typeof(RectTransform)).AddComponent<RawImage>();
                 icono.transform.SetParent(f.Fondo.transform, false);
                 icono.texture = entrada.Icono;
@@ -855,13 +905,16 @@ namespace MechaCyberpunk.UI.Armas
             area.transform.SetParent(canvas.transform, false);
             areaHolo = (RectTransform)area.transform;
 
-            KitUI.Colocar(areaHolo, new Vector2(0.5f, 0.5f), new Vector2(0f, -10f), new Vector2(AnchoHolo, AltoHolo));
+            KitUI.Colocar(areaHolo, new Vector2(0.5f, 0.5f), new Vector2(0f, SubeHolo), new Vector2(AnchoHolo, AltoHolo));
             Image resplandor = KitUI.CrearImagen(areaHolo, "Resplandor", new Color(config.ColorHolograma.r, config.ColorHolograma.g, config.ColorHolograma.b, 0.05f));
             KitUI.Estirar(resplandor.rectTransform);
             Rejilla(areaHolo);
             imagenHolo = new GameObject("Imagen", typeof(RectTransform)).AddComponent<RawImage>();
             imagenHolo.transform.SetParent(areaHolo, false);
             KitUI.Estirar(imagenHolo.rectTransform);
+            // La textura es de la proporción de antes (ancho / alto de la config): se recorta arriba y abajo para no deformar el arma.
+            float proporcion = (AltoHolo / AnchoHolo) / ((float)config.AltoTextura / config.AnchoTextura);
+            imagenHolo.uvRect = new Rect(0f, (1f - proporcion) * 0.5f, 1f, proporcion);
             imagenHolo.material = config.MaterialAditivoUI;
             imagenHolo.raycastTarget = true;
             destelloHolo = KitUI.CrearImagen(areaHolo, "Destello", Color.clear);
@@ -869,26 +922,27 @@ namespace MechaCyberpunk.UI.Armas
             destelloHolo.material = config.MaterialAditivoUI;
             Marcas(areaHolo, estilo.Turquesa);
 
-            textoArma = Texto(areaHolo, "Arma", RolTexto.Titulo, TextAnchor.LowerLeft, new Vector2(0f, 1f), new Vector2(24f, 84f),
+            textoArma = Texto(areaHolo, "Arma", RolTexto.Titulo, TextAnchor.LowerLeft, new Vector2(0f, 1f), new Vector2(24f, SobreHolo),
                 new Vector2(AnchoHolo * 0.6f, 80f), string.Empty, estilo.Texto);
             textoArma.fontSize = TamanoNombreArma;
-            textoNivelArma = Texto(areaHolo, "NivelArma", RolTexto.Encabezado, TextAnchor.LowerRight, new Vector2(1f, 1f), new Vector2(-24f, 84f),
+            textoNivelArma = Texto(areaHolo, "NivelArma", RolTexto.Encabezado, TextAnchor.LowerRight, new Vector2(1f, 1f), new Vector2(-24f, SobreHolo),
                 new Vector2(AnchoHolo * 0.4f, 70f), string.Empty, estilo.Turquesa);
             textoPiezaElegida = Texto(areaHolo, "PiezaElegida", RolTexto.Encabezado, TextAnchor.UpperCenter, new Vector2(0.5f, 0f), new Vector2(0f, -14f),
-                new Vector2(AnchoHolo, 56f), string.Empty, estilo.Naranja);
+                new Vector2(AnchoHolo, 56f), string.Empty, Acento);
             textoPiezaElegida.rectTransform.pivot = new Vector2(0.5f, 1f);
-            textoAyudaRaton = Texto(areaHolo, "AyudaRaton", RolTexto.Ayuda, TextAnchor.UpperCenter, new Vector2(0.5f, 0f), new Vector2(0f, -72f),
+            // T-887: la ayuda del ratón dentro del holograma, abajo (debajo ya va la tabla).
+            textoAyudaRaton = Texto(areaHolo, "AyudaRaton", RolTexto.Ayuda, TextAnchor.LowerCenter, new Vector2(0.5f, 0f), new Vector2(0f, 10f),
                 new Vector2(AnchoHolo, 30f), config.TextoAyudaRaton, estilo.Desactivado);
-            textoAyudaRaton.rectTransform.pivot = new Vector2(0.5f, 1f);
+            textoAyudaRaton.rectTransform.pivot = new Vector2(0.5f, 0f);
         }
 
         private void ConstruirPiezas(EstiloCyberfix estilo)
         {
-            Image panel = KitUI.CrearPanelMarco(canvas.transform, "PanelPiezas", 0.85f);
+            Image panel = PanelH10(canvas.transform, "PanelPiezas");
             KitUI.Colocar(panel.rectTransform, new Vector2(1f, 0f), new Vector2(-Margen, AbajoLateral), new Vector2(AnchoLateral, AltoLateral));
             float ancho = AnchoLateral - 40f;
             Texto(panel.transform, "Encabezado", RolTexto.Encabezado, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(28f, -14f),
-                new Vector2(ancho, 56f), config.EncabezadoPiezas, estilo.Naranja);
+                new Vector2(ancho, 56f), config.EncabezadoPiezas, Acento);
             float y = -80f;
             for (int i = 0; i < filasPiezas.Length; i++)
             {
@@ -900,7 +954,7 @@ namespace MechaCyberpunk.UI.Armas
                 Button boton = f.Fondo.gameObject.AddComponent<Button>();
                 boton.transition = Selectable.Transition.None;
                 boton.onClick.AddListener(() => ElegirPieza(p, true));
-                f.Borde = KitUI.CrearBorde(f.Fondo.rectTransform, estilo.BordeElegido, estilo.Naranja);
+                f.Borde = KitUI.CrearBorde(f.Fondo.rectTransform, estilo.BordeElegido, Acento);
                 f.Numeral = Texto(f.Fondo.transform, "Numeral", RolTexto.Encabezado, TextAnchor.MiddleCenter, new Vector2(0f, 0.5f), new Vector2(4f, 0f),
                     new Vector2(64f, AltoFilaPieza), string.Empty, estilo.Texto);
                 f.Nombre = Texto(f.Fondo.transform, "Nombre", RolTexto.Boton, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(76f, 18f),
@@ -908,37 +962,10 @@ namespace MechaCyberpunk.UI.Armas
                 f.Detalle = Texto(f.Fondo.transform, "Detalle", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(76f, -20f),
                     new Vector2(ancho - 84f, 28f), string.Empty, estilo.Texto);
                 f.Etiqueta = Texto(f.Fondo.transform, "Etiqueta", RolTexto.Ayuda, TextAnchor.MiddleRight, new Vector2(1f, 0.5f), new Vector2(-14f, 18f),
-                    new Vector2(ancho * 0.6f, 40f), string.Empty, estilo.Naranja);
+                    new Vector2(ancho * 0.6f, 40f), string.Empty, Acento);
                 f.Etiqueta.fontSize = estilo.Tamano(RolTexto.Texto);
                 filasPiezas[i] = f;
                 y -= AltoFilaPieza + 8f;
-            }
-
-            y -= 8f;
-            Texto(panel.transform, "EncabezadoTabla", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(28f, y),
-                new Vector2(ancho, 30f), config.EncabezadoEstadisticas, estilo.Desactivado);
-            y -= 34f;
-            foreach (EstadisticaArma estadistica in ReglaMejoraArma.OrdenEstadisticas)
-            {
-                FilaTabla f = new FilaTabla();
-                GameObject fila = new GameObject("Fila_" + estadistica, typeof(RectTransform));
-                fila.transform.SetParent(panel.transform, false);
-                RectTransform rf = (RectTransform)fila.transform;
-                KitUI.Colocar(rf, new Vector2(0.5f, 1f), new Vector2(0f, y), new Vector2(ancho, AltoFilaEstadistica));
-                f.Nombre = Texto(rf, "Nombre", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(8f, 0f), new Vector2(150f, 32f), string.Empty, estilo.Texto);
-                f.Antes = Texto(rf, "Antes", RolTexto.Ayuda, TextAnchor.MiddleRight, new Vector2(0f, 1f), new Vector2(150f, 0f), new Vector2(82f, 32f), string.Empty, estilo.Texto);
-                f.Flecha = Texto(rf, "Flecha", RolTexto.Ayuda, TextAnchor.MiddleCenter, new Vector2(0f, 1f), new Vector2(234f, 0f), new Vector2(30f, 32f), "→", estilo.Desactivado);
-                f.Despues = Texto(rf, "Despues", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(266f, 0f), new Vector2(70f, 32f), string.Empty, estilo.Texto);
-                f.Diferencia = Texto(rf, "Diferencia", RolTexto.Ayuda, TextAnchor.MiddleRight, new Vector2(1f, 1f), new Vector2(-8f, 0f), new Vector2(56f, 32f), string.Empty, estilo.Texto);
-                Image fondoBarra = KitUI.CrearImagen(rf, "Barra", new Color(1f, 1f, 1f, 0.08f));
-                f.Barra = fondoBarra.rectTransform;
-                KitUI.Colocar(f.Barra, new Vector2(0f, 0f), new Vector2(8f, 6f), new Vector2(ancho - 16f, 5f));
-                f.BarraDespues = KitUI.CrearImagen(f.Barra, "Despues", Color.white);
-                Barra(f.BarraDespues.rectTransform);
-                f.BarraAntes = KitUI.CrearImagen(f.Barra, "Antes", Color.white);
-                Barra(f.BarraAntes.rectTransform);
-                filasTabla.Add(f);
-                y -= AltoFilaEstadistica;
             }
 
             textoAviso = Texto(panel.transform, "Aviso", RolTexto.Ayuda, TextAnchor.MiddleCenter, new Vector2(0.5f, 0f), new Vector2(0f, AltoBoton + 30f),
@@ -952,6 +979,40 @@ namespace MechaCyberpunk.UI.Armas
             mejorar.onClick.AddListener(Comprar);
             KitUI.CrearBorde(fondoBoton.rectTransform, estilo.BordeElegido * 0.67f, new Color(1f, 1f, 1f, 0.25f));
             textoBoton = KitUI.CrearTexto(fondoBoton.transform, "Texto", RolTexto.Boton, TextAnchor.MiddleCenter);
+        }
+
+        // T-887: la tabla ANTES → DESPUÉS va al centro, debajo del holograma (antes se apretaba bajo las piezas, a la derecha).
+        private void ConstruirTabla(EstiloCyberfix estilo)
+        {
+            Image panel = PanelH10(canvas.transform, "PanelEstadisticas");
+            KitUI.Colocar(panel.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, AbajoLateral), new Vector2(AnchoHolo, AltoPanelTabla));
+            float ancho = AnchoHolo - 60f;
+            float y = -14f;
+            Texto(panel.transform, "EncabezadoTabla", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(30f, y),
+                new Vector2(ancho, 30f), config.EncabezadoEstadisticas, estilo.Desactivado);
+            y -= 38f;
+            foreach (EstadisticaArma estadistica in ReglaMejoraArma.OrdenEstadisticas)
+            {
+                FilaTabla f = new FilaTabla();
+                GameObject fila = new GameObject("Fila_" + estadistica, typeof(RectTransform));
+                fila.transform.SetParent(panel.transform, false);
+                RectTransform rf = (RectTransform)fila.transform;
+                KitUI.Colocar(rf, new Vector2(0.5f, 1f), new Vector2(0f, y), new Vector2(ancho, AltoFilaTabla));
+                f.Nombre = Texto(rf, "Nombre", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 1f), Vector2.zero, new Vector2(220f, 32f), string.Empty, estilo.Texto);
+                f.Antes = Texto(rf, "Antes", RolTexto.Ayuda, TextAnchor.MiddleRight, new Vector2(0f, 1f), new Vector2(ancho * 0.42f, 0f), new Vector2(110f, 32f), string.Empty, estilo.Texto);
+                f.Flecha = Texto(rf, "Flecha", RolTexto.Ayuda, TextAnchor.MiddleCenter, new Vector2(0f, 1f), new Vector2(ancho * 0.42f + 116f, 0f), new Vector2(40f, 32f), "→", estilo.Desactivado);
+                f.Despues = Texto(rf, "Despues", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(ancho * 0.42f + 162f, 0f), new Vector2(110f, 32f), string.Empty, estilo.Texto);
+                f.Diferencia = Texto(rf, "Diferencia", RolTexto.Ayuda, TextAnchor.MiddleRight, new Vector2(1f, 1f), Vector2.zero, new Vector2(90f, 32f), string.Empty, estilo.Texto);
+                Image fondoBarra = KitUI.CrearImagen(rf, "Barra", new Color(1f, 1f, 1f, 0.08f));
+                f.Barra = fondoBarra.rectTransform;
+                KitUI.Colocar(f.Barra, new Vector2(0f, 0f), new Vector2(0f, 2f), new Vector2(ancho, 3f));
+                f.BarraDespues = KitUI.CrearImagen(f.Barra, "Despues", Color.white);
+                Barra(f.BarraDespues.rectTransform);
+                f.BarraAntes = KitUI.CrearImagen(f.Barra, "Antes", Color.white);
+                Barra(f.BarraAntes.rectTransform);
+                filasTabla.Add(f);
+                y -= AltoFilaTabla;
+            }
         }
 
         private static void Barra(RectTransform rect)
@@ -971,12 +1032,12 @@ namespace MechaCyberpunk.UI.Armas
             grupoLetrero.interactable = false;
             Image franja = KitUI.CrearImagen(canvasLetrero.transform, "Franja", new Color(0f, 0f, 0f, 0.6f));
             KitUI.Colocar(franja.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, -170f), new Vector2(1920f, 200f));
-            Image lineaArriba = KitUI.CrearImagen(franja.transform, "LineaArriba", estilo.Naranja);
+            Image lineaArriba = KitUI.CrearImagen(franja.transform, "LineaArriba", Acento);
             KitUI.Colocar(lineaArriba.rectTransform, new Vector2(0.5f, 1f), Vector2.zero, new Vector2(1920f, 3f));
             Image lineaAbajo = KitUI.CrearImagen(franja.transform, "LineaAbajo", estilo.Turquesa);
             KitUI.Colocar(lineaAbajo.rectTransform, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(1920f, 3f));
             textoLetrero = Texto(franja.transform, "Titulo", RolTexto.Titulo, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, 22f),
-                new Vector2(1400f, 120f), config.TextoLetrero, estilo.Naranja);
+                new Vector2(1400f, 120f), config.TextoLetrero, Acento);
             textoLetrero.fontSize = 110;
             textoLetreroArma = Texto(franja.transform, "Arma", RolTexto.Encabezado, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -62f),
                 new Vector2(1400f, 50f), string.Empty, estilo.Turquesa);
