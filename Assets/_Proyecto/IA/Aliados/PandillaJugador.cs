@@ -17,6 +17,8 @@ namespace MechaCyberpunk.IA.Aliados
 
         [Tooltip("Prefab del aliado (Aliado.prefab).")]
         [SerializeField] private GameObject prefabAliado;
+        [Tooltip("T-744: prefab del segundo aliado (Aliado_AL11.prefab); los miembros pares usan el primero y los impares este. Vacío: todos usan el primero.")]
+        [SerializeField] private GameObject prefabAliadoSegundo;
         [Tooltip("Segundos que tarda en volver un aliado caído (s).")]
         [Min(1f)] [SerializeField] private float segundosVuelta = 45f;
         [Tooltip("Distancia detrás de ti a la que vuelve un aliado caído (m).")]
@@ -142,7 +144,8 @@ namespace MechaCyberpunk.IA.Aliados
             {
                 return;
             }
-            GameObject objeto = Instantiate(prefabAliado, Suelo(posicion), Quaternion.identity);
+            GameObject prefab = prefabAliadoSegundo != null && miembros.IndexOf(m) % 2 == 1 ? prefabAliadoSegundo : prefabAliado;
+            GameObject objeto = Instantiate(prefab, Suelo(posicion), Quaternion.identity);
             objeto.name = "Aliado_" + m.Nombre;
             m.Aliado = objeto.GetComponent<AliadoAPie>();
             m.Aliado.PonerNivel(ReglaAliado.Nivel(m.Vencidos));

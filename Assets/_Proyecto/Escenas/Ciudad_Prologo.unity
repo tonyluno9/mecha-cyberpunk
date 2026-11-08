@@ -1240306,6 +1240306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.PandillaJugador
   prefabAliado: {fileID: 82683616222837917, guid: 61871bd7513a4be4fa0594a0170dbe30, type: 3}
+  prefabAliadoSegundo: {fileID: 82683616222837917, guid: 13f6e5f4604ba0544b9ebe4386770851, type: 3}
   segundosVuelta: 45
   distanciaVuelta: 15
 --- !u!1 &2084501530

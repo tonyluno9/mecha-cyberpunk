@@ -52,7 +52,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private static readonly (string prefab, float relativa)[] Personajes =
         {
             ("Visual_man", 1.00f), ("Visual_woman", 1.00f), ("Visual_PJ01", 1.00f), ("Visual_Doctor", 1.10f), ("Visual_Inventor", 0.98f), ("Visual_Hacker", 1.00f),
-            ("Visual_RobotHombre", 1.00f), ("Visual_SkullHombre", 1.00f), ("Visual_woman2", 0.97f), ("Visual_GuardiaNova", 1.25f),
+            ("Visual_RobotHombre", 1.00f), ("Visual_SkullHombre", 1.00f), ("Visual_woman2", 0.97f), ("Visual_AL10", 1.00f), ("Visual_AL11", 1.00f), ("Visual_GuardiaNova", 1.25f),
         };
 
         [UnityTest]
