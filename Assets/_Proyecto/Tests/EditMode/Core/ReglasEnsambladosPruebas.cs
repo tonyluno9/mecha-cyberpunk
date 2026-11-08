@@ -44,6 +44,9 @@ namespace MechaCyberpunk.Tests.Core
         private static readonly HashSet<string> ReferenciasPermitidas = new HashSet<string>
         {
             "MechaCyberpunk.Tests.PlayMode.IA -> MechaCyberpunk.Trafico",
+            // T-745: disparar al dron y a los barriles con el jugador real (Personaje) cruza con Trafico y Vehiculos.
+            "MechaCyberpunk.Tests.PlayMode.Personaje -> MechaCyberpunk.Trafico",
+            "MechaCyberpunk.Tests.PlayMode.Personaje -> MechaCyberpunk.Vehiculos",
         };
 
         /// <summary>Dueño de un ensamblado por su nombre, o null si el nombre no está en la tabla.</summary>

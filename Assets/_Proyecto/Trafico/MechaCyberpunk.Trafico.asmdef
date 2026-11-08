@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Trafico",
     "rootNamespace": "MechaCyberpunk.Trafico",
-    "references": ["MechaCyberpunk.Core"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Vehiculos"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

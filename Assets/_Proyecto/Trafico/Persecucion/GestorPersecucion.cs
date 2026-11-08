@@ -127,6 +127,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Registro<ICalor>.Agregado += Enlazar;
             Registro<ICalor>.Quitado += Desenlazar;
             EventosLugares.JugadorEntro += AlEntrarALugar;
+            DronMundo.Derribado += AlDerribarDron;
             if (zona != null)
             {
                 Registro<IZonaBusqueda>.Agregar(zona);
@@ -158,6 +159,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Registro<ICalor>.Agregado -= Enlazar;
             Registro<ICalor>.Quitado -= Desenlazar;
             EventosLugares.JugadorEntro -= AlEntrarALugar;
+            DronMundo.Derribado -= AlDerribarDron;
             if (zona != null)
             {
                 Registro<IZonaBusqueda>.Quitar(zona);
@@ -187,6 +189,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             retirandose.RemoveAll(c => c == null || (c is PatrullaMundo robada && robada.Robada));
             patrullas.RemoveAll(p => p == null || p.Robada); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
+            drones.RemoveAll(d => d == null); // T-730: un dron derribado ya no cuenta
             if (calor == null || calor.Nivel <= 0 || config == null)
             {
                 SegundosSinVer = 0f;
@@ -316,6 +319,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 calor.NivelCambio -= Reconciliar;
                 calor = null;
                 Reconciliar(0);
+            }
+        }
+
+        // T-730: derribar un dron baja la búsqueda (CalorAlDerribarDron puntos; con CalorConTestigos también baja el piso que se sostiene).
+        private void AlDerribarDron(DronMundo dron)
+        {
+            if (calor != null && config != null && drones.Contains(dron))
+            {
+                calor.Enfriar(config.CalorAlDerribarDron);
             }
         }
 

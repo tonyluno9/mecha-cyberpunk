@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MechaCyberpunk.Vehiculos.Efectos;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
 using MechaCyberpunk.Trafico.Persecucion;
@@ -126,22 +127,23 @@ namespace MechaCyberpunk.Tests.Trafico
             while (Time.time < fin && !(vioTrazo && blanco.Impactos > 0))
             {
                 yield return null;
-                if (d.TrazoVisible)
+                if (TrazadorBala.Activos > 0 && TrazadorBala.UltimaLinea != null)
                 {
                     vioTrazo = true;
-                    grosor = d.Trazo.startWidth;
-                    largo = Vector3.Distance(d.Trazo.GetPosition(0), d.Trazo.GetPosition(1));
+                    grosor = TrazadorBala.UltimaLinea.startWidth;
+                    largo = Mathf.Max(largo, Vector3.Distance(TrazadorBala.UltimaLinea.GetPosition(0), TrazadorBala.UltimaLinea.GetPosition(1)));
                 }
             }
             Assert.Greater(blanco.Impactos, 0, "El dron le hace daño al jugador");
             Assert.Greater(blanco.DanioTotal, 0f, "El daño es real");
             Assert.IsTrue(vioTrazo, "Cada disparo deja un trazo");
-            Assert.LessOrEqual(grosor, 0.01f, "El trazo es un hilo finísimo");
-            Assert.LessOrEqual(largo, 6.01f, "Y cortísimo");
+            Assert.LessOrEqual(grosor, 0.05f, "El trazo es un hilo finísimo");
+            Assert.LessOrEqual(largo, ReglaTrazo.Cola + 0.1f, "Y la estela es corta");
+            Assert.LessOrEqual(Vector3.Distance(d.DestinoUltimoTrazo, jugador.transform.position + Vector3.up * 1.2f), 0.2f, "T-745: el trazo termina donde pega la bala (el pecho)");
             Assert.IsTrue(sonidos.Sonaron.Exists(s => s.id == DronMundo.IdDisparo), "Suena el disparo");
             Assert.AreEqual(0, d.Rozaduras, "La bala que pega no silba");
             yield return Esperar(0.2f);
-            Assert.IsFalse(d.TrazoVisible, "El trazo dura un instante");
+            Assert.AreEqual(0, TrazadorBala.Activos, "El trazo dura un instante y no queda flotando");
         }
 
         [UnityTest]
