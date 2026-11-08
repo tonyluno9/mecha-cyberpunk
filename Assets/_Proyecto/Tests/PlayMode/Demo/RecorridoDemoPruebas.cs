@@ -1863,40 +1863,50 @@ namespace MechaCyberpunk.Tests.Demo
             if (director.Paso == PasoHistoria.Inventor)
             {
                 yield return IrYUsar("EL INVENTOR", () => director.Paso != PasoHistoria.Inventor, 75f, 8f, DirectorPandillas.IdInventor);
-                // Se abre la tienda del CIC (modal): como un jugador compra PUÑOS I y PISTOLA II con los B500 y sale con Esc.
+                // T-747: desde T-814 las mejoras de armas se compran en el banco de trabajo de Tino (BancoArmas), no en un mostrador (el MostradorCIC
+                // está apagado a propósito y Tino solo manda al banco). El jugador se para frente al banco, E lo abre, Enter compra y Esc sale.
                 comprando = true;
                 ICartera cartera = Registro<ICartera>.Actual;
                 int antesDeComprar = cartera.Dinero;
-                MechaCyberpunk.UI.Tiendas.PantallaTienda tienda = null;
-                float finTienda = Time.realtimeSinceStartup + 12f;
-                while (Time.realtimeSinceStartup < finTienda && (tienda == null || !tienda.Visible))
+                MechaCyberpunk.UI.Armas.BancoArmas banco = Object.FindFirstObjectByType<MechaCyberpunk.UI.Armas.BancoArmas>();
+                if (banco == null)
                 {
-                    tienda = Object.FindFirstObjectByType<MechaCyberpunk.UI.Tiendas.PantallaTienda>();
-                    if (tienda == null || !tienda.Visible)
+                    Bug("El CIC no tiene banco de trabajo", "no hay BancoArmas en la escena", "A", true);
+                }
+                else
+                {
+                    // Junto a Tino el banco queda a un par de metros: primero E ahí; si no abre, el jugador se acerca al banco.
+                    float inicioBanco = Time.realtimeSinceStartup;
+                    bool acercado = false;
+                    float finBanco = inicioBanco + 12f;
+                    while (!banco.PantallaAbierta && Time.realtimeSinceStartup < finBanco)
                     {
-                        // El primer E fue la charla (avanza la historia); otro E, de frente, abre la tienda.
+                        if (!acercado && Time.realtimeSinceStartup - inicioBanco > 4f)
+                        {
+                            acercado = true;
+                            yield return Colocar(banco.Posicion + Vector3.back * 1.0f, 1.2f);
+                        }
                         yield return Pulsar(teclado.eKey, 20);
+                        yield return Siguiente();
                     }
-                    yield return Siguiente();
-                }
-                if (tienda == null || !tienda.Visible)
-                {
-                    Bug("La tienda del CIC no se abre", "12 s y varios E después de hablar con EL INVENTOR la tienda no está visible (pausa " + Pausa.Activa + ", control " + Controlador.ControlActivo + ")", "A", true);
-                }
-                yield return Segundos(1f);
-                yield return Pulsar(teclado.enterKey);
-                yield return Pulsar(teclado.downArrowKey);
-                yield return Pulsar(teclado.enterKey);
-                yield return Pulsar(teclado.escapeKey, 10);
-                Debug.Log("[T-476] tienda del CIC: dinero " + antesDeComprar + " -> " + cartera.Dinero + ", pausa " + Pausa.Activa + ", control " + Controlador.ControlActivo);
-                if (cartera.Dinero >= antesDeComprar)
-                {
-                    Bug("La tienda del CIC no cobra al comprar", "dinero " + antesDeComprar + " antes y " + cartera.Dinero + " después de Enter en las dos primeras filas", "A", true);
+                    if (!banco.PantallaAbierta)
+                    {
+                        Bug("El banco del CIC no se abre", "12 s y varios E frente al banco de Tino y no está abierto (pausa " + Pausa.Activa + ", control " + Controlador.ControlActivo + ")", "A", true);
+                    }
+                    yield return Segundos(1f);
+                    yield return Pulsar(teclado.enterKey);
+                    yield return Pulsar(teclado.escapeKey, 10);
+                    yield return Segundos(0.3f);
+                    Debug.Log("[T-476] banco del CIC: dinero " + antesDeComprar + " -> " + cartera.Dinero + ", pausa " + Pausa.Activa + ", control " + Controlador.ControlActivo);
+                    if (banco.PantallaAbierta)
+                    {
+                        Bug("Esc no cierra el banco del CIC", "el banco sigue abierto tras Esc", "A", true);
+                    }
                 }
                 comprando = false;
                 if (!Controlador.ControlActivo)
                 {
-                    Bug("Esc no cierra la tienda del CIC", "el control del jugador sigue apagado tras Esc", "A", true);
+                    Bug("Esc no devuelve el control tras el banco del CIC", "el control del jugador sigue apagado tras Esc", "A", true);
                 }
             }
             TerminarTramo();
