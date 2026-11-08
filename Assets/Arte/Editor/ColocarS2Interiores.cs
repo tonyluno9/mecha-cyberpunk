@@ -85,7 +85,7 @@ namespace MechaCyberpunk.Arte.Editor
             piso.SetTextureScale("_BaseMap", azulejo.GetTextureScale("_BaseMap"));
             EditorUtility.SetDirty(piso);
             AssetDatabase.SaveAssets();
-            Forrar(r, caja, 2, 5, 2, 0.45f, frenteHaciaMasZ: true, centroVano: -100f, anchoVano: 2.6f, paredPropia: azulejo, pisoPropio: piso);
+            Forrar(r, caja, 2, 5, 2, 0.45f, frenteHaciaMasZ: true, centroVano: VanoConsultorioX, anchoVano: 2.6f, paredPropia: azulejo, pisoPropio: piso);
 
             GameObject sillon = Modelo(r, I + "I07", new Vector3(-102.1f, 0f, -13.4f), 0f, caja.Piso, ejeLargoEnZ: true);
             Modelo(r, I + "I06", new Vector3(-102.1f, 0f, -13.4f), 0f, caja.Techo, colgar: true);
@@ -352,6 +352,9 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // ---------------------------------------------------------------- Ayudas
+
+        /// <summary>T-890: el vano del frente del consultorio, donde cae la puerta de la fachada P12.</summary>
+        public const float VanoConsultorioX = -102f;
 
         public readonly struct Caja
         {

@@ -36,6 +36,15 @@ namespace MechaCyberpunk.Arte.Editor
         public const float EscalaAlto = 0.88f;
         public const float IntensidadPoste = 340f;
 
+        /// <summary>T-890: las fachadas nuevas del kit (con el hueco de la puerta vacío) y la puerta que cierra cada una.</summary>
+        public const string PlantaLocal = "C01_Fachada";
+        public const string PlantaVivienda = "C02_Fachada";
+        public const string PisoFachada = "C03_Fachada";
+        public const string PuertaLocal = "PU02_Garaje";
+        public const string PuertaVivienda = "PU01_Puerta";
+        /// <summary>Grueso de una puerta en su vano (m): los modelos de Tripo vienen muy abultados.</summary>
+        public const float GruesoPuerta = 0.12f;
+
         /// <summary>Colores de los pisos altos (sobre el C03 crema): terracota, turquesa apagado, crema y verde agua (§1).</summary>
         public static readonly (string nombre, Color color)[] ColoresPiso =
         {
@@ -154,6 +163,8 @@ namespace MechaCyberpunk.Arte.Editor
             public Bounds Caja;
             public float Muro;
             public readonly List<(Rect rect, float fondo)> Huecos = new List<(Rect, float)>();
+            /// <summary>T-890: el vano de la puerta: el agujero que atraviesa la pieza de lado a lado (null si no tiene).</summary>
+            public Rect? Vano;
         }
 
         private static readonly Dictionary<string, Medida> Medidas = new Dictionary<string, Medida>();
@@ -240,13 +251,66 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 Componentes(m, z, hueco, nx, ny, paso, b, go.transform.position, saliente);
             }
+            m.Vano = BuscarVano(z, nx, ny, paso, b, go.transform.position);
             b.center -= go.transform.position;
             m.Caja = b;
             Object.DestroyImmediate(go);
             Medidas[codigo] = m;
             ColocarS2.Informe.AppendLine("  medida " + codigo + ": muro z=" + m.Muro.ToString("0.00") + " caja=" + b.size.ToString("0.00") + " huecos=" +
-                                         string.Join(" ", m.Huecos.Select(h => "[" + h.rect.x.ToString("0.0") + "," + h.rect.y.ToString("0.0") + " " + h.rect.width.ToString("0.0") + "x" + h.rect.height.ToString("0.0") + " f" + h.fondo.ToString("0.00") + "]")));
+                                         string.Join(" ", m.Huecos.Select(h => "[" + h.rect.x.ToString("0.0") + "," + h.rect.y.ToString("0.0") + " " + h.rect.width.ToString("0.0") + "x" + h.rect.height.ToString("0.0") + " f" + h.fondo.ToString("0.00") + "]")) +
+                                         (m.Vano.HasValue ? " vano=" + m.Vano.Value.x.ToString("0.00") + "," + m.Vano.Value.y.ToString("0.00") + " " + m.Vano.Value.width.ToString("0.00") + "x" + m.Vano.Value.height.ToString("0.00") : ""));
             return m;
+        }
+
+        /// <summary>T-890: el agujero más grande por donde los rayos pasan sin pegarle a nada, sin contar lo que llega a los lados o arriba de la pieza.</summary>
+        private static Rect? BuscarVano(float[,] z, int nx, int ny, float paso, Bounds b, Vector3 origen)
+        {
+            const int FilasDelPiso = 2; // las primeras filas pueden quedar bajo la malla: el vano se alarga hasta el piso si llega a ellas
+            const float AreaMinima = 1f; // m²
+            bool[,] visto = new bool[nx, ny];
+            Rect? mejor = null;
+            for (int i = 0; i < nx; i++)
+            {
+                for (int j = FilasDelPiso; j < ny; j++)
+                {
+                    if (visto[i, j] || !float.IsNaN(z[i, j]))
+                    {
+                        continue;
+                    }
+                    Queue<Vector2Int> cola = new Queue<Vector2Int>();
+                    cola.Enqueue(new Vector2Int(i, j));
+                    visto[i, j] = true;
+                    int x0 = i, x1 = i, y0 = j, y1 = j;
+                    while (cola.Count > 0)
+                    {
+                        Vector2Int c = cola.Dequeue();
+                        x0 = Mathf.Min(x0, c.x); x1 = Mathf.Max(x1, c.x); y0 = Mathf.Min(y0, c.y); y1 = Mathf.Max(y1, c.y);
+                        foreach (Vector2Int d in new[] { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down })
+                        {
+                            Vector2Int n = c + d;
+                            if (n.x >= 0 && n.y >= FilasDelPiso && n.x < nx && n.y < ny && !visto[n.x, n.y] && float.IsNaN(z[n.x, n.y]))
+                            {
+                                visto[n.x, n.y] = true;
+                                cola.Enqueue(n);
+                            }
+                        }
+                    }
+                    if (x0 == 0 || x1 == nx - 1 || y1 == ny - 1)
+                    {
+                        continue;
+                    }
+                    if (y0 == FilasDelPiso)
+                    {
+                        y0 = 0;
+                    }
+                    Rect r = new Rect(b.min.x + x0 * paso - origen.x, b.min.y + y0 * paso - origen.y, (x1 - x0 + 1) * paso, (y1 - y0 + 1) * paso);
+                    if (r.width * r.height >= AreaMinima && (!mejor.HasValue || r.width * r.height > mejor.Value.width * mejor.Value.height))
+                    {
+                        mejor = r;
+                    }
+                }
+            }
+            return mejor;
         }
 
         private static void Componentes(Medida m, float[,] z, bool[,] hueco, int nx, int ny, float paso, Bounds b, Vector3 origen, bool saliente)
@@ -304,8 +368,8 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Cómo es una casa: planta baja (C01 local o C02 vivienda), piso alto (C03 con color) y lo que lleva.</summary>
         public sealed class Estilo
         {
-            public string PlantaBaja = "C02_FachadaVivienda_cy";
-            public string PisoAlto = "C03_FachadaPisoAlto_cy";
+            public string PlantaBaja = KitS2c.PlantaVivienda;
+            public string PisoAlto = KitS2c.PisoFachada;
             public int ColorPiso;
             public bool Tinaco = true;
             public bool Foco = true;
@@ -320,8 +384,8 @@ namespace MechaCyberpunk.Arte.Editor
         {
             return new Estilo
             {
-                PlantaBaja = o.Chance(0.45f) ? "C01_FachadaLocal_cy" : "C02_FachadaVivienda_cy",
-                PisoAlto = o.Chance(0.12f) ? "C20b_PisoDosVentanas_cy" : "C03_FachadaPisoAlto_cy",
+                PlantaBaja = o.Chance(0.45f) ? KitS2c.PlantaLocal : KitS2c.PlantaVivienda,
+                PisoAlto = o.Chance(0.12f) ? "C20b_PisoDosVentanas_cy" : KitS2c.PisoFachada,
                 ColorPiso = o.Azar.Next(ColoresPiso.Length),
                 Tinaco = o.Chance(0.75f),
                 Foco = o.Chance(0.65f),
@@ -351,10 +415,11 @@ namespace MechaCyberpunk.Arte.Editor
             Medida mb = Medir(e.PlantaBaja);
             float altoBaja = mb.Caja.size.y * EscalaAlto;
             GameObject baja = Pieza(casa.transform, e.PlantaBaja, centro + normal * mb.Muro, giro, new Vector3(ancho / mb.Caja.size.x, EscalaAlto, 1f), false);
-            Ventanas(o, baja.transform, mb, e.LucesVentanas * 0.5f, 1.2f);
+            Ventanas(o, baja.transform, mb, e.LucesVentanas * 0.5f, AltoMinimoVentanaBaja);
+            PuertaCerrada(baja.transform, mb, e.PlantaBaja);
 
             Medida ma = Medir(e.PisoAlto);
-            bool panel = ma.Caja.size.z < 1.2f;
+            bool panel = e.PisoAlto.StartsWith("C20");
             float altoAlto = ma.Caja.size.y * EscalaAlto;
             Vector3 baseAlto = centro + Vector3.up * altoBaja;
             GameObject alto = Pieza(casa.transform, e.PisoAlto, baseAlto + normal * ma.Muro, giro, new Vector3(ancho / ma.Caja.size.x, EscalaAlto, 1f), false);
@@ -471,11 +536,43 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        /// <summary>T-890: las ventanas de planta baja empiezan a esta altura (m); más abajo son zócalos y puertas.</summary>
+        private const float AltoMinimoVentanaBaja = 1f;
+
+        /// <summary>T-890: la puerta que le toca a una planta baja, cerrada en su vano (estas casas no tienen interior). Sin vano, nada.</summary>
+        private static void PuertaCerrada(Transform baja, Medida m, string plantaBaja)
+        {
+            if (!m.Vano.HasValue)
+            {
+                return;
+            }
+            string codigo = plantaBaja == PlantaLocal ? PuertaLocal : PuertaVivienda;
+            Medida mp = Medir(codigo);
+            Rect v = m.Vano.Value;
+            GameObject p = (GameObject)PrefabUtility.InstantiatePrefab(Prefab(codigo), baja);
+            p.name = "Puerta";
+            p.transform.localRotation = Quaternion.identity;
+            p.transform.localScale = new Vector3(v.width / mp.Caja.size.x, v.height / mp.Caja.size.y, GruesoPuerta / mp.Caja.size.z);
+            // Hundida 3 cm detrás del muro de la fachada (hacia +Z local), dentro de su marco.
+            p.transform.localPosition = new Vector3(v.center.x, v.yMin, m.Muro + 0.03f + GruesoPuerta * 0.5f);
+            foreach (Collider c in p.GetComponentsInChildren<Collider>())
+            {
+                c.enabled = false;
+            }
+        }
+
         /// <summary>Ventanas cálidas: en cada hueco medido, un vidrio que brilla de noche detrás de los barrotes (al azar).</summary>
         private static void Ventanas(Obra o, Transform pieza, Medida m, float probabilidad, float altoMinimo)
         {
+            List<Rect> puestos = new List<Rect>();
             foreach ((Rect r, float fondo) in m.Huecos)
             {
+                // T-890: en las fachadas nuevas el marco saliente y el vidrio hundido se miden como dos huecos: una sola ventana.
+                if (puestos.Any(p => p.Overlaps(r)))
+                {
+                    continue;
+                }
+                puestos.Add(r);
                 if (r.yMin < altoMinimo || r.height > 2.4f || !o.Chance(probabilidad))
                 {
                     continue;
