@@ -71,7 +71,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola));
             Transform pistola = Arma("Pistola");
             Assert.AreEqual(0f, Vector3.Distance(new Vector3(0.0129f, 0.1181f, 0.0080f), pistola.localPosition), 0.0005f);
-            Assert.Less(Quaternion.Angle(new Quaternion(-0.05021f, 0.72950f, 0.66647f, 0.14534f), pistola.localRotation), 0.2f);
+            Assert.Less(Quaternion.Angle(Quaternion.Euler(AgarresArmas.GiroPJ01), pistola.localRotation), 0.2f, "El nodo Pistola lleva el agarre de agarre.txt compuesto con el giro del modelo");
+            Assert.Less(Quaternion.Angle(AgarresArmas.CuaternionTony, pistola.localRotation * pistola.Find("W01/Modelo").localRotation * Quaternion.Inverse(AgarresArmas.GiroFbxDeTony)), 0.3f,
+                "Pistola * Modelo * inverso del giro del FBX = el cuaternion de Tony");
             Assert.AreEqual(1f, pistola.lossyScale.x, 0.02f);
             Press(raton.rightButton);
             yield return Esperar(1.6f);

@@ -23,16 +23,29 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.Less(a.Posicion.magnitude, 0.2f, "El arma queda cerca de la palma (m)");
         }
 
-        [TestCase("Pistola")]
+        [Test]
+        public void Agarre_PJ01_DeLaPistola_EsElCasoADeAgarreTxt()
+        {
+            Assert.IsTrue(AgarresArmas.TryObtener("Pistola", AgarresArmas.ManoDerechaPJ01, out AgarreArma a));
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(0.0129f, 0.1181f, 0.0080f), a.Posicion), 0.0001f);
+            // El nodo Pistola * giro del modelo (180° sobre Y) * inverso del giro del FBX de Tony = el cuaternión de agarre.txt.
+            Quaternion nodo = Quaternion.Euler(a.Rotacion);
+            Quaternion compuesto = nodo * AgarresArmas.GiroModeloPistola * Quaternion.Inverse(AgarresArmas.GiroFbxDeTony);
+            Assert.Less(Quaternion.Angle(AgarresArmas.CuaternionTony, compuesto), 0.3f, "El agarre compuesto es el cuaternión de Tony");
+            Assert.AreEqual(-0.05021f, AgarresArmas.CuaternionTony.x, 0.00001f);
+            Assert.AreEqual(0.14534f, AgarresArmas.CuaternionTony.w, 0.00001f);
+            // El nodo conserva los ejes de siempre: con la pistola nivelada su X es horizontal; aquí basta que sea un giro propio sin escala.
+            Assert.AreEqual(1f, nodo.x * nodo.x + nodo.y * nodo.y + nodo.z * nodo.z + nodo.w * nodo.w, 0.001f);
+        }
+
         [TestCase("Fusil")]
         [TestCase("Escopeta")]
         [TestCase("Sniper")]
-        public void Agarre_PJ01_EsElCasoADeAgarreTxt_ParaCadaArma(string arma)
+        public void Agarre_PJ01_DeLasArmasLargas_SigueSiendoElDeSiempre(string arma)
         {
             Assert.IsTrue(AgarresArmas.TryObtener(arma, AgarresArmas.ManoDerechaPJ01, out AgarreArma a));
-            Assert.AreEqual(0f, Vector3.Distance(new Vector3(0.0129f, 0.1181f, 0.0080f), a.Posicion), 0.0001f);
-            Quaternion tony = new Quaternion(-0.05021f, 0.72950f, 0.66647f, 0.14534f);
-            Assert.Less(Quaternion.Angle(tony, Quaternion.Euler(a.Rotacion)), 0.3f, "El giro es el cuaternión de Tony");
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(-0.025f, 0.06f, -0.035f), a.Posicion), 0.0001f);
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(-90f, 0f, 0f), a.Rotacion), 0.0001f);
         }
 
         [Test]

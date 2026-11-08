@@ -165,9 +165,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1f);
             yield return Fotos("pistola-reposo", pistola);
             Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.07f, "En reposo la empuñadura está en la palma (m)");
-            // T-736: el agarre de PJ01 es el de agarre.txt (R_Hand): el arma mide 21 cm y la empuñadura va en la palma.
-            Assert.AreEqual("R_Hand", mano.name);
-            Assert.AreEqual(0.21f, MedirLargo(pistola), 0.02f, "La pistola mide unos 21 cm");
+            Assert.AreEqual("R_Hand", mano.name, "T-736: el jugador es PJ01 (R_Hand)");
             Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), -0.2f, "En reposo el cañón no apunta hacia atrás");
 
             Press(teclado.wKey);
@@ -188,6 +186,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Fotos("pistola-apuntar", pistola);
             Assert.Greater(Vector3.Dot(Vector3.ProjectOnPlane(pistola.forward, Vector3.up).normalized, visual.transform.forward), 0.9f, "Apuntando el cañón mira al frente (conserva la inclinación de la animación)");
             Assert.Less(Mathf.Abs(Vector3.Dot(pistola.right, Vector3.up)), 0.35f, "La pistola no está torcida");
+            Assert.AreEqual(0.21f, MedirLargo(pistola), 0.02f, "T-736: la pistola W01 mide unos 21 cm (visible al apuntar)");
             Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.07f, "Apuntando sigue en la palma");
 
             Press(raton.leftButton);
