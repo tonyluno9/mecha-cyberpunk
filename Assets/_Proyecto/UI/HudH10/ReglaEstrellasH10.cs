@@ -23,6 +23,18 @@ namespace MechaCyberpunk.UI.Hud
             return Mathf.Clamp(Mathf.Max(nivel, porValor), 1, Total);
         }
 
+        /// <summary>
+        /// T-729: segundos seguidos sin que te vea la policía a partir de los cuales las estrellas parpadean (te están por perder). La policía te da por escapado a los
+        /// 45 s (ConfigPersecucion.SegundosParaEscapar) y avisa los últimos 8 (ReglaBusquedaPolicial.SegundosAviso): 45 - 8 = 37. UI no ve Trafico; una prueba cuida que coincidan.
+        /// </summary>
+        public const float SegundosSinVerParaParpadear = 37f;
+
+        /// <summary>T-729: las estrellas solo parpadean cuando te buscan y ya llevas rato sin que te vean (la policía está por perderte).</summary>
+        public static bool DebeParpadear(bool buscando, bool teVen, float segundosSinVer)
+        {
+            return buscando && !teVen && segundosSinVer >= SegundosSinVerParaParpadear;
+        }
+
         /// <summary>Opacidad de las estrellas llenas: parpadean mientras te buscan, fijas si no.</summary>
         public static float Alfa(float tiempo, bool parpadea)
         {

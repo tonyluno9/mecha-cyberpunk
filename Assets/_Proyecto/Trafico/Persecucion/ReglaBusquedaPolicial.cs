@@ -3,11 +3,15 @@ using UnityEngine;
 namespace MechaCyberpunk.Trafico.Persecucion
 {
     /// <summary>
-    /// La búsqueda policial (T-665), sin escena: un círculo centrado donde te vieron por última vez. Mientras te ven, el círculo te sigue; si no te ven
-    /// y sigues dentro, no pasa nada; solo si pasas <c>segundosParaEscapar</c> seguidos sin que te vean Y fuera del círculo, escapaste.
+    /// La búsqueda policial (T-665, simplificada en T-729), sin escena: un círculo centrado donde te vieron por última vez (solo para dibujarlo en el mapa). Mientras te ven, el
+    /// círculo te sigue y no escapas; si pasas <c>segundosParaEscapar</c> seguidos sin que te vea nadie, ya no te buscan, estés donde estés. Los últimos <see cref="SegundosAviso"/> s
+    /// de ese tiempo son el aviso de que te están por perder (las estrellas parpadean solo entonces).
     /// </summary>
     public sealed class ReglaBusquedaPolicial
     {
+        /// <summary>T-729: cuántos segundos antes de perderte empieza el aviso (las estrellas del HUD parpadean). El HUD usa su propia constante: HUD (UI) no ve Trafico.</summary>
+        public const float SegundosAviso = 8f;
+
         private readonly float radio;
         private readonly float segundosParaEscapar;
 
@@ -20,8 +24,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
         public bool Activa { get; private set; }
         public Vector3 Centro { get; private set; }
         public float Radio => radio;
+        /// <summary>Segundos seguidos sin que te vea nadie (se reinicia cuando te ven o hay un delito nuevo).</summary>
         public float SegundosFuera { get; private set; }
         public bool Visto { get; private set; }
+        public float SegundosParaEscapar => segundosParaEscapar;
+
+        /// <summary>True en los últimos <see cref="SegundosAviso"/> s antes de perderte: la policía está por darte por escapado.</summary>
+        public bool PorPerderte => Activa && !Visto && SegundosFuera >= segundosParaEscapar - SegundosAviso;
 
         /// <summary>Empieza la búsqueda con el círculo en <paramref name="donde"/>.</summary>
         public void Iniciar(Vector3 donde)
@@ -60,13 +69,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (teVen)
             {
                 Centro = jugador;
-                SegundosFuera = 0f;
-                return false;
-            }
-            Vector3 d = jugador - Centro;
-            d.y = 0f;
-            if (d.magnitude <= radio)
-            {
                 SegundosFuera = 0f;
                 return false;
             }

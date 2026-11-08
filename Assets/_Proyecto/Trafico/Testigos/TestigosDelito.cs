@@ -101,6 +101,16 @@ namespace MechaCyberpunk.Trafico.Testigos
         /// <summary>Decide qué pasa con un delito de <paramref name="cantidad"/> puntos que acaba de ocurrir.</summary>
         public ResultadoTestigos Evaluar(float cantidad, MotivoCalor motivo)
         {
+            ResultadoTestigos resultado = EvaluarInterno(cantidad, motivo);
+            DelitoEvaluado?.Invoke(cantidad, motivo, resultado); // T-729: para saber de dónde sube la búsqueda (pruebas y diagnóstico)
+            return resultado;
+        }
+
+        /// <summary>T-729: avisa cada delito evaluado (calor que se quería sumar, motivo y qué pasó). El que lo llama está en la pila de quien escucha.</summary>
+        public static event System.Action<float, MotivoCalor, ResultadoTestigos> DelitoEvaluado;
+
+        private ResultadoTestigos EvaluarInterno(float cantidad, MotivoCalor motivo)
+        {
             Vector3? jugador = PosicionDelJugador();
             if (decorador == null || config == null || !jugador.HasValue || motivo == MotivoCalor.Mision || decorador.Nivel > 0)
             {

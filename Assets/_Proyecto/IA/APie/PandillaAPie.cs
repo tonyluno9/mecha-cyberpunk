@@ -414,7 +414,8 @@ namespace MechaCyberpunk.IA.APie
                 vencidos.Add(vencido);
             }
             // T-686: el dinero ya no se abona solo; cada pandillero lo suelta al caer y el jugador lo recoge.
-            if (datos.CalorAlVencer > 0f)
+            // T-729: si lo venció la policía, no es un delito del jugador: no suma búsqueda.
+            if (datos.CalorAlVencer > 0f && !vencido.CayoPorLaPolicia)
             {
                 Registro<ICalor>.Actual?.Sumar(datos.CalorAlVencer, MotivoCalor.Pelea);
             }

@@ -46,6 +46,16 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1f, ReglaEstrellasH10.Alfa(0.9f, true), 0.001f);
         }
 
+        [Test]
+        public void Estrellas_SoloParpadeanCuandoTeEstanPorPerder()
+        {
+            Assert.IsFalse(ReglaEstrellasH10.DebeParpadear(false, false, 50f), "Sin búsqueda no parpadean");
+            Assert.IsFalse(ReglaEstrellasH10.DebeParpadear(true, true, 50f), "Si te ven, fijas");
+            Assert.IsFalse(ReglaEstrellasH10.DebeParpadear(true, false, 3f), "Te buscan pero hace poco que no te ven: fijas");
+            Assert.IsFalse(ReglaEstrellasH10.DebeParpadear(true, false, ReglaEstrellasH10.SegundosSinVerParaParpadear - 0.1f));
+            Assert.IsTrue(ReglaEstrellasH10.DebeParpadear(true, false, ReglaEstrellasH10.SegundosSinVerParaParpadear), "Llevas rato sin que te vean: te están por perder");
+        }
+
         // ---- Ayudas de botón ----
 
         private static ContextoAyudaH10 Base() => new ContextoAyudaH10
