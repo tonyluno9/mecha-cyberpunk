@@ -100,15 +100,15 @@ namespace MechaCyberpunk.Personaje.Combate
             pistola.Cambio -= AlCambiarPistola;
         }
 
-        // T-733: la pistola no se ve aunque esté seleccionada; solo aparece mientras se apunta (o justo después de disparar o recargar),
-        // que es cuando el Animator juega Pistola_Sacar. Las demás armas se ven siempre que están en la mano.
+        // T-733: la pistola no se ve aunque esté seleccionada; solo aparece mientras se apunta (o justo después de disparar o recargar).
+        // T-734: aparece con el evento de Pistola_Sacar (0.30 s) y desaparece con el de Pistola_Guardar (0.53 s): VisualPersonaje.ArmaEnMano. Las demás armas se ven siempre que están en la mano.
         private void LateUpdate()
         {
             if (visualJugador == null)
             {
                 visualJugador = GetComponentInChildren<VisualPersonaje>(true);
             }
-            bool visible = visualJugador == null || visualJugador.ArmaLevantada;
+            bool visible = visualJugador == null || visualJugador.ArmaEnMano;
             if (visible != pistolaVisible)
             {
                 pistolaVisible = visible;

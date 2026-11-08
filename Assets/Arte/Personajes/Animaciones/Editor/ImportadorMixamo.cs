@@ -63,8 +63,45 @@ namespace MechaCyberpunk.Arte.Editor
             clip.lockRootRotation = false;
             // La altura sí va en la pose: sin eso las muertes y los levantarse no bajan el cuerpo al piso.
             clip.lockRootHeightY = true;
+            clip.events = EventosDe(nombre, clip.firstFrame, clip.lastFrame);
             importer.clipAnimations = new[] { clip };
             return true;
+        }
+
+        // T-734: la pistola solo está en la mano mientras se apunta. Pistola_Sacar la activa a los 0.30 s (la mano está en la cadera, fotograma 10) y
+        // Pistola_Guardar la desactiva a los 0.53 s (la mano llega a la cadera, fotograma 17), como pide agarre.txt de Tony. Los eventos llaman a
+        // ReceptorEventosArma (Personaje.Visual); los nombres de las funciones están en las pruebas de EditMode para que no se separen.
+        public const string FuncionSacarPistola = "AlSacarPistola";
+        public const string FuncionGuardarPistola = "AlGuardarPistola";
+        public const float SegundosEventoSacar = 0.30f;
+        public const float SegundosEventoGuardar = 0.53f;
+        const float CuadrosPorSegundo = 30f;
+
+        /// <summary>Los eventos de un clip por su nombre (vacío si no lleva). El tiempo del importador es la fracción del clip (0 a 1).</summary>
+        public static AnimationEvent[] EventosDe(string nombre, float primerCuadro, float ultimoCuadro)
+        {
+            float largo = Mathf.Max(0.01f, (ultimoCuadro - primerCuadro) / CuadrosPorSegundo);
+            if (nombre == "Pistola_Sacar")
+            {
+                return new[] { new AnimationEvent { functionName = FuncionSacarPistola, time = SegundosEventoSacar / largo } };
+            }
+            if (nombre == "Pistola_Guardar")
+            {
+                return new[] { new AnimationEvent { functionName = FuncionGuardarPistola, time = SegundosEventoGuardar / largo } };
+            }
+            return new AnimationEvent[0];
+        }
+
+        /// <summary>T-734: escribe los eventos de Pistola_Sacar y Pistola_Guardar en sus .meta. Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ImportadorMixamo.AplicarEventosPistola</summary>
+        public static void AplicarEventosPistola()
+        {
+            foreach (string nombre in new[] { "Pistola_Sacar", "Pistola_Guardar" })
+            {
+                string ruta = Carpeta + "Pistola/" + nombre + ".fbx";
+                var importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
+                if (importer != null && AjustarClips(importer, ruta)) importer.SaveAndReimport();
+            }
+            AssetDatabase.SaveAssets();
         }
 
         [MenuItem("Herramientas/Reimportar animaciones Mixamo")]
