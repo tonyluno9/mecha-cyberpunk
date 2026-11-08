@@ -64,6 +64,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             cubierta = GetComponent<CubiertaYRodada>();
             visual = GetComponentInChildren<VisualPersonaje>(true);
             if (visual != null) { visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador; }
+            ClipsDeTony(visual);
             apuntadoIK = visual != null ? visual.GetComponentInChildren<ApuntadoIK>(true) : null;
             if (animador == null)
             {
@@ -76,11 +77,30 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
         }
 
+        /// <summary>
+        /// T-724: caminar y correr del jugador son Loco_Caminar y Loco_Correr de Tony tal como vienen: a su rapidez original (Animator.speed = 1,
+        /// sin el ajuste que los aceleraba hasta 2.2x para igualar la velocidad del cuerpo) y con los pies sin IK procedural encima del clip.
+        /// </summary>
+        public static void ClipsDeTony(VisualPersonaje visual)
+        {
+            if (visual == null)
+            {
+                return;
+            }
+            visual.ConfigurarClips(0f, 0f);
+            IKPiesYMirada ik = visual.GetComponentInChildren<IKPiesYMirada>(true);
+            if (ik != null)
+            {
+                ik.Pies = false;
+            }
+        }
+
         public void AlCambiarModelo(Animator nuevo)
         {
             animador = nuevo;
             visual = nuevo != null ? nuevo.GetComponentInParent<VisualPersonaje>() : null;
             if (visual != null) { visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador; }
+            ClipsDeTony(visual);
             apuntadoIK = nuevo != null ? nuevo.GetComponent<ApuntadoIK>() : null;
             enabled = nuevo != null;
         }

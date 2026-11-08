@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: ConfigCamaraHombro_Base
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigCamaraHombro
   lateralNormal: 0
-  alturaNormal: 3.4
-  distanciaNormal: 7
-  fovNormal: 65
+  alturaNormal: 1.55
+  distanciaNormal: 3.5
+  fovNormal: 60
+  brazoVertical: 0.15
+  acercarMirandoAbajo: 0.35
   lateralApuntando: 0
-  alturaApuntando: 3.4
-  distanciaApuntando: 7
-  fovApuntando: 45
+  alturaApuntando: 1.55
+  distanciaApuntando: 3.5
+  fovApuntando: 40
   fovSniper: 15
   duracionZoom: 0.15
   sensibilidadZoom: 0.35
