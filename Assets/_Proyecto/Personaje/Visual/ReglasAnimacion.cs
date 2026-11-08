@@ -106,10 +106,10 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Caminar tal como viene, medida con MedicionClips (T-562; T-733: el Loco_Caminar ajustado de Tony mide 0.997).</summary>
         public const float VelocidadClipCaminar = 0.997f;
-        /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Correr tal como viene, medida con MedicionClips (T-562).</summary>
-        public const float VelocidadClipCorrer = 2.79f;
-        /// <summary>Rapidez máxima de la animación: deja que Correr iguale los 7.5 m/s del jugador sin toparse (7.5 / 2.79 = 2.69).</summary>
-        public const float RapidezMaximaLocomocion = 2.8f;
+        /// <summary>Velocidad (m/s) a la que avanza el clip Loco_Correr tal como viene, medida con MedicionClips (T-562; T-736: el Loco_Correr ajustado de Tony mide 2.51).</summary>
+        public const float VelocidadClipCorrer = 2.51f;
+        /// <summary>Rapidez máxima de la animación: deja que Correr iguale los 7.5 m/s del jugador sin toparse (7.5 / 2.51 = 2.99).</summary>
+        public const float RapidezMaximaLocomocion = 3f;
         /// <summary>Rapidez máxima de Caminar antes de pasar a Correr (a 2.2x el clip aún no se ve acelerado de más).</summary>
         public const float RapidezMaximaCaminar = 2.2f;
         /// <summary>Velocidad (m/s) normal de caminar del jugador y los aliados (Caminar en los árboles de arma).</summary>

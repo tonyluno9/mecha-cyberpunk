@@ -15,12 +15,37 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Sniper")]
         public void Agarre_ConocidoParaCadaArma_ConElCanonPorLosDedos(string arma)
         {
-            Assert.IsTrue(AgarresArmas.TryObtener(arma, out AgarreArma a));
-            // Con -90° en X el +Z del arma (cañón) cae en el +Y de la mano (los dedos) y la corredera (+Y) en -Z (hacia el pulgar).
+            Assert.IsTrue(AgarresArmas.TryObtener(arma, "RightHand", out AgarreArma a));
+            // Modelos mixamorig: con -90° en X el +Z del arma (cañón) cae en el +Y de la mano (los dedos) y la corredera (+Y) en -Z (hacia el pulgar).
             Quaternion r = Quaternion.Euler(a.Rotacion);
             Assert.AreEqual(1f, Vector3.Dot(r * Vector3.forward, Vector3.up), 0.001f, "cañón = dedos");
             Assert.AreEqual(1f, Vector3.Dot(r * Vector3.up, Vector3.back), 0.001f, "corredera = lado del pulgar");
             Assert.Less(a.Posicion.magnitude, 0.2f, "El arma queda cerca de la palma (m)");
+        }
+
+        [Test]
+        public void Agarre_PJ01_DeLaPistola_EsElCasoADeAgarreTxt()
+        {
+            Assert.IsTrue(AgarresArmas.TryObtener("Pistola", AgarresArmas.ManoDerechaPJ01, out AgarreArma a));
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(0.0129f, 0.1181f, 0.0080f), a.Posicion), 0.0001f);
+            // El nodo Pistola * giro del modelo (180° sobre Y) * inverso del giro del FBX de Tony = el cuaternión de agarre.txt.
+            Quaternion nodo = Quaternion.Euler(a.Rotacion);
+            Quaternion compuesto = nodo * AgarresArmas.GiroModeloPistola * Quaternion.Inverse(AgarresArmas.GiroFbxDeTony);
+            Assert.Less(Quaternion.Angle(AgarresArmas.CuaternionTony, compuesto), 0.3f, "El agarre compuesto es el cuaternión de Tony");
+            Assert.AreEqual(-0.05021f, AgarresArmas.CuaternionTony.x, 0.00001f);
+            Assert.AreEqual(0.14534f, AgarresArmas.CuaternionTony.w, 0.00001f);
+            // El nodo conserva los ejes de siempre: con la pistola nivelada su X es horizontal; aquí basta que sea un giro propio sin escala.
+            Assert.AreEqual(1f, nodo.x * nodo.x + nodo.y * nodo.y + nodo.z * nodo.z + nodo.w * nodo.w, 0.001f);
+        }
+
+        [TestCase("Fusil")]
+        [TestCase("Escopeta")]
+        [TestCase("Sniper")]
+        public void Agarre_PJ01_DeLasArmasLargas_SigueSiendoElDeSiempre(string arma)
+        {
+            Assert.IsTrue(AgarresArmas.TryObtener(arma, AgarresArmas.ManoDerechaPJ01, out AgarreArma a));
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(-0.025f, 0.06f, -0.035f), a.Posicion), 0.0001f);
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(-90f, 0f, 0f), a.Rotacion), 0.0001f);
         }
 
         [Test]
