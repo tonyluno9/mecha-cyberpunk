@@ -55,6 +55,9 @@ namespace MechaCyberpunk.UI
         [Tooltip("Duración del letrero ARMA MEJORADA al salir (s).")]
         [Min(0.1f)] [SerializeField] private float duracionLetrero = 2.2f;
 
+        [Min(0.05f)] [Tooltip("Lo que tarda la franja de escaneo en recorrer el arma al mejorar (s).")]
+        [SerializeField] private float duracionEscaneo = 0.9f;
+
         [Header("Colores")]
         [SerializeField] private Color colorHolograma = new Color(0.15f, 0.85f, 1f, 1f);
         [SerializeField] private Color colorMejora = new Color(0.35f, 1f, 0.55f, 1f);
@@ -123,6 +126,7 @@ namespace MechaCyberpunk.UI
         public float EsperaGiroSolo => esperaGiroSolo;
         public float RapidezPieza => rapidezPieza;
         public float DuracionDestello => duracionDestello;
+        public float DuracionEscaneo => duracionEscaneo;
         public float DuracionNumeros => duracionNumeros;
         public float DuracionLetrero => duracionLetrero;
         public Color ColorHolograma => colorHolograma;

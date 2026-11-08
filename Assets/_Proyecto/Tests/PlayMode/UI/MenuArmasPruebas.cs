@@ -225,6 +225,14 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(EstadoPieza.Instalada, pantalla.Estado(PiezaArma.Cargador));
             Assert.AreEqual(EstadoPieza.Disponible, pantalla.Estado(PiezaArma.Canon));
             StringAssert.Contains("INSTALADO", pantalla.Aviso);
+            // T-895: al mejorar, la franja recorre el arma, el cargador regresa y luego destella.
+            Assert.IsTrue(vista.Escaneando, "El escaneo arranca al mejorar");
+            yield return new WaitForSecondsRealtime(config.DuracionEscaneo * 0.5f);
+            Assert.Greater(vista.AvanceEscaneo, 0.1f, "La franja avanza");
+            Capturar("s2m-c2-escaneo.png");
+            yield return EsperarHasta(() => !vista.Escaneando, "que termine el escaneo");
+            yield return new WaitForSecondsRealtime(0.6f);
+            Assert.Less(vista.Separacion(PiezaArma.Cargador), 0.1f, "El cargador regresa a su lugar");
             yield return new WaitForSecondsRealtime(0.15f);
             Capturar("s2n-menu-armas-2.png");
 

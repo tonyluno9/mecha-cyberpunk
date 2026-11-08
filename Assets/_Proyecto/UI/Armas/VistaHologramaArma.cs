@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MechaCyberpunk.UI.Armas
 {
@@ -26,6 +29,7 @@ namespace MechaCyberpunk.UI.Armas
         private const float GiroInicial = -18f;
         private const float MinimoDireccion = 0.0001f;
         private const int ProfundidadTextura = 24;
+        private const float MargenEscaneo = 0.08f;
         // La imagen (un quad) no da la vuelta: se mece de lado a lado y el arrastre la gira hasta LimiteImagen.
         private const float AmplitudVaiven = 22f;
         private const float VelocidadVaiven = 0.7f;
@@ -38,6 +42,9 @@ namespace MechaCyberpunk.UI.Armas
         private static readonly int IdModoImagen = Shader.PropertyToID("_ModoImagen");
         private static readonly int IdCull = Shader.PropertyToID("_Cull");
         private static readonly int IdColor = Shader.PropertyToID("_Color");
+        private static readonly int IdBarridoDir = Shader.PropertyToID("_BarridoDir");
+        private static readonly int IdBarridoPos = Shader.PropertyToID("_BarridoPos");
+        private static readonly int IdBarridoFuerza = Shader.PropertyToID("_BarridoFuerza");
 
         private sealed class Pieza
         {
@@ -69,6 +76,12 @@ namespace MechaCyberpunk.UI.Armas
         private float destello;
         private float vaiven;
         private bool conModelo;
+        private Tween tweenEscaneo;
+        private bool escaneando;
+        private float avanceEscaneo;
+        private float inicioEscaneo;
+        private float finEscaneo;
+        private PiezaArma? piezaRegresada;
 
         public RenderTexture Textura => textura;
         public Camera Camara => camara;
@@ -78,6 +91,10 @@ namespace MechaCyberpunk.UI.Armas
         public float Inclinacion => inclinacion;
         public float Distancia => distancia;
         public PiezaArma Elegida => elegida;
+        /// <summary>T-895: true mientras la franja de escaneo recorre el arma.</summary>
+        public bool Escaneando => escaneando;
+        /// <summary>T-895: cuánto ha recorrido la franja (0 a 1).</summary>
+        public float AvanceEscaneo => avanceEscaneo;
 
         /// <summary>Qué tan separada está la pieza (0 en su lugar, 1 fuera). 0 si el arma no tiene esa pieza.</summary>
         public float Separacion(PiezaArma pieza) => piezas.TryGetValue(pieza, out Pieza p) ? p.Abierta : 0f;
@@ -150,6 +167,10 @@ namespace MechaCyberpunk.UI.Armas
         public void ElegirPieza(PiezaArma pieza, IReadOnlyDictionary<PiezaArma, EstadoPieza> estadosPiezas)
         {
             elegida = pieza;
+            if (piezaRegresada.HasValue && piezaRegresada.Value != pieza)
+            {
+                piezaRegresada = null;
+            }
             estados.Clear();
             if (estadosPiezas != null)
             {
@@ -163,6 +184,35 @@ namespace MechaCyberpunk.UI.Armas
 
         /// <summary>Destello al comprar: la pieza elegida brilla y se apaga en <see cref="ConfigMenuArmas.DuracionDestello"/>.</summary>
         public void Destellar() => destello = 1f;
+
+        /// <summary>
+        /// T-895: al mejorar, la franja recorre el arma de punta a punta mientras la pieza elegida vuelve a su lugar; al terminar la pieza destella y
+        /// avisa <paramref name="alTerminar"/>. Si se cambia de arma o se cierra el menú a la mitad, se cancela sin avisar.
+        /// </summary>
+        public void Escanear(Action alTerminar)
+        {
+            if (set == null || config == null)
+            {
+                alTerminar?.Invoke();
+                return;
+            }
+            tweenEscaneo?.Kill();
+            Bounds arma = Limites();
+            inicioEscaneo = arma.min.x - MargenEscaneo;
+            finEscaneo = arma.max.x + MargenEscaneo;
+            piezaRegresada = elegida;
+            escaneando = true;
+            avanceEscaneo = 0f;
+            tweenEscaneo = DOTween.To(() => avanceEscaneo, v => { avanceEscaneo = v; Pintar(); }, 1f, config.DuracionEscaneo)
+                .SetEase(Ease.InOutSine).SetUpdate(true).SetTarget(this)
+                .OnComplete(() =>
+                {
+                    escaneando = false;
+                    Destellar();
+                    Pintar();
+                    alTerminar?.Invoke();
+                });
+        }
 
         /// <summary>Gira con el arrastre del ratón (px).</summary>
         public void Girar(Vector2 arrastre)
@@ -210,7 +260,8 @@ namespace MechaCyberpunk.UI.Armas
             foreach (KeyValuePair<PiezaArma, Pieza> par in piezas)
             {
                 Pieza p = par.Value;
-                p.Abierta = Mathf.Lerp(p.Abierta, par.Key == elegida ? 1f : 0f, paso);
+                bool afuera = par.Key == elegida && piezaRegresada != par.Key;
+                p.Abierta = Mathf.Lerp(p.Abierta, afuera ? 1f : 0f, paso);
                 p.Transform.localPosition = Vector3.Lerp(p.Base, p.Separado, p.Abierta);
             }
             if (destello > 0f)
@@ -460,6 +511,9 @@ namespace MechaCyberpunk.UI.Armas
                 bloque.SetFloat(IdResalte, esElegida && conModelo ? 1f : 0f);
                 bloque.SetFloat(IdDestello, esElegida || !conModelo ? destello : destello * 0.25f);
                 bloque.SetFloat(IdAlfa, bloqueada && !esElegida ? AlfaBloqueada : 1f);
+                bloque.SetVector(IdBarridoDir, Vector3.right);
+                bloque.SetFloat(IdBarridoPos, Mathf.Lerp(inicioEscaneo, finEscaneo, avanceEscaneo));
+                bloque.SetFloat(IdBarridoFuerza, escaneando ? 1f : 0f);
                 r.SetPropertyBlock(bloque);
             }
             if (pedestal != null)
@@ -518,6 +572,11 @@ namespace MechaCyberpunk.UI.Armas
 
         private void Limpiar()
         {
+            tweenEscaneo?.Kill();
+            tweenEscaneo = null;
+            escaneando = false;
+            avanceEscaneo = 0f;
+            piezaRegresada = null;
             foreach (Object o in creados)
             {
                 if (o != null)

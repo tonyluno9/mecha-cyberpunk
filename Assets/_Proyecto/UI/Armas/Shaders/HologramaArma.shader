@@ -23,6 +23,11 @@ Shader "MechaCyberpunk/UI/HologramaArma"
         _Destello ("Destello (0 a 1)", Range(0, 1)) = 0
         _Alfa ("Opacidad general", Range(0, 1)) = 1
         _ModoImagen ("Modo imagen (0 o 1)", Range(0, 1)) = 0
+        _BarridoDir ("Eje del barrido (mundo)", Vector) = (1, 0, 0, 0)
+        _BarridoPos ("Posición del barrido (m sobre el eje)", Float) = 0
+        _BarridoAncho ("Ancho del barrido (m)", Float) = 0.06
+        _BarridoFuerza ("Fuerza del barrido (0 a 1)", Range(0, 1)) = 0
+        _Revelar ("Solo se ve lo ya barrido (0 o 1)", Range(0, 1)) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 2
     }
 
@@ -65,6 +70,11 @@ Shader "MechaCyberpunk/UI/HologramaArma"
                 half _Destello;
                 half _Alfa;
                 half _ModoImagen;
+                float4 _BarridoDir;
+                float _BarridoPos;
+                float _BarridoAncho;
+                half _BarridoFuerza;
+                half _Revelar;
             CBUFFER_END
 
             struct Entrada
@@ -128,6 +138,11 @@ Shader "MechaCyberpunk/UI/HologramaArma"
 
                 half3 color = lerp(color3D, colorImagen, _ModoImagen);
                 color += (_ColorBorde.rgb * 0.9 + 0.2) * _Destello * lerp(1.0, luz, _ModoImagen);
+                // T-895: la franja que recorre la pieza al escanear; con _Revelar lo que falta por barrer no se dibuja (T-896).
+                float avance = dot(salida.posMundo, _BarridoDir.xyz) - _BarridoPos;
+                half franjaEscaneo = smoothstep(_BarridoAncho, 0.0, abs(avance)) * _BarridoFuerza;
+                color += (_ColorBorde.rgb * 1.4 + 0.3) * franjaEscaneo;
+                color *= lerp(1.0, step(avance, 0.0), _Revelar);
                 color *= parpadeo * _Alfa;
                 return half4(color, saturate(max(color.r, max(color.g, color.b))));
             }

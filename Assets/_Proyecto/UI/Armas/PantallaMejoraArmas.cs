@@ -31,6 +31,9 @@ namespace MechaCyberpunk.UI.Armas
         private const float AltoFilaArma = 150f;
         private const float AnchoIcono = 190f;
         private const float AltoFilaPieza = 84f;
+        private const float LadoIconoPieza = 72f;
+        private const float XTextoPieza = 138f;
+        private const string RutaIconosPieza = "Menus/Pieza_";
         private const float AltoFilaEstadistica = 48f;
         private const float AltoBoton = 70f;
         private const float AnchoHolo = 900f;
@@ -47,6 +50,7 @@ namespace MechaCyberpunk.UI.Armas
         private const float AlfaFilaNormal = 0.06f;
         private const float AlfaDestelloPantalla = 0.55f;
         private const float AlfaBarraAntes = 0.45f;
+        private const float AlfaIconoBloqueado = 0.35f;
         private const int TamanoTituloGrande = 84;
         private const int TamanoNombreArma = 60;
         private static readonly string[] Romanos = { "", "I", "II", "III" };
@@ -65,6 +69,7 @@ namespace MechaCyberpunk.UI.Armas
             public Image Fondo;
             public GameObject Borde;
             public Text Numeral;
+            public Image Icono;
             public Text Nombre;
             public Text Detalle;
             public Text Etiqueta;
@@ -142,6 +147,7 @@ namespace MechaCyberpunk.UI.Armas
         private bool arrastrando;
         private float destello;
         private float animacionNumeros = 1f;
+        private bool esperandoEscaneo;
         private float tiempoLetrero;
         private int cuadroAbierta = -1;
         private string ultimaMejora = string.Empty;
@@ -470,9 +476,14 @@ namespace MechaCyberpunk.UI.Armas
                 Sonidos.Reproducir(config.SonidoCompra);
                 comproAlgo = true;
                 ultimaMejora = ArmaElegida.Nombre + " " + Romanos[siguiente.Nivel];
-                destello = 1f;
+                // T-895: primero el escaneo y la pieza regresando; el destello y los números suben cuando termina.
                 animacionNumeros = 0f;
-                vista.Destellar();
+                esperandoEscaneo = true;
+                vista.Escanear(() =>
+                {
+                    esperandoEscaneo = false;
+                    destello = 1f;
+                });
                 MostrarAviso(string.Format(config.FormatoComprado, config.Pieza(pieza).Nombre, ArmaElegida.Nombre), config.ColorMejora);
             }
             Pintar();
@@ -493,7 +504,11 @@ namespace MechaCyberpunk.UI.Armas
         private void AnimarCompra(float dt)
         {
             bool repintar = false;
-            if (animacionNumeros < 1f)
+            if (esperandoEscaneo && !vista.Escaneando)
+            {
+                esperandoEscaneo = false; // se cambió de arma a la mitad: el escaneo se canceló
+            }
+            if (animacionNumeros < 1f && !esperandoEscaneo)
             {
                 animacionNumeros = Mathf.Min(1f, animacionNumeros + dt / config.DuracionNumeros);
                 repintar = true;
@@ -598,6 +613,7 @@ namespace MechaCyberpunk.UI.Armas
                 f.Borde.SetActive(elegida);
                 f.Numeral.text = Romanos[ReglaMejoraArma.NivelDe(p)];
                 f.Numeral.color = estado == EstadoPieza.Instalada ? estilo.Turquesa : estado == EstadoPieza.Bloqueada ? estilo.Desactivado : colorFila;
+                f.Icono.color = estado == EstadoPieza.Bloqueada ? new Color(1f, 1f, 1f, AlfaIconoBloqueado) : Color.white;
                 f.Nombre.text = datos.Nombre;
                 f.Nombre.color = estado == EstadoPieza.Bloqueada && !elegida ? estilo.Desactivado : colorFila;
                 f.Detalle.text = TextoMejora(p);
@@ -956,12 +972,19 @@ namespace MechaCyberpunk.UI.Armas
                 boton.onClick.AddListener(() => ElegirPieza(p, true));
                 f.Borde = KitUI.CrearBorde(f.Fondo.rectTransform, estilo.BordeElegido, Acento);
                 f.Numeral = Texto(f.Fondo.transform, "Numeral", RolTexto.Encabezado, TextAnchor.MiddleCenter, new Vector2(0f, 0.5f), new Vector2(4f, 0f),
-                    new Vector2(64f, AltoFilaPieza), string.Empty, estilo.Texto);
-                f.Nombre = Texto(f.Fondo.transform, "Nombre", RolTexto.Boton, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(76f, 18f),
-                    new Vector2(ancho - 84f, 40f), string.Empty, estilo.Texto);
-                f.Detalle = Texto(f.Fondo.transform, "Detalle", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(76f, -20f),
-                    new Vector2(ancho - 84f, 28f), string.Empty, estilo.Texto);
-                f.Etiqueta = Texto(f.Fondo.transform, "Etiqueta", RolTexto.Ayuda, TextAnchor.MiddleRight, new Vector2(1f, 0.5f), new Vector2(-14f, 18f),
+                    new Vector2(56f, AltoFilaPieza), string.Empty, estilo.Texto);
+                // T-895: el ícono H34 de la pieza real de la W01.
+                f.Icono = KitUI.CrearImagen(f.Fondo.transform, "Icono", Color.white);
+                f.Icono.sprite = Resources.Load<Sprite>(RutaIconosPieza + p);
+                f.Icono.preserveAspect = true;
+                f.Icono.raycastTarget = false;
+                f.Icono.enabled = f.Icono.sprite != null;
+                KitUI.Colocar(f.Icono.rectTransform, new Vector2(0f, 0.5f), new Vector2(60f, 0f), new Vector2(LadoIconoPieza, LadoIconoPieza));
+                f.Nombre = Texto(f.Fondo.transform, "Nombre", RolTexto.Boton, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(XTextoPieza, 18f),
+                    new Vector2(ancho - XTextoPieza - 8f, 40f), string.Empty, estilo.Texto);
+                f.Detalle = Texto(f.Fondo.transform, "Detalle", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(XTextoPieza, -20f),
+                    new Vector2(ancho - XTextoPieza - 8f, 28f), string.Empty, estilo.Texto);
+                f.Etiqueta = Texto(f.Fondo.transform, "Etiqueta", RolTexto.Ayuda, TextAnchor.MiddleRight, new Vector2(1f, 0.5f), new Vector2(-14f, -20f),
                     new Vector2(ancho * 0.6f, 40f), string.Empty, Acento);
                 f.Etiqueta.fontSize = estilo.Tamano(RolTexto.Texto);
                 filasPiezas[i] = f;
