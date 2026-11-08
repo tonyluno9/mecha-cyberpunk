@@ -78,6 +78,12 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>T-681: quita el punto de mira; el cañón vuelve a mirar al frente del cuerpo.</summary>
         public void QuitarPuntoMira() => hayMira = false;
 
+        /// <summary>T-738: hay un punto de mira puesto (lo lee AgarrePistolaPJ01).</summary>
+        public bool HayMira => hayMira;
+
+        /// <summary>T-738: el punto de mira puesto por <see cref="PonerPuntoMira"/>.</summary>
+        public Vector3 PuntoMira => puntoMira;
+
         private void Awake()
         {
             animador = GetComponent<Animator>();
