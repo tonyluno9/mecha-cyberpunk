@@ -1,5 +1,6 @@
 using System;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
@@ -8,9 +9,8 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Inicio
 {
     /// <summary>
-    /// Botón de la pantalla de inicio: texto grande de Teko que al estar elegido (con teclado, control o ratón encima) se corre a la
-    /// derecha, se enciende en blanco con un halo turquesa, saca una barra de neón a la izquierda y un fondo que se abre; al pulsarlo
-    /// destella. Elegir por ratón y por teclado es lo mismo (el puntero encima elige el botón), así solo hay un resaltado a la vez.
+    /// Botón de la pantalla de inicio: texto en Rajdhani que al estar elegido (con teclado, control o ratón encima) se corre a la
+    /// derecha, se enciende, saca una punta de flecha a la izquierda y tiñe su fondo; al pulsarlo destella. Elegir por ratón y por teclado es lo mismo (el puntero encima elige el botón), así solo hay un resaltado a la vez.
     /// Suena UI_MOVER al elegirse y UI_ACEPTAR al pulsarse.
     /// </summary>
     public class BotonInicio : Selectable, ISubmitHandler, IPointerClickHandler
@@ -22,10 +22,10 @@ namespace MechaCyberpunk.UI.Inicio
         private const float SegundosEncender = 0.16f;
         private const float SegundosApagar = 0.22f;
         private const float VelocidadDestello = 4.5f;
-        private const float DesplazamientoElegido = 30f;
-        private const float AnchoBarra = 6f;
-        private const float AlfaFondo = 0.5f;
-        private const float AlfaHalo = 0.75f;
+        private const float DesplazamientoElegido = 14f;
+        private const float AnchoBarra = 26f;
+        private const float AlfaFondo = 0.06f;
+        private const float AlfaHalo = 0.22f;
 
         [SerializeField] private Text texto;
         [SerializeField] private Text halo;
@@ -91,16 +91,17 @@ namespace MechaCyberpunk.UI.Inicio
             boton.targetGraphic = zonaRayos;
             boton.colorAcento = acento;
 
-            boton.fondo = UIInicio.Imagen(raiz, "Fondo", UIInicio.ConAlfa(acento, 0f), SpritesInicio.DegradadoH);
+            boton.fondo = UIInicio.Imagen(raiz, "Fondo", UIInicio.ConAlfa(acento, 0f), TrazoH10.Relleno);
+            boton.fondo.type = Image.Type.Sliced;
             UIInicio.Anclar(boton.fondo.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0f, 0.5f), Vector2.zero, Vector2.zero);
             boton.destelloImagen = UIInicio.Imagen(raiz, "Destello", UIInicio.ConAlfa(Color.white, 0f), SpritesInicio.DegradadoH, true);
             UIInicio.Estirar(boton.destelloImagen.rectTransform);
-            boton.barra = UIInicio.Imagen(raiz, "Barra", acento, SpritesInicio.Blanco, true);
-            UIInicio.Anclar(boton.barra.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(AnchoBarra, tamano.y * 0.8f));
+            boton.barra = UIInicio.Imagen(raiz, "Barra", acento, TrazoH10.Cheuron);
+            UIInicio.Anclar(boton.barra.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(8f, 0f), new Vector2(AnchoBarra, AnchoBarra));
 
             boton.contenido = UIInicio.Nodo(raiz, "Contenido");
             UIInicio.Estirar(boton.contenido);
-            boton.texto = UIInicio.Texto(boton.contenido, "Texto", etiqueta, UIInicio.FuenteTitulos, tamanoTexto, UIInicio.TextoSuave, ancla);
+            boton.texto = UIInicio.Texto(boton.contenido, "Texto", etiqueta, TrazoH10.Fuente, tamanoTexto, UIInicio.TextoSuave, ancla);
             UIInicio.Estirar(boton.texto.rectTransform);
             boton.texto.rectTransform.offsetMin = new Vector2(34f, 0f);
             boton.texto.rectTransform.offsetMax = new Vector2(-20f, 0f);
@@ -221,9 +222,9 @@ namespace MechaCyberpunk.UI.Inicio
             }
             contenido.anchoredPosition = new Vector2(desplazamiento * suave, 0f);
             fondo.color = UIInicio.ConAlfa(colorAcento, AlfaFondo * suave);
-            fondo.rectTransform.localScale = new Vector3(Mathf.Lerp(0.55f, 1f, suave), 1f, 1f);
+            fondo.rectTransform.localScale = new Vector3(Mathf.Lerp(0.8f, 1f, suave), 1f, 1f);
             barra.color = UIInicio.ConAlfa(colorAcento, suave);
-            barra.rectTransform.localScale = new Vector3(1f, suave, 1f);
+            barra.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.6f, 1f, suave);
             destelloImagen.color = UIInicio.ConAlfa(Color.white, 0.55f * destello);
         }
     }
