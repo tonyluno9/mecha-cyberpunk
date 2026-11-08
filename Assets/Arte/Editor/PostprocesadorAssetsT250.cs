@@ -68,6 +68,11 @@ namespace MechaCyberpunk.Arte.Editor
 
         public static bool EsPersonajeDeTripo(string ruta)
         {
+            // T-892: las meseras R01 se importan igual que los demás personajes de Tripo.
+            if (ruta.StartsWith("Assets/Arte/Personajes/" + ColocarS2pMeseras.Nombre + "/"))
+            {
+                return true;
+            }
             foreach (string n in PersonajesDeTripo)
             {
                 if (ruta.StartsWith("Assets/Arte/Personajes/" + n + "/"))

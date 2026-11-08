@@ -12154,6 +12154,121 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2801925128222918610, guid: 9dada94213a974b48b6938e3f7160a89, type: 3}
   m_PrefabInstance: {fileID: 21767710}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &21794383
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1839554388}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 66.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_Name
+      value: Mesera_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a9d93705b1a766843b4d733646fa65bb, type: 2}
+    - target: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8123563153433565277, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 028652a4128a4714790c003f32fe2132, type: 2}
+    - target: {fileID: 9140253385185518857, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.036223184
+      objectReference: {fileID: 0}
+    - target: {fileID: 9140253385185518857, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.22688986
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 21794387}
+  m_SourcePrefab: {fileID: 100100000, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+--- !u!4 &21794384 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 21794383}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &21794385 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 21794383}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &21794386 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 21794383}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &21794387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21794385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 290ba0d022f673843afa097ecd41421f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Casino::MechaCyberpunk.Casino.Meseras.RondaMesera
+  puntos:
+  - {x: 66.5, y: 0.2, z: 45}
+  - {x: 66.5, y: 0.2, z: 51}
+  - {x: 72, y: 0.2, z: 54.6}
+  velocidad: 1.1
+  pausa: 2.5
+  esperaInicial: 2.6
+  animador: {fileID: 21794386}
 --- !u!1 &21912328
 GameObject:
   m_ObjectHideFlags: 0
@@ -426994,6 +427109,120 @@ Transform:
   - {fileID: 742283873}
   m_Father: {fileID: 1473779401}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &658482002
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1839554388}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 74
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 43
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_Name
+      value: Mesera_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a9d93705b1a766843b4d733646fa65bb, type: 2}
+    - target: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8123563153433565277, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 028652a4128a4714790c003f32fe2132, type: 2}
+    - target: {fileID: 9140253385185518857, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.036223184
+      objectReference: {fileID: 0}
+    - target: {fileID: 9140253385185518857, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.22688986
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 658482006}
+  m_SourcePrefab: {fileID: 100100000, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+--- !u!4 &658482003 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 658482002}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &658482004 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 658482002}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &658482005 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 658482002}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &658482006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658482004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 290ba0d022f673843afa097ecd41421f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Casino::MechaCyberpunk.Casino.Meseras.RondaMesera
+  puntos:
+  - {x: 74, y: 0.2, z: 43}
+  - {x: 74, y: 0.2, z: 51}
+  velocidad: 1.1
+  pausa: 2.5
+  esperaInicial: 1.3
+  animador: {fileID: 658482005}
 --- !u!1 &658638771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1074586,6 +1074815,121 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1801508002}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1801578282
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1839554388}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 66
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 47
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_Name
+      value: Mesera_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a9d93705b1a766843b4d733646fa65bb, type: 2}
+    - target: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8123563153433565277, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 028652a4128a4714790c003f32fe2132, type: 2}
+    - target: {fileID: 9140253385185518857, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.036223184
+      objectReference: {fileID: 0}
+    - target: {fileID: 9140253385185518857, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.22688986
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1801578286}
+  m_SourcePrefab: {fileID: 100100000, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+--- !u!4 &1801578283 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 1801578282}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1801578284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 1801578282}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1801578285 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a49f407eb44443f4382f7548e3f6945f, type: 3}
+  m_PrefabInstance: {fileID: 1801578282}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1801578286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801578284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 290ba0d022f673843afa097ecd41421f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Casino::MechaCyberpunk.Casino.Meseras.RondaMesera
+  puntos:
+  - {x: 66, y: 0.2, z: 47}
+  - {x: 73, y: 0.2, z: 47}
+  - {x: 80, y: 0.2, z: 47}
+  velocidad: 1.1
+  pausa: 2.5
+  esperaInicial: 0
+  animador: {fileID: 1801578285}
 --- !u!1 &1801614270
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095672,6 +1096016,40 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1, y: 0.97079426, z: 2.5710878}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1839554387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1839554388}
+  m_Layer: 0
+  m_Name: S2p_Meseras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1839554388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839554387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1801578283}
+  - {fileID: 658482003}
+  - {fileID: 21794384}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1839556585
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1285028,3 +1285406,4 @@ SceneRoots:
   - {fileID: 1542555827}
   - {fileID: 1336296187}
   - {fileID: 1025027614}
+  - {fileID: 1839554388}
