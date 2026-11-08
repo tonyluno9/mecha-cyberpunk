@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
 namespace MechaCyberpunk.Personaje.Apariencia
@@ -124,9 +125,17 @@ namespace MechaCyberpunk.Personaje.Apariencia
             {
                 return;
             }
+            string mano = hacia.parent != null ? hacia.parent.name : string.Empty;
             for (int i = desde.childCount - 1; i >= 0; i--)
             {
-                desde.GetChild(i).SetParent(hacia, false);
+                Transform arma = desde.GetChild(i);
+                arma.SetParent(hacia, false);
+                // T-736: cada modelo tiene sus ejes en la mano; el arma toma el agarre de la mano a la que pasa (PJ01: agarre.txt).
+                if (AgarresArmas.TryObtener(arma.name, mano, out AgarreArma agarre))
+                {
+                    arma.localPosition = agarre.Posicion;
+                    arma.localRotation = Quaternion.Euler(agarre.Rotacion);
+                }
             }
         }
 

@@ -144,7 +144,7 @@ namespace MechaCyberpunk.Arte.Editor
             string[] rutas =
             {
                 Carpeta + "Pistola/Pistola_Disparo.fbx", Carpeta + "Pistola/Pistola_Correr.fbx",
-                Carpeta + "Pistola/Pistola_ApuntarCaminar_Derecha.fbx", Carpeta + "Pistola/Pistola_ApuntarCaminar_Izquierda.fbx", Carpeta + "Locomocion/Loco_Caminar.fbx",
+                Carpeta + "Pistola/Pistola_ApuntarCaminar_Derecha.fbx", Carpeta + "Pistola/Pistola_ApuntarCaminar_Izquierda.fbx", Carpeta + "Locomocion/Loco_Caminar.fbx", Carpeta + "Locomocion/Loco_Correr.fbx",
             };
             foreach (var ruta in rutas)
             {

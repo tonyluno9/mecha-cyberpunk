@@ -26,6 +26,27 @@ namespace MechaCyberpunk.Tests.Personaje
         private static Vector3 Palma(Animator a) =>
             Vector3.Lerp(a.GetBoneTransform(HumanBodyBones.RightHand).position, a.GetBoneTransform(HumanBodyBones.RightMiddleProximal).position, 0.5f);
 
+        // Largo (m) del arma a lo largo de su cañón (eje +Z), con sus mallas en el mundo (lossyScale incluida).
+        private static float MedirLargo(Transform arma)
+        {
+            float min = float.MaxValue;
+            float max = float.MinValue;
+            foreach (MeshRenderer mr in arma.GetComponentsInChildren<MeshRenderer>())
+            {
+                if (!mr.enabled || !mr.gameObject.activeInHierarchy || mr.name.StartsWith("Cuerpo") || mr.name == "Canon") { continue; } // los cubos de ayuda no cuentan
+                MeshFilter mf = mr.GetComponent<MeshFilter>();
+                Bounds mb = mf.sharedMesh.bounds; // las mallas no son legibles: se usan las esquinas de su caja local
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector3 esquina = mb.center + Vector3.Scale(mb.extents, new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f));
+                    float z = Vector3.Dot(mf.transform.TransformPoint(esquina) - arma.position, arma.forward);
+                    min = Mathf.Min(min, z);
+                    max = Mathf.Max(max, z);
+                }
+            }
+            return max - min;
+        }
+
         private IEnumerator Fotos(string sufijo, Transform arma)
         {
             Transform t = jugador.transform;
@@ -144,7 +165,9 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1f);
             yield return Fotos("pistola-reposo", pistola);
             Assert.Less(Vector3.Distance(pistola.position, Palma(a)), 0.07f, "En reposo la empuñadura está en la palma (m)");
-            Assert.Greater(Vector3.Dot(pistola.forward, mano.up), 0.97f, "El cañón sigue la dirección de los dedos");
+            // T-736: el agarre de PJ01 es el de agarre.txt (R_Hand): el arma mide 21 cm y la empuñadura va en la palma.
+            Assert.AreEqual("R_Hand", mano.name);
+            Assert.AreEqual(0.21f, MedirLargo(pistola), 0.02f, "La pistola mide unos 21 cm");
             Assert.Greater(Vector3.Dot(pistola.forward, visual.transform.forward), -0.2f, "En reposo el cañón no apunta hacia atrás");
 
             Press(teclado.wKey);

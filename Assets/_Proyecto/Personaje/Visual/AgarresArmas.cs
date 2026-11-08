@@ -24,27 +24,52 @@ namespace MechaCyberpunk.Personaje.Visual
     }
 
     /// <summary>
-    /// S1 (T-650): agarre de cada arma en la mano del modelo Humanoid de Tripo. En la mano derecha (hueso RightHand) los ejes son Y hacia los dedos,
-    /// X hacia el dorso (la palma mira a -X) y -Z hacia el pulgar; el arma lleva el cañón a +Z y la corredera a +Y, así que se gira -90° en X
-    /// (cañón por los dedos, corredera hacia el pulgar). Valores medidos con capturas de cerca (docs/capturas/s1-*.png).
+    /// S1 (T-650): agarre de cada arma en la mano del modelo Humanoid. T-736: el jugador es PJ01 (rig de Tripo de 78 huesos, mano derecha = R_Hand); su
+    /// agarre es el caso A de agarre.txt de Tony (PJ01 a 1.80 m con el Scale Factor del importador: R_Hand con lossyScale 1): palma en la empuñadura, índice en el
+    /// gatillo, cañón al frente y corredera arriba. Las armas largas llevan la empuñadura (la palma) en su origen igual que la pistola, así que toman el mismo agarre.
     /// </summary>
     public static class AgarresArmas
     {
         /// <summary>Nombre del punto de la mano izquierda (hijo del arma).</summary>
         public const string NombreAgarreIzquierdo = "AgarreIzq";
 
-        private static readonly Vector3 GiroEnMano = new Vector3(-90f, 0f, 0f);
+        /// <summary>Posición (m) y giro (Euler °) del arma en R_Hand de PJ01: caso A de agarre.txt (Quaternion -0.05021, 0.72950, 0.66647, 0.14534).</summary>
+        public static readonly Vector3 PosicionPJ01 = new Vector3(0.0129f, 0.1181f, 0.0080f);
+        public static readonly Vector3 GiroPJ01 = new Vector3(-80.74f, 115.55f, 48.50f);
+        /// <summary>Alto de PJ01 en R_Hand si el modelo se importara a escala 1 y se agrandara en su objeto (caso B de agarre.txt); solo por referencia.</summary>
+        public const float EscalaCasoB = 0.5444f;
+
+        private static readonly Vector3 GiroEnMano = GiroPJ01;
         // T-679: los modelos W02-W04 llevan la empuñadura (la palma) en su origen, igual que la pistola W01.
-        private static readonly Vector3 PosicionArmaLarga = new Vector3(-0.025f, 0.06f, -0.035f);
+        private static readonly Vector3 PosicionArmaLarga = PosicionPJ01;
         private static readonly Vector3 GiroManoIzquierdaLarga = new Vector3(316f, 88f, 179f);
 
-        /// <summary>El agarre de un arma por su nombre en el socket (Pistola, Fusil, Escopeta, Sniper); false si no se conoce.</summary>
+        /// <summary>Nombre del hueso de la mano derecha de PJ01 (el jugador).</summary>
+        public const string ManoDerechaPJ01 = "R_Hand";
+
+        // Agarre de los modelos de Tripo de 65 huesos mixamorig (man, woman...): Y hacia los dedos, X hacia el dorso; el arma se gira -90 en X. Solo para cuando
+        // el jugador cambia a uno de esos modelos (ModeloSegunPerfil); PJ01 usa los valores de agarre.txt.
+        private static readonly Vector3 GiroEnManoMixamo = new Vector3(-90f, 0f, 0f);
+        private static readonly Vector3 PosicionEnManoMixamo = new Vector3(-0.025f, 0.06f, -0.035f);
+
+        /// <summary>El agarre de un arma para la mano de un modelo: la de PJ01 (R_Hand) usa agarre.txt de Tony; cualquier otra, el agarre de los modelos mixamorig.</summary>
+        public static bool TryObtener(string arma, string nombreMano, out AgarreArma agarre)
+        {
+            bool tiene = TryObtener(arma, out agarre);
+            if (tiene && nombreMano != ManoDerechaPJ01)
+            {
+                agarre = new AgarreArma(PosicionEnManoMixamo, GiroEnManoMixamo, agarre.PosicionIzquierda, agarre.RotacionIzquierda);
+            }
+            return tiene;
+        }
+
+        /// <summary>El agarre de un arma por su nombre en el socket (Pistola, Fusil, Escopeta, Sniper) para PJ01; false si no se conoce.</summary>
         public static bool TryObtener(string arma, out AgarreArma agarre)
         {
             switch (arma)
             {
                 case "Pistola":
-                    agarre = new AgarreArma(new Vector3(-0.025f, 0.06f, -0.035f), GiroEnMano, new Vector3(-0.12f, -0.06f, -0.08f), new Vector3(9f, 84f, 96f));
+                    agarre = new AgarreArma(PosicionPJ01, GiroPJ01, new Vector3(-0.12f, -0.06f, -0.08f), new Vector3(9f, 84f, 96f));
                     return true;
                 case "Fusil":
                     agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.36f), GiroManoIzquierdaLarga);

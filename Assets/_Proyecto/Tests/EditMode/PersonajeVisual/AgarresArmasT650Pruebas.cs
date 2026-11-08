@@ -15,12 +15,24 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Sniper")]
         public void Agarre_ConocidoParaCadaArma_ConElCanonPorLosDedos(string arma)
         {
-            Assert.IsTrue(AgarresArmas.TryObtener(arma, out AgarreArma a));
-            // Con -90° en X el +Z del arma (cañón) cae en el +Y de la mano (los dedos) y la corredera (+Y) en -Z (hacia el pulgar).
+            Assert.IsTrue(AgarresArmas.TryObtener(arma, "RightHand", out AgarreArma a));
+            // Modelos mixamorig: con -90° en X el +Z del arma (cañón) cae en el +Y de la mano (los dedos) y la corredera (+Y) en -Z (hacia el pulgar).
             Quaternion r = Quaternion.Euler(a.Rotacion);
             Assert.AreEqual(1f, Vector3.Dot(r * Vector3.forward, Vector3.up), 0.001f, "cañón = dedos");
             Assert.AreEqual(1f, Vector3.Dot(r * Vector3.up, Vector3.back), 0.001f, "corredera = lado del pulgar");
             Assert.Less(a.Posicion.magnitude, 0.2f, "El arma queda cerca de la palma (m)");
+        }
+
+        [TestCase("Pistola")]
+        [TestCase("Fusil")]
+        [TestCase("Escopeta")]
+        [TestCase("Sniper")]
+        public void Agarre_PJ01_EsElCasoADeAgarreTxt_ParaCadaArma(string arma)
+        {
+            Assert.IsTrue(AgarresArmas.TryObtener(arma, AgarresArmas.ManoDerechaPJ01, out AgarreArma a));
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(0.0129f, 0.1181f, 0.0080f), a.Posicion), 0.0001f);
+            Quaternion tony = new Quaternion(-0.05021f, 0.72950f, 0.66647f, 0.14534f);
+            Assert.Less(Quaternion.Angle(tony, Quaternion.Euler(a.Rotacion)), 0.3f, "El giro es el cuaternión de Tony");
         }
 
         [Test]
