@@ -242,7 +242,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
-        public void LosOtrosCarros_SiguenConSuModeloDeUnaMalla([Values("V02", "V03", "V04", "V06", "V08", "V09", "V10")] string codigo)
+        public void LosOtrosCarros_SiguenConSuModeloDeUnaMalla([Values("V02", "V03", "V04", "V06", "V09", "V10")] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
             Assert.IsNull(raiz.GetComponent<PuertasCarro>(), codigo + " no lleva puertas por piezas");

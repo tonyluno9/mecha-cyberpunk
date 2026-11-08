@@ -313,7 +313,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
         }
 
         // URP Lit con la textura de color y la normal de la pieza (junto al .fbx: <nombre>_basecolor.jpg y <nombre>_normal.jpg). Se crea una vez.
-        private static Material MaterialDe(string rutaSinExtension)
+        public static Material MaterialDe(string rutaSinExtension)
         {
             string ruta = rutaSinExtension + ".mat";
             Material material = AssetDatabase.LoadAssetAtPath<Material>(ruta);

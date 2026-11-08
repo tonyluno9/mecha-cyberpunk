@@ -172,6 +172,8 @@ namespace MechaCyberpunk.Vehiculos.Editor
             {
                 // T-592: las motos llevan su config, la inclinación en curvas y la malla sin caballete.
                 CreadorMotosT592.Preparar(codigo);
+                // T-743: las motos llevan llantas RU02 que giran y doblan.
+                CreadorMotosPiezasT743.ArmarPrefab(codigo);
             }
             return string.Format("{0}\tlargo {1:F2}\tancho {2:F2}\talto {3:F2}", codigo, L, W, H);
         }

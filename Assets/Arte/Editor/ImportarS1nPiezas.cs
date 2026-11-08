@@ -41,6 +41,9 @@ namespace MechaCyberpunk.Arte.Editor
             new Zip("modelos3d/piezas/V01BCARROZA.zip", "V01b", "V01b_Carroceria"),
             new Zip("modelos3d/piezas/V05CARROZA.zip", "V05", "V05_Carroceria"),
             new Zip("modelos3d/piezas/RU01COCHE.zip", "RU01", "RU01"),
+            // T-743: la llanta única de las motos y el cuerpo de la moto C19 (sin ruedas).
+            new Zip("modelos3d/piezas/RU02MOTO.zip", "RU02", "RU02"),
+            new Zip("modelos3d/piezas/C19CUERPO.zip", "C19", "C19_Cuerpo"),
         };
 
         /// <summary>Puertas de Blender: archivo de origen y nombre en Assets (carro, lado).</summary>
