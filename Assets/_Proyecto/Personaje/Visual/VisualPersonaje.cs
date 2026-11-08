@@ -160,14 +160,55 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>
         /// T-733: la pistola solo está en la mano mientras se apunta (o justo después de disparar o recargar): es cuando el Animator
-        /// juega Pistola_Sacar y no Pistola_Guardar. Lo lee ArmasAPie para mostrar u ocultar la pistola del jugador.
+        /// juega Pistola_Sacar y no Pistola_Guardar. Es lo que se quiere; <see cref="ArmaEnMano"/> es lo que ya se ve.
         /// </summary>
         public bool ArmaLevantada => TipoArmaAnimador != TipoArmaVisual.Ninguna;
+
+        /// <summary>
+        /// T-734: el arma ya está en la mano. La prende el evento de Pistola_Sacar (0.30 s) o un disparo o recarga al instante, y la apaga el evento de
+        /// Pistola_Guardar (0.53 s). Lo lee ArmasAPie para mostrar u ocultar la pistola del jugador.
+        /// </summary>
+        public bool ArmaEnMano { get; private set; }
+
+        /// <summary>Avisa cuando cambia <see cref="ArmaEnMano"/>.</summary>
+        public event Action<bool> CambioArmaEnMano;
+
+        /// <summary>La usa <see cref="ReceptorEventosArma"/>; también para pruebas.</summary>
+        public void PonerArmaEnMano(bool enMano)
+        {
+            if (ArmaEnMano == enMano)
+            {
+                return;
+            }
+            ArmaEnMano = enMano;
+            CambioArmaEnMano?.Invoke(enMano);
+        }
+
+        // Red de seguridad: si un evento no llegó (el estado se cortó, la capa quedó sin peso, se cambió el modelo) el arma sigue lo que juega el torso.
+        private void CorregirArmaEnMano()
+        {
+            int capa = IndiceCapaArriba();
+            if (capa < 0 || animador.IsInTransition(capa))
+            {
+                return;
+            }
+            AnimatorStateInfo estado = animador.GetCurrentAnimatorStateInfo(capa);
+            if (ArmaEnMano && !ArmaLevantada && estado.shortNameHash == HashVacio)
+            {
+                PonerArmaEnMano(false);
+            }
+            else if (!ArmaEnMano && ArmaLevantada && estado.shortNameHash != HashVacio && !estado.IsName("PistolaSacar") && !estado.IsName("PistolaGuardar"))
+            {
+                PonerArmaEnMano(true);
+            }
+        }
 
         private void LevantarArma()
         {
             armaLevantadaHasta = Time.time + SegundosArmaTrasAccion;
             Aplicar();
+            // Disparar o recargar al instante: la pistola está en la mano ya, sin esperar el evento de Pistola_Sacar.
+            PonerArmaEnMano(true);
         }
 
         public bool Cubierto
@@ -463,6 +504,10 @@ namespace MechaCyberpunk.Personaje.Visual
                 enabled = false;
                 return;
             }
+            if (animador.GetComponent<ReceptorEventosArma>() == null)
+            {
+                animador.gameObject.AddComponent<ReceptorEventosArma>();
+            }
             Transform padre = transform.parent != null ? transform.parent : transform;
             controlador = padre.GetComponentInParent<CharacterController>();
             cuerpo = padre.GetComponentInParent<Rigidbody>();
@@ -482,6 +527,7 @@ namespace MechaCyberpunk.Personaje.Visual
                 LeerEstadoDelPadre(Time.deltaTime);
             }
             Aplicar();
+            CorregirArmaEnMano();
             if (congelado)
             {
                 animador.speed = 0f;

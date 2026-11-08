@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Tests.Personaje
             {
                 Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola));
             }
-            yield return Esperar(0.4f);
+            yield return Esperar(0.8f);
         }
 
         private static string Estado(Animator a, int capa)
@@ -46,6 +46,9 @@ namespace MechaCyberpunk.Tests.Personaje
             }
             return "?";
         }
+
+        // Altura de la cabeza sobre los pies del jugador (no sobre el mundo: el cuerpo puede estar todavia posandose).
+        private float AlturaCabeza() => anim.GetBoneTransform(HumanBodyBones.Head).position.y - jugador.transform.position.y;
 
         private GameObject Pistola() => visual.GetComponentInChildren<ApuntadoIK>(true).SocketArma.Find("Pistola").gameObject;
 
@@ -95,6 +98,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(raton.rightButton);
             yield return HastaEstado(1, "PistolaSacar", 0.5f);
             Assert.AreEqual("PistolaSacar", Estado(anim, 1), "Entrar a apuntar es Pistola_Sacar");
+            yield return Esperar(0.45f); // T-734: aparece con el evento de Pistola_Sacar (0.30 s)
             Assert.IsTrue(Pistola().activeInHierarchy, "Al apuntar se ve");
             Foto("sacar");
             yield return Esperar(1.3f);
@@ -104,6 +108,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(raton.rightButton);
             yield return HastaEstado(1, "PistolaGuardar", 0.5f);
             Assert.AreEqual("PistolaGuardar", Estado(anim, 1), "Dejar de apuntar es Pistola_Guardar");
+            yield return Esperar(0.7f); // T-734: desaparece con el evento de Pistola_Guardar (0.53 s)
             Assert.IsFalse(Pistola().activeInHierarchy, "Al dejar de apuntar no se ve");
             Foto("guardar");
             yield return Esperar(1.2f);
@@ -175,13 +180,13 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Agachado_AgacharseQuietoCaminarEnCuatroDireccionesYPararse()
         {
             yield return Preparar(false);
-            float cabezaDePie = anim.GetBoneTransform(HumanBodyBones.Head).position.y;
+            float cabezaDePie = AlturaCabeza();
             yield return Pulsar(teclado.leftCtrlKey);
             yield return HastaEstado(0, "Agacharse", 0.4f);
             Assert.AreEqual("Agacharse", Estado(anim, 0), "Primero Loco_Agacharse");
             yield return Esperar(1.3f);
             Assert.AreEqual("AgachadoQuieto", Estado(anim, 0), "Despues Loco_AgachadoIdle");
-            Assert.Less(anim.GetBoneTransform(HumanBodyBones.Head).position.y, cabezaDePie - 0.12f, "La cabeza baja");
+            Assert.Less(AlturaCabeza(), cabezaDePie - 0.12f, "La cabeza baja");
             Assert.AreEqual(0f, visual.PesoCapaArriba, 0.05f, "Sin pose de arma agachado");
             Foto("agachado-quieto");
 
@@ -216,7 +221,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual("Pararse", Estado(anim, 0), "Para levantarse Loco_Pararse");
             yield return Esperar(1.3f);
             Assert.AreEqual("Idle", Estado(anim, 0));
-            Assert.AreEqual(cabezaDePie, anim.GetBoneTransform(HumanBodyBones.Head).position.y, 0.12f, "Vuelve a su altura");
+            Assert.AreEqual(cabezaDePie, AlturaCabeza(), 0.12f, "Vuelve a su altura");
         }
 
         [UnityTest]

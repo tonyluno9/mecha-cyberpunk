@@ -535,11 +535,14 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["PistolaAgachado"], e["PistolaIdle"], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, false));
             Unir(e["PistolaAgachado"], e["PistolaGuardar"], false, 0f, MezclaCorta, Distinto(ReglasVisual.TipoArma, pistola));
             Unir(e["PistolaGuardar"], e["Vacio"], true, SalidaUnaVez, Mezcla);
+            // T-734: si se vuelve a apuntar mientras se guarda, se saca de nuevo sin esperar a que termine Guardar.
+            Unir(e["PistolaGuardar"], e["PistolaSacar"], false, 0f, MezclaCorta, Entero(ReglasVisual.TipoArma, pistola));
             Unir(e["Vacio"], e["LargaIdle"], false, 0f, Mezcla, Entero(ReglasVisual.TipoArma, larga));
             foreach ((string idle, string apuntar, int arma) in new[] { ("PistolaIdle", "PistolaApuntar", pistola), ("LargaIdle", "LargaApuntar", larga) })
             {
                 Unir(e[idle], e[apuntar], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, true));
-                Unir(e[apuntar], e[idle], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, false));
+                // T-734: solo pasa a Idle si el arma sigue levantada (disparó hace poco); si se guarda, va directo a Pistola_Guardar y su evento llega a los 0.53 s.
+                Unir(e[apuntar], e[idle], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, false), Entero(ReglasVisual.TipoArma, arma));
                 // La pistola pasa por Pistola_Guardar; las armas largas se sueltan directo.
                 string guardar = arma == pistola ? "PistolaGuardar" : "Vacio";
                 Unir(e[idle], e[guardar], false, 0f, arma == pistola ? MezclaCorta : Mezcla, Distinto(ReglasVisual.TipoArma, arma));
