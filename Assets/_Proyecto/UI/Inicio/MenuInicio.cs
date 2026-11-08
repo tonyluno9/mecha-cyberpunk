@@ -185,6 +185,13 @@ namespace MechaCyberpunk.UI.Inicio
             ArmarMarco(c);
             ArmarPanel(c);
             fondoCalles = FondoCallesInicio.Crear(c);
+            fondoCalles.CalleRealLista += () =>
+            {
+                if (fondo != null)
+                {
+                    fondo.gameObject.SetActive(false); // T-898: la ciudad real sustituye a la avenida generada
+                }
+            };
 
             logo = LogoInicio.Crear(c, NombreJuego.Nombre, 210, new Vector2(MargenIzquierdo - 6f, -100f));
             logo.AsignarSprite(Resources.Load<Sprite>(RutaLogo));
