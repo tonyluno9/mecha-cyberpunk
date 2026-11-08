@@ -66,6 +66,16 @@ namespace MechaCyberpunk.Personaje.Visual
 
         public const string CapaBase = "Base";
         public const string CapaArriba = "Arriba";
+        /// <summary>
+        /// T-735: capa ADITIVA con la máscara del torso donde suenan Pistola_Dano_Frente, Espalda y Fuerte: el torso se estremece encima de lo que
+        /// ya juegue (apuntar, disparar, caminar) sin quitarle la pose. Los tres clips empiezan y terminan en Pistola_Apuntar, que es su pose de referencia.
+        /// </summary>
+        public const string CapaDano = "Dano";
+        /// <summary>
+        /// T-735: un golpe de esta fracción de la vida máxima (o más) se muestra como daño fuerte (Pistola_Dano_Fuerte); menos, de frente o de espalda
+        /// según de dónde viene. Es el umbral de <c>AnimacionJugador</c>.
+        /// </summary>
+        public const float FraccionDanoFuerte = 0.25f;
         /// <summary>T-733: dirección local con la que se apunta caminando (el árbol 2D de la capa de arriba). Es VelX/VelZ de quien calcula la dirección y 0 en quien no.</summary>
         public const string ApuntarX = "ApuntarX";
         public const string ApuntarZ = "ApuntarZ";
@@ -150,7 +160,6 @@ namespace MechaCyberpunk.Personaje.Visual
                 case "GirarDer": case "GirarIzq": return 1.5f;
                 case "CoberturaDisparo1": case "CoberturaDisparo2": return 1.5f;
                 case "LevantarseBocaArriba": case "LevantarseBocaAbajo": return 2.5f;
-                case "DanoFrente": case "DanoEspalda": case "DanoFuerte": return 2.6f;
                 default: return 1f;
             }
         }
@@ -164,10 +173,13 @@ namespace MechaCyberpunk.Personaje.Visual
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
         };
 
+        /// <summary>Estados de la capa aditiva de daño (T-735).</summary>
+        public static readonly string[] EstadosDano = { "Vacio", "DanoFrente", "DanoEspalda", "DanoFuerte" };
+
         /// <summary>Estados de la capa de arriba (torso).</summary>
         public static readonly string[] EstadosArriba =
         {
-            "Vacio", "GolpeIzq", "GolpeDer", "GolpeFuerte", "DanoFrente", "DanoEspalda", "DanoFuerte",
+            "Vacio", "GolpeIzq", "GolpeDer", "GolpeFuerte",
             "PistolaIdle", "PistolaSacar", "PistolaGuardar", "PistolaApuntar", "PistolaAgachado", "PistolaDisparo", "PistolaRecargar", "PistolaRecargarCaminar",
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };

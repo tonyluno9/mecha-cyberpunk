@@ -21,7 +21,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             AnimatorController c = Base();
             Assert.IsNotNull(c);
-            Assert.AreEqual(2, c.layers.Length, "T-733: sin capa Brazos ni Piernas: el agachado son clips de Tony");
+            Assert.AreEqual(3, c.layers.Length, "T-735: Base, Arriba y la capa aditiva de Dano; sin Brazos ni Piernas");
+            Assert.AreEqual(ReglasAnimacion.CapaDano, c.layers[2].name);
+            Assert.AreEqual(AnimatorLayerBlendingMode.Additive, c.layers[2].blendingMode);
+            Assert.AreEqual(1f, c.layers[2].defaultWeight, 0.001f);
+            Assert.AreEqual(c.layers[1].avatarMask, c.layers[2].avatarMask, "Misma máscara de torso");
             Assert.IsTrue(c.layers[1].iKPass, "IK Pass también en la capa de arriba (mano izquierda al arma)");
             Assert.AreEqual(ReglasAnimacion.CapaBase, c.layers[0].name);
             Assert.AreEqual(ReglasAnimacion.CapaArriba, c.layers[1].name);
@@ -44,7 +48,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             string[] arribaE = Estados(c.layers[1].stateMachine);
             foreach (string e in ReglasAnimacion.EstadosArriba) { CollectionAssert.Contains(arribaE, e); }
             Assert.AreEqual(ReglasAnimacion.EstadosArriba.Length, arribaE.Length);
-            foreach (ChildAnimatorState s in c.layers[0].stateMachine.states.Concat(c.layers[1].stateMachine.states))
+            CollectionAssert.AreEquivalent(ReglasAnimacion.EstadosDano, Estados(c.layers[2].stateMachine));
+            foreach (ChildAnimatorState s in c.layers[0].stateMachine.states.Concat(c.layers[1].stateMachine.states).Concat(c.layers[2].stateMachine.states))
             {
                 if (s.state.name != "Vacio")
                 {
@@ -79,7 +84,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             {
                 var transiciones = new List<AnimatorStateTransition>(capa.stateMachine.anyStateTransitions);
                 foreach (ChildAnimatorState s in capa.stateMachine.states) { transiciones.AddRange(s.state.transitions); }
-                Assert.Greater(transiciones.Count, 10);
+                Assert.Greater(transiciones.Count, capa.name == ReglasAnimacion.CapaDano ? 5 : 10);
                 foreach (AnimatorStateTransition t in transiciones)
                 {
                     foreach (AnimatorCondition cond in t.conditions)

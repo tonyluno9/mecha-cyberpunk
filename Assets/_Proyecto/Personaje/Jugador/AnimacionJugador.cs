@@ -26,8 +26,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         // Un impacto cuenta como del jugador si cae a esta distancia de su centro (m); el evento no dice a quién le pegaron.
         private const float DistanciaImpacto = 2.2f;
         private const float AlturaCentro = 1f;
-        // Un golpe de esta fracción de la vida máxima o más se muestra como daño fuerte.
-        private const float FraccionDanoFuerte = 0.25f;
+        // Un golpe de esta fracción de la vida máxima o más se muestra como daño fuerte (T-735: ReglasAnimacion.FraccionDanoFuerte).
+        private const float FraccionDanoFuerte = ReglasAnimacion.FraccionDanoFuerte;
 
         [SerializeField] private Animator animador;
         [Tooltip("Segundos que el jugador sigue tumbado después de despertar, antes de levantarse (s).")]

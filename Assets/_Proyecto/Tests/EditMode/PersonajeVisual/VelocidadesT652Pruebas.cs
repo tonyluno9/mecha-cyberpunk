@@ -24,7 +24,6 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase(0, "SaltoInicio")]
         [TestCase(0, "SaltoAterrizaje")]
         [TestCase(0, "LevantarseBocaArriba")]
-        [TestCase(1, "DanoFrente")]
         public void Estado_ConRapidezEnLaTabla_ElControladorLaTiene(int capa, string estado)
         {
             Assert.Greater(ReglasAnimacion.VelocidadEstado(estado), 1f, estado);

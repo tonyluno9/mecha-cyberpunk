@@ -64,6 +64,12 @@ namespace MechaCyberpunk.Arte.Editor
             // La altura sí va en la pose: sin eso las muertes y los levantarse no bajan el cuerpo al piso.
             clip.lockRootHeightY = true;
             clip.events = EventosDe(nombre, clip.firstFrame, clip.lastFrame);
+            // T-735: Pistola_Dano_* se usan en una capa aditiva; empiezan en Pistola_Apuntar, que es su pose de referencia (su primer cuadro).
+            if (nombre.StartsWith("Pistola_Dano_"))
+            {
+                clip.hasAdditiveReferencePose = true;
+                clip.additiveReferencePoseFrame = clip.firstFrame;
+            }
             importer.clipAnimations = new[] { clip };
             return true;
         }
@@ -98,6 +104,18 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (string nombre in new[] { "Pistola_Sacar", "Pistola_Guardar" })
             {
                 string ruta = Carpeta + "Pistola/" + nombre + ".fbx";
+                var importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
+                if (importer != null && AjustarClips(importer, ruta)) importer.SaveAndReimport();
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>T-735: marca Pistola_Dano_Frente, Espalda y Fuerte como aditivos en su .meta. Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ImportadorMixamo.AplicarAditivoDano</summary>
+        public static void AplicarAditivoDano()
+        {
+            foreach (string nombre in new[] { "Pistola_Dano_Frente", "Pistola_Dano_Espalda", "Pistola_Dano_Fuerte" })
+            {
+                string ruta = Carpeta + "Dano/" + nombre + ".fbx";
                 var importer = AssetImporter.GetAtPath(ruta) as ModelImporter;
                 if (importer != null && AjustarClips(importer, ruta)) importer.SaveAndReimport();
             }

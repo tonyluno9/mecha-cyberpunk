@@ -58,6 +58,8 @@ namespace MechaCyberpunk.Tests
 
         private bool Arriba(string nombre) => EnEstado(1, nombre);
 
+        private bool Dano(string nombre) => EnEstado(2, nombre);
+
         private IEnumerator Hasta(System.Func<bool> condicion, string que, float limite = 3f)
         {
             float fin = Time.time + limite;
@@ -72,7 +74,7 @@ namespace MechaCyberpunk.Tests
         public IEnumerator Quieto_EmpiezaEnIdleYTrae3CapasConLaDeArribaVacia()
         {
             yield return new WaitForSeconds(0.3f);
-            Assert.AreEqual(2, animador.layerCount, "Base y Arriba (T-733: sin capa Brazos)");
+            Assert.AreEqual(3, animador.layerCount, "Base, Arriba y Dano (T-735)");
             Assert.IsTrue(Base("Idle"));
             Assert.IsTrue(Arriba("Vacio"));
             Assert.AreEqual(1f, visual.PesoCapaArriba, 0.01f);
@@ -211,13 +213,13 @@ namespace MechaCyberpunk.Tests
         {
             yield return new WaitForSeconds(0.2f);
             visual.Herir(-visual.transform.forward);
-            yield return Hasta(() => Arriba("DanoFrente"), "DanoFrente");
-            yield return Hasta(() => Arriba("Vacio"), "Vacio");
+            yield return Hasta(() => Dano("DanoFrente"), "DanoFrente");
+            yield return Hasta(() => Dano("Vacio"), "Vacio");
             visual.Herir(visual.transform.forward);
-            yield return Hasta(() => Arriba("DanoEspalda"), "DanoEspalda");
-            yield return Hasta(() => Arriba("Vacio"), "Vacio");
+            yield return Hasta(() => Dano("DanoEspalda"), "DanoEspalda");
+            yield return Hasta(() => Dano("Vacio"), "Vacio");
             visual.Herir(visual.transform.forward, true);
-            yield return Hasta(() => Arriba("DanoFuerte"), "DanoFuerte");
+            yield return Hasta(() => Dano("DanoFuerte"), "DanoFuerte");
         }
 
         [UnityTest]
