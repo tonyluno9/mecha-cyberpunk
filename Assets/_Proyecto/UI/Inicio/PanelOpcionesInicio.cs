@@ -1,6 +1,7 @@
 using System;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion.Opciones;
+using MechaCyberpunk.UI.Hud;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -24,10 +25,8 @@ namespace MechaCyberpunk.UI.Inicio
         public const string TextoTitulo = "OPCIONES";
         public const string TextoVolver = "VOLVER";
         public const string TextoAyuda = "↑ ↓ ELEGIR  ·  ← → CAMBIAR  ·  Q E PESTAÑA  ·  ESC VOLVER";
-        public const string TextoControles =
-            "MOVER  W A S D        CORRER  SHIFT        SALTAR  ESPACIO\n"
-            + "INTERACTUAR  E        APUNTAR  CLIC DERECHO        DISPARAR  CLIC IZQUIERDO\n"
-            + "RECARGAR  R        ARMAS  1 A 5 O RUEDA        MAPA  M        TELÉFONO  T        PAUSA  ESC";
+        /// <summary>T-726: las filas de controles con las teclas reales de las acciones del Input System (no texto fijo).</summary>
+        public static string TextoControles => ReglaControlesInicio.Texto(TeclaReal);
         public static readonly string[] TextosPestanas = { "GRÁFICOS", "AUDIO", "CONTROLES" };
         public static readonly string[] TextosVolumen = { "VOLUMEN GENERAL", "EFECTOS", "VOCES", "AMBIENTE", "MÚSICA", "INTERFAZ" };
         public static readonly string[] TextosCalidad = { "BAJA", "MEDIA", "ALTA" };
@@ -55,12 +54,16 @@ namespace MechaCyberpunk.UI.Inicio
         [SerializeField] private FilaOpcion tutorial;
         [SerializeField] private BotonInicio volver;
 
+        [SerializeField] private Text controles;
+
         private ServicioOpciones servicio;
         private PestanaOpciones actual;
         private bool refrescando;
 
         public PestanaOpciones Pestana => actual;
         public BotonInicio Volver => volver;
+        /// <summary>El texto de Controles, con las teclas reales.</summary>
+        public Text Controles => controles;
         public BotonInicio[] Pestanas => pestanas;
         public FilaOpcion Calidad => calidad;
         public FilaOpcion Resolucion => resolucion;
@@ -76,6 +79,23 @@ namespace MechaCyberpunk.UI.Inicio
 
         /// <summary>Se dispara al pulsar VOLVER (el menú decide qué mostrar).</summary>
         public event Action PidioVolver;
+
+        // El nombre visible de la tecla de una acción: de la acción real del jugador (o del asset real si aún no hay jugador); el mapa y la pausa
+        // son teclas del teclado que el juego lee directo, y salen del dispositivo.
+        private static string TeclaReal(string accion)
+        {
+            switch (accion)
+            {
+                case ReglaControlesInicio.Mover:
+                    return TeclasHud.TextoMover(TeclasHud.Buscar(accion));
+                case ReglaControlesInicio.Mapa:
+                    return Keyboard.current != null ? TeclasHud.Nombre(Keyboard.current.mKey.displayName) : string.Empty;
+                case ReglaControlesInicio.Pausa:
+                    return Keyboard.current != null ? TeclasHud.Nombre(Keyboard.current.escapeKey.displayName) : string.Empty;
+                default:
+                    return TeclasHud.Texto(TeclasHud.Buscar(accion));
+            }
+        }
 
         public static PanelOpcionesInicio Crear(Transform padre)
         {
@@ -134,6 +154,7 @@ namespace MechaCyberpunk.UI.Inicio
             panel.apuntado = Fila(panel.contenidos[2], ref y, f => FilaOpcion.CrearSelector(f, "Apuntado", "APUNTADO ASISTIDO", TextosApuntado, (int)NivelApuntadoAsistido.Suave, true));
             panel.tutorial = Fila(panel.contenidos[2], ref y, f => FilaOpcion.CrearConmutador(f, "Tutorial", "AVISOS DE TUTORIAL", true));
             Text controles = UIInicio.Texto(panel.contenidos[2], "Controles", TextoControles, UIInicio.FuenteTexto, 27, UIInicio.TextoSuave, TextAnchor.UpperLeft);
+            panel.controles = controles;
             UIInicio.Punto(controles.rectTransform, new Vector2(0f, 1f), new Vector2(34f, y - 22f), new Vector2(AnchoFila - 40f, 130f));
             controles.lineSpacing = 1.35f;
             Image rayaControles = UIInicio.Imagen(panel.contenidos[2], "RayaControles", UIInicio.ConAlfa(UIInicio.Naranja, 0.6f), SpritesInicio.DegradadoH, true);

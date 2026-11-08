@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8ebcba51f8a441459cafbda5f3bce5f, type: 3}
+  m_Name: ControlesHud
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Hud.ControlesHud
+  aPie: {fileID: -944628639613478452, guid: c989656e714a4084491168fccd720455, type: 3}
+  interfaz: {fileID: -944628639613478452, guid: 436580cf9f2f4294a8ed3f86b16492f5, type: 3}

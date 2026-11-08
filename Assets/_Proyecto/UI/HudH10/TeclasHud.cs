@@ -28,6 +28,8 @@ namespace MechaCyberpunk.UI.Hud
                     return "Clic der.";
                 case "Space":
                     return "Espacio";
+                case "Escape":
+                    return "Esc";
                 case "Left Shift":
                 case "Shift":
                     return "Shift";
@@ -95,7 +97,10 @@ namespace MechaCyberpunk.UI.Hud
             return partes.Count > 0 ? string.Join(" ", partes) : respaldo;
         }
 
-        /// <summary>La acción <paramref name="nombre"/> del mapa "APie" que cargó algún objeto de la escena (los componentes del jugador la referencian), o null.</summary>
+        /// <summary>
+        /// La acción <paramref name="nombre"/> del mapa "APie" que cargó algún objeto de la escena (los componentes del jugador la referencian). Si aún no hay
+        /// jugador (el menú de inicio), la del asset real que guarda <see cref="ControlesHud"/> (T-726); null si no existe.
+        /// </summary>
         public static InputAction Buscar(string nombre)
         {
             InputActionReference[] todas = Resources.FindObjectsOfTypeAll<InputActionReference>();
@@ -107,7 +112,7 @@ namespace MechaCyberpunk.UI.Hud
                     return accion;
                 }
             }
-            return null;
+            return ControlesHud.Actual != null ? ControlesHud.Actual.AccionAPie(nombre) : null;
         }
     }
 }

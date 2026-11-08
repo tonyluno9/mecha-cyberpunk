@@ -55,6 +55,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private Coroutine cinematica;
         private float proximoObjetivo;
         private bool saltar;
+        private bool hudOculto;
 
         public FaseAsalto Fase => regla.Fase;
         public int DineroRobado => regla.DineroRobado;
@@ -248,8 +249,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private void LeerSalto()
         {
-            Keyboard teclado = Keyboard.current;
-            if (regla.PuedeSaltar && teclado != null && teclado.enterKey.wasPressedThisFrame)
+            if (regla.PuedeSaltar && MechaCyberpunk.UI.Hud.HudCinematica.SaltarPresionado)
             {
                 saltar = true;
                 // El salto hace el robo ya, para que lo que sigue sea igual.
@@ -495,7 +495,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             abajo.rectTransform.anchoredPosition = Vector2.zero;
             abajo.rectTransform.sizeDelta = new Vector2(0f, 1080f * AltoBarras);
             Text tecla = KitUI.CrearTexto(abajo.transform, "TeclaSaltar", RolTexto.Ayuda, TextAnchor.MiddleRight);
-            tecla.text = TeclaSaltar;
+            tecla.text = MechaCyberpunk.UI.Hud.HudCinematica.TextoSaltar();
+            // T-726: en la cinemática el HUD se oculta y solo queda este letrero.
+            MechaCyberpunk.UI.Hud.HudCinematica.Entrar();
+            hudOculto = true;
             tecla.color = e.Turquesa;
             tecla.rectTransform.offsetMax = new Vector2(-60f, 0f);
         }
@@ -539,6 +542,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private void QuitarCinematica()
         {
+            if (hudOculto)
+            {
+                hudOculto = false;
+                MechaCyberpunk.UI.Hud.HudCinematica.Salir();
+            }
             if (camaraCinematica != null)
             {
                 Destroy(camaraCinematica.gameObject);
