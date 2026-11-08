@@ -51,7 +51,7 @@ namespace MechaCyberpunk.Tests.Personaje
         // Alturas relativas al jugador de cada personaje que comparte escala con él (ColocarS2.Personajes): nadie enano ni gigante.
         private static readonly (string prefab, float relativa)[] Personajes =
         {
-            ("Visual_man", 1.00f), ("Visual_woman", 1.00f), ("Visual_Doctor", 1.10f), ("Visual_Inventor", 0.98f), ("Visual_Hacker", 1.00f),
+            ("Visual_man", 1.00f), ("Visual_woman", 1.00f), ("Visual_PJ01", 1.00f), ("Visual_Doctor", 1.10f), ("Visual_Inventor", 0.98f), ("Visual_Hacker", 1.00f),
             ("Visual_RobotHombre", 1.00f), ("Visual_SkullHombre", 1.00f), ("Visual_woman2", 0.97f), ("Visual_GuardiaNova", 1.25f),
         };
 
@@ -80,7 +80,7 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = jugador.GetComponentInChildren<VisualPersonaje>(true);
             MechaCyberpunk.Personaje.Movimiento.CubiertaYRodada cubierta = jugador.GetComponent<MechaCyberpunk.Personaje.Movimiento.CubiertaYRodada>();
             float escala = visual.Animador.transform.localScale.y;
-            Assert.Greater(escala, 1.1f, "El Modelo del jugador va escalado para medir 1.80 m");
+            Assert.Greater(escala, 0.9f, "El Modelo del jugador conserva su escala (PJ01 la trae del import, T-732)");
             cubierta.AlternarAgachado(); // sin agacharse no se rueda (T-673)
             Assert.IsTrue(cubierta.Rodar());
             yield return Esperar(cubierta.Datos.DuracionRodada + 0.3f);

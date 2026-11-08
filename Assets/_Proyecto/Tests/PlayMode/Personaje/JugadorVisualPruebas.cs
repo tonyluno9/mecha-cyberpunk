@@ -104,7 +104,7 @@ namespace MechaCyberpunk.Tests.Personaje
             // Sin ventana de juego el Animator se duerme fuera de cámara y los huesos no se mueven: se le pide que anime siempre.
             visual.Animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             visual.Caido = true;
-            yield return Esperar(2.5f);
+            yield return Esperar(4f);
             Assert.AreEqual(0f, visual.Tumbado, 0.01f, "KO con clip de muerte: no se tumba a mano");
             Transform cabeza = visual.Animador.GetBoneTransform(HumanBodyBones.Head);
             Assert.Less(cabeza.position.y, 1.0f, "La cabeza queda cerca del piso (m)");
@@ -127,11 +127,11 @@ namespace MechaCyberpunk.Tests.Personaje
             Registro<IPerfilJugador>.Agregar(perfil);
             modelo.Configurar(new[]
             {
-                UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_woman.prefab"),
+                UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_PJ01.prefab"),
                 UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_man.prefab"),
             });
             yield return null;
-            Assert.IsTrue(Visual().GetComponentInChildren<SkinnedMeshRenderer>().name.Contains("86ec4d7a"), "Empieza la mujer");
+            Assert.AreEqual("R_Hand", Visual().Animador.GetBoneTransform(HumanBodyBones.RightHand).name, "Empieza PJ01 (T-732)");
             int armasAntes = jugador.GetComponentsInChildren<Transform>(true).Length;
 
             perfil.Poner(new AparienciaJugador(1, 0, 0));
