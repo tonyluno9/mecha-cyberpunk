@@ -95,7 +95,9 @@ namespace MechaCyberpunk.Tests.UI
             // Sin cartel de lugar en el centro: ningún texto dibujado fuera de la cola repite el nombre de la ciudad.
             foreach (Text t in UnityEngine.Object.FindObjectsByType<Text>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
-                if (t.enabled && t.text.Contains("MEGALOPOLIS") && t.canvas.name != "CanvasAvisos")
+                // T-701: el HUD nuevo lleva el nombre de la zona chico y delgado arriba al centro (TituloZona de CanvasH10), que se desvanece solo; no es el cartel de lugar viejo.
+                bool tituloDelHudNuevo = t.name == "TituloZona" && t.canvas.name == "CanvasH10";
+                if (t.enabled && t.text.Contains("MEGALOPOLIS") && t.canvas.name != "CanvasAvisos" && !tituloDelHudNuevo)
                 {
                     Assert.Fail("cartel de lugar suelto fuera de la cola: " + t.name);
                 }

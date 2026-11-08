@@ -53,8 +53,25 @@ namespace MechaCyberpunk.Tests.Progresion
             base.TearDown();
         }
 
-        [Test]
-        public void MaquinaDePasos()
+        // T-727: la ciudad cargada con LoadSceneInPlayMode se quedaba viva para la siguiente prueba (otra clase, otro ensamblado) y dejaba dos HudAPie
+        // y un jugador de más. Cada prueba la descarga al terminar.
+        [UnityTearDown]
+        public IEnumerator DescargarCiudad()
+        {
+            Scene escena = SceneManager.GetActiveScene();
+            if (escena.name == "Ciudad_Prologo") // la escena de la prueba (con el ejecutor de pruebas) no se toca
+            {
+                foreach (GameObject raiz in escena.GetRootGameObjects())
+                {
+                    UnityEngine.Object.Destroy(raiz);
+                }
+            }
+            Registros.LimpiarTodos();
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator MaquinaDePasos()
         {
             MaquinaHistoriaPandillas m = new MaquinaHistoriaPandillas();
             Assert.AreEqual(PasoHistoria.Despierta, m.Paso);
@@ -90,6 +107,7 @@ namespace MechaCyberpunk.Tests.Progresion
             director.Cargar("{\"paso\":\"Mecha\"}");
             Assert.AreEqual(PasoHistoria.Despierta, director.Paso, "Un paso que ya no existe empieza en Despierta.");
             UnityEngine.Object.DestroyImmediate(objeto);
+            yield return null; // un UnityTearDown solo se aplica a pruebas de corrutina
         }
 
         private static IEnumerator EsperarHasta(Func<bool> condicion, string que, float segundos)

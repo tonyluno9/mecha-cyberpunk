@@ -61,6 +61,12 @@ namespace MechaCyberpunk.UI
         [SerializeField] private Color colorPeor = new Color(1f, 0.3f, 0.3f, 1f);
         [Tooltip("Fondo de toda la pantalla (tapa la ciudad).")]
         [SerializeField] private Color colorFondo = new Color(0.012f, 0.02f, 0.04f, 1f);
+        [Tooltip("T-887: el acento del menú, el turquesa de las líneas del HUD (H10).")]
+        [SerializeField] private Color colorAcento = new Color(0.36f, 0.93f, 0.9f, 1f);
+        [Tooltip("T-887: letra del texto, la del HUD H10 (Rajdhani Regular).")]
+        [SerializeField] private Font fuenteTexto;
+        [Tooltip("T-887: letra de títulos y números grandes (Rajdhani Medium).")]
+        [SerializeField] private Font fuenteTitulo;
 
         [Header("Textos")]
         [SerializeField] private string titulo = "BANCO DE TINO";
@@ -123,6 +129,16 @@ namespace MechaCyberpunk.UI
         public Color ColorMejora => colorMejora;
         public Color ColorPeor => colorPeor;
         public Color ColorFondo => colorFondo;
+        public Color ColorAcento => colorAcento;
+        public Font FuenteTexto => fuenteTexto;
+        public Font FuenteTitulo => fuenteTitulo;
+
+        /// <summary>T-887: pone las letras del HUD H10 (Rajdhani); las carga el editor.</summary>
+        public void PonerFuentes(Font texto, Font titulo)
+        {
+            fuenteTexto = texto;
+            fuenteTitulo = titulo;
+        }
         public string Titulo => titulo;
         public string Subtitulo => subtitulo;
         public string EncabezadoArmas => encabezadoArmas;

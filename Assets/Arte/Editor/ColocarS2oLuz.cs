@@ -28,7 +28,9 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---- Los números de la noche (se dejan públicos para afinarlos con el editor vivo).
         public static float Exposicion = 1.7f;
-        public static float ExposicionNeonAlto = 0f;
+        /// <summary>T-889: el volumen de Neón Alto suma esto a la exposición de la noche. Entre torres altas la calle quedaba con la mitad
+        /// del brillo que los demás barrios (16 contra 35-49 de promedio en las fotos de s2o-luz-zona); con 1.4 queda en 40.</summary>
+        public static float ExposicionNeonAlto = 1.4f;
         public static float IntensidadLuna = 0.32f;
         public static Color ColorLuna = new Color(0.5f, 0.62f, 1f);
         public static Color Ambiente = new Color(0.4f, 0.41f, 0.47f);
