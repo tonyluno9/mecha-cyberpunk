@@ -2,19 +2,25 @@ using UnityEngine;
 
 namespace MechaCyberpunk.Personaje
 {
-    /// <summary>Cámara de hombro del jugador a pie (T-400): posición normal y apuntando, FOV, inclinación y suavizado.</summary>
+    /// <summary>Cámara de hombro del jugador a pie (T-400, Cinemachine desde T-723): posición normal y apuntando, FOV, inclinación y suavizado.</summary>
     [CreateAssetMenu(menuName = "Mecha Cyberpunk/Config cámara de hombro", fileName = "ConfigCamaraHombro_Nuevo")]
     public class ConfigCamaraHombro : ScriptableObject
     {
         [Header("Normal")]
         [Tooltip("Desplazamiento a la derecha del hombro (m).")]
         [SerializeField] private float lateralNormal = 0.55f;
-        [Tooltip("Altura del punto de giro sobre los pies (m).")]
+        [Tooltip("Altura del punto de giro (el cuello, a donde mira la cámara) sobre los pies (m).")]
         [Min(0.1f)] [SerializeField] private float alturaNormal = 1.55f;
         [Tooltip("Distancia hacia atrás (m).")]
         [Min(0.1f)] [SerializeField] private float distanciaNormal = 3.2f;
         [Tooltip("Campo de visión (°).")]
         [Range(20f, 120f)] [SerializeField] private float fovNormal = 60f;
+
+        [Tooltip("T-723: cuánto sube la cámara por encima del punto de giro, sobre el hombro (m).")]
+        [Min(0f)] [SerializeField] private float brazoVertical = 0.3f;
+
+        [Tooltip("T-723: cuánto se acerca la cámara (fracción de la distancia) al mirar 30° hacia abajo o más; cerca, como CAM02_APieCerca.png.")]
+        [Range(0f, 0.6f)] [SerializeField] private float acercarMirandoAbajo = 0.4f;
 
         [Header("Apuntando")]
         [SerializeField] private float lateralApuntando = 0.7f;
@@ -49,6 +55,8 @@ namespace MechaCyberpunk.Personaje
         public float LateralNormal => lateralNormal;
         public float AlturaNormal => alturaNormal;
         public float DistanciaNormal => distanciaNormal;
+        public float BrazoVertical => brazoVertical;
+        public float AcercarMirandoAbajo => acercarMirandoAbajo;
         public float FovNormal => fovNormal;
         public float LateralApuntando => lateralApuntando;
         public float AlturaApuntando => alturaApuntando;

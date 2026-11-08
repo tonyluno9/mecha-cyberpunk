@@ -32,21 +32,20 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.5f);
             Vector3 p = jugador.GetComponentInChildren<CamaraHombro>().transform.position;
             Vector3 local = jugador.transform.InverseTransformPoint(p);
-            Assert.AreEqual(0f, local.x, 0.05f, "T-699: centrada detrás del jugador");
-            Assert.Greater(local.y, 2.5f, "T-699: alta");
-            Assert.Less(local.z, -6f, "Atrás del jugador (T-699: como H10)");
-            Assert.Greater(local.z, -7.2f);
+            Assert.AreEqual(0f, local.x, 0.05f, "T-723: centrada detrás del jugador");
+            Assert.That(local.y, Is.InRange(1.6f, 2.0f), "T-723: un poco arriba del hombro");
+            Assert.That(local.z, Is.InRange(-3.8f, -3.0f), "T-723: detrás del jugador (CAM01)");
         }
 
         [UnityTest]
         public IEnumerator Camara_BajoUnTecho_NoSubePorEncimaDelTecho()
         {
-            // T-699: la cámara va alta (3.4 m); en una casa con techo a 2.6 m no puede quedar fuera, arriba del techo.
+            // T-723: en una casa con techo a 2.6 m la cámara no puede quedar fuera, arriba del techo.
             Caja(new Vector3(0f, 2.8f, 0f), new Vector3(30f, 0.4f, 30f));
             yield return Calentar();
             yield return Esperar(0.5f);
             Vector3 p = jugador.GetComponentInChildren<CamaraHombro>().transform.position;
-            Assert.Less(p.y, 2.6f, "La cámara quedó por encima del techo: " + p);
+            Assert.Less(p.y, 2.4f, "La cámara quedó por encima del techo: " + p);
         }
     }
 }

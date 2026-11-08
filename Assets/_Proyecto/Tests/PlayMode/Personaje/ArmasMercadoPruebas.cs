@@ -325,8 +325,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Vector3 puntoTiro = suelo - Vector3.right * 40f;
             Vector3 derecha = Vector3.Cross(Vector3.up, Vector3.right);
             BlancoDeTiro objetivo = PonerBlanco(puntoTiro + Vector3.right * DistanciaBlanco + derecha * LateralApuntando);
-            // T-699: la cámara va a 3.4 m de altura mirando horizontal (como H10): el blanco se sube a la altura de la mira.
-            objetivo.transform.position += Vector3.up * 2.5f;
+            // T-723: la cámara va a 1.7 m de altura mirando horizontal: el blanco se sube a la altura de la mira.
+            objetivo.transform.position += Vector3.up * 0.8f;
             Physics.SyncTransforms();
             jugador.Colocar(Mirando(puntoTiro, puntoTiro + Vector3.right));
             yield return new WaitForSecondsRealtime(0.5f);
@@ -336,7 +336,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(5, armas.TamanoCargador, "SNIPER I: cargador de 5");
             Assert.AreEqual(5, armas.Balas);
             Assert.IsFalse(mira.Visible, "Sin clic derecho no hay mira");
-            Assert.AreEqual(65f, camara.fieldOfView, 1f, "FOV normal 65 (T-699)");
+            Assert.AreEqual(60f, camara.fieldOfView, 1f, "FOV normal 60 (T-723)");
 
             // Sin zoom, a 80 m casi todo falla (dispersión 8°, semilla fija).
             UnityEngine.Random.InitState(1234);
@@ -386,7 +386,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             // Soltar el clic derecho devuelve todo.
             Release(raton.rightButton);
-            yield return EsperarHasta(() => Mathf.Abs(camara.fieldOfView - 65f) <= 0.5f, "FOV 65", 2f);
+            yield return EsperarHasta(() => Mathf.Abs(camara.fieldOfView - 60f) <= 0.5f, "FOV 60", 2f);
             Assert.IsFalse(mira.Visible, "Al soltar se apaga la mira");
             Assert.AreEqual(1f, controlador.FactorSensibilidad, 0.01f);
 
@@ -408,7 +408,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(zoom.Activo, "Con el fusil no hay zoom del sniper");
             Press(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.5f);
-            Assert.AreEqual(45f, camara.fieldOfView, 1f, "Con el fusil, clic derecho apunta con zoom a FOV 45 (T-699)");
+            Assert.AreEqual(40f, camara.fieldOfView, 1f, "Con el fusil, clic derecho apunta con zoom a FOV 40 (T-723)");
             Assert.IsFalse(mira.Visible, "El fusil no usa la mira del sniper");
             Release(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.4f);

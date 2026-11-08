@@ -48,7 +48,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.leftShiftKey);
             yield return Esperar(0.9f);
             Assert.AreEqual("Correr", Estado(animador), "Al correr usa Correr");
-            Assert.Greater(animador.speed, 1f, "La animación se acelera para que los pies no patinen");
+            Assert.AreEqual(1f, animador.speed, 0.001f, "T-724: el clip de Tony se reproduce a su rapidez original");
             // Pies en el piso: el hueso del pie derecho a la altura del suelo del CharacterController (piso en y = 0).
             Transform pie = animador.GetBoneTransform(HumanBodyBones.RightFoot);
             Assert.IsNotNull(pie);
@@ -62,18 +62,14 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Caminar_SinPatinar_LaRapidezDeLaAnimacionSigueLaVelocidadReal()
+        public IEnumerator Caminar_LaAnimacionNoSeAceleraNiSeFrena_ElClipVaASuRapidezOriginal()
         {
             yield return Calentar();
             VisualPersonaje visual = Visual();
             Press(teclado.wKey);
             yield return Esperar(1.2f);
-            float real = controlador.Velocidad.magnitude;
-            Assert.Greater(real, 1f);
-            UnityEditor.SerializedProperty referencia = new UnityEditor.SerializedObject(visual).FindProperty(Estado(visual.Animador) == "Correr" ? "velocidadClipCorrer" : "velocidadClipCaminar");
-            Assert.Greater(referencia.floatValue, 0f);
-            float esperada = Mathf.Clamp(visual.Velocidad / (referencia.floatValue * visual.EscalaClips), 0.6f, 2.2f);
-            Assert.AreEqual(esperada, visual.Animador.speed, esperada * 0.15f, "rapidez = velocidad / velocidad del clip");
+            Assert.Greater(controlador.Velocidad.magnitude, 1f);
+            Assert.AreEqual(1f, visual.Animador.speed, 0.001f, "T-724: Loco_Caminar tal como viene, sin ajustar la rapidez a la velocidad real");
             Release(teclado.wKey);
         }
 
