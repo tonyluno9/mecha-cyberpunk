@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MechaCyberpunk.Vehiculos.Efectos;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Vehiculos.Datos;
 using UnityEngine;
@@ -14,12 +15,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
     /// </summary>
     public class DanioCarro : MonoBehaviour, IRecibeDanio, IObjetoInerte
     {
-        private const int LadoTextura = 32;
         private const float AlturaMotor = 0.9f;
         private const float AdelanteMotor = 1.4f;
         private const float FraccionAlturaMotorMoto = 0.4f;
-        private const int ParticulasExplosion = 60;
-        private const int ParticulasHumoExplosion = 30;
         private const float SegundosDestelloExplosion = 0.25f;
         private const float ImpulsoVerticalExplosion = 4f;
         // T-692: los choques que cuentan. Una rapidez imposible es un glitch de física (carro lanzado, penetración), no un choque real.
@@ -44,8 +42,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private ParticleSystem humo;
         private ParticleSystem fuego;
         private Light luz;
-        private Material material;
-        private Texture2D textura;
         private float proximoChoque;
         private float ignorarChoquesHasta;
         private float finArdiendo;
@@ -93,18 +89,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 return 0f;
             }
             return Mathf.Min(CalculoDanioCarro.DanioPorChoque(rapidez, umbral, danioPorMetro), vidaMaxima * FraccionMaximaPorChoque, danioMaximo);
-        }
-
-        private void OnDestroy()
-        {
-            if (material != null)
-            {
-                Destroy(material);
-            }
-            if (textura != null)
-            {
-                Destroy(textura);
-            }
         }
 
         /// <summary>
@@ -274,8 +258,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
             Sonidos.ReproducirEn("VEH_CHOQUE_FUERTE", centro);
             UltimaExplosion = ExplosionCarro.Crear(centro, config.RadioExplosion);
-            EmitirRafaga(fuego, ParticulasExplosion, 7f);
-            EmitirRafaga(humo, ParticulasHumoExplosion, 4f);
             DanarAlrededor(centro);
             SumarCalorSiEstaCerca(centro);
             if (cuerpo != null)
@@ -357,23 +339,6 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
-        private static void EmitirRafaga(ParticleSystem sistema, int cantidad, float velocidad)
-        {
-            if (sistema == null)
-            {
-                return;
-            }
-            for (int i = 0; i < cantidad; i++)
-            {
-                ParticleSystem.EmitParams parametros = new ParticleSystem.EmitParams
-                {
-                    position = sistema.transform.position + UnityEngine.Random.insideUnitSphere * 0.8f,
-                    velocity = (Vector3.up * 0.8f + UnityEngine.Random.insideUnitSphere) * velocidad * UnityEngine.Random.Range(0.3f, 1f)
-                };
-                sistema.Emit(parametros, 1);
-            }
-        }
-
         /// <summary>
         /// Dónde está el motor, en el espacio del vehículo (T-695): el carro lo lleva al frente (bajo el cofre); la moto, en el centro de la moto
         /// (a media altura del modelo, a media longitud), no en el aire delante de la rueda.
@@ -413,16 +378,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         private void CrearEfectos()
         {
-            Shader shader = Shader.Find("Sprites/Default");
-            if (shader == null)
-            {
-                return;
-            }
-            textura = CrearTextura();
-            material = new Material(shader) { mainTexture = textura, color = Color.white };
             Vector3 puntoMotor = PuntoMotor();
-            humo = CrearParticulas("HumoCarro", new Color(0.18f, 0.18f, 0.2f, 0.85f), 0.7f, 3f, 2.2f, -0.05f, puntoMotor);
-            fuego = CrearParticulas("FuegoCarro", new Color(1f, 0.5f, 0.1f, 0.95f), 0.45f, 0.8f, 1.6f, -0.2f, puntoMotor);
+            // T-745: el humo y el fuego del carro averiado son prefabs del Unity Particle Pack (EfectosExplosion); el estado maneja su emisión.
+            humo = EfectosExplosion.Humo(transform, puntoMotor, 0.8f);
+            fuego = EfectosExplosion.Fuego(transform, puntoMotor, 0.8f);
             GameObject objetoLuz = new GameObject("LuzFuegoCarro");
             objetoLuz.transform.SetParent(transform, false);
             objetoLuz.transform.localPosition = puntoMotor;
@@ -435,64 +394,5 @@ namespace MechaCyberpunk.Vehiculos.Carro
             luz.enabled = false;
         }
 
-        private ParticleSystem CrearParticulas(string nombre, Color color, float tamano, float vida, float velocidad, float gravedad, Vector3 posicionLocal)
-        {
-            GameObject objeto = new GameObject(nombre);
-            objeto.transform.SetParent(transform, false);
-            objeto.transform.localPosition = posicionLocal;
-            ParticleSystem sistema = objeto.AddComponent<ParticleSystem>();
-            sistema.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            ParticleSystem.MainModule main = sistema.main;
-            main.playOnAwake = false;
-            main.loop = true;
-            main.simulationSpace = ParticleSystemSimulationSpace.World;
-            main.startLifetime = vida;
-            main.startSize = tamano;
-            main.startSpeed = velocidad;
-            main.startColor = color;
-            main.gravityModifier = gravedad;
-            main.maxParticles = 200;
-            ParticleSystem.EmissionModule emision = sistema.emission;
-            emision.rateOverTime = 0f;
-            ParticleSystem.ShapeModule forma = sistema.shape;
-            forma.shapeType = ParticleSystemShapeType.Cone;
-            forma.angle = 18f;
-            forma.radius = 0.25f;
-            forma.rotation = new Vector3(-90f, 0f, 0f);
-            ParticleSystem.SizeOverLifetimeModule tamanoVida = sistema.sizeOverLifetime;
-            tamanoVida.enabled = true;
-            tamanoVida.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0f, 0.6f), new Keyframe(1f, 1.6f)));
-            ParticleSystem.ColorOverLifetimeModule colorVida = sistema.colorOverLifetime;
-            colorVida.enabled = true;
-            Gradient degradado = new Gradient();
-            degradado.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
-            colorVida.color = degradado;
-            ParticleSystemRenderer render = objeto.GetComponent<ParticleSystemRenderer>();
-            render.sharedMaterial = material;
-            render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            sistema.Play();
-            return sistema;
-        }
-
-        // Círculo suave blanco; el color sale de las partículas.
-        private static Texture2D CrearTextura()
-        {
-            Texture2D t = new Texture2D(LadoTextura, LadoTextura, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, name = "DanioCarro_Punto" };
-            float c = (LadoTextura - 1) * 0.5f;
-            Color32[] pixeles = new Color32[LadoTextura * LadoTextura];
-            for (int y = 0; y < LadoTextura; y++)
-            {
-                for (int x = 0; x < LadoTextura; x++)
-                {
-                    float d = Mathf.Sqrt((x - c) * (x - c) + (y - c) * (y - c)) / c;
-                    byte a = (byte)Mathf.RoundToInt(Mathf.Clamp01(1.4f - d * 1.4f) * 255f);
-                    pixeles[y * LadoTextura + x] = new Color32(255, 255, 255, a);
-                }
-            }
-            t.SetPixels32(pixeles);
-            t.Apply(false, true);
-            return t;
-        }
     }
 }

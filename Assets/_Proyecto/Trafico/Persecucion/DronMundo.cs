@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Vehiculos.Efectos;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
 using UnityEngine;
@@ -7,10 +8,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
 {
     /// <summary>
     /// Un dron de la policía (T-341): vuela sobre el jugador y se le acerca hasta la distancia de seguimiento, con su luz apuntando hacia abajo.
-    /// Sin colliders: no estorba ni empuja nada. T-710: dispara de verdad: suena el disparo, deja un trazo finísimo y cortísimo (como T-676), si falla y la bala
+    /// T-710: dispara de verdad: suena el disparo, deja un trazo de la bala (T-745: termina donde pega o se desvanece al máximo alcance), si falla y la bala
     /// pasa cerca del jugador suena el silbido de la bala rozando, y si acierta hace daño real por <see cref="IRecibeDanio"/>.
+    /// T-730: se puede derribar a balazos (tiene una esfera de impacto chica en el aire, donde no estorba): al quedarse sin vida deja de disparar, cae girando y explota
+    /// en chico (EfectosExplosion, con un radio chico); al derribarlo baja la búsqueda (lo hace el gestor con <see cref="Derribado"/>).
     /// </summary>
-    public class DronMundo : MonoBehaviour
+    public class DronMundo : MonoBehaviour, IRecibeDanio, IObjetoInerte
     {
         private const float GradosPorSegundoGiro = 180f;
 
@@ -21,13 +24,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // T-710: trazo de la bala (hilo finísimo y cortísimo, como el del pandillero) y silbido de la bala que pasa cerca.
         public const string IdDisparo = "ARM_PIS_DISPARO";
         public const string IdRoce = "ARM_BALA_ROZA";
-        private const float DuracionTrazo = 0.03f;
-        private const float GrosorTrazo = 0.006f;
-        private const float LargoTrazo = 6f;
         private const float BajoElDron = 0.2f;
-        private static readonly Color ColorTrazo = new Color(1f, 0.9f, 0.6f, 0.9f);
-        private LineRenderer trazo;
-        private float finTrazo = -1f;
 
         private Light[] luces;
         private Color[] coloresLuces;
@@ -42,10 +39,109 @@ namespace MechaCyberpunk.Trafico.Persecucion
             calculo = reglas;
             config = numeros;
             posicionJugador = dondeEstaElJugador;
+            vida = numeros != null ? numeros.VidaDron : -1f;
+        }
+
+        // ---- T-730: derribar al dron ----
+
+        /// <summary>Radio (m) de la esfera donde le pegan las balas.</summary>
+        public const float RadioImpacto = 0.6f;
+
+        /// <summary>Radio (m) de la explosión chica al estrellarse.</summary>
+        public const float RadioExplosion = 2.5f;
+
+        public const string IdExplosion = "VEH_EXPLOSION";
+        private const float GravedadCaida = 14f;
+        private const float GiroCaida = 540f;
+        private const float SegundosMaximosCayendo = 4f;
+        private const float AlturaDeSuelo = 0.4f;
+
+        /// <summary>Se avisa una vez por cada dron que cae (el gestor de la persecución baja la búsqueda). Se vacía al entrar a Play.</summary>
+        public static event Action<DronMundo> Derribado;
+
+        private float vida = -1f;
+        private float velocidadCaida;
+        private float segundosCayendo;
+
+        /// <summary>Vida que le queda (puntos de daño). Se llena al prepararlo con <see cref="ConfigPersecucion.VidaDron"/>.</summary>
+        public float Vida => vida;
+
+        /// <summary>True desde que se queda sin vida: ya no dispara ni persigue, solo cae.</summary>
+        public bool EstaCayendo { get; private set; }
+
+        /// <summary>True una vez que se estrelló y explotó (el objeto se destruye en ese cuadro).</summary>
+        public bool Exploto { get; private set; }
+
+        /// <summary>La explosión chica de la caída (para las pruebas; null hasta que explota).</summary>
+        public InstanciaExplosion Explosion { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarEventos() => Derribado = null;
+
+        public ResultadoDanio RecibirDanio(InfoDanio info)
+        {
+            if (EstaCayendo || info.Cantidad <= 0f || config == null)
+            {
+                return ResultadoDanio.Ignorado;
+            }
+            if (vida < 0f)
+            {
+                vida = config.VidaDron;
+            }
+            float aplicado = Mathf.Min(info.Cantidad, vida);
+            vida -= aplicado;
+            if (vida <= 0f)
+            {
+                Derribar();
+            }
+            return new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, vida <= 0f);
+        }
+
+        private void Derribar()
+        {
+            EstaCayendo = true;
+            Retirando = false;
+            finAviso = -1f;
+            PonerLuces(false);
+            velocidadCaida = 0f;
+            segundosCayendo = 0f;
+            Derribado?.Invoke(this);
+        }
+
+        private void Caer(float dt)
+        {
+            segundosCayendo += dt;
+            velocidadCaida += GravedadCaida * dt;
+            Vector3 paso = Vector3.down * (velocidadCaida * dt);
+            bool toca = Physics.Raycast(transform.position, Vector3.down, out RaycastHit golpe, paso.magnitude + AlturaDeSuelo, ~0, QueryTriggerInteraction.Ignore)
+                && !golpe.collider.transform.IsChildOf(transform);
+            transform.Rotate(Vector3.up, GiroCaida * dt, Space.World);
+            transform.Rotate(Vector3.forward, GiroCaida * 0.4f * dt, Space.Self);
+            if (toca || segundosCayendo >= SegundosMaximosCayendo)
+            {
+                Vector3 donde = toca ? golpe.point + Vector3.up * AlturaDeSuelo : transform.position;
+                Estrellar(donde);
+                return;
+            }
+            transform.position += paso;
+        }
+
+        private void Estrellar(Vector3 donde)
+        {
+            Exploto = true;
+            Explosion = EfectosExplosion.Explosion(donde, RadioExplosion);
+            Sonidos.ReproducirEn(IdExplosion, donde);
+            Destroy(gameObject);
         }
 
         private void Awake()
         {
+            if (GetComponentInChildren<Collider>() == null)
+            {
+                SphereCollider esfera = gameObject.AddComponent<SphereCollider>();
+                esfera.radius = RadioImpacto;
+                esfera.isTrigger = false;
+            }
             luces = GetComponentsInChildren<Light>(true);
             coloresLuces = new Color[luces.Length];
             for (int i = 0; i < luces.Length; i++)
@@ -112,7 +208,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 float desvio = (Azar() < 0.5f ? -1f : 1f) * (0.4f + 0.8f * Azar());
                 direccion = (pecho + lado * desvio - origen).normalized;
             }
-            DibujarTrazo(origen, direccion, Vector3.Distance(origen, pecho));
+            DibujarTrazo(origen, direccion, Vector3.Distance(origen, pecho), acierta);
             if (acierta)
             {
                 Aciertos++;
@@ -136,37 +232,19 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>T-710: cuántas balas pasaron lo bastante cerca del jugador como para silbar.</summary>
         public int Rozaduras { get; private set; }
 
-        /// <summary>T-710: True mientras se ve el trazo del último disparo.</summary>
-        public bool TrazoVisible => trazo != null && trazo.enabled;
+        /// <summary>T-745: dónde terminó el trazo del último disparo del dron (el impacto o el final del alcance).</summary>
+        public Vector3 DestinoUltimoTrazo { get; private set; }
 
-        /// <summary>T-710: el trazo del último disparo (para pruebas).</summary>
-        public LineRenderer Trazo => trazo;
-
-        private void DibujarTrazo(Vector3 origen, Vector3 direccion, float distancia)
+        private void DibujarTrazo(Vector3 origen, Vector3 direccion, float distancia, bool acierta)
         {
-            if (trazo == null)
+            // T-745: si acertó, el trazo llega al pecho; si no, sigue hasta lo primero que pegue o se desvanece en el alcance máximo.
+            if (acierta)
             {
-                GameObject objeto = new GameObject("Trazo");
-                objeto.transform.SetParent(transform, false);
-                trazo = objeto.AddComponent<LineRenderer>();
-                trazo.positionCount = 2;
-                trazo.useWorldSpace = true;
-                trazo.startWidth = GrosorTrazo;
-                trazo.endWidth = GrosorTrazo;
-                trazo.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                trazo.receiveShadows = false;
-                Shader sprite = Shader.Find("Sprites/Default");
-                if (sprite != null)
-                {
-                    trazo.sharedMaterial = new Material(sprite);
-                }
-                trazo.startColor = ColorTrazo;
-                trazo.endColor = ColorTrazo;
+                DestinoUltimoTrazo = origen + direccion * distancia;
+                TrazadorBala.Trazar(origen, DestinoUltimoTrazo, true);
+                return;
             }
-            trazo.SetPosition(0, origen);
-            trazo.SetPosition(1, origen + direccion * Mathf.Min(LargoTrazo, Mathf.Max(0.1f, distancia)));
-            trazo.enabled = true;
-            finTrazo = Time.time + DuracionTrazo;
+            DestinoUltimoTrazo = TrazadorBala.TrazarDireccion(origen, direccion, transform);
         }
 
         private readonly RaycastHit[] impactosLinea = new RaycastHit[16];
@@ -234,13 +312,14 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private void Update()
         {
-            if (trazo != null && trazo.enabled && Time.time >= finTrazo)
-            {
-                trazo.enabled = false;
-            }
             Vector3? jugador = posicionJugador?.Invoke();
             if (calculo == null)
             {
+                return;
+            }
+            if (EstaCayendo)
+            {
+                Caer(Time.deltaTime);
                 return;
             }
             if (Retirando)
