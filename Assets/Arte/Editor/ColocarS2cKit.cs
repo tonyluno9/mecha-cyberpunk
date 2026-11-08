@@ -292,7 +292,7 @@ namespace MechaCyberpunk.Arte.Editor
             const float anchoBanqueta = 4f;
             KitS2c.Losa(o, raiz, "Banqueta", a + direccion * (largo * 0.5f) + normal * (anchoBanqueta * 0.5f) + Vector3.up * (banqueta - 0.125f), Quaternion.LookRotation(direccion),
                 new Vector3(anchoBanqueta, ColocarS2cCalle.AltoBanqueta + 0.1f, largo), KitS2c.MatBanqueta(), 2f, true);
-            NovaEdificios(o, raiz, a, direccion, normal, largo, banqueta);
+            float cubierto = NovaEdificios(o, raiz, a, direccion, normal, largo, banqueta);
             for (float x = 2f; x < largo - 1f; x += 3f)
             {
                 KitS2c.Pieza(raiz, "C18_BarreraCalle", a + direccion * x + normal * (anchoBanqueta - 0.35f) + Vector3.up * banqueta, Quaternion.LookRotation(direccion), new Vector3(0.14f, 0.9f, 0.3f));
@@ -300,7 +300,11 @@ namespace MechaCyberpunk.Arte.Editor
             for (float x = 10f; x < largo - 3f; x += 20f)
             {
                 KitS2c.Poste(o, raiz, a + direccion * x + normal * (anchoBanqueta - 0.8f) + Vector3.up * banqueta, normal, piso, false, KitS2c.Fria);
-                KitS2c.Pieza(raiz, "CY08_CamaraCorporativa", a + direccion * (x + 3f) + normal * 0.25f + Vector3.up * (banqueta + 3.6f), Quaternion.LookRotation(normal), Vector3.one, false);
+                if (x + 3.5f < cubierto)
+                {
+                    // T-888: solo donde hay torre detrás (con las torres juntas la hilera termina antes que la banqueta).
+                    KitS2c.Pieza(raiz, "CY08_CamaraCorporativa", a + direccion * (x + 3f) + normal * 0.25f + Vector3.up * (banqueta + 3.6f), Quaternion.LookRotation(normal), Vector3.one, false);
+                }
                 if (x + 6f < largo - 1f)
                 {
                     KitS2c.Pieza(raiz, "C11_Basurero", a + direccion * (x + 6f) + normal * 0.8f + Vector3.up * banqueta, Quaternion.LookRotation(normal), Vector3.one);
@@ -308,7 +312,10 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        private static void NovaEdificios(KitS2c.Obra o, Transform raiz, Vector3 a, Vector3 direccion, Vector3 normal, float largo, float banqueta)
+        public const float SeparacionTorres = 0.02f;
+
+        /// <returns>Hasta dónde llegan las torres a lo largo del frente (m).</returns>
+        private static float NovaEdificios(KitS2c.Obra o, Transform raiz, Vector3 a, Vector3 direccion, Vector3 normal, float largo, float banqueta)
         {
             string[] torres = { "T20", "T21", "T22", "T23" };
             float x = 0f;
@@ -331,9 +338,12 @@ namespace MechaCyberpunk.Arte.Editor
                 float fondo = Vector3.Scale(b.size, new Vector3(Mathf.Abs(normal.x), 0f, Mathf.Abs(normal.z))).magnitude;
                 Vector3 centro = a + direccion * (x + ancho * 0.5f) - normal * (fondo * 0.5f) + Vector3.up * banqueta;
                 t.transform.position += centro - new Vector3(b.center.x, b.min.y, b.center.z);
-                x += ancho + 1.5f;
+                // T-888 (playtest 7-nov): sin hueco entre torres. Con 1.5 m quedaban rendijas que parecían callejones y no llevaban a
+                // ningún lado (o terminaban en una bolsa sin salida).
+                x += ancho + SeparacionTorres;
                 i++;
             }
+            return x;
         }
 
         /// <summary>
