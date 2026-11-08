@@ -135,6 +135,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         /// </summary>
         public static readonly Dictionary<string, (string Base, string Papel)[]> ClipsPorPapel = new Dictionary<string, (string, string)[]>
         {
+            // T-739: el jugador sin implante camina y corre con los clips SinImplante; con implante, el árbol usa los ConImplante (parámetro ConImplante).
+            ["Jugador"] = new[] { ("Loco_Caminar", "Loco_Caminar_SinImplante"), ("Loco_Correr", "Loco_Correr_SinImplante") },
             ["SKULLS"] = new[] { ("Loco_Idle", "Skull_Idle"), ("Loco_Caminar", "Skull_Caminar") },
             ["Jefe"] = new[]
             {
@@ -235,17 +237,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
             Estado("Idle", "Loco_Idle");
             AnimatorState caminar = Estado("Caminar", null);
-            caminar.motion = Arbol2D(c, "Caminar", new (string, Vector2)[]
-            {
-                ("Loco_Caminar", new Vector2(0f, 1f)), ("Loco_CaminarAtras", new Vector2(0f, -1f)),
-                ("Loco_CaminarDer", new Vector2(1f, 0f)), ("Loco_CaminarIzq", new Vector2(-1f, 0f)),
-            });
+            // T-739: dos árboles 2D (sin y con implante) mezclados por el parámetro ConImplante (0 o 1). Los papeles que no lo mueven se quedan en 0 y siguen con Loco_Caminar y Loco_Correr.
+            caminar.motion = ArbolImplante(c, "Caminar", "Loco_Caminar", "Loco_Caminar_ConImplante");
             AnimatorState correr = Estado("Correr", null);
-            correr.motion = Arbol2D(c, "Correr", new (string, Vector2)[]
-            {
-                ("Loco_Correr", new Vector2(0f, 1f)), ("Loco_CaminarAtras", new Vector2(0f, -1f)),
-                ("Loco_CaminarDer", new Vector2(1f, 0f)), ("Loco_CaminarIzq", new Vector2(-1f, 0f)),
-            });
+            correr.motion = ArbolImplante(c, "Correr", "Loco_Correr", "Loco_Correr_ConImplante");
             Estado("GirarDer", "Loco_GirarDer");
             Estado("GirarIzq", "Loco_GirarIzq");
             Estado("Frenar", "Loco_Frenar");
@@ -436,6 +431,26 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
             AssetDatabase.AddObjectToAsset(arbol, c);
             return arbol;
+        }
+
+        private static BlendTree ArbolImplante(AnimatorController c, string nombre, string clipSin, string clipCon)
+        {
+            BlendTree Lados(string sufijo, string adelante) => Arbol2D(c, nombre + sufijo, new (string, Vector2)[]
+            {
+                (adelante, new Vector2(0f, 1f)), ("Loco_CaminarAtras", new Vector2(0f, -1f)),
+                ("Loco_CaminarDer", new Vector2(1f, 0f)), ("Loco_CaminarIzq", new Vector2(-1f, 0f)),
+            });
+            var raiz = new BlendTree
+            {
+                name = nombre,
+                blendType = BlendTreeType.Simple1D,
+                blendParameter = ReglasAnimacion.ConImplante,
+                useAutomaticThresholds = false,
+            };
+            raiz.AddChild(Lados("_Sin", clipSin), 0f);
+            raiz.AddChild(Lados("_Con", clipCon), 1f);
+            AssetDatabase.AddObjectToAsset(raiz, c);
+            return raiz;
         }
 
         private static BlendTree Arbol1D(AnimatorController c, string nombre, string parametro, (string clip, float umbral)[] hijos)

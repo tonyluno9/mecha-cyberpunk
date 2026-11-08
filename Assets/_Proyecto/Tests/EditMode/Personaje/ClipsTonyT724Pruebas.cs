@@ -60,6 +60,8 @@ namespace MechaCyberpunk.Tests.Personaje
             o.GetOverrides(pares);
             foreach (KeyValuePair<AnimationClip, AnimationClip> par in pares)
             {
+                // T-739: el jugador sin implante usa los SinImplante de caminar y correr; todo lo demas es el clip de la base.
+                if (par.Key.name == "Loco_Caminar" || par.Key.name == "Loco_Correr") { Assert.AreEqual(par.Key.name + "_SinImplante", par.Value.name); continue; }
                 Assert.AreSame(par.Key, par.Value == null ? par.Key : par.Value, "El override del jugador cambia " + par.Key.name + " por " + (par.Value != null ? par.Value.name : "nada"));
             }
         }
@@ -80,8 +82,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(correr, "Estado Correr");
             Assert.AreEqual("Loco_Caminar", ClipAdelante(caminar), "Caminar hacia delante es Loco_Caminar");
             Assert.AreEqual("Loco_Correr", ClipAdelante(correr), "Correr hacia delante es Loco_Correr");
-            Assert.AreEqual(CarpetaTony + "Locomocion/Loco_Caminar.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("Loco_Caminar")));
-            Assert.AreEqual(CarpetaTony + "Locomocion/Loco_Correr.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("Loco_Correr")));
+            Assert.AreEqual(CarpetaTony + "Locomocion/Loco_Caminar_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("Loco_Caminar_SinImplante"))); // T-739: el jugador sin implante
+            Assert.AreEqual(CarpetaTony + "Locomocion/Loco_Correr_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("Loco_Correr_SinImplante")));
         }
 
         private static AnimationClip ClipPorNombre(string nombre)
@@ -99,6 +101,8 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             if (estado.motion is AnimationClip directo) return directo.name;
             BlendTree arbol = (BlendTree)estado.motion;
+            // T-739: la raiz mezcla sin y con implante (parametro ConImplante); se mira el arbol sin implante, el que usan los demas papeles.
+            if (arbol.blendType == BlendTreeType.Simple1D) arbol = (BlendTree)arbol.children[0].motion;
             foreach (ChildMotion hijo in arbol.children)
             {
                 if (hijo.position == new Vector2(0f, 1f)) return hijo.motion.name;

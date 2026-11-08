@@ -35,6 +35,7 @@ namespace MechaCyberpunk.Tests.Personaje
             agarre = anim.GetComponent<AgarrePistolaPJ01>();
             Assert.IsNotNull(agarre, "El jugador lleva AgarrePistolaPJ01");
             if (SoloMedir) { agarre.enabled = false; }
+            agarre.RetrocesoGrados = 0f; // los angulos se miden sin el retroceso; el retroceso tiene su propia prueba
             yield return Esperar(0.8f);
         }
 
@@ -171,6 +172,33 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(raton.rightButton);
         }
 
+        [UnityTest]
+        public IEnumerator Disparo_ElCanonDaUnSaltoCortoHaciaArriba_UnosDecimasDeSegundo_YVuelveALaMira()
+        {
+            yield return Preparar();
+            agarre.RetrocesoGrados = 4f;
+            Press(raton.rightButton);
+            yield return Esperar(2.0f);
+            Assert.AreEqual(0f, agarre.RetrocesoActual, 0.001f, "Sin disparar no hay retroceso");
+            Press(raton.leftButton);
+            yield return null;
+            Release(raton.leftButton);
+            float maximo = 0f, anguloMax = 0f;
+            float fin = Time.time + 0.3f;
+            while (Time.time < fin)
+            {
+                maximo = Mathf.Max(maximo, agarre.RetrocesoActual);
+                anguloMax = Mathf.Max(anguloMax, AnguloAMira());
+                yield return null;
+            }
+            Anotar("retroceso: pico=" + maximo.ToString("F1") + " grados, canon a la mira max=" + anguloMax.ToString("F1"));
+            Assert.Greater(maximo, 1.5f, "El cañón sube un poco al disparar");
+            Assert.Less(maximo, 6f, "Y solo un poco");
+            yield return Esperar(0.4f);
+            Assert.AreEqual(0f, agarre.RetrocesoActual, 0.001f, "Pasados 0.1 s ya no hay retroceso");
+            Assert.Less(AnguloAMira(), 3f, "Vuelve a la mira");
+            Release(raton.rightButton);
+        }
         [UnityTest]
         public IEnumerator Apuntar_CaminarDeLado_CanonALaMira_CorrederaArriba_EnLaPalma()
         {

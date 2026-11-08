@@ -22,6 +22,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private static readonly int IdGolpe = Animator.StringToHash("Golpe");
         private static readonly int IdDisparo = Animator.StringToHash("Disparo");
         private static readonly int IdRecarga = Animator.StringToHash("Recarga");
+        private static readonly int IdConImplante = Animator.StringToHash(ReglasAnimacion.ConImplante);
 
         // Un impacto cuenta como del jugador si cae a esta distancia de su centro (m); el evento no dice a quién le pegaron.
         private const float DistanciaImpacto = 2.2f;
@@ -50,6 +51,14 @@ namespace MechaCyberpunk.Personaje.Jugador
         private bool agachadoAntes;
         private bool rodandoAntes;
         private ApuntadoIK apuntadoIK;
+        private float conImplanteAplicado = -1f;
+
+        /// <summary>T-739: el jugador lleva un implante de piernas (IMP01) o de brazos (IMP02) y camina y corre con los clips ConImplante (ServicioImplantes, contrato IImplantes de Core).</summary>
+        public static bool LlevaImplanteDeLocomocion()
+        {
+            IImplantes implantes = Registro<IImplantes>.Actual;
+            return implantes != null && (implantes.Nivel(EspacioImplante.Piernas) > 0 || implantes.Nivel(EspacioImplante.Brazos) > 0);
+        }
 
         // T-681: hasta dónde se busca el punto de mira para llevarle el cañón (m).
         private const float AlcanceMiraVisual = 80f;
@@ -111,6 +120,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         public void AlCambiarModelo(Animator nuevo)
         {
             animador = nuevo;
+            conImplanteAplicado = -1f;
             visual = nuevo != null ? nuevo.GetComponentInParent<VisualPersonaje>() : null;
             if (visual != null) { visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador; }
             ClipsDeTony(visual);
@@ -143,6 +153,12 @@ namespace MechaCyberpunk.Personaje.Jugador
                 return;
             }
             animador.SetFloat(IdVelocidad, controlador.Velocidad.magnitude);
+            float conImplante = LlevaImplanteDeLocomocion() ? 1f : 0f;
+            if (conImplante != conImplanteAplicado)
+            {
+                animador.SetFloat(IdConImplante, conImplante);
+                conImplanteAplicado = conImplante;
+            }
             animador.SetBool(IdEnPiso, controlador.EnPiso);
             if (visual == null)
             {
