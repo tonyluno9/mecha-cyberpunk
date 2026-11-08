@@ -38,6 +38,7 @@ namespace MechaCyberpunk.UI.Mapa
         private static Sprite bordeMinimapa;
         private static Sprite engrane;
         private static Sprite casa;
+        private static Sprite marco;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Limpiar()
@@ -48,6 +49,7 @@ namespace MechaCyberpunk.UI.Mapa
             bordeMinimapa = null;
             engrane = null;
             casa = null;
+            marco = null;
         }
 
         public static Sprite Circulo => circulo != null ? circulo : circulo = CrearSprite("Mapa_Circulo", (x, y) => x * x + y * y <= 1f);
@@ -61,6 +63,9 @@ namespace MechaCyberpunk.UI.Mapa
         public static Sprite BordeMinimapa => bordeMinimapa != null ? bordeMinimapa : bordeMinimapa = CrearSprite("Mapa_Borde", (x, y) => EnAnillo(x, y, GrosorBordeMinimapa));
 
         public static Sprite Engrane => engrane != null ? engrane : engrane = CrearSprite("Mapa_Engrane", EnEngrane);
+
+        /// <summary>Un marco cuadrado fino (T-747): las manzanas del mapa muestran el color de su dueño solo en el borde para no tapar la imagen.</summary>
+        public static Sprite Marco => marco != null ? marco : marco = CrearSprite("Mapa_Marco", (x, y) => Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) >= 0.97f);
 
         public static Sprite Casa => casa != null ? casa : casa = CrearSprite("Mapa_Casa", EnCasa);
 
@@ -127,6 +132,13 @@ namespace MechaCyberpunk.UI.Mapa
                 nombre.color = e.Texto;
             }
             return fondo;
+        }
+
+        /// <summary>El nombre de un icono de lugar hecho con <see cref="CrearDestino"/> (T-721), o null si no lo lleva.</summary>
+        public static Text NombreDe(Image icono)
+        {
+            Transform t = icono != null ? icono.transform.Find("Nombre") : null;
+            return t != null ? t.GetComponent<Text>() : null;
         }
 
         /// <summary>Un aliado: un círculo del color dado con contorno oscuro.</summary>

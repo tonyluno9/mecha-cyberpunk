@@ -186,7 +186,13 @@ namespace MechaCyberpunk.Tests.Trafico
             float despues = Vector3.Distance(dron.transform.position, jugadorObjeto.transform.position);
             Assert.Less(despues, antes);
             Assert.Greater(dron.transform.position.y - jugadorObjeto.transform.position.y, 0f, "El dron vuela sobre el jugador");
-            Assert.AreEqual(0, dron.GetComponentsInChildren<Collider>().Length, "El dron no lleva colliders");
+            // T-745 le dio una esfera sólida para poder derribarlo a tiros (las balas ignoran los triggers). T-747: no estorba, porque el dron se mueve por
+            // transform (sin Rigidbody) a varios metros de altura; solo debe ser esa esfera chica y seguir siendo derribable.
+            Collider[] colliders = dron.GetComponentsInChildren<Collider>();
+            Assert.AreEqual(1, colliders.Length, "El dron lleva solo la esfera de impacto");
+            Assert.IsInstanceOf<SphereCollider>(colliders[0]);
+            Assert.LessOrEqual(((SphereCollider)colliders[0]).radius, DronMundo.RadioImpacto + 0.001f, "La esfera es chica");
+            Assert.IsNull(dron.GetComponentInChildren<Rigidbody>(), "Sin Rigidbody: nada lo empuja ni empuja");
         }
 
         [UnityTest]
