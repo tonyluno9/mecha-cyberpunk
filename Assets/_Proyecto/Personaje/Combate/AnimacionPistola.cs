@@ -23,6 +23,8 @@ namespace MechaCyberpunk.Personaje.Combate
         [SerializeField] private Transform bateria;
         [Tooltip("Escala del modelo respecto al FBX (m por m): las distancias de las curvas se multiplican por ella.")]
         [Min(0.01f)] [SerializeField] private float escalaModelo = 1f;
+        [Tooltip("T-736: giro que lleva los ejes del modelo de las curvas (cañón a +X, arriba +Y) a los ejes del padre de la corredera y el cargador. Identidad en W01_Pistola; el modelo de agarre (W01_Pistola_agarre) lo trae girado.")]
+        [SerializeField] private Quaternion ejesModelo = Quaternion.identity;
 
         private PistolaAPie pistola;
         private Vector3 correderaReposo;
@@ -38,6 +40,9 @@ namespace MechaCyberpunk.Personaje.Combate
         public bool Recargando => tRecarga >= 0f;
         public Transform Corredera => corredera;
         public float DuracionRecarga => duracionRecarga;
+
+        /// <summary>T-736: los ejes del modelo respecto a los de las curvas (ver <c>ejesModelo</c>).</summary>
+        public void ConfigurarEjes(Quaternion ejes) => ejesModelo = ejes;
 
         public void Configurar(Transform nuevaCorredera, Transform nuevaBateria, float escala)
         {
@@ -167,7 +172,7 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             if (corredera != null)
             {
-                corredera.localPosition = correderaReposo + Vector3.left * (RecorridoCorredera * escalaModelo * atras);
+                corredera.localPosition = correderaReposo + ejesModelo * (Vector3.left * (RecorridoCorredera * escalaModelo * atras));
             }
         }
 
@@ -178,8 +183,9 @@ namespace MechaCyberpunk.Personaje.Combate
                 // Sale (cuadros 7-19): baja y gira mientras cae; luego ya no está.
                 float sale = Mathf.Clamp01((cuadro - 7f) / 12f);
                 bateria.gameObject.SetActive(cuadro < 19f);
-                bateria.localPosition = bateriaReposo + new Vector3(0.025f * sale, -0.6f * sale * sale, -0.26f * sale) * escalaModelo;
-                bateria.localRotation = bateriaGiroReposo * Quaternion.Euler(sale * 90f, 0f, sale * 45f);
+                bateria.localPosition = bateriaReposo + ejesModelo * (new Vector3(0.025f * sale, -0.6f * sale * sale, -0.26f * sale) * escalaModelo);
+                Quaternion giro = Quaternion.Euler(sale * 90f, 0f, sale * 45f);
+                bateria.localRotation = ejesModelo == Quaternion.identity ? bateriaGiroReposo * giro : ejesModelo * giro * Quaternion.Inverse(ejesModelo) * bateriaGiroReposo;
             }
             if (nueva != null)
             {
@@ -187,7 +193,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 bool visible = cuadro >= 12f && cuadro < CuadrosRecarga;
                 nueva.gameObject.SetActive(visible);
                 float entra = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((cuadro - 12f) / 15f));
-                nueva.localPosition = bateriaReposo + new Vector3(0.01f, -0.05f, -0.13f) * ((1f - entra) * escalaModelo);
+                nueva.localPosition = bateriaReposo + ejesModelo * (new Vector3(0.01f, -0.05f, -0.13f) * ((1f - entra) * escalaModelo));
                 nueva.localRotation = bateriaGiroReposo;
             }
             PonerCorredera(CurvaCorredera(cuadro, 30f));
