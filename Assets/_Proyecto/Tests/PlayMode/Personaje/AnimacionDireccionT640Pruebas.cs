@@ -122,7 +122,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), mov.normalized), 0.7f, "El cuerpo (huesos) mira hacia donde camina");
             Assert.Greater(Vector3.Dot(visual.transform.forward, mov.normalized), 0.7f, "El visual mira hacia donde camina");
             Assert.AreEqual("Caminar", Estado(a), "Caminar normal usa Caminar");
-            Assert.AreEqual("Loco_Caminar", ClipDominante(a));
+            Assert.AreEqual("Loco_Caminar_SinImplante", ClipDominante(a));
 
             // El clip no gira el cuerpo: el frente se queda estable mientras camina recto.
             Vector3 f0 = FrenteHuesos(a);
@@ -140,7 +140,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.leftShiftKey);
             yield return Esperar(1.2f);
             Assert.AreEqual("Correr", Estado(a), "Con Shift usa Correr");
-            Assert.AreEqual("Loco_Correr", ClipDominante(a));
+            Assert.AreEqual("Loco_Correr_SinImplante", ClipDominante(a));
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), Mundo().normalized), 0.7f, "Corriendo también mira al frente");
             Release(teclado.leftShiftKey);
             yield return Esperar(1.2f);
@@ -161,7 +161,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.sKey);
             yield return Esperar(1.0f);
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), Mundo().normalized), 0.7f, "Con S el cuerpo se voltea y mira hacia donde camina");
-            Assert.AreEqual("Loco_Caminar", ClipDominante(a));
+            Assert.AreEqual("Loco_Caminar_SinImplante", ClipDominante(a));
             Release(teclado.sKey);
             yield return Esperar(0.5f);
             Press(raton.rightButton);

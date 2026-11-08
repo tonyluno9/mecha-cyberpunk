@@ -39,3 +39,18 @@ Con la pistola W01 en R_Hand (caso A de agarre.txt) y el clip Pistola_Apuntar pu
 | Pistola_Apuntar en Blender (agarre.txt) | 0-1° | 0° | < 2° |
 
 (Los valores de Unity están en docs/tareas/hechas/T-737-pj01-apuntar.md, medidos en Play con docs/capturas/pj01-apuntar-*.)
+
+## Pose de apuntar con dos manos (T-741, medido)
+
+Al apuntar con los tres implantes (pj01-implantes-todos-lvl2-apuntando-frente.png) la pose se ve rara: la pistola alta, a la altura de la cara, y la mano izquierda abierta y separada. No es un fallo del código: es el mismo retargeting.
+Medido en Play con Pistola_Apuntar parado, en largos de brazo (hombro a codo más codo a mano):
+
+| Esqueleto | Manos separadas | Ancho de la mano izq. (pulgar a meñique) |
+| --- | --- | --- |
+| Mixamo, la fuente del clip, en su propio esqueleto | 0.07 (las manos se tocan: agarre a dos manos) | 0.15 |
+| PJ01 en Unity con Humanoid | 0.44 (unos 25 cm de hueco) | 0.22 |
+
+La mano izquierda queda a 0.48 largos de brazo de la pistola. Humanoid copia ángulos, no posiciones: PJ01 tiene hombros y brazos más anchos y gruesos que el esqueleto de Mixamo, y con los mismos ángulos las manos no se juntan.
+La pistola se ve alta porque el hombro y el brazo derecho de PJ01 quedan por delante del rostro con ese ancho; el cañón sí apunta a la mira (menos de 1.3 grados, T-738), solo que visto de frente lo que se ve es la boca del arma.
+Lo que sirve de Blender: los clips Pistola_Apuntar, Disparo, ApuntarLateral_* y ApuntarAtras ya aplicados a PJ01 (opción 1 de arriba), con la mano izquierda sobre la empuñadura como en tu prueba de agarre.
+Alternativa del lado del código, solo si no llegan: IK de la mano izquierda a un punto de la empuñadura (AgarreIzq ya existe en la pistola). Se descartó por ahora porque se pidió dejar la mano izquierda como la pone el clip.
