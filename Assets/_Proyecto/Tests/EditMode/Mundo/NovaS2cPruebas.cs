@@ -28,7 +28,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(2, frentes.Length, "un frente de cada lado");
             foreach (Transform f in frentes)
             {
-                Assert.GreaterOrEqual(f.Cast<Transform>().Count(t => t.name.StartsWith("T2")), 3, "torres T20–T23");
+                Assert.GreaterOrEqual(f.Cast<Transform>().Count(t => t.name.StartsWith("Edificio_")), 3, "edificios de módulos NV01 y NV02");
             }
             Light[] postes = raiz.GetComponentsInChildren<Light>(true).Where(l => l.type == LightType.Spot).ToArray();
             Assert.GreaterOrEqual(postes.Length, 4);

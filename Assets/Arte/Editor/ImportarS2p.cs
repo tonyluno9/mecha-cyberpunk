@@ -45,6 +45,33 @@ namespace MechaCyberpunk.Arte.Editor
             new Entrada(CarpetaPiezas + "GARAGEPUERTA.zip", "PU02_Garaje", ArteT250.Eje.Alto, 2.6f),
         };
 
+        public const string CarpetaCalle = "imageassets/modelos3d/calle/";
+
+        /// <summary>T-891: los modelos de la calle que sustituyen lo hecho en código (medidas de docs/pedido-arte-08nov.md).</summary>
+        public static readonly Entrada[] Calle =
+        {
+            new Entrada(CarpetaCalle + "TK01.zip", "TK01_BaseTinaco", ArteT250.Eje.Largo, 1.9f),
+            new Entrada(CarpetaCalle + "NE01.zip", "NE01_NeonBandera", ArteT250.Eje.Alto, 0.8f),
+            new Entrada(CarpetaCalle + "NE01B.zip", "NE01B_NeonBandera", ArteT250.Eje.Alto, 0.8f),
+            new Entrada(CarpetaCalle + "NE02.zip", "NE02_NeonPared", ArteT250.Eje.Largo, 0.9f),
+            new Entrada(CarpetaCalle + "AL01.zip", "AL01_Alcantarilla", ArteT250.Eje.Largo, 0.9f),
+            new Entrada(CarpetaCalle + "MT01.zip", "MT01_MuroTrasero", ArteT250.Eje.Alto, 6f),
+            new Entrada(CarpetaCalle + "TL01.zip", "TL01_Toldo", ArteT250.Eje.Largo, 2.5f),
+            new Entrada(CarpetaCalle + "FA01.zip", "FA01_Farmacia", ArteT250.Eje.Largo, 3f),
+            new Entrada(CarpetaCalle + "NV01.zip", "NV01_FachadaOficinas", ArteT250.Eje.Largo, 6f),
+            new Entrada(CarpetaCalle + "NV02.zip", "NV02_PlantaBajaNova", ArteT250.Eje.Largo, 6f),
+            new Entrada(CarpetaCalle + "BL01.zip", "BL01_Bolardo", ArteT250.Eje.Alto, 0.9f),
+            new Entrada(CarpetaCalle + "BT01.zip", "BT01_BoteBasura", ArteT250.Eje.Alto, 0.95f),
+        };
+
+
+        /// <summary>T-891: si el código es de una pieza de imageassets/modelos3d/calle/.</summary>
+        public static bool EsDeCalle(string codigo)
+        {
+            // Local y no estática: los modelos estáticos de esta clase la llaman mientras se inicializa.
+            return new[] { "TK01", "NE01", "NE02", "AL01", "MT01", "TL01", "FA01", "NV01", "NV02", "BL01", "BT01" }.Any(codigo.StartsWith);
+        }
+
         public static readonly StringBuilder Informe = new StringBuilder();
 
         [MenuItem("Mecha Cyberpunk/S2p/0 Importar fachadas y puertas (B3)")]
@@ -117,6 +144,78 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Importar();
             Revisar(Fachadas);
+        }
+
+        /// <summary>Batchmode de T-891: importa las piezas de calle y las fotografía de frente, de lado y desde arriba.</summary>
+        public static void ImportarCalleYRevisar()
+        {
+            ImportarCalle();
+            Revisar(Calle);
+        }
+
+        /// <summary>T-891: importa las piezas de calle, enciende lo que brilla y les activa Mesh LOD (son 12 a 19 mil triángulos cada una).</summary>
+        [MenuItem("Mecha Cyberpunk/S2p/2 Importar piezas de calle (B5)")]
+        public static void ImportarCalle()
+        {
+            Importar(Calle);
+            foreach (Entrada e in Calle.Concat(Fachadas))
+            {
+                ModelImporter imp = AssetImporter.GetAtPath(e.Modelo.RutaFbx) as ModelImporter;
+                if (imp != null && !imp.generateMeshLods)
+                {
+                    imp.generateMeshLods = true;
+                    imp.SaveAndReimport();
+                }
+            }
+            foreach (Entrada e in Calle.Where(e => e.Modelo.Codigo.StartsWith("NE") || e.Modelo.Codigo.StartsWith("FA")))
+            {
+                Emision(e.Modelo, UmbralNeon, 0f, IntensidadNeon);
+            }
+            Emision(Calle.First(e => e.Modelo.Codigo.StartsWith("NV02")).Modelo, UmbralMarcoNova, SaturacionMarcoNova, IntensidadNeon);
+            foreach (string c in new[] { "NV01_FachadaOficinas", "NV02_PlantaBajaNova" })
+            {
+                Material m = AssetDatabase.LoadAssetAtPath<Material>(Calle.First(e => e.Modelo.Codigo == c).Modelo.RutaMaterial);
+                m.enableInstancing = true; // Nova repite estos módulos decenas de veces
+                EditorUtility.SetDirty(m);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        private const float UmbralNeon = 0.62f;
+        private const float UmbralMarcoNova = 0.45f;
+        private const float SaturacionMarcoNova = 0.35f;
+        private const float IntensidadNeon = 3f;
+
+        /// <summary>
+        /// Los tubos de neón no son material aparte: vienen pintados en la textura. Se copia a &lt;código&gt;_emision.png lo que pasa del umbral de
+        /// brillo y de saturación, y el material lo usa como mapa de emisión. Así brilla el tubo y no la caja.
+        /// </summary>
+        private static void Emision(ArteT250.Modelo m, float umbral, float saturacionMinima, float intensidad)
+        {
+            string origen = m.Carpeta + "/" + m.Codigo + "_basecolor.jpg";
+            string destino = m.Carpeta + "/" + m.Codigo + "_emision.png";
+            Texture2D t = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            t.LoadImage(File.ReadAllBytes(origen));
+            Color32[] p = t.GetPixels32();
+            for (int i = 0; i < p.Length; i++)
+            {
+                Color.RGBToHSV(p[i], out float _, out float s, out float v);
+                if (v < umbral || s < saturacionMinima)
+                {
+                    p[i] = new Color32(0, 0, 0, 255);
+                }
+            }
+            t.SetPixels32(p);
+            t.Apply();
+            File.WriteAllBytes(destino, t.EncodeToPNG());
+            Object.DestroyImmediate(t);
+            AssetDatabase.ImportAsset(destino);
+            Material mat = AssetDatabase.LoadAssetAtPath<Material>(m.RutaMaterial);
+            mat.SetTexture("_EmissionMap", AssetDatabase.LoadAssetAtPath<Texture2D>(destino));
+            mat.SetColor("_EmissionColor", Color.white * intensidad);
+            mat.EnableKeyword("_EMISSION");
+            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
+            EditorUtility.SetDirty(mat);
         }
 
         public static void Revisar(Entrada[] entradas)
