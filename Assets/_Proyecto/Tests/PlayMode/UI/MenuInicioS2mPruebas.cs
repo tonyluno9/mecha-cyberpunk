@@ -13,6 +13,50 @@ namespace MechaCyberpunk.Tests.UI
     {
         private MenuInicio menu;
 
+        [UnityTest]
+        public IEnumerator CamaraReal_RecorreLasCallesConCorteCada8Segundos()
+        {
+            // T-898: se vuelve a cargar el menú, ahora con la ciudad; sin scripts de juego en esa escena.
+            FondoCallesInicio.CargarEnBatch = true;
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_Proyecto/Escenas/Inicio.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return null;
+            menu = Object.FindFirstObjectByType<MenuInicio>();
+            float limite = Time.realtimeSinceStartup + 120f;
+            while (!menu.FondoCalles.CamaraReal && Time.realtimeSinceStartup < limite)
+            {
+                yield return null;
+            }
+            FondoCallesInicio.CargarEnBatch = false;
+            Assert.IsTrue(menu.FondoCalles.CamaraReal, "La escena de calles cargó");
+            RecorridoCallesMenu recorrido = RecorridoCallesMenu.Actual;
+            Assert.IsNotNull(recorrido);
+            Assert.AreEqual(FondoCallesInicio.Calles, recorrido.Calles);
+            Assert.AreEqual(0, recorrido.Calle);
+            Vector3 antes = recorrido.Camara.transform.position;
+            yield return new WaitForSecondsRealtime(1.5f);
+            Assert.Greater(Vector3.Distance(antes, recorrido.Camara.transform.position), 0.5f, "La cámara se mueve por la calle");
+            CapturarCalle(recorrido.Camara, 0);
+            for (int i = 1; i < FondoCallesInicio.Calles; i++)
+            {
+                float hasta = Time.realtimeSinceStartup + recorrido.SegundosPorCalle + 3f;
+                while (recorrido.Calle != i && Time.realtimeSinceStartup < hasta)
+                {
+                    yield return null;
+                }
+                Assert.AreEqual(i, recorrido.Calle, "Corta a la calle " + i);
+                yield return new WaitForSecondsRealtime(0.5f);
+                CapturarCalle(recorrido.Camara, i);
+            }
+        }
+
+        private static void CapturarCalle(Camera camara, int calle)
+        {
+            if (System.Environment.GetEnvironmentVariable("CAPTURAR_S2M_INICIO") == "1")
+            {
+                CapturaUI.Capturar("docs/capturas/s2m-c1-calle-" + calle + ".png", camara);
+            }
+        }
+
         [UnitySetUp]
         public IEnumerator Cargar()
         {
