@@ -49,21 +49,25 @@ namespace MechaCyberpunk.UI.Inicio
 
         private const float SegundosEntrada = 1.7f;
         private const float EsperaPrimerBoton = 0.9f;
-        private const float MargenIzquierdo = 120f;
-        private const float AltoBoton = 76f;
-        private const float AltoBotonConResumen = 104f;
-        private const float AnchoBoton = 660f;
-        private const float SeparacionBotones = 6f;
-        private const int TamanoTextoBoton = 56;
-        private const float YPrimerBoton = -370f;
-        private const float AnchoPanel = 800f;
-        private const float XPanel = 80f;
-        private const float MargenPanel = 56f;
-        private const float GrosorBordePanel = 2f;
+        private const float MargenIzquierdo = TrazoH10.MargenPantalla;
+        private const float AltoBoton = 58f;
+        private const float AltoBotonConResumen = 86f;
+        private const float AnchoBoton = 520f;
+        private const float SeparacionBotones = 4f;
+        private const int TamanoTextoBoton = 38;
+        private const float BaseMenu = 100f;
+        private const float RellenoMenu = 24f;
+        private const float AltoCabeceraMenu = 40f;
+        private const float AnchoLogo = 760f;
+        private const float AnchoDatos = 560f;
+        private const float AltoDatos = 250f;
         private const float SegundosAviso = 0.25f;
+        private const float EscalonBotones = 0.05f;
         private const string RutaLogo = "Inicio/Logo";
-        private static readonly Color Coral = new Color(1f, 0.33f, 0.28f, 1f);
-        private static readonly Color RojoPanel = new Color(0.32f, 0.03f, 0.05f, 0.5f);
+        private const string TituloMenu = "MENÚ PRINCIPAL";
+        private const string TituloPartida = "ÚLTIMA PARTIDA";
+        private const string TituloConsejo = "CONSEJO";
+        private const string SinPartidaDetalle = "Todavía no hay una partida guardada.";
 
         [SerializeField] private FondoCiudad3D fondo;
         [SerializeField] private PantallaCreacionPandilla creacion;
@@ -85,6 +89,9 @@ namespace MechaCyberpunk.UI.Inicio
         private PantallaRanuras ranuras;
         private CanvasGroup aviso;
         private Text textoAviso;
+        private Image panelMenu;
+        private Image panelDatos;
+        private Text datoPartida;
         private BotonInicio botonOpciones;
         private BotonInicio creditos;
         private BotonInicio salir;
@@ -151,6 +158,7 @@ namespace MechaCyberpunk.UI.Inicio
             RefrescarPartida();
             panelPrincipal.FijarYa(true);
             panelOpciones.FijarYa(false);
+            AnimarEntrada();
             Sonidos.Reproducir(SonidoInicio);
             Debug.Log("[UI] Pantalla de inicio abierta.");
         }
@@ -172,8 +180,8 @@ namespace MechaCyberpunk.UI.Inicio
             Transform c = canvas.transform;
 
             // Ambiente de pantalla: sombra a la izquierda para leer el menú, viñetas arriba y abajo, líneas de barrido.
-            Image sombra = UIInicio.Imagen(c, "SombraMenu", UIInicio.ConAlfa(UIInicio.Noche, 0.88f), SpritesInicio.DegradadoH);
-            UIInicio.Anclar(sombra.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(1250f, 0f));
+            Image sombra = UIInicio.Imagen(c, "SombraMenu", UIInicio.ConAlfa(UIInicio.Noche, 0.6f), SpritesInicio.DegradadoH);
+            UIInicio.Anclar(sombra.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(1000f, 0f));
             Image arriba = UIInicio.Imagen(c, "VinetaArriba", UIInicio.ConAlfa(Color.black, 0.55f), SpritesInicio.DegradadoV);
             UIInicio.Anclar(arriba.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, 260f));
             Image abajo = UIInicio.Imagen(c, "VinetaAbajo", UIInicio.ConAlfa(Color.black, 0.65f), SpritesInicio.DegradadoVAbajo);
@@ -183,7 +191,6 @@ namespace MechaCyberpunk.UI.Inicio
             lineas.type = Image.Type.Tiled;
             UIInicio.Estirar(lineas.rectTransform);
             ArmarMarco(c);
-            ArmarPanel(c);
             fondoCalles = FondoCallesInicio.Crear(c);
             fondoCalles.CalleRealLista += () =>
             {
@@ -193,20 +200,21 @@ namespace MechaCyberpunk.UI.Inicio
                 }
             };
 
-            logo = LogoInicio.Crear(c, NombreJuego.Nombre, 210, new Vector2(MargenIzquierdo - 6f, -100f));
+            logo = LogoInicio.Crear(c, NombreJuego.Nombre, 210, new Vector2(MargenIzquierdo, -96f));
             logo.AsignarSprite(Resources.Load<Sprite>(RutaLogo));
-            logo.GetComponentsInChildren<Image>(true).First(i => i.name == "LogoPng").rectTransform.sizeDelta = new Vector2(AnchoBoton, 0f);
+            logo.GetComponentsInChildren<Image>(true).First(i => i.name == "LogoPng").rectTransform.sizeDelta = new Vector2(AnchoLogo, 0f);
 
             raizPrincipal = UIInicio.Nodo(c, "Principal");
             UIInicio.Estirar(raizPrincipal);
             panelPrincipal = PanelAnimado.Agregar(raizPrincipal, new Vector2(-120f, 0f), 0.4f);
-            continuar = Boton(TextoContinuar, UIInicio.Cian);
-            nueva = Boton(TextoNueva, UIInicio.Cian);
-            cargar = Boton(TextoCargar, UIInicio.Cian);
-            botonOpciones = Boton(TextoOpciones, UIInicio.Cian);
-            creditos = Boton(TextoCreditos, UIInicio.Cian);
-            salir = Boton(TextoSalir, UIInicio.Naranja);
-            continuar.AgregarSubtexto(TextoSinPartida, 26, UIInicio.TextoApagado);
+            ArmarPanel();
+            continuar = Boton(TextoContinuar, TrazoH10.Turquesa);
+            nueva = Boton(TextoNueva, TrazoH10.Turquesa);
+            cargar = Boton(TextoCargar, TrazoH10.Turquesa);
+            botonOpciones = Boton(TextoOpciones, TrazoH10.Turquesa);
+            creditos = Boton(TextoCreditos, TrazoH10.Turquesa);
+            salir = Boton(TextoSalir, TrazoH10.Turquesa);
+            continuar.AgregarSubtexto(TextoSinPartida, TrazoH10.TamanoMicro, UIInicio.TextoApagado);
             continuar.AlPulsar.AddListener(ContinuarPartida);
             nueva.AlPulsar.AddListener(NuevaPartida);
             cargar.AlPulsar.AddListener(AbrirCargar);
@@ -222,10 +230,14 @@ namespace MechaCyberpunk.UI.Inicio
             panelOpciones = PanelAnimado.Agregar((RectTransform)opciones.transform, new Vector2(140f, 0f), 0.4f);
             opciones.PidioVolver += CerrarOpciones;
 
-            ayuda = UIInicio.Texto(c, "Ayuda", AyudaTeclado, UIInicio.FuenteTexto, 26, UIInicio.TextoSuave, TextAnchor.LowerLeft);
-            UIInicio.Punto(ayuda.rectTransform, new Vector2(0f, 0f), new Vector2(MargenIzquierdo, 54f), new Vector2(900f, 40f));
-            Text version = UIInicio.Texto(c, "Version", Version, UIInicio.FuenteTexto, 24, UIInicio.TextoApagado, TextAnchor.LowerRight);
-            UIInicio.Punto(version.rectTransform, new Vector2(1f, 0f), new Vector2(-80f, 54f), new Vector2(700f, 40f));
+            ArmarDatos();
+
+            TrazoH10.Recta(c, "ReglaPie", TrazoH10.TurquesaTenue, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f),
+                new Vector2(0f, 72f), new Vector2(-2f * MargenIzquierdo, TrazoH10.GrosorLinea));
+            ayuda = TrazoH10.Etiqueta(c, "Ayuda", AyudaTeclado, TrazoH10.TamanoDato, TrazoH10.TextoTenue);
+            UIInicio.Punto(ayuda.rectTransform, new Vector2(0f, 0f), new Vector2(MargenIzquierdo, 30f), new Vector2(900f, 34f));
+            Text version = TrazoH10.Etiqueta(c, "Version", Version, TrazoH10.TamanoDato, TrazoH10.TextoTenue, TextAnchor.MiddleRight);
+            UIInicio.Punto(version.rectTransform, new Vector2(1f, 0f), new Vector2(-MargenIzquierdo, 30f), new Vector2(700f, 34f));
 
             ArmarAviso(c);
 
@@ -233,35 +245,36 @@ namespace MechaCyberpunk.UI.Inicio
             UIInicio.Estirar(velo.rectTransform);
         }
 
-        /// <summary>T-893: el panel vertical rojo translúcido detrás del logo y las opciones, con su borde coral.</summary>
-        private void ArmarPanel(Transform c)
+        /// <summary>El panel compacto del menú, abajo a la izquierda; su alto se ajusta en <see cref="RefrescarPartida"/>.</summary>
+        private void ArmarPanel()
         {
-            Image panel = UIInicio.Imagen(c, "PanelMenu", RojoPanel, SpritesInicio.Blanco);
-            UIInicio.Anclar(panel.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(XPanel, 0f), new Vector2(AnchoPanel, -2f * MargenPanel));
-            panel.raycastTarget = false;
-            foreach (float x in new[] { 0f, AnchoPanel - GrosorBordePanel })
-            {
-                Image borde = UIInicio.Imagen(panel.rectTransform, "Borde", Coral, SpritesInicio.Blanco, true);
-                UIInicio.Anclar(borde.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(x, 0f), new Vector2(GrosorBordePanel, 0f));
-            }
-            foreach (float y in new[] { 0f, 1f })
-            {
-                Image borde = UIInicio.Imagen(panel.rectTransform, "Borde", Coral, SpritesInicio.Blanco, true);
-                UIInicio.Anclar(borde.rectTransform, new Vector2(0f, y), new Vector2(1f, y), new Vector2(0.5f, y), Vector2.zero, new Vector2(0f, GrosorBordePanel));
-            }
+            panelMenu = TrazoH10.Panel(raizPrincipal, "PanelMenu", TrazoH10.TurquesaTenue);
+            TrazoH10.Seccion(panelMenu.transform, "TituloMenu", TituloMenu, new Vector2(RellenoMenu, -RellenoMenu * 0.5f), AnchoBoton - RellenoMenu);
         }
 
-        /// <summary>T-893: recuadro de aviso del mismo estilo, a la derecha del panel. Se cierra con un clic.</summary>
+        /// <summary>Datos reales a la derecha: la última partida guardada y un consejo del juego.</summary>
+        private void ArmarDatos()
+        {
+            panelDatos = TrazoH10.Panel(raizPrincipal, "PanelDatos", TrazoH10.TurquesaTenue);
+            UIInicio.Punto(panelDatos.rectTransform, new Vector2(1f, 0f), new Vector2(-MargenIzquierdo, BaseMenu), new Vector2(AnchoDatos, AltoDatos));
+            float ancho = AnchoDatos - 2f * RellenoMenu;
+            TrazoH10.Seccion(panelDatos.transform, "TituloPartida", TituloPartida, new Vector2(RellenoMenu, -RellenoMenu * 0.5f), ancho);
+            datoPartida = TrazoH10.Etiqueta(panelDatos.transform, "DatoPartida", string.Empty, TrazoH10.TamanoDato, TrazoH10.Texto, TextAnchor.UpperLeft);
+            UIInicio.Punto(datoPartida.rectTransform, new Vector2(0f, 1f), new Vector2(RellenoMenu, -58f), new Vector2(ancho, 60f));
+            datoPartida.horizontalOverflow = HorizontalWrapMode.Wrap;
+            TrazoH10.Seccion(panelDatos.transform, "TituloConsejo", TituloConsejo, new Vector2(RellenoMenu, -128f), ancho);
+            Text consejo = TrazoH10.Etiqueta(panelDatos.transform, "Consejo", ConsejosCarga.Obtener(DateTime.Now.DayOfYear), TrazoH10.TamanoDato, TrazoH10.TextoTenue, TextAnchor.UpperLeft);
+            UIInicio.Punto(consejo.rectTransform, new Vector2(0f, 1f), new Vector2(RellenoMenu, -166f), new Vector2(ancho, 64f));
+            consejo.horizontalOverflow = HorizontalWrapMode.Wrap;
+        }
+
+        /// <summary>Recuadro de aviso al centro, en coral porque es una alerta. Se cierra con un clic.</summary>
         private void ArmarAviso(Transform c)
         {
-            Image fondoAviso = UIInicio.Imagen(c, "Aviso", new Color(0.1f, 0.02f, 0.03f, 0.92f), SpritesInicio.Blanco);
-            UIInicio.Punto(fondoAviso.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(470f, 0f), new Vector2(820f, 180f));
-            foreach (float y in new[] { 0f, 1f })
-            {
-                Image borde = UIInicio.Imagen(fondoAviso.rectTransform, "Borde", Coral, SpritesInicio.Blanco, true);
-                UIInicio.Anclar(borde.rectTransform, new Vector2(0f, y), new Vector2(1f, y), new Vector2(0.5f, y), Vector2.zero, new Vector2(0f, GrosorBordePanel));
-            }
-            textoAviso = UIInicio.Texto(fondoAviso.rectTransform, "Texto", string.Empty, UIInicio.FuenteTexto, 40, Color.white, TextAnchor.MiddleCenter);
+            Image fondoAviso = TrazoH10.Panel(c, "Aviso", TrazoH10.Coral, TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.94f));
+            UIInicio.Punto(fondoAviso.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(820f, 180f));
+            fondoAviso.raycastTarget = true;
+            textoAviso = TrazoH10.Etiqueta(fondoAviso.rectTransform, "Texto", string.Empty, TrazoH10.TamanoSeccion, TrazoH10.Texto, TextAnchor.MiddleCenter);
             UIInicio.Estirar(textoAviso.rectTransform);
             aviso = fondoAviso.gameObject.AddComponent<CanvasGroup>();
             fondoAviso.gameObject.AddComponent<Button>().onClick.AddListener(CerrarAviso);
@@ -300,23 +313,12 @@ namespace MechaCyberpunk.UI.Inicio
 
         private void ArmarMarco(Transform c)
         {
-            const float margen = 56f;
-            const float largo = 90f;
-            const float grosor = 3f;
-            Color color = UIInicio.ConAlfa(UIInicio.Cian, 0.55f);
-            for (int i = 0; i < 4; i++)
-            {
-                bool derecha = (i & 1) == 1;
-                bool abajo = (i & 2) == 2;
-                Vector2 ancla = new Vector2(derecha ? 1f : 0f, abajo ? 0f : 1f);
-                Vector2 pos = new Vector2(derecha ? -margen : margen, abajo ? margen : -margen);
-                Image h = UIInicio.Imagen(c, "EsquinaH" + i, color, SpritesInicio.Blanco, true);
-                UIInicio.Punto(h.rectTransform, ancla, pos, new Vector2(largo, grosor));
-                Image v = UIInicio.Imagen(c, "EsquinaV" + i, color, SpritesInicio.Blanco, true);
-                UIInicio.Punto(v.rectTransform, ancla, pos, new Vector2(grosor, largo));
-            }
-            reloj = UIInicio.Texto(c, "Reloj", string.Empty, UIInicio.FuenteTitulos, 34, UIInicio.ConAlfa(UIInicio.Cian, 0.85f), TextAnchor.UpperRight);
-            UIInicio.Punto(reloj.rectTransform, new Vector2(1f, 1f), new Vector2(-86f, -70f), new Vector2(520f, 50f));
+            TrazoH10.Recta(c, "ReglaTitulo", TrazoH10.TurquesaTenue, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -72f), new Vector2(-2f * MargenIzquierdo, TrazoH10.GrosorLinea));
+            RectTransform regla = TrazoH10.Regla(c, "Regla", 41, 12f, 12f, TrazoH10.TurquesaTenue);
+            UIInicio.Punto(regla, new Vector2(1f, 1f), new Vector2(-MargenIzquierdo, -74f), regla.sizeDelta);
+            reloj = TrazoH10.Etiqueta(c, "Reloj", string.Empty, TrazoH10.TamanoDato, TrazoH10.Turquesa, TextAnchor.MiddleRight);
+            UIInicio.Punto(reloj.rectTransform, new Vector2(1f, 1f), new Vector2(-MargenIzquierdo, -32f), new Vector2(620f, 34f));
         }
 
         private BotonInicio Boton(string texto, Color acento)
@@ -340,8 +342,13 @@ namespace MechaCyberpunk.UI.Inicio
                 continuar.FijarSubtexto(FormatoRanura.Linea(servicio.ResumenDe(ranuraContinuar)), UIInicio.Cian);
             }
             nueva.Etiqueta = hay ? TextoNueva : TextoJugar;
-            float y = YPrimerBoton;
-            foreach (BotonInicio b in new[] { continuar, nueva, cargar, botonOpciones, creditos, salir })
+            datoPartida.text = hay ? FormatoRanura.Linea(servicio.ResumenDe(ranuraContinuar)) : SinPartidaDetalle;
+            BotonInicio[] todos = { continuar, nueva, cargar, botonOpciones, creditos, salir };
+            float altoBotones = todos.Where(b => b.gameObject.activeSelf).Sum(b => (b == continuar ? AltoBotonConResumen : AltoBoton) + SeparacionBotones);
+            float altoPanel = altoBotones + 2f * RellenoMenu + AltoCabeceraMenu;
+            UIInicio.Punto(panelMenu.rectTransform, Vector2.zero, new Vector2(MargenIzquierdo, BaseMenu), new Vector2(AnchoBoton + 2f * RellenoMenu, altoPanel));
+            float y = BaseMenu + altoPanel - RellenoMenu - AltoCabeceraMenu;
+            foreach (BotonInicio b in todos)
             {
                 if (!b.gameObject.activeSelf)
                 {
@@ -349,7 +356,8 @@ namespace MechaCyberpunk.UI.Inicio
                 }
                 float alto = b == continuar ? AltoBotonConResumen : AltoBoton;
                 RectTransform r = (RectTransform)b.transform;
-                UIInicio.Punto(r, new Vector2(0f, 1f), new Vector2(MargenIzquierdo, y - alto * 0.5f), new Vector2(AnchoBoton, alto));
+                r.DOKill();
+                UIInicio.Punto(r, Vector2.zero, new Vector2(MargenIzquierdo + RellenoMenu, y - alto), new Vector2(AnchoBoton, alto));
                 y -= alto + SeparacionBotones;
             }
             Navigation.Mode mode = Navigation.Mode.Automatic;
@@ -358,6 +366,22 @@ namespace MechaCyberpunk.UI.Inicio
                 Navigation n = b.navigation;
                 n.mode = mode;
                 b.navigation = n;
+            }
+        }
+
+        // Los paneles y cada opción llegan escalonados.
+        private void AnimarEntrada()
+        {
+            AnimH10.EntrarPanel(panelMenu.rectTransform, new Vector2(-AnimH10.DesplazamientoEntrada, 0f));
+            AnimH10.EntrarPanel(panelDatos.rectTransform, new Vector2(AnimH10.DesplazamientoEntrada, 0f), EscalonBotones * 2f);
+            float demora = EscalonBotones;
+            foreach (BotonInicio b in new[] { continuar, nueva, cargar, botonOpciones, creditos, salir })
+            {
+                if (b.gameObject.activeSelf)
+                {
+                    AnimH10.EntrarPanel((RectTransform)b.transform, new Vector2(-AnimH10.DesplazamientoEntrada, 0f), demora);
+                    demora += EscalonBotones;
+                }
             }
         }
 
