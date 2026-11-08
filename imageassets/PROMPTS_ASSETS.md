@@ -2324,3 +2324,347 @@ Use the attached image ONLY for the art style, materials, colors and level of we
 ```
 Edit the attached character image. Keep EXACTLY the same character: same face, same curly hair with taper fade, the two shaved lines on the RIGHT side of the head, same body, same art style, same strict T-pose, same framing and the same plain flat pure white background. Change ONLY these things: 1) a slightly LIGHTER skin tone (light-medium tan instead of medium brown), keeping the same face; 2) a small silver hoop earring in his RIGHT ear, the same side as the shaved lines; 3) the sleeveless shirt is now plain BLACK (fitted sleeveless shirt, no print, no logo); 4) BLACK cargo pants with a relaxed, loose straight fit (not tight, not skinny), with flat side pockets, the hems resting on the shoes; 5) white high-top retro basketball sneakers with a canvas-leather look, a white rubber sole and a bold BLUE curved stripe on the side of each shoe (an original stripe shape, not a real brand logo). No text, no brand logos. Nothing hanging loose.
 ```
+
+
+# Parte 21 — Piezas separadas para Tripo (llantas, carrocerías y puertas, fachadas sin puerta, motos sin ruedas)
+
+Lote: `lote_piezas.json` · script: `generar_piezas.ps1` · salida `imageassets/modelos-nuevos/piezas/`.
+
+## RU01 — RU01_LlantaCarro (fase 1)
+- **Medida:** 0.65 m de diámetro · 0.22 m de ancho · **Tripo:** HD · 6000 · 2K · **Adjuntar:** `V01a_CarroViejito.png`, `V05_PatrullaSedan.png`
+
+```
+Use the attached cars ONLY for the art style, wheel size and the look of their tires and rims; draw a generic wheel that fits all of them. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONE single car wheel on its own: a chunky dark rubber tire with simple tread and a simple plain steel rim in dark gunmetal with a few round holes and a center cap, light wear and dust. Show the same wheel twice side by side with space between them: on the left seen straight from the side (looking directly at the rim), on the right in a 3/4 view showing the tread and thickness.
+```
+
+## RU02 — RU02_LlantaMoto (fase 1)
+- **Medida:** 0.55 m de diámetro · 0.12 m de ancho · **Tripo:** HD · 6000 · 2K · **Adjuntar:** `V07_MotoReparto.png`, `C19_Moto_v1.png`
+
+```
+Use the attached motorcycles ONLY for the art style, wheel size and look; draw a generic wheel that fits all of them. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONE single motorcycle wheel on its own: a chunky dark rubber tire with simple tread and a spoked rim with thick chunky spokes (about 12) and a small hub in dark gunmetal, light wear. Show the same wheel twice side by side with space between them: on the left seen straight from the side, on the right in a 3/4 view showing the tread and thickness.
+```
+
+## V01a-C — V01a_Carroceria (fase 2)
+- **Medida:** 4.2 × 1.95 × 2.3 m (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V01a_CarroViejito.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V01a-P — V01a_Puerta (fase 2)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V01a_CarroViejito.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V05-C — V05_Carroceria (fase 2)
+- **Medida:** 4.6 m de largo (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V05_PatrullaSedan.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V05-P — V05_Puerta (fase 2)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V05_PatrullaSedan.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V09-C — V09_Carroceria (fase 2)
+- **Medida:** 4.2 m de largo (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V09_Taxi.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V09-P — V09_Puerta (fase 2)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V09_Taxi.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V01b-C — V01b_Carroceria (fase 3)
+- **Medida:** 4.5 × 1.5 × 2.4 m (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V01b_CarroPro.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V01b-P — V01b_Puerta (fase 3)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V01b_CarroPro.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V02-C — V02_Carroceria (fase 3)
+- **Medida:** 4.3 m de largo (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V02_SedanViejo.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V02-P — V02_Puerta (fase 3)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V02_SedanViejo.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V03-C — V03_Carroceria (fase 3)
+- **Medida:** 4.8 m de largo (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V03_PickupTrabajo.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V03-P — V03_Puerta (fase 3)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V03_PickupTrabajo.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V04-C — V04_Carroceria (fase 3)
+- **Medida:** 4.6 m de largo (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V04_CombiVieja.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V04-P — V04_Puerta (fase 3)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V04_CombiVieja.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V06-C — V06_Carroceria (fase 3)
+- **Medida:** 5.0 m de largo (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V06_PatrullaCamioneta.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V06-P — V06_Puerta (fase 3)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V06_PatrullaCamioneta.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## V10-C — V10_Carroceria (fase 3)
+- **Medida:** 4.8 m de largo (sin ruedas) · **Tripo:** HD · 18000 · 2K · **Adjuntar:** `V10_Pickup.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same vehicle design, shape, proportions, paint colors, panels, patches, lights, details, wear and art style. Draw the same vehicle from the same 3/4 front left view, but as a body shell for a game with separate parts: 1) NO wheels: the four wheel arches are empty, with dark empty wheel wells and nothing inside; 2) NO front doors: both front door openings are empty holes with their door frames visible, showing the simple dark interior: the driver seat, the steering wheel and the dashboard; 3) NO glass at all: the windshield, side windows and rear window are open empty frames, no glass, no reflections. The rest of the vehicle stays identical (rear doors, if any, stay closed). Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## V10-P — V10_Puerta (fase 3)
+- **Medida:** puerta delantera izq. (~1.1 × 1.1 m) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `V10_Pickup.png`
+
+```
+Use the attached vehicle as the exact reference: keep EXACTLY the same paint color, panels, patches, handle, wear and art style of its FRONT LEFT door. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the front left door of this vehicle, removed and shown on its own, seen from the outside straight from the side, with a very slight angle so its thickness is visible: the outer door panel with its handle and its side mirror if the vehicle has one on that door, the window frame on top is empty and open (no glass), the inner edge shows a simple dark door frame thickness and hinge side. 
+```
+
+## C01F — C01_Fachada_SinPuerta (fase 4)
+- **Medida:** igual que C01 · **Tripo:** Smart Mesh P2 · 10000 · 2K · **Adjuntar:** `C01_FachadaLocal.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the door opening (the shop entrance with its rolling shutter) is now completely EMPTY: keep the door frame and the shutter box above it, but remove the shutter and any door, leaving a dark empty opening. Everything else stays identical. The back is flat. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## C02F — C02_Fachada_SinPuerta (fase 4)
+- **Medida:** igual que C02 · **Tripo:** Smart Mesh P2 · 10000 · 2K · **Adjuntar:** `C02_FachadaVivienda.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the house door opening is now completely EMPTY: keep the door frame, but remove the door, leaving a dark empty opening. Everything else stays identical. The back is flat. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## C03F — C03_Fachada_SinPuerta (fase 4)
+- **Medida:** igual que C03 · **Tripo:** Smart Mesh P2 · 10000 · 2K · **Adjuntar:** `C03_FachadaPisoAlto.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that any ground floor door opening is now completely EMPTY: keep the door frame, but remove the door, leaving a dark empty opening. Everything else stays identical. The back is flat. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## P11F — P11_EntradaCasa_SinPuerta (fase 4)
+- **Medida:** 2.2 × 3 m · **Tripo:** Smart Mesh P2 · 10000 · 2K · **Adjuntar:** `P11_EntradaCasa.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the entrance opening is now completely EMPTY: keep the thick concrete door frame, the steps, the mailboxes, the bulb and the conduit, but remove the metal grille gate and any door, leaving a dark empty opening. Everything else stays identical. The back is flat. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## P12F — P12_FachadaConsultorio_SinPuerta (fase 4)
+- **Medida:** 6 × 4.5 m · **Tripo:** Smart Mesh P2 · 10000 · 2K · **Adjuntar:** `P12_FachadaConsultorio.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the door opening is now completely EMPTY: keep the door frame, the light strip and the cross above it, but remove the heavy metal door, leaving a dark empty opening. Everything else stays identical. The back is flat. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+## PU01 — PU01_PuertaVivienda (fase 4)
+- **Medida:** 0.9 × 2.1 m · 5 cm de grueso · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `C02_FachadaVivienda.png`, `C01_FachadaLocal.png`
+
+```
+Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: a single house front door on its own, closed, seen straight from the front with a very slight angle so its thickness shows: painted wood and metal sheet panels in a faded color, a chunky round knob and a lock, a small vent grille, scuffs and chipped paint. No frame, only the door leaf.
+```
+
+## PU02 — PU02_CortinaMetalica (fase 4)
+- **Medida:** 2.4 × 2.4 m (ajustar al hueco de C01) · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `C01_FachadaLocal.png`
+
+```
+Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: a single rolling metal shop shutter on its own, fully closed (rolled down): horizontal corrugated metal slats in grey with a faded paint, a thick bottom bar with a handle and a padlock loop, the rolled drum box on top, dents and grime. Seen straight from the front with a very slight angle.
+```
+
+## PU03 — PU03_RejaEntrada (fase 4)
+- **Medida:** 1.1 × 2.2 m · 6 cm de grueso · **Tripo:** HD · 8000 · 2K · **Adjuntar:** `P11_EntradaCasa.png`
+
+```
+Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the metal grille security gate of that building entrance, on its own, closed: a thick metal frame with the same lattice of chunky bars, a padlock and a handle, the same paint and rust. Only the gate leaf, no wall, no frame. Seen straight from the front with a very slight angle.
+```
+
+## PU04 — PU04_PuertaMetalica (fase 4)
+- **Medida:** 1 × 2.2 m · 8 cm de grueso · **Tripo:** Smart Mesh P2 · 6000 · 2K · **Adjuntar:** `P12_FachadaConsultorio.png`
+
+```
+Use the attached facade ONLY to match the door's style, colors, materials and wear to it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the heavy reinforced metal door of that clinic, on its own, closed: thick riveted steel plate, the small speaker grille, a chunky handle and lock, the same paint, grime and rust. Only the door leaf, no wall, no frame. Seen straight from the front with a very slight angle.
+```
+
+## V07-B — V07_Cuerpo (fase 5)
+- **Medida:** 1.9 m de largo (sin ruedas) · **Tripo:** HD · 12000 · 2K · **Adjuntar:** `V07_MotoReparto.png`
+
+```
+Use the attached motorcycle as the exact reference: keep EXACTLY the same design, shape, colors, panels, lights, cargo, details, wear and art style. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the same motorcycle WITHOUT its two wheels: the front fork and the rear swingarm stay, with their empty axle ends where the wheels would go, nothing inside them; the motorcycle stands upright as if on an invisible stand. Show it twice side by side with space between them: on the left straight from the side, on the right in a 3/4 front view.
+```
+
+## V08-B — V08_Cuerpo (fase 5)
+- **Medida:** 2.2 m de largo (sin ruedas) · **Tripo:** HD · 12000 · 2K · **Adjuntar:** `V08_MotoPatrulla.png`
+
+```
+Use the attached motorcycle as the exact reference: keep EXACTLY the same design, shape, colors, panels, lights, cargo, details, wear and art style. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the same motorcycle WITHOUT its two wheels: the front fork and the rear swingarm stay, with their empty axle ends where the wheels would go, nothing inside them; the motorcycle stands upright as if on an invisible stand. Show it twice side by side with space between them: on the left straight from the side, on the right in a 3/4 front view.
+```
+
+## C19-B — C19_Cuerpo (fase 5)
+- **Medida:** 2.0 m de largo (sin ruedas) · **Tripo:** HD · 12000 · 2K · **Adjuntar:** `C19_Moto_v1.png`
+
+```
+Use the attached motorcycle as the exact reference: keep EXACTLY the same design, shape, colors, panels, lights, cargo, details, wear and art style. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: the same motorcycle WITHOUT its two wheels: the front fork and the rear swingarm stay, with their empty axle ends where the wheels would go, nothing inside them; the motorcycle stands upright as if on an invisible stand. Show it twice side by side with space between them: on the left straight from the side, on the right in a 3/4 front view.
+```
+
+
+## Parte 21b — Fachadas sin puerta: hueco que deja ver el fondo blanco (corrige fase 4)
+
+### C01F → `imageassets/modelos-nuevos/piezas/C01_Fachada_SinPuerta_v2.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the door opening (the shop entrance with its rolling shutter) is now completely EMPTY: keep the door frame and the shutter box above it, but remove the shutter and any door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+### C02F → `imageassets/modelos-nuevos/piezas/C02_Fachada_SinPuerta_v2.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the house door opening is now completely EMPTY: keep the door frame, but remove the door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+### C03F → `imageassets/modelos-nuevos/piezas/C03_Fachada_SinPuerta_v2.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that any ground floor door opening is now completely EMPTY: keep the door frame, but remove the door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+### P11F → `imageassets/modelos-nuevos/piezas/P11_EntradaCasa_SinPuerta_v2.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the entrance opening is now completely EMPTY: keep the thick concrete door frame, the steps, the mailboxes, the bulb and the conduit, but remove the metal grille gate and any door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+### P12F → `imageassets/modelos-nuevos/piezas/P12_FachadaConsultorio_SinPuerta_v2.png`
+
+```
+Use the attached facade as the exact reference: keep EXACTLY the same design, size, proportions, materials, colors, signs, lights, cables, wear and art style. Draw the same facade straight from the front, with the only change that the door opening is now completely EMPTY: keep the door frame, the light strip and the cross above it, but remove the heavy metal door, leaving a real see-through hole cut all the way through the wall: through the opening you see ONLY the same plain flat pure white background, exactly like the background around the object. Nothing inside the opening: no darkness, no shadow, no interior, no floor, no door.  Everything else stays identical. The wall is a single flat slab whose back is flat; the opening goes straight through it. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. 
+```
+
+
+### PU02b — PU02_CortinaMetalica_v2 (fase 7): solo la lámina, sin marco ni rollo
+
+```
+Use the attached facade ONLY to match the style, colors and wear. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Stylized game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients, no photorealistic noise. Subject: ONLY the slatted curtain sheet of a rolling metal shop shutter, on its own, as a flat rectangular panel: horizontal corrugated dark grey metal slats from top to bottom, a thick bottom bar with a small handle and a padlock loop, faded paint, dents and grime. NO frame, NO side guide rails, NO roll drum, NO box on top, NO wall: the top edge of the panel is just the last slat, straight and clean. Seen straight from the front with a very slight angle so its thin thickness is visible.
+```
+
+
+# Parte 22 — Pedido 09-nov: menús, logo agresivo e íconos con el look de las REF (solo estilo)
+
+Lote: `lote_09nov.json` · script: `generar_09nov.ps1`.
+
+## M20 — M20_MenuInicio (fase 1)
+- **Salida:** `imageassets/referencias/menus/M20_MenuInicio.png` · 16:9 · **Adjuntar:** `REF_MenuInicio.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The attached screenshots marked as menu references are ONLY a style guide: take their general visual language (dark panels with thin red lines, corners cut on a diagonal, cyan accents for active elements, slots with colored borders by rarity, thin condensed uppercase typography, lots of empty space, a hologram in the center). Do NOT copy anything specific from them: no logos, no names, no icons, no texts, no layouts copied one to one. This is an ORIGINAL menu design for our own game CYBERCITY. Palette: coral red (#FF5A4E) for lines and titles, cyan (#3FE3E0) for active and selected elements, an almost black reddish background, rarity colors green, blue, purple and orange. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game menu screen, crisp and readable, like a polished commercial game. The second attached image is our game's city: use it, softly blurred and darkened, as the background. Screen: the main menu. On the left a tall vertical translucent dark red panel with thin coral red edge lines and a diagonal cut corner; at the top of the panel the game logo text "CYBERCITY" (spelled exactly C-Y-B-E-R-C-I-T-Y) in aggressive slanted brush-like letters; below it a vertical list of options in thin condensed uppercase: "CONTINUAR" (highlighted in cyan with a small marker, as selected), "NUEVA PARTIDA", "CARGAR", "OPCIONES", "CRÉDITOS", "SALIR". In the bottom-left corner a tiny version number "v0.9". The rest of the screen shows the blurred night street.
+```
+
+## M21 — M21_MejoraArmas (fase 1)
+- **Salida:** `imageassets/referencias/menus/M21_MejoraArmas.png` · 16:9 · **Adjuntar:** `REF_MenuArmas1.png`, `REF_MenuArmas2.png`, `H01_Pistola.png`
+
+```
+The attached screenshots marked as menu references are ONLY a style guide: take their general visual language (dark panels with thin red lines, corners cut on a diagonal, cyan accents for active elements, slots with colored borders by rarity, thin condensed uppercase typography, lots of empty space, a hologram in the center). Do NOT copy anything specific from them: no logos, no names, no icons, no texts, no layouts copied one to one. This is an ORIGINAL menu design for our own game CYBERCITY. Palette: coral red (#FF5A4E) for lines and titles, cyan (#3FE3E0) for active and selected elements, an almost black reddish background, rarity colors green, blue, purple and orange. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game menu screen, crisp and readable, like a polished commercial game. The third attached image is our pistol hologram: use it as the big hologram in the center. Screen: the weapon upgrade bench of Tino. Top: two tabs "MEJORAS" (active, cyan underline) and "ARMAS". Left side: a column of small category icons in thin red line, and next to it a grid of weapon slots with colored borders by rarity (green, blue, purple, orange), each showing a small weapon silhouette. Center: the pistol as a large glowing cyan hologram seen from the side, with its magazine pulled slightly out below it and glowing brighter, as the selected part. Right side: the weapon name "PISTOLA W01", the rarity "RARA" in blue, and three stats with before and after values: "DAÑO 24 → 30", "CADENCIA 3.0 → 3.0", "CARGADOR 12 → 16", the improved values in cyan. Bottom: a row of 4 part slots labeled "CARGADOR" (selected, cyan border), "CAÑÓN", "MIRA", "EMPUÑADURA", each with a small cost like "$ 1,200", and a button "MEJORAR" with a cut corner.
+```
+
+## M22 — M22_ClinicaImplantes (fase 1)
+- **Salida:** `imageassets/referencias/menus/M22_ClinicaImplantes.png` · 16:9 · **Adjuntar:** `REF_MenuImplantes.png`, `PJ01_Protagonista_v2.png`, `IMP01_ExoPiernas_v2.png`
+
+```
+The attached screenshots marked as menu references are ONLY a style guide: take their general visual language (dark panels with thin red lines, corners cut on a diagonal, cyan accents for active elements, slots with colored borders by rarity, thin condensed uppercase typography, lots of empty space, a hologram in the center). Do NOT copy anything specific from them: no logos, no names, no icons, no texts, no layouts copied one to one. This is an ORIGINAL menu design for our own game CYBERCITY. Palette: coral red (#FF5A4E) for lines and titles, cyan (#3FE3E0) for active and selected elements, an almost black reddish background, rarity colors green, blue, purple and orange. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game menu screen, crisp and readable, like a polished commercial game. The second attached image is our protagonist and the third is a leg exoskeleton implant: use them. Screen: the implant clinic of the Doc. Center: the full body of the protagonist standing as a hologram in red and orange tones with glowing vein-like light lines, a slightly see-through hologram, a thin glowing leg exoskeleton outlined on his legs. Thin lines go out from the body to groups of square implant slots on both sides: top-left group labeled "CABEZA / OJOS" with 2 slots, middle-left group "BRAZOS" with 3 slots, middle-right group "PIERNAS" with 3 slots (one selected with a cyan border), lower-right group "PIEL / ESCUDO" with 2 slots; slots have rarity-colored borders and small implant icons, some empty. A detail box for the selected implant: title "EXO DE PIERNAS II", a short description "Salto más alto y menos daño por caída.", the cost "$ 4,500" and a button "INSTALAR". Top-right corner: "I+D+I · CLÍNICA DEL DOC" and the money "$ 12,450".
+```
+
+## LG20 — LG20_Amarillo (fase 2)
+- **Salida:** `imageassets/logo/LG20_Amarillo.png` · 16:9 · **Adjuntar:** `REF_MenuInicio.png`
+
+```
+Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly "CYBERCITY": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: electric yellow letters with a thin cyan outline.
+```
+
+## LG21 — LG21_Rojo (fase 2)
+- **Salida:** `imageassets/logo/LG21_Rojo.png` · 16:9 · **Adjuntar:** `REF_MenuInicio.png`
+
+```
+Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly "CYBERCITY": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: coral red (#FF5A4E) letters with a soft red glow.
+```
+
+## LG22 — LG22_Cian (fase 2)
+- **Salida:** `imageassets/logo/LG22_Cian.png` · 16:9 · **Adjuntar:** `REF_MenuInicio.png`
+
+```
+Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly "CYBERCITY": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: cyan (#3FE3E0) letters with a slight red glitch offset on a few strokes.
+```
+
+## LG23 — LG23_Blanco (fase 2)
+- **Salida:** `imageassets/logo/LG23_Blanco.png` · 16:9 · **Adjuntar:** `REF_MenuInicio.png`
+
+```
+Design an ORIGINAL video game title logo (do not imitate the logo of any existing game). The text must read exactly "CYBERCITY": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Lettering: aggressive slanted letters leaning to the right, drawn with a fast digital brush or marker stroke, sharp tapered stroke ends, energetic but readable. Under the word a fast underline stroke, and one signature detail of our own: a thin street light pole with a small lamp rising from the underline at the right end, and a tiny silhouette of a tall tower behind the letters. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, nothing else. Use the attached menu reference ONLY for the general mood. Color: white letters with a coral red shadow copy offset down and to the right.
+```
+
+## H30 — H30_IconosImplantes (fase 3)
+- **Salida:** `imageassets/ui/menus/H30_IconosImplantes.png` · 3:2 · **Adjuntar:** `REF_MenuImplantes.png`, `IMP01_ExoPiernas_v2.png`, `IMP02_ExoBrazos_v2.png`, `IMP03_VisorCabeza_v2.png`
+
+```
+Use the attached menu reference ONLY for the general style of the item icons (illustrated, slightly glowing, in dark square slots with thin colored borders). Original icons of our own, do not copy any icon from the reference. A clean icon sheet on a PURE BLACK (#000000) flat background: each icon centered inside its own square slot, slots in a neat grid with even spacing, all slots the same size, no text, no labels, no numbers. The other attached images are our implants: base the icons on them. 6 illustrated implant icons in a grid of 3 columns by 2 rows, slot borders by rarity: 1) leg exoskeleton level I (simple rods, green border), 2) leg exoskeleton level II (the same with extra glowing parts, blue border), 3) arm exoskeleton level I (green border), 4) arm exoskeleton level II (blue border), 5) a bionic eye monocle (purple border), 6) a goggles visor for the eyes (orange border).
+```
+
+## H31 — H31_IconosPiezasArma (fase 3)
+- **Salida:** `imageassets/ui/menus/H31_IconosPiezasArma.png` · 3:2 · **Adjuntar:** `REF_MenuArmas1.png`, `H01_Pistola.png`
+
+```
+Use the attached menu reference ONLY for the general style of the item icons (illustrated, slightly glowing, in dark square slots with thin colored borders). Original icons of our own, do not copy any icon from the reference. A clean icon sheet on a PURE BLACK (#000000) flat background: each icon centered inside its own square slot, slots in a neat grid with even spacing, all slots the same size, no text, no labels, no numbers. 6 illustrated weapon part icons in a grid of 3 columns by 2 rows, slot borders in rarity colors (green, green, blue, blue, purple, orange): a pistol magazine, a gun barrel, a small scope sight, a pistol grip, a suppressor, a small glowing damage chip.
+```
+
+## H32 — H32_IconosCategorias (fase 3)
+- **Salida:** `imageassets/ui/menus/H32_IconosCategorias.png` · 21:9 · **Adjuntar:** `REF_MenuArmas2.png`
+
+```
+Use the attached menu reference ONLY for the general line style. Original icons of our own. A single row of 8 category icons evenly spaced on a PURE BLACK (#000000) flat background, each drawn in a single thin coral red (#FF5A4E) line, same line weight and size, no slots, no text: a pistol, a shotgun, an assault rifle, a sniper rifle with scope, a combat knife, a consumable (a drink can and a small box), an implant (a robotic arm segment), a weapon part (a gear with a bullet).
+```
