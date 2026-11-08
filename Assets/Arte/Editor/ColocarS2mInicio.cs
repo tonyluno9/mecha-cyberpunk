@@ -103,12 +103,6 @@ namespace MechaCyberpunk.Arte.Editor
             recorrido.AddComponent<RecorridoCallesMenu>().Configurar(camara, desdes, hacias);
 
             EditorSceneManager.SaveScene(escena, FondoCallesInicio.EscenaCalles, true);
-            List<EditorBuildSettingsScene> lista = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
-            if (!lista.Exists(s => s.path == FondoCallesInicio.EscenaCalles))
-            {
-                lista.Add(new EditorBuildSettingsScene(FondoCallesInicio.EscenaCalles, true));
-                EditorBuildSettings.scenes = lista.ToArray();
-            }
             EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single);
             AssetDatabase.SaveAssets();
         }

@@ -92,11 +92,20 @@ namespace MechaCyberpunk.UI.Inicio
 
         private IEnumerator Start()
         {
-            if ((Application.isBatchMode && !CargarEnBatch) || SceneUtility.GetBuildIndexByScenePath(EscenaCalles) < 0)
+            if (Application.isBatchMode && !CargarEnBatch)
             {
                 yield break;
             }
+#if UNITY_EDITOR
+            // Como EscenaInicio: en el editor se carga por ruta, sin estar en Build Settings (la demo lleva solo sus tres escenas).
+            AsyncOperation carga = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(EscenaCalles, new LoadSceneParameters(LoadSceneMode.Additive));
+#else
+            if (SceneUtility.GetBuildIndexByScenePath(EscenaCalles) < 0)
+            {
+                yield break; // sin la escena en el build se quedan las fotos
+            }
             AsyncOperation carga = SceneManager.LoadSceneAsync(EscenaCalles, LoadSceneMode.Additive);
+#endif
             if (carga == null)
             {
                 yield break;
