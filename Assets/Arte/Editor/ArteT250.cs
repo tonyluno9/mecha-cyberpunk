@@ -110,6 +110,11 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 return "Exteriores";
             }
+            // T-883: P10-P12 son puertas y fachadas (no personajes): con los exteriores.
+            if (codigo.StartsWith("P1"))
+            {
+                return "Exteriores";
+            }
             switch (codigo[0])
             {
                 case 'C': return "Calle";

@@ -47,7 +47,10 @@ namespace MechaCyberpunk.Arte.Editor
         public const float VanoX0 = -62.5f, VanoX1 = -61.5f, AltoVano = 2.2f;
 
         // ---- Taller del mecánico dentro de la planta baja del Edificio_45 (cuerpo x -37..-12.3, z -84..-59.3; fachada oeste en x -37).
-        public const float TallerX0 = -37f, TallerX1 = -28f, TallerZ0 = -75.67f, TallerZ1 = -67.67f, TallerTecho = 4.6f;
+        // T-883 (playtest 7-nov): a escala real, cabe un carro con espacio: 16 m de fondo (antes 9) y 5.4 m de alto (antes 4.6).
+        public const float TallerX0 = -37f, TallerX1 = -21f, TallerZ0 = -75.67f, TallerZ1 = -67.67f, TallerTecho = 5.4f;
+        /// <summary>Cuánto se recorrió el fondo del taller (T-883): lo que iba contra la pared del fondo se mueve esto en x.</summary>
+        private const float Fondo = TallerX1 + 28f;
         public const float PortonZ0 = -74.9f, PortonZ1 = -68.45f, PortonAlto = 4.3f;
         private const float AltoPlantaBaja = 6.2f;
         private static readonly float[] BahiasTaller = { -73.67f, -69.67f };
@@ -567,7 +570,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform m = Grupo(raiz, "Muebles");
             float p = Suelo;
             // Elevador de dos postes con el carro del cliente arriba, la nariz hacia la calle.
-            Vector3 centroCarro = new Vector3(-32.4f, 0f, -73.0f);
+            Vector3 centroCarro = new Vector3(-29f, 0f, -73.0f);
             Transform elevador = Grupo(m, "Elevador");
             GameObject carro = ColocarS2Interiores.Modelo(elevador, V + "V01a_CarroViejito", centroCarro, 90f, p + 1.55f, sinCollider: true);
             Bounds bc = carro != null ? ArteT250.Limites(carro) : new Bounds(centroCarro + Vector3.up * 2.5f, new Vector3(4.2f, 1.9f, 2.1f));
@@ -599,21 +602,21 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Pieza(elevador, "Travesano", amarillo, new Vector3(centroCarro.x, p + alto - 0.1f, centroCarro.z), new Vector3(0.22f, 0.2f, bc.size.z + 0.7f + 0.32f), false);
             // Lo de un taller, contra las paredes (como el cuarto aparte de S2, ahora en su sitio).
-            ColocarS2Interiores.Modelo(m, T + "T07_GruaMotor", new Vector3(-31.6f, 0f, -70.4f), 0f, p);
-            ColocarS2Interiores.Modelo(m, T + "T04_GabineteHerramientas", new Vector3(-29.4f, 0f, -75.15f), 180f, p);
-            ColocarS2Interiores.Modelo(m, T + "T01_ParedTaller", new Vector3(-28.45f, 0f, -71.5f), 90f, p, 0.75f);
-            ColocarS2Interiores.Modelo(m, T + "T03_BancoTrabajo", new Vector3(-30.0f, 0f, -68.2f), 0f, p);
-            ColocarS2Interiores.Modelo(m, T + "T06_Soldadora", new Vector3(-32.4f, 0f, -68.25f), 0f, p);
-            ColocarS2Interiores.Modelo(m, T + "T05_Generador", new Vector3(-28.7f, 0f, -68.5f), 90f, p);
-            ColocarS2Interiores.Modelo(m, T + "T08_RepisaTaller", new Vector3(-28.45f, 0f, -74.0f), 90f, p, 0.85f);
+            ColocarS2Interiores.Modelo(m, T + "T07_GruaMotor", new Vector3(-31.6f + Fondo * 0.5f, 0f, -70.4f), 0f, p);
+            ColocarS2Interiores.Modelo(m, T + "T04_GabineteHerramientas", new Vector3(-29.4f + Fondo, 0f, -75.15f), 180f, p);
+            ColocarS2Interiores.Modelo(m, T + "T01_ParedTaller", new Vector3(-28.45f + Fondo, 0f, -71.5f), 90f, p, 0.75f);
+            ColocarS2Interiores.Modelo(m, T + "T03_BancoTrabajo", new Vector3(-30.0f + Fondo, 0f, -68.2f), 0f, p);
+            ColocarS2Interiores.Modelo(m, T + "T06_Soldadora", new Vector3(-32.4f + Fondo, 0f, -68.25f), 0f, p);
+            ColocarS2Interiores.Modelo(m, T + "T05_Generador", new Vector3(-28.7f + Fondo, 0f, -68.5f), 90f, p);
+            ColocarS2Interiores.Modelo(m, T + "T08_RepisaTaller", new Vector3(-28.45f + Fondo, 0f, -74.0f), 90f, p, 0.85f);
             ColocarS2Interiores.Modelo(m, L + "L04_Llantas", new Vector3(-35.6f, 0f, -68.6f), 0f, p);
-            ColocarS2Interiores.Modelo(m, L + "L04_Llantas", new Vector3(-30.2f, 0f, -74.6f), 40f, p);
+            ColocarS2Interiores.Modelo(m, L + "L04_Llantas", new Vector3(-30.2f + Fondo, 0f, -74.6f), 40f, p);
             ColocarS2Interiores.Modelo(m, C + "C16_Tambo", new Vector3(-36.1f, 0f, -75.1f), 0f, p);
             ColocarS2Interiores.Modelo(m, C + "C16_Tambo", new Vector3(-35.45f, 0f, -75.15f), 0f, p);
-            ColocarS2Interiores.Modelo(m, C + "C16_Tambo", new Vector3(-28.7f, 0f, -69.9f), 0f, p);
-            ColocarS2Interiores.Modelo(m, C + "CY03_MazoCables", new Vector3(-28.2f, 0f, -73.0f), 90f, p + 1.6f, sinCollider: true);
+            ColocarS2Interiores.Modelo(m, C + "C16_Tambo", new Vector3(-28.7f + Fondo, 0f, -69.9f), 0f, p);
+            ColocarS2Interiores.Modelo(m, C + "CY03_MazoCables", new Vector3(-28.2f + Fondo, 0f, -73.0f), 90f, p + 1.6f, sinCollider: true);
             ColocarS2Interiores.Modelo(m, C + "CY03_MazoCables", new Vector3(-34.0f, 0f, -67.85f), 0f, p + 1.6f, sinCollider: true);
-            foreach (float x in new[] { -33.8f, -30.2f })
+            foreach (float x in new[] { -33.8f, -29f, -24.2f })
             {
                 GameObject lampara = ColocarS2Interiores.Modelo(m, "Assets/Arte/Clandestino/Prefabs/A05_LamparaColgante", new Vector3(x, 0f, -71.7f), 90f, TallerTecho - 0.05f, 0.5f, colgar: true);
                 if (lampara != null)
@@ -642,11 +645,12 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Transform l = Grupo(raiz, "Luces");
             Luz(l, "Tubo_Calido_1", new Vector3(-33.8f, TallerTecho - 0.7f, -71.7f), Calido, 9f, 11f);
-            Luz(l, "Tubo_Calido_2", new Vector3(-30.2f, TallerTecho - 0.7f, -71.7f), Calido, 8f, 11f);
-            Luz(l, "Relleno_Fondo", new Vector3(-29.0f, 2.2f, -71.7f), Calido, 4f, 8f);
-            Luz(l, "Neon_Magenta", new Vector3(-31.0f, 2.6f, -68.1f), Magenta, 3f, 5f);
-            Luz(l, "Neon_Turquesa", new Vector3(-28.5f, 2.6f, -72.8f), Turquesa, 3f, 5f);
-            Luz(l, "Bajo_Carro", new Vector3(-32.4f, 1.0f, -73.0f), Calido, 3f, 5f);
+            Luz(l, "Tubo_Calido_2", new Vector3(-29f, TallerTecho - 0.7f, -71.7f), Calido, 8f, 11f);
+            Luz(l, "Tubo_Calido_3", new Vector3(-24.2f, TallerTecho - 0.7f, -71.7f), Calido, 8f, 11f);
+            Luz(l, "Relleno_Fondo", new Vector3(-29.0f + Fondo, 2.2f, -71.7f), Calido, 4f, 8f);
+            Luz(l, "Neon_Magenta", new Vector3(-31.0f + Fondo, 2.6f, -68.1f), Magenta, 3f, 5f);
+            Luz(l, "Neon_Turquesa", new Vector3(-28.5f + Fondo, 2.6f, -72.8f), Turquesa, 3f, 5f);
+            Luz(l, "Bajo_Carro", new Vector3(-29f, 1.0f, -73.0f), Calido, 3f, 5f);
             Light foco = Luz(l, "Foco_Porton", new Vector3(-36.4f, TallerTecho - 0.3f, -71.7f), Calido, 6f, 12f);
             foco.type = LightType.Spot;
             foco.spotAngle = 110f;

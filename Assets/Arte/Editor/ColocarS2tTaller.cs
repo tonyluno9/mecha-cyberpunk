@@ -25,7 +25,13 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly Bounds FrentePorton = new Bounds(new Vector3(-38f, 3f, -71.7f), new Vector3(4f, 8f, 9f));
         public static readonly Bounds ArribaDelTaller = new Bounds(new Vector3(-37.5f, 9f, -70f), new Vector3(4f, 6f, 12f));
         /// <summary>Escala del modelo como la de los otros NPC de Tripo de la ciudad (woman2 de Canepa).</summary>
-        public const float EscalaModelo = 1.29f;
+        /// <summary>T-883: 1.29 lo dejaba de 1.53 m animado (medido con BakeMesh en Play); con 1.52 mide 1.80 m.</summary>
+        public const float EscalaModelo = 1.52f;
+        /// <summary>T-883: el letrero de Tony (L15, EL CANEPA / TALLER MECÁNICO pintado a mano) en lugar del C15a con texto.</summary>
+        public const string RutaL15 = "Assets/Arte/Exteriores/Prefabs/L15.prefab";
+        public const float LargoL15 = 3.8f;
+        /// <summary>Giro (°, en y) para que la cara pintada del L15 mire a la calle (-x); se ajustó con la foto del frente.</summary>
+        public static float GiroL15 = 90f;
         public static readonly Color Naranja = new Color(1f, 0.62f, 0.2f);
 
         [MenuItem("Mecha Cyberpunk/S2t/10 Taller del mecanico")]
@@ -59,6 +65,26 @@ namespace MechaCyberpunk.Arte.Editor
             if (letrero == null)
             {
                 ColocarS2.Informe.AppendLine("FALTA " + RutaLetrero);
+                return;
+            }
+            GameObject l15 = AssetDatabase.LoadAssetAtPath<GameObject>(RutaL15);
+            if (l15 != null)
+            {
+                // El L15 va donde estaba el C15a (sobre el portón, de cara a la calle, hacia -x) y el C15a se apaga.
+                Bounds lb = ArteT250.Limites(letrero.gameObject);
+                letrero.gameObject.SetActive(false);
+                GameObject nuevo = (GameObject)PrefabUtility.InstantiatePrefab(l15, raiz);
+                nuevo.name = "Letrero_L15";
+                nuevo.transform.rotation = Quaternion.Euler(0f, GiroL15, 0f);
+                Bounds b0 = ArteT250.Limites(nuevo);
+                nuevo.transform.localScale = Vector3.one * (LargoL15 / Mathf.Max(b0.size.x, b0.size.z));
+                Bounds b1 = ArteT250.Limites(nuevo);
+                nuevo.transform.position += new Vector3(ColocarS2nPuertas.TallerX0 - 0.05f - b1.max.x, lb.min.y - b1.min.y, lb.center.z - b1.center.z);
+                foreach (Collider c in nuevo.GetComponentsInChildren<Collider>())
+                {
+                    Object.DestroyImmediate(c);
+                }
+                ColocarS2.Informe.AppendLine("letrero L15 de Tony sobre el portón: " + ArteT250.Limites(nuevo).size.ToString("F2"));
                 return;
             }
             Bounds b = ArteT250.Limites(letrero.gameObject);
