@@ -39,7 +39,7 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Dinero que suelta al caer (puntos de dinero).")]
         [Min(0)] [SerializeField] private int dinero = 40;
         [Tooltip("Segundos después del KO en que desaparece (s).")]
-        [Min(0.1f)] [SerializeField] private float segundosParaDesaparecer = 4f;
+        [Min(0.1f)] [SerializeField] private float segundosParaDesaparecer = 45f;
         [Tooltip("Duración del parpadeo rojo al recibir daño (s).")]
         [Min(0.01f)] [SerializeField] private float duracionParpadeo = 0.12f;
         [Tooltip("Cuánto sube el brazo en el aviso del golpe (°).")]

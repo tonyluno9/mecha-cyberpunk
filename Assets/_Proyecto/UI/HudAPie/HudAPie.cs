@@ -311,6 +311,7 @@ namespace MechaCyberpunk.UI.Hud
         private void OnEnable()
         {
             EventosMontaje.Aviso += AlAvisoMontable;
+            MunicionEnPiso.Recogida += AlRecogerMunicion;
             if (!listo)
             {
                 return;
@@ -369,6 +370,7 @@ namespace MechaCyberpunk.UI.Hud
         private void OnDisable()
         {
             EventosMontaje.Aviso -= AlAvisoMontable;
+            MunicionEnPiso.Recogida -= AlRecogerMunicion;
             if (!listo)
             {
                 return;
@@ -1025,6 +1027,12 @@ namespace MechaCyberpunk.UI.Hud
         private static void AlAvisoMontable(IMontable montable, string texto)
         {
             ColaAvisos.Publicar(texto, PrioridadAviso.Alta, TipoAviso.Malo, 4f, "montable");
+        }
+
+        // T-746: las balas recogidas de un enemigo caído se avisan en la cola de avisos.
+        private static void AlRecogerMunicion(ArmaAPie arma, int balas)
+        {
+            ColaAvisos.Publicar("+" + balas + " BALAS", PrioridadAviso.Normal, TipoAviso.Bueno, 1.5f, "municion");
         }
 
         // T-537: la hora del juego bajo los Biits (se arma sola la primera vez, junto a la cifra del dinero).

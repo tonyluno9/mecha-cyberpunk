@@ -191,6 +191,7 @@ namespace MechaCyberpunk.Tests.IA
             yield return null;
             foreach (MechaCyberpunk.Personaje.Combate.DineroEnPiso suelto in Object.FindObjectsByType<MechaCyberpunk.Personaje.Combate.DineroEnPiso>(FindObjectsSortMode.None))
             {
+                if (suelto == null) continue; // T-746: uno ya se recogió al pasar junto al anterior
                 Registro<IJugador>.Actual.Colocar(new Pose(suelto.transform.position, Quaternion.identity));
                 yield return Esperar(0.9f);
             }

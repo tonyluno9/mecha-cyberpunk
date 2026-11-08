@@ -16,7 +16,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
     /// </summary>
     public class PatrullaMundo : MonoBehaviour
     {
-        private const float GradosPorSegundoGiro = 360f;
+        // T-746: gira como un carro, no sobre su eje: lo que puede girar depende de lo que avanza (radio de giro mínimo, el del carro del jugador: distancia entre ejes / tan del volante).
+        private const float RadioMinimoGiro = 3.6f;
         private const float DistanciaMinimaDeNodo = 0.01f;
         // T-533: de cerca deja la calle y va directo hacia el jugador (como en GTA), y por el megáfono le grita cada tanto.
         private const float DistanciaDirecta = 28f;
@@ -517,7 +518,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     rastro.Add(posicion);
                 }
                 posicion += direccion * paso;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), GradosPorSegundoGiro * dt);
+                GirarHacia(direccion, paso);
             }
             transform.position = posicion;
             int cercano = calles.MasCercano(posicion);
@@ -557,7 +558,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 Vector3 direccion = hacia.normalized;
                 posicion += direccion * paso;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), GradosPorSegundoGiro * dt);
+                GirarHacia(direccion, paso);
             }
             transform.position = posicion;
             int cercano = calles.MasCercano(posicion);
@@ -582,9 +583,17 @@ namespace MechaCyberpunk.Trafico.Persecucion
             nodoMeta = meta;
         }
 
+        // T-746: como en un carro, el giro (rad) no pasa de los metros avanzados entre el radio mínimo; detenida no gira, así no da vueltas sobre su eje.
+        private void GirarHacia(Vector3 direccion, float metrosAvanzados)
+        {
+            float maximo = metrosAvanzados / RadioMinimoGiro * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), maximo);
+        }
+
         private void Avanzar(float distanciaAlObjetivo, float dt)
         {
             float restante = calculo.Paso(false, distanciaAlObjetivo, dt);
+            float recorrido = restante;
             while (restante > 0f && indiceEnCamino < camino.Count)
             {
                 Vector3 nodo = calles.Nodo(camino[indiceEnCamino]);
@@ -599,7 +608,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 }
                 Vector3 direccion = haciaNodo / distancia;
                 posicion += direccion * restante;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), GradosPorSegundoGiro * dt);
+                GirarHacia(direccion, recorrido);
                 restante = 0f;
             }
             transform.position = posicion;

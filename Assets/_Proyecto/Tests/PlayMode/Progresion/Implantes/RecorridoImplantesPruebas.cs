@@ -752,7 +752,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
                 golpesLista.Add(golpesDados);
                 ronda++;
             }
-            float finEspera = Time.time + datosPandillero.SegundosParaDesaparecer + 1f;
+            float finEspera = Time.time + 1f; // T-746: los vencidos se quedan tirados (KO)
             while (Time.time < finEspera)
             {
                 MantenerVivo();
