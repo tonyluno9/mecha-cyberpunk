@@ -34,13 +34,15 @@ namespace MechaCyberpunk.Tests.Vehiculos
         public void Prefab_RuedasDeGreybox_SiguenPeroNoSeVen([ValueSource(nameof(Codigos))] string codigo)
         {
             GameObject prefab = Cargar(codigo);
+            // T-742: V01a, V01b y V05 van por piezas: sus ruedas SÍ se ven (llantas RU01); lo prueba CarrosPorPiezasT742Pruebas.
+            bool porPiezas = prefab.GetComponent<PuertasCarro>() != null;
             foreach (string nombre in new[] { "Rueda_DI", "Rueda_DD", "Rueda_TI", "Rueda_TD" })
             {
                 Transform rueda = prefab.transform.Find(nombre);
                 Assert.IsNotNull(rueda, "La física necesita " + nombre);
                 foreach (Renderer r in rueda.GetComponentsInChildren<Renderer>(true))
                 {
-                    Assert.IsFalse(r.enabled, nombre + " no se ve");
+                    Assert.AreEqual(porPiezas, r.enabled, nombre + (porPiezas ? " se ve (llanta RU01)" : " no se ve"));
                 }
             }
             foreach (string nombre in new[] { "Carroceria", "Cabina" })
@@ -49,6 +51,10 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Assert.IsNotNull(prefab.transform.Find(nombre).GetComponent<BoxCollider>(), nombre + " sigue chocando");
             }
             // Ningún cilindro de greybox visible en todo el prefab.
+            if (porPiezas)
+            {
+                return;
+            }
             foreach (MeshFilter f in prefab.GetComponentsInChildren<MeshFilter>(true))
             {
                 MeshRenderer r = f.GetComponent<MeshRenderer>();

@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Trafico.Editor",
     "rootNamespace": "MechaCyberpunk.Trafico.Editor",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Trafico"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Trafico", "MechaCyberpunk.Vehiculos", "MechaCyberpunk.Vehiculos.Editor"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
