@@ -161,6 +161,11 @@ namespace MechaCyberpunk.Vehiculos.Editor
             {
                 raiz.AddComponent<CarroEstacionado>();
             }
+            if (CreadorCarrosPiezasT742.EsPorPiezas(codigo))
+            {
+                // T-742: V01a, V01b y V05 van armados por piezas (carrocería, puertas y llantas), no con el modelo de una sola malla.
+                CreadorCarrosPiezasT742.Armar(raiz, codigo);
+            }
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab(codigo));
             Object.DestroyImmediate(raiz);
             if (moto)

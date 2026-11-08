@@ -96,3 +96,10 @@ marino (`man_PoliciaMarino.mat`); cuando vuelva a llegar uno con esqueleto lo ca
 - La lógica de que el policía se baje de la patrulla y dispare va en un lote posterior. `PoliciaAPie` ya tiene vida, colisión, pistola W01 e IA a pie, pero no hay
   ninguno colocado en la ciudad.
 - Si alguien corre `CreadorArmas.Crear` o `CreadorJugadorAPie.RegenerarPrefabTerceraPersona`, el prefab del jugador vuelve a las cajas: correr después el importador.
+
+**Piezas de carros (T-742, noche 9-nov)**
+- `Assets/Arte/Editor/ImportarS1nPiezas.cs` (menú **Mecha Cyberpunk > S1n > Meter piezas de carros**; batch: `-executeMethod MechaCyberpunk.Arte.Editor.ImportarS1nPiezas.MeterTodo`, informe en `Logs/s1n-piezas.txt`).
+  Desempaca `modelos3d/piezas/V01CARROZA.zip`, `V01BCARROZA.zip`, `V05CARROZA.zip` y `RU01COCHE.zip` y copia `blender/puertas/V01A_, V01B_ y V05_Puerta_Izquierda/Derecha.fbx` a
+  `Assets/Arte/Vehiculos/Piezas/<V01a|V01b|V05|RU01>/` (`<código>_Carroceria.fbx`, `_Puerta_Izq.fbx`, `_Puerta_Der.fbx`, `RU01.fbx` y sus `_basecolor.jpg`/`_normal.jpg`).
+  Las puertas traen su textura incrustada en el .fbx: se extrae una vez a `<código>_Puerta_basecolor.jpg` y `_normal.jpg`. Los de más de 15 mil caras llevan Mesh LOD. Correrlo dos veces no cambia nada.
+- Después `CreadorCarrosPiezasT742.ArmarTodos` arma los tres carros y `CreadorPatrullaPiezasT742.Armar` la patrulla (RU02 y C19CUERPO de las motos son B2).
