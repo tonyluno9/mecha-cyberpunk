@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void NeonAlto_PuentesDelAnchoDeLaCalle()
         {
-            foreach (Transform p in Raiz("T505_NeonAlto").Find("Piezas").Cast<Transform>().Where(t => t.name.StartsWith("N02")))
+            foreach (Transform p in Raiz("T505_NeonAlto").Find("Piezas").Cast<Transform>().Where(t => t.name.StartsWith("N02") && t.gameObject.activeSelf)) // T-885: apagados
             {
                 Bounds b = Caja(p);
                 Assert.Greater(b.min.x, 33f, "No entra a los edificios del oeste");
