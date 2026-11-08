@@ -67,7 +67,7 @@ MonoBehaviour:
   anchoTextura: 1152
   altoTextura: 720
   campoVision: 28
-  distancia: 2.9
+  distancia: 3.5
   distanciaMinima: 1.5
   distanciaMaxima: 4
   pasoRueda: 0.25
@@ -83,6 +83,9 @@ MonoBehaviour:
   colorMejora: {r: 0.35, g: 1, b: 0.55, a: 1}
   colorPeor: {r: 1, g: 0.3, b: 0.3, a: 1}
   colorFondo: {r: 0.012, g: 0.02, b: 0.04, a: 1}
+  colorAcento: {r: 0.36, g: 0.93, b: 0.9, a: 1}
+  fuenteTexto: {fileID: 12800000, guid: 449d32f24a791ad47853b1b251ca3c0b, type: 3}
+  fuenteTitulo: {fileID: 12800000, guid: 9f074b92f03b1764b9544b15717affbc, type: 3}
   titulo: BANCO DE TINO
   subtitulo: MEJORA DE ARMAS
   encabezadoArmas: TUS ARMAS
