@@ -34,15 +34,16 @@ namespace MechaCyberpunk.Tests.Vehiculos
         public void Prefab_RuedasDeGreybox_SiguenPeroNoSeVen([ValueSource(nameof(Codigos))] string codigo)
         {
             GameObject prefab = Cargar(codigo);
-            // T-742: V01a, V01b y V05 van por piezas: sus ruedas SÍ se ven (llantas RU01); lo prueba CarrosPorPiezasT742Pruebas.
-            bool porPiezas = prefab.GetComponent<PuertasCarro>() != null;
+            // T-742 y T-743: V01a, V01b, V05 y la moto V08 van por piezas: sus ruedas SÍ se ven (llantas RU01 y RU02); lo prueban CarrosPorPiezasT742Pruebas y MotosPorPiezasT743Pruebas.
+            bool porPiezas = prefab.GetComponent<RuedasVisualesCarro>() != null;
             foreach (string nombre in new[] { "Rueda_DI", "Rueda_DD", "Rueda_TI", "Rueda_TD" })
             {
                 Transform rueda = prefab.transform.Find(nombre);
                 Assert.IsNotNull(rueda, "La física necesita " + nombre);
                 foreach (Renderer r in rueda.GetComponentsInChildren<Renderer>(true))
                 {
-                    Assert.AreEqual(porPiezas, r.enabled, nombre + (porPiezas ? " se ve (llanta RU01)" : " no se ve"));
+                    bool llantaEnElAncla = prefab.GetComponent<PuertasCarro>() != null; // los carros llevan la llanta en el ancla; las motos en Ruedas_T743
+                    Assert.AreEqual(llantaEnElAncla, r.enabled, nombre + (llantaEnElAncla ? " se ve (llanta RU01)" : " no se ve"));
                 }
             }
             foreach (string nombre in new[] { "Carroceria", "Cabina" })
