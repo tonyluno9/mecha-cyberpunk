@@ -839,7 +839,8 @@ namespace MechaCyberpunk.Tests.Demo
             hacia.y = 0f;
             Vector3 dir = hacia.sqrMagnitude > 0.01f ? hacia.normalized : Vector3.forward;
             Vector3 punto = destino - dir * Mathf.Max(distancia, 1.2f);
-            if (Physics.Raycast(punto + Vector3.up * 4f, Vector3.down, out RaycastHit piso, 10f))
+            // T-748: el rayo sale 1.5 m sobre el destino (no 4 m sobre el punto): en interiores (banco de Tino) desde 4 m pegaba en el techo y el jugador quedaba en la azotea, 4 m arriba.
+            if (Physics.Raycast(new Vector3(punto.x, Mathf.Max(destino.y, Jugador.Raiz.position.y) + 1.5f, punto.z), Vector3.down, out RaycastHit piso, 10f))
             {
                 punto = piso.point;
             }
