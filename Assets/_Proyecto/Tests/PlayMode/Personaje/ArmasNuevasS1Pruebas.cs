@@ -53,6 +53,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator EnLaMano_ModeloVisible_CanonAlFrente_EmpunaduraEnLaPalma_BocaEnLaPunta()
         {
             yield return Calentar();
+            ConIKDeApuntadoEncendido(); // T-737: mide las correcciones de ApuntadoIK, que el jugador ya no usa
             VisualPersonaje visual = Visual();
             Animator a = visual.Animador;
             a.cullingMode = AnimatorCullingMode.AlwaysAnimate;
