@@ -14,6 +14,11 @@ namespace MechaCyberpunk.UI.Kit
     /// </summary>
     public static class KitUI
     {
+        private const float AlfaLineaPanelH10 = 0.55f;
+        private const float GrosorLineaPanelH10 = 1.5f;
+        private const float LargoEscuadraH10 = 46f;
+        private const float GrosorEscuadraH10 = 3f;
+
         public const float AnchoReferencia = 1920f;
         public const float AltoReferencia = 1080f;
         public const float MezclaAnchoAlto = 0.5f;
@@ -128,6 +133,34 @@ namespace MechaCyberpunk.UI.Kit
                 imagen.pixelsPerUnitMultiplier = 3f;
             }
             return imagen;
+        }
+
+        /// <summary>
+        /// T-896: panel de los menús turquesa, como el HUD H10: fondo oscuro casi transparente y marco de línea fina con escuadras en las esquinas.
+        /// </summary>
+        public static Image CrearPanelH10(Transform padre, string nombre, Color color)
+        {
+            Image panel = CrearImagen(padre, nombre, new Color(0.01f, 0.03f, 0.05f, 0.55f));
+            panel.raycastTarget = false;
+            Color linea = new Color(color.r, color.g, color.b, AlfaLineaPanelH10);
+            Vector2[] anclas = { new Vector2(0.5f, 1f), new Vector2(0.5f, 0f), new Vector2(0f, 0.5f), new Vector2(1f, 0.5f) };
+            for (int i = 0; i < anclas.Length; i++)
+            {
+                bool horizontal = i < 2;
+                Vector2 ancla = anclas[i];
+                RectTransform r = CrearImagen(panel.transform, "Linea", linea).rectTransform;
+                r.anchorMin = horizontal ? new Vector2(0f, ancla.y) : new Vector2(ancla.x, 0f);
+                r.anchorMax = horizontal ? new Vector2(1f, ancla.y) : new Vector2(ancla.x, 1f);
+                r.pivot = ancla;
+                r.sizeDelta = horizontal ? new Vector2(0f, GrosorLineaPanelH10) : new Vector2(GrosorLineaPanelH10, 0f);
+                r.anchoredPosition = Vector2.zero;
+            }
+            foreach (Vector2 e in new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f) })
+            {
+                Colocar(CrearImagen(panel.transform, "Escuadra", color).rectTransform, e, Vector2.zero, new Vector2(LargoEscuadraH10, GrosorEscuadraH10));
+                Colocar(CrearImagen(panel.transform, "Escuadra", color).rectTransform, e, Vector2.zero, new Vector2(GrosorEscuadraH10, LargoEscuadraH10));
+            }
+            return panel;
         }
 
         /// <summary>

@@ -67,45 +67,21 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
         }
 
-        private static void Capturar(IJugador jugador, string nombre)
+        private static void Capturar(string nombre)
         {
             if (Environment.GetEnvironmentVariable(VariableCaptura) != "1")
             {
                 return;
             }
-            const int Ancho = 1920;
-            const int Alto = 1080;
-            Camera camara = jugador.Camara;
-            var movidos = new List<Canvas>();
-            foreach (Canvas lienzo in Object.FindObjectsByType<Canvas>(FindObjectsSortMode.None))
-            {
-                if (lienzo.renderMode != RenderMode.ScreenSpaceOverlay)
-                {
-                    continue;
-                }
-                lienzo.renderMode = RenderMode.ScreenSpaceCamera;
-                lienzo.worldCamera = camara;
-                lienzo.planeDistance = 0.35f;
-                movidos.Add(lienzo);
-            }
-            var rt = new RenderTexture(Ancho, Alto, 24);
-            var imagen = new Texture2D(Ancho, Alto, TextureFormat.RGB24, false);
-            RenderTexture anterior = RenderTexture.active;
-            camara.targetTexture = rt;
-            camara.Render();
-            RenderTexture.active = rt;
-            imagen.ReadPixels(new Rect(0f, 0f, Ancho, Alto), 0, 0);
-            imagen.Apply();
-            camara.targetTexture = null;
-            RenderTexture.active = anterior;
-            File.WriteAllBytes(Path.Combine("docs", "capturas", nombre), imagen.EncodeToPNG());
-            Object.Destroy(imagen);
-            rt.Release();
-            Object.Destroy(rt);
-            foreach (Canvas lienzo in movidos)
-            {
-                lienzo.renderMode = RenderMode.ScreenSpaceOverlay;
-            }
+            // Una cámara lejos de la ciudad: la de verdad dibujaría los contornos del mundo encima del lienzo en la foto.
+            GameObject go = new GameObject("CamaraCaptura");
+            go.transform.position = new Vector3(0f, -1000f, 0f);
+            Camera camara = go.AddComponent<Camera>();
+            camara.clearFlags = CameraClearFlags.SolidColor;
+            camara.backgroundColor = Color.black;
+            camara.farClipPlane = 5f;
+            MechaCyberpunk.Tests.UI.CapturaUI.Capturar(Path.Combine("docs", "capturas", nombre), camara);
+            Object.Destroy(go);
         }
 
         [UnityTest]
@@ -161,32 +137,45 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => mostrador.PantallaAbierta && mostrador.Pantalla.Visible, "abrir la tienda con E", 5f);
             yield return new WaitForSecondsRealtime(0.5f);
-            Capturar(jugador, "T-430-1.png");
+            VistaHologramaCuerpo holograma = mostrador.Pantalla.Holograma;
+            Assert.IsTrue(holograma.ConCuerpo, "El cuerpo de PJ01 está en el holograma");
+            Assert.AreEqual(1, holograma.NivelVisible(EspacioImplante.Ojos), "Se ve el visor que se ofrece");
+            Assert.IsNotNull(holograma.Pieza(EspacioImplante.Ojos), "con su malla real");
+            var (inicio, fin, casilla, punto) = mostrador.Pantalla.Conector;
+            Assert.Less(Vector2.Distance(inicio, casilla), 2f, "La línea de luz sale de la casilla");
+            Assert.Less(Vector2.Distance(fin, punto), 2f, "y llega a su lugar en el cuerpo");
+            Capturar("s2m-c3-clinica.png");
 
             // OJOS I: Enter pide confirmar, Enter instala.
             yield return Pulsar(teclado.enterKey);
             Assert.IsTrue(mostrador.Pantalla.Confirmando);
             yield return Pulsar(teclado.enterKey);
+            Assert.IsTrue(holograma.Ensamblando, "T-896: al instalar, el implante se ensambla");
+            yield return new WaitForSecondsRealtime(0.35f);
+            Capturar("s2m-c3-ensamble.png");
             yield return EsperarHasta(() => servicio.Nivel(EspacioImplante.Ojos) == 1 && !mostrador.Operando, "operación de ojos", 30f);
             Assert.Less(cartera.Dinero, dinero, "Se cobró");
             Assert.Greater(EfectosAPie.FactorAlcanceApuntado(servicio.Efectos), 1f, "OJOS alarga el apuntado asistido");
             yield return new WaitForSecondsRealtime(0.5f);
-            Assert.AreEqual(1, hud.Visibles);
+            // T-864: al usar la clínica el Doc regala PIERNAS I.
+            Assert.AreEqual(2, hud.Visibles);
             Assert.AreEqual("O1", hud.TextoIcono(EspacioImplante.Ojos));
+            Assert.AreEqual("P1", hud.TextoIcono(EspacioImplante.Piernas));
 
-            // PIERNAS I (tercera fila): ahora la rodada espera menos.
+            // BRAZOS I (segunda fila): aparece con el barrido y se instala.
             Assert.AreEqual("IMPLANTES", doc.Texto);
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => mostrador.PantallaAbierta, "reabrir la tienda", 5f);
             yield return Pulsar(teclado.downArrowKey);
-            yield return Pulsar(teclado.downArrowKey);
+            Assert.IsTrue(mostrador.Pantalla.Holograma.Revelando, "T-896: el implante de brazos aparece con el barrido");
+            yield return new WaitForSecondsRealtime(0.3f);
+            Capturar("s2m-c3-barrido.png");
             yield return Pulsar(teclado.enterKey);
             yield return Pulsar(teclado.enterKey);
-            yield return EsperarHasta(() => servicio.Nivel(EspacioImplante.Piernas) == 1 && !mostrador.Operando, "operación de piernas", 30f);
+            yield return EsperarHasta(() => servicio.Nivel(EspacioImplante.Brazos) == 1 && !mostrador.Operando, "operación de brazos", 30f);
             Assert.Less(EfectosAPie.EnfriamientoRodada(2f, servicio.Efectos), 2f, "PIERNAS acorta el enfriamiento de la rodada");
             yield return new WaitForSecondsRealtime(0.5f);
-            Assert.AreEqual(2, hud.Visibles);
-            Assert.AreEqual("P1", hud.TextoIcono(EspacioImplante.Piernas));
+            Assert.AreEqual(3, hud.Visibles);
         }
     }
 }

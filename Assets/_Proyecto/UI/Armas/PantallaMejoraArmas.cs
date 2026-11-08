@@ -834,27 +834,7 @@ namespace MechaCyberpunk.UI.Armas
         }
 
         // T-887: panel como el HUD H10: fondo oscuro casi transparente y un marco de línea fina turquesa con esquinas marcadas.
-        private Image PanelH10(Transform padre, string nombre)
-        {
-            Image panel = KitUI.CrearImagen(padre, nombre, new Color(0.01f, 0.03f, 0.05f, 0.55f));
-            panel.raycastTarget = false;
-            Color linea = new Color(Acento.r, Acento.g, Acento.b, 0.55f);
-            Vector2[] anclas = { new Vector2(0.5f, 1f), new Vector2(0.5f, 0f), new Vector2(0f, 0.5f), new Vector2(1f, 0.5f) };
-            for (int i = 0; i < anclas.Length; i++)
-            {
-                bool horizontal = i < 2;
-                Vector2 ancla = anclas[i];
-                Image l = KitUI.CrearImagen(panel.transform, "Linea", linea);
-                RectTransform r = l.rectTransform;
-                r.anchorMin = horizontal ? new Vector2(0f, ancla.y) : new Vector2(ancla.x, 0f);
-                r.anchorMax = horizontal ? new Vector2(1f, ancla.y) : new Vector2(ancla.x, 1f);
-                r.pivot = ancla;
-                r.sizeDelta = horizontal ? new Vector2(0f, GrosorLinea) : new Vector2(GrosorLinea, 0f);
-                r.anchoredPosition = Vector2.zero;
-            }
-            Marcas((RectTransform)panel.transform, Acento);
-            return panel;
-        }
+        private Image PanelH10(Transform padre, string nombre) => KitUI.CrearPanelH10(padre, nombre, Acento);
 
         private void ConstruirLista(EstiloCyberfix estilo)
         {

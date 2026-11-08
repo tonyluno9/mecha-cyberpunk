@@ -100,7 +100,11 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Object.DestroyImmediate(copia);
             }
+            return Repartir(destino, vertices, normales, triangulos);
+        }
 
+        private static Mesh Repartir(string destino, List<Vector3> vertices, List<Vector3> normales, List<int> triangulos)
+        {
             // Reparte cada triángulo por la región de su centro, medida contra el alto del cuerpo.
             Bounds limites = new Bounds(vertices.Count > 0 ? vertices[0] : Vector3.zero, Vector3.zero);
             foreach (Vector3 v in vertices)
@@ -123,6 +127,37 @@ namespace MechaCyberpunk.Arte.Editor
                 lista.Add(triangulos[t + 2]);
             }
 
+            Mesh malla = Guardar(destino, vertices, normales, regiones);
+            Debug.Log("[Arte] " + destino + ": " + vertices.Count + " vértices, alto " + alto.ToString("F2") + " m, triángulos por espacio "
+                + regiones[0].Count / 3 + "/" + regiones[1].Count / 3 + "/" + regiones[2].Count / 3 + "/" + regiones[3].Count / 3);
+            return malla;
+        }
+
+        /// <summary>T-896: hornea el cuerpo desde estos renderers, repartido en las 4 submallas por espacio.</summary>
+        public static Mesh HornearDe(IEnumerable<SkinnedMeshRenderer> renderers, string destino)
+        {
+            List<Vector3> vertices = new List<Vector3>();
+            List<Vector3> normales = new List<Vector3>();
+            List<int> triangulos = new List<int>();
+            foreach (SkinnedMeshRenderer sk in renderers)
+            {
+                Agregar(sk.sharedMesh, sk.transform.localToWorldMatrix, vertices, normales, triangulos);
+            }
+            return Repartir(destino, vertices, normales, triangulos);
+        }
+
+        /// <summary>T-896: hornea una pieza suelta (un implante) en una sola submalla, en el mismo espacio que el cuerpo.</summary>
+        public static Mesh HornearPieza(SkinnedMeshRenderer pieza, string destino)
+        {
+            List<Vector3> vertices = new List<Vector3>();
+            List<Vector3> normales = new List<Vector3>();
+            List<int> triangulos = new List<int>();
+            Agregar(pieza.sharedMesh, pieza.transform.localToWorldMatrix, vertices, normales, triangulos);
+            return Guardar(destino, vertices, normales, new[] { triangulos });
+        }
+
+        private static Mesh Guardar(string destino, List<Vector3> vertices, List<Vector3> normales, IList<List<int>> regiones)
+        {
             Mesh malla = AssetDatabase.LoadAssetAtPath<Mesh>(destino);
             bool nueva = malla == null;
             if (nueva)
@@ -134,8 +169,8 @@ namespace MechaCyberpunk.Arte.Editor
             malla.indexFormat = vertices.Count > MaximoIndices16 ? IndexFormat.UInt32 : IndexFormat.UInt16;
             malla.SetVertices(vertices);
             malla.SetNormals(normales);
-            malla.subMeshCount = regiones.Length;
-            for (int i = 0; i < regiones.Length; i++)
+            malla.subMeshCount = regiones.Count;
+            for (int i = 0; i < regiones.Count; i++)
             {
                 malla.SetTriangles(regiones[i], i, true);
             }
@@ -148,8 +183,6 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 EditorUtility.SetDirty(malla);
             }
-            Debug.Log("[Arte] " + destino + ": " + vertices.Count + " vértices, alto " + alto.ToString("F2") + " m, triángulos por espacio "
-                + regiones[0].Count / 3 + "/" + regiones[1].Count / 3 + "/" + regiones[2].Count / 3 + "/" + regiones[3].Count / 3);
             return malla;
         }
 

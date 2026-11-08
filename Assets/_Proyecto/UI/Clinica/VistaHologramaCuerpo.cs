@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using MechaCyberpunk.Core;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MechaCyberpunk.UI.Clinica
 {
@@ -28,15 +31,31 @@ namespace MechaCyberpunk.UI.Clinica
         private const float UnidadesPorPaso = 120f;
         private const float GradosPorVuelta = 360f;
         private const float FraccionBrazo = 0.55f;
+        private const float MinimoDireccion = 0.0001f;
+        private const float EscalaEnsamble = 0.12f;
+        private const float MargenBarrido = 0.03f;
 
         private static readonly int IdResalte = Shader.PropertyToID("_Resalte");
         private static readonly int IdDestello = Shader.PropertyToID("_Destello");
         private static readonly int IdAlfa = Shader.PropertyToID("_Alfa");
         private static readonly int IdColor = Shader.PropertyToID("_Color");
+        private static readonly int IdBarridoDir = Shader.PropertyToID("_BarridoDir");
+        private static readonly int IdBarridoPos = Shader.PropertyToID("_BarridoPos");
+        private static readonly int IdBarridoFuerza = Shader.PropertyToID("_BarridoFuerza");
+        private static readonly int IdRevelar = Shader.PropertyToID("_Revelar");
 
         private readonly List<Object> creados = new List<Object>();
         private readonly bool[] instalados = new bool[Espacios];
         private readonly Vector3[] centros = new Vector3[Espacios];
+        private readonly Renderer[] piezas = new Renderer[Espacios];
+        private readonly MeshFilter[] filtros = new MeshFilter[Espacios];
+        private readonly int[] nivelPieza = new int[Espacios];
+        private readonly int[] nivelInstalado = new int[Espacios];
+        private Tween tweenRevelar;
+        private Tween tweenEnsamble;
+        private int piezaRevelando = -1;
+        private float avanceRevelar;
+        private float ensamble;
         private MaterialPropertyBlock bloque;
         private ConfigPantallaClinica config;
         private RenderTexture textura;
@@ -67,6 +86,14 @@ namespace MechaCyberpunk.UI.Clinica
         public EspacioImplante Elegido => elegido;
         /// <summary>El renderer del cuerpo (una submalla por espacio), o null.</summary>
         public Renderer Render => render;
+        /// <summary>T-896: true mientras el barrido revela un implante.</summary>
+        public bool Revelando => piezaRevelando >= 0;
+        /// <summary>T-896: true mientras el implante se ensambla al instalarlo.</summary>
+        public bool Ensamblando => tweenEnsamble != null && tweenEnsamble.IsActive() && tweenEnsamble.IsPlaying();
+        /// <summary>T-896: el nivel de la pieza que se ve en ese espacio (0 = ninguna).</summary>
+        public int NivelVisible(EspacioImplante espacio) => nivelPieza[(int)espacio];
+        /// <summary>T-896: el renderer de la pieza del espacio, o null.</summary>
+        public Renderer Pieza(EspacioImplante espacio) => piezas[(int)espacio];
 
         /// <summary>Qué tan resaltado va el espacio ahora (0 a 1): el elegido late entre ~0.55 y 1, los demás en 0.</summary>
         public float Resalte(EspacioImplante espacio) => espacio == elegido && render != null ? Pulso() : 0f;
@@ -136,6 +163,125 @@ namespace MechaCyberpunk.UI.Clinica
                 instalados[i] = conImplante != null && i < conImplante.Count && conImplante[i];
             }
             Pintar();
+        }
+
+        /// <summary>
+        /// T-896: pone en el cuerpo los implantes instalados (<paramref name="niveles"/>, uno por espacio) y, en <paramref name="espacioPrueba"/>, la pieza del
+        /// nivel que se ofrece; si es una pieza nueva aparece con un barrido de luz de abajo hacia arriba.
+        /// </summary>
+        public void MostrarImplantes(IReadOnlyList<int> niveles, EspacioImplante espacioPrueba, int nivelPrueba)
+        {
+            if (config == null || cuerpo == null)
+            {
+                return;
+            }
+            for (int i = 0; i < Espacios; i++)
+            {
+                nivelInstalado[i] = niveles != null && i < niveles.Count ? niveles[i] : 0;
+                bool prueba = i == (int)espacioPrueba && nivelPrueba > 0;
+                int nivel = prueba ? nivelPrueba : nivelInstalado[i];
+                bool cambio = PonerPieza(i, nivel);
+                if (prueba && cambio && piezas[i] != null && piezas[i].gameObject.activeSelf)
+                {
+                    Revelar(i);
+                }
+            }
+            Pintar();
+        }
+
+        /// <summary>
+        /// T-896: el implante recién instalado llega de lejos, se acomoda en el cuerpo y destella; luego avisa <paramref name="alTerminar"/>.
+        /// Sin pieza visible (sistema nervioso) solo destella.
+        /// </summary>
+        public void Ensamblar(EspacioImplante espacio, IReadOnlyList<int> niveles, Action alTerminar)
+        {
+            MostrarImplantes(niveles, espacio, 0);
+            int i = (int)espacio;
+            CancelarRevelar();
+            tweenEnsamble?.Kill();
+            if (config == null || piezas[i] == null || !piezas[i].gameObject.activeSelf)
+            {
+                Destellar();
+                alTerminar?.Invoke();
+                return;
+            }
+            Transform pieza = piezas[i].transform;
+            Vector3 centroLocal = centros[i] - render.GetComponent<MeshFilter>().sharedMesh.bounds.center;
+            float escala = cuerpo.localScale.x > 0f ? cuerpo.localScale.x : 1f;
+            Vector3 fuera = (centroLocal.sqrMagnitude > MinimoDireccion ? centroLocal.normalized : Vector3.up) * (config.DistanciaEnsamble / escala);
+            ensamble = 1f;
+            pieza.localPosition = fuera;
+            tweenEnsamble = DOTween.To(() => ensamble, v =>
+                {
+                    ensamble = v;
+                    pieza.localPosition = fuera * v;
+                    pieza.localScale = Vector3.one * (1f + v * EscalaEnsamble);
+                    Pintar();
+                }, 0f, config.DuracionEnsamble)
+                .SetEase(Ease.OutCubic).SetUpdate(true).SetTarget(this)
+                .OnComplete(() =>
+                {
+                    Destellar();
+                    Pintar();
+                    alTerminar?.Invoke();
+                });
+        }
+
+        private bool PonerPieza(int i, int nivel)
+        {
+            if (nivelPieza[i] == nivel && (nivel == 0 || piezas[i] != null))
+            {
+                return false;
+            }
+            nivelPieza[i] = nivel;
+            Mesh malla = nivel > 0 ? config.MallaImplante((EspacioImplante)i, nivel) : null;
+            if (malla == null)
+            {
+                if (piezas[i] != null)
+                {
+                    piezas[i].gameObject.SetActive(false);
+                }
+                if (piezaRevelando == i)
+                {
+                    CancelarRevelar();
+                }
+                return false;
+            }
+            if (piezas[i] == null)
+            {
+                GameObject go = new GameObject("Implante_" + (EspacioImplante)i);
+                go.transform.SetParent(cuerpo, false);
+                filtros[i] = go.AddComponent<MeshFilter>();
+                piezas[i] = go.AddComponent<MeshRenderer>();
+                piezas[i].sharedMaterial = config.MaterialHolograma;
+                ApagarSombras(piezas[i]);
+            }
+            filtros[i].sharedMesh = malla;
+            piezas[i].gameObject.SetActive(true);
+            piezas[i].transform.localPosition = Vector3.zero;
+            piezas[i].transform.localScale = Vector3.one;
+            return true;
+        }
+
+        private void Revelar(int i)
+        {
+            CancelarRevelar();
+            piezaRevelando = i;
+            avanceRevelar = 0f;
+            tweenRevelar = DOTween.To(() => avanceRevelar, v => { avanceRevelar = v; Pintar(); }, 1f, config.DuracionRevelar)
+                .SetEase(Ease.Linear).SetUpdate(true).SetTarget(this)
+                .OnComplete(() =>
+                {
+                    piezaRevelando = -1;
+                    Pintar();
+                });
+        }
+
+        private void CancelarRevelar()
+        {
+            tweenRevelar?.Kill();
+            tweenRevelar = null;
+            piezaRevelando = -1;
         }
 
         /// <summary>Destello al instalar: el cuerpo entero brilla y se apaga en <see cref="ConfigPantallaClinica.DuracionDestello"/>.</summary>
@@ -298,12 +444,16 @@ namespace MechaCyberpunk.UI.Clinica
                 {
                     bool esElegido = i == (int)elegido;
                     render.GetPropertyBlock(bloque, i);
-                    bloque.SetColor(IdColor, esElegido ? config.ColorEspacio : i < Espacios && instalados[i] ? config.ColorInstalado : config.ColorHolograma);
+                    bloque.SetColor(IdColor, esElegido ? config.ColorEspacio : config.ColorHolograma);
                     bloque.SetFloat(IdResalte, esElegido ? Pulso() : 0f);
                     bloque.SetFloat(IdDestello, destello);
                     bloque.SetFloat(IdAlfa, esElegido ? 1f : AlfaNormal);
                     render.SetPropertyBlock(bloque, i);
                 }
+            }
+            for (int i = 0; i < Espacios; i++)
+            {
+                PintarPieza(i);
             }
             if (pedestal != null)
             {
@@ -312,6 +462,28 @@ namespace MechaCyberpunk.UI.Clinica
                 bloque.SetColor(IdColor, config.ColorHolograma);
                 pedestal.SetPropertyBlock(bloque);
             }
+        }
+
+        private void PintarPieza(int i)
+        {
+            Renderer pieza = piezas[i];
+            if (pieza == null || !pieza.gameObject.activeSelf)
+            {
+                return;
+            }
+            bool revelando = i == piezaRevelando;
+            Bounds b = pieza.bounds;
+            bool barriendo = revelando || (ensamble > 0f && Ensamblando && i == (int)elegido);
+            pieza.GetPropertyBlock(bloque);
+            bloque.SetColor(IdColor, config.ColorEspacio);
+            bloque.SetFloat(IdResalte, 0f);
+            bloque.SetFloat(IdDestello, destello);
+            bloque.SetFloat(IdAlfa, 1f);
+            bloque.SetVector(IdBarridoDir, Vector3.up);
+            bloque.SetFloat(IdBarridoPos, Mathf.Lerp(b.min.y - MargenBarrido, b.max.y + MargenBarrido, revelando ? avanceRevelar : 1f - ensamble));
+            bloque.SetFloat(IdBarridoFuerza, barriendo ? 1f : 0f);
+            bloque.SetFloat(IdRevelar, revelando ? 1f : 0f);
+            pieza.SetPropertyBlock(bloque);
         }
 
         private static void ApagarSombras(Renderer r)
@@ -324,6 +496,17 @@ namespace MechaCyberpunk.UI.Clinica
 
         private void Limpiar()
         {
+            CancelarRevelar();
+            tweenEnsamble?.Kill();
+            tweenEnsamble = null;
+            ensamble = 0f;
+            for (int i = 0; i < Espacios; i++)
+            {
+                piezas[i] = null;
+                filtros[i] = null;
+                nivelPieza[i] = 0;
+                nivelInstalado[i] = 0;
+            }
             foreach (Object o in creados)
             {
                 if (o != null)
