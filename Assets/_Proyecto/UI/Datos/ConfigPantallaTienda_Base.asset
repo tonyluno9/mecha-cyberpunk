@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fcb076bca6105b41b3045d67b8da2c2, type: 3}
   m_Name: ConfigPantallaTienda_Base
   m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.ConfigPantallaTienda
-  colorElegido: {r: 1, g: 0.1, b: 0.7, a: 1}
+  colorElegido: {r: 0.55, g: 1, b: 0.92, a: 1}
   colorNormal: {r: 0.75, g: 0.8, b: 0.9, a: 1}
   colorApagado: {r: 0.35, g: 0.38, b: 0.45, a: 1}
   colorDinero: {r: 1, g: 0.85, b: 0.2, a: 1}
@@ -29,7 +29,11 @@ MonoBehaviour:
   formatoPestanaElegida: '[ {0} ]'
   formatoFila: '{0}     {1}     LLEVAS {2}/{3}'
   formatoFilaElegida: '> {0}'
-  textoVenderPronto: PRONTO
+  formatoFilaVenta: '{0}     {1} c/u     TIENES {2}'
+  textoNadaQueVender: NO TIENES NADA QUE LE INTERESE
+  formatoVendido: VENDISTE {0} POR {1}
+  textoAyudaVender: "\u2191 \u2193 elegir \xB7 \u2190 \u2192 pesta\xF1a \xB7 Enter
+    vender \xB7 Esc salir"
   textoSinOfertas: NO HAY NADA A LA VENTA
   formatoComprado: COMPRASTE {0}
   textoMaximo: "LLEVAS EL M\xC1XIMO"
@@ -37,3 +41,7 @@ MonoBehaviour:
   textoNoDisponible: "NO SE VENDE AQU\xCD"
   textoAyuda: "\u2191 \u2193 elegir \xB7 \u2190 \u2192 pesta\xF1a \xB7 Enter comprar
     \xB7 Esc salir"
+  formatoPrecioRebajado: "{0} \u2192 {1}"
+  formatoFavorDescuento: "FAVOR \xB7 \u2212{0} % EN ESTA COMPRA \xB7 TE QUEDAN {1}"
+  tamanoFavor: 34
+  colorFavor: {r: 1, g: 0.85, b: 0.2, a: 1}

@@ -163,7 +163,7 @@ namespace MechaCyberpunk.UI.Mapa
             titulo = KitUI.CrearTexto(rectPanel, "Titulo", RolTexto.Encabezado, TextAnchor.MiddleCenter);
             KitUI.Colocar(titulo.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -relleno), new Vector2(tamanoPanel.x, altoTitulo));
             titulo.text = NombreCiudad;
-            titulo.color = e.Naranja;
+            titulo.color = e.Turquesa;
 
             // La vista recorta el dibujo con zoom.
             vista = KitUI.CrearImagen(rectPanel, "Vista", Color.black).rectTransform;
@@ -222,6 +222,7 @@ namespace MechaCyberpunk.UI.Mapa
             KitUI.Colocar(ayuda.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, relleno), new Vector2(tamanoPanel.x, altoAyuda));
             ayuda.text = TextoAyuda;
             ayuda.color = e.Turquesa;
+            KitUI.VestirTurquesa(canvas.transform);
             panel.SetActive(false);
         }
 

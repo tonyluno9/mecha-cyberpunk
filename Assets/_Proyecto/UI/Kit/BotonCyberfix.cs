@@ -20,6 +20,12 @@ namespace MechaCyberpunk.UI.Kit
         private const float SegundosPulsado = 0.12f;
 
         [SerializeField] private string etiqueta = string.Empty;
+        private const float AlfaAcentoElegido = 0.22f;
+        private const float AlfaAcentoPulsado = 0.4f;
+
+        private bool conAcento;
+        private Color acento;
+
         [SerializeField] private Text texto;
         [SerializeField] private Text textoValor;
         [SerializeField] private Image fondo;
@@ -50,6 +56,25 @@ namespace MechaCyberpunk.UI.Kit
             targetGraphic = fondo;
             transition = Transition.None;
             navigation = new Navigation { mode = Navigation.Mode.None };
+            Refrescar();
+        }
+
+        /// <summary>T-897: el botón usa este color en vez del naranja del kit y deja el sprite del botón (para las pantallas turquesa).</summary>
+        public void UsarAcento(Color color)
+        {
+            conAcento = true;
+            acento = color;
+            if (fondo != null)
+            {
+                fondo.sprite = null;
+            }
+            if (borde != null)
+            {
+                foreach (Image linea in borde.GetComponentsInChildren<Image>(true))
+                {
+                    linea.color = color;
+                }
+            }
             Refrescar();
         }
 
@@ -195,7 +220,12 @@ namespace MechaCyberpunk.UI.Kit
                 borde.SetActive(marcado);
             }
             PiezasUI piezas = PiezasUI.Actual;
-            if (fondo.sprite != null && piezas != null && piezas.BotonNormal != null)
+            if (conAcento)
+            {
+                fondo.color = !activo || !(marcado || EstaPulsado) ? e.Fondo
+                    : new Color(acento.r, acento.g, acento.b, EstaPulsado ? AlfaAcentoPulsado : AlfaAcentoElegido);
+            }
+            else if (fondo.sprite != null && piezas != null && piezas.BotonNormal != null)
             {
                 // T-522: el botón de UI02 con sus tres estados; desactivado es el normal apagado.
                 fondo.sprite = !activo ? piezas.BotonNormal : EstaPulsado ? piezas.BotonPulsado : marcado ? piezas.BotonResaltado : piezas.BotonNormal;
@@ -205,7 +235,7 @@ namespace MechaCyberpunk.UI.Kit
             {
                 fondo.color = !activo ? e.Fondo : EstaPulsado ? e.FondoPulsado : marcado ? e.FondoElegido : e.Fondo;
             }
-            texto.color = !activo ? e.Desactivado : marcado ? e.Naranja : e.Texto;
+            texto.color = !activo ? e.Desactivado : marcado ? (conAcento ? acento : e.Naranja) : e.Texto;
             texto.text = marcado ? PrefijoElegido + etiqueta : etiqueta;
             if (textoValor != null)
             {

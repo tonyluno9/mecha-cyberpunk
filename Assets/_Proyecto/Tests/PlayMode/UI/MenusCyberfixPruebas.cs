@@ -135,6 +135,22 @@ namespace MechaCyberpunk.Tests.UI
             CapturaUI.Capturar2K("docs/capturas/T-522-" + nombre + "-1440.png", camara);
         }
 
+        private static void CapturarS2m(string archivo, Camera camara)
+        {
+            if (Environment.GetEnvironmentVariable(VariableCaptura) == "1")
+            {
+                CapturaUI.Capturar("docs/capturas/" + archivo, camara);
+            }
+        }
+
+        // T-897: los paneles de pausa, mapa y tienda ya no usan el marco naranja de UI01 sino el H10.
+        private static void AssertTurquesa(Image panel, string que)
+        {
+            Assert.IsNotNull(panel, que);
+            Assert.AreNotSame(PiezasUI.Actual.MarcoPanel, panel.sprite, que + " sin el marco naranja");
+            Assert.IsNotNull(panel.transform.Find("MarcoH10"), que + " con el marco H10");
+        }
+
         private static void AssertMarco(Image panel, string que)
         {
             Assert.IsNotNull(panel, que);
@@ -260,6 +276,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(mapa.Abierto);
             yield return new WaitForSecondsRealtime(0.3f);
             Capturar("mapa", camara);
+            CapturarS2m("s2m-c4-mapa.png", camara);
             yield return Pulsar(teclado.escapeKey);
             Assert.IsFalse(mapa.Abierto);
 
@@ -267,10 +284,12 @@ namespace MechaCyberpunk.Tests.UI
             PantallaPausa pausa = UnityEngine.Object.FindFirstObjectByType<PantallaPausa>();
             yield return Pulsar(teclado.escapeKey);
             Assert.IsTrue(pausa.Abierta);
-            AssertMarco(pausa.transform.Find("CanvasPausa/Panel").GetComponent<Image>(), "El panel de pausa");
-            Assert.AreSame(PiezasUI.Actual.BotonResaltado, FondoDe(pausa.Continuar).sprite);
+            AssertTurquesa(pausa.transform.Find("CanvasPausa/Panel").GetComponent<Image>(), "El panel de pausa");
+            Assert.IsNull(FondoDe(pausa.Continuar).sprite, "T-897: sin el botón naranja");
+            Assert.AreEqual(KitUI.Estilo.Turquesa, pausa.Continuar.Texto.color, "El elegido va en turquesa");
             yield return new WaitForSecondsRealtime(0.2f);
             Capturar("pausa", camara);
+            CapturarS2m("s2m-c4-pausa.png", camara);
             yield return Pulsar(teclado.downArrowKey);
             yield return Pulsar(teclado.enterKey);
             Assert.IsTrue(pausa.Ranuras.Abierta, "Se abren las ranuras");
@@ -317,6 +336,7 @@ namespace MechaCyberpunk.Tests.UI
                 }
                 Assert.IsNotNull(pantalla.transform.Find("Contenido/MarcoTienda"), "La tienda lleva el marco");
                 Capturar(numero == 0 ? "tienda" : "tienda-cic", camara);
+                CapturarS2m(numero == 0 ? "s2m-c4-tienda.png" : "s2m-c4-tienda-cic.png", camara);
                 numero++;
                 yield return Pulsar(teclado.escapeKey);
                 yield return Pulsar(teclado.eKey);
