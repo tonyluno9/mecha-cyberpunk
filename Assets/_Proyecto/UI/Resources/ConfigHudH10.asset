@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Hud.ConfigHudH10
   fuente: {fileID: 12800000, guid: 449d32f24a791ad47853b1b251ca3c0b, type: 3}
   fuenteNumeros: {fileID: 12800000, guid: 9f074b92f03b1764b9544b15717affbc, type: 3}
-  estrellaContorno: {fileID: 21300000, guid: e8b4a3718dc6c3e49a04fe4000631bc2, type: 3}
-  estrellaLlena: {fileID: 21300000, guid: ed27a1e9d132df844ad707b2352a2792, type: 3}
+  estrellaContorno: {fileID: 21300000, guid: a4dbabaa47b6524439e2efb390017eb4, type: 3}
+  estrellaLlena: {fileID: 21300000, guid: 34512f9a131d0c5468d688bf9931eacc, type: 3}
   cuerpoLinea:
-  - {fileID: 21300000, guid: 110f44bcb2e6a4a4092c771ae11ec492, type: 3}
-  - {fileID: 21300000, guid: 603e09154934ed04b995acdf43dcfeee, type: 3}
-  - {fileID: 21300000, guid: ec4fadc0b172649458fe3964ad3a5c16, type: 3}
-  - {fileID: 21300000, guid: 6d33b85ec7bfb6c458ce01929ede8804, type: 3}
+  - {fileID: 21300000, guid: f423f47da4c1acd43976865f9ee8028c, type: 3}
+  - {fileID: 21300000, guid: 407819183fccc9a4ea85a4ebe4c08659, type: 3}
+  - {fileID: 21300000, guid: 2d8159ddc2d66c7468176970632e8a8f, type: 3}
+  - {fileID: 21300000, guid: 0cd3dc3a6f30ffb49b5251922830e362, type: 3}
   cuerpoRelleno:
-  - {fileID: 21300000, guid: 9629901318195764182089fb311cdd78, type: 3}
-  - {fileID: 21300000, guid: 48fd99a8304c1114f8ae904a45a4cf99, type: 3}
-  - {fileID: 21300000, guid: 246cca04fc5e3734b923c7561e660058, type: 3}
-  - {fileID: 21300000, guid: b46dcf99d6bf1c74592cff3d1cc415c6, type: 3}
+  - {fileID: 21300000, guid: 53fb3b7b02286a54c96c57c40cb533a8, type: 3}
+  - {fileID: 21300000, guid: 2a6619012772bc245802a05fbb02afe0, type: 3}
+  - {fileID: 21300000, guid: a7aaf8eb4eaa7254a902505750d9356e, type: 3}
+  - {fileID: 21300000, guid: c571011c6d7ea5446af1e9d274a70d79, type: 3}
   idsObjeto:
   - bebida_energetica
   - papitas
@@ -33,10 +33,19 @@ MonoBehaviour:
   - cafe
   - bateria_escudo
   iconosObjeto:
-  - {fileID: 21300000, guid: 7e59611b88d904d44871549f2d109006, type: 3}
-  - {fileID: 21300000, guid: 1e20df60f0a73944194f0c73c5b457ec, type: 3}
-  - {fileID: 21300000, guid: 37000426544be4a44a415a7297ea610d, type: 3}
-  - {fileID: 21300000, guid: c5c025894af39bc4e882ccb580dfbb70, type: 3}
-  - {fileID: 21300000, guid: 23066e6a2ab247b4c9a98e4bc2e4c574, type: 3}
+  - {fileID: 21300000, guid: 0d583948f8188f44dbbf61e599aec29f, type: 3}
+  - {fileID: 21300000, guid: b27b9066a9fd08e48a2a2e539ae2e1a7, type: 3}
+  - {fileID: 21300000, guid: a93576b05fb79fb4eb1dcb14c531058a, type: 3}
+  - {fileID: 21300000, guid: e82c60f5d2f06734ea5c916a29e27b42, type: 3}
+  - {fileID: 21300000, guid: 80cad61b5cc8f0a418a797dac7cd68dd, type: 3}
   conoMinimapa: {fileID: 21300000, guid: e94ac695dceda0b4ab1e52aa4ea695d7, type: 3}
   puntoRuta: {fileID: 21300000, guid: 1e33cab5c441fd84cb017d5b6fb74828, type: 3}
+  marcoEscudo: {fileID: 21300000, guid: 4efacac2922e9f34c948d52dc0b7e3f9, type: 3}
+  marcoVida: {fileID: 21300000, guid: 0f67989d139f2954c9d204a9714ae668, type: 3}
+  rellenoEscudo: {fileID: 21300000, guid: 34079043db16fa84e8766904a5778dbf, type: 3}
+  rellenoVida: {fileID: 21300000, guid: 3985c3a87d30e5b46b496437117e66de, type: 3}
+  emblemaVida: {fileID: 21300000, guid: 3d01166ce4d66084d84c2354130c73ed, type: 3}
+  marcoMinimapa: {fileID: 21300000, guid: 991d60ba3022881438a5ffead107f212, type: 3}
+  casillaObjeto: {fileID: 21300000, guid: d071d845bbb96d54db54ecd8ec3622e9, type: 3}
+  segundosEsperaPerdida: 0.45
+  segundosBajaPerdida: 0.6

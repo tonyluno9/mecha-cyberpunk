@@ -20,6 +20,7 @@ namespace MechaCyberpunk.UI.Mapa
         /// <summary>Lado (px) del cono de vista del jugador (T-700): la punta queda en el centro y el cono sube.</summary>
         private const float LadoCono = 150f;
         private const float GrosorBordePx = 2f;
+        private const float FraccionEsquinaMarco = 0.14f;
 
         [Tooltip("Metros del mundo del centro al borde del círculo (m).")]
         [Min(5f)] [SerializeField] private float radioMetros = 60f;
@@ -153,7 +154,7 @@ namespace MechaCyberpunk.UI.Mapa
                 cono.color = new Color(e.Turquesa.r, e.Turquesa.g, e.Turquesa.b, 0.9f);
                 cono.raycastTarget = false;
             }
-            KitUI.CrearBorde(raiz, GrosorBordePx, new Color(e.Turquesa.r, e.Turquesa.g, e.Turquesa.b, 0.9f));
+            ArmarMarco(estilo, e);
             flecha = (RectTransform)KitUI.CrearTriangulo(raiz, "Jugador", ladoFlecha, Color.white).rectTransform.parent;
             textoPunto = KitUI.CrearTexto(raiz, "DistanciaPunto", RolTexto.Hud, TextAnchor.MiddleLeft);
             KitUI.Colocar(textoPunto.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(DisposicionHud.LadoMinimapa, KitUI.Estilo.AltoFilaHud));
@@ -161,6 +162,24 @@ namespace MechaCyberpunk.UI.Mapa
             textoPunto.color = e.Turquesa;
             textoPunto.gameObject.SetActive(false);
             canvas.enabled = false;
+        }
+
+        // T-725: el marco del chat de arte (9-slice, esquinas marcadas); si falta, el borde fino de código.
+        private void ArmarMarco(ConfigHudH10 estilo, EstiloCyberfix e)
+        {
+            Sprite marco = estilo != null ? estilo.MarcoMinimapa : null;
+            if (marco == null)
+            {
+                KitUI.CrearBorde(raiz, GrosorBordePx, new Color(e.Turquesa.r, e.Turquesa.g, e.Turquesa.b, 0.9f));
+                return;
+            }
+            Image imagen = KitUI.CrearImagen(raiz, "Marco", Color.white);
+            imagen.sprite = marco;
+            imagen.type = Image.Type.Sliced;
+            imagen.fillCenter = false;
+            KitUI.Estirar(imagen.rectTransform);
+            // Las esquinas miden la fracción pedida del lado del minimapa, sea cual sea el tamaño del sprite.
+            imagen.pixelsPerUnitMultiplier = Mathf.Max(0.01f, marco.border.x / (DisposicionHud.LadoMinimapa * FraccionEsquinaMarco));
         }
 
         private static RectTransform Centrado(Transform padre, string nombre)
