@@ -18,7 +18,9 @@ namespace MechaCyberpunk.Tests.UI
     /// </summary>
     public class DestinosMapaPruebas : InputTestFixture
     {
-        private const float Cerca = 2f;
+        // T-727: el minimapa quita los iconos que caen a menos de 35 px del centro (los taparían la flecha del jugador, T-721): a 2.17 px/m son 16 m.
+        // "Cerca" ya no es 2 m (ahí el icono queda bajo la flecha a propósito) sino 20 m, dentro del radio de 60 m del minimapa.
+        private const float Cerca = 20f;
         private const float ToleranciaMetros = 1.5f;
 
         private sealed class JugadorFalso : IJugador
