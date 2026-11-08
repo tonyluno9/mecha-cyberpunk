@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using DG.Tweening;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
@@ -35,6 +37,7 @@ namespace MechaCyberpunk.UI.Inicio
         public const string TextoContinuar = "CONTINUAR";
         public const string TextoNueva = "NUEVA PARTIDA";
         public const string TextoJugar = "JUGAR";
+        public const string TextoCargar = "CARGAR";
         public const string TextoOpciones = "OPCIONES";
         public const string TextoCreditos = "CRÉDITOS";
         public const string TextoSalir = "SALIR";
@@ -47,12 +50,20 @@ namespace MechaCyberpunk.UI.Inicio
         private const float SegundosEntrada = 1.7f;
         private const float EsperaPrimerBoton = 0.9f;
         private const float MargenIzquierdo = 120f;
-        private const float AltoBoton = 88f;
-        private const float AltoBotonConResumen = 112f;
+        private const float AltoBoton = 76f;
+        private const float AltoBotonConResumen = 104f;
         private const float AnchoBoton = 660f;
         private const float SeparacionBotones = 6f;
-        private const int TamanoTextoBoton = 66;
-        private const float YPrimerBoton = -395f;
+        private const int TamanoTextoBoton = 56;
+        private const float YPrimerBoton = -370f;
+        private const float AnchoPanel = 800f;
+        private const float XPanel = 80f;
+        private const float MargenPanel = 56f;
+        private const float GrosorBordePanel = 2f;
+        private const float SegundosAviso = 0.25f;
+        private const string RutaLogo = "Inicio/Logo";
+        private static readonly Color Coral = new Color(1f, 0.33f, 0.28f, 1f);
+        private static readonly Color RojoPanel = new Color(0.32f, 0.03f, 0.05f, 0.5f);
 
         [SerializeField] private FondoCiudad3D fondo;
         [SerializeField] private PantallaCreacionPandilla creacion;
@@ -69,6 +80,11 @@ namespace MechaCyberpunk.UI.Inicio
         private Text reloj;
         private BotonInicio continuar;
         private BotonInicio nueva;
+        private BotonInicio cargar;
+        private FondoCallesInicio fondoCalles;
+        private PantallaRanuras ranuras;
+        private CanvasGroup aviso;
+        private Text textoAviso;
         private BotonInicio botonOpciones;
         private BotonInicio creditos;
         private BotonInicio salir;
@@ -83,6 +99,10 @@ namespace MechaCyberpunk.UI.Inicio
         public EstadoInicio Estado { get; private set; }
         public BotonInicio Continuar => continuar;
         public BotonInicio Nueva => nueva;
+        public BotonInicio Cargar => cargar;
+        public FondoCallesInicio FondoCalles => fondoCalles;
+        public bool AvisoVisible => aviso != null && aviso.gameObject.activeSelf;
+        public string TextoDelAviso => textoAviso != null ? textoAviso.text : string.Empty;
         public BotonInicio BotonOpciones => botonOpciones;
         public BotonInicio Creditos => creditos;
         public BotonInicio Salir => salir;
@@ -163,24 +183,30 @@ namespace MechaCyberpunk.UI.Inicio
             lineas.type = Image.Type.Tiled;
             UIInicio.Estirar(lineas.rectTransform);
             ArmarMarco(c);
+            ArmarPanel(c);
+            fondoCalles = FondoCallesInicio.Crear(c);
 
             logo = LogoInicio.Crear(c, NombreJuego.Nombre, 210, new Vector2(MargenIzquierdo - 6f, -100f));
+            logo.AsignarSprite(Resources.Load<Sprite>(RutaLogo));
+            logo.GetComponentsInChildren<Image>(true).First(i => i.name == "LogoPng").rectTransform.sizeDelta = new Vector2(AnchoBoton, 0f);
 
             raizPrincipal = UIInicio.Nodo(c, "Principal");
             UIInicio.Estirar(raizPrincipal);
             panelPrincipal = PanelAnimado.Agregar(raizPrincipal, new Vector2(-120f, 0f), 0.4f);
             continuar = Boton(TextoContinuar, UIInicio.Cian);
             nueva = Boton(TextoNueva, UIInicio.Cian);
+            cargar = Boton(TextoCargar, UIInicio.Cian);
             botonOpciones = Boton(TextoOpciones, UIInicio.Cian);
             creditos = Boton(TextoCreditos, UIInicio.Cian);
             salir = Boton(TextoSalir, UIInicio.Naranja);
             continuar.AgregarSubtexto(TextoSinPartida, 26, UIInicio.TextoApagado);
             continuar.AlPulsar.AddListener(ContinuarPartida);
             nueva.AlPulsar.AddListener(NuevaPartida);
+            cargar.AlPulsar.AddListener(AbrirCargar);
             botonOpciones.AlPulsar.AddListener(AbrirOpciones);
             creditos.AlPulsar.AddListener(AbrirCreditos);
             salir.AlPulsar.AddListener(SalirDelJuego);
-            foreach (BotonInicio b in new[] { continuar, nueva, botonOpciones, creditos, salir })
+            foreach (BotonInicio b in new[] { continuar, nueva, cargar, botonOpciones, creditos, salir })
             {
                 b.Elegido += AlElegir;
             }
@@ -194,8 +220,75 @@ namespace MechaCyberpunk.UI.Inicio
             Text version = UIInicio.Texto(c, "Version", Version, UIInicio.FuenteTexto, 24, UIInicio.TextoApagado, TextAnchor.LowerRight);
             UIInicio.Punto(version.rectTransform, new Vector2(1f, 0f), new Vector2(-80f, 54f), new Vector2(700f, 40f));
 
+            ArmarAviso(c);
+
             velo = UIInicio.Imagen(c, "Entrada", Color.black);
             UIInicio.Estirar(velo.rectTransform);
+        }
+
+        /// <summary>T-893: el panel vertical rojo translúcido detrás del logo y las opciones, con su borde coral.</summary>
+        private void ArmarPanel(Transform c)
+        {
+            Image panel = UIInicio.Imagen(c, "PanelMenu", RojoPanel, SpritesInicio.Blanco);
+            UIInicio.Anclar(panel.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(XPanel, 0f), new Vector2(AnchoPanel, -2f * MargenPanel));
+            panel.raycastTarget = false;
+            foreach (float x in new[] { 0f, AnchoPanel - GrosorBordePanel })
+            {
+                Image borde = UIInicio.Imagen(panel.rectTransform, "Borde", Coral, SpritesInicio.Blanco, true);
+                UIInicio.Anclar(borde.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(x, 0f), new Vector2(GrosorBordePanel, 0f));
+            }
+            foreach (float y in new[] { 0f, 1f })
+            {
+                Image borde = UIInicio.Imagen(panel.rectTransform, "Borde", Coral, SpritesInicio.Blanco, true);
+                UIInicio.Anclar(borde.rectTransform, new Vector2(0f, y), new Vector2(1f, y), new Vector2(0.5f, y), Vector2.zero, new Vector2(0f, GrosorBordePanel));
+            }
+        }
+
+        /// <summary>T-893: recuadro de aviso del mismo estilo, a la derecha del panel. Se cierra con un clic.</summary>
+        private void ArmarAviso(Transform c)
+        {
+            Image fondoAviso = UIInicio.Imagen(c, "Aviso", new Color(0.1f, 0.02f, 0.03f, 0.92f), SpritesInicio.Blanco);
+            UIInicio.Punto(fondoAviso.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(470f, 0f), new Vector2(820f, 180f));
+            foreach (float y in new[] { 0f, 1f })
+            {
+                Image borde = UIInicio.Imagen(fondoAviso.rectTransform, "Borde", Coral, SpritesInicio.Blanco, true);
+                UIInicio.Anclar(borde.rectTransform, new Vector2(0f, y), new Vector2(1f, y), new Vector2(0.5f, y), Vector2.zero, new Vector2(0f, GrosorBordePanel));
+            }
+            textoAviso = UIInicio.Texto(fondoAviso.rectTransform, "Texto", string.Empty, UIInicio.FuenteTexto, 40, Color.white, TextAnchor.MiddleCenter);
+            UIInicio.Estirar(textoAviso.rectTransform);
+            aviso = fondoAviso.gameObject.AddComponent<CanvasGroup>();
+            fondoAviso.gameObject.AddComponent<Button>().onClick.AddListener(CerrarAviso);
+            aviso.gameObject.SetActive(false);
+        }
+
+        /// <summary>T-893: muestra un aviso (por ejemplo, "LA PARTIDA GUARDADA ESTÁ DAÑADA").</summary>
+        public void MostrarAviso(string texto)
+        {
+            textoAviso.text = texto;
+            aviso.DOKill();
+            aviso.gameObject.SetActive(true);
+            aviso.alpha = 0f;
+            DOTween.To(() => aviso.alpha, v => aviso.alpha = v, 1f, SegundosAviso).SetTarget(aviso).SetUpdate(true);
+        }
+
+        public void CerrarAviso()
+        {
+            aviso.DOKill();
+            DOTween.To(() => aviso.alpha, v => aviso.alpha = v, 0f, SegundosAviso).SetTarget(aviso).SetUpdate(true).OnComplete(() => aviso.gameObject.SetActive(false));
+        }
+
+        /// <summary>T-893: CARGAR abre la pantalla de ranuras de siempre; al elegir una, <see cref="FlujoPartida"/> carga la escena.</summary>
+        private void AbrirCargar()
+        {
+            if (Estado != EstadoInicio.Principal)
+            {
+                return;
+            }
+            if (ranuras == null)
+            {
+                ranuras = new GameObject("PantallaRanuras").AddComponent<PantallaRanuras>();
+            }
+            ranuras.Abrir(ModoRanuras.Cargar);
         }
 
         private void ArmarMarco(Transform c)
@@ -234,13 +327,14 @@ namespace MechaCyberpunk.UI.Inicio
             ranuraContinuar = servicio != null ? servicio.RanuraMasReciente() : -1;
             bool hay = ranuraContinuar >= 0;
             continuar.gameObject.SetActive(hay);
+            cargar.gameObject.SetActive(hay);
             if (hay)
             {
                 continuar.FijarSubtexto(FormatoRanura.Linea(servicio.ResumenDe(ranuraContinuar)), UIInicio.Cian);
             }
             nueva.Etiqueta = hay ? TextoNueva : TextoJugar;
             float y = YPrimerBoton;
-            foreach (BotonInicio b in new[] { continuar, nueva, botonOpciones, creditos, salir })
+            foreach (BotonInicio b in new[] { continuar, nueva, cargar, botonOpciones, creditos, salir })
             {
                 if (!b.gameObject.activeSelf)
                 {
@@ -252,7 +346,7 @@ namespace MechaCyberpunk.UI.Inicio
                 y -= alto + SeparacionBotones;
             }
             Navigation.Mode mode = Navigation.Mode.Automatic;
-            foreach (BotonInicio b in new[] { continuar, nueva, botonOpciones, creditos, salir })
+            foreach (BotonInicio b in new[] { continuar, nueva, cargar, botonOpciones, creditos, salir })
             {
                 Navigation n = b.navigation;
                 n.mode = mode;

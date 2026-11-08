@@ -1,0 +1,103 @@
+using DG.Tweening;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace MechaCyberpunk.UI.Inicio
+{
+    /// <summary>
+    /// T-893: el fondo del menú de inicio con las calles reales del juego (K01, tianguis, Neón Alto, Nova): fotos de la ciudad que se acercan
+    /// despacio y cambian con un corte suave cada <see cref="SegundosPorCalle"/>.
+    /// </summary>
+    public class FondoCallesInicio : MonoBehaviour
+    {
+        public const string CarpetaResources = "Inicio/FondoCalle_";
+        public const int Calles = 4;
+        public const float SegundosPorCalle = 8f;
+        private const float SegundosCorte = 0.7f;
+        private const float EscalaInicial = 1.04f;
+        private const float EscalaFinal = 1.14f;
+
+        private Sprite[] fotos;
+        private Image frente;
+        private Image detras;
+        private CalculoFondoCalles calculo;
+
+        public int CantidadFotos => fotos != null ? fotos.Length : 0;
+        public int Actual => calculo != null ? calculo.Actual : 0;
+
+        public static FondoCallesInicio Crear(Transform padre)
+        {
+            RectTransform nodo = UIInicio.Nodo(padre, "FondoCalles");
+            UIInicio.Estirar(nodo);
+            nodo.SetAsFirstSibling();
+            FondoCallesInicio f = nodo.gameObject.AddComponent<FondoCallesInicio>();
+            f.Armar();
+            return f;
+        }
+
+        private void Armar()
+        {
+            fotos = new Sprite[Calles];
+            for (int i = 0; i < Calles; i++)
+            {
+                fotos[i] = Resources.Load<Sprite>(CarpetaResources + i);
+                if (fotos[i] == null)
+                {
+                    Debug.LogError("[UI] FondoCallesInicio: falta la foto " + CarpetaResources + i, this);
+                    enabled = false;
+                    return;
+                }
+            }
+            detras = Capa("Detras");
+            frente = Capa("Frente");
+            calculo = new CalculoFondoCalles(Calles, SegundosPorCalle);
+            Mostrar(frente, fotos[0]);
+        }
+
+        private Image Capa(string nombre)
+        {
+            Image i = UIInicio.Imagen(transform, nombre, Color.white, null);
+            UIInicio.Estirar(i.rectTransform);
+            i.raycastTarget = false;
+            return i;
+        }
+
+        private static void Mostrar(Image capa, Sprite foto)
+        {
+            capa.DOKill();
+            capa.rectTransform.DOKill();
+            capa.sprite = foto;
+            capa.color = Color.white;
+            capa.rectTransform.localScale = Vector3.one * EscalaInicial;
+            capa.rectTransform.DOScale(EscalaFinal, SegundosPorCalle + SegundosCorte).SetEase(Ease.Linear);
+        }
+
+        private void Update()
+        {
+            if (!calculo.Avanzar(Time.unscaledDeltaTime))
+            {
+                return;
+            }
+            // La capa de atrás toma la foto nueva y la de enfrente se desvanece; luego cambian de papel.
+            Mostrar(detras, fotos[calculo.Actual]);
+            Image saliente = frente;
+            DOTween.ToAlpha(() => saliente.color, c => saliente.color = c, 0f, SegundosCorte).SetTarget(saliente).SetEase(Ease.InOutSine);
+            frente.transform.SetAsFirstSibling();
+            detras.transform.SetAsFirstSibling();
+            frente.transform.SetAsLastSibling();
+            (frente, detras) = (detras, frente);
+        }
+
+        private void OnDestroy()
+        {
+            foreach (Image i in new[] { frente, detras })
+            {
+                if (i != null)
+                {
+                    i.DOKill();
+                    i.rectTransform.DOKill();
+                }
+            }
+        }
+    }
+}
