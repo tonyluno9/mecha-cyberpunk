@@ -28,8 +28,8 @@ namespace MechaCyberpunk.UI.Mapa
         public static readonly string[] EtiquetasFijasLeyenda =
             { "SKULLS", "SNAKES", "NOVA", "TÚ", "ALIADOS", "ENEMIGOS", "OBJETIVO", "EL MERCADO", "I+D+I", "CIC", "CASA", "PUNTO MARCADO" };
 
-        [Tooltip("Píxeles de pantalla (referencia 1920x1080) por metro del mundo, con zoom 1.")]
-        [Min(0.1f)] [SerializeField] private float pixelesPorMetro = 2.6f;
+        // T-747: la imagen de la ciudad entera (400 x 280 m) llena la vista de 800 x 560 con zoom 1. Constante: el valor viejo seguía guardado en la escena.
+        private const float pixelesPorMetro = MapaImagen.PixelesVistaPorMetro;
         [Tooltip("Tamaño de la vista del mapa (px).")]
         [SerializeField] private Vector2 tamanoVista = new Vector2(800f, 560f);
         /// <summary>Filas (de dos negocios cada una) de la sección NEGOCIOS (T-429): caben 8 negocios.</summary>
@@ -62,6 +62,9 @@ namespace MechaCyberpunk.UI.Mapa
         private readonly List<TipoMarcaMapa> tiposMarcas = new List<TipoMarcaMapa>();
         private Image[] manzanas;
         private Text[] etiquetas;
+        private RawImage imagenMapa;
+        private readonly List<Text> nombresBarrios = new List<Text>();
+        private const int TamanoNombreBarrio = 44;
         private Text titulo;
         private RectTransform romboObjetivo;
         private Image puntoMarcado;
@@ -107,6 +110,8 @@ namespace MechaCyberpunk.UI.Mapa
         public float Zoom => zoom;
         public RectTransform Vista => vista;
         public RectTransform Contenido => contenido;
+        /// <summary>La flecha del jugador en el mapa grande (T-747).</summary>
+        public RectTransform PuntoJugador => puntoJugador;
 
         /// <summary>El rombo del objetivo (T-408), en px del dibujo a zoom 1 (x, z del mundo por píxeles por metro).</summary>
         public RectTransform RomboObjetivo => romboObjetivo;
@@ -169,18 +174,34 @@ namespace MechaCyberpunk.UI.Mapa
             KitUI.Colocar(contenido, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             contenido.pivot = new Vector2(0.5f, 0.5f);
 
-            Image calles = KitUI.CrearImagen(contenido, "Calles", e.Calles);
-            KitUI.Colocar(calles.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, GeometriaBarrio.TamanoConCalles * pixelesPorMetro);
+            // T-747: la captura cenital de la ciudad real (centro del cuadro = origen del mundo); sin imagen, las calles planas de antes.
+            Texture2D plano = MapaImagen.Cargar();
+            if (plano != null)
+            {
+                imagenMapa = new GameObject("ImagenCiudad", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
+                imagenMapa.rectTransform.SetParent(contenido, false);
+                imagenMapa.texture = plano;
+                imagenMapa.raycastTarget = false;
+                KitUI.Colocar(imagenMapa.rectTransform, new Vector2(0.5f, 0.5f), MapaImagen.MundoADibujo(MapaImagen.Centro, pixelesPorMetro), MapaImagen.Tamano * pixelesPorMetro);
+            }
+            else
+            {
+                Image calles = KitUI.CrearImagen(contenido, "Calles", e.Calles);
+                KitUI.Colocar(calles.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, GeometriaBarrio.TamanoConCalles * pixelesPorMetro);
+            }
+            CrearNombresBarrios(e);
             float lado = GeometriaBarrio.LadoManzana * pixelesPorMetro;
             manzanas = new Image[GeometriaBarrio.Cantidad];
             etiquetas = new Text[GeometriaBarrio.Cantidad];
             for (int i = 0; i < manzanas.Length; i++)
             {
                 manzanas[i] = KitUI.CrearImagen(contenido, "Manzana_" + (i + 1), Color.gray);
+                // T-747: el dueño se ve en el borde, para dejar ver la imagen.
+                manzanas[i].sprite = IconosMapa.Marco;
+                manzanas[i].raycastTarget = false;
                 KitUI.Colocar(manzanas[i].rectTransform, new Vector2(0.5f, 0.5f), GeometriaBarrio.Centros[i] * pixelesPorMetro, Vector2.one * lado);
                 etiquetas[i] = KitUI.CrearTexto(manzanas[i].transform, "Etiqueta", RolTexto.Ayuda, TextAnchor.MiddleCenter);
-                etiquetas[i].color = Color.black;
-                etiquetas[i].GetComponent<Shadow>().enabled = false;
+                etiquetas[i].color = e.Texto;
             }
 
             circuloBusqueda = new CirculoBusquedaMapa(contenido);
@@ -202,6 +223,25 @@ namespace MechaCyberpunk.UI.Mapa
             ayuda.text = TextoAyuda;
             ayuda.color = e.Turquesa;
             panel.SetActive(false);
+        }
+
+        /// <summary>Los cuatro nombres grandes de los barrios (T-747), semitransparentes del color del barrio, como en M10.</summary>
+        public IReadOnlyList<Text> NombresBarrios => nombresBarrios;
+        public RawImage ImagenMapa => imagenMapa;
+
+        private void CrearNombresBarrios(EstiloCyberfix e)
+        {
+            for (int i = 0; i < BarriosMapa.Todos.Length; i++)
+            {
+                BarriosMapa.Barrio b = BarriosMapa.Todos[i];
+                Text t = KitUI.CrearTexto(contenido, "Barrio_" + b.Nombre, RolTexto.Encabezado, TextAnchor.MiddleCenter);
+                KitUI.Colocar(t.rectTransform, new Vector2(0.5f, 0.5f), b.PuntoNombre * pixelesPorMetro, new Vector2(300f, 70f));
+                t.fontSize = TamanoNombreBarrio;
+                t.text = b.Nombre;
+                t.color = new Color(b.Color.r, b.Color.g, b.Color.b, 0.6f);
+                t.raycastTarget = false;
+                nombresBarrios.Add(t);
+            }
         }
 
         // A la derecha: tu pandilla, SKULLS, SNAKES, NOVA, tú, aliados, enemigos, objetivo, los cuatro lugares y el punto marcado.
@@ -425,6 +465,7 @@ namespace MechaCyberpunk.UI.Mapa
                 string zona = GeometriaBarrio.Zona(i, territorio);
                 manzanas[i].color = zona.Length > 0 ? FormatoTerritorio.ColorDe(territorio.Dueno(zona)) : Color.gray;
                 etiquetas[i].text = zona.Length > 0 ? territorio.Nombre(zona) + "\nRESPETO " + territorio.Respeto(zona) : string.Empty;
+                etiquetas[i].rectTransform.localScale = contraZoom;
             }
             Color tuColor = FormatoTerritorio.ColorDe(IdPandilla.Jugador);
             nombrePandilla.text = FormatoTerritorio.NombreDe(IdPandilla.Jugador);
@@ -494,6 +535,81 @@ namespace MechaCyberpunk.UI.Mapa
                     destinos[i].rectTransform.localScale = contraZoom;
                 }
             }
+            SepararNombres(catalogo);
+        }
+
+        // T-721: los nombres de los lugares no se tapan entre sí, ni a los iconos, ni a los nombres de los barrios ni a los de las manzanas.
+        private readonly List<Vector2> centrosNombres = new List<Vector2>();
+        private readonly List<Vector2> tamanosNombres = new List<Vector2>();
+        private readonly List<bool> arribaNombres = new List<bool>();
+        private readonly List<bool> visiblesNombres = new List<bool>();
+        private readonly List<Rect> fijosNombres = new List<Rect>();
+        private readonly Rect[] nombresColocados = new Rect[16];
+
+        private void SepararNombres(IReadOnlyList<DestinoMapa> catalogo)
+        {
+            centrosNombres.Clear();
+            tamanosNombres.Clear();
+            arribaNombres.Clear();
+            visiblesNombres.Clear();
+            fijosNombres.Clear();
+            // Todo en píxeles de la vista (con zoom): el icono y su nombre no crecen con el zoom, las posiciones sí.
+            for (int i = 0; i < catalogo.Count; i++)
+            {
+                Text nombre = IconosMapa.NombreDe(destinos[i]);
+                bool visible = destinos[i].gameObject.activeSelf && nombre != null;
+                visiblesNombres.Add(visible);
+                centrosNombres.Add(destinos[i].rectTransform.anchoredPosition * zoom);
+                arribaNombres.Add(catalogo[i].EtiquetaArriba);
+                tamanosNombres.Add(visible ? new Vector2(nombre.preferredWidth + 6f, nombre.fontSize * 1.25f) : Vector2.zero);
+            }
+            foreach (Text t in nombresBarrios)
+            {
+                fijosNombres.Add(CalculoEtiquetasMapa.Caja(t.rectTransform.anchoredPosition * zoom, new Vector2(t.preferredWidth, t.fontSize * 1.2f)));
+            }
+            for (int i = 0; i < etiquetas.Length; i++)
+            {
+                if (etiquetas[i].text.Length > 0)
+                {
+                    fijosNombres.Add(CalculoEtiquetasMapa.Caja(manzanas[i].rectTransform.anchoredPosition * zoom, new Vector2(etiquetas[i].preferredWidth, etiquetas[i].preferredHeight)));
+                }
+            }
+            // Las marcas de lugar (CIC, casa, I+D+I, mercado), el objetivo y el jugador tampoco se tapan.
+            foreach (Image marca in marcas)
+            {
+                if (marca.gameObject.activeSelf)
+                {
+                    fijosNombres.Add(CalculoEtiquetasMapa.Caja(marca.rectTransform.anchoredPosition * zoom, Vector2.one * ladoIcono));
+                }
+            }
+            if (romboObjetivo.gameObject.activeSelf)
+            {
+                fijosNombres.Add(CalculoEtiquetasMapa.Caja(romboObjetivo.anchoredPosition * zoom, Vector2.one * diagonalRombo));
+            }
+            fijosNombres.Add(CalculoEtiquetasMapa.Caja(puntoJugador.anchoredPosition * zoom, Vector2.one * ladoFlecha));
+            Vector2[] lugares = CalculoEtiquetasMapa.Colocar(centrosNombres, tamanosNombres, arribaNombres, visiblesNombres, fijosNombres, ladoIcono);
+            for (int i = 0; i < catalogo.Count; i++)
+            {
+                if (!visiblesNombres[i])
+                {
+                    continue;
+                }
+                IconosMapa.NombreDe(destinos[i]).rectTransform.anchoredPosition = lugares[i];
+                nombresColocados[i] = CalculoEtiquetasMapa.Caja(centrosNombres[i] + lugares[i], tamanosNombres[i]);
+            }
+        }
+
+        /// <summary>El rectángulo del nombre del lugar en la vista (px desde el centro del dibujo, con el zoom de ahora), o null si no se dibuja (T-721).</summary>
+        public Rect? NombreDeLugar(IdDestinoMapa id)
+        {
+            for (int i = 0; i < destinos.Count; i++)
+            {
+                if (CatalogoDestinosMapa.Todos[i].Id == id && destinos[i].gameObject.activeSelf)
+                {
+                    return nombresColocados[i];
+                }
+            }
+            return null;
         }
 
         /// <summary>El icono del lugar del catálogo si sale ahora en el mapa grande (T-667), o null.</summary>

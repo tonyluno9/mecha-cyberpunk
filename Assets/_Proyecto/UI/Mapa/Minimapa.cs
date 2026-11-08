@@ -51,8 +51,9 @@ namespace MechaCyberpunk.UI.Mapa
         private Text textoPunto;
         // T-701: las calles salen de la escena viva (contornos de manzanas), como líneas finas claras; el barrio viejo (GeometriaBarrio) ya no se usa aquí.
         private RectTransform capaCalles;
+        private RawImage imagenMapa;
         private readonly List<Image> lineasCalles = new List<Image>();
-        private static readonly Color ColorLineaCalle = new Color(0.72f, 0.95f, 0.95f, 0.7f);
+        private static readonly Color ColorLineaCalle = new Color(0.72f, 0.95f, 0.95f, 0.4f);
         private const float GrosorLineaCallePx = 1.6f;
         private const float MetrosCalles = 105f;
         /// <summary>Cuántas líneas de calle se dibujan ahora.</summary>
@@ -77,6 +78,8 @@ namespace MechaCyberpunk.UI.Mapa
         private int aliadosVisibles;
         private float escala;
 
+        /// <summary>La imagen de la ciudad del minimapa (T-747), o null si no hay.</summary>
+        public RawImage ImagenMapa => imagenMapa;
         public bool Visible => canvas != null && canvas.enabled;
         public RectTransform Raiz => raiz;
         /// <summary>Lo que gira con la cámara (calles y manzanas). Su rotación en Z es el rumbo de la cámara.</summary>
@@ -134,6 +137,18 @@ namespace MechaCyberpunk.UI.Mapa
 
             mundo = Centrado(mascara.transform, "Mundo");
             desplazado = Centrado(mundo, "Desplazado");
+            // T-747: la captura cenital de la ciudad (la misma del mapa grande), debajo de las líneas de calles; sin ella, solo las líneas.
+            Texture2D plano = MapaImagen.Cargar();
+            if (plano != null)
+            {
+                imagenMapa = new GameObject("ImagenCiudad", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
+                imagenMapa.rectTransform.SetParent(desplazado, false);
+                imagenMapa.texture = plano;
+                imagenMapa.raycastTarget = false;
+                imagenMapa.color = new Color(1f, 1f, 1f, 0.95f);
+                KitUI.Colocar(imagenMapa.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one);
+                imagenMapa.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            }
             capaCalles = Centrado(desplazado, "Calles");
 
             circuloBusqueda = new CirculoBusquedaMapa(desplazado);
@@ -216,6 +231,12 @@ namespace MechaCyberpunk.UI.Mapa
 
             mundo.localRotation = Quaternion.Euler(0f, 0f, rumbo);
             desplazado.anchoredPosition = -GeometriaBarrio.AMapa(centro) * escala;
+            if (imagenMapa != null)
+            {
+                // El centro del cuadro de la imagen es el origen del mundo: mismas cuentas que los iconos (MapaImagen.MundoADibujo).
+                imagenMapa.rectTransform.anchoredPosition = MapaImagen.MundoADibujo(MapaImagen.Centro, escala);
+                imagenMapa.rectTransform.sizeDelta = MapaImagen.Tamano * escala;
+            }
             DibujarCalles(centro);
             circuloBusqueda.Actualizar(escala);
 
