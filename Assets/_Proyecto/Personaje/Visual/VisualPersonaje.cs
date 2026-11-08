@@ -60,6 +60,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdRodar = Animator.StringToHash(ReglasVisual.Rodar);
         private static readonly int IdVelX = Animator.StringToHash(ReglasAnimacion.VelX);
         private static readonly int IdVelZ = Animator.StringToHash(ReglasAnimacion.VelZ);
+        private static readonly int IdApuntarX = Animator.StringToHash(ReglasAnimacion.ApuntarX);
+        private static readonly int IdApuntarZ = Animator.StringToHash(ReglasAnimacion.ApuntarZ);
         private static readonly int IdVelY = Animator.StringToHash(ReglasAnimacion.VelY);
         private static readonly int IdGiro = Animator.StringToHash(ReglasAnimacion.Giro);
         private static readonly int IdAgachado = Animator.StringToHash(ReglasAnimacion.Agachado);
@@ -155,6 +157,12 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>El tipo de arma que ve el Animator: solo al apuntar (o justo después de disparar o recargar) se usan las poses de arma; si no, camina y corre normal (T-671).</summary>
         public TipoArmaVisual TipoArmaAnimador => apuntando || Time.time < armaLevantadaHasta ? tipoArma : TipoArmaVisual.Ninguna;
+
+        /// <summary>
+        /// T-733: la pistola solo está en la mano mientras se apunta (o justo después de disparar o recargar): es cuando el Animator
+        /// juega Pistola_Sacar y no Pistola_Guardar. Lo lee ArmasAPie para mostrar u ocultar la pistola del jugador.
+        /// </summary>
+        public bool ArmaLevantada => TipoArmaAnimador != TipoArmaVisual.Ninguna;
 
         private void LevantarArma()
         {
@@ -425,8 +433,6 @@ namespace MechaCyberpunk.Personaje.Visual
         private float giro;
         private float rapidezIdle = 1f;
         private bool rapidezAgachadoAplicada;
-        private int capaBrazos = -2;
-        private float pesoBrazos;
         private float pesoArriba = 1f;
         private float velocidadAnterior;
         private float yawAnterior;
@@ -512,21 +518,8 @@ namespace MechaCyberpunk.Personaje.Visual
             pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
             animador.SetLayerWeight(capaArriba, pesoArriba);
 
-            // T-683: agachado sin apuntar, los brazos quedan sueltos (los clips de agachado traen la pose de rifle); apuntando manda la capa de arriba.
-            if (capaBrazos == -2)
-            {
-                capaBrazos = animador.GetLayerIndex(ReglasAnimacion.CapaBrazos);
-            }
-            if (capaBrazos >= 0)
-            {
-                bool sueltos = agachado && !apuntando && !cubierto && !caido && !manejando && !viendoTelefono && !EnGesto;
-                pesoBrazos = Mathf.MoveTowards(pesoBrazos, sueltos ? 1f : 0f, rapidezCapaArriba * dt);
-                animador.SetLayerWeight(capaBrazos, pesoBrazos);
-            }
         }
 
-        /// <summary>Peso actual de la capa de brazos sueltos (agachado sin apuntar), de 0 a 1.</summary>
-        public float PesoCapaBrazos => pesoBrazos;
         /// <summary>Peso actual de la capa de arriba (torso), de 0 a 1.</summary>
         public float PesoCapaArriba => pesoArriba;
 
@@ -690,6 +683,9 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 Poner(IdVelX, velX);
                 Poner(IdVelZ, velZ);
+                // T-733: el árbol de apuntar camina hacia donde va; quien no calcula la dirección deja ApuntarX/Z en 0 y apunta quieto.
+                Poner(IdApuntarX, velX);
+                Poner(IdApuntarZ, velZ);
                 Poner(IdVelY, velY);
                 Poner(IdGiro, giro);
             }

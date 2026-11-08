@@ -65,7 +65,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Parametros(c);
             ConstruirBase(c);
             ConstruirArriba(c, mascara);
-            ConstruirBrazos(c, mascara);
             EditorUtility.SetDirty(c);
             AssetDatabase.SaveAssets();
             CrearOverrides(c);
@@ -213,7 +212,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 if (p.name == ReglasVisual.EnSuelo) { p.defaultBool = true; }
                 if (p.name == ReglasAnimacion.VelZ) { p.defaultFloat = 1f; }
                 if (p.name == ReglasAnimacion.PoseCobertura) { p.defaultFloat = 0.999f; }
-                if (p.name == ReglasAnimacion.PoseAgachadoQuieto) { p.defaultFloat = ReglasAnimacion.FraccionAgachadoQuieto; }
                 if (p.name == ReglasAnimacion.RapidezGolpe) { p.defaultFloat = 1f; }
             }
             c.parameters = lista;
@@ -254,11 +252,17 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Estado("SaltoAire", "Loco_SaltoAire");
             Estado("SaltoAterrizaje", "Loco_SaltoAterrizaje");
             Estado("Caida", "Loco_Caida");
-            Estado("AgachadoCaminar", "Rifle_AgachadoCaminar");
-            // T-683: no hay clip de agachado quieto; se congela la pose más baja de Cobertura_Entrar (las rodillas dobladas) con un parámetro de tiempo.
-            AnimatorState agachadoQuieto = Estado("AgachadoQuieto", "Cobertura_Entrar");
-            agachadoQuieto.timeParameterActive = true;
-            agachadoQuieto.timeParameter = ReglasAnimacion.PoseAgachadoQuieto;
+            // T-733: los clips de agachado de Tony (agarre.txt): agacharse, quieto, caminar en las cuatro direcciones, pararse y rodar.
+            AnimatorState agachadoCaminar = Estado("AgachadoCaminar", null);
+            agachadoCaminar.motion = Arbol2D(c, "AgachadoCaminar", new (string, Vector2)[]
+            {
+                ("Loco_AgachadoCaminar", new Vector2(0f, 1f)), ("Loco_AgachadoAtras", new Vector2(0f, -1f)),
+                ("Loco_AgachadoLateral_Derecha", new Vector2(1f, 0f)), ("Loco_AgachadoLateral_Izquierda", new Vector2(-1f, 0f)),
+            });
+            Estado("AgachadoQuieto", "Loco_AgachadoIdle");
+            Estado("Agacharse", "Loco_Agacharse");
+            Estado("Pararse", "Loco_Pararse");
+            Estado("Rodar", "Loco_Rodar");
             Estado("CoberturaEntrar", "Cobertura_Entrar");
             // Mantener = la última pose de Entrar congelada (no hay clip de estar cubierto).
             // (con speed 0 las transiciones de salida no avanzan: el tiempo se fija con un parámetro).
@@ -277,18 +281,28 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
             string[] suelo = { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto" };
 
-            // Agachado (T-683): quieto con la pose baja de Cobertura_Entrar, caminando con Rifle_AgachadoCaminar; los brazos los suelta la capa Brazos.
-            foreach (string s in new[] { "Idle", "Caminar", "Correr" })
+            // Agachado (T-733): de pie se baja con Loco_Agacharse y queda en AgachadoQuieto o AgachadoCaminar (por velocidad); para levantarse usa Loco_Pararse.
+            foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar" })
             {
-                Unir(e[s], e["AgachadoCaminar"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, true), Mayor(ReglasVisual.Velocidad, UmbralCaminar));
-                Unir(e[s], e["AgachadoQuieto"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, true), Menor(ReglasVisual.Velocidad, UmbralCaminar));
+                Unir(e[s], e["Agacharse"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, true), Bool(ReglasVisual.EnSuelo, true));
             }
+            Unir(e["Agacharse"], e["AgachadoCaminar"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Agachado, true), Mayor(ReglasVisual.Velocidad, UmbralCaminar));
+            Unir(e["Agacharse"], e["AgachadoQuieto"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Agachado, true));
+            Unir(e["Agacharse"], e["Pararse"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, false));
             Unir(e["AgachadoQuieto"], e["AgachadoCaminar"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, true), Mayor(ReglasVisual.Velocidad, UmbralCaminar));
             Unir(e["AgachadoCaminar"], e["AgachadoQuieto"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, true), Menor(ReglasVisual.Velocidad, UmbralCaminar));
             foreach (string s in new[] { "AgachadoCaminar", "AgachadoQuieto" })
             {
-                Unir(e[s], e["Idle"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, false));
+                Unir(e[s], e["Pararse"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, false));
             }
+            Unir(e["Pararse"], e["Caminar"], true, SalidaUnaVez, Mezcla, Mayor(ReglasVisual.Velocidad, UmbralCaminar));
+            Unir(e["Pararse"], e["Idle"], true, SalidaUnaVez, Mezcla);
+            // Rodar (desde cualquier estado menos las muertes): al acabar sigue agachado (caminando o quieto) o se levanta con Pararse.
+            AnimatorStateTransition rodar = m.AddAnyStateTransition(e["Rodar"]);
+            Configurar(rodar, false, 0f, MezclaCorta, false, Disparador(ReglasAnimacion.Rodar), Bool(ReglasVisual.Caer, false));
+            Unir(e["Rodar"], e["Pararse"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Agachado, false));
+            Unir(e["Rodar"], e["AgachadoCaminar"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Agachado, true), Mayor(ReglasVisual.Velocidad, UmbralCaminar));
+            Unir(e["Rodar"], e["AgachadoQuieto"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Agachado, true));
 
             // Frenar al soltar el avance corriendo.
             foreach (string s in new[] { "Caminar", "Correr" })
@@ -355,7 +369,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["LevantarseBocaAbajo"], e["Idle"], true, SalidaUnaVez, Mezcla);
 
             // Entrar en cobertura desde el suelo (no desde cualquier estado: si no, saldría de Mantener y entraría otra vez en bucle).
-            foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "SaltoAterrizaje" })
+            foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "SaltoAterrizaje" })
             {
                 Unir(e[s], e["CoberturaEntrar"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, true));
             }
@@ -405,14 +419,14 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["VerTelefono"], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, UmbralCaminar));
         }
 
-        private static BlendTree Arbol2D(AnimatorController c, string nombre, (string clip, Vector2 pos)[] hijos)
+        private static BlendTree Arbol2D(AnimatorController c, string nombre, (string clip, Vector2 pos)[] hijos, string parametroX = ReglasAnimacion.VelX, string parametroY = ReglasAnimacion.VelZ)
         {
             var arbol = new BlendTree
             {
                 name = nombre,
                 blendType = BlendTreeType.SimpleDirectional2D,
-                blendParameter = ReglasAnimacion.VelX,
-                blendParameterY = ReglasAnimacion.VelZ,
+                blendParameter = parametroX,
+                blendParameterY = parametroY,
                 useAutomaticThresholds = false,
             };
             foreach ((string clip, Vector2 pos) in hijos)
@@ -478,9 +492,18 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 ("Pistola_Idle", 0f), ("Pistola_Caminar", ReglasAnimacion.VelocidadAndar), ("Pistola_Correr", ReglasAnimacion.VelocidadCarrera),
             }));
-            Estado("PistolaApuntar", Arbol1D(c, "PistolaApuntar", ReglasAnimacion.VelX, new (string, float)[]
+            // T-733: sacar y guardar la pistola (la pistola solo se ve mientras se apunta), apuntar quieto o caminando en las cuatro direcciones
+            // (árbol 2D sobre ApuntarX/ApuntarZ) y apuntar agachado (quieto o caminando, sin disparar).
+            Estado("PistolaSacar", Clip("Pistola_Sacar"));
+            Estado("PistolaGuardar", Clip("Pistola_Guardar"));
+            Estado("PistolaApuntar", Arbol2D(c, "PistolaApuntar", new (string, Vector2)[]
             {
-                ("Pistola_ApuntarCaminar_Izquierda", -1f), ("Pistola_Apuntar", 0f), ("Pistola_ApuntarCaminar_Derecha", 1f),
+                ("Pistola_Apuntar", Vector2.zero), ("Pistola_Caminar", new Vector2(0f, 1f)), ("Pistola_ApuntarAtras", new Vector2(0f, -1f)),
+                ("Pistola_ApuntarLateral_Derecha", new Vector2(1f, 0f)), ("Pistola_ApuntarLateral_Izquierda", new Vector2(-1f, 0f)),
+            }, ReglasAnimacion.ApuntarX, ReglasAnimacion.ApuntarZ));
+            Estado("PistolaAgachado", Arbol1D(c, "PistolaAgachado", ReglasVisual.Velocidad, new (string, float)[]
+            {
+                ("Pistola_AgachadoIdle", 0f), ("Pistola_AgachadoCaminar", ReglasAnimacion.VelocidadAgachadoCaminando),
             }));
             Estado("PistolaDisparo", Clip("Pistola_Disparo"));
             Estado("PistolaRecargar", Clip("Pistola_Recargar"));
@@ -501,15 +524,26 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             int pistola = (int)TipoArmaVisual.Pistola;
             int larga = (int)TipoArmaVisual.ArmaLarga;
 
-            // Vacío es el centro: de ahí se va al arma que se tiene en la mano.
-            Unir(e["Vacio"], e["PistolaIdle"], false, 0f, Mezcla, Entero(ReglasVisual.TipoArma, pistola));
+            // Vacío es el centro: de ahí se va al arma que se tiene en la mano. La pistola se saca (Pistola_Sacar) y al dejar de apuntar se guarda.
+            Unir(e["Vacio"], e["PistolaSacar"], false, 0f, MezclaCorta, Entero(ReglasVisual.TipoArma, pistola));
+            Unir(e["PistolaSacar"], e["PistolaAgachado"], true, SalidaUnaVez, Mezcla, Bool(ReglasVisual.Apuntando, true), Bool(ReglasAnimacion.Agachado, true));
+            Unir(e["PistolaSacar"], e["PistolaApuntar"], true, SalidaUnaVez, Mezcla, Bool(ReglasVisual.Apuntando, true));
+            Unir(e["PistolaSacar"], e["PistolaIdle"], true, SalidaUnaVez, Mezcla);
+            Unir(e["PistolaSacar"], e["PistolaGuardar"], false, 0f, MezclaCorta, Distinto(ReglasVisual.TipoArma, pistola));
+            Unir(e["PistolaApuntar"], e["PistolaAgachado"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, true));
+            Unir(e["PistolaAgachado"], e["PistolaApuntar"], false, 0f, Mezcla, Bool(ReglasAnimacion.Agachado, false));
+            Unir(e["PistolaAgachado"], e["PistolaIdle"], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, false));
+            Unir(e["PistolaAgachado"], e["PistolaGuardar"], false, 0f, MezclaCorta, Distinto(ReglasVisual.TipoArma, pistola));
+            Unir(e["PistolaGuardar"], e["Vacio"], true, SalidaUnaVez, Mezcla);
             Unir(e["Vacio"], e["LargaIdle"], false, 0f, Mezcla, Entero(ReglasVisual.TipoArma, larga));
             foreach ((string idle, string apuntar, int arma) in new[] { ("PistolaIdle", "PistolaApuntar", pistola), ("LargaIdle", "LargaApuntar", larga) })
             {
                 Unir(e[idle], e[apuntar], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, true));
                 Unir(e[apuntar], e[idle], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, false));
-                Unir(e[idle], e["Vacio"], false, 0f, Mezcla, Distinto(ReglasVisual.TipoArma, arma));
-                Unir(e[apuntar], e["Vacio"], false, 0f, Mezcla, Distinto(ReglasVisual.TipoArma, arma));
+                // La pistola pasa por Pistola_Guardar; las armas largas se sueltan directo.
+                string guardar = arma == pistola ? "PistolaGuardar" : "Vacio";
+                Unir(e[idle], e[guardar], false, 0f, arma == pistola ? MezclaCorta : Mezcla, Distinto(ReglasVisual.TipoArma, arma));
+                Unir(e[apuntar], e[guardar], false, 0f, arma == pistola ? MezclaCorta : Mezcla, Distinto(ReglasVisual.TipoArma, arma));
             }
 
             // Disparo y recarga desde cualquier estado de arriba, con el arma que se tiene.
@@ -548,25 +582,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 AnyA(m, e[danos[i]], MezclaCorta, true, Disparador(ReglasVisual.Herido), Entero(ReglasAnimacion.DanoTipo, i));
                 Unir(e[danos[i]], e["Vacio"], true, SalidaDano, MezclaCorta);
             }
-        }
-
-        // ---------- Capa de brazos (T-683) ----------
-
-        private static void ConstruirBrazos(AnimatorController c, AvatarMask mascara)
-        {
-            c.AddLayer(ReglasAnimacion.CapaBrazos);
-            AnimatorControllerLayer[] capas = c.layers;
-            int i = capas.Length - 1;
-            capas[i].avatarMask = mascara;
-            capas[i].blendingMode = AnimatorLayerBlendingMode.Override;
-            // Usa la máscara del torso (cuerpo, cabeza y brazos): el torso queda derecho con los brazos colgando sobre las piernas agachadas.
-            // La prende VisualPersonaje solo agachado sin apuntar.
-            capas[i].defaultWeight = 0f;
-            c.layers = capas;
-            AnimatorStateMachine m = c.layers[i].stateMachine;
-            AnimatorState sueltos = m.AddState("BrazosSueltos");
-            sueltos.motion = Clip("Loco_Idle");
-            m.defaultState = sueltos;
         }
 
         // ---------- Transiciones ----------
