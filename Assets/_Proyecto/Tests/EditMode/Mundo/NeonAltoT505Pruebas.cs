@@ -63,15 +63,13 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void Autopista_DosTramosSinColliderQueCubrenLaCalle()
         {
-            Transform[] puentes = raiz.GetComponentsInChildren<Transform>().Where(t => t.name.StartsWith("N02_T505")).ToArray();
+            // T-885 (playtest 7-nov): los dos tramos siguen en la escena (apagados) hasta que llegue la pasarela PS01 del pedido de arte.
+            Transform[] puentes = raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("N02_T505")).ToArray();
             Assert.AreEqual(2, puentes.Length);
+            Assert.IsTrue(puentes.All(p => !p.gameObject.activeSelf), "apagados: atravesaban de un edificio al otro sin sentido");
             foreach (Transform p in puentes)
             {
                 Assert.AreEqual(0, p.GetComponentsInChildren<Collider>().Count(c => c.enabled), "la autopista no debe tener collider activo");
-                Bounds b = p.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((a, c) => { a.Encapsulate(c); return a; });
-                Assert.Less(b.min.x, XOeste, "entra en el edificio oeste");
-                Assert.Greater(b.max.x, XEste, "entra en el edificio este");
-                Assert.Greater(b.max.y, 9f);
             }
         }
 

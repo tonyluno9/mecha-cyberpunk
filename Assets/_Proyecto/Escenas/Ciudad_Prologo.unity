@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 796982461}
+  m_SkyboxMaterial: {fileID: 704969}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -527,6 +527,49 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 646052}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &704969
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Cielo_Procedural (hora)
+  m_Shader: {fileID: 4800000, guid: e500bf0be3d0d5047bb04dbf90fe33b4, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _SUNDISK_HIGH_QUALITY
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _AltoBrillo: 0.25
+    - _AtmosphereThickness: 0.6
+    - _Bruma: 0.07
+    - _Curva: 0.3
+    - _Exposure: 1
+    - _HaloSol: 0.35
+    - _SunDisk: 2
+    - _SunSize: 0
+    - _SunSizeConvergence: 5
+    m_Colors:
+    - _ColorBrillo: {r: 0.2, g: 0.24, b: 0.32, a: 0.12}
+    - _ColorHorizonte: {r: 0.2, g: 0.24, b: 0.32, a: 1}
+    - _ColorSol: {r: 0.45, g: 0.55, b: 1, a: 1}
+    - _GroundColor: {r: 0.2, g: 0.24, b: 0.32, a: 1}
+    - _SkyTint: {r: 0.034999996, g: 0.055, b: 0.13, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &778826
 GameObject:
   m_ObjectHideFlags: 0
@@ -372687,6 +372730,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: N02_T505
       objectReference: {fileID: 0}
+    - target: {fileID: 8251169941146430769, guid: 1c8c39dda5929f742bfc240b00236df4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -512313,49 +512360,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 796639176}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!21 &796982461
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Cielo_Procedural (hora)
-  m_Shader: {fileID: 4800000, guid: e500bf0be3d0d5047bb04dbf90fe33b4, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _SUNDISK_HIGH_QUALITY
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _AltoBrillo: 0.25
-    - _AtmosphereThickness: 0.6
-    - _Bruma: 0.07
-    - _Curva: 0.3
-    - _Exposure: 1
-    - _HaloSol: 0.35
-    - _SunDisk: 2
-    - _SunSize: 0
-    - _SunSizeConvergence: 5
-    m_Colors:
-    - _ColorBrillo: {r: 0.2, g: 0.24, b: 0.32, a: 0.12}
-    - _ColorHorizonte: {r: 0.2, g: 0.24, b: 0.32, a: 1}
-    - _ColorSol: {r: 0.45, g: 0.55, b: 1, a: 1}
-    - _GroundColor: {r: 0.2, g: 0.24, b: 0.32, a: 1}
-    - _SkyTint: {r: 0.034999996, g: 0.055, b: 0.13, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1001 &797060096
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -871732,6 +871736,10 @@ PrefabInstance:
     - target: {fileID: 8251169941146430769, guid: 1c8c39dda5929f742bfc240b00236df4, type: 3}
       propertyPath: m_Name
       value: N02_T505
+      objectReference: {fileID: 0}
+    - target: {fileID: 8251169941146430769, guid: 1c8c39dda5929f742bfc240b00236df4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
