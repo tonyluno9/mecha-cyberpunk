@@ -108,11 +108,11 @@ namespace MechaCyberpunk.Vehiculos.Efectos
 
         /// <summary>Humo continuo (la emisión se maneja con <c>emission.rateOverTime</c>), pegado a <paramref name="padre"/>. Null si no hay catálogo.</summary>
         public static ParticleSystem Humo(Transform padre, Vector3 posicionLocal, float escala = 1f) =>
-            Continuo(CatalogoEfectos.Actual != null ? CatalogoEfectos.Actual.Humo : null, "HumoPack", padre, posicionLocal, escala);
+            Continuo(CatalogoEfectos.Actual != null ? CatalogoEfectos.Actual.Humo : null, "HumoPack", padre, posicionLocal, escala, false);
 
         /// <summary>Fuego continuo chico (la emisión se maneja con <c>emission.rateOverTime</c>), pegado a <paramref name="padre"/>. Null si no hay catálogo.</summary>
         public static ParticleSystem Fuego(Transform padre, Vector3 posicionLocal, float escala = 1f) =>
-            Continuo(CatalogoEfectos.Actual != null ? CatalogoEfectos.Actual.FuegoChico : null, "FuegoPack", padre, posicionLocal, escala);
+            Continuo(CatalogoEfectos.Actual != null ? CatalogoEfectos.Actual.FuegoChico : null, "FuegoPack", padre, posicionLocal, escala, true);
 
         /// <summary>Llamas en el suelo que duran <paramref name="segundos"/> (un barril que reventó).</summary>
         public static GameObject FuegoSuelo(Vector3 punto, float segundos)
@@ -155,7 +155,7 @@ namespace MechaCyberpunk.Vehiculos.Efectos
             return Mathf.Min(maximo, 10f);
         }
 
-        private static ParticleSystem Continuo(GameObject plantilla, string nombre, Transform padre, Vector3 posicionLocal, float escala)
+        private static ParticleSystem Continuo(GameObject plantilla, string nombre, Transform padre, Vector3 posicionLocal, float escala, bool enEspacioLocal)
         {
             if (plantilla == null)
             {
@@ -176,10 +176,13 @@ namespace MechaCyberpunk.Vehiculos.Efectos
                 ParticleSystem.MainModule main = sistema.main;
                 main.loop = true;
                 main.playOnAwake = false;
-                main.simulationSpace = ParticleSystemSimulationSpace.World;
+                // T-932: el fuego va en espacio local del carro (sin estela); el humo sí puede quedarse atrás en el mundo.
+                main.simulationSpace = enEspacioLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
                 ParticleSystem.EmissionModule emision = sistema.emission;
                 emision.SetBursts(new ParticleSystem.Burst[0]);
                 emision.rateOverTime = 0f;
+                // T-932: los sistemas hijos del pack (TinyFlames) emiten por distancia recorrida: sin esto un carro intacto dejaba fuego al avanzar.
+                emision.rateOverDistance = 0f;
                 sistema.Play();
             }
             return principal;
