@@ -64,9 +64,9 @@ namespace MechaCyberpunk.Vehiculos.Editor
 
         public static readonly Medidas[] Tabla =
         {
-            new Medidas("V01a", 0.277f, -0.007f, 0.04f, 0.25f, 0.30f, -0.273f, 0.299f, 0.20f),
-            new Medidas("V01b", 0.245f, -0.003f, 0.06f, 0.24f, 0.30f, -0.297f, 0.299f, 0.20f),
-            new Medidas("V05", 0.268f, -0.030f, 0.03f, 0.24f, 0.28f, -0.293f, 0.280f, 0.20f),
+            new Medidas("V01a", 0.277f, -0.007f, 0.04f, 0.25f, 0.34f, -0.273f, 0.299f, 0.20f),
+            new Medidas("V01b", 0.245f, -0.003f, 0.06f, 0.24f, 0.34f, -0.297f, 0.299f, 0.20f),
+            new Medidas("V05", 0.268f, -0.030f, 0.03f, 0.24f, 0.32f, -0.293f, 0.280f, 0.20f),
         };
 
         public static bool EsPorPiezas(string codigo) => Codigos.Contains(codigo);
