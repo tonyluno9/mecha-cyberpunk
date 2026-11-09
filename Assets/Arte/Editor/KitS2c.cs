@@ -1065,13 +1065,17 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 return ya;
             }
+            // T-924: forma irregular y orilla suave. Lóbulos alargados y girados (no gotas redondas), el contorno deformado con ruido de dos
+            // escalas, una orilla que se desvanece en ~15 % del charco (antes un corte casi seco) y un borde mojado más ancho todavía.
             const int n = 256;
             System.Random r = new System.Random(100 + forma);
-            List<Vector3> gotas = new List<Vector3>();
-            int cuantas = 3 + r.Next(4);
+            List<Vector4> lobulos = new List<Vector4>(); // x, y: centro; z: radio; w: giro (rad)
+            List<float> alargues = new List<float>();
+            int cuantas = 4 + r.Next(3);
             for (int i = 0; i < cuantas; i++)
             {
-                gotas.Add(new Vector3(0.3f + 0.4f * (float)r.NextDouble(), 0.25f + 0.5f * (float)r.NextDouble(), 0.12f + 0.14f * (float)r.NextDouble()));
+                lobulos.Add(new Vector4(0.28f + 0.44f * (float)r.NextDouble(), 0.28f + 0.44f * (float)r.NextDouble(), 0.09f + 0.1f * (float)r.NextDouble(), (float)r.NextDouble() * Mathf.PI));
+                alargues.Add(1.5f + 1.8f * (float)r.NextDouble());
             }
             Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, true);
             for (int y = 0; y < n; y++)
@@ -1079,12 +1083,25 @@ namespace MechaCyberpunk.Arte.Editor
                 for (int x = 0; x < n; x++)
                 {
                     float u = x / (float)n, v = y / (float)n;
-                    float campo = gotas.Sum(g => Mathf.Exp(-((u - g.x) * (u - g.x) + (v - g.y) * (v - g.y)) / (g.z * g.z)));
-                    campo += (Ruido(u * 9f + forma * 7f, v * 9f) - 0.5f) * 0.45f;
-                    float borde = Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v)) * 8f;
-                    float a = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((campo - 0.55f) * 5f)) * Mathf.Clamp01(borde);
-                    // T-882: G = el borde mojado alrededor del charco (más ancho y suave).
-                    float mojado = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((campo - 0.32f) * 3f)) * Mathf.Clamp01(borde * 0.8f);
+                    // Deformación del dominio: el contorno ondula en lugar de ser una elipse.
+                    float du = (Ruido(u * 4f + forma * 5f, v * 4f + 1.3f) - 0.5f) * 0.14f + (Ruido(u * 11f, v * 11f + forma) - 0.5f) * 0.05f;
+                    float dv = (Ruido(u * 4f + 7.1f, v * 4f + forma * 3f) - 0.5f) * 0.14f + (Ruido(u * 11f + 3f, v * 11f) - 0.5f) * 0.05f;
+                    float pu = u + du, pv = v + dv;
+                    float campo = 0f;
+                    for (int i = 0; i < lobulos.Count; i++)
+                    {
+                        Vector4 l = lobulos[i];
+                        float cx = pu - l.x, cy = pv - l.y;
+                        float c = Mathf.Cos(l.w), sn = Mathf.Sin(l.w);
+                        float a1 = (cx * c + cy * sn) / alargues[i];
+                        float a2 = -cx * sn + cy * c;
+                        campo += Mathf.Exp(-(a1 * a1 + a2 * a2) / (l.z * l.z));
+                    }
+                    float borde = Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v)) * 7f;
+                    // Orilla suave: de 0.30 a 0.75 del campo (antes 0.55 a 0.75).
+                    float a = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((campo - 0.30f) / 0.45f)) * Mathf.Clamp01(borde);
+                    // G = el borde mojado alrededor del charco: más ancho y todavía más suave.
+                    float mojado = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((campo - 0.08f) / 0.45f)) * Mathf.Clamp01(borde * 0.8f);
                     t.SetPixel(x, y, new Color(a, Mathf.Max(a, mojado), a, a));
                 }
             }
