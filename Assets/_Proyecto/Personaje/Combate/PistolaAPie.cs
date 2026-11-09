@@ -273,12 +273,11 @@ namespace MechaCyberpunk.Personaje.Combate
                     Sonidos.ReproducirEn("ARM_FUS_RAFAGA_COLA", transform.position);
                 }
                 disparabaAutomatica = pidio && d.Automatica;
-                // T-733: agachado no se dispara; para disparar se para (la siguiente pulsación ya dispara).
+                // T-936: agachado, al pulsar disparar se para solo y dispara con esa misma pulsación (si hay techo encima y no cabe de pie, dispara agachado).
                 bool agachado = !enCarro && cubierta != null && cubierta.AgachadoLibre;
                 if (pidio && agachado)
                 {
                     cubierta.AlternarAgachado();
-                    pidio = false;
                 }
                 if (pidio && actual.IntentarDisparar())
                 {

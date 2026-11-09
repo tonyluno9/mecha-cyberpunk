@@ -1,7 +1,9 @@
 using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Pruebas;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Personaje.Visual;
 using NUnit.Framework;
@@ -151,6 +153,30 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.0f);
             Assert.AreEqual("AgachadoCaminar", EstadoAgachado(visual.Animador), "Caminando agachado usa AgachadoCaminar");
             Release(teclado.wKey);
+        }
+
+        [UnityTest]
+        public IEnumerator Agachado_UnaSolaPulsacionDeDisparar_SePoneDePieYHaceDanioReal()
+        {
+            yield return Calentar();
+            Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola));
+            yield return Esperar(0.8f);
+            // Un blanco ancho de frente, para que el daño no dependa del pulso de la cámara.
+            GameObject blanco = Caja(new Vector3(0f, 2f, 6f), new Vector3(6f, 4f, 1f));
+            MunecoAPie muneco = blanco.AddComponent<MunecoAPie>();
+            Physics.SyncTransforms();
+            yield return Pulsar(teclado.leftCtrlKey);
+            yield return Esperar(0.6f);
+            Assert.IsTrue(Cubierta.AgachadoLibre, "Empieza agachado");
+            float antes = muneco.Actual;
+            int balas = jugador.GetComponent<ArmasAPie>().Balas;
+            Press(raton.leftButton);
+            yield return null;
+            Release(raton.leftButton);
+            yield return Esperar(0.4f);
+            Assert.IsFalse(Cubierta.AgachadoLibre, "Una pulsación: se para");
+            Assert.AreEqual(balas - 1, jugador.GetComponent<ArmasAPie>().Balas, "y dispara con esa misma pulsación");
+            Assert.Less(muneco.Actual, antes, "el objetivo recibe daño real con una sola pulsación estando agachado");
         }
 
         [UnityTest]
