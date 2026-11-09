@@ -69,7 +69,7 @@ namespace MechaCyberpunk.Arte.Editor
         public static bool EsDeCalle(string codigo)
         {
             // Local y no estática: los modelos estáticos de esta clase la llaman mientras se inicializa.
-            return new[] { "TK01", "NE01", "NE02", "AL01", "MT01", "TL01", "FA01", "NV01", "NV02", "BL01", "BT01" }.Any(codigo.StartsWith);
+            return new[] { "TK01", "NE01", "NE02", "AL01", "MT01", "TL01", "FA01", "NV01", "NV02", "BL01", "BT01", "ES01", "BS01", "PS01", "PC01", "O01" }.Any(codigo.StartsWith);
         }
 
         public static readonly StringBuilder Informe = new StringBuilder();

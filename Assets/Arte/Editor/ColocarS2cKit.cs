@@ -201,7 +201,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 LetreroFarmacia(o, raiz, P(3.6f, banqueta + 3.25f, -0.55f), D(Vector3.back));
             }
-            Semaforo(o, raiz, P(-Banqueta + 0.35f, banqueta, -Banqueta + 0.35f), D(new Vector3(-1f, 0f, -1f)));
+            Semaforo(o, raiz, P(-Banqueta + 0.35f, banqueta, -Banqueta + 0.35f), D(new Vector3(-1f, 0f, -1f)), giro);
             Vector3 punta = KitS2c.Poste(o, raiz, P(10.5f, banqueta, -Banqueta + 0.45f), D(Vector3.back), piso, true);
             KitS2c.Cable(o, punta, punta + D(new Vector3(-12f, -0.4f, 12f)), 1.1f);
             KitS2c.Cable(o, punta + Vector3.down * 0.2f, punta + D(new Vector3(-12.5f, -0.7f, 11f)), 1.2f);
@@ -235,40 +235,13 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>
-        /// Semáforo: el poste con panel N08 del kit de exteriores mirando al cruce, con tres micas (roja, ámbar y verde; prendida la roja) en
-        /// la cara del panel. Cuando llegue el ES01 (pedido-arte-08nov) se cambia por ese modelo.
+        /// Semáforo: el ES01 (T-910) con la cara hacia el cruce y su ciclo verde, ámbar y rojo. Las esquinas de la calle cruzada (giro distinto en 90°)
+        /// van a medio ciclo; las diagonales opuestas coinciden. Ver <see cref="ColocarT910.Semaforo"/>.
         /// </summary>
-        private static void Semaforo(KitS2c.Obra o, Transform padre, Vector3 pie, Vector3 haciaCruce)
+        private static void Semaforo(KitS2c.Obra o, Transform padre, Vector3 pie, Vector3 haciaCruce, Quaternion giroEsquina)
         {
-            haciaCruce.y = 0f;
-            haciaCruce.Normalize();
-            GameObject s = new GameObject("Semaforo");
-            s.transform.SetParent(padre, false);
-            s.transform.position = pie;
-            Quaternion giro = Quaternion.LookRotation(-haciaCruce);
-            GameObject poste = KitS2c.Pieza(s.transform, "N08", pie, giro, Vector3.one);
-            poste.name = "Poste";
-            KitS2c.Medida m = KitS2c.Medir("N08");
-            Color[] colores = { new Color(4f, 0.5f, 0.35f), new Color(0.5f, 0.32f, 0.05f), new Color(0.05f, 0.35f, 0.12f) };
-            float alto = m.Caja.size.y;
-            for (int i = 0; i < 3; i++)
-            {
-                GameObject f = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                Object.DestroyImmediate(f.GetComponent<Collider>());
-                f.name = "Mica_" + i;
-                f.transform.SetParent(poste.transform, false);
-                f.transform.localPosition = new Vector3(0f, alto * (0.88f - i * 0.12f), m.Muro - 0.015f);
-                f.transform.localRotation = Quaternion.identity;
-                f.transform.localScale = Vector3.one * 0.34f;
-                int k = i;
-                f.GetComponent<MeshRenderer>().sharedMaterial = KitS2c.Mat("S2c_Semaforo_" + i, () =>
-                {
-                    Material mat = KitS2c.Emision(colores[k], KitS2c.TexOvalo());
-                    mat.SetColor("_ColorDia", colores[k] * 0.6f);
-                    return mat;
-                });
-            }
-            KitS2c.Luz(s.transform, pie + Vector3.up * alto * 0.88f + haciaCruce * 0.5f, LightType.Point, new Color(1f, 0.2f, 0.15f), 0.6f, 3f, 0f);
+            bool contrafase = Mathf.Abs(Mathf.RoundToInt(giroEsquina.eulerAngles.y / 90f)) % 2 != 0;
+            ColocarT910.Semaforo(o, padre, pie, haciaCruce, contrafase);
         }
 
         /// <summary>Frente de Nova (K06): edificios altos con las torres del kit de exteriores, banqueta ancha con bolardos, cámaras y luz fría.</summary>
