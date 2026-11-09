@@ -1,0 +1,7 @@
+# T-924 Charcos más reales y entradas con neón
+
+- Charcos: se rehicieron las 4 máscaras (KitS2c.TexCharco, mismos PNG y GUID en Assets/Arte/Mundo/S2c/Texturas/): lóbulos alargados y girados, contorno deformado con ruido, orilla que se desvanece (antes un corte casi seco) y borde mojado más ancho. En los 4 materiales S2c_Charco_* el reflejo baja de 1.3 a 1.0 y la opacidad de 0.92 a 0.86. No se tocó el shader, ReflejoCharcos, los postes ni sus luces. Script: Assets/Arte/Editor/ColocarT924.cs (Charcos).
+- Entradas con neón: el "neón raro" era el bloque plano Letrero (5 x 1.4 m, material Barrio_Letrero_*, sin texto porque su LetreroCanvas ya estaba apagado) que seguía prendido sobre las entradas de Clandestino (rectángulo magenta flotando), Mercado Negro, Casino (tapado por el modelo VivaCoin) y Bar. Se apagaron como el de la Casa (T-861). Los neones de marco (jambas, laterales, borde del toldo) se vieron alineados y no se tocaron.
+- Evidencia: docs/capturas/t924-{antes,despues}-charco-0..3, -clandestino-frente/diagonal, -casino-*, -mercado-* (el mercado salió desde dentro: ángulo malo), -casa-frente, -doc-frente. Charcos con la cámara principal y ReflejoCharcos.Actualizar (CapturasS2T92Pruebas.Charcos_T924).
+- Pruebas: EditMode CharcosPuertasT924Pruebas (3: orilla suave, formas distintas, sin bloques planos).
+- Límites: de noche la calle es muy oscura y el cambio de charcos es sutil (se nota en la orilla y en que el reflejo es más tenue). No encontré neones atravesando paredes: el chequeo de 105 letreros NE01/NE02 los dio a 0.07-0.38 m de su pared.

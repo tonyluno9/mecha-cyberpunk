@@ -31,9 +31,9 @@ Material:
     m_Floats:
     - _FresnelMin: 0.3
     - _FresnelPotencia: 3
-    - _Intensidad: 1.3
+    - _Intensidad: 1
     - _Ondas: 0.0045
-    - _Opacidad: 0.92
+    - _Opacidad: 0.86
     - _OpacidadBorde: 0.55
     - _ReflejoBorde: 0.25
     m_Colors:
