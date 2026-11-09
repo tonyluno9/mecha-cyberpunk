@@ -676,6 +676,24 @@ namespace MechaCyberpunk.Personaje.Visual
             animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia * EscalaClips, rapidezMinima, tope);
         }
 
+        private const float HolguraPisoCerca = 0.25f;
+        private static readonly RaycastHit[] golpesPiso = new RaycastHit[8];
+
+        // Un rayo corto bajo los pies; no cuenta lo propio ni los triggers.
+        private bool HayPisoCerca()
+        {
+            Bounds b = controlador.bounds;
+            int n = Physics.RaycastNonAlloc(b.center, Vector3.down, golpesPiso, b.extents.y + HolguraPisoCerca, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                if (!golpesPiso[i].collider.transform.IsChildOf(controlador.transform))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void LeerEstadoDelPadre(float dt)
         {
             Transform padre = transform.parent != null ? transform.parent : transform;
@@ -687,7 +705,8 @@ namespace MechaCyberpunk.Personaje.Visual
                 mundo = v;
                 objetivo = ReglasVisual.VelocidadHorizontal(v.x, v.z);
                 // Un CharacterController quieto que no recibe Move cada cuadro reporta isGrounded falso: solo cuenta como aire si de verdad sube o cae.
-                enSuelo = controlador.isGrounded || Mathf.Abs(v.y) < VelocidadVerticalEnAire;
+                // T-944: en la cima de un salto la velocidad vertical también es casi cero: solo cuenta como suelo si de verdad hay piso abajo.
+                enSuelo = controlador.isGrounded || (Mathf.Abs(v.y) < VelocidadVerticalEnAire && HayPisoCerca());
             }
             else if (cuerpo != null)
             {
