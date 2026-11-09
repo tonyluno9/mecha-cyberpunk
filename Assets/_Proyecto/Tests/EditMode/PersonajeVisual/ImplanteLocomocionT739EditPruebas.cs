@@ -72,9 +72,9 @@ namespace MechaCyberpunk.Tests
             var pares = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<AnimationClip, AnimationClip>>();
             o.GetOverrides(pares);
             string Valor(string clipBase) => pares.Find(p => p.Key != null && p.Key.name == clipBase).Value.name;
-            Assert.AreEqual("Loco_Caminar_SinImplante", Valor("Loco_Caminar"));
-            Assert.AreEqual("Loco_Correr_SinImplante", Valor("Loco_Correr"));
-            Assert.AreEqual("Loco_Caminar_ConImplante", Valor("Loco_Caminar_ConImplante"));
+            Assert.AreEqual("PJ01_Caminar_SinImplante", Valor("Loco_Caminar")); // T-749: clips de Blender aplicados a PJ01
+            Assert.AreEqual("PJ01_Correr_SinImplante", Valor("Loco_Correr"));
+            Assert.AreEqual("PJ01_Caminar_ConImplante", Valor("Loco_Caminar_ConImplante"));
             var npc = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(ConstructorControladorBase.RutaOverride("NPC"));
             pares.Clear();
             npc.GetOverrides(pares);

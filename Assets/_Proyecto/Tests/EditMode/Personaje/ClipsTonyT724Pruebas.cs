@@ -14,6 +14,8 @@ namespace MechaCyberpunk.Tests.Personaje
     {
         private const string RutaPrefab = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string CarpetaTony = "Assets/Arte/Personajes/Animaciones/";
+        // T-749: los clips de Blender ya aplicados a PJ01 reemplazan a los de Mixamo donde hay.
+        private const string CarpetaClipsPJ01 = "Assets/Arte/Personajes/PJ01/Clips/";
         private const string RutaOverrideJugador = "Assets/Arte/Personajes/Animaciones/Overrides/Override_Jugador.overrideController";
         private const string RutaControladorBase = "Assets/Arte/Personajes/Animaciones/ControladorBase.controller";
 
@@ -42,7 +44,7 @@ namespace MechaCyberpunk.Tests.Personaje
             foreach (AnimationClip clip in rac.animationClips)
             {
                 string ruta = AssetDatabase.GetAssetPath(clip);
-                if (!ruta.StartsWith(CarpetaTony))
+                if (!ruta.StartsWith(CarpetaTony) && !ruta.StartsWith(CarpetaClipsPJ01))
                 {
                     fuera.Add(clip.name + " <- " + ruta);
                 }
@@ -60,8 +62,8 @@ namespace MechaCyberpunk.Tests.Personaje
             o.GetOverrides(pares);
             foreach (KeyValuePair<AnimationClip, AnimationClip> par in pares)
             {
-                // T-739: el jugador sin implante usa los SinImplante de caminar y correr; todo lo demas es el clip de la base.
-                if (par.Key.name == "Loco_Caminar" || par.Key.name == "Loco_Correr") { Assert.AreEqual(par.Key.name + "_SinImplante", par.Value.name); continue; }
+                // T-749: un clip de Blender aplicado a PJ01 (PJ01_*) o el de la base; nada mas.
+                if (par.Value != null && AssetDatabase.GetAssetPath(par.Value).StartsWith(CarpetaClipsPJ01)) { continue; }
                 Assert.AreSame(par.Key, par.Value == null ? par.Key : par.Value, "El override del jugador cambia " + par.Key.name + " por " + (par.Value != null ? par.Value.name : "nada"));
             }
         }
@@ -82,8 +84,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(correr, "Estado Correr");
             Assert.AreEqual("Loco_Caminar", ClipAdelante(caminar), "Caminar hacia delante es Loco_Caminar");
             Assert.AreEqual("Loco_Correr", ClipAdelante(correr), "Correr hacia delante es Loco_Correr");
-            Assert.AreEqual(CarpetaTony + "Locomocion/Loco_Caminar_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("Loco_Caminar_SinImplante"))); // T-739: el jugador sin implante
-            Assert.AreEqual(CarpetaTony + "Locomocion/Loco_Correr_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("Loco_Correr_SinImplante")));
+            Assert.AreEqual(CarpetaClipsPJ01 + "PJ01_Caminar_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("PJ01_Caminar_SinImplante"))); // T-749: el jugador usa los de Blender
+            Assert.AreEqual(CarpetaClipsPJ01 + "PJ01_Correr_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("PJ01_Correr_SinImplante")));
         }
 
         private static AnimationClip ClipPorNombre(string nombre)
