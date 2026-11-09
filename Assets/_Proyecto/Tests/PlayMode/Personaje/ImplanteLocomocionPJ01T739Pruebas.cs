@@ -82,7 +82,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Preparar();
             Press(teclado.wKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("Loco_Caminar_SinImplante", ClipActivo(out float peso), "Sin implante: Loco_Caminar_SinImplante");
+            Assert.AreEqual("PJ01_Caminar_SinImplante", ClipActivo(out float peso), "Sin implante: Loco_Caminar_SinImplante");
             Assert.Greater(peso, 0.9f);
             Fotos("caminar-sin");
 
@@ -90,24 +90,24 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Asentar();
             Assert.IsTrue(MechaCyberpunk.Personaje.Jugador.AnimacionJugador.LlevaImplanteDeLocomocion(), "El contrato dice que lleva implante");
             Assert.AreEqual(1f, anim.GetFloat("ConImplante"), "parametro ConImplante");
-            Assert.AreEqual("Loco_Caminar_ConImplante", ClipActivo(out peso), "IMP01 (piernas): Loco_Caminar_ConImplante " + Todos());
+            Assert.AreEqual("PJ01_Caminar_ConImplante", ClipActivo(out peso), "IMP01 (piernas): Loco_Caminar_ConImplante " + Todos());
             Assert.Greater(peso, 0.9f);
             Fotos("caminar-con-piernas");
 
             implantes.Poner(EspacioImplante.Piernas, 0);
             implantes.Poner(EspacioImplante.Brazos, 2);
             yield return Asentar();
-            Assert.AreEqual("Loco_Caminar_ConImplante", ClipActivo(out peso), "IMP02 (brazos): Loco_Caminar_ConImplante");
+            Assert.AreEqual("PJ01_Caminar_ConImplante", ClipActivo(out peso), "IMP02 (brazos): Loco_Caminar_ConImplante");
 
             implantes.Poner(EspacioImplante.Brazos, 0);
             yield return Asentar();
-            Assert.AreEqual("Loco_Caminar_SinImplante", ClipActivo(out peso), "Al quitarlo, vuelve a SinImplante");
+            Assert.AreEqual("PJ01_Caminar_SinImplante", ClipActivo(out peso), "Al quitarlo, vuelve a SinImplante");
 
             // Ojos y sistema nervioso no tocan la locomocion.
             implantes.Poner(EspacioImplante.Ojos, 1);
             implantes.Poner(EspacioImplante.SistemaNervioso, 1);
             yield return Asentar();
-            Assert.AreEqual("Loco_Caminar_SinImplante", ClipActivo(out peso), "Ojos y sistema nervioso no cambian el clip");
+            Assert.AreEqual("PJ01_Caminar_SinImplante", ClipActivo(out peso), "Ojos y sistema nervioso no cambian el clip");
             Release(teclado.wKey);
         }
 
@@ -119,20 +119,20 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return null;
             Press(teclado.leftShiftKey);
             yield return Esperar(1.6f);
-            Assert.AreEqual("Loco_Correr_SinImplante", ClipActivo(out float peso), "Sin implante: Loco_Correr_SinImplante");
+            Assert.AreEqual("PJ01_Correr_SinImplante", ClipActivo(out float peso), "Sin implante: Loco_Correr_SinImplante");
             Assert.Greater(peso, 0.9f);
             Fotos("correr-sin");
 
             implantes.Poner(EspacioImplante.Brazos, 1);
             yield return Asentar();
-            Assert.AreEqual("Loco_Correr_ConImplante", ClipActivo(out peso), "IMP02: Loco_Correr_ConImplante");
+            Assert.AreEqual("PJ01_Correr_ConImplante", ClipActivo(out peso), "IMP02: Loco_Correr_ConImplante");
             Assert.Greater(peso, 0.9f);
             Fotos("correr-con-brazos");
 
             implantes.Poner(EspacioImplante.Brazos, 0);
             implantes.Poner(EspacioImplante.Piernas, 2);
             yield return Asentar();
-            Assert.AreEqual("Loco_Correr_ConImplante", ClipActivo(out peso), "IMP01 nivel 2: Loco_Correr_ConImplante");
+            Assert.AreEqual("PJ01_Correr_ConImplante", ClipActivo(out peso), "IMP01 nivel 2: Loco_Correr_ConImplante");
             Release(teclado.leftShiftKey);
             Release(teclado.wKey);
         }
@@ -145,7 +145,7 @@ namespace MechaCyberpunk.Tests.Personaje
             anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             Press(teclado.wKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("Loco_Caminar_SinImplante", ClipActivo(out float peso));
+            Assert.AreEqual("PJ01_Caminar_SinImplante", ClipActivo(out float peso));
             Release(teclado.wKey);
         }
     }
