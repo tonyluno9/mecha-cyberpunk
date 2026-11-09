@@ -9,7 +9,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
 {
     /// <summary>
     /// Build de Windows de la demo (T-137): pone en Build Settings las escenas de DatosEscenas_Demo en orden (título, ciudad,
-    /// flashback), fija el nombre del producto y la pantalla, y construye Builds/Demo/MechaCyberpunk.exe (64 bits).
+    /// flashback), fija el nombre del producto y la pantalla, y construye Builds/Demo/CyberCity.exe (64 bits).
     /// Batchmode: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.Construir
     /// Solo Build Settings: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.AplicarEscenas
     /// </summary>
@@ -17,7 +17,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
     {
         public const string RutaDatosEscenasDemo = "Assets/_Proyecto/Progresion/Datos/DatosEscenas_Demo.asset";
         public const string CarpetaBuild = "Builds/Demo";
-        public const string NombreEjecutable = "MechaCyberpunk.exe";   // del Construir() viejo del mecha
+        public const string NombreEjecutable = NombreJuego.Ejecutable;
         public const string NombreEjecutableJuego = NombreJuego.Ejecutable;
         private const string ExeViejo = "MechaCyberpunk.exe";
         private const string DatosViejo = "MechaCyberpunk_Data";
@@ -69,6 +69,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         {
             AplicarEscenas();
             Directory.CreateDirectory(CarpetaBuild);
+            PrepararBuildCyberfix(CarpetaBuild);
             BuildPlayerOptions opciones = new BuildPlayerOptions
             {
                 scenes = EscenasDemo(),

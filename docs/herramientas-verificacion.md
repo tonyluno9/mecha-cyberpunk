@@ -129,10 +129,10 @@ Con Unity cerrado, desde la raíz del repo:
 ```
 
 - Pone en Build Settings las escenas de `DatosEscenas_Demo` (CreacionPersonaje, Ciudad_Prologo, Flashback), el nombre
-  "Mecha Cyberpunk (demo)" y pantalla completa nativa (Alt+Enter: ventana), y construye `Builds/Demo/MechaCyberpunk.exe`
+  "Mecha Cyberpunk (demo)" y pantalla completa nativa (Alt+Enter: ventana), y construye `Builds/Demo/CyberCity.exe`
   (Windows 64 bits). Sale con 0 si el build salió bien y con 1 si no; el resumen está en el log con `[Progresion] ConstruirDemo`.
 - Solo Build Settings: `-executeMethod MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.AplicarEscenas -quit`.
   En el editor: menú Mecha Cyberpunk > Demo.
-- Comprobar el ejecutable: `Builds/Demo/MechaCyberpunk.exe -batchmode -nographics -logFile Logs/demo-player.log` unos segundos
+- Comprobar el ejecutable: `Builds/Demo/CyberCity.exe -batchmode -nographics -logFile Logs/demo-player.log` unos segundos
   y luego cerrarlo; el log no debe tener `Exception` ni `Error` y debe decir que cargó CreacionPersonaje.
 - La prueba de EditMode `BuildSettingsDemoPruebas` comprueba la lista de escenas.
