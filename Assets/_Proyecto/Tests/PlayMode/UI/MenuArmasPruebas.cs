@@ -10,6 +10,7 @@ using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion.Pruebas;
 using MechaCyberpunk.UI;
 using MechaCyberpunk.UI.Armas;
+using MechaCyberpunk.UI.Kit;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -216,7 +217,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return new WaitForSecondsRealtime(0.8f);
             Assert.Greater(vista.Separacion(PiezaArma.Cargador), 0.9f, "El cargador se separa del arma");
             Assert.Less(vista.Separacion(PiezaArma.Canon), 0.1f, "El cañón se queda en su lugar");
-            Capturar("s2n-menu-armas-1.png");
+            Capturar("ui-banco-1.png");
 
             // Enter compra el cargador: nivel I, cobra el precio de la oferta.
             yield return Pulsar(teclado.enterKey);
@@ -229,12 +230,12 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(vista.Escaneando, "El escaneo arranca al mejorar");
             yield return new WaitForSecondsRealtime(config.DuracionEscaneo * 0.5f);
             Assert.Greater(vista.AvanceEscaneo, 0.1f, "La franja avanza");
-            Capturar("s2m-c2-escaneo.png");
+            Capturar("ui-banco-escaneo.png");
             yield return EsperarHasta(() => !vista.Escaneando, "que termine el escaneo");
             yield return new WaitForSecondsRealtime(0.6f);
             Assert.Less(vista.Separacion(PiezaArma.Cargador), 0.1f, "El cargador regresa a su lugar");
             yield return new WaitForSecondsRealtime(0.15f);
-            Capturar("s2n-menu-armas-2.png");
+            Capturar("ui-banco-2.png");
 
             // Enter otra vez sobre el cargador no cobra.
             yield return Pulsar(teclado.enterKey);
@@ -247,7 +248,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return new WaitForSecondsRealtime(0.8f);
             Assert.Greater(vista.Separacion(PiezaArma.Canon), 0.9f, "El cañón se separa");
             Assert.Less(vista.Separacion(PiezaArma.Cargador), 0.1f, "El cargador regresa");
-            Capturar("s2n-menu-armas-3.png");
+            Capturar("ui-banco-3.png");
 
             // ↓ pasa a la mira: bloqueada (primero el cañón); Enter no cobra.
             yield return Pulsar(teclado.downArrowKey);
@@ -258,7 +259,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Pistola));
             yield return new WaitForSecondsRealtime(0.8f);
             Assert.Greater(vista.Separacion(PiezaArma.Mira), 0.9f, "La mira se separa");
-            Capturar("s2n-menu-armas-6.png");
+            Capturar("ui-banco-6.png");
 
             // Arrastrar sobre el holograma lo gira.
             float giroAntes = vista.Giro;
@@ -278,7 +279,20 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsFalse(vista.ConModelo, "La escopeta se ve con su imagen H02");
             Assert.AreEqual(PiezaArma.Cargador, pantalla.PiezaElegida);
             yield return new WaitForSecondsRealtime(0.5f);
-            Capturar("s2n-menu-armas-4.png");
+            Capturar("ui-banco-4.png");
+
+            // T-900: el filo de la casilla sale del nivel real; las pestañas y categorías filtran la lista sin perder las armas.
+            Assert.AreEqual(TrazoH10.Rareza(1), pantalla.ColorFilo(0), "La pistola en nivel I lleva el filo de ese nivel");
+            pantalla.FijarCategoria(ArmaAPie.Escopeta);
+            Assert.AreEqual(1, pantalla.CantidadArmas, "Solo la escopeta");
+            Assert.AreEqual(ArmaAPie.Escopeta, pantalla.ArmaElegida.Arma);
+            pantalla.FijarCategoria(ArmaAPie.Escopeta);
+            Assert.AreEqual(2, pantalla.CantidadArmas, "Elegir la misma categoría quita el filtro");
+            pantalla.FijarFiltro(FiltroArmas.AlMaximo);
+            Assert.AreEqual(0, pantalla.CantidadArmas, "Ninguna arma al máximo");
+            pantalla.FijarFiltro(FiltroArmas.Todas);
+            Assert.AreEqual(2, pantalla.CantidadArmas);
+            yield return null;
 
             // Esc cierra; el control vuelve un cuadro después y sale el letrero ARMA MEJORADA.
             yield return Pulsar(teclado.escapeKey);
@@ -289,7 +303,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(pantalla.LetreroVisible, "Sale el letrero ARMA MEJORADA");
             StringAssert.Contains("PISTOLA I", pantalla.Letrero);
             yield return new WaitForSecondsRealtime(0.4f);
-            Capturar("s2n-menu-armas-5.png");
+            Capturar("ui-banco-5.png");
             yield return new WaitForSecondsRealtime(config.DuracionLetrero);
             Assert.IsFalse(pantalla.LetreroVisible, "El letrero se va solo");
             Assert.IsEmpty(errores, "Sin errores: " + string.Join(" | ", errores));

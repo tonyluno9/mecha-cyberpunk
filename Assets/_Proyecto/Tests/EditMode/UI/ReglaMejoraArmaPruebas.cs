@@ -39,6 +39,17 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(ReglaMejoraArma.HaySiguiente(2));
         }
 
+        [TestCase(FiltroArmas.Todas, 0, true)]
+        [TestCase(FiltroArmas.Todas, 3, true)]
+        [TestCase(FiltroArmas.Mejorables, 2, true)]
+        [TestCase(FiltroArmas.Mejorables, 3, false)]
+        [TestCase(FiltroArmas.AlMaximo, 2, false)]
+        [TestCase(FiltroArmas.AlMaximo, 3, true)]
+        public void PasaFiltro_SegunPestanaYNivel(FiltroArmas filtro, int nivel, bool esperado)
+        {
+            Assert.AreEqual(esperado, ReglaMejoraArma.PasaFiltro(filtro, nivel));
+        }
+
         [Test]
         public void Estado_AlMaximo_TodoInstaladoYNoHaySiguiente()
         {

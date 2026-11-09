@@ -27,9 +27,10 @@ namespace MechaCyberpunk.UI.Kit
 
         public static readonly Color Turquesa = new Color(0.361f, 0.890f, 0.839f, 1f);
         public static readonly Color TurquesaTenue = new Color(0.361f, 0.890f, 0.839f, 0.42f);
-        public static readonly Color TurquesaFondo = new Color(0.361f, 0.890f, 0.839f, 0.12f);
+        public static readonly Color TurquesaFondo = new Color(0.361f, 0.890f, 0.839f, 0.08f);
         public static readonly Color Amarillo = new Color(0.965f, 0.953f, 0.149f, 1f);
         public static readonly Color Coral = new Color(0.961f, 0.431f, 0.388f, 1f);
+        public static readonly Color RarezaAzul = new Color(0.412f, 0.620f, 1f, 1f);
         public static readonly Color Texto = new Color(0.902f, 0.961f, 0.953f, 1f);
         public static readonly Color TextoTenue = new Color(0.557f, 0.690f, 0.690f, 1f);
         public static readonly Color FondoPanel = new Color(0.012f, 0.035f, 0.051f, 0.62f);
@@ -148,6 +149,30 @@ namespace MechaCyberpunk.UI.Kit
             }
             raiz.sizeDelta = new Vector2(marcas * separacion, alto);
             return raiz;
+        }
+
+        /// <summary>Tiende una línea recta de a hacia b (en coordenadas ancladas abajo a la izquierda del padre).</summary>
+        public static void Unir(RectTransform linea, Vector2 a, Vector2 b)
+        {
+            Vector2 d = b - a;
+            linea.anchorMin = Vector2.zero;
+            linea.anchorMax = Vector2.zero;
+            linea.pivot = new Vector2(0f, 0.5f);
+            linea.anchoredPosition = a;
+            linea.sizeDelta = new Vector2(d.magnitude, GrosorLinea);
+            linea.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+        }
+
+        /// <summary>El filo de rareza de un nivel: base, I, II y III.</summary>
+        public static Color Rareza(int nivel)
+        {
+            switch (nivel)
+            {
+                case 1: return Turquesa;
+                case 2: return RarezaAzul;
+                case 3: return Amarillo;
+                default: return TextoTenue;
+            }
         }
 
         public static void Estirar(RectTransform rect)

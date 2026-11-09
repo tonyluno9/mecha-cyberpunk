@@ -105,6 +105,18 @@ namespace MechaCyberpunk.UI.Armas
         /// <summary>La posición en el mundo de la pieza (para las pruebas), o la del set.</summary>
         public Vector3 PosicionPieza(PiezaArma pieza) => piezas.TryGetValue(pieza, out Pieza p) ? p.Transform.position : config.PosicionSet;
 
+        /// <summary>El centro visible de la pieza en el mundo; false si el arma no la tiene.</summary>
+        public bool CentroPieza(PiezaArma pieza, out Vector3 centro)
+        {
+            centro = Vector3.zero;
+            if (!piezas.TryGetValue(pieza, out Pieza p) || p.Renderers.Count == 0)
+            {
+                return false;
+            }
+            centro = LimitesDe(p.Renderers).center;
+            return true;
+        }
+
         /// <summary>Arma el set con el arma; si ya había uno, lo rehace.</summary>
         public void Mostrar(EntradaArmaMenu entrada, ConfigMenuArmas configuracion)
         {
