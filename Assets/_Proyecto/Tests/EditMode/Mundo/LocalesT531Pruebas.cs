@@ -47,9 +47,8 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsFalse(taller.Find("T02_EstacionExo_Visual_T250").gameObject.activeSelf, "Sin la estación del mecha");
             // T-853 (playtest 6-nov tarde): Tony pidió quitar el banco de trabajo de junto a la casa.
             Assert.AreEqual(0, taller.GetComponentsInChildren<Transform>().Count(t => t.name == "T03_BancoTrabajo"), "Sin banco de trabajo junto a la casa");
-            Bounds casa = new Bounds(new Vector3(-63f, 2f, -77f), new Vector3(11f, 6f, 13f));
-            Transform guera = escena.GetRootGameObjects().First(g => g.name == "GTA_T405").transform.Cast<Transform>().First(t => t.name.StartsWith("Reclutable_LA G"));
-            Assert.IsFalse(casa.Contains(guera.position), "LA GÜERA ya no está en la habitación");
+            // T-945: LA GÜERA era reclutable: ya no hay reclutables en la ciudad.
+            Assert.IsFalse(escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>(true)).Any(t => t.name.StartsWith("Reclutable_")), "Sin reclutables");
         }
 
         [Test]
