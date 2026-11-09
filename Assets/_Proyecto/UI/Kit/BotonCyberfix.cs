@@ -25,6 +25,10 @@ namespace MechaCyberpunk.UI.Kit
 
         private bool conAcento;
         private Color acento;
+        private bool conReposo;
+        private Color fondoReposo;
+        private float alfaElegido = AlfaAcentoElegido;
+        private float alfaPulsado = AlfaAcentoPulsado;
 
         [SerializeField] private Text texto;
         [SerializeField] private Text textoValor;
@@ -75,6 +79,16 @@ namespace MechaCyberpunk.UI.Kit
                     linea.color = color;
                 }
             }
+            Refrescar();
+        }
+
+        /// <summary>T-902: el fondo del botón en reposo (las pantallas H10 lo piden casi transparente). Solo vale con acento.</summary>
+        public void UsarFondoReposo(Color color, float alfaDelElegido = AlfaAcentoElegido, float alfaDelPulsado = AlfaAcentoPulsado)
+        {
+            conReposo = true;
+            fondoReposo = color;
+            alfaElegido = alfaDelElegido;
+            alfaPulsado = alfaDelPulsado;
             Refrescar();
         }
 
@@ -222,8 +236,8 @@ namespace MechaCyberpunk.UI.Kit
             PiezasUI piezas = PiezasUI.Actual;
             if (conAcento)
             {
-                fondo.color = !activo || !(marcado || EstaPulsado) ? e.Fondo
-                    : new Color(acento.r, acento.g, acento.b, EstaPulsado ? AlfaAcentoPulsado : AlfaAcentoElegido);
+                fondo.color = !activo || !(marcado || EstaPulsado) ? (conReposo ? fondoReposo : e.Fondo)
+                    : new Color(acento.r, acento.g, acento.b, EstaPulsado ? alfaPulsado : alfaElegido);
             }
             else if (fondo.sprite != null && piezas != null && piezas.BotonNormal != null)
             {

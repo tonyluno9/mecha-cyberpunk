@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -11,7 +12,7 @@ namespace MechaCyberpunk.UI.Clinica
     /// El holograma del cuerpo de la clínica (T-815): un set lejos de la ciudad (<see cref="ConfigPantallaClinica.PosicionSet"/>) con su cámara
     /// que dibuja en una RenderTexture (<see cref="Textura"/>) el cuerpo del personaje horneado en el editor (solo la malla: sin scripts, huesos
     /// ni colisiones) con el shader holográfico del banco de armas. La malla trae una submalla por <see cref="EspacioImplante"/>: el espacio
-    /// elegido late en naranja, los que ya tienen implante van en verde y el resto en cian. Se gira con <see cref="Girar"/>, se acerca con
+    /// elegido late en amarillo y el resto va en cian. Se gira con <see cref="Girar"/>, se acerca con
     /// <see cref="Acercar"/>, gira solo cuando no se toca y la cámara se va un poco hacia el espacio elegido. Sin malla dibuja solo el pedestal.
     /// </summary>
     public class VistaHologramaCuerpo : MonoBehaviour
@@ -34,6 +35,8 @@ namespace MechaCyberpunk.UI.Clinica
         private const float MinimoDireccion = 0.0001f;
         private const float EscalaEnsamble = 0.12f;
         private const float MargenBarrido = 0.03f;
+        // El área de la guía H10 es más alta: un poco más de distancia para que el cuerpo quepa de pies a cabeza.
+        private const float FactorEncuadre = 1.2f;
 
         private static readonly int IdResalte = Shader.PropertyToID("_Resalte");
         private static readonly int IdDestello = Shader.PropertyToID("_Destello");
@@ -119,7 +122,7 @@ namespace MechaCyberpunk.UI.Clinica
                 };
                 textura.Create();
             }
-            distancia = config.Distancia;
+            distancia = config.Distancia * FactorEncuadre;
             giro = GiroInicial;
             inclinacion = InclinacionInicial;
             esperaGiro = 0f;
@@ -307,7 +310,7 @@ namespace MechaCyberpunk.UI.Clinica
             {
                 return;
             }
-            distancia = Mathf.Clamp(distancia - rueda / UnidadesPorPaso * config.PasoRueda, config.DistanciaMinima, config.DistanciaMaxima);
+            distancia = Mathf.Clamp(distancia - rueda / UnidadesPorPaso * config.PasoRueda, config.DistanciaMinima, config.DistanciaMaxima * FactorEncuadre);
             ColocarCamara();
         }
 
@@ -444,7 +447,7 @@ namespace MechaCyberpunk.UI.Clinica
                 {
                     bool esElegido = i == (int)elegido;
                     render.GetPropertyBlock(bloque, i);
-                    bloque.SetColor(IdColor, esElegido ? config.ColorEspacio : config.ColorHolograma);
+                    bloque.SetColor(IdColor, esElegido ? TrazoH10.Amarillo : config.ColorHolograma);
                     bloque.SetFloat(IdResalte, esElegido ? Pulso() : 0f);
                     bloque.SetFloat(IdDestello, destello);
                     bloque.SetFloat(IdAlfa, esElegido ? 1f : AlfaNormal);
@@ -475,7 +478,7 @@ namespace MechaCyberpunk.UI.Clinica
             Bounds b = pieza.bounds;
             bool barriendo = revelando || (ensamble > 0f && Ensamblando && i == (int)elegido);
             pieza.GetPropertyBlock(bloque);
-            bloque.SetColor(IdColor, config.ColorEspacio);
+            bloque.SetColor(IdColor, TrazoH10.Amarillo);
             bloque.SetFloat(IdResalte, 0f);
             bloque.SetFloat(IdDestello, destello);
             bloque.SetFloat(IdAlfa, 1f);

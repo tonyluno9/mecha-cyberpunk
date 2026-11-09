@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Inventario;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,6 +20,7 @@ namespace MechaCyberpunk.UI.Mapa
     {
         /// <summary>Título del mapa (documento del juego, 29-oct).</summary>
         public const string NombreCiudad = "MEGALOPOLIS";
+        public const string TextoLeyenda = "LEYENDA";
         public const string TextoAyuda = "M O ESC PARA CERRAR · RUEDA: ZOOM · CLIC: MARCAR UN PUNTO O UN LUGAR";
         public const int OrdenCanvas = 40;
         public const float ZoomMinimo = 1f;
@@ -32,14 +34,18 @@ namespace MechaCyberpunk.UI.Mapa
         private const float pixelesPorMetro = MapaImagen.PixelesVistaPorMetro;
         [Tooltip("Tamaño de la vista del mapa (px).")]
         [SerializeField] private Vector2 tamanoVista = new Vector2(800f, 560f);
-        /// <summary>Filas (de dos negocios cada una) de la sección NEGOCIOS (T-429): caben 8 negocios.</summary>
-        public const int FilasNegocios = 4;
-        [Tooltip("Alto de cada fila de la sección NEGOCIOS (px).")]
-        [Min(20f)] [SerializeField] private float altoFilaNegocios = 30f;
-        [Tooltip("Ancho de la leyenda (px).")]
-        [Min(100f)] [SerializeField] private float anchoLeyenda = 340f;
-        [Tooltip("Alto de cada fila de la leyenda (px).")]
-        [Min(20f)] [SerializeField] private float altoFilaLeyenda = 40f;
+        /// <summary>Filas de la sección NEGOCIOS (T-429): caben 8 negocios, una por renglón (T-902).</summary>
+        public const int FilasNegocios = 8;
+        // T-902: composición H10. El mapa es el protagonista y a la derecha va un panel angosto con la leyenda y los negocios.
+        private const float AnchoLateral = 520f;
+        private const float RellenoLateral = 18f;
+        private const float AltoFilaLeyenda = 36f;
+        private const float AltoFilaNegocios = 34f;
+        private const float InicioLeyenda = 50f;
+        /// <summary>Tu pandilla más las doce etiquetas fijas.</summary>
+        public static readonly int FilasLeyenda = EtiquetasFijasLeyenda.Length + 1;
+        private const float EspacioSecciones = 14f;
+        private const int TamanoTextoLateral = TrazoH10.TamanoDato;
         [Tooltip("Cuánto cambia el zoom por cada paso de la rueda (multiplica).")]
         [Min(1.01f)] [SerializeField] private float pasoZoom = 1.25f;
         [Tooltip("Un clic a menos de esto del punto marcado lo quita (px de la vista).")]
@@ -81,6 +87,9 @@ namespace MechaCyberpunk.UI.Mapa
         private Vector3 destinoRuta;
         private bool rutaCalculada;
         private GameObject fondoPantalla;
+        private RectTransform panelLateral;
+        private Text textoDinero;
+        private float escalaVista = 1f;
         private ControladorAPie controlCongelado;
         private Text nombrePandilla;
         private Image colorPandilla;
@@ -148,31 +157,42 @@ namespace MechaCyberpunk.UI.Mapa
 
         private void Awake()
         {
+            // T-904: el inventario (tecla I) vive junto al mapa para que exista en cada escena que tiene mapa, sin tocar escenas.
+            if (GetComponent<PantallaInventario>() == null)
+            {
+                gameObject.AddComponent<PantallaInventario>();
+            }
             EstiloCyberfix e = KitUI.Estilo;
-            float relleno = e.Relleno;
-            float altoTitulo = e.Tamano(RolTexto.Encabezado) + relleno;
-            float altoAyuda = e.AltoFilaHud;
+            float margen = TrazoH10.MargenPantalla;
+            float separacion = TrazoH10.SeparacionModulo;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasMapa", OrdenCanvas);
-            fondoPantalla = KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla").gameObject;
+            Image velo = KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
+            velo.color = TrazoH10.FondoPantalla;
+            fondoPantalla = velo.gameObject;
             fondoPantalla.SetActive(false);
-            float altoNegocios = (FilasNegocios + 1) * altoFilaNegocios;
-            Vector2 tamanoPanel = new Vector2(tamanoVista.x + anchoLeyenda + 3f * relleno, tamanoVista.y + altoTitulo + altoAyuda + altoNegocios + 5f * relleno);
-            RectTransform rectPanel = KitUI.CrearPanel(canvas.transform, "Panel", tamanoPanel);
+            RectTransform rectPanel = TrazoH10.Nodo(canvas.transform, "Panel");
+            TrazoH10.Estirar(rectPanel);
             panel = rectPanel.gameObject;
 
-            titulo = KitUI.CrearTexto(rectPanel, "Titulo", RolTexto.Encabezado, TextAnchor.MiddleCenter);
-            KitUI.Colocar(titulo.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -relleno), new Vector2(tamanoPanel.x, altoTitulo));
-            titulo.text = NombreCiudad;
-            titulo.color = e.Turquesa;
+            textoDinero = VestidoH10.Cabecera(rectPanel, NombreCiudad, null, "TU DINERO", out titulo);
+
+            // El mapa ocupa todo el espacio entre la cabecera, la barra de teclas y el panel lateral.
+            float arriba = VestidoH10.AltoCabecera + separacion;
+            float areaAncho = KitUI.AnchoReferencia - 2f * margen - AnchoLateral - separacion;
+            float areaAlto = KitUI.AltoReferencia - arriba - VestidoH10.AltoPie - separacion;
+            escalaVista = Mathf.Min(areaAncho / tamanoVista.x, areaAlto / tamanoVista.y);
+            Vector2 tamanoMarco = tamanoVista * escalaVista;
 
             // La vista recorta el dibujo con zoom.
             vista = KitUI.CrearImagen(rectPanel, "Vista", Color.black).rectTransform;
-            KitUI.Colocar(vista, new Vector2(0f, 1f), new Vector2(relleno, -(relleno + altoTitulo)), tamanoVista);
+            KitUI.Colocar(vista, new Vector2(0f, 1f), new Vector2(margen, -arriba), tamanoVista);
+            vista.localScale = new Vector3(escalaVista, escalaVista, 1f);
             vista.gameObject.AddComponent<RectMask2D>();
             contenido = new GameObject("Contenido", typeof(RectTransform)).GetComponent<RectTransform>();
             contenido.SetParent(vista, false);
             KitUI.Colocar(contenido, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             contenido.pivot = new Vector2(0.5f, 0.5f);
+            MarcoMapa(rectPanel, new Vector2(margen, -arriba), tamanoMarco);
 
             // T-747: la captura cenital de la ciudad real (centro del cuadro = origen del mundo); sin imagen, las calles planas de antes.
             Texture2D plano = MapaImagen.Cargar();
@@ -215,15 +235,35 @@ namespace MechaCyberpunk.UI.Mapa
             romboObjetivo.gameObject.SetActive(false);
             puntoJugador = (RectTransform)KitUI.CrearTriangulo(contenido, "Jugador", ladoFlecha, Color.white).rectTransform.parent;
 
-            CrearLeyenda(rectPanel, new Vector2(-relleno, -(relleno + altoTitulo)));
-            CrearNegocios(rectPanel, new Vector2(relleno, -(2f * relleno + altoTitulo + tamanoVista.y)), new Vector2(tamanoVista.x + anchoLeyenda + relleno, altoFilaNegocios));
-
-            Text ayuda = KitUI.CrearTexto(rectPanel, "Ayuda", RolTexto.Ayuda, TextAnchor.MiddleCenter);
-            KitUI.Colocar(ayuda.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, relleno), new Vector2(tamanoPanel.x, altoAyuda));
-            ayuda.text = TextoAyuda;
-            ayuda.color = e.Turquesa;
+            ConstruirLateral(rectPanel, arriba, areaAlto);
+            VestidoH10.Pie(rectPanel, TextoAyuda);
             KitUI.VestirTurquesa(canvas.transform);
+            VestidoH10.Fuente(canvas.transform);
             panel.SetActive(false);
+        }
+
+        // Cuatro rectas finas alrededor de la vista (la vista es un rectángulo recortado, por eso no lleva el corte).
+        private static void MarcoMapa(RectTransform padre, Vector2 esquina, Vector2 tamano)
+        {
+            float g = TrazoH10.GrosorLinea;
+            Vector2 ancla = new Vector2(0f, 1f);
+            Color c = TrazoH10.TurquesaTenue;
+            TrazoH10.Recta(padre, "MarcoArriba", c, ancla, ancla, ancla, esquina, new Vector2(tamano.x, g));
+            TrazoH10.Recta(padre, "MarcoAbajo", c, ancla, ancla, ancla, esquina + new Vector2(0f, -tamano.y + g), new Vector2(tamano.x, g));
+            TrazoH10.Recta(padre, "MarcoIzquierda", c, ancla, ancla, ancla, esquina, new Vector2(g, tamano.y));
+            TrazoH10.Recta(padre, "MarcoDerecha", c, ancla, ancla, ancla, esquina + new Vector2(tamano.x - g, 0f), new Vector2(g, tamano.y));
+        }
+
+        // Panel lateral angosto: LEYENDA arriba y NEGOCIOS debajo, con datos reales.
+        private void ConstruirLateral(RectTransform padre, float arriba, float alto)
+        {
+            panelLateral = TrazoH10.Panel(padre, "PanelLateral", TrazoH10.TurquesaTenue).rectTransform;
+            TrazoH10.Colocar(panelLateral, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-TrazoH10.MargenPantalla, -arriba), new Vector2(AnchoLateral, alto));
+            float ancho = AnchoLateral - 2f * RellenoLateral;
+            TrazoH10.Seccion(panelLateral, "SeccionLeyenda", TextoLeyenda, new Vector2(RellenoLateral, -12f), ancho);
+            CrearLeyenda(panelLateral, new Vector2(RellenoLateral, -InicioLeyenda), ancho);
+            float yNegocios = InicioLeyenda + FilasLeyenda * AltoFilaLeyenda + EspacioSecciones;
+            CrearNegocios(panelLateral, new Vector2(RellenoLateral, -yNegocios), ancho);
         }
 
         /// <summary>Los cuatro nombres grandes de los barrios (T-747), semitransparentes del color del barrio, como en M10.</summary>
@@ -246,13 +286,12 @@ namespace MechaCyberpunk.UI.Mapa
         }
 
         // A la derecha: tu pandilla, SKULLS, SNAKES, NOVA, tú, aliados, enemigos, objetivo, los cuatro lugares y el punto marcado.
-        private void CrearLeyenda(RectTransform padre, Vector2 esquina)
+        private void CrearLeyenda(RectTransform padre, Vector2 esquina, float ancho)
         {
             EstiloCyberfix e = KitUI.Estilo;
-            RectTransform leyenda = new GameObject("Leyenda", typeof(RectTransform)).GetComponent<RectTransform>();
-            leyenda.SetParent(padre, false);
-            KitUI.Colocar(leyenda, new Vector2(1f, 1f), esquina, new Vector2(anchoLeyenda, tamanoVista.y));
-            float cuadro = altoFilaLeyenda * 0.6f;
+            RectTransform leyenda = TrazoH10.Nodo(padre, "Leyenda");
+            KitUI.Colocar(leyenda, new Vector2(0f, 1f), esquina, new Vector2(ancho, FilasLeyenda * AltoFilaLeyenda));
+            float cuadro = AltoFilaLeyenda * 0.6f;
             int fila = 0;
             colorPandilla = IconosMapa.Pieza(FilaVacia(leyenda, fila++, string.Empty, out nombrePandilla), "Cuadro", null, Color.white, cuadro);
             IconosMapa.Pieza(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[0], out _), "Cuadro", null, FormatoTerritorio.ColorDe(IdPandilla.Calaveras), cuadro);
@@ -270,18 +309,14 @@ namespace MechaCyberpunk.UI.Mapa
             IconosMapa.CrearPuntoMarcado(FilaVacia(leyenda, fila, EtiquetasFijasLeyenda[11], out _), ladoIcono * 0.8f);
         }
 
-        // T-429: debajo del mapa, el encabezado NEGOCIOS y una fila por negocio en dos columnas.
-        private void CrearNegocios(RectTransform padre, Vector2 esquina, Vector2 tamanoFila)
+        // T-429: debajo de la leyenda, el encabezado NEGOCIOS y una fila por negocio.
+        private void CrearNegocios(RectTransform padre, Vector2 esquina, float ancho)
         {
-            encabezadoNegocios = KitUI.CrearTexto(padre, "NegociosEncabezado", RolTexto.Ayuda, TextAnchor.MiddleLeft);
-            KitUI.Colocar(encabezadoNegocios.rectTransform, new Vector2(0f, 1f), esquina, tamanoFila);
-            encabezadoNegocios.color = KitUI.Estilo.Naranja;
-            float ancho = tamanoFila.x * 0.5f;
-            for (int i = 0; i < FilasNegocios * 2; i++)
+            encabezadoNegocios = TrazoH10.Seccion(padre, "NegociosEncabezado", "NEGOCIOS", esquina, ancho);
+            for (int i = 0; i < FilasNegocios; i++)
             {
-                Text t = KitUI.CrearTexto(padre, "Negocio_" + (i + 1), RolTexto.Ayuda, TextAnchor.MiddleLeft);
-                Vector2 pos = esquina + new Vector2((i % 2) * ancho, -(1 + i / 2) * tamanoFila.y);
-                KitUI.Colocar(t.rectTransform, new Vector2(0f, 1f), pos, new Vector2(ancho, tamanoFila.y));
+                Text t = TrazoH10.Etiqueta(padre, "Negocio_" + (i + 1), string.Empty, TamanoTextoLateral, TrazoH10.Texto);
+                TrazoH10.Punto(t.rectTransform, new Vector2(0f, 1f), esquina + new Vector2(0f, -40f - i * AltoFilaNegocios), new Vector2(ancho, AltoFilaNegocios));
                 textosNegocios.Add(t);
             }
         }
@@ -311,16 +346,15 @@ namespace MechaCyberpunk.UI.Mapa
         // Una fila con el hueco de la muestra (a la izquierda) y su texto; devuelve el hueco.
         private Transform FilaVacia(RectTransform leyenda, int fila, string etiqueta, out Text texto)
         {
-            RectTransform rect = new GameObject("Fila_" + fila, typeof(RectTransform)).GetComponent<RectTransform>();
-            rect.SetParent(leyenda, false);
-            KitUI.Colocar(rect, new Vector2(0f, 1f), new Vector2(0f, -fila * altoFilaLeyenda), new Vector2(anchoLeyenda, altoFilaLeyenda));
-            RectTransform hueco = new GameObject("Muestra", typeof(RectTransform)).GetComponent<RectTransform>();
-            hueco.SetParent(rect, false);
-            KitUI.Colocar(hueco, new Vector2(0f, 0.5f), new Vector2(altoFilaLeyenda * 0.5f, 0f), Vector2.zero);
+            float ancho = leyenda.sizeDelta.x;
+            RectTransform rect = TrazoH10.Nodo(leyenda, "Fila_" + fila);
+            KitUI.Colocar(rect, new Vector2(0f, 1f), new Vector2(0f, -fila * AltoFilaLeyenda), new Vector2(ancho, AltoFilaLeyenda));
+            RectTransform hueco = TrazoH10.Nodo(rect, "Muestra");
+            KitUI.Colocar(hueco, new Vector2(0f, 0.5f), new Vector2(AltoFilaLeyenda * 0.5f, 0f), Vector2.zero);
             hueco.pivot = new Vector2(0.5f, 0.5f);
-            texto = KitUI.CrearTexto(rect, "Texto", RolTexto.Ayuda, TextAnchor.MiddleLeft);
-            texto.rectTransform.offsetMin = new Vector2(altoFilaLeyenda + KitUI.Estilo.Relleno * 0.5f, 0f);
-            texto.text = etiqueta;
+            texto = TrazoH10.Etiqueta(rect, "Texto", etiqueta, TamanoTextoLateral, TrazoH10.Texto);
+            TrazoH10.Estirar(texto.rectTransform);
+            texto.rectTransform.offsetMin = new Vector2(AltoFilaLeyenda + KitUI.Estilo.Relleno * 0.5f, 0f);
             textosLeyenda.Add(texto);
             return hueco;
         }
@@ -426,6 +460,7 @@ namespace MechaCyberpunk.UI.Mapa
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             Sonidos.Reproducir(SonidoAbrir);
+            AnimH10.EntrarPanel(panelLateral, new Vector2(AnimH10.DesplazamientoEntrada, 0f));
             AplicarZoom();
             Refrescar();
         }
@@ -455,6 +490,8 @@ namespace MechaCyberpunk.UI.Mapa
 
         private void Refrescar()
         {
+            ICartera cartera = Registro<ICartera>.Actual;
+            textoDinero.text = Moneda.Texto(cartera != null ? cartera.Dinero : 0);
             ITerritorio territorio = Registro<ITerritorio>.Actual;
             Vector3 contraZoom = new Vector3(1f / zoom, 1f / zoom, 1f);
             for (int i = 0; i < manzanas.Length; i++)

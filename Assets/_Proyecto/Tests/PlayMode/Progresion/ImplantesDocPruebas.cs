@@ -141,10 +141,11 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsTrue(holograma.ConCuerpo, "El cuerpo de PJ01 está en el holograma");
             Assert.AreEqual(1, holograma.NivelVisible(EspacioImplante.Ojos), "Se ve el visor que se ofrece");
             Assert.IsNotNull(holograma.Pieza(EspacioImplante.Ojos), "con su malla real");
+            Assert.AreEqual(3, mostrador.Pantalla.LineasEspacioVisibles, "Las otras tres casillas también llevan su línea al cuerpo");
             var (inicio, fin, casilla, punto) = mostrador.Pantalla.Conector;
             Assert.Less(Vector2.Distance(inicio, casilla), 2f, "La línea de luz sale de la casilla");
             Assert.Less(Vector2.Distance(fin, punto), 2f, "y llega a su lugar en el cuerpo");
-            Capturar("s2m-c3-clinica.png");
+            Capturar("ui-clinica-clinica.png");
 
             // OJOS I: Enter pide confirmar, Enter instala.
             yield return Pulsar(teclado.enterKey);
@@ -152,7 +153,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.enterKey);
             Assert.IsTrue(holograma.Ensamblando, "T-896: al instalar, el implante se ensambla");
             yield return new WaitForSecondsRealtime(0.35f);
-            Capturar("s2m-c3-ensamble.png");
+            Capturar("ui-clinica-ensamble.png");
             yield return EsperarHasta(() => servicio.Nivel(EspacioImplante.Ojos) == 1 && !mostrador.Operando, "operación de ojos", 30f);
             Assert.Less(cartera.Dinero, dinero, "Se cobró");
             Assert.Greater(EfectosAPie.FactorAlcanceApuntado(servicio.Efectos), 1f, "OJOS alarga el apuntado asistido");
@@ -169,7 +170,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.downArrowKey);
             Assert.IsTrue(mostrador.Pantalla.Holograma.Revelando, "T-896: el implante de brazos aparece con el barrido");
             yield return new WaitForSecondsRealtime(0.3f);
-            Capturar("s2m-c3-barrido.png");
+            Capturar("ui-clinica-barrido.png");
             yield return Pulsar(teclado.enterKey);
             yield return Pulsar(teclado.enterKey);
             yield return EsperarHasta(() => servicio.Nivel(EspacioImplante.Brazos) == 1 && !mostrador.Operando, "operación de brazos", 30f);

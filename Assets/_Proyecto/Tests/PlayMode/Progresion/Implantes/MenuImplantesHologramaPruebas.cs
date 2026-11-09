@@ -150,7 +150,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.IsFalse(pantalla.Visible, "la pantalla se cerró");
             Assert.IsTrue(pantalla.Destellando && pantalla.LienzoVisible, "el holograma destella al cerrar");
             Foto("s2n-menu-implantes-5.png");
-            yield return Esperar(config.DuracionDestello + 0.3f);
+            yield return Esperar(config.DuracionDestello + config.DuracionEnsamble + 0.3f);
             Assert.IsFalse(pantalla.LienzoVisible, "y se va");
             Assert.IsFalse(holo.Encendida, "el holograma se apaga");
             yield return EsperarOperacion();

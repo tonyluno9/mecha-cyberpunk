@@ -145,7 +145,11 @@ namespace MechaCyberpunk.UI.Hud
         public float AlfaRellenoParte(ZonaCuerpoH10 zona) => cuerpoRelleno[(int)zona].color.a;
         public Color ColorRellenoParte(ZonaCuerpoH10 zona) => cuerpoRelleno[(int)zona].color;
 
-        private void Awake() => Actual = this;
+        private void Awake()
+        {
+            Actual = this;
+            gameObject.AddComponent<OcultadorHudMenus>();
+        }
 
         private void Start()
         {

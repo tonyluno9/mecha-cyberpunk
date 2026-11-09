@@ -45,6 +45,17 @@ namespace MechaCyberpunk.UI.Armas
         /// <summary>True si hay pieza que comprar (se tiene el arma y no está al máximo).</summary>
         public static bool HaySiguiente(int nivelActual) => nivelActual >= 0 && nivelActual < NivelMaximo;
 
+        /// <summary>Si un arma de ese nivel se ve con esa pestaña.</summary>
+        public static bool PasaFiltro(FiltroArmas filtro, int nivel)
+        {
+            switch (filtro)
+            {
+                case FiltroArmas.Mejorables: return HaySiguiente(nivel);
+                case FiltroArmas.AlMaximo: return nivel >= NivelMaximo;
+                default: return true;
+            }
+        }
+
         /// <summary>La pieza que sigue; si no hay (arma al máximo o sin arma), la última.</summary>
         public static PiezaArma Siguiente(int nivelActual) => HaySiguiente(nivelActual) ? PiezaDeNivel(nivelActual + 1) : PiezaArma.Mira;
 
