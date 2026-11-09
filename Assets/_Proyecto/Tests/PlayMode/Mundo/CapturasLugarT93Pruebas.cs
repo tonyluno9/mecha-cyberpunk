@@ -49,6 +49,23 @@ namespace MechaCyberpunk.Tests.Mundo
                 Foto(cen - cz, cen + cz * 0.9f, prefijo + "-" + fase + "-vista-z", 72f);
                 Foto(cen + cz, cen - cz * 0.9f, prefijo + "-" + fase + "-vista-menosz", 72f);
             }
+            string rayos = System.Environment.GetEnvironmentVariable("T93_RAYOS");
+            if (!string.IsNullOrEmpty(rayos))
+            {
+                foreach (string v in rayos.Split(';'))
+                {
+                    float[] f = v.Split(',').Select(t => float.Parse(t, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+                    Vector3 o = new Vector3(f[0], f[1], f[2]), d = new Vector3(f[3], f[4], f[5]);
+                    if (Physics.Raycast(o, d.normalized, out RaycastHit h, 60f, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        var partes = new List<string>();
+                        for (Transform a = h.collider.transform; a != null; a = a.parent) { partes.Insert(0, a.name); }
+                        Renderer r = h.collider.GetComponentInChildren<Renderer>();
+                        dump.Add("RAYO " + o.ToString("F0") + " -> " + h.point.ToString("F1") + " n" + h.normal.ToString("F0") + " " + string.Join("/", partes.Take(6)) + " | " + (r != null ? r.sharedMaterial.name + " cubo" + r.bounds.size.ToString("F0") : "-") );
+                    }
+                    else { dump.Add("RAYO " + o.ToString("F0") + " nada"); }
+                }
+            }
             File.WriteAllLines("Logs/lugar-dump.txt", dump);
             string vistas = System.Environment.GetEnvironmentVariable("T93_VISTAS");
             if (!string.IsNullOrEmpty(vistas))
