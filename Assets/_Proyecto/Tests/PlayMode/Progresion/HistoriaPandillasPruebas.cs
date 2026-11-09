@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
@@ -234,26 +233,12 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return null;
             yield return null;
             yield return Pulsar(teclado.eKey);
-            yield return EsperarHasta(() => director.Paso == PasoHistoria.Chato, "recoger la pistola", 5f);
+            yield return EsperarHasta(() => director.Paso != PasoHistoria.Pistola, "recoger la pistola", 5f);
             Assert.IsTrue(arsenal.Tiene(ArmaAPie.Pistola));
             Assert.AreEqual(DirectorPandillas.AyudaApuntarYDisparar(), director.Pantalla.Ayuda, "T-718: la ayuda usa las teclas reales");
 
-            // d. El CHATO: E.
-            Reclutable chato = null;
-            foreach (Reclutable r in UnityEngine.Object.FindObjectsByType<Reclutable>(FindObjectsSortMode.None))
-            {
-                if (r.Nombre == "EL CHATO")
-                {
-                    chato = r;
-                }
-            }
-            Assert.IsNotNull(chato);
-            Acercar(chato.transform.position, 1.0f);
-            yield return null;
-            yield return null;
-            yield return Pulsar(teclado.eKey);
-            yield return EsperarHasta(() => director.Paso == PasoHistoria.Doc, "reclutar al CHATO", 5f);
-            Assert.AreEqual(1, Registro<IPandillaJugador>.Actual.Cantidad);
+            // d. T-930: el paso del Chato avanza solo (ya no hay aliados que reclutar).
+            yield return EsperarHasta(() => director.Paso == PasoHistoria.Doc, "pasar el paso del CHATO", 5f);
 
             // d2. T-418: EL DOC y EL INVENTOR, con E.
             yield return UsarProfe(DirectorPandillas.IdDoc, 1.6f);
@@ -306,7 +291,6 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.enterKey);
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Libre, "cerrar el continuará", 5f);
             Assert.IsFalse(director.Pantalla.ContinuaraVisible);
-            Assert.AreEqual(1, Registro<IPandillaJugador>.Actual.Cantidad);
             Assert.IsTrue(arsenal.Tiene(ArmaAPie.Pistola));
         }
     }

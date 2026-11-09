@@ -160,13 +160,6 @@ namespace MechaCyberpunk.Tests
             vp.TipoArma = MechaCyberpunk.Personaje.Visual.TipoArmaVisual.Ninguna;
             vp.LeerDelPadre = true;
 
-            // 3: aliado.
-            GameObject prefabAliado = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/IA/Prefabs/Aliado.prefab");
-            GameObject aliado = Object.Instantiate(prefabAliado, pies + jugador.right * 1.4f + frente * 1.2f, Quaternion.LookRotation(-frente));
-            for (int i = 0; i < 20; i++) { yield return null; }
-            yield return Foto(aliado.transform.position, frente, "T-520-3.png");
-            Object.Destroy(aliado);
-
             // 4 y 5: SKULLS y su jefe.
             Transform skulls = Buscar("Pandillero_1");
             foreach (Transform t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))

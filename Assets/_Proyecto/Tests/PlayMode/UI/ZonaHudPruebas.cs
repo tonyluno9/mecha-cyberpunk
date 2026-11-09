@@ -139,7 +139,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarHasta(() =>
             {
                 DirectorPandillas director = UnityEngine.Object.FindFirstObjectByType<DirectorPandillas>();
-                return director != null && director.Iniciado && Registro<IJugador>.Actual != null && Registro<IPandillaJugador>.Actual != null;
+                return director != null && director.Iniciado && Registro<IJugador>.Actual != null;
             }, "el director arrancó", 30f);
             IJugador jugador = Registro<IJugador>.Actual;
             foreach (PandillaAPie grupo in UnityEngine.Object.FindObjectsByType<PandillaAPie>(FindObjectsSortMode.None))
@@ -169,7 +169,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarHasta(() =>
             {
                 DirectorPandillas director = UnityEngine.Object.FindFirstObjectByType<DirectorPandillas>();
-                return director != null && director.Iniciado && Registro<IJugador>.Actual != null && Registro<IPandillaJugador>.Actual != null;
+                return director != null && director.Iniciado && Registro<IJugador>.Actual != null;
             }, "el director arrancó", 30f);
             IJugador jugador = Registro<IJugador>.Actual;
             foreach (PandillaAPie grupo in UnityEngine.Object.FindObjectsByType<PandillaAPie>(FindObjectsSortMode.None))

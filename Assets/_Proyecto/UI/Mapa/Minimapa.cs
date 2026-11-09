@@ -11,7 +11,7 @@ namespace MechaCyberpunk.UI.Mapa
     /// El minimapa (T-409, canvas propio de orden 25). Desde T-700 es CUADRADO, de 260 px, arriba a la derecha como H10_HUD.png, con borde turquesa
     /// fino, la ruta punteada al objetivo y el cono de vista del jugador; muestra 60 m a la redonda y gira con la cámara (arriba es hacia donde miras). Calles en gris sobre negro,
     /// manzanas del color de su dueño al 55 %, tú como flecha blanca fija en el centro, el objetivo como rombo naranja (pegado al borde si está
-    /// lejos), enemigos en rojo (el jefe más grande), aliados del color de tu pandilla, los iconos de los lugares y el punto marcado en el mapa
+    /// lejos), enemigos en rojo (el jefe más grande), los iconos de los lugares y el punto marcado en el mapa
     /// grande con su distancia. Se esconde en el mecha y con el mapa grande abierto. Las cuentas están en <see cref="CalculoMinimapa"/>.
     /// </summary>
     public class Minimapa : MonoBehaviour
@@ -73,9 +73,7 @@ namespace MechaCyberpunk.UI.Mapa
         private int recalculosRuta;
         private readonly List<Image> marcas = new List<Image>();
         private readonly List<TipoMarcaMapa> tiposMarcas = new List<TipoMarcaMapa>();
-        private readonly List<Image> aliados = new List<Image>();
         private readonly List<Image> destinos = new List<Image>();
-        private int aliadosVisibles;
         private float escala;
 
         /// <summary>La imagen de la ciudad del minimapa (T-747), o null si no hay.</summary>
@@ -96,10 +94,6 @@ namespace MechaCyberpunk.UI.Mapa
         public float RadioMetros => radioMetros;
         /// <summary>Píxeles por metro.</summary>
         public float Escala => escala;
-        public int AliadosVisibles => aliadosVisibles;
-        /// <summary>Cuántos puntos de aliado hay creados (los que no salen están apagados).</summary>
-        public int AliadosCreados => aliados.Count;
-        public Image Aliado(int indice) => aliados[indice];
         /// <summary>Puntos de la ruta GPS (mundo), vacía si no hay objetivo.</summary>
         public IReadOnlyList<Vector3> Ruta => ruta;
         /// <summary>Cuántos tramos de la ruta se dibujan ahora.</summary>
@@ -270,7 +264,6 @@ namespace MechaCyberpunk.UI.Mapa
 
             DibujarMarcas(centro, rumbo, radio);
             DibujarDestinos(centro, rumbo, radio);
-            DibujarAliados(centro, rumbo, radio);
             QuitarEncimados();
             rombo.SetAsLastSibling();
             punto.rectTransform.SetAsLastSibling();
@@ -375,7 +368,6 @@ namespace MechaCyberpunk.UI.Mapa
             visiblesIconos.Clear();
             Reunir(marcas);
             Reunir(destinos);
-            Reunir(aliados);
             bool[] quedan = CalculoCallesMapa.SinEncimar(posicionesIconos, visiblesIconos, ladoIcono * SeparacionIconos, ladoFlecha + ladoIcono * 0.5f);
             for (int i = 0; i < iconos.Count; i++)
             {
@@ -464,31 +456,6 @@ namespace MechaCyberpunk.UI.Mapa
                 }
             }
             return null;
-        }
-
-        private void DibujarAliados(Vector3 centro, float rumbo, float radio)
-        {
-            IPandillaJugador pandilla = Registro<IPandillaJugador>.Actual;
-            int cantidad = pandilla != null ? pandilla.Aliados.Count : 0;
-            Color color = FormatoTerritorio.ColorDe(IdPandilla.Jugador);
-            while (aliados.Count < cantidad)
-            {
-                aliados.Add(IconosMapa.CrearAliado(capaMarcas, ladoIcono, color));
-            }
-            aliadosVisibles = 0;
-            for (int i = 0; i < aliados.Count; i++)
-            {
-                Vector2 px = Vector2.zero;
-                Transform aliado = i < cantidad ? pandilla.Aliados[i] : null;
-                bool dentro = aliado != null && CalculoMinimapa.Ubicar(centro, rumbo, aliado.position, escala, radio, false, out px);
-                Mostrar(aliados[i].gameObject, dentro);
-                if (dentro)
-                {
-                    aliados[i].color = color;
-                    aliados[i].rectTransform.anchoredPosition = px;
-                    aliadosVisibles++;
-                }
-            }
         }
 
         private static void Mostrar(GameObject objeto, bool ver)
