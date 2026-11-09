@@ -14,12 +14,13 @@ namespace MechaCyberpunk.Tests.UI
 {
     /// <summary>
     /// T-942: las cuatro armas del banco de Tino se ven en 3D con sus piezas (las de una sola malla se parten en Cargador, Canon y resto).
-    /// Cada pieza elegida se separa y su centro se mueve; el escaneo corre en las tres. Con CAPTURAR_UI=1 guarda
+    /// Cada pieza elegida se separa (sin cruzar el pedestal) y su centro se mueve; el escaneo corre en las tres. Con CAPTURAR_UI=1 guarda
     /// docs/capturas/ui-banco-escopeta.png, ui-banco-fusil.png y ui-banco-francotirador.png con la pieza separada.
     /// </summary>
     public class BancoTodasArmasT942Pruebas
     {
         private const string RutaConfig = "Assets/_Proyecto/UI/Datos/ConfigMenuArmas_Base.asset";
+        private const float PedestalBajo = 0.42f;
         private static readonly string[] Nombres = { "escopeta", "fusil", "francotirador" };
 
         private static IReadOnlyDictionary<PiezaArma, EstadoPieza> Estados()
@@ -60,6 +61,7 @@ namespace MechaCyberpunk.Tests.UI
                 Assert.Greater(vista.Separacion(pieza), 0.9f, nombre + ": " + pieza + " se separa");
                 vista.CentroPieza(pieza, out Vector3 despues);
                 Assert.Greater((despues - antes).magnitude, 0.02f, nombre + ": " + pieza + " se mueve");
+                Assert.Greater(despues.y, config.PosicionSet.y - PedestalBajo, nombre + ": " + pieza + " no cruza el pedestal");
                 if (pieza == PiezaArma.Cargador && Environment.GetEnvironmentVariable("CAPTURAR_UI") == "1")
                 {
                     Guardar(vista, "docs/capturas/ui-banco-" + nombre + ".png");
