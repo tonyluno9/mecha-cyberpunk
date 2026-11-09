@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
@@ -41,6 +42,8 @@ namespace MechaCyberpunk.Tests.Trafico
             Registros.LimpiarTodos();
             EventosLugares.LimpiarSuscriptores();
             config = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ConfigPersecucion>(RutaConfig));
+            // T-933: sin rondas; esta prueba mide las patrullas de persecución (una ronda ya circulando sí podría adoptarse a la vista).
+            typeof(ConfigPersecucion).GetField("patrullasDeRonda", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(config, 0);
             GameObject piso = GameObject.CreatePrimitive(PrimitiveType.Cube);
             piso.transform.position = new Vector3(0f, -0.5f, 0f);
             piso.transform.localScale = new Vector3(900f, 1f, 900f);
@@ -116,7 +119,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 yield return null;
             }
             Assert.AreEqual(0, gestor.Patrullas, "Con todas las salidas a la vista no sale ninguna patrulla de la nada");
-            Assert.AreEqual(0, gestor.GetComponentsInChildren<PatrullaMundo>().Length);
+            Assert.AreEqual(0, gestor.GetComponentsInChildren<PatrullaMundo>().Count(r => !r.EnRonda));
 
             MirarAlCielo();
             fin = Time.time + 1.2f;
@@ -125,7 +128,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 yield return null;
             }
             Assert.Greater(gestor.Patrullas, 0, "Cuando ninguna salida se ve, las patrullas salen");
-            foreach (PatrullaMundo p in gestor.GetComponentsInChildren<PatrullaMundo>())
+            foreach (PatrullaMundo p in gestor.GetComponentsInChildren<PatrullaMundo>().Where(r => !r.EnRonda))
             {
                 Vector3 d = p.transform.position - jugador.transform.position;
                 d.y = 0f;
@@ -142,7 +145,7 @@ namespace MechaCyberpunk.Tests.Trafico
             calor.Sumar(60f, MotivoCalor.Mision);
             yield return null;
             yield return null;
-            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>();
+            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>().Where(r => !r.EnRonda).ToArray(); // T-933: las rondas no cuentan
             Assert.Greater(patrullas.Length, 0);
             Vector3[] anterior = new Vector3[patrullas.Length];
             float[] inicial = new float[patrullas.Length];

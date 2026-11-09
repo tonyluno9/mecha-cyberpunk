@@ -123,7 +123,7 @@ namespace MechaCyberpunk.Tests.Trafico
             }
         }
 
-        private PatrullaMundo UnaPatrulla() => gestor.GetComponentsInChildren<PatrullaMundo>().FirstOrDefault(p => !p.Robada);
+        private PatrullaMundo UnaPatrulla() => gestor.GetComponentsInChildren<PatrullaMundo>().FirstOrDefault(p => !p.Robada && !p.EnRonda);
 
         private static float Plano(Vector3 a, Vector3 b)
         {
@@ -240,7 +240,7 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.AreEqual(3, gestor.Patrullas, "Con el calor 3 hay 3 patrullas de la policía");
 
             // El jugador (en la patrulla robada) se va al punto de las calles más lejos de todas las patrullas.
-            PatrullaMundo[] perseguidoras = gestor.GetComponentsInChildren<PatrullaMundo>().Where(x => !x.Robada).ToArray();
+            PatrullaMundo[] perseguidoras = gestor.GetComponentsInChildren<PatrullaMundo>().Where(x => !x.Robada && !x.EnRonda).ToArray();
             Vector3 lejos = Enumerable.Range(0, calles.Cantidad).Select(i => calles.Nodo(i))
                 .OrderByDescending(n => perseguidoras.Min(x => Plano(x.transform.position, n))).First();
             jugadorObjeto.transform.position = lejos;

@@ -4,9 +4,8 @@ using UnityEngine;
 namespace MechaCyberpunk.Trafico.Calle
 {
     /// <summary>
-    /// T-705: el conductor al que le roban el carro. Lo sacan del asiento a la puerta, cae al suelo y se levanta asustado. Ya de pie es un testigo
-    /// (<see cref="PeatonMundo"/>): si el jugador sigue cerca llama a la policía con el teléfono (Inter_Telefono) y se queda parado mirándolo;
-    /// si no llama (el jugador se fue, la llamada se canceló) sale corriendo (<see cref="ConductorHuye"/>). Si lo matan se queda tirado y desaparece.
+    /// T-705: el conductor al que le roban el carro. Lo sacan del asiento a la puerta, cae al suelo y se levanta asustado. Ya de pie huye
+    /// (<see cref="PeatonMundo"/>), sin llamar a nadie (T-933): al levantarse sale corriendo (<see cref="ConductorHuye"/>). Si lo matan se queda tirado y desaparece.
     /// </summary>
     public class ConductorRobado : MonoBehaviour
     {
@@ -26,7 +25,6 @@ namespace MechaCyberpunk.Trafico.Calle
         /// <summary>Lo que tarda en levantarse (s).</summary>
         public const float SegundosLevantarse = 1.8f;
         private const float SegundosCuerpo = 10f;
-        private const float GradosPorSegundo = 360f;
         private const float AlturaBusquedaPiso = 2f;
 
         private Vector3 desde;
@@ -56,10 +54,6 @@ namespace MechaCyberpunk.Trafico.Calle
             if (afuera.sqrMagnitude > 0.0001f)
             {
                 transform.rotation = Quaternion.LookRotation(afuera.normalized, Vector3.up);
-            }
-            if (peaton != null)
-            {
-                peaton.Tumbado = true; // tirado no saca el teléfono
             }
             // Mensajes de Unity: los atiende VisualPersonaje del modelo activo (Trafico no referencia ese ensamblado).
             BroadcastMessage("Tumbar", SendMessageOptions.DontRequireReceiver);
@@ -97,21 +91,10 @@ namespace MechaCyberpunk.Trafico.Calle
                     if (t >= SegundosCaido + SegundosLevantarse)
                     {
                         Fase = FaseConductor.Asustado;
-                        if (peaton != null)
-                        {
-                            peaton.Tumbado = false;
-                        }
                     }
                     break;
                 case FaseConductor.Asustado:
-                    if (peaton != null && peaton.Llamando)
-                    {
-                        Mirar(amenaza);
-                    }
-                    else
-                    {
-                        Huir();
-                    }
+                    Huir();
                     break;
             }
         }
@@ -127,16 +110,6 @@ namespace MechaCyberpunk.Trafico.Calle
 
         /// <summary>Hacia dónde mira ahora (el jugador). Se actualiza mientras dura la llamada.</summary>
         public void PonerAmenaza(Vector3 posicion) => amenaza = posicion;
-
-        private void Mirar(Vector3 punto)
-        {
-            Vector3 hacia = punto - transform.position;
-            hacia.y = 0f;
-            if (hacia.sqrMagnitude > 0.01f)
-            {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(hacia, Vector3.up), GradosPorSegundo * Time.deltaTime);
-            }
-        }
 
         private static Vector3 PegarAlPiso(Vector3 punto)
         {

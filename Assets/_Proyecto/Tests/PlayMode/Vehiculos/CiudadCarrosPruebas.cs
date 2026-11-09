@@ -21,7 +21,13 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// </summary>
     public class CiudadCarrosPruebas : InputTestFixture
     {
-        private GameObject[] testigosCamara;
+        private TestigoQueSiempreVe testigoPolicia;
+
+        /// <summary>T-933: un testigo de la policía de prueba que siempre ve al jugador (para forzar que el delito cuente).</summary>
+        private sealed class TestigoQueSiempreVe : MechaCyberpunk.Trafico.Testigos.ITestigoPolicia
+        {
+            public bool VeElPunto(Vector3 punto) => true;
+        }
         private const string RutaCiudad = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string PatronAdorno = @"^Carro_\d+$";
         private const string PrefijoRobable = "CarroRobable_";
@@ -65,6 +71,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Object.Destroy(raiz);
             }
             Registros.LimpiarTodos();
+            testigoPolicia = null;
             yield return null;
         }
 
@@ -258,21 +265,11 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 jugador.Colocar(new Pose(posicion, Quaternion.LookRotation(mirada.normalized, Vector3.up)));
                 yield return MirarHacia(jugador, raton, Quaternion.LookRotation(mirada.normalized, Vector3.up).eulerAngles.y);
                 yield return Esperar(0.4f);
-                // T-661: robar un carro solo sube el calor si alguien lo ve; aquí lo ven tres cámaras de seguridad alrededor.
-                if (testigosCamara == null)
+                // T-933: robar un carro solo sube el calor si lo ve la policía; aquí un testigo de prueba siempre ve.
+                if (testigoPolicia == null)
                 {
-                    testigosCamara = new GameObject[3];
-                    for (int k = 0; k < testigosCamara.Length; k++)
-                    {
-                        testigosCamara[k] = new GameObject("CamaraTestigo" + k);
-                        testigosCamara[k].AddComponent<MechaCyberpunk.Trafico.Testigos.CamaraSeguridad>().Configurar(60f, 89f);
-                    }
-                }
-                Vector3[] lados = { Vector3.up * 8f, Vector3.up * 5f + Vector3.right * 4f, Vector3.up * 5f + Vector3.left * 4f };
-                for (int k = 0; k < testigosCamara.Length; k++)
-                {
-                    testigosCamara[k].transform.position = posicion + lados[k];
-                    testigosCamara[k].transform.rotation = Quaternion.LookRotation(posicion + Vector3.up - testigosCamara[k].transform.position, Vector3.up);
+                    testigoPolicia = new TestigoQueSiempreVe();
+                    Registro<MechaCyberpunk.Trafico.Testigos.ITestigoPolicia>.Agregar(testigoPolicia);
                 }
                 float antes = calor.Valor;
 

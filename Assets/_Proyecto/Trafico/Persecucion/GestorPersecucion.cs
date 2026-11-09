@@ -17,7 +17,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>Mensaje de Unity que recibe el jugador al ser arrestado (T-690).</summary>
         public const string MensajeArresto = "AlSerArrestado";
         private const string PrefijoManzana = "Manzana_";
-        private const string NombreCamara = "CamaraSeguridad";
         private const float LadoManzana = 80f;          // medida del barrio (CreadorBarrio, m)
         private const float AlturaCalles = 0.2f;        // sobre la banqueta (m)
         private const float GradosPorVuelta = 360f;
@@ -33,6 +32,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private readonly List<DronMundo> drones = new List<DronMundo>();
         private readonly List<PatrullaMundo> patrullas = new List<PatrullaMundo>();
+        // T-933: las patrullas que circulan sin búsqueda; son las únicas que pueden verte cometer un delito.
+        private readonly List<PatrullaMundo> rondas = new List<PatrullaMundo>();
+        private const float SegundosEntreRondas = 5f;
+        private float reintentoRonda;
+
+        /// <summary>T-933: las patrullas de ronda de ahora.</summary>
+        public IReadOnlyList<PatrullaMundo> Rondas => rondas;
         private readonly List<Component> retirandose = new List<Component>();
         private bool huboContacto;
         private float reintentoSalida;
@@ -90,38 +96,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
             zona = new ZonaBusqueda(busqueda);
         }
 
-        private void Start() => ColocarCamaras();
-
-        /// <summary>Cuántas cámaras de seguridad puso el gestor en las esquinas (T-662).</summary>
-        public int Camaras { get; private set; }
-
-        // T-662: cámaras de seguridad en postes, en las esquinas de los cruces de las calles del barrio. Son testigos del delito (TestigosDelito).
-        private void ColocarCamaras()
-        {
-            if (config.CamarasPorCruce <= 0)
-            {
-                return;
-            }
-            if (calles == null)
-            {
-                calles = ArmarCalles();
-            }
-            GameObject molde = Resources.Load<GameObject>(NombreCamara);
-            if (calles == null || molde == null)
-            {
-                return;
-            }
-            Transform contenedor = new GameObject("CamarasSeguridad").transform;
-            contenedor.SetParent(transform, false);
-            foreach (CalculoCamaras.Colocacion c in CalculoCamaras.Colocaciones(calles, config.CamarasPorCruce, config.DesfaseEsquinaCamara))
-            {
-                GameObject poste = Instantiate(molde, c.Posicion, Quaternion.Euler(0f, c.Giro, 0f), contenedor);
-                poste.name = "CamaraSeguridad_" + (Camaras + 1);
-                poste.GetComponent<CamaraSeguridad>().Configurar(config.AlcanceCamara, config.SemiAnguloCamara);
-                Camaras++;
-            }
-        }
-
         private void OnEnable()
         {
             Registro<ICalor>.Agregado += Enlazar;
@@ -172,6 +146,14 @@ namespace MechaCyberpunk.Trafico.Persecucion
             busqueda?.Detener();
             Desenlazar(calor);
             Reconciliar(0);
+            foreach (PatrullaMundo ronda in rondas)
+            {
+                if (ronda != null)
+                {
+                    Destroy(ronda.gameObject);
+                }
+            }
+            rondas.Clear();
             // Apagado el gestor ya no hay quien vea irse a los que se retiraban: se quitan de golpe.
             foreach (Component c in retirandose)
             {
@@ -190,6 +172,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             retirandose.RemoveAll(c => c == null || (c is PatrullaMundo robada && robada.Robada));
             patrullas.RemoveAll(p => p == null || p.Robada); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
             drones.RemoveAll(d => d == null); // T-730: un dron derribado ya no cuenta
+            MantenerRondas(Time.deltaTime);
             if (calor == null || calor.Nivel <= 0 || config == null)
             {
                 SegundosSinVer = 0f;
@@ -223,7 +206,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     }
                 }
             }
-            bool teVen = patrullaVe || PatrullaMundo.JugadorEnPatrulla || (jugador.HasValue && (LoVeUnDron(jugador.Value) || testigos.CamaraQueVe(jugador.Value) != null));
+            bool teVen = patrullaVe || PatrullaMundo.JugadorEnPatrulla || (jugador.HasValue && LoVeUnDron(jugador.Value));
             if (teVen)
             {
                 huboContacto = true;
@@ -370,6 +353,14 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Retirar(drones, dronesPedidos);
             while (patrullas.Count < patrullasPedidas)
             {
+                PatrullaMundo adoptada = SacarRonda();
+                if (adoptada != null)
+                {
+                    adoptada.Alertar();
+                    adoptada.Intercepta = patrullas.Count % 2 == 1;
+                    patrullas.Add(adoptada);
+                    continue;
+                }
                 if (!CrearPatrulla())
                 {
                     break; // T-598: sin calles no hay patrulla; sin este corte el ciclo no terminaba
@@ -415,6 +406,52 @@ namespace MechaCyberpunk.Trafico.Persecucion
             DronMundo dron = Instantiate(prefabDron, lejos, Quaternion.identity, transform);
             dron.Preparar(calculo, config, PosicionDelJugador);
             drones.Add(dron);
+        }
+
+        // T-933: mantiene las patrullas de ronda: si falta alguna sale otra, siempre lejos y fuera de la vista.
+        private void MantenerRondas(float dt)
+        {
+            rondas.RemoveAll(p => p == null || p.Robada || p.Retirando || !p.EnRonda);
+            reintentoRonda -= dt;
+            if (reintentoRonda > 0f || config == null || calculo == null || prefabPatrulla == null || rondas.Count >= config.PatrullasDeRonda)
+            {
+                return;
+            }
+            reintentoRonda = SegundosEntreRondas;
+            if (calles == null)
+            {
+                calles = ArmarCalles();
+            }
+            int salida = calles != null ? NodoDeSalida(PosicionDelJugador() ?? transform.position) : -1;
+            if (salida < 0)
+            {
+                return;
+            }
+            PatrullaMundo ronda = Instantiate(prefabPatrulla, transform);
+            ronda.PrepararRonda(calculo, config, calles, salida, PosicionDelJugador);
+            rondas.Add(ronda);
+        }
+
+        // T-933: la patrulla de ronda más cercana al jugador deja la ronda; null si no hay.
+        private PatrullaMundo SacarRonda()
+        {
+            Vector3 centro = PosicionDelJugador() ?? transform.position;
+            PatrullaMundo mejor = null;
+            float menor = float.MaxValue;
+            foreach (PatrullaMundo p in rondas)
+            {
+                if (p != null && !p.Robada && !p.Retirando && p.EnRonda)
+                {
+                    float d = DistanciaPlano(p.transform.position, centro);
+                    if (d < menor)
+                    {
+                        menor = d;
+                        mejor = p;
+                    }
+                }
+            }
+            rondas.Remove(mejor);
+            return mejor;
         }
 
         private bool CrearPatrulla()

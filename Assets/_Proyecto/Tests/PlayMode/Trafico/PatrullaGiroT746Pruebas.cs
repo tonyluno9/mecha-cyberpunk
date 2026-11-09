@@ -79,7 +79,7 @@ namespace MechaCyberpunk.Tests.Trafico
             calor.Poner(1);
             yield return null;
             yield return null;
-            PatrullaMundo patrulla = gestor.GetComponentsInChildren<PatrullaMundo>().FirstOrDefault(p => !p.Robada);
+            PatrullaMundo patrulla = gestor.GetComponentsInChildren<PatrullaMundo>().FirstOrDefault(p => !p.Robada && !p.EnRonda);
             Assert.IsNotNull(patrulla);
             Time.timeScale = 3f;
             Vector3 posAnt = patrulla.transform.position;

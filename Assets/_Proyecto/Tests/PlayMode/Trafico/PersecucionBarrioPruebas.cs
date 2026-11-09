@@ -149,7 +149,7 @@ namespace MechaCyberpunk.Tests.Trafico
             }
             Assert.AreEqual(0, gestor.Retirandose);
             Assert.AreEqual(0, gestor.GetComponentsInChildren<DronMundo>().Length);
-            Assert.AreEqual(0, gestor.GetComponentsInChildren<PatrullaMundo>().Length);
+            Assert.AreEqual(0, gestor.GetComponentsInChildren<PatrullaMundo>().Count(r => !r.EnRonda));
         }
 
         [UnityTest]

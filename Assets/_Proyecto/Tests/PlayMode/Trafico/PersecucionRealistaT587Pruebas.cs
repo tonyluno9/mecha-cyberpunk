@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Calle;
@@ -90,7 +91,6 @@ namespace MechaCyberpunk.Tests.Trafico
             config = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ConfigPersecucion>(RutaConfig));
             Poner("segundosArresto", 9999f); // T-665: estas pruebas miran la persecución, no el arresto
             Poner("radioVistaDron", 1f);     // y los drones y las cámaras no deben ver a través de las paredes de prueba
-            Poner("camarasPorCruce", 0f);
         }
 
         [TearDown]
@@ -203,7 +203,7 @@ namespace MechaCyberpunk.Tests.Trafico
             calor.Poner(3);
             yield return null;
             Assert.AreEqual(3, gestor.Patrullas);
-            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>();
+            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>().Where(r => !r.EnRonda).ToArray(); // T-933: las rondas no cuentan
             Assert.AreEqual(3, patrullas.Length);
             foreach (PatrullaMundo p in patrullas)
             {
@@ -337,7 +337,7 @@ namespace MechaCyberpunk.Tests.Trafico
             Time.timeScale = EscalaDeTiempo;
             // Que lleguen cerca.
             float limite = Time.time + 80f;
-            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>();
+            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>().Where(r => !r.EnRonda).ToArray(); // T-933: las rondas no cuentan
             Assert.AreEqual(3, patrullas.Length);
             while (Time.time < limite)
             {
@@ -460,7 +460,7 @@ namespace MechaCyberpunk.Tests.Trafico
             int nivel3 = gestor.Patrullas;
             Assert.Less(nivel1, nivel2);
             Assert.Less(nivel2, nivel3);
-            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>();
+            PatrullaMundo[] patrullas = gestor.GetComponentsInChildren<PatrullaMundo>().Where(r => !r.EnRonda).ToArray(); // T-933: las rondas no cuentan
             for (int i = 0; i < patrullas.Length; i++)
             {
                 for (int j = i + 1; j < patrullas.Length; j++)
