@@ -60,6 +60,21 @@ namespace MechaCyberpunk.UI.Mapa
             }
         }
 
+        /// <summary>T-934: los cuatro lados de cada huella, para dibujar el contorno de cada edificio.</summary>
+        public static List<Tramo> LadosDeHuellas(IReadOnlyList<Huella> huellas)
+        {
+            List<Tramo> lados = new List<Tramo>(huellas.Count * 4);
+            for (int i = 0; i < huellas.Count; i++)
+            {
+                Vector2[] e = huellas[i].Esquinas;
+                for (int k = 0; k < 4; k++)
+                {
+                    lados.Add(new Tramo(e[k], e[(k + 1) % 4]));
+                }
+            }
+            return lados;
+        }
+
         /// <summary>
         /// Los contornos de las manzanas: se marca en una cuadrícula de <paramref name="celda"/> m lo que cubren las huellas y se sacan las líneas donde
         /// lo ocupado toca lo libre. Lo que queda entre manzanas son las calles, así que las líneas son los bordes de las calles. Huellas que se tocan

@@ -113,6 +113,12 @@ namespace MechaCyberpunk.UI.Hud
             Vector3 posicion = Vector3.zero;
             bool conPosicion = hay && UbicacionObjetivo.Resolver(actual, Registro<ILugar>.Todos, out posicion);
             AvisarCambio(hay ? actual.Texto + "|" + actual.Lugar + "|" + (conPosicion ? posicion.ToString() : string.Empty) : null);
+            // T-934: lo que marcaste en el mapa manda sobre el objetivo y se sigue viendo con el mapa cerrado, como en el minimapa.
+            if (Mapa.PuntoMarcadoMapa.Hay)
+            {
+                posicion = Mapa.PuntoMarcadoMapa.Posicion;
+                conPosicion = true;
+            }
 
             IJugador jugador = Registro<IJugador>.Actual;
             Camera camara = jugador != null ? jugador.Camara : null;

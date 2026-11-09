@@ -25,6 +25,7 @@ namespace MechaCyberpunk.UI.Mapa
         private const float SegundosMaximos = 30f;
 
         private static List<CalculoCallesMapa.Tramo> tramos = new List<CalculoCallesMapa.Tramo>();
+        private static List<CalculoCallesMapa.Tramo> edificios = new List<CalculoCallesMapa.Tramo>();
         private static int escenaBuscada = int.MinValue;
         private static float proximaBusqueda;
         private static float intervalo = SegundosPrimeraBusqueda;
@@ -39,6 +40,16 @@ namespace MechaCyberpunk.UI.Mapa
             }
         }
 
+        /// <summary>T-934: los lados de cada edificio de la escena (m: x este, y norte).</summary>
+        public static IReadOnlyList<CalculoCallesMapa.Tramo> Edificios
+        {
+            get
+            {
+                Actualizar();
+                return edificios;
+            }
+        }
+
         /// <summary>Fuerza buscar otra vez (las pruebas lo usan al armar una escena).</summary>
         public static void Reiniciar()
         {
@@ -46,6 +57,7 @@ namespace MechaCyberpunk.UI.Mapa
             proximaBusqueda = 0f;
             intervalo = SegundosPrimeraBusqueda;
             tramos = new List<CalculoCallesMapa.Tramo>();
+            edificios = new List<CalculoCallesMapa.Tramo>();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -66,7 +78,9 @@ namespace MechaCyberpunk.UI.Mapa
             escenaBuscada = escena;
             proximaBusqueda = Time.unscaledTime + intervalo;
             intervalo = Mathf.Min(intervalo * 2f, SegundosMaximos);
-            tramos = CalculoCallesMapa.ContornosDeManzanas(Buscar());
+            List<CalculoCallesMapa.Huella> huellas = Buscar();
+            tramos = CalculoCallesMapa.ContornosDeManzanas(huellas);
+            edificios = CalculoCallesMapa.LadosDeHuellas(huellas);
         }
 
         private static List<CalculoCallesMapa.Huella> Buscar()
