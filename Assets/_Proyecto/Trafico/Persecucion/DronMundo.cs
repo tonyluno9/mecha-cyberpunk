@@ -33,6 +33,40 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private CalculoPersecucion calculo;
         private ConfigPersecucion config;
         private Func<Vector3?> posicionJugador;
+        // T-938: cada dron tiene su punto propio alrededor del jugador y se aparta de los demás.
+        private static readonly System.Collections.Generic.List<DronMundo> ActivosLista = new System.Collections.Generic.List<DronMundo>();
+        private static readonly System.Collections.Generic.List<Vector3> OtrasPosiciones = new System.Collections.Generic.List<Vector3>();
+        private int indiceOrbita;
+        private int totalOrbita = 1;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarActivos() => ActivosLista.Clear();
+
+        private void OnEnable() => ActivosLista.Add(this);
+
+        private void OnDisable() => ActivosLista.Remove(this);
+
+        /// <summary>T-938: el gestor le dice qué número es de cuántos drones, para que cada uno tenga su punto.</summary>
+        public void AsignarOrbita(int indice, int total)
+        {
+            indiceOrbita = indice;
+            totalOrbita = Mathf.Max(1, total);
+        }
+
+        /// <summary>T-938: la separación que le toca moverse este cuadro para no quedar a menos de la distancia mínima de otro dron.</summary>
+        private Vector3 SepararDeOtros()
+        {
+            OtrasPosiciones.Clear();
+            foreach (DronMundo otro in ActivosLista)
+            {
+                if (otro != this && !otro.EstaCayendo)
+                {
+                    OtrasPosiciones.Add(otro.transform.position);
+                }
+            }
+            Vector3 aparte = CalculoSeparacionDrones.PuntoEnCirculo(Vector3.zero, indiceOrbita, totalOrbita, 1f, 0f);
+            return CalculoSeparacionDrones.Repulsion(transform.position, OtrasPosiciones, config.DistanciaMinimaEntreDrones, aparte);
+        }
 
         public void Preparar(CalculoPersecucion reglas, ConfigPersecucion numeros, Func<Vector3?> dondeEstaElJugador)
         {
@@ -315,13 +349,14 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
-            Vector3 meta = jugador.Value + Vector3.up * config.AlturaDron;
+            Vector3 meta = CalculoSeparacionDrones.PuntoEnCirculo(jugador.Value, indiceOrbita, totalOrbita, config.RadioOrbitaDron, config.AlturaDron);
             Vector3 haciaMeta = meta - transform.position;
             float paso = calculo.Paso(true, haciaMeta.magnitude, Time.deltaTime);
             if (paso > 0f)
             {
                 transform.position += haciaMeta.normalized * paso;
             }
+            transform.position += SepararDeOtros();
             Disparar();
             Vector3 haciaJugador = jugador.Value - transform.position;
             haciaJugador.y = 0f;

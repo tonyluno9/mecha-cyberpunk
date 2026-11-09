@@ -199,8 +199,12 @@ namespace MechaCyberpunk.Tests.IA
             Assert.AreEqual(dineroAntes + DineroEsperado, cartera.Dinero);
 
             // 2 x 8 + el tiro no llegan al umbral de 25: se sube el calor como lo haría la tecla de prueba.
-            calor.Sumar(CalorExtra, MotivoCalor.Otro);
-            Assert.GreaterOrEqual(calor.Nivel, 1);
+            // T-938: los drones salen desde el nivel 2 de búsqueda.
+            for (int i = 0; i < 20 && calor.Nivel < 2; i++)
+            {
+                calor.Sumar(CalorExtra, MotivoCalor.Otro);
+            }
+            Assert.GreaterOrEqual(calor.Nivel, 2);
             float fin = Time.time + LimiteDrones;
             while (Time.time < fin && gestor.Drones < 1)
             {
