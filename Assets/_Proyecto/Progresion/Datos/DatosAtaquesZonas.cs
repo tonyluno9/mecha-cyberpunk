@@ -7,8 +7,8 @@ namespace MechaCyberpunk.Progresion
     public class DatosAtaquesZonas : ScriptableObject
     {
         [Tooltip("Espera entre ataques: un valor al azar entre mínimo y máximo (s), antes de acortarla por zonas y calor.")]
-        [Min(10f)] [SerializeField] private float segundosMinimo = 420f;
-        [Min(10f)] [SerializeField] private float segundosMaximo = 780f;
+        [Min(10f)] [SerializeField] private float segundosMinimo = 2100f; // T-939: antes 420 s (7 min); ahora 35 min, 5 veces más
+        [Min(10f)] [SerializeField] private float segundosMaximo = 3900f; // T-939: antes 780 s (13 min)
         [Tooltip("Cuánto se acorta la espera por cada zona tuya además de la primera (0.35 = 35 % más seguido).")]
         [Min(0f)] [SerializeField] private float masPorZona = 0.35f;
         [Tooltip("Cuánto se acorta la espera por cada nivel de calor.")]

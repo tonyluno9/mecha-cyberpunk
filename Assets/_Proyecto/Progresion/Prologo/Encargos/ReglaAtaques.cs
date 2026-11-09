@@ -10,6 +10,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
     /// </summary>
     public sealed class ReglaAtaques
     {
+        /// <summary>T-939: por muchas zonas y calor que haya, la espera nunca baja de esta fracción del mínimo (antes un cuarto: con el mínimo de 35 min seguía siendo menos de 10).</summary>
+        public const float FraccionPisoDelIntervalo = 0.5f;
+
         private float espera = -1f;
         private int defendidos;
         private int perdidos;
@@ -24,7 +27,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Encargos
         {
             float basico = Mathf.Lerp(minimo, Mathf.Max(minimo, maximo), Mathf.Clamp01(azar01));
             float factor = 1f + masPorZona * Mathf.Max(0, zonasTuyas - 1) + masPorCalor * Mathf.Max(0, nivelCalor);
-            return Mathf.Max(minimo * 0.25f, basico / factor);
+            return Mathf.Max(minimo * FraccionPisoDelIntervalo, basico / factor);
         }
 
         /// <summary>No ocurre durante la historia, durante un encargo, con otro ataque en curso ni sin una zona que atacar.</summary>

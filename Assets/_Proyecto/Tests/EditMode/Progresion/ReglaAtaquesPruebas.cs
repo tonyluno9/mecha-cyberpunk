@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Prologo.Encargos;
 using NUnit.Framework;
 
@@ -21,7 +22,18 @@ namespace MechaCyberpunk.Tests.Progresion
             float calor = ReglaAtaques.Intervalo(400f, 800f, 1, 3, 0.5f, 0.35f, 0.2f);
             Assert.Less(zonas, basico);
             Assert.Less(calor, basico);
-            Assert.GreaterOrEqual(ReglaAtaques.Intervalo(400f, 800f, 20, 3, 0f, 0.35f, 0.2f), 100f, "Nunca baja de un cuarto del mínimo");
+            Assert.GreaterOrEqual(ReglaAtaques.Intervalo(400f, 800f, 20, 3, 0f, 0.35f, 0.2f), 400f * ReglaAtaques.FraccionPisoDelIntervalo, "Nunca baja de la mitad del mínimo");
+        }
+
+        [Test]
+        public void DatosBase_T939_ElIntervaloMinimoEs5VecesElDeAntesYNuncaBajaDe10Minutos()
+        {
+            DatosAtaquesZonas datos = UnityEditor.AssetDatabase.LoadAssetAtPath<DatosAtaquesZonas>("Assets/_Proyecto/Progresion/Datos/DatosAtaquesZonas_Base.asset");
+            Assert.IsNotNull(datos);
+            Assert.GreaterOrEqual(datos.SegundosMinimo, 5f * 420f, "Antes 420 s: ahora 5 veces más");
+            Assert.GreaterOrEqual(datos.SegundosMaximo, 5f * 780f);
+            float peorCaso = ReglaAtaques.Intervalo(datos.SegundosMinimo, datos.SegundosMaximo, 20, 3, 0f, datos.MasPorZona, datos.MasPorCalor);
+            Assert.GreaterOrEqual(peorCaso, 600f, "Con muchas zonas y calor máximo, un ataque rival no llega antes de 10 minutos");
         }
 
         [Test]

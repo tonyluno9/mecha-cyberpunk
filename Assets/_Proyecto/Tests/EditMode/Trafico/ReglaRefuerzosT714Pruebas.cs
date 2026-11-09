@@ -46,6 +46,17 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [Test]
+        public void EnfriamientoPorDefecto_T939_EsDe10Minutos()
+        {
+            ReglaRefuerzos r = new ReglaRefuerzos();
+            r.RegistrarMuertes(3);
+            r.Llamado(0f);
+            r.RegistrarMuertes(3);
+            Assert.IsFalse(r.DebeLlamar(599f, 0), "Antes eran 60 s");
+            Assert.IsTrue(r.DebeLlamar(601f, 0));
+        }
+
+        [Test]
         public void MuertesNegativasOCero_NoCuentan()
         {
             ReglaRefuerzos r = new ReglaRefuerzos();

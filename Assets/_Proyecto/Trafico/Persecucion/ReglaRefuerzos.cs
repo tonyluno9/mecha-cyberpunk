@@ -7,7 +7,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
     public sealed class ReglaRefuerzos
     {
         public const int MuertesParaLlamar = 3;
-        public const float SegundosEnfriamiento = 60f;
+        public const float SegundosEnfriamiento = 600f; // T-939: antes 60 s; ahora 10 min
         public const int MaximoEnCamino = 1;
 
         private readonly int muertesParaLlamar;

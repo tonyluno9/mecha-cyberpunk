@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fad34970b6e1d047af051b07dfaec52, type: 3}
   m_Name: DatosAtaquesZonas_Base
   m_EditorClassIdentifier: MechaCyberpunk.Progresion::MechaCyberpunk.Progresion.DatosAtaquesZonas
-  segundosMinimo: 420
-  segundosMaximo: 780
+  segundosMinimo: 2100
+  segundosMaximo: 3900
   masPorZona: 0.35
   masPorCalor: 0.2
   segundosParaLlegar: 150

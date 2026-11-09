@@ -50,6 +50,8 @@ namespace MechaCyberpunk.Tests.Progresion
         [UnityTearDown]
         public IEnumerator DescargarEscena()
         {
+            restaurarRondas?.Invoke(); // el asset de config queda como estaba
+            restaurarRondas = null;
             foreach (GameObject raiz in SceneManager.GetActiveScene().GetRootGameObjects()) Object.Destroy(raiz);
             Registros.LimpiarTodos();
             yield return null;
@@ -87,7 +89,35 @@ namespace MechaCyberpunk.Tests.Progresion
             }, "el director y el carro del asaltante (AsaltoMundo) están listos", 40f);
             ICartera cartera = Registro<ICartera>.Actual;
             if (cartera.Dinero < Dinero) cartera.Abonar(Dinero - cartera.Dinero, MotivoDinero.Otro);
+            SinRondasDePolicia();
             listo(director);
+        }
+
+        // T-933: hay patrullas de ronda al azar y una que viera robar el carro subiría el calor y arrestaría al jugador; esta prueba mide el asalto, no la ronda.
+        private static Action restaurarRondas;
+
+        private static void SinRondasDePolicia()
+        {
+            foreach (MonoBehaviour m in Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+            {
+                if (m.GetType().Name != "GestorPersecucion")
+                {
+                    continue;
+                }
+                System.Reflection.BindingFlags privado = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+                ScriptableObject config = (ScriptableObject)m.GetType().GetField("config", privado).GetValue(m);
+                System.Reflection.FieldInfo campo = config.GetType().GetField("patrullasDeRonda", privado);
+                object antes = campo.GetValue(config);
+                campo.SetValue(config, 0);
+                restaurarRondas = () => campo.SetValue(config, antes);
+                foreach (MonoBehaviour ronda in (System.Collections.IEnumerable)m.GetType().GetField("rondas", privado).GetValue(m))
+                {
+                    if (ronda != null)
+                    {
+                        Object.Destroy(ronda.gameObject);
+                    }
+                }
+            }
         }
 
         private IEnumerator Pulsar(UnityEngine.InputSystem.Controls.ButtonControl tecla)
