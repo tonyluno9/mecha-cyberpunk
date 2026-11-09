@@ -12,7 +12,7 @@ colores de otros juegos.
 | --- | --- | --- |
 | Color principal: líneas, títulos, elegido, holograma | `Turquesa` | #5CE3D6 |
 | Líneas secundarias y marcas de regla | `TurquesaTenue` | #5CE3D6 al 42 % |
-| Fondo del elemento elegido | `TurquesaFondo` | #5CE3D6 al 12 % |
+| Fondo del elemento elegido | `TurquesaFondo` | #5CE3D6 al 8 % |
 | Acento, poco y con intención: lo que cuesta, lo que mejora, la acción principal | `Amarillo` | #F6F326 (el del logo LG24) |
 | Solo alertas y costos que no alcanzan | `Coral` | #F56E63 |
 | Texto | `Texto` | #E6F5F3 |
