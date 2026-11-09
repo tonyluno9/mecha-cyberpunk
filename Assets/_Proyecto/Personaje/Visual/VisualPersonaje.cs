@@ -91,6 +91,9 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Rapidez de los golpes de puños (1 = la del clip). El jugador la sube para que la animación siga el ritmo del golpe del juego (T-652).</summary>
         public float RapidezGolpes { get => rapidezGolpes; set => rapidezGolpes = Mathf.Max(0.1f, value); }
 
+        /// <summary>T-944: rapidez de los clips de caer muerto (1 = tal como vienen).</summary>
+        public float RapidezMuerte { get; set; } = 1f;
+
         /// <summary>0 = de pie, 1 = tumbado (KO).</summary>
         public float Tumbado => tumbado;
 
@@ -622,8 +625,29 @@ namespace MechaCyberpunk.Personaje.Visual
         public float EscalaClips => animador != null ? Mathf.Max(0.1f, animador.transform.lossyScale.y) : 1f;
 
         /// <summary>Acelera o frena Caminar y Correr para que los pies sigan el suelo a la velocidad real.</summary>
+        private static readonly int HashMuerteAdelante = Animator.StringToHash("MuerteAdelante");
+        private static readonly int HashMuerteAtras = Animator.StringToHash("MuerteAtras");
+        private static readonly int HashMuerteDesmayo = Animator.StringToHash("MuerteDesmayo");
+        private bool rapidezMuerteAplicada;
+
         private void AjustarRapidez()
         {
+            // T-944: la caída al morir puede ir más rápida (solo el jugador lo pide).
+            if (animador != null && !Mathf.Approximately(RapidezMuerte, 1f))
+            {
+                int actual = animador.GetCurrentAnimatorStateInfo(0).shortNameHash;
+                if (actual == HashMuerteAdelante || actual == HashMuerteAtras || actual == HashMuerteDesmayo)
+                {
+                    animador.speed = RapidezMuerte;
+                    rapidezMuerteAplicada = true;
+                    return;
+                }
+                if (rapidezMuerteAplicada)
+                {
+                    animador.speed = 1f;
+                    rapidezMuerteAplicada = false;
+                }
+            }
             // T-683: agachado caminando la rapidez del clip sube con la velocidad (con Shift los pies van más rápido, no solo deslizan).
             if (animador != null && animador.GetCurrentAnimatorStateInfo(0).shortNameHash == HashAgachadoCaminar)
             {

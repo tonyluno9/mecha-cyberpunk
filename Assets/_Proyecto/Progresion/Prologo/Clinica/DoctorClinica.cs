@@ -192,7 +192,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             {
                 return;
             }
-            IHistoria historia = Registro<IHistoria>.Actual;
+            // T-946: la etapa de la historia solo manda si hay un prólogo que maneje esa caída; en la ciudad no lo hay y una partida nueva se queda en PeleaTutorial.
+            IHistoria historia = FindFirstObjectByType<DirectorPrologo>() != null ? Registro<IHistoria>.Actual : null;
             bool enFlujo = peleasDelFlujo > 0 || (llamado != null && llamado.Estado == EstadoLlamado.EnArena);
             if (!ReglaDoctor.Actua(historia != null, historia != null ? historia.Etapa : EtapaPrologo.Libre, cayoElMecha, enFlujo))
             {

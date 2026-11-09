@@ -72,7 +72,11 @@ namespace MechaCyberpunk.Personaje.Jugador
             vida = GetComponent<VidaAPie>();
             cubierta = GetComponent<CubiertaYRodada>();
             visual = GetComponentInChildren<VisualPersonaje>(true);
-            if (visual != null) { visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador; }
+            if (visual != null)
+            {
+                visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador;
+                visual.RapidezMuerte = ReglasAnimacion.RapidezMuerteJugador;
+            }
             ClipsDeTony(visual);
             apuntadoIK = visual != null ? visual.GetComponentInChildren<ApuntadoIK>(true) : null;
             if (animador == null)

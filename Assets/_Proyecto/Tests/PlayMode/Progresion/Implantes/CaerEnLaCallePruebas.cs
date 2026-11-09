@@ -372,7 +372,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
         }
 
         [UnityTest]
-        public IEnumerator ConLaHistoriaFueraDeLibre_ElKOAPieNoLlamaAlDoctor()
+        public IEnumerator SinDirectorDelPrologo_ConLaHistoriaFueraDeLibre_ElDocAtiendeIgual()
         {
             yield return Preparar(true);
             PonerDinero(DineroInicial);
@@ -382,14 +382,12 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Colocar(InicioLejosDeLaPandilla);
             MatarPorCodigo();
             float fin = Time.time + SegundosSinDoctor;
-            while (Time.time < fin)
+            while (doctor.Caidas == 0 && Time.time < fin)
             {
                 yield return null;
-                Vigilar();
             }
-            Assert.AreEqual(0, doctor.Caidas, "el doctor no atendió nada");
-            Assert.IsTrue(vidaJugador.EstaKO, "el jugador sigue en KO");
-            Assert.AreEqual(DineroInicial, cartera.Dinero, "no cobró");
+            // T-946: en la ciudad no hay director del prólogo que maneje la caída: el Doc atiende en cualquier etapa.
+            Assert.AreEqual(1, doctor.Caidas, "el doctor atiende la caída");
             Registro<IHistoria>.Quitar(doble);
             VerificarFinal("e");
         }

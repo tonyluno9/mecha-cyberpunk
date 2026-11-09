@@ -147,6 +147,8 @@ namespace MechaCyberpunk.Personaje.Visual
         /// tardan 1.8 a 2.2 s y conectan a los 0.5 a 1.1 s. Con 3.3 conectan a 0.15 a 0.33 s y terminan a 0.55 a 0.67 s.
         /// </summary>
         public const float RapidezGolpeJugador = 3.3f;
+        /// <summary>T-944: qué tan rápido cae el jugador al morir (1 = el clip tal como viene).</summary>
+        public const float RapidezMuerteJugador = 1.8f;
 
         /// <summary>
         /// Rapidez (x) del estado del controlador base con ese nombre; 1 si no se acelera. Los clips de Mixamo traen mucha espera antes y después de la acción:

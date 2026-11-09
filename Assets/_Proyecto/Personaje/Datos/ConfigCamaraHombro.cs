@@ -51,6 +51,8 @@ namespace MechaCyberpunk.Personaje
         [Min(0.01f)] [SerializeField] private float radioColision = 0.2f;
         [Tooltip("Giro del cuerpo hacia donde camina (°/s).")]
         [Min(1f)] [SerializeField] private float giroCuerpo = 720f;
+        [Tooltip("Segundos que el cuerpo mira hacia donde dispara sin estar apuntando (s).")]
+        [Min(0f)] [SerializeField] private float segundosGiroAlDisparar = 0.6f;
 
         public float LateralNormal => lateralNormal;
         public float AlturaNormal => alturaNormal;
@@ -72,5 +74,6 @@ namespace MechaCyberpunk.Personaje
         public float Suavizado => suavizado;
         public float RadioColision => radioColision;
         public float GiroCuerpo => giroCuerpo;
+        public float SegundosGiroAlDisparar => segundosGiroAlDisparar;
     }
 }
