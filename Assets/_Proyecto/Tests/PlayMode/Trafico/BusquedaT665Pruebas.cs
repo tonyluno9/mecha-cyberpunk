@@ -72,7 +72,6 @@ namespace MechaCyberpunk.Tests.Trafico
             Poner(config, "segundosArresto", SegundosArresto);
             Poner(config, "distanciaArresto", 12f);
             Poner(config, "radioVistaDron", 1f);
-            Poner(config, "camarasPorCruce", 0);
             GameObject piso = GameObject.CreatePrimitive(PrimitiveType.Cube);
             piso.transform.position = new Vector3(0f, -0.5f, 0f);
             piso.transform.localScale = new Vector3(2000f, 1f, 2000f);

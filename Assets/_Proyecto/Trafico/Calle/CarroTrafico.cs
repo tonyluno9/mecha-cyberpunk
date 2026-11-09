@@ -28,9 +28,7 @@ namespace MechaCyberpunk.Trafico.Calle
         // T-532: lo que no es tráfico (carros estacionados o robados, patrullas, gente, puestos) se ve con un rayo en caja a la altura del cofre.
         private const float AlturaRayo = 0.9f;
         private const int MaxChoques = 8;
-        // T-705: el conductor al que le roban el carro pierde de vista al jugador (y cancela su llamada) a esta distancia.
         public const string NombreConductorRobado = "ConductorRobado";
-        public const float RadioAbandonoConductor = 25f;
         // T-532: aparece y desaparece lejos y fuera de la vista.
         private const float DistanciaOculta = 45f;
         // T-704: nace y se borra solo fuera del frustum de la cámara (con este margen en metros alrededor del carro) y lejos del jugador.
@@ -377,7 +375,6 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 peaton = conductor.AddComponent<PeatonMundo>();
             }
-            peaton.RadioAbandonoPropio = RadioAbandonoConductor;
             conductor.AddComponent<ConductorRobado>().Iniciar(asiento, montable.PuntoSubida, jugador ?? transform.position);
             ConductorSacado = peaton;
             return peaton;

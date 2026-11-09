@@ -115,6 +115,12 @@ namespace MechaCyberpunk.Tests.IA
             }
         }
 
+        /// <summary>T-933: un testigo de la policía de prueba que siempre ve al jugador (para forzar que el delito cuente).</summary>
+        private sealed class TestigoQueSiempreVe : MechaCyberpunk.Trafico.Testigos.ITestigoPolicia
+        {
+            public bool VeElPunto(Vector3 punto) => true;
+        }
+
         [UnityTest]
         public IEnumerator TeDisparanEnSuTerritorio()
         {
@@ -157,13 +163,8 @@ namespace MechaCyberpunk.Tests.IA
             gestorObjeto.SetActive(true);
             yield return null;
 
-            // T-661: un delito solo suma calor si alguien lo ve; aquí lo ve una cámara de seguridad.
-            Transform raizJugador = Registro<IJugador>.Actual.Raiz;
-            GameObject testigo = new GameObject("CamaraTestigo");
-            testigo.transform.position = raizJugador.position + new Vector3(0f, 6f, 0f) + raizJugador.right * 5f;
-            testigo.transform.rotation = Quaternion.LookRotation(raizJugador.position - testigo.transform.position, Vector3.up);
-            testigo.AddComponent<MechaCyberpunk.Trafico.Testigos.CamaraSeguridad>().Configurar(60f, 80f);
-            testigo.transform.SetParent(gestorObjeto.transform, true);
+            // T-933: un delito solo suma calor si lo ve la policía; aquí un testigo de prueba siempre ve.
+            Registro<MechaCyberpunk.Trafico.Testigos.ITestigoPolicia>.Agregar(new TestigoQueSiempreVe());
 
             // Un tiro real con la pistola (2, clic derecho, clic): suma calor en la calle.
             int dineroAntes = cartera.Dinero;

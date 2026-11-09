@@ -47,96 +47,20 @@ namespace MechaCyberpunk.Trafico.Peatones
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Limpiar() => ActivosLista.Clear();
 
-        // T-663: un civil que vio un delito se queda parado con el teléfono (icono encima) hasta terminar la llamada; si lo matan, cae y no llama.
+        // Cuerpo del peatón al morir (T-663).
         private const float AlturaCapsula = 1.8f;
         private const float RadioCapsula = 0.3f;
         private const float SegundosCuerpo = 10f;
-        private const float MargenIcono = 0.35f;
         private float vida;
         private float segundosMuerto;
-        private IndicadorLlamada indicador;
         private CapsuleCollider capsula;
         private Renderer[] visuales;
-
-        // T-705: mientras llama saca el teléfono (Inter_Telefono) y lo vuelve a sacar cada vez que termina el gesto. El gesto lo juega VisualPersonaje
-        // (otro ensamblado que Trafico no referencia): se le manda el mensaje "Telefonear" con BroadcastMessage y se mira el Animator del modelo activo.
-        private const float SegundosEntreTelefono = 0.4f;
-        private const string EstadoTelefono = "Telefono";
-        private Animator animadorActivo;
-        private float proximoTelefono;
-
-        /// <summary>T-705: cuántas veces sacó el teléfono al llamar (para pruebas).</summary>
-        public int GestosTelefono { get; private set; }
-
-        /// <summary>T-705: True mientras está tirado en el piso (el conductor al que le roban el carro): no saca el teléfono.</summary>
-        public bool Tumbado { get; set; }
-
-        /// <summary>
-        /// T-705: si es mayor que 0, la distancia al jugador (m) a la que este testigo pierde de vista al jugador y cancela su llamada, en lugar
-        /// del radio general de <see cref="ConfigPersecucion.RadioAbandonoCivil"/>. El conductor al que le roban el carro usa uno corto.
-        /// </summary>
-        public float RadioAbandonoPropio { get; set; }
-
-        private void MantenerTelefono()
-        {
-            if (!Llamando || Muerto || Tumbado || Time.time < proximoTelefono)
-            {
-                return;
-            }
-            // El prefab trae dos modelos (persona y robot, solo uno activo): el Animator es el del modelo activo.
-            if (animadorActivo == null || !animadorActivo.isActiveAndEnabled)
-            {
-                animadorActivo = GetComponentInChildren<Animator>(false);
-            }
-            if (animadorActivo == null || animadorActivo.runtimeAnimatorController == null)
-            {
-                return;
-            }
-            if (animadorActivo.GetCurrentAnimatorStateInfo(0).IsName(EstadoTelefono)
-                || (animadorActivo.IsInTransition(0) && animadorActivo.GetNextAnimatorStateInfo(0).IsName(EstadoTelefono)))
-            {
-                return;
-            }
-            proximoTelefono = Time.time + SegundosEntreTelefono;
-            GestosTelefono++;
-            BroadcastMessage("Telefonear", SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <summary>True mientras está llamando a la policía (parado, con el teléfono).</summary>
-        public bool Llamando { get; private set; }
 
         /// <summary>True si ya lo mataron: queda tirado un rato y no hace nada.</summary>
         public bool Muerto { get; private set; }
 
         /// <summary>Se avisa al morir un peatón.</summary>
         public static event Action<PeatonMundo> Murio;
-
-        /// <summary>Empieza a llamar: deja de huir y de caminar y muestra el icono del teléfono.</summary>
-        public void IniciarLlamada()
-        {
-            if (Muerto)
-            {
-                return;
-            }
-            Llamando = true;
-            proximoTelefono = 0f;
-            Calmar();
-            if (indicador == null)
-            {
-                indicador = IndicadorLlamada.Crear(transform, MargenIcono);
-            }
-            indicador.gameObject.SetActive(true);
-        }
-
-        /// <summary>Termina o cancela la llamada: quita el icono y sigue su camino.</summary>
-        public void TerminarLlamada()
-        {
-            Llamando = false;
-            if (indicador != null)
-            {
-                indicador.gameObject.SetActive(false);
-            }
-        }
 
         public ResultadoDanio RecibirDanio(InfoDanio info)
         {
@@ -162,7 +86,6 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Muerto = true;
-            TerminarLlamada();
             Calmar();
             segundosMuerto = 0f;
             if (capsula != null)
@@ -241,7 +164,6 @@ namespace MechaCyberpunk.Trafico.Peatones
         private void OnDisable()
         {
             EventosRuido.Disparo -= AlOirDisparo;
-            TerminarLlamada();
             ActivosLista.Remove(this);
             Calmar();
         }
@@ -249,7 +171,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         /// <summary>Un disparo en <paramref name="posicion"/>: si está dentro del radio de oído, el peatón huye.</summary>
         public void AlOirDisparo(Vector3 posicion)
         {
-            if (calculo == null || config == null || !isActiveAndEnabled || Llamando || Muerto)
+            if (calculo == null || config == null || !isActiveAndEnabled || Muerto)
             {
                 return;
             }
@@ -266,7 +188,6 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         private void Update()
         {
-            MantenerTelefono();
             if (calculo == null)
             {
                 return;
@@ -280,16 +201,6 @@ namespace MechaCyberpunk.Trafico.Peatones
                     {
                         r.enabled = false;
                     }
-                }
-                return;
-            }
-            if (Llamando)
-            {
-                Detenido = true;
-                Vector3? aQuien = posicionJugador?.Invoke();
-                if (aQuien.HasValue)
-                {
-                    Mirar(aQuien.Value - transform.position);
                 }
                 return;
             }

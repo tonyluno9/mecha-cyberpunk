@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using MechaCyberpunk.Core;
@@ -43,7 +44,6 @@ namespace MechaCyberpunk.Tests.Trafico
             config = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ConfigPersecucion>(RutaConfig));
             Poner("segundosArresto", 9999f);
             Poner("radioVistaDron", 1f);
-            Poner("camarasPorCruce", 0);
             GameObject piso = GameObject.CreatePrimitive(PrimitiveType.Cube);
             piso.transform.position = new Vector3(0f, -0.5f, 0f);
             piso.transform.localScale = new Vector3(2000f, 1f, 2000f);
@@ -225,7 +225,7 @@ namespace MechaCyberpunk.Tests.Trafico
             {
                 yield return null;
                 cuadros++;
-                IReadOnlyList<PatrullaMundo> todas = PatrullaMundo.Activas;
+                IReadOnlyList<PatrullaMundo> todas = PatrullaMundo.Activas.Where(r => !r.EnRonda).ToList(); // T-933: las rondas no cuentan
                 for (int i = 0; i < todas.Count; i++)
                 {
                     for (int j = i + 1; j < todas.Count; j++)

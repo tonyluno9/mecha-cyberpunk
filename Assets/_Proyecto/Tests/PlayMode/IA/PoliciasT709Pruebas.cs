@@ -162,6 +162,11 @@ namespace MechaCyberpunk.Tests
             listo(patrulla);
         }
 
+        private sealed class TestigoQueSiempreVe : MechaCyberpunk.Trafico.Testigos.ITestigoPolicia
+        {
+            public bool VeElPunto(Vector3 punto) => true;
+        }
+
         [UnityTest]
         public IEnumerator AlLlegar_LosPoliciasSeBajan_SeCubrenTrasLaPatrulla_AsomanYDisparan()
         {
@@ -292,6 +297,8 @@ namespace MechaCyberpunk.Tests
             PandilleroAPie policia = p.GetComponent<PandilleroAPie>();
             yield return null;
             Assert.IsTrue(policia.Datos.EsPolicia);
+            // T-933: el calor solo sube si lo ve la policía; este policía suelto no cuenta, así que otro testigo de prueba ve.
+            Registro<MechaCyberpunk.Trafico.Testigos.ITestigoPolicia>.Agregar(new TestigoQueSiempreVe());
             float antes = calor.Valor;
             float vidaAntes = policia.Actual;
             policia.RecibirDanio(new InfoDanio(5f, TipoDanio.Disparo, p.transform.position + Vector3.up, Vector3.back, null));

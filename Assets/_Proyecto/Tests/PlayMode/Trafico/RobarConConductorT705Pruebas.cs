@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Calle;
 using MechaCyberpunk.Trafico.Datos;
@@ -18,9 +17,8 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.Trafico
 {
     /// <summary>
-    /// T-705: al robar un carro del tráfico con conductor, lo sacan, cae al suelo y se levanta asustado; es un testigo: si el jugador se queda cerca llama a la
-    /// policía con el teléfono (Inter_Telefono) y hay calor; si el jugador se va, lo matan o no hay quien llame, no hay persecución. El civil de T-663 usa
-    /// la misma animación del teléfono al llamar.
+    /// T-705: al robar un carro del tráfico con conductor, lo sacan, cae al suelo y se levanta asustado; es un testigo: ya no llama (T-933): al levantarse huye
+    /// corriendo. El calor solo sube si lo ve un policía.
     /// </summary>
     public class RobarConConductorT705Pruebas
     {
@@ -28,7 +26,6 @@ namespace MechaCyberpunk.Tests.Trafico
         private const string RutaConfigTrafico = "Assets/_Proyecto/Trafico/Datos/ConfigTraficoCalle_Trafico.asset";
         private const string RutaPrefabCarro = "Assets/_Proyecto/Trafico/Prefabs/CarroTrafico_V02.prefab";
         private const string RutaPeaton = "Assets/_Proyecto/Trafico/Prefabs/Peaton.prefab";
-        private const float SegundosLlamada = 5f;
 
         public sealed class CalorReal : ICalor
         {
@@ -80,7 +77,6 @@ namespace MechaCyberpunk.Tests.Trafico
             EventosRuido.LimpiarSuscriptores();
             CarroTrafico.Activos.Clear();
             config = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ConfigPersecucion>(RutaConfig));
-            config.GetType().GetField("segundosLlamadaCivil", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(config, SegundosLlamada);
             configTrafico = AssetDatabase.LoadAssetAtPath<ConfigTraficoCalle>(RutaConfigTrafico);
             piso = GameObject.CreatePrimitive(PrimitiveType.Cube);
             piso.transform.position = new Vector3(0f, -0.5f, 0f);
@@ -213,61 +209,34 @@ namespace MechaCyberpunk.Tests.Trafico
             Capturar(conductor.transform, "s1c-T-705-conductor-en-el-suelo.png");
             yield return Esperar(ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse);
             Assert.IsFalse(fases.Tirado, "Se levantó");
-            Assert.AreEqual(ConductorRobado.FaseConductor.Asustado, fases.Fase, "Y está asustado");
-            Capturar(conductor.transform, "s1c-T-705-conductor-asustado-llamando.png");
+            Assert.IsTrue(fases.Fase == ConductorRobado.FaseConductor.Asustado || fases.Fase == ConductorRobado.FaseConductor.Huyendo, "Y está asustado o ya huye");
+            Capturar(conductor.transform, "s1c-T-705-conductor-asustado.png");
         }
 
         [UnityTest]
-        public IEnumerator ElJugadorSeQuedaCerca_ElConductorLlamaConElTelefonoYHayCalor()
+        public IEnumerator SinTestigoDeLaPolicia_ElConductorNoLlamaYHuyeCorriendo_SinCalor()
         {
             yield return CarroDetenido();
             Assert.AreEqual(0f, real.Valor);
             Assert.IsTrue(Robar());
-            PeatonMundo peaton = GameObject.Find(CarroTrafico.NombreConductorRobado).GetComponent<PeatonMundo>();
-            Assert.IsTrue(peaton.Llamando, "Es testigo y llama");
-            Animator animador = peaton.GetComponentInChildren<Animator>(false);
-            Assert.IsNotNull(animador, "Tiene modelo animado");
-            string recorrido = "";
-            float t0 = Time.time;
-            string ultimo = "";
-            bool vioElTelefono = false;
-            float fin = Time.time + SegundosLlamada + 0.3f;
-            while (Time.time < fin)
-            {
-                yield return null;
-                AnimatorStateInfo estadoAhora = animador.GetCurrentAnimatorStateInfo(0);
-                string nombreAhora = estadoAhora.IsName("Telefono") ? "Telefono" : estadoAhora.IsName("Idle") ? "Idle" : estadoAhora.IsName("LevantarseBocaArriba") ? "LevantarseArriba" : estadoAhora.IsName("LevantarseBocaAbajo") ? "LevantarseAbajo" : "otro" + estadoAhora.shortNameHash;
-                if (nombreAhora != ultimo)
-                {
-                    ultimo = nombreAhora;
-                    recorrido += nombreAhora + "@" + (Time.time - t0).ToString("F1") + " ";
-                }
-                vioElTelefono |= animador.GetCurrentAnimatorStateInfo(0).IsName("Telefono");
-            }
-            Assert.IsTrue(vioElTelefono, "Usa la animación Inter_Telefono al llamar (estados: " + recorrido + ", gestos " + peaton.GestosTelefono + ", llamando " + peaton.Llamando + ")");
-            Assert.GreaterOrEqual(peaton.GestosTelefono, 1);
-            Assert.GreaterOrEqual(real.Valor, 25f, "Terminó de llamar: hay calor (persecución)");
+            GameObject conductor = GameObject.Find(CarroTrafico.NombreConductorRobado);
+            Assert.IsNotNull(conductor);
+            yield return Esperar(ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse + 0.5f);
+            Assert.IsNotNull(conductor.GetComponent<ConductorHuye>(), "Ya no llama por teléfono: al levantarse sale corriendo");
+            Assert.AreEqual(0f, real.Valor, 0.001f, "Ningún policía lo vio: no hay persecución");
         }
 
         [UnityTest]
-        public IEnumerator ElJugadorSeVa_ElConductorNoLlamaYNoHayPersecucion()
+        public IEnumerator SiUnPoliciaLoVe_RobarElCarroSubeElCalor()
         {
             yield return CarroDetenido();
+            Registro<ITestigoPolicia>.Agregar(new PoliciaQueSiempreVe());
             Assert.IsTrue(Robar());
-            GameObject conductor = GameObject.Find(CarroTrafico.NombreConductorRobado);
-            PeatonMundo peaton = conductor.GetComponent<PeatonMundo>();
-            Assert.IsTrue(peaton.Llamando);
-            // El jugador se aleja con el carro antes de que termine la llamada.
-            jugador.transform.position += new Vector3(0f, 0f, 60f);
-            yield return Esperar(SegundosLlamada + 0.5f);
-            Assert.IsFalse(peaton.Llamando, "Perdió de vista al jugador: la llamada se canceló");
-            Assert.AreEqual(0f, real.Valor, 0.001f, "Nadie llamó: no hay persecución");
-            yield return Esperar(2.5f);
-            Assert.IsNotNull(conductor.GetComponent<ConductorHuye>(), "Asustado, sale corriendo");
+            Assert.GreaterOrEqual(real.Valor, 25f, "Lo vio una patrulla: hay calor");
         }
 
         [UnityTest]
-        public IEnumerator SiMatanAlConductor_NoLlamaYNoHayCalor()
+        public IEnumerator SiMatanAlConductor_SeQuedaTiradoYNoHayCalor()
         {
             yield return CarroDetenido();
             Assert.IsTrue(Robar());
@@ -275,37 +244,13 @@ namespace MechaCyberpunk.Tests.Trafico
             yield return Esperar(0.5f);
             peaton.RecibirDanio(new InfoDanio(500f, TipoDanio.Disparo, peaton.transform.position, Vector3.forward, null));
             Assert.IsTrue(peaton.Muerto);
-            yield return Esperar(SegundosLlamada + 0.5f);
-            Assert.IsFalse(peaton.Llamando);
-            Assert.AreEqual(0f, real.Valor, 0.001f, "Muerto no llama");
+            yield return Esperar(1f);
+            Assert.AreEqual(0f, real.Valor, 0.001f, "Muerto no llama a nadie");
         }
 
-        [UnityTest]
-        public IEnumerator ElCivilQueLlama_UsaLaAnimacionDelTelefono()
+        private sealed class PoliciaQueSiempreVe : ITestigoPolicia
         {
-            GameObject objeto = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPeaton), new Vector3(10f, 0f, 10f), Quaternion.identity);
-            extras.Add(objeto);
-            PeatonMundo civil = objeto.GetComponent<PeatonMundo>();
-            // Sin ninguna cámara que lo vea, Unity no avanza la animación (culling): se pone una mirándolo.
-            GameObject c = new GameObject("CamaraDePrueba");
-            extras.Add(c);
-            c.AddComponent<Camera>();
-            c.transform.position = new Vector3(10f, 1.6f, 6f);
-            c.transform.LookAt(new Vector3(10f, 1f, 10f));
-            yield return null;
-            civil.IniciarLlamada();
-            Animator animador = civil.GetComponentInChildren<Animator>(false);
-            Assert.IsNotNull(animador);
-            bool vioElTelefono = false;
-            float fin = Time.time + 2.5f;
-            while (Time.time < fin)
-            {
-                yield return null;
-                vioElTelefono |= animador.GetCurrentAnimatorStateInfo(0).IsName("Telefono");
-            }
-            Assert.IsTrue(vioElTelefono, "El civil que llama juega Inter_Telefono");
-            Assert.GreaterOrEqual(civil.GestosTelefono, 1);
-            civil.TerminarLlamada();
+            public bool VeElPunto(Vector3 punto) => true;
         }
     }
 }

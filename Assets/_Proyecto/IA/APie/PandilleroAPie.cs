@@ -15,7 +15,7 @@ namespace MechaCyberpunk.IA.APie
     /// <see cref="ModeloVida"/>, parpadea, cae en KO y desaparece. Lo leen los OJOS por <see cref="ILecturaRival"/>.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class PandilleroAPie : MonoBehaviour, IVida, IRecibeDanio, ILecturaRival, IMarcaMapa
+    public class PandilleroAPie : MonoBehaviour, IVida, IRecibeDanio, ILecturaRival, IMarcaMapa, ICriminalCalle
     {
         private const float Gravedad = -20f;
         private const float AlturaCentroImpacto = 1f;
@@ -113,6 +113,12 @@ namespace MechaCyberpunk.IA.APie
 
         /// <summary>A quién apunta ahora (el jugador o un aliado), o null (T-405).</summary>
         public Transform ObjetivoActual { get; private set; }
+
+        /// <summary>T-933: dónde está, para que la policía lo vea.</summary>
+        public Vector3 Posicion => transform.position;
+
+        /// <summary>T-933: true si no es policía, sigue en pie y está apuntando a alguien.</summary>
+        public bool EstaAtacando => datos != null && !datos.EsPolicia && !EstaKO && ObjetivoActual != null;
 
         public DatosPandilleroAPie Datos => datos;
 
@@ -268,10 +274,12 @@ namespace MechaCyberpunk.IA.APie
             Registro<ILecturaRival>.Agregar(this);
             Registro<IMarcaMapa>.Agregar(this);
             Activos.Add(this);
+            Registro<ICriminalCalle>.Agregar(this);
         }
 
         private void OnDisable()
         {
+            Registro<ICriminalCalle>.Quitar(this);
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
@@ -1002,6 +1010,12 @@ namespace MechaCyberpunk.IA.APie
 
         private bool EsAtacable()
         {
+            // T-933: la policía solo va contra el jugador si lo están buscando.
+            ICalor calor = Registro<ICalor>.Actual;
+            if (datos != null && datos.EsPolicia && calor != null && calor.Nivel <= 0)
+            {
+                return false;
+            }
             IJugador jugador = Registro<IJugador>.Actual;
             return jugador != null && raizJugador != null && jugador.Modo == ModoJugador.APie && recibeJugador != null
                 && (vidaJugador == null || !vidaJugador.EstaKO);

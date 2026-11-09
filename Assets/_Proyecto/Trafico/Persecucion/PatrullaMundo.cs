@@ -13,8 +13,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
     /// hasta salir de la vista, donde desaparece. Sus luces rojas y azules alternan con <see cref="ConfigPersecucion.PeriodoSirena"/>.
     /// T-707: es un carro de verdad (el de Vehiculos, con cuerpo cinemático y colliders, igual que los del tráfico): es sólido y se puede robar. Al subir el
     /// jugador deja de ser patrulla (pasa a ser carro suyo) y, mientras vaya en ella, la policía lo ubica siempre (GPS).
+    /// T-933: también puede ir de ronda (<see cref="PrepararRonda"/>): circula sin sirena y sin saber dónde estás; si ve a un criminal atacando, va y baja a sus policías.
     /// </summary>
-    public class PatrullaMundo : MonoBehaviour
+    public class PatrullaMundo : MonoBehaviour, Testigos.ITestigoPolicia
     {
         // T-746: gira como un carro, no sobre su eje: lo que puede girar depende de lo que avanza (radio de giro mínimo, el del carro del jugador: distancia entre ejes / tan del volante).
         private const float RadioMinimoGiro = 3.6f;
@@ -36,6 +37,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float VelocidadImposible = 80f;
         private const float AlcanceCamara = 400f;
         private const float SegundosMinimosDeRetiro = 1f;
+        // T-933: ronda.
+        private const float SegundosEntreVistazos = 0.5f;
+        private const float AlturaOjosPolicia = 1.6f;
+        private const float AlturaCriminal = 1.2f;
         private static readonly List<PatrullaMundo> ActivasLista = new List<PatrullaMundo>();
         // T-666: conducción natural: carril a la derecha, esquiva obstáculos y no se encima con otras patrullas.
         private const float AnchoCarril = 1.6f;
@@ -77,6 +82,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private Vector3? jugadorAnterior;
         private int nodoRetiro = -1;
         private float segundosRetirandose;
+        private ICriminalCalle criminalVisto;
+        private System.Random azarRonda;
+        private float proximoVistazo;
+        private float segundosSinCriminal;
+
+        /// <summary>T-933: true si anda de ronda (sin sirena y sin perseguir a nadie).</summary>
+        public bool EnRonda { get; private set; }
+
+        /// <summary>T-933: true si de ronda vio a un criminal atacando y va por él.</summary>
+        public bool AtiendeCriminal => CriminalVivo();
 
         public static IReadOnlyList<PatrullaMundo> Activas => ActivasLista;
 
@@ -305,7 +320,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>True si ya se está yendo: ignora al jugador y sale de la vista por la calle.</summary>
         public bool Retirando { get; private set; }
 
-        public void Preparar(CalculoPersecucion reglas, ConfigPersecucion numeros, GrafoCalles grafo, int nodoInicial, Func<Vector3?> dondeEstaElJugador)
+        public void Preparar(CalculoPersecucion reglas, ConfigPersecucion numeros, GrafoCalles grafo, int nodoInicial, Func<Vector3?> dondeEstaElJugador, bool conSirena = true)
         {
             calculo = reglas;
             config = numeros;
@@ -332,6 +347,33 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 cuerpo.isKinematic = true;
                 cuerpo.interpolation = RigidbodyInterpolation.None; // la mueve este script con el transform: la interpolación del cuerpo lo contradice
             }
+            if (conSirena && bucleSirena == Sonidos.SinBucle)
+            {
+                bucleSirena = Sonidos.ReproducirBucle("CAL_PATRULLA_SIRENA", transform);
+            }
+        }
+
+        /// <summary>T-933: sale de ronda: circula por las calles sin sirena ni saber dónde está el jugador.</summary>
+        public void PrepararRonda(CalculoPersecucion reglas, ConfigPersecucion numeros, GrafoCalles grafo, int nodoInicial, Func<Vector3?> dondeEstaElJugador)
+        {
+            Preparar(reglas, numeros, grafo, nodoInicial, dondeEstaElJugador, false);
+            EnRonda = true;
+            azarRonda = new System.Random(GetInstanceID());
+            segundosSinCriminal = 0f;
+            criminalVisto = null;
+            PonerLuces(false, false);
+        }
+
+        /// <summary>T-933: empezó la búsqueda: esta patrulla deja la ronda y persigue al jugador.</summary>
+        public void Alertar()
+        {
+            if (!EnRonda)
+            {
+                return;
+            }
+            EnRonda = false;
+            criminalVisto = null;
+            ultimaVista = posicionJugador?.Invoke() ?? posicion;
             if (bucleSirena == Sonidos.SinBucle)
             {
                 bucleSirena = Sonidos.ReproducirBucle("CAL_PATRULLA_SIRENA", transform);
@@ -368,23 +410,40 @@ namespace MechaCyberpunk.Trafico.Persecucion
             enabled = false;
         }
 
-        private void OnEnable() => ActivasLista.Add(this);
+        private void OnEnable()
+        {
+            ActivasLista.Add(this);
+            Registro<Testigos.ITestigoPolicia>.Agregar(this);
+        }
 
         private void OnDisable()
         {
             ActivasLista.Remove(this);
+            Registro<Testigos.ITestigoPolicia>.Quitar(this);
             Sonidos.DetenerBucle(bucleSirena);
             bucleSirena = Sonidos.SinBucle;
         }
 
-        /// <summary>T-661: true si esta patrulla (que no se está yendo) ve el punto: a menos de <see cref="ConfigPersecucion.RadioVista"/> m y sin pared en medio.</summary>
+        /// <summary>T-661, T-933: true si esta patrulla o alguno de sus policías a pie ve el punto: a menos de <see cref="ConfigPersecucion.RadioVista"/> m y sin pared en medio.</summary>
         public bool VeElPunto(Vector3 punto)
         {
             if (Retirando || config == null || Destruida)
             {
                 return false;
             }
-            return DistanciaPlano(posicion, punto) <= config.RadioVista && Testigos.LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, punto);
+            if (DistanciaPlano(posicion, punto) <= config.RadioVista && Testigos.LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, punto))
+            {
+                return true;
+            }
+            foreach (GameObject policia in policias)
+            {
+                if (policia != null && policia.activeInHierarchy && DistanciaPlano(policia.transform.position, punto) <= config.RadioVista
+                    && Testigos.LineaDeVista.Libre(policia.transform.position + Vector3.up * AlturaOjosPolicia, punto))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         // T-666: frena si hay otra patrulla delante o un obstáculo cerrando los dos carriles; Conducir usa ese factor como si el tiempo corriera más lento.
@@ -411,6 +470,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (Retirando)
             {
                 Retirada(jugador, Time.deltaTime * factorVelocidad);
+                return;
+            }
+            if (EnRonda)
+            {
+                Rondar(Time.deltaTime * factorVelocidad);
                 return;
             }
             Sirena();
@@ -459,6 +523,70 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 Replanear(nuevaMeta);
             }
             Avanzar(distancia, dt);
+        }
+
+        // T-933: la ronda. Va de cruce en cruce al azar; si ve a un criminal atacando va por él, baja a sus policías y, cuando ya no hay criminales a la vista, se va.
+        private void Rondar(float dt)
+        {
+            if (Time.time >= proximoVistazo)
+            {
+                proximoVistazo = Time.time + SegundosEntreVistazos;
+                criminalVisto = BuscarCriminal();
+            }
+            if (CriminalVivo())
+            {
+                segundosSinCriminal = 0f;
+                Vector3 donde = criminalVisto.Posicion;
+                if (DistanciaPlano(posicion, donde) <= config.DistanciaParaBajarPolicias)
+                {
+                    BajarPolicias();
+                    return;
+                }
+                Directo(donde, dt);
+                return;
+            }
+            if (PoliciasBajaron)
+            {
+                segundosSinCriminal += dt;
+                if (segundosSinCriminal >= config.SegundosTrasCriminal)
+                {
+                    Retirar();
+                }
+                return;
+            }
+            if (rastro.Count > 0)
+            {
+                Regresar(dt);
+                return;
+            }
+            if (indiceEnCamino >= camino.Count)
+            {
+                Replanear(azarRonda.Next(calles.Cantidad));
+            }
+            Avanzar(float.MaxValue, dt * config.FactorVelocidadRonda);
+        }
+
+        private bool CriminalVivo() => criminalVisto is UnityEngine.Object objeto && objeto != null && criminalVisto.EstaAtacando;
+
+        // El criminal que está atacando más cercano que esta patrulla ve; null si no hay.
+        private ICriminalCalle BuscarCriminal()
+        {
+            ICriminalCalle mejor = null;
+            float menor = config.RadioVista;
+            foreach (ICriminalCalle c in Registro<ICriminalCalle>.Todos)
+            {
+                if (!(c is UnityEngine.Object objeto) || objeto == null || !c.EstaAtacando)
+                {
+                    continue;
+                }
+                float d = DistanciaPlano(posicion, c.Posicion);
+                if (d <= menor && Testigos.LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, c.Posicion + Vector3.up * AlturaCriminal))
+                {
+                    menor = d;
+                    mejor = c;
+                }
+            }
+            return mejor;
         }
 
         // Velocidad del jugador suavizada (m/s): con ella las patrullas que cortan el paso saben hacia dónde corre.
