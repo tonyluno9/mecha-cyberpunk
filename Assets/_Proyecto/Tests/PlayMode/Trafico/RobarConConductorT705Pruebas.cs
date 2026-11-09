@@ -226,6 +226,31 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.AreEqual(0f, real.Valor, 0.001f, "Ningún policía lo vio: no hay persecución");
         }
 
+        // T-937: la causa de que saliera volando: ConductorHuye tiraba el rayo al piso desde 3 m arriba y daba en la cápsula del propio conductor,
+        // así que lo subía 1.8 m cada cuadro. Se mide su altura cuadro a cuadro hasta que desaparece.
+        [UnityTest]
+        public IEnumerator ElConductor_AlHuir_VaPegadoAlPiso_YNuncaSubePorLosAires()
+        {
+            yield return CarroDetenido();
+            Assert.IsTrue(Robar());
+            GameObject conductor = GameObject.Find(CarroTrafico.NombreConductorRobado);
+            Assert.IsNotNull(conductor);
+            float maxima = 0f;
+            float ultima = 0f;
+            bool huyo = false;
+            float fin = Time.time + ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse + 4f;
+            while (conductor != null && Time.time < fin)
+            {
+                maxima = Mathf.Max(maxima, conductor.transform.position.y);
+                ultima = conductor.transform.position.y;
+                huyo |= conductor.GetComponent<ConductorHuye>() != null;
+                yield return null;
+            }
+            Assert.IsTrue(huyo, "Tras levantarse sale corriendo");
+            Assert.Less(maxima, 0.5f, "El conductor nunca sube de 0.5 m (llegó a " + maxima.ToString("F1") + " m)");
+            Assert.Less(Mathf.Abs(ultima), 0.2f, "Y va pegado al piso al correr (" + ultima.ToString("F2") + " m)");
+        }
+
         [UnityTest]
         public IEnumerator SiUnPoliciaLoVe_RobarElCarroSubeElCalor()
         {

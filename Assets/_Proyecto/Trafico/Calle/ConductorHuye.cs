@@ -4,7 +4,8 @@ namespace MechaCyberpunk.Trafico.Calle
 {
     /// <summary>
     /// El conductor al que le robaron el carro (T-511): sale corriendo en línea recta, alejándose del jugador, esquivando lo que le cierre el paso
-    /// (da vuelta al lado libre), pegado al piso, y desaparece a los pocos segundos. No lleva collider.
+    /// (da vuelta al lado libre), pegado al piso, y desaparece a los pocos segundos. T-937: ahora lleva la cápsula del peatón; sus rayos la ignoran
+    /// (antes el rayo al piso daba en su propia cápsula y lo subía 1.8 m cada cuadro: salía volando).
     /// </summary>
     public class ConductorHuye : MonoBehaviour
     {
@@ -45,17 +46,34 @@ namespace MechaCyberpunk.Trafico.Calle
                 return;
             }
             Vector3 pecho = transform.position + Vector3.up * AlturaDelPecho;
-            if (Physics.Raycast(pecho, direccion, DistanciaVista, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            if (Rayo(pecho, direccion, DistanciaVista, out _))
             {
                 direccion = Quaternion.Euler(0f, GiroAlEsquivar, 0f) * direccion;
             }
             Vector3 siguiente = transform.position + direccion * (RapidezHuida * Time.deltaTime);
-            if (Physics.Raycast(siguiente + Vector3.up * AlturaBusquedaPiso, Vector3.down, out RaycastHit piso, AlturaBusquedaPiso * 2f,
-                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            if (Rayo(siguiente + Vector3.up * AlturaBusquedaPiso, Vector3.down, AlturaBusquedaPiso * 2f, out RaycastHit piso))
             {
                 siguiente.y = piso.point.y;
             }
             transform.SetPositionAndRotation(siguiente, Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), 720f * Time.deltaTime));
+        }
+
+        // El primer golpe del rayo que no sea del propio conductor (su cápsula, sus huesos).
+        private bool Rayo(Vector3 origen, Vector3 sentido, float largo, out RaycastHit golpe)
+        {
+            golpe = default;
+            float menor = float.MaxValue;
+            bool hay = false;
+            foreach (RaycastHit g in Physics.RaycastAll(origen, sentido, largo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            {
+                if (g.distance < menor && !g.collider.transform.IsChildOf(transform))
+                {
+                    menor = g.distance;
+                    golpe = g;
+                    hay = true;
+                }
+            }
+            return hay;
         }
     }
 }
