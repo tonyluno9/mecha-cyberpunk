@@ -238,6 +238,11 @@ namespace MechaCyberpunk.Tests.UI
             StringAssert.Contains(ColoresPandilla.NombrePredeterminado, leyenda, "La leyenda trae el nombre de tu pandilla");
             foreach (IMarcaMapa lugar in Registro<IMarcaMapa>.Todos)
             {
+                if (lugar.Tipo == TipoMarcaMapa.Clinica)
+                {
+                    Assert.IsNotNull(mapa.IconoDestino(IdDestinoMapa.ElDoc), "El I+D+I lo dibuja su destino del catálogo");
+                    continue;
+                }
                 Assert.IsNotNull(mapa.MarcaDe(lugar), "El mapa siempre muestra " + lugar.Tipo);
             }
 

@@ -30,6 +30,8 @@ namespace MechaCyberpunk.UI.Mapa
         private static readonly Dictionary<string, float> faltantes = new Dictionary<string, float>();
         // T-934: la última posición conocida de cada lugar: un lugar no se borra del mapa porque su interior esté apagado.
         private static readonly Dictionary<IdDestinoMapa, Vector3> ultimas = new Dictionary<IdDestinoMapa, Vector3>();
+        private static readonly Dictionary<string, Transform> indiceApagados = new Dictionary<string, Transform>();
+        private static int escenaIndice = int.MinValue;
 
         public static IReadOnlyList<DestinoMapa> Todos => todos;
 
@@ -39,6 +41,8 @@ namespace MechaCyberpunk.UI.Mapa
             objetos.Clear();
             faltantes.Clear();
             ultimas.Clear();
+            indiceApagados.Clear();
+            escenaIndice = int.MinValue;
         }
 
         public static DestinoMapa De(IdDestinoMapa id)
@@ -155,12 +159,29 @@ namespace MechaCyberpunk.UI.Mapa
             return transformEncontrado;
         }
 
-        // T-934: GameObject.Find no ve lo apagado, y un interior apagado no debe quitar su lugar del mapa.
+        // T-934: GameObject.Find no ve lo apagado, y un interior apagado no debe quitar su lugar del mapa. Se recorre la escena una sola vez y solo se guardan los nombres del catálogo.
         private static Transform BuscarApagado(string nombre)
         {
-            for (int s = 0; s < SceneManager.sceneCount; s++)
+            int escena = SceneManager.GetActiveScene().handle;
+            if (escena != escenaIndice)
             {
-                Scene escena = SceneManager.GetSceneAt(s);
+                escenaIndice = escena;
+                LlenarIndice();
+            }
+            return indiceApagados.TryGetValue(nombre, out Transform t) && t != null ? t : null;
+        }
+
+        private static void LlenarIndice()
+        {
+            indiceApagados.Clear();
+            HashSet<string> buscados = new HashSet<string>();
+            foreach (DestinoMapa d in todos)
+            {
+                buscados.UnionWith(d.NombresDeObjeto);
+            }
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                Scene escena = SceneManager.GetSceneAt(i);
                 if (!escena.isLoaded)
                 {
                     continue;
@@ -169,14 +190,13 @@ namespace MechaCyberpunk.UI.Mapa
                 {
                     foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
                     {
-                        if (t.name == nombre)
+                        if (buscados.Contains(t.name) && !indiceApagados.ContainsKey(t.name))
                         {
-                            return t;
+                            indiceApagados[t.name] = t;
                         }
                     }
                 }
             }
-            return null;
         }
 
         // Un objeto de un grupo que se quedó en el origen (como la raíz del Tianguis) no dice dónde está: se usa el centro de lo que dibuja.
