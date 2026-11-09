@@ -286,7 +286,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(pausa.Abierta);
             AssertTurquesa(pausa.transform.Find("CanvasPausa/Panel").GetComponent<Image>(), "El panel de pausa");
             Assert.IsNull(FondoDe(pausa.Continuar).sprite, "T-897: sin el botón naranja");
-            Assert.AreEqual(KitUI.Estilo.Turquesa, pausa.Continuar.Texto.color, "El elegido va en turquesa");
+            Assert.AreEqual(TrazoH10.Turquesa, pausa.Continuar.Texto.color, "El elegido va en turquesa H10 (T-902)");
             yield return new WaitForSecondsRealtime(0.2f);
             Capturar("pausa", camara);
             CapturarS2m("s2m-c4-pausa.png", camara);
