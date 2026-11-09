@@ -36,7 +36,7 @@ namespace MechaCyberpunk.Arte.Editor
         public static Color Ambiente = new Color(0.4f, 0.41f, 0.47f);
         public static Color ColorNiebla = new Color(0.2f, 0.24f, 0.32f);
         public static Color Cielo = new Color(0.035f, 0.055f, 0.13f);
-        public static float DensidadNiebla = 0.036f;
+        public static float DensidadNiebla = 0.006f; // T-920: antes 0.036; que se vea el fondo de la ciudad
         public static float ExposicionCielo = 1f;
         public static float BrilloCiudad = 0.12f;
 
