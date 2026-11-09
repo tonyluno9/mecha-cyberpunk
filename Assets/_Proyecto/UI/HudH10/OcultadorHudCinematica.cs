@@ -52,7 +52,8 @@ namespace MechaCyberpunk.UI.Hud
 
         private void OnDestroy() => HudCinematica.AlDestruirseElOcultador(this);
 
-        private static bool EsDelHud(Canvas lienzo)
+        /// <summary>True si el lienzo es del HUD (HudAPie, minimapa o marcador del objetivo).</summary>
+        public static bool EsDelHud(Canvas lienzo)
         {
             return lienzo.GetComponentInParent<HudAPie>() != null
                 || lienzo.GetComponentInParent<Minimapa>() != null

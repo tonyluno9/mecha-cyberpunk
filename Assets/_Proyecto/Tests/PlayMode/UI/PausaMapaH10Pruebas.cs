@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
+using MechaCyberpunk.UI.Hud;
 using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Mapa;
 using MechaCyberpunk.UI.MenuPausa;
@@ -123,6 +124,10 @@ namespace MechaCyberpunk.Tests.UI
                 Assert.IsNotNull(boton.GetComponent<HoverH10>(), "Hover H10 en " + boton.Etiqueta);
             }
             yield return new WaitForSecondsRealtime(SegundosEntrada);
+            yield return null;
+            OcultadorHudMenus ocultador = Object.FindFirstObjectByType<OcultadorHudMenus>();
+            Assert.IsNotNull(ocultador, "El HUD trae su ocultador");
+            Assert.Greater(ocultador.Ocultos, 0, "Con la pausa abierta el HUD no se dibuja");
             Capturar("ui-pausa");
 
             // SALIR AL TÍTULO sigue pidiendo confirmación, y Esc la cancela sin cerrar la pausa.
