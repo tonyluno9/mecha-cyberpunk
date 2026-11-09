@@ -221,8 +221,8 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        private static GameObject Caja(Transform p, string n, Vector3 pos, Vector3 esc, Material m) => Primitiva(PrimitiveType.Cube, p, n, pos, esc, Quaternion.identity, m);
-        private static GameObject Cilindro(Transform p, string n, Vector3 pos, Vector3 esc, Quaternion g, Material m) => Primitiva(PrimitiveType.Cylinder, p, n, pos, esc, g, m);
+        public static GameObject Caja(Transform p, string n, Vector3 pos, Vector3 esc, Material m) => Primitiva(PrimitiveType.Cube, p, n, pos, esc, Quaternion.identity, m);
+        public static GameObject Cilindro(Transform p, string n, Vector3 pos, Vector3 esc, Quaternion g, Material m) => Primitiva(PrimitiveType.Cylinder, p, n, pos, esc, g, m);
 
         private static GameObject Primitiva(PrimitiveType t, Transform p, string n, Vector3 pos, Vector3 esc, Quaternion g, Material m)
         {
@@ -237,7 +237,7 @@ namespace MechaCyberpunk.Arte.Editor
             return o;
         }
 
-        private static Light Luz(Transform p, string n, Vector3 pos, LightType tipo, Color c, float intensidad, float alcance, float angulo)
+        public static Light Luz(Transform p, string n, Vector3 pos, LightType tipo, Color c, float intensidad, float alcance, float angulo)
         {
             Light l = new GameObject(n).AddComponent<Light>();
             l.transform.SetParent(p, false);
@@ -250,7 +250,7 @@ namespace MechaCyberpunk.Arte.Editor
             return l;
         }
 
-        private static Material Mat(string n, Color b, Color e)
+        public static Material Mat(string n, Color b, Color e)
         {
             string ruta = CarpetaMat + n + ".mat";
             Material m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
@@ -266,7 +266,7 @@ namespace MechaCyberpunk.Arte.Editor
             return m;
         }
 
-        private static Material MatTex(string n, Texture2D t, Vector2 mosaico, bool emite = false, float brillo = BrilloPantalla)
+        public static Material MatTex(string n, Texture2D t, Vector2 mosaico, bool emite = false, float brillo = BrilloPantalla)
         {
             Material m = Mat(n, Color.white, emite ? Color.white * brillo : Color.black);
             m.SetTexture("_BaseMap", t);
