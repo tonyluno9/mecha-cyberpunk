@@ -20,8 +20,6 @@ namespace MechaCyberpunk.UI.Inicio
         public const string EscenaCalles = "Assets/_Proyecto/Escenas/Menu_Calles.unity";
         private const float SegundosAReal = 1f;
         private const float SegundosCorte = 0.7f;
-        private const float EscalaInicial = 1.04f;
-        private const float EscalaFinal = 1.14f;
 
         private Sprite[] fotos;
         private Image frente;
@@ -86,8 +84,7 @@ namespace MechaCyberpunk.UI.Inicio
             capa.rectTransform.DOKill();
             capa.sprite = foto;
             capa.color = Color.white;
-            capa.rectTransform.localScale = Vector3.one * EscalaInicial;
-            capa.rectTransform.DOScale(EscalaFinal, SegundosPorCalle + SegundosCorte).SetEase(Ease.Linear);
+            capa.rectTransform.localScale = Vector3.one; // T-941: sin zoom, la foto se ve a 1:1
         }
 
         private IEnumerator Start()

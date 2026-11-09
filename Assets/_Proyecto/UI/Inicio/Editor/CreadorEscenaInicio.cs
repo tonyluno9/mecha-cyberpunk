@@ -183,12 +183,7 @@ namespace MechaCyberpunk.UI.Inicio.Editor
             colores.contrast.Override(14f);
             colores.saturation.Override(14f);
 
-            ChromaticAberration aberracion = Agregar<ChromaticAberration>(perfil);
-            aberracion.intensity.Override(0.18f);
-
-            FilmGrain grano = Agregar<FilmGrain>(perfil);
-            grano.type.Override(FilmGrainLookup.Thin1);
-            grano.intensity.Override(0.18f);
+            // T-941: sin aberración cromática ni grano, el menú se ve nítido.
 
             Tonemapping tono = Agregar<Tonemapping>(perfil);
             tono.mode.Override(TonemappingMode.ACES);
