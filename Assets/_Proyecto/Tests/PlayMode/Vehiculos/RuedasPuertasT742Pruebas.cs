@@ -226,8 +226,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 anterior = ruedas.RodadoGrados;
                 direccionMaxima = Mathf.Max(direccionMaxima, ruedas.DireccionGrados);
             }
-            float esperado = Cuadros * MetrosPorCuadro / 0.3f * Mathf.Rad2Deg;
-            Assert.AreEqual(esperado, avanceTotal, esperado * 0.1f, "Rodó lo que avanzó: " + avanceTotal + "° de " + esperado + "° (radio 0.3 m)");
+            float esperado = Cuadros * MetrosPorCuadro / ruedas.Radio * Mathf.Rad2Deg;
+            Assert.AreEqual(esperado, avanceTotal, esperado * 0.1f, "Rodó lo que avanzó: " + avanceTotal + "° de " + esperado + "° (radio " + ruedas.Radio + " m)");
             Assert.Greater(direccionMaxima, 5f, "Las delanteras doblan hacia donde gira el carro (" + direccionMaxima + "°)");
             Assert.AreEqual(0f, Mathf.DeltaAngle(0f, Direccion("Rueda_TI").localEulerAngles.y), 0.01f, "Las traseras no doblan");
         }
