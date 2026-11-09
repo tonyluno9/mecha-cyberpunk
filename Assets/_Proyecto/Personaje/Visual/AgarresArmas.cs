@@ -33,18 +33,17 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Nombre del punto de la mano izquierda (hijo del arma).</summary>
         public const string NombreAgarreIzquierdo = "AgarreIzq";
 
-        /// <summary>Posición (m) y giro (Euler °) del arma en R_Hand de PJ01: caso A de agarre.txt (Quaternion -0.05021, 0.72950, 0.66647, 0.14534).</summary>
-        public static readonly Vector3 PosicionPJ01 = new Vector3(0.0129f, 0.1181f, 0.0080f);
         /// <summary>
-        /// El cuaternión de agarre.txt de Tony (x, y, z, w) es del FBX W01_Pistola_agarre tal como lo ve él. Aquí el FBX se importa girado 180° sobre (1,1,0) respecto a como
-        /// lo ve Tony (con el agarre puesto, el cañón apuntaba atrás y la corredera de lado; ver ColocarAgarrePistolaT736). El hijo Modelo de la pistola lleva el giro
-        /// <see cref="GiroModeloPistola"/> (cañón a +Z, corredera a +Y) y el nodo Pistola, el agarre de Tony compuesto con ese giro, para que la pistola quede igual
-        /// que en su prueba pero con los ejes de siempre (cañón +Z, corredera +Y, X horizontal), que son los que supone la corrección de ApuntadoIK.
+        /// Posición (m) del arma en R_Hand de PJ01. T-749: el caso A de agarre.txt (0.0129, 0.1181, 0.0080) está escrito para un R_Hand girado 180° en Y respecto al de PJ01 en Unity
+        /// (por eso X y Z van con el signo contrario) y para PJ01 a 1.837; aquí se importa a <c>ImportadorClipsPJ01.EscalaClips</c> = 1.88. Medido en W01_Pistola_agarre.blend.
         /// </summary>
+        public static readonly Vector3 PosicionPJ01 = new Vector3(-0.0132f, 0.1209f, -0.0081f);
+        /// <summary>El cuaternión de agarre.txt de Tony (x, y, z, w): nodo Pistola (cañón +Z, corredera +Y) respecto a su R_Hand.</summary>
         public static readonly Quaternion CuaternionTony = new Quaternion(-0.05021f, 0.72950f, 0.66647f, 0.14534f);
-        public static readonly Quaternion GiroFbxDeTony = new Quaternion(0.70710678f, 0.70710678f, 0f, 0f);
+        /// <summary>T-749: el R_Hand de PJ01 en Unity tiene los ejes girados 180° en Y respecto al de agarre.txt (comprobado en la pose de Blender: el resultado queda a 0.2° del arma de Blender).</summary>
+        public static readonly Quaternion GiroManoUnity = Quaternion.Euler(0f, 180f, 0f);
         public static readonly Quaternion GiroModeloPistola = Quaternion.Euler(0f, 180f, 0f);
-        public static Vector3 GiroPJ01 => (CuaternionTony * GiroFbxDeTony * Quaternion.Inverse(GiroModeloPistola)).eulerAngles;
+        public static Vector3 GiroPJ01 => (GiroManoUnity * CuaternionTony).eulerAngles;
         /// <summary>Alto de PJ01 en R_Hand si el modelo se importara a escala 1 y se agrandara en su objeto (caso B de agarre.txt); solo por referencia.</summary>
         public const float EscalaCasoB = 0.5444f;
 

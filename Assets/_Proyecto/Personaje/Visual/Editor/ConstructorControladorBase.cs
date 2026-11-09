@@ -95,7 +95,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 {
                     continue;
                 }
-                bool arriba = parte == AvatarMaskBodyPart.Body || parte == AvatarMaskBodyPart.Head
+                // T-749: Root va en la máscara: sin él la cadera viene de la capa base (otra postura) y el torso y la pistola salen girados hasta 46° respecto a Blender.
+                bool arriba = parte == AvatarMaskBodyPart.Root || parte == AvatarMaskBodyPart.Body || parte == AvatarMaskBodyPart.Head
                     || parte == AvatarMaskBodyPart.LeftArm || parte == AvatarMaskBodyPart.RightArm
                     || parte == AvatarMaskBodyPart.LeftFingers || parte == AvatarMaskBodyPart.RightFingers
                     || parte == AvatarMaskBodyPart.LeftHandIK || parte == AvatarMaskBodyPart.RightHandIK;

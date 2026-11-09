@@ -34,6 +34,45 @@ namespace MechaCyberpunk.Tests.Personaje
 
         private Camera Camara() => jugador.GetComponentInChildren<CamaraHombro>().GetComponent<Camera>();
 
+        private float ultimoCanon, ultimoLadeo, ultimasManos;
+
+        private void Comprobar(string titulo)
+        {
+            Medir(titulo);
+            Assert.Less(ultimoCanon, CanonMaximo, titulo + ": canon apuntando a la mira");
+            Assert.Less(Mathf.Abs(ultimoLadeo), LadeoMaximo, titulo + ": corredera arriba");
+            Assert.Less(ultimasManos, ManosMaximo, titulo + ": las dos manos juntas");
+        }
+
+        private const float CanonMaximo = 4f, LadeoMaximo = 4f, ManosMaximo = 13f, DiferenciaPiesMaxima = 0.06f;
+
+        private float AlturaPies()
+        {
+            float y = Mathf.Min(anim.GetBoneTransform(HumanBodyBones.LeftFoot).position.y, anim.GetBoneTransform(HumanBodyBones.RightFoot).position.y);
+            return y - visual.transform.position.y;
+        }
+
+        private void Foto(string nombre, Vector3 desplazamiento)
+        {
+            if (System.Environment.GetEnvironmentVariable("T749_CAPTURAS") != "1") { return; }
+            var go = new GameObject("CamaraFoto");
+            var cam = go.AddComponent<Camera>();
+            Vector3 centro = visual.transform.position + Vector3.up * 1.2f;
+            go.transform.position = centro + visual.transform.rotation * desplazamiento;
+            go.transform.LookAt(centro);
+            var rt = new RenderTexture(1280, 720, 24);
+            cam.targetTexture = rt;
+            cam.Render();
+            RenderTexture.active = rt;
+            var tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
+            tex.Apply();
+            RenderTexture.active = null;
+            System.IO.File.WriteAllBytes("docs/capturas/pj01-t749-" + nombre + ".png", tex.EncodeToPNG());
+            cam.targetTexture = null;
+            Object.Destroy(tex); Object.Destroy(rt); Object.Destroy(go);
+        }
+
         private string Medir(string titulo)
         {
             Camera c = Camara();
@@ -49,6 +88,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Transform hi = anim.GetBoneTransform(HumanBodyBones.LeftHand), hd = anim.GetBoneTransform(HumanBodyBones.RightHand), dedo = anim.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
             float izq = Vector3.Distance(Vector3.Lerp(hi.position, dedo.position, 0.5f), pistola.position) * 100f;
             float manos = Vector3.Distance(hi.position, hd.position) * 100f;
+            ultimoCanon = Vector3.Angle(pistola.forward, haciaMira); ultimoLadeo = ladeo; ultimasManos = manos;
             string s = titulo + ": canon giro " + giro.ToString("F1") + " cabeceo " + cab.ToString("F1") + " | mira giro " + giroM.ToString("F1") + " cabeceo " + cabM.ToString("F1") +
                 " | canon a la mira " + Vector3.Angle(pistola.forward, haciaMira).ToString("F1") + " | ladeo " + ladeo.ToString("F1") + " | mano izq a empunadura " + izq.ToString("F1") + " cm, entre manos " + manos.ToString("F1") + " cm";
             // Giro local de la pistola (respecto a su socket) con el que el canon miraria al frente del cuerpo con la corredera arriba: el agarre que haria falta en este cuadro.
@@ -69,9 +109,15 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Medida_Apuntar_Disparo_Laterales()
         {
             yield return Preparar();
+            float piesSinApuntar = AlturaPies();
+            Foto("sin-apuntar", new Vector3(2.2f, 0.3f, 2.2f));
             Press(raton.rightButton);
             yield return Esperar(2.0f);
-            Medir("quieto");
+            Comprobar("quieto");
+            Foto("apuntando-lado", new Vector3(3f, 0.2f, 0.4f));
+            Foto("apuntando-frente", new Vector3(0.7f, 0.2f, 3f));
+            Foto("apuntando-atras", new Vector3(-0.8f, 0.5f, -2.6f));
+            Assert.Less(Mathf.Abs(AlturaPies() - piesSinApuntar), DiferenciaPiesMaxima, "Los pies no se despegan al apuntar quieto");
             Press(raton.leftButton);
             yield return null;
             Release(raton.leftButton);
@@ -82,7 +128,8 @@ namespace MechaCyberpunk.Tests.Personaje
             {
                 Press(k);
                 yield return Esperar(1.2f);
-                Medir(n);
+                Comprobar(n);
+                Foto(n, new Vector3(2.5f, 0.3f, 1.5f));
                 Release(k);
                 yield return Esperar(0.6f);
             }

@@ -3,11 +3,9 @@ using UnityEngine;
 namespace MechaCyberpunk.Personaje.Visual
 {
     /// <summary>
-    /// T-738 (A6 final): compensa en el agarre de la pistola de PJ01 lo que el retargeting Humanoid mueve la mano respecto a Blender. Con el clip puro la mano llega con la pistola
-    /// unos 22 grados a un lado, 19 arriba y con la corredera ladeada (medido: 17-29 grados de la mira y 65-80 de ladeo, y la mano oscila hasta 24 grados en el ciclo de caminar de lado,
-    /// así que un giro fijo por clip no alcanza). NO toca huesos: solo gira la pistola, en el pivote de la empuñadura (sigue en la palma, R_Hand no se mueve), para que el cañón mire
-    /// de la boca al punto de mira con la corredera arriba. El agarre de Tony (agarre.txt, AgarresArmas.CuaternionTony y PosicionPJ01) queda tal cual en el nodo de la pistola como
-    /// referencia: con <see cref="Usar"/> apagado la pistola vuelve a él, para cuando llegue el export de Blender (docs/pedido-blender-09nov.md).
+    /// T-738 (A6 final), T-749: gira la pistola para que el cañón mire de la boca al punto de mira, con la corredera arriba. Con los clips de Blender (T-749) el arma ya queda al frente y este giro
+    /// es de unos grados (la mira sale del hombro, no del frente del cuerpo). NO toca huesos, solo la pistola en el pivote de la empuñadura, y el retroceso corto al disparar.
+    /// Con <see cref="Usar"/> apagado la pistola queda con el agarre de <see cref="AgarresArmas.GiroPJ01"/>.
     /// </summary>
     [RequireComponent(typeof(Animator))]
     [DefaultExecutionOrder(30)]
@@ -56,7 +54,7 @@ namespace MechaCyberpunk.Personaje.Visual
             if (capaArriba == -2) { capaArriba = a.GetLayerIndex(ReglasAnimacion.CapaArriba); }
             if (capaArriba < 0) { return 0f; }
             AnimatorClipInfo[] clips = a.GetCurrentAnimatorClipInfo(capaArriba);
-            if (clips.Length == 0 || clips[0].clip.name != ClipDisparo) { return 0f; }
+            if (clips.Length == 0 || !clips[0].clip.name.EndsWith(ClipDisparo)) { return 0f; }
             float t = a.GetCurrentAnimatorStateInfo(capaArriba).normalizedTime * clips[0].clip.length;
             if (t < 0f || t >= retrocesoSegundos) { return 0f; }
             return retrocesoGrados * Mathf.Sin(Mathf.PI * t / retrocesoSegundos);

@@ -60,6 +60,8 @@ namespace MechaCyberpunk.Tests.Personaje
 
     public static class MedidaPoseClipsPJ01
     {
+        /// <summary>Lo mismo que ImportadorClipsPJ01.GiroCuerpoClips: los FBX miran a -Z.</summary>
+        public const float GiroCuerpoClips = 180f;
         public const string RutaPJ01 = "Assets/Arte/Personajes/PJ01/PJ01.fbx";
         public const string CarpetaClips = "Assets/Arte/Personajes/PJ01/Clips/";
         public const string CarpetaReferencia = "Assets/Arte/Personajes/PJ01/ClipsReferencia/";
@@ -169,7 +171,11 @@ namespace MechaCyberpunk.Tests.Personaje
                 string ruta = CarpetaReferencia + nombre + ".fbx";
                 Marco = new GameObject("MarcoBlender");
                 Marco.transform.position = posicion;
-                Raiz = (GameObject)Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(ruta), Marco.transform);
+                // SampleAnimation reescribe la raíz del clip: el giro al frente del cuerpo va en un nodo intermedio.
+                var giro = new GameObject("GiroFrente").transform;
+                giro.SetParent(Marco.transform, false);
+                giro.localRotation = Quaternion.Euler(0f, GiroCuerpoClips, 0f);
+                Raiz = (GameObject)Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(ruta), giro);
                 clip = Clip(ruta);
             }
 

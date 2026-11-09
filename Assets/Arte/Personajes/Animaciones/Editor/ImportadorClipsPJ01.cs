@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const string Prefijo = "PJ01_";
         /// <summary>El Scale Factor de PJ01.fbx y PJ01_Implantes.fbx (userData "escala=1.88").</summary>
         public const float EscalaClips = 1.88f;
+        /// <summary>Giro (grados en Y) que pasa el cuerpo de los FBX (-Z) al frente de los clips Humanoid del juego (+Z).</summary>
+        public const float GiroCuerpoClips = 180f;
 
         public override int GetPostprocessOrder() => 200;
 
@@ -141,6 +143,8 @@ namespace MechaCyberpunk.Arte.Editor
             clip.lockRootPositionXZ = false;
             clip.lockRootRotation = true;
             clip.keepOriginalOrientation = true;
+            // Los FBX llevan el cuerpo mirando a -Z (el nodo raíz que trae Blender); los demás clips, a +Z. Sin este giro el cuerpo quedaba de espaldas al frente.
+            clip.rotationOffset = GiroCuerpoClips;
             clip.lockRootHeightY = true;
             clip.keepOriginalPositionY = true;
             clip.events = ImportadorMixamo.EventosDe(baseNombre, clip.firstFrame, clip.lastFrame);

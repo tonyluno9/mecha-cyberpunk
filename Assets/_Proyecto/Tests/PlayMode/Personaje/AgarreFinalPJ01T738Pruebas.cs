@@ -163,11 +163,11 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.6f);
             Transform mano = anim.GetBoneTransform(HumanBodyBones.RightHand);
             Quaternion manoConCompensacion = mano.localRotation;
-            Assert.Greater(Quaternion.Angle(Quaternion.Euler(AgarresArmas.GiroPJ01), pistola.localRotation), 5f, "Con la compensacion la pistola ya no lleva el giro de agarre.txt");
+            Assert.Greater(Quaternion.Angle(Quaternion.Euler(AgarresArmas.GiroPJ01), pistola.localRotation), 0.5f, "Con la compensacion la pistola sigue a la mira (T-749: ya solo son unos grados, el agarre deja el arma al frente)");
             agarre.Usar = false;
             yield return Esperar(0.2f);
             Assert.Less(Quaternion.Angle(Quaternion.Euler(AgarresArmas.GiroPJ01), pistola.localRotation), 0.2f, "Apagada, vuelve al agarre de Tony (referencia)");
-            Assert.Less(Vector3.Distance(new Vector3(0.0129f, 0.1181f, 0.0080f), pistola.localPosition), 0.0005f, "La posicion nunca se toca");
+            Assert.Less(Vector3.Distance(AgarresArmas.PosicionPJ01, pistola.localPosition), 0.0005f, "La posicion nunca se toca");
             Assert.Less(Quaternion.Angle(manoConCompensacion, mano.localRotation), 3f, "La compensacion no mueve la mano (solo cambia el reloj del clip)");
             Release(raton.rightButton);
         }
