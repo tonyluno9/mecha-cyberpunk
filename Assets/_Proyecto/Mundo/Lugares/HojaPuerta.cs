@@ -55,6 +55,9 @@ namespace MechaCyberpunk.Mundo.Lugares
         public bool Corrediza => corrediza;
         /// <summary>T-884: lo que se desliza al abrir del todo, en el espacio del padre (m).</summary>
         public Vector3 DesplazamientoCorredizo => desplazamientoCorredizo;
+        /// <summary>T-910: cuánto está abierta, de 0 (cerrada) a 1 (abierta del todo), ya suavizado.</summary>
+        public float ProgresoApertura => Suavizar(progreso);
+
         /// <summary>T-804: true si la hoja gira sobre una bisagra.</summary>
         public bool ConBisagra => conBisagra;
 

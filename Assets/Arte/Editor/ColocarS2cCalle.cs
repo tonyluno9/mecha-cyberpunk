@@ -181,8 +181,8 @@ namespace MechaCyberpunk.Arte.Editor
                 // T-891: rejilla AL01 embutida en el arroyo (solo se asoman 4 cm de su marco).
                 KitS2c.Pieza(cosas, "AL01_Alcantarilla", a - Vector3.up * (KitS2c.Medir("AL01_Alcantarilla").Caja.size.y - 0.04f), Quaternion.identity, Vector3.one, false).name = "Alcantarilla";
             }
-            Copiar(cosas, "Bolsas1", new[] { new Vector3(-69.5f, banqueta, ZSur + 0.5f), new Vector3(-99f, banqueta, ZNorte - 0.5f) });
-            Copiar(cosas, "Bolsas2", new[] { new Vector3(-88f, banqueta, ZSur + 0.5f) });
+            // T-910: la basura son piezas BS01a-e sueltas (antes, copias de las bolsas del callejón).
+            ColocarT910.Basura(cosas, banqueta);
             KitS2c.Pieza(cosas, "C16_Tambo", new Vector3(-61.8f, banqueta, ZNorte - 0.6f), Quaternion.identity, Vector3.one);
             KitS2c.Pieza(cosas, "C11_Basurero", new Vector3(-92f, banqueta, ZNorte - 0.6f), Quaternion.LookRotation(Vector3.back), Vector3.one);
             KitS2c.Pieza(cosas, "C17_Huacales", new Vector3(-83.5f, banqueta, ZSur + 0.6f), Quaternion.Euler(0f, 20f, 0f), Vector3.one);

@@ -72,6 +72,7 @@ namespace MechaCyberpunk.Arte.Editor
             so.FindProperty("desplazamientoCorredizo").vector3Value = enPadre;
             so.ApplyModifiedPropertiesWithoutUndo();
 
+            ColocarT910.PuertaCristal(hoja, ancho, dirLargo);
             Transform lugar = ColocarS2.Buscar(RutaLugar);
             PuertaAutomatica auto = lugar.GetComponent<PuertaAutomatica>() ?? lugar.gameObject.AddComponent<PuertaAutomatica>();
             SerializedObject sa = new SerializedObject(auto);
