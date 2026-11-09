@@ -195390,51 +195390,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &273017308
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 273017310}
-  - component: {fileID: 273017309}
-  m_Layer: 0
-  m_Name: Reclutable_EL CHATO
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &273017309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 273017308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9cdbf31ba4a0a4b87ffb6a077754c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.Reclutable
---- !u!4 &273017310
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 273017308}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -52.5, y: 0, z: -74}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1087078976}
-  m_Father: {fileID: 2084333190}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &273310422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -576999,96 +576954,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2801925128222918610, guid: 9dada94213a974b48b6938e3f7160a89, type: 3}
   m_PrefabInstance: {fileID: 892301990}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &892343028
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2132116121}
-    m_Modifications:
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5083024976931515990, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      propertyPath: m_Name
-      value: Modelo
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5083024976931515990, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 892343031}
-  m_SourcePrefab: {fileID: 100100000, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
---- !u!4 &892343029 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4650585124823810269, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-  m_PrefabInstance: {fileID: 892343028}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &892343030 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5083024976931515990, guid: e1a8bbcdd69f6e844bb2b480091a238d, type: 3}
-  m_PrefabInstance: {fileID: 892343028}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &892343031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 892343030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f630e102248a05348b2783799e9bdf0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
-  materiales:
-  - {fileID: 2100000, guid: 6ec547dd60b834244a9fabd82ddb2137, type: 2}
-  indice: 0
-  materialFranja: {fileID: 0}
-  grosorFranja: 0.14
-  colorLuz: {r: 0, g: 0, b: 0, a: 0}
-  intensidadLuz: 2.5
-  alcanceLuz: 5
 --- !u!1001 &892412574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -688353,68 +688218,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2801925128222918610, guid: 9dada94213a974b48b6938e3f7160a89, type: 3}
   m_PrefabInstance: {fileID: 1087067500}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1087078974
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 273017310}
-    m_Modifications:
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6473915207903942225, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-      propertyPath: m_Name
-      value: Modelo
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
---- !u!4 &1087078976 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4559933546589122663, guid: 08e50e46e6e225b40adf25afcf22764f, type: 3}
-  m_PrefabInstance: {fileID: 1087078974}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1087232131
 GameObject:
   m_ObjectHideFlags: 0
@@ -699957,51 +699760,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1110722043}
   m_Mesh: {fileID: 2926045068242351748, guid: 4316bf273776bb64b9aedae815a34da2, type: 2}
---- !u!1 &1110810946
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1110810947}
-  - component: {fileID: 1110810948}
-  m_Layer: 0
-  m_Name: "Reclutable_LA G\xDCERA"
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1110810947
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110810946}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -55.5, y: 0.2, z: -86}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1611449686}
-  m_Father: {fileID: 2084333190}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1110810948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110810946}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9cdbf31ba4a0a4b87ffb6a077754c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.Reclutable
 --- !u!1001 &1111427194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -987646,68 +987404,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1611421837}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &1611449685
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1110810947}
-    m_Modifications:
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7146404556939082291, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-      propertyPath: m_Name
-      value: Modelo
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
---- !u!4 &1611449686 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5119186107786688264, guid: c79555f7c35abf142b0fa1d4e7d3b33e, type: 3}
-  m_PrefabInstance: {fileID: 1611449685}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1611716117
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1269128,8 +1268824,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2084333190}
-  - component: {fileID: 2084333192}
-  - component: {fileID: 2084333191}
   m_Layer: 0
   m_Name: GTA_T405
   m_TagString: Untagged
@@ -1269149,36 +1268843,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 273017310}
-  - {fileID: 1110810947}
-  - {fileID: 2132116121}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2084333191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084333189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45c569b8bfff2414ba1acdf67137a4c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Hud.HudAliados
---- !u!114 &2084333192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084333189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9205c12e4cc69024cb57f51e275d4133, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.PandillaJugador
 --- !u!1 &2084501530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291812,51 +1291479,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2131976497}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2132116120
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2132116121}
-  - component: {fileID: 2132116122}
-  m_Layer: 0
-  m_Name: Reclutable_EL TOPO
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2132116121
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2132116120}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -58.5, y: 0.2, z: -86}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 892343029}
-  m_Father: {fileID: 2084333190}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2132116122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2132116120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9cdbf31ba4a0a4b87ffb6a077754c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Aliados.Reclutable
 --- !u!1 &2132168310
 GameObject:
   m_ObjectHideFlags: 0

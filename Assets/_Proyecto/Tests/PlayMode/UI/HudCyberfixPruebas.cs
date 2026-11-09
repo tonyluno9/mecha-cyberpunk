@@ -128,7 +128,7 @@ namespace MechaCyberpunk.Tests.UI
             }
             jugador.Colocar(new Pose(Inicio, Quaternion.LookRotation(Vector3.right)));
             Registro<ICartera>.Actual.Abonar(1250, MotivoDinero.Premio);
-            Registro<ICalor>.Actual.Sumar(40f, MotivoCalor.Otro);
+            Registro<ICalor>.Actual.Sumar(40f, MotivoCalor.Mision);
             yield return new WaitForSecondsRealtime(1f);
             yield return null;
 
