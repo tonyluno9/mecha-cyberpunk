@@ -28,6 +28,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Textura X05 en gris, que se tiñe con el color de cada material: vigas, focos, latón y cordón no quedan como color liso.</summary>
         private const int TexturaBase = 5;
         private const float BrilloAlfombra = 0.18f;
+        private const float BrilloPantalla = 1.6f;
 
         private static readonly Color Dorado = new Color(1f, 0.74f, 0.4f);
         private static readonly Color Magenta = new Color(0.95f, 0.25f, 0.8f);
@@ -55,13 +56,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static void Revestir()
         {
-            Material alfombra = MatTex("T930_Alfombra", TexturaAlfombra(), new Vector2(9.2f, 11.7f));
-            // Brilla un poco para que de noche no quede negra (la prueba de T-546).
-            alfombra.EnableKeyword("_EMISSION");
-            alfombra.SetTexture("_EmissionMap", alfombra.GetTexture("_BaseMap"));
-            alfombra.SetTextureScale("_EmissionMap", new Vector2(9.2f, 11.7f));
-            alfombra.SetColor("_EmissionColor", Color.white * BrilloAlfombra);
-            EditorUtility.SetDirty(alfombra);
+            Material alfombra = MatTex("T930_Alfombra", TexturaAlfombra(), new Vector2(9.2f, 11.7f), true, BrilloAlfombra);
             Renderer a = ColocarS2.Buscar("T546_Interiores/Casino/AlfombraEstampada")?.GetComponent<Renderer>();
             if (a != null) { a.sharedMaterial = alfombra; }
             Texture2D x04 = AssetDatabase.LoadAssetAtPath<Material>(CarpetaMat + "X04_Pared.mat")?.mainTexture as Texture2D;
@@ -266,17 +261,17 @@ namespace MechaCyberpunk.Arte.Editor
             }
             m.SetColor("_BaseColor", b);
             if (m.GetTexture("_BaseMap") == null) { m.SetTexture("_BaseMap", ColocarS2Interiores.TexturaGris(TexturaBase)); }
-            if (e.maxColorComponent > 0.001f) { m.EnableKeyword("_EMISSION"); m.SetColor("_EmissionColor", e); m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None; }
+            if (e.maxColorComponent > 0.001f) { m.EnableKeyword("_EMISSION"); m.SetColor("_EmissionColor", e); m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive; }
             EditorUtility.SetDirty(m);
             return m;
         }
 
-        private static Material MatTex(string n, Texture2D t, Vector2 mosaico, bool emite = false)
+        private static Material MatTex(string n, Texture2D t, Vector2 mosaico, bool emite = false, float brillo = BrilloPantalla)
         {
-            Material m = Mat(n, Color.white, emite ? Color.white * 1.6f : Color.black);
+            Material m = Mat(n, Color.white, emite ? Color.white * brillo : Color.black);
             m.SetTexture("_BaseMap", t);
             m.SetTextureScale("_BaseMap", mosaico);
-            if (emite) { m.SetTexture("_EmissionMap", t); }
+            if (emite) { m.SetTexture("_EmissionMap", t); m.SetTextureScale("_EmissionMap", mosaico); }
             EditorUtility.SetDirty(m);
             return m;
         }
