@@ -32,6 +32,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private Vector3 amenaza;
         private float t;
         private PeatonMundo peaton;
+        private Collider capsula;
 
         public FaseConductor Fase { get; private set; } = FaseConductor.Sacado;
 
@@ -45,6 +46,12 @@ namespace MechaCyberpunk.Trafico.Calle
         public void Iniciar(Vector3 asiento, Vector3 puerta, Vector3 haciaQuien)
         {
             peaton = GetComponent<PeatonMundo>();
+            // T-937: nace dentro del volumen del carro (en el asiento): sin colisión mientras sale, para no empujar al carro ni a sí mismo.
+            capsula = GetComponent<Collider>();
+            if (capsula != null)
+            {
+                capsula.enabled = false;
+            }
             amenaza = haciaQuien;
             hasta = PegarAlPiso(puerta);
             desde = new Vector3(asiento.x, hasta.y, asiento.z);
@@ -78,6 +85,10 @@ namespace MechaCyberpunk.Trafico.Calle
                     if (t >= SegundosSacar)
                     {
                         Fase = FaseConductor.Caido;
+                        if (capsula != null)
+                        {
+                            capsula.enabled = true; // ya está afuera, junto a la puerta
+                        }
                     }
                     break;
                 case FaseConductor.Caido:
