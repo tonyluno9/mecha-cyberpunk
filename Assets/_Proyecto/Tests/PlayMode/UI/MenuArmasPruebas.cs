@@ -34,6 +34,7 @@ namespace MechaCyberpunk.Tests.UI
         private const string VariableCaptura = "CAPTURAR_S2N_ARMAS";
         private const int DineroInicial = 500;
         private const int PrecioPistolaI = 150;
+        private const int PrecioEscopetaI = 250;
         private const float SegundosEspera = 5f;
 
         private sealed class CarteraDoble : ICartera
@@ -273,13 +274,21 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             Assert.Greater(Mathf.Abs(Mathf.DeltaAngle(giroAntes, vista.Giro)), 30f, "Arrastrar gira el holograma");
 
-            // → pasa a la escopeta: sin modelo 3D, su imagen holográfica.
+            // → pasa a la escopeta: T-942, ahora también en 3D y con sus piezas partidas de la malla.
             yield return Pulsar(teclado.rightArrowKey);
             Assert.AreEqual(ArmaAPie.Escopeta, pantalla.ArmaElegida.Arma);
-            Assert.IsFalse(vista.ConModelo, "La escopeta se ve con su imagen H02");
+            Assert.IsTrue(vista.ConModelo, "La escopeta se ve con su modelo W02");
+            Assert.IsTrue(vista.TienePieza(PiezaArma.Cargador) && vista.TienePieza(PiezaArma.Canon) && vista.TienePieza(PiezaArma.Mira), "La escopeta tiene sus tres piezas");
             Assert.AreEqual(PiezaArma.Cargador, pantalla.PiezaElegida);
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(0.8f);
+            Assert.Greater(vista.Separacion(PiezaArma.Cargador), 0.9f, "El cargador de la escopeta se separa");
             Capturar("ui-banco-4.png");
+            // Comprar el cargador de la escopeta: usa sus estadísticas y precio por nivel (DatosArma_escopeta_1).
+            int dineroAntes = cartera.Dinero;
+            yield return Pulsar(teclado.enterKey);
+            Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Escopeta), "La escopeta sube a nivel I");
+            Assert.AreEqual(PrecioEscopetaI, dineroAntes - cartera.Dinero, "Cobra el precio de DatosArma_escopeta_1");
+            yield return EsperarHasta(() => !vista.Escaneando, "que termine el escaneo de la escopeta");
 
             // T-900: el filo de la casilla sale del nivel real; las pestañas y categorías filtran la lista sin perder las armas.
             Assert.AreEqual(TrazoH10.Rareza(1), pantalla.ColorFilo(0), "La pistola en nivel I lleva el filo de ese nivel");
@@ -301,7 +310,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             Assert.IsTrue(controlador.ControlActivo, "El control vuelve al jugador");
             Assert.IsTrue(pantalla.LetreroVisible, "Sale el letrero ARMA MEJORADA");
-            StringAssert.Contains("PISTOLA I", pantalla.Letrero);
+            StringAssert.Contains("ESCOPETA I", pantalla.Letrero);
             yield return new WaitForSecondsRealtime(0.4f);
             Capturar("ui-banco-5.png");
             yield return new WaitForSecondsRealtime(config.DuracionLetrero);

@@ -325,13 +325,26 @@ namespace MechaCyberpunk.UI.Armas
             raiz.SetParent(contenido, false);
             Dictionary<string, Transform> porNombre = new Dictionary<string, Transform>();
             Matrix4x4 aRaiz = origen.worldToLocalMatrix;
-            foreach (MeshFilter mf in origen.GetComponentsInChildren<MeshFilter>(true))
+            MeshFilter[] filtros = origen.GetComponentsInChildren<MeshFilter>(true);
+            Transform bocaModelo = BuscarHijo(origen, "Boca");
+            // T-942: un arma de una sola malla (sin las piezas con nombre) se parte en Cargador, Canon y resto.
+            bool partir = filtros.Length == 1 && filtros[0].sharedMesh != null && bocaModelo != null
+                && BuscarHijo(origen, entrada.NombrePieza(PiezaArma.Cargador)) == null && BuscarHijo(origen, entrada.NombrePieza(PiezaArma.Canon)) == null;
+            foreach (MeshFilter mf in filtros)
             {
                 if (mf.sharedMesh == null || mf.GetComponent<MeshRenderer>() == null)
                 {
                     continue;
                 }
-                AgregarMalla(raiz, mf.name, mf.sharedMesh, aRaiz * mf.transform.localToWorldMatrix, porNombre);
+                Matrix4x4 matriz = aRaiz * mf.transform.localToWorldMatrix;
+                if (partir)
+                {
+                    AgregarMallaPartida(raiz, entrada, mf.sharedMesh, matriz, origen.InverseTransformPoint(bocaModelo.position), porNombre);
+                }
+                else
+                {
+                    AgregarMalla(raiz, mf.name, mf.sharedMesh, matriz, porNombre);
+                }
             }
             foreach (SkinnedMeshRenderer sk in origen.GetComponentsInChildren<SkinnedMeshRenderer>(true))
             {
@@ -372,7 +385,82 @@ namespace MechaCyberpunk.UI.Armas
             }
         }
 
-        private void AgregarMalla(Transform raiz, string nombre, Mesh malla, Matrix4x4 matriz, Dictionary<string, Transform> porNombre)
+        private static Transform BuscarHijo(Transform raiz, string nombre)
+        {
+            if (string.IsNullOrEmpty(nombre))
+            {
+                return null;
+            }
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+            {
+                if (t.name == nombre)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        // T-942: crea tres mallas nuevas (resto, cañón y cargador) con los triángulos repartidos por posición; el asset original no se toca.
+        // El cañón y el cargador se registran en porNombre con el nombre de pieza de la entrada, igual que en la pistola.
+        private void AgregarMallaPartida(Transform raiz, EntradaArmaMenu entrada, Mesh malla, Matrix4x4 matriz, Vector3 boca, Dictionary<string, Transform> porNombre)
+        {
+            Vector3[] vertices = malla.vertices;
+            Vector3[] enRaiz = new Vector3[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                enRaiz[i] = matriz.MultiplyPoint3x4(vertices[i]);
+            }
+            int[] todosTriangulos = malla.triangles;
+            ParteMalla[] partes = CalculoPiezasArma.Repartir(enRaiz, todosTriangulos, boca);
+            string[] nombres =
+            {
+                "Resto",
+                string.IsNullOrEmpty(entrada.NombrePieza(PiezaArma.Canon)) ? "Canon" : entrada.NombrePieza(PiezaArma.Canon),
+                string.IsNullOrEmpty(entrada.NombrePieza(PiezaArma.Cargador)) ? "Cargador" : entrada.NombrePieza(PiezaArma.Cargador)
+            };
+            for (int parte = 0; parte < nombres.Length; parte++)
+            {
+                Mesh nueva = new Mesh { name = malla.name + "_" + nombres[parte], indexFormat = malla.indexFormat };
+                nueva.vertices = vertices;
+                nueva.normals = malla.normals;
+                nueva.uv = malla.uv;
+                nueva.subMeshCount = malla.subMeshCount;
+                int usados = 0;
+                for (int sub = 0; sub < malla.subMeshCount; sub++)
+                {
+                    int[] tri = malla.GetTriangles(sub);
+                    List<int> elegidos = new List<int>();
+                    // Índice del primer triángulo de esta submalla dentro de malla.triangles.
+                    int desplazamiento = 0;
+                    for (int s = 0; s < sub; s++)
+                    {
+                        desplazamiento += (int)malla.GetIndexCount(s) / 3;
+                    }
+                    for (int t = 0; t < tri.Length / 3; t++)
+                    {
+                        if ((int)partes[desplazamiento + t] == parte)
+                        {
+                            elegidos.Add(tri[t * 3]);
+                            elegidos.Add(tri[t * 3 + 1]);
+                            elegidos.Add(tri[t * 3 + 2]);
+                        }
+                    }
+                    nueva.SetTriangles(elegidos, sub);
+                    usados += elegidos.Count;
+                }
+                if (usados == 0)
+                {
+                    Destroy(nueva);
+                    continue;
+                }
+                nueva.RecalculateBounds();
+                creados.Add(nueva);
+                AgregarMalla(raiz, nombres[parte], nueva, matriz, porNombre);
+            }
+        }
+
+        private void AgregarMalla(Transform raiz,string nombre, Mesh malla, Matrix4x4 matriz, Dictionary<string, Transform> porNombre)
         {
             GameObject go = new GameObject(nombre);
             go.transform.SetParent(raiz, false);
