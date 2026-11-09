@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Transform alfombra = c.Find("AlfombraEstampada");
             Assert.Greater(alfombra.position.y, 0.24f, "Encima del piso del casino (0.24 m), si no queda tapada");
             Material m = alfombra.GetComponent<Renderer>().sharedMaterial;
-            Assert.AreEqual("T546_AlfombraCasino", m.mainTexture.name);
+            Assert.AreEqual("T930_AlfombraGrecas", m.mainTexture.name); // T-930: alfombra de grecas según la referencia
             Assert.IsTrue(m.IsKeywordEnabled("_EMISSION"), "Brilla un poco: con la noche se ve negra");
             Transform[] maquinas = c.Cast<Transform>().Where(t => t.name == "Tragamonedas_Adorno").ToArray();
             Assert.GreaterOrEqual(maquinas.Length, 12, "Hileras de tragamonedas");
