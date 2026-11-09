@@ -21,6 +21,9 @@ namespace MechaCyberpunk.UI.Editor
         public const string RutaPistola = "Assets/Arte/Armas/W01_Pistola/W01_Pistola.prefab";
         public const string CarpetaHologramas = "Assets/Arte/UI/Hologramas/";
 
+        // T-942: las cuatro armas llevan modelo 3D.
+        private static GameObject Modelo(string carpeta) => AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Armas/" + carpeta + "/" + carpeta + ".prefab");
+
         [MenuItem("Mecha Cyberpunk/UI/Menú de mejora de armas (T-814)")]
         public static void Crear()
         {
@@ -35,9 +38,9 @@ namespace MechaCyberpunk.UI.Editor
             var armas = new List<EntradaArmaMenu>
             {
                 EntradaArmaMenu.Crear(ArmaAPie.Pistola, "PISTOLA", h01, pistola, h01),
-                EntradaArmaMenu.Crear(ArmaAPie.Escopeta, "ESCOPETA", h02, null, h02),
-                EntradaArmaMenu.Crear(ArmaAPie.Fusil, "FUSIL", h03, null, h03),
-                EntradaArmaMenu.Crear(ArmaAPie.Sniper, "FRANCOTIRADOR", h04, null, h04)
+                EntradaArmaMenu.Crear(ArmaAPie.Escopeta, "ESCOPETA", h02, Modelo("W02_Escopeta"), h02),
+                EntradaArmaMenu.Crear(ArmaAPie.Fusil, "FUSIL", h03, Modelo("W03_Fusil"), h03),
+                EntradaArmaMenu.Crear(ArmaAPie.Sniper, "FRANCOTIRADOR", h04, Modelo("W04_Francotirador"), h04)
             };
             var piezas = new List<EntradaPiezaMenu>
             {

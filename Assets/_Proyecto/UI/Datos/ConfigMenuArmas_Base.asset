@@ -24,7 +24,7 @@ MonoBehaviour:
   - arma: 2
     nombre: ESCOPETA
     icono: {fileID: 2800000, guid: d1f5247d030608a4ab1ec0a84cf6734e, type: 3}
-    modelo: {fileID: 0}
+    modelo: {fileID: 7360004428801462376, guid: 7c64bc06447776e43bbbd028981b71a9, type: 3}
     imagen: {fileID: 2800000, guid: d1f5247d030608a4ab1ec0a84cf6734e, type: 3}
     piezaCargador: Bateria
     piezaCanon: Corredera
@@ -32,7 +32,7 @@ MonoBehaviour:
   - arma: 3
     nombre: FUSIL
     icono: {fileID: 2800000, guid: 32722ccdc9e41d04a8727a47938357ba, type: 3}
-    modelo: {fileID: 0}
+    modelo: {fileID: 5841512486656019091, guid: 17a9300c2bc2e514fa307dc0f43c0852, type: 3}
     imagen: {fileID: 2800000, guid: 32722ccdc9e41d04a8727a47938357ba, type: 3}
     piezaCargador: Bateria
     piezaCanon: Corredera
@@ -40,7 +40,7 @@ MonoBehaviour:
   - arma: 4
     nombre: FRANCOTIRADOR
     icono: {fileID: 2800000, guid: f9690ea2b9cb87d4a81b8646ed066d1a, type: 3}
-    modelo: {fileID: 0}
+    modelo: {fileID: 1064652143047605441, guid: 603d772d10666ae4fabb24c93ade2a33, type: 3}
     imagen: {fileID: 2800000, guid: f9690ea2b9cb87d4a81b8646ed066d1a, type: 3}
     piezaCargador: Bateria
     piezaCanon: Corredera
@@ -79,6 +79,7 @@ MonoBehaviour:
   duracionDestello: 0.9
   duracionNumeros: 0.7
   duracionLetrero: 2.2
+  duracionEscaneo: 0.9
   colorHolograma: {r: 0.15, g: 0.85, b: 1, a: 1}
   colorMejora: {r: 0.35, g: 1, b: 0.55, a: 1}
   colorPeor: {r: 1, g: 0.3, b: 0.3, a: 1}
