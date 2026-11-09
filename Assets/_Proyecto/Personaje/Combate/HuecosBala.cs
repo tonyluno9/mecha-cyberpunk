@@ -29,6 +29,11 @@ namespace MechaCyberpunk.Personaje.Combate
             public float Edad;
             public bool Activo;
             public bool Metal;
+            // T-931: la superficie donde quedó y, si no está pegado a un cuerpo ni es estática, el punto en su espacio local para ver si se movió.
+            public Transform Superficie;
+            public Vector3 Local;
+            public Vector3 Mundo;
+            public bool Vigila;
         }
 
         [SerializeField] private ConfigHuecosBala config;
@@ -197,7 +202,12 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 superficie = golpe.collider;
             }
-            bool metal = superficie != null && EsMetal(superficie);
+            // T-931: sin superficie visible en ese punto (aire, colliders invisibles, triggers) no hay hueco: nada de marcas flotantes.
+            if (superficie == null || !ReglaHuecosBala.HayHueco(superficie.isTrigger, impacto.EnPersona, SuperficieImpacto.Visible(superficie, impacto.Punto)))
+            {
+                return false;
+            }
+            bool metal = EsMetal(superficie);
             Hueco h = Tomar();
             float tamano = metal ? config.TamanoMetal : config.TamanoConcreto;
             h.Transform.SetParent(transform, false);
@@ -206,10 +216,16 @@ namespace MechaCyberpunk.Personaje.Combate
             h.Transform.rotation = Quaternion.LookRotation(-normal) * Quaternion.Euler(0f, 0f, Random.value * GradosPorVuelta);
             h.Transform.localScale = Vector3.one * tamano;
             // En un carro el hueco se va con él.
-            if (metal && superficie.attachedRigidbody != null)
+            bool pegado = metal && superficie.attachedRigidbody != null;
+            if (pegado)
             {
                 h.Transform.SetParent(superficie.attachedRigidbody.transform, true);
             }
+            // T-931: si la superficie no es estática y el hueco no va pegado a su cuerpo, se guarda dónde quedó para borrarlo si se mueve.
+            h.Superficie = superficie.transform;
+            h.Mundo = impacto.Punto;
+            h.Local = superficie.transform.InverseTransformPoint(impacto.Punto);
+            h.Vigila = !pegado && !superficie.gameObject.isStatic;
             h.Render.sharedMaterial = metal ? config.MaterialMetal : config.MaterialConcreto;
             h.Edad = 0f;
             h.Metal = metal;
@@ -288,6 +304,13 @@ namespace MechaCyberpunk.Personaje.Combate
                 if (h.Transform == null)
                 {
                     h.Activo = false;
+                    continue;
+                }
+                // T-931: la superficie se destruyó, se apagó o se movió más de 2 cm: el hueco se va con ella.
+                if (h.Superficie == null || !h.Superficie.gameObject.activeInHierarchy
+                    || (h.Vigila && ReglaHuecosBala.SeMovio(h.Mundo, h.Superficie.TransformPoint(h.Local))))
+                {
+                    Apagar(h);
                     continue;
                 }
                 h.Edad += dt;

@@ -87,7 +87,7 @@ namespace MechaCyberpunk.Tests.UI
             while (Time.realtimeSinceStartup < finCiudad)
             {
                 DirectorPandillas directorCiudad = Object.FindFirstObjectByType<DirectorPandillas>();
-                if (directorCiudad != null && directorCiudad.Iniciado && Registro<IJugador>.Actual != null && Registro<IObjetivos>.Actual != null && Registro<IPandillaJugador>.Actual != null)
+                if (directorCiudad != null && directorCiudad.Iniciado && Registro<IJugador>.Actual != null && Registro<IObjetivos>.Actual != null)
                 {
                     break;
                 }
@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Tests.UI
             while (Time.realtimeSinceStartup < finCiudad)
             {
                 DirectorPandillas directorCiudad = Object.FindFirstObjectByType<DirectorPandillas>();
-                if (directorCiudad != null && directorCiudad.Iniciado && Registro<IJugador>.Actual != null && Registro<IObjetivos>.Actual != null && Registro<IPandillaJugador>.Actual != null)
+                if (directorCiudad != null && directorCiudad.Iniciado && Registro<IJugador>.Actual != null && Registro<IObjetivos>.Actual != null)
                 {
                     break;
                 }
@@ -197,7 +197,7 @@ namespace MechaCyberpunk.Tests.UI
             while (Time.realtimeSinceStartup < finCiudad)
             {
                 DirectorPandillas directorCiudad = Object.FindFirstObjectByType<DirectorPandillas>();
-                if (directorCiudad != null && directorCiudad.Iniciado && Registro<IJugador>.Actual != null && Registro<IObjetivos>.Actual != null && Registro<IPandillaJugador>.Actual != null)
+                if (directorCiudad != null && directorCiudad.Iniciado && Registro<IJugador>.Actual != null && Registro<IObjetivos>.Actual != null)
                 {
                     break;
                 }

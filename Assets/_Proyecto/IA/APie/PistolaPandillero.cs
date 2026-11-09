@@ -1,12 +1,11 @@
 using System;
-using MechaCyberpunk.Combate.Efectos;
 using MechaCyberpunk.Core;
 using UnityEngine;
 
 namespace MechaCyberpunk.IA.APie
 {
     /// <summary>
-    /// Arma del pandillero armado (T-402): avisa con un láser rojo y luego dispara un rayo al pecho del jugador. El acierto baja con la
+    /// Arma del pandillero armado (T-402): avisa con un sonido y luego dispara un rayo invisible al pecho del jugador. El acierto baja con la
     /// distancia (70 % a 10 m, 30 % a 30 m) y el rayo no atraviesa muros. Hace daño por <see cref="IRecibeDanio"/> con <see cref="TipoDanio.Disparo"/>.
     /// </summary>
     public class PistolaPandillero : MonoBehaviour
@@ -16,16 +15,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Fuente del azar (0 a 1). Las pruebas la cambian para que sea determinista.</summary>
         public static Func<float> Azar = () => UnityEngine.Random.value;
 
-        [Tooltip("Línea del láser de aviso y del trazo del disparo. Se crea sola si falta.")]
-        [SerializeField] private LineRenderer laser;
-        [Tooltip("Material del láser (rojo, sin sombras).")]
-        [SerializeField] private Material materialLaser;
-        // T-676: sin rayos láser; el aviso es un hilo finísimo. T-745: el trazo de la bala lo dibuja TrazadorBala.
-        private const float Grosor = 0.006f;
-        private static readonly Color ColorAviso = new Color(1f, 0.2f, 0.15f, 0.35f);
-
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
-        private float finTrazo = -1f;
         private bool avisando;
 
         public int Disparos { get; private set; }
@@ -42,102 +32,23 @@ namespace MechaCyberpunk.IA.APie
             return Mathf.Lerp(pCerca, pLejos, t);
         }
 
-        private void Awake() => AsegurarLaser();
-
-        private void AsegurarLaser()
-        {
-            if (laser != null)
-            {
-                return;
-            }
-            GameObject objeto = new GameObject("Laser");
-            objeto.transform.SetParent(transform, false);
-            laser = objeto.AddComponent<LineRenderer>();
-            laser.positionCount = 2;
-            laser.useWorldSpace = true;
-            laser.startWidth = Grosor;
-            laser.endWidth = Grosor;
-            laser.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            laser.receiveShadows = false;
-            if (materialLaser != null)
-            {
-                laser.sharedMaterial = materialLaser;
-            }
-            else
-            {
-                Shader sprite = Shader.Find("Sprites/Default");
-                if (sprite != null)
-                {
-                    laser.sharedMaterial = new Material(sprite);
-                }
-            }
-            PonerColor(ColorAviso);
-            laser.enabled = false;
-        }
-
-        private void PonerColor(Color color)
-        {
-            laser.startColor = color;
-            laser.endColor = color;
-            laser.startWidth = Grosor;
-            laser.endWidth = Grosor;
-        }
-
-        private void Update()
-        {
-            if (!avisando && laser != null && laser.enabled && Time.time >= finTrazo)
-            {
-                laser.enabled = false;
-            }
-        }
-
-        private void OnDisable()
-        {
-            avisando = false;
-            if (laser != null)
-            {
-                laser.enabled = false;
-            }
-        }
-
         /// <summary>Fracción final del aviso en la que se ve el destello del hilo (T-676: un destello breve justo antes del tiro, no una línea que se queda).</summary>
         public const float ProgresoDestelloAviso = 0.8f;
 
-        /// <summary>
-        /// Aviso de disparo: suena al empezar y, solo en el último tramo (<paramref name="progreso"/> de 0 a 1 desde <see cref="ProgresoDestelloAviso"/>),
-        /// muestra un hilo finísimo de la boca al objetivo.
-        /// </summary>
+        /// <summary>Aviso de disparo: suena una vez al empezar a apuntar. T-931: sin hilo ni láser visible.</summary>
         public void Apuntar(Vector3 origen, Vector3 objetivo, float progreso = 1f)
         {
-            AsegurarLaser();
             if (!avisando)
             {
                 Sonidos.ReproducirEn("ARM_LASER_AVISO", origen);
             }
             avisando = true;
-            if (progreso < ProgresoDestelloAviso)
-            {
-                laser.enabled = Time.time < finTrazo;
-                return;
-            }
-            PonerColor(ColorAviso);
-            laser.SetPosition(0, origen);
-            laser.SetPosition(1, objetivo);
-            laser.enabled = true;
         }
 
-        /// <summary>Apaga el láser de aviso (el trazo del disparo sigue su curso).</summary>
+        /// <summary>Termina el aviso de disparo.</summary>
         public void QuitarAviso()
         {
-            if (!avisando)
-            {
-                return;
-            }
             avisando = false;
-            if (laser != null && Time.time >= finTrazo)
-            {
-                laser.enabled = false;
-            }
         }
 
         /// <summary>
@@ -146,7 +57,6 @@ namespace MechaCyberpunk.IA.APie
         /// </summary>
         public bool Disparar(Vector3 origen, Vector3 pecho, IRecibeDanio objetivo, float danio, float probabilidad, bool lineaVerificada = false)
         {
-            AsegurarLaser();
             avisando = false;
             Disparos++;
             EventosRuido.PublicarDisparo(origen);
@@ -162,15 +72,6 @@ namespace MechaCyberpunk.IA.APie
                 punto = puntoCubierta;
             }
             bool acierta = libre && Azar() <= probabilidad;
-            // T-745: el trazo termina donde pega la bala. Si falla en campo abierto sigue hasta el muro o el alcance máximo.
-            if (libre && !acierta)
-            {
-                TrazadorBala.TrazarDireccion(origen, direccion, transform);
-            }
-            else
-            {
-                TrazadorBala.Trazar(origen, punto, true);
-            }
             if (!acierta)
             {
                 return false;

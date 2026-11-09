@@ -14,7 +14,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
     public static class ConectarVisualesT520
     {
         public const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
-        public const string RutaAliado = "Assets/_Proyecto/IA/Prefabs/Aliado.prefab";
         public const string RutaPandillero = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab";
         public const string RutaPeaton = "Assets/_Proyecto/Trafico/Prefabs/Peaton.prefab";
         public const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
@@ -48,7 +47,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public static void Conectar()
         {
             ConectarJugador();
-            ConectarEnPrefab(RutaAliado, "Visual_woman2", "Modelo");
             ConectarEnPrefab(RutaPandillero, "Visual_man", "Modelo");
             ConectarPeaton();
             AjustarDatosSkulls();

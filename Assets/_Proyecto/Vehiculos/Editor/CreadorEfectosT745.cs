@@ -15,7 +15,6 @@ namespace MechaCyberpunk.Vehiculos.Editor
     {
         public const string CarpetaPack = "Assets/UnityTechnologies/ParticlePack";
         public const string RutaCatalogo = "Assets/_Proyecto/Vehiculos/Resources/CatalogoEfectos.asset";
-        public const string RutaMaterialTrazo = "Assets/_Proyecto/Vehiculos/Resources/Trazo_URP.mat";
         public const string RutaMaterialChamusco = "Assets/_Proyecto/Vehiculos/Materiales/Chamusco_URP.mat";
         private const string Fuego = CarpetaPack + "/EffectExamples/Fire & Explosion Effects/Prefabs/";
         private const string Humo = CarpetaPack + "/EffectExamples/Smoke & Steam Effects/Prefabs/";
@@ -27,7 +26,6 @@ namespace MechaCyberpunk.Vehiculos.Editor
         public static void Crear()
         {
             string informe = ConvertirMaterialesDelPack();
-            Material trazo = CrearMaterial(RutaMaterialTrazo, null, new Color(1f, 0.85f, 0.45f, 1f), true);
             Material chamusco = CrearMaterial(RutaMaterialChamusco, AssetDatabase.LoadAssetAtPath<Texture2D>(TexturaRedonda), Color.white, false);
             CatalogoEfectos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoEfectos>(RutaCatalogo);
             if (catalogo == null)

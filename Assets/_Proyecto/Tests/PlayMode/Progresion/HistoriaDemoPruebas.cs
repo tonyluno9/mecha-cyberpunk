@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
@@ -252,16 +251,8 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(0, SnakesPrendidos(), "Antes de Libre no hay SNAKES");
             cartera.Abonar(500 - cartera.Dinero, MotivoDinero.Otro);
 
-            // a. El CHATO: E lo recluta y toca ir con EL DOC.
-            Reclutable chato = null;
-            foreach (Reclutable r in Object.FindObjectsByType<Reclutable>(FindObjectsSortMode.None))
-            {
-                chato = r.Nombre == DirectorPandillas.NombreChato ? r : chato;
-            }
-            Assert.IsNotNull(chato);
-            yield return PonerFrente(jugador, chato.transform, 1.0f);
-            yield return Pulsar(teclado.eKey);
-            yield return EsperarHasta(() => director.Paso == PasoHistoria.Doc, "reclutar al CHATO", 5f);
+            // a. T-930: el paso del Chato avanza solo y toca ir con EL DOC.
+            yield return EsperarHasta(() => director.Paso == PasoHistoria.Doc, "pasar el paso del CHATO", 5f);
             Assert.AreEqual("VE CON EL DOC A I+D+I", Objetivo);
 
             // b. EL DOC con vida 50: E te deja al máximo sin cobrar.

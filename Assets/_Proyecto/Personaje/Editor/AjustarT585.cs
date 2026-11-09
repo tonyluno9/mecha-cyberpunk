@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Personaje.Editor
         {
             Poner(RutaCamara, ("lateralNormal", 0.45f), ("alturaNormal", 1.6f), ("distanciaNormal", 1.9f), ("fovNormal", 50f),
                 ("lateralApuntando", 0.6f), ("distanciaApuntando", 1.2f), ("fovApuntando", 40f));
-            Poner(RutaDatos, ("vidaMaxima", 150f), ("regeneracionPorSegundo", 8f), ("segundosParaRegenerar", 4f));
+            Poner(RutaDatos, ("vidaMaxima", 150f), ("regeneracionPorSegundo", 3f), ("segundosParaRegenerar", 8f));
             AssetDatabase.SaveAssets();
         }
 

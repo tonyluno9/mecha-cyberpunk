@@ -72,8 +72,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ebc747e57704f448b662979790a1652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PistolaPandillero
-  laser: {fileID: 0}
-  materialLaser: {fileID: 2100000, guid: 3f59678903d126a4aac03db333570d8d, type: 2}
 --- !u!114 &8659610626320314338
 MonoBehaviour:
   m_ObjectHideFlags: 0

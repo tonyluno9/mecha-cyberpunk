@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
@@ -25,7 +24,6 @@ namespace MechaCyberpunk.Tests.UI
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string VariableCaptura = "CAPTURAR_T521";
-        private const string NombreAliado = "EL CHATO";
         private const string LetrasEspanol = "ÁÉÍÓÚÑñ¿¡·";
         private static readonly Vector3 Inicio = new Vector3(-20f, 0.5f, 0f);
 
@@ -108,7 +106,7 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator HudEnLaCiudad_VidaCalorBiitsArmaAliadosYZona()
+        public IEnumerator HudEnLaCiudad_VidaCalorBiitsArmaYZona()
         {
             yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
@@ -116,22 +114,19 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarHasta(() =>
             {
                 director = UnityEngine.Object.FindFirstObjectByType<DirectorPandillas>();
-                return director != null && director.Iniciado && Registro<IJugador>.Actual != null && Registro<IPandillaJugador>.Actual != null;
+                return director != null && director.Iniciado && Registro<IJugador>.Actual != null;
             }, "el director arrancó", 30f);
             yield return new WaitForSecondsRealtime(0.5f);
             IJugador jugador = Registro<IJugador>.Actual;
             HudAPie hud = UnityEngine.Object.FindFirstObjectByType<HudAPie>();
             HudTerritorio zona = UnityEngine.Object.FindFirstObjectByType<HudTerritorio>();
-            HudAliados aliados = UnityEngine.Object.FindFirstObjectByType<HudAliados>();
             Assert.IsNotNull(hud);
             Assert.IsNotNull(zona);
-            Assert.IsNotNull(aliados);
             foreach (PandillaAPie grupo in UnityEngine.Object.FindObjectsByType<PandillaAPie>(FindObjectsSortMode.None))
             {
                 grupo.gameObject.SetActive(false);
             }
             jugador.Colocar(new Pose(Inicio, Quaternion.LookRotation(Vector3.right)));
-            Assert.IsTrue(((PandillaJugador)Registro<IPandillaJugador>.Actual).Reclutar(NombreAliado));
             Registro<ICartera>.Actual.Abonar(1250, MotivoDinero.Premio);
             Registro<ICalor>.Actual.Sumar(40f, MotivoCalor.Otro);
             yield return new WaitForSecondsRealtime(1f);
@@ -163,11 +158,6 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(5, hud.CasillasArma.Length);
             Assert.IsNotNull(hud.IconoArma.sprite, "icono del arma activa");
             Assert.IsTrue(hud.IconoArma.enabled);
-
-            // Aliados compactos: una fila para el CHATO.
-            yield return EsperarHasta(() => aliados.FilasVisibles > 0, "la fila del aliado", 5f);
-            Assert.IsTrue(aliados.Panel.gameObject.activeSelf);
-            Assert.LessOrEqual(aliados.Panel.sizeDelta.y, DisposicionHud.AltoAliados, "compacto");
 
             // Zona: el panel con el texto del dueño y tu respeto.
             yield return EsperarHasta(() => zona.TextoZona.text.Length > 0, "la zona", 20f);

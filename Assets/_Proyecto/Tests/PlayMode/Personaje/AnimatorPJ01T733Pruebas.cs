@@ -247,7 +247,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Agachado_NoDispara_ParaDispararSePara()
+        public IEnumerator Agachado_AlDispararSePara_YDisparaConLaMismaPulsacion()
         {
             yield return Preparar(true);
             ArmasAPie armas = jugador.GetComponent<ArmasAPie>();
@@ -262,14 +262,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return null;
             Release(raton.leftButton);
             yield return Esperar(0.3f);
-            Assert.AreEqual(antes, armas.Balas, "Agachado no dispara");
-            Assert.IsFalse(cubierta.AgachadoLibre, "Para disparar se para");
-            yield return Esperar(1.3f);
-            Press(raton.leftButton);
-            yield return null;
-            Release(raton.leftButton);
-            yield return Esperar(0.2f);
-            Assert.AreEqual(antes - 1, armas.Balas, "Ya de pie dispara");
+            Assert.AreEqual(antes - 1, armas.Balas, "T-936: agachado, la primera pulsación ya dispara");
+            Assert.IsFalse(cubierta.AgachadoLibre, "y se para");
             Release(raton.rightButton);
         }
 

@@ -79,7 +79,6 @@ namespace MechaCyberpunk.Tests
         }
 
         [TestCase("Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab", "woman")]
-        [TestCase("Assets/_Proyecto/IA/Prefabs/Aliado.prefab", "woman2")]
         [TestCase("Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab", "man")]
         [TestCase("Assets/_Proyecto/Trafico/Prefabs/Peaton.prefab", "woman2")]
         public void PrefabsDelJuego_UsanElVisualDeTripo_SinElMunecoDePrueba(string ruta, string cuerpo)

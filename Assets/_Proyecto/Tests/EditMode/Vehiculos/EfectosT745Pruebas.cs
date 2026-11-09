@@ -7,29 +7,13 @@ using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.Tests.Vehiculos
 {
-    /// <summary>T-745: detección de barriles, copia del trazo para el dron y que los efectos del Unity Particle Pack usan materiales URP (nada rosa).</summary>
+    /// <summary>T-745: detección de barriles y que los efectos del Unity Particle Pack usan materiales URP (nada rosa).</summary>
     public class EfectosT745Pruebas
     {
         private const string RutaPack = "Assets/UnityTechnologies/ParticlePack/EffectExamples";
 
         private static bool EsUrp(Shader shader) =>
             shader != null && shader.name != "Hidden/InternalErrorShader" && (shader.name.StartsWith("Universal Render Pipeline/") || shader.name.StartsWith("Shader Graphs/"));
-
-        [Test]
-        public void TrazoDelDron_NoPasaDelDestino_Ni_QuedaFlotando()
-        {
-            foreach (float distancia in new[] { 2f, 12f, 60f })
-            {
-                float fin = ReglaTrazo.Duracion(distancia);
-                ReglaTrazo.Tramo(distancia, fin * 0.5f, out float cola, out float cabeza);
-                Assert.LessOrEqual(cabeza, distancia);
-                Assert.LessOrEqual(cola, cabeza);
-                ReglaTrazo.Tramo(distancia, fin, out float colaFinal, out float cabezaFinal);
-                Assert.AreEqual(distancia, colaFinal, 0.01f);
-                Assert.AreEqual(distancia, cabezaFinal, 0.0001f);
-                Assert.IsTrue(ReglaTrazo.Termino(distancia, fin));
-            }
-        }
 
         [Test]
         public void Barriles_SeReconocenPorNombre()
@@ -68,14 +52,6 @@ namespace MechaCyberpunk.Tests.Vehiculos
             }
         }
 
-
-        [Test]
-        public void MaterialDelTrazo_EsUrp_YEstaEnResources()
-        {
-            Material m = Resources.Load<Material>("Trazo_URP");
-            Assert.IsNotNull(m, "Trazo_URP en Resources (lo cargan los dos TrazadorBala)");
-            Assert.IsTrue(EsUrp(m.shader), m.shader.name);
-        }
 
         [Test]
         public void Catalogo_TieneTodosLosPrefabsDelPack()

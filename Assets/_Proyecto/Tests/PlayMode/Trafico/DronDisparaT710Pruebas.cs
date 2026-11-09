@@ -116,34 +116,19 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [UnityTest]
-        public IEnumerator Dron_QueAcierta_HaceDanioReal_ConTrazoFinisimo_YSonidoDeDisparo()
+        public IEnumerator Dron_QueAcierta_HaceDanioReal_YSonidoDeDisparo()
         {
             Preparar(() => 0f); // siempre acierta
             DronMundo d = dron.GetComponent<DronMundo>();
-            bool vioTrazo = false;
-            float grosor = 1f;
-            float largo = 0f;
             float fin = Time.time + 5f;
-            while (Time.time < fin && !(vioTrazo && blanco.Impactos > 0))
+            while (Time.time < fin && blanco.Impactos == 0)
             {
                 yield return null;
-                if (TrazadorBala.Activos > 0 && TrazadorBala.UltimaLinea != null)
-                {
-                    vioTrazo = true;
-                    grosor = TrazadorBala.UltimaLinea.startWidth;
-                    largo = Mathf.Max(largo, Vector3.Distance(TrazadorBala.UltimaLinea.GetPosition(0), TrazadorBala.UltimaLinea.GetPosition(1)));
-                }
             }
             Assert.Greater(blanco.Impactos, 0, "El dron le hace daño al jugador");
             Assert.Greater(blanco.DanioTotal, 0f, "El daño es real");
-            Assert.IsTrue(vioTrazo, "Cada disparo deja un trazo");
-            Assert.LessOrEqual(grosor, 0.05f, "El trazo es un hilo finísimo");
-            Assert.LessOrEqual(largo, ReglaTrazo.Cola + 0.1f, "Y la estela es corta");
-            Assert.LessOrEqual(Vector3.Distance(d.DestinoUltimoTrazo, jugador.transform.position + Vector3.up * 1.2f), 0.2f, "T-745: el trazo termina donde pega la bala (el pecho)");
             Assert.IsTrue(sonidos.Sonaron.Exists(s => s.id == DronMundo.IdDisparo), "Suena el disparo");
             Assert.AreEqual(0, d.Rozaduras, "La bala que pega no silba");
-            yield return Esperar(0.2f);
-            Assert.AreEqual(0, TrazadorBala.Activos, "El trazo dura un instante y no queda flotando");
         }
 
         [UnityTest]

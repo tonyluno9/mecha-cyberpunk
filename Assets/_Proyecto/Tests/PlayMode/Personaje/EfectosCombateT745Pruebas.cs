@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using MechaCyberpunk.Combate.Efectos;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Trafico.Datos;
@@ -96,7 +95,7 @@ namespace MechaCyberpunk.Tests.Personaje
             propios.Clear();
             foreach (GameObject raiz in Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
             {
-                if (raiz != null && (raiz.name == "EfectoExplosion" || raiz.name == "LlamasSuelo" || raiz.name == "ExplosionCarro" || raiz.name == "TrazadorBala"))
+                if (raiz != null && (raiz.name == "EfectoExplosion" || raiz.name == "LlamasSuelo" || raiz.name == "ExplosionCarro"))
                 {
                     Object.Destroy(raiz);
                 }
@@ -315,82 +314,6 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         // ---------- trazo ----------
-
-        [UnityTest]
-        public IEnumerator Trazo_TerminaDondePegaLaBala_YNoQuedaFlotando()
-        {
-            yield return Calentar();
-            yield return EquiparPistolaYApuntar();
-            Vector3 mira = PuntoDeMira(15f);
-            GameObject pared = Propio(GameObject.CreatePrimitive(PrimitiveType.Cube));
-            pared.transform.position = new Vector3(mira.x, 2f, mira.z);
-            pared.transform.localScale = new Vector3(14f, 6f, 0.5f);
-            pared.transform.rotation = Quaternion.Euler(0f, controlador.Camara.eulerAngles.y, 0f);
-            Physics.SyncTransforms();
-            int antes = TrazadorBala.Creados;
-
-            Press(raton.leftButton);
-            yield return null;
-            Release(raton.leftButton);
-            float limite = Time.time + 1f;
-            while (TrazadorBala.Creados == antes && Time.time < limite)
-            {
-                yield return null;
-            }
-            Assert.Greater(TrazadorBala.Creados, antes, "El disparo deja un trazo");
-            Assert.IsTrue(TrazadorBala.UltimoPego, "El trazo termina en un impacto");
-            Vector3 destino = TrazadorBala.UltimoDestino;
-            Vector3 cercaDePared = pared.GetComponent<Collider>().ClosestPoint(destino);
-            Assert.Less(Vector3.Distance(destino, cercaDePared), 0.05f, "El destino del trazo está sobre la pared");
-            LineRenderer linea = TrazadorBala.UltimaLinea;
-            float tope = Time.time + 0.5f;
-            bool llego = false;
-            while (Time.time < tope && TrazadorBala.Activos > 0)
-            {
-                Assert.LessOrEqual(Vector3.Distance(linea.GetPosition(1), destino), Vector3.Distance(linea.GetPosition(0), destino) + 0.01f);
-                if (!llego && Vector3.Distance(linea.GetPosition(1), destino) < 0.05f)
-                {
-                    llego = true;
-                    Vector3 dir = (destino - linea.GetPosition(0)).normalized;
-                    Vector3 lado = Vector3.Cross(Vector3.up, dir).normalized;
-                    Foto("s1e-T-745-trazo-pared", destino - dir * 6f + lado * 5f + Vector3.up * 0.6f, destino - dir * 2.5f, 45f);
-                }
-                yield return null;
-            }
-            Assert.IsTrue(llego, "La cabeza del trazo llegó al punto de impacto");
-            Assert.AreEqual(0, TrazadorBala.Activos, "Pasado un instante no queda ningún trazo flotando");
-            Assert.IsFalse(linea.enabled);
-        }
-
-        [UnityTest]
-        public IEnumerator Trazo_SinImpacto_SeDesvaneceAlAlcanceMaximo()
-        {
-            yield return Calentar();
-            yield return EquiparPistolaYApuntar();
-            int antes = TrazadorBala.Creados;
-            Press(raton.leftButton);
-            yield return null;
-            Release(raton.leftButton);
-            float limite = Time.time + 1f;
-            while (TrazadorBala.Creados == antes && Time.time < limite)
-            {
-                yield return null;
-            }
-            Assert.Greater(TrazadorBala.Creados, antes);
-            Assert.IsFalse(TrazadorBala.UltimoPego, "No pegó en nada");
-            LineRenderer linea = TrazadorBala.UltimaLinea;
-            float inicio = linea.startColor.a;
-            Assert.Greater(inicio, 0.9f);
-            float minimo = inicio;
-            float tope = Time.time + 1f;
-            while (Time.time < tope && TrazadorBala.Activos > 0)
-            {
-                minimo = Mathf.Min(minimo, linea.startColor.a);
-                yield return null;
-            }
-            Assert.Less(minimo, 0.6f, "Se va desvaneciendo");
-            Assert.AreEqual(0, TrazadorBala.Activos, "Se acaba solo");
-        }
 
         // ---------- explosiones del pack ----------
 

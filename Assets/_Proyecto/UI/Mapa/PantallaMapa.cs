@@ -12,7 +12,7 @@ namespace MechaCyberpunk.UI.Mapa
 {
     /// <summary>
     /// El mapa del barrio con M (T-404, D-tony-220; T-409 con el kit): vista desde arriba con las 6 manzanas del color del dueño de su zona,
-    /// su nombre y respeto, tú como flecha blanca, tus aliados, los enemigos, el objetivo y los iconos de El Mercado, I+D+I, el CIC y la casa.
+    /// su nombre y respeto, tú como flecha blanca, los enemigos, el objetivo y los iconos de El Mercado, I+D+I, el CIC y la casa.
     /// La rueda hace zoom de 1x a 3x centrado en el cursor; un clic izquierdo marca un punto (que sale en el minimapa) y otro clic sobre él lo
     /// quita. A la derecha va la leyenda. M o Esc lo cierran. Mientras está abierto el jugador a pie no se mueve ni dispara y el cursor se ve.
     /// </summary>
@@ -28,7 +28,7 @@ namespace MechaCyberpunk.UI.Mapa
         public const string SonidoAbrir = "UI_MAPA_ABRIR";
         public const string SonidoCerrar = "UI_MAPA_CERRAR";
         public static readonly string[] EtiquetasFijasLeyenda =
-            { "SKULLS", "SNAKES", "NOVA", "TÚ", "ALIADOS", "ENEMIGOS", "OBJETIVO", "EL MERCADO", "I+D+I", "CIC", "CASA", "PUNTO MARCADO" };
+            { "SKULLS", "SNAKES", "NOVA", "TÚ", "ENEMIGOS", "OBJETIVO", "EL MERCADO", "I+D+I", "CIC", "CASA", "PUNTO MARCADO" };
 
         // T-747: la imagen de la ciudad entera (400 x 280 m) llena la vista de 800 x 560 con zoom 1. Constante: el valor viejo seguía guardado en la escena.
         private const float pixelesPorMetro = MapaImagen.PixelesVistaPorMetro;
@@ -42,7 +42,7 @@ namespace MechaCyberpunk.UI.Mapa
         private const float AltoFilaLeyenda = 36f;
         private const float AltoFilaNegocios = 34f;
         private const float InicioLeyenda = 50f;
-        /// <summary>Tu pandilla más las doce etiquetas fijas.</summary>
+        /// <summary>Tu pandilla más las once etiquetas fijas.</summary>
         public static readonly int FilasLeyenda = EtiquetasFijasLeyenda.Length + 1;
         private const float EspacioSecciones = 14f;
         private const int TamanoTextoLateral = TrazoH10.TamanoDato;
@@ -63,7 +63,6 @@ namespace MechaCyberpunk.UI.Mapa
         private RectTransform vista;
         private RectTransform contenido;
         private RectTransform puntoJugador;
-        private readonly List<Image> puntosAliados = new List<Image>();
         private readonly List<Image> marcas = new List<Image>();
         private readonly List<TipoMarcaMapa> tiposMarcas = new List<TipoMarcaMapa>();
         private Image[] manzanas;
@@ -93,7 +92,6 @@ namespace MechaCyberpunk.UI.Mapa
         private ControladorAPie controlCongelado;
         private Text nombrePandilla;
         private Image colorPandilla;
-        private Image colorAliados;
         private readonly List<Text> textosLeyenda = new List<Text>();
         private readonly List<Text> textosNegocios = new List<Text>();
         private Text encabezadoNegocios;
@@ -285,7 +283,7 @@ namespace MechaCyberpunk.UI.Mapa
             }
         }
 
-        // A la derecha: tu pandilla, SKULLS, SNAKES, NOVA, tú, aliados, enemigos, objetivo, los cuatro lugares y el punto marcado.
+        // A la derecha: tu pandilla, SKULLS, SNAKES, NOVA, tú, enemigos, objetivo, los cuatro lugares y el punto marcado.
         private void CrearLeyenda(RectTransform padre, Vector2 esquina, float ancho)
         {
             EstiloCyberfix e = KitUI.Estilo;
@@ -298,15 +296,14 @@ namespace MechaCyberpunk.UI.Mapa
             IconosMapa.Pieza(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[1], out _), "Cuadro", null, FormatoTerritorio.ColorDe(IdPandilla.Viboras), cuadro);
             IconosMapa.Pieza(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[2], out _), "Cuadro", null, FormatoTerritorio.ColorDe(IdPandilla.Nova), cuadro);
             KitUI.CrearTriangulo(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[3], out _), "Muestra", ladoFlecha * 0.8f, Color.white);
-            colorAliados = IconosMapa.CrearAliado(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[4], out _), ladoIcono, FormatoTerritorio.ColorDe(IdPandilla.Jugador));
-            IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[5], out _), TipoMarcaMapa.Enemigo, ladoIcono);
-            KitUI.CrearRombo(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[6], out _), "Muestra", ladoIcono * 0.8f, e.Naranja);
+            IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[4], out _), TipoMarcaMapa.Enemigo, ladoIcono);
+            KitUI.CrearRombo(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[5], out _), "Muestra", ladoIcono * 0.8f, e.Naranja);
             TipoMarcaMapa[] lugares = { TipoMarcaMapa.Mercado, TipoMarcaMapa.Clinica, TipoMarcaMapa.Cic, TipoMarcaMapa.Casa };
             for (int i = 0; i < lugares.Length; i++)
             {
-                IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[7 + i], out _), lugares[i], ladoIcono * 0.85f);
+                IconosMapa.Crear(FilaVacia(leyenda, fila++, EtiquetasFijasLeyenda[6 + i], out _), lugares[i], ladoIcono * 0.85f);
             }
-            IconosMapa.CrearPuntoMarcado(FilaVacia(leyenda, fila, EtiquetasFijasLeyenda[11], out _), ladoIcono * 0.8f);
+            IconosMapa.CrearPuntoMarcado(FilaVacia(leyenda, fila, EtiquetasFijasLeyenda[10], out _), ladoIcono * 0.8f);
         }
 
         // T-429: debajo de la leyenda, el encabezado NEGOCIOS y una fila por negocio.
@@ -508,7 +505,6 @@ namespace MechaCyberpunk.UI.Mapa
             Color tuColor = FormatoTerritorio.ColorDe(IdPandilla.Jugador);
             nombrePandilla.text = FormatoTerritorio.NombreDe(IdPandilla.Jugador);
             colorPandilla.color = tuColor;
-            colorAliados.color = tuColor;
 
             IJugador jugador = Registro<IJugador>.Actual;
             if (jugador != null && jugador.Raiz != null)
@@ -543,7 +539,6 @@ namespace MechaCyberpunk.UI.Mapa
             DibujarDestinos(contraZoom);
             RefrescarNegocios();
             DibujarMarcas(contraZoom);
-            DibujarAliados(tuColor, contraZoom);
             puntoMarcado.rectTransform.SetAsLastSibling();
             romboObjetivo.SetAsLastSibling();
             puntoJugador.SetAsLastSibling();
@@ -752,28 +747,6 @@ namespace MechaCyberpunk.UI.Mapa
             for (int i = todas.Count; i < marcas.Count; i++)
             {
                 marcas[i].gameObject.SetActive(false);
-            }
-        }
-
-        // T-405: un punto por aliado, del color de tu pandilla.
-        private void DibujarAliados(Color color, Vector3 contraZoom)
-        {
-            IPandillaJugador pandilla = Registro<IPandillaJugador>.Actual;
-            int cantidad = pandilla != null ? pandilla.Aliados.Count : 0;
-            while (puntosAliados.Count < cantidad)
-            {
-                puntosAliados.Add(IconosMapa.CrearAliado(contenido, ladoIcono, color));
-            }
-            for (int i = 0; i < puntosAliados.Count; i++)
-            {
-                bool hay = i < cantidad && pandilla.Aliados[i] != null;
-                puntosAliados[i].gameObject.SetActive(hay);
-                if (hay)
-                {
-                    puntosAliados[i].color = color;
-                    puntosAliados[i].rectTransform.anchoredPosition = GeometriaBarrio.AMapa(pandilla.Aliados[i].position) * pixelesPorMetro;
-                    puntosAliados[i].rectTransform.localScale = contraZoom;
-                }
             }
         }
     }

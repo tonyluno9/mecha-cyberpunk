@@ -1,6 +1,5 @@
 using System.Collections;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
@@ -62,7 +61,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         [SerializeField] private Transform puertaCasa;
         [SerializeField] private Transform donaLupe;
         [SerializeField] private PandilleroAPie[] calaveras = System.Array.Empty<PandilleroAPie>();
-        [SerializeField] private Reclutable chato;
         [Tooltip("Los grupos de Calaveras del tianguis: apagados hasta el paso del tianguis.")]
         [SerializeField] private GameObject[] gruposTianguis = System.Array.Empty<GameObject>();
         [Tooltip("Los grupos de SNAKES de Neón Alto: apagados hasta el juego libre (T-418).")]
@@ -303,11 +301,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     }
                     break;
                 case PasoHistoria.Chato:
-                    IPandillaJugador pandilla = Registro<IPandillaJugador>.Actual;
-                    if (pandilla != null && Tiene(pandilla, NombreChato))
-                    {
-                        Avisar(AvisoHistoria.ChatoUnido);
-                    }
+                    // T-930: ya no hay aliados que reclutar; el paso del Chato avanza solo.
+                    Avisar(AvisoHistoria.ChatoUnido);
                     break;
                 case PasoHistoria.Tianguis:
                     // Los textos del Tianguis esperan a que se lea lo que dijo EL INVENTOR.
@@ -342,18 +337,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     }
                     break;
             }
-        }
-
-        private static bool Tiene(IPandillaJugador pandilla, string nombre)
-        {
-            for (int i = 0; i < pandilla.Cantidad; i++)
-            {
-                if (pandilla.Nombre(i) == nombre)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private static float DistanciaAlJugador(Vector3 punto)
@@ -551,10 +534,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             }
             Prender(gruposTianguis, paso >= PasoHistoria.Tianguis);
             Prender(gruposNeon, paso == PasoHistoria.Libre);
-            if (chato != null)
-            {
-                chato.LiberadoPorHistoria = paso == PasoHistoria.Chato;
-            }
             if (doc != null)
             {
                 doc.DarRegalo(paso == PasoHistoria.Doc ? RegaloDoc : (System.Action)null);
@@ -588,8 +567,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     FijarObjetivo(TextoPistola, arma != null, arma != null ? arma.transform.position : default);
                     break;
                 case PasoHistoria.Chato:
+                    QuitarObjetivo(); // T-930: paso de paso, sin aliado que buscar
                     pantalla.MostrarAyuda(AyudaApuntarYDisparar(), 8f);
-                    FijarObjetivo(TextoChato, chato != null, chato != null ? chato.Posicion : default);
                     break;
                 case PasoHistoria.Doc:
                     FijarObjetivo(TextoDoc, doc != null, doc != null ? doc.Posicion : default);
