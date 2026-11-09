@@ -59,6 +59,19 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator Postes_T921_CruceSinLetreroDeCalle()
+        {
+            if (!Activas)
+            {
+                yield break;
+            }
+            // El cruce del Eje Central con la Av. Neón: tenía letreros colgados del poste de la esquina.
+            Foto(new Vector3(47f, 1.7f, -22f), new Vector3(47f, 4f, 0f), "t921-" + Fase + "-cruce-eje-neon");
+            Foto(new Vector3(-47f, 1.7f, -22f), new Vector3(-47f, 4f, 0f), "t921-" + Fase + "-cruce-eje-coyote");
+            yield return null;
+        }
+
         public static void Foto(Vector3 desde, Vector3 hacia, string nombre)
         {
             if (!Activas)
