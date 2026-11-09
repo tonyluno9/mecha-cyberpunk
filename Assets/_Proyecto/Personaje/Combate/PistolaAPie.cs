@@ -1,5 +1,4 @@
 using System;
-using MechaCyberpunk.Combate.Efectos;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
@@ -466,13 +465,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 if (BuscarImpacto(origen, direccion, d.Alcance, out RaycastHit mejor))
                 {
-                    TrazadorBala.Trazar(origen, mejor.point, true);
                     Impactar(arma, d.Danio * multiplicadorGuarida, mejor, direccion);
-                }
-                else
-                {
-                    // T-745: sin impacto, el trazo se desvanece al llegar al alcance máximo del arma.
-                    TrazadorBala.Trazar(origen, origen + direccion * d.Alcance, false);
                 }
             }
 
@@ -500,7 +493,10 @@ namespace MechaCyberpunk.Personaje.Combate
                 mato = objetivo.RecibirDanio(new InfoDanio(danio * ReglaZonaDanio.Multiplicador(cabeza), TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
             }
             BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato, cabeza));
-            PonerMarca(mejor.point, mejor.normal);
+            if (ReglaHuecosBala.HayHueco(mejor.collider.isTrigger, esCarne, SuperficieImpacto.Visible(mejor.collider, mejor.point)))
+            {
+                PonerMarca(mejor.point, mejor.normal);
+            }
         }
 
         // El primer collider que no sea del propio jugador; los triggers se ignoran.
