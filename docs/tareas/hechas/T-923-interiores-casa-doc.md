@@ -1,0 +1,8 @@
+# T-923 Interiores de la casa y el Doc
+
+- I+D+I del Doc: el muro viejo T531_Locales/IDI/MuroFondo (textura vieja T506_CasinoInt_Muro) compartía plano (z -15.90) con el forro nuevo y peleaban: franjas moradas y se veía la pared de atrás. Se corrió 4 cm hacia fuera (z -15.99). Capturas t923-{antes,despues}-idi-esq1/esq2.
+- Cuarto: se quitaron los 7 pósters (Poster_*, S2_Cuarto/Poster_S2) y la puerta pasó de L02 a P10 (Assets/Arte/Exteriores/Prefabs/P10.prefab, ya importado en T-883, no hizo falta reimportar el zip) colgada de la misma Hoja con su BoxCollider y HojaPuerta, así abre igual (bisagra al este). Capturas t923-*-cuarto-puerta-dentro y -pasillo.
+- Entrada de la casa desde dentro: el panel naranja plano era el marco viejo Barrio/Manzana_4/Lugar_Casa/Puerta/Marco_T536 (material liso T506_Barrio_Casa). Se apagó su dibujo (colliders intactos) y queda a la vista la fachada P11 con su reja. Un muro de respaldo que probé se quitó: no se veía y estorbaba. Capturas t923-*-casa-entrada*.
+- Script repetible: Assets/Arte/Editor/ColocarT923.cs (Aplicar). Pruebas: EditMode InterioresT923Pruebas (4); se ajustaron InterioresT546Pruebas (ya no exige pósters) y MundoS2Pruebas (puerta P10). Capturas por PlayMode CapturasS2T92Pruebas.Interiores_T923 con T92_CAPTURAS=1.
+- Límites: la puerta P10 mide 0.35 m de grosor (modelo de Tony) en una pared de 0.1 m; sale por los dos lados. Pared frontal del I+D+I (Frente_*_Dentro, gris liso) no se tocó.
+- PlayMode CuartosPruebas: 2 fallos que NO son de esta tarea (fallan igual en la rama anterior): Cuarto_Mide3x4x2_7 (el cuarto ahora mide 5 m) y Salir_PorLaPuerta... (la E no ofrece la puerta de la calle).

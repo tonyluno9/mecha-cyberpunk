@@ -72,6 +72,33 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator Interiores_T923()
+        {
+            if (!Activas)
+            {
+                yield break;
+            }
+            Vector3 ojo(float x, float z) => new Vector3(x, 1.65f, z);
+            // I+D+I del Doc (x -104..-96, z -16..-10): las cuatro paredes desde dentro.
+            Foto(ojo(-100f, -10.6f), ojo(-100f, -16f), "t923-" + Fase + "-idi-fondo");
+            Foto(ojo(-96.4f, -13f), ojo(-104f, -13f), "t923-" + Fase + "-idi-izq");
+            Foto(ojo(-103.6f, -13f), ojo(-96f, -13f), "t923-" + Fase + "-idi-der");
+            Foto(ojo(-100f, -15.6f), ojo(-100f, -10f), "t923-" + Fase + "-idi-frente");
+            Foto(ojo(-98f, -10.8f), ojo(-103f, -15f), "t923-" + Fase + "-idi-esq1");
+            Foto(ojo(-102f, -10.8f), ojo(-97f, -15f), "t923-" + Fase + "-idi-esq2");
+            // Cuarto (x -66.5..-61.5, z -75.5..-71.5, puerta al sur en x -62).
+            Foto(ojo(-62.2f, -73.2f), ojo(-66.5f, -73f), "t923-" + Fase + "-cuarto-posters");
+            Foto(ojo(-65.5f, -72f), ojo(-62f, -75.5f), "t923-" + Fase + "-cuarto-puerta-dentro");
+            Foto(ojo(-62f, -77.2f), ojo(-62f, -75.5f), "t923-" + Fase + "-cuarto-puerta-pasillo");
+            Foto(ojo(-65f, -74f), ojo(-64f, -71.5f), "t923-" + Fase + "-cuarto-fondo");
+            // Entrada de la casa desde dentro (pasillo, x -63.6..-57).
+            Foto(ojo(-60f, -77f), ojo(-56.7f, -77f), "t923-" + Fase + "-casa-entrada");
+            Foto(ojo(-61f, -77f), ojo(-56.7f, -75.8f), "t923-" + Fase + "-casa-entrada-n");
+            Foto(ojo(-61f, -77f), ojo(-56.7f, -78.2f), "t923-" + Fase + "-casa-entrada-s");
+            yield return null;
+        }
+
         public static void Foto(Vector3 desde, Vector3 hacia, string nombre)
         {
             if (!Activas)
