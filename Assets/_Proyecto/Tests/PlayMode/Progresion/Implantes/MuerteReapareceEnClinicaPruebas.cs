@@ -56,7 +56,7 @@ namespace MechaCyberpunk.Tests
             EventosPelea.LimpiarSuscriptores();
         }
 
-        private IEnumerator Preparar(int dineroInicial)
+        private IEnumerator Preparar(int dineroInicial, EtapaPrologo etapa = EtapaPrologo.Libre)
         {
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
             float fin = Time.time + SegundosCalentamiento;
@@ -75,8 +75,9 @@ namespace MechaCyberpunk.Tests
             Assert.IsNotNull(cartera, "hay cartera");
             ServicioHistoria historia = Registro<IHistoria>.Actual as ServicioHistoria;
             Assert.IsNotNull(historia, "hay historia");
-            historia.Avanzar(EtapaPrologo.Libre);
-            Assert.AreEqual(EtapaPrologo.Libre, historia.Etapa, "juego libre: el doctor atiende las caídas");
+            historia.Reiniciar();
+            historia.Avanzar(etapa);
+            Assert.AreEqual(etapa, historia.Etapa, "etapa de la prueba");
 
             if (dineroInicial > cartera.Dinero)
             {
@@ -185,6 +186,15 @@ namespace MechaCyberpunk.Tests
             yield return Preparar(1200);
             yield return MatarYEsperar(true);
             Assert.AreEqual(1200 - datos.Cobro, cartera.Dinero, "el doctor cobró el cobro completo");
+            Assert.AreEqual(1, doctor.Caidas, "una sola secuencia");
+        }
+
+        // T-946: una partida nueva se queda en PeleaTutorial (ya no hay director del prólogo en la ciudad) y el Doc debe atender igual.
+        [UnityTest]
+        public IEnumerator Morir_EnPartidaNueva_ElDocAtiendeIgualYDespiertaEnLaClinica()
+        {
+            yield return Preparar(1200, EtapaPrologo.PeleaTutorial);
+            yield return MatarYEsperar(true);
             Assert.AreEqual(1, doctor.Caidas, "una sola secuencia");
         }
 

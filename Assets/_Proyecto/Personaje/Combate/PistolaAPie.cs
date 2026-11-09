@@ -281,6 +281,10 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 if (pidio && actual.IntentarDisparar())
                 {
+                    if (!enCarro)
+                    {
+                        controlador.MirarAlDisparar(); // T-943: si dispara hacia atrás o de lado, el cuerpo gira hacia allá
+                    }
                     Disparar(activa, d);
                 }
                 else if (pidio && !actual.Recargando && actual.Balas <= 0 && Time.time >= finEsperaVacio)

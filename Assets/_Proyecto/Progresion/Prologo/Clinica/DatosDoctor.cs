@@ -17,11 +17,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
 
         [Header("Tiempos")]
         [Tooltip("Segundos que se ve caer al jugador antes de que empiece el fundido (s).")]
-        [Min(0f)] [SerializeField] private float segundosEspera = 3f;
+        [Min(0f)] [SerializeField] private float segundosEspera = 1.2f;
         [Tooltip("Segundos que se queda la pantalla HAS MUERTO una vez encendida; 0 = sin pantalla (T-689).")]
-        [Min(0f)] [SerializeField] private float segundosPantallaMuerte = 2.6f;
+        [Min(0f)] [SerializeField] private float segundosPantallaMuerte = 1.4f;
         [Tooltip("Segundos que tarda en encenderse la pantalla HAS MUERTO (s).")]
-        [Min(0.05f)] [SerializeField] private float segundosEntradaMuerte = 0.9f;
+        [Min(0.05f)] [SerializeField] private float segundosEntradaMuerte = 0.35f;
         [Tooltip("Segundos que la pantalla se queda en negro antes de despertar (s).")]
         [Min(0f)] [SerializeField] private float segundosNegro = 1f;
         [Tooltip("Segundos que se ve el subtítulo del doctor al despertar (s).")]

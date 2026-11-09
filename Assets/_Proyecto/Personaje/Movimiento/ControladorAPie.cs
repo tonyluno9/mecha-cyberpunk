@@ -55,6 +55,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private bool enPiso;
         private float giroCamara;
         private bool apuntando;
+        private float segundosMirarAlDisparo;
 
         /// <summary>Velocidad horizontal en el espacio del jugador (x lateral, y adelante, m/s).</summary>
         public Vector2 Velocidad => movimiento.VelocidadHorizontal;
@@ -263,11 +264,19 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
         }
 
+        /// <summary>T-943: al disparar sin apuntar, el cuerpo gira un momento hacia donde mira la cámara.</summary>
+        public void MirarAlDisparar()
+        {
+            segundosMirarAlDisparo = configCamara != null ? configCamara.SegundosGiroAlDisparar : 0f;
+        }
+
         private void GirarCuerpo(float dt, Vector3 horizontal)
         {
             float giroMaximo = (configCamara != null ? configCamara.GiroCuerpo : 720f) * dt;
             float objetivo = transform.eulerAngles.y;
-            if (apuntando)
+            bool mirandoAlDisparo = segundosMirarAlDisparo > 0f;
+            segundosMirarAlDisparo = Mathf.Max(0f, segundosMirarAlDisparo - dt);
+            if (apuntando || mirandoAlDisparo)
             {
                 objetivo = giroCamara;
             }
