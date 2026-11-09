@@ -199,6 +199,75 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(0, huecos.Activos, "los huecos se apagan con el tiempo");
         }
 
+        private static HuecosBala NuevosHuecos()
+        {
+            if (HuecosBala.Actual != null)
+            {
+                Object.DestroyImmediate(HuecosBala.Actual.gameObject);
+            }
+            return HuecosBala.Crear();
+        }
+
+        [UnityTest]
+        public IEnumerator Impacto_SinSuperficieVisible_NoDejaHueco()
+        {
+            HuecosBala huecos = NuevosHuecos();
+            // Un collider invisible (sin Renderer en él, sus padres ni sus hijos): la bala "pega" pero no hay nada que se vea.
+            GameObject muro = new GameObject("MuroInvisible");
+            muro.transform.position = new Vector3(0f, 1.5f, 5f);
+            BoxCollider caja = muro.AddComponent<BoxCollider>();
+            caja.size = new Vector3(6f, 3f, 0.3f);
+            // Un cubo visible al lado como control.
+            GameObject pared = Pared();
+            pared.transform.position = new Vector3(10f, 1.5f, 5f);
+            Physics.SyncTransforms();
+            yield return null;
+            Vector3 ojo = new Vector3(0f, 1.6f, -1f);
+            Assert.IsFalse(huecos.SimularImpacto(Disparo(ojo, new Vector3(0f, 1.5f, 5f))), "colisión invisible: sin hueco");
+            Assert.AreEqual(0, huecos.Activos);
+            Vector3 ojoControl = new Vector3(10f, 1.6f, -1f);
+            Assert.IsTrue(huecos.SimularImpacto(Disparo(ojoControl, new Vector3(10f, 1.5f, 5f))), "pared con malla: con hueco");
+            Assert.AreEqual(1, huecos.Activos);
+        }
+
+        [UnityTest]
+        public IEnumerator Hueco_SiLaSuperficieSeMueveSeApagaOSeDestruye_Desaparece()
+        {
+            HuecosBala huecos = NuevosHuecos();
+            GameObject pared = Pared();
+            Physics.SyncTransforms();
+            yield return null;
+            Vector3 ojo = new Vector3(-1f, 1.6f, -1f);
+
+            // Se mueve menos de 2 cm: sigue ahí.
+            Assert.IsTrue(huecos.SimularImpacto(Disparo(ojo, new Vector3(-1f, 1.5f, 5f))));
+            pared.transform.position += Vector3.right * 0.015f;
+            yield return null;
+            Assert.AreEqual(1, huecos.Activos, "un movimiento de 1,5 cm no lo quita");
+
+            // Se mueve más de 2 cm: desaparece.
+            pared.transform.position += Vector3.right * 0.05f;
+            yield return null;
+            Assert.AreEqual(0, huecos.Activos, "si la superficie se movió más de 2 cm el hueco desaparece");
+
+            // Se apaga: desaparece.
+            pared.transform.position = new Vector3(0f, 1.5f, 5f);
+            Physics.SyncTransforms();
+            Assert.IsTrue(huecos.SimularImpacto(Disparo(ojo, new Vector3(-1f, 1.5f, 5f))));
+            pared.SetActive(false);
+            yield return null;
+            Assert.AreEqual(0, huecos.Activos, "si la superficie se apaga el hueco desaparece");
+
+            // Se destruye: desaparece.
+            pared.SetActive(true);
+            Physics.SyncTransforms();
+            Assert.IsTrue(huecos.SimularImpacto(Disparo(ojo, new Vector3(-1f, 1.5f, 5f))));
+            Object.Destroy(pared);
+            yield return null;
+            yield return null;
+            Assert.AreEqual(0, huecos.Activos, "si la superficie se destruye el hueco desaparece");
+        }
+
         private static void Capturar(Vector3 desde, Vector3 hacia)
         {
             const int Ancho = 1920;

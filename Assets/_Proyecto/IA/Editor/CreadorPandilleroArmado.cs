@@ -16,7 +16,6 @@ namespace MechaCyberpunk.IA.Editor
         public const string RutaDatosViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Viboras.asset";
         public const string RutaDatosNova = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Nova.asset";
         public const string RutaPrefab = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab";
-        private const string RutaMaterialLaser = "Assets/_Proyecto/IA/Materiales/PistolaPandillero_Laser.mat";
         private const string RutaModelo = "Assets/Arte/Personajes/MunecoHumano/ModeloHumano.prefab";
 
         private const float AlturaCuerpo = 1.8f;
@@ -32,30 +31,15 @@ namespace MechaCyberpunk.IA.Editor
         [MenuItem("Mecha Cyberpunk/Crear T-402 pandillero armado")]
         public static void Crear()
         {
-            Material laser = CrearMaterialLaser();
             DatosPandilleroAPie calaveras = CrearDatos(RutaDatosCalaveras, "SKULL", 3, new Color(1f, 0.1f, 0.8f));
             CrearDatos(RutaDatosViboras, "SNAKE", 3, new Color(0.45f, 1f, 0.1f));
             CrearDatosNova();
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab) == null)
             {
-                ArmarPrefab(calaveras, laser);
+                ArmarPrefab(calaveras);
             }
             AssetDatabase.SaveAssets();
             Debug.Log("[IA] T-402 pandillero armado listo.");
-        }
-
-        private static Material CrearMaterialLaser()
-        {
-            Material material = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialLaser);
-            if (material != null)
-            {
-                return material;
-            }
-            Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
-            material = new Material(shader);
-            material.SetColor("_BaseColor", Color.red);
-            AssetDatabase.CreateAsset(material, RutaMaterialLaser);
-            return material;
         }
 
         private static DatosPandilleroAPie CrearDatos(string ruta, string nombre, int tamano, Color color)
@@ -100,7 +84,7 @@ namespace MechaCyberpunk.IA.Editor
             }
         }
 
-        private static void ArmarPrefab(DatosPandilleroAPie datos, Material laser)
+        private static void ArmarPrefab(DatosPandilleroAPie datos)
         {
             GameObject modelo = AssetDatabase.LoadAssetAtPath<GameObject>(RutaModelo);
             if (modelo == null)
@@ -117,10 +101,7 @@ namespace MechaCyberpunk.IA.Editor
                 controlador.center = new Vector3(0f, AlturaCuerpo * 0.5f, 0f);
                 GameObject visual = (GameObject)PrefabUtility.InstantiatePrefab(modelo, raiz.transform);
                 visual.name = "Modelo";
-                PistolaPandillero pistola = raiz.AddComponent<PistolaPandillero>();
-                SerializedObject soPistola = new SerializedObject(pistola);
-                soPistola.FindProperty("materialLaser").objectReferenceValue = laser;
-                soPistola.ApplyModifiedPropertiesWithoutUndo();
+                raiz.AddComponent<PistolaPandillero>();
                 PandilleroAPie pandillero = raiz.AddComponent<PandilleroAPie>();
                 SerializedObject so = new SerializedObject(pandillero);
                 so.FindProperty("datos").objectReferenceValue = datos;

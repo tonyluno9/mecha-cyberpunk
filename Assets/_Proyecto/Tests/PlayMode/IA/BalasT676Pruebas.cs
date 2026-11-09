@@ -88,19 +88,6 @@ namespace MechaCyberpunk.Tests.IA
             return total;
         }
 
-        private int LaseresVisibles()
-        {
-            int n = 0;
-            foreach (LineRenderer l in grupo.GetComponentsInChildren<LineRenderer>(true))
-            {
-                if (l.enabled && l.name == "Laser")
-                {
-                    n++;
-                }
-            }
-            return n;
-        }
-
         private static IEnumerator Esperar(float segundos)
         {
             float fin = Time.time + segundos;
@@ -111,7 +98,7 @@ namespace MechaCyberpunk.Tests.IA
         }
 
         [UnityTest]
-        public IEnumerator TrasUnMuro_NoDisparanNiMuestranAviso()
+        public IEnumerator TrasUnMuro_NoDisparan()
         {
             CrearGrupo(15f);
             muro = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -120,44 +107,29 @@ namespace MechaCyberpunk.Tests.IA
             Physics.SyncTransforms();
             VidaAPie vida = jugador.GetComponent<VidaAPie>();
             float maxima = vida.Maxima;
-            int avisos = 0;
             float fin = Time.time + 6f;
             while (Time.time < fin)
             {
-                avisos += LaseresVisibles();
                 yield return null;
             }
             string donde = "";
             foreach (PandilleroAPie p in grupo.GetComponentsInChildren<PandilleroAPie>()) { donde += p.transform.position + " "; }
             Assert.AreEqual(0, Disparos(), "Sin línea de vista no hay disparo (pandilleros en " + donde + ")");
-            Assert.AreEqual(0, avisos, "Ni aviso láser a través del muro");
             Assert.AreEqual(maxima, vida.Actual, 0.001f);
         }
 
         [UnityTest]
-        public IEnumerator ConLineaLibre_DisparanYElTrazoEsFinisimoYCortisimo()
+        public IEnumerator ConLineaLibre_Disparan()
         {
             CrearGrupo(15f);
             VidaAPie vida = jugador.GetComponent<VidaAPie>();
             float maxima = vida.Maxima;
-            float anchoMax = 0f;
             float fin = Time.time + 5f;
             while (Time.time < fin && vida.Actual >= maxima)
             {
                 yield return null;
             }
             Assert.Less(vida.Actual, maxima, "Con línea libre sí disparan");
-            int trazosLargos = 0;
-            foreach (LineRenderer l in grupo.GetComponentsInChildren<LineRenderer>(true))
-            {
-                anchoMax = Mathf.Max(anchoMax, l.startWidth);
-                if (l.enabled && (l.GetPosition(1) - l.GetPosition(0)).magnitude > 6.5f)
-                {
-                    trazosLargos++;
-                }
-            }
-            Assert.LessOrEqual(anchoMax, 0.01f, "Trazo finísimo (" + anchoMax + " m)");
-            Assert.AreEqual(0, trazosLargos, "Trazo cortísimo (no cruza la calle)");
         }
     }
 }

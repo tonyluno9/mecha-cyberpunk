@@ -208,7 +208,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 float desvio = (Azar() < 0.5f ? -1f : 1f) * (0.4f + 0.8f * Azar());
                 direccion = (pecho + lado * desvio - origen).normalized;
             }
-            DibujarTrazo(origen, direccion, Vector3.Distance(origen, pecho), acierta);
             if (acierta)
             {
                 Aciertos++;
@@ -231,21 +230,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         /// <summary>T-710: cuántas balas pasaron lo bastante cerca del jugador como para silbar.</summary>
         public int Rozaduras { get; private set; }
-
-        /// <summary>T-745: dónde terminó el trazo del último disparo del dron (el impacto o el final del alcance).</summary>
-        public Vector3 DestinoUltimoTrazo { get; private set; }
-
-        private void DibujarTrazo(Vector3 origen, Vector3 direccion, float distancia, bool acierta)
-        {
-            // T-745: si acertó, el trazo llega al pecho; si no, sigue hasta lo primero que pegue o se desvanece en el alcance máximo.
-            if (acierta)
-            {
-                DestinoUltimoTrazo = origen + direccion * distancia;
-                TrazadorBala.Trazar(origen, DestinoUltimoTrazo, true);
-                return;
-            }
-            DestinoUltimoTrazo = TrazadorBala.TrazarDireccion(origen, direccion, transform);
-        }
 
         private readonly RaycastHit[] impactosLinea = new RaycastHit[16];
 
