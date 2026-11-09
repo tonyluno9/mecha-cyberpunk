@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Tests.UI
         [Test]
         public void Catalogo_TieneLosOchoLugaresDelDiseno_ConNombreYSinRepetirse()
         {
-            string[] esperados = { "CASA", "EL DOC", "TINO", "MECÁNICO", "TIANGUIS", "CASINO", "MERCADO", "MISIONES" };
+            string[] esperados = { "CASA", "I+D+I", "TINO", "MECÁNICO", "TIANGUIS", "CASINO", "MERCADO", "MISIONES" };
             Assert.AreEqual(esperados.Length, CatalogoDestinosMapa.Todos.Count);
             for (int i = 0; i < esperados.Length; i++)
             {
