@@ -82,13 +82,15 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [Test]
-        public void ConfigPersecucion_PorDefecto_DaUnDronEnNivel1YUnaPatrullaEnNivel3()
+        public void ConfigPersecucion_PorDefecto_NoDaDronEnNivel1_UnoEnNivel2_YUnaPatrullaEnNivel3()
         {
             ConfigPersecucion config = ScriptableObject.CreateInstance<ConfigPersecucion>();
             try
             {
                 CalculoPersecucion calculo = config.Crear();
-                Assert.AreEqual(1, calculo.Drones(1));
+                Assert.AreEqual(0, calculo.Drones(1), "T-938: ningún dron en el nivel 1");
+                Assert.AreEqual(1, calculo.Drones(2));
+                Assert.AreEqual(2, calculo.Drones(3));
                 Assert.AreEqual(0, calculo.Patrullas(2));
                 Assert.AreEqual(1, calculo.Patrullas(3));
             }

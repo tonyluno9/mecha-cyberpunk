@@ -9,7 +9,7 @@ namespace MechaCyberpunk.Trafico.Datos
     public class ConfigPersecucion : ScriptableObject
     {
         [Tooltip("Drones en los niveles de calor 1, 2 y 3 (el primer elemento es el nivel 1).")]
-        [SerializeField] private List<int> dronesPorNivel = new List<int> { 1, 2, 2 };
+        [SerializeField] private List<int> dronesPorNivel = new List<int> { 0, 1, 2 };
         [Tooltip("Patrullas en los mismos niveles.")]
         [SerializeField] private List<int> patrullasPorNivel = new List<int> { 0, 0, 1 };
         [Min(0.1f)] [Tooltip("Velocidad del dron (m/s).")]
@@ -23,7 +23,11 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(1f)] [Tooltip("Altura del dron sobre el jugador (m).")]
         [SerializeField] private float alturaDron = 7f;
         [Min(1f)] [Tooltip("A qué distancia del jugador aparece un dron (m).")]
-        [SerializeField] private float distanciaAparicionDron = 40f;
+        [SerializeField] private float distanciaAparicionDron = 90f;
+        [Min(0f)] [Tooltip("T-938: radio del círculo alrededor del jugador donde se coloca cada dron, uno por índice (m).")]
+        [SerializeField] private float radioOrbitaDron = 4f;
+        [Min(0f)] [Tooltip("T-938: dos drones nunca quedan a menos de esta distancia (m).")]
+        [SerializeField] private float distanciaMinimaEntreDrones = 3f;
         [Min(0.05f)] [Tooltip("Cada cuánto cambian de color las luces de la patrulla (s).")]
         [SerializeField] private float periodoSirena = 0.4f;
 
@@ -129,6 +133,8 @@ namespace MechaCyberpunk.Trafico.Datos
         public float AvisoDron => avisoDron;
         public float AlturaDron => alturaDron;
         public float DistanciaAparicionDron => distanciaAparicionDron;
+        public float RadioOrbitaDron => radioOrbitaDron;
+        public float DistanciaMinimaEntreDrones => distanciaMinimaEntreDrones;
         public float PeriodoSirena => periodoSirena;
 
         public CalculoPersecucion Crear()

@@ -22,6 +22,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float GradosPorVuelta = 360f;
         public const float DistanciaSalidaPatrulla = 80f;
         private const int IntentosDeSalidaDron = 8;
+        private const float GradosReintentoDron = 47f;
         private const float SeparacionDeSalida = 20f;
         private const float AlcanceCamara = 400f;
         private const float SegundosReintentoSalida = 0.5f;
@@ -172,6 +173,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             retirandose.RemoveAll(c => c == null || (c is PatrullaMundo robada && robada.Robada));
             patrullas.RemoveAll(p => p == null || p.Robada); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
             drones.RemoveAll(d => d == null); // T-730: un dron derribado ya no cuenta
+            for (int i = 0; i < drones.Count; i++)
+            {
+                drones[i].AsignarOrbita(i, drones.Count); // T-938: cada dron su punto
+            }
             MantenerRondas(Time.deltaTime);
             if (calor == null || calor.Nivel <= 0 || config == null)
             {
@@ -348,7 +353,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             int patrullasPedidas = calculo == null ? 0 : calculo.Patrullas(nivel);
             while (drones.Count < dronesPedidos)
             {
-                CrearDron();
+                CrearDron(dronesPedidos);
             }
             Retirar(drones, dronesPedidos);
             while (patrullas.Count < patrullasPedidas)
@@ -389,15 +394,17 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
-        private void CrearDron()
+        private void CrearDron(int total)
         {
             Vector3 centro = PosicionDelJugador() ?? transform.position;
             Camera camara = Camera.main;
             Vector3 lejos = centro;
+            int indice = drones.Count;
+            float anguloBase = (float)azar.NextDouble() * GradosPorVuelta;
             for (int intento = 0; intento < IntentosDeSalidaDron; intento++)
             {
-                float angulo = (float)azar.NextDouble() * GradosPorVuelta * Mathf.Deg2Rad;
-                lejos = centro + new Vector3(Mathf.Cos(angulo), 0f, Mathf.Sin(angulo)) * config.DistanciaAparicionDron + Vector3.up * config.AlturaDron;
+                // T-938: cada dron sale por su lado (en círculo, por índice); si ese lado se ve, se gira el círculo y se prueba otra vez.
+                lejos = CalculoSeparacionDrones.PuntoEnCirculo(centro, indice, total, config.DistanciaAparicionDron, config.AlturaDron, anguloBase + intento * GradosReintentoDron);
                 if (!ReglaVistaPolicia.LoVe(camara, lejos, AlcanceCamara))
                 {
                     break; // T-587: sale fuera de la vista
@@ -406,6 +413,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             DronMundo dron = Instantiate(prefabDron, lejos, Quaternion.identity, transform);
             dron.Preparar(calculo, config, PosicionDelJugador);
             drones.Add(dron);
+            dron.AsignarOrbita(indice, total);
         }
 
         // T-933: mantiene las patrullas de ronda: si falta alguna sale otra, siempre lejos y fuera de la vista.

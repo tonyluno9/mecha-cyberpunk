@@ -125,10 +125,15 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.AreEqual(0, gestor.Patrullas);
 
             // T-533: una patrulla viene desde el nivel 1 (antes solo en el 3); en el 3 son tres.
+            // T-938: el dron solo sale desde el nivel 2.
             calor.Poner(1);
             yield return EsperarFrames();
-            Assert.AreEqual(1, gestor.Drones);
+            Assert.AreEqual(0, gestor.Drones);
             Assert.AreEqual(1, gestor.Patrullas);
+
+            calor.Poner(2);
+            yield return EsperarFrames();
+            Assert.AreEqual(1, gestor.Drones);
 
             calor.Poner(3);
             yield return EsperarFrames();
@@ -140,7 +145,9 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.AreEqual(0, gestor.Drones);
             Assert.AreEqual(0, gestor.Patrullas);
             // T-587: no desaparecen de golpe: se van y se borran solos al salir de la vista.
-            Assert.AreEqual(5, gestor.Retirandose);
+            // T-938: los drones salen a 90 m, fuera de la vista y lejos: al retirarse desaparecen al instante; las patrullas más cercanas se van andando.
+            Assert.Greater(gestor.Retirandose, 0);
+            Assert.LessOrEqual(gestor.Retirandose, 5);
             Time.timeScale = EscalaDeTiempo;
             float limite = Time.time + SegundosDeJuego;
             while (Time.time < limite && gestor.Retirandose > 0)
@@ -172,7 +179,7 @@ namespace MechaCyberpunk.Tests.Trafico
         [UnityTest]
         public IEnumerator Dron_SeAcercaAlJugador_YVuelaSobreEl()
         {
-            calor.Poner(1);
+            calor.Poner(2);
             yield return null;
             DronMundo dron = gestor.GetComponentInChildren<DronMundo>();
             Assert.IsNotNull(dron);

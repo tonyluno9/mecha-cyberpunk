@@ -190,7 +190,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 AssetDatabase.LoadAssetAtPath<GameObject>(RutaPatrulla).GetComponent<PatrullaMundo>());
             objeto.SetActive(true);
             Propio(objeto);
-            calor.Sumar(30f, MotivoCalor.Mision);
+            calor.Sumar(45f, MotivoCalor.Mision); // T-938: el dron sale desde el nivel 2
             float limite = Time.time + 4f;
             while (gestor.Drones == 0 && Time.time < limite)
             {
