@@ -21,8 +21,8 @@ MonoBehaviour:
   radioGolpe: 0.3
   preparacionGolpe: 0.12
   recargaGolpe: 0.45
-  regeneracionPorSegundo: 8
-  segundosParaRegenerar: 4
+  regeneracionPorSegundo: 3
+  segundosParaRegenerar: 8
   alturaCamaraKO: 0.4
   ladeoCamaraKO: 40
   velocidadCaidaKO: 6
