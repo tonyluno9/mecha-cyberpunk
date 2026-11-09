@@ -40,15 +40,12 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Habitacion_ViveEnSuCuartoAparte_PosteresConTexturaYFocoCalido()
+        public void Habitacion_ViveEnSuCuartoAparte_SinPosteresYFocoCalido()
         {
             Assert.IsNull(raiz.Find("Habitacion"), "T-550: la habitación ya es un cuarto aparte (T550_Cuartos)");
             Transform h = escena.GetRootGameObjects().First(g => g.name == "T550_Cuartos").transform.Find("Cuarto_Habitacion");
-            for (int i = 1; i <= 3; i++)
-            {
-                Renderer r = h.Find("Poster_" + i).GetComponent<Renderer>();
-                Assert.AreEqual("T546_Poster_" + i, r.sharedMaterial.mainTexture.name);
-            }
+            // T-923 (playtest 9-nov): los pósters tenían la textura rota y se quitaron del cuarto.
+            Assert.IsNull(h.Find("Poster_1"), "T-923: sin pósters");
             // S2 (playtest 5-nov): el foco es pelón y cuelga de su cable, como en habitacion.png.
             Assert.Less(h.Find("S2_Cuarto/Foco_Pelon").lossyScale.y, 0.2f, "Foco chico de cuarto");
             Light foco = h.Find("Luces/FocoColgante_Luz").GetComponent<Light>();

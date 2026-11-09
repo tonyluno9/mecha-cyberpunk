@@ -165,7 +165,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.That(mochila.size.y, Is.InRange(0.4f, 0.65f), "mochila de tamaño real");
             Assert.Greater(cuarto.InverseTransformPoint(Limites(cuarto.Find("I01")).center).x, 0.5f, "ropero a la derecha, como en la referencia");
             Assert.IsFalse(Limites(cuarto.Find("I01")).Contains(cuarto.Find("Aparicion").position + Vector3.up), "el jugador no aparece dentro del ropero");
-            Bounds puerta = Limites(cuarto.Find("Puerta_Cuarto/Hoja/Puerta_L02")); // T-804: la hoja L02 gira en su bisagra
+            Bounds puerta = Limites(cuarto.Find("Puerta_Cuarto/Hoja/Puerta_P10")); // T-804: la hoja gira en su bisagra; T-923: ahora con el modelo P10
             Assert.That(puerta.size.y, Is.InRange(2f, 2.3f), "puerta de verdad de unos 2.1 m");
             Assert.LessOrEqual(puerta.size.x, 1.2f);
             Assert.IsNotNull(cuarto.Find("S2_Cuarto/Foco_Pelon"));
