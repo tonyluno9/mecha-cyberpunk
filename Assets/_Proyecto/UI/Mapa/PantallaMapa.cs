@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Inventario;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -156,6 +157,11 @@ namespace MechaCyberpunk.UI.Mapa
 
         private void Awake()
         {
+            // T-904: el inventario (tecla I) vive junto al mapa para que exista en cada escena que tiene mapa, sin tocar escenas.
+            if (GetComponent<PantallaInventario>() == null)
+            {
+                gameObject.AddComponent<PantallaInventario>();
+            }
             EstiloCyberfix e = KitUI.Estilo;
             float margen = TrazoH10.MargenPantalla;
             float separacion = TrazoH10.SeparacionModulo;
