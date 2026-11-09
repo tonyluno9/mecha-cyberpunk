@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.IA.Datos;
 using MechaCyberpunk.IA.Editor;
@@ -28,7 +27,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         public const string RaizT402 = "GTA_T402";
         public const string RaizT403 = "GTA_T403";
         public const string RaizT404 = "GTA_T404";
-        public const string RaizT405 = "GTA_T405";
+        private const string RutaModeloHumano = "Assets/Arte/Personajes/MunecoHumano/ModeloHumano.prefab";
         public const string RaizT406 = "GTA_T406";
         public const string RaizT407 = "GTA_T407";
         public const float HoraInicial = 19f;
@@ -51,7 +50,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             T402Interno();
             T403Interno();
             T404Interno();
-            T405Interno();
             T406Interno();
             T407Interno();
             T414Interno();
@@ -322,19 +320,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 calaveras[i] = c.GetComponent<PandilleroAPie>();
             }
 
-            // El CHATO queda solo para la historia.
-            Reclutable chato = null;
-            foreach (Reclutable r in Object.FindObjectsByType<Reclutable>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            {
-                if (r.Nombre == "EL CHATO")
-                {
-                    chato = r;
-                    SerializedObject soR = new SerializedObject(r);
-                    soR.FindProperty("soloHistoria").boolValue = true;
-                    soR.ApplyModifiedPropertiesWithoutUndo();
-                }
-            }
-
             // Grupos de Calaveras (los del tianguis): apagados.
             List<GameObject> grupos = new List<GameObject>();
             foreach (PandillaAPie g in Object.FindObjectsByType<PandillaAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None))
@@ -366,7 +351,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             {
                 lista.GetArrayElementAtIndex(i).objectReferenceValue = calaveras[i];
             }
-            so.FindProperty("chato").objectReferenceValue = chato;
             so.FindProperty("radioSalida").floatValue = RadioSalidaCasa;
             SerializedProperty gl = so.FindProperty("gruposTianguis");
             gl.arraySize = grupos.Count;
@@ -376,62 +360,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             }
             so.ApplyModifiedPropertiesWithoutUndo();
             Debug.Log("[Progresion] CreadorCiudadPandillas.T406: director, Lupe en " + centro + ", " + grupos.Count + " grupos apagados, "
-                + arsenales + " arsenal(es) sin pistola, chato " + (chato != null ? "ok" : "NO"));
-        }
-
-        [MenuItem("Mecha Cyberpunk/Pandillas/T-405 Aliados")]
-        public static void T405()
-        {
-            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
-            T405Interno();
-            Guardar(escena);
-        }
-
-        private const string RutaModeloHumano = "Assets/Arte/Personajes/MunecoHumano/ModeloHumano.prefab";
-
-        // T-405: los 3 reclutables de LA FOSA (frente a la casa, en la esquina y junto al taller) y la pandilla del jugador con su HUD.
-        private static void T405Interno()
-        {
-            GameObject anterior = BuscarRaiz(RaizT405);
-            if (anterior != null)
-            {
-                Object.DestroyImmediate(anterior);
-            }
-            GameObject prefabAliado = CreadorAliado.Crear();
-            GameObject modelo = AssetDatabase.LoadAssetAtPath<GameObject>(RutaModeloHumano);
-            GameObject raiz = new GameObject(RaizT405);
-            PandillaJugador pandilla = raiz.AddComponent<PandillaJugador>();
-            SerializedObject soPandilla = new SerializedObject(pandilla);
-            soPandilla.FindProperty("prefabAliado").objectReferenceValue = prefabAliado;
-            soPandilla.ApplyModifiedPropertiesWithoutUndo();
-            raiz.AddComponent<MechaCyberpunk.UI.Hud.HudAliados>();
-
-            Transform puerta = BuscarTransform(IdAparicion);
-            Vector3 centro = puerta != null ? puerta.position : Vector3.zero;
-            string[] nombres = { "EL CHATO", "LA GÜERA", "EL TOPO" };
-            int[] costos = { 0, 200, 350 };
-            int[] respetos = { 10, 40, 70 };
-            Vector3[] desvios = { new Vector3(3f, 0f, 3f), new Vector3(-7f, 0f, -5f), new Vector3(-3f, 0f, -9f) };
-            for (int i = 0; i < nombres.Length; i++)
-            {
-                Vector3 punto = centro + desvios[i];
-                if (Physics.Raycast(punto + Vector3.up * 4f, Vector3.down, out RaycastHit piso, 10f))
-                {
-                    punto = piso.point;
-                }
-                GameObject objeto = new GameObject("Reclutable_" + nombres[i]);
-                objeto.transform.SetParent(raiz.transform, false);
-                objeto.transform.position = punto;
-                GameObject visual = (GameObject)PrefabUtility.InstantiatePrefab(modelo, objeto.transform);
-                visual.name = "Modelo";
-                visual.transform.localPosition = Vector3.zero;
-                Reclutable reclutable = objeto.AddComponent<Reclutable>();
-                reclutable.Configurar(nombres[i], costos[i], respetos[i], "fosa");
-                SerializedObject so = new SerializedObject(reclutable);
-                so.FindProperty("visual").objectReferenceValue = visual;
-                so.ApplyModifiedPropertiesWithoutUndo();
-                Debug.Log("[Progresion] T405 reclutable " + nombres[i] + " en " + punto);
-            }
+                + arsenales + " arsenal(es) sin pistola");
         }
 
         [MenuItem("Mecha Cyberpunk/Pandillas/T-403 Cuatro armas")]

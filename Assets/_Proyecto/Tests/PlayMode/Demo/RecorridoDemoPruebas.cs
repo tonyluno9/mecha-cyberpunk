@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Progresion.Apoyo;
 using MechaCyberpunk.Personaje.Combate;
@@ -1142,7 +1141,7 @@ namespace MechaCyberpunk.Tests.Demo
             Vector3 hacia = pecho - origen;
             foreach (RaycastHit g in Physics.RaycastAll(origen, hacia.normalized, hacia.magnitude, ~0, QueryTriggerInteraction.Ignore))
             {
-                if (g.collider.transform.IsChildOf(Jugador.Raiz) || g.collider.GetComponentInParent<PandilleroAPie>() != null || g.collider.GetComponentInParent<AliadoAPie>() != null)
+                if (g.collider.transform.IsChildOf(Jugador.Raiz) || g.collider.GetComponentInParent<PandilleroAPie>() != null)
                 {
                     continue;
                 }
@@ -1720,10 +1719,10 @@ namespace MechaCyberpunk.Tests.Demo
             TerminarTramo();
 
             // 6. El CHATO.
-            IniciarTramo("06 Reclutar al CHATO");
+            IniciarTramo("06 Paso del CHATO (T-930: avanza solo)");
             if (director.Paso == PasoHistoria.Chato)
             {
-                yield return IrYUsar("EL CHATO", () => director.Paso != PasoHistoria.Chato, 120f);
+                yield return EsperarHasta(() => director.Paso != PasoHistoria.Chato, "el paso del CHATO avanza solo", 10f);
             }
             TerminarTramo();
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Combate.Voces;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.Datos;
 using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
@@ -485,20 +484,9 @@ namespace MechaCyberpunk.IA.APie
         {
             bool atacable = Alerta && EsAtacable();
             Vector3 posicionJugador = raizJugador != null ? raizJugador.position : hogar;
-            // T-405: dispara al más cercano entre el jugador y sus aliados.
             IRecibeDanio recibe = recibeJugador;
             ObjetivoActual = atacable ? raizJugador : null;
-            if (atacable)
-            {
-                AliadoAPie aliado = AliadoAPie.MasCercano(transform.position, DistanciaPlana(transform.position, posicionJugador));
-                if (aliado != null)
-                {
-                    recibe = aliado;
-                    posicionJugador = aliado.transform.position;
-                    ObjetivoActual = aliado.transform;
-                }
-            }
-            // T-729: la policía ataca primero a quien comete el delito (un SKULL que está disparando al jugador o a sus aliados, el asaltante), no al jugador.
+            // T-729: la policía ataca primero a quien comete el delito (un SKULL que está disparando al jugador, el asaltante), no al jugador.
             if (datos.EsPolicia)
             {
                 PandilleroAPie criminal = CriminalMasCercano();

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
 using MechaCyberpunk.UI.Hud;
@@ -29,7 +28,6 @@ namespace MechaCyberpunk.Tests.UI
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string VariableCaptura = "CAPTURAR_T409";
-        private const string NombreAliado = "EL CHATO";
         private static readonly Vector3 Inicio = new Vector3(-20f, 0.5f, 0f);
         private const float DeltaGiro = 30f;
         private const float ToleranciaGrados = 2f;
@@ -144,7 +142,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarHasta(() =>
             {
                 director = UnityEngine.Object.FindFirstObjectByType<DirectorPandillas>();
-                return director != null && director.Iniciado && Registro<IJugador>.Actual != null && Registro<IPandillaJugador>.Actual != null;
+                return director != null && director.Iniciado && Registro<IJugador>.Actual != null;
             }, "el director arrancó", 30f);
             yield return new WaitForSecondsRealtime(0.5f);
             IJugador jugador = Registro<IJugador>.Actual;
@@ -219,29 +217,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsNull(minimapa.MarcaDe(pandillero), "A 80 m no sale");
             pandillero.gameObject.SetActive(false);
 
-            // c. El CHATO se une: sale del color de tu pandilla (naranja por defecto).
-            Assert.IsTrue(((PandillaJugador)Registro<IPandillaJugador>.Actual).Reclutar(NombreAliado));
-            yield return EsperarHasta(() => AliadoAPie.Activos.Count > 0, "aparece el aliado", 10f);
-            AliadoAPie chato = AliadoAPie.Activos[0];
-            yield return EsperarHasta(() => minimapa.AliadosVisibles > 0
-                || CalculoMinimapa.DistanciaPlana(chato.transform.position, jugador.Raiz.position) > minimapa.RadioMetros, "el aliado en el minimapa", 5f);
-            if (CalculoMinimapa.DistanciaPlana(chato.transform.position, jugador.Raiz.position) > minimapa.RadioMetros)
-            {
-                // Apareció lejos: se lo acerca para la prueba.
-                chato.transform.position = Inicio + Vector3.back * 4f;
-                yield return null;
-                minimapa.Actualizar();
-            }
-            Assert.Greater(minimapa.AliadosVisibles, 0, "El aliado sale en el minimapa");
-            for (int i = 0; i < minimapa.AliadosCreados; i++)
-            {
-                if (minimapa.Aliado(i).gameObject.activeSelf)
-                {
-                    AssertColor(ColoresPandilla.Color(ColoresPandilla.Predeterminado), minimapa.Aliado(i).color, "el aliado va naranja");
-                }
-            }
-
-            // Captura 1: el minimapa en el Tianguis con un enemigo y el aliado.
+            // Captura 1: el minimapa en el Tianguis con un enemigo.
             Poner(pandillero, cerca);
             yield return null;
             minimapa.Actualizar();
@@ -296,7 +272,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(PuntoMarcadoMapa.Hay);
             Assert.IsTrue(mapa.PuntoMarcado.gameObject.activeSelf, "El mapa dibuja el punto");
 
-            // Captura 2: el mapa con su leyenda, el punto marcado, el aliado y los iconos.
+            // Captura 2: el mapa con su leyenda, el punto marcado y los iconos.
             yield return null;
             Capturar("T-409-2", camara);
 

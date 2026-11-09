@@ -141,16 +141,6 @@ namespace MechaCyberpunk.UI.Mapa
             return t != null ? t.GetComponent<Text>() : null;
         }
 
-        /// <summary>Un aliado: un círculo del color dado con contorno oscuro.</summary>
-        public static Image CrearAliado(Transform padre, float lado, Color color)
-        {
-            Image punto = Pieza(padre, "Aliado", Circulo, color, Tamano(TipoMarcaMapa.Enemigo, lado));
-            Outline borde = punto.gameObject.AddComponent<Outline>();
-            borde.effectColor = KitUI.Estilo.Contorno;
-            borde.effectDistance = Vector2.one * GrosorContornoPunto;
-            return punto;
-        }
-
         /// <summary>El punto marcado: un anillo turquesa con un punto en medio.</summary>
         public static Image CrearPuntoMarcado(Transform padre, float lado)
         {

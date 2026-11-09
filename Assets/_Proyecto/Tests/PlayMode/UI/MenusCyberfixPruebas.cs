@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.IA.Aliados;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
@@ -228,7 +227,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarHasta(() =>
             {
                 DirectorPandillas d = UnityEngine.Object.FindFirstObjectByType<DirectorPandillas>();
-                return d != null && d.Iniciado && Registro<IJugador>.Actual != null && Registro<IPandillaJugador>.Actual != null;
+                return d != null && d.Iniciado && Registro<IJugador>.Actual != null;
             }, "la ciudad arrancó", 30f);
             yield return new WaitForSecondsRealtime(0.5f);
             IJugador jugador = Registro<IJugador>.Actual;
@@ -239,7 +238,6 @@ namespace MechaCyberpunk.Tests.UI
                 grupo.gameObject.SetActive(false);
             }
             jugador.Colocar(new Pose(Inicio, Quaternion.LookRotation(Vector3.right)));
-            Assert.IsTrue(((PandillaJugador)Registro<IPandillaJugador>.Actual).Reclutar("EL CHATO"));
             Registro<ICartera>.Actual.Abonar(1250, MotivoDinero.Premio);
             Registro<ICalor>.Actual.Sumar(40f, MotivoCalor.Otro);
             yield return new WaitForSecondsRealtime(1f);
