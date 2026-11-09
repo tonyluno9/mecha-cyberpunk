@@ -31,10 +31,10 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Noche_NieblaAzulEspesaYCieloLiso()
+        public void Noche_NieblaAzulDelgadaYCieloLiso()
         {
             ConfigCicloDia ciclo = AssetDatabase.LoadAssetAtPath<ConfigCicloDia>(ColocarS2cLook.RutaCicloDia);
-            Assert.GreaterOrEqual(ciclo.DensidadNiebla(23f), 0.03f, "el fondo de la calle se pierde");
+            Assert.LessOrEqual(ciclo.DensidadNiebla(23f), 0.01f, "T-920: niebla mínima, el fondo de la ciudad se ve");
             Color niebla = ciclo.ColorNiebla(23f);
             Assert.Greater(niebla.b, niebla.r, "niebla azul");
             Color cielo = ciclo.ColorCielo(23f);
