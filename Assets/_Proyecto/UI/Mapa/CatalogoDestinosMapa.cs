@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MechaCyberpunk.UI.Mapa
 {
@@ -16,7 +17,7 @@ namespace MechaCyberpunk.UI.Mapa
         private static readonly DestinoMapa[] todos =
         {
             new DestinoMapa(IdDestinoMapa.Casa, "CASA", string.Empty, IdLugar.Casa, TipoMarcaMapa.Casa, "Lugar_Casa"),
-            new DestinoMapa(IdDestinoMapa.ElDoc, "EL DOC", "+", IdLugar.Clinica, TipoMarcaMapa.Clinica, "Clinica_Camilla", "Lugar_Clinica"),
+            new DestinoMapa(IdDestinoMapa.ElDoc, "I+D+I", "+", IdLugar.Clinica, TipoMarcaMapa.Clinica, "Clinica_Camilla", "Lugar_Clinica"),
             new DestinoMapa(IdDestinoMapa.Tino, "TINO", "T", IdLugar.Ninguno, TipoMarcaMapa.Cic, "Lugar_CIC", "TallerTino"), // el taller de Tino es el CIC
             new DestinoMapa(IdDestinoMapa.Mecanico, "MECÁNICO", "M", IdLugar.Ninguno, null, "Lugar_TallerMecanico"),
             new DestinoMapa(IdDestinoMapa.Tianguis, "TIANGUIS", "G", IdLugar.Ninguno, null, "Tianguis").ConEtiquetaArriba(),
@@ -27,6 +28,10 @@ namespace MechaCyberpunk.UI.Mapa
 
         private static readonly Dictionary<string, Transform> objetos = new Dictionary<string, Transform>();
         private static readonly Dictionary<string, float> faltantes = new Dictionary<string, float>();
+        // T-934: la última posición conocida de cada lugar: un lugar no se borra del mapa porque su interior esté apagado.
+        private static readonly Dictionary<IdDestinoMapa, Vector3> ultimas = new Dictionary<IdDestinoMapa, Vector3>();
+        private static readonly Dictionary<string, Transform> indiceApagados = new Dictionary<string, Transform>();
+        private static int escenaIndice = int.MinValue;
 
         public static IReadOnlyList<DestinoMapa> Todos => todos;
 
@@ -35,6 +40,9 @@ namespace MechaCyberpunk.UI.Mapa
         {
             objetos.Clear();
             faltantes.Clear();
+            ultimas.Clear();
+            indiceApagados.Clear();
+            escenaIndice = int.MinValue;
         }
 
         public static DestinoMapa De(IdDestinoMapa id)
@@ -66,6 +74,7 @@ namespace MechaCyberpunk.UI.Mapa
                     if (lugares[i] != null && lugares[i].Id == destino.Lugar)
                     {
                         posicion = Plano(lugares[i].PosicionEntrada);
+                        ultimas[id] = posicion;
                         return true;
                     }
                 }
@@ -73,6 +82,7 @@ namespace MechaCyberpunk.UI.Mapa
             if (destino.Marca.HasValue && MarcaDe(destino.Marca.Value, out IMarcaMapa marca))
             {
                 posicion = Plano(marca.Posicion);
+                ultimas[id] = posicion;
                 return true;
             }
             foreach (string nombre in destino.NombresDeObjeto)
@@ -81,10 +91,11 @@ namespace MechaCyberpunk.UI.Mapa
                 if (t != null)
                 {
                     posicion = PosicionDe(t);
+                    ultimas[id] = posicion;
                     return true;
                 }
             }
-            return false;
+            return ultimas.TryGetValue(id, out posicion);
         }
 
         /// <summary>True si una marca de lugar de T-409 del mismo tipo ya dibuja este destino (para no repetir su icono).</summary>
@@ -137,14 +148,55 @@ namespace MechaCyberpunk.UI.Mapa
                 return null;
             }
             GameObject encontrado = GameObject.Find(nombre);
-            if (encontrado == null)
+            Transform transformEncontrado = encontrado != null ? encontrado.transform : BuscarApagado(nombre);
+            if (transformEncontrado == null)
             {
                 faltantes[nombre] = Time.unscaledTime + SegundosDeCache;
                 return null;
             }
-            objetos[nombre] = encontrado.transform;
+            objetos[nombre] = transformEncontrado;
             faltantes.Remove(nombre);
-            return encontrado.transform;
+            return transformEncontrado;
+        }
+
+        // T-934: GameObject.Find no ve lo apagado, y un interior apagado no debe quitar su lugar del mapa. Se recorre la escena una sola vez y solo se guardan los nombres del catálogo.
+        private static Transform BuscarApagado(string nombre)
+        {
+            int escena = SceneManager.GetActiveScene().handle;
+            if (escena != escenaIndice)
+            {
+                escenaIndice = escena;
+                LlenarIndice();
+            }
+            return indiceApagados.TryGetValue(nombre, out Transform t) && t != null ? t : null;
+        }
+
+        private static void LlenarIndice()
+        {
+            indiceApagados.Clear();
+            HashSet<string> buscados = new HashSet<string>();
+            foreach (DestinoMapa d in todos)
+            {
+                buscados.UnionWith(d.NombresDeObjeto);
+            }
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                Scene escena = SceneManager.GetSceneAt(i);
+                if (!escena.isLoaded)
+                {
+                    continue;
+                }
+                foreach (GameObject raiz in escena.GetRootGameObjects())
+                {
+                    foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (buscados.Contains(t.name) && !indiceApagados.ContainsKey(t.name))
+                        {
+                            indiceApagados[t.name] = t;
+                        }
+                    }
+                }
+            }
         }
 
         // Un objeto de un grupo que se quedó en el origen (como la raíz del Tianguis) no dice dónde está: se usa el centro de lo que dibuja.

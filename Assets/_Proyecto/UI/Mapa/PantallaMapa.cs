@@ -67,7 +67,6 @@ namespace MechaCyberpunk.UI.Mapa
         private readonly List<TipoMarcaMapa> tiposMarcas = new List<TipoMarcaMapa>();
         private Image[] manzanas;
         private Text[] etiquetas;
-        private RawImage imagenMapa;
         private readonly List<Text> nombresBarrios = new List<Text>();
         private const int TamanoNombreBarrio = 44;
         private Text titulo;
@@ -78,7 +77,17 @@ namespace MechaCyberpunk.UI.Mapa
         // T-668: la ruta GPS naranja hasta lo marcado, por las calles (como en el minimapa).
         private const float MetrosParaRecalcularRuta = 2f;
         private const float GrosorRutaPx = 4f;
-        private static readonly Color ColorRuta = new Color(1f, 0.55f, 0.1f, 0.95f);
+        private static readonly Color ColorRuta = TrazoH10.Amarillo;
+        // T-934: el mapa es transparente y solo lleva contornos finos en turquesa.
+        private const float GrosorCallesPx = 1.5f;
+        private const float GrosorEdificiosPx = 1f;
+        private const float AlfaVelo = 0.76f;
+        private const int TamanoEtiquetaZona = 14;
+        private const float AlfaNombreBarrio = 0.55f;
+        private const float AlfaEdificios = 0.34f;
+        private const float AlfaCalles = 0.9f;
+        private LineasMapa lineasCalles;
+        private LineasMapa lineasEdificios;
         private RectTransform capaRuta;
         private readonly List<Image> segmentosRuta = new List<Image>();
         private List<Vector3> ruta = new List<Vector3>();
@@ -165,7 +174,7 @@ namespace MechaCyberpunk.UI.Mapa
             float separacion = TrazoH10.SeparacionModulo;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasMapa", OrdenCanvas);
             Image velo = KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
-            velo.color = TrazoH10.FondoPantalla;
+            velo.color = TrazoH10.ConAlfa(TrazoH10.FondoPantalla, AlfaVelo);
             fondoPantalla = velo.gameObject;
             fondoPantalla.SetActive(false);
             RectTransform rectPanel = TrazoH10.Nodo(canvas.transform, "Panel");
@@ -182,7 +191,7 @@ namespace MechaCyberpunk.UI.Mapa
             Vector2 tamanoMarco = tamanoVista * escalaVista;
 
             // La vista recorta el dibujo con zoom.
-            vista = KitUI.CrearImagen(rectPanel, "Vista", Color.black).rectTransform;
+            vista = KitUI.CrearImagen(rectPanel, "Vista", Color.clear).rectTransform;
             KitUI.Colocar(vista, new Vector2(0f, 1f), new Vector2(margen, -arriba), tamanoVista);
             vista.localScale = new Vector3(escalaVista, escalaVista, 1f);
             vista.gameObject.AddComponent<RectMask2D>();
@@ -192,21 +201,9 @@ namespace MechaCyberpunk.UI.Mapa
             contenido.pivot = new Vector2(0.5f, 0.5f);
             MarcoMapa(rectPanel, new Vector2(margen, -arriba), tamanoMarco);
 
-            // T-747: la captura cenital de la ciudad real (centro del cuadro = origen del mundo); sin imagen, las calles planas de antes.
-            Texture2D plano = MapaImagen.Cargar();
-            if (plano != null)
-            {
-                imagenMapa = new GameObject("ImagenCiudad", typeof(RectTransform), typeof(RawImage)).GetComponent<RawImage>();
-                imagenMapa.rectTransform.SetParent(contenido, false);
-                imagenMapa.texture = plano;
-                imagenMapa.raycastTarget = false;
-                KitUI.Colocar(imagenMapa.rectTransform, new Vector2(0.5f, 0.5f), MapaImagen.MundoADibujo(MapaImagen.Centro, pixelesPorMetro), MapaImagen.Tamano * pixelesPorMetro);
-            }
-            else
-            {
-                Image calles = KitUI.CrearImagen(contenido, "Calles", e.Calles);
-                KitUI.Colocar(calles.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, GeometriaBarrio.TamanoConCalles * pixelesPorMetro);
-            }
+            // T-934: sin imagen ni rellenos: los edificios y, encima, los bordes de las calles.
+            lineasEdificios = LineasMapa.Crear(contenido, "ContornosEdificios", TrazoH10.ConAlfa(TrazoH10.Turquesa, AlfaEdificios));
+            lineasCalles = LineasMapa.Crear(contenido, "ContornosCalles", TrazoH10.ConAlfa(TrazoH10.Turquesa, AlfaCalles));
             CrearNombresBarrios(e);
             float lado = GeometriaBarrio.LadoManzana * pixelesPorMetro;
             manzanas = new Image[GeometriaBarrio.Cantidad];
@@ -217,8 +214,10 @@ namespace MechaCyberpunk.UI.Mapa
                 // T-747: el dueño se ve en el borde, para dejar ver la imagen.
                 manzanas[i].sprite = IconosMapa.Marco;
                 manzanas[i].raycastTarget = false;
+                manzanas[i].enabled = false; // T-934: sin rellenos ni bordes de color: el color del dueño va en su etiqueta
                 KitUI.Colocar(manzanas[i].rectTransform, new Vector2(0.5f, 0.5f), GeometriaBarrio.Centros[i] * pixelesPorMetro, Vector2.one * lado);
                 etiquetas[i] = KitUI.CrearTexto(manzanas[i].transform, "Etiqueta", RolTexto.Ayuda, TextAnchor.MiddleCenter);
+                etiquetas[i].fontSize = TamanoEtiquetaZona;
                 etiquetas[i].color = e.Texto;
             }
 
@@ -266,7 +265,14 @@ namespace MechaCyberpunk.UI.Mapa
 
         /// <summary>Los cuatro nombres grandes de los barrios (T-747), semitransparentes del color del barrio, como en M10.</summary>
         public IReadOnlyList<Text> NombresBarrios => nombresBarrios;
-        public RawImage ImagenMapa => imagenMapa;
+        /// <summary>T-934: las líneas de los bordes de las calles.</summary>
+        public LineasMapa LineasCalles => lineasCalles;
+
+        /// <summary>T-934: las líneas de los contornos de los edificios.</summary>
+        public LineasMapa LineasEdificios => lineasEdificios;
+
+        /// <summary>T-934: la vista no tiene fondo propio.</summary>
+        public Color ColorVista => vista.GetComponent<Image>().color;
 
         private void CrearNombresBarrios(EstiloCyberfix e)
         {
@@ -277,7 +283,7 @@ namespace MechaCyberpunk.UI.Mapa
                 KitUI.Colocar(t.rectTransform, new Vector2(0.5f, 0.5f), b.PuntoNombre * pixelesPorMetro, new Vector2(300f, 70f));
                 t.fontSize = TamanoNombreBarrio;
                 t.text = b.Nombre;
-                t.color = new Color(b.Color.r, b.Color.g, b.Color.b, 0.6f);
+                t.color = TrazoH10.ConAlfa(TrazoH10.Turquesa, AlfaNombreBarrio);
                 t.raycastTarget = false;
                 nombresBarrios.Add(t);
             }
@@ -430,6 +436,8 @@ namespace MechaCyberpunk.UI.Mapa
         {
             contenido.localScale = new Vector3(zoom, zoom, 1f);
             contenido.anchoredPosition = desplazamiento;
+            lineasCalles.FijarGrosor(GrosorCallesPx / zoom);
+            lineasEdificios.FijarGrosor(GrosorEdificiosPx / zoom);
         }
 
         public void Abrir()
@@ -458,6 +466,8 @@ namespace MechaCyberpunk.UI.Mapa
             Cursor.visible = true;
             Sonidos.Reproducir(SonidoAbrir);
             AnimH10.EntrarPanel(panelLateral, new Vector2(AnimH10.DesplazamientoEntrada, 0f));
+            lineasCalles.Fijar(CatalogoCallesMapa.Tramos, pixelesPorMetro);
+            lineasEdificios.Fijar(CatalogoCallesMapa.Edificios, pixelesPorMetro);
             AplicarZoom();
             Refrescar();
         }
@@ -499,6 +509,7 @@ namespace MechaCyberpunk.UI.Mapa
                 }
                 string zona = GeometriaBarrio.Zona(i, territorio);
                 manzanas[i].color = zona.Length > 0 ? FormatoTerritorio.ColorDe(territorio.Dueno(zona)) : Color.gray;
+                etiquetas[i].color = zona.Length > 0 ? manzanas[i].color : TrazoH10.TextoTenue;
                 etiquetas[i].text = zona.Length > 0 ? territorio.Nombre(zona) + "\nRESPETO " + territorio.Respeto(zona) : string.Empty;
                 etiquetas[i].rectTransform.localScale = contraZoom;
             }
@@ -556,7 +567,7 @@ namespace MechaCyberpunk.UI.Mapa
             }
             for (int i = 0; i < catalogo.Count; i++)
             {
-                bool hay = !CatalogoDestinosMapa.LoDibujaUnaMarca(catalogo[i].Id) && CatalogoDestinosMapa.Posicion(catalogo[i].Id, out Vector3 donde);
+                bool hay = (catalogo[i].Id == IdDestinoMapa.ElDoc || !CatalogoDestinosMapa.LoDibujaUnaMarca(catalogo[i].Id)) && CatalogoDestinosMapa.Posicion(catalogo[i].Id, out Vector3 donde);
                 if (destinos[i].gameObject.activeSelf != hay)
                 {
                     destinos[i].gameObject.SetActive(hay);
@@ -736,9 +747,11 @@ namespace MechaCyberpunk.UI.Mapa
                     marcas[i] = IconosMapa.Crear(contenido, marca.Tipo, ladoIcono);
                     tiposMarcas[i] = marca.Tipo;
                 }
-                if (marcas[i].gameObject.activeSelf != marca.Visible)
+                // T-934: el I+D+I lo dibuja siempre su destino del catálogo, con icono y nombre.
+                bool verMarca = marca.Visible && marca.Tipo != TipoMarcaMapa.Clinica;
+                if (marcas[i].gameObject.activeSelf != verMarca)
                 {
-                    marcas[i].gameObject.SetActive(marca.Visible);
+                    marcas[i].gameObject.SetActive(verMarca);
                 }
                 RectTransform rect = marcas[i].rectTransform;
                 rect.anchoredPosition = GeometriaBarrio.AMapa(marca.Posicion) * pixelesPorMetro;

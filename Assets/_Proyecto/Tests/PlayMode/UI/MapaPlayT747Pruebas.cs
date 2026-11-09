@@ -103,9 +103,6 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             yield return null;
             Assert.IsTrue(mapa.Abierto, "M abre el mapa grande");
-            Assert.IsNotNull(mapa.ImagenMapa, "El mapa grande dibuja la imagen de la ciudad");
-            Assert.AreSame(MapaImagen.Cargar(), mapa.ImagenMapa.texture);
-            Assert.IsTrue(mapa.ImagenMapa.gameObject.activeInHierarchy);
             Assert.AreEqual(4, mapa.NombresBarrios.Count, "Los cuatro barrios con su nombre");
             yield return Pulsar(teclado.mKey);
             yield return null;
@@ -149,14 +146,11 @@ namespace MechaCyberpunk.Tests.UI
 
             yield return Pulsar(teclado.mKey);
             Assert.IsTrue(mapa.Abierto, "M abre el mapa grande");
-            Assert.IsNotNull(mapa.ImagenMapa, "El mapa grande dibuja la imagen de la ciudad");
-            Assert.AreSame(MapaImagen.Cargar(), mapa.ImagenMapa.texture);
-            Assert.IsTrue(mapa.ImagenMapa.gameObject.activeInHierarchy);
             Assert.AreEqual(4, mapa.NombresBarrios.Count, "Los cuatro barrios con su nombre");
 
             // La flecha del jugador cae exactamente donde la imagen tiene ese punto del mundo.
             Vector2 flecha = mapa.PuntoJugador.position;
-            Vector2 enLaImagen = PuntoDeImagen(mapa.ImagenMapa, new Vector2(jugador.Raiz.position.x, jugador.Raiz.position.z));
+            Vector2 enLaImagen = mapa.PantallaDe(jugador.Raiz.position);
             Assert.AreEqual(0f, Vector2.Distance(flecha, enLaImagen), 1.5f, "La flecha cae sobre su lugar de la imagen (mapa grande)");
             Assert.AreEqual(0f, Vector2.Distance(flecha, mapa.PantallaDe(jugador.Raiz.position)), 1.5f, "y coincide con PantallaDe");
 
@@ -168,7 +162,7 @@ namespace MechaCyberpunk.Tests.UI
                 {
                     continue;
                 }
-                Assert.AreEqual(0f, Vector2.Distance(icono.rectTransform.position, PuntoDeImagen(mapa.ImagenMapa, new Vector2(donde.x, donde.z))), 1.5f,
+                Assert.AreEqual(0f, Vector2.Distance(icono.rectTransform.position, mapa.PantallaDe(donde)), 1.5f,
                     "El icono de " + d.Id + " cae sobre su lugar de la imagen");
             }
             Camera camara = jugador.Camara;
