@@ -13,7 +13,6 @@ namespace MechaCyberpunk.UI.Inicio
         /// <summary>T-698: ruta en Resources del PNG del logo (opcional). Para usarlo: importar el PNG como Sprite en
         /// Assets/_Proyecto/UI/Resources/LogoCybercity.png; sin él se usa el texto provisional con glitch.</summary>
         public const string RecursoLogo = "LogoCybercity";
-        public const string Lema = "SOBREVIVE A LA NOCHE";
         private const int CantidadCortes = 4;
         private const float SegundosEncendido = 1.1f;
         private const float SeparacionReposo = 3f;
@@ -28,8 +27,6 @@ namespace MechaCyberpunk.UI.Inicio
         [SerializeField] private Text copiaMagenta;
         [SerializeField] private Text copiaCian;
         [SerializeField] private Text halo;
-        [SerializeField] private Text lema;
-        [SerializeField] private Image linea;
         [SerializeField] private Image[] cortes = new Image[0];
 
         [Tooltip("PNG del logo (opcional). Si está asignado, reemplaza al texto provisional.")]
@@ -113,10 +110,6 @@ namespace MechaCyberpunk.UI.Inicio
                 logo.cortes[i] = corte;
             }
 
-            logo.linea = UIInicio.Imagen(raiz, "Linea", UIInicio.Cian, SpritesInicio.DegradadoH, true);
-            UIInicio.Punto(logo.linea.rectTransform, new Vector2(0f, 0f), new Vector2(8f, -6f), new Vector2(0f, 5f));
-            logo.lema = UIInicio.Texto(raiz, "Lema", Lema, UIInicio.FuenteTexto, 30, UIInicio.TextoSuave, TextAnchor.UpperLeft);
-            UIInicio.Punto(logo.lema.rectTransform, new Vector2(0f, 0f), new Vector2(10f, -64f), new Vector2(800f, 40f));
             logo.AsignarSprite(Resources.Load<Sprite>(RecursoLogo));
             return logo;
         }
@@ -181,9 +174,6 @@ namespace MechaCyberpunk.UI.Inicio
                 }
             }
 
-            float largoLinea = Mathf.Lerp(0f, 520f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((tiempo - 0.5f) / 0.9f)));
-            linea.rectTransform.sizeDelta = new Vector2(largoLinea, 5f);
-            lema.color = UIInicio.ConAlfa(UIInicio.TextoSuave, Mathf.Clamp01((tiempo - 1.1f) / 0.6f));
         }
     }
 }

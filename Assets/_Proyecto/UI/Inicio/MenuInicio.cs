@@ -44,7 +44,6 @@ namespace MechaCyberpunk.UI.Inicio
         public const string TextoSinPartida = "SIN PARTIDA GUARDADA";
         public const string AyudaTeclado = "↑ ↓ ELEGIR     ENTER ACEPTAR     ESC VOLVER";
         public const string AyudaControl = "↑ ↓ ELEGIR     A ACEPTAR     B VOLVER";
-        public const string Version = "DEMO  ·  CYBERCITY";
         public const string SonidoInicio = "UI_TITULO_INICIO";
 
         private const float SegundosEntrada = 1.7f;
@@ -179,17 +178,13 @@ namespace MechaCyberpunk.UI.Inicio
             grupoMenu = canvas.gameObject.AddComponent<CanvasGroup>();
             Transform c = canvas.transform;
 
-            // Ambiente de pantalla: sombra a la izquierda para leer el menú, viñetas arriba y abajo, líneas de barrido.
+            // Ambiente de pantalla: sombra a la izquierda para leer el menú, viñetas arriba y abajo.
             Image sombra = UIInicio.Imagen(c, "SombraMenu", UIInicio.ConAlfa(UIInicio.Noche, 0.6f), SpritesInicio.DegradadoH);
             UIInicio.Anclar(sombra.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(1000f, 0f));
             Image arriba = UIInicio.Imagen(c, "VinetaArriba", UIInicio.ConAlfa(Color.black, 0.55f), SpritesInicio.DegradadoV);
             UIInicio.Anclar(arriba.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, 260f));
             Image abajo = UIInicio.Imagen(c, "VinetaAbajo", UIInicio.ConAlfa(Color.black, 0.65f), SpritesInicio.DegradadoVAbajo);
             UIInicio.Anclar(abajo.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), Vector2.zero, new Vector2(0f, 300f));
-            SpritesInicio.ConfigurarRepeticion(SpritesInicio.Lineas);
-            Image lineas = UIInicio.Imagen(c, "Lineas", new Color(0.5f, 0.85f, 1f, 0.045f), SpritesInicio.Lineas);
-            lineas.type = Image.Type.Tiled;
-            UIInicio.Estirar(lineas.rectTransform);
             ArmarMarco(c);
             fondoCalles = FondoCallesInicio.Crear(c);
             fondoCalles.CalleRealLista += () =>
@@ -236,8 +231,6 @@ namespace MechaCyberpunk.UI.Inicio
                 new Vector2(0f, 72f), new Vector2(-2f * MargenIzquierdo, TrazoH10.GrosorLinea));
             ayuda = TrazoH10.Etiqueta(c, "Ayuda", AyudaTeclado, TrazoH10.TamanoDato, TrazoH10.TextoTenue);
             UIInicio.Punto(ayuda.rectTransform, new Vector2(0f, 0f), new Vector2(MargenIzquierdo, 30f), new Vector2(900f, 34f));
-            Text version = TrazoH10.Etiqueta(c, "Version", Version, TrazoH10.TamanoDato, TrazoH10.TextoTenue, TextAnchor.MiddleRight);
-            UIInicio.Punto(version.rectTransform, new Vector2(1f, 0f), new Vector2(-MargenIzquierdo, 30f), new Vector2(700f, 34f));
 
             ArmarAviso(c);
 
