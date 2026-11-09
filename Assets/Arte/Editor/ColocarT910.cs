@@ -32,7 +32,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// Dónde cruza la cubierta de cada pasarela (z). Los N02 estaban en z 38 y 72, pero ahí camina la gente de las banquetas (T-510, z 14 a 46):
         /// con las escaleras encima caminarían trepando. Las cubiertas van más al norte, donde la banqueta está libre; las escaleras bajan al sur.
         /// </summary>
-        public static readonly float[] ZCubiertas = { 60f, 73.5f };
+        public static readonly float[] ZCubiertas = { 64f, 77.5f };
         private const float CubiertaDesdeCentro = 5.6f;
         /// <summary>Lentes del ES01 respecto al pivote del prefab (medidas con ImportarT910.MedirSemaforo): x, z de la cara y alturas rojo, ámbar, verde.</summary>
         private static readonly Vector3[] Lentes = { new Vector3(-1f, 3.74f, -0.215f), new Vector3(-1f, 3.36f, -0.215f), new Vector3(-1f, 2.98f, -0.215f) };
