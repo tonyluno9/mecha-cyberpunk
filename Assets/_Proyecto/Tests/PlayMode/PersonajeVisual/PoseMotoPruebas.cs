@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Tests
             Vector3 antes = visual.position;
             Assert.IsTrue(pose.Montar(moto));
             Assert.IsFalse(caballete.activeSelf, "el caballete se esconde al manejar");
-            yield return new WaitForSeconds(ReglasMoto.SegundosSubir + 0.3f);
+            yield return new WaitForSeconds(pose.SegundosSubir + 0.3f);
             Assert.AreEqual(1f, pose.Avance, 0.01f);
             Transform cadera = animador.GetBoneTransform(HumanBodyBones.Hips);
             Assert.Less(Vector3.Distance(cadera.position, moto.Asiento.position), 0.15f, "cadera en el asiento");
@@ -71,7 +71,7 @@ namespace MechaCyberpunk.Tests
             Assert.Greater(pose.Inclinacion, ReglasMoto.InclinacionMaxima * 0.8f, "se inclina a la derecha en la curva");
 
             pose.Bajar();
-            yield return new WaitForSeconds(ReglasMoto.SegundosSubir + 0.3f);
+            yield return new WaitForSeconds(pose.SegundosBajar + 0.3f);
             Assert.IsFalse(pose.Montado);
             Assert.IsTrue(caballete.activeSelf, "el caballete vuelve");
             Assert.Less(Vector3.Distance(visual.position, antes), 0.01f, "el visual vuelve a su sitio de a pie");

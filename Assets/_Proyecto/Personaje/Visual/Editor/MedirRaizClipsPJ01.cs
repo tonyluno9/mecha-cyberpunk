@@ -31,6 +31,31 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
         }
 
+        /// <summary>T-963: largo de los clips de carro y moto y la cadera (respecto de la raíz del modelo) al inicio, a la mitad y al final.</summary>
+        public static void CarroMoto()
+        {
+            foreach (string nombre in new[] { "PJ01_Carro_Entrar", "PJ01_Carro_Manejar", "PJ01_Carro_Salir", "PJ01_Moto_Subir", "PJ01_Moto_Manejar", "PJ01_Moto_Bajar",
+                "Carro_Entrar", "Carro_Manejar_Bucle", "Carro_Salir" })
+            {
+                AnimationClip c = ConstructorControladorBase.Clip(nombre);
+                if (c == null) { continue; }
+                GameObject inst = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CreadorVisualPersonaje.RutaPrefab("PJ01")));
+                Animator a = inst.GetComponentInChildren<Animator>();
+                a.enabled = false;
+                string texto = "dura " + c.length.ToString("F2") + " s, bucle " + c.isLooping + "; cadera";
+                foreach (float f in new[] { 0f, 0.5f, 1f })
+                {
+                    c.SampleAnimation(a.gameObject, c.length * f);
+                    Vector3 p = inst.transform.InverseTransformPoint(a.GetBoneTransform(HumanBodyBones.Hips).position);
+                    Vector3 pie = inst.transform.InverseTransformPoint(a.GetBoneTransform(HumanBodyBones.LeftFoot).position);
+                    Vector3 mano = inst.transform.InverseTransformPoint(a.GetBoneTransform(HumanBodyBones.LeftHand).position);
+                    texto += " @" + f.ToString("F1") + " " + p.ToString("F2") + " pieI " + pie.ToString("F2") + " manoI " + mano.ToString("F2");
+                }
+                Debug.Log("[Personaje] T-963 " + nombre + ": " + texto);
+                Object.DestroyImmediate(inst);
+            }
+        }
+
         /// <summary>El momento (s del clip) en que una mano llega más lejos al frente de la cadera, y cuánto.</summary>
         public static string Alcance(AnimationClip c)
         {

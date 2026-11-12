@@ -61,7 +61,9 @@ namespace MechaCyberpunk.Tests.Personaje
             float fin = Time.time + 8f;
             while (anim.Fase != AnimacionCarro.FaseCarro.Dentro && Time.time < fin) { yield return null; }
             Assert.AreEqual(AnimacionCarro.FaseCarro.Dentro, anim.Fase);
-            yield return Esperar(0.6f);
+            // T-963: con los clips de Blender subir dura lo que el clip (1.2 s), no el fundido de 0.3 s.
+            PoseMoto pose = visual.Animador.GetComponent<PoseMoto>();
+            yield return Esperar((pose != null ? pose.SegundosSubir : 0f) + 0.6f);
         }
 
         private float Velocidad() => Vector3.Dot(cuerpo.linearVelocity, vehiculo.transform.forward);
@@ -156,7 +158,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.Less(Vector3.Distance(a.GetBoneTransform(HumanBodyBones.RightHand).position, puntos.ManubrioDerecho.position), 0.08f, "Mano derecha en el manubrio");
             Assert.Less(Vector3.Distance(a.GetBoneTransform(HumanBodyBones.LeftFoot).position, puntos.EstriboIzquierdo.position), 0.08f, "Pie izquierdo en el estribo");
             Assert.Less(Vector3.Distance(a.GetBoneTransform(HumanBodyBones.RightFoot).position, puntos.EstriboDerecho.position), 0.08f, "Pie derecho en el estribo");
-            Assert.Greater(a.GetBoneTransform(HumanBodyBones.Head).position.y, puntos.ManubrioIzquierdo.position.y + 0.05f, "La cabeza queda sobre el manubrio");
+            Assert.Greater(a.GetBoneTransform(HumanBodyBones.Head).position.y, puntos.ManubrioIzquierdo.position.y, "La cabeza queda sobre el manubrio (T-963: sin el margen de 5 cm de la pose por IK; con los clips de Blender la V07 queda 2.5 cm encima)");
         }
 
         private static Bounds Unir(Bounds a, Bounds b)

@@ -82,6 +82,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Muerte_Desmayo", "PJ01_Muerte_Desmayo")]
         [TestCase("Dano_Levantarse_BocaArriba", "PJ01_Dano_Levantarse_BocaArriba")]
         [TestCase("Dano_Levantarse_BocaAbajo", "PJ01_Dano_Levantarse_BocaAbajo")]
+        [TestCase("Carro_Entrar", "PJ01_Carro_Entrar")]
+        [TestCase("Carro_Manejar_Bucle", "PJ01_Carro_Manejar")]
+        [TestCase("Carro_Salir", "PJ01_Carro_Salir")]
         public void Jugador_UsaElClipDeBlender(string clipBase, string clipPJ01)
         {
             Assert.AreEqual(clipPJ01, OverridesJugador()[clipBase]);
@@ -163,6 +166,28 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         public void Muertes_ElAvanceDelClipVaAlRootMotion_NoALaPose(string clip)
         {
             Assert.IsFalse(ClipImportado(clip).lockRootPositionXZ, "sin Bake Into Pose en XZ: el avance mueve la cápsula");
+        }
+    
+        [TestCase("MotoSubir", "PJ01_Moto_Subir")]
+        [TestCase("MotoManejar", "PJ01_Moto_Manejar")]
+        [TestCase("MotoBajar", "PJ01_Moto_Bajar")]
+        public void Moto_TieneSusEstadosConLosClipsDeBlender(string estado, string clip)
+        {
+            Assert.AreEqual(clip, Estado(0, estado).motion.name);
+        }
+
+        [Test]
+        public void Moto_SubirTerminaManejando_YManejarSeQuitaAlBajar()
+        {
+            AnimatorState subir = Estado(0, "MotoSubir");
+            AnimatorStateTransition aManejar = subir.transitions.First(t => t.destinationState.name == "MotoManejar");
+            Assert.IsTrue(aManejar.conditions.Any(c => c.parameter == ReglasAnimacion.Manejando && c.mode == AnimatorConditionMode.If));
+            Assert.Less(System.Array.IndexOf(subir.transitions, aManejar), System.Array.FindIndex(subir.transitions, t => t.destinationState.name == "Idle"),
+                "manejar va antes que Idle al salir de subir");
+            Assert.IsTrue(Estado(0, "MotoManejar").transitions.Any(t => t.destinationState.name == "Idle"
+                && t.conditions.Any(c => c.parameter == ReglasAnimacion.Manejando && c.mode == AnimatorConditionMode.IfNot)));
+            var bajar = Base().layers[0].stateMachine.anyStateTransitions.First(t => t.destinationState.name == "MotoBajar");
+            Assert.IsTrue(bajar.conditions.Any(c => c.parameter == ReglasAnimacion.GestoTipo && c.threshold == (int)GestoVisual.MotoBajar));
         }
     }
 }
