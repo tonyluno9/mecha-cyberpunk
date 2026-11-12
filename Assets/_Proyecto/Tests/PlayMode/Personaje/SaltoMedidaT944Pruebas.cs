@@ -10,6 +10,9 @@ namespace MechaCyberpunk.Tests.Personaje
     public class SaltoMedidaT944Pruebas : BaseJugadorAPie
     {
         private const float AlturaAire = 0.2f;
+        private const float UmbralDespegue = 0.02f;
+        private const float AlturaSaltoT961 = 0.45f;
+        private const float SegundosAireT961 = 0.47f;
 
         private static bool Es(Animator a, string estado)
         {
@@ -55,9 +58,16 @@ namespace MechaCyberpunk.Tests.Personaje
             float fin = Time.time + 1.6f;
             string rastro = string.Empty;
             string ultimo = string.Empty;
+            // T-961: el salto de la muestra de Blender sube 0.45 m y pasa 0.47 s en el aire.
+            float maxima = 0f;
+            float despegue = -1f;
+            float aterrizaje = -1f;
             while (Time.time < fin)
             {
                 float altura = jugador.transform.position.y - piso;
+                maxima = Mathf.Max(maxima, altura);
+                if (despegue < 0f && altura > UmbralDespegue) { despegue = Time.time; }
+                if (despegue >= 0f && aterrizaje < 0f && altura <= UmbralDespegue && Time.time > despegue + 0.1f) { aterrizaje = Time.time; }
                 foreach (string e in new[] { "Idle", "SaltoInicio", "SaltoAire", "Caida", "SaltoAterrizaje" })
                 {
                     if (Es(animador, e) && e != ultimo)
@@ -85,6 +95,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(vioAire, "Se ve la fase en el aire, ya despegado: " + rastro);
             Assert.IsTrue(vioAterrizaje, "Se ve el aterrizaje");
             Assert.Less(alturaAlAterrizar, 0.35f, "El aterrizaje empieza cerca del piso, no en el aire");
+            Assert.AreEqual(AlturaSaltoT961, maxima, 0.05f, "Altura del salto (m)");
+            Assert.Greater(aterrizaje, 0f, "Vuelve al piso");
+            Assert.AreEqual(SegundosAireT961, aterrizaje - despegue, 0.08f, "Tiempo en el aire (s)");
             Assert.IsNotNull(jugador.GetComponent<ControladorAPie>());
         }
     }

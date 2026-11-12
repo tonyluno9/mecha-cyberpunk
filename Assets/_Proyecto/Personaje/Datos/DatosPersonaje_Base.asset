@@ -15,7 +15,7 @@ MonoBehaviour:
   vidaMaxima: 150
   velocidadCaminar: 4.5
   velocidadCorrer: 7.5
-  alturaSalto: 1.1
+  alturaSalto: 0.45
   danioGolpe: 15
   alcanceGolpe: 1.6
   radioGolpe: 0.3
@@ -23,6 +23,9 @@ MonoBehaviour:
   recargaGolpe: 0.45
   regeneracionPorSegundo: 3
   segundosParaRegenerar: 8
+  escudoMaximo: 30
+  escudoRecargaPorSegundo: 12
+  escudoSegundosParaRecargar: 4
   alturaCamaraKO: 0.4
   ladeoCamaraKO: 40
   velocidadCaidaKO: 6

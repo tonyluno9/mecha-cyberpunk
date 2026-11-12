@@ -145,6 +145,33 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         }
 
         /// <summary>
+        /// T-961: rehace solo la altura de las tres cajas de salto de la escena guardada (sin volver a crear la escena) con <see cref="AlturasCajasSalto"/>; se usa al cambiar la
+        /// altura del salto en DatosPersonaje. Batchmode: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.CreadorEscenaImplantes.AjustarCajasSalto
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T-961 Ajustar cajas de salto de Pruebas_Implantes")]
+        public static void AjustarCajasSalto()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            float[] alturas = AlturasCajasSalto();
+            string[] nombres = { "BASE", "PIERNAS I", "PIERNAS II" };
+            for (int i = 0; i < alturas.Length; i++)
+            {
+                GameObject caja = GameObject.Find("Caja salto " + nombres[i]);
+                if (caja == null)
+                {
+                    throw new InvalidOperationException("Falta la caja de salto " + nombres[i] + " en " + RutaEscena);
+                }
+                Vector3 escala = caja.transform.localScale;
+                caja.transform.localScale = new Vector3(escala.x, alturas[i], escala.z);
+                Vector3 p = caja.transform.position;
+                caja.transform.position = new Vector3(p.x, alturas[i] / 2f, p.z);
+            }
+            EditorSceneManager.MarkSceneDirty(escena);
+            EditorSceneManager.SaveScene(escena);
+            Debug.Log("[Progresion] T-961: cajas de salto " + string.Join(" / ", Array.ConvertAll(alturas, a => a.ToString("0.###"))) + " m.");
+        }
+
+        /// <summary>
         /// Captura aérea (T-193-2) en memoria con Camera.Render, sin guardar la escena.
         /// Batchmode: -executeMethod MechaCyberpunk.Progresion.Prologo.Editor.CreadorEscenaImplantes.CapturarVistaAerea
         /// </summary>

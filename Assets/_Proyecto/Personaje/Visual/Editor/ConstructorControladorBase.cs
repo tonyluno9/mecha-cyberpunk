@@ -153,6 +153,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Pistola_Recargar", "PJ01_Pistola_Recargar"), ("Pistola_RecargarCaminar", "PJ01_Pistola_RecargarCaminar"),
             ("Pistola_AgachadoIdle", "PJ01_Pistola_AgachadoIdle"), ("Pistola_AgachadoCaminar", "PJ01_Pistola_AgachadoCaminar"),
             ("Pistola_Dano_Frente", "PJ01_Pistola_Dano_Frente"), ("Pistola_Dano_Espalda", "PJ01_Pistola_Dano_Espalda"), ("Pistola_Dano_Fuerte", "PJ01_Pistola_Dano_Fuerte"),
+            // T-960 (A4): locomoción base de Blender; las versiones _ConImplante ya están en los árboles de la base (ClipConImplante).
+            ("Loco_Idle", "PJ01_Loco_Idle"), ("Loco_CaminarAtras", "PJ01_Loco_CaminarAtras"), ("Loco_CaminarDer", "PJ01_Loco_CaminarDer"),
+            ("Loco_CaminarIzq", "PJ01_Loco_CaminarIzq"), ("Loco_GirarDer", "PJ01_Loco_GirarDer"), ("Loco_GirarIzq", "PJ01_Loco_GirarIzq"),
+            ("Loco_Frenar", "PJ01_Loco_Frenar"),
+            // T-961 (A2): salto en tres fases (SaltoAire sin bucle: se queda en su última pose hasta aterrizar) y la caída larga en bucle.
+            ("Loco_SaltoInicio", "PJ01_Loco_SaltoInicio"), ("Loco_SaltoAire", "PJ01_Loco_SaltoAire"),
+            ("Loco_SaltoAterrizaje", "PJ01_Loco_SaltoAterrizaje"), ("Loco_Caida", "PJ01_Loco_Caida"),
         };
 
         /// <summary>
@@ -262,15 +269,17 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 return s;
             }
 
-            Estado("Idle", "Loco_Idle");
+            // T-960: quieto, giros y frenar también tienen versión con implante (PJ01_*_ConImplante, sin choques con IMP01 o IMP02): árbol 1D por ConImplante.
+            // Los papeles que no lo mueven se quedan en 0 y ven solo el clip sin implante.
+            Estado("Idle", null).motion = ArbolConImplante(c, "Idle", "Loco_Idle");
             AnimatorState caminar = Estado("Caminar", null);
             // T-739: dos árboles 2D (sin y con implante) mezclados por el parámetro ConImplante (0 o 1). Los papeles que no lo mueven se quedan en 0 y siguen con Loco_Caminar y Loco_Correr.
             caminar.motion = ArbolImplante(c, "Caminar", "Loco_Caminar", "Loco_Caminar_ConImplante");
             AnimatorState correr = Estado("Correr", null);
             correr.motion = ArbolImplante(c, "Correr", "Loco_Correr", "Loco_Correr_ConImplante");
-            Estado("GirarDer", "Loco_GirarDer");
-            Estado("GirarIzq", "Loco_GirarIzq");
-            Estado("Frenar", "Loco_Frenar");
+            Estado("GirarDer", null).motion = ArbolConImplante(c, "GirarDer", "Loco_GirarDer");
+            Estado("GirarIzq", null).motion = ArbolConImplante(c, "GirarIzq", "Loco_GirarIzq");
+            Estado("Frenar", null).motion = ArbolConImplante(c, "Frenar", "Loco_Frenar");
             Estado("SaltoInicio", "Loco_SaltoInicio");
             Estado("SaltoAire", "Loco_SaltoAire");
             Estado("SaltoAterrizaje", "Loco_SaltoAterrizaje");
@@ -460,12 +469,23 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             return arbol;
         }
 
+        /// <summary>T-960: la versión con implante de un clip de locomoción de Mixamo es el clip de Blender PJ01_&lt;clip&gt;_ConImplante (solo existe para PJ01).</summary>
+        public static string ClipConImplante(string clipLoco) => PrefijoClipPJ01 + clipLoco + "_ConImplante";
+
+        /// <summary>T-960: árbol 1D por ConImplante: 0 el clip de la base (el override de cada papel lo cambia) y 1 su versión con implante de PJ01.</summary>
+        private static BlendTree ArbolConImplante(AnimatorController c, string nombre, string clipSin)
+        {
+            return Arbol1D(c, nombre, ReglasAnimacion.ConImplante, new (string, float)[] { (clipSin, 0f), (ClipConImplante(clipSin), 1f) });
+        }
+
         private static BlendTree ArbolImplante(AnimatorController c, string nombre, string clipSin, string clipCon)
         {
-            BlendTree Lados(string sufijo, string adelante) => Arbol2D(c, nombre + sufijo, new (string, Vector2)[]
+            // T-960: los lados y atrás con implante son los PJ01_Loco_Caminar*_ConImplante (antes el árbol con implante repetía los de Mixamo).
+            BlendTree Lados(string sufijo, string adelante, bool implante) => Arbol2D(c, nombre + sufijo, new (string, Vector2)[]
             {
-                (adelante, new Vector2(0f, 1f)), ("Loco_CaminarAtras", new Vector2(0f, -1f)),
-                ("Loco_CaminarDer", new Vector2(1f, 0f)), ("Loco_CaminarIzq", new Vector2(-1f, 0f)),
+                (adelante, new Vector2(0f, 1f)), (implante ? ClipConImplante("Loco_CaminarAtras") : "Loco_CaminarAtras", new Vector2(0f, -1f)),
+                (implante ? ClipConImplante("Loco_CaminarDer") : "Loco_CaminarDer", new Vector2(1f, 0f)),
+                (implante ? ClipConImplante("Loco_CaminarIzq") : "Loco_CaminarIzq", new Vector2(-1f, 0f)),
             });
             var raiz = new BlendTree
             {
@@ -474,8 +494,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 blendParameter = ReglasAnimacion.ConImplante,
                 useAutomaticThresholds = false,
             };
-            raiz.AddChild(Lados("_Sin", clipSin), 0f);
-            raiz.AddChild(Lados("_Con", clipCon), 1f);
+            raiz.AddChild(Lados("_Sin", clipSin, false), 0f);
+            raiz.AddChild(Lados("_Con", clipCon, true), 1f);
             AssetDatabase.AddObjectToAsset(raiz, c);
             return raiz;
         }
