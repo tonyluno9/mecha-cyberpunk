@@ -157,6 +157,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Loco_Idle", "PJ01_Loco_Idle"), ("Loco_CaminarAtras", "PJ01_Loco_CaminarAtras"), ("Loco_CaminarDer", "PJ01_Loco_CaminarDer"),
             ("Loco_CaminarIzq", "PJ01_Loco_CaminarIzq"), ("Loco_GirarDer", "PJ01_Loco_GirarDer"), ("Loco_GirarIzq", "PJ01_Loco_GirarIzq"),
             ("Loco_Frenar", "PJ01_Loco_Frenar"),
+            // T-961 (A2): salto en tres fases (SaltoAire sin bucle: se queda en su última pose hasta aterrizar) y la caída larga en bucle.
+            ("Loco_SaltoInicio", "PJ01_Loco_SaltoInicio"), ("Loco_SaltoAire", "PJ01_Loco_SaltoAire"),
+            ("Loco_SaltoAterrizaje", "PJ01_Loco_SaltoAterrizaje"), ("Loco_Caida", "PJ01_Loco_Caida"),
         };
 
         /// <summary>
