@@ -24,7 +24,7 @@ namespace MechaCyberpunk.UI.Armas
         [SerializeField] private string piezaCargador = "Bateria";
         [Tooltip("Nombre del objeto del modelo que es el cañón (se separa al elegirlo).")]
         [SerializeField] private string piezaCanon = "Corredera";
-        [Tooltip("Nombre del objeto del modelo que es la mira. Vacío: el banco arma una mira holográfica encima del cañón.")]
+        [Tooltip("Nombre del objeto del modelo que es la mira. Vacío: el arma no tiene mira en el holograma.")]
         [SerializeField] private string piezaMira = "";
         [Tooltip("Si el arma lleva mira (nivel III). Sin mira (la escopeta) sube solo hasta el nivel II y el banco no le arma mira holográfica.")]
         [SerializeField] private bool tieneMira = true;

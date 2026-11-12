@@ -120,7 +120,8 @@ Transform:
   m_LocalPosition: {x: -0.0026999898, y: 0.10870001, z: -0.062000003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7529500836783515029}
   m_Father: {fileID: 235035129064137082}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3571855674047904394
@@ -314,6 +315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6534850969663385967}
   - component: {fileID: 7011298388318578878}
+  - component: {fileID: 7775051696183523664}
   m_Layer: 0
   m_Name: W01_Pistola_agarre
   m_TagString: Untagged
@@ -353,3 +355,99 @@ MonoBehaviour:
   bateria: {fileID: 375518555433646277}
   escalaModelo: 1
   ejesModelo: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
+--- !u!114 &7775051696183523664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6077884961466823719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d846c43b29fec7479b503421e6cb016, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Combate.MiraSegunNivel
+  mira: {fileID: 7148894529151352623}
+--- !u!1001 &8067231588590649982
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 758984057764271206}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1259257
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.1259257
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.1259257
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.040250827
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0016888957
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.024803221
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.000000029802326
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.000000089406974
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_Name
+      value: Mira
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+--- !u!1 &7148894529151352623 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+  m_PrefabInstance: {fileID: 8067231588590649982}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7529500836783515029 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 69d664795c2b2664b851882f5a80b748, type: 3}
+  m_PrefabInstance: {fileID: 8067231588590649982}
+  m_PrefabAsset: {fileID: 0}

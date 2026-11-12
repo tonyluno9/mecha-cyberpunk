@@ -37,7 +37,7 @@ namespace MechaCyberpunk.UI.Editor
 
             var armas = new List<EntradaArmaMenu>
             {
-                EntradaArmaMenu.Crear(ArmaAPie.Pistola, "PISTOLA", h01, pistola, h01),
+                EntradaArmaMenu.Crear(ArmaAPie.Pistola, "PISTOLA", h01, pistola, h01, "Bateria", "Corredera", "Mira"),
                 EntradaArmaMenu.Crear(ArmaAPie.Escopeta, "ESCOPETA", h02, Modelo("W02_Escopeta"), h02, "Bomba", "Canon", "", false),
                 EntradaArmaMenu.Crear(ArmaAPie.Fusil, "FUSIL", h03, Modelo("W03_Fusil"), h03, "Cargador", "Canon", "Mira"),
                 EntradaArmaMenu.Crear(ArmaAPie.Sniper, "FRANCOTIRADOR", h04, Modelo("W04_Francotirador"), h04, "Cargador", "Canon", "Mira")
