@@ -322,6 +322,19 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Saca el teléfono (gesto Inter_Telefono).</summary>
         public void Telefonear() => Gestear(GestoVisual.Telefono);
 
+        /// <summary>T-964: avisa cuando el gesto del teléfono lo lleva al oído (evento de PJ01_Inter_Telefono).</summary>
+        public event System.Action TelefonoEnOreja;
+
+        /// <summary>T-964: cuántas veces llegó el teléfono al oído (para las pruebas).</summary>
+        public int VecesTelefonoEnOreja { get; private set; }
+
+        /// <summary>La usa <see cref="ReceptorEventosArma"/>.</summary>
+        public void AvisarTelefonoEnOreja()
+        {
+            VecesTelefonoEnOreja++;
+            TelefonoEnOreja?.Invoke();
+        }
+
         /// <summary>True mientras la capa base juega un gesto, manejar o el celular (los estados con la etiqueta Gesto).</summary>
         public bool EnGesto
         {

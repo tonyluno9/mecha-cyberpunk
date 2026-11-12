@@ -11,6 +11,8 @@ namespace MechaCyberpunk.Personaje.Visual
     {
         public const string FuncionSacar = "AlSacarPistola";
         public const string FuncionGuardar = "AlGuardarPistola";
+        /// <summary>T-964: evento de PJ01_Inter_Telefono cuando el teléfono llega al oído.</summary>
+        public const string FuncionTelefonoEnOreja = "AlTelefonoEnOreja";
 
         private VisualPersonaje visual;
 
@@ -40,6 +42,16 @@ namespace MechaCyberpunk.Personaje.Visual
             if (v != null && !v.ArmaLevantada)
             {
                 v.PonerArmaEnMano(false);
+            }
+        }
+
+        /// <summary>T-964: evento de PJ01_Inter_Telefono (6.5 s): el teléfono ya está en el oído.</summary>
+        public void AlTelefonoEnOreja()
+        {
+            VisualPersonaje v = Visual();
+            if (v != null)
+            {
+                v.AvisarTelefonoEnOreja();
             }
         }
     }

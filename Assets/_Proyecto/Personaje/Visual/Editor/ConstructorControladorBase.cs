@@ -136,8 +136,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
         /// <summary>
         /// T-749: clip del controlador base -> clip PJ01_* de Assets/Arte/Personajes/PJ01/Clips. Quedan fuera PJ01_Pistola_ApuntarCaminar_Derecha e Izquierda: son giros en el sitio
-        /// con el arma apuntando (agarre.txt de Tony), no hay un estado que los pida. Los clips que no vinieron de Blender (carro, moto, interacciones, puños, muertes, cobertura,
-        /// rifle, gestos) siguen con los de Mixamo: ver docs/pedido-blender-10nov.md.
+        /// con el arma apuntando (agarre.txt de Tony), no hay un estado que los pida. T-960 a T-964: también los clips de Blender del 9-nov (locomoción, salto, puños, muertes,
+        /// carro, arma larga, cobertura e interacciones). Siguen de Mixamo los gestos de otros papeles (Burla, Presumir) y Carro_Pitar (no vino de Blender).
         /// </summary>
         public static readonly (string Base, string Papel)[] ClipsDeJugadorPJ01 =
         {
@@ -166,6 +166,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Dano_Levantarse_BocaArriba", "PJ01_Dano_Levantarse_BocaArriba"), ("Dano_Levantarse_BocaAbajo", "PJ01_Dano_Levantarse_BocaAbajo"),
             // T-963 (A1): subir, manejar y bajar del carro (postura nueva: más abajo, piernas al piso, manos en el volante). La moto tiene sus propios estados.
             ("Carro_Entrar", "PJ01_Carro_Entrar"), ("Carro_Manejar_Bucle", "PJ01_Carro_Manejar"), ("Carro_Salir", "PJ01_Carro_Salir"),
+            // T-964 (A5): arma larga (escopeta, fusil y francotirador), cobertura (son con pistola) e interacciones. Inter_Telefono va recortado al tramo útil.
+            ("Rifle_Idle", "PJ01_Rifle_Idle"), ("Rifle_Caminar", "PJ01_Rifle_Caminar"), ("Rifle_Correr", "PJ01_Rifle_Correr"),
+            ("Rifle_Apuntar", "PJ01_Rifle_Apuntar"), ("Rifle_ApuntarCaminar", "PJ01_Rifle_ApuntarCaminar"), ("Rifle_ApuntarCorrer", "PJ01_Rifle_ApuntarCorrer"),
+            ("Rifle_DisparoCaminar", "PJ01_Rifle_DisparoCaminar"), ("Rifle_Recargar", "PJ01_Rifle_Recargar"),
+            ("Cobertura_Entrar", "PJ01_Cobertura_Entrar"), ("Cobertura_Disparo", "PJ01_Cobertura_Disparo"), ("Cobertura_Disparo2", "PJ01_Cobertura_Disparo2"),
+            ("Inter_AbrirPuerta", "PJ01_Inter_AbrirPuerta"), ("Inter_Boton", "PJ01_Inter_Boton"), ("Inter_Recoger", "PJ01_Inter_Recoger"),
+            ("Inter_Telefono", "PJ01_Inter_Telefono"), ("Inter_VerTelefono_Bucle", "PJ01_Inter_VerTelefono"),
         };
 
         /// <summary>
