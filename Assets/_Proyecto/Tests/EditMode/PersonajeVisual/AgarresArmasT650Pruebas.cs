@@ -40,9 +40,20 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Fusil")]
         [TestCase("Escopeta")]
         [TestCase("Sniper")]
-        public void Agarre_PJ01_DeLasArmasLargas_SigueSiendoElDeSiempre(string arma)
+        public void Agarre_PJ01_DeLasArmasLargas_EsElDelW03DeBlender(string arma)
         {
+            // T-965 (A6): (0.003, 0.068, 0.003) m y (1.6, -169.3, -0.5)° respecto a R_Hand en Blender, pasados a Unity.
             Assert.IsTrue(AgarresArmas.TryObtener(arma, AgarresArmas.ManoDerechaPJ01, out AgarreArma a));
+            Assert.AreEqual(0f, Vector3.Distance(new Vector3(-0.00307f, 0.0696f, -0.00307f), a.Posicion), 0.0002f);
+            Quaternion esperado = AgarresArmas.GiroManoUnity * AgarresArmas.CambiarDeMano(AgarresArmas.EulerBlender(new Vector3(1.6f, -169.3f, -0.5f))) * Quaternion.Euler(-90f, 0f, 0f);
+            Assert.Less(Quaternion.Angle(esperado, Quaternion.Euler(a.Rotacion)), 0.1f);
+            Assert.Greater(a.PosicionIzquierda.z, 0.2f, "la mano izquierda va adelante, en el guardamanos");
+        }
+
+        [TestCase("Fusil")]
+        public void Agarre_ModeloMixamo_DeLasArmasLargas_SigueSiendoElDeSiempre(string arma)
+        {
+            Assert.IsTrue(AgarresArmas.TryObtener(arma, "mixamorig:RightHand", out AgarreArma a));
             Assert.AreEqual(0f, Vector3.Distance(new Vector3(-0.025f, 0.06f, -0.035f), a.Posicion), 0.0001f);
             Assert.AreEqual(0f, Vector3.Distance(new Vector3(-90f, 0f, 0f), a.Rotacion), 0.0001f);
         }

@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Personaje.Visual
     /// <summary>
     /// S1 (T-650): agarre de cada arma en la mano del modelo Humanoid. T-736: el jugador es PJ01 (rig de Tripo de 78 huesos, mano derecha = R_Hand); su
     /// agarre de la PISTOLA es el caso A de agarre.txt de Tony (PJ01 a 1.80 m con el Scale Factor del importador: R_Hand con lossyScale 1): palma en la empuñadura,
-    /// índice en el gatillo, cañón al frente y corredera arriba. Las armas largas (fusil, escopeta, sniper) siguen con su agarre de siempre (plan de PJ01, A6).
+    /// índice en el gatillo, cañón al frente y corredera arriba. T-965 (A6): las armas largas (fusil, escopeta, sniper) van como el W03 en 06_Rifle_Inter_Cobertura.blend.
     /// </summary>
     public static class AgarresArmas
     {
@@ -47,10 +47,38 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Alto de PJ01 en R_Hand si el modelo se importara a escala 1 y se agrandara en su objeto (caso B de agarre.txt); solo por referencia.</summary>
         public const float EscalaCasoB = 0.5444f;
 
-        private static readonly Vector3 GiroEnMano = new Vector3(-90f, 0f, 0f);
+        /// <summary>T-965 (A6): el W03 respecto al hueso R_Hand en 06_Rifle_Inter_Cobertura.blend (BITACORA 06): posición (m, PJ01 a 1.837) y giro Euler XYZ de Blender (°).</summary>
+        public static readonly Vector3 PosicionArmaLargaBlender = new Vector3(0.003f, 0.068f, 0.003f);
+        public static readonly Vector3 GiroArmaLargaBlender = new Vector3(1.6f, -169.3f, -0.5f);
+        /// <summary>T-965: PJ01 va a 1.837 en Blender y a 1.88 en Unity (<c>ImportadorClipsPJ01.EscalaClips</c>), como la pistola en T-749.</summary>
+        public const float EscalaBlenderAUnity = 1.88f / 1.837f;
+        /// <summary>T-965: el eje Z de arriba de Blender pasado a Y de Unity, como al importar un FBX de Blender.</summary>
+        public static readonly Quaternion BlenderAUnity = Quaternion.Euler(-90f, 0f, 0f);
+
+        /// <summary>Un giro Euler XYZ de Blender (primero X, luego Y, luego Z) como cuaternión, con los mismos componentes que en Blender (como CuaternionTony).</summary>
+        public static Quaternion EulerBlender(Vector3 grados) =>
+            Quaternion.AngleAxis(grados.z, Vector3.forward) * Quaternion.AngleAxis(grados.y, Vector3.up) * Quaternion.AngleAxis(grados.x, Vector3.right);
+
+        /// <summary>
+        /// T-965: posición del arma larga (su raíz, con la empuñadura en el origen) en R_Hand de PJ01: la de Blender con el R_Hand de Unity girado 180° en Y (X y Z con signo
+        /// contrario, como la pistola) y a la escala de Unity.
+        /// </summary>
+        /// <summary>T-965: la mano izquierda en el espacio del arma larga, medida en PJ01_Rifle_Apuntar con este agarre (bajo el guardamanos, 27 cm delante de la empuñadura).</summary>
+        public static readonly Vector3 ManoIzquierdaArmaLarga = new Vector3(-0.038f, 0.006f, 0.273f);
+        public static readonly Vector3 GiroManoIzquierdaArmaLarga = new Vector3(278.5f, 348.0f, 235.2f);
+
+        public static Vector3 PosicionArmaLargaPJ01 => GiroManoUnity * (PosicionArmaLargaBlender * EscalaBlenderAUnity);
+
+        /// <summary>
+        /// T-965: giro del arma larga en R_Hand de PJ01. El de Blender pasa a Unity cambiando de mano (componentes Y y Z del cuaternión con el signo contrario), con el R_Hand de
+        /// Unity girado 180° en Y y el arriba de Blender (Z) en el de Unity (Y). Se eligió entre 16 conversiones midiendo contra el propio clip PJ01_Rifle_Apuntar
+        /// (AgarreArmasLargasT965.Candidatos): el cañón queda a 7° de la línea entre las manos (la izquierda va 4 cm al lado del guardamanos) y la mira a 1° de arriba.
+        /// </summary>
+        public static Vector3 GiroArmaLargaPJ01 => (GiroManoUnity * CambiarDeMano(EulerBlender(GiroArmaLargaBlender)) * BlenderAUnity).eulerAngles;
+
+        /// <summary>Un giro de un sistema de mano derecha (Blender) en el de mano izquierda (Unity): X se refleja.</summary>
+        public static Quaternion CambiarDeMano(Quaternion q) => new Quaternion(q.x, -q.y, -q.z, q.w);
         // T-679: los modelos W02-W04 llevan la empuñadura (la palma) en su origen, igual que la pistola W01.
-        private static readonly Vector3 PosicionArmaLarga = new Vector3(-0.025f, 0.06f, -0.035f);
-        private static readonly Vector3 GiroManoIzquierdaLarga = new Vector3(316f, 88f, 179f);
 
         /// <summary>Nombre del hueso de la mano derecha de PJ01 (el jugador).</summary>
         public const string ManoDerechaPJ01 = "R_Hand";
@@ -62,12 +90,13 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>
         /// El agarre de un arma para la mano de un modelo: la pistola en la mano de PJ01 (R_Hand) usa agarre.txt de Tony; las armas largas y cualquier otra mano,
-        /// el agarre de los modelos mixamorig.
+        /// el agarre de los modelos mixamorig. T-965: en R_Hand todas las armas usan el de PJ01.
         /// </summary>
         public static bool TryObtener(string arma, string nombreMano, out AgarreArma agarre)
         {
             bool tiene = TryObtener(arma, out agarre);
-            if (tiene && (nombreMano != ManoDerechaPJ01 || arma != "Pistola"))
+            // T-965: en la mano de PJ01 todas las armas usan su agarre de Blender (antes las largas usaban el de los modelos mixamorig).
+            if (tiene && nombreMano != ManoDerechaPJ01)
             {
                 agarre = new AgarreArma(PosicionEnManoMixamo, GiroEnManoMixamo, agarre.PosicionIzquierda, agarre.RotacionIzquierda);
             }
@@ -83,13 +112,10 @@ namespace MechaCyberpunk.Personaje.Visual
                     agarre = new AgarreArma(PosicionPJ01, GiroPJ01, new Vector3(-0.12f, -0.06f, -0.08f), new Vector3(9f, 84f, 96f));
                     return true;
                 case "Fusil":
-                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.36f), GiroManoIzquierdaLarga);
-                    return true;
                 case "Escopeta":
-                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.36f), GiroManoIzquierdaLarga);
-                    return true;
                 case "Sniper":
-                    agarre = new AgarreArma(PosicionArmaLarga, GiroEnMano, new Vector3(-0.06f, 0.03f, 0.38f), GiroManoIzquierdaLarga);
+                    // T-965 (A6): las tres con el agarre del W03 de Blender; la mano izquierda donde la pone PJ01_Rifle_Apuntar.
+                    agarre = new AgarreArma(PosicionArmaLargaPJ01, GiroArmaLargaPJ01, ManoIzquierdaArmaLarga, GiroManoIzquierdaArmaLarga);
                     return true;
                 default:
                     agarre = default;
