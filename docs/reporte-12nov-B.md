@@ -28,9 +28,8 @@ contra las vistas de `_REVISION/`, con pruebas y publicada en `main` con merge `
 - Capturas revisadas: docs/capturas/t970, t971, t972 y t973.
 
 ## Lo que hay que saber
-- **Dos fallos que trajo T-964 (Sesión A):** con main actual, `ArmasNuevasS1Pruebas` falla en "escopeta: apuntando el cañón mira al frente" (0.83, pide > 0.9) y en "con el francotirador, apuntar hace zoom". Las dos pasaban con T-970 y T-971 antes de mezclar T-964 (clips de rifle y Animator). Se le avisó a la otra sesión; no lo toqué porque es su área.
+- **Dos fallos que trajo T-964 (Sesión A), ya resueltos:** `ArmasNuevasS1Pruebas` fallaba al apuntar con la escopeta y en el zoom del francotirador por el agarre viejo de las armas largas con los clips nuevos. La Sesión A lo arregló en T-965 (76873af) con el agarre del W03 de Blender; los modelos y las piezas no cambiaron. Ojo: ImportarS1n y AplicarAgarresArmas ahora toman esos valores nuevos.
 - **Menú:** `Menu_Calles.unity` tiene copias sueltas de carros que todavía llevan las puertas de Tripo. No lo toqué porque pediste no tocar los menús. Por eso los FBX y materiales `*_Puerta*` de `Assets/Arte/Vehiculos/Piezas/` siguen en el proyecto. Para borrarlos: quitar las puertas de ese menú y las entradas de puertas de `ImportarS1nPiezas`.
-- **Agarre de las armas largas:** las capturas en la mano se ven bien con el agarre actual; el ajuste fino (A6) es de la Sesión A.
 - En la captura del V01a con el jugador sentado, el pelo asoma un poco por el techo; es de la postura o la escala del clip de carro, no de las puertas.
 - Al mezclar T-963 hubo conflicto en `AnimacionCarro.cs`: se quedó lo de T-963 (avance del clip) sin los campos de puertas, y se probó con las clases de carro y moto.
 - La mira de la pistola es pequeña: en la vista de lado el punto rojo casi no se ve.
