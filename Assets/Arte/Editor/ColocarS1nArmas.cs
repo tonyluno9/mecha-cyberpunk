@@ -4,6 +4,7 @@ using System.Text;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Personaje.Visual.Editor;
+using MechaCyberpunk.UI.Editor;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -84,6 +85,22 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Importacion(m);
                 Material material = Material(m);
+                string piezas = m.Carpeta + m.Codigo + "_Piezas.fbx";
+                if (File.Exists(piezas))
+                {
+                    // T-970: con el modelo de piezas de Blender el prefab lo arma ArmasPiezasT970 (idempotente: si ya está armado no cambia nada).
+                    bool nuevo = !File.Exists(m.RutaPrefab);
+                    if (nuevo)
+                    {
+                        PrefabVacio(m);
+                    }
+                    ArmasPiezasT970.ArmarPrefab(m.RutaPrefab, piezas, Informe);
+                    if (nuevo || !File.Exists(m.RutaPiso))
+                    {
+                        Piso(m, AssetDatabase.LoadAssetAtPath<GameObject>(m.RutaPrefab));
+                    }
+                    continue;
+                }
                 GameObject prefab = Prefab(m, material);
                 Piso(m, prefab);
             }
@@ -139,6 +156,15 @@ namespace MechaCyberpunk.Arte.Editor
             AssetDatabase.SaveAssetIfDirty(material);
             Informe.AppendLine("material " + m.RutaMaterial + ": color " + (color != null ? color.name : "FALTA") + ", normal " + (normal != null ? normal.name : "no"));
             return material;
+        }
+
+        // La raíz con su Boca; ArmasPiezasT970.ArmarPrefab le pone el Modelo y mueve la Boca.
+        private static void PrefabVacio(Medida m)
+        {
+            GameObject raiz = new GameObject(m.Codigo + "_" + m.Nombre);
+            new GameObject("Boca").transform.SetParent(raiz.transform, false);
+            PrefabUtility.SaveAsPrefabAsset(raiz, m.RutaPrefab);
+            Object.DestroyImmediate(raiz);
         }
 
         private static GameObject Prefab(Medida m, Material material)
@@ -200,6 +226,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Informe.AppendLine("ERROR: JugadorAPie no tiene ApuntadoIK con socket de arma");
                     return;
                 }
+                bool cambios = false;
                 foreach (Medida m in listas)
                 {
                     Transform objeto = ik.SocketArma.Find(m.Objeto);
@@ -209,6 +236,12 @@ namespace MechaCyberpunk.Arte.Editor
                         continue;
                     }
                     Transform viejo = objeto.Find(m.Codigo);
+                    GameObject origen = viejo != null ? PrefabUtility.GetCorrespondingObjectFromSource(viejo.gameObject) : null;
+                    if (origen != null && AssetDatabase.GetAssetPath(origen) == m.RutaPrefab)
+                    {
+                        continue; // ya está armado con este prefab
+                    }
+                    cambios = true;
                     if (viejo != null)
                     {
                         Object.DestroyImmediate(viejo.gameObject);
@@ -234,8 +267,11 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                     Informe.AppendLine("jugador: " + m.Codigo + " en la mano como " + m.Objeto);
                 }
-                AplicarAgarresArmas.Aplicar(contenido);
-                PrefabUtility.SaveAsPrefabAsset(contenido, RutaJugador);
+                if (cambios)
+                {
+                    AplicarAgarresArmas.Aplicar(contenido);
+                    PrefabUtility.SaveAsPrefabAsset(contenido, RutaJugador);
+                }
             }
             finally
             {

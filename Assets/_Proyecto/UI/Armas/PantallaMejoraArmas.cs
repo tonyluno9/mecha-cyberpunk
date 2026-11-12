@@ -362,11 +362,11 @@ namespace MechaCyberpunk.UI.Armas
                 }
                 if (arriba.WasPressedThisFrame())
                 {
-                    ElegirPieza((PiezaArma)(((int)pieza + ReglaMejoraArma.CantidadPiezas - 1) % ReglaMejoraArma.CantidadPiezas), true);
+                    ElegirPieza(PiezaVecina(-1), true);
                 }
                 else if (abajo.WasPressedThisFrame())
                 {
-                    ElegirPieza((PiezaArma)(((int)pieza + 1) % ReglaMejoraArma.CantidadPiezas), true);
+                    ElegirPieza(PiezaVecina(1), true);
                 }
                 if (confirmar.WasPressedThisFrame())
                 {
@@ -463,7 +463,7 @@ namespace MechaCyberpunk.UI.Armas
             foreach (EntradaArmaMenu entrada in armasTodas)
             {
                 bool categoriaBien = !categoria.HasValue || categoria.Value == entrada.Arma;
-                if (categoriaBien && ReglaMejoraArma.PasaFiltro(filtro, arsenal != null ? arsenal.Nivel(entrada.Arma) : 0))
+                if (categoriaBien && ReglaMejoraArma.PasaFiltro(filtro, arsenal != null ? arsenal.Nivel(entrada.Arma) : 0, entrada.NivelMaximo))
                 {
                     armas.Add(entrada);
                 }
@@ -487,6 +487,27 @@ namespace MechaCyberpunk.UI.Armas
             AplicarFiltros();
             ElegirArma(0, true);
         }
+
+        // El nivel más alto del arma elegida (2 la escopeta, que no lleva mira; 3 las demás).
+        private int MaximoActual() => ArmaElegida != null ? ArmaElegida.NivelMaximo : ReglaMejoraArma.NivelMaximo;
+
+        // La pieza que sigue en la lista saltando la mira del arma que no la lleva.
+        private PiezaArma PiezaVecina(int paso)
+        {
+            PiezaArma candidata = pieza;
+            for (int i = 0; i < ReglaMejoraArma.CantidadPiezas; i++)
+            {
+                candidata = (PiezaArma)(((int)candidata + paso + ReglaMejoraArma.CantidadPiezas) % ReglaMejoraArma.CantidadPiezas);
+                if (candidata != PiezaArma.Mira || ArmaElegida == null || ArmaElegida.TieneMira)
+                {
+                    return candidata;
+                }
+            }
+            return pieza;
+        }
+
+        // Lo que dice la fila de la mira en el arma que no la lleva (la fila queda apagada para no romper la lista).
+        private const string TextoSinPieza = "SIN MIRA";
 
         private int NivelActual()
         {
@@ -519,7 +540,7 @@ namespace MechaCyberpunk.UI.Armas
             vista.Mostrar(ArmaElegida, config);
             imagenHolo.texture = vista.Textura;
             imagenHolo.enabled = true;
-            pieza = ReglaMejoraArma.Siguiente(NivelActual());
+            pieza = ReglaMejoraArma.Siguiente(NivelActual(), MaximoActual());
             animacionNumeros = 1f;
             textoAviso.gameObject.SetActive(false);
             if (conSonido)
@@ -533,6 +554,10 @@ namespace MechaCyberpunk.UI.Armas
         /// <summary>Elige la pieza (también con clic): se separa del arma y la tabla muestra su mejora.</summary>
         public void ElegirPieza(PiezaArma nueva, bool conSonido)
         {
+            if (nueva == PiezaArma.Mira && ArmaElegida != null && !ArmaElegida.TieneMira)
+            {
+                return;
+            }
             pieza = nueva;
             animacionNumeros = 1f;
             textoAviso.gameObject.SetActive(false);
@@ -553,11 +578,11 @@ namespace MechaCyberpunk.UI.Armas
             }
             Sonidos.Reproducir(config.SonidoAceptar);
             int nivel = NivelActual();
-            EstadoPieza estado = ReglaMejoraArma.Estado(pieza, nivel);
+            EstadoPieza estado = ReglaMejoraArma.Estado(pieza, nivel, MaximoActual());
             ServicioInventario inventario = Registro<ServicioInventario>.Actual;
             ICartera cartera = Registro<ICartera>.Actual;
             DatosArma siguiente = DatosNivel(ReglaMejoraArma.NivelDe(pieza));
-            if (!ReglaMejoraArma.HaySiguiente(nivel))
+            if (!ReglaMejoraArma.HaySiguiente(nivel, MaximoActual()))
             {
                 MostrarAviso(config.TextoAlMaximo, Color.white);
             }
@@ -600,7 +625,7 @@ namespace MechaCyberpunk.UI.Armas
 
         private string TextoBloqueada(int nivel)
         {
-            return string.Format(config.FormatoBloqueada, config.Pieza(ReglaMejoraArma.PiezaQueFalta(pieza, nivel)).Nombre);
+            return string.Format(config.FormatoBloqueada, config.Pieza(ReglaMejoraArma.PiezaQueFalta(pieza, nivel, MaximoActual())).Nombre);
         }
 
         private void MostrarAviso(string texto, Color color)
@@ -650,11 +675,11 @@ namespace MechaCyberpunk.UI.Armas
             EntradaArmaMenu entrada = ArmaElegida;
             bool hay = entrada != null && armas.Count > 0;
             textoArma.text = hay ? entrada.Nombre : string.Empty;
-            textoNivelArma.text = hay ? TextoNivel(nivel) : string.Empty;
+            textoNivelArma.text = hay ? TextoNivel(nivel, entrada.NivelMaximo) : string.Empty;
             estados.Clear();
             for (int i = 0; i < ReglaMejoraArma.CantidadPiezas; i++)
             {
-                estados[(PiezaArma)i] = hay ? ReglaMejoraArma.Estado((PiezaArma)i, nivel) : EstadoPieza.Bloqueada;
+                estados[(PiezaArma)i] = hay ? ReglaMejoraArma.Estado((PiezaArma)i, nivel, entrada.NivelMaximo) : EstadoPieza.Bloqueada;
             }
             EntradaPiezaMenu datosPieza = config.Pieza(pieza);
             textoPiezaElegida.text = hay ? Romanos[ReglaMejoraArma.NivelDe(pieza)] + " · " + datosPieza.Nombre + " · " + TextoMejora(pieza) : string.Empty;
@@ -686,7 +711,7 @@ namespace MechaCyberpunk.UI.Armas
             return real == datos.Estadistica ? datos.Mejora : string.Format(config.FormatoMejoraReal, config.NombreEstadistica(real));
         }
 
-        private string TextoNivel(int nivel) => nivel <= 0 ? config.TextoBase : string.Format(config.FormatoNivel, Romanos[Mathf.Min(nivel, ReglaMejoraArma.NivelMaximo)]);
+        private string TextoNivel(int nivel, int maximo) => nivel <= 0 ? config.TextoBase : string.Format(config.FormatoNivel, Romanos[Mathf.Min(nivel, maximo)]);
 
         private void PintarFilaArma(int i)
         {
@@ -698,9 +723,10 @@ namespace MechaCyberpunk.UI.Armas
             f.Borde.SetActive(elegida);
             f.Filo.color = TrazoH10.Rareza(nivel);
             f.Nombre.color = TrazoH10.Texto;
-            f.Nivel.text = TextoNivel(nivel);
+            f.Nivel.text = TextoNivel(nivel, armas[i].NivelMaximo);
             for (int m = 0; m < f.Marcas.Length; m++)
             {
+                f.Marcas[m].gameObject.SetActive(m < armas[i].NivelMaximo);
                 f.Marcas[m].color = m < nivel ? TrazoH10.Turquesa : TrazoH10.ConAlfa(TrazoH10.TextoTenue, 0.25f);
             }
         }
@@ -731,12 +757,12 @@ namespace MechaCyberpunk.UI.Armas
                 return;
             }
             int falta = 0;
-            for (int n = nivel + 1; n <= ReglaMejoraArma.NivelMaximo; n++)
+            for (int n = nivel + 1; n <= MaximoActual(); n++)
             {
                 DatosArma datos = DatosNivel(n);
                 falta += datos != null ? ReglaMejoraArma.Precio(datos) : 0;
             }
-            textoProgreso.text = Mathf.Max(0, nivel) + " / " + ReglaMejoraArma.NivelMaximo + "\n" + FormatoDinero.Texto(falta);
+            textoProgreso.text = Mathf.Clamp(nivel, 0, MaximoActual()) + " / " + MaximoActual() + "\n" + FormatoDinero.Texto(falta);
         }
 
         // Lo que el arma hace hoy y cómo queda el dinero si se compra la pieza elegida.
@@ -805,8 +831,9 @@ namespace MechaCyberpunk.UI.Armas
                         f.Etiqueta.fontSize = TrazoH10.TamanoDato;
                         break;
                     default:
-                        f.Etiqueta.text = armas.Count > 0 ? string.Format(config.FormatoBloqueada,
-                            config.Pieza(ReglaMejoraArma.PiezaQueFalta(p, nivel)).Nombre) : string.Empty;
+                        f.Etiqueta.text = armas.Count == 0 ? string.Empty
+                            : ReglaMejoraArma.NivelDe(p) > MaximoActual() ? TextoSinPieza
+                            : string.Format(config.FormatoBloqueada, config.Pieza(ReglaMejoraArma.PiezaQueFalta(p, nivel, MaximoActual())).Nombre);
                         f.Etiqueta.color = TrazoH10.TextoTenue;
                         f.Etiqueta.fontSize = TrazoH10.TamanoMicro;
                         break;
@@ -820,7 +847,7 @@ namespace MechaCyberpunk.UI.Armas
             int nivelPieza = ReglaMejoraArma.NivelDe(pieza);
             DatosArma antes = armas.Count > 0 ? DatosNivel(nivelPieza - 1) : null;
             DatosArma despues = armas.Count > 0 ? DatosNivel(nivelPieza) : null;
-            DatosArma referencia = armas.Count > 0 ? DatosNivel(ReglaMejoraArma.NivelMaximo) : null;
+            DatosArma referencia = armas.Count > 0 ? DatosNivel(MaximoActual()) : null;
             EstadisticasArma a = EstadisticasArma.De(antes);
             EstadisticasArma d = EstadisticasArma.De(despues);
             EstadisticasArma r = EstadisticasArma.De(referencia);
@@ -880,7 +907,7 @@ namespace MechaCyberpunk.UI.Armas
                 textoBoton.text = config.TextoSinArmas;
                 color = estilo.Desactivado;
             }
-            else if (!ReglaMejoraArma.HaySiguiente(nivel))
+            else if (!ReglaMejoraArma.HaySiguiente(nivel, MaximoActual()))
             {
                 textoBoton.text = config.TextoAlMaximo;
                 color = TrazoH10.Turquesa;

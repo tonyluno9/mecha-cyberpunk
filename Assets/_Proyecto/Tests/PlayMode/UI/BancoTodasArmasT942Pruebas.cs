@@ -44,16 +44,17 @@ namespace MechaCyberpunk.Tests.UI
             vista.Mostrar(entrada, config);
             yield return null;
             Assert.IsTrue(vista.ConModelo);
-            foreach (PiezaArma pieza in new[] { PiezaArma.Cargador, PiezaArma.Canon, PiezaArma.Mira })
+            foreach (PiezaArma pieza in Piezas(entrada))
             {
                 Assert.IsTrue(vista.TienePieza(pieza), nombre + " tiene " + pieza);
             }
+            Assert.AreEqual(entrada.TieneMira, vista.TienePieza(PiezaArma.Mira), nombre + ": solo las armas con mira tienen mira en el holograma");
             // El cargador cuelga por debajo del cañón y el cañón queda hacia un extremo (más lejos del centro que el cargador).
             Assert.IsTrue(vista.CentroPieza(PiezaArma.Cargador, out Vector3 cargador));
             Assert.IsTrue(vista.CentroPieza(PiezaArma.Canon, out Vector3 canon));
             Assert.Less(cargador.y, canon.y, "El cargador queda más abajo que el cañón");
 
-            foreach (PiezaArma pieza in new[] { PiezaArma.Cargador, PiezaArma.Canon, PiezaArma.Mira })
+            foreach (PiezaArma pieza in Piezas(entrada))
             {
                 vista.CentroPieza(pieza, out Vector3 antes);
                 vista.ElegirPieza(pieza, Estados());
@@ -62,9 +63,9 @@ namespace MechaCyberpunk.Tests.UI
                 vista.CentroPieza(pieza, out Vector3 despues);
                 Assert.Greater((despues - antes).magnitude, 0.02f, nombre + ": " + pieza + " se mueve");
                 Assert.Greater(despues.y, config.PosicionSet.y - PedestalBajo, nombre + ": " + pieza + " no cruza el pedestal");
-                if (pieza == PiezaArma.Cargador && Environment.GetEnvironmentVariable("CAPTURAR_UI") == "1")
+                if (Environment.GetEnvironmentVariable("CAPTURAR_T970") == "1" && NombreCaptura(nombre, pieza) != null)
                 {
-                    Guardar(vista, "docs/capturas/ui-banco-" + nombre + ".png");
+                    Guardar(vista, "docs/capturas/t970/" + NombreCaptura(nombre, pieza) + ".png");
                 }
             }
             vista.ElegirPieza(PiezaArma.Cargador, Estados());
@@ -79,6 +80,26 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(termino, nombre + ": el escaneo termina");
             vista.Ocultar();
             Object.Destroy(go);
+        }
+
+        // T-970: las piezas que el arma sí tiene (la escopeta no lleva mira).
+        private static PiezaArma[] Piezas(EntradaArmaMenu entrada)
+        {
+            return entrada.TieneMira ? new[] { PiezaArma.Cargador, PiezaArma.Canon, PiezaArma.Mira } : new[] { PiezaArma.Cargador, PiezaArma.Canon };
+        }
+
+        // Las capturas que pide T-970 (la escopeta llama bomba a su cargador); null si esa pieza no se captura.
+        private static string NombreCaptura(string arma, PiezaArma pieza)
+        {
+            switch (arma + "-" + pieza)
+            {
+                case "escopeta-Cargador": return "banco-escopeta-bomba";
+                case "fusil-Cargador": return "banco-fusil-cargador";
+                case "fusil-Mira": return "banco-fusil-mira";
+                case "francotirador-Canon": return "banco-francotirador-canon";
+                case "francotirador-Mira": return "banco-francotirador-mira";
+                default: return null;
+            }
         }
 
         // Guarda lo que ve la cámara del holograma sobre un fondo oscuro.

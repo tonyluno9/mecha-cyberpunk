@@ -26,11 +26,14 @@ namespace MechaCyberpunk.UI.Armas
         [SerializeField] private string piezaCanon = "Corredera";
         [Tooltip("Nombre del objeto del modelo que es la mira. Vacío: el banco arma una mira holográfica encima del cañón.")]
         [SerializeField] private string piezaMira = "";
+        [Tooltip("Si el arma lleva mira (nivel III). Sin mira (la escopeta) sube solo hasta el nivel II y el banco no le arma mira holográfica.")]
+        [SerializeField] private bool tieneMira = true;
 
         public ArmaAPie Arma => arma;
         public string Nombre => nombre;
         public Texture2D Icono => icono;
         public GameObject Modelo => modelo;
+        public bool TieneMira => tieneMira;
         public Texture2D Imagen => imagen != null ? imagen : icono;
 
         /// <summary>El nombre del objeto del modelo que es esa pieza (vacío si no hay).</summary>
@@ -44,9 +47,17 @@ namespace MechaCyberpunk.UI.Armas
             }
         }
 
-        public static EntradaArmaMenu Crear(ArmaAPie arma, string nombre, Texture2D icono, GameObject modelo, Texture2D imagen)
+        /// <summary>El nivel más alto del arma: 3 con mira, 2 sin mira (la mira es el nivel III).</summary>
+        public int NivelMaximo => tieneMira ? ReglaMejoraArma.NivelMaximo : ReglaMejoraArma.NivelMaximo - 1;
+
+        public static EntradaArmaMenu Crear(ArmaAPie arma, string nombre, Texture2D icono, GameObject modelo, Texture2D imagen,
+            string cargador = "Bateria", string canon = "Corredera", string mira = "", bool tieneMira = true)
         {
-            return new EntradaArmaMenu { arma = arma, nombre = nombre, icono = icono, modelo = modelo, imagen = imagen };
+            return new EntradaArmaMenu
+            {
+                arma = arma, nombre = nombre, icono = icono, modelo = modelo, imagen = imagen,
+                piezaCargador = cargador, piezaCanon = canon, piezaMira = mira, tieneMira = tieneMira
+            };
         }
     }
 }
