@@ -278,7 +278,9 @@ namespace MechaCyberpunk.Tests.UI
             yield return Pulsar(teclado.rightArrowKey);
             Assert.AreEqual(ArmaAPie.Escopeta, pantalla.ArmaElegida.Arma);
             Assert.IsTrue(vista.ConModelo, "La escopeta se ve con su modelo W02");
-            Assert.IsTrue(vista.TienePieza(PiezaArma.Cargador) && vista.TienePieza(PiezaArma.Canon) && vista.TienePieza(PiezaArma.Mira), "La escopeta tiene sus tres piezas");
+            Assert.IsTrue(vista.TienePieza(PiezaArma.Cargador) && vista.TienePieza(PiezaArma.Canon), "La escopeta tiene su bomba (cargador) y su cañón reales");
+            Assert.IsFalse(vista.TienePieza(PiezaArma.Mira), "La escopeta no lleva mira");
+            Assert.AreEqual(2, pantalla.ArmaElegida.NivelMaximo, "La escopeta sube solo hasta el nivel II");
             Assert.AreEqual(PiezaArma.Cargador, pantalla.PiezaElegida);
             yield return new WaitForSecondsRealtime(0.8f);
             Assert.Greater(vista.Separacion(PiezaArma.Cargador), 0.9f, "El cargador de la escopeta se separa");
@@ -289,6 +291,16 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Escopeta), "La escopeta sube a nivel I");
             Assert.AreEqual(PrecioEscopetaI, dineroAntes - cartera.Dinero, "Cobra el precio de DatosArma_escopeta_1");
             yield return EsperarHasta(() => !vista.Escaneando, "que termine el escaneo de la escopeta");
+            // T-970: las teclas de pieza saltan la mira de la escopeta y su fila queda apagada.
+            Assert.AreEqual(EstadoPieza.Bloqueada, pantalla.Estado(PiezaArma.Mira), "La mira de la escopeta queda apagada");
+            yield return Pulsar(teclado.downArrowKey);
+            Assert.AreEqual(PiezaArma.Canon, pantalla.PiezaElegida);
+            yield return Pulsar(teclado.downArrowKey);
+            Assert.AreEqual(PiezaArma.Cargador, pantalla.PiezaElegida, "Abajo desde el cañón da la vuelta sin pasar por la mira");
+            yield return Pulsar(teclado.upArrowKey);
+            Assert.AreEqual(PiezaArma.Canon, pantalla.PiezaElegida, "Arriba desde el cargador da la vuelta sin pasar por la mira");
+            pantalla.ElegirPieza(PiezaArma.Mira, false);
+            Assert.AreEqual(PiezaArma.Canon, pantalla.PiezaElegida, "Elegir la mira de la escopeta con clic no hace nada");
 
             // T-900: el filo de la casilla sale del nivel real; las pestañas y categorías filtran la lista sin perder las armas.
             Assert.AreEqual(TrazoH10.Rareza(1), pantalla.ColorFilo(0), "La pistola en nivel I lleva el filo de ese nivel");

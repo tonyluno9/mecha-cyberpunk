@@ -70,7 +70,6 @@ namespace MechaCyberpunk.UI.Armas
         private Renderer pedestal;
         private Material materialImagen;
         private PiezaArma elegida;
-        private Vector3 bocaCache;
         private float giro = GiroInicial;
         private float inclinacion = InclinacionInicial;
         private float distancia;
@@ -342,8 +341,6 @@ namespace MechaCyberpunk.UI.Armas
                     AgregarMalla(raiz, sk.name, sk.sharedMesh, aRaiz * sk.transform.localToWorldMatrix, porNombre);
                 }
             }
-            Transform bocaModelo = BuscarHijo(origen, "Boca");
-            Vector3? bocaMundo = null;
             Bounds limites = Limites();
             // De lado: el largo del arma sobre X.
             if (limites.size.z > limites.size.x)
@@ -359,12 +356,6 @@ namespace MechaCyberpunk.UI.Armas
                 raiz.position += pivote.position - limites.center;
                 limites = Limites();
             }
-
-            if (bocaModelo != null)
-            {
-                bocaMundo = raiz.TransformPoint(origen.InverseTransformPoint(bocaModelo.position));
-            }
-            bocaCache = bocaMundo ?? new Vector3(limites.max.x, limites.center.y, limites.center.z);
             foreach (PiezaArma pieza in new[] { PiezaArma.Cargador, PiezaArma.Canon, PiezaArma.Mira })
             {
                 string nombre = entrada.NombrePieza(pieza);
@@ -373,18 +364,9 @@ namespace MechaCyberpunk.UI.Armas
                     RegistrarPieza(pieza, t, limites);
                 }
             }
-            // T-942: las armas cuyo modelo no trae cargador o cañón los llevan como piezas holográficas de primitivas.
             bool canonDelModelo = piezas.ContainsKey(PiezaArma.Canon);
-            if (!piezas.ContainsKey(PiezaArma.Cargador))
-            {
-                RegistrarPieza(PiezaArma.Cargador, CrearCargador(limites), limites);
-            }
-            if (!piezas.ContainsKey(PiezaArma.Canon))
-            {
-                Vector3 boca = bocaMundo ?? new Vector3(limites.max.x, limites.center.y, limites.center.z);
-                RegistrarPieza(PiezaArma.Canon, CrearCanon(limites, boca), limites);
-            }
-            if (!piezas.ContainsKey(PiezaArma.Mira))
+            // T-970: lo que el modelo no trae no se inventa, salvo la mira holográfica de la pistola (T-971 la va a quitar). La escopeta no lleva mira.
+            if (entrada.TieneMira && !piezas.ContainsKey(PiezaArma.Mira))
             {
                 Bounds apoyo = canonDelModelo && piezas.TryGetValue(PiezaArma.Canon, out Pieza canon) ? LimitesDe(canon.Renderers) : limites;
                 Transform mira = CrearMira(apoyo);
@@ -454,28 +436,6 @@ namespace MechaCyberpunk.UI.Armas
                 }
             }
             return null;
-        }
-
-        // Caja holográfica bajo la zona central del arma (T-942); tamaño y lugar salen de CalculoPiezasPrimitivas.
-        private Transform CrearCargador(Bounds arma)
-        {
-            Bounds caja = CalculoPiezasPrimitivas.Cargador(arma, CalculoPiezasPrimitivas.SignoFrente(arma, bocaCache));
-            Transform cargador = new GameObject("CargadorHolografico").transform;
-            cargador.SetParent(contenido, false);
-            cargador.position = caja.center;
-            Primitiva(cargador, PrimitiveType.Cube, "Caja", Vector3.zero, Quaternion.identity, caja.size);
-            return cargador;
-        }
-
-        // Cilindro holográfico en la punta del arma, con su extremo en la boca (T-942).
-        private Transform CrearCanon(Bounds arma, Vector3 boca)
-        {
-            CalculoPiezasPrimitivas.Canon(arma, boca, out Vector3 centro, out float radio, out float largo);
-            Transform canon = new GameObject("CanonHolografico").transform;
-            canon.SetParent(contenido, false);
-            canon.position = centro;
-            Primitiva(canon, PrimitiveType.Cylinder, "Cilindro", Vector3.zero, Quaternion.Euler(0f, 0f, 90f), new Vector3(radio * 2f, largo * 0.5f, radio * 2f));
-            return canon;
         }
 
         // Una mira holográfica (riel, tubo y dos lentes) sentada sobre el cañón (o sobre el arma), de lado como el arma.
