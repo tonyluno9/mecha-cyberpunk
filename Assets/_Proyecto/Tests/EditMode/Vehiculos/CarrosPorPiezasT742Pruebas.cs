@@ -9,7 +9,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Tests.Vehiculos
 {
     /// <summary>
-    /// T-742: V01a, V01b y V05 por piezas (Carroceria, Puerta_Izq, Puerta_Der con pivote en la bisagra, cuatro llantas RU01 con su pivote en el centro,
+    /// T-742: V01a, V01b y V05 por piezas (Carroceria sin puertas desde T-972, cuatro llantas RU01 con su pivote en el centro,
     /// Asiento_Conductor y Punto_Puerta), con el mismo tamaño y los mismos colliders de antes, también en el tráfico y en la patrulla.
     /// </summary>
     public class CarrosPorPiezasT742Pruebas
@@ -63,8 +63,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Transform visual = raiz.Find("Visual_T511");
             Assert.IsNotNull(visual, "Visual_T511");
             Assert.IsNotNull(visual.Find("Carroceria"), "Carroceria");
-            Assert.IsNotNull(visual.Find("Puerta_Izq"), "Puerta_Izq");
-            Assert.IsNotNull(visual.Find("Puerta_Der"), "Puerta_Der");
+            Assert.IsNull(visual.Find("Puerta_Izq"), "T-972: sin Puerta_Izq");
+            Assert.IsNull(visual.Find("Puerta_Der"), "T-972: sin Puerta_Der");
             foreach (string nombre in Ruedas)
             {
                 Transform rueda = raiz.Find(nombre);
@@ -104,22 +104,21 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
-        public void Puertas_TienenElPivoteEnLaBisagraDelanteraYSeAbrenHaciaAfuera([ValueSource(nameof(Codigos))] string codigo)
+        public void SinPuertas_NiPiezasNiScriptsFaltantes([ValueSource(nameof(Codigos))] string codigo)
         {
-            Transform visual = Carro(codigo).transform.Find("Visual_T511");
-            foreach (string nombre in new[] { "Puerta_Izq", "Puerta_Der" })
+            SinPuertasNiFaltantes(Carro(codigo), codigo);
+        }
+
+        private static void SinPuertasNiFaltantes(GameObject prefab, string nombre)
+        {
+            foreach (Transform t in prefab.GetComponentsInChildren<Transform>(true))
             {
-                Transform pivote = visual.Find(nombre);
-                Bounds b = LimitesEn(pivote, pivote);
-                // En el marco del modelo el frente va a -X: la bisagra (origen del pivote) está en el borde delantero (X mínima) y abajo.
-                Assert.AreEqual(0f, b.min.x, 0.002f, nombre + ": la bisagra es el borde delantero");
-                Assert.AreEqual(0f, b.min.y, 0.002f, nombre + ": el origen está abajo de la puerta");
-                Assert.Greater(b.size.x, 0.1f, nombre + ": tiene largo");
+                StringAssert.DoesNotStartWith("Puerta_", t.name, nombre + ": no queda pieza de puerta (" + t.name + ")");
+                foreach (MonoBehaviour m in t.GetComponents<MonoBehaviour>())
+                {
+                    Assert.IsNotNull(m, nombre + ": script faltante en " + t.name);
+                }
             }
-            // Cada puerta está de su lado (izquierda: X negativa del carro, derecha: positiva).
-            Transform raiz = Carro(codigo).transform;
-            Assert.Less(raiz.InverseTransformPoint(visual.Find("Puerta_Izq").position).x, -0.5f);
-            Assert.Greater(raiz.InverseTransformPoint(visual.Find("Puerta_Der").position).x, 0.5f);
         }
 
         [Test]
@@ -174,13 +173,23 @@ namespace MechaCyberpunk.Tests.Vehiculos
             }
         }
 
+        // GUID del script PuertasCarro que se borró en T-972: nada en el proyecto debe seguir apuntando a él.
+        private const string GuidPuertasCarroBorrado = "e3db3036f5b35684b872f66bd2f83b89";
+
         [Test]
-        public void Puertas_ElComponenteApuntaALosPivotes([ValueSource(nameof(Codigos))] string codigo)
+        public void NadaReferenciaAlScriptPuertasCarroBorrado()
         {
-            GameObject carro = Carro(codigo);
-            SerializedObject so = new SerializedObject(carro.GetComponent<PuertasCarro>());
-            Assert.AreSame(carro.transform.Find("Visual_T511/Puerta_Izq"), so.FindProperty("puertaIzquierda").objectReferenceValue);
-            Assert.AreSame(carro.transform.Find("Visual_T511/Puerta_Der"), so.FindProperty("puertaDerecha").objectReferenceValue);
+            string[] carpetas = { "Assets/_Proyecto/Vehiculos/Prefabs", "Assets/_Proyecto/Trafico/Prefabs", "Assets/_Proyecto/Escenas" };
+            int revisados = 0;
+            foreach (string guid in AssetDatabase.FindAssets("t:Prefab t:Scene", carpetas))
+            {
+                string ruta = AssetDatabase.GUIDToAssetPath(guid);
+                revisados++;
+                StringAssert.DoesNotContain(GuidPuertasCarroBorrado, System.IO.File.ReadAllText(ruta), ruta + " aún referencia PuertasCarro");
+            }
+            Assert.Greater(revisados, 10, "Revisó prefabs y escenas");
+            Assert.IsTrue(System.IO.File.Exists("Assets/_Proyecto/Escenas/Ciudad_Prologo.unity"), "Está la escena de la ciudad");
+            StringAssert.DoesNotContain(GuidPuertasCarroBorrado, System.IO.File.ReadAllText("Assets/_Proyecto/Escenas/Ciudad_Prologo.unity"));
         }
 
         [Test]
@@ -201,7 +210,6 @@ namespace MechaCyberpunk.Tests.Vehiculos
         {
             GameObject prefab = Cargar("Assets/_Proyecto/Trafico/Prefabs/CarroTrafico_" + codigo + ".prefab");
             Assert.IsNotNull(prefab.GetComponent<CarroTrafico>());
-            Assert.IsNotNull(prefab.GetComponent<PuertasCarro>());
             Assert.IsNotNull(prefab.GetComponent<RuedasVisualesCarro>());
             Assert.IsNotNull(prefab.transform.Find("Visual_T511/Carroceria"));
             Assert.IsNotNull(prefab.transform.Find("Rueda_DI/Direccion/Giro/Modelo"));
@@ -217,9 +225,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.IsNotNull(patrulla.transform.Find("LuzRoja"), "Sirena roja");
             Assert.IsNotNull(patrulla.transform.Find("LuzAzul"), "Sirena azul");
             Assert.IsNotNull(patrulla.transform.Find("Visual_T511/Carroceria"));
-            Assert.IsNotNull(patrulla.transform.Find("Visual_T511/Puerta_Izq"));
-            Assert.IsNotNull(patrulla.transform.Find("Visual_T511/Puerta_Der"));
-            Assert.IsNotNull(patrulla.GetComponent<PuertasCarro>());
+            SinPuertasNiFaltantes(patrulla, "Patrulla");
             Assert.IsNotNull(patrulla.GetComponent<RuedasVisualesCarro>());
             foreach (string nombre in Ruedas)
             {
@@ -245,7 +251,6 @@ namespace MechaCyberpunk.Tests.Vehiculos
         public void LosOtrosCarros_SiguenConSuModeloDeUnaMalla([Values("V02", "V03", "V04", "V06", "V09", "V10")] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
-            Assert.IsNull(raiz.GetComponent<PuertasCarro>(), codigo + " no lleva puertas por piezas");
             Assert.IsNull(raiz.GetComponent<RuedasVisualesCarro>(), codigo + " no lleva ruedas por piezas");
             Assert.IsNull(raiz.Find("Visual_T511/Carroceria"), codigo + " sigue con su modelo de una malla");
         }

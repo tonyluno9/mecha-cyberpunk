@@ -11,7 +11,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
 {
     /// <summary>
     /// T-742: V01a, V01b y V05 por piezas, jugando con entrada simulada: las llantas giran con la velocidad, las delanteras doblan con A y D, las
-    /// traseras no, la física sigue igual de siempre y las puertas se abren y cierran con DOTween.
+    /// traseras no y la física sigue igual de siempre. Sin puertas desde T-972.
     /// </summary>
     public class RuedasPuertasT742Pruebas : InputTestFixture
     {
@@ -230,57 +230,6 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.AreEqual(esperado, avanceTotal, esperado * 0.1f, "Rodó lo que avanzó: " + avanceTotal + "° de " + esperado + "° (radio " + ruedas.Radio + " m)");
             Assert.Greater(direccionMaxima, 5f, "Las delanteras doblan hacia donde gira el carro (" + direccionMaxima + "°)");
             Assert.AreEqual(0f, Mathf.DeltaAngle(0f, Direccion("Rueda_TI").localEulerAngles.y), 0.01f, "Las traseras no doblan");
-        }
-
-        [UnityTest]
-        public IEnumerator Puertas_AbrirPorUnLado_SoloEsaPuertaSeAbreYAlCerrarVuelve([ValueSource(nameof(Codigos))] string codigo)
-        {
-            yield return Calentar();
-            CrearCarro(codigo, new Vector3(0f, 0.3f, 0f), false);
-            PuertasCarro puertas = carroObjeto.GetComponent<PuertasCarro>();
-            Assert.AreEqual(0f, puertas.AperturaActual(PuertasCarro.Lado.Izquierda), 0.5f, "Empieza cerrada");
-
-            carroObjeto.SendMessage("AbrirPuertaDelLado", -2.1f);
-            yield return null;
-            Assert.IsTrue(puertas.EstaAbierta(PuertasCarro.Lado.Izquierda));
-            Assert.IsFalse(puertas.EstaAbierta(PuertasCarro.Lado.Derecha));
-            float limite = Time.time + 1.5f;
-            while (puertas.AperturaActual(PuertasCarro.Lado.Izquierda) < puertas.AnguloApertura - 1f && Time.time < limite)
-            {
-                yield return null;
-            }
-            Assert.AreEqual(puertas.AnguloApertura, puertas.AperturaActual(PuertasCarro.Lado.Izquierda), 1f, "La puerta izquierda llegó a su apertura");
-            Assert.AreEqual(0f, puertas.AperturaActual(PuertasCarro.Lado.Derecha), 0.5f, "La derecha sigue cerrada");
-
-            carroObjeto.SendMessage("CerrarPuertas");
-            limite = Time.time + 1.5f;
-            while (puertas.AperturaActual(PuertasCarro.Lado.Izquierda) > 1f && Time.time < limite)
-            {
-                yield return null;
-            }
-            Assert.AreEqual(0f, puertas.AperturaActual(PuertasCarro.Lado.Izquierda), 1f, "Se cerró");
-            Assert.IsFalse(puertas.EstaAbierta(PuertasCarro.Lado.Izquierda));
-
-            carroObjeto.SendMessage("AbrirPuertaDelLado", 2.1f);
-            limite = Time.time + 1.5f;
-            while (puertas.AperturaActual(PuertasCarro.Lado.Derecha) < puertas.AnguloApertura - 1f && Time.time < limite)
-            {
-                yield return null;
-            }
-            Assert.AreEqual(puertas.AnguloApertura, puertas.AperturaActual(PuertasCarro.Lado.Derecha), 1f, "La puerta derecha se abre por su lado");
-            Assert.AreEqual(0f, puertas.AperturaActual(PuertasCarro.Lado.Izquierda), 0.5f);
-        }
-
-        [UnityTest]
-        public IEnumerator Puertas_SubirPorAtrasOPorElTecho_NoAbrenNingunaPuerta()
-        {
-            yield return Calentar();
-            CrearCarro("V01a", new Vector3(0f, 0.3f, 0f), false);
-            PuertasCarro puertas = carroObjeto.GetComponent<PuertasCarro>();
-            carroObjeto.SendMessage("AbrirPuertaDelLado", 0.05f);
-            yield return Esperar(0.6f);
-            Assert.AreEqual(0f, puertas.AperturaActual(PuertasCarro.Lado.Izquierda), 0.5f);
-            Assert.AreEqual(0f, puertas.AperturaActual(PuertasCarro.Lado.Derecha), 0.5f);
         }
 
         private static IEnumerator Esperar(float segundos)
