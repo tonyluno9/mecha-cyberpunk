@@ -10,10 +10,9 @@ namespace MechaCyberpunk.Vehiculos.Editor
 {
     /// <summary>
     /// T-742: los carros V01a, V01b y V05 armados por piezas. Reemplaza el modelo de una sola malla (Visual_T511 / Visual) por
-    /// Visual_T511 con la carrocería sin puertas ni ruedas (Carroceria) y dos pivotes de puerta en la bisagra (Puerta_Izq y Puerta_Der, cada uno con su
-    /// puerta de Blender), y pone la llanta RU01 en las cuatro ruedas (Rueda_xx / Direccion / Giro / Modelo). Sin vidrio, para ver al conductor.
+    /// Visual_T511 con la carrocería sin ruedas (Carroceria) y pone la llanta RU01 en las cuatro ruedas (Rueda_xx / Direccion / Giro / Modelo). Sin vidrio, para ver al conductor.
     /// Conserva el tamaño del carro de antes (la carrocería nueva mide lo mismo que el modelo viejo, pies en y = 0), los colliders de cubos, la física y
-    /// la cámara; solo se renombran Asiento a Asiento_Conductor y PuntoSubida a Punto_Puerta. Agrega <see cref="RuedasVisualesCarro"/> y <see cref="PuertasCarro"/>.
+    /// la cámara; solo se renombran Asiento a Asiento_Conductor y PuntoSubida a Punto_Puerta. Agrega <see cref="RuedasVisualesCarro"/>. T-972: sin puertas (decisión del 9-nov).
     /// Las piezas las mete <c>ImportarS1nPiezas</c> (Assets/Arte/Vehiculos/Piezas/). Correrlo otra vez deja lo mismo.
     /// Batchmode: -executeMethod MechaCyberpunk.Vehiculos.Editor.CreadorCarrosPiezasT742.ArmarTodos
     /// </summary>
@@ -32,29 +31,20 @@ namespace MechaCyberpunk.Vehiculos.Editor
 
         /// <summary>
         /// Lo que se ajusta a mano por carro. Las X y Z van en el marco del modelo (unidades del FBX de la carrocería, que mide cerca de 1 de largo):
-        /// el frente del carro va a -X y su izquierda a -Z. Puerta: escala sobre el FBX de la puerta, X del centro, Y del borde de abajo y Z de la cara de afuera.
-        /// Ruedas: radio en metros, X del eje delantero y del trasero, y Z (distancia al centro) del centro de cada llanta.
+        /// el frente del carro va a -X y su izquierda a -Z. Ruedas: radio en metros, X del eje delantero y del trasero, y Z (distancia al centro) del centro de cada llanta.
         /// </summary>
         public readonly struct Medidas
         {
             public readonly string Codigo;
-            public readonly float EscalaPuerta;
-            public readonly float PuertaX;
-            public readonly float PuertaY;
-            public readonly float PuertaZExterior;
             public readonly float RadioRueda;
             public readonly float RuedaXDelantera;
             public readonly float RuedaXTrasera;
             public readonly float RuedaZ;
 
-            public Medidas(string codigo, float escalaPuerta, float puertaX, float puertaY, float puertaZExterior, float radioRueda,
+            public Medidas(string codigo, float radioRueda,
                 float ruedaXDelantera, float ruedaXTrasera, float ruedaZ)
             {
                 Codigo = codigo;
-                EscalaPuerta = escalaPuerta;
-                PuertaX = puertaX;
-                PuertaY = puertaY;
-                PuertaZExterior = puertaZExterior;
                 RadioRueda = radioRueda;
                 RuedaXDelantera = ruedaXDelantera;
                 RuedaXTrasera = ruedaXTrasera;
@@ -64,9 +54,9 @@ namespace MechaCyberpunk.Vehiculos.Editor
 
         public static readonly Medidas[] Tabla =
         {
-            new Medidas("V01a", 0.277f, -0.007f, 0.04f, 0.25f, 0.34f, -0.273f, 0.299f, 0.20f),
-            new Medidas("V01b", 0.245f, -0.003f, 0.06f, 0.24f, 0.34f, -0.297f, 0.299f, 0.20f),
-            new Medidas("V05", 0.268f, -0.030f, 0.03f, 0.24f, 0.32f, -0.293f, 0.280f, 0.20f),
+            new Medidas("V01a", 0.34f, -0.273f, 0.299f, 0.20f),
+            new Medidas("V01b", 0.34f, -0.297f, 0.299f, 0.20f),
+            new Medidas("V05", 0.32f, -0.293f, 0.280f, 0.20f),
         };
 
         public static bool EsPorPiezas(string codigo) => Codigos.Contains(codigo);
@@ -102,15 +92,12 @@ namespace MechaCyberpunk.Vehiculos.Editor
         {
             Medidas m = Tabla.First(t => t.Codigo == codigo);
             GameObject fbxCarroceria = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaPiezas + codigo + "/" + codigo + "_Carroceria.fbx");
-            GameObject fbxIzq = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaPiezas + codigo + "/" + codigo + "_Puerta_Izq.fbx");
-            GameObject fbxDer = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaPiezas + codigo + "/" + codigo + "_Puerta_Der.fbx");
             GameObject fbxLlanta = AssetDatabase.LoadAssetAtPath<GameObject>(RutaLlanta);
-            if (fbxCarroceria == null || fbxIzq == null || fbxDer == null || fbxLlanta == null)
+            if (fbxCarroceria == null || fbxLlanta == null)
             {
                 return codigo + "\tFALTAN piezas en " + CarpetaPiezas + " (corre ImportarS1nPiezas.MeterTodo)";
             }
             Material materialCarro = MaterialDe(CarpetaPiezas + codigo + "/" + codigo + "_Carroceria");
-            Material materialPuerta = MaterialDe(CarpetaPiezas + codigo + "/" + codigo + "_Puerta");
             Material materialLlanta = MaterialDe(CarpetaPiezas + "RU01/RU01");
 
             // El tamaño y el lugar del modelo de antes (o del armado anterior): la carrocería nueva queda igual.
@@ -151,9 +138,6 @@ namespace MechaCyberpunk.Vehiculos.Editor
             }
             float escalaVisual = visual.transform.localScale.x;
 
-            Transform puertaIzq = ArmarPuerta(fbxIzq, "Puerta_Izq", -1f, m, visual.transform, materialPuerta);
-            Transform puertaDer = ArmarPuerta(fbxDer, "Puerta_Der", 1f, m, visual.transform, materialPuerta);
-
             // Ruedas: las anclas de la suspensión (Rueda_xx) se quedan donde están; la llanta se coloca en el hueco de la carrocería.
             Transform[] direccionDelantera = new Transform[2];
             Transform[] giro = new Transform[4];
@@ -187,7 +171,6 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Transform traseraTI = raiz.transform.Find("Rueda_TI");
             float distanciaEjes = Mathf.Abs(raiz.transform.InverseTransformPoint(delanteraDI.position).z - raiz.transform.InverseTransformPoint(traseraTI.position).z);
             PonerRuedas(raiz, direccionDelantera, giro, m.RadioRueda, distanciaEjes);
-            PonerPuertas(raiz, puertaIzq, puertaDer);
 
             Bounds final = CreadorCarrosT511.LimitesExactos(visual);
             return string.Format("{0}\tcarrocería {1:F2} x {2:F2} x {3:F2} m (escala {4:F3})", codigo, final.size.x, final.size.y, final.size.z, escalaVisual);
@@ -204,23 +187,6 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 r.sharedMaterials = Enumerable.Repeat(material, Mathf.Max(1, r.sharedMaterials.Length)).ToArray();
             }
             return copia;
-        }
-
-        // Pivote en la bisagra (borde delantero de la puerta) con la puerta de hijo. Marco del modelo: el frente va a -X.
-        private static Transform ArmarPuerta(GameObject fbx, string nombre, float lado, Medidas m, Transform visual, Material material)
-        {
-            GameObject pivote = new GameObject(nombre);
-            pivote.transform.SetParent(visual, false);
-            GameObject modelo = Pieza(fbx, "Modelo", pivote.transform, material);
-            Bounds b = LimitesEn(modelo, pivote.transform);
-            float k = m.EscalaPuerta;
-            modelo.transform.localScale = Vector3.one * k;
-            // La bisagra queda en el borde delantero (X mínima), abajo (Y mínima) y a la mitad del grosor (Z) de la puerta.
-            modelo.transform.localPosition = -new Vector3(b.min.x, b.min.y, b.center.z) * k;
-            float xBisagra = m.PuertaX - b.size.x * k * 0.5f;
-            float zCentro = lado * (m.PuertaZExterior - b.size.z * k * 0.5f);
-            pivote.transform.localPosition = new Vector3(xBisagra, m.PuertaY, zCentro);
-            return pivote.transform;
         }
 
         // Rueda_xx / Direccion / Giro / Modelo. La llanta queda centrada en el pivote, con la cara de la llanta hacia afuera. Devuelve {Direccion, Giro}.
@@ -287,19 +253,6 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Poner(so.FindProperty("giro"), giro);
             so.FindProperty("radio").floatValue = radio;
             so.FindProperty("distanciaEjes").floatValue = distanciaEjes;
-            so.ApplyModifiedPropertiesWithoutUndo();
-        }
-
-        private static void PonerPuertas(GameObject raiz, Transform izquierda, Transform derecha)
-        {
-            PuertasCarro puertas = raiz.GetComponent<PuertasCarro>();
-            if (puertas == null)
-            {
-                puertas = raiz.AddComponent<PuertasCarro>();
-            }
-            SerializedObject so = new SerializedObject(puertas);
-            so.FindProperty("puertaIzquierda").objectReferenceValue = izquierda;
-            so.FindProperty("puertaDerecha").objectReferenceValue = derecha;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
