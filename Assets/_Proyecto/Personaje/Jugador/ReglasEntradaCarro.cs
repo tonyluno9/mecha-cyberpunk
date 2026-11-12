@@ -47,5 +47,43 @@ namespace MechaCyberpunk.Personaje.Jugador
             v.y = 0f;
             return v;
         }
+
+        /// <summary>
+        /// T-963: avance (0 a 1) del cuerpo entre la puerta y el asiento a partir de cuánto le falta a la cadera del clip para llegar a su sitio final (<paramref name="distancias"/>,
+        /// muestras del clip en tiempos iguales, m). Al subir la distancia va de grande a 0 (al asiento); al bajar, de 0 a grande (fuera). Nunca retrocede.
+        /// </summary>
+        public static float[] AvanceDesdeDistancias(float[] distancias, bool haciaElAsiento)
+        {
+            if (distancias == null || distancias.Length < 2)
+            {
+                return null;
+            }
+            float total = haciaElAsiento ? distancias[0] : distancias[distancias.Length - 1];
+            if (total < DistanciaMinimaClip)
+            {
+                return null;
+            }
+            var avance = new float[distancias.Length];
+            float maximo = 0f;
+            for (int i = 0; i < distancias.Length; i++)
+            {
+                float f = haciaElAsiento ? 1f - distancias[i] / total : distancias[i] / total;
+                maximo = Mathf.Max(maximo, Mathf.Clamp01(f));
+                avance[i] = maximo;
+            }
+            avance[avance.Length - 1] = 1f;
+            return avance;
+        }
+
+        /// <summary>T-963: lo que el clip mueve la cadera, como mínimo, para que su avance sirva (m); con menos se usa la ventana fija.</summary>
+        public const float DistanciaMinimaClip = 0.2f;
+
+        /// <summary>T-963: el avance en la fracción <paramref name="fraccion"/> del clip (0 a 1), interpolando entre muestras.</summary>
+        public static float AvanceEn(float[] avance, float fraccion)
+        {
+            float x = Mathf.Clamp01(fraccion) * (avance.Length - 1);
+            int i = Mathf.Min((int)x, avance.Length - 2);
+            return Mathf.Lerp(avance[i], avance[i + 1], x - i);
+        }
     }
 }
