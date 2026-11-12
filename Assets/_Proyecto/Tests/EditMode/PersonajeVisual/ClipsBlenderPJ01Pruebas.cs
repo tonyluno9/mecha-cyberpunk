@@ -70,6 +70,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Loco_GirarDer", "PJ01_Loco_GirarDer")]
         [TestCase("Loco_GirarIzq", "PJ01_Loco_GirarIzq")]
         [TestCase("Loco_Frenar", "PJ01_Loco_Frenar")]
+        [TestCase("Loco_SaltoInicio", "PJ01_Loco_SaltoInicio")]
+        [TestCase("Loco_SaltoAire", "PJ01_Loco_SaltoAire")]
+        [TestCase("Loco_SaltoAterrizaje", "PJ01_Loco_SaltoAterrizaje")]
+        [TestCase("Loco_Caida", "PJ01_Loco_Caida")]
         public void Jugador_UsaElClipDeBlender(string clipBase, string clipPJ01)
         {
             Assert.AreEqual(clipPJ01, OverridesJugador()[clipBase]);
@@ -109,6 +113,27 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
                 Assert.AreEqual(EscalaPJ01, importer.globalScale, 1e-4f, importer.assetPath);
                 Assert.AreEqual(ModelImporterAnimationType.Human, importer.animationType, importer.assetPath);
             }
+        }
+
+        [Test]
+        public void Salto_DatosDelJugador_SubenCeroCuarentaYCincoConGravedadDieciseis()
+        {
+            var datos = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.DatosPersonaje>(AjustarSaltoT961.RutaDatosPersonaje);
+            var config = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.ConfigControlesAPie>(AjustarSaltoT961.RutaConfigControles);
+            Assert.AreEqual(0.45f, datos.AlturaSalto, 1e-4f);
+            Assert.AreEqual(16f, config.Gravedad, 1e-4f);
+            float segundosAire = 2f * Mathf.Sqrt(2f * datos.AlturaSalto / config.Gravedad);
+            Assert.AreEqual(0.47f, segundosAire, 0.01f, "como la muestra de Blender (BITACORA 03)");
+        }
+
+        [Test]
+        public void SaltoAire_DelJugador_NoEsBucle_YSeQuedaHastaAterrizar()
+        {
+            AnimationClip aire = AssetDatabase.LoadAllAssetsAtPath(ConstructorControladorBase.CarpetaClipsPJ01 + "/PJ01_Loco_SaltoAire.fbx")
+                .OfType<AnimationClip>().First(c => c.name == "PJ01_Loco_SaltoAire");
+            Assert.IsFalse(aire.isLooping);
+            AnimatorState s = Estado(0, "SaltoAire");
+            Assert.IsFalse(s.transitions.Any(t => t.destinationState.name == "SaltoAterrizaje" && t.hasExitTime), "solo aterriza al tocar el piso");
         }
     }
 }

@@ -22,7 +22,7 @@ namespace MechaCyberpunk.Personaje
         [Range(0f, 1f)] [SerializeField] private float controlAire = 0.3f;
 
         [Tooltip("Gravedad del jugador a pie (m/s²).")]
-        [Min(0.1f)] [SerializeField] private float gravedad = 20f;
+        [Min(0.1f)] [SerializeField] private float gravedad = 16f;
 
         [Tooltip("Altura de los ojos sobre los pies (m).")]
         [Min(0.1f)] [SerializeField] private float alturaOjos = 1.65f;

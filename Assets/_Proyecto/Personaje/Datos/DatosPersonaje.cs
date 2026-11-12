@@ -16,7 +16,7 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float velocidadCorrer = 7.5f;
 
         [Tooltip("Altura máxima del salto (m).")]
-        [Min(0.1f)] [SerializeField] private float alturaSalto = 1.1f;
+        [Min(0.1f)] [SerializeField] private float alturaSalto = 0.45f;
 
         [Header("Golpe a pie")]
         [Tooltip("Daño de cada golpe de puño (puntos).")]
