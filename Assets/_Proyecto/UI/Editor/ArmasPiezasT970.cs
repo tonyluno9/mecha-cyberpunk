@@ -111,15 +111,28 @@ namespace MechaCyberpunk.UI.Editor
             return !primero;
         }
 
-        /// <summary>Quita el Modelo viejo, pone el FBX de piezas, mueve la Boca y reporta límites.</summary>
+        /// <summary>Arma todos los prefabs W0x con sus piezas (la misma lógica que usa ColocarS1nArmas) y reporta límites.</summary>
         public static void ColocarPrefabs()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder informe = new StringBuilder();
             foreach (Arma a in Armas)
             {
-                GameObject raiz = PrefabUtility.LoadPrefabContents(a.RutaPrefab);
+                ArmarPrefab(a.RutaPrefab, a.RutaFbx, informe);
+            }
+            Debug.Log("[T970]\n" + informe);
+        }
+
+        /// <summary>
+        /// Quita el Modelo viejo del prefab (si lo hay), pone el FBX de piezas girado (cañón a +Z, arriba +Y, escala 1, empuñadura en el origen)
+        /// y mueve la Boca a la punta de la pieza Canon. Idempotente: si ya está armado no cambia nada.
+        /// </summary>
+        public static void ArmarPrefab(string rutaPrefab, string rutaFbx, StringBuilder sb)
+        {
+            string id = System.IO.Path.GetFileNameWithoutExtension(rutaFbx);
+            {
+                GameObject raiz = PrefabUtility.LoadPrefabContents(rutaPrefab);
                 Transform t = raiz.transform;
-                sb.AppendLine("== " + a.Id + " raiz rot " + t.localEulerAngles + " esc " + t.localScale + " hijos: " + Hijos(t));
+                sb.AppendLine("== " + id + " raiz rot " + t.localEulerAngles + " esc " + t.localScale + " hijos: " + Hijos(t));
                 Transform viejo = t.Find("Modelo");
                 bool yaNuevo = viejo != null && viejo.Find("Armazon") != null;
                 if (viejo != null && !yaNuevo)
@@ -132,7 +145,7 @@ namespace MechaCyberpunk.UI.Editor
                 }
                 if (!yaNuevo)
                 {
-                    GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(a.RutaFbx);
+                    GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(rutaFbx);
                     GameObject nuevo = (GameObject)PrefabUtility.InstantiatePrefab(fbx, t);
                     nuevo.name = "Modelo";
                     nuevo.transform.localPosition = Vector3.zero;
@@ -180,10 +193,9 @@ namespace MechaCyberpunk.UI.Editor
                         sb.AppendLine(h.name + " en " + p.ToString("F3") + (bn.Contains(p) ? " dentro del arma" : " FUERA del arma nueva"));
                     }
                 }
-                PrefabUtility.SaveAsPrefabAsset(raiz, a.RutaPrefab);
+                PrefabUtility.SaveAsPrefabAsset(raiz, rutaPrefab);
                 PrefabUtility.UnloadPrefabContents(raiz);
             }
-            Debug.Log("[T970]\n" + sb);
         }
 
         /// <summary>Pone en ConfigMenuArmas_Base los nombres de las piezas reales (la pistola no cambia) y quita la mira a la escopeta.</summary>
