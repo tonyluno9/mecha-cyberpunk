@@ -145,10 +145,12 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>
         /// Rapidez de los tres clips de puños del jugador (x). El golpe del juego conecta a los 0.12 s y se recupera a los 0.57 s; los clips de Mixamo
         /// tardan 1.8 a 2.2 s y conectan a los 0.5 a 1.1 s. Con 3.3 conectan a 0.15 a 0.33 s y terminan a 0.55 a 0.67 s.
+        /// T-962: los PJ01_Punos_* de Blender duran 1.43 a 1.83 s (0.8 de los de Mixamo, con el impacto en la misma fracción del clip): con 2.7 conectan a los 0.13 a 0.21 s
+        /// y terminan a los 0.53 a 0.68 s, como antes.
         /// </summary>
-        public const float RapidezGolpeJugador = 3.3f;
-        /// <summary>T-944: qué tan rápido cae el jugador al morir (1 = el clip tal como viene).</summary>
-        public const float RapidezMuerteJugador = 1.8f;
+        public const float RapidezGolpeJugador = 2.7f;
+        /// <summary>T-944: qué tan rápido cae el jugador al morir (1 = el clip tal como viene). T-962: los PJ01_Muerte_* de Blender ya vienen 1.7 veces más rápidos que los de Mixamo.</summary>
+        public const float RapidezMuerteJugador = 1f;
 
         /// <summary>
         /// Rapidez (x) del estado del controlador base con ese nombre; 1 si no se acelera. Los clips de Mixamo traen mucha espera antes y después de la acción:

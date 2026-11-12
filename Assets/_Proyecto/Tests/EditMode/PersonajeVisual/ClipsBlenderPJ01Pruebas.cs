@@ -74,6 +74,14 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Loco_SaltoAire", "PJ01_Loco_SaltoAire")]
         [TestCase("Loco_SaltoAterrizaje", "PJ01_Loco_SaltoAterrizaje")]
         [TestCase("Loco_Caida", "PJ01_Loco_Caida")]
+        [TestCase("Punos_GolpeIzq", "PJ01_Punos_GolpeIzq")]
+        [TestCase("Punos_GolpeDer", "PJ01_Punos_GolpeDer")]
+        [TestCase("Punos_Fuerte", "PJ01_Punos_Fuerte")]
+        [TestCase("Muerte_Adelante", "PJ01_Muerte_Adelante")]
+        [TestCase("Muerte_Atras", "PJ01_Muerte_Atras")]
+        [TestCase("Muerte_Desmayo", "PJ01_Muerte_Desmayo")]
+        [TestCase("Dano_Levantarse_BocaArriba", "PJ01_Dano_Levantarse_BocaArriba")]
+        [TestCase("Dano_Levantarse_BocaAbajo", "PJ01_Dano_Levantarse_BocaAbajo")]
         public void Jugador_UsaElClipDeBlender(string clipBase, string clipPJ01)
         {
             Assert.AreEqual(clipPJ01, OverridesJugador()[clipBase]);
@@ -134,6 +142,27 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.IsFalse(aire.isLooping);
             AnimatorState s = Estado(0, "SaltoAire");
             Assert.IsFalse(s.transitions.Any(t => t.destinationState.name == "SaltoAterrizaje" && t.hasExitTime), "solo aterriza al tocar el piso");
+        }
+    
+        [Test]
+        public void Muertes_DelJugador_NoSeAceleranOtraVez_YMuevenLaRaiz()
+        {
+            Assert.AreEqual(1f, ReglasAnimacion.RapidezMuerteJugador, "los PJ01_Muerte_* ya vienen 1.7 veces más rápidos");
+            foreach (string estado in new[] { "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo" })
+            {
+                Assert.IsTrue(RaizCaidaJugador.MueveLaRaiz(Animator.StringToHash(estado)), estado);
+            }
+            foreach (string estado in new[] { "Idle", "Caminar", "SaltoAire", "CarroEntrar" })
+            {
+                Assert.IsFalse(RaizCaidaJugador.MueveLaRaiz(Animator.StringToHash(estado)), estado);
+            }
+        }
+
+        [TestCase("PJ01_Muerte_Adelante")]
+        [TestCase("PJ01_Dano_Levantarse_BocaArriba")]
+        public void Muertes_ElAvanceDelClipVaAlRootMotion_NoALaPose(string clip)
+        {
+            Assert.IsFalse(ClipImportado(clip).lockRootPositionXZ, "sin Bake Into Pose en XZ: el avance mueve la cápsula");
         }
     }
 }

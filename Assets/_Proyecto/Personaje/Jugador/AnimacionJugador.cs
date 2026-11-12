@@ -87,7 +87,24 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 Debug.LogError("[Personaje] Falta el Animator del modelo en AnimacionJugador de " + name, this);
                 enabled = false;
+                return;
             }
+            PonerRaizCaida(animador);
+        }
+
+        /// <summary>T-962: las muertes y levantarse de Blender mueven la cápsula del jugador con su root motion (<see cref="RaizCaidaJugador"/>).</summary>
+        private void PonerRaizCaida(Animator a)
+        {
+            if (a == null)
+            {
+                return;
+            }
+            RaizCaidaJugador raiz = a.GetComponent<RaizCaidaJugador>();
+            if (raiz == null)
+            {
+                raiz = a.gameObject.AddComponent<RaizCaidaJugador>();
+            }
+            raiz.Configurar(GetComponent<CharacterController>());
         }
 
         /// <summary>
@@ -126,8 +143,13 @@ namespace MechaCyberpunk.Personaje.Jugador
             animador = nuevo;
             conImplanteAplicado = -1f;
             visual = nuevo != null ? nuevo.GetComponentInParent<VisualPersonaje>() : null;
-            if (visual != null) { visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador; }
+            if (visual != null)
+            {
+                visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador;
+                visual.RapidezMuerte = ReglasAnimacion.RapidezMuerteJugador;
+            }
             ClipsDeTony(visual);
+            PonerRaizCaida(nuevo);
             apuntadoIK = nuevo != null ? nuevo.GetComponent<ApuntadoIK>() : null;
             enabled = nuevo != null;
         }
