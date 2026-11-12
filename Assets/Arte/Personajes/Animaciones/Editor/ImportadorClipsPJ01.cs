@@ -52,6 +52,13 @@ namespace MechaCyberpunk.Arte.Editor
         /// archivo y aquí no (Carro_Manejar, Moto_Manejar, Inter_VerTelefono).
         /// </summary>
         public static readonly string[] SinBucle = { "Loco_SaltoAire" };
+
+        /// <summary>T-964: último cuadro (30 fps) del tramo útil de PJ01_Inter_Telefono: el teléfono ya está en el oído (7.8 s de 37; el estado sale al 88 %, el evento tiene que quedar antes).</summary>
+        public const float UltimoCuadroTelefono = 235f;
+        /// <summary>T-964: cuadro en que el teléfono llega al oído (6.5 s).</summary>
+        public const float CuadroTelefonoEnOreja = 195f;
+        /// <summary>T-964: función del evento (la recibe ReceptorEventosArma en Personaje.Visual).</summary>
+        public const string FuncionTelefonoEnOreja = "AlTelefonoEnOreja";
         public static readonly string[] ConBucle = { "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono" };
 
         public static bool TieneBucle(string baseNombre)
@@ -166,6 +173,13 @@ namespace MechaCyberpunk.Arte.Editor
             clip.lockRootHeightY = true;
             clip.keepOriginalPositionY = true;
             clip.events = ImportadorMixamo.EventosDe(baseNombre, clip.firstFrame, clip.lastFrame);
+            if (baseNombre == "Inter_Telefono")
+            {
+                // T-964: el clip dura 37 s (saca el teléfono, se lo lleva al oído y habla 25 s). El gesto usa solo sacar y llevar al oído; un evento avisa cuando llega.
+                clip.firstFrame = 0f;
+                clip.lastFrame = UltimoCuadroTelefono;
+                clip.events = new[] { new AnimationEvent { functionName = FuncionTelefonoEnOreja, time = CuadroTelefonoEnOreja / UltimoCuadroTelefono } };
+            }
             if (baseNombre.StartsWith("Pistola_Dano_"))
             {
                 clip.hasAdditiveReferencePose = true;

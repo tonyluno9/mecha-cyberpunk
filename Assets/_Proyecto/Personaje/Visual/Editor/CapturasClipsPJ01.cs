@@ -92,6 +92,20 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             });
         }
 
+        /// <summary>T-964: Inter_Telefono dura 37 s; doce poses repartidas para ver qué tramo sirve.</summary>
+        public static void Telefono()
+        {
+            var a = new Pose[6];
+            var b = new Pose[6];
+            for (int i = 0; i < 6; i++)
+            {
+                a[i] = new Pose("PJ01_Inter_Telefono", i / 11f);
+                b[i] = new Pose("PJ01_Inter_Telefono", (i + 6) / 11f);
+            }
+            Hoja("telefono-a", a);
+            Hoja("telefono-b", b);
+        }
+
         public static void CarroMoto()
         {
             Hoja("carro-moto", new[]

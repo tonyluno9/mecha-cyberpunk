@@ -85,6 +85,22 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Carro_Entrar", "PJ01_Carro_Entrar")]
         [TestCase("Carro_Manejar_Bucle", "PJ01_Carro_Manejar")]
         [TestCase("Carro_Salir", "PJ01_Carro_Salir")]
+        [TestCase("Rifle_Idle", "PJ01_Rifle_Idle")]
+        [TestCase("Rifle_Caminar", "PJ01_Rifle_Caminar")]
+        [TestCase("Rifle_Correr", "PJ01_Rifle_Correr")]
+        [TestCase("Rifle_Apuntar", "PJ01_Rifle_Apuntar")]
+        [TestCase("Rifle_ApuntarCaminar", "PJ01_Rifle_ApuntarCaminar")]
+        [TestCase("Rifle_ApuntarCorrer", "PJ01_Rifle_ApuntarCorrer")]
+        [TestCase("Rifle_DisparoCaminar", "PJ01_Rifle_DisparoCaminar")]
+        [TestCase("Rifle_Recargar", "PJ01_Rifle_Recargar")]
+        [TestCase("Cobertura_Entrar", "PJ01_Cobertura_Entrar")]
+        [TestCase("Cobertura_Disparo", "PJ01_Cobertura_Disparo")]
+        [TestCase("Cobertura_Disparo2", "PJ01_Cobertura_Disparo2")]
+        [TestCase("Inter_AbrirPuerta", "PJ01_Inter_AbrirPuerta")]
+        [TestCase("Inter_Boton", "PJ01_Inter_Boton")]
+        [TestCase("Inter_Recoger", "PJ01_Inter_Recoger")]
+        [TestCase("Inter_Telefono", "PJ01_Inter_Telefono")]
+        [TestCase("Inter_VerTelefono_Bucle", "PJ01_Inter_VerTelefono")]
         public void Jugador_UsaElClipDeBlender(string clipBase, string clipPJ01)
         {
             Assert.AreEqual(clipPJ01, OverridesJugador()[clipBase]);
@@ -188,6 +204,18 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
                 && t.conditions.Any(c => c.parameter == ReglasAnimacion.Manejando && c.mode == AnimatorConditionMode.IfNot)));
             var bajar = Base().layers[0].stateMachine.anyStateTransitions.First(t => t.destinationState.name == "MotoBajar");
             Assert.IsTrue(bajar.conditions.Any(c => c.parameter == ReglasAnimacion.GestoTipo && c.threshold == (int)GestoVisual.MotoBajar));
+        }
+    
+        [Test]
+        public void Telefono_VaRecortadoAlTramoUtil_ConElEventoAlLlegarAlOido()
+        {
+            ModelImporterClipAnimation clip = ClipImportado("PJ01_Inter_Telefono");
+            Assert.AreEqual(0f, clip.firstFrame);
+            Assert.AreEqual(235f, clip.lastFrame, "7.8 s de los 37 s: sacar y llevar al oído");
+            Assert.AreEqual(1, clip.events.Length);
+            Assert.AreEqual(ReceptorEventosArma.FuncionTelefonoEnOreja, clip.events[0].functionName);
+            Assert.That(clip.events[0].time, Is.InRange(0.7f, 0.87f), "antes de que el estado salga (88 %)");
+            Assert.IsNotNull(typeof(ReceptorEventosArma).GetMethod(clip.events[0].functionName), "el receptor tiene el método del evento");
         }
     }
 }
