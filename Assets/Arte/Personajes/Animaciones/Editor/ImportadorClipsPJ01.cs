@@ -46,6 +46,24 @@ namespace MechaCyberpunk.Arte.Editor
             return n.StartsWith("Caminar_") || n.StartsWith("Correr_") ? "Loco_" + n : n;
         }
 
+        /// <summary>
+        /// T-960: el bucle de los clips de Blender. Igual que los de Mixamo salvo: Loco_SaltoAire NO es bucle (12 cuadros que van de la pose final de SaltoInicio a la inicial de
+        /// SaltoAterrizaje; en una caída larga se queda en la última pose y entra Loco_Caida, que sí es bucle; BITACORA 03, ajuste 2), y los que en Mixamo llevaban "_Bucle" en el
+        /// archivo y aquí no (Carro_Manejar, Moto_Manejar, Inter_VerTelefono).
+        /// </summary>
+        public static readonly string[] SinBucle = { "Loco_SaltoAire" };
+        public static readonly string[] ConBucle = { "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono" };
+
+        public static bool TieneBucle(string baseNombre)
+        {
+            if (System.Array.IndexOf(SinBucle, baseNombre) >= 0) { return false; }
+            if (System.Array.IndexOf(ConBucle, baseNombre) >= 0) { return true; }
+            // La versión con implante se repite igual que la de sin implante (Loco_Idle_ConImplante como Loco_Idle).
+            const string conImplante = "_ConImplante";
+            if (baseNombre.EndsWith(conImplante)) { return TieneBucle(baseNombre.Substring(0, baseNombre.Length - conImplante.Length)); }
+            return ImportadorMixamo.TieneBucle(baseNombre);
+        }
+
         void OnPreprocessModel()
         {
             if (EsReferencia(assetPath))
@@ -136,7 +154,7 @@ namespace MechaCyberpunk.Arte.Editor
             string baseNombre = NombreBase(nombre);
             ModelImporterClipAnimation clip = clips[0];
             clip.name = nombre;
-            clip.loopTime = ImportadorMixamo.TieneBucle(baseNombre);
+            clip.loopTime = TieneBucle(baseNombre);
             // Humanoid normaliza la raíz a la orientación del cuerpo y le quita el giro que el clip trae respecto al objeto de Blender (hasta 25 grados en apuntar). Para que la
             // pistola quede donde está en Blender, el giro y la altura se hornean en la pose y se toman del original. El avance XZ no se hornea: los clips quedan en el sitio, igual
             // que todos los demás (el cuerpo lo mueve el controlador).
