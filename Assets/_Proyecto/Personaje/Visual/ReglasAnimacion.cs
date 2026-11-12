@@ -32,6 +32,10 @@ namespace MechaCyberpunk.Personaje.Visual
         Telefono = 7,
         Burla = 8,
         Presumir = 9,
+        /// <summary>T-963: subir a la moto (PJ01_Moto_Subir) y quedarse manejando (PJ01_Moto_Manejar) mientras Manejando siga prendido.</summary>
+        MotoSubir = 10,
+        /// <summary>T-963: bajar de la moto (PJ01_Moto_Bajar).</summary>
+        MotoBajar = 11,
     }
 
     /// <summary>
@@ -168,6 +172,8 @@ namespace MechaCyberpunk.Personaje.Visual
                 case "GirarDer": case "GirarIzq": return 1.5f;
                 case "CoberturaDisparo1": case "CoberturaDisparo2": return 1.5f;
                 case "LevantarseBocaArriba": case "LevantarseBocaAbajo": return 2.5f;
+                // T-963: los clips de moto de Blender duran 1.77 s; subir y bajar en 1.2 s.
+                case "MotoSubir": case "MotoBajar": return 1.5f;
                 default: return 1f;
             }
         }
@@ -179,6 +185,7 @@ namespace MechaCyberpunk.Personaje.Visual
             "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "Rodar", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2",
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
+            "MotoSubir", "MotoManejar", "MotoBajar",
         };
 
         /// <summary>Estados de la capa aditiva de daño (T-735).</summary>

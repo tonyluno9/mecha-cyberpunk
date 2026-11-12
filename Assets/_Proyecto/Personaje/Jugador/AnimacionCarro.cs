@@ -77,6 +77,9 @@ namespace MechaCyberpunk.Personaje.Jugador
         private float transcurrido;
         private Transform raizCarroPuertas;
         private bool puertasAbiertas;
+        // T-963: avance del cuerpo entre puerta y asiento según la cadera del clip (null = ventana fija de antes).
+        private float[] avanceClip;
+        private const int MuestrasAvance = 32;
 
         public FaseCarro Fase { get; private set; }
 
@@ -137,6 +140,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             AbrirPuertaDelLado(asiento, puerta);
 
             ApagarIK(true);
+            avanceClip = AvanceDelClip("Carro_Entrar", true);
             duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Entrar") / ReglasAnimacion.VelocidadEstado("CarroEntrar"));
             transcurrido = 0f;
             Fase = FaseCarro.Entrando;
@@ -172,7 +176,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             visual.LeerDelPadre = false;
             visual.Velocidad = 0f;
             visual.EnSuelo = true;
-            visual.Congelado = true;
+            // T-963: con los clips de Blender el cuerpo lo mueve PoseMoto con MotoSubir y MotoManejar (que va quieto); sin ellos se congela la pose como antes (T-695).
+            visual.Congelado = !poseMoto.ConClips;
             Fase = FaseCarro.Dentro;
             return true;
         }
@@ -189,8 +194,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
             if (modoMoto)
             {
+                visual.Congelado = false;
                 poseMoto.Bajar();
-                duracion = ReglasMoto.SegundosSubir + SegundosMinimosMoto;
+                duracion = poseMoto.SegundosBajar + SegundosMinimosMoto;
                 transcurrido = 0f;
                 Fase = FaseCarro.Saliendo;
                 return;
@@ -207,6 +213,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             AbrirPuertaDelLado(marcoSalida, salida.position);
             visual.Manejando = false;
             visual.Gestear(GestoVisual.CarroSalir);
+            avanceClip = AvanceDelClip("Carro_Salir", false);
             duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Salir") / ReglasAnimacion.VelocidadEstado("CarroSalir"));
             transcurrido = 0f;
             Fase = FaseCarro.Saliendo;
@@ -371,7 +378,9 @@ namespace MechaCyberpunk.Personaje.Jugador
                 return;
             }
             float u = segundos - segundosAcercar;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(InicioDeslizarEntrada * duracion, FinDeslizarEntrada * duracion, u));
+            float t = avanceClip != null
+                ? ReglasEntradaCarro.AvanceEn(avanceClip, u / duracion)
+                : Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(InicioDeslizarEntrada * duracion, FinDeslizarEntrada * duracion, u));
             raizVisual.localPosition = Vector3.Lerp(puertaLocal, asientoLocal, t);
             raizVisual.localRotation = Quaternion.Euler(0f, Mathf.LerpAngle(puertaYaw, 0f, t), 0f);
         }
@@ -384,6 +393,25 @@ namespace MechaCyberpunk.Personaje.Jugador
             Vector3 fin = transform.position;
             Vector3 salida = Vector3.ProjectOnPlane(puerta - asiento, Vector3.up);
             Quaternion haciaFuera = salida.sqrMagnitude > 1e-4f ? Quaternion.LookRotation(salida, Vector3.up) : giroAsiento;
+            if (avanceClip != null)
+            {
+                // T-963: del asiento a la puerta y de ahí a la raíz, al ritmo con el que el clip saca la cadera del carro.
+                float p = ReglasEntradaCarro.AvanceEn(avanceClip, transcurrido / duracion);
+                float tramo1 = Vector3.Distance(asiento, puerta);
+                float largo = tramo1 + Vector3.Distance(puerta, fin);
+                float recorrido = p * largo;
+                if (largo < 1e-3f || recorrido <= tramo1)
+                {
+                    float g = tramo1 > 1e-3f ? recorrido / tramo1 : 1f;
+                    raizVisual.SetPositionAndRotation(Vector3.Lerp(asiento, puerta, g), Quaternion.Slerp(giroAsiento, haciaFuera, g));
+                }
+                else
+                {
+                    float g = (recorrido - tramo1) / Mathf.Max(1e-3f, largo - tramo1);
+                    raizVisual.SetPositionAndRotation(Vector3.Lerp(puerta, fin, g), Quaternion.Slerp(haciaFuera, transform.rotation, g));
+                }
+                return;
+            }
             float f1 = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(transcurrido / (FinTramoAsientoPuerta * duracion)));
             if (transcurrido < FinTramoAsientoPuerta * duracion)
             {
@@ -433,7 +461,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             Transform huesoCadera = animador.GetBoneTransform(HumanBodyBones.Hips);
             if (manejar != null && huesoCadera != null)
             {
-                manejar.SampleAnimation(animador.gameObject, 0f);
+                MuestrearSinMover(manejar, 0f);
                 cadera = transform.InverseTransformPoint(huesoCadera.position);
             }
             raizVisual.localPosition = respaldo;
@@ -480,7 +508,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             Quaternion giro = raizVisual.localRotation;
             raizVisual.localPosition = Vector3.zero;
             raizVisual.localRotation = Quaternion.identity;
-            manejar.SampleAnimation(animador.gameObject, 0f);
+            MuestrearSinMover(manejar, 0f);
             float cabezaSobreModelo = transform.InverseTransformPoint(hueso.position).y;
             raizVisual.localPosition = respaldo;
             raizVisual.localRotation = giro;
@@ -489,8 +517,71 @@ namespace MechaCyberpunk.Personaje.Jugador
             return Mathf.Clamp(cabezaDeseada - cabezaAhora, 0f, MaximaSubidaAsiento);
         }
 
+        /// <summary>Pone la pose del clip en ese tiempo sin que el objeto del Animator se quede movido por el avance del clip.</summary>
+        private void MuestrearSinMover(AnimationClip clip, float segundos)
+        {
+            Transform objetoAnimador = animador.transform;
+            Vector3 posicion = objetoAnimador.localPosition;
+            Quaternion giro = objetoAnimador.localRotation;
+            clip.SampleAnimation(animador.gameObject, segundos);
+            objetoAnimador.localPosition = posicion;
+            objetoAnimador.localRotation = giro;
+        }
+
+        /// <summary>
+        /// T-963: muestrea la cadera del clip (en el plano, sobre el propio modelo en el origen) y devuelve su avance hacia el asiento (al subir) o hacia fuera (al bajar).
+        /// Null si el clip casi no mueve la cadera (entonces se usa la ventana fija de antes).
+        /// </summary>
+        private float[] AvanceDelClip(string nombre, bool haciaElAsiento)
+        {
+            AnimationClip clip = BuscarClip(nombre);
+            Transform cadera = animador.GetBoneTransform(HumanBodyBones.Hips);
+            if (clip == null || cadera == null)
+            {
+                return null;
+            }
+            Vector3 respaldo = raizVisual.localPosition;
+            Quaternion giro = raizVisual.localRotation;
+            Transform objetoAnimador = animador.transform;
+            Vector3 respaldoAnimador = objetoAnimador.localPosition;
+            Quaternion giroAnimador = objetoAnimador.localRotation;
+            raizVisual.localPosition = Vector3.zero;
+            raizVisual.localRotation = Quaternion.identity;
+            var puntos = new Vector3[MuestrasAvance];
+            for (int i = 0; i < MuestrasAvance; i++)
+            {
+                clip.SampleAnimation(animador.gameObject, clip.length * i / (MuestrasAvance - 1));
+                Vector3 p = transform.InverseTransformPoint(cadera.position);
+                puntos[i] = new Vector3(p.x, 0f, p.z);
+            }
+            // El muestreo puede mover el objeto del Animator con el avance del clip: se deja como estaba.
+            objetoAnimador.localPosition = respaldoAnimador;
+            objetoAnimador.localRotation = giroAnimador;
+            raizVisual.localPosition = respaldo;
+            raizVisual.localRotation = giro;
+            Vector3 sitio = haciaElAsiento ? puntos[MuestrasAvance - 1] : puntos[0];
+            var distancias = new float[MuestrasAvance];
+            for (int i = 0; i < MuestrasAvance; i++)
+            {
+                distancias[i] = Vector3.Distance(puntos[i], sitio);
+            }
+            return ReglasEntradaCarro.AvanceDesdeDistancias(distancias, haciaElAsiento);
+        }
+
+        /// <summary>
+        /// El clip que de verdad suena en el estado cuyo clip base es <paramref name="nombre"/> (el de Mixamo del controlador base). T-963: el jugador lo cambia por el de
+        /// Blender (PJ01_Carro_*) en su override, así que primero se pregunta al override; si no hay, se busca por nombre.
+        /// </summary>
         private AnimationClip BuscarClip(string nombre)
         {
+            if (animador.runtimeAnimatorController is AnimatorOverrideController cambio)
+            {
+                AnimationClip propio = cambio[nombre];
+                if (propio != null)
+                {
+                    return propio;
+                }
+            }
             foreach (AnimationClip c in animador.runtimeAnimatorController.animationClips)
             {
                 if (c != null && c.name == nombre)

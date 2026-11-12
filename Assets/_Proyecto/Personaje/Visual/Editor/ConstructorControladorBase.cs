@@ -164,6 +164,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Punos_GolpeIzq", "PJ01_Punos_GolpeIzq"), ("Punos_GolpeDer", "PJ01_Punos_GolpeDer"), ("Punos_Fuerte", "PJ01_Punos_Fuerte"),
             ("Muerte_Adelante", "PJ01_Muerte_Adelante"), ("Muerte_Atras", "PJ01_Muerte_Atras"), ("Muerte_Desmayo", "PJ01_Muerte_Desmayo"),
             ("Dano_Levantarse_BocaArriba", "PJ01_Dano_Levantarse_BocaArriba"), ("Dano_Levantarse_BocaAbajo", "PJ01_Dano_Levantarse_BocaAbajo"),
+            // T-963 (A1): subir, manejar y bajar del carro (postura nueva: más abajo, piernas al piso, manos en el volante). La moto tiene sus propios estados.
+            ("Carro_Entrar", "PJ01_Carro_Entrar"), ("Carro_Manejar_Bucle", "PJ01_Carro_Manejar"), ("Carro_Salir", "PJ01_Carro_Salir"),
         };
 
         /// <summary>
@@ -423,6 +425,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("AbrirPuerta", "Inter_AbrirPuerta", GestoVisual.AbrirPuerta), ("Boton", "Inter_Boton", GestoVisual.Boton),
             ("Recoger", "Inter_Recoger", GestoVisual.Recoger), ("Telefono", "Inter_Telefono", GestoVisual.Telefono),
             ("Burla", "Skull_Burla", GestoVisual.Burla), ("Presumir", "Nova_Flexing", GestoVisual.Presumir),
+            // T-963: la moto no tenía clips (era una pose por IK); los de Blender van directo en la base (no hay de Mixamo que cambiar).
+            ("MotoSubir", "PJ01_Moto_Subir", GestoVisual.MotoSubir), ("MotoBajar", "PJ01_Moto_Bajar", GestoVisual.MotoBajar),
         };
 
         // T-622 a T-624: gestos de una vez (trigger Gesto + GestoTipo, desde cualquier estado menos las muertes), manejar y ver el celular.
@@ -434,6 +438,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
             estado("CarroManejar", "Carro_Manejar_Bucle", 1f).tag = ReglasAnimacion.EtiquetaGesto;
             estado("VerTelefono", "Inter_VerTelefono_Bucle", 1f).tag = ReglasAnimacion.EtiquetaGesto;
+            estado("MotoManejar", "PJ01_Moto_Manejar", 1f).tag = ReglasAnimacion.EtiquetaGesto;
 
             for (int i = 0; i < ClipsGestos.Length; i++)
             {
@@ -444,9 +449,15 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                     // Sube y se queda al volante; si Manejando ya se quitó, vuelve a pararse.
                     Unir(e["CarroEntrar"], e["CarroManejar"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Manejando, true));
                 }
+                if (ClipsGestos[i].Estado == "MotoSubir")
+                {
+                    // T-963: igual en la moto: termina de subir y se queda manejando.
+                    Unir(e["MotoSubir"], e["MotoManejar"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Manejando, true));
+                }
                 Unir(e[ClipsGestos[i].Estado], e["Idle"], true, SalidaUnaVez, Mezcla);
             }
             Unir(e["CarroManejar"], e["Idle"], false, 0f, Mezcla, Bool(ReglasAnimacion.Manejando, false));
+            Unir(e["MotoManejar"], e["Idle"], false, 0f, Mezcla, Bool(ReglasAnimacion.Manejando, false));
             foreach (string s in new[] { "Idle", "Caminar", "GirarDer", "GirarIzq" })
             {
                 Unir(e[s], e["VerTelefono"], false, 0f, Mezcla, Bool(ReglasAnimacion.ViendoTelefono, true), Menor(ReglasVisual.Velocidad, UmbralCaminar));
