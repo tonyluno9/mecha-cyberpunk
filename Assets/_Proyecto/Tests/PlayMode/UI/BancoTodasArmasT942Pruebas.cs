@@ -82,6 +82,63 @@ namespace MechaCyberpunk.Tests.UI
             Object.Destroy(go);
         }
 
+        // T-971: la pistola trae su Mira real de Blender (4 submallas): se separa hacia arriba y nada se arma con mallas simples.
+        [UnityTest]
+        public IEnumerator Banco_Pistola_TieneLaMiraRealYSeSeparaHaciaArriba()
+        {
+            ConfigMenuArmas config = AssetDatabase.LoadAssetAtPath<ConfigMenuArmas>(RutaConfig);
+            EntradaArmaMenu entrada = config.Armas[0];
+            GameObject go = new GameObject("VistaPrueba");
+            VistaHologramaArma vista = go.AddComponent<VistaHologramaArma>();
+            vista.Mostrar(entrada, config);
+            yield return null;
+            Assert.IsTrue(vista.TienePieza(PiezaArma.Mira), "La pistola tiene mira con la malla real");
+            foreach (string inventado in new[] { "MiraHolografica", "CargadorHolografico", "CanonHolografico" })
+            {
+                Assert.IsNull(GameObject.Find(inventado), inventado + " ya no se crea");
+            }
+            vista.CentroPieza(PiezaArma.Mira, out Vector3 antes);
+            vista.ElegirPieza(PiezaArma.Mira, Estados());
+            yield return new WaitForSecondsRealtime(0.9f);
+            vista.CentroPieza(PiezaArma.Mira, out Vector3 despues);
+            Assert.Greater(vista.Separacion(PiezaArma.Mira), 0.9f, "La mira se separa");
+            Assert.Greater(despues.y - antes.y, 0.02f, "La mira sale hacia arriba");
+            int submallas = 0;
+            foreach (Renderer r in go.GetComponentsInChildren<Renderer>())
+            {
+                if (r.name == "Mira")
+                {
+                    submallas = r.sharedMaterials.Length;
+                }
+            }
+            Assert.GreaterOrEqual(submallas, 4, "La mira es una malla de 4 submallas con el material del holograma en todas");
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T971") == "1")
+            {
+                Guardar(vista, "docs/capturas/t971/banco-pistola-mira.png");
+            }
+            vista.Ocultar();
+            Object.Destroy(go);
+        }
+
+        // T-971: la escopeta no lleva mira: el holograma no la arma.
+        [UnityTest]
+        public IEnumerator Banco_Escopeta_SinMira_NoSeInventa()
+        {
+            ConfigMenuArmas config = AssetDatabase.LoadAssetAtPath<ConfigMenuArmas>(RutaConfig);
+            GameObject go = new GameObject("VistaPrueba");
+            VistaHologramaArma vista = go.AddComponent<VistaHologramaArma>();
+            vista.Mostrar(config.Armas[1], config);
+            yield return null;
+            Assert.IsFalse(vista.TienePieza(PiezaArma.Mira));
+            Assert.IsNull(GameObject.Find("MiraHolografica"));
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T971") == "1")
+            {
+                Guardar(vista, "docs/capturas/t971/banco-escopeta-sinmira.png");
+            }
+            vista.Ocultar();
+            Object.Destroy(go);
+        }
+
         // T-970: las piezas que el arma sí tiene (la escopeta no lleva mira).
         private static PiezaArma[] Piezas(EntradaArmaMenu entrada)
         {
