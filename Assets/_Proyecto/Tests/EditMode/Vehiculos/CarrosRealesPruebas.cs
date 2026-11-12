@@ -42,7 +42,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Assert.IsNotNull(rueda, "La física necesita " + nombre);
                 foreach (Renderer r in rueda.GetComponentsInChildren<Renderer>(true))
                 {
-                    bool llantaEnElAncla = prefab.GetComponent<PuertasCarro>() != null; // los carros llevan la llanta en el ancla; las motos en Ruedas_T743
+                    bool llantaEnElAncla = prefab.transform.Find("Visual_T511/Carroceria") != null; // los carros llevan la llanta en el ancla; las motos en Ruedas_T743
                     Assert.AreEqual(llantaEnElAncla, r.enabled, nombre + (llantaEnElAncla ? " se ve (llanta RU01)" : " no se ve"));
                 }
             }
