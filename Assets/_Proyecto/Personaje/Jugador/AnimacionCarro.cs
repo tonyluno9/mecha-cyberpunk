@@ -40,9 +40,6 @@ namespace MechaCyberpunk.Personaje.Jugador
         private const float AlturaRayoPiso = 1.5f;
         private const float LargoRayoPiso = 4f;
         private const int MaxImpactosPiso = 8;
-        // T-742: mensajes a la raíz del carro armado por piezas (PuertasCarro, Vehiculos): AnimacionCarro no puede referenciar ese ensamblado.
-        private const string MensajeAbrirPuerta = "AbrirPuertaDelLado";
-        private const string MensajeCerrarPuertas = "CerrarPuertas";
 
         private PoseMoto poseMoto;
         private IMontable montableActual;
@@ -75,8 +72,6 @@ namespace MechaCyberpunk.Personaje.Jugador
         private Quaternion giroAsiento;
         private float duracion;
         private float transcurrido;
-        private Transform raizCarroPuertas;
-        private bool puertasAbiertas;
 
         public FaseCarro Fase { get; private set; }
 
@@ -94,7 +89,6 @@ namespace MechaCyberpunk.Personaje.Jugador
         private void OnDisable()
         {
             claxon.Disable();
-            CerrarPuertas();
         }
 
         /// <summary>Sube: el jugador estaba en <paramref name="posicionPrevia"/> mirando a <paramref name="frentePrevio"/>. Devuelve false si no hay modelo animable.</summary>
@@ -134,7 +128,6 @@ namespace MechaCyberpunk.Personaje.Jugador
             Vector3 haciaAsiento = asientoLocal - puertaLocal;
             puertaYaw = Mathf.Atan2(haciaAsiento.x, haciaAsiento.z) * Mathf.Rad2Deg;
             segundosAcercar = ReglasEntradaCarro.SegundosAcercar(Vector3.Distance(inicioLocal, puertaLocal));
-            AbrirPuertaDelLado(asiento, puerta);
 
             ApagarIK(true);
             duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Entrar") / ReglasAnimacion.VelocidadEstado("CarroEntrar"));
@@ -204,7 +197,6 @@ namespace MechaCyberpunk.Personaje.Jugador
                 asientoSalidaLocal = marcoSalida.InverseTransformPoint(asientoMundo);
                 puertaSalidaLocal = marcoSalida.InverseTransformPoint(puertaMundo);
             }
-            AbrirPuertaDelLado(marcoSalida, salida.position);
             visual.Manejando = false;
             visual.Gestear(GestoVisual.CarroSalir);
             duracion = Mathf.Max(SegundosMinimos, LargoClip("Carro_Salir") / ReglasAnimacion.VelocidadEstado("CarroSalir"));
@@ -247,36 +239,6 @@ namespace MechaCyberpunk.Personaje.Jugador
             return punto;
         }
 
-        // T-742: abre la puerta del lado por donde sube o baja el jugador (X local de <paramref name="punto"/> respecto del carro). Sin PuertasCarro no pasa nada.
-        private void AbrirPuertaDelLado(Transform asiento, Vector3 punto)
-        {
-            if (asiento == null)
-            {
-                return;
-            }
-            Rigidbody cuerpo = asiento.GetComponentInParent<Rigidbody>();
-            raizCarroPuertas = cuerpo != null ? cuerpo.transform : asiento.parent;
-            if (raizCarroPuertas == null)
-            {
-                return;
-            }
-            puertasAbiertas = true;
-            raizCarroPuertas.SendMessage(MensajeAbrirPuerta, raizCarroPuertas.InverseTransformPoint(punto).x, SendMessageOptions.DontRequireReceiver);
-        }
-
-        private void CerrarPuertas()
-        {
-            if (!puertasAbiertas)
-            {
-                return;
-            }
-            puertasAbiertas = false;
-            if (raizCarroPuertas != null)
-            {
-                raizCarroPuertas.SendMessage(MensajeCerrarPuertas, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
         private bool Preparar()
         {
             visual = GetComponentInChildren<VisualPersonaje>(true);
@@ -312,15 +274,6 @@ namespace MechaCyberpunk.Personaje.Jugador
                 clipIniciado = true;
                 visual.Manejando = true;
                 visual.Gestear(GestoVisual.CarroEntrar);
-            }
-            if (puertasAbiertas)
-            {
-                // La puerta se cierra cuando el conductor ya se deslizó al asiento (al subir) o ya salió al piso (al bajar).
-                float cierre = Fase == FaseCarro.Entrando ? segundosAcercar + FinDeslizarEntrada * duracion : FinTramoPuertaPiso * duracion;
-                if (transcurrido >= cierre)
-                {
-                    CerrarPuertas();
-                }
             }
             float total = Fase == FaseCarro.Entrando ? segundosAcercar + duracion : duracion;
             if (transcurrido >= total)
@@ -396,7 +349,6 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         private void Terminar()
         {
-            CerrarPuertas();
             if (Fase == FaseCarro.Entrando)
             {
                 Fase = FaseCarro.Dentro;

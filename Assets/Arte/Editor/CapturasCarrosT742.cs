@@ -7,7 +7,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Arte.Editor
 {
     /// <summary>
-    /// T-742: capturas de los carros armados por piezas (puertas abiertas, ruedas giradas y dobladas). Las fotos de ajuste salen en Logs/.
+    /// T-742: capturas de los carros armados por piezas (sin puertas, ruedas giradas y dobladas). Las fotos de ajuste salen en Logs/.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.CapturasCarrosT742.Capturar
     /// </summary>
     public static class CapturasCarrosT742
@@ -64,11 +64,6 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Deja el carro con las puertas abiertas (o cerradas), las ruedas giradas y las delanteras dobladas, para la foto.</summary>
         public static void Posar(GameObject carro, bool abiertas)
         {
-            PuertasCarro puertas = carro.GetComponent<PuertasCarro>();
-            SerializedObject sp = new SerializedObject(puertas);
-            float angulo = abiertas ? puertas.AnguloApertura : 0f;
-            ((Transform)sp.FindProperty("puertaIzquierda").objectReferenceValue).localRotation = Quaternion.Euler(0f, angulo, 0f);
-            ((Transform)sp.FindProperty("puertaDerecha").objectReferenceValue).localRotation = Quaternion.Euler(0f, -angulo, 0f);
             SerializedObject sr = new SerializedObject(carro.GetComponent<RuedasVisualesCarro>());
             foreach (string lista in new[] { "direccionDelantera", "giro" })
             {

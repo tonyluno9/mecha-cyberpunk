@@ -48,7 +48,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Assert.IsNotNull(raiz.Find("Visual_T511/Ruedas_T743/" + nombre + "/Direccion/Giro/Modelo"), nombre);
             }
             Assert.AreEqual(2, raiz.Find("Visual_T511/Ruedas_T743").childCount, "Solo dos llantas");
-            Assert.IsNull(raiz.GetComponent<PuertasCarro>(), "Las motos no llevan puertas");
+            Assert.IsNull(raiz.Find("Visual_T511/Puerta_Izq"), "Las motos no llevan puertas");
         }
 
         [Test]

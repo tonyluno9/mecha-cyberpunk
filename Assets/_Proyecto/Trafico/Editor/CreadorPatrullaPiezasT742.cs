@@ -5,8 +5,8 @@ using UnityEngine;
 namespace MechaCyberpunk.Trafico.Editor
 {
     /// <summary>
-    /// T-742: la patrulla (Trafico/Prefabs/Patrulla.prefab, copia del carro V05 desde T-707) pasa al V05 armado por piezas: la carrocería sin puertas,
-    /// Puerta_Izq y Puerta_Der con bisagra y las cuatro llantas RU01 que giran y doblan. Conserva en la raíz el <c>PatrullaMundo</c>, las luces de la sirena,
+    /// T-742: la patrulla (Trafico/Prefabs/Patrulla.prefab, copia del carro V05 desde T-707) pasa al V05 armado por piezas: la carrocería sin puertas (T-972: tampoco
+    /// piezas de puerta) y las cuatro llantas RU01 que giran y doblan. Conserva en la raíz el <c>PatrullaMundo</c>, las luces de la sirena,
     /// la física, los colliders y el asiento (el robo y el GPS de T-707 siguen igual): solo cambian los visuales y se renombran Asiento y PuntoSubida.
     /// Corre después de <see cref="CreadorCarrosPiezasT742.ArmarTodos"/>. Batchmode: -executeMethod MechaCyberpunk.Trafico.Editor.CreadorPatrullaPiezasT742.Armar
     /// </summary>
