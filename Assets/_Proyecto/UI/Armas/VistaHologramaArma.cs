@@ -9,7 +9,7 @@ namespace MechaCyberpunk.UI.Armas
     /// <summary>
     /// El holograma del banco de armas (T-814): un set lejos de la ciudad (<see cref="ConfigMenuArmas.PosicionSet"/>) con su cámara que dibuja
     /// en una RenderTexture (<see cref="Textura"/>) el arma con el shader holográfico. Con modelo 3D copia sus mallas (sin scripts ni
-    /// colisiones), lo deja de 1 m de largo y separa la pieza elegida (vista explotada); la mira, si el modelo no trae, la arma con mallas
+    /// colisiones), lo deja de 1 m de largo y separa la pieza elegida (vista explotada); lo que el modelo no trae no se inventa.
     /// simples. Sin modelo gira la imagen holográfica en un quad. Se gira con <see cref="Girar"/>, se acerca con <see cref="Acercar"/> y gira
     /// solo cuando no se toca. Sin capas propias: el set está a 500 m bajo la ciudad y la cámara solo ve 10 m.
     /// </summary>
@@ -70,7 +70,6 @@ namespace MechaCyberpunk.UI.Armas
         private Renderer pedestal;
         private Material materialImagen;
         private PiezaArma elegida;
-        private Vector3 bocaCache;
         private float giro = GiroInicial;
         private float inclinacion = InclinacionInicial;
         private float distancia;
@@ -342,8 +341,6 @@ namespace MechaCyberpunk.UI.Armas
                     AgregarMalla(raiz, sk.name, sk.sharedMesh, aRaiz * sk.transform.localToWorldMatrix, porNombre);
                 }
             }
-            Transform bocaModelo = BuscarHijo(origen, "Boca");
-            Vector3? bocaMundo = null;
             Bounds limites = Limites();
             // De lado: el largo del arma sobre X.
             if (limites.size.z > limites.size.x)
@@ -359,12 +356,6 @@ namespace MechaCyberpunk.UI.Armas
                 raiz.position += pivote.position - limites.center;
                 limites = Limites();
             }
-
-            if (bocaModelo != null)
-            {
-                bocaMundo = raiz.TransformPoint(origen.InverseTransformPoint(bocaModelo.position));
-            }
-            bocaCache = bocaMundo ?? new Vector3(limites.max.x, limites.center.y, limites.center.z);
             foreach (PiezaArma pieza in new[] { PiezaArma.Cargador, PiezaArma.Canon, PiezaArma.Mira })
             {
                 string nombre = entrada.NombrePieza(pieza);
@@ -373,23 +364,7 @@ namespace MechaCyberpunk.UI.Armas
                     RegistrarPieza(pieza, t, limites);
                 }
             }
-            // T-942: las armas cuyo modelo no trae cargador o cañón los llevan como piezas holográficas de primitivas.
-            bool canonDelModelo = piezas.ContainsKey(PiezaArma.Canon);
-            if (!piezas.ContainsKey(PiezaArma.Cargador))
-            {
-                RegistrarPieza(PiezaArma.Cargador, CrearCargador(limites), limites);
-            }
-            if (!piezas.ContainsKey(PiezaArma.Canon))
-            {
-                Vector3 boca = bocaMundo ?? new Vector3(limites.max.x, limites.center.y, limites.center.z);
-                RegistrarPieza(PiezaArma.Canon, CrearCanon(limites, boca), limites);
-            }
-            if (!piezas.ContainsKey(PiezaArma.Mira))
-            {
-                Bounds apoyo = canonDelModelo && piezas.TryGetValue(PiezaArma.Canon, out Pieza canon) ? LimitesDe(canon.Renderers) : limites;
-                Transform mira = CrearMira(apoyo);
-                RegistrarPieza(PiezaArma.Mira, mira, limites);
-            }
+            // T-971: lo que el modelo no trae no se inventa (ya ningún arma usa mallas simples): la escopeta no lleva mira.
         }
 
         private void AgregarMalla(Transform raiz, string nombre, Mesh malla, Matrix4x4 matriz, Dictionary<string, Transform> porNombre)
@@ -454,68 +429,6 @@ namespace MechaCyberpunk.UI.Armas
                 }
             }
             return null;
-        }
-
-        // Caja holográfica bajo la zona central del arma (T-942); tamaño y lugar salen de CalculoPiezasPrimitivas.
-        private Transform CrearCargador(Bounds arma)
-        {
-            Bounds caja = CalculoPiezasPrimitivas.Cargador(arma, CalculoPiezasPrimitivas.SignoFrente(arma, bocaCache));
-            Transform cargador = new GameObject("CargadorHolografico").transform;
-            cargador.SetParent(contenido, false);
-            cargador.position = caja.center;
-            Primitiva(cargador, PrimitiveType.Cube, "Caja", Vector3.zero, Quaternion.identity, caja.size);
-            return cargador;
-        }
-
-        // Cilindro holográfico en la punta del arma, con su extremo en la boca (T-942).
-        private Transform CrearCanon(Bounds arma, Vector3 boca)
-        {
-            CalculoPiezasPrimitivas.Canon(arma, boca, out Vector3 centro, out float radio, out float largo);
-            Transform canon = new GameObject("CanonHolografico").transform;
-            canon.SetParent(contenido, false);
-            canon.position = centro;
-            Primitiva(canon, PrimitiveType.Cylinder, "Cilindro", Vector3.zero, Quaternion.Euler(0f, 0f, 90f), new Vector3(radio * 2f, largo * 0.5f, radio * 2f));
-            return canon;
-        }
-
-        // Una mira holográfica (riel, tubo y dos lentes) sentada sobre el cañón (o sobre el arma), de lado como el arma.
-        private Transform CrearMira(Bounds apoyo)
-        {
-            const float Largo = 0.26f;
-            const float Radio = 0.032f;
-            const float AltoRiel = 0.028f;
-            const float Hundido = 0.035f;
-            Transform mira = new GameObject("MiraHolografica").transform;
-            mira.SetParent(contenido, false);
-            mira.position = new Vector3(apoyo.center.x, apoyo.max.y - Hundido + AltoRiel + Radio, apoyo.center.z);
-            Primitiva(mira, PrimitiveType.Cube, "Riel", new Vector3(0f, -Radio - AltoRiel * 0.5f, 0f), Quaternion.identity,
-                new Vector3(Largo * 0.55f, AltoRiel, Radio * 1.1f));
-            Primitiva(mira, PrimitiveType.Cylinder, "Tubo", Vector3.zero, Quaternion.Euler(0f, 0f, 90f), new Vector3(Radio * 2f, Largo * 0.5f, Radio * 2f));
-            Primitiva(mira, PrimitiveType.Cylinder, "LenteDelantera", new Vector3(Largo * 0.5f, 0f, 0f), Quaternion.Euler(0f, 0f, 90f),
-                new Vector3(Radio * 2.8f, Radio * 0.4f, Radio * 2.8f));
-            Primitiva(mira, PrimitiveType.Cylinder, "LenteTrasera", new Vector3(-Largo * 0.5f, 0f, 0f), Quaternion.Euler(0f, 0f, 90f),
-                new Vector3(Radio * 2.5f, Radio * 0.4f, Radio * 2.5f));
-            return mira;
-        }
-
-        private Renderer Primitiva(Transform padre, PrimitiveType tipo, string nombre, Vector3 posicion, Quaternion rotacion, Vector3 escala)
-        {
-            GameObject go = GameObject.CreatePrimitive(tipo);
-            go.name = nombre;
-            Collider c = go.GetComponent<Collider>();
-            if (c != null)
-            {
-                Destroy(c);
-            }
-            go.transform.SetParent(padre, false);
-            go.transform.localPosition = posicion;
-            go.transform.localRotation = rotacion;
-            go.transform.localScale = escala;
-            Renderer r = go.GetComponent<Renderer>();
-            r.sharedMaterial = config.MaterialHolograma;
-            ApagarSombras(r);
-            todos.Add(r);
-            return r;
         }
 
         private void CrearImagen(EntradaArmaMenu entrada)
