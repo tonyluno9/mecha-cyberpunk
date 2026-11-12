@@ -27,14 +27,18 @@ namespace MechaCyberpunk.UI.Armas
         /// <summary>La pieza que da ese nivel (1 a 3).</summary>
         public static PiezaArma PiezaDeNivel(int nivel) => (PiezaArma)(Math.Max(1, Math.Min(NivelMaximo, nivel)) - 1);
 
-        /// <summary>Estado de la pieza con el arma en <paramref name="nivelActual"/> (-1 = no se tiene el arma).</summary>
-        public static EstadoPieza Estado(PiezaArma pieza, int nivelActual)
+        /// <summary>Estado de la pieza con el arma en <paramref name="nivelActual"/> (-1 = no se tiene el arma). Una pieza sobre el <paramref name="maximo"/> del arma (la mira de la escopeta) queda bloqueada.</summary>
+        public static EstadoPieza Estado(PiezaArma pieza, int nivelActual, int maximo = NivelMaximo)
         {
             if (nivelActual < 0)
             {
                 return EstadoPieza.Bloqueada;
             }
             int nivel = NivelDe(pieza);
+            if (nivel > maximo)
+            {
+                return EstadoPieza.Bloqueada;
+            }
             if (nivel <= nivelActual)
             {
                 return EstadoPieza.Instalada;
@@ -43,28 +47,28 @@ namespace MechaCyberpunk.UI.Armas
         }
 
         /// <summary>True si hay pieza que comprar (se tiene el arma y no está al máximo).</summary>
-        public static bool HaySiguiente(int nivelActual) => nivelActual >= 0 && nivelActual < NivelMaximo;
+        public static bool HaySiguiente(int nivelActual, int maximo = NivelMaximo) => nivelActual >= 0 && nivelActual < maximo;
 
         /// <summary>Si un arma de ese nivel se ve con esa pestaña.</summary>
-        public static bool PasaFiltro(FiltroArmas filtro, int nivel)
+        public static bool PasaFiltro(FiltroArmas filtro, int nivel, int maximo = NivelMaximo)
         {
             switch (filtro)
             {
-                case FiltroArmas.Mejorables: return HaySiguiente(nivel);
-                case FiltroArmas.AlMaximo: return nivel >= NivelMaximo;
+                case FiltroArmas.Mejorables: return HaySiguiente(nivel, maximo);
+                case FiltroArmas.AlMaximo: return nivel >= maximo;
                 default: return true;
             }
         }
 
         /// <summary>La pieza que sigue; si no hay (arma al máximo o sin arma), la última.</summary>
-        public static PiezaArma Siguiente(int nivelActual) => HaySiguiente(nivelActual) ? PiezaDeNivel(nivelActual + 1) : PiezaArma.Mira;
+        public static PiezaArma Siguiente(int nivelActual, int maximo = NivelMaximo) => HaySiguiente(nivelActual, maximo) ? PiezaDeNivel(nivelActual + 1) : PiezaDeNivel(maximo);
 
         /// <summary>
         /// La pieza que hay que comprar antes de esta (para el aviso "primero el cargador"). Si la pieza no está bloqueada, ella misma.
         /// </summary>
-        public static PiezaArma PiezaQueFalta(PiezaArma pieza, int nivelActual)
+        public static PiezaArma PiezaQueFalta(PiezaArma pieza, int nivelActual, int maximo = NivelMaximo)
         {
-            return Estado(pieza, nivelActual) == EstadoPieza.Bloqueada && nivelActual >= 0 ? Siguiente(nivelActual) : pieza;
+            return Estado(pieza, nivelActual, maximo) == EstadoPieza.Bloqueada && nivelActual >= 0 ? Siguiente(nivelActual, maximo) : pieza;
         }
 
         /// <summary>
