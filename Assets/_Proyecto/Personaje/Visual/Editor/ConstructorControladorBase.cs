@@ -160,6 +160,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             // T-961 (A2): salto en tres fases (SaltoAire sin bucle: se queda en su última pose hasta aterrizar) y la caída larga en bucle.
             ("Loco_SaltoInicio", "PJ01_Loco_SaltoInicio"), ("Loco_SaltoAire", "PJ01_Loco_SaltoAire"),
             ("Loco_SaltoAterrizaje", "PJ01_Loco_SaltoAterrizaje"), ("Loco_Caida", "PJ01_Loco_Caida"),
+            // T-962 (A3): puños, muertes rápidas y levantarse. Las muertes y levantarse mueven la cápsula con su root motion (RaizCaidaJugador). PJ01_Punos_Guardia no tiene estado.
+            ("Punos_GolpeIzq", "PJ01_Punos_GolpeIzq"), ("Punos_GolpeDer", "PJ01_Punos_GolpeDer"), ("Punos_Fuerte", "PJ01_Punos_Fuerte"),
+            ("Muerte_Adelante", "PJ01_Muerte_Adelante"), ("Muerte_Atras", "PJ01_Muerte_Atras"), ("Muerte_Desmayo", "PJ01_Muerte_Desmayo"),
+            ("Dano_Levantarse_BocaArriba", "PJ01_Dano_Levantarse_BocaArriba"), ("Dano_Levantarse_BocaAbajo", "PJ01_Dano_Levantarse_BocaAbajo"),
         };
 
         /// <summary>
