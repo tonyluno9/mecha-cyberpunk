@@ -33,7 +33,9 @@ namespace MechaCyberpunk.Progresion.Sonido
         private float[] nivelCruce = new float[2];
         private int cruceActivo;
         private string ambienteDeseado;
-        private IdLugar lugar = IdLugar.Calle;
+        // T-977: lugares en los que está el jugador, el último manda (la clínica está dentro del mercado: al salir de ella vuelve el del mercado).
+        private readonly List<IdLugar> lugares = new List<IdLugar>();
+        private IdLugar lugar => lugares.Count > 0 ? lugares[lugares.Count - 1] : IdLugar.Calle;
         private int siguienteBucle;
         private float proximaRevision;
 
@@ -57,13 +59,35 @@ namespace MechaCyberpunk.Progresion.Sonido
             public Transform sigue;
             public SeccionSonido seccion;
             public string id;
+            public float relativo;
         }
 
         public string UltimoId { get; private set; }
         public string AmbienteDeseado => ambienteDeseado;
 
+        /// <summary>T-977: cuántas fuentes de ambiente suenan ahora con volumen (para las pruebas; tras el cruce, una sola).</summary>
+        public int AmbientesSonando(float volumenMinimo)
+        {
+            int n = 0;
+            foreach (AudioSource a in cruce)
+            {
+                if (a != null && a.isPlaying && a.volume > volumenMinimo) n++;
+            }
+            return n;
+        }
+
+        /// <summary>T-977: volumen actual de la fuente de ambiente que suena (0 si ninguna).</summary>
+        public float VolumenAmbienteActual => cruce != null && cruce[cruceActivo].isPlaying ? cruce[cruceActivo].volume : 0f;
+
         /// <summary>Cuántas veces se pidió el ID (hubiera o no archivo). Es el contador de las pruebas.</summary>
         public int Pedidos(string id) => conteo.TryGetValue(id, out int n) ? n : 0;
+
+        /// <summary>T-977: cuántas veces sonó de verdad el ID (pasó interruptor, tiempo mínimo y límites). Para medir que no se repita en exceso.</summary>
+        public int Sonados(string id) => sonados.TryGetValue(id, out int n) ? n : 0;
+
+        private readonly Dictionary<string, int> sonados = new Dictionary<string, int>();
+
+        private void ContarSonado(string id) => sonados[id] = Sonados(id) + 1;
 
         /// <summary>Tono, volumen relativo y clip del último sonido puntual que sonó (para las pruebas).</summary>
         public float UltimaDistanciaMaxima => fuentes != null && UltimaFuente != null ? UltimaFuente.maxDistance : 0f;
@@ -305,6 +329,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             f.spatialBlend = en3D == true ? 1f : 0f;
             if (en3D == true) f.transform.position = posicion;
             f.Play();
+            ContarSonado(id);
         }
 
         public int ReproducirBucle(string id, Transform sigue)
@@ -321,12 +346,15 @@ namespace MechaCyberpunk.Progresion.Sonido
             AudioSource f = CrearFuente("Bucle_" + id);
             f.clip = clip;
             f.loop = true;
-            f.volume = VolumenFinal(seccion);
+            // T-977: el bucle también lleva el volumen relativo de su ID (la sirena es fuerte; el derrape, bajo).
+            float relativo = ReglaMezclaSonidos.Para(id).Volumen;
+            f.volume = VolumenFinal(seccion) * relativo;
             f.spatialBlend = sigue != null ? 1f : 0f;
             if (sigue != null) f.transform.position = sigue.position;
             f.Play();
+            ContarSonado(id);
             int numero = siguienteBucle++;
-            bucles[numero] = new Bucle { fuente = f, sigue = sigue, seccion = seccion, id = id };
+            bucles[numero] = new Bucle { fuente = f, sigue = sigue, seccion = seccion, id = id, relativo = relativo };
             return numero;
         }
 
@@ -344,13 +372,14 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private void AlEntrar(IdLugar nuevo)
         {
-            lugar = nuevo;
+            lugares.Remove(nuevo);
+            if (nuevo != IdLugar.Calle && nuevo != IdLugar.Ninguno) lugares.Add(nuevo);
             ActualizarAmbiente();
         }
 
         private void AlSalir(IdLugar anterior)
         {
-            if (lugar == anterior) lugar = IdLugar.Calle;
+            lugares.Remove(anterior);
             ActualizarAmbiente();
         }
 
@@ -394,13 +423,14 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 float meta = i == cruceActivo && idCruce[i] != null ? 1f : 0f;
                 nivelCruce[i] = Mathf.MoveTowards(nivelCruce[i], meta, paso);
-                cruce[i].volume = nivelCruce[i] * VolumenFinal(SeccionSonido.Ambiente);
+                // T-977: cada ambiente con su nivel; en el cruce de 1 s uno baja mientras el otro sube (nunca dos a todo volumen).
+                cruce[i].volume = nivelCruce[i] * VolumenFinal(SeccionSonido.Ambiente) * ReglaMezclaSonidos.VolumenAmbiente(idCruce[i]);
                 if (meta == 0f && nivelCruce[i] == 0f && cruce[i].isPlaying) cruce[i].Stop();
             }
             foreach (Bucle b in bucles.Values)
             {
                 if (b.sigue != null && b.fuente != null) b.fuente.transform.position = b.sigue.position;
-                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion);
+                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo;
             }
         }
     }

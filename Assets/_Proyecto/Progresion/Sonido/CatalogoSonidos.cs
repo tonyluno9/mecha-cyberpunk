@@ -30,12 +30,19 @@ namespace MechaCyberpunk.Progresion.Sonido
         [Header("Interruptores por ID (T-620): marca encendido para prender un sonido. Lista vacia = todo suena.")]
         [SerializeField] private List<Interruptor> interruptores = new List<Interruptor>();
 
-        [Header("Mezcla (T-470): voces y disparos por encima, ambientes bajos")]
-        [Range(0f, 1f)] [SerializeField] private float gananciaEfectos = 1f;
-        [Range(0f, 1f)] [SerializeField] private float gananciaVoces = 1f;
-        [Range(0f, 1f)] [SerializeField] private float gananciaAmbiente = 0.3f;
-        [Range(0f, 1f)] [SerializeField] private float gananciaMusica = 0f;
-        [Range(0f, 1f)] [SerializeField] private float gananciaInterfaz = 0.7f;
+        [Header("Mezcla (T-470, final en T-977): disparos y voces arriba, interfaz en medio, ambientes muy abajo (cada AMB trae su nivel)")]
+        [Range(0f, 1f)] [SerializeField] private float gananciaEfectos = MezclaEfectos;
+        [Range(0f, 1f)] [SerializeField] private float gananciaVoces = MezclaVoces;
+        [Range(0f, 1f)] [SerializeField] private float gananciaAmbiente = MezclaAmbiente;
+        [Range(0f, 1f)] [SerializeField] private float gananciaMusica = MezclaMusica;
+        [Range(0f, 1f)] [SerializeField] private float gananciaInterfaz = MezclaInterfaz;
+
+        /// <summary>T-977: la mezcla final por sección. Los ambientes llegan bajos por su archivo y su nivel (ReglaMezclaSonidos.VolumenAmbiente).</summary>
+        public const float MezclaEfectos = 1f;
+        public const float MezclaVoces = 0.85f;
+        public const float MezclaAmbiente = 1f;
+        public const float MezclaMusica = 0.5f;
+        public const float MezclaInterfaz = 0.6f;
         [Tooltip("Mientras ReglaOpciones deje el ambiente en 0 por defecto, el ambiente suena al menos a este nivel de la opción. Ponlo en 0 cuando la opción ya arranque encendida.")]
         [Range(0f, 1f)] [SerializeField] private float pisoOpcionAmbiente = 0.8f;
 
@@ -82,6 +89,7 @@ namespace MechaCyberpunk.Progresion.Sonido
                 if (e != null && !string.IsNullOrEmpty(e.id)) ids.Add(e.id);
             }
             foreach (string id in ReglaMezclaSonidos.IdsEncendidos) ids.Add(id);
+            foreach (string id in ReglaMezclaSonidos.IdsRegresados) ids.Add(id);
             interruptores.RemoveAll(i => i == null || !ids.Contains(i.id));
             HashSet<string> tienen = new HashSet<string>();
             foreach (Interruptor i in interruptores) tienen.Add(i.id);
@@ -93,6 +101,16 @@ namespace MechaCyberpunk.Progresion.Sonido
         }
 
         public float PisoOpcionAmbiente => pisoOpcionAmbiente;
+
+        /// <summary>T-977: deja la mezcla final de las secciones (la usa el editor para el asset del juego).</summary>
+        public void FijarMezclaFinal()
+        {
+            gananciaEfectos = MezclaEfectos;
+            gananciaVoces = MezclaVoces;
+            gananciaAmbiente = MezclaAmbiente;
+            gananciaMusica = MezclaMusica;
+            gananciaInterfaz = MezclaInterfaz;
+        }
 
         /// <summary>Ganancia de mezcla de la sección (se multiplica por el volumen general y por el de las opciones).</summary>
         public float Ganancia(SeccionSonido seccion)

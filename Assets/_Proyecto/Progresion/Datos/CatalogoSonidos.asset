@@ -690,13 +690,13 @@ MonoBehaviour:
   - id: AMB_CALLE_DIA
     encendido: 0
   - id: AMB_CALLE_NOCHE
-    encendido: 0
+    encendido: 1
   - id: AMB_CASINO
-    encendido: 0
+    encendido: 1
   - id: AMB_CLANDESTINO
     encendido: 0
   - id: AMB_CLINICA
-    encendido: 0
+    encendido: 1
   - id: AMB_INTERIOR_CASA
     encendido: 0
   - id: AMB_LLUVIA_SUAVE
@@ -710,7 +710,7 @@ MonoBehaviour:
   - id: ARM_BALA_IMPACTO_CARNE
     encendido: 1
   - id: ARM_BALA_IMPACTO_CONCRETO
-    encendido: 0
+    encendido: 1
   - id: ARM_BALA_IMPACTO_METAL
     encendido: 0
   - id: ARM_BALA_ROZA
@@ -772,7 +772,7 @@ MonoBehaviour:
   - id: CAL_PATRULLA_SIRENA
     encendido: 1
   - id: CAL_SUBE_NIVEL
-    encendido: 0
+    encendido: 1
   - id: ECO_ARMA_RECOGER
     encendido: 0
   - id: ECO_CASINO_TRAGAMONEDAS
@@ -782,7 +782,7 @@ MonoBehaviour:
   - id: ECO_COMPRA
     encendido: 1
   - id: ECO_DINERO_RECOGER
-    encendido: 0
+    encendido: 1
   - id: ECO_SIN_DINERO
     encendido: 0
   - id: JUG_CAER
@@ -794,7 +794,7 @@ MonoBehaviour:
   - id: JUG_DANIO
     encendido: 1
   - id: JUG_PASO_ASFALTO
-    encendido: 0
+    encendido: 1
   - id: JUG_PASO_ASFALTO_MOJADO
     encendido: 0
   - id: JUG_PASO_INTERIOR
@@ -828,9 +828,9 @@ MonoBehaviour:
   - id: MUN_PERRO_LADRA
     encendido: 0
   - id: MUN_PUERTA_CASA_ABRIR
-    encendido: 0
+    encendido: 1
   - id: MUN_PUERTA_CASA_CERRAR
-    encendido: 0
+    encendido: 1
   - id: MUN_REJA
     encendido: 0
   - id: MUN_SOLDADORA
@@ -850,9 +850,9 @@ MonoBehaviour:
   - id: PAN_JEFE_CAE
     encendido: 0
   - id: PAN_JEFE_ENTRADA
-    encendido: 0
+    encendido: 1
   - id: PAN_RIVAL_ALERTA
-    encendido: 0
+    encendido: 1
   - id: PAN_RIVAL_CAE
     encendido: 0
   - id: PAN_RIVAL_DANIO
@@ -890,9 +890,9 @@ MonoBehaviour:
   - id: UI_MOVER
     encendido: 1
   - id: UI_OBJETIVO_CUMPLIDO
-    encendido: 0
+    encendido: 1
   - id: UI_OBJETIVO_NUEVO
-    encendido: 0
+    encendido: 1
   - id: UI_TELEFONO
     encendido: 0
   - id: UI_TEXTO
@@ -914,7 +914,7 @@ MonoBehaviour:
   - id: VEH_FORZAR_PUERTA
     encendido: 0
   - id: VEH_FRENO_DERRAPE
-    encendido: 0
+    encendido: 1
   - id: VEH_LLANTAS_MOJADO
     encendido: 0
   - id: VEH_MOTO_MOTOR
@@ -926,9 +926,9 @@ MonoBehaviour:
   - id: VEH_PRO_MOTOR_RALENTI
     encendido: 0
   - id: VEH_PUERTA_ABRIR
-    encendido: 0
+    encendido: 1
   - id: VEH_PUERTA_CERRAR
-    encendido: 0
+    encendido: 1
   - id: VEH_VIEJO_ARRANQUE
     encendido: 0
   - id: VEH_VIEJO_MOTOR_ACELERA
@@ -944,8 +944,8 @@ MonoBehaviour:
   - id: ZON_RESPETO_SUBE
     encendido: 0
   gananciaEfectos: 1
-  gananciaVoces: 1
-  gananciaAmbiente: 0.3
-  gananciaMusica: 0
-  gananciaInterfaz: 0.7
+  gananciaVoces: 0.85
+  gananciaAmbiente: 1
+  gananciaMusica: 0.5
+  gananciaInterfaz: 0.6
   pisoOpcionAmbiente: 0.8
