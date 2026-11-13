@@ -7,7 +7,7 @@ namespace MechaCyberpunk.Progresion.Opciones
     /// <summary>
     /// Reglas puras de las opciones (T-411): valores por defecto, límites y JSON de ida y vuelta. Sensibilidad de 0.25 a 3 en pasos de 0.05;
     /// volúmenes de 0 a 1 en pasos de 0.05 (5 %). Por defecto: sensibilidad 1, Y normal, volúmenes al 80 % salvo Ambiente y Música en 0
-    /// (el silencio del plan de la noche, D-tony-264), calidad ALTA, resolución nativa y pantalla completa.
+    /// (el silencio del plan de la noche, D-tony-264), calidad MEDIO (T-978), resolución nativa y pantalla completa.
     /// </summary>
     public static class ReglaOpciones
     {
@@ -22,6 +22,13 @@ namespace MechaCyberpunk.Progresion.Opciones
         private static readonly float[] escalasRender = { 0.75f, 0.9f, 1f };
         private static readonly float[] distanciasSombra = { 40f, 70f, 120f };
         private static readonly int[] muestrasMsaa = { 1, 2, 4 };
+        // T-978: distancia de dibujo (m; 0 = hasta el plano lejano de la cámara), reflejos de charcos y postproceso.
+        private static readonly float[] distanciasDibujo = { 150f, 300f, 0f };
+        private static readonly bool[] reflejosCharcos = { false, true, true };
+        private static readonly bool[] postprocesos = { false, true, true };
+
+        /// <summary>T-978: la calidad de una partida nueva (y la que queda si el archivo trae una que no existe).</summary>
+        public const CalidadGrafica CalidadPorDefecto = CalidadGrafica.Media;
 
         public static ValoresOpciones PorDefecto()
         {
@@ -54,7 +61,7 @@ namespace MechaCyberpunk.Progresion.Opciones
             }
             if (!Enum.IsDefined(typeof(CalidadGrafica), v.calidad))
             {
-                v.calidad = CalidadGrafica.Alta;
+                v.calidad = CalidadPorDefecto;
             }
             if (v.tutorialVisto == null)
             {
@@ -115,5 +122,45 @@ namespace MechaCyberpunk.Progresion.Opciones
         public static float EscalaRender(CalidadGrafica calidad) => escalasRender[(int)calidad];
         public static float DistanciaSombras(CalidadGrafica calidad) => distanciasSombra[(int)calidad];
         public static int Msaa(CalidadGrafica calidad) => muestrasMsaa[(int)calidad];
+        /// <summary>T-978: argumento de la línea de comandos que fija la calidad: "-calidad Bajo", "Medio" o "Alto" (también Baja/Media/Alta, sin importar mayúsculas).</summary>
+        public const string ArgumentoCalidad = "-calidad";
+
+        /// <summary>T-978: la calidad pedida con <see cref="ArgumentoCalidad"/>; false si no viene o no se entiende.</summary>
+        public static bool CalidadDeArgumentos(string[] argumentos, out CalidadGrafica calidad)
+        {
+            calidad = CalidadPorDefecto;
+            if (argumentos == null)
+            {
+                return false;
+            }
+            for (int i = 0; i < argumentos.Length - 1; i++)
+            {
+                if (!string.Equals(argumentos[i], ArgumentoCalidad, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                string valor = argumentos[i + 1].ToLowerInvariant();
+                if (valor.StartsWith("baj"))
+                {
+                    calidad = CalidadGrafica.Baja;
+                    return true;
+                }
+                if (valor.StartsWith("med"))
+                {
+                    calidad = CalidadGrafica.Media;
+                    return true;
+                }
+                if (valor.StartsWith("alt"))
+                {
+                    calidad = CalidadGrafica.Alta;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static float DistanciaDibujo(CalidadGrafica calidad) => distanciasDibujo[(int)calidad];
+        public static bool ReflejosCharcos(CalidadGrafica calidad) => reflejosCharcos[(int)calidad];
+        public static bool Postproceso(CalidadGrafica calidad) => postprocesos[(int)calidad];
     }
 }

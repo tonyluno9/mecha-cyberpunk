@@ -233,6 +233,23 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(40f, servicio.CopiaRender.shadowDistance, Tolerancia);
             Assert.AreEqual(escalaProyecto, proyecto.renderScale, Tolerancia, "El asset de URP del proyecto queda igual");
 
+            // T-978: en BAJO la cámara dibuja hasta 150 m, sin postproceso, y los charcos no reflejan; en ALTO vuelve todo.
+            var camaraCalidad = new GameObject("CamaraCalidadT978").AddComponent<Camera>();
+            var datosCalidad = camaraCalidad.gameObject.AddComponent<UniversalAdditionalCameraData>();
+            datosCalidad.renderPostProcessing = true;
+            servicio.AplicarCamara(camaraCalidad);
+            Assert.AreEqual(150f, camaraCalidad.layerCullDistances[0], Tolerancia, "BAJO: distancia de dibujo");
+            Assert.IsFalse(datosCalidad.renderPostProcessing, "BAJO: sin postproceso");
+            Assert.IsFalse(CalidadVisual.ReflejosCharcos, "BAJO: sin reflejos de charcos");
+            servicio.FijarCalidad(CalidadGrafica.Alta);
+            servicio.AplicarCamara(camaraCalidad);
+            Assert.AreEqual(0f, camaraCalidad.layerCullDistances[0], Tolerancia, "ALTO: hasta el plano lejano");
+            Assert.IsTrue(datosCalidad.renderPostProcessing, "ALTO: vuelve el postproceso que traía la cámara");
+            Assert.IsTrue(CalidadVisual.ReflejosCharcos, "ALTO: con reflejos");
+            Assert.AreEqual(1f, servicio.CopiaRender.renderScale, Tolerancia);
+            servicio.FijarCalidad(CalidadGrafica.Baja);
+            UnityEngine.Object.Destroy(camaraCalidad.gameObject);
+
             // g. Un servicio nuevo con el mismo archivo lee lo mismo.
             GameObject otro = new GameObject("OtroServicioOpciones");
             ServicioOpciones nuevo = otro.AddComponent<ServicioOpciones>();

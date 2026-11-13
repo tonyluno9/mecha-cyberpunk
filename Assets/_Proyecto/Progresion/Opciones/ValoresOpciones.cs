@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Progresion.Opciones
         public bool invertirY;
         public NivelApuntadoAsistido apuntadoAsistido = NivelApuntadoAsistido.Suave;
         public float[] volumenes = new float[0];
-        public CalidadGrafica calidad = CalidadGrafica.Alta;
+        public CalidadGrafica calidad = CalidadGrafica.Media;
         public int resolucionAncho;
         public int resolucionAlto;
         public bool pantallaCompleta = true;

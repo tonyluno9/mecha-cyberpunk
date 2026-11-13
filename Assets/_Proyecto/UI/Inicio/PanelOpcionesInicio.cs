@@ -29,7 +29,7 @@ namespace MechaCyberpunk.UI.Inicio
         public static string TextoControles => ReglaControlesInicio.Texto(TeclaReal);
         public static readonly string[] TextosPestanas = { "GRÁFICOS", "AUDIO", "CONTROLES" };
         public static readonly string[] TextosVolumen = { "VOLUMEN GENERAL", "EFECTOS", "VOCES", "AMBIENTE", "MÚSICA", "INTERFAZ" };
-        public static readonly string[] TextosCalidad = { "BAJA", "MEDIA", "ALTA" };
+        public static readonly string[] TextosCalidad = { "BAJO", "MEDIO", "ALTO" };
         public static readonly string[] TextosApuntado = { "APAGADO", "SUAVE", "FUERTE" };
 
         private const float AnchoPanel = 1000f;
@@ -134,7 +134,7 @@ namespace MechaCyberpunk.UI.Inicio
             }
 
             float y = 0f;
-            panel.calidad = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearSelector(f, "Calidad", "CALIDAD", TextosCalidad, (int)CalidadGrafica.Alta, false));
+            panel.calidad = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearSelector(f, "Calidad", "CALIDAD", TextosCalidad, (int)ReglaOpciones.CalidadPorDefecto, false));
             panel.resolucion = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearSelector(f, "Resolucion", "RESOLUCIÓN", new[] { "1920 x 1080" }, 0, false));
             panel.pantallaCompleta = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearConmutador(f, "PantallaCompleta", "PANTALLA COMPLETA", true));
 
