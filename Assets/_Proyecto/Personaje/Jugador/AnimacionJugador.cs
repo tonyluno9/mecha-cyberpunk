@@ -75,6 +75,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (visual != null)
             {
                 visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador;
+                visual.GuardiaTrasGolpe = true; // T-985: PJ01_Punos_Guardia entre golpes
                 visual.RapidezMuerte = ReglasAnimacion.RapidezMuerteJugador;
             }
             ClipsDeTony(visual);
@@ -146,6 +147,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (visual != null)
             {
                 visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador;
+                visual.GuardiaTrasGolpe = true; // T-985: PJ01_Punos_Guardia entre golpes
                 visual.RapidezMuerte = ReglasAnimacion.RapidezMuerteJugador;
             }
             ClipsDeTony(visual);

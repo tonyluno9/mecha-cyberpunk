@@ -1,6 +1,7 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
+using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
@@ -56,7 +57,39 @@ namespace MechaCyberpunk.Personaje.Jugador
         }
 
         /// <summary>Saca el teléfono (la pantalla del teléfono lo llama al abrirse).</summary>
-        public void SacarTelefono() => Gestear(GestoVisual.Telefono);
+        public void SacarTelefono()
+        {
+            Gestear(GestoVisual.Telefono);
+            // T-985: tras sacarlo se queda viendo el celular (PJ01_Inter_VerTelefono, en bucle) mientras el control siga congelado por la pantalla.
+            viendoPantalla = true;
+            PonerViendoTelefono(true);
+        }
+
+        private bool viendoPantalla;
+        private ControladorAPie controlador;
+
+        private void PonerViendoTelefono(bool valor)
+        {
+            VisualPersonaje v = GetComponentInChildren<VisualPersonaje>(false);
+            if (v != null)
+            {
+                v.ViendoTelefono = valor;
+            }
+        }
+
+        private void Update()
+        {
+            if (!viendoPantalla)
+            {
+                return;
+            }
+            controlador = controlador != null ? controlador : GetComponent<ControladorAPie>();
+            if (controlador == null || controlador.ControlActivo)
+            {
+                viendoPantalla = false;
+                PonerViendoTelefono(false);
+            }
+        }
 
         /// <summary>Lanza un gesto en el modelo del jugador, si va a pie y el modelo está activo.</summary>
         public void Gestear(GestoVisual gesto)
