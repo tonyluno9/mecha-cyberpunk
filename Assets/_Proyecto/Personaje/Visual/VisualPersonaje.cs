@@ -82,6 +82,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private Vector3 posicionAnterior;
         private float velocidad;
         private bool enSuelo = true;
+        /// <summary>S2: con true el visual cuenta al jugador como en el suelo (trepando o agarrándose de un borde, sin animación de caída).</summary>
+        public bool ForzarSuelo { get; set; }
 
         public Animator Animador => animador;
         public bool LeerDelPadre { get => leerDelPadre; set => leerDelPadre = value; }
@@ -733,6 +735,11 @@ namespace MechaCyberpunk.Personaje.Visual
                 Vector3 delta = padre.position - posicionAnterior;
                 mundo = dt > 0f ? delta / dt : Vector3.zero;
                 objetivo = dt > 0f ? ReglasVisual.VelocidadHorizontal(delta.x, delta.z) / dt : 0f;
+                enSuelo = true;
+            }
+            // S2: al trepar o agarrarse de un borde el controlador está apagado o quieto: no se pone la animación de caída.
+            if (ForzarSuelo)
+            {
                 enSuelo = true;
             }
             posicionAnterior = padre.position;

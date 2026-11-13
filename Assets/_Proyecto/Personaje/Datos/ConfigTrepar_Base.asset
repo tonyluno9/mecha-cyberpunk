@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cdc8222ae60b8147ab99913dfc4f958, type: 3}
+  m_Name: ConfigTrepar_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigTrepar
+  velocidadEscalera: 2.2
+  velocidadTubo: 1.5
+  alturaMinimaAgarre: 0.5
+  alturaMaximaAgarre: 2.3
+  distanciaSondeo: 0.7
+  segundosAgarreBase: 0.35
+  segundosAgarrePorMetro: 0.2
+  anguloMaximoEnganche: 60
+  empujeSoltar: 2
+  agarreAutomaticoEnAire: 1
+  normalMinimaSuelo: 0.7
+  segundosEnfriamiento: 0.4
+  sobrealturaSondeo: 0.3
+  margenSuperficie: 0.05
+  toleranciaApoyo: 0.15
