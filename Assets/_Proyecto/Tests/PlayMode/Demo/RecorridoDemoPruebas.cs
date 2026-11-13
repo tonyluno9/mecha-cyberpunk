@@ -47,7 +47,7 @@ namespace MechaCyberpunk.Tests.Demo
     /// Correr (Unity cerrado): Unity.exe -batchmode -projectPath . -runTests -testPlatform PlayMode -testFilter MechaCyberpunk.Tests.Demo.RecorridoDemoPruebas (T474_HASTA=3, 4, 9, 10 u 11 lo corta tras ese tramo; T474_SIN_CONTINUAR=1 no sale al título; T474_DESDE=12 solo depura el final: salta a Neón Alto).
     /// T-476: el bot hornea un NavMesh en ejecución (NavMeshBuilder con los colliders sólidos y quietos), sigue su camino de esquina en esquina con WASD, prueba las puertas con E (si no abren, las excluye y vuelve a hornear), compra PUÑOS I y PISTOLA II en el CIC y pelea con visión, ráfagas, R, Q y retirada para que reaparezcan los grupos.
     /// </summary>
-    public class RecorridoDemoPruebas : InputTestFixture
+    public partial class RecorridoDemoPruebas : InputTestFixture
     {
         // T-475: la ruta por rejilla se usa desde cerca (EL DOC está tras una pared a 6 m en línea recta).
         private const float DistanciaRutaMinima = 4f;
@@ -488,6 +488,9 @@ namespace MechaCyberpunk.Tests.Demo
                     || c.GetComponentInParent<CharacterController>() != null || c.GetComponentInParent<PandilleroAPie>() != null
                     || (Jugador != null && c.transform.IsChildOf(Jugador.Raiz)) || c.GetComponentInParent<PersonajeApoyo>() != null;
             });
+            // T-978: una malla de choque sin lectura (la pasarela PS01 de T-910) no se puede hornear en ejecución (error en el log). Se deja fuera: va por
+            // encima de la calle y el bot camina por abajo.
+            fuentes.RemoveAll(s => s.component is MeshCollider mc && mc.sharedMesh != null && !mc.sharedMesh.isReadable);
             NavMeshBuildSettings ajustes = NavMesh.CreateSettings();
             ajustes.agentRadius = 0.35f;
             ajustes.agentHeight = 1.7f;
