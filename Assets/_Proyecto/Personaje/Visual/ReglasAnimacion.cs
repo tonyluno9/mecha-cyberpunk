@@ -55,6 +55,10 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string CoberturaTipo = "CoberturaTipo";
         public const string DisparoCobertura = "DisparoCobertura";
         public const string Frenar = "Frenar";
+        /// <summary>T-985: puños en guardia (estado PunosGuardia de la capa de arriba, PJ01_Punos_Guardia). Lo pone VisualPersonaje unos segundos después de cada golpe de puños, solo en quien tiene <c>GuardiaTrasGolpe</c> (el jugador).</summary>
+        public const string EnGuardia = "EnGuardia";
+        /// <summary>T-985: segundos que el jugador sigue en guardia tras su último golpe de puños.</summary>
+        public const float SegundosGuardiaPunos = 2.5f;
         /// <summary>Tiempo normalizado fijo del estado CoberturaMantener (la última pose de entrar).</summary>
         public const string PoseCobertura = "PoseCobertura";
 
@@ -182,7 +186,7 @@ namespace MechaCyberpunk.Personaje.Visual
         public static readonly string[] EstadosBase =
         {
             "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "SaltoInicio", "SaltoAire", "SaltoAterrizaje", "Caida",
-            "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "Rodar", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2",
+            "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "Rodar", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2", "GirarApuntarDer", "GirarApuntarIzq",
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
             "MotoSubir", "MotoManejar", "MotoBajar",
@@ -195,12 +199,12 @@ namespace MechaCyberpunk.Personaje.Visual
         public static readonly string[] EstadosArriba =
         {
             "Vacio", "GolpeIzq", "GolpeDer", "GolpeFuerte",
-            "PistolaIdle", "PistolaSacar", "PistolaGuardar", "PistolaApuntar", "PistolaAgachado", "PistolaDisparo", "PistolaRecargar", "PistolaRecargarCaminar",
+            "PunosGuardia", "PistolaIdle", "PistolaSacar", "PistolaGuardar", "PistolaApuntar", "PistolaAgachado", "PistolaDisparo", "PistolaRecargar", "PistolaRecargarCaminar",
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
         public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, ApuntarX, ApuntarZ, ConImplante };
-        public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono };
+        public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono, EnGuardia };
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
         public static readonly string[] ParametrosTrigger =
         {

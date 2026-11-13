@@ -141,9 +141,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         }
 
         /// <summary>
-        /// T-749: clip del controlador base -> clip PJ01_* de Assets/Arte/Personajes/PJ01/Clips. Quedan fuera PJ01_Pistola_ApuntarCaminar_Derecha e Izquierda: son giros en el sitio
-        /// con el arma apuntando (agarre.txt de Tony), no hay un estado que los pida. T-960 a T-964: también los clips de Blender del 9-nov (locomoción, salto, puños, muertes,
-        /// carro, arma larga, cobertura e interacciones). Siguen de Mixamo los gestos de otros papeles (Burla, Presumir) y Carro_Pitar (no vino de Blender).
+        /// T-749: clip del controlador base -> clip PJ01_* de Assets/Arte/Personajes/PJ01/Clips. T-985: PJ01_Pistola_ApuntarCaminar_Derecha e Izquierda son los estados GirarApuntarDer/Izq (giros en el sitio
+        /// con el arma apuntando, van directo en la base). T-960 a T-964: también los clips de Blender del 9-nov (locomoción, salto, puños, muertes,
+        /// carro, arma larga, cobertura e interacciones). T-985: Burla, Presumir y Carro_Pitar del jugador también van con PJ01.
         /// </summary>
         public static readonly (string Base, string Papel)[] ClipsDeJugadorPJ01 =
         {
@@ -166,7 +166,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             // T-961 (A2): salto en tres fases (SaltoAire sin bucle: se queda en su última pose hasta aterrizar) y la caída larga en bucle.
             ("Loco_SaltoInicio", "PJ01_Loco_SaltoInicio"), ("Loco_SaltoAire", "PJ01_Loco_SaltoAire"),
             ("Loco_SaltoAterrizaje", "PJ01_Loco_SaltoAterrizaje"), ("Loco_Caida", "PJ01_Loco_Caida"),
-            // T-962 (A3): puños, muertes rápidas y levantarse. Las muertes y levantarse mueven la cápsula con su root motion (RaizCaidaJugador). PJ01_Punos_Guardia no tiene estado.
+            // T-962 (A3): puños, muertes rápidas y levantarse. Las muertes y levantarse mueven la cápsula con su root motion (RaizCaidaJugador). PJ01_Punos_Guardia es el estado PunosGuardia (T-985).
             ("Punos_GolpeIzq", "PJ01_Punos_GolpeIzq"), ("Punos_GolpeDer", "PJ01_Punos_GolpeDer"), ("Punos_Fuerte", "PJ01_Punos_Fuerte"),
             ("Muerte_Adelante", "PJ01_Muerte_Adelante"), ("Muerte_Atras", "PJ01_Muerte_Atras"), ("Muerte_Desmayo", "PJ01_Muerte_Desmayo"),
             ("Dano_Levantarse_BocaArriba", "PJ01_Dano_Levantarse_BocaArriba"), ("Dano_Levantarse_BocaAbajo", "PJ01_Dano_Levantarse_BocaAbajo"),
@@ -179,6 +179,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Cobertura_Entrar", "PJ01_Cobertura_Entrar"), ("Cobertura_Disparo", "PJ01_Cobertura_Disparo"), ("Cobertura_Disparo2", "PJ01_Cobertura_Disparo2"),
             ("Inter_AbrirPuerta", "PJ01_Inter_AbrirPuerta"), ("Inter_Boton", "PJ01_Inter_Boton"), ("Inter_Recoger", "PJ01_Inter_Recoger"),
             ("Inter_Telefono", "PJ01_Inter_Telefono"), ("Inter_VerTelefono_Bucle", "PJ01_Inter_VerTelefono"),
+            // T-985: gestos que seguían de Mixamo en el jugador. Burla y Presumir (los usan otros papeles; el jugador no los lanza) quedan en la postura de guardia de puños; el claxon usa la pose de manejar.
+            ("Skull_Burla", "PJ01_Punos_Guardia"), ("Nova_Flexing", "PJ01_Punos_Guardia"), ("Carro_Pitar", "PJ01_Carro_Manejar"),
         };
 
         /// <summary>
@@ -299,6 +301,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Estado("GirarDer", null).motion = ArbolConImplante(c, "GirarDer", "Loco_GirarDer");
             Estado("GirarIzq", null).motion = ArbolConImplante(c, "GirarIzq", "Loco_GirarIzq");
             Estado("Frenar", null).motion = ArbolConImplante(c, "Frenar", "Loco_Frenar");
+            // T-985: giro en el sitio apuntando con la pistola (PJ01_Pistola_ApuntarCaminar_*, solo existen de PJ01: van directo en la base como los de la moto).
+            Estado("GirarApuntarDer", "PJ01_Pistola_ApuntarCaminar_Derecha");
+            Estado("GirarApuntarIzq", "PJ01_Pistola_ApuntarCaminar_Izquierda");
             Estado("SaltoInicio", "Loco_SaltoInicio");
             Estado("SaltoAire", "Loco_SaltoAire");
             Estado("SaltoAterrizaje", "Loco_SaltoAterrizaje");
@@ -330,7 +335,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ConstruirGestos(m, e, Estado);
             m.defaultState = e["Idle"];
 
-            string[] suelo = { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto" };
+            string[] suelo = { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto" };
 
             // Agachado (T-733): de pie se baja con Loco_Agacharse y queda en AgachadoQuieto o AgachadoCaminar (por velocidad); para levantarse usa Loco_Pararse.
             foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar" })
@@ -369,6 +374,16 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["Correr"], e["Caminar"], false, 0f, Mezcla, Menor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer * ReglasAnimacion.HisteresisCorrer));
             Unir(e["Frenar"], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer * 0.5f));
 
+            // T-985: apuntando con la pistola el giro en el sitio es PJ01_Pistola_ApuntarCaminar_*; va antes que GirarDer/GirarIzq (gana la primera transición cierta).
+            int pistolaGiro = (int)TipoArmaVisual.Pistola;
+            Unir(e["Idle"], e["GirarApuntarDer"], false, 0f, Mezcla, Mayor(ReglasAnimacion.Giro, ReglasAnimacion.UmbralGiro), Menor(ReglasVisual.Velocidad, UmbralCaminar), Bool(ReglasVisual.Apuntando, true), Entero(ReglasVisual.TipoArma, pistolaGiro));
+            Unir(e["Idle"], e["GirarApuntarIzq"], false, 0f, Mezcla, Menor(ReglasAnimacion.Giro, -ReglasAnimacion.UmbralGiro), Menor(ReglasVisual.Velocidad, UmbralCaminar), Bool(ReglasVisual.Apuntando, true), Entero(ReglasVisual.TipoArma, pistolaGiro));
+            foreach (string g in new[] { "GirarApuntarDer", "GirarApuntarIzq" })
+            {
+                Unir(e[g], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, UmbralCaminar));
+                Unir(e[g], e["Idle"], false, 0f, Mezcla, Bool(ReglasVisual.Apuntando, false));
+                Unir(e[g], e["Idle"], true, SalidaUnaVez, Mezcla);
+            }
             // Giro en el sitio.
             Unir(e["Idle"], e["GirarDer"], false, 0f, Mezcla, Mayor(ReglasAnimacion.Giro, ReglasAnimacion.UmbralGiro), Menor(ReglasVisual.Velocidad, UmbralCaminar));
             Unir(e["Idle"], e["GirarIzq"], false, 0f, Mezcla, Menor(ReglasAnimacion.Giro, -ReglasAnimacion.UmbralGiro), Menor(ReglasVisual.Velocidad, UmbralCaminar));
@@ -420,7 +435,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["LevantarseBocaAbajo"], e["Idle"], true, SalidaUnaVez, Mezcla);
 
             // Entrar en cobertura desde el suelo (no desde cualquier estado: si no, saldría de Mantener y entraría otra vez en bucle).
-            foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "SaltoAterrizaje" })
+            foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "SaltoAterrizaje" })
             {
                 Unir(e[s], e["CoberturaEntrar"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, true));
             }
@@ -578,6 +593,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
 
             Estado("Vacio", null);
+            // T-985: guardia de puños (PJ01_Punos_Guardia) unos segundos después de cada golpe del jugador (parámetro EnGuardia, ver VisualPersonaje.EnGuardia).
+            Estado("PunosGuardia", Clip("PJ01_Punos_Guardia"));
             m.defaultState = e["Vacio"];
             // T-652: solo el jugador acelera sus puños (RapidezGolpe); los enemigos dejan el parámetro en 1 y conservan su tiempo.
             foreach (string golpe in new[] { "GolpeIzq", "GolpeDer", "GolpeFuerte" })
@@ -665,11 +682,15 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 Unir(e[recarga], e[idle], true, SalidaUnaVez, Mezcla);
             }
 
+            Unir(e["Vacio"], e["PunosGuardia"], false, 0f, Mezcla, Bool(ReglasAnimacion.EnGuardia, true), Entero(ReglasVisual.TipoArma, 0));
+            Unir(e["PunosGuardia"], e["Vacio"], false, 0f, Mezcla, Bool(ReglasAnimacion.EnGuardia, false));
+            Unir(e["PunosGuardia"], e["Vacio"], false, 0f, Mezcla, Distinto(ReglasVisual.TipoArma, 0));
             // Puños: izquierda, derecha o fuerte según GolpeTipo.
             string[] golpes = { "GolpeIzq", "GolpeDer", "GolpeFuerte" };
             for (int i = 0; i < golpes.Length; i++)
             {
                 AnyA(m, e[golpes[i]], MezclaCorta, true, Disparador(ReglasVisual.Golpe), Entero(ReglasAnimacion.GolpeTipo, i));
+                Unir(e[golpes[i]], e["PunosGuardia"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.EnGuardia, true));
                 Unir(e[golpes[i]], e["Vacio"], true, SalidaUnaVez, Mezcla);
             }
 
