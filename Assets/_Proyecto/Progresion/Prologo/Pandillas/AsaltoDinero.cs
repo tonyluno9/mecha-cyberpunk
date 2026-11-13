@@ -455,8 +455,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 Destroy(maletin.gameObject);
                 maletin = null;
             }
-            Registro<ICartera>.Actual?.Abonar(premio, MotivoDinero.Otro);
+            // El aviso del maletín va primero en la cola; el del dinero sale después como "+$10,000 · PREMIO".
             pantalla?.MostrarAyuda(AvisoMaletin + premio.ToString("N0", System.Globalization.CultureInfo.InvariantCulture), 4f);
+            Registro<ICartera>.Actual?.Abonar(premio, MotivoDinero.Premio);
             StartCoroutine(GestoRecoger());
             QuitarVictima();
             QuitarObjetivo();
