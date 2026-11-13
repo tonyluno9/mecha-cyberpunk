@@ -123,7 +123,7 @@ namespace MechaCyberpunk.Tests.Demo
                 Vector3 frente = Vector3.forward;
                 float inicioPersecucion = Time.realtimeSinceStartup;
                 float finAsalto = Time.realtimeSinceStartup + 100f;
-                while (director.Asalto.Fase != FaseAsalto.Enfrentando && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
+                while (director.Asalto.Fase != FaseAsalto.Maletin && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
                 {
                     bool enToma = Time.realtimeSinceStartup - inicioPersecucion < 13f;
                     if (PosicionMarcador(out Vector3 marca))
@@ -155,10 +155,11 @@ namespace MechaCyberpunk.Tests.Demo
                 Object.Destroy(goSigue);
                 // La pelea no se graba: el bot la hace pegado a una puerta y no se ve bien.
                 grabador.Fijar(false);
-                IEnumerator pelea = PelearAPunos(() => director.Paso != PasoHistoria.Asalto, p => p.name == AsaltoDinero.NombreAsaltante, 90f, "el asaltante");
-                while (pelea.MoveNext())
+                // T-987: se recoge el maletín que soltaron con E (ya no hay que vencer al asaltante).
+                if (director.Asalto.Maletin != null)
                 {
-                    yield return pelea.Current;
+                    yield return Colocar(director.Asalto.Maletin.transform.position, 1.4f);
+                    yield return Pulsar(teclado.eKey, 15);
                 }
             }
 

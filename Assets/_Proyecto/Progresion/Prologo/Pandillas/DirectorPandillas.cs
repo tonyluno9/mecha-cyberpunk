@@ -103,7 +103,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         /// <summary>Todos los objetivos de la historia, para revisar que quepan en <see cref="LargoMaximoObjetivo"/> (D-tony-240).</summary>
         public static string[] TextosObjetivo => new[]
         {
-            TextoSalir, AsaltoDinero.TextoRobarCarro, AsaltoDinero.TextoPerseguir, AsaltoDinero.TextoRecuperar, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
+            TextoSalir, AsaltoDinero.TextoRobarCarro, AsaltoDinero.TextoPerseguir, AsaltoDinero.TextoMaletin, AsaltoDinero.TextoMaletinEnCarro, TextoDefender, TextoPistola, TextoChato, TextoDoc, TextoInventor, TextoTianguis(7, 7), TextoJefe, TextoHacker
         };
 
         /// <summary>T-716: el lugar de Core al que apunta el objetivo si el destino de la escena falta. Nunca una coordenada fija.</summary>

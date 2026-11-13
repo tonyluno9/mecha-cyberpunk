@@ -2,27 +2,27 @@ using UnityEngine;
 
 namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 {
-    /// <summary>Las fases del asalto (T-717, rehecho en T-728): cinemática, persecución del carro (primero te robas un carro), pelea con el asaltante cuando el carro se detiene, y listo.</summary>
+    /// <summary>Las fases del asalto (T-717, rehecho en T-728): cinemática, persecución del carro (primero te robas un carro), maletín en el piso cuando el carro se detiene (T-987), y listo.</summary>
     public enum FaseAsalto
     {
         Inactivo,
         Cinematica,
         Persecucion,
-        Enfrentando,
+        Maletin,
         Terminado
     }
 
     /// <summary>
     /// Reglas puras del asalto de la historia del dinero (T-728): a quien asaltan es una persona de afuera, NO el jugador (no te quitan dinero). Cuánto le roban a la víctima,
-    /// cuándo se puede saltar la cinemática, qué fase sigue, cuánto te da la víctima al detener al asaltante y qué objetivo toca. No toca el mundo: <see cref="AsaltoDinero"/> la mueve.
+    /// cuándo se puede saltar la cinemática, qué fase sigue, cuánto hay en el maletín y qué objetivo toca. No toca el mundo: <see cref="AsaltoDinero"/> la mueve.
     /// </summary>
     public sealed class ReglaAsalto
     {
         /// <summary>Lo que le roban a la víctima.</summary>
         public const int DineroDeLaVictima = 300;
 
-        /// <summary>Qué parte de lo robado te da la víctima de agradecimiento (decisión de T-728: la mitad).</summary>
-        public const float FraccionRecompensa = 0.5f;
+        /// <summary>T-987: lo que hay en el maletín que sueltan los asaltantes.</summary>
+        public const int DineroDelMaletin = 10000;
 
         public FaseAsalto Fase { get; private set; } = FaseAsalto.Inactivo;
 
@@ -37,9 +37,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         /// <summary>True durante la cinemática: Enter la salta.</summary>
         public bool PuedeSaltar => Fase == FaseAsalto.Cinematica;
-
-        /// <summary>Lo que te da la víctima si detienes al asaltante.</summary>
-        public static int Recompensa(int robado) => Mathf.RoundToInt(Mathf.Max(0, robado) * FraccionRecompensa);
 
         /// <summary>Empieza el asalto: el asaltante va por el dinero de la víctima.</summary>
         public void Iniciar()
@@ -74,28 +71,27 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             return true;
         }
 
-        /// <summary>El carro se detuvo (llanta, choque, fin de la ruta o atorón): hay que enfrentar al asaltante.</summary>
+        /// <summary>El carro se detuvo (llanta, choque, fin de la ruta o atorón): los asaltantes sueltan el maletín y hay que recogerlo.</summary>
         public bool CarroDetenido()
         {
             if (Fase != FaseAsalto.Persecucion)
             {
                 return false;
             }
-            Fase = FaseAsalto.Enfrentando;
+            Fase = FaseAsalto.Maletin;
             return true;
         }
 
-        /// <summary>El asaltante cayó: devuelve lo que te da la víctima (0 si no estaba en la fase de pelea).</summary>
-        public int AsaltanteVencido()
+        /// <summary>El jugador recogió el maletín: devuelve los $10,000 una sola vez (0 si no era la fase del maletín). Termina el asalto.</summary>
+        public int MaletinRecogido()
         {
-            if (Fase != FaseAsalto.Enfrentando)
+            if (Fase != FaseAsalto.Maletin)
             {
                 return 0;
             }
             Fase = FaseAsalto.Terminado;
-            int premio = DineroEnManosDelLadron ? Recompensa(DineroRobado) : 0;
             DineroEnManosDelLadron = false;
-            return premio;
+            return DineroDelMaletin;
         }
 
         /// <summary>Se cancela el asalto (otro paso de la historia, una carga). No hay dinero tuyo que reponer.</summary>
@@ -114,8 +110,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 case FaseAsalto.Cinematica:
                 case FaseAsalto.Persecucion:
                     return enVehiculo ? AsaltoDinero.TextoPerseguir : AsaltoDinero.TextoRobarCarro;
-                case FaseAsalto.Enfrentando:
-                    return AsaltoDinero.TextoRecuperar;
+                case FaseAsalto.Maletin:
+                    return enVehiculo ? AsaltoDinero.TextoMaletinEnCarro : AsaltoDinero.TextoMaletin;
                 default:
                     return string.Empty;
             }
