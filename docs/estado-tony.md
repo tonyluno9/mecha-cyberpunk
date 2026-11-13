@@ -2,6 +2,12 @@
 
 Rama de integración actual: tony/fase-g (fase G, abajo). Antes: tony/fase-7, bloques 1 a 4 de T-F7 hechos (economía, ligas, piezas, habilidades; T-140 a T-180).
 
+
+## T-977 sonidos que regresan y mezcla final (13-nov) — en main
+- Prendidos los 12 puntos de docs/sonidos-sugerencias.md con volumen y tiempo mínimo por ID; molestos siguen apagados. Detalle en docs/tareas/hechas/T-977-sonidos-regresan.md.
+- Nuevos ganchos: impacto en concreto, derrape del carro (bucle), recoger dinero, puertas de casa. Mezcla por sección y nivel por ambiente (medido por RMS).
+- Pruebas: EditMode 741/741 (Sonido, Vehículos, Progresión, Personaje), PlayMode Sonido 19/19, ManejoCarro 15/15.
+- Falta oírlo con audífonos (Tony).
 ## Noche B 3→4 nov: animaciones (docs/noche-B-tony.md, T-560 a T-562) — HECHA, en main
 - Paso 0: planes en main (fdc2616). T-550 ya estaba mezclada.
 - Paso 1, T-560: 46 clips de Mixamo en Assets/Arte/Personajes/Animaciones/<Grupo>/. Los importa ImportadorMixamo: Humanoid, en el sitio y con bucle según el nombre.

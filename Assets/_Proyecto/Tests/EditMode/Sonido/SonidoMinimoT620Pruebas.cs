@@ -41,7 +41,8 @@ namespace MechaCyberpunk.Tests.Sonido
             Assert.IsTrue(c.Encendido("UI_TEXTO"), "lo que ya estaba puesto se conserva");
             Assert.IsTrue(c.Encendido("UI_MOVER"));
             Assert.IsTrue(c.Encendido(ReglaMezclaSonidos.IdExplosion));
-            Assert.IsFalse(c.Encendido("AMB_CALLE_NOCHE"));
+            Assert.IsTrue(c.Encendido("AMB_CALLE_NOCHE"), "T-977: regresó");
+            Assert.IsFalse(c.Encendido("AMB_TIANGUIS"));
         }
 
         [Test]
@@ -63,8 +64,8 @@ namespace MechaCyberpunk.Tests.Sonido
             {
                 Assert.IsTrue(c.Encendido(id), id);
             }
-            Assert.AreEqual(ReglaMezclaSonidos.IdsEncendidos.Length, encendidos);
-            foreach (string apagado in new[] { "UI_TEXTO", "VEH_CLAXON_TRAFICO", "JUG_PASO_ASFALTO", "AMB_CALLE_NOCHE", "PAN_RIVAL_ALERTA", "VEH_PUERTA_ABRIR" })
+            Assert.AreEqual(ReglaMezclaSonidos.IdsEncendidos.Length + ReglaMezclaSonidos.IdsRegresados.Length, encendidos, "T-977: los minimos y los que regresan");
+            foreach (string apagado in new[] { "UI_TEXTO", "VEH_CLAXON_TRAFICO", "JUG_PASO_INTERIOR", "AMB_TIANGUIS", "PAN_RIVAL_PROVOCA", "MUN_PERRO_LADRA" })
             {
                 Assert.IsFalse(c.Encendido(apagado), apagado);
             }

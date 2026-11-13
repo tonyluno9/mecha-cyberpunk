@@ -170,6 +170,43 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [UnityTest]
+        public IEnumerator T977_AcelerarDerecho_NoRechinanLasLlantas()
+        {
+            yield return Calentar();
+            CrearCarro(new Vector3(0f, 0f, -95f), Quaternion.identity, true);
+            yield return Simular(0.5f);
+            bool rechino = false;
+            Press(teclado.wKey);
+            yield return Simular(4f, () => rechino |= carro.Rechina);
+            Assert.Greater(carro.Velocidad, 8f);
+            Assert.IsFalse(rechino, "acelerar derecho no rechina");
+        }
+
+        [UnityTest]
+        public IEnumerator T977_FrenazoA16_RechinanLasLlantas_YParadoSeCallan()
+        {
+            yield return Calentar();
+            CrearCarro(Vector3.zero, Quaternion.identity, true);
+            yield return Simular(0.5f);
+            FijarVelocidadAdelante(16f);
+            yield return Simular(Time.fixedDeltaTime * 2f); // Velocidad se lee en el siguiente paso de física
+            Assert.Greater(carro.Velocidad, 14f);
+            Press(teclado.sKey);
+            bool rechino = false;
+            float tiempo = 0f;
+            while (carro.Velocidad >= 0.5f && tiempo < 3.5f)
+            {
+                yield return Simular(Time.fixedDeltaTime);
+                tiempo += Time.fixedDeltaTime;
+                rechino |= carro.Rechina;
+            }
+            Release(teclado.sKey);
+            Assert.IsTrue(rechino, "el frenazo a 16 m/s rechina");
+            yield return Simular(0.6f);
+            Assert.IsFalse(carro.Rechina, "parado ya no rechina (el bucle se corta)");
+        }
+
+        [UnityTest]
         public IEnumerator Reversa_SostenerSYaParado_VaHaciaAtrasSinPasarDe5Y5()
         {
             yield return Calentar();

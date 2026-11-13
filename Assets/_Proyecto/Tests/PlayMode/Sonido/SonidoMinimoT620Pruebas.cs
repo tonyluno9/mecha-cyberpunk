@@ -50,10 +50,10 @@ namespace MechaCyberpunk.Tests.Sonido
             GestorSonidos g = CrearGestor(out _);
             yield return null;
             g.Reproducir("UI_TEXTO");
-            g.ReproducirEn("JUG_PASO_ASFALTO", Vector3.zero);
+            g.ReproducirEn("JUG_PASO_INTERIOR", Vector3.zero); // T-977: el de asfalto ya regresó
             Assert.AreEqual(1, g.Pedidos("UI_TEXTO"));
             Assert.AreEqual(0, g.VocesTotales, "apagados: no suena nada");
-            Assert.AreEqual(Sonidos.SinBucle, g.ReproducirBucle("AMB_CALLE_NOCHE", null));
+            Assert.AreEqual(Sonidos.SinBucle, g.ReproducirBucle("AMB_TIANGUIS", null));
             g.Reproducir("UI_ACEPTAR");
             Assert.AreEqual(1, g.VocesTotales, "encendido: suena");
         }
