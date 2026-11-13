@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Tests.PlayMode.Demo",
     "rootNamespace": "MechaCyberpunk.Tests",
-    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "Unity.InputSystem.TestFramework", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Creditos", "MechaCyberpunk.IA", "MechaCyberpunk.Personaje", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Progresion.Apoyo", "UnityEngine.UI", "MechaCyberpunk.Tests.PlayMode.UI"],
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "Unity.InputSystem.TestFramework", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Creditos", "MechaCyberpunk.IA", "MechaCyberpunk.Personaje", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Progresion.Apoyo", "UnityEngine.UI", "MechaCyberpunk.Tests.PlayMode.UI", "Unity.RenderPipelines.Universal.Runtime"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

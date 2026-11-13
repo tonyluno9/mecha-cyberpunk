@@ -311,6 +311,48 @@ namespace MechaCyberpunk.Personaje.Jugador
             return true;
         }
 
+        private const float PasoBuscarSalida = 0.05f;
+        private const int MaxChoquesSalida = 16;
+        private readonly Collider[] choquesSalida = new Collider[MaxChoquesSalida];
+
+        /// <summary>
+        /// T-976: el punto más cercano a <paramref name="deseada"/>, yendo en línea recta hacia <paramref name="segura"/> (la salida que dio el vehículo), donde cabe la
+        /// cápsula del jugador. Mira como <paramref name="deseada"/>; si en ningún punto cabe, devuelve la segura con ese giro.
+        /// </summary>
+        private Pose SalidaLibreHacia(Pose deseada, Pose segura)
+        {
+            float distancia = Vector3.Distance(deseada.position, segura.position);
+            int pasos = Mathf.CeilToInt(distancia / PasoBuscarSalida);
+            for (int i = 0; i <= pasos; i++)
+            {
+                Vector3 punto = Vector3.Lerp(deseada.position, segura.position, pasos > 0 ? (float)i / pasos : 1f);
+                if (CabeEn(punto))
+                {
+                    return new Pose(punto, deseada.rotation);
+                }
+            }
+            return new Pose(segura.position, deseada.rotation);
+        }
+
+        private bool CabeEn(Vector3 pie)
+        {
+            float radio = controlador.radius;
+            Vector3 centro = pie + controlador.center;
+            float mitad = Mathf.Max(0f, controlador.height * 0.5f - radio);
+            // Un poco despegada del piso para no contar el suelo.
+            Vector3 abajo = centro - Vector3.up * (mitad - controlador.stepOffset * 0.5f);
+            Vector3 arriba = centro + Vector3.up * mitad;
+            int cantidad = Physics.OverlapCapsuleNonAlloc(abajo, arriba, radio, choquesSalida, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < cantidad; i++)
+            {
+                if (!choquesSalida[i].transform.IsChildOf(transform))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>Baja del montable si puede. Se coloca en la pose de salida y recupera lo suyo.</summary>
         public bool Bajar()
         {
@@ -327,9 +369,18 @@ namespace MechaCyberpunk.Personaje.Jugador
             MontableActual = null;
             if (animacionCarro != null)
             {
+                // T-976: de la moto se baja donde termina el clip (si cabe), para que el cuerpo no se deslice ni gire al final.
+                if (animacionCarro.SalidaMoto(salida, out Pose finClip))
+                {
+                    salida = SalidaLibreHacia(finClip, salida);
+                }
                 animacionCarro.Bajar(montable, salida);
             }
             Colocar(salida);
+            if (animacionCarro != null)
+            {
+                animacionCarro.TrasColocar();
+            }
             controladorAPie.enabled = true;
             controladorAPie.ActivarControl(true);
             if (armas != null)
