@@ -1586,13 +1586,18 @@ namespace MechaCyberpunk.Tests.Demo
                 yield return null;
                 Soltar(teclado.enterKey);
                 float finAsalto = Time.realtimeSinceStartup + 100f;
-                while (director.Asalto.Fase != FaseAsalto.Enfrentando && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
+                while (director.Asalto.Fase != FaseAsalto.Maletin && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
                 {
                     yield return null;
                 }
                 if (director.Paso == PasoHistoria.Asalto)
                 {
-                    yield return PelearAPunos(() => director.Paso != PasoHistoria.Asalto, p => p.name == AsaltoDinero.NombreAsaltante, 90f, "el asaltante");
+                    // T-987: ya no hay que vencer al asaltante: se recoge el maletín que soltaron con E.
+                    if (director.Asalto.Maletin != null)
+                    {
+                        yield return Colocar(director.Asalto.Maletin.transform.position, 1.4f);
+                        yield return Pulsar(teclado.eKey, 15);
+                    }
                 }
                 if (director.Paso == PasoHistoria.Asalto)
                 {

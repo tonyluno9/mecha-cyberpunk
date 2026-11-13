@@ -23,9 +23,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
     {
         public const string TextoPerseguir = "PERSÍGUELOS";
         public const string TextoRobarCarro = "RÓBATE UN CARRO";
-        public const string TextoRecuperar = "ATRAPA AL ASALTANTE";
+        public const string TextoMaletin = "RECOGE EL MALETÍN";
+        public const string TextoMaletinEnCarro = "BÁJATE Y RECOGE EL MALETÍN";
         public const string PrefijoRobo = "ASALTAN A UNA PERSONA: ";
-        public const string PrefijoRecuperado = "LA VÍCTIMA TE DA ";
+        public const string AvisoMaletin = "MALETÍN RECUPERADO · +$";
         public const string SubtituloRobo = "—¡La lana! ¡Toda, mija!";
         public const string SubtituloHuida = "—¡Gracias por la lana!";
         public const string TeclaSaltar = "ENTER: SALTAR";
@@ -45,6 +46,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private const float SegundosEntreObjetivos = 0.4f;
         private const float SeparacionPuertaCarro = 2.4f;
         private const float AlturaSobreSuelo = 0.05f;
+        private const float SeparacionMaletin = 1.9f;
+        private const float AtrasMaletin = 1.4f;
+        private const float DistanciaMaletinJugador = 1.5f;
         private const float AltoBarras = 0.12f;
         private const float DistanciaCamara = 6.5f;
         private const float AlturaCamara = 2.4f;
@@ -56,6 +60,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private GameObject victima;
         private PuntoEscena puntoEscena;
         private PandilleroAPie pandillero;
+        private MaletinAsalto maletin;
         private Camera camaraCinematica;
         private Canvas canvasBarras;
         private ControladorAPie controlador;
@@ -68,6 +73,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public int DineroRobado => regla.DineroRobado;
         public bool DineroEnManosDelLadron => regla.DineroEnManosDelLadron;
         public GameObject Asaltante => asaltante;
+
+        /// <summary>T-987: el maletín que sueltan al detenerse el carro (null antes y después).</summary>
+        public MaletinAsalto Maletin => maletin;
 
         /// <summary>La persona de afuera a la que asaltan (null fuera del asalto).</summary>
         public GameObject Victima => victima;
@@ -151,6 +159,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             }
             LiberarJugador();
             QuitarCinematica();
+            QuitarMaletin();
             if (asaltante != null)
             {
                 Destroy(asaltante);
@@ -158,6 +167,16 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 pandillero = null;
             }
             QuitarVictima();
+        }
+
+        private void QuitarMaletin()
+        {
+            if (maletin != null)
+            {
+                maletin.Recogido -= AlRecogerMaletin;
+                Destroy(maletin.gameObject);
+                maletin = null;
+            }
         }
 
         private void QuitarVictima()
@@ -285,9 +304,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 SeguirElCarro();
             }
-            else if (regla.Fase == FaseAsalto.Enfrentando)
+            else if (regla.Fase == FaseAsalto.Maletin)
             {
-                SeguirAlAsaltante();
+                VigilarMaletin();
             }
         }
 
@@ -365,47 +384,97 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 pandillero.enabled = true;
                 pandillero.Alerta = true;
-                pandillero.Vencido += AlVencerAsaltante;
             }
-            PonerObjetivo(puerta);
+            PonerMaletin(carro);
         }
 
-        private void SeguirAlAsaltante()
+        // ---------- El maletín (T-987) ----------
+
+        // Lo suelta junto a la puerta del carro; si no hay piso ahí, junto al jugador. Nunca queda bajo el piso.
+        private void PonerMaletin(Pose carro)
         {
-            if (asaltante == null)
+            QuitarMaletin();
+            Vector3 donde = carro.position + carro.rotation * (Vector3.right * SeparacionMaletin + Vector3.back * AtrasMaletin);
+            if (!MaletinAsalto.BuscarPiso(donde, asaltante != null ? asaltante.transform : null, out Vector3 piso))
             {
-                AlVencerAsaltante(null); // se perdió (cayó del mundo, se destruyó): no se traba la historia
+                piso = PisoJuntoAlJugador();
+            }
+            CrearMaletin(piso, carro.rotation.eulerAngles.y);
+        }
+
+        private void CrearMaletin(Vector3 piso, float giro)
+        {
+            maletin = MaletinAsalto.Crear(piso, giro);
+            maletin.Recogido += AlRecogerMaletin;
+            PonerObjetivo(PosicionMaletin());
+        }
+
+        private Vector3 PisoJuntoAlJugador()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador == null || jugador.Raiz == null)
+            {
+                return maletin != null ? maletin.transform.position : Vector3.zero;
+            }
+            Vector3 al = jugador.Raiz.position + jugador.Raiz.forward * DistanciaMaletinJugador;
+            if (MaletinAsalto.BuscarPiso(al, jugador.Raiz, out Vector3 piso))
+            {
+                return piso;
+            }
+            return jugador.Raiz.position;
+        }
+
+        private Vector3 PosicionMaletin() => maletin != null ? maletin.transform.position + Vector3.up * 0.4f : Vector3.zero;
+
+        // Cada cuadro: si el maletín se perdió (destruido o cayó fuera del mundo) se vuelve a poner junto al jugador; el marcador sigue y cambia de texto al subir o bajar de un carro.
+        private void VigilarMaletin()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (maletin == null || (jugador != null && jugador.Raiz != null && maletin.EstaPerdido(jugador.Raiz.position)))
+            {
+                QuitarMaletin();
+                CrearMaletin(PisoJuntoAlJugador(), 0f);
                 return;
             }
             if (Time.time >= proximoObjetivo)
             {
-                PonerObjetivo(asaltante.transform.position);
+                PonerObjetivo(PosicionMaletin());
             }
         }
 
-        private void AlVencerAsaltante(PandilleroAPie vencido)
+        private void AlRecogerMaletin()
         {
-            if (pandillero != null)
+            int premio = regla.MaletinRecogido();
+            if (premio <= 0)
             {
-                pandillero.Vencido -= AlVencerAsaltante;
+                return; // ya se cobró: nunca se paga dos veces
             }
-            int premio = regla.AsaltanteVencido();
-            if (regla.Fase != FaseAsalto.Terminado)
+            if (maletin != null)
             {
-                return;
+                maletin.Recogido -= AlRecogerMaletin;
+                Destroy(maletin.gameObject);
+                maletin = null;
             }
-            if (premio > 0)
-            {
-                // T-728: la víctima te da una parte de lo que le robaron.
-                Registro<ICartera>.Actual?.Abonar(premio, MotivoDinero.Otro);
-                pantalla?.MostrarAyuda(PrefijoRecuperado + "$" + premio, 4f);
-            }
+            Registro<ICartera>.Actual?.Abonar(premio, MotivoDinero.Otro);
+            pantalla?.MostrarAyuda(AvisoMaletin + premio.ToString("N0", System.Globalization.CultureInfo.InvariantCulture), 4f);
+            StartCoroutine(GestoRecoger());
             QuitarVictima();
             QuitarObjetivo();
-            // El asaltante vencido se queda en el piso (cayó); solo se avisa que la historia sigue.
+            // El asaltante sigue ahí peleando: ya no es necesario vencerlo.
             asaltante = null;
             pandillero = null;
             Terminado?.Invoke();
+        }
+
+        // El gesto se juega un cuadro después de usar el interactuable: el jugador pone su gesto genérico justo tras Usar y este lo reemplaza.
+        private IEnumerator GestoRecoger()
+        {
+            yield return null;
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador != null && jugador.Raiz != null)
+            {
+                jugador.Raiz.GetComponent<MechaCyberpunk.Personaje.Jugador.GestosJugador>()?.Gestear(MechaCyberpunk.Personaje.Visual.GestoVisual.Recoger);
+            }
         }
 
         // ---------- Mundo ----------
