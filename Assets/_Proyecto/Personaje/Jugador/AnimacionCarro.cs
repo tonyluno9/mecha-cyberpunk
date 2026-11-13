@@ -74,6 +74,10 @@ namespace MechaCyberpunk.Personaje.Jugador
         private float transcurrido;
         // T-963: avance del cuerpo entre puerta y asiento según la cadera del clip (null = ventana fija de antes).
         private float[] avanceClip;
+        // T-976: dónde estaba el modelo justo antes de que la raíz del jugador salte a la salida (se repone en TrasColocar).
+        private bool reponerVisual;
+        private Vector3 visualAntesDeColocar;
+        private Quaternion giroAntesDeColocar;
         private const int MuestrasAvance = 32;
 
         public FaseCarro Fase { get; private set; }
@@ -185,6 +189,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
+            reponerVisual = true;
+            visualAntesDeColocar = raizVisual.position;
+            giroAntesDeColocar = raizVisual.rotation;
             if (modoMoto)
             {
                 visual.Congelado = false;
@@ -211,6 +218,36 @@ namespace MechaCyberpunk.Personaje.Jugador
             Fase = FaseCarro.Saliendo;
             RestaurarCabeza();
             ApagarIK(false);
+        }
+
+        /// <summary>
+        /// T-976: llamar justo después de colocar la raíz del jugador en la salida. El modelo es hijo de la raíz y saltaría con ella hasta el LateUpdate; en ese cuadro el
+        /// Animator calcularía el IK con el cuerpo lejos de la moto (pies y cadera de un cuadro chueco). Se deja donde estaba.
+        /// </summary>
+        public void TrasColocar()
+        {
+            if (!reponerVisual || raizVisual == null)
+            {
+                return;
+            }
+            reponerVisual = false;
+            raizVisual.SetPositionAndRotation(visualAntesDeColocar, giroAntesDeColocar);
+        }
+
+        /// <summary>
+        /// T-976: dónde conviene que quede la raíz del jugador al bajar de la moto: donde termina el clip de bajar, a la altura de <paramref name="salida"/> y mirando
+        /// como la moto. False si no va en moto con clips (se usa la salida del vehículo tal cual).
+        /// </summary>
+        public bool SalidaMoto(Pose salida, out Pose pose)
+        {
+            pose = salida;
+            if (!modoMoto || poseMoto == null || !poseMoto.PoseFinalBajar(out Vector3 posicion, out Quaternion giro))
+            {
+                return false;
+            }
+            posicion.y = salida.position.y;
+            pose = new Pose(posicion, giro);
+            return true;
         }
 
         /// <summary>Suena el claxon: los brazos tocan el claxon sentado al volante.</summary>
@@ -383,11 +420,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 visual.Manejando = true;
                 return;
             }
-            if (modoMoto)
-            {
-                visual.LeerDelPadre = leerDelPadrePrevio;
-                visual.Congelado = false;
-            }
+            bool eraMoto = modoMoto;
             modoMoto = false;
             if (apuntado != null)
             {
@@ -397,6 +430,12 @@ namespace MechaCyberpunk.Personaje.Jugador
             Fase = FaseCarro.Fuera;
             raizVisual.localPosition = posicionOriginal;
             raizVisual.localRotation = rotacionOriginal;
+            if (eraMoto)
+            {
+                // T-976: después de devolver el visual a su sitio, para que empiece a leer el giro desde ahí.
+                visual.LeerDelPadre = leerDelPadrePrevio;
+                visual.Congelado = false;
+            }
             RestaurarCabeza();
             ApagarIK(false);
         }

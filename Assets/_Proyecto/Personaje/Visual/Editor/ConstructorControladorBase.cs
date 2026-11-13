@@ -36,6 +36,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
         public static AnimationClip Clip(string nombre)
         {
+            // T-976: si hay copia limpia del clip (tramo malo de Blender rehecho), se usa esa.
+            AnimationClip limpio = LimpiarClipsMotoT976.Limpio(nombre);
+            if (limpio != null)
+            {
+                return limpio;
+            }
             string carpeta = nombre.StartsWith(PrefijoClipPJ01) ? CarpetaClipsPJ01 : Carpeta;
             foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", new[] { carpeta }))
             {
@@ -450,7 +456,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             for (int i = 0; i < ClipsGestos.Length; i++)
             {
                 AnimatorStateTransition t = m.AddAnyStateTransition(e[ClipsGestos[i].Estado]);
-                Configurar(t, false, 0f, MezclaCorta, true, Disparador(ReglasAnimacion.Gesto), Entero(ReglasAnimacion.GestoTipo, (int)ClipsGestos[i].Gesto));
+                // T-976: de manejar la moto a bajar no se mezcla: el primer cuadro de MotoBajar ya es la postura de MotoManejar (cadera a 2 mm) y la mezcla corta
+                // bajaba todo el cuerpo 6 cm a medio camino.
+                float mezclaGesto = ClipsGestos[i].Estado == "MotoBajar" ? 0f : MezclaCorta;
+                Configurar(t, false, 0f, mezclaGesto, true, Disparador(ReglasAnimacion.Gesto), Entero(ReglasAnimacion.GestoTipo, (int)ClipsGestos[i].Gesto));
                 if (ClipsGestos[i].Estado == "CarroEntrar")
                 {
                     // Sube y se queda al volante; si Manejando ya se quitó, vuelve a pararse.
@@ -460,6 +469,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 {
                     // T-963: igual en la moto: termina de subir y se queda manejando.
                     Unir(e["MotoSubir"], e["MotoManejar"], true, SalidaUnaVez, Mezcla, Bool(ReglasAnimacion.Manejando, true));
+                }
+                if (ClipsGestos[i].Estado == "MotoBajar")
+                {
+                    // T-976: la mezcla con Idle cruzaba la pierna derecha por el aire (pie a 1.5 m en medio de la mezcla). El último cuadro de MotoBajar ya es la postura de
+                    // Idle (pies a menos de 4 cm), así que se cambia sin mezcla al terminar el clip.
+                    Unir(e["MotoBajar"], e["Idle"], true, 1f, 0f);
+                    continue;
                 }
                 Unir(e[ClipsGestos[i].Estado], e["Idle"], true, SalidaUnaVez, Mezcla);
             }

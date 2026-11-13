@@ -84,7 +84,23 @@ namespace MechaCyberpunk.Personaje.Visual
         private bool enSuelo = true;
 
         public Animator Animador => animador;
-        public bool LeerDelPadre { get => leerDelPadre; set => leerDelPadre = value; }
+        public bool LeerDelPadre
+        {
+            get => leerDelPadre;
+            set
+            {
+                if (value && !leerDelPadre)
+                {
+                    // T-976: al volver a leer del padre se parte de donde está ahora. Con lo viejo (de antes de subir a la moto) el giro acumulado
+                    // hacía que el cuerpo jugara GirarIzq/GirarDer en el sitio al quedar de pie.
+                    Transform padre = transform.parent != null ? transform.parent : transform;
+                    posicionAnterior = padre.position;
+                    yawAnterior = transform.eulerAngles.y;
+                    giro = 0f;
+                }
+                leerDelPadre = value;
+            }
+        }
 
         private float rapidezGolpes = 1f;
 
