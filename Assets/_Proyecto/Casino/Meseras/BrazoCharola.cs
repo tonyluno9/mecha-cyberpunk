@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Casino.Meseras
         [Tooltip("Dirección del antebrazo (codo a muñeca) en el espacio del cuerpo, sin unidades.")]
         [SerializeField] private Vector3 direccionAntebrazo = new Vector3(0.22f, 0.1f, 0.97f);
 
-        private Transform hombro, codo, mano;
+        private Transform hombro, codo, mano, musloIzq, musloDer;
         private Vector3 arribaAntebrazo, arribaMano;
 
         /// <summary>Hacia dónde mira la cara de arriba de la charola, en el mundo (en la pose T apunta hacia arriba).</summary>
@@ -30,9 +30,11 @@ namespace MechaCyberpunk.Casino.Meseras
             hombro = animador.GetBoneTransform(HumanBodyBones.LeftUpperArm);
             codo = animador.GetBoneTransform(HumanBodyBones.LeftLowerArm);
             mano = animador.GetBoneTransform(HumanBodyBones.LeftHand);
-            if (hombro == null || codo == null || mano == null)
+            musloIzq = animador.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
+            musloDer = animador.GetBoneTransform(HumanBodyBones.RightUpperLeg);
+            if (hombro == null || codo == null || mano == null || musloIzq == null || musloDer == null)
             {
-                Debug.LogError("[Casino] BrazoCharola en '" + name + "' necesita los huesos del brazo izquierdo.", this);
+                Debug.LogError("[Casino] BrazoCharola en '" + name + "' necesita los huesos del brazo izquierdo y los muslos.", this);
                 enabled = false;
                 return;
             }
@@ -43,13 +45,23 @@ namespace MechaCyberpunk.Casino.Meseras
 
         private void LateUpdate()
         {
-            Girar(hombro, codo.position - hombro.position, transform.TransformDirection(direccionBrazo));
-            Girar(codo, mano.position - codo.position, transform.TransformDirection(direccionAntebrazo));
+            // El marco es hacia donde mira el cuerpo, no la raíz: la raíz de la R01 va girada 180° (RondaMesera.giroModelo).
+            Quaternion cuerpo = Cuerpo();
+            Girar(hombro, codo.position - hombro.position, cuerpo * direccionBrazo);
+            Girar(codo, mano.position - codo.position, cuerpo * direccionAntebrazo);
             // La charola la mueve el antebrazo o la mano según el pesado del modelo: se endereza el giro de los dos.
             Vector3 eje = (mano.position - codo.position).normalized;
             Vector3 actual = Vector3.ProjectOnPlane(codo.TransformDirection(arribaAntebrazo), eje);
             codo.rotation = Quaternion.FromToRotation(actual, Vector3.ProjectOnPlane(Vector3.up, eje)) * codo.rotation;
             mano.rotation = Quaternion.FromToRotation(NormalCharola, Vector3.up) * mano.rotation;
+        }
+
+        /// <summary>Giro horizontal del cuerpo animado, sacado de los muslos (Animator.bodyRotation no se puede leer en LateUpdate).</summary>
+        private Quaternion Cuerpo()
+        {
+            Vector3 frente = Vector3.Cross(musloDer.position - musloIzq.position, Vector3.up);
+            frente.y = 0f;
+            return frente.sqrMagnitude > 1e-6f ? Quaternion.LookRotation(frente) : transform.rotation;
         }
 
         private static void Girar(Transform hueso, Vector3 actual, Vector3 deseada)
