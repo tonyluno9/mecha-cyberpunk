@@ -42,8 +42,44 @@ namespace MechaCyberpunk.Progresion.Sonido
             "UI_MOVER", "UI_ACEPTAR", "UI_CANCELAR", "ZON_CONQUISTADA", "ECO_COMPRA",
         };
 
-        /// <summary>Si el ID es de los que suenan por defecto.</summary>
-        public static bool EncendidoPorDefecto(string id) => Array.IndexOf(IdsEncendidos, id) >= 0;
+        /// <summary>
+        /// T-977: los que regresan, en el orden de docs/sonidos-sugerencias.md. Cada uno trae su volumen, su limite de voces y su tiempo entre
+        /// repeticiones (no suenan parejos: sus archivos van de -46 a -11 dB). Los molestos de esa lista (voces de NPC, jadeos, claxon, hologramas,
+        /// neon, perros, aire, disparos lejanos, UI_TEXTO) siguen apagados.
+        /// </summary>
+        public static readonly string[] IdsRegresados =
+        {
+            ReglaAmbienteZona.CalleNoche, "VEH_PUERTA_ABRIR", "VEH_PUERTA_CERRAR", "ARM_BALA_IMPACTO_CONCRETO", "PAN_RIVAL_ALERTA", "PAN_JEFE_ENTRADA",
+            "UI_OBJETIVO_NUEVO", "UI_OBJETIVO_CUMPLIDO", IdDerrape, "JUG_PASO_ASFALTO", "CAL_SUBE_NIVEL", "ECO_DINERO_RECOGER",
+            "MUN_PUERTA_CASA_ABRIR", "MUN_PUERTA_CASA_CERRAR", ReglaAmbienteZona.Casino, ReglaAmbienteZona.Clinica,
+        };
+
+        /// <summary>T-977: los que no se prenden sin probar (docs/sonidos-sugerencias.md: hacian spam).</summary>
+        public static readonly string[] IdsMolestos =
+        {
+            "PAN_VECINO_AUXILIO", "PAN_SILBIDO_LLAMAR", "PAN_RIVAL_PROVOCA", "PAN_ALIADO_SIGUE", "PAN_ALIADO_ESPERA", "JUG_CORRER_RESPIRA", "VEH_CLAXON_TRAFICO",
+            "VEH_CLAXON_VIEJO", "MUN_HOLOGRAMA", "MUN_NEON_ZUMBIDO", "AMB_NEON_ALTO", "MUN_PERRO_LADRA", "MUN_AIRE_ACONDICIONADO", "ARM_DISPARO_LEJANO", "UI_TEXTO",
+        };
+
+        public const string IdDerrape = "VEH_FRENO_DERRAPE";
+
+        /// <summary>Si el ID es de los que suenan por defecto (los minimos de T-620 y los que regresan en T-977).</summary>
+        public static bool EncendidoPorDefecto(string id) => Array.IndexOf(IdsEncendidos, id) >= 0 || Array.IndexOf(IdsRegresados, id) >= 0;
+
+        /// <summary>
+        /// T-977: nivel de cada ambiente sobre la ganancia de la seccion, para que todos queden cerca de -45 dB aunque sus archivos no:
+        /// calle de noche -46.5 dB, casino -37.8 dB, clinica -27.1 dB (RMS medido). Un ambiente sin nivel propio va a la mitad.
+        /// </summary>
+        public static float VolumenAmbiente(string id)
+        {
+            switch (id)
+            {
+                case ReglaAmbienteZona.CalleNoche: return 1f;
+                case ReglaAmbienteZona.Casino: return 0.55f;
+                case ReglaAmbienteZona.Clinica: return 0.13f;
+                default: return 0.5f;
+            }
+        }
 
         /// <summary>Si el mismo ID se pidio muy pronto despues de la vez anterior (<paramref name="antes"/>).</summary>
         public static bool Repite(float ahora, float antes, float segundosMinimosPolitica)
@@ -55,7 +91,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         public static PoliticaSonido Para(string id)
         {
             PoliticaSonido p = ParaBase(id);
-            if (!EncendidoPorDefecto(id)) return p;
+            if (Array.IndexOf(IdsEncendidos, id) < 0) return p;
             return new PoliticaSonido(p.Grupo, p.MaxVoces, VolumenParejo, p.VariacionTono, p.SegundosMinimos, p.DistanciaMaxima);
         }
 
@@ -75,14 +111,24 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "JUG_SALTO": return new PoliticaSonido("voz-jugador", 1, 0.8f, 0.05f, 0.2f, 20f);
                 case "PAN_RIVAL_DANIO": return new PoliticaSonido("voz-rival-danio", 2, 0.85f, 0.08f, 0.1f, 35f);
                 case "PAN_RIVAL_CAE": return new PoliticaSonido("voz-rival-cae", 3, 0.9f, 0.08f, 0f, 35f);
-                case "PAN_RIVAL_ALERTA": return new PoliticaSonido("voz-rival-alerta", 2, 0.85f, 0.08f, 0.3f, 35f);
+                // T-977: un solo "¡Ey!" aunque te descubran varios a la vez (el archivo es fuerte, -11 dB).
+                case "PAN_RIVAL_ALERTA": return new PoliticaSonido("voz-rival-alerta", 1, 0.6f, 0.08f, 2.5f, 35f);
+                case "PAN_JEFE_ENTRADA": return new PoliticaSonido("voz-jefe", 1, 0.9f, 0f, 10f, 45f);
+                // T-977: avisos de objetivo, calor y dinero: uno a la vez y sin metralleta.
+                case "UI_OBJETIVO_NUEVO":
+                case "UI_OBJETIVO_CUMPLIDO": return new PoliticaSonido("objetivo", 1, 0.6f, 0f, 1f);
+                case "CAL_SUBE_NIVEL": return new PoliticaSonido("calor", 1, 0.65f, 0f, 3f);
+                case "ECO_DINERO_RECOGER": return new PoliticaSonido("dinero", 1, 0.55f, 0.05f, 0.25f, 20f);
+                case "MUN_PUERTA_CASA_ABRIR":
+                case "MUN_PUERTA_CASA_CERRAR": return new PoliticaSonido("puerta-casa", 1, 0.6f, 0.04f, 0.5f, 20f);
                 case "PAN_ALIADO_RECLUTA":
                 case "PAN_ALIADO_CAE": return new PoliticaSonido("voz-aliado", 1, 0.9f, 0.05f, 0f, 30f);
             }
             if (id.StartsWith(PrefijoPaso, StringComparison.Ordinal))
             {
                 // T-596: pasos bajos, con tono distinto cada vez, y de poco alcance.
-                return new PoliticaSonido("paso", 2, 0.7f, 0.06f, 0.1f, 20f);
+                // T-977: solo los del jugador, una voz y bajitos (debajo de los disparos y las voces).
+                return new PoliticaSonido("paso", 1, 0.45f, 0.06f, 0.15f, 20f);
             }
             if (id.StartsWith("VEH_", StringComparison.Ordinal))
             {
@@ -105,6 +151,10 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "VEH_CLAXON_VIEJO": return new PoliticaSonido(GrupoClaxon, 2, 0.7f, 0.08f, 0.2f, 35f);
                 case "VEH_PASA_CERCA": return new PoliticaSonido("pasa-cerca", 1, 0.8f, 0.06f, 1.5f, 30f);
                 case "VEH_VIEJO_ARRANQUE": return new PoliticaSonido("arranque", 1, 0.8f, 0.04f, 0f, 30f);
+                case "VEH_PUERTA_ABRIR":
+                case "VEH_PUERTA_CERRAR": return new PoliticaSonido("puerta-carro", 1, 0.6f, 0.04f, 0.5f, 25f);
+                // T-977: el derrape es un bucle (el archivo dura 11.6 s) que el carro corta al terminar; el tiempo minimo evita que rearranque a cada rato.
+                case IdDerrape: return new PoliticaSonido("derrape", 1, 0.5f, 0.05f, 1.5f, 35f);
                 case "VEH_CHOQUE_LEVE":
                 case "VEH_CHOQUE_FUERTE": return new PoliticaSonido("choque", 2, 0.85f, 0.05f, 0.15f);
                 default: return SinPolitica;
@@ -132,8 +182,9 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "ARM_CASQUILLO": return new PoliticaSonido(GrupoArmaAccesorio, 2, 0.4f, 0.1f, 0.04f);
                 case "ARM_ESC_BOMBEO":
                 case "ARM_SNI_CERROJO": return new PoliticaSonido(GrupoArmaAccesorio, 2, 0.7f, 0.02f, 0f);
+                // T-977: el tiro que falla pega en el concreto: una vez por tiro, mas bajo que el disparo y sin repetirse en rafaga.
+                case "ARM_BALA_IMPACTO_CONCRETO": return new PoliticaSonido(GrupoImpacto, 2, 0.5f, 0.08f, 0.12f, 30f);
                 case "ARM_BALA_IMPACTO_CARNE":
-                case "ARM_BALA_IMPACTO_CONCRETO":
                 case "ARM_BALA_IMPACTO_METAL": return new PoliticaSonido(GrupoImpacto, 2, 0.7f, 0.06f, 0f);
                 default: return SinPolitica;
             }

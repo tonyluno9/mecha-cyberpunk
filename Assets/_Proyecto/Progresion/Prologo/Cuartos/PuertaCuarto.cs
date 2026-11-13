@@ -109,12 +109,18 @@ namespace MechaCyberpunk.Progresion.Prologo.Cuartos
                 controlador.ActivarControl(false);
                 controlCongelado = controlador;
             }
+            // T-977: la puerta del cuarto suena (la de la calle ya sonó al abrir su hoja; la interior suena aquí) y se cierra detrás al llegar.
+            if (esSalida)
+            {
+                Sonidos.ReproducirEn("MUN_PUERTA_CASA_ABRIR", transform.position);
+            }
             PantallaFundido fundido = ObtenerFundido();
             if (fundido != null)
             {
                 yield return fundido.Fundir(1f, segundosAlNegro);
             }
             jugador.Colocar(destino);
+            Sonidos.Reproducir("MUN_PUERTA_CASA_CERRAR");
             for (int i = 0; i < CuadrosDeFisica; i++)
             {
                 yield return new WaitForFixedUpdate();

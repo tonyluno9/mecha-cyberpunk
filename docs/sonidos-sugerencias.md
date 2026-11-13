@@ -1,4 +1,7 @@
 # Sonidos: qué prender después (sugerencias, en orden)
+
+**13-nov (T-977): los 12 puntos ya están prendidos**, cada uno con su volumen y su tiempo entre repeticiones (docs/tareas/hechas/T-977-sonidos-regresan.md). De la nota del punto 1 no se prendieron AMB_TIANGUIS ni AMB_INTERIOR_CASA. Los molestos de abajo siguen apagados.
+
 Desde el 5-nov el juego tiene solo los sonidos necesarios (ver docs/plan-noche-05nov.md, Paso 1). Estos se prenden uno por uno desde el ScriptableObject de volumen, probando cada vez que no se amontone. Ya existen los archivos.
 
 1. **AMB_CALLE_NOCHE** — un solo ambiente bajito de ciudad de noche; da vida sin estorbar. (Luego, si funciona: AMB_TIANGUIS en El Tianguis y AMB_INTERIOR_CASA en la habitación.)

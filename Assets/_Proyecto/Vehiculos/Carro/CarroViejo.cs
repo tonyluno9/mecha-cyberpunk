@@ -181,6 +181,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void OnDisable()
         {
             Registro<IMontable>.Quitar(this);
+            DetenerDerrape();
             controlesPropios?.Disable();
         }
 
@@ -236,6 +237,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             salida = pose;
             salidaForzada = false;
             Ocupado = false;
+            DetenerDerrape();
             camaraCarro.Encender(false);
             TomarControl(false);
             OcupadoCambio?.Invoke(false);
@@ -548,6 +550,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             float fuerzaAdelante;
             float fuerzaLateral;
 
+            ActualizarDerrape(vAdelante, vLateral, dt);
             if (TieneControl)
             {
                 EntradaCarro e = EntradaActual;
@@ -577,6 +580,49 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 Vector3 punto = puntos[i];
                 punto += arriba * Vector3.Dot(centroMasa - punto, arriba);
                 cuerpo.AddForceAtPosition(fuerzaPorRueda, punto);
+            }
+        }
+
+        /// <summary>T-977: el ID de las llantas que rechinan.</summary>
+        public const string SonidoDerrape = "VEH_FRENO_DERRAPE";
+
+        private int bucleDerrape = Sonidos.SinBucle;
+        private bool rechina;
+        private float desdeCambioDerrape = ReglaDerrapeSonido.SegundosDescanso;
+
+        /// <summary>T-977: si las llantas rechinan ahora (para las pruebas).</summary>
+        public bool Rechina => rechina;
+
+        // T-977: solo el carro que maneja el jugador; el archivo dura 11.6 s, así que va en bucle y se corta al terminar el derrape.
+        private void ActualizarDerrape(float vAdelante, float vLateral, float dt)
+        {
+            desdeCambioDerrape += dt;
+            EntradaCarro e = EntradaActual;
+            bool ahora = TieneControl
+                && ReglaDerrapeSonido.Rechina(vAdelante, vLateral, e.Frenar, e.FrenoMano, rechina, desdeCambioDerrape);
+            if (ahora == rechina)
+            {
+                return;
+            }
+            rechina = ahora;
+            desdeCambioDerrape = 0f;
+            if (ahora)
+            {
+                bucleDerrape = Sonidos.ReproducirBucle(SonidoDerrape, transform);
+            }
+            else
+            {
+                DetenerDerrape();
+            }
+        }
+
+        private void DetenerDerrape()
+        {
+            rechina = false;
+            if (bucleDerrape != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleDerrape);
+                bucleDerrape = Sonidos.SinBucle;
             }
         }
 

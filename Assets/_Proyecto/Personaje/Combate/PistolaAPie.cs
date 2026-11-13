@@ -418,8 +418,14 @@ namespace MechaCyberpunk.Personaje.Combate
             return BuscarImpacto(camara.position, camara.forward, alcance, out RaycastHit centro) ? centro.point : camara.position + camara.forward * alcance;
         }
 
+        /// <summary>T-977: el sonido del tiro que falla y pega en una superficie (pared, piso, carro): uno por tiro, aunque la escopeta lance varios perdigones.</summary>
+        public const string SonidoImpactoSuperficie = "ARM_BALA_IMPACTO_CONCRETO";
+
+        private bool sonoImpactoEsteTiro;
+
         private void Disparar(ArmaAPie arma, DatosArma d)
         {
+            sonoImpactoEsteTiro = false;
             // Tercera persona: un rayo desde el centro de la cámara halla el punto y otro, desde la boca del arma, llega a ese punto.
             // La escopeta lanza varios perdigones en un cono; la dispersión es el semiángulo del cono.
             Transform camara = desdeCarro && jugadorApie.Camara != null ? jugadorApie.Camara.transform : controlador.Camara;
@@ -483,7 +489,8 @@ namespace MechaCyberpunk.Personaje.Combate
             Disparo?.Invoke();
         }
 
-        // Daño, efectos y marca de una bala que pegó. T-676: no suena nada al impactar (el disparo suena siempre igual).
+        // Daño, efectos y marca de una bala que pegó. T-676: el disparo suena siempre igual y pegarle a una persona no suena;
+        // T-977: el tiro que falla y pega en una superficie suena una vez (ayuda a saber dónde pegó).
         private void Impactar(ArmaAPie arma, float danio, RaycastHit mejor, Vector3 direccion)
         {
             IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
@@ -496,6 +503,11 @@ namespace MechaCyberpunk.Personaje.Combate
                 mato = objetivo.RecibirDanio(new InfoDanio(danio * ReglaZonaDanio.Multiplicador(cabeza), TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
             }
             BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato, cabeza));
+            if (!esCarne && !sonoImpactoEsteTiro)
+            {
+                sonoImpactoEsteTiro = true;
+                Sonidos.ReproducirEn(SonidoImpactoSuperficie, mejor.point);
+            }
             if (ReglaHuecosBala.HayHueco(mejor.collider.isTrigger, esCarne, SuperficieImpacto.Visible(mejor.collider, mejor.point)))
             {
                 PonerMarca(mejor.point, mejor.normal);

@@ -67,7 +67,7 @@ namespace MechaCyberpunk.Tests.Sonido
         }
 
         [UnityTest]
-        public IEnumerator ElDisparoSuenaMasBajoQueElMaximoYVariaPocoElTono()
+        public IEnumerator ElDisparoSuenaMasBajoQueElMaximo_YSiempreConElMismoTono()
         {
             GestorSonidos g = Crear("ARM_SNI_DISPARO", "ARM_PIS_DISPARO");
             g.FijarSemillaTono(7);
@@ -81,9 +81,9 @@ namespace MechaCyberpunk.Tests.Sonido
                 Assert.Less(g.UltimoVolumenRelativo, 1f);
                 yield return new WaitForSecondsRealtime(0.11f); // T-620: el mismo ID no se repite antes de 0.1 s
             }
-            Assert.GreaterOrEqual(minimo, 0.969f);
-            Assert.LessOrEqual(maximo, 1.031f);
-            Assert.Greater(maximo - minimo, 0.01f, "El tono varia entre disparos.");
+            // T-676 (y T-977): el disparo suena siempre igual, sin variar el tono.
+            Assert.AreEqual(1f, minimo, 1e-4f);
+            Assert.AreEqual(1f, maximo, 1e-4f, "El tono del disparo no varía.");
         }
 
         [UnityTest]

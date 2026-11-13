@@ -105,7 +105,7 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             tomado = true;
             cartera.Abonar(cantidad, MotivoDinero.Otro);
-            Sonidos.ReproducirEn("ECO_COMPRA", transform.position);
+            Sonidos.ReproducirEn("ECO_DINERO_RECOGER", transform.position); // T-977: su propio sonido (antes sonaba el de comprar)
             Destroy(gameObject);
         }
     }
