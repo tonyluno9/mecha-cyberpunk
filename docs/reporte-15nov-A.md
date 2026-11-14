@@ -83,7 +83,14 @@ Pedido de Tony (14-nov noche): avisos del Doc y de la silla, rueda de armas y ob
 - **Capturas** revisadas: `docs/capturas/t993/`. Incluye `antes-pistola.png` para comparar.
 
 ## Builds
-BUILDS_AQUI
+Desde main `f4eef16`, uno por uno y sin ningún Unity de la Sesión B corriendo.
+- **Demo**: `C:\Users\Angel Perez\Desktop\videojuego\mecha-cyberpunk\Builds\Demo\CyberCity.exe` (ConstruirDemoPandillas).
+  - Terminó a las **00:40** del 14-nov, hora de México.
+  - `Logs/build-demo-15nov.log` dice "Build Finished, Result: Success".
+- **Juego**: `C:\Users\Angel Perez\Desktop\videojuego\mecha-cyberpunk\Builds\Juego\CyberCity.exe` (ConstruirJuego).
+  - Terminó a las **00:41**.
+  - `Logs/build-juego-15nov.log` dice "Build Finished, Result: Success".
+- Unity quedó cerrado (0 procesos).
 
 ## Pendientes y notas
 - **`NeonAltoT505Pruebas.EntradaDelCasino_TieneFocosTubosCargadoresYMoto`** (EditMode, Mundo/casino) falla en main desde que entraron cambios de la Sesión B.
