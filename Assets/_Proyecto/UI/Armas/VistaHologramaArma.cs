@@ -16,6 +16,7 @@ namespace MechaCyberpunk.UI.Armas
     public class VistaHologramaArma : MonoBehaviour
     {
         private const float LargoArma = 1f;
+        private const float DistanciaInicial = 2f;
         private const float AlturaCamara = 0.12f;
         private const float CercaCamara = 0.05f;
         private const float LejosCamara = 10f;
@@ -73,6 +74,8 @@ namespace MechaCyberpunk.UI.Armas
         private float giro = GiroInicial;
         private float inclinacion = InclinacionInicial;
         private float distancia;
+        private float distanciaEncuadre;
+        private float fraccionAltoVisible = 1f;
         private float esperaGiro;
         private float destello;
         private float vaiven;
@@ -91,6 +94,10 @@ namespace MechaCyberpunk.UI.Armas
         public float Giro => giro;
         public float Inclinacion => inclinacion;
         public float Distancia => distancia;
+        /// <summary>T-993: la distancia de cámara que deja el arma llenando el panel (la rueda se mueve desde aquí).</summary>
+        public float DistanciaEncuadre => distanciaEncuadre;
+        /// <summary>T-993: qué parte del alto de la textura se ve en el panel (0 a 1; el panel recorta arriba y abajo).</summary>
+        public float FraccionAltoVisible => fraccionAltoVisible;
         public PiezaArma Elegida => elegida;
         /// <summary>T-895: true mientras la franja de escaneo recorre el arma.</summary>
         public bool Escaneando => escaneando;
@@ -118,6 +125,9 @@ namespace MechaCyberpunk.UI.Armas
             return true;
         }
 
+        /// <summary>T-993: dice qué parte del alto de la textura muestra el panel, para encuadrar el arma dentro de lo que se ve.</summary>
+        public void FijarFraccionAltoVisible(float fraccion) => fraccionAltoVisible = Mathf.Clamp(fraccion, 0.1f, 1f);
+
         /// <summary>Arma el set con el arma; si ya había uno, lo rehace.</summary>
         public void Mostrar(EntradaArmaMenu entrada, ConfigMenuArmas configuracion)
         {
@@ -132,7 +142,7 @@ namespace MechaCyberpunk.UI.Armas
                 };
                 textura.Create();
             }
-            distancia = config.Distancia;
+            distancia = DistanciaInicial;
             giro = GiroInicial;
             inclinacion = InclinacionInicial;
             vaiven = 0f;
@@ -160,6 +170,7 @@ namespace MechaCyberpunk.UI.Armas
                 CrearImagen(entrada);
             }
             CrearPedestal();
+            EncuadrarArma();
             AplicarGiro();
             Pintar();
         }
@@ -246,7 +257,7 @@ namespace MechaCyberpunk.UI.Armas
         public void Acercar(float rueda)
         {
             const float UnidadesPorPaso = 120f;
-            distancia = Mathf.Clamp(distancia - rueda / UnidadesPorPaso * config.PasoRueda, config.DistanciaMinima, config.DistanciaMaxima);
+            distancia = Mathf.Clamp(distancia - rueda / UnidadesPorPaso * config.PasoRueda, distanciaEncuadre * config.ZoomMinimo, distanciaEncuadre * config.ZoomMaximo);
             ColocarCamara();
         }
 
@@ -306,6 +317,59 @@ namespace MechaCyberpunk.UI.Armas
             camara.targetTexture = textura;
             camara.depth = -50f;
             ColocarCamara();
+        }
+
+        // T-993: acerca la cámara hasta que el arma, de lado y sin separar piezas, ocupe llenadoAncho del ancho o llenadoAlto del alto del panel
+        // (lo que limite primero). Mide con las mallas ya puestas; la perspectiva no es lineal, por eso repite unas veces.
+        private void EncuadrarArma()
+        {
+            const int Repeticiones = 4;
+            const float DistanciaMinimaEncuadre = 0.3f;
+            distanciaEncuadre = DistanciaInicial;
+            if (todos.Count > 0 && pivote != null)
+            {
+                Quaternion antes = pivote.localRotation;
+                pivote.localRotation = Quaternion.Euler(InclinacionInicial, 0f, 0f);
+                for (int i = 0; i < Repeticiones; i++)
+                {
+                    distancia = distanciaEncuadre;
+                    ColocarCamara();
+                    ProyectarArma(out float ancho, out float alto);
+                    float necesario = Mathf.Max(ancho / config.LlenadoAncho, alto / (fraccionAltoVisible * config.LlenadoAlto));
+                    if (necesario > 0f)
+                    {
+                        distanciaEncuadre = Mathf.Max(DistanciaMinimaEncuadre, distanciaEncuadre * necesario);
+                    }
+                }
+                pivote.localRotation = antes;
+            }
+            distancia = distanciaEncuadre;
+            ColocarCamara();
+        }
+
+        // Lo que ocupa el arma en la textura (0 a 1 del ancho y del alto) con la cámara donde está.
+        private void ProyectarArma(out float ancho, out float alto)
+        {
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
+            foreach (Renderer r in todos)
+            {
+                MeshFilter mf = r != null ? r.GetComponent<MeshFilter>() : null;
+                if (mf == null || mf.sharedMesh == null)
+                {
+                    continue;
+                }
+                Bounds b = mf.sharedMesh.bounds;
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector3 esquina = b.center + Vector3.Scale(b.extents, new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f));
+                    Vector3 p = camara.WorldToViewportPoint(mf.transform.TransformPoint(esquina));
+                    min = Vector2.Min(min, p);
+                    max = Vector2.Max(max, p);
+                }
+            }
+            ancho = Mathf.Max(0f, max.x - min.x);
+            alto = Mathf.Max(0f, max.y - min.y);
         }
 
         private void ColocarCamara()

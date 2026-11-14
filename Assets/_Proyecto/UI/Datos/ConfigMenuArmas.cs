@@ -30,12 +30,14 @@ namespace MechaCyberpunk.UI
         [Min(64)] [SerializeField] private int altoTextura = 720;
         [Tooltip("Campo de visión de la cámara del holograma (°).")]
         [Range(10f, 60f)] [SerializeField] private float campoVision = 28f;
-        [Tooltip("Distancia de la cámara al arma (m; el arma mide 1 m de largo en el set).")]
-        [Min(0.5f)] [SerializeField] private float distancia = 2.9f;
-        [Tooltip("Distancia mínima con la rueda (m).")]
-        [Min(0.5f)] [SerializeField] private float distanciaMinima = 1.5f;
-        [Tooltip("Distancia máxima con la rueda (m).")]
-        [Min(0.5f)] [SerializeField] private float distanciaMaxima = 4f;
+        [Tooltip("T-993: cuánto del ancho del panel debe ocupar el arma de lado (0 a 1). La cámara se acerca sola hasta lograrlo.")]
+        [Range(0.3f, 0.95f)] [SerializeField] private float llenadoAncho = 0.8f;
+        [Tooltip("T-993: cuánto del alto del panel debe ocupar el arma (0 a 1). Si el arma es alta (pistola), manda este límite.")]
+        [Range(0.3f, 0.95f)] [SerializeField] private float llenadoAlto = 0.75f;
+        [Tooltip("T-993: lo más cerca que llega la rueda, como fracción de la distancia del encuadre automático.")]
+        [Range(0.2f, 1f)] [SerializeField] private float zoomMinimo = 0.6f;
+        [Tooltip("T-993: lo más lejos que llega la rueda, como fracción de la distancia del encuadre automático.")]
+        [Range(1f, 3f)] [SerializeField] private float zoomMaximo = 1.5f;
         [Tooltip("Metros por cada paso de la rueda (m por 120 unidades de scroll).")]
         [Min(0f)] [SerializeField] private float pasoRueda = 0.25f;
         [Tooltip("Giro al arrastrar con el ratón (° por píxel).")]
@@ -116,9 +118,10 @@ namespace MechaCyberpunk.UI
         public int AnchoTextura => anchoTextura;
         public int AltoTextura => altoTextura;
         public float CampoVision => campoVision;
-        public float Distancia => distancia;
-        public float DistanciaMinima => distanciaMinima;
-        public float DistanciaMaxima => distanciaMaxima;
+        public float LlenadoAncho => llenadoAncho;
+        public float LlenadoAlto => llenadoAlto;
+        public float ZoomMinimo => zoomMinimo;
+        public float ZoomMaximo => zoomMaximo;
         public float PasoRueda => pasoRueda;
         public float Sensibilidad => sensibilidad;
         public float InclinacionMaxima => inclinacionMaxima;
