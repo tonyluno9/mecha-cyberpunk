@@ -170,7 +170,6 @@ namespace MechaCyberpunk.Progresion.Opciones
                 distanciasCapas[i] = distancia;
             }
             camara.layerCullDistances = distanciasCapas;
-            camara.layerCullSpherical = true;
             UniversalAdditionalCameraData datos = camara.GetComponent<UniversalAdditionalCameraData>();
             if (datos == null)
             {
