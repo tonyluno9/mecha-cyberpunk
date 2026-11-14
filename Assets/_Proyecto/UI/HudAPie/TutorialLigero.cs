@@ -51,6 +51,7 @@ namespace MechaCyberpunk.UI.Hud
         private GolpeAPie golpe;
         private ArmasAPie armas;
         private IEscudo escudo;
+        private int aperturasRuedaVistas = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Aperturas;
         private int vistasGuardadas;
 
         public ReglaTutorial Regla => regla;
@@ -161,10 +162,8 @@ namespace MechaCyberpunk.UI.Hud
                     return TeclasHud.Texto(cubierta != null ? cubierta.AccionAgachar : null, omision);
                 case ReglaTutorial.TeclaCubrirse:
                     return TeclasHud.Texto(cubierta != null ? cubierta.AccionCubrirse : null, omision);
-                case ReglaTutorial.TeclaConsumibleSiguiente:
-                    return TeclasHud.Texto(consumibles != null ? consumibles.AccionSiguiente : null, omision);
-                case ReglaTutorial.TeclaConsumibleUsar:
-                    return TeclasHud.Texto(consumibles != null ? consumibles.AccionUsar : null, omision);
+                case ReglaTutorial.TeclaRueda:
+                    return TeclasHud.Texto(TeclasHud.Buscar("Rueda"), omision);
                 case ReglaTutorial.TeclaMapa:
                     return Keyboard.current != null ? TeclasHud.Nombre(Keyboard.current.mKey.displayName) : omision;
                 default:
@@ -231,8 +230,9 @@ namespace MechaCyberpunk.UI.Hud
             {
                 regla.Hecha(AccionTutorial.Golpear);
             }
-            if (consumibles != null && (consumibles.AccionSiguiente.WasPressedThisFrame() || consumibles.AccionUsar.WasPressedThisFrame()))
+            if (MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Aperturas != aperturasRuedaVistas)
             {
+                aperturasRuedaVistas = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Aperturas;
                 regla.Hecha(AccionTutorial.Consumibles);
             }
             if (pistola != null && pistola.Recargando)

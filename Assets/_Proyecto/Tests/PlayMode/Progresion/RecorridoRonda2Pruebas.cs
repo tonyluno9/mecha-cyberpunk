@@ -320,8 +320,8 @@ namespace MechaCyberpunk.Tests.Progresion
             float vidaAntes = muneco.Actual;
             jugador.Colocar(Mirando(puntoTiro, posMuneco));
             yield return new WaitForSecondsRealtime(0.5f);
-            yield return Pulsar(teclado.digit3Key);
-            Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "3 saca la escopeta.");
+            armas.Equipar(ArmaAPie.Escopeta); yield return null; // T-991: ya no hay tecla 3
+            Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "La escopeta se equipa.");
             Assert.AreEqual(armas.TamanoCargador, armas.Balas, "Sale con el cargador lleno.");
             int balas = armas.Balas;
             int disparosAntes = gestor.Pedidos("ARM_ESC_DISPARO");

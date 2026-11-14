@@ -390,7 +390,8 @@ namespace MechaCyberpunk.UI.MenuPausa
             {
                 return;
             }
-            escalaPrevia = Time.timeScale;
+            // T-991: si la rueda de armas estaba abierta (tiempo a 0.25), la escala que se devuelve al continuar es la que ella guardó.
+            escalaPrevia = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Abierta ? MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.EscalaAnterior : Time.timeScale;
             audioPrevio = AudioListener.pause;
             Time.timeScale = 0f;
             AudioListener.pause = true;

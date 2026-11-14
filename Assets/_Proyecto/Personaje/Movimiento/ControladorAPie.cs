@@ -88,6 +88,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
 
+        /// <summary>T-991: true mientras la rueda de armas y objetos está abierta: el ratón no gira la cámara ni dispara (caminar sigue igual).</summary>
+        public bool EntradaBloqueada { get; set; }
+
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
@@ -201,7 +204,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
             float dt = Time.deltaTime;
 
-            if (cursorBloqueado)
+            if (cursorBloqueado && !EntradaBloqueada)
             {
                 float minima = configCamara != null ? configCamara.InclinacionMinima : -40f;
                 float maxima = configCamara != null ? configCamara.InclinacionMaxima : 60f;

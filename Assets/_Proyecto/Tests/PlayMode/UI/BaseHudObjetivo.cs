@@ -184,6 +184,21 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
         }
 
+        /// <summary>T-991: elige una casilla de la rueda de armas y objetos como lo haría una persona: mantiene Tab, mueve el ratón hacia la casilla y suelta.</summary>
+        protected IEnumerator ElegirEnRueda(int casilla)
+        {
+            Press(teclado.tabKey);
+            yield return null;
+            yield return null;
+            float angulo = MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.AnguloDeCasilla(casilla) * Mathf.Deg2Rad;
+            Set(raton.delta, new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
+            yield return null;
+            yield return null;
+            Release(teclado.tabKey);
+            yield return null;
+            yield return null;
+        }
+
         /// <summary>Gira con el ratón simulado; positivo es a la derecha.</summary>
         protected IEnumerator Girar(float grados)
         {

@@ -232,6 +232,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<HudConsumibles>();
             }
+            if (GetComponent<MechaCyberpunk.UI.Rueda.RuedaArmasObjetos>() == null)
+            {
+                gameObject.AddComponent<MechaCyberpunk.UI.Rueda.RuedaArmasObjetos>();
+            }
             if (GetComponent<HudH10>() == null)
             {
                 gameObject.AddComponent<HudH10>();

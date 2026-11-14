@@ -12,7 +12,7 @@ namespace MechaCyberpunk.UI.Inicio
             "Abre el mapa con M y marca tu destino para seguir el GPS.",
             "Saca el teléfono con T para ver tus contactos.",
             "ESC abre la pausa: ahí guardas la partida y ajustas las opciones.",
-            "Las teclas 1 a 5 cambian de arma; la rueda del ratón también.",
+            "Mantén TAB para elegir un arma o usar un objeto; la rueda del ratón también cambia de arma.",
             "Lo que pasa en la calle se nota: la policía se fija en lo que haces.",
             "Cada pandilla manda en su zona. Mira los colores del mapa.",
         };

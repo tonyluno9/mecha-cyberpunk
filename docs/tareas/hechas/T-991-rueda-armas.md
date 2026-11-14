@@ -1,0 +1,25 @@
+# T-991: rueda radial de armas y objetos (Tab)
+
+Diseño: `docs/diseno/rueda-y-habilidades.md` (sección "Rueda (T-991)" y "Lo que se actualiza"). Las habilidades [1][2][3] son T-992 (no se hicieron; solo quedan libres las teclas 1 a 5, 6 a 0 y F).
+
+## Qué se hizo
+- **Lógica pura** `UI/Rueda/ReglaRuedaArmas.cs`: 10 casillas de 36° (Puños 288°, Pistola 324°, Escopeta 0°, Fusil 36°, Francotirador 72°; Bebida 108°, Papitas 144°, Venda 180°, Café 216°, Batería 252°), ángulo del cursor a casilla, zona muerta de 40 px, radio máximo 160 px, casillas no disponibles no se eligen y resultado al soltar (arma, objeto o nada).
+- **Componente** `UI/Rueda/RuedaArmasObjetos.cs`: lo agrega `HudAPie.Awake` (como HudH10), así aparece solo con el jugador a pie. Canvas propio (orden 16) con fondo negro al 55 %, 10 casillas en anillo (icono de holograma de `PiezasUI` para las armas, icono de `ConfigHudH10` para los objetos, texto si no hay icono), `xN` en los objetos y balas `cargador|reserva` en las armas de fuego, nombre y detalle en el centro, cursor virtual. Colores y fuente del H10.
+- Abre al mantener la acción **Rueda** (Tab) solo a pie, vivo, con control, sin menú (`PilaPantallas`, `MenuCyberfix`) ni pausa. `Time.timeScale = 0.25` y `fixedDeltaTime` escalado; al cerrar se devuelven. Se cierra sola (sin elegir) si mueres, bajas del modo a pie, se congela el control o abre un menú o la pausa.
+- Soltar con un arma resaltada llama a `ArmasAPie.Equipar` (solo si `ArmasAPie.PuedeCambiar`: igual que antes, no se cambia durante un golpe); con un objeto, a `ConsumiblesJugador.Usar`.
+- **Entrada**: `ControlesAPie.inputactions` pierde `ArmaPunos/Pistola/Escopeta/Fusil/Sniper` y gana `Rueda` (Button, `<Keyboard>/tab`); `CambiarArma` (rueda del mouse) sigue. `CreadorJugadorAPie` coherente (crea `Rueda`, y al actualizar un archivo viejo borra las acciones de armas). `ArmasAPie` ya no lee 1 a 5. `ConsumiblesJugador` ya no lee Tab, F ni 6 a 0: expone `Catalogo` y `Usar`.
+- **Mouse congelado con la rueda abierta**: `ControladorAPie.EntradaBloqueada` (no gira la cámara); `GolpeAPie`, `PistolaAPie` (no disparan) y `ArmasAPie` (no cambia con la rueda del mouse) la respetan. Caminar sigue igual.
+- **Pausa**: `PantallaPausa.Abrir` toma `RuedaArmasObjetos.EscalaAnterior` si la rueda estaba abierta, y la rueda no toca `timeScale` si la pausa está activa. `PantallaPausa` sigue siendo la única que pone el 0.
+- **Textos**: `ReglaControlesInicio` ("ARMAS Y OBJETOS  TAB"), `ReglaTutorial`/`TutorialLigero` ("MANTÉN [Tab] PARA ELEGIR UN ARMA O USAR UN OBJETO"; se da por visto al abrir la rueda), `ConsejosCarga`. Las casillas de objetos del HudH10 ya no muestran tecla ni "elegido".
+- `PistolaAPie.CargadorDe(arma)` (para mostrar las balas de cada arma en la rueda).
+
+## Decisiones
+- No hay lista de teclas reasignables en Opciones (solo el texto de Controles que sale de las acciones reales): se actualizó ese texto; no hay nada que quitar ni agregar.
+- Las acciones `ArmaX` se borraron del `.inputactions` y de `ArmasAPie`. `JugadorAPie.prefab` no se tocó: conserva campos viejos sin uso (Unity los ignora y se limpian al volver a guardar el prefab).
+- El flanco de Tab se detecta con `IsPressed` y el movimiento del ratón se suma en `InputSystem.onAfterUpdate`: con `WasPressedThisFrame` y `Mouse.delta` en `Update`, una entrada simulada que se procesa entre cuadros se perdía.
+- `ConsumiblesJugador.Seleccionado` y `ReglaConsumibles.Siguiente` quedan (sin teclas; sin uso en pantalla).
+- Tutorial: no hay paso de "cambiar de arma" ni de [1]/[2]/[3] (esto último es T-992).
+
+## Pruebas
+Ver el resumen del commit; EditMode `ReglaRuedaArmasPruebas` (9) y PlayMode `RuedaArmasT991Pruebas` (8 + la de capturas).
+Capturas (CAPTURAR_T991=1, Ciudad_Prologo): `docs/capturas/t991/rueda-armas.png` (pistola resaltada) y `rueda-objetos.png` (venda resaltada).

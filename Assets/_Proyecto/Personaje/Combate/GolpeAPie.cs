@@ -94,7 +94,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 AjustarRecarga();
             }
             // T-675: sin spam; el siguiente golpe espera a que termine la animación del anterior.
-            if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos && !AnimacionOcupada())
+            if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos && !AnimacionOcupada() && !controlador.EntradaBloqueada)
             {
                 ciclo.IntentarGolpear();
             }

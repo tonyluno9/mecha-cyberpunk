@@ -271,8 +271,8 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
 
         private IEnumerator CambiarAPistola()
         {
-            yield return Tecla(teclado.digit2Key);
-            Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva, "la tecla 2 saca la pistola");
+            armas.Equipar(ArmaAPie.Pistola); yield return null; // T-991: ya no hay tecla 2
+            Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva, "la pistola se equipa");
         }
 
         private static int Necesarios(float vida, float danio) => Mathf.CeilToInt(vida / danio - 0.0001f);

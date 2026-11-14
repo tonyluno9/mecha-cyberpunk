@@ -166,12 +166,10 @@ namespace MechaCyberpunk.Tests.IA
             // T-933: un delito solo suma calor si lo ve la policía; aquí un testigo de prueba siempre ve.
             Registro<MechaCyberpunk.Trafico.Testigos.ITestigoPolicia>.Agregar(new TestigoQueSiempreVe());
 
-            // Un tiro real con la pistola (2, clic derecho, clic): suma calor en la calle.
+            // Un tiro real con la pistola (arma en la mano, clic derecho, clic): suma calor en la calle.
             int dineroAntes = cartera.Dinero;
             float calorAntes = calor.Valor;
-            Press(teclado.digit2Key);
-            yield return null;
-            Release(teclado.digit2Key);
+            jugador.GetComponent<MechaCyberpunk.Personaje.Combate.ArmasAPie>().Equipar(MechaCyberpunk.Personaje.Combate.ArmaAPie.Pistola); // T-991: ya no hay tecla 2
             Press(raton.rightButton);
             yield return null;
             Press(raton.leftButton);

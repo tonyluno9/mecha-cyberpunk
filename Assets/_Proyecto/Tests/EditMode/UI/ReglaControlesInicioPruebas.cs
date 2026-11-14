@@ -22,7 +22,7 @@ namespace MechaCyberpunk.Tests.UI
             string texto = ReglaControlesInicio.Texto(accion => null);
             StringAssert.Contains("MOVER  W A S D", texto);
             StringAssert.Contains("SALTAR  ESPACIO", texto);
-            StringAssert.Contains("ARMAS  1 A 5 O RUEDA", texto);
+            StringAssert.Contains("ARMAS Y OBJETOS  TAB", texto);
             StringAssert.Contains("PAUSA  ESC", texto);
         }
 

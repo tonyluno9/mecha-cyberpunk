@@ -75,6 +75,21 @@ namespace MechaCyberpunk.Tests.Personaje
             foreach (ApuntadoIK ik in jugador.GetComponentsInChildren<ApuntadoIK>(true)) { ik.ClipPuro = false; }
         }
 
+        /// <summary>T-991: elige una casilla de la rueda de armas y objetos como lo haría una persona: mantiene Tab, mueve el ratón hacia el ángulo de la casilla y suelta.</summary>
+        protected IEnumerator ElegirEnRueda(int casilla)
+        {
+            Press(teclado.tabKey);
+            yield return null;
+            yield return null;
+            float angulo = MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.AnguloDeCasilla(casilla) * Mathf.Deg2Rad;
+            Set(raton.delta, new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
+            yield return null;
+            yield return null;
+            Release(teclado.tabKey);
+            yield return null;
+            yield return null;
+        }
+
         protected GameObject Caja(Vector3 centro, Vector3 tamano)
         {
             GameObject caja = GameObject.CreatePrimitive(PrimitiveType.Cube);

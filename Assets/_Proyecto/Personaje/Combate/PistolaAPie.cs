@@ -97,6 +97,9 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private static int Indice(ArmaAPie arma) => arma == ArmaAPie.Punos ? (int)ArmaAPie.Pistola : (int)arma;
 
+        /// <summary>T-991: el cargador de un arma de fuego (la rueda muestra las balas de cada una), o null si no la tiene.</summary>
+        public CargadorPistola CargadorDe(ArmaAPie arma) => arma == ArmaAPie.Punos ? null : cargadores[Indice(arma)];
+
         /// <summary>Se dispara al disparar, al hacer clic vacío y al empezar o terminar la recarga.</summary>
         public event Action Cambio;
         /// <summary>Se dispara en cada tiro, haya dado a algo o no.</summary>
@@ -267,7 +270,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     }
                 }
                 DatosArma d = datosArmas[(int)activa];
-                bool pidio = d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame();
+                bool pidio = !controlador.EntradaBloqueada && (d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame());
                 if (!pidio && disparabaAutomatica && activa == ArmaAPie.Fusil)
                 {
                     Sonidos.ReproducirEn("ARM_FUS_RAFAGA_COLA", transform.position);

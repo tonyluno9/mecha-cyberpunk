@@ -10,8 +10,8 @@ using UnityEngine.InputSystem;
 namespace MechaCyberpunk.Personaje.Jugador
 {
     /// <summary>
-    /// Usa los consumibles del inventario (T-685). Teclas: Tab elige el siguiente objeto que lleva, F usa el elegido y 6, 7, 8, 9 y 0
-    /// usan directo el 1.o a 5.o consumible del catálogo (bebida, papitas, venda, café, batería). Solo a pie, con control y vivo.
+    /// Usa los consumibles del inventario (T-685). Ya no tiene teclas: los objetos se usan desde la rueda de armas y objetos (Tab, T-991), que llama a
+    /// <see cref="Usar"/>. El catálogo va en orden: bebida, papitas, venda, café, batería. Solo a pie, con control y vivo.
     /// Cura (de golpe o repartida), da segundos sin recibir daño, recupera escudo o acelera, según los datos del objeto.
     /// La agrega <see cref="JugadorAPie"/> al nacer.
     /// </summary>
@@ -19,15 +19,6 @@ namespace MechaCyberpunk.Personaje.Jugador
     {
         private readonly List<DatosConsumible> disponibles = new List<DatosConsumible>();
         private readonly List<DatosConsumible> catalogo = new List<DatosConsumible>();
-        private static readonly string[] TeclasDirectas = { "<Keyboard>/6", "<Keyboard>/7", "<Keyboard>/8", "<Keyboard>/9", "<Keyboard>/0" };
-
-        // Las teclas avisan por evento (performed) y Update atiende lo pendiente: así no se pierde una pulsación corta.
-        private readonly InputAction siguiente = new InputAction("ConsumibleSiguiente", InputActionType.Button, "<Keyboard>/tab");
-        private readonly InputAction usar = new InputAction("ConsumibleUsar", InputActionType.Button, "<Keyboard>/f");
-        private readonly InputAction[] directas = new InputAction[TeclasDirectas.Length];
-        private bool pidioSiguiente;
-        private bool pidioUsar;
-        private int pidioDirecta = -1;
         private readonly CuracionGradual gradual = new CuracionGradual();
 
         private JugadorAPie jugador;
@@ -41,22 +32,10 @@ namespace MechaCyberpunk.Personaje.Jugador
         /// <summary>Los consumibles que lleva ahora, en orden del catálogo.</summary>
         public IReadOnlyList<DatosConsumible> Disponibles => disponibles;
 
-        /// <summary>T-718: las acciones de elegir y usar un objeto, para que el tutorial muestre la tecla real.</summary>
-        public InputAction AccionSiguiente => siguiente;
+        /// <summary>Todos los consumibles del catálogo, con o sin existencias, en orden (bebida, papitas, venda, café, batería): los lugares de la rueda de objetos.</summary>
+        public IReadOnlyList<DatosConsumible> Catalogo => catalogo;
 
-        public InputAction AccionUsar => usar;
-
-        /// <summary>
-        /// La tecla real que usa directo a <paramref name="c"/> (6, 7, 8, 9, 0 según su lugar en el catálogo), leída de la acción
-        /// con GetBindingDisplayString; vacía si no está en el catálogo (T-700: el HUD muestra la tecla verdadera).
-        /// </summary>
-        public string TextoTecla(DatosConsumible c)
-        {
-            int lugar = c != null ? catalogo.IndexOf(c) : -1;
-            return lugar >= 0 && lugar < directas.Length ? directas[lugar].GetBindingDisplayString() : string.Empty;
-        }
-
-        /// <summary>El objeto elegido con Tab, o null si no lleva ninguno.</summary>
+        /// <summary>El primer objeto que lleva, o null si no lleva ninguno.</summary>
         public DatosConsumible Seleccionado => indice >= 0 && indice < disponibles.Count ? disponibles[indice] : null;
 
         /// <summary>Segundos que le quedan a la velocidad extra del café.</summary>
@@ -76,34 +55,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             jugador = GetComponent<JugadorAPie>();
             controlador = GetComponent<ControladorAPie>();
             vida = GetComponent<VidaAPie>();
-            siguiente.performed += _ => pidioSiguiente = true;
-            usar.performed += _ => pidioUsar = true;
-            for (int i = 0; i < directas.Length; i++)
-            {
-                int numero = i;
-                directas[i] = new InputAction("ConsumibleDirecto" + (i + 1), InputActionType.Button, TeclasDirectas[i]);
-                directas[i].performed += _ => pidioDirecta = numero;
-            }
-        }
-
-        private void OnEnable()
-        {
-            siguiente.Enable();
-            usar.Enable();
-            foreach (InputAction accion in directas)
-            {
-                accion.Enable();
-            }
         }
 
         private void OnDisable()
         {
-            siguiente.Disable();
-            usar.Disable();
-            foreach (InputAction accion in directas)
-            {
-                accion.Disable();
-            }
             Desuscribir();
             RestablecerVelocidad();
         }
@@ -136,29 +91,6 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (velocidadHasta >= 0f && Time.time >= velocidadHasta)
             {
                 RestablecerVelocidad();
-            }
-            bool siguientePedido = pidioSiguiente;
-            bool usarPedido = pidioUsar;
-            int directaPedida = pidioDirecta;
-            pidioSiguiente = false;
-            pidioUsar = false;
-            pidioDirecta = -1;
-            if (!PuedeActuar())
-            {
-                return;
-            }
-            if (siguientePedido)
-            {
-                indice = ReglaConsumibles.Siguiente(indice, disponibles.Count);
-                Cambio?.Invoke();
-            }
-            if (usarPedido)
-            {
-                Usar(Seleccionado);
-            }
-            if (directaPedida >= 0 && directaPedida < catalogo.Count)
-            {
-                Usar(catalogo[directaPedida]);
             }
         }
 
