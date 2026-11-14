@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MechaCyberpunk.Core.Trepar;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -52,10 +53,53 @@ namespace MechaCyberpunk.Tests.Personaje
             return ZonasCasas.Concat(new[] { "Barrio" }).FirstOrDefault(z => nombre.StartsWith(z)) ?? nombre;
         }
 
+        // Otras clases dejan la Ciudad cargada: se descarta antes de cada prueba y después (para no contaminar a las siguientes).
+        [UnitySetUp]
+        public IEnumerator DescargarCiudadPrevia()
+        {
+            yield return DescargarCiudades("TechosS2_VaciaAntes");
+        }
+
+        [UnityTearDown]
+        public IEnumerator DescargarCiudadAlTerminar()
+        {
+            yield return DescargarCiudades("TechosS2_VaciaDespues");
+        }
+
+        private static IEnumerator DescargarCiudades(string nombreVacia)
+        {
+            bool hayCiudad = false;
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                hayCiudad |= SceneManager.GetSceneAt(i).path.Contains("Ciudad");
+            }
+            if (!hayCiudad)
+            {
+                yield break;
+            }
+            SceneManager.SetActiveScene(SceneManager.CreateScene(nombreVacia));
+            for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
+            {
+                Scene s = SceneManager.GetSceneAt(i);
+                if (s.path.Contains("Ciudad"))
+                {
+                    yield return SceneManager.UnloadSceneAsync(s);
+                }
+            }
+        }
+
+        public override void TearDown()
+        {
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado != null ? new InputDevice[] { teclado } : new InputDevice[0]);
+            base.TearDown();
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
+        }
+
         private IEnumerator Cargar()
         {
             teclado = InputSystem.AddDevice<Keyboard>();
             InputSystem.AddDevice<Mouse>();
+            MapasDeAccionesDePrueba.Reiniciar(teclado);
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             trepar = Object.FindFirstObjectByType<TreparAPie>();

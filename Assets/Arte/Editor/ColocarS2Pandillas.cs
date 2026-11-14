@@ -145,7 +145,69 @@ namespace MechaCyberpunk.Arte.Editor
                 CrearGrupo(raiz.transform, i, elegidos[i], Tamanos[i], acoso, calaveras, prefabPandillero);
             }
             ColocarS2.Informe.AppendLine("Grupos: " + elegidos.Count + ", SKULLS: " + elegidos.Select((e, i) => Tamanos[i]).Sum());
+            AbrirPasoEnAzotea();
             ColocarS2.Guardar("s2-pandillas");
+        }
+
+        // T-999: el pretil (0,9 m de alto y 0,36 m de grueso) entre la azotea vecina y la del grupo no se puede agarrar (no da apoyo) ni saltar,
+        // así que desde la vecina no se llegaba al grupo. Se apaga la pieza de pretil que queda en la línea a espaldas del grupo (un paso de ~2 m).
+        private const float AnchoPaso = 1.2f;
+        private const float DistMinPaso = 3f;
+        private const float DistMaxPaso = 12f;
+
+        [MenuItem("Mecha Cyberpunk/S2/Abrir paso en la azotea de la pandilla")]
+        public static void AbrirPasoEnAzoteaMenu()
+        {
+            ColocarS2.Informe.Clear();
+            ColocarS2.Abrir();
+            Physics.SyncTransforms();
+            AbrirPasoEnAzotea();
+            ColocarS2.Guardar("s2-pandillas-paso");
+        }
+
+        private static void AbrirPasoEnAzotea()
+        {
+            Transform raiz = ColocarS2.Buscar(Raiz);
+            Transform grupo = raiz == null ? null : raiz.Cast<Transform>().FirstOrDefault(t => t.name.EndsWith("_Azotea"));
+            if (grupo == null)
+            {
+                ColocarS2.Informe.AppendLine("Paso en la azotea: no hay grupo de azotea.");
+                return;
+            }
+            // La espalda del grupo: contraria al frente medio de sus pandilleros (miran al civil), en línea cardinal.
+            Vector3 frente = Vector3.zero;
+            foreach (PandilleroAPie p in grupo.GetComponentsInChildren<PandilleroAPie>(true))
+            {
+                frente += p.transform.forward;
+            }
+            frente.y = 0f;
+            Vector3 espalda = -frente.normalized;
+            Vector3 d = Mathf.Abs(espalda.x) > Mathf.Abs(espalda.z) ? new Vector3(Mathf.Sign(espalda.x), 0f, 0f) : new Vector3(0f, 0f, Mathf.Sign(espalda.z));
+            Vector3 c = grupo.position;
+            Vector3 lado = Vector3.Cross(Vector3.up, d);
+            int apagados = 0;
+            foreach (Transform t in ColocarS2.Todos())
+            {
+                if (t.name != "C05_PretilAzotea" || !t.gameObject.activeSelf)
+                {
+                    continue;
+                }
+                Collider col = t.GetComponentInChildren<Collider>();
+                if (col == null || Mathf.Abs(col.bounds.center.y - c.y) > 1.5f)
+                {
+                    continue;
+                }
+                Vector3 rel = col.bounds.center - c;
+                float largo = Vector3.Dot(rel, d);
+                float cruz = Mathf.Abs(Vector3.Dot(rel, lado));
+                if (largo >= DistMinPaso && largo <= DistMaxPaso && cruz <= AnchoPaso)
+                {
+                    t.gameObject.SetActive(false);
+                    apagados++;
+                    ColocarS2.Informe.AppendLine("Paso en la azotea: pretil " + t.name + " apagado en " + col.bounds.center + " (a " + largo.ToString("F1") + " m del grupo hacia " + d + ")");
+                }
+            }
+            ColocarS2.Informe.AppendLine("Pasos abiertos en el pretil de " + grupo.name + ": " + apagados);
         }
 
         // ------------------------------------------------------------------ datos

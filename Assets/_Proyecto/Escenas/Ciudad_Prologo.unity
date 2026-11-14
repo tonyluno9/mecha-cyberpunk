@@ -571939,6 +571939,10 @@ PrefabInstance:
       value: C05_PretilAzotea
       objectReference: {fileID: 0}
     - target: {fileID: 7663400285526035616, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7663400285526035616, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4
       objectReference: {fileID: 0}
@@ -873745,6 +873749,10 @@ PrefabInstance:
     - target: {fileID: 7663400285526035616, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
       propertyPath: m_Name
       value: C05_PretilAzotea
+      objectReference: {fileID: 0}
+    - target: {fileID: 7663400285526035616, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7663400285526035616, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
       propertyPath: m_StaticEditorFlags
