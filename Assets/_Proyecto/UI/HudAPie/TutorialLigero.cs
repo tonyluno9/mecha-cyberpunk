@@ -1,6 +1,7 @@
 using MechaCyberpunk.Combate.Golpe;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.Personaje.Habilidades;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
@@ -50,6 +51,7 @@ namespace MechaCyberpunk.UI.Hud
         private ConsumiblesJugador consumibles;
         private GolpeAPie golpe;
         private ArmasAPie armas;
+        private HabilidadesProtesis habilidades;
         private IEscudo escudo;
         private int aperturasRuedaVistas = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Aperturas;
         private int vistasGuardadas;
@@ -120,6 +122,7 @@ namespace MechaCyberpunk.UI.Hud
             consumibles = raizCacheada.GetComponentInChildren<ConsumiblesJugador>();
             golpe = raizCacheada.GetComponentInChildren<GolpeAPie>();
             armas = raizCacheada.GetComponentInChildren<ArmasAPie>();
+            habilidades = raizCacheada.GetComponentInChildren<HabilidadesProtesis>();
             IEscudo nuevoEscudo = Registro<IEscudo>.Actual;
             if (nuevoEscudo != escudo)
             {
@@ -235,6 +238,11 @@ namespace MechaCyberpunk.UI.Hud
                 aperturasRuedaVistas = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Aperturas;
                 regla.Hecha(AccionTutorial.Consumibles);
             }
+            if (habilidades != null && (habilidades.Estado(HabilidadProtesis.Piernas) != EstadoHabilidad.Lista
+                || habilidades.Estado(HabilidadProtesis.Brazos) != EstadoHabilidad.Lista || habilidades.Estado(HabilidadProtesis.Cabeza) != EstadoHabilidad.Lista))
+            {
+                regla.Hecha(AccionTutorial.Habilidades);
+            }
             if (pistola != null && pistola.Recargando)
             {
                 regla.Hecha(AccionTutorial.Recargar);
@@ -276,6 +284,9 @@ namespace MechaCyberpunk.UI.Hud
                     return consumibles != null && consumibles.Disponibles.Count > 0;
                 case AccionTutorial.Escudo:
                     return escudo != null && escudo.Maximo > 0f;
+                case AccionTutorial.Habilidades:
+                    return habilidades != null && (habilidades.Nivel(HabilidadProtesis.Piernas) > 0 || habilidades.Nivel(HabilidadProtesis.Brazos) > 0
+                        || habilidades.Nivel(HabilidadProtesis.Cabeza) > 0);
                 case AccionTutorial.Apuntar:
                 case AccionTutorial.Disparar:
                 case AccionTutorial.Recargar:
@@ -335,15 +346,26 @@ namespace MechaCyberpunk.UI.Hud
             {
                 if (regla.HayAviso)
                 {
-                    texto.text = ReglaTutorial.Texto(regla.Aviso, TeclaReal);
+                    texto.text = TextoAviso();
                 }
                 return;
             }
             if (regla.HayAviso)
             {
-                texto.text = ReglaTutorial.Texto(regla.Aviso, TeclaReal);
+                texto.text = TextoAviso();
             }
             cuadro.SetActive(regla.HayAviso);
+        }
+
+        // T-992: el aviso de habilidades solo nombra las que el jugador tiene.
+        private string TextoAviso()
+        {
+            if (regla.Aviso == AccionTutorial.Habilidades && habilidades != null)
+            {
+                return ReglaTutorial.TextoHabilidades(TeclaReal, habilidades.Nivel(HabilidadProtesis.Piernas) > 0,
+                    habilidades.Nivel(HabilidadProtesis.Brazos) > 0, habilidades.Nivel(HabilidadProtesis.Cabeza) > 0);
+            }
+            return ReglaTutorial.Texto(regla.Aviso, TeclaReal);
         }
 
         private void GuardarSiCambio()

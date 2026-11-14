@@ -49,6 +49,7 @@ namespace MechaCyberpunk.UI.Hud
                 case AccionTutorial.SubirAlCarro:
                 case AccionTutorial.Mapa:
                 case AccionTutorial.Consumibles:
+                case AccionTutorial.Habilidades:
                     return AccionTutorial.Moverse;
                 case AccionTutorial.Agacharse:
                     return AccionTutorial.Correr;
@@ -84,6 +85,9 @@ namespace MechaCyberpunk.UI.Hud
         public const string TeclaMapa = "Mapa";
         public const string TeclaTelefono = "Telefono";
         public const string TeclaRueda = "Rueda";
+        public const string TeclaPiernas = "HabilidadPiernas";
+        public const string TeclaBrazos = "HabilidadBrazos";
+        public const string TeclaCabeza = "HabilidadCabeza";
 
         /// <summary>Las teclas de siempre, para cuando no hay Input System que preguntar (pruebas y respaldo).</summary>
         public static string TeclaPorOmision(string nombre)
@@ -102,6 +106,9 @@ namespace MechaCyberpunk.UI.Hud
                 case TeclaMapa: return "M";
                 case TeclaTelefono: return "T";
                 case TeclaRueda: return "Tab";
+                case TeclaPiernas: return "1";
+                case TeclaBrazos: return "2";
+                case TeclaCabeza: return "3";
                 default: return nombre;
             }
         }
@@ -134,8 +141,22 @@ namespace MechaCyberpunk.UI.Hud
                 case AccionTutorial.Misiones: return k(TeclaTelefono) + " ABRE EL TELÉFONO Y TUS MISIONES";
                 case AccionTutorial.Consumibles: return "MANTÉN " + k(TeclaRueda) + " PARA ELEGIR UN ARMA O USAR UN OBJETO";
                 case AccionTutorial.Escudo: return "TU ESCUDO ABSORBE BALAS Y SE RECARGA SOLO";
+                case AccionTutorial.Habilidades: return TextoHabilidades(tecla, true, true, true);
                 default: return string.Empty;
             }
+        }
+
+        /// <summary>
+        /// T-992: el aviso de las habilidades de prótesis, solo con las que se tienen: "[1] PIERNAS · [2] BRAZOS · [3] CABEZA". Vacío si no hay ninguna.
+        /// </summary>
+        public static string TextoHabilidades(Func<string, string> tecla, bool piernas, bool brazos, bool cabeza)
+        {
+            Func<string, string> k = nombre => (tecla != null ? tecla(nombre) : TeclaPorOmision(nombre)).ToUpperInvariant();
+            List<string> partes = new List<string>();
+            if (piernas) partes.Add("[" + k(TeclaPiernas) + "] PIERNAS");
+            if (brazos) partes.Add("[" + k(TeclaBrazos) + "] BRAZOS");
+            if (cabeza) partes.Add("[" + k(TeclaCabeza) + "] CABEZA");
+            return string.Join(" · ", partes);
         }
 
         /// <summary>La persona hizo la acción: se da por vista y, si era el aviso en pantalla, se quita.</summary>

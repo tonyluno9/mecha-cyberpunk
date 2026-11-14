@@ -115,6 +115,36 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "HabilidadPiernas",
+                    "type": "Button",
+                    "id": "a1f0c3d2-5b7e-4c81-9d0a-3e6f7b8c9d01",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "HabilidadBrazos",
+                    "type": "Button",
+                    "id": "a1f0c3d2-5b7e-4c81-9d0a-3e6f7b8c9d02",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "HabilidadCabeza",
+                    "type": "Button",
+                    "id": "a1f0c3d2-5b7e-4c81-9d0a-3e6f7b8c9d03",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -280,6 +310,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Rueda",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e01",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HabilidadPiernas",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e02",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HabilidadBrazos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e03",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HabilidadCabeza",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

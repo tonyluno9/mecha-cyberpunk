@@ -121,11 +121,15 @@ namespace MechaCyberpunk.Personaje.Combate
             return arsenal != null ? arsenal.Datos(ArmaAPie.Punos) : null;
         }
 
+        private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis habilidades;
+        private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis Habilidades =>
+            habilidades != null ? habilidades : (habilidades = GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>());
+
         private float DanioDelGolpe()
         {
             DatosArma punos = DatosPunos();
             float basico = punos != null ? punos.Danio : datos.DanioGolpe;
-            return basico * implantes.Efectos.multiplicadorGolpeAPie;
+            return basico * implantes.Efectos.multiplicadorGolpeAPie * (Habilidades != null ? Habilidades.FactorGolpe : 1f);
         }
 
         private void AjustarRecarga()
@@ -150,6 +154,13 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 ResultadoDanio resultado = objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(), TipoDanio.Golpe, punto, direccion, null));
                 Conecto?.Invoke(resultado.CausoKO);
+                // T-992: con BRAZOS activa el golpe empuja a lo que tenga cuerpo con física.
+                float empuje = Habilidades != null ? Habilidades.EmpujeGolpe : 0f;
+                Rigidbody cuerpo = empuje > 0f && objetivo is Component componente ? componente.GetComponentInParent<Rigidbody>() : null;
+                if (cuerpo != null)
+                {
+                    cuerpo.AddForce(direccion.normalized * empuje, ForceMode.VelocityChange);
+                }
             }
             Sonidos.ReproducirEn(objetivo != null ? "PUN_GOLPE_CARNE" : "PUN_GOLPE_AIRE", objetivo != null ? punto : origen);
             Impacto?.Invoke();

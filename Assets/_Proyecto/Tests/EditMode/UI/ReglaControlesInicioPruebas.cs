@@ -27,10 +27,14 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
-        public void Texto_TieneLasTresFilas()
+        public void Texto_TieneLasCuatroFilas_ConLasHabilidades()
         {
             string[] filas = ReglaControlesInicio.Texto(accion => "X").Split('\n');
-            Assert.AreEqual(3, filas.Length);
+            Assert.AreEqual(4, filas.Length);
+            StringAssert.Contains("[1] PIERNAS", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.Contains("[2] BRAZOS", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.Contains("[3] CABEZA", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.StartsWith("HABILIDADES", filas[3]);
             StringAssert.StartsWith("MOVER", filas[0]);
             StringAssert.StartsWith("INTERACTUAR", filas[1]);
             StringAssert.StartsWith("RECARGAR", filas[2]);

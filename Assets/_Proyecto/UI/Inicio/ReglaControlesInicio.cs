@@ -16,6 +16,9 @@ namespace MechaCyberpunk.UI.Inicio
         public const string Disparar = "Atacar";
         public const string Recargar = "Recargar";
         public const string Rueda = "Rueda";
+        public const string Piernas = "HabilidadPiernas";
+        public const string Brazos = "HabilidadBrazos";
+        public const string Cabeza = "HabilidadCabeza";
         public const string Mapa = "Mapa";
         public const string Telefono = "Telefono";
         public const string Pausa = "Pausa";
@@ -33,6 +36,9 @@ namespace MechaCyberpunk.UI.Inicio
                 case Disparar: return "Clic";
                 case Recargar: return "R";
                 case Rueda: return "Tab";
+                case Piernas: return "1";
+                case Brazos: return "2";
+                case Cabeza: return "3";
                 case Mapa: return "M";
                 case Telefono: return "T";
                 case Pausa: return "Esc";
@@ -52,7 +58,8 @@ namespace MechaCyberpunk.UI.Inicio
             return "MOVER  " + T(Mover) + "        CORRER  " + T(Correr) + "        SALTAR  " + T(Saltar) + "\n"
                 + "INTERACTUAR  " + T(Interactuar) + "        APUNTAR  " + T(Apuntar) + "        DISPARAR  " + T(Disparar) + "\n"
                 + "RECARGAR  " + T(Recargar) + "        ARMAS Y OBJETOS  " + T(Rueda) + "        MAPA  " + T(Mapa)
-                + "        TELÉFONO  " + T(Telefono) + "        PAUSA  " + T(Pausa);
+                + "        TELÉFONO  " + T(Telefono) + "        PAUSA  " + T(Pausa) + "\n"
+                + "HABILIDADES  [" + T(Piernas) + "] PIERNAS  [" + T(Brazos) + "] BRAZOS  [" + T(Cabeza) + "] CABEZA";
         }
     }
 }

@@ -20,6 +20,7 @@ namespace MechaCyberpunk.UI.Hud
         Mapa,
         Misiones,
         Consumibles,
-        Escudo
+        Escudo,
+        Habilidades
     }
 }

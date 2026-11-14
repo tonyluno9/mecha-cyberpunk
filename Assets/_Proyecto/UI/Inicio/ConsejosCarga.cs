@@ -13,6 +13,7 @@ namespace MechaCyberpunk.UI.Inicio
             "Saca el teléfono con T para ver tus contactos.",
             "ESC abre la pausa: ahí guardas la partida y ajustas las opciones.",
             "Mantén TAB para elegir un arma o usar un objeto; la rueda del ratón también cambia de arma.",
+            "Con implantes, las teclas 1, 2 y 3 activan las habilidades de piernas, brazos y cabeza.",
             "Lo que pasa en la calle se nota: la policía se fija en lo que haces.",
             "Cada pandilla manda en su zona. Mira los colores del mapa.",
         };

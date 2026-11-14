@@ -1,6 +1,7 @@
 using System;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje.Habilidades;
 using MechaCyberpunk.Progresion.Apoyo;
 using NUnit.Framework;
 using UnityEditor;
@@ -9,7 +10,7 @@ using Object = UnityEngine.Object;
 
 namespace MechaCyberpunk.Tests.Progresion
 {
-    /// <summary>T-866 (playtest 6-nov tarde): con el VISOR (ojos) los enemigos cercanos llevan el material de rayos X; sin él, no.</summary>
+    /// <summary>T-866 (playtest 6-nov tarde): con el VISOR (ojos) los enemigos cercanos llevan el material de rayos X; sin él, no. T-992: y solo mientras CABEZA está activa.</summary>
     public class VisorRayosXPruebas
     {
         private sealed class ImplantesDoble : IImplantes
@@ -32,9 +33,13 @@ namespace MechaCyberpunk.Tests.Progresion
             public void Colocar(Pose pose) { }
         }
 
+        [TearDown]
+        public void Limpiar() => HabilidadesProtesis.PonerCabezaActiva(false);
+
         [Test]
         public void Visor_MarcaAlEnemigoCercano_YAlQuitarloLoDesmarca()
         {
+            HabilidadesProtesis.PonerCabezaActiva(true);
             ImplantesDoble implantes = new ImplantesDoble { Ojos = 1 };
             GameObject jugadorGo = new GameObject("Jugador");
             JugadorDoble jugador = new JugadorDoble { Raiz = jugadorGo.transform };
@@ -62,6 +67,12 @@ namespace MechaCyberpunk.Tests.Progresion
                 visor.Actualizar();
                 Assert.IsFalse(visor.EstaMarcado(r), "sin el visor, no");
                 Assert.AreEqual(1, r.sharedMaterials.Length, "y su material queda como estaba");
+                implantes.Ojos = 1;
+                visor.Actualizar();
+                Assert.IsTrue(visor.EstaMarcado(r), "con el visor otra vez, se marca");
+                HabilidadesProtesis.PonerCabezaActiva(false);
+                visor.Actualizar();
+                Assert.IsFalse(visor.EstaMarcado(r), "con CABEZA apagada, aunque tenga el implante, no se ve a través de las cosas");
             }
             finally
             {

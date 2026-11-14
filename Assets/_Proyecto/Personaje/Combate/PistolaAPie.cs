@@ -234,11 +234,17 @@ namespace MechaCyberpunk.Personaje.Combate
             }
         }
 
+        private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis habilidades;
+
         private void Update()
         {
             RevisarArmas();
             ReproducirDiferidos();
-            float factorRecarga = EfectosAPie.FactorRecarga(implantes.Efectos);
+            if (habilidades == null)
+            {
+                habilidades = GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>();
+            }
+            float factorRecarga = EfectosAPie.FactorRecarga(implantes.Efectos) * (habilidades != null ? habilidades.FactorTiempoRecarga : 1f);
             for (int i = 0; i < CantidadArmas; i++)
             {
                 if (cargadores[i] != null)
