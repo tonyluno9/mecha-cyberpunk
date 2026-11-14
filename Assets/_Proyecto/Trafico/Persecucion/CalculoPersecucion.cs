@@ -64,6 +64,20 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return Math.Min(posible, distanciaAlJugador - distanciaSeguimiento);
         }
 
+        /// <summary>
+        /// T-986: la velocidad (m/s) que debe llevar un perseguidor que maneja de verdad: la suya, pero frenando con <paramref name="desaceleracion"/> (m/s2)
+        /// para quedar parado a la distancia de seguimiento. 0 si ya está ahí o más cerca.
+        /// </summary>
+        public float VelocidadDeseada(bool esDron, float distanciaAlJugador, float desaceleracion)
+        {
+            if (distanciaAlJugador <= distanciaSeguimiento)
+            {
+                return 0f;
+            }
+            float tope = esDron ? velocidadDron : velocidadPatrulla;
+            return Math.Min(tope, (float)Math.Sqrt(2f * Math.Max(0f, desaceleracion) * (distanciaAlJugador - distanciaSeguimiento)));
+        }
+
         /// <summary>True si el perseguidor está lo bastante cerca como para alcanzar al jugador.</summary>
         public bool Alcanzado(float distanciaAlJugador) => distanciaAlJugador <= distanciaCaptura;
     }

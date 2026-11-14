@@ -553,6 +553,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             GrafoCalles grafo = GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles);
             TraficoCalle.AlargarHaciaLasAfueras(grafo); // T-587: las patrullas llegan y se van por las calles de las afueras, lejos de la vista
+            BloqueosDeCalles.Marcar(grafo); // T-986: manejan con física: un cierre en la calle las detiene, así que ninguna sale ni va por ahí
             return grafo;
         }
 

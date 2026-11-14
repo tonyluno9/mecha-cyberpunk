@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
+using MechaCyberpunk.Vehiculos.Carro;
 using UnityEngine;
 
 namespace MechaCyberpunk.Trafico.Persecucion
@@ -17,9 +18,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
     /// </summary>
     public class PatrullaMundo : MonoBehaviour, Testigos.ITestigoPolicia
     {
-        // T-746: gira como un carro, no sobre su eje: lo que puede girar depende de lo que avanza (radio de giro mínimo, el del carro del jugador: distancia entre ejes / tan del volante).
-        private const float RadioMinimoGiro = 3.6f;
-        private const float DistanciaMinimaDeNodo = 0.01f;
         // T-533: de cerca deja la calle y va directo hacia el jugador (como en GTA), y por el megáfono le grita cada tanto.
         private const float DistanciaDirecta = 28f;
         private const float DistanciaMegafono = 35f;
@@ -29,7 +27,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float AlturaOjos = 2.2f;
         private const float MargenAlJugador = 3f;
         private const float DistanciaEntreMigas = 2f;
-        private const float LlegadaAMiga = 0.3f;
         private const float MargenDelante = 1.5f;
         private const int MaximoDeMigas = 60;
         // T-587: velocidad del jugador suavizada y alcance de la cámara para saber si la patrulla se ve.
@@ -44,8 +41,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private static readonly List<PatrullaMundo> ActivasLista = new List<PatrullaMundo>();
         // T-666: conducción natural: carril a la derecha, esquiva obstáculos y no se encima con otras patrullas.
         private const float AnchoCarril = 1.6f;
-        private const float VelocidadCarril = 4.5f;
-        private const float DistanciaObstaculo = 14f;
+        private const float VelocidadCarril = 6f;
+        private const float DistanciaObstaculo = 20f;
         private const float RadioObstaculo = 0.7f;
         private const float AlturaObstaculo = 1.4f;
         private const float DistanciaFrenoPatrullas = 12f;
@@ -53,6 +50,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float AnchoDePasoPatrullas = 2.8f;
         private const float FactorObstaculoTotal = 0.15f;
         private const float RapidezDeFreno = 3f;
+        // T-986: maneja con la física del carro; esto es lo que se mira para quitarla si queda volcada y para no esperar por siempre un obstáculo.
+        private const float MinimoArribaVolcada = 0.3f;
+        private const float DistanciaMinimaDeMira = 1f;
+        private static readonly float[] CarrilesPosibles = { AnchoCarril, -AnchoCarril, 2.75f * AnchoCarril, -2.75f * AnchoCarril };
         private static readonly float[] GradosParaEsquivar = { 35f, -35f, 70f, -70f, 105f, -105f };
         private static readonly RaycastHit[] impactos = new RaycastHit[16];
         private float factorVelocidad = 1f;
@@ -76,6 +77,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private int indiceEnCamino;
         private int nodoMeta = -1;
         private Vector3 posicion;
+        // T-986: el conductor IA (puro) y lo que el cerebro le pasa cada paso de física: a dónde mirar y qué velocidad llevar.
+        private CarroViejo carro;
+        private ConductorCarroIA conductor;
+        private Vector3 puntoDeMira;
+        private float velocidadDeseada;
+        private ParametrosConductorIA parametrosConductor;
+        private bool orientarAlSalir;
+        private float segundosVolcada;
+        private float segundosObstaculoTotal;
+        private bool estorboEnMiCarril;
         private readonly List<Vector3> rastro = new List<Vector3>();
         private Vector3 ultimaVista;
         private Vector3 velocidadJugador;
@@ -118,13 +129,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private IMontable montable;
         private Renderer[] visuales;
         private float raizABajo = -1f;
-        private float alturaSuelo;
-        private float objetivoSuelo;
-        private float proximoRayoSuelo;
         private readonly RaycastHit[] golpesSuelo = new RaycastHit[8];
         private readonly RaycastHit[] golpesRayo = new RaycastHit[16];
-        private const float SegundosEntreRayosSuelo = 0.3f;
-        private const float VelocidadAjusteSuelo = 6f;
         private const float AltoRayoSuelo = 2f;
         private const float LargoRayoSuelo = 10f;
         private const float MinimoRaizABajo = 0.05f;
@@ -137,6 +143,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             cuerpo = GetComponent<Rigidbody>();
             montable = GetComponent<IMontable>();
+            carro = GetComponent<CarroViejo>();
             List<Renderer> mallas = new List<Renderer>();
             foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
             {
@@ -243,13 +250,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             VaDirecto = false;
             // Ya es un carro suelto del jugador: su suspensión y sus choques ignoran lo que comparta su raíz, y colgada del barrio compartiría la del suelo.
             transform.SetParent(null, true);
-            if (cuerpo != null)
-            {
-                cuerpo.isKinematic = false;
-                cuerpo.interpolation = RigidbodyInterpolation.Interpolate;
-                cuerpo.linearVelocity = Vector3.zero;
-                cuerpo.angularVelocity = Vector3.zero;
-            }
+            carro?.SoltarIA(); // T-986: ahora la maneja el jugador
             PonerLuces(false, false);
             enabled = false; // OnDisable apaga la sirena y la quita de las activas
         }
@@ -275,16 +276,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 }
             }
             return y;
-        }
-
-        private void SeguirElSuelo(float dt)
-        {
-            if (Time.time >= proximoRayoSuelo)
-            {
-                proximoRayoSuelo = Time.time + SegundosEntreRayosSuelo;
-                objetivoSuelo = BuscarSuelo(posicion, alturaSuelo, objetivoSuelo);
-            }
-            alturaSuelo = Mathf.MoveTowards(alturaSuelo, objetivoSuelo, VelocidadAjusteSuelo * dt);
         }
 
         // Nada sólido en el rayo (el de la propia patrulla no cuenta: su origen puede quedar dentro de su carrocería).
@@ -338,14 +329,29 @@ namespace MechaCyberpunk.Trafico.Persecucion
             velocidadJugador = Vector3.zero;
             // La policía sabe por la radio dónde fue el aviso: ahí va primero.
             ultimaVista = posicionJugador?.Invoke() ?? posicion;
-            alturaSuelo = BuscarSuelo(posicion, posicion.y, posicion.y);
-            objetivoSuelo = alturaSuelo;
-            proximoRayoSuelo = Time.time + SegundosEntreRayosSuelo;
-            transform.position = new Vector3(posicion.x, alturaSuelo + RaizABajo, posicion.z);
+            // T-986: la única vez que se coloca a mano es al aparecer, fuera de la vista; después maneja con la física del carro.
+            float alturaSuelo = BuscarSuelo(posicion, posicion.y, posicion.y);
+            Vector3 colocacion = new Vector3(posicion.x, alturaSuelo + RaizABajo, posicion.z);
+            transform.position = colocacion;
             if (cuerpo != null)
             {
-                cuerpo.isKinematic = true;
-                cuerpo.interpolation = RigidbodyInterpolation.None; // la mueve este script con el transform: la interpolación del cuerpo lo contradice
+                cuerpo.isKinematic = false;
+                cuerpo.interpolation = RigidbodyInterpolation.Interpolate;
+                cuerpo.position = colocacion;
+                cuerpo.linearVelocity = Vector3.zero;
+                cuerpo.angularVelocity = Vector3.zero;
+            }
+            parametrosConductor = config.ParametrosConductor;
+            puntoDeMira = colocacion;
+            velocidadDeseada = 0f;
+            orientarAlSalir = true;
+            segundosVolcada = 0f;
+            segundosObstaculoTotal = 0f;
+            desvioCarril = 0f;
+            if (carro != null)
+            {
+                conductor = new ConductorCarroIA(carro.ParametrosManejo, parametrosConductor);
+                carro.ConducirConIA(PedirEntrada);
             }
             if (conSirena && bucleSirena == Sonidos.SinBucle)
             {
@@ -392,7 +398,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             VeAlJugador = false;
             segundosRetirandose = 0f;
             Vector3 referencia = posicionJugador?.Invoke() ?? ultimaVista;
-            nodoRetiro = calles.MasLejano(referencia);
+            nodoRetiro = calles.MasLejano(referencia, calles.MasCercano(transform.position)); // T-986: el más lejano al que de verdad puede llegar
             nodoMeta = -1;
             Sonidos.DetenerBucle(bucleSirena);
             bucleSirena = Sonidos.SinBucle;
@@ -405,6 +411,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private void AlExplotarVehiculo()
         {
             Destruida = true;
+            carro?.SoltarIA();
             VeAlJugador = false;
             PonerLuces(false, false);
             enabled = false;
@@ -420,6 +427,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             ActivasLista.Remove(this);
             Registro<Testigos.ITestigoPolicia>.Quitar(this);
+            carro?.SoltarIA();
             Sonidos.DetenerBucle(bucleSirena);
             bucleSirena = Sonidos.SinBucle;
         }
@@ -431,7 +439,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return false;
             }
-            if (DistanciaPlano(posicion, punto) <= config.RadioVista && Testigos.LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, punto))
+            if (DistanciaPlano(transform.position, punto) <= config.RadioVista && Testigos.LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, punto))
             {
                 return true;
             }
@@ -446,35 +454,88 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return false;
         }
 
-        // T-666: frena si hay otra patrulla delante o un obstáculo cerrando los dos carriles; Conducir usa ese factor como si el tiempo corriera más lento.
-        private void Update()
+        // T-986: el conductor IA pide su entrada al carro en cada paso de física.
+        private EntradaCarro PedirEntrada()
         {
-            if (calculo == null)
-            {
-                return;
-            }
-            float dtReal = Time.deltaTime;
-            SeguirElSuelo(dtReal);
-            factorVelocidad = Mathf.MoveTowards(factorVelocidad, FactorDeFreno(), RapidezDeFreno * dtReal);
-            Conducir();
-            AplicarCarril(dtReal);
+            return conductor.Calcular(cuerpo.position, cuerpo.rotation * Vector3.forward, cuerpo.linearVelocity, puntoDeMira, velocidadDeseada, Time.fixedDeltaTime);
         }
 
-        private void Conducir()
+        /// <summary>T-986: rapidez actual de la patrulla (m/s).</summary>
+        public float Rapidez => cuerpo != null ? cuerpo.linearVelocity.magnitude : 0f;
+
+        /// <summary>T-986: el punto al que mira el conductor y los m/s que quiere llevar (para las pruebas).</summary>
+        public Vector3 PuntoDeMira => puntoDeMira;
+        public float VelocidadDeseada => velocidadDeseada;
+
+        /// <summary>T-986: false hasta que quedó colocada y mirando hacia donde va (al aparecer, fuera de la vista).</summary>
+        public bool Orientada => !orientarAlSalir;
+
+        /// <summary>T-986: true mientras da reversa por haberse atorado.</summary>
+        public bool EnReversa => conductor != null && conductor.EnReversa;
+
+        /// <summary>T-986: cuántas veces se atoró y dio reversa.</summary>
+        public int Reversas => conductor != null ? conductor.Reversas : 0;
+
+        // T-666: frena si hay otra patrulla delante o un obstáculo cerrando los dos carriles. T-986: el cerebro corre en el paso de física,
+        // decide a dónde mirar y qué velocidad llevar, y el conductor lo vuelve volante y pedales del carro; ya no se mueve el transform.
+        private void FixedUpdate()
         {
-            if (calculo == null)
+            if (calculo == null || cuerpo == null)
             {
                 return;
             }
+            float dt = Time.fixedDeltaTime;
+            posicion = cuerpo.position;
+            if (QuitarSiVolcada(dt))
+            {
+                return;
+            }
+            factorVelocidad = Mathf.MoveTowards(factorVelocidad, FactorDeFreno(), RapidezDeFreno * dt);
+            velocidadDeseada = 0f;
+            puntoDeMira = posicion + cuerpo.rotation * Vector3.forward;
+            Conducir(dt);
+            AplicarCarril(dt);
+            FrenarPorObstaculo(dt);
+        }
+
+        // Boca abajo o de lado por unos segundos y sin que nadie la vea: se quita como la que se retira; a la vista se queda.
+        private bool QuitarSiVolcada(float dt)
+        {
+            bool volcada = Vector3.Dot(cuerpo.rotation * Vector3.up, Vector3.up) < MinimoArribaVolcada;
+            segundosVolcada = volcada ? segundosVolcada + dt : 0f;
+            if (segundosVolcada >= config.SegundosVolcada && !Robada && !ConJugador && !ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara))
+            {
+                Destroy(gameObject);
+                return true;
+            }
+            return false;
+        }
+
+        // Un obstáculo que cierra los dos carriles: frena y espera; si sigue ahí avanza muy despacio (si choca, el conductor da reversa).
+        private void FrenarPorObstaculo(float dt)
+        {
+            if (estorboEnMiCarril && !ObstaculoTotal)
+            {
+                velocidadDeseada = Mathf.Min(velocidadDeseada, parametrosConductor.VelocidadMinimaCurva); // da tiempo a cambiar de carril antes de llegar
+            }
+            segundosObstaculoTotal = ObstaculoTotal ? segundosObstaculoTotal + dt : 0f;
+            if (ObstaculoTotal)
+            {
+                velocidadDeseada = segundosObstaculoTotal >= parametrosConductor.SegundosParaAtoro ? velocidadDeseada * FactorObstaculoTotal : 0f;
+            }
+        }
+
+        private void Conducir(float dtReal)
+        {
             Vector3? jugador = posicionJugador?.Invoke();
             if (Retirando)
             {
-                Retirada(jugador, Time.deltaTime * factorVelocidad);
+                Retirada(jugador, dtReal, factorVelocidad);
                 return;
             }
             if (EnRonda)
             {
-                Rondar(Time.deltaTime * factorVelocidad);
+                Rondar(dtReal, factorVelocidad * config.FactorVelocidadRonda);
                 return;
             }
             Sirena();
@@ -482,12 +543,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
-            float dt = Time.deltaTime * factorVelocidad;
             float distanciaReal = DistanciaPlano(posicion, jugador.Value);
             bool libre = CaminoLibre(jugador.Value, distanciaReal, AlturaVista);
             // T-707: con el jugador en una patrulla robada la policía lo ubica siempre (GPS), esté donde esté.
             VeAlJugador = JugadorEnPatrulla || (distanciaReal <= config.RadioVista && CaminoLibre(jugador.Value, distanciaReal, AlturaOjos));
-            MedirVelocidad(jugador.Value, Time.deltaTime);
+            MedirVelocidad(jugador.Value, dtReal);
             if (VeAlJugador)
             {
                 ultimaVista = jugador.Value;
@@ -506,12 +566,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             if (VaDirecto)
             {
-                Directo(objetivo, dt);
+                Directo(objetivo, factorVelocidad);
                 return;
             }
-            if (rastro.Count > 0)
+            if (rastro.Count > 0 && Regresar(factorVelocidad))
             {
-                Regresar(dt);
                 return;
             }
             Vector3 destino = Intercepta && VeAlJugador
@@ -522,11 +581,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 Replanear(nuevaMeta);
             }
-            Avanzar(distancia, dt);
+            Avanzar(distancia, factorVelocidad);
         }
 
         // T-933: la ronda. Va de cruce en cruce al azar; si ve a un criminal atacando va por él, baja a sus policías y, cuando ya no hay criminales a la vista, se va.
-        private void Rondar(float dt)
+        private void Rondar(float dt, float factor)
         {
             if (Time.time >= proximoVistazo)
             {
@@ -542,7 +601,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     BajarPolicias();
                     return;
                 }
-                Directo(donde, dt);
+                Directo(donde, factor);
                 return;
             }
             if (PoliciasBajaron)
@@ -554,16 +613,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 }
                 return;
             }
-            if (rastro.Count > 0)
+            if (rastro.Count > 0 && Regresar(factor))
             {
-                Regresar(dt);
                 return;
             }
-            if (indiceEnCamino >= camino.Count)
+            // Elige el siguiente destino al llegar al último cruce, sin detenerse.
+            if (indiceEnCamino >= camino.Count - 1)
             {
                 Replanear(azarRonda.Next(calles.Cantidad));
             }
-            Avanzar(float.MaxValue, dt * config.FactorVelocidadRonda);
+            Avanzar(float.MaxValue, factor);
         }
 
         private bool CriminalVivo() => criminalVisto is UnityEngine.Object objeto && objeto != null && criminalVisto.EstaAtacando;
@@ -605,20 +664,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
         }
 
         // T-587: de camino a la salida de la ciudad; desaparece solo fuera de la vista de la cámara y lejos del jugador.
-        private void Retirada(Vector3? jugador, float dt)
+        private void Retirada(Vector3? jugador, float dt, float factor)
         {
             segundosRetirandose += dt;
-            if (rastro.Count > 0)
-            {
-                Regresar(dt);
-            }
-            else
+            if (rastro.Count == 0 || !Regresar(factor))
             {
                 if (nodoMeta != nodoRetiro)
                 {
                     Replanear(nodoRetiro);
                 }
-                Avanzar(float.MaxValue, dt);
+                Avanzar(float.MaxValue, factor);
             }
             bool lejos = !jugador.HasValue || DistanciaPlano(posicion, jugador.Value) >= config.DistanciaRetiro;
             bool sinVerse = lejos && !ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara);
@@ -629,14 +684,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
         }
 
         // De cerca: directo hacia el jugador hasta la distancia de seguimiento. Al alejarse vuelve a la calle por el nodo más cercano.
-        private void Directo(Vector3 jugador, float dt)
+        private void Directo(Vector3 jugador, float factor)
         {
-            float paso = calculo.Paso(false, DistanciaPlano(posicion, jugador), dt);
             Vector3 hacia = jugador - posicion;
             hacia.y = 0f;
-            if (hacia.sqrMagnitude > 0.0001f)
+            float distancia = hacia.magnitude;
+            float mira = Mathf.Max(DistanciaMinimaDeMira, ConductorCarroIA.DistanciaMira(parametrosConductor, Rapidez));
+            if (distancia > 0.01f)
             {
-                Vector3 direccion = Esquivar(hacia.normalized); // T-666: rodea lo que le tapa el paso
+                Vector3 recta = hacia / distancia;
+                Vector3 direccion = Esquivar(recta); // T-666: rodea lo que le tapa el paso
                 if (rastro.Count == 0 || Vector3.Distance(rastro[rastro.Count - 1], posicion) >= DistanciaEntreMigas)
                 {
                     if (rastro.Count >= MaximoDeMigas)
@@ -645,10 +702,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     }
                     rastro.Add(posicion);
                 }
-                posicion += direccion * paso;
-                GirarHacia(direccion, paso);
+                bool rodea = Vector3.Dot(direccion, recta) < 0.999f;
+                puntoDeMira = rodea || distancia > mira ? posicion + direccion * mira : jugador;
+                velocidadDeseada = Mathf.Min(calculo.VelocidadDeseada(false, distancia, config.DesaceleracionPlaneada), config.VelocidadPatrulla * factor);
             }
-            transform.position = posicion;
             int cercano = calles.MasCercano(posicion);
             camino.Clear();
             camino.Add(cercano);
@@ -671,29 +728,35 @@ namespace MechaCyberpunk.Trafico.Persecucion
         }
 
         // T-581: de vuelta a la calle por las migas que dejó al ir directo (nunca en línea recta por donde no sabe qué hay).
-        private void Regresar(float dt)
+        // T-986: va hacia la miga más reciente que quede a la distancia de mira; las que ya tiene cerca las da por recorridas. False si ya no quedan.
+        private bool Regresar(float factor)
         {
-            Vector3 miga = rastro[rastro.Count - 1];
-            Vector3 hacia = miga - posicion;
-            hacia.y = 0f;
-            float paso = calculo.Paso(false, float.MaxValue, dt);
-            if (hacia.magnitude <= Mathf.Max(paso, LlegadaAMiga))
+            while (rastro.Count > 0 && DistanciaPlano(posicion, rastro[rastro.Count - 1]) <= config.RadioLlegadaMiga)
             {
-                posicion = new Vector3(miga.x, posicion.y, miga.z);
                 rastro.RemoveAt(rastro.Count - 1);
             }
-            else
+            if (rastro.Count == 0)
             {
-                Vector3 direccion = hacia.normalized;
-                posicion += direccion * paso;
-                GirarHacia(direccion, paso);
+                return false;
             }
-            transform.position = posicion;
+            float mira = Mathf.Max(DistanciaMinimaDeMira, ConductorCarroIA.DistanciaMira(parametrosConductor, Rapidez));
+            Vector3 destino = rastro[0];
+            for (int i = rastro.Count - 1; i >= 0; i--)
+            {
+                if (DistanciaPlano(posicion, rastro[i]) >= mira)
+                {
+                    destino = rastro[i];
+                    break;
+                }
+            }
+            puntoDeMira = destino;
+            velocidadDeseada = config.VelocidadPatrulla * factor;
             int cercano = calles.MasCercano(posicion);
             camino.Clear();
             camino.Add(cercano);
             indiceEnCamino = 0;
             nodoMeta = -1;
+            return true;
         }
 
         // La patrulla puede estar a medio tramo: el camino nuevo parte del nodo al que iba (o del último nodo si ya iba para atrás).
@@ -711,35 +774,144 @@ namespace MechaCyberpunk.Trafico.Persecucion
             nodoMeta = meta;
         }
 
-        // T-746: como en un carro, el giro (rad) no pasa de los metros avanzados entre el radio mínimo; detenida no gira, así no da vueltas sobre su eje.
-        private void GirarHacia(Vector3 direccion, float metrosAvanzados)
+        // T-986: sigue la ruta del grafo con el carro real: da por pasado un cruce al llegar cerca o al rebasarlo, mira un punto de la ruta por delante
+        // (más lejos cuanto más rápido va, corrido al carril) y pide la velocidad que le deja frenar a tiempo en la meta y en las curvas.
+        private void Avanzar(float distanciaAlObjetivo, float factor)
         {
-            float maximo = metrosAvanzados / RadioMinimoGiro * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direccion, Vector3.up), maximo);
+            while (indiceEnCamino < camino.Count && NodoPasado(indiceEnCamino))
+            {
+                indiceEnCamino++;
+            }
+            if (indiceEnCamino >= camino.Count)
+            {
+                puntoDeMira = calles.Nodo(camino[camino.Count - 1]);
+                return; // llegó a la meta de la ruta: se queda parada
+            }
+            float aDesacelerar = config.DesaceleracionPlaneada;
+            float tope = config.VelocidadPatrulla * factor;
+            float mira = Mathf.Max(DistanciaMinimaDeMira, ConductorCarroIA.DistanciaMira(parametrosConductor, Rapidez));
+            Vector3 desde = InicioDeTramo();
+            puntoDeMira = PuntoSobreLaRuta(desde, mira);
+            float velocidad = tope;
+            if (distanciaAlObjetivo < float.MaxValue)
+            {
+                velocidad = Mathf.Min(velocidad, calculo.VelocidadDeseada(false, distanciaAlObjetivo, aDesacelerar));
+            }
+            // Frena para tomar cada curva a su velocidad y para quedar parada en el último cruce.
+            float acumulado = DistanciaPlano(desde, calles.Nodo(camino[indiceEnCamino]));
+            float alcanceFreno = tope * tope / (2f * aDesacelerar) + config.RadioLlegadaNodo;
+            for (int k = indiceEnCamino; k < camino.Count; k++)
+            {
+                float antes = Mathf.Max(0f, acumulado - config.RadioLlegadaNodo);
+                if (k == camino.Count - 1)
+                {
+                    velocidad = Mathf.Min(velocidad, ConductorCarroIA.VelocidadParaFrenar(antes, 0f, aDesacelerar));
+                    break;
+                }
+                Vector3 origen = k > 0 ? calles.Nodo(camino[k - 1]) : desde;
+                Vector3 entra = calles.Nodo(camino[k]) - (k > indiceEnCamino || indiceEnCamino > 0 ? origen : desde);
+                Vector3 sale = calles.Nodo(camino[k + 1]) - calles.Nodo(camino[k]);
+                entra.y = 0f;
+                sale.y = 0f;
+                float angulo = entra.sqrMagnitude > 0.01f && sale.sqrMagnitude > 0.01f ? Vector3.Angle(entra, sale) : 0f;
+                float enCurva = ConductorCarroIA.VelocidadEnCurva(parametrosConductor, tope, angulo);
+                velocidad = Mathf.Min(velocidad, ConductorCarroIA.VelocidadParaFrenar(antes, enCurva, aDesacelerar));
+                acumulado += DistanciaPlano(calles.Nodo(camino[k]), calles.Nodo(camino[k + 1]));
+                if (acumulado > alcanceFreno)
+                {
+                    break;
+                }
+            }
+            velocidadDeseada = velocidad;
+            if (orientarAlSalir)
+            {
+                OrientarAlSalir();
+            }
         }
 
-        private void Avanzar(float distanciaAlObjetivo, float dt)
+        // Al aparecer (fuera de la vista) queda mirando hacia donde va la ruta, para no tener que dar la vuelta con el volante.
+        private void OrientarAlSalir()
         {
-            float restante = calculo.Paso(false, distanciaAlObjetivo, dt);
-            float recorrido = restante;
-            while (restante > 0f && indiceEnCamino < camino.Count)
+            orientarAlSalir = false;
+            Vector3 hacia = puntoDeMira - posicion;
+            hacia.y = 0f;
+            if (hacia.sqrMagnitude > 1f && !ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara))
             {
-                Vector3 nodo = calles.Nodo(camino[indiceEnCamino]);
-                Vector3 haciaNodo = nodo - posicion;
-                float distancia = haciaNodo.magnitude;
-                if (distancia <= DistanciaMinimaDeNodo || distancia <= restante)
-                {
-                    posicion = nodo;
-                    restante -= distancia;
-                    indiceEnCamino++;
-                    continue;
-                }
-                Vector3 direccion = haciaNodo / distancia;
-                posicion += direccion * restante;
-                GirarHacia(direccion, recorrido);
-                restante = 0f;
+                Quaternion giro = Quaternion.LookRotation(hacia, Vector3.up);
+                cuerpo.rotation = giro;
+                transform.rotation = giro;
             }
-            transform.position = posicion;
+        }
+
+        // Un cruce cuenta como pasado al llegar a RadioLlegadaNodo de él o al rebasarlo a lo largo del tramo que llegaba a él.
+        private bool NodoPasado(int i)
+        {
+            Vector3 nodo = calles.Nodo(camino[i]);
+            Vector3 aEl = nodo - posicion;
+            aEl.y = 0f;
+            if (aEl.magnitude <= config.RadioLlegadaNodo)
+            {
+                return true;
+            }
+            if (i == 0)
+            {
+                return false;
+            }
+            Vector3 tramo = nodo - calles.Nodo(camino[i - 1]);
+            tramo.y = 0f;
+            return Vector3.Dot(-aEl, tramo) > 0f;
+        }
+
+        // Donde la patrulla está sobre el eje de su tramo (la proyección de su posición); sin tramo anterior, donde está.
+        private Vector3 InicioDeTramo()
+        {
+            if (indiceEnCamino <= 0)
+            {
+                return posicion;
+            }
+            Vector3 a = calles.Nodo(camino[indiceEnCamino - 1]);
+            Vector3 b = calles.Nodo(camino[indiceEnCamino]);
+            Vector3 ab = b - a;
+            ab.y = 0f;
+            float largo2 = ab.sqrMagnitude;
+            if (largo2 < 0.01f)
+            {
+                return posicion;
+            }
+            Vector3 ap = posicion - a;
+            ap.y = 0f;
+            float t = Mathf.Clamp01(Vector3.Dot(ap, ab) / largo2);
+            Vector3 punto = a + ab * t;
+            punto.y = posicion.y;
+            return punto;
+        }
+
+        // El punto a "mira" metros por la ruta desde "desde", con el desvío del carril sobre la derecha de ese tramo. Pasado el último cruce sigue recto.
+        private Vector3 PuntoSobreLaRuta(Vector3 desde, float mira)
+        {
+            Vector3 actual = desde;
+            Vector3 rumbo = cuerpo.rotation * Vector3.forward;
+            rumbo.y = 0f;
+            rumbo.Normalize();
+            float restante = mira;
+            for (int i = indiceEnCamino; i < camino.Count; i++)
+            {
+                Vector3 nodo = calles.Nodo(camino[i]);
+                nodo.y = actual.y;
+                Vector3 tramo = nodo - actual;
+                float largo = tramo.magnitude;
+                if (largo > 0.01f)
+                {
+                    rumbo = tramo / largo;
+                }
+                if (largo >= restante)
+                {
+                    break;
+                }
+                restante -= largo;
+                actual = nodo;
+            }
+            return actual + rumbo * restante + Vector3.Cross(Vector3.up, rumbo) * desvioCarril;
         }
 
         // ---- T-666: conducción más natural ----
@@ -752,11 +924,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (!enCalle)
             {
                 ObstaculoTotal = false;
+                estorboEnMiCarril = false;
             }
             desvioCarril = Mathf.MoveTowards(desvioCarril, meta, VelocidadCarril * dt);
-            Vector3 sobreLaCalle = posicion + transform.right * desvioCarril;
-            sobreLaCalle.y = alturaSuelo + RaizABajo;
-            transform.position = sobreLaCalle;
         }
 
         /// <summary>Metros que se separa de la línea central de la calle: positivo a la derecha, negativo a la izquierda.</summary>
@@ -775,10 +945,19 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             adelante.Normalize();
             Vector3 derecha = transform.right;
-            bool libreDerecha = !HayObstaculo(posicion + derecha * AnchoCarril, adelante, DistanciaObstaculo);
-            bool libreIzquierda = !HayObstaculo(posicion - derecha * AnchoCarril, adelante, DistanciaObstaculo);
-            ObstaculoTotal = !libreDerecha && !libreIzquierda;
-            return libreDerecha || ObstaculoTotal ? AnchoCarril : -AnchoCarril;
+            Vector3 eje = posicion - derecha * desvioCarril; // T-986: la patrulla ya va corrida; los dos carriles se miden desde el eje de la calle
+            estorboEnMiCarril = HayObstaculo(eje + derecha * desvioCarril, adelante, DistanciaObstaculo);
+            // El carril de la derecha, el de la izquierda y, si algo los tapa, un poco más hacia cada lado de la calle; si no hay paso, frena.
+            foreach (float carril in CarrilesPosibles)
+            {
+                if (!HayObstaculo(eje + derecha * carril, adelante, DistanciaObstaculo))
+                {
+                    ObstaculoTotal = false;
+                    return carril;
+                }
+            }
+            ObstaculoTotal = true;
+            return AnchoCarril;
         }
 
         // Un cilindro de RadioObstaculo m hacia delante; no cuentan los triggers, el jugador, los peatones ni las patrullas.
@@ -823,7 +1002,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // o, en un cruce de caminos, la que tiene menos prioridad cede; 0.15 si un obstáculo le cierra los dos carriles.
         private float FactorDeFreno()
         {
-            float factor = ObstaculoTotal ? FactorObstaculoTotal : 1f;
+            float factor = 1f;
             Vector3 adelante = transform.forward;
             adelante.y = 0f;
             for (int i = 0; i < ActivasLista.Count; i++)

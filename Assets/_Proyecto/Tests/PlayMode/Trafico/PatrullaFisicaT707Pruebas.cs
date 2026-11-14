@@ -145,7 +145,7 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [UnityTest]
-        public IEnumerator Patrulla_EsUnCarroSolido_ConCuerpoCinematicoYColliders()
+        public IEnumerator Patrulla_EsUnCarroSolido_ConCuerpoConFisicaYColliders()
         {
             calor.Poner(1);
             yield return Frames();
@@ -155,13 +155,15 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.GreaterOrEqual(colliders.Length, 1, "La patrulla lleva colliders sólidos");
             Rigidbody cuerpo = patrulla.GetComponent<Rigidbody>();
             Assert.IsNotNull(cuerpo);
-            Assert.IsTrue(cuerpo.isKinematic, "Como los carros del tráfico: cuerpo cinemático mientras maneja la IA");
+            // T-986: ya no es cinemática: maneja con la física del carro del jugador y un conductor IA.
+            Assert.IsFalse(cuerpo.isKinematic, "Cuerpo con física: maneja con la misma física que el carro del jugador");
             Assert.IsNotNull(patrulla.GetComponent<IMontable>(), "Se puede robar como cualquier carro");
-            Assert.IsTrue(patrulla.GetComponent<CarroViejo>().EstaEnTrafico);
+            Assert.IsFalse(patrulla.GetComponent<CarroViejo>().EstaEnTrafico, "Ya no es tráfico cinemático");
+            Assert.IsTrue(patrulla.GetComponent<CarroViejo>().ConIA, "Lo maneja un conductor IA");
             Assert.IsNotNull(patrulla.GetComponent<CarroEstacionado>(), "Al robarla suma calor como cualquier carro");
 
             // Un rayo desde arriba choca con ella (es un objeto sólido, no un fantasma).
-            Physics.SyncTransforms(); // la patrulla se mueve por transform: se pone al día la física antes del rayo
+            Physics.SyncTransforms();
             Vector3 centro = patrulla.transform.position;
             Assert.IsTrue(Physics.Raycast(centro + Vector3.up * 6f, Vector3.down, out RaycastHit golpe, 12f, ~0, QueryTriggerInteraction.Ignore));
             Assert.IsTrue(golpe.collider.transform.IsChildOf(patrulla.transform), "El rayo pegó en " + golpe.collider.name);
@@ -246,7 +248,7 @@ namespace MechaCyberpunk.Tests.Trafico
             jugadorObjeto.transform.position = lejos;
             Assert.Greater(perseguidoras.Min(x => Plano(x.transform.position, lejos)), config.RadioVista,
                 "El jugador queda fuera del radio de vista de todas las patrullas");
-            yield return Frames(5);
+            yield return new WaitForSeconds(0.5f);
             foreach (PatrullaMundo x in perseguidoras)
             {
                 Assert.IsTrue(x.VeAlJugador, "GPS: la patrulla lo ubica aunque esté lejos y sin línea de vista");
@@ -255,7 +257,7 @@ namespace MechaCyberpunk.Tests.Trafico
 
             // Al bajarse, el GPS se apaga: las patrullas lejanas dejan de verlo.
             Assert.IsTrue(carro.IntentarBajar(out _));
-            yield return Frames(5);
+            yield return new WaitForSeconds(0.5f); // T-986: el cerebro de la patrulla corre en el paso de física: se espera tiempo de juego, no cuadros
             Assert.IsFalse(PatrullaMundo.JugadorEnPatrulla);
             Assert.IsTrue(perseguidoras.Any(x => !x.VeAlJugador), "Sin GPS, las patrullas lejanas ya no lo ven");
         }

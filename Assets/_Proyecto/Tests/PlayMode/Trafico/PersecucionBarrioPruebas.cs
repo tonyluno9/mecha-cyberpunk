@@ -117,6 +117,20 @@ namespace MechaCyberpunk.Tests.Trafico
             }
         }
 
+        // T-986: las patrullas manejan con física, así que solo salen por calles por las que pueden llegar (no tras un cierre) y una a una, cuando la anterior
+        // ya se alejó de la salida: la cantidad pedida se alcanza al cabo de unos segundos, no en tres cuadros.
+        private IEnumerator EsperarPatrullas(int cantidad)
+        {
+            float anterior = Time.timeScale;
+            Time.timeScale = EscalaDeTiempo;
+            float limite = Time.time + SegundosDeJuego;
+            while (Time.time < limite && gestor.Patrullas < cantidad)
+            {
+                yield return null;
+            }
+            Time.timeScale = anterior;
+        }
+
         [UnityTest]
         public IEnumerator Nivel0_SinPerseguidores_Subir_LosCrea_YBajarA0_LosRetira()
         {
@@ -137,6 +151,7 @@ namespace MechaCyberpunk.Tests.Trafico
 
             calor.Poner(3);
             yield return EsperarFrames();
+            yield return EsperarPatrullas(3);
             Assert.AreEqual(2, gestor.Drones);
             Assert.AreEqual(3, gestor.Patrullas);
 
@@ -164,6 +179,7 @@ namespace MechaCyberpunk.Tests.Trafico
         {
             calor.Poner(3);
             yield return EsperarFrames();
+            yield return EsperarPatrullas(3);
             Assert.AreEqual(5, gestor.Drones + gestor.Patrullas);
 
             EventosLugares.PublicarEntro(IdLugar.Bar);

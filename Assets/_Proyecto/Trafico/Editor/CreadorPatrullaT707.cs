@@ -71,7 +71,8 @@ namespace MechaCyberpunk.Trafico.Editor
                 Object.DestroyImmediate(copia);
 
                 Rigidbody cuerpo = raiz.GetComponent<Rigidbody>();
-                cuerpo.isKinematic = true;
+                cuerpo.isKinematic = false; // T-986: maneja con la física del carro
+                cuerpo.interpolation = RigidbodyInterpolation.Interpolate;
 
                 PatrullaMundo patrulla = raiz.GetComponent<PatrullaMundo>();
                 SerializedObject so = new SerializedObject(patrulla);

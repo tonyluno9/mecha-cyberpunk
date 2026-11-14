@@ -14,6 +14,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private readonly List<Vector3> nodos = new List<Vector3>();
         private readonly List<List<int>> vecinos = new List<List<int>>();
+        // T-986: tramos que un carro de verdad no puede recorrer (un cierre, una barda): los caminos los rodean o no existen.
+        private readonly HashSet<long> tramosBloqueados = new HashSet<long>();
 
         public int Cantidad => nodos.Count;
 
@@ -68,6 +70,20 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return nuevo;
         }
 
+        private static long LlaveDeTramo(int a, int b) => a < b ? (long)a * 1000003L + b : (long)b * 1000003L + a;
+
+        /// <summary>T-986: marca el tramo entre dos nodos vecinos como cerrado: <see cref="Camino"/> ya no pasa por él.</summary>
+        public void BloquearTramo(int a, int b)
+        {
+            tramosBloqueados.Add(LlaveDeTramo(a, b));
+        }
+
+        /// <summary>T-986: false si el tramo entre dos nodos vecinos está cerrado.</summary>
+        public bool TramoLibre(int a, int b) => !tramosBloqueados.Contains(LlaveDeTramo(a, b));
+
+        /// <summary>T-986: cuántos tramos están cerrados.</summary>
+        public int TramosBloqueados => tramosBloqueados.Count;
+
         /// <summary>Índice del nodo más cercano a un punto (en el plano, ignorando la altura).</summary>
         public int MasCercano(Vector3 punto)
         {
@@ -102,6 +118,34 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return mejor;
         }
 
+        /// <summary>T-986: el nodo más lejano a un punto entre los que se puede llegar por las calles desde el nodo <paramref name="desde"/> (sin cruzar tramos cerrados).</summary>
+        public int MasLejano(Vector3 punto, int desde)
+        {
+            int mejor = desde;
+            float mayor = -1f;
+            HashSet<int> vistos = new HashSet<int> { desde };
+            Queue<int> cola = new Queue<int>();
+            cola.Enqueue(desde);
+            while (cola.Count > 0)
+            {
+                int actual = cola.Dequeue();
+                float d = Plano(nodos[actual], punto);
+                if (d > mayor)
+                {
+                    mayor = d;
+                    mejor = actual;
+                }
+                foreach (int vecino in vecinos[actual])
+                {
+                    if (TramoLibre(actual, vecino) && vistos.Add(vecino))
+                    {
+                        cola.Enqueue(vecino);
+                    }
+                }
+            }
+            return mejor;
+        }
+
         /// <summary>Camino de nodos más corto en saltos de <paramref name="desde"/> a <paramref name="hasta"/>, ambos incluidos; vacío si no hay.</summary>
         public List<int> Camino(int desde, int hasta)
         {
@@ -123,7 +167,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 }
                 foreach (int vecino in vecinos[actual])
                 {
-                    if (anterior[vecino] < 0)
+                    if (anterior[vecino] < 0 && TramoLibre(actual, vecino))
                     {
                         anterior[vecino] = actual;
                         cola.Enqueue(vecino);
