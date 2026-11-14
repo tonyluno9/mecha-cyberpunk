@@ -139,6 +139,10 @@ namespace MechaCyberpunk.IA.APie
             get => alerta;
             set
             {
+                if (Acosando)
+                {
+                    return;
+                }
                 if (value && !alerta)
                 {
                     Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
@@ -174,6 +178,17 @@ namespace MechaCyberpunk.IA.APie
         public event Action KO;
         /// <summary>Se dispara una vez al caer en KO.</summary>
         public event Action<PandilleroAPie> Vencido;
+        /// <summary>S2: se dispara después de aplicar cada daño que recibe (también el que lo deja KO), con quién y cuánto.</summary>
+        public event Action<PandilleroAPie, InfoDanio> DanioRecibido;
+
+        /// <summary>
+        /// S2: mientras es true está acosando a un civil (lo maneja <see cref="GrupoAcoso"/>): no persigue, no patrulla, no pide refuerzos
+        /// al recibir daño y no acepta la alerta del territorio.
+        /// </summary>
+        public bool Acosando { get; set; }
+
+        /// <summary>S2: el visual animado (null si es un greybox sin él).</summary>
+        public VisualPersonaje Visual => visual;
 
         // ---- ILecturaRival ----
         string ILecturaRival.Nombre => datos != null ? datos.Nombre : name;
@@ -355,7 +370,7 @@ namespace MechaCyberpunk.IA.APie
             }
             float cantidad = info.Cantidad * (Castigable ? datos.MultiplicadorCastigo : 1f); // T-693: recuperándose, recibe más
             float aplicado = modelo.Aplicar(cantidad);
-            if (datos.UsaPistola && !modelo.EstaKO && Grupo != null)
+            if (datos.UsaPistola && !modelo.EstaKO && Grupo != null && !Acosando)
             {
                 // T-423: pide refuerzos a su grupo.
                 Grupo.Avisar(this, "¡Refuerzos!", true);
@@ -380,6 +395,7 @@ namespace MechaCyberpunk.IA.APie
                 Registro<ICalor>.Actual?.Sumar(modelo.EstaKO ? datos.CalorAlMatar : datos.CalorAlGolpear, MotivoCalor.Pelea);
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
+            DanioRecibido?.Invoke(this, info);
             return resultado;
         }
 
@@ -406,6 +422,11 @@ namespace MechaCyberpunk.IA.APie
 
             ActualizarGrito();
             BuscarJugador();
+            if (Acosando)
+            {
+                ActualizarAcosando();
+                return;
+            }
             if (datos.JefeCuerpoACuerpo)
             {
                 ActualizarJefeNova();
@@ -442,6 +463,14 @@ namespace MechaCyberpunk.IA.APie
                 Golpear(posicionJugador);
             }
             ActualizarBrazo();
+        }
+
+        // S2: mientras acosa solo cae al piso; la posición, la mirada y los gestos los pone el GrupoAcoso.
+        private void ActualizarAcosando()
+        {
+            ObjetivoActual = null;
+            velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
+            controlador.Move(Vector3.up * velocidadVertical * Time.deltaTime);
         }
 
         // ---- Pandillero armado (T-402) ----
