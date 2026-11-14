@@ -17,6 +17,8 @@ namespace MechaCyberpunk.Casino.Meseras
         [Tooltip("Segundos antes de arrancar, para que no vayan todas al mismo paso.")]
         [Min(0f)] [SerializeField] private float esperaInicial;
         [SerializeField] private Animator animador;
+        [Tooltip("Giro (°) del modelo respecto a su camino. La R01 de Blender (T-973) mira hacia -Z: con 0 caminaba de espaldas.")]
+        [SerializeField] private float giroModelo = 180f;
 
         private CalculoRondaMesera ronda;
 
@@ -32,14 +34,17 @@ namespace MechaCyberpunk.Casino.Meseras
             }
             ronda = new CalculoRondaMesera(puntos, velocidad, pausa, esperaInicial);
             transform.position = ronda.Posicion;
-            transform.rotation = Quaternion.LookRotation(ronda.Direccion);
+            transform.rotation = Mirada();
         }
+
+        /// <summary>Hacia dónde gira la raíz para que el modelo mire a su camino.</summary>
+        private Quaternion Mirada() => Quaternion.LookRotation(ronda.Direccion) * Quaternion.Euler(0f, giroModelo, 0f);
 
         private void Update()
         {
             ronda.Avanzar(Time.deltaTime);
             transform.position = ronda.Posicion;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(ronda.Direccion), GradosPorSegundo * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Mirada(), GradosPorSegundo * Time.deltaTime);
             animador.SetFloat(ParametroVelocidad, ronda.EstaCaminando ? velocidad : 0f);
         }
     }

@@ -36,6 +36,9 @@ namespace MechaCyberpunk.IA.APie
         public TurnosPandillaAPie Turnos => turnos;
         public PandilleroAPie[] Pandilleros => pandilleros;
 
+        /// <summary>S2: con true el territorio no enciende la alerta por sí solo (el <see cref="GrupoAcoso"/> decide cuándo te ven).</summary>
+        public bool TerritorioSuprimido { get; set; }
+
         /// <summary>
         /// T-713: grupo de una misión. Salen todos los del grupo a la vez (de día o de noche), no se retiran al amanecer, y los que caen no vuelven a
         /// aparecer (ni por esperar, ni por irte y regresar). Hay que ponerlo antes de prender el grupo.
@@ -58,7 +61,7 @@ namespace MechaCyberpunk.IA.APie
                 int cuenta = 0;
                 foreach (PandilleroAPie p in pandilleros)
                 {
-                    if (p.gameObject.activeSelf && !p.EstaKO)
+                    if (p != null && p.gameObject.activeSelf && !p.EstaKO)
                     {
                         cuenta++;
                     }
@@ -133,7 +136,7 @@ namespace MechaCyberpunk.IA.APie
         {
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (p.gameObject.activeSelf && !p.EstaKO)
+                if (p != null && p.gameObject.activeSelf && !p.EstaKO)
                 {
                     return p;
                 }
@@ -160,7 +163,7 @@ namespace MechaCyberpunk.IA.APie
             float radio2 = datos.RadioRefuerzos * datos.RadioRefuerzos;
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (p == origen || !p.gameObject.activeSelf || p.EstaKO)
+                if (p == null || p == origen || !p.gameObject.activeSelf || p.EstaKO)
                 {
                     continue;
                 }
@@ -178,7 +181,7 @@ namespace MechaCyberpunk.IA.APie
             total = 0;
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (!p.gameObject.activeSelf || p.EstaKO)
+                if (p == null || !p.gameObject.activeSelf || p.EstaKO)
                 {
                     continue;
                 }
@@ -206,28 +209,34 @@ namespace MechaCyberpunk.IA.APie
                 delta.y = 0f;
                 distancia = delta.magnitude;
             }
-            bool alertaAntes = alerta;
-            bool valido = hayJugador && jugador.Modo == ModoJugador.APie && !jugadorEnInterior;
-            if (!valido)
+            if (!TerritorioSuprimido)
             {
-                alerta = false;
-            }
-            else if (!alerta && distancia <= datos.RadioTerritorio)
-            {
-                alerta = true;
-            }
-            else if (alerta && distancia > datos.RadioTerritorio + datos.MargenPersecucion && Time.time >= forzadaHasta)
-            {
-                alerta = false;
-            }
-            foreach (PandilleroAPie p in pandilleros)
-            {
-                p.Alerta = alerta;
-            }
-            if (alerta && !alertaAntes)
-            {
-                // T-423: al ver al jugador, el primero en pie grita y avisa a los demás.
-                Avisar(PrimeroEnPie(), "¡Ahí está!", false);
+                bool alertaAntes = alerta;
+                bool valido = hayJugador && jugador.Modo == ModoJugador.APie && !jugadorEnInterior;
+                if (!valido)
+                {
+                    alerta = false;
+                }
+                else if (!alerta && distancia <= datos.RadioTerritorio)
+                {
+                    alerta = true;
+                }
+                else if (alerta && distancia > datos.RadioTerritorio + datos.MargenPersecucion && Time.time >= forzadaHasta)
+                {
+                    alerta = false;
+                }
+                foreach (PandilleroAPie p in pandilleros)
+                {
+                    if (p != null)
+                    {
+                        p.Alerta = alerta;
+                    }
+                }
+                if (alerta && !alertaAntes)
+                {
+                    // T-423: al ver al jugador, el primero en pie grita y avisa a los demás.
+                    Avisar(PrimeroEnPie(), "¡Ahí está!", false);
+                }
             }
 
             if (Presentes > 0)

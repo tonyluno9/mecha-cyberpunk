@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48a84713ac5dbd74aad5c77979af6721, type: 3}
+  m_Name: DatosAcoso_Base
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosAcoso
+  radioCirculoMinimo: 1.8
+  radioCirculoMaximo: 2.4
+  velocidadGiro: 360
+  periodoGestoMinimo: 2.5
+  periodoGestoMaximo: 5
+  probabilidadEmpujon: 0.5
+  probabilidadCaida: 0.35
+  periodoDeteccion: 0.2
+  distanciaVista: 18
+  anguloVista: 120
+  inclinacionMaximaVista: 30
+  distanciaOido: 4
+  alturaOjos: 1.5
+  alturaPechoJugador: 1.1
+  retrasoEmboscada: 1.6
+  retrasoEmboscadaDesdeArriba: 2.6
+  alturaDesdeArriba: 2.5
+  giroBusqueda: 140
+  gritoAlerta: "\xA1Ah\xED est\xE1!"
+  gritoSorpresa: "\xBF\xA1Qui\xE9n fue!?"
+  gritoGracias: "\xA1Gracias!"
+  gritoEmpujon: "\xA1Ya c\xE1llate!"
+  retrocesoEmpujon: 0.4
+  segundosRetroceso: 0.25
+  segundosCaido: 2
+  segundosLevantarse: 0.7
+  velocidadHuida: 5.5
+  distanciaHuida: 25
+  distanciaRayoHuida: 1.2
+  giroPared: 45
+  caidaMaximaHuida: 0.8
+  giroHuida: 540
+  escalaEncogido: 0.92
+  bonoCivil: 40

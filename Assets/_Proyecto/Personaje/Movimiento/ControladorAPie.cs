@@ -90,6 +90,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
         /// <summary>T-991: true mientras la rueda de armas y objetos está abierta: el ratón no gira la cámara ni dispara (caminar sigue igual).</summary>
         public bool EntradaBloqueada { get; set; }
+        /// <summary>S2: con true no se mueve al jugador ni se aplica gravedad (trepa o agarre de borde); la mirada sigue funcionando.</summary>
+        public bool MovimientoSuspendido { get; set; }
+        private Vector3 impulso;
 
         private void Awake()
         {
@@ -195,6 +198,15 @@ namespace MechaCyberpunk.Personaje.Movimiento
             giroCamara = transform.eulerAngles.y;
         }
 
+        /// <summary>S2: termina la suspensión del movimiento con la velocidad reiniciada y, opcional, un empujón horizontal (m/s) que se apaga solo.</summary>
+        public void ReanudarMovimiento(Vector3 empuje)
+        {
+            movimiento.Reiniciar();
+            impulso = empuje;
+            tiempoAire = 0f;
+            MovimientoSuspendido = false;
+        }
+
         private void Update()
         {
             if (!controlActivo)
@@ -222,6 +234,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
             apuntando = apuntar != null && apuntar.action.IsPressed();
 
+            if (MovimientoSuspendido)
+            {
+                return;
+            }
+
             Vector2 entrada = mover.action.ReadValue<Vector2>();
             bool quiereCorrer = correr.action.IsPressed() && !apuntando;
             Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, quiereCorrer,
@@ -237,7 +254,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
             // Tercera persona: el movimiento es relativo a la cámara; el cuerpo gira hacia donde camina, o hacia donde mira si apunta.
             Quaternion marco = Quaternion.Euler(0f, giroCamara, 0f);
             Vector3 horizontal = marco * new Vector3(velocidad.x, 0f, velocidad.y);
-            horizontal = horizontal * FactorVelocidad * FactorExtraVelocidad + DesplazamientoExterno;
+            horizontal = horizontal * FactorVelocidad * FactorExtraVelocidad + DesplazamientoExterno + impulso;
+            impulso = Vector3.MoveTowards(impulso, Vector3.zero, config.FrenadoPiso * config.ControlAire * dt);
             GirarCuerpo(dt, horizontal);
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
