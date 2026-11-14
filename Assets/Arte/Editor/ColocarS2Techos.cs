@@ -154,8 +154,9 @@ namespace MechaCyberpunk.Arte.Editor
                 AssetDatabase.DeleteAsset(RutaMallas);
             }
             AssetDatabase.CreateFolder(RutaCarpeta.TrimEnd('/'), "Mallas");
-            matEscalera = Material("S2b_EscaleraGreybox", new Color(0.13f, 0.14f, 0.16f), 0.8f, 0.45f);
-            matTubo = Material("S2b_TuboGreybox", new Color(0.27f, 0.28f, 0.3f), 0.7f, 0.4f);
+            // Textura de metal oxidado de la escalera de emergencia L03 (el test de SinGreybox no admite material liso).
+            matEscalera = Material("S2b_EscaleraGreybox", new Color(0.55f, 0.55f, 0.58f), 0.6f, 0.35f, TexturaMetal);
+            matTubo = Material("S2b_TuboGreybox", new Color(0.75f, 0.75f, 0.78f), 0.6f, 0.35f, TexturaTubo);
             matTablon = Material("S2b_TablonGreybox", new Color(0.32f, 0.22f, 0.14f), 0f, 0.2f);
             techos = new List<Techo>();
             accesos = new List<Acceso>();
@@ -166,7 +167,18 @@ namespace MechaCyberpunk.Arte.Editor
             Physics.SyncTransforms();
         }
 
-        private static Material Material(string nombre, Color color, float metal, float suavidad)
+        /// <summary>Solo actualiza los materiales de escalera y tubo (textura de metal) sin volver a colocar nada.</summary>
+        public static void ActualizarMateriales()
+        {
+            Material("S2b_EscaleraGreybox", new Color(0.55f, 0.55f, 0.58f), 0.6f, 0.35f, TexturaMetal);
+            Material("S2b_TuboGreybox", new Color(0.75f, 0.75f, 0.78f), 0.6f, 0.35f, TexturaTubo);
+            AssetDatabase.SaveAssets();
+        }
+
+        private const string TexturaMetal = "Assets/Arte/Callejon/L03_EscaleraEmergencia/L03_EscaleraEmergencia_basecolor.jpg";
+        private const string TexturaTubo = "Assets/Arte/Callejon/L03_EscaleraEmergencia/L03_EscaleraEmergencia_basecolor.jpg";
+
+        private static Material Material(string nombre, Color color, float metal, float suavidad, string textura = null)
         {
             string ruta = RutaCarpeta + nombre + ".mat";
             Material m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
@@ -178,6 +190,10 @@ namespace MechaCyberpunk.Arte.Editor
             m.SetColor("_BaseColor", color);
             m.SetFloat("_Metallic", metal);
             m.SetFloat("_Smoothness", suavidad);
+            if (textura != null)
+            {
+                m.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(textura));
+            }
             EditorUtility.SetDirty(m);
             return m;
         }

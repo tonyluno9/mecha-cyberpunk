@@ -1,9 +1,11 @@
 using System.Collections;
 using MechaCyberpunk.Core.Trepar;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Personaje
@@ -23,6 +25,33 @@ namespace MechaCyberpunk.Tests.Personaje
         private const float Tolerancia = 0.15f;
 
         private TreparAPie trepar;
+
+        // TechosS2Pruebas deja cargada la Ciudad (edificios, su jugador) y estorba a la escena armada aquí: se descarga antes de cada prueba.
+        [UnitySetUp]
+        public IEnumerator DescargarCiudadSobrante()
+        {
+            for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
+            {
+                Scene escena = SceneManager.GetSceneAt(i);
+                if (!escena.path.Contains("Ciudad"))
+                {
+                    continue;
+                }
+                SceneManager.SetActiveScene(SceneManager.CreateScene("TreparAPiePruebas_Vacia"));
+                yield return SceneManager.UnloadSceneAsync(escena);
+            }
+            yield return null;
+        }
+
+        public override void Setup()
+        {
+            base.Setup();
+            // TechosS2Pruebas deja ControlesAPie con controles de otro InputSystem: las acciones quedan sin controles y el teclado de esta prueba no las mueve.
+            // Se descarta ese estado y se reactiva el controlador para que las resuelva de nuevo.
+            MapasDeAccionesDePrueba.Reiniciar(teclado);
+            controlador.enabled = false;
+            controlador.enabled = true;
+        }
 
         private void Teletransportar(Vector3 posicion)
         {
@@ -77,7 +106,9 @@ namespace MechaCyberpunk.Tests.Personaje
                 }
             }
             propios.Clear();
+            MapasDeAccionesDePrueba.AntesDelTearDown(teclado);
             base.TearDown();
+            MapasDeAccionesDePrueba.DespuesDelTearDown();
         }
 
         private IEnumerator CorrerHastaZ(float z, float maxSegundos)

@@ -20,7 +20,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float ParedMaxima = 0.35f;
         public const float BajadaMaxima = 3f;
         /// <summary>Raíces que no se revisan: personajes, vehículos, cielo, luces y cables (cuelgan a propósito).</summary>
-        private static readonly string[] Saltar = { "JugadorAPie", "AMB_", "GTA_T405", "GTA_T406", "Trafico", "JaulaClandestino", "MechaEstacionado", "T541_Torres", "T513" };
+        private static readonly string[] Saltar = { "JugadorAPie", "AMB_", "GTA_T405", "GTA_T406", "Trafico", "JaulaClandestino", "MechaEstacionado", "T541_Torres", "T513", "S2_PandillasAcoso" };
         private static readonly string[] NombresSaltar = { "Cable", "Nube", "Luz", "Charco", "Linea", "Cebra", "Raya", "Sombra", "Brillo", "Neon", "Cielo", "Fondo", "Halo", "CY07b_Dron" };
         /// <summary>Hasta dónde (m) se busca una pared a los lados para pegarle una pieza que flota.</summary>
         public const float BuscarPared = 4f;
