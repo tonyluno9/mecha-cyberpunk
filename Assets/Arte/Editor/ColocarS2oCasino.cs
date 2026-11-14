@@ -149,7 +149,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         /// <summary>Giros (°) de los modelos para que miren como deben (se ajustaron con las fotos de dentro).</summary>
         public static float GiroMesa = 90f;
-        public static float GiroSilla = 0f;
+        public static float GiroSilla = 180f; // El modelo I12 tiene el frente en -Z: con 0 las sillas le daban la espalda a la mesa.
         public static float GiroBarra = 0f;
 
         public static void Fotos(string cuando)
