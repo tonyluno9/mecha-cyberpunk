@@ -853,6 +853,40 @@ namespace MechaCyberpunk.Tests.Demo
             yield return Siguiente();
         }
 
+        // T-988: el maletín cae junto al carro del asalto; desde un lado el candidato de E era el carro (se sube en vez de recoger). Como una persona, se prueba desde
+        // otros lados (y más cerca) hasta que el maletín se recoge.
+        private IEnumerator RecogerMaletin(DirectorPandillas director)
+        {
+            float[] giros = { 0f, 90f, 180f, 270f };
+            float[] distancias = { 1.2f, 0.8f };
+            for (int d = 0; d < distancias.Length && director.Paso == PasoHistoria.Asalto; d++)
+            {
+                for (int g = 0; g < giros.Length && director.Paso == PasoHistoria.Asalto; g++)
+                {
+                    MaletinAsalto maletin = director.Asalto.Maletin;
+                    if (maletin == null)
+                    {
+                        yield break;
+                    }
+                    Vector3 destino = maletin.transform.position;
+                    Vector3 dir = Quaternion.Euler(0f, giros[g], 0f) * Vector3.forward;
+                    Vector3 punto = destino - dir * distancias[d];
+                    if (Physics.Raycast(new Vector3(punto.x, destino.y + 1.5f, punto.z), Vector3.down, out RaycastHit piso, 10f, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        punto = piso.point;
+                    }
+                    punto.y += 0.1f;
+                    Jugador.Colocar(new Pose(punto, Quaternion.LookRotation(dir, Vector3.up)));
+                    Controlador?.ReiniciarMovimiento();
+                    yield return Siguiente();
+                    yield return Siguiente();
+                    yield return Pulsar(teclado.eKey, 15);
+                    yield return Segundos(0.3f);
+                    Debug.Log("[T-988] maletín intento " + (d * giros.Length + g + 1) + " desde " + punto + " a " + distancias[d] + " m: paso " + director.Paso + " recogido " + (maletin == null || maletin.FueRecogido));
+                }
+            }
+        }
+
         private IEnumerator EsperarConVida()
         {
             VidaAPie vida = Jugador.Raiz.GetComponentInChildren<VidaAPie>();
@@ -1451,7 +1485,7 @@ namespace MechaCyberpunk.Tests.Demo
             HornearNavMesh();
             Vector3[] lugares =
             {
-                new Vector3(-59f, 0f, -77f), new Vector3(-44.3f, 0f, -77f), new Vector3(-32.8f, 1.24f, 28.9f), new Vector3(-36f, 0.2f, 85f), new Vector3(74.5f, 0.2f, 47f)
+                new Vector3(-59f, 0f, -77f), new Vector3(-44.3f, 0f, -77f), new Vector3(-100.3f, 0.24f, -13.4f), new Vector3(-36f, 0.2f, 85f), new Vector3(74.5f, 0.2f, 47f)
             };
             string[] nombres = { "casa", "INVENTOR", "DOC", "Tianguis", "HACKER" };
             for (int i = 0; i < 2; i++)
@@ -1593,11 +1627,7 @@ namespace MechaCyberpunk.Tests.Demo
                 if (director.Paso == PasoHistoria.Asalto)
                 {
                     // T-987: ya no hay que vencer al asaltante: se recoge el maletín que soltaron con E.
-                    if (director.Asalto.Maletin != null)
-                    {
-                        yield return Colocar(director.Asalto.Maletin.transform.position, 1.4f);
-                        yield return Pulsar(teclado.eKey, 15);
-                    }
+                    yield return RecogerMaletin(director);
                 }
                 if (director.Paso == PasoHistoria.Asalto)
                 {
