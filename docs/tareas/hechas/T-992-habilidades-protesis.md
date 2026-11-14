@@ -19,5 +19,9 @@ Diseño: `docs/diseno/rueda-y-habilidades.md`.
 
 ## Pruebas
 - EditMode completo: 2443 de 2444 pasan; falla solo `NeonAltoT505Pruebas.EntradaDelCasino_TieneFocosTubosCargadoresYMoto` (ya fallaba en main).
-- PlayMode `HabilidadesProtesisT992Pruebas`: 11, primera corrida 10 pasan y 1 fallaba (recarga: faltaba el pasivo x0.55 de BRAZOS II en lo esperado; corregido en la prueba, medido 0.31 s contra 0.56 s esperados). Medidos: correr 20.258 m (esperado 20.258), salto 1.287 m (1.287), golpe 75 (75), visor 1 renderer marcado.
-- Pendiente de correr (el sistema cortó el proceso por poca memoria): la corrida filtrada de PlayMode (Visor, PandillaAPie, ControladorAPie, GolpeAPie, PistolaAPie, HudH10, Tutorial, RuedaArmasT991), la prueba de recarga corregida y las capturas (`CAPTURAR_T992=1`, `docs/capturas/t992/`).
+- PlayMode `HabilidadesProtesisT992Pruebas`: 11 de 11 pasan. Medidos: correr 20.258 m (esperado 20.258), salto 1.287 m (1.287), golpe 75 (75), recarga con BRAZOS II 0.3086 s (1.4 base x 0.55 pasivo x 0.4 = 0.308; el 0.56 de la primera corrida era un esperado mal calculado en la prueba, sin el pasivo; el código aplica cada factor una sola vez), visor 1 renderer marcado y 0 al acabar.
+- Tanda 1 (HabilidadesProtesisT992, VisorRayosX, PandillaAPie, ControladorAPie, GolpeAPie, GolpesT675, PistolaAPie, ImplantesAPie): 71 pruebas, 60 pasan, 10 fallan, 1 omitida. Fallan `ControladorAPiePruebas.APie_EspacioEnElPiso_SubeLosPiesEntre09Y13Metros` (salto 0.45 m: `DatosPersonaje.alturaSalto` es 0.45 en main, sin implantes mi factor vale 1; falla igual en main) y 9 de `PandillaAPiePruebas` (Dinero_, Fuga_, Ojos_, Pelea_, Tumbar_x4, los 8 conocidos, y `Mecha_SubirAlMechaASuLado...`, que pasa sola).
+- Tanda 2 (HudH10Pruebas, RuedaArmasT991, ConsumiblesT685): 29, 27 pasan, 1 falla (`HudH10Pruebas.Estrellas_SinCalorSonContorno...`, conocida), 1 omitida.
+- Tutorial (TutorialCompletoT718, TutorialLigero): 3 de 3 tras actualizar `TutorialCompletoT718` (el aviso de habilidades no sale sin implantes).
+- Capturas (CAPTURAR_T992=1, 1 de 1 pasa): `docs/capturas/t992/barra-lista.png`, `barra-activa.png`, `visor.png`.
+- `verificar.sh compilar` OK y `ensamblados` OK.

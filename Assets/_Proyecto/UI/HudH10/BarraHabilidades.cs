@@ -84,7 +84,15 @@ namespace MechaCyberpunk.UI.Hud
             }
         }
 
-        public static string AvisoActivada(HabilidadProtesis h) => NombreDe(h) + " ACTIVAS";
+        public static string AvisoActivada(HabilidadProtesis h)
+        {
+            switch (h)
+            {
+                case HabilidadProtesis.Piernas: return "PIERNAS ACTIVAS";
+                case HabilidadProtesis.Brazos: return "BRAZOS ACTIVOS";
+                default: return "CABEZA ACTIVA";
+            }
+        }
 
         private static string TeclaPorOmision(HabilidadProtesis h) => ((int)h + 1).ToString();
 
