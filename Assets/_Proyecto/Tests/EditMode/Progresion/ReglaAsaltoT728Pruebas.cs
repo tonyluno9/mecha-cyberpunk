@@ -21,19 +21,37 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(FaseAsalto.Persecucion, r.Fase);
             Assert.IsFalse(r.PuedeSaltar);
             Assert.IsTrue(r.CarroDetenido());
-            Assert.AreEqual(FaseAsalto.Enfrentando, r.Fase);
-            Assert.AreEqual(150, r.AsaltanteVencido(), "Al vencerlo la víctima te da la mitad de lo robado");
+            Assert.AreEqual(FaseAsalto.Maletin, r.Fase);
+            Assert.AreEqual(10000, r.MaletinRecogido(), "T-987: el maletín trae $10,000");
             Assert.AreEqual(FaseAsalto.Terminado, r.Fase);
             Assert.IsFalse(r.DineroEnManosDelLadron);
         }
 
         [Test]
-        public void LaRecompensa_EsLaMitadYNuncaNegativa()
+        public void ElMaletin_PagaDiezMilUnaSolaVez()
         {
-            Assert.AreEqual(150, ReglaAsalto.Recompensa(300));
-            Assert.AreEqual(0, ReglaAsalto.Recompensa(0));
-            Assert.AreEqual(0, ReglaAsalto.Recompensa(-40));
-            Assert.AreEqual(ReglaAsalto.DineroDeLaVictima / 2, ReglaAsalto.Recompensa(ReglaAsalto.DineroDeLaVictima));
+            ReglaAsalto r = new ReglaAsalto();
+            r.Iniciar();
+            r.Abordar();
+            r.CarroDetenido();
+            Assert.AreEqual(ReglaAsalto.DineroDelMaletin, r.MaletinRecogido());
+            Assert.AreEqual(10000, ReglaAsalto.DineroDelMaletin);
+            Assert.AreEqual(0, r.MaletinRecogido(), "No se cobra dos veces");
+            Assert.AreEqual(FaseAsalto.Terminado, r.Fase);
+        }
+
+        [Test]
+        public void ElMaletin_NoSePagaFueraDeSuFase()
+        {
+            ReglaAsalto r = new ReglaAsalto();
+            Assert.AreEqual(0, r.MaletinRecogido(), "Sin asalto no hay maletín");
+            r.Iniciar();
+            Assert.AreEqual(0, r.MaletinRecogido(), "En la cinemática tampoco");
+            r.Abordar();
+            Assert.AreEqual(0, r.MaletinRecogido(), "Ni durante la persecución");
+            r.CarroDetenido();
+            r.Cancelar();
+            Assert.AreEqual(0, r.MaletinRecogido(), "Cancelado no paga");
         }
 
         [Test]
@@ -43,9 +61,9 @@ namespace MechaCyberpunk.Tests.Progresion
             r.Iniciar();
             Assert.IsTrue(r.Abordar());
             Assert.IsTrue(r.DineroEnManosDelLadron, "El robo pasa aunque se salte");
-            Assert.AreEqual(0, r.AsaltanteVencido(), "Sin fase de pelea no da nada todavía");
+            Assert.AreEqual(0, r.MaletinRecogido(), "Sin maletín en el piso no da nada todavía");
             r.CarroDetenido();
-            Assert.AreEqual(150, r.AsaltanteVencido());
+            Assert.AreEqual(10000, r.MaletinRecogido());
         }
 
         [Test]
@@ -54,9 +72,9 @@ namespace MechaCyberpunk.Tests.Progresion
             ReglaAsalto r = new ReglaAsalto();
             r.Iniciar();
             Assert.IsFalse(r.CarroDetenido(), "El carro no se detiene antes de la persecución");
-            Assert.AreEqual(0, r.AsaltanteVencido(), "No hay pelea antes de que se detenga el carro");
+            Assert.AreEqual(0, r.MaletinRecogido(), "No hay maletín antes de que se detenga el carro");
             r.Abordar();
-            Assert.AreEqual(0, r.AsaltanteVencido(), "No se vence al asaltante en plena huida");
+            Assert.AreEqual(0, r.MaletinRecogido(), "No hay maletín en plena huida");
             Assert.IsFalse(r.Abordar(), "Solo se aborda una vez");
         }
 
@@ -69,7 +87,7 @@ namespace MechaCyberpunk.Tests.Progresion
             r.Cancelar();
             Assert.AreEqual(FaseAsalto.Inactivo, r.Fase);
             Assert.IsFalse(r.DineroEnManosDelLadron);
-            Assert.AreEqual(0, r.AsaltanteVencido());
+            Assert.AreEqual(0, r.MaletinRecogido());
         }
 
         [Test]
@@ -78,7 +96,8 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(AsaltoDinero.TextoRobarCarro, ReglaAsalto.TextoObjetivo(FaseAsalto.Cinematica, false));
             Assert.AreEqual(AsaltoDinero.TextoRobarCarro, ReglaAsalto.TextoObjetivo(FaseAsalto.Persecucion, false), "A pie: róbate un carro");
             Assert.AreEqual(AsaltoDinero.TextoPerseguir, ReglaAsalto.TextoObjetivo(FaseAsalto.Persecucion, true), "Ya en un carro: persíguelos");
-            Assert.AreEqual(AsaltoDinero.TextoRecuperar, ReglaAsalto.TextoObjetivo(FaseAsalto.Enfrentando, true));
+            Assert.AreEqual("RECOGE EL MALETÍN", ReglaAsalto.TextoObjetivo(FaseAsalto.Maletin, false));
+            Assert.AreEqual("BÁJATE Y RECOGE EL MALETÍN", ReglaAsalto.TextoObjetivo(FaseAsalto.Maletin, true));
             Assert.AreEqual(string.Empty, ReglaAsalto.TextoObjetivo(FaseAsalto.Inactivo, false));
             Assert.AreEqual(string.Empty, ReglaAsalto.TextoObjetivo(FaseAsalto.Terminado, true));
             Assert.AreEqual("RÓBATE UN CARRO", AsaltoDinero.TextoRobarCarro);

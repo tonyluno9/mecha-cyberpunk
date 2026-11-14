@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Mundo.Datos;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -49,10 +50,11 @@ namespace MechaCyberpunk.Mundo.Ambiente
             Soltar();
         }
 
-        // Solo si se ve algún charco (CharcoVisible): sin charcos a la vista no hace falta el segundo render de la escena.
+        // Solo si se ve algún charco (CharcoVisible) y la calidad lo pide: sin charcos a la vista no hace falta el segundo render de la escena.
         private void LateUpdate()
         {
-            if (CharcoVisible.Visibles > 0)
+            // T-978: en calidad BAJO no hay reflejos (CalidadVisual de Core lo fija según Opciones).
+            if (CalidadVisual.ReflejosCharcos && CharcoVisible.Visibles > 0)
             {
                 Actualizar(Camera.main);
             }

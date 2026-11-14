@@ -135,6 +135,12 @@ namespace MechaCyberpunk.Tests.Progresion
             MechaCyberpunk.Tests.UI.CapturaUI.Capturar("docs/capturas/s1d-T-728-" + nombre + ".png", camara);
         }
 
+        private static void FotoT987(string nombre, Camera camara)
+        {
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T987") != "1" || camara == null) return;
+            MechaCyberpunk.Tests.UI.CapturaUI.Capturar("docs/capturas/t987/" + nombre + ".png", camara);
+        }
+
         private static Camera CamaraAsalto()
         {
             GameObject objeto = GameObject.Find("CamaraAsalto");
@@ -304,8 +310,8 @@ namespace MechaCyberpunk.Tests.Progresion
             Foto("persecucion-en-carro", jugador.Camara);
 
             // e. El carro llega al final de su ruta (o se detiene): baja el asaltante y toca atraparlo.
-            yield return Esperar(() => asalto.Fase == FaseAsalto.Enfrentando, "el carro se detiene y baja el asaltante", 100f);
-            Assert.AreEqual(AsaltoDinero.TextoRecuperar, TextoObjetivo);
+            yield return Esperar(() => asalto.Fase == FaseAsalto.Maletin, "el carro se detiene y sueltan el maletín", 100f);
+            Assert.AreEqual(AsaltoDinero.TextoMaletinEnCarro, TextoObjetivo, "Va en carro: bájate y recoge el maletín");
             Assert.IsTrue(asalto.Asaltante.activeInHierarchy);
             if (Environment.GetEnvironmentVariable("CAPTURAR_S1") == "1")
             {
@@ -324,10 +330,14 @@ namespace MechaCyberpunk.Tests.Progresion
             PandilleroAPie pandillero = asalto.Asaltante.GetComponent<PandilleroAPie>();
             Assert.IsTrue(pandillero.enabled, "El asaltante pelea");
 
-            // f. Al vencerlo, la víctima te da la mitad de lo robado y la historia sigue.
+            // f. T-987: vencer al asaltante ya no paga ni termina; se recoge el maletín con E y la historia sigue.
             pandillero.RecibirDanio(new InfoDanio(100000f, TipoDanio.Disparo, pandillero.transform.position, Vector3.forward, null));
+            yield return null;
+            Assert.AreEqual(Dinero, cartera.Dinero, "Vencer al asaltante no da dinero");
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "Sigue el asalto hasta recoger el maletín");
+            yield return RecogerMaletin(asalto);
             yield return Esperar(() => director.Paso == PasoHistoria.PrimeraPelea, "la historia sigue a la primera pelea", 5f);
-            Assert.AreEqual(Dinero + ReglaAsalto.Recompensa(ReglaAsalto.DineroDeLaVictima), cartera.Dinero, "La víctima te dio una parte");
+            Assert.AreEqual(Dinero + ReglaAsalto.DineroDelMaletin, cartera.Dinero, "El maletín dio $10,000");
         }
 
         [UnityTest]
@@ -365,14 +375,153 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // El carro frena y se detiene mucho antes del final de su ruta; baja el asaltante.
             float inicio = Time.realtimeSinceStartup;
-            yield return Esperar(() => asalto.Fase == FaseAsalto.Enfrentando, "la llanta ponchada detiene el carro", 20f);
+            yield return Esperar(() => asalto.Fase == FaseAsalto.Maletin, "la llanta ponchada detiene el carro", 20f);
             Assert.Less(Time.realtimeSinceStartup - inicio, 12f, "Se detuvo por la llanta, no por llegar al final");
-            Assert.AreEqual(AsaltoDinero.TextoRecuperar, TextoObjetivo);
+            yield return null;
+            Assert.IsTrue(TextoObjetivo == AsaltoDinero.TextoMaletin || TextoObjetivo == AsaltoDinero.TextoMaletinEnCarro, "El objetivo es el maletín: " + TextoObjetivo);
             Assert.AreEqual(Dinero, cartera.Dinero, "Tu dinero nunca se tocó");
+            yield return RecogerMaletin(asalto);
+            yield return Esperar(() => director.Paso == PasoHistoria.PrimeraPelea, "la historia sigue", 5f);
+            Assert.AreEqual(Dinero + ReglaAsalto.DineroDelMaletin, cartera.Dinero, "El maletín da $10,000");
+        }
+
+        // T-987: lleva el asalto hasta que el carro se detiene (fin de su ruta) y devuelve el control con el maletín puesto.
+        private IEnumerator LlegarAlMaletin(Action<DirectorPandillas> listo)
+        {
+            DirectorPandillas director = null;
+            yield return Cargar(d => director = d);
+            IJugador jugador = Registro<IJugador>.Actual;
+            Transform puerta = null;
+            foreach (Transform t in Object.FindObjectsByType<Transform>(FindObjectsSortMode.None))
+            {
+                if (t.name == "PuertaCasa" || t.name == "Casa_Puerta") puerta = t;
+            }
+            if (puerta != null) jugador.Colocar(new Pose(puerta.position + Vector3.up * 0.1f, Quaternion.identity));
+            director.Cargar("{\"paso\":\"Asalto\"}");
+            yield return null;
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return Pulsar(teclado.enterKey);
+            yield return Esperar(() => director.Asalto.Fase == FaseAsalto.Persecucion, "empieza la persecución", 40f);
+            yield return Esperar(() => director.Asalto.Fase == FaseAsalto.Maletin, "el carro se detiene (fin de ruta)", 110f);
+            yield return null;
+            yield return null;
+            listo(director);
+        }
+
+        // Pone al jugador a pie a 1.4 m del maletín mirándolo y aprieta E de verdad.
+        private IEnumerator RecogerMaletin(AsaltoDinero asalto)
+        {
+            MaletinAsalto maletin = asalto.Maletin;
+            Assert.IsNotNull(maletin, "Hay un maletín");
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador.Modo != ModoJugador.APie)
+            {
+                ((MechaCyberpunk.Personaje.Jugador.JugadorAPie)jugador).Bajar(); // el objetivo pedía bajarse del carro
+                yield return Esperar(() => jugador.Modo == ModoJugador.APie, "el jugador baja del carro", 5f);
+                yield return new WaitForSecondsRealtime(1f);
+            }
+            Vector3 destino = maletin.transform.position;
+            Vector3 punto = destino + Vector3.back * 1.4f;
+            if (Physics.Raycast(punto + Vector3.up * 2f, Vector3.down, out RaycastHit piso, 6f, ~0, QueryTriggerInteraction.Ignore)) punto = piso.point;
+            jugador.Colocar(new Pose(punto + Vector3.up * 0.1f, Quaternion.LookRotation(Vector3.forward)));
+            jugador.Raiz.GetComponentInChildren<ControladorAPie>()?.ReiniciarMovimiento();
+            yield return null;
+            yield return null;
+            yield return Pulsar(teclado.eKey);
+            yield return Pulsar(teclado.eKey);
+            if (asalto.Fase == FaseAsalto.Maletin)
+            {
+                MechaCyberpunk.Personaje.Interaccion.InteraccionAPie inter = jugador.Raiz.GetComponentInChildren<MechaCyberpunk.Personaje.Interaccion.InteraccionAPie>();
+                Debug.Log("[T-987] E no recogió: modo " + jugador.Modo + ", control " + jugador.Raiz.GetComponentInChildren<ControladorAPie>().ControlActivo + ", candidato "
+                    + (inter != null && inter.InteractuableCandidato != null ? inter.InteractuableCandidato.Texto : "ninguno") + ", tipo " + (inter != null ? inter.TipoCandidato.ToString() : "?")
+                    + ", distancia " + Vector3.Distance(jugador.Raiz.position, maletin.transform.position));
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Maletin_AlDetenerseElCarro_AparecePegadoAlPisoConObjetivo_YSeRecogeConEUnaSolaVez()
+        {
+            DirectorPandillas director = null;
+            yield return LlegarAlMaletin(d => director = d);
+            AsaltoDinero asalto = director.Asalto;
+            ICartera cartera = Registro<ICartera>.Actual;
+            IJugador jugador = Registro<IJugador>.Actual;
+            ServicioObjetivos objetivos = Registro<IObjetivos>.Actual as ServicioObjetivos;
+            int antes = cartera.Dinero;
+            MaletinAsalto maletin = asalto.Maletin;
+            Assert.IsNotNull(maletin, "Al detenerse el carro hay un maletín");
+            Assert.IsNotNull(asalto.Asaltante, "El asaltante baja");
+            yield return new WaitForSeconds(0.8f); // termina de caer
+            Vector3 carro = Punto(AsaltoMundoId.Principal).Pose.position;
+            Assert.Less(Vector3.Distance(maletin.transform.position, carro), 5f, "El maletín cae junto al carro");
+            Assert.IsTrue(Physics.Raycast(maletin.transform.position + Vector3.up * 0.3f, Vector3.down, out RaycastHit golpe, 1f, ~0, QueryTriggerInteraction.Ignore), "Hay piso debajo del maletín");
+            Assert.Less(golpe.distance, 0.45f, "El maletín está sobre el piso");
+            Assert.IsTrue(TextoObjetivo == AsaltoDinero.TextoMaletin || TextoObjetivo == AsaltoDinero.TextoMaletinEnCarro, "El objetivo es el maletín: " + TextoObjetivo);
+            Assert.Less(Vector3.Distance(objetivos.Posicion, maletin.transform.position), 1.5f, "El marcador está sobre el maletín");
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T987") == "1")
+            {
+                // Para la captura: el jugador a unos metros del maletín, mirándolo.
+                Vector3 centro = maletin.transform.position + Vector3.up * 0.3f;
+                Vector3 cerca = AsaltoDinero.PosicionLibre(centro, new[] { Vector3.left, Vector3.right, Vector3.forward, Vector3.back }, 3.2f, 1.0f);
+                Vector3 mira = centro - cerca; mira.y = 0f; mira = mira.sqrMagnitude > 0.01f ? mira.normalized : Vector3.forward;
+                if (Physics.Raycast(cerca + Vector3.up * 0.5f, Vector3.down, out RaycastHit pisoFoto, 4f, ~0, QueryTriggerInteraction.Ignore)) cerca = pisoFoto.point;
+                jugador.Colocar(new Pose(cerca + Vector3.up * 0.1f, Quaternion.LookRotation(mira)));
+                yield return new WaitForSecondsRealtime(0.5f);
+                FotoT987("maletin-en-el-piso", jugador.Camara);
+                GameObject objetoFoto = new GameObject("CamaraFoto987");
+                Camera camaraFoto = objetoFoto.AddComponent<Camera>();
+                camaraFoto.CopyFrom(jugador.Camara);
+                camaraFoto.depth += 3f;
+                camaraFoto.transform.position = AsaltoDinero.PosicionLibre(centro, new[] { Vector3.left, Vector3.right, Vector3.forward, Vector3.back }, 2.2f, 1.1f);
+                camaraFoto.transform.rotation = Quaternion.LookRotation((centro - camaraFoto.transform.position).normalized);
+                yield return null;
+                FotoT987("maletin-detalle", camaraFoto);
+                Object.Destroy(objetoFoto);
+            }
+
+            // El asaltante vencido NO termina ni paga.
             PandilleroAPie pandillero = asalto.Asaltante.GetComponent<PandilleroAPie>();
             pandillero.RecibirDanio(new InfoDanio(100000f, TipoDanio.Disparo, pandillero.transform.position, Vector3.forward, null));
-            yield return Esperar(() => director.Paso == PasoHistoria.PrimeraPelea, "la historia sigue", 5f);
-            Assert.AreEqual(Dinero + ReglaAsalto.Recompensa(ReglaAsalto.DineroDeLaVictima), cartera.Dinero, "La víctima te da una parte");
+            yield return null;
+            Assert.AreEqual(antes, cartera.Dinero);
+            Assert.AreEqual(FaseAsalto.Maletin, asalto.Fase);
+
+            int terminados = 0;
+            asalto.Terminado += () => terminados++;
+            yield return RecogerMaletin(asalto);
+            Assert.AreEqual(1, terminados, "Terminado se dispara");
+            Assert.AreEqual(antes + 10000, cartera.Dinero, "La cartera sube exactamente $10,000");
+            Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso, "La historia sigue");
+            Assert.IsNull(asalto.Maletin);
+            FotoT987("maletin-recuperado", jugador.Camara);
+            // Una segunda E no paga otra vez.
+            yield return Pulsar(teclado.eKey);
+            yield return Pulsar(teclado.eKey);
+            Assert.AreEqual(antes + 10000, cartera.Dinero, "No se cobra dos veces");
+            Assert.AreEqual(1, terminados);
+        }
+
+        [UnityTest]
+        public IEnumerator Maletin_SiSePierdeOCaeFueraDelMundo_SeVuelveAPonerJuntoAlJugador()
+        {
+            DirectorPandillas director = null;
+            yield return LlegarAlMaletin(d => director = d);
+            AsaltoDinero asalto = director.Asalto;
+            IJugador jugador = Registro<IJugador>.Actual;
+            MaletinAsalto primero = asalto.Maletin;
+            Assert.IsNotNull(primero);
+            primero.transform.position = new Vector3(0f, jugador.Raiz.position.y - 500f, 0f);
+            yield return null;
+            yield return null;
+            Assert.IsNotNull(asalto.Maletin, "Se repuso el maletín");
+            Assert.AreNotSame(primero, asalto.Maletin);
+            Assert.Less(Vector3.Distance(asalto.Maletin.transform.position, jugador.Raiz.position), 4f, "Quedó junto al jugador");
+            Assert.Greater(asalto.Maletin.transform.position.y, jugador.Raiz.position.y - 1f, "No quedó bajo el piso");
+            Object.Destroy(asalto.Maletin.gameObject);
+            yield return null;
+            yield return null;
+            Assert.IsNotNull(asalto.Maletin, "Si lo destruyen también se repone");
+            Assert.AreEqual(FaseAsalto.Maletin, asalto.Fase);
         }
 
         [UnityTest]

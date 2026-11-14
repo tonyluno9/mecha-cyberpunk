@@ -30,7 +30,7 @@ namespace MechaCyberpunk.UI.Opciones
         public const string TextoAyuda = "↑ ↓ ELEGIR · ← → CAMBIAR · ESC VOLVER";
         public const string FormatoSensibilidad = "{0:0.00}x";
         public static readonly string[] TextosApuntado = { "APAGADO", "SUAVE", "FUERTE" };
-        public static readonly string[] TextosCalidad = { "BAJA", "MEDIA", "ALTA" };
+        public static readonly string[] TextosCalidad = { "BAJO", "MEDIO", "ALTO" };
         // En el orden de SeccionSonido.
         public static readonly string[] TextosVolumen = { "VOLUMEN GENERAL", "EFECTOS", "VOCES", "AMBIENTE", "MÚSICA", "INTERFAZ" };
 
@@ -117,7 +117,7 @@ namespace MechaCyberpunk.UI.Opciones
                 volumenes[i] = KitUI.CrearDeslizador(panel, TextosVolumen[i], 0f, 1f, ReglaOpciones.PasoVolumen, ReglaOpciones.VolumenPorDefecto, null);
                 Fila(volumenes[i], ref y);
             }
-            calidad = KitUI.CrearSelector(panel, TextoCalidad, TextosCalidad, (int)CalidadGrafica.Alta, null);
+            calidad = KitUI.CrearSelector(panel, TextoCalidad, TextosCalidad, (int)ReglaOpciones.CalidadPorDefecto, null);
             Fila(calidad, ref y);
             resolucion = KitUI.CrearSelector(panel, TextoResolucion, new[] { "1920 x 1080" }, 0, null);
             Fila(resolucion, ref y);

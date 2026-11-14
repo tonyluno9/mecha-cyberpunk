@@ -12,7 +12,7 @@ namespace MechaCyberpunk.Tests.Progresion
         [Test]
         public void LimitesYArchivo()
         {
-            // Por defecto: 1x, Y normal, 80 % salvo la Música (silencio), ALTA, nativa y pantalla completa.
+            // Por defecto: 1x, Y normal, 80 % salvo la Música (silencio), MEDIO (T-978), nativa y pantalla completa.
             ValoresOpciones defecto = ReglaOpciones.PorDefecto();
             Assert.AreEqual(1f, defecto.sensibilidad, Tolerancia);
             Assert.IsFalse(defecto.invertirY);
@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.Efectos], Tolerancia);
             Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.Ambiente], Tolerancia, "T-442: el ambiente suena por defecto");
             Assert.AreEqual(0f, defecto.volumenes[(int)SeccionSonido.Musica], Tolerancia);
-            Assert.AreEqual(CalidadGrafica.Alta, defecto.calidad);
+            Assert.AreEqual(CalidadGrafica.Media, defecto.calidad, "T-978: MEDIO por defecto");
             Assert.AreEqual(0, defecto.resolucionAncho);
             Assert.IsTrue(defecto.pantallaCompleta);
 
@@ -42,7 +42,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(0f, raros.volumenes[1], Tolerancia);
             Assert.AreEqual(0.5f, raros.volumenes[2], Tolerancia);
             Assert.AreEqual(0.8f, raros.volumenes[(int)SeccionSonido.Interfaz], Tolerancia);
-            Assert.AreEqual(CalidadGrafica.Alta, raros.calidad);
+            Assert.AreEqual(CalidadGrafica.Media, raros.calidad);
             Assert.AreEqual(0, raros.resolucionAncho, "Una resolución inválida vuelve a la nativa");
             Assert.AreEqual(0, raros.resolucionAlto);
 
@@ -70,13 +70,32 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(1f, roto.sensibilidad, Tolerancia);
             Assert.AreEqual(0.8f, roto.volumenes[(int)SeccionSonido.General], Tolerancia);
             Assert.IsFalse(ReglaOpciones.DeJson(string.Empty, out ValoresOpciones vacio));
-            Assert.AreEqual(CalidadGrafica.Alta, vacio.calidad);
+            Assert.AreEqual(CalidadGrafica.Media, vacio.calidad);
 
             // Calidad: BAJA 0.75 / 40 m / MSAA 1; ALTA 1 / 120 m / 4.
             Assert.AreEqual(0.75f, ReglaOpciones.EscalaRender(CalidadGrafica.Baja), Tolerancia);
             Assert.AreEqual(40f, ReglaOpciones.DistanciaSombras(CalidadGrafica.Baja), Tolerancia);
             Assert.AreEqual(1, ReglaOpciones.Msaa(CalidadGrafica.Baja));
             Assert.AreEqual(4, ReglaOpciones.Msaa(CalidadGrafica.Alta));
+
+            // T-978: BAJO dibuja hasta 150 m, sin reflejos de charcos ni postproceso; MEDIO hasta 300 m con todo; ALTO hasta el plano lejano (0).
+            Assert.AreEqual(150f, ReglaOpciones.DistanciaDibujo(CalidadGrafica.Baja), Tolerancia);
+            Assert.AreEqual(300f, ReglaOpciones.DistanciaDibujo(CalidadGrafica.Media), Tolerancia);
+            Assert.AreEqual(0f, ReglaOpciones.DistanciaDibujo(CalidadGrafica.Alta), Tolerancia);
+            Assert.IsFalse(ReglaOpciones.ReflejosCharcos(CalidadGrafica.Baja));
+            Assert.IsTrue(ReglaOpciones.ReflejosCharcos(CalidadGrafica.Media));
+            Assert.IsTrue(ReglaOpciones.ReflejosCharcos(CalidadGrafica.Alta));
+            Assert.IsFalse(ReglaOpciones.Postproceso(CalidadGrafica.Baja));
+            Assert.IsTrue(ReglaOpciones.Postproceso(CalidadGrafica.Media));
+            Assert.IsTrue(ReglaOpciones.Postproceso(CalidadGrafica.Alta));
+
+            // T-978: "-calidad Bajo" en la línea de comandos.
+            Assert.IsTrue(ReglaOpciones.CalidadDeArgumentos(new[] { "CyberCity.exe", "-calidad", "Bajo" }, out CalidadGrafica deArgs));
+            Assert.AreEqual(CalidadGrafica.Baja, deArgs);
+            Assert.IsTrue(ReglaOpciones.CalidadDeArgumentos(new[] { "-CALIDAD", "alta" }, out deArgs));
+            Assert.AreEqual(CalidadGrafica.Alta, deArgs);
+            Assert.IsFalse(ReglaOpciones.CalidadDeArgumentos(new[] { "-calidad" }, out _), "Sin valor no cuenta");
+            Assert.IsFalse(ReglaOpciones.CalidadDeArgumentos(new[] { "-calidad", "ultra" }, out _));
         }
     }
 }

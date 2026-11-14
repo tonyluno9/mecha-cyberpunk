@@ -72,6 +72,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdCoberturaTipo = Animator.StringToHash(ReglasAnimacion.CoberturaTipo);
         private static readonly int IdDisparoCobertura = Animator.StringToHash(ReglasAnimacion.DisparoCobertura);
         private static readonly int IdFrenar = Animator.StringToHash(ReglasAnimacion.Frenar);
+        private static readonly int IdEnGuardia = Animator.StringToHash(ReglasAnimacion.EnGuardia);
         private static readonly int IdGesto = Animator.StringToHash(ReglasAnimacion.Gesto);
         private static readonly int IdGestoTipo = Animator.StringToHash(ReglasAnimacion.GestoTipo);
         private static readonly int IdManejando = Animator.StringToHash(ReglasAnimacion.Manejando);
@@ -86,7 +87,23 @@ namespace MechaCyberpunk.Personaje.Visual
         public bool ForzarSuelo { get; set; }
 
         public Animator Animador => animador;
-        public bool LeerDelPadre { get => leerDelPadre; set => leerDelPadre = value; }
+        public bool LeerDelPadre
+        {
+            get => leerDelPadre;
+            set
+            {
+                if (value && !leerDelPadre)
+                {
+                    // T-976: al volver a leer del padre se parte de donde está ahora. Con lo viejo (de antes de subir a la moto) el giro acumulado
+                    // hacía que el cuerpo jugara GirarIzq/GirarDer en el sitio al quedar de pie.
+                    Transform padre = transform.parent != null ? transform.parent : transform;
+                    posicionAnterior = padre.position;
+                    yawAnterior = transform.eulerAngles.y;
+                    giro = 0f;
+                }
+                leerDelPadre = value;
+            }
+        }
 
         private float rapidezGolpes = 1f;
 
@@ -403,6 +420,15 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             Disparo(IdGolpe);
         }
+
+        /// <summary>
+        /// T-985: si es true, tras un golpe de puños el personaje se queda en guardia (PJ01_Punos_Guardia) <see cref="ReglasAnimacion.SegundosGuardiaPunos"/> segundos.
+        /// Solo lo enciende el jugador (AnimacionJugador): los enemigos conservan su pose al terminar el golpe.
+        /// </summary>
+        public bool GuardiaTrasGolpe { get; set; }
+
+        /// <summary>True mientras el personaje está en guardia de puños: con <see cref="GuardiaTrasGolpe"/>, sin arma levantada y poco después de su último golpe.</summary>
+        public bool EnGuardia => GuardiaTrasGolpe && !caido && TipoArmaAnimador == TipoArmaVisual.Ninguna && Time.time - ultimoGolpe < ReglasAnimacion.SegundosGuardiaPunos;
 
         // T-675: el siguiente golpe espera a que acabe la animación del anterior; la reacción al daño se corta con un golpe o un esquive.
         private const float EsperaDisparador = 0.08f;
@@ -814,6 +840,7 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdAgachado, agachado);
             Poner(IdManejando, manejando);
             Poner(IdViendoTelefono, viendoTelefono);
+            Poner(IdEnGuardia, EnGuardia);
             Poner(IdRapidezGolpe, rapidezGolpes);
             if (leerDelPadre)
             {

@@ -47,7 +47,7 @@ namespace MechaCyberpunk.Tests.Demo
     /// Correr (Unity cerrado): Unity.exe -batchmode -projectPath . -runTests -testPlatform PlayMode -testFilter MechaCyberpunk.Tests.Demo.RecorridoDemoPruebas (T474_HASTA=3, 4, 9, 10 u 11 lo corta tras ese tramo; T474_SIN_CONTINUAR=1 no sale al título; T474_DESDE=12 solo depura el final: salta a Neón Alto).
     /// T-476: el bot hornea un NavMesh en ejecución (NavMeshBuilder con los colliders sólidos y quietos), sigue su camino de esquina en esquina con WASD, prueba las puertas con E (si no abren, las excluye y vuelve a hornear), compra PUÑOS I y PISTOLA II en el CIC y pelea con visión, ráfagas, R, Q y retirada para que reaparezcan los grupos.
     /// </summary>
-    public class RecorridoDemoPruebas : InputTestFixture
+    public partial class RecorridoDemoPruebas : InputTestFixture
     {
         // T-475: la ruta por rejilla se usa desde cerca (EL DOC está tras una pared a 6 m en línea recta).
         private const float DistanciaRutaMinima = 4f;
@@ -488,6 +488,9 @@ namespace MechaCyberpunk.Tests.Demo
                     || c.GetComponentInParent<CharacterController>() != null || c.GetComponentInParent<PandilleroAPie>() != null
                     || (Jugador != null && c.transform.IsChildOf(Jugador.Raiz)) || c.GetComponentInParent<PersonajeApoyo>() != null;
             });
+            // T-978: una malla de choque sin lectura (la pasarela PS01 de T-910) no se puede hornear en ejecución (error en el log). Se deja fuera: va por
+            // encima de la calle y el bot camina por abajo.
+            fuentes.RemoveAll(s => s.component is MeshCollider mc && mc.sharedMesh != null && !mc.sharedMesh.isReadable);
             NavMeshBuildSettings ajustes = NavMesh.CreateSettings();
             ajustes.agentRadius = 0.35f;
             ajustes.agentHeight = 1.7f;
@@ -848,6 +851,40 @@ namespace MechaCyberpunk.Tests.Demo
             Controlador?.ReiniciarMovimiento();
             yield return Siguiente();
             yield return Siguiente();
+        }
+
+        // T-988: el maletín cae junto al carro del asalto; desde un lado el candidato de E era el carro (se sube en vez de recoger). Como una persona, se prueba desde
+        // otros lados (y más cerca) hasta que el maletín se recoge.
+        private IEnumerator RecogerMaletin(DirectorPandillas director)
+        {
+            float[] giros = { 0f, 90f, 180f, 270f };
+            float[] distancias = { 1.2f, 0.8f };
+            for (int d = 0; d < distancias.Length && director.Paso == PasoHistoria.Asalto; d++)
+            {
+                for (int g = 0; g < giros.Length && director.Paso == PasoHistoria.Asalto; g++)
+                {
+                    MaletinAsalto maletin = director.Asalto.Maletin;
+                    if (maletin == null)
+                    {
+                        yield break;
+                    }
+                    Vector3 destino = maletin.transform.position;
+                    Vector3 dir = Quaternion.Euler(0f, giros[g], 0f) * Vector3.forward;
+                    Vector3 punto = destino - dir * distancias[d];
+                    if (Physics.Raycast(new Vector3(punto.x, destino.y + 1.5f, punto.z), Vector3.down, out RaycastHit piso, 10f, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        punto = piso.point;
+                    }
+                    punto.y += 0.1f;
+                    Jugador.Colocar(new Pose(punto, Quaternion.LookRotation(dir, Vector3.up)));
+                    Controlador?.ReiniciarMovimiento();
+                    yield return Siguiente();
+                    yield return Siguiente();
+                    yield return Pulsar(teclado.eKey, 15);
+                    yield return Segundos(0.3f);
+                    Debug.Log("[T-988] maletín intento " + (d * giros.Length + g + 1) + " desde " + punto + " a " + distancias[d] + " m: paso " + director.Paso + " recogido " + (maletin == null || maletin.FueRecogido));
+                }
+            }
         }
 
         private IEnumerator EsperarConVida()
@@ -1448,7 +1485,7 @@ namespace MechaCyberpunk.Tests.Demo
             HornearNavMesh();
             Vector3[] lugares =
             {
-                new Vector3(-59f, 0f, -77f), new Vector3(-44.3f, 0f, -77f), new Vector3(-32.8f, 1.24f, 28.9f), new Vector3(-36f, 0.2f, 85f), new Vector3(74.5f, 0.2f, 47f)
+                new Vector3(-59f, 0f, -77f), new Vector3(-44.3f, 0f, -77f), new Vector3(-100.3f, 0.24f, -13.4f), new Vector3(-36f, 0.2f, 85f), new Vector3(74.5f, 0.2f, 47f)
             };
             string[] nombres = { "casa", "INVENTOR", "DOC", "Tianguis", "HACKER" };
             for (int i = 0; i < 2; i++)
@@ -1583,13 +1620,14 @@ namespace MechaCyberpunk.Tests.Demo
                 yield return null;
                 Soltar(teclado.enterKey);
                 float finAsalto = Time.realtimeSinceStartup + 100f;
-                while (director.Asalto.Fase != FaseAsalto.Enfrentando && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
+                while (director.Asalto.Fase != FaseAsalto.Maletin && director.Paso == PasoHistoria.Asalto && Time.realtimeSinceStartup < finAsalto)
                 {
                     yield return null;
                 }
                 if (director.Paso == PasoHistoria.Asalto)
                 {
-                    yield return PelearAPunos(() => director.Paso != PasoHistoria.Asalto, p => p.name == AsaltoDinero.NombreAsaltante, 90f, "el asaltante");
+                    // T-987: ya no hay que vencer al asaltante: se recoge el maletín que soltaron con E.
+                    yield return RecogerMaletin(director);
                 }
                 if (director.Paso == PasoHistoria.Asalto)
                 {

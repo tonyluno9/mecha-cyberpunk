@@ -28,6 +28,14 @@ namespace MechaCyberpunk.Progresion.Opciones
         private bool copiaPuesta;
         private ISonidos gestorAplicado;
         private readonly List<Vector2Int> resoluciones = new List<Vector2Int>();
+        // T-978: la calidad que ya se le puso a cada cámara (distancia de dibujo y postproceso) y el postproceso que traía.
+        private readonly Dictionary<Camera, int> calidadEnCamara = new Dictionary<Camera, int>();
+        private readonly Dictionary<Camera, bool> postprocesoOriginal = new Dictionary<Camera, bool>();
+        private readonly float[] distanciasCapas = new float[CantidadCapas];
+        private Camera[] camaras = new Camera[8];
+        private int versionCalidad;
+        private const int CantidadCapas = 32;
+        private const int MaximoCamarasRecordadas = 32;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
@@ -104,6 +112,8 @@ namespace MechaCyberpunk.Progresion.Opciones
         private void OnDestroy()
         {
             QuitarCopia();
+            // T-978: sin servicio todo vuelve a como era (reflejos prendidos).
+            CalidadVisual.FijarReflejosCharcos(true);
         }
 
         private void Update()
@@ -113,6 +123,80 @@ namespace MechaCyberpunk.Progresion.Opciones
             if (gestor != null && gestor != gestorAplicado)
             {
                 AplicarVolumenes();
+            }
+        }
+
+        // T-978: las cámaras cambian (a pie, carro, cinemáticas, escenas, la de los charcos): a cada una activa se le pone la distancia de dibujo
+        // y el postproceso, una vez por cámara y calidad.
+        private void LateUpdate()
+        {
+            int cantidad = Camera.allCamerasCount;
+            if (camaras.Length < cantidad)
+            {
+                camaras = new Camera[cantidad * 2];
+            }
+            cantidad = Camera.GetAllCameras(camaras);
+            for (int i = 0; i < cantidad; i++)
+            {
+                AplicarCamara(camaras[i]);
+                camaras[i] = null;
+            }
+        }
+
+        /// <summary>
+        /// T-978: pone en <paramref name="camara"/> la distancia de dibujo de la calidad (por capa: Cinemachine reescribe el plano lejano cada cuadro, las
+        /// distancias por capa no) y apaga su postproceso en BAJO (en MEDIO y ALTO vuelve el que traía). No hace nada si ya está puesta.
+        /// </summary>
+        public void AplicarCamara(Camera camara)
+        {
+            if (camara == null)
+            {
+                return;
+            }
+            CalidadGrafica c = Valores.calidad;
+            int marca = versionCalidad * 8 + (int)c;
+            if (calidadEnCamara.TryGetValue(camara, out int puesta) && puesta == marca)
+            {
+                return;
+            }
+            if (calidadEnCamara.Count >= MaximoCamarasRecordadas)
+            {
+                OlvidarCamarasDestruidas();
+            }
+            calidadEnCamara[camara] = marca;
+            float distancia = ReglaOpciones.DistanciaDibujo(c);
+            for (int i = 0; i < CantidadCapas; i++)
+            {
+                distanciasCapas[i] = distancia;
+            }
+            camara.layerCullDistances = distanciasCapas;
+            UniversalAdditionalCameraData datos = camara.GetComponent<UniversalAdditionalCameraData>();
+            if (datos == null)
+            {
+                return;
+            }
+            if (!postprocesoOriginal.TryGetValue(camara, out bool original))
+            {
+                original = datos.renderPostProcessing;
+                postprocesoOriginal[camara] = original;
+            }
+            datos.renderPostProcessing = original && ReglaOpciones.Postproceso(c);
+        }
+
+        private void OlvidarCamarasDestruidas()
+        {
+            var muertas = new List<Camera>();
+            foreach (Camera c in calidadEnCamara.Keys)
+            {
+                if (c == null)
+                {
+                    muertas.Add(c);
+                }
+            }
+            foreach (Camera c in muertas)
+            {
+                calidadEnCamara.Remove(c);
+                postprocesoOriginal.Remove(c);
             }
         }
 
@@ -195,6 +279,12 @@ namespace MechaCyberpunk.Progresion.Opciones
                 avisoRoto = true;
                 Debug.LogWarning("[Progresion] " + ruta + " está roto; se usan las opciones por defecto.");
             }
+            // T-978: "-calidad Bajo|Medio|Alto" al lanzar el juego manda sobre el archivo (para medir y grabar sin tocar lo que eligió el jugador).
+            if (ReglaOpciones.CalidadDeArgumentos(Environment.GetCommandLineArgs(), out CalidadGrafica forzada))
+            {
+                valores.calidad = forzada;
+                Debug.Log("[Progresion] Calidad " + forzada + " por la línea de comandos.");
+            }
         }
 
         private void Guardar()
@@ -243,6 +333,8 @@ namespace MechaCyberpunk.Progresion.Opciones
 
         private void AplicarCalidad()
         {
+            CalidadVisual.FijarReflejosCharcos(ReglaOpciones.ReflejosCharcos(Valores.calidad));
+            versionCalidad++;
             if (!copiaPuesta)
             {
                 original = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;

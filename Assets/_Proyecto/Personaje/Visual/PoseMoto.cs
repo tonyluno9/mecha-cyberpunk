@@ -80,6 +80,26 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Lo que tarda en bajar (s).</summary>
         public float SegundosBajar => segundosBajar;
 
+        /// <summary>
+        /// T-976: dónde queda parado el cuerpo al terminar el clip de bajar (en el mundo, a la altura del asiento sentado; quien lo use pone la altura del piso) y mirando
+        /// hacia donde apunta la moto. False si no va montado o no usa los clips.
+        /// </summary>
+        public bool PoseFinalBajar(out Vector3 posicion, out Quaternion giro)
+        {
+            posicion = Vector3.zero;
+            giro = Quaternion.identity;
+            if (moto == null || !conClips || caminoBajar == null)
+            {
+                return false;
+            }
+            Transform asiento = moto.Asiento;
+            Vector3 raizSentado = asiento.position - asiento.rotation * caderaSentado;
+            posicion = raizSentado + asiento.rotation * (caminoBajar[caminoBajar.Length - 1] - caminoBajar[0]);
+            Vector3 frente = Vector3.ProjectOnPlane(asiento.forward, Vector3.up);
+            giro = frente.sqrMagnitude > 1e-4f ? Quaternion.LookRotation(frente, Vector3.up) : Quaternion.identity;
+            return true;
+        }
+
         private void Awake()
         {
             animador = GetComponent<Animator>();
@@ -253,7 +273,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private void ColocarConClips(Transform asiento, float fase, Vector3 mundoAntes, Quaternion giroAntes)
         {
             bool sentado = !bajando && fase >= 1f;
-            float pesoInclinacion = bajando ? 0f : ReglasMoto.Suave(Mathf.InverseLerp(InicioIKSubir, 1f, fase));
+            // T-976: al bajar, el enderezado y la inclinación se van con el IK (antes se cortaban en el primer cuadro y la cadera saltaba).
+            float pesoInclinacion = bajando ? 1f - ReglasMoto.Suave(fase / FinIKBajar) : ReglasMoto.Suave(Mathf.InverseLerp(InicioIKSubir, 1f, fase));
             // Los clips se hicieron en la C19 (deportiva): en una moto de manubrio alto (reparto) el cuerpo se endereza lo que su InclinacionTorso es menor que la de la C19.
             float cabeceo = (moto.InclinacionTorso - InclinacionTorsoClips) * EnderezarPorGrado * pesoInclinacion;
             Quaternion rotMoto = asiento.rotation * Quaternion.Euler(cabeceo, 0f, -inclinacion * pesoInclinacion);

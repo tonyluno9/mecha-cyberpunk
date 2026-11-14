@@ -27,7 +27,7 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float AlturaCalles = 0.2f;
         private const float SegundosDeJuego = 60f;
         private const float EscalaDeTiempo = 5f;
-        private const float ToleranciaDeCalle = 2f; // T-666: va por su carril, a 1.6 m del eje de la calle (la calle mide 14 m)
+        private const float ToleranciaDeCalle = 5f; // T-666: va por su carril, a 1.6 m del eje de la calle (la calle mide 14 m); T-986: con física también rodea por el carril de afuera (4.4 m) y se abre un poco en las curvas
         private const float MetrosMinimosRecorridos = 20f;
         private const int FramesDeEspera = 3;
         private const float DistanciaDeCaptura = 25f;
@@ -117,6 +117,20 @@ namespace MechaCyberpunk.Tests.Trafico
             }
         }
 
+        // T-986: las patrullas manejan con física, así que solo salen por calles por las que pueden llegar (no tras un cierre) y una a una, cuando la anterior
+        // ya se alejó de la salida: la cantidad pedida se alcanza al cabo de unos segundos, no en tres cuadros.
+        private IEnumerator EsperarPatrullas(int cantidad)
+        {
+            float anterior = Time.timeScale;
+            Time.timeScale = EscalaDeTiempo;
+            float limite = Time.time + SegundosDeJuego;
+            while (Time.time < limite && gestor.Patrullas < cantidad)
+            {
+                yield return null;
+            }
+            Time.timeScale = anterior;
+        }
+
         [UnityTest]
         public IEnumerator Nivel0_SinPerseguidores_Subir_LosCrea_YBajarA0_LosRetira()
         {
@@ -137,6 +151,7 @@ namespace MechaCyberpunk.Tests.Trafico
 
             calor.Poner(3);
             yield return EsperarFrames();
+            yield return EsperarPatrullas(3);
             Assert.AreEqual(2, gestor.Drones);
             Assert.AreEqual(3, gestor.Patrullas);
 
@@ -164,6 +179,7 @@ namespace MechaCyberpunk.Tests.Trafico
         {
             calor.Poner(3);
             yield return EsperarFrames();
+            yield return EsperarPatrullas(3);
             Assert.AreEqual(5, gestor.Drones + gestor.Patrullas);
 
             EventosLugares.PublicarEntro(IdLugar.Bar);
