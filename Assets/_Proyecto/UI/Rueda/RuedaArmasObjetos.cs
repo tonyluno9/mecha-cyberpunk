@@ -22,12 +22,12 @@ namespace MechaCyberpunk.UI.Rueda
     /// </summary>
     public class RuedaArmasObjetos : MonoBehaviour
     {
-        public const int OrdenCanvas = 16;
+        public const int OrdenCanvas = 90; // por encima de todos los canvas del HUD (H10 12, historia 20, mapa 40, pausa 60 queda debajo: la rueda no abre con ella)
         public const string NombreAccion = "Rueda";
 
         private const float RadioAnillo = 300f;
         private const float LadoCasilla = 124f;
-        private const float AlfaFondo = 0.55f;
+        private const float AlfaFondo = 0.92f; // el diseño pide al menos 0.55; con mezcla lineal 0.8 apenas se notaba
         private const float AlfaApagada = 0.28f;
 
         private static readonly Color Turquesa = new Color(0.30f, 0.92f, 0.90f, 1f);
@@ -52,6 +52,7 @@ namespace MechaCyberpunk.UI.Rueda
         private static float escalaAnterior = 1f;
         private static int aperturas;
 
+        private readonly List<Canvas> ocultos = new List<Canvas>();
         private Canvas canvas;
         private GameObject raiz;
         private readonly Casilla[] casillas = new Casilla[ReglaRuedaArmas.Casillas];
@@ -241,6 +242,7 @@ namespace MechaCyberpunk.UI.Rueda
             cursor = Vector2.zero;
             movimientoPendiente = Vector2.zero;
             resaltada = -1;
+            OcultarHud();
             raiz.SetActive(true);
             Dibujar();
         }
@@ -263,6 +265,7 @@ namespace MechaCyberpunk.UI.Rueda
             }
             Time.fixedDeltaTime = fixedAnterior;
             raiz.SetActive(false);
+            RestaurarHud();
             if (controlador != null)
             {
                 controlador.EntradaBloqueada = false;
@@ -282,6 +285,32 @@ namespace MechaCyberpunk.UI.Rueda
             {
                 consumibles.Usar(consumibles.Catalogo[eleccion.Indice]);
             }
+        }
+
+        // Mientras la rueda está abierta el resto del HUD (tutorial, avisos, ayudas, objetos, minimapa, subtítulos: todo canvas que no sea del mundo) se apaga para que nada se encime.
+        private void OcultarHud()
+        {
+            ocultos.Clear();
+            foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (c.enabled && c != canvas && !canvas.transform.IsChildOf(c.transform) && !c.transform.IsChildOf(canvas.transform) && c.renderMode != RenderMode.WorldSpace)
+                {
+                    c.enabled = false;
+                    ocultos.Add(c);
+                }
+            }
+        }
+
+        private void RestaurarHud()
+        {
+            foreach (Canvas c in ocultos)
+            {
+                if (c != null)
+                {
+                    c.enabled = true;
+                }
+            }
+            ocultos.Clear();
         }
 
         private bool Disponible(int casilla)
@@ -398,6 +427,12 @@ namespace MechaCyberpunk.UI.Rueda
             fondo.raycastTarget = false;
             KitUI.Estirar(fondo.rectTransform);
 
+            // Un disco tenue con aro turquesa detrás de las casillas, para que el anillo se lea como rueda.
+            Image disco = KitUI.CrearImagen(raiz.transform, "Disco", Color.white);
+            disco.sprite = SpriteDisco();
+            disco.raycastTarget = false;
+            KitUI.Colocar(disco.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one * (RadioAnillo * 2f + LadoCasilla + 40f));
+
             for (int i = 0; i < casillas.Length; i++)
             {
                 casillas[i] = ArmarCasilla(i);
@@ -410,6 +445,24 @@ namespace MechaCyberpunk.UI.Rueda
             punto = (RectTransform)KitUI.CrearRombo(raiz.transform, "Cursor", 18f, Blanco).rectTransform.parent;
             punto.anchorMin = punto.anchorMax = new Vector2(0.5f, 0.5f);
             raiz.SetActive(false);
+        }
+
+        private static Sprite SpriteDisco()
+        {
+            const int lado = 256;
+            Texture2D t = new Texture2D(lado, lado, TextureFormat.RGBA32, false);
+            float mitad = lado / 2f;
+            for (int y = 0; y < lado; y++)
+            {
+                for (int x = 0; x < lado; x++)
+                {
+                    float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(mitad, mitad)) / mitad;
+                    float alfa = d > 1f ? 0f : d > 0.985f ? 0.4f : 0.07f;
+                    t.SetPixel(x, y, new Color(Turquesa.r, Turquesa.g, Turquesa.b, alfa));
+                }
+            }
+            t.Apply();
+            return Sprite.Create(t, new Rect(0f, 0f, lado, lado), new Vector2(0.5f, 0.5f), 100f);
         }
 
         private Casilla ArmarCasilla(int indice)
