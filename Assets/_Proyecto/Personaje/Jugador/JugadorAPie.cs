@@ -82,6 +82,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 gameObject.AddComponent<ConsumiblesJugador>();
             }
+            if (GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>() == null)
+            {
+                gameObject.AddComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>();
+            }
             lanzamientoMoto = GetComponent<LanzamientoMoto>();
             if (lanzamientoMoto == null)
             {

@@ -229,8 +229,11 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             Assert.IsTrue(tutorial.Regla.Vista(AccionTutorial.Escudo), "El escudo que absorbe da por visto su aviso");
 
+            // T-992: el aviso de habilidades solo sale con algún implante; aquí no hay, así que no se ofrece.
+            Assert.IsFalse(tutorial.Regla.Vista(AccionTutorial.Habilidades), "Sin implantes no se ofrece el aviso de habilidades");
             foreach (AccionTutorial accion in Enum.GetValues(typeof(AccionTutorial)))
             {
+                if (accion == AccionTutorial.Habilidades) continue;
                 Assert.IsTrue(tutorial.Regla.Vista(accion), "Quedó pendiente " + accion);
             }
         }

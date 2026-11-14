@@ -240,6 +240,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<HudH10>();
             }
+            if (GetComponent<BarraHabilidades>() == null)
+            {
+                gameObject.AddComponent<BarraHabilidades>();
+            }
             if (config == null || grupoVida == null || grupoMira == null || grupoArma == null || grupoCancion == null
                 || relleno == null || textoVida == null || textoArma == null || textoCancion == null
                 || grupoObjetivo == null || textoObjetivo == null

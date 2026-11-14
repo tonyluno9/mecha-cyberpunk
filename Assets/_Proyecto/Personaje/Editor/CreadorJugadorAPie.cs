@@ -213,6 +213,15 @@ namespace MechaCyberpunk.Personaje.Editor
                 mapa.AddAction("Rueda", InputActionType.Button, "<Keyboard>/tab");
                 cambio = true;
             }
+            // T-992: habilidades de prótesis en teclas fijas.
+            foreach ((string nombre, string tecla) in new[] { ("HabilidadPiernas", "1"), ("HabilidadBrazos", "2"), ("HabilidadCabeza", "3") })
+            {
+                if (mapa.FindAction(nombre) == null)
+                {
+                    mapa.AddAction(nombre, InputActionType.Button, "<Keyboard>/" + tecla);
+                    cambio = true;
+                }
+            }
             if (mapa.FindAction("CambiarArma") == null)
             {
                 mapa.AddAction("CambiarArma", InputActionType.Value, "<Mouse>/scroll/y", expectedControlLayout: "Axis");

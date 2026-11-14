@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje.Habilidades;
 using UnityEngine;
 
 namespace MechaCyberpunk.Progresion.Apoyo
@@ -10,6 +11,7 @@ namespace MechaCyberpunk.Progresion.Apoyo
     /// a cada enemigo vivo a menos de <see cref="Alcance"/> m (pandilleros, el jefe) se le suma el material de rayos X (Resources/VisorRayosX: solo
     /// se dibuja donde algo lo tapa, en naranja). Al quitarse el visor o al morir el enemigo, se le quita. Busca enemigos cada
     /// <see cref="CadaCuanto"/> s, no cada cuadro. Se crea solo al cargar la escena si está el material.
+    /// T-992: ya no es siempre; marca solo mientras la habilidad CABEZA ([3]) está activa (<see cref="HabilidadesProtesis.CabezaActiva"/>) y hay implante de ojos.
     /// </summary>
     public class VisorRayosX : MonoBehaviour
     {
@@ -55,6 +57,10 @@ namespace MechaCyberpunk.Progresion.Apoyo
         /// <summary>Para las pruebas: el material de rayos X.</summary>
         public void Configurar(Material rayosX) => material = rayosX;
 
+        private void OnEnable() => HabilidadesProtesis.CabezaCambio += Actualizar;
+
+        private void OnDisable() => HabilidadesProtesis.CabezaCambio -= Actualizar;
+
         private void OnDestroy()
         {
             Desmarcar();
@@ -64,11 +70,11 @@ namespace MechaCyberpunk.Progresion.Apoyo
             }
         }
 
-        /// <summary>True si el jugador trae el implante de ojos.</summary>
+        /// <summary>True si el jugador trae el implante de ojos y la habilidad CABEZA está activa.</summary>
         public static bool VisorPuesto()
         {
             IImplantes implantes = Registro<IImplantes>.Actual;
-            return implantes != null && implantes.Nivel(EspacioImplante.Ojos) > 0;
+            return implantes != null && implantes.Nivel(EspacioImplante.Ojos) > 0 && HabilidadesProtesis.CabezaActiva;
         }
 
         private void Update()

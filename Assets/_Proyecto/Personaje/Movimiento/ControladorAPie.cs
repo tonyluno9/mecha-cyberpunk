@@ -88,6 +88,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
 
+        // T-992: las habilidades de prótesis suman su multiplicador temporal encima de los implantes (1 si no hay o no están activas).
+        private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis habilidades;
+        private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis Habilidades =>
+            habilidades != null ? habilidades : (habilidades = GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>());
+
         /// <summary>T-991: true mientras la rueda de armas y objetos está abierta: el ratón no gira la cámara ni dispara (caminar sigue igual).</summary>
         public bool EntradaBloqueada { get; set; }
         /// <summary>S2: con true no se mueve al jugador ni se aplica gravedad (trepa o agarre de borde); la mirada sigue funcionando.</summary>
@@ -242,10 +247,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
             Vector2 entrada = mover.action.ReadValue<Vector2>();
             bool quiereCorrer = correr.action.IsPressed() && !apuntando;
             Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, quiereCorrer,
-                enPiso, dt, datos.VelocidadCaminar, EfectosAPie.VelocidadCorrer(datos, implantes.Efectos), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
+                enPiso, dt, datos.VelocidadCaminar * (Habilidades != null ? Habilidades.FactorCaminar : 1f),
+                EfectosAPie.VelocidadCorrer(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorCorrer : 1f), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
             bool quiereSaltar = !SaltoBloqueado && saltar.action.WasPressedThisFrame();
             float vertical = movimiento.ActualizarVertical(enPiso, quiereSaltar, dt,
-                EfectosAPie.AlturaSalto(datos, implantes.Efectos), config.Gravedad);
+                EfectosAPie.AlturaSalto(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorSalto : 1f), config.Gravedad);
             if (enPiso && quiereSaltar && vertical > 0f)
             {
                 Sonidos.Reproducir(VozJugador.Id("JUG_SALTO"));
