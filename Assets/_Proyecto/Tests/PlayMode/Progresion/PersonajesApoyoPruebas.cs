@@ -230,36 +230,22 @@ namespace MechaCyberpunk.Tests.Progresion
             PersonajeApoyo doc = Personaje("doc");
             yield return PonerFrente(jugador, doc);
             Assert.IsTrue(doc.PuedeUsar);
-            StringAssert.Contains("CURARTE", doc.Texto);
-            yield return Pulsar(teclado.eKey);
-            // T-813: con la silla en el consultorio (ColocarS2nSillaClinica), EL DOC te manda a sentarte y la silla cobra y cura.
+            // T-990: el Doc siempre ofrece IMPLANTES (la clínica existe), también herido; curar es trabajo de la silla.
+            Assert.AreEqual("IMPLANTES", doc.Texto);
             SillaClinica silla = SillaClinica.Actual;
-            // Si la historia dejó un regalo en EL DOC, la E lo cura gratis; si no, te manda a la silla.
-            if (silla != null && silla.isActiveAndEnabled && vida.Actual < vida.Maxima)
+            Assert.IsNotNull(silla, "La silla está en el consultorio");
+            Assert.IsTrue(silla.PuedeUsar, "La silla se ofrece herido y con dinero");
+            StringAssert.Contains("CURARME", silla.Texto);
+            silla.Usar();
+            float finSilla = Time.realtimeSinceStartup + silla.Config.Duracion + 5f;
+            while ((silla.EnSecuencia || vida.Actual < vida.Maxima) && Time.realtimeSinceStartup < finSilla)
             {
-                // Frente al Doc, la silla (a ~1 m) puede ganar la E: entonces ya empezó a curar.
-                if (!silla.EnSecuencia)
-                {
-                    // T-702: sin implantes, EL DOC regala uno y dice la frase del regalo (RegaloImplanteDoc); si no, manda a la silla.
-                    RegaloImplanteDoc regaloDoc = Object.FindFirstObjectByType<RegaloImplanteDoc>();
-                    string fraseDoc = regaloDoc != null && regaloDoc.Regalado ? regaloDoc.Frase : silla.Config.FraseDoc;
-                    StringAssert.Contains(fraseDoc, doc.UltimoTexto, "El Doc te manda a la silla (jugador en " + jugador.Raiz.position
-                        + ", candidato " + ((Component)jugador).GetComponentInChildren<MechaCyberpunk.Personaje.Interaccion.InteraccionAPie>().InteractuableCandidato
-                        + ", regalo " + doc.TieneRegalo + ", aviso del Doc '" + doc.Texto + "' " + doc.PuedeUsar + ", silla '" + silla.Texto + "', vida " + vida.Actual + ")");
-                    Assert.Less(vida.Actual, vida.Maxima, "De palabra ya no cura");
-                    Assert.IsTrue(silla.PuedeUsar, "La silla se ofrece");
-                    silla.Usar();
-                }
-                float finSilla = Time.realtimeSinceStartup + silla.Config.Duracion + 5f;
-                while ((silla.EnSecuencia || vida.Actual < vida.Maxima) && Time.realtimeSinceStartup < finSilla)
-                {
-                    yield return null;
-                }
                 yield return null;
             }
+            yield return null;
             Assert.AreEqual(vida.Maxima, vida.Actual, 0.5f, "El Doc deja la vida al máximo");
-            Assert.AreEqual(450, cartera.Dinero, "El Doc cobra Ƀ50");
-            Assert.AreEqual("ESTÁS BIEN, MIJO", doc.Texto, "Con la vida llena dice que estás bien");
+            Assert.AreEqual(450, cartera.Dinero, "La silla del Doc cobra Ƀ50");
+            Assert.AreEqual("IMPLANTES", doc.Texto, "Con la vida llena sigue ofreciendo IMPLANTES");
 
             // c. EL MECÁNICO: calor 2 -> 0 y cobra Ƀ100.
             PersonajeApoyo mecanico = Personaje("mecanico");

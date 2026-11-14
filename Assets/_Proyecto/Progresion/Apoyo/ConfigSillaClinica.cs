@@ -16,8 +16,8 @@ namespace MechaCyberpunk.Progresion.Apoyo
         [Tooltip("Lo que dice EL DOC al terminar.")]
         [SerializeField] private string fraseFin = "Listo, como nuevo. Ten más cuidado, mijo.";
         [Tooltip("{0} = costo con Ƀ. El HUD le antepone \"E · \".")]
-        [SerializeField] private string formatoAviso = "SENTARTE · CURARTE {0}";
-        [SerializeField] private string textoSano = "SENTARTE · REVISIÓN GRATIS";
+        [SerializeField] private string formatoAviso = "CURARME · {0}";
+        [SerializeField] private string textoSano = "CURARME";
         [SerializeField] private string textoSinDinero = "SILLA DEL DOC · NO TE ALCANZA";
         [SerializeField] private string textoBarra = "CURANDO";
         [SerializeField] private string nombreDoc = "EL DOC · JOEL";
