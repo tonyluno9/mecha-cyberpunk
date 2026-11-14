@@ -95,7 +95,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             velocidadSuave += (velocidad - velocidadSuave) * suavidad;
             giroSuave += (giroGrados / dt - giroSuave) * suavidad;
             float objetivo;
-            if (carro != null && carro.TieneControl)
+            if (carro != null && (carro.TieneControl || carro.ConIA))
             {
                 objetivo = CalculoRuedasVisuales.AnguloPorVolante(carro.Volante, velocidadSuave, velocidadRapida, anguloParado, anguloRapido);
             }

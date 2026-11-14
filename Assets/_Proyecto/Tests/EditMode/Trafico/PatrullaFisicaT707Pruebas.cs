@@ -24,7 +24,9 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.IsNotNull(prefab.GetComponent<CarroEstacionado>(), "Robarla suma calor como cualquier carro");
             Rigidbody cuerpo = prefab.GetComponent<Rigidbody>();
             Assert.IsNotNull(cuerpo);
-            Assert.IsTrue(cuerpo.isKinematic, "Cinemática mientras la maneja la IA, como los carros del tráfico");
+            // T-986: ya no es cinemática: la maneja un conductor IA con la misma física que el carro del jugador.
+            Assert.IsFalse(cuerpo.isKinematic, "Cuerpo con física, como el carro del jugador");
+            Assert.AreEqual(RigidbodyInterpolation.Interpolate, cuerpo.interpolation, "Con interpolación, como el carro del jugador");
             Assert.GreaterOrEqual(prefab.GetComponentsInChildren<Collider>(true).Count(c => !c.isTrigger), 1, "Es sólida");
             Assert.AreEqual(2, prefab.GetComponentsInChildren<Light>(true).Count(l => l.name.StartsWith("Luz")), "Sigue con sus luces de sirena");
         }

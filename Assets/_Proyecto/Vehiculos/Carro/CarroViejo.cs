@@ -111,6 +111,17 @@ namespace MechaCyberpunk.Vehiculos.Carro
         /// <summary>Si el carro está leyendo la entrada del conductor.</summary>
         public bool TieneControl { get; private set; }
 
+        /// <summary>T-986: los valores de manejo del carro, para que un conductor IA los use.</summary>
+        public ParametrosManejo ParametrosManejo => parametros;
+
+        private Func<EntradaCarro> conductorIA;
+
+        /// <summary>T-986: true si lo maneja un conductor IA (<see cref="ConducirConIA"/>): usa la misma física que con el jugador.</summary>
+        public bool ConIA => conductorIA != null;
+
+        /// <summary>T-986: alguien lo maneja, el jugador o la IA.</summary>
+        private bool Manejado => TieneControl || conductorIA != null;
+
         /// <summary>Posición del volante (-1 a 1, suavizada): para que las ruedas delanteras doblen (T-742).</summary>
         public float Volante => volante;
 
@@ -197,7 +208,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public string Nombre => string.IsNullOrEmpty(nombreModelo) ? "Carro viejo" : nombreModelo;
         public Vector3 PuntoSubida => puntoSubida.position;
         public bool Ocupado { get; private set; }
-        public bool PuedeSubir => listo && !Ocupado && (!EstaEnTrafico || velocidadEnTrafico < config.RapidezMaximaParaBajar);
+        public bool PuedeSubir => listo && !Ocupado && (!EstaEnTrafico || velocidadEnTrafico < config.RapidezMaximaParaBajar)
+            && (conductorIA == null || Rapidez < config.RapidezMaximaParaBajar);
         public Transform Asiento => asiento;
         public Camera Camara => camaraCarro.Camara;
         public event Action<bool> OcupadoCambio;
@@ -214,6 +226,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 return false;
             }
+            SoltarIA(); // T-986: al subir el jugador manda él
             Ocupado = true;
             Sonidos.ReproducirEn("VEH_VIEJO_ARRANQUE", transform.position);
             camaraCarro.Encender(true);
@@ -395,6 +408,36 @@ namespace MechaCyberpunk.Vehiculos.Carro
             ActualizarMapa();
         }
 
+        /// <summary>
+        /// T-986: un conductor IA maneja el carro: cada paso de física pide su <see cref="EntradaCarro"/> a <paramref name="conductor"/> (con el volante
+        /// suavizado igual que el del jugador) y no hace falta tomar el control del jugador ni habilitar sus controles.
+        /// </summary>
+        public void ConducirConIA(Func<EntradaCarro> conductor)
+        {
+            conductorIA = conductor;
+            if (conductor != null && cuerpo != null && !cuerpo.isKinematic)
+            {
+                cuerpo.WakeUp();
+                segundosEnReposo = 0f;
+            }
+        }
+
+        /// <summary>T-986: el conductor IA deja el carro (queda estacionado, o lo toma el jugador).</summary>
+        public void SoltarIA()
+        {
+            if (conductorIA == null)
+            {
+                return;
+            }
+            conductorIA = null;
+            if (!TieneControl)
+            {
+                EntradaActual = default;
+                marcha.Reiniciar();
+                volante = 0f;
+            }
+        }
+
         private void ActualizarMapa()
         {
             if (!listo)
@@ -423,11 +466,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
         // Motor en marcha mínima mientras alguien maneja; el tono sube con la rapidez.
         private void ActualizarMotor()
         {
-            if (Ocupado && bucleMotor == Sonidos.SinBucle)
+            bool suena = Ocupado || conductorIA != null;
+            if (suena && bucleMotor == Sonidos.SinBucle)
             {
                 bucleMotor = Sonidos.ReproducirBucle("VEH_VIEJO_MOTOR_RALENTI", transform);
             }
-            else if (!Ocupado && bucleMotor != Sonidos.SinBucle)
+            else if (!suena && bucleMotor != Sonidos.SinBucle)
             {
                 Sonidos.DetenerBucle(bucleMotor);
                 bucleMotor = Sonidos.SinBucle;
@@ -458,7 +502,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 posicionAnterior = transform.position;
                 return;
             }
-            if (!TieneControl && cuerpo.IsSleeping())
+            if (!Manejado && cuerpo.IsSleeping())
             {
                 return;
             }
@@ -470,7 +514,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
             Velocidad = Vector3.Dot(cuerpo.linearVelocity, adelante);
             ActualizarMotor();
-            EntradaActual = TieneControl ? LeerEntrada() : default;
+            EntradaActual = TieneControl ? LeerEntrada() : (conductorIA != null ? LeerConductorIA() : default);
 
             // Suspensión: un rayo por rueda. El motor y el agarre se reparten entre las ruedas que tocan piso.
             Vector3[] puntos = puntosPiso;
@@ -498,7 +542,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         // T-511: un carro sin conductor que lleva un rato quieto sobre sus ruedas se duerme: dormido no cuesta física (hay decenas estacionados).
         private void DormirSiEstaQuieto(float dt)
         {
-            bool quieto = !TieneControl && !Ocupado && RuedasEnPiso >= RuedasMinimasParaGirar
+            bool quieto = !Manejado && !Ocupado && RuedasEnPiso >= RuedasMinimasParaGirar
                 && cuerpo.linearVelocity.sqrMagnitude < UmbralReposo * UmbralReposo && cuerpo.angularVelocity.sqrMagnitude < UmbralReposo * UmbralReposo;
             segundosEnReposo = quieto ? segundosEnReposo + dt : 0f;
             if (segundosEnReposo >= SegundosParaDormir)
@@ -521,7 +565,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             for (int i = 0; i < cantidad; i++)
             {
                 RaycastHit impacto = impactos[i];
-                if (impacto.collider.transform.root == transform.root || impacto.distance >= mejor)
+                // T-986: solo cuentan como suyos los colliders de este carro; la patrulla cuelga del barrio y no debe ignorar el piso que comparte raíz con ella
+                if (impacto.collider.attachedRigidbody == cuerpo || impacto.collider.transform.IsChildOf(transform) || impacto.distance >= mejor)
                 {
                     continue;
                 }
@@ -551,7 +596,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             float fuerzaLateral;
 
             ActualizarDerrape(vAdelante, vLateral, dt);
-            if (TieneControl)
+            if (Manejado)
             {
                 EntradaCarro e = EntradaActual;
                 float factorMarcha = marcha.Factor(parametros, e.Acelerar, e.Frenar, vAdelante, dt);
@@ -630,6 +675,15 @@ namespace MechaCyberpunk.Vehiculos.Carro
         {
             Vector3 eje = Vector3.Cross(arriba, Vector3.up);
             cuerpo.AddTorque(eje * config.FuerzaAntivuelco);
+        }
+
+        // T-986: la entrada de la IA pasa por el mismo volante con velocidad limitada que el del jugador.
+        private EntradaCarro LeerConductorIA()
+        {
+            EntradaCarro e = conductorIA();
+            volante = CalculoDireccion.Suavizar(volante, Mathf.Clamp(e.Girar, -1f, 1f), Time.fixedDeltaTime,
+                config.VelocidadVolante, config.VelocidadCentradoVolante);
+            return new EntradaCarro(Mathf.Clamp01(e.Acelerar), Mathf.Clamp01(e.Frenar), volante, Mathf.Clamp01(e.FrenoMano));
         }
 
         private EntradaCarro LeerEntrada()

@@ -91,6 +91,72 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(0f)] [Tooltip("Por debajo de esta velocidad cuentas como quieto para el arresto (m/s).")]
         [SerializeField] private float velocidadArresto = 2f;
 
+        [Header("Conducción de las patrullas (T-986)")]
+        [Min(0f)] [Tooltip("Distancia de mira de la patrulla con el carro parado (m).")]
+        [SerializeField] private float distanciaMiraMinima = 4f;
+        [Min(0f)] [Tooltip("Metros más que mira por cada m/s de rapidez (s).")]
+        [SerializeField] private float segundosMira = 0.45f;
+        [Min(1f)] [Tooltip("Velocidad con la que toma una esquina de 90 grados (m/s).")]
+        [SerializeField] private float velocidadCurva90 = 10f;
+        [Min(1f)] [Tooltip("La velocidad más baja que pide en una curva, aunque sea vuelta en U (m/s).")]
+        [SerializeField] private float velocidadMinimaCurva = 4f;
+        [Range(0.1f, 1f)] [Tooltip("Qué parte del agarre lateral del carro usa al tomar una curva.")]
+        [SerializeField] private float fraccionAgarreCurva = 1f;
+        [Min(0.5f)] [Tooltip("Desaceleración con la que planea frenar antes de una curva o de la meta (m/s2); el freno del carro da más.")]
+        [SerializeField] private float desaceleracionPlaneada = 5f;
+        [Min(0.1f)] [Tooltip("Velocidad que le falta para pisar el acelerador a fondo (m/s).")]
+        [SerializeField] private float rangoAceleracion = 3f;
+        [Min(0.1f)] [Tooltip("Velocidad que le sobra para pisar el freno a fondo (m/s).")]
+        [SerializeField] private float rangoFreno = 3f;
+        [Min(0.1f)] [Tooltip("Si le sobra tanta velocidad frena a fondo de golpe (m/s).")]
+        [SerializeField] private float errorFrenoFuerte = 4f;
+        [Min(0f)] [Tooltip("Error de velocidad que deja pasar sin tocar los pedales (m/s).")]
+        [SerializeField] private float zonaMuertaVelocidad = 0.4f;
+        [Min(0.05f)] [Tooltip("Por debajo de esta rapidez la patrulla cuenta como quieta (m/s).")]
+        [SerializeField] private float rapidezQuieta = 0.5f;
+        [Min(0.5f)] [Tooltip("Segundos quieta queriendo avanzar para darse por atorada (s).")]
+        [SerializeField] private float segundosParaAtoro = 2.5f;
+        [Min(0.5f)] [Tooltip("Segundos que da reversa al atorarse (s).")]
+        [SerializeField] private float segundosReversa = 1.8f;
+        [Range(0f, 1f)] [Tooltip("Volante mínimo (0 a 1) con el que da reversa para sacar la trompa.")]
+        [SerializeField] private float volanteReversaMinimo = 0.6f;
+        [Range(10f, 180f)] [Tooltip("Ángulo al punto de mira desde el que un giro es tan cerrado que usa el freno de mano (grados).")]
+        [SerializeField] private float anguloFrenoMano = 65f;
+        [Min(1f)] [Tooltip("Rapidez mínima para usar el freno de mano en un giro muy cerrado (m/s).")]
+        [SerializeField] private float velocidadFrenoMano = 6f;
+        [Min(0.5f)] [Tooltip("A esta distancia de un cruce da el cruce por pasado y mira al siguiente (m).")]
+        [SerializeField] private float radioLlegadaNodo = 4f;
+        [Min(0.5f)] [Tooltip("A esta distancia de una miga de pan la da por recorrida (m).")]
+        [SerializeField] private float radioLlegadaMiga = 3f;
+        [Min(1f)] [Tooltip("Cuántos segundos volcada (boca abajo o de lado) hasta quitarla, si nadie la ve (s).")]
+        [SerializeField] private float segundosVolcada = 4f;
+
+        public float RadioLlegadaNodo => radioLlegadaNodo;
+        public float RadioLlegadaMiga => radioLlegadaMiga;
+        public float SegundosVolcada => segundosVolcada;
+        public float DesaceleracionPlaneada => desaceleracionPlaneada;
+
+        /// <summary>T-986: los números del conductor IA de las patrullas.</summary>
+        public ParametrosConductorIA ParametrosConductor => new ParametrosConductorIA
+        {
+            DistanciaMiraMinima = distanciaMiraMinima,
+            SegundosMira = segundosMira,
+            VelocidadCurva90 = velocidadCurva90,
+            VelocidadMinimaCurva = velocidadMinimaCurva,
+            FraccionAgarre = fraccionAgarreCurva,
+            DesaceleracionPlaneada = desaceleracionPlaneada,
+            RangoAceleracion = rangoAceleracion,
+            RangoFreno = rangoFreno,
+            ErrorFrenoFuerte = errorFrenoFuerte,
+            ZonaMuerta = zonaMuertaVelocidad,
+            RapidezQuieta = rapidezQuieta,
+            SegundosParaAtoro = segundosParaAtoro,
+            SegundosReversa = segundosReversa,
+            VolanteReversaMinimo = volanteReversaMinimo,
+            AnguloFrenoMano = anguloFrenoMano,
+            VelocidadFrenoMano = velocidadFrenoMano,
+        };
+
         public int PatrullasDeRonda => patrullasDeRonda;
         public float FactorVelocidadRonda => factorVelocidadRonda;
         public float SegundosTrasCriminal => segundosTrasCriminal;
