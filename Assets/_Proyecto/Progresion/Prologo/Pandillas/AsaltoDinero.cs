@@ -46,8 +46,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private const float SegundosEntreObjetivos = 0.4f;
         private const float SeparacionPuertaCarro = 2.4f;
         private const float AlturaSobreSuelo = 0.05f;
-        private const float SeparacionMaletin = 1.9f;
-        private const float AtrasMaletin = 1.4f;
+        // T-988: detrás de la camioneta y lejos de su puerta (la E a 2.5 m tomaba el carro en vez del maletín).
+        private const float SeparacionMaletin = 0.6f;
+        private const float AtrasMaletin = 4.2f;
         private const float DistanciaMaletinJugador = 1.5f;
         private const float AltoBarras = 0.12f;
         private const float DistanciaCamara = 6.5f;
@@ -390,7 +391,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         // ---------- El maletín (T-987) ----------
 
-        // Lo suelta junto a la puerta del carro; si no hay piso ahí, junto al jugador. Nunca queda bajo el piso.
+        // Lo suelta detrás del carro (T-988); si no hay piso ahí, junto al jugador. Nunca queda bajo el piso.
         private void PonerMaletin(Pose carro)
         {
             QuitarMaletin();

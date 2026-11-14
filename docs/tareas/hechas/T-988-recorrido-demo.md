@@ -18,3 +18,7 @@
 - Maletín: recogido en el intento 3 (intentos 1 y 2 tomaron otro candidato); el paso avanzó a PrimeraPelea. El monto ($10,000) lo cubren las pruebas de T-987; el recorrido no imprime la cartera.
 - compilar OK, EditMode 2368/2368, OpcionesPruebas 1/1.
 - Log sin excepciones ni LogError en el juego (solo avisos de shaders HDRP del ParticlePack, ajenos).
+
+## Ajuste de Opus
+El maletín caía a 1.9 m de la puerta de la camioneta y la E (alcance 2.5 m) a veces tomaba el carro. Ahora cae detrás de la camioneta (0.6 m a la derecha, 4.2 m atrás).
+AsaltoDineroT728Pruebas + DemoDePrincipioAFin + NavMesh: 8/8; el recorrido lo recoge al primer intento.
