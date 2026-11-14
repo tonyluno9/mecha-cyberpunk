@@ -592493,6 +592493,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: C09_Tinaco
       objectReference: {fileID: 0}
+    - target: {fileID: 4079867750756257302, guid: 45fc5358c9a6cd84286b58e7847d6d97, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5670800764093476715, guid: 45fc5358c9a6cd84286b58e7847d6d97, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.1409578
@@ -845187,6 +845191,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: N01_T512
       objectReference: {fileID: 0}
+    - target: {fileID: 1728201847704644768, guid: 2b93a52d863133b46b567753f71def11, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8544912821853922169, guid: 2b93a52d863133b46b567753f71def11, type: 3}
       propertyPath: m_LocalPosition.x
       value: -21.31402
@@ -924895,6 +924903,10 @@ PrefabInstance:
     - target: {fileID: 4079867750756257302, guid: 45fc5358c9a6cd84286b58e7847d6d97, type: 3}
       propertyPath: m_Name
       value: C09_Tinaco
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079867750756257302, guid: 45fc5358c9a6cd84286b58e7847d6d97, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4079867750756257302, guid: 45fc5358c9a6cd84286b58e7847d6d97, type: 3}
       propertyPath: m_StaticEditorFlags
