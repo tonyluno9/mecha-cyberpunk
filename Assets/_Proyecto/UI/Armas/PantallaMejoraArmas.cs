@@ -1170,6 +1170,7 @@ namespace MechaCyberpunk.UI.Armas
             // La textura es de la proporción de antes (ancho / alto de la config): se recorta arriba y abajo para no deformar el arma.
             float proporcion = (AltoHolo / AnchoHolo) / ((float)config.AltoTextura / config.AnchoTextura);
             imagenHolo.uvRect = new Rect(0f, (1f - proporcion) * 0.5f, 1f, proporcion);
+            vista.FijarFraccionAltoVisible(proporcion);
             imagenHolo.material = config.MaterialAditivoUI;
             imagenHolo.raycastTarget = true;
             destelloHolo = KitUI.CrearImagen(areaHolo, "Destello", Color.clear);
