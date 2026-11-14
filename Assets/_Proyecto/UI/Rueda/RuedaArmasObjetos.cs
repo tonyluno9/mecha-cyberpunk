@@ -104,7 +104,7 @@ namespace MechaCyberpunk.UI.Rueda
         private void Start()
         {
             Armar();
-            accion = TeclasHud.Buscar(NombreAccion);
+            accion = BuscarAccion();
             accion?.Enable();
             Pausa.Cambio += AlCambiarPausa;
             InputSystem.onAfterUpdate += AcumularMovimiento;
@@ -151,7 +151,7 @@ namespace MechaCyberpunk.UI.Rueda
             }
             if (accion == null)
             {
-                accion = TeclasHud.Buscar(NombreAccion);
+                accion = BuscarAccion();
                 accion?.Enable();
                 if (accion == null)
                 {
@@ -186,9 +186,19 @@ namespace MechaCyberpunk.UI.Rueda
             Dibujar();
         }
 
+        // La acción del asset del jugador (la de ControlesHud, la misma que usan los demás componentes); si no está, la que ya haya cargado la escena.
+        private static InputAction BuscarAccion()
+        {
+            ControlesHud controles = ControlesHud.Actual;
+            return (controles != null ? controles.AccionAPie(NombreAccion) : null) ?? TeclasHud.Buscar(NombreAccion);
+        }
+
+        // El jugador del registro; si no hay (una prueba lo limpia), el que lleva este HUD anidado.
+        private IJugador JugadorActual() => Registro<IJugador>.Actual ?? GetComponentInParent<JugadorAPie>();
+
         private void Vincular()
         {
-            IJugador j = Registro<IJugador>.Actual;
+            IJugador j = JugadorActual();
             Transform r = j != null ? j.Raiz : null;
             if (r == raizJugador && (r == null || controlador != null))
             {
@@ -206,7 +216,7 @@ namespace MechaCyberpunk.UI.Rueda
         private bool PuedeAbrir()
         {
             Vincular();
-            IJugador j = Registro<IJugador>.Actual;
+            IJugador j = JugadorActual();
             return j != null && j.Modo == ModoJugador.APie && controlador != null && controlador.ControlActivo && armas != null
                 && vida != null && !vida.EstaKO && !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0
                 && Time.timeScale > 0.01f;
@@ -214,7 +224,7 @@ namespace MechaCyberpunk.UI.Rueda
 
         private bool PuedeSeguir()
         {
-            IJugador j = Registro<IJugador>.Actual;
+            IJugador j = JugadorActual();
             return j != null && j.Raiz == raizJugador && j.Modo == ModoJugador.APie && controlador != null && controlador.ControlActivo
                 && vida != null && !vida.EstaKO && !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0;
         }

@@ -30,6 +30,9 @@ namespace MechaCyberpunk.Tests.Personaje
         public override void Setup()
         {
             base.Setup();
+            // T-991: la rueda no abre con la pausa activa ni con el tiempo detenido; una prueba anterior pudo dejarlos así.
+            MechaCyberpunk.Core.Pausa.Fijar(false);
+            Time.timeScale = 1f;
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
 
