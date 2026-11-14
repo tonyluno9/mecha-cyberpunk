@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace MechaCyberpunk.Tests.Mundo
+namespace MechaCyberpunk.Tests.Personaje
 {
     /// <summary>
     /// T-996: en Ciudad_Prologo cada pasarela PS01 se puede subir por sus dos escaleras (entrada libre, peldaños que el jugador a pie sube con W),

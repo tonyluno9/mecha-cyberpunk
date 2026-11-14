@@ -9,7 +9,7 @@ Pendiente del reporte 11-nov-B: "sin probar a mano: subir la escalera de la pasa
 
 ## Qué se hizo
 - `Assets/Arte/Editor/ColocarT996.cs` (`ColocarT996.Escaleras`, idempotente, guarda la escena): una rampa invisible (BoxCollider, hija `T996_RampasEscalera` de cada PS01) de la banqueta al primer peldaño en cada escalera, y apaga los props chicos que caen en la entrada.
-- `Assets/_Proyecto/Tests/PlayMode/Mundo/PasarelaNovaT996Pruebas.cs`: sube con W por cada escalera de cada pasarela, cruza el tablero y baja por la otra; empuja de lado en el tablero; pie de cada escalera libre (OverlapCapsule); capturas con `T996_CAPTURAS=1`. El asmdef de pruebas de Mundo ahora referencia Personaje y Progresion.
+- `Assets/_Proyecto/Tests/PlayMode/Personaje/PasarelaNovaT996Pruebas.cs`: sube con W por cada escalera de cada pasarela, cruza el tablero y baja por la otra; empuja de lado en el tablero; pie de cada escalera libre (OverlapCapsule); capturas con `T996_CAPTURAS=1`. El asmdef de pruebas de Mundo ahora referencia Personaje y Progresion.
 - Ciudad_Prologo.unity: solo las rampas y los 7 props apagados.
 
 ## Criterios
