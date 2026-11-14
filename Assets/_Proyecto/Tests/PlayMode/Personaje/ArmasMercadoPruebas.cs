@@ -100,6 +100,21 @@ namespace MechaCyberpunk.Tests.Personaje
             }
         }
 
+
+        // T-991: el arma se elige como lo haría una persona con la rueda: mantiene Tab, mueve el ratón hacia la casilla y suelta.
+        private IEnumerator ElegirEnRueda(int casilla)
+        {
+            Press(teclado.tabKey);
+            yield return null;
+            yield return null;
+            float angulo = MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.AnguloDeCasilla(casilla) * Mathf.Deg2Rad;
+            Set(raton.delta, new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
+            yield return null;
+            yield return null;
+            Release(teclado.tabKey);
+            yield return null;
+            yield return null;
+        }
         private IEnumerator Pulsar(ButtonControl tecla)
         {
             Press(tecla);
@@ -253,8 +268,8 @@ namespace MechaCyberpunk.Tests.Personaje
             cartera.Abonar(Dinero - cartera.Dinero, MotivoDinero.Otro);
             Assert.AreEqual(Dinero, cartera.Dinero);
             Assert.IsFalse(arsenal.Tiene(ArmaAPie.Sniper), "Empieza sin sniper");
-            yield return Pulsar(teclado.digit5Key);
-            Assert.AreNotEqual(ArmaAPie.Sniper, armas.ArmaActiva, "Sin sniper, 5 no hace nada");
+            yield return ElegirEnRueda(4);
+            Assert.AreNotEqual(ArmaAPie.Sniper, armas.ArmaActiva, "Sin sniper, la rueda no lo elige");
 
             // a. Se camina hasta El Mercado y E abre la tienda.
             Transform lugar = Buscar("Lugar_MercadoNegro");
@@ -331,8 +346,8 @@ namespace MechaCyberpunk.Tests.Personaje
             jugador.Colocar(Mirando(puntoTiro, puntoTiro + Vector3.right));
             yield return new WaitForSecondsRealtime(0.5f);
 
-            yield return Pulsar(teclado.digit5Key);
-            Assert.AreEqual(ArmaAPie.Sniper, armas.ArmaActiva, "5 saca el sniper");
+            yield return ElegirEnRueda(4);
+            Assert.AreEqual(ArmaAPie.Sniper, armas.ArmaActiva, "La rueda saca el sniper");
             Assert.AreEqual(5, armas.TamanoCargador, "SNIPER I: cargador de 5");
             Assert.AreEqual(5, armas.Balas);
             Assert.IsFalse(mira.Visible, "Sin clic derecho no hay mira");
@@ -402,9 +417,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(armas.Recargando, "R recarga");
             yield return EsperarHasta(() => !armas.Recargando && armas.Balas == 5, "recargar a 5 balas", 10f);
 
-            // g. 4 saca el fusil; mantener el clic dispara solo, 8 o más balas en 1 s.
-            yield return Pulsar(teclado.digit4Key);
-            Assert.AreEqual(ArmaAPie.Fusil, armas.ArmaActiva, "4 saca el fusil");
+            // g. La rueda saca el fusil; mantener el clic dispara solo, 8 o más balas en 1 s.
+            yield return ElegirEnRueda(3);
+            Assert.AreEqual(ArmaAPie.Fusil, armas.ArmaActiva, "La rueda saca el fusil");
             Assert.IsFalse(zoom.Activo, "Con el fusil no hay zoom del sniper");
             Press(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.5f);
@@ -436,7 +451,7 @@ namespace MechaCyberpunk.Tests.Personaje
                     .LoadAssetAtPath<ScriptableObject>("Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Calaveras.asset");
                 so.ApplyModifiedPropertiesWithoutUndo();
                 jugador.Colocar(Mirando(desde, donde - derecha * LateralApuntando));
-                yield return Pulsar(teclado.digit5Key);
+                yield return ElegirEnRueda(4);
                 Press(raton.rightButton);
                 yield return new WaitForSecondsRealtime(1f);
                 Capturar("T-416-1.png");

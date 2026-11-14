@@ -214,13 +214,12 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(tutorial.Regla.Vista(AccionTutorial.Misiones));
             yield return Pulsar(teclado.tKey); // se cierra
 
-            // 7. Los objetos: Tab elige y F usa.
+            // 7. Los objetos y las armas: se mantiene Tab (la rueda).
             yield return EsperarAviso(tutorial, AccionTutorial.Consumibles);
             Foto("aviso-objetos");
-            StringAssert.Contains(tutorial.TeclaReal(ReglaTutorial.TeclaConsumibleSiguiente).ToUpperInvariant(), tutorial.Texto.text);
-            StringAssert.Contains(tutorial.TeclaReal(ReglaTutorial.TeclaConsumibleUsar).ToUpperInvariant(), tutorial.Texto.text);
+            StringAssert.Contains(tutorial.TeclaReal(ReglaTutorial.TeclaRueda).ToUpperInvariant(), tutorial.Texto.text);
             yield return Pulsar(teclado.tabKey);
-            Assert.IsTrue(tutorial.Regla.Vista(AccionTutorial.Consumibles), "Tab da por vistos los objetos");
+            Assert.IsTrue(tutorial.Regla.Vista(AccionTutorial.Consumibles), "Tab (la rueda) da por vistos los objetos");
 
             // 8. El escudo: un golpe que absorbe.
             yield return EsperarAviso(tutorial, AccionTutorial.Escudo);

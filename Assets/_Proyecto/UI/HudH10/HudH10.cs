@@ -678,7 +678,6 @@ namespace MechaCyberpunk.UI.Hud
         {
             IReadOnlyList<DatosConsumible> lista = consumibles != null ? consumibles.Disponibles : null;
             ServicioInventario inventario = Registro<ServicioInventario>.Actual;
-            DatosConsumible elegido = consumibles != null ? consumibles.Seleccionado : null;
             for (int i = 0; i < ranuras.Length; i++)
             {
                 RanuraObjeto r = ranuras[i];
@@ -695,12 +694,9 @@ namespace MechaCyberpunk.UI.Hud
                 }
                 r.Icono.enabled = icono != null;
                 Poner(r.Nombre, icono == null ? c.Nombre : string.Empty);
-                string tecla = consumibles.TextoTecla(c);
-                bool enCuadrito = r.Borde != null && r.Borde.name == "Casilla";
-                Poner(r.Tecla, tecla.Length > 0 ? (enCuadrito ? tecla : "[" + tecla + "]") : string.Empty);
+                Poner(r.Tecla, string.Empty); // T-991: los objetos se usan desde la rueda (Tab), ya no hay una tecla por casilla
                 Poner(r.Cantidad, "x" + inventario.Cantidad(c));
-                bool sel = c == elegido;
-                r.Fondo.color = sel ? new Color(0.10f, 0.32f, 0.34f, 0.55f) : FondoCasilla;
+                r.Fondo.color = FondoCasilla;
             }
         }
 

@@ -191,7 +191,6 @@ namespace MechaCyberpunk.Tests.UI
             ServicioInventario inventario = Registro<ServicioInventario>.Actual;
             DatosConsumible bebida = (DatosConsumible)inventario.Catalogo.Buscar("bebida_energetica");
             DatosConsumible papitas = (DatosConsumible)inventario.Catalogo.Buscar("papitas");
-            ConsumiblesJugador consumibles = jugador.GetComponent<ConsumiblesJugador>();
             Assert.IsFalse(h10.RanuraVisible(0), "Sin objetos no hay casillas");
             inventario.Agregar(bebida, 1);
             inventario.Agregar(papitas, 2);
@@ -202,10 +201,8 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsFalse(h10.RanuraVisible(2));
             Assert.AreEqual("x1", h10.CantidadRanura(0));
             Assert.AreEqual("x2", h10.CantidadRanura(1));
-            Assert.AreEqual(consumibles.TextoTecla(bebida), h10.TeclaRanura(0), "La tecla sale de la acción real (en el cuadrito de la casilla, sin corchetes)");
-            Assert.AreEqual(consumibles.TextoTecla(papitas), h10.TeclaRanura(1));
-            Assert.AreEqual("6", h10.TeclaRanura(0), "La bebida se usa con el 6");
-            Assert.AreEqual("7", h10.TeclaRanura(1), "Las papitas con el 7");
+            Assert.AreEqual(string.Empty, h10.TeclaRanura(0), "T-991: los objetos se usan desde la rueda (Tab), la casilla ya no lleva tecla");
+            Assert.AreEqual(string.Empty, h10.TeclaRanura(1));
             Assert.IsNotNull(h10.IconoRanura(0), "Ícono de la bebida");
             Assert.IsNotNull(h10.IconoRanura(1), "Ícono de las papitas");
             Assert.AreNotSame(h10.IconoRanura(0), h10.IconoRanura(1));
@@ -214,9 +211,7 @@ namespace MechaCyberpunk.Tests.UI
             IEscudo escudo = Registro<IEscudo>.Actual;
             vida.RecibirDanio(Bala((escudo != null ? escudo.Actual : 0f) + 30f, jugador.transform.position + Vector3.up));
             yield return null;
-            Press(teclado.digit7Key);
-            yield return null;
-            Release(teclado.digit7Key);
+            yield return ElegirEnRueda(6);
             yield return null;
             yield return null;
             Assert.AreEqual("x1", h10.CantidadRanura(1), "Usar las papitas con la tecla 7 baja la cantidad en el HUD");
@@ -231,7 +226,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(golpe.EndsWith("Golpe"), "Con los puños la ayuda es Golpe: " + golpe);
             Assert.IsTrue(golpe.StartsWith("[Clic]"), "Con la tecla real del ratón: " + golpe);
 
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             Assert.IsNotNull(h10.IconoArma.sprite, "La pistola trae su holograma");
             StringAssert.StartsWith("8", h10.TextoBalas.text.Replace("<size=32><color=#8fdcdacc>", string.Empty), "8 balas en el cargador");
             StringAssert.Contains("| 8", h10.TextoBalas.text);

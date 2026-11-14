@@ -15,8 +15,7 @@ namespace MechaCyberpunk.UI.Inicio
         public const string Apuntar = "Apuntar";
         public const string Disparar = "Atacar";
         public const string Recargar = "Recargar";
-        public const string PrimeraArma = "ArmaPunos";
-        public const string UltimaArma = "ArmaSniper";
+        public const string Rueda = "Rueda";
         public const string Mapa = "Mapa";
         public const string Telefono = "Telefono";
         public const string Pausa = "Pausa";
@@ -33,8 +32,7 @@ namespace MechaCyberpunk.UI.Inicio
                 case Apuntar: return "Clic der.";
                 case Disparar: return "Clic";
                 case Recargar: return "R";
-                case PrimeraArma: return "1";
-                case UltimaArma: return "5";
+                case Rueda: return "Tab";
                 case Mapa: return "M";
                 case Telefono: return "T";
                 case Pausa: return "Esc";
@@ -53,7 +51,7 @@ namespace MechaCyberpunk.UI.Inicio
 
             return "MOVER  " + T(Mover) + "        CORRER  " + T(Correr) + "        SALTAR  " + T(Saltar) + "\n"
                 + "INTERACTUAR  " + T(Interactuar) + "        APUNTAR  " + T(Apuntar) + "        DISPARAR  " + T(Disparar) + "\n"
-                + "RECARGAR  " + T(Recargar) + "        ARMAS  " + T(PrimeraArma) + " A " + T(UltimaArma) + " O RUEDA        MAPA  " + T(Mapa)
+                + "RECARGAR  " + T(Recargar) + "        ARMAS Y OBJETOS  " + T(Rueda) + "        MAPA  " + T(Mapa)
                 + "        TELÉFONO  " + T(Telefono) + "        PAUSA  " + T(Pausa);
         }
     }

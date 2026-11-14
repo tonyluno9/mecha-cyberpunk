@@ -67,26 +67,6 @@
                     "priority": 0
                 },
                 {
-                    "name": "ArmaPunos",
-                    "type": "Button",
-                    "id": "5b937590-c3ab-4559-a7f7-32980755fee1",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "ArmaPistola",
-                    "type": "Button",
-                    "id": "415cc049-8ac3-450c-a38f-c0e4d7fd6f9f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
                     "name": "Recargar",
                     "type": "Button",
                     "id": "c51244f9-7579-4642-8f0d-a0bcf59ecd42",
@@ -117,26 +97,6 @@
                     "priority": 0
                 },
                 {
-                    "name": "ArmaEscopeta",
-                    "type": "Button",
-                    "id": "cfd45f01-8d16-4507-b766-441c5d0be613",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "ArmaFusil",
-                    "type": "Button",
-                    "id": "aa8d81fa-a5f3-4f34-89d3-6c90c454b85c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
                     "name": "CambiarArma",
                     "type": "Value",
                     "id": "c64495e4-d092-4c8b-beeb-e735ea971412",
@@ -147,9 +107,9 @@
                     "priority": 0
                 },
                 {
-                    "name": "ArmaSniper",
+                    "name": "Rueda",
                     "type": "Button",
-                    "id": "68005e94-2d81-412c-bde0-5bd192140a0c",
+                    "id": "7d3b1c52-6f0e-4a9b-9c1d-2e8a5b4f6a10",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -270,28 +230,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8434c816-c6c5-4c72-9e82-cc3e3b49af94",
-                    "path": "<Keyboard>/1",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ArmaPunos",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5475c39d-a5d5-4707-92c4-f6b988fe85ee",
-                    "path": "<Keyboard>/2",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ArmaPistola",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "23fa235c-3552-46ac-a514-fd6fdff52bda",
                     "path": "<Keyboard>/r",
                     "interactions": "",
@@ -325,28 +263,6 @@
                 },
                 {
                     "name": "",
-                    "id": "14222ad4-7727-44d6-a19c-dc90948cc7bc",
-                    "path": "<Keyboard>/3",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ArmaEscopeta",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6a69b137-4961-4c4d-8cbb-579b2d2edde5",
-                    "path": "<Keyboard>/4",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ArmaFusil",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "d0a9d715-76e7-412b-907b-582622e53258",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
@@ -358,12 +274,12 @@
                 },
                 {
                     "name": "",
-                    "id": "325ddfd9-bc7b-4276-bb4b-c3ab6eda7782",
-                    "path": "<Keyboard>/5",
+                    "id": "b1e94a07-3c58-4d2f-8a6e-9f0d7c215e33",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ArmaSniper",
+                    "action": "Rueda",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

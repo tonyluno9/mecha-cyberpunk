@@ -68,8 +68,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(DineroInicial, cartera.Dinero, "Empieza con Ƀ400");
 
             ArmasAPie armas = jugador.GetComponent<ArmasAPie>();
-            yield return Tecla(teclado.digit3Key);
-            Assert.AreEqual(ArmaAPie.Punos, armas.ArmaActiva, "Sin escopeta, 3 no cambia de arma");
+            yield return ElegirEnRueda(2);
+            Assert.AreEqual(ArmaAPie.Punos, armas.ArmaActiva, "Sin escopeta, la rueda no cambia de arma");
 
             // Mostrador del mercado negro delante del jugador.
             mostradorObj = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaMostrador),
@@ -118,8 +118,8 @@ namespace MechaCyberpunk.Tests.Personaje
             mostradorObj = null;
             yield return null;
 
-            yield return Tecla(teclado.digit3Key);
-            Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "3 pone la escopeta");
+            yield return ElegirEnRueda(2);
+            Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "La rueda pone la escopeta");
 
             objetivo = GameObject.CreatePrimitive(PrimitiveType.Cube);
             objetivo.transform.position = new Vector3(0f, 4f, DistanciaMuneco);

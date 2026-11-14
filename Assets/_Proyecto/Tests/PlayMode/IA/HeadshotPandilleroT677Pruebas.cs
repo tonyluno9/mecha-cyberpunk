@@ -87,9 +87,7 @@ namespace MechaCyberpunk.Tests.IA
         public IEnumerator Pandillero_TiroALaCabezaHaceTresVecesElDelPecho()
         {
             yield return Esperar(0.6f);
-            Press(teclado.digit2Key);
-            yield return null;
-            Release(teclado.digit2Key);
+            jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola); // T-991: ya no hay tecla 2; el arma se pone como lo hace la rueda
             float limite = Time.time + 3f;
             ArmasAPie armas = jugador.GetComponent<ArmasAPie>();
             while (armas.ArmaActiva != ArmaAPie.Pistola && Time.time < limite)

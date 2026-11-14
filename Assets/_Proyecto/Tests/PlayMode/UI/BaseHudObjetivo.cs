@@ -63,6 +63,9 @@ namespace MechaCyberpunk.Tests.UI
             base.Setup();
             Registros.LimpiarTodos();
             EventosLugares.LimpiarSuscriptores();
+            // T-991: la rueda no abre con la pausa activa ni con el tiempo detenido; una prueba anterior pudo dejarlos así.
+            MechaCyberpunk.Core.Pausa.Fijar(false);
+            Time.timeScale = 1f;
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
             config = AssetDatabase.LoadAssetAtPath<ConfigHudAPie>(RutaConfig);
@@ -181,6 +184,21 @@ namespace MechaCyberpunk.Tests.UI
             Press(tecla);
             yield return null;
             Release(tecla);
+            yield return null;
+        }
+
+        /// <summary>T-991: elige una casilla de la rueda de armas y objetos como lo haría una persona: mantiene Tab, mueve el ratón hacia la casilla y suelta.</summary>
+        protected IEnumerator ElegirEnRueda(int casilla)
+        {
+            Press(teclado.tabKey);
+            yield return null;
+            yield return null;
+            float angulo = MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.AnguloDeCasilla(casilla) * Mathf.Deg2Rad;
+            Set(raton.delta, new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
+            yield return null;
+            yield return null;
+            Release(teclado.tabKey);
+            yield return null;
             yield return null;
         }
 

@@ -62,7 +62,6 @@ namespace MechaCyberpunk.Tests.UI
             DatosConsumible bebida = (DatosConsumible)inventario.Catalogo.Buscar("bebida_energetica");
             Assert.IsNotNull(bebida, "El catálogo trae la bebida");
             inventario.Agregar(bebida, 1);
-            string consumiblesTecla = jugador.GetComponent<MechaCyberpunk.Personaje.Jugador.ConsumiblesJugador>().TextoTecla(bebida);
             yield return null;
             yield return null;
             Assert.IsTrue(h10.RanuraVisible(0));
@@ -71,7 +70,7 @@ namespace MechaCyberpunk.Tests.UI
             Transform casilla = h10.GrupoObjetos.transform.Find("Objeto0/Casilla");
             Assert.IsNotNull(casilla, "Casilla de H26");
             Assert.AreSame(cfg.CasillaObjeto, casilla.GetComponent<Image>().sprite);
-            Assert.AreEqual(consumiblesTecla, h10.TeclaRanura(0), "La tecla real va en el cuadrito de la esquina");
+            Assert.AreEqual(string.Empty, h10.TeclaRanura(0), "T-991: sin tecla por casilla (los objetos van en la rueda)");
         }
 
         [UnityTest]
