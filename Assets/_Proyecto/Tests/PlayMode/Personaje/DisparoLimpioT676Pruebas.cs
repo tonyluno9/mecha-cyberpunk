@@ -41,9 +41,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
         private IEnumerator EquiparPistola()
         {
-            Press(teclado.digit2Key);
-            yield return null;
-            Release(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             float limite = Time.time + 3f;
             while (jugador.GetComponent<ArmasAPie>().ArmaActiva != ArmaAPie.Pistola && Time.time < limite)
             {

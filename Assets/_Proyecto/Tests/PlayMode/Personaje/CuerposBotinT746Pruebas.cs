@@ -65,9 +65,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Enemigo_AbatidoConLaPistola_SeQuedaTirado_YSueltaDinero()
         {
             yield return Calentar();
-            Press(teclado.digit2Key);
-            yield return null;
-            Release(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             ArmasAPie armas = jugador.GetComponent<ArmasAPie>();
             float limite = Time.time + 3f;
             while (armas.ArmaActiva != ArmaAPie.Pistola && Time.time < limite) yield return null;

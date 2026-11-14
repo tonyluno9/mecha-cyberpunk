@@ -42,9 +42,7 @@ namespace MechaCyberpunk.Tests.Personaje
             int conectos = 0;
             sensacion.Conecto += mato => conectos++;
 
-            Press(teclado.digit2Key);
-            yield return null;
-            Release(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             yield return null;
             Press(raton.leftButton);
             yield return null;

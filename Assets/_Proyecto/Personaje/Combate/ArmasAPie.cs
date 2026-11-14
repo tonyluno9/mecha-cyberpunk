@@ -11,7 +11,7 @@ using UnityEngine.InputSystem;
 namespace MechaCyberpunk.Personaje.Combate
 {
     /// <summary>
-    /// Arma activa del jugador a pie: 1 puños, 2 pistola, 3 escopeta, 4 fusil, 5 sniper y la rueda del ratón (T-403). Un arma que no se tiene
+    /// Arma activa del jugador a pie: se elige con la rueda de armas y objetos (Tab, T-991) o con la rueda del ratón (T-403). Un arma que no se tiene
     /// (<see cref="ArsenalJugador"/>) no se elige. Mantiene a <see cref="GolpeAPie"/> al día y muestra solo el visual del arma en la mano.
     /// No se cambia de arma mientras se prepara o se recupera un golpe. El HUD lee el arma, el nivel, las balas y el cargador desde aquí.
     /// </summary>
@@ -21,11 +21,6 @@ namespace MechaCyberpunk.Personaje.Combate
     [RequireComponent(typeof(VidaAPie))]
     public class ArmasAPie : MonoBehaviour
     {
-        [SerializeField] private InputActionReference armaPunos;
-        [SerializeField] private InputActionReference armaPistola;
-        [SerializeField] private InputActionReference armaEscopeta;
-        [SerializeField] private InputActionReference armaFusil;
-        [SerializeField] private InputActionReference armaSniper;
         [Tooltip("Rueda del ratón: arriba la siguiente arma, abajo la anterior.")]
         [SerializeField] private InputActionReference cambiarArma;
         [Tooltip("Visual del puño (hijo de Manos). Se oculta con un arma de fuego en la mano.")]
@@ -69,33 +64,17 @@ namespace MechaCyberpunk.Personaje.Combate
             pistola = GetComponent<PistolaAPie>();
             controlador = GetComponent<ControladorAPie>();
             vida = GetComponent<VidaAPie>();
-            if (armaPunos == null || armaPistola == null)
-            {
-                Debug.LogError("[Personaje] Faltan referencias en ArmasAPie de " + name, this);
-                enabled = false;
-                return;
-            }
             Aplicar();
         }
 
         private void OnEnable()
         {
-            armaPunos.action.Enable();
-            armaPistola.action.Enable();
-            armaEscopeta?.action.Enable();
-            armaFusil?.action.Enable();
-            armaSniper?.action.Enable();
             cambiarArma?.action.Enable();
             pistola.Cambio += AlCambiarPistola;
         }
 
         private void OnDisable()
         {
-            armaPunos.action.Disable();
-            armaPistola.action.Disable();
-            armaEscopeta?.action.Disable();
-            armaFusil?.action.Disable();
-            armaSniper?.action.Disable();
             cambiarArma?.action.Disable();
             pistola.Cambio -= AlCambiarPistola;
         }
@@ -122,27 +101,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 return;
             }
-            if (armaPunos.action.WasPressedThisFrame())
-            {
-                Cambiar(ArmaAPie.Punos);
-            }
-            else if (armaPistola.action.WasPressedThisFrame())
-            {
-                Cambiar(ArmaAPie.Pistola);
-            }
-            else if (armaEscopeta != null && armaEscopeta.action.WasPressedThisFrame())
-            {
-                Cambiar(ArmaAPie.Escopeta);
-            }
-            else if (armaFusil != null && armaFusil.action.WasPressedThisFrame())
-            {
-                Cambiar(ArmaAPie.Fusil);
-            }
-            else if (armaSniper != null && armaSniper.action.WasPressedThisFrame())
-            {
-                Cambiar(ArmaAPie.Sniper);
-            }
-            else if (cambiarArma != null && cambiarArma.action.WasPerformedThisFrame())
+            if (cambiarArma != null && cambiarArma.action.WasPerformedThisFrame() && !controlador.EntradaBloqueada)
             {
                 float rueda = cambiarArma.action.ReadValue<float>();
                 if (rueda != 0f)
@@ -151,6 +110,9 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
             }
         }
+
+        /// <summary>T-991: false mientras se prepara o se recupera un golpe (como antes con las teclas), con el control congelado o en KO: la rueda no equipa nada.</summary>
+        public bool PuedeCambiar => !vida.EstaKO && controlador.ControlActivo && golpe.Fase == FaseGolpe.Listo;
 
         /// <summary>True si el jugador ya tiene esa arma (T-445).</summary>
         public bool TieneArma(ArmaAPie arma) => Tiene(arma);

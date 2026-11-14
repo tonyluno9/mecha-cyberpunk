@@ -199,7 +199,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return Calentar();
             Assert.AreEqual("PUÑOS", hud.TextoArma.text);
 
-            yield return Tecla(teclado.digit2Key);
+            armas.Equipar(ArmaAPie.Pistola); yield return null; // T-991: ya no hay tecla 2
             Assert.AreEqual("PISTOLA 8/8", hud.TextoArma.text);
 
             yield return Clic();
@@ -213,7 +213,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual("PISTOLA 8/8", hud.TextoArma.text);
             Assert.AreEqual(config.ColorTexto, hud.TextoArma.color);
 
-            yield return Tecla(teclado.digit1Key);
+            armas.Equipar(ArmaAPie.Punos); yield return null;
             Assert.AreEqual("PUÑOS", hud.TextoArma.text);
         }
 

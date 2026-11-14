@@ -61,9 +61,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return null;
             float maxima = muneco.Maxima;
 
-            Press(teclado.digit2Key);
-            yield return null;
-            Release(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             yield return null;
             Assert.AreEqual(ArmaAPie.Pistola, jugador.GetComponent<ArmasAPie>().ArmaActiva);
 

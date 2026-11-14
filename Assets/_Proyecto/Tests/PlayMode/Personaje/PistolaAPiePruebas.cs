@@ -104,7 +104,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return null;
             float maxima = muneco.Maxima;
 
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva);
             yield return Clic();
 
@@ -123,7 +123,7 @@ namespace MechaCyberpunk.Tests.Personaje
             MunecoAPie muneco = CrearMuneco(80f);
             yield return null;
 
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             yield return Clic();
 
             Assert.AreEqual(1, disparos, "El tiro sale aunque no llegue a nadie");
@@ -139,7 +139,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Physics.SyncTransforms();
             yield return null;
 
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             yield return Clic();
 
             Assert.AreEqual(1, disparos);
@@ -150,7 +150,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Pistola_VeinteClicsEnUnSegundo_DisparaComoMaximoCincoVeces()
         {
             yield return Calentar();
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             int clics = 0;
             float fin = Time.time + 1f;
             while (Time.time < fin)
@@ -169,7 +169,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             ObjetivoContador contador = CrearContador(15f);
             yield return null;
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
 
             for (int i = 0; i < pistola.TamanoCargador; i++)
             {
@@ -201,7 +201,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Pistola_TeclaR_RecargaUnCargadorIncompleto()
         {
             yield return Calentar();
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             yield return Clic();
             Assert.AreEqual(7, pistola.Balas);
 
@@ -218,8 +218,8 @@ namespace MechaCyberpunk.Tests.Personaje
             MunecoAPie muneco = CrearMuneco(1.2f);
             Caja(new Vector3(0f, 4f, 30f), new Vector3(6f, 8f, 0.5f));
             yield return null;
-            yield return Tecla(teclado.digit2Key);
-            yield return Tecla(teclado.digit1Key);
+            yield return ElegirEnRueda(1);
+            yield return ElegirEnRueda(0);
             Assert.AreEqual(ArmaAPie.Punos, armas.ArmaActiva);
             float maxima = muneco.Maxima;
 
@@ -237,7 +237,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             MunecoAPie muneco = CrearMuneco(1.2f);
             yield return null;
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
 
             yield return Clic();
             yield return Esperar(0.4f);
@@ -250,7 +250,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Pistola_EnKO_NoDispara()
         {
             yield return Calentar();
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             VidaAPie vida = jugador.GetComponent<VidaAPie>();
             vida.RecibirDanio(new InfoDanio(vida.Maxima + 1f, TipoDanio.Golpe, Vector3.zero, Vector3.forward, null));
             Assert.IsTrue(vida.EstaKO);
@@ -262,7 +262,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(0, disparos);
             Assert.AreEqual(8, pistola.Balas);
 
-            yield return Tecla(teclado.digit1Key);
+            yield return ElegirEnRueda(0);
             Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva, "En KO tampoco se cambia de arma");
         }
 
@@ -270,7 +270,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public IEnumerator Pistola_DisparandoAlPisoASusPies_NoSeHaceDanio()
         {
             yield return Calentar();
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             VidaAPie vida = jugador.GetComponent<VidaAPie>();
             int impactos = 0;
             EventosPelea.ImpactoRecibido += (quien, info, resultado) => impactos++;
@@ -299,7 +299,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(raton.leftButton);
             Assert.AreNotEqual(MechaCyberpunk.Combate.Golpe.FaseGolpe.Listo, golpe.Fase);
 
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
             Assert.AreEqual(ArmaAPie.Punos, armas.ArmaActiva, "No se cambia de arma mientras se prepara el golpe");
         }
 
@@ -309,7 +309,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             Caja(new Vector3(0f, 4f, 6f), new Vector3(8f, 8f, 0.5f));
             Physics.SyncTransforms();
-            yield return Tecla(teclado.digit2Key);
+            yield return ElegirEnRueda(1);
 
             for (int i = 0; i < 20; i++)
             {

@@ -10,7 +10,7 @@ using UnityEngine.TestTools;
 namespace MechaCyberpunk.Tests.Personaje
 {
     /// <summary>
-    /// T-685: usar bebida, papitas, venda, café y batería con teclas (Tab elige, F usa, 6 a 0 directo), se guardan en el inventario,
+    /// T-685 (T-991: ahora con la rueda de Tab): usar bebida, papitas, venda, café y batería, se guardan en el inventario,
     /// y comprarlos en la expendedora con E. Capturas con CAPTURAR_S1=1 en docs/capturas/s1t-T-685-*.png.
     /// </summary>
     public class ConsumiblesT685Pruebas : BaseJugadorAPie
@@ -46,14 +46,14 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Bebida_Tecla6_CuraYDa5SegundosSinDanio()
+        public IEnumerator Bebida_Rueda_CuraYDa5SegundosSinDanio()
         {
             yield return Preparar();
             vida.RecibirDanio(Bala(60f));
             float vidaBaja = vida.Actual;
             inventario.Agregar(Dato("bebida_energetica"), 2);
             yield return null;
-            yield return Pulsar(teclado.digit6Key);
+            yield return ElegirEnRueda(5);
             Assert.AreEqual(1, inventario.Cantidad(Dato("bebida_energetica")), "Gasta una");
             Assert.AreEqual(vidaBaja + 25f, vida.Actual, 0.01f, "Cura");
             Assert.AreEqual(5f, vida.InvulnerableRestante, 0.3f, "5 s sin recibir daño");
@@ -67,33 +67,35 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Papitas_TabYF_CuranPoco_YNoSeGastanConLaVidaLlena()
+        public IEnumerator Papitas_Rueda_CuranPoco_YNoSeGastanConLaVidaLlena()
         {
             yield return Preparar();
             inventario.Agregar(Dato("papitas"), 2);
             yield return null;
-            Assert.AreEqual(Dato("papitas"), consumibles.Seleccionado);
-            yield return Pulsar(teclado.fKey);
+            yield return ElegirEnRueda(6);
             Assert.AreEqual(2, inventario.Cantidad(Dato("papitas")), "Con la vida llena no se gastan");
             vida.RecibirDanio(Bala(50f));
             float baja = vida.Actual;
-            yield return Pulsar(teclado.fKey);
+            yield return ElegirEnRueda(6);
             Assert.AreEqual(1, inventario.Cantidad(Dato("papitas")));
             Assert.AreEqual(baja + 15f, vida.Actual, 0.01f, "Curan poco");
         }
 
         [UnityTest]
-        public IEnumerator Tab_RecorreLosQueLleva()
+        public IEnumerator Tab_SinMoverElRaton_NoUsaNada_YDevuelveElTiempo()
         {
             yield return Preparar();
+            vida.RecibirDanio(Bala(50f));
             inventario.Agregar(Dato("papitas"), 1);
-            inventario.Agregar(Dato("cafe"), 1);
             yield return null;
-            DatosConsumible primero = consumibles.Seleccionado;
-            yield return Pulsar(teclado.tabKey);
-            Assert.AreNotEqual(primero, consumibles.Seleccionado);
-            yield return Pulsar(teclado.tabKey);
-            Assert.AreEqual(primero, consumibles.Seleccionado, "Da la vuelta");
+            Press(teclado.tabKey);
+            yield return null;
+            yield return null;
+            Release(teclado.tabKey);
+            yield return null;
+            yield return null;
+            Assert.AreEqual(1, inventario.Cantidad(Dato("papitas")), "Sin resaltar nada solo cierra");
+            Assert.AreEqual(1f, Time.timeScale, 0.001f);
         }
 
         [UnityTest]
@@ -104,7 +106,7 @@ namespace MechaCyberpunk.Tests.Personaje
             float baja = vida.Actual;
             inventario.Agregar(Dato("venda"), 1);
             yield return null;
-            yield return Pulsar(teclado.digit8Key);
+            yield return ElegirEnRueda(7);
             Assert.IsTrue(consumibles.Curando);
             Assert.Less(vida.Actual - baja, 30f, "No cura todo de golpe");
             yield return Esperar(4.5f);
@@ -126,7 +128,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Physics.SyncTransforms();
             inventario.Agregar(Dato("cafe"), 1);
             yield return null;
-            yield return Pulsar(teclado.digit9Key);
+            yield return ElegirEnRueda(8);
             Assert.AreEqual(1.35f, controlador.FactorExtraVelocidad, 0.001f);
             Assert.Greater(consumibles.VelocidadRestante, 15f);
             z0 = jugador.transform.position.z;
@@ -147,7 +149,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(0f, escudo.Actual, 0.001f);
             inventario.Agregar(Dato("bateria_escudo"), 1);
             yield return null;
-            yield return Pulsar(teclado.digit0Key);
+            yield return ElegirEnRueda(9);
             Assert.AreEqual(30f, escudo.Actual, 0.01f);
             Assert.AreEqual(0, inventario.Cantidad(Dato("bateria_escudo")));
         }

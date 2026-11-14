@@ -1218,7 +1218,7 @@ namespace MechaCyberpunk.Tests.Demo
             CubiertaYRodada cubiertaJ = Jugador.Raiz.GetComponentInChildren<CubiertaYRodada>();
             if (armas != null && armas.ArmaActiva != ArmaAPie.Pistola)
             {
-                yield return Pulsar(teclado.digit2Key);
+                armas.Equipar(ArmaAPie.Pistola); yield return null; // T-991: ya no hay tecla 2 (la rueda llama a Equipar)
             }
             sinE = true;
             float errorT741 = -1f;
@@ -1249,8 +1249,8 @@ namespace MechaCyberpunk.Tests.Demo
                 if (armas != null && armas.ArmaActiva != ArmaAPie.Pistola && Time.realtimeSinceStartup >= proximoEquipo)
                 {
                     proximoEquipo = Time.realtimeSinceStartup + 1f;
-                    Debug.Log("[T-741] arma activa " + armas.ArmaActiva + ", tiene pistola " + armas.TieneArma(ArmaAPie.Pistola) + "; pulsa 2");
-                    yield return Pulsar(teclado.digit2Key);
+                    Debug.Log("[T-741] arma activa " + armas.ArmaActiva + ", tiene pistola " + armas.TieneArma(ArmaAPie.Pistola) + "; equipa la pistola");
+                    armas.Equipar(ArmaAPie.Pistola); yield return null; // T-991: ya no hay tecla 2 (la rueda llama a Equipar)
                 }
                 yield return EsperarConVida();
                 if (ventajaDePrueba && vida != null && !vida.EstaKO && vida.Maxima > 0f && vida.Actual < vida.Maxima * UmbralVentaja)

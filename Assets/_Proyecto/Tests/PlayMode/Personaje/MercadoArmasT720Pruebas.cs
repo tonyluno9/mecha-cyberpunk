@@ -314,8 +314,8 @@ namespace MechaCyberpunk.Tests.Personaje
             jugador.Colocar(Mirando(suelo, suelo + Vector3.right));
             yield return new WaitForSecondsRealtime(0.5f);
 
-            yield return Pulsar(teclado.digit3Key);
-            Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "3 saca la escopeta comprada");
+            armas.Equipar(ArmaAPie.Escopeta); yield return null; // T-991: ya no hay tecla 3
+            Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "La escopeta comprada se equipa");
             Assert.AreEqual(4, armas.Balas);
             Time.timeScale = 8f;
             while (armas.Balas > 0)
@@ -344,10 +344,10 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(armas.Recargando, "Sin balas de reserva R no recarga");
             Assert.AreEqual(0, armas.Balas);
 
-            yield return Pulsar(teclado.digit4Key);
-            Assert.AreEqual(ArmaAPie.Fusil, armas.ArmaActiva, "4 saca el fusil comprado");
-            yield return Pulsar(teclado.digit5Key);
-            Assert.AreEqual(ArmaAPie.Sniper, armas.ArmaActiva, "5 saca el sniper comprado");
+            armas.Equipar(ArmaAPie.Fusil); yield return null;
+            Assert.AreEqual(ArmaAPie.Fusil, armas.ArmaActiva, "El fusil comprado se equipa");
+            armas.Equipar(ArmaAPie.Sniper); yield return null;
+            Assert.AreEqual(ArmaAPie.Sniper, armas.ArmaActiva, "El sniper comprado se equipa");
         }
     }
 }

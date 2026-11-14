@@ -171,14 +171,9 @@ namespace MechaCyberpunk.Personaje.Editor
             mapa.AddAction("Saltar", InputActionType.Button, "<Keyboard>/space");
             mapa.AddAction("Interactuar", InputActionType.Button, "<Keyboard>/e");
             mapa.AddAction("Atacar", InputActionType.Button, "<Mouse>/leftButton");
-            mapa.AddAction("ArmaPunos", InputActionType.Button, "<Keyboard>/1");
-            mapa.AddAction("ArmaPistola", InputActionType.Button, "<Keyboard>/2");
             mapa.AddAction("Recargar", InputActionType.Button, "<Keyboard>/r");
             mapa.AddAction("Telefono", InputActionType.Button, "<Keyboard>/t");
             mapa.AddAction("Apuntar", InputActionType.Button, "<Mouse>/rightButton");
-            mapa.AddAction("ArmaEscopeta", InputActionType.Button, "<Keyboard>/3");
-            mapa.AddAction("ArmaFusil", InputActionType.Button, "<Keyboard>/4");
-            mapa.AddAction("ArmaSniper", InputActionType.Button, "<Keyboard>/5");
             mapa.AddAction("CambiarArma", InputActionType.Value, "<Mouse>/scroll/y", expectedControlLayout: "Axis");
 
             File.WriteAllText(RutaEntrada, asset.ToJson());
@@ -203,26 +198,19 @@ namespace MechaCyberpunk.Personaje.Editor
                 mapa.AddAction("Apuntar", InputActionType.Button, "<Mouse>/rightButton");
                 cambio = true;
             }
-            // T-403: 3 escopeta, 4 fusil (antes subfusil), T-416: 5 sniper, y la rueda del ratón.
-            if (mapa.FindAction("ArmaEscopeta") == null)
+            // T-991: las teclas 1 a 5 de las armas se quitan (se elige con la rueda de Tab); las acciones viejas se borran del archivo.
+            foreach (string vieja in new[] { "ArmaPunos", "ArmaPistola", "ArmaEscopeta", "ArmaFusil", "ArmaSubfusil", "ArmaSniper" })
             {
-                mapa.AddAction("ArmaEscopeta", InputActionType.Button, "<Keyboard>/3");
-                cambio = true;
+                InputAction accion = mapa.FindAction(vieja);
+                if (accion != null)
+                {
+                    accion.RemoveAction();
+                    cambio = true;
+                }
             }
-            InputAction viejaFusil = mapa.FindAction("ArmaSubfusil");
-            if (viejaFusil != null)
+            if (mapa.FindAction("Rueda") == null)
             {
-                viejaFusil.Rename("ArmaFusil");
-                cambio = true;
-            }
-            if (mapa.FindAction("ArmaFusil") == null)
-            {
-                mapa.AddAction("ArmaFusil", InputActionType.Button, "<Keyboard>/4");
-                cambio = true;
-            }
-            if (mapa.FindAction("ArmaSniper") == null)
-            {
-                mapa.AddAction("ArmaSniper", InputActionType.Button, "<Keyboard>/5");
+                mapa.AddAction("Rueda", InputActionType.Button, "<Keyboard>/tab");
                 cambio = true;
             }
             if (mapa.FindAction("CambiarArma") == null)
@@ -496,13 +484,8 @@ namespace MechaCyberpunk.Personaje.Editor
             soPistola.ApplyModifiedPropertiesWithoutUndo();
 
             SerializedObject soArmas = new SerializedObject(raiz.AddComponent<ArmasAPie>());
-            soArmas.FindProperty("armaPunos").objectReferenceValue = Referencia("ArmaPunos");
-            soArmas.FindProperty("armaPistola").objectReferenceValue = Referencia("ArmaPistola");
             soArmas.FindProperty("visualPunos").objectReferenceValue = null;
             soArmas.FindProperty("visualPistola").objectReferenceValue = pistolaObj;
-            soArmas.FindProperty("armaEscopeta").objectReferenceValue = Referencia("ArmaEscopeta");
-            soArmas.FindProperty("armaFusil").objectReferenceValue = Referencia("ArmaFusil");
-            soArmas.FindProperty("armaSniper").objectReferenceValue = Referencia("ArmaSniper");
             soArmas.FindProperty("cambiarArma").objectReferenceValue = Referencia("CambiarArma");
             soArmas.FindProperty("visualEscopeta").objectReferenceValue = escopetaObj;
             soArmas.FindProperty("visualFusil").objectReferenceValue = fusilObj;
