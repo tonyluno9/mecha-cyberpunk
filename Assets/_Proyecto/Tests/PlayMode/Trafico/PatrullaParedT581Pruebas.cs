@@ -24,7 +24,7 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float Paso = 94f;
         private const float DistanciaDelJugador = 20f;
         private const float SegundosDeJuego = 12f;
-        private const float ToleranciaDeCalle = 2f; // T-666: va por su carril, a 1.6 m del eje de la calle (la calle mide 14 m)
+        private const float ToleranciaDeCalle = 5f; // T-666: va por su carril, a 1.6 m del eje de la calle (la calle mide 14 m); T-986: con física también rodea por el carril de afuera (4.4 m) y se abre un poco en las curvas
 
         private readonly List<GameObject> extras = new List<GameObject>();
 

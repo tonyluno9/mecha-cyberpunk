@@ -30,13 +30,16 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float EscalaDeTiempo = 3f;
         private const float SegundosMaximos = 150f;
         private const float VelocidadJugador = 9f;
+        private const float VelocidadJugadorCiudad = 13f;
+        private const float SegundosCiudad = 80f;
+        private const int CapturasCiudad = 6;
         private const float MiraJugador = 8f;
         private const float RadioNodoJugador = 4f;
         private const int NivelDeCalor = 3;
         private const float SegundosEntreCapturas = 2f;
         private const int MaximoDeCapturas = 8;
         private const float MargenSalto = 0.05f;
-        private const float MargenGiro = 0.35f;
+        private const float MargenGiro = 0.6f;
         private const float RapidezQuieta = 0.5f;
         private const float GiroMaximoQuieta = 10f;
         private const float DerrapeMinimo = 0.5f;
@@ -48,6 +51,7 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float SegundosTrasAlcanzar = 2f;
         private const float SegundosExtraSinCapturas = 6f;
         private const float SegundosLibreTrasChoque = 0.4f;
+        private const float EmpujonMinimo = 1f;
 
         /// <summary>Anota cuándo fue el último choque de un cuerpo (con otro carro, un policía o la ciudad).</summary>
         private sealed class Contactos : MonoBehaviour
@@ -75,6 +79,8 @@ namespace MechaCyberpunk.Tests.Trafico
                 public Vector3 posicion;
                 public float rapidez;
                 public float yaw;
+                public Vector3 velocidad;
+                public float empujon = float.MinValue;
                 public int pasos;
                 public float segundosQuieta;
                 public Contactos contactos;
@@ -127,7 +133,13 @@ namespace MechaCyberpunk.Tests.Trafico
                     {
                         h.pasos = 0; // todavía se está colocando al aparecer (fuera de la vista): eso no se mide
                     }
-                    bool libre = Time.time - h.contactos.Ultimo > SegundosLibreTrasChoque;
+                    // Un empujón que no es choque (una explosión, un golpe de un cuerpo que no avisa) cambia la velocidad más de lo que un motor da en un paso.
+                    if (h.pasos > 0 && (cuerpo.linearVelocity - h.velocidad).magnitude > EmpujonMinimo)
+                    {
+                        h.empujon = Time.time;
+                    }
+                    h.velocidad = cuerpo.linearVelocity;
+                    bool libre = Time.time - Mathf.Max(h.contactos.Ultimo, h.empujon) > SegundosLibreTrasChoque;
                     if (h.pasos >= PasosOmitidos && !libre)
                     {
                         MuestrasConChoque++;
@@ -197,9 +209,11 @@ namespace MechaCyberpunk.Tests.Trafico
             private readonly ParametrosConductorIA parametros;
             private readonly List<Vector3> ruta;
             private int indice = 1;
+            private readonly float velocidadMaxima;
 
-            public JugadorEnCarro(CarroViejo carro, ConfigPersecucion config, List<Vector3> ruta)
+            public JugadorEnCarro(CarroViejo carro, ConfigPersecucion config, List<Vector3> ruta, float velocidadMaxima)
             {
+                this.velocidadMaxima = velocidadMaxima;
                 this.carro = carro;
                 cuerpo = carro.GetComponent<Rigidbody>();
                 this.ruta = ruta;
@@ -224,7 +238,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 Vector3 actual = posicion;
                 float restante = MiraJugador;
                 Vector3 rumbo = (ruta[indice] - actual).normalized;
-                float velocidad = VelocidadJugador;
+                float velocidad = velocidadMaxima;
                 float acumulado = 0f;
                 for (int i = indice; i < ruta.Count; i++)
                 {
@@ -249,7 +263,7 @@ namespace MechaCyberpunk.Tests.Trafico
                     Vector3 sale = ruta[k + 1] - ruta[k];
                     entra.y = 0f;
                     sale.y = 0f;
-                    float vc = ConductorCarroIA.VelocidadEnCurva(parametros, VelocidadJugador, Vector3.Angle(entra, sale));
+                    float vc = ConductorCarroIA.VelocidadEnCurva(parametros, velocidadMaxima, Vector3.Angle(entra, sale));
                     acumulado = Plano(ruta[k] - posicion);
                     velocidad = Mathf.Min(velocidad, ConductorCarroIA.VelocidadParaFrenar(Mathf.Max(0f, acumulado - RadioNodoJugador), vc, parametros.DesaceleracionPlaneada));
                 }
@@ -268,6 +282,11 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         private GameObject barrio;
+        private bool ciudad;
+        private HashSet<int> raicesAntes;
+        private Transform raizCiudad;
+        private GameObject telemetriaObjeto;
+        private UnityEngine.SceneManagement.Scene escenaCiudad;
         private GameObject jugadorObjeto;
         private PatrullaFisicaT707Pruebas.CalorDoble calor;
         private GestorPersecucion gestor;
@@ -336,9 +355,91 @@ namespace MechaCyberpunk.Tests.Trafico
             Time.fixedDeltaTime = pasoAnterior;
             Object.DestroyImmediate(jugadorObjeto);
             Object.DestroyImmediate(barrio);
+            Object.DestroyImmediate(telemetriaObjeto);
+            if (ciudad && gestor != null)
+            {
+                Object.DestroyImmediate(gestor.gameObject); // sus patrullas cuelgan de él
+            }
             Object.DestroyImmediate(config);
             Registros.LimpiarTodos();
             EventosLugares.LimpiarSuscriptores();
+        }
+
+        // La ciudad de verdad (Ciudad_Prologo, la de la demo): se carga igual que RecorridoDemoPruebas y la persecución cuelga de su barrio.
+        private IEnumerator MontarCiudad()
+        {
+            ciudad = true;
+            raicesAntes = CierresCiudadT986Pruebas.InstantaneaDeRaices();
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(CierresCiudadT986Pruebas.RutaEscena,
+                new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single));
+            escenaCiudad = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            for (int i = 0; i < 30; i++)
+            {
+                yield return null;
+            }
+            foreach (GestorPersecucion propio in Object.FindObjectsByType<GestorPersecucion>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                propio.enabled = false;
+            }
+            calles = CierresCiudadT986Pruebas.GrafoDeLaCiudad(out raizCiudad);
+            Assert.IsNotNull(calles, "La ciudad tiene calles para la persecución");
+            Physics.SyncTransforms();
+            int cerrados = BloqueosDeCalles.Marcar(calles);
+            Debug.Log("[T-986] ciudad: " + calles.Cantidad + " nodos, tramos cerrados: " + cerrados);
+            // Los dobles del jugador y del calor mandan: lo que la escena haya registrado se quita.
+            Registros.LimpiarTodos();
+            calor = new PatrullaFisicaT707Pruebas.CalorDoble();
+            Registro<ICalor>.Agregar(calor);
+        }
+
+        [UnityTearDown]
+        public IEnumerator DescargarCiudad()
+        {
+            if (ciudad)
+            {
+                ciudad = false;
+                UnityEngine.SceneManagement.Scene vacia = UnityEngine.SceneManagement.SceneManager.CreateScene("VaciaT986");
+                UnityEngine.SceneManagement.SceneManager.SetActiveScene(vacia);
+                if (escenaCiudad.IsValid() && escenaCiudad.isLoaded)
+                {
+                    yield return UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(escenaCiudad);
+                }
+                CierresCiudadT986Pruebas.QuitarRaicesNuevas(raicesAntes);
+            }
+        }
+
+        // El camino simple más largo del grafo (sin repetir cruces) y de regreso por el mismo: con vueltas en las esquinas y en U en las puntas.
+        private List<Vector3> RutaLargaDeIdaYVuelta()
+        {
+            List<int> mejor = new List<int>();
+            for (int inicio = 0; inicio < calles.Cantidad; inicio++)
+            {
+                Recorrer(new List<int> { inicio }, ref mejor);
+            }
+            List<Vector3> ida = mejor.Select(i => calles.Nodo(i)).ToList();
+            List<Vector3> ruta = new List<Vector3>(ida);
+            for (int i = ida.Count - 2; i >= 0; i--)
+            {
+                ruta.Add(ida[i]);
+            }
+            return ruta;
+        }
+
+        private void Recorrer(List<int> actual, ref List<int> mejor)
+        {
+            if (actual.Count > mejor.Count)
+            {
+                mejor = new List<int>(actual);
+            }
+            foreach (int v in calles.Vecinos(actual[actual.Count - 1]))
+            {
+                if (!actual.Contains(v) && calles.TramoLibre(actual[actual.Count - 1], v))
+                {
+                    actual.Add(v);
+                    Recorrer(actual, ref mejor);
+                    actual.RemoveAt(actual.Count - 1);
+                }
+            }
         }
 
         // Dentro de los cierres del barrio solo queda un tramo libre entre dos cruces y los brazos de las calles que salen de ellos hasta los cierres:
@@ -403,10 +504,44 @@ namespace MechaCyberpunk.Tests.Trafico
             cam.farClipPlane = 400f;
             cam.fieldOfView = 60f;
             Vector3 atras = -Vector3.ProjectOnPlane(jugador.Adelante, Vector3.up).normalized;
-            cam.transform.position = centro + Vector3.up * (12f + distancia * 0.6f) + atras * (6f + distancia * 0.4f);
+            // Cámara alta: la primera posición desde la que ninguna línea a los puntos de interés la tapa algo sólido (techos, toldos, letreros).
+            Vector3 elegida = centro + Vector3.up * (12f + distancia * 0.6f) + atras * (6f + distancia * 0.4f);
+            bool libre = false;
+            foreach (float altura in new[] { 12f, 16f, 22f, 30f, 40f })
+            {
+                foreach (float retroceso in new[] { 6f, 2f, 10f, 0f })
+                {
+                    Vector3 candidata = centro + Vector3.up * (altura + distancia * 0.6f) + atras * (retroceso + distancia * 0.4f);
+                    if (!LineaTapada(candidata, centro) && !LineaTapada(candidata, jugador.Posicion + Vector3.up * 1.5f))
+                    {
+                        elegida = candidata;
+                        libre = true;
+                        break;
+                    }
+                }
+                if (libre)
+                {
+                    break;
+                }
+            }
+            cam.transform.position = elegida;
             cam.transform.LookAt(centro);
             CapturaPrueba.Guardar(cam, nombre);
             Object.DestroyImmediate(cam.gameObject);
+        }
+
+        // Algo sólido fijo entre la cámara y el punto (los cuerpos sueltos, como los carros, no cuentan).
+        private static bool LineaTapada(Vector3 desde, Vector3 hasta)
+        {
+            Vector3 d = hasta - desde;
+            foreach (RaycastHit h in Physics.RaycastAll(desde, d.normalized, d.magnitude - 0.5f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (h.collider.attachedRigidbody == null && h.collider.GetComponentInParent<MechaCyberpunk.Trafico.Peatones.PeatonMundo>() == null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         [UnityTest]
@@ -423,11 +558,18 @@ namespace MechaCyberpunk.Tests.Trafico
             yield return Correr(false, true);
         }
 
-        private IEnumerator Correr(bool conCapturas, bool exigeDerrape)
+        [UnityTest]
+        public IEnumerator PersecucionEnLaCiudadDePrologo_LasPatrullasManejanConFisicaYAlcanzanAlJugador()
+        {
+            yield return MontarCiudad();
+            yield return Correr(true, false, true);
+        }
+
+        private IEnumerator Correr(bool conCapturas, bool exigeDerrape, bool enCiudad = false)
         {
             System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Application.dataPath, "..", "docs", "capturas", "t986"));
             GameObject prefabCarro = AssetDatabase.LoadAssetAtPath<GameObject>(RutaCarroJugador);
-            List<Vector3> ruta = RutaConVueltas();
+            List<Vector3> ruta = enCiudad ? RutaLargaDeIdaYVuelta() : RutaConVueltas();
             Assert.GreaterOrEqual(ruta.Count, 4, "La ruta del jugador tiene varias calles con vueltas");
             Vector3 primerRumbo = (ruta[1] - ruta[0]).normalized;
             Vector3 salida = ruta[0] + Vector3.Cross(Vector3.up, primerRumbo) * 1.6f;
@@ -436,17 +578,18 @@ namespace MechaCyberpunk.Tests.Trafico
             CarroViejo carroJugador = carroObjeto.GetComponent<CarroViejo>();
             Assert.IsNotNull(carroJugador);
             yield return null;
-            JugadorEnCarro jugador = new JugadorEnCarro(carroJugador, config, ruta);
+            JugadorEnCarro jugador = new JugadorEnCarro(carroJugador, config, ruta, enCiudad ? VelocidadJugadorCiudad : VelocidadJugador);
             Registro<IJugador>.Agregar(new PatrullaFisicaT707Pruebas.JugadorDoble { Raiz = jugador.Raiz });
 
             GameObject objeto = new GameObject("Persecucion");
             objeto.SetActive(false);
-            objeto.transform.SetParent(barrio.transform, false);
+            objeto.transform.SetParent(enCiudad ? raizCiudad : barrio.transform, false);
             gestor = objeto.AddComponent<GestorPersecucion>();
             gestor.Configurar(config, AssetDatabase.LoadAssetAtPath<GameObject>(RutaDron).GetComponent<DronMundo>(),
                 AssetDatabase.LoadAssetAtPath<GameObject>(RutaPatrulla).GetComponent<PatrullaMundo>());
             objeto.SetActive(true);
-            Telemetria telemetria = barrio.AddComponent<Telemetria>();
+            telemetriaObjeto = enCiudad ? new GameObject("Telemetria986") : barrio;
+            Telemetria telemetria = telemetriaObjeto.AddComponent<Telemetria>();
             telemetria.Carro = carroJugador.ParametrosManejo;
 
             // Primero maneja un rato sin calor; luego sube el calor y salen las patrullas.
@@ -457,30 +600,33 @@ namespace MechaCyberpunk.Tests.Trafico
             int capturas = 0;
             float proximaCaptura = Time.time + 1f;
             float alcance = -1f;
-            float fin = Time.time + SegundosMaximos;
+            float fin = Time.time + (enCiudad ? SegundosCiudad : SegundosMaximos);
+            int tope = enCiudad ? CapturasCiudad : MaximoDeCapturas;
+            string prefijo = enCiudad ? "t986/ciudad-" : "t986/persecucion-";
+            float separacion = enCiudad ? SegundosCiudad / (CapturasCiudad + 1) : SegundosEntreCapturas;
             while (Time.time < fin)
             {
                 yield return null;
-                if (conCapturas && capturas < MaximoDeCapturas && Time.time >= proximaCaptura)
+                if (conCapturas && capturas < tope && Time.time >= proximaCaptura)
                 {
                     capturas++;
-                    proximaCaptura = Time.time + SegundosEntreCapturas;
-                    Foto(jugador, PatrullaMundo.Activas, "t986/persecucion-" + capturas + ".png");
+                    proximaCaptura = Time.time + separacion;
+                    Foto(jugador, PatrullaMundo.Activas, prefijo + capturas + ".png");
                 }
                 if (alcance < 0f && PatrullaMundo.Activas.Any(p => p != null && p.PoliciasBajaron))
                 {
                     alcance = Time.time - inicioPersecucion;
                 }
-                if (alcance >= 0f && (capturas >= MaximoDeCapturas || !conCapturas) && Time.time > inicioPersecucion + alcance + SegundosTrasAlcanzar + (conCapturas ? 0f : SegundosExtraSinCapturas))
+                if (!enCiudad && alcance >= 0f && (capturas >= MaximoDeCapturas || !conCapturas) && Time.time > inicioPersecucion + alcance + SegundosTrasAlcanzar + (conCapturas ? 0f : SegundosExtraSinCapturas))
                 {
                     break;
                 }
             }
             Time.timeScale = 1f;
-            if (conCapturas && capturas < MaximoDeCapturas)
+            if (conCapturas && capturas < tope)
             {
                 capturas++;
-                Foto(jugador, PatrullaMundo.Activas, "t986/persecucion-" + capturas + ".png");
+                Foto(jugador, PatrullaMundo.Activas, prefijo + capturas + ".png");
             }
             telemetria.Choques = telemetria.Distintas.Sum(p => p != null ? p.GetComponent<Contactos>().Cantidad : 0);
             Debug.Log("[T-986] persecución: " + telemetria.Muestras + " muestras libres y " + telemetria.MuestrasConChoque + " con choque (" + telemetria.Choques + " choques) de " + telemetria.Distintas.Count + " patrullas; alcanzó al jugador a los " + alcance.ToString("F1")

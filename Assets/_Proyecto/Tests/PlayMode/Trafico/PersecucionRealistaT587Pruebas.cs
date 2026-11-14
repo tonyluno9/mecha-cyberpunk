@@ -360,6 +360,7 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.AreEqual(3, CuentaRetirando(patrullas), "Las tres se están yendo");
             Dictionary<PatrullaMundo, Vector3> ultima = new Dictionary<PatrullaMundo, Vector3>();
             limite = Time.time + 90f;
+            float inicioRetirada = Time.time;
             int desaparecieronALaVista = 0;
             while (Time.time < limite && gestor.Retirandose > 0)
             {
@@ -377,7 +378,9 @@ namespace MechaCyberpunk.Tests.Trafico
                     {
                         Vector3 d = donde - posicion;
                         d.y = 0f;
-                        if (ReglaVistaPolicia.LoVe(camara, donde, 400f) && d.magnitude < config.DistanciaRetiro)
+                        // T-986: la que sigue a la vista tras SegundosMaximosRetiro se borra de todos modos (a propósito); una patrulla de física atorada en un embotellamiento puede llegar a eso.
+                        bool pordio = Time.time - inicioRetirada >= config.SegundosMaximosRetiro - 1f;
+                        if (!pordio && ReglaVistaPolicia.LoVe(camara, donde, 400f) && d.magnitude < config.DistanciaRetiro)
                         {
                             desaparecieronALaVista++;
                         }

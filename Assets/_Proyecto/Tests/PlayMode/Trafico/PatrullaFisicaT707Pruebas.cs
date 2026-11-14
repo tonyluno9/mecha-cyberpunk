@@ -239,6 +239,12 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.IsTrue(carro.IntentarSubir(jugador));
             calor.Poner(3);
             yield return Frames();
+            // T-986: salen por calles por las que pueden llegar y una a una (la siguiente espera a que la anterior se aleje de la salida).
+            float esperaPatrullas = Time.time + 30f;
+            while (Time.time < esperaPatrullas && gestor.Patrullas < 3)
+            {
+                yield return null;
+            }
             Assert.AreEqual(3, gestor.Patrullas, "Con el calor 3 hay 3 patrullas de la policía");
 
             // El jugador (en la patrulla robada) se va al punto de las calles más lejos de todas las patrullas.

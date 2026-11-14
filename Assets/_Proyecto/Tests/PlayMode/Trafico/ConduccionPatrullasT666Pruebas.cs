@@ -238,7 +238,7 @@ namespace MechaCyberpunk.Tests.Trafico
             }
             Assert.AreEqual(3f, maximoJuntas, "Hubo tres patrullas en la persecución");
             Assert.Greater(cuadros, 100);
-            Assert.GreaterOrEqual(menor, 3f, "En 30 s de persecución dos patrullas nunca estuvieron a menos de 3 m una de otra (la más cerca: " + menor + " m)");
+            Assert.GreaterOrEqual(menor, 2.5f, "En 30 s de persecución dos patrullas nunca estuvieron a menos de 2.5 m una de otra (T-986: con cuerpos de física, 3 m era el margen del movimiento por transform) (la más cerca: " + menor + " m)");
         }
     }
 }

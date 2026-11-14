@@ -59,3 +59,12 @@ No hay inercia, ni derrape, ni frenado real; de lado se desliza; contra algo só
 - EditMode: ConductorCarroIAT986Pruebas (14) y PatrullaFisicaT707Pruebas actualizada; todo EditMode 2381/2381.
 - PlayMode: PersecucionFisicaT986Pruebas (2), CarroConductorIAT986Pruebas (Vehiculos, 5) y las existentes (PatrullaGiro, ConduccionPatrullas, PatrullaLlega, PatrullaPared, PatrullaFisica, PersecucionRealista,
   PoliciaRonda, Busqueda, PatrullasLejos, PersecucionBarrio, Arresto, Policias, DronesLlegando, Testigos, ExplosionArea, EfectosCombate).
+
+## Segunda vuelta: BloqueosDeCalles en la ciudad real (Ciudad_Prologo)
+- Medido cargando la escena como RecorridoDemoPruebas (CierresCiudadT986Pruebas): el grafo de la persecución tiene 14 nodos y 13 tramos (manzanas + afueras). La versión anterior de `Marcar` cerraba 0
+  y la nueva cierra 0; ningún tramo tiene siquiera el carril derecho tapado por un sólido fijo. En la escena todos los cierres del Barrio (Final_Reten, Final_Obra, Cierre_*) están inactivos (solo Final_Autopista activo).
+- Los 6 tramos cerrados que vimos eran de Barrio.prefab suelto (con sus cierres activos), no de la ciudad. Aun así la detección era floja: dos carriles y cualquier sólido en cualquier punto de un tramo de 90 m.
+  Ahora: cuatro carriles (1.6 y 4.4 m a cada lado, los que la patrulla usa para rodear), y solo cierra si en una misma franja de 3 m hay sólido en los cuatro; ignora normales de piso, lo que queda
+  bajo la suspensión (techo del sólido a menos de 0.5 m) y lo que cuelga sobre el techo del carro (base a más de 1.9 m). Barrio.prefab suelto: antes 6, ahora ver el log "tramos cerrados" de PersecucionFisicaT986Pruebas.
+- Prueba nueva en la ciudad: persecución de 80 s de juego, jugador en un carro con ruta de ida y vuelta por el camino más largo (esquinas y vueltas en U), calor 3. Capturas ciudad-1..6.png con cámara alta
+  elegida sin sólidos fijos en la línea al punto (se rehicieron también persecucion-1..8, la 3 estaba tapada por un techo).
