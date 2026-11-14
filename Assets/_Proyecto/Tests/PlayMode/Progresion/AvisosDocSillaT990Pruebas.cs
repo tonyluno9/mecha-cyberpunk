@@ -19,7 +19,7 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.Progresion
 {
     /// <summary>
-    /// T-990: en Ciudad_Prologo, al llegar al DOC el HUD H10 dice "[E] IMPLANTES" y la E abre la clínica; al llegar a la silla dice "[E] " + el texto de la silla y la E te sienta.
+    /// T-990: en Ciudad_Prologo, DE NOCHE (clínica cerrada por horario), al llegar al DOC el HUD H10 dice "[E] IMPLANTES" y la E abre la clínica; al llegar a la silla dice "[E] CURARME" y la E te sienta.
     /// El jugador se coloca con Colocar en el punto donde se para de verdad (frente al Doc / junto a la silla) y mira hacia ellos; la E es una tecla simulada.
     /// Deja docs/capturas/t990/doc.png y silla.png (1920x1080) con CAPTURAR_T990=1.
     /// </summary>
@@ -124,7 +124,7 @@ namespace MechaCyberpunk.Tests.Progresion
             }
             IJugador jugador = Registro<IJugador>.Actual;
             ICartera cartera = Registro<ICartera>.Actual;
-            Registro<IRelojMundo>.Actual.AvanzarHasta(12f);
+            Registro<IRelojMundo>.Actual.AvanzarHasta(2f); // de noche la clínica está cerrada por horario
             cartera.Abonar(20000 - cartera.Dinero, MotivoDinero.Otro);
             InteraccionAPie interaccion = jugador.Raiz.GetComponentInChildren<InteraccionAPie>();
             HudH10 hud = Object.FindFirstObjectByType<HudH10>();
@@ -140,6 +140,7 @@ namespace MechaCyberpunk.Tests.Progresion
             SillaClinica silla = SillaClinica.Actual;
             Assert.IsNotNull(silla, "La silla de la clínica está en la ciudad");
             MostradorClinica mostrador = Object.FindFirstObjectByType<MostradorClinica>();
+            Assert.IsFalse(mostrador.PuedeUsar, "De noche el mostrador de la clínica dice cerrado");
             Debug.Log("[T-990] doc.pos=" + doc.Posicion + " doc.forward=" + doc.transform.forward + " silla.pos=" + silla.Posicion
                 + " mostrador=" + (mostrador != null ? mostrador.name + " PuedeUsar=" + mostrador.PuedeUsar + " pos=" + mostrador.Posicion : "null"));
 
@@ -150,6 +151,7 @@ namespace MechaCyberpunk.Tests.Progresion
             jugador.Colocar(new Pose(frente, Quaternion.LookRotation(hacia.normalized, Vector3.up)));
             yield return new WaitForSecondsRealtime(0.6f);
             Diagnosticar("DOC", jugador, interaccion, doc, hud);
+            Assert.IsTrue(doc.PuedeUsar, "EL DOC ofrece IMPLANTES aunque la clínica esté cerrada por horario");
             Assert.IsTrue(Contiene(hud, "[E] IMPLANTES"), "Frente al Doc el HUD dice [E] IMPLANTES; dice " + Ayudas(hud));
             Capturar("doc.png");
             yield return Pulsar(teclado.eKey);
@@ -169,52 +171,9 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return new WaitForSecondsRealtime(0.6f);
             Diagnosticar("SILLA", jugador, interaccion, silla, hud);
             Assert.IsTrue(silla.PuedeUsar, "La silla se puede usar");
-            Assert.IsTrue(Contiene(hud, "[E] " + silla.Texto), "Junto a la silla el HUD dice [E] " + silla.Texto + "; dice " + Ayudas(hud));
+            Assert.AreEqual("CURARME", silla.Texto);
+            Assert.IsTrue(Contiene(hud, "[E] CURARME"), "Junto a la silla el HUD dice [E] CURARME; dice " + Ayudas(hud));
             Capturar("silla.png");
-            yield return Pulsar(teclado.eKey);
-            yield return EsperarHasta(() => silla.EnSecuencia, "la E te sienta", 5f);
-        }
-
-        // Causa de T-990: de noche la clínica está cerrada, EL DOC no ofrece nada (PuedeUsar=false) y, por estar más cerca, le quitaba el lugar a la silla pegada a él.
-        [UnityTest]
-        public IEnumerator DeNocheConLaClinicaCerradaLaSillaNoLaTapaElDoc()
-        {
-            yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
-            yield return null;
-            DirectorPandillas historia = null;
-            yield return EsperarHasta(() =>
-            {
-                historia = Object.FindFirstObjectByType<DirectorPandillas>();
-                return historia != null && historia.Iniciado && Registro<IJugador>.Actual != null && Registro<ICartera>.Actual != null && Registro<IRelojMundo>.Actual != null;
-            }, "el director arrancó", 30f);
-            for (int i = 0; i < 12 && historia.Paso != PasoHistoria.Libre; i++)
-            {
-                yield return Pulsar(teclado.f6Key);
-            }
-            IJugador jugador = Registro<IJugador>.Actual;
-            Registro<IRelojMundo>.Actual.AvanzarHasta(2f);
-            InteraccionAPie interaccion = jugador.Raiz.GetComponentInChildren<InteraccionAPie>();
-            HudH10 hud = Object.FindFirstObjectByType<HudH10>();
-            PersonajeApoyo doc = null;
-            foreach (PersonajeApoyo p in Object.FindObjectsByType<PersonajeApoyo>(FindObjectsSortMode.None))
-            {
-                doc = p.Datos.Id == "doc" ? p : doc;
-            }
-            SillaClinica silla = SillaClinica.Actual;
-            Assert.IsNotNull(doc);
-            Assert.IsNotNull(silla);
-
-            // Delante de los dos, un poco más cerca del Doc que de la silla (1.2 m contra 1.4 m), mirando entre ellos.
-            Vector3 punto = doc.Posicion + new Vector3(0.2f, 0.08f, 1.2f);
-            Vector3 hacia = (silla.Posicion + doc.Posicion) * 0.5f - punto;
-            hacia.y = 0f;
-            jugador.Colocar(new Pose(punto, Quaternion.LookRotation(hacia.normalized, Vector3.up)));
-            yield return new WaitForSecondsRealtime(0.6f);
-            Diagnosticar("NOCHE", jugador, interaccion, silla, hud);
-            Assert.IsFalse(doc.PuedeUsar, "De noche la clínica está cerrada y EL DOC no ofrece nada");
-            Assert.IsTrue(silla.PuedeUsar);
-            Assert.AreSame(silla, interaccion.InteractuableCandidato, "La silla usable gana al Doc que no se puede usar");
-            Assert.IsTrue(Contiene(hud, "[E] " + silla.Texto), "El HUD dice [E] " + silla.Texto + "; dice " + Ayudas(hud));
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => silla.EnSecuencia, "la E te sienta", 5f);
         }

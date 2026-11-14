@@ -59,15 +59,19 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         [Test]
-        public void DocConImplantes_ConVidaLlenaOfreceImplantesYConVidaBajaSigueCurando()
+        public void DocConImplantes_ConClinicaSiempreOfreceImplantesSinMirarLaVida()
         {
-            var curar = ReglaPersonajeApoyo.Evaluar(ServicioApoyo.Curar, 50, 100f, 100f, 0, 500);
-            var llena = ReglaPersonajeApoyo.DocConImplantes(curar, 100f, 100f, true);
-            Assert.AreEqual("IMPLANTES", llena.Texto);
-            Assert.IsTrue(llena.PuedeUsar);
+            // T-990: el Doc está presente, así que ofrece IMPLANTES con la vida llena o baja; curar es trabajo de la silla.
+            var llena = ReglaPersonajeApoyo.Evaluar(ServicioApoyo.Curar, 50, 100f, 100f, 0, 500);
             var herido = ReglaPersonajeApoyo.Evaluar(ServicioApoyo.Curar, 50, 40f, 100f, 0, 500);
-            Assert.AreEqual(herido.Texto, ReglaPersonajeApoyo.DocConImplantes(herido, 40f, 100f, true).Texto);
-            Assert.AreEqual(curar.Texto, ReglaPersonajeApoyo.DocConImplantes(curar, 100f, 100f, false).Texto, "Sin clínica disponible no ofrece implantes");
+            var sinDinero = ReglaPersonajeApoyo.Evaluar(ServicioApoyo.Curar, 50, 40f, 100f, 0, 0);
+            foreach (var curar in new[] { llena, herido, sinDinero })
+            {
+                var aviso = ReglaPersonajeApoyo.DocConImplantes(curar, true);
+                Assert.AreEqual("IMPLANTES", aviso.Texto);
+                Assert.IsTrue(aviso.PuedeUsar);
+                Assert.AreEqual(curar.Texto, ReglaPersonajeApoyo.DocConImplantes(curar, false).Texto, "Sin clínica no ofrece implantes");
+            }
         }
     }
 }

@@ -90,16 +90,7 @@ namespace MechaCyberpunk.Personaje.Interaccion
                 {
                     return;
                 }
-                ElegirCandidato(false);
-                // T-990: un interactuable que no se puede usar (el Doc con la clínica cerrada) no le quita el lugar a otro que sí, como la silla pegada a él.
-                if (TipoCandidato == TipoCandidatoAPie.Interactuable && !InteractuableCandidato.PuedeUsar)
-                {
-                    ElegirCandidato(true);
-                    if (TipoCandidato == TipoCandidatoAPie.Ninguno)
-                    {
-                        ElegirCandidato(false);
-                    }
-                }
+                ElegirCandidato();
             }
 
             if (!interactuar.action.WasPressedThisFrame())
@@ -151,9 +142,8 @@ namespace MechaCyberpunk.Personaje.Interaccion
         }
 
         // Puertas y montables compiten en la misma lista de puntos: gana el más cercano y de frente.
-        private void ElegirCandidato(bool soloUsables)
+        private void ElegirCandidato()
         {
-            LimpiarCandidatos();
             puertas.Clear();
             montables.Clear();
             interactuables.Clear();
@@ -191,7 +181,6 @@ namespace MechaCyberpunk.Personaje.Interaccion
             IReadOnlyList<IInteractuable> todosInteractuables = Registro<IInteractuable>.Todos;
             for (int i = 0; i < todosInteractuables.Count; i++)
             {
-                if (soloUsables && !todosInteractuables[i].PuedeUsar) continue;
                 puertas.Add(null);
                 montables.Add(null);
                 interactuables.Add(todosInteractuables[i]);

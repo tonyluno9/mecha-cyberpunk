@@ -37,6 +37,9 @@ namespace MechaCyberpunk.UI.Clinica
 
         public bool PuedeUsar => !abierta && !operando && Decidir(out _);
 
+        /// <summary>T-990: EL DOC está presente, así que abre la clínica sin mirar el horario de la puerta (sí respeta abierta y operando).</summary>
+        public bool PuedeAbrirDesdeDoc => !abierta && !operando && PuedeAbrirDocAhora();
+
         public string Texto
         {
             get
@@ -87,6 +90,21 @@ namespace MechaCyberpunk.UI.Clinica
             {
                 return;
             }
+            Abrir();
+        }
+
+        /// <summary>T-990: lo que hace la E frente a EL DOC; abre la pantalla aunque la clínica esté "cerrada" por horario.</summary>
+        public void AbrirDesdeDoc()
+        {
+            if (!PuedeAbrirDesdeDoc)
+            {
+                return;
+            }
+            Abrir();
+        }
+
+        private void Abrir()
+        {
             abierta = true;
             congela.Congelar();
             pantalla.Mostrar(Registro<ServicioImplantes>.Actual, AlInstalar, AlSalir);
@@ -169,6 +187,12 @@ namespace MechaCyberpunk.UI.Clinica
         }
 
         // Decide si se puede usar y qué dice el aviso. Texto vacío = no se ofrece.
+        private static bool PuedeAbrirDocAhora()
+        {
+            JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;
+            return jugador != null && jugador.Modo == ModoJugador.APie && Registro<ServicioImplantes>.Actual != null;
+        }
+
         private bool Decidir(out string texto)
         {
             texto = string.Empty;
