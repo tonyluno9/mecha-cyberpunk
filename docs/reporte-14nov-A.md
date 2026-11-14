@@ -52,8 +52,12 @@ Los números de tarea T-985 a T-988 se eligieron saltando T-980 a T-984 para no 
 - El recorrido completo a veces no recogía el maletín por el problema de la E; quedó resuelto con el ajuste de T-987.
 - Resultado: DemoDePrincipioAFin pasa (233 s, 0 `[BUG]`), NavMesh pasa y VideoDemoT979 pasa. Con el maletín nuevo, 8/8 junto con las del asalto, y se recoge al primer intento.
 
-## Builds
-(ver al final)
+## Builds (desde main `68dab03`, uno por uno, sin ningún Unity de la Sesión B corriendo)
+- **Demo**: `C:\Users\Angel Perez\Desktop\videojuego\mecha-cyberpunk\Builds\Demo\CyberCity.exe`, hecho con ConstruirDemoPandillas (lleva DEMO_FINAL).
+  - Terminó a las **19:12** del 13-nov, hora de México. Logs/build-demo-14nov.log dice "Build Finished, Result: Success". Pesa 1.9 GB.
+- **Juego**: `C:\Users\Angel Perez\Desktop\videojuego\mecha-cyberpunk\Builds\Juego\CyberCity.exe`, hecho con ConstruirJuego.
+  - Terminó a las **19:13**. Logs/build-juego-14nov.log dice "Build Finished, Result: Success". Pesa 1.8 GB.
+- Unity quedó cerrado al terminar.
 
 ## Pendientes y notas
 - `AsaltoDineroT728Pruebas`: 3 pruebas fallan cuando corren después de las clases de patrullas e IA, en main y en la rama.
