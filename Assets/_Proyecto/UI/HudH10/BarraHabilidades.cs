@@ -15,10 +15,10 @@ namespace MechaCyberpunk.UI.Hud
     public class BarraHabilidades : MonoBehaviour
     {
         public const int OrdenCanvas = 12;
-        public const float Lado = 96f;
+        public const float Lado = 120f;
         public const float Hueco = 14f;
         public const float MargenAbajo = 96f;
-        private const float AltoMedidor = 8f;
+        private const float AltoMedidor = 10f;
         private const float SegundosAviso = 1.6f;
         private const float SegundosTeclas = 1f;
         private const string Apagada = "—";
@@ -27,8 +27,8 @@ namespace MechaCyberpunk.UI.Hud
         private static readonly Color TurquesaSuave = new Color(0.78f, 1f, 1f, 1f);
         private static readonly Color Rosa = new Color(0.93f, 0.40f, 0.46f, 1f);
         private static readonly Color Gris = new Color(0.55f, 0.60f, 0.62f, 1f);
-        private static readonly Color FondoCasilla = new Color(0.02f, 0.07f, 0.11f, 0.38f);
-        private static readonly Color FondoActiva = new Color(0.10f, 0.36f, 0.38f, 0.75f);
+        private static readonly Color FondoCasilla = new Color(0f, 0f, 0f, 0.7f);
+        private static readonly Color FondoActiva = new Color(0.02f, 0.20f, 0.22f, 0.85f);
 
         private sealed class Casilla
         {
@@ -123,10 +123,10 @@ namespace MechaCyberpunk.UI.Hud
             c.Fondo.raycastTarget = false;
             GameObject borde = KitUI.CrearBorde(raiz, 2f, Color.white);
             c.Borde = borde.GetComponentsInChildren<Image>();
-            c.Tecla = Texto(raiz, "Tecla", new Vector2(0f, 1f), new Vector2(8f, -4f), new Vector2(40f, 28f), 24, TextAnchor.MiddleLeft);
-            c.Nombre = Texto(raiz, "Nombre", new Vector2(0.5f, 0.5f), new Vector2(0f, 4f), new Vector2(Lado, 40f), 22, TextAnchor.MiddleCenter);
+            c.Tecla = Texto(raiz, "Tecla", new Vector2(0f, 1f), new Vector2(10f, -6f), new Vector2(56f, 38f), 32, TextAnchor.MiddleLeft);
+            c.Nombre = Texto(raiz, "Nombre", new Vector2(0.5f, 0.5f), new Vector2(0f, 6f), new Vector2(Lado, 48f), 30, TextAnchor.MiddleCenter);
             c.Nombre.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            RectTransform pista = Nuevo(raiz, "Medidor", new Vector2(0f, 0f), new Vector2(8f, 8f), new Vector2(Lado - 16f, AltoMedidor));
+            RectTransform pista = Nuevo(raiz, "Medidor", new Vector2(0f, 0f), new Vector2(10f, 10f), new Vector2(Lado - 20f, AltoMedidor));
             Image fondoMedidor = pista.gameObject.AddComponent<Image>();
             fondoMedidor.color = new Color(0f, 0f, 0f, 0.5f);
             fondoMedidor.raycastTarget = false;
