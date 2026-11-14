@@ -51,11 +51,12 @@ namespace MechaCyberpunk.Progresion.Apoyo
         }
 
         /// <summary>
-        /// EL DOC con la vida llena ofrece los implantes (T-430) si la clínica se puede usar; con la vida baja sigue curando.
+        /// EL DOC, si la clínica existe, siempre ofrece los implantes (T-990), de día o de noche y con la vida llena o baja: curar es trabajo de la silla.
+        /// Sin clínica sigue con el aviso de curar.
         /// </summary>
-        public static Aviso DocConImplantes(Aviso curar, float vida, float vidaMaxima, bool clinicaDisponible)
+        public static Aviso DocConImplantes(Aviso curar, bool clinicaDisponible)
         {
-            return vida >= vidaMaxima && clinicaDisponible ? new Aviso(TextoImplantes, true) : curar;
+            return clinicaDisponible ? new Aviso(TextoImplantes, true) : curar;
         }
 
         /// <summary>Una frase al azar (<paramref name="azar"/> de 0 a cantidad-1) que no es la última que dijo (-1: ninguna).</summary>

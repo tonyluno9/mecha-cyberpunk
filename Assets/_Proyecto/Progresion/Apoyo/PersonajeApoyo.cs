@@ -66,9 +66,9 @@ namespace MechaCyberpunk.Progresion.Apoyo
                     calor != null ? calor.Nivel : 0, cartera != null ? cartera.Dinero : 0);
                 if (datos.Servicio == ServicioApoyo.Curar)
                 {
-                    // T-430: con la vida llena EL DOC ofrece los implantes (la clínica de I+D+I, que no se ofrece aparte).
+                    // T-430/T-990: EL DOC siempre ofrece los implantes (la clínica de I+D+I, que no se ofrece aparte), también de noche; curar es de la silla.
                     MostradorClinica clinica = BuscarClinica();
-                    aviso = ReglaPersonajeApoyo.DocConImplantes(aviso, actual, maxima, vida != null && clinica != null && clinica.PuedeUsar);
+                    aviso = ReglaPersonajeApoyo.DocConImplantes(aviso, vida != null && clinica != null && clinica.PuedeAbrirDesdeDoc);
                 }
                 return aviso;
             }
@@ -192,7 +192,7 @@ namespace MechaCyberpunk.Progresion.Apoyo
                     case ServicioApoyo.Curar:
                         if (Aviso.Texto == ReglaPersonajeApoyo.TextoImplantes)
                         {
-                            clinica.Usar();
+                            clinica.AbrirDesdeDoc();
                         }
                         else
                         {
