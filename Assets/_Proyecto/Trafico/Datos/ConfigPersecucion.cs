@@ -170,6 +170,50 @@ namespace MechaCyberpunk.Trafico.Datos
         [SerializeField] private float radioVistaDron = 45f;
         public float RadioVistaDron => radioVistaDron;
 
+        [Header("Vuelo del dron (T-1008)")]
+        [Min(0.5f)] [Tooltip("Aceleración horizontal máxima del dron al arrancar o girar (m/s2).")]
+        [SerializeField] private float aceleracionDron = 7f;
+        [Min(0.5f)] [Tooltip("Desaceleración con la que planea frenar al llegar; menor que la aceleración para frenar suave (m/s2).")]
+        [SerializeField] private float frenadoDron = 4f;
+        [Min(0.1f)] [Tooltip("Velocidad vertical máxima del dron al ajustar su altura (m/s).")]
+        [SerializeField] private float velocidadVerticalDron = 4f;
+        [Min(0.1f)] [Tooltip("Aceleración vertical máxima del dron (m/s2).")]
+        [SerializeField] private float aceleracionVerticalDron = 4f;
+        [Min(10f)] [Tooltip("Qué tan rápido puede girar el rumbo del dron (grados/s).")]
+        [SerializeField] private float giroRumboDron = 120f;
+        [Range(0f, 45f)] [Tooltip("Inclinación máxima del dron al acelerar o girar (grados).")]
+        [SerializeField] private float inclinacionMaximaDron = 20f;
+        [Min(0f)] [Tooltip("Grados que se inclina el dron por cada m/s2 de aceleración (grados).")]
+        [SerializeField] private float inclinacionPorAceleracionDron = 2.5f;
+        [Min(0.5f)] [Tooltip("Qué tan rápido alcanza la inclinación pedida (1/s).")]
+        [SerializeField] private float suavizadoInclinacionDron = 6f;
+        [Min(0f)] [Tooltip("Cuánto sube y baja el dron flotando en el aire (m).")]
+        [SerializeField] private float amplitudFloteDron = 0.12f;
+        [Min(0f)] [Tooltip("Cuántas veces por segundo sube y baja al flotar (Hz).")]
+        [SerializeField] private float frecuenciaFloteDron = 0.5f;
+        [Min(0f)] [Tooltip("Balanceo leve del dron de lado a lado (grados).")]
+        [SerializeField] private float amplitudBalanceoDron = 1.5f;
+        [Min(0f)] [Tooltip("Cuántas veces por segundo se balancea el dron (Hz).")]
+        [SerializeField] private float frecuenciaBalanceoDron = 0.35f;
+
+        /// <summary>T-1008: los números del vuelo natural de los drones (la velocidad máxima es la velocidad del dron).</summary>
+        public ParametrosVueloDron ParametrosVuelo => new ParametrosVueloDron
+        {
+            VelocidadMaxima = velocidadDron,
+            AceleracionMaxima = aceleracionDron,
+            AceleracionFrenado = frenadoDron,
+            VelocidadVertical = velocidadVerticalDron,
+            AceleracionVertical = aceleracionVerticalDron,
+            GradosRumboPorSegundo = giroRumboDron,
+            InclinacionMaxima = inclinacionMaximaDron,
+            GradosPorAceleracion = inclinacionPorAceleracionDron,
+            SuavizadoInclinacion = suavizadoInclinacionDron,
+            AmplitudFlote = amplitudFloteDron,
+            FrecuenciaFlote = frecuenciaFloteDron,
+            AmplitudBalanceo = amplitudBalanceoDron,
+            FrecuenciaBalanceo = frecuenciaBalanceoDron,
+        };
+
         [Header("Dron derribable (T-730)")]
         [Min(1f)] [Tooltip("Puntos de daño que aguanta el dron antes de caer. Una pistola hace 10 a 20 por bala.")]
         [SerializeField] private float vidaDron = 40f;
