@@ -37,7 +37,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float DistanciaRuta = 45f;
         private const float LimiteZonaX = 47f;
         private const float PasoMalla = 2f;
-        private const float MitadEje = 5.2f;
+        private const float MitadEje = 4.4f;
         private const float MitadLado = 2.6f;
         private const float AlturaSuelo = 1f;
         private const float SueloMinY = -0.1f;
@@ -47,7 +47,9 @@ namespace MechaCyberpunk.Arte.Editor
         private const float DespejeAlto = 2.4f;
         private const float DistLugares = 14f;
         private const float DistPandillas = 25f;
-        private const float DistEntreRinas = 40f;
+        private static List<Vector3> pandilleros = new List<Vector3>();
+        private const float DistPandilleros = 8f;
+        private const float DistEntreRinas = 25f;
         private const float GrosorMaximoProp = 0.9f;
 
         private static readonly string[] TiposLugar =
@@ -177,13 +179,13 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             List<Vector3> evitar = Lugares();
-            evitar.AddRange(PandillasExistentes());
+            pandilleros = PandillasExistentes();
             GameObject raiz = new GameObject(Raiz);
             List<Vector3> hechas = new List<Vector3>();
             // Frontera: pegada al límite (x = 47) del lado de Neón Alto; dentro: más al este.
             (string nombre, float xMin, float xMax, Vector2 preferida)[] sitios =
             {
-                ("Rina_Frontera", LimiteZonaX - 17f, LimiteZonaX + 40f, new Vector2(LimiteZonaX, 0f)),
+                ("Rina_Frontera", LimiteZonaX, LimiteZonaX + 40f, new Vector2(LimiteZonaX, 0f)),
                 ("Rina_NeonAlto", 85f, 118f, new Vector2(100f, 0f))
             };
             foreach ((string nombre, float xMin, float xMax, Vector2 preferida) in sitios)
@@ -280,6 +282,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Vector3 c = new Vector3(x, 0f, z);
                     if (DistanciaALaRuta(c) < DistanciaRuta || EnZonaProhibida(c)
                         || evitar.Any(e => Vector3.Distance(new Vector3(e.x, 0f, e.z), c) < DistLugares)
+                        || pandilleros.Any(e => Vector3.Distance(new Vector3(e.x, 0f, e.z), c) < DistPandilleros)
                         || hechas.Any(e => Vector3.Distance(e, c) < DistEntreRinas))
                     {
                         continue;
@@ -352,7 +355,7 @@ namespace MechaCyberpunk.Arte.Editor
             return true;
         }
 
-        private static bool Despejado(Vector3 centro, Vector3 eje) => Despejado(centro, eje, MitadEje, MitadLado, 3.6f, 2f);
+        private static bool Despejado(Vector3 centro, Vector3 eje) => Despejado(centro, eje, MitadEje, MitadLado, 3f, 1.8f);
 
         /// <summary>
         /// Lo que otras pruebas de la ciudad exigen libre: la calle de Nova (arroyo de z = -43, x de 54 a 134) y las salidas del borde (franja de z = 0 hacia
@@ -362,7 +365,9 @@ namespace MechaCyberpunk.Arte.Editor
         {
             bool calleNova = p.x >= ColocarS2cNova.X0 - 12f && p.x <= ColocarS2cNova.X1 + 12f && Mathf.Abs(p.z - ColocarS2cNova.ZCentro) <= 14f;
             bool salidaEste = p.x >= 110f && Mathf.Abs(p.z) <= 8f;
-            return calleNova || salidaEste;
+            // La calle de los suburbios (z = -43, de x = -39 a 39) también se cruza en una prueba.
+            bool calleSuburbios = p.x >= -50f && p.x <= 50f && Mathf.Abs(p.z - ColocarS2cCalle.ZCentro) <= 14f;
+            return calleNova || salidaEste || calleSuburbios;
         }
 
         internal static List<Vector3> Lugares()
