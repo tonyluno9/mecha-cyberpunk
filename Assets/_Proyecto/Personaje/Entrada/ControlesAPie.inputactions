@@ -145,6 +145,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "HabilidadLaser",
+                    "type": "Button",
+                    "id": "a1f0c3d2-5b7e-4c81-9d0a-3e6f7b8c9d04",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "HabilidadMisiles",
+                    "type": "Button",
+                    "id": "a1f0c3d2-5b7e-4c81-9d0a-3e6f7b8c9d05",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -343,6 +363,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "HabilidadCabeza",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e04",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HabilidadLaser",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e05",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HabilidadMisiles",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

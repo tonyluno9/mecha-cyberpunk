@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Personaje.Editor
         public const string RutaConfig = "Assets/_Proyecto/Personaje/Datos/Resources/ConfigArmasEspeciales.asset";
         public const string RutaMaterialRayo = "Assets/_Proyecto/Personaje/Materiales/PlasmaRayo.mat";
         public const string RutaExplosion = "Assets/UnityTechnologies/ParticlePack/EffectExamples/Fire & Explosion Effects/Prefabs/SmallExplosion.prefab";
-        private static readonly Color ColorRayoHdr = new Color(0.6f, 1.6f, 2.6f, 1f);
+        private static readonly Color ColorRayoHdr = new Color(2.2f, 2.2f, 2.2f, 1f); // blanco HDR: el color lo pone cada rayo (cian el plasma, rojo el láser)
 
         [MenuItem("Mecha Cyberpunk/T-1013 Crear armas nuevas")]
         public static void Crear()

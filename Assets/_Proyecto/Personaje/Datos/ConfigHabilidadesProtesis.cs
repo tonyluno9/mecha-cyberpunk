@@ -27,6 +27,10 @@ namespace MechaCyberpunk.Personaje
         [SerializeField] private TiemposHabilidad piernas = new TiemposHabilidad { duracionNivel1 = 6f, duracionNivel2 = 10f, recarga = 20f };
         [SerializeField] private TiemposHabilidad brazos = new TiemposHabilidad { duracionNivel1 = 6f, duracionNivel2 = 10f, recarga = 25f };
         [SerializeField] private TiemposHabilidad cabeza = new TiemposHabilidad { duracionNivel1 = 8f, duracionNivel2 = 14f, recarga = 30f };
+        [Tooltip("T-1017: el brazo láser dispara mientras dura.")]
+        [SerializeField] private TiemposHabilidad laser = new TiemposHabilidad { duracionNivel1 = 4f, duracionNivel2 = 4f, recarga = 16f };
+        [Tooltip("T-1017: la hombrera lanza sus misiles al activarse; la duración es cuánto se ve activa.")]
+        [SerializeField] private TiemposHabilidad misiles = new TiemposHabilidad { duracionNivel1 = 1f, duracionNivel2 = 1f, recarga = 22f };
 
         [Header("PIERNAS")]
         [Tooltip("Multiplica la velocidad al correr mientras dura.")]
@@ -44,6 +48,37 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Multiplica el tiempo de recarga del arma mientras dura (0.4 = recarga en 40 % del tiempo).")]
         [Range(0.05f, 1f)] [SerializeField] private float factorTiempoRecarga = 0.4f;
 
+        [Header("LÁSER (T-1017)")]
+        [Tooltip("Daño por segundo del brazo láser a todo lo que toca (puntos/s).")]
+        [Min(0f)] [SerializeField] private float danioLaser = 80f;
+        [Tooltip("Alcance del brazo láser (m).")]
+        [Min(1f)] [SerializeField] private float alcanceLaser = 45f;
+        [Tooltip("Ancho del rayo del brazo (m).")]
+        [Min(0.01f)] [SerializeField] private float anchoLaser = 0.08f;
+        [Tooltip("Radio con que el láser toca lo que cruza (m).")]
+        [Min(0.01f)] [SerializeField] private float radioLaser = 0.2f;
+        [SerializeField] private Color colorLaser = new Color(1f, 0.15f, 0.2f, 1f);
+
+        [Header("MISILES (T-1017)")]
+        [Tooltip("Misiles que lanza la hombrera cada vez.")]
+        [Range(1, 12)] [SerializeField] private int cantidadMisiles = 4;
+        [Tooltip("Segundos entre un misil y el siguiente (s).")]
+        [Min(0f)] [SerializeField] private float segundosEntreMisiles = 0.15f;
+        [Tooltip("Daño de la explosión de cada misil (puntos, en el centro).")]
+        [Min(0f)] [SerializeField] private float danioMisil = 90f;
+        [Tooltip("Radio de la explosión de cada misil (m).")]
+        [Min(0.1f)] [SerializeField] private float radioMisil = 3.5f;
+        [Tooltip("Velocidad de vuelo del misil (m/s).")]
+        [Min(1f)] [SerializeField] private float velocidadMisil = 20f;
+        [Tooltip("Cuánto gira el misil hacia su blanco (°/s).")]
+        [Min(1f)] [SerializeField] private float giroMisil = 220f;
+        [Tooltip("Distancia a la que busca blancos (m).")]
+        [Min(1f)] [SerializeField] private float busquedaMisil = 45f;
+        [Tooltip("Semiángulo del cono al frente de la cámara donde busca blancos (°).")]
+        [Range(5f, 180f)] [SerializeField] private float conoMisil = 75f;
+        [Tooltip("Segundos que vuela un misil antes de explotar solo (s).")]
+        [Min(0.5f)] [SerializeField] private float vidaMisil = 5f;
+
         [Header("Entrada")]
         [Tooltip("Asset de entrada del jugador a pie (ControlesAPie): mapa APie, acciones HabilidadPiernas, HabilidadBrazos y HabilidadCabeza.")]
         [SerializeField] private InputActionAsset controles;
@@ -55,6 +90,20 @@ namespace MechaCyberpunk.Personaje
         public float EmpujeGolpe => empujeGolpe;
         public float FactorTiempoRecarga => factorTiempoRecarga;
         public InputActionAsset Controles => controles;
+        public float DanioLaser => danioLaser;
+        public float AlcanceLaser => alcanceLaser;
+        public float AnchoLaser => anchoLaser;
+        public float RadioLaser => radioLaser;
+        public Color ColorLaser => colorLaser;
+        public int CantidadMisiles => cantidadMisiles;
+        public float SegundosEntreMisiles => segundosEntreMisiles;
+        public float DanioMisil => danioMisil;
+        public float RadioMisil => radioMisil;
+        public float VelocidadMisil => velocidadMisil;
+        public float GiroMisil => giroMisil;
+        public float BusquedaMisil => busquedaMisil;
+        public float ConoMisil => conoMisil;
+        public float VidaMisil => vidaMisil;
 
         public TiemposHabilidad Tiempos(HabilidadProtesis habilidad)
         {
@@ -62,6 +111,8 @@ namespace MechaCyberpunk.Personaje
             {
                 case HabilidadProtesis.Piernas: return piernas;
                 case HabilidadProtesis.Brazos: return brazos;
+                case HabilidadProtesis.Laser: return laser;
+                case HabilidadProtesis.Misiles: return misiles;
                 default: return cabeza;
             }
         }
@@ -73,6 +124,8 @@ namespace MechaCyberpunk.Personaje
             {
                 case HabilidadProtesis.Piernas: return "HabilidadPiernas";
                 case HabilidadProtesis.Brazos: return "HabilidadBrazos";
+                case HabilidadProtesis.Laser: return "HabilidadLaser";
+                case HabilidadProtesis.Misiles: return "HabilidadMisiles";
                 default: return "HabilidadCabeza";
             }
         }

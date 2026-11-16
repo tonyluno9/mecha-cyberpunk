@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 752b7b56b72e2ed4189dda3e67305515, type: 3}
+  m_Name: DatosProtesisAtaque_misiles
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosProtesisAtaque
+  id: protesis_misiles
+  nombre: Hombrera de misiles
+  tipo: 6
+  valorVenta: 0
+  maximo: 1
+  oferta: {fileID: 11400000, guid: 55ebd63201d62e645871a783b9e1e146, type: 2}
+  habilidad: 4
+  modelo: {fileID: 0}

@@ -103,6 +103,30 @@ namespace MechaCyberpunk.UI.Clinica
         [SerializeField] private InputAction confirmar = new InputAction("ClinicaEnter", InputActionType.Button, "<Keyboard>/enter");
         [Tooltip("Cancela la confirmación o sale (Esc).")]
         [SerializeField] private InputAction salir = new InputAction("ClinicaEsc", InputActionType.Button, "<Keyboard>/escape");
+        [Tooltip("T-1017: abre la pestaña PRÓTESIS DE ATAQUE (lo que vende el Doc además de los implantes).")]
+        [SerializeField] private InputAction ataque = new InputAction("ClinicaAtaque", InputActionType.Button, "<Keyboard>/tab");
+        private Action alPedirAtaque;
+        private Text textoAtaque;
+
+        /// <summary>T-1017: el texto de la pestaña de prótesis de ataque ("[TAB] PRÓTESIS DE ATAQUE"), vacío si no hay.</summary>
+        public string TextoAtaque => textoAtaque != null && textoAtaque.gameObject.activeSelf ? textoAtaque.text : string.Empty;
+
+        /// <summary>T-1017: quien abre la clínica pasa aquí lo que hace Tab (abrir las prótesis de ataque); null = no se ofrecen.</summary>
+        public void OfrecerAtaque(Action alPedir, string texto)
+        {
+            alPedirAtaque = alPedir;
+            if (textoAtaque == null && lienzo != null)
+            {
+                // En el pie, a la izquierda, en la línea de la ayuda (no tapa las filas de los espacios).
+                textoAtaque = Texto(lienzo.transform, "PestanaAtaque", RolTexto.Ayuda, TextAnchor.MiddleLeft, new Vector2(0f, 0f),
+                    new Vector2(Margen, 26f), new Vector2(520f, 32f), string.Empty, TrazoH10.Amarillo);
+            }
+            if (textoAtaque != null)
+            {
+                textoAtaque.text = texto ?? string.Empty;
+                textoAtaque.gameObject.SetActive(alPedir != null && !string.IsNullOrEmpty(texto));
+            }
+        }
         [Tooltip("Arrastrar para girar el holograma (clic izquierdo).")]
         [SerializeField] private InputAction arrastrar = new InputAction("ClinicaArrastrar", InputActionType.Button, "<Mouse>/leftButton");
         [Tooltip("Movimiento del ratón al arrastrar (px).")]
@@ -296,6 +320,7 @@ namespace MechaCyberpunk.UI.Clinica
             abajo.Enable();
             confirmar.Enable();
             salir.Enable();
+            ataque.Enable();
             arrastrar.Enable();
             movimientoRaton.Enable();
             rueda.Enable();
@@ -313,6 +338,7 @@ namespace MechaCyberpunk.UI.Clinica
                 abajo.Disable();
                 confirmar.Disable();
                 salir.Disable();
+                ataque.Disable();
                 arrastrar.Disable();
                 movimientoRaton.Disable();
                 rueda.Disable();
@@ -381,6 +407,12 @@ namespace MechaCyberpunk.UI.Clinica
             ColocarMarcador();
             if (Time.frameCount == cuadroAbierta)
             {
+                return;
+            }
+            if (ataque.WasPressedThisFrame() && alPedirAtaque != null && !confirmando && !instalando)
+            {
+                Sonidos.Reproducir(config.SonidoAceptar);
+                alPedirAtaque.Invoke();
                 return;
             }
             if (salir.WasPressedThisFrame())

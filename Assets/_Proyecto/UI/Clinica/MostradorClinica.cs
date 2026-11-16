@@ -108,6 +108,52 @@ namespace MechaCyberpunk.UI.Clinica
             abierta = true;
             congela.Congelar();
             pantalla.Mostrar(Registro<ServicioImplantes>.Actual, AlInstalar, AlSalir);
+            // T-1017: con Tab, las prótesis de ataque del Doc (brazo láser, hombrera de misiles) en la pantalla de tienda.
+            MechaCyberpunk.Personaje.CatalogoProtesisAtaque catalogo = MechaCyberpunk.Personaje.CatalogoProtesisAtaque.Actual;
+            bool hay = catalogo != null && catalogo.Tienda != null && Tienda() != null;
+            pantalla.OfrecerAtaque(hay ? AbrirAtaque : (System.Action)null, TextoPestanaAtaque);
+        }
+
+        /// <summary>T-1017: el texto de la pestaña de prótesis de ataque en la clínica.</summary>
+        public const string TextoPestanaAtaque = "[TAB] PRÓTESIS DE ATAQUE";
+
+        private MechaCyberpunk.UI.Tiendas.PantallaTienda tiendaPantalla;
+
+        private MechaCyberpunk.UI.Tiendas.PantallaTienda Tienda()
+        {
+            if (tiendaPantalla == null)
+            {
+                tiendaPantalla = FindFirstObjectByType<MechaCyberpunk.UI.Tiendas.PantallaTienda>(FindObjectsInactive.Include);
+            }
+            return tiendaPantalla;
+        }
+
+        /// <summary>T-1017: cambia de la clínica a la tienda de prótesis de ataque; Esc vuelve a la clínica.</summary>
+        public void AbrirAtaque()
+        {
+            MechaCyberpunk.Personaje.CatalogoProtesisAtaque catalogo = MechaCyberpunk.Personaje.CatalogoProtesisAtaque.Actual;
+            MechaCyberpunk.UI.Tiendas.PantallaTienda tienda = Tienda();
+            if (catalogo == null || catalogo.Tienda == null || tienda == null)
+            {
+                return;
+            }
+            pantalla.Ocultar();
+            var objetos = new System.Collections.Generic.List<MechaCyberpunk.Economia.DatosObjeto>();
+            foreach (MechaCyberpunk.Personaje.DatosProtesisAtaque p in catalogo.Protesis)
+            {
+                if (p != null)
+                {
+                    objetos.Add(p);
+                }
+            }
+            tienda.Mostrar(new MechaCyberpunk.Economia.TiendaBasica(catalogo.Tienda), objetos, () =>
+            {
+                tienda.Ocultar();
+                if (abierta)
+                {
+                    Abrir();
+                }
+            });
         }
 
         private void AlSalir()
