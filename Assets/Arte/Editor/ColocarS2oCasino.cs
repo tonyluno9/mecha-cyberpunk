@@ -128,7 +128,8 @@ namespace MechaCyberpunk.Arte.Editor
                 for (int k = -1; k <= 1; k++)
                 {
                     Vector3 silla = c + new Vector3(-1.45f + Mathf.Abs(k) * 0.35f, 0f, k * 0.85f);
-                    ColocarS2Interiores.Modelo(raiz, I + "I12", silla, 90f - k * 25f + GiroSilla, Piso);
+                    GameObject sillaI12 = ColocarS2Interiores.Modelo(raiz, I + "I12", silla, 0f, Piso);
+                    sillaI12.transform.rotation = ColocarT1105Casino.YawSilla(silla, c); // T-1105: de frente a su mesa
                 }
                 ColocarS2Interiores.Modelo(raiz, I + "I13", c, 0f, Techo, colgar: true);
             }
@@ -149,7 +150,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         /// <summary>Giros (°) de los modelos para que miren como deben (se ajustaron con las fotos de dentro).</summary>
         public static float GiroMesa = 90f;
-        public static float GiroSilla = 180f; // El modelo I12 tiene el frente en -Z: con 0 las sillas le daban la espalda a la mesa.
+        public static float GiroSilla = 180f; // Ya no se usa (T-1105): el frente de I12 es -Z y YawSilla orienta cada silla a su mesa.
         public static float GiroBarra = 0f;
 
         public static void Fotos(string cuando)
