@@ -29,6 +29,19 @@ namespace MechaCyberpunk.IA.APie
         public PandillaAPie BandoA => bandoA;
         public PandillaAPie BandoB => bandoB;
         public IReadOnlyList<PandilleroAPie> Miembros => miembros;
+        private float ultimoGrito = -100f;
+
+        /// <summary>Un miembro pide su turno para gritar: true (y queda anotado) solo si pasó <see cref="ReglaRina.SeparacionGritos"/> desde el último grito de la riña.</summary>
+        public bool PedirGrito()
+        {
+            if (!ReglaRina.PuedeGritar(Time.time, ultimoGrito))
+            {
+                return false;
+            }
+            ultimoGrito = Time.time;
+            return true;
+        }
+
         /// <summary>Cuántas veces se rearmó la riña.</summary>
         public int Rearmes { get; private set; }
 

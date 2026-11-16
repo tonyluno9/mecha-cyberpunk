@@ -35,7 +35,7 @@ namespace MechaCyberpunk.IA.APie
         public void Iniciar(RinaPandillas dueno)
         {
             rina = dueno;
-            proximoGrito = Time.time + Random.Range(2f, 5f);
+            proximoGrito = ReglaRina.PrimerGrito(Time.time, Random.value);
         }
 
         /// <summary>La riña termina o el jugador se mete: este pandillero vuelve a su IA normal.</summary>
@@ -52,7 +52,7 @@ namespace MechaCyberpunk.IA.APie
             rival = null;
             fase = Fase.Libre;
             restante = 0f;
-            proximoGrito = Time.time + Random.Range(2f, 5f);
+            proximoGrito = ReglaRina.PrimerGrito(Time.time, Random.value);
         }
 
         public void Actualizar(PandilleroAPie p, float dt)
@@ -64,8 +64,16 @@ namespace MechaCyberpunk.IA.APie
             }
             if (Time.time >= proximoGrito)
             {
-                proximoGrito = Time.time + Random.Range(5f, 10f);
-                p.Gritar(ReglaRina.Grito(p.Pandilla, Random.value));
+                // Si otro de la riña gritó hace menos de 1.5 s, espera un poco (no se enciman).
+                if (rina.PedirGrito())
+                {
+                    p.Gritar(ReglaRina.Grito(p.Pandilla, Random.value));
+                    proximoGrito = ReglaRina.SiguienteGrito(Time.time, Random.value);
+                }
+                else
+                {
+                    proximoGrito = Time.time + ReglaRina.SeparacionGritos * (0.5f + Random.value);
+                }
             }
             if (fase == Fase.Libre && (rival == null || !ReglaRina.RivalValido(Describir(rival), p.Pandilla) || Time.time >= proximaBusqueda))
             {

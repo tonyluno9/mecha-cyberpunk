@@ -89,5 +89,23 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual("¡Lárgate, víbora!", ReglaRina.Grito(IdPandilla.Calaveras, 0f));
             Assert.IsNotEmpty(ReglaRina.Grito(IdPandilla.Calaveras, 1f), "el azar en 1 no se sale de la lista");
         }
+    
+        [Test]
+        public void Gritos_UnoCadaUnoYMedioComoMinimoEnLaMismaRina()
+        {
+            Assert.IsFalse(ReglaRina.PuedeGritar(10f, 9f), "1 s después todavía no");
+            Assert.IsTrue(ReglaRina.PuedeGritar(10.5f, 9f), "1.5 s después sí");
+            Assert.IsTrue(ReglaRina.PuedeGritar(0f, -100f), "el primero de la riña siempre puede");
+        }
+
+        [Test]
+        public void Gritos_ElPrimeroYElSiguienteSeDesfasanConElAzar()
+        {
+            Assert.AreEqual(1f, ReglaRina.PrimerGrito(0f, 0f), 0.0001f);
+            Assert.AreEqual(8f, ReglaRina.PrimerGrito(0f, 1f), 0.0001f);
+            Assert.AreNotEqual(ReglaRina.PrimerGrito(0f, 0.2f), ReglaRina.PrimerGrito(0f, 0.7f), "dos miembros con azar distinto no gritan a la vez");
+            Assert.AreEqual(5f, ReglaRina.SiguienteGrito(0f, 0f), 0.0001f);
+            Assert.AreEqual(12f, ReglaRina.SiguienteGrito(0f, 1f), 0.0001f);
+        }
     }
 }
