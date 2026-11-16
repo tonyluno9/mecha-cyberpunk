@@ -1905,8 +1905,16 @@ namespace MechaCyberpunk.Tests.Demo
                 // La clínica abre cuando el Doc termina de hablar (varios segundos): se espera hasta 15 s a que abra y se cierra.
                 float finClinica = Time.realtimeSinceStartup + 15f;
                 bool cerrada = false;
+                MechaCyberpunk.UI.Clinica.MostradorClinica mostradorDoc = Object.FindFirstObjectByType<MechaCyberpunk.UI.Clinica.MostradorClinica>(FindObjectsInactive.Include);
+                float proximoLog = 0f;
                 while (Time.realtimeSinceStartup < finClinica && !cerrada)
                 {
+                    if (Time.realtimeSinceStartup >= proximoLog)
+                    {
+                        proximoLog = Time.realtimeSinceStartup + 1f;
+                        Debug.Log("[T-1113] clínica visible " + (clinica != null && clinica.Visible) + " mostrador abierta " + (mostradorDoc != null && mostradorDoc.PantallaAbierta) + " operando "
+                            + (mostradorDoc != null && mostradorDoc.Operando) + " control " + Controlador.ControlActivo + " paso " + director.Paso + " pausa " + Pausa.Activa);
+                    }
                     if ((clinica != null && clinica.Visible) || !Controlador.ControlActivo)
                     {
                         yield return Pulsar(teclado.escapeKey, 10);
@@ -1917,6 +1925,8 @@ namespace MechaCyberpunk.Tests.Demo
                 }
                 // Lejos del Doc antes de seguir: si el bot se traba junto a él y pulsa E, la clínica volvería a abrir.
                 yield return Segundos(0.5f);
+                Debug.Log("[T-1113] fin de la espera: cerrada " + cerrada + " clínica visible " + (clinica != null && clinica.Visible) + " mostrador abierta " + (mostradorDoc != null && mostradorDoc.PantallaAbierta)
+                    + " control " + Controlador.ControlActivo + " paso " + director.Paso);
                 if (clinica != null && clinica.Visible)
                 {
                     Bug("La clínica del Doc no se cierra con Esc", "sigue abierta tras varios Esc", "A", true);
