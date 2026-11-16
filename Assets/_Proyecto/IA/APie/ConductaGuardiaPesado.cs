@@ -87,6 +87,20 @@ namespace MechaCyberpunk.IA.APie
             provocado = true;
         }
 
+        /// <summary>Lo deja como al inicio: vida y escudo llenos, en su puesto y de guardia (lo apagado se prende).</summary>
+        public void Reiniciar()
+        {
+            provocado = false;
+            regla?.Reiniciar();
+            escudo?.Reiniciar();
+            gameObject.SetActive(true);
+            if (pandillero != null)
+            {
+                pandillero.SetCastigable(false);
+                pandillero.Reaparecer();
+            }
+        }
+
         /// <summary>Deja de pelear y vuelve a su puesto.</summary>
         public void VolverAlPuesto()
         {
