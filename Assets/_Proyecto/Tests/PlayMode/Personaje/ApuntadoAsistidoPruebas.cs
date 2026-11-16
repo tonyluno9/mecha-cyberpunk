@@ -132,9 +132,9 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             yield return Calentar();
             Preparar(NivelApuntadoAsistido.Apagado, new Vector3(2.5f, 1f, 18f));
-            yield return Esperar(0.1f);
-            float antes = AnguloAlEnemigo();
             Press(raton.rightButton);
+            yield return Esperar(0.8f); // T-1001: al apuntar la cámara pasa al hombro; se mide ya colocada
+            float antes = AnguloAlEnemigo();
             yield return Esperar(1f);
             Assert.AreEqual(antes, AnguloAlEnemigo(), 0.5f, "Con el asistido apagado la cámara no se mueve sola");
             Release(raton.rightButton);
@@ -146,9 +146,9 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             Preparar(NivelApuntadoAsistido.Fuerte, new Vector3(2.5f, 1f, 18f));
             Caja(new Vector3(1.5f, 1.5f, 10f), new Vector3(8f, 3f, 0.5f));
-            yield return Esperar(0.1f);
-            float antes = AnguloAlEnemigo();
             Press(raton.rightButton);
+            yield return Esperar(0.8f); // T-1001: al apuntar la cámara pasa al hombro; se mide ya colocada
+            float antes = AnguloAlEnemigo();
             yield return Esperar(1f);
             Assert.IsFalse(jugador.GetComponent<ApuntadoAsistido>().HayBlanco);
             Assert.AreEqual(antes, AnguloAlEnemigo(), 0.5f);
