@@ -23,6 +23,7 @@ namespace MechaCyberpunk.Tests.Mundo
                 // T-885 (playtest 7-nov): los N02 atravesaban de un edificio al otro sin sentido; se quitaron hasta que llegue la pasarela PS01.
                 Transform[] puentes = activos.Where(t => t.name == "N02_T505").ToArray();
                 Assert.AreEqual(0, puentes.Length, "sin los puentes N02 que atravesaban edificios");
+                Assert.IsFalse(activos.Any(t => t.name == "PS01_Pasarela"), "T-1104: sin las pasarelas PS01");
                 Assert.IsFalse(activos.Any(t => t.name == ColocarS2tLimpieza.RaizPuentes), "sin la escalera de cubos de T-809");
                 foreach (Transform p in puentes)
                 {
