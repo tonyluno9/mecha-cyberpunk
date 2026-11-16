@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
         private const string RutaModeloHumano = "Assets/Arte/Personajes/MunecoHumano/ModeloHumano.prefab";
         public const string RaizT406 = "GTA_T406";
         public const string RaizT407 = "GTA_T407";
-        public const float HoraInicial = 19f;
+        public const float HoraInicial = 10f;
         public const float DistanciaMuneco1 = 8f;
         public const float DistanciaMuneco2 = 12f;
 
@@ -513,7 +513,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
                 Debug.LogWarning("[Progresion] CreadorCiudadPandillas: falta " + IdAparicion + " o el prefab del muñeco.");
             }
 
-            // 4. Hora inicial 19:00 con una copia de la config del reloj, para no tocar el asset de Alan.
+            // 4. Hora inicial 10:00 (de día, T-1002) con una copia de la config del reloj, para no tocar el asset de Alan.
             PonerHoraInicial();
             Debug.Log("[Progresion] CreadorCiudadPandillas.T400: " + RaizT400 + " lista, mecha apagado, hora " + HoraInicial + ".");
         }
