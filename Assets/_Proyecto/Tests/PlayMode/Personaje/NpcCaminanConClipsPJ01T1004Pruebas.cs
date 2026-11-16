@@ -57,7 +57,7 @@ namespace MechaCyberpunk.Tests.Personaje
             a.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             float fin = Time.time + LimiteSegundos;
             while (Time.time < fin && !ClipsQueSuenan(a).Contains(ClipCaminar)) { yield return null; }
-            CollectionAssert.Contains(ClipsQueSuenan(a), ClipCaminar, "Suena el clip de caminar de PJ01 en " + ruta);
+            CollectionAssert.Contains(ClipsQueSuenan(a), ClipCaminar, "Suena el clip de caminar de PJ01 en " + ruta + " (controller " + (a.runtimeAnimatorController != null ? a.runtimeAnimatorController.name : "null") + ", avatar " + (a.avatar != null ? a.avatar.name : "null") + ", activo " + a.isActiveAndEnabled + ")");
             foreach (string clip in ClipsQueSuenan(a)) { StringAssert.StartsWith("PJ01_", clip, "Solo clips de PJ01 en " + ruta); }
             float hasta = Time.time + SegundosParaEstabilizar;
             while (Time.time < hasta) { yield return null; }
