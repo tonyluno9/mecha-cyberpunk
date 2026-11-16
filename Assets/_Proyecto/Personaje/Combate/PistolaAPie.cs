@@ -59,13 +59,14 @@ namespace MechaCyberpunk.Personaje.Combate
         private bool desdeCarro;
         private Transform raizCarro;
         private const float AlturaBocaCarro = 0.4f;
-        private const int CantidadArmas = 5;
+        private static readonly int CantidadArmas = Enum.GetValues(typeof(ArmaAPie)).Length;
         private readonly CargadorPistola[] cargadores = new CargadorPistola[CantidadArmas];
         private readonly DatosArma[] datosArmas = new DatosArma[CantidadArmas];
         private readonly Transform[] visuales = new Transform[CantidadArmas];
         private readonly Light[] luces = new Light[CantidadArmas];
         private readonly Vector3[] reposos = new Vector3[CantidadArmas];
         private DatosArma pistolaBase;
+        private ArmasEspecialesAPie especiales;
         private ArsenalJugador arsenal;
         private ReservaBalas reserva;
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
@@ -139,6 +140,18 @@ namespace MechaCyberpunk.Personaje.Combate
             luces[(int)ArmaAPie.Escopeta] = luzBocaEscopeta;
             luces[(int)ArmaAPie.Fusil] = luzBocaFusil;
             luces[(int)ArmaAPie.Sniper] = luzBocaSniper;
+            // T-1013: las armas nuevas tienen su visual en ArmasAPie y su luz de boca dentro del visual.
+            for (int i = (int)ArmasAPie.PrimeraNueva; i < CantidadArmas; i++)
+            {
+                GameObject v = armas.Visual((ArmaAPie)i);
+                visuales[i] = v != null ? v.transform : null;
+                luces[i] = v != null ? v.GetComponentInChildren<Light>(true) : null;
+            }
+            especiales = GetComponent<ArmasEspecialesAPie>();
+            if (especiales == null)
+            {
+                especiales = gameObject.AddComponent<ArmasEspecialesAPie>();
+            }
             for (int i = 1; i < CantidadArmas; i++)
             {
                 if (visuales[i] != null)
@@ -276,6 +289,13 @@ namespace MechaCyberpunk.Personaje.Combate
                     }
                 }
                 DatosArma d = datosArmas[(int)activa];
+                // T-1013: lanzagranadas, granada y rifle de plasma los maneja ArmasEspecialesAPie (proyectiles, arco y rayo).
+                if (!enCarro && d.TipoDisparo != TipoDisparoArma.Bala)
+                {
+                    especiales.Actualizar(activa, actual, d, !controlador.EntradaBloqueada && atacar.action.IsPressed());
+                    ActualizarVisual();
+                    return;
+                }
                 bool pidio = !controlador.EntradaBloqueada && (d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame());
                 if (!pidio && disparabaAutomatica && activa == ArmaAPie.Fusil)
                 {
@@ -302,7 +322,30 @@ namespace MechaCyberpunk.Personaje.Combate
                     Sonidos.Reproducir("ARM_VACIO");
                 }
             }
+            if (especiales != null && (!puede || datosArmas[Indice(activa)] == null || datosArmas[Indice(activa)].TipoDisparo == TipoDisparoArma.Bala))
+            {
+                especiales.Soltar();
+            }
             ActualizarVisual();
+        }
+
+        /// <summary>T-1013: la boca del arma (su luz o su visual), o null si no hay.</summary>
+        public Transform BocaDe(ArmaAPie arma)
+        {
+            int i = Indice(arma);
+            return luces[i] != null ? luces[i].transform : visuales[i];
+        }
+
+        /// <summary>T-1013: avisa del disparo de un arma especial (fogonazo, retroceso, ruido, calor y Disparo) como los tiros de bala.</summary>
+        public void AvisarDisparoEspecial(ArmaAPie arma, Vector3 boca)
+        {
+            EventosRuido.PublicarDisparo(boca);
+            SumarCalor();
+            inicioRetroceso = Time.time;
+            armaRetroceso = arma;
+            finLuz = Time.time + duracionLuz;
+            Fogonazo?.Invoke(arma, boca);
+            Disparo?.Invoke();
         }
 
         // T-445: ¿el jugador va manejando? Entonces la raíz del carro no recibe sus balas.
@@ -322,7 +365,7 @@ namespace MechaCyberpunk.Personaje.Combate
         // Desde el carro solo se dispara pistola o fusil: la que lleva en la mano si es una de esas; si no, la pistola.
         private ArmaAPie ArmaDeCarro(ArmaAPie activa)
         {
-            if (activa == ArmaAPie.Pistola || activa == ArmaAPie.Fusil)
+            if (activa == ArmaAPie.Pistola || activa == ArmaAPie.Fusil || activa == ArmaAPie.Subfusil || activa == ArmaAPie.Revolver)
             {
                 return activa;
             }
@@ -365,15 +408,32 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>T-593: el ID de sonido del disparo de cada arma (ARM_PIS/ESC/FUS/SNI).</summary>
         public static string IdDisparo(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_DISPARO" : arma == ArmaAPie.Fusil ? "ARM_FUS_DISPARO"
-                : arma == ArmaAPie.Sniper ? "ARM_SNI_DISPARO" : "ARM_PIS_DISPARO";
+            switch (arma)
+            {
+                case ArmaAPie.Escopeta: return "ARM_ESC_DISPARO";
+                case ArmaAPie.Fusil: return "ARM_FUS_DISPARO";
+                case ArmaAPie.Sniper: return "ARM_SNI_DISPARO";
+                case ArmaAPie.Subfusil: return "ARM_SUB_DISPARO";
+                case ArmaAPie.Revolver: return "ARM_SNI_DISPARO";
+                case ArmaAPie.Lanzagranadas: return "ARM_ESC_DISPARO";
+                case ArmaAPie.RiflePlasma: return "ARM_LASER_AVISO";
+                default: return "ARM_PIS_DISPARO";
+            }
         }
 
         /// <summary>T-593: el ID de sonido de la recarga de cada arma.</summary>
         public static string IdRecarga(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Escopeta ? "ARM_ESC_RECARGA_CARTUCHO" : arma == ArmaAPie.Fusil ? "ARM_FUS_RECARGA"
-                : arma == ArmaAPie.Sniper ? "ARM_SNI_RECARGA" : "ARM_PIS_RECARGA";
+            switch (arma)
+            {
+                case ArmaAPie.Escopeta: return "ARM_ESC_RECARGA_CARTUCHO";
+                case ArmaAPie.Lanzagranadas: return "ARM_ESC_RECARGA_CARTUCHO";
+                case ArmaAPie.Fusil: return "ARM_FUS_RECARGA";
+                case ArmaAPie.RiflePlasma: return "ARM_FUS_RECARGA";
+                case ArmaAPie.Sniper: return "ARM_SNI_RECARGA";
+                case ArmaAPie.Subfusil: return "ARM_SUB_RECARGA";
+                default: return "ARM_PIS_RECARGA";
+            }
         }
 
         // T-442: programa un sonido para dentro de unos segundos.
