@@ -12,16 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ad443089387bd348a0b5c26ac95b9ea, type: 3}
   m_Name: ConfigCamaraHombro_Base
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigCamaraHombro
-  lateralNormal: 0
+  lateralNormal: 0.3
   alturaNormal: 1.55
   distanciaNormal: 3.5
   fovNormal: 60
   brazoVertical: 0.15
   acercarMirandoAbajo: 0.35
-  lateralApuntando: 0
+  lateralApuntando: 0.75
   alturaApuntando: 1.55
-  distanciaApuntando: 3.5
-  fovApuntando: 40
+  distanciaApuntando: 1.5
+  fovApuntando: 45
+  rapidezCambioHombro: 6
+  margenHombro: 0.25
   fovSniper: 15
   duracionZoom: 0.15
   sensibilidadZoom: 0.35
@@ -32,3 +34,4 @@ MonoBehaviour:
   suavizado: 12
   radioColision: 0.2
   giroCuerpo: 720
+  segundosGiroAlDisparar: 0.6

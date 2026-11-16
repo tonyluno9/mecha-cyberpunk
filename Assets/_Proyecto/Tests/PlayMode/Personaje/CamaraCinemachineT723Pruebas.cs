@@ -58,7 +58,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Debug.Log("[T723] local " + jugador.transform.InverseTransformPoint(camara.transform.position) + " fov " + camara.fieldOfView);
             Debug.Log("[T723] fraccion " + fraccion.ToString("F3") + " centroX " + centroX.ToString("F3") + " pies " + pies.ToString("F3") + " cabeza " + cabeza.ToString("F3"));
             Assert.That(fraccion, Is.InRange(0.36f, 0.5f), "El personaje ocupa ~40 % del alto de la pantalla (CAM01)");
-            Assert.AreEqual(0.5f, centroX, 0.05f, "Centrado en horizontal");
+            Assert.That(centroX, Is.InRange(0.4f, 0.5f), "T-1001: casi centrado, un poco a la izquierda (CAM04)");
             Assert.Less(pies, 0.2f, "Los pies quedan en la parte de abajo");
             Assert.That(cabeza, Is.InRange(0.4f, 0.65f), "La cabeza queda cerca del centro: se ve la calle por delante");
             Vector3 local = jugador.transform.InverseTransformPoint(camara.transform.position);
@@ -98,9 +98,9 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.0f);
             Assert.Less(camara.fieldOfView, fovQuieto - 5f, "Apuntando sí hace zoom");
             Vector3 apuntando = jugador.transform.InverseTransformPoint(camara.transform.position);
-            Assert.AreEqual(normal.x, apuntando.x, 0.05f, "T-682: apuntando queda centrada");
-            Assert.AreEqual(normal.z, apuntando.z, 0.05f, "T-682: misma distancia al apuntar");
-            Assert.AreEqual(0.5f, camara.WorldToViewportPoint(jugador.transform.position + Vector3.up * 1.2f).x, 0.03f);
+            Assert.Greater(apuntando.x, normal.x + 0.3f, "T-1001: apuntando va sobre el hombro derecho");
+            Assert.Greater(apuntando.z, normal.z + 1f, "T-1001: apuntando se acerca");
+            Assert.Less(camara.WorldToViewportPoint(jugador.transform.position + Vector3.up * 1.2f).x, 0.4f, "T-1001: el personaje queda a la izquierda");
             CapturaS1.FotoCamara("s1d-T-723-apuntando", camara);
             Release(raton.rightButton);
             yield return Esperar(1.0f);
@@ -137,7 +137,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.Less(p.y, 2.4f, "Bajo el techo: " + p);
             Medir(jugador, camara, out float fraccion, out float centroX, out _, out _);
             Assert.Greater(fraccion, 0.3f, "En el cuarto se ve al personaje, no solo el techo");
-            Assert.AreEqual(0.5f, centroX, 0.1f);
+            Assert.AreEqual(0.5f, centroX, 0.15f);
             CapturaS1.FotoCamara("s1d-T-723-cuarto-chico", camara);
         }
 
@@ -157,7 +157,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.3f);
             Assert.IsTrue(Hombro.Brain.enabled);
             Vector3 local = jugador.transform.InverseTransformPoint(Camara.transform.position);
-            Assert.AreEqual(0f, local.x, 0.05f, "Al volver el control la cámara vuelve detrás del jugador");
+            Assert.That(local.x, Is.InRange(0.15f, 0.45f), "Al volver el control la cámara vuelve detrás del jugador (CAM04)");
         }
     }
 }

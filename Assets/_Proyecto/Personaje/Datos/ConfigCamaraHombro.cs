@@ -28,6 +28,12 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float distanciaApuntando = 1.6f;
         [Range(20f, 120f)] [SerializeField] private float fovApuntando = 48f;
 
+        [Header("Cambio de hombro (T-1001)")]
+        [Tooltip("Rapidez con la que la cámara pasa de un hombro al otro (1/s).")]
+        [Min(0.1f)] [SerializeField] private float rapidezCambioHombro = 6f;
+        [Tooltip("Margen libre que pide el hombro derecho, además del desplazamiento lateral, para quedarse en él (m).")]
+        [Min(0f)] [SerializeField] private float margenHombro = 0.25f;
+
         [Header("Zoom del sniper (T-416)")]
         [Tooltip("Campo de visión con el zoom del sniper (°).")]
         [Range(5f, 60f)] [SerializeField] private float fovSniper = 15f;
@@ -64,6 +70,8 @@ namespace MechaCyberpunk.Personaje
         public float AlturaApuntando => alturaApuntando;
         public float DistanciaApuntando => distanciaApuntando;
         public float FovApuntando => fovApuntando;
+        public float RapidezCambioHombro => rapidezCambioHombro;
+        public float MargenHombro => margenHombro;
         public float FovSniper => fovSniper;
         public float DuracionZoom => duracionZoom;
         public float SensibilidadZoom => sensibilidadZoom;
