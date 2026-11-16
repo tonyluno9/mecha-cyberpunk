@@ -107,8 +107,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.tabKey);
             yield return null;
             yield return null;
-            float angulo = MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.AnguloDeCasilla(casilla) * Mathf.Deg2Rad;
-            Set(raton.delta, new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
+            // T-1010: la rueda solo muestra lo que llevas; el ángulo de la casilla sale de la rueda abierta (NaN = no está: no se resalta nada).
+            float angulo = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Actual.AnguloDe(casilla) * Mathf.Deg2Rad;
+            Set(raton.delta, float.IsNaN(angulo) ? Vector2.zero : new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
             yield return null;
             yield return null;
             Release(teclado.tabKey);
