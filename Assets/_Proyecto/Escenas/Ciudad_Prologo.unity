@@ -104664,6 +104664,88 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8544912821853922169, guid: 2b93a52d863133b46b567753f71def11, type: 3}
   m_PrefabInstance: {fileID: 160091128}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &160210175
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1858765421}
+    m_Modifications:
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.5999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 160210178}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+--- !u!4 &160210176 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 160210175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &160210177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 160210175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &160210178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160210177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &160236515
 GameObject:
   m_ObjectHideFlags: 0
@@ -146298,6 +146380,88 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2776253032022714459, guid: 815e8d2d1f924d94080476cf29682e75, type: 3}
   m_PrefabInstance: {fileID: 224722341}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &224904219
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1858765421}
+    m_Modifications:
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.5999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 224904222}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+--- !u!4 &224904220 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 224904219}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &224904221 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 224904219}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &224904222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224904221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &225191581
 GameObject:
   m_ObjectHideFlags: 0
@@ -195626,6 +195790,88 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5413609254299694401, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
   m_PrefabInstance: {fileID: 256490133}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &256522064
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2145836218}
+    m_Modifications:
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 256522067}
+  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+--- !u!4 &256522065 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 256522064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &256522066 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 256522064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &256522067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256522066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &256673147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -212271,6 +212517,88 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3098237225951528160, guid: 7eaa3506ca53538428cdf0ed1a4db54a, type: 3}
   m_PrefabInstance: {fileID: 285781315}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &285782437
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1645506054}
+    m_Modifications:
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.5999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 285782440}
+  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+--- !u!4 &285782438 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 285782437}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &285782439 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 285782437}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &285782440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285782439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &285898601
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -237589,6 +237917,100 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1001 &320342354
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1874309819}
+    m_Modifications:
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.6199996
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6771123
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7358797
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5693905557138637805, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: datos
+      value: 
+      objectReference: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 320342357}
+  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+--- !u!4 &320342355 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_PrefabInstance: {fileID: 320342354}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &320342356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_PrefabInstance: {fileID: 320342354}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &320342357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320342356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f630e102248a05348b2783799e9bdf0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
+  materiales:
+  - {fileID: 2100000, guid: 2326a2e99425f8143a05e09c506804dd, type: 2}
+  indice: 0
+  materialFranja: {fileID: 0}
+  grosorFranja: 0.14
+  colorLuz: {r: 0, g: 0, b: 0, a: 0}
+  intensidadLuz: 2.5
+  alcanceLuz: 5
 --- !u!1001 &320458723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -388771,55 +389193,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 553287780}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &553304212
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 553304213}
-  - component: {fileID: 553304214}
-  m_Layer: 0
-  m_Name: Bando_Viboras
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &553304213
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553304212}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1521003727}
-  - {fileID: 1817021837}
-  - {fileID: 1305629941}
-  m_Father: {fileID: 1528475958}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &553304214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553304212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
-  datos: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
-  idPandilla: 3
 --- !u!1 &553402318
 GameObject:
   m_ObjectHideFlags: 0
@@ -418980,6 +419353,39 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8443494197628751984, guid: b5ef7fd54adb81f469432c7c11ba735e, type: 3}
   m_PrefabInstance: {fileID: 586912950}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &586999939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 586999940}
+  m_Layer: 0
+  m_Name: T1107_Rinas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &586999940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586999939}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 727610859}
+  - {fileID: 725077882}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &587069931
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -506462,88 +506868,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 325457062599238838, guid: 201740f25f396054783b1fd84ef82e37, type: 3}
   m_PrefabInstance: {fileID: 720490254}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &720649144
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 885531833}
-    m_Modifications:
-    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 720649147}
-  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
---- !u!4 &720649145 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 720649144}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &720649146 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 720649144}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &720649147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 720649146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &720800362
 GameObject:
   m_ObjectHideFlags: 0
@@ -510207,6 +510531,54 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 724893089}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &725077881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 725077882}
+  - component: {fileID: 725077883}
+  m_Layer: 0
+  m_Name: Rina_NeonAlto
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &725077882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725077881}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 99, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2145836218}
+  - {fileID: 2106469252}
+  m_Father: {fileID: 586999940}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &725077883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725077881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58253431c901fc541a23123b50c5733b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.RinaPandillas
+  bandoA: {fileID: 2145836219}
+  bandoB: {fileID: 2106469253}
 --- !u!1 &725091448
 GameObject:
   m_ObjectHideFlags: 0
@@ -511520,6 +511892,54 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 727547665}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &727610858
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 727610859}
+  - component: {fileID: 727610860}
+  m_Layer: 0
+  m_Name: Rina_Frontera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &727610859
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727610858}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 50, y: 0, z: 4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1645506054}
+  - {fileID: 1858765421}
+  m_Father: {fileID: 586999940}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &727610860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727610858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58253431c901fc541a23123b50c5733b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.RinaPandillas
+  bandoA: {fileID: 1645506055}
+  bandoB: {fileID: 1858765422}
 --- !u!1 &727705226
 GameObject:
   m_ObjectHideFlags: 0
@@ -515720,54 +516140,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 733529584}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &733539039
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 733539040}
-  - component: {fileID: 733539041}
-  m_Layer: 0
-  m_Name: Rina_NeonAlto
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &733539040
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 733539039}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 128, y: 0.22, z: -44}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 879361601}
-  - {fileID: 885531833}
-  m_Father: {fileID: 1801627861}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &733539041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 733539039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58253431c901fc541a23123b50c5733b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.RinaPandillas
-  bandoA: {fileID: 879361602}
-  bandoB: {fileID: 885531834}
 --- !u!1001 &733829101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -606246,55 +606618,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6103641859927359379, guid: 20d3459c35022b84aaaa91e4302a8a8b, type: 3}
   m_PrefabInstance: {fileID: 878760037}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &879361600
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 879361601}
-  - component: {fileID: 879361602}
-  m_Layer: 0
-  m_Name: Bando_Viboras
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &879361601
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 879361600}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2140031486}
-  - {fileID: 2005821270}
-  - {fileID: 2091694724}
-  m_Father: {fileID: 733539040}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &879361602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 879361600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
-  datos: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
-  idPandilla: 3
 --- !u!1 &879552205
 GameObject:
   m_ObjectHideFlags: 0
@@ -609369,55 +609692,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &885531832
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 885531833}
-  - component: {fileID: 885531834}
-  m_Layer: 0
-  m_Name: Bando_Calaveras
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &885531833
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885531832}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2113659676}
-  - {fileID: 1905205490}
-  - {fileID: 720649145}
-  m_Father: {fileID: 733539040}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &885531834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885531832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
-  datos: {fileID: 11400000, guid: 00951fa1ae965af4694d6eecea1887c7, type: 2}
-  idPandilla: 2
 --- !u!1 &885534744
 GameObject:
   m_ObjectHideFlags: 0
@@ -653336,6 +653610,88 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6100310372397912579, guid: dd4467618b9fa0e4bb1325c463bdc004, type: 3}
   m_PrefabInstance: {fileID: 952436297}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &952576378
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2106469252}
+    m_Modifications:
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 952576381}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+--- !u!4 &952576379 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 952576378}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &952576380 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 952576378}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &952576381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 952576380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &952808462
 GameObject:
   m_ObjectHideFlags: 0
@@ -696347,6 +696703,88 @@ ReflectionProbe:
   m_UseOcclusionCulling: 1
   m_Importance: 2
   m_CustomBakedTexture: {fileID: 8900000, guid: c3e2a4ad1a0bf02488a8a6e825b3c8ac, type: 3}
+--- !u!1001 &1027363365
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1645506054}
+    m_Modifications:
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.5999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1027363368}
+  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+--- !u!4 &1027363366 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1027363365}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1027363367 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1027363365}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1027363368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027363367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &1027408957
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -728591,88 +729029,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3098237225951528160, guid: 7eaa3506ca53538428cdf0ed1a4db54a, type: 3}
   m_PrefabInstance: {fileID: 1083907358}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1084107963
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1440924533}
-    m_Modifications:
-    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1084107966}
-  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
---- !u!4 &1084107964 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1084107963}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1084107965 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1084107963}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1084107966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1084107965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &1084242948
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -763389,88 +763745,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1143813504}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &1143885732
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1440924533}
-    m_Modifications:
-    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1143885735}
-  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
---- !u!4 &1143885733 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1143885732}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1143885734 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1143885732}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1143885735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1143885734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &1144349383
 GameObject:
   m_ObjectHideFlags: 0
@@ -858888,6 +859162,100 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296968842}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1296971069
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1874309819}
+    m_Modifications:
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.2000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.7999983
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.68208474
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7312732
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5693905557138637805, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: datos
+      value: 
+      objectReference: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1296971072}
+  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+--- !u!4 &1296971070 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_PrefabInstance: {fileID: 1296971069}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1296971071 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_PrefabInstance: {fileID: 1296971069}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1296971072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296971071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f630e102248a05348b2783799e9bdf0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
+  materiales:
+  - {fileID: 2100000, guid: 2326a2e99425f8143a05e09c506804dd, type: 2}
+  indice: 0
+  materialFranja: {fileID: 0}
+  grosorFranja: 0.14
+  colorLuz: {r: 0, g: 0, b: 0, a: 0}
+  intensidadLuz: 2.5
+  alcanceLuz: 5
 --- !u!1 &1297022544
 GameObject:
   m_ObjectHideFlags: 0
@@ -863354,88 +863722,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5645268913461338921, guid: 4995ddc520eabf64fbb5f8262558229f, type: 3}
   m_PrefabInstance: {fileID: 1305490793}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1305629940
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 553304213}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1305629943}
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &1305629941 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1305629940}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1305629942 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1305629940}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1305629943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1305629942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &1305755084
 GameObject:
   m_ObjectHideFlags: 0
@@ -874766,68 +875052,6 @@ Transform:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1325962795}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1326133165
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1874309819}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.7999992
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6721199
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7404423
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &1326133166 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1326133165}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1326185380
 PrefabInstance:
@@ -892653,6 +892877,88 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354227265}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1354390041
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1645506054}
+    m_Modifications:
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1354390044}
+  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+--- !u!4 &1354390042 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1354390041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1354390043 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1354390041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1354390044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354390043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &1354422345
 GameObject:
   m_ObjectHideFlags: 0
@@ -924794,6 +925100,88 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8978084203577214399, guid: 45fc5358c9a6cd84286b58e7847d6d97, type: 3}
   m_PrefabInstance: {fileID: 1410054009}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1410112766
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2145836218}
+    m_Modifications:
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1410112769}
+  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+--- !u!4 &1410112767 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1410112766}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1410112768 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1410112766}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1410112769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410112768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &1410149681
 GameObject:
   m_ObjectHideFlags: 0
@@ -934468,6 +934856,88 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425970509}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1426187229
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2145836218}
+    m_Modifications:
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1426187232}
+  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+--- !u!4 &1426187230 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1426187229}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1426187231 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
+  m_PrefabInstance: {fileID: 1426187229}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1426187232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426187231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &1426197891
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -938448,68 +938918,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1433972391}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &1434159828
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1874309819}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.6199996
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6771123
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7358797
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &1434159829 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1434159828}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1434243753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -943274,55 +943682,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1440788189}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1440924532
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1440924533}
-  - component: {fileID: 1440924534}
-  m_Layer: 0
-  m_Name: Bando_Calaveras
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1440924533
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440924532}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1084107964}
-  - {fileID: 1143885733}
-  - {fileID: 1565494829}
-  m_Father: {fileID: 1528475958}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1440924534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440924532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
-  datos: {fileID: 11400000, guid: 00951fa1ae965af4694d6eecea1887c7, type: 2}
-  idPandilla: 2
 --- !u!1 &1441079606
 GameObject:
   m_ObjectHideFlags: 0
@@ -957382,6 +957741,88 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1461841942}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1461897769
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1858765421}
+    m_Modifications:
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1461897772}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+--- !u!4 &1461897770 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 1461897769}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1461897771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 1461897769}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1461897772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461897771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &1462136135
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -993592,88 +994033,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 388107083429153459, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
   m_PrefabInstance: {fileID: 1520948136}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1521003726
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 553304213}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1521003729}
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &1521003727 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1521003726}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1521003728 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1521003726}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1521003729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521003728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &1521014910
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -999027,54 +999386,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3098237225951528160, guid: 7eaa3506ca53538428cdf0ed1a4db54a, type: 3}
   m_PrefabInstance: {fileID: 1528347589}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1528475957
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1528475958}
-  - component: {fileID: 1528475959}
-  m_Layer: 0
-  m_Name: Rina_Frontera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1528475958
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528475957}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 61, y: 0.22, z: -42}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 553304213}
-  - {fileID: 1440924533}
-  m_Father: {fileID: 1801627861}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1528475959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528475957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58253431c901fc541a23123b50c5733b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.RinaPandillas
-  bandoA: {fileID: 553304214}
-  bandoB: {fileID: 1440924534}
 --- !u!1001 &1528583541
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1020787,88 +1021098,6 @@ LODGroup:
     - renderer: {fileID: 1675682747}
     - renderer: {fileID: 1496612777}
   m_Enabled: 1
---- !u!1001 &1565494828
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1440924533}
-    m_Modifications:
-    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1565494831}
-  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
---- !u!4 &1565494829 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1565494828}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1565494830 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1565494828}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1565494831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565494830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &1565527893
 GameObject:
   m_ObjectHideFlags: 0
@@ -1036049,6 +1036278,100 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1590133044}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1590379187
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1874309819}
+    m_Modifications:
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.7999992
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6721199
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7404423
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621516485986720305, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5693905557138637805, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      propertyPath: datos
+      value: 
+      objectReference: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1590379190}
+  m_SourcePrefab: {fileID: 100100000, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+--- !u!4 &1590379188 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1720747859600089161, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_PrefabInstance: {fileID: 1590379187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1590379189 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 717102959254564787, guid: 2f8e4c53b773824489920d093dcbf01e, type: 3}
+  m_PrefabInstance: {fileID: 1590379187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1590379190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590379189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f630e102248a05348b2783799e9bdf0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VarianteVisual
+  materiales:
+  - {fileID: 2100000, guid: 2326a2e99425f8143a05e09c506804dd, type: 2}
+  indice: 0
+  materialFranja: {fileID: 0}
+  grosorFranja: 0.14
+  colorLuz: {r: 0, g: 0, b: 0, a: 0}
+  intensidadLuz: 2.5
+  alcanceLuz: 5
 --- !u!1001 &1590485009
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1081773,6 +1082096,55 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1645503124}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1645506053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1645506054}
+  - component: {fileID: 1645506055}
+  m_Layer: 0
+  m_Name: Bando_Viboras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1645506054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645506053}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 285782438}
+  - {fileID: 1354390042}
+  - {fileID: 1027363366}
+  m_Father: {fileID: 727610859}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1645506055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645506053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
+  datos: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
+  idPandilla: 3
 --- !u!1 &1645566931
 GameObject:
   m_ObjectHideFlags: 0
@@ -1082573,6 +1082945,88 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1646731526}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1646788423
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2106469252}
+    m_Modifications:
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1646788426}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+--- !u!4 &1646788424 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 1646788423}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1646788425 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 1646788423}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1646788426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646788425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &1646918715
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1172486,39 +1172940,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1801614270}
   m_Mesh: {fileID: 4300000, guid: 68ffbbdcb74a00647b3ae8bb09a774fb, type: 2}
---- !u!1 &1801627860
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1801627861}
-  m_Layer: 0
-  m_Name: T1107_Rinas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1801627861
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801627860}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1528475958}
-  - {fileID: 733539040}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1802056294
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1182134,88 +1182555,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5670800764093476715, guid: 45fc5358c9a6cd84286b58e7847d6d97, type: 3}
   m_PrefabInstance: {fileID: 1816934813}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1817021836
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 553304213}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1817021839}
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &1817021837 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1817021836}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1817021838 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 1817021836}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1817021839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1817021838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &1817270169
 GameObject:
   m_ObjectHideFlags: 0
@@ -1207073,6 +1207412,55 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1858744495}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1858765420
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1858765421}
+  - component: {fileID: 1858765422}
+  m_Layer: 0
+  m_Name: Bando_Calaveras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1858765421
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858765420}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 224904220}
+  - {fileID: 1461897770}
+  - {fileID: 160210176}
+  m_Father: {fileID: 727610859}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1858765422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858765420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
+  datos: {fileID: 11400000, guid: 00951fa1ae965af4694d6eecea1887c7, type: 2}
+  idPandilla: 2
 --- !u!1001 &1858889582
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1214544,9 +1214932,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2147098250}
-  - {fileID: 1434159829}
-  - {fileID: 1326133166}
+  - {fileID: 1296971070}
+  - {fileID: 320342355}
+  - {fileID: 1590379188}
   m_Father: {fileID: 433930472}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1874309820
@@ -1233945,88 +1234333,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1001 &1905205489
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 885531833}
-    m_Modifications:
-    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1905205492}
-  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
---- !u!4 &1905205490 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1905205489}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1905205491 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 1905205489}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1905205492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905205491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &1905293156
 GameObject:
   m_ObjectHideFlags: 0
@@ -1302405,88 +1302711,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2005709046}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &2005821269
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 879361601}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2005821272}
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &2005821270 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 2005821269}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2005821271 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 2005821269}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2005821272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2005821271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &2005921153
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352920,6 +1353144,88 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1001 &2083832992
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2106469252}
+    m_Modifications:
+    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_Name
+      value: Pandillero_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2083832995}
+  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+--- !u!4 &2083832993 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 2083832992}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2083832994 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
+  m_PrefabInstance: {fileID: 2083832992}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2083832995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083832994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &2083901551
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1356585,88 +1356891,6 @@ Transform:
   - {fileID: 1105207571}
   m_Father: {fileID: 1067707553}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &2091694723
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 879361601}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2091694726}
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &2091694724 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 2091694723}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2091694725 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 2091694723}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2091694726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091694725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1001 &2092161155
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1364759,6 +1364983,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8375351504227717814, guid: 5f383dc70ed34a74185a1be427139438, type: 3}
   m_PrefabInstance: {fileID: 2106418905}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2106469251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2106469252}
+  - component: {fileID: 2106469253}
+  m_Layer: 0
+  m_Name: Bando_Calaveras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2106469252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106469251}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1646788424}
+  - {fileID: 952576379}
+  - {fileID: 2083832993}
+  m_Father: {fileID: 725077882}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2106469253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106469251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
+  datos: {fileID: 11400000, guid: 00951fa1ae965af4694d6eecea1887c7, type: 2}
+  idPandilla: 2
 --- !u!1001 &2106531503
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1367798,88 +1368071,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1655344080895085060, guid: d160d2a85e6191e428b49a300095ebfe, type: 3}
   m_PrefabInstance: {fileID: 2113401269}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2113659675
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 885531833}
-    m_Modifications:
-    - target: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2113659678}
-  m_SourcePrefab: {fileID: 100100000, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
---- !u!4 &2113659676 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5750916058192305527, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 2113659675}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2113659677 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3079878483245274361, guid: 263361120e9d9434c8a6c431fc0a861e, type: 3}
-  m_PrefabInstance: {fileID: 2113659675}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2113659678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2113659677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &2113737567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1381317,88 +1381508,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6585303758695177812, guid: d4c262dcdd6d4a84591eb33c18ed55b5, type: 3}
   m_PrefabInstance: {fileID: 2139959589}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2140031485
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 879361601}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.5999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2140031488}
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &2140031486 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 2140031485}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2140031487 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 2140031485}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2140031488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140031487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afacea015454c354e9f239da75a26186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaRina
 --- !u!1 &2140051081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1385768,6 +1385877,55 @@ Transform:
   - {fileID: 2031576497}
   m_Father: {fileID: 1444232224}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2145836217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2145836218}
+  - component: {fileID: 2145836219}
+  m_Layer: 0
+  m_Name: Bando_Viboras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2145836218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145836217}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1410112767}
+  - {fileID: 1426187230}
+  - {fileID: 256522065}
+  m_Father: {fileID: 725077882}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2145836219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145836217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fe7c7e74a8169c49972d0a8dbbb9fbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandillaAPie
+  datos: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
+  idPandilla: 3
 --- !u!1001 &2145970130
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1386717,68 +1386875,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 388107083429153459, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
   m_PrefabInstance: {fileID: 2146884413}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &2147098249
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1874309819}
-    m_Modifications:
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3.2000005
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.7999983
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.68208474
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7312732
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4628721241918675691, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-      propertyPath: m_Name
-      value: Pandillero_1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
---- !u!4 &2147098250 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 807783368355466972, guid: d5b03a3b68faaa44c8c7e24aa29eec6a, type: 3}
-  m_PrefabInstance: {fileID: 2147098249}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2147170841
 PrefabInstance:
@@ -1401359,4 +1401455,4 @@ SceneRoots:
   - {fileID: 830031661}
   - {fileID: 1612120022}
   - {fileID: 1730142519}
-  - {fileID: 1801627861}
+  - {fileID: 586999940}

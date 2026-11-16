@@ -11,8 +11,8 @@ namespace MechaCyberpunk.Arte.Editor
 {
     /// <summary>
     /// T-1107: crea el prefab PandilleroArmado_Snakes (visual E10) y coloca dos riñas SNAKES contra SKULLS en la ciudad: una en la frontera de Neón Alto
-    /// con el tianguis y otra dentro de Neón Alto. Sitios planos y despejados (sondeo de física) a 45 m o más de la ruta de la demo. También pasa a
-    /// los SNAKES que ya había al visual E10. Idempotente: rehace la raíz <see cref="Raiz"/>.
+    /// con el tianguis y otra dentro de Neón Alto. Sitios planos y despejados (sondeo de física) a 45 m o más de la ruta de la demo y fuera de la
+    /// calle de Nova. Idempotente: rehace la raíz <see cref="Raiz"/>.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ColocarT1107Rina.Colocar
     /// </summary>
     public static class ColocarT1107Rina
@@ -43,9 +43,10 @@ namespace MechaCyberpunk.Arte.Editor
         private const float PlanoTolerancia = 0.08f;
         private const float DespejeBajo = 0.4f;
         private const float DespejeAlto = 2.4f;
-        private const float DistLugares = 25f;
+        private const float DistLugares = 14f;
         private const float DistPandillas = 25f;
         private const float DistEntreRinas = 40f;
+        private const float GrosorMaximoProp = 0.9f;
 
         private static readonly string[] TiposLugar =
         {
@@ -104,8 +105,8 @@ namespace MechaCyberpunk.Arte.Editor
             // Frontera: pegada al límite (x = 47) del lado de Neón Alto; dentro: más al este.
             (string nombre, float xMin, float xMax, Vector2 preferida)[] sitios =
             {
-                ("Rina_Frontera", LimiteZonaX + 6f, LimiteZonaX + 40f, new Vector2(LimiteZonaX + 10f, -40f)),
-                ("Rina_NeonAlto", 100f, 190f, new Vector2(130f, -110f))
+                ("Rina_Frontera", LimiteZonaX + 3f, LimiteZonaX + 40f, new Vector2(LimiteZonaX + 10f, 0f)),
+                ("Rina_NeonAlto", 85f, 118f, new Vector2(100f, 0f))
             };
             foreach ((string nombre, float xMin, float xMax, Vector2 preferida) in sitios)
             {
@@ -120,7 +121,6 @@ namespace MechaCyberpunk.Arte.Editor
                     IdPandilla.Calaveras);
                 ColocarS2.Informe.AppendLine(nombre + " en " + sitio.Value.centro.ToString("F1") + " eje " + sitio.Value.eje + ", a " + DistanciaALaRuta(sitio.Value.centro).ToString("F0") + " m de la ruta de la demo");
             }
-            ColocarS2.Informe.AppendLine("SNAKES viejos pasados a E10: " + PasarSnakesViejosAE10(snakes, viboras, raiz.transform));
             ColocarS2.Guardar("t1107-rinas");
         }
 
@@ -174,39 +174,6 @@ namespace MechaCyberpunk.Arte.Editor
             w.transform.localScale = ejemplo.localScale;
         }
 
-        // Los SNAKES que ya estaban (de pandillas de ciudad) pasan al visual E10: se reemplaza cada pandillero por una instancia del prefab nuevo.
-        private static int PasarSnakesViejosAE10(GameObject prefabSnakes, DatosPandilleroAPie viboras, Transform raizRinas)
-        {
-            int cambiados = 0;
-            foreach (PandilleroAPie p in Object.FindObjectsByType<PandilleroAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToArray())
-            {
-                if (p.transform.IsChildOf(raizRinas))
-                {
-                    continue;
-                }
-                SerializedObject so = new SerializedObject(p);
-                if (so.FindProperty("datos").objectReferenceValue != viboras)
-                {
-                    continue;
-                }
-                GameObject origen = PrefabUtility.GetCorrespondingObjectFromSource(p.gameObject);
-                if (origen != null && AssetDatabase.GetAssetPath(origen) == RutaPrefabSnakes)
-                {
-                    continue;
-                }
-                Transform padre = p.transform.parent;
-                int indice = p.transform.GetSiblingIndex();
-                GameObject nuevo = (GameObject)PrefabUtility.InstantiatePrefab(prefabSnakes, padre);
-                nuevo.name = p.name;
-                nuevo.transform.SetPositionAndRotation(p.transform.position, p.transform.rotation);
-                nuevo.transform.SetSiblingIndex(indice);
-                nuevo.SetActive(p.gameObject.activeSelf);
-                Object.DestroyImmediate(p.gameObject);
-                cambiados++;
-            }
-            return cambiados;
-        }
-
         // ------------------------------------------------------------------ sitios
 
         // Devuelve el centro y el eje (X o Z) de un sitio plano y despejado: calles y banquetas del tamaño de la riña, sin paredes ni props de por medio.
@@ -215,10 +182,10 @@ namespace MechaCyberpunk.Arte.Editor
             List<(Vector3 centro, Vector3 eje)> validos = new List<(Vector3, Vector3)>();
             for (float x = xMin; x <= xMax; x += PasoMalla)
             {
-                for (float z = -190f; z <= 190f; z += PasoMalla)
+                for (float z = -90f; z <= 90f; z += PasoMalla)
                 {
                     Vector3 c = new Vector3(x, 0f, z);
-                    if (DistanciaALaRuta(c) < DistanciaRuta
+                    if (DistanciaALaRuta(c) < DistanciaRuta || EnZonaProhibida(c)
                         || evitar.Any(e => Vector3.Distance(new Vector3(e.x, 0f, e.z), c) < DistLugares)
                         || hechas.Any(e => Vector3.Distance(e, c) < DistEntreRinas))
                     {
@@ -271,14 +238,41 @@ namespace MechaCyberpunk.Arte.Editor
             return true;
         }
 
-        private static bool Despejado(Vector3 centro, Vector3 eje)
+        // Despejado: nada sólido en el núcleo (donde se paran los dos bandos) y, en el resto de la huella, solo cosas delgadas (postes, bolardos, letreros).
+        internal static bool Despejado(Vector3 centro, Vector3 eje, float mitadEje, float mitadLado, float nucleoEje, float nucleoLado)
         {
+            Quaternion giro = Quaternion.LookRotation(eje, Vector3.up);
+            float alto = (DespejeAlto - DespejeBajo) * 0.5f;
             Vector3 c = new Vector3(centro.x, centro.y + (DespejeBajo + DespejeAlto) * 0.5f, centro.z);
-            Vector3 mitad = new Vector3(MitadLado, (DespejeAlto - DespejeBajo) * 0.5f, MitadEje); // z local = eje
-            return !Physics.CheckBox(c, mitad, Quaternion.LookRotation(eje, Vector3.up), ~0, QueryTriggerInteraction.Ignore);
+            if (Physics.CheckBox(c, new Vector3(nucleoLado, alto, nucleoEje), giro, ~0, QueryTriggerInteraction.Ignore))
+            {
+                return false;
+            }
+            foreach (Collider col in Physics.OverlapBox(c, new Vector3(mitadLado, alto, mitadEje), giro, ~0, QueryTriggerInteraction.Ignore))
+            {
+                Vector3 t = col.bounds.size;
+                if (t.x > GrosorMaximoProp || t.z > GrosorMaximoProp)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
-        private static List<Vector3> Lugares()
+        private static bool Despejado(Vector3 centro, Vector3 eje) => Despejado(centro, eje, MitadEje, MitadLado, 3.6f, 2f);
+
+        /// <summary>
+        /// Lo que otras pruebas de la ciudad exigen libre: la calle de Nova (arroyo de z = -43, x de 54 a 134) y las salidas del borde (franja de z = 0 hacia
+        /// x = +-120). Ahí no se coloca nada.
+        /// </summary>
+        internal static bool EnZonaProhibida(Vector3 p)
+        {
+            bool calleNova = p.x >= ColocarS2cNova.X0 - 12f && p.x <= ColocarS2cNova.X1 + 12f && Mathf.Abs(p.z - ColocarS2cNova.ZCentro) <= 14f;
+            bool salidaEste = p.x >= 110f && Mathf.Abs(p.z) <= 8f;
+            return calleNova || salidaEste;
+        }
+
+        internal static List<Vector3> Lugares()
         {
             List<Vector3> puntos = new List<Vector3>();
             foreach (Transform t in ColocarS2.Todos())
@@ -291,7 +285,7 @@ namespace MechaCyberpunk.Arte.Editor
             return puntos;
         }
 
-        private static List<Vector3> PandillasExistentes()
+        internal static List<Vector3> PandillasExistentes()
         {
             List<Vector3> puntos = new List<Vector3>();
             foreach (PandilleroAPie p in Object.FindObjectsByType<PandilleroAPie>(FindObjectsInactive.Include, FindObjectsSortMode.None))
