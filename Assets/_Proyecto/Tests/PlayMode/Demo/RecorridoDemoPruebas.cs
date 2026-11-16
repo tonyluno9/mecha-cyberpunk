@@ -1891,6 +1891,12 @@ namespace MechaCyberpunk.Tests.Demo
             if (director.Paso == PasoHistoria.Doc)
             {
                 yield return IrYUsar("EL DOC", () => director.Paso != PasoHistoria.Doc, 75f, 8f, DirectorPandillas.IdDoc);
+                // T-1112: desde T-990 el Doc abre la clínica (IMPLANTES) con E y apaga el control del jugador; el bot la cierra con Esc.
+                if (!Controlador.ControlActivo)
+                {
+                    yield return Pulsar(teclado.escapeKey, 10);
+                    yield return Segundos(0.5f);
+                }
             }
             else
             {

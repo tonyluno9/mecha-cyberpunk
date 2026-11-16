@@ -378,6 +378,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Vector3 punta = KitS2c.Poste(o, postes, pie, haciaCalle, pisoCalle, transformador);
             Transform poste = postes.GetChild(postes.childCount - 1);
+            AjustarLucesPoste(poste);
             foreach (BoxCollider bc in poste.GetComponentsInChildren<BoxCollider>(true))
             {
                 Vector3 c = bc.center;
@@ -385,6 +386,39 @@ namespace MechaCyberpunk.Arte.Editor
                 bc.size = new Vector3(AnchoColliderPoste, bc.size.y, AnchoColliderPoste);
             }
             return punta;
+        }
+
+        /// <summary>
+        /// T-1112: la luz del poste del kit sale con alcance 20 m; los postes de la ciudad llevan los valores de ColocarS2oLuz (alcance corto, ver
+        /// LuzK01S2oPruebas.Postes_ElNaranjaQuedaBajoCadaPoste). Los postes de esta calle usan los mismos.
+        /// </summary>
+        public static void AjustarLucesPoste(Transform poste)
+        {
+            foreach (Light l in poste.GetComponentsInChildren<Light>(true).Where(ColocarS2oLuz.EsPoste))
+            {
+                l.range = ColocarS2oLuz.RangoPoste;
+                l.intensity = ColocarS2oLuz.IntensidadPoste;
+                l.spotAngle = ColocarS2oLuz.AnguloPoste;
+                l.innerSpotAngle = ColocarS2oLuz.AnguloPoste * 0.4f;
+            }
+        }
+
+        /// <summary>Aplica <see cref="AjustarLucesPoste"/> a los postes ya colocados, sin rehacer la calle. Idempotente.</summary>
+        [MenuItem("Mecha Cyberpunk/T-1112/Ajustar luces de los postes de la calle del Doc")]
+        public static void AjustarLucesEnEscena()
+        {
+            ColocarS2.Informe.Clear();
+            ColocarS2.Abrir();
+            Transform raiz = ColocarS2.Buscar(Raiz + "/Postes");
+            if (raiz != null)
+            {
+                foreach (Transform poste in raiz.Cast<Transform>())
+                {
+                    AjustarLucesPoste(poste);
+                }
+                ColocarS2.Informe.AppendLine("Luces ajustadas en " + raiz.childCount + " postes");
+            }
+            ColocarS2.Guardar("t1112-luces");
         }
 
         private static void Cablear(List<Vector3> puntas, List<Vector3> mismoLado, List<Vector3> otroLado)
