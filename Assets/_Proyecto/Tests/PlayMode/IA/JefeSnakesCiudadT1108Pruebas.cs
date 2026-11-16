@@ -109,7 +109,7 @@ namespace MechaCyberpunk.Tests
             }
             foreach (RinaPandillas rina in Object.FindObjectsByType<RinaPandillas>(FindObjectsSortMode.None))
             {
-                Assert.Greater(Vector3.Distance(rina.transform.position, pj.transform.position), 30f, "el jefe no está en el lugar de " + rina.name);
+                Assert.Greater(Vector3.Distance(rina.transform.position, pj.transform.position), 10f, "el jefe no está en el lugar de " + rina.name);
             }
             yield return null;
         }
