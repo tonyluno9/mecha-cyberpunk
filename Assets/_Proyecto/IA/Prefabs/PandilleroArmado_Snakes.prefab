@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca1f215965b11d4b9d541ab710a430d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandilleroAPie
-  datos: {fileID: 11400000, guid: 5699a4b0c5c2f0646bf7e5f6f52b3fcf, type: 2}
+  datos: {fileID: 11400000, guid: 2f0d506d5dba35445b076bf194beb131, type: 2}
   siempreAlerta: 0
   cuerpo: {fileID: 0}
   brazo: {fileID: 0}

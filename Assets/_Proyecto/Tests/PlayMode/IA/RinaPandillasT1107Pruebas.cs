@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Tests
         private const string RutaJugador = "Assets/_Proyecto/Personaje/Prefabs/JugadorAPie.prefab";
         private const string RutaSnakes = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado_Snakes.prefab";
         private const string RutaSkulls = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado_Skulls.prefab";
-        private const string RutaViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Viboras.asset";
+        private const string RutaViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_ViborasE10.asset";
         private const string RutaCalaveras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Calaveras.asset";
 
         private GameObject piso;

@@ -8,7 +8,12 @@ Rama `tony/T-1107-rina-snakes-skulls`. Diseño: `docs/diseno/enemigos-nuevos-16n
 - `RinaPandillas`: arma la riña con 2 `PandillaAPie`. Estados Rina / Liberada (los seis van contra el jugador) / Terminada (un bando cayó: vuelven a su punto con la IA normal). Rearma sola (Reaparecer de todos, de frente al otro bando).
 - `ConstructorRina` (solo editor): arma una riña con prefabs y datos dados; lo usan el colocador y las pruebas.
 - Prefab `IA/Prefabs/PandilleroArmado_Snakes.prefab` (visual E10 + pistola W01, datos Viboras), usado por las riñas.
-- `Assets/Arte/Editor/ColocarT1107Rina.cs` (raíz `T1107_Rinas`, idempotente): 2 riñas por sondeo de física (calle plana y despejada): `Rina_Frontera` en (50, 0, 4), el cruce de la calle de Neón Alto con la calle del eje este-oeste, y `Rina_NeonAlto` en (99, 0, 0), a 49 y 53 m de la ruta de la demo (mínimo exigido 30 m; el colocador pide 45 m). Evita la calle de Nova (arroyo z=-43) y la franja de salida este (z=0, x>=110) porque otras pruebas las exigen libres.
+- `Assets/Arte/Editor/ColocarT1107Rina.cs` (raíz `T1107_Rinas`, idempotente): 2 riñas por sondeo de física (calle plana y despejada): `Rina_Frontera` en (34, 0.2, -44), junto a la frontera del tianguis, y `Rina_NeonAlto` en (105, 0.2, -12), a 77 y 66 m de la ruta de la demo (mínimo exigido 30 m; el colocador pide 45 m). Cada huella queda a 6.4 m o más del eje de las calles de tráfico (carril a 2.4 m + 4 m; el mismo grafo del tráfico) y a 7 m o más de cualquier puerta. Evita la calle de Nova (arroyo z=-43) y la franja de salida este (z=0, x>=110) porque otras pruebas las exigen libres.
+
+## Corrección de la revisión
+- SNAKES verde plano: `PandilleroAPie` pinta el cuerpo con `colorNormal` de sus datos (verde de Viboras) sobre la textura. Los SNAKES de las riñas usan ahora `DatosPandilleroAPie_ViborasE10.asset` (copia de Viboras con color base blanco); el prefab `PandilleroArmado_Snakes` también. Prueba `Ciudad_LosSnakesSeVenConSuTexturaE10_SinTinteDePandilla`: material E10 con su `_BaseMap`, nunca el verde, y en algún cuadro todos con el color base del material.
+- Gritos en espejo: solo era la cámara de captura (el grito mira a `Camera.main`); la captura ahora es MainCamera y las demás se apagan. En juego sale bien.
+- Tráfico: ver sitios arriba; prueba `Ciudad_NadieEstaEnUnCarrilDeTrafico_AlMenosCuatroMetrosDelCarril`.
 
 ## Decisiones
 - La riña no mata: nadie baja de 25% de vida por golpes de riña. Si no, cada KO sumaría búsqueda (`calorAlVencer`) y registraría vencidos en el territorio sin que el jugador haga nada. "Un bando cae" = nadie queda en pie por encima de 25%.

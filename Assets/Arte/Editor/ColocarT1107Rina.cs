@@ -22,7 +22,9 @@ namespace MechaCyberpunk.Arte.Editor
         public const string RutaPrefabSkulls = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado_Skulls.prefab";
         private const string RutaPrefabBase = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab";
         private const string RutaVisualE10 = "Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_E10_PandilleroSnakes.prefab";
-        private const string RutaDatosViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Viboras.asset";
+        private const string RutaDatosViborasBase = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Viboras.asset";
+        /// <summary>Datos de los SNAKES con el visual E10: iguales a los de Viboras pero con el color base en blanco (sin tinte verde sobre la textura).</summary>
+        public const string RutaDatosViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_ViborasE10.asset";
         private const string RutaDatosCalaveras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Calaveras.asset";
 
         /// <summary>Puntos de la ruta de la demo (casa, inventor, Doc, tianguis, hacker) y el orden en que el bot los recorre.</summary>
@@ -54,6 +56,80 @@ namespace MechaCyberpunk.Arte.Editor
             "MostradorPeleas", "DoctorClinica"
         };
 
+        /// <summary>Distancia mínima (m) de cualquier punto de la huella al eje de una calle de tráfico: los carros van a 2.4 m del eje y se pide 4 m más.</summary>
+        public const float DistanciaCarriles = 6.4f;
+        /// <summary>Distancia mínima (m) del centro de la huella a una puerta.</summary>
+        public const float DistanciaPuertas = 7f;
+
+        private static readonly List<(Vector3 a, Vector3 b)> Calles = new List<(Vector3, Vector3)>();
+        private static readonly List<Vector3> PuertasEscena = new List<Vector3>();
+
+        /// <summary>Lee de la escena abierta las calles por las que pasan los carros (el mismo grafo que usa el tráfico, con las calles de las afueras) y las puertas.</summary>
+        internal static void CargarTraficoYPuertas()
+        {
+            Calles.Clear();
+            PuertasEscena.Clear();
+            Transform manzana = ColocarS2.Todos().FirstOrDefault(t => t.name.StartsWith("Manzana_"));
+            MechaCyberpunk.Trafico.Persecucion.GrafoCalles grafo = manzana != null && manzana.parent != null
+                ? MechaCyberpunk.Trafico.Persecucion.GestorPersecucion.ArmarCallesDe(manzana.parent) : null;
+            if (grafo != null)
+            {
+                MechaCyberpunk.Trafico.Calle.TraficoCalle.AlargarHaciaLasAfueras(grafo);
+                for (int i = 0; i < grafo.Cantidad; i++)
+                {
+                    foreach (int j in grafo.Vecinos(i))
+                    {
+                        if (j > i)
+                        {
+                            Calles.Add((grafo.Nodo(i), grafo.Nodo(j)));
+                        }
+                    }
+                }
+            }
+            foreach (MonoBehaviour m in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (m is IPuerta puerta)
+                {
+                    PuertasEscena.Add(puerta.Posicion);
+                }
+            }
+            ColocarS2.Informe.AppendLine("Calles de tráfico: " + Calles.Count + " tramos; puertas: " + PuertasEscena.Count);
+        }
+
+        internal static float DistanciaACalles(Vector3 p)
+        {
+            float menor = float.MaxValue;
+            foreach ((Vector3 a, Vector3 b) in Calles)
+            {
+                menor = Mathf.Min(menor, DistanciaASegmento(p, a, b));
+            }
+            return menor;
+        }
+
+        /// <summary>True si toda la huella (9 puntos del rectángulo) queda a <see cref="DistanciaCarriles"/> de las calles de tráfico y el centro lejos de las puertas.</summary>
+        internal static bool HuellaLibreDeTrafico(Vector3 centro, Vector3 eje, float mitadEje, float mitadLado)
+        {
+            Vector3 lado = Vector3.Cross(Vector3.up, eje);
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    if (DistanciaACalles(centro + eje * (i * mitadEje) + lado * (j * mitadLado)) < DistanciaCarriles)
+                    {
+                        return false;
+                    }
+                }
+            }
+            foreach (Vector3 puerta in PuertasEscena)
+            {
+                if (Vector3.Distance(new Vector3(puerta.x, 0f, puerta.z), new Vector3(centro.x, 0f, centro.z)) < DistanciaPuertas)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>Distancia en el plano de <paramref name="p"/> al punto o segmento más cercano de la ruta de la demo.</summary>
         public static float DistanciaALaRuta(Vector3 p)
         {
@@ -78,9 +154,11 @@ namespace MechaCyberpunk.Arte.Editor
         public static void Colocar()
         {
             ColocarS2.Informe.Clear();
+            AsegurarDatosE10();
             AsegurarPrefabSnakes();
             ColocarS2.Abrir();
             Physics.SyncTransforms();
+            CargarTraficoYPuertas();
             Transform vieja = ColocarS2.Buscar(Raiz);
             if (vieja != null)
             {
@@ -105,7 +183,7 @@ namespace MechaCyberpunk.Arte.Editor
             // Frontera: pegada al límite (x = 47) del lado de Neón Alto; dentro: más al este.
             (string nombre, float xMin, float xMax, Vector2 preferida)[] sitios =
             {
-                ("Rina_Frontera", LimiteZonaX + 3f, LimiteZonaX + 40f, new Vector2(LimiteZonaX + 10f, 0f)),
+                ("Rina_Frontera", LimiteZonaX - 17f, LimiteZonaX + 40f, new Vector2(LimiteZonaX, 0f)),
                 ("Rina_NeonAlto", 85f, 118f, new Vector2(100f, 0f))
             };
             foreach ((string nombre, float xMin, float xMax, Vector2 preferida) in sitios)
@@ -126,6 +204,21 @@ namespace MechaCyberpunk.Arte.Editor
 
 
         // ------------------------------------------------------------------ prefab
+
+        /// <summary>Copia los datos de Viboras con el color base en blanco: el pandillero pinta su cuerpo con ese color y con el verde taparía la textura E10.</summary>
+        public static void AsegurarDatosE10()
+        {
+            if (AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(RutaDatosViboras) == null)
+            {
+                AssetDatabase.CopyAsset(RutaDatosViborasBase, RutaDatosViboras);
+            }
+            DatosPandilleroAPie datos = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(RutaDatosViboras);
+            SerializedObject so = new SerializedObject(datos);
+            so.FindProperty("colorNormal").colorValue = Color.white;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(datos);
+            AssetDatabase.SaveAssets();
+        }
 
         /// <summary>Crea (o rehace) el prefab del SNAKES con el visual E10 y la pistola W01 en la mano, con los datos de Viboras.</summary>
         public static void AsegurarPrefabSnakes()
@@ -193,7 +286,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                     foreach (Vector3 eje in new[] { Vector3.right, Vector3.forward })
                     {
-                        if (Plano(c, eje, out float y) && Despejado(new Vector3(x, y, z), eje))
+                        if (Plano(c, eje, out float y) && Despejado(new Vector3(x, y, z), eje) && HuellaLibreDeTrafico(c, eje, MitadEje, MitadLado))
                         {
                             validos.Add((new Vector3(x, y, z), eje));
                             break;

@@ -2,6 +2,8 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Trafico.Calle;
+using MechaCyberpunk.Trafico.Persecucion;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -21,7 +23,7 @@ namespace MechaCyberpunk.Tests
         private const string CarpetaFotos = "docs/capturas/t-1107";
         private const float DistanciaMinimaRuta = 30f;
         private const float TolerSuelo = 0.5f;
-        private const string RutaSnakes = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado_Snakes.prefab";
+        private const float DistanciaMinimaCarriles = 6.4f; // carril a 2.4 m del eje de la calle + 4 m
 
         // Casa, inventor, Doc, inventor, tianguis y hacker: los puntos que recorre RecorridoDemoPruebas, unidos en ese orden.
         private static readonly Vector3[] Ruta =
@@ -112,6 +114,74 @@ namespace MechaCyberpunk.Tests
             Assert.Less(rinas.Sum(r => r.Miembros.Sum(p => p.Actual)), antes, "se pegan entre ellos");
         }
 
+        // Las calles por las que pasan los carros: el mismo grafo que arma el tráfico, con las calles de las afueras.
+        private static GrafoCalles GrafoDelTrafico()
+        {
+            Transform manzana = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t.name.StartsWith("Manzana_"));
+            Assert.IsNotNull(manzana, "la ciudad tiene manzanas");
+            GrafoCalles grafo = GestorPersecucion.ArmarCallesDe(manzana.parent);
+            Assert.IsNotNull(grafo);
+            TraficoCalle.AlargarHaciaLasAfueras(grafo);
+            return grafo;
+        }
+
+        [UnityTest]
+        public IEnumerator Ciudad_NadieEstaEnUnCarrilDeTrafico_AlMenosCuatroMetrosDelCarril()
+        {
+            GrafoCalles grafo = GrafoDelTrafico();
+            foreach (RinaPandillas r in Object.FindObjectsByType<RinaPandillas>(FindObjectsSortMode.None))
+            {
+                foreach (PandilleroAPie p in r.Miembros)
+                {
+                    float menor = float.MaxValue;
+                    for (int i = 0; i < grafo.Cantidad; i++)
+                    {
+                        foreach (int j in grafo.Vecinos(i))
+                        {
+                            if (j > i) menor = Mathf.Min(menor, DistanciaASegmento(p.transform.position, grafo.Nodo(i), grafo.Nodo(j)));
+                        }
+                    }
+                    Assert.GreaterOrEqual(menor, DistanciaMinimaCarriles, p.name + " de " + r.name + " a 4 m o más del carril más cercano");
+                }
+            }
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator Ciudad_LosSnakesSeVenConSuTexturaE10_SinTinteDePandilla()
+        {
+            SkinnedMeshRenderer[] renderers = Object.FindObjectsByType<RinaPandillas>(FindObjectsSortMode.None)
+                .SelectMany(r => r.Miembros.Where(m => m.Pandilla == MechaCyberpunk.Core.IdPandilla.Viboras))
+                .SelectMany(p => p.transform.Find("Modelo").GetComponentsInChildren<SkinnedMeshRenderer>(true)).ToArray();
+            Assert.Greater(renderers.Length, 0, "hay renderers de SNAKE");
+            foreach (SkinnedMeshRenderer rend in renderers)
+            {
+                Assert.IsTrue(rend.sharedMaterial.name.StartsWith("E10_PandilleroSnakes"), "material E10");
+                Assert.IsNotNull(rend.sharedMaterial.GetTexture("_BaseMap"), "el material E10 tiene su textura base");
+            }
+            // Tras 2 s de Play: nunca el verde de la pandilla y, entre un destello de golpe (rojo, 0.12 s) y otro, el color base del material.
+            float fin = Time.time + 2f;
+            while (Time.time < fin) yield return null;
+            bool visto = false;
+            fin = Time.time + 6f;
+            while (Time.time < fin && !visto)
+            {
+                bool todosSinTinte = true;
+                foreach (SkinnedMeshRenderer rend in renderers)
+                {
+                    MaterialPropertyBlock bloque = new MaterialPropertyBlock();
+                    rend.GetPropertyBlock(bloque);
+                    Color delMaterial = rend.sharedMaterial.GetColor("_BaseColor");
+                    Color efectivo = bloque.isEmpty || !bloque.HasColor("_BaseColor") ? delMaterial : bloque.GetColor("_BaseColor");
+                    Assert.IsFalse(Mathf.Abs(efectivo.r - 0.45f) < 0.02f && Mathf.Abs(efectivo.g - 1f) < 0.02f && Mathf.Abs(efectivo.b - 0.1f) < 0.02f, "tinte verde de Viboras sobre el SNAKE");
+                    todosSinTinte &= Mathf.Abs(delMaterial.r - efectivo.r) < 0.01f && Mathf.Abs(delMaterial.g - efectivo.g) < 0.01f && Mathf.Abs(delMaterial.b - efectivo.b) < 0.01f;
+                }
+                visto = todosSinTinte;
+                yield return null;
+            }
+            Assert.IsTrue(visto, "en algún cuadro todos los SNAKES se ven con el color base del material E10, sin tinte");
+        }
+
         [UnityTest]
         public IEnumerator Capturas_RinaA8MetrosYA20Metros()
         {
@@ -128,16 +198,19 @@ namespace MechaCyberpunk.Tests
                 Vector3 centro = rinas[i].Miembros.Aggregate(Vector3.zero, (s, p) => s + p.transform.position) / rinas[i].Miembros.Count;
                 foreach (float d in new[] { 8f, 20f })
                 {
-                    yield return Foto(centro, d, CarpetaFotos + "/rina-" + (i + 1) + "-" + d + "m.png");
+                    yield return Foto(centro, d, rinas[i].Miembros.Select(m => m.transform.position).ToArray(), CarpetaFotos + "/rina-" + (i + 1) + "-" + d + "m.png");
                 }
             }
         }
 
         // La primera posición alrededor de la riña, a la distancia pedida, que no queda dentro de un edificio y la ve sin nada de por medio.
-        private static IEnumerator Foto(Vector3 centro, float distancia, string ruta)
+        private static IEnumerator Foto(Vector3 centro, float distancia, Vector3[] puntos, string ruta)
         {
             GameObject go = new GameObject("CamaraFoto");
+            // Camera.main es la que mira el texto de los gritos: la de la captura lo es (las demás se apagan).
+            foreach (Camera otra in Camera.allCameras) otra.enabled = false;
             Camera camara = go.AddComponent<Camera>();
+            go.tag = "MainCamera";
             camara.farClipPlane = 400f;
             camara.fieldOfView = 60f;
             Vector3 mira = centro + Vector3.up * 1.2f;
@@ -148,7 +221,7 @@ namespace MechaCyberpunk.Tests
                 {
                     Vector3 pos = centro + Quaternion.Euler(0f, a, 0f) * Vector3.forward * distancia + Vector3.up * altura;
                     if (Physics.CheckSphere(pos, 0.5f, ~0, QueryTriggerInteraction.Ignore)
-                        || Physics.Linecast(pos, mira, out RaycastHit h, ~0, QueryTriggerInteraction.Ignore) && h.collider.GetComponentInParent<PandilleroAPie>() == null)
+                        || puntos.Any(q => Physics.Linecast(pos, q + Vector3.up * 1.2f, out RaycastHit h, ~0, QueryTriggerInteraction.Ignore) && h.collider.GetComponentInParent<PandilleroAPie>() == null))
                     {
                         continue;
                     }
@@ -157,6 +230,7 @@ namespace MechaCyberpunk.Tests
                 }
             }
             go.transform.LookAt(mira);
+            yield return null;
             yield return null;
             RenderTexture rt = new RenderTexture(1280, 720, 24);
             camara.targetTexture = rt;
