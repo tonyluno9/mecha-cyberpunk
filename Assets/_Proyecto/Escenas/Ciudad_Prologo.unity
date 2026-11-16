@@ -558373,6 +558373,55 @@ Transform:
   - {fileID: 1046321795}
   m_Father: {fileID: 219476292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &799251134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 799251136}
+  - component: {fileID: 799251135}
+  m_Layer: 0
+  m_Name: T1109_GuardiasPesados
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &799251135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799251134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b07b36eebb877974488dac2cea036171, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PuestoGuardiasPesados
+  guardias:
+  - {fileID: 978980149}
+  - {fileID: 1472549365}
+--- !u!4 &799251136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799251134}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 978980150}
+  - {fileID: 1472549366}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &799860139
 GameObject:
   m_ObjectHideFlags: 0
@@ -668678,6 +668727,79 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 978935216}
   m_Mesh: {fileID: 5263401311248709148, guid: 4316bf273776bb64b9aedae815a34da2, type: 2}
+--- !u!1001 &978980148
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 799251136}
+    m_Modifications:
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 105.98004
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.37000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -49.754658
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8768010873611308381, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_Name
+      value: Guardia_Poniente
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+--- !u!114 &978980149 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3008208832629831705, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+  m_PrefabInstance: {fileID: 978980148}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6c5d4e152246042a51e18d6dc61192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaGuardiaPesado
+--- !u!4 &978980150 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+  m_PrefabInstance: {fileID: 978980148}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &979078623
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -965062,6 +965184,79 @@ Transform:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1471887997}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1472549364
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 799251136}
+    m_Modifications:
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 113.98005
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.37000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -49.754658
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8768010873611308381, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+      propertyPath: m_Name
+      value: Guardia_Oriente
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+--- !u!114 &1472549365 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3008208832629831705, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+  m_PrefabInstance: {fileID: 1472549364}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6c5d4e152246042a51e18d6dc61192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaGuardiaPesado
+--- !u!4 &1472549366 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5223733496116239770, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+  m_PrefabInstance: {fileID: 1472549364}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1472735752
 PrefabInstance:
@@ -1401937,3 +1402132,4 @@ SceneRoots:
   - {fileID: 1730142519}
   - {fileID: 603241211}
   - {fileID: 59294068}
+  - {fileID: 799251136}
