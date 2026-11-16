@@ -138,6 +138,22 @@ namespace MechaCyberpunk.Tests.UI
             yield return new WaitForSecondsRealtime(0.3f);
             Assert.Less(cartera.Dinero, antes, "Enter compra el arma elegida");
 
+            // T-1013: las armas nuevas también salen con su holograma (el rifle de plasma).
+            int plasma = -1;
+            for (int i = 0; i < pantalla.CantidadFilas && plasma < 0; i++)
+            {
+                plasma = pantalla.TextoFila(i).ToUpperInvariant().Contains("RIFLE DE PLASMA") ? i : -1;
+            }
+            Assert.GreaterOrEqual(plasma, 0, "El Mercado vende el rifle de plasma");
+            for (int vueltas = 0; pantalla.IndiceElegido != plasma && vueltas < 60; vueltas++)
+            {
+                yield return Pulsar(teclado.downArrowKey);
+            }
+            yield return new WaitForSecondsRealtime(1.2f);
+            Assert.AreEqual(ArmaAPie.RiflePlasma, vista.ArmaMostrada, "El holograma es el rifle de plasma");
+            Assert.IsTrue(vista.Holograma.ConModelo, "Con su modelo 3D");
+            Capturar("mercado-rifle-plasma.png");
+
             yield return Pulsar(teclado.escapeKey);
             yield return EsperarHasta(() => !pantalla.Visible, "cerrar con Esc", 5f);
             Assert.IsFalse(vista.Activa, "Al cerrar se apaga la vista");
