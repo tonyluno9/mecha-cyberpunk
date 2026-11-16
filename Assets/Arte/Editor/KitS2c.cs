@@ -395,6 +395,10 @@ namespace MechaCyberpunk.Arte.Editor
             public bool Antena;
             public bool AireAzotea;
             public float LucesVentanas = 0.45f;
+            /// <summary>T-1102: pisos de la casa (1 a 3; la planta baja cuenta como uno).</summary>
+            public int Pisos = 2;
+            /// <summary>T-1102: toldo sobre la puerta a mano (null = al azar en las viviendas, como antes).</summary>
+            public bool? Toldo;
         }
 
         public static Estilo EstiloAlAzar(Obra o)
@@ -434,7 +438,7 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject baja = Pieza(casa.transform, e.PlantaBaja, centro + normal * mb.Muro, giro, new Vector3(ancho / mb.Caja.size.x, EscalaAlto, 1f), false);
             Ventanas(o, baja.transform, mb, e.LucesVentanas * 0.5f, AltoMinimoVentanaBaja);
             PuertaCerrada(baja.transform, mb, e.PlantaBaja);
-            if (e.PlantaBaja == PlantaVivienda && mb.Vano.HasValue && o.Chance(ProbabilidadToldo))
+            if (mb.Vano.HasValue && (e.Toldo.HasValue ? e.Toldo.Value : e.PlantaBaja == PlantaVivienda && o.Chance(ProbabilidadToldo)))
             {
                 Toldo(casa.transform, baja.transform, mb, normal, giro);
             }
@@ -442,18 +446,22 @@ namespace MechaCyberpunk.Arte.Editor
             Medida ma = Medir(e.PisoAlto);
             bool panel = e.PisoAlto.StartsWith("C20");
             float altoAlto = ma.Caja.size.y * EscalaAlto;
-            Vector3 baseAlto = centro + Vector3.up * altoBaja;
-            GameObject alto = Pieza(casa.transform, e.PisoAlto, baseAlto + normal * ma.Muro, giro, new Vector3(ancho / ma.Caja.size.x, EscalaAlto, 1f), false);
-            Pintar(alto, e.ColorPiso);
-            Ventanas(o, alto.transform, ma, e.LucesVentanas, 0f);
-            float azotea = altoBaja + altoAlto;
+            float azotea = altoBaja;
+            for (int piso = 1; piso < Mathf.Max(1, e.Pisos); piso++)
+            {
+                Vector3 baseAlto = centro + Vector3.up * azotea;
+                GameObject alto = Pieza(casa.transform, e.PisoAlto, baseAlto + normal * ma.Muro, giro, new Vector3(ancho / ma.Caja.size.x, EscalaAlto, 1f), false);
+                Pintar(alto, e.ColorPiso);
+                Ventanas(o, alto.transform, ma, e.LucesVentanas, 0f);
+                azotea += altoAlto;
+            }
 
             // Cuerpo detrás de las piezas: llena el fondo de la cuadra (de atrás y de arriba es lo que se ve). Su caja es la que choca: empieza
             // en la línea de fachada, así lo que sale de las piezas (toldos, marcos, tubos) no estorba en la banqueta a los peatones.
             Vector3 cuerpoCentro = centro - normal * (fondo * 0.5f + 0.02f) + Vector3.up * (azotea - 0.02f) * 0.5f;
             Losa(o, casa.transform, "Cuerpo", cuerpoCentro, giro, new Vector3(ancho - 0.04f, azotea - 0.02f, fondo - 0.04f),
                 MatCuerpo(e.ColorPiso), 3f, true);
-            if (panel)
+            if (panel && e.Pisos > 1)
             {
                 // El panel C20 es delgado: el muro del piso alto lo pone el cuerpo; arriba de la planta baja va una franja.
                 Pieza(casa.transform, "C23_Franja", centro + Vector3.up * (altoBaja - 0.3f) + normal * 0.1f, giro, new Vector3(ancho / 4.43f, 1f, 1f), false);
@@ -1166,7 +1174,7 @@ namespace MechaCyberpunk.Arte.Editor
             return Guardar(nombre, t, true, TextureWrapMode.Clamp);
         }
 
-        private static Texture2D TexMuro()
+        public static Texture2D TexMuro()
         {
             const string nombre = "S2c_Muro";
             Texture2D ya = Cargar(nombre);
