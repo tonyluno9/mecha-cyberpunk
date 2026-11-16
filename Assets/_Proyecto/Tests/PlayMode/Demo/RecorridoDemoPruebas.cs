@@ -803,6 +803,13 @@ namespace MechaCyberpunk.Tests.Demo
                     {
                         trabas++;
                         yield return UsarPuerta(terminar ?? (() => false));
+                        // T-1019: la E de la puerta junto al Doc abre la clínica (T-990); el bot la cierra y sigue.
+                        MechaCyberpunk.UI.Clinica.PantallaClinica clinicaAbierta = Object.FindFirstObjectByType<MechaCyberpunk.UI.Clinica.PantallaClinica>();
+                        if (clinicaAbierta != null && clinicaAbierta.Visible)
+                        {
+                            yield return Pulsar(teclado.escapeKey, 10);
+                            yield return Segundos(0.5f);
+                        }
                         ControladorAPie cc = Controlador;
                         Debug.Log("[T-474] estado: control " + cc.ControlActivo + " enPiso " + cc.EnPiso + " vel " + cc.Velocidad + " timeScale " + Time.timeScale + " w " + teclado.wKey.isPressed + " s " + teclado.sKey.isPressed + " a " + teclado.aKey.isPressed
                             + " libres " + Libre(pos, 0f, 2f) + "," + Libre(pos, 90f, 2f) + "," + Libre(pos, 180f, 2f) + "," + Libre(pos, 270f, 2f) + " pausa " + Pausa.Activa);
@@ -1892,10 +1899,27 @@ namespace MechaCyberpunk.Tests.Demo
             {
                 yield return IrYUsar("EL DOC", () => director.Paso != PasoHistoria.Doc, 75f, 8f, DirectorPandillas.IdDoc);
                 // T-1112: desde T-990 el Doc abre la clínica (IMPLANTES) con E y apaga el control del jugador; el bot la cierra con Esc.
-                if (!Controlador.ControlActivo)
+                // T-1019: desde T-1005 el Doc primero habla ("Elige tu prótesis...") y la clínica se abre un momento después: se espera un poco y
+                // se cierra con Esc cada vez que esté abierta (antes el Esc llegaba antes de que abriera y la clínica se quedaba tapando el resto).
+                MechaCyberpunk.UI.Clinica.PantallaClinica clinica = Object.FindFirstObjectByType<MechaCyberpunk.UI.Clinica.PantallaClinica>(FindObjectsInactive.Include);
+                // La clínica abre cuando el Doc termina de hablar (varios segundos): se espera hasta 15 s a que abra y se cierra.
+                float finClinica = Time.realtimeSinceStartup + 15f;
+                bool cerrada = false;
+                while (Time.realtimeSinceStartup < finClinica && !cerrada)
                 {
-                    yield return Pulsar(teclado.escapeKey, 10);
-                    yield return Segundos(0.5f);
+                    if ((clinica != null && clinica.Visible) || !Controlador.ControlActivo)
+                    {
+                        yield return Pulsar(teclado.escapeKey, 10);
+                        yield return Segundos(0.5f);
+                        cerrada = (clinica == null || !clinica.Visible) && Controlador.ControlActivo;
+                    }
+                    yield return null;
+                }
+                // Lejos del Doc antes de seguir: si el bot se traba junto a él y pulsa E, la clínica volvería a abrir.
+                yield return Segundos(0.5f);
+                if (clinica != null && clinica.Visible)
+                {
+                    Bug("La clínica del Doc no se cierra con Esc", "sigue abierta tras varios Esc", "A", true);
                 }
             }
             else
