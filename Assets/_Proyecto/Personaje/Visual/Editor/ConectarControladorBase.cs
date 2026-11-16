@@ -17,6 +17,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("woman", "Jugador", false), ("woman2", "Aliados", true), ("man", "SKULLS", true), ("SkullHombre", "SKULLS", true),
             ("RobotHombre", "Robots", false), ("GuardiaNova", "Guardias", true), ("Doctor", "NPC", true),
             ("Hacker", "SNAKES", true), ("Inventor", "Profes", true),
+            ("E10_PandilleroSnakes", "SNAKES", true), ("E11_JefeSnakes", "Jefe", true), ("E12_GuardiaPesadoNova", "Guardias", true), ("E14_JefeFinalNova", "Jefe", true),
         };
 
         [MenuItem("Mecha Cyberpunk/Personajes/T-561 Conectar controlador base")]
@@ -29,6 +30,21 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             foreach ((string modelo, string papel, bool mira) in Reparto)
             {
                 ConectarPrefab(modelo, papel, mira, caminar, correr);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>T-1106: conecta solo los 4 enemigos nuevos (papel, IK, velocidades de PJ01 sin implante). Se puede repetir.
+        /// Batchmode: -executeMethod MechaCyberpunk.Personaje.Visual.Editor.ConectarControladorBase.ConectarNuevosT1106</summary>
+        public static void ConectarNuevosT1106()
+        {
+            foreach ((string modelo, string papel, bool mira) in Reparto)
+            {
+                if (System.Array.IndexOf(CreadorVisualTripo.NombresT1106, modelo) < 0)
+                {
+                    continue;
+                }
+                ConectarPrefab(modelo, papel, mira, ReglasAnimacion.VelocidadClipCaminarSinImplante, ReglasAnimacion.VelocidadClipCorrerSinImplante);
             }
             AssetDatabase.SaveAssets();
         }

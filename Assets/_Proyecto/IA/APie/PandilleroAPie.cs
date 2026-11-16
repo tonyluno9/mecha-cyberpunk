@@ -45,6 +45,12 @@ namespace MechaCyberpunk.IA.APie
         private float finParpadeo = -1f;
         private float desaparicion = -1f;
         private Transform raizJugador;
+        // T-1106: ganchos de conducta y filtro de daño
+        private IConductaAPie conducta;
+        private IFiltroDanioAPie filtroDanio;
+        private bool castigableExtra;
+        [Tooltip("Pandilla de este pandillero si no tiene Grupo (T-1106). Ninguna = sin pandilla.")]
+        [SerializeField] private IdPandilla pandillaPropia = IdPandilla.Ninguna;
         private IVida vidaJugador;
         private IRecibeDanio recibeJugador;
         private bool pintadoAviso;
@@ -126,7 +132,7 @@ namespace MechaCyberpunk.IA.APie
         public ReglaJefeNova.Fase FaseJefe => reglaJefe != null ? reglaJefe.Actual : ReglaJefeNova.Fase.Acecho;
 
         /// <summary>True mientras el jefe se recupera de un golpe o una carga: el momento de castigarlo (T-693).</summary>
-        public bool Castigable => reglaJefe != null && reglaJefe.Vulnerable;
+        public bool Castigable => (reglaJefe != null && reglaJefe.Vulnerable) || castigableExtra;
 
         /// <summary>Cuántos golpes de área ha dado desde su última carga (T-693).</summary>
         public int GolpesDesdeCarga => reglaJefe != null ? reglaJefe.GolpesDesdeCarga : 0;
@@ -227,6 +233,7 @@ namespace MechaCyberpunk.IA.APie
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
+            ResolverGanchos();
             if (datos == null || (!datos.UsaPistola && !datos.JefeCuerpoACuerpo && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
             {
                 Debug.LogError("[IA] Faltan referencias en PandilleroAPie de " + name, this);
@@ -234,6 +241,15 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
             Iniciar();
+        }
+
+        // Start corre un cuadro después: una conducta agregada justo tras instanciar también se encuentra.
+        private void Start() => ResolverGanchos();
+
+        private void ResolverGanchos()
+        {
+            conducta = GetComponent<IConductaAPie>();
+            filtroDanio = GetComponent<IFiltroDanioAPie>();
         }
 
         private void Iniciar()
@@ -373,6 +389,18 @@ namespace MechaCyberpunk.IA.APie
                 visual.RegistrarGolpe(info.Direccion); // antes de aplicar: si este golpe lo deja KO, decide cómo cae
             }
             float cantidad = info.Cantidad * (Castigable ? datos.MultiplicadorCastigo : 1f); // T-693: recuperándose, recibe más
+            TipoBloqueo bloqueoFiltro = TipoBloqueo.Ninguno;
+            if (filtroDanio != null)
+            {
+                // T-1106: el escudo decide cuánto entra de la cantidad ya multiplicada.
+                cantidad = filtroDanio.Filtrar(this, new InfoDanio(cantidad, info.Tipo, info.Punto, info.Direccion, info.Atacante), out bloqueoFiltro);
+                if (cantidad <= 0f)
+                {
+                    ResultadoDanio bloqueado = new ResultadoDanio(0f, bloqueoFiltro, false);
+                    EventosPelea.PublicarImpacto(null, info, bloqueado);
+                    return bloqueado;
+                }
+            }
             float aplicado = modelo.Aplicar(cantidad);
             if (datos.SeDefiende)
             {
@@ -388,7 +416,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 CayoPorLaPolicia = true;
             }
-            ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
+            ResultadoDanio resultado = new ResultadoDanio(aplicado, bloqueoFiltro, modelo.EstaKO);
             if (!modelo.EstaKO)
             {
                 finParpadeo = Time.time + datos.DuracionParpadeo;
@@ -431,6 +459,11 @@ namespace MechaCyberpunk.IA.APie
 
             ActualizarGrito();
             BuscarJugador();
+            if (conducta != null && conducta.Controla)
+            {
+                conducta.Actualizar(this, Time.deltaTime); // T-1106
+                return;
+            }
             if (Acosando)
             {
                 ActualizarAcosando();
@@ -835,6 +868,115 @@ namespace MechaCyberpunk.IA.APie
 
         /// <summary>Luz del brillo del aviso (T-693); null si todavía no avisó.</summary>
         public Light BrilloJefe => brilloJefe;
+
+        // ---- API para conductas (T-1106) ----
+
+        /// <summary>Raíz del jugador (Transform), o null si no hay.</summary>
+        public Transform Jugador => raizJugador;
+
+        /// <summary>True si el jugador existe, va a pie y sigue en pie: se le puede pegar.</summary>
+        public bool JugadorAtacable => EsAtacable();
+
+        /// <summary>Pandilla de este pandillero: la de su <see cref="Grupo"/> o, si no tiene, la que se le puso en el inspector.</summary>
+        public IdPandilla Pandilla => Grupo != null ? Grupo.Pandilla : pandillaPropia;
+
+        /// <summary>Fracción de vida que le queda, de 0 a 1.</summary>
+        public float VidaFraccion => modelo != null && modelo.Maxima > 0f ? modelo.Actual / modelo.Maxima : 1f;
+
+        /// <summary>Activa o apaga un castigo extra: mientras es true, <see cref="Castigable"/> es true y recibe más daño.</summary>
+        public void SetCastigable(bool valor) => castigableExtra = valor;
+
+        /// <summary>Mueve con gravedad y controlador a <paramref name="velocidadPlana"/> (m/s en XZ) y avisa al animador (Velocidad y EnPiso).</summary>
+        public void MoverPlano(Vector3 velocidadPlana)
+        {
+            velocidadPlana.y = 0f;
+            velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
+            Vector3 mover = velocidadPlana;
+            mover.y = velocidadVertical;
+            controlador.Move(mover * Time.deltaTime);
+            if (animador != null)
+            {
+                animador.SetFloat(IdVelocidad, velocidadPlana.magnitude);
+                animador.SetBool(IdEnPiso, true);
+            }
+        }
+
+        /// <summary>Gira en el plano hacia <paramref name="dir"/> a lo más <paramref name="gradosPorSegundo"/> (°/s).</summary>
+        public void MirarHacia(Vector3 dir, float gradosPorSegundo)
+        {
+            dir.y = 0f;
+            if (dir.sqrMagnitude < PasoMinimoCuadrado)
+            {
+                return;
+            }
+            Quaternion meta = Quaternion.LookRotation(dir.normalized, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, meta, gradosPorSegundo * Time.deltaTime);
+        }
+
+        /// <summary>Le pega al jugador (si es atacable) con <paramref name="cantidad"/> de daño en <paramref name="direccion"/>.</summary>
+        public void DaniarJugador(float cantidad, Vector3 direccion)
+        {
+            if (!EsAtacable())
+            {
+                return;
+            }
+            Vector3 punto = raizJugador.position + Vector3.up * AlturaCentroImpacto;
+            recibeJugador.RecibirDanio(new InfoDanio(cantidad, TipoDanio.Golpe, punto, direccion, null));
+        }
+
+        /// <summary>Le pega a otro objetivo (por ejemplo un rival de otra pandilla) con <paramref name="cantidad"/> de daño.</summary>
+        public void DaniarA(IRecibeDanio objetivo, float cantidad, Vector3 direccion)
+        {
+            if (objetivo == null)
+            {
+                return;
+            }
+            Vector3 punto = transform.position + Vector3.up * AlturaCentroImpacto + direccion.normalized * AdelanteBoca;
+            objetivo.RecibirDanio(new InfoDanio(cantidad, TipoDanio.Golpe, punto, direccion, null));
+        }
+
+        /// <summary>Muestra el aviso de un ataque: el cuerpo y una luz suben hacia <paramref name="color"/> según <paramref name="progreso"/> (0 a 1; 0 lo apaga).</summary>
+        public void MostrarAviso(float progreso, Color color)
+        {
+            int paso = progreso <= 0f ? -2 : Mathf.RoundToInt(progreso * 10f) + 1000 + Mathf.RoundToInt(color.r * 10f) * 7 + Mathf.RoundToInt(color.g * 10f) * 13 + Mathf.RoundToInt(color.b * 10f) * 29;
+            if (paso == pasoBrillo)
+            {
+                return;
+            }
+            pasoBrillo = paso;
+            if (progreso <= 0f)
+            {
+                PintarCuerpo(datos.ColorNormal);
+                if (brilloJefe != null)
+                {
+                    brilloJefe.enabled = false;
+                }
+                return;
+            }
+            PintarCuerpo(Color.Lerp(datos.ColorNormal, color, progreso));
+            if (brilloJefe == null)
+            {
+                GameObject objeto = new GameObject("BrilloJefe");
+                objeto.transform.SetParent(transform, false);
+                objeto.transform.localPosition = Vector3.up * 1.3f;
+                brilloJefe = objeto.AddComponent<Light>();
+                brilloJefe.type = LightType.Point;
+                brilloJefe.range = 7f;
+                brilloJefe.shadows = LightShadows.None;
+            }
+            brilloJefe.color = color;
+            brilloJefe.intensity = 6f * progreso;
+            brilloJefe.enabled = true;
+        }
+
+        /// <summary>Juega la animación de golpe (fuerte o normal) del visual, si tiene.</summary>
+        public void AnimarGolpe(bool fuerte)
+        {
+            if (visual != null)
+            {
+                visual.Golpear(fuerte);
+            }
+        }
 
         // ---- Táctica (T-423) ----
 
