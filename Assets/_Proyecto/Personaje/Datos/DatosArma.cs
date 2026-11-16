@@ -47,7 +47,35 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Distancia máxima del disparo (m).")]
         [Min(1f)] [SerializeField] private float alcance = 60f;
 
+        [Header("Armas especiales (T-1013)")]
+        [Tooltip("Cómo dispara: bala (rayo), proyectil en arco, lanzada con la mano o rayo que se carga.")]
+        [SerializeField] private TipoDisparoArma tipoDisparo = TipoDisparoArma.Bala;
+        [Tooltip("Radio de la explosión del proyectil o de la granada (m). 0 = no explota.")]
+        [Min(0f)] [SerializeField] private float radioExplosion;
+        [Tooltip("Velocidad de salida del proyectil o de la granada (m/s).")]
+        [Min(0f)] [SerializeField] private float velocidadProyectil = 22f;
+        [Tooltip("Segundos que hay que mantener el disparo para cargar el rayo (s).")]
+        [Min(0f)] [SerializeField] private float segundosCarga;
+        [Tooltip("Segundos que dura el rayo una vez cargado (s). El daño del arma es por segundo mientras toca.")]
+        [Min(0f)] [SerializeField] private float segundosRayo;
+
         public ArmaAPie Arma => arma;
+        public TipoDisparoArma TipoDisparo => tipoDisparo;
+        public float RadioExplosion => radioExplosion;
+        public float VelocidadProyectil => velocidadProyectil;
+        public float SegundosCarga => segundosCarga;
+        public float SegundosRayo => segundosRayo;
+
+        /// <summary>T-1013: pone los datos de las armas especiales (para pruebas y para CreadorArmas).</summary>
+        public DatosArma ConEspecial(TipoDisparoArma tipo, float radio, float velocidad, float carga, float rayo)
+        {
+            tipoDisparo = tipo;
+            radioExplosion = Mathf.Max(0f, radio);
+            velocidadProyectil = Mathf.Max(0f, velocidad);
+            segundosCarga = Mathf.Max(0f, carga);
+            segundosRayo = Mathf.Max(0f, rayo);
+            return this;
+        }
         public int Nivel => nivel;
         public int Precio => precio;
         public float Danio => danio;

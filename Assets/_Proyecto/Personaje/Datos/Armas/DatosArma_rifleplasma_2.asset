@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 821c6226efcb0ca4093622255201496d, type: 3}
+  m_Name: DatosArma_rifleplasma_2
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosArma
+  id: arma_rifleplasma_2
+  nombre: Rifle de plasma II
+  tipo: 4
+  valorVenta: 0
+  maximo: 1
+  oferta: {fileID: 11400000, guid: a47a65257fbf76b46a18aae1fa08de8b, type: 2}
+  arma: 9
+  nivel: 2
+  precio: 1200
+  danio: 165
+  perdigones: 1
+  cargador: 4
+  recarga: 2.3
+  tiempoEntreDisparos: 0.5
+  automatica: 0
+  dispersion: 0
+  dispersionApuntando: 0
+  alcance: 80
+  tipoDisparo: 3
+  radioExplosion: 0
+  velocidadProyectil: 22
+  segundosCarga: 3
+  segundosRayo: 5

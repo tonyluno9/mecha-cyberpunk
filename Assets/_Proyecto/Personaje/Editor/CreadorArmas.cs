@@ -36,6 +36,12 @@ namespace MechaCyberpunk.Personaje.Editor
             public float dispersionApuntando;
             public float alcance;
             public int[] precio;
+            // T-1013: armas especiales.
+            public TipoDisparoArma tipo = TipoDisparoArma.Bala;
+            public float[] radio;
+            public float velocidad = 22f;
+            public float carga;
+            public float rayo;
         }
 
         private static readonly Familia[] Familias =
@@ -54,7 +60,23 @@ namespace MechaCyberpunk.Personaje.Editor
                 dispersion = 2.5f, dispersionApuntando = 1.2f, precio = new[] { 700, 350, 600, 850 } },
             new Familia { arma = ArmaAPie.Sniper, clave = "sniper", nombre = "Sniper", danio = new[] { 70f, 85f, 100f, 120f },
                 cargador = new[] { 4, 5, 6, 7 }, recarga = new[] { 2.8f, 2.5f, 2.2f, 1.9f }, entre = 1.2f, alcance = 150f,
-                dispersion = 8f, dispersionApuntando = 0f, precio = new[] { 900, 400, 650, 900 } }
+                dispersion = 8f, dispersionApuntando = 0f, precio = new[] { 900, 400, 650, 900 } },
+            // T-1013: las armas nuevas (imageassets/modelos3d/armas_nuevas).
+            new Familia { arma = ArmaAPie.Subfusil, clave = "subfusil", nombre = "Subfusil", danio = new[] { 11f, 13f, 15f, 18f },
+                cargador = new[] { 25, 30, 35, 40 }, recarga = new[] { 1.6f, 1.4f, 1.25f, 1.1f }, entre = 0.07f, automatica = true, alcance = 45f,
+                dispersion = 4f, dispersionApuntando = 2.5f, precio = new[] { 500, 300, 500, 700 } },
+            new Familia { arma = ArmaAPie.Revolver, clave = "revolver", nombre = "Revólver", danio = new[] { 55f, 65f, 78f, 95f },
+                cargador = new[] { 6, 6, 6, 6 }, recarga = new[] { 2.2f, 2.0f, 1.7f, 1.5f }, entre = 0.55f, alcance = 70f,
+                dispersion = 1.5f, dispersionApuntando = 0.3f, precio = new[] { 400, 300, 500, 700 } },
+            new Familia { arma = ArmaAPie.Lanzagranadas, clave = "lanzagranadas", nombre = "Lanzagranadas", danio = new[] { 120f, 140f, 165f, 200f },
+                cargador = new[] { 6, 6, 6, 6 }, recarga = new[] { 3.0f, 2.7f, 2.3f, 2.0f }, entre = 0.8f, alcance = 60f,
+                precio = new[] { 1500, 600, 900, 1300 }, tipo = TipoDisparoArma.Proyectil, radio = new[] { 4.5f, 5f, 5.5f, 6f }, velocidad = 28f },
+            new Familia { arma = ArmaAPie.Granada, clave = "granada", nombre = "Granada", danio = new[] { 150f, 170f, 195f, 230f },
+                cargador = new[] { 1, 1, 1, 1 }, recarga = new[] { 0.6f, 0.55f, 0.5f, 0.45f }, entre = 0.8f, alcance = 40f,
+                precio = new[] { 300, 300, 500, 700 }, tipo = TipoDisparoArma.Lanzada, radio = new[] { 5f, 5.5f, 6f, 6.5f }, velocidad = 16f },
+            new Familia { arma = ArmaAPie.RiflePlasma, clave = "rifleplasma", nombre = "Rifle de plasma", danio = new[] { 120f, 140f, 165f, 200f },
+                cargador = new[] { 3, 3, 4, 5 }, recarga = new[] { 3.0f, 2.7f, 2.3f, 2.0f }, entre = 0.5f, alcance = 80f,
+                precio = new[] { 2500, 800, 1200, 1600 }, tipo = TipoDisparoArma.Rayo, carga = 3f, rayo = 5f }
         };
 
         private static readonly string[] Numerales = { string.Empty, " I", " II", " III" };
@@ -74,7 +96,6 @@ namespace MechaCyberpunk.Personaje.Editor
                 Directory.CreateDirectory(CarpetaArmas);
                 AssetDatabase.Refresh();
             }
-            BorrarSubfusil();
             var armas = new List<DatosArma>();
             var bases = new List<DatosOferta>();
             var mejoras = new List<DatosOferta>();
@@ -98,15 +119,6 @@ namespace MechaCyberpunk.Personaje.Editor
             ReemplazarArmas(AssetDatabase.LoadAssetAtPath<ScriptableObject>(RutaCatalogoObjetos), "objetos", armas);
             ReemplazarArmas(AssetDatabase.LoadAssetAtPath<ScriptableObject>(RutaTienda), "ofertas", ofertas);
             AssetDatabase.SaveAssets();
-        }
-
-        // T-416: el subfusil pasó a fusil; los assets viejos se borran.
-        private static void BorrarSubfusil()
-        {
-            foreach (string guid in AssetDatabase.FindAssets("subfusil", new[] { CarpetaArmas, CarpetaOfertas }))
-            {
-                AssetDatabase.DeleteAsset(AssetDatabase.GUIDToAssetPath(guid));
-            }
         }
 
         // Quita los vacíos (assets borrados) y las armas u ofertas de armas que ya estaban, y agrega las nuevas en su orden.
@@ -176,6 +188,11 @@ namespace MechaCyberpunk.Personaje.Editor
             so.FindProperty("dispersion").floatValue = f.dispersion;
             so.FindProperty("dispersionApuntando").floatValue = f.dispersionApuntando;
             so.FindProperty("alcance").floatValue = f.alcance;
+            so.FindProperty("tipoDisparo").enumValueIndex = (int)f.tipo;
+            so.FindProperty("radioExplosion").floatValue = f.radio != null ? f.radio[nivel] : 0f;
+            so.FindProperty("velocidadProyectil").floatValue = f.velocidad;
+            so.FindProperty("segundosCarga").floatValue = f.carga;
+            so.FindProperty("segundosRayo").floatValue = f.rayo;
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(arma);
             return arma;
