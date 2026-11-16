@@ -55,6 +55,11 @@ namespace MechaCyberpunk.UI.Rueda
                 case ArmaAPie.Escopeta: return "ESCOPETA";
                 case ArmaAPie.Fusil: return "FUSIL";
                 case ArmaAPie.Sniper: return "FRANCOTIRADOR";
+                case ArmaAPie.Subfusil: return "SUBFUSIL";
+                case ArmaAPie.Revolver: return "REVÓLVER";
+                case ArmaAPie.Lanzagranadas: return "LANZAGRANADAS";
+                case ArmaAPie.Granada: return "GRANADA";
+                case ArmaAPie.RiflePlasma: return "RIFLE DE PLASMA";
                 default: return arma.ToString().ToUpperInvariant();
             }
         }

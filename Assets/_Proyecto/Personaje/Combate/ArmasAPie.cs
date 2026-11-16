@@ -29,6 +29,11 @@ namespace MechaCyberpunk.Personaje.Combate
         [SerializeField] private GameObject visualEscopeta;
         [SerializeField] private GameObject visualFusil;
         [SerializeField] private GameObject visualSniper;
+        [Tooltip("T-1013: visuales de las armas nuevas (hijos del socket de la mano derecha), en el orden de ArmaAPie desde el subfusil: subfusil, revólver, lanzagranadas, granada y rifle de plasma.")]
+        [SerializeField] private GameObject[] visualesNuevas = new GameObject[0];
+
+        /// <summary>T-1013: la primera de las armas nuevas; las de aquí en adelante van en <see cref="visualesNuevas"/>.</summary>
+        public const ArmaAPie PrimeraNueva = ArmaAPie.Subfusil;
 
         private GolpeAPie golpe;
         private PistolaAPie pistola;
@@ -40,6 +45,22 @@ namespace MechaCyberpunk.Personaje.Combate
         private bool pistolaVisible;
 
         public ArmaAPie ArmaActiva => armaActiva;
+
+        /// <summary>El visual del arma en la mano (activo o no), o null si no hay.</summary>
+        public GameObject Visual(ArmaAPie arma)
+        {
+            switch (arma)
+            {
+                case ArmaAPie.Punos: return visualPunos;
+                case ArmaAPie.Pistola: return visualPistola;
+                case ArmaAPie.Escopeta: return visualEscopeta;
+                case ArmaAPie.Fusil: return visualFusil;
+                case ArmaAPie.Sniper: return visualSniper;
+                default:
+                    int i = (int)arma - (int)PrimeraNueva;
+                    return visualesNuevas != null && i >= 0 && i < visualesNuevas.Length ? visualesNuevas[i] : null;
+            }
+        }
         /// <summary>Nivel del arma en la mano (0 a 3; 0 si no hay arsenal).</summary>
         public int Nivel
         {
@@ -92,6 +113,8 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 pistolaVisible = visible;
                 Mostrar(visualPistola, ArmaAPie.Pistola, pistolaVisible);
+                // T-1014: el revólver y la granada usan la pose de pistola: también aparecen con el evento de sacar.
+                MostrarNuevas();
             }
         }
 
@@ -178,6 +201,16 @@ namespace MechaCyberpunk.Personaje.Combate
             Mostrar(visualEscopeta, ArmaAPie.Escopeta);
             Mostrar(visualFusil, ArmaAPie.Fusil);
             Mostrar(visualSniper, ArmaAPie.Sniper);
+            MostrarNuevas();
+        }
+
+        private void MostrarNuevas()
+        {
+            for (int i = 0; visualesNuevas != null && i < visualesNuevas.Length; i++)
+            {
+                ArmaAPie arma = (ArmaAPie)((int)PrimeraNueva + i);
+                Mostrar(visualesNuevas[i], arma, !ReglasArmaAPie.UsaPoseDePistola(arma) || pistolaVisible);
+            }
         }
 
         private void Mostrar(GameObject visual, ArmaAPie arma, bool permitido = true)

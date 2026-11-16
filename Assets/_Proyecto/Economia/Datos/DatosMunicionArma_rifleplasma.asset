@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543bbc1c48749034888dab06ef5543b9, type: 3}
+  m_Name: DatosMunicionArma_rifleplasma
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosMunicionArma
+  id: municion_arma_rifleplasma
+  nombre: Celdas de plasma
+  tipo: 3
+  valorVenta: 0
+  maximo: 9
+  oferta: {fileID: 11400000, guid: 361895d9e0bf43243a926f30011b32fe, type: 2}
+  arma: 9
+  balasPorPaquete: 3
+  balasIniciales: 3

@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Tests
 
         private static void Tienda(string archivo, IdLugar lugar, params DatosOferta[] ofertas) => Tienda(archivo, lugar, 0, ofertas);
 
-        // 'extras' son ofertas que se suman al final (las 19 de armas de El Mercado, T-416).
+        // 'extras' son ofertas que se suman al final: T-1013, las 39 de armas (10 armas, 4 niveles, sin los puños base) y las 8 de balas de El Mercado.
         private static void Tienda(string archivo, IdLugar lugar, int extras, params DatosOferta[] ofertas)
         {
             var t = AssetDatabase.LoadAssetAtPath<DatosTienda>($"{Carpeta}DatosTienda_{archivo}.asset");
@@ -113,7 +113,7 @@ namespace MechaCyberpunk.Tests
             var celdas = Oferta("MunicionCeldas", 40, TipoOferta.Municion);
             var cargas = Oferta("MunicionCargas", 50, TipoOferta.Municion);
 
-            Tienda("MercadoNegro", IdLugar.MercadoNegro, 22, kit, misil, brazo, combustible, celdas, cargas);
+            Tienda("MercadoNegro", IdLugar.MercadoNegro, 47, kit, misil, brazo, combustible, celdas, cargas);
             Tienda("Clinica", IdLugar.Clinica, ojos);
             Tienda("Bar", IdLugar.Bar, bebida);
         }

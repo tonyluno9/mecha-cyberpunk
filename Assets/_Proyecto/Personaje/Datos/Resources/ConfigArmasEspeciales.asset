@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a1c25f7c27dd9941bc89f3686714a09, type: 3}
+  m_Name: ConfigArmasEspeciales
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigArmasEspeciales
+  prefabExplosion: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
+  radioDelEfecto: 3
+  segundosEfecto: 4
+  danioEnElBorde: 0.3
+  danioAlJugador: 0.5
+  empuje: 9
+  colorDestello: {r: 1, g: 0.6, b: 0.25, a: 1}
+  intensidadDestello: 12
+  prefabGranada: {fileID: 5078022794559435476, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+  tamanoGranada: 0.12
+  mechaGranada: 2.2
+  elevacionLanzada: 14
+  rebote: 0.35
+  puntosArco: 40
+  segundosArco: 2.2
+  anchoArco: 0.04
+  colorArco: {r: 1, g: 0.85, b: 0.2, a: 0.85}
+  materialRayo: {fileID: 2100000, guid: 0f41838051668d845803ddd5198f0522, type: 2}
+  colorRayo: {r: 0.35, g: 0.85, b: 1, a: 1}
+  anchoRayo: 0.22
+  radioRayo: 0.35
+  tamanoCarga: 0.3
+  intensidadLuzRayo: 6
+  segundosZumbido: 0.35
+  segundosGiroTambor: 0.14

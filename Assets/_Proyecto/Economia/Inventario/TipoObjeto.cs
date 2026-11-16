@@ -9,6 +9,8 @@ namespace MechaCyberpunk.Economia
         Municion,
         Arma,
         /// <summary>Se usa con una tecla y da un efecto (T-685).</summary>
-        Consumible
+        Consumible,
+        /// <summary>T-1017: prótesis de ataque del Doc (brazo láser, hombrera de misiles); se usa desde la barra de habilidades.</summary>
+        Protesis
     }
 }

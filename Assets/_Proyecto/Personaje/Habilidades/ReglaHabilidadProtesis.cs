@@ -2,12 +2,17 @@ using System;
 
 namespace MechaCyberpunk.Personaje.Habilidades
 {
-    /// <summary>Las tres habilidades de prótesis (T-992), en el orden de sus teclas: [1] PIERNAS, [2] BRAZOS, [3] CABEZA.</summary>
+    /// <summary>
+    /// Las habilidades de prótesis (T-992), en el orden de sus teclas: [1] PIERNAS, [2] BRAZOS, [3] CABEZA (implantes de la clínica) y, desde T-1017,
+    /// las prótesis de ataque que se compran con el Doc: [4] LÁSER (brazo láser) y [5] MISILES (hombrera de misiles teledirigidos).
+    /// </summary>
     public enum HabilidadProtesis
     {
         Piernas = 0,
         Brazos = 1,
-        Cabeza = 2
+        Cabeza = 2,
+        Laser = 3,
+        Misiles = 4
     }
 
     /// <summary>Lista: se puede usar. Activa: el medidor se vacía y el efecto corre. Recargando: el medidor se llena y no se puede usar.</summary>

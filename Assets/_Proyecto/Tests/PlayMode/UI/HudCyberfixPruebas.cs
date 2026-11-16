@@ -93,7 +93,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsNotNull(piezas.SimboloBiits);
             Assert.IsNotNull(piezas.MarcoMinimapa);
             Assert.IsNotNull(piezas.PanelArma);
-            Assert.AreEqual(5, piezas.Armas.Length);
+            Assert.AreEqual(Enum.GetValues(typeof(MechaCyberpunk.Personaje.Combate.ArmaAPie)).Length, piezas.Armas.Length, "T-1014: un icono por arma del enum (puños, 4 armas y las 5 nuevas)");
             foreach (Sprite arma in piezas.Armas)
             {
                 Assert.IsNotNull(arma);

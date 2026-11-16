@@ -44,7 +44,7 @@ namespace MechaCyberpunk.UI.Hud
             {
                 return TextoArma(arma, balas, tamanoCargador, recargando, config);
             }
-            string nombre = arma == ArmaAPie.Escopeta ? "ESCOPETA" : arma == ArmaAPie.Fusil ? "FUSIL" : arma == ArmaAPie.Sniper ? "SNIPER" : "PISTOLA";
+            string nombre = arma == ArmaAPie.Pistola ? "PISTOLA" : MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.NombreArma(arma) == "FRANCOTIRADOR" ? "SNIPER" : MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.NombreArma(arma); // T-1013: también las armas nuevas
             if (recargando)
             {
                 return nombre + numeral + " · RECARGANDO";

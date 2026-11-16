@@ -211,7 +211,7 @@ namespace MechaCyberpunk.Tests.UI
             IEscudo escudo = Registro<IEscudo>.Actual;
             vida.RecibirDanio(Bala((escudo != null ? escudo.Actual : 0f) + 30f, jugador.transform.position + Vector3.up));
             yield return null;
-            yield return ElegirEnRueda(6);
+            yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(1));
             yield return null;
             yield return null;
             Assert.AreEqual("x1", h10.CantidadRanura(1), "Usar las papitas con la tecla 7 baja la cantidad en el HUD");

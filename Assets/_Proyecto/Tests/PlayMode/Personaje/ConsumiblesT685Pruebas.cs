@@ -53,7 +53,7 @@ namespace MechaCyberpunk.Tests.Personaje
             float vidaBaja = vida.Actual;
             inventario.Agregar(Dato("bebida_energetica"), 2);
             yield return null;
-            yield return ElegirEnRueda(5);
+            yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(0));
             Assert.AreEqual(1, inventario.Cantidad(Dato("bebida_energetica")), "Gasta una");
             Assert.AreEqual(vidaBaja + 25f, vida.Actual, 0.01f, "Cura");
             Assert.AreEqual(5f, vida.InvulnerableRestante, 0.3f, "5 s sin recibir daño");
@@ -72,11 +72,11 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Preparar();
             inventario.Agregar(Dato("papitas"), 2);
             yield return null;
-            yield return ElegirEnRueda(6);
+            yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(1));
             Assert.AreEqual(2, inventario.Cantidad(Dato("papitas")), "Con la vida llena no se gastan");
             vida.RecibirDanio(Bala(50f));
             float baja = vida.Actual;
-            yield return ElegirEnRueda(6);
+            yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(1));
             Assert.AreEqual(1, inventario.Cantidad(Dato("papitas")));
             Assert.AreEqual(baja + 15f, vida.Actual, 0.01f, "Curan poco");
         }
@@ -106,7 +106,7 @@ namespace MechaCyberpunk.Tests.Personaje
             float baja = vida.Actual;
             inventario.Agregar(Dato("venda"), 1);
             yield return null;
-            yield return ElegirEnRueda(7);
+            yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(2));
             Assert.IsTrue(consumibles.Curando);
             Assert.Less(vida.Actual - baja, 30f, "No cura todo de golpe");
             yield return Esperar(4.5f);
@@ -128,7 +128,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Physics.SyncTransforms();
             inventario.Agregar(Dato("cafe"), 1);
             yield return null;
-            yield return ElegirEnRueda(8);
+            yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(3));
             Assert.AreEqual(1.35f, controlador.FactorExtraVelocidad, 0.001f);
             Assert.Greater(consumibles.VelocidadRestante, 15f);
             z0 = jugador.transform.position.z;
@@ -149,7 +149,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(0f, escudo.Actual, 0.001f);
             inventario.Agregar(Dato("bateria_escudo"), 1);
             yield return null;
-            yield return ElegirEnRueda(9);
+            yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(4));
             Assert.AreEqual(30f, escudo.Actual, 0.01f);
             Assert.AreEqual(0, inventario.Cantidad(Dato("bateria_escudo")));
         }

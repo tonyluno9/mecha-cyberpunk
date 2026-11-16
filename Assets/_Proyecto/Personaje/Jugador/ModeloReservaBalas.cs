@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         public event Action Cambio;
 
         /// <summary>True si el arma gasta balas de reserva al recargar.</summary>
-        public static bool EsLimitada(ArmaAPie arma) => arma == ArmaAPie.Escopeta || arma == ArmaAPie.Fusil || arma == ArmaAPie.Sniper;
+        public static bool EsLimitada(ArmaAPie arma) => arma != ArmaAPie.Punos && arma != ArmaAPie.Pistola; // T-1013: todas menos puños y pistola
 
         /// <summary>True si la reserva del arma ya existe (ya se dieron sus balas iniciales).</summary>
         public bool Existe(ArmaAPie arma) => balas.ContainsKey(arma);

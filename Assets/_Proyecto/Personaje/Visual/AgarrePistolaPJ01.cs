@@ -26,6 +26,9 @@ namespace MechaCyberpunk.Personaje.Visual
         private Transform pistola;
         private Transform boca;
         private Quaternion agarreOriginal;
+        // T-1014: las armas de pose de pistola (pistola, revólver y granada) y el agarre con el que cada una entró en la mano.
+        private static readonly string[] NombresPistola = { "Pistola", "Revolver", "Granada" };
+        private readonly System.Collections.Generic.Dictionary<Transform, Quaternion> agarres = new System.Collections.Generic.Dictionary<Transform, Quaternion>();
 
         public bool Usar { get => usar; set => usar = value; }
 
@@ -60,19 +63,43 @@ namespace MechaCyberpunk.Personaje.Visual
             return retrocesoGrados * Mathf.Sin(Mathf.PI * t / retrocesoSegundos);
         }
 
+        // La que está en la mano (la primera activa); si ninguna lo está, se queda con la última. Con el cambio de arma devuelve el agarre original a la que se suelta.
+        private void ElegirArma()
+        {
+            Transform elegida = null;
+            foreach (string nombre in NombresPistola)
+            {
+                Transform t = ik.SocketArma.Find(nombre);
+                if (t != null && !agarres.ContainsKey(t))
+                {
+                    agarres[t] = t.localRotation;
+                }
+                if (elegida == null && t != null && t.gameObject.activeInHierarchy)
+                {
+                    elegida = t;
+                }
+            }
+            if (elegida == null && pistola == null)
+            {
+                elegida = ik.SocketArma.Find(NombresPistola[0]);
+            }
+            if (elegida != null && elegida != pistola)
+            {
+                if (pistola != null) { pistola.localRotation = agarres[pistola]; }
+                pistola = elegida;
+                boca = pistola.Find("Boca");
+                agarreOriginal = agarres[pistola];
+            }
+        }
+
         private void LateUpdate()
         {
             if (ik == null || ik.SocketArma == null)
             {
                 return;
             }
-            if (pistola == null)
-            {
-                pistola = ik.SocketArma.Find("Pistola");
-                if (pistola == null) { return; }
-                boca = pistola.Find("Boca");
-                agarreOriginal = pistola.localRotation;
-            }
+            ElegirArma();
+            if (pistola == null) { return; }
             if (!usar)
             {
                 pistola.localRotation = agarreOriginal;

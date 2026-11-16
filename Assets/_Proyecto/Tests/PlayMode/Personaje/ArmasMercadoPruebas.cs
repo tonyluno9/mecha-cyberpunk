@@ -306,14 +306,10 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => mostrador.PantallaAbierta && pantalla.Visible, "abrir El Mercado con E", 5f);
 
-            // b. La lista: PISTOLA, ESCOPETA, FUSIL y SNIPER con su precio, y nada de "subfusil".
-            foreach (string nombre in new[] { "PISTOLA", "ESCOPETA", "FUSIL", "SNIPER" })
+            // b. La lista: PISTOLA, ESCOPETA, FUSIL y SNIPER con su precio (T-1013: y las armas nuevas, como el subfusil).
+            foreach (string nombre in new[] { "PISTOLA", "ESCOPETA", "FUSIL", "SNIPER", "SUBFUSIL" })
             {
                 Assert.GreaterOrEqual(FilaBase(pantalla, nombre), 0, "El Mercado lista " + nombre);
-            }
-            for (int i = 0; i < pantalla.CantidadFilas; i++)
-            {
-                StringAssert.DoesNotContain("SUBFUSIL", pantalla.TextoFila(i).ToUpperInvariant());
             }
             StringAssert.Contains("700", pantalla.TextoFila(FilaBase(pantalla, "FUSIL")));
             StringAssert.Contains("900", pantalla.TextoFila(FilaBase(pantalla, "SNIPER")));
