@@ -112,11 +112,25 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         [Test]
-        public void Instalar_SinLigaSuficiente_EsLigaBaja()
+        public void Instalar_Nivel2_YaNoPideLiga()
         {
-            // Sin servicio de ligas la liga es 1 y el nivel 2 abre en la 3.
-            Assert.AreEqual(ResultadoImplante.LigaBaja, servicio.Instalar(Dato("implante_brazos_2")));
+            // T-1005: sin servicio de ligas la liga es 1 y el nivel II se compra en cuanto tienes el I.
+            Assert.AreEqual(ResultadoImplante.Instalado, servicio.Instalar(Dato("implante_brazos_1")));
+            Assert.AreEqual(ResultadoImplante.Instalado, servicio.Instalar(Dato("implante_brazos_2")));
+            Assert.AreEqual(2, servicio.Nivel(EspacioImplante.Brazos));
+            Assert.AreEqual(10000 - 5000, cartera.Dinero, "se cobró I más la diferencia");
+        }
+
+        [Test]
+        public void Instalar_ExoDePiernasI_EsGratisYNoCobra()
+        {
+            int cobros = 0;
+            cartera.Cambio += (d, m) => cobros++;
+            Assert.AreEqual(0, Dato("implante_piernas_1").Precio);
+            Assert.AreEqual(ResultadoImplante.Instalado, servicio.Instalar(Dato("implante_piernas_1")));
+            Assert.AreEqual(1, servicio.Nivel(EspacioImplante.Piernas));
             Assert.AreEqual(10000, cartera.Dinero);
+            Assert.AreEqual(0, cobros, "no hubo movimiento de dinero");
         }
 
         [Test]

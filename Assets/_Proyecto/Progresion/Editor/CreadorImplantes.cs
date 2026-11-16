@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Progresion.Editor
         public const string RutaCatalogo = Carpeta + "/CatalogoImplantes_Base.asset";
         private const string RutaPrefab = "Assets/_Proyecto/Progresion/Prefabs/ServiciosProgresion.prefab";
         private const int LigaNivel1 = 1;
-        private const int LigaNivel2 = 3;
+        private const int LigaNivel2 = 1; // T-1005: el nivel II se abre en cuanto tienes el I
 
         private static EfectosImplantes Efecto(float golpe = 1f, float correr = 1f, float salto = 1f, float reaccion = 1f,
             bool vida = false, bool numeros = false, float anticipacion = 0f,
@@ -49,7 +49,7 @@ namespace MechaCyberpunk.Progresion.Editor
                     "TUS PUÑOS PEGAN MÁS Y LA PISTOLA PATEA MENOS", Efecto(golpe: 1.5f, retroceso: 0.3f)),
                 DatosImplante.Crear("implante_brazos_2", "BRAZOS DE PRENSA", EspacioImplante.Brazos, 2, 5000, LigaNivel2,
                     "TUS PUÑOS PEGAN EL DOBLE Y LA PISTOLA CASI NO PATEA", Efecto(golpe: 2f, retroceso: 0.5f)),
-                DatosImplante.Crear("implante_piernas_1", "PIERNAS DE RESORTE", EspacioImplante.Piernas, 1, 2000, LigaNivel1,
+                DatosImplante.Crear("implante_piernas_1", "PIERNAS DE RESORTE", EspacioImplante.Piernas, 1, 0, LigaNivel1,
                     "CORRES, SALTAS Y RUEDAS MÁS", Efecto(correr: 1.2f, salto: 1.3f, rodada: 0.25f)),
                 DatosImplante.Crear("implante_piernas_2", "PIERNAS DE CHAPULÍN", EspacioImplante.Piernas, 2, 5000, LigaNivel2,
                     "CORRES, SALTAS Y RUEDAS MUCHO MÁS", Efecto(correr: 1.35f, salto: 1.6f, rodada: 0.4f)),

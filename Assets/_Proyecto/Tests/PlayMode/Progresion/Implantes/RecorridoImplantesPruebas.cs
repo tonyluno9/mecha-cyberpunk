@@ -102,7 +102,7 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
         private const int DineroTrasCobro = 0;
         private const int DineroParaMejorar = 20000;
         private const int DineroDePrueba = 777;
-        private const int PrecioPiernasMasBrazos = 4000;
+        private const int PrecioPiernasMasBrazos = 2000; // T-1005: PIERNAS I es gratis, BRAZOS I cuesta 2,000
         private const int FilaOjos = 0;
         private const int FilaBrazos = 1;
         private const int FilaPiernas = 2;
@@ -692,11 +692,11 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             VerificarCarrera("sin implantes", totalSin, tramoSin, datosPersonaje.VelocidadCorrer);
             Paso("a", string.Join("; ", medidas));
 
-            // b) Clínica: PIERNAS I y BRAZOS I, Ƀ4,000 en total, +2 h cada una; el espejo muestra las dos piezas.
+            // b) Clínica: PIERNAS I y BRAZOS I, Ƀ2,000 en total (PIERNAS I gratis), +2 h cada una; el espejo muestra las dos piezas.
             int dineroAntesB = cartera.Dinero;
             yield return InstalarVarios("b", (FilaPiernas, piernas1), (FilaBrazos, brazos1));
-            Assert.AreEqual(PrecioPiernasMasBrazos, piernas1.Precio + brazos1.Precio, "los precios de los assets suman 4,000");
-            Assert.AreEqual(dineroAntesB - PrecioPiernasMasBrazos, cartera.Dinero, "−Ƀ4,000 en total");
+            Assert.AreEqual(PrecioPiernasMasBrazos, piernas1.Precio + brazos1.Precio, "los precios de los assets suman 2,000");
+            Assert.AreEqual(dineroAntesB - PrecioPiernasMasBrazos, cartera.Dinero, "−Ƀ2,000 en total");
             Assert.AreEqual(piernas1.Nombre, implantes.Nombre(EspacioImplante.Piernas));
             Assert.AreEqual(brazos1.Nombre, implantes.Nombre(EspacioImplante.Brazos));
             yield return MirarseAlEspejo(false, null);
