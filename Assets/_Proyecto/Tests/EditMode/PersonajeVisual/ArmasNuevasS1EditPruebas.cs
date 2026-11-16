@@ -47,17 +47,19 @@ namespace MechaCyberpunk.Tests.Arte
         }
 
         [Test]
-        public void BancoDeTino_TieneLasCuatroArmasConIconoEImagenHolografica()
+        public void BancoDeTino_TieneLasNueveArmasConIconoEImagenHolografica()
         {
             ConfigMenuArmas config = AssetDatabase.LoadAssetAtPath<ConfigMenuArmas>("Assets/_Proyecto/UI/Datos/ConfigMenuArmas_Base.asset");
             Assert.IsNotNull(config);
-            Assert.AreEqual(4, config.Armas.Count);
-            ArmaAPie[] esperadas = { ArmaAPie.Pistola, ArmaAPie.Escopeta, ArmaAPie.Fusil, ArmaAPie.Sniper };
+            // T-1014: las cuatro de siempre y las cinco nuevas (sin puños), en el orden de ArmaAPie.
+            ArmaAPie[] esperadas = { ArmaAPie.Pistola, ArmaAPie.Escopeta, ArmaAPie.Fusil, ArmaAPie.Sniper, ArmaAPie.Subfusil, ArmaAPie.Revolver, ArmaAPie.Lanzagranadas, ArmaAPie.Granada, ArmaAPie.RiflePlasma };
+            Assert.AreEqual(esperadas.Length, config.Armas.Count);
             for (int i = 0; i < esperadas.Length; i++)
             {
                 Assert.AreEqual(esperadas[i], config.Armas[i].Arma);
                 Assert.IsNotNull(config.Armas[i].Icono, "Icono de " + esperadas[i]);
                 Assert.IsNotNull(config.Armas[i].Imagen, "Imagen de " + esperadas[i]);
+                Assert.IsNotNull(config.Armas[i].Modelo, "Modelo 3D de " + esperadas[i]);
             }
         }
     }

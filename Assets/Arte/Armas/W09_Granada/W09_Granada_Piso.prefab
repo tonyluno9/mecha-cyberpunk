@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4393878673391254412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7542079347660807952}
+  m_Layer: 0
+  m_Name: Modelo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7542079347660807952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4393878673391254412}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7586034919553249217}
+  m_Father: {fileID: 5051441848307926216}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4574798160616562845
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5051441848307926216}
+  - component: {fileID: 3701469025447457097}
+  m_Layer: 0
+  m_Name: W09_Granada_Piso
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5051441848307926216
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4574798160616562845}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7542079347660807952}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3701469025447457097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4574798160616562845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a3a8a7320b9d97478ead66e0999c146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Combate.ArmaEnPiso
+  arma: 8
+  nombre: la granada
+  colorBrillo: {r: 0.2, g: 1, b: 0.9, a: 1}
+  intensidadBrillo: 4
+  alcanceBrillo: 2.2
+  giroPorSegundo: 90
+  alturaFlotar: 0.25
+  amplitudFlotar: 0.06
+  frecuenciaFlotar: 1.2
+--- !u!1001 &28706753662385023
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7542079347660807952}
+    m_Modifications:
+    - target: {fileID: 5078022794559435476, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_Name
+      value: W09_Granada
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.015519999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.002338238
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+--- !u!4 &7586034919553249217 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7575897018038310078, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+  m_PrefabInstance: {fileID: 28706753662385023}
+  m_PrefabAsset: {fileID: 0}

@@ -67,6 +67,14 @@ namespace MechaCyberpunk.Personaje.Visual
         public static readonly Vector3 ManoIzquierdaArmaLarga = new Vector3(-0.038f, 0.006f, 0.273f);
         public static readonly Vector3 GiroManoIzquierdaArmaLarga = new Vector3(278.5f, 348.0f, 235.2f);
 
+        /// <summary>
+        /// T-1014: la mano izquierda de las armas largas nuevas en el espacio del arma (palma de la derecha en el origen, cañón a +Z, arriba +Y), medida sobre el render de lado de cada
+        /// modelo (Blender, rejilla de 0.1 m): subfusil en el agarre delantero, lanzagranadas en el agarre bajo el cañón y rifle de plasma bajo el bloque de energía.
+        /// </summary>
+        public static readonly Vector3 ManoIzquierdaSubfusil = new Vector3(-0.038f, -0.024f, 0.30f);
+        public static readonly Vector3 ManoIzquierdaLanzagranadas = new Vector3(-0.038f, -0.053f, 0.371f);
+        public static readonly Vector3 ManoIzquierdaRiflePlasma = new Vector3(-0.038f, -0.007f, 0.286f);
+
         public static Vector3 PosicionArmaLargaPJ01 => GiroManoUnity * (PosicionArmaLargaBlender * EscalaBlenderAUnity);
 
         /// <summary>
@@ -103,12 +111,14 @@ namespace MechaCyberpunk.Personaje.Visual
             return tiene;
         }
 
-        /// <summary>El agarre de un arma por su nombre en el socket (Pistola, Fusil, Escopeta, Sniper) para PJ01 (R_Hand); false si no se conoce.</summary>
+        /// <summary>El agarre de un arma por su nombre en el socket (Pistola, Fusil, Escopeta, Sniper y, T-1014, Subfusil, Revolver, Lanzagranadas, Granada, RiflePlasma) para PJ01 (R_Hand); false si no se conoce.</summary>
         public static bool TryObtener(string arma, out AgarreArma agarre)
         {
             switch (arma)
             {
                 case "Pistola":
+                case "Revolver": // T-1014: el revólver y la granada se agarran como la pistola (palma en la empuñadura, cañón al frente).
+                case "Granada":
                     agarre = new AgarreArma(PosicionPJ01, GiroPJ01, new Vector3(-0.12f, -0.06f, -0.08f), new Vector3(9f, 84f, 96f));
                     return true;
                 case "Fusil":
@@ -116,6 +126,15 @@ namespace MechaCyberpunk.Personaje.Visual
                 case "Sniper":
                     // T-965 (A6): las tres con el agarre del W03 de Blender; la mano izquierda donde la pone PJ01_Rifle_Apuntar.
                     agarre = new AgarreArma(PosicionArmaLargaPJ01, GiroArmaLargaPJ01, ManoIzquierdaArmaLarga, GiroManoIzquierdaArmaLarga);
+                    return true;
+                case "Subfusil":
+                    agarre = new AgarreArma(PosicionArmaLargaPJ01, GiroArmaLargaPJ01, ManoIzquierdaSubfusil, GiroManoIzquierdaArmaLarga);
+                    return true;
+                case "Lanzagranadas":
+                    agarre = new AgarreArma(PosicionArmaLargaPJ01, GiroArmaLargaPJ01, ManoIzquierdaLanzagranadas, GiroManoIzquierdaArmaLarga);
+                    return true;
+                case "RiflePlasma":
+                    agarre = new AgarreArma(PosicionArmaLargaPJ01, GiroArmaLargaPJ01, ManoIzquierdaRiflePlasma, GiroManoIzquierdaArmaLarga);
                     return true;
                 default:
                     agarre = default;

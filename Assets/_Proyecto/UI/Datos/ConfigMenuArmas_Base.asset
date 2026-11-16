@@ -49,6 +49,51 @@ MonoBehaviour:
     piezaCanon: Canon
     piezaMira: Mira
     tieneMira: 1
+  - arma: 5
+    nombre: SUBFUSIL
+    icono: {fileID: 2800000, guid: 801ca801c5c404e48815e953e1022ded, type: 3}
+    modelo: {fileID: 5669941787781308872, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+    imagen: {fileID: 2800000, guid: 801ca801c5c404e48815e953e1022ded, type: 3}
+    piezaCargador: 
+    piezaCanon: 
+    piezaMira: 
+    tieneMira: 1
+  - arma: 6
+    nombre: "REV\xD3LVER"
+    icono: {fileID: 2800000, guid: 2d41b7ad92930a946b102d4d79965bc0, type: 3}
+    modelo: {fileID: 8342746015109774610, guid: 15b09d1626092e34695036e38e206936, type: 3}
+    imagen: {fileID: 2800000, guid: 2d41b7ad92930a946b102d4d79965bc0, type: 3}
+    piezaCargador: 
+    piezaCanon: 
+    piezaMira: 
+    tieneMira: 1
+  - arma: 7
+    nombre: LANZAGRANADAS
+    icono: {fileID: 2800000, guid: 6bcc4efc3ddec6043ab82d92507d8d18, type: 3}
+    modelo: {fileID: 6036242900338142239, guid: 5c1e5273060afde45af9615d5a59c308, type: 3}
+    imagen: {fileID: 2800000, guid: 6bcc4efc3ddec6043ab82d92507d8d18, type: 3}
+    piezaCargador: 
+    piezaCanon: 
+    piezaMira: 
+    tieneMira: 1
+  - arma: 8
+    nombre: GRANADA
+    icono: {fileID: 2800000, guid: d04a194a4bc4d0347a1d0e2b33e2558c, type: 3}
+    modelo: {fileID: 5078022794559435476, guid: f2838f7cbb0b77f449f6b38ce9246766, type: 3}
+    imagen: {fileID: 2800000, guid: d04a194a4bc4d0347a1d0e2b33e2558c, type: 3}
+    piezaCargador: 
+    piezaCanon: 
+    piezaMira: 
+    tieneMira: 1
+  - arma: 9
+    nombre: RIFLE DE PLASMA
+    icono: {fileID: 2800000, guid: 295e7cbded036334ebbc62d6043b8061, type: 3}
+    modelo: {fileID: 5767179017206332319, guid: c614113fe3391cc40b4157863b449f22, type: 3}
+    imagen: {fileID: 2800000, guid: 295e7cbded036334ebbc62d6043b8061, type: 3}
+    piezaCargador: 
+    piezaCanon: 
+    piezaMira: 
+    tieneMira: 1
   piezas:
   - pieza: 0
     nombre: CARGADOR
@@ -71,9 +116,10 @@ MonoBehaviour:
   anchoTextura: 1152
   altoTextura: 720
   campoVision: 28
-  distancia: 3.5
-  distanciaMinima: 1.5
-  distanciaMaxima: 4
+  llenadoAncho: 0.8
+  llenadoAlto: 0.75
+  zoomMinimo: 0.6
+  zoomMaximo: 1.5
   pasoRueda: 0.25
   sensibilidad: 0.35
   inclinacionMaxima: 55

@@ -18,3 +18,13 @@ namespace MechaCyberpunk.Personaje.Combate
         RiflePlasma
     }
 }
+
+namespace MechaCyberpunk.Personaje.Combate
+{
+    /// <summary>T-1014: reglas del tipo de arma para la animación y el agarre.</summary>
+    public static class ReglasArmaAPie
+    {
+        /// <summary>El arma se maneja con la pose de pistola (una mano, se saca y se guarda): pistola, revólver y granada. Las demás armas nuevas y las viejas usan la pose de armas largas.</summary>
+        public static bool UsaPoseDePistola(ArmaAPie arma) => arma == ArmaAPie.Pistola || arma == ArmaAPie.Revolver || arma == ArmaAPie.Granada;
+    }
+}

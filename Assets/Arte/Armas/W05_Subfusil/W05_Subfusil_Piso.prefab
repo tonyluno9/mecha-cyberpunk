@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5675738582986578840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 294369475587906522}
+  - component: {fileID: 1529957011756240623}
+  m_Layer: 0
+  m_Name: W05_Subfusil_Piso
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &294369475587906522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5675738582986578840}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5082169991435677351}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1529957011756240623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5675738582986578840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a3a8a7320b9d97478ead66e0999c146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Combate.ArmaEnPiso
+  arma: 5
+  nombre: el subfusil
+  colorBrillo: {r: 0.2, g: 1, b: 0.9, a: 1}
+  intensidadBrillo: 4
+  alcanceBrillo: 2.2
+  giroPorSegundo: 90
+  alturaFlotar: 0.25
+  amplitudFlotar: 0.06
+  frecuenciaFlotar: 1.2
+--- !u!1 &7322050767363022147
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5082169991435677351}
+  m_Layer: 0
+  m_Name: Modelo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5082169991435677351
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7322050767363022147}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8481028257827520868}
+  m_Father: {fileID: 294369475587906522}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7968884308180413384
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5082169991435677351}
+    m_Modifications:
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.03811571
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00002094724
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.1890814
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669941787781308872, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+      propertyPath: m_Name
+      value: W05_Subfusil
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+--- !u!4 &8481028257827520868 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1956110671441242796, guid: 16e6ece02f333e74ba04436f562406eb, type: 3}
+  m_PrefabInstance: {fileID: 7968884308180413384}
+  m_PrefabAsset: {fileID: 0}

@@ -22,8 +22,17 @@ namespace MechaCyberpunk.Arte.Editor
         public const string RutaMaterialHud = "Assets/_Proyecto/UI/Resources/UIHologramaHud.mat";
         public const string ShaderHud = "MechaCyberpunk/UI/HologramaHud";
 
-        /// <summary>Los archivos que se buscan (sin carpeta), en el orden de las armas: pistola, escopeta, fusil, francotirador.</summary>
-        public static readonly string[] Archivos = { "H01_Pistola.png", "H02_Escopeta.png", "H03_Fusil.png", "H04_Francotirador.png" };
+        /// <summary>
+        /// Los archivos que se buscan (sin carpeta), en el orden de ArmaAPie desde la pistola: pistola, escopeta, fusil, francotirador y, T-1014 (los hace
+        /// imageassets/ui/hologramas/generar_t1014.py), subfusil, revólver, lanzagranadas, granada y rifle de plasma.
+        /// </summary>
+        public static readonly string[] Archivos =
+        {
+            "H01_Pistola.png", "H02_Escopeta.png", "H03_Fusil.png", "H04_Francotirador.png",
+            "H05_Subfusil.png", "H06_Revolver.png", "H07_Lanzagranadas.png", "H08_Granada.png", "H09_RiflePlasma.png"
+        };
+        /// <summary>T-1014: cuántas armas del enum hay (puños incluidos): los arrays de PiezasUI (armas y armasHolograma) quedan de este tamaño.</summary>
+        public const int ArmasEnElEnum = 10;
 
         [MenuItem("Mecha Cyberpunk/S2n/Hologramas de armas (H01-H04)")]
         public static void Importar()
@@ -89,6 +98,19 @@ namespace MechaCyberpunk.Arte.Editor
                 puestos += sprite != null ? 1 : 0;
             }
             so.FindProperty("materialHolograma").objectReferenceValue = material;
+            // T-1014: el icono normal de las armas nuevas (no tienen otro) es su holograma; el array de iconos queda del tamaño del enum.
+            SerializedProperty iconos = so.FindProperty("armas");
+            if (iconos.arraySize < ArmasEnElEnum)
+            {
+                iconos.arraySize = ArmasEnElEnum;
+            }
+            for (int i = 5; i < ArmasEnElEnum && i < lista.arraySize; i++)
+            {
+                if (iconos.GetArrayElementAtIndex(i).objectReferenceValue == null)
+                {
+                    iconos.GetArrayElementAtIndex(i).objectReferenceValue = lista.GetArrayElementAtIndex(i).objectReferenceValue;
+                }
+            }
             so.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.SaveAssets();
             Debug.Log("[Arte] HUD: " + puestos + " armas con icono holográfico");

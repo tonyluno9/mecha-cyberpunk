@@ -50,6 +50,19 @@ namespace MechaCyberpunk.UI.Editor
 
         private static void Poner(SerializedObject so, string campo, Sprite sprite) => so.FindProperty(campo).objectReferenceValue = sprite;
 
+        /// <summary>T-1014: las armas nuevas (subfusil, revólver, lanzagranadas, granada y rifle de plasma) no tienen otro icono que su holograma: armas queda del tamaño del enum.</summary>
+        private static void PonerIconosArmasNuevas(SerializedObject so)
+        {
+            string[] hologramas = { "H05_Subfusil", "H06_Revolver", "H07_Lanzagranadas", "H08_Granada", "H09_RiflePlasma" };
+            SerializedProperty lista = so.FindProperty("armas");
+            int primera = lista.arraySize;
+            lista.arraySize = primera + hologramas.Length;
+            for (int i = 0; i < hologramas.Length; i++)
+            {
+                lista.GetArrayElementAtIndex(primera + i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Arte/UI/Hologramas/" + hologramas[i] + ".png");
+            }
+        }
+
         private static void PonerLista(SerializedObject so, string campo, string grupo, string[] nombres)
         {
             SerializedProperty lista = so.FindProperty(campo);
@@ -85,6 +98,7 @@ namespace MechaCyberpunk.UI.Editor
             Poner(so, "logo", Cargar("Marca", "logo_cyberfix"));
             Poner(so, "fondoMenu", Cargar("Marca", "fondo_menu"));
             PonerLista(so, "armas", "Armas", new[] { "arma_punos", "arma_pistola", "arma_escopeta", "arma_fusil", "arma_sniper" });
+            PonerIconosArmasNuevas(so);
             PonerLista(so, "estados", "Estado", new[] { "estado_respeto", "estado_calor", "estado_aliados", "estado_implantes", "estado_objetivo", "estado_telefono" });
             PonerLista(so, "iconosMapa", "Mapa", new[] { "mapa_casa", "mapa_mercado_negro", "mapa_clinica", "mapa_taller", "mapa_bar", "mapa_casino", "mapa_mision" });
             PonerLista(so, "reticulas", "Reticulas", new[] { "reticula_mira", "reticula_sniper", "reticula_impacto" });
