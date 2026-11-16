@@ -504,6 +504,29 @@ namespace MechaCyberpunk.Tests.Demo
             Debug.Log("[T-476] NavMesh horneado: " + fuentes.Count + " fuentes (de " + antes + ") triángulos " + NavMesh.CalculateTriangulation().indices.Length / 3);
         }
 
+        // T-1113: pulsa Esc hasta que la clínica del Doc esté cerrada y el jugador tenga el control (máximo <segundos>). Si ya está así no hace nada.
+        private IEnumerator AsegurarControlDelJugador(MechaCyberpunk.UI.Clinica.PantallaClinica clinica, MechaCyberpunk.UI.Clinica.MostradorClinica mostrador, float segundos)
+        {
+            float fin = Time.realtimeSinceStartup + segundos;
+            int escapes = 0;
+            while (Time.realtimeSinceStartup < fin
+                && ((clinica != null && clinica.Visible) || (mostrador != null && (mostrador.PantallaAbierta || mostrador.Operando)) || !Controlador.ControlActivo))
+            {
+                if (mostrador != null && mostrador.Operando)
+                {
+                    yield return null; // la operación termina sola
+                    continue;
+                }
+                yield return Pulsar(teclado.escapeKey, 10);
+                yield return Segundos(0.5f);
+                escapes++;
+            }
+            if (escapes > 0)
+            {
+                Debug.Log("[T-1113] control del jugador devuelto tras " + escapes + " Esc: clínica visible " + (clinica != null && clinica.Visible) + " control " + Controlador.ControlActivo);
+            }
+        }
+
         // Como un jugador ante una puerta que le cierra el paso: se acerca, la mira de frente y pulsa E; si no se mueve, esa puerta no abre (cerrada en la demo)
         // y el NavMesh se hornea de nuevo sin ese paso. Devuelve true si había una puerta por probar.
         private IEnumerator UsarPuerta(Func<bool> terminar)
@@ -1905,6 +1928,7 @@ namespace MechaCyberpunk.Tests.Demo
                 // La clínica abre cuando el Doc termina de hablar (varios segundos): se espera hasta 15 s a que abra y se cierra.
                 float finClinica = Time.realtimeSinceStartup + 15f;
                 bool cerrada = false;
+                MechaCyberpunk.UI.Clinica.MostradorClinica mostradorDoc = Object.FindFirstObjectByType<MechaCyberpunk.UI.Clinica.MostradorClinica>(FindObjectsInactive.Include);
                 while (Time.realtimeSinceStartup < finClinica && !cerrada)
                 {
                     if ((clinica != null && clinica.Visible) || !Controlador.ControlActivo)
@@ -1917,9 +1941,14 @@ namespace MechaCyberpunk.Tests.Demo
                 }
                 // Lejos del Doc antes de seguir: si el bot se traba junto a él y pulsa E, la clínica volvería a abrir.
                 yield return Segundos(0.5f);
-                if (clinica != null && clinica.Visible)
+                Debug.Log("[T-1113] fin de la espera: cerrada " + cerrada + " clínica visible " + (clinica != null && clinica.Visible) + " mostrador abierta " + (mostradorDoc != null && mostradorDoc.PantallaAbierta)
+                    + " control " + Controlador.ControlActivo + " paso " + director.Paso);
+                // T-1113: antes de seguir el control del jugador tiene que haber vuelto (si la clínica abre tarde o un Esc se pierde, se insiste).
+                yield return AsegurarControlDelJugador(clinica, mostradorDoc, 10f);
+                if ((clinica != null && clinica.Visible) || !Controlador.ControlActivo)
                 {
-                    Bug("La clínica del Doc no se cierra con Esc", "sigue abierta tras varios Esc", "A", true);
+                    Bug("La clínica del Doc no se cierra con Esc", "sigue abierta o sin control tras varios Esc: clínica " + (clinica != null && clinica.Visible)
+                        + ", control " + Controlador.ControlActivo, "A", true);
                 }
             }
             else
@@ -1928,6 +1957,9 @@ namespace MechaCyberpunk.Tests.Demo
             }
             TerminarTramo();
             IniciarTramo("09 EL INVENTOR (mejora de la pistola)");
+            // T-1113: si la clínica del Doc abrió después del tramo 08, aquí se cierra antes de caminar (el control apagado dejaba al bot atorado junto al Doc).
+            yield return AsegurarControlDelJugador(Object.FindFirstObjectByType<MechaCyberpunk.UI.Clinica.PantallaClinica>(FindObjectsInactive.Include),
+                Object.FindFirstObjectByType<MechaCyberpunk.UI.Clinica.MostradorClinica>(FindObjectsInactive.Include), 10f);
             if (director.Paso == PasoHistoria.Inventor)
             {
                 yield return IrYUsar("EL INVENTOR", () => director.Paso != PasoHistoria.Inventor, 75f, 8f, DirectorPandillas.IdInventor);
