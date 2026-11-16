@@ -109,7 +109,6 @@ namespace MechaCyberpunk.Tests
             PandilleroAPie p = c.GetComponent<PandilleroAPie>();
             Assert.AreEqual(220f, p.Maxima, 0.001f);
             Assert.AreEqual(2.2f, p.Datos.Velocidad, 0.001f);
-            Assert.IsNotNull(c.Escudo.Placa, "el escudo tiene su placa visible");
         }
 
         [UnityTest]
@@ -187,6 +186,9 @@ namespace MechaCyberpunk.Tests
             PandilleroAPie p = c.GetComponent<PandilleroAPie>();
             float antes = p.Actual;
             ResultadoDanio de = p.RecibirDanio(Golpe(p, 20f, Vector3.forward));
+            Assert.IsNotNull(c.Escudo.Chispas, "al bloquear sale la ráfaga de chispas");
+            yield return null;
+            Assert.Greater(c.Escudo.Chispas.particleCount, 0, "hay chispas vivas");
             Assert.AreEqual(TipoBloqueo.Normal, de.Bloqueo);
             Assert.AreEqual(3f, antes - p.Actual, 0.01f, "de frente entra el 15% de 20");
             antes = p.Actual;
@@ -210,7 +212,6 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(1, rotos, "150 de daño bruto rompen el escudo");
             yield return null;
             Assert.IsFalse(c.Escudo.Activo);
-            Assert.IsFalse(c.Escudo.Placa.gameObject.activeSelf, "la placa se esconde");
             Assert.AreEqual(ReglaGuardiaPesado.Fase.Aturdido, c.Regla.Actual);
             Assert.IsTrue(p.Castigable, "aturdido queda castigable");
             float antes = p.Actual;
@@ -222,7 +223,6 @@ namespace MechaCyberpunk.Tests
             yield return Esperar(4f);
             Assert.IsTrue(c.Escudo.Activo, "a los 5 s el escudo vuelve completo");
             Assert.AreEqual(150f, c.Escudo.Regla.Aguante, 0.001f);
-            Assert.IsTrue(c.Escudo.Placa.gameObject.activeSelf);
         }
 
         [UnityTest]
@@ -310,20 +310,25 @@ namespace MechaCyberpunk.Tests
             }
             Directory.CreateDirectory(CarpetaFotos);
             yield return Esperar(0.3f);
-            ConductaGuardiaPesado c = Crear(new Vector3(0f, 0.05f, 4f), MiraAlJugador);
-            yield return Esperar(0.4f);
-            PandilleroAPie p = c.GetComponent<PandilleroAPie>();
+            // El jugador real le pega de frente (puño con el ratón); la cámara lo ve de lado, del lado del escudo (antebrazo izquierdo).
+            ConductaGuardiaPesado c = Crear(new Vector3(0f, 0.05f, 1.6f), MiraAlJugador);
+            yield return Esperar(0.3f);
             GameObject go = new GameObject("CamaraFoto");
             extras.Add(go);
             foreach (Camera otra in Camera.allCameras) otra.enabled = false;
             Camera camara = go.AddComponent<Camera>();
             go.tag = "MainCamera";
             camara.farClipPlane = 100f;
-            go.transform.position = c.transform.position + new Vector3(-1.4f, 1.7f, -2.6f);
-            go.transform.LookAt(c.transform.position + Vector3.up * 1.1f);
-            p.RecibirDanio(Golpe(p, 8f, Vector3.forward));
-            p.RecibirDanio(Golpe(p, 8f, Vector3.forward)); // un segundo golpe: la chispa se ve en este cuadro
+            go.transform.position = c.transform.position + new Vector3(3.2f, 1.5f, 0.4f);
+            go.transform.LookAt(c.transform.position + new Vector3(0f, 1.1f, -0.4f));
+            Press(raton.leftButton);
             yield return null;
+            yield return null;
+            Release(raton.leftButton);
+            float limite = Time.time + 2f;
+            while ((c.Escudo.Chispas == null || c.Escudo.Chispas.particleCount == 0) && Time.time < limite) yield return null;
+            Assert.IsNotNull(c.Escudo.Chispas);
+            Assert.Greater(c.Escudo.Chispas.particleCount, 0, "el puño de frente saca chispas");
             RenderTexture rt = new RenderTexture(1280, 720, 24);
             camara.targetTexture = rt;
             camara.Render();

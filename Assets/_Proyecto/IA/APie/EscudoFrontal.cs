@@ -6,29 +6,31 @@ namespace MechaCyberpunk.IA.APie
 {
     /// <summary>
     /// T-1109: el escudo del guardia pesado de Nova (E12) como filtro de daño del <see cref="PandilleroAPie"/>. Traduce <see cref="ReglaEscudoFrontal"/>:
-    /// de frente reduce 85% (TipoBloqueo.Normal, con un flash de chispa y sonido metálico), aguanta 150 de daño bruto y al romperse avisa con <see cref="Roto"/>.
-    /// Dibuja una placa metálica azul en el antebrazo izquierdo (hueso LeftLowerArm); se esconde mientras el escudo está caído.
+    /// de frente reduce 85% (TipoBloqueo.Normal), aguanta 150 de daño bruto y al romperse avisa con <see cref="Roto"/>. El escudo que se ve es el del propio
+    /// modelo E12 (antebrazo izquierdo); este componente solo pone la lógica y, al bloquear, una ráfaga de chispas amarillo-blancas a la altura del escudo
+    /// y un destello de luz de 0.15 s, más un sonido metálico.
     /// </summary>
     public class EscudoFrontal : MonoBehaviour, IFiltroDanioAPie
     {
         private const string SonidoMetal = "ARM_BALA_IMPACTO_METAL";
-        private const float SegundosChispa = 0.12f;
-        private static readonly Vector3 TamanoPlaca = new Vector3(0.5f, 0.7f, 0.06f);
-        private const float AdelantePlaca = 0.2f;
+        private const float SegundosChispa = 0.15f;
+        private const int ChispasPorGolpe = 24;
+        private const float AdelanteEscudo = 0.25f;
+        private const float AlturaPechoPorDefecto = 1.3f;
+        private static readonly Color ColorChispa = new Color(1f, 0.92f, 0.55f, 1f);
 
-        [Tooltip("Material metálico azul de la placa del escudo.")]
-        [SerializeField] private Material materialPlaca;
+        [Tooltip("Material aditivo de las chispas del bloqueo.")]
+        [SerializeField] private Material materialChispa;
 
         private ReglaEscudoFrontal regla;
-        private PandilleroAPie pandillero;
-        private Transform placa;
-        private Light chispa;
-        private float finChispa;
-        private bool placaVisible = true;
+        private Transform huesoEscudo;
+        private Light destello;
+        private ParticleSystem chispas;
+        private float finDestello = -1f;
 
         public ReglaEscudoFrontal Regla => regla ?? (regla = new ReglaEscudoFrontal());
         public bool Activo => Regla.Activo;
-        public Transform Placa => placa;
+        public ParticleSystem Chispas => chispas;
 
         /// <summary>Se rompió el escudo (el aguante llegó a 0).</summary>
         public event Action Roto;
@@ -36,27 +38,18 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Llegó un golpe o bala (de frente o no): la conducta lo toma como provocación.</summary>
         public event Action Golpeado;
 
-        private void Awake()
-        {
-            pandillero = GetComponent<PandilleroAPie>();
-        }
-
         private void Start()
         {
-            CrearPlaca();
+            Animator animador = GetComponentInChildren<Animator>(true);
+            huesoEscudo = animador != null && animador.isHuman ? animador.GetBoneTransform(HumanBodyBones.LeftLowerArm) : null;
         }
 
         private void Update()
         {
             Regla.Avanzar(Time.deltaTime);
-            if (placa != null && placaVisible != Regla.Activo)
+            if (destello != null && destello.enabled && Time.time >= finDestello)
             {
-                placaVisible = Regla.Activo;
-                placa.gameObject.SetActive(placaVisible);
-            }
-            if (chispa != null && chispa.enabled && Time.time >= finChispa)
-            {
-                chispa.enabled = false;
+                destello.enabled = false;
             }
         }
 
@@ -67,7 +60,7 @@ namespace MechaCyberpunk.IA.APie
             Golpeado?.Invoke();
             if (r.Bloqueo != TipoBloqueo.Ninguno)
             {
-                Chispar(info.Punto != Vector3.zero ? info.Punto : p.transform.position + Vector3.up * 1.2f + p.transform.forward * 0.5f);
+                Chispar(PuntoEscudo(p));
                 Sonidos.ReproducirEn(SonidoMetal, p.transform.position);
             }
             if (r.SeRompio)
@@ -83,49 +76,63 @@ namespace MechaCyberpunk.IA.APie
             Regla.Reiniciar();
         }
 
-        private void Chispar(Vector3 punto)
+        // La altura del escudo del modelo: el antebrazo izquierdo, un poco hacia el frente.
+        private Vector3 PuntoEscudo(PandilleroAPie p)
         {
-            if (chispa == null)
-            {
-                GameObject go = new GameObject("ChispaEscudo");
-                go.transform.SetParent(transform, false);
-                chispa = go.AddComponent<Light>();
-                chispa.type = LightType.Point;
-                chispa.color = new Color(1f, 0.85f, 0.5f);
-                chispa.range = 4f;
-                chispa.intensity = 8f;
-                chispa.shadows = LightShadows.None;
-            }
-            chispa.transform.position = punto;
-            chispa.enabled = true;
-            finChispa = Time.time + SegundosChispa;
+            Vector3 centro = huesoEscudo != null ? huesoEscudo.position : p.transform.position + Vector3.up * AlturaPechoPorDefecto;
+            return centro + p.transform.forward * AdelanteEscudo;
         }
 
-        private void CrearPlaca()
+        private void Chispar(Vector3 punto)
         {
-            Animator animador = GetComponentInChildren<Animator>(true);
-            Transform hueso = animador != null && animador.isHuman ? animador.GetBoneTransform(HumanBodyBones.LeftLowerArm) : null;
-            Transform padre = hueso != null ? hueso : transform;
-            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            go.name = "PlacaEscudo";
-            Collider col = go.GetComponent<Collider>();
-            if (col != null)
+            if (chispas == null)
             {
-                Destroy(col); // la placa no estorba a las balas ni al jugador
+                CrearEfectos();
             }
-            if (materialPlaca != null)
+            chispas.transform.position = punto;
+            chispas.Emit(ChispasPorGolpe);
+            destello.transform.position = punto;
+            destello.enabled = true;
+            finDestello = Time.time + SegundosChispa;
+        }
+
+        private void CrearEfectos()
+        {
+            GameObject go = new GameObject("ChispasEscudo");
+            go.transform.SetParent(transform, false);
+            chispas = go.AddComponent<ParticleSystem>();
+            chispas.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            ParticleSystem.MainModule main = chispas.main;
+            main.loop = false;
+            main.playOnAwake = false;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.startLifetime = SegundosChispa;
+            main.startSpeed = new ParticleSystem.MinMaxCurve(4f, 8f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.08f, 0.22f);
+            main.startColor = ColorChispa;
+            main.maxParticles = 200;
+            ParticleSystem.EmissionModule emision = chispas.emission;
+            emision.enabled = false; // las ráfagas salen con Emit
+            ParticleSystem.ShapeModule forma = chispas.shape;
+            forma.shapeType = ParticleSystemShapeType.Sphere;
+            forma.radius = 0.08f;
+            ParticleSystemRenderer render = chispas.GetComponent<ParticleSystemRenderer>();
+            render.renderMode = ParticleSystemRenderMode.Stretch;
+            render.lengthScale = 2.5f;
+            render.velocityScale = 0.1f;
+            if (materialChispa != null)
             {
-                go.GetComponent<Renderer>().sharedMaterial = materialPlaca;
+                render.sharedMaterial = materialChispa;
             }
-            go.transform.SetParent(padre, false);
-            Vector3 centro = hueso != null ? hueso.position : transform.position + Vector3.up * 1.2f;
-            go.transform.position = centro + transform.forward * AdelantePlaca;
-            go.transform.rotation = transform.rotation;
-            Vector3 escala = padre.lossyScale;
-            go.transform.localScale = new Vector3(TamanoPlaca.x / Mathf.Max(escala.x, 0.0001f), TamanoPlaca.y / Mathf.Max(escala.y, 0.0001f), TamanoPlaca.z / Mathf.Max(escala.z, 0.0001f));
-            placa = go.transform;
-            placaVisible = true;
-            placa.gameObject.SetActive(Regla.Activo);
+            GameObject luz = new GameObject("DestelloEscudo");
+            luz.transform.SetParent(transform, false);
+            destello = luz.AddComponent<Light>();
+            destello.type = LightType.Point;
+            destello.color = ColorChispa;
+            destello.range = 5f;
+            destello.intensity = 14f;
+            destello.shadows = LightShadows.None;
+            destello.enabled = false;
         }
     }
 }

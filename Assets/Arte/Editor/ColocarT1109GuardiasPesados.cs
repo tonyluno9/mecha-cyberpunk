@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Arte.Editor
 {
     /// <summary>
-    /// T-1109: crea los datos (DatosPandilleroAPie_GuardiaPesadoE12), el material de la placa del escudo y el prefab GuardiaPesado_E12, y coloca 1 guardia pesado
+    /// T-1109: crea los datos (DatosPandilleroAPie_GuardiaPesadoE12), el material de las chispas del escudo y el prefab GuardiaPesado_E12, y coloca 1 guardia pesado
     /// a cada lado de la entrada de la torre principal de Nova (el edificio más alto de S2c_Nova), en la banqueta y sin tapar el paso. Elige el punto por sondeo
     /// de física. Idempotente: rehace la raíz <see cref="Raiz"/>, con un <see cref="PuestoGuardiasPesados"/> que guarda a los dos guardias para T-1110.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.ColocarT1109GuardiasPesados.Colocar
@@ -18,7 +18,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const string Raiz = "T1109_GuardiasPesados";
         public const string RutaDatos = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_GuardiaPesadoE12.asset";
         public const string RutaPrefab = "Assets/_Proyecto/IA/Prefabs/GuardiaPesado_E12.prefab";
-        public const string RutaMaterial = "Assets/_Proyecto/IA/Prefabs/Mat_PlacaEscudoNova.mat";
+        public const string RutaMaterial = "Assets/_Proyecto/IA/Prefabs/Mat_ChispaEscudoNova.mat";
         private const string RutaDatosBase = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeNova.asset";
         private const string RutaPrefabBase = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab";
         private const string RutaVisualE12 = "Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_E12_GuardiaPesadoNova.prefab";
@@ -175,12 +175,19 @@ namespace MechaCyberpunk.Arte.Editor
             Material m = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterial);
             if (m == null)
             {
-                m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                m = new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit"));
                 AssetDatabase.CreateAsset(m, RutaMaterial);
             }
-            m.SetColor("_BaseColor", new Color(0.12f, 0.32f, 0.75f));
-            m.SetFloat("_Metallic", 0.85f);
-            m.SetFloat("_Smoothness", 0.7f);
+            // Transparente de mezcla aditiva: las chispas brillan sobre lo que hay detrás.
+            m.SetFloat("_Surface", 1f);
+            m.SetFloat("_Blend", 2f);
+            m.SetFloat("_SrcBlend", 1f);
+            m.SetFloat("_DstBlend", 1f);
+            m.SetFloat("_ZWrite", 0f);
+            m.SetOverrideTag("RenderType", "Transparent");
+            m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            m.renderQueue = 3000;
+            m.SetColor("_BaseColor", Color.white);
             EditorUtility.SetDirty(m);
             AssetDatabase.SaveAssets();
             return m;
@@ -189,7 +196,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Prefab del guardia: PandilleroAPie con el visual E12, <see cref="ConductaGuardiaPesado"/> y <see cref="EscudoFrontal"/>.</summary>
         public static void AsegurarPrefab()
         {
-            Material placa = AsegurarMaterial();
+            Material chispa = AsegurarMaterial();
             GameObject contenido = PrefabUtility.LoadPrefabContents(RutaPrefabBase);
             try
             {
@@ -205,7 +212,7 @@ namespace MechaCyberpunk.Arte.Editor
                     contenido.AddComponent<ConductaGuardiaPesado>();
                 }
                 SerializedObject soE = new SerializedObject(contenido.GetComponent<EscudoFrontal>());
-                soE.FindProperty("materialPlaca").objectReferenceValue = placa;
+                soE.FindProperty("materialChispa").objectReferenceValue = chispa;
                 soE.ApplyModifiedPropertiesWithoutUndo();
                 SerializedObject so = new SerializedObject(contenido.GetComponent<PandilleroAPie>());
                 so.FindProperty("datos").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(RutaDatos);
