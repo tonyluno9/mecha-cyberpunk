@@ -66,11 +66,23 @@ las capturas y el arreglo del recorrido de la demo. Lo mecánico lo hicieron sub
 **T-1019**: el recorrido de la demo se trababa en EL INVENTOR (7 bugs encadenados). El error estaba en el bot, no en el juego.
 - Desde T-1005 el Doc primero habla y la clínica abre un momento después; el bot pulsaba Esc antes, y la clínica se quedaba abierta tapando todo.
 - Ahora el bot espera y la cierra cuando aparece.
-- El resultado de la corrida va en la sección de builds.
+- **RecorridoDemoPruebas: 3/3.** La demo llega de principio a fin al juego libre.
+- Quedan 4 bugs anotados que no la detienen:
+  - El bot tarda en llegar al Doc, a EL INVENTOR y a EL HACKER (topes al caminar).
+  - El marcador de EL HACKER queda a 165 m del personaje, en Neón Alto (zona de la Sesión B).
 
 ## Builds
 
-(se llena al final)
+Se hicieron desde main `5600608`, que ya trae los cambios de la Sesión B, uno por uno y como proceso aparte.
+- **Demo**: `C:\Users\Angel Perez\Desktop\videojuego\mecha-cyberpunk\Builds\Demo\CyberCity.exe` (ConstruirDemoPandillas).
+  - Terminó a las **08:00** del 16-nov, hora de México.
+  - `Logs/build-demo-16nov.log` dice "Build Finished, Result: Success".
+- **Juego**: `C:\Users\Angel Perez\Desktop\videojuego\mecha-cyberpunk\Builds\Juego\CyberCity.exe` (ConstruirJuego).
+  - Terminó a las **08:34**.
+  - `Logs/build-juego-16nov.log` dice "Build Finished, Result: Success".
+- El ejecutable `CyberCity.exe` conserva la fecha del 9-nov porque es el mismo player de Unity; los datos de `CyberCity_Data` son de hoy.
+- Antes de `git pull` y del recorrido se esperó a que no hubiera ningún Unity de `.sesiones/s2` (06:56). Los builds se hicieron con la Sesión B corriendo pruebas en paralelo, porque no paraba de lanzar corridas.
+- El Unity de esta sesión quedó cerrado. A las 08:34 seguía abierto uno de la Sesión B con sus pruebas.
 
 ## Pendientes y notas
 
