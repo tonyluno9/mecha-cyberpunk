@@ -13,6 +13,30 @@ namespace MechaCyberpunk.IA.APie
 
         public ConductaGuardiaPesado[] Guardias => guardias;
 
+        /// <summary>Los deja como al inicio (vida llena, en su puesto, de guardia; lo apagado se prende).</summary>
+        public void ReiniciarTodos()
+        {
+            foreach (ConductaGuardiaPesado g in guardias)
+            {
+                if (g != null)
+                {
+                    g.Reiniciar();
+                }
+            }
+        }
+
+        /// <summary>Apaga a los guardias que queden (cuando cae el jefe final).</summary>
+        public void ApagarTodos()
+        {
+            foreach (ConductaGuardiaPesado g in guardias)
+            {
+                if (g != null)
+                {
+                    g.gameObject.SetActive(false);
+                }
+            }
+        }
+
         /// <summary>Provoca a todos los guardias en pie.</summary>
         public void ProvocarATodos()
         {
