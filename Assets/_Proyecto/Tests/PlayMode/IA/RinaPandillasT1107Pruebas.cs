@@ -96,6 +96,30 @@ namespace MechaCyberpunk.Tests
         }
 
         [UnityTest]
+        public IEnumerator Rina_LosGritosNoSeEncimanNiSalenSincronizados()
+        {
+            CrearRina(new Vector3(0f, 0f, 50f));
+            bool[] activo = new bool[rina.Miembros.Count];
+            System.Collections.Generic.List<float> inicios = new System.Collections.Generic.List<float>();
+            float fin = Time.time + 30f;
+            while (Time.time < fin)
+            {
+                for (int i = 0; i < activo.Length; i++)
+                {
+                    bool ahora = rina.Miembros[i].GritoActual != null;
+                    if (ahora && !activo[i]) inicios.Add(Time.time);
+                    activo[i] = ahora;
+                }
+                yield return null;
+            }
+            Assert.GreaterOrEqual(inicios.Count, 3, "se oyen gritos en 30 s");
+            for (int i = 1; i < inicios.Count; i++)
+            {
+                Assert.GreaterOrEqual(inicios[i] - inicios[i - 1], ReglaRina.SeparacionGritos - 0.1f, "los gritos " + (i - 1) + " y " + i + " de la misma riña se enciman");
+            }
+        }
+
+        [UnityTest]
         public IEnumerator Rina_ConElJugadorA5m_LosSeisLoAtacan()
         {
             CrearRina(new Vector3(0f, 0f, 5.5f)); // el más cercano queda a ~4.6 m

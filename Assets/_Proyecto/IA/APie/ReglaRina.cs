@@ -95,6 +95,22 @@ namespace MechaCyberpunk.IA.APie
             return frases[Mathf.Clamp((int)(azar01 * frases.Length), 0, frases.Length - 1)];
         }
 
+        /// <summary>Segundos mínimos entre dos gritos de la misma riña (que no se enciman).</summary>
+        public const float SeparacionGritos = 1.5f;
+        public const float GritoInicialMinimo = 1f;
+        public const float GritoInicialMaximo = 8f;
+        public const float IntervaloGritoMinimo = 5f;
+        public const float IntervaloGritoMaximo = 12f;
+
+        /// <summary>True si ya pasó <see cref="SeparacionGritos"/> desde el último grito de la riña (<paramref name="ultimoGrito"/>, s).</summary>
+        public static bool PuedeGritar(float ahora, float ultimoGrito) => ahora - ultimoGrito >= SeparacionGritos;
+
+        /// <summary>Cuándo toca el primer grito de un miembro: aleatorio entre 1 y 8 s después de <paramref name="ahora"/>.</summary>
+        public static float PrimerGrito(float ahora, float azar01) => ahora + GritoInicialMinimo + (GritoInicialMaximo - GritoInicialMinimo) * azar01;
+
+        /// <summary>Cuándo toca el siguiente grito de un miembro: entre 5 y 12 s después de <paramref name="ahora"/> (con jitter).</summary>
+        public static float SiguienteGrito(float ahora, float azar01) => ahora + IntervaloGritoMinimo + (IntervaloGritoMaximo - IntervaloGritoMinimo) * azar01;
+
         private static float DistanciaPlana2(Vector3 a, Vector3 b)
         {
             float dx = a.x - b.x;
