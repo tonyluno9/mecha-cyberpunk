@@ -90,10 +90,10 @@ namespace MechaCyberpunk.UI.Tiendas
             raiz = TrazoH10.Nodo(padre, "VistaMercado");
             TrazoH10.Estirar(raiz);
 
-            titulo = TrazoH10.Etiqueta(raiz, "TituloMercado", string.Empty, 64, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
+            titulo = TrazoH10.Etiqueta(raiz, "TituloMercado", string.Empty, TrazoH10.TamanoTitulo, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
             TrazoH10.Colocar(titulo.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -14f), new Vector2(900f, 80f));
 
-            dinero = TrazoH10.Etiqueta(raiz, "DineroGrande", string.Empty, 72, TrazoH10.Turquesa);
+            dinero = TrazoH10.Etiqueta(raiz, "DineroGrande", string.Empty, TrazoH10.TamanoTitulo, TrazoH10.Turquesa);
             TrazoH10.Colocar(dinero.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f),
                 new Vector2(TrazoH10.MargenPantalla + 40f, -(VistaPantallaArriba() + 6f)), new Vector2(AnchoLista - 60f, AltoDinero));
 
@@ -107,7 +107,7 @@ namespace MechaCyberpunk.UI.Tiendas
                 new Vector2(-TrazoH10.SeparacionModulo * 0.5f, 0f), new Vector2(TrazoH10.GrosorLinea, -40f));
             separador.raycastTarget = false;
 
-            nombre = TrazoH10.Etiqueta(derecha, "NombreArma", string.Empty, 70, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
+            nombre = TrazoH10.Etiqueta(derecha, "NombreArma", string.Empty, TrazoH10.TamanoTitulo, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
             TrazoH10.Colocar(nombre.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -4f), new Vector2(0f, AltoNombre));
 
             RectTransform rejilla = TrazoH10.Nodo(derecha, "Rejilla");
@@ -144,7 +144,7 @@ namespace MechaCyberpunk.UI.Tiendas
             Image lineaBoton = TrazoH10.Imagen(boton, "Linea", TrazoH10.Amarillo, TrazoH10.Linea);
             TrazoH10.Estirar(lineaBoton.rectTransform);
             botonBorde = new[] { lineaBoton };
-            botonTexto = TrazoH10.Etiqueta(boton, "Texto", TextoComprar, 44, TrazoH10.Amarillo, TextAnchor.MiddleCenter);
+            botonTexto = TrazoH10.Etiqueta(boton, "Texto", TextoComprar, TrazoH10.TamanoCifra, TrazoH10.Amarillo, TextAnchor.MiddleCenter);
             TrazoH10.Estirar(botonTexto.rectTransform);
             EventTrigger disparador = boton.gameObject.AddComponent<EventTrigger>();
             EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
@@ -164,9 +164,9 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private void Barra(int i, Vector2 sitio)
         {
-            etiquetas[i] = TrazoH10.Etiqueta(derecha, "Barra" + i, ReglaVistaMercado.Etiquetas[i], 32, TrazoH10.Texto);
+            etiquetas[i] = TrazoH10.Etiqueta(derecha, "Barra" + i, ReglaVistaMercado.Etiquetas[i], TrazoH10.TamanoSeccion, TrazoH10.Texto);
             TrazoH10.Colocar(etiquetas[i].rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), sitio, new Vector2(AnchoBarra, 40f));
-            valores[i] = TrazoH10.Etiqueta(derecha, "Valor" + i, string.Empty, 32, TrazoH10.Texto, TextAnchor.MiddleRight);
+            valores[i] = TrazoH10.Etiqueta(derecha, "Valor" + i, string.Empty, TrazoH10.TamanoSeccion, TrazoH10.Texto, TextAnchor.MiddleRight);
             TrazoH10.Colocar(valores[i].rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), sitio, new Vector2(AnchoBarra, 40f));
             Image pista = TrazoH10.Imagen(derecha, "Pista" + i, TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.9f));
             TrazoH10.Colocar(pista.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), sitio + new Vector2(0f, -44f), new Vector2(AnchoBarra, AltoBarra));
