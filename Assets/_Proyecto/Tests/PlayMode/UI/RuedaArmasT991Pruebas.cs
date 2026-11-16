@@ -128,9 +128,9 @@ namespace MechaCyberpunk.Tests.UI
             inventario.Agregar(Dato("venda"), 1);
             yield return null;
             yield return AbrirRueda();
-            Assert.AreEqual("x1", rueda.TextoCantidad(7), "La venda muestra cuántas lleva");
-            yield return ApuntarA(7);
-            Assert.AreEqual(7, rueda.Resaltada);
+            Assert.AreEqual("x1", rueda.TextoCantidad(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(2)), "La venda muestra cuántas lleva");
+            yield return ApuntarA(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(2));
+            Assert.AreEqual(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(2), rueda.Resaltada);
             yield return Soltar();
             Assert.AreEqual(0, inventario.Cantidad(Dato("venda")), "Soltar Tab usa la venda");
             Assert.IsTrue(consumibles.Curando);
@@ -144,7 +144,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsFalse(armas.TieneArma(ArmaAPie.Escopeta));
             yield return AbrirRueda();
             Assert.IsTrue(rueda.CasillaApagada(2), "Escopeta apagada");
-            Assert.IsTrue(rueda.CasillaApagada(5), "Bebida sin piezas apagada");
+            Assert.IsTrue(rueda.CasillaApagada(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(0)), "Bebida sin piezas apagada");
             Assert.IsFalse(rueda.CasillaApagada(0), "Puños siempre está");
             yield return ApuntarA(2);
             Assert.AreEqual(-1, rueda.Resaltada, "La escopeta que no tienes no se resalta");
@@ -152,7 +152,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(ArmaAPie.Punos, armas.ArmaActiva, "No se equipó nada");
             vida.RecibirDanio(Bala(60f));
             yield return AbrirRueda();
-            yield return ApuntarA(5);
+            yield return ApuntarA(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(0));
             Assert.AreEqual(-1, rueda.Resaltada, "La bebida sin piezas no se resalta");
             yield return Soltar();
         }
@@ -316,10 +316,31 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1, rueda.Resaltada);
             yield return new WaitForSecondsRealtime(0.3f);
             Capturar("rueda-armas.png");
-            yield return ApuntarA(7);
-            Assert.AreEqual(7, rueda.Resaltada);
+            yield return ApuntarA(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(2));
+            Assert.AreEqual(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(2), rueda.Resaltada);
             yield return new WaitForSecondsRealtime(0.3f);
             Capturar("rueda-objetos.png");
+            Release(teclado.tabKey);
+            yield return null;
+            yield return null;
+
+            // T-1013: con todas las armas nuevas la rueda crece y el rifle de plasma se puede elegir.
+            ArsenalJugador arsenal = j.Raiz.GetComponentInChildren<ArsenalJugador>();
+            foreach (ArmaAPie arma in new[] { ArmaAPie.Escopeta, ArmaAPie.Fusil, ArmaAPie.Sniper, ArmaAPie.Subfusil, ArmaAPie.Revolver,
+                ArmaAPie.Lanzagranadas, ArmaAPie.Granada, ArmaAPie.RiflePlasma })
+            {
+                inventario.Agregar(arsenal.Catalogo.Buscar(arma, 0), 1);
+            }
+            yield return new WaitForSecondsRealtime(0.3f);
+            Press(teclado.tabKey);
+            yield return null;
+            yield return null;
+            Assert.IsTrue(rueda.CasillaVisible((int)ArmaAPie.RiflePlasma), "El rifle de plasma está en la rueda");
+            Assert.AreEqual(ReglaRuedaArmas.CasillasArma + 3, rueda.Sectores, "Diez armas y los tres objetos que llevas");
+            yield return ApuntarA((int)ArmaAPie.RiflePlasma);
+            Assert.AreEqual((int)ArmaAPie.RiflePlasma, rueda.Resaltada);
+            yield return new WaitForSecondsRealtime(0.3f);
+            Capturar("rueda-todas-las-armas.png");
             Release(teclado.tabKey);
             yield return null;
             yield return null;
