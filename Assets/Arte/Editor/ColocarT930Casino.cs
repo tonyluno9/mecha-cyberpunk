@@ -25,6 +25,8 @@ namespace MechaCyberpunk.Arte.Editor
         private const float Piso = 0.2f;
         private const float Techo = 5.7f;
         private const string Nombre = "MeseraRobot";
+        /// <summary>T-1105: el frente del modelo R01 es -Z local, así que con giro 0 la cajera mira al salón (-z).</summary>
+        public const float GiroCajera = 0f;
         /// <summary>Textura X05 en gris, que se tiñe con el color de cada material: vigas, focos, latón y cordón no quedan como color liso.</summary>
         private const int TexturaBase = 5;
         private const float BrilloAlfombra = 0.18f;
@@ -166,7 +168,7 @@ namespace MechaCyberpunk.Arte.Editor
                 if (r != null) { r.enabled = false; }
             }
             ColocarS2Interiores.Modelo(raiz, I + "I14", new Vector3(72f, 0f, 58.9f), 0f, Piso, 0.9f, sinCollider: true);
-            GameObject m = Robot(raiz, "Cajera_R01", new Vector3(72f, Piso, 59.25f), Quaternion.Euler(0f, 180f, 0f));
+            GameObject m = Robot(raiz, "Cajera_R01", new Vector3(72f, Piso, 59.25f), Quaternion.Euler(0f, GiroCajera, 0f));
             m.AddComponent<BrazoCharola>();
         }
 
@@ -188,9 +190,10 @@ namespace MechaCyberpunk.Arte.Editor
         private static void Hacker(Transform raiz)
         {
             Apagar("GTA_T417/Apoyo_SERGIO/Set_Hacker", false);
-            ColocarS2Interiores.Modelo(raiz, I + "I02", new Vector3(80.1f, 0f, 40.5f), -90f, Piso, sinCollider: false);
-            ColocarS2Interiores.Modelo(raiz, I + "I12", new Vector3(81.4f, 0f, 40.5f), -90f, Piso, sinCollider: true);
-            Luz(raiz, "LuzHacker", new Vector3(80.6f, 3.2f, 40.5f), LightType.Point, new Color(0.3f, 0.95f, 0.9f), 5f, 6f, 0f);
+            // T-1105: SERGIO en la esquina noroeste (ColocarT1105Casino.Aplicar lo sienta de frente a su escritorio).
+            ColocarS2Interiores.Modelo(raiz, I + "I02", new Vector3(ColocarT1105Casino.XEscritorio, 0f, ColocarT1105Casino.ZHacker), ColocarT1105Casino.GiroEscritorio, Piso, sinCollider: false);
+            ColocarS2Interiores.Modelo(raiz, I + "I12", new Vector3(ColocarT1105Casino.XSilla, 0f, ColocarT1105Casino.ZHacker), ColocarT1105Casino.GiroSillaHacker, Piso, ColocarT1105Casino.EscalaSilla, sinCollider: true);
+            Luz(raiz, "LuzHacker", new Vector3(ColocarT1105Casino.XEscritorio + 0.5f, 3.2f, ColocarT1105Casino.ZHacker), LightType.Point, new Color(0.3f, 0.95f, 0.9f), 5f, 6f, 0f);
         }
 
         private static void Meseras()

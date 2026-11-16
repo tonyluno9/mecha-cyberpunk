@@ -34,12 +34,12 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             float piso = pose.transform.position.y;
             float cadera = animador.GetBoneTransform(HumanBodyBones.Hips).position.y - piso;
             Assert.That(cadera, Is.InRange(0.35f, 0.75f), "altura de la cadera");
-            Transform mesa = GameObject.Find("Mesa_Cubierta").transform;
+            // T-930/T-1105: el set de cubos (Set_Hacker) está apagado; la mesa es el escritorio I02 del casino.
+            Transform mesa = GameObject.Find("T930_Casino").transform.Find("I02");
             float cabeza = animador.GetBoneTransform(HumanBodyBones.Head).position.y;
             Assert.Greater(cabeza, mesa.position.y + 0.1f, "cabeza sobre la mesa");
             Vector3 haciaMesa = Vector3.ProjectOnPlane(mesa.position - animador.GetBoneTransform(HumanBodyBones.Hips).position, Vector3.up).normalized;
             Assert.Greater(Vector3.Dot(pose.GetComponentInParent<VisualPersonaje>().transform.forward, haciaMesa), 0.9f, "mira a la mesa");
-            Assert.IsNotNull(GameObject.Find("Laptop_Pantalla"));
         }
 
         [UnityTest]
@@ -65,7 +65,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             yield return null;
             var go = new GameObject("CamHacker");
             Camera cam = go.AddComponent<Camera>();
-            Transform set = GameObject.Find("Set_Hacker").transform;
+            Transform set = pose.GetComponentInParent<VisualPersonaje>().transform;
             cam.transform.position = set.position + set.right * 1.6f + set.forward * 0.5f + Vector3.up * 1.3f;
             cam.transform.LookAt(set.position + set.forward * 0.3f + Vector3.up * 0.9f);
             cam.cullingMask = ~0;
