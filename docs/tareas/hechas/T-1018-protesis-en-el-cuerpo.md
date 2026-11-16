@@ -13,3 +13,6 @@ PlayMode `ProtesisEnElCuerpoT1018Pruebas` (6): sin prótesis no hay modelo activ
 ## Notas
 - La orientación de los modelos de Tripo se decidió mirando sus renders sueltos (modelo-*.png): el brazo viene colgando (cañón arriba, mano abajo) y se pone con la mano en la muñeca; la hombrera se gira 90 grados para que el depósito quede atrás. Es una decisión estética que conviene que Tony vea.
 - Las prótesis solo se ven con la cámara a pie; en el carro o el mecha no cambia nada.
+
+## Revisión (Opus)
+- La hombrera IMP05 es un arnés (dos hombreras, correas y el lanzador arriba), no una sola hombrera: ahora va en el pecho (hueso Chest), a lo ancho de los hombros (0.5 m), derecha, con el lanzador sobre el hombro izquierdo. Ejes revisados con `EjesProtesisT1018.Render` (la raíz del .fbx trae 90° en X).

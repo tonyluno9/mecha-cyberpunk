@@ -48,7 +48,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
             }
             var inventario = Registro<MechaCyberpunk.Economia.ServicioInventario>.Actual;
             Actualizar(catalogo, inventario, HabilidadProtesis.Laser, HumanBodyBones.RightLowerArm, ref laser, ref puntaLaser);
-            Actualizar(catalogo, inventario, HabilidadProtesis.Misiles, HumanBodyBones.LeftShoulder, ref misiles, ref salidaMisiles);
+            Actualizar(catalogo, inventario, HabilidadProtesis.Misiles, HumanBodyBones.Chest, ref misiles, ref salidaMisiles);
         }
 
         private void Actualizar(CatalogoProtesisAtaque catalogo, MechaCyberpunk.Economia.ServicioInventario inventario, HabilidadProtesis habilidad, HumanBodyBones hueso, ref GameObject instancia, ref Transform punta)

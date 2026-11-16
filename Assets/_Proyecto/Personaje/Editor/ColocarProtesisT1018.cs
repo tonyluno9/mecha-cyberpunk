@@ -32,9 +32,18 @@ namespace MechaCyberpunk.Personaje.Editor
         {
             /// <summary>A lo largo del hueso hacia la mano (el brazo láser).</summary>
             Antebrazo,
-            /// <summary>Derecho en el cuerpo, sobre un punto de un hueso (la hombrera).</summary>
+            /// <summary>Derecho en el cuerpo, sobre un punto de un hueso.</summary>
             Hombro,
+            /// <summary>Arnés sobre los dos hombros, pegado al pecho (la hombrera de misiles: dos hombreras, correas y el lanzador arriba).</summary>
+            Pecho,
         }
+
+        // IMP05 en su .fbx (ejes de Unity, revisado con EjesProtesisT1018): derecho (+Y arriba), las dos hombreras a lo ancho en X (0.96 m), los misiles
+        // apuntan a -Z (en el mundo con la raíz sin girar). El centro de las hombreras está a 0.43 m de su base y el lanzador arriba, a 0.85 m.
+        private static readonly Vector3 AnclaHombrerasImp05 = new Vector3(0f, 0f, -0.43f);
+        private static readonly Vector3 LanzadorImp05 = new Vector3(0.16f, -0.05f, -0.85f);
+        // En el marco del modelo (la raíz del .fbx trae 90° en X): arriba es -Z y los misiles miran a -Y. Así el lanzador (+X) queda sobre el hombro izquierdo.
+        private static readonly Quaternion ArnesDerecho = Quaternion.LookRotation(Vector3.down, Vector3.back);
 
         public readonly struct Prototesis
         {
@@ -85,8 +94,9 @@ namespace MechaCyberpunk.Personaje.Editor
         {
             new Prototesis("IMP04", "BrazoLaser", HabilidadProtesis.Laser, ModoColocacion.Antebrazo, HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, 0.46f,
                 Vector3.down, Vector3.back, Vector3.zero),
-            new Prototesis("IMP05", "HombreraMisiles", HabilidadProtesis.Misiles, ModoColocacion.Hombro, HumanBodyBones.LeftShoulder, HumanBodyBones.LeftUpperArm, 0.3f,
-                Vector3.up, Vector3.right, new Vector3(0.04f, 0.1f, -0.02f), 90f),
+            // T-1018 (revisión): es un arnés de dos hombreras, no una sola: va en el pecho, a lo ancho de los hombros, con el lanzador arriba y los misiles al frente.
+            new Prototesis("IMP05", "HombreraMisiles", HabilidadProtesis.Misiles, ModoColocacion.Pecho, HumanBodyBones.Chest, HumanBodyBones.LeftShoulder, 0.5f,
+                Vector3.up, Vector3.right, new Vector3(0f, 0.02f, -0.02f), 0f),
         };
 
         private static readonly StringBuilder Informe = new StringBuilder();
@@ -259,6 +269,17 @@ namespace MechaCyberpunk.Personaje.Editor
                     giro = Quaternion.Inverse(hueso.rotation) * enMundo;
                     centro = Vector3.Lerp(hueso.position, hacia.position, 0.5f);
                     puntaModelo = b.center + Vector3.Scale(p.EjeALaPunta, b.size) * 0.5f;
+                }
+                else if (p.Modo == ModoColocacion.Pecho)
+                {
+                    // El ancho del arnés (X del modelo) mide Largo; su frente (-Z) mira adelante del cuerpo y las hombreras van entre las dos clavículas.
+                    escala = p.Largo / (b.size.x * hueso.lossyScale.x);
+                    giro = Quaternion.Inverse(hueso.rotation) * cuerpo.rotation * Quaternion.Euler(0f, p.GiroHombro, 0f) * ArnesDerecho;
+                    Transform izquierda = animador.GetBoneTransform(HumanBodyBones.LeftShoulder);
+                    Transform derecha = animador.GetBoneTransform(HumanBodyBones.RightShoulder);
+                    centro = Vector3.Lerp(izquierda.position, derecha.position, 0.5f);
+                    puntaModelo = LanzadorImp05;
+                    b.center = AnclaHombrerasImp05;
                 }
                 else
                 {

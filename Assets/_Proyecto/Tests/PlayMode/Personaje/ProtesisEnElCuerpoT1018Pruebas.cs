@@ -104,7 +104,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Preparar();
             Dar(HabilidadProtesis.Misiles);
             yield return Esperar(0.3f);
-            VerificarModelo(visibles.ModeloMisiles, HumanBodyBones.LeftShoulder);
+            VerificarModelo(visibles.ModeloMisiles, HumanBodyBones.Chest);
             Assert.IsNull(visibles.ModeloLaser, "El brazo no está");
         }
 
