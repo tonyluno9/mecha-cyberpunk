@@ -61,19 +61,19 @@ namespace MechaCyberpunk.Tests.Mundo
                     continue;
                 }
                 yield return Foto(new Vector3(-90f, 8f, -50f), HaciaNova, "casa-" + momento);
-                yield return Foto(new Vector3(60f, 1.7f, -43f), new Vector3(134f, 30f, -43f), "calle-nova-" + momento);
+                yield return Foto(new Vector3(30f, 60f, -43f), new Vector3(104f, 58f, -58f), "calle-nova-" + momento, CampoDeVision);
                 yield return Foto(new Vector3(47f, 1.7f, 8f), new Vector3(47f, 60f, 60f), "neon-alto-" + momento);
             }
             Assert.IsTrue(File.Exists(Carpeta + "/" + (antes ? "antes-" : "") + "tianguis-noche.png"));
         }
 
-        private static IEnumerator Foto(Vector3 desde, Vector3 hacia, string nombre)
+        private static IEnumerator Foto(Vector3 desde, Vector3 hacia, string nombre, float campo = CampoDeVision)
         {
             GameObject go = new GameObject("CamaraFoto");
             Camera cam = go.AddComponent<Camera>();
             cam.nearClipPlane = 0.05f;
             cam.farClipPlane = LejaniaMaxima;
-            cam.fieldOfView = CampoDeVision;
+            cam.fieldOfView = campo;
             cam.depth = 100f;
             go.transform.position = desde;
             go.transform.LookAt(hacia);

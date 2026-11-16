@@ -31,9 +31,11 @@ namespace MechaCyberpunk.Arte.Editor
         public const float NieblaMaxima = 0.45f;
         public const float AltoHaz = 100f;
         public const float RadioHaz = 3.5f;
-        public const float AnchoLetrero = 26f;
-        public const float AltoLetrero = 10.6f;
-        public const float AlzadoLetrero = 12f;
+        public const float AnchoLetrero = 65f;
+        public const float AltoLetrero = 26.5f;
+        public const float AlzadoLetrero = 14f;
+        public const float DesfaseLetrero = 8f;
+        public const float SeparacionMastiles = 4f;
         public const float LadoAviso = 1.4f;
 
         private static readonly string[] OriginalesT541 = { "T20", "T21", "T22", "T23" };
@@ -213,7 +215,7 @@ namespace MechaCyberpunk.Arte.Editor
             letrero.SetTexture("_BaseMap", Texture2D.blackTexture);
             letrero.SetColor("_BaseColor", Color.black);
             letrero.SetTexture("_EmissionMap", tex);
-            letrero.SetColor("_EmissionColor", new Color(0.6f, 2.6f, 3.4f));
+            letrero.SetColor("_EmissionColor", new Color(0.4f, 4.5f, 6f));
             letrero.SetFloat("_EmisionDia", 1f);
             letrero.SetFloat("_FactorNiebla", 0.1f);
             EditorUtility.SetDirty(letrero);
@@ -221,7 +223,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform grupo = new GameObject("Letrero_NOVA").transform;
             grupo.SetParent(raiz, false);
             float techo = torre.max.y;
-            Vector3 centro = new Vector3(torre.center.x, techo + AlzadoLetrero + AltoLetrero * 0.5f, torre.center.z);
+            Vector3 centro = new Vector3(torre.center.x - DesfaseLetrero, techo + AlzadoLetrero + AltoLetrero * 0.5f, torre.center.z);
             GameObject quad = Primitiva(PrimitiveType.Quad, "Texto", grupo, letrero);
             // El quad de Unity se ve desde su -Z: gira para verse desde el poniente (donde está la ciudad).
             quad.transform.SetPositionAndRotation(centro, Quaternion.LookRotation(Vector3.right));
@@ -236,8 +238,8 @@ namespace MechaCyberpunk.Arte.Editor
             for (int lado = -1; lado <= 1; lado += 2)
             {
                 GameObject mastil = Primitiva(PrimitiveType.Cube, "Mastil_" + lado, grupo, oscuro);
-                mastil.transform.position = new Vector3(centro.x + 0.1f, techo + AlzadoLetrero * 0.5f + 1f, centro.z + lado * AnchoLetrero * 0.35f);
-                mastil.transform.localScale = new Vector3(0.8f, AlzadoLetrero + 2f, 0.8f);
+                mastil.transform.position = new Vector3(centro.x + 0.1f, techo + AlzadoLetrero * 0.5f + 1f, centro.z + lado * SeparacionMastiles);
+                mastil.transform.localScale = new Vector3(2f, AlzadoLetrero + 2f, 2f);
             }
 
             Material haz = AssetDatabase.LoadAssetAtPath<Material>(CarpetaMateriales + "/T1103_Haz.mat");
@@ -300,6 +302,8 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- textura del letrero (letras de 5x7 celdas)
 
+        private static readonly Color ColorLetra = new Color(0.15f, 1f, 1f);
+
         private static readonly string[][] Letras =
         {
             new[] { "10001", "11001", "10101", "10101", "10011", "10001", "10001" },   // N
@@ -333,7 +337,7 @@ namespace MechaCyberpunk.Arte.Editor
                         {
                             for (int x = 0; x < celda; x++)
                             {
-                                px[(cy + y) * t.width + cx + x] = Color.white;
+                                px[(cy + y) * t.width + cx + x] = ColorLetra;
                             }
                         }
                     }
@@ -342,18 +346,18 @@ namespace MechaCyberpunk.Arte.Editor
             // Marco fino alrededor.
             for (int i = 0; i < t.width; i++)
             {
-                for (int g = 0; g < 4; g++)
+                for (int g = 0; g < 10; g++)
                 {
-                    px[g * t.width + i] = Color.white;
-                    px[(t.height - 1 - g) * t.width + i] = Color.white;
+                    px[g * t.width + i] = ColorLetra;
+                    px[(t.height - 1 - g) * t.width + i] = ColorLetra;
                 }
             }
             for (int j = 0; j < t.height; j++)
             {
-                for (int g = 0; g < 4; g++)
+                for (int g = 0; g < 10; g++)
                 {
-                    px[j * t.width + g] = Color.white;
-                    px[j * t.width + t.width - 1 - g] = Color.white;
+                    px[j * t.width + g] = ColorLetra;
+                    px[j * t.width + t.width - 1 - g] = ColorLetra;
                 }
             }
             t.SetPixels(px);
