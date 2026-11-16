@@ -98,5 +98,11 @@ namespace MechaCyberpunk.UI
         public string FormatoFavorDescuento => formatoFavorDescuento;
         public int TamanoFavor => tamanoFavor;
         public Color ColorFavor => colorFavor;
+
+        [Header("El Mercado (T-1012)")]
+        [Tooltip("Armas del banco de Tino: el holograma 3D de la vista de El Mercado (M32). Vacío = la tienda de armas usa la vista de siempre.")]
+        [SerializeField] private ConfigMenuArmas configArmas;
+
+        public ConfigMenuArmas ConfigArmas => configArmas;
     }
 }
