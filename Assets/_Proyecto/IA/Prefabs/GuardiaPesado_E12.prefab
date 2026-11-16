@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e990abe9b8bade44883bd43a2a374d3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.EscudoFrontal
-  materialPlaca: {fileID: 2100000, guid: 9f3a07563f8552d43acca2444128b31e, type: 2}
+  materialChispa: {fileID: 2100000, guid: 33ddf6dc28eb6a04397648e9185b2a16, type: 2}
 --- !u!114 &3008208832629831705
 MonoBehaviour:
   m_ObjectHideFlags: 0

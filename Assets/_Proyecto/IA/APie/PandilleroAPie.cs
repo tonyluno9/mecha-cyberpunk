@@ -417,7 +417,7 @@ namespace MechaCyberpunk.IA.APie
                 CayoPorLaPolicia = true;
             }
             ResultadoDanio resultado = new ResultadoDanio(aplicado, bloqueoFiltro, modelo.EstaKO);
-            if (!modelo.EstaKO)
+            if (!modelo.EstaKO && bloqueoFiltro != TipoBloqueo.Normal) // T-1109: un golpe bloqueado por el escudo no hace parpadear ni herir al guardia
             {
                 finParpadeo = Time.time + datos.DuracionParpadeo;
                 if (visual != null)
