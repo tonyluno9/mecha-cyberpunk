@@ -21,6 +21,7 @@ namespace MechaCyberpunk.Personaje.Combate
     {
         private const int MaxImpactosPorGolpe = 16;
         private const float AlturaPecho = 1.2f;
+        private const int MaxCercanos = 32;
 
         [SerializeField] private DatosPersonaje datos;
         [SerializeField] private InputActionReference atacar;
@@ -38,6 +39,12 @@ namespace MechaCyberpunk.Personaje.Combate
         private readonly SeguidorImplantes implantes = new SeguidorImplantes();
         private Vector3 posicionReposo;
         private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactosPorGolpe];
+        private readonly Collider[] cercanos = new Collider[MaxCercanos];
+        private readonly RaycastHit[] estorbos = new RaycastHit[MaxImpactosPorGolpe];
+        private readonly System.Collections.Generic.List<Component> blancos = new System.Collections.Generic.List<Component>();
+        private readonly System.Collections.Generic.List<Vector2> posicionesBlancos = new System.Collections.Generic.List<Vector2>();
+        private bool girando;
+        private float anguloAutoGiro;
 
         public DatosPersonaje Datos => datos;
         public FaseGolpe Fase => ciclo != null ? ciclo.Fase : FaseGolpe.Listo;
@@ -96,13 +103,106 @@ namespace MechaCyberpunk.Personaje.Combate
             // T-675: sin spam; el siguiente golpe espera a que termine la animación del anterior.
             if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos && !AnimacionOcupada() && !controlador.EntradaBloqueada)
             {
-                ciclo.IntentarGolpear();
+                if (ciclo.IntentarGolpear())
+                {
+                    IniciarAutoGiro();
+                }
+            }
+            if (girando)
+            {
+                AvanzarAutoGiro(Time.deltaTime);
             }
             if (ciclo.Avanzar(Time.deltaTime))
             {
+                if (girando)
+                {
+                    // Si la preparación terminó antes que el giro, se termina de girar para que el golpe conecte.
+                    transform.rotation = Quaternion.Euler(0f, anguloAutoGiro, 0f);
+                    girando = false;
+                }
                 Impactar();
             }
             MoverPuno();
+        }
+
+        // T-1003: al golpear, el cuerpo se gira hacia el oponente vivo más cercano al frente, sin muro en medio. Apuntando no cambia nada.
+        private void IniciarAutoGiro()
+        {
+            girando = false;
+            if (controlador.Apuntando || datos.RadioAutoGiro <= 0f)
+            {
+                return;
+            }
+            Vector3 centro = transform.position;
+            Vector3 origen = centro + Vector3.up * AlturaPecho;
+            Vector3 frente3 = controlador.Camara != null ? controlador.Camara.forward : transform.forward;
+            Vector2 frente = new Vector2(frente3.x, frente3.z);
+            if (frente.sqrMagnitude < 0.0001f)
+            {
+                frente = new Vector2(transform.forward.x, transform.forward.z);
+            }
+            blancos.Clear();
+            posicionesBlancos.Clear();
+            int cantidad = Physics.OverlapSphereNonAlloc(centro, datos.RadioAutoGiro, cercanos, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < cantidad; i++)
+            {
+                Collider c = cercanos[i];
+                if (c.transform.root == transform.root)
+                {
+                    continue;
+                }
+                Component componente = c.GetComponentInParent<IRecibeDanio>() as Component;
+                if (componente == null || blancos.Contains(componente))
+                {
+                    continue;
+                }
+                IVida vidaBlanco = componente.GetComponentInParent<IVida>();
+                if ((vidaBlanco != null && vidaBlanco.EstaKO) || HayMuroEntre(origen, c, componente.transform.root))
+                {
+                    continue;
+                }
+                Vector3 p = componente.transform.position;
+                blancos.Add(componente);
+                posicionesBlancos.Add(new Vector2(p.x, p.z));
+            }
+            Vector2 yo = new Vector2(centro.x, centro.z);
+            int elegido = SelectorAutoGiro.Elegir(yo, frente, posicionesBlancos, datos.RadioAutoGiro, datos.AnguloAutoGiro);
+            if (elegido < 0)
+            {
+                return;
+            }
+            anguloAutoGiro = SelectorAutoGiro.AnguloYaw(posicionesBlancos[elegido] - yo);
+            girando = true;
+        }
+
+        private bool HayMuroEntre(Vector3 origen, Collider destino, Transform raizBlanco)
+        {
+            Vector3 delta = destino.bounds.center - origen;
+            float distancia = delta.magnitude;
+            if (distancia < 0.01f)
+            {
+                return false;
+            }
+            int n = Physics.RaycastNonAlloc(origen, delta / distancia, estorbos, distancia, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                Transform raiz = estorbos[i].collider.transform.root;
+                if (raiz != transform.root && raiz != raizBlanco)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void AvanzarAutoGiro(float dt)
+        {
+            float angulo = Mathf.MoveTowardsAngle(transform.eulerAngles.y, anguloAutoGiro, datos.VelocidadAutoGiro * dt);
+            transform.rotation = Quaternion.Euler(0f, angulo, 0f);
+            if (Mathf.Approximately(Mathf.DeltaAngle(angulo, anguloAutoGiro), 0f))
+            {
+                girando = false;
+            }
         }
 
         private bool AnimacionOcupada()
