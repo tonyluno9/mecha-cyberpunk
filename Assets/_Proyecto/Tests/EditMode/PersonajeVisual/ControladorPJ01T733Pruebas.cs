@@ -119,13 +119,15 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void LosVisualesQueUsanLocoCaminar_TraenLaVelocidadNueva()
+        public void LosVisuales_TraenLaVelocidadDeSuClip()
         {
             foreach (string n in new[] { "woman", "woman2", "PJ01", "Doctor", "Hacker", "Inventor", "RobotHombre" })
             {
                 var visual = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorVisualPersonaje.RutaPrefab(n)).GetComponent<VisualPersonaje>();
                 float v = new SerializedObject(visual).FindProperty("velocidadClipCaminar").floatValue;
-                Assert.AreEqual(ReglasAnimacion.VelocidadClipCaminar, v, 0.005f, "Visual_" + n);
+                // T-1004: el jugador (woman, PJ01) sigue con Loco_Caminar de Tony; los NPC van con PJ01_Caminar_SinImplante.
+                float esperada = n == "woman" || n == "PJ01" ? ReglasAnimacion.VelocidadClipCaminar : ReglasAnimacion.VelocidadClipCaminarSinImplante;
+                Assert.AreEqual(esperada, v, 0.005f, "Visual_" + n);
             }
         }
 

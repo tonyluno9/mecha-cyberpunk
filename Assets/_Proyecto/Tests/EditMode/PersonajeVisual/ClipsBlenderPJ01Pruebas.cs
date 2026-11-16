@@ -107,12 +107,12 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void OtrosPapeles_NoCambianSuLocomocion()
+        public void OtrosPapeles_UsanLaLocomocionDePJ01_T1004()
         {
             var o = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(ConstructorControladorBase.RutaOverride("NPC"));
             var pares = new List<KeyValuePair<AnimationClip, AnimationClip>>();
             o.GetOverrides(pares);
-            Assert.AreEqual("Loco_Idle", pares.First(p => p.Key.name == "Loco_Idle").Value.name);
+            Assert.AreEqual("PJ01_Loco_Idle", pares.First(p => p.Key.name == "Loco_Idle").Value.name);
         }
 
         [TestCase("PJ01_Loco_SaltoAire", false)]

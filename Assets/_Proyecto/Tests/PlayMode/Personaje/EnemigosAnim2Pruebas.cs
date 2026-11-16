@@ -10,7 +10,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Personaje
 {
-    /// <summary>T-624: SKULLS, su jefe y los guardias de Nova juegan sus clips (idle, burla, ataque, muerte, presumir) según lo que les pasa.</summary>
+    /// <summary>T-624 (T-1004: con los clips de PJ01): SKULLS, su jefe y los guardias de Nova juegan sus clips (idle, burla, ataque, muerte, presumir) según lo que les pasa.</summary>
     public class EnemigosAnim2Pruebas : BaseJugadorAPie
     {
         private readonly List<GameObject> creados = new List<GameObject>();
@@ -38,10 +38,13 @@ namespace MechaCyberpunk.Tests.Personaje
             return go;
         }
 
+        // T-1004: los clips son de PJ01; un nombre con * al final es un prefijo (p. ej. PJ01_Muerte_*).
+        private static bool Coincide(string nombre, string clip) => clip.EndsWith("*") ? nombre.StartsWith(clip.TrimEnd('*')) : nombre == clip;
+
         private static bool Reproduce(Animator a, int capa, string clip)
         {
-            foreach (AnimatorClipInfo c in a.GetCurrentAnimatorClipInfo(capa)) { if (c.clip != null && c.clip.name == clip) return true; }
-            foreach (AnimatorClipInfo c in a.GetNextAnimatorClipInfo(capa)) { if (c.clip != null && c.clip.name == clip) return true; }
+            foreach (AnimatorClipInfo c in a.GetCurrentAnimatorClipInfo(capa)) { if (c.clip != null && Coincide(c.clip.name, clip)) return true; }
+            foreach (AnimatorClipInfo c in a.GetNextAnimatorClipInfo(capa)) { if (c.clip != null && Coincide(c.clip.name, clip)) return true; }
             return false;
         }
 
@@ -61,9 +64,9 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = skull.GetComponentInChildren<VisualPersonaje>(true);
             Assert.IsNotNull(visual, "El skull tiene visual");
             Animator a = visual.Animador;
-            yield return Hasta(() => Reproduce(a, 0, "Skull_Idle"), "Skull_Idle parado");
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Loco_Idle"), "Skull_Idle parado");
             pandillero.Alerta = true;
-            yield return Hasta(() => Reproduce(a, 0, "Skull_Burla"), "Skull_Burla al verte");
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Punos_Guardia"), "Skull_Burla al verte");
         }
 
         [UnityTest]
@@ -74,7 +77,7 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = go.GetComponent<VisualPersonaje>();
             visual.LeerDelPadre = false;
             visual.Velocidad = 1.3f;
-            yield return Hasta(() => Reproduce(visual.Animador, 0, "Skull_Caminar"), "Skull_Caminar");
+            yield return Hasta(() => Reproduce(visual.Animador, 0, "PJ01_Caminar_SinImplante"), "PJ01_Caminar_SinImplante");
         }
 
         [UnityTest]
@@ -85,16 +88,16 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = jefe.GetComponentInChildren<VisualPersonaje>(true);
             Animator a = visual.Animador;
             Assert.AreEqual("Override_Jefe", a.runtimeAnimatorController.name);
-            yield return Hasta(() => Reproduce(a, 0, "Jefe_Idle"), "Jefe_Idle");
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Loco_Idle"), "PJ01_Loco_Idle");
             jefe.GetComponent<PandilleroAPie>().Alerta = true;
-            yield return Hasta(() => Reproduce(a, 0, "Jefe_Burla"), "Jefe_Burla de entrada");
-            yield return Hasta(() => !Reproduce(a, 0, "Jefe_Burla"), "termina la burla", 8f);
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Punos_Guardia"), "Jefe_Burla de entrada");
+            yield return Hasta(() => !Reproduce(a, 0, "PJ01_Punos_Guardia"), "termina la burla", 8f);
             visual.TipoArma = TipoArmaVisual.Pistola;
             yield return Esperar(0.4f);
             visual.Disparar();
-            yield return Hasta(() => Reproduce(a, 1, "Jefe_Ataque"), "Jefe_Ataque al atacar");
+            yield return Hasta(() => Reproduce(a, 1, "PJ01_Pistola_Disparo"), "Jefe_Ataque al atacar");
             visual.Caido = true;
-            yield return Hasta(() => Reproduce(a, 0, "Jefe_Muerte"), "Jefe_Muerte");
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Muerte_*"), "PJ01_Muerte_*");
         }
 
         [UnityTest]
@@ -108,20 +111,20 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = guardia.GetComponent<VisualPersonaje>();
             Animator a = visual.Animador;
             Assert.AreEqual("Override_Guardias", a.runtimeAnimatorController.name);
-            yield return Hasta(() => Reproduce(a, 0, "Nova_Idle"), "Nova_Idle vigilando");
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Loco_Idle"), "Nova_Idle vigilando");
 
-            yield return Hasta(() => Reproduce(a, 0, "Nova_Flexing"), "Nova_Flexing al presumir", 8f);
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Punos_Guardia"), "Nova_Flexing al presumir", 8f);
 
             // Alerta con el jugador encima: golpes y barrida.
             guardia.transform.position = new Vector3(0f, 0f, 1.5f);
             EventosRuido.PublicarDisparo(guardia.transform.position);
             yield return Hasta(() => nova.GolpesDados >= 1, "golpe de amenaza", 4f);
-            yield return Hasta(() => Reproduce(a, 1, "Nova_Punch"), "Nova_Punch");
+            yield return Hasta(() => Reproduce(a, 1, "PJ01_Punos_Golpe*"), "PJ01_Punos_Golpe*");
             yield return Hasta(() => nova.GolpesDados >= 3, "tercer golpe", 6f);
-            yield return Hasta(() => Reproduce(a, 1, "Nova_Barrido"), "Nova_Barrido", 2f);
+            yield return Hasta(() => Reproduce(a, 1, "PJ01_Punos_Fuerte"), "PJ01_Punos_Fuerte", 2f);
 
             visual.Caido = true;
-            yield return Hasta(() => Reproduce(a, 0, "Nova_Muerte"), "Nova_Muerte");
+            yield return Hasta(() => Reproduce(a, 0, "PJ01_Muerte_*"), "PJ01_Muerte_*");
         }
 
         [UnityTest]
@@ -132,7 +135,7 @@ namespace MechaCyberpunk.Tests.Personaje
             VisualPersonaje visual = go.GetComponent<VisualPersonaje>();
             visual.LeerDelPadre = false;
             visual.Velocidad = 6f;
-            yield return Hasta(() => Reproduce(visual.Animador, 0, "Nova_Correr"), "Nova_Correr");
+            yield return Hasta(() => Reproduce(visual.Animador, 0, "PJ01_Correr_SinImplante"), "PJ01_Correr_SinImplante");
         }
     
         private Camera CamaraFrente(GameObject objetivo, float distancia = 3.2f)
@@ -153,7 +156,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.5f);
             skull.GetComponent<PandilleroAPie>().Alerta = true;
             Animator aSkull = skull.GetComponentInChildren<VisualPersonaje>(true).Animador;
-            yield return Hasta(() => Reproduce(aSkull, 0, "Skull_Burla"), "burla");
+            yield return Hasta(() => Reproduce(aSkull, 0, "PJ01_Punos_Guardia"), "burla");
             yield return Esperar(0.6f);
             Debug.Log("[T624] skull base=" + aSkull.GetCurrentAnimatorClipInfo(0)[0].clip.name + " w=" + aSkull.GetLayerWeight(1));
             yield return AnimacionCarroPruebas.Capturar(CamaraFrente(skull), "docs/capturas/anim2-skull-burla.png");
@@ -162,7 +165,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.5f);
             jefe.GetComponent<PandilleroAPie>().Alerta = true;
             Animator aJefe = jefe.GetComponentInChildren<VisualPersonaje>(true).Animador;
-            yield return Hasta(() => Reproduce(aJefe, 0, "Jefe_Burla"), "burla jefe");
+            yield return Hasta(() => Reproduce(aJefe, 0, "PJ01_Punos_Guardia"), "burla jefe");
             yield return Esperar(0.6f);
             yield return AnimacionCarroPruebas.Capturar(CamaraFrente(jefe, 3.8f), "docs/capturas/anim2-jefe-burla.png");
 

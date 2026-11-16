@@ -44,6 +44,13 @@ namespace MechaCyberpunk.Tests.Personaje
             return max - min;
         }
 
+        // Hacia dónde mira el pecho: perpendicular a la línea de hombro izquierdo a hombro derecho.
+        private static Vector3 Frente(Animator a)
+        {
+            Vector3 derecha = a.GetBoneTransform(HumanBodyBones.RightUpperArm).position - a.GetBoneTransform(HumanBodyBones.LeftUpperArm).position;
+            return Vector3.Cross(Vector3.ProjectOnPlane(derecha, Vector3.up).normalized, Vector3.up);
+        }
+
         [UnityTest]
         public IEnumerator Policia_SeVeConUniforme_MideComoPersona_ConPistola()
         {
@@ -68,14 +75,13 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(a.isHuman && a.avatar.isValid, "Humanoide con avatar propio");
             Assert.IsNotNull(a.runtimeAnimatorController, "Con las animaciones humanoides del proyecto");
             Transform p = policia.transform;
-            Vector3 pie = Vector3.ProjectOnPlane(a.GetBoneTransform(HumanBodyBones.LeftToes).position - a.GetBoneTransform(HumanBodyBones.LeftFoot).position, Vector3.up);
             Animator aS = skull.GetComponentInChildren<Animator>();
-            Vector3 pieS = Vector3.ProjectOnPlane(aS.GetBoneTransform(HumanBodyBones.LeftToes).position - aS.GetBoneTransform(HumanBodyBones.LeftFoot).position, Vector3.up);
-            Assert.AreEqual(Mathf.Sign(Vector3.Dot(pieS.normalized, skull.transform.forward)), Mathf.Sign(Vector3.Dot(pie.normalized, p.forward)), "Policía y SKULL miran igual respecto a su raíz: " + Vector3.Dot(pieS.normalized, skull.transform.forward) + " vs " + Vector3.Dot(pie.normalized, p.forward));
+            // T-1004: con los clips de PJ01 (Humanoid) la dirección de los pies depende de la pose; el frente del pecho (de un hombro al otro) no.
             CapturaS1.Foto("s1t-T-680-policia-y-skull", p, new Vector3(0.2f, 1.3f, 3.2f), new Vector3(0.2f, 0.95f, 0f), 40f, 900, 700);
             CapturaS1.Foto("s1t-T-680-policia-frente", p, new Vector3(0f, 1.3f, 2.2f), new Vector3(0f, 0.95f, 0f), 35f, 700, 700);
             CapturaS1.Foto("s1t-T-680-policia-atras", p, new Vector3(0f, 1.3f, -2.2f), new Vector3(0f, 0.95f, 0f), 35f, 700, 700);
             CapturaS1.Foto("s1t-T-680-policia-lado", p, new Vector3(2.2f, 1.2f, 0f), new Vector3(0f, 0.95f, 0f), 35f, 700, 700);
+            Assert.AreEqual(Mathf.Sign(Vector3.Dot(Frente(aS), skull.transform.forward)), Mathf.Sign(Vector3.Dot(Frente(a), p.forward)), "Policía y SKULL miran igual respecto a su raíz: " + Vector3.Dot(Frente(aS), skull.transform.forward) + " vs " + Vector3.Dot(Frente(a), p.forward));
         }
     }
 }
