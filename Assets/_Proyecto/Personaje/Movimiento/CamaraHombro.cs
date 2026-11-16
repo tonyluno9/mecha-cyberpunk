@@ -10,7 +10,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
     /// <see cref="CinemachineThirdPersonFollow"/> (detrás y arriba del hombro, con su colisión contra muros) y
     /// <see cref="CinemachineDeoccluder"/>. Este script solo le da los datos cada frame: el giro y la inclinación de
     /// <see cref="ControladorAPie"/> van en el punto que sigue la vcam, el techo baja el punto de giro, y apuntar o el
-    /// zoom del sniper cambian el campo de visión (lo único que cambia al apuntar). Es la única cámara del jugador a pie:
+    /// zoom del sniper cambian el campo de visión. T-1001: sin apuntar el personaje queda casi centrado (CAM04) y al apuntar la
+    /// cámara se acerca al hombro derecho (CAM05), o al izquierdo si hay pared a la derecha. Es la única cámara del jugador a pie:
     /// si la cámara está apagada (carro) o el control está quitado (menús, cinemáticas), el Brain se apaga y no toca la cámara.
     /// </summary>
     [DefaultExecutionOrder(-200)]
@@ -28,6 +29,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private float altura;
         private float distancia;
         private float fov;
+        private float lado = 1f;
         private bool iniciada;
         private ZoomSniper zoom;
         private SensacionDisparo sensacion;
@@ -38,6 +40,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private Transform punto;
 
         public float DistanciaActual => distancia;
+
+        /// <summary>T-1001: hombro de la cámara, de 0 (izquierdo) a 1 (derecho). Cambia al izquierdo si hay pared a la derecha.</summary>
+        public float LadoActual => lado;
 
         /// <summary>La cámara virtual de Cinemachine del jugador a pie.</summary>
         public CinemachineCamera Vcam => vcam;
@@ -171,6 +176,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 altura = objetivoAltura;
                 distancia = objetivoDistancia;
                 fov = objetivoFov;
+                lado = 1f;
             }
             else
             {
@@ -196,6 +202,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
             float brazo = Mathf.Max(0f, total - pivoteLibre);
 
             punto.SetPositionAndRotation(controlador.transform.position + Vector3.up * pivoteLibre, giro);
+
+            // T-1001: si el hombro derecho choca con una pared, la cámara pasa al izquierdo (y vuelve cuando hay sitio).
+            float objetivoLado = HombroDerechoLibre(punto.position, giro * Vector3.right, lateral) ? 1f : 0f;
+            lado = Mathf.MoveTowards(lado, objetivoLado, config.RapidezCambioHombro * Time.deltaTime);
+            seguir.CameraSide = Mathf.SmoothStep(0f, 1f, lado);
             seguir.ShoulderOffset = new Vector3(lateral, 0f, 0f);
             seguir.VerticalArmLength = brazo;
             seguir.CameraDistance = distancia * (1f - config.AcercarMirandoAbajo * Mathf.Clamp01(controlador.Inclinacion / 30f));
@@ -209,6 +220,27 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 brain.enabled = true;
                 vcam.PreviousStateIsValid = false;
             }
+        }
+
+        /// <summary>T-1001: ¿cabe la cámara a la derecha del punto de giro (desplazamiento lateral más margen)?</summary>
+        private bool HombroDerechoLibre(Vector3 desde, Vector3 derecha, float desplazamiento)
+        {
+            if (desplazamiento <= 0.01f)
+            {
+                return true;
+            }
+            float largo = desplazamiento + config.MargenHombro;
+            int cantidad = Physics.SphereCastNonAlloc(desde, config.RadioColision, derecha, choques, largo, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < cantidad; i++)
+            {
+                RaycastHit choque = choques[i];
+                if (choque.collider.transform.root == controlador.transform.root || choque.distance <= 0f)
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
