@@ -8,7 +8,7 @@ Rama `tony/T-1107-rina-snakes-skulls`. Diseño: `docs/diseno/enemigos-nuevos-16n
 - `RinaPandillas`: arma la riña con 2 `PandillaAPie`. Estados Rina / Liberada (los seis van contra el jugador) / Terminada (un bando cayó: vuelven a su punto con la IA normal). Rearma sola (Reaparecer de todos, de frente al otro bando).
 - `ConstructorRina` (solo editor): arma una riña con prefabs y datos dados; lo usan el colocador y las pruebas.
 - Prefab `IA/Prefabs/PandilleroArmado_Snakes.prefab` (visual E10 + pistola W01, datos Viboras), usado por las riñas.
-- `Assets/Arte/Editor/ColocarT1107Rina.cs` (raíz `T1107_Rinas`, idempotente): 2 riñas por sondeo de física (calle plana y despejada): `Rina_Frontera` en (34, 0.2, -44), junto a la frontera del tianguis, y `Rina_NeonAlto` en (105, 0.2, -12), a 77 y 66 m de la ruta de la demo (mínimo exigido 30 m; el colocador pide 45 m). Cada huella queda a 6.4 m o más del eje de las calles de tráfico (carril a 2.4 m + 4 m; el mismo grafo del tráfico) y a 7 m o más de cualquier puerta. Evita la calle de Nova (arroyo z=-43) y la franja de salida este (z=0, x>=110) porque otras pruebas las exigen libres.
+- `Assets/Arte/Editor/ColocarT1107Rina.cs` (raíz `T1107_Rinas`, idempotente): 2 riñas por sondeo de física (calle plana y despejada): `Rina_Frontera` en (75, 0.2, -16) y `Rina_NeonAlto` en (101, 0.2, -12) (plazas de Neón Alto; las únicas libres con la regla de carriles), a 63 y 65 m de la ruta de la demo (mínimo exigido 30 m; el colocador pide 45 m). Cada huella queda a 6.4 m o más del eje de las calles de tráfico (carril a 2.4 m + 4 m; el mismo grafo del tráfico) y a 7 m o más de cualquier puerta. Evita la calle de Nova y la de los suburbios (z=-43) y la franja de salida este (z=0, x>=110) porque otras pruebas las exigen libres.
 
 ## Corrección de la revisión
 - SNAKES verde plano: `PandilleroAPie` pinta el cuerpo con `colorNormal` de sus datos (verde de Viboras) sobre la textura. Los SNAKES de las riñas usan ahora `DatosPandilleroAPie_ViborasE10.asset` (copia de Viboras con color base blanco); el prefab `PandilleroArmado_Snakes` también. Prueba `Ciudad_LosSnakesSeVenConSuTexturaE10_SinTinteDePandilla`: material E10 con su `_BaseMap`, nunca el verde, y en algún cuadro todos con el color base del material.
@@ -32,3 +32,6 @@ Rama `tony/T-1107-rina-snakes-skulls`. Diseño: `docs/diseno/enemigos-nuevos-16n
 
 ## Pendiente
 - Los SKULLS se ven casi negros de noche (su material); no es de esta tarea.
+
+## Nota
+- `RecorridoDemoPruebas` es intermitente: falló 3 veces en el tramo 09 (el jugador se queda en el Doc, x=-101, lejos de las riñas) y pasó 3/3 en 3 corridas siguientes con la misma escena y con la escena sin riñas. No depende de ellas.

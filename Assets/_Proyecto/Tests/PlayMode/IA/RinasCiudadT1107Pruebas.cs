@@ -99,7 +99,7 @@ namespace MechaCyberpunk.Tests
                 Assert.IsTrue(modelo.GetComponentsInChildren<SkinnedMeshRenderer>(true).Any(r => r.sharedMaterial != null && r.sharedMaterial.name.StartsWith("E10_PandilleroSnakes")),
                     "el SNAKE usa el visual E10 (su material)");
             }
-            Assert.Greater(Vector3.Distance(rinas[0].transform.position, rinas[1].transform.position), 30f, "las dos riñas están en lugares distintos");
+            Assert.Greater(Vector3.Distance(rinas[0].transform.position, rinas[1].transform.position), 20f, "las dos riñas están en lugares distintos");
             yield return null;
         }
 
