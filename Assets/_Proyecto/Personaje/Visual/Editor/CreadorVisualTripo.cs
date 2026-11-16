@@ -16,7 +16,11 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
     {
         public const string Carpeta = CreadorVisualPersonaje.CarpetaPersonajes;
         public const float AlturaObjetivo = 1.8f;
-        public static readonly string[] Nombres = { "woman", "man", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Policia" };
+        public static readonly string[] Nombres = { "woman", "man", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Policia",
+            "E10_PandilleroSnakes", "E11_JefeSnakes", "E12_GuardiaPesadoNova", "E14_JefeFinalNova" };
+
+        /// <summary>T-1106: los cuatro enemigos nuevos del 16-nov (solo ellos se crean con <see cref="CrearNuevosT1106"/>).</summary>
+        public static readonly string[] NombresT1106 = { "E10_PandilleroSnakes", "E11_JefeSnakes", "E12_GuardiaPesadoNova", "E14_JefeFinalNova" };
 
         /// <summary>T-510: altura (m) de los que no miden 1.8: el jefe SKULLS y los dos de armadura.</summary>
         public static float AlturaDe(string nombre)
@@ -24,6 +28,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             switch (nombre)
             {
                 case "SkullHombre": return 1.95f;
+                case "E10_PandilleroSnakes": return 1.8f;
+                case "E11_JefeSnakes": return 1.95f;
+                case "E12_GuardiaPesadoNova": return 2.05f;
+                case "E14_JefeFinalNova": return 2.3f;
                 case "RobotHombre":
                 case "GuardiaNova":
                 case "Policia": return 1.85f;
@@ -43,6 +51,17 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public static void CrearTodos()
         {
             foreach (string n in Nombres)
+            {
+                Crear(n);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>T-1106: crea solo los visuales de los 4 enemigos nuevos, sin tocar a los demás personajes.
+        /// Batchmode: -executeMethod MechaCyberpunk.Personaje.Visual.Editor.CreadorVisualTripo.CrearNuevosT1106</summary>
+        public static void CrearNuevosT1106()
+        {
+            foreach (string n in NombresT1106)
             {
                 Crear(n);
             }
@@ -388,6 +407,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public static bool EsTexturaDeColor(string archivo)
         {
             string n = archivo.ToLowerInvariant();
+            if (n.EndsWith("_base.jpg"))
+            {
+                return true; // T-1106: los enemigos nuevos nombran su textura de color <Nombre>_Base.jpg
+            }
             if (n.Contains("metallic") || n.Contains("roughness") || n.Contains("normal") || n.EndsWith("_0_3.jpg") || n.EndsWith("_0_1.jpg") || n.EndsWith("_0_2.jpg"))
             {
                 return false;

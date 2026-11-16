@@ -64,6 +64,7 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly string[] PersonajesDeTripo =
         {
             "man", "woman", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Mecanico", "Policia", "PJ01", "AL10", "AL11",
+            "E10_PandilleroSnakes", "E11_JefeSnakes", "E12_GuardiaPesadoNova", "E14_JefeFinalNova",
         };
 
         public static bool EsPersonajeDeTripo(string ruta)
