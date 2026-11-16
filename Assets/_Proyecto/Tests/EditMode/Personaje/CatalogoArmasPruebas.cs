@@ -75,8 +75,8 @@ namespace MechaCyberpunk.Tests.Personaje
             {
                 ofertasArmas += oferta != null && oferta.Id.StartsWith("oferta_arma_") ? 1 : 0;
             }
-            Assert.AreEqual(19, ofertasArmas, "4 armas y 15 mejoras");
-            Assert.AreEqual(19 + 6 + 3, tienda.Ofertas.Count, "Además del kit, las 4 municiones y el brazo y las 3 balas de arma (T-720)");
+            Assert.AreEqual(19 + 20, ofertasArmas, "4 armas y 15 mejoras, y las 5 armas nuevas (T-1013) con sus 3 mejoras");
+            Assert.AreEqual(39 + 6 + 8, tienda.Ofertas.Count, "Además del kit, las 4 municiones y el brazo, las 3 balas de arma (T-720) y las 5 de las armas nuevas (T-1013)");
 
             DatosArma sniper = catalogo.Buscar(ArmaAPie.Sniper, 0);
             Assert.AreEqual(4, sniper.Cargador, "Sniper base: 4 balas");
@@ -88,6 +88,10 @@ namespace MechaCyberpunk.Tests.Personaje
                     continue;
                 }
                 DatosArma otra = catalogo.Buscar(tipo, 0);
+                if (otra.TipoDisparo != TipoDisparoArma.Bala)
+                {
+                    continue; // T-1013: el daño del lanzagranadas, la granada y el rifle de plasma es de explosión o de rayo, no por bala
+                }
                 Assert.Greater(sniper.Danio, otra.Danio, "El sniper pega más por bala que " + tipo);
                 Assert.LessOrEqual(sniper.Cargador, otra.Cargador, "El sniper tiene el menor cargador (o igual) que " + tipo);
             }

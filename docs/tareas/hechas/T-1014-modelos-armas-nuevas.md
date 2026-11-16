@@ -30,13 +30,15 @@ Sigue el camino de W02-W04 (`ImportarS1n` y `ColocarS1nArmas`) con `Assets/Arte/
 | W08 Lanzagranadas | 0.82 | 0.80 m | (0.153, 0.155) | (-0.49, 0.294) | (-0.038, -0.053, 0.371) | -0.175, -0.015, 0.21, 0.12 |
 | W09 Granada | 1.0 | 0.107 m | centro del cuerpo | luz a (0, 0.04, 0.15) | como la pistola | no tiene |
 
-La granada va 5.5 cm arriba y 3 cm adelante de la palma para que se vea sobre el puño.
+La granada va 9 cm arriba y 4 cm adelante de la palma para que se vea sobre el puño.
 
 ## Pruebas
 - Nueva `ArmasNuevasT1014Pruebas` (PlayMode): en la mano, en el piso (E) y el tambor. Capturas con `CAPTURAR_S1=1` en `docs/capturas/t1014/`.
-- Ajustadas: `CatalogoArmasPruebas` (40 armas, subfusil), `ArmasNuevasS1EditPruebas` (9 entradas del banco con modelo), `ArmasMercadoPruebas` (el Mercado lista el
-  subfusil), `HudCyberfixPruebas` (iconos de armas = tamaño del enum) y `ArmasEspecialesT1013Pruebas` (el segundo blanco del rayo es más ancho: el rayo sale de la
-  boca real del rifle y no del centro del cuerpo).
+- Ajustadas: `CatalogoArmasPruebas` (40 armas, 39 ofertas de armas, 53 ofertas, subfusil presente, "el sniper pega más" solo contra armas de bala),
+  `ArmasNuevasS1EditPruebas` (9 entradas del banco con modelo), `ArmasMercadoPruebas` (el Mercado lista el subfusil), `HudCyberfixPruebas` (iconos de armas = tamaño
+  del enum) y `ArmasEspecialesT1013Pruebas` (`Preparar` pone el Animator en AlwaysAnimate: con modelo, el rayo y las granadas salen de la boca real y, sin esto, el
+  personaje no se anima fuera de cámara y el rifle queda de lado).
+- Ya fallaba en la base (T-1013): `CanonAlPuntoDeMiraT681Pruebas.CuatroArmas_AlApuntarYDisparar...` (4.43° contra 4.0° de tolerancia, igual con y sin T-1014).
 
 ## Notas
 - La tira de casillas del HUD a pie sigue con 5 casillas (puños y las 4 armas); el arma activa siempre muestra su holograma.
