@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Tests.Progresion
         public void ReglaB_Nivel1CuestaEntre3VecesElRival1DeLaLiga1YElJefeDeLaLiga2()
         {
             int piso = 3 * Rival1(1), tope = Jefe(2);
-            foreach (DatosImplante d in Nivel(1))
+            foreach (DatosImplante d in Nivel(1).Where(x => x.Precio > 0)) // T-1005: EXO DE PIERNAS I es gratis a propósito
             {
                 Assert.GreaterOrEqual(d.Precio, piso, $"REGLA b: {d.Id} cuesta ${d.Precio} y el piso es ${piso}.");
                 Assert.LessOrEqual(d.Precio, tope, $"REGLA b: {d.Id} cuesta ${d.Precio} y el tope es ${tope}.");

@@ -32,7 +32,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.5f);
             Vector3 p = jugador.GetComponentInChildren<CamaraHombro>().transform.position;
             Vector3 local = jugador.transform.InverseTransformPoint(p);
-            Assert.AreEqual(0f, local.x, 0.05f, "T-723: centrada detrás del jugador");
+            Assert.That(local.x, Is.InRange(0.2f, 0.4f), "T-1001: casi centrada, un poco a la derecha (CAM04)");
             Assert.That(local.y, Is.InRange(1.6f, 2.0f), "T-723: un poco arriba del hombro");
             Assert.That(local.z, Is.InRange(-3.8f, -3.0f), "T-723: detrás del jugador (CAM01)");
         }

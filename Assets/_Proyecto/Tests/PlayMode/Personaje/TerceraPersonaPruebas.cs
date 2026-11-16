@@ -38,7 +38,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.That(distancia, Is.InRange(1.6f, 4f), "T-723: la cámara queda entre 1.6 y 4 m del jugador");
             Vector3 relativa = camara.position - jugador.transform.position;
             Assert.Less(Vector3.Dot(relativa, haciaDondeMira), 0f, "La cámara queda atrás");
-            Assert.AreEqual(0f, Vector3.Dot(relativa, Vector3.Cross(Vector3.up, haciaDondeMira)), 0.05f, "T-699/T-723: la cámara queda centrada detrás del jugador");
+            Assert.That(Vector3.Dot(relativa, Vector3.Cross(Vector3.up, haciaDondeMira)), Is.InRange(0.15f, 0.45f), "T-1001: la cámara queda casi centrada, un poco a la derecha (CAM04)");
             Camera principal = camara.GetComponent<Camera>();
             float fovNormal = principal.fieldOfView;
 

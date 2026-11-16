@@ -80,9 +80,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Camera camara = jugador.Camara;
             CamaraCinemachineT723Pruebas.Medir(jugador.Raiz.gameObject, camara, out float fraccion, out float centroX, out float pies, out float cabeza);
             Debug.Log("[T723] calle fraccion " + fraccion.ToString("F3") + " centroX " + centroX.ToString("F3") + " pies " + pies.ToString("F3") + " cabeza " + cabeza.ToString("F3"));
-            CapturaS1.FotoCamara("s1d-T-723-calle", camara);
+            CapturaS1.FotoCamara("s1d-T-1001-sin-apuntar-calle", camara);
             Assert.That(fraccion, Is.InRange(0.36f, 0.5f), "El personaje ocupa ~40 % del alto");
-            Assert.AreEqual(0.5f, centroX, 0.05f);
+            Assert.That(centroX, Is.InRange(0.4f, 0.5f), "T-1001: casi centrado, un poco a la izquierda (CAM04)");
             Assert.Less(pies, 0.2f);
 
             // A pie cerca: mirando un poco hacia abajo (CAM02).
@@ -98,7 +98,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(raton.rightButton);
             yield return new WaitForSeconds(1.2f);
             Assert.Less(camara.fieldOfView, 50f, "Apuntando hace zoom");
-            CapturaS1.FotoCamara("s1d-T-723-apuntando", camara);
+            Assert.Less(camara.WorldToViewportPoint(jugador.Raiz.position + Vector3.up * 1.3f).x, 0.4f, "T-1001: apuntando, el personaje queda a la izquierda (CAM05)");
+            CapturaS1.FotoCamara("s1d-T-1001-apuntando-calle", camara);
             Release(raton.rightButton);
         }
 

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Habilidades;
 using MechaCyberpunk.UI.Kit;
@@ -7,42 +9,55 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// T-992: la barra de las tres habilidades de prótesis, abajo al centro del HUD H10 (sobre el aviso del tutorial, entre los objetos y el arma).
-    /// Cada casilla lleva la tecla real (Input System, <see cref="TeclasHud"/>), el nombre y un medidor. Lista: turquesa y llena; activa: brilla y se
-    /// vacía; recargando: rosa y se llena; sin implante: gris con "—". Además publica los avisos "PIERNAS ACTIVAS" y "NECESITAS EXO DE PIERNAS" en la
-    /// cola de avisos. Solo se ve a pie. Lo agrega <see cref="HudAPie"/> al nacer; su canvas es del HUD, así que la rueda y los menús lo apagan.
+    /// T-992 (T-1011: como el mockup M31_HabilidadesProtesis.png): la barra de habilidades de prótesis, abajo al centro del HUD H10. Cada casilla lleva
+    /// arriba la tecla real y el nombre ("[1] PIERNAS"), en medio el dibujo de línea de la prótesis (nivel I o II) y abajo un medidor. Lista: turquesa
+    /// y llena; activa: amarilla y se vacía; recargando: rosa y se llena; sin implante: gris con "—". Las tres primeras (piernas, brazos, cabeza)
+    /// siempre están; las de ataque (láser, misiles) solo salen cuando tienes la prótesis. Publica los avisos "PIERNAS ACTIVAS" y
+    /// "NECESITAS EXO DE PIERNAS". Solo se ve a pie. Lo agrega <see cref="HudAPie"/> al nacer; su canvas es del HUD, así que la rueda y los menús lo apagan.
     /// </summary>
     public class BarraHabilidades : MonoBehaviour
     {
         public const int OrdenCanvas = 12;
-        public const float Lado = 120f;
-        public const float Hueco = 14f;
-        public const float MargenAbajo = 96f;
+        public const float Lado = 128f;
+        public const float Hueco = 30f;
+        public const float MargenAbajo = 56f;
+        public const string CarpetaIconos = "Protesis/";
+        private const int Fijas = 3;
         private const float AltoMedidor = 10f;
+        private const float SeparacionMedidor = 12f;
+        private const float AltoEtiqueta = 34f;
         private const float SegundosAviso = 1.6f;
         private const float SegundosTeclas = 1f;
         private const string Apagada = "—";
 
         private static readonly Color Turquesa = new Color(0.30f, 0.92f, 0.90f, 1f);
         private static readonly Color TurquesaSuave = new Color(0.78f, 1f, 1f, 1f);
+        private static readonly Color Amarillo = new Color(1f, 0.92f, 0.25f, 1f);
         private static readonly Color Rosa = new Color(0.93f, 0.40f, 0.46f, 1f);
         private static readonly Color Gris = new Color(0.55f, 0.60f, 0.62f, 1f);
-        private static readonly Color FondoCasilla = new Color(0f, 0f, 0f, 0.7f);
-        private static readonly Color FondoActiva = new Color(0.02f, 0.20f, 0.22f, 0.85f);
+        private static readonly Color FondoCasilla = new Color(0f, 0.02f, 0.03f, 0.62f);
+        private static readonly Color FondoActiva = new Color(0.05f, 0.045f, 0f, 0.75f);
+
+        private static readonly int Total = Enum.GetValues(typeof(HabilidadProtesis)).Length;
 
         private sealed class Casilla
         {
+            public RectTransform Raiz;
             public Image Fondo;
             public Image[] Borde;
-            public Text Tecla;
-            public Text Nombre;
+            public Image Icono;
+            public Text Etiqueta;
             public RectTransform Relleno;
             public Image RellenoImagen;
             public Color Color;
-            public string TextoNombre = string.Empty;
+            public string Tecla = string.Empty;
+            public string Nombre = string.Empty;
+            public int NivelIcono = -1;
         }
 
-        private readonly Casilla[] casillas = new Casilla[3];
+        private readonly Casilla[] casillas = new Casilla[Total];
+        private readonly List<int> visibles = new List<int>();
+        private readonly Dictionary<string, Sprite> iconos = new Dictionary<string, Sprite>();
         private GameObject grupo;
         private HabilidadesProtesis habilidades;
         private Font fuente;
@@ -51,17 +66,29 @@ namespace MechaCyberpunk.UI.Hud
         /// <summary>True si la barra se está dibujando.</summary>
         public bool Visible => grupo != null && grupo.activeSelf;
 
-        /// <summary>La tecla que se ve en la casilla.</summary>
-        public string TeclaMostrada(HabilidadProtesis h) => casillas[(int)h].Tecla.text;
+        /// <summary>La tecla que se ve en la casilla (sin corchetes).</summary>
+        public string TeclaMostrada(HabilidadProtesis h) => casillas[(int)h].Tecla;
 
         /// <summary>El nombre que se ve en la casilla ("—" si no hay implante).</summary>
-        public string NombreMostrado(HabilidadProtesis h) => casillas[(int)h].Nombre.text;
+        public string NombreMostrado(HabilidadProtesis h) => casillas[(int)h].Nombre;
 
-        /// <summary>El color con que se pinta la casilla (turquesa lista, rosa recargando, gris sin implante).</summary>
+        /// <summary>El texto de arriba de la casilla, como "[1] PIERNAS".</summary>
+        public string EtiquetaMostrada(HabilidadProtesis h) => casillas[(int)h].Etiqueta.text;
+
+        /// <summary>El color con que se pinta la casilla (turquesa lista, amarillo activa, rosa recargando, gris sin implante).</summary>
         public Color ColorMostrado(HabilidadProtesis h) => casillas[(int)h].Color;
 
         /// <summary>Cuánto del medidor se ve (0 a 1).</summary>
         public float MedidorMostrado(HabilidadProtesis h) => casillas[(int)h].Relleno.anchorMax.x;
+
+        /// <summary>True si la casilla de la habilidad está en la barra ahora.</summary>
+        public bool CasillaVisible(HabilidadProtesis h) => casillas[(int)h].Raiz.gameObject.activeSelf;
+
+        /// <summary>El dibujo de la prótesis que lleva la casilla (null si no lo hay).</summary>
+        public Sprite IconoMostrado(HabilidadProtesis h) => casillas[(int)h].Icono.sprite;
+
+        /// <summary>La casilla (raíz) de la habilidad, para capturas y pruebas.</summary>
+        public RectTransform CasillaDe(HabilidadProtesis h) => casillas[(int)h].Raiz;
 
         public static string NombreDe(HabilidadProtesis h)
         {
@@ -69,7 +96,8 @@ namespace MechaCyberpunk.UI.Hud
             {
                 case HabilidadProtesis.Piernas: return "PIERNAS";
                 case HabilidadProtesis.Brazos: return "BRAZOS";
-                default: return "CABEZA";
+                case HabilidadProtesis.Cabeza: return "CABEZA";
+                default: return NombreAtaque(h);
             }
         }
 
@@ -80,7 +108,8 @@ namespace MechaCyberpunk.UI.Hud
             {
                 case HabilidadProtesis.Piernas: return "NECESITAS EXO DE PIERNAS";
                 case HabilidadProtesis.Brazos: return "NECESITAS EXO DE BRAZOS";
-                default: return "NECESITAS EL VISOR";
+                case HabilidadProtesis.Cabeza: return "NECESITAS EL VISOR";
+                default: return "NECESITAS LA PRÓTESIS " + NombreAtaque(h);
             }
         }
 
@@ -90,8 +119,16 @@ namespace MechaCyberpunk.UI.Hud
             {
                 case HabilidadProtesis.Piernas: return "PIERNAS ACTIVAS";
                 case HabilidadProtesis.Brazos: return "BRAZOS ACTIVOS";
-                default: return "CABEZA ACTIVA";
+                case HabilidadProtesis.Cabeza: return "CABEZA ACTIVA";
+                default: return NombreAtaque(h) + " LISTO";
             }
+        }
+
+        // Las prótesis de ataque (T-1017) se llaman por su nombre en el enum: Laser → LÁSER, Misiles → MISILES.
+        private static string NombreAtaque(HabilidadProtesis h)
+        {
+            string nombre = h.ToString().ToUpperInvariant();
+            return nombre == "LASER" ? "LÁSER" : nombre;
         }
 
         private static string TeclaPorOmision(HabilidadProtesis h) => ((int)h + 1).ToString();
@@ -105,30 +142,39 @@ namespace MechaCyberpunk.UI.Hud
             grupo = new GameObject("Habilidades", typeof(RectTransform));
             grupo.transform.SetParent(canvas.transform, false);
             KitUI.Estirar((RectTransform)grupo.transform);
-            float ancho = 3f * Lado + 2f * Hueco;
             for (int i = 0; i < casillas.Length; i++)
             {
-                casillas[i] = Armar(i, -ancho * 0.5f + i * (Lado + Hueco));
+                casillas[i] = Armar(i);
             }
             grupo.SetActive(false);
         }
 
-        private Casilla Armar(int indice, float x)
+        private Casilla Armar(int indice)
         {
             Casilla c = new Casilla();
-            RectTransform raiz = Nuevo(grupo.transform, "Habilidad" + indice, new Vector2(0.5f, 0f), new Vector2(x, MargenAbajo), new Vector2(Lado, Lado));
-            raiz.pivot = new Vector2(0f, 0f);
-            raiz.anchoredPosition = new Vector2(x, MargenAbajo);
-            c.Fondo = raiz.gameObject.AddComponent<Image>();
+            c.Raiz = Nuevo(grupo.transform, "Habilidad" + indice, new Vector2(0.5f, 0f), new Vector2(0f, MargenAbajo), new Vector2(Lado, Lado));
+            c.Raiz.pivot = new Vector2(0f, 0f);
+            c.Fondo = c.Raiz.gameObject.AddComponent<Image>();
             c.Fondo.raycastTarget = false;
-            GameObject borde = KitUI.CrearBorde(raiz, 2f, Color.white);
+            GameObject borde = KitUI.CrearBorde(c.Raiz, 2f, Color.white);
             c.Borde = borde.GetComponentsInChildren<Image>();
-            c.Tecla = Texto(raiz, "Tecla", new Vector2(0f, 1f), new Vector2(10f, -6f), new Vector2(56f, 38f), 32, TextAnchor.MiddleLeft);
-            c.Nombre = Texto(raiz, "Nombre", new Vector2(0.5f, 0.5f), new Vector2(0f, 6f), new Vector2(Lado, 48f), 30, TextAnchor.MiddleCenter);
-            c.Nombre.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            RectTransform pista = Nuevo(raiz, "Medidor", new Vector2(0f, 0f), new Vector2(10f, 10f), new Vector2(Lado - 20f, AltoMedidor));
+
+            RectTransform icono = Nuevo(c.Raiz, "Icono", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(Lado - 18f, Lado - 18f));
+            icono.pivot = new Vector2(0.5f, 0.5f);
+            icono.anchoredPosition = Vector2.zero;
+            c.Icono = icono.gameObject.AddComponent<Image>();
+            c.Icono.preserveAspect = true;
+            c.Icono.raycastTarget = false;
+
+            // Arriba de la caja: "[1] PIERNAS".
+            c.Etiqueta = Texto(c.Raiz, "Etiqueta", new Vector2(0.5f, 1f), new Vector2(0f, 6f), new Vector2(Lado + Hueco, AltoEtiqueta), 26, TextAnchor.LowerCenter);
+            c.Etiqueta.rectTransform.pivot = new Vector2(0.5f, 0f);
+            c.Etiqueta.rectTransform.anchoredPosition = new Vector2(0f, 6f);
+
+            // Abajo de la caja: el medidor.
+            RectTransform pista = Nuevo(c.Raiz, "Medidor", new Vector2(0f, 0f), new Vector2(0f, -SeparacionMedidor - AltoMedidor), new Vector2(Lado, AltoMedidor));
             Image fondoMedidor = pista.gameObject.AddComponent<Image>();
-            fondoMedidor.color = new Color(0f, 0f, 0f, 0.5f);
+            fondoMedidor.color = new Color(0f, 0f, 0f, 0.55f);
             fondoMedidor.raycastTarget = false;
             GameObject relleno = new GameObject("Relleno", typeof(RectTransform));
             relleno.transform.SetParent(pista, false);
@@ -161,6 +207,9 @@ namespace MechaCyberpunk.UI.Hud
             t.horizontalOverflow = HorizontalWrapMode.Overflow;
             t.verticalOverflow = VerticalWrapMode.Overflow;
             t.raycastTarget = false;
+            Outline sombra = r.gameObject.AddComponent<Outline>();
+            sombra.effectColor = new Color(0f, 0f, 0f, 0.7f);
+            sombra.effectDistance = new Vector2(1.2f, -1.2f);
             return t;
         }
 
@@ -206,45 +255,111 @@ namespace MechaCyberpunk.UI.Hud
             {
                 return;
             }
+            Acomodar();
+            bool refrescarTeclas = Time.unscaledTime >= siguienteTecla;
+            if (refrescarTeclas)
+            {
+                siguienteTecla = Time.unscaledTime + SegundosTeclas;
+            }
             for (int i = 0; i < casillas.Length; i++)
             {
-                Pintar((HabilidadProtesis)i, casillas[i]);
+                if (casillas[i].Raiz.gameObject.activeSelf)
+                {
+                    Pintar((HabilidadProtesis)i, casillas[i], refrescarTeclas);
+                }
             }
         }
 
-        private void Pintar(HabilidadProtesis h, Casilla c)
+        // Las tres fijas siempre; las de ataque solo si tienes la prótesis. Centradas abajo, en el orden de sus teclas.
+        private void Acomodar()
         {
-            bool tiene = habilidades.Nivel(h) > 0;
+            int cuantas = 0;
+            bool cambio = false;
+            for (int i = 0; i < Total; i++)
+            {
+                bool va = i < Fijas || habilidades.Nivel((HabilidadProtesis)i) > 0;
+                if (va)
+                {
+                    cambio |= cuantas >= visibles.Count || visibles[cuantas] != i;
+                    cuantas++;
+                }
+            }
+            cambio |= cuantas != visibles.Count;
+            if (!cambio)
+            {
+                return;
+            }
+            visibles.Clear();
+            for (int i = 0; i < Total; i++)
+            {
+                bool va = i < Fijas || habilidades.Nivel((HabilidadProtesis)i) > 0;
+                casillas[i].Raiz.gameObject.SetActive(va);
+                if (va)
+                {
+                    visibles.Add(i);
+                }
+            }
+            float ancho = visibles.Count * Lado + (visibles.Count - 1) * Hueco;
+            for (int k = 0; k < visibles.Count; k++)
+            {
+                casillas[visibles[k]].Raiz.anchoredPosition = new Vector2(-ancho * 0.5f + k * (Lado + Hueco), MargenAbajo);
+            }
+        }
+
+        private void Pintar(HabilidadProtesis h, Casilla c, bool refrescarTeclas)
+        {
+            int nivel = habilidades.Nivel(h);
+            bool tiene = nivel > 0;
             EstadoHabilidad estado = habilidades.Estado(h);
-            Color color = !tiene ? Gris : (estado == EstadoHabilidad.Recargando ? Rosa : Turquesa);
             bool activa = estado == EstadoHabilidad.Activa;
+            Color color = !tiene ? Gris : activa ? Amarillo : estado == EstadoHabilidad.Recargando ? Rosa : Turquesa;
             c.Color = color;
             c.Fondo.color = activa ? FondoActiva : FondoCasilla;
-            Color borde = new Color(color.r, color.g, color.b, activa ? 1f : (tiene ? 0.85f : 0.4f));
+            Color borde = new Color(color.r, color.g, color.b, tiene ? 1f : 0.45f);
             foreach (Image tira in c.Borde)
             {
                 tira.color = borde;
             }
-            c.Tecla.color = new Color(color.r, color.g, color.b, tiene ? 1f : 0.6f);
-            c.Nombre.color = activa ? Color.white : (tiene ? TurquesaSuave : Gris);
-            if (c.Tecla.text.Length == 0 || Time.unscaledTime >= siguienteTecla)
+            if (c.Tecla.Length == 0 || refrescarTeclas)
             {
-                c.Tecla.text = TeclasHud.Texto(TeclasHud.Buscar(ConfigHabilidadesProtesisNombre(h)), TeclaPorOmision(h));
-                if (h == HabilidadProtesis.Cabeza)
-                {
-                    siguienteTecla = Time.unscaledTime + SegundosTeclas;
-                }
+                c.Tecla = TeclasHud.Texto(TeclasHud.Buscar(MechaCyberpunk.Personaje.ConfigHabilidadesProtesis.NombreAccion(h)), TeclaPorOmision(h));
             }
-            string nombre = tiene ? NombreDe(h) : Apagada;
-            if (c.Nombre.text != nombre)
+            c.Nombre = tiene ? NombreDe(h) : Apagada;
+            string etiqueta = "[" + c.Tecla + "] " + (tiene ? c.Nombre : NombreDe(h));
+            if (c.Etiqueta.text != etiqueta)
             {
-                c.Nombre.text = nombre;
+                c.Etiqueta.text = etiqueta;
             }
+            c.Etiqueta.color = !tiene ? Gris : activa ? Amarillo : TurquesaSuave;
+
+            int nivelIcono = Mathf.Max(1, nivel);
+            if (c.NivelIcono != nivelIcono)
+            {
+                c.NivelIcono = nivelIcono;
+                c.Icono.sprite = Icono(h, nivelIcono);
+                c.Icono.enabled = c.Icono.sprite != null;
+            }
+            c.Icono.color = !tiene ? new Color(Gris.r, Gris.g, Gris.b, 0.45f) : activa ? Amarillo : Turquesa;
+
             float medidor = tiene ? habilidades.Medidor(h) : 0f;
             c.Relleno.anchorMax = new Vector2(Mathf.Clamp01(medidor), 1f);
-            c.RellenoImagen.color = activa ? Color.white : color;
+            c.RellenoImagen.color = color;
         }
 
-        private static string ConfigHabilidadesProtesisNombre(HabilidadProtesis h) => MechaCyberpunk.Personaje.ConfigHabilidadesProtesis.NombreAccion(h);
+        // El dibujo de línea de la prótesis: UI/Resources/Protesis/Protesis_<Habilidad>_<nivel>.png (si no hay del nivel II, el del I).
+        private Sprite Icono(HabilidadProtesis h, int nivel)
+        {
+            string nombre = CarpetaIconos + "Protesis_" + h + "_" + nivel;
+            if (!iconos.TryGetValue(nombre, out Sprite sprite))
+            {
+                sprite = Resources.Load<Sprite>(nombre);
+                if (sprite == null && nivel > 1)
+                {
+                    sprite = Resources.Load<Sprite>(CarpetaIconos + "Protesis_" + h + "_1");
+                }
+                iconos[nombre] = sprite;
+            }
+            return sprite;
+        }
     }
 }

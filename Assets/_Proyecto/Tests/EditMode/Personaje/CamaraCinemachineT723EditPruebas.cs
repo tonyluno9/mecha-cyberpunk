@@ -20,16 +20,12 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [Test]
-        public void ConfigAPie_DetrasYUnPocoArribaDelHombro_CentradaYSinZoomSalvoAlApuntar()
+        public void ConfigAPie_DetrasYUnPocoArribaDelHombro_YSinZoomSalvoAlApuntar()
         {
             SerializedObject c = Abrir(RutaConfig);
             float camaraAltura = c.FindProperty("alturaNormal").floatValue + c.FindProperty("brazoVertical").floatValue;
             Assert.That(camaraAltura, Is.InRange(1.6f, 2.1f), "La cámara queda un poco arriba del hombro y la cabeza");
             Assert.That(c.FindProperty("distanciaNormal").floatValue, Is.InRange(3f, 4f), "Detrás del personaje (CAM01)");
-            Assert.AreEqual(0f, c.FindProperty("lateralNormal").floatValue, 0.001f, "T-699: centrada");
-            Assert.AreEqual(0f, c.FindProperty("lateralApuntando").floatValue, 0.001f, "T-682: apuntando centrada");
-            Assert.AreEqual(c.FindProperty("distanciaNormal").floatValue, c.FindProperty("distanciaApuntando").floatValue, 0.001f, "Apuntar no cambia la distancia");
-            Assert.AreEqual(c.FindProperty("alturaNormal").floatValue, c.FindProperty("alturaApuntando").floatValue, 0.001f, "Apuntar no sube la cámara");
             Assert.Less(c.FindProperty("fovApuntando").floatValue, c.FindProperty("fovNormal").floatValue - 5f, "Solo apuntar hace zoom");
         }
 

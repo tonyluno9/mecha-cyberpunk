@@ -25,23 +25,45 @@ namespace MechaCyberpunk.UI.Rueda
         public const int OrdenCanvas = 90; // por encima de todos los canvas del HUD (H10 12, historia 20, mapa 40, pausa 60 queda debajo: la rueda no abre con ella)
         public const string NombreAccion = "Rueda";
 
-        private const float RadioAnillo = 300f;
-        private const float LadoCasilla = 124f;
-        private const float AlfaFondo = 0.92f; // el diseño pide al menos 0.55; con mezcla lineal 0.8 apenas se notaba
+        // Medidas en px de referencia (1920 x 1080), tomadas del mockup M30_RuedaArmas.png.
+        private const float RadioInterior = 212f;
+        private const float RadioExterior = 430f;
+        private const float RadioIcono = 318f;
+        private const float SeparacionTexto = 50f;
+        private const float ApotemaCentro = 172f;
+        private const float HuecoSectores = 9f;
+        private const float GrosorBorde = 3f;
+        private const float BrilloBorde = 9f;
+        private const float AlfaFondo = 0.62f;
         private const float AlfaApagada = 0.28f;
 
         private static readonly Color Turquesa = new Color(0.30f, 0.92f, 0.90f, 1f);
         private static readonly Color TurquesaSuave = new Color(0.78f, 1f, 1f, 1f);
+        private static readonly Color Amarillo = new Color(1f, 0.92f, 0.25f, 1f);
         private static readonly Color Blanco = new Color(0.93f, 0.97f, 0.97f, 1f);
-        private static readonly Color FondoCasilla = new Color(0.02f, 0.07f, 0.11f, 0.62f);
-        private static readonly Color FondoResaltada = new Color(0.10f, 0.40f, 0.42f, 0.9f);
-        private static readonly string[] NombresArmas = { "PUÑOS", "PISTOLA", "ESCOPETA", "FUSIL", "FRANCOTIRADOR" };
+        private static readonly Color FondoCasilla = new Color(0.02f, 0.08f, 0.11f, 0.72f);
+        private static readonly Color FondoResaltada = new Color(0.05f, 0.045f, 0.0f, 0.78f);
+        private static readonly Color FondoCentro = new Color(0.02f, 0.06f, 0.09f, 0.80f);
+
+        /// <summary>Nombre en la rueda de cada arma.</summary>
+        public static string NombreArma(ArmaAPie arma)
+        {
+            switch (arma)
+            {
+                case ArmaAPie.Punos: return "PUÑOS";
+                case ArmaAPie.Pistola: return "PISTOLA";
+                case ArmaAPie.Escopeta: return "ESCOPETA";
+                case ArmaAPie.Fusil: return "FUSIL";
+                case ArmaAPie.Sniper: return "FRANCOTIRADOR";
+                default: return arma.ToString().ToUpperInvariant();
+            }
+        }
 
         private sealed class Casilla
         {
             public RectTransform Raiz;
             public Image Fondo;
-            public Image[] Borde;
+            public Image Borde;
             public Image Icono;
             public Text Nombre;
             public Text Cantidad;
@@ -53,9 +75,13 @@ namespace MechaCyberpunk.UI.Rueda
         private static int aperturas;
 
         private readonly List<Canvas> ocultos = new List<Canvas>();
+        private readonly Dictionary<CanvasGroup, float> grupos = new Dictionary<CanvasGroup, float>();
         private Canvas canvas;
         private GameObject raiz;
-        private readonly Casilla[] casillas = new Casilla[ReglaRuedaArmas.Casillas];
+        private readonly List<Casilla> casillas = new List<Casilla>();
+        private List<int> disposicion = new List<int>();
+        private RectTransform anillo;
+        private Image bordeCentro;
         private Text textoNombre;
         private Text textoDetalle;
         private RectTransform punto;
@@ -81,8 +107,27 @@ namespace MechaCyberpunk.UI.Rueda
         /// <summary>Cuántas veces se ha abierto la rueda (el tutorial lo lee para dar por vista la tecla aunque la abran y cierren de golpe).</summary>
         public static int Aperturas => aperturas;
 
-        /// <summary>La casilla resaltada ahora (0 a 9) o -1.</summary>
+        /// <summary>La rueda del jugador (la última que se armó), o null.</summary>
+        public static RuedaArmasObjetos Actual { get; private set; }
+
+        /// <summary>La casilla resaltada ahora (id de <see cref="ReglaRuedaArmas"/>) o -1.</summary>
         public int Resaltada => resaltada;
+
+        /// <summary>Cuántos sectores tiene el anillo ahora.</summary>
+        public int Sectores => disposicion.Count;
+
+        /// <summary>Los ids de casilla de cada sector, en el sentido del reloj desde arriba (<see cref="ReglaRuedaArmas.Vacia"/> = vacío).</summary>
+        public IReadOnlyList<int> Disposicion => disposicion;
+
+        /// <summary>True si la casilla está en la rueda ahora (arma que tienes, objeto con piezas).</summary>
+        public bool CasillaVisible(int casilla) => disposicion.IndexOf(casilla) >= 0;
+
+        /// <summary>El ángulo (° en el sentido del reloj desde arriba) del sector de la casilla, o NaN si no está en la rueda.</summary>
+        public float AnguloDe(int casilla)
+        {
+            int posicion = disposicion.IndexOf(casilla);
+            return posicion < 0 ? float.NaN : ReglaRuedaArmas.AnguloDeSector(posicion, disposicion.Count);
+        }
 
         /// <summary>El cursor virtual (px de referencia desde el centro, +y arriba).</summary>
         public Vector2 Cursor => cursor;
@@ -91,8 +136,19 @@ namespace MechaCyberpunk.UI.Rueda
 
         public Text TextoNombre => textoNombre;
         public Text TextoDetalle => textoDetalle;
-        public bool CasillaApagada(int casilla) => casillas[casilla].Grupo.alpha < 0.5f;
-        public string TextoCantidad(int casilla) => casillas[casilla].Cantidad.text;
+        /// <summary>True si la casilla no se puede elegir (no está en la rueda o está apagada).</summary>
+        public bool CasillaApagada(int casilla)
+        {
+            int posicion = disposicion.IndexOf(casilla);
+            return posicion < 0 || casillas[posicion].Grupo.alpha < 0.5f;
+        }
+
+        /// <summary>El texto de cantidad de la casilla ("x2" en los objetos), o vacío si no está en la rueda.</summary>
+        public string TextoCantidad(int casilla)
+        {
+            int posicion = disposicion.IndexOf(casilla);
+            return posicion < 0 ? string.Empty : casillas[posicion].Cantidad.text;
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void LimpiarEstatico()
@@ -105,6 +161,7 @@ namespace MechaCyberpunk.UI.Rueda
         private void Start()
         {
             Armar();
+            Actual = this;
             accion = BuscarAccion();
             accion?.Enable();
             Pausa.Cambio += AlCambiarPausa;
@@ -123,6 +180,10 @@ namespace MechaCyberpunk.UI.Rueda
 
         private void OnDestroy()
         {
+            if (Actual == this)
+            {
+                Actual = null;
+            }
             Pausa.Cambio -= AlCambiarPausa;
             InputSystem.onAfterUpdate -= AcumularMovimiento;
         }
@@ -183,7 +244,7 @@ namespace MechaCyberpunk.UI.Rueda
             }
             cursor = ReglaRuedaArmas.MoverCursor(cursor, movimientoPendiente);
             movimientoPendiente = Vector2.zero;
-            resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, Disponible);
+            resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, disposicion, Disponible);
             Dibujar();
         }
 
@@ -243,6 +304,7 @@ namespace MechaCyberpunk.UI.Rueda
             movimientoPendiente = Vector2.zero;
             resaltada = -1;
             OcultarHud();
+            Disponer();
             raiz.SetActive(true);
             Dibujar();
         }
@@ -299,6 +361,7 @@ namespace MechaCyberpunk.UI.Rueda
                     ocultos.Add(c);
                 }
             }
+            OcultarHermanos();
         }
 
         private void RestaurarHud()
@@ -311,10 +374,61 @@ namespace MechaCyberpunk.UI.Rueda
                 }
             }
             ocultos.Clear();
+            foreach (KeyValuePair<CanvasGroup, float> g in grupos)
+            {
+                if (g.Key != null)
+                {
+                    g.Key.alpha = g.Value;
+                }
+            }
+            grupos.Clear();
+        }
+
+        // T-1010: la rueda vive dentro del canvas del HUD, que no se puede apagar sin apagarla a ella: lo demás de ese canvas (minimapa, calavera,
+        // barras) se vuelve transparente mientras la rueda está abierta.
+        private void OcultarHermanos()
+        {
+            Canvas tope = null;
+            for (Transform t = canvas.transform.parent; t != null; t = t.parent)
+            {
+                if (t.GetComponent<Canvas>() != null)
+                {
+                    tope = t.GetComponent<Canvas>();
+                }
+            }
+            if (tope == null)
+            {
+                return;
+            }
+            // En cada nivel, del canvas de la rueda hasta el canvas de más arriba, se apagan los hermanos.
+            for (Transform t = canvas.transform; t != tope.transform && t.parent != null; t = t.parent)
+            {
+                foreach (Transform hermano in t.parent)
+                {
+                    if (hermano == t || !hermano.gameObject.activeSelf)
+                    {
+                        continue;
+                    }
+                    CanvasGroup g = hermano.GetComponent<CanvasGroup>();
+                    if (g == null)
+                    {
+                        g = hermano.gameObject.AddComponent<CanvasGroup>();
+                    }
+                    if (!grupos.ContainsKey(g))
+                    {
+                        grupos.Add(g, g.alpha);
+                        g.alpha = 0f;
+                    }
+                }
+            }
         }
 
         private bool Disponible(int casilla)
         {
+            if (casilla == ReglaRuedaArmas.Vacia)
+            {
+                return false;
+            }
             if (ReglaRuedaArmas.EsArma(casilla))
             {
                 ArmaAPie arma = (ArmaAPie)casilla;
@@ -352,65 +466,77 @@ namespace MechaCyberpunk.UI.Rueda
         {
             ConfigHudH10 cfg = ConfigHudH10.Actual;
             PiezasUI piezas = PiezasUI.Actual;
-            for (int i = 0; i < casillas.Length; i++)
+            for (int i = 0; i < casillas.Count; i++)
             {
                 Casilla c = casillas[i];
-                bool ok = Disponible(i);
-                bool resalto = i == resaltada;
-                c.Grupo.alpha = ok ? 1f : AlfaApagada;
+                int id = disposicion[i];
+                bool ok = Disponible(id);
+                bool resalto = id >= 0 && id == resaltada;
+                c.Grupo.alpha = id == ReglaRuedaArmas.Vacia ? 0.6f : ok ? 1f : AlfaApagada;
                 c.Fondo.color = resalto ? FondoResaltada : FondoCasilla;
-                Color colorBorde = resalto ? Blanco : new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.85f);
-                foreach (Image tira in c.Borde)
-                {
-                    tira.color = colorBorde;
-                }
-                c.Raiz.localScale = resalto ? Vector3.one * 1.12f : Vector3.one;
+                c.Borde.color = resalto ? Amarillo : new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.9f);
                 Sprite icono = null;
                 Material material = null;
                 string cantidad = string.Empty;
-                string nombre;
-                if (ReglaRuedaArmas.EsArma(i))
+                string nombre = string.Empty;
+                if (ReglaRuedaArmas.EsArma(id))
                 {
-                    nombre = NombresArmas[i];
-                    if (piezas != null && piezas.EsHolograma(i))
+                    nombre = NombreArma((ArmaAPie)id);
+                    if (piezas != null)
                     {
-                        icono = piezas.ArmaHud(i);
-                        material = piezas.MaterialArmaHud(i);
+                        icono = piezas.ArmaHud(id);
+                        material = piezas.MaterialArmaHud(id);
                     }
-                    cantidad = ok ? BalasDe((ArmaAPie)i) : string.Empty;
                 }
-                else
+                else if (ReglaRuedaArmas.EsObjeto(id))
                 {
-                    DatosConsumible o = ObjetoDe(i);
+                    DatosConsumible o = ObjetoDe(id);
                     nombre = o != null ? o.Nombre.ToUpperInvariant() : "—";
                     icono = o != null && cfg != null ? cfg.Icono(o.Id) : null;
-                    cantidad = "x" + CantidadDe(i);
+                    cantidad = "x" + CantidadDe(id);
                 }
                 c.Icono.sprite = icono;
                 c.Icono.material = material != null ? material : c.Icono.defaultMaterial;
+                c.Icono.color = resalto ? Amarillo : Turquesa;
                 c.Icono.enabled = icono != null;
                 c.Nombre.text = nombre;
+                c.Nombre.color = resalto ? Amarillo : TurquesaSuave;
                 c.Cantidad.text = cantidad;
+                c.Cantidad.color = resalto ? Amarillo : Blanco;
+            }
+            // El sector resaltado va encima de los demás para que su brillo no quede tapado.
+            int lugar = disposicion.IndexOf(resaltada);
+            if (lugar >= 0)
+            {
+                casillas[lugar].Raiz.SetAsLastSibling();
             }
             punto.anchoredPosition = cursor;
+            bordeCentro.color = resaltada >= 0 ? Amarillo : Turquesa;
+            textoNombre.color = Amarillo;
+            textoDetalle.color = Amarillo;
             if (resaltada < 0)
             {
                 textoNombre.text = string.Empty;
+                textoDetalle.color = TurquesaSuave;
+                textoDetalle.fontSize = 24;
                 textoDetalle.text = "SUELTA PARA CERRAR";
                 return;
             }
             if (ReglaRuedaArmas.EsArma(resaltada))
             {
-                textoNombre.text = NombresArmas[resaltada];
+                textoNombre.text = NombreArma((ArmaAPie)resaltada);
                 string balas = BalasDe((ArmaAPie)resaltada);
-                textoDetalle.text = balas.Length > 0 ? "BALAS " + balas.Replace("|", " | ") : "CUERPO A CUERPO";
+                textoDetalle.fontSize = balas.Length > 0 ? 40 : 24;
+                textoDetalle.text = balas.Length > 0 ? balas.Replace("|", " / ") : "CUERPO A CUERPO";
             }
             else
             {
                 DatosConsumible o = ObjetoDe(resaltada);
                 textoNombre.text = o != null ? o.Nombre.ToUpperInvariant() : string.Empty;
+                textoDetalle.fontSize = 22;
                 textoDetalle.text = o != null ? o.Descripcion.ToUpperInvariant() : string.Empty;
             }
+            textoNombre.fontSize = textoNombre.text.Length > 10 ? 34 : 46;
         }
 
         // ---- Armado ----
@@ -423,22 +549,19 @@ namespace MechaCyberpunk.UI.Rueda
             raiz.transform.SetParent(canvas.transform, false);
             KitUI.Estirar((RectTransform)raiz.transform);
 
-            Image fondo = KitUI.CrearImagen(raiz.transform, "Fondo", new Color(0f, 0f, 0f, AlfaFondo));
+            Image fondo = KitUI.CrearImagen(raiz.transform, "Fondo", new Color(0f, 0.01f, 0.03f, AlfaFondo));
             fondo.raycastTarget = false;
             KitUI.Estirar(fondo.rectTransform);
 
-            // Un disco tenue con aro turquesa detrás de las casillas, para que el anillo se lea como rueda.
-            Image disco = KitUI.CrearImagen(raiz.transform, "Disco", Color.white);
-            disco.sprite = SpriteDisco();
-            disco.raycastTarget = false;
-            KitUI.Colocar(disco.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one * (RadioAnillo * 2f + LadoCasilla + 40f));
+            anillo = Nuevo(raiz.transform, "Anillo", Vector2.zero, Vector2.zero);
 
-            for (int i = 0; i < casillas.Length; i++)
-            {
-                casillas[i] = ArmarCasilla(i);
-            }
-            textoNombre = Texto(raiz.transform, "Nombre", new Vector2(0f, 26f), new Vector2(420f, 60f), 46, TurquesaSuave);
-            textoDetalle = Texto(raiz.transform, "Detalle", new Vector2(0f, -30f), new Vector2(420f, 80f), 28, Blanco);
+            // El octágono del centro: nombre y balas de lo resaltado (M30).
+            DibujoRueda.Par octagono = DibujoRueda.Octagono(ApotemaCentro, GrosorBorde, BrilloBorde);
+            Figura(raiz.transform, "CentroRelleno", octagono.Relleno, FondoCentro);
+            bordeCentro = Figura(raiz.transform, "CentroBorde", octagono.Borde, Turquesa);
+
+            textoNombre = Texto(raiz.transform, "Nombre", new Vector2(0f, 30f), new Vector2(330f, 60f), 46, Amarillo);
+            textoDetalle = Texto(raiz.transform, "Detalle", new Vector2(0f, -32f), new Vector2(300f, 90f), 40, Amarillo);
             textoDetalle.verticalOverflow = VerticalWrapMode.Truncate;
             textoDetalle.horizontalOverflow = HorizontalWrapMode.Wrap;
 
@@ -447,46 +570,80 @@ namespace MechaCyberpunk.UI.Rueda
             raiz.SetActive(false);
         }
 
-        private static Sprite SpriteDisco()
+        // Arma la lista de sectores con lo que el jugador lleva ahora y rehace el anillo si cambió.
+        private void Disponer()
         {
-            const int lado = 256;
-            Texture2D t = new Texture2D(lado, lado, TextureFormat.RGBA32, false);
-            float mitad = lado / 2f;
-            for (int y = 0; y < lado; y++)
+            Vincular();
+            List<int> nueva = ReglaRuedaArmas.Disposicion(Disponible);
+            bool igual = nueva.Count == disposicion.Count && casillas.Count == nueva.Count;
+            for (int i = 0; igual && i < nueva.Count; i++)
             {
-                for (int x = 0; x < lado; x++)
-                {
-                    float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(mitad, mitad)) / mitad;
-                    float alfa = d > 1f ? 0f : d > 0.985f ? 0.4f : 0.07f;
-                    t.SetPixel(x, y, new Color(Turquesa.r, Turquesa.g, Turquesa.b, alfa));
-                }
+                igual = nueva[i] == disposicion[i];
             }
-            t.Apply();
-            return Sprite.Create(t, new Rect(0f, 0f, lado, lado), new Vector2(0.5f, 0.5f), 100f);
+            if (igual)
+            {
+                return;
+            }
+            disposicion = nueva;
+            foreach (Casilla c in casillas)
+            {
+                Destroy(c.Raiz.gameObject);
+            }
+            casillas.Clear();
+            DibujoRueda.Par sector = DibujoRueda.Sector(RadioInterior, RadioExterior, ReglaRuedaArmas.GradosPorSector(disposicion.Count),
+                HuecoSectores, GrosorBorde, BrilloBorde);
+            for (int i = 0; i < disposicion.Count; i++)
+            {
+                casillas.Add(ArmarCasilla(i, disposicion.Count, sector));
+            }
         }
 
-        private Casilla ArmarCasilla(int indice)
+        private Casilla ArmarCasilla(int posicion, int total, DibujoRueda.Par sector)
         {
             Casilla c = new Casilla();
-            GameObject g = new GameObject("Casilla" + indice, typeof(RectTransform));
-            g.transform.SetParent(raiz.transform, false);
+            float grados = ReglaRuedaArmas.AnguloDeSector(posicion, total);
+            GameObject g = new GameObject("Casilla" + posicion, typeof(RectTransform));
+            g.transform.SetParent(anillo, false);
             c.Raiz = (RectTransform)g.transform;
-            float angulo = ReglaRuedaArmas.AnguloDeCasilla(indice) * Mathf.Deg2Rad;
-            KitUI.Colocar(c.Raiz, new Vector2(0.5f, 0.5f), new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * RadioAnillo, new Vector2(LadoCasilla, LadoCasilla));
+            KitUI.Colocar(c.Raiz, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             c.Grupo = g.AddComponent<CanvasGroup>();
-            c.Fondo = g.AddComponent<Image>();
-            c.Fondo.color = FondoCasilla;
-            c.Fondo.raycastTarget = false;
-            GameObject borde = KitUI.CrearBorde(c.Raiz, 2f, Turquesa);
-            c.Borde = borde.GetComponentsInChildren<Image>();
-            RectTransform ri = Nuevo(c.Raiz, "Icono", new Vector2(0f, 20f), new Vector2(64f, 64f));
+            c.Grupo.blocksRaycasts = false;
+            c.Fondo = Figura(c.Raiz, "Relleno", sector.Relleno, FondoCasilla);
+            c.Borde = Figura(c.Raiz, "Borde", sector.Borde, Turquesa);
+            c.Fondo.rectTransform.localEulerAngles = new Vector3(0f, 0f, -grados);
+            c.Borde.rectTransform.localEulerAngles = new Vector3(0f, 0f, -grados);
+
+            float rad = grados * Mathf.Deg2Rad;
+            Vector2 centro = new Vector2(Mathf.Sin(rad), Mathf.Cos(rad)) * RadioIcono;
+            // Como el mockup: en los sectores de arriba el nombre va sobre el icono; en los demás, debajo.
+            float lado = Mathf.Cos(rad) > 0.5f ? 1f : -1f;
+            float ancho = 2f * RadioIcono * Mathf.Sin(Mathf.PI / total) - 14f;
+            RectTransform ri = Nuevo(c.Raiz, "Icono", centro - new Vector2(0f, lado * 10f), new Vector2(Mathf.Min(150f, ancho), 74f));
             c.Icono = ri.gameObject.AddComponent<Image>();
             c.Icono.preserveAspect = true;
             c.Icono.raycastTarget = false;
             c.Icono.color = Turquesa;
-            c.Nombre = Texto(c.Raiz, "Nombre", new Vector2(0f, -28f), new Vector2(LadoCasilla, 26f), 17, TurquesaSuave);
-            c.Cantidad = Texto(c.Raiz, "Cantidad", new Vector2(0f, -50f), new Vector2(LadoCasilla, 24f), 22, Blanco);
+            int letra = total > 10 ? 21 : 28;
+            c.Nombre = Texto(c.Raiz, "Nombre", centro + new Vector2(0f, lado * SeparacionTexto), new Vector2(ancho + 30f, 26f), letra, TurquesaSuave);
+            c.Cantidad = Texto(c.Raiz, "Cantidad", centro + new Vector2(ancho * 0.32f, -lado * 34f - 6f), new Vector2(60f, 28f), 22, Blanco);
             return c;
+        }
+
+        // Una imagen con un sprite de DibujoRueda, del tamaño del sprite y con el pivote en el centro de la rueda.
+        private static Image Figura(Transform padre, string nombre, Sprite sprite, Color color)
+        {
+            GameObject g = new GameObject(nombre, typeof(RectTransform));
+            g.transform.SetParent(padre, false);
+            RectTransform r = (RectTransform)g.transform;
+            r.anchorMin = r.anchorMax = new Vector2(0.5f, 0.5f);
+            r.sizeDelta = sprite.rect.size;
+            r.pivot = new Vector2(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height);
+            r.anchoredPosition = Vector2.zero;
+            Image imagen = g.AddComponent<Image>();
+            imagen.sprite = sprite;
+            imagen.color = color;
+            imagen.raycastTarget = false;
+            return imagen;
         }
 
         private static RectTransform Nuevo(Transform padre, string nombre, Vector2 posicion, Vector2 tamano)

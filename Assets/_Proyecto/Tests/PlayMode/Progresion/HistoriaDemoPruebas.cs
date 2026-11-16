@@ -269,7 +269,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(500, cartera.Dinero, "EL DOC no cobra en la historia");
             // T-702: sin implantes, EL DOC dice la frase del regalo (RegaloImplanteDoc); si no hubo regalo, la de curar de la historia.
             RegaloImplanteDoc regaloDoc = Object.FindFirstObjectByType<RegaloImplanteDoc>();
-            StringAssert.Contains(regaloDoc != null && regaloDoc.Regalado ? regaloDoc.Frase : DirectorPandillas.SubtituloDoc, pantalla.Subtitulo);
+            StringAssert.Contains(regaloDoc != null && regaloDoc.Avisado ? regaloDoc.Frase : DirectorPandillas.SubtituloDoc, pantalla.Subtitulo);
             Assert.AreEqual("VE CON EL INVENTOR AL CIC", Objetivo);
             Assert.IsFalse(doc.TieneRegalo, "Fuera del paso Doc vuelve a cobrar");
 

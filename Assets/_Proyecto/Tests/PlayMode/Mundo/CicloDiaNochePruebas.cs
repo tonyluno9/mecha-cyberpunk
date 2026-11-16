@@ -108,7 +108,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreSame(reloj, Registro<IRelojMundo>.Actual);
             Assert.AreEqual(7f, Registro<IRelojMundo>.Actual.HoraAmanecer);
             Assert.AreEqual(19f, Registro<IRelojMundo>.Actual.HoraAnochecer);
-            Assert.AreEqual(FranjaDia.Noche, Registro<IRelojMundo>.Actual.Franja);
+            Assert.AreEqual(FranjaDia.Dia, Registro<IRelojMundo>.Actual.Franja, "T-1002: la escena empieza de día");
         }
 
         [UnityTest]

@@ -443,7 +443,8 @@ namespace MechaCyberpunk.UI.Clinica
                 case EstadoOfertaImplante.Instalar:
                     confirmando = true;
                     Sonidos.Reproducir(config.SonidoAceptar);
-                    Preparar(textoAviso, string.Format(config.FormatoConfirmar, FormatoDinero.Texto(oferta.Costo)), config.ColorPrecio, config.TamanoOpcion);
+                    Preparar(textoAviso, oferta.Costo == 0 ? config.FormatoConfirmarGratis : string.Format(config.FormatoConfirmar, FormatoDinero.Texto(oferta.Costo)),
+                        config.ColorPrecio, config.TamanoOpcion);
                     textoAviso.gameObject.SetActive(true);
                     break;
                 case EstadoOfertaImplante.SinDinero:
@@ -491,6 +492,9 @@ namespace MechaCyberpunk.UI.Clinica
             PintarHolograma(ofertaElegida, mostrado);
         }
 
+        /// <summary>T-1005: el costo en texto; con costo 0 (el exo de piernas I) dice GRATIS.</summary>
+        private string TextoCosto(int costo) => costo == 0 ? config.TextoGratis : FormatoDinero.Texto(costo);
+
         private string TextoDeOferta(OfertaImplante oferta, int nivelInstalado)
         {
             switch (oferta.Estado)
@@ -502,7 +506,7 @@ namespace MechaCyberpunk.UI.Clinica
                 case EstadoOfertaImplante.SinDinero:
                     return string.Format(config.FormatoSinDinero, oferta.Implante.Nombre);
                 default:
-                    string precio = string.Format(config.FormatoPrecio, oferta.Implante.Nombre, FormatoDinero.Texto(oferta.Costo));
+                    string precio = string.Format(config.FormatoPrecio, oferta.Implante.Nombre, TextoCosto(oferta.Costo));
                     return nivelInstalado > 0 ? precio + " · " + config.TextoDiferencia : precio;
             }
         }
@@ -797,12 +801,12 @@ namespace MechaCyberpunk.UI.Clinica
                     etiqueta.color = TrazoH10.TextoTenue;
                     break;
                 case EstadoOfertaImplante.SinDinero:
-                    etiqueta.text = FormatoDinero.Texto(oferta.Costo);
+                    etiqueta.text = TextoCosto(oferta.Costo);
                     etiqueta.color = TrazoH10.Coral;
                     break;
                 default:
-                    etiqueta.text = FormatoDinero.Texto(oferta.Costo);
-                    etiqueta.color = cartera != null && cartera.PuedePagar(oferta.Costo) ? TrazoH10.Amarillo : TrazoH10.Coral;
+                    etiqueta.text = TextoCosto(oferta.Costo);
+                    etiqueta.color = oferta.Costo == 0 || (cartera != null && cartera.PuedePagar(oferta.Costo)) ? TrazoH10.Amarillo : TrazoH10.Coral;
                     break;
             }
         }
@@ -830,7 +834,7 @@ namespace MechaCyberpunk.UI.Clinica
             switch (oferta.Estado)
             {
                 case EstadoOfertaImplante.Instalar:
-                    textoBoton.text = string.Format(config.FormatoBoton, FormatoDinero.Texto(oferta.Costo));
+                    textoBoton.text = string.Format(config.FormatoBoton, TextoCosto(oferta.Costo));
                     color = TrazoH10.Amarillo;
                     break;
                 case EstadoOfertaImplante.SinDinero:

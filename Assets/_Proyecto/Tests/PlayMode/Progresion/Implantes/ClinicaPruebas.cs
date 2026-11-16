@@ -56,7 +56,9 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             Assert.AreEqual(piernas.Descripcion, pantalla.Descripcion, "la descripción de la opción elegida");
             yield return Tecla(teclado.enterKey);
             Assert.IsTrue(pantalla.Confirmando, "el primer Enter pide confirmar");
-            StringAssert.Contains("¿INSTALAR POR Ƀ" + piernas.Precio.ToString("N0", CultureInfo.InvariantCulture) + "?", pantalla.Aviso);
+            Assert.AreEqual(0, piernas.Precio, "T-1005: EXO DE PIERNAS I es gratis");
+            StringAssert.Contains(config.TextoGratis, pantalla.TextoOpcion(FilaPiernas), "la fila dice GRATIS");
+            StringAssert.Contains(config.FormatoConfirmarGratis, pantalla.Aviso);
             Assert.AreEqual(DineroAlto, cartera.Dinero, "pedir confirmar no cobra");
 
             float hora0 = reloj.Hora;
@@ -75,9 +77,9 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             }
             float transcurrido = Time.time - t0;
             Assert.IsFalse(mostrador.Operando, "terminó la operación");
-            Assert.AreEqual(DineroAlto - piernas.Precio, cartera.Dinero, "se cobró el precio de PIERNAS I");
-            Assert.AreEqual(1, motivoClinica, "un solo cobro con MotivoDinero.Clinica");
-            Assert.AreEqual(-piernas.Precio, cobrado, "el cobro fue de -precio");
+            Assert.AreEqual(DineroAlto, cartera.Dinero, "PIERNAS I es gratis: no se cobra nada");
+            Assert.AreEqual(0, motivoClinica, "ningún cobro de la clínica");
+            Assert.AreEqual(0, cobrado, "no hubo cobro");
             Assert.AreEqual(1, implantes.Nivel(EspacioImplante.Piernas), "PIERNAS nivel 1");
             Assert.AreEqual(piernas.Nombre, implantes.Nombre(EspacioImplante.Piernas));
             Assert.IsFalse(pantalla.Visible, "la pantalla se cerró");
@@ -99,26 +101,27 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
         }
 
         [UnityTest]
-        public IEnumerator Clinica_OpcionEnGris_EnterNoHaceNada()
+        public IEnumerator Clinica_NivelII_SeAbreEnCuantoTienesElI_SinLiga()
         {
+            // T-1005: ya no hay bloqueo de liga: con OJOS I y la liga 1, OJOS II se ofrece normal y se compra.
             yield return CargarEscena();
             PonerDinero(DineroAlto);
             PonerLiga(1);
             CargarImplantes(Datos(EspacioImplante.Ojos, 1).Id);
             DatosImplante ojos2 = Datos(EspacioImplante.Ojos, 2);
+            Assert.AreEqual(1, ojos2.LigaMinima, "el nivel II no pide liga");
 
             yield return AbrirClinica();
-            StringAssert.Contains("SE ABRE EN LA LIGA " + ojos2.LigaMinima, pantalla.TextoOpcion(FilaOjos), "la fila de OJOS dice en qué liga se abre");
-            Assert.AreEqual(config.ColorApagado, pantalla.ColorOpcion(FilaOjos), "la fila va en gris");
+            StringAssert.DoesNotContain("SE ABRE EN LA LIGA", pantalla.TextoOpcion(FilaOjos), "la fila de OJOS no habla de ligas");
+            Assert.AreNotEqual(config.ColorApagado, pantalla.ColorOpcion(FilaOjos), "la fila no va en gris");
             StringAssert.StartsWith(config.NombreEspacio(FilaOjos) + " · " + Datos(EspacioImplante.Ojos, 1).Nombre, pantalla.TextoEspacio(FilaOjos), "lo instalado");
             yield return Tecla(teclado.enterKey);
-            Assert.IsFalse(pantalla.Confirmando, "Enter en gris no pide confirmar");
-            Assert.AreEqual(string.Empty, pantalla.Aviso, "no avisa");
+            Assert.IsTrue(pantalla.Confirmando, "Enter pide confirmar el nivel II");
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(DineroAlto, cartera.Dinero, "no cobra");
-            Assert.AreEqual(1, implantes.Nivel(EspacioImplante.Ojos), "OJOS sigue en 1");
-            Assert.IsTrue(pantalla.Visible, "la pantalla sigue abierta");
-            VerificarFinal("gris");
+            yield return EsperarOperacion();
+            Assert.AreEqual(2, implantes.Nivel(EspacioImplante.Ojos), "OJOS nivel 2");
+            Assert.AreEqual(DineroAlto - (ojos2.Precio - Datos(EspacioImplante.Ojos, 1).Precio), cartera.Dinero, "se cobró la diferencia");
+            VerificarFinal("nivel-ii-sin-liga");
         }
 
         [UnityTest]
@@ -296,8 +299,8 @@ namespace MechaCyberpunk.Tests.Progresion.Implantes
             yield return AbrirClinica();
             yield return Bajar(FilaPiernas);
             yield return Cuadros(FramesParaElHud * 4);
-            StringAssert.Contains("SE ABRE EN LA LIGA", pantalla.TextoOpcion(FilaOjos), "una fila en gris");
-            StringAssert.Contains("Ƀ", pantalla.TextoOpcion(FilaPiernas), "una fila con precio");
+            StringAssert.DoesNotContain("SE ABRE EN LA LIGA", pantalla.TextoOpcion(FilaOjos), "T-1005: ya no hay filas bloqueadas por liga");
+            StringAssert.Contains(config.TextoGratis, pantalla.TextoOpcion(FilaPiernas), "T-1005: PIERNAS I dice GRATIS");
             Assert.AreEqual(1, pantalla.Vista.Cuerpo.NivelMostrado(EspacioImplante.Piernas), "la vista previa lleva el implante probado");
             CapturarConHud(RutaCaptura1);
             VerificarFinal("captura");

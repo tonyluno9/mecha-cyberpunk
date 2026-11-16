@@ -50,6 +50,9 @@ namespace MechaCyberpunk.UI
         [SerializeField] private string textoLoMejor = "LO MEJOR QUE HAY";
         [Tooltip("{0} = precio con Ƀ.")]
         [SerializeField] private string formatoConfirmar = "¿INSTALAR POR {0}? ENTER SÍ · ESC NO";
+        [Tooltip("T-1005: lo que se muestra en vez del precio cuando la opción cuesta 0 (el exo de piernas I del Doc).")]
+        [SerializeField] private string textoGratis = "GRATIS";
+        [SerializeField] private string formatoConfirmarGratis = "¿INSTALAR GRATIS? ENTER SÍ · ESC NO";
         [SerializeField] private string textoAyuda = "↑ ↓ elegir · Enter instalar · Esc salir";
         [Tooltip("Marca de la fila elegida; {0} = texto.")]
         [SerializeField] private string formatoElegido = "> {0}";
@@ -95,6 +98,8 @@ namespace MechaCyberpunk.UI
         public string TextoAvisoSinDinero => textoAvisoSinDinero;
         public string TextoLoMejor => textoLoMejor;
         public string FormatoConfirmar => formatoConfirmar;
+        public string TextoGratis => textoGratis;
+        public string FormatoConfirmarGratis => formatoConfirmarGratis;
         public string TextoAyuda => textoAyuda;
         public string FormatoElegido => formatoElegido;
         public string TextoMostrador => textoMostrador;

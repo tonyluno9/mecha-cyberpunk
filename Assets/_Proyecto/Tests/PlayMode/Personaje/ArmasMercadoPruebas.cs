@@ -34,7 +34,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private const int Dinero = 3000;
         private const float DistanciaBlanco = 80f;
         private const float VidaBlanco = 60f;
-        private const float LateralApuntando = 0f; // T-672/T-682: al apuntar la cámara queda centrada
+        private const float LateralApuntando = 0.75f; // T-1001: al apuntar la cámara va sobre el hombro derecho
 
         private Keyboard teclado;
         private Mouse raton;
@@ -107,8 +107,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.tabKey);
             yield return null;
             yield return null;
-            float angulo = MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.AnguloDeCasilla(casilla) * Mathf.Deg2Rad;
-            Set(raton.delta, new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
+            // T-1010: la rueda solo muestra lo que llevas; el ángulo de la casilla sale de la rueda abierta (NaN = no está: no se resalta nada).
+            float angulo = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Actual.AnguloDe(casilla) * Mathf.Deg2Rad;
+            Set(raton.delta, float.IsNaN(angulo) ? Vector2.zero : new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
             yield return null;
             yield return null;
             Release(teclado.tabKey);
@@ -423,7 +424,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(zoom.Activo, "Con el fusil no hay zoom del sniper");
             Press(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.5f);
-            Assert.AreEqual(40f, camara.fieldOfView, 1f, "Con el fusil, clic derecho apunta con zoom a FOV 40 (T-723)");
+            Assert.AreEqual(45f, camara.fieldOfView, 1f, "Con el fusil, clic derecho apunta con zoom a FOV 45 (T-1001)");
             Assert.IsFalse(mira.Visible, "El fusil no usa la mira del sniper");
             Release(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.4f);

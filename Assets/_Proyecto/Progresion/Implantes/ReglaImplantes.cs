@@ -25,7 +25,7 @@ namespace MechaCyberpunk.Progresion
             if (siguiente == null) return new OfertaImplante(null, EstadoOfertaImplante.YaLoMejor, 0, 0);
             int costo = Costo(catalogo, siguiente, nivelInstalado);
             if (liga < siguiente.LigaMinima) return new OfertaImplante(siguiente, EstadoOfertaImplante.LigaBaja, costo, siguiente.LigaMinima);
-            if (dinero < costo) return new OfertaImplante(siguiente, EstadoOfertaImplante.SinDinero, costo, 0);
+            if (costo > 0 && dinero < costo) return new OfertaImplante(siguiente, EstadoOfertaImplante.SinDinero, costo, 0); // T-1005: lo gratis se compra aun con deuda
             return new OfertaImplante(siguiente, EstadoOfertaImplante.Instalar, costo, 0);
         }
 

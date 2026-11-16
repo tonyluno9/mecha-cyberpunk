@@ -73,8 +73,8 @@ namespace MechaCyberpunk.Tests.UI
 
         private IEnumerator ApuntarA(int casilla)
         {
-            float a = ReglaRuedaArmas.AnguloDeCasilla(casilla) * Mathf.Deg2Rad;
-            Vector2 meta = new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * 120f;
+            float a = rueda.AnguloDe(casilla) * Mathf.Deg2Rad;
+            Vector2 meta = float.IsNaN(a) ? Vector2.zero : new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * 120f;
             Set(raton.delta, meta - rueda.Cursor);
             yield return null;
             yield return null;
@@ -258,8 +258,8 @@ namespace MechaCyberpunk.Tests.UI
 
         private static void Capturar(string nombre)
         {
-            Directory.CreateDirectory(Path.Combine("docs", "capturas", "t991"));
-            CapturaUI.Capturar(Path.Combine("docs", "capturas", "t991", nombre), Camera.main);
+            Directory.CreateDirectory(Path.Combine("docs", "capturas", "t1010"));
+            CapturaUI.Capturar(Path.Combine("docs", "capturas", "t1010", nombre), Camera.main);
         }
 
         [UnityTest]
