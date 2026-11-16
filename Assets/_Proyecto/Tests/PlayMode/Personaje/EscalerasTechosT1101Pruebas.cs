@@ -318,14 +318,34 @@ namespace MechaCyberpunk.Tests.Personaje
                 Vector3 desde = p.PieAbajo - p.Frente * 3f + Vector3.up * 1.7f;
                 yield return Foto(desde, p.transform.position + Vector3.up * 3.2f, "escalera-" + n++ + "-" + z);
             }
-            List<string> fallas = new List<string>();
+            // Dos vistas desde un callejón hacia la parte trasera de la manzana (a 8 m de la pared, a 1,7 m de altura).
             for (int k = 0; k < 2 && k < nuevas.Count; k++)
             {
-                PuntoTrepar p = nuevas[k * 3 % nuevas.Count];
+                PuntoTrepar p = nuevas[(k * 4 + 1) % nuevas.Count];
+                Vector3 desde = p.PieAbajo - p.Frente * 8f + Vector3.up * 1.7f;
+                yield return Foto(desde, p.transform.position + Vector3.up * 4f, "callejon-" + (k + 1));
+            }
+            // Cinco vistas desde techos distintos después de subir de verdad; cada una mira a un lado distinto.
+            List<string> fallas = new List<string>();
+            for (int k = 0; k < 5 && k < nuevas.Count; k++)
+            {
+                PuntoTrepar p = nuevas[(k * 3) % nuevas.Count];
                 yield return Subir(p, fallas);
                 Vector3 ojos = jugador.transform.position + Vector3.up * 1.7f;
-                yield return Foto(ojos, ojos + p.Frente * 6f - Vector3.up * 0.8f, "techo-" + (k + 1));
+                Vector3 dir = Quaternion.Euler(0f, 90f * (k % 4), 0f) * p.Frente;
+                // La cámara de la foto queda en la cabeza del jugador: se ve por dentro su propio modelo (esquirlas negras). Se oculta mientras dura la foto.
+                Renderer[] propios = jugador.GetComponentsInChildren<Renderer>().Where(r => r.enabled).ToArray();
+                foreach (Renderer r in propios)
+                {
+                    r.enabled = false;
+                }
+                yield return Foto(ojos, ojos + dir * 6f - Vector3.up * 0.8f, "techo-" + (k + 1));
+                foreach (Renderer r in propios)
+                {
+                    r.enabled = true;
+                }
             }
+            Assert.IsEmpty(fallas, string.Join(", ", fallas));
         }
 
         private static IEnumerator Foto(Vector3 desde, Vector3 hacia, string nombre)

@@ -22,6 +22,12 @@ Prueba nueva EscalerasTechosT1101Pruebas (Ciudad_Prologo real, jugador real, W s
 - PlayMode EscalerasTechosT1101Pruebas: 4 total, 4 pasan, 0 fallan (con T1101_CAPTURAS=1). TechosS2Pruebas 6/6, TreparAPiePruebas 5/5, EmboscadaTechoT999Pruebas 5 (4 pasan, 1 saltada: captura).
 - EditMode RevisarCiudadT995Pruebas|FlotantesS2tPruebas: 3/3. verificar.sh compilar: OK.
 
+## Correcciones tras la revisión del líder
+- Paredes invisibles: KitS2c.MallaCaja tenía invertido el triángulo de las 4 caras laterales (cross(eu, ev) opuesto al normal). Corregido en KitS2c (Cara voltea el orden si hace falta) y en los assets ya generados con CorregirCarasT1101 (Arte/Editor, menú S2, idempotente): recorre las mallas .asset de Assets/Arte, solo cajas de 24 vértices y 12 triángulos, y voltea el triángulo cuyo normal geométrico contradice el del vértice (245 mallas, 1960 triángulos; los normales no cambian, ya apuntaban hacia afuera). Sin re-correr colocadores de la ciudad, sin _Cull Off. Antes/después: escalera-1 ya no deja ver las casas de dentro de la manzana.
+- Esquirlas negras en techo-1: eran el modelo del propio jugador visto por dentro (la cámara de la foto está en su cabeza). Los renderers del jugador se ocultan durante la foto; no hay basura en la escena (cables, lluvia y partículas descartados). Verificado en 5 techos.
+- Capturas nuevas (11): 4 escaleras desde la calle, 2 desde el callejón (callejon-1/2), 5 desde techos distintos (techo-1 a 5).
+- Pruebas tras la corrección: EscalerasTechosT1101Pruebas 4 total, 3 pasan, 0 fallan, 1 saltada (captura, sin T1101_CAPTURAS); TechosS2Pruebas 6/6; EditMode RevisarCiudadT995Pruebas|FlotantesS2tPruebas|SinGreyboxT506Pruebas 12/12; compilar OK.
+
 ## Pendiente
-- Las espaldas de las casas (caras laterales de las cajas "Cuerpo" hechas con KitS2c.Losa/MallaCaja) tienen el orden de vértices invertido: desde afuera no se dibuja la pared y se ven las fachadas de atrás a través. Las escaleras nuevas quedan pegadas a muros que se ven huecos desde la calle trasera. Corrección sugerida (tarea de arte): invertir el giro de las 4 caras laterales en MallaCaja o poner _Cull=Off en S2c_Cuerpo_*.
 - TreparAPie no limpia puntoCercano si el jugador se teletransporta dentro del trigger de una escalera (solo teletransporte, no pasa jugando).
+- Barrio quedó sin escaleras nuevas (muros con fachadas pegadas o en la franja de T-1102).

@@ -878,7 +878,9 @@ namespace MechaCyberpunk.Arte.Editor
                     n.Add(normal);
                 }
                 uv.Add(new Vector2(0f, 0f)); uv.Add(new Vector2(su / metrosUv, 0f)); uv.Add(new Vector2(su / metrosUv, sv / metrosUv)); uv.Add(new Vector2(0f, sv / metrosUv));
-                t.AddRange(new[] { k, k + 1, k + 2, k, k + 2, k + 3 });
+                // Unity: el frente de un triángulo es el que se ve en sentido horario, y cross(b - a, c - a) apunta hacia quien lo ve.
+                bool invertida = Vector3.Dot(Vector3.Cross(eu, ev), normal) < 0f;
+                t.AddRange(invertida ? new[] { k, k + 2, k + 1, k, k + 3, k + 2 } : new[] { k, k + 1, k + 2, k, k + 2, k + 3 });
             }
             Cara(Vector3.up, Vector3.right, Vector3.back, tam.x, tam.z);
             Cara(Vector3.down, Vector3.right, Vector3.forward, tam.x, tam.z);
