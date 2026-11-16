@@ -22,11 +22,10 @@ namespace MechaCyberpunk.Arte.Editor
         private const string RutaDatosBase = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeNova.asset";
         private const string RutaPrefabBase = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado.prefab";
         private const string RutaVisualE11 = "Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_E11_JefeSnakes.prefab";
-        private const string RutaDatosViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Viboras.asset";
 
         private const float PasoMalla = 2f;
-        private const float MitadEje = 5.5f;
-        private const float MitadLado = 3.5f;
+        private const float MitadEje = 4f;
+        private const float MitadLado = 2.4f;
         private const float AlturaSuelo = 1f;
         private const float SueloMinY = -0.1f;
         private const float SueloMaxY = 0.45f;
@@ -34,16 +33,20 @@ namespace MechaCyberpunk.Arte.Editor
         private const float DespejeBajo = 0.4f;
         private const float DespejeAlto = 2.4f;
         private const float DistLugares = 14f;
-        private const float DistRinas = 40f;
+        private static List<Vector3> pandilleros = new List<Vector3>();
+        private const float DistPandilleros = 8f;
+        private const float DistRinas = 11f;
 
         [MenuItem("Mecha Cyberpunk/T1108/Colocar jefe SNAKES")]
         public static void Colocar()
         {
             ColocarS2.Informe.Clear();
+            ColocarT1107Rina.AsegurarDatosE10();
             AsegurarDatos();
             AsegurarPrefab();
             ColocarS2.Abrir();
             Physics.SyncTransforms();
+            ColocarT1107Rina.CargarTraficoYPuertas();
             Transform vieja = ColocarS2.Buscar(Raiz);
             if (vieja != null)
             {
@@ -54,7 +57,7 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject prefabJefe = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab);
             GameObject prefabSnakes = AssetDatabase.LoadAssetAtPath<GameObject>(ColocarT1107Rina.RutaPrefabSnakes);
             DatosPandilleroAPie datosJefe = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(RutaDatos);
-            DatosPandilleroAPie viboras = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(RutaDatosViboras);
+            DatosPandilleroAPie viboras = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(ColocarT1107Rina.RutaDatosViboras);
             if (prefabJefe == null || prefabSnakes == null || datosJefe == null || viboras == null)
             {
                 Debug.LogError("[Arte] T-1108: faltan el prefab o los datos del jefe SNAKES.");
@@ -62,7 +65,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             List<Vector3> evitar = ColocarT1107Rina.Lugares();
-            evitar.AddRange(ColocarT1107Rina.PandillasExistentes());
+            pandilleros = ColocarT1107Rina.PandillasExistentes();
             List<Vector3> rinas = Object.FindObjectsByType<RinaPandillas>(FindObjectsInactive.Include, FindObjectsSortMode.None).Select(r => r.transform.position).ToList();
             (Vector3 centro, Vector3 eje)? sitio = Buscar(new Vector2(47f, -60f), evitar, rinas);
             if (sitio == null)
@@ -137,26 +140,27 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ------------------------------------------------------------------ sitio
 
-        // Un tramo de calle plano y despejado (de 13 x 10 m) en Neón Alto, fuera de la ruta de la demo, de los lugares, de las otras pandillas y de las riñas,
+        // Un tramo de calle plano y despejado (de 8 x 5 m) en Neón Alto, fuera de la ruta de la demo, de los lugares, de las otras pandillas y de las riñas,
         // con piso libre también donde esperan los refuerzos (12 m detrás del jefe). Devuelve el centro y el eje (X o Z) en el que mira el jefe.
         private static (Vector3 centro, Vector3 eje)? Buscar(Vector2 preferido, List<Vector3> evitar, List<Vector3> rinas)
         {
             List<(Vector3 centro, Vector3 eje)> validos = new List<(Vector3, Vector3)>();
-            for (float x = 50f; x <= 118f; x += PasoMalla)
+            for (float x = 47f; x <= 118f; x += PasoMalla)
             {
                 for (float z = -90f; z <= 90f; z += PasoMalla)
                 {
                     Vector3 c = new Vector3(x, 0f, z);
                     if (ColocarT1107Rina.DistanciaALaRuta(c) < ColocarT1107Rina.DistanciaRuta || ColocarT1107Rina.EnZonaProhibida(c)
                         || evitar.Any(e => Vector3.Distance(new Vector3(e.x, 0f, e.z), c) < DistLugares)
+                        || pandilleros.Any(e => Vector3.Distance(new Vector3(e.x, 0f, e.z), c) < DistPandilleros)
                         || rinas.Any(e => Vector3.Distance(new Vector3(e.x, 0f, e.z), c) < DistRinas))
                     {
                         continue;
                     }
                     foreach (Vector3 eje in new[] { Vector3.right, Vector3.forward })
                     {
-                        if (Plano(c, eje, out float y) && ColocarT1107Rina.Despejado(new Vector3(x, y, z), eje, MitadEje, MitadLado, 3.5f, 2.5f)
-                            && ConstructorJefeSnakes.DireccionRefuerzos(new Vector3(x, y, z), eje) != Vector3.zero && HayRefuerzos(new Vector3(x, y, z), eje))
+                        if (Plano(c, eje, out float y) && ColocarT1107Rina.Despejado(new Vector3(x, y, z), eje, MitadEje, MitadLado, 2.5f, 1.5f)
+                            && ColocarT1107Rina.HuellaLibreDeTrafico(c, eje, MitadEje, MitadLado) && HayRefuerzos(new Vector3(x, y, z), eje))
                         {
                             validos.Add((new Vector3(x, y, z), eje));
                             break;

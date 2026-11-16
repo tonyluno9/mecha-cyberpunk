@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Tests
         private const string RutaJefe = "Assets/_Proyecto/IA/Prefabs/JefeSnakes_E11.prefab";
         private const string RutaDatosJefe = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_JefeSnakesE11.asset";
         private const string RutaSnakes = "Assets/_Proyecto/IA/Prefabs/PandilleroArmado_Snakes.prefab";
-        private const string RutaViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_Viboras.asset";
+        private const string RutaViboras = "Assets/_Proyecto/IA/Datos/DatosPandilleroAPie_ViborasE10.asset";
         private const string CarpetaFotos = "docs/capturas/t-1108";
 
         private sealed class TerritorioFalso : ITerritorio
@@ -234,11 +234,14 @@ namespace MechaCyberpunk.Tests
         {
             GameObject go = new GameObject("CamaraFoto");
             extras.Add(go);
+            foreach (Camera otra in Camera.allCameras) otra.enabled = false; // la de la captura es Camera.main: el grito mira hacia ella
             Camera camara = go.AddComponent<Camera>();
+            go.tag = "MainCamera";
             camara.farClipPlane = 200f;
             Vector3 centro = (jefe.transform.position + jugador.transform.position) * 0.5f;
             go.transform.position = centro + Vector3.right * 6f + Vector3.up * 1.8f;
             go.transform.LookAt(jefe.transform.position + Vector3.up * 1.1f);
+            yield return null;
             yield return null;
             RenderTexture rt = new RenderTexture(1280, 720, 24);
             camara.targetTexture = rt;

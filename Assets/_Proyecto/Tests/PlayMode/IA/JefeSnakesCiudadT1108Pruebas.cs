@@ -2,6 +2,8 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Trafico.Calle;
+using MechaCyberpunk.Trafico.Persecucion;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -21,6 +23,7 @@ namespace MechaCyberpunk.Tests
         private const float DistanciaMinimaRuta = 30f;
         private const float TolerSuelo = 0.5f;
         private const float SeparacionMinima = 1f;
+        private const float DistanciaMinimaCarriles = 6.4f; // carril a 2.4 m del eje de la calle + 4 m
         private const float LimiteNeonAltoX = 47f;
 
         private static readonly Vector3[] Ruta =
@@ -112,6 +115,51 @@ namespace MechaCyberpunk.Tests
         }
 
         [UnityTest]
+        public IEnumerator Ciudad_ElJefeYSusEscoltasEstanAMasDeCuatroMetrosDeCualquierCarril()
+        {
+            Transform manzana = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t.name.StartsWith("Manzana_"));
+            Assert.IsNotNull(manzana, "la ciudad tiene manzanas");
+            GrafoCalles grafo = GestorPersecucion.ArmarCallesDe(manzana.parent);
+            TraficoCalle.AlargarHaciaLasAfueras(grafo);
+            ConductaJefeSnakes jefe = Object.FindObjectsByType<ConductaJefeSnakes>(FindObjectsSortMode.None)[0];
+            PandilleroAPie[] todos = jefe.Escoltas.Pandilleros.Concat(new[] { jefe.GetComponent<PandilleroAPie>() }).ToArray();
+            foreach (PandilleroAPie p in todos)
+            {
+                float menor = float.MaxValue;
+                for (int i = 0; i < grafo.Cantidad; i++)
+                {
+                    foreach (int j in grafo.Vecinos(i))
+                    {
+                        if (j > i) menor = Mathf.Min(menor, DistanciaASegmento(p.transform.position, grafo.Nodo(i), grafo.Nodo(j)));
+                    }
+                }
+                Assert.GreaterOrEqual(menor, DistanciaMinimaCarriles, p.name + " a 4 m o más del carril más cercano");
+            }
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator Ciudad_LosEscoltasSnakesSeVenConSuTexturaE10_SinTinteVerde()
+        {
+            ConductaJefeSnakes jefe = Object.FindObjectsByType<ConductaJefeSnakes>(FindObjectsSortMode.None)[0];
+            SkinnedMeshRenderer[] renderers = jefe.Escoltas.Pandilleros.SelectMany(p => p.transform.Find("Modelo").GetComponentsInChildren<SkinnedMeshRenderer>(true)).ToArray();
+            Assert.Greater(renderers.Length, 0);
+            float fin = Time.time + 2f;
+            while (Time.time < fin) yield return null;
+            foreach (SkinnedMeshRenderer rend in renderers)
+            {
+                Assert.IsTrue(rend.sharedMaterial.name.StartsWith("E10_PandilleroSnakes"), "material E10");
+                MaterialPropertyBlock bloque = new MaterialPropertyBlock();
+                rend.GetPropertyBlock(bloque);
+                Color delMaterial = rend.sharedMaterial.GetColor("_BaseColor");
+                Color efectivo = bloque.isEmpty || !bloque.HasColor("_BaseColor") ? delMaterial : bloque.GetColor("_BaseColor");
+                Assert.AreEqual(delMaterial.r, efectivo.r, 0.01f, "sin tinte (r)");
+                Assert.AreEqual(delMaterial.g, efectivo.g, 0.01f, "sin tinte (g)");
+                Assert.AreEqual(delMaterial.b, efectivo.b, 0.01f, "sin tinte (b)");
+            }
+        }
+
+        [UnityTest]
         public IEnumerator Capturas_JefeConSusEscoltasEnSuLugar()
         {
             if (System.Environment.GetEnvironmentVariable("T1108_CAPTURAS") != "1")
@@ -122,7 +170,10 @@ namespace MechaCyberpunk.Tests
             ConductaJefeSnakes jefe = Object.FindObjectsByType<ConductaJefeSnakes>(FindObjectsSortMode.None)[0];
             Vector3 centro = jefe.transform.position;
             GameObject go = new GameObject("CamaraFoto");
+            // Camera.main es la que mira el texto de los gritos: la de la captura lo es (las demás se apagan).
+            foreach (Camera otra in Camera.allCameras) otra.enabled = false;
             Camera camara = go.AddComponent<Camera>();
+            go.tag = "MainCamera";
             camara.farClipPlane = 400f;
             Vector3 mira = centro + Vector3.up * 1.2f;
             bool puesta = false;
@@ -141,6 +192,7 @@ namespace MechaCyberpunk.Tests
                 }
             }
             go.transform.LookAt(mira);
+            yield return null;
             yield return null;
             RenderTexture rt = new RenderTexture(1280, 720, 24);
             camara.targetTexture = rt;
