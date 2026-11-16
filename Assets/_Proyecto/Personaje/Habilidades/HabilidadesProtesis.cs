@@ -112,6 +112,10 @@ namespace MechaCyberpunk.Personaje.Habilidades
             controlador = GetComponent<ControladorAPie>();
             vida = GetComponent<VidaAPie>();
             config = Resources.Load<ConfigHabilidadesProtesis>(ConfigHabilidadesProtesis.NombreRecurso);
+            if (GetComponent<ProtesisVisiblesAPie>() == null)
+            {
+                gameObject.AddComponent<ProtesisVisiblesAPie>();
+            }
             if (GetComponent<ProtesisAtaqueAPie>() == null)
             {
                 gameObject.AddComponent<ProtesisAtaqueAPie>();

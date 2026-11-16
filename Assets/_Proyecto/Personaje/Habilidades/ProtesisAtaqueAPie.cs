@@ -30,6 +30,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
         private HabilidadesProtesis habilidades;
         private ControladorAPie controlador;
         private PistolaAPie pistola;
+        private ProtesisVisiblesAPie visibles;
         private Animator animador;
         private ConfigHabilidadesProtesis cfg;
         private LineRenderer laser;
@@ -55,6 +56,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
             habilidades = GetComponent<HabilidadesProtesis>();
             controlador = GetComponent<ControladorAPie>();
             pistola = GetComponent<PistolaAPie>();
+            visibles = GetComponent<ProtesisVisiblesAPie>();
         }
 
         private void Start()
@@ -146,14 +148,24 @@ namespace MechaCyberpunk.Personaje.Habilidades
         }
 
         // La mano derecha (del Animator si hay) o un punto al frente a la altura de la mano.
+        // T-1018: el rayo sale de la punta del brazo láser si está puesto.
         private Vector3 Mano()
         {
+            if (visibles != null && visibles.PuntaLaser != null)
+            {
+                return visibles.PuntaLaser.position;
+            }
             Transform hueso = animador != null && animador.isHuman ? animador.GetBoneTransform(HumanBodyBones.RightHand) : null;
             return hueso != null ? hueso.position : transform.position + Vector3.up * AlturaMano + transform.forward * AdelanteMano + transform.right * LadoHombro;
         }
 
+        // T-1018: los misiles salen de la hombrera si está puesta.
         private Vector3 Hombro()
         {
+            if (visibles != null && visibles.SalidaMisiles != null)
+            {
+                return visibles.SalidaMisiles.position;
+            }
             Transform hueso = animador != null && animador.isHuman ? animador.GetBoneTransform(HumanBodyBones.LeftShoulder) : null;
             Vector3 baseHombro = hueso != null ? hueso.position : transform.position + Vector3.up * AlturaHombro - transform.right * LadoHombro;
             return baseHombro + Vector3.up * 0.25f;
