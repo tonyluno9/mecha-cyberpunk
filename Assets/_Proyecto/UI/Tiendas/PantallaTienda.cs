@@ -94,6 +94,20 @@ namespace MechaCyberpunk.UI.Tiendas
         private Text detalleDescripcion;
         private Image lineaPestanaComprar;
         private Image lineaPestanaVender;
+        // T-1012: El Mercado (la tienda que vende armas) se dibuja como el mockup M32 con VistaMercadoArmas.
+        private VistaMercadoArmas mercado;
+        private bool modoMercado;
+        private string tituloTienda = string.Empty;
+        private Vector2 posicionLista;
+        private Vector2 tamanoLista;
+        private Vector2 posicionFilas;
+        private Vector2 tamanoFilas;
+
+        /// <summary>T-1012: la vista de El Mercado (null si la tienda no vende armas o aún no se abrió).</summary>
+        public VistaMercadoArmas Mercado => mercado;
+
+        /// <summary>T-1012: true si la pantalla está en el modo de El Mercado (M32).</summary>
+        public bool ModoMercado => modoMercado;
 
         public bool Visible => visible;
         public PestanaTienda Pestana => pestana;
@@ -138,6 +152,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private void OnDisable()
         {
+            mercado?.Encender(false);
             DesactivarEntrada();
             visible = false;
             PilaPantallas.Cerrar(this);
@@ -162,12 +177,15 @@ namespace MechaCyberpunk.UI.Tiendas
             objetos.Clear();
             todos.Clear();
             todos.AddRange(objetosEnVenta);
+            modoMercado = EsMercado();
             Refiltrar();
             pestana = PestanaTienda.Comprar;
             indice = 0;
 
             VestirH10();
             textoTitulo.text = string.Format(config.FormatoTitulo, tienda.Nombre.ToUpperInvariant());
+            tituloTienda = tienda.Nombre.ToUpperInvariant();
+            AplicarModo();
             textoAviso.text = string.Empty;
             textoAviso.gameObject.SetActive(false);
             Pintar();
@@ -186,6 +204,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
         public void Ocultar()
         {
+            mercado?.Encender(false);
             visible = false;
             PilaPantallas.Cerrar(this);
             DesactivarEntrada();
@@ -491,6 +510,63 @@ namespace MechaCyberpunk.UI.Tiendas
             textoFavor = ReubicarAbajo(textoFavor, ancho, 100f, TrazoH10.Amarillo);
             textoAviso = ReubicarAbajo(textoAviso, ancho, 48f, TrazoH10.Turquesa);
             VestidoH10.Fuente(raiz);
+            posicionLista = panelLista.anchoredPosition;
+            tamanoLista = panelLista.sizeDelta;
+            posicionFilas = listaFilas.anchoredPosition;
+            tamanoFilas = listaFilas.sizeDelta;
+        }
+
+        // T-1012: si la tienda vende armas (El Mercado) y hay holograma, la lista se angosta, el dinero va grande arriba de ella y a la derecha va la
+        // vista M32; con cualquier otra tienda (CIC, expendedoras) se deja la composición de siempre.
+        private bool EsMercado()
+        {
+            if (config.ConfigArmas == null)
+            {
+                return false;
+            }
+            foreach (DatosObjeto objeto in todos)
+            {
+                if (objeto is DatosArma)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void AplicarModo()
+        {
+            modoMercado = EsMercado();
+            if (modoMercado && mercado == null)
+            {
+                mercado = gameObject.AddComponent<VistaMercadoArmas>();
+                mercado.Armar(contenido.transform, config.ConfigArmas, () =>
+                {
+                    if (visible && PilaPantallas.EsArriba(this) && pestana == PestanaTienda.Comprar)
+                    {
+                        Sonidos.Reproducir("UI_ACEPTAR");
+                        Comprar();
+                    }
+                });
+            }
+            mercado?.Encender(modoMercado);
+            panelDetalle.gameObject.SetActive(!modoMercado);
+            textoTitulo.gameObject.SetActive(!modoMercado);
+            textoDinero.gameObject.SetActive(!modoMercado);
+            if (modoMercado)
+            {
+                panelLista.sizeDelta = new Vector2(VistaMercadoArmas.AnchoLista, tamanoLista.y);
+                listaFilas.anchoredPosition = posicionFilas - new Vector2(0f, VistaMercadoArmas.AltoDinero);
+                listaFilas.sizeDelta = tamanoFilas - new Vector2(0f, VistaMercadoArmas.AltoDinero);
+                mercado.ColocarDinero(panelLista);
+            }
+            else
+            {
+                panelLista.anchoredPosition = posicionLista;
+                panelLista.sizeDelta = tamanoLista;
+                listaFilas.anchoredPosition = posicionFilas;
+                listaFilas.sizeDelta = tamanoFilas;
+            }
         }
 
         private static void QuitarSombras(Text texto)
@@ -656,6 +732,10 @@ namespace MechaCyberpunk.UI.Tiendas
         // El detalle de la fila elegida: lo que es, lo que cuesta (o paga) y cuánto te quedaría. Todo viene del objeto y la cartera reales.
         private void PintarDetalle(DatosObjeto objeto, ICartera cartera)
         {
+            if (modoMercado)
+            {
+                mercado.Pintar(tituloTienda, objeto, objeto != null && pestana == PestanaTienda.Comprar ? PrecioCobrado(objeto) : 0, cartera);
+            }
             for (int i = 0; i < DatosDelDetalle; i++)
             {
                 etiquetasDato[i].gameObject.SetActive(false);
@@ -719,10 +799,12 @@ namespace MechaCyberpunk.UI.Tiendas
             RectTransform caja = TrazoH10.Nodo(listaFilas, "Fila_" + numero);
             TrazoH10.Colocar(caja, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -numero * pasoFila), new Vector2(0f, altoFilaActual));
             contenedoresFilas.Add(caja.gameObject);
-            Image fondoFila = TrazoH10.Imagen(caja, "Fondo", elegida ? TrazoH10.TurquesaFondo : TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0f), TrazoH10.Relleno);
+            // T-1012: en El Mercado la fila elegida va en amarillo, como el mockup M32.
+            Color acento = modoMercado ? TrazoH10.Amarillo : TrazoH10.Turquesa;
+            Image fondoFila = TrazoH10.Imagen(caja, "Fondo", elegida ? TrazoH10.ConAlfa(acento, modoMercado ? 0.025f : 0.08f) : TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0f), TrazoH10.Relleno);
             fondoFila.raycastTarget = true;
             TrazoH10.Estirar(fondoFila.rectTransform);
-            Color reposo = elegida ? TrazoH10.Turquesa : TrazoH10.ConAlfa(TrazoH10.TurquesaTenue, AlfaLineaFila);
+            Color reposo = elegida ? acento : TrazoH10.ConAlfa(TrazoH10.TurquesaTenue, modoMercado ? 0.8f : AlfaLineaFila);
             Image linea = TrazoH10.Imagen(caja, "Linea", reposo, TrazoH10.Linea);
             TrazoH10.Estirar(linea.rectTransform);
             HoverH10.Agregar(caja.gameObject, linea, reposo, TrazoH10.Turquesa);
@@ -735,7 +817,7 @@ namespace MechaCyberpunk.UI.Tiendas
             texto.gameObject.SetActive(true);
             texto.gameObject.name = "Nombre";
             texto.text = nombre;
-            texto.color = TrazoH10.Texto;
+            texto.color = modoMercado ? (elegida ? TrazoH10.Amarillo : TrazoH10.Turquesa) : TrazoH10.Texto;
             texto.fontSize = TrazoH10.TamanoFila;
             texto.alignment = TextAnchor.MiddleLeft;
             texto.horizontalOverflow = HorizontalWrapMode.Overflow;
@@ -747,13 +829,14 @@ namespace MechaCyberpunk.UI.Tiendas
             }
             TrazoH10.Colocar(texto.rectTransform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             texto.rectTransform.offsetMin = new Vector2(RellenoFila, 0f);
-            texto.rectTransform.offsetMax = new Vector2(-(RellenoFila + AnchoPrecio + AnchoLleva), 0f);
+            texto.rectTransform.offsetMax = new Vector2(-(RellenoFila + AnchoPrecio + (modoMercado ? 0f : AnchoLleva)), 0f);
             textosFilas.Add(texto);
             cadenasFilas.Add(cadena);
 
             Text llevas = TrazoH10.Etiqueta(caja, "Lleva", lleva, TrazoH10.TamanoDato, TrazoH10.TextoTenue, TextAnchor.MiddleRight);
             TrazoH10.Punto(llevas.rectTransform, new Vector2(1f, 0.5f), new Vector2(-(RellenoFila + AnchoPrecio), 0f), new Vector2(AnchoLleva, AltoFila));
-            Text costo = TrazoH10.Etiqueta(caja, "Precio", precio, TrazoH10.TamanoFila, colorPrecio, TextAnchor.MiddleRight);
+            llevas.gameObject.SetActive(!modoMercado);
+            Text costo = TrazoH10.Etiqueta(caja, "Precio", precio, TrazoH10.TamanoFila, modoMercado && colorPrecio == TrazoH10.Amarillo ? (elegida ? TrazoH10.Amarillo : TrazoH10.Turquesa) : colorPrecio, TextAnchor.MiddleRight);
             TrazoH10.Punto(costo.rectTransform, new Vector2(1f, 0.5f), new Vector2(-RellenoFila, 0f), new Vector2(AnchoPrecio, AltoFila));
             VestidoH10.Fuente(caja);
         }
