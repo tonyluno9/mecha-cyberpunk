@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DatosPandilleroAPie_JefeNova
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosPandilleroAPie
   nombre: "CAPIT\xC1N NOVA"
-  vidaMaxima: 400
+  vidaMaxima: 1200
   danioGolpe: 10
   preparacionGolpe: 0.5
   recargaGolpe: 1.2
@@ -29,6 +29,11 @@ MonoBehaviour:
   segundosParaDesaparecer: 45
   duracionParpadeo: 0.12
   anguloBrazoAviso: 130
+  seDefiende: 1
+  segundosDefensa: 20
+  esPolicia: 0
+  calorAlGolpear: 8
+  calorAlMatar: 30
   tamanoPandilla: 3
   maxAtacando: 1
   radioFormacion: 2.5
@@ -67,14 +72,14 @@ MonoBehaviour:
   jefeCuerpoACuerpo: 1
   alcanceJefe: 2.6
   telegrafiaGolpeJefe: 0.8
-  danioGolpeJefe: 22
+  danioGolpeJefe: 40
   radioGolpeJefe: 2.8
   recuperaGolpeJefe: 1.8
   golpesPorCarga: 3
   telegrafiaCarga: 1.1
   velocidadCarga: 11
   duracionCarga: 0.7
-  danioCarga: 35
+  danioCarga: 60
   radioCarga: 1.6
   recuperaCarga: 2.6
   distanciaMinCarga: 4

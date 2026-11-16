@@ -136,7 +136,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>True cuando la pandilla dice que el jugador está en su territorio (solo pandilleros armados).</summary>
         public bool Alerta
         {
-            get => alerta;
+            get => alerta || Provocado;
             set
             {
                 if (Acosando)
@@ -157,7 +157,11 @@ namespace MechaCyberpunk.IA.APie
         }
 
         private bool alerta;
+        private float provocadoHasta = -1f;
         private bool esJefe;
+
+        /// <summary>T-1009: true mientras dura la defensa tras recibir daño (solo si sus datos tienen seDefiende).</summary>
+        public bool Provocado => datos != null && datos.SeDefiende && Time.time < provocadoHasta;
         private bool policiaYaSeCubrio;
 
         /// <summary>True si es el pandillero de un <see cref="JefePandilla"/>: sale más grande en el minimapa (T-409).</summary>
@@ -370,6 +374,11 @@ namespace MechaCyberpunk.IA.APie
             }
             float cantidad = info.Cantidad * (Castigable ? datos.MultiplicadorCastigo : 1f); // T-693: recuperándose, recibe más
             float aplicado = modelo.Aplicar(cantidad);
+            if (datos.SeDefiende)
+            {
+                // T-1009: si lo golpean o le disparan, pelea contra el jugador un buen rato.
+                provocadoHasta = Time.time + datos.SegundosDefensa;
+            }
             if (datos.UsaPistola && !modelo.EstaKO && Grupo != null && !Acosando)
             {
                 // T-423: pide refuerzos a su grupo.
