@@ -355,12 +355,21 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3 haciaJugador = jugador.Value - transform.position;
             haciaJugador.y = 0f;
             float rumbo = haciaJugador.sqrMagnitude > 0.001f ? Mathf.Atan2(haciaJugador.x, haciaJugador.z) * Mathf.Rad2Deg : RumboActual();
-            Volar(meta, rumbo, Time.deltaTime);
+            Volar(PuntoDeParada(meta), rumbo, Time.deltaTime);
             transform.position += SepararDeOtros();
             Disparar();
         }
 
         // T-1008: vuelo con inercia: acelera, frena suave al llegar, gira el rumbo con límite y se inclina con la aceleración.
+        // Como antes: no se acerca a menos de la distancia de seguimiento de su punto; dentro de ella se queda flotando donde está.
+        private Vector3 PuntoDeParada(Vector3 meta)
+        {
+            Vector3 hacia = meta - transform.position;
+            float distancia = hacia.magnitude;
+            float seguimiento = calculo.DistanciaSeguimiento;
+            return distancia <= seguimiento ? transform.position : transform.position + hacia / distancia * (distancia - seguimiento);
+        }
+
         private float RumboActual() => vuelo != null ? vuelo.Rumbo : transform.eulerAngles.y;
 
         private void Volar(Vector3 meta, float rumboDeseado, float dt)

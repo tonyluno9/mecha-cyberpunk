@@ -44,9 +44,10 @@ namespace MechaCyberpunk.Tests.Trafico
             DronMundo comp = dron.GetComponent<DronMundo>();
             comp.Preparar(config.Crear(), config, () => jugador.transform.position);
             comp.AsignarOrbita(0, 1);
-            // La meta del dron 0 es el punto del círculo (radio) a su altura sobre el jugador.
+            // La meta del dron 0 es el punto del círculo a su altura sobre el jugador; se queda a la distancia de seguimiento de él.
             Vector3 meta = CalculoSeparacionDrones.PuntoEnCirculo(Vector3.zero, 0, 1, config.RadioOrbitaDron, config.AlturaDron);
             Vector3 sentido = (meta - dron.transform.position).normalized;
+            meta -= sentido * config.Crear().DistanciaSeguimiento; // se detiene a la distancia de seguimiento de su punto
             Quaternion anterior = dron.transform.rotation;
             float mayorGiro = 0f;
             float pasoDeLargo = float.MinValue;

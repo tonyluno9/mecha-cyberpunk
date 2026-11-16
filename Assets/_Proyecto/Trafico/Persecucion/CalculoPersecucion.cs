@@ -47,6 +47,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
         }
 
         /// <summary>El nivel más alto con cantidades definidas.</summary>
+        /// <summary>T-1008: distancia (m) a la que un perseguidor se queda del jugador.</summary>
+        public float DistanciaSeguimiento => distanciaSeguimiento;
+
         public int NivelMaximo => dronesPorNivel.Length;
 
         public int Drones(int nivel) => nivel <= 0 ? 0 : dronesPorNivel[Math.Min(nivel, NivelMaximo) - 1];
