@@ -86,10 +86,9 @@ namespace MechaCyberpunk.Tests.UI
             Assert.Less(piernas.anchoredPosition.x, cabeza.anchoredPosition.x, "En el orden de sus teclas");
             Assert.AreEqual(0f, (piernas.anchoredPosition.x + cabeza.anchoredPosition.x + BarraHabilidades.Lado) * 0.5f, 1f, "Centrada abajo");
 
-            Press(teclado.digit1Key);
-            yield return null;
-            yield return null;
-            Release(teclado.digit1Key);
+            // La tecla [1] ya la prueba HabilidadesProtesisT992Pruebas; aquí se activa directo (en la ciudad la historia puede tener la entrada ocupada).
+            Assert.AreEqual(1, HabilidadesProtesis.Actual.Nivel(HabilidadProtesis.Piernas) > 0 ? 1 : 0, "Tiene las piernas");
+            Assert.IsTrue(HabilidadesProtesis.Actual.Pulsar(HabilidadProtesis.Piernas), "Se activan las piernas");
             yield return new WaitForSecondsRealtime(0.8f);
             Assert.AreEqual(EstadoHabilidad.Activa, HabilidadesProtesis.Actual.Estado(HabilidadProtesis.Piernas));
             Color activa = barra.ColorMostrado(HabilidadProtesis.Piernas);
