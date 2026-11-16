@@ -113,6 +113,8 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 pistolaVisible = visible;
                 Mostrar(visualPistola, ArmaAPie.Pistola, pistolaVisible);
+                // T-1014: el revólver y la granada usan la pose de pistola: también aparecen con el evento de sacar.
+                MostrarNuevas();
             }
         }
 
@@ -199,9 +201,15 @@ namespace MechaCyberpunk.Personaje.Combate
             Mostrar(visualEscopeta, ArmaAPie.Escopeta);
             Mostrar(visualFusil, ArmaAPie.Fusil);
             Mostrar(visualSniper, ArmaAPie.Sniper);
+            MostrarNuevas();
+        }
+
+        private void MostrarNuevas()
+        {
             for (int i = 0; visualesNuevas != null && i < visualesNuevas.Length; i++)
             {
-                Mostrar(visualesNuevas[i], (ArmaAPie)((int)PrimeraNueva + i));
+                ArmaAPie arma = (ArmaAPie)((int)PrimeraNueva + i);
+                Mostrar(visualesNuevas[i], arma, !ReglasArmaAPie.UsaPoseDePistola(arma) || pistolaVisible);
             }
         }
 

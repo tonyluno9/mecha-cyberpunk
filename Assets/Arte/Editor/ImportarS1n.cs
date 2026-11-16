@@ -32,14 +32,17 @@ namespace MechaCyberpunk.Arte.Editor
         {
             public readonly string Codigo;
             public readonly string Nombre;
+            private readonly string zip;
 
-            public Arma(string codigo, string nombre)
+            /// <param name="zip">Ruta del .zip dentro de imageassets/; vacía = modelos3d/&lt;Codigo&gt;.zip (T-1014: las armas nuevas están en modelos3d/armas_nuevas/&lt;Codigo&gt;_&lt;Nombre&gt;.zip).</param>
+            public Arma(string codigo, string nombre, string zip = "")
             {
                 Codigo = codigo;
                 Nombre = nombre;
+                this.zip = zip;
             }
 
-            public string Zip => "modelos3d/" + Codigo + ".zip";
+            public string Zip => string.IsNullOrEmpty(zip) ? "modelos3d/" + Codigo + ".zip" : zip;
             public string Carpeta => CarpetaArmas + Codigo + "_" + Nombre + "/";
             public string Fbx => Carpeta + Codigo + "_" + Nombre + ".fbx";
             public string Texturas => Carpeta + "Texturas/";
@@ -52,6 +55,15 @@ namespace MechaCyberpunk.Arte.Editor
             new Arma("W04", "Francotirador"),
         };
 
+        /// <summary>T-1014: W05 subfusil, W06 revólver, W07 rifle de plasma y W08 lanzagranadas (Tripo). Las arma <see cref="ColocarT1014Armas"/>.</summary>
+        public static readonly Arma[] ArmasNuevas =
+        {
+            new Arma("W05", "Subfusil", "modelos3d/armas_nuevas/W05_Subfusil.zip"),
+            new Arma("W06", "Revolver", "modelos3d/armas_nuevas/W06_Revolver.zip"),
+            new Arma("W07", "RiflePlasma", "modelos3d/armas_nuevas/W07_RiflePlasma.zip"),
+            new Arma("W08", "Lanzagranadas", "modelos3d/armas_nuevas/W08_Lanzagranadas.zip"),
+        };
+
         public static readonly StringBuilder Informe = new StringBuilder();
 
         [MenuItem("Mecha Cyberpunk/S1n/Meter assets nuevos")]
@@ -59,6 +71,10 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Informe.Clear();
             foreach (Arma arma in Armas)
+            {
+                MeterZip(arma.Zip, arma.Fbx, arma.Texturas);
+            }
+            foreach (Arma arma in ArmasNuevas)
             {
                 MeterZip(arma.Zip, arma.Fbx, arma.Texturas);
             }
@@ -205,6 +221,8 @@ namespace MechaCyberpunk.Arte.Editor
         {
             ColocarS1nArmas.Colocar();
             Informe.AppendLine(File.ReadAllText("Logs/s1n-armas.txt"));
+            ColocarT1014Armas.Colocar();
+            Informe.AppendLine(File.ReadAllText("Logs/t1014-armas.txt"));
             ColocarS1nPolicia.Colocar();
         }
     }

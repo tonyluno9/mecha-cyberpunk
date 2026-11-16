@@ -3,6 +3,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Personaje.Visual;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -50,6 +51,12 @@ namespace MechaCyberpunk.Tests.Personaje
         private IEnumerator Preparar(ArmaAPie arma)
         {
             yield return Calentar();
+            // T-1014: las armas ya tienen modelo y el rayo y las granadas salen de su boca: sin esto, con la cámara de la prueba el personaje no se anima (fuera de pantalla) y el arma queda de lado.
+            VisualPersonaje visual = jugador.GetComponentInChildren<VisualPersonaje>(true);
+            if (visual != null && visual.Animador != null)
+            {
+                visual.Animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            }
             yield return Esperar(0.3f);
             armas = jugador.GetComponent<ArmasAPie>();
             especiales = jugador.GetComponent<ArmasEspecialesAPie>();

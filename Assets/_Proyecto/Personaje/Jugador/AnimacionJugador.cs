@@ -193,7 +193,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 animador.SetBool(IdApuntando, controlador.Apuntando);
             }
             bool desarmado = armas == null || armas.ArmaActiva == ArmaAPie.Punos;
-            TipoArmaVisual tipoArma = ReglasAnimacion.TipoPorArma(desarmado, !desarmado && armas.ArmaActiva == ArmaAPie.Pistola);
+            TipoArmaVisual tipoArma = ReglasAnimacion.TipoPorArma(desarmado, !desarmado && ReglasArmaAPie.UsaPoseDePistola(armas.ArmaActiva));
             bool ko = vida != null && vida.EstaKO;
             if (visual == null)
             {
