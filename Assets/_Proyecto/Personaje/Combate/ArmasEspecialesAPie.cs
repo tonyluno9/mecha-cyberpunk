@@ -14,13 +14,18 @@ namespace MechaCyberpunk.Personaje.Combate
     /// También hace girar el tambor del revólver y del lanzagranadas en cada tiro (<see cref="TamborArma"/>).
     /// </summary>
     [RequireComponent(typeof(PistolaAPie))]
+    [DefaultExecutionOrder(OrdenEjecucion)]
     public class ArmasEspecialesAPie : MonoBehaviour
     {
+        /// <summary>Después de la animación, del giro del cuerpo y del IK del arma (que corren en LateUpdate con orden menor).</summary>
+        public const int OrdenEjecucion = 1000;
         private const float TicDanioRayo = 0.1f;
         private const int MaxToques = 32;
         private const float AlturaManoGranada = 1.45f;
         private const float AdelanteManoGranada = 0.35f;
         private const float LatidoRayo = 18f;
+        private const float IntensidadBola = 1.4f;
+        private static readonly int ColorBase = Shader.PropertyToID("_BaseColor");
 
         private ControladorAPie controlador;
         private PistolaAPie pistola;
@@ -77,7 +82,9 @@ namespace MechaCyberpunk.Personaje.Combate
             r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             if (cfg.MaterialRayo != null)
             {
-                r.sharedMaterial = cfg.MaterialRayo;
+                // Copia propia teñida del color del rayo (el material es blanco HDR y la esfera no tiene colores de vértice).
+                r.material = new Material(cfg.MaterialRayo);
+                r.material.SetColor(ColorBase, cfg.ColorRayo * IntensidadBola);
             }
             bolaCarga = bola.transform;
             bolaCarga.gameObject.SetActive(false);
@@ -176,6 +183,33 @@ namespace MechaCyberpunk.Personaje.Combate
         /// </summary>
         public void Actualizar(ArmaAPie arma, CargadorPistola cargador, DatosArma d, bool pulsado)
         {
+            // Solo se anota: el disparo y lo que se ve van en LateUpdate, cuando el arma ya está donde la dejó la animación y el giro de la mira
+            // (en Update la boca aún está donde miraba el cuerpo el cuadro anterior).
+            pendiente = true;
+            armaPendiente = arma;
+            cargadorPendiente = cargador;
+            datosPendientes = d;
+            pulsadoPendiente = pulsado;
+        }
+
+        private bool pendiente;
+        private ArmaAPie armaPendiente;
+        private CargadorPistola cargadorPendiente;
+        private DatosArma datosPendientes;
+        private bool pulsadoPendiente;
+
+        private void LateUpdate()
+        {
+            if (!pendiente)
+            {
+                return;
+            }
+            pendiente = false;
+            Procesar(armaPendiente, cargadorPendiente, datosPendientes, pulsadoPendiente);
+        }
+
+        private void Procesar(ArmaAPie arma, CargadorPistola cargador, DatosArma d, bool pulsado)
+        {
             bool flanco = pulsado && !pulsadoAntes;
             pulsadoAntes = pulsado;
             if (d.TipoDisparo != TipoDisparoArma.Rayo && plasma != null && plasma.Estado != EstadoPlasma.Reposo)
@@ -210,6 +244,7 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>Sin arma especial en la mano: se esconde el arco y se corta el plasma.</summary>
         public void Soltar()
         {
+            pendiente = false;
             pulsadoAntes = false;
             if (arco != null)
             {
