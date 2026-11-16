@@ -438,7 +438,7 @@ namespace MechaCyberpunk.Tests
             yield return Esperar(0.4f);
             CrearJefe(new Vector3(0f, 0.05f, 8f));
             yield return BajarVidaA(0.6f);
-            jefe.RecibirDanio(Golpe(40f)); // el pulso del escudo
+            yield return Esperar(0.5f); // el escudo en reposo (el pulso del golpe dura 0.25 s)
             yield return Foto(CarpetaFotos + "/fase2-escudo.png", new Vector3(10f, 3f, 3f));
             conducta.Regla.ForzarIndice(1);
             float fin = Time.time + 4f;

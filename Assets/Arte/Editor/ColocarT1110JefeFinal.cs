@@ -141,9 +141,28 @@ namespace MechaCyberpunk.Arte.Editor
         public static void AsegurarMateriales()
         {
             AditivoTransparente(RutaMatAro, new Color(1f, 0.25f, 0.15f));
-            AditivoTransparente(RutaMatEsfera, new Color(0.05f, 0.35f, 0.45f));
+            MaterialEsfera();
             AditivoTransparente(RutaMatBarrera, new Color(0.1f, 0.45f, 0.6f));
             AssetDatabase.SaveAssets();
+        }
+
+        // Esfera del escudo: shader propio translúcido con borde brillante (alfa ~0.2 en el centro).
+        private static void MaterialEsfera()
+        {
+            Material m = AssetDatabase.LoadAssetAtPath<Material>(RutaMatEsfera);
+            Shader shader = Shader.Find("MechaCyberpunk/EscudoEnergia");
+            if (m == null)
+            {
+                m = new Material(shader);
+                AssetDatabase.CreateAsset(m, RutaMatEsfera);
+            }
+            m.shader = shader;
+            m.SetColor("_Color", new Color(0.25f, 0.9f, 1f));
+            m.SetFloat("_AlfaCentro", 0.2f);
+            m.SetFloat("_Potencia", 3f);
+            m.SetFloat("_Brillo", 1f);
+            m.renderQueue = 3000;
+            EditorUtility.SetDirty(m);
         }
 
         // Material URP/Unlit transparente de mezcla aditiva: brilla sin tapar lo que hay detrás.

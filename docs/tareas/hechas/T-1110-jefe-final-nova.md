@@ -22,3 +22,4 @@ Rama `tony/T-1110-jefe-final-nova` (sale de `tony/T-1109-guardia-pesado-nova`). 
 
 ## Notas
 - `JefeNovaT693Pruebas.CadaTresGolpes_CargaEnLinea` ya falla en la base.
+- Corrección: la esfera del escudo usa el shader `MechaCyberpunk/EscudoEnergia` (alfa 0.2 en el centro, borde con fresnel; el golpe sube el brillo 0.25 s) y se ve al jefe con su textura dentro. Recapturas fase2-escudo y fase2-onda.
