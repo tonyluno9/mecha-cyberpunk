@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
     /// </summary>
     public class HabilidadesProtesis : MonoBehaviour
     {
-        private const int Cantidad = 3;
+        private static readonly int Cantidad = Enum.GetValues(typeof(HabilidadProtesis)).Length;
 
         private static bool cabezaActiva;
 
@@ -54,7 +54,19 @@ namespace MechaCyberpunk.Personaje.Habilidades
         public float Restante(HabilidadProtesis h) => reglas[(int)h] != null ? reglas[(int)h].Restante : 0f;
 
         /// <summary>El nivel del implante que da esa habilidad (0 = sin implante).</summary>
-        public int Nivel(HabilidadProtesis h) => implantes.Nivel(Espacio(h));
+        public int Nivel(HabilidadProtesis h)
+        {
+            if (EsDeAtaque(h))
+            {
+                // T-1017: las de ataque se tienen si la prótesis está en el inventario (se compran con el Doc).
+                CatalogoProtesisAtaque catalogo = CatalogoProtesisAtaque.Actual;
+                return catalogo != null && catalogo.Tiene(h, Registro<MechaCyberpunk.Economia.ServicioInventario>.Actual) ? 1 : 0;
+            }
+            return implantes.Nivel(Espacio(h));
+        }
+
+        /// <summary>T-1017: true para las prótesis de ataque del Doc (láser, misiles), que no son implantes de la clínica.</summary>
+        public static bool EsDeAtaque(HabilidadProtesis h) => h == HabilidadProtesis.Laser || h == HabilidadProtesis.Misiles;
 
         public static EspacioImplante Espacio(HabilidadProtesis h)
         {
@@ -100,6 +112,10 @@ namespace MechaCyberpunk.Personaje.Habilidades
             controlador = GetComponent<ControladorAPie>();
             vida = GetComponent<VidaAPie>();
             config = Resources.Load<ConfigHabilidadesProtesis>(ConfigHabilidadesProtesis.NombreRecurso);
+            if (GetComponent<ProtesisAtaqueAPie>() == null)
+            {
+                gameObject.AddComponent<ProtesisAtaqueAPie>();
+            }
             if (config == null)
             {
                 Debug.LogError("[Personaje] Falta Resources/" + ConfigHabilidadesProtesis.NombreRecurso + " (ConfigHabilidadesProtesis) en " + name, this);
