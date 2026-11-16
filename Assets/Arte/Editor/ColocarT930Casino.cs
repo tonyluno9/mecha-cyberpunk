@@ -192,7 +192,7 @@ namespace MechaCyberpunk.Arte.Editor
             Apagar("GTA_T417/Apoyo_SERGIO/Set_Hacker", false);
             // T-1105: SERGIO en la esquina noroeste (ColocarT1105Casino.Aplicar lo sienta de frente a su escritorio).
             ColocarS2Interiores.Modelo(raiz, I + "I02", new Vector3(ColocarT1105Casino.XEscritorio, 0f, ColocarT1105Casino.ZHacker), ColocarT1105Casino.GiroEscritorio, Piso, sinCollider: false);
-            ColocarS2Interiores.Modelo(raiz, I + "I12", new Vector3(ColocarT1105Casino.XSilla, 0f, ColocarT1105Casino.ZHacker), ColocarT1105Casino.GiroSillaHacker, Piso, sinCollider: true);
+            ColocarS2Interiores.Modelo(raiz, I + "I12", new Vector3(ColocarT1105Casino.XSilla, 0f, ColocarT1105Casino.ZHacker), ColocarT1105Casino.GiroSillaHacker, Piso, ColocarT1105Casino.EscalaSilla, sinCollider: true);
             Luz(raiz, "LuzHacker", new Vector3(ColocarT1105Casino.XEscritorio + 0.5f, 3.2f, ColocarT1105Casino.ZHacker), LightType.Point, new Color(0.3f, 0.95f, 0.9f), 5f, 6f, 0f);
         }
 

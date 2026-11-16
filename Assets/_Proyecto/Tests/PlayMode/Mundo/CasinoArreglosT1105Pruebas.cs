@@ -25,6 +25,8 @@ namespace MechaCyberpunk.Tests.Mundo
         private const int FramesEspera = 90;
         private const string PrefijoMuro = "T930_Muro_";
         private const string MuroPanel = "T1105_MuroSobreArco";
+        private const float EsperaSentado = 2f;
+        private const float AsientoModelo = 0.62f;
 
         private static bool Capturas => System.Environment.GetEnvironmentVariable("T1105_CAPTURAS") == "1";
 
@@ -119,13 +121,29 @@ namespace MechaCyberpunk.Tests.Mundo
         [UnityTest]
         public IEnumerator Hacker_SentadoEnSuSillaMirandoSuPantalla()
         {
+            // Tras 2 s de Play: la pose de sentado ya se aplicó encima del Animator.
+            float fin = Time.time + EsperaSentado;
+            while (Time.time < fin)
+            {
+                yield return null;
+            }
             Animator a = AnimadorHacker();
             Transform silla = Hijo(RaizCasino, "I12");
             Transform escritorio = Hijo(RaizCasino, "I02");
             Transform cadera = a.GetBoneTransform(HumanBodyBones.Hips);
             float metros = Plano(cadera.position - silla.position).magnitude;
             Assert.Less(metros, MaxMetrosSilla, "la cadera de SERGIO está a " + metros.ToString("F2") + " m de su silla");
-            Assert.That(cadera.position.y - silla.position.y, Is.InRange(0.2f, 0.7f), "la cadera está a la altura del asiento");
+            // El asiento I12 está a 0.62 m de su base, con la escala de la silla.
+            float asiento = silla.position.y + AsientoModelo * silla.lossyScale.y;
+            Assert.That(cadera.position.y, Is.InRange(asiento + 0.05f, asiento + 0.25f), "la cadera (" + cadera.position.y.ToString("F2") + ") está sobre el asiento (" + asiento.ToString("F2") + ")");
+            // Muslos horizontales (rodilla a la altura de la cadera, a menos de 0.15 m) y pies cerca del piso.
+            Transform rodilla = a.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
+            Assert.Less(Mathf.Abs(rodilla.position.y - a.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position.y), 0.15f, "muslos horizontales");
+            float piso = silla.position.y;
+            Assert.Less(a.GetBoneTransform(HumanBodyBones.LeftFoot).position.y - piso, 0.25f, "los pies están cerca del piso");
+            // La silla de frente al escritorio: su frente es -Z local y el respaldo queda detrás de la espalda.
+            Assert.Greater(Vector3.Dot(Plano(-silla.forward), Plano(escritorio.position - silla.position).normalized), 0.9f, "el frente de la silla apunta al escritorio");
+            Assert.Greater(Vector3.Dot(Plano(silla.forward), Plano(silla.position - escritorio.position).normalized), 0.9f, "el respaldo queda del lado contrario al escritorio");
             // El frente de SERGIO es el de su Visual (el que usa PoseSentado para poner las piernas): la malla de Tripo mira hacia ahí.
             Transform visual = GameObject.Find("Apoyo_SERGIO").transform.Find("Visual");
             Vector3 hacia = Plano(escritorio.position - cadera.position);
@@ -184,19 +202,20 @@ namespace MechaCyberpunk.Tests.Mundo
             }
             System.IO.Directory.CreateDirectory("docs/capturas/t-1105");
             Transform cajera = Hijo(RaizCasino, "Cajera_R01");
-            Foto(new Vector3(72f, 1.7f, 53f), cajera.position + Vector3.up * 1.2f, "cajera-desde-el-salon", 55f);
+            yield return Foto(new Vector3(72f, 1.7f, 53f), cajera.position + Vector3.up * 1.2f, "cajera-desde-el-salon", 55f);
             Transform sergio = GameObject.Find("Apoyo_SERGIO").transform;
             Vector3 c = sergio.position + Vector3.up * 0.9f;
-            Foto(c + new Vector3(0.5f, 0.6f, 2.4f), c, "sergio-de-lado", 55f);
-            Foto(c + new Vector3(3.2f, 0.7f, 0f), c, "sergio-por-detras", 55f);
-            Foto(c + new Vector3(2.2f, 0.9f, -2.4f), c, "sergio-tres-cuartos", 55f);
-            Foto(new Vector3(74f, 5.2f, 47f), new Vector3(74f, 0.5f, 47f), "mesas-desde-arriba", 95f);
-            Foto(new Vector3(70f, 2.4f, 47f), new Vector3(60.8f, 4.0f, 47f), "entrada-desde-dentro", 62f);
-            Foto(new Vector3(76f, 5.5f, 36f), new Vector3(63f, 1f, 40f), "esquina-de-sergio", 70f);
+            yield return Foto(c + new Vector3(0.5f, 0.6f, 2.4f), c, "sergio-de-lado", 55f);
+            yield return Foto(c + new Vector3(3.2f, 0.7f, 0f), c, "sergio-por-detras", 55f);
+            yield return Foto(c + new Vector3(2.2f, 0.9f, -2.4f), c, "sergio-tres-cuartos", 55f);
+            yield return Foto(new Vector3(74f, 5.2f, 47f), new Vector3(74f, 0.5f, 47f), "mesas-desde-arriba", 95f);
+            yield return Foto(new Vector3(70f, 2.4f, 47f), new Vector3(60.8f, 4.0f, 47f), "entrada-desde-dentro", 62f);
+            yield return Foto(new Vector3(76f, 5.5f, 36f), new Vector3(63f, 1f, 40f), "esquina-de-sergio", 70f);
             yield return null;
         }
 
-        private static void Foto(Vector3 pos, Vector3 mira, string nombre, float fov)
+        /// <summary>La cámara renderiza sola al final del frame, después de las poses de LateUpdate (sentado, charola); la textura se lee dos frames después.</summary>
+        private static IEnumerator Foto(Vector3 pos, Vector3 mira, string nombre, float fov)
         {
             GameObject go = new GameObject("CamT1105");
             Camera cam = go.AddComponent<Camera>();
@@ -207,7 +226,8 @@ namespace MechaCyberpunk.Tests.Mundo
             go.transform.LookAt(mira);
             RenderTexture rt = new RenderTexture(1280, 720, 24);
             cam.targetTexture = rt;
-            cam.Render();
+            yield return null;
+            yield return null;
             RenderTexture.active = rt;
             Texture2D tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);

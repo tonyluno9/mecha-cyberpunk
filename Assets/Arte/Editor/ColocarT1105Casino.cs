@@ -1,4 +1,5 @@
 using System.Linq;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,6 +27,12 @@ namespace MechaCyberpunk.Arte.Editor
         public const float GiroEscritorio = 270f;
         public const float GiroSillaHacker = 90f;
         public const float GiroHacker = 270f;
+        /// <summary>Escala de la silla I12 de Sergio: el asiento (0.62 m en el modelo) queda a la altura de sus piernas cortas para que sus pies lleguen al piso.</summary>
+        public const float EscalaSilla = 0.7f;
+        /// <summary>Altura del asiento I12 sin escala sobre su base (m), medida en la malla.</summary>
+        public const float AsientoSilla = 0.62f;
+        /// <summary>Cuánto sobre el asiento queda la cadera de Sergio sentado (m).</summary>
+        public const float CaderaSobreAsiento = 0.1f;
         private const float AlturaLuz = 3.2f;
         private const float LuzDesdeEscritorio = 0.5f;
         private const float AlturaPanelMin = 3.0f;
@@ -99,6 +106,14 @@ namespace MechaCyberpunk.Arte.Editor
             if (escritorio == null || silla == null || sergio == null) { ColocarS2.Informe.AppendLine("FALTA algo del Hacker"); return; }
             escritorio.SetPositionAndRotation(new Vector3(XEscritorio, escritorio.position.y, ZHacker), Quaternion.Euler(0f, GiroEscritorio, 0f));
             silla.SetPositionAndRotation(new Vector3(XSilla, silla.position.y, ZHacker), Quaternion.Euler(0f, GiroSillaHacker, 0f));
+            silla.localScale = Vector3.one * EscalaSilla;
+            PoseSentado pose = sergio.GetComponentInChildren<PoseSentado>(true);
+            if (pose != null)
+            {
+                SerializedObject so = new SerializedObject(pose);
+                so.FindProperty("alturaCadera").floatValue = AsientoSilla * EscalaSilla + CaderaSobreAsiento;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
             if (luz != null)
             {
                 luz.position = new Vector3(XEscritorio + LuzDesdeEscritorio, AlturaLuz, ZHacker);
