@@ -149,9 +149,7 @@ namespace MechaCyberpunk.Tests.Mundo
                 mira = basura.GetChild(0).position;
             }
             Foto(desde, mira, "t910-basura-banqueta");
-            Transform pasarela = GameObject.Find("T910_Pasarelas").transform.GetChild(0);
-            Vector3 p = pasarela.position;
-            Foto(new Vector3(p.x, p.y + 1.7f, p.z - 22f), new Vector3(p.x, p.y + 4f, p.z), "t910-pasarela-calle");
+            // T-1104: la pasarela PS01 se quitó, ya no hay foto de ella.
             Transform lata = Object.FindObjectsByType<Transform>(FindObjectsSortMode.None).FirstOrDefault(t => t.name == "Lata_O01");
             Assert.IsNotNull(lata, "hay una expendedora con su lata");
             Vector3 frente = -lata.parent.forward;

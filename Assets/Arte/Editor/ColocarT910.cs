@@ -245,6 +245,8 @@ namespace MechaCyberpunk.Arte.Editor
                 ColocarS2.Informe.AppendLine("PS01 en " + g.transform.position.ToString("F1") + ", caja " + ArteT250.Limites(g).size.ToString("F1") + " (suelo y " + y.ToString("F2") + ")");
             }
             ColocarS2.Informe.AppendLine("Pasarelas PS01: " + puentes.Length + " (N02 siguen apagados)");
+            // T-1104: las pasarelas ya no van; se apagan completas y se devuelven los props del pie de las escaleras.
+            ColocarT1104SinPasarelas.Aplicar();
             ColocarS2.Guardar("t910-pasarelas");
         }
 

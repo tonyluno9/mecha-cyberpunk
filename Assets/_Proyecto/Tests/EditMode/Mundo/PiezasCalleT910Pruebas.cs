@@ -75,35 +75,15 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Pasarela_PS01SobreLaCalleConCollider()
+        public void Pasarela_PS01YaNoEstaEnLaCalle()
         {
-            Transform[] pasarelas = ColocarS2.Todos().Where(t => t.name == "PS01_Pasarela" && t.parent != null && t.parent.name == ColocarT910.RaizPasarelas).ToArray();
-            Assert.AreEqual(2, pasarelas.Length);
-            Assert.IsTrue(ColocarS2.Todos().Where(t => t.name == "N02_T505").All(t => !t.gameObject.activeSelf), "los N02 siguen apagados");
-            Physics.SyncTransforms();
-            foreach (Transform p in pasarelas)
-            {
-                MeshCollider[] colliders = p.GetComponentsInChildren<MeshCollider>();
-                Assert.IsNotEmpty(colliders);
-                Assert.IsTrue(colliders.All(c => c.enabled && c.sharedMesh != null));
-                Bounds b = Caja(p.gameObject);
-                float suelo = p.position.y;
-                Assert.GreaterOrEqual(b.size.x, 19f, "de banqueta a banqueta");
-                // Claro por encima de la calle: bajo la cubierta (centro de la calle) caben los carros.
-                // La cubierta cruza la calle en el extremo +z del modelo (las escaleras bajan hacia -z).
-                float zCubierta = b.max.z - 0.6f;
-                Vector3 centro = new Vector3(b.center.x, suelo + 0.5f, zCubierta);
-                Assert.IsTrue(Physics.Raycast(centro, Vector3.up, out RaycastHit abajo, 20f), "la cubierta está sobre la calle");
-                Assert.Greater(abajo.distance, 4.5f, "claro suficiente para carros");
-                Assert.IsTrue(Physics.Raycast(new Vector3(b.center.x, suelo + 20f, zCubierta), Vector3.down, out RaycastHit arriba, 30f), "se camina sobre la cubierta");
-                Assert.Greater(arriba.point.y - suelo, 5f);
-                // La escalera sube: rayos hacia abajo a lo largo de ella (al lado oeste) dan alturas crecientes.
-                float xEscalera = b.min.x + 2f;
-                var alturas = Enumerable.Range(0, 40).Select(i => b.min.z + (b.size.z * (i + 0.5f) / 40f))
-                    .Select(z => Physics.Raycast(new Vector3(xEscalera, suelo + 20f, z), Vector3.down, out RaycastHit h, 30f) ? h.point.y - suelo : -1f).Where(h => h >= 0f).ToArray();
-                Assert.GreaterOrEqual(alturas.Length, 20, "peldaños bajo los rayos");
-                Assert.Greater(alturas.Max() - alturas.Min(), 4f, "la escalera sube de la banqueta a la cubierta");
-            }
+            // T-1104: las pasarelas PS01 con sus escaleras y rampas se quitaron por completo (el modelo y el colocador siguen para reusarlos).
+            Transform[] todos = ColocarS2.Todos().ToArray();
+            Transform raiz = todos.FirstOrDefault(t => t.name == ColocarT910.RaizPasarelas);
+            Assert.IsTrue(raiz == null || !raiz.gameObject.activeSelf, "la raíz T910_Pasarelas está apagada");
+            Assert.IsFalse(todos.Any(t => t.name == "PS01_Pasarela" && t.gameObject.activeInHierarchy), "ninguna PS01 activa");
+            Assert.IsFalse(todos.Any(t => t.name == ColocarT996.NombreRampas && t.gameObject.activeInHierarchy), "ninguna rampa T996 activa");
+            Assert.IsTrue(todos.Where(t => t.name == "N02_T505").All(t => !t.gameObject.activeSelf), "los N02 siguen apagados");
         }
 
         [Test]
