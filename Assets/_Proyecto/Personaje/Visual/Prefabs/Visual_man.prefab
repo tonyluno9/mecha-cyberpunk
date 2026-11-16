@@ -112,8 +112,8 @@ MonoBehaviour:
   animador: {fileID: 4860792649028321701}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 0.6401866
-  velocidadClipCorrer: 2.1075106
+  velocidadClipCaminar: 1.293
+  velocidadClipCorrer: 3.19
   rapidezMinima: 0.6
   rapidezMaxima: 3
   rapidezCapaArriba: 8
@@ -283,6 +283,7 @@ MonoBehaviour:
   socketArma: {fileID: 2652572571420802749}
   inclinacionBajada: 60
   manosPorIK: 0
+  clipPuro: 0
   maximoCorreccionCanon: 45
   inclinacionArmaLarga: -5
   maximoCorreccionArmaLarga: 120

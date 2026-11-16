@@ -48,10 +48,10 @@ MonoBehaviour:
   animador: {fileID: 1191352048583532837}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 0.8054182
-  velocidadClipCorrer: 2.9473684
+  velocidadClipCaminar: 1.293
+  velocidadClipCorrer: 3.19
   rapidezMinima: 0.6
-  rapidezMaxima: 2.2
+  rapidezMaxima: 3
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
@@ -129,15 +129,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.4646053
+      value: 1.5235
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.4646053
+      value: 1.5235
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.4646053
+      value: 1.5235
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -242,6 +242,7 @@ MonoBehaviour:
   socketArma: {fileID: 8429695646086095422}
   inclinacionBajada: 60
   manosPorIK: 1
+  clipPuro: 0
   maximoCorreccionCanon: 45
   inclinacionArmaLarga: -5
   maximoCorreccionArmaLarga: 120

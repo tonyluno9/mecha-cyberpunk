@@ -184,27 +184,21 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         };
 
         /// <summary>
-        /// T-624: clips propios de cada papel (clip del controlador base -> clip del papel). SKULLS, su jefe y los guardias de Nova usan los
-        /// clips de Enemigos y jefe; el resto de los papeles se queda con los de la base.
+        /// T-1004: todos los papeles humanos (aliados, NPC, SKULLS, SNAKES, guardias de Nova, robots, profes y el jefe) usan los mismos clips de PJ01 que el jugador
+        /// (ClipsDeJugadorPJ01): nadie camina con clips de Mixamo. Los clips propios que tenían SKULLS, el jefe y los guardias (T-624) ya no se usan.
+        /// Los papeles que no mueven el parámetro ConImplante se quedan en la rama sin implante de los árboles.
         /// </summary>
-        public static readonly Dictionary<string, (string Base, string Papel)[]> ClipsPorPapel = new Dictionary<string, (string, string)[]>
+        public static readonly Dictionary<string, (string Base, string Papel)[]> ClipsPorPapel = ConstruirClipsPorPapel();
+
+        private static Dictionary<string, (string Base, string Papel)[]> ConstruirClipsPorPapel()
         {
-            // T-739: el jugador sin implante camina y corre con los clips SinImplante; con implante, el árbol usa los ConImplante (parámetro ConImplante).
-            // T-749: todos son los clips de Blender ya aplicados a PJ01 (Humanoid, sin retargeting entre esqueletos distintos); ver ClipsDeJugadorPJ01.
-            ["Jugador"] = ClipsDeJugadorPJ01,
-            ["SKULLS"] = new[] { ("Loco_Idle", "Skull_Idle"), ("Loco_Caminar", "Skull_Caminar") },
-            ["Jefe"] = new[]
+            var mapa = new Dictionary<string, (string Base, string Papel)[]>();
+            foreach (string papel in Papeles)
             {
-                ("Loco_Idle", "Jefe_Idle"), ("Loco_Caminar", "Jefe_Caminar"), ("Skull_Burla", "Jefe_Burla"), ("Pistola_Disparo", "Jefe_Ataque"),
-                ("Muerte_Adelante", "Jefe_Muerte"), ("Muerte_Atras", "Jefe_Muerte"), ("Muerte_Desmayo", "Jefe_Muerte"),
-            },
-            ["Guardias"] = new[]
-            {
-                ("Loco_Idle", "Nova_Idle"), ("Loco_Caminar", "Nova_Caminar"), ("Loco_Correr", "Nova_Correr"),
-                ("Punos_GolpeIzq", "Nova_Punch"), ("Punos_GolpeDer", "Nova_Punch"), ("Punos_Fuerte", "Nova_Barrido"),
-                ("Muerte_Adelante", "Nova_Muerte"), ("Muerte_Atras", "Nova_Muerte"), ("Muerte_Desmayo", "Nova_Muerte"),
-            },
-        };
+                mapa[papel] = ClipsDeJugadorPJ01;
+            }
+            return mapa;
+        }
 
         private static void AplicarClipsPorPapel()
         {

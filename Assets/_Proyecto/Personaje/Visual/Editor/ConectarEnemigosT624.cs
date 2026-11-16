@@ -37,7 +37,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                     Animator animador = visual.GetComponentInChildren<Animator>(true);
                     animador.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(ConstructorControladorBase.RutaOverride(papel));
                 }
-                visual.ConfigurarClips(ConectarControladorBase.Medir(clipCaminar), ConectarControladorBase.Medir(clipCorrer), ReglasAnimacion.RapidezMaximaLocomocion);
+                // T-1004: los enemigos ya usan los clips de PJ01 (sin implante), no los suyos de Mixamo.
+                visual.ConfigurarClips(ReglasAnimacion.VelocidadClipCaminarSinImplante, ReglasAnimacion.VelocidadClipCorrerSinImplante, ReglasAnimacion.RapidezMaximaLocomocion);
                 PrefabUtility.SaveAsPrefabAsset(contenido, ruta);
             }
             finally
