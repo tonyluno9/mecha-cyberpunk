@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.Tests.EditMode.Vehiculos",
     "rootNamespace": "MechaCyberpunk.Tests",
-    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "MechaCyberpunk.Arena", "MechaCyberpunk.Mundo", "MechaCyberpunk.Vehiculos", "MechaCyberpunk.Casino", "MechaCyberpunk.Trafico", "UnityEngine.UI"],
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "MechaCyberpunk.Core", "MechaCyberpunk.Arena", "MechaCyberpunk.Mundo", "MechaCyberpunk.Vehiculos", "MechaCyberpunk.Vehiculos.Editor", "MechaCyberpunk.Casino", "MechaCyberpunk.Trafico", "UnityEngine.UI"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
