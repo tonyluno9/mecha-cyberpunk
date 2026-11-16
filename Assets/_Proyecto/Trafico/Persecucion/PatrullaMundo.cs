@@ -52,6 +52,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float RapidezDeFreno = 3f;
         // T-986: maneja con la física del carro; esto es lo que se mira para quitarla si queda volcada y para no esperar por siempre un obstáculo.
         private const float MinimoArribaVolcada = 0.3f;
+        private const float AlturaAlEnderezar = 0.6f; // T-1006
         private const float DistanciaMinimaDeMira = 1f;
         private static readonly float[] CarrilesPosibles = { AnchoCarril, -AnchoCarril, 2.75f * AnchoCarril, -2.75f * AnchoCarril };
         private static readonly float[] GradosParaEsquivar = { 35f, -35f, 70f, -70f, 105f, -105f };
@@ -80,6 +81,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // T-986: el conductor IA (puro) y lo que el cerebro le pasa cada paso de física: a dónde mirar y qué velocidad llevar.
         private CarroViejo carro;
         private ConductorCarroIA conductor;
+        // T-1006: detecta que no avanza aunque acelera y el volante suavizado que se le pasa al carro.
+        private DetectorAtasco detectorAtasco;
+        private float volanteSuavizado;
         private Vector3 puntoDeMira;
         private float velocidadDeseada;
         private ParametrosConductorIA parametrosConductor;
@@ -351,6 +355,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (carro != null)
             {
                 conductor = new ConductorCarroIA(carro.ParametrosManejo, parametrosConductor);
+                detectorAtasco = new DetectorAtasco(config.ParametrosAtasco);
+                volanteSuavizado = 0f;
                 carro.ConducirConIA(PedirEntrada);
             }
             if (conSirena && bucleSirena == Sonidos.SinBucle)
@@ -457,7 +463,113 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // T-986: el conductor IA pide su entrada al carro en cada paso de física.
         private EntradaCarro PedirEntrada()
         {
-            return conductor.Calcular(cuerpo.position, cuerpo.rotation * Vector3.forward, cuerpo.linearVelocity, puntoDeMira, velocidadDeseada, Time.fixedDeltaTime);
+            EntradaCarro e = conductor.Calcular(cuerpo.position, cuerpo.rotation * Vector3.forward, cuerpo.linearVelocity, puntoDeMira, velocidadDeseada, Time.fixedDeltaTime);
+            // T-1006: el volante no cambia más rápido de lo que una persona lo giraría, así no tiembla.
+            volanteSuavizado = ReglaSuavizadoVolante.Seguir(volanteSuavizado, e.Girar, config.VelocidadVolante, Time.fixedDeltaTime);
+            return new EntradaCarro(e.Acelerar, e.Frenar, volanteSuavizado, e.FrenoMano);
+        }
+
+        /// <summary>T-1006: cuántas veces se recolocó en otro cruce por estar atorada.</summary>
+        public int Recolocaciones { get; private set; }
+
+        /// <summary>T-1006: cuántas veces se enderezó por quedar volcada a la vista.</summary>
+        public int Enderezadas { get; private set; }
+
+        // T-1006: pide avanzar pero no avanza: reversa con giro y reintento; si sigue atorada en el mismo lugar, se pone en otro cruce fuera de la vista.
+        private void RevisarAtasco(float dt)
+        {
+            if (detectorAtasco == null || conductor == null)
+            {
+                return;
+            }
+            bool quiere = velocidadDeseada >= config.VelocidadMinimaAtasco;
+            AccionAtasco accion = detectorAtasco.Actualizar(cuerpo.position, quiere, conductor.Reversas, conductor.EnReversa, dt);
+            if (accion == AccionAtasco.Reversa)
+            {
+                conductor.ForzarReversa();
+            }
+            else if (accion == AccionAtasco.Recolocar)
+            {
+                Recolocar();
+            }
+        }
+
+        // El cruce más cercano (entre las distancias del config) que la cámara no ve, lejos del jugador y sin otro vehículo encima; si no hay, sigue intentándolo.
+        private void Recolocar()
+        {
+            if (calles == null)
+            {
+                return;
+            }
+            Vector3? cerca = posicionJugador?.Invoke();
+            if (cerca.HasValue && DistanciaPlano(posicion, cerca.Value) <= DistanciaDirecta)
+            {
+                return; // junto al jugador no se teletransporta: solo reintenta con reversa
+            }
+            Camera camara = Camera.main;
+            Vector3? jugador = posicionJugador?.Invoke();
+            int mejor = -1;
+            float mejorDistancia = float.MaxValue;
+            for (int i = 0; i < calles.Cantidad; i++)
+            {
+                Vector3 nodo = calles.Nodo(i);
+                float d = DistanciaPlano(posicion, nodo);
+                if (d < config.DistanciaMinimaRecolocar || d > config.DistanciaMaximaRecolocar || d >= mejorDistancia
+                    || ReglaVistaPolicia.LoVe(camara, nodo, AlcanceCamara) || Calle.CarroTrafico.PuntoEnVista(camara, nodo)
+                    || (jugador.HasValue && DistanciaPlano(jugador.Value, nodo) < config.DistanciaMinimaSalida)
+                    || !Calle.EspacioLibre.Libre(nodo))
+                {
+                    continue;
+                }
+                mejor = i;
+                mejorDistancia = d;
+            }
+            if (mejor < 0)
+            {
+                return;
+            }
+            Vector3 destino = calles.Nodo(mejor);
+            float y = BuscarSuelo(destino, destino.y, destino.y) + RaizABajo;
+            Vector3 colocacion = new Vector3(destino.x, y, destino.z);
+            Recolocaciones++;
+            Debug.Log("[Trafico] T-1006: patrulla atorada en " + posicion + ", recolocada en el cruce " + mejor + ".");
+            Quaternion derecha = Quaternion.Euler(0f, cuerpo.rotation.eulerAngles.y, 0f);
+            cuerpo.position = colocacion;
+            cuerpo.rotation = derecha;
+            transform.SetPositionAndRotation(colocacion, derecha);
+            cuerpo.linearVelocity = Vector3.zero;
+            cuerpo.angularVelocity = Vector3.zero;
+            posicion = colocacion;
+            camino.Clear();
+            camino.Add(mejor);
+            indiceEnCamino = 0;
+            nodoMeta = -1;
+            rastro.Clear();
+            desvioCarril = 0f;
+            volanteSuavizado = 0f;
+            orientarAlSalir = true;
+            conductor.Reiniciar();
+            detectorAtasco.Reiniciar();
+            Physics.SyncTransforms();
+        }
+
+        // Vuelve a ponerla sobre sus ruedas, mirando como estaba, en el mismo lugar.
+        private void Enderezar()
+        {
+            Vector3 adelante = Vector3.ProjectOnPlane(cuerpo.rotation * Vector3.forward, Vector3.up);
+            if (adelante.sqrMagnitude < 0.01f)
+            {
+                adelante = Vector3.ProjectOnPlane(cuerpo.rotation * Vector3.up, Vector3.up);
+            }
+            Quaternion giro = Quaternion.LookRotation(adelante.sqrMagnitude < 0.01f ? Vector3.forward : adelante.normalized, Vector3.up);
+            Vector3 punto = cuerpo.position + Vector3.up * AlturaAlEnderezar;
+            cuerpo.position = punto;
+            cuerpo.rotation = giro;
+            transform.SetPositionAndRotation(punto, giro);
+            cuerpo.linearVelocity = Vector3.zero;
+            cuerpo.angularVelocity = Vector3.zero;
+            Enderezadas++;
+            Physics.SyncTransforms();
         }
 
         /// <summary>T-986: rapidez actual de la patrulla (m/s).</summary>
@@ -496,17 +608,24 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Conducir(dt);
             AplicarCarril(dt);
             FrenarPorObstaculo(dt);
+            RevisarAtasco(dt);
         }
 
-        // Boca abajo o de lado por unos segundos y sin que nadie la vea: se quita como la que se retira; a la vista se queda.
+        // Boca abajo o de lado por unos segundos y sin que nadie la vea: se quita como la que se retira; a la vista se endereza (T-1006).
         private bool QuitarSiVolcada(float dt)
         {
             bool volcada = Vector3.Dot(cuerpo.rotation * Vector3.up, Vector3.up) < MinimoArribaVolcada;
             segundosVolcada = volcada ? segundosVolcada + dt : 0f;
-            if (segundosVolcada >= config.SegundosVolcada && !Robada && !ConJugador && !ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara))
+            if (segundosVolcada >= config.SegundosVolcada && !Robada && !ConJugador)
             {
-                Destroy(gameObject);
-                return true;
+                if (!ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara))
+                {
+                    Destroy(gameObject);
+                    return true;
+                }
+                // T-1006: a la vista no se quita de golpe: se endereza en su lugar.
+                Enderezar();
+                segundosVolcada = 0f;
             }
             return false;
         }

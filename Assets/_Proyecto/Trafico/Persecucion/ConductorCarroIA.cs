@@ -69,6 +69,18 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>Cuántas veces se ha atorado y dado reversa.</summary>
         public int Reversas => reversas;
 
+        /// <summary>T-1006: pide la maniobra de reversa ya (la usa el detector de atasco cuando ve que no avanza aunque acelera).</summary>
+        public void ForzarReversa()
+        {
+            if (EnReversa)
+            {
+                return;
+            }
+            segundosAtorada = 0f;
+            segundosDeReversa = p.SegundosReversa;
+            reversas++;
+        }
+
         public void Reiniciar()
         {
             segundosAtorada = 0f;
