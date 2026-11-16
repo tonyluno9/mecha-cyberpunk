@@ -109,7 +109,8 @@ namespace MechaCyberpunk.Progresion
                 return ResultadoImplante.SinDinero;
             }
             int costo = ReglaImplantes.Costo(Catalogo, implante, actual);
-            if (!cartera.IntentarPagar(costo, MotivoDinero.Clinica)) return ResultadoImplante.SinDinero;
+            // T-1005: un costo 0 (el exo de piernas I del Doc) no cobra: la cartera no deja "pagar" 0.
+            if (costo > 0 && !cartera.IntentarPagar(costo, MotivoDinero.Clinica)) return ResultadoImplante.SinDinero;
 
             Lista[(int)implante.Espacio] = implante;
             Instalado?.Invoke(implante.Espacio, implante.Nivel);

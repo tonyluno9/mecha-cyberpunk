@@ -2,36 +2,58 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
 using NUnit.Framework;
 using UnityEditor;
-using UnityEngine;
 
 namespace MechaCyberpunk.Tests.Progresion
 {
-    /// <summary>T-864 (playtest 6-nov tarde): el Doc regala un implante sin cobrar ni pedir liga (ServicioImplantes.Regalar).</summary>
+    /// <summary>
+    /// T-1005 (playtest 16-nov): el Doc ya no regala el exo de piernas directo; en la clínica el EXO DE PIERNAS I cuesta 0 (GRATIS) y se compra,
+    /// y el nivel II de cualquier prótesis se abre en cuanto tienes el nivel I, sin requisito de liga.
+    /// </summary>
     public class RegaloImplanteS2tPruebas
     {
-        private const string RutaRegalo = "Assets/_Proyecto/Progresion/Datos/Implantes/DatosImplante_implante_piernas_1.asset";
+        private const string RutaCatalogo = "Assets/_Proyecto/Progresion/Datos/Implantes/CatalogoImplantes_Base.asset";
+        private const int LigaUno = 1;
+        private const int DineroCero = 0;
+        private const int DineroDeuda = -300;
+        private const int DineroSobrado = 100000;
+
+        private static CatalogoImplantes Catalogo()
+        {
+            CatalogoImplantes catalogo = AssetDatabase.LoadAssetAtPath<CatalogoImplantes>(RutaCatalogo);
+            Assert.IsNotNull(catalogo, RutaCatalogo);
+            return catalogo;
+        }
 
         [Test]
-        public void Regalar_SinCartera_LoInstalaUnaVez()
+        public void ExoDePiernasI_CuestaCeroYSeOfreceAunSinDineroNiLiga()
         {
-            GameObject go = new GameObject("Implantes");
-            try
+            CatalogoImplantes catalogo = Catalogo();
+            Assert.AreEqual(0, catalogo.Buscar(EspacioImplante.Piernas, 1).Precio);
+            foreach (int dinero in new[] { DineroCero, DineroDeuda })
             {
-                ServicioImplantes s = go.AddComponent<ServicioImplantes>();
-                DatosImplante d = AssetDatabase.LoadAssetAtPath<DatosImplante>(RutaRegalo);
-                Assert.IsNotNull(d);
-                int avisos = 0;
-                s.Instalado += (e, n) => avisos++;
-                Assert.AreEqual(ResultadoImplante.Instalado, s.Regalar(d));
-                Assert.AreEqual(1, s.Nivel(EspacioImplante.Piernas));
-                Assert.AreEqual(1, s.Cantidad);
-                Assert.AreEqual(ResultadoImplante.YaInstalado, s.Regalar(d), "no se repite");
-                Assert.AreEqual(1, avisos);
+                OfertaImplante o = ReglaImplantes.Oferta(catalogo, EspacioImplante.Piernas, 0, LigaUno, dinero);
+                Assert.AreEqual(EstadoOfertaImplante.Instalar, o.Estado, "con dinero " + dinero);
+                Assert.AreEqual(0, o.Costo);
             }
-            finally
+        }
+
+        [Test]
+        public void NivelII_DeCualquierProtesis_SeOfreceConElIEnLaLiga1()
+        {
+            CatalogoImplantes catalogo = Catalogo();
+            foreach (EspacioImplante espacio in System.Enum.GetValues(typeof(EspacioImplante)))
             {
-                Object.DestroyImmediate(go);
+                DatosImplante nivel2 = catalogo.Buscar(espacio, 2);
+                Assert.AreEqual(LigaUno, nivel2.LigaMinima, espacio + " II no pide liga");
+                OfertaImplante o = ReglaImplantes.Oferta(catalogo, espacio, 1, LigaUno, DineroSobrado);
+                Assert.AreEqual(EstadoOfertaImplante.Instalar, o.Estado, espacio + " II se puede comprar con el I");
             }
+        }
+
+        [Test]
+        public void ElDoc_DiceElegirProtesis()
+        {
+            StringAssert.Contains("Elige tu prótesis, te regalo la de piernas", MechaCyberpunk.Progresion.Apoyo.RegaloImplanteDoc.TextoFrase);
         }
     }
 }

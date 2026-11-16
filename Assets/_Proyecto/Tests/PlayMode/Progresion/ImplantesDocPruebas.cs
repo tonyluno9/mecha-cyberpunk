@@ -146,6 +146,11 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.Less(Vector2.Distance(inicio, casilla), 2f, "La línea de luz sale de la casilla");
             Assert.Less(Vector2.Distance(fin, punto), 2f, "y llega a su lugar en el cuerpo");
             Capturar("ui-clinica-clinica.png");
+            RegaloImplanteDoc regaloDoc = Object.FindFirstObjectByType<RegaloImplanteDoc>();
+            Assert.IsNotNull(regaloDoc, "el Doc trae su frase del regalo");
+            Assert.IsTrue(regaloDoc.Avisado, "T-1005: el Doc dice que elijas tu prótesis");
+            StringAssert.Contains("Elige tu prótesis, te regalo la de piernas", regaloDoc.Frase);
+            Assert.AreEqual(0, servicio.Cantidad, "T-1005: pero no instala nada solo");
 
             // OJOS I: Enter pide confirmar, Enter instala.
             yield return Pulsar(teclado.enterKey);
@@ -158,10 +163,9 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.Less(cartera.Dinero, dinero, "Se cobró");
             Assert.Greater(EfectosAPie.FactorAlcanceApuntado(servicio.Efectos), 1f, "OJOS alarga el apuntado asistido");
             yield return new WaitForSecondsRealtime(0.5f);
-            // T-864: al usar la clínica el Doc regala PIERNAS I.
-            Assert.AreEqual(2, hud.Visibles);
+            // T-1005: el Doc ya no instala PIERNAS I solo: solo está OJOS I.
+            Assert.AreEqual(1, hud.Visibles);
             Assert.AreEqual("O1", hud.TextoIcono(EspacioImplante.Ojos));
-            Assert.AreEqual("P1", hud.TextoIcono(EspacioImplante.Piernas));
 
             // BRAZOS I (segunda fila): aparece con el barrido y se instala.
             Assert.AreEqual("IMPLANTES", doc.Texto);
@@ -174,6 +178,20 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.enterKey);
             yield return Pulsar(teclado.enterKey);
             yield return EsperarHasta(() => servicio.Nivel(EspacioImplante.Brazos) == 1 && !mostrador.Operando, "operación de brazos", 30f);
+            Assert.AreEqual(2, hud.Visibles, "OJOS I y BRAZOS I; PIERNAS no se instaló sola");
+            Assert.AreEqual(0, servicio.Nivel(EspacioImplante.Piernas), "T-1005: el Doc no regala el exo de piernas directo");
+
+            // T-1005: PIERNAS I sale GRATIS en el menú y lo compras tú (Enter, Enter); no se cobra.
+            yield return Pulsar(teclado.eKey);
+            yield return EsperarHasta(() => mostrador.PantallaAbierta, "reabrir la tienda para las piernas", 5f);
+            yield return Pulsar(teclado.downArrowKey);
+            yield return Pulsar(teclado.downArrowKey);
+            StringAssert.Contains("GRATIS", mostrador.Pantalla.TextoOpcion(2), "EXO DE PIERNAS I aparece GRATIS");
+            int dineroAntesPiernas = cartera.Dinero;
+            yield return Pulsar(teclado.enterKey);
+            yield return Pulsar(teclado.enterKey);
+            yield return EsperarHasta(() => servicio.Nivel(EspacioImplante.Piernas) == 1 && !mostrador.Operando, "operación de piernas", 30f);
+            Assert.AreEqual(dineroAntesPiernas, cartera.Dinero, "PIERNAS I es gratis");
             Assert.Less(EfectosAPie.EnfriamientoRodada(2f, servicio.Efectos), 2f, "PIERNAS acorta el enfriamiento de la rodada");
             yield return new WaitForSecondsRealtime(0.5f);
             Assert.AreEqual(3, hud.Visibles);

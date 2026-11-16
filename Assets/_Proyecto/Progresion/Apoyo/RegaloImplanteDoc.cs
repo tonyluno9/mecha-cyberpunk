@@ -4,24 +4,28 @@ using UnityEngine;
 namespace MechaCyberpunk.Progresion.Apoyo
 {
     /// <summary>
-    /// T-864 (playtest 6-nov tarde): al empezar el juego EL DOC te regala un implante. La primera vez que hablas con él sin ningún implante, te
-    /// instala gratis <see cref="regalo"/> (<see cref="ServicioImplantes.Regalar"/>) y te lo dice. Como el implante se guarda con la partida, no se
-    /// repite. Va junto al <see cref="PersonajeApoyo"/> del Doc; solo escucha su evento Usado.
+    /// T-864 / T-1005 (playtest 16-nov): EL DOC ya no instala el exo de piernas solo. Mientras no tengas ningún implante, al hablar con él te dice
+    /// <see cref="Frase"/> y el EXO DE PIERNAS I aparece GRATIS en el menú de la clínica: lo compras tú (cuesta 0 y se instala como cualquier
+    /// compra). Va junto al <see cref="PersonajeApoyo"/> del Doc; solo escucha su evento Usado.
     /// </summary>
     public class RegaloImplanteDoc : MonoBehaviour
     {
+        /// <summary>Lo que dice el Doc (las pruebas lo leen de aquí en vez de copiar el texto).</summary>
+        public const string TextoFrase = "Elige tu prótesis, te regalo la de piernas. Siéntate en la silla.";
+
         [Tooltip("El Doc (su PersonajeApoyo).")]
         [SerializeField] private PersonajeApoyo doc;
-        [Tooltip("El implante que regala.")]
+        [Tooltip("El implante que ofrece gratis (EXO DE PIERNAS I); su precio es 0 en el catálogo.")]
         [SerializeField] private DatosImplante regalo;
-        [Tooltip("Lo que dice al regalarlo.")]
-        [SerializeField] private string frase = "Toma, mijo, va por la casa: te puse un exo de piernas. Para lo demás, siéntate en la silla.";
 
-        /// <summary>Lo que dice al regalar el implante (T-702: las pruebas lo leen de aquí en vez de copiar el texto).</summary>
-        public string Frase => frase;
+        /// <summary>Lo que dice el Doc.</summary>
+        public string Frase => TextoFrase;
 
-        /// <summary>True si ya lo regaló en esta partida (para las pruebas).</summary>
-        public bool Regalado { get; private set; }
+        /// <summary>El implante que ofrece gratis.</summary>
+        public DatosImplante Regalo => regalo;
+
+        /// <summary>True si ya dijo la frase en esta partida (para las pruebas).</summary>
+        public bool Avisado { get; private set; }
 
         public void Configurar(PersonajeApoyo personaje, DatosImplante implante)
         {
@@ -61,15 +65,12 @@ namespace MechaCyberpunk.Progresion.Apoyo
         private void AlUsar(string id)
         {
             ServicioImplantes servicio = Registro<ServicioImplantes>.Actual;
-            if (Regalado || servicio == null || servicio.Cantidad > 0)
+            if (servicio == null || servicio.Cantidad > 0)
             {
                 return;
             }
-            if (servicio.Regalar(regalo) == ResultadoImplante.Instalado)
-            {
-                Regalado = true;
-                doc.Decir(frase);
-            }
+            Avisado = true;
+            doc.Decir(TextoFrase);
         }
     }
 }
