@@ -131,7 +131,41 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(1f)] [Tooltip("Cuántos segundos volcada (boca abajo o de lado) hasta quitarla, si nadie la ve (s).")]
         [SerializeField] private float segundosVolcada = 4f;
 
+        [Header("Atascos (T-1006)")]
+        [Min(0.2f)] [Tooltip("Cada cuántos segundos se mide cuánto avanzó una patrulla que pide avanzar (s).")]
+        [SerializeField] private float ventanaAtasco = 1.5f;
+        [Min(0.05f)] [Tooltip("Si en esa ventana avanzó menos que esto, está atorada y da reversa (m).")]
+        [SerializeField] private float distanciaMinimaAvance = 0.6f;
+        [Min(1)] [Tooltip("Reversas seguidas en el mismo lugar para recolocarla en la calle.")]
+        [SerializeField] private int reversasParaRecolocar = 2;
+        [Min(1f)] [Tooltip("Segundos atorada en el mismo lugar, aunque dé reversa, para recolocarla (s).")]
+        [SerializeField] private float segundosParaRecolocar = 10f;
+        [Min(1f)] [Tooltip("Si se aleja tanto del lugar donde se atoró, se da por liberada (m).")]
+        [SerializeField] private float radioLiberada = 6f;
+        [Min(1f)] [Tooltip("Al recolocarla, el cruce elegido está al menos a esta distancia de donde se atoró (m).")]
+        [SerializeField] private float distanciaMinimaRecolocar = 15f;
+        [Min(1f)] [Tooltip("Al recolocarla, el cruce elegido está a lo más a esta distancia de donde se atoró (m).")]
+        [SerializeField] private float distanciaMaximaRecolocar = 120f;
+        [Min(0.5f)] [Tooltip("Cuánto puede cambiar el volante por segundo (1 es el giro completo); evita que tiemble (1/s).")]
+        [SerializeField] private float velocidadVolante = 6f;
+
         public float RadioLlegadaNodo => radioLlegadaNodo;
+        [Min(0.1f)] [Tooltip("Solo se considera atorada si pide al menos esta velocidad (m/s); así no cuenta la que se acomoda despacio junto al jugador.")]
+        [SerializeField] private float velocidadMinimaAtasco = 2f;
+        public float VelocidadMinimaAtasco => velocidadMinimaAtasco;
+        public float DistanciaMinimaRecolocar => distanciaMinimaRecolocar;
+        public float DistanciaMaximaRecolocar => distanciaMaximaRecolocar;
+        public float VelocidadVolante => velocidadVolante;
+
+        /// <summary>T-1006: los números del detector de atasco de las patrullas.</summary>
+        public ParametrosAtasco ParametrosAtasco => new ParametrosAtasco
+        {
+            VentanaSegundos = ventanaAtasco,
+            DistanciaMinima = distanciaMinimaAvance,
+            ReversasParaRecolocar = reversasParaRecolocar,
+            SegundosParaRecolocar = segundosParaRecolocar,
+            RadioLiberada = radioLiberada,
+        };
         public float RadioLlegadaMiga => radioLlegadaMiga;
         public float SegundosVolcada => segundosVolcada;
         public float DesaceleracionPlaneada => desaceleracionPlaneada;
@@ -169,6 +203,50 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(5f)] [Tooltip("Un dron te ve desde aquí, sin contar paredes (vuela por encima) (m).")]
         [SerializeField] private float radioVistaDron = 45f;
         public float RadioVistaDron => radioVistaDron;
+
+        [Header("Vuelo del dron (T-1008)")]
+        [Min(0.5f)] [Tooltip("Aceleración horizontal máxima del dron al arrancar o girar (m/s2).")]
+        [SerializeField] private float aceleracionDron = 7f;
+        [Min(0.5f)] [Tooltip("Desaceleración con la que planea frenar al llegar; menor que la aceleración para frenar suave (m/s2).")]
+        [SerializeField] private float frenadoDron = 4f;
+        [Min(0.1f)] [Tooltip("Velocidad vertical máxima del dron al ajustar su altura (m/s).")]
+        [SerializeField] private float velocidadVerticalDron = 4f;
+        [Min(0.1f)] [Tooltip("Aceleración vertical máxima del dron (m/s2).")]
+        [SerializeField] private float aceleracionVerticalDron = 4f;
+        [Min(10f)] [Tooltip("Qué tan rápido puede girar el rumbo del dron (grados/s).")]
+        [SerializeField] private float giroRumboDron = 120f;
+        [Range(0f, 45f)] [Tooltip("Inclinación máxima del dron al acelerar o girar (grados).")]
+        [SerializeField] private float inclinacionMaximaDron = 20f;
+        [Min(0f)] [Tooltip("Grados que se inclina el dron por cada m/s2 de aceleración (grados).")]
+        [SerializeField] private float inclinacionPorAceleracionDron = 2.5f;
+        [Min(0.5f)] [Tooltip("Qué tan rápido alcanza la inclinación pedida (1/s).")]
+        [SerializeField] private float suavizadoInclinacionDron = 6f;
+        [Min(0f)] [Tooltip("Cuánto sube y baja el dron flotando en el aire (m).")]
+        [SerializeField] private float amplitudFloteDron = 0.12f;
+        [Min(0f)] [Tooltip("Cuántas veces por segundo sube y baja al flotar (Hz).")]
+        [SerializeField] private float frecuenciaFloteDron = 0.5f;
+        [Min(0f)] [Tooltip("Balanceo leve del dron de lado a lado (grados).")]
+        [SerializeField] private float amplitudBalanceoDron = 1.5f;
+        [Min(0f)] [Tooltip("Cuántas veces por segundo se balancea el dron (Hz).")]
+        [SerializeField] private float frecuenciaBalanceoDron = 0.35f;
+
+        /// <summary>T-1008: los números del vuelo natural de los drones (la velocidad máxima es la velocidad del dron).</summary>
+        public ParametrosVueloDron ParametrosVuelo => new ParametrosVueloDron
+        {
+            VelocidadMaxima = velocidadDron,
+            AceleracionMaxima = aceleracionDron,
+            AceleracionFrenado = frenadoDron,
+            VelocidadVertical = velocidadVerticalDron,
+            AceleracionVertical = aceleracionVerticalDron,
+            GradosRumboPorSegundo = giroRumboDron,
+            InclinacionMaxima = inclinacionMaximaDron,
+            GradosPorAceleracion = inclinacionPorAceleracionDron,
+            SuavizadoInclinacion = suavizadoInclinacionDron,
+            AmplitudFlote = amplitudFloteDron,
+            FrecuenciaFlote = frecuenciaFloteDron,
+            AmplitudBalanceo = amplitudBalanceoDron,
+            FrecuenciaBalanceo = frecuenciaBalanceoDron,
+        };
 
         [Header("Dron derribable (T-730)")]
         [Min(1f)] [Tooltip("Puntos de daño que aguanta el dron antes de caer. Una pistola hace 10 a 20 por bala.")]

@@ -15,7 +15,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
     /// </summary>
     public class DronMundo : MonoBehaviour, IRecibeDanio, IObjetoInerte
     {
-        private const float GradosPorSegundoGiro = 180f;
+        private const float DistanciaMetaRetiro = 50f; // T-1008: al retirarse apunta a un punto así de lejos, nunca llega
+        private CalculoVueloDron vuelo;
 
         /// <summary>Fuente del azar (0 a 1) de los disparos. Las pruebas la cambian.</summary>
         public static Func<float> Azar = () => UnityEngine.Random.value;
@@ -318,7 +319,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3 lejos = jugador.HasValue ? transform.position - jugador.Value : transform.forward;
             lejos.y = 0f;
             Vector3 direccion = (lejos.sqrMagnitude > 0.001f ? lejos.normalized : transform.forward) + Vector3.up * 0.25f;
-            transform.position += direccion.normalized * (calculo.Paso(true, float.MaxValue, dt));
+            float rumboRetiro = RumboActual();
+            Volar(transform.position + direccion.normalized * DistanciaMetaRetiro, rumboRetiro, dt);
             bool distante = !jugador.HasValue || Vector3.Distance(transform.position, jugador.Value) >= config.DistanciaRetiro;
             if ((distante && !ReglaVistaPolicia.LoVe(Camera.main, transform.position, RetiroAlcanceCamara)) || segundosRetirandose >= config.SegundosMaximosRetiro)
             {
@@ -350,20 +352,34 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return;
             }
             Vector3 meta = CalculoSeparacionDrones.PuntoEnCirculo(jugador.Value, indiceOrbita, totalOrbita, config.RadioOrbitaDron, config.AlturaDron);
-            Vector3 haciaMeta = meta - transform.position;
-            float paso = calculo.Paso(true, haciaMeta.magnitude, Time.deltaTime);
-            if (paso > 0f)
-            {
-                transform.position += haciaMeta.normalized * paso;
-            }
-            transform.position += SepararDeOtros();
-            Disparar();
             Vector3 haciaJugador = jugador.Value - transform.position;
             haciaJugador.y = 0f;
-            if (haciaJugador.sqrMagnitude > 0.001f)
+            float rumbo = haciaJugador.sqrMagnitude > 0.001f ? Mathf.Atan2(haciaJugador.x, haciaJugador.z) * Mathf.Rad2Deg : RumboActual();
+            Volar(PuntoDeParada(meta), rumbo, Time.deltaTime);
+            transform.position += SepararDeOtros();
+            Disparar();
+        }
+
+        // T-1008: vuelo con inercia: acelera, frena suave al llegar, gira el rumbo con límite y se inclina con la aceleración.
+        // Como antes: no se acerca a menos de la distancia de seguimiento de su punto; dentro de ella se queda flotando donde está.
+        private Vector3 PuntoDeParada(Vector3 meta)
+        {
+            Vector3 hacia = meta - transform.position;
+            float distancia = hacia.magnitude;
+            float seguimiento = calculo.DistanciaSeguimiento;
+            return distancia <= seguimiento ? transform.position : transform.position + hacia / distancia * (distancia - seguimiento);
+        }
+
+        private float RumboActual() => vuelo != null ? vuelo.Rumbo : transform.eulerAngles.y;
+
+        private void Volar(Vector3 meta, float rumboDeseado, float dt)
+        {
+            if (vuelo == null)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(haciaJugador, Vector3.up), GradosPorSegundoGiro * Time.deltaTime);
+                vuelo = new CalculoVueloDron(config.ParametrosVuelo, transform.eulerAngles.y);
             }
+            transform.position += vuelo.Paso(transform.position, meta, rumboDeseado, dt);
+            transform.rotation = vuelo.Rotacion;
         }
     }
 }

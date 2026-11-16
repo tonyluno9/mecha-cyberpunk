@@ -45,6 +45,12 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Cuánto sube el brazo en el aviso del golpe (°).")]
         [Range(0f, 180f)] [SerializeField] private float anguloBrazoAviso = 130f;
 
+        [Header("Defensa al ser golpeado (T-1009)")]
+        [Tooltip("Si es true, al recibir daño pasa a pelear contra el jugador (alerta) aunque no esté en su territorio ni cerca del jefe.")]
+        [SerializeField] private bool seDefiende;
+        [Tooltip("Cuánto dura la defensa después del último daño recibido (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosDefensa = 20f;
+
         [Header("Policía (T-709)")]
         [Tooltip("Si es un policía: siempre está en alerta contra el jugador, empieza cubierto y dispararle sube la búsqueda.")]
         [SerializeField] private bool esPolicia;
@@ -172,6 +178,8 @@ namespace MechaCyberpunk.IA.Datos
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f);
 
         public bool JefeCuerpoACuerpo => jefeCuerpoACuerpo;
+        public bool SeDefiende => seDefiende;
+        public float SegundosDefensa => segundosDefensa;
         public float AlcanceJefe => alcanceJefe;
         public float TelegrafiaGolpeJefe => telegrafiaGolpeJefe;
         public float DanioGolpeJefe => danioGolpeJefe;

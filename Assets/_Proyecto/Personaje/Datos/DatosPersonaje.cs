@@ -34,6 +34,16 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Tiempo después del impacto en que no se puede golpear otra vez (s).")]
         [Min(0.01f)] [SerializeField] private float recargaGolpe = 0.45f;
 
+        [Header("Auto-giro del golpe (T-1003)")]
+        [Tooltip("Radio en que el golpe busca un oponente al que girarse (m).")]
+        [Min(0f)] [SerializeField] private float radioAutoGiro = 2.5f;
+
+        [Tooltip("Mitad del cono al frente de la cámara en que se busca al oponente (°).")]
+        [Range(0f, 180f)] [SerializeField] private float anguloAutoGiro = 70f;
+
+        [Tooltip("Velocidad con que el cuerpo se gira hacia el oponente durante la preparación del golpe (°/s).")]
+        [Min(1f)] [SerializeField] private float velocidadAutoGiro = 1440f;
+
         [Header("Regeneración")]
         [Tooltip("Vida que recupera por segundo cuando lleva un rato sin recibir daño (puntos/s).")]
         [Min(0f)] [SerializeField] private float regeneracionPorSegundo = 5f;
@@ -72,6 +82,9 @@ namespace MechaCyberpunk.Personaje
         public float RadioGolpe => radioGolpe;
         public float PreparacionGolpe => preparacionGolpe;
         public float RecargaGolpe => recargaGolpe;
+        public float RadioAutoGiro => radioAutoGiro;
+        public float AnguloAutoGiro => anguloAutoGiro;
+        public float VelocidadAutoGiro => velocidadAutoGiro;
         public float AlturaCamaraKO => alturaCamaraKO;
         public float LadeoCamaraKO => ladeoCamaraKO;
         public float VelocidadCaidaKO => velocidadCaidaKO;

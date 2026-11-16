@@ -45,3 +45,4 @@ MonoBehaviour:
   formatoFavorDescuento: "FAVOR \xB7 \u2212{0} % EN ESTA COMPRA \xB7 TE QUEDAN {1}"
   tamanoFavor: 34
   colorFavor: {r: 1, g: 0.85, b: 0.2, a: 1}
+  configArmas: {fileID: 11400000, guid: 0e3c34618fae18c48925c1b5644f866c, type: 2}
