@@ -73,7 +73,7 @@ namespace MechaCyberpunk.Tests.Personaje
         [UnityTearDown]
         public IEnumerator Descargar()
         {
-            Scene vacia = SceneManager.CreateScene("PasarelaNovaT996_Vacia");
+            Scene vacia = SceneManager.CreateScene("PasarelaNovaT996_Vacia_" + System.Guid.NewGuid().ToString("N"));
             SceneManager.SetActiveScene(vacia);
             for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
             {
