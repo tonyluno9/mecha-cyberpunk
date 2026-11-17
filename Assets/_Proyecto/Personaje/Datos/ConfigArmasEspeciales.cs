@@ -22,6 +22,8 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float segundosEfecto = 4f;
         [Tooltip("Parte del daño que llega al borde del radio (0 a 1); en el centro es el daño completo.")]
         [Range(0f, 1f)] [SerializeField] private float danioEnElBorde = 0.3f;
+        [Tooltip("T-1325: parte del radio (0 a 1) dentro de la cual la explosión mata a cualquier persona que no sea el jugador (policías, pandilleros).")]
+        [Range(0f, 1f)] [SerializeField] private float fraccionLetal = 0.6f;
         [Tooltip("Parte del daño que recibe el propio jugador si está dentro del radio (0 a 1).")]
         [Range(0f, 1f)] [SerializeField] private float danioAlJugador = 0.5f;
         [Tooltip("Empuje a lo que tiene Rigidbody (cambio de velocidad en el centro, m/s).")]
@@ -92,6 +94,7 @@ namespace MechaCyberpunk.Personaje
         public float SegundosEfecto => segundosEfecto;
         public float DanioEnElBorde => danioEnElBorde;
         public float DanioAlJugador => danioAlJugador;
+        public float FraccionLetal => fraccionLetal;
         public float Empuje => empuje;
         public Color ColorDestello => colorDestello;
         public float IntensidadDestello => intensidadDestello;
