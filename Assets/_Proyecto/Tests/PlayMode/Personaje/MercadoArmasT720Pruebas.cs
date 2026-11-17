@@ -240,7 +240,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return EsperarHasta(() => mostrador.PantallaAbierta && pantalla.Visible, "abrir El Mercado con E", 5f);
 
             // b. Sin el arma no se ofrecen sus balas.
-            string[] nombres = { "ESCOPETA", "FUSIL", "SNIPER" };
+            string[] nombres = { "ESCOPETA", "FUSIL", "FRANCOTIRADOR" } /* T-1314: el sniper se ve como Francotirador */;
             ArmaAPie[] tipos = { ArmaAPie.Escopeta, ArmaAPie.Fusil, ArmaAPie.Sniper };
             foreach (string arma in nombres)
             {
@@ -298,7 +298,7 @@ namespace MechaCyberpunk.Tests.Personaje
             cartera.Abonar(Dinero, MotivoDinero.Otro);
             reserva.Agregar(ArmaAPie.Sniper, 999);
             Assert.AreEqual(ReservaBalas.Maximo(ArmaAPie.Sniper), reserva.Cantidad(ArmaAPie.Sniper));
-            yield return Comprar(pantalla, FilaCon(pantalla, "BALAS DE SNIPER"), "balas de sniper");
+            yield return Comprar(pantalla, FilaCon(pantalla, "BALAS DE FRANCOTIRADOR"), "balas de sniper");
             Assert.AreEqual(Dinero, cartera.Dinero, "Con la reserva llena no cobra");
             Assert.AreNotEqual(string.Empty, pantalla.Aviso);
             StringAssert.DoesNotContain("COMPRASTE", pantalla.Aviso);

@@ -249,7 +249,7 @@ namespace MechaCyberpunk.UI.Tiendas
                 ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
                 datos = arsenal != null ? arsenal.Datos(arma) : null;
             }
-            nombre.text = objeto != null ? objeto.Nombre.ToUpperInvariant() : string.Empty;
+            nombre.text = objeto != null ? ReglaVistaMercado.Nombre(objeto).ToUpperInvariant() : string.Empty;
             BarraMercado[] barras = ReglaVistaMercado.De(datos);
             for (int i = 0; i < barras.Length; i++)
             {

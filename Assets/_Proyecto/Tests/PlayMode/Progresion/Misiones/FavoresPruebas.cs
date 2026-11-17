@@ -50,7 +50,8 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
         private const string PuntoEscondite = "Mision_Escondite_Azotea";
         private const string TextoEsconderte = "E · ESCONDERTE (FAVOR)";
         private const string TextoSinFavor = "ESCONDITE · NECESITAS UN FAVOR";
-        private const string FilaMisiles = "MISILES";
+        // T-1314: El Mercado ya no vende misiles (solo armas y balas): el descuento se prueba con la escopeta.
+        private const string FilaMisiles = "ESCOPETA";
         private const int NivelCalorRobo = 2;
         private const float CalorDePrueba = 50f;
         private const string PuntoDonaLupe = "Mision_Encargo_DonaLupe";
@@ -431,9 +432,9 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             DatosObjeto misiles = null;
             foreach (DatosObjeto o in mostrador.EnVenta)
             {
-                if (o.Nombre.ToUpperInvariant() == FilaMisiles) misiles = o;
+                if (o.Nombre.ToUpperInvariant() == FilaMisiles && o.Tipo == TipoObjeto.Arma) misiles = o;
             }
-            Assert.IsNotNull(misiles, "el mercado vende misiles");
+            Assert.IsNotNull(misiles, "el mercado vende la escopeta (T-1314)");
             int precio = misiles.Oferta.Precio;
             int rebajado = TiendaBasica.PrecioCon(misiles.Oferta, favores.Datos(TipoFavor.Descuento).Valor);
             int necesita = precio + rebajado;
@@ -444,27 +445,27 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             }
             int dinero = cartera.Dinero;
             int lleva = inventario.Cantidad(misiles);
-            Debug.Log("[T-187] esperado: misiles $" + precio + " -> $" + rebajado + ", dinero " + dinero);
-            Assert.AreEqual(80, precio, "los misiles cuestan Ƀ80 en los datos");
-            Assert.AreEqual(56, rebajado, "con 30 % cuestan Ƀ56");
+            Debug.Log("[T-187] esperado: escopeta $" + precio + " -> $" + rebajado + ", dinero " + dinero);
+            Assert.AreEqual(350, precio, "la escopeta cuesta Ƀ350 en los datos");
+            Assert.AreEqual(245, rebajado, "con 30 % cuesta Ƀ245");
 
             yield return AbrirTienda(mostrador);
             int fila = FilaDeMisiles(pantalla);
             yield return ElegirFila(pantalla, fila);
-            StringAssert.Contains("Ƀ80 → Ƀ56", pantalla.TextoFila(fila), "la fila muestra el precio rebajado");
+            StringAssert.Contains("Ƀ350 → Ƀ245", pantalla.TextoFila(fila), "la fila muestra el precio rebajado");
             Assert.AreEqual("FAVOR · −30 % EN ESTA COMPRA · TE QUEDAN 1", pantalla.Favor, "la línea del favor");
             CapturarConHud(RutaCaptura1);
 
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(dinero - rebajado, cartera.Dinero, "la primera compra cobra Ƀ56");
-            Assert.AreEqual(lleva + 1, inventario.Cantidad(misiles), "entró 1 misil");
+            Assert.AreEqual(dinero - rebajado, cartera.Dinero, "la primera compra cobra Ƀ245");
+            Assert.AreEqual(lleva + 1, inventario.Cantidad(misiles), "entró la escopeta");
             Assert.AreEqual(0, favores.Cantidad(TipoFavor.Descuento), "el favor se gastó");
             Assert.AreEqual(string.Empty, pantalla.Favor, "la línea del favor se apaga");
-            StringAssert.DoesNotContain("→", pantalla.TextoFila(fila), "ya no hay rebaja");
-
-            yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(dinero - rebajado - precio, cartera.Dinero, "la segunda compra cobra Ƀ80");
-            Assert.AreEqual(lleva + 2, inventario.Cantidad(misiles), "entró otro misil");
+            for (int f = 0; f < pantalla.CantidadFilas; f++)
+            {
+                StringAssert.DoesNotContain("→", pantalla.TextoFila(f), "ya no hay rebaja");
+            }
+            // T-1314: la segunda compra con precio completo ya no es posible: el arma comprada deja de ofrecerse.
             yield return Tecla(teclado.escapeKey);
             yield return Cuadros(FramesParaElHud);
 

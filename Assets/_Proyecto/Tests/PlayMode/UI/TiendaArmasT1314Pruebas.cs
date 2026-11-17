@@ -117,6 +117,7 @@ namespace MechaCyberpunk.Tests.UI
                 Debug.Log("[T1314] fila " + i + ": " + nombre);
                 Assert.IsFalse(Regex.IsMatch(nombre, @"\b(I|II|III|[123])$"), "Sin nivel en el nombre: " + nombre);
                 StringAssert.DoesNotContain("MEJORA", fila);
+                Assert.IsFalse(Regex.IsMatch(nombre, "KIT|MISIL|COMBUSTIBLE|^CELDAS$|^CARGAS$|SNIPER"), "Solo armas a pie y sus balas: " + nombre);
                 StringAssert.DoesNotContain("RIFLE DE PLASMA     ", fila, "El arma que ya tienes no se ofrece");
                 hayPlasma |= nombre == "CELDAS DE PLASMA";
             }

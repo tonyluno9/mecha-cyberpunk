@@ -307,12 +307,12 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return EsperarHasta(() => mostrador.PantallaAbierta && pantalla.Visible, "abrir El Mercado con E", 5f);
 
             // b. La lista: PISTOLA, ESCOPETA, FUSIL y SNIPER con su precio (T-1013: y las armas nuevas, como el subfusil).
-            foreach (string nombre in new[] { "PISTOLA", "ESCOPETA", "FUSIL", "SNIPER", "SUBFUSIL" })
+            foreach (string nombre in new[] { "PISTOLA", "ESCOPETA", "FUSIL", "FRANCOTIRADOR", "SUBFUSIL" } /* T-1314 */)
             {
                 Assert.GreaterOrEqual(FilaBase(pantalla, nombre), 0, "El Mercado lista " + nombre);
             }
             StringAssert.Contains("700", pantalla.TextoFila(FilaBase(pantalla, "FUSIL")));
-            StringAssert.Contains("900", pantalla.TextoFila(FilaBase(pantalla, "SNIPER")));
+            StringAssert.Contains("900", pantalla.TextoFila(FilaBase(pantalla, "FRANCOTIRADOR")));
             yield return new WaitForSecondsRealtime(0.4f);
             Capturar("T-416-2.png");
 
@@ -320,12 +320,14 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Comprar(pantalla, FilaBase(pantalla, "FUSIL"), "FUSIL");
             Assert.IsTrue(arsenal.Tiene(ArmaAPie.Fusil), "Enter compra el fusil");
             Assert.AreEqual(Dinero - 700, cartera.Dinero);
-            yield return Comprar(pantalla, FilaBase(pantalla, "SNIPER"), "SNIPER");
+            yield return Comprar(pantalla, FilaBase(pantalla, "FRANCOTIRADOR"), "SNIPER");
             Assert.IsTrue(arsenal.Tiene(ArmaAPie.Sniper), "Enter compra el sniper");
             Assert.AreEqual(0, arsenal.Nivel(ArmaAPie.Sniper));
-            yield return Comprar(pantalla, FilaCon(pantalla, "SNIPER I"), "SNIPER I");
+            // T-1314: las mejoras ya no se venden en El Mercado (son del banco de Tino): el SNIPER I se da por código.
+            Assert.AreEqual(-1, FilaCon(pantalla, "FRANCOTIRADOR I"), "El Mercado no ofrece la mejora");
+            Assert.IsNotNull(arsenal.DarMejora(ArmaAPie.Sniper));
             Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Sniper), "SNIPER I es nivel 1");
-            Assert.AreEqual(Dinero - 700 - 900 - 400, cartera.Dinero, "Cobra Ƀ700, Ƀ900 y Ƀ400");
+            Assert.AreEqual(Dinero - 700 - 900, cartera.Dinero, "Cobra Ƀ700 y Ƀ900");
             yield return Pulsar(teclado.escapeKey);
             yield return EsperarHasta(() => !mostrador.PantallaAbierta, "cerrar la tienda con Esc", 5f);
 

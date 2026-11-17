@@ -11,6 +11,12 @@ Pedido de Tony (playtest 17 nov, punto 14).
 ## Resultados
 EditMode ensamblado UI: 322/322. PlayMode (tiendas): 18, 16 pasan; fallan `Registro_ElMostradorRegistraSuTiendaYListaElKitYLasMuniciones` (conteo viejo de ofertas, falla en la base, no relacionado) y `Cic_Abre...` (pasa sola, falla por orden/tiempo).
 
+## Segunda pasada (pedido del orquestador)
+- El Mercado ya no vende el Kit de reparación ni las municiones del mecha (Misiles, Combustible, Celdas, Cargas): `ReglaVistaMercado.EsArmaOBalas` filtra en `Refiltrar` solo cuando la pantalla va en modo Mercado (armas a la venta).
+- Dónde se compran ahora: en ningún lado. Se revisó el catálogo y los DatosTienda: solo `DatosTienda_MercadoNegro` ofrecía el kit y esas 4 municiones (Bar: bebida, Clínica: implante de ojos, Expendedora: consumibles, CIC: sin ofertas propias de esto). El mecha no está en la demo.
+- "SNIPER" se muestra como "FRANCOTIRADOR" ("Balas de francotirador" para sus balas) con `ReglaVistaMercado.Nombre`; solo es texto, los ids y los assets no cambian.
+- `MostradorTiendaPruebas.Registro_...` y `Comprar_ConDinero_TresKits...` ya fallaban en la base (origin/main: esperaba 28 ofertas y hay 53; esperaba 10 filas y había 15), medido corriendo la clase con los archivos de origin/main. El número se ajustó a 53 con comentario.
+- Pruebas viejas reescritas con comentario "T-1314" (ahora comprueban que ya no salen): `MostradorTiendaPruebas` (4), `ArmasPruebas`, `ArmasMercadoPruebas` (SNIPER I se da por código), `MercadoArmasT720Pruebas`, `TiendaMercadoT1012Pruebas`, `FavoresPruebas` y `RecorridoMisionesPruebas` (el descuento se prueba con la escopeta), `RecorridoHabilidadesPruebas` (misiles y celdas por código).
+
 ## Decisiones
-- Kit de reparación y municiones del mecha (Misiles, Combustible, Celdas, Cargas) se dejan en El Mercado: sus pruebas viejas y el juego del mecha dependen de ellos. Si Tony los quiere fuera, es filtrar por tipo en `Refiltrar`.
 - Nombres de balas ya eran claros; no se renombró ningún asset.

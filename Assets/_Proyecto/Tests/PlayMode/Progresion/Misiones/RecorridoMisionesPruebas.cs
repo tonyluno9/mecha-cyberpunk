@@ -61,7 +61,8 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
         private const string TextoEsconderte = "E · ESCONDERTE (FAVOR)";
         private const string TextoHechaHoy = "YA LO HICISTE HOY";
         private const string TextoConocido = "AHORA ERES CONOCIDO EN EL BARRIO";
-        private const string FilaMisiles = "MISILES";
+        // T-1314: El Mercado ya no vende misiles (solo armas y balas): el descuento se prueba con la escopeta (la variable sigue llamándose misiles).
+        private const string FilaMisiles = "ESCOPETA";
         private const string FilaChatarra = "CHATARRA";
         private const int DineroInicial = 1000;
         private const int HoraNoche = 21;
@@ -441,9 +442,9 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             DatosObjeto misiles = null;
             foreach (DatosObjeto o in mostrador.EnVenta)
             {
-                if (o.Nombre.ToUpperInvariant() == FilaMisiles) misiles = o;
+                if (o.Nombre.ToUpperInvariant() == FilaMisiles && o.Tipo == TipoObjeto.Arma) misiles = o;
             }
-            Assert.IsNotNull(misiles, "el mercado vende misiles");
+            Assert.IsNotNull(misiles, "el mercado vende la escopeta (T-1314)");
             int precioMisil = misiles.Oferta.Precio;
             int descuentoMisil = TiendaBasica.PrecioCon(misiles.Oferta, favores.Datos(TipoFavor.Descuento).Valor);
             int ventaChatarra = rBodega.ChatarraCantidad * chatarra.ValorVenta;
@@ -568,13 +569,13 @@ namespace MechaCyberpunk.Tests.Progresion.Misiones
             yield return Tecla(teclado.leftArrowKey);
             Assert.AreEqual(PestanaTienda.Comprar, pantalla.Pestana, "e) flecha izquierda vuelve a COMPRAR");
             int filaMisiles = FilaConTexto(pantalla, FilaMisiles);
-            Assert.GreaterOrEqual(filaMisiles, 0, "e) la tienda lista misiles");
+            Assert.GreaterOrEqual(filaMisiles, 0, "e) la tienda lista la escopeta");
             yield return ElegirFila(pantalla, filaMisiles);
             StringAssert.Contains("Ƀ" + precioMisil + " → Ƀ" + descuentoMisil, pantalla.TextoFila(filaMisiles), "e) la fila muestra la rebaja");
             int dineroAntesMisil = cartera.Dinero;
             yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(dineroAntesMisil - descuentoMisil, cartera.Dinero, "e) el misil cuesta Ƀ56 con el descuento");
-            Assert.AreEqual(misilesAntes + misilesEsperados, inventario.Cantidad(misiles), "e) entró 1 misil");
+            Assert.AreEqual(dineroAntesMisil - descuentoMisil, cartera.Dinero, "e) la escopeta cuesta Ƀ245 con el descuento");
+            Assert.AreEqual(misilesAntes + misilesEsperados, inventario.Cantidad(misiles), "e) entró la escopeta");
             Assert.AreEqual(0, favores.Cantidad(TipoFavor.Descuento), "e) el descuento se gastó");
             yield return Tecla(teclado.escapeKey);
             yield return Cuadros(FramesParaElHud);

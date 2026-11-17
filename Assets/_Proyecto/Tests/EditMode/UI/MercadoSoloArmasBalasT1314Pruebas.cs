@@ -32,6 +32,30 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
+        public void EsArmaOBalas_SoloArmasYBalasDeArmas_NadaDelMecha()
+        {
+            Assert.IsTrue(ReglaVistaMercado.EsArmaOBalas(AssetDatabase.LoadAssetAtPath<DatosArma>(CarpetaArmas + "DatosArma_fusil_0.asset")));
+            Assert.IsTrue(ReglaVistaMercado.EsArmaOBalas(AssetDatabase.LoadAssetAtPath<DatosMunicionArma>(CarpetaBalas + "DatosMunicionArma_rifleplasma.asset")));
+            foreach (string n in new[] { "KitReparacion", "MunicionMisil", "MunicionCombustible", "MunicionCeldas", "MunicionCargas", "BrazoChatarra" })
+            {
+                DatosObjeto o = AssetDatabase.LoadAssetAtPath<DatosObjeto>(CarpetaBalas + "DatosObjeto_" + n + ".asset");
+                Assert.IsNotNull(o, n);
+                Assert.IsFalse(ReglaVistaMercado.EsArmaOBalas(o), n);
+            }
+        }
+
+        [Test]
+        public void Nombre_Sniper_SeMuestraComoFrancotirador_SinTocarElId()
+        {
+            DatosArma sniper = AssetDatabase.LoadAssetAtPath<DatosArma>(CarpetaArmas + "DatosArma_sniper_0.asset");
+            DatosMunicionArma balas = AssetDatabase.LoadAssetAtPath<DatosMunicionArma>(CarpetaBalas + "DatosMunicionArma_sniper.asset");
+            Assert.AreEqual("Francotirador", ReglaVistaMercado.Nombre(sniper));
+            Assert.AreEqual("Balas de francotirador", ReglaVistaMercado.Nombre(balas));
+            Assert.AreEqual("Sniper", sniper.Nombre, "El dato no cambia");
+            Assert.AreEqual("Fusil", ReglaVistaMercado.Nombre(AssetDatabase.LoadAssetAtPath<DatosArma>(CarpetaArmas + "DatosArma_fusil_0.asset")));
+        }
+
+        [Test]
         public void Balas_ConNombreClaro_SinNivelNiMejora()
         {
             string[] guias = AssetDatabase.FindAssets("t:DatosMunicionArma", new[] { CarpetaBalas });
