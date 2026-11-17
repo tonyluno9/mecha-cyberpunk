@@ -204,9 +204,14 @@ namespace MechaCyberpunk.Personaje.Combate
                 c.Disparo += AlCambiar;
                 c.RecargaIniciada += AlCambiar;
                 c.RecargaTerminada += AlCambiar;
+                c.RecargaCancelada += AlCambiar;
                 c.ClicVacio += () =>
                 {
-                    c.EmpezarRecarga();
+                    // T-1308: la recarga automática al vaciarse también suena y pasa por la animación (AnimacionJugador lee Recargando).
+                    if (c.EmpezarRecarga())
+                    {
+                        Sonidos.Reproducir(IdRecarga(arma));
+                    }
                     Cambio?.Invoke();
                 };
                 cargadores[i] = c;
@@ -268,6 +273,7 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             ArmaAPie activa = armas.ArmaActiva;
             bool enCarro = EstaEnCarro();
+            CancelarRecargasInterrumpidas(activa, enCarro);
             if (enCarro)
             {
                 activa = ArmaDeCarro(activa);
@@ -327,6 +333,33 @@ namespace MechaCyberpunk.Personaje.Combate
                 especiales.Soltar();
             }
             ActualizarVisual();
+        }
+
+        private ArmaAPie armaAnterior = ArmaAPie.Pistola;
+        private bool enCarroAnterior;
+
+        /// <summary>
+        /// T-1308: una recarga solo repone balas si la animación termina. Si se cambia de arma, se rueda, se entra o sale del carro, o se cae KO,
+        /// la recarga en curso se cancela y no se reponen balas.
+        /// </summary>
+        private void CancelarRecargasInterrumpidas(ArmaAPie activa, bool enCarro)
+        {
+            bool rodando = cubierta != null && cubierta.Rodando;
+            bool cambioArma = activa != armaAnterior;
+            bool cambioCarro = enCarro != enCarroAnterior;
+            if (cambioArma || cambioCarro || rodando || vida.EstaKO)
+            {
+                for (int i = 0; i < CantidadArmas; i++)
+                {
+                    // Al cambiar de arma solo se corta la que se dejó; rodar, el carro o el KO cortan la que esté en curso.
+                    if (cargadores[i] != null && (cambioArma ? i == Indice(armaAnterior) : true))
+                    {
+                        cargadores[i].CancelarRecarga();
+                    }
+                }
+            }
+            armaAnterior = activa;
+            enCarroAnterior = enCarro;
         }
 
         /// <summary>T-1013: la boca del arma (su luz o su visual), o null si no hay.</summary>
