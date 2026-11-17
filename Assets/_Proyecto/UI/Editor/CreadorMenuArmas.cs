@@ -47,11 +47,11 @@ namespace MechaCyberpunk.UI.Editor
                 EntradaArmaMenu.Crear(ArmaAPie.Escopeta, "ESCOPETA", h02, Modelo("W02_Escopeta"), h02, "Bomba", "Canon", "", false),
                 EntradaArmaMenu.Crear(ArmaAPie.Fusil, "FUSIL", h03, Modelo("W03_Fusil"), h03, "Cargador", "Canon", "Mira"),
                 EntradaArmaMenu.Crear(ArmaAPie.Sniper, "FRANCOTIRADOR", h04, Modelo("W04_Francotirador"), h04, "Cargador", "Canon", "Mira"),
-                EntradaArmaMenu.Crear(ArmaAPie.Subfusil, "SUBFUSIL", h05, Modelo("W05_Subfusil"), h05, "", "", ""),
-                EntradaArmaMenu.Crear(ArmaAPie.Revolver, "REVÓLVER", h06, Modelo("W06_Revolver"), h06, "", "", ""),
-                EntradaArmaMenu.Crear(ArmaAPie.Lanzagranadas, "LANZAGRANADAS", h07, Modelo("W08_Lanzagranadas"), h07, "", "", ""),
+                EntradaArmaMenu.Crear(ArmaAPie.Subfusil, "SUBFUSIL", h05, Modelo("W05_Subfusil"), h05, "Cargador", "Canon", "Mira"),
+                EntradaArmaMenu.Crear(ArmaAPie.Revolver, "REVÓLVER", h06, Modelo("W06_Revolver"), h06, "Tambor", "Canon", "", false),
+                EntradaArmaMenu.Crear(ArmaAPie.Lanzagranadas, "LANZAGRANADAS", h07, Modelo("W08_Lanzagranadas"), h07, "Tambor", "Canon", "", false),
                 EntradaArmaMenu.Crear(ArmaAPie.Granada, "GRANADA", h08, Modelo("W09_Granada"), h08, "", "", ""),
-                EntradaArmaMenu.Crear(ArmaAPie.RiflePlasma, "RIFLE DE PLASMA", h09, Modelo("W07_RiflePlasma"), h09, "", "", "")
+                EntradaArmaMenu.Crear(ArmaAPie.RiflePlasma, "RIFLE DE PLASMA", h09, Modelo("W07_RiflePlasma"), h09, "Celda", "Canon", "Mira")
             };
             var piezas = new List<EntradaPiezaMenu>
             {

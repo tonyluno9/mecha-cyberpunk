@@ -214,6 +214,12 @@ namespace MechaCyberpunk.Tests.Personaje
             TamborArma t = armas.Visual(ArmaAPie.Revolver).GetComponentInChildren<TamborArma>(true);
             Press(raton.rightButton);
             yield return Esperar(0.9f);
+            // T-1313: al sacar el arma el tambor da una vuelta; se espera a que termine antes de medir lo que gira un disparo.
+            float limiteVuelta = Time.time + 2f;
+            while (!Mathf.Approximately(t.Angulo, t.Objetivo) && Time.time < limiteVuelta)
+            {
+                yield return null;
+            }
             float antesObjetivo = t.Objetivo;
             Press(raton.leftButton);
             yield return null;

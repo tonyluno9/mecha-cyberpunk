@@ -11,6 +11,8 @@ namespace MechaCyberpunk.Personaje.Combate
         public const string NombreTambor = "Tambor";
         public const int RecamarasPorOmision = 6;
         private const float GradosPorVuelta = 360f;
+        /// <summary>Lo que tarda el giro completo al sacar el arma (T-1313).</summary>
+        public const float SegundosVueltaAlSacar = 0.6f;
 
         private Transform visual;
         private Quaternion reposo;
@@ -43,6 +45,23 @@ namespace MechaCyberpunk.Personaje.Combate
             float paso = GradosPorVuelta / Mathf.Max(1, recamaras);
             objetivo += paso;
             rapidez = paso / Mathf.Max(0.01f, segundos);
+        }
+
+        /// <summary>T-1313: una vuelta completa en <paramref name="segundos"/> s (al sacar el arma). No hace nada antes de <see cref="Iniciar"/>.</summary>
+        public void GirarVuelta(float segundos)
+        {
+            if (visual == null)
+            {
+                return;
+            }
+            objetivo += GradosPorVuelta;
+            rapidez = GradosPorVuelta / Mathf.Max(0.01f, segundos);
+        }
+
+        private void OnEnable()
+        {
+            // El visual del arma se activa al sacarla (en la rueda o al cambiar de arma): el tambor da una vuelta.
+            GirarVuelta(SegundosVueltaAlSacar);
         }
 
         private void Update()
