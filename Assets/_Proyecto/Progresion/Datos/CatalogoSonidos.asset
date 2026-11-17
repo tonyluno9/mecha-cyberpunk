@@ -782,7 +782,7 @@ MonoBehaviour:
   - id: CAL_DRON_ESCANEO
     encendido: 0
   - id: CAL_DRON_ZUMBIDO
-    encendido: 0
+    encendido: 1
   - id: CAL_PATRULLA_MEGAFONO
     encendido: 0
   - id: CAL_PATRULLA_SIRENA

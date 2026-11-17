@@ -70,6 +70,12 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>T-1204: se soltó de una escalera de mano al llegar al piso bajando (para el clip de salir abajo).</summary>
         public event System.Action SalioAbajo;
         private bool agarreDesdeEscalera;
+        // T-1310: saltar barda (pasa al otro lado en línea recta) y clip de trepar borde.
+        private bool saltandoBarda;
+        private ReproductorClipUnico reproductor;
+
+        /// <summary>T-1310: True mientras salta una barda o muro bajo (PJ01_Parkour_SaltarBarda).</summary>
+        public bool SaltandoBarda => saltandoBarda;
 
         private void Awake()
         {
@@ -79,6 +85,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (GetComponent<AnimacionEscalera>() == null)
             {
                 gameObject.AddComponent<AnimacionEscalera>();
+            }
+            if (GetComponent<CaidaJugador>() == null)
+            {
+                gameObject.AddComponent<CaidaJugador>();
             }
             if (config == null || mover == null || saltar == null)
             {
@@ -179,10 +189,107 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
             bool automatico = config.AgarreAutomaticoEnAire && !controlador.EnPiso && entrada.y > UmbralAdelante;
             bool manual = pulsoSaltar && !controlador.SaltoBloqueado;
+            if (manual && controlador.EnPiso && IntentarSaltarBarda(out Vector3 aterrizaje, out AnimationClip clipBarda))
+            {
+                saltandoBarda = true;
+                Reproducir(clipBarda);
+                IniciarAgarre(aterrizaje, clipBarda.length);
+                return;
+            }
             if ((manual || automatico) && IntentarAgarre(out Vector3 destino, out float segundos))
             {
+                // T-1310: un borde alto se trepa con el clip de PJ01 y el agarre dura lo que el clip.
+                ConfigAnimacionParkour parkour = ConfigAnimacionParkour.Actual;
+                if (parkour != null && parkour.TreparBorde != null && destino.y - transform.position.y >= parkour.AlturaMinimaBorde)
+                {
+                    segundos = parkour.TreparBorde.length;
+                    Reproducir(parkour.TreparBorde);
+                }
                 IniciarAgarre(destino, segundos);
             }
+        }
+
+        private void Reproducir(AnimationClip clip)
+        {
+            VisualPersonaje v = visual != null ? visual : (visual = GetComponentInChildren<VisualPersonaje>(true));
+            if (v == null)
+            {
+                return;
+            }
+            if (reproductor == null)
+            {
+                reproductor = v.GetComponent<ReproductorClipUnico>();
+                if (reproductor == null)
+                {
+                    reproductor = v.gameObject.AddComponent<ReproductorClipUnico>();
+                }
+            }
+            reproductor.Reproducir(v.Animador, clip);
+        }
+
+        // T-1310: obstáculo bajo y delgado delante (muro, barda): devuelve dónde caen los pies del otro lado. Solo con el clip de saltar barda en ConfigAnimacionParkour.
+        private bool IntentarSaltarBarda(out Vector3 aterrizaje, out AnimationClip clip)
+        {
+            aterrizaje = Vector3.zero;
+            ConfigAnimacionParkour parkour = ConfigAnimacionParkour.Actual;
+            clip = parkour != null ? parkour.SaltarBarda : null;
+            if (clip == null)
+            {
+                return false;
+            }
+            Vector3 pos = transform.position;
+            Vector3 frente = transform.forward;
+            frente.y = 0f;
+            if (frente.sqrMagnitude <= 0f)
+            {
+                return false;
+            }
+            frente.Normalize();
+            float radio = cc.radius;
+            float margen = config.MargenSuperficie;
+            Vector3 origenPared = pos + Vector3.up * (parkour.AlturaMinimaBarda * 0.5f);
+            if (!GolpeMasCercano(origenPared, frente, radio + config.DistanciaSondeo, out RaycastHit pared) || pared.normal.y >= config.NormalMinimaSuelo)
+            {
+                return false;
+            }
+            Vector3 sonda = pared.point + frente * 0.05f;
+            float inicioRayo = pos.y + parkour.AlturaMaximaBarda + config.SobrealturaSondeo;
+            if (!GolpeMasCercano(new Vector3(sonda.x, inicioRayo, sonda.z), Vector3.down, inicioRayo - pos.y, out RaycastHit cara)
+                || cara.normal.y < config.NormalMinimaSuelo)
+            {
+                return false;
+            }
+            float altura = cara.point.y - pos.y;
+            if (ReglaParkour.Clasificar(altura, parkour.AlturaMinimaBarda, parkour.AlturaMaximaBarda, config.AlturaMaximaAgarre) != AccionParkour.SaltarBarda)
+            {
+                return false;
+            }
+            const float PasoGrosor = 0.1f;
+            const float AlturaSondaBarda = 0.3f;
+            const float ToleranciaCara = 0.15f;
+            for (float d = PasoGrosor; d <= parkour.GrosorMaximoBarda + PasoGrosor; d += PasoGrosor)
+            {
+                Vector3 p = cara.point + frente * d;
+                bool sigueObstaculo = GolpeMasCercano(new Vector3(p.x, cara.point.y + AlturaSondaBarda, p.z), Vector3.down, AlturaSondaBarda + ToleranciaCara, out _);
+                if (sigueObstaculo)
+                {
+                    continue;
+                }
+                Vector3 a = p + frente * (radio + margen);
+                if (!GolpeMasCercano(new Vector3(a.x, cara.point.y + AlturaSondaBarda, a.z), Vector3.down, altura + AlturaSondaBarda + 1f, out RaycastHit piso)
+                    || piso.normal.y < config.NormalMinimaSuelo || piso.point.y > pos.y + AlturaSondaBarda || piso.point.y < pos.y - 1.5f)
+                {
+                    return false;
+                }
+                Vector3 pies = new Vector3(a.x, piso.point.y + margen, a.z);
+                if (!CapsulaLibre(pies, radio) || !CapsulaLibre(new Vector3(sonda.x, cara.point.y + margen, sonda.z), radio))
+                {
+                    return false;
+                }
+                aterrizaje = pies;
+                return true;
+            }
+            return false;
         }
 
         // T-1203: el jugador de verdad está en el trigger de la escalera (al pie, frente a la pared), no en el techo ni lejos.
@@ -335,7 +442,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private void ActualizarAgarre(float dt)
         {
             bool termino = regla.AvanzarAgarre(dt);
-            transform.position = CalculoAgarre.Posicion(inicioAgarre, finAgarre, termino ? 1f : regla.ProgresoAgarre);
+            float progreso = termino ? 1f : regla.ProgresoAgarre;
+            // T-1310: saltando una barda el cuerpo va en línea recta al otro lado (la altura la pone el clip); los demás agarres suben y luego avanzan.
+            transform.position = saltandoBarda ? Vector3.Lerp(inicioAgarre, finAgarre, progreso) : CalculoAgarre.Posicion(inicioAgarre, finAgarre, progreso);
             if (termino)
             {
                 Terminar(Vector3.zero);
@@ -464,6 +573,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private void Terminar(Vector3 empuje)
         {
             regla.Soltar();
+            saltandoBarda = false;
+            if (reproductor != null)
+            {
+                reproductor.Detener();
+            }
             invertirHastaSoltar = false;
             BajandoEscalera = false;
             agarreDesdeEscalera = false;

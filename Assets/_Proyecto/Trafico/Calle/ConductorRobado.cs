@@ -63,6 +63,8 @@ namespace MechaCyberpunk.Trafico.Calle
                 transform.rotation = Quaternion.LookRotation(afuera.normalized, Vector3.up);
             }
             // Mensajes de Unity: los atiende VisualPersonaje del modelo activo (Trafico no referencia ese ensamblado).
+            // T-1310: PJ01_Conductor_SerSacado dura lo que tarda en sacarlo y dejarlo tirado.
+            BroadcastMessage("SerSacado", SegundosSacar + SegundosCaido, SendMessageOptions.DontRequireReceiver);
             BroadcastMessage("Tumbar", SendMessageOptions.DontRequireReceiver);
         }
 

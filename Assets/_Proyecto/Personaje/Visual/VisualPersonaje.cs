@@ -69,6 +69,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdMuerteTipo = Animator.StringToHash(ReglasAnimacion.MuerteTipo);
         private static readonly int IdGolpeTipo = Animator.StringToHash(ReglasAnimacion.GolpeTipo);
         private static readonly int IdRapidezGolpe = Animator.StringToHash(ReglasAnimacion.RapidezGolpe);
+        private static readonly int IdArmaLargaEquipada = Animator.StringToHash(ReglasAnimacion.ArmaLargaEquipada);
         private static readonly int IdCoberturaTipo = Animator.StringToHash(ReglasAnimacion.CoberturaTipo);
         private static readonly int IdDisparoCobertura = Animator.StringToHash(ReglasAnimacion.DisparoCobertura);
         private static readonly int IdFrenar = Animator.StringToHash(ReglasAnimacion.Frenar);
@@ -334,6 +335,25 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>Lo tira al suelo (igual que <see cref="Caido"/> = true).</summary>
         public void Tumbar() => Caido = true;
+
+        /// <summary>
+        /// T-1310: lo sacan del carro (PJ01_Conductor_SerSacado, 80 cuadros). Lo manda ConductorRobado (Trafico) con BroadcastMessage("SerSacado", segundos); el clip se acelera
+        /// para durar <paramref name="segundos"/> (lo que tarda en sacarlo y dejarlo tirado) y termina en la pose de tirado, justo antes de levantarse.
+        /// </summary>
+        public void SerSacado(float segundos)
+        {
+            ConfigAnimacionParkour config = ConfigAnimacionParkour.Actual;
+            if (config == null || config.ConductorSerSacado == null || animador == null || segundos <= 0f)
+            {
+                return;
+            }
+            ReproductorClipUnico reproductor = GetComponent<ReproductorClipUnico>();
+            if (reproductor == null)
+            {
+                reproductor = gameObject.AddComponent<ReproductorClipUnico>();
+            }
+            reproductor.Reproducir(animador, config.ConductorSerSacado, config.ConductorSerSacado.length / segundos);
+        }
 
         /// <summary>Lo levanta (igual que <see cref="Caido"/> = false).</summary>
         public void Levantar() => Caido = false;
@@ -660,7 +680,41 @@ namespace MechaCyberpunk.Personaje.Visual
             eje.localPosition = posicionBase + new Vector3(0f, alturaTumbado * tumbado, 0f);
         }
 
-        private bool TieneMuerteAnimada() => animador != null && Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int);
+        private bool TieneMuerteAnimada()
+        {
+            if (animador == null)
+            {
+                return false;
+            }
+            if (Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int))
+            {
+                return true;
+            }
+            // T-1306: los controladores propios (Policia, Mecanico, Mesera) no tienen MuerteTipo pero su estado de KO ya trae un clip de muerte que acuesta
+            // al personaje; girarlo 90° además lo dejaba con el torso parado ("hincado").
+            RuntimeAnimatorController controlador = animador.runtimeAnimatorController;
+            if (controlador != controladorRevisado)
+            {
+                controladorRevisado = controlador;
+                clipDeMuerte = false;
+                if (controlador != null)
+                {
+                    foreach (AnimationClip clip in controlador.animationClips)
+                    {
+                        if (clip != null && clip.name.Contains(FragmentoClipMuerte))
+                        {
+                            clipDeMuerte = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            return clipDeMuerte;
+        }
+
+        private const string FragmentoClipMuerte = "_Muerte_";
+        private RuntimeAnimatorController controladorRevisado;
+        private bool clipDeMuerte;
 
         /// <summary>Escala del modelo contra la que se midieron las velocidades de los clips (1 = el clip tal como viene): el paso crece con el modelo (T-670).</summary>
         public float EscalaClips => animador != null ? Mathf.Max(0.1f, animador.transform.lossyScale.y) : 1f;
@@ -852,6 +906,7 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdManejando, manejando);
             Poner(IdViendoTelefono, viendoTelefono);
             Poner(IdEnGuardia, EnGuardia);
+            Poner(IdArmaLargaEquipada, tipoArma == TipoArmaVisual.ArmaLarga);
             Poner(IdRapidezGolpe, rapidezGolpes);
             if (leerDelPadre)
             {
