@@ -26,6 +26,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const float SegundosGraciaInicial = 1.5f;
         private const float SegundosGraciaEmpuje = 1.2f;
         private const float UpwardsExplosion = 0.3f;
+        private const float AmortiguarChatarra = 4f;
+        // T-1201: el fuego se apaga en el primer 70% del tiempo ardiendo; el humo sigue, cada vez más tenue, hasta el final.
+        private const float FraccionFuegoArdiendo = 0.7f;
+        private const float HumoChatarra = 40f;
+        private const float EscalaLlamasChatarra = 0.8f;
         // T-696: el aviso de fuego es chisporroteo (antes la alarma de robo, que ya no suena).
         public const string IdAvisoFuego = "MUN_CHISPAS_ELECTRICAS";
         public const string MensajeExplosion = "AlExplotarVehiculo";
@@ -47,6 +52,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private float finArdiendo;
         private float finDestello;
         private bool ardiendo;
+        private float inicioArdiendo;
+        private float quietoDesde = -1f;
+        private ParticleSystem[] llamasChatarra;
+        private float[] tasasLlamas;
 
         public EstadoCarro Estado => calculo != null ? calculo.Estado : EstadoCarro.Sano;
         public float Vida => calculo != null ? calculo.Actual : 0f;
@@ -169,6 +178,33 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 bool destello = Time.time < finDestello;
                 luz.intensity = destello ? 8f : 1.5f + Mathf.PerlinNoise(Time.time * 9f, 0f) * 1.5f;
             }
+            if (Explotado)
+            {
+                AsentarChatarra();
+            }
+            if (ardiendo && Explotado && Time.time < finArdiendo)
+            {
+                // T-1201: el fuego se apaga primero y el humo después, poco a poco, en vez de cortarse de golpe.
+                float t = Mathf.InverseLerp(inicioArdiendo, finArdiendo, Time.time);
+                float vivo = Mathf.Clamp01(1f - t / FraccionFuegoArdiendo);
+                Emitir(fuego, 25f * vivo);
+                Emitir(humo, Mathf.Lerp(HumoChatarra, 3f, t));
+                if (llamasChatarra != null)
+                {
+                    for (int i = 0; i < llamasChatarra.Length; i++)
+                    {
+                        if (llamasChatarra[i] != null)
+                        {
+                            ParticleSystem.EmissionModule emision = llamasChatarra[i].emission;
+                            emision.rateOverTimeMultiplier = tasasLlamas[i] * vivo;
+                        }
+                    }
+                }
+                if (luz != null && Time.time >= finDestello)
+                {
+                    luz.intensity *= Mathf.Clamp01(1f - t / FraccionFuegoArdiendo);
+                }
+            }
             if (ardiendo && Explotado && Time.time >= finArdiendo)
             {
                 ardiendo = false;
@@ -226,6 +262,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             ParticleSystem.EmissionModule emision = sistema.emission;
             emision.rateOverTime = porSegundo;
+            // T-1201: el tráfico apaga y vuelve a prender sus carros, y al apagarse el sistema se detiene (no tiene playOnAwake): se reanuda aquí.
+            if (porSegundo > 0f && !sistema.isPlaying)
+            {
+                sistema.Play(true);
+            }
         }
 
         private static void Apagar(ParticleSystem sistema)
@@ -240,6 +281,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         {
             Explotado = true;
             ardiendo = true;
+            inicioArdiendo = Time.time;
             finArdiendo = Time.time + config.SegundosArdiendo;
             finDestello = Time.time + SegundosDestelloExplosion;
             Vector3 centro = transform.position + Vector3.up * AlturaMotor;
@@ -260,17 +302,77 @@ namespace MechaCyberpunk.Vehiculos.Carro
             UltimaExplosion = ExplosionCarro.Crear(centro, config.RadioExplosion);
             DanarAlrededor(centro);
             SumarCalorSiEstaCerca(centro);
-            if (cuerpo != null)
+            if (cuerpo != null && !cuerpo.isKinematic)
             {
+                // T-1201: el estallido lo frena en seco (no sigue rodando ni se desliza) y solo lo levanta un poco; luego queda como chatarra.
+                cuerpo.linearVelocity = new Vector3(0f, Mathf.Max(0f, cuerpo.linearVelocity.y), 0f);
+                cuerpo.angularVelocity = Vector3.zero;
+                cuerpo.linearDamping = AmortiguarChatarra;
+                cuerpo.angularDamping = AmortiguarChatarra;
                 cuerpo.AddForce(Vector3.up * ImpulsoVerticalExplosion * 0.5f, ForceMode.VelocityChange);
             }
             Ennegrecer();
+            PrenderLlamasChatarra();
             if (carro != null)
             {
                 carro.enabled = false;
             }
             Debug.Log("[Vehiculos] Explotó " + name);
         }
+
+        /// <summary>T-1201: True cuando la chatarra ya cayó y quedó fija (cuerpo cinemático: nada la arrastra ni la empuja).</summary>
+        public bool ChatarraFija => Explotado && cuerpo != null && cuerpo.isKinematic;
+
+        // T-1201: tras caer del estallido, en cuanto casi no se mueve medio segundo, el carro queda fijo en su lugar.
+        private void AsentarChatarra()
+        {
+            if (cuerpo == null || cuerpo.isKinematic)
+            {
+                return;
+            }
+            Vector3 v = cuerpo.linearVelocity;
+            v.x *= 0.5f;
+            v.z *= 0.5f;
+            cuerpo.linearVelocity = v;
+            bool quieto = cuerpo.linearVelocity.sqrMagnitude < 0.25f && cuerpo.angularVelocity.sqrMagnitude < 0.25f;
+            if (!quieto || Time.time < finDestello + 0.3f)
+            {
+                quietoDesde = -1f;
+                return;
+            }
+            if (quietoDesde < 0f)
+            {
+                quietoDesde = Time.time;
+            }
+            else if (Time.time - quietoDesde >= 0.5f)
+            {
+                cuerpo.linearVelocity = Vector3.zero;
+                cuerpo.angularVelocity = Vector3.zero;
+                cuerpo.isKinematic = true;
+            }
+        }
+
+        // T-1201: la chatarra arde con las llamas medianas del pack (las del barril) sobre el motor; se apagan poco a poco junto con el fuego chico.
+        private void PrenderLlamasChatarra()
+        {
+            GameObject llamas = EfectosExplosion.FuegoSuelo(transform.TransformPoint(new Vector3(0f, AlturaMotor * 0.8f, AdelanteMotor * 0.6f)), config.SegundosArdiendo);
+            if (llamas == null)
+            {
+                return;
+            }
+            llamas.name = "LlamasChatarra";
+            llamas.transform.SetParent(transform, true);
+            llamas.transform.localScale = Vector3.one * EscalaLlamasChatarra;
+            llamasChatarra = llamas.GetComponentsInChildren<ParticleSystem>(true);
+            tasasLlamas = new float[llamasChatarra.Length];
+            for (int i = 0; i < llamasChatarra.Length; i++)
+            {
+                tasasLlamas[i] = llamasChatarra[i].emission.rateOverTimeMultiplier;
+            }
+        }
+
+        /// <summary>T-1201: las llamas medianas que arden sobre la chatarra (null si no ha explotado o no hay catálogo).</summary>
+        public ParticleSystem[] LlamasChatarra => llamasChatarra;
 
         private void DanarAlrededor(Vector3 centro)
         {
@@ -325,9 +427,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
         // Pinta la carrocería de armazón quemado.
         private void Ennegrecer()
         {
+            // T-1201: la chatarra queda quemada entera (antes solo la malla "Carroceria", que los carros de tráfico no tienen).
             foreach (Renderer render in GetComponentsInChildren<Renderer>(true))
             {
-                if (render is ParticleSystemRenderer || render.name != "Carroceria")
+                if (render is ParticleSystemRenderer || render is LineRenderer || render is TrailRenderer)
                 {
                     continue;
                 }
