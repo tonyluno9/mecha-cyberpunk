@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Arte.Editor
     public static class ColocarT1317Ajustes
     {
         public const float IntensidadPosteAntes = 40f;
+        public const float RangoPosteAntes = 9f;
+        public const float AnguloPosteAntes = 75f;
         private static readonly string[] RaicesQueNoSonBarriles = { "JugadorAPie", "MechaEstacionado" };
         private static readonly string[] LetrerosFuera = { "S2t_Casa/Tablero_C15a", "S2t_Casa/Tablero_Texto", "T1103_Luces/Letrero_NOVA", "T1103_Luces/Haz_Nova" };
 
@@ -99,10 +101,18 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Solo cambia la intensidad de las luces de poste (las que reconoce <see cref="ColocarS2oLuz.EsPoste"/>).</summary>
         public static int Postes(float intensidad)
         {
+            // Revisión: con solo la intensidad casi no se notaba (el cono de 9 m apenas llega al piso): la luz nueva también alcanza más y abre más.
+            bool nueva = intensidad >= ColocarS2oLuz.IntensidadPoste;
             int n = 0;
             foreach (Light l in Object.FindObjectsByType<Light>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(ColocarS2oLuz.EsPoste))
             {
                 l.intensity = intensidad;
+                l.range = nueva ? ColocarS2oLuz.RangoPoste : RangoPosteAntes;
+                if (l.type == LightType.Spot)
+                {
+                    l.spotAngle = nueva ? ColocarS2oLuz.AnguloPoste : AnguloPosteAntes;
+                    l.innerSpotAngle = l.spotAngle * 0.4f;
+                }
                 EditorUtility.SetDirty(l);
                 n++;
             }

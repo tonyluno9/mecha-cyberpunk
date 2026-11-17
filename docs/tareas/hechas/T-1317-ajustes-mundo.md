@@ -12,3 +12,4 @@ Pruebas viejas actualizadas (T-1317): CasaS2t, CiudadTorresT1103, CallesLlenasT5
 Capturas: docs/capturas/t-1317/ (casa, torre Nova, calle antes/despues; la mejora de luz es sutil: charco naranja bajo el poste).
 
 Decisiones: los tambos decorativos de T506/T508 ahora tienen collider (solidos) para poder reventar. CreadorCiudadPandillasT426 (Progresion) sigue creando un TextMesh ENCARGOS que ColocarS2.Limpieza quita; no se toco.
+- Revisión (Opus): con 54 casi no se notaba; postes a intensidad 70, alcance 12 m (antes 9) y cono 80° (el máximo de PostesS2tPruebas; antes 75). EditMode Mundo+Vehiculos 566/566.

@@ -6143,10 +6143,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -83142,10 +83142,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -110780,10 +110780,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -141450,10 +141450,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -147620,10 +147620,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -151672,7 +151672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -151688,11 +151688,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -151700,7 +151700,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -153100,7 +153100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -153116,11 +153116,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -153128,7 +153128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -153552,7 +153552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -153568,11 +153568,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -153580,7 +153580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -154100,7 +154100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -154116,11 +154116,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -154128,7 +154128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -155128,7 +155128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -155144,11 +155144,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -155156,7 +155156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -156764,7 +156764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -156780,11 +156780,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -156792,7 +156792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -156852,7 +156852,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -156868,11 +156868,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -156880,7 +156880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -156976,7 +156976,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -156992,11 +156992,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -157004,7 +157004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -157140,7 +157140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -157156,11 +157156,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -157168,7 +157168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -157304,7 +157304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -157320,11 +157320,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -157332,7 +157332,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -157652,7 +157652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -157672,11 +157672,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -157684,7 +157684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -157720,7 +157720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -157736,11 +157736,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -157748,7 +157748,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -158256,7 +158256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -158272,11 +158272,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -158284,7 +158284,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -158416,7 +158416,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -158432,11 +158432,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -158444,7 +158444,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -159832,7 +159832,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -159848,11 +159848,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -159860,7 +159860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -160096,7 +160096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -160112,11 +160112,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -160124,7 +160124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -160704,7 +160704,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -160720,11 +160720,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -160732,7 +160732,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -162300,7 +162300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -162316,11 +162316,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -162328,7 +162328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -162980,7 +162980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -162996,11 +162996,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -163008,7 +163008,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -163040,7 +163040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -163060,11 +163060,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -163072,7 +163072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -163660,7 +163660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -163676,11 +163676,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -163688,7 +163688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -163808,7 +163808,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -163828,11 +163828,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -163840,7 +163840,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -163960,7 +163960,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -163976,11 +163976,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -163988,7 +163988,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -165348,7 +165348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -165364,11 +165364,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -165376,7 +165376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -165944,7 +165944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -165964,11 +165964,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -165976,7 +165976,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -166444,7 +166444,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -166460,11 +166460,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -166472,7 +166472,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -167004,7 +167004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -167024,11 +167024,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -167036,7 +167036,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -167824,7 +167824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -167840,11 +167840,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -167852,7 +167852,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -168944,7 +168944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -168960,11 +168960,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -168972,7 +168972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -169668,7 +169668,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -169684,11 +169684,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -169696,7 +169696,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -170560,7 +170560,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -170576,11 +170576,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -170588,7 +170588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -171040,7 +171040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -171056,11 +171056,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -171068,7 +171068,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -171156,7 +171156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -171176,11 +171176,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -171188,7 +171188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -171844,7 +171844,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -171860,11 +171860,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -171872,7 +171872,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -172004,7 +172004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -172024,11 +172024,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -172036,7 +172036,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -172092,7 +172092,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -172108,11 +172108,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -172120,7 +172120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -173120,7 +173120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -173136,11 +173136,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -173148,7 +173148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -173436,7 +173436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -173452,11 +173452,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -173464,7 +173464,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -173760,7 +173760,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -173776,11 +173776,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -173788,7 +173788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -173904,7 +173904,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -173920,11 +173920,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -173932,7 +173932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -174520,7 +174520,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -174536,11 +174536,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -174548,7 +174548,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -174812,7 +174812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -174828,11 +174828,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -174840,7 +174840,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -175152,7 +175152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -175168,11 +175168,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -175180,7 +175180,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -175976,7 +175976,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -175992,11 +175992,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -176004,7 +176004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -177616,7 +177616,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -177632,11 +177632,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -177644,7 +177644,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -178500,7 +178500,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -178516,11 +178516,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -178528,7 +178528,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -178708,7 +178708,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -178728,11 +178728,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -178740,7 +178740,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -179912,7 +179912,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -179928,11 +179928,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -179940,7 +179940,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -180516,7 +180516,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -180532,11 +180532,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -180544,7 +180544,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -180664,7 +180664,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -180680,11 +180680,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -180692,7 +180692,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -180784,7 +180784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -180800,11 +180800,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -180812,7 +180812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -180928,7 +180928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -180944,11 +180944,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -180956,7 +180956,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -181232,7 +181232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -181248,11 +181248,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -181260,7 +181260,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -181796,7 +181796,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Range
-      value: 9
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Color.b
@@ -181812,11 +181812,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 54
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
-      value: 75
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Lightmapping
@@ -181824,7 +181824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 30
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Shadows.m_Bias
@@ -203379,10 +203379,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -238489,10 +238489,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -256002,10 +256002,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -264118,10 +264118,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -270837,10 +270837,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -281776,10 +281776,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -303717,10 +303717,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -323956,10 +323956,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -359837,10 +359837,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -407468,10 +407468,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -473355,10 +473355,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -572776,10 +572776,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -587377,10 +587377,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -596613,10 +596613,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -597978,10 +597978,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -609042,10 +609042,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -623309,10 +623309,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -663041,10 +663041,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -707719,10 +707719,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -708357,10 +708357,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -725182,10 +725182,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -748723,10 +748723,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -820723,10 +820723,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -866183,10 +866183,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -927876,10 +927876,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -964547,10 +964547,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1018274,10 +1018274,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1045739,10 +1045739,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1081765,10 +1081765,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1096515,10 +1096515,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1101892,10 +1101892,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1130879,10 +1130879,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1132757,10 +1132757,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1151310,10 +1151310,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1218666,10 +1218666,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1235647,10 +1235647,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1255887,10 +1255887,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1292634,10 +1292634,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1322931,10 +1322931,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1332054,10 +1332054,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1335553,10 +1335553,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1340320,10 +1340320,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -1374659,10 +1374659,10 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 54
-  m_Range: 9
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 30
+  m_Intensity: 70
+  m_Range: 12
+  m_SpotAngle: 80
+  m_InnerSpotAngle: 32
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0

@@ -33,7 +33,7 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             Light[] postes = escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Light>(true)).Where(ColocarS2oLuz.EsPoste).ToArray();
             Assert.Greater(postes.Length, 50);
-            Assert.AreEqual(54f, ColocarS2oLuz.IntensidadPoste);
+            Assert.AreEqual(70f, ColocarS2oLuz.IntensidadPoste);
             foreach (Light l in postes)
             {
                 Assert.AreEqual(ColocarS2oLuz.IntensidadPoste, l.intensity, 0.001f, l.transform.parent.name);
