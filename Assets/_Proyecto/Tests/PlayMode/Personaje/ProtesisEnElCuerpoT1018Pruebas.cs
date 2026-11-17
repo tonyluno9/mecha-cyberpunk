@@ -19,7 +19,7 @@ namespace MechaCyberpunk.Tests.Personaje
     public class ProtesisEnElCuerpoT1018Pruebas : BaseJugadorAPie
     {
         private const float TamanoMinimo = 0.15f;
-        private const float TamanoMaximo = 1.0f;
+        private const float TamanoMaximo = 1.3f; // T-1311: la hombrera nueva va pesada a los huesos y su caja abarca más que la pieza
         private const float DistanciaAlHueso = 0.6f;
         private const float DistanciaMinimaCamara = 0.25f;
         private const float DistanciaPunta = 0.03f;
