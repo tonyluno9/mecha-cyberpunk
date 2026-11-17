@@ -41,3 +41,4 @@ empiece con `CY06_Expendedora` y que no tenga ya una, y un collider si le faltar
 - En un solo proceso con HudAPiePruebas y HudH10Pruebas por delante, fallan lo mismo con y sin este cambio (medido en la base): HudAPie Arma_ConEntradaSimulada,
   HudH10 (Arma_Balas, Estrellas, Objetos_TeclaReal), RecorridoNombres y TiendaCic; esa contaminación también hace fallar a las pruebas que corren
   después (RuedaArmasT991 y las de T-1315) aunque pasan solas.
+- Revisión (Opus): RuedaArmasT991 + InventarioRuedaT1315 juntas 12/12 (+1 ignorada); ExpendedorasMarcadoresT719 sola 1/1. Si en el mismo proceso corren antes InventarioPruebas o ExpendedorasMarcadoresT719, fallan 6 de RuedaArmasT991 también en origin/main (contaminación de entrada entre clases, ya existía): correr en tandas.
