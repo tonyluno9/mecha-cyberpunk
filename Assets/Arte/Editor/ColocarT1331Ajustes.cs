@@ -38,6 +38,7 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Informe.Clear();
             ColocarS2.Abrir();
             QuitarToldos();
+            QuitarCalleComercial();
             Tino();
             Estelas();
             Carros();
@@ -125,6 +126,30 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             return malos;
+        }
+
+        /// <summary>Revisión (Opus): en la calle comercial K10 (T-1320), los toldos TL01 con las patas en el aire y los puestos con techito parados en el arroyo.</summary>
+        public static List<Transform> SobrantesK10()
+        {
+            Transform k10 = GameObject.Find("T1320_Calles")?.transform.Find("CalleComercial_K10");
+            if (k10 == null)
+            {
+                return new List<Transform>();
+            }
+            string[] prefijos = { "TL01_Toldo", "C12_PuestoTacos", "C13_PuestoCiber", "CY09_PuestoImplantes", "C17_Huacales" };
+            return k10.Cast<Transform>().Where(t => prefijos.Any(p => t.name.StartsWith(p))).ToList();
+        }
+
+        private static void QuitarCalleComercial()
+        {
+            HashSet<Object> referidos = ColocarS2.Referidos();
+            List<Transform> sobran = SobrantesK10();
+            foreach (Transform t in sobran)
+            {
+                ColocarS2.Informe.AppendLine("K10: quitado " + t.name + " en " + t.position.ToString("F1"));
+                ColocarS2.Quitar(t.gameObject, referidos);
+            }
+            ColocarS2.Informe.AppendLine("K10: toldos y puestos de la calle quitados: " + sobran.Count);
         }
 
         private static GrafoCalles Grafo()
@@ -314,7 +339,40 @@ namespace MechaCyberpunk.Arte.Editor
                 apagados++;
                 ColocarS2.Informe.AppendLine("  Tino: plano encimado apagado " + ColocarS2.Ruta(r.transform));
             }
-            ColocarS2.Informe.AppendLine("Tino: " + renderers.Count + " renderers revisados, " + cambiados + " materiales cambiados, " + apagados + " planos encimados apagados");
+            // Revisión (Opus): lo "roto por fuera" eran los paños *_Fuera del forro (ladrillo X03 muy ampliado) y la pilastra y el dintel de T531
+            // (textura de ventanas estirada en una caja). Llevan el muro liso de la fachada de al lado.
+            Material liso = MaterialFachadaLisa();
+            int fachada = 0;
+            if (liso != null)
+            {
+                foreach (Renderer r in renderers.Where(EsFrenteTino))
+                {
+                    if (r.sharedMaterial != liso)
+                    {
+                        r.sharedMaterial = liso;
+                        EditorUtility.SetDirty(r);
+                    }
+                    fachada++;
+                }
+            }
+            ColocarS2.Informe.AppendLine("Tino: " + renderers.Count + " renderers revisados, " + cambiados + " materiales cambiados, " + apagados + " planos encimados apagados, "
+                + fachada + " paños del frente con " + NombreFachadaLisa);
+        }
+
+        public const string NombreFachadaLisa = "T507_C21_PisoLiso_cy_0";
+
+        /// <summary>Paños del frente del CIC vistos desde la calle: forro *_Fuera de TallerTino, pilastras y dintel de T531_Locales/CIC.</summary>
+        public static bool EsFrenteTino(Renderer r)
+        {
+            string ruta = ColocarS2.Ruta(r.transform);
+            return (ruta.StartsWith("S2_Interiores/TallerTino/Forro/") && r.name.EndsWith("_Fuera"))
+                || (ruta.StartsWith("T531_Locales/CIC/") && (r.name == "Pilastra" || r.name == "Dintel"));
+        }
+
+        public static Material MaterialFachadaLisa()
+        {
+            return Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Select(x => x.sharedMaterial).FirstOrDefault(m => m != null && m.name == NombreFachadaLisa);
         }
 
         // ================================================================ 3. Estelas
@@ -330,14 +388,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 lista.Add((t.gameObject, "TrailRenderer"));
             }
-            foreach (LineRenderer l in Object.FindObjectsByType<LineRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            {
-                string n = l.name;
-                if (!(n.StartsWith("Cable") || n.StartsWith("Serie") || l.transform.root.name == "JugadorAPie"))
-                {
-                    lista.Add((l.gameObject, "LineRenderer " + n));
-                }
-            }
+            // Revisión (Opus): las LineRenderer de la escena son grietas de la cabina del MechaEstacionado y cables: no se tocan.
             foreach (ParticleSystem ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 if (ps.transform.root.name == "JugadorAPie" || ps.GetComponentInParent<MechaCyberpunk.Mundo.Ambiente.LluviaSigueJugador>() != null)
@@ -352,13 +403,6 @@ namespace MechaCyberpunk.Arte.Editor
                 else if (ps.transform.position.y > AlturaTecho && ps.gameObject.name.StartsWith("Vapor"))
                 {
                     lista.Add((ps.gameObject, "vapor en el techo"));
-                }
-            }
-            foreach (Renderer r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            {
-                if (r.sharedMaterial != null && r.sharedMaterial.shader != null && r.sharedMaterial.shader.name == ColocarT1103Torres.NombreShaderHaz)
-                {
-                    lista.Add((r.gameObject, "haz de torre"));
                 }
             }
             return lista;

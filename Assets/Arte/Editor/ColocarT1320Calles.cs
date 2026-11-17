@@ -342,27 +342,15 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         continue;
                     }
-                    Toldo(o, calle, new Vector3(x + o.Rango(-0.6f, 0.6f), banqueta + 2.75f, z), haciaCalle);
+                    // T-1331 (playtest 17-nov): sin toldo TL01; sus patas quedaban en el aire. El neón se queda.
                     if (o.Chance(0.55f))
                     {
                         KitS2c.Neon(o, calle, new Vector3(x + o.Rango(1.5f, 2.4f), banqueta + 3.7f, z), haciaCalle, Vector3.right, o.Chance(0.5f) ? KitS2c.Magenta : KitS2c.Turquesa, o.Chance(0.4f));
                     }
                 }
             }
-            // Puestos a la orilla del arroyo (sin tráfico en esta calle), alternando lados y dejando libres los cruces.
-            string[] puestos = { "C12_PuestoTacos", "C13_PuestoCiber", "CY09_PuestoImplantes" };
+            // T-1331 (playtest 17-nov): sin puestos en el arroyo; sus techitos quedaban en medio de la calle.
             int k = 0;
-            for (float x = ComercioX0 + 4f; x < ComercioX1 - 4f; x += 7.5f)
-            {
-                bool norte = k % 2 == 0;
-                float z = norte ? ColocarS2cCalle.ZNorte - ColocarS2cCalle.Banqueta - 1.1f : ColocarS2cCalle.ZSur + ColocarS2cCalle.Banqueta + 1.1f;
-                Poner(calle, puestos[k % puestos.Length], new Vector3(x, arroyo, z), Quaternion.Euler(0f, norte ? 180f : 0f, 0f), true);
-                if (k % 3 == 1)
-                {
-                    Poner(calle, "C17_Huacales", new Vector3(x + 1.8f, arroyo, z + (norte ? 0.4f : -0.4f)), Quaternion.Euler(0f, o.Rango(0f, 90f), 0f), true);
-                }
-                k++;
-            }
             // Foquitos en zigzag de fachada a fachada.
             bool alNorte = true;
             for (float x = ComercioX0; x < ComercioX1; x += 4.5f)

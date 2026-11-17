@@ -35,6 +35,20 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        public void CalleComercial_SinToldosConPatasEnElAireNiPuestosEnElArroyo()
+        {
+            Assert.IsEmpty(ColocarT1331Ajustes.SobrantesK10().Where(t => t.gameObject.activeInHierarchy).Select(t => t.name).ToArray());
+        }
+
+        [Test]
+        public void Tino_ElFrenteLlevaElMuroLisoDeLaFachada()
+        {
+            var frente = ColocarT1331Ajustes.RenderersTino().Where(ColocarT1331Ajustes.EsFrenteTino).ToList();
+            Assert.AreEqual(6, frente.Count, "tres paños de fuera, dos pilastras y el dintel");
+            Assert.IsEmpty(frente.Where(r => r.sharedMaterial == null || r.sharedMaterial.name != ColocarT1331Ajustes.NombreFachadaLisa).Select(r => r.name).ToArray());
+        }
+
+        [Test]
         public void Estelas_NoQuedanEstelasRaras()
         {
             Assert.IsEmpty(ColocarT1331Ajustes.EstelasRaras().Select(e => e.motivo + ": " + e.objeto.name).ToArray());
