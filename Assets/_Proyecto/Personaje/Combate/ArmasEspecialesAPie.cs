@@ -206,6 +206,12 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             if (!pendiente)
             {
+                // T-1309: un cuadro sin el plasma en la mano (dejó de apuntar o soltó el arma) corta la carga y su chispeo.
+                if (ChispeoSonando)
+                {
+                    plasma?.Cancelar();
+                    ApagarPlasma();
+                }
                 return;
             }
             pendiente = false;
