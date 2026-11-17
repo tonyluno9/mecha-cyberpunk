@@ -237,6 +237,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             FallarMisionEnCurso();
             LlevarElMechaAlTaller();
             Registro<ICalor>.Actual?.Borrar();
+            EventosJugador.PublicarDesperto(); // T-1328: los perseguidores y atacantes sueltan al jugador
             DormirHoras();
             ColocarEnLaCamilla();
             if (vidaJugador != null)
