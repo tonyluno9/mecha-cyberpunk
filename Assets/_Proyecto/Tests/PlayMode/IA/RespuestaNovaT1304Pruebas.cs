@@ -146,8 +146,13 @@ namespace MechaCyberpunk.Tests
             foreach (PandilleroAPie p in respuesta.Guardias.Concat(respuesta.Pesados))
             {
                 float d = Vector3.Distance(Plano(p.transform.position), Plano(jugador.transform.position));
-                Assert.That(d, Is.InRange(21.5f, 34.5f), p.name + " aparece a 22-34 m");
+                Assert.That(d, Is.InRange(12f, 34.5f), p.name + " aparece lejos (22-34 m) y ya viene caminando");
                 Assert.IsTrue(p.Alerta, p.name + " está en alerta contra el jugador");
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                Assert.IsTrue(respuesta.BuscarPunto(jugador.transform.position, out Vector3 punto), "Hay dónde aparecer");
+                Assert.That(Vector3.Distance(Plano(punto), Plano(jugador.transform.position)), Is.InRange(21.9f, 34.1f), "Aparecen a 22-34 m");
             }
             float antes = respuesta.Guardias.Average(p => Vector3.Distance(Plano(p.transform.position), Plano(jugador.transform.position)));
             Time.timeScale = 3f;
