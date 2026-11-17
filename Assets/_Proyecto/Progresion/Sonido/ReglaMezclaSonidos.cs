@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         };
 
         /// <summary>T-1309: un disparo propio por arma (subfusil, revólver, lanzagranadas, rifle de plasma) y el chispeo al cargar el plasma.</summary>
-        public static readonly string[] IdsArmasT1309 = { "ARM_SUB_DISPARO", "ARM_REV_DISPARO", "ARM_LGR_DISPARO", "ARM_PLA_DISPARO", "ARM_PLA_CARGA" };
+        public static readonly string[] IdsArmasT1309 = { "ARM_SUB_DISPARO", "ARM_REV_DISPARO", "ARM_LGR_DISPARO", "ARM_PLA_DISPARO", "ARM_PLA_CARGA", "CAL_DRON_ZUMBIDO" }; // T-1309b: y el motor de los drones
 
         /// <summary>T-977: los que no se prenden sin probar (docs/sonidos-sugerencias.md: hacian spam).</summary>
         public static readonly string[] IdsMolestos =
@@ -179,6 +179,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             switch (id)
             {
                 // T-1309: chispeo en bucle de la carga del rifle de plasma (suave, no tapa el resto).
+                case "CAL_DRON_ZUMBIDO": return new PoliticaSonido("dron", 3, 0.45f, 0f, 0f, 60f); // T-1309b: motor en bucle, hasta 3 drones a la vez
                 case "ARM_PLA_CARGA": return new PoliticaSonido(GrupoArmaAccesorio, 1, 0.5f, 0f, 0f);
                 case "ARM_FUS_RAFAGA_COLA": return new PoliticaSonido(GrupoArma, 1, 0.5f, 0f, 0f);
                 case "ARM_CAMBIAR":

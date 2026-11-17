@@ -55,6 +55,7 @@ namespace MechaCyberpunk.Personaje.Editor
                 entrada.finales = new[] { clip };
                 catalogo.FijarEncendido(id, true);
             }
+            catalogo.FijarEncendido("CAL_DRON_ZUMBIDO", true); // T-1309b: el motor de los drones (su clip ya estaba en el catálogo)
             entradas.Sort((a, b) => string.CompareOrdinal(a.id, b.id));
             catalogo.Fijar(entradas);
             EditorUtility.SetDirty(catalogo);
