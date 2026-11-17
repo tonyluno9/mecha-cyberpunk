@@ -463,7 +463,8 @@ namespace MechaCyberpunk.IA.APie
                 if (calor != null && !DanioDeLaPolicia)
                 {
                     calor.Sumar(modelo.EstaKO ? datos.CalorAlMatar : datos.CalorAlGolpear, MotivoCalor.Pelea);
-                    SubirAPrimeraEstrella(calor); // T-1303: desde el primer golpe o bala a un policía ya te buscan y atacan
+                    // T-1303: desde el primer golpe o bala a un policía ya te buscan y atacan. T-1322: dispararle = 2 estrellas; matarlo = 3.
+                    EstrellasBusqueda.SubirA(calor, modelo.EstaKO ? EstrellasBusqueda.EstrellasPorMatarPolicia : EstrellasBusqueda.EstrellasPorDispararAPolicia);
                 }
             }
             EventosPelea.PublicarImpacto(null, info, resultado);

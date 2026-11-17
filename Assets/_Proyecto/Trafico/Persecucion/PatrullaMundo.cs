@@ -234,6 +234,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return;
             }
             PoliciasBajaron = true;
+            RadioPolicia.Sonar(transform.position, config); // T-1322
             if (ocupantes.Count > 0)
             {
                 BajarOcupantes(false);
@@ -547,12 +548,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
             float vida = danioCarro.Vida;
             if (vidaVista >= 0f && vida < vidaVista - 0.01f)
             {
-                PonerEnBusquedaSiFueElJugador();
+                PonerEnBusquedaSiFueElJugador(EstrellasBusqueda.EstrellasPorDispararAPatrulla); // T-1322: dispararle a una patrulla = 2 estrellas
             }
             vidaVista = vida;
         }
 
-        private void PonerEnBusquedaSiFueElJugador()
+        private void PonerEnBusquedaSiFueElJugador(int estrellas)
         {
             Vector3? jugador = posicionJugador?.Invoke();
             if (!jugador.HasValue)
@@ -564,7 +565,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (jugador.HasValue && ReglaCulpaPatrulla.CuentaComoDelito(Time.time - tiempoAparicion, Time.time - tiempoChoqueAjeno,
                     DistanciaPlano(transform.position, jugador.Value), DistanciaDanioDelJugador))
             {
-                ReglaPrimeraEstrella.Subir(Registro<ICalor>.Actual);
+                EstrellasBusqueda.SubirA(Registro<ICalor>.Actual, estrellas); // T-1322
             }
         }
 
@@ -603,7 +604,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             if (!Robada && !Destruida)
             {
-                PonerEnBusquedaSiFueElJugador(); // T-1303
+                PonerEnBusquedaSiFueElJugador(EstrellasBusqueda.EstrellasPorReventarPatrulla); // T-1303, T-1322: reventarla = 3 estrellas
             }
             Destruida = true;
             // T-1202: con la explosión los policías salen de golpe (y el estallido los alcanza).
