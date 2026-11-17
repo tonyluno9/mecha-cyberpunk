@@ -33,7 +33,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
         [SerializeField] private string textoDoctor = "EL DOC: Otra vez tú. Son quinientos, mijo.";
         [SerializeField] private string textoDeuda = "No traes todo, mijo. Hoy te lo perdono.";
         [SerializeField] private string textoMuerte = "HAS MUERTO";
-        [SerializeField] private string detalleMuerte = "DESPERTARÁS EN LA CLÍNICA";
+        [SerializeField] private string detalleMuerte = "Despiertas en la clínica del Doc"; // T-1316: como M34
         [SerializeField] private string textoObjetivo = "VUELVE A CASA";
 
         [Header("Puntos del mundo")]

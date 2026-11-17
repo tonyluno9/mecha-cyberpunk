@@ -215,7 +215,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             PantallaAviso aviso = null;
             if (datos.SegundosPantallaMuerte > 0f)
             {
-                aviso = PantallaAviso.Crear(datos.TextoMuerte, datos.DetalleMuerte, UIInicio.Magenta);
+                aviso = PantallaAviso.Crear(datos.TextoMuerte, datos.DetalleMuerte, PantallaAviso.RojoMuerte, 0.85f); // T-1316: rojo con viñeta, como M34
                 PantallaMuerte = aviso;
                 yield return aviso.Aparecer(datos.SegundosEntradaMuerte);
                 yield return EsperarSinEscala(datos.SegundosPantallaMuerte);
