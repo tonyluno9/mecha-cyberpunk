@@ -139,12 +139,14 @@ namespace MechaCyberpunk.Tests.UI
             Capturar("barra-lista.png");
 
             // 2. BRAZOS recargando y PIERNAS activa vaciándose.
-            yield return Tecla(teclado.cKey);
+            habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Brazos));
             float fin = Time.time + 6.6f;
             while (Time.time < fin) yield return null;
             Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Brazos));
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas));
             fin = Time.time + 2.2f;
             while (Time.time < fin) yield return null;
@@ -173,7 +175,8 @@ namespace MechaCyberpunk.Tests.UI
             so.ApplyModifiedPropertiesWithoutUndo();
             contenedor.SetActive(true);
             yield return new WaitForSecondsRealtime(0.3f);
-            yield return Tecla(teclado.xKey);
+            habilidades.Pulsar(HabilidadProtesis.Cabeza); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Cabeza));
             Assert.Greater(visor.Marcados, 0);
             yield return new WaitForSecondsRealtime(0.4f);

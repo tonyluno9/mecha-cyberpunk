@@ -129,7 +129,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1, HabilidadesProtesis.Actual.Nivel(HabilidadProtesis.Laser), "El láser ya está en las habilidades");
             BarraHabilidades barra = Object.FindFirstObjectByType<BarraHabilidades>();
             Assert.IsTrue(barra.CasillaVisible(HabilidadProtesis.Laser), "La barra M31 muestra el láser");
-            Assert.AreEqual("[4] LÁSER", barra.EtiquetaMostrada(HabilidadProtesis.Laser));
+            Assert.AreEqual("LÁSER", barra.EtiquetaMostrada(HabilidadProtesis.Laser));
             Assert.IsFalse(barra.CasillaVisible(HabilidadProtesis.Misiles), "Sin la hombrera no sale su casilla");
             Assert.IsTrue(HabilidadesProtesis.Actual.Pulsar(HabilidadProtesis.Laser), "Se usa desde la barra");
             yield return new WaitForSecondsRealtime(0.8f);

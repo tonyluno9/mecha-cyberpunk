@@ -130,10 +130,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Dar(HabilidadProtesis.Laser);
             yield return Esperar(0.3f);
             Assert.IsNotNull(visibles.PuntaLaser, "El brazo tiene punta");
-            Press(teclado.digit4Key);
+            habilidades.Pulsar(HabilidadProtesis.Laser);
             yield return null;
             yield return null;
-            Release(teclado.digit4Key);
             yield return Esperar(0.3f);
             LineRenderer rayo = GameObject.Find("LaserBrazo").GetComponent<LineRenderer>();
             Assert.IsTrue(rayo.enabled, "Se ve el rayo");

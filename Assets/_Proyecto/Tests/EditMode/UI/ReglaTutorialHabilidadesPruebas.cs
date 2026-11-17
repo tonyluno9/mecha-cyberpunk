@@ -9,17 +9,17 @@ namespace MechaCyberpunk.Tests.UI
         [Test]
         public void TextoHabilidades_SoloLasQueTienes()
         {
-            Assert.AreEqual("[Q] PIERNAS · [C] BRAZOS · [X] CABEZA", ReglaTutorial.TextoHabilidades(null, true, true, true));
-            Assert.AreEqual("[Q] PIERNAS · [X] CABEZA", ReglaTutorial.TextoHabilidades(null, true, false, true));
-            Assert.AreEqual("[C] BRAZOS", ReglaTutorial.TextoHabilidades(null, false, true, false));
+            Assert.AreEqual("MANTÉN TAB Y ELIGE CON EL RATÓN: PIERNAS · BRAZOS · CABEZA", ReglaTutorial.TextoHabilidades(null, true, true, true));
+            Assert.AreEqual("MANTÉN TAB Y ELIGE CON EL RATÓN: PIERNAS · CABEZA", ReglaTutorial.TextoHabilidades(null, true, false, true));
+            Assert.AreEqual("MANTÉN TAB Y ELIGE CON EL RATÓN: BRAZOS", ReglaTutorial.TextoHabilidades(null, false, true, false));
             Assert.AreEqual(string.Empty, ReglaTutorial.TextoHabilidades(null, false, false, false));
         }
 
         [Test]
         public void TextoHabilidades_UsaLaTeclaRealQueDaElInputSystem()
         {
-            string texto = ReglaTutorial.TextoHabilidades(nombre => nombre == ReglaTutorial.TeclaPiernas ? "z" : "x", true, false, false);
-            Assert.AreEqual("[Z] PIERNAS", texto);
+            string texto = ReglaTutorial.TextoHabilidades(nombre => nombre == ReglaTutorial.TeclaRuedaExo ? "z" : "x", true, false, false);
+            Assert.AreEqual("MANTÉN Z Y ELIGE CON EL RATÓN: PIERNAS", texto);
         }
 
         [Test]

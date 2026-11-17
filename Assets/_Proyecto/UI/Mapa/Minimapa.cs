@@ -208,7 +208,7 @@ namespace MechaCyberpunk.UI.Mapa
             IJugador jugador = Registro<IJugador>.Actual;
             // En el mecha no va, y con el mapa grande abierto sobra.
             bool ver = jugador != null && jugador.Raiz != null && jugador.Modo != ModoJugador.Mecha && !PantallaMapa.HayAbierto
-                && !MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Abierta; // T-1010: con la rueda abierta tampoco
+                && !MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Abierta && !MechaCyberpunk.UI.Rueda.RuedaHabilidadesExo.Abierta; // T-1010: con la rueda abierta tampoco
             if (canvas.enabled != ver)
             {
                 canvas.enabled = ver;
