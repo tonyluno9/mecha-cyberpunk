@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Inicio
 {
     /// <summary>
-    /// T-1316: las ilustraciones de la pantalla de carga (L01-L06, en Resources/Carga/) a pantalla completa, una tras otra como en GTA:
+    /// T-1316: las ilustraciones de la pantalla de carga (L01-L06, en Resources/Carga/) enteras en la pantalla, una tras otra como en GTA:
     /// cada una se acerca y se desliza despacio (zoom y paneo) y la siguiente entra con un fundido. Empieza en una al azar.
     /// La regla del movimiento está en <see cref="ReglaFotosCarga"/>.
     /// </summary>
@@ -79,11 +79,8 @@ namespace MechaCyberpunk.UI.Inicio
             capa.texture = fotos[indice];
             capa.color = new Color(1f, 1f, 1f, alfa);
             RectTransform r = capa.rectTransform;
-            // Cubre la pantalla conservando la proporción de la foto.
-            float aspecto = (float)fotos[indice].width / fotos[indice].height;
-            Vector2 tamano = aspecto > AnchoPantalla / AltoPantalla
-                ? new Vector2(AltoPantalla * aspecto, AltoPantalla)
-                : new Vector2(AnchoPantalla, AnchoPantalla / aspecto);
+            // T-1330: cabe entera en la pantalla conservando la proporción (sin estirar ni recortar).
+            Vector2 tamano = ReglaFotosCarga.TamanoEncajado(fotos[indice].width, fotos[indice].height, AnchoPantalla, AltoPantalla);
             UIInicio.Punto(r, new Vector2(0.5f, 0.5f), ReglaFotosCarga.Paneo(indice, t), tamano);
             float escala = ReglaFotosCarga.Escala(t);
             r.localScale = new Vector3(escala, escala, 1f);
