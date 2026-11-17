@@ -66,7 +66,8 @@ namespace MechaCyberpunk.Tests.Mundo
                 GameObject copia = Object.Instantiate(prefab);
                 try
                 {
-                    Bounds b = ImportarT511.LimitesExactos(copia.transform.Find("Visual_T511").gameObject);
+                    // T-1312: las ruedas de Blender van fuera de Visual_T511: se mide el carro completo.
+                    Bounds b = ImportarT511.LimitesExactos(copia);
                     float largo = ImportarS2nCarros.Medidas.First(m => m.codigo == codigo).largo;
                     Assert.AreEqual(largo, b.size.z, 0.05f, codigo + ": el largo va en Z");
                     Assert.Less(b.size.y, 2.5f, codigo + ": no queda de punta");

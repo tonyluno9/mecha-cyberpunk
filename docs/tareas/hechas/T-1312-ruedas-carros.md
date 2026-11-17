@@ -10,3 +10,8 @@ Origen: docs/playtest-17nov.md, punto 12 (sesión B).
 - `RuedasBlenderT1312Pruebas` (PlayMode, 7 casos): al avanzar, las ruedas giran solo sobre X y tocan el piso. 7/7.
 - Capturas de lado y 3/4 en docs/capturas/t-1312/ (revisadas: ruedas en su hueco, sobre el piso).
 - Pruebas del área: EditMode Vehiculos 198/198; PlayMode Vehiculos 141/142: falla CiudadCarrosPruebas (el V08 estacionado se atora al robarlo), que también falla en la base 4f96fe3 con los prefabs de antes.
+- Las variantes de color del tráfico (V02, V03, V04) tiñen ahora el material de la carrocería de Blender
+  (`ColocarS2nCarros.RehacerVariantes`). `CreadorCarrosT511.CrearUno` ya no rearma con el modelo viejo un carro que lleva las
+  piezas de Blender (lo hacía `ImportarS2n.MeterTodo`, que corre una prueba de EditMode).
+- EditMode completo antes del arreglo: 2578/2581; los 3 fallos eran de esta tarea y quedaron arreglados (CarrosS2nPruebas 4/4,
+  T742/T743 al día). PlayMode de carros en Personaje (T694, T696, T704): 23/23.
