@@ -120,5 +120,48 @@ namespace MechaCyberpunk.Tests.Personaje
             }
             Assert.AreEqual(Tamano, disparos);
         }
+
+        // T-1308: las balas solo se reponen al terminar la recarga; una recarga interrumpida no repone nada.
+        [Test]
+        public void CancelarRecarga_AMitad_NoReponeBalasNiTermina()
+        {
+            CargadorPistola cargador = Nuevo();
+            cargador.IntentarDisparar();
+            int terminadas = 0;
+            int canceladas = 0;
+            cargador.RecargaTerminada += () => terminadas++;
+            cargador.RecargaCancelada += () => canceladas++;
+            Assert.IsTrue(cargador.EmpezarRecarga());
+            cargador.Avanzar(Recarga / 2f);
+            Assert.AreEqual(Tamano - 1, cargador.Balas, "A mitad de la recarga aun no hay balas nuevas");
+            Assert.IsTrue(cargador.CancelarRecarga());
+            cargador.Avanzar(Recarga * 2f);
+            Assert.IsFalse(cargador.Recargando);
+            Assert.AreEqual(Tamano - 1, cargador.Balas);
+            Assert.AreEqual(0, terminadas);
+            Assert.AreEqual(1, canceladas);
+        }
+
+        [Test]
+        public void CancelarRecarga_SinRecargar_NoHaceNada()
+        {
+            CargadorPistola cargador = Nuevo();
+            Assert.IsFalse(cargador.CancelarRecarga());
+        }
+
+        [Test]
+        public void CancelarRecarga_LuegoRecargar_ReponeAlTerminarLaNueva()
+        {
+            CargadorPistola cargador = Nuevo();
+            cargador.IntentarDisparar();
+            cargador.EmpezarRecarga();
+            cargador.Avanzar(Recarga * 0.9f);
+            cargador.CancelarRecarga();
+            Assert.IsTrue(cargador.EmpezarRecarga());
+            cargador.Avanzar(Recarga * 0.9f);
+            Assert.AreEqual(Tamano - 1, cargador.Balas);
+            cargador.Avanzar(Recarga * 0.2f);
+            Assert.AreEqual(Tamano, cargador.Balas);
+        }
     }
 }

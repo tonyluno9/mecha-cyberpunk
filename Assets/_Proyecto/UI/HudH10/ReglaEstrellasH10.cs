@@ -13,15 +13,13 @@ namespace MechaCyberpunk.UI.Hud
         /// Cuántas estrellas se ven llenas: ninguna sin calor; con calor, tantas como el nivel o como la fracción del calor en quintos, la mayor
         /// (el nivel 1 siempre muestra una).
         /// </summary>
-        public static int Llenas(int nivel, float valor, float maximo)
-        {
-            if (nivel <= 0)
-            {
-                return 0;
-            }
-            int porValor = maximo > 0f ? Mathf.CeilToInt(Total * Mathf.Clamp01(valor / maximo)) : 0;
-            return Mathf.Clamp(Mathf.Max(nivel, porValor), 1, Total);
-        }
+        public static int Llenas(int nivel, float valor, float maximo) => MechaCyberpunk.Core.EstrellasBusqueda.De(nivel, valor, maximo); // T-1304: la regla vive en Core (Nova la usa)
+
+        /// <summary>T-1304: con 4 o 5 estrellas viene Nova y las estrellas se pintan de azul intenso.</summary>
+        public static readonly Color AzulNova = new Color(0.12f, 0.38f, 1f);
+
+        /// <summary>T-1304: color de las estrellas: turquesa normal; azul intenso desde las estrellas de Nova.</summary>
+        public static Color ColorEstrellas(int llenas, Color normal) => MechaCyberpunk.Core.EstrellasBusqueda.EsNova(llenas) ? AzulNova : normal;
 
         /// <summary>
         /// T-729: segundos seguidos sin que te vea la policía a partir de los cuales las estrellas parpadean (te están por perder). La policía te da por escapado a los

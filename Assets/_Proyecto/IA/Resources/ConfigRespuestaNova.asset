@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e70f1c05529a84b488d06841616ef186, type: 3}
+  m_Name: ConfigRespuestaNova
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.ConfigRespuestaNova
+  guardia: {fileID: 5024837999812873335, guid: 126d4f33c29cea44bb8675e94fa2596f, type: 3}
+  guardiaPesado: {fileID: 8768010873611308381, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
+  jefeFinal: {fileID: 3140000843143448795, guid: 9afb64f01015b1d418404a089bca983d, type: 3}
+  guardiasConCuatro: 3
+  pesadosConCuatro: 1
+  guardiasConCinco: 5
+  pesadosConCinco: 2
+  distanciaMinima: 22
+  distanciaMaxima: 34
+  segundosEntreOleadas: 25
+  segundosParaRetirarse: 6

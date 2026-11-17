@@ -51,6 +51,11 @@ namespace MechaCyberpunk.Trafico.Peatones
         private const float AlturaCapsula = 1.8f;
         private const float RadioCapsula = 0.3f;
         private const float SegundosCuerpo = 10f;
+        private const float SegundosCaida = 0.5f;
+        private Quaternion rotacionInicialCaida;
+        private Quaternion rotacionTirado;
+        private float progresoCaida = 1f;
+        private ReglaCivil regla;
         private float vida;
         private float segundosMuerto;
         private CapsuleCollider capsula;
@@ -71,11 +76,80 @@ namespace MechaCyberpunk.Trafico.Peatones
             float antes = vida;
             vida -= info.Cantidad;
             bool mato = vida <= 0f;
+            Vector3? jugador = posicionJugador?.Invoke();
             if (mato)
             {
                 Matar();
+                // T-1305: matar a un civil suma calor (con testigos, lo decide el decorador de calor) si lo hizo el jugador.
+                if (config != null && ReglaCivil.EsAgresionDelJugador(info.Tipo, info.Punto, info.Direccion, jugador, info.Atacante != null))
+                {
+                    Registro<ICalor>.Actual?.Sumar(config.CalorPorMuerte, MotivoCalor.Pelea);
+                }
+            }
+            else
+            {
+                ReaccionarAlGolpe(info, jugador);
             }
             return new ResultadoDanio(Mathf.Min(antes, info.Cantidad), TipoBloqueo.Ninguno, mato);
+        }
+
+        // T-1305: herido sin morir, o pelea de vuelta (si el jugador está al alcance) o huye.
+        private void ReaccionarAlGolpe(InfoDanio info, Vector3? jugador)
+        {
+            if (regla == null || config == null)
+            {
+                return;
+            }
+            float? distancia = jugador.HasValue ? DistanciaPlano(jugador.Value, transform.position) : (float?)null;
+            if (regla.Herido(distancia) == EstadoCivil.Huyendo)
+            {
+                Vector3 origen = jugador.HasValue ? jugador.Value : info.Punto - info.Direccion;
+                IniciarHuida(origen);
+            }
+        }
+
+        // T-1305: en revancha se queda quieto mirando al jugador y le pega con golpes chicos; al terminar huye.
+        private void AtenderRevancha()
+        {
+            Detenido = true;
+            Vector3? jugador = posicionJugador?.Invoke();
+            float? distancia = jugador.HasValue ? DistanciaPlano(jugador.Value, transform.position) : (float?)null;
+            if (jugador.HasValue)
+            {
+                Mirar(jugador.Value - transform.position);
+            }
+            if (regla.Avanzar(Time.deltaTime, distancia))
+            {
+                GolpearAlJugador(jugador.Value);
+            }
+            if (regla.Estado == EstadoCivil.Huyendo)
+            {
+                IniciarHuida(jugador ?? transform.position - transform.forward);
+            }
+        }
+
+        private void GolpearAlJugador(Vector3 posJugador)
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            IRecibeDanio objetivo = jugador != null && jugador.Raiz != null ? jugador.Raiz.GetComponentInParent<IRecibeDanio>() : null;
+            if (objetivo == null)
+            {
+                return;
+            }
+            Vector3 direccion = posJugador - transform.position;
+            direccion.y = 0f;
+            direccion = direccion.sqrMagnitude > DesplazamientoMinimoParaDecidir ? direccion.normalized : transform.forward;
+            Vector3 punto = transform.position + Vector3.up * AlturaPecho + direccion * RadioCuerpo;
+            objetivo.RecibirDanio(new InfoDanio(config.DanioRevancha, TipoDanio.Golpe, punto, direccion, null));
+        }
+
+        private void IniciarHuida(Vector3 origen)
+        {
+            origenDelRuido = origen;
+            huidaRestante = config.SegundosHuida;
+            sentidoDecidido = false;
+            calculo.MultiplicadorVelocidad = config.MultiplicadorHuida;
+            calculo.CancelarEspera();
         }
 
         /// <summary>Lo mata: cae, queda tirado <see cref="SegundosCuerpo"/> s y se esconde. Cancela cualquier llamada.</summary>
@@ -92,7 +166,15 @@ namespace MechaCyberpunk.Trafico.Peatones
             {
                 capsula.enabled = false;
             }
-            transform.rotation = Quaternion.Euler(90f, transform.eulerAngles.y, 0f);
+            // T-1305: cae tirado al piso (90°) en SegundosCaida; la rotación se interpola en Update.
+            rotacionInicialCaida = transform.rotation;
+            rotacionTirado = Quaternion.Euler(90f, transform.eulerAngles.y, 0f);
+            progresoCaida = 0f;
+            if (calculo == null)
+            {
+                transform.rotation = rotacionTirado; // sin preparar no corre Update: cae de golpe
+                progresoCaida = 1f;
+            }
             transform.position += Vector3.up * RadioCapsula;
             Murio?.Invoke(this);
         }
@@ -150,6 +232,8 @@ namespace MechaCyberpunk.Trafico.Peatones
             posicionJugador = dondeEstaElJugador;
             calculo = numeros.Crear(RutasBanqueta.Largos(ruta), azar);
             vida = numeros.VidaPeaton;
+            regla = new ReglaCivil(() => (float)azar.NextDouble(), numeros.ProbabilidadRevancha, numeros.AlcanceRevancha, numeros.GolpesRevancha,
+                numeros.SegundosEntreGolpesRevancha, numeros.SegundosMaximosRevancha);
             calculo.Avanzar(segundosPrevios);
             Colocar();
         }
@@ -179,11 +263,11 @@ namespace MechaCyberpunk.Trafico.Peatones
             {
                 return;
             }
-            origenDelRuido = posicion;
-            huidaRestante = config.SegundosHuida;
-            sentidoDecidido = false;
-            calculo.MultiplicadorVelocidad = config.MultiplicadorHuida;
-            calculo.CancelarEspera();
+            if (regla != null && regla.Estado == EstadoCivil.Revancha)
+            {
+                return; // T-1305: pelea y no hace caso del ruido
+            }
+            IniciarHuida(posicion);
         }
 
         private void Update()
@@ -194,6 +278,11 @@ namespace MechaCyberpunk.Trafico.Peatones
             }
             if (Muerto)
             {
+                if (progresoCaida < 1f)
+                {
+                    progresoCaida = Mathf.Min(1f, progresoCaida + Time.deltaTime / SegundosCaida);
+                    transform.rotation = Quaternion.Slerp(rotacionInicialCaida, rotacionTirado, progresoCaida);
+                }
                 segundosMuerto += Time.deltaTime;
                 if (segundosMuerto >= SegundosCuerpo)
                 {
@@ -202,6 +291,11 @@ namespace MechaCyberpunk.Trafico.Peatones
                         r.enabled = false;
                     }
                 }
+                return;
+            }
+            if (regla != null && regla.Estado == EstadoCivil.Revancha)
+            {
+                AtenderRevancha();
                 return;
             }
             bool huyendo = huidaRestante > 0f;
@@ -330,6 +424,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         {
             huidaRestante = 0f;
             sentidoDecidido = true;
+            regla?.Calmar();
             if (calculo != null)
             {
                 calculo.MultiplicadorVelocidad = 1f;
