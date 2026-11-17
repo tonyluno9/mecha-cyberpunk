@@ -125,7 +125,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Cono de la luz de un poste (°) y su centro sin difuminar (°): un charco claro bajo la lámpara, no toda la calle.</summary>
-        public const float AnguloCono = 80f;
+        public const float AnguloCono = 100f;
         public const float AnguloCentro = 45f;
         public const string NombreLuzNueva = "Luz_S2t";
         public static readonly Color ColorN09 = new Color(0.72f, 0.93f, 1f);
