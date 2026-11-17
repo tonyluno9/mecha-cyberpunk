@@ -22,7 +22,7 @@ namespace MechaCyberpunk.Tests.UI
             string texto = ReglaControlesInicio.Texto(accion => null);
             StringAssert.Contains("MOVER  W A S D", texto);
             StringAssert.Contains("SALTAR  ESPACIO", texto);
-            StringAssert.Contains("ARMAS Y OBJETOS  TAB", texto);
+            StringAssert.Contains("ARMAS Y OBJETOS  RUEDA (CLIC)", texto);
             StringAssert.Contains("PAUSA  ESC", texto);
         }
 
@@ -31,9 +31,8 @@ namespace MechaCyberpunk.Tests.UI
         {
             string[] filas = ReglaControlesInicio.Texto(accion => "X").Split('\n');
             Assert.AreEqual(4, filas.Length);
-            StringAssert.Contains("[Q] PIERNAS", ReglaControlesInicio.Texto(accion => null));
-            StringAssert.Contains("[C] BRAZOS", ReglaControlesInicio.Texto(accion => null));
-            StringAssert.Contains("[X] CABEZA", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.Contains("MANTÉN TAB", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.DoesNotContain("[Q]", ReglaControlesInicio.Texto(accion => null), "T-1329: sin teclas sueltas de habilidades");
             StringAssert.StartsWith("HABILIDADES", filas[3]);
             StringAssert.StartsWith("MOVER", filas[0]);
             StringAssert.StartsWith("INTERACTUAR", filas[1]);

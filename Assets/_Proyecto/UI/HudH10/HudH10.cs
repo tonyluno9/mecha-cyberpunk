@@ -31,6 +31,7 @@ namespace MechaCyberpunk.UI.Hud
         private const float LadoEstrella = 38f;
         private const float PasoEstrella = 49f;
         private const float Linea = 2f;
+        private const float DistanciaAvisoCentro = 170f; // T-1329: px de referencia bajo el centro de la pantalla
         private const float UmbralVidaBaja = 0.25f;
 
         private static readonly Color Turquesa = new Color(0.30f, 0.92f, 0.90f, 1f);
@@ -69,6 +70,9 @@ namespace MechaCyberpunk.UI.Hud
         private Image iconoArma;
         private Text textoBalas;
         private Text[] textosAyuda;
+        private RectTransform avisoCentro;
+        private Text teclaAvisoCentro;
+        private Text textoAvisoCentro;
         private Image[] cuerpoLinea;
         private Image[] cuerpoRelleno;
 
@@ -132,6 +136,14 @@ namespace MechaCyberpunk.UI.Hud
         public GameObject GrupoObjetos => grupoObjetos;
         public GameObject GrupoArma => grupoArma;
         public Text[] TextosAyuda => textosAyuda;
+
+        /// <summary>T-1329: el aviso de interacción (hablar, entrar, recoger...) al centro de la pantalla, abajo del centro, con la tecla en un cuadrito.</summary>
+        public RectTransform AvisoCentro => avisoCentro;
+        public Text TeclaAvisoCentro => teclaAvisoCentro;
+        public Text TextoAvisoCentro => textoAvisoCentro;
+        public bool AvisoCentroVisible => avisoCentro != null && avisoCentro.gameObject.activeSelf;
+        /// <summary>El aviso al centro como "[E] Hablar" (vacío si no se ve).</summary>
+        public string AvisoCentroCompleto => AvisoCentroVisible ? "[" + teclaAvisoCentro.text + "] " + textoAvisoCentro.text : string.Empty;
 
         /// <summary>Casilla de objeto <paramref name="indice"/>: si se ve, su tecla, su cantidad y su ícono.</summary>
         public bool RanuraVisible(int indice) => ranuras != null && ranuras[indice].Raiz.activeSelf;
@@ -469,11 +481,47 @@ namespace MechaCyberpunk.UI.Hud
             iconoArma.enabled = false;
 
             textoBalas = Texto(g, "Balas", br, new Vector2(-309f, 52f), new Vector2(220f, 72f), 62, Blanco, TextAnchor.MiddleRight, true);
+            ArmarAvisoCentro(g);
             textosAyuda = new Text[ReglaAyudasH10.Maximo];
             for (int i = 0; i < textosAyuda.Length; i++)
             {
                 textosAyuda[i] = Texto(g, "Ayuda" + i, br, new Vector2(-62f, 212f + i * 48f), new Vector2(520f, 38f), 28, new Color(0.84f, 0.96f, 0.96f, 1f), TextAnchor.MiddleRight);
             }
+        }
+
+        // T-1329: el aviso de interacción va al centro y un poco abajo (no a la derecha): un cuadrito con la tecla y el texto de lo que hace.
+        private void ArmarAvisoCentro(Transform g)
+        {
+            Vector2 centro = new Vector2(0.5f, 0.5f);
+            avisoCentro = Nuevo(g, "AvisoCentro", centro, new Vector2(0f, -DistanciaAvisoCentro), new Vector2(900f, 56f));
+            avisoCentro.pivot = centro;
+            HorizontalLayoutGroup fila = avisoCentro.gameObject.AddComponent<HorizontalLayoutGroup>();
+            fila.childAlignment = TextAnchor.MiddleCenter;
+            fila.spacing = 14f;
+            fila.childControlWidth = true;
+            fila.childControlHeight = true;
+            fila.childForceExpandWidth = false;
+            fila.childForceExpandHeight = false;
+            ContentSizeFitter ajuste = avisoCentro.gameObject.AddComponent<ContentSizeFitter>();
+            ajuste.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            ajuste.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+            RectTransform caja = Nuevo(avisoCentro, "Tecla", centro, Vector2.zero, new Vector2(52f, 52f));
+            Image fondoCaja = caja.gameObject.AddComponent<Image>();
+            fondoCaja.color = new Color(0.02f, 0.08f, 0.11f, 0.85f);
+            fondoCaja.raycastTarget = false;
+            KitUI.CrearBorde(caja, Linea, Turquesa);
+            LayoutElement medida = caja.gameObject.AddComponent<LayoutElement>();
+            medida.minWidth = 52f;
+            medida.minHeight = 52f;
+            medida.preferredWidth = 52f;
+            teclaAvisoCentro = Texto(caja, "Letra", centro, Vector2.zero, new Vector2(52f, 52f), 28, TurquesaSuave, TextAnchor.MiddleCenter, true);
+            KitUI.Estirar(teclaAvisoCentro.rectTransform);
+
+            textoAvisoCentro = Texto(avisoCentro, "Accion", centro, Vector2.zero, new Vector2(600f, 52f), 30, Blanco, TextAnchor.MiddleLeft);
+            LayoutElement medidaTexto = textoAvisoCentro.gameObject.AddComponent<LayoutElement>();
+            medidaTexto.minHeight = 52f;
+            avisoCentro.gameObject.SetActive(false);
         }
 
         // Lo viejo que duplica esto queda sin dibujarse (con CanvasGroup, sin apagarlo: HudAPie sigue llevando su estado).
@@ -737,7 +785,21 @@ namespace MechaCyberpunk.UI.Hud
                 accionInteractuar = accionInteractuar ?? TeclasHud.Buscar("Interactuar");
             }
             ContextoAyudaH10 c = Contexto();
-            List<AyudaH10> ayudas = ReglaAyudasH10.Ayudas(c);
+            // T-1329: la interacción sale al centro; a la derecha quedan solo recargar y golpe.
+            string interaccionTexto = ReglaAyudasH10.TextoInteraccion(c);
+            bool hayInteraccion = c.Modo == ModoJugador.APie && interaccionTexto.Length > 0;
+            if (avisoCentro.gameObject.activeSelf != hayInteraccion)
+            {
+                avisoCentro.gameObject.SetActive(hayInteraccion);
+            }
+            if (hayInteraccion)
+            {
+                Poner(teclaAvisoCentro, c.TeclaInteractuar);
+                Poner(textoAvisoCentro, interaccionTexto);
+            }
+            ContextoAyudaH10 sinInteraccion = c;
+            sinInteraccion.Candidato = TipoCandidatoInteraccion.Ninguno;
+            List<AyudaH10> ayudas = ReglaAyudasH10.Ayudas(sinInteraccion);
             // Fila 0 = la de abajo. Con dos ayudas la primera va arriba; con una sola, abajo.
             for (int i = 0; i < textosAyuda.Length; i++)
             {

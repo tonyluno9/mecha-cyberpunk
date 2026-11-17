@@ -76,9 +76,6 @@ namespace MechaCyberpunk.UI.Hud
         /// <summary>True si la barra se está dibujando.</summary>
         public bool Visible => grupo != null && grupo.activeSelf;
 
-        /// <summary>La tecla que se ve en la casilla (sin corchetes).</summary>
-        public string TeclaMostrada(HabilidadProtesis h) => casillas[(int)h].Tecla;
-
         /// <summary>El nombre que se ve en la casilla ("—" si no hay implante).</summary>
         public string NombreMostrado(HabilidadProtesis h) => casillas[(int)h].Nombre;
 
@@ -139,18 +136,6 @@ namespace MechaCyberpunk.UI.Hud
         {
             string nombre = h.ToString().ToUpperInvariant();
             return nombre == "LASER" ? "LÁSER" : nombre;
-        }
-
-        /// <summary>T-1302: la tecla de siempre de cada habilidad (Q, C y X; láser y misiles en 4 y 5), para cuando el Input System no responde.</summary>
-        public static string TeclaPorOmision(HabilidadProtesis h)
-        {
-            switch (h)
-            {
-                case HabilidadProtesis.Piernas: return "Q";
-                case HabilidadProtesis.Brazos: return "C";
-                case HabilidadProtesis.Cabeza: return "X";
-                default: return ((int)h + 1).ToString();
-            }
         }
 
         private void Awake()
@@ -335,12 +320,8 @@ namespace MechaCyberpunk.UI.Hud
             {
                 tira.color = borde;
             }
-            if (c.Tecla.Length == 0 || refrescarTeclas)
-            {
-                c.Tecla = TeclasHud.Texto(TeclasHud.Buscar(MechaCyberpunk.Personaje.ConfigHabilidadesProtesis.NombreAccion(h)), TeclaPorOmision(h));
-            }
             c.Nombre = tiene ? NombreDe(h) : Apagada;
-            string etiqueta = "[" + c.Tecla + "] " + (tiene ? c.Nombre : NombreDe(h));
+            string etiqueta = tiene ? c.Nombre : NombreDe(h); // T-1329: ya no hay una tecla por habilidad (se eligen con la rueda de Tab)
             if (c.Etiqueta.text != etiqueta)
             {
                 c.Etiqueta.text = etiqueta;

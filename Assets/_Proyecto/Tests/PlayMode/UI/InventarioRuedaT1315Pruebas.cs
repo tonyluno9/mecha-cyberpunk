@@ -38,12 +38,13 @@ namespace MechaCyberpunk.Tests.UI
         private const float SegundosEntrada = 0.8f;
 
         private Keyboard teclado;
+        private Mouse raton;
 
         public override void Setup()
         {
             base.Setup();
             teclado = InputSystem.AddDevice<Keyboard>();
-            InputSystem.AddDevice<Mouse>();
+            raton = InputSystem.AddDevice<Mouse>();
             EquipoRueda.Reiniciar();
         }
 
@@ -142,11 +143,11 @@ namespace MechaCyberpunk.Tests.UI
             inventario.Agregar(bebida, 2);
 
             // Rueda abierta antes de quitar nada: el fusil sale.
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return new WaitForSecondsRealtime(0.4f);
             Assert.IsTrue(RuedaArmasObjetos.Abierta, "Tab abre la rueda");
             Assert.IsTrue(rueda.CasillaVisible((int)ArmaAPie.Fusil), "El fusil va en la rueda por omisión");
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return new WaitForSecondsRealtime(0.3f);
 
             // I abre; E pasa a ARMAS; se elige el fusil y Enter lo quita.
@@ -179,12 +180,12 @@ namespace MechaCyberpunk.Tests.UI
             yield return Pulsar(teclado.iKey);
             Assert.IsFalse(pantalla.Abierta);
 
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return new WaitForSecondsRealtime(0.4f);
             Assert.IsTrue(RuedaArmasObjetos.Abierta);
             Assert.IsFalse(rueda.CasillaVisible((int)ArmaAPie.Fusil), "La rueda ya no muestra el fusil");
             Assert.IsTrue(rueda.CasillaVisible((int)ArmaAPie.Escopeta), "Lo demás sigue en la rueda");
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return new WaitForSecondsRealtime(0.3f);
 
             // Volver a ponerlo: F lo equipa y la rueda lo vuelve a mostrar.
@@ -194,10 +195,10 @@ namespace MechaCyberpunk.Tests.UI
             yield return Pulsar(teclado.fKey);
             Assert.IsTrue(pantalla.Elegida.Equipada, "F lo vuelve a equipar");
             yield return Pulsar(teclado.iKey);
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return new WaitForSecondsRealtime(0.4f);
             Assert.IsTrue(rueda.CasillaVisible((int)ArmaAPie.Fusil));
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return new WaitForSecondsRealtime(0.2f);
         }
 

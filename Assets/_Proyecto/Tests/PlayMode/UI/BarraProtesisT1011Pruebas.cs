@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.UI
 {
     /// <summary>
-    /// T-1011: la barra de prótesis como el mockup M31 en la ciudad real: "[Q] PIERNAS" con el dibujo de la prótesis a la izquierda y el medidor debajo, en columna en el lateral izquierdo (T-1302);
+    /// T-1011: la barra de prótesis como el mockup M31 en la ciudad real: "PIERNAS" con el dibujo de la prótesis a la izquierda y el medidor debajo, en columna en el lateral izquierdo (T-1302);
     /// la activa en amarillo. Con CAPTURAR_T991=1 deja docs/capturas/t1011/barra-m31.png.
     /// </summary>
     public class BarraProtesisT1011Pruebas : BaseHudObjetivo
@@ -74,9 +74,9 @@ namespace MechaCyberpunk.Tests.UI
             BarraHabilidades barra = Object.FindFirstObjectByType<BarraHabilidades>();
             Assert.IsNotNull(barra);
             Assert.IsTrue(barra.Visible, "A pie la barra se ve");
-            Assert.AreEqual("[Q] PIERNAS", barra.EtiquetaMostrada(HabilidadProtesis.Piernas));
-            Assert.AreEqual("[C] BRAZOS", barra.EtiquetaMostrada(HabilidadProtesis.Brazos));
-            Assert.AreEqual("[X] CABEZA", barra.EtiquetaMostrada(HabilidadProtesis.Cabeza), "Sin visor la casilla sigue con su nombre, en gris");
+            Assert.AreEqual("PIERNAS", barra.EtiquetaMostrada(HabilidadProtesis.Piernas));
+            Assert.AreEqual("BRAZOS", barra.EtiquetaMostrada(HabilidadProtesis.Brazos));
+            Assert.AreEqual("CABEZA", barra.EtiquetaMostrada(HabilidadProtesis.Cabeza), "Sin visor la casilla sigue con su nombre, en gris");
             Assert.AreEqual("—", barra.NombreMostrado(HabilidadProtesis.Cabeza));
             Assert.IsNotNull(barra.IconoMostrado(HabilidadProtesis.Piernas), "Lleva el dibujo de la prótesis");
             Assert.AreEqual("Protesis_Piernas_2", barra.IconoMostrado(HabilidadProtesis.Piernas).name, "Con el nivel II, el dibujo del II");
