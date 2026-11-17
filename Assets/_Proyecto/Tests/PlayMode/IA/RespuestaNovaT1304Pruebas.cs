@@ -167,9 +167,9 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(5, respuesta.Estrellas);
             Assert.IsTrue(respuesta.HayJefe, "con 5 estrellas llega el jefe final");
 
-            calor.Poner(30f); // 2 estrellas
+            calor.Poner(0f); // T-1323: con 1-3 estrellas los que ya vieron al jugador lo siguen; sin búsqueda (Doc, arresto) Nova se retira
             yield return Esperar(8f);
-            Assert.AreEqual(0, respuesta.GuardiasVivos + respuesta.PesadosVivos, "bajo 4 estrellas Nova se retira");
+            Assert.AreEqual(0, respuesta.GuardiasVivos + respuesta.PesadosVivos, "sin búsqueda Nova se retira");
             Assert.IsFalse(respuesta.HayJefe);
         }
 
