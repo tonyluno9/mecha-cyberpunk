@@ -270,6 +270,17 @@ namespace MechaCyberpunk.Trafico.Datos
         public float DistanciaParaBajarPolicias => distanciaSeguimiento + margenParaBajarPolicias;
         public float SegundosMaximosRetiro => segundosMaximosRetiro;
 
+        [Header("Cinco estrellas y radio (T-1322)")]
+        [Min(0)] [Tooltip("Patrullas que se suman a las del nivel cuando tienes 5 estrellas (salen las camionetas si hay prefab).")]
+        [SerializeField] private int patrullasExtraCincoEstrellas = 3;
+        [Min(0)] [Tooltip("Drones que se suman a los del nivel cuando tienes 5 estrellas.")]
+        [SerializeField] private int dronesExtraCincoEstrellas = 3;
+        [Tooltip("ID de sonido de la radio de la policía. Vacío: no hay clip de radio todavía y no suena nada (el ID debe existir en CatalogoSonidos y en ReglaMezclaSonidos).")]
+        [SerializeField] private string idSonidoRadio = "";
+        public int PatrullasExtraCincoEstrellas => patrullasExtraCincoEstrellas;
+        public int DronesExtraCincoEstrellas => dronesExtraCincoEstrellas;
+        public string IdSonidoRadio => idSonidoRadio;
+
         public int NivelDisparoDron => nivelDisparoDron;
         public float SegundosEntreTirosDron => segundosEntreTirosDron;
         public float DanioDron => danioDron;
