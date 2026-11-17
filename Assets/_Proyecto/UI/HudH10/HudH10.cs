@@ -651,6 +651,7 @@ namespace MechaCyberpunk.UI.Hud
             segundosSinVer = conBusqueda && !zona.Visto ? segundosSinVer + Time.unscaledDeltaTime : 0f;
             buscando = ReglaEstrellasH10.DebeParpadear(conBusqueda, conBusqueda && zona.Visto, segundosSinVer);
             float alfa = ReglaEstrellasH10.Alfa(Time.unscaledTime, buscando);
+            Color tono = ReglaEstrellasH10.ColorEstrellas(estrellasLlenas, Turquesa); // T-1304: azul intenso con Nova
             for (int i = 0; i < estrellas.Length; i++)
             {
                 bool llena = i < estrellasLlenas;
@@ -659,7 +660,7 @@ namespace MechaCyberpunk.UI.Hud
                 {
                     estrellas[i].sprite = sprite;
                 }
-                estrellas[i].color = new Color(Turquesa.r, Turquesa.g, Turquesa.b, llena ? alfa : 0.75f);
+                estrellas[i].color = new Color(tono.r, tono.g, tono.b, llena ? alfa : 0.75f);
             }
         }
 
