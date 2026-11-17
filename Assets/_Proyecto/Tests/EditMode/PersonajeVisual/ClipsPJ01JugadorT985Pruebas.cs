@@ -61,9 +61,13 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             return salida;
         }
 
+        private const string PrefijoEscalera = "PJ01_Escalera_";
+
         private static string[] ClipsDeLaCarpeta()
         {
-            return Directory.GetFiles(ConstructorControladorBase.CarpetaClipsPJ01, "PJ01_*.fbx").Select(Path.GetFileNameWithoutExtension).OrderBy(n => n).ToArray();
+            // T-1204: los PJ01_Escalera_* no van en el controlador: los juega AnimacionEscalera desde ConfigAnimacionEscalera (se revisan aparte).
+            return Directory.GetFiles(ConstructorControladorBase.CarpetaClipsPJ01, "PJ01_*.fbx").Select(Path.GetFileNameWithoutExtension)
+                .Where(n => !n.StartsWith(PrefijoEscalera)).OrderBy(n => n).ToArray();
         }
 
         [Test]
@@ -83,6 +87,20 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.AreEqual(80, todos.Length, "La carpeta de clips debe tener los 80 PJ01_*");
             Assert.IsEmpty(noPJ01, "Clips que no son PJ01 en el jugador:\n" + string.Join("\n", noPJ01));
             Assert.IsEmpty(sinUsar, "PJ01 sin ningún estado:\n" + string.Join("\n", sinUsar));
+        }
+
+        [Test]
+        public void Escalera_LosClipsPJ01_Escalera_EstanEnLaConfigDeEscalera()
+        {
+            string[] escalera = Directory.GetFiles(ConstructorControladorBase.CarpetaClipsPJ01, PrefijoEscalera + "*.fbx").Select(Path.GetFileNameWithoutExtension).ToArray();
+            var config = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.ConfigAnimacionEscalera>("Assets/_Proyecto/Personaje/Datos/Resources/ConfigAnimacionEscalera.asset");
+            Assert.IsNotNull(config, "Falta ConfigAnimacionEscalera");
+            var enConfig = new HashSet<string>(new[] { config.Entrar, config.Subir, config.Bajar, config.SalirArriba, config.SalirAbajo }.Where(c => c != null).Select(c => c.name));
+            Assert.AreEqual(5, escalera.Length, "Los 5 PJ01_Escalera_*");
+            foreach (string nombre in escalera)
+            {
+                Assert.IsTrue(enConfig.Contains(nombre), nombre + " no está en ConfigAnimacionEscalera");
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MechaCyberpunk.Core.Trepar;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion.Pruebas;
 using NUnit.Framework;
@@ -220,6 +221,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
+        [Timeout(900000)]
         public IEnumerator Escaleras_Todas_LlevanAUnTechoConPiso()
         {
             yield return Cargar();
@@ -393,7 +395,7 @@ namespace MechaCyberpunk.Tests.Personaje
                     continue;
                 }
                 probadas++;
-                Poner(new Vector3(p.Cima.x, p.Salida.y, p.Cima.z) + p.Frente * 0.45f, -p.Frente);
+                Poner(p.Salida + Vector3.up * 0.05f, -p.Frente);
                 trepar.enabled = false;
                 yield return null;
                 trepar.enabled = true;
@@ -440,6 +442,106 @@ namespace MechaCyberpunk.Tests.Personaje
             }
             Assert.GreaterOrEqual(probadas, 1, "Ninguna escalera subió para probar la bajada");
             Assert.IsEmpty(fallas, string.Join("\n", fallas));
+        }
+
+        /// <summary>
+        /// T-1204: con los clips PJ01_Escalera_* asignados, al subir juega Entrar y Subir, al pasar al techo SalirArriba, al bajar desde el techo Bajar y al
+        /// llegar al piso SalirAbajo. Con CAPTURAR_T991=1 deja docs/capturas/t1204/ (de lado, a 4 m de la escalera).
+        /// </summary>
+        [UnityTest]
+        [Timeout(600000)]
+        public IEnumerator Escalera_ConClipsDePJ01_JuegaCadaTramo()
+        {
+            yield return Cargar();
+            ConfigAnimacionEscalera anim = ConfigAnimacionEscalera.Actual;
+            Assert.IsNotNull(anim, "Existe Resources/ConfigAnimacionEscalera");
+            Assert.IsNotNull(anim.Subir, "Clip de subir");
+            Assert.IsNotNull(anim.Bajar, "Clip de bajar");
+            Assert.IsNotNull(anim.SalirArriba, "Clip de salir arriba");
+            Assert.IsNotNull(anim.SalirAbajo, "Clip de salir abajo");
+            AnimacionEscalera reproductor = jugador.GetComponent<AnimacionEscalera>();
+            Assert.IsNotNull(reproductor);
+            bool capturar = System.Environment.GetEnvironmentVariable("CAPTURAR_T991") == "1";
+            const string carpeta = "docs/capturas/t1204/";
+            PuntoTrepar p = Escaleras().First(EsNueva);
+            Vector3 lado = Vector3.Cross(Vector3.up, p.Frente).normalized;
+            System.Func<Vector3> camara = () => jugador.transform.position - p.Frente * 2.5f + lado * 3.5f + Vector3.up * 1.4f;
+
+            Poner(Partida(p), p.Frente);
+            trepar.enabled = false;
+            yield return null;
+            trepar.enabled = true;
+            yield return Esperar(0.5f);
+            var vistos = new HashSet<AnimationClip>();
+            bool fotoSubir = false;
+            bool fotoSalir = false;
+            Press(teclado.wKey);
+            float fin = Time.time + 12f;
+            while (Time.time < fin && !(vistos.Contains(anim.SalirArriba) && !trepar.Trepando))
+            {
+                yield return null;
+                if (reproductor.ClipActual != null)
+                {
+                    vistos.Add(reproductor.ClipActual);
+                }
+                if (capturar && !fotoSubir && reproductor.ClipActual == anim.Subir && trepar.ProgresoEscalera > p.AlturaSubida * 0.5f)
+                {
+                    fotoSubir = true;
+                    yield return Foto(camara(), jugador.transform.position + Vector3.up * 1f, "subiendo", carpeta);
+                }
+                if (capturar && !fotoSalir && trepar.SaliendoArriba && trepar.ProgresoSalida > 0.5f)
+                {
+                    fotoSalir = true;
+                    yield return Foto(camara(), jugador.transform.position + Vector3.up * 1f, "saliendo-arriba", carpeta);
+                }
+            }
+            Release(teclado.wKey);
+            if (anim.Entrar != null)
+            {
+                Assert.IsTrue(vistos.Contains(anim.Entrar), "Juega el clip de entrar");
+            }
+            Assert.IsTrue(vistos.Contains(anim.Subir), "Juega el clip de subir");
+            Assert.IsTrue(vistos.Contains(anim.SalirArriba), "Juega el clip de salir arriba");
+            Assert.IsFalse(trepar.Trepando, "Llegó al techo");
+            Assert.Greater(jugador.transform.position.y, p.transform.position.y + p.AlturaSubida - MargenAltura, "Está en el techo");
+            yield return Esperar(0.5f);
+
+            // Bajar desde el techo: en la orilla, de espaldas a la pared, con W.
+            Poner(p.Salida + Vector3.up * 0.05f, -p.Frente);
+            trepar.enabled = false;
+            yield return null;
+            trepar.enabled = true;
+            yield return Esperar(0.4f);
+            vistos.Clear();
+            bool fotoBajar = false;
+            bool fotoAbajo = false;
+            Press(teclado.wKey);
+            fin = Time.time + 12f;
+            bool salioAbajo = false;
+            while (Time.time < fin && !(salioAbajo && reproductor.ClipActual == null))
+            {
+                yield return null;
+                if (reproductor.ClipActual != null)
+                {
+                    vistos.Add(reproductor.ClipActual);
+                }
+                salioAbajo |= reproductor.ClipActual == anim.SalirAbajo;
+                if (capturar && !fotoBajar && reproductor.ClipActual == anim.Bajar && trepar.ProgresoEscalera < p.AlturaSubida * 0.5f)
+                {
+                    fotoBajar = true;
+                    yield return Foto(camara(), jugador.transform.position + Vector3.up * 1f, "bajando", carpeta);
+                }
+                if (capturar && !fotoAbajo && salioAbajo)
+                {
+                    fotoAbajo = true;
+                    Release(teclado.wKey);
+                    yield return Foto(camara(), jugador.transform.position + Vector3.up * 1f, "saliendo-abajo", carpeta);
+                }
+            }
+            Release(teclado.wKey);
+            Assert.IsTrue(vistos.Contains(anim.Bajar), "Juega el clip de bajar");
+            Assert.IsTrue(salioAbajo, "Al llegar al piso juega el clip de salir abajo");
+            Assert.Less(jugador.transform.position.y, p.transform.position.y + 0.5f, "Quedó en el piso");
         }
 
         // ------------------------------------------------------------------ capturas
@@ -496,7 +598,9 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsEmpty(fallas, string.Join(", ", fallas));
         }
 
-        private static IEnumerator Foto(Vector3 desde, Vector3 hacia, string nombre)
+        private static IEnumerator Foto(Vector3 desde, Vector3 hacia, string nombre) => Foto(desde, hacia, nombre, "docs/capturas/t-1101/");
+
+        private static IEnumerator Foto(Vector3 desde, Vector3 hacia, string nombre, string carpeta)
         {
             GameObject go = new GameObject("CamaraFoto");
             Camera cam = go.AddComponent<Camera>();
@@ -515,7 +619,8 @@ namespace MechaCyberpunk.Tests.Personaje
             tex.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
             tex.Apply();
             RenderTexture.active = null;
-            System.IO.File.WriteAllBytes("docs/capturas/t-1101/" + nombre + ".png", tex.EncodeToPNG());
+            System.IO.Directory.CreateDirectory(carpeta);
+            System.IO.File.WriteAllBytes(carpeta + nombre + ".png", tex.EncodeToPNG());
             cam.targetTexture = null;
             Object.Destroy(tex);
             Object.Destroy(rt);

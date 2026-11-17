@@ -1,40 +1,35 @@
-# Pedido de animaciones: escalera (T-1204)
+# Animaciones de escalera (T-1204)
 
-Hoy, cuando el jugador sube una escalera, no hay animación: el personaje va pegado a la escalera con la pose de estar parado.
-El código ya está listo para usar dos animaciones en cuanto existan. No inventamos animaciones: faltan estos dos archivos.
+## Estado al 17-nov
 
-## Archivos que hacen falta
+Ya están en el juego las cinco animaciones de escalera hechas en Blender sobre PJ01:
 
-Se guardan en la carpeta `imageassets/animaciones/` con estos nombres exactos:
+| Archivo (en `imageassets/blender/pj01_clips/`) | Cuándo se juega |
+| --- | --- |
+| `PJ01_Escalera_Entrar.fbx` | Al engancharse a la escalera desde el piso. |
+| `PJ01_Escalera_Subir.fbx` | Subiendo. Avanza con los metros que sube: si se detiene, la animación se detiene. |
+| `PJ01_Escalera_Bajar.fbx` | Bajando, igual que la de subir. |
+| `PJ01_Escalera_SalirArriba.fbx` | Al pasar de la escalera al techo. El paso dura lo que el clip. |
+| `PJ01_Escalera_SalirAbajo.fbx` | Al soltarse abajo, al llegar al piso bajando. |
 
-- `imageassets/animaciones/Escalera_Subir.fbx`
-- `imageassets/animaciones/Escalera_Bajar.fbx`
+- Se importan igual que los demás clips de PJ01: Humanoid con el avatar de PJ01 y Scale Factor 1.8367. Se copian a `Assets/Arte/Personajes/PJ01/Clips/`.
+- Subir y Bajar se repiten en bucle; Entrar, SalirArriba y SalirAbajo no.
+- Una vuelta completa de Subir o Bajar equivale a 0.9 m de escalera. Se ajusta en
+  `Assets/_Proyecto/Personaje/Datos/Resources/ConfigAnimacionEscalera.asset` (campo Metros por ciclo).
 
-Si solo llega uno, se usa para subir y para bajar. Lo ideal son los dos.
+## Si cambias o agregas un clip
 
-## Cómo bajarlas de Mixamo
-
-1. Entra a Mixamo. Puedes usar cualquier personaje humanoide, o subir el PJ01.
-2. Busca "Climbing Ladder" (subir) y "Climbing Down Ladder" o parecido (bajar).
-3. Ajustes de descarga:
-   - Format: FBX Binary (.fbx)
-   - Skin: Without Skin
-   - Frames per second: 30
-   - Keyframe Reduction: none
-   - "In Place": márcalo si la animación lo ofrece.
-4. Que sea un solo ciclo de peldaño (una mano y un pie) que se pueda repetir en bucle.
-
-## Qué pasa cuando los pongas
-
-- Al abrir Unity, el proyecto los importa solo como animaciones Humanoid y los conecta. Si Unity ya estaba abierto, usa el menú
+- Guarda el archivo nuevo con el mismo nombre en `imageassets/blender/pj01_clips/`.
+- Al abrir Unity, si falta algún clip en la config, se importa solo. Para reimportar los que ya estaban, usa el menú
   Mecha Cyberpunk > T-1204 > Importar animaciones de escalera.
-- La animación avanza con los metros que sube el jugador, no con el tiempo: si se detiene en la escalera, la animación se detiene.
-  Una vuelta completa del clip equivale a 0,9 m de subida; se ajusta en `ConfigAnimacionEscalera`
-  (`Assets/_Proyecto/Personaje/Datos/Resources/ConfigAnimacionEscalera.asset`, campo Metros por ciclo).
-- El personaje sigue pegado a la escalera y arriba sale al techo como hasta ahora.
+- También acepta animaciones de Mixamo para subir y bajar: `imageassets/animaciones/Escalera_Subir.fbx` y `Escalera_Bajar.fbx`
+  (FBX Binary, Without Skin, 30 fps, "In Place"). Si existen los de PJ01, se usan los de PJ01.
 
 ## Bajar desde el techo
 
-Esto ya funciona sin animaciones: camina hasta la orilla del techo justo encima de una escalera, mirando hacia la calle, y presiona W.
-El jugador se engancha a la escalera por arriba; con W sigue bajando hasta que sueltes la tecla, y después W sube y S baja como siempre.
-Al llegar al piso con S (o al piso mismo mientras desciende) se suelta.
+Párate en el techo donde te deja la escalera (o junto a su orilla), mirando hacia la calle, y presiona W. El jugador se engancha a la
+escalera por arriba y baja mientras sostengas W. Al soltar W, la escalera vuelve a lo normal: W sube y S baja. Al llegar al piso se suelta.
+
+## Pendiente de revisar jugando
+
+- Durante SalirArriba el cuerpo pasa por encima del pretil (`docs/capturas/t1204/saliendo-arriba.png`). Revisa si se ve bien en tu techo favorito.

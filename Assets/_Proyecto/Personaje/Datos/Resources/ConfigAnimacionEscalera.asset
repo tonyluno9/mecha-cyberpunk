@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991358a740eec8f4687d4c09c92a1289, type: 3}
   m_Name: ConfigAnimacionEscalera
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigAnimacionEscalera
-  subir: {fileID: 0}
-  bajar: {fileID: 0}
+  subir: {fileID: -4731260249662587301, guid: ba2289c357a5c554681a6bcb0bd2451b, type: 3}
+  bajar: {fileID: -1583896922394375028, guid: 1e3c8aa856f8c79428289650ce82645b, type: 3}
+  entrar: {fileID: 8079969105062301833, guid: e620e86758551de459116de7ac90ecea, type: 3}
+  salirArriba: {fileID: 4361080868340105370, guid: 3d59272782df8c34ca93e1e8a50c3874, type: 3}
+  salirAbajo: {fileID: -6098687193638062630, guid: 62330422fbe989f41bb809b8a086a77a, type: 3}
   metrosPorCiclo: 0.9
