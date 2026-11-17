@@ -1,6 +1,7 @@
 using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.Personaje.Datos;
 using MechaCyberpunk.Personaje.Habilidades;
 using NUnit.Framework;
 using UnityEngine;
