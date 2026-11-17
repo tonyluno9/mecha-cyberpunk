@@ -20,3 +20,4 @@ EditMode ensamblado UI: 322/322. PlayMode (tiendas): 18, 16 pasan; fallan `Regis
 
 ## Decisiones
 - Nombres de balas ya eran claros; no se renombró ningún asset.
+- Revisión (Opus): RecorridoEconomiaPruebas compraba el kit en El Mercado: ahora comprueba que ya no sale y lo compra por código (1/1). El material Armas_CorteInterior de las piezas de T-1313 lleva una textura oscura lisa (ArmasPiezasT1313.TexturaCorte) para que SinGreyboxT506 no lo tome por greybox. EditMode completo: 2628/2629 antes de ese arreglo; SinGreyboxT506 9/9 después.
