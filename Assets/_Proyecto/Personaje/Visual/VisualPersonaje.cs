@@ -660,7 +660,41 @@ namespace MechaCyberpunk.Personaje.Visual
             eje.localPosition = posicionBase + new Vector3(0f, alturaTumbado * tumbado, 0f);
         }
 
-        private bool TieneMuerteAnimada() => animador != null && Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int);
+        private bool TieneMuerteAnimada()
+        {
+            if (animador == null)
+            {
+                return false;
+            }
+            if (Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int))
+            {
+                return true;
+            }
+            // T-1306: los controladores propios (Policia, Mecanico, Mesera) no tienen MuerteTipo pero su estado de KO ya trae un clip de muerte que acuesta
+            // al personaje; girarlo 90° además lo dejaba con el torso parado ("hincado").
+            RuntimeAnimatorController controlador = animador.runtimeAnimatorController;
+            if (controlador != controladorRevisado)
+            {
+                controladorRevisado = controlador;
+                clipDeMuerte = false;
+                if (controlador != null)
+                {
+                    foreach (AnimationClip clip in controlador.animationClips)
+                    {
+                        if (clip != null && clip.name.Contains(FragmentoClipMuerte))
+                        {
+                            clipDeMuerte = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            return clipDeMuerte;
+        }
+
+        private const string FragmentoClipMuerte = "_Muerte_";
+        private RuntimeAnimatorController controladorRevisado;
+        private bool clipDeMuerte;
 
         /// <summary>Escala del modelo contra la que se midieron las velocidades de los clips (1 = el clip tal como viene): el paso crece con el modelo (T-670).</summary>
         public float EscalaClips => animador != null ? Mathf.Max(0.1f, animador.transform.lossyScale.y) : 1f;
