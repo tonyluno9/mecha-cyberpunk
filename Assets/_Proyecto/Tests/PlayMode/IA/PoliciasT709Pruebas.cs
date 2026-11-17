@@ -303,7 +303,8 @@ namespace MechaCyberpunk.Tests
             float vidaAntes = policia.Actual;
             policia.RecibirDanio(new InfoDanio(5f, TipoDanio.Disparo, p.transform.position + Vector3.up, Vector3.back, null));
             Assert.Less(policia.Actual, vidaAntes, "Recibe el daño");
-            Assert.AreEqual(antes + policia.Datos.CalorAlGolpear, calor.Valor, 0.01f, "Dispararle sube la búsqueda");
+            Assert.GreaterOrEqual(calor.Valor, antes + policia.Datos.CalorAlGolpear - 0.01f, "Dispararle sube la búsqueda");
+            Assert.GreaterOrEqual(calor.Nivel, 1, "T-1303: desde el primer disparo a un policía ya te buscan");
             Assert.IsFalse(policia.EstaKO);
 
             antes = calor.Valor;

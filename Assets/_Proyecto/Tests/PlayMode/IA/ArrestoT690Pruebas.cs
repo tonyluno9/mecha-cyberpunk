@@ -170,10 +170,24 @@ namespace MechaCyberpunk.Tests
             float fin = Time.realtimeSinceStartup + 60f;
             while (Time.realtimeSinceStartup < fin && consecuencia.Pantalla == null)
             {
+                AcercarUnPolicia(); // T-1303: solo arresta un policía a pie que te toca
                 yield return null;
             }
             Time.timeScale = 1f;
             Assert.IsNotNull(consecuencia.Pantalla, "tras el arresto sale la pantalla ARRESTADO");
+        }
+
+        // T-1303: el primer policía que bajó de la patrulla llega hasta el jugador y lo toca.
+        private void AcercarUnPolicia()
+        {
+            foreach (GameObject policia in PatrullaMundo.PoliciasAPieLista)
+            {
+                if (policia != null)
+                {
+                    policia.transform.position = jugador.transform.position + Vector3.right * 0.6f;
+                    return;
+                }
+            }
         }
 
         [UnityTest]
