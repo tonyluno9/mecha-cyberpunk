@@ -17,6 +17,10 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 95d1ef804cae8fd4b919e5af76ea7c6f, type: 3}
     provisionales: []
+  - id: AMB_CALLEJON
+    finales:
+    - {fileID: 8300000, guid: 6cb54870a2d4cc94992cb4f1b31e8862, type: 3}
+    provisionales: []
   - id: AMB_CALLE_DIA
     finales:
     - {fileID: 8300000, guid: 2c40e237fd8bcb648a9f2a2d43cfc545, type: 3}
@@ -24,10 +28,6 @@ MonoBehaviour:
   - id: AMB_CALLE_NOCHE
     finales:
     - {fileID: 8300000, guid: 4bcc51da2f450814fac4103fb0626665, type: 3}
-    provisionales: []
-  - id: AMB_CALLEJON
-    finales:
-    - {fileID: 8300000, guid: 6cb54870a2d4cc94992cb4f1b31e8862, type: 3}
     provisionales: []
   - id: AMB_CASINO
     finales:
@@ -154,6 +154,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 2e0b6eaa79f59af4e8cf18c84f493aa5, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 45e416e907c475a49beb588dd8950615, type: 3}
+  - id: ARM_LGR_DISPARO
+    finales:
+    - {fileID: 8300000, guid: 643598e56b8dc0c448a9e62194c072cb, type: 3}
+    provisionales: []
   - id: ARM_MEJORA
     finales:
     - {fileID: 8300000, guid: d63f35949eba92d47b85096bba82ff7f, type: 3}
@@ -175,13 +179,24 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 089b8e51ea51a7f498dfdec883d2cb51, type: 3}
     provisionales: []
+  - id: ARM_PLA_CARGA
+    finales:
+    - {fileID: 8300000, guid: 746a6074cfea48f41b019aeb7d1ad66d, type: 3}
+    provisionales: []
+  - id: ARM_PLA_DISPARO
+    finales:
+    - {fileID: 8300000, guid: 326a119c0202cb145840bab111c7b769, type: 3}
+    provisionales: []
+  - id: ARM_REV_DISPARO
+    finales:
+    - {fileID: 8300000, guid: 97fa580d9a999d347a16877d643913a7, type: 3}
+    provisionales: []
   - id: ARM_SNI_CERROJO
     finales:
     - {fileID: 8300000, guid: 0f16b3992c67fc943a701511796175f5, type: 3}
     provisionales: []
   - id: ARM_SNI_DISPARO
     finales:
-    - {fileID: 8300000, guid: 510a8287664e5e6429da7c637c4d5fc0, type: 3}
     - {fileID: 8300000, guid: 6d765b1e68558c94b9429db41b5751b5, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 1f6a730ff258ff54799bcbd230a918e6, type: 3}
@@ -197,7 +212,8 @@ MonoBehaviour:
     provisionales:
     - {fileID: 8300000, guid: 71bc289062dadce4aad496a08ff03f6b, type: 3}
   - id: ARM_SUB_DISPARO
-    finales: []
+    finales:
+    - {fileID: 8300000, guid: 7be23b2b96288944f97a99a5e8a1e0d7, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 5e2dd3120fa67af4a8519aa6abe5e8e8, type: 3}
   - id: ARM_SUB_RECARGA
@@ -272,11 +288,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 4969a753b0a031a4cbd0ab06af9e7d28, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 7cf3f363f1955c841b36eb8edf41dc89, type: 3}
-  - id: JUG_CAE_DERROTADO
-    finales:
-    - {fileID: 8300000, guid: b97388d7dfd17294390bd3e6464fb28e, type: 3}
-    - {fileID: 8300000, guid: 29b2448abeb09c64fb5bcecd2646d137, type: 3}
-    provisionales: []
   - id: JUG_CAER
     finales:
     - {fileID: 8300000, guid: be0d30ef4260a3842a9e352c8a8c973d, type: 3}
@@ -284,6 +295,11 @@ MonoBehaviour:
     - {fileID: 8300000, guid: ef0cf970364e22741ba5b80b7c304eee, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 0f628c7fe089ab24e99a87bf9c366745, type: 3}
+  - id: JUG_CAE_DERROTADO
+    finales:
+    - {fileID: 8300000, guid: b97388d7dfd17294390bd3e6464fb28e, type: 3}
+    - {fileID: 8300000, guid: 29b2448abeb09c64fb5bcecd2646d137, type: 3}
+    provisionales: []
   - id: JUG_CORRER_RESPIRA
     finales:
     - {fileID: 8300000, guid: 583d9d5f03cb4d443a8a1ed8f468cefa, type: 3}
@@ -754,7 +770,7 @@ MonoBehaviour:
   - id: ARM_SNI_ZOOM
     encendido: 0
   - id: ARM_SUB_DISPARO
-    encendido: 0
+    encendido: 1
   - id: ARM_SUB_RECARGA
     encendido: 0
   - id: ARM_VACIO
@@ -943,6 +959,14 @@ MonoBehaviour:
     encendido: 0
   - id: ZON_RESPETO_SUBE
     encendido: 0
+  - id: ARM_REV_DISPARO
+    encendido: 1
+  - id: ARM_LGR_DISPARO
+    encendido: 1
+  - id: ARM_PLA_DISPARO
+    encendido: 1
+  - id: ARM_PLA_CARGA
+    encendido: 1
   gananciaEfectos: 1
   gananciaVoces: 0.85
   gananciaAmbiente: 1
