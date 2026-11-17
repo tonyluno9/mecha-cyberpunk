@@ -2668,3 +2668,309 @@ Use the attached menu reference ONLY for the general style of the item icons (il
 ```
 Use the attached menu reference ONLY for the general line style. Original icons of our own. A single row of 8 category icons evenly spaced on a PURE BLACK (#000000) flat background, each drawn in a single thin coral red (#FF5A4E) line, same line weight and size, no slots, no text: a pistol, a shotgun, an assault rifle, a sniper rifle with scope, a combat knife, a consumable (a drink can and a small box), an implant (a robotic arm segment), a weapon part (a gear with a bullet).
 ```
+
+
+# Parte 23 — Pedido 14-nov: rueda de armas, habilidades, tienda, armas W05–W08, prótesis IMP04–05, enemigos E10–E14, hologramas H05–H08
+
+Lote: `lote_14nov.json` · script: `generar_14nov.ps1`.
+
+## M30 — M30_RuedaArmas (fase 1)
+- **Salida:** `imageassets/referencias/menus/M30_RuedaArmas.png` · 16:9 · **Adjuntar:** `H10_HUD.png`, `K01_Barrio_HUDnuevo.png`, `H01_Pistola.png`
+
+```
+The FIRST attached image is our game's HUD and the SECOND is our game's city look: match their style EXACTLY: thin lines, corners cut on a diagonal, turquoise with a yellow accent for the selected element, thin clean sans-serif text, no heavy panels. Original design of our own, nothing copied from other games. Full 16:9 game screenshot over the night street of the second image. All text in Spanish, spelled EXACTLY as written, no other words. The third image is our pistol hologram style for the weapon icons. Screen: the weapon wheel is open: the street behind is darkened and slightly blurred (slow motion), and in the center of the screen a radial wheel of 8 slots arranged in a circle, drawn in thin turquoise lines with cut corners: "PISTOLA", "ESCOPETA", "FUSIL", "FRANCOTIRADOR", "PUÑOS", "BEBIDA", "PAPITAS", "VENDA", each slot with a small cyan hologram icon of its weapon or item and its name in tiny thin text. The selected slot "FUSIL" is highlighted in yellow. In the center of the wheel: the selected name "FUSIL" and its ammo "30 / 120". The normal HUD is hidden.
+```
+
+## M31 — M31_HabilidadesProtesis (fase 1)
+- **Salida:** `imageassets/referencias/menus/M31_HabilidadesProtesis.png` · 16:9 · **Adjuntar:** `H10_HUD.png`, `K01_Barrio_HUDnuevo.png`, `H33_Implantes_Nivel2_v2.png`
+
+```
+Keep the FIRST attached image EXACTLY the same: the same street, character, camera and the same HUD in every corner. The second image is our city look and the third image shows our implant icons. Add ONLY one new element in the bottom center of the screen, in the same thin HUD style: a bar of 3 square ability slots side by side with cut corners, each with its key and name above it in Spanish, spelled exactly: "[1] PIERNAS", "[2] BRAZOS", "[3] CABEZA"; each slot shows the small icon of its implant (leg exoskeleton, arm exoskeleton, visor) and a thin energy/recharge bar below it: PIERNAS full and ACTIVE, glowing yellow; BRAZOS half recharged in turquoise; CABEZA full in turquoise. No other new text.
+```
+
+## M32 — M32_TiendaArmas (fase 1)
+- **Salida:** `imageassets/referencias/menus/M32_TiendaArmas.png` · 16:9 · **Adjuntar:** `H10_HUD.png`, `K01_Barrio_HUDnuevo.png`, `H04_Francotirador.png`
+
+```
+The FIRST attached image is our game's HUD and the SECOND is our game's city look: match their style EXACTLY: thin lines, corners cut on a diagonal, turquoise with a yellow accent for the selected element, thin clean sans-serif text, no heavy panels. Original design of our own, nothing copied from other games. Full 16:9 game screenshot over the night street of the second image. All text in Spanish, spelled EXACTLY as written, no other words. The third image is the weapon hologram to show big. Screen: the gun shop of El Mercado. The street is darkened behind a large translucent interface. Left side: a vertical list of weapons with thin separators, each row with a name and a price: "PISTOLA  $ 800", "ESCOPETA  $ 2,400", "FUSIL  $ 4,800", "FRANCOTIRADOR  $ 7,500" (selected, highlighted in yellow), "SUBFUSIL  $ 3,600", "REVÓLVER  $ 2,900". Right side: the selected weapon shown BIG as a glowing cyan hologram from the side, its name "FRANCOTIRADOR" above, and four stats as thin bars with numbers: "DAÑO 90", "CADENCIA 20", "CARGADOR 5", "ALCANCE 95". Bottom right: a button with a cut corner "COMPRAR" in yellow, and above the list the money "$ 12,450".
+```
+
+## W05 — W05_Subfusil (fase 2)
+- **Salida:** `imageassets/armas/W05_Subfusil.png` · 16:9 · **Adjuntar:** `W01_Pistola.png`, `W03_Fusil.png`
+- **Medida:** 0.55 m (culata plegada) · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: a compact burst-fire submachine gun: a short boxy body, a long straight magazine sticking down, a folding stock folded to the side, a short barrel with a vented shroud, a small teal burst-mode light, red tape on the front grip.
+```
+
+## W06 — W06_Revolver (fase 2)
+- **Salida:** `imageassets/armas/W06_Revolver.png` · 16:9 · **Adjuntar:** `W01_Pistola.png`, `W03_Fusil.png`
+- **Medida:** 0.38 m · **Tripo:** HD · 10000 · 2K
+
+```
+Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: a heavy large-caliber revolver: a long thick barrel with a top rib, a big cylinder with a glowing turquoise ring of light around it, a chunky hammer, a sand-beige grip wrapped in red tape.
+```
+
+## W07 — W07_RiflePlasma (fase 2)
+- **Salida:** `imageassets/armas/W07_RiflePlasma.png` · 16:9 · **Adjuntar:** `W01_Pistola.png`, `W03_Fusil.png`
+- **Medida:** 1.0 m · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: an energy plasma rifle: a long body with three thick copper-and-gunmetal coils wrapped around the barrel glowing turquoise between them, a boxy energy cell inserted in the side glowing bright turquoise, heat vents, a sand-beige stock, small amber warning lights.
+```
+
+## W08 — W08_Lanzagranadas (fase 2)
+- **Salida:** `imageassets/armas/W08_Lanzagranadas.png` · 16:9 · **Adjuntar:** `W01_Pistola.png`, `W03_Fusil.png`
+- **Medida:** 0.8 m · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: a sturdy revolving-drum grenade launcher: a big round rotating drum with six thick chambers, a wide short barrel, a heavy frame, a top carry handle, a folding stock, orange hazard stripes, a small amber ready light.
+```
+
+## IMP04 — IMP04_BrazoLaser (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/IMP04_BrazoLaser.png` · 16:9 · **Adjuntar:** `IMP02_ExoBrazos.png`, `W01_Pistola.png`
+- **Medida:** 0.45 m (codo a mano) · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, materials and colors of our cyber parts and weapons. Stylized low-poly 3D game asset, chunky simplified shapes, large clean bevels, soft hand-painted gradients. Single object, complete, centered, isolated on a plain flat pure white background, soft even lighting, no cast shadow, no person, no text, no logos. Show the same piece twice side by side with space between them: on the left from the front, on the right in a 3/4 view. Subject: a cybernetic RIGHT forearm prosthetic, from elbow to hand, in gunmetal and chrome with orange accents: its top armor plates are split open like petals and a short thick laser cannon with a glowing turquoise lens slides out over the back of the hand; the hand itself is a robotic hand with chunky fingers. Hollow socket at the elbow end where it attaches.
+```
+
+## IMP05 — IMP05_HombreraMisiles (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/IMP05_HombreraMisiles.png` · 16:9 · **Adjuntar:** `IMP02_ExoBrazos.png`, `W01_Pistola.png`
+- **Medida:** 0.4 m de ancho · lanzador 0.3 m · **Tripo:** HD · 10000 · 2K
+
+```
+Use the attached images ONLY for the art style, materials and colors of our cyber parts and weapons. Stylized low-poly 3D game asset, chunky simplified shapes, large clean bevels, soft hand-painted gradients. Single object, complete, centered, isolated on a plain flat pure white background, soft even lighting, no cast shadow, no person, no text, no logos. Show the same piece twice side by side with space between them: on the left from the front, on the right in a 3/4 view. Subject: a shoulder pad armor piece with a compact missile launcher that rises above the shoulder: a curved gunmetal shoulder plate with straps shaped as solid bands, a small hinged arm, and on top a boxy launcher pod with 4 mini missile tubes in a 2 by 2 grid, the missile tips orange, a small red targeting light.
+```
+
+## E10 — E10_PandilleroSnakes (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/E10_PandilleroSnakes.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `SkullHombre_frente.png`
+- **Medida:** 1.78 m · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a gang member of the SNAKES, the rival gang of the Skulls: an adult man, a fitted cropped jacket with a scale pattern in dark green and black, snake tattoos winding down both forearms, a cloth mask over the lower face in black with a green fang pattern, fitted black cargo pants, black boots, acid green accents.
+```
+
+## E11 — E11_JefeSnakes (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/E11_JefeSnakes.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `SkullHombre_frente.png`
+- **Medida:** 2.0 m · corpulento · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: the boss of the SNAKES gang, a mini boss: a big, broad, tall man, a long dark green coat fitted closed at the waist and ending at the knees (no loose tails), a scale-pattern vest under it, a shaved head with a snake tattoo on the scalp, a heavy cybernetic LEFT arm in black and gunmetal with a long blade folded along the forearm and acid green lights, black boots.
+```
+
+## E12 — E12_GuardiaPesadoNova (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `GuardiaNova_frente.png`
+- **Medida:** 2.0 m (con armadura) · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a heavy Nova corporation guard in full white and blue armor: bulky chest plate, shoulder pads, armored arms and legs, a closed helmet with a dark visor and a thin turquoise light line, a large riot shield strapped flat to the LEFT forearm (kept close along the arm), clean and corporate, blue light accents.
+```
+
+## E13 — E13_DronAsalto (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/E13_DronAsalto.png` · 4:3 · **Adjuntar:** `DR01_Dron.png`, `V05_PatrullaSedan.png`
+- **Medida:** 1.4 m de ancho · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached drone ONLY for the art style and level of detail; this is a bigger, more dangerous version in Nova corporation colors (white and blue). Stylized low-poly 3D game asset, chunky simplified shapes, soft hand-painted gradients. Single object, complete, centered, isolated on a plain flat pure white background, soft even lighting, no cast shadow, no text, no logos. Subject: a Nova assault drone: an armored white and blue central body, four thick arms each ending in a round rotor guard with a chunky rotor inside, the four rotor units clearly separated from the body by visible gaps so they can be cut as separate pieces, a heavy rotary machine gun hanging under the body, a glowing red eye light at the front. View: 3/4 view from the front, slightly from above.
+```
+
+## E14 — E14_JefeFinalNova (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/E14_JefeFinalNova.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `GuardiaNova_frente.png`
+- **Medida:** 3.0 m · **Tripo:** Quads · 25000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: the FINAL BOSS: the head of security of the Nova corporation inside a heavy powered exosuit about 3 meters tall: massive white and blue armored frame with gunmetal joints, a small protected cockpit-helmet on top where his stern face is visible behind a clear visor, broad shoulders, both forearms ending in big arm cannons with glowing blue barrels instead of hands, a round glowing blue energy shield emitter in the center of the chest, thick armored legs. Imposing and heroic proportions for a giant.
+```
+
+## H05 — H05_Subfusil (fase 5)
+- **Salida:** `imageassets/ui/hologramas/H05_Subfusil.png` · 16:9 · **Adjuntar:** `W05_Subfusil.png`
+
+```
+Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.
+```
+
+## H06 — H06_Revolver (fase 5)
+- **Salida:** `imageassets/ui/hologramas/H06_Revolver.png` · 16:9 · **Adjuntar:** `W06_Revolver.png`
+
+```
+Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.
+```
+
+## H07 — H07_RiflePlasma (fase 5)
+- **Salida:** `imageassets/ui/hologramas/H07_RiflePlasma.png` · 16:9 · **Adjuntar:** `W07_RiflePlasma.png`
+
+```
+Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.
+```
+
+## H08 — H08_Lanzagranadas (fase 5)
+- **Salida:** `imageassets/ui/hologramas/H08_Lanzagranadas.png` · 16:9 · **Adjuntar:** `W08_Lanzagranadas.png`
+
+```
+Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.
+```
+
+
+# Parte 24 — Componentes para Unity: íconos de línea (H40 armas, H41 prótesis)
+
+Lote: `lote_16nov.json` · script: `generar_16nov.ps1`.
+
+## H40 — H40_IconosArmasLinea
+- **Salida:** `imageassets/ui/menus/H40_IconosArmasLinea.png` · 1:1 · **Adjuntar:** `M30_RuedaArmas.png`, `M32_TiendaArmas.png`
+
+```
+The attached images are our approved game menus: match their thin turquoise line icon style EXACTLY (single thin turquoise line, same line weight, clean geometric shapes, subtle glow, corners cut on a diagonal on the cells). Original icons of our own. A clean icon sheet for Unity on a PURE BLACK (#000000) flat background: each icon centered inside its own square cell outlined with a very thin dim turquoise line with one cut corner, all cells exactly the same size in a neat grid with even spacing, every icon the same visual size and line weight, no text, no labels, no numbers, no extra decoration. 9 weapon icons in a 3 by 3 grid, each weapon seen from the side pointing right, drawn as a thin turquoise outline, in this order left to right, top to bottom: 1) a pistol, 2) a pump shotgun, 3) a compact assault rifle with a red dot sight, 4) a bolt-action sniper rifle with a big scope, 5) a clenched fist (for fists), 6) a compact submachine gun with a long magazine, 7) a heavy revolver with a long barrel, 8) a plasma rifle with coils around the barrel and an energy cell, 9) a revolving-drum grenade launcher.
+```
+
+## H41 — H41_IconosProtesis
+- **Salida:** `imageassets/ui/menus/H41_IconosProtesis.png` · 3:2 · **Adjuntar:** `M31_HabilidadesProtesis.png`, `H30_IconosImplantes.png`, `H33_Implantes_Nivel2_v2.png`
+
+```
+The attached images are our approved game menus: match their thin turquoise line icon style EXACTLY (single thin turquoise line, same line weight, clean geometric shapes, subtle glow, corners cut on a diagonal on the cells). Original icons of our own. A clean icon sheet for Unity on a PURE BLACK (#000000) flat background: each icon centered inside its own square cell outlined with a very thin dim turquoise line with one cut corner, all cells exactly the same size in a neat grid with even spacing, every icon the same visual size and line weight, no text, no labels, no numbers, no extra decoration. The second and third images show the shapes of our implants (level I and level II): use them only for the shapes, redrawn as thin turquoise line icons. 6 prosthetic icons in a grid of 3 columns by 2 rows. Top row = LEVEL I (minimal, thin): 1) legs: a thin hip ring with one rod down the outside of each leg with small knee joints, 2) arms: a spine piece with one rod along each arm, 3) head: a single round cyber monocle lens for one eye. Bottom row = LEVEL II (bigger, heavier, complete), same order: 4) legs: a full leg exoskeleton with hip belt, thigh plates, knee joints, shin plates and foot trays, 5) arms: a full upper-body exoskeleton with chest plate, shoulder pads, elbow hinges and gauntlets, 6) head: a wide goggle visor over both eyes. Level II icons visibly more complete and with thicker lines than level I, but the same cell size. Add one tiny marker in the top-right corner of each cell: one small bar for level I and two small bars for level II.
+```
+
+
+# Parte 25 — Pedido 16-nov: maletín, tragamonedas, pantallas de carga, ARRESTADO/HAS MUERTO, H42, calles K08–K10, neones LT01–LT04
+
+Lote: `lote_16nov_b.json` · script: `generar_16nov_b.ps1`.
+
+## MA01 — MA01_Maletin (fase 1)
+- **Salida:** `imageassets/modelos-nuevos/MA01_Maletin.png` · 4:3 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `SkullHombre_frente.png`
+- **Medida:** 0.5 × 0.15 × 0.38 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game; do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels, soft hand-painted gradients, thin outlines, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling. No text, no letters, no numbers, no logos. The second image shows the Skulls gang: use only their skull motif for the sticker. Subject: a closed metal money briefcase of robbers: scratched brushed aluminum with ribbed sides, two chunky latch locks with small number wheels shown as plain blank wheels, a thick handle, rounded corners, dents, and one sticker of a stylized magenta holographic skull (no text) on the lid. View: 3/4 view from the front left, slightly from above.
+```
+
+## TR01 — TR01_Tragamonedas (fase 1)
+- **Salida:** `imageassets/modelos-nuevos/TR01_Tragamonedas.png` · 3:4 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `L10_LetreroVivaCoin.png`
+- **Medida:** 0.7 × 0.6 × 1.8 m · **Tripo:** Smart Mesh P2 · 10000 · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game; do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels, soft hand-painted gradients, thin outlines, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling. No text, no letters, no numbers, no logos. The second image is the VivaCoin casino sign: use its gold and magenta colors. Subject: a casino slot machine cabinet: tall rounded gold and magenta cabinet, a glowing screen showing three abstract symbols (a star, a coin, a diamond shape), a row of round warm bulbs around the top edge, a chunky lever on the right side with a red ball, a small button panel, a coin tray at the bottom. View: 3/4 view from the front left, slightly from above.
+```
+
+## TR02 — TR02_Tragamonedas (fase 1)
+- **Salida:** `imageassets/modelos-nuevos/TR02_Tragamonedas.png` · 3:4 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `L10_LetreroVivaCoin.png`
+- **Medida:** 0.7 × 0.65 × 1.9 m · **Tripo:** Smart Mesh P2 · 10000 · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game; do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels, soft hand-painted gradients, thin outlines, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling. No text, no letters, no numbers, no logos. Subject: a modern casino slot machine cabinet variant: a sleek black cabinet with glowing turquoise light strips along its edges, a large CURVED screen showing abstract symbols, a panel with three big round glowing buttons in turquoise, magenta and yellow, a small stool-height footrest. View: 3/4 view from the front left, slightly from above.
+```
+
+## L01 — L01_Carga_Protagonista (fase 2)
+- **Salida:** `imageassets/ui/carga/L01_Carga_Protagonista.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `PJ01_Protagonista_v2.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is our protagonist: keep his face, curly hair with taper fade and the two shaved lines on the right side, silver hoop earring, black sleeveless shirt, black loose cargo pants and white high-top sneakers with a blue side stripe. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: a close-up of the protagonist from the waist up on a night street, holding our worn pistol low and ready, turquoise and magenta neon light on one side of his face and orange street light on the other, determined look, blurred street lights and wet reflections behind him.
+```
+
+## L02 — L02_Carga_Persecucion (fase 2)
+- **Salida:** `imageassets/ui/carga/L02_Carga_Persecucion.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `PJ01_Protagonista_v2.png`, `V01a_CarroViejito.png`, `V05_PatrullaSedan.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is our protagonist: keep his face, curly hair with taper fade and the two shaved lines on the right side, silver hoop earring, black sleeveless shirt, black loose cargo pants and white high-top sneakers with a blue side stripe. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: The third image is the player's car and the fourth is the police car. A car chase on a wet night street: in the front a boxy dark van of the Skulls gang with magenta skull-like markings shown as simple shapes (no text), right behind it the player's old orange car with the protagonist driving, sparks flying where they scrape, and further back a police patrol with red and blue lights, motion blur, low dramatic angle.
+```
+
+## L03 — L03_Carga_Doc (fase 2)
+- **Salida:** `imageassets/ui/carga/L03_Carga_Doc.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `Doc_frente.png`, `consultorio-doc.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is the Doc character (keep his look) and the THIRD is his clinic (use it as the setting). A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the Doc inside his underground I+D+I clinic, standing next to the reclining surgery chair, adjusting the big robotic surgery arm that hangs from the ceiling over the chair, monitors with abstract graphs, shelves with implants, cold turquoise light.
+```
+
+## L04 — L04_Carga_Casino (fase 2)
+- **Salida:** `imageassets/ui/carga/L04_Carga_Casino.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `R01_MeseraRobot.png`, `L10_LetreroVivaCoin.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is the casino waitress robot and the THIRD is the casino sign: include both, redrawn in our style. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the entrance of the VivaCoin casino at night: the big gold and magenta sign glowing above the doors (draw it as a shape with no readable text), two white and gold waitress robots with trays standing by the entrance, red carpet, gold lights, people arriving as silhouettes, light reflecting on the wet street.
+```
+
+## L05 — L05_Carga_Nova (fase 2)
+- **Salida:** `imageassets/ui/carga/L05_Carga_Nova.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `E12_GuardiaPesadoNova.png`, `E13_DronAsalto.png`, `K06_CalleNova.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND image is the heavy Nova guard, the THIRD the Nova assault drone and the FOURTH the Nova district: include them, redrawn in our style. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the huge white Nova tower at night seen from below, its light at the top, cold blue fog, a line of heavy armored Nova guards at its base, and assault drones with red lights flying around the tower, searchlights in the sky.
+```
+
+## L06 — L06_Carga_Techos (fase 2)
+- **Salida:** `imageassets/ui/carga/L06_Carga_Techos.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `PJ01_Protagonista_v2.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is our protagonist: keep his face, curly hair with taper fade and the two shaved lines on the right side, silver hoop earring, black sleeveless shirt, black loose cargo pants and white high-top sneakers with a blue side stripe. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the protagonist seen from behind and slightly to the side, sitting on the edge of a rooftop of the poor neighborhood, looking at the city at night: rooftops with water tanks, antennas and cables in the foreground, the glowing districts in the distance with neon colors and the Nova tower far away on the horizon.
+```
+
+## M33 — M33_Arrestado (fase 3)
+- **Salida:** `imageassets/referencias/menus/M33_Arrestado.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `H10_HUD.png`, `PJ01_Protagonista_v2.png`, `V05_PatrullaSedan.png`
+
+```
+The FIRST attached image is our game's look and the SECOND is our HUD: match their style EXACTLY. Original design of our own, nothing copied from other games. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game screen. The third image is the protagonist and the fourth the police car. Screen: ARRESTED: the protagonist handcuffed and pushed against the hood of a police car, red and blue police lights washing over the scene, the whole image desaturated with only the red and blue lights in color, the normal HUD hidden. Big thin title in the center: "ARRESTADO". Below it, smaller: "-25 %  $ 3,112" and under that "Vuelves a casa". Thin lines with cut corners framing the text, in the HUD style.
+```
+
+## M34 — M34_HasMuerto (fase 3)
+- **Salida:** `imageassets/referencias/menus/M34_HasMuerto.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `H10_HUD.png`, `PJ01_Protagonista_v2.png`
+
+```
+The FIRST attached image is our game's look and the SECOND is our HUD: match their style EXACTLY. Original design of our own, nothing copied from other games. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game screen. The third image is the protagonist. Screen: YOU DIED: the protagonist lying fallen on the wet street at night, seen from above at an angle, a red vignette around the edges of the screen, a digital glitch distortion on some horizontal slices, the normal HUD hidden. Big thin title in the center: "HAS MUERTO" in red. Below it, smaller: "Despiertas en la clínica del Doc". Thin lines with cut corners framing the text, in the HUD style.
+```
+
+## H42 — H42_IconosProtesisAtaque (fase 4)
+- **Salida:** `imageassets/ui/menus/H42_IconosProtesisAtaque.png` · 16:9 · **Adjuntar:** `H41_IconosProtesis.png`, `IMP04_BrazoLaser.png`, `IMP05_HombreraMisiles.png`
+
+```
+The FIRST attached image is our prosthetic icon sheet: match its style EXACTLY (single thin turquoise line, same line weight, cells with a very thin dim turquoise outline and one cut corner, subtle glow). The second and third images are the implants to draw. A small icon sheet on a PURE BLACK (#000000) flat background with 2 cells of the same size side by side: 1) the cybernetic forearm opened with the laser cannon sliding out, 2) the shoulder pad with the 4-tube mini missile launcher. Same cell size as the reference, no text, no numbers.
+```
+
+## K08 — K08_CalleSuburbios_Cuadra (fase 5)
+- **Salida:** `imageassets/referencias/look/K08_CalleSuburbios_Cuadra.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, turquoise and magenta neon, orange sodium street lights, wet reflective ground with puddles, thick cables between poles). No HUD, no player character, no rain, no readable text, no logos: signs show only abstract shapes. Wide view at eye height. Short city blocks: the next corner is visible. Scene: one complete block of the Suburbios neighborhood seen from the sidewalk across the street: a row of attached two-story houses painted in different faded colors with water tanks on the roofs, a small corner shop with a rolled-up shutter and a glowing fridge, a car repair workshop with an open garage, an empty lot with a low painted wall and weeds, utility poles with orange lamps and cables, parked old cars, the corner at each end of the block visible.
+```
+
+## K09 — K09_Plaza_Barrio (fase 5)
+- **Salida:** `imageassets/referencias/look/K09_Plaza_Barrio.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, turquoise and magenta neon, orange sodium street lights, wet reflective ground with puddles, thick cables between poles). No HUD, no player character, no rain, no readable text, no logos: signs show only abstract shapes. Wide view at eye height. Short city blocks: the next corner is visible. Scene: a small neighborhood plaza between blocks: a small round kiosk with a dome roof in the center, benches, a few trees with round crowns, a couple of food stalls with tarp roofs and warm bulbs, a few people as small figures, two-story houses and small shops surrounding the plaza on all sides, streets entering at the corners.
+```
+
+## K10 — K10_CalleMercado (fase 5)
+- **Salida:** `imageassets/referencias/look/K10_CalleMercado.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K02_Tianguis.png`, `K03_NeonAlto.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, turquoise and magenta neon, orange sodium street lights, wet reflective ground with puddles, thick cables between poles). No HUD, no player character, no rain, no readable text, no logos: signs show only abstract shapes. Wide view at eye height. Short city blocks: the next corner is visible. Scene: The second and third images are the El Mercado and Neon Alto districts: this street is the transition between them. A busy commercial street: ground floor shops with metal shutters, some open with glowing interiors, many projecting signs and neon with abstract shapes, buildings of 3 to 4 floors with balconies, a few screens, more neon toward the far end, people on the sidewalks.
+```
+
+## LT01 — LT01_NeonTaqueria (fase 6)
+- **Salida:** `imageassets/modelos-nuevos/LT01_NeonTaqueria.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+- **Medida:** 3 × 1 m · **Tripo:** HD · 10000 · 2K
+
+```
+Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a taco restaurant sign: the word "TAQUERÍA" (with the accent on the I) in big warm orange and yellow neon letters, with a neon taco shape and a small chili pepper.
+```
+
+## LT02 — LT02_NeonFarmacia24 (fase 6)
+- **Salida:** `imageassets/modelos-nuevos/LT02_NeonFarmacia24.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+- **Medida:** 3 × 0.9 m · **Tripo:** HD · 10000 · 2K
+
+```
+Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a pharmacy sign: the words "FARMACIA 24 H" in white and green neon letters with a big green neon cross on the left.
+```
+
+## LT03 — LT03_NeonHotel (fase 6)
+- **Salida:** `imageassets/modelos-nuevos/LT03_NeonHotel.png` · 9:16 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+- **Medida:** 1.2 × 5 m · **Tripo:** HD · 10000 · 2K
+
+```
+Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a tall vertical hotel sign: the word "HOTEL" written vertically, one letter under the other, in magenta neon letters, with turquoise neon stars between the letters.
+```
+
+## LT04 — LT04_NeonVivaCoin (fase 6)
+- **Salida:** `imageassets/modelos-nuevos/LT04_NeonVivaCoin.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `L10_LetreroVivaCoin.png`
+- **Medida:** 4 × 1.5 m · **Tripo:** HD · 10000 · 2K
+
+```
+Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: an advertising sign for the casino: the word "VIVACOIN" in big gold neon letters with a magenta neon outline, a neon gold coin on the left and a magenta arrow pointing right.
+```

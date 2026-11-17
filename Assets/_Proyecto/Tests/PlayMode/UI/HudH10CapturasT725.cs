@@ -164,6 +164,12 @@ namespace MechaCyberpunk.Tests.UI
             while (Time.unscaledTime < limite && !(h10.Buscando && h10.Estrella(0).color.a > 0.99f)) yield return null;
             Debug.Log("[T725] llenas " + h10.EstrellasLlenas + " buscando " + h10.Buscando);
             Foto("s1d-T-725-juego-busqueda");
+            // T-1304: con 5 estrellas viene Nova y las estrellas se pintan de azul intenso.
+            fijo.Valor = 95f;
+            yield return Esperar(0.6f);
+            Assert.AreEqual(5, h10.EstrellasLlenas, "5 estrellas");
+            Assert.Greater(h10.Estrella(0).color.b, h10.Estrella(0).color.g + 0.3f, "Las estrellas de Nova son azules");
+            Foto("s1d-T-1304-estrellas-nova");
             Registro<IZonaBusqueda>.Quitar(zona);
             Registro<ICalor>.Quitar(fijo);
 
