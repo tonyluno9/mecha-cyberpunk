@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -58,6 +59,10 @@ namespace MechaCyberpunk.Personaje.Visual
         private const float AmplitudCabeza = 2.2f;
         private const float AmplitudCadera = 1.2f;
 
+        // T-1332: los que platican se miran entre sí: busca a la pareja más cercana de esta lista (o la que le pongan con PlaticarCon).
+        private const float DistanciaPareja = 2.5f;
+        private static readonly List<GenteDeBanqueta> Platicadores = new List<GenteDeBanqueta>();
+        private GenteDeBanqueta companero;
         private Animator animador;
         private SkinnedMeshRenderer cuerpo;
         private Transform pecho;
@@ -88,6 +93,22 @@ namespace MechaCyberpunk.Personaje.Visual
         public float Ritmo => ritmo;
         public AnimationClip ClipPlatica => clipPlatica;
         public bool Platicando => hayGrafo;
+
+        /// <summary>T-1332: con quién platica (a quien mira de frente); null si no tiene pareja cerca.</summary>
+        public GenteDeBanqueta Companero => companero;
+
+        /// <summary>T-1332: fija a la pareja de plática (ambos se miran).</summary>
+        public void PlaticarCon(GenteDeBanqueta otro)
+        {
+            companero = otro;
+            if (otro != null && otro != this)
+            {
+                otro.companero = this;
+            }
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarPlaticadores() => Platicadores.Clear();
 
         /// <summary>T-534: true mientras voltea a ver al jugador (se detiene si caminaba).</summary>
         public bool Mirando => mirando;
@@ -124,6 +145,10 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void Awake()
         {
+            if (GetComponent<IRecibeDanio>() == null)
+            {
+                gameObject.AddComponent<VidaGente>(); // T-1332: la gente de banqueta recibe daño y muere
+            }
             animador = GetComponentInChildren<Animator>(true);
             cuerpo = GetComponentInChildren<SkinnedMeshRenderer>(true);
             if (mover == null)
@@ -155,6 +180,10 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             if (modo == ModoGente.Platicar)
             {
+                if (!Platicadores.Contains(this))
+                {
+                    Platicadores.Add(this);
+                }
                 IniciarPlatica();
             }
             else if (modo == ModoGente.Caminar && mover != null)
@@ -174,6 +203,7 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void OnDisable()
         {
+            Platicadores.Remove(this);
             if (hayGrafo)
             {
                 grafo.Destroy();
@@ -210,10 +240,45 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 return;
             }
+            if (modo == ModoGente.Platicar)
+            {
+                MirarAlCompanero(dt);
+            }
             if (modo == ModoGente.Caminar && mover != null)
             {
                 Caminar(dt);
             }
+        }
+
+        // T-1332: gira hacia su pareja de plática (la busca si no tiene o si la suya ya no está).
+        private void MirarAlCompanero(float dt)
+        {
+            if (companero == null || !companero.isActiveAndEnabled)
+            {
+                companero = null;
+                float mejor = DistanciaPareja;
+                foreach (GenteDeBanqueta otro in Platicadores)
+                {
+                    float d = otro != this ? Vector3.Distance(otro.transform.position, transform.position) : float.MaxValue;
+                    if (d < mejor)
+                    {
+                        mejor = d;
+                        companero = otro;
+                    }
+                }
+                if (companero == null)
+                {
+                    return;
+                }
+            }
+            Vector3 hacia = companero.transform.position - transform.position;
+            hacia.y = 0f;
+            if (hacia.sqrMagnitude < 0.01f)
+            {
+                return;
+            }
+            girar.rotation = Quaternion.RotateTowards(girar.rotation, Quaternion.LookRotation(hacia.normalized, Vector3.up), GradosPorSegundoMirar * dt);
+            giroOriginal = girar.rotation;
         }
 
         // T-534: si el jugador está cerca y quieto un momento, se voltea hacia él; al irse, vuelve a lo suyo. Devuelve true mientras mira.
