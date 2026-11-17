@@ -8,6 +8,7 @@ using MechaCyberpunk.UI.Armas;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Tiendas
@@ -43,6 +44,18 @@ namespace MechaCyberpunk.UI.Tiendas
         private Text dinero;
         private Text nombre;
         private RawImage imagenHolo;
+        private RectTransform areaHolo;
+        private bool arrastrando;
+        [Tooltip("Arrastrar el arma con el ratón (botón izquierdo).")]
+        [SerializeField] private InputAction arrastrar = new InputAction("MercadoArrastrar", InputActionType.Button, "<Mouse>/leftButton");
+        [Tooltip("Movimiento del ratón (px) para girar el arma.")]
+        [SerializeField] private InputAction movimientoRaton = new InputAction("MercadoRaton", InputActionType.Value, "<Mouse>/delta");
+        [Tooltip("Rueda para acercar o alejar el arma.")]
+        [SerializeField] private InputAction rueda = new InputAction("MercadoRueda", InputActionType.Value, "<Mouse>/scroll/y");
+        [Tooltip("Girar el arma a la izquierda sin ratón.")]
+        [SerializeField] private InputAction giroIzquierda = new InputAction("MercadoGiroIzq", InputActionType.Button, "<Keyboard>/q");
+        [Tooltip("Girar el arma a la derecha sin ratón.")]
+        [SerializeField] private InputAction giroDerecha = new InputAction("MercadoGiroDer", InputActionType.Button, "<Keyboard>/e");
         private Text botonTexto;
         private Image[] botonBorde;
         private readonly Text[] etiquetas = new Text[ReglaVistaMercado.Barras];
@@ -117,7 +130,7 @@ namespace MechaCyberpunk.UI.Tiendas
             piso.color = TrazoH10.ConAlfa(TrazoH10.Turquesa, 0.75f);
             piso.raycastTarget = false;
 
-            RectTransform areaHolo = TrazoH10.Nodo(derecha, "Holograma");
+            areaHolo = TrazoH10.Nodo(derecha, "Holograma");
             TrazoH10.Colocar(areaHolo, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -AltoNombre), new Vector2(AnchoHolo, AltoHolo));
             imagenHolo = new GameObject("Imagen", typeof(RectTransform)).AddComponent<RawImage>();
             imagenHolo.transform.SetParent(areaHolo, false);
@@ -180,6 +193,67 @@ namespace MechaCyberpunk.UI.Tiendas
             rellenos[i].offsetMax = new Vector2(-2f, -2f);
         }
 
+        /// <summary>T-1326: el rectángulo del holograma, donde se arrastra para girar el arma.</summary>
+        public RectTransform AreaHolograma => areaHolo;
+
+        /// <summary>
+        /// T-1326: gira el arma con el ratón (arrastrar con el botón izquierdo sobre el holograma), la rueda la acerca y Q/E la giran sin ratón.
+        /// La llama <see cref="PantallaTienda"/> cada cuadro mientras la tienda está arriba.
+        /// </summary>
+        public void Atender()
+        {
+            if (!Activa || vista == null || imagenHolo == null || !imagenHolo.enabled)
+            {
+                arrastrando = false;
+                return;
+            }
+            Mouse raton = Mouse.current;
+            if (raton != null)
+            {
+                Canvas canvas = raiz.GetComponentInParent<Canvas>();
+                Camera camara = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+                bool encima = RectTransformUtility.RectangleContainsScreenPoint(areaHolo, raton.position.ReadValue(), camara);
+                if (arrastrar.WasPressedThisFrame())
+                {
+                    arrastrando = encima;
+                }
+                if (!arrastrar.IsPressed())
+                {
+                    arrastrando = false;
+                }
+                Vector2 delta = movimientoRaton.ReadValue<Vector2>();
+                if (arrastrando && delta != Vector2.zero)
+                {
+                    vista.Girar(delta);
+                }
+                float rueda = this.rueda.ReadValue<float>();
+                if (encima && Mathf.Abs(rueda) > 0f)
+                {
+                    vista.Acercar(rueda);
+                }
+            }
+            float direccion = ReglaGiroHolograma.Direccion(giroIzquierda.IsPressed(), giroDerecha.IsPressed());
+            if (direccion != 0f)
+            {
+                vista.Girar(ReglaGiroHolograma.ArrastrePorTeclas(direccion, Time.unscaledDeltaTime));
+            }
+        }
+
+        private void ActivarEntrada(bool activar)
+        {
+            foreach (InputAction a in new[] { arrastrar, movimientoRaton, rueda, giroIzquierda, giroDerecha })
+            {
+                if (activar)
+                {
+                    a.Enable();
+                }
+                else
+                {
+                    a.Disable();
+                }
+            }
+        }
+
         /// <summary>Pone el dinero grande arriba de la lista (dentro de su panel), como el mockup.</summary>
         public void ColocarDinero(RectTransform panelLista)
         {
@@ -199,6 +273,7 @@ namespace MechaCyberpunk.UI.Tiendas
                 return;
             }
             raiz.gameObject.SetActive(encender);
+            ActivarEntrada(encender);
             if (dinero != null)
             {
                 dinero.gameObject.SetActive(encender);
@@ -355,6 +430,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private void OnDestroy()
         {
+            ActivarEntrada(false);
             Soltar();
         }
     }

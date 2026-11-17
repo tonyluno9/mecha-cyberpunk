@@ -6,6 +6,7 @@ using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.UI.Kit;
+using MechaCyberpunk.UI.Tiendas;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -124,6 +125,10 @@ namespace MechaCyberpunk.UI.Armas
         [SerializeField] private InputAction movimientoRaton = new InputAction("ArmasRaton", InputActionType.Value, "<Mouse>/delta");
         [Tooltip("Rueda del ratón para acercar.")]
         [SerializeField] private InputAction rueda = new InputAction("ArmasRueda", InputActionType.Value, "<Mouse>/scroll/y");
+        [Tooltip("T-1326: girar el arma a la izquierda sin ratón (Q).")]
+        [SerializeField] private InputAction giroIzquierda = new InputAction("ArmasGiroIzq", InputActionType.Button, "<Keyboard>/q");
+        [Tooltip("T-1326: girar el arma a la derecha sin ratón (E).")]
+        [SerializeField] private InputAction giroDerecha = new InputAction("ArmasGiroDer", InputActionType.Button, "<Keyboard>/e");
 
         private readonly List<EntradaArmaMenu> armas = new List<EntradaArmaMenu>();
         private readonly List<EntradaArmaMenu> armasTodas = new List<EntradaArmaMenu>();
@@ -289,6 +294,8 @@ namespace MechaCyberpunk.UI.Armas
             arrastrar.Enable();
             movimientoRaton.Enable();
             rueda.Enable();
+            giroIzquierda.Enable();
+            giroDerecha.Enable();
         }
 
         /// <summary>Cierra el menú; si se compró algo, sale el letrero ARMA MEJORADA.</summary>
@@ -329,6 +336,8 @@ namespace MechaCyberpunk.UI.Armas
             arrastrar.Disable();
             movimientoRaton.Disable();
             rueda.Disable();
+            giroIzquierda.Disable();
+            giroDerecha.Disable();
         }
 
         private void Update()
@@ -430,6 +439,11 @@ namespace MechaCyberpunk.UI.Armas
             if (arrastrando)
             {
                 vista.Girar(movimientoRaton.ReadValue<Vector2>());
+            }
+            float direccionTeclas = ReglaGiroHolograma.Direccion(giroIzquierda.IsPressed(), giroDerecha.IsPressed());
+            if (direccionTeclas != 0f && armas.Count > 0)
+            {
+                vista.Girar(ReglaGiroHolograma.ArrastrePorTeclas(direccionTeclas, Time.unscaledDeltaTime));
             }
             float scroll = rueda.ReadValue<float>();
             if (encima && Mathf.Abs(scroll) > 0f)
@@ -1000,6 +1014,7 @@ namespace MechaCyberpunk.UI.Armas
             textoDinero = Texto(canvas.transform, "Dinero", RolTexto.Titulo, TextAnchor.MiddleRight, new Vector2(1f, 1f),
                 new Vector2(-Margen, -14f), new Vector2(500f, 60f), string.Empty, TrazoH10.Turquesa);
             textoDinero.fontSize = TrazoH10.TamanoCifra;
+            ConstruirBotonSalir();
 
             ConstruirLista(estilo);
             ConstruirHolograma(estilo);
@@ -1100,6 +1115,30 @@ namespace MechaCyberpunk.UI.Armas
             b.Boton = fondo.gameObject.AddComponent<Button>();
             b.Boton.transition = Selectable.Transition.None;
             return b;
+        }
+
+        // T-1326: botón SALIR en la cabecera; un clic hace lo mismo que Esc.
+        public void ClicSalir()
+        {
+            if (!visible || !PilaPantallas.EsArriba(this))
+            {
+                return;
+            }
+            Sonidos.Reproducir(config.SonidoCancelar);
+            alSalir?.Invoke();
+        }
+
+        private void ConstruirBotonSalir()
+        {
+            Image fondoSalir = TrazoH10.Panel(canvas.transform, "BotonSalir", TrazoH10.TurquesaTenue, TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.3f));
+            fondoSalir.raycastTarget = true;
+            TrazoH10.Punto(fondoSalir.rectTransform, new Vector2(1f, 1f), new Vector2(-(Margen + 540f), -20f), new Vector2(200f, 50f));
+            Button salirBoton = fondoSalir.gameObject.AddComponent<Button>();
+            salirBoton.transition = Selectable.Transition.None;
+            salirBoton.onClick.AddListener(ClicSalir);
+            HoverH10.Agregar(fondoSalir.gameObject, fondoSalir.transform.Find("Linea").GetComponent<Image>(), TrazoH10.TurquesaTenue, TrazoH10.Turquesa);
+            Text texto = TrazoH10.Etiqueta(fondoSalir.transform, "Texto", "SALIR", TrazoH10.TamanoFila, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
+            TrazoH10.Estirar(texto.rectTransform);
         }
 
         private void ConstruirFilasArmas()
