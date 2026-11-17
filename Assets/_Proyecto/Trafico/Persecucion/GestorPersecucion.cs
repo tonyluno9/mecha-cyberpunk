@@ -30,6 +30,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
         [SerializeField] private ConfigPersecucion config;
         [SerializeField] private DronMundo prefabDron;
         [SerializeField] private PatrullaMundo prefabPatrulla;
+        [Tooltip("T-1322: la camioneta de los 5 estrellas. Vacío: no hay modelo todavía y salen patrullas normales.")]
+        [SerializeField] private PatrullaMundo prefabCamioneta;
+        private int estrellasPublicadas;
 
         private readonly List<DronMundo> drones = new List<DronMundo>();
         private readonly List<PatrullaMundo> patrullas = new List<PatrullaMundo>();
@@ -70,6 +73,39 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>True si ya te dieron por perdido (T-587).</summary>
         public bool Perdido => config != null && ReglaVistaPolicia.Perdido(SegundosSinVer, config.SegundosParaPerder) && huboContacto;
 
+        /// <summary>T-1322: el prefab de la camioneta (opcional). Con 5 estrellas las patrullas extra salen con él; si es null, con el de la patrulla.</summary>
+        public void PonerCamioneta(PatrullaMundo camioneta) => prefabCamioneta = camioneta;
+
+        /// <summary>T-1322: true si ahora mismo hay 5 estrellas (llegan los refuerzos extra).</summary>
+        public bool CincoEstrellas => calor != null && calor.Nivel > 0 && EstrellasBusqueda.EnMaximo(EstrellasBusqueda.De(calor));
+
+        private int PatrullasPedidas(int nivel) => calculo == null ? 0 : calculo.Patrullas(nivel) + (CincoEstrellas && config != null ? config.PatrullasExtraCincoEstrellas : 0);
+
+        private int DronesPedidos(int nivel) => calculo == null ? 0 : calculo.Drones(nivel) + (CincoEstrellas && config != null ? config.DronesExtraCincoEstrellas : 0);
+
+        // T-1322: avisa cuando cambian las estrellas; al llegar o salir de las 5 reajusta los perseguidores (el nivel de calor no cambia entre 4 y 5 estrellas).
+        private void AlCambiarValor(float valor)
+        {
+            int estrellas = EstrellasBusqueda.De(calor);
+            if (estrellas == estrellasPublicadas)
+            {
+                return;
+            }
+            bool eraMaximo = EstrellasBusqueda.EnMaximo(estrellasPublicadas);
+            bool sera = EstrellasBusqueda.EnMaximo(estrellas);
+            bool sube = estrellas > estrellasPublicadas;
+            estrellasPublicadas = estrellas;
+            EstrellasBusqueda.PublicarCambio(estrellas);
+            if (eraMaximo != sera)
+            {
+                Reconciliar(calor.Nivel);
+                if (sera && sube)
+                {
+                    RadioPolicia.Sonar(PosicionDelJugador() ?? transform.position, config); // llegan los refuerzos
+                }
+            }
+        }
+
         /// <summary>Lo usan el creador de editor y las pruebas, antes de que el gestor se active.</summary>
         public void Configurar(ConfigPersecucion numeros, DronMundo dron, PatrullaMundo patrulla)
         {
@@ -90,6 +126,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             azar = new System.Random(341);
             testigos = gameObject.AddComponent<TestigosDelito>(); // T-661: sin testigos no hay calor
             testigos.Configurar(config);
+            gameObject.AddComponent<VigilanteDisparoACarros>().Configurar(testigos); // T-1322: dispararle a un carro frente a la policía
             gameObject.AddComponent<GestorRefuerzos>().Configurar(config); // T-714: los SKULLS llaman refuerzos en carro
             gameObject.AddComponent<AsaltoMundo>(); // T-717: el carro del asaltante de la historia del dinero
             busqueda = new ReglaBusquedaPolicial(config.RadioBusqueda, config.SegundosParaEscapar);
@@ -193,7 +230,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (reintentoSalida <= 0f)
             {
                 reintentoSalida = SegundosReintentoSalida;
-                if (patrullas.Count < calculo.Patrullas(calor.Nivel))
+                if (patrullas.Count < PatrullasPedidas(calor.Nivel))
                 {
                     Reconciliar(calor.Nivel); // T-664: las patrullas que no pudieron salir sin verse lo intentan de nuevo
                 }
@@ -333,6 +370,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Desenlazar(calor);
             calor = nuevo;
             calor.NivelCambio += Reconciliar;
+            calor.ValorCambio += AlCambiarValor;
+            estrellasPublicadas = EstrellasBusqueda.De(calor);
             Reconciliar(calor.Nivel);
         }
 
@@ -341,6 +380,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (viejo != null && ReferenceEquals(viejo, calor))
             {
                 calor.NivelCambio -= Reconciliar;
+                calor.ValorCambio -= AlCambiarValor;
+                if (estrellasPublicadas != 0)
+                {
+                    estrellasPublicadas = 0;
+                    EstrellasBusqueda.PublicarCambio(0);
+                }
                 calor = null;
                 Reconciliar(0);
             }
@@ -385,8 +430,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             patrullas.RemoveAll(p => p == null || p.Robada || p.Destruida); // T-707
             ActualizarBusqueda(nivel);
-            int dronesPedidos = calculo == null ? 0 : calculo.Drones(nivel);
-            int patrullasPedidas = calculo == null ? 0 : calculo.Patrullas(nivel);
+            int dronesPedidos = DronesPedidos(nivel);
+            int patrullasPedidas = PatrullasPedidas(nivel);
             while (drones.Count < dronesPedidos)
             {
                 CrearDron(dronesPedidos);
@@ -514,7 +559,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return false; // T-664: ahora no hay por dónde salir sin que se vea; se reintenta en Update
             }
-            PatrullaMundo patrulla = Instantiate(prefabPatrulla, transform);
+            // T-1322: con 5 estrellas las que pasan de las del nivel son camionetas (si hay prefab).
+            bool extra = CincoEstrellas && patrullas.Count >= calculo.Patrullas(calor.Nivel);
+            PatrullaMundo molde = extra && prefabCamioneta != null ? prefabCamioneta : prefabPatrulla;
+            PatrullaMundo patrulla = Instantiate(molde, transform);
             patrulla.Preparar(calculo, config, calles, salida, PosicionDelJugador);
             patrulla.Intercepta = patrullas.Count % 2 == 1; // T-587: cada segunda patrulla corta el paso
             patrullas.Add(patrulla);
