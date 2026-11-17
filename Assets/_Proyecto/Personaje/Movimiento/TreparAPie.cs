@@ -90,6 +90,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 gameObject.AddComponent<CaidaJugador>();
             }
+            if (GetComponent<AtropelloJugador>() == null)
+            {
+                gameObject.AddComponent<AtropelloJugador>();
+            }
             if (config == null || mover == null || saltar == null)
             {
                 Debug.LogError("[Personaje] Faltan referencias en TreparAPie de " + name, this);

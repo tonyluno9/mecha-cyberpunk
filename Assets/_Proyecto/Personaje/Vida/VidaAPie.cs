@@ -171,6 +171,32 @@ namespace MechaCyberpunk.Personaje.Vida
             {
                 cantidad = escudo.Absorber(cantidad);
             }
+            return AplicarAVida(info, cantidad);
+        }
+
+        /// <summary>
+        /// T-1327: daño que va solo a la vida, sin pasar por el escudo (ni lo absorbe ni lo reduce): el de las caídas. Respeta KO y la invulnerabilidad
+        /// (bebida energética, rodada) y publica el impacto igual que <see cref="RecibirDanio"/>.
+        /// </summary>
+        public ResultadoDanio RecibirDanioSoloVida(InfoDanio info)
+        {
+            if (modelo == null || modelo.EstaKO || info.Cantidad <= 0f || Time.time < invulnerableHasta)
+            {
+                return ResultadoDanio.Ignorado;
+            }
+            if (cubierta == null)
+            {
+                cubierta = GetComponent<CubiertaYRodada>();
+            }
+            if (cubierta != null && cubierta.Invulnerable)
+            {
+                return ResultadoDanio.Ignorado;
+            }
+            return AplicarAVida(info, info.Cantidad);
+        }
+
+        private ResultadoDanio AplicarAVida(InfoDanio info, float cantidad)
+        {
             float aplicado = modelo.Aplicar(cantidad);
             if (info.Tipo == TipoDanio.Explosion && quemadura != null && !modelo.EstaKO)
             {

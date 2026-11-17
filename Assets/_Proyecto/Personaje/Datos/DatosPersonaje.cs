@@ -43,6 +43,8 @@ namespace MechaCyberpunk.Personaje
 
         [Tooltip("Velocidad con que el cuerpo se gira hacia el oponente durante la preparación del golpe (°/s).")]
         [Min(1f)] [SerializeField] private float velocidadAutoGiro = 1440f;
+        [Tooltip("T-1327: lo más que el jugador se acerca al blanco al golpear (m). 0 = no se acerca.")]
+        [Min(0f)] [SerializeField] private float avanceAutoGiro = 0.8f;
 
         [Header("Regeneración")]
         [Tooltip("Vida que recupera por segundo cuando lleva un rato sin recibir daño (puntos/s).")]
@@ -85,6 +87,7 @@ namespace MechaCyberpunk.Personaje
         public float RadioAutoGiro => radioAutoGiro;
         public float AnguloAutoGiro => anguloAutoGiro;
         public float VelocidadAutoGiro => velocidadAutoGiro;
+        public float AvanceAutoGiro => avanceAutoGiro;
         public float AlturaCamaraKO => alturaCamaraKO;
         public float LadeoCamaraKO => ladeoCamaraKO;
         public float VelocidadCaidaKO => velocidadCaidaKO;

@@ -131,7 +131,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (danio > 0f)
             {
                 float antes = vida.Actual;
-                vida.RecibirDanio(new InfoDanio(danio, TipoDanio.Golpe, transform.position, Vector3.down, null));
+                vida.RecibirDanioSoloVida(new InfoDanio(danio, TipoDanio.Golpe, transform.position, Vector3.down, null)); // T-1327: el escudo no absorbe la caída
                 UltimoDanio = antes - vida.Actual;
                 Debug.Log("[Personaje] T-1310: caída de " + caida.ToString("0.0") + " m, daño " + UltimoDanio.ToString("0.0"));
             }
