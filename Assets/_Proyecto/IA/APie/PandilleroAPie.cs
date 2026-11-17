@@ -1214,7 +1214,8 @@ namespace MechaCyberpunk.IA.APie
                 return false;
             }
             IJugador jugador = Registro<IJugador>.Actual;
-            return jugador != null && raizJugador != null && jugador.Modo == ModoJugador.APie && recibeJugador != null
+            // T-1307: el jugador en carro o moto también es blanco (las balas le dan; ver PistolaPandillero.HayLinea). El mecha no.
+            return jugador != null && raizJugador != null && (jugador.Modo == ModoJugador.APie || jugador.Modo == ModoJugador.Carro) && recibeJugador != null
                 && (vidaJugador == null || !vidaJugador.EstaKO);
         }
 

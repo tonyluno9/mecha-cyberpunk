@@ -3,6 +3,7 @@ using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Vida;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -109,13 +110,50 @@ namespace MechaCyberpunk.Personaje.Jugador
             Registro<IJugador>.Agregar(this);
             Registro<IGuardable>.Agregar(this);
             EventosMontaje.SalidaForzada += AlSalidaForzada;
+            vidaSuscrita = GetComponent<VidaAPie>();
+            if (vidaSuscrita != null)
+            {
+                vidaSuscrita.KO += AlCaerKO;
+            }
         }
 
         private void OnDisable()
         {
+            if (vidaSuscrita != null)
+            {
+                vidaSuscrita.KO -= AlCaerKO;
+                vidaSuscrita = null;
+            }
             Registro<IJugador>.Quitar(this);
             Registro<IGuardable>.Quitar(this);
             EventosMontaje.SalidaForzada -= AlSalidaForzada;
+        }
+
+        // T-1307: si las balas lo tumban dentro del carro o la moto, se baja en cuanto el vehículo lo deje (a pie sigue el flujo normal de KO).
+        private const float SegundosReintentoBajarKO = 0.25f;
+        private const float SegundosMaximosBajarKO = 15f;
+        private VidaAPie vidaSuscrita;
+
+        private void AlCaerKO()
+        {
+            if (MontableActual != null && isActiveAndEnabled)
+            {
+                StartCoroutine(BajarTrasKO());
+            }
+        }
+
+        private IEnumerator BajarTrasKO()
+        {
+            float fin = Time.time + SegundosMaximosBajarKO;
+            WaitForSeconds espera = new WaitForSeconds(SegundosReintentoBajarKO);
+            while (MontableActual != null && Time.time < fin)
+            {
+                if (Bajar())
+                {
+                    yield break;
+                }
+                yield return espera;
+            }
         }
 
         // T-444: el carro explota (o algo igual) y saca al jugador de golpe.
@@ -386,7 +424,9 @@ namespace MechaCyberpunk.Personaje.Jugador
                 animacionCarro.TrasColocar();
             }
             controladorAPie.enabled = true;
-            controladorAPie.ActivarControl(true);
+            // T-1307: si bajó porque lo tumbaron (KO), no recupera el control.
+            VidaAPie vida = GetComponent<VidaAPie>();
+            controladorAPie.ActivarControl(vida == null || !vida.EstaKO);
             if (armas != null)
             {
                 armas.enabled = true;

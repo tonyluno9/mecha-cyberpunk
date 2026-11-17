@@ -1,5 +1,6 @@
 using System;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using UnityEngine;
 
@@ -160,6 +161,11 @@ namespace MechaCyberpunk.Personaje.Vida
             {
                 return ResultadoDanio.Ignorado;
             }
+            // T-1307: dentro de un carro la carrocería frena parte de las balas; en la moto no hay nada que proteja.
+            if (info.Tipo == TipoDanio.Disparo && EnCarroConCarroceria())
+            {
+                cantidad *= FraccionDanioDisparoEnCarro;
+            }
             // T-684: el escudo absorbe primero; lo que sobra pasa a la vida.
             if (escudo != null)
             {
@@ -174,6 +180,22 @@ namespace MechaCyberpunk.Personaje.Vida
             EventosPelea.PublicarImpacto(null, info, resultado);
             Sonidos.ReproducirEn(VozJugador.Id("JUG_DANIO"), transform.position);
             return resultado;
+        }
+
+        /// <summary>T-1307: fracción del daño de una bala que le llega al jugador sentado dentro de un carro (la moto recibe el daño completo).</summary>
+        public const float FraccionDanioDisparoEnCarro = 0.55f;
+
+        private JugadorAPie jugadorAPie;
+        private AnimacionCarro animacionCarro;
+
+        private bool EnCarroConCarroceria()
+        {
+            if (jugadorAPie == null)
+            {
+                jugadorAPie = GetComponent<JugadorAPie>();
+                animacionCarro = GetComponent<AnimacionCarro>();
+            }
+            return jugadorAPie != null && jugadorAPie.Modo == ModoJugador.Carro && (animacionCarro == null || !animacionCarro.EnMoto);
         }
 
         public bool ProtegeDe(Vector3 origen, out Vector3 puntoCubierta)
