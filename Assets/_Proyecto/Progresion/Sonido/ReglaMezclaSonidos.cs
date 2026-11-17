@@ -54,6 +54,9 @@ namespace MechaCyberpunk.Progresion.Sonido
             "MUN_PUERTA_CASA_ABRIR", "MUN_PUERTA_CASA_CERRAR", ReglaAmbienteZona.Casino, ReglaAmbienteZona.Clinica,
         };
 
+        /// <summary>T-1309: un disparo propio por arma (subfusil, revólver, lanzagranadas, rifle de plasma) y el chispeo al cargar el plasma.</summary>
+        public static readonly string[] IdsArmasT1309 = { "ARM_SUB_DISPARO", "ARM_REV_DISPARO", "ARM_LGR_DISPARO", "ARM_PLA_DISPARO", "ARM_PLA_CARGA" };
+
         /// <summary>T-977: los que no se prenden sin probar (docs/sonidos-sugerencias.md: hacian spam).</summary>
         public static readonly string[] IdsMolestos =
         {
@@ -64,7 +67,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         public const string IdDerrape = "VEH_FRENO_DERRAPE";
 
         /// <summary>Si el ID es de los que suenan por defecto (los minimos de T-620 y los que regresan en T-977).</summary>
-        public static bool EncendidoPorDefecto(string id) => Array.IndexOf(IdsEncendidos, id) >= 0 || Array.IndexOf(IdsRegresados, id) >= 0;
+        public static bool EncendidoPorDefecto(string id) => Array.IndexOf(IdsEncendidos, id) >= 0 || Array.IndexOf(IdsRegresados, id) >= 0 || Array.IndexOf(IdsArmasT1309, id) >= 0;
 
         /// <summary>
         /// T-977: nivel de cada ambiente sobre la ganancia de la seccion, para que todos queden cerca de -45 dB aunque sus archivos no:
