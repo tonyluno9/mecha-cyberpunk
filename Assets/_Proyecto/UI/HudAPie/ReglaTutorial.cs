@@ -85,6 +85,7 @@ namespace MechaCyberpunk.UI.Hud
         public const string TeclaMapa = "Mapa";
         public const string TeclaTelefono = "Telefono";
         public const string TeclaRueda = "Rueda";
+        public const string TeclaConsumir = "ConsumirEquipado";
         public const string TeclaPiernas = "HabilidadPiernas";
         public const string TeclaBrazos = "HabilidadBrazos";
         public const string TeclaCabeza = "HabilidadCabeza";
@@ -106,6 +107,7 @@ namespace MechaCyberpunk.UI.Hud
                 case TeclaMapa: return "M";
                 case TeclaTelefono: return "T";
                 case TeclaRueda: return "Tab";
+                case TeclaConsumir: return "B";
                 case TeclaPiernas: return "Q";
                 case TeclaBrazos: return "C";
                 case TeclaCabeza: return "X";
@@ -139,7 +141,7 @@ namespace MechaCyberpunk.UI.Hud
                 case AccionTutorial.Moto: return k(TeclaInteractuar) + " TE SUBE A LA MOTO · " + k(TeclaMover) + " ACELERA, FRENA Y GIRA";
                 case AccionTutorial.Mapa: return k(TeclaMapa) + " ABRE EL MAPA";
                 case AccionTutorial.Misiones: return k(TeclaTelefono) + " ABRE EL TELÉFONO Y TUS MISIONES";
-                case AccionTutorial.Consumibles: return "MANTÉN " + k(TeclaRueda) + " PARA ELEGIR UN ARMA O USAR UN OBJETO";
+                case AccionTutorial.Consumibles: return "MANTÉN " + k(TeclaRueda) + " PARA ELEGIR UN ARMA O USAR UN OBJETO · " + k(TeclaConsumir) + " USA EL OBJETO EQUIPADO";
                 case AccionTutorial.Escudo: return "TU ESCUDO ABSORBE BALAS Y SE RECARGA SOLO";
                 case AccionTutorial.Habilidades: return TextoHabilidades(tecla, true, true, true);
                 default: return string.Empty;
