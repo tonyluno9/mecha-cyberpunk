@@ -136,6 +136,7 @@ namespace MechaCyberpunk.IA.APie
                 anunciada = true;
                 Sonidos.Reproducir(config.SonidoLlegada);
                 LlegadaEspecial?.Invoke();
+                proximaOleada = Time.time; // la oleada baja en ese momento, no a la siguiente vuelta
             }
             if (Time.time >= proximaOleada)
             {

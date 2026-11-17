@@ -125,7 +125,7 @@ namespace MechaCyberpunk.Tests
         public IEnumerator CuatroEstrellas_LlegaCayendoDesdeArribaConDestello_YAterrizaEnElPiso()
         {
             calor.Poner(75f);
-            yield return Esperar(0.4f);
+            yield return Esperar(0.6f); // la respuesta revisa cada medio segundo
             Assert.Greater(respuesta.GuardiasVivos, 0, "llegó Nova");
             PandilleroAPie p = respuesta.Guardias.First(g => g != null);
             Assert.Greater(p.transform.position.y, 3f, "aparece unos metros sobre el piso, no en él");

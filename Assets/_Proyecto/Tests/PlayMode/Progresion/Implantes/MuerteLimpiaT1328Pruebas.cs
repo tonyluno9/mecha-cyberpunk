@@ -47,7 +47,7 @@ namespace MechaCyberpunk.Tests
             ICalor calor = Registro<ICalor>.Actual;
             Assert.IsNotNull(calor);
 
-            calor.Sumar(calor.Maximo, MotivoCalor.Pelea);
+            calor.Sumar(calor.Maximo, MotivoCalor.Mision); // sin policía que vea, una pelea no da calor (testigos); la misión sí
             Assert.Greater(EstrellasBusqueda.De(calor), 0, "antes de morir hay estrellas");
 
             Vector3 cerca = jugador.transform.position;
