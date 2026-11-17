@@ -51,6 +51,13 @@ namespace MechaCyberpunk.Tests.Personaje
         private IEnumerator EquiparPlasma()
         {
             yield return Calentar();
+            // Como en ArmasEspecialesT1013Pruebas: con la cámara de la prueba el personaje no se anima (fuera de pantalla) y el rifle no carga.
+            MechaCyberpunk.Personaje.Visual.VisualPersonaje visual = jugador.GetComponentInChildren<MechaCyberpunk.Personaje.Visual.VisualPersonaje>(true);
+            if (visual != null && visual.Animador != null)
+            {
+                visual.Animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            }
+            yield return Esperar(0.3f);
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             Assert.IsNotNull(arsenal, "Hay arsenal");
             Registro<ServicioInventario>.Actual.Agregar(arsenal.Catalogo.Buscar(ArmaAPie.RiflePlasma, 0), 1);
