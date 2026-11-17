@@ -69,6 +69,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public float GiroCamara => giroCamara;
         /// <summary>True mientras se mantiene el clic derecho con el control activo.</summary>
         public bool Apuntando => apuntando;
+        /// <summary>T-1324: true mientras se mantiene el clic derecho aunque no se pueda apuntar (arma sin balas).</summary>
+        public bool QuiereApuntar { get; private set; }
+        /// <summary>T-1324: lo pone PistolaAPie: con el arma sin balas en el cargador no se apunta (primero recarga).</summary>
+        public bool ApuntarBloqueado { get; set; }
         /// <summary>Multiplica la sensibilidad del ratón (T-416: baja con el zoom del sniper). 1 = normal.</summary>
         public float FactorSensibilidad { get; set; } = 1f;
         /// <summary>Multiplica la velocidad de caminar (T-421: agachado en cubierta, 0 al rodar). 1 = normal.</summary>
@@ -87,6 +91,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool SaltoBloqueado { get; set; }
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
+        /// <summary>T-1327: True mientras un carro lo tiró y está en el suelo o levantándose (AtropelloJugador): no ataca ni salta ni camina.</summary>
+        public bool Derribado { get; set; }
 
         // T-992: las habilidades de prótesis suman su multiplicador temporal encima de los implantes (1 si no hay o no están activas).
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis habilidades;
@@ -178,6 +184,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (!activo)
             {
                 apuntando = false;
+                QuiereApuntar = false;
                 movimiento.Reiniciar();
                 // T-728: el CharacterController guarda la velocidad del último Move. Sin esto el visual del jugador seguía "caminando" quieto durante una
                 // cinemática (lee controlador.velocity): un Move en cero la deja en cero y el muñeco queda en reposo.
@@ -237,7 +244,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 giroCamara = Mathf.Repeat(giroCamara + giro, 360f);
                 mirada.Limitar(minima, maxima);
             }
-            apuntando = apuntar != null && apuntar.action.IsPressed();
+            QuiereApuntar = apuntar != null && apuntar.action.IsPressed();
+            apuntando = QuiereApuntar && !ApuntarBloqueado;
 
             if (MovimientoSuspendido)
             {
@@ -263,8 +271,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
             horizontal = horizontal * FactorVelocidad * FactorExtraVelocidad + DesplazamientoExterno + impulso;
             impulso = Vector3.MoveTowards(impulso, Vector3.zero, config.FrenadoPiso * config.ControlAire * dt);
             GirarCuerpo(dt, horizontal);
+            bool estabaEnPiso = enPiso;
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
+            if (!enPiso && estabaEnPiso && movimiento.VelocidadVertical <= 0f)
+            {
+                enPiso = PegarAlPiso();
+            }
             if (enPiso && tiempoAire > SegundosMinimosAire)
             {
                 Sonidos.ReproducirEn("JUG_CAER", transform.position);
@@ -289,6 +302,34 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 UltimoIdPaso = IdPasoDelPiso();
                 Sonidos.ReproducirEn(UltimoIdPaso, transform.position);
             }
+        }
+
+        /// <summary>
+        /// T-1327: bajando escalones o una rampa el CharacterController pierde el piso un cuadro (el escalón baja más de lo que cae en un cuadro): el jugador "flotaba"
+        /// y el animador veía aire. Si venía en el piso y no saltó, se baja pegado al piso hasta EscalonMaximo. Devuelve si quedó en el piso.
+        /// </summary>
+        private bool PegarAlPiso()
+        {
+            float radio = controlador.radius * 0.9f;
+            Vector3 centro = transform.TransformPoint(controlador.center);
+            Vector3 origen = centro + Vector3.down * (controlador.height * 0.5f - controlador.radius);
+            float alcance = EscalonMaximo + controlador.skinWidth;
+            // Primero un rayo recto desde el centro del pie: al dejar un escalón, la esfera choca con la esquina del de arriba (normal inclinada) y no veía el de abajo.
+            Vector3 pie = centro + Vector3.down * (controlador.height * 0.5f - controlador.skinWidth - 0.02f);
+            if (Physics.Raycast(pie, Vector3.down, out RaycastHit rayo, alcance + 0.02f, ~0, QueryTriggerInteraction.Ignore)
+                && rayo.collider.transform.root != transform.root && rayo.normal.y >= Mathf.Cos(PendienteMaxima * Mathf.Deg2Rad))
+            {
+                controlador.Move(Vector3.down * (rayo.distance + controlador.skinWidth));
+                return controlador.isGrounded;
+            }
+            if (!Physics.SphereCast(origen + Vector3.up * controlador.radius * 0.1f, radio, Vector3.down, out RaycastHit golpe, alcance, ~0, QueryTriggerInteraction.Ignore)
+                || golpe.collider.transform.root == transform.root
+                || golpe.normal.y < Mathf.Cos(PendienteMaxima * Mathf.Deg2Rad))
+            {
+                return false;
+            }
+            controlador.Move(Vector3.down * Mathf.Max(0f, golpe.distance));
+            return controlador.isGrounded;
         }
 
         /// <summary>T-943: al disparar sin apuntar, el cuerpo gira un momento hacia donde mira la cámara.</summary>

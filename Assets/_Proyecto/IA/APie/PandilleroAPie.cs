@@ -340,10 +340,41 @@ namespace MechaCyberpunk.IA.APie
             Registro<IMarcaMapa>.Agregar(this);
             Activos.Add(this);
             Registro<ICriminalCalle>.Agregar(this);
+            EventosJugador.Desperto += AlDespertarElJugador;
+        }
+
+        /// <summary>
+        /// T-1328: el jugador despertó con el Doc. La policía se va; los demás dejan de apuntarle, se calman y vuelven a su punto
+        /// (no se curan ni reaparecen: solo sueltan la persecución).
+        /// </summary>
+        private void AlDespertarElJugador()
+        {
+            if (EstaKO || Acosando)
+            {
+                return;
+            }
+            if (datos != null && datos.EsPolicia)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            alerta = siempreAlerta;
+            provocadoHasta = -1f;
+            regla?.Reiniciar();
+            reglaJefe?.Reiniciar();
+            tactica?.Reiniciar();
+            patrulla?.Reiniciar();
+            tieneCubierta = false;
+            disparoReciente = false;
+            modoAnterior = ReglaTacticaPandillero.Modo.Rodear;
+            turnos?.Soltar(this);
+            ApagarBrillo();
+            ObjetivoActual = null;
         }
 
         private void OnDisable()
         {
+            EventosJugador.Desperto -= AlDespertarElJugador;
             Registro<ICriminalCalle>.Quitar(this);
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
@@ -354,6 +385,7 @@ namespace MechaCyberpunk.IA.APie
 
         private void OnDestroy()
         {
+            EventosJugador.Desperto -= AlDespertarElJugador;
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
@@ -463,7 +495,8 @@ namespace MechaCyberpunk.IA.APie
                 if (calor != null && !DanioDeLaPolicia)
                 {
                     calor.Sumar(modelo.EstaKO ? datos.CalorAlMatar : datos.CalorAlGolpear, MotivoCalor.Pelea);
-                    SubirAPrimeraEstrella(calor); // T-1303: desde el primer golpe o bala a un policía ya te buscan y atacan
+                    // T-1303: desde el primer golpe o bala a un policía ya te buscan y atacan. T-1322: dispararle = 2 estrellas; matarlo = 3.
+                    EstrellasBusqueda.SubirA(calor, modelo.EstaKO ? EstrellasBusqueda.EstrellasPorMatarPolicia : EstrellasBusqueda.EstrellasPorDispararAPolicia);
                 }
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
@@ -766,7 +799,14 @@ namespace MechaCyberpunk.IA.APie
 
             if (animador != null)
             {
-                animador.SetFloat(IdVelocidad, deseada.magnitude);
+                // T-1321: el policía anima con la velocidad real del cuerpo (caminar apuntando, sin deslizarse).
+                float velocidadAnimada = deseada.magnitude;
+                if (datos.EsPolicia)
+                {
+                    Vector3 real = controlador.velocity;
+                    velocidadAnimada = ReglaAnimacionPolicia.VelocidadVista(new Vector2(real.x, real.z).magnitude, velocidadAnimada);
+                }
+                animador.SetFloat(IdVelocidad, velocidadAnimada);
                 PonerEnPiso();
                 if (visual != null)
                 {

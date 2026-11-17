@@ -18,6 +18,11 @@ namespace MechaCyberpunk.IA.APie
         private const float MismoPiso = 1.5f;
         private const float CaidaMaxima = 40f;
         private const float RadioCapsula = 0.4f;
+        private const float GravedadAgente = 20f; // la misma de PandilleroAPie (m/s²)
+        private const float AlturaAgente = 2.4f; // lo que mide el jefe final más un margen (m)
+        private const float MargenCaida = 0.5f;
+        private const float AlturaMinimaCaida = 3f; // con menos de esto encima no vale la pena caer: aparecen en el piso
+        private const float AlturaDestelloSalida = 1f;
 
         /// <summary>Las pruebas que no son de Nova pueden apagarla para que no aparezca nadie en sus escenas.</summary>
         public static bool Apagada { get; set; }
@@ -31,6 +36,11 @@ namespace MechaCyberpunk.IA.APie
         private float proximaRevision;
         private float proximaOleada;
         private float segundosSinNova;
+        private bool anunciada;
+        private readonly HashSet<PandilleroAPie> vistos = new HashSet<PandilleroAPie>();
+
+        /// <summary>T-1323: la búsqueda llegó al tope (5 estrellas) y suena el aviso especial; Nova baja del cielo.</summary>
+        public event System.Action LlegadaEspecial;
 
         public int Estrellas { get; private set; }
         public int GuardiasVivos => Vivos(guardias);
@@ -69,10 +79,12 @@ namespace MechaCyberpunk.IA.APie
         private void OnEnable()
         {
             Actual = this;
+            EventosJugador.Desperto += RetirarTodos; // T-1328: al despertar con el Doc, Nova se va
         }
 
         private void OnDisable()
         {
+            EventosJugador.Desperto -= RetirarTodos;
             if (Actual == this)
             {
                 Actual = null;
@@ -91,19 +103,41 @@ namespace MechaCyberpunk.IA.APie
             IJugador jugador = Registro<IJugador>.Actual;
             bool hayPolicia = Registro<IZonaBusqueda>.Actual != null;
             Estrellas = config == null || Apagada || !hayPolicia ? 0 : EstrellasBusqueda.De(Registro<ICalor>.Actual);
+            guardias.RemoveAll(p => p == null);
+            pesados.RemoveAll(p => p == null);
             if (jugador == null || jugador.Raiz == null || !EstrellasBusqueda.EsNova(Estrellas))
             {
+                anunciada = false;
                 segundosSinNova += SegundosRevisar;
-                if (Apagada || config == null || segundosSinNova >= config.SegundosParaRetirarse)
+                if (Apagada || config == null || Estrellas <= 0 || jugador == null || jugador.Raiz == null)
                 {
-                    RetirarTodos();
+                    // Sin búsqueda (el Doc, un arresto, otra escena): se van todos, hayan visto al jugador o no.
+                    if (Apagada || config == null || segundosSinNova >= (config != null ? config.SegundosParaRetirarse : 0f))
+                    {
+                        RetirarTodos();
+                    }
+                    return;
                 }
+                // T-1323: con 1 a 3 estrellas se retiran los que nunca vieron al jugador; los que ya lo vieron lo siguen persiguiendo.
+                if (segundosSinNova >= config.SegundosParaRetirarse)
+                {
+                    RetirarNoVistos();
+                }
+                Vector3 aqui = jugador.Raiz.position;
+                MarcarVistos(aqui);
+                Azuzar(aqui);
                 return;
             }
             segundosSinNova = 0f;
             Vector3 donde = jugador.Raiz.position;
-            guardias.RemoveAll(p => p == null);
-            pesados.RemoveAll(p => p == null);
+            if (Estrellas >= EstrellasBusqueda.Total && !anunciada)
+            {
+                // T-1323: al llegar al tope suena el aviso y Nova baja del cielo (la oleada de abajo).
+                anunciada = true;
+                Sonidos.Reproducir(config.SonidoLlegada);
+                LlegadaEspecial?.Invoke();
+                proximaOleada = Time.time; // la oleada baja en ese momento, no a la siguiente vuelta
+            }
             if (Time.time >= proximaOleada)
             {
                 proximaOleada = Time.time + config.SegundosEntreOleadas;
@@ -115,8 +149,46 @@ namespace MechaCyberpunk.IA.APie
                 jefe = Aparecer(config.JefeFinal, donde, "Nova_JefeFinal");
                 jefeSalio = jefe != null;
             }
+            MarcarVistos(donde);
             Azuzar(donde);
         }
+
+        /// <summary>T-1323: marca como "ya te vio" a los agentes de Nova en pie que están a <see cref="ConfigRespuestaNova.DistanciaVista"/> o menos del jugador.</summary>
+        private void MarcarVistos(Vector3 donde)
+        {
+            float vista = config.DistanciaVista;
+            MarcarVistos(guardias, donde, vista);
+            MarcarVistos(pesados, donde, vista);
+            if (jefe != null && !jefe.EstaKO)
+            {
+                MarcarVisto(jefe, donde, vista);
+            }
+        }
+
+        private void MarcarVistos(List<PandilleroAPie> lista, Vector3 donde, float vista)
+        {
+            foreach (PandilleroAPie p in lista)
+            {
+                MarcarVisto(p, donde, vista);
+            }
+        }
+
+        private void MarcarVisto(PandilleroAPie p, Vector3 donde, float vista)
+        {
+            if (p == null || p.EstaKO || vistos.Contains(p))
+            {
+                return;
+            }
+            Vector3 d = p.transform.position - donde;
+            d.y = 0f;
+            if (d.sqrMagnitude <= vista * vista)
+            {
+                vistos.Add(p);
+            }
+        }
+
+        /// <summary>True si este agente de Nova ya vio al jugador (y lo sigue persiguiendo aunque baje la búsqueda).</summary>
+        public bool YaVioAlJugador(PandilleroAPie p) => vistos.Contains(p);
 
         // Todos van por el jugador: su punto (la correa) es donde está el jugador y están en alerta; el pesado y el jefe, además, en modo pelea.
         private void Azuzar(Vector3 donde)
@@ -186,7 +258,9 @@ namespace MechaCyberpunk.IA.APie
             Vector3 mira = jugador - punto;
             mira.y = 0f;
             Quaternion giro = mira.sqrMagnitude > 0.01f ? Quaternion.LookRotation(mira) : Quaternion.identity;
-            GameObject objeto = Instantiate(prefab, punto, giro);
+            float altura = AlturaLibreArriba(punto);
+            Vector3 inicio = punto + Vector3.up * altura;
+            GameObject objeto = Instantiate(prefab, inicio, giro);
             objeto.name = nombre;
             PandilleroAPie p = objeto.GetComponent<PandilleroAPie>();
             if (p == null)
@@ -194,9 +268,44 @@ namespace MechaCyberpunk.IA.APie
                 Destroy(objeto);
                 return null;
             }
+            if (prefab == config.GuardiaPesado && !Mathf.Approximately(config.EscalaPesado, 1f))
+            {
+                // T-1323: el pesado se veía más chico que los otros agentes de Nova.
+                Transform modelo = objeto.transform.Find("Modelo");
+                if (modelo != null)
+                {
+                    modelo.localScale *= config.EscalaPesado;
+                }
+            }
+            objeto.AddComponent<ZonaCabezaNova>();
             Azuzar(p, jugador);
+            // T-1323: llegan cayendo (la gravedad del agente y su animación de caída hacen el resto) con un destello al salir y otro al aterrizar.
+            DestelloLlegadaNova.Lanzar(inicio + Vector3.up * AlturaDestelloSalida, config, 0f);
+            if (altura > 0f)
+            {
+                DestelloLlegadaNova.Lanzar(punto, config, SegundosDeCaida(altura));
+            }
             return p;
         }
+
+        /// <summary>Cuánto se puede subir desde <paramref name="punto"/> (hasta <see cref="ConfigRespuestaNova.AlturaCaida"/>) sin topar con un techo: desde ahí caen.</summary>
+        private float AlturaLibreArriba(Vector3 punto)
+        {
+            float maxima = config.AlturaCaida;
+            if (maxima <= 0f)
+            {
+                return 0f;
+            }
+            float libre = maxima;
+            if (Physics.Raycast(punto + Vector3.up * AlturaSonda, Vector3.up, out RaycastHit techo, maxima + MargenCaida, ~0, QueryTriggerInteraction.Ignore))
+            {
+                libre = Mathf.Max(0f, techo.distance + AlturaSonda - AlturaAgente);
+            }
+            return Mathf.Min(maxima, libre) >= AlturaMinimaCaida ? Mathf.Min(maxima, libre) : 0f;
+        }
+
+        /// <summary>Segundos que tarda en caer <paramref name="altura"/> metros con la gravedad de <see cref="PandilleroAPie"/>.</summary>
+        public static float SegundosDeCaida(float altura) => Mathf.Sqrt(2f * altura / GravedadAgente);
 
         /// <summary>Un punto libre en el piso a 22-34 m del jugador: primero a su misma altura (su calle o su techo); si no hay, en el piso de abajo.</summary>
         public bool BuscarPunto(Vector3 jugador, out Vector3 punto)
@@ -241,6 +350,34 @@ namespace MechaCyberpunk.IA.APie
             jefe = null;
             jefeSalio = false;
             proximaOleada = 0f;
+            anunciada = false;
+            vistos.Clear();
+        }
+
+        /// <summary>T-1323: quita a los que nunca vieron al jugador; los que ya lo vieron se quedan persiguiéndolo.</summary>
+        private void RetirarNoVistos()
+        {
+            QuitarNoVistos(guardias);
+            QuitarNoVistos(pesados);
+            if (jefe != null && !jefe.EstaKO && !vistos.Contains(jefe))
+            {
+                Destroy(jefe.gameObject);
+                jefe = null;
+                jefeSalio = false;
+            }
+        }
+
+        private void QuitarNoVistos(List<PandilleroAPie> lista)
+        {
+            for (int i = lista.Count - 1; i >= 0; i--)
+            {
+                PandilleroAPie p = lista[i];
+                if (p != null && !p.EstaKO && !vistos.Contains(p))
+                {
+                    Destroy(p.gameObject);
+                    lista.RemoveAt(i);
+                }
+            }
         }
 
         private static void Quitar(List<PandilleroAPie> lista)

@@ -122,8 +122,10 @@ namespace MechaCyberpunk.Personaje.Combate
             float dt = Time.deltaTime;
             float errorGiro = Mathf.DeltaAngle(controlador.GiroCamara, giroObjetivo);
             float errorInclinacion = inclinacionObjetivo - controlador.Inclinacion;
+            // T-1324: con el zoom del sniper la mira queda libre arriba y abajo: la ayuda solo corrige el giro, no la inclinación.
+            bool miraLibre = zoom != null && zoom.Mezcla > 0f;
             controlador.Empujar(ReglaApuntadoAsistido.Correccion(errorGiro, fuerza, dt, datos.MaximoGradosPorSegundo),
-                ReglaApuntadoAsistido.Correccion(errorInclinacion, fuerza, dt, datos.MaximoGradosPorSegundo));
+                miraLibre ? 0f : ReglaApuntadoAsistido.Correccion(errorInclinacion, fuerza, dt, datos.MaximoGradosPorSegundo));
         }
 
         // Nada que no sea el jugador ni el enemigo entre la cámara y el pecho del enemigo.

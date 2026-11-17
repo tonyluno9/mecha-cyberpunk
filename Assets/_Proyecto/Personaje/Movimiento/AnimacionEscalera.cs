@@ -33,6 +33,12 @@ namespace MechaCyberpunk.Personaje.Movimiento
             return Mathf.Repeat(progreso / metrosPorCiclo, 1f) * largoClip;
         }
 
+        /// <summary>T-1327: igual, pero con <paramref name="alReves"/> el clip avanza cuando el progreso baja (el clip de bajar).</summary>
+        public static float TiempoClip(float progreso, float metrosPorCiclo, float largoClip, bool alReves)
+        {
+            return TiempoClip(alReves ? -progreso : progreso, metrosPorCiclo, largoClip);
+        }
+
         private float inicioEntrar = -1f;
         private float inicioSalirAbajo = -1f;
 
@@ -90,7 +96,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 {
                     bool bajando = trepar.BajandoEscalera;
                     clip = bajando && config.Bajar != null ? config.Bajar : config.Subir != null ? config.Subir : config.Bajar;
-                    tiempo = clip != null ? TiempoClip(trepar.ProgresoEscalera, config.MetrosPorCiclo, clip.length) : 0d;
+                    // T-1327: el clip de bajar avanza con los metros que se baja; con el progreso a secas se veía al revés (el progreso disminuye al bajar).
+                    bool clipDeBajar = bajando && clip == config.Bajar;
+                    tiempo = clip != null ? TiempoClip(trepar.ProgresoEscalera, config.MetrosPorCiclo, clip.length, clipDeBajar) : 0d;
                 }
             }
             else if (config.SalirAbajo != null && inicioSalirAbajo >= 0f && Time.time - inicioSalirAbajo < config.SalirAbajo.length && !trepar.Trepando)

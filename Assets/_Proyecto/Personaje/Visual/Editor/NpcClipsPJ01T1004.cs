@@ -59,7 +59,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 {
                     foreach ((string estado, string clip) in ClipsDeEstado)
                     {
-                        if (hijo.state.name == estado)
+                        // T-1321: un estado que ya es un árbol (el policía apuntando y caminando) no se vuelve a pisar con un clip suelto.
+                        if (hijo.state.name == estado && !(hijo.state.motion is BlendTree))
                         {
                             hijo.state.motion = ConstructorControladorBase.Clip(clip);
                         }

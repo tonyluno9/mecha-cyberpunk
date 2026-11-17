@@ -33,6 +33,15 @@ namespace MechaCyberpunk.Personaje.Combate
             return mejor;
         }
 
+        /// <summary>
+        /// T-1327: cuánto se acerca el jugador al blanco al golpear (m): lo que falta para quedar a <paramref name="distanciaParada"/> de él, sin pasar de
+        /// <paramref name="avanceMaximo"/>. Si ya está más cerca no avanza.
+        /// </summary>
+        public static float Acercamiento(float distancia, float distanciaParada, float avanceMaximo)
+        {
+            return Mathf.Clamp(distancia - distanciaParada, 0f, Mathf.Max(0f, avanceMaximo));
+        }
+
         /// <summary>Ángulo de giro en Y (°) para mirar hacia una dirección del plano XZ.</summary>
         public static float AnguloYaw(Vector2 direccion)
         {

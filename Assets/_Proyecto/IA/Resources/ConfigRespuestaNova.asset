@@ -23,3 +23,12 @@ MonoBehaviour:
   distanciaMaxima: 34
   segundosEntreOleadas: 25
   segundosParaRetirarse: 6
+  alturaCaida: 12
+  segundosDestello: 0.6
+  intensidadDestello: 25
+  alcanceDestello: 12
+  colorDestello: {r: 0.3, g: 0.65, b: 1, a: 1}
+  materialDestello: {fileID: 2100000, guid: 33ddf6dc28eb6a04397648e9185b2a16, type: 2}
+  sonidoLlegada: PAN_JEFE_ENTRADA
+  escalaPesado: 1.15
+  distanciaVista: 40

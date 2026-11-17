@@ -13,6 +13,9 @@ namespace MechaCyberpunk.Personaje.Combate
     {
         private const string Sonido = "VEH_EXPLOSION";
         private const int MaxCercanos = 64;
+        /// <summary>T-1325: daño de la explosión dentro del radio letal.</summary>
+        public const float DanioLetal = 9999f;
+        private static readonly HashSet<IDetonable> detonables = new HashSet<IDetonable>();
         private static readonly Collider[] cercanos = new Collider[MaxCercanos];
         private static readonly HashSet<IRecibeDanio> vistos = new HashSet<IRecibeDanio>();
         private static readonly HashSet<Rigidbody> empujados = new HashSet<Rigidbody>();
@@ -41,6 +44,7 @@ namespace MechaCyberpunk.Personaje.Combate
             vistos.Clear();
             empujados.Clear();
             int danados = 0;
+            Detonar(centro, radio);
             int cantidad = Physics.OverlapSphereNonAlloc(centro, radio, cercanos, ~0, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < cantidad; i++)
             {
@@ -53,9 +57,14 @@ namespace MechaCyberpunk.Personaje.Combate
                 if (objetivo != null && vistos.Add(objetivo))
                 {
                     float cuanto = ReglaBalistica.DanioExplosion(danio, radio, distancia, cfg.DanioEnElBorde);
-                    if (raizJugador != null && c.transform.root == raizJugador)
+                    bool esElJugador = raizJugador != null && c.transform.root == raizJugador;
+                    if (esElJugador)
                     {
                         cuanto *= cfg.DanioAlJugador;
+                    }
+                    else if (EsLetal(distancia, radio, cfg.FraccionLetal) && c.GetComponentInParent<IObjetoInerte>() == null)
+                    {
+                        cuanto = Mathf.Max(cuanto, DanioLetal);
                     }
                     if (cuanto > 0f)
                     {
@@ -74,6 +83,36 @@ namespace MechaCyberpunk.Personaje.Combate
             EventosRuido.PublicarDisparo(centro);
             Efecto(centro, radio, cfg);
             return danados;
+        }
+
+        /// <summary>T-1325: true si a esa distancia la explosión mata a una persona (dentro de <paramref name="fraccion"/> del radio).</summary>
+        public static bool EsLetal(float distancia, float radio, float fraccion)
+        {
+            return radio > 0f && distancia <= radio * fraccion;
+        }
+
+        // T-1325: lo que se destroza de un golpe (carros) dentro del radio revienta al instante, antes de repartir el daño: así los policías que salen
+        // de una patrulla destrozada ya están en su sitio cuando llega el daño letal.
+        private static void Detonar(Vector3 centro, float radio)
+        {
+            int n = Physics.OverlapSphereNonAlloc(centro, radio, cercanos, ~0, QueryTriggerInteraction.Ignore);
+            detonables.Clear();
+            for (int i = 0; i < n; i++)
+            {
+                IDetonable d = cercanos[i].GetComponentInParent<IDetonable>();
+                if (d != null)
+                {
+                    detonables.Add(d);
+                }
+            }
+            foreach (IDetonable d in detonables)
+            {
+                d.Detonar(0f);
+            }
+            if (detonables.Count > 0)
+            {
+                Physics.SyncTransforms();
+            }
         }
 
         private static void Efecto(Vector3 centro, float radio, ConfigArmasEspeciales cfg)
