@@ -67,7 +67,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Plasma_MientrasCarga_ChispeaEnBucleYSeCortaAlSoltar()
+        public IEnumerator Plasma_MientrasCarga_ChispeaEnBucleYSeCortaAlCambiarDeArma()
         {
             yield return EquiparPlasma();
             ArmasEspecialesAPie especiales = jugador.GetComponent<ArmasEspecialesAPie>();
@@ -79,10 +79,13 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(especiales.ChispeoSonando, "Suena el chispeo al cargar");
             Assert.Contains("bucle:" + ArmasEspecialesAPie.IdChispeoPlasma, sonidos.Ids);
             Assert.AreEqual(1, sonidos.BuclesActivos.Count, "Un solo bucle");
+            // Cambiar de arma a media carga corta la carga y su chispeo.
+            Assert.IsTrue(jugador.GetComponent<ArmasAPie>().Equipar(ArmaAPie.Pistola), "Se cambia a la pistola");
+            yield return Esperar(0.3f);
             Release(raton.leftButton);
             Release(raton.rightButton);
-            yield return Esperar(0.3f);
-            Assert.IsFalse(especiales.ChispeoSonando, "Al soltar se corta");
+            Assert.AreNotEqual(EstadoPlasma.Cargando, especiales.EstadoPlasma, "Ya no carga");
+            Assert.IsFalse(especiales.ChispeoSonando, "Al dejar el rifle se corta el chispeo");
             Assert.AreEqual(0, sonidos.BuclesActivos.Count);
         }
 
