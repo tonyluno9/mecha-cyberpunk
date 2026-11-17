@@ -18,7 +18,7 @@ namespace MechaCyberpunk.Tests
     /// </summary>
     public class MuertesT1306Pruebas
     {
-        public const float AlturaCaderaTirado = 0.42f;
+        public const float AlturaCaderaTirado = 0.5f; // boca abajo la cadera queda a 0.37-0.42 m; hincado lo delata la cabeza
         /// <summary>Hincado o sentado, la cabeza queda a ~0.9-1.2 m; tirado, a menos de esto.</summary>
         public const float AlturaCabezaTirado = 0.6f;
         private const string Carpeta = "Assets/_Proyecto/IA/Prefabs/";
