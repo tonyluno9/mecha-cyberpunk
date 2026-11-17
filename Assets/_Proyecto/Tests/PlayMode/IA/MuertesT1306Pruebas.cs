@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Tests
     public class MuertesT1306Pruebas
     {
         public const float AlturaCaderaTirado = 0.42f;
+        /// <summary>Hincado o sentado, la cabeza queda a ~0.9-1.2 m; tirado, a menos de esto.</summary>
+        public const float AlturaCabezaTirado = 0.6f;
         private const string Carpeta = "Assets/_Proyecto/IA/Prefabs/";
         private static readonly string[] Prefabs =
         {
@@ -46,6 +48,24 @@ namespace MechaCyberpunk.Tests
             }
             creados.Clear();
             Registros.LimpiarTodos();
+        }
+
+        private static Transform Cabeza(GameObject quien)
+        {
+            Animator a = quien.GetComponentInChildren<Animator>(true);
+            return a != null && a.isHuman ? a.GetBoneTransform(HumanBodyBones.Head) : null;
+        }
+
+        private static string Estado(GameObject quien)
+        {
+            Animator a = quien.GetComponentInChildren<Animator>(true);
+            if (a == null || a.runtimeAnimatorController == null)
+            {
+                return "sin animator";
+            }
+            AnimatorClipInfo[] clips = a.GetCurrentAnimatorClipInfo(0);
+            string nombre = clips.Length > 0 && clips[0].clip != null ? clips[0].clip.name : "?";
+            return a.runtimeAnimatorController.name + " / " + nombre + (a.isHuman ? "" : " (no humanoide)");
         }
 
         private static Transform Cadera(GameObject quien)
@@ -114,10 +134,13 @@ namespace MechaCyberpunk.Tests
                 Transform cadera = Cadera(p.gameObject);
                 Assert.IsNotNull(cadera, nombre + " tiene cadera");
                 float altura = cadera.position.y;
-                Debug.Log("[T-1306] " + nombre + ": cadera a " + altura.ToString("F2") + " m, muerte " + (p.Visual != null ? p.Visual.Muerte.ToString() : "-"));
-                if (altura > AlturaCaderaTirado)
+                Transform cabeza = Cabeza(p.gameObject);
+                float alturaCabeza = cabeza != null ? cabeza.position.y : 0f;
+                Debug.Log("[T-1306] " + nombre + ": cadera a " + altura.ToString("F2") + " m, cabeza a " + alturaCabeza.ToString("F2") + " m, muerte "
+                    + (p.Visual != null ? p.Visual.Muerte.ToString() : "-") + ", " + Estado(p.gameObject));
+                if (altura > AlturaCaderaTirado || alturaCabeza > AlturaCabezaTirado)
                 {
-                    hincados.Add(nombre + " (" + altura.ToString("F2") + " m)");
+                    hincados.Add(nombre + " (cadera " + altura.ToString("F2") + ", cabeza " + alturaCabeza.ToString("F2") + " m)");
                 }
             }
             Assert.IsEmpty(hincados, "Quedan hincados o sentados: " + string.Join(", ", hincados));
