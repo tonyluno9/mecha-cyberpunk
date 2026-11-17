@@ -171,6 +171,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Transform traseraTI = raiz.transform.Find("Rueda_TI");
             float distanciaEjes = Mathf.Abs(raiz.transform.InverseTransformPoint(delanteraDI.position).z - raiz.transform.InverseTransformPoint(traseraTI.position).z);
             PonerRuedas(raiz, direccionDelantera, giro, m.RadioRueda, distanciaEjes);
+            CreadorRuedasT1331.CambiarLlantas(raiz); // T-1331: la rueda de Blender en vez de la llanta RU01
 
             Bounds final = CreadorCarrosT511.LimitesExactos(visual);
             return string.Format("{0}\tcarrocería {1:F2} x {2:F2} x {3:F2} m (escala {4:F3})", codigo, final.size.x, final.size.y, final.size.z, escalaVisual);
