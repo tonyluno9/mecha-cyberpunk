@@ -92,7 +92,12 @@ Logs: `Logs/build-demo-17nov.log` y `Logs/build-juego-17nov.log`.
 
 ## RecorridoDemoPruebas
 
-(Se corre al final, sola; resultado abajo.)
+Se corrió sola, después de los builds, y terminó el 17-nov a las 00:16: **3/3**.
+- `DemoDePrincipioAFin`: pasó.
+- `NavMesh_LugaresDeLaHistoria_TienenCamino`: pasó.
+- `VideoDemoT979`: pasó.
+
+Esta vez no se cortó por memoria. Resultados en `Logs/r-demo-17nov.xml`.
 
 ## Pendientes conocidos
 
