@@ -15,6 +15,8 @@ namespace MechaCyberpunk.UI.Tiendas
     {
         public const string NombreDatos = "DatosExpendedoras_Ciudad";
         public const string NombreRaiz = "Expendedoras";
+        /// <summary>T-1315: las máquinas que Mundo ya puso en la escena como adorno (CY06_Expendedora...) empiezan por este nombre y también venden.</summary>
+        public const string PrefijoDecorada = "CY06_Expendedora";
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AlArrancar()
@@ -54,7 +56,8 @@ namespace MechaCyberpunk.UI.Tiendas
                     lugares.Add(p);
                 }
             }
-            if (lugares.Count == 0)
+            List<Transform> decoradas = BuscarDecoradas(escena);
+            if (lugares.Count == 0 && decoradas.Count == 0)
             {
                 return null;
             }
@@ -93,6 +96,17 @@ namespace MechaCyberpunk.UI.Tiendas
                     caja.size = new Vector3(1.64f, 2f, 0.98f);
                 }
                 maquina.AddComponent<Expendedora>().Iniciar(datos.Tienda, datos.Catalogo, pantalla);
+            }
+            // T-1315: toda máquina de la escena vende, también las de adorno del tianguis y de las fachadas.
+            foreach (Transform decorada in decoradas)
+            {
+                if (decorada.GetComponentInChildren<Collider>(true) == null)
+                {
+                    var caja = decorada.gameObject.AddComponent<BoxCollider>();
+                    caja.center = new Vector3(0f, 1f, 0f);
+                    caja.size = new Vector3(1.64f, 2f, 0.98f);
+                }
+                decorada.gameObject.AddComponent<Expendedora>().Iniciar(datos.Tienda, datos.Catalogo, pantalla);
             }
             return raiz.transform;
         }
@@ -133,6 +147,35 @@ namespace MechaCyberpunk.UI.Tiendas
             }
             posicion = p.posicion;
             return true;
+        }
+
+        /// <summary>T-1315: los objetos de la escena que son una máquina de adorno y todavía no venden (el nombre empieza con el prefijo, sin otra máquina arriba ni el componente).</summary>
+        public static List<Transform> BuscarDecoradas(Scene escena)
+        {
+            var resultado = new List<Transform>();
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                if (raiz.name == NombreRaiz)
+                {
+                    continue;
+                }
+                foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+                {
+                    if (!t.name.StartsWith(PrefijoDecorada, System.StringComparison.Ordinal) || t.GetComponentInParent<Expendedora>(true) != null
+                        || t.GetComponentInChildren<Expendedora>(true) != null)
+                    {
+                        continue;
+                    }
+                    // Solo la más alta de una cadena de nombres iguales (el prefab raíz, no su modelo).
+                    Transform padre = t.parent;
+                    if (padre != null && padre.name.StartsWith(PrefijoDecorada, System.StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+                    resultado.Add(t);
+                }
+            }
+            return resultado;
         }
 
         private static Transform BuscarMarcador(Scene escena, string nombre)

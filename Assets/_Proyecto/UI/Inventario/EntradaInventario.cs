@@ -35,6 +35,18 @@ namespace MechaCyberpunk.UI.Inventario
         /// <summary>Pares etiqueta, valor del detalle (daño, cargador, nivel...).</summary>
         public IReadOnlyList<KeyValuePair<string, string>> Datos => datos;
 
+        /// <summary>T-1315: si se puede poner en la rueda (armas de fuego y consumibles).</summary>
+        public bool Equipable { get; private set; }
+        /// <summary>T-1315: si va en la rueda ahora.</summary>
+        public bool Equipada { get; private set; }
+
+        public EntradaInventario ConEquipo(bool equipable, bool equipada)
+        {
+            Equipable = equipable;
+            Equipada = equipable && equipada;
+            return this;
+        }
+
         public EntradaInventario ConDato(string etiqueta, string valor)
         {
             datos.Add(new KeyValuePair<string, string>(etiqueta, valor));

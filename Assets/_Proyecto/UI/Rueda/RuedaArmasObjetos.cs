@@ -442,6 +442,17 @@ namespace MechaCyberpunk.UI.Rueda
             return CantidadDe(casilla) > 0;
         }
 
+        // T-1315: lo que se quitó en el inventario (I) no sale en la rueda; los puños siempre salen.
+        private bool EstaEquipada(int casilla)
+        {
+            if (ReglaRuedaArmas.EsArma(casilla))
+            {
+                return casilla == (int)ArmaAPie.Punos || EquipoRueda.Equipado(EquipoRueda.IdArma((ArmaAPie)casilla));
+            }
+            DatosConsumible c = ObjetoDe(casilla);
+            return c == null || EquipoRueda.Equipado(c.Id);
+        }
+
         private DatosConsumible ObjetoDe(int casilla)
         {
             int lugar = casilla - ReglaRuedaArmas.CasillasArma;
@@ -579,7 +590,7 @@ namespace MechaCyberpunk.UI.Rueda
         private void Disponer()
         {
             Vincular();
-            List<int> nueva = ReglaRuedaArmas.Disposicion(Disponible);
+            List<int> nueva = ReglaRuedaArmas.Disposicion(c => Disponible(c) && EstaEquipada(c));
             bool igual = nueva.Count == disposicion.Count && casillas.Count == nueva.Count;
             for (int i = 0; igual && i < nueva.Count; i++)
             {

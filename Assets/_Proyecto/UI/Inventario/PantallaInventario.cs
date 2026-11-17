@@ -4,6 +4,7 @@ using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.UI.Kit;
+using MechaCyberpunk.UI.Rueda;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -22,7 +23,12 @@ namespace MechaCyberpunk.UI.Inventario
         public const int OrdenCanvas = 42;
         public const string Titulo = "INVENTARIO";
         public const string Subtitulo = "LO QUE TRAES";
-        public const string TextoAyuda = "I O ESC CERRAR · ← → ↑ ↓ ELEGIR · Q E CATEGORÍA";
+        public const string TextoAyuda = "I O ESC CERRAR · ← → ↑ ↓ ELEGIR · Q E CATEGORÍA · ENTER O F EN LA RUEDA";
+        public const string TextoEquipar = "PONER EN LA RUEDA";
+        public const string TextoQuitar = "QUITAR DE LA RUEDA";
+        public const string TextoRuedaLlena = "LA RUEDA ESTÁ LLENA";
+        public const string TextoMarcaRueda = "RUEDA";
+        public const string TextoSoloLectura = "SOLO SE CONSULTA";
         public const string TextoVacio = "NO TRAES NADA EN ESTA CATEGORÍA";
         public const string TextoSinSeleccion = "ELIGE UNA CASILLA";
         public const string SonidoMover = "UI_MOVER";
@@ -42,6 +48,7 @@ namespace MechaCyberpunk.UI.Inventario
         private const float LadoIconoDetalle = 96f;
         private const float AltoDato = 44f;
         private const int DatosMaximos = 6;
+        private const float AltoBotonEquipo = 72f;
         private const float AlfaFilo = 0.9f;
         private const float AlfaSinIcono = 0.5f;
 
@@ -55,6 +62,8 @@ namespace MechaCyberpunk.UI.Inventario
         [SerializeField] private InputAction abajo = new InputAction("InventarioAbajo", InputActionType.Button, "<Keyboard>/downArrow");
         [SerializeField] private InputAction categoriaAnterior = new InputAction("InventarioCategoriaAnterior", InputActionType.Button, "<Keyboard>/q");
         [SerializeField] private InputAction categoriaSiguiente = new InputAction("InventarioCategoriaSiguiente", InputActionType.Button, "<Keyboard>/e");
+        [Tooltip("T-1315: pone o quita de la rueda el arma u objeto elegido.")]
+        [SerializeField] private InputAction equipar = new InputAction("InventarioEquipar", InputActionType.Button, "<Keyboard>/enter");
 
         private static readonly Dictionary<string, Texture2D> iconos = new Dictionary<string, Texture2D>();
 
@@ -68,6 +77,7 @@ namespace MechaCyberpunk.UI.Inventario
             public Text Inicial;
             public Text Nombre;
             public Text Cantidad;
+            public Text Marca;
         }
 
         private sealed class FilaCategoria
@@ -107,6 +117,9 @@ namespace MechaCyberpunk.UI.Inventario
         private Text detalleCategoria;
         private Text detalleDescripcion;
         private Text detalleCantidad;
+        private Image botonEquipoFondo;
+        private Text botonEquipoTexto;
+        private string mensajeEquipo;
         private ControladorAPie controlCongelado;
         private CursorLockMode bloqueoPrevio;
         private bool cursorPrevio;
@@ -155,6 +168,10 @@ namespace MechaCyberpunk.UI.Inventario
 
         private void Awake()
         {
+            if (equipar.bindings.Count < 2)
+            {
+                equipar.AddBinding("<Keyboard>/f");
+            }
             Construir();
         }
 
@@ -168,6 +185,7 @@ namespace MechaCyberpunk.UI.Inventario
             abajo.Enable();
             categoriaAnterior.Enable();
             categoriaSiguiente.Enable();
+            equipar.Enable();
         }
 
         private void OnDisable()
@@ -180,6 +198,7 @@ namespace MechaCyberpunk.UI.Inventario
             abajo.Disable();
             categoriaAnterior.Disable();
             categoriaSiguiente.Disable();
+            equipar.Disable();
             Cerrar();
         }
 
@@ -215,6 +234,10 @@ namespace MechaCyberpunk.UI.Inventario
             else if (categoriaSiguiente.WasPressedThisFrame())
             {
                 CambiarCategoria(ReglaInventarioUI.Siguiente(categoria, 1));
+            }
+            if (equipar.WasPressedThisFrame())
+            {
+                AlternarEquipo();
             }
             int dx = (derecha.WasPressedThisFrame() ? 1 : 0) - (izquierda.WasPressedThisFrame() ? 1 : 0);
             int dy = (abajo.WasPressedThisFrame() ? 1 : 0) - (arriba.WasPressedThisFrame() ? 1 : 0);
@@ -288,6 +311,7 @@ namespace MechaCyberpunk.UI.Inventario
         /// <summary>Elige una casilla de las visibles (con la rueda de la lista a la vista).</summary>
         public void Elegir(int nuevo)
         {
+            mensajeEquipo = null;
             if (visibles.Count == 0)
             {
                 indice = 0;
@@ -375,7 +399,11 @@ namespace MechaCyberpunk.UI.Inventario
                 f.Cuenta.text = ReglaInventarioUI.Contar(todas, cat).ToString();
                 f.Cuenta.color = activa ? TrazoH10.Turquesa : TrazoH10.TextoTenue;
             }
-            textoEncabezadoCuadricula.text = ReglaInventarioUI.Nombre(categoria);
+            // T-1315: con más casillas de las que caben, el encabezado dice cuáles se ven.
+            int cabenAhora = casillas.Length;
+            textoEncabezadoCuadricula.text = ReglaInventarioUI.Nombre(categoria)
+                + (visibles.Count > cabenAhora ? "  " + (filaInicial * ReglaInventarioUI.Columnas + 1) + "-"
+                    + Mathf.Min(visibles.Count, (filaInicial * ReglaInventarioUI.Columnas) + cabenAhora) + " DE " + visibles.Count : string.Empty);
             CasillasConEntrada = 0;
             for (int c = 0; c < casillas.Length; c++)
             {
@@ -401,6 +429,8 @@ namespace MechaCyberpunk.UI.Inventario
             casilla.Filo.color = TrazoH10.ConAlfa(TrazoH10.Rareza(entrada.Rareza), AlfaFilo);
             casilla.Nombre.text = entrada.Nombre;
             casilla.Cantidad.text = entrada.Cantidad > 1 || entrada.Categoria == CategoriaInventario.Municion ? "x" + entrada.Cantidad : string.Empty;
+            casilla.Marca.text = entrada.Equipable && entrada.Equipada ? TextoMarcaRueda : string.Empty;
+            casilla.Marca.color = elegida ? TrazoH10.Texto : TrazoH10.Turquesa;
             PonerIcono(casilla.Icono, casilla.Inicial, entrada, TrazoH10.Texto);
         }
 
@@ -420,8 +450,10 @@ namespace MechaCyberpunk.UI.Inventario
                 detalleCantidad.text = string.Empty;
                 detalleIcono.gameObject.SetActive(false);
                 detalleInicial.gameObject.SetActive(false);
+                PintarBotonEquipo(null);
                 return;
             }
+            PintarBotonEquipo(entrada);
             detalleNombre.text = entrada.Nombre;
             detalleNombre.color = TrazoH10.Texto;
             detalleCategoria.text = ReglaInventarioUI.Nombre(entrada.Categoria);
@@ -436,6 +468,59 @@ namespace MechaCyberpunk.UI.Inventario
                 valoresDato[i].gameObject.SetActive(true);
             }
         }
+
+        // T-1315: el botón de abajo del detalle: poner o quitar de la rueda; los implantes solo se consultan.
+        private void PintarBotonEquipo(EntradaInventario entrada)
+        {
+            bool hay = entrada != null && (entrada.Equipable || entrada.Categoria == CategoriaInventario.Implantes);
+            botonEquipoFondo.gameObject.SetActive(hay);
+            if (!hay)
+            {
+                return;
+            }
+            string texto = entrada.Categoria == CategoriaInventario.Implantes ? TextoSoloLectura : entrada.Equipada ? TextoQuitar : TextoEquipar;
+            botonEquipoTexto.text = string.IsNullOrEmpty(mensajeEquipo) ? texto : mensajeEquipo;
+            botonEquipoFondo.color = entrada.Equipable ? (entrada.Equipada ? TrazoH10.TurquesaFondo : TrazoH10.FondoPanel) : TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.4f);
+            botonEquipoTexto.color = entrada.Equipable ? TrazoH10.Turquesa : TrazoH10.TextoTenue;
+        }
+
+        /// <summary>T-1315: pone en la rueda o quita de ella el arma u objeto elegido (el botón, Enter y F). False si no se puede cambiar.</summary>
+        public bool AlternarEquipo()
+        {
+            EntradaInventario entrada = Elegida;
+            if (!abierta || entrada == null || !entrada.Equipable)
+            {
+                return false;
+            }
+            if (!entrada.Equipada)
+            {
+                int equipadas = 0;
+                foreach (EntradaInventario otra in todas)
+                {
+                    if (otra.Equipable && otra.Equipada)
+                    {
+                        equipadas++;
+                    }
+                }
+                if (!EquipoRueda.HayLugar(equipadas))
+                {
+                    mensajeEquipo = TextoRuedaLlena;
+                    Pintar();
+                    return false;
+                }
+            }
+            EquipoRueda.Poner(entrada.Id, !entrada.Equipada);
+            mensajeEquipo = null;
+            Sonidos.Reproducir(SonidoMover);
+            Reconstruir();
+            return true;
+        }
+
+        /// <summary>El texto del botón de la rueda (para las pruebas).</summary>
+        public string TextoBotonEquipo => botonEquipoTexto != null && botonEquipoFondo.gameObject.activeSelf ? botonEquipoTexto.text : string.Empty;
+
+        /// <summary>La marca "RUEDA" de la casilla <paramref name="numero"/> (de las visibles), para las pruebas.</summary>
+        public string MarcaDe(int numero) => casillas[numero].Marca.text;
 
         // El ícono de la entrada; sin ícono se dibuja la inicial del nombre.
         private static void PonerIcono(RawImage icono, Text inicial, EntradaInventario entrada, Color color)
@@ -574,6 +659,8 @@ namespace MechaCyberpunk.UI.Inventario
                 TrazoH10.Punto(casilla.Nombre.rectTransform, new Vector2(0f, 0f), new Vector2(10f, 8f), new Vector2(LadoCasilla - 20f, 48f));
                 casilla.Cantidad = TrazoH10.Etiqueta(caja, "Cantidad", string.Empty, TrazoH10.TamanoDato, TrazoH10.Turquesa, TextAnchor.UpperRight);
                 TrazoH10.Punto(casilla.Cantidad.rectTransform, new Vector2(1f, 1f), new Vector2(-10f, -8f), new Vector2(LadoCasilla * 0.6f, 30f));
+                casilla.Marca = TrazoH10.Etiqueta(caja, "Marca", string.Empty, TrazoH10.TamanoMicro, TrazoH10.Turquesa, TextAnchor.UpperLeft);
+                TrazoH10.Punto(casilla.Marca.rectTransform, new Vector2(0f, 1f), new Vector2(10f, -8f), new Vector2(LadoCasilla * 0.5f, 30f));
                 EventTrigger disparador = caja.gameObject.AddComponent<EventTrigger>();
                 EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
                 clic.callback.AddListener(_ => Elegir(filaInicial * ReglaInventarioUI.Columnas + numero));
@@ -604,6 +691,21 @@ namespace MechaCyberpunk.UI.Inventario
             detalleDescripcion = TrazoH10.Etiqueta(panelDetalle, "Descripcion", string.Empty, TrazoH10.TamanoDato, TrazoH10.TextoTenue, TextAnchor.UpperLeft);
             detalleDescripcion.horizontalOverflow = HorizontalWrapMode.Wrap;
             TrazoH10.Punto(detalleDescripcion.rectTransform, new Vector2(0f, 1f), new Vector2(RellenoPanel, -184f), new Vector2(ancho, 110f));
+            // T-1315: el botón de poner o quitar de la rueda, abajo del detalle.
+            RectTransform botonEquipo = TrazoH10.Nodo(panelDetalle, "BotonEquipo");
+            TrazoH10.Colocar(botonEquipo, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 24f), new Vector2(ancho, AltoBotonEquipo));
+            botonEquipoFondo = botonEquipo.gameObject.AddComponent<Image>();
+            botonEquipoFondo.raycastTarget = true;
+            Image lineaBoton = TrazoH10.Imagen(botonEquipo, "Linea", TrazoH10.TurquesaTenue, TrazoH10.Linea);
+            TrazoH10.Estirar(lineaBoton.rectTransform);
+            HoverH10.Agregar(botonEquipo.gameObject, lineaBoton, TrazoH10.TurquesaTenue, TrazoH10.Turquesa);
+            botonEquipoTexto = TrazoH10.Etiqueta(botonEquipo, "Texto", string.Empty, TrazoH10.TamanoFila, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
+            TrazoH10.Estirar(botonEquipoTexto.rectTransform);
+            EventTrigger disparadorBoton = botonEquipo.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry clicBoton = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
+            clicBoton.callback.AddListener(_ => AlternarEquipo());
+            disparadorBoton.triggers.Add(clicBoton);
+            botonEquipo.gameObject.SetActive(false);
             float yDatos = 312f;
             TrazoH10.Recta(panelDetalle, "ReglaDatos", TrazoH10.TurquesaTenue, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f),
                 new Vector2(0f, -(yDatos - 8f)), new Vector2(-2f * RellenoPanel, TrazoH10.GrosorLinea));

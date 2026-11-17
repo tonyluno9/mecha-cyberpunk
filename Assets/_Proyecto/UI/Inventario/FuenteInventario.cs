@@ -7,6 +7,8 @@ using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Progresion;
+using MechaCyberpunk.UI.Rueda;
 
 namespace MechaCyberpunk.UI.Inventario
 {
@@ -49,6 +51,7 @@ namespace MechaCyberpunk.UI.Inventario
                 string nombre = datos != null ? datos.Nombre.ToUpperInvariant() : NombreDeArma(arma);
                 string icono = arma == ArmaAPie.Punos ? IconoPunos : "Cat_" + arma;
                 EntradaInventario entrada = new EntradaInventario("arma_" + arma, nombre, CategoriaInventario.Armas, 1, 0, nivel, icono, string.Empty);
+                entrada.ConEquipo(arma != ArmaAPie.Punos, EquipoRueda.Equipado(EquipoRueda.IdArma(arma)));
                 entrada.ConDato("NIVEL", NivelesRomanos[Math.Min(Math.Max(nivel, 0), NivelesRomanos.Length - 1)]);
                 if (datos != null)
                 {
@@ -116,6 +119,7 @@ namespace MechaCyberpunk.UI.Inventario
                 string descripcion = objeto is DatosConsumible c ? c.Descripcion : objeto.Oferta != null ? objeto.Oferta.Descripcion : string.Empty;
                 EntradaInventario entrada = new EntradaInventario(objeto.Id, objeto.Nombre.ToUpperInvariant(), categoria, cantidad, objeto.Maximo, 0,
                     consumible ? "Cat_Consumibles" : null, descripcion);
+                entrada.ConEquipo(objeto is DatosConsumible, EquipoRueda.Equipado(objeto.Id));
                 entrada.ConDato("TIPO", Espaciar(objeto.Tipo.ToString()));
                 entrada.ConDato("LLEVAS", cantidad + " / " + objeto.Maximo);
                 if (objeto is DatosConsumible datos)
@@ -153,10 +157,31 @@ namespace MechaCyberpunk.UI.Inventario
                 }
                 string nombre = implantes.Nombre(espacio);
                 string titulo = string.IsNullOrEmpty(nombre) ? Espaciar(espacio.ToString()) : nombre.ToUpperInvariant();
-                EntradaInventario entrada = new EntradaInventario("implante_" + espacio, titulo, CategoriaInventario.Implantes, 1, 0, nivel, "Cat_Implantes", string.Empty);
+                EntradaInventario entrada = new EntradaInventario("implante_" + espacio, titulo, CategoriaInventario.Implantes, 1, 0, nivel, "Cat_Implantes", DescripcionImplante(implantes, espacio));
                 entrada.ConDato("ESPACIO", Espaciar(espacio.ToString()));
                 entrada.ConDato("NIVEL", NivelesRomanos[Math.Min(nivel, NivelesRomanos.Length - 1)]);
                 lista.Add(entrada);
+            }
+        }
+
+        // T-1315: para qué sirve el implante: la frase de su dato en la clínica; sin ella, lo que hace su espacio del cuerpo.
+        private static string DescripcionImplante(IImplantes implantes, EspacioImplante espacio)
+        {
+            if (implantes is ServicioImplantes servicio)
+            {
+                DatosImplante datos = servicio.ImplanteInstalado(espacio);
+                if (datos != null && !string.IsNullOrEmpty(datos.Descripcion))
+                {
+                    return datos.Descripcion;
+                }
+            }
+            switch (espacio)
+            {
+                case EspacioImplante.Ojos: return "VES LA VIDA DEL RIVAL Y SU PRÓXIMO ATAQUE.";
+                case EspacioImplante.Brazos: return "MÁS DAÑO EN EL GOLPE A PIE.";
+                case EspacioImplante.Piernas: return "CORRES Y SALTAS MÁS A PIE.";
+                case EspacioImplante.SistemaNervioso: return "REACCIONAS MÁS RÁPIDO EN EL MECHA.";
+                default: return string.Empty;
             }
         }
 
