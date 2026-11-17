@@ -766,7 +766,14 @@ namespace MechaCyberpunk.IA.APie
 
             if (animador != null)
             {
-                animador.SetFloat(IdVelocidad, deseada.magnitude);
+                // T-1321: el policía anima con la velocidad real del cuerpo (caminar apuntando, sin deslizarse).
+                float velocidadAnimada = deseada.magnitude;
+                if (datos.EsPolicia)
+                {
+                    Vector3 real = controlador.velocity;
+                    velocidadAnimada = ReglaAnimacionPolicia.VelocidadVista(new Vector2(real.x, real.z).magnitude, velocidadAnimada);
+                }
+                animador.SetFloat(IdVelocidad, velocidadAnimada);
                 PonerEnPiso();
                 if (visual != null)
                 {

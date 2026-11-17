@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
 using MechaCyberpunk.Vehiculos.Carro;
+using MechaCyberpunk.Vehiculos.Efectos;
 using UnityEngine;
 
 namespace MechaCyberpunk.Trafico.Persecucion
@@ -559,9 +560,42 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 IJugador j = Registro<IJugador>.Actual;
                 jugador = j != null && j.Raiz != null ? j.Raiz.position : (Vector3?)null;
             }
-            if (jugador.HasValue && DistanciaPlano(transform.position, jugador.Value) <= DistanciaDanioDelJugador)
+            // T-1321: un daño sin culpa del jugador (recién aparecida, o chocó con un barril o algo ajeno) no es un delito.
+            if (jugador.HasValue && ReglaCulpaPatrulla.CuentaComoDelito(Time.time - tiempoAparicion, Time.time - tiempoChoqueAjeno,
+                    DistanciaPlano(transform.position, jugador.Value), DistanciaDanioDelJugador))
             {
                 ReglaPrimeraEstrella.Subir(Registro<ICalor>.Actual);
+            }
+        }
+
+        private float tiempoAparicion = float.NegativeInfinity;
+        private float tiempoChoqueAjeno = float.NegativeInfinity;
+        private float velocidadAntesDeObstaculo;
+
+        /// <summary>T-1321: segundos desde el último choque con algo que no es el jugador (para pruebas).</summary>
+        public void MarcarChoqueAjeno() => tiempoChoqueAjeno = Time.time;
+
+        // T-1321: un choque con algo que no es el jugador no cuenta como delito; contra un barril a velocidad lo revienta (la explosión la daña).
+        private void OnCollisionEnter(Collision colision)
+        {
+            if (Robada || Destruida)
+            {
+                return;
+            }
+            Collider otro = colision.collider;
+            IJugador jugador = Registro<IJugador>.Actual;
+            bool esDelJugador = (jugador != null && jugador.Raiz != null && otro.transform.IsChildOf(jugador.Raiz))
+                || (otro.GetComponentInParent<IJugador>() != null)
+                || (otro.GetComponentInParent<IMontable>() != null && jugador != null && jugador.Modo != ModoJugador.APie);
+            if (esDelJugador)
+            {
+                return;
+            }
+            tiempoChoqueAjeno = Time.time;
+            BarrilExplosivo barril = otro.GetComponentInParent<BarrilExplosivo>();
+            if (barril != null && !barril.Exploto && colision.relativeVelocity.magnitude >= ReglaCulpaPatrulla.RapidezRompeBarril)
+            {
+                barril.RecibirDanio(new InfoDanio(BarrilExplosivo.VidaInicial, TipoDanio.Disparo, colision.GetContact(0).point, -colision.GetContact(0).normal, null));
             }
         }
 
@@ -584,6 +618,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private void OnEnable()
         {
             ActivasLista.Add(this);
+            tiempoAparicion = Time.time;
             Registro<Testigos.ITestigoPolicia>.Agregar(this);
         }
 
@@ -640,7 +675,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
-            bool quiere = velocidadDeseada >= config.VelocidadMinimaAtasco;
+            // T-1321: cuenta lo que quería antes de que un obstáculo (un barril) la frenara; si no, parada ante él nunca se daba por atorada.
+            bool quiere = Mathf.Max(velocidadDeseada, velocidadAntesDeObstaculo) >= config.VelocidadMinimaAtasco;
             AccionAtasco accion = detectorAtasco.Actualizar(cuerpo.position, quiere, conductor.Reversas, conductor.EnReversa, dt);
             if (accion == AccionAtasco.Reversa)
             {
@@ -791,6 +827,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // Un obstáculo que cierra los dos carriles: frena y espera; si sigue ahí avanza muy despacio (si choca, el conductor da reversa).
         private void FrenarPorObstaculo(float dt)
         {
+            velocidadAntesDeObstaculo = velocidadDeseada;
             if (estorboEnMiCarril && !ObstaculoTotal)
             {
                 velocidadDeseada = Mathf.Min(velocidadDeseada, parametrosConductor.VelocidadMinimaCurva); // da tiempo a cambiar de carril antes de llegar
@@ -1233,12 +1270,21 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     return carril;
                 }
             }
+            // T-1321: si solo son barriles lo que tapa, no es un muro: sigue despacio (los empuja, los revienta o se atora y da reversa) en vez de quedarse parada.
+            foreach (float carril in CarrilesPosibles)
+            {
+                if (!HayObstaculo(eje + derecha * carril, adelante, DistanciaObstaculo, true))
+                {
+                    ObstaculoTotal = false;
+                    return carril;
+                }
+            }
             ObstaculoTotal = true;
             return AnchoCarril;
         }
 
         // Un cilindro de RadioObstaculo m hacia delante; no cuentan los triggers, el jugador, los peatones ni las patrullas.
-        private bool HayObstaculo(Vector3 desde, Vector3 direccion, float distancia)
+        private bool HayObstaculo(Vector3 desde, Vector3 direccion, float distancia, bool ignorarBarriles = false)
         {
             Vector3 origen = desde + Vector3.up * AlturaObstaculo;
             int cuantos = Physics.SphereCastNonAlloc(origen, RadioObstaculo, direccion, impactos, distancia, ~0, QueryTriggerInteraction.Ignore);
@@ -1248,7 +1294,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 Collider c = impactos[i].collider;
                 if (c.GetComponentInParent<PatrullaMundo>() != null || c.GetComponentInParent<Peatones.PeatonMundo>() != null
-                    || (raizJugador != null && c.transform.IsChildOf(raizJugador)))
+                    || (raizJugador != null && c.transform.IsChildOf(raizJugador))
+                    || (ignorarBarriles && c.GetComponentInParent<BarrilExplosivo>() != null))
                 {
                     continue;
                 }
