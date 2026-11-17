@@ -53,9 +53,23 @@ namespace MechaCyberpunk.Arte.Editor
             Hoja();
         }
 
+        /// <summary>T-1312: rehace solo las variantes de color (sin importar zips ni tocar la escena).</summary>
+        public static void RehacerVariantes()
+        {
+            StringBuilder informe = new StringBuilder();
+            foreach (var v in Variantes)
+            {
+                informe.AppendLine(CrearVariante(v.codigo, v.color, v.tinte));
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Arte] T-1312 variantes:" + System.Environment.NewLine + informe);
+        }
+
         private static string CrearVariante(string codigo, string color, Color tinte)
         {
-            Material original = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Vehiculos/" + codigo + "/" + codigo + ".mat");
+            // T-1312: si el carro ya lleva la carrocería de Blender, se tiñe ese material.
+            Material original = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Vehiculos/Piezas/" + codigo + "/" + codigo + "_Blender_Carroceria.mat")
+                ?? AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Vehiculos/" + codigo + "/" + codigo + ".mat");
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorTraficoT511.RutaPrefab(codigo));
             if (original == null || prefab == null)
             {

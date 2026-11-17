@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 113389472752455450, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5df3bc09e97f4e34dba0555f9a7d4f37, type: 2}
     - target: {fileID: 604021781173111443, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,11 +52,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2036124514824212244, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5df3bc09e97f4e34dba0555f9a7d4f37, type: 2}
+    - target: {fileID: 2157313079528963299, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5df3bc09e97f4e34dba0555f9a7d4f37, type: 2}
     - target: {fileID: 2234120505946986203, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
       propertyPath: m_Name
       value: CarroTrafico_V03_Verde
       objectReference: {fileID: 0}
-    - target: {fileID: 8519768211257708223, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
+    - target: {fileID: 5427749472173932908, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5df3bc09e97f4e34dba0555f9a7d4f37, type: 2}
+    - target: {fileID: 8932748929899303720, guid: 440886deb8b33d342b5baba3fd765ae2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 5df3bc09e97f4e34dba0555f9a7d4f37, type: 2}

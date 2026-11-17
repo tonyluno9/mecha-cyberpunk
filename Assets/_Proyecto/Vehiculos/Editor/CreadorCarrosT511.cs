@@ -71,6 +71,15 @@ namespace MechaCyberpunk.Vehiculos.Editor
 
         public static string CrearUno(string codigo, string arte, float giro, float largo)
         {
+            // T-1312: los carros armados con las piezas de Blender (carrocería y ruedas que giran) no se vuelven a armar con el modelo viejo.
+            if (System.Array.IndexOf(CreadorCarrosBlenderT1312.Carros, codigo) >= 0 || codigo == CreadorCarrosBlenderT1312.CodigoMoto)
+            {
+                GameObject actual = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab(codigo));
+                if (actual != null && actual.GetComponent<MechaCyberpunk.Vehiculos.Carro.RuedasVisualesCarro>() != null)
+                {
+                    return codigo + "	ya armado con las piezas de Blender (T-1312): no se toca";
+                }
+            }
             GameObject baseCarro = AssetDatabase.LoadAssetAtPath<GameObject>(RutaBase);
             GameObject arteAsset = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Prefabs/" + arte + ".prefab")
                 ?? AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Calle/Prefabs/" + arte + ".prefab");
