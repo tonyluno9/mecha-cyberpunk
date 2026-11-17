@@ -18,6 +18,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
         private GameObject misiles;
         private Transform puntaLaser;
         private Transform salidaMisiles;
+        private bool buscoPiezas;
 
         /// <summary>El modelo del brazo láser si está puesto y activo; si no, null.</summary>
         public GameObject ModeloLaser => laser != null && laser.activeSelf ? laser : null;
@@ -44,6 +45,19 @@ namespace MechaCyberpunk.Personaje.Habilidades
                 if (animador == null || !animador.isHuman)
                 {
                     return;
+                }
+            }
+            if (!buscoPiezas)
+            {
+                // T-1311: si el cuerpo de PJ01 trae las piezas de PJ01_Implantes_Ataque.fbx se usan esas (y sus vacíos de salida) en vez del prefab de T-1018.
+                buscoPiezas = true;
+                PiezasProtesisAtaquePJ01 piezas = animador.GetComponentInChildren<PiezasProtesisAtaquePJ01>(true);
+                if (piezas != null && piezas.Laser != null && piezas.Misiles != null)
+                {
+                    laser = piezas.Laser;
+                    puntaLaser = piezas.SalidaLaser;
+                    misiles = piezas.Misiles;
+                    salidaMisiles = piezas.SalidaMisiles;
                 }
             }
             var inventario = Registro<MechaCyberpunk.Economia.ServicioInventario>.Actual;
