@@ -45,7 +45,45 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private void OnEnable() => ActivosLista.Add(this);
 
-        private void OnDisable() => ActivosLista.Remove(this);
+        private void OnDisable()
+        {
+            ActivosLista.Remove(this);
+            PararMotor();
+        }
+
+        /// <summary>T-1309b: zumbido del motor en bucle, 3D, pegado al dron mientras vuela.</summary>
+        public const string IdMotor = "CAL_DRON_ZUMBIDO";
+        private const float SegundosReintentoMotor = 1f;
+        private int bucleMotor = Sonidos.SinBucle;
+        private float reintentoMotor;
+
+        /// <summary>True mientras suena el motor (para pruebas).</summary>
+        public bool MotorSonando => bucleMotor != Sonidos.SinBucle;
+
+        // El servicio de sonido puede llegar después que el dron: se intenta cada segundo hasta que suene.
+        private void MantenerMotor()
+        {
+            if (EstaCayendo)
+            {
+                PararMotor();
+                return;
+            }
+            if (bucleMotor != Sonidos.SinBucle || Time.time < reintentoMotor)
+            {
+                return;
+            }
+            reintentoMotor = Time.time + SegundosReintentoMotor;
+            bucleMotor = Sonidos.ReproducirBucle(IdMotor, transform);
+        }
+
+        private void PararMotor()
+        {
+            if (bucleMotor != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleMotor);
+                bucleMotor = Sonidos.SinBucle;
+            }
+        }
 
         /// <summary>T-938: el gestor le dice qué número es de cuántos drones, para que cada uno tenga su punto.</summary>
         public void AsignarOrbita(int indice, int total)
@@ -332,6 +370,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private void Update()
         {
+            MantenerMotor(); // T-1309b
             Vector3? jugador = posicionJugador?.Invoke();
             if (calculo == null)
             {
