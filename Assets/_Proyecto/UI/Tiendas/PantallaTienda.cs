@@ -96,6 +96,9 @@ namespace MechaCyberpunk.UI.Tiendas
         private Image lineaPestanaVender;
         // T-1012: El Mercado (la tienda que vende armas) se dibuja como el mockup M32 con VistaMercadoArmas.
         private VistaMercadoArmas mercado;
+        private bool cursorLiberado;
+        private CursorLockMode bloqueoPrevio;
+        private bool cursorPrevio;
         private bool modoMercado;
         private string tituloTienda = string.Empty;
         private Vector2 posicionLista;
@@ -152,6 +155,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private void OnDisable()
         {
+            SoltarCursor();
             mercado?.Encender(false);
             DesactivarEntrada();
             visible = false;
@@ -194,6 +198,7 @@ namespace MechaCyberpunk.UI.Tiendas
             AnimH10.EntrarPanel(panelLista, new Vector2(-AnimH10.DesplazamientoEntrada, 0f));
             AnimH10.EntrarPanel(panelDetalle, new Vector2(AnimH10.DesplazamientoEntrada, 0f), AnimH10.SegundosEscalon);
             PilaPantallas.Abrir(this);
+            LiberarCursor();
             arriba.Enable();
             abajo.Enable();
             izquierda.Enable();
@@ -204,6 +209,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
         public void Ocultar()
         {
+            SoltarCursor();
             mercado?.Encender(false);
             visible = false;
             PilaPantallas.Cerrar(this);
@@ -212,6 +218,32 @@ namespace MechaCyberpunk.UI.Tiendas
             {
                 contenido.SetActive(false);
             }
+        }
+
+        // T-1314: en El Mercado el cursor se ve y está libre para elegir con el mouse; al cerrar vuelve a como estaba.
+        private void LiberarCursor()
+        {
+            if (!modoMercado || cursorLiberado)
+            {
+                return;
+            }
+            cursorLiberado = true;
+            bloqueoPrevio = Cursor.lockState;
+            cursorPrevio = Cursor.visible;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            KitUI.AsegurarEventSystem();
+        }
+
+        private void SoltarCursor()
+        {
+            if (!cursorLiberado)
+            {
+                return;
+            }
+            cursorLiberado = false;
+            Cursor.lockState = bloqueoPrevio;
+            Cursor.visible = cursorPrevio;
         }
 
         private void DesactivarEntrada()
@@ -286,14 +318,14 @@ namespace MechaCyberpunk.UI.Tiendas
             }
         }
 
-        // T-403: de cada arma solo se ofrece la mejora siguiente (el nivel n pide tener el n-1).
+        // T-1314: de las armas solo se ofrece la base que aún no se tiene (las mejoras son del banco de Tino).
         private void Refiltrar()
         {
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             objetos.Clear();
             foreach (DatosObjeto objeto in todos)
             {
-                if (objeto is DatosArma arma && arsenal != null && !arsenal.EsSiguiente(arma))
+                if (objeto is DatosArma arma && !ReglaVistaMercado.SeOfrece(arma, arsenal != null && arsenal.Tiene(arma.Arma)))
                 {
                     continue;
                 }
@@ -872,8 +904,18 @@ namespace MechaCyberpunk.UI.Tiendas
         private void ElegirFila(int numero)
         {
             int cantidad = pestana == PestanaTienda.Comprar ? objetos.Count : vendibles.Count;
-            if (!visible || !PilaPantallas.EsArriba(this) || numero < 0 || numero >= cantidad || numero == indice)
+            if (!visible || !PilaPantallas.EsArriba(this) || numero < 0 || numero >= cantidad)
             {
+                return;
+            }
+            if (numero == indice)
+            {
+                // T-1314: en El Mercado un clic sobre la fila ya elegida compra.
+                if (modoMercado && pestana == PestanaTienda.Comprar)
+                {
+                    Sonidos.Reproducir("UI_ACEPTAR");
+                    Comprar();
+                }
                 return;
             }
             indice = numero;

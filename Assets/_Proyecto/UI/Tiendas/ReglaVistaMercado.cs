@@ -31,6 +31,12 @@ namespace MechaCyberpunk.UI.Tiendas
         public const float AlcanceLleno = 150f;
         private const float SegundosCadencia = 10f;
 
+        /// <summary>
+        /// T-1314: El Mercado solo vende armas base que aún no se tienen (las mejoras por nivel son del banco de Tino). Las balas y lo demás se ofrecen siempre
+        /// (las balas ya se filtran por el arma que se tiene).
+        /// </summary>
+        public static bool SeOfrece(DatosArma arma, bool yaLaTiene) => arma != null && arma.Nivel == 0 && !yaLaTiene;
+
         public static readonly string[] Etiquetas = { "DAÑO", "CARGADOR", "CADENCIA", "ALCANCE" };
 
         /// <summary>Las cuatro barras del arma en ese nivel (vacías si no hay datos).</summary>

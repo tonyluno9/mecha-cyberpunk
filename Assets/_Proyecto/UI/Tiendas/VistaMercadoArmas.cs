@@ -223,7 +223,7 @@ namespace MechaCyberpunk.UI.Tiendas
             armaMostrada = (ArmaAPie)(-1);
         }
 
-        /// <summary>Pinta el título, el dinero y el objeto elegido (un arma, su mejora o sus balas).</summary>
+        /// <summary>Pinta el título, el dinero y el objeto elegido (un arma o sus balas).</summary>
         public void Pintar(string tituloTienda, DatosObjeto objeto, int precio, ICartera cartera)
         {
             if (!Activa)

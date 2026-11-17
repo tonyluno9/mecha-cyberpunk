@@ -45,7 +45,7 @@ namespace MechaCyberpunk.Tests.UI
         private const int DineroDeuda = -200;
         private const int PrecioKit = 250;
         private const int FilasNoArmas = 5;
-        private const int FilasDeArmas = 5; // T-416: de cada arma solo se ofrece la siguiente (escopeta, fusil, sniper, PISTOLA I y PUÑOS I)
+        private const int FilasDeArmas = 8; // T-1314: solo las armas base que no se tienen (sin mejoras por nivel; esas son del banco de Tino)
         private const int FilasDelMercado = FilasNoArmas + FilasDeArmas;
         private const int OfertasDelMercado = 6 + 19 + 3;
         private const int MaximoMisiles = 6;
