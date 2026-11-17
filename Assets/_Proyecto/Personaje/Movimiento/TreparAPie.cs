@@ -30,6 +30,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private readonly RaycastHit[] golpes = new RaycastHit[MaxGolpes];
         private readonly Collider[] choques = new Collider[MaxGolpes];
         private PuntoTrepar puntoCercano;
+        private Collider triggerCercano;
+        // T-1203: holgura para seguir "dentro" del trigger de la escalera (m).
+        private const float HolguraTrigger = 0.35f;
+        private const float AlturaCentroCuerpo = 0.9f;
         private PuntoTrepar puntoActual;
         private Vector3 inicioAgarre;
         private Vector3 finAgarre;
@@ -62,6 +66,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 controlador.ReanudarMovimiento(Vector3.zero);
             }
             puntoCercano = null;
+            triggerCercano = null;
         }
 
         private void OnTriggerEnter(Collider otro)
@@ -70,6 +75,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (punto != null)
             {
                 puntoCercano = punto;
+                triggerCercano = otro;
             }
         }
 
@@ -79,6 +85,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (punto != null && punto == puntoCercano)
             {
                 puntoCercano = null;
+                triggerCercano = null;
             }
         }
 
@@ -124,6 +131,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 return;
             }
+            if (puntoCercano != null && !SigueJuntoAEscalera())
+            {
+                // T-1203: al subir se apaga el CharacterController y Unity ya no avisa la salida del trigger; sin esto, caminar en el techo
+                // hacia el mismo lado de la escalera volvía a engancharla y regresaba al jugador a la orilla.
+                puntoCercano = null;
+                triggerCercano = null;
+            }
             if (puntoCercano != null && entrada.y > UmbralAdelante && PuedeEngancharse(puntoCercano))
             {
                 EngancharEscalera(puntoCercano);
@@ -135,6 +149,17 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 IniciarAgarre(destino, segundos);
             }
+        }
+
+        // T-1203: el jugador de verdad está en el trigger de la escalera (al pie, frente a la pared), no en el techo ni lejos.
+        private bool SigueJuntoAEscalera()
+        {
+            if (triggerCercano == null || !triggerCercano.enabled || !triggerCercano.gameObject.activeInHierarchy)
+            {
+                return false;
+            }
+            Vector3 centro = transform.position + Vector3.up * AlturaCentroCuerpo;
+            return (triggerCercano.ClosestPoint(centro) - centro).sqrMagnitude <= HolguraTrigger * HolguraTrigger;
         }
 
         private bool PuedeEngancharse(PuntoTrepar punto)
@@ -330,6 +355,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         {
             regla.Soltar();
             puntoActual = null;
+            puntoCercano = null; // T-1203: si sigue al pie, el trigger lo vuelve a avisar al prender el CharacterController
+            triggerCercano = null;
             cc.enabled = true;
             if (visual != null)
             {

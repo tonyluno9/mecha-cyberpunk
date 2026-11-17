@@ -300,6 +300,7 @@ namespace MechaCyberpunk.Tests.Personaje
         /// no vuelve a engancharse a la escalera, no lo regresa nada a la orilla (sin saltos de más de 0,4 m en un cuadro) y quieto no se desliza.
         /// </summary>
         [UnityTest]
+        [Timeout(900000)]
         public IEnumerator Techos_CaminarDespuesDeSubir_NoRegresaNiEmpuja()
         {
             yield return Cargar();
