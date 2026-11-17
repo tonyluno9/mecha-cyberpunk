@@ -1376,6 +1376,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Persecucion.PatrullaMundo
   alturaRaiz: 0.3
   prefabPolicia: {fileID: 2915260599946528448, guid: 093b3e2d7c5562740adae22ed74c80da, type: 3}
+  clipPoliciaManejar: {fileID: -3130932603845693335, guid: 3e7a1288f1767b34eb32354c0d63d394, type: 3}
+  clipPoliciaSalir: {fileID: 7090688471300547316, guid: 3205b57635ccae7418d226b167c5e930, type: 3}
   luzRoja: {fileID: 6083341006562276566}
   luzAzul: {fileID: 8518531123946448863}
 --- !u!114 &385540726142170091
