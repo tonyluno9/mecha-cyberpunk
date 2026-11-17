@@ -1,7 +1,7 @@
 using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Habilidades;
-using MechaCyberpunk.Tests.Personaje;
+using MechaCyberpunk.Progresion;
 using MechaCyberpunk.UI.Hud;
 using MechaCyberpunk.UI.Rueda;
 using NUnit.Framework;
@@ -17,6 +17,34 @@ namespace MechaCyberpunk.Tests.UI
     /// </summary>
     public class ControlesT1329Pruebas : BaseHudObjetivo
     {
+        /// <summary>Doble de IImplantes (copia de Tests.Personaje.ImplantesFalsos: ese ensamblado no lo ve UI).</summary>
+        private sealed class ImplantesFalsos : IImplantes
+        {
+            private const string RutaDatos = "Assets/_Proyecto/Progresion/Datos/Implantes/DatosImplante_implante_";
+            private readonly int[] niveles = new int[4];
+            private EfectosImplantes efectos = EfectosImplantes.Ninguno;
+            public int Cantidad { get { int n = 0; foreach (int x in niveles) if (x > 0) n++; return n; } }
+            public EfectosImplantes Efectos => efectos;
+            public event System.Action Cambio;
+            public event System.Action<EspacioImplante, int> Instalado;
+            public int Nivel(EspacioImplante espacio) => niveles[(int)espacio];
+            public string Nombre(EspacioImplante espacio) => niveles[(int)espacio] > 0 ? "FALSO" : string.Empty;
+
+            public void Poner(EspacioImplante espacio, int nivel)
+            {
+                niveles[(int)espacio] = nivel;
+                efectos = EfectosImplantes.Ninguno;
+                for (int i = 0; i < niveles.Length; i++)
+                {
+                    if (niveles[i] <= 0) continue;
+                    var datos = AssetDatabase.LoadAssetAtPath<DatosImplante>(RutaDatos + ((EspacioImplante)i).ToString().ToLowerInvariant() + "_" + niveles[i] + ".asset");
+                    if (datos != null) efectos = EfectosImplantes.Combinar(efectos, datos.Efectos);
+                }
+                Cambio?.Invoke();
+                if (nivel > 0) Instalado?.Invoke(espacio, nivel);
+            }
+        }
+
         private const string RutaCarro = "Assets/_Proyecto/Personaje/Pruebas/CarroDePrueba.prefab";
 
         private HabilidadesProtesis habilidades;
