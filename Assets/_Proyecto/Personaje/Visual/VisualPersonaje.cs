@@ -811,6 +811,17 @@ namespace MechaCyberpunk.Personaje.Visual
             Disparo(IdRecargar);
         }
 
+        /// <summary>
+        /// T-1308: recarga con su animación aunque el arma esté guardada: la saca (pose de arma) y la mantiene levantada mientras dura la recarga
+        /// (<paramref name="segundos"/>) más un respiro; después se guarda sola como tras un disparo.
+        /// </summary>
+        public void Recargar(float segundos)
+        {
+            Recargar();
+            armaLevantadaHasta = Mathf.Max(armaLevantadaHasta, Time.time + Mathf.Max(0f, segundos) + SegundosArmaTrasAccion);
+            Aplicar();
+        }
+
         public void Golpear() => Golpear(false);
 
         public void Herir() => Disparo(IdHerido);
