@@ -42,7 +42,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private const float RapidezCaminar = 3.5f;
         private const float RapidezCorrer = 6.5f;
         private const float DistanciaAlCarro = 2f;
-        private const float SegundosMaximosEsperandoCarro = 20f;
+        private const float SegundosMaximosEsperandoCarro = 30f; // T-1301: sin cinemática no hay ~3 s de margen antes de esperar el carro
         private const float SegundosEntreObjetivos = 0.4f;
         private const float SeparacionPuertaCarro = 2.4f;
         private const float AlturaSobreSuelo = 0.05f;
@@ -53,6 +53,16 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private const float AltoBarras = 0.12f;
         private const float DistanciaCamara = 6.5f;
         private const float AlturaCamara = 2.4f;
+
+        /// <summary>
+        /// T-1301: interruptor de la cinemática de la intro (cuando asaltan a la chica). Apagado por ahora: la partida empieza sin ella y el asalto queda igual que si se
+        /// hubiera saltado con Enter (robo hecho, objetivo "RÓBATE UN CARRO" activo, sin cámara ni barras ni HUD oculto). Para volver a prenderla, ponlo en true.
+        /// Las pruebas de la cinemática lo prenden y lo restauran.
+        /// </summary>
+        public static bool ConCinematica { get; set; } = false;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarEstatico() => ConCinematica = false;
 
         private readonly ReglaAsalto regla = new ReglaAsalto();
         private PantallaHistoriaPandillas pantalla;
@@ -131,6 +141,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 return;
             }
             regla.Iniciar();
+            saltar = false;
             controlador = jugador.Raiz.GetComponentInChildren<ControladorAPie>();
             PonerEscena(jugador);
             punto.Activar(true); // el carro sale hacia donde asaltan a la víctima
@@ -204,8 +215,15 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private IEnumerator Cinematica(IJugador jugador, IPuntoHistoria punto)
         {
-            Congelar(jugador);
-            PonerCinematica(jugador);
+            if (ConCinematica)
+            {
+                Congelar(jugador);
+                PonerCinematica(jugador);
+            }
+            else
+            {
+                saltar = true; // T-1301: sin cinemática = como si se hubiera saltado con Enter desde el primer cuadro
+            }
 
             // 1. El asaltante camina hacia la víctima (una persona de afuera; tú solo miras).
             while (!saltar && Distancia(asaltante.transform.position, victima.transform.position) > DistanciaRobo)
