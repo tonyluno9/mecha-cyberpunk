@@ -16,6 +16,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
     public class CaidaJugador : MonoBehaviour
     {
         private const float SegundosMinimosAire = 0.3f;
+        /// <summary>Más que esto (m) en un solo cuadro no es caer: es que alguien movió al jugador.</summary>
+        private const float DistanciaTeletransporte = 3f;
+        private Vector3 posicionAnterior;
+        private bool tienePosicionAnterior;
 
         private ControladorAPie controlador;
         private VidaAPie vida;
@@ -53,6 +57,24 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 return;
             }
             float dt = Time.deltaTime;
+            // Un salto de varios metros en un cuadro es un teletransporte (Colocar, cargar partida, bajar del carro), no una caída: se olvida lo medido.
+            Vector3 posicion = transform.position;
+            bool teletransporte = tienePosicionAnterior && (posicion - posicionAnterior).sqrMagnitude > DistanciaTeletransporte * DistanciaTeletransporte;
+            posicionAnterior = posicion;
+            tienePosicionAnterior = true;
+            if (teletransporte)
+            {
+                estabaEnAire = false;
+                segundosAire = 0f;
+                if (Rodando)
+                {
+                    segundosRodando = 0f;
+                    controlador.FactorVelocidad = 1f;
+                    controlador.DesplazamientoExterno = Vector3.zero;
+                    controlador.SaltoBloqueado = false;
+                }
+                return;
+            }
             if (Rodando)
             {
                 segundosRodando -= dt;
