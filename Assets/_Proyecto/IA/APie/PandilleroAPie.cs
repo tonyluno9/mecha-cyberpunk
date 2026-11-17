@@ -103,6 +103,32 @@ namespace MechaCyberpunk.IA.APie
 
         private static readonly int IdVelocidad = Animator.StringToHash("Velocidad");
         private static readonly int IdEnPiso = Animator.StringToHash("EnPiso");
+        private static readonly int IdVelY = Animator.StringToHash("VelY");
+        /// <summary>T-1306: bajando más rápido que esto (m/s) ya no está en el piso para el animador (escalones y rampas no cuentan como caída).</summary>
+        private const float VelocidadCaidaVisible = -3f;
+        private int tieneVelY = -1;
+
+        // T-1306: el animador sabe si va cayendo (EnPiso y VelY): un SKULL que salta de un techo usa la caída (Loco_Caida) y el aterrizaje, no camina en el aire.
+        private void PonerEnPiso()
+        {
+            bool enPiso = controlador == null || controlador.isGrounded || velocidadVertical > VelocidadCaidaVisible;
+            animador.SetBool(IdEnPiso, enPiso);
+            if (tieneVelY < 0)
+            {
+                tieneVelY = 0;
+                foreach (AnimatorControllerParameter parametro in animador.parameters)
+                {
+                    if (parametro.nameHash == IdVelY && parametro.type == AnimatorControllerParameterType.Float)
+                    {
+                        tieneVelY = 1;
+                    }
+                }
+            }
+            if (tieneVelY == 1)
+            {
+                animador.SetFloat(IdVelY, enPiso ? 0f : velocidadVertical);
+            }
+        }
         private static readonly int IdApuntando = Animator.StringToHash("Apuntando");
         private static readonly int IdArma = Animator.StringToHash("Arma");
         private static readonly int IdKO = Animator.StringToHash("KO");
@@ -724,7 +750,7 @@ namespace MechaCyberpunk.IA.APie
             if (animador != null)
             {
                 animador.SetFloat(IdVelocidad, deseada.magnitude);
-                animador.SetBool(IdEnPiso, true);
+                PonerEnPiso();
                 if (visual != null)
                 {
                     // T-712: detrás de la cubierta, ya llegado, se agacha (Cobertura_Entrar); al asomarse se para y apunta.
@@ -794,7 +820,7 @@ namespace MechaCyberpunk.IA.APie
             if (animador != null)
             {
                 animador.SetFloat(IdVelocidad, deseada.magnitude);
-                animador.SetBool(IdEnPiso, true);
+                PonerEnPiso();
             }
         }
 
@@ -897,7 +923,7 @@ namespace MechaCyberpunk.IA.APie
             if (animador != null)
             {
                 animador.SetFloat(IdVelocidad, velocidadPlana.magnitude);
-                animador.SetBool(IdEnPiso, true);
+                PonerEnPiso();
             }
         }
 
