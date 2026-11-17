@@ -9,3 +9,4 @@ Origen: docs/playtest-17nov.md, punto 12 (sesión B).
   Medidas en Logs/t1312-carros.txt (radio de rueda y entre ejes por modelo). A la moto se le quitó el caballete.
 - `RuedasBlenderT1312Pruebas` (PlayMode, 7 casos): al avanzar, las ruedas giran solo sobre X y tocan el piso. 7/7.
 - Capturas de lado y 3/4 en docs/capturas/t-1312/ (revisadas: ruedas en su hueco, sobre el piso).
+- Pruebas del área: EditMode Vehiculos 198/198; PlayMode Vehiculos 141/142: falla CiudadCarrosPruebas (el V08 estacionado se atora al robarlo), que también falla en la base 4f96fe3 con los prefabs de antes.

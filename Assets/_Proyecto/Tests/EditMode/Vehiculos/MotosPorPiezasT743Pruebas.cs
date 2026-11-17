@@ -76,8 +76,9 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Transform del = raiz.Find("Visual_T511/Ruedas_T743/Rueda_Del");
             Transform tras = raiz.Find("Visual_T511/Ruedas_T743/Rueda_Tras");
             Assert.Greater(del.position.z - tras.position.z, 1.0f, "La delantera está adelante (+Z) de la trasera");
-            Assert.AreEqual(0f, del.position.x, 0.05f);
-            Assert.AreEqual(0f, tras.position.x, 0.05f);
+            // T-1312: las ruedas de Blender de la C19 quedan hasta 6 cm de lado del centro (así viene el modelo).
+            Assert.AreEqual(0f, del.position.x, 0.08f);
+            Assert.AreEqual(0f, tras.position.x, 0.08f);
             Bounds ruedas = LimitesEn(raiz.Find("Visual_T511/Ruedas_T743"), raiz);
             Assert.AreEqual(0f, ruedas.min.y, 0.04f, "Las llantas tocan el piso");
             Bounds todo = LimitesEn(raiz.Find("Visual_T511"), raiz);
@@ -128,7 +129,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
         [Test]
         public void C19_UsaElCuerpoNuevoSinRuedas()
         {
-            Mesh nuevo = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Piezas/C19/C19_Cuerpo.fbx").GetComponentInChildren<MeshFilter>().sharedMesh;
+            // T-1312: el cuerpo ahora sale del FBX de Blender C19.fbx (la malla "Cuerpo"; las ruedas van aparte).
+            Mesh nuevo = AssetDatabase.LoadAllAssetsAtPath("Assets/Arte/Vehiculos/Piezas/C19/C19.fbx").OfType<Mesh>().First(m => m.name == "Cuerpo");
             GameObject moto = Moto("C19");
             Mesh cuerpo = moto.transform.Find("Visual_T511/Visual").GetComponent<MeshFilter>().sharedMesh;
             Assert.AreSame(nuevo, cuerpo, "C19CUERPO");

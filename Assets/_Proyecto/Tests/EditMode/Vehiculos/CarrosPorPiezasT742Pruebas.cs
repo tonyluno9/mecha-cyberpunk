@@ -248,11 +248,12 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
-        public void LosOtrosCarros_SiguenConSuModeloDeUnaMalla([Values("V02", "V03", "V04", "V06", "V09", "V10")] string codigo)
+        public void LosOtrosCarros_LlevanLasRuedasDeBlenderT1312([Values("V02", "V03", "V04", "V06", "V09", "V10")] string codigo)
         {
+            // T-1312: estos carros ya llevan carrocería y ruedas separadas de Blender (antes seguían con su modelo de una malla).
             Transform raiz = Carro(codigo).transform;
-            Assert.IsNull(raiz.GetComponent<RuedasVisualesCarro>(), codigo + " no lleva ruedas por piezas");
-            Assert.IsNull(raiz.Find("Visual_T511/Carroceria"), codigo + " sigue con su modelo de una malla");
+            Assert.IsNotNull(raiz.GetComponent<RuedasVisualesCarro>(), codigo + " lleva ruedas por piezas");
+            Assert.IsNotNull(raiz.Find("Rueda_DI/Direccion/Giro"), codigo + " tiene la rueda delantera izquierda que gira");
         }
     }
 }
