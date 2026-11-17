@@ -45,6 +45,12 @@ namespace MechaCyberpunk.Personaje.Combate
         private readonly System.Collections.Generic.List<Vector2> posicionesBlancos = new System.Collections.Generic.List<Vector2>();
         private bool girando;
         private float anguloAutoGiro;
+        // T-1327: el golpe dirigido también acerca un poco al jugador al blanco.
+        private const float DistanciaParadaGolpe = 1f;
+        private const float RapidezAcercamiento = 6f;
+        private float acercamientoPendiente;
+        private Vector3 direccionAcercamiento;
+        private CharacterController cuerpo;
 
         public DatosPersonaje Datos => datos;
         public FaseGolpe Fase => ciclo != null ? ciclo.Fase : FaseGolpe.Listo;
@@ -61,6 +67,7 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             controlador = GetComponent<ControladorAPie>();
             vida = GetComponent<VidaAPie>();
+            cuerpo = GetComponent<CharacterController>();
             if (datos == null || atacar == null)
             {
                 Debug.LogError("[Personaje] Faltan referencias en GolpeAPie de " + name, this);
@@ -90,8 +97,10 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Update()
         {
-            if (vida.EstaKO || !controlador.ControlActivo)
+            if (vida.EstaKO || !controlador.ControlActivo || controlador.Derribado)
             {
+                girando = false;
+                acercamientoPendiente = 0f;
                 ciclo.Reiniciar();
                 MoverPuno();
                 return;
@@ -112,6 +121,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 AvanzarAutoGiro(Time.deltaTime);
             }
+            Acercar(Time.deltaTime);
             if (ciclo.Avanzar(Time.deltaTime))
             {
                 if (girando)
@@ -129,6 +139,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private void IniciarAutoGiro()
         {
             girando = false;
+            acercamientoPendiente = 0f;
             if (controlador.Apuntando || datos.RadioAutoGiro <= 0f)
             {
                 return;
@@ -171,8 +182,25 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 return;
             }
-            anguloAutoGiro = SelectorAutoGiro.AnguloYaw(posicionesBlancos[elegido] - yo);
+            Vector2 haciaBlanco = posicionesBlancos[elegido] - yo;
+            anguloAutoGiro = SelectorAutoGiro.AnguloYaw(haciaBlanco);
             girando = true;
+            acercamientoPendiente = SelectorAutoGiro.Acercamiento(haciaBlanco.magnitude, DistanciaParadaGolpe, datos.AvanceAutoGiro);
+            direccionAcercamiento = new Vector3(haciaBlanco.x, 0f, haciaBlanco.y).normalized;
+        }
+
+        /// <summary>T-1327: metros que le faltan por acercarse al blanco del golpe (para las pruebas).</summary>
+        public float AcercamientoPendiente => acercamientoPendiente;
+
+        private void Acercar(float dt)
+        {
+            if (acercamientoPendiente <= 0f || cuerpo == null || !cuerpo.enabled)
+            {
+                return;
+            }
+            float paso = Mathf.Min(acercamientoPendiente, RapidezAcercamiento * dt);
+            acercamientoPendiente -= paso;
+            cuerpo.Move(direccionAcercamiento * paso);
         }
 
         private bool HayMuroEntre(Vector3 origen, Collider destino, Transform raizBlanco)

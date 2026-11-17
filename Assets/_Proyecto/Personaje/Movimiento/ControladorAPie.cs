@@ -87,6 +87,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool SaltoBloqueado { get; set; }
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
+        /// <summary>T-1327: True mientras un carro lo tiró y está en el suelo o levantándose (AtropelloJugador): no ataca ni salta ni camina.</summary>
+        public bool Derribado { get; set; }
 
         // T-992: las habilidades de prótesis suman su multiplicador temporal encima de los implantes (1 si no hay o no están activas).
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis habilidades;
@@ -263,8 +265,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
             horizontal = horizontal * FactorVelocidad * FactorExtraVelocidad + DesplazamientoExterno + impulso;
             impulso = Vector3.MoveTowards(impulso, Vector3.zero, config.FrenadoPiso * config.ControlAire * dt);
             GirarCuerpo(dt, horizontal);
+            bool estabaEnPiso = enPiso;
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
+            if (!enPiso && estabaEnPiso && movimiento.VelocidadVertical <= 0f)
+            {
+                enPiso = PegarAlPiso();
+            }
             if (enPiso && tiempoAire > SegundosMinimosAire)
             {
                 Sonidos.ReproducirEn("JUG_CAER", transform.position);
@@ -289,6 +296,26 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 UltimoIdPaso = IdPasoDelPiso();
                 Sonidos.ReproducirEn(UltimoIdPaso, transform.position);
             }
+        }
+
+        /// <summary>
+        /// T-1327: bajando escalones o una rampa el CharacterController pierde el piso un cuadro (el escalón baja más de lo que cae en un cuadro): el jugador "flotaba"
+        /// y el animador veía aire. Si venía en el piso y no saltó, se baja pegado al piso hasta EscalonMaximo. Devuelve si quedó en el piso.
+        /// </summary>
+        private bool PegarAlPiso()
+        {
+            float radio = controlador.radius * 0.9f;
+            Vector3 centro = transform.TransformPoint(controlador.center);
+            Vector3 origen = centro + Vector3.down * (controlador.height * 0.5f - controlador.radius);
+            float alcance = EscalonMaximo + controlador.skinWidth;
+            if (!Physics.SphereCast(origen + Vector3.up * controlador.radius * 0.1f, radio, Vector3.down, out RaycastHit golpe, alcance, ~0, QueryTriggerInteraction.Ignore)
+                || golpe.collider.transform.root == transform.root
+                || golpe.normal.y < Mathf.Cos(PendienteMaxima * Mathf.Deg2Rad))
+            {
+                return false;
+            }
+            controlador.Move(Vector3.down * Mathf.Max(0f, golpe.distance));
+            return controlador.isGrounded;
         }
 
         /// <summary>T-943: al disparar sin apuntar, el cuerpo gira un momento hacia donde mira la cámara.</summary>
