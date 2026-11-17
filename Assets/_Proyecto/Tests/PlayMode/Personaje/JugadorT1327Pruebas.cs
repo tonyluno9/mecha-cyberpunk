@@ -160,7 +160,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.5f);
             Assert.IsTrue(controlador.EnPiso, "arranca parado arriba");
             Press(teclado.wKey);
-            int cuadrosEnAire = 0;
+            float segundosEnAire = 0f; // en segundos: en batchmode un cuadro dura ~1 ms
             float fin = Time.time + 2.5f;
             float yMinima = 10f;
             while (Time.time < fin)
@@ -168,13 +168,13 @@ namespace MechaCyberpunk.Tests.Personaje
                 yield return null;
                 if (!controlador.EnPiso)
                 {
-                    cuadrosEnAire++;
+                    segundosEnAire += Time.deltaTime;
                 }
                 yMinima = Mathf.Min(yMinima, jugador.transform.position.y);
             }
             Release(teclado.wKey);
             Assert.Less(jugador.transform.position.y, 0.15f, "bajó los escalones hasta el piso");
-            Assert.LessOrEqual(cuadrosEnAire, 2, "bajando escalones el jugador sigue pegado al piso");
+            Assert.LessOrEqual(segundosEnAire, 0.05f, "bajando escalones el jugador sigue pegado al piso");
         }
     }
 }

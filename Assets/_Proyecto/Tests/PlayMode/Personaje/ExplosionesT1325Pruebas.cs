@@ -43,7 +43,7 @@ namespace MechaCyberpunk.Tests.Personaje
             piso.transform.position = new Vector3(0f, -0.5f, 0f);
             piso.transform.localScale = new Vector3(200f, 1f, 200f);
             a = Carro(new Vector3(0f, 0.6f, 0f));
-            b = Carro(new Vector3(3.2f, 0.6f, 0f));
+            b = Carro(new Vector3(4.5f, 0.6f, 0f)); // fuera del radio de la granada (6 m del centro), dentro del de la explosión del carro (7 m)
             lejos = Carro(new Vector3(40f, 0.6f, 0f));
             Physics.SyncTransforms();
         }

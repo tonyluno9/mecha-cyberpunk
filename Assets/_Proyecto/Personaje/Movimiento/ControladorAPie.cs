@@ -314,6 +314,14 @@ namespace MechaCyberpunk.Personaje.Movimiento
             Vector3 centro = transform.TransformPoint(controlador.center);
             Vector3 origen = centro + Vector3.down * (controlador.height * 0.5f - controlador.radius);
             float alcance = EscalonMaximo + controlador.skinWidth;
+            // Primero un rayo recto desde el centro del pie: al dejar un escalón, la esfera choca con la esquina del de arriba (normal inclinada) y no veía el de abajo.
+            Vector3 pie = centro + Vector3.down * (controlador.height * 0.5f - controlador.skinWidth - 0.02f);
+            if (Physics.Raycast(pie, Vector3.down, out RaycastHit rayo, alcance + 0.02f, ~0, QueryTriggerInteraction.Ignore)
+                && rayo.collider.transform.root != transform.root && rayo.normal.y >= Mathf.Cos(PendienteMaxima * Mathf.Deg2Rad))
+            {
+                controlador.Move(Vector3.down * (rayo.distance + controlador.skinWidth));
+                return controlador.isGrounded;
+            }
             if (!Physics.SphereCast(origen + Vector3.up * controlador.radius * 0.1f, radio, Vector3.down, out RaycastHit golpe, alcance, ~0, QueryTriggerInteraction.Ignore)
                 || golpe.collider.transform.root == transform.root
                 || golpe.normal.y < Mathf.Cos(PendienteMaxima * Mathf.Deg2Rad))
