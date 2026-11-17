@@ -13,9 +13,48 @@ namespace MechaCyberpunk.Vehiculos.Carro
     /// daña lo que tenga cerca (también a quien lo maneja, que sale de golpe) y queda como un armazón negro que sigue ardiendo un rato.
     /// Lo agrega <see cref="CarroViejo"/> al nacer; los números salen de <see cref="ConfigDanioCarro"/> (sin asset usa los de por defecto).
     /// </summary>
-    public class DanioCarro : MonoBehaviour, IRecibeDanio, IObjetoInerte
+    public class DanioCarro : MonoBehaviour, IRecibeDanio, IObjetoInerte, IDetonable
     {
+        private float detonarEn = -1f;
+
+        /// <summary>T-1325: ya recibió una orden de detonar y va a explotar en unos segundos (la cadena de carros).</summary>
+        public bool Detonando => detonarEn >= 0f && !Explotado;
+
+        /// <summary>
+        /// T-1325: lo destroza una explosión cercana (granada, carro vecino): explota en <paramref name="retraso"/> segundos (0 o carro apagado: al instante).
+        /// </summary>
+        public void Detonar(float retraso)
+        {
+            if (calculo == null || Explotado || Detonando)
+            {
+                return;
+            }
+            if (retraso <= 0f || !isActiveAndEnabled)
+            {
+                ExplotarYa();
+                return;
+            }
+            detonarEn = Time.time + retraso;
+        }
+
+        private void ExplotarYa()
+        {
+            detonarEn = -1f;
+            if (calculo == null || Explotado)
+            {
+                return;
+            }
+            EstadoCarro antes = calculo.Estado;
+            calculo.Aplicar(calculo.Actual);
+            Revisar(antes);
+        }
+
         private const float AlturaMotor = 0.9f;
+        private const string NombreModeloLlanta = "Modelo";
+        private const string NombreGiroLlanta = "Giro";
+        private const float MasaPieza = 15f;
+        private const float VelocidadPieza = 9f;
+        private const float SegundosPiezas = 12f;
         private const float AdelanteMotor = 1.4f;
         private const float FraccionAlturaMotorMoto = 0.4f;
         private const float SegundosDestelloExplosion = 0.25f;
@@ -167,6 +206,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 return;
             }
+            if (Detonando && Time.time >= detonarEn)
+            {
+                ExplotarYa();
+            }
             if (!Explotado && calculo.Estado == EstadoCarro.Fuego)
             {
                 EstadoCarro antes = calculo.Estado;
@@ -312,6 +355,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 cuerpo.AddForce(Vector3.up * ImpulsoVerticalExplosion * 0.5f, ForceMode.VelocityChange);
             }
             Ennegrecer();
+            LanzarPiezas();
             PrenderLlamasChatarra();
             if (carro != null)
             {
@@ -371,6 +415,48 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
+        // T-1325: el carro revienta en pedazos con las piezas que ya tiene su modelo: las llantas (Giro/Modelo) y, si las tuviera, puertas y cofre.
+        // Cada pieza se suelta del carro, se vuelve cuerpo físico con su propia malla como collider y sale volando; a los segundos se borra.
+        private void LanzarPiezas()
+        {
+            List<Transform> piezas = new List<Transform>();
+            foreach (Transform t in GetComponentsInChildren<Transform>(true))
+            {
+                bool llanta = t.name == NombreModeloLlanta && t.parent != null && t.parent.name == NombreGiroLlanta;
+                bool carroceria = t.name.StartsWith("Puerta") || t.name.StartsWith("Cofre") || t.name.StartsWith("Capo");
+                if ((llanta || carroceria) && t.GetComponentInChildren<MeshRenderer>(true) != null)
+                {
+                    piezas.Add(t);
+                }
+            }
+            Collider[] propios = GetComponentsInChildren<Collider>(true);
+            Vector3 centro = transform.position + Vector3.up * AlturaMotor;
+            foreach (Transform pieza in piezas)
+            {
+                pieza.SetParent(null, true);
+                MeshFilter malla = pieza.GetComponentInChildren<MeshFilter>(true);
+                Bounds caja = malla != null && malla.sharedMesh != null ? malla.sharedMesh.bounds : new Bounds(Vector3.zero, Vector3.one * 0.5f);
+                BoxCollider colision = pieza.gameObject.AddComponent<BoxCollider>();
+                colision.center = malla != null ? pieza.InverseTransformPoint(malla.transform.TransformPoint(caja.center)) : Vector3.zero;
+                colision.size = Vector3.Scale(caja.size, malla != null ? malla.transform.lossyScale : Vector3.one) / Mathf.Max(0.0001f, pieza.lossyScale.x);
+                foreach (Collider propio in propios)
+                {
+                    Physics.IgnoreCollision(colision, propio);
+                }
+                Rigidbody rb = pieza.gameObject.AddComponent<Rigidbody>();
+                rb.mass = MasaPieza;
+                Vector3 fuera = pieza.position - centro;
+                Vector3 impulso = (fuera.normalized + Vector3.up).normalized * VelocidadPieza + UnityEngine.Random.insideUnitSphere * 1.5f;
+                rb.linearVelocity = impulso;
+                rb.angularVelocity = UnityEngine.Random.insideUnitSphere * 8f;
+                Destroy(pieza.gameObject, SegundosPiezas);
+            }
+            PiezasLanzadas = piezas.Count;
+        }
+
+        /// <summary>T-1325: cuántas piezas (llantas, puertas, cofre) salieron volando en el estallido.</summary>
+        public int PiezasLanzadas { get; private set; }
+
         /// <summary>T-1201: las llamas medianas que arden sobre la chatarra (null si no ha explotado o no hay catálogo).</summary>
         public ParticleSystem[] LlamasChatarra => llamasChatarra;
 
@@ -380,6 +466,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             Collider[] cercanos = Physics.OverlapSphere(centro, radio, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide);
             HashSet<IRecibeDanio> vistos = new HashSet<IRecibeDanio>();
             HashSet<Rigidbody> empujados = new HashSet<Rigidbody>();
+            HashSet<IDetonable> detonados = new HashSet<IDetonable>();
             foreach (Collider c in cercanos)
             {
                 if (c == null || c.transform.IsChildOf(transform))
@@ -399,6 +486,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
                     c.GetComponentInParent<DanioCarro>()?.IgnorarChoques(SegundosGraciaEmpuje);
                     Vector3 direccion = (c.bounds.center - centro).normalized;
                     victima.RecibirDanio(new InfoDanio(config.DanioExplosion * factor, TipoDanio.Explosion, c.ClosestPoint(centro), direccion, null));
+                }
+                // T-1325: los carros dentro del radio se destrozan en cadena, uno tras otro con un retraso corto.
+                IDetonable vecino = c.GetComponentInParent<IDetonable>();
+                if (vecino != null && !ReferenceEquals(vecino, this) && detonados.Add(vecino))
+                {
+                    vecino.Detonar(BarrilExplosivo.RetrasoCadena);
                 }
                 Rigidbody rb = c.attachedRigidbody;
                 if (!c.isTrigger && rb != null && rb != cuerpo && empujados.Add(rb))
