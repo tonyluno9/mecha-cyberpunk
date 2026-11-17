@@ -31,9 +31,9 @@ namespace MechaCyberpunk.Tests.UI
         {
             string[] filas = ReglaControlesInicio.Texto(accion => "X").Split('\n');
             Assert.AreEqual(4, filas.Length);
-            StringAssert.Contains("[1] PIERNAS", ReglaControlesInicio.Texto(accion => null));
-            StringAssert.Contains("[2] BRAZOS", ReglaControlesInicio.Texto(accion => null));
-            StringAssert.Contains("[3] CABEZA", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.Contains("[Q] PIERNAS", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.Contains("[C] BRAZOS", ReglaControlesInicio.Texto(accion => null));
+            StringAssert.Contains("[X] CABEZA", ReglaControlesInicio.Texto(accion => null));
             StringAssert.StartsWith("HABILIDADES", filas[3]);
             StringAssert.StartsWith("MOVER", filas[0]);
             StringAssert.StartsWith("INTERACTUAR", filas[1]);

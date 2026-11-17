@@ -9,8 +9,9 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// T-992 (T-1011: como el mockup M31_HabilidadesProtesis.png): la barra de habilidades de prótesis, abajo al centro del HUD H10. Cada casilla lleva
-    /// arriba la tecla real y el nombre ("[1] PIERNAS"), en medio el dibujo de línea de la prótesis (nivel I o II) y abajo un medidor. Lista: turquesa
+    /// T-992 (T-1011: como el mockup M31_HabilidadesProtesis.png; T-1302: en columna): la barra de habilidades de prótesis, en el lateral izquierdo del HUD H10,
+    /// de arriba abajo en el orden de sus teclas. Cada casilla lleva a la izquierda el dibujo de línea de la prótesis (nivel I o II), a la derecha la tecla real
+    /// y el nombre ("[Q] PIERNAS") y debajo un medidor. Lista: turquesa
     /// y llena; activa: amarilla y se vacía; recargando: rosa y se llena; sin implante: gris con "—". Las tres primeras (piernas, brazos, cabeza)
     /// siempre están; las de ataque (láser, misiles) solo salen cuando tienes la prótesis. Publica los avisos "PIERNAS ACTIVAS" y
     /// "NECESITAS EXO DE PIERNAS". Solo se ve a pie. Lo agrega <see cref="HudAPie"/> al nacer; su canvas es del HUD, así que la rueda y los menús lo apagan.
@@ -18,14 +19,23 @@ namespace MechaCyberpunk.UI.Hud
     public class BarraHabilidades : MonoBehaviour
     {
         public const int OrdenCanvas = 12;
-        public const float Lado = 128f;
-        public const float Hueco = 30f;
-        public const float MargenAbajo = 56f;
+        public const float Ancho = 236f;
+        public const float Alto = 72f;
+        public const float Hueco = 6f;
+        /// <summary>Distancia al borde izquierdo: la misma que el minimapa y la ayuda (<see cref="DisposicionHud.MargenH10"/>).</summary>
+        public const float MargenIzquierdo = DisposicionHud.MargenH10;
+        /// <summary>
+        /// Distancia del borde de arriba a la primera casilla (px de 1080): debajo de vida, calor, Biits y renta (arriba a la izquierda) y, con las cinco
+        /// casillas, termina arriba de la ayuda de controles (abajo a la izquierda).
+        /// </summary>
+        public const float DesdeArriba = 388f;
         public const string CarpetaIconos = "Protesis/";
         private const int Fijas = 3;
         private const float AltoMedidor = 10f;
-        private const float SeparacionMedidor = 12f;
-        private const float AltoEtiqueta = 34f;
+        private const float LadoIcono = 64f;
+        private const float XTexto = LadoIcono + 10f;
+        private const float AnchoTexto = Ancho - XTexto - 8f;
+        private const float AltoEtiqueta = 32f;
         private const float SegundosAviso = 1.6f;
         private const float SegundosTeclas = 1f;
         private const string Apagada = "—";
@@ -72,7 +82,7 @@ namespace MechaCyberpunk.UI.Hud
         /// <summary>El nombre que se ve en la casilla ("—" si no hay implante).</summary>
         public string NombreMostrado(HabilidadProtesis h) => casillas[(int)h].Nombre;
 
-        /// <summary>El texto de arriba de la casilla, como "[1] PIERNAS".</summary>
+        /// <summary>El texto de la casilla, como "[Q] PIERNAS".</summary>
         public string EtiquetaMostrada(HabilidadProtesis h) => casillas[(int)h].Etiqueta.text;
 
         /// <summary>El color con que se pinta la casilla (turquesa lista, amarillo activa, rosa recargando, gris sin implante).</summary>
@@ -131,7 +141,17 @@ namespace MechaCyberpunk.UI.Hud
             return nombre == "LASER" ? "LÁSER" : nombre;
         }
 
-        private static string TeclaPorOmision(HabilidadProtesis h) => ((int)h + 1).ToString();
+        /// <summary>T-1302: la tecla de siempre de cada habilidad (Q, C y X; láser y misiles en 4 y 5), para cuando el Input System no responde.</summary>
+        public static string TeclaPorOmision(HabilidadProtesis h)
+        {
+            switch (h)
+            {
+                case HabilidadProtesis.Piernas: return "Q";
+                case HabilidadProtesis.Brazos: return "C";
+                case HabilidadProtesis.Cabeza: return "X";
+                default: return ((int)h + 1).ToString();
+            }
+        }
 
         private void Awake()
         {
@@ -152,27 +172,23 @@ namespace MechaCyberpunk.UI.Hud
         private Casilla Armar(int indice)
         {
             Casilla c = new Casilla();
-            c.Raiz = Nuevo(grupo.transform, "Habilidad" + indice, new Vector2(0.5f, 0f), new Vector2(0f, MargenAbajo), new Vector2(Lado, Lado));
-            c.Raiz.pivot = new Vector2(0f, 0f);
+            c.Raiz = Nuevo(grupo.transform, "Habilidad" + indice, new Vector2(0f, 1f), new Vector2(MargenIzquierdo, -DesdeArriba), new Vector2(Ancho, Alto));
             c.Fondo = c.Raiz.gameObject.AddComponent<Image>();
             c.Fondo.raycastTarget = false;
             GameObject borde = KitUI.CrearBorde(c.Raiz, 2f, Color.white);
             c.Borde = borde.GetComponentsInChildren<Image>();
 
-            RectTransform icono = Nuevo(c.Raiz, "Icono", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(Lado - 18f, Lado - 18f));
-            icono.pivot = new Vector2(0.5f, 0.5f);
-            icono.anchoredPosition = Vector2.zero;
+            // A la izquierda: el dibujo de la prótesis.
+            RectTransform icono = Nuevo(c.Raiz, "Icono", new Vector2(0f, 1f), new Vector2(4f, -4f), new Vector2(LadoIcono, LadoIcono));
             c.Icono = icono.gameObject.AddComponent<Image>();
             c.Icono.preserveAspect = true;
             c.Icono.raycastTarget = false;
 
-            // Arriba de la caja: "[1] PIERNAS".
-            c.Etiqueta = Texto(c.Raiz, "Etiqueta", new Vector2(0.5f, 1f), new Vector2(0f, 6f), new Vector2(Lado + Hueco, AltoEtiqueta), 26, TextAnchor.LowerCenter);
-            c.Etiqueta.rectTransform.pivot = new Vector2(0.5f, 0f);
-            c.Etiqueta.rectTransform.anchoredPosition = new Vector2(0f, 6f);
+            // A la derecha, arriba: "[Q] PIERNAS".
+            c.Etiqueta = Texto(c.Raiz, "Etiqueta", new Vector2(0f, 1f), new Vector2(XTexto, -8f), new Vector2(AnchoTexto, AltoEtiqueta), 24, TextAnchor.MiddleLeft);
 
-            // Abajo de la caja: el medidor.
-            RectTransform pista = Nuevo(c.Raiz, "Medidor", new Vector2(0f, 0f), new Vector2(0f, -SeparacionMedidor - AltoMedidor), new Vector2(Lado, AltoMedidor));
+            // A la derecha, abajo: el medidor.
+            RectTransform pista = Nuevo(c.Raiz, "Medidor", new Vector2(0f, 1f), new Vector2(XTexto, -(Alto - AltoMedidor - 10f)), new Vector2(AnchoTexto, AltoMedidor));
             Image fondoMedidor = pista.gameObject.AddComponent<Image>();
             fondoMedidor.color = new Color(0f, 0f, 0f, 0.55f);
             fondoMedidor.raycastTarget = false;
@@ -270,7 +286,7 @@ namespace MechaCyberpunk.UI.Hud
             }
         }
 
-        // Las tres fijas siempre; las de ataque solo si tienes la prótesis. Centradas abajo, en el orden de sus teclas.
+        // Las tres fijas siempre; las de ataque solo si tienes la prótesis. En columna a la izquierda, de arriba abajo en el orden de sus teclas.
         private void Acomodar()
         {
             int cuantas = 0;
@@ -299,10 +315,9 @@ namespace MechaCyberpunk.UI.Hud
                     visibles.Add(i);
                 }
             }
-            float ancho = visibles.Count * Lado + (visibles.Count - 1) * Hueco;
             for (int k = 0; k < visibles.Count; k++)
             {
-                casillas[visibles[k]].Raiz.anchoredPosition = new Vector2(-ancho * 0.5f + k * (Lado + Hueco), MargenAbajo);
+                casillas[visibles[k]].Raiz.anchoredPosition = new Vector2(MargenIzquierdo, -(DesdeArriba + k * (Alto + Hueco)));
             }
         }
 

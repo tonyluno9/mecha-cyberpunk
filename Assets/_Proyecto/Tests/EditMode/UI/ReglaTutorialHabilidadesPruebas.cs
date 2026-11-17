@@ -9,9 +9,9 @@ namespace MechaCyberpunk.Tests.UI
         [Test]
         public void TextoHabilidades_SoloLasQueTienes()
         {
-            Assert.AreEqual("[1] PIERNAS · [2] BRAZOS · [3] CABEZA", ReglaTutorial.TextoHabilidades(null, true, true, true));
-            Assert.AreEqual("[1] PIERNAS · [3] CABEZA", ReglaTutorial.TextoHabilidades(null, true, false, true));
-            Assert.AreEqual("[2] BRAZOS", ReglaTutorial.TextoHabilidades(null, false, true, false));
+            Assert.AreEqual("[Q] PIERNAS · [C] BRAZOS · [X] CABEZA", ReglaTutorial.TextoHabilidades(null, true, true, true));
+            Assert.AreEqual("[Q] PIERNAS · [X] CABEZA", ReglaTutorial.TextoHabilidades(null, true, false, true));
+            Assert.AreEqual("[C] BRAZOS", ReglaTutorial.TextoHabilidades(null, false, true, false));
             Assert.AreEqual(string.Empty, ReglaTutorial.TextoHabilidades(null, false, false, false));
         }
 
