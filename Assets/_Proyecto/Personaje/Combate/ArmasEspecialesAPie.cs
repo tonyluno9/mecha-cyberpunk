@@ -388,6 +388,7 @@ namespace MechaCyberpunk.Personaje.Combate
             tocados.Clear();
             int n = Physics.SphereCastNonAlloc(origen, cfg.RadioRayo, direccion, toques, d.Alcance, ~0, QueryTriggerInteraction.Ignore);
             System.Array.Sort(toques, 0, n, Comparador);
+            int atravesadas = 0;
             for (int i = 0; i < n; i++)
             {
                 RaycastHit t = toques[i];
@@ -403,10 +404,14 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 if (!esAlguien)
                 {
-                    // Las paredes (y los objetos) paran el rayo; la gente no.
-                    pega = true;
-                    largo = t.distance > 0f ? t.distance : 0f;
-                    break;
+                    // T-1324: la gente no lo para; paredes y objetos solo si ya atravesó el máximo (ReglaDanioRayo).
+                    if (!ReglaDanioRayo.AtraviesaOtra(atravesadas, cfg.ParedesQueAtraviesa))
+                    {
+                        pega = true;
+                        largo = t.distance > 0f ? t.distance : 0f;
+                        break;
+                    }
+                    atravesadas++;
                 }
             }
             finRayo = origen + direccion * largo;
@@ -417,7 +422,10 @@ namespace MechaCyberpunk.Personaje.Combate
                 acumuladoTic = 0f;
                 foreach (IRecibeDanio objetivo in tocados)
                 {
-                    objetivo.RecibirDanio(new InfoDanio(danio, TipoDanio.Disparo, finRayo, direccion, null));
+                    IVida vidaObjetivo = objetivo as IVida;
+                    float cantidad = ReglaDanioRayo.Calcular(danio, objetivo is IObjetoInerte, vidaObjetivo != null ? vidaObjetivo.Actual : 0f,
+                        cfg.MultiplicadorObjetos, cfg.FactorMataGente);
+                    objetivo.RecibirDanio(new InfoDanio(cantidad, TipoDanio.Disparo, finRayo, direccion, null));
                 }
             }
             if (Time.time >= siguienteZumbido)

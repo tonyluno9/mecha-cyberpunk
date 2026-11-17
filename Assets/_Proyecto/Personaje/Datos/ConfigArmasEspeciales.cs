@@ -57,6 +57,12 @@ namespace MechaCyberpunk.Personaje
         [Min(0.01f)] [SerializeField] private float anchoRayo = 0.22f;
         [Tooltip("Radio con que el rayo toca lo que cruza (m).")]
         [Min(0.01f)] [SerializeField] private float radioRayo = 0.35f;
+        [Tooltip("T-1324: cuántos colliders que no son gente (paredes, carros, objetos) atraviesa el rayo antes de pararse.")]
+        [Min(0)] [SerializeField] private int paredesQueAtraviesa = 3;
+        [Tooltip("T-1324: multiplica el daño del rayo a objetos y carros (x).")]
+        [Min(1f)] [SerializeField] private float multiplicadorObjetos = 3f;
+        [Tooltip("T-1324: a una persona que toca, el rayo le hace tanto daño como su vida actual por este factor (x): un toque la mata.")]
+        [Min(1f)] [SerializeField] private float factorMataGente = 20f;
         [Tooltip("Lado máximo de la bola de energía en la boca al terminar de cargar (m).")]
         [Min(0.01f)] [SerializeField] private float tamanoCarga = 0.3f;
         [Tooltip("Intensidad de la luz de la carga y del rayo.")]
@@ -108,6 +114,9 @@ namespace MechaCyberpunk.Personaje
         public Color ColorRayo => colorRayo;
         public float AnchoRayo => anchoRayo;
         public float RadioRayo => radioRayo;
+        public int ParedesQueAtraviesa => paredesQueAtraviesa;
+        public float MultiplicadorObjetos => multiplicadorObjetos;
+        public float FactorMataGente => factorMataGente;
         public float TamanoCarga => tamanoCarga;
         public float IntensidadLuzRayo => intensidadLuzRayo;
         public float SegundosZumbido => segundosZumbido;

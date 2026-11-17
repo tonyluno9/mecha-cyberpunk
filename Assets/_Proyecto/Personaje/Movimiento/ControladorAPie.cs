@@ -69,6 +69,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public float GiroCamara => giroCamara;
         /// <summary>True mientras se mantiene el clic derecho con el control activo.</summary>
         public bool Apuntando => apuntando;
+        /// <summary>T-1324: true mientras se mantiene el clic derecho aunque no se pueda apuntar (arma sin balas).</summary>
+        public bool QuiereApuntar { get; private set; }
+        /// <summary>T-1324: lo pone PistolaAPie: con el arma sin balas en el cargador no se apunta (primero recarga).</summary>
+        public bool ApuntarBloqueado { get; set; }
         /// <summary>Multiplica la sensibilidad del ratón (T-416: baja con el zoom del sniper). 1 = normal.</summary>
         public float FactorSensibilidad { get; set; } = 1f;
         /// <summary>Multiplica la velocidad de caminar (T-421: agachado en cubierta, 0 al rodar). 1 = normal.</summary>
@@ -178,6 +182,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (!activo)
             {
                 apuntando = false;
+                QuiereApuntar = false;
                 movimiento.Reiniciar();
                 // T-728: el CharacterController guarda la velocidad del último Move. Sin esto el visual del jugador seguía "caminando" quieto durante una
                 // cinemática (lee controlador.velocity): un Move en cero la deja en cero y el muñeco queda en reposo.
@@ -237,7 +242,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 giroCamara = Mathf.Repeat(giroCamara + giro, 360f);
                 mirada.Limitar(minima, maxima);
             }
-            apuntando = apuntar != null && apuntar.action.IsPressed();
+            QuiereApuntar = apuntar != null && apuntar.action.IsPressed();
+            apuntando = QuiereApuntar && !ApuntarBloqueado;
 
             if (MovimientoSuspendido)
             {
