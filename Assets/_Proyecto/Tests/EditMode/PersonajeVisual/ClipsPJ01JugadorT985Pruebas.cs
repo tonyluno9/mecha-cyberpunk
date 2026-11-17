@@ -63,11 +63,17 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
 
         private const string PrefijoEscalera = "PJ01_Escalera_";
 
+        // T-1310: el parkour, la caída y el robo de carro los juega un PlayableGraph desde ConfigAnimacionParkour (se revisan en ClipsRonda2T1310Pruebas).
+        private static bool FueraDelControlador(string n)
+        {
+            return n.StartsWith("PJ01_Parkour_") || n == "PJ01_Carro_SacarConductor" || n == "PJ01_Conductor_SerSacado";
+        }
+
         private static string[] ClipsDeLaCarpeta()
         {
             // T-1204: los PJ01_Escalera_* no van en el controlador: los juega AnimacionEscalera desde ConfigAnimacionEscalera (se revisan aparte).
             return Directory.GetFiles(ConstructorControladorBase.CarpetaClipsPJ01, "PJ01_*.fbx").Select(Path.GetFileNameWithoutExtension)
-                .Where(n => !n.StartsWith(PrefijoEscalera)).OrderBy(n => n).ToArray();
+                .Where(n => !n.StartsWith(PrefijoEscalera) && !FueraDelControlador(n)).OrderBy(n => n).ToArray();
         }
 
         [Test]
@@ -84,7 +90,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             string[] sinUsar = todos.Where(n => !usados.Contains(n)).ToArray();
             Debug.Log("[T-985] clips no PJ01: " + noPJ01.Length + "; PJ01 sin usar: " + sinUsar.Length + " de " + todos.Length);
 
-            Assert.AreEqual(80, todos.Length, "La carpeta de clips debe tener los 80 PJ01_*");
+            Assert.AreEqual(83, todos.Length, "La carpeta de clips debe tener los 83 PJ01_* del controlador (T-1310: +3 de cobertura con rifle)");
             Assert.IsEmpty(noPJ01, "Clips que no son PJ01 en el jugador:\n" + string.Join("\n", noPJ01));
             Assert.IsEmpty(sinUsar, "PJ01 sin ningún estado:\n" + string.Join("\n", sinUsar));
         }

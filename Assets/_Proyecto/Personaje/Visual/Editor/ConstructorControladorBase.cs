@@ -321,6 +321,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             mantener.timeParameter = ReglasAnimacion.PoseCobertura;
             Estado("CoberturaDisparo1", "Cobertura_Disparo");
             Estado("CoberturaDisparo2", "Cobertura_Disparo2");
+            // T-1310: cobertura con arma larga (solo existen de PJ01: van directo en la base).
+            Estado("CoberturaRifleEntrar", "PJ01_CoberturaRifle_Entrar");
+            Estado("CoberturaRifleIdle", "PJ01_CoberturaRifle_Idle");
+            Estado("CoberturaRifleDisparo", "PJ01_CoberturaRifle_Disparo");
             Estado("MuerteAdelante", "Muerte_Adelante");
             Estado("MuerteAtras", "Muerte_Atras");
             Estado("MuerteDesmayo", "Muerte_Desmayo");
@@ -413,6 +417,15 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 Unir(e[s], e["Idle"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, false));
             }
 
+            // T-1310: cobertura con rifle. Se elige al entrar (ArmaLargaEquipada); entrar, quedarse (bucle), asomarse por la derecha a disparar y salir.
+            Unir(e["CoberturaRifleEntrar"], e["CoberturaRifleIdle"], true, SalidaUnaVez, Mezcla);
+            Unir(e["CoberturaRifleIdle"], e["CoberturaRifleDisparo"], false, 0f, MezclaCorta, Disparador(ReglasAnimacion.DisparoCobertura));
+            Unir(e["CoberturaRifleDisparo"], e["CoberturaRifleIdle"], true, SalidaUnaVez, Mezcla);
+            foreach (string s in new[] { "CoberturaRifleEntrar", "CoberturaRifleIdle", "CoberturaRifleDisparo" })
+            {
+                Unir(e[s], e["Idle"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, false));
+            }
+
             // Muerte según el tipo (desde cualquier estado) y levantarse boca arriba o abajo.
             string[] muertes = { "MuerteAdelante", "MuerteAtras", "MuerteDesmayo" };
             for (int i = 0; i < muertes.Length; i++)
@@ -431,6 +444,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             // Entrar en cobertura desde el suelo (no desde cualquier estado: si no, saldría de Mantener y entraría otra vez en bucle).
             foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "SaltoAterrizaje" })
             {
+                // T-1310: con arma larga va antes (gana la primera transición cierta).
+                Unir(e[s], e["CoberturaRifleEntrar"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, true), Bool(ReglasAnimacion.ArmaLargaEquipada, true));
                 Unir(e[s], e["CoberturaEntrar"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, true));
             }
 
