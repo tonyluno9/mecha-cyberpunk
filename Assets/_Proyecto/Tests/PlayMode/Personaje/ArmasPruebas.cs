@@ -106,9 +106,10 @@ namespace MechaCyberpunk.Tests.Personaje
             {
                 string texto = pantalla.TextoFila(i);
                 nivel1 |= texto.Contains("ESCOPETA I ");
-                nivel0 |= texto.Contains("ESCOPETA ") && !texto.Contains("ESCOPETA I");
+                nivel0 |= texto.TrimStart('>', ' ').StartsWith("ESCOPETA ") && !texto.Contains("ESCOPETA I"); // T-1314: solo la fila del arma, no sus balas
             }
-            Assert.IsTrue(nivel1, "Ofrece la mejora ESCOPETA I");
+            // T-1314: las mejoras (ESCOPETA I) ya no se venden en El Mercado, son del banco de Tino.
+            Assert.IsFalse(nivel1, "No ofrece la mejora ESCOPETA I");
             Assert.IsFalse(nivel0, "Ya no ofrece la escopeta base");
 
             yield return Tecla(teclado.escapeKey);

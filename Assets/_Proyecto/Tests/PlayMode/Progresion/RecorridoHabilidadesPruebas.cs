@@ -863,18 +863,15 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Tecla(teclado.eKey);
             Assert.IsTrue(pantallaTienda.Visible, "E abre la tienda");
             Assert.AreEqual(PestanaTienda.Comprar, pantallaTienda.Pestana);
-            for (int i = 0; i < MisilesAComprar; i++)
-            {
-                yield return ComprarMunicion(misiles);
-            }
-            for (int i = 0; i < CeldasAComprar; i++)
-            {
-                yield return ComprarMunicion(celdas);
-            }
+            // T-1314: El Mercado ya no vende misiles ni celdas del mecha (solo armas a pie y sus balas): se comprueba que no salen y se dan por código.
+            Assert.AreEqual(-1, FilaTienda(misiles), "b) El Mercado ya no vende misiles");
+            Assert.AreEqual(-1, FilaTienda(celdas), "b) ni celdas");
+            Assert.AreEqual(MisilesAComprar, inventario.Agregar(misiles, MisilesAComprar), "b) atajo: 3 misiles por código");
+            Assert.AreEqual(CeldasAComprar, inventario.Agregar(celdas, CeldasAComprar), "b) atajo: 2 celdas por código");
+            atajos.Add("Agregar misiles y celdas por código (T-1314: El Mercado ya no los vende)");
             Assert.AreEqual(MisilesAComprar, inventario.Cantidad(misiles), "b) 3 misiles");
             Assert.AreEqual(CeldasAComprar, inventario.Cantidad(celdas), "b) 2 celdas");
-            StringAssert.Contains(FormatoDinero.Texto(cartera.Dinero), pantallaTienda.Dinero, "b) la tienda muestra el dinero que queda");
-            StringAssert.Contains("LLEVAS " + MisilesAComprar + "/" + misiles.Maximo, pantallaTienda.TextoFila(FilaTienda(misiles)));
+            StringAssert.Contains(FormatoDinero.Texto(cartera.Dinero), pantallaTienda.Dinero, "b) la tienda muestra el dinero");
             if (pantallaTienda.PuedeVender)
             {
                 yield return Tecla(teclado.rightArrowKey);

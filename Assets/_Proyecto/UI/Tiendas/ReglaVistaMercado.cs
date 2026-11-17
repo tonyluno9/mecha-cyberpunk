@@ -1,4 +1,6 @@
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje;
+using MechaCyberpunk.Personaje.Combate;
 using UnityEngine;
 
 namespace MechaCyberpunk.UI.Tiendas
@@ -30,6 +32,33 @@ namespace MechaCyberpunk.UI.Tiendas
         public const float CadenciaLlena = 100f;
         public const float AlcanceLleno = 150f;
         private const float SegundosCadencia = 10f;
+
+        /// <summary>
+        /// T-1314: El Mercado solo vende armas base que aún no se tienen (las mejoras por nivel son del banco de Tino). Las balas y lo demás se ofrecen siempre
+        /// (las balas ya se filtran por el arma que se tiene).
+        /// </summary>
+        public static bool SeOfrece(DatosArma arma, bool yaLaTiene) => arma != null && arma.Nivel == 0 && !yaLaTiene;
+
+        /// <summary>T-1314: en El Mercado solo van armas a pie y sus balas (nada de kits ni municiones del mecha).</summary>
+        public static bool EsArmaOBalas(DatosObjeto objeto) => objeto is DatosArma || objeto is DatosMunicionArma;
+
+        /// <summary>T-1314: el nombre que se ve en la tienda. El sniper se muestra como Francotirador (solo el texto, los ids no cambian).</summary>
+        public static string Nombre(DatosObjeto objeto)
+        {
+            if (objeto == null)
+            {
+                return string.Empty;
+            }
+            if (objeto is DatosArma arma && arma.Arma == ArmaAPie.Sniper)
+            {
+                return "Francotirador";
+            }
+            if (objeto is DatosMunicionArma balas && balas.Arma == ArmaAPie.Sniper)
+            {
+                return "Balas de francotirador";
+            }
+            return objeto.Nombre;
+        }
 
         public static readonly string[] Etiquetas = { "DAÑO", "CARGADOR", "CADENCIA", "ALCANCE" };
 
