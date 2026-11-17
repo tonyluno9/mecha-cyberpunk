@@ -478,7 +478,8 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(0, inventario.Cantidad(brazo));
         }
 
-        // b) Mercado: compra un kit con E, Enter.
+        // b) T-1314: El Mercado ya solo vende armas a pie y balas (el mecha no está en la demo): la tienda se abre con E y ya no ofrece
+        // el kit, así que el kit se compra por código (mismo precio y mismo motivo de cobro) para seguir el recorrido del mecha.
         private IEnumerator ComprarElKit()
         {
             int precioKit = AssetDatabase.LoadAssetAtPath<DatosOferta>(RutaOfertaKit).Precio;
@@ -488,14 +489,15 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Tecla(teclado.eKey);
             Assert.IsTrue(pantallaTienda.Visible, "E abre la tienda");
             Assert.AreEqual(PestanaTienda.Comprar, pantallaTienda.Pestana, "Abre en COMPRAR");
-            StringAssert.Contains("KIT", pantallaTienda.TextoFila(0).ToUpperInvariant(), "La primera fila es el kit");
-            yield return Tecla(teclado.enterKey);
-            Assert.AreEqual(antes - precioKit, cartera.Dinero, "b) el kit cuesta $" + precioKit);
-            Assert.AreEqual(1, inventario.Cantidad(kit), "b) el kit entró al inventario");
-            Assert.AreEqual((-precioKit, MotivoDinero.Compra), movimientos[movimientos.Count - 1], "b) el cobro es una Compra");
+            StringAssert.DoesNotContain("KIT", pantallaTienda.TextoFila(0).ToUpperInvariant(), "T-1314: El Mercado ya no vende el kit");
             yield return Tecla(teclado.escapeKey);
             yield return Cuadros(FramesParaElHud);
             Assert.IsFalse(pantallaTienda.Visible, "Esc cierra la tienda");
+            Assert.IsTrue(cartera.IntentarPagar(precioKit, MotivoDinero.Compra), "b) alcanza para el kit");
+            Assert.AreEqual(1, inventario.Agregar(kit, 1), "b) el kit entra al inventario");
+            Assert.AreEqual(antes - precioKit, cartera.Dinero, "b) el kit cuesta $" + precioKit);
+            Assert.AreEqual(1, inventario.Cantidad(kit), "b) el kit entró al inventario");
+            Assert.AreEqual((-precioKit, MotivoDinero.Compra), movimientos[movimientos.Count - 1], "b) el cobro es una Compra");
         }
 
         // c) Apuesta Ƀ250, pelea la casera, daño real, un kit con G y gana.

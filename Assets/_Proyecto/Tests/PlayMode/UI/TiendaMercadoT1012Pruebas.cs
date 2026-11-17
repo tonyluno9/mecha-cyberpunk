@@ -110,7 +110,7 @@ namespace MechaCyberpunk.Tests.UI
             {
                 string texto = pantalla.TextoFila(i).ToUpperInvariant();
                 Debug.Log("[T1012] fila " + i + ": " + texto);
-                if (!texto.Contains("BALAS") && (texto.Contains("ESCOPETA") || texto.Contains("FUSIL") || texto.Contains("PISTOLA") || texto.Contains("SNIPER")))
+                if (!texto.Contains("BALAS") && (texto.Contains("ESCOPETA") || texto.Contains("FUSIL") || texto.Contains("PISTOLA") || texto.Contains("FRANCOTIRADOR"))) // T-1314
                 {
                     fila = i;
                 }

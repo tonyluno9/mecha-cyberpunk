@@ -73,6 +73,28 @@ namespace MechaCyberpunk.UI.Editor
             Debug.Log("[T1313]\n" + informe);
         }
 
+        /// <summary>
+        /// T-1314: las caras de corte de las piezas (Armas_CorteInterior) llevan una textura oscura lisa, para que no cuenten como
+        /// material greybox sin arte (SinGreyboxT506Pruebas). El color base queda en blanco: el oscuro lo pone la textura.
+        /// </summary>
+        public static void TexturaCorte()
+        {
+            const string rutaTextura = "Assets/Arte/Armas/Armas_CorteInterior_Base.png";
+            AssetDatabase.ImportAsset(rutaTextura, ImportAssetOptions.ForceUpdate);
+            Texture2D textura = AssetDatabase.LoadAssetAtPath<Texture2D>(rutaTextura);
+            Material corte = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/Armas/Armas_CorteInterior.mat");
+            if (textura == null || corte == null)
+            {
+                Debug.LogError("[UI] T-1314: falta la textura o el material del corte interior.");
+                return;
+            }
+            corte.SetTexture("_BaseMap", textura);
+            corte.SetColor("_BaseColor", Color.white);
+            EditorUtility.SetDirty(corte);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[UI] T-1314: Armas_CorteInterior con textura " + rutaTextura);
+        }
+
         public static void ConfigurarBanco()
         {
             ConfigMenuArmas config = AssetDatabase.LoadAssetAtPath<ConfigMenuArmas>(CreadorMenuArmas.RutaConfig);

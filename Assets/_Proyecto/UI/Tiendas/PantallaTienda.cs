@@ -96,6 +96,9 @@ namespace MechaCyberpunk.UI.Tiendas
         private Image lineaPestanaVender;
         // T-1012: El Mercado (la tienda que vende armas) se dibuja como el mockup M32 con VistaMercadoArmas.
         private VistaMercadoArmas mercado;
+        private bool cursorLiberado;
+        private CursorLockMode bloqueoPrevio;
+        private bool cursorPrevio;
         private bool modoMercado;
         private string tituloTienda = string.Empty;
         private Vector2 posicionLista;
@@ -152,6 +155,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private void OnDisable()
         {
+            SoltarCursor();
             mercado?.Encender(false);
             DesactivarEntrada();
             visible = false;
@@ -194,6 +198,7 @@ namespace MechaCyberpunk.UI.Tiendas
             AnimH10.EntrarPanel(panelLista, new Vector2(-AnimH10.DesplazamientoEntrada, 0f));
             AnimH10.EntrarPanel(panelDetalle, new Vector2(AnimH10.DesplazamientoEntrada, 0f), AnimH10.SegundosEscalon);
             PilaPantallas.Abrir(this);
+            LiberarCursor();
             arriba.Enable();
             abajo.Enable();
             izquierda.Enable();
@@ -204,6 +209,7 @@ namespace MechaCyberpunk.UI.Tiendas
 
         public void Ocultar()
         {
+            SoltarCursor();
             mercado?.Encender(false);
             visible = false;
             PilaPantallas.Cerrar(this);
@@ -212,6 +218,32 @@ namespace MechaCyberpunk.UI.Tiendas
             {
                 contenido.SetActive(false);
             }
+        }
+
+        // T-1314: en El Mercado el cursor se ve y está libre para elegir con el mouse; al cerrar vuelve a como estaba.
+        private void LiberarCursor()
+        {
+            if (!modoMercado || cursorLiberado)
+            {
+                return;
+            }
+            cursorLiberado = true;
+            bloqueoPrevio = Cursor.lockState;
+            cursorPrevio = Cursor.visible;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            KitUI.AsegurarEventSystem();
+        }
+
+        private void SoltarCursor()
+        {
+            if (!cursorLiberado)
+            {
+                return;
+            }
+            cursorLiberado = false;
+            Cursor.lockState = bloqueoPrevio;
+            Cursor.visible = cursorPrevio;
         }
 
         private void DesactivarEntrada()
@@ -286,14 +318,19 @@ namespace MechaCyberpunk.UI.Tiendas
             }
         }
 
-        // T-403: de cada arma solo se ofrece la mejora siguiente (el nivel n pide tener el n-1).
+        // T-1314: de las armas solo se ofrece la base que aún no se tiene (las mejoras son del banco de Tino).
         private void Refiltrar()
         {
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             objetos.Clear();
             foreach (DatosObjeto objeto in todos)
             {
-                if (objeto is DatosArma arma && arsenal != null && !arsenal.EsSiguiente(arma))
+                // T-1314: El Mercado solo vende armas a pie y sus balas (nada de kit ni municiones del mecha).
+                if (modoMercado && !ReglaVistaMercado.EsArmaOBalas(objeto))
+                {
+                    continue;
+                }
+                if (objeto is DatosArma arma && !ReglaVistaMercado.SeOfrece(arma, arsenal != null && arsenal.Tiene(arma.Arma)))
                 {
                     continue;
                 }
@@ -359,7 +396,7 @@ namespace MechaCyberpunk.UI.Tiendas
                         }
                         Sonidos.Reproducir("ECO_COMPRA");
                         Refiltrar();
-                        MostrarAviso(string.Format(config.FormatoComprado, objeto.Nombre.ToUpperInvariant()));
+                        MostrarAviso(string.Format(config.FormatoComprado, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant()));
                         break;
                     case ResultadoCompra.SinDinero:
                         Sonidos.Reproducir("ECO_SIN_DINERO");
@@ -390,7 +427,7 @@ namespace MechaCyberpunk.UI.Tiendas
             else
             {
                 cartera.Abonar(pago, MotivoDinero.Venta);
-                MostrarAviso(string.Format(config.FormatoVendido, objeto.Nombre.ToUpperInvariant(), FormatoDinero.Texto(pago)));
+                MostrarAviso(string.Format(config.FormatoVendido, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant(), FormatoDinero.Texto(pago)));
             }
             Pintar();
         }
@@ -680,10 +717,10 @@ namespace MechaCyberpunk.UI.Tiendas
                 {
                     precio = string.Format(config.FormatoPrecioRebajado, precio, FormatoDinero.Texto(TiendaBasica.PrecioCon(objeto.Oferta, rebaja)));
                 }
-                string fila = string.Format(config.FormatoFila, objeto.Nombre.ToUpperInvariant(), precio, lleva, objeto.Maximo);
+                string fila = string.Format(config.FormatoFila, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant(), precio, lleva, objeto.Maximo);
                 bool elegida = i == indice;
                 bool alcanza = cartera != null && cartera.PuedePagar(PrecioCobrado(objeto));
-                AgregarFila(i, elegida ? string.Format(config.FormatoFilaElegida, fila) : fila, objeto.Nombre.ToUpperInvariant(),
+                AgregarFila(i, elegida ? string.Format(config.FormatoFilaElegida, fila) : fila, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant(),
                     string.Format("{0} {1}/{2}", TextoLleva, lleva, objeto.Maximo), precio, alcanza ? TrazoH10.Amarillo : TrazoH10.Coral, elegida);
             }
             PintarDetalle(objetos[Mathf.Clamp(indice, 0, objetos.Count - 1)], cartera);
@@ -721,9 +758,9 @@ namespace MechaCyberpunk.UI.Tiendas
             {
                 DatosObjeto objeto = vendibles[i];
                 string pago = FormatoDinero.Texto(ReglaVenta.Pago(objeto, compra));
-                string fila = string.Format(config.FormatoFilaVenta, objeto.Nombre.ToUpperInvariant(), pago, inventario.Cantidad(objeto));
+                string fila = string.Format(config.FormatoFilaVenta, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant(), pago, inventario.Cantidad(objeto));
                 bool elegida = i == indice;
-                AgregarFila(i, elegida ? string.Format(config.FormatoFilaElegida, fila) : fila, objeto.Nombre.ToUpperInvariant(),
+                AgregarFila(i, elegida ? string.Format(config.FormatoFilaElegida, fila) : fila, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant(),
                     string.Format("{0} {1}", TextoTienes, inventario.Cantidad(objeto)), pago, TrazoH10.Amarillo, elegida);
             }
             PintarDetalle(vendibles[indice], cartera);
@@ -749,7 +786,7 @@ namespace MechaCyberpunk.UI.Tiendas
                 return;
             }
             int dinero = cartera != null ? cartera.Dinero : 0;
-            detalleNombre.text = objeto.Nombre.ToUpperInvariant();
+            detalleNombre.text = ReglaVistaMercado.Nombre(objeto).ToUpperInvariant();
             detalleTipo.text = System.Text.RegularExpressions.Regex.Replace(objeto.Tipo.ToString(), "(?<=[a-z])(?=[A-Z])", " ").ToUpperInvariant();
             detalleDescripcion.text = objeto.Oferta != null ? objeto.Oferta.Descripcion : string.Empty;
             int fila = 0;
@@ -872,8 +909,18 @@ namespace MechaCyberpunk.UI.Tiendas
         private void ElegirFila(int numero)
         {
             int cantidad = pestana == PestanaTienda.Comprar ? objetos.Count : vendibles.Count;
-            if (!visible || !PilaPantallas.EsArriba(this) || numero < 0 || numero >= cantidad || numero == indice)
+            if (!visible || !PilaPantallas.EsArriba(this) || numero < 0 || numero >= cantidad)
             {
+                return;
+            }
+            if (numero == indice)
+            {
+                // T-1314: en El Mercado un clic sobre la fila ya elegida compra.
+                if (modoMercado && pestana == PestanaTienda.Comprar)
+                {
+                    Sonidos.Reproducir("UI_ACEPTAR");
+                    Comprar();
+                }
                 return;
             }
             indice = numero;
