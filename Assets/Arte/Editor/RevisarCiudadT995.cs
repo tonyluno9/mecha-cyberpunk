@@ -29,6 +29,9 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static readonly string[] SaltarRaiz = { "JugadorAPie", "AMB_", "GTA_T405", "GTA_T406", "Trafico", "JaulaClandestino", "MechaEstacionado", "T541_Torres", "T513", "S2_PandillasAcoso" };
         private static readonly string[] SaltarNombre = { "Cable", "Nube", "Luz", "Charco", "Linea", "Cebra", "Raya", "Sombra", "Brillo", "Neon", "Cielo", "Fondo", "Halo", "Decal", "Personaje", "Vehiculo", "Carro", "Dron", "Letrero", "Pantalla", "Antena", "Cornisa", "Franja", "Banqueta", "Pretil", "Halo" };
+
+        /// <summary>T-1318: el pretil C05 lleva su malla en C05_PretilAzotea/EscalaAlto/Visual; se salta por el nombre del pretil, no del hijo.</summary>
+        private static bool EsPretil(Transform t) => t.GetComponentsInParent<Transform>(true).Any(p => p.name.Contains("Pretil"));
         /// <summary>Piezas de estructura: se apilan y se pegan entre sí a propósito, no se comparan entre ellas.</summary>
         private static readonly string[] Estructura = { "Fachada", "Piso", "Cornisa", "Franja", "Esquina", "Pretil", "Muro", "Banqueta", "Edificio", "Torre", "Techo", "Escalera", "Pasarela", "Puente", "Calle", "Suelo", "Rampa", "Acera", "Interior", "Cuarto", "Casa", "Taller" };
         private static readonly string[] SaltarRutaAsset = { "Assets/Arte/Personajes", "Assets/Arte/Vehiculos", "Assets/Arte/Armas" };
@@ -69,7 +72,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static IEnumerable<Transform> Piezas()
         {
             return ColocarS2.Todos().Where(t => t.gameObject.activeInHierarchy && PrefabUtility.IsAnyPrefabInstanceRoot(t.gameObject)
-                    && !SaltarRaiz.Any(s => t.root.name.StartsWith(s)) && !SaltarNombre.Any(n => t.name.Contains(n)) && !Excepciones.Contains(t.name))
+                    && !SaltarRaiz.Any(s => t.root.name.StartsWith(s)) && !SaltarNombre.Any(n => t.name.Contains(n)) && !EsPretil(t) && !Excepciones.Contains(t.name))
                 .Where(t =>
                 {
                     string ruta = FuenteAsset(t);
@@ -153,7 +156,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static bool RenderizaMalla(Renderer r)
         {
-            return r.enabled && !(r is ParticleSystemRenderer) && r.bounds.size.magnitude >= MinimoRenderer && !SaltarNombre.Any(n => r.name.Contains(n));
+            return r.enabled && !(r is ParticleSystemRenderer) && r.bounds.size.magnitude >= MinimoRenderer && !SaltarNombre.Any(n => r.name.Contains(n)) && !EsPretil(r.transform);
         }
 
         /// <summary>Pares encimados (props que se meten unos en otros, duplicados) y props con el centro dentro de una fachada.</summary>

@@ -83,7 +83,10 @@ namespace MechaCyberpunk.Arte.Editor
             Vector3 c = losa.position;
             Transform pretil = casa.Cast<Transform>().First(h => h.name == NombrePretil);
             ColocarS2cLook.Foto(c + new Vector3(9f, 4.5f, 7f), c, "docs/capturas/t-1318/azotea-desde-otro-techo.png", 55f, 16f);
-            ColocarS2cLook.Foto(pretil.position + new Vector3(2.2f, 1.4f, 2.2f), pretil.position + Vector3.up * 0.5f, "docs/capturas/t-1318/pretil-de-cerca.png", 60f, 16f);
+            Vector3 dentro = new Vector3(c.x - pretil.position.x, 0f, c.z - pretil.position.z).normalized;
+            Vector3 lado = Vector3.Cross(Vector3.up, dentro);
+            ColocarS2cLook.Foto(pretil.position + dentro * 1.6f + lado * 1.2f + Vector3.up * 1.1f, pretil.position + Vector3.up * 0.25f, "docs/capturas/t-1318/pretil-de-cerca.png", 55f, 16f);
+            ColocarS2cLook.Foto(c + new Vector3(9f, 4.5f, 7f), c, "docs/capturas/t-1318/azotea-noche.png", 55f);
             ColocarS2cLook.Foto(new Vector3(c.x + 10f, 48f, c.z - 38f), new Vector3(c.x, 5f, c.z - 8f), "docs/capturas/t-1318/techos-desde-arriba.png", 55f, 16f);
             EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single);
         }
@@ -102,12 +105,49 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Guardar("t1318-techos");
         }
 
+        /// <summary>Alto en el mundo de todas las mallas de un objeto, desde sus vértices (Renderer.bounds sale en cero en prefabs cargados).</summary>
+        private static float AltoDeMalla(GameObject raiz)
+        {
+            float min = float.MaxValue;
+            float max = float.MinValue;
+            foreach (MeshFilter f in raiz.GetComponentsInChildren<MeshFilter>(true).Where(f => f.sharedMesh != null))
+            {
+                Bounds b = f.sharedMesh.bounds;
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector3 esquina = b.center + Vector3.Scale(b.extents, new Vector3(i % 2 == 0 ? -1f : 1f, (i / 2) % 2 == 0 ? -1f : 1f, i / 4 == 0 ? -1f : 1f));
+                    float y = f.transform.TransformPoint(esquina).y;
+                    min = Mathf.Min(min, y);
+                    max = Mathf.Max(max, y);
+                }
+            }
+            return max > min ? max - min : 0f;
+        }
+
         /// <summary>El prefab C05 queda con el collider bajo; la malla no se toca.</summary>
         private static void AjustarPrefabPretil()
         {
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefabPretil);
             try
             {
+                Transform visual = raiz.transform.Find("Visual");
+                Transform escala = raiz.transform.Find("EscalaAlto");
+                if (escala == null && visual != null)
+                {
+                    // Un padre sin giro: escalarlo en Y baja la malla en vertical aunque el FBX traiga giros dentro.
+                    escala = new GameObject("EscalaAlto").transform;
+                    escala.SetParent(raiz.transform, false);
+                    visual.SetParent(escala, true);
+                }
+                if (escala != null)
+                {
+                    float alto = AltoDeMalla(raiz);
+                    if (alto > ArteT250.AltoMallaPretil + 0.01f)
+                    {
+                        // La base queda en el piso (el pivote del prefab está en la base).
+                        escala.localScale = new Vector3(escala.localScale.x, escala.localScale.y * ArteT250.AltoMallaPretil / alto, escala.localScale.z);
+                    }
+                }
                 BoxCollider c = raiz.GetComponent<BoxCollider>();
                 if (c != null)
                 {
@@ -145,7 +185,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 arriba = t.TransformPoint(c.center + Vector3.up * (c.size.y * 0.5f));
                 Renderer r = c.GetComponent<Renderer>();
                 float y = Mathf.Max(arriba.y, r.bounds.max.y);
-                Mesh m = KitS2c.MallaCaja(new Vector3(Mathf.Max(0.1f, tam.x - 0.08f), EspesorLosa, Mathf.Max(0.1f, tam.z - 0.08f)), 4f);
+                Mesh m = KitS2c.MallaCaja(new Vector3(Mathf.Max(0.1f, tam.x - 0.08f), EspesorLosa, Mathf.Max(0.1f, tam.z - 0.08f)), 2f);
                 m.name = "T1318_Azotea_" + mallas.Count;
                 mallas.Add(m);
                 GameObject go = new GameObject(NombreLosa);

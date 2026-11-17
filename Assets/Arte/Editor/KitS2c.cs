@@ -463,7 +463,7 @@ namespace MechaCyberpunk.Arte.Editor
                 MatCuerpo(e.ColorPiso), 3f, true);
             // T-1318: losa de azotea de 2 cm sobre la cara de arriba del cuerpo (sin collider). Ver MatAzotea.
             Losa(o, casa.transform, "AzoteaT1318", cuerpoCentro + Vector3.up * ((azotea - 0.02f) * 0.5f + 0.01f), giro,
-                new Vector3(ancho - 0.08f, 0.02f, fondo - 0.08f), MatAzotea(), 4f, false);
+                new Vector3(ancho - 0.08f, 0.02f, fondo - 0.08f), MatAzotea(), 2f, false);
             if (panel && e.Pisos > 1)
             {
                 // El panel C20 es delgado: el muro del piso alto lo pone el cuerpo; arriba de la planta baja va una franja.
@@ -1022,18 +1022,23 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>
-        /// T-1318: la azotea es el concreto gastado del barrio (misma escala en metros que el asfalto de la calle), más claro, con una capa de
-        /// impermeabilizante rojizo. Va en una losa delgada sin collider sobre la cara de arriba del cuerpo, nunca en muros ni fachadas.
+        /// T-1318: la azotea es el asfalto de la calle (misma textura y normal, escala por metro de las losas) en gris cálido claro, con una capa de
+        /// impermeabilizante gastado. Va en una losa delgada sin collider sobre la cara de arriba del cuerpo, nunca en muros ni fachadas.
         /// </summary>
         public static Material MatAzotea()
         {
             return Mat("S2c_Azotea", () =>
             {
+                // Opción B de T-1318: el asfalto salía casi negro de lejos; albedo del concreto del barrio y el grano (normal) del asfalto de la calle.
                 Material m = new Material(AssetDatabase.LoadAssetAtPath<Material>("Assets/_Proyecto/Mundo/Materiales/Barrio_Concreto.mat"));
+                Material calle = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Proyecto/Mundo/Materiales/Barrio_Asfalto.mat");
+                m.SetTexture("_BumpMap", calle.GetTexture("_BumpMap"));
+                m.SetFloat("_BumpScale", 1f);
+                m.EnableKeyword("_NORMALMAP");
                 m.SetTextureScale("_BaseMap", Vector2.one);
                 m.SetTextureScale("_BumpMap", Vector2.one);
-                m.SetFloat("_Smoothness", 0.25f);
-                m.SetColor("_BaseColor", new Color(0.5f, 0.41f, 0.39f));
+                m.SetFloat("_Smoothness", 0.3f);
+                m.SetColor("_BaseColor", new Color(0.6f, 0.57f, 0.54f));
                 return m;
             });
         }

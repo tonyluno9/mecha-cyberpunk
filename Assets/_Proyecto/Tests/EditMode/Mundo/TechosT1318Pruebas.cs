@@ -53,7 +53,17 @@ namespace MechaCyberpunk.Tests.Mundo
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ColocarT1318Techos.RutaPrefabPretil);
             BoxCollider c = prefab.GetComponent<BoxCollider>();
             Assert.LessOrEqual(c.size.y, AlturaSalto() - 0.049f);
-            Assert.GreaterOrEqual(prefab.GetComponentInChildren<MeshRenderer>(true).bounds.size.y, 0.9f, "La malla visible no se toca");
+            Assert.AreEqual(ArteT250.AltoMallaPretil, prefab.GetComponentInChildren<MeshRenderer>(true).bounds.size.y, 0.03f, "La malla visible es un muro bajo de 0.5 m");
+        }
+
+        [Test]
+        public void Pretiles_LaMallaDeLasInstanciasEsBaja()
+        {
+            foreach (Transform p in Todos().Where(t => t.name == ColocarT1318Techos.NombrePretil))
+            {
+                MeshRenderer mr = p.GetComponentInChildren<MeshRenderer>(true);
+                Assert.AreEqual(ArteT250.AltoMallaPretil, mr.bounds.size.y, 0.03f, ColocarS2.Ruta(p));
+            }
         }
 
         [Test]

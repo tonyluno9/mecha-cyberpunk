@@ -20,6 +20,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const string CarpetaArte = "Assets/Arte/";
         /// <summary>T-1318: alto del collider del pretil C05 (m): menos que el salto del jugador (alturaSalto 0.45).</summary>
         public const float AltoColliderPretil = 0.4f;
+        /// <summary>T-1318: alto de la malla visible del pretil C05 (m): muro bajo, apenas más que su collider.</summary>
+        public const float AltoMallaPretil = 0.5f;
         public const string RutaEscenaPruebas = "Assets/_Proyecto/Escenas/Tony/Pruebas_Assets.unity";
         public const string CarpetaCapturas = "docs/capturas";
 
@@ -216,7 +218,11 @@ namespace MechaCyberpunk.Arte.Editor
             caja.size = final.size;
             if (modelo.Codigo == "C05_PretilAzotea")
             {
-                // T-1318: el pretil choca solo hasta lo que se salta (alturaSalto 0.45 m); la malla visible no cambia.
+                // T-1318: el pretil es un muro bajo de 0.5 m y choca solo hasta 0.4 m (alturaSalto 0.45 m).
+                Transform escalaAlto = new GameObject("EscalaAlto").transform;
+                escalaAlto.SetParent(raiz.transform, false);
+                visual.transform.SetParent(escalaAlto, true);
+                escalaAlto.localScale = new Vector3(1f, AltoMallaPretil / final.size.y, 1f);
                 caja.size = new Vector3(caja.size.x, AltoColliderPretil, caja.size.z);
                 caja.center = new Vector3(caja.center.x, AltoColliderPretil * 0.5f, caja.center.z);
             }

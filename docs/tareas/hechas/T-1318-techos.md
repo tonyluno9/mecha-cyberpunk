@@ -27,3 +27,8 @@ Ningún collider de azotea sube más que su malla; `Aplicar` recorta si alguno l
 - Se probó asfalto con tinte (salió muy oscuro) y luego concreto; se quedó concreto rojizo.
 - Los Casa_ inactivos (12 del kit, 43 edificios del barrio) no llevan losa: están apagados en la escena.
 - No se corrió ningún Colocar viejo ni CreadorTodo.
+
+## Ajustes finales (revisión del coordinador)
+- Material: concreto del barrio (albedo, gris cálido 0.6/0.57/0.54) con la normal del asfalto de la calle (el grano se ve de cerca), UV a 2 m. El asfalto con tinte salía casi negro de lejos (opción B del encargo). Capturas de día y de noche (azotea-noche.png, hora 23).
+- Pretil: malla visible a 0.5 m (padre "EscalaAlto" sin giro dentro del prefab C05, escala Y; el FBX trae giros y escalar el hijo no bajaba el alto) y collider a 0.4 m. ArteT250 y ColocarT1318Techos lo hacen igual. RevisarCiudadT995 salta los pretiles por el nombre del padre.
+- Pruebas finales: EditMode Mundo 373/373; PlayMode (TechosSalto, TechosS2, EscalerasTechosT1101, TreparAPie, EmboscadaTecho): 24 corridas, 22 pasan, 0 fallan, 2 omitidas.
