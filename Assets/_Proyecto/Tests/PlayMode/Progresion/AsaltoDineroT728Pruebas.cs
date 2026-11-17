@@ -33,6 +33,7 @@ namespace MechaCyberpunk.Tests.Progresion
         public override void Setup()
         {
             base.Setup();
+            AsaltoDinero.ConCinematica = true; // T-1301: estas pruebas miden el asalto con su cinemática (Enter la salta); la de fábrica sin ella prende false
             carpeta = Path.Combine(Application.temporaryCachePath, "asalto_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(carpeta);
             ServicioGuardado.RutaForzada = Path.Combine(carpeta, "partida.json");
@@ -42,6 +43,7 @@ namespace MechaCyberpunk.Tests.Progresion
 
         public override void TearDown()
         {
+            AsaltoDinero.ConCinematica = false; // T-1301: el valor de fábrica es sin cinemática
             ServicioGuardado.RutaForzada = null;
             if (carpeta != null && Directory.Exists(carpeta)) Directory.Delete(carpeta, true);
             base.TearDown();
@@ -338,6 +340,41 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return RecogerMaletin(asalto);
             yield return Esperar(() => director.Paso == PasoHistoria.PrimeraPelea, "la historia sigue a la primera pelea", 5f);
             Assert.AreEqual(Dinero + ReglaAsalto.DineroDelMaletin, cartera.Dinero, "El maletín dio $10,000");
+        }
+
+        // T-1301: de fábrica no hay cinemática: sin cámara ni barras ni HUD oculto, el jugador libre y la misión activa (como si se hubiera saltado con Enter).
+        [UnityTest]
+        public IEnumerator Asalto_SinCinematica_NoHayCamaraNiHudOcultoYLaMisionQuedaActiva()
+        {
+            AsaltoDinero.ConCinematica = false; // T-1301: el valor de fábrica
+            DirectorPandillas director = null;
+            yield return Cargar(d => director = d);
+            ICartera cartera = Registro<ICartera>.Actual;
+            ControladorAPie control = Registro<IJugador>.Actual.Raiz.GetComponentInChildren<ControladorAPie>();
+            director.Cargar("{\"paso\":\"Despierta\"}");
+            yield return null;
+            yield return PonerEnLaPuerta(director);
+            if (director.Paso == PasoHistoria.Despierta)
+            {
+                director.Cargar("{\"paso\":\"Asalto\"}");
+            }
+            yield return Esperar(() => director.Paso == PasoHistoria.Asalto, "al salir de casa empieza el asalto", 5f);
+            yield return null;
+            AsaltoDinero asalto = director.Asalto;
+            float inicio = Time.realtimeSinceStartup;
+            Assert.IsNull(CamaraAsalto(), "No hay cámara de cinemática");
+            Assert.IsFalse(asalto.CinematicaVisible, "No hay barras de cinemática");
+            Assert.IsFalse(MechaCyberpunk.UI.Hud.HudCinematica.Activa, "El HUD no se oculta");
+            Assert.IsTrue(control.ControlActivo, "El jugador no queda congelado");
+            Assert.AreNotEqual(FaseAsalto.Inactivo, asalto.Fase, "La misión del asalto está activa");
+            Assert.AreEqual(AsaltoDinero.TextoRobarCarro, TextoObjetivo, "El objetivo de la misión aparece");
+            Assert.AreEqual(Dinero, cartera.Dinero, "No te quitan tu dinero");
+            yield return Esperar(() => asalto.Fase == FaseAsalto.Persecucion, "el ladrón sube al carro como si se hubiera saltado", 70f);
+            Debug.Log("[T-1301] el carro llegó y el ladrón subió a los " + (Time.realtimeSinceStartup - inicio) + " s");
+            Assert.AreEqual(ReglaAsalto.DineroDeLaVictima, asalto.DineroRobado, "El robo ya pasó");
+            Assert.IsNull(CamaraAsalto());
+            Assert.IsFalse(MechaCyberpunk.UI.Hud.HudCinematica.Activa);
+            Assert.AreEqual(AsaltoDinero.TextoRobarCarro, TextoObjetivo);
         }
 
         [UnityTest]
