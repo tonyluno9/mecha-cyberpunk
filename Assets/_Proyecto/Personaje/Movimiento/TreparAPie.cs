@@ -40,16 +40,37 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private float enfriamiento;
         private bool liberarPendiente;
         private Vector3 empujePendiente;
+        // T-1204: bajar desde el techo; mientras no se suelte W, W camina hacia abajo por la escalera.
+        private const float AlcanceBordeAdelante = 0.6f;
+        private const float BajaSondaBorde = 0.6f;
+        private const float RadioSondaBorde = 0.5f;
+        private const float ToleranciaAlturaCima = 0.6f;
+        private const float ToleranciaHorizontalCima = 1.2f;
+        private const float MargenInicioBajada = 0.05f;
+        private const float UmbralSoltarTecla = 0.1f;
+        private readonly Collider[] sondaBorde = new Collider[8];
+        private bool invertirHastaSoltar;
 
         /// <summary>True mientras sube por una escalera o tubo, o se agarra de un borde.</summary>
         public bool Trepando => regla.Estado != EstadoTrepar.Libre;
         public EstadoTrepar Estado => regla.Estado;
+
+        /// <summary>T-1204: True mientras sube o baja una escalera de mano (no tubos ni agarres).</summary>
+        public bool EnEscaleraDeMano => regla.Estado == EstadoTrepar.EnEscalera && puntoActual != null && puntoActual.Tipo == TipoTrepar.Escalera;
+        /// <summary>T-1204: metros trepados desde el pie de la escalera (m).</summary>
+        public float ProgresoEscalera => regla.Progreso;
+        /// <summary>T-1204: True si la última entrada vertical efectiva en la escalera fue hacia abajo.</summary>
+        public bool BajandoEscalera { get; private set; }
 
         private void Awake()
         {
             controlador = GetComponent<ControladorAPie>();
             cc = GetComponent<CharacterController>();
             visual = GetComponentInChildren<VisualPersonaje>(true);
+            if (GetComponent<AnimacionEscalera>() == null)
+            {
+                gameObject.AddComponent<AnimacionEscalera>();
+            }
             if (config == null || mover == null || saltar == null)
             {
                 Debug.LogError("[Personaje] Faltan referencias en TreparAPie de " + name, this);
@@ -143,6 +164,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 EngancharEscalera(puntoCercano);
                 return;
             }
+            if (entrada.y > UmbralAdelante && controlador.EnPiso && IntentarBajarDesdeTecho())
+            {
+                return;
+            }
             bool automatico = config.AgarreAutomaticoEnAire && !controlador.EnPiso && entrada.y > UmbralAdelante;
             bool manual = pulsoSaltar && !controlador.SaltoBloqueado;
             if ((manual || automatico) && IntentarAgarre(out Vector3 destino, out float segundos))
@@ -160,6 +185,45 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
             Vector3 centro = transform.position + Vector3.up * AlturaCentroCuerpo;
             return (triggerCercano.ClosestPoint(centro) - centro).sqrMagnitude <= HolguraTrigger * HolguraTrigger;
+        }
+
+        // T-1204: busca una escalera cuya cima queda justo bajo la orilla delante del jugador y se engancha desde arriba.
+        private bool IntentarBajarDesdeTecho()
+        {
+            Vector3 frente = transform.forward;
+            frente.y = 0f;
+            if (frente.sqrMagnitude <= 0f)
+            {
+                return false;
+            }
+            frente.Normalize();
+            Vector3 centro = transform.position + frente * AlcanceBordeAdelante + Vector3.down * BajaSondaBorde;
+            int n = Physics.OverlapSphereNonAlloc(centro, RadioSondaBorde, sondaBorde, ~0, QueryTriggerInteraction.Collide);
+            for (int i = 0; i < n; i++)
+            {
+                PuntoTrepar punto = sondaBorde[i].GetComponentInParent<PuntoTrepar>();
+                if (punto == null || punto.Tipo != TipoTrepar.Escalera)
+                {
+                    continue;
+                }
+                if (Mathf.Abs(transform.position.y - punto.Cima.y) > ToleranciaAlturaCima)
+                {
+                    continue;
+                }
+                Vector3 dif = punto.Cima - transform.position;
+                dif.y = 0f;
+                if (dif.magnitude > ToleranciaHorizontalCima || Vector3.Angle(frente, -punto.Frente) > config.AnguloMaximoEnganche)
+                {
+                    continue;
+                }
+                puntoActual = punto;
+                regla.IniciarEscalera(punto.AlturaSubida, config.VelocidadEscalera, punto.AlturaSubida - MargenInicioBajada);
+                invertirHastaSoltar = true;
+                Suspender();
+                ColocarEnEscalera();
+                return true;
+            }
+            return false;
         }
 
         private bool PuedeEngancharse(PuntoTrepar punto)
@@ -182,7 +246,20 @@ namespace MechaCyberpunk.Personaje.Movimiento
         {
             bool enPiso = Physics.Raycast(transform.position + Vector3.up * AlturaRayoPiso, Vector3.down,
                 AlturaRayoPiso + DistanciaPisoEscalera, ~0, QueryTriggerInteraction.Ignore);
-            AccionTrepar accion = regla.AvanzarEscalera(dt, entradaVertical, enPiso, pulsoSaltar);
+            if (invertirHastaSoltar && entradaVertical <= UmbralSoltarTecla)
+            {
+                invertirHastaSoltar = false;
+            }
+            float efectiva = invertirHastaSoltar ? -entradaVertical : entradaVertical;
+            if (efectiva < 0f)
+            {
+                BajandoEscalera = true;
+            }
+            else if (efectiva > 0f)
+            {
+                BajandoEscalera = false;
+            }
+            AccionTrepar accion = regla.AvanzarEscalera(dt, efectiva, enPiso, pulsoSaltar);
             switch (accion)
             {
                 case AccionTrepar.Solto:
@@ -354,6 +431,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private void Terminar(Vector3 empuje)
         {
             regla.Soltar();
+            invertirHastaSoltar = false;
+            BajandoEscalera = false;
             puntoActual = null;
             puntoCercano = null; // T-1203: si sigue al pie, el trigger lo vuelve a avisar al prender el CharacterController
             triggerCercano = null;

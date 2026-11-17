@@ -370,6 +370,78 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsEmpty(subida, "Escaleras que no subieron:\n" + string.Join("\n", subida));
         }
 
+        /// <summary>
+        /// T-1204: desde el techo, parado en la orilla sobre la escalera y mirando hacia la calle, W baja por la escalera y suelta al llegar al piso.
+        /// </summary>
+        [UnityTest]
+        [Timeout(600000)]
+        public IEnumerator Techo_BajarPorLaEscalera_DesdeArriba()
+        {
+            yield return Cargar();
+            List<string> fallas = new List<string>();
+            int probadas = 0;
+            foreach (PuntoTrepar p in Escaleras())
+            {
+                if (probadas >= 3)
+                {
+                    break;
+                }
+                List<string> subida = new List<string>();
+                yield return Subir(p, subida);
+                if (subida.Count > 0)
+                {
+                    continue;
+                }
+                probadas++;
+                Poner(new Vector3(p.Cima.x, p.Salida.y, p.Cima.z) + p.Frente * 0.45f, -p.Frente);
+                trepar.enabled = false;
+                yield return null;
+                trepar.enabled = true;
+                yield return Esperar(0.5f);
+                bool enganchoDeMano = false;
+                bool bajo = false;
+                Press(teclado.wKey);
+                float fin = Time.time + 1f;
+                while (Time.time < fin && !trepar.Trepando)
+                {
+                    yield return null;
+                }
+                if (!trepar.Trepando)
+                {
+                    Release(teclado.wKey);
+                    fallas.Add(p.name + ": W en la orilla no se engancha a la escalera desde arriba (pos " + jugador.transform.position.ToString("F2") + ")");
+                    continue;
+                }
+                fin = Time.time + 8f;
+                while (Time.time < fin && trepar.Trepando)
+                {
+                    enganchoDeMano |= trepar.EnEscaleraDeMano;
+                    bajo |= trepar.BajandoEscalera;
+                    yield return null;
+                }
+                Release(teclado.wKey);
+                yield return Esperar(0.3f);
+                if (trepar.Trepando)
+                {
+                    fallas.Add(p.name + ": sigue en la escalera tras 8 s (estado " + trepar.Estado + ")");
+                }
+                if (jugador.transform.position.y >= p.transform.position.y + 0.5f)
+                {
+                    fallas.Add(p.name + ": no llega al piso, termina en y " + jugador.transform.position.y.ToString("F2"));
+                }
+                if (!enganchoDeMano)
+                {
+                    fallas.Add(p.name + ": EnEscaleraDeMano nunca fue verdadero");
+                }
+                if (!bajo)
+                {
+                    fallas.Add(p.name + ": BajandoEscalera nunca fue verdadero");
+                }
+            }
+            Assert.GreaterOrEqual(probadas, 1, "Ninguna escalera subió para probar la bajada");
+            Assert.IsEmpty(fallas, string.Join("\n", fallas));
+        }
+
         // ------------------------------------------------------------------ capturas
 
         [UnityTest]
