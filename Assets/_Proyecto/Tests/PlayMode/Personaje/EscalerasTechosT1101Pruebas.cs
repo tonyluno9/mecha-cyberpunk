@@ -9,6 +9,7 @@ using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
@@ -292,6 +293,81 @@ namespace MechaCyberpunk.Tests.Personaje
                 }
             }
             Assert.IsEmpty(fallas, string.Join("\n", fallas));
+        }
+
+        /// <summary>
+        /// T-1203: en TODOS los techos con escalera, después de subir el jugador camina con W, A y D (1,2 s cada una) y luego se queda quieto:
+        /// no vuelve a engancharse a la escalera, no lo regresa nada a la orilla (sin saltos de más de 0,4 m en un cuadro) y quieto no se desliza.
+        /// </summary>
+        [UnityTest]
+        [Timeout(900000)]
+        public IEnumerator Techos_CaminarDespuesDeSubir_NoRegresaNiEmpuja()
+        {
+            yield return Cargar();
+            List<PuntoTrepar> lista = Escaleras();
+            string solo = System.Environment.GetEnvironmentVariable("T1101_SOLO");
+            List<string> fallas = new List<string>();
+            List<string> subida = new List<string>();
+            int revisados = 0;
+            foreach (PuntoTrepar p in lista.Where(x => string.IsNullOrEmpty(solo) || x.name.Contains(solo)))
+            {
+                int antes = subida.Count;
+                yield return Subir(p, subida);
+                if (subida.Count > antes)
+                {
+                    continue;
+                }
+                revisados++;
+                string nombre = p.name + " (" + (p.transform.parent != null ? p.transform.parent.name : "") + ")";
+                float yTecho = jugador.transform.position.y;
+                foreach (ButtonControl tecla in new[] { teclado.wKey, teclado.aKey, teclado.dKey })
+                {
+                    Vector3 previa = jugador.transform.position;
+                    Press(tecla);
+                    float fin = Time.time + 1.2f;
+                    string falla = null;
+                    while (Time.time < fin && falla == null)
+                    {
+                        yield return null;
+                        Vector3 ahora = jugador.transform.position;
+                        Vector3 salto = ahora - previa;
+                        salto.y = 0f;
+                        if (trepar.Trepando)
+                        {
+                            falla = "con " + tecla.name + " se vuelve a enganchar a la escalera en " + ahora.ToString("F2");
+                        }
+                        else if (salto.magnitude > 0.4f)
+                        {
+                            falla = "con " + tecla.name + " salta " + salto.magnitude.ToString("F2") + " m en un cuadro, de " + previa.ToString("F2") + " a " + ahora.ToString("F2");
+                        }
+                        previa = ahora;
+                    }
+                    Release(tecla);
+                    if (falla != null)
+                    {
+                        fallas.Add(nombre + ": " + falla);
+                        break;
+                    }
+                    yield return Esperar(0.3f);
+                    if (jugador.transform.position.y < yTecho - 1f)
+                    {
+                        break; // se bajó del techo caminando por la orilla: es válido y ya no hay techo que revisar
+                    }
+                }
+                if (jugador.transform.position.y >= yTecho - 1f && controlador.EnPiso)
+                {
+                    Vector3 quieto = jugador.transform.position;
+                    yield return Esperar(1f);
+                    float deriva = Vector3.Distance(quieto, jugador.transform.position);
+                    if (deriva > 0.1f)
+                    {
+                        fallas.Add(nombre + ": quieto se desliza " + deriva.ToString("F2") + " m desde " + quieto.ToString("F2"));
+                    }
+                }
+            }
+            Debug.Log("[Personaje] T-1203: techos revisados " + revisados + " de " + lista.Count + (subida.Count > 0 ? "; no subió: " + string.Join(" | ", subida) : ""));
+            Assert.IsEmpty(fallas, fallas.Count + " de " + revisados + " techos fallan:\n" + string.Join("\n", fallas));
+            Assert.IsEmpty(subida, "Escaleras que no subieron:\n" + string.Join("\n", subida));
         }
 
         // ------------------------------------------------------------------ capturas
