@@ -25,7 +25,7 @@ namespace MechaCyberpunk.Tests.Personaje
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string RaizNuevas = "T1101_Escaleras";
-        private const int NuevasMinimas = 12;
+        private const int NuevasMinimas = 10;   // T-1320: dos escaleras de las casas que dejaron lugar a la plaza (CalleDorada_01 y _03) se apagaron
         private const float MaxSegundos = 8f;
         private const float MargenAltura = 0.4f;
         private const float DistanciaPartida = 1.5f;

@@ -44,7 +44,8 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             Transform raiz = RaizDeTechos;
             Assert.IsNotNull(raiz, "Falta " + RaizTechos + " en Ciudad_Prologo");
-            return raiz.GetComponentsInChildren<PuntoTrepar>(true).ToList();
+            // T-1320: solo los accesos activos (la ruta de techo de las casas que dejaron lugar a la plaza quedó apagada).
+            return raiz.GetComponentsInChildren<PuntoTrepar>(false).ToList();
         }
 
         private static string ZonaDe(PuntoTrepar p)
