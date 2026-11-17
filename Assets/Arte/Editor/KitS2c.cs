@@ -1073,7 +1073,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---- texturas que se dibujan en código (se guardan como PNG y se importan)
 
-        private static Texture2D Guardar(string nombre, Texture2D t, bool srgb, TextureWrapMode envolver)
+        public static Texture2D Guardar(string nombre, Texture2D t, bool srgb, TextureWrapMode envolver)
         {
             string ruta = CarpetaTexturas + "/" + nombre + ".png";
             File.WriteAllBytes(ruta, t.EncodeToPNG());
@@ -1087,7 +1087,7 @@ namespace MechaCyberpunk.Arte.Editor
             return AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
         }
 
-        private static Texture2D Cargar(string nombre) => AssetDatabase.LoadAssetAtPath<Texture2D>(CarpetaTexturas + "/" + nombre + ".png");
+        public static Texture2D Cargar(string nombre) => AssetDatabase.LoadAssetAtPath<Texture2D>(CarpetaTexturas + "/" + nombre + ".png");
 
         private static float Ruido(float x, float y) => Mathf.PerlinNoise(x, y);
 
