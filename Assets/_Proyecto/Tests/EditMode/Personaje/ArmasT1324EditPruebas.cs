@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 GameObject blanco = Caja("Blanco", new Vector3(0f, 0f, 20f));
                 objetos.Add(blanco);
                 Physics.SyncTransforms();
-                bool hay = ReglaImpactoBala.BuscarPrimero(Vector3.zero, Vector3.forward, 150f, null, null, out RaycastHit mejor);
+                bool hay = ReglaImpactoBala.BuscarPrimero(Lejos, Vector3.forward, 150f, null, null, out RaycastHit mejor);
                 Assert.IsTrue(hay);
                 Assert.AreEqual("Blanco", mejor.collider.name);
             }
@@ -80,7 +80,7 @@ namespace MechaCyberpunk.Tests.Personaje
             try
             {
                 Physics.SyncTransforms();
-                bool hay = ReglaImpactoBala.BuscarPrimero(Vector3.zero, Vector3.forward, 50f, propio.transform.root, null, out RaycastHit mejor);
+                bool hay = ReglaImpactoBala.BuscarPrimero(Lejos, Vector3.forward, 50f, propio.transform.root, null, out RaycastHit mejor);
                 Assert.IsTrue(hay);
                 Assert.AreEqual("Blanco", mejor.collider.name);
                 Assert.AreEqual(9.5f, mejor.distance, 0.05f);
@@ -92,10 +92,13 @@ namespace MechaCyberpunk.Tests.Personaje
             }
         }
 
+        /// <summary>Lejos de cualquier escena abierta por otras pruebas (la ciudad tiene banquetas en el origen).</summary>
+        private static readonly Vector3 Lejos = new Vector3(0f, 500f, 0f);
+
         private static GameObject Caja(string nombre, Vector3 posicion)
         {
             var o = new GameObject(nombre);
-            o.transform.position = posicion;
+            o.transform.position = Lejos + posicion;
             o.AddComponent<BoxCollider>().size = new Vector3(2f, 2f, 1f);
             return o;
         }
