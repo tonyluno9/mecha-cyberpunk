@@ -25,13 +25,18 @@ namespace MechaCyberpunk.Vehiculos.Carro
         /// </summary>
         public void Detonar(float retraso)
         {
-            if (calculo == null || Explotado || Detonando)
+            if (calculo == null || Explotado)
             {
                 return;
             }
+            // Una detonación inmediata (granada encima) gana sobre una cadena que ya venía en camino.
             if (retraso <= 0f || !isActiveAndEnabled)
             {
                 ExplotarYa();
+                return;
+            }
+            if (Detonando)
+            {
                 return;
             }
             detonarEn = Time.time + retraso;
