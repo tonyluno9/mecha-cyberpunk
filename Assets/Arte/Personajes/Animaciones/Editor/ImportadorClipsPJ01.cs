@@ -51,7 +51,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// SaltoAterrizaje; en una caída larga se queda en la última pose y entra Loco_Caida, que sí es bucle; BITACORA 03, ajuste 2), y los que en Mixamo llevaban "_Bucle" en el
         /// archivo y aquí no (Carro_Manejar, Moto_Manejar, Inter_VerTelefono).
         /// </summary>
-        public static readonly string[] SinBucle = { "Loco_SaltoAire" };
+        public static readonly string[] SinBucle = { "Loco_SaltoAire", "Escalera_Entrar", "Escalera_SalirArriba", "Escalera_SalirAbajo" };
 
         /// <summary>T-964: último cuadro (30 fps) del tramo útil de PJ01_Inter_Telefono: el teléfono ya está en el oído (7.8 s de 37; el estado sale al 88 %, el evento tiene que quedar antes).</summary>
         public const float UltimoCuadroTelefono = 235f;
@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float CuadroTelefonoEnOreja = 195f;
         /// <summary>T-964: función del evento (la recibe ReceptorEventosArma en Personaje.Visual).</summary>
         public const string FuncionTelefonoEnOreja = "AlTelefonoEnOreja";
-        public static readonly string[] ConBucle = { "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono" };
+        public static readonly string[] ConBucle = { "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono", "Escalera_Subir", "Escalera_Bajar" };
 
         public static bool TieneBucle(string baseNombre)
         {
