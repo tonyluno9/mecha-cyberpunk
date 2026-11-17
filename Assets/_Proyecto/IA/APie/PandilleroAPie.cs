@@ -249,6 +249,10 @@ namespace MechaCyberpunk.IA.APie
         private void ResolverGanchos()
         {
             conducta = GetComponent<IConductaAPie>();
+            if (conducta == null && datos != null && datos.EsPolicia)
+            {
+                conducta = gameObject.AddComponent<ConductaEscaleraPolicia>(); // T-1303: si estás en un techo, sube por la escalera
+            }
             filtroDanio = GetComponent<IFiltroDanioAPie>();
         }
 
@@ -429,7 +433,12 @@ namespace MechaCyberpunk.IA.APie
             if (datos.EsPolicia)
             {
                 // T-709: dispararle a la policía sube la búsqueda; matarla, mucho más.
-                Registro<ICalor>.Actual?.Sumar(modelo.EstaKO ? datos.CalorAlMatar : datos.CalorAlGolpear, MotivoCalor.Pelea);
+                ICalor calor = Registro<ICalor>.Actual;
+                if (calor != null && !DanioDeLaPolicia)
+                {
+                    calor.Sumar(modelo.EstaKO ? datos.CalorAlMatar : datos.CalorAlGolpear, MotivoCalor.Pelea);
+                    SubirAPrimeraEstrella(calor); // T-1303: desde el primer golpe o bala a un policía ya te buscan y atacan
+                }
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
             DanioRecibido?.Invoke(this, info);
@@ -703,6 +712,10 @@ namespace MechaCyberpunk.IA.APie
                 {
                     deseada = VelocidadRodeo(posicionJugador);
                 }
+                if (datos.EsPolicia)
+                {
+                    deseada = VelocidadPolicia(deseada, adelante, distancia, puedeTirar, modo);
+                }
             }
 
             if (deseada.sqrMagnitude < PasoMinimoCuadrado)
@@ -710,6 +723,10 @@ namespace MechaCyberpunk.IA.APie
                 deseada = VelocidadDePatrulla();
             }
             Vector3 mirada = atacable && !huyendo ? haciaJugador : deseada;
+            if (datos.EsPolicia && deseada.magnitude > VelocidadCaminarPolicia + 0.5f)
+            {
+                mirada = deseada; // T-1303: corriendo mira hacia donde corre (no corre de lado ni de espaldas)
+            }
             mirada.y = 0f;
             if (mirada.sqrMagnitude > 0.0001f)
             {
@@ -1199,6 +1216,48 @@ namespace MechaCyberpunk.IA.APie
             IJugador jugador = Registro<IJugador>.Actual;
             return jugador != null && raizJugador != null && jugador.Modo == ModoJugador.APie && recibeJugador != null
                 && (vidaJugador == null || !vidaJugador.EstaKO);
+        }
+
+        /// <summary>T-1303: el policía corre a lo más a esto (m/s): el clip de correr va a 3.19 m/s; más rápido se ve flotando.</summary>
+        public const float VelocidadCorrerPolicia = 3.6f;
+        /// <summary>T-1303: caminando mientras dispara (el clip de caminar va a ~1.3-1.6 m/s).</summary>
+        public const float VelocidadCaminarPolicia = 1.4f;
+        /// <summary>T-1303: a esta distancia (m, en el plano) el policía ya te tocó: se detiene (el arresto lo cuenta Trafico).</summary>
+        public const float DistanciaTocarPolicia = 0.9f;
+
+        /// <summary>
+        /// T-1303: el policía no corre de lado ni de espaldas con el clip de caminar de frente: lejos corre hacia ti (a la rapidez del clip), en rango camina
+        /// hacia ti disparando y muy cerca se planta. A cubrirse sí corre (mirando hacia donde corre).
+        /// </summary>
+        private Vector3 VelocidadPolicia(Vector3 deseada, Vector3 adelante, float distancia, bool puedeTirar, ReglaTacticaPandillero.Modo modo)
+        {
+            if (modo == ReglaTacticaPandillero.Modo.Cubrirse || modo == ReglaTacticaPandillero.Modo.Asomado)
+            {
+                return Vector3.ClampMagnitude(deseada, VelocidadCorrerPolicia);
+            }
+            if (distancia > datos.DistanciaMaxTiro || (!puedeTirar && distancia > datos.DistanciaMinTiro))
+            {
+                return adelante * Mathf.Min(datos.Velocidad, VelocidadCorrerPolicia);
+            }
+            // Camina hacia ti disparando; ya cerca sigue hasta tocarte (así te arresta, T-1303) y ahí se planta.
+            return distancia > DistanciaTocarPolicia ? adelante * VelocidadCaminarPolicia : Vector3.zero;
+        }
+
+        /// <summary>
+        /// T-1303: si el calor todavía no llega a la primera estrella, lo sube lo justo para llegar (en pasos del 5 % del máximo; los umbrales viven en los datos
+        /// de Progresion, que IA no conoce).
+        /// </summary>
+        public static void SubirAPrimeraEstrella(ICalor calor)
+        {
+            if (calor == null || calor.Maximo <= 0f)
+            {
+                return;
+            }
+            float paso = calor.Maximo * 0.05f;
+            for (int i = 0; i < 40 && calor.Nivel <= 0 && calor.Valor < calor.Maximo; i++)
+            {
+                calor.Sumar(paso, MotivoCalor.Pelea);
+            }
         }
 
         // T-446: mientras espera en su zona, camina de un punto a otro cerca de su hogar. Sale de la patrulla en cuanto deja de esperar.
