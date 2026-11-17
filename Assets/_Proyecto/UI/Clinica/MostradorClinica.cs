@@ -123,7 +123,12 @@ namespace MechaCyberpunk.UI.Clinica
         {
             if (tiendaPantalla == null)
             {
-                tiendaPantalla = FindFirstObjectByType<MechaCyberpunk.UI.Tiendas.PantallaTienda>(FindObjectsInactive.Include);
+                // T-1330: primero la que lleva el propio mostrador (así también sale en Ciudad, que no trae otra), si no la de la escena.
+                tiendaPantalla = GetComponentInChildren<MechaCyberpunk.UI.Tiendas.PantallaTienda>(true);
+                if (tiendaPantalla == null)
+                {
+                    tiendaPantalla = FindFirstObjectByType<MechaCyberpunk.UI.Tiendas.PantallaTienda>(FindObjectsInactive.Include);
+                }
             }
             return tiendaPantalla;
         }

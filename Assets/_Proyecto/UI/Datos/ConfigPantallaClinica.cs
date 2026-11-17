@@ -190,7 +190,7 @@ namespace MechaCyberpunk.UI
         [Tooltip("Nombre de cada efecto, en el orden de EfectoImplante.")]
         [SerializeField] private string[] nombresEfectos =
         {
-            "GOLPE A PIE", "CORRER", "SALTO", "ESPERA EN EL MECHA", "VIDA DEL RIVAL", "VIDA EN NÚMEROS", "AVISO DE ATAQUE",
+            "GOLPE A PIE", "CORRER", "SALTO", "TIEMPO DE GOLPE Y GUARDIA (MECHA)", "VIDA DEL RIVAL", "VIDA EN NÚMEROS", "AVISO DE ATAQUE",
             "ALCANCE AL APUNTAR", "RETROCESO", "ESPERA DE RODADA", "RECARGA"
         };
         [Header("Sonidos de la pantalla (ids de GestorSonidos)")]

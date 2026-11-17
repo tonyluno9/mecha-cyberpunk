@@ -10,10 +10,10 @@ namespace MechaCyberpunk.UI.Inicio
     {
         public const float SegundosPorFoto = 6.5f;
         public const float SegundosFundido = 1.3f;
-        public const float EscalaInicial = 1.06f;
-        public const float EscalaFinal = 1.16f;
-        /// <summary>Paneo máximo (px de 1920x1080) hacia cada lado; cabe en el margen del zoom inicial (3 % de 1080 = 32 px en vertical).</summary>
-        public const float PaneoMaximo = 44f;
+        /// <summary>T-1330: sin zoom ni paneo: la foto se ve entera, con su proporción, sin recortar (bordes negros si hace falta).</summary>
+        public const float EscalaInicial = 1f;
+        public const float EscalaFinal = 1f;
+        public const float PaneoMaximo = 0f;
         private const float ProporcionVertical = 0.6f;
         private const float GiroPorFoto = 2.4f;
 
@@ -49,6 +49,15 @@ namespace MechaCyberpunk.UI.Inicio
         }
 
         /// <summary>Zoom de una foto que lleva <paramref name="t"/> segundos en pantalla.</summary>
+        /// <summary>T-1330: tamaño de una foto de <paramref name="ancho"/> x <paramref name="alto"/> px que cabe entera en la pantalla (FitInParent), sin estirar.</summary>
+        public static Vector2 TamanoEncajado(float ancho, float alto, float anchoPantalla, float altoPantalla)
+        {
+            float aspecto = ancho / alto;
+            return aspecto > anchoPantalla / altoPantalla
+                ? new Vector2(anchoPantalla, anchoPantalla / aspecto)
+                : new Vector2(altoPantalla * aspecto, altoPantalla);
+        }
+
         public static float Escala(float t) => Mathf.Lerp(EscalaInicial, EscalaFinal, Progreso(t));
 
         /// <summary>Desplazamiento (px) de la foto <paramref name="indice"/> a los <paramref name="t"/> segundos: cruza de un lado al otro en una dirección propia.</summary>
