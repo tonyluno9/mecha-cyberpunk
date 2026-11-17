@@ -14,6 +14,8 @@ namespace MechaCyberpunk.UI.Inicio
         private const float AnchoPantalla = 1920f;
         private const float AltoPantalla = 1080f;
         private const float SegundosBarrido = 7f;
+        /// <summary>T-1316: cuánto se ve el neón animado encima de las fotos de carga (1 sin fotos).</summary>
+        private const float AlfaNeonConFotos = 0.2f;
 
         private sealed class Estela
         {
@@ -27,6 +29,10 @@ namespace MechaCyberpunk.UI.Inicio
         private RectTransform mancha2;
         private RectTransform barrido;
         private float tiempo;
+        private FotosCarga fotos;
+
+        /// <summary>T-1316: las fotos L01-L06 de la carga (null si no hay).</summary>
+        public FotosCarga Fotos => fotos;
 
         public static FondoCarga Crear(Transform padre)
         {
@@ -36,11 +42,14 @@ namespace MechaCyberpunk.UI.Inicio
             System.Random azar = new System.Random(77);
             Image noche = UIInicio.Imagen(raiz, "Noche", UIInicio.Noche);
             UIInicio.Estirar(noche.rectTransform);
+            // T-1316: con las ilustraciones L01-L06 la carga es como en GTA (fotos con zoom y paneo lento); el neón queda muy tenue encima.
+            fondo.fotos = FotosCarga.Crear(raiz);
+            float alfaNeon = fondo.fotos != null ? AlfaNeonConFotos : 1f;
 
-            Image m1 = UIInicio.Imagen(raiz, "ManchaMagenta", UIInicio.ConAlfa(UIInicio.Magenta, 0.30f), SpritesInicio.Brillo, true);
+            Image m1 = UIInicio.Imagen(raiz, "ManchaMagenta", UIInicio.ConAlfa(UIInicio.Magenta, 0.30f * alfaNeon), SpritesInicio.Brillo, true);
             UIInicio.Punto(m1.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(-380f, 60f), new Vector2(1300f, 1300f));
             fondo.mancha1 = m1.rectTransform;
-            Image m2 = UIInicio.Imagen(raiz, "ManchaCian", UIInicio.ConAlfa(UIInicio.Cian, 0.24f), SpritesInicio.Brillo, true);
+            Image m2 = UIInicio.Imagen(raiz, "ManchaCian", UIInicio.ConAlfa(UIInicio.Cian, 0.24f * alfaNeon), SpritesInicio.Brillo, true);
             UIInicio.Punto(m2.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(520f, -80f), new Vector2(1100f, 1100f));
             fondo.mancha2 = m2.rectTransform;
 
@@ -48,7 +57,7 @@ namespace MechaCyberpunk.UI.Inicio
             for (int i = 0; i < CantidadEstelas; i++)
             {
                 float largo = 160f + (float)azar.NextDouble() * 620f;
-                Color color = UIInicio.ConAlfa(colores[azar.Next(colores.Length)], 0.18f + (float)azar.NextDouble() * 0.5f);
+                Color color = UIInicio.ConAlfa(colores[azar.Next(colores.Length)], (0.18f + (float)azar.NextDouble() * 0.5f) * alfaNeon);
                 Image e = UIInicio.Imagen(raiz, "Estela" + i, color, SpritesInicio.DegradadoH, true);
                 float altura = 2f + (float)azar.NextDouble() * 4f;
                 UIInicio.Punto(e.rectTransform, new Vector2(0f, 0f), new Vector2((float)azar.NextDouble() * (AnchoPantalla + largo), (float)azar.NextDouble() * AltoPantalla), new Vector2(largo, altura));
@@ -56,13 +65,13 @@ namespace MechaCyberpunk.UI.Inicio
             }
 
             SpritesInicio.ConfigurarRepeticion(SpritesInicio.Lineas);
-            Image rejilla = UIInicio.Imagen(raiz, "Rejilla", new Color(0.4f, 0.8f, 1f, 0.05f), SpritesInicio.Lineas);
+            Image rejilla = UIInicio.Imagen(raiz, "Rejilla", new Color(0.4f, 0.8f, 1f, 0.05f * alfaNeon), SpritesInicio.Lineas);
             rejilla.type = Image.Type.Tiled;
             UIInicio.Estirar(rejilla.rectTransform);
 
-            Image barridoImagen = UIInicio.Imagen(raiz, "Barrido", UIInicio.ConAlfa(UIInicio.Cian, 0.07f), SpritesInicio.DegradadoV, true);
+            Image barridoImagen = UIInicio.Imagen(raiz, "Barrido", UIInicio.ConAlfa(UIInicio.Cian, 0.07f * alfaNeon), SpritesInicio.DegradadoV, true);
             UIInicio.Punto(barridoImagen.rectTransform, new Vector2(0.5f, 1f), Vector2.zero, new Vector2(AnchoPantalla, 260f));
-            Image bordeBarrido = UIInicio.Imagen(barridoImagen.transform, "Borde", UIInicio.ConAlfa(UIInicio.Cian, 0.5f), SpritesInicio.Blanco, true);
+            Image bordeBarrido = UIInicio.Imagen(barridoImagen.transform, "Borde", UIInicio.ConAlfa(UIInicio.Cian, 0.5f * alfaNeon), SpritesInicio.Blanco, true);
             UIInicio.Anclar(bordeBarrido.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, 3f));
             fondo.barrido = barridoImagen.rectTransform;
 

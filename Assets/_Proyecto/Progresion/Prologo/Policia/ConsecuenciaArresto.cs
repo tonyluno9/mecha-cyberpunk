@@ -79,9 +79,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Policia
             }
             ICartera cartera = Registro<ICartera>.Actual;
             int multa = ReglaMultaArresto.Multa(cartera != null ? cartera.Dinero : 0, porcentajeMulta);
+            // T-1316: como M33: "-25 %   $ 778" y debajo "Vuelves a casa".
             string detalle = multa > 0
-                ? "MULTA: " + multa + " (" + Mathf.RoundToInt(porcentajeMulta * 100f) + " % DE TU DINERO)"
-                : "NO TRAÍAS DINERO: TE SOLTARON";
+                ? "<color=#FF7A7A>-" + Mathf.RoundToInt(porcentajeMulta * 100f) + " %</color>     $ " + multa.ToString("N0", System.Globalization.CultureInfo.InvariantCulture) + "\nVuelves a casa"
+                : "No traías dinero: te soltaron\nVuelves a casa";
             PantallaAviso aviso = PantallaAviso.Crear(Titulo, detalle, ColorPolicia);
             Pantalla = aviso;
             yield return aviso.Aparecer(segundosEntrada);
