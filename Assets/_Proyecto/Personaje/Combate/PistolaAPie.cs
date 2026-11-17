@@ -18,7 +18,6 @@ namespace MechaCyberpunk.Personaje.Combate
     [RequireComponent(typeof(VidaAPie))]
     public class PistolaAPie : MonoBehaviour
     {
-        private const int MaxImpactos = 16;
 
         [SerializeField] private DatosPistola datos;
         [SerializeField] private InputActionReference atacar;
@@ -69,7 +68,6 @@ namespace MechaCyberpunk.Personaje.Combate
         private ArmasEspecialesAPie especiales;
         private ArsenalJugador arsenal;
         private ReservaBalas reserva;
-        private readonly RaycastHit[] impactos = new RaycastHit[MaxImpactos];
         private float inicioRetroceso = -100f;
         private const float PuntaDelArma = 0.5f;
         private const float MaximaIntensidadLuzBoca = 1.2f;
@@ -281,6 +279,7 @@ namespace MechaCyberpunk.Personaje.Combate
             desdeCarro = enCarro;
             CargadorPistola actual = EsDeFuego(activa) ? cargadores[(int)activa] : null;
             bool puede = actual != null && !vida.EstaKO && (controlador.ControlActivo || enCarro);
+            RevisarApuntarSinBalas(activa, actual, puede && !enCarro);
             if (puede)
             {
                 if (recargar.action.WasPressedThisFrame())
@@ -333,6 +332,18 @@ namespace MechaCyberpunk.Personaje.Combate
                 especiales.Soltar();
             }
             ActualizarVisual();
+        }
+
+        // T-1324: sin balas en el cargador no se apunta: se intenta recargar primero (si hay reserva). El rayo de plasma ya en marcha no se corta.
+        private void RevisarApuntarSinBalas(ArmaAPie activa, CargadorPistola actual, bool aplica)
+        {
+            bool rayoEnMarcha = especiales != null && especiales.EstadoPlasma != EstadoPlasma.Reposo;
+            bool bloquear = aplica && ReglaApuntarConBalas.Bloquea(actual.Balas, rayoEnMarcha);
+            controlador.ApuntarBloqueado = bloquear;
+            if (bloquear && controlador.QuiereApuntar && !actual.Recargando && actual.EmpezarRecarga())
+            {
+                Sonidos.Reproducir(IdRecarga(activa));
+            }
         }
 
         private ArmaAPie armaAnterior = ArmaAPie.Pistola;
@@ -617,27 +628,12 @@ namespace MechaCyberpunk.Personaje.Combate
         }
 
         // El primer collider que no sea del propio jugador; los triggers se ignoran.
+        // T-1324: antes era un RaycastNonAlloc con un buffer de 16: con el sniper (150 m) o en una calle con muchos colliders el buffer se llenaba
+        // sin traer el mas cercano y la bala "pasaba de largo" al policia. Ahora se avanza con rayos simples (siempre el mas cercano) saltando los propios.
         private bool BuscarImpacto(Vector3 origen, Vector3 direccion, float alcance, out RaycastHit mejor)
         {
-            int cantidad = Physics.RaycastNonAlloc(origen, direccion, impactos, alcance, ~0, QueryTriggerInteraction.Ignore);
-            bool hay = false;
-            mejor = default;
-            for (int i = 0; i < cantidad; i++)
-            {
-                RaycastHit impacto = impactos[i];
-                if (impacto.collider.transform.root == transform.root || (raizCarro != null && impacto.collider.transform.root == raizCarro))
-                {
-                    continue;
-                }
-                if (!hay || impacto.distance < mejor.distance)
-                {
-                    mejor = impacto;
-                    hay = true;
-                }
-            }
-            return hay;
+            return ReglaImpactoBala.BuscarPrimero(origen, direccion, alcance, transform.root, raizCarro, out mejor);
         }
-
 
         private void AlCambiar() => Cambio?.Invoke();
 
