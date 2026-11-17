@@ -44,8 +44,6 @@ namespace MechaCyberpunk.Personaje.Combate
         public event Action ClicVacio;
         public event Action RecargaIniciada;
         public event Action RecargaTerminada;
-        /// <summary>T-1308: la recarga se interrumpió y no repuso balas.</summary>
-        public event Action RecargaCancelada;
 
         /// <summary>Dispara si hay balas, no recarga y pasó el tiempo entre disparos. Con el cargador vacío avisa el clic vacío.</summary>
         public bool IntentarDisparar()
@@ -79,19 +77,6 @@ namespace MechaCyberpunk.Personaje.Combate
             Recargando = true;
             recargaRestante = tiempoRecarga * Math.Max(0f, FactorRecarga);
             RecargaIniciada?.Invoke();
-            return true;
-        }
-
-        /// <summary>T-1308: corta la recarga sin reponer balas (cambiar de arma, rodar, entrar al carro). Devuelve si había una en curso.</summary>
-        public bool CancelarRecarga()
-        {
-            if (!Recargando)
-            {
-                return false;
-            }
-            Recargando = false;
-            recargaRestante = 0f;
-            RecargaCancelada?.Invoke();
             return true;
         }
 

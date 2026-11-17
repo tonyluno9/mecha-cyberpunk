@@ -241,15 +241,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             bool recargando = pistola != null && pistola.Recargando;
             if (recargando && !recargandoAntes)
             {
-                // T-1308: con el visual nuevo la recarga saca el arma si estaba guardada (si no, el Animator ignoraba el disparador).
-                if (visual != null)
-                {
-                    visual.Recargar(pistola.Cargador != null ? pistola.Cargador.TiempoRecarga : 0f);
-                }
-                else
-                {
-                    animador.SetTrigger(IdRecarga);
-                }
+                animador.SetTrigger(IdRecarga);
             }
             recargandoAntes = recargando;
         }

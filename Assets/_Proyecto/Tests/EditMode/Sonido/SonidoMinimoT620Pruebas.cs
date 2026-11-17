@@ -64,7 +64,7 @@ namespace MechaCyberpunk.Tests.Sonido
             {
                 Assert.IsTrue(c.Encendido(id), id);
             }
-            Assert.AreEqual(ReglaMezclaSonidos.IdsEncendidos.Length + ReglaMezclaSonidos.IdsRegresados.Length + ReglaMezclaSonidos.IdsArmasT1309.Length, encendidos, "T-977: los minimos y los que regresan; T-1309: las armas nuevas");
+            Assert.AreEqual(ReglaMezclaSonidos.IdsEncendidos.Length + ReglaMezclaSonidos.IdsRegresados.Length, encendidos, "T-977: los minimos y los que regresan");
             foreach (string apagado in new[] { "UI_TEXTO", "VEH_CLAXON_TRAFICO", "JUG_PASO_INTERIOR", "AMB_TIANGUIS", "PAN_RIVAL_PROVOCA", "MUN_PERRO_LADRA" })
             {
                 Assert.IsFalse(c.Encendido(apagado), apagado);

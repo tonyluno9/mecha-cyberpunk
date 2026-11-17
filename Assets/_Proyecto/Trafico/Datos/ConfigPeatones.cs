@@ -35,32 +35,9 @@ namespace MechaCyberpunk.Trafico.Datos
 
         [Header("Vida y llamada (T-663)")]
         [Min(1f)] [Tooltip("Vida de un peatón (puntos); a 0 cae y ya no llama a la policía.")]
-        [SerializeField] private float vidaPeaton = 40f;
-
-        [Header("Civiles que se defienden y matar a uno (T-1305)")]
-        [Range(0f, 1f)] [Tooltip("Probabilidad de que un civil herido (que no murió) te pegue de vuelta en vez de huir (fracción de 0 a 1).")]
-        [SerializeField] private float probabilidadRevancha = 0.3f;
-        [Min(0.5f)] [Tooltip("A qué distancia del jugador puede pegar un civil y desde dónde decide pelear (m).")]
-        [SerializeField] private float alcanceRevancha = 1.5f;
-        [Min(0f)] [Tooltip("Daño de cada golpe de un civil al jugador (puntos).")]
-        [SerializeField] private float danioRevancha = 5f;
-        [Min(1)] [Tooltip("Cuántos golpes da un civil antes de huir (golpes).")]
-        [SerializeField] private int golpesRevancha = 2;
-        [Min(0.1f)] [Tooltip("Tiempo entre un golpe del civil y el siguiente (s).")]
-        [SerializeField] private float segundosEntreGolpesRevancha = 0.7f;
-        [Min(0.5f)] [Tooltip("Tiempo máximo que un civil insiste en pelear antes de huir (s).")]
-        [SerializeField] private float segundosMaximosRevancha = 3f;
-        [Min(0f)] [Tooltip("Calor que suma matar a un civil (puntos, motivo Pelea; solo cuenta si hay testigos).")]
-        [SerializeField] private float calorPorMuerte = 25f;
+        [SerializeField] private float vidaPeaton = 15f;
 
         public float VidaPeaton => vidaPeaton;
-        public float ProbabilidadRevancha => probabilidadRevancha;
-        public float AlcanceRevancha => alcanceRevancha;
-        public float DanioRevancha => danioRevancha;
-        public int GolpesRevancha => golpesRevancha;
-        public float SegundosEntreGolpesRevancha => segundosEntreGolpesRevancha;
-        public float SegundosMaximosRevancha => segundosMaximosRevancha;
-        public float CalorPorMuerte => calorPorMuerte;
         public float RadioOirDisparo => radioOirDisparo;
         public float SegundosHuida => segundosHuida;
         public float MultiplicadorHuida => multiplicadorHuida;

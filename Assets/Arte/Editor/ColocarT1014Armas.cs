@@ -6,6 +6,7 @@ using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Personaje.Visual.Editor;
+using MechaCyberpunk.UI.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -139,6 +140,17 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (Medida m in listas)
             {
                 Importacion(m.RutaFbx);
+                string piezas = m.Carpeta + m.Codigo + "_Piezas.fbx";
+                if (File.Exists(piezas) && File.Exists(m.RutaPrefab))
+                {
+                    // T-1313: con el modelo de piezas de Blender el prefab lo arma ArmasPiezasT970 (idempotente: no pisa el prefab ya armado).
+                    ArmasPiezasT970.ArmarPrefab(m.RutaPrefab, piezas, Informe);
+                    if (!File.Exists(m.RutaPiso))
+                    {
+                        Piso(AssetDatabase.LoadAssetAtPath<GameObject>(m.RutaPrefab), m.RutaPiso, m.Arma, m.Articulo, 0f);
+                    }
+                    continue;
+                }
                 Material material = Material(m);
                 GameObject prefab = Prefab(m, material);
                 Piso(prefab, m.RutaPiso, m.Arma, m.Articulo, 0f);
