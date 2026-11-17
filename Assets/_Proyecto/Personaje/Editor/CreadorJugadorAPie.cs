@@ -214,7 +214,7 @@ namespace MechaCyberpunk.Personaje.Editor
                 cambio = true;
             }
             // T-992: habilidades de prótesis en teclas fijas.
-            foreach ((string nombre, string tecla) in new[] { ("HabilidadPiernas", "1"), ("HabilidadBrazos", "2"), ("HabilidadCabeza", "3") })
+            foreach ((string nombre, string tecla) in new[] { ("HabilidadPiernas", "q"), ("HabilidadBrazos", "c"), ("HabilidadCabeza", "x") })
             {
                 if (mapa.FindAction(nombre) == null)
                 {

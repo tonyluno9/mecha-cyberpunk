@@ -11,7 +11,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.Personaje
 {
-    /// <summary>T-421: Q se pega a una pared y protege de balas del otro lado; apuntar se asoma; CTRL rueda con invulnerabilidad y enfriamiento.</summary>
+    /// <summary>T-421: V se pega a una pared y protege de balas del otro lado; apuntar se asoma; CTRL rueda con invulnerabilidad y enfriamiento.</summary>
     public class CubiertaYRodadaPruebas : BaseJugadorAPie
     {
         private IEnumerator Pulsar(Key tecla)
@@ -33,9 +33,9 @@ namespace MechaCyberpunk.Tests.Personaje
             VidaAPie vida = jugador.GetComponent<VidaAPie>();
             Assert.IsNotNull(cubierta, "ControladorAPie crea la cubierta");
 
-            yield return Pulsar(Key.Q);
+            yield return Pulsar(Key.V);
             yield return Esperar(0.5f);
-            Assert.IsTrue(cubierta.Cubierto, "Q se pega a la pared cercana");
+            Assert.IsTrue(cubierta.Cubierto, "V se pega a la pared cercana");
             Assert.IsTrue(cubierta.Agachado);
 
             Vector3 tirador = new Vector3(0f, 1.2f, 12f);
@@ -65,8 +65,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(raton.rightButton);
             yield return null;
 
-            yield return Pulsar(Key.Q);
-            Assert.IsFalse(cubierta.Cubierto, "Q otra vez sale");
+            yield return Pulsar(Key.V);
+            Assert.IsFalse(cubierta.Cubierto, "V otra vez sale");
         }
 
         [UnityTest]
