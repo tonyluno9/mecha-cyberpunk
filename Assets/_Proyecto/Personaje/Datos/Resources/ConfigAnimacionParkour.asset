@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a44642839a147658de6f0f4be998e2c, type: 3}
+  m_Name: ConfigAnimacionParkour
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.ConfigAnimacionParkour
+  saltarBarda: {fileID: 2876037936202016094, guid: f331d37ff0e3dca4187168159da47f96, type: 3}
+  treparBorde: {fileID: 4437930416021609257, guid: d4c5b145c0ffef94a8ae379502e24fd0, type: 3}
+  rodarCaida: {fileID: -4597219013203990382, guid: d81e8136e3330d849bc64a8fb51ccabe, type: 3}
+  carroSacarConductor: {fileID: 1911249235712614251, guid: 57a009de332e6824b8e3f654906e97a2, type: 3}
+  conductorSerSacado: {fileID: 7617926507685868045, guid: 0b81de045db35404c84756ccd66d67d6, type: 3}
+  alturaMinimaBarda: 0.6
+  alturaMaximaBarda: 1.3
+  grosorMaximoBarda: 0.8
+  alturaMinimaBorde: 1.3
+  alturaRodar: 4
+  umbralDanioCaida: 4
+  danioPorMetro: 2
+  fraccionDanioMaximo: 0.3
+  metrosRodando: 2.2

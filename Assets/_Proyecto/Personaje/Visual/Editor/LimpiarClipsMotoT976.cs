@@ -14,7 +14,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
     public static class LimpiarClipsMotoT976
     {
         public const string CarpetaLimpios = ConstructorControladorBase.CarpetaClipsPJ01 + "/Limpios";
-        public static readonly string[] Clips = { "PJ01_Moto_Subir", "PJ01_Moto_Bajar" };
+        // T-1310: PJ01_Moto_Bajar de la ronda 2 ya viene sin el cuadro malo (BITACORA 05): se usa el FBX directo, sin copia limpia.
+        public static readonly string[] Clips = { "PJ01_Moto_Subir" };
 
         /// <summary>Cambio de un músculo de un cuadro al siguiente (normalizado, 1 = todo su rango) que ya no es movimiento sino cambio de rama. Lo más rápido de
         /// verdad en estos clips cambia menos de 0.4 por cuadro.</summary>
