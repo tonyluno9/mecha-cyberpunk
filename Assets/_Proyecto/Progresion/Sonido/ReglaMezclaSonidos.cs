@@ -175,6 +175,8 @@ namespace MechaCyberpunk.Progresion.Sonido
             }
             switch (id)
             {
+                // T-1309: chispeo en bucle de la carga del rifle de plasma (suave, no tapa el resto).
+                case "ARM_PLA_CARGA": return new PoliticaSonido(GrupoArmaAccesorio, 1, 0.5f, 0f, 0f);
                 case "ARM_FUS_RAFAGA_COLA": return new PoliticaSonido(GrupoArma, 1, 0.5f, 0f, 0f);
                 case "ARM_CAMBIAR":
                 case "ARM_PIS_SACAR": return new PoliticaSonido(GrupoArma, 1, 0.6f, 0.03f, 0f);

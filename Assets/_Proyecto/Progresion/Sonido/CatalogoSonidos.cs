@@ -166,10 +166,9 @@ namespace MechaCyberpunk.Progresion.Sonido
             return clip;
         }
 
-        /// <summary>El código pide ARM_SUB_* para el fusil y el equipo entregó ARM_FUS_*; mientras la Sesión A no renombre, suenan los ARM_FUS_.</summary>
+        /// <summary>El código pide ARM_SUB_* para el fusil y el equipo entregó ARM_FUS_*; mientras la Sesión A no renombre, suenan los ARM_FUS_ (T-1309: el disparo del subfusil ya tiene clip propio y no se alias).</summary>
         private static readonly Dictionary<string, string> Alias = new Dictionary<string, string>
         {
-            { "ARM_SUB_DISPARO", "ARM_FUS_DISPARO" },
             { "ARM_SUB_RECARGA", "ARM_FUS_RECARGA" },
         };
 

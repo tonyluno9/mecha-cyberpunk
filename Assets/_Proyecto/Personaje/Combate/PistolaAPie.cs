@@ -447,9 +447,9 @@ namespace MechaCyberpunk.Personaje.Combate
                 case ArmaAPie.Fusil: return "ARM_FUS_DISPARO";
                 case ArmaAPie.Sniper: return "ARM_SNI_DISPARO";
                 case ArmaAPie.Subfusil: return "ARM_SUB_DISPARO";
-                case ArmaAPie.Revolver: return "ARM_SNI_DISPARO";
-                case ArmaAPie.Lanzagranadas: return "ARM_ESC_DISPARO";
-                case ArmaAPie.RiflePlasma: return "ARM_LASER_AVISO";
+                case ArmaAPie.Revolver: return "ARM_REV_DISPARO"; // T-1309: mismo clip de siempre (ARM_SNI_DISPARO_01), con su propio ID
+                case ArmaAPie.Lanzagranadas: return "ARM_LGR_DISPARO";
+                case ArmaAPie.RiflePlasma: return "ARM_PLA_DISPARO";
                 default: return "ARM_PIS_DISPARO";
             }
         }

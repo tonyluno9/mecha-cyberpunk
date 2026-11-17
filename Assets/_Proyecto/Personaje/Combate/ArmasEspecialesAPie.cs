@@ -35,7 +35,12 @@ namespace MechaCyberpunk.Personaje.Combate
         private DatosArma datosPlasma;
         private bool pulsadoAntes;
         private LineRenderer arco;
-        private LineRenderer rayo;
+        private EfectoRayoPlasma rayo;
+        private int bucleChispeo = Sonidos.SinBucle;
+        /// <summary>T-1309: ID del chispeo en bucle mientras carga el rifle de plasma.</summary>
+        public const string IdChispeoPlasma = "ARM_PLA_CARGA";
+        /// <summary>T-1309: ID del disparo del rayo de plasma.</summary>
+        public const string IdDisparoPlasma = "ARM_PLA_DISPARO";
         private Transform bolaCarga;
         private Light luzRayo;
         private Vector3[] puntosArco;
@@ -71,8 +76,7 @@ namespace MechaCyberpunk.Personaje.Combate
             armas = GetComponent<ArmasAPie>();
             cfg = ConfigArmasEspeciales.Actual;
             arco = Linea("ArcoGranada", cfg.AnchoArco, cfg.ColorArco);
-            rayo = Linea("RayoPlasma", cfg.AnchoRayo, cfg.ColorRayo);
-            rayo.numCapVertices = 4;
+            rayo = EfectoRayoPlasma.Crear(transform, cfg.MaterialRayo, cfg.ColorRayo, cfg.AnchoRayo);
             puntosArco = new Vector3[Mathf.Max(2, cfg.PuntosArco)];
             GameObject bola = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             Destroy(bola.GetComponent<Collider>());
@@ -340,7 +344,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 if (antes != EstadoPlasma.Cargando)
                 {
-                    Sonidos.ReproducirEn("ARM_LASER_AVISO", origen);
+                    IniciarChispeo(pistola.BocaDe(arma));
                 }
                 float c = plasma.Carga;
                 bolaCarga.gameObject.SetActive(true);
@@ -349,14 +353,14 @@ namespace MechaCyberpunk.Personaje.Combate
                 luzRayo.enabled = true;
                 luzRayo.transform.position = origen;
                 luzRayo.intensity = cfg.IntensidadLuzRayo * c;
-                rayo.enabled = false;
                 return;
             }
             if (plasma.Estado == EstadoPlasma.Rayo)
             {
                 if (empezo)
                 {
-                    Sonidos.ReproducirEn(PistolaAPie.IdDisparo(ArmaAPie.Sniper), origen);
+                    PararChispeo();
+                    Sonidos.ReproducirEn(IdDisparoPlasma, origen);
                     pistola.AvisarDisparoEspecial(arma, origen);
                     siguienteZumbido = Time.time;
                     acumuladoTic = TicDanioRayo;
@@ -374,6 +378,7 @@ namespace MechaCyberpunk.Personaje.Combate
             Vector3 hacia = punto - origen;
             Vector3 direccion = hacia.sqrMagnitude > 0.0001f ? hacia.normalized : transform.forward;
             float largo = d.Alcance;
+            bool pega = false;
             tocados.Clear();
             int n = Physics.SphereCastNonAlloc(origen, cfg.RadioRayo, direccion, toques, d.Alcance, ~0, QueryTriggerInteraction.Ignore);
             System.Array.Sort(toques, 0, n, Comparador);
@@ -393,6 +398,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 if (!esAlguien)
                 {
                     // Las paredes (y los objetos) paran el rayo; la gente no.
+                    pega = true;
                     largo = t.distance > 0f ? t.distance : 0f;
                     break;
                 }
@@ -413,11 +419,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 siguienteZumbido = Time.time + cfg.SegundosZumbido;
                 Sonidos.ReproducirEn("ARM_BALA_ZUMBIDO", origen);
             }
-            rayo.enabled = true;
-            rayo.positionCount = 2;
-            rayo.SetPosition(0, origen);
-            rayo.SetPosition(1, finRayo);
-            rayo.widthMultiplier = cfg.AnchoRayo * (0.85f + 0.15f * Mathf.Sin(Time.time * LatidoRayo));
+            rayo.Mostrar(origen, finRayo, pega);
             bolaCarga.gameObject.SetActive(true);
             bolaCarga.position = origen;
             bolaCarga.localScale = Vector3.one * cfg.TamanoCarga * 0.7f;
@@ -428,12 +430,29 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private static readonly IComparer<RaycastHit> Comparador = Comparer<RaycastHit>.Create((a, b) => a.distance.CompareTo(b.distance));
 
+        // T-1309: chispeo eléctrico en bucle mientras carga; se corta al disparar, soltar, cancelar o cambiar de arma.
+        private void IniciarChispeo(Transform sigue)
+        {
+            PararChispeo();
+            bucleChispeo = Sonidos.ReproducirBucle(IdChispeoPlasma, sigue != null ? sigue : transform);
+        }
+
+        private void PararChispeo()
+        {
+            if (bucleChispeo != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleChispeo);
+                bucleChispeo = Sonidos.SinBucle;
+            }
+        }
+
+        /// <summary>True mientras suena el chispeo de la carga del plasma (para pruebas).</summary>
+        public bool ChispeoSonando => bucleChispeo != Sonidos.SinBucle;
+
         private void ApagarPlasma()
         {
-            if (rayo != null)
-            {
-                rayo.enabled = false;
-            }
+            PararChispeo();
+            // El rayo no se apaga de golpe: EfectoRayoPlasma se desvanece solo si deja de recibir Mostrar.
             if (bolaCarga != null)
             {
                 bolaCarga.gameObject.SetActive(false);
