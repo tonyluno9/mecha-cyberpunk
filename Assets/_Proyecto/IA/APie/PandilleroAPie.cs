@@ -1256,7 +1256,7 @@ namespace MechaCyberpunk.IA.APie
             float paso = calor.Maximo * 0.05f;
             for (int i = 0; i < 40 && calor.Nivel <= 0 && calor.Valor < calor.Maximo; i++)
             {
-                calor.Sumar(paso, MotivoCalor.Pelea);
+                calor.Sumar(paso, MotivoCalor.Mision); // la víctima es la policía: no pregunta por testigos (igual que ReglaPrimeraEstrella de Trafico)
             }
         }
 

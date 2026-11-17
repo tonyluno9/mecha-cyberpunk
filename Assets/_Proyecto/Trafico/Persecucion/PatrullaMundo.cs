@@ -152,6 +152,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             cuerpo = GetComponent<Rigidbody>();
             montable = GetComponent<IMontable>();
             carro = GetComponent<CarroViejo>();
+            danioCarro = GetComponent<DanioCarro>();
             List<Renderer> mallas = new List<Renderer>();
             foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
             {
@@ -175,6 +176,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
         public bool PoliciasBajaron { get; private set; }
 
         private readonly List<GameObject> policias = new List<GameObject>();
+
+        /// <summary>T-1303: todos los policías a pie que bajaron de alguna patrulla (también de las que explotaron); el arresto mide contra ellos. Puede traer nulos.</summary>
+        public static readonly List<GameObject> PoliciasAPieLista = new List<GameObject>();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarPoliciasAPie() => PoliciasAPieLista.Clear();
         private const float SeparacionPuerta = 1.9f;
         private const float SeparacionEntrePolicias = 0.9f;
         private const float AlturaSobreSuelo = 0.05f;
@@ -261,6 +268,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             GameObject policia = Instantiate(prefabPolicia, punto, giro);
             policia.name = "Policia_" + (i + 1);
             policias.Add(policia);
+            PoliciasAPieLista.Add(policia);
         }
 
         // T-1202: cada policía sentado se baja por su lado. De golpe (explosión o robo) aparece ya afuera, junto a su puerta.
@@ -523,8 +531,46 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>T-692: la patrulla explotó (lo avisa DanioCarro con un mensaje de Unity); deja de manejar, ver y sonar.</summary>
         public bool Destruida { get; private set; }
 
+        private DanioCarro danioCarro;
+        private float vidaVista = -1f;
+        /// <summary>T-1303: el daño a la patrulla cuenta como delito contra la policía si el jugador anda a menos de esto (m).</summary>
+        public const float DistanciaDanioDelJugador = 80f;
+
+        // T-1303: el primer golpe, bala o choque a una patrulla (con el jugador cerca) ya te pone en búsqueda; no hasta que explota.
+        private void LateUpdate()
+        {
+            if (danioCarro == null || Robada || Destruida)
+            {
+                return;
+            }
+            float vida = danioCarro.Vida;
+            if (vidaVista >= 0f && vida < vidaVista - 0.01f)
+            {
+                PonerEnBusquedaSiFueElJugador();
+            }
+            vidaVista = vida;
+        }
+
+        private void PonerEnBusquedaSiFueElJugador()
+        {
+            Vector3? jugador = posicionJugador?.Invoke();
+            if (!jugador.HasValue)
+            {
+                IJugador j = Registro<IJugador>.Actual;
+                jugador = j != null && j.Raiz != null ? j.Raiz.position : (Vector3?)null;
+            }
+            if (jugador.HasValue && DistanciaPlano(transform.position, jugador.Value) <= DistanciaDanioDelJugador)
+            {
+                ReglaPrimeraEstrella.Subir(Registro<ICalor>.Actual);
+            }
+        }
+
         private void AlExplotarVehiculo()
         {
+            if (!Robada && !Destruida)
+            {
+                PonerEnBusquedaSiFueElJugador(); // T-1303
+            }
             Destruida = true;
             // T-1202: con la explosión los policías salen de golpe (y el estallido los alcanza).
             PoliciasBajaron = true;

@@ -225,11 +225,30 @@ namespace MechaCyberpunk.Tests.Trafico
             Registro<ICalor>.Actual.Sumar(60f, MotivoCalor.Mision);
             Time.timeScale = EscalaDeTiempo;
             float fin = Time.time + 40f;
+            bool sinToqueNoHuboArresto = false;
             while (Time.time < fin && arrestos == 0)
             {
+                // T-1303: la patrulla junto a ti no basta; te arresta el policía a pie que llega y te toca.
+                GameObject policia = PatrullaMundo.PoliciasAPieLista.Find(p => p != null);
+                if (policia != null)
+                {
+                    if (!sinToqueNoHuboArresto)
+                    {
+                        policia.transform.position = jugador.transform.position + Vector3.right * 4f;
+                        sinToqueNoHuboArresto = true;
+                        float espera = Time.time + 3f;
+                        while (Time.time < espera)
+                        {
+                            policia.transform.position = jugador.transform.position + Vector3.right * 4f;
+                            yield return null;
+                        }
+                        Assert.AreEqual(0, arrestos, "A 4 m (sin tocarte) no te arrestan aunque estés quieto");
+                    }
+                    policia.transform.position = jugador.transform.position + Vector3.right * 0.6f;
+                }
                 yield return null;
             }
-            Assert.AreEqual(1, arrestos, "Una patrulla llegó, te vio quieto y te arrestó");
+            Assert.AreEqual(1, arrestos, "Un policía llegó, te tocó y te arrestó");
             Assert.AreEqual(0, calor.Nivel, "Al arrestarte el calor se borra");
             Assert.AreEqual(0, escapes);
         }
