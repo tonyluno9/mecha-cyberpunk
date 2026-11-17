@@ -1237,7 +1237,7 @@ namespace MechaCyberpunk.Tests.Demo
         }
 
         // Combate a distancia con la pistola como un jugador: elige al enemigo vivo más cercano, se acerca por el NavMesh hasta verlo a
-        // ~14 m, apunta a su pecho con clic derecho (con el apuntado asistido), dispara ráfagas cortas, recarga con R, se cubre con Q si
+        // ~14 m, apunta a su pecho con clic derecho (con el apuntado asistido), dispara ráfagas cortas, recarga con R, se cubre con V si
         // la vida baja de 50 % (regenera tras unos segundos sin daño) y vuelve a pelear.
         private IEnumerator PelearConPistola(Func<bool> terminar, Func<PandilleroAPie, bool> filtro, float maximo, string que)
         {
@@ -1322,7 +1322,7 @@ namespace MechaCyberpunk.Tests.Demo
                         cubriendo = false;
                         if (cubiertaJ != null && cubiertaJ.Cubierto)
                         {
-                            yield return Pulsar(teclado.qKey, 0);
+                            yield return Pulsar(teclado.vKey, 0);
                         }
                     }
                     yield return Siguiente();
@@ -1333,7 +1333,7 @@ namespace MechaCyberpunk.Tests.Demo
                     SoltarTeclas();
                     Soltar(raton.leftButton);
                     Soltar(raton.rightButton);
-                    yield return Pulsar(teclado.qKey, 1);
+                    yield return Pulsar(teclado.vKey, 1);
                     cubriendo = cubiertaJ != null && cubiertaJ.Cubierto;
                     finCubierta = Time.realtimeSinceStartup + 18f;
                     if (!cubriendo)
@@ -1448,7 +1448,7 @@ namespace MechaCyberpunk.Tests.Demo
             Soltar(raton.leftButton);
             Soltar(raton.rightButton);
             Soltar(teclado.rKey);
-            Soltar(teclado.qKey);
+            Soltar(teclado.vKey);
             sinE = false;
                     zonaCentro = Vector3.zero;
         }

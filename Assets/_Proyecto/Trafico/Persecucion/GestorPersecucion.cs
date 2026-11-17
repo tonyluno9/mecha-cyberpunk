@@ -93,7 +93,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             gameObject.AddComponent<GestorRefuerzos>().Configurar(config); // T-714: los SKULLS llaman refuerzos en carro
             gameObject.AddComponent<AsaltoMundo>(); // T-717: el carro del asaltante de la historia del dinero
             busqueda = new ReglaBusquedaPolicial(config.RadioBusqueda, config.SegundosParaEscapar);
-            arresto = new ReglaArresto(config.DistanciaArresto, config.SegundosArresto, config.VelocidadArresto);
+            // T-1303: el arresto es por contacto: a lo más DistanciaToque m y unos instantes (la configuración puede pedir menos, no más).
+            arresto = new ReglaArresto(Mathf.Min(config.DistanciaArresto, DistanciaToque), Mathf.Min(config.SegundosArresto, SegundosToque), float.MaxValue);
             zona = new ZonaBusqueda(busqueda);
         }
 
@@ -171,7 +172,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private void Update()
         {
             retirandose.RemoveAll(c => c == null || (c is PatrullaMundo robada && robada.Robada));
-            patrullas.RemoveAll(p => p == null || p.Robada); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
+            patrullas.RemoveAll(p => p == null || p.Robada || p.Destruida); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
             drones.RemoveAll(d => d == null); // T-730: un dron derribado ya no cuenta
             for (int i = 0; i < drones.Count; i++)
             {
@@ -236,7 +237,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             float velocidad = jugadorAnterior.HasValue && dt > 0f ? DistanciaPlano(jugador.Value, jugadorAnterior.Value) / dt : 0f;
             jugadorAnterior = jugador;
-            if (arresto.Avanzar(patrullaVe, cercana, velocidad, dt))
+            // T-1303: solo te arresta un policía a pie que te alcanza y te toca (no una patrulla cerca un rato).
+            float toque = PoliciaMasCercano(jugador.Value);
+            if (arresto.Avanzar(toque <= DistanciaToque, toque, 0f, dt))
             {
                 Arrestar();
                 return;
@@ -247,7 +250,40 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
-        /// <summary>Una patrulla cerca te arrestó (T-665): el calor se borra, la policía se retira y se avisa en <see cref="EventosPolicia"/>.</summary>
+        /// <summary>T-1303: a esta distancia (m, en el plano) un policía a pie ya te tocó.</summary>
+        public const float DistanciaToque = 1.3f;
+        /// <summary>T-1303: segundos seguidos de contacto para el arresto (un roce no basta, pero es casi inmediato).</summary>
+        public const float SegundosToque = 0.4f;
+        private const float DiferenciaAlturaToque = 1.4f;
+
+        /// <summary>T-1303: distancia en el plano al policía a pie vivo más cercano que está a tu altura (MaxValue si no hay).</summary>
+        public static float PoliciaMasCercano(Vector3 jugador)
+        {
+            float menor = float.MaxValue;
+            List<GameObject> lista = PatrullaMundo.PoliciasAPieLista;
+            for (int i = lista.Count - 1; i >= 0; i--)
+            {
+                GameObject policia = lista[i];
+                if (policia == null)
+                {
+                    lista.RemoveAt(i);
+                    continue;
+                }
+                if (!policia.activeInHierarchy || Mathf.Abs(policia.transform.position.y - jugador.y) > DiferenciaAlturaToque)
+                {
+                    continue;
+                }
+                IVida vida = policia.GetComponentInChildren<IVida>();
+                if (vida != null && vida.EstaKO)
+                {
+                    continue;
+                }
+                menor = Mathf.Min(menor, DistanciaPlano(policia.transform.position, jugador));
+            }
+            return menor;
+        }
+
+        /// <summary>Un policía te alcanzó y te tocó; antes: una patrulla cerca te arrestó (T-665): el calor se borra, la policía se retira y se avisa en <see cref="EventosPolicia"/>.</summary>
         private void Arrestar()
         {
             Debug.Log("[Trafico] El jugador fue arrestado.");
@@ -347,7 +383,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // Deja exactamente las cantidades que pide el nivel: crea las que faltan y retira las que sobran.
         private void Reconciliar(int nivel)
         {
-            patrullas.RemoveAll(p => p == null || p.Robada); // T-707
+            patrullas.RemoveAll(p => p == null || p.Robada || p.Destruida); // T-707
             ActualizarBusqueda(nivel);
             int dronesPedidos = calculo == null ? 0 : calculo.Drones(nivel);
             int patrullasPedidas = calculo == null ? 0 : calculo.Patrullas(nivel);

@@ -98,7 +98,7 @@ namespace MechaCyberpunk.UI.Hud
                 case TeclaCorrer: return "Shift";
                 case TeclaSaltar: return "Espacio";
                 case TeclaAgacharse: return "Ctrl";
-                case TeclaCubrirse: return "Q";
+                case TeclaCubrirse: return "V";
                 case TeclaGolpe: return "Clic";
                 case TeclaApuntar: return "Clic der.";
                 case TeclaRecargar: return "R";
@@ -106,9 +106,9 @@ namespace MechaCyberpunk.UI.Hud
                 case TeclaMapa: return "M";
                 case TeclaTelefono: return "T";
                 case TeclaRueda: return "Tab";
-                case TeclaPiernas: return "1";
-                case TeclaBrazos: return "2";
-                case TeclaCabeza: return "3";
+                case TeclaPiernas: return "Q";
+                case TeclaBrazos: return "C";
+                case TeclaCabeza: return "X";
                 default: return nombre;
             }
         }
@@ -147,7 +147,7 @@ namespace MechaCyberpunk.UI.Hud
         }
 
         /// <summary>
-        /// T-992: el aviso de las habilidades de prótesis, solo con las que se tienen: "[1] PIERNAS · [2] BRAZOS · [3] CABEZA". Vacío si no hay ninguna.
+        /// T-992: el aviso de las habilidades de prótesis, solo con las que se tienen: "[Q] PIERNAS · [C] BRAZOS · [X] CABEZA". Vacío si no hay ninguna.
         /// </summary>
         public static string TextoHabilidades(Func<string, string> tecla, bool piernas, bool brazos, bool cabeza)
         {

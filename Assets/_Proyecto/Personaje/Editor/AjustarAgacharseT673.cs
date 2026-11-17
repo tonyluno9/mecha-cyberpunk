@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Personaje.Editor
         {
             Object asset = AssetDatabase.LoadAssetAtPath<Object>(RutaAyudas);
             SerializedObject so = new SerializedObject(asset);
-            so.FindProperty("textoAPie").stringValue = "WASD caminar · SHIFT correr · ESPACIO saltar · E usar · Q cubrirse · CTRL agacharse (+ESPACIO rueda)";
+            so.FindProperty("textoAPie").stringValue = "WASD caminar · SHIFT correr · ESPACIO saltar · E usar · V cubrirse · CTRL agacharse (+ESPACIO rueda)";
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
             AssetDatabase.SaveAssets();

@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.UI
 {
     /// <summary>
-    /// T-1011: la barra de prótesis como el mockup M31 en la ciudad real: "[1] PIERNAS" arriba, el dibujo de la prótesis en la caja y el medidor abajo;
+    /// T-1011: la barra de prótesis como el mockup M31 en la ciudad real: "[Q] PIERNAS" con el dibujo de la prótesis a la izquierda y el medidor debajo, en columna en el lateral izquierdo (T-1302);
     /// la activa en amarillo. Con CAPTURAR_T991=1 deja docs/capturas/t1011/barra-m31.png.
     /// </summary>
     public class BarraProtesisT1011Pruebas : BaseHudObjetivo
@@ -74,19 +74,21 @@ namespace MechaCyberpunk.Tests.UI
             BarraHabilidades barra = Object.FindFirstObjectByType<BarraHabilidades>();
             Assert.IsNotNull(barra);
             Assert.IsTrue(barra.Visible, "A pie la barra se ve");
-            Assert.AreEqual("[1] PIERNAS", barra.EtiquetaMostrada(HabilidadProtesis.Piernas));
-            Assert.AreEqual("[2] BRAZOS", barra.EtiquetaMostrada(HabilidadProtesis.Brazos));
-            Assert.AreEqual("[3] CABEZA", barra.EtiquetaMostrada(HabilidadProtesis.Cabeza), "Sin visor la casilla sigue con su nombre, en gris");
+            Assert.AreEqual("[Q] PIERNAS", barra.EtiquetaMostrada(HabilidadProtesis.Piernas));
+            Assert.AreEqual("[C] BRAZOS", barra.EtiquetaMostrada(HabilidadProtesis.Brazos));
+            Assert.AreEqual("[X] CABEZA", barra.EtiquetaMostrada(HabilidadProtesis.Cabeza), "Sin visor la casilla sigue con su nombre, en gris");
             Assert.AreEqual("—", barra.NombreMostrado(HabilidadProtesis.Cabeza));
             Assert.IsNotNull(barra.IconoMostrado(HabilidadProtesis.Piernas), "Lleva el dibujo de la prótesis");
             Assert.AreEqual("Protesis_Piernas_2", barra.IconoMostrado(HabilidadProtesis.Piernas).name, "Con el nivel II, el dibujo del II");
             Assert.AreEqual("Protesis_Brazos_1", barra.IconoMostrado(HabilidadProtesis.Brazos).name);
             RectTransform piernas = barra.CasillaDe(HabilidadProtesis.Piernas);
             RectTransform cabeza = barra.CasillaDe(HabilidadProtesis.Cabeza);
-            Assert.Less(piernas.anchoredPosition.x, cabeza.anchoredPosition.x, "En el orden de sus teclas");
-            Assert.AreEqual(0f, (piernas.anchoredPosition.x + cabeza.anchoredPosition.x + BarraHabilidades.Lado) * 0.5f, 1f, "Centrada abajo");
+            Assert.Greater(piernas.anchoredPosition.y, cabeza.anchoredPosition.y, "En columna, de arriba abajo en el orden de sus teclas");
+            Assert.AreEqual(piernas.anchoredPosition.x, cabeza.anchoredPosition.x, 0.5f, "Todas en la misma columna");
+            Assert.AreEqual(BarraHabilidades.MargenIzquierdo, piernas.anchoredPosition.x, 0.5f, "Pegada al lado izquierdo");
+            Assert.AreEqual(0f, piernas.anchorMin.x, "Anclada a la izquierda");
 
-            // La tecla [1] ya la prueba HabilidadesProtesisT992Pruebas; aquí se activa directo (en la ciudad la historia puede tener la entrada ocupada).
+            // La tecla [Q] ya la prueba HabilidadesProtesisT992Pruebas; aquí se activa directo (en la ciudad la historia puede tener la entrada ocupada).
             Assert.AreEqual(1, HabilidadesProtesis.Actual.Nivel(HabilidadProtesis.Piernas) > 0 ? 1 : 0, "Tiene las piernas");
             Assert.IsTrue(HabilidadesProtesis.Actual.Pulsar(HabilidadProtesis.Piernas), "Se activan las piernas");
             yield return new WaitForSecondsRealtime(0.8f);

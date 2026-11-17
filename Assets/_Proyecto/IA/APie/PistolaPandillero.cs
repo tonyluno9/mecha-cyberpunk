@@ -113,10 +113,34 @@ namespace MechaCyberpunk.IA.APie
                     continue;
                 }
                 mejor = impacto.distance;
-                llegaAlJugador = ReferenceEquals(impacto.collider.GetComponentInParent<IRecibeDanio>(), objetivo);
+                llegaAlJugador = ReferenceEquals(impacto.collider.GetComponentInParent<IRecibeDanio>(), objetivo)
+                    || EsVehiculoDelObjetivo(impacto.collider, objetivo);
                 punto = impacto.point;
             }
             return llegaAlJugador;
+        }
+
+        /// <summary>
+        /// T-1307: True si <paramref name="objetivo"/> es el jugador y el collider es del carro o la moto en que va: la bala que pega en el vehículo le llega
+        /// al jugador (la vida del jugador decide cuánto, según sea carro o moto).
+        /// </summary>
+        private static bool EsVehiculoDelObjetivo(Collider collider, IRecibeDanio objetivo)
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador == null || jugador.Raiz == null || jugador.Modo != ModoJugador.Carro || !(objetivo is Component componente)
+                || componente.transform != jugador.Raiz)
+            {
+                return false;
+            }
+            for (int i = 0; i < Registro<IMontable>.Todos.Count; i++)
+            {
+                IMontable montable = Registro<IMontable>.Todos[i];
+                if (montable.Ocupado && montable is Component vehiculo && collider.transform.IsChildOf(vehiculo.transform))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -36,9 +36,9 @@ namespace MechaCyberpunk.UI.Inicio
                 case Disparar: return "Clic";
                 case Recargar: return "R";
                 case Rueda: return "Tab";
-                case Piernas: return "1";
-                case Brazos: return "2";
-                case Cabeza: return "3";
+                case Piernas: return "Q";
+                case Brazos: return "C";
+                case Cabeza: return "X";
                 case Mapa: return "M";
                 case Telefono: return "T";
                 case Pausa: return "Esc";

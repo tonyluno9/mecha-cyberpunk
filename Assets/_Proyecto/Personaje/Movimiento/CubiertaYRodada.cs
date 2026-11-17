@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 namespace MechaCyberpunk.Personaje.Movimiento
 {
     /// <summary>
-    /// Cubrirse y rodar a pie (T-421). Lo crea <see cref="ControladorAPie"/>. Q pega al jugador a la cubierta más cercana (pared, carro, caja) y lo
-    /// deja agachado; al apuntar se asoma (de pie, sin protección) y puede disparar; sale con Q o caminando lejos de ella. CTRL agacha y levanta (alterna,
+    /// Cubrirse y rodar a pie (T-421). Lo crea <see cref="ControladorAPie"/>. V pega al jugador a la cubierta más cercana (pared, carro, caja) y lo
+    /// deja agachado; al apuntar se asoma (de pie, sin protección) y puede disparar; sale con V o caminando lejos de ella. CTRL agacha y levanta (alterna,
     /// T-673): agachado camina lento, con SHIFT más rápido y con ESPACIO rueda en la dirección del movimiento con unos segundos de invulnerabilidad y un
     /// enfriamiento; de pie no se rueda. Baja la cápsula y la cámara.
     /// T-733: el cuerpo ya no se encoge ni se gira a mano: agacharse, quedarse agachado y rodar son clips (Loco_Agacharse, Loco_AgachadoIdle,
@@ -68,7 +68,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
             alturaOriginal = cuerpo.height;
             centroOriginal = cuerpo.center;
-            accionCubrirse = new InputAction("Cubrirse", InputActionType.Button, "<Keyboard>/q");
+            accionCubrirse = new InputAction("Cubrirse", InputActionType.Button, "<Keyboard>/v");
             accionAgachar = new InputAction("Agacharse", InputActionType.Button, "<Keyboard>/leftCtrl");
             accionRodar = new InputAction("Rodar", InputActionType.Button, "<Keyboard>/space");
         }
