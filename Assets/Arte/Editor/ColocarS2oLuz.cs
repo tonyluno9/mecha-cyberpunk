@@ -42,7 +42,8 @@ namespace MechaCyberpunk.Arte.Editor
 
         /// <summary>Postes de la calle (C07 y N09): alcance corto para que el naranja quede en un círculo bajo cada uno.</summary>
         public static float RangoPoste = 9f;
-        public static float IntensidadPoste = 40f;
+        /// <summary>T-1317: antes 40; la calle de noche un poco más iluminada (+35 %).</summary>
+        public static float IntensidadPoste = 54f;
         public static float AnguloPoste = 75f;
         /// <summary>Luces de relleno de las fachadas (Luna_*, una por edificio greybox) y las verdes del barrio: las que hacían zonas quemadas.</summary>
         public static float IntensidadRelleno = 3f;

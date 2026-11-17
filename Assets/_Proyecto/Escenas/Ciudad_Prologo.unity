@@ -6143,7 +6143,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -19439,96 +19439,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 34130442}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &34221521
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 34221522}
-  - component: {fileID: 34221524}
-  - component: {fileID: 34221523}
-  m_Layer: 0
-  m_Name: Haz_Nova
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &34221522
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 34221521}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 109.98004, y: 86.49207, z: -58.77733}
-  m_LocalScale: {x: 7, y: 50, z: 7}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1730142519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &34221523
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 34221521}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: f03a46fc39c6e38458096e25374063d2, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &34221524
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 34221521}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &34276034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45898,23 +45808,35 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 460788348}
+    m_TransformParent: {fileID: 1609526060}
     m_Modifications:
     - target: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_Name
       value: T507_Tambo_Barril2
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.6666665
+      objectReference: {fileID: 0}
+    - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.6666665
+      objectReference: {fileID: 0}
+    - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.400002
+      value: 0.000003178914
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.2
+      value: -1.4
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.400002
+      value: -0.000003178914
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalRotation.w
@@ -45948,13 +45870,33 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 70429517}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &70429515 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 70429514}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &70429516 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 70429514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &70429517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70429516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &70633555
 GameObject:
   m_ObjectHideFlags: 0
@@ -70125,13 +70067,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 114999936}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &114999934 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 114999933}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &114999935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 114999933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &114999936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 114999935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &115265482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83180,7 +83142,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -89631,13 +89593,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 135067750}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 135067751}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &135067748 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 135067747}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &135067749 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 135067747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &135067750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135067749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &135067751
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135067749}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6458721, y: 0.8999999, z: 0.6915974}
+  m_Center: {x: 0, y: 0.44999996, z: 0}
 --- !u!1 &135114863
 GameObject:
   m_ObjectHideFlags: 0
@@ -100851,13 +100857,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 153850112}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &153850110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 153850109}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &153850111 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 153850109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &153850112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153850111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &154002355
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -103302,85 +103328,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2801925128222918610, guid: 9dada94213a974b48b6938e3f7160a89, type: 3}
   m_PrefabInstance: {fileID: 157364665}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &157572343
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 157572344}
-  - component: {fileID: 157572346}
-  - component: {fileID: 157572345}
-  m_Layer: 0
-  m_Name: Texto
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &157572344
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157572343}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 885479298}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &157572345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157572343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.3, g: 0.95, b: 0.9, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 1
-    m_BestFit: 1
-    m_MinSize: 10
-    m_MaxSize: 200
-    m_Alignment: 4
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: ENCARGOS
---- !u!222 &157572346
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157572343}
-  m_CullTransparentMesh: 1
 --- !u!1001 &157638372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -107424,13 +107371,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 164279342}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &164279340 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 164279339}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &164279341 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 164279339}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &164279342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164279341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &164601864
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -110813,7 +110780,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -141483,7 +141450,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -142696,6 +142663,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 218779622}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &218790372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &218911446
 GameObject:
   m_ObjectHideFlags: 0
@@ -147641,7 +147620,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -151709,7 +151688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 319599213714487664, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -153137,7 +153116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 757291128389447240, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -153589,7 +153568,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 886540844926520972, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -154137,7 +154116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 1044652566870291609, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -155165,7 +155144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 1326771916293136448, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -156801,7 +156780,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 1855358066841160062, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -156889,7 +156868,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 1870001482552474958, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -157013,7 +156992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 1889430908482337886, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -157177,7 +157156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 1911565139141254554, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -157341,7 +157320,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 1935573663329743087, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -157693,7 +157672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 2023259627416745861, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -157757,7 +157736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 2028003901989171460, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -158293,7 +158272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 2229043483312627442, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -158453,7 +158432,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 2247570555598427051, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -159869,7 +159848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 2737700747717948235, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -160133,7 +160112,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 2794300357167167378, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -160741,7 +160720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 2967031713934199488, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -162337,7 +162316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 3472002465595755654, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -163017,7 +162996,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 3686394827253953680, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -163081,7 +163060,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 3689837303304596548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -163697,7 +163676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 3892077409133266855, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -163849,7 +163828,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 3924399936146114191, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -163997,7 +163976,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 3953976090545567164, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -165385,7 +165364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 4379986301047668688, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -165985,7 +165964,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 4548951404024071643, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -166481,7 +166460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 4696319155405871594, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -167045,7 +167024,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 4899958454507228703, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -167861,7 +167840,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 5128300691128533206, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -168981,7 +168960,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 5499263779204595163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -169705,7 +169684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 5707458409815496163, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -170597,7 +170576,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 5974940259178790103, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -171077,7 +171056,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6081571378160488229, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -171197,7 +171176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6105682339533304600, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -171881,7 +171860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6314407984107795484, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -172045,7 +172024,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6349720530309528933, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -172129,7 +172108,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6359248415688387817, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -173157,7 +173136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6662941312107979159, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -173473,7 +173452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6732155960030498598, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -173797,7 +173776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6831782518282007136, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -173941,7 +173920,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 6870004300909603168, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -174557,7 +174536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 7066005053631836251, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -174849,7 +174828,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 7135191789988054269, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -175189,7 +175168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 7199068408033191543, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -176013,7 +175992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 7468446817013864706, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -177653,7 +177632,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8025886777941800056, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -178537,7 +178516,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8253885722678873175, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -178749,7 +178728,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8296414347972301508, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -179949,7 +179928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8704611237821324549, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -180553,7 +180532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8892912110556195052, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -180701,7 +180680,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8935173902378353840, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -180821,7 +180800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8950619366177610264, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -180965,7 +180944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8988870159807124361, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -181269,7 +181248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 9085029507378365183, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -181833,7 +181812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 9221608003386460539, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_SpotAngle
@@ -181933,12 +181912,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1404376155143277360, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1146000279}
-    - targetCorrespondingSourceObject: {fileID: 5571933673980524622, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 70429515}
-    - targetCorrespondingSourceObject: {fileID: 5571933673980524622, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 7106029485537313864, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2103861768}
+    - targetCorrespondingSourceObject: {fileID: 3075434233995308085, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 70429515}
     - targetCorrespondingSourceObject: {fileID: 3989348261050208848, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       insertIndex: -1
       addedObject: {fileID: 24780719}
@@ -182129,6 +182108,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2551223498365104014, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1887493173}
+    - targetCorrespondingSourceObject: {fileID: 8598590263531495562, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2132107174}
+    - targetCorrespondingSourceObject: {fileID: 699728894213608576, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2132107173}
     - targetCorrespondingSourceObject: {fileID: 1382372383978732498, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1986892110}
@@ -182327,6 +182312,45 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4144294291579481811, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       insertIndex: -1
       addedObject: {fileID: 423815107}
+    - targetCorrespondingSourceObject: {fileID: 7056775234670661201, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2132107172}
+    - targetCorrespondingSourceObject: {fileID: 4985785605626900194, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2132107171}
+    - targetCorrespondingSourceObject: {fileID: 8119642727494112907, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2132107170}
+    - targetCorrespondingSourceObject: {fileID: 9116107185654410583, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1543240743}
+    - targetCorrespondingSourceObject: {fileID: 5798575013995035871, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 920898368}
+    - targetCorrespondingSourceObject: {fileID: 4153141565712840244, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1761102562}
+    - targetCorrespondingSourceObject: {fileID: 3079093348675906690, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 525393761}
+    - targetCorrespondingSourceObject: {fileID: 7591955079249454021, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1544961151}
+    - targetCorrespondingSourceObject: {fileID: 6963530750768838923, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 218790372}
+    - targetCorrespondingSourceObject: {fileID: 2610565477044245491, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1092016432}
+    - targetCorrespondingSourceObject: {fileID: 4777841319359645649, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 346744305}
+    - targetCorrespondingSourceObject: {fileID: 4596494772901789816, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1438679459}
+    - targetCorrespondingSourceObject: {fileID: 323362378466923642, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1284511774}
   m_SourcePrefab: {fileID: 100100000, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
 --- !u!1 &231901976 stripped
 GameObject:
@@ -189558,13 +189582,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 243818149}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 243818150}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &243818147 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 243818146}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &243818148 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 243818146}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &243818149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243818148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &243818150
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243818148}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.64587206, y: 0.8999999, z: 0.69159734}
+  m_Center: {x: 0, y: 0.44999993, z: 0}
 --- !u!1 &243835749
 GameObject:
   m_ObjectHideFlags: 0
@@ -203311,7 +203379,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -209623,13 +209691,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 280571646}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 280571647}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &280571644 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 280571643}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &280571645 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 280571643}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &280571646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280571645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &280571647
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280571645}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7866266, y: 0.9, z: 0.82071364}
+  m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!1 &280601287
 GameObject:
   m_ObjectHideFlags: 0
@@ -217121,13 +217233,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 292648685}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &292648683 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 292648682}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &292648684 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 292648682}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &292648685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292648684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &292716070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -238357,7 +238489,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -255870,7 +256002,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -257219,6 +257351,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 346700839}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &346744305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &346921062
 GameObject:
   m_ObjectHideFlags: 0
@@ -263974,7 +264118,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -270693,7 +270837,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -281632,7 +281776,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -298617,96 +298761,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 388107083429153459, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
   m_PrefabInstance: {fileID: 416860071}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &416907514
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 416907515}
-  - component: {fileID: 416907517}
-  - component: {fileID: 416907516}
-  m_Layer: 0
-  m_Name: TextoTrasero
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &416907515
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 416907514}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 102.030045, y: 63.742073, z: -58.77733}
-  m_LocalScale: {x: 65, y: 26.5, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1832286517}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &416907516
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 416907514}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: bceeb81a47947da46be92c2b8d14a17d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &416907517
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 416907514}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &417219873
 GameObject:
   m_ObjectHideFlags: 0
@@ -303663,7 +303717,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -322906,11 +322960,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!4 &460788348 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5571933673980524622, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
-  m_PrefabInstance: {fileID: 231901975}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &460835181
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -323907,7 +323956,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -356266,13 +356315,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 502859097}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &502859095 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 502859094}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &502859096 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 502859094}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &502859097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502859096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &502932801
 GameObject:
   m_ObjectHideFlags: 0
@@ -359768,7 +359837,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -371046,6 +371115,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3895816965996459787, guid: cadbcb3e4218e3e4784df4390a0b6cdc, type: 3}
   m_PrefabInstance: {fileID: 525260514}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &525393761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &525653044
 GameObject:
   m_ObjectHideFlags: 0
@@ -400404,13 +400485,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 564187669}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &564187667 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 564187666}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &564187668 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 564187666}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &564187669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564187668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &564229305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -407367,7 +407468,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -419255,13 +419356,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 586222508}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &586222506 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 586222505}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &586222507 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 586222505}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &586222508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586222507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &586240840
 GameObject:
   m_ObjectHideFlags: 0
@@ -439490,13 +439611,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 623754479}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 623754480}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &623754477 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 623754476}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &623754478 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 623754476}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &623754479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623754478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &623754480
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623754478}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.64587206, y: 0.8999999, z: 0.69159734}
+  m_Center: {x: 0, y: 0.44999993, z: 0}
 --- !u!1 &623879898
 GameObject:
   m_ObjectHideFlags: 0
@@ -446830,13 +446995,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 635628027}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 635628028}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &635628025 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 635628024}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &635628026 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 635628024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &635628027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635628026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &635628028
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635628026}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6458721, y: 0.8999999, z: 0.6915974}
+  m_Center: {x: 0, y: 0.44999993, z: 0}
 --- !u!1 &635648692
 GameObject:
   m_ObjectHideFlags: 0
@@ -447304,13 +447513,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 636384971}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &636384969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 636384968}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &636384970 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 636384968}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &636384971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636384970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &636463180
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -473126,7 +473355,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -506164,13 +506393,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 718685046}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &718685044 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 718685043}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &718685045 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 718685043}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &718685046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718685045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &718990834
 GameObject:
   m_ObjectHideFlags: 0
@@ -572527,7 +572776,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -586683,13 +586932,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 847451736}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 847451737}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &847451734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 847451733}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &847451735 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 847451733}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &847451736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847451735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &847451737
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847451735}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6458721, y: 0.8999999, z: 0.6915974}
+  m_Center: {x: 0, y: 0.44999996, z: 0}
 --- !u!1001 &847479755
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -587084,7 +587377,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -596320,7 +596613,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -597685,7 +597978,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -598343,13 +598636,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 865166782}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 865166783}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &865166780 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 865166779}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &865166781 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 865166779}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &865166782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865166781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &865166783
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865166781}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.64587206, y: 0.8999999, z: 0.69159734}
+  m_Center: {x: 0, y: 0.44999993, z: 0}
 --- !u!1 &865238017
 GameObject:
   m_ObjectHideFlags: 0
@@ -608497,6 +608834,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       insertIndex: -1
       addedObject: {fileID: 881855208}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 881855209}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &881855206 stripped
 Transform:
@@ -608524,6 +608864,18 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.45, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &881855209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881855207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &882365877
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -608690,7 +609042,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -610241,66 +610593,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 885372552}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &885479297
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 885479298}
-  - component: {fileID: 885479299}
-  m_Layer: 0
-  m_Name: Tablero_Texto
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &885479298
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885479297}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -82.4}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 157572344}
-  m_Father: {fileID: 2069349968}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -56.543583, y: 1.55}
-  m_SizeDelta: {x: 128.00049, y: 31.900797}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &885479299
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885479297}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &885534744
 GameObject:
   m_ObjectHideFlags: 0
@@ -618725,13 +619017,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 901973530}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &901973528 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 901973527}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &901973529 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 901973527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &901973530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901973529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &902753846
 GameObject:
   m_ObjectHideFlags: 0
@@ -622997,7 +623309,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -630213,6 +630525,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 325457062599238838, guid: 201740f25f396054783b1fd84ef82e37, type: 3}
   m_PrefabInstance: {fileID: 920857321}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &920898368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &920974625
 GameObject:
   m_ObjectHideFlags: 0
@@ -652265,13 +652589,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 948965163}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 948965164}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &948965161 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 948965160}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &948965162 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 948965160}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &948965163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948965162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &948965164
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948965162}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.64587206, y: 0.8999999, z: 0.69159734}
+  m_Center: {x: 0, y: 0.44999996, z: 0}
 --- !u!1001 &948997669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -654929,13 +655297,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 953775711}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &953775709 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 953775708}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &953775710 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 953775708}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &953775711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953775710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &953832394
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -662653,7 +663041,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -676108,13 +676496,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 990573724}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &990573722 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 990573721}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &990573723 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 990573721}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &990573724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990573723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &990850197
 GameObject:
   m_ObjectHideFlags: 0
@@ -683157,13 +683565,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1002389039}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1002389037 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1002389036}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1002389038 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1002389036}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1002389039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002389038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1002475226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -690261,13 +690689,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1015713269}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1015713267 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1015713266}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1015713268 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1015713266}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1015713269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015713268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1015849540
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -707271,7 +707719,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -707909,7 +708357,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -724734,7 +725182,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -735037,6 +735485,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091768985}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1092016432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1092047823
 GameObject:
   m_ObjectHideFlags: 0
@@ -742681,96 +743141,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2801925128222918610, guid: 9dada94213a974b48b6938e3f7160a89, type: 3}
   m_PrefabInstance: {fileID: 1107126223}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1107164761
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1107164762}
-  - component: {fileID: 1107164764}
-  - component: {fileID: 1107164763}
-  m_Layer: 0
-  m_Name: Mastil_-1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1107164762
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107164761}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 102.08004, y: 44.492073, z: -62.77733}
-  m_LocalScale: {x: 2, y: 16, z: 2}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1832286517}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &1107164763
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107164761}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: ba9597fb1690351418867f757e82d8e0, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1107164764
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107164761}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &1107264491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -748353,7 +748723,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -751238,13 +751608,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1122081145}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1122081143 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1122081142}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1122081144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1122081142}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1122081145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122081144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1122255153
 GameObject:
   m_ObjectHideFlags: 0
@@ -761229,13 +761619,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1139307087}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1139307085 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1139307084}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1139307086 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1139307084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1139307087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139307086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1139359470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -806270,13 +806680,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1211709037}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1211709038}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1211709035 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1211709034}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1211709036 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1211709034}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1211709037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211709036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &1211709038
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211709036}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.64587206, y: 0.8999999, z: 0.69159734}
+  m_Center: {x: 0, y: 0.44999993, z: 0}
 --- !u!1 &1211749001
 GameObject:
   m_ObjectHideFlags: 0
@@ -820269,7 +820723,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -847025,96 +847479,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 388107083429153459, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
   m_PrefabInstance: {fileID: 1273674962}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1273909909
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1273909910}
-  - component: {fileID: 1273909912}
-  - component: {fileID: 1273909911}
-  m_Layer: 0
-  m_Name: Texto
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1273909910
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273909909}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 101.98004, y: 63.742073, z: -58.77733}
-  m_LocalScale: {x: 65, y: 26.5, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1832286517}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &1273909911
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273909909}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: bceeb81a47947da46be92c2b8d14a17d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1273909912
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273909909}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1274456160
 GameObject:
   m_ObjectHideFlags: 0
@@ -852755,6 +853119,18 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &1284511774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1284556030
 GameObject:
   m_ObjectHideFlags: 0
@@ -865807,7 +866183,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -883558,13 +883934,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1338069087}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1338069085 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1338069084}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1338069086 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1338069084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1338069087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338069086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1338442414
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -888381,13 +888777,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1347371755}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1347371753 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1347371752}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1347371754 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1347371752}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1347371755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347371754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1347615543
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -927460,7 +927876,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -932567,96 +932983,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 1706773925901882714, guid: da027f35860f8da4ba8e8b2178f27262, type: 3}
   m_PrefabInstance: {fileID: 1419320737}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1419660304
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1419660305}
-  - component: {fileID: 1419660307}
-  - component: {fileID: 1419660306}
-  m_Layer: 0
-  m_Name: Mastil_1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1419660305
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419660304}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 102.08004, y: 44.492073, z: -54.77733}
-  m_LocalScale: {x: 2, y: 16, z: 2}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1832286517}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &1419660306
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419660304}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: ba9597fb1690351418867f757e82d8e0, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1419660307
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419660304}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1419735948
 GameObject:
   m_ObjectHideFlags: 0
@@ -942905,6 +943231,18 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1438645871}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1438679459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1438949442
 GameObject:
   m_ObjectHideFlags: 0
@@ -955061,13 +955399,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1456419311}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1456419309 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1456419308}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1456419310 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1456419308}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1456419311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456419310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1456688344
 GameObject:
   m_ObjectHideFlags: 0
@@ -964189,7 +964547,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -978186,13 +978544,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1492135962}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1492135963}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1492135960 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1492135959}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1492135961 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1492135959}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1492135962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492135961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &1492135963
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492135961}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.800547, y: 0.9, z: 0.7642182}
+  m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!1001 &1492664651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -979462,13 +979864,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1494689156}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1494689154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1494689153}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1494689155 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1494689153}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1494689156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494689155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1494730465
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -995626,85 +996048,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 388107083429153459, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
   m_PrefabInstance: {fileID: 1522315109}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1522332766
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2069349968}
-    m_Modifications:
-    - target: {fileID: 1851899823048786755, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_Name
-      value: Tablero_C15a
-      objectReference: {fileID: 0}
-    - target: {fileID: 1851899823048786755, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.53333336
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.53333336
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.53333336
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -56.751865
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.2599927
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -82.40001
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1728666692461369365, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
---- !u!4 &1522332767 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4507307208847204704, guid: 6d759e3d74327aa47adafd257b262cc8, type: 3}
-  m_PrefabInstance: {fileID: 1522332766}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1522340537
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1007840,6 +1008183,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7953964400459044256, guid: c72945ec221ceb445a6f698bf1c7399a, type: 3}
   m_PrefabInstance: {fileID: 1542827601}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1543240743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1543446118
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008630,6 +1008985,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 388107083429153459, guid: d12b3a8c16cfddb4fad5e142323d6a34, type: 3}
   m_PrefabInstance: {fileID: 1544961100}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1544961151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1544965124
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017907,7 +1018274,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1045372,7 +1045739,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1052748,6 +1053115,16 @@ Transform:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1608956581}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1609526060 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3075434233995308085, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1609526061 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7106029485537313864, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1609736010
 PrefabInstance:
@@ -1072495,6 +1072872,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1635477740}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1635477741}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1635477738 stripped
 Transform:
@@ -1072522,6 +1072902,18 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.45, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1635477741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635477739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1635537294
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081373,7 +1081765,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1081660,13 +1082052,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1642966098}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1642966096 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1642966095}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1642966097 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1642966095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1642966098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642966097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1643052612
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1082926,13 +1083338,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1644957097}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1644957095 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1644957094}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1644957096 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1644957094}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1644957097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644957096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1645425332
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092871,13 +1093303,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1662843517}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1662843518}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1662843515 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1662843514}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1662843516 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1662843514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1662843517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662843516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &1662843518
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662843516}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6458721, y: 0.8999999, z: 0.6915974}
+  m_Center: {x: 0, y: 0.44999996, z: 0}
 --- !u!1001 &1662897585
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1096039,7 +1096515,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1101416,7 +1101892,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1110630,13 +1111106,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1695784289}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1695784287 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1695784286}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1695784288 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1695784286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1695784289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695784288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1696477576
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1127545,13 +1128041,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1720511911}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1720511912}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1720511909 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1720511908}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1720511910 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1720511908}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1720511911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720511910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &1720511912
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720511910}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.77525705, y: 0.9, z: 0.81050557}
+  m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!1001 &1720576451
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1130339,7 +1130879,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1131794,13 +1132334,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1726890271}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1726890272}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1726890269 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1726890268}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1726890270 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1726890268}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1726890271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1726890270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &1726890272
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1726890270}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6458721, y: 0.8999999, z: 0.6915974}
+  m_Center: {x: 0, y: 0.44999996, z: 0}
 --- !u!1 &1727109758
 GameObject:
   m_ObjectHideFlags: 0
@@ -1132173,7 +1132757,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1132882,6 +1133466,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1729319035}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1729319036}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1729319033 stripped
 Transform:
@@ -1132909,6 +1133496,18 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.45, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1729319036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729319034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1729330149
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133382,8 +1133981,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1832286517}
-  - {fileID: 34221522}
   - {fileID: 1885680408}
   - {fileID: 579957921}
   - {fileID: 824721295}
@@ -1142871,13 +1143468,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1747617092}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1747617090 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1747617089}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1747617091 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1747617089}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1747617092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747617091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1747700357
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150693,7 +1151310,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1150747,6 +1151364,18 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1761102562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1761484749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192745,41 +1193374,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8090547696467696723, guid: 7c3e32273fbd12c468d76ca31a477234, type: 3}
   m_PrefabInstance: {fileID: 1832109606}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1832286516
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1832286517}
-  m_Layer: 0
-  m_Name: Letrero_NOVA
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1832286517
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832286516}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1273909910}
-  - {fileID: 416907515}
-  - {fileID: 1107164762}
-  - {fileID: 1419660305}
-  m_Father: {fileID: 1730142519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1832308234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197060,13 +1197654,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1839817271}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1839817269 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1839817268}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1839817270 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1839817268}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1839817271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839817270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &1839927860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1218052,7 +1218666,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.93, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1220161,13 +1220775,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1879063498}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1879063496 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1879063495}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1879063497 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1879063495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1879063498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879063497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1879074434
 GameObject:
   m_ObjectHideFlags: 0
@@ -1235013,7 +1235647,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1255253,7 +1255887,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1268897,13 +1269531,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1962819673}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1962819671 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1962819670}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1962819672 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1962819670}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1962819673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962819672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &1963145253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291761,13 +1292415,57 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1995074517}
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1995074518}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &1995074515 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 1995074514}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1995074516 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 1995074514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1995074517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995074516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!65 &1995074518
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995074516}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6458721, y: 0.8999999, z: 0.6915974}
+  m_Center: {x: 0, y: 0.44999993, z: 0}
 --- !u!1001 &1995131766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1291936,7 +1292634,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1322233,7 +1322931,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1331356,7 +1332054,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1334855,7 +1335553,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.6, b: 0.22, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1339622,7 +1340320,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1345451,8 +1346149,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1522332767}
-  - {fileID: 885479298}
   - {fileID: 1437172040}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1364530,23 +1365226,35 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 460788348}
+    m_TransformParent: {fileID: 1609526061}
     m_Modifications:
     - target: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_Name
       value: T507_Tambo_Barril1
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.6666665
+      objectReference: {fileID: 0}
+    - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.6666665
+      objectReference: {fileID: 0}
+    - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.400002
+      value: 0.000003178914
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.2
+      value: -1.4
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.400002
+      value: -0.000003178914
       objectReference: {fileID: 0}
     - target: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1364580,13 +1365288,33 @@ PrefabInstance:
     - {fileID: 4177833619526464360, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2103861770}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &2103861768 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 2103861767}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2103861769 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 2103861767}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2103861770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2103861769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &2103923852
 GameObject:
   m_ObjectHideFlags: 0
@@ -1373931,7 +1374659,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 0.72, g: 0.86, b: 1, a: 1}
-  m_Intensity: 40
+  m_Intensity: 54
   m_Range: 9
   m_SpotAngle: 75
   m_InnerSpotAngle: 30
@@ -1378927,6 +1379655,141 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2131976497}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2132107155 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 323362378466923642, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107156 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4596494772901789816, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4777841319359645649, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107158 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2610565477044245491, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107159 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6963530750768838923, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107160 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7591955079249454021, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107161 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3079093348675906690, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107162 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4153141565712840244, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107163 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5798575013995035871, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107164 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9116107185654410583, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107165 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8119642727494112907, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107166 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4985785605626900194, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107167 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7056775234670661201, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107168 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 699728894213608576, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2132107169 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8598590263531495562, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
+  m_PrefabInstance: {fileID: 231901975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2132107170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!114 &2132107171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!114 &2132107172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!114 &2132107173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
+--- !u!114 &2132107174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132107169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1 &2132168310
 GameObject:
   m_ObjectHideFlags: 0
@@ -1386518,13 +1387381,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2145023311}
   m_SourcePrefab: {fileID: 100100000, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
 --- !u!4 &2145023309 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251193390039262940, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
   m_PrefabInstance: {fileID: 2145023308}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2145023310 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 494941637657742118, guid: 0c406e306dab4034bbb3a3c97fd97224, type: 3}
+  m_PrefabInstance: {fileID: 2145023308}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2145023311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145023310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75955ad02c6b0ff43a32aba8a2b86071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo
 --- !u!1001 &2145107269
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -70,7 +70,7 @@ namespace MechaCyberpunk.Arte.Editor
             if (principal != null)
             {
                 Bounds b = Limites(principal);
-                LetreroYHaz(raiz, b);
+                // T-1317: sin el letrero NOVA grande ni su haz; la torre queda como antes del letrero (solo materiales nítidos y luces de aviso).
                 Avisos(raiz, "Nova", b);
             }
             else
