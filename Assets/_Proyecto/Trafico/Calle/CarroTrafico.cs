@@ -349,6 +349,15 @@ namespace MechaCyberpunk.Trafico.Calle
             enabled = false;
         }
 
+        /// <summary>T-1201: el carro explotó (lo avisa DanioCarro con un mensaje de Unity): deja de avanzar por su ruta y queda como chatarra.</summary>
+        public bool Destruido { get; private set; }
+
+        private void AlExplotarVehiculo()
+        {
+            Destruido = true;
+            enabled = false;
+        }
+
         /// <summary>T-705: True mientras el jugador ya subió y el carro todavía no lo sabe (el conductor aún está adentro).</summary>
         public bool EstaSiendoRobado => !Robado && montable != null && montable.Ocupado;
 

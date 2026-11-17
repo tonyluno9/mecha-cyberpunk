@@ -26,6 +26,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private const float SegundosGraciaInicial = 1.5f;
         private const float SegundosGraciaEmpuje = 1.2f;
         private const float UpwardsExplosion = 0.3f;
+        private const float AmortiguarChatarra = 4f;
+        // T-1201: el fuego se apaga en el primer 70% del tiempo ardiendo; el humo sigue, cada vez más tenue, hasta el final.
+        private const float FraccionFuegoArdiendo = 0.7f;
         // T-696: el aviso de fuego es chisporroteo (antes la alarma de robo, que ya no suena).
         public const string IdAvisoFuego = "MUN_CHISPAS_ELECTRICAS";
         public const string MensajeExplosion = "AlExplotarVehiculo";
@@ -47,6 +50,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private float finArdiendo;
         private float finDestello;
         private bool ardiendo;
+        private float inicioArdiendo;
+        private float quietoDesde = -1f;
 
         public EstadoCarro Estado => calculo != null ? calculo.Estado : EstadoCarro.Sano;
         public float Vida => calculo != null ? calculo.Actual : 0f;
@@ -169,6 +174,21 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 bool destello = Time.time < finDestello;
                 luz.intensity = destello ? 8f : 1.5f + Mathf.PerlinNoise(Time.time * 9f, 0f) * 1.5f;
             }
+            if (Explotado)
+            {
+                AsentarChatarra();
+            }
+            if (ardiendo && Explotado && Time.time < finArdiendo)
+            {
+                // T-1201: el fuego se apaga primero y el humo después, poco a poco, en vez de cortarse de golpe.
+                float t = Mathf.InverseLerp(inicioArdiendo, finArdiendo, Time.time);
+                Emitir(fuego, 25f * Mathf.Clamp01(1f - t / FraccionFuegoArdiendo));
+                Emitir(humo, Mathf.Lerp(20f, 3f, t));
+                if (luz != null && Time.time >= finDestello)
+                {
+                    luz.intensity *= Mathf.Clamp01(1f - t / FraccionFuegoArdiendo);
+                }
+            }
             if (ardiendo && Explotado && Time.time >= finArdiendo)
             {
                 ardiendo = false;
@@ -240,6 +260,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         {
             Explotado = true;
             ardiendo = true;
+            inicioArdiendo = Time.time;
             finArdiendo = Time.time + config.SegundosArdiendo;
             finDestello = Time.time + SegundosDestelloExplosion;
             Vector3 centro = transform.position + Vector3.up * AlturaMotor;
@@ -260,8 +281,13 @@ namespace MechaCyberpunk.Vehiculos.Carro
             UltimaExplosion = ExplosionCarro.Crear(centro, config.RadioExplosion);
             DanarAlrededor(centro);
             SumarCalorSiEstaCerca(centro);
-            if (cuerpo != null)
+            if (cuerpo != null && !cuerpo.isKinematic)
             {
+                // T-1201: el estallido lo frena en seco (no sigue rodando ni se desliza) y solo lo levanta un poco; luego queda como chatarra.
+                cuerpo.linearVelocity = new Vector3(0f, Mathf.Max(0f, cuerpo.linearVelocity.y), 0f);
+                cuerpo.angularVelocity = Vector3.zero;
+                cuerpo.linearDamping = AmortiguarChatarra;
+                cuerpo.angularDamping = AmortiguarChatarra;
                 cuerpo.AddForce(Vector3.up * ImpulsoVerticalExplosion * 0.5f, ForceMode.VelocityChange);
             }
             Ennegrecer();
@@ -270,6 +296,38 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 carro.enabled = false;
             }
             Debug.Log("[Vehiculos] Explotó " + name);
+        }
+
+        /// <summary>T-1201: True cuando la chatarra ya cayó y quedó fija (cuerpo cinemático: nada la arrastra ni la empuja).</summary>
+        public bool ChatarraFija => Explotado && cuerpo != null && cuerpo.isKinematic;
+
+        // T-1201: tras caer del estallido, en cuanto casi no se mueve medio segundo, el carro queda fijo en su lugar.
+        private void AsentarChatarra()
+        {
+            if (cuerpo == null || cuerpo.isKinematic)
+            {
+                return;
+            }
+            Vector3 v = cuerpo.linearVelocity;
+            v.x *= 0.5f;
+            v.z *= 0.5f;
+            cuerpo.linearVelocity = v;
+            bool quieto = cuerpo.linearVelocity.sqrMagnitude < 0.25f && cuerpo.angularVelocity.sqrMagnitude < 0.25f;
+            if (!quieto || Time.time < finDestello + 0.3f)
+            {
+                quietoDesde = -1f;
+                return;
+            }
+            if (quietoDesde < 0f)
+            {
+                quietoDesde = Time.time;
+            }
+            else if (Time.time - quietoDesde >= 0.5f)
+            {
+                cuerpo.linearVelocity = Vector3.zero;
+                cuerpo.angularVelocity = Vector3.zero;
+                cuerpo.isKinematic = true;
+            }
         }
 
         private void DanarAlrededor(Vector3 centro)
