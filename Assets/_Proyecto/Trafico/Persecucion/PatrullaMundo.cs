@@ -66,6 +66,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         [Min(0f)] [SerializeField] private float alturaRaiz = 0.3f;
         [Tooltip("T-709: el policía a pie que se baja al llegar (IA/Prefabs/PoliciaAPie). Sin él no se baja nadie.")]
         [SerializeField] private GameObject prefabPolicia;
+        [Tooltip("T-1202: clip de manejar del jugador (PJ01_Carro_Manejar): los policías van sentados dentro con él.")]
+        [SerializeField] private AnimationClip clipPoliciaManejar;
+        [Tooltip("T-1202: clip de bajar del carro del jugador (PJ01_Carro_Salir): los policías se bajan con él.")]
+        [SerializeField] private AnimationClip clipPoliciaSalir;
         [Tooltip("Luces de la sirena: la primera es roja y la segunda azul; alternan.")]
         [SerializeField] private Light luzRoja;
         [SerializeField] private Light luzAzul;
@@ -175,7 +179,46 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float SeparacionEntrePolicias = 0.9f;
         private const float AlturaSobreSuelo = 0.05f;
 
-        /// <summary>T-709: al llegar junto al jugador, los policías abren la puerta y se bajan, uno por cada lado de la patrulla.</summary>
+        private readonly List<OcupantePatrulla> ocupantes = new List<OcupantePatrulla>();
+        // T-1202: la puerta queda a esta distancia del centro del carro, de lado (m), y el asiento de atrás a esta distancia detrás del de adelante.
+        private const float LadoPuerta = 1.05f;
+        private const float AtrasAsientoTrasero = 0.9f;
+
+        /// <summary>T-1202: los policías que todavía van sentados dentro (o bajándose).</summary>
+        public int PoliciasDentro => ocupantes.Count;
+
+        /// <summary>T-1202: las figuras de los policías sentados dentro (o bajándose).</summary>
+        public IReadOnlyList<OcupantePatrulla> Ocupantes => ocupantes;
+
+        private void Start()
+        {
+            SentarPolicias();
+        }
+
+        // T-1202: la patrulla sale con sus policías sentados dentro: el conductor en el asiento del jugador y el copiloto del otro lado.
+        private void SentarPolicias()
+        {
+            if (prefabPolicia == null || config == null || clipPoliciaManejar == null || PoliciasBajaron || Robada || ocupantes.Count > 0)
+            {
+                return;
+            }
+            Transform asiento = montable?.Asiento;
+            if (asiento == null)
+            {
+                return;
+            }
+            Vector3 conductor = transform.InverseTransformPoint(asiento.position);
+            for (int i = 0; i < config.PoliciasPorPatrulla; i++)
+            {
+                Vector3 local = new Vector3(i % 2 == 0 ? conductor.x : -conductor.x, conductor.y, conductor.z - AtrasAsientoTrasero * (i / 2));
+                ocupantes.Add(OcupantePatrulla.Crear(prefabPolicia, transform, local, clipPoliciaManejar, clipPoliciaSalir));
+            }
+        }
+
+        /// <summary>
+        /// T-709: al llegar junto al jugador, los policías abren la puerta y se bajan, uno por cada lado de la patrulla. T-1202: si van sentados
+        /// dentro, se bajan con el clip de bajar del carro y al tocar el piso se vuelven el policía de verdad.
+        /// </summary>
         public void BajarPolicias()
         {
             if (PoliciasBajaron || prefabPolicia == null || config == null || Robada)
@@ -183,20 +226,84 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return;
             }
             PoliciasBajaron = true;
-            Vector3? jugador = posicionJugador?.Invoke();
+            if (ocupantes.Count > 0)
+            {
+                BajarOcupantes(false);
+                Sonidos.ReproducirEn("VEH_PUERTA_ABRIR", transform.position);
+                return;
+            }
             for (int i = 0; i < config.PoliciasPorPatrulla; i++)
             {
                 float lado = i % 2 == 0 ? 1f : -1f;
-                Vector3 punto = transform.position + transform.right * (lado * SeparacionPuerta) - transform.forward * (SeparacionEntrePolicias * (i / 2));
-                punto.y = BuscarSuelo(punto, transform.position.y, transform.position.y - RaizABajo) + AlturaSobreSuelo;
-                Vector3 mirada = (jugador ?? transform.position + transform.forward) - punto;
-                mirada.y = 0f;
-                Quaternion giro = mirada.sqrMagnitude > 0.01f ? Quaternion.LookRotation(mirada) : transform.rotation;
-                GameObject policia = Instantiate(prefabPolicia, punto, giro);
-                policia.name = "Policia_" + (i + 1);
-                policias.Add(policia);
+                Vector3 punto = PuntoDeBajada(lado, i);
+                PonerPolicia(punto, GiroHaciaJugador(punto), i);
             }
             Sonidos.ReproducirEn("VEH_PUERTA_ABRIR", transform.position);
+        }
+
+        private Vector3 PuntoDeBajada(float lado, int i)
+        {
+            Vector3 punto = transform.position + transform.right * (lado * SeparacionPuerta) - transform.forward * (SeparacionEntrePolicias * (i / 2));
+            punto.y = BuscarSuelo(punto, transform.position.y, transform.position.y - RaizABajo) + AlturaSobreSuelo;
+            return punto;
+        }
+
+        private Quaternion GiroHaciaJugador(Vector3 punto)
+        {
+            Vector3? jugador = posicionJugador?.Invoke();
+            Vector3 mirada = (jugador ?? transform.position + transform.forward) - punto;
+            mirada.y = 0f;
+            return mirada.sqrMagnitude > 0.01f ? Quaternion.LookRotation(mirada) : transform.rotation;
+        }
+
+        private void PonerPolicia(Vector3 punto, Quaternion giro, int i)
+        {
+            GameObject policia = Instantiate(prefabPolicia, punto, giro);
+            policia.name = "Policia_" + (i + 1);
+            policias.Add(policia);
+        }
+
+        // T-1202: cada policía sentado se baja por su lado. De golpe (explosión o robo) aparece ya afuera, junto a su puerta.
+        private void BajarOcupantes(bool deGolpe)
+        {
+            bool alInstante = deGolpe || clipPoliciaSalir == null;
+            for (int i = 0; i < ocupantes.Count; i++)
+            {
+                OcupantePatrulla ocupante = ocupantes[i];
+                if (ocupante == null)
+                {
+                    continue;
+                }
+                Vector3 asientoLocal = transform.InverseTransformPoint(ocupante.transform.position);
+                float lado = asientoLocal.x < 0f ? -1f : 1f;
+                Vector3 punto = PuntoDeBajada(lado, i);
+                Quaternion giro = GiroHaciaJugador(punto);
+                if (alInstante)
+                {
+                    Destroy(ocupante.gameObject);
+                    PonerPolicia(punto, giro, i);
+                    continue;
+                }
+                if (ocupante.Bajando)
+                {
+                    continue;
+                }
+                int indice = i;
+                Vector3 puerta = new Vector3(lado * LadoPuerta, asientoLocal.y, asientoLocal.z);
+                ocupante.Bajar(puerta, punto, giro, o => AlTocarPiso(o, indice));
+            }
+            if (alInstante)
+            {
+                ocupantes.Clear();
+            }
+        }
+
+        private void AlTocarPiso(OcupantePatrulla ocupante, int indice)
+        {
+            ocupantes.Remove(ocupante);
+            Pose pose = ocupante.PoseFinal;
+            Destroy(ocupante.gameObject);
+            PonerPolicia(pose.position, pose.rotation, indice);
         }
 
         private void OnDestroy()
@@ -250,6 +357,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return;
             }
             Robada = true;
+            // T-1202: si el jugador se sube con los policías dentro, ellos ya están afuera.
+            BajarOcupantes(true);
             VeAlJugador = false;
             VaDirecto = false;
             // Ya es un carro suelto del jugador: su suspensión y sus choques ignoran lo que comparta su raíz, y colgada del barrio compartiría la del suelo.
@@ -417,6 +526,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private void AlExplotarVehiculo()
         {
             Destruida = true;
+            // T-1202: con la explosión los policías salen de golpe (y el estallido los alcanza).
+            PoliciasBajaron = true;
+            BajarOcupantes(true);
             carro?.SoltarIA();
             VeAlJugador = false;
             PonerLuces(false, false);

@@ -194,6 +194,13 @@ namespace MechaCyberpunk.Tests.Trafico
             }
             Time.timeScale = 1f;
             Assert.IsTrue(ronda.PoliciasBajaron, "Llega y baja a sus policías");
+            // T-1202: se bajan con el clip de bajar del carro; el policía de verdad aparece al tocar el piso.
+            limite = Time.time + 5f;
+            while (Time.time < limite && ronda.PoliciasDentro > 0)
+            {
+                yield return null;
+            }
+            Debug.Log("[Trafico] T-933: tras bajar quedan dentro " + ronda.PoliciasDentro + ", policías " + ronda.Policias.Count + ", bajando " + (ronda.Ocupantes.Count > 0 && ronda.Ocupantes[0] != null ? ronda.Ocupantes[0].Bajando.ToString() : "-") + ", hijos " + ronda.transform.childCount);
             Assert.AreEqual(config.PoliciasPorPatrulla, ronda.Policias.Count);
             Assert.IsTrue(ronda.EnRonda, "Sigue siendo ronda: no hay búsqueda");
             Assert.AreEqual(0f, calor.Valor, 0.001f);
