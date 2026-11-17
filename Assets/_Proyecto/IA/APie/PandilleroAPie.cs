@@ -340,10 +340,41 @@ namespace MechaCyberpunk.IA.APie
             Registro<IMarcaMapa>.Agregar(this);
             Activos.Add(this);
             Registro<ICriminalCalle>.Agregar(this);
+            EventosJugador.Desperto += AlDespertarElJugador;
+        }
+
+        /// <summary>
+        /// T-1328: el jugador despertó con el Doc. La policía se va; los demás dejan de apuntarle, se calman y vuelven a su punto
+        /// (no se curan ni reaparecen: solo sueltan la persecución).
+        /// </summary>
+        private void AlDespertarElJugador()
+        {
+            if (EstaKO || Acosando)
+            {
+                return;
+            }
+            if (datos != null && datos.EsPolicia)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            alerta = siempreAlerta;
+            provocadoHasta = -1f;
+            regla?.Reiniciar();
+            reglaJefe?.Reiniciar();
+            tactica?.Reiniciar();
+            patrulla?.Reiniciar();
+            tieneCubierta = false;
+            disparoReciente = false;
+            modoAnterior = ReglaTacticaPandillero.Modo.Rodear;
+            turnos?.Soltar(this);
+            ApagarBrillo();
+            ObjetivoActual = null;
         }
 
         private void OnDisable()
         {
+            EventosJugador.Desperto -= AlDespertarElJugador;
             Registro<ICriminalCalle>.Quitar(this);
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
@@ -354,6 +385,7 @@ namespace MechaCyberpunk.IA.APie
 
         private void OnDestroy()
         {
+            EventosJugador.Desperto -= AlDespertarElJugador;
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);

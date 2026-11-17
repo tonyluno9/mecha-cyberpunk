@@ -69,10 +69,12 @@ namespace MechaCyberpunk.IA.APie
         private void OnEnable()
         {
             Actual = this;
+            EventosJugador.Desperto += RetirarTodos; // T-1328: al despertar con el Doc, Nova se va
         }
 
         private void OnDisable()
         {
+            EventosJugador.Desperto -= RetirarTodos;
             if (Actual == this)
             {
                 Actual = null;
