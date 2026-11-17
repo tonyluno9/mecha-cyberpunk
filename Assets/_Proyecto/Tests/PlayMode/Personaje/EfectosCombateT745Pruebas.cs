@@ -307,6 +307,8 @@ namespace MechaCyberpunk.Tests.Personaje
             InstaladorBarriles.Instalar(SceneManager.GetActiveScene());
             Physics.SyncTransforms();
             uno.GetComponent<BarrilExplosivo>().RecibirDanio(new InfoDanio(100f, TipoDanio.Disparo, uno.transform.position, Vector3.forward, null));
+            // T-1317: la cadena lleva un retraso corto (BarrilExplosivo.RetrasoCadena).
+            yield return Esperar(BarrilExplosivo.RetrasoCadena + 0.3f);
             Assert.IsTrue(dos.GetComponent<BarrilExplosivo>().Exploto, "El vecino cercano revienta en cadena");
             yield return null;
         }

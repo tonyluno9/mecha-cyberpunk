@@ -77,16 +77,12 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Nova_TieneLetrero_Haz_Y_LucesDeAviso()
+        public void Nova_SinLetrero_SinHaz_ConLucesDeAviso()
         {
             Transform luces = Raiz("T1103_Luces");
-            Assert.IsNotNull(luces.Find("Letrero_NOVA/Texto"), "Letrero NOVA");
-            Transform haz = luces.Find("Haz_Nova");
-            Assert.IsNotNull(haz, "Haz de luz");
-            Assert.GreaterOrEqual(haz.localScale.y * 2f, 80f, "El haz mide entre 80 y 120 m");
-            Assert.LessOrEqual(haz.localScale.y * 2f, 120f);
-            Assert.IsNull(haz.GetComponent<Collider>(), "Sin colisión");
-            Assert.AreEqual(UnityEngine.Rendering.ShadowCastingMode.Off, haz.GetComponent<Renderer>().shadowCastingMode);
+            // T-1317: Tony pidió quitar el letrero NOVA grande y su haz.
+            Assert.IsNull(luces.Find("Letrero_NOVA"), "sin letrero NOVA");
+            Assert.IsNull(luces.Find("Haz_Nova"), "sin haz de luz");
             Transform[] avisos = luces.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("LuzAviso_")).ToArray();
             Assert.GreaterOrEqual(avisos.Length, AvisosMinimos);
             Assert.IsEmpty(luces.GetComponentsInChildren<Light>(true), "Sin luces reales nuevas");

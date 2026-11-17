@@ -53,7 +53,9 @@ namespace MechaCyberpunk.Tests.Mundo
             CollectionAssert.IsEmpty(sobran);
             Transform tablero = Buscar(ColocarS2tCasa.RutaTablero);
             Assert.Less(Vector3.Distance(tablero.position, ColocarS2tCasa.LugarTablero), 0.05f, "el tablero de encargos está en la pared de la casa");
-            Assert.IsNotNull(Buscar(ColocarS2tCasa.NombreRaiz + "/Tablero_C15a"), "con su letrero del kit");
+            // T-1317: Tony pidió quitar el letrero ENCARGOS de afuera de la casa.
+            Assert.IsNull(Buscar(ColocarS2tCasa.NombreRaiz + "/Tablero_C15a"), "sin letrero del kit afuera");
+            Assert.IsNull(Buscar(ColocarS2tCasa.NombreRaiz + "/Tablero_Texto"), "sin el texto ENCARGOS afuera");
         }
     }
 }

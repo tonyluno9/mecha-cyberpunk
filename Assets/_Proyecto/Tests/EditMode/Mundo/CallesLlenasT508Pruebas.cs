@@ -60,7 +60,8 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void Adornos_NoTienenCollidersNiTapanPuertas()
         {
-            Assert.IsEmpty(raiz.GetComponentsInChildren<Collider>(true), "los adornos no llevan collider: no tapan caminos ni coberturas");
+            // T-1317: los barriles y tambos llevan collider para poder reventar; los demás adornos no.
+            Assert.IsEmpty(raiz.GetComponentsInChildren<Collider>(true).Where(c => c.GetComponentInParent<MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo>(true) == null).ToArray(), "los adornos no llevan collider: no tapan caminos ni coberturas");
             Vector3[] puertas = escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<MonoBehaviour>(true))
                 .Where(m => m != null && m.GetType().Name == "PuertaLocal").Select(m => m.transform.position).ToArray();
             Assert.IsNotEmpty(puertas);

@@ -17,11 +17,16 @@ namespace MechaCyberpunk.Vehiculos.Efectos
         public const float SegundosLlamas = 8f;
         public const string IdExplosion = "VEH_EXPLOSION";
         private const float SubidaEmpuje = 0.6f;
+        /// <summary>T-1317: segundos entre que un barril recibe una explosión y revienta, para que la cadena se vea barril por barril.</summary>
+        public const float RetrasoCadena = 0.15f;
 
         private float vida = VidaInicial;
 
         public float Vida => vida;
         public bool Exploto { get; private set; }
+
+        /// <summary>T-1317: ya recibió una explosión y va a reventar en <see cref="RetrasoCadena"/> segundos.</summary>
+        public bool Detonando { get; private set; }
 
         /// <summary>La última explosión visual (para pruebas).</summary>
         public InstanciaExplosion Explosion { get; private set; }
@@ -32,6 +37,25 @@ namespace MechaCyberpunk.Vehiculos.Efectos
             {
                 return ResultadoDanio.Ignorado;
             }
+            // T-1317: una explosión dentro del radio revienta el barril siempre, sin importar la caída por distancia.
+            if (info.Tipo == TipoDanio.Explosion)
+            {
+                float restante = vida;
+                vida = 0f;
+                if (!Detonando)
+                {
+                    Detonando = true;
+                    if (isActiveAndEnabled)
+                    {
+                        StartCoroutine(ExplotarConRetraso());
+                    }
+                    else
+                    {
+                        Explotar();
+                    }
+                }
+                return new ResultadoDanio(restante, TipoBloqueo.Ninguno, false);
+            }
             float aplicado = Mathf.Min(info.Cantidad, vida);
             vida -= aplicado;
             if (vida <= 0f)
@@ -39,6 +63,15 @@ namespace MechaCyberpunk.Vehiculos.Efectos
                 Explotar();
             }
             return new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, Exploto);
+        }
+
+        private System.Collections.IEnumerator ExplotarConRetraso()
+        {
+            yield return new WaitForSeconds(RetrasoCadena);
+            if (!Exploto)
+            {
+                Explotar();
+            }
         }
 
         private void Explotar()

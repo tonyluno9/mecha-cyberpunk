@@ -176,7 +176,8 @@ namespace MechaCyberpunk.Tests.Mundo
             GameObject raiz = escena.GetRootGameObjects().FirstOrDefault(g => g.name == "T506_SinGreybox");
             Assert.IsNotNull(raiz, "Falta la raíz T506_SinGreybox (Mecha Cyberpunk/T-506/Quitar greybox)");
             Assert.AreEqual(1, escena.GetRootGameObjects().Count(g => g.name == "T506_SinGreybox"));
-            Assert.AreEqual(0, raiz.GetComponentsInChildren<Collider>(true).Length, "Los props son solo visuales");
+            // T-1317: los tambos llevan collider para poder reventar; los demás props son solo visuales.
+            Assert.AreEqual(0, raiz.GetComponentsInChildren<Collider>(true).Count(c => c.GetComponentInParent<MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo>(true) == null), "Los props son solo visuales");
             // T-530: en El Tianguis se quitaron las cajas de los puestos que quedaban encimados (antes 30 o más).
             Assert.GreaterOrEqual(raiz.GetComponentsInChildren<Renderer>().Length, 15);
         }

@@ -118,20 +118,7 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             t.SetPositionAndRotation(LugarTablero, Quaternion.Euler(0f, 90f, 0f));
-            GameObject letrero = ColocarS2Interiores.Modelo(raiz, C + "C15a_LetreroHorizontal", new Vector3(LugarTablero.x, 0f, LugarTablero.z), 90f, LugarTablero.y - 0.45f, 1f, sinCollider: true);
-            if (letrero == null)
-            {
-                ColocarS2.Informe.AppendLine("FALTA C15a_LetreroHorizontal");
-                return;
-            }
-            letrero.name = "Tablero_C15a";
-            Bounds b = ArteT250.Limites(letrero);
-            letrero.transform.localScale *= 1.6f / Mathf.Max(0.01f, Mathf.Max(b.size.x, b.size.z));
-            b = ArteT250.Limites(letrero);
-            letrero.transform.position += new Vector3(FrenteX + 0.01f - b.min.x, LugarTablero.y - b.center.y, LugarTablero.z - b.center.z);
-            b = ArteT250.Limites(letrero);
-            ColocarS2t.TextoMundo(raiz, "Tablero_Texto", "ENCARGOS", new Vector3(b.max.x + 0.02f, b.center.y, b.center.z), new Vector2(b.size.z * 0.8f, b.size.y * 0.55f),
-                Vector3.right, new Color(0.3f, 0.95f, 0.9f));
+            // T-1317: sin el letrero ENCARGOS afuera de la casa (Tablero_C15a y Tablero_Texto); el tablero invisible se queda para interactuar.
             ColocarS2.Informe.AppendLine("tablero de encargos en la pared: " + LugarTablero);
         }
 
