@@ -284,7 +284,9 @@ namespace MechaCyberpunk.Tests.Personaje
                     yield return null;
                 }
                 Release(teclado.wKey);
-                if (minimo < yTecho - PasoSobreTecho)
+                // T-1318: el pretil ya se salta (collider 0,4 m), así que caminar contra él puede bajar a un techo o a la calle; solo es falla si no hay suelo bajo el jugador (atravesó el piso).
+                bool conSuelo = Physics.Raycast(jugador.transform.position + Vector3.up * 0.3f, Vector3.down, 0.7f, ~0, QueryTriggerInteraction.Ignore);
+                if (minimo < yTecho - PasoSobreTecho && !conSuelo)
                 {
                     fallas.Add(p.name + ": cayó a " + minimo.ToString("F2") + " desde el techo a " + yTecho.ToString("F2"));
                 }

@@ -335,6 +335,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
+        // T-1318: el pretil choca solo a 0.4 m (menos que el salto): esta prueba camina sin saltar y sigue sin cruzarlo; saltarlo lo cubre TechosSaltoT1318Pruebas.
         public IEnumerator Pretil_CaminarCincoSegundosHaciaElBorde_NoCae()
         {
             yield return Cargar();
