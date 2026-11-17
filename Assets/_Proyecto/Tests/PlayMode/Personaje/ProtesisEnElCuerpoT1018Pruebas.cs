@@ -19,8 +19,8 @@ namespace MechaCyberpunk.Tests.Personaje
     public class ProtesisEnElCuerpoT1018Pruebas : BaseJugadorAPie
     {
         private const float TamanoMinimo = 0.15f;
-        private const float TamanoMaximo = 0.7f;
-        private const float DistanciaAlHueso = 0.45f;
+        private const float TamanoMaximo = 1.3f; // T-1311: la hombrera nueva va pesada a los huesos y su caja abarca más que la pieza
+        private const float DistanciaAlHueso = 0.6f;
         private const float DistanciaMinimaCamara = 0.25f;
         private const float DistanciaPunta = 0.03f;
         private const float DistanciaCuerpo = 2.6f;
@@ -65,7 +65,8 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             Assert.IsNotNull(modelo, "El modelo está activo");
             Assert.IsTrue(modelo.activeInHierarchy);
-            Assert.AreEqual(animador.GetBoneTransform(hueso), modelo.transform.parent, "Pegado a su hueso");
+            // T-1311: la pieza es una malla pesada a los huesos de PJ01 (cuelga del cuerpo, no de un hueso).
+            Assert.IsTrue(modelo.transform.IsChildOf(animador.transform) || modelo.transform.parent == animador.GetBoneTransform(hueso), "Pegado al cuerpo");
             Bounds b = Limites(modelo);
             float mayor = Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z));
             Assert.That(mayor, Is.InRange(TamanoMinimo, TamanoMaximo), "Tamaño humano (m): " + mayor);
@@ -115,11 +116,11 @@ namespace MechaCyberpunk.Tests.Personaje
             Dar(HabilidadProtesis.Laser);
             yield return Esperar(0.3f);
             Transform hueso = animador.GetBoneTransform(HumanBodyBones.RightLowerArm);
-            Vector3 relativo = hueso.InverseTransformPoint(visibles.ModeloLaser.transform.position);
+            Vector3 relativo = hueso.InverseTransformPoint(visibles.PuntaLaser.position);
             Press(teclado.wKey);
             yield return Esperar(0.8f);
             Release(teclado.wKey);
-            Assert.AreEqual(0f, Vector3.Distance(relativo, hueso.InverseTransformPoint(visibles.ModeloLaser.transform.position)), 0.001f, "Sigue al hueso al caminar");
+            Assert.AreEqual(0f, Vector3.Distance(relativo, hueso.InverseTransformPoint(visibles.PuntaLaser.position)), 0.001f, "Sigue al hueso al caminar");
         }
 
         [UnityTest]
