@@ -212,8 +212,8 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Color[] colores =
             {
-                new Color(0.9f, 0.3f, 0.16f), new Color(0.2f, 0.62f, 0.36f), new Color(0.2f, 0.4f, 0.9f),
-                new Color(1f, 0.58f, 0.1f), new Color(0.14f, 0.72f, 0.7f),
+                new Color(0.45f, 0.17f, 0.1f), new Color(0.18f, 0.35f, 0.28f), new Color(0.16f, 0.25f, 0.38f),
+                new Color(0.55f, 0.3f, 0.12f), new Color(0.12f, 0.33f, 0.35f),
             };
             Transform padre = new GameObject("Contenedores").transform;
             padre.SetParent(r, false);
@@ -321,7 +321,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Vector3 lado = Vector3.Cross(Vector3.up, normal);
             KitS2c.Neon(o, padre, frente + Vector3.up * 5.2f + lado * 4f + normal * 0.2f, normal, lado, neon, true);
-            Light l = KitS2c.Luz(padre, frente + Vector3.up * 9f + normal * 1.2f - lado * 5f, LightType.Spot, KitS2c.Calido, 260f, 20f, 95f, normal * 0.5f + Vector3.down);
+            Light l = KitS2c.Luz(padre, frente + Vector3.up * 8f + normal * 4f - lado * 2f, LightType.Spot, KitS2c.Calido, 420f, 24f, 105f, -normal * 0.55f + Vector3.down);
             l.name = "ReflectorBodega";
             Colocar(padre, "PU06_Pallets", frente + normal * 2f + lado * 7f, Mathf.Atan2(normal.x, normal.z) * Mathf.Rad2Deg, 0f, 1.2f, false, false);
             Colocar(padre, "PU06_Pallets", frente + normal * 1.6f - lado * 9f, 15f, 0f, 1.0f, false, false);
@@ -366,7 +366,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Material m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
                 m.SetColor("_BaseColor", new Color(0.3f, 0.02f, 0.02f));
                 m.EnableKeyword("_EMISSION");
-                m.SetColor("_EmissionColor", new Color(4f, 0.1f, 0.1f));
+                m.SetColor("_EmissionColor", new Color(12f, 0.3f, 0.3f));
                 m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
                 return m;
             });
@@ -377,7 +377,7 @@ namespace MechaCyberpunk.Arte.Editor
                 s.name = "LuzRojaGrua";
                 s.transform.SetParent(padre, true);
                 s.transform.position = cima + new Vector3(i * 3f, -Mathf.Abs(i) * 4f, 0f);
-                s.transform.localScale = Vector3.one * 0.5f;
+                s.transform.localScale = Vector3.one * 0.8f;
                 s.GetComponent<MeshRenderer>().sharedMaterial = rojo;
                 s.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             }
@@ -389,6 +389,7 @@ namespace MechaCyberpunk.Arte.Editor
             padre.SetParent(r, false);
             // Caseta junto a la calle de U5; la pluma no tiene modelo: queda su hueco.
             Colocar(padre, "LO04_Caseta", new Vector3(U5.x + 14f, YPatio, U5.z - 8f), 0f, 0f, 3.2f, false, false);
+            Colocar(padre, "LO04_Caseta", new Vector3(U8.x + 10f, YPatio, U8.z - 14f), 0f, 0f, 3.2f, false, false);
             Hueco(padre, "PluminaEntrada", new Vector3(U5.x + 14f, YPatio, U5.z));
             // Reja en el perímetro de tierra: norte (con el hueco de U8) y oeste.
             for (float x = X0 + 2f; x < X1 - 2f; x += 4f)
@@ -584,8 +585,8 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         Material m = new Material(origen);
                         m.SetColor("_BaseColor", color * (variante == 0 ? 1f : 0.8f));
-                        m.SetFloat("_Smoothness", 0.5f);
-                        m.SetFloat("_Metallic", 0.15f);
+                        m.SetFloat("_Smoothness", 0.3f);
+                        m.SetFloat("_Metallic", 0.2f);
                         return m;
                     });
                 }
@@ -600,7 +601,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             ColocarS2.Abrir();
             // K15: pasillo a nivel de piso (calle de x = 160 hacia el sur), contenedores a la izquierda, bodegas a la derecha, grúas y barco al fondo.
-            ColocarS2cLook.Foto(new Vector3(160f, 1.7f, -98f), new Vector3(186f, 15f, -255f), "docs/capturas/zonas/puerto-juego-k15.png", 62f);
+            ColocarS2cLook.Foto(new Vector3(157f, 1.7f, -98f), new Vector3(172f, 22f, -255f), "docs/capturas/zonas/puerto-juego-k15.png", 55f);
             ColocarS2.LadoALado("imageassets/referencias/look/K15_Puerto.png", "docs/capturas/zonas/puerto-juego-k15.png", "docs/capturas/zonas/puerto-k15.png");
             // A15: aérea.
             ColocarS2cLook.Foto(new Vector3(322f, 72f, -48f), new Vector3(225f, 0f, -175f), "docs/capturas/zonas/puerto-juego-a15.png", 60f);
