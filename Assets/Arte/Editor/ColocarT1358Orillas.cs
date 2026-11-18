@@ -24,9 +24,9 @@ namespace MechaCyberpunk.Arte.Editor
         {
             ("U1", new Vector4(-54f, -240f, -40f, -187f)),
             ("U2", new Vector4(40f, -240f, 54f, -187f)),
-            ("U4", new Vector4(-320f, -7f, -249f, 7f)),
+            ("U4", new Vector4(-311f, -7f, -249f, 7f)),   // hasta la orilla oeste de la calle base (x -305 ± 7): ahí empiezan casas y escaleras del cerro
             ("U9", new Vector4(249f, -7f, 310f, 7f)),
-            ("U7", new Vector4(-125f, 187f, -100f, 240f)),
+            ("U7", new Vector4(-125f, 203f, -100f, 240f)),   // desde la orilla norte de la calle cruzada (z 194 + 7): lo de abajo es T530
         };
 
         /// <summary>Límites del mundo nuevos: nombre, centro y tamaño.</summary>

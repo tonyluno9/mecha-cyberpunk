@@ -212,8 +212,8 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Color[] colores =
             {
-                new Color(0.45f, 0.17f, 0.1f), new Color(0.18f, 0.35f, 0.28f), new Color(0.16f, 0.25f, 0.38f),
-                new Color(0.55f, 0.3f, 0.12f), new Color(0.12f, 0.33f, 0.35f),
+                new Color(0.78f, 0.3f, 0.18f), new Color(0.32f, 0.6f, 0.48f), new Color(0.28f, 0.44f, 0.66f), // tonos de A15, aclarados ×1.75 para la luz de noche
+                new Color(0.9f, 0.5f, 0.2f), new Color(0.22f, 0.56f, 0.6f),
             };
             Transform padre = new GameObject("Contenedores").transform;
             padre.SetParent(r, false);
@@ -504,6 +504,9 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject p = AssetDatabase.FindAssets(codigo + " t:Prefab")
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(ruta => { string n = Path.GetFileNameWithoutExtension(ruta); return n == codigo || n.StartsWith(codigo + "_"); })
+                // Primero el nombre exacto y los módulos texturizados de la sesión B (T-1346); después los de T-1353.
+                .OrderBy(ruta => Path.GetFileNameWithoutExtension(ruta) == codigo ? 0 : 1)
+                .ThenBy(ruta => ruta.StartsWith("Assets/Arte/Zonas/") == (codigo != "PT01_Contenedor40") ? 0 : 1) // el contenedor se tiñe sobre el material de T-1353
                 .Select(AssetDatabase.LoadAssetAtPath<GameObject>).FirstOrDefault();
             prefabs[codigo] = p;
             return p;

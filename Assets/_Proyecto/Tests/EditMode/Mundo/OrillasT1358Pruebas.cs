@@ -34,9 +34,23 @@ namespace MechaCyberpunk.Tests.Mundo
             {
                 Vector3 centro = new Vector3((r.x + r.z) * 0.5f, 2f, (r.y + r.w) * 0.5f);
                 Vector3 mitad = new Vector3((r.z - r.x) * 0.5f, 1f, (r.w - r.y) * 0.5f);
-                Collider[] golpes = Physics.OverlapBox(centro, mitad, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+                // El tablero de la autopista (rampa norte: losa, asfalto, parapetos) ES la calle de U7: no cuenta como estorbo.
+                Collider[] golpes = Physics.OverlapBox(centro, mitad, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore)
+                    .Where(c => c.GetComponentInParent<Transform>() == null || !EsTablero(c.transform)).ToArray();
                 Assert.IsEmpty(golpes, nombre + " tapada por: " + string.Join(", ", golpes.Select(c => c.name + "@" + c.transform.position)));
             }
+        }
+
+        private static bool EsTablero(Transform t)
+        {
+            for (Transform p = t; p != null; p = p.parent)
+            {
+                if (p.name == "Tablero" && p.parent != null && p.parent.name == "T1356_Autopista")
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         [Test]

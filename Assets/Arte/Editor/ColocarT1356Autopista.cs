@@ -115,7 +115,7 @@ namespace MechaCyberpunk.Arte.Editor
             // autopista arriba y túnel en el acantilado al fondo.
             Vector3 camaraK18 = new Vector3(-205f, 1.7f, 236f);
             RevisarCamara(camaraK18);
-            ColocarS2cLook.Foto(camaraK18, new Vector3(-330f, 13f, 250f), "Logs/autopista-k18-juego.png", 65f);
+            ColocarS2cLook.Foto(new Vector3(-262f, 4f, 214f), new Vector3(-322f, 11f, 246f), "Logs/autopista-k18-juego.png", 70f); // calle z=216 frente al túnel: tablero arriba a la derecha, boca al fondo
             ColocarS2.LadoALado("imageassets/referencias/look/K18_AutopistaElevada.png", "Logs/autopista-k18-juego.png", "docs/capturas/zonas/autopista-k18.png");
             // A18: al este-sureste del túnel y por encima: autopista curva entrando al túnel del acantilado, rampa abajo, casitas en primer plano.
             Vector3 camaraA18 = new Vector3(-230f, 48f, 205f);
@@ -836,7 +836,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             if (!tripo)
             {
-                return AssetDatabase.LoadAssetAtPath<GameObject>(carpeta + codigo + ".prefab");
+                return AssetDatabase.LoadAssetAtPath<GameObject>(carpeta == CarpetaModulos ? CorrerZonasT1350.RutaModulo(codigo) : carpeta + codigo + ".prefab");
             }
             if (!Directory.Exists(CarpetaTripo))
             {

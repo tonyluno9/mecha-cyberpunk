@@ -955,7 +955,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             if (!prefabs.TryGetValue(nombre, out GameObject p))
             {
-                p = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaModulos + nombre + ".prefab");
+                p = AssetDatabase.LoadAssetAtPath<GameObject>(CorrerZonasT1350.RutaModulo(nombre));
                 prefabs[nombre] = p;
             }
             return p;

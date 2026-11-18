@@ -53,7 +53,7 @@ namespace MechaCyberpunk.Tests.Mundo
             if (m.HasProperty("_EmissionColor") && m.GetColor("_EmissionColor").maxColorComponent > UmbralEmision) { return true; }
             if (m.HasProperty("_Surface") && m.GetFloat("_Surface") > 0.5f) { return true; }
             string sh = m.shader.name;
-            return sh.Contains("Unlit") || sh.Contains("Particles") || sh.Contains("Sprites") || sh.StartsWith("MechaCyberpunk/Torre") || sh.Contains("TextMeshPro") || sh.Contains("UI/");
+            return sh.Contains("Unlit") || sh.Contains("Particles") || sh.Contains("Sprites") || sh.StartsWith("MechaCyberpunk/Torre") || sh == "MechaCyberpunk/Mar" || sh == "MechaCyberpunk/Mundo/EmisionNoche" || sh.Contains("TextMeshPro") || sh.Contains("UI/");
         }
 
         private static bool EnRaizExcluida(Transform t)

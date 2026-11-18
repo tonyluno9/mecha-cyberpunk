@@ -29,7 +29,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const string RutaMaterialTerreno = "Assets/_Proyecto/Mundo/Materiales/Cerro_Terreno.mat";
         public const string RutaTexturaT05 = "Assets/_Proyecto/Mundo/Texturas/T05_ConcretoCerro.png";
         public const string FuenteT05 = "imageassets/calle/T05_ConcretoCerro.png";
-        public const string RutaCarro = "Assets/_Proyecto/Vehiculos/Prefabs/CarroViejo.prefab";
+        public const string RutaCarro = "Assets/Arte/Vehiculos/Prefabs/V01a_CarroViejito.prefab"; // el CarroViejo de Vehiculos es greybox (T-506)
         public const string CarpetaModulos = "Assets/Arte/ZonasModulos/Prefabs/";
         public const string CarpetaTripo = "Assets/Arte/Zonas";
 
@@ -152,8 +152,8 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (float z in ZEscaleras)
             {
                 float xArriba = Trazado.XPierna2 + FachadaDesdeEje - 0.5f;
-                float xAbajo = Trazado.XBase - FachadaDesdeEje + 0.5f;
-                int pasos = Mathf.Max(1, Mathf.RoundToInt((xAbajo - xArriba) / LargoModuloEscalera));
+                float xAbajo = Trazado.XBase - FachadaDesdeEje+ 0.5f; // el barandal CE03 (4 m) no debe salir a la calle base (U4)
+                int pasos = Mathf.Max(1, Mathf.FloorToInt((xAbajo - xArriba) / LargoModuloEscalera) - 1);
                 xAbajo = xArriba + pasos * LargoModuloEscalera;
                 (float z, float yArriba, float yAbajo, float xArriba, float xAbajo, int pasos) e = (z, Trazado.AlturaPierna2(z) + AltoBanqueta, AltoBanqueta, xArriba, xAbajo, pasos);
                 escaleras.Add(e);
@@ -574,7 +574,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Instancia la pieza modular (prefab de Blender) o deja el hueco vacío "Hueco_CODIGO".</summary>
         private static void Modulo(string codigo, Transform padre, Transform huecos, Vector3 pos, Quaternion giro, Vector3? escala = null)
         {
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CarpetaModulos + codigo + ".prefab");
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CorrerZonasT1350.RutaModulo(codigo));
             if (prefab != null)
             {
                 GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
