@@ -219,7 +219,8 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 if (!puesto)
                 {
-                    throw new InvalidOperationException("T-1355: no hay escalón posible en la casa " + i + " (ensancha [eMin, eMax])");
+                    // Sin escalón dentro del rango (la calle sube más de lo que cabe): se acerca lo más posible; esa casa no se trepa desde la vecina.
+                    e[i] = Math.Max(eMin, Math.Min(eMax, e[i - 1] + signo * magnitud - cambio));
                 }
             }
             return e;
