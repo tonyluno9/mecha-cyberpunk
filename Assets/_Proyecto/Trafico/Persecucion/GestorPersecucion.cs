@@ -618,7 +618,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     centros.Add(new Vector2(hijo.position.x, hijo.position.z));
                 }
             }
-            return centros.Count > 0 ? GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles) : null;
+            if (centros.Count == 0)
+            {
+                return null;
+            }
+            GrafoCalles grafo = GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles);
+            CallesDeZona.Agregar(grafo); // T-1350: las calles de las zonas nuevas (antes del alargue de las afueras)
+            return grafo;
         }
 
         private GrafoCalles ArmarCalles()
@@ -636,6 +642,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return null;
             }
             GrafoCalles grafo = GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles);
+            CallesDeZona.Agregar(grafo); // T-1350
             TraficoCalle.AlargarHaciaLasAfueras(grafo); // T-587: las patrullas llegan y se van por las calles de las afueras, lejos de la vista
             BloqueosDeCalles.Marcar(grafo); // T-986: manejan con física: un cierre en la calle las detiene, así que ninguna sale ni va por ahí
             return grafo;

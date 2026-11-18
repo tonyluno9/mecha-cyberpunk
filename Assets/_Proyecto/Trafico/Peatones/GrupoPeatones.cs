@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Core.Mundo;
 using MechaCyberpunk.Trafico.Datos;
 using UnityEngine;
 
@@ -74,6 +75,45 @@ namespace MechaCyberpunk.Trafico.Peatones
                 peaton.gameObject.SetActive(false);
                 peatones.Add(peaton);
             }
+            CrearPeatonesDeZonas();
+        }
+
+        // T-1350: un peatón por ruta de banqueta de las calles de zona (sin autopistas), hasta MaximoPeatonesDeZonas, a la misma proporción día/noche.
+        private const int MaximoPeatonesDeZonas = 16;
+        private const float AlturaBanquetaZona = 0.2f;     // m
+        private const float MitadBanquetaZona = 1.5f;      // m, del borde de la calle al centro de la banqueta
+        private readonly List<PeatonMundo> peatonesDeZonas = new List<PeatonMundo>();
+
+        /// <summary>T-1350: peatones de las banquetas de zonas nuevas (aparte de <see cref="Peatones"/>).</summary>
+        public IReadOnlyList<PeatonMundo> PeatonesDeZonas => peatonesDeZonas;
+
+        private void CrearPeatonesDeZonas()
+        {
+            List<Vector3[]> rutasZona = new List<Vector3[]>();
+            foreach (CalleZona calle in CalleZona.Activas)
+            {
+                if (calle == null || !calle.Banquetas || calle.Autopista || calle.Cantidad < 2)
+                {
+                    continue;
+                }
+                foreach (Vector3[] ruta in RutasBanqueta.DeCalleZona(calle.Puntos(), calle.Ancho, MitadBanquetaZona, AlturaBanquetaZona))
+                {
+                    for (int i = 0; i < ruta.Length; i++)
+                    {
+                        ruta[i] = transform.InverseTransformPoint(ruta[i]); // los peatones andan en espacio local de este grupo
+                    }
+                    rutasZona.Add(ruta);
+                }
+            }
+            int cuantos = Mathf.Min(rutasZona.Count, MaximoPeatonesDeZonas);
+            for (int i = 0; i < cuantos; i++)
+            {
+                PeatonMundo peaton = Instantiate(prefabPeaton, transform);
+                peaton.name = "PeatonZona_" + (i + 1);
+                peaton.Preparar(rutasZona[i * rutasZona.Count / cuantos], config, new System.Random(azar.Next()), PosicionDelJugador, (float)azar.NextDouble() * SegundosPreviosMaximos);
+                peaton.gameObject.SetActive(false);
+                peatonesDeZonas.Add(peaton);
+            }
         }
 
         private void Update()
@@ -86,6 +126,15 @@ namespace MechaCyberpunk.Trafico.Peatones
                 if (peatones[i].gameObject.activeSelf != debeEstar)
                 {
                     peatones[i].gameObject.SetActive(debeEstar);
+                }
+            }
+            int objetivoZonas = Mathf.CeilToInt(peatonesDeZonas.Count * (float)objetivo / Mathf.Max(1, config.Maximo));
+            for (int i = 0; i < peatonesDeZonas.Count; i++)
+            {
+                bool debeEstar = i < objetivoZonas;
+                if (peatonesDeZonas[i].gameObject.activeSelf != debeEstar)
+                {
+                    peatonesDeZonas[i].gameObject.SetActive(debeEstar);
                 }
             }
         }
