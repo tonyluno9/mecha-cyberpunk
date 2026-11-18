@@ -9,7 +9,7 @@ Referencias: imageassets/referencias/look/K18_AutopistaElevada.png y A18_Autopis
   (huellas en `ColocarT1356Trazado.HuellasCasas`, a más de 8 m en planta del borde del tablero). Nada de casas debajo del tablero: un lote con
   charcos, carros chatarra y basura.
 - **Rampa norte (U7 reubicada)**: sigue saliendo de la calle cruzada norte (-107,0,201) y pasa por el enlace (-120,0,215) sobre la calle baja, pero ahora sube
-  hacia el OESTE por z = 232 y se une al tablero en (-270,10,250) (antes subía al este y se unía en (30,10,250)). Pendiente ~8.4 % (tope 9 %).
+  hacia el OESTE por z = 232 y se une al tablero en (-300,10,250) (antes subía al este y se unía en (30,10,250)). Pendiente ~7.3 % (tope 9 %); va a ras los primeros 12 m.
 - **Se lee elevada**: losa de 1.4 m, viga central debajo, cabezal bajo cada columna, columnas de 2.6 m de diámetro (AU04 escalada en grosor) cada ~24 m,
   parapeto de concreto de 1 m con tapa de 15 cm y canto saliente (siempre visible; se quitó el guardarraíl AU05 para no duplicar). Sin parapeto donde el
   tablero va a ras del piso (entrada de la calle).

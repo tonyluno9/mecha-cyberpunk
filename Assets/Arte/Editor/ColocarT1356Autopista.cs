@@ -86,11 +86,12 @@ namespace MechaCyberpunk.Arte.Editor
                 Rectas(o, tablero, principal.GetRange(0, T.IndiceFinRecta + 1));
             }
             Tramo(o, tablero, "RampaNorte", rampaNorte, -1, principal);
-            Piso(o, tablero, "CalleBaja", calleBaja);
+            // Las banquetas se cortan donde la calle se cruza con otra (CalleEste, rampa): un borde de 0.2 m en medio del arroyo atora a los carros.
+            Piso(o, tablero, "CalleBaja", calleBaja, 0f, 30f);
             Piso(o, tablero, "CalleOeste", calleOeste);
             RayasCalleOeste(o, Hijo(raiz, "RayasCalleOeste"), calleOeste);
             Piso(o, tablero, "CalleEste", calleEste);
-            Piso(o, tablero, "ConectorEste", conector);
+            Piso(o, tablero, "ConectorEste", conector, T.CorteBanquetaEnCruce, 3f);
             Tunel(o, Hijo(raiz, "Tunel"), tunel);
             Columnas(o, Hijo(raiz, "Columnas"), new[] { principal, rampaNorte });
             Luminarias(o, Hijo(raiz, "Luminarias"), new[] { principal, rampaNorte });
@@ -324,12 +325,14 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Calle a nivel del piso con banquetas de 3 m (0.2 m): asfalto y banquetas con collider.</summary>
-        private static void Piso(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> p)
+        private static void Piso(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> p, float cortarInicio = 0f, float cortarFinal = 0f)
         {
             Transform t = Hijo(padre, nombre);
             Barrer(o, t, "Asfalto", p, -7f, 7f, -1f, 0f, KitS2c.MatAsfalto(), true, true); // cara de arriba EXACTAMENTE en y = 0: la losa crece hacia abajo
-            Barrer(o, t, "Banqueta_Izq", p, -10f, -7f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
-            Barrer(o, t, "Banqueta_Der", p, 7f, 10f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
+            float largo = T.Longitud(p);
+            List<Vector3> banq = cortarInicio + cortarFinal > 0f && largo > cortarInicio + cortarFinal + 1f ? T.Subtramo(p, cortarInicio, largo - cortarFinal) : p;
+            Barrer(o, t, "Banqueta_Izq", banq, -10f, -7f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
+            Barrer(o, t, "Banqueta_Der", banq, 7f, 10f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
         }
 
         /// <summary>Piezas AU01 encadenadas de a a b por sus medidas (se estiran un poco para cerrar sin huecos).</summary>
@@ -363,6 +366,8 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static void Tunel(KitS2c.Obra o, Transform padre, List<Vector3> p)
         {
+            // Anillos cada ~5 m: el tubo (piso, paredes y techo) sigue la vuelta sin tramos largos que se tuerzan; los extremos quedan exactos.
+            p = T.Resamplear(p, 5f);
             Material concreto = Concreto();
             Barrer(o, padre, "Piso", p, -8f, 8f, -GruesoTablero, -0.05f, concreto, true, true);
             Barrer(o, padre, "Asfalto", p, -MedioAsfalto, MedioAsfalto, -0.05f, 0f, KitS2c.MatAsfalto(), true, true);
@@ -867,6 +872,11 @@ namespace MechaCyberpunk.Arte.Editor
                 float sentido = k % 2 == 0 ? 1f : -1f;
                 GameObject c = Poner(raiz, prefabs[k % prefabs.Length], raiz.position, Quaternion.LookRotation(Vector3.right * sentido), Vector3.one, false);
                 c.name = "CarroArriba_" + k;
+                // Decorativo puro: sin física ni colliders (nada con collider sobre el carril que atore al jugador).
+                foreach (Rigidbody rb in c.GetComponentsInChildren<Rigidbody>(true))
+                {
+                    Object.DestroyImmediate(rb);
+                }
                 float x = Mathf.Lerp(-MitadRecorridoCarros + 20f, MitadRecorridoCarros - 20f, (k / 2 + 0.5f * (k % 2)) / (CarrosArriba / 2f));
                 c.transform.localPosition = new Vector3(x, 0f, -CarrilCentro * sentido);
                 Bounds b = c.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((u, v) => { u.Encapsulate(v); return u; });
