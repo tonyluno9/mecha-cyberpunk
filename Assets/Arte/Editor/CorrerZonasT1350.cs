@@ -309,6 +309,33 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        /// <summary>Lista los colliders a menos de -radio m de cada -puntos "x,y,z;x,y,z" en Logs/colliders-puntos.txt (diagnóstico).</summary>
+        public static void ListarColliders()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            int i = Array.IndexOf(args, "-puntos");
+            int j = Array.IndexOf(args, "-radio");
+            float radio = j >= 0 ? float.Parse(args[j + 1], System.Globalization.CultureInfo.InvariantCulture) : 2f;
+            ColocarS2.Abrir();
+            Physics.SyncTransforms();
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            foreach (string s in args[i + 1].Split(';'))
+            {
+                Vector3 p = Vec(s);
+                sb.AppendLine("== " + p);
+                foreach (Collider c in Physics.OverlapSphere(p, radio, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    string ruta = c.name;
+                    for (Transform t = c.transform.parent; t != null; t = t.parent)
+                    {
+                        ruta = t.name + "/" + ruta;
+                    }
+                    sb.AppendLine("  " + c.GetType().Name + " " + ruta + " bounds " + c.bounds.min.ToString("F1") + ".." + c.bounds.max.ToString("F1"));
+                }
+            }
+            System.IO.File.WriteAllText("Logs/colliders-puntos.txt", sb.ToString());
+        }
+
         private static Vector3 Vec(string s)
         {
             string[] c = s.Split(',');
