@@ -14,7 +14,7 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Rueda
 {
     /// <summary>
-    /// T-991: la rueda radial de armas y objetos (docs/diseno/rueda-y-habilidades.md). Al mantener su tecla (acción "Rueda", Tab) a pie, vivo y con control,
+    /// T-991: la rueda radial de armas y objetos (docs/diseno/rueda-y-habilidades.md). Al mantener su tecla (acción "Rueda", botón medio del ratón desde T-1329; antes Tab) a pie, vivo y con control,
     /// el tiempo baja a 0.25, el fondo se oscurece y el ratón mueve un cursor virtual (no gira la cámara ni dispara). Al soltar equipa el arma resaltada
     /// o usa el objeto resaltado; sin nada resaltado solo cierra. Se cierra sola si mueres, subes a un carro, hay una cinemática o se abre un menú o la pausa
     /// (la pausa conserva la escala de tiempo que había antes de la rueda). La lógica de casillas está en <see cref="ReglaRuedaArmas"/>.
@@ -286,7 +286,7 @@ namespace MechaCyberpunk.UI.Rueda
             IJugador j = JugadorActual();
             return j != null && j.Modo == ModoJugador.APie && controlador != null && controlador.ControlActivo && armas != null
                 && vida != null && !vida.EstaKO && !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0
-                && Time.timeScale > 0.01f;
+                && !RuedaHabilidadesExo.Abierta && Time.timeScale > 0.01f;
         }
 
         private bool PuedeSeguir()

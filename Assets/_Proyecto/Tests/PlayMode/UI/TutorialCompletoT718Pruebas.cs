@@ -218,8 +218,8 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarAviso(tutorial, AccionTutorial.Consumibles);
             Foto("aviso-objetos");
             StringAssert.Contains(tutorial.TeclaReal(ReglaTutorial.TeclaRueda).ToUpperInvariant(), tutorial.Texto.text);
-            yield return Pulsar(teclado.tabKey);
-            Assert.IsTrue(tutorial.Regla.Vista(AccionTutorial.Consumibles), "Tab (la rueda) da por vistos los objetos");
+            yield return Pulsar(raton.middleButton);
+            Assert.IsTrue(tutorial.Regla.Vista(AccionTutorial.Consumibles), "Botón medio (la rueda) da por vistos los objetos");
 
             // 8. El escudo: un golpe que absorbe.
             yield return EsperarAviso(tutorial, AccionTutorial.Escudo);

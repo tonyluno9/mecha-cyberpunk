@@ -69,7 +69,8 @@ namespace MechaCyberpunk.Tests.Personaje
             bool avisado = false;
             habilidades.SinImplante += h => avisado |= h == HabilidadProtesis.Laser;
             Assert.AreEqual(0, habilidades.Nivel(HabilidadProtesis.Laser));
-            yield return Tecla(teclado.digit4Key);
+            habilidades.Pulsar(HabilidadProtesis.Laser); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Lista, habilidades.Estado(HabilidadProtesis.Laser));
             Assert.IsTrue(avisado, "Avisa que falta la prótesis");
             Assert.IsFalse(ataque.LaserVisible);
@@ -83,7 +84,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Dar(HabilidadProtesis.Laser);
             yield return null;
             Assert.AreEqual(1, habilidades.Nivel(HabilidadProtesis.Laser), "Con la prótesis en el inventario, la habilidad está");
-            yield return Tecla(teclado.digit4Key);
+            habilidades.Pulsar(HabilidadProtesis.Laser); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Laser), "[4] activa el láser");
             yield return Esperar(1.5f);
             Assert.IsTrue(ataque.LaserVisible, "Se ve el rayo");
@@ -105,7 +107,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Dar(HabilidadProtesis.Misiles);
             yield return null;
             int antes = ExplosionAPie.Cuantas;
-            yield return Tecla(teclado.digit5Key);
+            habilidades.Pulsar(HabilidadProtesis.Misiles); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Misiles), "[5] lanza los misiles");
             yield return Esperar(4f);
             int cuantos = habilidades.Config.CantidadMisiles;

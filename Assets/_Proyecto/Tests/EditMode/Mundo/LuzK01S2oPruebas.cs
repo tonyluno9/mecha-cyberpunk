@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.Greater(postes.Length, 50);
             foreach (Light l in postes)
             {
-                Assert.LessOrEqual(l.range, 12f, ColocarS2.Ruta(l.transform) + ": alcance corto");
+                Assert.LessOrEqual(l.range, 16f, ColocarS2.Ruta(l.transform) + ": alcance corto (T-1331: 16 m, los postes iluminan más al oscurecer)");
             }
         }
 

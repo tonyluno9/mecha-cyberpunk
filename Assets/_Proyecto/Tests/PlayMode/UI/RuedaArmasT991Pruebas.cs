@@ -66,7 +66,7 @@ namespace MechaCyberpunk.Tests.UI
 
         private IEnumerator AbrirRueda()
         {
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return null;
             yield return null;
         }
@@ -82,7 +82,7 @@ namespace MechaCyberpunk.Tests.UI
 
         private IEnumerator Soltar()
         {
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return null;
             yield return null;
         }
@@ -308,7 +308,7 @@ namespace MechaCyberpunk.Tests.UI
             }
             yield return new WaitForSecondsRealtime(0.8f);
 
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return null;
             yield return null;
             Assert.IsTrue(RuedaArmasObjetos.Abierta, "La rueda abrió en la ciudad");
@@ -320,7 +320,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(2), rueda.Resaltada);
             yield return new WaitForSecondsRealtime(0.3f);
             Capturar("rueda-objetos.png");
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return null;
             yield return null;
 
@@ -332,7 +332,7 @@ namespace MechaCyberpunk.Tests.UI
                 inventario.Agregar(arsenal.Catalogo.Buscar(arma, 0), 1);
             }
             yield return new WaitForSecondsRealtime(0.3f);
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return null;
             yield return null;
             Assert.IsTrue(rueda.CasillaVisible((int)ArmaAPie.RiflePlasma), "El rifle de plasma está en la rueda");
@@ -341,7 +341,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual((int)ArmaAPie.RiflePlasma, rueda.Resaltada);
             yield return new WaitForSecondsRealtime(0.3f);
             Capturar("rueda-todas-las-armas.png");
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return null;
             yield return null;
         }

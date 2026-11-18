@@ -153,9 +153,17 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1f, h10.Estrella(0).color.a, 0.001f);
 
             ZonaBusquedaFalsa zona = new ZonaBusquedaFalsa();
+            // Con 5 estrellas y una zona de búsqueda llegaría Nova (T-1304) y tumbaría al jugador: aquí solo se prueba el HUD.
+            MechaCyberpunk.IA.APie.RespuestaNova.Apagada = true;
             Registro<IZonaBusqueda>.Agregar(zona);
-            yield return null;
-            Assert.IsTrue(h10.Buscando, "Con zona de búsqueda activa, parpadean");
+            // T-729: parpadean cuando llevas un rato sin que te vean, no al instante.
+            float hasta = Time.unscaledTime + ReglaEstrellasH10.SegundosSinVerParaParpadear + 0.5f;
+            while (!h10.Buscando && Time.unscaledTime < hasta)
+            {
+                calor.Sumar(calor.Maximo, MotivoCalor.Choque); // que el calor no baje solo mientras se espera
+                yield return null;
+            }
+            Assert.IsTrue(h10.Buscando, "Con zona de búsqueda activa y sin que te vean, parpadean");
             HashSet<float> alfas = new HashSet<float>();
             float fin = Time.unscaledTime + ReglaEstrellasH10.SegundosParpadeo * 3f;
             while (Time.unscaledTime < fin)
@@ -165,6 +173,7 @@ namespace MechaCyberpunk.Tests.UI
             }
             Assert.GreaterOrEqual(alfas.Count, 2, "El alfa de la estrella llena cambia: parpadea");
             Registro<IZonaBusqueda>.Quitar(zona);
+            MechaCyberpunk.IA.APie.RespuestaNova.Apagada = false;
         }
 
         [UnityTest]
@@ -249,11 +258,11 @@ namespace MechaCyberpunk.Tests.UI
             carro = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaCarro), new Vector3(2f, 0f, 1.1f), Quaternion.identity);
             yield return Esperar(0.5f);
             string subir = "[E] " + ReglaAyudasH10.TextoSubirCarro;
-            Assert.AreEqual(subir, h10.TextosAyuda[1].text, "Frente a un carro la ayuda cambia a subir (arriba, con el golpe de los puños abajo)");
-            Assert.AreEqual("[Clic] Golpe", h10.TextosAyuda[0].text);
+            Assert.AreEqual(subir, h10.AvisoCentroCompleto, "T-1329: frente a un carro el aviso de subir sale al centro, no a la derecha");
+            Assert.AreEqual("[Clic] Golpe", h10.TextosAyuda[0].text, "A la derecha queda el golpe de los puños");
             carro.transform.position = new Vector3(40f, 0f, 40f);
             yield return Esperar(0.5f);
-            Assert.IsFalse(h10.TextosAyuda[0].text.Contains("Subir") || h10.TextosAyuda[1].text.Contains("Subir"), "Lejos del carro ya no sale");
+            Assert.IsFalse(h10.TextosAyuda[0].text.Contains("Subir") || h10.TextosAyuda[1].text.Contains("Subir") || h10.AvisoCentroVisible, "Lejos del carro ya no sale");
         }
 
         [UnityTest]

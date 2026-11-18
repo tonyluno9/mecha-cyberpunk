@@ -165,6 +165,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "RuedaExo",
+                    "type": "Button",
+                    "id": "c2d4e6f8-1a3b-4c5d-8e7f-9a0b1c2d3e41",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "RuedaExoElegir",
+                    "type": "Button",
+                    "id": "c2d4e6f8-1a3b-4c5d-8e7f-9a0b1c2d3e42",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -325,7 +345,7 @@
                 {
                     "name": "",
                     "id": "b1e94a07-3c58-4d2f-8a6e-9f0d7c215e33",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Mouse>/middleButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -335,56 +355,23 @@
                 },
                 {
                     "name": "",
-                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e01",
-                    "path": "<Keyboard>/q",
+                    "id": "c2d4e6f8-1a3b-4c5d-8e7f-9a0b1c2d3e51",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "HabilidadPiernas",
+                    "action": "RuedaExo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e02",
-                    "path": "<Keyboard>/c",
+                    "id": "c2d4e6f8-1a3b-4c5d-8e7f-9a0b1c2d3e52",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "HabilidadBrazos",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e03",
-                    "path": "<Keyboard>/x",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "HabilidadCabeza",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e04",
-                    "path": "<Keyboard>/4",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "HabilidadLaser",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a1f0c3d2-5b7e-4c81-9e0a-3e6f7b8c9e05",
-                    "path": "<Keyboard>/5",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "HabilidadMisiles",
+                    "action": "RuedaExoElegir",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

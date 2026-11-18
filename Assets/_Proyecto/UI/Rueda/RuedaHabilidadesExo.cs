@@ -1,0 +1,367 @@
+using System.Collections.Generic;
+using MechaCyberpunk.Core;
+using MechaCyberpunk.Personaje.Habilidades;
+using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.UI.Hud;
+using MechaCyberpunk.UI.Kit;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
+namespace MechaCyberpunk.UI.Rueda
+{
+    /// <summary>
+    /// T-1329: la rueda de habilidades del EXO. Se mantiene Tab (acción "RuedaExo"), el tiempo baja a 0.25 y el ratón mueve un cursor virtual hacia la
+    /// habilidad (piernas, brazos, cabeza, láser, misiles); el clic izquierdo (acción "RuedaExoElegir") la activa. Al soltar Tab se cierra. Ya no hay una
+    /// tecla suelta por habilidad. No abre a la vez que la rueda de armas (botón medio). Reusa la lógica de sectores de <see cref="ReglaRuedaArmas"/>.
+    /// La agrega <see cref="HudAPie"/> al nacer y arma su canvas en código con los colores del HUD H10.
+    /// </summary>
+    public class RuedaHabilidadesExo : MonoBehaviour
+    {
+        public const int OrdenCanvas = 91;
+        public const string NombreAccion = "RuedaExo";
+        public const string NombreAccionElegir = "RuedaExoElegir";
+
+        private const float RadioIcono = 280f;
+        private static readonly Vector2 TamanoCasilla = new Vector2(250f, 96f);
+
+        private static readonly Color Turquesa = new Color(0.30f, 0.92f, 0.90f, 1f);
+        private static readonly Color Amarillo = new Color(1f, 0.92f, 0.25f, 1f);
+        private static readonly Color Rosa = new Color(1f, 0.35f, 0.6f, 1f);
+        private static readonly Color Gris = new Color(0.5f, 0.55f, 0.58f, 1f);
+        private static readonly Color Blanco = new Color(0.93f, 0.97f, 0.97f, 1f);
+        private static readonly Color FondoCasilla = new Color(0.02f, 0.08f, 0.11f, 0.8f);
+        private static readonly Color FondoResaltada = new Color(0.07f, 0.06f, 0.0f, 0.85f);
+
+        private sealed class Casilla
+        {
+            public RectTransform Raiz;
+            public Image Fondo;
+            public Text Nombre;
+            public Text Estado;
+        }
+
+        private static bool abierta;
+        private static float escalaAnterior = 1f;
+        private static int aperturas;
+        private static int activaciones;
+
+        private readonly List<int> disposicion = new List<int>();
+        private readonly List<Casilla> casillas = new List<Casilla>();
+        private Canvas canvas;
+        private GameObject raiz;
+        private RectTransform punto;
+        private Text textoCentro;
+        private InputAction accion;
+        private InputAction accionElegir;
+        private bool estabaPulsada;
+        private bool clicEstabaPulsado;
+        private Vector2 movimientoPendiente;
+        private Vector2 cursor;
+        private int resaltada = -1;
+        private float fixedAnterior = 0.02f;
+        private Transform raizJugador;
+        private ControladorAPie controlador;
+        private HabilidadesProtesis habilidades;
+        private VidaAPie vida;
+
+        /// <summary>True mientras la rueda está abierta.</summary>
+        public static bool Abierta => abierta;
+
+        /// <summary>La escala de tiempo que había antes de abrir la rueda.</summary>
+        public static float EscalaAnterior => escalaAnterior;
+
+        /// <summary>Cuántas veces se ha abierto.</summary>
+        public static int Aperturas => aperturas;
+
+        /// <summary>Cuántas habilidades se han activado desde la rueda.</summary>
+        public static int Activaciones => activaciones;
+
+        public static RuedaHabilidadesExo Actual { get; private set; }
+
+        /// <summary>La habilidad resaltada ahora (valor de <see cref="HabilidadProtesis"/>) o -1.</summary>
+        public int Resaltada => resaltada;
+
+        public Vector2 Cursor => cursor;
+
+        public bool Armada => raiz != null;
+
+        /// <summary>La posición en pantalla (px de referencia desde el centro, +y arriba) de la casilla de esa habilidad.</summary>
+        public static Vector2 PosicionDe(HabilidadProtesis h)
+        {
+            float rad = ReglaRuedaArmas.AnguloDeSector((int)h, Cantidad) * Mathf.Deg2Rad;
+            return new Vector2(Mathf.Sin(rad), Mathf.Cos(rad)) * RadioIcono;
+        }
+
+        /// <summary>El ángulo (° en el sentido del reloj desde arriba) del sector de la habilidad.</summary>
+        public static float AnguloDe(HabilidadProtesis h) => ReglaRuedaArmas.AnguloDeSector((int)h, Cantidad);
+
+        private static int Cantidad => System.Enum.GetValues(typeof(HabilidadProtesis)).Length;
+
+        public static string NombreDe(HabilidadProtesis h)
+        {
+            string nombre = h.ToString().ToUpperInvariant();
+            return nombre == "LASER" ? "LÁSER" : nombre;
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarEstatico()
+        {
+            abierta = false;
+            escalaAnterior = 1f;
+            aperturas = 0;
+            activaciones = 0;
+            Actual = null;
+        }
+
+        private void Start()
+        {
+            Armar();
+            Actual = this;
+            BuscarAcciones();
+            Pausa.Cambio += AlCambiarPausa;
+            InputSystem.onAfterUpdate += AcumularMovimiento;
+        }
+
+        private void OnDisable()
+        {
+            if (abierta && raiz != null)
+            {
+                Cerrar();
+            }
+            accion?.Disable();
+            accionElegir?.Disable();
+            accion = null;
+            accionElegir = null;
+        }
+
+        private void OnDestroy()
+        {
+            if (Actual == this)
+            {
+                Actual = null;
+            }
+            Pausa.Cambio -= AlCambiarPausa;
+            InputSystem.onAfterUpdate -= AcumularMovimiento;
+        }
+
+        private void AcumularMovimiento()
+        {
+            if (abierta && Mouse.current != null)
+            {
+                movimientoPendiente += Mouse.current.delta.ReadValue();
+            }
+        }
+
+        private void AlCambiarPausa(bool activa)
+        {
+            if (activa && abierta)
+            {
+                Cerrar();
+            }
+        }
+
+        private void BuscarAcciones()
+        {
+            ControlesHud controles = ControlesHud.Actual;
+            accion = (controles != null ? controles.AccionAPie(NombreAccion) : null) ?? TeclasHud.Buscar(NombreAccion);
+            accionElegir = (controles != null ? controles.AccionAPie(NombreAccionElegir) : null) ?? TeclasHud.Buscar(NombreAccionElegir);
+            accion?.Enable();
+            accionElegir?.Enable();
+        }
+
+        private void Update()
+        {
+            if (raiz == null)
+            {
+                return;
+            }
+            if (accion == null || accionElegir == null)
+            {
+                BuscarAcciones();
+                if (accion == null || accionElegir == null)
+                {
+                    return;
+                }
+            }
+            // El flanco se detecta a mano: así una pulsación simulada que se procesa entre cuadros tampoco se pierde.
+            bool pulsada = accion.IsPressed();
+            bool flanco = pulsada && !estabaPulsada;
+            estabaPulsada = pulsada;
+            bool clic = accionElegir.IsPressed();
+            bool clicNuevo = clic && !clicEstabaPulsado;
+            clicEstabaPulsado = clic;
+            if (!abierta)
+            {
+                if (flanco && PuedeAbrir())
+                {
+                    Abrir();
+                }
+                return;
+            }
+            if (!PuedeSeguir() || !pulsada)
+            {
+                Cerrar();
+                return;
+            }
+            cursor = ReglaRuedaArmas.MoverCursor(cursor, movimientoPendiente);
+            movimientoPendiente = Vector2.zero;
+            resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, disposicion, Elegible);
+            if (clicNuevo && resaltada >= 0 && habilidades != null && habilidades.Pulsar((HabilidadProtesis)resaltada))
+            {
+                activaciones++;
+            }
+            Dibujar();
+        }
+
+        private IJugador JugadorActual() => Registro<IJugador>.Actual ?? GetComponentInParent<JugadorAPie>();
+
+        private void Vincular()
+        {
+            IJugador j = JugadorActual();
+            Transform r = j != null ? j.Raiz : null;
+            if (r == raizJugador && (r == null || controlador != null))
+            {
+                return;
+            }
+            raizJugador = r;
+            controlador = r != null ? r.GetComponentInChildren<ControladorAPie>() : null;
+            habilidades = r != null ? r.GetComponentInChildren<HabilidadesProtesis>() : null;
+            vida = r != null ? r.GetComponentInChildren<VidaAPie>() : null;
+        }
+
+        private bool PuedeAbrir()
+        {
+            Vincular();
+            IJugador j = JugadorActual();
+            return j != null && j.Modo == ModoJugador.APie && controlador != null && controlador.ControlActivo && habilidades != null
+                && vida != null && !vida.EstaKO && !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0
+                && !RuedaArmasObjetos.Abierta && Time.timeScale > 0.01f;
+        }
+
+        private bool PuedeSeguir()
+        {
+            IJugador j = JugadorActual();
+            return j != null && j.Raiz == raizJugador && j.Modo == ModoJugador.APie && controlador != null && controlador.ControlActivo
+                && vida != null && !vida.EstaKO && !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0;
+        }
+
+        private void Abrir()
+        {
+            abierta = true;
+            aperturas++;
+            escalaAnterior = Time.timeScale;
+            fixedAnterior = Time.fixedDeltaTime;
+            Time.timeScale = ReglaRuedaArmas.EscalaTiempo * escalaAnterior;
+            Time.fixedDeltaTime = fixedAnterior * ReglaRuedaArmas.EscalaTiempo;
+            controlador.EntradaBloqueada = true;
+            cursor = Vector2.zero;
+            movimientoPendiente = Vector2.zero;
+            resaltada = -1;
+            raiz.SetActive(true);
+            Dibujar();
+        }
+
+        private void Cerrar()
+        {
+            if (!abierta)
+            {
+                return;
+            }
+            abierta = false;
+            if (!Pausa.Activa)
+            {
+                Time.timeScale = escalaAnterior;
+            }
+            Time.fixedDeltaTime = fixedAnterior;
+            raiz.SetActive(false);
+            if (controlador != null)
+            {
+                controlador.EntradaBloqueada = false;
+            }
+            resaltada = -1;
+        }
+
+        // Solo se puede elegir la habilidad cuyo implante o prótesis tienes.
+        private bool Elegible(int casilla) => habilidades != null && habilidades.Nivel((HabilidadProtesis)casilla) > 0;
+
+        private void Dibujar()
+        {
+            for (int i = 0; i < casillas.Count; i++)
+            {
+                HabilidadProtesis h = (HabilidadProtesis)disposicion[i];
+                Casilla c = casillas[i];
+                bool tiene = Elegible(i);
+                bool resalto = i == resaltada;
+                EstadoHabilidad estado = habilidades != null ? habilidades.Estado(h) : EstadoHabilidad.Lista;
+                Color color = !tiene ? Gris : estado == EstadoHabilidad.Activa ? Amarillo : estado == EstadoHabilidad.Recargando ? Rosa : Turquesa;
+                c.Fondo.color = resalto ? FondoResaltada : FondoCasilla;
+                c.Nombre.color = resalto ? Amarillo : color;
+                c.Estado.color = resalto ? Amarillo : color;
+                c.Nombre.text = NombreDe(h);
+                c.Estado.text = !tiene ? "SIN IMPLANTE" : estado == EstadoHabilidad.Activa ? "ACTIVA" : estado == EstadoHabilidad.Recargando ? "RECARGANDO" : "LISTA";
+            }
+            punto.anchoredPosition = cursor;
+            textoCentro.text = resaltada < 0 ? "MUEVE EL RATÓN Y HAZ CLIC\nSUELTA TAB PARA CERRAR" : NombreDe((HabilidadProtesis)resaltada);
+        }
+
+        private void Armar()
+        {
+            canvas = KitUI.CrearCanvas(transform, "CanvasRuedaExo", OrdenCanvas);
+            canvas.GetComponent<GraphicRaycaster>().enabled = false;
+            raiz = new GameObject("RuedaExo", typeof(RectTransform));
+            raiz.transform.SetParent(canvas.transform, false);
+            KitUI.Estirar((RectTransform)raiz.transform);
+
+            Image fondo = KitUI.CrearImagen(raiz.transform, "Fondo", new Color(0f, 0.01f, 0.03f, 0.62f));
+            fondo.raycastTarget = false;
+            KitUI.Estirar(fondo.rectTransform);
+
+            textoCentro = Texto(Nuevo(raiz.transform, "Centro", Vector2.zero, new Vector2(420f, 120f)), 30, Amarillo);
+
+            for (int i = 0; i < Cantidad; i++)
+            {
+                disposicion.Add(i);
+                Casilla c = new Casilla();
+                c.Raiz = Nuevo(raiz.transform, "Casilla" + i, PosicionDe((HabilidadProtesis)i), TamanoCasilla);
+                c.Fondo = c.Raiz.gameObject.AddComponent<Image>();
+                c.Fondo.raycastTarget = false;
+                c.Fondo.color = FondoCasilla;
+                KitUI.CrearBorde(c.Raiz, 3f, Turquesa);
+                c.Nombre = Texto(Nuevo(c.Raiz, "Nombre", new Vector2(0f, 16f), new Vector2(TamanoCasilla.x - 10f, 40f)), 34, Turquesa);
+                c.Estado = Texto(Nuevo(c.Raiz, "Estado", new Vector2(0f, -22f), new Vector2(TamanoCasilla.x - 10f, 30f)), 22, Turquesa);
+                casillas.Add(c);
+            }
+
+            punto = (RectTransform)KitUI.CrearRombo(raiz.transform, "Cursor", 18f, Blanco).rectTransform.parent;
+            punto.anchorMin = punto.anchorMax = new Vector2(0.5f, 0.5f);
+            raiz.SetActive(false);
+        }
+
+        private static RectTransform Nuevo(Transform padre, string nombre, Vector2 posicion, Vector2 tamano)
+        {
+            GameObject g = new GameObject(nombre, typeof(RectTransform));
+            g.transform.SetParent(padre, false);
+            RectTransform r = (RectTransform)g.transform;
+            KitUI.Colocar(r, new Vector2(0.5f, 0.5f), posicion, tamano);
+            return r;
+        }
+
+        private static Text Texto(RectTransform r, int letra, Color color)
+        {
+            Text t = r.gameObject.AddComponent<Text>();
+            ConfigHudH10 estilo = ConfigHudH10.Actual;
+            t.font = estilo != null && estilo.Fuente != null ? estilo.Fuente : KitUI.Estilo.Fuente;
+            t.fontSize = letra;
+            t.alignment = TextAnchor.MiddleCenter;
+            t.color = color;
+            t.horizontalOverflow = HorizontalWrapMode.Overflow;
+            t.verticalOverflow = VerticalWrapMode.Overflow;
+            t.raycastTarget = false;
+            t.text = string.Empty;
+            return t;
+        }
+    }
+}

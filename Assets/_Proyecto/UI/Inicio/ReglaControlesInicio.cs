@@ -16,9 +16,7 @@ namespace MechaCyberpunk.UI.Inicio
         public const string Disparar = "Atacar";
         public const string Recargar = "Recargar";
         public const string Rueda = "Rueda";
-        public const string Piernas = "HabilidadPiernas";
-        public const string Brazos = "HabilidadBrazos";
-        public const string Cabeza = "HabilidadCabeza";
+        public const string RuedaExo = "RuedaExo";
         public const string Mapa = "Mapa";
         public const string Telefono = "Telefono";
         public const string Pausa = "Pausa";
@@ -35,10 +33,8 @@ namespace MechaCyberpunk.UI.Inicio
                 case Apuntar: return "Clic der.";
                 case Disparar: return "Clic";
                 case Recargar: return "R";
-                case Rueda: return "Tab";
-                case Piernas: return "Q";
-                case Brazos: return "C";
-                case Cabeza: return "X";
+                case Rueda: return "Rueda (clic)";
+                case RuedaExo: return "Tab";
                 case Mapa: return "M";
                 case Telefono: return "T";
                 case Pausa: return "Esc";
@@ -59,7 +55,7 @@ namespace MechaCyberpunk.UI.Inicio
                 + "INTERACTUAR  " + T(Interactuar) + "        APUNTAR  " + T(Apuntar) + "        DISPARAR  " + T(Disparar) + "\n"
                 + "RECARGAR  " + T(Recargar) + "        ARMAS Y OBJETOS  " + T(Rueda) + "        MAPA  " + T(Mapa)
                 + "        TELÉFONO  " + T(Telefono) + "        PAUSA  " + T(Pausa) + "\n"
-                + "HABILIDADES  [" + T(Piernas) + "] PIERNAS  [" + T(Brazos) + "] BRAZOS  [" + T(Cabeza) + "] CABEZA";
+                + "HABILIDADES DEL EXO  MANTÉN " + T(RuedaExo) + " Y ELIGE CON EL RATÓN";
         }
     }
 }

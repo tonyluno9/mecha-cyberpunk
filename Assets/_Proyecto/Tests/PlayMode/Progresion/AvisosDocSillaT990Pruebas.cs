@@ -76,7 +76,7 @@ namespace MechaCyberpunk.Tests.Progresion
 
         private static string Ayudas(HudH10 hud)
         {
-            string s = string.Empty;
+            string s = "centro=" + hud.AvisoCentroCompleto;
             foreach (UnityEngine.UI.Text t in hud.TextosAyuda)
             {
                 s += "[" + t.text + "]";
@@ -86,6 +86,10 @@ namespace MechaCyberpunk.Tests.Progresion
 
         private static bool Contiene(HudH10 hud, string texto)
         {
+            if (hud.AvisoCentroCompleto == texto)
+            {
+                return true;
+            }
             foreach (UnityEngine.UI.Text t in hud.TextosAyuda)
             {
                 if (t.text == texto)

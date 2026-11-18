@@ -240,6 +240,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<MechaCyberpunk.UI.Rueda.RuedaArmasObjetos>();
             }
+            if (GetComponent<MechaCyberpunk.UI.Rueda.RuedaHabilidadesExo>() == null)
+            {
+                gameObject.AddComponent<MechaCyberpunk.UI.Rueda.RuedaHabilidadesExo>();
+            }
             if (GetComponent<HudH10>() == null)
             {
                 gameObject.AddComponent<HudH10>();

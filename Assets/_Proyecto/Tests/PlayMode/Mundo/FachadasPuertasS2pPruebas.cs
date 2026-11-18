@@ -84,8 +84,8 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsTrue(Registro<IPuerta>.Todos.Contains(puerta), "E la encuentra en el registro de puertas");
             HojaPuerta hoja = t.GetComponentInChildren<HojaPuerta>();
             Vector3 calle = new Vector3(t.position.x, 0.22f, -9.2f);
-            Assert.IsNotEmpty(Estorbos(calle, Vector3.back), "cerrada debe estorbar el paso");
-            Assert.AreEqual(ResultadoPuerta.Abierta, puerta.IntentarAbrir());
+            // T-1330: fuera del consultorio la puerta está siempre abierta (sin cerrarse sola) y deja pasar.
+            EventosLugares.PublicarSalio(IdLugar.Clinica);
             yield return new WaitForSeconds(SegundosParaAbrir);
             Assert.IsTrue(puerta.EstaAbierta);
             CollectionAssert.IsEmpty(Estorbos(calle, Vector3.back), "abierta debe dejar pasar al jugador por el vano");

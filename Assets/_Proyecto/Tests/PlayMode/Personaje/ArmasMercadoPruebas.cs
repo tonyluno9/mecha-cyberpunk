@@ -104,7 +104,7 @@ namespace MechaCyberpunk.Tests.Personaje
         // T-991: el arma se elige como lo haría una persona con la rueda: mantiene Tab, mueve el ratón hacia la casilla y suelta.
         private IEnumerator ElegirEnRueda(int casilla)
         {
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return null;
             yield return null;
             // T-1010: la rueda solo muestra lo que llevas; el ángulo de la casilla sale de la rueda abierta (NaN = no está: no se resalta nada).
@@ -112,7 +112,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Set(raton.delta, float.IsNaN(angulo) ? Vector2.zero : new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
             yield return null;
             yield return null;
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return null;
             yield return null;
         }
@@ -302,7 +302,7 @@ namespace MechaCyberpunk.Tests.Personaje
             }
             Release(teclado.wKey);
             yield return new WaitForSecondsRealtime(0.3f);
-            PantallaTienda pantalla = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+            PantallaTienda pantalla = PantallaDeTiendas();
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => mostrador.PantallaAbierta && pantalla.Visible, "abrir El Mercado con E", 5f);
 
@@ -312,7 +312,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 Assert.GreaterOrEqual(FilaBase(pantalla, nombre), 0, "El Mercado lista " + nombre);
             }
             StringAssert.Contains("700", pantalla.TextoFila(FilaBase(pantalla, "FUSIL")));
-            StringAssert.Contains("900", pantalla.TextoFila(FilaBase(pantalla, "FRANCOTIRADOR")));
+            StringAssert.Contains("2,200", pantalla.TextoFila(FilaBase(pantalla, "FRANCOTIRADOR"))); // T-1324: el francotirador cuesta 2200
             yield return new WaitForSecondsRealtime(0.4f);
             Capturar("T-416-2.png");
 
@@ -327,7 +327,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(-1, FilaCon(pantalla, "FRANCOTIRADOR I"), "El Mercado no ofrece la mejora");
             Assert.IsNotNull(arsenal.DarMejora(ArmaAPie.Sniper));
             Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Sniper), "SNIPER I es nivel 1");
-            Assert.AreEqual(Dinero - 700 - 900, cartera.Dinero, "Cobra Ƀ700 y Ƀ900");
+            Assert.AreEqual(Dinero - 700 - 2200, cartera.Dinero, "Cobra Ƀ700 y Ƀ2200");
             yield return Pulsar(teclado.escapeKey);
             yield return EsperarHasta(() => !mostrador.PantallaAbierta, "cerrar la tienda con Esc", 5f);
 
@@ -457,6 +457,26 @@ namespace MechaCyberpunk.Tests.Personaje
                 Release(raton.rightButton);
                 Object.Destroy(pandillero);
             }
+        }
+    
+
+        // T-1330 puso otra PantallaTienda dentro de MostradorClinica (y T-685 las Expendedoras tienen la suya):
+        // FindFirstObjectByType podía devolver cualquiera. Las tiendas de la calle usan la que no está dentro de esos dos.
+        private static PantallaTienda PantallaDeTiendas()
+        {
+            foreach (PantallaTienda p in Object.FindObjectsByType<PantallaTienda>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
+            {
+                bool ajena = false;
+                for (Transform t = p.transform; t != null; t = t.parent)
+                {
+                    ajena |= t.name.StartsWith("MostradorClinica") || t.name == "Expendedoras";
+                }
+                if (!ajena)
+                {
+                    return p;
+                }
+            }
+            return null;
         }
     }
 }
