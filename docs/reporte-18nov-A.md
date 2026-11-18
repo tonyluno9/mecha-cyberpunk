@@ -62,3 +62,122 @@ del build.
 
 La corrí sola, después de los builds. Había 7.8 GB libres y el Unity de la sesión B estaba abierto. Terminó a las 03:28: **3/3**
 (DemoDePrincipioAFin 288 s, NavMesh_LugaresDeLaHistoria_TienenCamino, VideoDemoT979).
+
+---
+
+# Parte 2 · Mapa expandido: Malecón, Colonia del Cerro, Autopista elevada y Puerto
+
+Madrugada del 18-nov (00:40 a 03:45, hora de México). Opus dirigió e integró. Ocho subagentes Sonnet escribieron una tarea cada uno, en
+worktrees sin Unity. Cada tarea tuvo su rama `tony/T-135x`. Opus compiló, corrió los scripts en Unity, tomó las capturas, las comparó con su
+referencia y devolvió correcciones: 4 rondas en Malecón y Autopista, 3 en Cerro y Puerto. Todo entró a main con merge `--no-ff` (`8b33987`)
+y push. Las coordenadas y los puntos de unión están en `docs/plan-zonas-18nov.md`.
+
+## Distribución (M12 adaptado a la ciudad real)
+Los 4 barrios no se movieron. La autopista vieja decorativa (z = 103) sigue igual. Imagen nueva del mapa grande:
+`Assets/_Proyecto/UI/Resources/Mapa/MapaCiudad.png`, de 3300 x 2480 (x de -480 a 345, z de -330 a 290, 4 px/m).
+- **Malecón:** todo el borde sur, a continuación de los corredores sur de las afueras. Es una avenida en curva suave (radio mínimo de ~165 m).
+  Del lado oeste sube a la base del cerro y del lado este entra al Puerto.
+- **Colonia del Cerro:** al oeste de Suburbios. Se llega por la calle oeste de las afueras hasta la calle base (x = -305). Desde ahí sube un
+  zigzag con pendiente máxima del 5 % hasta una plaza a ~28 m. A media ladera sale el túnel de la autopista.
+- **Autopista elevada:** en z = 250 y a 10 m de alto. Al oeste entra en túnel a un acantilado del cerro. Tiene dos rampas: la norte sale
+  de la calle cruzada norte (8 %) y la este baja por x = 300 (7.7 %) hasta la puerta norte del Puerto. Un conector la une con la calle este
+  de las afueras.
+- **Puerto:** al sureste, al final del Malecón. Tiene dos puertas: la oeste, con caseta, viene del Malecón; la norte viene de la rampa este.
+- **Orillas (T-1358):**
+  - Se apagaron, sin borrar nada, los edificios de fondo y los muros invisibles del final de las 6 afueras. La lista está en
+    `Logs/t1358-orillas.txt`.
+  - Límites del mundo nuevos: norte z = 290, oeste x = -480, este x = 345, y muros en el mar.
+  - `SalidaDelAgua` saca al jugador si se queda 3 s en el agua.
+  - Los paneles pintados de fondo (T-513) se alejaron. Los del sur y el este quedaban sobre el mar y se apagaron.
+
+## Qué quedó por tarea
+
+| Tarea | Qué hace | Evidencia |
+| --- | --- | --- |
+| T-1350 calles de zona | Contrato `Core/Mundo/CalleZona`: cada calle nueva lleva su línea de centro con la altura real. `CallesDeZona` la mete al grafo del tráfico, de la persecución y del GPS. Los carros siguen la altura de la rampa y se inclinan; en la autopista van 1.6 veces más rápido. Hay peatones en las banquetas de las calles de zona. | `CallesDeZonaT1350Pruebas` 12/12. `TraficoZonasT1350Pruebas` 3/3, en PlayMode con la escena real: hay camino desde el centro a las 4 zonas, no quedan calles sin salida y en menos de 60 s un carro del tráfico pisa una calle de zona. |
+| T-1351 mar | Shader `MechaCyberpunk/Mar` con olas, fresnel, reflejo de la sonda y estelas de las luces. La espuma va solo en la franja de orilla. La espuma por profundidad pintaba de blanco todo el mar, así que quedó apagada. | `MarT1351Pruebas` 4/4. Capturas revisadas. |
+| T-1352 mapa | Mapa grande y minimapa con los límites nuevos y los nombres MALECÓN, COLONIA DEL CERRO, PUERTO y AUTOPISTA. El minimapa dibuja las calles de zona. El HUD muestra la zona nueva al entrar; el territorio no cambió. | `MapaCiudadT747Pruebas` (con la imagen nueva), `MapaPlayT747Pruebas`, `ZonaHudPruebas`. |
+| T-1353 piezas | Los 18 FBX de `imageassets/blender/zonas` importados a `Assets/Arte/ZonasModulos` con collider, LOD y marca de estático. Las escaleras CE01 y ML02 llevan una rampa invisible para subirlas caminando. | `PiezasZonasT1353Pruebas`. |
+| T-1354 Malecón | Avenida de 4 carriles y paseo de 8 m con barandal ML01, palmeras AR03, faroles ML01_Farol con luz de sodio y bancas. Escaleras a la playa, playa de 30 m y escollera. Muelle con 6 lanchas, puesto de mariscos y faro sobre rocas con haz que gira (`GiroHazFaro`). Del lado de la ciudad, fachadas de 3-4 pisos con cortinas, neones y aires, y postes con muchos cables. | Capturas `malecon-k11/k12/a11.png`. `MaleconT1354Pruebas`. |
+| T-1355 Colonia del Cerro | Ladera con calle base, zigzag, plaza y escaleras CE01 con barandal CE03. Unas 700 casas escalonadas (CC01 y CC02 de Tripo, y casas del kit teñidas), con tendederos CC04, lavaderos CC05, postes y carros viejos. Las azoteas tienen 0.6-2.2 m de desnivel para el parkour y `PuntoTrepar` en los accesos. | Capturas `cerro-k13/a13.png`. `CerroT1355Pruebas`. |
+| T-1356 Autopista | Tablero, rampas, curva, columnas AU04, parapeto, guardarraíl AU05 y luminarias AU01 con luz. Túnel con boca AU06 dentro de un acantilado de roca. Debajo, un barrio bajo con chatarra. | Capturas `autopista-k18/a18.png`. `AutopistaT1356Pruebas`. `TraficoZonasT1350Pruebas` encontró que la rampa norte quedaba bajo la losa; ya está corregido. |
+| T-1357 Puerto | 27 bloques de contenedores de 1 a 4 de alto con pasillos de 3.5 m y calles internas en circuito. Cuatro grúas PU01 en el muelle, barco PU02, bodegas PU03 y PU04 con neón y reflector, montacargas, pallets, bitas, reja DS01 y casetas. | Capturas `puerto-k15/a15.png`. `PuertoT1357Pruebas`. |
+| T-1358 orillas | Lo de la sección anterior. | `OrillasT1358Pruebas` (uniones libres, límites nuevos), `CalculoSalidaDelAguaPruebas`. |
+
+Orquestación con `Assets/Arte/Editor/CorrerZonasT1350.cs`, en una sola sesión de Unity:
+`-executeMethod MechaCyberpunk.Arte.Editor.CorrerZonasT1350.Correr -zonas T1354Malecon.Aplicar,T1355Cerro.Aplicar,T1356Autopista.Aplicar,T1357Puerto.Aplicar,T1358Orillas.Aplicar,CorrerZonasT1350.ArreglarZonas,CorrerZonasT1350.PodarLuces,FlotantesS2t.Arreglar,RevisarCiudadT995.Arreglar,CorrerZonasT1350.GuardarComoPrefabs`.
+- Las fotos (`...Fotos`) se toman en **otra** corrida. Si se toman en la misma sesión que rehace las zonas, el URP falla al dibujar y salen
+  negras.
+- Cada zona queda guardada como prefab en `Assets/Arte/Mundo/Zonas/`. Con las zonas dentro, la escena llegó a 106 MB y GitHub la rechazó; con
+  los prefabs pesa 55 MB. La historia local que tenía la escena grande nunca se subió: la rehíce limpia y sin force push.
+- Las zonas se pueden volver a generar con sus scripts. Nunca se corrió CreadorTodo.
+
+## Rendimiento
+- **Luces:** los kits ponían una luz real en cada neón y foco, y la escena pasó de 695 a 1400 luces. Con eso el URP ya no podía dibujar: se
+  llenaba el búfer de luces. `PodarLuces` deja spots a 10 m o más entre sí y puntuales a 20 m o más; lo demás queda solo emisivo. Ahora
+  hay 876 luces en total: Malecón 49, Cerro 98, Autopista 88 y Puerto 47.
+- **Oclusión y LOD:** todo lo de las zonas está marcado estático, con Occluder en lo grande y opaco. Las piezas de Blender llevan LOD con
+  corte por tamaño en pantalla. No medí los FPS en el build.
+- **Cerro:** son ~700 casas. Es la zona más pesada (prefab de 25 MB).
+
+## Comparación con las referencias
+Las capturas están en docs/capturas/zonas/, con la referencia a la izquierda y el juego a la derecha.
+- **Puerto (K15, A15):** es lo más parecido.
+  - A15 tiene el mismo acomodo: grúas en el muelle, bloques de contenedores de colores, calles con postes y charcos de luz, y bodegas abajo
+    a la derecha.
+  - En K15 están el pasillo, los contenedores a la izquierda, las bodegas a la derecha y los montacargas.
+  - Faltan los grafitis de los contenedores y el brillo naranja de K15.
+- **Cerro (K13, A13):**
+  - K13 ya se lee como calle de colonia en subida, con casas pegadas de colores, poste con lámpara, cables y un carro.
+  - En A13 la ladera está llena de casas, pero se ven como cajas parejas. Falta el escalonado irregular de la referencia.
+  - La ciudad de neón no queda abajo a la derecha como en la referencia, porque el zigzag sube hacia el sur.
+- **Malecón (K11, K12, A11):**
+  - Ya tiene paseo, barandal de balaustres, palmeras, faroles, cables, fachadas con neón, playa, puesto, muelle y faro.
+  - El lado de la ciudad todavía muestra bloques altos y lisos de las afueras viejas.
+  - La luz se ve azul pareja, sin el contraste cálido de la referencia.
+  - Al otro lado del agua no hay skyline: el panel de fondo sobre el mar se veía como un muro y lo apagué.
+- **Autopista (K18, A18):**
+  - En A18 ya se ve la autopista entrando a la boca del túnel en el acantilado, con el cerro y la chatarra debajo.
+  - **K18 no quedó:** desde la calle no logré el encuadre de la referencia (columna grande, rampa al centro, túnel al fondo), porque las
+    casitas tapan la autopista. Es lo primero que hay que rehacer.
+- **General:** la luz de noche de la ciudad (T-512, T-1331) es la que les gustó en los barrios y no la toqué. Por eso todo sale más azul y
+  plano que las ilustraciones.
+
+## Assets
+- Se usaron los props de Tripo de la sesión B, en Assets/Arte/Zonas; esa carpeta no se tocó.
+- De los módulos de Blender (T-1346) de la sesión B se usan los suyos, que vienen con textura. Hay tres excepciones, que usan los de
+  T-1353:
+  - las escaleras, porque necesitan la rampa para subirlas caminando;
+  - la autopista, porque su material `PinturaBlanca` no trae textura y la prueba T-506 lo marca como greybox;
+  - el contenedor, porque el tinte del Puerto está ajustado sobre ese material.
+- Mientras llegan las texturas de Blender, los materiales de T-1353 llevan textura provisional: concreto T05, asfalto T03, arena T04, y
+  lámina, madera y metal de T-506. Solo cambié materiales propios de las zonas; los que comparten los barrios (S2c_*) no.
+- Huecos anotados en `docs/assets-faltan.md`: la pluma de la caseta del Puerto, las hieleras y los bancos de plástico del puesto de
+  mariscos, y CC03_CasaCerro.
+
+## Pruebas
+- **EditMode de zonas, escena, mapa y tráfico: 186/186.** Varias pruebas de la escena se rompieron por las zonas y ya pasan: postes con la
+  luz de T-1331, tambos con BarrilExplosivo, piezas flotantes y encimadas, greybox, fondo T-513 y uniones.
+- **Cambié la expectativa de tres pruebas,** con la razón en el código:
+  - `FondoCiudadT513` cuenta también los tramos apagados.
+  - `SinGreyboxT506` no cuenta como greybox el agua ni la emisión de noche.
+  - `OrillasT1358` no cuenta como estorbo el tablero de la autopista, porque es la calle misma.
+- **Suite completa de EditMode:** dio 3025/3036 antes de esos arreglos. Las 11 fallas eran las de arriba.
+- **PlayMode sin fallas:** `TraficoZonasT1350`, `TraficoCalle`, `PeatonesBarrio`, `CierresCiudadT986`, `MapaPlayT747` y `ZonaHud` (24 de 26; las
+  otras 2 no se cuentan como fallas).
+- **`PersecucionRealistaT587Pruebas` falla 3/6** ("Expected 3 But was 6" patrullas). **También falla con el código de tráfico de main**: lo
+  probé regresando la carpeta Trafico a main. No viene de este trabajo; queda pendiente.
+- **No corrí** el PlayMode completo (por la memoria) ni `RecorridoDemoPruebas` después de este cambio.
+
+## Builds
+- `Builds/Demo/CyberCity.exe` (`ConstruirDemoPandillas`): Succeeded, 0 errores, 5014 MB, 03:36.
+- `Builds/Juego/CyberCity.exe` (`ConstruirJuego`): Succeeded, 0 errores, 5014 MB, 03:38.
+- No jugué los builds. Que se pueda manejar por la rampa y el túnel está probado con el grafo y el tráfico en PlayMode, no con el jugador
+  al volante.
+
+## Para revisar jugando
+1. Manejar desde el centro al Malecón y al Puerto, subir la rampa norte, cruzar la autopista y entrar por el túnel al cerro.
+2. Parkour en las azoteas del cerro y en los contenedores del Puerto.
+3. Policía persiguiendo en las zonas nuevas.
+4. FPS en el cerro.
+5. Si la luz y los colores del Malecón te gustan antes de seguir afinando.
