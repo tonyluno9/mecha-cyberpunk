@@ -103,3 +103,6 @@ cambiar `GrupoPeatones` a una lista de prefabs.
 
 ### Plazas
 Los prefabs de plaza (T-1341) no llevan piso: el adoquín (T06) y la colocación en la ciudad los pone la sesión A o Tony.
+
+### Zona pendiente: Las Lomas del M12
+No existe aún. `ZonaTrafico_LasLomas` (T-1364) cubre por ahora los corredores norte x = ±47, z 88..201 de las afueras. Moverla cuando exista la zona.
