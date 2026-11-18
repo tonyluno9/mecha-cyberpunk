@@ -129,6 +129,7 @@ namespace MechaCyberpunk.Tests
             EventosLugares.LimpiarSuscriptores();
             EventosPolicia.LimpiarSuscriptores();
             EventosPelea.LimpiarSuscriptores();
+            MechaCyberpunk.Tests.Personaje.LimpiezaEntreClasesT1338.Limpiar(); // T-1338: patrullas, drones y policías sueltos no pasan a la clase siguiente
         }
 
         private static IEnumerator Esperar(float segundos)
