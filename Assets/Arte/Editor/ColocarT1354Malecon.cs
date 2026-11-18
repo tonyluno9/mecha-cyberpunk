@@ -627,7 +627,7 @@ namespace MechaCyberpunk.Arte.Editor
                 punto.y = ColocarT1354Curva.YAgua;
                 orilla.Add(punto);
             }
-            bool espuma = LlamarMar("CrearOrilla", mar, orilla, ColocarT1354Curva.YAgua);
+            bool espuma = LlamarMar("CrearOrilla", mar, orilla, ColocarT1354Curva.YAgua, 3f);
             if (!plano)
             {
                 new GameObject("Hueco_Mar").transform.SetParent(mar, false);

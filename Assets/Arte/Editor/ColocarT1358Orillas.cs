@@ -58,6 +58,7 @@ namespace MechaCyberpunk.Arte.Editor
 
             ApagarAfueras();
             CrearRaiz();
+            AlejarFondo();
 
             ColocarS2.Informe.AppendLine("APAGADOS (SetActive false) en " + ColocarT530.NombreRaiz + ": " + Apagados.Count);
             foreach (string a in Apagados)
@@ -65,6 +66,39 @@ namespace MechaCyberpunk.Arte.Editor
                 ColocarS2.Informe.AppendLine("  " + a);
             }
             ColocarS2.Guardar("t1358-orillas");
+        }
+
+        /// <summary>
+        /// Los paneles pintados de fondo de T-513 (malla en coordenadas de mundo a 478 m del centro) tapaban el mar y quedaban dentro del cerro:
+        /// cada tramo se escala desde el origen (misma altura aparente) para que quede detrás de las zonas nuevas. Idempotente (escala absoluta).
+        /// </summary>
+        private static void AlejarFondo()
+        {
+            Transform fondo = ColocarS2.Buscar("T513_Fondo");
+            if (fondo == null)
+            {
+                ColocarS2.Informe.AppendLine("PENDIENTE: no hay T513_Fondo");
+                return;
+            }
+            (string prefijo, float escala)[] tramos =
+            {
+                ("Tramo_0", 1.36f),   // norte: 478 -> 650 m (detrás de la autopista)
+                ("Tramo_1", 1.72f),   // este: 478 -> 820 m (detrás del mar del puerto)
+                ("Tramo_2", 1.8f),    // sur: 478 -> 860 m (la cámara ve hasta 1000 m) (el skyline al otro lado de la bahía, como K11)
+                ("Tramo_3", 1.5f),    // oeste: 478 -> 720 m (detrás del cerro)
+            };
+            foreach (Transform t in fondo)
+            {
+                foreach ((string prefijo, float escala) in tramos)
+                {
+                    if (t.name.StartsWith(prefijo))
+                    {
+                        t.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                        t.localScale = Vector3.one * escala;
+                        ColocarS2.Informe.AppendLine("Fondo T513 " + t.name + " escala " + escala);
+                    }
+                }
+            }
         }
 
         private static string Ruta(Transform t)
