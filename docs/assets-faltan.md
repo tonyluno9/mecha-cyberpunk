@@ -25,7 +25,6 @@ El código ya está listo con un hueco para cada uno. Cuando llegue el asset se 
 | --- | --- | --- |
 | Pieza de mira propia en el modelo W07 (el FBX de Tripo es una sola malla; la "Mira" del banco es un corte de región) | Una mira visible en el arma | Sin hueco: hoy la mira es la línea de `MiraLaserPlasma` en `ArmasEspecialesAPie` |
 
-<<<<<<< HEAD
 ## T-1357: Puerto
 
 Cada pieza se busca por nombre; si no esta, ColocarT1357Puerto deja un Hueco_CODIGO vacio. Al 18-nov no existia ninguna en la rama.
@@ -36,7 +35,6 @@ Cada pieza se busca por nombre; si no esta, ColocarT1357Puerto deja un Hueco_COD
 | PU01_Grua, PU02_Barco, PU03_Bodega, PU04_Bodega, PU05_Montacargas, PU06_Pallets | Grua, carguero, bodegas, montacargas, pallets | Tripo (Assets/Arte/Zonas) |
 | LO04_Caseta | Caseta de la entrada U5 | Solo si existe en Assets/Arte/Zonas |
 | PluminaEntrada | Pluma de la entrada | Sin modelo, siempre hueco |
-=======
 ## T-1356: Autopista
 
 El script `ColocarT1356Autopista.Aplicar` deja un `Hueco_<CODIGO>` (GameObject vacío, sin malla) cuando falta la pieza; la lista exacta de cada corrida queda en `Logs/t1356-autopista.txt`.
@@ -50,4 +48,15 @@ Al escribir la tarea no existían `Assets/Arte/ZonasModulos/Prefabs/` ni `Assets
 | AU06_EntradaTunel (Blender) | Bocas del túnel | `Hueco_AU06` en `T1356_Autopista/Tunel` |
 | AU01_Luminaria (Tripo) | Luminarias cada 30 m | `Hueco_AU01` en `T1356_Autopista/Luminarias` |
 | T20, T21, T23 (kit de torres) | Fondo al norte | `Hueco_FondoTorres` si no están |
->>>>>>> tony/T-1356-autopista
+## T-1354: Malecón
+
+Cada hueco es un GameObject vacío `Hueco_<CODIGO>` bajo `T1354_Malecon`; Logs/t1354-malecon.txt lista cuáles quedaron.
+
+| Qué | Para qué | Hueco |
+| --- | --- | --- |
+| Prefabs de Blender de T-1353 (Assets/Arte/ZonasModulos/Prefabs): ML01_BarandalMalecon, ML02_EscaleraPlaya, ML03_MuelleRecto, ML04_MuelleEsquina, ML05_Escollera | Barandal, escaleras, muelle, escollera | `Hueco_ML01_BarandalMalecon`, etc. (solo si T-1353 no los creó) |
+| Tripo (Assets/Arte/Zonas): AR03_Palmera, ML01_Farol, ML02_Lancha, ML03_PuestoMariscos, ML04_Faro, PZ01_Banca | Palmeras, faroles, lanchas, puesto, faro, bancas | `Hueco_AR03_Palmera`, etc. (esa carpeta no existe en esta rama) |
+| Hieleras y bancos de plástico del puesto (K12) | Puesto de mariscos | `Hueco_Hielera`, `Hueco_BancoPlastico` (sin código de modelo) |
+| Material de arena T04_Arena en Assets | Playa | Color liso `T1354_Arena` |
+| Componente de runtime que gire el haz del faro | Haz giratorio (K12) | El Spot del faro queda fijo |
+| CreadorMarT1351.CrearPlanoMar y CrearOrilla (T-1351) | Agua | `Hueco_Mar` y `Hueco_Orilla` |
