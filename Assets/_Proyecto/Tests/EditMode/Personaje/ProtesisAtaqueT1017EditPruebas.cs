@@ -31,15 +31,16 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [Test]
-        public void Entrada_LaserEnEl4YMisilesEnEl5()
+        public void Entrada_LaserYMisiles_SinTeclaSuelta_SeEligenConLaRuedaExoEnTab()
         {
+            // T-1329: Tony pidió quitar las teclas sueltas (4 y 5); el láser y los misiles se eligen en la rueda del EXO, que se abre con Tab.
             string json = File.ReadAllText("Assets/_Proyecto/Personaje/Entrada/ControlesAPie.inputactions");
             Assert.AreEqual("HabilidadLaser", ConfigHabilidadesProtesis.NombreAccion(HabilidadProtesis.Laser));
             Assert.AreEqual("HabilidadMisiles", ConfigHabilidadesProtesis.NombreAccion(HabilidadProtesis.Misiles));
-            StringAssert.Contains("\"path\": \"<Keyboard>/4\"", json);
-            StringAssert.Contains("\"path\": \"<Keyboard>/5\"", json);
-            StringAssert.Contains("\"action\": \"HabilidadLaser\"", json);
-            StringAssert.Contains("\"action\": \"HabilidadMisiles\"", json);
+            StringAssert.DoesNotContain("\"path\": \"<Keyboard>/4\"", json);
+            StringAssert.DoesNotContain("\"path\": \"<Keyboard>/5\"", json);
+            StringAssert.Contains("\"action\": \"RuedaExo\"", json);
+            StringAssert.Contains("\"path\": \"<Keyboard>/tab\"", json);
         }
     }
 }
