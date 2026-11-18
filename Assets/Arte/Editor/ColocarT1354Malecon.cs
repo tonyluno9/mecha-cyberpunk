@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static Vector3 DejarLibre(Vector3 desde)
         {
             Physics.SyncTransforms();
-            for (int i = 0; i < 6 && Physics.CheckSphere(desde, 1.5f); i++)
+            for (int i = 0; i < 6 && Physics.CheckSphere(desde, 1.5f, ~0, QueryTriggerInteraction.Ignore); i++) // el volumen de luz y las zonas de tráfico son triggers
             {
                 desde += Vector3.up * 10f;
             }
@@ -977,9 +977,9 @@ namespace MechaCyberpunk.Arte.Editor
         // ================================================================ T-1363: la otra orilla (skyline) y la luz local
 
         public const string RutaPerfilLuz = "Assets/Arte/Mundo/Zonas/PerfilMalecon_T1363.asset";
-        /// <summary>La otra orilla: una losa oscura de x -700 a 330 y z -690 a -900 (el agua llega hasta -900) con torres encima, a unos 475 m de la avenida.</summary>
-        private const float ZOrillaLejana = -690f;
-        private const float ZFinOrillaLejana = -900f;
+        /// <summary>La otra orilla: una losa oscura de x -700 a 330 y z -560 a -700 con torres encima, a unos 330 m de la avenida (más cerca para que entre en el corte de 600 m de las fotos y se lea como bahía, K11).</summary>
+        private const float ZOrillaLejana = -560f;
+        private const float ZFinOrillaLejana = -700f;
         private const float XOesteOrillaLejana = -700f;
         private const float XEsteOrillaLejana = 330f;
         private const float AltoPisoLejano = 12f;

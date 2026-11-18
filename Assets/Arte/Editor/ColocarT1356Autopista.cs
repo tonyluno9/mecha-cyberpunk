@@ -129,9 +129,9 @@ namespace MechaCyberpunk.Arte.Editor
             Directory.CreateDirectory("Logs");
             // K18 (T-1362): a ~2 m sobre la calle baja (z = 215), mirando al oeste con un poco de giro al sur: la calle y las casitas a la izquierda,
             // la rampa norte subiendo al centro, una columna grande a la derecha, el tablero curvo arriba y el túnel al fondo a la derecha.
-            Vector3 camaraK18 = new Vector3(-150f, 2f, 213f);
+            Vector3 camaraK18 = new Vector3(-228f, 2.2f, 226f); // en el lote, entre la calle baja y el tablero: columna y tablero a la derecha, túnel al fondo
             RevisarCamara(camaraK18);
-            ColocarS2cLook.Foto(camaraK18, new Vector3(-250f, 9f, 201f), "Logs/autopista-k18-juego.png", 72f);
+            ColocarS2cLook.Foto(camaraK18, new Vector3(-330f, 11f, 248f), "Logs/autopista-k18-juego.png", 72f);
             ColocarS2.LadoALado("imageassets/referencias/look/K18_AutopistaElevada.png", "Logs/autopista-k18-juego.png", "docs/capturas/zonas/autopista-k18.png");
             // A18: aérea a ~45 m, al este-sureste del túnel: autopista curva entrando al túnel del acantilado, rampa abajo, casitas en primer plano.
             Vector3 camaraA18 = new Vector3(-120f, 45f, 185f);
@@ -752,8 +752,11 @@ namespace MechaCyberpunk.Arte.Editor
                 // 70 % en el lote bajo el tablero y la rampa; el resto estacionado en la calle baja o en la calle del lote este.
                 bool enCalle = !o.Chance(0.7f);
                 float xc = enCalle ? (o.Chance(0.6f) ? o.Rango(-200f, -135f) : o.Rango(45f, 220f)) : o.Rango(-300f, 225f);
-                Vector3 p = new Vector3(xc, 0f, enCalle ? (xc < 0f ? T.ZCalleBaja : 216f) + o.Rango(-2f, 2f) : o.Rango(230f, 257f));
-                if (BajoRampa(rampaNorte, p, 10f) || columnas.Any(q => Mathf.Abs(q.x - p.x) < 8f && Mathf.Abs(q.z - p.z) < 4f))
+                // Estacionados pegados a la banqueta (a 5.5 m del eje), no sobre el carril; nada en el enlace de la rampa norte (U7).
+                float orilla = (o.Chance(0.5f) ? 1f : -1f) * 5.5f;
+                Vector3 p = new Vector3(xc, 0f, enCalle ? (xc < 0f ? T.ZCalleBaja : 216f) + orilla : o.Rango(230f, 257f));
+                bool enEnlaceU7 = p.x > -132f && p.x < -92f && p.z > 192f && p.z < 244f;
+                if (enEnlaceU7 || BajoRampa(rampaNorte, p, 10f) || columnas.Any(q => Mathf.Abs(q.x - p.x) < 8f && Mathf.Abs(q.z - p.z) < 4f))
                 {
                     continue;
                 }

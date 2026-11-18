@@ -167,7 +167,7 @@ namespace MechaCyberpunk.Arte.Editor
             Poner(o, padre, avenida, calles, adoquin, "Plaza_Esquina", "Plaza_Esquina_U2", 47f, 10f, 100f, -11f, -30f, -1f);
             Poner(o, padre, avenida, calles, adoquin, "Plaza_Banqueta", "Plaza_Banqueta_1", -230f, -290f, -170f, 9.5f, 13.5f, 0.5f);
             Poner(o, padre, avenida, calles, adoquin, "Plaza_Banqueta", "Plaza_Banqueta_2", -110f, -170f, -60f, 9.5f, 13.5f, 0.5f);
-            Poner(o, padre, avenida, calles, adoquin, "Plaza_Banqueta", "Plaza_Banqueta_3", 20f, -30f, 110f, 9.5f, 13.5f, 0.5f);
+            Poner(o, padre, avenida, calles, adoquin, "Plaza_Banqueta", "Plaza_Banqueta_3", 75f, 60f, 110f, 9.5f, 13.5f, 0.5f);
         }
 
         /// <summary>

@@ -289,6 +289,33 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Guardar("t1350-prefabs-zonas");
         }
 
+        /// <summary>
+        /// Fotos sueltas para revisar: -fotos "x,y,z>x,y,z>ruta;x,y,z>x,y,z>ruta" (desde, hacia, archivo). No guarda la escena.
+        /// </summary>
+        public static void FotosLibres()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            int i = Array.IndexOf(args, "-fotos");
+            if (i < 0 || i + 1 >= args.Length)
+            {
+                Debug.LogError("[Arte] FotosLibres: falta -fotos");
+                return;
+            }
+            ColocarS2.Abrir();
+            foreach (string toma in args[i + 1].Split(';'))
+            {
+                string[] p = toma.Split('>');
+                ColocarS2cLook.Foto(Vec(p[0]), Vec(p[1]), p[2], 65f);
+            }
+        }
+
+        private static Vector3 Vec(string s)
+        {
+            string[] c = s.Split(',');
+            System.Globalization.CultureInfo inv = System.Globalization.CultureInfo.InvariantCulture;
+            return new Vector3(float.Parse(c[0], inv), float.Parse(c[1], inv), float.Parse(c[2], inv));
+        }
+
         public static void Correr()
         {
             string[] args = Environment.GetCommandLineArgs();
