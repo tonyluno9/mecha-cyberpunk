@@ -24,3 +24,14 @@ El código ya está listo con un hueco para cada uno. Cuando llegue el asset se 
 | Qué | Para qué | Hueco en el código |
 | --- | --- | --- |
 | Pieza de mira propia en el modelo W07 (el FBX de Tripo es una sola malla; la "Mira" del banco es un corte de región) | Una mira visible en el arma | Sin hueco: hoy la mira es la línea de `MiraLaserPlasma` en `ArmasEspecialesAPie` |
+
+## T-1357: Puerto
+
+Cada pieza se busca por nombre; si no esta, ColocarT1357Puerto deja un Hueco_CODIGO vacio. Al 18-nov no existia ninguna en la rama.
+
+| Codigo | Que | Origen |
+| --- | --- | --- |
+| PT01_Contenedor40, PT02_BitaAmarre, DS01_RejaPuas | Contenedor de 40, bita, reja | Blender (T-1353, ZonasModulos/Prefabs) |
+| PU01_Grua, PU02_Barco, PU03_Bodega, PU04_Bodega, PU05_Montacargas, PU06_Pallets | Grua, carguero, bodegas, montacargas, pallets | Tripo (Assets/Arte/Zonas) |
+| LO04_Caseta | Caseta de la entrada U5 | Solo si existe en Assets/Arte/Zonas |
+| PluminaEntrada | Pluma de la entrada | Sin modelo, siempre hueco |
