@@ -23,6 +23,8 @@ namespace MechaCyberpunk.Trafico.Calle
         [SerializeField] private CarroTrafico prefabCarro;
         [Tooltip("T-511: los carros con modelo real; si hay, cada carro del tráfico usa uno de estos (en orden y repitiendo) en vez de prefabCarro.")]
         [SerializeField] private List<CarroTrafico> prefabsCarro = new List<CarroTrafico>();
+        [Tooltip("T-1345: carros por zona de la ciudad. Sin él se carga Resources/ConfigCarrosZonas (si no existe, no hay zonas).")]
+        [SerializeField] private ConfigCarrosZonas configZonas;
         [Tooltip("Opcional: el padre de las manzanas (hijos Manzana_). Sin él se usa el del GestorPersecucion del barrio.")]
         [SerializeField] private Transform barrio;
 
@@ -165,17 +167,58 @@ namespace MechaCyberpunk.Trafico.Calle
                 return;
             }
             AlargarHaciaLasAfueras(calles);
+            if (configZonas == null)
+            {
+                configZonas = Resources.Load<ConfigCarrosZonas>("ConfigCarrosZonas");
+            }
+            List<CarroTrafico> general = new List<CarroTrafico>(prefabsCarro);
+            if (configZonas != null && prefabsCarro.Count > 0)
+            {
+                foreach (CarroTrafico extra in configZonas.ExtrasGenerales)
+                {
+                    if (extra != null && !general.Contains(extra))
+                    {
+                        general.Add(extra);
+                    }
+                }
+            }
             System.Random azar = new System.Random(Semilla);
             for (int i = 0; i < config.Maximo; i++)
             {
-                CarroTrafico molde = prefabsCarro.Count > 0 ? prefabsCarro[i % prefabsCarro.Count] : prefabCarro;
+                int nodo = ElegirNodo(azar);
+                CarroTrafico molde = general.Count > 0 ? ElegirParaPunto(general, calles.Nodo(nodo), azar, i) : prefabCarro;
                 CarroTrafico carro = Instantiate(molde, transform);
                 carro.name = "CarroTrafico_" + (i + 1);
-                carro.Preparar(config, calles, ElegirNodo(azar), new System.Random(azar.Next()), PosicionDelJugador);
+                carro.Preparar(config, calles, nodo, new System.Random(azar.Next()), PosicionDelJugador);
                 carro.gameObject.SetActive(false);
                 carros.Add(carro);
             }
             listo = true;
+        }
+
+        // T-1345: con una zona que contiene el punto y está en la config, mezcla con los carros de la zona; si no, igual que siempre (general[i % Count]).
+        private CarroTrafico ElegirParaPunto(IReadOnlyList<CarroTrafico> general, Vector3 punto, System.Random azar, int indice)
+        {
+            ZonaTrafico zona = configZonas != null ? ZonaTrafico.De(punto) : null;
+            ConfigCarrosZonas.Zona datos = zona != null ? configZonas.Buscar(zona.Nombre) : null;
+            if (datos == null)
+            {
+                return Elegir(general, null, 0f, 0f, indice);
+            }
+            return Elegir(general, datos.carros, datos.mezcla, (float)azar.NextDouble(), indice);
+        }
+
+        /// <summary>
+        /// T-1345: el carro a sacar. Sin zona (o vacía) es <c>general[indice % Count]</c>; con zona, si <paramref name="azar01"/> &lt; <paramref name="mezcla"/> sale de la zona
+        /// (por <paramref name="indice"/>), si no, de la lista general.
+        /// </summary>
+        public static CarroTrafico Elegir(IReadOnlyList<CarroTrafico> general, IReadOnlyList<CarroTrafico> zona, float mezcla, float azar01, int indice)
+        {
+            if (zona != null && zona.Count > 0 && azar01 < mezcla)
+            {
+                return zona[indice % zona.Count];
+            }
+            return general != null && general.Count > 0 ? general[indice % general.Count] : null;
         }
 
         private void Update()
