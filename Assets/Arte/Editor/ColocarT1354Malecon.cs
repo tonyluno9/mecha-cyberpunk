@@ -982,16 +982,86 @@ namespace MechaCyberpunk.Arte.Editor
         private const float ZFinOrillaLejana = -700f;
         private const float XOesteOrillaLejana = -700f;
         private const float XEsteOrillaLejana = 330f;
-        private const float AltoPisoLejano = 12f;
         private static readonly Color[] ColoresOrillaLejana =
         {
             new Color(1f, 0.55f, 0.2f), new Color(0.1f, 0.95f, 0.88f), new Color(1f, 0.2f, 0.78f), new Color(1f, 0.55f, 0.2f), new Color(0.35f, 0.5f, 1f),
         };
 
+        public const string RutaTexVentanasLejanas = "Assets/Arte/Mundo/Zonas/T1363_VentanasLejanas.png";
+        private const int CeldasVentanas = 32;
+        private const int PixelesCelda = 16;
+        /// <summary>Cada ventana mide 1.5 m: la textura de 32 x 32 celdas cubre 48 m (UV en metros de la malla de caja).</summary>
+        private const float MetrosVentana = 1.5f;
+
         /// <summary>
-        /// K11 (izquierda) y K12 (fondo): una ciudad iluminada al otro lado del agua. Torres del kit T20-T23 (las de Neón Alto, T-541: base, pisos con
-        /// ventanas, pantallas T22 de vez en cuando y remate) de 4 a 16 pisos de 12 m sobre una losa de orilla con una franja emisiva en el borde, y pocas
-        /// luces puntuales de color fuertes en la base de las torres (el shader del mar las convierte en estelas en el agua). Sin colliders ni sombras.
+        /// Textura de ventanas de 512 x 512 (32 x 32 celdas de 16 px): rejilla con celdas encendidas al azar en tonos cálidos (sodio, foco) y fríos
+        /// (led, tele), alguna magenta, sobre pared casi negra. Se guarda como asset y se rehace igual cada vez (semilla fija).
+        /// </summary>
+        public static Texture2D TexturaVentanasLejanas()
+        {
+            int lado = CeldasVentanas * PixelesCelda;
+            Texture2D t = new Texture2D(lado, lado, TextureFormat.RGBA32, false);
+            Color pared = new Color(0.015f, 0.017f, 0.025f, 1f);
+            System.Random azar = new System.Random(1363);
+            Color[] pixeles = new Color[lado * lado];
+            for (int i = 0; i < pixeles.Length; i++)
+            {
+                pixeles[i] = pared;
+            }
+            for (int cx = 0; cx < CeldasVentanas; cx++)
+            {
+                for (int cy = 0; cy < CeldasVentanas; cy++)
+                {
+                    if (azar.NextDouble() > 0.55)
+                    {
+                        continue;
+                    }
+                    double tono = azar.NextDouble();
+                    Color luz = tono < 0.5 ? new Color(1f, 0.74f, 0.4f) : tono < 0.88 ? new Color(0.62f, 0.82f, 1f) : new Color(1f, 0.35f, 0.8f);
+                    luz *= 0.55f + 0.45f * (float)azar.NextDouble();
+                    luz.a = 1f;
+                    for (int px = 2; px < PixelesCelda - 2; px++)
+                    {
+                        for (int py = 3; py < PixelesCelda - 3; py++)
+                        {
+                            pixeles[(cy * PixelesCelda + py) * lado + cx * PixelesCelda + px] = luz;
+                        }
+                    }
+                }
+            }
+            t.SetPixels(pixeles);
+            t.Apply();
+            File.WriteAllBytes(RutaTexVentanasLejanas, t.EncodeToPNG());
+            Object.DestroyImmediate(t);
+            AssetDatabase.ImportAsset(RutaTexVentanasLejanas);
+            TextureImporter imp = (TextureImporter)AssetImporter.GetAtPath(RutaTexVentanasLejanas);
+            imp.sRGBTexture = true;
+            imp.wrapMode = TextureWrapMode.Repeat;
+            imp.mipmapEnabled = true;
+            imp.SaveAndReimport();
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(RutaTexVentanasLejanas);
+        }
+
+        /// <summary>
+        /// Material que brilla siempre (URP Unlit, color HDR): no usa EmisionNoche, que depende de la hora (_T501Noche) y de un componente en la escena.
+        /// De día se ve claro, pero la otra orilla está a 300 m y la niebla la funde.
+        /// </summary>
+        private static Material MatBrillo(string nombre, Color color, Texture textura)
+        {
+            return KitS2c.Mat(nombre, () =>
+            {
+                Material m = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                m.SetColor("_BaseColor", color);
+                m.SetTexture("_BaseMap", textura != null ? textura : Texture2D.whiteTexture);
+                return m;
+            });
+        }
+
+        /// <summary>
+        /// K11 (izquierda) y K12 (fondo): una ciudad iluminada al otro lado del agua. Torres de caja (un cuerpo y un remate más angosto) con un material
+        /// propio de ventanas encendidas (textura generada, emisión HDR x2.5, ventanas de 1.5 m), pantallas grandes magenta y turquesa en 7 torres, luz roja
+        /// en cada azotea, 3 haces verticales tenues (HaloLuz) y una franja de luces cálidas en la orilla que el shader del mar vuelve estelas.
+        /// Sin colliders ni sombras; encima, pocas luces puntuales fuertes en la base.
         /// </summary>
         private static void OtraOrilla(KitS2c.Obra o, Transform grupo)
         {
@@ -1001,79 +1071,99 @@ namespace MechaCyberpunk.Arte.Editor
             KitS2c.Losa(o, grupo, "Orilla", new Vector3(centroX, -1f, (ZOrillaLejana + ZFinOrillaLejana) * 0.5f), Quaternion.identity,
                 new Vector3(largo, 4f, ZOrillaLejana - ZFinOrillaLejana), suelo, 40f, false);
 
-            // Franja emisiva en el borde de la orilla, en tramos de 70 m con huecos de 20 m y colores del barrio (sodio, turquesa, magenta).
+            // Franja de luces cálidas en el borde de la orilla (sodio y foco, con algo de turquesa y magenta), en tramos de 70 m con huecos de 20 m.
             int tramo = 0;
             for (float x = XOesteOrillaLejana + 30f; x + 70f < XEsteOrillaLejana; x += 90f, tramo++)
             {
-                Color color = ColoresOrillaLejana[tramo % ColoresOrillaLejana.Length];
-                Material m = KitS2c.Mat("T1363_FranjaOrilla_" + (tramo % ColoresOrillaLejana.Length), () => KitS2c.Emision(color * 1.6f, Texture2D.whiteTexture));
-                KitS2c.Losa(o, grupo, "FranjaOrilla", new Vector3(x + 35f, 1.3f, ZOrillaLejana - 0.4f), Quaternion.identity, new Vector3(70f, 0.6f, 0.6f), m, 4f, false);
+                int c = tramo % ColoresOrillaLejana.Length;
+                Material m = MatBrillo("T1363b_FranjaOrilla_" + c, ColoresOrillaLejana[c] * 3f, null);
+                KitS2c.Losa(o, grupo, "FranjaOrilla", new Vector3(x + 35f, 1.4f, ZOrillaLejana - 0.4f), Quaternion.identity, new Vector3(70f, 0.8f, 0.6f), m, 4f, false);
             }
 
-            GameObject t20 = KitS2c.Prefab("T20");
-            GameObject t21 = KitS2c.Prefab("T21");
-            GameObject t22 = KitS2c.Prefab("T22");
-            GameObject t23 = KitS2c.Prefab("T23");
-            if (t20 == null || t21 == null || t22 == null || t23 == null)
+            Texture2D ventanas = TexturaVentanasLejanas();
+            Material matVentanas = MatBrillo("T1363b_VentanasLejanas", new Color(2.5f, 2.5f, 2.5f, 1f), ventanas);
+            Material matRojo = MatBrillo("T1363b_LuzRoja", new Color(4f, 0.15f, 0.1f, 1f), null);
+            Material matMagenta = MatBrillo("T1363b_PantallaMagenta", new Color(3.8f, 0.5f, 3f, 1f), null);
+            Material matTurquesa = MatBrillo("T1363b_PantallaTurquesa", new Color(0.4f, 3.6f, 3.4f, 1f), null);
+            Material matHaz = KitS2c.Mat("T1363b_HazLejano", () =>
             {
-                faltan.Add("Torres T20-T23 de Neón Alto (Assets/Arte/Exteriores/Prefabs)");
-                return;
-            }
-            // De K11 se ve mirando al oeste con el mar a la izquierda; de K12, al este. Las torres cubren x -330 a 270, de frente (pantallas al norte).
+                Material m = new Material(Shader.Find("MechaCyberpunk/Mundo/HaloLuz"));
+                m.SetColor("_Color", new Color(0.3f, 0.95f, 1f));
+                m.SetFloat("_Intensidad", 0.3f);
+                m.SetFloat("_Borde", 1.2f);
+                m.SetFloat("_Caida", 0.4f);
+                m.SetFloat("_Suave", 0.3f);
+                m.SetTexture("_Ruido", KitS2c.TexMuro());
+                return m;
+            });
+
             System.Random azar = new System.Random(Semilla + 9);
             int torres = 0;
-            for (float x = -330f; x <= 270f; x += azar.Next(22, 38))
+            int pantallas = 0;
+            int haces = 0;
+            Quaternion sinGiro = Quaternion.identity;
+            for (float x = -330f; x <= 270f; x += azar.Next(20, 36))
             {
-                float ancho = 18f + (float)azar.NextDouble() * 18f;
-                float fondo = 16f + (float)azar.NextDouble() * 14f;
-                int pisos = azar.Next(4, 17);
-                float z = -705f - (float)azar.NextDouble() * 55f;
+                float ancho = 16f + (float)azar.NextDouble() * 18f;
+                float fondo = 16f + (float)azar.NextDouble() * 12f;
+                float alto = 50f + (float)azar.NextDouble() * 120f;
+                float z = ZOrillaLejana - 22f - (float)azar.NextDouble() * 85f;
                 Transform torre = new GameObject("Torre_" + torres).transform;
                 torre.SetParent(grupo, false);
-                torre.position = new Vector3(x, ColocarT1354Curva.YAgua + 2f, z);
-                float y = TramoLejano(torre, t20, "Base", 0f, ColocarT541.AltoBase, ancho, fondo);
-                bool ultimaPantalla = false;
-                for (int i = 0; i < pisos; i++)
+                torre.position = new Vector3(x, 1f, z);
+                // Cuerpo y remate más angosto (silueta escalonada); el UV va en metros: cada ventana mide 1.5 m.
+                float altoRemate = alto * (0.15f + 0.2f * (float)azar.NextDouble());
+                SinSombra(KitS2c.Losa(o, torre, "Cuerpo", new Vector3(x, 1f + alto * 0.5f, z), sinGiro, new Vector3(ancho, alto, fondo), matVentanas, MetrosVentana * CeldasVentanas, false));
+                float anchoRemate = ancho * 0.6f;
+                SinSombra(KitS2c.Losa(o, torre, "Remate", new Vector3(x, 1f + alto + altoRemate * 0.5f, z), sinGiro, new Vector3(anchoRemate, altoRemate, fondo * 0.6f), matVentanas, MetrosVentana * CeldasVentanas, false));
+                float cima = 1f + alto + altoRemate;
+                // Luz roja de aviso en la azotea.
+                SinSombra(KitS2c.Losa(o, torre, "LuzRoja", new Vector3(x, cima + 1.2f, z), sinGiro, new Vector3(1.6f, 2.4f, 1.6f), matRojo, 4f, false));
+                // Pantalla grande en la cara que mira al norte (a la avenida), pegada a la fachada, en una de cada 3 torres, hasta 8.
+                if (torres % 3 == 1 && pantallas < 8)
                 {
-                    bool pantalla = !ultimaPantalla && i > 0 && azar.NextDouble() < 0.35;
-                    y = TramoLejano(torre, pantalla ? t22 : t21, pantalla ? "PisoPantalla" : "Piso", y, AltoPisoLejano, ancho, fondo);
-                    ultimaPantalla = pantalla;
+                    float altoPantalla = Mathf.Min(alto * 0.45f, 30f);
+                    float yPantalla = 1f + alto * (0.35f + 0.3f * (float)azar.NextDouble());
+                    SinSombra(KitS2c.Losa(o, torre, "Pantalla", new Vector3(x, yPantalla, z + fondo * 0.5f + 0.25f), sinGiro,
+                        new Vector3(ancho * 0.7f, altoPantalla, 0.4f), pantallas % 2 == 0 ? matMagenta : matTurquesa, 4f, false));
+                    pantallas++;
                 }
-                TramoLejano(torre, t23, "Remate", y, ColocarT541.AltoRemate, ancho, fondo);
-                // La cara de pantallas del kit (la -Z del modelo) mira al norte, a la avenida.
-                torre.rotation = Quaternion.LookRotation(Vector3.back, Vector3.up);
+                // Haz vertical tenue sobre 3 torres altas.
+                if (haces < 3 && alto > 110f && torres % 2 == 0)
+                {
+                    GameObject haz = new GameObject("Haz");
+                    haz.transform.SetParent(torre, false);
+                    haz.transform.SetPositionAndRotation(new Vector3(x, cima + 2.4f, z), Quaternion.Euler(-90f, 0f, 0f));
+                    Mesh malla = MallaHaz(260f, 1.5f, 7f);
+                    malla.name = o.Nombre + "_HazLejano_" + haces;
+                    o.Mallas.Add(malla);
+                    haz.AddComponent<MeshFilter>().sharedMesh = malla;
+                    SinSombra(haz).sharedMaterial = matHaz;
+                    haces++;
+                }
                 torres++;
-                // Una luz de color fuerte en la base de una de cada tres torres, sobre la losa (6 a 8 en total).
+                // Una luz de color fuerte en la base de una de cada tres torres, sobre la losa (para las estelas del mar).
                 if (torres % 3 == 1)
                 {
                     Color color = ColoresOrillaLejana[(torres / 3) % ColoresOrillaLejana.Length];
                     KitS2c.Luz(torre, new Vector3(x, 6f, ZOrillaLejana - 6f), LightType.Point, color, 40f, 240f, 0f);
                 }
             }
-            ColocarS2.Informe.AppendLine("Otra orilla (z " + ZOrillaLejana + " a " + ZFinOrillaLejana + "): " + torres + " torres, "
-                + grupo.GetComponentsInChildren<Light>(true).Length + " luces");
+            ColocarS2.Informe.AppendLine("Otra orilla (z " + ZOrillaLejana + " a " + ZFinOrillaLejana + "): " + torres + " torres con ventanas emisivas Unlit, "
+                + pantallas + " pantallas, " + haces + " haces, " + grupo.GetComponentsInChildren<Light>(true).Length + " luces");
         }
 
-        /// <summary>Una pieza de torre lejana: llena la planta, sin colliders ni sombras (como Pieza de T-541).</summary>
-        private static float TramoLejano(Transform torre, GameObject prefab, string nombre, float y, float alto, float ancho, float fondo)
+        /// <summary>Quita sombras (emitir y recibir) y deja el MeshRenderer del objeto listo; devuelve el renderer.</summary>
+        private static MeshRenderer SinSombra(GameObject go)
         {
-            GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab, torre);
-            g.name = nombre;
-            g.transform.localRotation = Quaternion.identity;
-            g.transform.localScale = Vector3.one;
-            Bounds b = ArteT250.Limites(g);
-            g.transform.localScale = new Vector3(ancho / Mathf.Max(0.01f, b.size.x), alto / Mathf.Max(0.01f, b.size.y), fondo / Mathf.Max(0.01f, b.size.z));
-            g.transform.localPosition = new Vector3(0f, y, 0f);
-            foreach (Collider c in g.GetComponentsInChildren<Collider>(true))
+            MeshRenderer mr = go.GetComponent<MeshRenderer>();
+            if (mr == null)
             {
-                c.enabled = false;
+                mr = go.AddComponent<MeshRenderer>();
             }
-            foreach (Renderer r in g.GetComponentsInChildren<Renderer>(true))
-            {
-                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                r.receiveShadows = false;
-            }
-            return y + alto;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            mr.receiveShadows = false;
+            return mr;
         }
 
         /// <summary>Cada torre lejana se oculta cuando ocupa menos del 0.3 % de la pantalla (cull por LOD).</summary>
