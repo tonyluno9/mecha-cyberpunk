@@ -23,6 +23,22 @@ namespace MechaCyberpunk.Arte.Editor
         public const float MaxSeparacionColumnas = 26f;
         public const float AlturaMinimaColumna = 2f;
         public const float PasoCurva = 15f;
+        /// <summary>Metros antes de tocar la huella de la losa principal en los que la rampa norte ya va a la altura del tablero.</summary>
+        public const float MargenIncorporacion = 15f;
+
+        /// <summary>Puntos a lo largo de la línea cada <paramref name="paso"/> m (con y interpolada), incluidos los extremos.</summary>
+        public static List<Vector3> Resamplear(IList<Vector3> p, float paso)
+        {
+            List<Vector3> r = new List<Vector3>();
+            float largo = Longitud(p);
+            int n = Mathf.Max(1, Mathf.CeilToInt(largo / paso));
+            for (int k = 0; k <= n; k++)
+            {
+                PuntoEn(p, largo * k / n, out Vector3 punto, out _);
+                r.Add(punto);
+            }
+            return r;
+        }
 
         public static readonly Vector3 U6Boca = new Vector3(-330f, 10f, 250f);
         public static readonly Vector3 U6Salida = new Vector3(-360f, 10f, 185f);
@@ -105,17 +121,27 @@ namespace MechaCyberpunk.Arte.Editor
             float tg = theta * Mathf.Rad2Deg;
             p.AddRange(Arco(xS, zE + r, r, -90f, -90f + tg, tg / 3f, 0f));
             p.AddRange(Arco(xS + 2f * r * Mathf.Sin(theta), zE + r - 2f * r * Mathf.Cos(theta), r, 90f + tg, 90f, tg / 3f, 0f));
-            // La y sube pareja con el largo recorrido desde el enlace.
-            float total = 0f;
-            for (int i = 2; i < p.Count; i++)
+            // La y sube pareja desde el enlace y llega a 10 m (la altura del tablero) MargenIncorporacion m antes de que el centro de la rampa entre
+            // en la huella de la losa principal (z >= 250 - 7.2); desde ahí va a nivel y se une en plano (pendiente ~8 %).
+            float zToca = ZTablero - 7.2f;
+            float sToca = -1f;
+            float acumulado = 0f;
+            for (int i = 2; i < p.Count && sToca < 0f; i++)
             {
-                total += Planta(p[i] - p[i - 1]).magnitude;
+                float l = Planta(p[i] - p[i - 1]).magnitude;
+                if (p[i].z >= zToca)
+                {
+                    float f = Mathf.InverseLerp(p[i - 1].z, p[i].z, zToca);
+                    sToca = acumulado + l * f;
+                }
+                acumulado += l;
             }
+            float sLlana = sToca - MargenIncorporacion;
             float s = 0f;
             for (int i = 2; i < p.Count; i++)
             {
                 s += Planta(p[i] - p[i - 1]).magnitude;
-                p[i] = new Vector3(p[i].x, YTablero * s / total, p[i].z);
+                p[i] = new Vector3(p[i].x, YTablero * Mathf.Min(1f, s / sLlana), p[i].z);
             }
             p[p.Count - 1] = U7Union;
             return p;
