@@ -123,6 +123,24 @@ namespace MechaCyberpunk.Tests.Personaje
                     Vector3 haciaCarro = montable.Asiento.position - modelo.position;
                     haciaCarro.y = 0f;
                     angulo = Vector3.Angle(Vector3.ProjectOnPlane(modelo.forward, Vector3.up), haciaCarro);
+                    if (FotoPruebaT1335.Pedida("CAPTURAR_T1335"))
+                    {
+                        // De lado: atrás del jugador y un poco afuera, para ver al jugador en la puerta y al conductor saliendo.
+                        Vector3 afuera = -haciaCarro.normalized;
+                        Vector3 lado = Vector3.Cross(Vector3.up, afuera);
+                        FotoPruebaT1335.Desde(modelo.position + afuera * 3.2f + lado * 2.4f + Vector3.up * 1.7f, modelo.position + Vector3.up * 0.9f,
+                            "docs/capturas/t-1335/sacar-conductor.png");
+                    }
+                }
+                if (inicioJugador >= 0f && Time.time >= inicioJugador + 0.7f && FotoPruebaT1335.Pedida("CAPTURAR_T1335")
+                    && !System.IO.File.Exists("docs/capturas/t-1335/sacar-conductor-2.png"))
+                {
+                    Transform m = anim.ModeloVisual;
+                    Vector3 afuera = m.position - montable.Asiento.position;
+                    afuera.y = 0f;
+                    afuera.Normalize();
+                    FotoPruebaT1335.Desde(m.position + afuera * 3.2f + Vector3.Cross(Vector3.up, afuera) * 2.4f + Vector3.up * 1.7f, m.position + Vector3.up * 0.9f,
+                        "docs/capturas/t-1335/sacar-conductor-2.png");
                 }
                 yield return null;
             }

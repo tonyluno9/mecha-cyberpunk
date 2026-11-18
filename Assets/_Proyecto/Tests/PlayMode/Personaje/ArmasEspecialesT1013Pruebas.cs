@@ -193,6 +193,10 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(GameObject.Find("MiraLaserPlasma"), "La línea existe");
             LineRenderer laser = GameObject.Find("MiraLaserPlasma").GetComponent<LineRenderer>();
             Assert.Greater(Vector3.Distance(laser.GetPosition(0), laser.GetPosition(1)), 1f, "Va de la boca al punto de mira");
+            if (FotoPruebaT1335.Pedida("CAPTURAR_T1337") && Camera.main != null)
+            {
+                FotoPruebaT1335.Con(Camera.main, "docs/capturas/t-1337/mira-laser-plasma.png");
+            }
             Press(raton.leftButton);
             yield return Esperar(3.5f);
             Assert.AreEqual(EstadoPlasma.Rayo, especiales.EstadoPlasma);
