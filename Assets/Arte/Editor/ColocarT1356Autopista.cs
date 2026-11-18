@@ -62,12 +62,12 @@ namespace MechaCyberpunk.Arte.Editor
 
             Transform tablero = Hijo(raiz, "Tablero");
             bool piezasRecta = Cargar(Recta, false) != null;
-            Tramo(o, tablero, "Principal", principal, piezasRecta ? T.IndiceFinRecta : -1);
+            Tramo(o, tablero, "Principal", principal, piezasRecta ? T.IndiceFinRecta : -1, rampaNorte);
             if (piezasRecta)
             {
                 Rectas(o, tablero, principal.GetRange(0, T.IndiceFinRecta + 1));
             }
-            Tramo(o, tablero, "RampaNorte", rampaNorte, -1);
+            Tramo(o, tablero, "RampaNorte", rampaNorte, -1, principal);
             Piso(o, tablero, "CalleEste", calleEste);
             Piso(o, tablero, "ConectorEste", conector);
             Tunel(o, Hijo(raiz, "Tunel"), tunel);
@@ -230,7 +230,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// Tablero elevado: losa de concreto, capa de asfalto y parapeto de concreto a cada lado (collider continuo). Si hay piezas AU01 en
         /// <paramref name="hastaRecta"/> (índice) el tablero generado de esa recta no se ve (solo el collider). El parapeto se ve solo si falta AU05.
         /// </summary>
-        private static void Tramo(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> p, int hastaRecta)
+        private static void Tramo(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> p, int hastaRecta, List<Vector3> otra)
         {
             Transform t = Hijo(padre, nombre);
             bool piezasGuardarrail = Cargar(Guardarrail, false) != null;
@@ -248,19 +248,58 @@ namespace MechaCyberpunk.Arte.Editor
                 Barrer(o, t, "Losa", p, -MedioTablero, MedioTablero, -GruesoTablero, -0.05f, Concreto(), true, true);
                 Barrer(o, t, "Asfalto", p, -MedioAsfalto, MedioAsfalto, -0.05f, 0f, KitS2c.MatAsfalto(), true, true);
             }
+            // Parapeto en tramos (cada 2 m): se corta donde el carril cae dentro del otro tablero a la misma altura, para que la incorporación sea en plano.
+            List<Vector3> densa = T.Resamplear(p, 2f);
+            List<Vector3> otraDensa = T.Resamplear(otra, 1f);
             foreach (float lado in new[] { -1f, 1f })
             {
                 float a = lado * MedioAsfalto;
                 float b = lado * MedioTablero;
-                Barrer(o, t, lado < 0 ? "Parapeto_Izq" : "Parapeto_Der", p, Mathf.Min(a, b), Mathf.Max(a, b), 0f, AltoParapeto, Concreto(), true, !piezasGuardarrail);
+                List<Vector3> corrida = new List<Vector3>();
+                int numero = 0;
+                for (int i = 0; i <= densa.Count; i++)
+                {
+                    bool libre = i < densa.Count && !EnOtroTablero(densa[i] + Lateral(densa, i) * (lado * (MedioTablero - 0.35f)), densa[i].y, otraDensa);
+                    if (libre)
+                    {
+                        corrida.Add(densa[i]);
+                        continue;
+                    }
+                    if (corrida.Count >= 2)
+                    {
+                        Barrer(o, t, (lado < 0 ? "Parapeto_Izq_" : "Parapeto_Der_") + numero++, corrida, Mathf.Min(a, b), Mathf.Max(a, b), 0f, AltoParapeto, Concreto(), true, !piezasGuardarrail);
+                    }
+                    corrida.Clear();
+                }
             }
+        }
+
+        private static Vector3 Lateral(List<Vector3> p, int i)
+        {
+            Vector3 t = Vector3.zero;
+            if (i > 0)
+            {
+                t += T.Planta(p[i] - p[i - 1]).normalized;
+            }
+            if (i < p.Count - 1)
+            {
+                t += T.Planta(p[i + 1] - p[i]).normalized;
+            }
+            t.Normalize();
+            return new Vector3(t.z, 0f, -t.x);
+        }
+
+        /// <summary>True si el punto cae sobre el tablero de la otra línea y a su misma altura (ahí no puede haber parapeto).</summary>
+        private static bool EnOtroTablero(Vector3 punto, float y, List<Vector3> otraDensa)
+        {
+            return otraDensa.Any(q => Mathf.Abs(q.y - y) < 0.6f && T.Planta(q - punto).magnitude < MedioTablero - 0.2f);
         }
 
         /// <summary>Calle a nivel del piso con banquetas de 3 m (0.2 m): asfalto y banquetas con collider.</summary>
         private static void Piso(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> p)
         {
             Transform t = Hijo(padre, nombre);
-            Barrer(o, t, "Asfalto", p, -7f, 7f, -0.6f, 0.02f, KitS2c.MatAsfalto(), true, true);
+            Barrer(o, t, "Asfalto", p, -7f, 7f, -0.6f, 0f, KitS2c.MatAsfalto(), true, true);
             Barrer(o, t, "Banqueta_Izq", p, -10f, -7f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
             Barrer(o, t, "Banqueta_Der", p, 7f, 10f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
         }
@@ -334,7 +373,8 @@ namespace MechaCyberpunk.Arte.Editor
             Quaternion giro = Quaternion.LookRotation(afuera);
             Vector3 pos = punto - afuera * (tam.z * 0.5f);
             pos.y = punto.y - (centro.y - tam.y * 0.5f);
-            Poner(padre, prefab, pos, giro, Vector3.one, true).name = "AU06_" + nombre;
+            // Sin collider propio: el tubo y el acantilado ya lo cierran y el del marco no debe estorbar la boca.
+            Poner(padre, prefab, pos, giro, Vector3.one, false).name = "AU06_" + nombre;
         }
 
         // ---------------------------------------------------------------- Columnas, guardarraíl, luminarias
@@ -389,8 +429,11 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Medir(prefab, out Vector3 tam, out Vector3 centro);
             float largo = Mathf.Max(0.5f, tam.x);
-            foreach (List<Vector3> linea in lineas)
+            List<List<Vector3>> todas = lineas.ToList();
+            for (int l = 0; l < todas.Count; l++)
             {
+                List<Vector3> linea = todas[l];
+                List<Vector3> otraDensa = T.Resamplear(todas[(l + 1) % todas.Count], 1f);
                 float total = T.Longitud(linea);
                 int n = Mathf.Max(1, Mathf.RoundToInt(total / largo));
                 for (int k = 0; k < n; k++)
@@ -400,6 +443,10 @@ namespace MechaCyberpunk.Arte.Editor
                     foreach (float lado in new[] { -1f, 1f })
                     {
                         Vector3 afuera = der * lado;
+                        if (EnOtroTablero(pt + afuera * (MedioTablero - 0.35f), pt.y, otraDensa))
+                        {
+                            continue;
+                        }
                         Vector3 pos = pt + afuera * (MedioTablero - tam.z * 0.5f);
                         pos.y = pt.y - (centro.y - tam.y * 0.5f);
                         Poner(padre, prefab, pos, Quaternion.LookRotation(afuera), new Vector3(total / n / largo, 1f, 1f), false).name = "AU05_" + k;
