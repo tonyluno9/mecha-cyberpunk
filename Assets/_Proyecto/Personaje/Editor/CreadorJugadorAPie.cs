@@ -210,15 +210,15 @@ namespace MechaCyberpunk.Personaje.Editor
             }
             if (mapa.FindAction("Rueda") == null)
             {
-                mapa.AddAction("Rueda", InputActionType.Button, "<Keyboard>/tab");
+                mapa.AddAction("Rueda", InputActionType.Button, "<Mouse>/middleButton"); // T-1329: la rueda de armas sale con la ruedita del ratón
                 cambio = true;
             }
-            // T-992: habilidades de prótesis en teclas fijas.
-            foreach ((string nombre, string tecla) in new[] { ("HabilidadPiernas", "q"), ("HabilidadBrazos", "c"), ("HabilidadCabeza", "x") })
+            // T-1329: Tab abre la rueda de habilidades del EXO (clic para elegir); las habilidades ya no tienen tecla suelta.
+            foreach ((string nombre, string ruta) in new[] { ("RuedaExo", "<Keyboard>/tab"), ("RuedaExoElegir", "<Mouse>/leftButton"), ("HabilidadPiernas", null), ("HabilidadBrazos", null), ("HabilidadCabeza", null) })
             {
                 if (mapa.FindAction(nombre) == null)
                 {
-                    mapa.AddAction(nombre, InputActionType.Button, "<Keyboard>/" + tecla);
+                    mapa.AddAction(nombre, InputActionType.Button, ruta);
                     cambio = true;
                 }
             }

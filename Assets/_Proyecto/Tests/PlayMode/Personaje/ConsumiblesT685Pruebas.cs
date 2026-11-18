@@ -88,10 +88,10 @@ namespace MechaCyberpunk.Tests.Personaje
             vida.RecibirDanio(Bala(50f));
             inventario.Agregar(Dato("papitas"), 1);
             yield return null;
-            Press(teclado.tabKey);
+            Press(raton.middleButton);
             yield return null;
             yield return null;
-            Release(teclado.tabKey);
+            Release(raton.middleButton);
             yield return null;
             yield return null;
             Assert.AreEqual(1, inventario.Cantidad(Dato("papitas")), "Sin resaltar nada solo cierra");

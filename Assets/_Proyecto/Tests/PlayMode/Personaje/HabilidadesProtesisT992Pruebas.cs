@@ -100,7 +100,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(habilidades.Config, "Resources/ConfigHabilidadesProtesis");
             Assert.IsNotNull(habilidades.Config.Controles, "la config apunta a ControlesAPie");
             Assert.IsNotNull(habilidades.Config.Controles.FindAction("APie/HabilidadPiernas"));
-            Assert.AreEqual("q", habilidades.Config.Controles.FindAction("APie/HabilidadPiernas").bindings[0].path.Substring("<Keyboard>/".Length));
+            Assert.AreEqual(0, habilidades.Config.Controles.FindAction("APie/HabilidadPiernas").bindings.Count, "T-1329: sin tecla suelta");
+            Assert.AreEqual("<Keyboard>/tab", habilidades.Config.Controles.FindAction("APie/RuedaExo").bindings[0].path);
             Assert.AreEqual(1f, habilidades.FactorCorrer, "sin activar no cambia nada");
         }
 
@@ -111,7 +112,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Poner(EspacioImplante.Piernas, 1);
             yield return null;
             Assert.AreEqual(EstadoHabilidad.Lista, habilidades.Estado(HabilidadProtesis.Piernas));
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             float inicio = Time.time;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas), "pulsar 1 activa PIERNAS");
 
@@ -134,7 +136,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(6.4f - (Time.time - inicio));
             Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "a los 6.4 s ya recarga");
             Assert.AreEqual(1f, habilidades.FactorCorrer, "y el efecto se acabó");
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "recargando no se activa otra vez");
         }
 
@@ -144,7 +147,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             Poner(EspacioImplante.Piernas, 1);
             yield return Esperar(0.4f);
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas));
             Assert.IsTrue(controlador.EnPiso);
             float pisoY = jugador.transform.position.y;
@@ -170,7 +174,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             Poner(EspacioImplante.Piernas, 2);
             yield return null;
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             float inicio = Time.time;
             yield return Esperar(9.4f - (Time.time - inicio));
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas), "con el nivel II sigue activa a los 9.4 s");
@@ -188,9 +193,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(barra, "el HUD a pie trae la barra de habilidades");
             Assert.IsTrue(barra.Visible, "a pie la barra se ve");
             Assert.AreEqual("—", barra.NombreMostrado(HabilidadProtesis.Piernas), "sin implante la casilla sale apagada con —");
-            Assert.AreEqual("Q", barra.TeclaMostrada(HabilidadProtesis.Piernas));
-            Assert.AreEqual("C", barra.TeclaMostrada(HabilidadProtesis.Brazos));
-            Assert.AreEqual("X", barra.TeclaMostrada(HabilidadProtesis.Cabeza));
+            Assert.AreEqual("PIERNAS", barra.EtiquetaMostrada(HabilidadProtesis.Piernas), "T-1329: la barra ya no lleva tecla");
 
             Press(teclado.leftShiftKey);
             Press(teclado.wKey);
@@ -198,15 +201,18 @@ namespace MechaCyberpunk.Tests.Personaje
             float velocidad = controlador.Velocidad.y;
             Release(teclado.wKey);
             Release(teclado.leftShiftKey);
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Lista, habilidades.Estado(HabilidadProtesis.Piernas), "sin implante no se activa");
             Assert.AreEqual(datos.VelocidadCorrer, velocidad, datos.VelocidadCorrer * Tolerancia, "y la velocidad no cambia");
             yield return null;
             yield return null;
             Assert.IsTrue(ColaAvisos.Actual.Texto.Contains("NECESITAS EXO DE PIERNAS"), "avisa; dice: " + ColaAvisos.Actual.Texto);
-            yield return Tecla(teclado.cKey);
+            habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Lista, habilidades.Estado(HabilidadProtesis.Brazos));
-            yield return Tecla(teclado.xKey);
+            habilidades.Pulsar(HabilidadProtesis.Cabeza); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Lista, habilidades.Estado(HabilidadProtesis.Cabeza));
         }
 
@@ -222,7 +228,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual("PIERNAS", barra.NombreMostrado(HabilidadProtesis.Piernas));
             Assert.AreEqual("BRAZOS", barra.NombreMostrado(HabilidadProtesis.Brazos));
             Assert.AreEqual(1f, barra.MedidorMostrado(HabilidadProtesis.Piernas), 0.01f, "lista: medidor lleno");
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             yield return Esperar(2f);
             float medidor = barra.MedidorMostrado(HabilidadProtesis.Piernas);
             Assert.Less(medidor, 0.9f, "activa: el medidor se vacía");
@@ -241,7 +248,8 @@ namespace MechaCyberpunk.Tests.Personaje
             vidaMuneco = muneco.AddComponent<MunecoAPie>();
             Physics.SyncTransforms();
             yield return null;
-            yield return Tecla(teclado.cKey);
+            habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Brazos));
             GolpeAPie golpe = jugador.GetComponent<GolpeAPie>();
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
@@ -272,7 +280,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(raton.leftButton);
             yield return Esperar(pistola.Datos.TiempoEntreDisparos + 0.1f);
             Assert.AreEqual(pistola.TamanoCargador - 1, pistola.Balas);
-            yield return Tecla(teclado.cKey);
+            habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Brazos));
             Press(teclado.rKey);
             yield return null;
@@ -316,7 +325,8 @@ namespace MechaCyberpunk.Tests.Personaje
             visor.Actualizar();
             Assert.AreEqual(0, visor.Marcados, "con CABEZA apagada el visor no marca a nadie, aunque tengas el implante");
 
-            yield return Tecla(teclado.xKey);
+            habilidades.Pulsar(HabilidadProtesis.Cabeza); // T-1329: ya no hay tecla suelta
+            yield return null;
             float inicio = Time.time;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Cabeza));
             Assert.Greater(visor.Marcados, 0, "pulsar 3 marca al enemigo detrás de la pared");
@@ -335,7 +345,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Poner(EspacioImplante.Piernas, 1);
             Poner(EspacioImplante.Brazos, 1);
             yield return null;
-            yield return Tecla(teclado.qKey);
+            habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas));
 
             extra = new GameObject("CarroFalso");
@@ -351,7 +362,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return null;
             Assert.AreEqual(ModoJugador.Carro, jugadorAPie.Modo);
 
-            yield return Tecla(teclado.cKey);
+            habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Lista, habilidades.Estado(HabilidadProtesis.Brazos), "en el carro la tecla 2 no hace nada");
             yield return Esperar(6.3f);
             Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "pero el tiempo de PIERNAS siguió corriendo");
@@ -363,7 +375,8 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             Poner(EspacioImplante.Brazos, 1);
             yield return null;
-            yield return Tecla(teclado.cKey);
+            habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
+            yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Brazos));
             VidaAPie vida = jugador.GetComponent<VidaAPie>();
             vida.RecibirDanio(new InfoDanio(100000f, TipoDanio.Disparo, jugador.transform.position, Vector3.forward, null));

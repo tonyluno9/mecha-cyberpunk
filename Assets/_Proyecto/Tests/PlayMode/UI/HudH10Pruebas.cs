@@ -249,11 +249,11 @@ namespace MechaCyberpunk.Tests.UI
             carro = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaCarro), new Vector3(2f, 0f, 1.1f), Quaternion.identity);
             yield return Esperar(0.5f);
             string subir = "[E] " + ReglaAyudasH10.TextoSubirCarro;
-            Assert.AreEqual(subir, h10.TextosAyuda[1].text, "Frente a un carro la ayuda cambia a subir (arriba, con el golpe de los puños abajo)");
-            Assert.AreEqual("[Clic] Golpe", h10.TextosAyuda[0].text);
+            Assert.AreEqual(subir, h10.AvisoCentroCompleto, "T-1329: frente a un carro el aviso de subir sale al centro, no a la derecha");
+            Assert.AreEqual("[Clic] Golpe", h10.TextosAyuda[0].text, "A la derecha queda el golpe de los puños");
             carro.transform.position = new Vector3(40f, 0f, 40f);
             yield return Esperar(0.5f);
-            Assert.IsFalse(h10.TextosAyuda[0].text.Contains("Subir") || h10.TextosAyuda[1].text.Contains("Subir"), "Lejos del carro ya no sale");
+            Assert.IsFalse(h10.TextosAyuda[0].text.Contains("Subir") || h10.TextosAyuda[1].text.Contains("Subir") || h10.AvisoCentroVisible, "Lejos del carro ya no sale");
         }
 
         [UnityTest]

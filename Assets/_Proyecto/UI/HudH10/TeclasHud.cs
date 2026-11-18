@@ -23,6 +23,9 @@ namespace MechaCyberpunk.UI.Hud
                 case "LMB":
                 case "Left Button":
                     return "Clic";
+                case "MMB":
+                case "Middle Button":
+                    return "Rueda (clic)";
                 case "RMB":
                 case "Right Button":
                     return "Clic der.";

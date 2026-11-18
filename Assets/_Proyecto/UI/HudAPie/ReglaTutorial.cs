@@ -86,9 +86,7 @@ namespace MechaCyberpunk.UI.Hud
         public const string TeclaTelefono = "Telefono";
         public const string TeclaRueda = "Rueda";
         public const string TeclaConsumir = "ConsumirEquipado";
-        public const string TeclaPiernas = "HabilidadPiernas";
-        public const string TeclaBrazos = "HabilidadBrazos";
-        public const string TeclaCabeza = "HabilidadCabeza";
+        public const string TeclaRuedaExo = "RuedaExo";
 
         /// <summary>Las teclas de siempre, para cuando no hay Input System que preguntar (pruebas y respaldo).</summary>
         public static string TeclaPorOmision(string nombre)
@@ -106,11 +104,9 @@ namespace MechaCyberpunk.UI.Hud
                 case TeclaInteractuar: return "E";
                 case TeclaMapa: return "M";
                 case TeclaTelefono: return "T";
-                case TeclaRueda: return "Tab";
+                case TeclaRueda: return "Rueda (clic)";
                 case TeclaConsumir: return "B";
-                case TeclaPiernas: return "Q";
-                case TeclaBrazos: return "C";
-                case TeclaCabeza: return "X";
+                case TeclaRuedaExo: return "Tab";
                 default: return nombre;
             }
         }
@@ -149,16 +145,16 @@ namespace MechaCyberpunk.UI.Hud
         }
 
         /// <summary>
-        /// T-992: el aviso de las habilidades de prótesis, solo con las que se tienen: "[Q] PIERNAS · [C] BRAZOS · [X] CABEZA". Vacío si no hay ninguna.
+        /// T-992: el aviso de las habilidades de prótesis, solo con las que se tienen: "MANTÉN TAB Y ELIGE CON EL RATÓN: PIERNAS · BRAZOS". T-1329: sin tecla suelta por habilidad. Vacío si no hay ninguna.
         /// </summary>
         public static string TextoHabilidades(Func<string, string> tecla, bool piernas, bool brazos, bool cabeza)
         {
             Func<string, string> k = nombre => (tecla != null ? tecla(nombre) : TeclaPorOmision(nombre)).ToUpperInvariant();
             List<string> partes = new List<string>();
-            if (piernas) partes.Add("[" + k(TeclaPiernas) + "] PIERNAS");
-            if (brazos) partes.Add("[" + k(TeclaBrazos) + "] BRAZOS");
-            if (cabeza) partes.Add("[" + k(TeclaCabeza) + "] CABEZA");
-            return string.Join(" · ", partes);
+            if (piernas) partes.Add("PIERNAS");
+            if (brazos) partes.Add("BRAZOS");
+            if (cabeza) partes.Add("CABEZA");
+            return partes.Count == 0 ? string.Empty : "MANTÉN " + k(TeclaRuedaExo) + " Y ELIGE CON EL RATÓN: " + string.Join(" · ", partes);
         }
 
         /// <summary>La persona hizo la acción: se da por vista y, si era el aviso en pantalla, se quita.</summary>
