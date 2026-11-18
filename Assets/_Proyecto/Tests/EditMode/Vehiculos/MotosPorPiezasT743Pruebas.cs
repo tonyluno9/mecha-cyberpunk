@@ -114,7 +114,11 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.AreSame(moto.transform.Find("Visual_T511/Visual").GetComponent<MeshFilter>(), filtro, "El cuerpo sigue en Visual_T511/Visual");
             Assert.AreSame(completa, filtro.sharedMesh);
             Assert.IsNotNull(sin, "Hay malla sin caballete");
-            Assert.Less(sin.triangles.Length, completa.triangles.Length, "La malla sin caballete tiene menos triángulos");
+            // T-1343: el cuerpo de Blender del V07 no casa con la zona de caballete del modelo viejo (tocaba el 6 % del cuerpo): se deja entero.
+            if (codigo != "V07")
+            {
+                Assert.Less(sin.triangles.Length, completa.triangles.Length, "La malla sin caballete tiene menos triángulos");
+            }
             Assert.AreEqual(0f, so.FindProperty("bajarAlOcultar").floatValue, 0.0001f, "Las llantas ya tocan el piso: el visual no baja");
         }
 

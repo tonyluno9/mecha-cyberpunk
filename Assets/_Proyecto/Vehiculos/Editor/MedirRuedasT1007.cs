@@ -21,7 +21,8 @@ namespace MechaCyberpunk.Vehiculos.Editor
     public static class MedirRuedasT1007
     {
         public const string RutaPatrulla = "Assets/_Proyecto/Trafico/Prefabs/Patrulla.prefab";
-        public static readonly string[] CodigosCarros = { "V01a", "V01b", "V05" };
+        // T-1343: V01a, V01b y V05 ya traen sus llantas de Blender ajustadas por el modelador; no se miden ni se reescalan aquí.
+        public static readonly string[] CodigosCarros = { };
         public static readonly string[] NombresRuedas = { "Rueda_DI", "Rueda_DD", "Rueda_TI", "Rueda_TD" };
 
         /// <summary>Qué parte del hueco llena la llanta (0.93 = la llanta mide el 93 % del radio del hueco, con un poco de luz alrededor).</summary>

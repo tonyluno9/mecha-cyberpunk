@@ -21,7 +21,8 @@ namespace MechaCyberpunk.Vehiculos.Editor
         public const string RutaFbxRueda = CreadorCarrosPiezasT742.CarpetaPiezas + CodigoRueda + "/" + CodigoRueda + ".fbx";
         public const string RutaMaterialRueda = CreadorCarrosPiezasT742.CarpetaPiezas + CodigoRueda + "/" + CodigoRueda + "_Blender_Rueda.mat";
         public const string RutaPatrulla = "Assets/_Proyecto/Trafico/Prefabs/Patrulla.prefab";
-        public static readonly string[] Carros = { "V01a", "V01b", "V05" };
+        // T-1343: V01a, V01b y V05 ya son carros de Blender con sus propias llantas (CreadorCarrosT1343); aquí solo queda la patrulla.
+        public static readonly string[] Carros = { };
 
         public static string[] Prefabs() => Carros.Select(c => CreadorCarrosPiezasT742.RutaPrefab(c)).Append(RutaPatrulla).ToArray();
 
