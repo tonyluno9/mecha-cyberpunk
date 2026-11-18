@@ -91,6 +91,44 @@ namespace MechaCyberpunk.Trafico.Peatones
             return puntos;
         }
 
+        /// <summary>
+        /// T-1350: las dos rutas (izquierda y derecha) de las banquetas de una calle de zona: la línea del centro movida <paramref name="ancho"/>/2 +
+        /// <paramref name="mitadBanqueta"/> m a cada lado y subida <paramref name="alturaPie"/> m. Los puntos repetidos se quitan; sin al menos 2 puntos no hay rutas.
+        /// </summary>
+        public static List<Vector3[]> DeCalleZona(IReadOnlyList<Vector3> centro, float ancho, float mitadBanqueta, float alturaPie)
+        {
+            List<Vector3> limpio = new List<Vector3>();
+            foreach (Vector3 p in centro)
+            {
+                if (limpio.Count == 0 || new Vector2(p.x - limpio[limpio.Count - 1].x, p.z - limpio[limpio.Count - 1].z).sqrMagnitude > 0.01f)
+                {
+                    limpio.Add(p);
+                }
+            }
+            List<Vector3[]> rutas = new List<Vector3[]>();
+            if (limpio.Count < 2)
+            {
+                return rutas;
+            }
+            float separacion = ancho / 2f + mitadBanqueta;
+            Vector3[] izquierda = new Vector3[limpio.Count];
+            Vector3[] derecha = new Vector3[limpio.Count];
+            for (int i = 0; i < limpio.Count; i++)
+            {
+                Vector3 antes = limpio[Mathf.Max(i - 1, 0)];
+                Vector3 despues = limpio[Mathf.Min(i + 1, limpio.Count - 1)];
+                Vector3 tramo = despues - antes;
+                tramo.y = 0f;
+                Vector3 lado = Vector3.Cross(Vector3.up, tramo.normalized) * separacion; // a la derecha de la marcha
+                Vector3 pie = limpio[i] + Vector3.up * alturaPie;
+                derecha[i] = pie + lado;
+                izquierda[i] = pie - lado;
+            }
+            rutas.Add(izquierda);
+            rutas.Add(derecha);
+            return rutas;
+        }
+
         /// <summary>Dónde está un peatón sobre la ruta: del punto de salida del tramo al de llegada, según su sentido y fracción.</summary>
         public static Vector3 Posicion(Vector3[] puntos, CalculoPeaton calculo)
         {

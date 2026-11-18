@@ -272,7 +272,7 @@ namespace MechaCyberpunk.Trafico.Calle
             int cantidad = grafo.Cantidad;
             for (int i = 0; i < cantidad; i++)
             {
-                if (grafo.Vecinos(i).Count != 1)
+                if (grafo.Vecinos(i).Count != 1 || grafo.EsDeZona(i)) // T-1350: una calle de zona sin salida no se alarga (no sale hacia el mar ni un muro)
                 {
                     continue;
                 }

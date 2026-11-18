@@ -599,10 +599,34 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 direccion = haciaNodo.normalized;
             }
-            eje += direccion * (velocidad * dt);
+            float factor = nodoAnterior != nodoDestino && calles.EsRapido(nodoAnterior, nodoDestino) ? FactorAutopista : 1f; // T-1350
+            eje += direccion * (velocidad * factor * dt);
             desvio = Vector3.MoveTowards(desvio, Derecha(direccion) * config.SeparacionCarril, VelocidadCambioCarril * dt);
-            Quaternion meta = Quaternion.LookRotation(direccion, Vector3.up);
+            Quaternion meta = Quaternion.LookRotation(DireccionConPendiente(), Vector3.up);
             transform.SetPositionAndRotation(Posicion(), Quaternion.RotateTowards(transform.rotation, meta, config.GiroMaximo * dt));
+        }
+
+        // T-1350: en una rampa (los dos nodos del tramo a distinta altura) el carro apunta hacia arriba o hacia abajo según la pendiente; en plano, igual que siempre.
+        private const float FactorAutopista = 1.6f;
+        private const float DesnivelMinimoRampa = 0.5f;
+        private const float InclinacionMaximaGrados = 15f;
+
+        private Vector3 DireccionConPendiente()
+        {
+            if (nodoAnterior == nodoDestino || nodoAnterior < 0)
+            {
+                return direccion;
+            }
+            Vector3 a = calles.Nodo(nodoAnterior);
+            Vector3 b = calles.Nodo(nodoDestino);
+            float desnivel = b.y - a.y;
+            float largo = Mathf.Sqrt((b.x - a.x) * (b.x - a.x) + (b.z - a.z) * (b.z - a.z));
+            if (Mathf.Abs(desnivel) < DesnivelMinimoRampa || largo < 1f)
+            {
+                return direccion;
+            }
+            float angulo = Mathf.Clamp(Mathf.Atan2(desnivel, largo) * Mathf.Rad2Deg, -InclinacionMaximaGrados, InclinacionMaximaGrados) * Mathf.Deg2Rad;
+            return new Vector3(direccion.x * Mathf.Cos(angulo), Mathf.Sin(angulo), direccion.z * Mathf.Cos(angulo));
         }
 
         // ---- Refuerzo de los SKULLS en carro (T-714) ----
