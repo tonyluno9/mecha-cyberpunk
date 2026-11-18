@@ -243,7 +243,8 @@ namespace MechaCyberpunk.Arte.Editor
             Vector3 a = p[0];
             Vector3 b = p[p.Count - 1];
             Medir(prefab, out Vector3 tam, out Vector3 centro);
-            bool largoX = tam.x >= tam.z;
+            // AU01 (Blender) mide 12 de ancho en X por 8 de largo en Z: el sentido de manejo es su Z aunque sea la medida menor.
+            bool largoX = false;
             float largo = largoX ? tam.x : tam.z;
             float ancho = largoX ? tam.z : tam.x;
             Vector3 dir = (b - a).normalized;
