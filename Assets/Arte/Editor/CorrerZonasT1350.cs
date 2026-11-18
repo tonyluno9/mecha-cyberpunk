@@ -61,6 +61,11 @@ namespace MechaCyberpunk.Arte.Editor
                     Vector3 p = l.transform.position;
                     if (puestas.Any(q => (q - p).sqrMagnitude < sep * sep))
                     {
+                        // El dato de luz de URP depende de la Light: se quita primero.
+                        foreach (Component extra in l.GetComponents<Component>().Where(c => c != null && c.GetType().Name == "UniversalAdditionalLightData"))
+                        {
+                            UnityEngine.Object.DestroyImmediate(extra);
+                        }
                         UnityEngine.Object.DestroyImmediate(l);
                         quitadas++;
                         continue;
