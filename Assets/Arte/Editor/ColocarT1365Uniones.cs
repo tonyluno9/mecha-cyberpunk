@@ -45,7 +45,11 @@ namespace MechaCyberpunk.Arte.Editor
             ("Sur", new Vector4(-115f, -212f, 115f, -180f)),
             ("Este", new Vector4(280f, -48f, 345f, 290f)),
             ("PuertoNorte", new Vector4(115f, -48f, 280f, -28f)),
+            ("Oeste", new Vector4(-312f, -70f, -242f, 70f)), // U4: el carro caía 2.1 m al salirse de la calle (recorrido T-1361)
         };
+
+        /// <summary>Alto libre (m) sobre el piso que deben tener las calles de zona del dueño de esta sesión (Malecón, Autopista).</summary>
+        private const float AltoLibre = 3f;
 
         /// <summary>Pone los pisos de respaldo (asfalto con collider) bajo la raíz T1365_Uniones. Idempotente.</summary>
         public static void Aplicar()
@@ -63,7 +67,61 @@ namespace MechaCyberpunk.Arte.Editor
             KitS2c.Terminar(o);
             ColocarS2.Informe.Clear();
             ColocarS2.Informe.AppendLine("T-1365: " + PisosRespaldo.Length + " pisos de respaldo a " + BajoCalle + " m bajo la calle");
+            LiberarCalles();
             ColocarS2.Guardar("t1365-uniones");
+        }
+
+        /// <summary>
+        /// Apaga (SetActive false, sin borrar) lo viejo de las afueras (T530_Afueras, S2_Calles) que tapa una calle de zona del Malecón o de la
+        /// Autopista: p. ej. el remate de la calle cruzada oeste en (-242, 64), que cerraba la calle oeste nueva. Revisa una caja del ancho de la
+        /// calle, de 0.4 a 3 m sobre su línea, cada 2 m. Lo apagado queda en el informe.
+        /// </summary>
+        private static void LiberarCalles()
+        {
+            Physics.SyncTransforms();
+            System.Collections.Generic.HashSet<GameObject> apagados = new System.Collections.Generic.HashSet<GameObject>();
+            foreach (MechaCyberpunk.Core.Mundo.CalleZona calle in UnityEngine.Object.FindObjectsByType<MechaCyberpunk.Core.Mundo.CalleZona>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (calle.Zona != "Malecon" && calle.Zona != "Autopista")
+                {
+                    continue;
+                }
+                System.Collections.Generic.List<Vector3> p = calle.Puntos();
+                for (int i = 1; i < p.Count; i++)
+                {
+                    Vector3 a = p[i - 1];
+                    Vector3 b = p[i];
+                    float largo = Vector3.Distance(a, b);
+                    for (float d = 0f; d <= largo; d += 2f)
+                    {
+                        Vector3 c = Vector3.Lerp(a, b, largo > 0f ? d / largo : 0f);
+                        Vector3 dir = b - a;
+                        dir.y = 0f;
+                        Quaternion giro = dir.sqrMagnitude > 0.001f ? Quaternion.LookRotation(dir) : Quaternion.identity;
+                        Vector3 mitad = new Vector3(calle.Ancho * 0.5f - 0.5f, (AltoLibre - 0.4f) * 0.5f, 1f);
+                        foreach (Collider col in Physics.OverlapBox(c + Vector3.up * (0.4f + mitad.y), mitad, giro, ~0, QueryTriggerInteraction.Ignore))
+                        {
+                            Transform raiz = col.transform.root;
+                            if (raiz.name != ColocarT530.NombreRaiz && raiz.name != "S2_Calles")
+                            {
+                                continue;
+                            }
+                            // El objeto de nivel de cuadra: el hijo directo de Salida_N (Edificio, Ventanas...).
+                            Transform t = col.transform;
+                            while (t.parent != null && t.parent.parent != null && t.parent.parent != raiz)
+                            {
+                                t = t.parent;
+                            }
+                            if (apagados.Add(t.gameObject))
+                            {
+                                t.gameObject.SetActive(false);
+                                ColocarS2.Informe.AppendLine("  apagado por tapar " + calle.name + ": " + raiz.name + "/" + t.parent?.name + "/" + t.name + " @" + t.position.ToString("F0"));
+                            }
+                        }
+                    }
+                }
+            }
+            ColocarS2.Informe.AppendLine("Calles liberadas: " + apagados.Count + " objetos viejos apagados");
         }
 
         public static void Fotos()
