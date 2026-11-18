@@ -32,7 +32,8 @@ namespace MechaCyberpunk.Arte.Editor
         /// Raíces de las zonas nuevas y separación mínima (m) entre luces reales que se conservan: spots (postes, faroles, reflectores) y
         /// puntuales (neones, focos). Con todas las luces de los kits la escena pasaba de 1400 Light y el URP ya no podía dibujar (búfer de luces).
         /// </summary>
-        private static readonly string[] RaicesZonas = { "T1354_Malecon", "T1355_Cerro", "T1356_Autopista", "T1357_Puerto" };
+        // 18-nov C: el Cerro (T1355) y el Puerto (T1357) los arregla la sesión B en sus prefabs; estos pasos ya no los tocan.
+        private static readonly string[] RaicesZonas = { "T1354_Malecon", "T1356_Autopista" };
         private const float SeparacionSpot = 10f;
         private const float SeparacionPunto = 20f;
 
