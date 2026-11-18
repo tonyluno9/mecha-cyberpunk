@@ -25,17 +25,14 @@ namespace MechaCyberpunk.Tests.Personaje
         protected ControladorAPie controlador;
         protected JugadorAPie jugadorAPie;
         protected DatosPersonaje datos;
-        private bool novaApagadaAntes;
         private readonly System.Collections.Generic.List<GameObject> extras = new System.Collections.Generic.List<GameObject>();
 
         public override void Setup()
         {
             base.Setup();
             // T-991: la rueda no abre con la pausa activa ni con el tiempo detenido; una prueba anterior pudo dejarlos así.
-            // T-1338: y una clase de policía o IA anterior pudo dejar patrullas, policías, cursor o Nova vivos.
-            LimpiezaEntreClasesT1338.Limpiar();
-            novaApagadaAntes = MechaCyberpunk.IA.APie.RespuestaNova.Apagada;
-            MechaCyberpunk.IA.APie.RespuestaNova.Apagada = true;
+            MechaCyberpunk.Core.Pausa.Fijar(false);
+            Time.timeScale = 1f;
             teclado = InputSystem.AddDevice<Keyboard>();
             raton = InputSystem.AddDevice<Mouse>();
 
@@ -72,7 +69,6 @@ namespace MechaCyberpunk.Tests.Personaje
             Object.Destroy(datos);
             Registros.LimpiarTodos();
             EventosLugares.LimpiarSuscriptores();
-            MechaCyberpunk.IA.APie.RespuestaNova.Apagada = novaApagadaAntes;
             base.TearDown();
         }
 
