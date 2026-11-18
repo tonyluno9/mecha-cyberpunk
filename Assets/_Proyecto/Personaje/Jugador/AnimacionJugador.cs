@@ -118,7 +118,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
-            visual.ConfigurarClips(0f, 0f);
+            // T-1333: la rapidez del clip vuelve a seguir la velocidad real (con 1 fijo los pies patinaban: el clip avanza a ~1.3 m/s y el jugador camina a 4.5). Sin IK de pies.
+            visual.ConfigurarClips(ReglasAnimacion.VelocidadClipCaminarSinImplante, ReglasAnimacion.VelocidadClipCorrerSinImplante, ReglasAnimacion.RapidezMaximaLocomocion);
             IKPiesYMirada ik = visual.GetComponentInChildren<IKPiesYMirada>(true);
             if (ik != null)
             {

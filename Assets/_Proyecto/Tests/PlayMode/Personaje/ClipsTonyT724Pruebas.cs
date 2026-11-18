@@ -55,7 +55,8 @@ namespace MechaCyberpunk.Tests.Personaje
         /// <summary>Todos los clips que suenan en alguna capa con peso de capa mayor que cero deben ser de locomoción de Tony.</summary>
         private static void AfirmarSoloLocomocionDeTony(Animator a, string esperado)
         {
-            Assert.AreEqual(1f, a.speed, 0.001f, "El Animator reproduce el clip a su rapidez original (sin acelerar ni frenar)");
+            Assert.Greater(a.speed, 1f, "T-1333: la rapidez del clip sigue la velocidad real (sin patinar)");
+            Assert.LessOrEqual(a.speed, ReglasAnimacion.RapidezMaximaLocomocion + 0.01f);
             Assert.IsFalse(a.applyRootMotion, "Sin movimiento de raíz");
             string base0 = ClipsActivos(a, 0);
             Assert.AreEqual(esperado + "(1.00)", base0, "La capa base reproduce solo " + esperado);
