@@ -44,7 +44,7 @@ namespace MechaCyberpunk.Arte.Editor
             float t = Mathf.Clamp01((CerroT1355Trazado.XBase - x) / 150f);
             float h = 30f * Suave(t);
             float oeste = Mathf.Max(0f, -450f - x);
-            h += oeste * 0.5f;
+            h += oeste * 0.25f;
             if (oeste > 0f)
             {
                 h += 2.5f * Mathf.Sin(z * 0.07f + x * 0.11f) * Mathf.Min(1f, oeste / 10f);

@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float AlturaPoste = 6.75f;
 
         // Intervalos de x donde hay fachadas (se saltan las bocas de los corredores x = ±47 y el Puerto, que empieza en x = 115).
-        private static readonly (float x0, float x1)[] Fachadas = { (-295f, -57f), (-37f, 37f), (57f, 105f) };
+        private static readonly (float x0, float x1)[] Fachadas = { (-295f, -57f), (-37f, 37f), (57f, 110f) };
         private static readonly Color[] ColoresLancha =
         {
             new Color(0.8f, 0.15f, 0.12f), new Color(0.15f, 0.55f, 0.3f), new Color(0.15f, 0.4f, 0.75f), new Color(0.9f, 0.75f, 0.15f), new Color(0.1f, 0.75f, 0.7f),
@@ -99,20 +99,31 @@ namespace MechaCyberpunk.Arte.Editor
             const string referencias = "imageassets/referencias/look/";
             (string nombre, string referencia, Vector3 desde, Vector3 hacia, float campo)[] tomas =
             {
-                // K11: a 1.7 m sobre el paseo junto al barandal, mirando al oeste por la avenida con el mar a la izquierda y la curva al fondo.
-                ("k11", "K11_Malecon.png", new Vector3(40f, 1.9f, -240.4f), new Vector3(-90f, 2.6f, -226f), 62f),
-                // K12: junto al puesto (x = 78) y el muelle (x = 92), mirando al suroeste: muelle a la izquierda. El faro está al este, detrás.
-                ("k12", "K12_Malecon_Muelle.png", new Vector3(108f, 1.9f, -236.5f), new Vector3(60f, 0f, -262f), 75f),
-                // A11: aérea a ~42 m sobre la avenida mirando al oeste-suroeste: playa y escollera a la derecha, muelle a la izquierda, edificios a la derecha.
-                ("a11", "A11_Malecon_Aerea.png", new Vector3(170f, 42f, -190f), new Vector3(40f, 0f, -262f), 80f),
+                // K11: a 1.75 m, a ~3 m del barandal hacia la avenida (lateral 12.6), mirando al oeste por la tangente con ~8 grados hacia la ciudad.
+                ("k11", "K11_Malecon.png", new Vector3(40f, 1.95f, -238.6f), new Vector3(-59f, 1.95f, -224.7f), 60f),
+                // K12: mirando al este desde el oeste del puesto (x = 78, a ~8 m): puesto y muelle a la derecha (el mar queda a la derecha), faro al fondo.
+                ("k12", "K12_Malecon_Muelle.png", new Vector3(70f, 1.9f, -236f), new Vector3(150f, 1f, -250f), 75f),
+                // A11: aérea a ~40 m, del lado de la ciudad al oeste del muelle, mirando al suroeste: playa, escollera y la curva.
+                ("a11", "A11_Malecon_Aerea.png", new Vector3(-20f, 40f, -200f), new Vector3(-95f, 0f, -250f), 70f),
             };
             Directory.CreateDirectory("Logs");
             foreach (var t in tomas)
             {
                 string juego = "Logs/t1354-" + t.nombre + ".png";
-                ColocarS2cLook.Foto(t.desde, t.hacia, juego, t.campo);
+                ColocarS2cLook.Foto(DejarLibre(t.desde), t.hacia, juego, t.campo);
                 ColocarS2.LadoALado(referencias + t.referencia, juego, "docs/capturas/zonas/malecon-" + t.nombre + ".png");
             }
+        }
+
+        /// <summary>Sube la cámara de a 10 m (hasta 6 veces) si quedó dentro de un collider (una grúa, un edificio).</summary>
+        private static Vector3 DejarLibre(Vector3 desde)
+        {
+            Physics.SyncTransforms();
+            for (int i = 0; i < 6 && Physics.CheckSphere(desde, 1.5f); i++)
+            {
+                desde += Vector3.up * 10f;
+            }
+            return desde;
         }
 
         // ================================================================ Terreno: calles, banquetas, playa
@@ -128,7 +139,7 @@ namespace MechaCyberpunk.Arte.Editor
                 m.SetFloat("_Smoothness", 0.3f);
                 return m;
             });
-            Material arena = KitS2c.Mat("T1354_Arena", () => KitS2c.Lit(new Color(0.16f, 0.14f, 0.13f), 0.15f));
+            Material arena = KitS2c.Mat("T1354_ArenaClara", () => KitS2c.Lit(new Color(0.42f, 0.36f, 0.28f), 0.15f));
             Material fondo = KitS2c.Mat("T1354_FondoMar", () => KitS2c.Lit(new Color(0.03f, 0.05f, 0.08f), 0.1f));
             const float h = ColocarT1354Curva.YBanqueta;
             const float a = ColocarT1354Curva.YArroyo;
@@ -355,7 +366,7 @@ namespace MechaCyberpunk.Arte.Editor
                         Bounds fb = Medida(prefabs["ML01_Farol"]);
                         Vector3 cabeza = p + Vector3.up * fb.size.y * 0.92f;
                         // Luz de sodio como la de los postes de la ciudad (ColocarS2oLuz): spot hacia abajo, y el halo en la niebla.
-                        KitS2c.Luz(farol.transform, cabeza, LightType.Spot, KitS2c.Sodio, ColocarS2oLuz.IntensidadPoste, ColocarS2oLuz.RangoPoste, ColocarS2oLuz.AnguloPoste, Vector3.down);
+                        KitS2c.Luz(farol.transform, cabeza, LightType.Spot, KitS2c.Sodio, ColocarS2oLuz.IntensidadPoste, ColocarS2oLuz.RangoPoste, ColocarS2oLuz.AnguloPoste, (giro * Vector3.forward * 0.6f + Vector3.down).normalized);
                         KitS2c.Halo(o, farol.transform, cabeza, ColocarT1354Curva.YBanqueta, KitS2c.Sodio);
                     }
                 }
@@ -506,16 +517,16 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject cono = new GameObject("Haz");
             cono.transform.SetParent(pivote.transform, false);
             cono.transform.localRotation = Quaternion.Euler(2f, 250f, 0f);
-            Mesh malla = MallaHaz(100f, 11f);
+            Mesh malla = MallaHaz(120f, 2f, 10f);
             malla.name = o.Nombre + "_Haz";
             o.Mallas.Add(malla);
             cono.AddComponent<MeshFilter>().sharedMesh = malla;
             MeshRenderer mr = cono.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = KitS2c.Mat("T1354_HazFaro", () =>
+            mr.sharedMaterial = KitS2c.Mat("T1354_HazFaroFino", () =>
             {
                 Material m = new Material(Shader.Find("MechaCyberpunk/Mundo/HaloLuz"));
                 m.SetColor("_Color", new Color(1f, 0.92f, 0.65f));
-                m.SetFloat("_Intensidad", 1.1f);
+                m.SetFloat("_Intensidad", 0.15f);
                 m.SetFloat("_Borde", 1.2f);
                 m.SetFloat("_Caida", 1.3f);
                 m.SetFloat("_Suave", 0.3f);
@@ -528,7 +539,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Cono abierto que sale de la punta (z = 0) y se abre hasta el radio dado en z = largo; la v de la UV va de 0 en la punta a 1 al final.</summary>
-        private static Mesh MallaHaz(float largo, float radio)
+        private static Mesh MallaHaz(float largo, float radioInicio, float radioFin)
         {
             const int lados = 20;
             List<Vector3> v = new List<Vector3>();
@@ -539,8 +550,8 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 float a = i * Mathf.PI * 2f / lados;
                 Vector3 r = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f);
-                v.Add(r * 0.05f);
-                v.Add(r * radio + Vector3.forward * largo);
+                v.Add(r * radioInicio);
+                v.Add(r * radioFin + Vector3.forward * largo);
                 n.Add(r);
                 n.Add(r);
                 uv.Add(new Vector2((float)i / lados, 0f));
@@ -655,6 +666,8 @@ namespace MechaCyberpunk.Arte.Editor
                     Vector3 a = linea[i] + normal * ColocarT1354Curva.LateralCiudad + Vector3.up * ColocarT1354Curva.YBanqueta;
                     Vector3 b = linea[i + 1] + normal * ColocarT1354Curva.LateralCiudad + Vector3.up * ColocarT1354Curva.YBanqueta;
                     Vector3 lado = Vector3.Cross(Vector3.up, normal).normalized;
+                    // Segunda hilera detrás, más alta y sin letreros: tapa los edificios de relleno de las afueras.
+                    KitS2c.Frente(o, casas, a - normal * 7.2f, b - normal * 7.2f, normal, 7f, k => EstiloFondo(o));
                     List<Vector3> altosTramo = KitS2c.Frente(o, casas, a, b, normal, 7f, k => EstiloMalecon(o));
                     foreach (Vector3 alto in altosTramo)
                     {
@@ -680,6 +693,22 @@ namespace MechaCyberpunk.Arte.Editor
             return altos;
         }
 
+        private static KitS2c.Estilo EstiloFondo(KitS2c.Obra o)
+        {
+            return new KitS2c.Estilo
+            {
+                PlantaBaja = KitS2c.PlantaVivienda,
+                PisoAlto = KitS2c.PisoFachada,
+                ColorPiso = o.Azar.Next(KitS2c.ColoresPiso.Length),
+                Pisos = 5 + o.Azar.Next(2),
+                Tinaco = o.Chance(0.5f),
+                Foco = false,
+                Neon = null,
+                AireAzotea = o.Chance(0.4f),
+                Toldo = false,
+            };
+        }
+
         private static KitS2c.Estilo EstiloMalecon(KitS2c.Obra o)
         {
             return new KitS2c.Estilo
@@ -688,7 +717,7 @@ namespace MechaCyberpunk.Arte.Editor
                 PlantaBaja = o.Chance(0.85f) ? KitS2c.PlantaLocal : KitS2c.PlantaVivienda,
                 PisoAlto = o.Chance(0.15f) ? "C20b_PisoDosVentanas_cy" : KitS2c.PisoFachada,
                 ColorPiso = o.Azar.Next(KitS2c.ColoresPiso.Length),
-                Pisos = o.Chance(0.15f) ? 5 : 3 + o.Azar.Next(2),
+                Pisos = o.Chance(0.35f) ? 5 : 4,
                 Tinaco = o.Chance(0.5f),
                 Foco = true,
                 Neon = o.Chance(0.9f) ? (o.Chance(0.5f) ? KitS2c.Magenta : KitS2c.Turquesa) : (Color?)null,
