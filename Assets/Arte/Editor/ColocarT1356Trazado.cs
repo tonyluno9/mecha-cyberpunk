@@ -28,9 +28,9 @@ namespace MechaCyberpunk.Arte.Editor
         public const float MargenIncorporacion = 15f;
         /// <summary>Línea del centro del tramo recto de la rampa norte (z, m).</summary>
         public const float ZRampaNorte = 232f;
-        /// <summary>Calle baja de barrio (T-1362): z = 215 de x = -290 hasta el enlace de la rampa (-120,0,215).</summary>
+        /// <summary>Calle baja de barrio (T-1362): z = 215 de x = -212 (donde llega la calle oeste) hasta el enlace de la rampa (-120,0,215).</summary>
         public const float ZCalleBaja = 215f;
-        public const float XOesteCalleBaja = -290f;
+        public const float XOesteCalleBaja = -212f;
         /// <summary>Separación mínima (m) en planta entre el borde del tablero y cualquier casa.</summary>
         public const float SeparacionCasasTablero = 8f;
         public const float MedioTableroPlanta = 7.2f;
@@ -38,9 +38,10 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Huellas en planta (x0, x1, z0, z1) de las hileras de casitas que coloca ColocarT1356Autopista.Bajo.</summary>
         public static readonly (float x0, float x1, float z0, float z1)[] HuellasCasas =
         {
-            (-290f, -135f, 199f, 205f), // sur de la calle baja, de cara al norte
+            (-195f, -135f, 199f, 205f), // sur de la calle baja, de cara al norte
             (40f, 225f, 204f, 210f),    // sur de la calle del lote este
             (-320f, 325f, 268f, 280f),  // detrás del tablero, de cara al sur
+            (-258f, -252f, 80f, 170f),  // oeste de la calle oeste (x = -242), de cara al este
         };
 
         /// <summary>Distancia en planta (m) de un punto a una huella rectangular (0 si está dentro).</summary>
@@ -128,10 +129,38 @@ namespace MechaCyberpunk.Arte.Editor
         {
             return new List<Vector3>
             {
-                new Vector3(XOesteCalleBaja, 0f, ZCalleBaja), new Vector3(-250f, 0f, ZCalleBaja), new Vector3(-210f, 0f, ZCalleBaja),
-                new Vector3(-165f, 0f, ZCalleBaja), U7Enlace,
+                new Vector3(XOesteCalleBaja, 0f, ZCalleBaja), new Vector3(-165f, 0f, ZCalleBaja), U7Enlace,
             };
         }
+
+        /// <summary>Extremo norte (abierto) de la calle cruzada oeste de T530 (x = -242, z -60 a 60): ahí arranca la calle oeste de la autopista.</summary>
+        public static readonly Vector3 CruzadaOesteNorte = new Vector3(-242f, 0f, 60f);
+        public const float RadioCalleOeste = 30f;
+        /// <summary>Ancho (m) de la calle oeste de la autopista.</summary>
+        public const float AnchoCalleOeste = 14f;
+
+        /// <summary>
+        /// Calle oeste (T-1362): de la calle cruzada oeste de T530 (-242,0,60) recta al norte por x = -242 y una vuelta de radio 30 al este hasta la calle baja
+        /// en (-212,0,215). Con la calle baja y la rampa une la calle oeste, el enlace (-120,0,215) y la calle cruzada norte (-107,0,201).
+        /// </summary>
+        public static List<Vector3> CalleOeste()
+        {
+            List<Vector3> p = new List<Vector3> { CruzadaOesteNorte };
+            for (float z = 90f; z < 185f - 1f; z += 31.67f)
+            {
+                p.Add(new Vector3(-242f, 0f, z));
+            }
+            p.Add(new Vector3(-242f, 0f, 185f));
+            p.AddRange(Arco(-242f + RadioCalleOeste, 185f, RadioCalleOeste, 180f, 90f, PasoCurva, 0f));
+            p[p.Count - 1] = new Vector3(XOesteCalleBaja, 0f, ZCalleBaja);
+            return p;
+        }
+
+        /// <summary>Puntos de la red que NO son de las zonas de la autopista pero a los que sus extremos se unen (calles de T530, cerro, puerto).</summary>
+        public static readonly Vector3[] PuntosDeLaRedExterna =
+        {
+            CruzadaOesteNorte, U7Inicio, U6Salida, U9Calle, PuertaNortePuerto,
+        };
 
         /// <summary>
         /// Rampa norte (T-1362): del borde de la calle cruzada norte (U7) y su enlace (-120,0,215) sobre la calle baja, curva a la izquierda (radio ~53)

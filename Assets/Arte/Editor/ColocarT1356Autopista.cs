@@ -71,6 +71,7 @@ namespace MechaCyberpunk.Arte.Editor
             List<Vector3> calleEste = T.CalleEste();
             List<Vector3> conector = T.ConectorEste();
             List<Vector3> calleBaja = T.CalleBaja();
+            List<Vector3> calleOeste = T.CalleOeste();
 
             Transform tablero = Hijo(raiz, "Tablero");
             bool piezasRecta = Cargar(Recta, false) != null;
@@ -81,6 +82,8 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Tramo(o, tablero, "RampaNorte", rampaNorte, -1, principal);
             Piso(o, tablero, "CalleBaja", calleBaja);
+            Piso(o, tablero, "CalleOeste", calleOeste);
+            RayasCalleOeste(o, Hijo(raiz, "RayasCalleOeste"), calleOeste);
             Piso(o, tablero, "CalleEste", calleEste);
             Piso(o, tablero, "ConectorEste", conector);
             Tunel(o, Hijo(raiz, "Tunel"), tunel);
@@ -91,7 +94,7 @@ namespace MechaCyberpunk.Arte.Editor
             Acantilado(o, Hijo(raiz, "Acantilado"));
             Bajo(o, Hijo(raiz, "Bajo"), rampaNorte);
             Fondo(o, Hijo(raiz, "Fondo"));
-            Calles(Hijo(raiz, "Calles"), principal, rampaNorte, tunel, calleEste, conector, calleBaja);
+            Calles(Hijo(raiz, "Calles"), principal, rampaNorte, tunel, calleEste, conector, calleBaja, calleOeste);
 
             KitS2c.Terminar(o);
             ColocarS2.Informe.AppendLine("Luces reales: " + luces + (luces > MaximoLuces ? " (PASA DEL TOPE " + MaximoLuces + ")" : " (dentro del tope " + MaximoLuces + ")"));
@@ -679,6 +682,20 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 anterior = punta;
             }
+            // Calle oeste (x = -242, la asfalta Piso en Aplicar): casitas bajas del kit al oeste, de cara al este, con postes y cables en esa banqueta.
+            (float x0, float x1, float z0, float z1) cOeste = T.HuellasCasas[3];
+            KitS2c.Frente(o, casas, new Vector3(cOeste.x1, 0f, cOeste.z0), new Vector3(cOeste.x1, 0f, cOeste.z1), Vector3.right, cOeste.x1 - cOeste.x0, Casitas(o, 0f, 0.4f, 0.3f, 0.5f));
+            anterior = null;
+            for (float z = cOeste.z0 + 8f; z < cOeste.z1 - 4f; z += SeparacionPostes)
+            {
+                Vector3 punta = KitS2c.Poste(o, postes, new Vector3(cOeste.x1 + 1.5f, 0f, z), Vector3.right, 0f, o.Chance(0.4f));
+                luces++;
+                if (anterior.HasValue)
+                {
+                    KitS2c.Cable(o, anterior.Value, punta, 0.6f);
+                }
+                anterior = punta;
+            }
             // Calle del lote este (solo asfalto, sin CalleZona) con su hilera sur.
             KitS2c.Losa(o, calles, "Calle_Este", new Vector3((este.x0 + este.x1) * 0.5f, -0.03f, 216f), Quaternion.identity, new Vector3(este.x1 - este.x0, 0.1f, 8f), KitS2c.MatAsfalto(), 8f, true);
             KitS2c.Frente(o, casas, new Vector3(este.x0, 0f, este.z1), new Vector3(este.x1, 0f, este.z1), Vector3.forward, este.z1 - este.z0, Casitas(o, 0.1f, 0.4f, 0.2f, 0.5f));
@@ -734,7 +751,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 // 70 % en el lote bajo el tablero y la rampa; el resto estacionado en la calle baja o en la calle del lote este.
                 bool enCalle = !o.Chance(0.7f);
-                float xc = enCalle ? (o.Chance(0.6f) ? o.Rango(-285f, -135f) : o.Rango(45f, 220f)) : o.Rango(-300f, 225f);
+                float xc = enCalle ? (o.Chance(0.6f) ? o.Rango(-200f, -135f) : o.Rango(45f, 220f)) : o.Rango(-300f, 225f);
                 Vector3 p = new Vector3(xc, 0f, enCalle ? (xc < 0f ? T.ZCalleBaja : 216f) + o.Rango(-2f, 2f) : o.Rango(230f, 257f));
                 if (BajoRampa(rampaNorte, p, 10f) || columnas.Any(q => Mathf.Abs(q.x - p.x) < 8f && Mathf.Abs(q.z - p.z) < 4f))
                 {
@@ -755,13 +772,23 @@ namespace MechaCyberpunk.Arte.Editor
             for (int k = 0, intento = 0; k < 70 && intento < 600; intento++)
             {
                 bool enCalle = o.Chance(0.35f);
-                Vector3 p = enCalle ? new Vector3(o.Rango(-285f, -135f), 0.03f, T.ZCalleBaja + o.Rango(-2.5f, 2.5f)) : new Vector3(o.Rango(-300f, 230f), 0.03f, o.Rango(228f, 258f));
+                Vector3 p = enCalle ? new Vector3(o.Rango(-200f, -135f), 0.03f, T.ZCalleBaja + o.Rango(-2.5f, 2.5f)) : new Vector3(o.Rango(-300f, 230f), 0.03f, o.Rango(228f, 258f));
                 if (BajoRampa(rampaNorte, p, 8f))
                 {
                     continue;
                 }
                 KitS2c.Charco(o, chatarra, p, o.Rango(2f, 5f), o.Rango(1.5f, 3.5f), o.Rango(0f, 180f));
                 k++;
+            }
+        }
+
+        /// <summary>Rayas blancas discontinuas (4 m de raya, 4 m de hueco) al centro del tramo recto de la calle oeste (x = -242).</summary>
+        private static void RayasCalleOeste(KitS2c.Obra o, Transform padre, List<Vector3> calle)
+        {
+            Vector3 inicio = calle[0];
+            for (float z = inicio.z + 4f; z + 4f < 185f; z += 8f)
+            {
+                KitS2c.Linea(padre, new Vector3(inicio.x, 0f, z), new Vector3(inicio.x, 0f, z + 4f), 0.2f, 0f);
             }
         }
 
@@ -869,7 +896,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- Calles (contrato Core)
 
-        private static void Calles(Transform padre, List<Vector3> principal, List<Vector3> rampaNorte, List<Vector3> tunel, List<Vector3> calleEste, List<Vector3> conector, List<Vector3> calleBaja)
+        private static void Calles(Transform padre, List<Vector3> principal, List<Vector3> rampaNorte, List<Vector3> tunel, List<Vector3> calleEste, List<Vector3> conector, List<Vector3> calleBaja, List<Vector3> calleOeste)
         {
             Calle(padre, "Calle_Principal", principal, false, true);
             Calle(padre, "Calle_RampaNorte", rampaNorte, false, true);
@@ -877,6 +904,7 @@ namespace MechaCyberpunk.Arte.Editor
             Calle(padre, "Calle_Este_x300", calleEste, true, false);
             Calle(padre, "Calle_ConectorU9", conector, true, false);
             Calle(padre, "Calle_Baja", calleBaja, true, false);
+            Calle(padre, "Calle_Oeste", calleOeste, true, false);
         }
 
         private static void Calle(Transform padre, string nombre, List<Vector3> puntos, bool banquetas, bool autopista)

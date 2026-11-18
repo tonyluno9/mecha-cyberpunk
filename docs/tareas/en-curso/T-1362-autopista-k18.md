@@ -4,7 +4,8 @@ Rama: tony/T-1362-autopista-k18 (sale de f41c439). Carpetas: Assets/Arte/Editor/
 Referencias: imageassets/referencias/look/K18_AutopistaElevada.png y A18_Autopista_Aerea.png. Plan: docs/plan-bugs-18nov.md, docs/plan-zonas-18nov.md.
 
 ## Qué cambió
-- **Calle baja** (CalleZona banquetas, zona "Autopista"): z = 215, x -290 a -120, paralela y al sur del tablero. Casitas de 1 a 3 pisos solo de su lado sur
+- **Calle oeste** (CalleZona banquetas, zona "Autopista", 14 m, rayas): de (-242,0,60), extremo norte abierto de la cruzada oeste de T530, recta al norte por x = -242 y vuelta de radio 30 a la calle baja en (-212,0,215). Casitas bajas del kit al oeste, postes y cables. No toca el corredor oeste (z = 0) ni el Cerro (x < -295). Arranca en z = 60 (final real de la cruzada) y no en 67 para que el asfalto quede pegado.
+- **Calle baja** (CalleZona banquetas, zona "Autopista"): z = 215, x -212 a -120 (une la calle oeste con el enlace de la rampa), paralela y al sur del tablero. Casitas de 1 a 3 pisos solo de su lado sur
   (huellas en `ColocarT1356Trazado.HuellasCasas`, a más de 8 m en planta del borde del tablero). Nada de casas debajo del tablero: un lote con
   charcos, carros chatarra y basura.
 - **Rampa norte (U7 reubicada)**: sigue saliendo de la calle cruzada norte (-107,0,201) y pasa por el enlace (-120,0,215) sobre la calle baja, pero ahora sube
