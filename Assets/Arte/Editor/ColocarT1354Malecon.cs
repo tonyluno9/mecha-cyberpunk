@@ -459,13 +459,14 @@ namespace MechaCyberpunk.Arte.Editor
             }
             if (!bajaAlMar)
             {
-                // Sin rampa con collider (o plana): se usa la altura nominal de la pieza con la cima alineada por su caja visible.
+                // Geometría conocida de la pieza de T-1353 (Assets/Arte/ZonasModulos/Prefabs/ML02_EscaleraPlaya.prefab): pivote en la base, 2.9 m de alto,
+                // la caja "Rampa" sube hacia su +Z local. La cima (+Z) mira a la ciudad, se escala en Y al desnivel y la base queda en el pie.
                 Bounds b = Medida(prefab);
+                go.transform.rotation = Quaternion.LookRotation(-haciaMar);
                 go.transform.localScale = new Vector3(1f, (yTope - yPie) / Mathf.Max(0.5f, b.size.y), 1f);
+                go.transform.position = new Vector3(centro.x, yPie - b.min.y * go.transform.localScale.y, centro.z);
                 Physics.SyncTransforms();
-                go.transform.position += Vector3.up * (yTope - b.max.y * go.transform.localScale.y);
-                ColocarS2.Informe.AppendLine("ESCALERA " + etiqueta + ": sin rampa con collider, se alineó por la caja visible (revisar a mano)");
-                faltan.Add("ML02_EscaleraPlaya: la rampa no baja hacia el mar o no tiene collider");
+                ColocarS2.Informe.AppendLine("ESCALERA " + etiqueta + ": colocada por su geometría (cima +Z hacia la ciudad), alto " + (yTope - yPie).ToString("F2") + " m");
                 return go;
             }
             // La pendiente medida en el eje (a 1.6 m del centro) se extiende a los 2 m de cada extremo.
