@@ -91,6 +91,13 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        public void Cuerpos_DeCasasDistintas_NoSeEncimanMasDeDecimaDeMetro()
+        {
+            List<(VariarCerroT1364.CasaT a, VariarCerroT1364.CasaT b)> pares = VariarCerroT1364.CuerposEncimados(casas);
+            Assert.IsEmpty(pares, "cuerpos encimados: " + string.Join("; ", pares.Take(10).Select(p => p.a.Raiz.name + " con " + p.b.Raiz.name)));
+        }
+
+        [Test]
         public void Renderers_NoUsanMallasPrimitivasDeUnity()
         {
             string[] nombres = { "Cube", "Plane", "Quad", "Cylinder", "Sphere", "Capsule" };

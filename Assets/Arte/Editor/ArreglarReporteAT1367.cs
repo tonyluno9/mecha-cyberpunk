@@ -41,6 +41,58 @@ namespace MechaCyberpunk.Arte.Editor
         public const float TechoLibre = 16.9f;
         /// <summary>La rejilla de la ladera es de 4 m: se suben también los vértices a esta distancia más del tubo, para que ningún triángulo lo cruce.</summary>
         public const float MargenMalla = 4f;
+        /// <summary>Entre medio ancho + 0.5 m y esta distancia más, la subida baja suave hasta la altura original (m).</summary>
+        public const float CaidaSuave = 5.5f;
+        /// <summary>Margen a cada lado de la calle que cuenta como corredor (banqueta + 0.0), y cuánto queda el terreno bajo la calle (m).</summary>
+        public const float MargenCorredor = 1.5f;
+        public const float BajoCalle = 0.15f;
+
+        /// <summary>Corredor de una calle: su eje (con alturas, en mundo) y su semiancho (ancho / 2 + 1.5 m).</summary>
+        public sealed class Corredor
+        {
+            public Vector3[] Puntos;
+            public float Semiancho;
+        }
+
+        public static float Suave(float t)
+        {
+            t = Mathf.Clamp01(t);
+            return t * t * (3f - 2f * t);
+        }
+
+        /// <summary>Altura de la calle más cercana si (x, z) cae dentro de su corredor.</summary>
+        public static bool AlturaCalle(IList<Corredor> calles, float x, float z, out float y)
+        {
+            y = 0f;
+            float mejor = float.MaxValue;
+            Vector2 q = new Vector2(x, z);
+            foreach (Corredor c in calles)
+            {
+                for (int i = 1; i < c.Puntos.Length; i++)
+                {
+                    Vector2 a = new Vector2(c.Puntos[i - 1].x, c.Puntos[i - 1].z), b = new Vector2(c.Puntos[i].x, c.Puntos[i].z);
+                    Vector2 ab = b - a;
+                    float s = ab.sqrMagnitude < 1e-6f ? 0f : Mathf.Clamp01(Vector2.Dot(q - a, ab) / ab.sqrMagnitude);
+                    float d = Vector2.Distance(q, a + ab * s);
+                    if (d <= c.Semiancho && d < mejor)
+                    {
+                        mejor = d;
+                        y = Mathf.Lerp(c.Puntos[i - 1].y, c.Puntos[i].y, s);
+                    }
+                }
+            }
+            return mejor < float.MaxValue;
+        }
+
+        public static List<Corredor> Corredores(GameObject raiz)
+        {
+            return raiz.GetComponentsInChildren<CalleZona>(false)
+                .Where(cz => !cz.Autopista)
+                .Select(cz => new Corredor { Puntos = cz.Puntos().ToArray(), Semiancho = cz.Ancho * 0.5f + MargenCorredor }).ToList();
+        }
+
+        /// <summary>La malla original de la ladera (T1355): de ahí parte siempre el arreglo, para ser idempotente.</summary>
+        public const string RutaMallasOriginal = "Assets/_Proyecto/Mundo/Datos/Zonas/T1355_Cerro_Mallas.asset";
         public const float ToleranciaPiso = 0.02f;
         // Prisma libre de la boca de salida.
         public static readonly Vector3 BocaMin = new Vector3(-368f, 8.6f, 185f);
@@ -145,7 +197,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// Copia de la ladera sin nada dentro del túnel ni de la boca: quita los triángulos que tocan el prisma de la boca y sube a
         /// <see cref="TechoLibre"/> los vértices que quedan en el tubo (más el margen de una celda). Normales suaves y bounds recalculados.
         /// </summary>
-        public static Mesh CorregirLadera(Mesh origen, Matrix4x4 aMundo, out int trianguloQuitados, out int verticesSubidos)
+        public static Mesh CorregirLadera(Mesh origen, Matrix4x4 aMundo, IList<Corredor> calles, out int trianguloQuitados, out int verticesSubidos)
         {
             Vector3[] v = origen.vertices;
             Vector3[] w = v.Select(p => aMundo.MultiplyPoint3x4(p)).ToArray();
@@ -171,10 +223,27 @@ namespace MechaCyberpunk.Arte.Editor
             verticesSubidos = 0;
             for (int i = 0; i < w.Length; i++)
             {
-                if (EnMargenTubo(w[i]) && w[i].y < TechoLibre && !EnHuellaBoca(w[i]))
+                float d = DistanciaAlEje(w[i].x, w[i].z);
+                if (d > MedioAnchoTunel + MargenTubo + CaidaSuave || w[i].y >= TechoLibre || EnHuellaBoca(w[i]))
                 {
-                    w[i].y = TechoLibre;
+                    continue;
+                }
+                // Dentro del tubo (+0.5 m) sube a TechoLibre; más afuera interpola hacia la altura original (sin paredes verticales).
+                float k = 1f - Suave((d - (MedioAnchoTunel + MargenTubo)) / CaidaSuave);
+                float y = Mathf.Lerp(w[i].y, TechoLibre, k);
+                // Nunca por encima de la superficie de una calle del corredor: se deja como estaba o 15 cm bajo la calle.
+                if (calles != null && AlturaCalle(calles, w[i].x, w[i].z, out float yCalle) && y > yCalle)
+                {
+                    y = w[i].y <= yCalle ? w[i].y : yCalle - BajoCalle;
+                }
+                if (y > w[i].y + 0.001f)
+                {
+                    w[i].y = y;
                     verticesSubidos++;
+                }
+                else if (y < w[i].y - 0.001f)
+                {
+                    w[i].y = y;
                 }
             }
             // Compacta: solo los vértices que usa algún triángulo.
@@ -507,9 +576,14 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             Matrix4x4 aMundo = t.localToWorldMatrix;
-            Mesh origen = mf.sharedMesh;
+            Mesh origen = AssetDatabase.LoadAllAssetsAtPath(RutaMallasOriginal).OfType<Mesh>().OrderByDescending(m => m.vertexCount).FirstOrDefault();
+            if (origen == null)
+            {
+                Log("ERROR: no se encontró la malla original T1355_Terreno en " + RutaMallasOriginal + "; la ladera no se toca.");
+                return;
+            }
             int antesTubo = VerticesEnTubo(origen, aMundo), antesBoca = VerticesEnBoca(origen, aMundo);
-            Mesh nueva = CorregirLadera(origen, aMundo, out int quitados, out int subidos);
+            Mesh nueva = CorregirLadera(origen, aMundo, Corredores(raiz), out int quitados, out int subidos);
             Mesh guardada = GuardarMalla(nueva, RutaLadera, "T1367_Ladera");
             Asignar(t, guardada);
             Log("Ladera: antes " + antesTubo + " vértices en el tubo y " + antesBoca + " en la boca. " + quitados + " triángulos quitados en la boca, "

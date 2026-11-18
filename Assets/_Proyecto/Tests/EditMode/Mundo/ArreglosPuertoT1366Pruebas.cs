@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MechaCyberpunk.Arte.Editor;
+using MechaCyberpunk.Core.Mundo;
 using MechaCyberpunk.Core.Trepar;
 using NUnit.Framework;
 using UnityEditor;
@@ -20,6 +21,11 @@ namespace MechaCyberpunk.Tests
         private const float AlturaCimaEscaleraMin = 2.3f;
         private const float AlturaMaxColliderPoste = 2.6f;
         private const float CoplanarTolerancia = 0.001f;
+        private const float AltoLibreCalle = 4.5f;
+        private const float HolguraArroyo = 0f;
+        private const float AlturaArroyo = 3f;
+        private const float ColliderBajoMinimo = 0.25f;
+        private const float ColliderAngosto = 1f;
 
         private GameObject raiz;
 
@@ -210,6 +216,60 @@ namespace MechaCyberpunk.Tests
             foreach (Transform g in raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("PU01_Grua")))
             {
                 Assert.AreEqual(ArreglarPuertoT1366.YMuelle, ArreglarPuertoT1366.LimitesRenderers(g).min.y, 0.02f, "Patas de la grúa en " + g.position);
+            }
+        }
+
+        [Test]
+        public void Gruas_NingunaParteBaja_QuedaEnElArroyoDeUnaCalle()
+        {
+            List<CalleZona> calles = raiz.GetComponentsInChildren<CalleZona>(true).ToList();
+            Assert.AreEqual(4, calles.Count);
+            foreach (Transform g in raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("PU01_Grua") && t.gameObject.activeSelf))
+            {
+                List<Vector3> bajos = ArreglarPuertoT1366.VerticesBajos(g, AltoLibreCalle);
+                Assert.Greater(bajos.Count, 0, "La grúa debe tener collider de malla");
+                foreach (CalleZona c in calles)
+                {
+                    Vector3[] eje = c.Puntos().ToArray();
+                    float radio = c.Ancho * 0.5f + HolguraArroyo;
+                    Vector3 mal = bajos.FirstOrDefault(v => ArreglarPuertoT1366.DistanciaPlanoACalle(v, eje) < radio);
+                    Assert.IsTrue(mal == default, "Grúa " + g.name + " con collider bajo " + AltoLibreCalle + " m en el arroyo de " + c.name + " en " + mal);
+                }
+            }
+        }
+
+        [Test]
+        public void Arroyos_DeLasCalles_NoTienenColliderBajo3m()
+        {
+            List<CalleZona> calles = raiz.GetComponentsInChildren<CalleZona>(true).ToList();
+            foreach (Collider c in raiz.GetComponentsInChildren<Collider>(true))
+            {
+                if (!c.enabled || c.isTrigger || !c.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+                string ruta = c.name + "/" + (c.transform.parent != null ? c.transform.parent.name : "");
+                if (ruta.Contains("Grua") || ruta.Contains("Barco") || ruta.Contains("Patio") || ruta.Contains("Muelle") || ruta.Contains("Bordillo"))
+                {
+                    continue;
+                }
+                if (!ArreglarPuertoT1366.LimitesCollider(c, out Bounds b) || b.max.y < ColliderBajoMinimo || b.min.y > AlturaArroyo)
+                {
+                    continue;
+                }
+                if (Mathf.Min(b.size.x, b.size.z) < ColliderAngosto && calles.All(k => ArreglarPuertoT1366.DistanciaPlanoACalle(b.center, k.Puntos().ToArray()) >= k.Ancho * 0.5f - 1f))
+                {
+                    continue; // postes y similares: angostos y en la orilla
+                }
+                foreach (Vector2 m in ArreglarPuertoT1366.MuestrasPlanta(c, b))
+                {
+                    foreach (CalleZona calle in calles)
+                    {
+                        float radio = calle.Ancho * 0.5f + HolguraArroyo;
+                        Assert.GreaterOrEqual(ArreglarPuertoT1366.DistanciaPlanoACalle(new Vector3(m.x, 0f, m.y), calle.Puntos().ToArray()), radio,
+                            "Collider " + c.name + " (" + c.transform.parent.name + ") dentro del arroyo de " + calle.name + " en " + b.center);
+                    }
+                }
             }
         }
 

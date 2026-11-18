@@ -78,7 +78,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         private sealed class Cuenta
         {
-            public int Tinte, Escalonadas, Pisos, Cuartos, Detalles, Cables, Reubicados;
+            public int Tinte, Escalonadas, Pisos, Cuartos, Detalles, Cables, Reubicados, EscalonesDeshechos, PisosDeshechos, CuartosDeshechos;
             public long TriDetalle;
             public int TendLav;
             public readonly Dictionary<string, int> PorTipo = new Dictionary<string, int>();
@@ -200,6 +200,7 @@ namespace MechaCyberpunk.Arte.Editor
             try
             {
                 Transform raiz = contenido.transform;
+                Estados.Clear();
                 Deshacer(raiz);
                 BorrarExtras(raiz);
                 Random az = new Random(Semilla);
@@ -236,7 +237,16 @@ namespace MechaCyberpunk.Arte.Editor
                         cuenta.Pisos++;
                     }
                 }
+                ResolverEncimes(raiz, cuenta, log);
+                conPiso.Clear();
                 casas = Leer(raiz);
+                foreach (CasaT c in casas)
+                {
+                    if (Estados.TryGetValue(c.Raiz, out EstadoCasa ec) && ec.Dy != 0f)
+                    {
+                        conPiso.Add(orden.First(o => o.Raiz == c.Raiz));
+                    }
+                }
                 Dictionary<Transform, CasaT> porRaiz = casas.ToDictionary(c => c.Raiz);
                 foreach (CasaT c in orden)
                 {
@@ -255,6 +265,7 @@ namespace MechaCyberpunk.Arte.Editor
                 }
 
                 casas = Leer(raiz);
+                QuitarCuartosEncimados(raiz, casas, cuenta);
                 PonerDetalles(raiz, detalles, casas, az, cuenta);
                 PonerCables(raiz, casas, az, cuenta);
 
@@ -571,6 +582,168 @@ namespace MechaCyberpunk.Arte.Editor
                     Mover(raiz, t, new Vector3(dx, 0f, 0f));
                 }
                 cuenta.Escalonadas++;
+                Estado(c.Raiz).Dx = dx;
+                Estado(c.Raiz).EscTecho = techo;
+            }
+        }
+
+        // ================================================================ Choques entre cuerpos
+
+        private sealed class EstadoCasa
+        {
+            public float Dx;
+            public List<Transform> EscTecho;
+            public float Dy;
+            public float Factor;
+            public List<Transform> Arriba, PisoTecho;
+            public GameObject Copia;
+        }
+
+        private static readonly Dictionary<Transform, EstadoCasa> Estados = new Dictionary<Transform, EstadoCasa>();
+
+        private static EstadoCasa Estado(Transform casa)
+        {
+            if (!Estados.TryGetValue(casa, out EstadoCasa e))
+            {
+                e = new EstadoCasa();
+                Estados[casa] = e;
+            }
+            return e;
+        }
+
+        private static bool Encima(Bounds a, Bounds b)
+        {
+            const float margen = 0.05f, minimo = 0.1f;
+            for (int eje = 0; eje < 3; eje++)
+            {
+                float solape = Mathf.Min(a.max[eje], b.max[eje]) - Mathf.Max(a.min[eje], b.min[eje]) - 2f * margen;
+                if (solape <= minimo)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>Pares de cuerpos (kit) de casas distintas que se enciman más de 0.1 m (con margen de 0.05 m).</summary>
+        public static List<(CasaT a, CasaT b)> CuerposEncimados(List<CasaT> casas)
+        {
+            List<(CasaT, CasaT)> r = new List<(CasaT, CasaT)>();
+            List<CasaT> kit = casas.Where(c => c.Kit).ToList();
+            List<Bounds> cajas = kit.Select(c => { Cubierta(c.Cuerpo, out Bounds b); return b; }).ToList();
+            for (int i = 0; i < kit.Count; i++)
+            {
+                for (int j = i + 1; j < kit.Count; j++)
+                {
+                    if (Encima(cajas[i], cajas[j]))
+                    {
+                        r.Add((kit[i], kit[j]));
+                    }
+                }
+            }
+            return r;
+        }
+
+        /// <summary>Un cuarto de azotea que se mete en el cuerpo de otra casa se quita.</summary>
+        private static void QuitarCuartosEncimados(Transform raiz, List<CasaT> casas, Cuenta cuenta)
+        {
+            foreach (CasaT c in casas.Where(x => x.Kit))
+            {
+                foreach (Transform t in c.Raiz.Cast<Transform>().Where(x => x.name.StartsWith(Prefijo + "Cuarto")).ToList())
+                {
+                    if (!Cubierta(t, out Bounds bc))
+                    {
+                        continue;
+                    }
+                    bool choca = casas.Any(o => o.Kit && o != c && Cubierta(o.Cuerpo, out Bounds bo) && Encima(bc, bo));
+                    if (choca)
+                    {
+                        Object.DestroyImmediate(t.gameObject);
+                        cuenta.Cuartos--;
+                        cuenta.CuartosDeshechos++;
+                    }
+                }
+            }
+        }
+
+        private static void DeshacerEscalon(Transform raiz, CasaT c, EstadoCasa e)
+        {
+            Vector3 d = new Vector3(-e.Dx, 0f, 0f);
+            Mover(raiz, c.Raiz, d);
+            if (c.Cimiento != null)
+            {
+                Mover(raiz, c.Cimiento, d);
+            }
+            foreach (Transform t in e.EscTecho)
+            {
+                Mover(raiz, t, d);
+            }
+            e.Dx = 0f;
+        }
+
+        private static void DeshacerPiso(Transform raiz, CasaT c, EstadoCasa e)
+        {
+            foreach (Transform t in e.Arriba.Concat(e.PisoTecho))
+            {
+                Mover(raiz, t, new Vector3(0f, -e.Dy, 0f));
+            }
+            Mover(raiz, c.Cuerpo, new Vector3(0f, -e.Dy * 0.5f, 0f));
+            Vector3 s0 = c.Cuerpo.localScale;
+            c.Cuerpo.localScale = new Vector3(s0.x, s0.y / e.Factor, s0.z);
+            Anotar(raiz, c.Cuerpo, Vector3.zero, new Vector3(1f, 1f / e.Factor, 1f));
+            if (e.Copia != null)
+            {
+                Object.DestroyImmediate(e.Copia);
+            }
+            e.Dy = 0f;
+        }
+
+        /// <summary>Deshace el escalonado y luego el piso extra de las casas cuyos cuerpos se enciman, hasta que no quede ningún par.</summary>
+        private static void ResolverEncimes(Transform raiz, Cuenta cuenta, StringBuilder log)
+        {
+            for (int vuelta = 0; vuelta < 20; vuelta++)
+            {
+                List<CasaT> casas = Leer(raiz);
+                List<(CasaT a, CasaT b)> pares = CuerposEncimados(casas);
+                if (pares.Count == 0)
+                {
+                    return;
+                }
+                bool algo = false;
+                foreach ((CasaT a, CasaT b) par in pares)
+                {
+                    CasaT[] dos = { par.a, par.b };
+                    bool hizo = false;
+                    foreach (CasaT h in dos)
+                    {
+                        if (Estados.TryGetValue(h.Raiz, out EstadoCasa e) && e.Dx != 0f)
+                        {
+                            DeshacerEscalon(raiz, h, e);
+                            cuenta.EscalonesDeshechos++;
+                            cuenta.Escalonadas--;
+                            hizo = true;
+                        }
+                    }
+                    if (!hizo)
+                    {
+                        foreach (CasaT h in dos)
+                        {
+                            if (Estados.TryGetValue(h.Raiz, out EstadoCasa e) && e.Dy != 0f)
+                            {
+                                DeshacerPiso(raiz, h, e);
+                                cuenta.PisosDeshechos++;
+                                cuenta.Pisos--;
+                                hizo = true;
+                            }
+                        }
+                    }
+                    algo |= hizo;
+                }
+                if (!algo)
+                {
+                    log.AppendLine("AVISO: quedan " + pares.Count + " pares de cuerpos encimados que no vienen de esta tarea.");
+                    return;
+                }
             }
         }
 
@@ -643,6 +816,12 @@ namespace MechaCyberpunk.Arte.Editor
             copia.transform.SetPositionAndRotation(pieza.position + Vector3.up * dy, pieza.rotation);
             copia.transform.localScale = pieza.localScale;
             c.Top = nuevoTop;
+            EstadoCasa est = Estado(c.Raiz);
+            est.Dy = dy;
+            est.Factor = factor;
+            est.Arriba = arriba;
+            est.PisoTecho = techo;
+            est.Copia = copia;
             return true;
         }
 
@@ -1003,6 +1182,7 @@ namespace MechaCyberpunk.Arte.Editor
             log.AppendLine("1. Pisos extra: " + cuenta.Pisos);
             log.AppendLine("   Casas con cuarto o piso extra: " + conExtra + " de " + casas.Count + " (" + (100f * conExtra / Mathf.Max(1, casas.Count)).ToString("F1") + " %)");
             log.AppendLine("2. Casas escalonadas: " + cuenta.Escalonadas);
+            log.AppendLine("   Deshechos por cuerpos encimados: " + cuenta.EscalonesDeshechos + " escalonados, " + cuenta.PisosDeshechos + " pisos extra, " + cuenta.CuartosDeshechos + " cuartos");
             log.AppendLine("3. Casas reteñidas: " + cuenta.Tinte + " con " + Paleta.Length + " colores; materiales nuevos: " + (Paleta.Length * 2) + " en " + CarpetaMateriales);
             log.AppendLine("4. Detalles de azotea agregados: " + cuenta.Detalles + " (" + string.Join(", ", cuenta.PorTipo.Select(p => p.Key + " " + p.Value)) + "), triángulos de detalles " + cuenta.TriDetalle);
             log.AppendLine("5. Cables nuevos: " + cuenta.Cables);

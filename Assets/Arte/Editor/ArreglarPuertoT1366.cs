@@ -32,8 +32,12 @@ namespace MechaCyberpunk.Arte.Editor
         // Contenedor separado de otro de la misma fila a lo más esto (m); los de una pila quedan apoyados con esta tolerancia.
         public const float HuecoFilaMaximo = 0.3f, ToleranciaApoyo = 0.02f;
         // El barco queda a 1 a 3 m del muelle (m).
-        public const float HuecoBarcoMin = 1f, HuecoBarcoMax = 3f, YMuelle = -1f, YMar = -3f, MuelleSur = -250f;
+        public const float HuecoBarcoMin = 1f, HuecoBarcoMax = 3f, YMuelle = -1f, YMar = -3f, MuelleSur = -250f, X0Muelle = 115f, X1Muelle = 330f, AnchoMuelle = 12f;
         public const float DesplazamientoEscaleraFila = -2f;
+        // Grúas: posición original del generador, alto libre que debe quedar sobre las calles y holgura al arroyo (m).
+        public const float XGruaBase = 175f, PasoGruas = 45f, ZGruaBase = -244f, AltoLibreCalle = 4.5f, HolguraArroyo = 0f;
+        public const float DesfaseZGrua = -2f, SeparacionGruas = 56f, ExclusionX0 = 293f, ExclusionX1 = 307f;
+        public const float PasoBusquedaZ = 0.25f, RangoBusquedaZ = 14f, RangoBusquedaX = 6f;
 
         private static readonly string[] PropsConCollider = { "PU06_Pallets", "C17_Huacales", "C16_Tambo", "PU05_Montacargas" };
         private static readonly string[] NombresBodegas = { "PU03_Bodega", "PU04_Bodega" };
@@ -147,6 +151,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Postes(raiz.transform);
                 PropsSueltos(raiz.transform);
                 Bodegas(raiz.transform);
+                DespejarArroyos(raiz.transform);
                 PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             }
             finally
@@ -223,20 +228,43 @@ namespace MechaCyberpunk.Arte.Editor
                 + " colliders de contenedores tapados apagados (los cubre el de su pila); mayor hueco entre filas contiguas " + huecoMaximo.ToString("F3") + " m");
         }
 
-        // Un BoxCollider por pila (fila x columna) en el propio Bloque, del tamaño de la pila.
+        // Un BoxCollider por pila (fila x columna) en el propio Bloque; center y size salen del espacio LOCAL del Bloque (8 vértices de cada contenedor).
         private static void SincronizarColliders(Transform bloque, List<Pila> pilas)
         {
             List<BoxCollider> cajas = bloque.GetComponents<BoxCollider>().ToList();
             for (int i = 0; i < pilas.Count; i++)
             {
-                Bounds b = LimitesRenderers(pilas[i].Contenedores[0]);
-                for (int k = 1; k < pilas[i].Contenedores.Count; k++)
+                Bounds local = default;
+                bool primero = true;
+                foreach (Transform cont in pilas[i].Contenedores)
                 {
-                    b.Encapsulate(LimitesRenderers(pilas[i].Contenedores[k]));
+                    foreach (MeshFilter mf in cont.GetComponentsInChildren<MeshFilter>(true))
+                    {
+                        if (mf.sharedMesh == null || mf.GetComponent<MeshRenderer>() == null)
+                        {
+                            continue;
+                        }
+                        Bounds m = mf.sharedMesh.bounds;
+                        for (int k = 0; k < 8; k++)
+                        {
+                            Vector3 e = m.extents;
+                            Vector3 esquina = m.center + new Vector3((k & 1) == 0 ? -e.x : e.x, (k & 2) == 0 ? -e.y : e.y, (k & 4) == 0 ? -e.z : e.z);
+                            Vector3 enBloque = bloque.InverseTransformPoint(mf.transform.TransformPoint(esquina));
+                            if (primero)
+                            {
+                                local = new Bounds(enBloque, Vector3.zero);
+                                primero = false;
+                            }
+                            else
+                            {
+                                local.Encapsulate(enBloque);
+                            }
+                        }
+                    }
                 }
                 BoxCollider bc = i < cajas.Count ? cajas[i] : bloque.gameObject.AddComponent<BoxCollider>();
-                bc.center = bloque.InverseTransformPoint(b.center);
-                bc.size = b.size;
+                bc.center = local.center;
+                bc.size = local.size;
             }
             for (int i = pilas.Count; i < cajas.Count; i++)
             {
@@ -317,9 +345,37 @@ namespace MechaCyberpunk.Arte.Editor
             List<Transform> gruas = muelle.Cast<Transform>().Where(t => t.name.StartsWith("PU01_Grua")).ToList();
             List<Transform> bitas = muelle.Cast<Transform>().Where(t => t.name.StartsWith("PT02_BitaAmarre")).ToList();
             int ajustadasY = 0, bitasMovidas = 0;
+            List<Rect> cajasObstaculo = CajasObstaculo(raiz);
+            List<Vector2> postes = PosicionesPostes(raiz);
+            float zCentro = ZEjeCalle4(raiz) + DesfaseZGrua;
+            int indiceGrua = 0, gruasSinSolucion = 0, activas = 0;
+            float centroPrevio = float.MinValue;
             foreach (Transform g in gruas)
             {
                 ActivarColliders(g);
+                // Posición original del generador (idempotente): sin giro, centrada en (175 + 45 i, -244), patas en y = -1.
+                g.gameObject.SetActive(true);
+                g.rotation = Quaternion.identity;
+                Bounds b0 = LimitesRenderers(g);
+                g.position += new Vector3(XGruaBase + PasoGruas * indiceGrua - b0.center.x, YMuelle - b0.min.y, ZGruaBase - b0.center.z);
+                indiceGrua++;
+                // Caben las que dejen su caja en x dentro del muelle sur, fuera de 293..307 (tramo norte-sur de Calle_2) y a >= 56 m de la anterior.
+                float medio = b0.extents.z;
+                float minimo = X0Muelle + medio + 0.2f, maximo = Mathf.Min(X1Muelle - medio - 0.2f, ExclusionX0 - medio - 0.2f);
+                int caben = maximo >= minimo ? Mathf.FloorToInt((maximo - minimo) / SeparacionGruas) + 1 : 0;
+                if (activas >= caben)
+                {
+                    g.gameObject.SetActive(false);
+                    informe.AppendLine("Grúa " + indiceGrua + ": DESACTIVADA (SetActive false): en x del muelle sur solo caben " + caben + " grúas separadas " + SeparacionGruas + " m y fuera de x " + ExclusionX0 + ".." + ExclusionX1);
+                    continue;
+                }
+                float nominal = caben > 1 ? minimo + (maximo - minimo) * activas / (caben - 1) : minimo;
+                float desde = Mathf.Max(minimo, centroPrevio == float.MinValue ? minimo : centroPrevio + SeparacionGruas);
+                string resultado = UbicarGrua(g, zCentro, nominal, desde, maximo, cajasObstaculo, postes, out bool sinSolucion, out float centroX);
+                centroPrevio = centroX;
+                activas++;
+                gruasSinSolucion += sinSolucion ? 1 : 0;
+                informe.AppendLine("Grúa " + indiceGrua + ": " + resultado);
                 float minY = LimitesRenderers(g).min.y;
                 if (Mathf.Abs(minY - YMuelle) > 0.005f)
                 {
@@ -356,21 +412,155 @@ namespace MechaCyberpunk.Arte.Editor
                 informe.AppendLine("Barco: collider de malla activo; quilla en y " + b.min.y.ToString("F2") + ", cubierta en y " + b.max.y.ToString("F2")
                     + " (mar en y " + YMar + "); hueco al muelle " + (MuelleSur - b.max.z).ToString("F2") + " m");
             }
-            informe.AppendLine("Grúas: " + gruas.Count + " con collider de malla; " + ajustadasY + " bajadas/subidas hasta pisar el muelle (y " + YMuelle + "); " + bitasMovidas + " bitas movidas fuera de las patas");
+            informe.AppendLine("Grúas: " + gruas.Count + " con collider de malla; " + ajustadasY + " bajadas/subidas hasta pisar el muelle (y " + YMuelle + "), " + gruasSinSolucion + " con conflictos; " + bitasMovidas + " bitas movidas fuera de las patas");
         }
 
-        private static List<Vector3> VerticesBajos(Transform raiz, float yMaxima)
+        private struct PuntoGrua
         {
-            List<Vector3> res = new List<Vector3>();
-            foreach (MeshFilter mf in raiz.GetComponentsInChildren<MeshFilter>(true))
+            public Vector2 Desde; // desde el centro de la grúa, sin girar
+            public bool Pie;
+        }
+
+        private static List<Rect> CajasObstaculo(Transform raiz)
+        {
+            List<Rect> r = new List<Rect>();
+            Transform padre = raiz.Find("Contenedores");
+            if (padre == null)
             {
-                if (mf.sharedMesh == null)
+                return r;
+            }
+            foreach (Transform bloque in padre)
+            {
+                List<Pila> pilas = bloque.name.StartsWith("Bloque_") ? PilasDe(bloque) : new List<Pila>();
+                if (pilas.Count == 0)
                 {
                     continue;
                 }
-                foreach (Vector3 v in mf.sharedMesh.vertices)
+                Bounds b = LimitesRenderers(pilas[0].Contenedores[0]);
+                foreach (Pila p in pilas)
                 {
-                    Vector3 w = mf.transform.TransformPoint(v);
+                    foreach (Transform c in p.Contenedores)
+                    {
+                        b.Encapsulate(LimitesRenderers(c));
+                    }
+                }
+                r.Add(new Rect(b.min.x - 1f, b.min.z - 1f, b.size.x + 2f, b.size.z + 2f));
+            }
+            return r;
+        }
+
+        private static List<Vector2> PosicionesPostes(Transform raiz)
+        {
+            Transform padre = raiz.Find("Postes");
+            return padre == null ? new List<Vector2>() : padre.Cast<Transform>().Where(t => t.name.StartsWith("Poste")).Select(t => new Vector2(t.position.x, t.position.z)).ToList();
+        }
+
+        /// <summary>
+        /// Coloca la grúa con sus dos largueros bajos (a lo largo de z local, 16 m libres entre ellos) paralelos a Calle_4: giro de 90 o 270 grados
+        /// (el de menos conflictos) y centro en z = eje de Calle_4 - 2 m, para que la calle pase entera entre los largueros. Solo se ajusta x
+        /// (±6 m del nominal, dentro de [desde, hasta]) para que ningún punto bajo toque un poste, un bloque ni el arroyo real (eje ± ancho/2) de una calle.
+        /// Los pies del lado del patio se hunden hasta 1 m: aceptado.
+        /// </summary>
+        private static string UbicarGrua(Transform g, float zCentro, float nominal, float desde, float hasta, List<Rect> obstaculos, List<Vector2> postes,
+            out bool conConflictos, out float centroFinal)
+        {
+            Bounds b = LimitesRenderers(g);
+            Vector2 centro = new Vector2(b.center.x, b.center.z);
+            HashSet<long> vistos = new HashSet<long>();
+            List<PuntoGrua> puntos = new List<PuntoGrua>();
+            foreach (Vector3 w in VerticesBajos(g, AltoLibreCalle))
+            {
+                bool pie = w.y <= YMuelle + 1f;
+                long clave = (Mathf.RoundToInt(w.x * 4f) * 1000003L + Mathf.RoundToInt(w.z * 4f)) * 2 + (pie ? 1 : 0);
+                if (vistos.Add(clave))
+                {
+                    puntos.Add(new PuntoGrua { Desde = new Vector2(w.x, w.z) - centro, Pie = pie });
+                }
+            }
+            List<(Vector3[] eje, float radio)> arroyos = g.root.GetComponentsInChildren<CalleZona>(true)
+                .Select(c => (c.Puntos().ToArray(), c.Ancho * 0.5f + HolguraArroyo)).ToList();
+            float[] giros = { 90f, 270f };
+            int menosConflictos = int.MaxValue, mejorArroyo = 0;
+            float mejorCosto = float.MaxValue, mejorYaw = 90f, mejorX = Mathf.Clamp(nominal, desde, Mathf.Max(desde, hasta));
+            foreach (float yaw in giros)
+            {
+                float c = Mathf.Cos(yaw * Mathf.Deg2Rad), s = Mathf.Sin(yaw * Mathf.Deg2Rad);
+                for (float x = desde; x <= hasta + 0.001f; x += 0.5f)
+                {
+                    float dx = x - nominal;
+                    int conflictos = 0, enArroyo = 0;
+                    foreach (PuntoGrua p in puntos)
+                    {
+                        Vector2 w = new Vector2(x, zCentro) + new Vector2(p.Desde.x * c + p.Desde.y * s, -p.Desde.x * s + p.Desde.y * c);
+                        Vector3 w3 = new Vector3(w.x, 0f, w.y);
+                        bool calle = arroyos.Any(a => DistanciaPlanoACalle(w3, a.eje) < a.radio);
+                        bool mal = calle || obstaculos.Any(r => r.Contains(w)) || postes.Any(q => (q - w).sqrMagnitude < 0.64f);
+                        conflictos += mal ? 1 : 0;
+                        enArroyo += calle ? 1 : 0;
+                    }
+                    float costo = Mathf.Abs(dx) + (yaw == 90f ? 0f : 0.1f);
+                    if (conflictos < menosConflictos || (conflictos == menosConflictos && costo < mejorCosto))
+                    {
+                        menosConflictos = conflictos;
+                        mejorArroyo = enArroyo;
+                        mejorCosto = costo;
+                        mejorYaw = yaw;
+                        mejorX = x;
+                    }
+                }
+            }
+            conConflictos = menosConflictos != 0;
+            centroFinal = mejorX;
+            g.RotateAround(new Vector3(centro.x, 0f, centro.y), Vector3.up, mejorYaw);
+            g.position += new Vector3(mejorX - centro.x, 0f, zCentro - centro.y);
+            // Hueco libre entre largueros a 1 m de alto, medido sobre la malla ya colocada.
+            List<Vector3> pies = VerticesBajos(g, YMuelle + 1f);
+            List<float> norte = pies.Where(v => v.z > zCentro).Select(v => v.z).ToList();
+            List<float> sur = pies.Where(v => v.z < zCentro).Select(v => v.z).ToList();
+            string hueco = norte.Count > 0 && sur.Count > 0 ? (norte.Min() - sur.Max()).ToString("F2") + " m" : "no medible";
+            Bounds fin = LimitesRenderers(g);
+            return "x " + mejorX.ToString("F1") + ", z " + zCentro.ToString("F1") + ", giro " + mejorYaw + ", hueco libre entre largueros a 1 m de alto " + hueco
+                + ", vértices bajos en un arroyo: " + mejorArroyo + ", en poste o bloque: " + (menosConflictos == int.MaxValue ? 0 : menosConflictos - mejorArroyo)
+                + "; caja x " + fin.min.x.ToString("F1") + ".." + fin.max.x.ToString("F1") + ", z " + fin.min.z.ToString("F1") + ".." + fin.max.z.ToString("F1");
+        }
+
+        /// <summary>z del tramo largo de Calle_4 (el paralelo al muelle).</summary>
+        private static float ZEjeCalle4(Transform raiz)
+        {
+            Transform c4 = raiz.Find("Calle_4");
+            CalleZona cz = c4 != null ? c4.GetComponent<CalleZona>() : null;
+            if (cz == null)
+            {
+                return -232f;
+            }
+            List<Vector3> pts = cz.Puntos();
+            float mejor = 0f, z = -232f;
+            for (int i = 1; i < pts.Count; i++)
+            {
+                float dx = Mathf.Abs(pts[i].x - pts[i - 1].x);
+                if (dx > mejor)
+                {
+                    mejor = dx;
+                    z = (pts[i].z + pts[i - 1].z) * 0.5f;
+                }
+            }
+            return z;
+        }
+
+        /// <summary>Vértices del collider de malla (o de la malla visible si no hay) por debajo de una altura, en mundo.</summary>
+        public static List<Vector3> VerticesBajos(Transform raiz, float yMaxima)
+        {
+            List<Vector3> res = new List<Vector3>();
+            List<(Transform t, Mesh m)> mallas = raiz.GetComponentsInChildren<MeshCollider>(true).Where(c => c.sharedMesh != null).Select(c => (c.transform, c.sharedMesh)).ToList();
+            if (mallas.Count == 0)
+            {
+                mallas = raiz.GetComponentsInChildren<MeshFilter>(true).Where(f => f.sharedMesh != null).Select(f => (f.transform, f.sharedMesh)).ToList();
+            }
+            foreach ((Transform t, Mesh m) in mallas)
+            {
+                foreach (Vector3 v in m.vertices)
+                {
+                    Vector3 w = t.TransformPoint(v);
                     if (w.y <= yMaxima)
                     {
                         res.Add(w);
@@ -580,6 +770,445 @@ namespace MechaCyberpunk.Arte.Editor
             go.transform.position += new Vector3(pie.x - b.center.x, pie.y - b.min.y, pie.z - b.center.z);
         }
 
+        // ---------------------------------------------------------------- Colliders fuera del arroyo de las calles
+
+        public const float ArroyoAlturaMinima = 0.3f, ArroyoAlturaMaxima = 3f, EmpujeMaximoProp = 12f, EmpujeMaximoBodegaNorte = 14f, MargenArroyoBodega = 0.5f, PatioMargen = 0.5f;
+
+        /// <summary>Puntos en planta (x, z) donde vigilar un collider: esquinas, aristas y centro de una caja; rejilla de 1 m para una malla.</summary>
+        public static List<Vector2> MuestrasPlanta(Collider c, Bounds b)
+        {
+            List<Vector2> m = new List<Vector2>();
+            if (c is BoxCollider bc)
+            {
+                Vector3 e = bc.size * 0.5f;
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        Vector3 w = c.transform.TransformPoint(bc.center + new Vector3(e.x * i, 0f, e.z * j));
+                        m.Add(new Vector2(w.x, w.z));
+                    }
+                }
+                return m;
+            }
+            for (float x = b.min.x; x <= b.max.x + 0.001f; x += 1f)
+            {
+                for (float z = b.min.z; z <= b.max.z + 0.001f; z += 1f)
+                {
+                    m.Add(new Vector2(x, z));
+                }
+            }
+            return m;
+        }
+
+        private static float ProfundidadEnArroyo(Vector2 w, List<(Vector3[] eje, float radio)> arroyos, out Vector2 haciaAfuera)
+        {
+            float peor = 0f;
+            haciaAfuera = Vector2.zero;
+            foreach ((Vector3[] eje, float radio) in arroyos)
+            {
+                for (int i = 1; i < eje.Length; i++)
+                {
+                    Vector2 a = new Vector2(eje[i - 1].x, eje[i - 1].z), d = new Vector2(eje[i].x, eje[i].z) - a;
+                    float k = d.sqrMagnitude < 1e-6f ? 0f : Mathf.Clamp01(Vector2.Dot(w - a, d) / d.sqrMagnitude);
+                    Vector2 cerca = a + d * k;
+                    float prof = radio - Vector2.Distance(w, cerca);
+                    if (prof > peor)
+                    {
+                        peor = prof;
+                        Vector2 fuera = w - cerca;
+                        haciaAfuera = fuera.sqrMagnitude < 1e-6f ? new Vector2(-d.y, d.x).normalized : fuera.normalized;
+                    }
+                }
+            }
+            return peor;
+        }
+
+        private sealed class Entorno
+        {
+            public List<(Vector3[] eje, float radio)> Arroyos;      // radio real
+            public List<(Vector3[] eje, float radio)> ArroyosMargen; // radio + 0.5 m
+            public List<Rect> Bloques;
+            public Rect Patio;
+            public List<Vector2> Postes;
+            public Transform Raiz;
+        }
+
+        /// <summary>Puntos en planta de los colliders (entre 0.3 y 3 m de alto) de un objeto.</summary>
+        private static List<Vector2> MuestrasDe(Transform t)
+        {
+            List<Vector2> m = new List<Vector2>();
+            foreach (Collider c in t.GetComponentsInChildren<Collider>(true).Where(x => !x.isTrigger))
+            {
+                if (LimitesCollider(c, out Bounds b) && b.max.y >= ArroyoAlturaMinima && b.min.y <= ArroyoAlturaMaxima)
+                {
+                    m.AddRange(MuestrasPlanta(c, b));
+                }
+            }
+            return m;
+        }
+
+        private static Rect RectDe(IEnumerable<Vector2> m)
+        {
+            float x0 = float.MaxValue, x1 = float.MinValue, z0 = float.MaxValue, z1 = float.MinValue;
+            foreach (Vector2 p in m)
+            {
+                x0 = Mathf.Min(x0, p.x);
+                x1 = Mathf.Max(x1, p.x);
+                z0 = Mathf.Min(z0, p.y);
+                z1 = Mathf.Max(z1, p.y);
+            }
+            return Rect.MinMaxRect(x0, z0, x1, z1);
+        }
+
+        private static Rect Expandir(Rect r, float m)
+        {
+            return Rect.MinMaxRect(r.xMin - m, r.yMin - m, r.xMax + m, r.yMax + m);
+        }
+
+        /// <summary>Rectángulos de lo que no se puede encimar: las demás bodegas, casetas y rejas (cajas de sus renderers).</summary>
+        private static List<Rect> OtrosRects(Transform raiz, Transform yo)
+        {
+            List<Rect> r = new List<Rect>();
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+            {
+                bool cuenta = NombresBodegas.Any(n => t.name.StartsWith(n)) || t.name.StartsWith("LO04_Caseta") || t.name.StartsWith("DS01_RejaPuas");
+                if (!cuenta || t == yo || (yo != null && t.IsChildOf(yo)) || PrefabUtility.GetNearestPrefabInstanceRoot(t) != t.gameObject)
+                {
+                    continue;
+                }
+                Bounds b = LimitesRenderers(t);
+                r.Add(Expandir(Rect.MinMaxRect(b.min.x, b.min.z, b.max.x, b.max.z), 0.3f));
+            }
+            return r;
+        }
+
+        /// <summary>Si el objeto, con esos puntos en planta, queda dentro del patio, fuera de arroyos (+0.5 m), bloques, postes y otras piezas.</summary>
+        private static bool Cabe(Entorno e, Transform yo, List<Vector2> puntos)
+        {
+            if (puntos.Count == 0)
+            {
+                return true;
+            }
+            Rect huella = RectDe(puntos);
+            Rect patio = Expandir(e.Patio, -PatioMargen);
+            if (huella.xMin < patio.xMin || huella.xMax > patio.xMax || huella.yMin < patio.yMin || huella.yMax > patio.yMax)
+            {
+                return false;
+            }
+            foreach (Vector2 p in puntos)
+            {
+                if (ProfundidadEnArroyo(p, e.ArroyosMargen, out _) > 0f)
+                {
+                    return false;
+                }
+            }
+            if (e.Bloques.Any(r => r.Overlaps(huella)) || OtrosRects(e.Raiz, yo).Any(r => r.Overlaps(huella)))
+            {
+                return false;
+            }
+            Rect poste = Expandir(huella, 0.8f);
+            return !e.Postes.Any(q => poste.Contains(q));
+        }
+
+        private static List<Vector2> Mover(List<Vector2> puntos, Vector2 centro, float giro, Vector2 delta)
+        {
+            float c = Mathf.Cos(giro * Mathf.Deg2Rad), s = Mathf.Sin(giro * Mathf.Deg2Rad);
+            return puntos.Select(p =>
+            {
+                Vector2 r = p - centro;
+                return centro + new Vector2(r.x * c + r.y * s, -r.x * s + r.y * c) + delta;
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Despeja el arroyo real (eje ± ancho/2) entre 0.3 y 3 m de alto:
+        /// - las bodegas que lo invaden se mueven hacia el lado opuesto a la calle (hasta 14 m), con sus detalles (neón, reflector, pallets, tambos, extras),
+        ///   y si no cabe se prueba girarlas 90°; si de plano no caben se dejan donde estaban CON collider y se anota "NO CABE";
+        /// - el montacargas que invade una calle se pone junto a la bodega más cercana, fuera de toda calle, o se deja con collider y se anota "NO CABE";
+        /// - los demás props (pallets, huacales, tambos) se apartan hacia afuera (hasta 12 m) y, si no caben, se apagan sus colliders.
+        /// </summary>
+        private static void DespejarArroyos(Transform raiz)
+        {
+            Entorno e = new Entorno
+            {
+                Raiz = raiz,
+                Arroyos = raiz.GetComponentsInChildren<CalleZona>(true).Select(c => (c.Puntos().ToArray(), c.Ancho * 0.5f + HolguraArroyo)).ToList(),
+                Bloques = CajasObstaculo(raiz),
+                Postes = PosicionesPostes(raiz),
+            };
+            e.ArroyosMargen = e.Arroyos.Select(a => (a.eje, a.radio + MargenArroyoBodega)).ToList();
+            Transform patio = raiz.Find("Patio");
+            Bounds bp = patio != null ? LimitesRenderers(patio) : new Bounds(new Vector3(216.5f, 0f, -141.5f), new Vector3(203f, 3f, 193f));
+            e.Patio = Rect.MinMaxRect(bp.min.x, bp.min.z, bp.max.x, bp.max.z);
+
+            Transform padreBodegas = raiz.Find("Bodegas");
+            List<Transform> bodegas = padreBodegas == null ? new List<Transform>()
+                : padreBodegas.Cast<Transform>().Where(t => NombresBodegas.Any(n => t.name.StartsWith(n))).ToList();
+            List<(Transform t, Rect r)> huellasOriginales = bodegas.Select(b => (b, Expandir(RectDe(MuestrasDe(b)), 0f))).ToList();
+            int bodegasMovidas = 0, noCaben = 0;
+            foreach (Transform b in bodegas)
+            {
+                List<Vector2> puntos = MuestrasDe(b);
+                if (puntos.Count == 0 || !puntos.Any(p => ProfundidadEnArroyo(p, e.Arroyos, out _) > 0f))
+                {
+                    continue;
+                }
+                Vector2 centro = RectDe(puntos).center;
+                Vector2 cerca = PuntoMasCercanoEnEje(centro, e.Arroyos, out _);
+                Vector2 lejos = centro - cerca;
+                Vector2 dir = Mathf.Abs(lejos.x) > Mathf.Abs(lejos.y) ? new Vector2(Mathf.Sign(lejos.x), 0f) : new Vector2(0f, Mathf.Sign(lejos.y == 0f ? 1f : lejos.y));
+                bool hecho = false;
+                foreach (float giro in new[] { 0f, 90f })
+                {
+                    for (float s = 0f; s <= EmpujeMaximoBodegaNorte && !hecho; s += 0.25f)
+                    {
+                        if (giro == 0f && s == 0f)
+                        {
+                            continue;
+                        }
+                        if (Cabe(e, b, Mover(puntos, centro, giro, dir * s)))
+                        {
+                            MoverConDetalles(b, padreBodegas, huellasOriginales, centro, giro, dir * s);
+                            informe.AppendLine("Bodega " + b.name + " movida " + s.ToString("F2") + " m hacia " + (dir.y > 0f ? "el norte" : dir.y < 0f ? "el sur" : dir.x > 0f ? "el este" : "el oeste")
+                                + (giro != 0f ? " y girada 90 grados" : "") + " con sus detalles, fuera del arroyo + " + MargenArroyoBodega + " m");
+                            hecho = true;
+                            bodegasMovidas++;
+                        }
+                    }
+                    if (hecho)
+                    {
+                        break;
+                    }
+                }
+                if (!hecho)
+                {
+                    noCaben++;
+                    ActivarColliders(b);
+                    informe.AppendLine("NO CABE: bodega " + b.name + " en " + b.position.ToString("F1") + " invade el arroyo y no hay sitio dentro del patio (hasta " + EmpujeMaximoBodegaNorte
+                        + " m, ni girada 90 grados): queda donde estaba CON collider");
+                }
+            }
+
+            int montMovidos = 0, montNoCaben = 0, movidos = 0, apagados = 0, revisados = 0;
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true).Where(x => x.name.StartsWith("PU05_Montacargas")).ToList())
+            {
+                if (PrefabUtility.GetNearestPrefabInstanceRoot(t) != t.gameObject)
+                {
+                    continue;
+                }
+                List<Vector2> puntos = MuestrasDe(t);
+                if (puntos.Count == 0 || !puntos.Any(p => ProfundidadEnArroyo(p, e.Arroyos, out _) > 0f))
+                {
+                    continue;
+                }
+                Vector2 centro = RectDe(puntos).center;
+                Rect cerca = bodegas.Count == 0 ? new Rect(centro, Vector2.zero)
+                    : bodegas.Select(b => RectDe(MuestrasDe(b))).OrderBy(r => DistanciaARect(centro, r)).First();
+                Vector2? mejor = null;
+                float mejorD = float.MaxValue;
+                foreach (float margen in new[] { 3f, 5f, 8f })
+                {
+                    Rect anillo = Expandir(cerca, margen);
+                    List<Vector2> candidatos = new List<Vector2>();
+                    for (float x = anillo.xMin; x <= anillo.xMax; x += 2f)
+                    {
+                        candidatos.Add(new Vector2(x, anillo.yMin));
+                        candidatos.Add(new Vector2(x, anillo.yMax));
+                    }
+                    for (float z = anillo.yMin; z <= anillo.yMax; z += 2f)
+                    {
+                        candidatos.Add(new Vector2(anillo.xMin, z));
+                        candidatos.Add(new Vector2(anillo.xMax, z));
+                    }
+                    foreach (Vector2 cand in candidatos)
+                    {
+                        Vector2 delta = cand - centro;
+                        if (delta.magnitude < mejorD && Cabe(e, t, Mover(puntos, centro, 0f, delta)))
+                        {
+                            mejor = delta;
+                            mejorD = delta.magnitude;
+                        }
+                    }
+                    if (mejor.HasValue)
+                    {
+                        break;
+                    }
+                }
+                ActivarColliders(t);
+                if (mejor.HasValue)
+                {
+                    t.position += new Vector3(mejor.Value.x, 0f, mejor.Value.y);
+                    montMovidos++;
+                }
+                else
+                {
+                    montNoCaben++;
+                    informe.AppendLine("NO CABE: montacargas en " + t.position.ToString("F1") + " invade una calle y no hay sitio junto a la bodega más cercana: queda donde estaba CON collider");
+                }
+            }
+
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+            {
+                if (!PropsConCollider.Any(n => t.name.StartsWith(n)) || t.name.StartsWith("PU05_Montacargas") || PrefabUtility.GetNearestPrefabInstanceRoot(t) != t.gameObject)
+                {
+                    continue;
+                }
+                revisados++;
+                float empujado = 0f;
+                bool fallo = false;
+                for (int vuelta = 0; vuelta < 6; vuelta++)
+                {
+                    float peor = 0f;
+                    Vector2 dir = Vector2.zero;
+                    foreach (Vector2 m in MuestrasDe(t))
+                    {
+                        float p = ProfundidadEnArroyo(m, e.Arroyos, out Vector2 fuera);
+                        if (p > peor)
+                        {
+                            peor = p;
+                            dir = fuera;
+                        }
+                    }
+                    if (peor <= 0f)
+                    {
+                        break;
+                    }
+                    empujado += peor + 0.05f;
+                    if (empujado > EmpujeMaximoProp)
+                    {
+                        fallo = true;
+                        break;
+                    }
+                    t.position += new Vector3(dir.x, 0f, dir.y) * (peor + 0.05f);
+                    movidos += vuelta == 0 ? 1 : 0;
+                }
+                if (!fallo && empujado > 0f)
+                {
+                    Bounds caja = LimitesRenderers(t);
+                    fallo = e.Bloques.Any(r => r.Overlaps(Rect.MinMaxRect(caja.min.x, caja.min.z, caja.max.x, caja.max.z)));
+                }
+                if (fallo)
+                {
+                    foreach (Collider c in t.GetComponentsInChildren<Collider>(true))
+                    {
+                        c.enabled = false;
+                    }
+                    apagados++;
+                    informe.AppendLine("Arroyo: " + t.name + " en " + t.position.ToString("F1") + " (pallet, huacal o tambo) no cabe fuera del arroyo: colliders apagados");
+                }
+            }
+            informe.AppendLine("Arroyos: " + bodegas.Count + " bodegas (" + bodegasMovidas + " movidas, " + noCaben + " NO CABE), montacargas (" + montMovidos + " movidos, " + montNoCaben + " NO CABE), "
+                + revisados + " pallets, huacales y tambos revisados, " + movidos + " apartados, " + apagados + " con colliders apagados");
+        }
+
+        private static float DistanciaARect(Vector2 p, Rect r)
+        {
+            float dx = Mathf.Max(0f, Mathf.Max(r.xMin - p.x, p.x - r.xMax)), dz = Mathf.Max(0f, Mathf.Max(r.yMin - p.y, p.y - r.yMax));
+            return Mathf.Sqrt(dx * dx + dz * dz);
+        }
+
+        private static Vector2 PuntoMasCercanoEnEje(Vector2 w, List<(Vector3[] eje, float radio)> arroyos, out float distancia)
+        {
+            float mejor = float.MaxValue;
+            Vector2 res = w;
+            foreach ((Vector3[] eje, float radio) in arroyos)
+            {
+                for (int i = 1; i < eje.Length; i++)
+                {
+                    Vector2 a = new Vector2(eje[i - 1].x, eje[i - 1].z), d = new Vector2(eje[i].x, eje[i].z) - a;
+                    float k = d.sqrMagnitude < 1e-6f ? 0f : Mathf.Clamp01(Vector2.Dot(w - a, d) / d.sqrMagnitude);
+                    Vector2 cerca = a + d * k;
+                    float dist = Vector2.Distance(w, cerca);
+                    if (dist < mejor)
+                    {
+                        mejor = dist;
+                        res = cerca;
+                    }
+                }
+            }
+            distancia = mejor;
+            return res;
+        }
+
+        /// <summary>Mueve la bodega y los objetos de "Bodegas" que son de ella (la bodega más cercana por su huella original): neón, letrero, reflector, pallets, tambos y extras.</summary>
+        private static void MoverConDetalles(Transform bodega, Transform padre, List<(Transform t, Rect r)> huellas, Vector2 centro, float giro, Vector2 delta)
+        {
+            List<Transform> partes = new List<Transform> { bodega };
+            if (padre != null && huellas.Count > 0)
+            {
+                foreach (Transform h in padre.Cast<Transform>())
+                {
+                    if (h == bodega || NombresBodegas.Any(n => h.name.StartsWith(n)) || h.name.StartsWith("PU05_Montacargas"))
+                    {
+                        continue;
+                    }
+                    Vector2 p = new Vector2(h.position.x, h.position.z);
+                    Transform suya = huellas.OrderBy(x => DistanciaARect(p, x.r)).First().t;
+                    if (suya == bodega)
+                    {
+                        partes.Add(h);
+                    }
+                }
+            }
+            foreach (Transform p in partes)
+            {
+                if (giro != 0f)
+                {
+                    p.RotateAround(new Vector3(centro.x, 0f, centro.y), Vector3.up, giro);
+                }
+                p.position += new Vector3(delta.x, 0f, delta.y);
+            }
+        }
+
+        /// <summary>Revisión final con física: OverlapBox cada 2 m a lo largo de cada calle (ancho/2 - 0.3, de 0.3 a 3 m de alto); lista cada collider hallado.</summary>
+        private static void RevisarArroyos(GameObject inst)
+        {
+            Physics.SyncTransforms();
+            HashSet<Collider> hallados = new HashSet<Collider>();
+            foreach (CalleZona calle in inst.GetComponentsInChildren<CalleZona>(true))
+            {
+                List<Vector3> pts = calle.Puntos();
+                for (int i = 1; i < pts.Count; i++)
+                {
+                    Vector3 a = pts[i - 1], d = pts[i] - pts[i - 1];
+                    float largo = d.magnitude;
+                    if (largo < 0.01f)
+                    {
+                        continue;
+                    }
+                    Quaternion giro = Quaternion.LookRotation(d / largo);
+                    for (float s = 1f; s < largo; s += 2f)
+                    {
+                        Vector3 centro = a + d / largo * s + Vector3.up * ((ArroyoAlturaMinima + ArroyoAlturaMaxima) * 0.5f);
+                        Vector3 mitad = new Vector3(calle.Ancho * 0.5f - 0.3f, (ArroyoAlturaMaxima - ArroyoAlturaMinima) * 0.5f, 1f);
+                        foreach (Collider c in Physics.OverlapBox(centro, mitad, giro, ~0, QueryTriggerInteraction.Ignore))
+                        {
+                            hallados.Add(c);
+                        }
+                    }
+                }
+            }
+            informe.AppendLine("Colliders en el arroyo (OverlapBox cada 2 m, 0.3 a 3 m de alto): " + hallados.Count + " (los angostos de la orilla, como postes, no se listan)");
+            List<(Vector3[] eje, float radio)> ejes = inst.GetComponentsInChildren<CalleZona>(true).Select(c => (c.Puntos().ToArray(), c.Ancho * 0.5f)).ToList();
+            int ignorados = 0;
+            foreach (Collider c in hallados.OrderBy(x => x.bounds.center.x).ThenBy(x => x.bounds.center.z))
+            {
+                // Postes y similares: miden menos de 1 m de ancho y están en la orilla (a más de ancho/2 - 1 m del eje): no son estorbo del carril.
+                if (Mathf.Min(c.bounds.size.x, c.bounds.size.z) < 1f && ejes.All(a => DistanciaPlanoACalle(c.bounds.center, a.eje) >= a.radio - 1f))
+                {
+                    ignorados++;
+                    continue;
+                }
+                string ruta = c.name;
+                for (Transform p = c.transform.parent; p != null && p != inst.transform; p = p.parent)
+                {
+                    ruta = p.name + "/" + ruta;
+                }
+                informe.AppendLine("  " + ruta + " centro " + c.bounds.center.ToString("F1") + " tam " + c.bounds.size.ToString("F1"));
+            }
+        }
+
         // ---------------------------------------------------------------- Barrido final
 
         private static void Barrido()
@@ -596,6 +1225,7 @@ namespace MechaCyberpunk.Arte.Editor
                 informe.AppendLine("  " + g.Key + ": " + g.Count() + " / " + g.Sum(h => h.cantidad));
             }
             informe.AppendLine("  total de grupos: " + res.Count);
+            RevisarArroyos(inst);
             Renderer[] rs = inst.GetComponentsInChildren<Renderer>(true);
             long tris = 0;
             foreach (MeshFilter mf in inst.GetComponentsInChildren<MeshFilter>(true))
