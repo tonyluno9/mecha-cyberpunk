@@ -39,7 +39,7 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("ID del sonido que suena cuando llega Nova con 5 estrellas. Hueco: falta un sonido propio (por ahora la entrada de un jefe).")]
         [SerializeField] private string sonidoLlegada = "PAN_JEFE_ENTRADA";
         [Tooltip("Cuánto se agranda el modelo del guardia pesado para igualar a los otros agentes de Nova (x).")]
-        [Min(0.5f)] [SerializeField] private float escalaPesado = 1.15f;
+        [Min(0.5f)] [SerializeField] private float escalaPesado = 1.43f; // T-1334: medido con BakeMesh, así mide lo mismo que el guardia (2.62 m)
         [Tooltip("Un agente de Nova que estuvo a esta distancia del jugador ya lo vio: lo persigue aunque baje la búsqueda (m).")]
         [Min(1f)] [SerializeField] private float distanciaVista = 40f;
 

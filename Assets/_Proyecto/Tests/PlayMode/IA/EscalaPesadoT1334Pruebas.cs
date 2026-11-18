@@ -182,6 +182,47 @@ namespace MechaCyberpunk.Tests
             Assert.Greater(hGuardia, 0.5f, "se midió al guardia");
             Assert.Greater(hPesado, 0.5f, "se midió al pesado");
             Assert.AreEqual(hGuardia, hPesado, hGuardia * 0.04f, "el pesado mide lo mismo que el guardia (+-4 %)");
+            if (Environment.GetEnvironmentVariable("CAPTURAR_T1334") == "1")
+            {
+                yield return CapturarJuntos(guardia.transform, pesado.transform, "docs/capturas/t-1334/pesado-junto-guardia.png");
+            }
+        }
+
+        // Pone al guardia y al pesado lado a lado, de frente a la cámara, y guarda la foto.
+        private static IEnumerator CapturarJuntos(Transform guardia, Transform pesado, string ruta)
+        {
+            Vector3 centro = guardia.position;
+            centro.y = 0f;
+            guardia.SetPositionAndRotation(centro + Vector3.left * 1.3f, Quaternion.Euler(0f, 180f, 0f));
+            pesado.SetPositionAndRotation(centro + Vector3.right * 1.3f, Quaternion.Euler(0f, 180f, 0f));
+            GameObject cam = new GameObject("CamaraT1334");
+            Camera c = cam.AddComponent<Camera>();
+            cam.transform.position = centro + new Vector3(0f, 1.4f, -6.5f);
+            cam.transform.LookAt(centro + Vector3.up * 1.3f);
+            c.fieldOfView = 45f;
+            c.clearFlags = CameraClearFlags.SolidColor;
+            c.backgroundColor = new Color(0.4f, 0.55f, 0.75f);
+            GameObject luz = new GameObject("LuzT1334");
+            luz.transform.rotation = Quaternion.Euler(40f, 20f, 0f);
+            luz.AddComponent<Light>().type = LightType.Directional;
+            RenderTexture rt = new RenderTexture(1200, 900, 24);
+            c.targetTexture = rt;
+            guardia.SetPositionAndRotation(centro + Vector3.left * 1.3f, Quaternion.Euler(0f, 180f, 0f));
+            pesado.SetPositionAndRotation(centro + Vector3.right * 1.3f, Quaternion.Euler(0f, 180f, 0f));
+            c.Render();
+            RenderTexture.active = rt;
+            Texture2D imagen = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
+            imagen.ReadPixels(new Rect(0f, 0f, rt.width, rt.height), 0, 0);
+            imagen.Apply();
+            RenderTexture.active = null;
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(ruta));
+            System.IO.File.WriteAllBytes(ruta, imagen.EncodeToPNG());
+            c.targetTexture = null;
+            Object.DestroyImmediate(rt);
+            Object.DestroyImmediate(imagen);
+            Object.DestroyImmediate(cam);
+            Object.DestroyImmediate(luz);
+            yield return null;
         }
     }
 }
