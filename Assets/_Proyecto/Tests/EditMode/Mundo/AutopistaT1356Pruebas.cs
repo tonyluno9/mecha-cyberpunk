@@ -142,6 +142,24 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        public void Rampa_ArrancaAlRasDelPisoSinCanto()
+        {
+            List<Vector3> r = T.RampaNorte();
+            Assert.AreEqual(0f, r[0].y, 0.0001f);
+            Assert.AreEqual(0f, r[1].y, 0.0001f);
+            Assert.LessOrEqual(r[2].y, 0.25f, "el primer tramo después del enlace casi no sube (a ras de la calle baja)");
+            float acumulado = 0f;
+            for (int i = 2; i < r.Count && acumulado < T.TramoRasante; i++)
+            {
+                acumulado += T.Planta(r[i] - r[i - 1]).magnitude;
+                if (acumulado <= T.TramoRasante)
+                {
+                    Assert.AreEqual(0f, r[i].y, 0.0001f, "a ras en los primeros " + T.TramoRasante + " m");
+                }
+            }
+        }
+
+        [Test]
         public void Casas_NingunaAMenosDe8MetrosDelBordeDelTablero()
         {
             foreach (List<Vector3> linea in new[] { T.Principal(), T.RampaNorte(), T.Tunel() })
