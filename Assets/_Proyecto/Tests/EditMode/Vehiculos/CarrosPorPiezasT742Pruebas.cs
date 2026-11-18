@@ -83,7 +83,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Transform raiz = Carro(codigo).transform;
             Bounds b = LimitesEn(raiz.Find("Visual_T511/Carroceria"), raiz);
             Assert.AreEqual(Largo(codigo), b.size.z, Margen, "Largo");
-            Assert.AreEqual(0f, b.min.y, Margen, "Pies en y = 0");
+            // T-1343: la carrocería de Blender va sin llantas y queda sobre ellas; lo que toca el piso son las llantas (abajo).
             Assert.AreEqual(0f, b.center.x, Margen, "Centrado a lo ancho");
             // Las llantas también tocan el piso (nada se hunde ni flota).
             Bounds todo = LimitesEn(raiz, raiz);
@@ -131,7 +131,10 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 {
                     Assert.IsNotNull(m, r.name + " tiene material");
                     StringAssert.DoesNotContain("Vidrio", m.name, "Sin vidrio, para ver al conductor");
-                    Assert.IsNotNull(m.GetTexture("_BaseMap"), r.name + ": con su textura");
+                    if (!r.name.StartsWith("Cristal_")) // T-1343: el cristal transparente no lleva textura
+                    {
+                        Assert.IsNotNull(m.GetTexture("_BaseMap"), r.name + ": con su textura");
+                    }
                 }
             }
         }

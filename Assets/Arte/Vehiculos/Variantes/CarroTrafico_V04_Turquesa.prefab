@@ -8,15 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2959069084990403373, guid: 3667045f4e901e448944567605618e1c, type: 3}
+    - target: {fileID: 820815701932506634, guid: 3667045f4e901e448944567605618e1c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
-    - target: {fileID: 3374880959871911628, guid: 3667045f4e901e448944567605618e1c, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
-    - target: {fileID: 3560698733114119481, guid: 3667045f4e901e448944567605618e1c, type: 3}
+    - target: {fileID: 2884335807361980150, guid: 3667045f4e901e448944567605618e1c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
@@ -24,11 +20,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: CarroTrafico_V04_Turquesa
       objectReference: {fileID: 0}
-    - target: {fileID: 7092370048336660441, guid: 3667045f4e901e448944567605618e1c, type: 3}
+    - target: {fileID: 6119196860146137722, guid: 3667045f4e901e448944567605618e1c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
-    - target: {fileID: 8598086640708579763, guid: 3667045f4e901e448944567605618e1c, type: 3}
+    - target: {fileID: 6738893217160157698, guid: 3667045f4e901e448944567605618e1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
+    - target: {fileID: 7309297666346100735, guid: 3667045f4e901e448944567605618e1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
+    - target: {fileID: 9074708680732826356, guid: 3667045f4e901e448944567605618e1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
+    - target: {fileID: 9131677661563857477, guid: 3667045f4e901e448944567605618e1c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a209f047157fea2439ced96cab3d705d, type: 2}
