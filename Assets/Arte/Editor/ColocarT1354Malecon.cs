@@ -100,9 +100,9 @@ namespace MechaCyberpunk.Arte.Editor
             (string nombre, string referencia, Vector3 desde, Vector3 hacia, float campo)[] tomas =
             {
                 // K11: a 1.75 m, a ~3 m del barandal hacia la avenida (lateral 12.6), mirando al oeste por la tangente con ~8 grados hacia la ciudad.
-                ("k11", "K11_Malecon.png", new Vector3(40f, 1.95f, -238.6f), new Vector3(-59f, 1.95f, -224.7f), 60f),
+                ("k11", "K11_Malecon.png", new Vector3(40f, 1.95f, -235.6f), new Vector3(-59f, 1.95f, -221.7f), 60f),
                 // K12: mirando al este desde el oeste del puesto (x = 78, a ~8 m): puesto y muelle a la derecha (el mar queda a la derecha), faro al fondo.
-                ("k12", "K12_Malecon_Muelle.png", new Vector3(70f, 1.9f, -236f), new Vector3(150f, 1f, -250f), 75f),
+                ("k12", "K12_Malecon_Muelle.png", new Vector3(70f, 2.2f, -236f), new Vector3(149f, 2.2f, -250f), 75f),
                 // A11: aérea a ~40 m, del lado de la ciudad al oeste del muelle, mirando al suroeste: playa, escollera y la curva.
                 ("a11", "A11_Malecon_Aerea.png", new Vector3(-20f, 40f, -200f), new Vector3(-95f, 0f, -250f), 70f),
             };
@@ -666,9 +666,23 @@ namespace MechaCyberpunk.Arte.Editor
                     Vector3 a = linea[i] + normal * ColocarT1354Curva.LateralCiudad + Vector3.up * ColocarT1354Curva.YBanqueta;
                     Vector3 b = linea[i + 1] + normal * ColocarT1354Curva.LateralCiudad + Vector3.up * ColocarT1354Curva.YBanqueta;
                     Vector3 lado = Vector3.Cross(Vector3.up, normal).normalized;
-                    // Segunda hilera detrás, más alta y sin letreros: tapa los edificios de relleno de las afueras.
-                    KitS2c.Frente(o, casas, a - normal * 7.2f, b - normal * 7.2f, normal, 7f, k => EstiloFondo(o));
+                    // Segunda hilera retirada 12 m (poco fondo: la calle cruzada de las afueras está en z = -201), oscura, sin ventanas encendidas
+                    // ni letreros y sin pasar de la altura de la de adelante + 2 pisos: no compite con la fachada de la avenida.
+                    int antes = casas.childCount;
+                    KitS2c.Frente(o, casas, a - normal * 12f, b - normal * 12f, normal, 3.5f, k => EstiloFondo(o));
+                    for (int c2 = antes; c2 < casas.childCount; c2++)
+                    {
+                        Oscurecer(casas.GetChild(c2));
+                    }
+                    int primeraDeAdelante = casas.childCount;
                     List<Vector3> altosTramo = KitS2c.Frente(o, casas, a, b, normal, 7f, k => EstiloMalecon(o));
+                    for (int c2 = primeraDeAdelante; c2 < casas.childCount; c2++)
+                    {
+                        foreach (Transform neon in casas.GetChild(c2).GetComponentsInChildren<Transform>().Where(x => x.name == "Neon").ToList())
+                        {
+                            Brillar(neon);
+                        }
+                    }
                     foreach (Vector3 alto in altosTramo)
                     {
                         altos.Add(alto);
@@ -686,11 +700,71 @@ namespace MechaCyberpunk.Arte.Editor
                             int color = o.Azar.Next(3);
                             Color c = color == 0 ? KitS2c.Magenta : color == 1 ? KitS2c.Turquesa : NaranjaNeon;
                             KitS2c.Neon(o, casas, centro + lado * o.Rango(-1.8f, 1.8f) + Vector3.up * o.Rango(3.2f, 5.2f), normal, lado, c, color != 2 && o.Chance(0.6f));
+                            Brillar(casas.GetChild(casas.childCount - 1));
                         }
                     }
                 }
             }
             return altos;
+        }
+
+        /// <summary>Emisión alta (HDR x3.5) en los materiales del letrero de neón, con copias de material para no tocar los originales.</summary>
+        private static void Brillar(Transform neon)
+        {
+            foreach (Renderer r in neon.GetComponentsInChildren<Renderer>())
+            {
+                Material[] ms = r.sharedMaterials;
+                for (int i = 0; i < ms.Length; i++)
+                {
+                    Material origen = ms[i];
+                    if (origen == null)
+                    {
+                        continue;
+                    }
+                    ms[i] = KitS2c.Mat("T1354_Brillo_" + origen.name, () =>
+                    {
+                        Material m = new Material(origen);
+                        foreach (string propiedad in new[] { "_EmissionColor", "_Color" })
+                        {
+                            if (m.HasProperty(propiedad))
+                            {
+                                Color c = m.GetColor(propiedad);
+                                m.SetColor(propiedad, new Color(c.r * 3.5f, c.g * 3.5f, c.b * 3.5f, c.a));
+                            }
+                        }
+                        return m;
+                    });
+                }
+                r.sharedMaterials = ms;
+            }
+        }
+
+        /// <summary>Pone una casa de la hilera de fondo gris oscura (0.15) y sin emisión.</summary>
+        private static void Oscurecer(Transform casa)
+        {
+            foreach (Renderer r in casa.GetComponentsInChildren<Renderer>())
+            {
+                Material[] ms = r.sharedMaterials;
+                for (int i = 0; i < ms.Length; i++)
+                {
+                    Material origen = ms[i];
+                    if (origen == null)
+                    {
+                        continue;
+                    }
+                    ms[i] = KitS2c.Mat("T1354_Oscuro_" + origen.name, () =>
+                    {
+                        Material m = new Material(origen);
+                        m.SetColor("_BaseColor", new Color(0.15f, 0.15f, 0.17f));
+                        if (m.HasProperty("_EmissionColor"))
+                        {
+                            m.SetColor("_EmissionColor", Color.black);
+                        }
+                        return m;
+                    });
+                }
+                r.sharedMaterials = ms;
+            }
         }
 
         private static KitS2c.Estilo EstiloFondo(KitS2c.Obra o)
@@ -700,7 +774,8 @@ namespace MechaCyberpunk.Arte.Editor
                 PlantaBaja = KitS2c.PlantaVivienda,
                 PisoAlto = KitS2c.PisoFachada,
                 ColorPiso = o.Azar.Next(KitS2c.ColoresPiso.Length),
-                Pisos = 5 + o.Azar.Next(2),
+                Pisos = 3,
+                LucesVentanas = 0f,
                 Tinaco = o.Chance(0.5f),
                 Foco = false,
                 Neon = null,
@@ -717,11 +792,12 @@ namespace MechaCyberpunk.Arte.Editor
                 PlantaBaja = o.Chance(0.85f) ? KitS2c.PlantaLocal : KitS2c.PlantaVivienda,
                 PisoAlto = o.Chance(0.15f) ? "C20b_PisoDosVentanas_cy" : KitS2c.PisoFachada,
                 ColorPiso = o.Azar.Next(KitS2c.ColoresPiso.Length),
-                Pisos = o.Chance(0.35f) ? 5 : 4,
+                Pisos = o.Chance(0.35f) ? 4 : 3,
                 Tinaco = o.Chance(0.5f),
                 Foco = true,
-                Neon = o.Chance(0.9f) ? (o.Chance(0.5f) ? KitS2c.Magenta : KitS2c.Turquesa) : (Color?)null,
-                NeonBandera = o.Chance(0.7f),
+                // Cada fachada de adelante lleva al menos un letrero en bandera visible desde la avenida.
+                Neon = o.Chance(0.5f) ? KitS2c.Magenta : KitS2c.Turquesa,
+                NeonBandera = true,
                 Antena = o.Chance(0.25f),
                 AireAzotea = o.Chance(0.4f),
                 Toldo = o.Chance(0.3f),
