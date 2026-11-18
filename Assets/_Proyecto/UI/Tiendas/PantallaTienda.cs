@@ -27,6 +27,7 @@ namespace MechaCyberpunk.UI.Tiendas
     /// </summary>
     public class PantallaTienda : MonoBehaviour
     {
+        private const string TextoSalir = "SALIR";
         // T-903: la composición H10 (cabecera, pestañas, lista a la izquierda y detalle a la derecha, barra de teclas).
         private const float AnchoLista = 1000f;
         private const float AltoPestana = 48f;
@@ -269,6 +270,11 @@ namespace MechaCyberpunk.UI.Tiendas
                 alSalir?.Invoke();
                 return;
             }
+            // T-1326: el arma 3D de El Mercado se gira con el ratón (arrastrar, rueda) o con Q/E.
+            if (modoMercado && mercado != null)
+            {
+                mercado.Atender();
+            }
             bool cambio = false;
             if (izquierda.WasPressedThisFrame() && pestana != PestanaTienda.Comprar)
             {
@@ -495,6 +501,7 @@ namespace MechaCyberpunk.UI.Tiendas
             float altoPaneles = KitUI.AltoReferencia - yPaneles - VestidoH10.AltoPie - separacion;
             lineaPestanaComprar = CrearPestana(textoPestanaComprar, new Vector2(margen, -yPestanas));
             lineaPestanaVender = CrearPestana(textoPestanaVender, new Vector2(margen + AnchoPestana + separacion, -yPestanas));
+            CrearBotonSalir(raiz, new Vector2(-margen, -yPestanas));
 
             // La lista, a la izquierda, sobre el marco de la tienda (el prefab ya lo trae).
             Transform marco = raiz.Find("MarcoTienda");
@@ -628,6 +635,11 @@ namespace MechaCyberpunk.UI.Tiendas
             texto.horizontalOverflow = HorizontalWrapMode.Overflow;
             Image linea = TrazoH10.Imagen(texto.transform, "Linea", TrazoH10.TurquesaTenue, TrazoH10.Linea);
             TrazoH10.Estirar(linea.rectTransform);
+            // T-1326: las pestañas también se eligen con un clic.
+            PestanaTienda destino = texto == textoPestanaComprar ? PestanaTienda.Comprar : PestanaTienda.Vender;
+            texto.raycastTarget = true;
+            AgregarClic(texto.gameObject, () => ClicPestana(destino));
+            HoverH10.Agregar(texto.gameObject, linea, TrazoH10.TurquesaTenue, TrazoH10.Turquesa);
             return linea;
         }
 
@@ -903,6 +915,57 @@ namespace MechaCyberpunk.UI.Tiendas
             textosFilas.Add(texto);
             cadenasFilas.Add(mensaje);
             VestidoH10.Fuente(caja);
+        }
+
+        // T-1326: un clic en una pestaña la elige (VENDER solo si la tienda compra).
+        private void ClicPestana(PestanaTienda destino)
+        {
+            if (!visible || !PilaPantallas.EsArriba(this) || pestana == destino || (destino == PestanaTienda.Vender && !PuedeVender))
+            {
+                return;
+            }
+            CambiarPestana(destino);
+            textoAviso.gameObject.SetActive(false);
+            Sonidos.Reproducir("UI_MOVER");
+            Pintar();
+        }
+
+        /// <summary>T-1326: el clic en SALIR hace lo mismo que Esc.</summary>
+        public void ClicSalir()
+        {
+            if (!visible || !PilaPantallas.EsArriba(this))
+            {
+                return;
+            }
+            Sonidos.Reproducir("UI_CANCELAR");
+            alSalir?.Invoke();
+        }
+
+        private static void AgregarClic(GameObject objeto, Action accion)
+        {
+            EventTrigger disparador = objeto.AddComponent<EventTrigger>();
+            EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
+            clic.callback.AddListener(_ => accion());
+            disparador.triggers.Add(clic);
+        }
+
+        // T-1326: botón SALIR arriba a la derecha, a la altura de las pestañas.
+        private void CrearBotonSalir(Transform raiz, Vector2 posicion)
+        {
+            RectTransform boton = TrazoH10.Nodo(raiz, "BotonSalir");
+            TrazoH10.Colocar(boton, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), posicion, new Vector2(AnchoPestana, AltoPestana));
+            Image fondoBoton = TrazoH10.Imagen(boton, "Fondo", TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.85f), TrazoH10.Relleno);
+            TrazoH10.Estirar(fondoBoton.rectTransform);
+            fondoBoton.raycastTarget = true;
+            Image linea = TrazoH10.Imagen(boton, "Linea", TrazoH10.TurquesaTenue, TrazoH10.Linea);
+            TrazoH10.Estirar(linea.rectTransform);
+            linea.raycastTarget = false;
+            Text texto = TrazoH10.Etiqueta(boton, "Texto", TextoSalir, TrazoH10.TamanoFila, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
+            TrazoH10.Estirar(texto.rectTransform);
+            texto.raycastTarget = false;
+            AgregarClic(boton.gameObject, ClicSalir);
+            HoverH10.Agregar(boton.gameObject, linea, TrazoH10.TurquesaTenue, TrazoH10.Turquesa);
+            VestidoH10.Fuente(boton);
         }
 
         // Un clic sobre una fila la elige.
