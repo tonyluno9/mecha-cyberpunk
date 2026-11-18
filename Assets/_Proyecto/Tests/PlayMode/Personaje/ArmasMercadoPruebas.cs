@@ -312,7 +312,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 Assert.GreaterOrEqual(FilaBase(pantalla, nombre), 0, "El Mercado lista " + nombre);
             }
             StringAssert.Contains("700", pantalla.TextoFila(FilaBase(pantalla, "FUSIL")));
-            StringAssert.Contains("900", pantalla.TextoFila(FilaBase(pantalla, "FRANCOTIRADOR")));
+            StringAssert.Contains("2,200", pantalla.TextoFila(FilaBase(pantalla, "FRANCOTIRADOR"))); // T-1324: el francotirador cuesta 2200
             yield return new WaitForSecondsRealtime(0.4f);
             Capturar("T-416-2.png");
 
@@ -327,7 +327,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(-1, FilaCon(pantalla, "FRANCOTIRADOR I"), "El Mercado no ofrece la mejora");
             Assert.IsNotNull(arsenal.DarMejora(ArmaAPie.Sniper));
             Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Sniper), "SNIPER I es nivel 1");
-            Assert.AreEqual(Dinero - 700 - 900, cartera.Dinero, "Cobra Ƀ700 y Ƀ900");
+            Assert.AreEqual(Dinero - 700 - 2200, cartera.Dinero, "Cobra Ƀ700 y Ƀ2200");
             yield return Pulsar(teclado.escapeKey);
             yield return EsperarHasta(() => !mostrador.PantallaAbierta, "cerrar la tienda con Esc", 5f);
 

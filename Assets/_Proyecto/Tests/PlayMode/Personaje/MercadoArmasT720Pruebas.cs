@@ -248,7 +248,7 @@ namespace MechaCyberpunk.Tests.Personaje
             }
 
             // c. Compra las tres armas con flechas y Enter; cada una cuesta lo que dice la fila.
-            int[] precios = { 350, 700, 900 };
+            int[] precios = { 350, 700, 2200 }; // T-1324: el francotirador cuesta 2200
             int dinero = Dinero;
             for (int i = 0; i < nombres.Length; i++)
             {

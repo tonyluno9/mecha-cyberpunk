@@ -152,6 +152,11 @@ namespace MechaCyberpunk.UI.Tiendas
             }
             plantillaFila.gameObject.SetActive(false);
             contenido.SetActive(false);
+            // T-1326: sin GraphicRaycaster el ratón no llega a las filas, las pestañas ni SALIR (el prefab no lo trae).
+            if (GetComponent<Canvas>() != null && GetComponent<GraphicRaycaster>() == null)
+            {
+                gameObject.AddComponent<GraphicRaycaster>();
+            }
         }
 
         private void OnDisable()

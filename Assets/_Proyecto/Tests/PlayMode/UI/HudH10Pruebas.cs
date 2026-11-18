@@ -153,11 +153,14 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(1f, h10.Estrella(0).color.a, 0.001f);
 
             ZonaBusquedaFalsa zona = new ZonaBusquedaFalsa();
+            // Con 5 estrellas y una zona de búsqueda llegaría Nova (T-1304) y tumbaría al jugador: aquí solo se prueba el HUD.
+            MechaCyberpunk.IA.APie.RespuestaNova.Apagada = true;
             Registro<IZonaBusqueda>.Agregar(zona);
             // T-729: parpadean cuando llevas un rato sin que te vean, no al instante.
             float hasta = Time.unscaledTime + ReglaEstrellasH10.SegundosSinVerParaParpadear + 0.5f;
             while (!h10.Buscando && Time.unscaledTime < hasta)
             {
+                calor.Sumar(calor.Maximo, MotivoCalor.Choque); // que el calor no baje solo mientras se espera
                 yield return null;
             }
             Assert.IsTrue(h10.Buscando, "Con zona de búsqueda activa y sin que te vean, parpadean");
@@ -170,6 +173,7 @@ namespace MechaCyberpunk.Tests.UI
             }
             Assert.GreaterOrEqual(alfas.Count, 2, "El alfa de la estrella llena cambia: parpadea");
             Registro<IZonaBusqueda>.Quitar(zona);
+            MechaCyberpunk.IA.APie.RespuestaNova.Apagada = false;
         }
 
         [UnityTest]

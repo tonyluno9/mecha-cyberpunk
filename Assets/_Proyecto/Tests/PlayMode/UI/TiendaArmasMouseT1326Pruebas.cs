@@ -144,8 +144,10 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             Assert.Greater(Cambio(antes, holo.Giro), 30f, "Arrastrar gira el arma");
 
-            // Arrastrar empezando fuera del holograma (sobre la lista) no la gira.
-            Set(raton.position, Centro(Buscar(pantalla.PanelLista, "Fila_0")));
+            // Arrastrar empezando fuera del holograma no la gira. Se empieza en una esquina vacía: sobre una fila, soltar la elige y el holograma cambia de arma.
+            Vector2 fuera = new Vector2(4f, 4f);
+            Assert.IsFalse(RectTransformUtility.RectangleContainsScreenPoint((RectTransform)area, fuera, null), "La esquina queda fuera del holograma");
+            Set(raton.position, fuera);
             yield return null;
             Press(raton.leftButton);
             yield return null;
@@ -194,10 +196,14 @@ namespace MechaCyberpunk.Tests.UI
 
             // Pasar el cursor resalta la fila.
             Transform fila1 = Buscar(pantalla.PanelLista, "Fila_1");
-            Set(raton.position, Centro(fila1));
-            yield return null;
-            yield return null;
-            Assert.IsTrue(fila1.GetComponent<HoverH10>().Encendido, "La fila bajo el cursor se resalta");
+            HoverH10 hover = fila1.GetComponent<HoverH10>();
+            float hasta = Time.realtimeSinceStartup + 0.5f;
+            while (!hover.Encendido && Time.realtimeSinceStartup < hasta)
+            {
+                Set(raton.position, Centro(fila1) + new Vector2(Time.frameCount % 2, 0f));
+                yield return null;
+            }
+            Assert.IsTrue(hover.Encendido, "La fila bajo el cursor se resalta");
 
             // Clic elige; otro clic sobre la elegida compra.
             yield return Clic(fila1);
@@ -218,6 +224,9 @@ namespace MechaCyberpunk.Tests.UI
         [UnityTest]
         public IEnumerator BancoDeTino_BotonSalir_CierraConUnClic()
         {
+            // En una escena vacía de prueba (sin la ciudad) el clic real en SALIR colgaba al editor si esta prueba corría primero; el banco vive en la ciudad.
+            yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EsperarHasta(() => Registro<IJugador>.Actual != null, "la ciudad", 30f);
             ConfigMenuArmas config = AssetDatabase.LoadAssetAtPath<ConfigMenuArmas>(RutaConfig);
             Assert.IsNotNull(config);
             GameObject go = new GameObject("PantallaTinoPrueba");
