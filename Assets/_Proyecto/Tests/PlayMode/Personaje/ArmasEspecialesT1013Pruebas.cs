@@ -180,5 +180,32 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(EstadoPlasma.Reposo, especiales.EstadoPlasma, "Soltar a la mitad cancela la carga");
             Assert.AreEqual(0f, blanco.Total, "Sin carga completa no hay rayo");
         }
+
+        [UnityTest]
+        public IEnumerator RiflePlasma_ConMiraLaser_SoloApuntando_YSeApagaConElRayo()
+        {
+            PonerBlanco(new Vector3(0.75f, 1.4f, 8f));
+            yield return Preparar(ArmaAPie.RiflePlasma);
+            Assert.IsFalse(especiales.LaserVisible, "Sin apuntar no hay mira");
+            Press(raton.rightButton);
+            yield return Esperar(0.8f);
+            Assert.IsTrue(especiales.LaserVisible, "T-1337: apuntando con el rifle de plasma se ve la mira");
+            Assert.IsNotNull(GameObject.Find("MiraLaserPlasma"), "La línea existe");
+            LineRenderer laser = GameObject.Find("MiraLaserPlasma").GetComponent<LineRenderer>();
+            Assert.Greater(Vector3.Distance(laser.GetPosition(0), laser.GetPosition(1)), 1f, "Va de la boca al punto de mira");
+            if (FotoPruebaT1335.Pedida("CAPTURAR_T1337") && Camera.main != null)
+            {
+                FotoPruebaT1335.Con(Camera.main, "docs/capturas/t-1337/mira-laser-plasma.png");
+            }
+            Press(raton.leftButton);
+            yield return Esperar(3.5f);
+            Assert.AreEqual(EstadoPlasma.Rayo, especiales.EstadoPlasma);
+            Assert.IsFalse(especiales.LaserVisible, "Con el rayo fuera la mira se apaga");
+            Release(raton.leftButton);
+            yield return Esperar(5.5f);
+            Release(raton.rightButton);
+            yield return Esperar(0.3f);
+            Assert.IsFalse(especiales.LaserVisible, "Sin apuntar se apaga");
+        }
     }
 }

@@ -26,6 +26,11 @@ namespace MechaCyberpunk.Personaje.Jugador
         private const float MinimoCabezaSobreCinturon = 0.2f;
         private const float MinimoCabezaBajoTecho = 0.25f;
         private const float MaximaSubidaAsiento = 1f;
+        // T-1335: robo con conductor. El conductor (ConductorRobado, Trafico) juega PJ01_Conductor_SerSacado en 0.35 + 0.9 s; el clip del jugador dura lo mismo para que terminen juntos.
+        private const string NombreConductorRobado = "ConductorRobado";
+        private const float SegundosSacarConductor = 1.25f;
+        private const float SegundosAlinearPuerta = 0.15f;
+        private const float DistanciaMaximaConductor = 5f;
 
         // Cuánto cae la cadera sentada respecto del punto del asiento del carro (m) y cuánto se echa para atrás.
         private const float CaidaCadera = 0.2f;
@@ -62,6 +67,9 @@ namespace MechaCyberpunk.Personaje.Jugador
         private Vector3 puertaLocal;
         private float puertaYaw;
         private float segundosAcercar;
+        // T-1335: cuándo empieza Carro_Entrar (el robo con conductor la retrasa hasta que acaba SacarConductor).
+        private float inicioClipEntrar;
+        private ReproductorClipUnico reproductorSacar;
         private bool clipIniciado;
         private Vector3 asientoLocal;
         private Transform marcoSalida;
@@ -81,6 +89,12 @@ namespace MechaCyberpunk.Personaje.Jugador
         private const int MuestrasAvance = 32;
 
         public FaseCarro Fase { get; private set; }
+
+        /// <summary>T-1335: True mientras el jugador juega PJ01_Carro_SacarConductor (robo con conductor).</summary>
+        public bool SacandoConductor => reproductorSacar != null && reproductorSacar.Reproduciendo;
+
+        /// <summary>T-1335: el modelo que se coloca junto a la puerta (para las pruebas). Null si no hay.</summary>
+        public Transform ModeloVisual => raizVisual;
 
         /// <summary>True si el modelo va en una moto (T-696).</summary>
         public bool EnMoto => modoMoto;
@@ -124,7 +138,11 @@ namespace MechaCyberpunk.Personaje.Jugador
 
             // T-656: la puerta más cercana (la del conductor o la del otro lado); el personaje se para pegado al carro, en el piso.
             Vector3 puerta = montable.PuntoSubida;
-            if (PuertasMontable.TryEspejo(montable, out Vector3 opuesta))
+            // T-1335: con conductor adentro (ya lo sacan: lo crea el carro al subir) se para en la puerta del conductor, sin elegir la otra.
+            VisualPersonaje conductor = BuscarConductorSacado(asiento.position);
+            ConfigAnimacionParkour config = ConfigAnimacionParkour.Actual;
+            bool sacando = conductor != null && config != null && config.CarroSacarConductor != null;
+            if (!sacando && PuertasMontable.TryEspejo(montable, out Vector3 opuesta))
             {
                 puerta = ReglasEntradaCarro.PuertaMasCercana(posicionPrevia, puerta, opuesta);
             }
@@ -134,7 +152,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             puertaLocal = asiento.InverseTransformPoint(puerta);
             Vector3 haciaAsiento = asientoLocal - puertaLocal;
             puertaYaw = Mathf.Atan2(haciaAsiento.x, haciaAsiento.z) * Mathf.Rad2Deg;
-            segundosAcercar = ReglasEntradaCarro.SegundosAcercar(Vector3.Distance(inicioLocal, puertaLocal));
+            segundosAcercar = sacando ? SegundosAlinearPuerta : ReglasEntradaCarro.SegundosAcercar(Vector3.Distance(inicioLocal, puertaLocal));
+            inicioClipEntrar = sacando ? Mathf.Max(segundosAcercar, SegundosSacarConductor) : segundosAcercar;
 
             ApagarIK(true);
             avanceClip = AvanceDelClip("Carro_Entrar", true);
@@ -143,7 +162,38 @@ namespace MechaCyberpunk.Personaje.Jugador
             Fase = FaseCarro.Entrando;
             clipIniciado = false;
             Colocar(0f);
+            if (sacando)
+            {
+                // Empieza en el mismo cuadro que el del conductor (que arrancó al crearlo, en IntentarSubir).
+                reproductorSacar = visual.GetComponent<ReproductorClipUnico>();
+                if (reproductorSacar == null)
+                {
+                    reproductorSacar = visual.gameObject.AddComponent<ReproductorClipUnico>();
+                }
+                reproductorSacar.Reproducir(animador, config.CarroSacarConductor, config.CarroSacarConductor.length / SegundosSacarConductor);
+            }
             return true;
+        }
+
+        // T-1335: el conductor al que están sacando del carro, el más cercano al asiento (null si no hay).
+        private static VisualPersonaje BuscarConductorSacado(Vector3 asiento)
+        {
+            VisualPersonaje mejor = null;
+            float menor = DistanciaMaximaConductor;
+            foreach (VisualPersonaje v in FindObjectsByType<VisualPersonaje>(FindObjectsSortMode.None))
+            {
+                if (v.transform.root.name != NombreConductorRobado)
+                {
+                    continue;
+                }
+                float d = Vector3.Distance(v.transform.position, asiento);
+                if (d < menor)
+                {
+                    menor = d;
+                    mejor = v;
+                }
+            }
+            return mejor;
         }
 
         // T-660: en una moto el conductor se sienta ENCIMA (cadera en el asiento de la moto), las manos van al manubrio y los pies a los estribos por IK.
@@ -188,6 +238,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (Fase == FaseCarro.Fuera || raizVisual == null)
             {
                 return;
+            }
+            if (reproductorSacar != null)
+            {
+                reproductorSacar.Detener();
             }
             reponerVisual = true;
             visualAntesDeColocar = raizVisual.position;
@@ -312,14 +366,18 @@ namespace MechaCyberpunk.Personaje.Jugador
                 return;
             }
             transcurrido += Time.deltaTime;
-            if (Fase == FaseCarro.Entrando && !clipIniciado && transcurrido >= segundosAcercar)
+            if (Fase == FaseCarro.Entrando && !clipIniciado && transcurrido >= inicioClipEntrar)
             {
-                // Ya está junto a la puerta: ahora sí juega el clip de subir.
+                // Ya está junto a la puerta (y sacó al conductor, si lo había): ahora sí juega el clip de subir.
                 clipIniciado = true;
+                if (reproductorSacar != null)
+                {
+                    reproductorSacar.Detener();
+                }
                 visual.Manejando = true;
                 visual.Gestear(GestoVisual.CarroEntrar);
             }
-            float total = Fase == FaseCarro.Entrando ? segundosAcercar + duracion : duracion;
+            float total = Fase == FaseCarro.Entrando ? inicioClipEntrar + duracion : duracion;
             if (transcurrido >= total)
             {
                 Terminar();
@@ -367,7 +425,14 @@ namespace MechaCyberpunk.Personaje.Jugador
                 raizVisual.localRotation = Quaternion.Euler(0f, Mathf.LerpAngle(inicioYaw, puertaYaw, f), 0f);
                 return;
             }
-            float u = segundos - segundosAcercar;
+            float u = segundos - inicioClipEntrar;
+            if (u < 0f)
+            {
+                // T-1335: quieto en la puerta, mirando al asiento, mientras saca al conductor.
+                raizVisual.localPosition = puertaLocal;
+                raizVisual.localRotation = Quaternion.Euler(0f, puertaYaw, 0f);
+                return;
+            }
             float t = avanceClip != null
                 ? ReglasEntradaCarro.AvanceEn(avanceClip, u / duracion)
                 : Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(InicioDeslizarEntrada * duracion, FinDeslizarEntrada * duracion, u));
