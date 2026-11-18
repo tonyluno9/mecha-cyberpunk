@@ -65,7 +65,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
         }
 
         // Sin materiales ni animación del FBX (los materiales son los .mat de la carpeta, con las texturas de la .fbm), sin mallas LOD.
-        private static void ConfigurarImportador(string codigo)
+        public static void ConfigurarImportador(string codigo)
         {
             ModelImporter importador = AssetImporter.GetAtPath(RutaFbx(codigo)) as ModelImporter;
             if (importador == null)
@@ -290,7 +290,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
         }
 
         // Una pieza del FBX como hijo sin vínculo al asset (solo la malla y su material), en el mismo lugar del FBX.
-        private static GameObject Pieza(Transform origen, string nombre, Transform padre, Material material)
+        public static GameObject Pieza(Transform origen, string nombre, Transform padre, Material material)
         {
             GameObject pieza = new GameObject(nombre);
             pieza.transform.SetParent(padre, false);
@@ -307,7 +307,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
 
         // Direccion / Giro / Modelo colgando de <paramref name="padre"/>; la llanta queda centrada en el pivote, con su malla orientada como el carro.
         // Devuelve Direccion; Giro sale en <paramref name="giro"/>.
-        private static Transform ArmarCadena(Transform padre, Vector3 centroMundo, Mesh malla, Quaternion rotacionMundo, float escala, Material material, out Transform giro)
+        public static Transform ArmarCadena(Transform padre, Vector3 centroMundo, Mesh malla, Quaternion rotacionMundo, float escala, Material material, out Transform giro)
         {
             GameObject direccion = new GameObject("Direccion");
             direccion.transform.SetParent(padre, false);
@@ -362,7 +362,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             return b;
         }
 
-        private static void Poner(SerializedProperty lista, Transform[] valores)
+        public static void Poner(SerializedProperty lista, Transform[] valores)
         {
             lista.arraySize = valores.Length;
             for (int i = 0; i < valores.Length; i++)
@@ -372,7 +372,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
         }
 
         // Materiales URP Lit con las texturas de la carpeta .fbm del FBX. Las ruedas usan su propia textura (la que lleva "tire" en el nombre) y, si el FBX no trae una, la de la carrocería.
-        private static void Materiales(string codigo, out Material carroceria, out Material rueda)
+        public static void Materiales(string codigo, out Material carroceria, out Material rueda)
         {
             string carpeta = CarpetaPiezas + codigo + "/" + codigo + ".fbm";
             string[] colores = Directory.GetFiles(carpeta, "*_basecolor.*").Where(f => !f.EndsWith(".meta")).Select(f => f.Replace('\\', '/')).ToArray();
