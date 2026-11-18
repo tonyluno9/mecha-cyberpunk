@@ -284,5 +284,55 @@ namespace MechaCyberpunk.Arte.Editor
         {
             return LateralMuro + AnchoPlaya;
         }
+
+        // ================================================================ T-1363: luz local del Malecón y relleno de T530
+
+        /// <summary>
+        /// Volumen de posproceso local del Malecón (isGlobal = false): una caja que cubre la avenida, el paseo y la playa (x de -305 a 165, z de -300 a -205)
+        /// con 15 m de mezcla. La mezcla llega a z = -190 como mucho: los barrios viejos (z &gt; -190) no cambian de luz.
+        /// </summary>
+        public const float VolumenXOeste = -305f;
+        public const float VolumenXEste = 165f;
+        public const float VolumenZSur = -300f;
+        public const float VolumenZNorte = -205f;
+        public const float VolumenYBajo = -10f;
+        public const float VolumenYAlto = 40f;
+        public const float VolumenMezcla = 15f;
+        public const float VolumenPrioridad = 10f;
+
+        /// <summary>Los barrios viejos empiezan en esta z hacia el norte: la luz del volumen no debe llegar ahí.</summary>
+        public const float ZBarriosViejos = -190f;
+
+        /// <summary>Distancia (m) de la avenida dentro de la cual el relleno liso de T530 se apaga.</summary>
+        public const float AlcanceRellenoT530 = 60f;
+
+        /// <summary>z del norte del tramo que las fachadas de las bocas de U1 y U2 cubren (los corredores sur terminan en z = -201).</summary>
+        public const float ZInicioFachadaCorredor = -178f;
+
+        /// <summary>La caja del collider del volumen (sin la mezcla).</summary>
+        public static Bounds CajaVolumen()
+        {
+            Vector3 min = new Vector3(VolumenXOeste, VolumenYBajo, VolumenZSur);
+            Vector3 max = new Vector3(VolumenXEste, VolumenYAlto, VolumenZNorte);
+            return new Bounds((min + max) * 0.5f, max - min);
+        }
+
+        /// <summary>Peso del volumen en el punto (0 a 1): 1 dentro de la caja y cae a 0 a <see cref="VolumenMezcla"/> m de ella.</summary>
+        public static float PesoVolumen(Vector3 punto)
+        {
+            Bounds caja = CajaVolumen();
+            float distancia = Mathf.Sqrt(caja.SqrDistance(punto));
+            return Mathf.Clamp01(1f - distancia / VolumenMezcla);
+        }
+
+        /// <summary>
+        /// True si el edificio liso de relleno de T530 (por su centro) queda detrás de las fachadas del Malecón, a menos de
+        /// <see cref="AlcanceRellenoT530"/> m de la avenida y en el último tramo de los corredores sur.
+        /// </summary>
+        public static bool RellenoT530Apagable(Vector3 centro)
+        {
+            float distancia = centro.z - ZCentro(centro.x);
+            return distancia > 0f && distancia <= AlcanceRellenoT530 && centro.z < ZInicioFachadaCorredor;
+        }
     }
 }
