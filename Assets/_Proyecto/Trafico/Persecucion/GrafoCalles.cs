@@ -17,6 +17,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // T-986: tramos que un carro de verdad no puede recorrer (un cierre, una barda): los caminos los rodean o no existen.
         private readonly HashSet<long> tramosBloqueados = new HashSet<long>();
 
+        // T-1350: nodos y tramos de las calles de zona (CalleZona): los de zona no se alargan hacia las afueras; los tramos rápidos son de autopista.
+        private readonly HashSet<int> nodosDeZona = new HashSet<int>();
+        private readonly HashSet<long> tramosRapidos = new HashSet<long>();
+        private float alturaMinima = float.MaxValue;
+        private float alturaMaxima = float.MinValue;
+
+        /// <summary>T-1350: a partir de esta diferencia de altura (m) entre nodos, "el más cercano" cuenta también la y (autopista sobre calles).</summary>
+        public const float DiferenciaDeAlturaTridimensional = 1.5f;
+
         public int Cantidad => nodos.Count;
 
         public Vector3 Nodo(int indice) => nodos[indice];
@@ -63,12 +72,52 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// </summary>
         public int AgregarTramo(int desde, Vector3 punto)
         {
-            nodos.Add(punto);
-            vecinos.Add(new List<int> { desde });
-            int nuevo = nodos.Count - 1;
-            vecinos[desde].Add(nuevo);
+            int nuevo = AgregarNodo(punto);
+            Enlazar(desde, nuevo);
             return nuevo;
         }
+
+        /// <summary>T-1350: agrega un nodo suelto (sin vecinos) y devuelve su índice. <paramref name="deZona"/>: pertenece a una calle de zona.</summary>
+        public int AgregarNodo(Vector3 punto, bool deZona = false)
+        {
+            nodos.Add(punto);
+            vecinos.Add(new List<int>());
+            alturaMinima = Mathf.Min(alturaMinima, punto.y);
+            alturaMaxima = Mathf.Max(alturaMaxima, punto.y);
+            int nuevo = nodos.Count - 1;
+            if (deZona)
+            {
+                nodosDeZona.Add(nuevo);
+            }
+            return nuevo;
+        }
+
+        /// <summary>T-1350: une dos nodos con un tramo (en los dos sentidos). No repite un tramo ni une un nodo consigo mismo. <paramref name="rapido"/>: tramo de autopista.</summary>
+        public void Enlazar(int a, int b, bool rapido = false)
+        {
+            if (a == b)
+            {
+                return;
+            }
+            if (!vecinos[a].Contains(b))
+            {
+                vecinos[a].Add(b);
+                vecinos[b].Add(a);
+            }
+            if (rapido)
+            {
+                tramosRapidos.Add(LlaveDeTramo(a, b));
+            }
+        }
+
+        /// <summary>T-1350: true si el nodo es de una calle de zona.</summary>
+        public bool EsDeZona(int indice) => nodosDeZona.Contains(indice);
+
+        /// <summary>T-1350: true si el tramo entre dos nodos es de autopista (los carros van más rápido).</summary>
+        public bool EsRapido(int a, int b) => tramosRapidos.Count > 0 && tramosRapidos.Contains(LlaveDeTramo(a, b));
+
+        /// <summary>T-1350: true si hay nodos a distinta altura (rampas, autopista elevada).</summary>
+        public bool TieneAlturas => nodos.Count > 0 && alturaMaxima - alturaMinima > DiferenciaDeAlturaTridimensional;
 
         private static long LlaveDeTramo(int a, int b) => a < b ? (long)a * 1000003L + b : (long)b * 1000003L + a;
 
@@ -84,14 +133,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>T-986: cuántos tramos están cerrados.</summary>
         public int TramosBloqueados => tramosBloqueados.Count;
 
-        /// <summary>Índice del nodo más cercano a un punto (en el plano, ignorando la altura).</summary>
+        /// <summary>Índice del nodo más cercano a un punto (en el plano, ignorando la altura; con nodos a distinta altura, T-1350, en 3D).</summary>
         public int MasCercano(Vector3 punto)
         {
             int mejor = 0;
             float menor = float.MaxValue;
+            bool tridimensional = TieneAlturas;
             for (int i = 0; i < nodos.Count; i++)
             {
-                float d = Plano(nodos[i], punto);
+                float d = tridimensional ? Vector3.Distance(nodos[i], punto) : Plano(nodos[i], punto);
                 if (d < menor)
                 {
                     menor = d;
@@ -266,6 +316,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             Vector2 pa = new Vector2(p.x - a.x, p.z - a.z);
             Vector2 ab = new Vector2(b.x - a.x, b.z - a.z);
+            if (ab.sqrMagnitude <= 0f)
+            {
+                return pa.magnitude;
+            }
             float t = Mathf.Clamp01(Vector2.Dot(pa, ab) / ab.sqrMagnitude);
             return (pa - ab * t).magnitude;
         }
