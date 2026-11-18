@@ -33,6 +33,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const int Filas = 4;
         public const float LargoBloque = 24.6f, FondoBloque = Filas * PasoFila;
         public const float PasilloX = 3.6f, PasilloZ = 3.5f;
+        /// <summary>Centro de la primera columna de bloques: el borde oeste queda pegado a la calle de x = 160 (pasillo angosto de K15).</summary>
+        public const float XBloques = 178.5f;
         public static readonly Vector3 U5 = new Vector3(160f, 0f, -215f);
         public static readonly Vector3 U8 = new Vector3(300f, 0f, -45f);
 
@@ -72,7 +74,7 @@ namespace MechaCyberpunk.Arte.Editor
             float[] xs = new float[4];
             for (int c = 0; c < 4; c++)
             {
-                xs[c] = 187f + c * (LargoBloque + PasilloX);
+                xs[c] = XBloques + c * (LargoBloque + PasilloX);
             }
             for (int f = 0; f < 4; f++)
             {
@@ -194,6 +196,9 @@ namespace MechaCyberpunk.Arte.Editor
                     float largo = d.magnitude + AnchoCalle;
                     KitS2c.Losa(o, go.transform, "Tramo", (a + b) * 0.5f + Vector3.up * (YPatio + 0.04f), Quaternion.LookRotation(d.normalized) * Quaternion.Euler(0f, 90f, 0f),
                         new Vector3(largo, 0.08f, AnchoCalle), asfalto, 8f, false);
+                    Vector3 borde = Vector3.Cross(d.normalized, Vector3.up) * (AnchoCalle * 0.5f - 0.3f);
+                    KitS2c.Linea(go.transform, a + borde, b + borde, 0.18f, YPatio + 0.08f);
+                    KitS2c.Linea(go.transform, a - borde, b - borde, 0.18f, YPatio + 0.08f);
                     for (float t = 4f; t < d.magnitude - 3f; t += 6f)
                     {
                         Vector3 p = a + d.normalized * t;
@@ -207,8 +212,8 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Color[] colores =
             {
-                new Color(0.62f, 0.22f, 0.14f), new Color(0.16f, 0.42f, 0.26f), new Color(0.14f, 0.28f, 0.58f),
-                new Color(0.85f, 0.45f, 0.1f), new Color(0.1f, 0.5f, 0.5f),
+                new Color(0.9f, 0.3f, 0.16f), new Color(0.2f, 0.62f, 0.36f), new Color(0.2f, 0.4f, 0.9f),
+                new Color(1f, 0.58f, 0.1f), new Color(0.14f, 0.72f, 0.7f),
             };
             Transform padre = new GameObject("Contenedores").transform;
             padre.SetParent(r, false);
@@ -244,6 +249,13 @@ namespace MechaCyberpunk.Arte.Editor
                     lg.RecalculateBounds();
                 }
                 Escaleras(g.transform, bl);
+                // Rayas blancas que marcan el bloque en el piso (A15).
+                float mx = LargoBloque * 0.5f + 0.9f, mz = FondoBloque * 0.5f + 0.9f, yl = YPatio + 0.06f;
+                Vector3 c0 = new Vector3(bl.Centro.x, yl, bl.Centro.y);
+                KitS2c.Linea(g.transform, c0 + new Vector3(-mx, 0f, -mz), c0 + new Vector3(mx, 0f, -mz), 0.2f, yl);
+                KitS2c.Linea(g.transform, c0 + new Vector3(-mx, 0f, mz), c0 + new Vector3(mx, 0f, mz), 0.2f, yl);
+                KitS2c.Linea(g.transform, c0 + new Vector3(-mx, 0f, -mz), c0 + new Vector3(-mx, 0f, mz), 0.2f, yl);
+                KitS2c.Linea(g.transform, c0 + new Vector3(mx, 0f, -mz), c0 + new Vector3(mx, 0f, mz), 0.2f, yl);
                 // Pallets al sur de la fila 0 (escalón de 1.2 m) en la columna oeste.
                 Colocar(g.transform, "PU06_Pallets", new Vector3(bl.Centro.x - LargoCont * 0.5f, YPatio, bl.ZFila(0) - PasoFila * 0.5f - 0.9f), 0f, 0f, 1.2f, false, false);
             }
@@ -277,37 +289,66 @@ namespace MechaCyberpunk.Arte.Editor
             p.AjustarTrigger();
         }
 
+        // K15: la hilera de bodegas va pegada a la calle (oeste, de frente al este) y otra al norte (de frente al sur), con cortinas,
+        // letreros de neón, reflectores cálidos, pallets, cajas y barriles en la puerta.
         private static void Bodegas(KitS2c.Obra o, Transform r)
         {
             Transform padre = new GameObject("Bodegas").transform;
             padre.SetParent(r, false);
-            // Fila norte, de frente al sur (calle z = -80).
-            string[] codigos = { "PU03_Bodega", "PU04_Bodega", "PU03_Bodega" };
-            for (int i = 0; i < 3; i++)
+            string[] codigos = { "PU03_Bodega", "PU04_Bodega" };
+            for (int i = 0; i < 4; i++)
             {
-                float x = 195f + i * 40f;
-                Colocar(padre, codigos[i], new Vector3(x, YPatio, -66f), 180f, 32f, 0f, false, false);
-                Color c = i == 1 ? KitS2c.Turquesa : KitS2c.Magenta;
-                KitS2c.Neon(o, padre, new Vector3(x, 7f, -78.5f), Vector3.back, Vector3.right, c, true);
-                KitS2c.Luz(padre, new Vector3(x - 12f, 10f, -78f), LightType.Spot, KitS2c.Fria, 600f, 30f, 80f, new Vector3(0f, -1f, -0.6f));
+                float z = -100f - i * 28.5f;
+                GameObject b = Colocar(padre, codigos[i % 2], new Vector3(132f, YPatio, z), 90f, 28f, 0f, false, false);
+                Mover(b, new Vector3(FrenteOeste - Medir(b).max.x, 0f, 0f));
+                Detalle(o, padre, new Vector3(FrenteOeste, YPatio, z), Vector3.right, i % 2 == 0 ? KitS2c.Magenta : KitS2c.Turquesa);
             }
-            // Columna oeste, de frente al este (calle x = 160).
             for (int i = 0; i < 3; i++)
             {
-                Colocar(padre, i == 1 ? "PU04_Bodega" : "PU03_Bodega", new Vector3(132f, YPatio, -112f - i * 32f), 90f, 28f, 0f, false, false);
+                float x = 205f + i * 36f;
+                GameObject b = Colocar(padre, codigos[i % 2], new Vector3(x, YPatio, -66f), 180f, 32f, 0f, false, false);
+                Mover(b, new Vector3(0f, 0f, FrenteNorte - Medir(b).min.z));
+                Detalle(o, padre, new Vector3(x, YPatio, FrenteNorte), Vector3.back, i % 2 == 0 ? KitS2c.Turquesa : KitS2c.Magenta);
+            }
+            Colocar(padre, "PU05_Montacargas", new Vector3(159f, YPatio, -130f), 200f, 0f, 2.6f, false, false);
+            Colocar(padre, "PU05_Montacargas", new Vector3(163f, YPatio, -176f), 20f, 0f, 2.6f, false, false);
+        }
+
+        private const float FrenteOeste = 153.6f, FrenteNorte = -85.4f;
+
+        // Puerta de una bodega: neón, reflector cálido hacia el piso, pallets, cajas y barril.
+        private static void Detalle(KitS2c.Obra o, Transform padre, Vector3 frente, Vector3 normal, Color neon)
+        {
+            Vector3 lado = Vector3.Cross(Vector3.up, normal);
+            KitS2c.Neon(o, padre, frente + Vector3.up * 5.2f + lado * 4f + normal * 0.2f, normal, lado, neon, true);
+            Light l = KitS2c.Luz(padre, frente + Vector3.up * 9f + normal * 1.2f - lado * 5f, LightType.Spot, KitS2c.Calido, 260f, 20f, 95f, normal * 0.5f + Vector3.down);
+            l.name = "ReflectorBodega";
+            Colocar(padre, "PU06_Pallets", frente + normal * 2f + lado * 7f, Mathf.Atan2(normal.x, normal.z) * Mathf.Rad2Deg, 0f, 1.2f, false, false);
+            Colocar(padre, "PU06_Pallets", frente + normal * 1.6f - lado * 9f, 15f, 0f, 1.0f, false, false);
+            Colocar(padre, "C17_Huacales", frente + normal * 1.4f + lado * 2.5f, 0f, 0f, 1.0f, false, false);
+            Colocar(padre, "C16_Tambo", frente + normal * 1.2f - lado * 6.5f, 0f, 0f, 1.0f, false, false);
+        }
+
+        private static void Mover(GameObject go, Vector3 delta)
+        {
+            if (!go.name.StartsWith("Hueco_"))
+            {
+                go.transform.position += delta;
             }
         }
 
+        // A15: las grúas en hilera sobre el borde del muelle y el barco atracado pegado a él; bitas a lo largo.
         private static void Muelle(KitS2c.Obra o, Transform r)
         {
             Transform padre = new GameObject("Muelle").transform;
             padre.SetParent(r, false);
-            for (float x = 200f; x <= 300f; x += 50f)
+            for (float x = 175f; x <= 310f; x += 45f)
             {
-                Colocar(padre, "PU01_Grua", new Vector3(x, YMuelle, ZSur + 6f), 0f, 0f, 42f, false, true);
+                Colocar(padre, "PU01_Grua", new Vector3(x, YMuelle, ZSur + 6f), 0f, 0f, 42f, false, false);
                 LucesRojas(padre, new Vector3(x, YMuelle + 40f, ZSur + 6f));
             }
-            Colocar(padre, "PU02_Barco", new Vector3(240f, YMar - 2f, ZSur - 28f), 0f, 130f, 0f, false, false);
+            GameObject barco = Colocar(padre, "PU02_Barco", new Vector3(250f, YMar - 2f, ZSur - 30f), 0f, 130f, 0f, false, true);
+            Mover(barco, new Vector3(0f, 0f, ZSur - 1.5f - Medir(barco).max.z));
             for (float x = X0 + 8f; x < X1; x += 12f)
             {
                 Colocar(padre, "PT02_BitaAmarre", new Vector3(x, YMuelle, ZSur + 1.5f), 0f, 0f, 0.7f, false, false);
@@ -316,7 +357,6 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Colocar(padre, "PT02_BitaAmarre", new Vector3(X1 - 1.5f, YMuelle, z), 90f, 0f, 0.7f, false, false);
             }
-            // Cadena de cuerda y reja del muelle no se pone: el muro invisible del borde es de T-1358.
         }
 
         private static void LucesRojas(Transform padre, Vector3 cima)
@@ -330,13 +370,13 @@ namespace MechaCyberpunk.Arte.Editor
                 m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
                 return m;
             });
-            for (int i = -1; i <= 1; i += 2)
+            for (int i = -3; i <= 3; i += 2)
             {
                 GameObject s = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 Object.DestroyImmediate(s.GetComponent<Collider>());
                 s.name = "LuzRojaGrua";
                 s.transform.SetParent(padre, true);
-                s.transform.position = cima + new Vector3(i * 6f, 0f, 0f);
+                s.transform.position = cima + new Vector3(i * 3f, -Mathf.Abs(i) * 4f, 0f);
                 s.transform.localScale = Vector3.one * 0.5f;
                 s.GetComponent<MeshRenderer>().sharedMaterial = rojo;
                 s.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -365,32 +405,50 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        // Postes de madera con lámpara de sodio cada ~20 m a lo largo de cada calle interna (junto a los contenedores), con cables.
         private static void Postes(KitS2c.Obra o, Transform r)
         {
             Transform padre = new GameObject("Postes").transform;
             padre.SetParent(r, false);
-            (Vector3 pie, Vector3 haciaCalle)[] ps =
+            const float cada = 20f, lado = 5.2f;
+            foreach (Vector3[] calle in Calles())
             {
-                (new Vector3(167f, YPatio, -87f), new Vector3(-1f, 0f, 1f)), (new Vector3(293f, YPatio, -87f), new Vector3(1f, 0f, 1f)),
-                (new Vector3(293f, YPatio, -209f), new Vector3(1f, 0f, -1f)), (new Vector3(167f, YPatio, -209f), new Vector3(-1f, 0f, -1f)),
-            };
-            List<Vector3> puntas = new List<Vector3>();
-            foreach (var p in ps)
-            {
-                puntas.Add(KitS2c.Poste(o, padre, p.pie, p.haciaCalle, YPatio, false));
-            }
-            for (int i = 0; i < puntas.Count; i++)
-            {
-                KitS2c.Cable(o, puntas[i], puntas[(i + 1) % puntas.Count], 1.5f);
+                for (int i = 1; i < calle.Length; i++)
+                {
+                    Vector3 d = calle[i] - calle[i - 1];
+                    float largo = d.magnitude;
+                    Vector3 dir = d / largo;
+                    Vector3 n = Vector3.Cross(dir, Vector3.up);
+                    Vector3? anterior = null;
+                    for (float t = 8f; t < largo - 4f; t += cada)
+                    {
+                        Vector3 pie = calle[i - 1] + dir * t + n * lado;
+                        Vector3 punta = KitS2c.Poste(o, padre, pie, -n, YPatio, false);
+                        Light l = padre.GetChild(padre.childCount - 1).GetComponentInChildren<Light>(true);
+                        if (l != null)
+                        {
+                            l.intensity = IntensidadPoste;
+                            l.range = AlcancePoste;
+                        }
+                        if (anterior.HasValue)
+                        {
+                            KitS2c.Cable(o, anterior.Value, punta, 1.2f);
+                            KitS2c.Cable(o, anterior.Value + n * 0.4f - Vector3.up * 0.5f, punta + n * 0.4f - Vector3.up * 0.5f, 1f);
+                        }
+                        anterior = punta;
+                    }
+                }
             }
         }
+
+        private const float IntensidadPoste = 140f, AlcancePoste = 18f;
 
         // Montacargas, pallets, barriles y la plaza abierta del patio norte; charcos por todo el patio.
         private static void Patio(KitS2c.Obra o, Transform r)
         {
             Transform padre = new GameObject("Patio").transform;
             padre.SetParent(r, false);
-            Vector3 plaza = new Vector3(187f + LargoBloque + PasilloX, YPatio, -92.5f - (FondoBloque + PasilloZ));
+            Vector3 plaza = new Vector3(XBloques + LargoBloque + PasilloX, YPatio, -92.5f - (FondoBloque + PasilloZ));
             Colocar(padre, "PU05_Montacargas", plaza + new Vector3(-4f, 0f, 2f), 35f, 0f, 2.6f, false, false);
             Colocar(padre, "PU05_Montacargas", new Vector3(175f, YPatio, -197f), -20f, 0f, 2.6f, false, false);
             for (int i = 0; i < 6; i++)
@@ -401,7 +459,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Colocar(padre, "C16_Tambo", new Vector3(o.Rango(170f, 290f), YPatio, o.Rango(-208f, -200f)), o.Rango(0f, 360f), 0f, 1.0f, false, false);
             }
-            for (int i = 0; i < 34; i++)
+            for (int i = 0; i < 110; i++)
             {
                 Vector3 p = new Vector3(o.Rango(X0 + 10f, MuelleEste - 6f), YPatio, o.Rango(ZNorte - 10f, MuelleSur + 4f));
                 if (Bloques().Any(b => Mathf.Abs(p.x - b.Centro.x) < LargoBloque * 0.5f + 1f && Mathf.Abs(p.z - b.Centro.y) < FondoBloque * 0.5f + 1f))
@@ -525,7 +583,9 @@ namespace MechaCyberpunk.Arte.Editor
                     ms[i] = KitS2c.Mat(nombre, () =>
                     {
                         Material m = new Material(origen);
-                        m.SetColor("_BaseColor", color * (variante == 0 ? 1f : 0.78f));
+                        m.SetColor("_BaseColor", color * (variante == 0 ? 1f : 0.8f));
+                        m.SetFloat("_Smoothness", 0.5f);
+                        m.SetFloat("_Metallic", 0.15f);
                         return m;
                     });
                 }
@@ -540,10 +600,10 @@ namespace MechaCyberpunk.Arte.Editor
         {
             ColocarS2.Abrir();
             // K15: pasillo a nivel de piso (calle de x = 160 hacia el sur), contenedores a la izquierda, bodegas a la derecha, grúas y barco al fondo.
-            ColocarS2cLook.Foto(new Vector3(160f, 1.7f, -95f), new Vector3(215f, 14f, -262f), "docs/capturas/zonas/puerto-juego-k15.png", 62f);
+            ColocarS2cLook.Foto(new Vector3(160f, 1.7f, -98f), new Vector3(186f, 15f, -255f), "docs/capturas/zonas/puerto-juego-k15.png", 62f);
             ColocarS2.LadoALado("imageassets/referencias/look/K15_Puerto.png", "docs/capturas/zonas/puerto-juego-k15.png", "docs/capturas/zonas/puerto-k15.png");
             // A15: aérea.
-            ColocarS2cLook.Foto(new Vector3(105f, 120f, -20f), new Vector3(230f, 0f, -165f), "docs/capturas/zonas/puerto-juego-a15.png", 60f);
+            ColocarS2cLook.Foto(new Vector3(322f, 72f, -48f), new Vector3(225f, 0f, -175f), "docs/capturas/zonas/puerto-juego-a15.png", 60f);
             ColocarS2.LadoALado("imageassets/referencias/look/A15_Puerto_Aerea.png", "docs/capturas/zonas/puerto-juego-a15.png", "docs/capturas/zonas/puerto-a15.png");
             EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single);
         }
