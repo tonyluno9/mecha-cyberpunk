@@ -25,7 +25,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float AlturaMinimaColumna = 2f;
         public const float PasoCurva = 15f;
         /// <summary>Metros antes de tocar la huella de la losa principal en los que la rampa norte ya va a la altura del tablero.</summary>
-        public const float MargenIncorporacion = 6f;
+        public const float MargenIncorporacion = 15f;
         /// <summary>Metros desde el enlace U7 en los que la rampa norte va a ras del piso (sin canto sobre la calle baja); la pendiente sube después.</summary>
         public const float TramoRasante = 12f;
         /// <summary>Línea del centro del tramo recto de la rampa norte (z, m).</summary>
@@ -72,8 +72,8 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly Vector3 U6Salida = new Vector3(-360f, 10f, 185f);
         public static readonly Vector3 U7Inicio = new Vector3(-107f, 0f, 201f);
         public static readonly Vector3 U7Enlace = new Vector3(-120f, 0f, 215f);
-        /// <summary>T-1362: la rampa norte sube hacia el OESTE (junto al túnel, como K18) y se une al tablero en (-270,10,250); antes era (30,10,250).</summary>
-        public static readonly Vector3 U7Union = new Vector3(-270f, 10f, 250f);
+        /// <summary>T-1362: la rampa norte sube hacia el OESTE (junto al túnel, como K18) y se une al tablero en (-300,10,250) (T-1362 ronda 3: más largo para que la rampa llegue a 10 m antes de que su borde toque el tablero); antes era (30,10,250).</summary>
+        public static readonly Vector3 U7Union = new Vector3(-300f, 10f, 250f);
         public static readonly Vector3 U8Curva = new Vector3(240f, 10f, 250f);
         public static readonly Vector3 U8Bajada = new Vector3(300f, 10f, 190f);
         public static readonly Vector3 U8Piso = new Vector3(300f, 0f, 60f);
@@ -105,7 +105,7 @@ namespace MechaCyberpunk.Arte.Editor
             return p;
         }
 
-        /// <summary>Recta z = 250 de la boca a (240,10,250) cada 30 m (pasa por U7 en x = -270), curva de 90 grados de radio 60 y bajada recta por x = 300 hasta el piso en z = 60.</summary>
+        /// <summary>Recta z = 250 de la boca a (240,10,250) cada 30 m (pasa por U7 en x = -300), curva de 90 grados de radio 60 y bajada recta por x = 300 hasta el piso en z = 60.</summary>
         public static List<Vector3> Principal()
         {
             List<Vector3> p = new List<Vector3>();
@@ -166,8 +166,8 @@ namespace MechaCyberpunk.Arte.Editor
 
         /// <summary>
         /// Rampa norte (T-1362): del borde de la calle cruzada norte (U7) y su enlace (-120,0,215) sobre la calle baja, curva a la izquierda (radio ~53)
-        /// hasta ir al OESTE por z = 232, recta, y una S de radio 40 que la lleva a z = 250 y y = 10 en (-270,10,250), tangente a la autopista.
-        /// Va a ras 12 m desde el enlace y luego sube con pendiente pareja (~8.6 %).
+        /// hasta ir al OESTE por z = 232, recta, y una S de radio 40 que la lleva a z = 250 y y = 10 en (-300,10,250), tangente a la autopista.
+        /// Va a ras 12 m desde el enlace y luego sube con pendiente pareja (~7.3 %).
         /// </summary>
         public static List<Vector3> RampaNorte()
         {
@@ -235,6 +235,29 @@ namespace MechaCyberpunk.Arte.Editor
             v.y = 0f;
             return v;
         }
+
+        /// <summary>Parte de la línea entre <paramref name="desde"/> y <paramref name="hasta"/> metros del inicio (con los puntos de en medio).</summary>
+        public static List<Vector3> Subtramo(IList<Vector3> p, float desde, float hasta)
+        {
+            List<Vector3> r = new List<Vector3>();
+            PuntoEn(p, desde, out Vector3 a, out _);
+            r.Add(a);
+            float acumulado = 0f;
+            for (int i = 1; i < p.Count; i++)
+            {
+                acumulado += Vector3.Distance(p[i - 1], p[i]);
+                if (acumulado > desde + 0.01f && acumulado < hasta - 0.01f)
+                {
+                    r.Add(p[i]);
+                }
+            }
+            PuntoEn(p, hasta, out Vector3 b, out _);
+            r.Add(b);
+            return r;
+        }
+
+        /// <summary>Metros desde el extremo de una calle que cruza a otra en los que se corta su banqueta, para que no invada el arroyo de la otra (banqueta de 3 m + 7 m de medio arroyo).</summary>
+        public const float CorteBanquetaEnCruce = 10f;
 
         public static float Longitud(IList<Vector3> p)
         {

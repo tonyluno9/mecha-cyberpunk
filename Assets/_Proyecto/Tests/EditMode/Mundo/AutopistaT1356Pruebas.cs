@@ -66,8 +66,8 @@ namespace MechaCyberpunk.Tests.Mundo
             List<Vector3> r = T.RampaNorte();
             Assert.IsTrue(T.Pasa(r, new Vector3(-107f, 0f, 201f)), "sigue unida a la calle cruzada norte");
             Assert.IsTrue(T.Pasa(r, new Vector3(-120f, 0f, 215f)));
-            Assert.IsTrue(T.Pasa(r, new Vector3(-270f, 10f, 250f)), "T-1362: se une al tablero junto al túnel");
-            Assert.IsTrue(T.Pasa(T.Principal(), new Vector3(-270f, 10f, 250f)), "la autopista tiene el punto de unión");
+            Assert.IsTrue(T.Pasa(r, new Vector3(-300f, 10f, 250f)), "T-1362: se une al tablero junto al túnel");
+            Assert.IsTrue(T.Pasa(T.Principal(), new Vector3(-300f, 10f, 250f)), "la autopista tiene el punto de unión");
         }
 
         [Test]
@@ -156,6 +156,33 @@ namespace MechaCyberpunk.Tests.Mundo
                 {
                     Assert.AreEqual(0f, r[i].y, 0.0001f, "a ras en los primeros " + T.TramoRasante + " m");
                 }
+            }
+        }
+
+        [Test]
+        public void Rampa_LlegaA10MetrosAntesDeQueSuBordeToqueElTablero()
+        {
+            foreach (Vector3 v in T.RampaNorte())
+            {
+                // El borde norte de la rampa (7.2 m de medio ancho, giro máx. ~40 grados) toca el tablero cuando su centro pasa de z ~ 237: ahí ya va a 10 m.
+                if (v.z >= 238f)
+                {
+                    Assert.AreEqual(10f, v.y, 0.01f, "rampa a la altura del tablero en " + v);
+                }
+            }
+        }
+
+        [Test]
+        public void Subtramo_RecortaLaBanquetaDeLaCalleQueCruza()
+        {
+            List<Vector3> conector = T.ConectorEste();
+            List<Vector3> banq = T.Subtramo(conector, T.CorteBanquetaEnCruce, T.Longitud(conector) - 3f);
+            Assert.AreEqual(290f, banq[0].x, 0.01f, "la banqueta del conector arranca fuera del arroyo de la calle este (x 293 a 307)");
+            Assert.AreEqual(252f, banq[banq.Count - 1].x, 0.01f);
+            Assert.AreEqual(T.Longitud(conector) - T.CorteBanquetaEnCruce - 3f, T.Longitud(banq), 0.05f);
+            foreach (Vector3 v in banq)
+            {
+                Assert.AreEqual(0f, v.z, 0.0001f);
             }
         }
 
