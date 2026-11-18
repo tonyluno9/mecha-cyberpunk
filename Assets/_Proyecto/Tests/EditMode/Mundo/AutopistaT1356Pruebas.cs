@@ -64,10 +64,57 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Uniones_U7RampaNorte_PasaPorSusPuntos()
         {
             List<Vector3> r = T.RampaNorte();
-            Assert.IsTrue(T.Pasa(r, new Vector3(-107f, 0f, 201f)));
+            Assert.IsTrue(T.Pasa(r, new Vector3(-107f, 0f, 201f)), "sigue unida a la calle cruzada norte");
             Assert.IsTrue(T.Pasa(r, new Vector3(-120f, 0f, 215f)));
-            Assert.IsTrue(T.Pasa(r, new Vector3(30f, 10f, 250f)));
-            Assert.IsTrue(T.Pasa(T.Principal(), new Vector3(30f, 10f, 250f)), "la autopista tiene el punto de unión");
+            Assert.IsTrue(T.Pasa(r, new Vector3(-270f, 10f, 250f)), "T-1362: se une al tablero junto al túnel");
+            Assert.IsTrue(T.Pasa(T.Principal(), new Vector3(-270f, 10f, 250f)), "la autopista tiene el punto de unión");
+        }
+
+        [Test]
+        public void CalleBaja_SaleLaRampaDeElla_YVaParalelaAlTablero()
+        {
+            List<Vector3> baja = T.CalleBaja();
+            Assert.IsTrue(T.Pasa(baja, T.U7Enlace), "la calle baja termina en el enlace donde arranca la rampa");
+            Assert.IsTrue(T.Pasa(T.RampaNorte(), T.U7Enlace));
+            foreach (Vector3 v in baja)
+            {
+                Assert.AreEqual(0f, v.y, 0.0001f, "a ras del piso");
+                Assert.AreEqual(T.ZCalleBaja, v.z, 0.0001f, "paralela al tablero (z constante) y al sur de él");
+                Assert.Less(v.z, T.ZTablero - T.MedioTableroPlanta - 10f);
+            }
+            Assert.LessOrEqual(T.PendienteMax(baja), T.PendienteMaxima);
+        }
+
+        [Test]
+        public void Rampa_SubeAlOeste_ConPendienteEntre6Y9PorCiento()
+        {
+            List<Vector3> r = T.RampaNorte();
+            Assert.Less(r[r.Count - 1].x, r[1].x, "sube hacia el oeste");
+            Assert.LessOrEqual(T.PendienteMax(r), 0.09f);
+            Assert.GreaterOrEqual(T.PendienteMax(r), 0.06f);
+        }
+
+        [Test]
+        public void Casas_NingunaAMenosDe8MetrosDelBordeDelTablero()
+        {
+            foreach (List<Vector3> linea in new[] { T.Principal(), T.RampaNorte(), T.Tunel() })
+            {
+                foreach (Vector3 v in T.Resamplear(linea, 2f))
+                {
+                    foreach (var huella in T.HuellasCasas)
+                    {
+                        float borde = T.DistanciaAHuella(v, huella) - T.MedioTableroPlanta;
+                        Assert.GreaterOrEqual(borde, T.SeparacionCasasTablero, "casa a " + borde + " m del borde del tablero en " + v);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void Casas_LasDelSurDeLaCalleBajaQuedanAlSurDeSuAsfalto()
+        {
+            var oeste = T.HuellasCasas[0];
+            Assert.Less(oeste.z1, T.ZCalleBaja - 7f, "el asfalto empieza 7 m al sur de la línea de la calle baja");
         }
 
         [Test]
