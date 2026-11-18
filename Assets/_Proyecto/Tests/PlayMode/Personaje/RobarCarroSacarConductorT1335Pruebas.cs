@@ -5,6 +5,7 @@ using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Trafico.Calle;
 using MechaCyberpunk.Trafico.Datos;
+using MechaCyberpunk.Trafico.Persecucion;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;

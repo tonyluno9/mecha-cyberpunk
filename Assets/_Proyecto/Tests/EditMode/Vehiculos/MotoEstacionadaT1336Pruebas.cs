@@ -57,7 +57,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
-        public void Ciudad_CadaMotoEstacionada_TieneDiezMetrosLibresAlFrente()
+        public void Ciudad_CadaMotoEstacionada_NoTieneNadaQueLaAtoreAlFrente()
         {
             SceneSetup[] antes = EditorSceneManager.GetSceneManagerSetup();
             try
@@ -67,7 +67,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Assert.IsNotEmpty(motos, "La ciudad trae al menos una moto estacionada");
                 foreach (var m in motos)
                 {
-                    Assert.IsTrue(MotoEstacionadaT1336.AdelanteLibre(m.transform, out string choque), m.name + " tiene por delante: " + choque);
+                    Assert.IsTrue(MotoEstacionadaT1336.AdelanteLibre(m.transform, MotoEstacionadaT1336.MetrosQueAtoran, out string choque), m.name + " tiene por delante: " + choque);
                 }
             }
             finally

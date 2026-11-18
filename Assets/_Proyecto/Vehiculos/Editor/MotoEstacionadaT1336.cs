@@ -16,18 +16,22 @@ namespace MechaCyberpunk.Vehiculos.Editor
     {
         public const string RutaCiudad = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         public const float MetrosLibres = 10f;
+        /// <summary>Lo que de verdad atora: algo a menos de esto al frente (a 7 m de un carro la moto sale bien al robarla).</summary>
+        public const float MetrosQueAtoran = 4f;
         private const float AltoInferior = 0.35f;
         private const float AltoSuperior = 1.4f;
         private const float MedioAncho = 0.5f;
         private const float AdelanteDelCentro = 1.15f;
 
         /// <summary>True si hay <see cref="MetrosLibres"/> sin nada por delante del morro de la moto (ignora sus propios colliders y los triggers).</summary>
-        public static bool AdelanteLibre(Transform moto, out string choque)
+        public static bool AdelanteLibre(Transform moto, out string choque) => AdelanteLibre(moto, MetrosLibres, out choque);
+
+        public static bool AdelanteLibre(Transform moto, float metros, out string choque)
         {
             Physics.SyncTransforms();
             float medioAlto = (AltoSuperior - AltoInferior) * 0.5f;
             Vector3 origen = moto.position + Vector3.up * (AltoInferior + medioAlto) + moto.forward * AdelanteDelCentro;
-            RaycastHit[] golpes = Physics.BoxCastAll(origen, new Vector3(MedioAncho, medioAlto, 0.05f), moto.forward, moto.rotation, MetrosLibres,
+            RaycastHit[] golpes = Physics.BoxCastAll(origen, new Vector3(MedioAncho, medioAlto, 0.05f), moto.forward, moto.rotation, metros,
                 Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
             choque = null;
             float mejor = float.MaxValue;
@@ -75,9 +79,9 @@ namespace MechaCyberpunk.Vehiculos.Editor
             foreach (CarroEstacionado moto in Motos())
             {
                 Transform t = moto.transform;
-                if (AdelanteLibre(t, out string choque))
+                if (AdelanteLibre(t, MetrosQueAtoran, out string choque))
                 {
-                    Debug.Log("[Vehiculos] T-1336: " + moto.name + " ya tiene " + MetrosLibres + " m libres.");
+                    Debug.Log("[Vehiculos] T-1336: " + moto.name + " no tiene nada a menos de " + MetrosQueAtoran + " m al frente.");
                     continue;
                 }
                 Vector3 origen = t.position;
@@ -85,7 +89,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 bool puesta = false;
                 foreach (float corrimiento in corrimientos)
                 {
-                    foreach (float vuelta in new[] { 0f, 180f })
+                    foreach (float vuelta in new[] { 0f, 180f, 90f, 270f })
                     {
                         Quaternion rotacion = giro * Quaternion.Euler(0f, vuelta, 0f);
                         t.SetPositionAndRotation(origen + rotacion * Vector3.forward * corrimiento, rotacion);
