@@ -982,6 +982,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float ZFinOrillaLejana = -700f;
         private const float XOesteOrillaLejana = -700f;
         private const float XEsteOrillaLejana = 330f;
+        private const float AltoPisoLejano = 12f;
         private static readonly Color[] ColoresOrillaLejana =
         {
             new Color(1f, 0.55f, 0.2f), new Color(0.1f, 0.95f, 0.88f), new Color(1f, 0.2f, 0.78f), new Color(1f, 0.55f, 0.2f), new Color(0.35f, 0.5f, 1f),
@@ -1058,7 +1059,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>
-        /// K11 (izquierda) y K12 (fondo): una ciudad iluminada al otro lado del agua. Torres de caja (un cuerpo y un remate más angosto) con un material
+        /// K11 (izquierda) y K12 (fondo): una ciudad iluminada al otro lado del agua. Torres del kit T20-T23 (como las de Neón Alto) con un material
         /// propio de ventanas encendidas (textura generada, emisión HDR x2.5, ventanas de 1.5 m), pantallas grandes magenta y turquesa en 7 torres, luz roja
         /// en cada azotea, 3 haces verticales tenues (HaloLuz) y una franja de luces cálidas en la orilla que el shader del mar vuelve estelas.
         /// Sin colliders ni sombras; encima, pocas luces puntuales fuertes en la base.
@@ -1081,7 +1082,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             Texture2D ventanas = TexturaVentanasLejanas();
-            Material matVentanas = MatBrillo("T1363b_VentanasLejanas", new Color(2.5f, 2.5f, 2.5f, 1f), ventanas);
+            MatBrillo("T1363b_VentanasLejanas", new Color(2.5f, 2.5f, 2.5f, 1f), ventanas);
             Material matRojo = MatBrillo("T1363b_LuzRoja", new Color(4f, 0.15f, 0.1f, 1f), null);
             Material matMagenta = MatBrillo("T1363b_PantallaMagenta", new Color(3.8f, 0.5f, 3f, 1f), null);
             Material matTurquesa = MatBrillo("T1363b_PantallaTurquesa", new Color(0.4f, 3.6f, 3.4f, 1f), null);
@@ -1102,6 +1103,15 @@ namespace MechaCyberpunk.Arte.Editor
             int pantallas = 0;
             int haces = 0;
             Quaternion sinGiro = Quaternion.identity;
+            GameObject t20 = KitS2c.Prefab("T20");
+            GameObject t21 = KitS2c.Prefab("T21");
+            GameObject t22 = KitS2c.Prefab("T22");
+            GameObject t23 = KitS2c.Prefab("T23");
+            if (t20 == null || t21 == null || t22 == null || t23 == null)
+            {
+                faltan.Add("Torres T20-T23 de Neón Alto (Assets/Arte/Exteriores/Prefabs)");
+                return;
+            }
             for (float x = -330f; x <= 270f; x += azar.Next(20, 36))
             {
                 float ancho = 16f + (float)azar.NextDouble() * 18f;
@@ -1110,13 +1120,32 @@ namespace MechaCyberpunk.Arte.Editor
                 float z = ZOrillaLejana - 22f - (float)azar.NextDouble() * 85f;
                 Transform torre = new GameObject("Torre_" + torres).transform;
                 torre.SetParent(grupo, false);
-                torre.position = new Vector3(x, 1f, z);
-                // Cuerpo y remate más angosto (silueta escalonada); el UV va en metros: cada ventana mide 1.5 m.
-                float altoRemate = alto * (0.15f + 0.2f * (float)azar.NextDouble());
-                SinSombra(KitS2c.Losa(o, torre, "Cuerpo", new Vector3(x, 1f + alto * 0.5f, z), sinGiro, new Vector3(ancho, alto, fondo), matVentanas, MetrosVentana * CeldasVentanas, false));
-                float anchoRemate = ancho * 0.6f;
-                SinSombra(KitS2c.Losa(o, torre, "Remate", new Vector3(x, 1f + alto + altoRemate * 0.5f, z), sinGiro, new Vector3(anchoRemate, altoRemate, fondo * 0.6f), matVentanas, MetrosVentana * CeldasVentanas, false));
-                float cima = 1f + alto + altoRemate;
+                torre.position = new Vector3(x, 0.8f, z);
+                // Las piezas del kit de Neón Alto (T-541): base T20, pisos T21 con alguna pantalla T22 y remate T23, escaladas a la planta y a la altura.
+                // Sus renderers llevan el material de ventanas encendidas (con el tiling de la planta de la torre).
+                int pisos = Mathf.Max(1, Mathf.RoundToInt((alto - ColocarT541.AltoBase - ColocarT541.AltoRemate) / AltoPisoLejano));
+                float y = TramoLejano(torre, t20, "Base", 0f, ColocarT541.AltoBase, ancho, fondo);
+                bool ultimaPantalla = false;
+                for (int i = 0; i < pisos; i++)
+                {
+                    bool pantalla = !ultimaPantalla && i > 0 && azar.NextDouble() < 0.3;
+                    y = TramoLejano(torre, pantalla ? t22 : t21, pantalla ? "PisoPantalla" : "Piso", y, AltoPisoLejano, ancho, fondo);
+                    ultimaPantalla = pantalla;
+                }
+                y = TramoLejano(torre, t23, "Remate", y, ColocarT541.AltoRemate, ancho, fondo);
+                // La cara de pantallas del kit (la -Z del modelo) mira al norte. Se gira antes de agregar lo demás (que va en coordenadas del mundo).
+                torre.rotation = Quaternion.LookRotation(Vector3.back, Vector3.up);
+                foreach (Renderer r in torre.GetComponentsInChildren<Renderer>(true))
+                {
+                    Vector3 tam = r.bounds.size;
+                    Material[] ms = new Material[r.sharedMaterials.Length];
+                    for (int k = 0; k < ms.Length; k++)
+                    {
+                        ms[k] = MatVentanasConTiling(ventanas, Mathf.Max(tam.x, tam.z), tam.y);
+                    }
+                    r.sharedMaterials = ms;
+                }
+                float cima = 1f + y;
                 // Luz roja de aviso en la azotea.
                 SinSombra(KitS2c.Losa(o, torre, "LuzRoja", new Vector3(x, cima + 1.2f, z), sinGiro, new Vector3(1.6f, 2.4f, 1.6f), matRojo, 4f, false));
                 // Pantalla grande en la cara que mira al norte (a la avenida), pegada a la fachada, en una de cada 3 torres, hasta 8.
@@ -1151,6 +1180,45 @@ namespace MechaCyberpunk.Arte.Editor
             }
             ColocarS2.Informe.AppendLine("Otra orilla (z " + ZOrillaLejana + " a " + ZFinOrillaLejana + "): " + torres + " torres con ventanas emisivas Unlit, "
                 + pantallas + " pantallas, " + haces + " haces, " + grupo.GetComponentsInChildren<Light>(true).Length + " luces");
+        }
+
+        /// <summary>
+        /// Material de ventanas con el tiling de una pieza: se supone que la UV del modelo recorre 0 a 1 la cara (ancho x alto); la textura cubre 48 m
+        /// (32 ventanas de 1.5 m), así que el tiling es medida / 48. Se agrupa de a 0.05 para no hacer un material por pieza.
+        /// </summary>
+        private static Material MatVentanasConTiling(Texture2D ventanas, float ancho, float alto)
+        {
+            float cubre = MetrosVentana * CeldasVentanas;
+            float tx = Mathf.Max(0.05f, Mathf.Round(ancho / cubre * 20f) / 20f);
+            float ty = Mathf.Max(0.05f, Mathf.Round(alto / cubre * 20f) / 20f);
+            return KitS2c.Mat("T1363b_Ventanas_" + tx.ToString("F2") + "x" + ty.ToString("F2"), () =>
+            {
+                Material m = new Material(MatBrillo("T1363b_VentanasLejanas", new Color(2.5f, 2.5f, 2.5f, 1f), ventanas));
+                m.mainTextureScale = new Vector2(tx, ty);
+                return m;
+            });
+        }
+
+        /// <summary>Una pieza de torre lejana: llena la planta, sin colliders ni sombras (como Pieza de T-541).</summary>
+        private static float TramoLejano(Transform torre, GameObject prefab, string nombre, float y, float alto, float ancho, float fondo)
+        {
+            GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab, torre);
+            g.name = nombre;
+            g.transform.localRotation = Quaternion.identity;
+            g.transform.localScale = Vector3.one;
+            Bounds b = ArteT250.Limites(g);
+            g.transform.localScale = new Vector3(ancho / Mathf.Max(0.01f, b.size.x), alto / Mathf.Max(0.01f, b.size.y), fondo / Mathf.Max(0.01f, b.size.z));
+            g.transform.localPosition = new Vector3(0f, y, 0f);
+            foreach (Collider c in g.GetComponentsInChildren<Collider>(true))
+            {
+                c.enabled = false;
+            }
+            foreach (Renderer r in g.GetComponentsInChildren<Renderer>(true))
+            {
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                r.receiveShadows = false;
+            }
+            return y + alto;
         }
 
         /// <summary>Quita sombras (emitir y recibir) y deja el MeshRenderer del objeto listo; devuelve el renderer.</summary>
