@@ -13,13 +13,9 @@ namespace MechaCyberpunk.Arte.Editor
         public const float X0 = -480f;
         public const float Z0 = -170f;
         public const float Celda = 4f;
-        public const int CeldasX = 46;
+        public const int CeldasX = 42;
         public const int CeldasZ = 97;
-        public const float MetrosUv = 6f;
-        public const float HuecoXMin = -366f;
-        public const float HuecoXMax = -354f;
-        public const float HuecoZMin = 185f;
-        public const float HuecoZMax = 193f;
+        public const float MetrosUv = 4f;
         private const float AltoLomaTunel = 20f;
 
         /// <summary>Una fuente de altura: puntos con su altura de piso, a qué distancia se queda plana y cómo se mezcla.</summary>
@@ -46,9 +42,9 @@ namespace MechaCyberpunk.Arte.Editor
         public static float Base(float x, float z)
         {
             float t = Mathf.Clamp01((CerroT1355Trazado.XBase - x) / 150f);
-            float h = 40f * Suave(t);
+            float h = 30f * Suave(t);
             float oeste = Mathf.Max(0f, -450f - x);
-            h += oeste * 0.8f;
+            h += oeste * 0.5f;
             if (oeste > 0f)
             {
                 h += 2.5f * Mathf.Sin(z * 0.07f + x * 0.11f) * Mathf.Min(1f, oeste / 10f);
@@ -116,48 +112,80 @@ namespace MechaCyberpunk.Arte.Editor
             return pesosP > 0f ? Mathf.Lerp(h, sumaP / pesosP, mejorP) : h;
         }
 
-        /// <summary>La malla del terreno. Los cuadros cuyo centro cae en el hueco de la salida del túnel no llevan triángulos.</summary>
+        /// <summary>
+        /// La malla del terreno con UV de mundo en las tres direcciones (4 m por repetición): cada triángulo toma el plano
+        /// (x,z), (z,y) o (x,y) según hacia dónde mira, así los taludes no estiran la textura. Normales suaves de la rejilla.
+        /// </summary>
         public static Mesh Malla(IList<Fuente> fuentes, IList<Plataforma> plataformas)
         {
             int nx = CeldasX + 1, nz = CeldasZ + 1;
-            Vector3[] v = new Vector3[nx * nz];
-            Vector2[] uv = new Vector2[nx * nz];
+            float[,] h = new float[nx, nz];
             for (int j = 0; j < nz; j++)
             {
                 for (int i = 0; i < nx; i++)
                 {
-                    float x = X0 + i * Celda, z = Z0 + j * Celda;
-                    v[j * nx + i] = new Vector3(x, Altura(x, z, fuentes, plataformas), z);
-                    uv[j * nx + i] = new Vector2(x / MetrosUv, z / MetrosUv);
+                    h[i, j] = Altura(X0 + i * Celda, Z0 + j * Celda, fuentes, plataformas);
                 }
             }
+            Vector3[] normales = new Vector3[nx * nz];
+            for (int j = 0; j < nz; j++)
+            {
+                for (int i = 0; i < nx; i++)
+                {
+                    float dx = h[Mathf.Max(i - 1, 0), j] - h[Mathf.Min(i + 1, nx - 1), j];
+                    float dz = h[i, Mathf.Max(j - 1, 0)] - h[i, Mathf.Min(j + 1, nz - 1)];
+                    normales[j * nx + i] = new Vector3(dx, 2f * Celda, dz).normalized;
+                }
+            }
+            List<Vector3> v = new List<Vector3>();
+            List<Vector3> n = new List<Vector3>();
+            List<Vector2> uv = new List<Vector2>();
             List<int> t = new List<int>();
             for (int j = 0; j < CeldasZ; j++)
             {
                 for (int i = 0; i < CeldasX; i++)
                 {
-                    float cx = X0 + (i + 0.5f) * Celda, cz = Z0 + (j + 0.5f) * Celda;
-                    if (EnHueco(cx, cz))
+                    int[] ci = { i, i, i + 1, i + 1 };
+                    int[] cj = { j, j + 1, j, j + 1 };
+                    // 0 = (i,j), 1 = (i,j+1), 2 = (i+1,j), 3 = (i+1,j+1): triángulos (0,1,2) y (2,1,3).
+                    foreach (int[] tri in new[] { new[] { 0, 1, 2 }, new[] { 2, 1, 3 } })
                     {
-                        continue;
+                        Vector3 a = new Vector3(X0 + ci[tri[0]] * Celda, h[ci[tri[0]], cj[tri[0]]], Z0 + cj[tri[0]] * Celda);
+                        Vector3 b = new Vector3(X0 + ci[tri[1]] * Celda, h[ci[tri[1]], cj[tri[1]]], Z0 + cj[tri[1]] * Celda);
+                        Vector3 c = new Vector3(X0 + ci[tri[2]] * Celda, h[ci[tri[2]], cj[tri[2]]], Z0 + cj[tri[2]] * Celda);
+                        Vector3 cara = Vector3.Cross(b - a, c - a);
+                        Vector3 abs = new Vector3(Mathf.Abs(cara.x), Mathf.Abs(cara.y), Mathf.Abs(cara.z));
+                        int eje = abs.y >= abs.x && abs.y >= abs.z ? 1 : (abs.x >= abs.z ? 0 : 2);
+                        for (int k = 0; k < 3; k++)
+                        {
+                            Vector3 p = k == 0 ? a : (k == 1 ? b : c);
+                            t.Add(v.Count);
+                            v.Add(p);
+                            n.Add(normales[cj[tri[k]] * nx + ci[tri[k]]]);
+                            uv.Add(UvMundo(p, eje));
+                        }
                     }
-                    int v00 = j * nx + i, v10 = v00 + 1, v01 = v00 + nx, v11 = v01 + 1;
-                    t.AddRange(new[] { v00, v01, v10, v10, v01, v11 });
                 }
             }
             Mesh m = new Mesh { name = "T1355_Terreno" };
             m.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-            m.vertices = v;
-            m.uv = uv;
-            m.triangles = t.ToArray();
-            m.RecalculateNormals();
+            m.SetVertices(v);
+            m.SetNormals(n);
+            m.SetUVs(0, uv);
+            m.SetTriangles(t, 0);
             m.RecalculateBounds();
             return m;
         }
 
-        public static bool EnHueco(float x, float z)
+        /// <summary>UV de mundo de un punto: eje 1 (mira arriba) usa (x, z); eje 0 usa (z, y); eje 2 usa (x, y).</summary>
+        public static Vector2 UvMundo(Vector3 p, int eje)
         {
-            return x >= HuecoXMin && x <= HuecoXMax && z >= HuecoZMin && z <= HuecoZMax;
+            switch (eje)
+            {
+                case 0: return new Vector2(p.z, p.y) / MetrosUv;
+                case 2: return new Vector2(p.x, p.y) / MetrosUv;
+                default: return new Vector2(p.x, p.z) / MetrosUv;
+            }
         }
 
         // ---------------------------------------------------------------- Cintas de calle

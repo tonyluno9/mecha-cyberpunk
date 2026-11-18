@@ -21,6 +21,6 @@ Las cuentas puras (curva, puntos de unión, espaciado) están en `ColocarT1354Cu
 ## Decisiones
 - El faro va al final este (plan); K12 lo ve al oeste, así que la toma de K12 mira al este-sureste (espejo).
 - U3: los puntos del plano obligan a girar ~68 grados en 40 m; su radio mínimo queda ~19 m (las demás calles piden 40).
-- El haz del faro es un Spot fijo: girarlo necesita un componente de runtime (fuera de las carpetas de esta tarea).
+- Ronda 2: sin tope de Light (faroles con spot de sodio como ColocarS2oLuz, postes, focos y neones con su luz); playa de 30 m con el agua por debajo hasta el muro; fachadas de 3-5 pisos con cortinas, neones y aires; postes a los dos lados con cables cruzando; muelle largo con 6 lanchas; faro sobre montículo de rocas con haz aditivo (HaloLuz) que gira con GiroHazFaro (Mundo/Ambiente); cruces U1/U2 libres 16 m; mar de x -700 a 330 (el este es del Puerto). Encuadres de fotos nuevos. Balcones: no hay pieza en el kit.
 - La arena usa color liso porque no hay material de T04_Arena en Assets.
 - Skyline: no se pudo comprobar sin Unity.

@@ -95,6 +95,8 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         t.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
                         t.localScale = Vector3.one * escala;
+                        // Sobre el mar (sur y este) el panel se veía como un muro oscuro en el cielo: se apaga; el horizonte queda en la niebla.
+                        t.gameObject.SetActive(prefijo == "Tramo_0" || prefijo == "Tramo_3");
                         ColocarS2.Informe.AppendLine("Fondo T513 " + t.name + " escala " + escala);
                     }
                 }

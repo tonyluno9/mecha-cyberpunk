@@ -20,7 +20,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float AnchoCalle = 9f;
         public const float AnchoBanqueta = 1.5f;
         /// <summary>Pendiente (m de subida por m de calle) del zigzag después de la salida del túnel.</summary>
-        public const float PendienteSubida = 0.072f;
+        public const float PendienteSubida = 0.05f;
         public const float PendienteMaxima = 0.09f;
         public const float RadioMinimo = 25f;
         public const float PasoMuestra = 2f;
@@ -219,7 +219,8 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 if (!puesto)
                 {
-                    throw new InvalidOperationException("T-1355: no hay escalón posible en la casa " + i + " (ensancha [eMin, eMax])");
+                    // Sin escalón dentro del rango (la calle sube más de lo que cabe): se acerca lo más posible; esa casa no se trepa desde la vecina.
+                    e[i] = Math.Max(eMin, Math.Min(eMax, e[i - 1] + signo * magnitud - cambio));
                 }
             }
             return e;

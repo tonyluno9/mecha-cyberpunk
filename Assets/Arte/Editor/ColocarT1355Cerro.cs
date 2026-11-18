@@ -33,9 +33,18 @@ namespace MechaCyberpunk.Arte.Editor
         public const string CarpetaModulos = "Assets/Arte/ZonasModulos/Prefabs/";
         public const string CarpetaTripo = "Assets/Arte/Zonas";
 
-        public const int MaximoLuces = 10;
-        public const int LucesDePostes = 7;
+        public const float IntensidadPoste = 140f;
+        public const float AlcancePoste = 16f;
+        public const float AnchoU4 = 14f;
+        public const float EscalonTerrazaMax = 2.8f;
         public const float Fondo = 8f;
+        public static readonly string[] CodigosCasaTripo = { "CC01_CasaCerro", "CC02_CasaCerro" };
+        public const float ProbabilidadTripo = 0.35f;
+        public static readonly Color[] Tintes =
+        {
+            new Color(0.38f, 0.58f, 0.46f), new Color(0.82f, 0.48f, 0.28f), new Color(0.8f, 0.5f, 0.56f),
+            new Color(0.35f, 0.62f, 0.62f), new Color(0.72f, 0.62f, 0.4f),
+        };
         public const float FachadaDesdeEje = Trazado.AnchoCalle * 0.5f + Trazado.AnchoBanqueta + 0.5f;
         public const float AltoBanqueta = 0.2f;
         public const float BajaPisoCalle = 0.12f;
@@ -47,10 +56,10 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly float[] ZEscaleras = { 120f, 60f, 0f };
 
         // Tomas de revisión: K13 (en la calle, mirando cuesta arriba con las escaleras al centro) y A13 (aérea).
-        public static readonly Vector3 K13Desde = new Vector3(-303f, 2.7f, 60f);
+        public static readonly Vector3 K13Desde = new Vector3(-308.5f, 1.9f, 60f);
         public static readonly Vector3 K13Hacia = new Vector3(-352f, 17.5f, 60f);
-        public static readonly Vector3 A13Desde = new Vector3(-283f, 62f, 14f);
-        public static readonly Vector3 A13Hacia = new Vector3(-372f, 14f, 66f);
+        public static readonly Vector3 A13Desde = new Vector3(-292f, 50f, -95f);
+        public static readonly Vector3 A13Hacia = new Vector3(-372f, 12f, 60f);
 
         private sealed class Fila
         {
@@ -62,6 +71,7 @@ namespace MechaCyberpunk.Arte.Editor
             public float EMin;
             public float EMax;
             public bool Escalable;
+            public float Fondo = ColocarT1355Cerro.Fondo;
         }
 
         private sealed class CasaPlan
@@ -73,6 +83,8 @@ namespace MechaCyberpunk.Arte.Editor
             public float Alto;
             public float E;
             public KitS2c.Estilo Estilo;
+            public GameObject Tripo;
+            public float Escala = 1f;
             public int Cadena;
             public float Base => YCalle + E;
         }
@@ -106,6 +118,7 @@ namespace MechaCyberpunk.Arte.Editor
             List<Terreno.Fuente> fuentes = new List<Terreno.Fuente>();
             float semiCalle = Trazado.AnchoCalle * 0.5f + Trazado.AnchoBanqueta + 1f;
             AgregarFuentes(fuentes, calleBase, semiCalle, BajaPisoCalle);
+            float semiU4 = AnchoU4 * 0.5f + Trazado.AnchoBanqueta + 1f;
             AgregarFuentes(fuentes, zigzag, semiCalle, BajaPisoCalle);
             List<Vector3> disco = new List<Vector3>();
             for (float r = 0f; r <= Trazado.RadioPlaza - 2f; r += 6f)
@@ -128,7 +141,7 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             fuentes.Add(new Terreno.Fuente { Puntos = u3.ToArray(), Semiancho = 9f, Baja = BajaPisoCalle + 0.1f });
-            fuentes.Add(new Terreno.Fuente { Puntos = u4.ToArray(), Semiancho = semiCalle, Baja = BajaPisoCalle });
+            fuentes.Add(new Terreno.Fuente { Puntos = u4.ToArray(), Semiancho = semiU4, Baja = BajaPisoCalle });
 
             // ---- Escaleras (datos)
             List<(float z, float yArriba, float yAbajo, float xArriba, float xAbajo, int pasos)> escaleras = new List<(float, float, float, float, float, int)>();
@@ -148,7 +161,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             // ---- Casas (plan puro) y plataformas
-            List<Fila> filas = Filas();
+            List<Fila> filas = Filas(fuentes);
             List<CasaPlan> casas = new List<CasaPlan>();
             foreach (Fila f in filas)
             {
@@ -156,8 +169,8 @@ namespace MechaCyberpunk.Arte.Editor
             }
             List<Terreno.Plataforma> plataformas = casas.Select(c => new Terreno.Plataforma
             {
-                X0 = Mathf.Min(c.Fila.XFachada, c.Fila.XFachada - c.Fila.Normal * Fondo) - 0.3f,
-                X1 = Mathf.Max(c.Fila.XFachada, c.Fila.XFachada - c.Fila.Normal * Fondo) + 0.3f,
+                X0 = Mathf.Min(c.Fila.XFachada, c.Fila.XFachada - c.Fila.Normal * c.Fila.Fondo) - 0.3f,
+                X1 = Mathf.Max(c.Fila.XFachada, c.Fila.XFachada - c.Fila.Normal * c.Fila.Fondo) + 0.3f,
                 Z0 = c.Z - c.Ancho * 0.5f,
                 Z1 = c.Z + c.Ancho * 0.5f,
                 Y = c.Base - 0.05f,
@@ -175,9 +188,9 @@ namespace MechaCyberpunk.Arte.Editor
             // ---- Mallas de calle, banquetas y rayas
             Material asfalto = KitS2c.MatAsfalto();
             Material banqueta = KitS2c.MatBanqueta();
-            Calle(o, callesPadre, "Calle_Base", calleBase, asfalto, banqueta, mallas);
-            Calle(o, callesPadre, "Calle_U4", u4, asfalto, banqueta, mallas);
-            Calle(o, callesPadre, "Calle_Zigzag", zigzag, asfalto, banqueta, mallas);
+            Calle(o, callesPadre, "Calle_Base", calleBase, Trazado.AnchoCalle, asfalto, banqueta, mallas);
+            Calle(o, callesPadre, "Calle_U4", u4, AnchoU4, asfalto, banqueta, mallas);
+            Calle(o, callesPadre, "Calle_Zigzag", zigzag, Trazado.AnchoCalle, asfalto, banqueta, mallas);
 
             // ---- Escaleras de concreto con su barandal
             Material concreto = MaterialTerreno();
@@ -204,9 +217,18 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Vector3 centro = new Vector3(c.Fila.XFachada, c.Base, c.Z);
                 Vector3 normal = new Vector3(c.Fila.Normal, 0f, 0f);
-                float azotea = KitS2c.Casa(o, casasPadre, centro, normal, c.Ancho, Fondo, c.Estilo);
-                Vector3 cuerpo = new Vector3(c.Fila.XFachada - c.Fila.Normal * Fondo * 0.5f, c.Base - 3f - 0.02f, c.Z);
-                KitS2c.Losa(o, casasPadre, "Cimiento", cuerpo, Quaternion.identity, new Vector3(Fondo, 6f, c.Ancho), concreto, 3f, false);
+                float azotea;
+                if (c.Tripo != null)
+                {
+                    azotea = ColocarTripo(casasPadre, c);
+                }
+                else
+                {
+                    azotea = KitS2c.Casa(o, casasPadre, centro, normal, c.Ancho, c.Fila.Fondo, c.Estilo);
+                    Tintar(casasPadre.GetChild(casasPadre.childCount - 1).gameObject, Tintes[o.Azar.Next(Tintes.Length)]);
+                }
+                Vector3 cuerpo = new Vector3(c.Fila.XFachada - c.Fila.Normal * c.Fila.Fondo * 0.5f, c.Base - 6f - 0.02f, c.Z);
+                KitS2c.Losa(o, casasPadre, "Cimiento", cuerpo, Quaternion.identity, new Vector3(c.Fila.Fondo, 12f, c.Ancho), concreto, 3f, false);
                 techos.Add(new Vector3(c.Fila.XFachada, c.Base + azotea, c.Z));
                 int cadenaId = c.Fila.Nombre.GetHashCode() ^ c.Cadena;
                 indiceEnCadena = cadenaId == cadenaPrevia ? indiceEnCadena + 1 : 0;
@@ -229,11 +251,12 @@ namespace MechaCyberpunk.Arte.Editor
             BarandalesPlaza(detallesPadre, huecosPadre, yPlaza);
 
             // ---- CalleZona
-            CrearCalleZona(callesPadre, "CalleZona_Base", calleBase);
-            CrearCalleZona(callesPadre, "CalleZona_U4", u4);
-            CrearCalleZona(callesPadre, "CalleZona_Zigzag", zigzag);
+            CrearCalleZona(callesPadre, "CalleZona_Base", calleBase, Trazado.AnchoCalle);
+            CrearCalleZona(callesPadre, "CalleZona_U4", u4, AnchoU4);
+            CrearCalleZona(callesPadre, "CalleZona_Zigzag", zigzag, Trazado.AnchoCalle);
 
-            int luces = LimitarLuces(o.Raiz);
+            AjustarPostes(postesPadre);
+            int luces = o.Raiz.GetComponentsInChildren<Light>(true).Length;
             MarcarEstatico(o.Raiz, carrosPadre);
             KitS2c.Terminar(o);
             GuardarMallas(mallas);
@@ -244,13 +267,15 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ================================================================ Filas de casas
 
-        private static List<Fila> Filas()
+        private static List<Fila> Filas(List<Terreno.Fuente> fuentes)
         {
             float zNorte = 165f, zSur = -22f;
             float[][] sinEscaleras = { new[] { zNorte, zSur } };
             // Tramos del lado de abajo: se parten donde cruzan las escaleras.
             float[][] conHuecos = TramosConHuecos(zNorte, zSur);
             float[][] conHuecosBase = TramosConHuecos(140f, -105f);
+            Terreno.Plataforma[] sinPlataformas = new Terreno.Plataforma[0];
+            Func<float, Func<float, float>> terrenoEn = x => z => Terreno.Altura(x, z, fuentes, sinPlataformas);
             float xOeste2 = Trazado.XPierna2 - FachadaDesdeEje, xEste2 = Trazado.XPierna2 + FachadaDesdeEje;
             float xOeste3 = Trazado.XPierna3 - FachadaDesdeEje, xEste3 = Trazado.XPierna3 + FachadaDesdeEje;
             return new List<Fila>
@@ -260,6 +285,11 @@ namespace MechaCyberpunk.Arte.Editor
                 new Fila { Nombre = "C_Pierna3_Oeste", XFachada = xOeste3, Normal = 1f, Tramos = new[] { new[] { 8f, -22f } }, YCalle = Trazado.AlturaPierna3, EMin = -0.3f, EMax = 2.8f, Escalable = true },
                 new Fila { Nombre = "E_Pierna3_Este", XFachada = xEste3, Normal = -1f, Tramos = new[] { new[] { 8f, -22f } }, YCalle = Trazado.AlturaPierna3, EMin = -5f, EMax = -1.8f, Escalable = false },
                 new Fila { Nombre = "D_CalleBase_Oeste", XFachada = Trazado.XBase - FachadaDesdeEje, Normal = 1f, Tramos = conHuecosBase, YCalle = z => 0f, EMin = -0.3f, EMax = 2.8f, Escalable = true },
+                // Relleno de la ladera: columnas de casas pegadas de espaldas, cada una sobre su terraza (el cimiento baja hasta el terreno).
+                new Fila { Nombre = "F_Ladera_Este", XFachada = -326.5f, Normal = 1f, Tramos = conHuecosBase, YCalle = terrenoEn(-330.5f), EMin = -0.3f, EMax = EscalonTerrazaMax },
+                new Fila { Nombre = "G_Ladera_Oeste", XFachada = -343.5f, Normal = -1f, Tramos = conHuecosBase, YCalle = terrenoEn(-339.5f), EMin = -0.3f, EMax = EscalonTerrazaMax },
+                new Fila { Nombre = "H_Ladera_Alta1", XFachada = -382.5f, Normal = -1f, Tramos = sinEscaleras, YCalle = terrenoEn(-378.5f), EMin = -0.3f, EMax = EscalonTerrazaMax },
+                new Fila { Nombre = "I_Ladera_Alta2", XFachada = -391f, Normal = 1f, Tramos = sinEscaleras, YCalle = terrenoEn(-395f), EMin = -0.3f, EMax = EscalonTerrazaMax },
             };
         }
 
@@ -295,13 +325,28 @@ namespace MechaCyberpunk.Arte.Editor
                         ancho = cursor - fin;
                     }
                     KitS2c.Estilo estilo = KitS2c.EstiloAlAzar(o);
-                    estilo.Pisos = 2;
-                    estilo.Foco = false;
-                    estilo.Neon = o.Chance(0.3f) ? (o.Chance(0.5f) ? KitS2c.Magenta : KitS2c.Turquesa) : (Color?)null;
+                    estilo.Pisos = o.Chance(0.4f) ? 3 : 2;
                     estilo.Toldo = o.Chance(0.4f);
-                    float alto = KitS2c.Medir(estilo.PlantaBaja).Caja.size.y * KitS2c.EscalaAlto + KitS2c.Medir(estilo.PisoAlto).Caja.size.y * KitS2c.EscalaAlto;
+                    float alto = KitS2c.Medir(estilo.PlantaBaja).Caja.size.y * KitS2c.EscalaAlto + (estilo.Pisos - 1) * KitS2c.Medir(estilo.PisoAlto).Caja.size.y * KitS2c.EscalaAlto;
+                    GameObject tripo = null;
+                    float escala = 1f;
+                    if (o.Chance(ProbabilidadTripo))
+                    {
+                        GameObject candidato = BuscarTripo(CodigosCasaTripo[o.Azar.Next(CodigosCasaTripo.Length)]);
+                        Vector3 tam = candidato == null ? Vector3.zero : TamanoTripo(candidato);
+                        if (tam.x > 0.1f && tam.z > 0.1f)
+                        {
+                            tripo = candidato;
+                            escala = Mathf.Clamp(ancho / tam.x, 0.7f, 1.5f);
+                            if (tam.z * escala > f.Fondo)
+                            {
+                                escala = f.Fondo / tam.z;
+                            }
+                            alto = tam.y * escala;
+                        }
+                    }
                     float z = cursor - ancho * 0.5f;
-                    tramo.Add(new CasaPlan { Fila = f, Z = z, Ancho = ancho, YCalle = f.YCalle(z), Alto = alto, Estilo = estilo, Cadena = cadena });
+                    tramo.Add(new CasaPlan { Fila = f, Z = z, Ancho = ancho, YCalle = f.YCalle(z), Alto = alto, Estilo = estilo, Tripo = tripo, Escala = escala, Cadena = cadena });
                     cursor -= ancho;
                 }
                 if (tramo.Count == 0)
@@ -330,10 +375,10 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        private static void Calle(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> pts, Material asfalto, Material banqueta, List<Mesh> mallas)
+        private static void Calle(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> pts, float ancho, Material asfalto, Material banqueta, List<Mesh> mallas)
         {
             Transform raiz = Hijo(padre, nombre);
-            float mitad = Trazado.AnchoCalle * 0.5f;
+            float mitad = ancho * 0.5f;
             Terreno.Datos a = new Terreno.Datos();
             Terreno.Cinta(a, pts, -mitad, mitad, 0f, 8f);
             Terreno.Datos b = new Terreno.Datos();
@@ -359,12 +404,12 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        private static void CrearCalleZona(Transform padre, string nombre, List<Vector3> pts)
+        private static void CrearCalleZona(Transform padre, string nombre, List<Vector3> pts, float ancho)
         {
             GameObject go = new GameObject(nombre);
             go.transform.SetParent(padre, false);
             CalleZona cz = go.AddComponent<CalleZona>();
-            cz.Definir(pts, Trazado.AnchoCalle, true, false, "Cerro");
+            cz.Definir(pts, ancho, true, false, "Cerro");
         }
 
         // ================================================================ Escaleras, barandales y accesos
@@ -481,7 +526,7 @@ namespace MechaCyberpunk.Arte.Editor
             List<Vector3> postesOeste = new List<Vector3>(), postesEste = new List<Vector3>();
             // Pierna 2: un poste cada 26 m, alternando lados, y cables que cruzan la calle.
             int k = 0;
-            for (float z = 160f; z > -20f; z -= 26f)
+            for (float z = 165f; z > -20f; z -= 16f)
             {
                 float y = Trazado.AlturaPierna2(z) + AltoBanqueta;
                 bool oeste = k % 2 == 0;
@@ -492,7 +537,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             // Calle base (lado oeste) cada 28 m.
             List<Vector3> postesBase = new List<Vector3>();
-            for (float z = -98f; z < 140f; z += 28f)
+            for (float z = -98f; z < 140f; z += 18f)
             {
                 Vector3 pie = new Vector3(Trazado.XBase - lado, AltoBanqueta, z);
                 postesBase.Add(KitS2c.Poste(o, padre, pie, Vector3.right, 0f, true));
@@ -510,6 +555,19 @@ namespace MechaCyberpunk.Arte.Editor
                 float a = Mathf.PI + i * 2f * Mathf.PI / 3f;
                 Vector3 pie = new Vector3(Trazado.CentroPlaza.x + (Trazado.RadioPlaza - lado) * Mathf.Cos(a), yp, Trazado.CentroPlaza.z + (Trazado.RadioPlaza - lado) * Mathf.Sin(a));
                 postesTres.Add(KitS2c.Poste(o, padre, pie, new Vector3(-Mathf.Cos(a), 0f, -Mathf.Sin(a)), yp - AltoBanqueta, false));
+            }
+            // Postes a los lados de cada escalera, uno cada 12 m, para que alumbren los escalones.
+            List<Vector3> postesEscalera = new List<Vector3>();
+            foreach (float zf in ZEscaleras)
+            {
+                float xa = Trazado.XPierna2 + FachadaDesdeEje - 0.5f, xb = Trazado.XBase - FachadaDesdeEje + 0.5f;
+                float lado2 = 1f;
+                for (float x = xa + 8f; x < xb - 4f; x += 12f)
+                {
+                    float y = Mathf.Lerp(Trazado.AlturaPierna2(zf) + AltoBanqueta, AltoBanqueta, (x - xa) / (xb - xa));
+                    postesEscalera.Add(KitS2c.Poste(o, padre, new Vector3(x, y, zf + lado2 * (AnchoEscalera * 0.5f + 0.9f)), new Vector3(0f, 0f, -lado2), y, false));
+                    lado2 = -lado2;
+                }
             }
             foreach (List<Vector3> serie in new[] { postesOeste, postesEste, postesBase, postesTres })
             {
@@ -530,7 +588,7 @@ namespace MechaCyberpunk.Arte.Editor
                     KitS2c.Cable(o, a + Vector3.down * (c * 0.25f), b + Vector3.down * (c * 0.25f), o.Rango(0.8f, 1.3f));
                 }
             }
-            foreach (Vector3 p in postesOeste.Concat(postesEste).Concat(postesBase).Concat(postesTres))
+            foreach (Vector3 p in postesOeste.Concat(postesEste).Concat(postesBase).Concat(postesTres).Concat(postesEscalera))
             {
                 foreach (Vector3 t in techos.OrderBy(t => (t - p).sqrMagnitude).Take(3))
                 {
@@ -601,33 +659,76 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ================================================================ Luces, estáticos, assets
 
-        /// <summary>Deja a lo más <see cref="MaximoLuces"/> Light reales: <see cref="LucesDePostes"/> de postes repartidas y el resto de neones. Devuelve las que quedan.</summary>
-        public static int LimitarLuces(Transform raiz)
+        /// <summary>Lámparas de sodio de los postes: spot cálido de <see cref="IntensidadPoste"/> y alcance <see cref="AlcancePoste"/>.</summary>
+        private static void AjustarPostes(Transform postes)
         {
-            List<Light> luces = raiz.GetComponentsInChildren<Light>(true).ToList();
-            List<Light> deposte = luces.Where(l => l.transform.parent != null && l.transform.parent.name.StartsWith("Poste_")).ToList();
-            List<Light> otras = luces.Except(deposte).ToList();
-            HashSet<Light> quedan = new HashSet<Light>();
-            if (deposte.Count > 0)
+            foreach (Light l in postes.GetComponentsInChildren<Light>(true))
             {
-                float paso = Mathf.Max(1f, deposte.Count / (float)LucesDePostes);
-                for (int i = 0; i < LucesDePostes && Mathf.RoundToInt(i * paso) < deposte.Count; i++)
+                if (l.transform.parent != null && l.transform.parent.name.StartsWith("Poste_"))
                 {
-                    quedan.Add(deposte[Mathf.RoundToInt(i * paso)]);
+                    l.intensity = IntensidadPoste;
+                    l.range = AlcancePoste;
                 }
             }
-            foreach (Light l in otras.Take(MaximoLuces - quedan.Count))
+        }
+
+        /// <summary>Pinta con el tinte el cuerpo y los pisos de color de la casa (bloque de propiedades, sin tocar los materiales).</summary>
+        private static void Tintar(GameObject casa, Color tinte)
+        {
+            MaterialPropertyBlock bloque = new MaterialPropertyBlock();
+            bloque.SetColor("_BaseColor", tinte);
+            foreach (Renderer r in casa.GetComponentsInChildren<Renderer>(true))
             {
-                quedan.Add(l);
-            }
-            foreach (Light l in luces)
-            {
-                if (!quedan.Contains(l))
+                Material m = r.sharedMaterial;
+                if (m != null && (m.name.StartsWith("S2c_Cuerpo_") || m.name.Contains("C03_Fachada") || m.name.Contains("C20")))
                 {
-                    Object.DestroyImmediate(l.gameObject);
+                    r.SetPropertyBlock(bloque);
                 }
             }
-            return quedan.Count;
+        }
+
+        private static readonly Dictionary<string, Vector3> TamanosTripo = new Dictionary<string, Vector3>();
+
+        /// <summary>Tamaño sin girar (x ancho, y alto, z fondo) del prefab de Tripo, medido con sus renderers; cero si no tiene.</summary>
+        private static Vector3 TamanoTripo(GameObject prefab)
+        {
+            if (TamanosTripo.TryGetValue(prefab.name, out Vector3 ya))
+            {
+                return ya;
+            }
+            GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            Renderer[] rs = g.GetComponentsInChildren<Renderer>(true);
+            Vector3 tam = Vector3.zero;
+            if (rs.Length > 0)
+            {
+                Bounds b = rs[0].bounds;
+                foreach (Renderer r in rs)
+                {
+                    b.Encapsulate(r.bounds);
+                }
+                tam = b.size;
+            }
+            Object.DestroyImmediate(g);
+            TamanosTripo[prefab.name] = tam;
+            return tam;
+        }
+
+        /// <summary>Casa de Tripo con el frente (+Z del modelo) a la calle, apoyada en la base y pegada a la línea de fachada. Devuelve su alto.</summary>
+        private static float ColocarTripo(Transform padre, CasaPlan c)
+        {
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(c.Tripo, padre);
+            go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.LookRotation(new Vector3(c.Fila.Normal, 0f, 0f)));
+            go.transform.localScale = Vector3.one * c.Escala;
+            Renderer[] rs = go.GetComponentsInChildren<Renderer>(true);
+            Bounds b = rs[0].bounds;
+            foreach (Renderer r in rs)
+            {
+                b.Encapsulate(r.bounds);
+            }
+            Vector3 destino = new Vector3(c.Fila.XFachada - c.Fila.Normal * b.size.x * 0.5f, c.Base, c.Z);
+            go.transform.position += destino - new Vector3(b.center.x, b.min.y, b.center.z);
+            return b.size.y;
         }
 
         private static void MarcarEstatico(Transform raiz, Transform sinEstatico)
@@ -649,6 +750,11 @@ namespace MechaCyberpunk.Arte.Editor
             Material m = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialTerreno);
             if (m != null)
             {
+                if (m.GetTexture("_BaseMap") == null)
+                {
+                    m.SetColor("_BaseColor", new Color(0.32f, 0.3f, 0.29f));
+                    EditorUtility.SetDirty(m);
+                }
                 return m;
             }
             Texture2D t05 = null;
@@ -661,7 +767,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Material origen = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Proyecto/Mundo/Materiales/Barrio_Concreto.mat");
             m = new Material(origen);
-            m.SetColor("_BaseColor", t05 != null ? Color.white : new Color(0.5f, 0.47f, 0.44f));
+            m.SetColor("_BaseColor", t05 != null ? Color.white : new Color(0.32f, 0.3f, 0.29f));
             if (t05 != null)
             {
                 m.SetTexture("_BaseMap", t05);
