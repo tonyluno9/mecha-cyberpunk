@@ -18,7 +18,8 @@ namespace MechaCyberpunk.UI.Editor
     {
         public const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         public const string RutaPng = "Assets/_Proyecto/UI/Resources/Mapa/MapaCiudad.png";
-        private const string RutaShader = "Assets/_Proyecto/UI/Editor/AlturaMapaT747.shader";
+        private const float LadoMaximoSuelo = 900f;
+        private const string RutaShader ="Assets/_Proyecto/UI/Editor/AlturaMapaT747.shader";
 
         public static void Generar()
         {
@@ -122,7 +123,10 @@ namespace MechaCyberpunk.UI.Editor
         public static bool Cuenta(MeshRenderer r)
         {
             Bounds b = r.bounds;
-            if (b.min.y < -5f || Mathf.Max(b.size.x, b.size.z) > 250f)
+            float lado = Mathf.Max(b.size.x, b.size.z);
+            // T-1352: el suelo plano de las zonas nuevas (Malecón, Autopista) mide más de 250 m; lo alto y gigante (cielo, fondos) sigue fuera.
+            bool sueloPlano = b.size.y < 1.5f && lado <= LadoMaximoSuelo;
+            if (b.min.y < -5f || (lado > 250f && !sueloPlano))
             {
                 return false;
             }

@@ -28,21 +28,49 @@ namespace MechaCyberpunk.UI.Mapa
         /// <summary>Lo que se difumina el color entre un barrio y otro (m).</summary>
         public const float Difuminado = 14f;
 
+        // T-1352: los cuatro barrios viejos conservan su cuadro de siempre (el de la imagen ahora es más grande).
+        private const float ViejoMinX = -200f;
+        private const float ViejoMaxX = 200f;
+        private const float ViejoMinZ = -140f;
+        private const float ViejoMaxZ = 140f;
+
+        /// <summary>Índice del primer barrio de las zonas nuevas (Malecón, Colonia del Cerro, Puerto, Autopista) en <see cref="Todos"/>.</summary>
+        public const int PrimeraZonaNueva = 4;
+
         public static readonly Barrio[] Todos =
         {
-            new Barrio("SUBURBIOS", Rect.MinMaxRect(MapaImagen.MinX, MapaImagen.MinZ, -47f, MapaImagen.MaxZ), new Color(1f, 0.55f, 0.2f), new Vector2(-125f, 120f)),
-            new Barrio("EL MERCADO", Rect.MinMaxRect(-47f, MapaImagen.MinZ, 47f, MapaImagen.MaxZ), new Color(1f, 0.78f, 0.25f), new Vector2(0f, 120f)),
-            new Barrio("NEÓN ALTO", Rect.MinMaxRect(47f, 0f, MapaImagen.MaxX, MapaImagen.MaxZ), new Color(1f, 0.2f, 0.75f), new Vector2(122f, 120f)),
-            new Barrio("NOVA", Rect.MinMaxRect(47f, MapaImagen.MinZ, MapaImagen.MaxX, 0f), new Color(0.25f, 0.55f, 1f), new Vector2(122f, -120f)),
+            new Barrio("SUBURBIOS", Rect.MinMaxRect(ViejoMinX, ViejoMinZ, -47f, ViejoMaxZ), new Color(1f, 0.55f, 0.2f), new Vector2(-125f, 120f)),
+            new Barrio("EL MERCADO", Rect.MinMaxRect(-47f, ViejoMinZ, 47f, ViejoMaxZ), new Color(1f, 0.78f, 0.25f), new Vector2(0f, 120f)),
+            new Barrio("NEÓN ALTO", Rect.MinMaxRect(47f, 0f, ViejoMaxX, ViejoMaxZ), new Color(1f, 0.2f, 0.75f), new Vector2(122f, 120f)),
+            new Barrio("NOVA", Rect.MinMaxRect(47f, ViejoMinZ, ViejoMaxX, 0f), new Color(0.25f, 0.55f, 1f), new Vector2(122f, -120f)),
+            // Zonas nuevas (docs/plan-zonas-18nov.md). Orden = prioridad si dos rectángulos se traslapan.
+            new Barrio("MALECÓN", Rect.MinMaxRect(-330f, -262f, 175f, -205f), new Color(0.15f, 0.5f, 0.9f), new Vector2(-100f, -233f)),
+            new Barrio("COLONIA DEL CERRO", Rect.MinMaxRect(-480f, -170f, -295f, 215f), new Color(0.85f, 0.45f, 0.2f), new Vector2(-388f, 100f)),
+            new Barrio("PUERTO", Rect.MinMaxRect(115f, -250f, 330f, -45f), new Color(0.1f, 0.7f, 0.6f), new Vector2(222f, -110f)),
+            new Barrio("AUTOPISTA", Rect.MinMaxRect(-330f, 235f, 240f, 265f), new Color(0.6f, 0.62f, 0.68f), new Vector2(-45f, 250f)),
         };
 
-        /// <summary>El barrio al que pertenece el punto (x, z): el del rectángulo que lo contiene, o el más cercano.</summary>
+        /// <summary>El nombre de la zona nueva que contiene el punto (x, z), o null si no está en ninguna (el HUD lo usa en lugar del barrio del territorio).</summary>
+        public static string ZonaNuevaEn(Vector2 mundo)
+        {
+            for (int i = PrimeraZonaNueva; i < Todos.Length; i++)
+            {
+                if (Todos[i].Rectangulo.Contains(mundo))
+                {
+                    return Todos[i].Nombre;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>El barrio al que pertenece el punto (x, z): el del rectángulo que lo contiene (las zonas nuevas mandan si se traslapan), o el más cercano.</summary>
         public static int De(Vector2 mundo)
         {
             int mejor = 0;
             float menor = float.MaxValue;
-            for (int i = 0; i < Todos.Length; i++)
+            for (int paso = 0; paso < Todos.Length; paso++)
             {
+                int i = (paso + PrimeraZonaNueva) % Todos.Length;
                 Rect r = Todos[i].Rectangulo;
                 float dx = Mathf.Max(r.xMin - mundo.x, 0f, mundo.x - r.xMax);
                 float dy = Mathf.Max(r.yMin - mundo.y, 0f, mundo.y - r.yMax);
