@@ -86,7 +86,7 @@ namespace MechaCyberpunk.Tests.UI
                 Foto(pantalla.GetComponentInChildren<Canvas>(), "carga-1", false);
             }
             yield return EsperarReal(2f);
-            Assert.Greater(fondo.Fotos.EscalaActual, escala, "la foto se acerca despacio");
+            Assert.AreEqual(escala, fondo.Fotos.EscalaActual, 1e-4f, "T-1330: la foto no se acerca (no se recorta)");
             yield return EsperarReal(ReglaFotosCarga.SegundosPorFoto + ReglaFotosCarga.SegundosFundido - 2f + 0.2f);
             Assert.AreNotSame(primera, fondo.Fotos.FotoActual, "pasó a la siguiente foto");
             if (Capturar)

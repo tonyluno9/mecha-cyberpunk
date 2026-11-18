@@ -42,6 +42,9 @@ namespace MechaCyberpunk.Mundo.Lugares
         private float segundosSinNadie;
         private bool abierta;
 
+        /// <summary>T-1330: mientras sea true la hoja abierta no se cierra sola (la puerta del Doc se queda abierta hasta que entras).</summary>
+        public bool MantenerAbierta { get; set; }
+
         /// <summary>True si la hoja está abierta o abriéndose (el collider ya no estorba).</summary>
         public bool EstaAbierta => abierta;
 
@@ -176,7 +179,7 @@ namespace MechaCyberpunk.Mundo.Lugares
             {
                 return;
             }
-            if (ContarOcupantes() > 0)
+            if (MantenerAbierta || ContarOcupantes() > 0)
             {
                 segundosSinNadie = 0f;
                 return;

@@ -12,6 +12,10 @@ namespace MechaCyberpunk.Mundo.Lugares
     {
         [SerializeField] private IdLugar lugar = IdLugar.Clinica;
         [SerializeField] private HojaPuerta hoja;
+        [Tooltip("T-1330: siempre abierta; se cierra mientras el jugador está dentro del consultorio y vuelve a abrirse al salir.")]
+        [SerializeField] private bool abiertaSalvoDentro = true;
+
+        private bool jugadorDentro;
 
         public IdLugar Lugar => lugar;
         public bool EstaAbierta => hoja.EstaAbierta;
@@ -35,6 +39,13 @@ namespace MechaCyberpunk.Mundo.Lugares
                 hoja.Cambio += AlCambiarHoja;
             }
             Registro<IPuerta>.Agregar(this);
+            EventosLugares.JugadorEntro += AlEntrar;
+            EventosLugares.JugadorSalio += AlSalir;
+        }
+
+        private void Start()
+        {
+            AplicarEstado();
         }
 
         private void OnDisable()
@@ -44,6 +55,47 @@ namespace MechaCyberpunk.Mundo.Lugares
                 hoja.Cambio -= AlCambiarHoja;
             }
             Registro<IPuerta>.Quitar(this);
+            EventosLugares.JugadorEntro -= AlEntrar;
+            EventosLugares.JugadorSalio -= AlSalir;
+        }
+
+        /// <summary>T-1330: true si el jugador está dentro del consultorio (la puerta está cerrada para él).</summary>
+        public bool JugadorDentro => jugadorDentro;
+
+        private void AlEntrar(IdLugar id)
+        {
+            if (id == lugar)
+            {
+                jugadorDentro = true;
+                AplicarEstado();
+            }
+        }
+
+        private void AlSalir(IdLugar id)
+        {
+            if (id == lugar)
+            {
+                jugadorDentro = false;
+                AplicarEstado();
+            }
+        }
+
+        // Fuera: abierta y sin cerrarse sola. Dentro: se cierra (con E se abre para salir y se cierra sola después).
+        private void AplicarEstado()
+        {
+            if (!abiertaSalvoDentro || hoja == null)
+            {
+                return;
+            }
+            hoja.MantenerAbierta = !jugadorDentro;
+            if (jugadorDentro)
+            {
+                hoja.Cerrar();
+            }
+            else
+            {
+                hoja.Abrir();
+            }
         }
 
         public ResultadoPuerta IntentarAbrir()
