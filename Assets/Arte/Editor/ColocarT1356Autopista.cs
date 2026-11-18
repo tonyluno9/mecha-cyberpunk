@@ -19,14 +19,18 @@ namespace MechaCyberpunk.Arte.Editor
     public static class ColocarT1356Autopista
     {
         public const string NombreRaiz = "T1356_Autopista";
-        public const int MaxLuces = 12;
-        public const int LucesTunel = 3;
+        public const float SeparacionLucesTunel = 14f;
+        public const float SeparacionPostes = 22f;
         public const float SeparacionLuminarias = 30f;
         public const float AlturaLuminaria = 9f;
         public const float GruesoTablero = 1.2f;
         public const float AltoParapeto = 0.9f;
         public const float AltoTunel = 6.5f;
         public const float SeparacionLucesTubo = 8f;
+        /// <summary>Cara este del acantilado: 1 m detrás del frente de la boca (x = -330) para que la pieza AU06 no choque con la roca.</summary>
+        public const float CaraAcantiladoX = -331f;
+        public const float AltoAcantilado = 45f;
+        public const float AltoBordeSinTerreno = 25f;
         private const float MedioAsfalto = 6.5f;
         private const float MedioTablero = 7.2f;
         private const string CarpetaModulos = "Assets/Arte/ZonasModulos/Prefabs/";
@@ -70,12 +74,14 @@ namespace MechaCyberpunk.Arte.Editor
             Columnas(o, Hijo(raiz, "Columnas"), new[] { principal, rampaNorte });
             GuardarrailVisual(o, Hijo(raiz, "Guardarrail"), new[] { principal, rampaNorte });
             Luminarias(o, Hijo(raiz, "Luminarias"), new[] { principal, rampaNorte });
+            ApagarEdificioDeLaUnion();
+            Acantilado(o, Hijo(raiz, "Acantilado"));
             Bajo(o, Hijo(raiz, "Bajo"), rampaNorte);
             Fondo(o, Hijo(raiz, "Fondo"));
             Calles(Hijo(raiz, "Calles"), principal, rampaNorte, tunel, calleEste, conector);
 
             KitS2c.Terminar(o);
-            ColocarS2.Informe.AppendLine("Luces reales: " + luces + " (tope " + MaxLuces + ")");
+            ColocarS2.Informe.AppendLine("Luces reales: " + luces);
             ColocarS2.Informe.AppendLine("Huecos: " + (faltan.Count == 0 ? "ninguno" : string.Join(", ", faltan.OrderBy(f => f))));
             ColocarS2.Guardar("t1356-autopista");
         }
@@ -89,9 +95,11 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Abrir();
             Directory.CreateDirectory("docs/capturas/zonas");
             Directory.CreateDirectory("Logs");
-            ColocarS2cLook.Foto(new Vector3(-150f, 1.8f, 198f), new Vector3(-40f, 5f, 236f), "Logs/autopista-k18-juego.png", 58f);
+            // K18: desde la calle del barrio de abajo (1.7 m) mirando al oeste: casas a la izquierda, columnas y autopista a la derecha, túnel en el acantilado al fondo.
+            ColocarS2cLook.Foto(new Vector3(-150f, 1.7f, 216f), new Vector3(-300f, 6f, 222f), "Logs/autopista-k18-juego.png", 58f);
             ColocarS2.LadoALado("imageassets/referencias/look/K18_AutopistaElevada.png", "Logs/autopista-k18-juego.png", "docs/capturas/zonas/autopista-k18.png");
-            ColocarS2cLook.Foto(new Vector3(-90f, 70f, 140f), new Vector3(-250f, 8f, 240f), "Logs/autopista-a18-juego.png", 62f);
+            // A18: aérea ~45 m sobre el barrio hacia el oeste-noroeste: rampa abajo al centro, autopista entrando al túnel del acantilado a la derecha.
+            ColocarS2cLook.Foto(new Vector3(20f, 45f, 198f), new Vector3(-200f, 8f, 212f), "Logs/autopista-a18-juego.png", 62f);
             ColocarS2.LadoALado("imageassets/referencias/look/A18_Autopista_Aerea.png", "Logs/autopista-a18-juego.png", "docs/capturas/zonas/autopista-a18.png");
         }
 
@@ -281,9 +289,10 @@ namespace MechaCyberpunk.Arte.Editor
                 T.PuntoEn(p, largo * (k + 0.5f) / franjas, out Vector3 pt, out Vector3 tg);
                 KitS2c.Losa(o, padre, "LuzTubo_" + k, pt + Vector3.up * (AltoTunel - 0.1f), Quaternion.LookRotation(tg), new Vector3(0.6f, 0.15f, 3f), LuzTubo(), 1f, false);
             }
-            for (int k = 0; k < LucesTunel; k++)
+            int luzTunel = Mathf.Max(3, Mathf.CeilToInt(largo / SeparacionLucesTunel));
+            for (int k = 0; k < luzTunel; k++)
             {
-                T.PuntoEn(p, largo * (k + 0.5f) / LucesTunel, out Vector3 pt, out _);
+                T.PuntoEn(p, largo * (k + 0.5f) / luzTunel, out Vector3 pt, out _);
                 KitS2c.Luz(padre, pt + Vector3.up * (AltoTunel - 0.8f), LightType.Point, new Color(1f, 0.92f, 0.75f), 160f, 24f, 0f);
                 luces++;
             }
@@ -386,7 +395,6 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 todas.AddRange(T.Luminarias(linea, SeparacionLuminarias));
             }
-            int cadaCuantas = Mathf.Max(1, Mathf.CeilToInt(todas.Count / (float)(MaxLuces - LucesTunel)));
             Vector3 tam = Vector3.one;
             Vector3 centro = Vector3.zero;
             float escala = 1f;
@@ -417,64 +425,230 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 Bounds b = go.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((x, y) => { x.Encapsulate(y); return x; });
                 Vector3 cabeza = new Vector3(b.center.x, b.max.y - 0.3f, b.center.z);
-                if (i % cadaCuantas == 0)
-                {
-                    KitS2c.Luz(go.transform, cabeza, LightType.Spot, KitS2c.Calido, KitS2c.IntensidadPoste, 20f, 112f, Vector3.down);
-                    luces++;
-                }
+                KitS2c.Luz(go.transform, cabeza, LightType.Spot, KitS2c.Calido, KitS2c.IntensidadPoste, 20f, 112f, Vector3.down);
+                luces++;
                 KitS2c.Halo(o, go.transform, cabeza, pt.y, KitS2c.Sodio);
             }
         }
 
-        // ---------------------------------------------------------------- Debajo: lote baldío, chatarra, casitas
+        // ---------------------------------------------------------------- Acantilado del cerro
+
+        /// <summary>
+        /// Masa de roca de x -480 a -330 y z 205 a 290 que sube a ~45 m, con la cara este vertical en x = -331 (ahí entra el túnel) y unida por el sur
+        /// al terreno del cerro (altura medida con rayos en z = 205). UV en espacio de mundo, material ZM_Roca y MeshCollider.
+        /// </summary>
+        private static void Acantilado(KitS2c.Obra o, Transform padre)
+        {
+            Physics.SyncTransforms();
+            List<float> xs = new List<float>();
+            for (float x = -480f; x <= -340f; x += 10f)
+            {
+                xs.Add(x);
+            }
+            xs.AddRange(new[] { -335f, CaraAcantiladoX, CaraAcantiladoX + 0.5f });
+            List<float> zs = new List<float>();
+            for (float z = 205f; z <= 290f; z += 5f)
+            {
+                zs.Add(z);
+            }
+            int nx = xs.Count;
+            int nz = zs.Count;
+            float[] borde = new float[nx];
+            for (int i = 0; i < nx; i++)
+            {
+                RaycastHit[] golpes = Physics.RaycastAll(new Vector3(xs[i], 300f, 205f), Vector3.down, 400f);
+                borde[i] = golpes.Length == 0 ? AltoBordeSinTerreno : Mathf.Max(AltoBordeSinTerreno, golpes.Max(g => g.point.y));
+            }
+            List<Vector3> v = new List<Vector3>();
+            List<Vector2> uv = new List<Vector2>();
+            for (int i = 0; i < nx; i++)
+            {
+                for (int j = 0; j < nz; j++)
+                {
+                    float x = xs[i];
+                    float z = zs[j];
+                    float tope = AltoAcantilado + 5f * Mathf.Sin(x * 0.07f) * Mathf.Cos(z * 0.09f);
+                    float t = Mathf.SmoothStep(0f, 1f, (z - 205f) / 25f);
+                    float h = Mathf.Lerp(borde[i], tope, t);
+                    if (i == nx - 1)
+                    {
+                        h = -0.5f;
+                    }
+                    v.Add(new Vector3(x, h, z));
+                    uv.Add(new Vector2(x / 8f, (z + h) / 8f));
+                }
+            }
+            List<int> tris = new List<int>();
+            for (int i = 0; i < nx - 1; i++)
+            {
+                for (int j = 0; j < nz - 1; j++)
+                {
+                    int a = i * nz + j;
+                    int b = a + 1;
+                    int c = a + nz;
+                    int d = c + 1;
+                    tris.AddRange(new[] { a, b, c, b, d, c });
+                }
+            }
+            Mesh m = new Mesh { name = o.Nombre + "_Acantilado", indexFormat = IndexFormat.UInt32 };
+            m.SetVertices(v);
+            m.SetUVs(0, uv);
+            m.SetTriangles(tris, 0);
+            m.RecalculateNormals();
+            m.RecalculateTangents();
+            m.RecalculateBounds();
+            o.Mallas.Add(m);
+            GameObject go = new GameObject("Acantilado");
+            go.transform.SetParent(padre, false);
+            go.AddComponent<MeshFilter>().sharedMesh = m;
+            Material roca = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/ZonasModulos/Materiales/ZM_Roca.mat");
+            go.AddComponent<MeshRenderer>().sharedMaterial = roca != null ? roca : KitS2c.Lit(new Color(0.12f, 0.12f, 0.14f), 0.1f, KitS2c.TexMuro());
+            go.AddComponent<MeshCollider>().sharedMesh = m;
+            GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccluderStatic | StaticEditorFlags.OccludeeStatic);
+        }
+
+        /// <summary>El remate de T530_Afueras/Salida_2 (x -111, z 201 a 215) toca la unión U7: se apaga si pisa el enlace.</summary>
+        private static void ApagarEdificioDeLaUnion()
+        {
+            Transform ed = ColocarS2.Buscar("T530_Afueras/Salida_2/Edificio");
+            if (ed == null)
+            {
+                ColocarS2.Informe.AppendLine("T530_Afueras/Salida_2/Edificio: no está (nada que apagar)");
+                return;
+            }
+            Renderer[] rs = ed.GetComponentsInChildren<Renderer>(true);
+            Collider[] cs = ed.GetComponentsInChildren<Collider>(true);
+            Bounds? caja = null;
+            foreach (Bounds b in rs.Select(r => r.bounds).Concat(cs.Select(c => c.bounds)))
+            {
+                Bounds w = b;
+                if (caja.HasValue)
+                {
+                    w = caja.Value;
+                    w.Encapsulate(b);
+                }
+                caja = w;
+            }
+            bool pisa = caja.HasValue && caja.Value.min.x < -85f && caja.Value.max.x > -135f && caja.Value.min.z < 235f && caja.Value.max.z > 195f;
+            if (pisa)
+            {
+                ed.gameObject.SetActive(false);
+            }
+            ColocarS2.Informe.AppendLine("T530_Afueras/Salida_2/Edificio " + (pisa ? "apagado (tocaba la unión U7): " : "no toca la unión: ") + (caja.HasValue ? caja.Value.ToString() : "sin medidas"));
+        }
+
+        // ---------------------------------------------------------------- Debajo: barrio bajo, chatarra, casitas
 
         private static void Bajo(KitS2c.Obra o, Transform padre, List<Vector3> rampaNorte)
         {
             // Piso de tierra: queda 2 cm bajo el piso de la ciudad, así no compite con el suelo que ya haya.
-            KitS2c.Losa(o, padre, "SueloBaldio", new Vector3(27.5f, -0.52f, 246f), Quaternion.identity, new Vector3(635f, 1f, 86f), Tierra(), 8f, true);
-            string[] basura = { "BS01a_Basura", "BS01b_Basura", "BS01c_Basura", "BS01d_Basura", "BS01e_Basura" };
-            string[] cosas = { "C16_Tambo", "C11_Basurero", "BT01_BoteBasura", "C17_Huacales" };
+            KitS2c.Losa(o, padre, "SueloBaldio", new Vector3(7f, -0.52f, 246f), Quaternion.identity, new Vector3(676f, 1f, 86f), Tierra(), 8f, true);
             List<Vector3> columnas = T.Columnas(rampaNorte);
             columnas.AddRange(T.Columnas(T.Principal()));
+            Transform casas = Hijo(padre, "Casitas");
+            Transform calles = Hijo(padre, "CallesBarrio");
+            Transform postes = Hijo(padre, "Postes");
             Transform chatarra = Hijo(padre, "Chatarra");
-            int puestos = 0;
-            for (int intento = 0; intento < 400 && puestos < 90; intento++)
+            System.Func<int, KitS2c.Estilo> estilo = i =>
             {
-                Vector3 p = new Vector3(o.Rango(-285f, 235f), 0f, o.Rango(206f, 242f));
-                if (Cerca(rampaNorte, p, 14f) || columnas.Any(c => T.Planta(c - p).magnitude < 3f))
+                KitS2c.Estilo e = KitS2c.EstiloAlAzar(o);
+                e.Pisos = o.Chance(0.35f) ? 2 : 1;
+                return e;
+            };
+            // Dos manzanas a los lados de la rampa norte, cada una con su calle (z = 216) entre dos hileras de casitas, con postes y cables.
+            (float x0, float x1)[] bloques = { (-290f, -135f), (40f, 225f) };
+            foreach ((float x0, float x1) in bloques)
+            {
+                KitS2c.Losa(o, calles, "Calle_" + (int)x0, new Vector3((x0 + x1) * 0.5f, -0.03f, 216f), Quaternion.identity, new Vector3(x1 - x0, 0.1f, 8f), KitS2c.MatAsfalto(), 8f, true);
+                KitS2c.Frente(o, casas, new Vector3(x0, 0f, 210f), new Vector3(x1, 0f, 210f), Vector3.forward, 6f, estilo);
+                KitS2c.Frente(o, casas, new Vector3(x0, 0f, 222f), new Vector3(x1, 0f, 222f), Vector3.back, 12f, estilo);
+                Vector3? anterior = null;
+                for (float x = x0 + 8f; x < x1 - 4f; x += SeparacionPostes)
+                {
+                    Vector3 punta = KitS2c.Poste(o, postes, new Vector3(x, 0f, 211f), Vector3.forward, 0f, o.Chance(0.4f));
+                    luces++;
+                    if (anterior.HasValue)
+                    {
+                        KitS2c.Cable(o, anterior.Value, punta, 0.6f);
+                    }
+                    anterior = punta;
+                }
+            }
+            // Hilera al norte de la autopista, de cara al tablero.
+            KitS2c.Frente(o, casas, new Vector3(-320f, 0f, 266f), new Vector3(325f, 0f, 266f), Vector3.back, 12f, estilo);
+            // Chatarra, basura y barriles en los patios de abajo del tablero y delante de la hilera norte.
+            string[] basura = { "BS01a_Basura", "BS01b_Basura", "BS01c_Basura", "BS01d_Basura", "BS01e_Basura" };
+            string[] cosas = { "C16_Tambo", "C11_Basurero", "BT01_BoteBasura", "C17_Huacales" };
+            GameObject chatarraTripo = Cargar("IN02_Chatarra", true);
+            if (chatarraTripo == null)
+            {
+                Hueco(chatarra, "IN02", new Vector3(0f, 0f, 240f), "Chatarra");
+            }
+            int puestos = 0;
+            for (int intento = 0; intento < 1200 && puestos < 260; intento++)
+            {
+                bool norte = o.Chance(0.3f);
+                Vector3 p = new Vector3(o.Rango(-320f, 235f), 0f, norte ? o.Rango(258f, 264f) : o.Rango(235f, 247f));
+                if (Cerca(rampaNorte, p, 14f) || columnas.Any(q => Mathf.Abs(q.x - p.x) < 6f && Mathf.Abs(q.z - p.z) < 3f))
                 {
                     continue;
                 }
-                string codigo = puestos % 3 == 0 ? o.Uno(cosas) : o.Uno(basura);
-                KitS2c.Pieza(chatarra, codigo, p, Quaternion.Euler(0f, o.Rango(0f, 360f), 0f), Vector3.one, false);
+                Quaternion giro = Quaternion.Euler(0f, o.Rango(0f, 360f), 0f);
+                if (puestos % 5 == 0 && chatarraTripo != null)
+                {
+                    GameObject c = Poner(chatarra, chatarraTripo, p, giro, Vector3.one, false);
+                    Bounds b = c.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((x, y) => { x.Encapsulate(y); return x; });
+                    c.transform.position += Vector3.up * (0.02f - b.min.y);
+                }
+                else
+                {
+                    KitS2c.Pieza(chatarra, puestos % 3 == 0 ? o.Uno(cosas) : o.Uno(basura), p, giro, Vector3.one, false);
+                }
                 puestos++;
             }
-            GameObject carro = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Prefabs/V01a_CarroViejito.prefab");
-            for (int intento = 0, k = 0; k < 6 && intento < 200 && carro != null; intento++)
+            GameObject[] carros =
             {
-                Vector3 p = new Vector3(o.Rango(-260f, 220f), 0f, o.Rango(210f, 238f));
-                if (Cerca(rampaNorte, p, 16f) || columnas.Any(q => T.Planta(q - p).magnitude < 5f))
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Prefabs/V01a_CarroViejito.prefab"),
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Prefabs/V01b_CarroPro.prefab"),
+            };
+            for (int intento = 0, k = 0; k < 14 && intento < 400; intento++)
+            {
+                Vector3 p = new Vector3(o.Rango(-300f, 225f), 0f, o.Chance(0.5f) ? o.Rango(236f, 246f) : 216f + o.Rango(-2f, 2f));
+                bool enCalle = Mathf.Abs(p.z - 216f) < 3f;
+                if (Cerca(rampaNorte, p, 16f) || columnas.Any(q => Mathf.Abs(q.x - p.x) < 8f && Mathf.Abs(q.z - p.z) < 4f) || (enCalle && !EnBloque(p.x, bloques)))
                 {
                     continue;
                 }
-                GameObject c = Poner(chatarra, carro, p, Quaternion.Euler(0f, o.Rango(0f, 360f), 0f), Vector3.one, true);
+                GameObject prefab = carros[k % carros.Length];
+                if (prefab == null)
+                {
+                    break;
+                }
+                Quaternion giro = Quaternion.Euler(0f, enCalle ? (o.Chance(0.5f) ? 90f : -90f) : o.Rango(0f, 360f), 0f);
+                GameObject c = Poner(chatarra, prefab, p, giro, Vector3.one, true);
                 c.name = "CarroViejo_" + k++;
                 Bounds b = c.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((x, y) => { x.Encapsulate(y); return x; });
                 c.transform.position += Vector3.up * (0.02f - b.min.y);
             }
-            // Casitas bajas (1 piso) en tres hileras que dan al sur, lejos de la rampa y de la autopista.
-            Transform casas = Hijo(padre, "Casitas");
-            (float x0, float x1)[] hileras = { (-285f, -145f), (60f, 225f) };
-            foreach ((float x0, float x1) in hileras)
+            // Charcos que reflejan la luz cálida (A18/K18): en las calles y en los patios.
+            for (int k = 0, intento = 0; k < 40 && intento < 300; intento++)
             {
-                KitS2c.Frente(o, casas, new Vector3(x0, 0f, 222f), new Vector3(x1, 0f, 222f), Vector3.back, 8f, i =>
+                bool enCalle = o.Chance(0.5f);
+                Vector3 p = enCalle ? new Vector3(o.Rango(-285f, 220f), 0.03f, 216f + o.Rango(-2.5f, 2.5f)) : new Vector3(o.Rango(-300f, 230f), 0.03f, o.Rango(235f, 247f));
+                if (Cerca(rampaNorte, p, 12f) || (enCalle && !EnBloque(p.x, bloques)))
                 {
-                    KitS2c.Estilo e = KitS2c.EstiloAlAzar(o);
-                    e.Pisos = 1;
-                    return e;
-                });
+                    continue;
+                }
+                KitS2c.Charco(o, chatarra, p, o.Rango(2f, 5f), o.Rango(1.5f, 3.5f), o.Rango(0f, 180f));
+                k++;
             }
         }
+
+        private static bool EnBloque(float x, (float x0, float x1)[] bloques)
+        {
+            return bloques.Any(b => x > b.x0 + 3f && x < b.x1 - 3f);
+        }
+
 
         private static bool Cerca(List<Vector3> linea, Vector3 p, float distancia)
         {
