@@ -25,7 +25,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const string NombreRaiz = "T1354_Malecon";
         public const int Semilla = 1354;
         public const float PasoPaseo = 12f;
-        public const float PasoEscaleras = 80f;
+        public const float PasoEscaleras = 70f;
         private const string CarpetaModulos = "Assets/Arte/ZonasModulos/Prefabs/";
         private const string CarpetaTripo = "Assets/Arte/Zonas";
         private const float XOesteZona = -330f;
@@ -321,9 +321,12 @@ namespace MechaCyberpunk.Arte.Editor
             float largo = ColocarT1354Curva.Longitud(borde);
             float dMuelle = DistanciaEnX(borde, XMuelle);
             float dPuesto = DistanciaEnX(borde, XPuesto);
+            float dEspigon = DistanciaEnX(borde, ColocarT1354Curva.U5.x + 8f);
             List<float> escaleras = ColocarT1354Curva.Cada(largo, PasoEscaleras, 40f);
             escaleras.Add(dMuelle);
-            escaleras.RemoveAll(d => Mathf.Abs(d - dMuelle) < 20f && d != dMuelle);
+            escaleras.Add(dEspigon);
+            // Las de la playa no se amontonan con las del muelle y el espigón (que bajan a una cubierta, no a la arena).
+            escaleras.RemoveAll(d => d != dMuelle && d != dEspigon && (Mathf.Abs(d - dMuelle) < 10f || Mathf.Abs(d - dEspigon) < 10f));
             float anchoEscalera = Medida(Modulo("ML02_EscaleraPlaya")).size.x;
             if (anchoEscalera < 1f)
             {
@@ -345,11 +348,13 @@ namespace MechaCyberpunk.Arte.Editor
                 cuantos++;
             }
 
-            // Escaleras a la playa, con la cima a la altura de la banqueta.
+            // Escaleras: la cima al ras de la banqueta (y = 0.2) y el pie en la arena (o en la cubierta del muelle y del espigón del faro).
             foreach (float d in escaleras)
             {
                 Vector3 p = Punto(borde, d, ColocarT1354Curva.LateralMuro + 1.5f, out Quaternion giro);
-                Poner(paseo, "ML02_EscaleraPlaya", true, p, giro, 1f, ColocarT1354Curva.YBanqueta, true);
+                bool aCubierta = d == dMuelle || d == dEspigon;
+                float yPie = aCubierta ? YMuelle : YPlaya(ColocarT1354Curva.LateralMuro + 3.5f, ColocarT1354Curva.LateralOrilla(p.z));
+                Escalera(paseo, p, giro * Vector3.forward, ColocarT1354Curva.YBanqueta, yPie, "d=" + d.ToString("F0") + (aCubierta ? " a cubierta" : " a playa"));
             }
 
             // Palmeras y faroles alternados cada 12 m (Tripo); la zona del puesto y las escaleras quedan libres.
@@ -397,6 +402,116 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 Poner(paseo, "PZ01_Banca", false, p, Quaternion.LookRotation(-(giro * Vector3.forward)), 1f, null, true);
             }
+        }
+
+        /// <summary>Altura (y) más alta donde un rayo vertical en (x, z) del punto toca un collider de <paramref name="go"/>; -infinito si no toca.</summary>
+        private static float AlturaDe(GameObject go, Vector3 punto)
+        {
+            float mejor = float.NegativeInfinity;
+            foreach (RaycastHit h in Physics.RaycastAll(punto + Vector3.up * 12f, Vector3.down, 30f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (h.collider.transform.IsChildOf(go.transform))
+                {
+                    mejor = Mathf.Max(mejor, h.point.y);
+                }
+            }
+            return mejor;
+        }
+
+        /// <summary>
+        /// T-1363: una ML02_EscaleraPlaya (pivote en la base, al centro; 4 x 2.9 x 4 con su caja "Rampa") con la cima al ras de <paramref name="yTope"/> y el pie en
+        /// <paramref name="yPie"/>: se gira hasta que baje hacia el mar (por raycasts a lo largo de su eje), se escala en Y y se sube o baja. La medida final de la cima
+        /// y del pie (raycasts) queda en el informe.
+        /// </summary>
+        private static GameObject Escalera(Transform padre, Vector3 centro, Vector3 haciaMar, float yTope, float yPie, string etiqueta)
+        {
+            GameObject prefab = Modulo("ML02_EscaleraPlaya");
+            if (prefab == null)
+            {
+                faltan.Add("ML02_EscaleraPlaya");
+                GameObject h = new GameObject("Hueco_ML02_EscaleraPlaya");
+                h.transform.SetParent(padre, false);
+                h.transform.position = centro;
+                return null;
+            }
+            haciaMar.y = 0f;
+            haciaMar.Normalize();
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            go.transform.rotation = Quaternion.LookRotation(haciaMar);
+            go.transform.localScale = Vector3.one;
+            go.transform.position = new Vector3(centro.x, 0f, centro.z);
+            Vector3 xz = new Vector3(centro.x, 0f, centro.z);
+            const float semiLargo = 2f;
+            const float inset = 0.4f;
+            float hCiudad = 0f, hMar = 0f;
+            bool bajaAlMar = false;
+            for (int k = 0; k < 4 && !bajaAlMar; k++)
+            {
+                Physics.SyncTransforms();
+                Vector3 dir = go.transform.forward;
+                hCiudad = AlturaDe(go, xz - dir * (semiLargo - inset));
+                hMar = AlturaDe(go, xz + dir * (semiLargo - inset));
+                bajaAlMar = hCiudad > float.NegativeInfinity && hMar > float.NegativeInfinity && hCiudad - hMar > 0.3f;
+                if (!bajaAlMar)
+                {
+                    go.transform.RotateAround(xz, Vector3.up, 90f);
+                }
+            }
+            if (!bajaAlMar)
+            {
+                // Sin rampa con collider (o plana): se usa la altura nominal de la pieza con la cima alineada por su caja visible.
+                Bounds b = Medida(prefab);
+                go.transform.localScale = new Vector3(1f, (yTope - yPie) / Mathf.Max(0.5f, b.size.y), 1f);
+                Physics.SyncTransforms();
+                go.transform.position += Vector3.up * (yTope - b.max.y * go.transform.localScale.y);
+                ColocarS2.Informe.AppendLine("ESCALERA " + etiqueta + ": sin rampa con collider, se alineó por la caja visible (revisar a mano)");
+                faltan.Add("ML02_EscaleraPlaya: la rampa no baja hacia el mar o no tiene collider");
+                return go;
+            }
+            // La pendiente medida en el eje (a 1.6 m del centro) se extiende a los 2 m de cada extremo.
+            float extension = semiLargo / (semiLargo - inset);
+            float alturaTotal = (hCiudad - hMar) * extension;
+            go.transform.localScale = new Vector3(1f, (yTope - yPie) / alturaTotal, 1f);
+            Physics.SyncTransforms();
+            Vector3 d2 = go.transform.forward;
+            float c2 = AlturaDe(go, xz - d2 * (semiLargo - inset));
+            float m2 = AlturaDe(go, xz + d2 * (semiLargo - inset));
+            float cimaExtrapolada = c2 + (c2 - m2) * (inset / (2f * (semiLargo - inset)));
+            go.transform.position += Vector3.up * (yTope - cimaExtrapolada);
+            Physics.SyncTransforms();
+            float cima = AlturaDe(go, xz - d2 * (semiLargo - 0.05f));
+            float pie = AlturaDe(go, xz + d2 * (semiLargo - 0.05f));
+            ColocarS2.Informe.AppendLine("Escalera " + etiqueta + ": cima " + cima.ToString("F2") + " (pedida " + yTope.ToString("F2") + "), pie " + pie.ToString("F2") + " (pedido " + yPie.ToString("F2") + ")"
+                + (Mathf.Abs(cima - yTope) > 0.15f || Mathf.Abs(pie - yPie) > 0.3f ? "  <-- REVISAR" : ""));
+            return go;
+        }
+
+        /// <summary>
+        /// Sube o baja una pieza de cubierta (muelle) hasta que su piso caminable (raycast en el centro de su caja) quede en <paramref name="y"/>: las piezas se
+        /// ponían por la parte más alta de su caja visible (postes), y el piso quedaba más abajo.
+        /// </summary>
+        private static void NivelarCubierta(GameObject go, float y)
+        {
+            if (go == null)
+            {
+                return;
+            }
+            Physics.SyncTransforms();
+            Renderer[] rs = go.GetComponentsInChildren<Renderer>();
+            Bounds b = rs.Length == 0 ? new Bounds(go.transform.position, Vector3.zero) : rs[0].bounds;
+            foreach (Renderer r in rs)
+            {
+                b.Encapsulate(r.bounds);
+            }
+            float h = AlturaDe(go, b.center);
+            if (h == float.NegativeInfinity)
+            {
+                ColocarS2.Informe.AppendLine("SIN PISO CAMINABLE en " + go.name + " (" + b.center.ToString("F1") + "): la pieza no tiene collider bajo su centro");
+                faltan.Add("Piso caminable en " + go.name);
+                return;
+            }
+            go.transform.position += Vector3.up * (y - h);
+            Physics.SyncTransforms();
         }
 
         /// <summary>Punto del paseo a una distancia y un lateral (hacia el mar), a la altura de la banqueta; <paramref name="giro"/> mira al mar.</summary>
@@ -510,12 +625,41 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             float cima = fondoMar + alto * 1.95f + alto * 0.75f;
+            CaminoAlFaro(costa, x, zCentro, punta, cima);
             GameObject faro = Poner(costa, "ML04_Faro", false, new Vector3(punta.x, cima, punta.z), Quaternion.identity, 1f, null, true);
             if (faro != null)
             {
                 Bounds fb = Medida(prefabs["ML04_Faro"]);
                 HazDelFaro(o, faro.transform, faro.transform.position + Vector3.up * fb.size.y * 0.85f);
             }
+        }
+
+        /// <summary>
+        /// T-1363: camino de muelle (ML03) sobre el espigón, desde la escalera que baja del paseo (en Paseo) hasta el pie del faro, con la cubierta en
+        /// <see cref="YMuelle"/>. Si la base del faro queda más alta que la cubierta, una escalera ML02 sube del final del camino a la base.
+        /// </summary>
+        private static void CaminoAlFaro(Transform costa, float x, float zCentro, Vector3 punta, float yFaro)
+        {
+            Bounds recto = Medida(Modulo("ML03_MuelleRecto"));
+            bool largoEnZ = recto.size.z >= recto.size.x;
+            float paso = Mathf.Max(recto.size.x, recto.size.z) > 1f ? Mathf.Max(recto.size.x, recto.size.z) : 4f;
+            Quaternion haciaSur = Quaternion.Euler(0f, largoEnZ ? 180f : 90f, 0f);
+            // La escalera del paseo ocupa 4 m a partir del muro (z = zCentro - 16): el camino sigue desde ahí hasta 5 m antes del centro del faro.
+            float z0 = zCentro - ColocarT1354Curva.LateralMuro - 1.5f - 2f - paso * 0.5f;
+            float zFin = punta.z + 5f;
+            int n = 0;
+            for (float z = z0; z > zFin; z -= paso)
+            {
+                NivelarCubierta(Poner(costa, "ML03_MuelleRecto", true, new Vector3(x, YMuelle, z), haciaSur, 1f, YMuelle, n == 0), YMuelle);
+                n++;
+            }
+            if (yFaro - YMuelle > 0.3f)
+            {
+                // Sube al faro: la cima (la base del faro) al sur y el pie sobre el último tramo, al norte.
+                float zEscalera = z0 - paso * n + paso * 0.5f - 2f;
+                Escalera(costa, new Vector3(x, 0f, zEscalera), Vector3.forward, yFaro, YMuelle, "al faro (cima = base del faro, y = " + yFaro.ToString("F2") + ")");
+            }
+            ColocarS2.Informe.AppendLine("Camino al faro: " + n + " tramos de muelle de z " + z0.ToString("F0") + " a " + zFin.ToString("F0") + "; base del faro y = " + yFaro.ToString("F2"));
         }
 
         /// <summary>El haz del faro: un cono aditivo (shader HaloLuz) que gira con una luz Spot, ambos hijos de un pivote con GiroHazFaro.</summary>
@@ -598,13 +742,13 @@ namespace MechaCyberpunk.Arte.Editor
             int tramos = Mathf.CeilToInt((zCosta - zOrilla + 26f) / paso);
             for (int i = 0; i < tramos; i++)
             {
-                Poner(muelle, "ML03_MuelleRecto", true, new Vector3(XMuelle, YMuelle, zCosta - paso * (i + 0.5f)), haciaSur, 1f, YMuelle, i == 0);
+                NivelarCubierta(Poner(muelle, "ML03_MuelleRecto", true, new Vector3(XMuelle, YMuelle, zCosta - paso * (i + 0.5f)), haciaSur, 1f, YMuelle, i == 0), YMuelle);
             }
             float zEsquina = zCosta - paso * (tramos + 0.5f);
-            Poner(muelle, "ML04_MuelleEsquina", true, new Vector3(XMuelle, YMuelle, zEsquina), haciaSur, 1f, YMuelle, true);
+            NivelarCubierta(Poner(muelle, "ML04_MuelleEsquina", true, new Vector3(XMuelle, YMuelle, zEsquina), haciaSur, 1f, YMuelle, true), YMuelle);
             for (int j = 0; j < 3; j++)
             {
-                Poner(muelle, "ML03_MuelleRecto", true, new Vector3(XMuelle + paso * (j + 1), YMuelle, zEsquina), haciaEste, 1f, YMuelle, false);
+                NivelarCubierta(Poner(muelle, "ML03_MuelleRecto", true, new Vector3(XMuelle + paso * (j + 1), YMuelle, zEsquina), haciaEste, 1f, YMuelle, false), YMuelle);
             }
 
             // 6 lanchas de colores amarradas al lado oeste del muelle, ya en el agua.
