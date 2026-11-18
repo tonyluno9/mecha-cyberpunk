@@ -104,7 +104,7 @@ namespace MechaCyberpunk.Tests.UI
                 mostrador = m.name.Contains("MercadoNegro") ? m : mostrador;
             }
             Assert.IsNotNull(mostrador, "Está el mostrador de El Mercado");
-            PantallaTienda pantalla = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+            PantallaTienda pantalla = PantallaDeTiendas();
             pantalla.Mostrar(mostrador.Tienda, mostrador.EnVenta, () => pantalla.Ocultar(), mostrador.Compra, mostrador.AceptaFavorDescuento);
             yield return EsperarHasta(() => pantalla.Visible, "abrir El Mercado", 5f);
             yield return EsperarHasta(() => pantalla.Mercado != null && pantalla.Mercado.Holograma != null && pantalla.Mercado.Holograma.Textura != null, "holograma del arma", 10f);
@@ -236,6 +236,26 @@ namespace MechaCyberpunk.Tests.UI
             yield return Clic(salir);
             Assert.IsTrue(cerro, "El clic en SALIR cierra el banco");
             Assert.IsFalse(pantalla.Visible);
+        }
+    
+
+        // T-1330 puso otra PantallaTienda dentro de MostradorClinica (y T-685 las Expendedoras tienen la suya):
+        // FindFirstObjectByType podía devolver cualquiera. Las tiendas de la calle usan la que no está dentro de esos dos.
+        private static PantallaTienda PantallaDeTiendas()
+        {
+            foreach (PantallaTienda p in Object.FindObjectsByType<PantallaTienda>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
+            {
+                bool ajena = false;
+                for (Transform t = p.transform; t != null; t = t.parent)
+                {
+                    ajena |= t.name.StartsWith("MostradorClinica") || t.name == "Expendedoras";
+                }
+                if (!ajena)
+                {
+                    return p;
+                }
+            }
+            return null;
         }
     }
 }

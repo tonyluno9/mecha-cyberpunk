@@ -98,7 +98,7 @@ namespace MechaCyberpunk.Tests.UI
 
             MostradorClinica mostrador = Object.FindFirstObjectByType<MostradorClinica>();
             PantallaClinica clinica = Object.FindFirstObjectByType<PantallaClinica>(FindObjectsInactive.Include);
-            PantallaTienda tienda = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+            PantallaTienda tienda = mostrador.GetComponentInChildren<PantallaTienda>(true) ?? Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include); // T-1330: la del propio mostrador
             Assert.IsNotNull(mostrador, "Está la clínica del Doc");
             mostrador.AbrirDesdeDoc();
             yield return EsperarHasta(() => clinica.Visible, "abrir la clínica", 5f);

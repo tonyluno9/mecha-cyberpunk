@@ -154,8 +154,13 @@ namespace MechaCyberpunk.Tests.UI
 
             ZonaBusquedaFalsa zona = new ZonaBusquedaFalsa();
             Registro<IZonaBusqueda>.Agregar(zona);
-            yield return null;
-            Assert.IsTrue(h10.Buscando, "Con zona de búsqueda activa, parpadean");
+            // T-729: parpadean cuando llevas un rato sin que te vean, no al instante.
+            float hasta = Time.unscaledTime + ReglaEstrellasH10.SegundosSinVerParaParpadear + 0.5f;
+            while (!h10.Buscando && Time.unscaledTime < hasta)
+            {
+                yield return null;
+            }
+            Assert.IsTrue(h10.Buscando, "Con zona de búsqueda activa y sin que te vean, parpadean");
             HashSet<float> alfas = new HashSet<float>();
             float fin = Time.unscaledTime + ReglaEstrellasH10.SegundosParpadeo * 3f;
             while (Time.unscaledTime < fin)

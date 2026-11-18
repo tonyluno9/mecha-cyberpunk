@@ -87,7 +87,7 @@ namespace MechaCyberpunk.Tests.UI
                 mostrador = m.name.Contains("MercadoNegro") ? m : mostrador;
             }
             Assert.IsNotNull(mostrador, "Está el mostrador de El Mercado");
-            PantallaTienda pantalla = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+            PantallaTienda pantalla = PantallaDeTiendas();
             // T-1002: el juego empieza a las 10:00 y El Mercado abre de noche.
             Registro<IRelojMundo>.Actual?.AvanzarHasta(22f);
             yield return null;
@@ -157,6 +157,26 @@ namespace MechaCyberpunk.Tests.UI
             yield return Pulsar(teclado.escapeKey);
             yield return EsperarHasta(() => !pantalla.Visible, "cerrar con Esc", 5f);
             Assert.IsFalse(vista.Activa, "Al cerrar se apaga la vista");
+        }
+    
+
+        // T-1330 puso otra PantallaTienda dentro de MostradorClinica (y T-685 las Expendedoras tienen la suya):
+        // FindFirstObjectByType podía devolver cualquiera. Las tiendas de la calle usan la que no está dentro de esos dos.
+        private static PantallaTienda PantallaDeTiendas()
+        {
+            foreach (PantallaTienda p in Object.FindObjectsByType<PantallaTienda>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
+            {
+                bool ajena = false;
+                for (Transform t = p.transform; t != null; t = t.parent)
+                {
+                    ajena |= t.name.StartsWith("MostradorClinica") || t.name == "Expendedoras";
+                }
+                if (!ajena)
+                {
+                    return p;
+                }
+            }
+            return null;
         }
     }
 }

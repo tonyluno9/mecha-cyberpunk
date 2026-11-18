@@ -90,7 +90,7 @@ namespace MechaCyberpunk.Tests.UI
                 mostrador = m.name.Contains("MercadoNegro") ? m : mostrador;
             }
             Assert.IsNotNull(mostrador, "Está el mostrador de El Mercado");
-            PantallaTienda pantalla = Object.FindFirstObjectByType<PantallaTienda>(FindObjectsInactive.Include);
+            PantallaTienda pantalla = PantallaDeTiendas();
             // Ya tiene el rifle de plasma: la tienda le ofrece sus Celdas de plasma y no el arma ni sus mejoras.
             Registro<ServicioInventario>.Actual.Agregar(UnityEditor.AssetDatabase.LoadAssetAtPath<DatosArma>("Assets/_Proyecto/Personaje/Datos/Armas/DatosArma_rifleplasma_0.asset"), 1);
             Registro<IRelojMundo>.Actual?.AvanzarHasta(22f);
@@ -158,6 +158,26 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarHasta(() => !pantalla.Visible, "cerrar con Esc", 5f);
             Assert.IsFalse(Cursor.visible, "Al cerrar el cursor vuelve a ocultarse");
             Assert.AreEqual(bloqueoPrevio, Cursor.lockState, "Al cerrar el cursor vuelve a como estaba (bloqueado en el juego)");
+        }
+    
+
+        // T-1330 puso otra PantallaTienda dentro de MostradorClinica (y T-685 las Expendedoras tienen la suya):
+        // FindFirstObjectByType podía devolver cualquiera. Las tiendas de la calle usan la que no está dentro de esos dos.
+        private static PantallaTienda PantallaDeTiendas()
+        {
+            foreach (PantallaTienda p in Object.FindObjectsByType<PantallaTienda>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
+            {
+                bool ajena = false;
+                for (Transform t = p.transform; t != null; t = t.parent)
+                {
+                    ajena |= t.name.StartsWith("MostradorClinica") || t.name == "Expendedoras";
+                }
+                if (!ajena)
+                {
+                    return p;
+                }
+            }
+            return null;
         }
     }
 }
