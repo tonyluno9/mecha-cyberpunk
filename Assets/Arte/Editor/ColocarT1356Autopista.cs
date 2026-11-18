@@ -113,14 +113,14 @@ namespace MechaCyberpunk.Arte.Editor
             Directory.CreateDirectory("Logs");
             // K18: a pie del barrio de abajo (1.7 m), al sur de la rampa norte, mirando al oeste-noroeste ~12 grados hacia arriba: columna cerca a la derecha,
             // autopista arriba y túnel en el acantilado al fondo.
-            Vector3 camaraK18 = new Vector3(-45f, 1.7f, 208f);
+            Vector3 camaraK18 = new Vector3(-205f, 1.7f, 236f);
             RevisarCamara(camaraK18);
-            ColocarS2cLook.Foto(camaraK18, new Vector3(-145f, 22f, 222f), "Logs/autopista-k18-juego.png", 65f);
+            ColocarS2cLook.Foto(camaraK18, new Vector3(-330f, 13f, 250f), "Logs/autopista-k18-juego.png", 65f);
             ColocarS2.LadoALado("imageassets/referencias/look/K18_AutopistaElevada.png", "Logs/autopista-k18-juego.png", "docs/capturas/zonas/autopista-k18.png");
             // A18: al este-sureste del túnel y por encima: autopista curva entrando al túnel del acantilado, rampa abajo, casitas en primer plano.
-            Vector3 camaraA18 = new Vector3(-200f, 55f, 215f);
+            Vector3 camaraA18 = new Vector3(-230f, 48f, 205f);
             RevisarCamara(camaraA18);
-            ColocarS2cLook.Foto(camaraA18, new Vector3(-330f, 12f, 250f), "Logs/autopista-a18-juego.png", 62f);
+            ColocarS2cLook.Foto(camaraA18, new Vector3(-325f, 14f, 248f), "Logs/autopista-a18-juego.png", 60f);
             ColocarS2.LadoALado("imageassets/referencias/look/A18_Autopista_Aerea.png", "Logs/autopista-a18-juego.png", "docs/capturas/zonas/autopista-a18.png");
         }
 
@@ -541,15 +541,27 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     float x = xs[i];
                     float z = zs[j];
-                    float tope = AltoAcantilado + 5f * Mathf.Sin(x * 0.07f) * Mathf.Cos(z * 0.09f);
+                    float ruido = Ruido(x, z);
+                    float tope = AltoAcantilado + 5f * Mathf.Sin(x * 0.07f) * Mathf.Cos(z * 0.09f) + (ruido - 0.5f) * 8f;
                     float t = Mathf.SmoothStep(0f, 1f, (z - 205f) / 25f);
                     float h = Mathf.Lerp(borde[i], tope, t);
                     if (i == nx - 1)
                     {
                         h = -0.5f;
                     }
-                    v.Add(new Vector3(x, h, z));
-                    uv.Add(new Vector2(x / 8f, (z + h) / 8f));
+                    // Roca abrupta: la cara este se quiebra en planta (solo hacia el oeste y lejos de la boca, z 238 a 262) y el resto se corre 1.2 m.
+                    float lejosBoca = Mathf.Clamp01((Mathf.Abs(z - 250f) - 12f) / 8f);
+                    float dx = 0f;
+                    if (i >= nx - 2)
+                    {
+                        dx = -Ruido(z, 7.3f) * 3f * lejosBoca;
+                    }
+                    else if (i > 0)
+                    {
+                        dx = (Ruido(x, z + 41f) - 0.5f) * 2.4f;
+                    }
+                    v.Add(new Vector3(x + dx, h, z));
+                    uv.Add(new Vector2((x + dx + 0.5f * z) / 8f, (0.5f * z + h) / 8f));
                 }
             }
             List<int> tris = new List<int>();
@@ -575,10 +587,29 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject go = new GameObject("Acantilado");
             go.transform.SetParent(padre, false);
             go.AddComponent<MeshFilter>().sharedMesh = m;
-            Material roca = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/ZonasModulos/Materiales/ZM_Roca.mat");
-            go.AddComponent<MeshRenderer>().sharedMaterial = roca != null ? roca : KitS2c.Lit(new Color(0.12f, 0.12f, 0.14f), 0.1f, KitS2c.TexMuro());
+            // Roca oscura y mate (copia de ZM_Roca con albedo gris oscuro y poca suavidad; si falta ZM_Roca, gris 0.12 con suavidad 0.1).
+            Material roca = KitS2c.Mat("T1356_Roca", () =>
+            {
+                Material zm = AssetDatabase.LoadAssetAtPath<Material>("Assets/Arte/ZonasModulos/Materiales/ZM_Roca.mat");
+                if (zm == null)
+                {
+                    return KitS2c.Lit(new Color(0.12f, 0.12f, 0.13f), 0.1f, KitS2c.TexMuro());
+                }
+                Material copia = new Material(zm);
+                copia.SetColor("_BaseColor", new Color(0.3f, 0.3f, 0.32f));
+                copia.SetFloat("_Smoothness", 0.1f);
+                return copia;
+            });
+            go.AddComponent<MeshRenderer>().sharedMaterial = roca;
             go.AddComponent<MeshCollider>().sharedMesh = m;
             GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccluderStatic | StaticEditorFlags.OccludeeStatic);
+        }
+
+        /// <summary>Ruido determinista de 0 a 1 para romper la malla de la roca.</summary>
+        private static float Ruido(float a, float b)
+        {
+            float s = Mathf.Sin(a * 12.9898f + b * 78.233f) * 43758.5453f;
+            return s - Mathf.Floor(s);
         }
 
         /// <summary>El remate de T530_Afueras/Salida_2 (x -111, z 201 a 215) toca la unión U7: se apaga si pisa el enlace.</summary>
