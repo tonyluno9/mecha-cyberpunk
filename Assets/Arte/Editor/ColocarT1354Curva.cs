@@ -273,13 +273,16 @@ namespace MechaCyberpunk.Arte.Editor
             return lista;
         }
 
+        /// <summary>Ancho de la playa seca (m) del pie del muro a la orilla.</summary>
+        public const float AnchoPlaya = 30f;
+
         /// <summary>
-        /// Lateral (m, hacia el mar) donde la playa toca el agua: la playa baja de la base del muro hasta la orilla,
-        /// que cae justo en z = <see cref="ZAgua"/> (donde empieza el plano del mar).
+        /// Lateral (m, hacia el mar) donde la playa toca el agua: <see cref="AnchoPlaya"/> m después del pie del muro, en cualquier z
+        /// (el plano del mar llega por debajo de la arena hasta el muro, así la orilla es donde la arena baja de y = -3).
         /// </summary>
         public static float LateralOrilla(float zCentro)
         {
-            return zCentro - ZAgua;
+            return LateralMuro + AnchoPlaya;
         }
     }
 }
