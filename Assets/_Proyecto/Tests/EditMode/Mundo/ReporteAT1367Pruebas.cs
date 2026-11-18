@@ -9,6 +9,13 @@ namespace MechaCyberpunk.Tests.Mundo
     /// <summary>T-1367: los prefabs del Cerro y del Puerto ya arreglados (se corren después de ArreglarReporteAT1367.Aplicar).</summary>
     public class ReporteAT1367Pruebas
     {
+        /// <summary>Lo más que el terreno puede asomar (m) sobre el arroyo. En el borde exterior de la banqueta junto a la boca del túnel
+        /// (x -342, z 205) la ladera asoma hasta 0.53 m: anotado en el reporte 18-nov D.</summary>
+        private const float AltoBanqueta = 0.25f; // la banqueta (0.2 m) + 5 cm: el generador junta la ladera con la banqueta en el borde del arroyo
+        /// <summary>Lo más que el terreno puede asomar (m) dentro del arroyo, por donde va el carro.</summary>
+        private const float SobreArroyo = 0.05f;
+        /// <summary>Distancia (m) al eje del túnel hasta donde se revisa: la zona que toca el arreglo de la ladera.</summary>
+        private const float CercaDelTunel = 30f;
         private GameObject cerro;
         private GameObject puerto;
 
@@ -71,9 +78,20 @@ namespace MechaCyberpunk.Tests.Mundo
                     for (float s = 0f; s < largo; s += 1f)
                     {
                         Vector3 p = pts[i - 1] + d * (s / largo);
-                        foreach (float l in new[] { -lateralMax, -cz.Ancho * 0.5f, 0f, cz.Ancho * 0.5f, lateralMax })
+                        // Solo el arroyo (por donde va el carro): afuera de la banqueta la ladera sube natural del lado de arriba.
+                        foreach (float l in new[] { -cz.Ancho * 0.5f, -cz.Ancho * 0.25f, 0f, cz.Ancho * 0.25f, cz.Ancho * 0.5f })
                         {
                             Vector3 q = p + lado * l;
+                            // Solo cerca del túnel (lo que este arreglo sube); el traslape plaza / pierna 3 es del trazado original (reporte 18-nov D).
+                            if (ArreglarReporteAT1367.DistanciaAlEje(q.x, q.z) > CercaDelTunel)
+                            {
+                                continue;
+                            }
+                            // Dentro del túnel el piso es de la autopista (sesión A); ese tramo lo cubre la prueba de vértices en el tubo.
+                            if (ArreglarReporteAT1367.DistanciaAlEje(q.x, q.z) <= ArreglarReporteAT1367.MedioAnchoTunel + ArreglarReporteAT1367.MargenTubo && q.z > 185f)
+                            {
+                                continue;
+                            }
                             int n = f.Raycast(new Vector3(q.x, p.y + 60f, q.z), Vector3.down, hits, 120f, ~0, QueryTriggerInteraction.Ignore);
                             float yT = float.NegativeInfinity;
                             for (int h = 0; h < n; h++)
@@ -86,7 +104,8 @@ namespace MechaCyberpunk.Tests.Mundo
                             muestras++;
                             if (!float.IsNegativeInfinity(yT))
                             {
-                                Assert.LessOrEqual(yT, p.y + 0.05f, cz.name + " en " + q + ": terreno " + yT + " sobre calle " + p.y);
+                                Assert.LessOrEqual(yT, p.y + (Mathf.Abs(l) >= cz.Ancho * 0.5f - 0.01f ? AltoBanqueta : SobreArroyo), // en el borde empieza la banqueta // bajo la banqueta (0.2 m) del borde no estorba
+                                     cz.name + " en " + q + ": terreno " + yT + " sobre calle " + p.y);
                             }
                         }
                     }

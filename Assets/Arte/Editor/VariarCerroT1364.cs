@@ -78,7 +78,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         private sealed class Cuenta
         {
-            public int Tinte, Escalonadas, Pisos, Cuartos, Detalles, Cables, Reubicados, EscalonesDeshechos, PisosDeshechos, CuartosDeshechos;
+            public int Tinte, Escalonadas, Pisos, Cuartos, Detalles, Cables, Reubicados, EscalonesDeshechos, PisosDeshechos, CuartosDeshechos, Asentados, Separados, SinSeparar;
             public long TriDetalle;
             public int TendLav;
             public readonly Dictionary<string, int> PorTipo = new Dictionary<string, int>();
@@ -266,6 +266,7 @@ namespace MechaCyberpunk.Arte.Editor
 
                 casas = Leer(raiz);
                 QuitarCuartosEncimados(raiz, casas, cuenta);
+                AsentarYSepararDetalles(raiz, detalles, casas, az, cuenta);
                 PonerDetalles(raiz, detalles, casas, az, cuenta);
                 PonerCables(raiz, casas, az, cuenta);
 
@@ -411,7 +412,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 p = t.position;
-                if (p.x > c.X0 - 0.3f && p.x < c.X1 + 0.3f && p.z > c.Z0 - 0.1f && p.z < c.Z1 + 0.1f && p.y >= c.Top - 0.6f && p.y <= c.Top + 3f)
+                if (p.x > c.X0 && p.x < c.X1 && p.z > c.Z0 && p.z < c.Z1 && p.y >= c.Top - 0.6f && p.y <= c.Top + 3f)
                 {
                     r.Add(t);
                 }
@@ -1000,8 +1001,113 @@ namespace MechaCyberpunk.Arte.Editor
             return grupo;
         }
 
+        private static bool Choca(Bounds a, Bounds b, float minimo)
+        {
+            for (int eje = 0; eje < 3; eje++)
+            {
+                if (Mathf.Min(a.max[eje], b.max[eje]) - Mathf.Max(a.min[eje], b.min[eje]) <= minimo)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static List<Transform> HijosDeDetalles(Transform detalles)
+        {
+            return detalles == null ? new List<Transform>() : detalles.Cast<Transform>().Where(t => !t.name.StartsWith("Acceso_") && !t.name.StartsWith(Prefijo)).ToList();
+        }
+
+        /// <summary>
+        /// Asienta lo de Detalles sobre la azotea de su casa (la base pegada a la azotea, sin dejar nada a más de 0.05 m) y separa lo que
+        /// quedó encimado con otro detalle o con algo de la azotea (cambia de lugar dentro de la azotea). Todo con Mover, para poder deshacerlo.
+        /// </summary>
+        private static void AsentarYSepararDetalles(Transform raiz, Transform detalles, List<CasaT> casas, Random az, Cuenta cuenta)
+        {
+            List<Transform> lista = HijosDeDetalles(detalles);
+            Dictionary<Transform, CasaT> duenos = new Dictionary<Transform, CasaT>();
+            foreach (Transform t in lista)
+            {
+                Vector3 p = t.position;
+                CasaT dueno = casas.Where(c => c.Kit && p.x > c.X0 && p.x < c.X1 && p.z > c.Z0 && p.z < c.Z1 && p.y >= c.Base && p.y <= c.Top + 8f)
+                    .OrderBy(c => Mathf.Abs(c.Top - p.y)).FirstOrDefault();
+                if (dueno == null || !Cubierta(t, out Bounds b))
+                {
+                    continue;
+                }
+                duenos[t] = dueno;
+                float dy = dueno.Top - b.min.y;
+                if (Mathf.Abs(dy) > 0.05f)
+                {
+                    Mover(raiz, t, new Vector3(0f, dy, 0f));
+                    cuenta.Asentados++;
+                }
+            }
+            foreach (KeyValuePair<Transform, CasaT> par in duenos)
+            {
+                Transform t = par.Key;
+                CasaT c = par.Value;
+                Cubierta(t, out Bounds b);
+                List<Bounds> otros = new List<Bounds>();
+                foreach (Transform u in lista)
+                {
+                    if (u != t && Cubierta(u, out Bounds bu))
+                    {
+                        otros.Add(bu);
+                    }
+                }
+                foreach (Transform u in EnAzotea(c, c.Top, true))
+                {
+                    if (!u.name.StartsWith("AzoteaT") && Cubierta(u, out Bounds bu))
+                    {
+                        otros.Add(bu);
+                    }
+                }
+                if (!otros.Any(o => Choca(o, b, 0.05f)))
+                {
+                    continue;
+                }
+                bool[] bo = Bordes(c, casas);
+                float mx0 = c.Normal < 0f ? MargenCalle : (bo[0] ? MargenVecina : MargenLibre);
+                float mx1 = c.Normal > 0f ? MargenCalle : (bo[1] ? MargenVecina : MargenLibre);
+                float mz0 = bo[2] ? MargenVecina : MargenLibre;
+                float mz1 = bo[3] ? MargenVecina : MargenLibre;
+                float hx = b.size.x * 0.5f, hz = b.size.z * 0.5f;
+                bool movido = false;
+                if (c.X0 + mx0 + hx <= c.X1 - mx1 - hx && c.Z0 + mz0 + hz <= c.Z1 - mz1 - hz)
+                {
+                    for (int intento = 0; intento < 40 && !movido; intento++)
+                    {
+                        Vector3 centro = new Vector3(Range(az, c.X0 + mx0 + hx, c.X1 - mx1 - hx), b.center.y, Range(az, c.Z0 + mz0 + hz, c.Z1 - mz1 - hz));
+                        Bounds candidato = new Bounds(centro, b.size + Vector3.one * 0.1f);
+                        if (!otros.Any(o => Choca(o, candidato, 0.05f)))
+                        {
+                            Mover(raiz, t, centro - b.center);
+                            movido = true;
+                        }
+                    }
+                }
+                if (movido)
+                {
+                    cuenta.Separados++;
+                }
+                else
+                {
+                    cuenta.SinSeparar++;
+                }
+            }
+        }
+
         private static void PonerDetalles(Transform raiz, Transform detalles, List<CasaT> casas, Random az, Cuenta cuenta)
         {
+            List<Bounds> detallesExistentes = new List<Bounds>();
+            foreach (Transform t in HijosDeDetalles(detalles))
+            {
+                if (Cubierta(t, out Bounds bd))
+                {
+                    detallesExistentes.Add(bd);
+                }
+            }
             foreach (CasaT c in casas.Where(x => x.Kit).OrderBy(x => az.Next()))
             {
                 if (cuenta.TriDetalle > TopeTriangulosDetalle)
@@ -1046,7 +1152,8 @@ namespace MechaCyberpunk.Arte.Editor
                         {
                             float px = Range(az, loX, hiX), pz = Range(az, loZ, hiZ);
                             Rect q = new Rect(px - hx, pz - hz, hx * 2f, hz * 2f);
-                            if (!ocupado.Any(o => o.Overlaps(q)))
+                            Bounds candidato = new Bounds(new Vector3(px, c.Top + 0.02f + b.size.y * 0.5f, pz), b.size);
+                            if (!ocupado.Any(o => o.Overlaps(q)) && !detallesExistentes.Any(d => Choca(d, candidato, 0.05f)))
                             {
                                 g.transform.position += new Vector3(px - b.center.x, c.Top + 0.02f - b.min.y, pz - b.center.z);
                                 puesto = true;
@@ -1185,6 +1292,7 @@ namespace MechaCyberpunk.Arte.Editor
             log.AppendLine("   Deshechos por cuerpos encimados: " + cuenta.EscalonesDeshechos + " escalonados, " + cuenta.PisosDeshechos + " pisos extra, " + cuenta.CuartosDeshechos + " cuartos");
             log.AppendLine("3. Casas reteñidas: " + cuenta.Tinte + " con " + Paleta.Length + " colores; materiales nuevos: " + (Paleta.Length * 2) + " en " + CarpetaMateriales);
             log.AppendLine("4. Detalles de azotea agregados: " + cuenta.Detalles + " (" + string.Join(", ", cuenta.PorTipo.Select(p => p.Key + " " + p.Value)) + "), triángulos de detalles " + cuenta.TriDetalle);
+            log.AppendLine("   Cosas de Detalles asentadas en su azotea: " + cuenta.Asentados + ", separadas de lo que tenían encima: " + cuenta.Separados + ", sin poder separar: " + cuenta.SinSeparar);
             log.AppendLine("5. Cables nuevos: " + cuenta.Cables);
             log.AppendLine("Objetos Extra_ de primer nivel: " + objetos + ", triángulos agregados: " + triExtra);
         }

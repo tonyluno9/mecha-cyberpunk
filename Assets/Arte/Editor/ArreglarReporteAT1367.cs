@@ -44,8 +44,9 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Entre medio ancho + 0.5 m y esta distancia más, la subida baja suave hasta la altura original (m).</summary>
         public const float CaidaSuave = 5.5f;
         /// <summary>Margen a cada lado de la calle que cuenta como corredor (banqueta + 0.0), y cuánto queda el terreno bajo la calle (m).</summary>
-        public const float MargenCorredor = 1.5f;
+        public const float MargenCorredor = 3f; // que el borde de la banqueta no quede bajo la ladera (rejilla de 4 m)
         public const float BajoCalle = 0.15f;
+        public const float ToleranciaCorredor = 0.03f;
 
         /// <summary>Corredor de una calle: su eje (con alturas, en mundo) y su semiancho (ancho / 2 + 1.5 m).</summary>
         public sealed class Corredor
@@ -82,6 +83,28 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             return mejor < float.MaxValue;
+        }
+
+        /// <summary>El piso del túnel o la calle si va más abajo (dentro del túnel la calle baja de 10 m): la ladera va por debajo de los dos.</summary>
+        public static float PisoBajo(IList<Corredor> calles, float x, float z)
+        {
+            float piso = PisoTunel;
+            // La calle más cercana aunque el vértice quede fuera de su corredor (hasta dos celdas más): el triángulo llega hasta ella.
+            if (calles != null && AlturaCalle(calles.Select(c => new Corredor { Puntos = c.Puntos, Semiancho = c.Semiancho + 2f * CeldaLadera }).ToList(), x, z, out float yCalle))
+            {
+                piso = Mathf.Min(piso, yCalle);
+            }
+            return piso;
+        }
+
+        /// <summary>Lado (m) de la celda de la malla de altura de la ladera.</summary>
+        public const float CeldaLadera = 4f;
+
+        /// <summary>Si (x, z) cae a menos de <paramref name="extra"/> m más allá del corredor de alguna calle.</summary>
+        public static bool CercaDeCalle(IList<Corredor> calles, float x, float z, float extra)
+        {
+            List<Corredor> anchos = calles.Select(c => new Corredor { Puntos = c.Puntos, Semiancho = c.Semiancho + extra }).ToList();
+            return AlturaCalle(anchos, x, z, out _);
         }
 
         public static List<Corredor> Corredores(GameObject raiz)
@@ -224,17 +247,39 @@ namespace MechaCyberpunk.Arte.Editor
             for (int i = 0; i < w.Length; i++)
             {
                 float d = DistanciaAlEje(w[i].x, w[i].z);
-                if (d > MedioAnchoTunel + MargenTubo + CaidaSuave || w[i].y >= TechoLibre || EnHuellaBoca(w[i]))
+                float y = w[i].y;
+                // T-1377: no se sube nada a menos de una celda de la malla (4 m) más allá del corredor de una calle: si no, el triángulo
+                // entre un vértice bajado y uno subido pasa por encima del borde de la calle.
+                bool sube = d <= MedioAnchoTunel + MargenTubo + CaidaSuave && y < TechoLibre && !EnHuellaBoca(w[i])
+                    && (calles == null || !CercaDeCalle(calles, w[i].x, w[i].z, CeldaLadera));
+                if (sube)
                 {
-                    continue;
+                    // Dentro del tubo (+0.5 m) sube a TechoLibre; más afuera interpola hacia la altura original (sin paredes verticales).
+                    float k = 1f - Suave((d - (MedioAnchoTunel + MargenTubo)) / CaidaSuave);
+                    y = Mathf.Lerp(y, TechoLibre, k);
                 }
-                // Dentro del tubo (+0.5 m) sube a TechoLibre; más afuera interpola hacia la altura original (sin paredes verticales).
-                float k = 1f - Suave((d - (MedioAnchoTunel + MargenTubo)) / CaidaSuave);
-                float y = Mathf.Lerp(w[i].y, TechoLibre, k);
-                // Nunca por encima de la superficie de una calle del corredor: se deja como estaba o 15 cm bajo la calle.
-                if (calles != null && AlturaCalle(calles, w[i].x, w[i].z, out float yCalle) && y > yCalle)
+                if (calles != null && AlturaCalle(calles, w[i].x, w[i].z, out float yCalle))
                 {
-                    y = w[i].y <= yCalle ? w[i].y : yCalle - BajoCalle;
+                    // Nunca por encima de la superficie de una calle del corredor: se deja como estaba o 15 cm bajo la calle.
+                    if (y > yCalle)
+                    {
+                        y = w[i].y <= yCalle ? w[i].y : yCalle - BajoCalle;
+                    }
+                    // Un vértice más de 3 cm sobre la calle baja a 15 cm bajo ella.
+                    if (y > yCalle + ToleranciaCorredor)
+                    {
+                        y = yCalle - BajoCalle;
+                    }
+                    // Dentro del volumen del tubo la ladera no puede ser el piso del túnel (es de la autopista): 15 cm bajo el piso.
+                    if (DentroDelTubo(new Vector3(w[i].x, y, w[i].z)))
+                    {
+                        y = PisoBajo(calles, w[i].x, w[i].z) - BajoCalle;
+                    }
+                }
+                // Lo que quede dentro del tubo (no se subió por estar junto a una calle) va bajo el piso del túnel.
+                if (DentroDelTubo(new Vector3(w[i].x, y, w[i].z)))
+                {
+                    y = PisoBajo(calles, w[i].x, w[i].z) - BajoCalle;
                 }
                 if (y > w[i].y + 0.001f)
                 {

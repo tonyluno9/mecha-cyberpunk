@@ -36,7 +36,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float DesplazamientoEscaleraFila = -2f;
         // Grúas: posición original del generador, alto libre que debe quedar sobre las calles y holgura al arroyo (m).
         public const float XGruaBase = 175f, PasoGruas = 45f, ZGruaBase = -244f, AltoLibreCalle = 4.5f, HolguraArroyo = 0f;
-        public const float DesfaseZGrua = -2f, SeparacionGruas = 56f, ExclusionX0 = 293f, ExclusionX1 = 307f;
+        public const float DesfaseZGrua = -2.4f, /* 2.4 m al sur: el larguero norte no toca el arroyo de Calle_2 */ SeparacionGruas = 56f, ExclusionX0 = 293f, ExclusionX1 = 307f;
         public const float PasoBusquedaZ = 0.25f, RangoBusquedaZ = 14f, RangoBusquedaX = 6f;
 
         private static readonly string[] PropsConCollider = { "PU06_Pallets", "C17_Huacales", "C16_Tambo", "PU05_Montacargas" };
@@ -718,7 +718,12 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 return;
             }
-            GameObject pallet = Buscar("PU06_Pallets"), tambo = Buscar("C16_Tambo");
+            // Los extras son duplicados de un original del Puerto con sus mismos componentes (el tambo lleva BarrilExplosivo): no se instancia el prefab pelón.
+            Transform pallet = PlantillaProp(raiz, "PU06_Pallets", false), tambo = PlantillaProp(raiz, "C16_Tambo", true);
+            if (tambo == null || pallet == null)
+            {
+                informe.AppendLine("Bodegas: no hay un C16_Tambo con BarrilExplosivo o un PU06_Pallets original en el Puerto para duplicar: sin extras");
+            }
             List<Transform> bodegas = padre.Cast<Transform>().Where(t => NombresBodegas.Any(n => t.name.StartsWith(n))).ToList();
             int extras = 0;
             foreach (Transform b in bodegas)
@@ -734,20 +739,64 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     Object.DestroyImmediate(viejo.gameObject);
                 }
-                if (pallet == null || tambo == null)
+                // T-1376: sin extras en las puertas (quedaban dentro de la caja de la bodega y se encimaban); el grupo viejo ya se borró arriba.
+                if (!PonerExtrasBodegas || pallet == null || tambo == null)
                 {
                     continue;
                 }
                 Transform grupo = new GameObject(marca).transform;
                 grupo.SetParent(padre, false);
-                Poner(pallet, grupo, frente + normal * 1.8f + lado * 11f, 90f, 1.2f);
-                Poner(pallet, grupo, frente + normal * 1.8f + lado * 12.4f, 85f, 1.0f);
-                Poner(tambo, grupo, frente + normal * 1.3f - lado * 11f, 0f, 1.0f);
-                Poner(tambo, grupo, frente + normal * 1.3f - lado * 12f, 0f, 1.0f);
-                Poner(tambo, grupo, frente + normal * 2.2f - lado * 11.5f, 0f, 1.0f);
+                PonerCopia(pallet, grupo, frente + normal * 1.8f + lado * 11f, 90f, 1.2f);
+                PonerCopia(pallet, grupo, frente + normal * 1.8f + lado * 12.4f, 85f, 1.0f);
+                PonerCopia(tambo, grupo, frente + normal * 1.3f - lado * 11f, 0f, 1.0f);
+                PonerCopia(tambo, grupo, frente + normal * 1.3f - lado * 12f, 0f, 1.0f);
+                PonerCopia(tambo, grupo, frente + normal * 2.2f - lado * 11.5f, 0f, 1.0f);
                 extras += 5;
             }
             informe.AppendLine("Bodegas: " + bodegas.Count + " con collider de malla; " + extras + " pallets y tambos extra en las puertas (a una calle de x=160 quedan a >= " + DespejeCalle + " m del eje)");
+        }
+
+        /// <summary>T-1376: los pallets y tambos extra en las puertas de las bodegas se apagaron: se encimaban con la bodega.</summary>
+        private const bool PonerExtrasBodegas = false;
+
+        /// <summary>Un original del Puerto (no extra) con ese nombre; con <paramref name="conBarril"/> exige un componente BarrilExplosivo y un collider.</summary>
+        private static Transform PlantillaProp(Transform raiz, string codigo, bool conBarril)
+        {
+            return raiz.GetComponentsInChildren<Transform>(true)
+                .Where(x => x.name.StartsWith(codigo) && PrefabUtility.GetNearestPrefabInstanceRoot(x) == x.gameObject && !EsExtra(x))
+                .FirstOrDefault(x => !conBarril || (x.GetComponentsInChildren<Component>(true).Any(c => c != null && c.GetType().Name == "BarrilExplosivo")
+                    && x.GetComponentsInChildren<Collider>(true).Length > 0));
+        }
+
+        private static bool EsExtra(Transform x)
+        {
+            for (Transform p = x.parent; p != null; p = p.parent)
+            {
+                if (p.name.StartsWith("Extra_"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>Duplica la plantilla (con todos sus componentes) y la pone con la base centrada en <paramref name="pie"/>, a la altura <paramref name="alto"/>.</summary>
+        private static void PonerCopia(Transform plantilla, Transform padre, Vector3 pie, float yaw, float alto)
+        {
+            if (plantilla == null)
+            {
+                return;
+            }
+            GameObject go = Object.Instantiate(plantilla.gameObject, padre);
+            go.name = plantilla.gameObject.name;
+            go.SetActive(true);
+            go.transform.rotation = Quaternion.identity;
+            Bounds b = LimitesRenderers(go.transform);
+            go.transform.localScale *= b.size.y > 1e-4f ? alto / b.size.y : 1f;
+            go.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+            b = LimitesRenderers(go.transform);
+            go.transform.position += new Vector3(pie.x - b.center.x, pie.y - b.min.y, pie.z - b.center.z);
+            ActivarColliders(go.transform);
         }
 
         private static GameObject Buscar(string codigo)

@@ -157,7 +157,8 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Barrido_SinColliderYCarroEnElCarril_EnCero()
         {
             List<BarridoZonasT1360.Hallazgo> r = BarridoZonasT1360.BarrerZona(zona).ToList();
-            Assert.AreEqual(0, r.Count(h => h.tipo == BarridoZonasT1360.TipoSinCollider));
+            // Los tendederos (CC04) van sin collider a propósito: estorbaban los saltos entre azoteas y es ropa colgada (T-1373).
+            Assert.AreEqual(0, r.Count(h => h.tipo == BarridoZonasT1360.TipoSinCollider && !h.ruta.Contains("CC04_Tendedero")));
             Assert.AreEqual(0, r.Count(h => h.tipo == BarridoZonasT1360.TipoCarro));
         }
     }

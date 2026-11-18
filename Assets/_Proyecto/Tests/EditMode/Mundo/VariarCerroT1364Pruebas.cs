@@ -104,6 +104,16 @@ namespace MechaCyberpunk.Tests.Mundo
             List<string> mal = new List<string>();
             foreach (MeshFilter mf in contenido.GetComponentsInChildren<MeshFilter>(true))
             {
+                bool esExtra = false;
+                for (Transform t = mf.transform; t != null && t != contenido.transform; t = t.parent)
+                {
+                    esExtra |= t.name.StartsWith(VariarCerroT1364.Prefijo);
+                }
+                // VentanaCalida es el vidrio luminoso del kit que viene dentro de las fachadas que se copian para el piso extra: no es nuevo.
+                if (!esExtra || mf.name == "VentanaCalida")
+                {
+                    continue;
+                }
                 Mesh m = mf.sharedMesh;
                 if (m != null && (AssetDatabase.GetAssetPath(m) == "Library/unity default resources" || nombres.Contains(m.name)))
                 {
