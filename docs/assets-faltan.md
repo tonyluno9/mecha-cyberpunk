@@ -18,3 +18,9 @@ El código ya está listo con un hueco para cada uno. Cuando llegue el asset se 
 | Texturas de techos y calles | Ciudad | Pedidas al chat de arte |
 | Maletín del dinero (MA01 por Tripo) | Atraco | No se hizo |
 | Lugares nuevos | Ciudad | Pedir referencia a Tony antes de armarlos |
+
+## T-1337: mira del rifle de plasma (W07)
+
+| Qué | Para qué | Hueco en el código |
+| --- | --- | --- |
+| Pieza de mira propia en el modelo W07 (el FBX de Tripo es una sola malla; la "Mira" del banco es un corte de región) | Una mira visible en el arma | Sin hueco: hoy la mira es la línea de `MiraLaserPlasma` en `ArmasEspecialesAPie` |

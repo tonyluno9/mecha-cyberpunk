@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private const float AlturaManoGranada = 1.45f;
         private const float AdelanteManoGranada = 0.35f;
         private const float LatidoRayo = 18f;
+        private const float AnchoLaser = 0.01f;
         private const float IntensidadBola = 1.4f;
         private static readonly int ColorBase = Shader.PropertyToID("_BaseColor");
 
@@ -35,6 +36,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private DatosArma datosPlasma;
         private bool pulsadoAntes;
         private LineRenderer arco;
+        private LineRenderer laser;
         private EfectoRayoPlasma rayo;
         private int bucleChispeo = Sonidos.SinBucle;
         /// <summary>T-1309: ID del chispeo en bucle mientras carga el rifle de plasma.</summary>
@@ -66,6 +68,9 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>True si se está dibujando el arco de la granada.</summary>
         public bool ArcoVisible => arco != null && arco.enabled;
 
+        /// <summary>T-1337: True si se dibuja la línea de mira del rifle de plasma (apuntando, antes y durante la carga).</summary>
+        public bool LaserVisible => laser != null && laser.enabled;
+
         /// <summary>La última granada o proyectil lanzado (para las pruebas).</summary>
         public ProyectilAPie UltimoProyectil { get; private set; }
 
@@ -76,6 +81,8 @@ namespace MechaCyberpunk.Personaje.Combate
             armas = GetComponent<ArmasAPie>();
             cfg = ConfigArmasEspeciales.Actual;
             arco = Linea("ArcoGranada", cfg.AnchoArco, cfg.ColorArco);
+            laser = Linea("MiraLaserPlasma", AnchoLaser, cfg.ColorRayo);
+            laser.positionCount = 2;
             rayo = EfectoRayoPlasma.Crear(transform, cfg.MaterialRayo, cfg.ColorRayo, cfg.AnchoRayo);
             puntosArco = new Vector3[Mathf.Max(2, cfg.PuntosArco)];
             GameObject bola = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -140,6 +147,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private void OnDestroy()
         {
             if (arco != null) Destroy(arco.gameObject);
+            if (laser != null) Destroy(laser.gameObject);
             if (rayo != null) Destroy(rayo.gameObject);
         }
 
@@ -247,6 +255,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 case TipoDisparoArma.Rayo:
                     arco.enabled = false;
                     Plasma(arma, cargador, d, pulsado);
+                    DibujarLaser(arma, d);
                     break;
             }
         }
@@ -259,6 +268,10 @@ namespace MechaCyberpunk.Personaje.Combate
             if (arco != null)
             {
                 arco.enabled = false;
+            }
+            if (laser != null)
+            {
+                laser.enabled = false;
             }
             plasma?.Cancelar();
             ApagarPlasma();
@@ -334,6 +347,21 @@ namespace MechaCyberpunk.Personaje.Combate
         }
 
         // ---- Rifle de plasma ----
+
+        // T-1337: la mira del rifle de plasma, como el arco del lanzagranadas: apuntando, una línea fina de la boca al punto que marca la cámara.
+        // Se apaga al salir el rayo (el rayo ya es la línea).
+        private void DibujarLaser(ArmaAPie arma, DatosArma d)
+        {
+            bool ver = controlador.Apuntando && EstadoPlasma != EstadoPlasma.Rayo;
+            if (ver)
+            {
+                Transform boca = pistola.BocaDe(arma);
+                Vector3 origen = boca != null ? boca.position : transform.position + Vector3.up * AlturaManoGranada;
+                laser.SetPosition(0, origen);
+                laser.SetPosition(1, pistola.PuntoDeMira(d.Alcance));
+            }
+            laser.enabled = ver;
+        }
 
         private void Plasma(ArmaAPie arma, CargadorPistola cargador, DatosArma d, bool pulsado)
         {
