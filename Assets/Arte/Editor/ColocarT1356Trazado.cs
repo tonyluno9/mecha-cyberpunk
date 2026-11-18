@@ -4,9 +4,10 @@ using UnityEngine;
 namespace MechaCyberpunk.Arte.Editor
 {
     /// <summary>
-    /// T-1356: trazado puro (sin escena) de la autopista elevada del borde norte y sus uniones con la ciudad (plan-zonas-18nov.md).
-    /// Cada lista es la línea del centro de una calle, en mundo, con la y real del tablero. Las uniones U6 a U9 salen EXACTAS.
-    /// Las pruebas de EditMode (AutopistaT1356Pruebas) miden pendiente, radio, uniones y separación de columnas sobre estas listas.
+    /// T-1356 y T-1362: trazado puro (sin escena) de la autopista elevada del borde norte y sus uniones con la ciudad (plan-zonas-18nov.md).
+    /// Cada lista es la línea del centro de una calle, en mundo, con la y real del tablero. Las uniones U6, U8 y U9 salen EXACTAS; la U7 (rampa norte)
+    /// se reubicó en T-1362: la rampa sale de la calle baja y sube hacia el oeste, junto al túnel, como en K18.
+    /// Las pruebas de EditMode (AutopistaT1356Pruebas) miden pendiente, radio, uniones, separación de columnas y de casas sobre estas listas.
     /// </summary>
     public static class ColocarT1356Trazado
     {
@@ -25,6 +26,31 @@ namespace MechaCyberpunk.Arte.Editor
         public const float PasoCurva = 15f;
         /// <summary>Metros antes de tocar la huella de la losa principal en los que la rampa norte ya va a la altura del tablero.</summary>
         public const float MargenIncorporacion = 15f;
+        /// <summary>Línea del centro del tramo recto de la rampa norte (z, m).</summary>
+        public const float ZRampaNorte = 232f;
+        /// <summary>Calle baja de barrio (T-1362): z = 215 de x = -212 (donde llega la calle oeste) hasta el enlace de la rampa (-120,0,215).</summary>
+        public const float ZCalleBaja = 215f;
+        public const float XOesteCalleBaja = -212f;
+        /// <summary>Separación mínima (m) en planta entre el borde del tablero y cualquier casa.</summary>
+        public const float SeparacionCasasTablero = 8f;
+        public const float MedioTableroPlanta = 7.2f;
+
+        /// <summary>Huellas en planta (x0, x1, z0, z1) de las hileras de casitas que coloca ColocarT1356Autopista.Bajo.</summary>
+        public static readonly (float x0, float x1, float z0, float z1)[] HuellasCasas =
+        {
+            (-195f, -135f, 199f, 205f), // sur de la calle baja, de cara al norte
+            (40f, 225f, 204f, 210f),    // sur de la calle del lote este
+            (-320f, 325f, 268f, 280f),  // detrás del tablero, de cara al sur
+            (-258f, -252f, 80f, 170f),  // oeste de la calle oeste (x = -242), de cara al este
+        };
+
+        /// <summary>Distancia en planta (m) de un punto a una huella rectangular (0 si está dentro).</summary>
+        public static float DistanciaAHuella(Vector3 punto, (float x0, float x1, float z0, float z1) h)
+        {
+            float dx = Mathf.Max(h.x0 - punto.x, 0f, punto.x - h.x1);
+            float dz = Mathf.Max(h.z0 - punto.z, 0f, punto.z - h.z1);
+            return Mathf.Sqrt(dx * dx + dz * dz);
+        }
 
         /// <summary>Puntos a lo largo de la línea cada <paramref name="paso"/> m (con y interpolada), incluidos los extremos.</summary>
         public static List<Vector3> Resamplear(IList<Vector3> p, float paso)
@@ -44,7 +70,8 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly Vector3 U6Salida = new Vector3(-360f, 10f, 185f);
         public static readonly Vector3 U7Inicio = new Vector3(-107f, 0f, 201f);
         public static readonly Vector3 U7Enlace = new Vector3(-120f, 0f, 215f);
-        public static readonly Vector3 U7Union = new Vector3(30f, 10f, 250f);
+        /// <summary>T-1362: la rampa norte sube hacia el OESTE (junto al túnel, como K18) y se une al tablero en (-270,10,250); antes era (30,10,250).</summary>
+        public static readonly Vector3 U7Union = new Vector3(-270f, 10f, 250f);
         public static readonly Vector3 U8Curva = new Vector3(240f, 10f, 250f);
         public static readonly Vector3 U8Bajada = new Vector3(300f, 10f, 190f);
         public static readonly Vector3 U8Piso = new Vector3(300f, 0f, 60f);
@@ -76,7 +103,7 @@ namespace MechaCyberpunk.Arte.Editor
             return p;
         }
 
-        /// <summary>Recta z = 250 de la boca a (240,10,250) cada 30 m (pasa por U7 en x = 30), curva de 90 grados de radio 60 y bajada recta por x = 300 hasta el piso en z = 60.</summary>
+        /// <summary>Recta z = 250 de la boca a (240,10,250) cada 30 m (pasa por U7 en x = -270), curva de 90 grados de radio 60 y bajada recta por x = 300 hasta el piso en z = 60.</summary>
         public static List<Vector3> Principal()
         {
             List<Vector3> p = new List<Vector3>();
@@ -97,33 +124,73 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Límite de la recta plana: índices 0 a <see cref="IndiceFinRecta"/> de <see cref="Principal"/> (x -330 a 240).</summary>
         public const int IndiceFinRecta = 19;
 
+        /// <summary>Calle baja con banquetas: del oeste al enlace de la rampa norte (U7Enlace), de donde sale la rampa.</summary>
+        public static List<Vector3> CalleBaja()
+        {
+            return new List<Vector3>
+            {
+                new Vector3(XOesteCalleBaja, 0f, ZCalleBaja), new Vector3(-165f, 0f, ZCalleBaja), U7Enlace,
+            };
+        }
+
+        /// <summary>Extremo norte (abierto) de la calle cruzada oeste de T530 (x = -242, z -60 a 60): ahí arranca la calle oeste de la autopista.</summary>
+        public static readonly Vector3 CruzadaOesteNorte = new Vector3(-242f, 0f, 60f);
+        public const float RadioCalleOeste = 30f;
+        /// <summary>Ancho (m) de la calle oeste de la autopista.</summary>
+        public const float AnchoCalleOeste = 14f;
+
         /// <summary>
-        /// Rampa norte: del borde de la calle cruzada norte (U7) y su enlace (-120,0,215), curva a la derecha de radio 40 hasta ir al este,
-        /// recta, y una S de radio 40 que la lleva a z = 250 y y = 10 en (30,10,250), tangente a la autopista. Sube con pendiente pareja desde el enlace.
+        /// Calle oeste (T-1362): de la calle cruzada oeste de T530 (-242,0,60) recta al norte por x = -242 y una vuelta de radio 30 al este hasta la calle baja
+        /// en (-212,0,215). Con la calle baja y la rampa une la calle oeste, el enlace (-120,0,215) y la calle cruzada norte (-107,0,201).
+        /// </summary>
+        public static List<Vector3> CalleOeste()
+        {
+            List<Vector3> p = new List<Vector3> { CruzadaOesteNorte };
+            for (float z = 90f; z < 185f - 1f; z += 31.67f)
+            {
+                p.Add(new Vector3(-242f, 0f, z));
+            }
+            p.Add(new Vector3(-242f, 0f, 185f));
+            p.AddRange(Arco(-242f + RadioCalleOeste, 185f, RadioCalleOeste, 180f, 90f, PasoCurva, 0f));
+            p[p.Count - 1] = new Vector3(XOesteCalleBaja, 0f, ZCalleBaja);
+            return p;
+        }
+
+        /// <summary>Puntos de la red que NO son de las zonas de la autopista pero a los que sus extremos se unen (calles de T530, cerro, puerto).</summary>
+        public static readonly Vector3[] PuntosDeLaRedExterna =
+        {
+            CruzadaOesteNorte, U7Inicio, U6Salida, U9Calle, PuertaNortePuerto,
+        };
+
+        /// <summary>
+        /// Rampa norte (T-1362): del borde de la calle cruzada norte (U7) y su enlace (-120,0,215) sobre la calle baja, curva a la izquierda (radio ~53)
+        /// hasta ir al OESTE por z = 232, recta, y una S de radio 40 que la lleva a z = 250 y y = 10 en (-270,10,250), tangente a la autopista.
+        /// Sube con pendiente pareja desde el enlace (~8.4 %).
         /// </summary>
         public static List<Vector3> RampaNorte()
         {
             const float r = RadioRampaNorte;
-            float sen45 = Mathf.Sin(45f * Mathf.Deg2Rad);
-            float cx = U7Enlace.x + r * sen45;
-            float cz = U7Enlace.z - r * sen45;
+            Vector3 dir = Planta(U7Enlace - U7Inicio).normalized;
+            float h = Mathf.Atan2(dir.z, dir.x);
+            float r1 = (ZRampaNorte - U7Enlace.z) / (1f + Mathf.Cos(h));
+            float cx = U7Enlace.x - r1 * Mathf.Sin(h);
+            float cz = U7Enlace.z + r1 * Mathf.Cos(h);
             List<Vector3> p = new List<Vector3> { U7Inicio, U7Enlace };
-            p.AddRange(Arco(cx, cz, r, 135f, 90f, PasoCurva, 0f));
-            float zE = cz + r;
-            float d = U7Union.z - zE;
+            p.AddRange(Arco(cx, cz, r1, h * Mathf.Rad2Deg - 90f, 90f, PasoCurva, 0f));
+            float d = U7Union.z - ZRampaNorte;
             float theta = Mathf.Acos(1f - d / (2f * r));
-            float xS = U7Union.x - 2f * r * Mathf.Sin(theta);
-            for (float x = Mathf.Ceil((cx + 10f) / 20f) * 20f; x < xS - 10f; x += 20f)
+            float xS = U7Union.x + 2f * r * Mathf.Sin(theta);
+            for (float x = Mathf.Floor((cx - 10f) / 20f) * 20f; x > xS + 10f; x -= 20f)
             {
-                p.Add(new Vector3(x, 0f, zE));
+                p.Add(new Vector3(x, 0f, ZRampaNorte));
             }
-            p.Add(new Vector3(xS, 0f, zE));
+            p.Add(new Vector3(xS, 0f, ZRampaNorte));
             float tg = theta * Mathf.Rad2Deg;
-            p.AddRange(Arco(xS, zE + r, r, -90f, -90f + tg, tg / 3f, 0f));
-            p.AddRange(Arco(xS + 2f * r * Mathf.Sin(theta), zE + r - 2f * r * Mathf.Cos(theta), r, 90f + tg, 90f, tg / 3f, 0f));
+            p.AddRange(Arco(xS, ZRampaNorte + r, r, -90f, -90f - tg, tg / 3f, 0f));
+            p.AddRange(Arco(xS - 2f * r * Mathf.Sin(theta), U7Union.z - r, r, 90f - tg, 90f, tg / 3f, 0f));
             // La y sube pareja desde el enlace y llega a 10 m (la altura del tablero) MargenIncorporacion m antes de que el centro de la rampa entre
-            // en la huella de la losa principal (z >= 250 - 7.2); desde ahí va a nivel y se une en plano (pendiente ~8 %).
-            float zToca = ZTablero - 7.2f;
+            // en la huella de la losa principal (z >= 250 - 7.2); desde ahí va a nivel y se une en plano.
+            float zToca = ZTablero - MedioTableroPlanta;
             float sToca = -1f;
             float acumulado = 0f;
             for (int i = 2; i < p.Count && sToca < 0f; i++)
