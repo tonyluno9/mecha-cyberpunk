@@ -42,6 +42,11 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Cara este del acantilado: 1 m detrás del frente de la boca (x = -330) para que la pieza AU06 no choque con la roca.</summary>
         public const float CaraAcantiladoX = -331f;
         public const float AltoAcantilado = 45f;
+        /// <summary>Mitad del ancho (m) del hueco de la boca en la cara del acantilado (el tubo mide 16 m por fuera).</summary>
+        public const float BocaMitadAncho = 8f;
+        /// <summary>Radio (m, en planta) alrededor del eje del túnel donde la roca queda por encima del techo; margen (m) sobre el techo del tubo.</summary>
+        public const float RadioLimpioTunel = 21f;
+        public const float MargenTechoRoca = 1.5f;
         public const float AltoBordeSinTerreno = 25f;
         private const float MedioAsfalto = 6.5f;
         private const float MedioTablero = 7.2f;
@@ -322,7 +327,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static void Piso(KitS2c.Obra o, Transform padre, string nombre, List<Vector3> p)
         {
             Transform t = Hijo(padre, nombre);
-            Barrer(o, t, "Asfalto", p, -7f, 7f, -0.6f, 0f, KitS2c.MatAsfalto(), true, true);
+            Barrer(o, t, "Asfalto", p, -7f, 7f, -1f, 0f, KitS2c.MatAsfalto(), true, true); // cara de arriba EXACTAMENTE en y = 0: la losa crece hacia abajo
             Barrer(o, t, "Banqueta_Izq", p, -10f, -7f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
             Barrer(o, t, "Banqueta_Der", p, 7f, 10f, -0.6f, 0.2f, KitS2c.MatBanqueta(), true, true, 4f);
         }
@@ -517,6 +522,12 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 zs.Add(z);
             }
+            // La boca deja libre el hueco del tubo (16 m de ancho): sus bordes entran como líneas de la malla para cortar la cara este sin huecos de más.
+            zs.Add(T.ZTablero - BocaMitadAncho);
+            zs.Add(T.ZTablero + BocaMitadAncho);
+            zs.Sort();
+            List<Vector3> ejeTunel = T.Resamplear(T.Tunel(), 2f);
+            float sobreTecho = T.YTablero + AltoTunel + 1.2f + MargenTechoRoca;
             int nx = xs.Count;
             int nz = zs.Count;
             float[] borde = new float[nx];
@@ -537,6 +548,12 @@ namespace MechaCyberpunk.Arte.Editor
                     float tope = AltoAcantilado + 5f * Mathf.Sin(x * 0.07f) * Mathf.Cos(z * 0.09f) + (ruido - 0.5f) * 8f;
                     float t = Mathf.SmoothStep(0f, 1f, (z - 205f) / 25f);
                     float h = Mathf.Lerp(borde[i], tope, t);
+                    // Ningún vértice de roca queda dentro del corredor del túnel: a menos de ~21 m en planta del eje (el paso de la malla es de 10 x 5 m, así los triángulos
+                    // tampoco cortan el tubo) se sube por encima del techo del tubo + margen.
+                    if (i < nx - 1 && ejeTunel.Any(q => T.Planta(q - new Vector3(x, 0f, z)).magnitude < RadioLimpioTunel))
+                    {
+                        h = Mathf.Max(h, sobreTecho);
+                    }
                     if (i == nx - 1)
                     {
                         h = -0.5f;
@@ -565,6 +582,30 @@ namespace MechaCyberpunk.Arte.Editor
                     int b = a + 1;
                     int c = a + nz;
                     int d = c + 1;
+                    bool cara = i == nx - 2;
+                    if (cara && zs[j] >= T.ZTablero - BocaMitadAncho - 0.01f && zs[j + 1] <= T.ZTablero + BocaMitadAncho + 0.01f)
+                    {
+                        // Cara este sobre la boca: se corta el hueco del tubo (de y = piso del tubo a su techo) y quedan la roca de abajo y la de arriba.
+                        float xCara = v[a].x;
+                        float yBajo = T.YTablero - GruesoTablero;
+                        float yAlto = T.YTablero + AltoTunel + 1.2f;
+                        int k0 = v.Count;
+                        v.Add(new Vector3(xCara, -0.5f, zs[j]));
+                        v.Add(new Vector3(xCara, -0.5f, zs[j + 1]));
+                        v.Add(new Vector3(xCara, yBajo, zs[j]));
+                        v.Add(new Vector3(xCara, yBajo, zs[j + 1]));
+                        v.Add(new Vector3(xCara, yAlto, zs[j]));
+                        v.Add(new Vector3(xCara, yAlto, zs[j + 1]));
+                        v.Add(new Vector3(xCara, Mathf.Max(yAlto, v[a].y), zs[j]));
+                        v.Add(new Vector3(xCara, Mathf.Max(yAlto, v[b].y), zs[j + 1]));
+                        for (int q = 0; q < 8; q++)
+                        {
+                            uv.Add(new Vector2((v[k0 + q].z + 0.5f * v[k0 + q].x) / 8f, (0.5f * v[k0 + q].z + v[k0 + q].y) / 8f));
+                        }
+                        // Normal hacia +x (afuera): (inferior-z0, superior-z0, inferior-z1).
+                        tris.AddRange(new[] { k0, k0 + 2, k0 + 1, k0 + 1, k0 + 2, k0 + 3, k0 + 4, k0 + 6, k0 + 5, k0 + 5, k0 + 6, k0 + 7 });
+                        continue;
+                    }
                     tris.AddRange(new[] { a, b, c, b, d, c });
                 }
             }
@@ -753,7 +794,7 @@ namespace MechaCyberpunk.Arte.Editor
                 bool enCalle = !o.Chance(0.7f);
                 float xc = enCalle ? (o.Chance(0.6f) ? o.Rango(-200f, -135f) : o.Rango(45f, 220f)) : o.Rango(-300f, 225f);
                 // Estacionados pegados a la banqueta (a 5.5 m del eje), no sobre el carril; nada en el enlace de la rampa norte (U7).
-                float orilla = (o.Chance(0.5f) ? 1f : -1f) * 5.5f;
+                float orilla = (o.Chance(0.5f) ? 1f : -1f) * 6.3f;
                 Vector3 p = new Vector3(xc, 0f, enCalle ? (xc < 0f ? T.ZCalleBaja : 216f) + orilla : o.Rango(230f, 257f));
                 bool enEnlaceU7 = p.x > -132f && p.x < -92f && p.z > 192f && p.z < 244f;
                 if (enEnlaceU7 || BajoRampa(rampaNorte, p, 10f) || columnas.Any(q => Mathf.Abs(q.x - p.x) < 8f && Mathf.Abs(q.z - p.z) < 4f))

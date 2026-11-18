@@ -25,7 +25,9 @@ namespace MechaCyberpunk.Arte.Editor
         public const float AlturaMinimaColumna = 2f;
         public const float PasoCurva = 15f;
         /// <summary>Metros antes de tocar la huella de la losa principal en los que la rampa norte ya va a la altura del tablero.</summary>
-        public const float MargenIncorporacion = 15f;
+        public const float MargenIncorporacion = 6f;
+        /// <summary>Metros desde el enlace U7 en los que la rampa norte va a ras del piso (sin canto sobre la calle baja); la pendiente sube después.</summary>
+        public const float TramoRasante = 12f;
         /// <summary>Línea del centro del tramo recto de la rampa norte (z, m).</summary>
         public const float ZRampaNorte = 232f;
         /// <summary>Calle baja de barrio (T-1362): z = 215 de x = -212 (donde llega la calle oeste) hasta el enlace de la rampa (-120,0,215).</summary>
@@ -165,7 +167,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>
         /// Rampa norte (T-1362): del borde de la calle cruzada norte (U7) y su enlace (-120,0,215) sobre la calle baja, curva a la izquierda (radio ~53)
         /// hasta ir al OESTE por z = 232, recta, y una S de radio 40 que la lleva a z = 250 y y = 10 en (-270,10,250), tangente a la autopista.
-        /// Sube con pendiente pareja desde el enlace (~8.4 %).
+        /// Va a ras 12 m desde el enlace y luego sube con pendiente pareja (~8.6 %).
         /// </summary>
         public static List<Vector3> RampaNorte()
         {
@@ -208,7 +210,7 @@ namespace MechaCyberpunk.Arte.Editor
             for (int i = 2; i < p.Count; i++)
             {
                 s += Planta(p[i] - p[i - 1]).magnitude;
-                p[i] = new Vector3(p[i].x, YTablero * Mathf.Min(1f, s / sLlana), p[i].z);
+                p[i] = new Vector3(p[i].x, YTablero * Mathf.Clamp01((s - TramoRasante) / (sLlana - TramoRasante)), p[i].z);
             }
             p[p.Count - 1] = U7Union;
             return p;
