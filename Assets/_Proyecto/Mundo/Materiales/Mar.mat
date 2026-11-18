@@ -31,12 +31,12 @@ Material:
     - _EscalaRuido: 0.35
     - _FresnelMin: 0.04
     - _FresnelPotencia: 4
-    - _FuerzaEspuma: 0.9
-    - _FuerzaNormal: 0.6
-    - _GananciaLuces: 3
-    - _GananciaLuna: 1.5
+    - _FuerzaEspuma: 0
+    - _FuerzaNormal: 0.45
+    - _GananciaLuces: 4
+    - _GananciaLuna: 0.35
     - _LargoOla: 14
-    - _Reflejo: 1
+    - _Reflejo: 0.6
     - _Rugosidad: 0.25
     - _SoloEspuma: 0
     - _TransparenciaOrilla: 1.2

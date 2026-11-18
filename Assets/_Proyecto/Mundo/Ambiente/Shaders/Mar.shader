@@ -16,17 +16,17 @@ Shader "MechaCyberpunk/Mar"
         _VelocidadOla ("Velocidad de ola", Range(0, 3)) = 0.6
         _EscalaRuido ("Escala del ruido de normales (1/m)", Range(0.02, 2)) = 0.35
         _VelocidadRuido ("Velocidad del ruido", Range(0, 2)) = 0.25
-        _FuerzaNormal ("Fuerza de normales", Range(0, 2)) = 0.6
+        _FuerzaNormal ("Fuerza de normales", Range(0, 2)) = 0.45
         _FresnelMin ("Reflejo mirando hacia abajo", Range(0, 1)) = 0.04
         _FresnelPotencia ("Potencia del fresnel", Range(1, 8)) = 4
-        _Reflejo ("Intensidad del reflejo de la sonda", Range(0, 3)) = 1
+        _Reflejo ("Intensidad del reflejo de la sonda", Range(0, 3)) = 0.6
         _Rugosidad ("Rugosidad del reflejo", Range(0, 1)) = 0.25
         _AnchoEstela ("Ancho de la estela de luz (rad)", Range(0.005, 0.3)) = 0.05
-        _GananciaLuces ("Ganancia de la estela de luces", Range(0, 20)) = 3
-        _GananciaLuna ("Ganancia de la luz principal", Range(0, 10)) = 1.5
+        _GananciaLuces ("Ganancia de la estela de luces", Range(0, 20)) = 4
+        _GananciaLuna ("Ganancia de la luz principal", Range(0, 10)) = 0.35
         _AnchoOrilla ("Ancho de la espuma por profundidad (m)", Range(0.05, 5)) = 0.8
         _ColorEspuma ("Espuma", Color) = (0.85, 0.92, 0.95, 1)
-        _FuerzaEspuma ("Fuerza de la espuma", Range(0, 1)) = 0.9
+        _FuerzaEspuma ("Fuerza de la espuma", Range(0, 1)) = 0
         _TransparenciaOrilla ("Transparencia en lo somero (m)", Range(0.05, 6)) = 1.2
         _SoloEspuma ("Solo espuma (franja de orilla)", Range(0, 1)) = 0
     }
