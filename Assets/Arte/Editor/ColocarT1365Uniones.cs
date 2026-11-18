@@ -29,6 +29,43 @@ namespace MechaCyberpunk.Arte.Editor
             ("U9-conector-este", new Vector3(240f, 1.7f, 2f), new Vector3(300f, 1f, 0f)),
         };
 
+        public const string NombreRaiz = "T1365_Uniones";
+
+        /// <summary>Lo que sobresale el piso de respaldo bajo el nivel de calle (m): no se ve donde hay piso y no hay z-fighting.</summary>
+        public const float BajoCalle = 0.05f;
+
+        /// <summary>
+        /// Franjas sin piso que dejó apagar los edificios de fondo de T530 (barrido T-1360: "hueco" y "vacio"): x0, z0, x1, z1 en planta.
+        /// Norte: alrededor de la calle cruzada norte y del enlace a la rampa (U7). Sur: entre la cruzada sur y las fachadas del Malecón (U1, U2).
+        /// Este: de la calle cruzada este al límite del mundo (rampa este, U8, U9). Puerto norte: franja entre las afueras este y la reja del Puerto.
+        /// </summary>
+        public static readonly (string nombre, Vector4 rect)[] PisosRespaldo =
+        {
+            ("Norte", new Vector4(-125f, 160f, 125f, 206f)),
+            ("Sur", new Vector4(-115f, -212f, 115f, -180f)),
+            ("Este", new Vector4(280f, -48f, 345f, 290f)),
+            ("PuertoNorte", new Vector4(115f, -48f, 280f, -28f)),
+        };
+
+        /// <summary>Pone los pisos de respaldo (asfalto con collider) bajo la raíz T1365_Uniones. Idempotente.</summary>
+        public static void Aplicar()
+        {
+            ColocarS2.Abrir();
+            KitS2c.Obra o = KitS2c.Empezar(NombreRaiz, 1365);
+            Material asfalto = KitS2c.MatAsfalto();
+            foreach ((string nombre, Vector4 r) in PisosRespaldo)
+            {
+                Vector3 tam = new Vector3(r.z - r.x, 1f, r.w - r.y);
+                Vector3 centro = new Vector3((r.x + r.z) * 0.5f, -BajoCalle - tam.y * 0.5f, (r.y + r.w) * 0.5f);
+                GameObject losa = KitS2c.Losa(o, o.Raiz, "PisoRespaldo_" + nombre, centro, Quaternion.identity, tam, asfalto, 4f, true);
+                UnityEditor.GameObjectUtility.SetStaticEditorFlags(losa, UnityEditor.StaticEditorFlags.BatchingStatic | UnityEditor.StaticEditorFlags.OccludeeStatic);
+            }
+            KitS2c.Terminar(o);
+            ColocarS2.Informe.Clear();
+            ColocarS2.Informe.AppendLine("T-1365: " + PisosRespaldo.Length + " pisos de respaldo a " + BajoCalle + " m bajo la calle");
+            ColocarS2.Guardar("t1365-uniones");
+        }
+
         public static void Fotos()
         {
             string etapa = "antes";

@@ -884,7 +884,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             foreach (Light l in Object.FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
-                if (!l.enabled || l.type == LightType.Directional || l.type == LightType.Area || Ignorado(l.transform) || !EnAlcance(ZonaPorPosicion(l.transform.position)))
+                if (!l.enabled || l.type == LightType.Directional || l.type == LightType.Rectangle || Ignorado(l.transform) || !EnAlcance(ZonaPorPosicion(l.transform.position)))
                 {
                     continue;
                 }
