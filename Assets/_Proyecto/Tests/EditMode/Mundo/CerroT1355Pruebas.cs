@@ -46,7 +46,7 @@ namespace MechaCyberpunk.Tests.Mundo
             float difY;
             Assert.Less(CerroT1355Trazado.DistanciaAPunto(CerroT1355Trazado.CalleBase(), zigzag[0], out difY), 0.01f);
             Vector3 fin = zigzag[zigzag.Count - 1];
-            Assert.That(fin.y, Is.InRange(30f, 42f), "la plaza queda arriba (~35 m)");
+            Assert.That(fin.y, Is.InRange(24f, 34f), "la plaza queda arriba (~28 m)");
             Assert.AreEqual(CerroT1355Trazado.AlturaPlaza(), fin.y, 0.1f);
         }
 
@@ -115,10 +115,19 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(0f, CerroT1355Terreno.Base(-305f, 0f), 0.01f);
             Assert.AreEqual(0f, CerroT1355Terreno.Base(-300f, 50f), 0.01f);
             float arriba = CerroT1355Terreno.Base(-450f, 40f);
-            Assert.That(arriba, Is.InRange(30f, 45f));
+            Assert.That(arriba, Is.InRange(24f, 34f));
             Assert.Greater(CerroT1355Terreno.Base(-475f, 40f), arriba, "la roca de atrás sigue subiendo");
             Assert.AreEqual(0f, CerroT1355Terreno.Base(-330f, -150f), 0.01f, "plano en la unión U3");
             Assert.Greater(CerroT1355Terreno.Base(-345f, 200f), 15f, "el terreno queda por encima del túnel");
+        }
+
+        [Test]
+        public void Terreno_UvDeMundo_CuatroMetrosPorRepeticionEnLosTresPlanos()
+        {
+            Vector3 p = new Vector3(8f, 12f, 20f);
+            Assert.AreEqual(new Vector2(2f, 5f), CerroT1355Terreno.UvMundo(p, 1));
+            Assert.AreEqual(new Vector2(5f, 3f), CerroT1355Terreno.UvMundo(p, 0));
+            Assert.AreEqual(new Vector2(2f, 3f), CerroT1355Terreno.UvMundo(p, 2));
         }
 
         [Test]
