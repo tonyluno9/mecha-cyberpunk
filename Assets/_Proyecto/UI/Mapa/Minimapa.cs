@@ -56,6 +56,12 @@ namespace MechaCyberpunk.UI.Mapa
         private static readonly Color ColorLineaCalle = new Color(0.72f, 0.95f, 0.95f, 0.4f);
         private const float GrosorLineaCallePx = 1.6f;
         private const float MetrosCalles = 105f;
+        // T-1352: cintas de las CalleZona (el mar ya viene pintado en la imagen de la ciudad, en azul oscuro).
+        private readonly List<Image> cintasZonas = new List<Image>();
+        private static readonly Color ColorCalleZona = new Color(0.45f, 0.62f, 0.68f, 0.35f);
+        private static readonly Color ColorAutopistaZona = new Color(0.7f, 0.72f, 0.8f, 0.4f);
+        /// <summary>Cuántas cintas de calles de zona se dibujan ahora.</summary>
+        public int CintasZonasVisibles { get; private set; }
         /// <summary>Cuántas líneas de calle se dibujan ahora.</summary>
         public int LineasCallesVisibles { get; private set; }
         // T-632: ruta tipo GPS por las calles hasta el objetivo; se recalcula al moverte más de MetrosParaRecalcular o si el objetivo cambia.
@@ -228,8 +234,8 @@ namespace MechaCyberpunk.UI.Mapa
             desplazado.anchoredPosition = -GeometriaBarrio.AMapa(centro) * escala;
             if (imagenMapa != null)
             {
-                // El centro del cuadro de la imagen es el origen del mundo: mismas cuentas que los iconos (MapaImagen.MundoADibujo).
-                imagenMapa.rectTransform.anchoredPosition = MapaImagen.MundoADibujo(MapaImagen.Centro, escala);
+                // T-1352: el centro del cuadro ya no es el origen del mundo; el dibujo (desplazado) sí lo tiene en su origen, igual que los iconos.
+                imagenMapa.rectTransform.anchoredPosition = MapaImagen.Centro * escala;
                 imagenMapa.rectTransform.sizeDelta = MapaImagen.Tamano * escala;
             }
             DibujarCalles(centro);
@@ -355,6 +361,54 @@ namespace MechaCyberpunk.UI.Mapa
                 Mostrar(lineasCalles[i].gameObject, false);
             }
             LineasCallesVisibles = usadas;
+            DibujarCallesZonas(c);
+        }
+
+        // T-1352: las calles de las zonas nuevas (CalleZona) no salen de la cuadrícula de manzanas: se dibujan como cintas del ancho de la calle.
+        private void DibujarCallesZonas(Vector2 c)
+        {
+            int usadas = 0;
+            IReadOnlyList<MechaCyberpunk.Core.Mundo.CalleZona> calles = MechaCyberpunk.Core.Mundo.CalleZona.Activas;
+            for (int k = 0; k < calles.Count; k++)
+            {
+                MechaCyberpunk.Core.Mundo.CalleZona calle = calles[k];
+                if (calle == null)
+                {
+                    continue;
+                }
+                List<CalculoCallesMapa.Tramo> tramos = CalculoCallesMapa.TramosDeLinea(calle.Puntos());
+                Color color = calle.Autopista ? ColorAutopistaZona : ColorCalleZona;
+                for (int i = 0; i < tramos.Count; i++)
+                {
+                    CalculoCallesMapa.Tramo t = tramos[i];
+                    if (CalculoCallesMapa.DistanciaATramo(c, t) > MetrosCalles)
+                    {
+                        continue;
+                    }
+                    if (usadas == cintasZonas.Count)
+                    {
+                        Image cinta = KitUI.CrearImagen(capaCalles, "CintaZona_" + usadas, color);
+                        KitUI.Colocar(cinta.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one);
+                        cinta.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                        cinta.raycastTarget = false;
+                        cintasZonas.Add(cinta);
+                    }
+                    Image imagen = cintasZonas[usadas];
+                    imagen.color = color;
+                    Mostrar(imagen.gameObject, true);
+                    Vector2 d = t.B - t.A;
+                    RectTransform rect = imagen.rectTransform;
+                    rect.anchoredPosition = (t.A + t.B) * 0.5f * escala;
+                    rect.sizeDelta = new Vector2(d.magnitude * escala, calle.Ancho * escala);
+                    rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
+                    usadas++;
+                }
+            }
+            for (int i = usadas; i < cintasZonas.Count; i++)
+            {
+                Mostrar(cintasZonas[i].gameObject, false);
+            }
+            CintasZonasVisibles = usadas;
         }
 
         // T-701: los íconos que quedan encimados (entre sí o sobre la flecha del jugador) se esconden; se queda el primero.

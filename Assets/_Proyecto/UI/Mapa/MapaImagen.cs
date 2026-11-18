@@ -10,14 +10,15 @@ namespace MechaCyberpunk.UI.Mapa
     public static class MapaImagen
     {
         public const string RutaRecurso = "Mapa/MapaCiudad";
-        public const float MinX = -200f;
-        public const float MaxX = 200f;
-        public const float MinZ = -140f;
-        public const float MaxZ = 140f;
-        /// <summary>Píxeles de la imagen por metro del mundo.</summary>
-        public const int PixelesPorMetro = 6;
-        /// <summary>Píxeles de pantalla (1920x1080) por metro con el zoom del mapa grande en 1: la imagen entera llena la vista de 800x560.</summary>
-        public const float PixelesVistaPorMetro = 2f;
+        // T-1352: el cuadro cubre el mundo con las zonas nuevas (oeste -480, este 345, norte 290) y un poco de mar al sur. Antes era -200..200 x -140..140 a 6 px/m.
+        public const float MinX = -480f;
+        public const float MaxX = 345f;
+        public const float MinZ = -330f;
+        public const float MaxZ = 290f;
+        /// <summary>Píxeles de la imagen por metro del mundo (825 x 620 m: la imagen mide 3300 x 2480 px, bajo el tope de 4096).</summary>
+        public const int PixelesPorMetro = 4;
+        /// <summary>Píxeles de pantalla (1920x1080) por metro con el zoom del mapa grande en 1: el cuadro entero cabe en la vista de 800x560 (limita el alto).</summary>
+        public const float PixelesVistaPorMetro = 0.9f;
 
         public static Vector2 Minimo => new Vector2(MinX, MinZ);
         public static Vector2 Maximo => new Vector2(MaxX, MaxZ);

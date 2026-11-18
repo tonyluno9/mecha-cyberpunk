@@ -6,6 +6,7 @@ using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.UI.Kit;
+using MechaCyberpunk.UI.Mapa;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -55,6 +56,7 @@ namespace MechaCyberpunk.UI.Hud
         private float inicioTitulo = float.MinValue;
         private float duracionTitulo;
         private string zonaPrevia;
+        private const string ClaveZonaNueva = "zona-nueva:";
         private ITerritorio territorioVisto;
 
         private RectTransform barraEscudo;
@@ -596,6 +598,13 @@ namespace MechaCyberpunk.UI.Hud
         {
             ITerritorio territorio = Registro<ITerritorio>.Actual;
             string zona = territorio != null && jugador != null && jugador.Raiz != null ? territorio.ZonaEn(jugador.Raiz.position) : null;
+            // T-1352: en una zona nueva (Malecón, Cerro, Puerto, Autopista) sale su nombre en vez del barrio de territorio; el territorio no cambia.
+            string zonaNueva = jugador != null && jugador.Raiz != null
+                ? BarriosMapa.ZonaNuevaEn(new Vector2(jugador.Raiz.position.x, jugador.Raiz.position.z)) : null;
+            if (zonaNueva != null)
+            {
+                zona = ClaveZonaNueva + zonaNueva;
+            }
             if (!ReferenceEquals(territorio, territorioVisto))
             {
                 territorioVisto = territorio;
@@ -604,7 +613,7 @@ namespace MechaCyberpunk.UI.Hud
             else if (zona != null && zona != zonaPrevia)
             {
                 zonaPrevia = zona;
-                string nombre = zona.Length > 0 ? territorio.Nombre(zona) : string.Empty;
+                string nombre = zonaNueva ?? (zona.Length > 0 ? territorio.Nombre(zona) : string.Empty);
                 if (nombre.Length > 0)
                 {
                     MostrarTitulo(ReglaTituloZonaH10.Texto(nombre), ReglaTituloZonaH10.SegundosVisible);

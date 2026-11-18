@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float SeparacionFila = 2f;
         private const float DistanciaEntreFilas = 30f;
 
-        public static readonly string[] Zonas = { "Calle", "Clandestino", "Callejon", "TallerCasa", "Vehiculos", "Exteriores", "Exos", "Personajes", "Interiores", "SinClasificar" };
+        public static readonly string[] Zonas = { "Calle", "Clandestino", "Callejon", "TallerCasa", "Vehiculos", "Exteriores", "Exos", "Personajes", "Interiores", "SinClasificar", "ZonasModulos" };
 
         public enum Eje
         {

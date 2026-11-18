@@ -207,5 +207,16 @@ namespace MechaCyberpunk.UI.Mapa
             }
             return queda;
         }
+
+        /// <summary>T-1352: los tramos de una línea de centro de calle (puntos en mundo; solo X y Z), uno por cada par de puntos seguidos.</summary>
+        public static List<Tramo> TramosDeLinea(IReadOnlyList<Vector3> puntos)
+        {
+            List<Tramo> tramos = new List<Tramo>();
+            for (int i = 1; puntos != null && i < puntos.Count; i++)
+            {
+                tramos.Add(new Tramo(new Vector2(puntos[i - 1].x, puntos[i - 1].z), new Vector2(puntos[i].x, puntos[i].z)));
+            }
+            return tramos;
+        }
     }
 }
