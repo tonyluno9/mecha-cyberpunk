@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4177b58bbfb52e44791a07ac07b2b994, type: 3}
+  m_Name: ConfigCarrosZonas
+  m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Datos.ConfigCarrosZonas
+  extrasGenerales:
+  - {fileID: 611141876868151087, guid: de8f0a52b093d894c9c505a77b1d3108, type: 3}
+  - {fileID: 6156778425230316142, guid: 6fb49b6b0d5a1834da42e38855b773fe, type: 3}
+  - {fileID: 4991646725525463166, guid: 01abffbcfc9d44343bc31299dd1d9237, type: 3}
+  - {fileID: 194961445837547594, guid: 43a099225d548d2489257688b7473832, type: 3}
+  zonas:
+  - nombre: Deshuesadero
+    carros:
+    - {fileID: 3523792096995377781, guid: ba4860bb4cdde744f97be6d581f17047, type: 3}
+    - {fileID: 1641972174722418323, guid: 0d80080f1c2f61c4cb73537ef6d50dd6, type: 3}
+    mezcla: 0.7
+  - nombre: Malecon
+    carros:
+    - {fileID: 3966435154445197487, guid: b2e2583f33ebb3342a6460a51ebb37a0, type: 3}
+    - {fileID: 3395853976058429898, guid: 9e83288f63c92634ab6b6ae431e23235, type: 3}
+    - {fileID: 3033274962922530294, guid: 22ea4829a67671d4bb06c89b0c22dcf6, type: 3}
+    mezcla: 0.5
+  - nombre: NeonAlto
+    carros:
+    - {fileID: 3966435154445197487, guid: b2e2583f33ebb3342a6460a51ebb37a0, type: 3}
+    - {fileID: 3395853976058429898, guid: 9e83288f63c92634ab6b6ae431e23235, type: 3}
+    - {fileID: 3033274962922530294, guid: 22ea4829a67671d4bb06c89b0c22dcf6, type: 3}
+    - {fileID: 611141876868151087, guid: de8f0a52b093d894c9c505a77b1d3108, type: 3}
+    mezcla: 0.5
+  - nombre: LasLomas
+    carros:
+    - {fileID: 786778277799404713, guid: e5abf6ca18835f24e9c527fbe2c84d86, type: 3}
+    - {fileID: 6156778425230316142, guid: 6fb49b6b0d5a1834da42e38855b773fe, type: 3}
+    mezcla: 0.7
+  - nombre: Avenida
+    carros:
+    - {fileID: 9185860648221475002, guid: e0deed84e5f60094fb4fedfe3d9bdefd, type: 3}
+    - {fileID: 6700325558062107476, guid: e23ecf9317e68c84da53b44c391676b7, type: 3}
+    - {fileID: 5539426728789183056, guid: a3c3255ae23917e498c47fb0c356bdde, type: 3}
+    - {fileID: 6156778425230316142, guid: 6fb49b6b0d5a1834da42e38855b773fe, type: 3}
+    - {fileID: 4991646725525463166, guid: 01abffbcfc9d44343bc31299dd1d9237, type: 3}
+    mezcla: 0.4
+  - nombre: Puerto
+    carros:
+    - {fileID: 6700325558062107476, guid: e23ecf9317e68c84da53b44c391676b7, type: 3}
+    - {fileID: 5539426728789183056, guid: a3c3255ae23917e498c47fb0c356bdde, type: 3}
+    - {fileID: 9185860648221475002, guid: e0deed84e5f60094fb4fedfe3d9bdefd, type: 3}
+    mezcla: 0.8
