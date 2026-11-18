@@ -102,9 +102,9 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Orilla_CaeEnElInicioDelAgua()
+        public void Orilla_DejaUnaPlayaDe30m()
         {
-            Assert.AreEqual(36f, ColocarT1354Curva.LateralOrilla(-226f), 1e-4f);
+            Assert.AreEqual(30f, ColocarT1354Curva.LateralOrilla(-226f) - ColocarT1354Curva.LateralMuro, 1e-4f);
         }
     }
 }
