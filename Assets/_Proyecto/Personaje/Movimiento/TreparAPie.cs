@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Core.Trepar;
 using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
@@ -367,6 +368,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             float velocidad = punto.Tipo == TipoTrepar.Tubo ? config.VelocidadTubo : config.VelocidadEscalera;
             regla.IniciarEscalera(punto.AlturaSubida, velocidad, transform.position.y - punto.transform.position.y);
             Suspender();
+            Sonidos.ReproducirEn(ReglaSonidosJugador.Trepar, transform.position);
             ColocarEnEscalera();
             if (punto.Tipo == TipoTrepar.Escalera)
             {
@@ -431,6 +433,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (regla.Estado == EstadoTrepar.Libre)
             {
                 Suspender();
+                Sonidos.ReproducirEn(ReglaSonidosJugador.Trepar, transform.position);
             }
             inicioAgarre = transform.position;
             finAgarre = destino;

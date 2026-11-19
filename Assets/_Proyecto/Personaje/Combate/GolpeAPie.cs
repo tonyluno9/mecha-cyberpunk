@@ -290,7 +290,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     cuerpo.AddForce(direccion.normalized * empuje, ForceMode.VelocityChange);
                 }
             }
-            Sonidos.ReproducirEn(objetivo != null ? "PUN_GOLPE_CARNE" : "PUN_GOLPE_AIRE", objetivo != null ? punto : origen);
+            Sonidos.ReproducirEn(ReglaSonidosJugador.IdGolpe(objetivo != null),objetivo != null ? punto : origen);
             Impacto?.Invoke();
         }
 
