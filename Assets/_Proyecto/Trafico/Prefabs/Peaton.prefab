@@ -78,6 +78,7 @@ MonoBehaviour:
   - {fileID: 3095621903603413029, guid: b83e9a46a677f67468c7a609b1639c2a, type: 3}
   - {fileID: 8385579478277162656, guid: eb4b3f49a77134044b6cf24c35887549, type: 3}
   probabilidadVariante: 0.65
+  configZona: {fileID: 11400000, guid: d08b4574cf8f44d43b626e5c3dae227d, type: 2}
 --- !u!1001 &1373700004045835116
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,0 +1,699 @@
+LISTA COMPLETA DE SONIDOS — CYBERCITY
+18-nov-2026
+
+Cómo leerla:
+- Cada línea es un sonido aparte. El código entre corchetes es el nombre sugerido del archivo (ej. ARM_W06_DISPARO.wav).
+- "(x3)" o "(x4)" = hacer 3 o 4 variantes del mismo sonido para que no se repita igual (ej. _01, _02, _03).
+- "(loop)" = sonido que se repite sin corte (motor, ambiente, lluvia).
+- "(cerca / lejos)" = dos versiones: una fuerte y nítida, otra lejana con eco (para cuando pasa a distancia).
+- Ya hay 288 sonidos en Assets/Arte/Audio. Una sesión puede cruzar esta lista con lo que ya existe y marcar lo que falta.
+
+======================================================================
+1. JUGADOR (PJ01)
+======================================================================
+
+1.1 Pasos (x4 cada uno, caminar y correr por separado)
+[PAS_ASFALTO_CAMINAR] pasos sobre asfalto, caminando
+[PAS_ASFALTO_CORRER] pasos sobre asfalto, corriendo
+[PAS_ASFALTO_MOJADO] pasos sobre asfalto mojado / charco (chapoteo)
+[PAS_CHARCO] pisar dentro de un charco hondo
+[PAS_BANQUETA] pasos sobre banqueta de concreto
+[PAS_ADOQUIN] pasos sobre adoquín (Centro Histórico)
+[PAS_ARENA_CAMINAR] pasos sobre arena seca (playa del malecón)
+[PAS_ARENA_MOJADA] pasos sobre arena mojada
+[PAS_MADERA_MUELLE] pasos sobre tablones del muelle (hueco, cruje)
+[PAS_MADERA_INTERIOR] pasos sobre piso de madera (cuarto de la casa)
+[PAS_LOSETA] pasos sobre loseta (clínica del Doc, tiendas)
+[PAS_ALFOMBRA] pasos sobre alfombra (casino, hotel)
+[PAS_METAL_LAMINA] pasos sobre lámina (techos, bodegas)
+[PAS_METAL_REJILLA] pasos sobre rejilla metálica (pasarelas, escaleras de Nova)
+[PAS_CONTENEDOR] pasos sobre techo de contenedor (puerto)
+[PAS_GRAVA] pasos sobre grava / tierra (lote baldío, deshuesadero)
+[PAS_PASTO] pasos sobre pasto (plazas, Las Lomas)
+[PAS_AZOTEA] pasos sobre azotea con impermeabilizante
+[PAS_ESCALERA_CONCRETO] subir/bajar escalera de concreto
+[PAS_ESCALERA_METAL] subir/bajar escalera metálica
+[PAS_VIDRIO_ROTO] pisar vidrios rotos
+[PAS_BASURA] pisar bolsas / papeles
+[PAS_AGACHADO] pasos agachado (más suaves, cualquier piso)
+
+1.2 Movimiento y cuerpo
+[JUG_SALTO] impulso al saltar (respiración + roce de ropa) (x3)
+[JUG_ATERRIZAJE_SUAVE] caer de poca altura (x3, por tipo de piso: concreto, metal, madera, arena)
+[JUG_ATERRIZAJE_DURO] caer de altura alta con golpe (x3)
+[JUG_DANIO_CAIDA] quejido al recibir daño por caída
+[JUG_RODADA] rodar en el piso (roce + golpe) (x3)
+[JUG_DESLIZAR] deslizarse en el piso (roce largo)
+[JUG_AGACHARSE] agacharse (ropa)
+[JUG_LEVANTARSE] levantarse
+[JUG_TREPAR] trepar un borde (manos en concreto/metal + esfuerzo) (x3)
+[JUG_COLGARSE] agarrarse de un borde
+[JUG_SALTO_PARKOUR] salto largo entre azoteas
+[JUG_VAULT] saltar por encima de una barda
+[JUG_ROPA_ROCE] roce de chamarra al moverse (loop suave)
+[JUG_RESPIRACION_CANSADO] respiración agitada al correr mucho (loop)
+[JUG_RESPIRACION_CALMA] respiración normal (loop muy suave)
+
+1.3 Voz y daño
+[JUG_DOLOR_LEVE] quejido corto al recibir un balazo (x4)
+[JUG_DOLOR_FUERTE] grito de dolor fuerte (x3)
+[JUG_GOLPEADO] recibir un golpe (x3)
+[JUG_QUEMADO] grito al quemarse
+[JUG_MUERTE] grito/último aliento al morir (x2)
+[JUG_ATROPELLADO] golpe de carro + caída
+[JUG_ESFUERZO] esfuerzo al golpear / empujar (x4)
+[JUG_TOS] toser (humo, explosión)
+[JUG_LATIDO_VIDA_BAJA] latido de corazón con vida baja (loop)
+[JUG_ZUMBIDO_EXPLOSION] pitido en el oído después de una explosión cercana
+
+1.4 Combate cuerpo a cuerpo
+[MEL_GOLPE_AIRE] puño que corta el aire (x3)
+[MEL_GOLPE_CARNE] puñetazo que conecta en persona (x4)
+[MEL_GOLPE_METAL] puñetazo que conecta en robot / armadura (x3)
+[MEL_PATADA] patada que conecta (x3)
+[MEL_BLOQUEO] bloquear un golpe
+[MEL_REMATE] golpe final fuerte (con un poco de eco)
+[MEL_GOLPE_BRAZO_ROBOT] golpe con el brazo robótico (metal pesado + servo)
+
+1.5 Interacción
+[INT_PUERTA_MADERA_ABRIR] / [INT_PUERTA_MADERA_CERRAR]
+[INT_PUERTA_METAL_ABRIR] / [INT_PUERTA_METAL_CERRAR]
+[INT_PUERTA_REJA_ABRIR] / [INT_PUERTA_REJA_CERRAR] (reja de casa, chirrido)
+[INT_CORTINA_METALICA_SUBIR] / [INT_CORTINA_METALICA_BAJAR]
+[INT_PUERTA_CRISTAL] puerta de cristal automática (Nova, casino)
+[INT_PUERTA_CLINICA] puerta del Doc
+[INT_PERILLA] girar perilla
+[INT_RECOGER_OBJETO] recoger un objeto chico (x2)
+[INT_RECOGER_ARMA] recoger un arma del piso
+[INT_RECOGER_BALAS] recoger balas
+[INT_RECOGER_DINERO] recoger dinero (billetes)
+[INT_RECOGER_MALETIN] agarrar el maletín
+[INT_MALETIN_ABRIR] / [INT_MALETIN_CERRAR] cerraduras del maletín
+[INT_SENTARSE_SILLA] sentarse en la silla del Doc
+[INT_CAMA_ACOSTARSE] acostarse en la cama
+[INT_DORMIR] transición de dormir (fade)
+[INT_DESPERTAR] despertar (alarma de celular o respiración)
+[INT_ESPEJO] acercarse al espejo (suave)
+[INT_INTERRUPTOR_LUZ] prender/apagar la luz
+[INT_HABLAR_INICIO] sonidito al iniciar un diálogo
+[INT_DIALOGO_SIGUIENTE] sonidito al pasar el texto
+[INT_TECLEO_HACKEO] tecleo / hackeo de terminal (loop)
+[INT_HACKEO_EXITO] / [INT_HACKEO_FALLO]
+
+1.6 Consumibles
+[CON_LATA_ABRIR] abrir lata de bebida energética
+[CON_BEBER] tragar (x2)
+[CON_PAPITAS_ABRIR] abrir bolsa de papitas
+[CON_PAPITAS_COMER] masticar papitas
+[CON_VENDA] poner venda
+[CON_CURACION] brillo / sonido de curarse
+[CON_INVULNERABLE] sonido de los 5 s sin daño (inicio y fin)
+
+======================================================================
+2. ARMAS
+======================================================================
+Para TODAS las armas de fuego, además de lo de cada una:
+[ARM_<código>_SACAR] sacar el arma
+[ARM_<código>_GUARDAR] guardar el arma
+[ARM_<código>_APUNTAR] subir el arma a apuntar (roce + clic)
+[ARM_<código>_SIN_BALAS] clic vacío al disparar sin balas
+[ARM_<código>_DISPARO] (cerca / lejos) (x3)
+[ARM_<código>_DISPARO_INTERIOR] disparo con eco de cuarto cerrado
+[ARM_<código>_COLA] eco/cola del disparo en la calle
+Casquillos (por calibre, x4 cada uno):
+[CAS_PISTOLA_CONCRETO] [CAS_PISTOLA_METAL] [CAS_PISTOLA_MADERA]
+[CAS_FUSIL_CONCRETO] [CAS_FUSIL_METAL]
+[CAS_ESCOPETA_CONCRETO] (cartucho de plástico, suena distinto)
+
+2.1 W01 Pistola
+[ARM_W01_DISPARO] (cerca / lejos) (x3)
+[ARM_W01_CORREDERA_ATRAS] / [ARM_W01_CORREDERA_ADELANTE]
+[ARM_W01_CARGADOR_SACAR] / [ARM_W01_CARGADOR_METER]
+[ARM_W01_CARGADOR_CAE] cargador vacío cae al piso
+[ARM_W01_SEGURO]
+
+2.2 W02 Escopeta de bomba
+[ARM_W02_DISPARO] (cerca / lejos) (x3)
+[ARM_W02_BOMBA_ATRAS] / [ARM_W02_BOMBA_ADELANTE] (el "chk-chk")
+[ARM_W02_CARTUCHO_METER] meter un cartucho (x3, para recarga de uno en uno)
+[ARM_W02_CARTUCHO_CAE] cartucho expulsado cae
+
+2.3 W03 Fusil de asalto
+[ARM_W03_DISPARO] (cerca / lejos) (x4)
+[ARM_W03_RAFAGA_LOOP] ráfaga continua (loop) + [ARM_W03_RAFAGA_FIN]
+[ARM_W03_CARGADOR_SACAR] / [ARM_W03_CARGADOR_METER]
+[ARM_W03_PALANCA] palanca de carga
+[ARM_W03_MODO_DISPARO] cambiar de modo (tiro a tiro / ráfaga)
+
+2.4 W04 Francotirador de cerrojo
+[ARM_W04_DISPARO] (cerca / lejos, con eco largo) (x2)
+[ARM_W04_CERROJO_ARRIBA] / [ARM_W04_CERROJO_ATRAS] / [ARM_W04_CERROJO_ADELANTE] / [ARM_W04_CERROJO_ABAJO]
+[ARM_W04_CARGADOR_SACAR] / [ARM_W04_CARGADOR_METER]
+[ARM_W04_MIRA_ZOOM_ENTRAR] / [ARM_W04_MIRA_ZOOM_SALIR] (lente)
+[ARM_W04_MIRA_RESPIRACION] respiración contenida al apuntar
+[ARM_W04_BIPODE] abrir/cerrar bípode
+
+2.5 W05 Subfusil
+[ARM_W05_DISPARO] (cerca / lejos) (x4)
+[ARM_W05_RAFAGA_LOOP] (loop, más rápido que el fusil) + [ARM_W05_RAFAGA_FIN]
+[ARM_W05_CARGADOR_SACAR] / [ARM_W05_CARGADOR_METER]
+[ARM_W05_PALANCA]
+
+2.6 W06 Revólver
+[ARM_W06_DISPARO] (cerca / lejos, más grave y fuerte que la pistola) (x3)
+[ARM_W06_MARTILLO] amartillar (clic del martillo)
+[ARM_W06_TAMBOR_GIRA] el tambor gira al disparar (clic-clic)
+[ARM_W06_TAMBOR_ABRIR] abrir el tambor
+[ARM_W06_CASQUILLOS_EXPULSAR] empujar el extractor (los 6 casquillos salen juntos)
+[ARM_W06_CASQUILLOS_CAEN] los casquillos caen al piso (varios tintineos)
+[ARM_W06_BALA_METER] meter una bala en el tambor (x3)
+[ARM_W06_TAMBOR_GIRAR_MANO] girar el tambor con la mano (ruleta)
+[ARM_W06_TAMBOR_CERRAR] cerrar el tambor (clac)
+
+2.7 W07 Rifle de plasma
+[ARM_W07_CARGA] carga de energía antes del disparo (sube de tono)
+[ARM_W07_DISPARO] (cerca / lejos) (x3) zumbido eléctrico + golpe
+[ARM_W07_RAYO_LOOP] rayo continuo (loop) + [ARM_W07_RAYO_FIN]
+[ARM_W07_IMPACTO] impacto del plasma (chisporroteo + quemado)
+[ARM_W07_ATRAVIESA] rayo que atraviesa paredes/objetos
+[ARM_W07_SOBRECALENTADO] alarma de sobrecalentamiento
+[ARM_W07_ENFRIAR] vapor al enfriarse
+[ARM_W07_CELDA_SACAR] / [ARM_W07_CELDA_METER] (recarga de celda de energía)
+[ARM_W07_ENCENDER] zumbido al sacarlo
+[ARM_W07_MIRA_LASER] zumbido suave de la línea de mira (loop)
+
+2.8 W08 Lanzagranadas
+[ARM_W08_DISPARO] "bloop" de salida (x2)
+[ARM_W08_TAMBOR_GIRA] el tambor gira entre tiros
+[ARM_W08_TAMBOR_ABRIR] / [ARM_W08_TAMBOR_CERRAR]
+[ARM_W08_GRANADA_METER] (x3)
+[ARM_W08_PROYECTIL_VUELA] silbido de la granada en el aire
+
+2.9 Granada de mano
+[ARM_GRANADA_SEGURO] quitar el seguro (anillo)
+[ARM_GRANADA_LANZAR] lanzar (roce + esfuerzo)
+[ARM_GRANADA_REBOTE] rebota en el piso (x3: concreto, metal, madera)
+[ARM_GRANADA_PITIDO] pitido antes de explotar (si lleva)
+-> la explosión va en la sección 6
+
+2.10 Arma especial de Nova (W09_ArmaNova)
+Nota: el código W09 ya lo usa la granada (W09_Granada); conviene renombrar el arma de Nova (ej. W10).
+[ARM_NOVA_DISPARO] (cerca / lejos) energía fría, limpia (x3)
+[ARM_NOVA_CARGA] carga corta
+[ARM_NOVA_RECARGA] recarga automática corporativa (servo + clic)
+[ARM_NOVA_IMPACTO]
+
+2.11 Implantes de ataque
+[IMP_LASER_ENCENDER] / [IMP_LASER_DISPARO] / [IMP_LASER_LOOP] / [IMP_LASER_APAGAR] (brazo láser)
+[IMP_MISILES_ABRIR] la hombrera se abre
+[IMP_MISILES_FIJAR] fijar blanco (pitidos que se aceleran)
+[IMP_MISILES_LANZAR] salida de cada misil (x4)
+[IMP_MISILES_VUELO] silbido del misil
+[IMP_MISILES_CERRAR]
+
+2.12 Impactos de bala (x4 cada uno)
+[IMP_BALA_CONCRETO] [IMP_BALA_LADRILLO] [IMP_BALA_METAL] [IMP_BALA_CARRO]
+[IMP_BALA_CRISTAL] (cristal que se rompe) [IMP_BALA_CRISTAL_TRANSPARENTE_CARRO]
+[IMP_BALA_MADERA] [IMP_BALA_AGUA] [IMP_BALA_ARENA] [IMP_BALA_TIERRA]
+[IMP_BALA_CARNE] [IMP_BALA_ROBOT] (metal + chispas) [IMP_BALA_ESCUDO] (escudo de energía)
+[IMP_BALA_CABEZA] (headshot, más seco)
+[IMP_BALA_LLANTA] llanta ponchada + aire saliendo
+[IMP_BALA_ZUMBIDO] bala que pasa rozando cerca del jugador (x4)
+[IMP_BALA_REBOTE] rebote metálico (ricochet) (x3)
+
+2.13 Tiendas de armas
+[TIE_ARMA_GIRAR] girar el arma en la vitrina
+[TIE_COMPRAR] compra hecha (caja registradora / pago)
+[TIE_SIN_DINERO] no alcanza el dinero
+[TIE_MEJORA_INSTALAR] instalar una mejora (piezas encajando)
+[TIE_MEJORA_CARGADOR] la animación del cargador en el menú de mejora
+
+======================================================================
+3. VEHÍCULOS
+======================================================================
+Para CADA carro (V01a, V01b, V02–V06, V09, V10, V12–V24, patrulla, V11 camioneta, V16 microbús, V17 camión, V18 tráiler, V19 ambulancia) se hace un juego de motor propio. Se pueden agrupar por tipo de motor:
+- Carro viejo (V01a, V02, V14): motor cansado, tos.
+- Sedán normal (V01b, V03, V04, V13, V15): motor limpio.
+- Deportivo / tuneado (V12, V20, V21): motor agresivo, turbo, escape fuerte.
+- Superdeportivo (V22, V23, V24): motor agudo o eléctrico futurista.
+- Pesado (V16, V17, V18, V11): diésel grave.
+- Policía y ambulancia (patrulla, V11, V19): motor fuerte + sirena.
+- Pickup / taxi (V09, V10): motor medio.
+
+3.1 Motor (por cada tipo de motor)
+[VEH_<tipo>_ARRANQUE] dar marcha y prender
+[VEH_<tipo>_ARRANQUE_FALLA] marcha que no prende (para carros viejos)
+[VEH_<tipo>_RALENTI] prendido sin moverse (loop)
+[VEH_<tipo>_BAJAS] avanzando despacio (loop)
+[VEH_<tipo>_MEDIAS] velocidad media (loop)
+[VEH_<tipo>_ALTAS] a fondo (loop)
+[VEH_<tipo>_ACELERON] acelerón / pisar a fondo
+[VEH_<tipo>_DESACELERAR] soltar el acelerador (motor frenando)
+[VEH_<tipo>_CAMBIO] cambio de velocidad
+[VEH_<tipo>_APAGAR]
+[VEH_<tipo>_TURBO] silbido del turbo (deportivos)
+[VEH_<tipo>_PETARDEO] tronidos del escape (tuneados)
+[VEH_<tipo>_DANIADO] motor dañado / humeando (loop)
+
+3.2 Llantas, frenos y manejo
+[VEH_FRENO] frenar normal
+[VEH_FRENO_FUERTE] frenón con rechinido
+[VEH_DERRAPE_ASFALTO] derrape en asfalto (loop)
+[VEH_DERRAPE_MOJADO] derrape en piso mojado
+[VEH_LLANTAS_GRAVA] rodar en grava (loop)
+[VEH_LLANTAS_ARENA] rodar en arena
+[VEH_LLANTAS_ADOQUIN] rodar en adoquín (vibración)
+[VEH_LLANTAS_CHARCO] pasar por charco (salpicada)
+[VEH_LLANTA_PONCHADA_RODAR] rodar con llanta ponchada (loop)
+[VEH_RIN_CHISPAS] rin pelón raspando el asfalto (loop)
+[VEH_FRENO_MANO]
+[VEH_TOPE] pasar un tope o bache
+[VEH_SUSPENSION] rebote de la suspensión al caer de un salto
+[VEH_CLAXON_<tipo>] claxon por tipo (normal, viejo, deportivo, camión, microbús)
+
+3.3 Puertas y cabina
+[VEH_PUERTA_ABRIR] / [VEH_PUERTA_CERRAR] (normal)
+[VEH_PUERTA_PESADA_ABRIR] / [VEH_PUERTA_PESADA_CERRAR] (camioneta, camión)
+[VEH_PUERTA_TIJERA] puerta tipo tijera (superdeportivos)
+[VEH_COFRE_ABRIR] / [VEH_COFRE_CERRAR]
+[VEH_CAJUELA_ABRIR] / [VEH_CAJUELA_CERRAR]
+[VEH_LLAVES] poner y girar las llaves
+[VEH_PUENTE] hacer puente a un carro robado (chispas de cables)
+[VEH_CINTURON] ponerse el cinturón (opcional)
+[VEH_DIRECCIONALES] direccionales (loop)
+[VEH_INTERIOR_AMBIENTE] ambiente dentro del carro (amortiguado) (loop)
+
+3.4 Robar carros
+[VEH_ROBO_JALAR_CONDUCTOR] sacar al conductor (forcejeo + grito)
+[VEH_ROBO_VENTANA_ROMPER] romper la ventana con el codo
+[VEH_ALARMA] alarma del carro robado (loop)
+[VEH_ALARMA_APAGAR] chirp de apagado
+[VEH_CONDUCTOR_GRITA] el conductor grita / se queja (x4)
+[VEH_CONDUCTOR_HUYE] el conductor sale corriendo
+
+3.5 Choques y daño
+[VEH_CHOQUE_LEVE] (x4)
+[VEH_CHOQUE_FUERTE] (x4)
+[VEH_CHOQUE_POSTE] choque contra poste (metal + vibración)
+[VEH_CHOQUE_MURO] choque contra muro
+[VEH_RASPON_LATERAL] raspar el costado contra algo (loop)
+[VEH_ATROPELLO] atropellar a alguien
+[VEH_CRISTAL_ROMPER] parabrisas que se estrella
+[VEH_PIEZA_CAE] puerta o cofre que se cae (metal en el piso)
+[VEH_INCENDIO_LOOP] carro en llamas (loop)
+[VEH_PRE_EXPLOSION] siseo antes de explotar
+-> la explosión va en la sección 6
+[VEH_AGUA_CAER] caer al mar con el carro (splash grande)
+[VEH_HUNDIRSE] burbujas del carro hundiéndose
+
+3.6 Motos (V07 reparto, V08 policía, MT01 deportiva, MT02 chopper)
+[MOTO_<tipo>_ARRANQUE] / [MOTO_<tipo>_RALENTI] / [MOTO_<tipo>_BAJAS] / [MOTO_<tipo>_MEDIAS] / [MOTO_<tipo>_ALTAS] / [MOTO_<tipo>_ACELERON] / [MOTO_<tipo>_APAGAR]
+  - reparto: motor chiquito 125cc
+  - deportiva: agudo, revoluciones altas
+  - chopper: grave, "potato-potato"
+  - policía: medio + sirena chica
+[MOTO_CABALLETE] subir/bajar el caballete
+[MOTO_CAIDA] moto que cae al piso
+[MOTO_DERRAPE]
+[MOTO_CLAXON]
+[MOTO_SUBIR] / [MOTO_BAJAR]
+
+3.7 Policía
+[POL_SIRENA_LOOP] sirena principal (loop, con efecto Doppler cuando pasa)
+[POL_SIRENA_YELP] sirena rápida (persecución)
+[POL_SIRENA_CORTA] "bloop" corto de aviso
+[POL_SIRENA_APAGAR]
+[POL_ALTAVOZ] "¡Deténgase!" por altavoz (x3 frases)
+[POL_RADIO_PATRULLA] radio dentro de la patrulla (estática + voces) (loop)
+[POL_RADIO_AVISO] aviso de radio al llegar a la zona (x5 frases cortas: "unidad en camino", "sospechoso a pie", etc.)
+[POL_RADIO_ESTATICA] estática sola (x3)
+[POL_CAMIONETA_SIRENA] sirena distinta para V11
+[POL_ESTRELLA_SUBE] sonido de HUD cuando sube una estrella
+[POL_ESTRELLA_BAJA] / [POL_PERDIDOS] cuando se pierde la persecución
+[POL_5_ESTRELLAS] aviso especial de 5 estrellas
+[POL_NOVA_AVISO] sonido especial de más de 5 estrellas (llega Nova): grave, épico, alarma corporativa
+
+3.8 Naves y helicóptero (NV01, NV03)
+[NAV_ROTORES_LOOP] rotores en ducto (loop, cerca / lejos)
+[NAV_ACERCARSE] / [NAV_ALEJARSE]
+[NAV_REFLECTOR] encender el reflector
+[NAV_PUERTA_ABRIR] puerta lateral
+[NAV_SOGA_BAJAR] soga que baja + policías bajando por la soga (roce)
+[NAV_ATERRIZAJE] / [NAV_DESPEGUE]
+[NAV_DANIADA] nave dañada (alarma + motor fallando)
+[NAV_CAIDA] nave que cae y se estrella
+
+3.9 Ambulancia
+[AMB_SIRENA_LOOP]
+[AMB_PUERTA_TRASERA]
+
+3.10 Radio de los carros
+[RAD_CAMBIAR_ESTACION] estática al cambiar
+[RAD_APAGAR]
+Estaciones (cada una con 3–5 canciones o loops largos + locutor):
+[RAD_EST1_*] cumbia electrónica / cumbia cyberpunk
+[RAD_EST2_*] synthwave / electrónica
+[RAD_EST3_*] rap / trap en español
+[RAD_EST4_*] rock / metal
+[RAD_EST5_*] noticias y comerciales de Nova (humor, locutor)
+[RAD_LOCUTOR_*] frases del locutor entre canciones (x10)
+
+======================================================================
+4. PERSONAJES Y NPCs
+======================================================================
+
+4.1 Peatones (para hombres y mujeres por separado)
+[NPC_H_GRITO_MIEDO] / [NPC_M_GRITO_MIEDO] (x4)
+[NPC_H_DOLOR] / [NPC_M_DOLOR] (x4)
+[NPC_H_MUERTE] / [NPC_M_MUERTE] (x3)
+[NPC_H_ENOJO] / [NPC_M_ENOJO] "¡oye!", "¡fíjate!" (x4)
+[NPC_H_SALUDO] / [NPC_M_SALUDO] (x3)
+[NPC_PLATICA_LOOP] murmullo de dos personas platicando (loop, sin palabras claras)
+[NPC_RISA] (x3)
+[NPC_LLAMA_POLICIA] "¡Policía!" / llamando por celular (x2)
+[NPC_CELULAR_FOTO] sonido de foto de celular (graban al jugador)
+[NPC_HUYE] corriendo asustado
+[NPC_ABUELA] voz de abuela quejándose
+[NPC_VENDEDOR_GRITO] "¡lleve, lleve!", "¡elotes!", "¡mariscos frescos!" (x5)
+[NPC_PESCADOR] silbido / tarareo
+
+4.2 Personajes con nombre
+[DOC_VOZ_*] el Doc: saludo, explicar implante, "siéntate", despedida (x6)
+[TINO_VOZ_*] Tino: saludo, "acércate al banco", compra, despedida (x6)
+[CANEPA_VOZ_*] El Canepa: saludo, reparación, despedida (x4)
+[MECANICO_HERRAMIENTAS] herramientas en el taller (loop)
+[ALIADO_VOZ_*] aliado: subir al carro, peligro, gracias (x5)
+[MESERA_ROBOT_*] mesera robot del casino: saludo, servir, voz sintética (x4)
+Si no hay voces grabadas: "gibberish" (murmullo tipo Sims) por personaje.
+
+4.3 SKULLS (pandilleros)
+[SKU_GRITO_ALERTA] "¡ahí está!", "¡cáiganle!" (x4)
+[SKU_INSULTO] (x5)
+[SKU_COBERTURA] "¡cúbranse!" (x2)
+[SKU_RECARGANDO] "¡recargando!" (x2)
+[SKU_DOLOR] (x4) [SKU_MUERTE] (x3)
+[SKU_HUIR] "¡vámonos!"
+[SKU_RISA_BURLA]
+[SKU_MATON_BRAZO] servo oxidado del brazo robótico del grandote (x3)
+[SKU_CAMIONETA_*] su camioneta (motor + rechinido)
+
+4.4 Policías a pie
+[POL_VOZ_ALTO] "¡Alto!", "¡Manos arriba!" (x4)
+[POL_VOZ_REFUERZOS] "¡Necesito refuerzos!" (x2)
+[POL_VOZ_OFICIAL_CAIDO] "¡Oficial caído!"
+[POL_VOZ_RENDIRSE] "¡Ríndete!"
+[POL_DOLOR] (x4) [POL_MUERTE] (x3)
+[POL_BAJAR_PATRULLA] puerta + pasos + cargar arma
+[POL_ESPOSAS] esposar (pantalla de ARRESTADO)
+
+4.5 Guardias y agentes de Nova (humanos con armadura)
+[NOV_VOZ_ALERTA] voz con filtro de casco: "Objetivo localizado" (x4)
+[NOV_VOZ_ORDEN] "Neutralizar", "Rodeen al objetivo" (x4)
+[NOV_PASOS_ARMADURA] pasos pesados con armadura (x4)
+[NOV_ARMADURA_MOVER] roce de placas de armadura
+[NOV_CAIDA_CIELO_DESCENSO] silbido al caer del cielo
+[NOV_CAIDA_CIELO_ATERRIZAJE] impacto fuerte + onda + destello (épico)
+[NOV_JETPACK_LOOP] jetpack de la élite (loop) + [NOV_JETPACK_ENCENDER] + [NOV_JETPACK_APAGAR]
+[NOV_ESCUDO_ACTIVAR] escudo del pesado se enciende
+[NOV_ESCUDO_IMPACTO] bala pegando en el escudo (x4)
+[NOV_ESCUDO_ROMPER] el escudo se rompe
+[NOV_DOLOR] (x3, con filtro) [NOV_MUERTE] (x2, voz con estática que se corta)
+[NOV_JEFE_ENTRADA] entrada del jefe (ya existe PAN_JEFE_ENTRADA)
+[NOV_JEFE_VOZ_*] frases del jefe final (x5)
+[NOV_JEFE_ATAQUE_*] golpes y ataques especiales del jefe (x4)
+[NOV_JEFE_MUERTE]
+
+4.6 Robots de Nova
+Centinela humanoide (E15):
+[ROB_CENT_ENCENDER] arranque (servos + pitido)
+[ROB_CENT_PASOS] pasos metálicos (x4)
+[ROB_CENT_SERVOS] servos al moverse (loop)
+[ROB_CENT_ESCANEO] escaneo con el visor (barrido)
+[ROB_CENT_ALERTA] voz sintética "Intruso detectado"
+[ROB_CENT_DISPARO]
+[ROB_CENT_DANIO] chispas + metal (x3)
+[ROB_CENT_CHISPAS_LOOP] dañado echando chispas (loop)
+[ROB_CENT_CAIDA] cae al piso (metal pesado)
+[ROB_CENT_APAGAR] se apaga (servos que bajan de tono)
+
+Robot pesado bípedo (E16):
+[ROB_PES_ENCENDER] arranque pesado (hidráulica + motor)
+[ROB_PES_PASOS] pasos que retumban (x4) + vibración
+[ROB_PES_HIDRAULICA] hidráulica al moverse (x4)
+[ROB_PES_CANON_CARGA] / [ROB_PES_CANON_DISPARO]
+[ROB_PES_ESCUDO_GOLPE] golpe con el escudo
+[ROB_PES_DANIO] (x3) [ROB_PES_ARMADURA_RASGA] placa que se desprende / se rasga
+[ROB_PES_CAIDA] cae (enorme)
+[ROB_PES_EXPLOSION] explota al morir
+
+Perro robot (E17):
+[ROB_PERRO_PASOS] patas metálicas rápidas (x4)
+[ROB_PERRO_GRUNIDO] gruñido sintético
+[ROB_PERRO_LADRIDO] ladrido sintético (x3)
+[ROB_PERRO_LAMPARA] encender lámpara
+[ROB_PERRO_TORRETA] torreta girando + disparo
+[ROB_PERRO_SALTO]
+[ROB_PERRO_MUERTE] chispas + caída + gemido sintético
+
+4.7 Drones
+Dron de policía (DR01):
+[DRN_POL_VUELO_LOOP] (cerca / lejos)
+[DRN_POL_SIRENA] sirena chica
+[DRN_POL_DISPARO] (x3)
+[DRN_POL_DANIO] [DRN_POL_CAIDA] [DRN_POL_EXPLOSION]
+Dron de asalto (E13):
+[DRN_ASA_VUELO_LOOP] [DRN_ASA_DISPARO] [DRN_ASA_EXPLOSION]
+Dron pesado (DR02):
+[DRN_PES_VUELO_LOOP] rotores grandes graves
+[DRN_PES_AMETRALLADORA_LOOP] + [DRN_PES_AMETRALLADORA_FIN]
+[DRN_PES_DANIO] [DRN_PES_CAIDA] [DRN_PES_EXPLOSION]
+Dron de carga (DR03):
+[DRN_CAR_VUELO_LOOP] [DRN_CAR_SOLTAR_CAPSULA] (enganche que se suelta) [DRN_CAR_CAPSULA_ATERRIZA] [DRN_CAR_CAPSULA_ABRIR]
+Dron explorador / enjambre (DR04):
+[DRN_EXP_VUELO_LOOP] zumbido agudo [DRN_EXP_ENJAMBRE_LOOP] muchos juntos [DRN_EXP_KAMIKAZE] se lanza y explota
+
+======================================================================
+5. IMPLANTES, EXO Y MECHA
+======================================================================
+[EXO_RUEDA_ABRIR] abrir la rueda de habilidades (Tab) (cámara lenta)
+[EXO_RUEDA_MOVER] pasar el cursor entre opciones (x2)
+[EXO_RUEDA_ELEGIR] activar una habilidad
+[EXO_RUEDA_CERRAR]
+[EXO_PIERNAS_ACTIVAR] / [EXO_PIERNAS_SALTO_SUPER] / [EXO_PIERNAS_ATERRIZAJE]
+[EXO_BRAZOS_ACTIVAR] servos al activar
+[EXO_ESCUDO_ACTIVAR] / [EXO_ESCUDO_LOOP] / [EXO_ESCUDO_GOLPE] / [EXO_ESCUDO_ROMPER] / [EXO_ESCUDO_RECARGA]
+[EXO_VISOR_ACTIVAR] / [EXO_VISOR_LOOP] (ver a través de paredes) / [EXO_VISOR_APAGAR]
+[EXO_SIN_ENERGIA] no hay energía para la habilidad
+[EXO_SERVOS_CAMINAR] servos del exo al caminar (muy suave, loop)
+[IMP_INSTALAR] instalar implante con el Doc (taladro quirúrgico + clics)
+[IMP_INSTALAR_DOLOR] quejido del jugador al instalar
+[IMP_SINAPSIS] sonido de sincronización neuronal (pitido que sube)
+[IMP_DESINSTALAR]
+Si se agrega: gancho y correr por paredes
+[MOV_GANCHO_DISPARO] [MOV_GANCHO_ENGANCHA] [MOV_GANCHO_JALAR_LOOP] [MOV_GANCHO_SOLTAR]
+[MOV_PARED_CORRER] (loop) [MOV_DASH] [MOV_DOBLE_SALTO]
+Mecha (MechaEstacionado y futuro mecha pilotable):
+[MEC_ENCENDER] secuencia de arranque (sistemas uno por uno + motor)
+[MEC_CABINA_ABRIR] / [MEC_CABINA_CERRAR]
+[MEC_PASOS] pasos gigantes que retumban (x4)
+[MEC_HIDRAULICA] (x4)
+[MEC_MOTOR_LOOP] motor interno (loop)
+[MEC_DISPARO_CANON] [MEC_MISILES] [MEC_PUNO]
+[MEC_DANIO] [MEC_ALARMA_DANIO] [MEC_APAGAR]
+[MEC_VOZ_SISTEMA_*] voz de la computadora del mecha (x6: "sistemas en línea", "daño crítico", etc.)
+
+======================================================================
+6. EXPLOSIONES, FUEGO Y DESTRUCCIÓN
+======================================================================
+[EXP_GRANADA] (cerca / lejos) (x3)
+[EXP_CARRO] carro que explota (cerca / lejos) (x3)
+[EXP_CARRO_CADENA] varias explosiones seguidas
+[EXP_PATRULLA_DESTROZADA] explosión grande + piezas cayendo
+[EXP_TANQUE_GAS] tanque de gas (puerto, industrial)
+[EXP_BARRIL] barril explosivo (x2)
+[EXP_DRON] dron que explota (chico)
+[EXP_ROBOT] robot que explota
+[EXP_NAVE] nave que cae y explota (enorme)
+[EXP_MISIL] impacto de misil
+[EXP_EN_AGUA] explosión en el agua (con chorro de agua)
+[EXP_INTERIOR] explosión dentro de un cuarto (eco)
+[EXP_ESCOMBROS] escombros y piezas cayendo después (x4)
+[EXP_CRISTALES] lluvia de vidrios después de una explosión
+[EXP_ONDA] onda de aire / golpe grave (para sentirla)
+[FUE_LOOP_CHICO] fuego chico (loop) [FUE_LOOP_GRANDE] incendio grande (loop)
+[FUE_ENCENDER] "fwoosh" al prenderse algo
+[FUE_APAGAR] fuego apagándose
+[FUE_JUGADOR] quemarse (crepitar en la ropa)
+[DES_CAJA_MADERA] romper caja (x2)
+[DES_BARRIL_PLASTICO] golpe a barril de plástico
+[DES_CRISTAL_VENTANA] ventana que se rompe (x3)
+[DES_LETRERO_NEON] letrero de neón roto (chispas + zumbido que se corta)
+[DES_FOCO] foco que revienta
+[DES_POSTE_CAE] poste que cae
+[DES_HIDRANTE] hidrante roto (chorro de agua, loop)
+[DES_TUBERIA_VAPOR] tubo roto echando vapor (loop)
+[DES_CHISPAS_ELECTRICAS] cables cortados echando chispas (loop)
+[DES_CONTENEDOR_GOLPE] golpe metálico grave en contenedor
+[DES_REJA] reja de malla sacudida
+
+======================================================================
+7. AMBIENTE (todos en loop)
+======================================================================
+7.1 Por zona
+[AMB_SUBURBIOS_NOCHE] perros lejanos, tele en una casa, grillos, música lejana
+[AMB_SUBURBIOS_DIA] niños jugando lejos, pájaros, vendedor lejos
+[AMB_MERCADO] gente, vendedores, música de bocina, platos
+[AMB_TIANGUIS] gritos de vendedores, bolsas, regateo
+[AMB_NEON_ALTO] tráfico, música de antro amortiguada, zumbido de pantallas
+[AMB_NOVA] ambiente limpio y frío, zumbido eléctrico, anuncios corporativos
+[AMB_MALECON] olas, viento, gaviotas, palmeras moviéndose
+[AMB_PLAYA] olas rompiendo en la arena
+[AMB_MUELLE] agua golpeando los pilotes, madera crujiendo, lanchas chocando
+[AMB_FARO] zumbido de la luz del faro + sirena de niebla lejana (de vez en cuando)
+[AMB_CERRO] perros, gallos, música de bocina lejana, eco del valle
+[AMB_PUERTO] grúas, contenedores chocando, motores de barco, bocina de barco lejana
+[AMB_INDUSTRIAL] maquinaria, zumbido de transformadores, vapor
+[AMB_DESHUESADERO] metal crujiendo, perros, viento entre chatarra
+[AMB_ARRANCONES] público gritando, motores revolucionando, música (evento)
+[AMB_CENTRO] campanas de la catedral (cada tanto), gente, puestos, organillero
+[AMB_LOMAS] silencio, aspersores, cámaras girando, perro grande ladrando
+[AMB_AUTOPISTA] tráfico rápido pasando (Doppler), viento
+[AMB_TUNEL] eco de tráfico dentro del túnel
+[AMB_CALLEJON] goteras, ratas, tubo de vapor, música lejana
+[AMB_AZOTEA] viento fuerte, ciudad abajo, antenas zumbando
+
+7.2 Objetos del mundo
+[OBJ_NEON_ZUMBIDO] zumbido de letrero de neón (loop, se oye al acercarse)
+[OBJ_NEON_PARPADEO] neón parpadeando
+[OBJ_POSTE_ZUMBIDO] zumbido de lámpara de sodio
+[OBJ_TRANSFORMADOR] zumbido de transformador de poste
+[OBJ_CABLES_VIENTO] cables silbando con el viento
+[OBJ_AIRE_ACONDICIONADO] aire acondicionado en la pared
+[OBJ_TINACO_AGUA] agua cayendo en tinaco
+[OBJ_SEMAFORO_PEATONAL] pitido del semáforo
+[OBJ_PANTALLA_ANUNCIO] anuncio en pantalla (voz + jingle de Nova o VivaCoin)
+[OBJ_MAQUINA_EXPENDEDORA_ZUMBIDO] + [OBJ_MAQUINA_COMPRAR] + [OBJ_MAQUINA_CAE_LATA]
+[OBJ_TELE_CASA] tele prendida en una casa
+[OBJ_BOCINA_FIESTA] bocina con música en una casa
+[OBJ_GOTERA]
+[OBJ_ALCANTARILLA] agua corriendo bajo la alcantarilla
+[OBJ_CAMARA_SEGURIDAD] servo de cámara girando (Lomas, Nova)
+[OBJ_PLUMA_CASETA] pluma subiendo/bajando
+[OBJ_GRUA_PUERTO] motor de grúa + cadenas
+[OBJ_MONTACARGAS] montacargas trabajando + pitido de reversa
+[OBJ_BARCO_BOCINA] bocina de barco
+[OBJ_LANCHA_MOTOR] motor fuera de borda
+[OBJ_FARO_GIRA] mecanismo del faro
+[OBJ_CAMPANAS] campanas de la catedral
+[OBJ_KIOSCO_MUSICA] música en el kiosco (banda)
+[OBJ_TENDEDERO] ropa moviéndose con el viento
+
+7.3 Clima y hora
+[CLI_LLUVIA_LIGERA] [CLI_LLUVIA_FUERTE] (ya existe Ambiente_Lluvia)
+[CLI_LLUVIA_SOBRE_LAMINA] [CLI_LLUVIA_SOBRE_CARRO] (dentro del carro)
+[CLI_TRUENO] (x3, cerca / lejos)
+[CLI_VIENTO] [CLI_VIENTO_FUERTE]
+[CLI_AMANECER] transición (pájaros empiezan)
+[CLI_ANOCHECER] transición (grillos empiezan, se prenden los neones)
+
+7.4 Interiores
+[INT_CUARTO] cuarto del jugador (refri, reloj, ciudad amortiguada)
+[INT_CLINICA_DOC] máquinas médicas, pitido de monitor
+[INT_TIENDA_TINO] herramientas, radio vieja
+[INT_TALLER_CANEPA] compresor, llave de impacto, radio
+[INT_ARMERIA] ventilador, silencio tenso
+[INT_CASINO] tragamonedas, fichas, música, gente, crupier
+[INT_HOTEL] lobby tranquilo, elevador
+[INT_NOVA_OFICINAS] aire acondicionado, teléfonos, teclados
+[INT_BODEGA] eco, goteras, metal
+
+7.5 Casino
+[CAS_TRAGAMONEDAS_PALANCA] [CAS_TRAGAMONEDAS_GIRAR_LOOP] [CAS_TRAGAMONEDAS_PARAR] (x3)
+[CAS_PREMIO_CHICO] [CAS_PREMIO_GRANDE] (monedas cayendo)
+[CAS_FICHAS] [CAS_RULETA_GIRA] [CAS_RULETA_BOLA] [CAS_CARTAS]
+
+======================================================================
+8. MISIONES Y EVENTOS
+======================================================================
+[MIS_NUEVA] nueva misión
+[MIS_OBJETIVO_ACTUALIZADO]
+[MIS_COMPLETADA] (fanfarria corta)
+[MIS_FALLIDA]
+[MIS_CINEMATICA_ENTRADA] / [MIS_CINEMATICA_SALIDA]
+[MIS_ATRACO_ALARMA] alarma del lugar del atraco (loop)
+[MIS_ATRACO_CAJA_FUERTE] abrir caja fuerte (perilla + clics + puerta pesada)
+[MIS_ATRACO_DINERO_INFINITO] sonido del dinero subiendo (contador)
+[MIS_CARRERA_SEMAFORO] 3-2-1 de arrancones
+[MIS_CARRERA_META] cruzar la meta + público
+[MIS_CHECKPOINT]
+[MIS_TEMPORIZADOR] tic-tac de tiempo límite (loop que se acelera)
+[EVT_ASALTO_CALLE] "¡me robaron!" + correr
+[EVT_PELEA_PANDILLAS] gritos + balazos lejos
+
+======================================================================
+9. INTERFAZ (UI) Y HUD
+======================================================================
+9.1 Menús
+[UI_MENU_ABRIR] [UI_MENU_CERRAR]
+[UI_MOVER] pasar el cursor por un botón
+[UI_SELECCIONAR] [UI_ATRAS]
+[UI_PESTANA] cambiar de pestaña
+[UI_DESLIZADOR] mover un deslizador (volumen, brillo)
+[UI_ERROR] acción no permitida
+[UI_GUARDAR] / [UI_CARGAR]
+[UI_PAUSA] / [UI_REANUDAR]
+[UI_LOGO_INTRO] sonido del logo CyberCity al iniciar
+[UI_PANTALLA_CARGA] ambiente de la pantalla de carga (loop)
+[UI_PANTALLA_CARGA_FIN]
+
+9.2 HUD
+[HUD_DINERO_SUBE] [HUD_DINERO_BAJA]
+[HUD_VIDA_BAJA] alarma de vida baja
+[HUD_ESCUDO_ROTO] [HUD_ESCUDO_LLENO]
+[HUD_ARMA_CAMBIAR]
+[HUD_RUEDA_ARMAS_ABRIR] [HUD_RUEDA_ARMAS_MOVER] [HUD_RUEDA_ARMAS_ELEGIR]
+[HUD_INDICADOR_DANIO] cuando te pegan de un lado
+[HUD_MAPA_ABRIR] [HUD_MAPA_CERRAR] [HUD_MAPA_MARCADOR]
+[HUD_MINIMAPA_PING] (llegas a un punto)
+[HUD_INTERACCION_APARECE] cuando aparece el iconito de tecla
+[HUD_NOTIFICACION]
+[HUD_MENSAJE_CELULAR] llega un mensaje
+[HUD_LOGRO] logro desbloqueado
+
+9.3 Pantallas especiales
+[PAN_ARRESTADO] (golpe + sirena que se aleja + esposas)
+[PAN_HAS_MUERTO] (latido que se detiene + glitch)
+[PAN_DESPERTAR_DOC] despertar en la clínica (monitor + respiración)
+[PAN_CREACION_PERSONAJE] música y clics de la creación de personaje
+[PAN_CREDITOS] música de créditos
+
+======================================================================
+10. MÚSICA
+======================================================================
+[MUS_MENU_PRINCIPAL] (loop)
+[MUS_EXPLORACION_NOCHE] (loop, tranquila)
+[MUS_EXPLORACION_DIA] (loop)
+[MUS_COMBATE_SKULLS] (loop, sube cuando empieza un tiroteo)
+[MUS_PERSECUCION_POLICIA] (loop, por niveles: 1–2, 3–4, 5 estrellas)
+[MUS_NOVA_LLEGA] (épica, más de 5 estrellas)
+[MUS_JEFE_FINAL] (loop)
+[MUS_ATRACO] (tensión)
+[MUS_SIGILO] (infiltración en Nova)
+[MUS_CARRERA] (arrancones)
+[MUS_CASINO] (lounge)
+[MUS_CLINICA_DOC] (tranquila, rara)
+[MUS_VICTORIA] (corta)
+[MUS_DERROTA] (corta)
+[MUS_TRANSICION_COMBATE_FIN] (bajada cuando se acaba el peligro)
+
+======================================================================
+TOTAL APROXIMADO
+======================================================================
+Contando variantes: entre 900 y 1,200 archivos de sonido.
+Lo más importante primero (lo que más se nota al jugar):
+1. Pasos por piso, disparos e impactos de todas las armas, recargas.
+2. Motores por tipo, choques, sirenas y radio de policía.
+3. Explosiones, fuego y destrucción.
+4. Ambiente por zona y zumbido de neones.
+5. Voces de enemigos (SKULLS, policía, Nova, robots) y drones.
+6. UI, HUD y música.

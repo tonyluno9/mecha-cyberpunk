@@ -8,7 +8,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1626646471788943647, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+    - target: {fileID: 1156918122990769848, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
+    - target: {fileID: 1526820096375269773, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
+    - target: {fileID: 1776404522532394551, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
+    - target: {fileID: 1922892532203528586, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
+    - target: {fileID: 2477264208429467864, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
+    - target: {fileID: 2537662312938318083, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
+    - target: {fileID: 3203436409788549157, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
@@ -16,14 +40,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CarroTrafico_V02_Azul
       objectReference: {fileID: 0}
-    - target: {fileID: 3871091626620750880, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
-    - target: {fileID: 3871467829110768766, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
     - target: {fileID: 4480918733254743414, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -64,19 +80,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7147888027619053859, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+    - target: {fileID: 4815793967468901235, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
-    - target: {fileID: 8323846597824366422, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+    - target: {fileID: 4823903723494492515, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
-    - target: {fileID: 8521353774631324621, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+    - target: {fileID: 4901595237742588221, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
-    - target: {fileID: 8530428967575985742, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
+    - target: {fileID: 7549067687552017589, guid: b5fe683143d1f0641aa6d923380aed83, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 8559e5a96356ff645b7a024b27806301, type: 2}
