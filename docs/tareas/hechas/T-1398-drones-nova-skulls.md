@@ -5,7 +5,7 @@ Rama: tony/T-1398-drones-nova-skulls. Dueño: Tony. Depende de T-1397.
 ## Qué se hizo
 - `RutaAerea` (Trafico/Drones): sigue en bucle una lista de puntos (x, z) en el espacio local del padre, a una altura, en m/s, se inclina al girar y oscila arriba y abajo. La lógica pura está en `CalculoRutaAerea` (Catmull-Rom cerrada, velocidad constante, fase, inclinación por °/s de giro con tope).
 - `GiroRotores` ahora no gira los rotores si la cámara está a más de `distanciaMaxima` m (por defecto 120; 0 = sin corte; se revisa cada 0.5 s). Lógica en `CalculoGiroRotores.DentroDeAlcance`.
-- `Arte/Editor/DronesZonasT1398` (Aplicar, Validar, Fotos) arma Assets/Arte/Mundo/Zonas/T1398_DronesAereos.prefab (18 drones, tope 25) y lo instancia en Ciudad_Prologo.unity. Cada dron: contenedor con RutaAerea > Dron_<código> de T-1397 (sin colliders) + 2 luces de navegación emisivas (materiales en Zonas/Materiales_T1398/) + 1 Light chica sin sombras en los de baja altura.
+- `Arte/Editor/DronesZonasT1398` (Aplicar, Validar, Fotos) arma Assets/Arte/Mundo/Zonas/T1398_DronesAereos.prefab (18 drones, tope 25) y lo instancia en Ciudad_Prologo.unity. Cada dron: contenedor con RutaAerea > Dron_<código> de T-1397 (sin colliders) + 2 halos de navegación rojo y verde (KitS2c.Halo con el shader HaloLuz, sin primitivos) + 1 Light chica sin sombras en los de baja altura.
 
 ## Dónde quedó cada grupo (coordenadas del mundo)
 | Grupo | Drones | Altura | Dónde |
@@ -27,7 +27,7 @@ Los territorios salen de ColocarS2cNova, ColocarS2Pandillas y CreadorCiudadPandi
 ## Criterios
 - [ ] Todo compila (el código se escribió sin Unity).
 - [ ] RutaAereaT1398Pruebas pasan.
-- [ ] Validar sin FALTA: 18 drones, sin colliders, a lo más 1 Light sin sombras cada uno, luces emisivas, rotores y corte de giro.
+- [ ] Validar sin FALTA: 18 drones, sin colliders, a lo más 1 Light sin sombras cada uno, halos de navegación, rotores y corte de giro.
 - [ ] Fotos revisadas: escala de cada modelo y que las luces queden en las puntas.
 
 ## Pendiente

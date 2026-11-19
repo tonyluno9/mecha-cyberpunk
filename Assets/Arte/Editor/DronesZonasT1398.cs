@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Arte.Editor
     /// <summary>
     /// T-1398: drones y naves aéreos de Nova, SKULLS, la policía y la ciudad (tráfico aéreo alto), como un solo prefab
     /// Assets/Arte/Mundo/Zonas/T1398_DronesAereos.prefab instanciado en Ciudad_Prologo. Cada uno es un contenedor con <see cref="RutaAerea"/>
-    /// que lleva el prefab Dron_&lt;código&gt; de T-1397 (con <see cref="GiroRotores"/>), luces de navegación emisivas y, a baja altura, una Light chica sin sombras.
+    /// que lleva el prefab Dron_&lt;código&gt; de T-1397 (con <see cref="GiroRotores"/>), luces de navegación (halos del kit, sin primitivos) y, a baja altura, una Light chica sin sombras.
     /// Sin colliders. Requiere que DronesT1397.Aplicar ya haya corrido.
     /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.DronesZonasT1398.Aplicar (luego .Validar y .Fotos). Informe en Logs/t1398-drones.txt.
     /// </summary>
@@ -21,7 +21,6 @@ namespace MechaCyberpunk.Arte.Editor
     {
         public const string NombreRaiz = "T1398_DronesAereos";
         public const string RutaPrefab = "Assets/Arte/Mundo/Zonas/T1398_DronesAereos.prefab";
-        public const string CarpetaMateriales = "Assets/Arte/Mundo/Zonas/Materiales_T1398/";
         public const string CarpetaFotos = "docs/capturas/t-1398/";
         public const int TopeDrones = 25;
         public const float AlturaMinimaAlta = 80f;
@@ -38,7 +37,10 @@ namespace MechaCyberpunk.Arte.Editor
         private const float LuzIntensidad = 1.6f;
         private const float RadioLuzNavegacion = 0.12f;
         private const float RadioLuzNaveFactor = 3f;
-        private const float EmisionIntensidad = 4f;
+        private const float HaloIntensidad = 1.2f;
+        private const float HaloAlto = 1.4f;
+        private static readonly Color ColorRojo = new Color(1f, 0.1f, 0.1f);
+        private static readonly Color ColorVerde = new Color(0.1f, 1f, 0.2f);
 
         /// <summary>Grupos y reglas de altura (m) que Validar comprueba.</summary>
         public static readonly (string grupo, float min, float max, int cantidad)[] Reglas =
@@ -149,9 +151,13 @@ namespace MechaCyberpunk.Arte.Editor
                     return;
                 }
             }
-            Directory.CreateDirectory(CarpetaMateriales);
-            Material rojo = MaterialLuz("Luz_Roja", new Color(1f, 0.1f, 0.1f));
-            Material verde = MaterialLuz("Luz_Verde", new Color(0.1f, 1f, 0.2f));
+            Material rojo = MaterialHalo("T1398_HaloRojo", ColorRojo);
+            Material verde = MaterialHalo("T1398_HaloVerde", ColorVerde);
+            if (rojo == null || verde == null)
+            {
+                Debug.LogError("[Arte] T-1398: falta el shader MechaCyberpunk/Mundo/HaloLuz.");
+                return;
+            }
 
             GameObject raiz = new GameObject(NombreRaiz);
             Dictionary<string, Transform> grupos = new Dictionary<string, Transform>();
@@ -229,8 +235,8 @@ namespace MechaCyberpunk.Arte.Editor
             float radio = RadioLuzNavegacion * (d.Codigo.StartsWith("NV") ? RadioLuzNaveFactor : 1f);
             Vector3 izq = envoltorio.transform.InverseTransformPoint(new Vector3(b.min.x, b.center.y, b.center.z));
             Vector3 der = envoltorio.transform.InverseTransformPoint(new Vector3(b.max.x, b.center.y, b.center.z));
-            CrearPunto(envoltorio.transform, "LuzNavegacion_Izq", izq, radio, rojo);
-            CrearPunto(envoltorio.transform, "LuzNavegacion_Der", der, radio, verde);
+            CrearHalo(envoltorio.transform, "LuzNavegacion_Izq", izq, radio, ColorRojo, rojo);
+            CrearHalo(envoltorio.transform, "LuzNavegacion_Der", der, radio, ColorVerde, verde);
             if (d.Foco != Luz.Ninguna)
             {
                 GameObject go = new GameObject("Foco");
@@ -250,35 +256,34 @@ namespace MechaCyberpunk.Arte.Editor
             envoltorio.transform.localRotation = Quaternion.LookRotation(m.Rumbo, Vector3.up);
         }
 
-        private static void CrearPunto(Transform padre, string nombre, Vector3 pos, float radio, Material mat)
+        // Luz de navegación como halo del kit (KitS2c.Halo, shader HaloLuz): un cono aditivo, sin primitivos. El tamaño crece con el del dron.
+        private static void CrearHalo(Transform padre, string nombre, Vector3 pos, float radio, Color color, Material mat)
         {
-            GameObject esfera = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            esfera.name = nombre;
-            Object.DestroyImmediate(esfera.GetComponent<Collider>());
-            esfera.transform.SetParent(padre, false);
-            esfera.transform.localPosition = pos;
-            esfera.transform.localScale = Vector3.one * radio * 2f;
-            MeshRenderer r = esfera.GetComponent<MeshRenderer>();
-            r.sharedMaterial = mat;
-            r.shadowCastingMode = ShadowCastingMode.Off;
-            r.receiveShadows = false;
+            float alto = HaloAlto * radio / RadioLuzNavegacion;
+            Vector3 mundo = padre.TransformPoint(pos);
+            KitS2c.Halo(null, padre, mundo + Vector3.up * alto * 0.5f, mundo.y - alto * 0.5f, color);
+            Transform h = padre.GetChild(padre.childCount - 1);
+            h.name = nombre;
+            MeshRenderer mr = h.GetComponent<MeshRenderer>();
+            mr.sharedMaterial = mat;
         }
 
-        private static Material MaterialLuz(string nombre, Color color)
+        private static Material MaterialHalo(string nombre, Color color)
         {
-            string ruta = CarpetaMateriales + nombre + ".mat";
-            Material mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
-            if (mat == null)
+            Shader shader = Shader.Find("MechaCyberpunk/Mundo/HaloLuz");
+            if (shader == null)
             {
-                mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                AssetDatabase.CreateAsset(mat, ruta);
+                return null;
             }
-            mat.SetColor("_BaseColor", color * 0.3f);
-            mat.EnableKeyword("_EMISSION");
-            mat.SetColor("_EmissionColor", color * EmisionIntensidad);
-            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
-            EditorUtility.SetDirty(mat);
-            return mat;
+            return KitS2c.Mat(nombre, () =>
+            {
+                Material m = new Material(shader);
+                m.SetColor("_Color", color);
+                m.SetFloat("_Intensidad", HaloIntensidad);
+                m.SetFloat("_Borde", 3.4f);
+                m.SetFloat("_Caida", 2f);
+                return m;
+            });
         }
 
         private static Bounds Limites(GameObject objeto)
@@ -374,10 +379,10 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         Falla(r.name + ": más de 1 Light o con sombras");
                     }
-                    bool tieneEmisiva = r.GetComponentsInChildren<Renderer>(true).Any(x => x.name.StartsWith("LuzNavegacion") && x.sharedMaterial != null && x.sharedMaterial.IsKeywordEnabled("_EMISSION"));
+                    bool tieneEmisiva = r.GetComponentsInChildren<Renderer>(true).Any(x => x.name.StartsWith("LuzNavegacion") && x.sharedMaterial != null && x.sharedMaterial.shader.name == "MechaCyberpunk/Mundo/HaloLuz");
                     if (!tieneEmisiva)
                     {
-                        Falla(r.name + " sin luz de navegación emisiva");
+                        Falla(r.name + " sin halo de luz de navegación");
                     }
                     if (r.GetComponentsInChildren<LODGroup>(true).Length > 0)
                     {
