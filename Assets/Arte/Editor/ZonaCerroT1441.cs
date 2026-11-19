@@ -158,6 +158,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Directory.CreateDirectory(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs"));
                 File.WriteAllLines(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs", "t1441-npcs.txt"),
                     planNpc.Select(p => p.Key + "|" + p.Value.x.ToString("R", CultureInfo.InvariantCulture) + "|" + p.Value.y.ToString("R", CultureInfo.InvariantCulture) + "|" + p.Value.z.ToString("R", CultureInfo.InvariantCulture)).ToArray());
+                Paso("poda", () => Podar(c));
                 Paso("LOD", () => AgruparLod(c));
                 Estatico(c);
                 KitS2c.Terminar(c.Obra);
@@ -692,6 +693,69 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Las piezas de prefab que no se pudieron combinar (malla no leíble) se agrupan por cuadro de 40 m bajo un LODGroup de un solo nivel que se apaga bajo el 2 % de la pantalla.</summary>
+        private static bool EnCuadroDe(Vector3 desde, Vector3 hacia, float campo, Vector3 punto, float min, float max)
+        {
+            Vector3 adelante = (hacia - desde).normalized;
+            Vector3 derecha = Vector3.Cross(Vector3.up, adelante).normalized;
+            Vector3 arriba = Vector3.Cross(adelante, derecha);
+            Vector3 d = punto - desde;
+            float prof = Vector3.Dot(d, adelante);
+            if (prof < min || prof > max)
+            {
+                return false;
+            }
+            float tanV = Mathf.Tan(campo * 0.5f * Mathf.Deg2Rad);
+            float tanH = tanV * (1376f / 768f);
+            return Mathf.Abs(Vector3.Dot(d, derecha) / prof) < tanH && Mathf.Abs(Vector3.Dot(d, arriba) / prof) < tanV;
+        }
+
+        private static int ContarRenderers(Transform raiz)
+        {
+            return raiz.GetComponentsInChildren<Renderer>(true).Count(r => !(r is ParticleSystemRenderer));
+        }
+
+        /// <summary>
+        /// Rendimiento: las piezas de prefab sueltas (mallas no leíbles, no se pueden combinar) que son puro adorno (antenas, chatarra, cajas, tambos, lavaderos, tendederos, aires, medidores,
+        /// toldos, macetas, basura) y que no están en el cuadro de K13, ni a 60 m o menos de su cámara, ni en el cuadro de A13, se quitan. Tinacos y gente no se tocan.
+        /// </summary>
+        private static void Podar(Ctx c)
+        {
+            int antes = ContarRenderers(c.Nuevo);
+            int quitados = 0, revisados = 0;
+            Dictionary<string, int> porTipo = new Dictionary<string, int>();
+            foreach (string ruta in new[] { "Techos", "Fachadas", "Calle/Basura" })
+            {
+                Transform padre = c.Nuevo.Find(ruta);
+                if (padre == null)
+                {
+                    continue;
+                }
+                foreach (Transform t in padre.Cast<Transform>().ToList())
+                {
+                    if (t.name.StartsWith("NPC_") || t.name.StartsWith("Tinaco_") || t.GetComponentInChildren<Animator>() != null || t.GetComponentInChildren<Light>() != null || t.GetComponentInChildren<Renderer>() == null)
+                    {
+                        continue;
+                    }
+                    revisados++;
+                    Vector3 p = Cubierta(t).center;
+                    bool enK13 = EnCuadroDe(K13Desde, K13Hacia, CampoK13, p, 1f, 400f);
+                    bool cerca = new Vector2(p.x - K13Desde.x, p.z - K13Desde.z).magnitude <= 60f;
+                    bool enA13 = EnCuadroDe(ZonaCerroT1440.A13Desde, ZonaCerroT1440.A13Hacia, CampoA13, p, 1f, 600f);
+                    if (enK13 || cerca || enA13)
+                    {
+                        continue;
+                    }
+                    string tipo = t.name.Split('_')[0];
+                    porTipo[tipo] = (porTipo.TryGetValue(tipo, out int v) ? v : 0) + 1;
+                    Object.DestroyImmediate(t.gameObject);
+                    quitados++;
+                }
+            }
+            Physics.SyncTransforms();
+            Log("Poda de adornos sueltos fuera de K13 (cuadro y 60 m) y de A13: " + quitados + " quitados de " + revisados + " (" + string.Join(", ", porTipo.Select(q => q.Key + " " + q.Value)) + "); quedan " + (revisados - quitados) + " sueltos.");
+            Log("Renderers de " + Raiz + " antes de la poda: " + antes + ", después: " + ContarRenderers(c.Nuevo) + ".");
+        }
+
         private static void AgruparLod(Ctx c)
         {
             int grupos = 0, piezas = 0;
@@ -814,7 +878,9 @@ namespace MechaCyberpunk.Arte.Editor
             Renderer[] rs = t.GetComponentsInChildren<Renderer>(true).Where(r => !(r is ParticleSystemRenderer)).ToArray();
             if (rs.Length == 0)
             {
-                return new Bounds(t.position, Vector3.zero);
+                // Sin malla propia (p. ej. el tinaco: la malla va en el lote): vale la caja de su collider.
+                Collider col = t.GetComponentInChildren<Collider>();
+                return col != null ? col.bounds : new Bounds(t.position, Vector3.zero);
             }
             Bounds b = rs[0].bounds;
             for (int i = 1; i < rs.Length; i++)
@@ -1367,9 +1433,17 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 q -= peso;
             }
-            GameObject g = Generado(t.Grupo, "Tinaco_" + (c.Contador++), malla, new[] { ladrillo, color }, new Vector3(pos.x, t.Y, pos.y), Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f), Vector3.one * e, true, true);
+            // Un objeto vacío con un BoxCollider del tamaño del tinaco (base de ladrillo + tanque, ~1.7 x 2.1 x 1.7 m a escala 1): la malla visible va en el lote por material.
+            Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f);
+            Vector3 donde = new Vector3(pos.x, t.Y, pos.y);
+            GameObject g = new GameObject("Tinaco_" + (c.Contador++));
+            g.transform.SetParent(t.Grupo, false);
+            g.transform.SetPositionAndRotation(donde, giro);
+            BoxCollider caja = g.AddComponent<BoxCollider>();
+            caja.size = new Vector3(1.72f, 2.1f, 1.72f) * e;
+            caja.center = new Vector3(0f, 1.05f * e, 0f);
             Physics.SyncTransforms();
-            Bounds fin = Cubierta(g.transform);
+            Bounds fin = caja.bounds;
             VariarCerroT1364.CasaT hh = t.H;
             if (EnPasillo(t, fin.center.x, fin.center.z, Mathf.Max(fin.extents.x, fin.extents.z) + 0.1f) || fin.min.x < hh.X0 || fin.max.x > hh.X1 || fin.min.z < hh.Z0 || fin.max.z > hh.Z1)
             {
@@ -1384,6 +1458,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Physics.SyncTransforms();
                 return false;
             }
+            Pegar(malla, new[] { ladrillo, color }, Matrix4x4.TRS(donde, giro, Vector3.one * e));
             c.Ocupado.Add(fin);
             return true;
         }
@@ -2675,7 +2750,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             foreach (Transform t in items)
             {
-                if (t.GetComponentInChildren<Animator>() != null || t.GetComponentInChildren<Renderer>() == null)
+                if (t.GetComponentInChildren<Animator>() != null || (t.GetComponentInChildren<Renderer>() == null && t.GetComponent<Collider>() == null))
                 {
                     continue;
                 }
@@ -2911,7 +2986,8 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 total++;
                 Renderer r = col.GetComponent<Renderer>() ?? col.GetComponentInParent<Renderer>();
-                if (r == null)
+                // El tinaco lleva un BoxCollider del tamaño de su malla, que va combinada en el lote por material (a petición de rendimiento): no es un muro invisible.
+                if (r == null && !col.name.StartsWith("Tinaco_"))
                 {
                     bool hijo = col.GetComponentInChildren<Renderer>() != null;
                     if (!hijo)
