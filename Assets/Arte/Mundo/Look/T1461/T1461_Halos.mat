@@ -25,6 +25,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _Acercar: 0
     - _CercaCamara: 3
     - _Intensidad: 0.7
     - _Tamano: 1.3
