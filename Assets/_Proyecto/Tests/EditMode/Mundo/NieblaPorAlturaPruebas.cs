@@ -54,6 +54,37 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        public void OcultoPorDebajo_SoloSeVeDesdeArriba()
+        {
+            Assert.IsTrue(CalculoOcultarAltura.OcultoPorDebajo(false, 10f, 25f, 3f));
+            Assert.IsFalse(CalculoOcultarAltura.OcultoPorDebajo(true, 40f, 25f, 3f));
+            Assert.IsTrue(CalculoOcultarAltura.OcultoPorDebajo(true, 27f, 25f, 3f), "sigue oculto dentro de la histéresis");
+        }
+
+        [Test]
+        public void OcultarPorAltura_SoloArriba_SeVeSoloDesdeArribaYSeRestaura()
+        {
+            var go = new GameObject("piso", typeof(MeshRenderer));
+            var host = new GameObject("host");
+            OcultarPorAltura o = host.AddComponent<OcultarPorAltura>();
+            var so = new UnityEditor.SerializedObject(o);
+            so.FindProperty("renderers").arraySize = 1;
+            so.FindProperty("renderers").GetArrayElementAtIndex(0).objectReferenceValue = go.GetComponent<MeshRenderer>();
+            so.FindProperty("umbral").floatValue = 25f;
+            so.FindProperty("soloArriba").boolValue = true;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            o.Aplicar(5f);
+            Assert.IsFalse(go.GetComponent<MeshRenderer>().enabled, "abajo se oculta");
+            o.Aplicar(60f);
+            Assert.IsTrue(go.GetComponent<MeshRenderer>().enabled, "arriba se ve");
+            o.Aplicar(5f);
+            o.Aplicar(float.NegativeInfinity);
+            Assert.IsTrue(go.GetComponent<MeshRenderer>().enabled, "restaurar lo deja visible");
+            Object.DestroyImmediate(go);
+            Object.DestroyImmediate(host);
+        }
+
+        [Test]
         public void OcultarPorAltura_ApagaYEnciendeLosRenderers()
         {
             var go = new GameObject("fondo", typeof(MeshRenderer));

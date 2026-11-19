@@ -35,3 +35,10 @@ skyline del Malecón como panel plano sobre el mar (K11) y niebla que tapa la zo
 
 ## Assets que faltan
 (vacío)
+
+## Ronda 2
+- Vacío azul alrededor de la isla (A18, norte de A11, A13): era el fondo (color de niebla/cielo) donde no hay geometría, al apagar T513 por altura. Nuevo `CiudadRespaldo` (Aplicar): plano de 4000 m a y -8 (bajo el mar, FondoMar y los pisos de respaldo) con la textura T1363_VentanasLejanas (mosaico de 96 m), material `Assets/Arte/Mundo/Look/T1462_CiudadRespaldo.mat`, sin collider. `OcultarPorAltura` ganó `soloArriba`: el plano solo existe con la cámara sobre 25 m, así a nivel de calle nada cambia.
+- `T1365_Uniones/PisoRespaldo_*` son losas de asfalto (S2c_Asfalto, liso 0.7, reflejan el cielo azul de noche); legítimas, se permiten.
+- Permitidos nuevos en Validar: DerramesNeon, Estelas, T1464_Autopista, PisoRespaldo, Skyline (bajo 100 m), CiudadRespaldo.
+- Cajas sobre el horizonte de A11: no pude nombrarlas con certeza. Validar ahora escribe una sección "ARRIBA" por cada aérea con los 30 renderers que más ocupan el tercio superior (ruta, malla, material, distancia).
+- Pruebas EditMode: 9 en NieblaPorAlturaPruebas (2 nuevas de OcultoPorDebajo y soloArriba).
