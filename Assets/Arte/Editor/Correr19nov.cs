@@ -136,6 +136,9 @@ namespace MechaCyberpunk.Arte.Editor
             var log = new StringBuilder();
             DespejarBocas("Assets/Arte/Mundo/Zonas/T1388_Uniones.prefab", null, log);
             DespejarBocas("Assets/Arte/Mundo/Zonas/T1355_Cerro.prefab", new[] { "T1385_", "T1394_", "T1401_" }, log);
+            DespejarBocas("Assets/Arte/Mundo/Zonas/T1356_Autopista.prefab", new[] { "T1386_", "T1395_", "T1402_", "T1404_" }, log);
+            DespejarBocas("Assets/Arte/Mundo/Zonas/T1354_Malecon.prefab", new[] { "T1384_", "T1393_", "T1400_", "T1404_" }, log);
+            DespejarBocas("Assets/Arte/Mundo/Zonas/T1357_Puerto.prefab", new[] { "T1387_", "T1396_", "T1402_" }, log);
             System.IO.File.WriteAllText("Logs/despejar-bocas.txt", log.ToString());
         }
 

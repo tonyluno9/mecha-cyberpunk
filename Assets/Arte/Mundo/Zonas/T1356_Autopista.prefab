@@ -339359,6 +339359,10 @@ PrefabInstance:
       value: AU03_15
       objectReference: {fileID: 0}
     - target: {fileID: 3095342774864344256, guid: ebce9c0f3ed4ed841a7d3391c0d57d51, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3095342774864344256, guid: ebce9c0f3ed4ed841a7d3391c0d57d51, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 20
       objectReference: {fileID: 0}
