@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MechaCyberpunk.Core.Mundo;
 using MechaCyberpunk.Core.Trepar;
 using MechaCyberpunk.Mundo.Ambiente;
 using MechaCyberpunk.Mundo.Reloj;
@@ -65,7 +66,10 @@ namespace MechaCyberpunk.Arte.Editor
         public const int MaxCarros = 6;
         public const long MaxTriangulosModelo = 20000;
         public const float CorteCarro = 0.05f;
-        public const float CortePiso = 0.02f;
+        public const float CortePiso = 0.04f;
+        /// <summary>Punto de la prueba de rendimiento "calle base al sur": las casas a menos de 80 m que no caen en A13 no llevan pisos extra.</summary>
+        public static readonly Vector3 PuntoBaseSur = new Vector3(-305f, 1.7f, -86f);
+        public const float RadioBaseSur = 80f;
         public const float CorteModelo = 0.04f;
         public const int MaxModelosPiso = 40;
         public const int MaxPisos = 110;
@@ -1654,6 +1658,10 @@ namespace MechaCyberpunk.Arte.Editor
                 int tiers = (int)TiersDe(k);
                 float uF, vF;
                 bool enCuadro = EnCuadroA13(new Vector3(k.Centro, roof, (k.Z0 + k.Z1) * 0.5f), out uF, out vF) && uF > 0.03f && uF < 0.97f && vF > 0.05f && vF < 0.95f;
+                if (!enCuadro && Vector3.Distance(new Vector3(k.Centro, roof, (k.Z0 + k.Z1) * 0.5f), PuntoBaseSur) < RadioBaseSur)
+                {
+                    continue; // vista "calle base al sur, mirando a la ladera" de la prueba de rendimiento
+                }
                 if (!enCuadro)
                 {
                     tiers = Mathf.Min(tiers, 1); // fuera del cuadro de A13 solo un piso extra (menos batches)
@@ -2137,6 +2145,16 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
+            int bajadas = 0;
+            foreach (Light l in c.Nuevo.GetComponentsInChildren<Light>(true))
+            {
+                if (l.range > RendimientoCerroT1365.AlcanceMaximoLuz)
+                {
+                    l.range = RendimientoCerroT1365.AlcanceMaximoLuz;
+                    bajadas++;
+                }
+            }
+            Log("Luces de T1440_Ladera con el alcance bajado a " + RendimientoCerroT1365.AlcanceMaximoLuz + " m (tope de RendimientoCerroT1365): " + bajadas + ".");
             Log("Postes nuevos: " + plan.Count + " (" + reales + " con Light real y sodio, " + baratos + " con cabeza emisiva y charco falso), charcos extra en postes viejos " + charcosViejos + ", cables " + cables + ".");
         }
 
@@ -2368,6 +2386,43 @@ namespace MechaCyberpunk.Arte.Editor
             Log("Fachadas hacia A13: " + enCuadro + " casas y pisos en el cuadro, " + neones + " neones chicos, " + ventanas + " ventanas cálidas en " + casasConLuz + " de ellos (emisión, sin Light).");
         }
 
+        /// <summary>Muestras (cada 0.5 m) de los ejes de todas las CalleZona activas de la zona: lo que usa BarridoZonasT1360 para "carro en el carril".</summary>
+        private static List<Vector3> EjesCalleZona(Ctx c)
+        {
+            List<Vector3> l = new List<Vector3>();
+            foreach (CalleZona cz in c.Zona.GetComponentsInChildren<CalleZona>(false))
+            {
+                IList<Vector3> pts = cz.Puntos();
+                for (int i = 0; i + 1 < pts.Count; i++)
+                {
+                    float largo = Vector3.Distance(pts[i], pts[i + 1]);
+                    int k = Mathf.Max(1, Mathf.CeilToInt(largo / 0.5f));
+                    for (int j = 0; j < k; j++)
+                    {
+                        l.Add(Vector3.Lerp(pts[i], pts[i + 1], j / (float)k));
+                    }
+                }
+                if (pts.Count > 0)
+                {
+                    l.Add(pts[pts.Count - 1]);
+                }
+            }
+            return l;
+        }
+
+        /// <summary>Distancia en planta del rectángulo de <paramref name="b"/> a la muestra de eje más cercana (0 si un eje pasa por dentro).</summary>
+        private static float DistanciaAEjes(Bounds b, List<Vector3> ejes)
+        {
+            float min = float.MaxValue;
+            foreach (Vector3 s in ejes)
+            {
+                float dx = Mathf.Max(0f, Mathf.Max(b.min.x - s.x, s.x - b.max.x));
+                float dz = Mathf.Max(0f, Mathf.Max(b.min.z - s.z, s.z - b.max.z));
+                min = Mathf.Min(min, Mathf.Sqrt(dx * dx + dz * dz));
+            }
+            return min;
+        }
+
         // ================================================================ Carros viejos sobre las piernas rectas del zigzag
 
         private static void Carros(Ctx c)
@@ -2380,6 +2435,7 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             List<Vector3> eje = CerroT1355Trazado.Zigzag();
+            List<Vector3> ejesZona = EjesCalleZona(c);
             int n = 0, lado = 1;
             float acum = 0f;
             for (int i = 1; i + 1 < eje.Count && n < MaxCarros; i++)
@@ -2419,6 +2475,14 @@ namespace MechaCyberpunk.Arte.Editor
                 Physics.SyncTransforms();
                 Bounds b = Cubierta(car.transform);
                 car.transform.position += Vector3.up * (y - b.min.y);
+                Physics.SyncTransforms();
+                b = Cubierta(car.transform);
+                if (DistanciaAEjes(b, ejesZona) < 1.5f)
+                {
+                    Object.DestroyImmediate(car); // BarridoZonasT1360: "carro en el carril" a menos de 1 m de un eje de CalleZona
+                    Physics.SyncTransforms();
+                    continue;
+                }
                 Lod(car, CorteCarro);
                 Physics.SyncTransforms();
                 n++;
