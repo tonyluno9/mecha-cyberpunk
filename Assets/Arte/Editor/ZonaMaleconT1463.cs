@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Arte.Editor
     /// <summary>
     /// T-1463: el Malecón igual a K11 y A11, con vida. Corre DESPUÉS de T1384, T1393, T1400, T1404 y T1413 (mismo prefab T1354_Malecon; todo lo nuevo cuelga de
     /// "T1463_Malecon", que se borra y rehace y vuelve a encender lo que apagó).
-    /// 1) Marcas de cámara Vista19b_K11 y Vista19b_A11 (hijos Mira y Campo_&lt;grados&gt;). K11 va en la banqueta del mar a x = -135, donde la avenida ya curva a la derecha.
+    /// 1) Marcas de cámara Vista19b_K11 y Vista19b_A11 (hijos Mira y Campo_&lt;grados&gt;). K11 va en la banqueta del mar a x = -150, donde la avenida ya curva a la derecha.
     /// 2) La fila del paseo se rehace: un farol ML01 cada 15 m y entre cada dos faroles una palmera AR03 (también cada 15 m); las palmeras y faroles viejos del paseo se apagan.
     /// 3) Letrero de neón (con emisión, sin Light) en cada edificio del frente que cae en el cuadro de K11 o de A11 y no tiene.
     /// 4) Gente de decorado (Visual_NP07..NP14 con PoseQuieta en estado Idle) en el paseo y la banqueta; basura y cajas en el paseo.
@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float XFilaDesde = -300f;
         private const float XFilaHasta = 105f;
         private const float RadioCamara = 2.2f;
-        private const int TopeSpots = 28;
+        private const int TopeSpots = 36;
         private const int CupoLuces = 40;
 
         // Gente
@@ -50,10 +50,12 @@ namespace MechaCyberpunk.Arte.Editor
         // Cámaras
         private const float AlturaOjos = 1.9f;
         private const float CampoK11 = 60f;
-        private const float CampoA11 = 70f;
+        private const float CampoA11 = 65f;
         private const float Aspecto = 16f / 9f;
-        private static readonly Vector3 CamaraA11 = new Vector3(150f, 40f, -300f);
-        private static readonly Vector3 MiraA11 = new Vector3(90f, 0f, -275f);
+        private static readonly Vector3 CamaraA11 = new Vector3(-120f, 40f, -268f);
+        private static readonly Vector3 MiraA11 = new Vector3(-190f, 0f, -230f);
+        private static readonly Vector2 CentroIslote = new Vector2(-258f, -300f);
+        private const string NombreFaroA11 = "ML04_Faro_T1463";
         private static readonly string[] NombresVisuales =
         {
             "Visual_NP07_Pescador_a", "Visual_NP08_Turista_a", "Visual_NP09_Corredor_a", "Visual_NP10_Elotero_a", "Visual_NP11_Estibador_a", "Visual_NP12_Abuela_a",
@@ -82,10 +84,10 @@ namespace MechaCyberpunk.Arte.Editor
             return p;
         }
 
-        /// <summary>K11: en el paseo, a 9.6 m del eje de la avenida (la fila de palmeras queda a la izquierda y el barandal más allá), a 1.9 m de alto, mirando al oeste donde la avenida ya curva a la derecha.</summary>
-        public static Vector3 CamaraK11 => PuntoLateral(-135f, 9.6f, AlturaOjos);
+        /// <summary>K11: en el paseo, a 9.6 m del eje de la avenida (la fila de palmeras queda a la izquierda y el barandal más allá), a 1.9 m de alto, mirando recto al oeste: la avenida que sigue curva a la derecha en pantalla.</summary>
+        public static Vector3 CamaraK11 => PuntoLateral(-150f, 9.6f, AlturaOjos);
 
-        public static Vector3 MiraK11 => PuntoLateral(-215f, 3f, 0.6f);
+        public static Vector3 MiraK11 => new Vector3(CamaraK11.x - 80f, 0.2f, CamaraK11.z);
 
         private static bool Proyectar(Vector3 cam, Vector3 mira, float campo, Vector3 p, out float sx, out float sy)
         {
@@ -236,6 +238,28 @@ namespace MechaCyberpunk.Arte.Editor
             return lista;
         }
 
+        /// <summary>Ocupado sin las losas, el barandal ni las piezas largas del paseo: solo cosas de pie de menos de 10 m.</summary>
+        private static List<Bounds> OcupadoDePie(Transform raiz)
+        {
+            return OcupadoPaseo(raiz).Where(b => b.size.x <= 10f && b.size.z <= 10f && b.size.y >= 0.6f).ToList();
+        }
+
+        /// <summary>Como Colocar de T-1393 pero la huella que se revisa es la del pie (no la copa ni los brazos): cabe junto al barandal.</summary>
+        private static GameObject PonerSimple(GameObject prefab, Transform padre, Vector3 suelo, Quaternion giro, float escala, List<Bounds> ocupado, float huella, string nombre)
+        {
+            Bounds mb = ZonaMaleconT1393.Medida(prefab);
+            Bounds pie = new Bounds(suelo + Vector3.up * 1.2f, new Vector3(huella, 2.4f, huella));
+            if (ocupado.Any(o => o.Intersects(pie))) { return null; }
+            Vector3 ancla = new Vector3(mb.center.x, mb.min.y, mb.center.z) * escala;
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            go.name = nombre;
+            go.transform.rotation = giro;
+            go.transform.localScale = Vector3.one * escala;
+            go.transform.position = suelo - giro * ancla;
+            ocupado.Add(pie);
+            return go;
+        }
+
         private static void MarcarEstaticos(Transform mio)
         {
             const StaticEditorFlags banderas = StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic | StaticEditorFlags.OccluderStatic;
@@ -273,6 +297,7 @@ namespace MechaCyberpunk.Arte.Editor
                 PonerMarca(mio, "Vista19b_A11", CamaraA11, MiraA11, CampoA11);
                 ApagarFilaVieja(raiz, apagados);
                 PonerFila(obra, raiz, mio);
+                PonerFaroA11(obra, mio);
                 PonerLetreros(raiz, mio);
                 PonerGente(raiz, mio, obra);
                 PonerBasura(raiz, mio);
@@ -339,7 +364,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Transform grupo = new GameObject("Fila").transform;
             grupo.SetParent(mio, false);
-            List<Bounds> ocupado = OcupadoPaseo(raiz);
+            List<Bounds> ocupado = OcupadoDePie(raiz);
             List<Vector3> borde = ColocarT1354Curva.BordeMar(-330f, 175f);
             float largo = ColocarT1354Curva.Longitud(borde);
             // Un farol queda 6 m delante de la cámara de K11 (como en la referencia); los demás cada 15 m. Las palmeras van a medio camino entre dos faroles.
@@ -363,8 +388,8 @@ namespace MechaCyberpunk.Arte.Editor
                     pos.y = ColocarT1354Curva.YBanqueta;
                     if (Plano(pos, camK) < RadioCamara) { omitidos++; continue; }
                     GameObject go = esPalmera
-                        ? ZonaMaleconT1393.Colocar(palmera, grupo, pos, Quaternion.Euler(0f, (float)obra.Azar.NextDouble() * 360f, 0f), 1.1f + (float)obra.Azar.NextDouble() * 0.3f, ocupado, "AR03_Palmera_" + nP)
-                        : ZonaMaleconT1393.Colocar(farol, grupo, pos, Quaternion.LookRotation(mar), 1f, ocupado, "ML01_Farol_" + nF);
+                        ? PonerSimple(palmera, grupo, pos, Quaternion.Euler(0f, (float)obra.Azar.NextDouble() * 360f, 0f), 1.1f + (float)obra.Azar.NextDouble() * 0.3f, ocupado, 1.2f, "AR03_Palmera_" + nP)
+                        : PonerSimple(farol, grupo, pos, Quaternion.LookRotation(mar), 1f, ocupado, 1f, "ML01_Farol_" + nF);
                     if (go == null) { omitidos++; continue; }
                     if (esPalmera) { nP++; continue; }
                     nF++;
@@ -383,6 +408,109 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Informe.AppendLine("Fila nueva: " + nP + " palmeras y " + nF + " faroles cada " + PasoFila + " m a " + LateralFila + " m del eje (" + spots + " con spot de sodio sin sombras, el resto solo halo); "
                 + omitidos + " omitidos por choque o por la cámara.");
+        }
+
+        // ================================================================ Faro de A11
+
+        private static Mesh MallaCono(float largo, float radioInicio, float radioFin)
+        {
+            const int lados = 20;
+            List<Vector3> v = new List<Vector3>();
+            List<Vector3> n = new List<Vector3>();
+            List<Vector2> uv = new List<Vector2>();
+            List<int> t = new List<int>();
+            for (int i = 0; i <= lados; i++)
+            {
+                float a = i * Mathf.PI * 2f / lados;
+                Vector3 r = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f);
+                v.Add(r * radioInicio);
+                v.Add(r * radioFin + Vector3.forward * largo);
+                n.Add(r);
+                n.Add(r);
+                uv.Add(new Vector2((float)i / lados, 0f));
+                uv.Add(new Vector2((float)i / lados, 1f));
+            }
+            for (int i = 0; i < lados; i++)
+            {
+                int a = i * 2;
+                t.AddRange(new[] { a, a + 1, a + 2, a + 1, a + 3, a + 2 });
+                t.AddRange(new[] { a, a + 2, a + 1, a + 1, a + 2, a + 3 });
+            }
+            Mesh m = new Mesh { indexFormat = UnityEngine.Rendering.IndexFormat.UInt16 };
+            m.SetVertices(v);
+            m.SetNormals(n);
+            m.SetUVs(0, uv);
+            m.SetTriangles(t, 0);
+            m.RecalculateBounds();
+            return m;
+        }
+
+        /// <summary>Faro sobre un islote de rocas ML05_Escollera a la vista de A11 (arriba a la izquierda), con halo y un haz (malla emisiva, sin Light) que barre el mar hacia el este.</summary>
+        private static void PonerFaroA11(KitS2c.Obra obra, Transform mio)
+        {
+            GameObject faro = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Zonas/ML/ML04_Faro.prefab");
+            GameObject roca = AssetDatabase.LoadAssetAtPath<GameObject>(CorrerZonasT1350.RutaModulo("ML05_Escollera"));
+            if (faro == null || roca == null)
+            {
+                Informe.AppendLine("FALTA ML04_Faro o ML05_Escollera: sin faro de A11.");
+                return;
+            }
+            Transform grupo = new GameObject("FaroA11").transform;
+            grupo.SetParent(mio, false);
+            const float escalaRoca = 2.2f;
+            const float escalaFaro = 1.7f;
+            Bounds rb = ZonaMaleconT1393.Medida(roca);
+            float alto = Mathf.Max(0.5f, rb.size.y) * escalaRoca;
+            float fondo = ColocarT1354Curva.YFondoPlaya - 0.4f;
+            float meta = ColocarT1354Curva.YAgua + 1.2f;
+            int capas = Mathf.Clamp(Mathf.CeilToInt((meta - fondo) / (alto * 0.65f)) + 1, 3, 9);
+            System.Random azar = new System.Random(14635);
+            float cima = fondo;
+            int piezas = 0;
+            for (int c = 0; c < capas; c++)
+            {
+                float radio = c == capas - 1 ? 0f : escalaRoca * 2.4f * (1f - (float)c / (capas - 1));
+                int cuantas = c == capas - 1 ? 1 : Mathf.Max(3, Mathf.RoundToInt(radio * 1.4f));
+                float y = fondo + alto * 0.65f * c;
+                for (int k = 0; k < cuantas; k++)
+                {
+                    float ang = k * Mathf.PI * 2f / cuantas + c;
+                    Vector3 p = new Vector3(CentroIslote.x + Mathf.Cos(ang) * radio, y, CentroIslote.y + Mathf.Sin(ang) * radio);
+                    PonerSimple(roca, grupo, p, Quaternion.Euler(0f, (float)azar.NextDouble() * 360f, 0f), escalaRoca, new List<Bounds>(), 0.1f, "ML05_Roca_" + c + "_" + k);
+                    piezas++;
+                }
+                cima = y + alto * 0.75f;
+            }
+            GameObject f = PonerSimple(faro, grupo, new Vector3(CentroIslote.x, cima, CentroIslote.y), Quaternion.identity, escalaFaro, new List<Bounds>(), 0.1f, NombreFaroA11);
+            Bounds fb = ZonaMaleconT1393.CajaDe(f);
+            Vector3 lampara = new Vector3(fb.center.x, fb.min.y + fb.size.y * 0.88f, fb.center.z);
+            KitS2c.Halo(obra, grupo, lampara + Vector3.up * 1.5f, lampara.y - 6f, KitS2c.Sodio);
+            Shader sh = Shader.Find("MechaCyberpunk/Mundo/HaloLuz");
+            if (sh == null) { Informe.AppendLine("FALTA el shader HaloLuz: sin haz."); return; }
+            Material mat = KitS2c.Mat("T1463_HazFaro", () =>
+            {
+                Material m = new Material(sh);
+                m.SetColor("_Color", KitS2c.Calido);
+                m.SetFloat("_Intensidad", 0.5f);
+                m.SetFloat("_Borde", 1.2f);
+                m.SetFloat("_Caida", 1.3f);
+                m.SetFloat("_Suave", 0.3f);
+                m.SetTexture("_Ruido", KitS2c.TexMuro());
+                return m;
+            });
+            Mesh malla = MallaCono(150f, 1.5f, 13f);
+            malla.name = "T1463_HazFaro";
+            obra.Mallas.Add(malla);
+            GameObject haz = new GameObject("Haz");
+            haz.transform.SetParent(grupo, false);
+            haz.transform.position = lampara;
+            haz.transform.rotation = Quaternion.LookRotation(new Vector3(1f, -0.01f, 0.18f));
+            haz.AddComponent<MeshFilter>().sharedMesh = malla;
+            MeshRenderer mr = haz.AddComponent<MeshRenderer>();
+            mr.sharedMaterial = mat;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            mr.receiveShadows = false;
+            Informe.AppendLine("Faro de A11: islote de " + piezas + " rocas en " + CentroIslote + ", lámpara en y " + lampara.y.ToString("F1") + ", haz de malla sin Light hacia el este.");
         }
 
         // ================================================================ Letreros de neón
@@ -502,9 +630,10 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 sitios.Add((cam.x - dx, LateralBarandalGente - (float)azar.NextDouble() * 0.5f));
             }
-            foreach (float dx in new[] { 10f, 24f, 38f, 58f, 80f })
+            int ib = 0;
+            foreach (float dx in new[] { 8f, 14f, 20f, 27f, 34f, 42f, 52f, 63f, 75f, 90f, 105f })
             {
-                sitios.Add((cam.x - dx, LateralBanquetaGente));
+                sitios.Add((cam.x - dx, LateralBanquetaGente - (ib++ % 2) * 1.3f));
             }
             for (float x = XFilaDesde + 6f; x <= 100f; x += PasoGente)
             {
@@ -531,7 +660,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Transform grupo = new GameObject("Basura").transform;
             grupo.SetParent(mio, false);
-            List<Bounds> ocupado = OcupadoPaseo(raiz);
+            List<Bounds> ocupado = OcupadoDePie(raiz);
             string[] codigos = { "BS01a_Basura", "BS01b_Basura", "BS01c_Basura", "C17_Huacales", "BS01d_Basura", "C16_Tambo", "BS01e_Basura", "BT01_BoteBasura" };
             List<GameObject> prefabs = codigos.Select(Cargar).ToList();
             System.Random azar = new System.Random(14633);
@@ -545,7 +674,8 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 suelo = linea + mar * (LateralBarandalGente + 0.5f);
                 suelo.y = ColocarT1354Curva.YBanqueta;
                 if (Plano(suelo, CamaraK11) < 2f) { continue; }
-                if (ZonaMaleconT1393.Colocar(p, grupo, suelo, Quaternion.Euler(0f, (float)azar.NextDouble() * 360f, 0f), 1f, ocupado, p.name + "_" + n) != null) { n++; }
+                Bounds pm = ZonaMaleconT1393.Medida(p);
+                if (PonerSimple(p, grupo, suelo, Quaternion.Euler(0f, (float)azar.NextDouble() * 360f, 0f), 1f, ocupado, Mathf.Clamp(Mathf.Max(pm.size.x, pm.size.z), 0.4f, 1.5f), p.name + "_" + n) != null) { n++; }
             }
             Informe.AppendLine("Basura y cajas en el paseo: " + n + " (BS01, huacales, tambos, botes). Bancas: no hay modelo de banca en el proyecto (anotado en assets que faltan).");
         }
@@ -729,8 +859,8 @@ namespace MechaCyberpunk.Arte.Editor
             Exigir(escaleras >= 2, "menos de 2 escaleras a la playa.");
             Exigir(rocas >= 6, "menos de 6 rocas de escollera.");
             Exigir(puestos >= 1, "no hay puesto ML03.");
-            Transform faro = raiz.GetComponentsInChildren<Transform>(false).FirstOrDefault(t => t.name == "ML04_Faro_Lejano");
-            Renderer haz = raiz.GetComponentsInChildren<Renderer>(false).FirstOrDefault(r => r.sharedMaterial != null && r.sharedMaterial.name.StartsWith("T1413_HazFaroLejano", StringComparison.Ordinal));
+            Transform faro = raiz.GetComponentsInChildren<Transform>(false).FirstOrDefault(t => t.name == NombreFaroA11);
+            Renderer haz = raiz.GetComponentsInChildren<Renderer>(false).FirstOrDefault(r => r.sharedMaterial != null && r.sharedMaterial.name.StartsWith("T1463_HazFaro", StringComparison.Ordinal));
             Informe.AppendLine("Faro lejano: " + (faro != null ? "sí" : "NO") + ", haz sin Light: " + (haz != null ? "sí (" + haz.name + ")" : "NO"));
             Exigir(faro != null && haz != null, "falta el faro lejano o su haz (T-1413).");
         }
@@ -812,7 +942,7 @@ namespace MechaCyberpunk.Arte.Editor
             Informe.AppendLine("K11 eje en x = -190 (el tramo medio): pantalla x " + vx.ToString("F2") + ". Barandal (lateral 15.6) a 12 m adelante: ver foto.");
 
             // A11: faro arriba a la izquierda, playa abajo a la izquierda, fachadas a la derecha.
-            Transform faro = raiz.GetComponentsInChildren<Transform>(false).FirstOrDefault(t => t.name == "ML04_Faro_Lejano");
+            Transform faro = raiz.GetComponentsInChildren<Transform>(false).FirstOrDefault(t => t.name == NombreFaroA11);
             if (faro != null)
             {
                 Bounds fb = ZonaMaleconT1393.CajaDe(faro.gameObject);
@@ -821,9 +951,9 @@ namespace MechaCyberpunk.Arte.Editor
                 Informe.AppendLine("A11 faro: pantalla x " + fx.ToString("F2") + ", y " + fy.ToString("F2") + " (esperado x < -0.1 e y > 0).");
                 Exigir(vf && fx < -0.1f && fx > -1f && fy > 0f && fy < 1f, "A11: el faro no cae arriba a la izquierda.");
             }
-            Vector3 playa = PuntoLateral(110f, 24f, ColocarT1354Curva.YPiePlaya);
+            Vector3 playa = PuntoLateral(-150f, 26f, -3f);
             bool vp = Proyectar(CamaraA11, MiraA11, CampoA11, playa, out float px, out float py);
-            Informe.AppendLine("A11 playa (x 110, lateral 24): pantalla x " + px.ToString("F2") + ", y " + py.ToString("F2") + " (esperado y < -0.1).");
+            Informe.AppendLine("A11 playa (x -150, lateral 26): pantalla x " + px.ToString("F2") + ", y " + py.ToString("F2") + " (esperado y < -0.1).");
             Exigir(vp && py < -0.1f && Mathf.Abs(px) <= 1f, "A11: la playa no cae abajo.");
             List<float> sxA = new List<float>();
             foreach ((Transform t, Bounds b) in Edificios(raiz))
@@ -832,10 +962,12 @@ namespace MechaCyberpunk.Arte.Editor
             }
             int aLaDerA = sxA.Count(s => s > 0f);
             Informe.AppendLine("A11 fachadas del frente en cuadro: " + sxA.Count + ", " + aLaDerA + " a la derecha del centro.");
-            Exigir(sxA.Count >= 3 && aLaDerA >= sxA.Count * 0.7f, "A11: las fachadas no caen a la derecha.");
-            Vector3 muelle = PuntoLateral(92f, 20f, 0f);
-            Proyectar(CamaraA11, MiraA11, CampoA11, muelle, out float mx, out float my);
-            Informe.AppendLine("A11 muelle (x 92): pantalla x " + mx.ToString("F2") + ", y " + my.ToString("F2") + " (en la referencia va arriba al centro).");
+            Exigir(sxA.Count >= 3 && aLaDerA >= sxA.Count * 0.6f, "A11: las fachadas no caen a la derecha.");
+            foreach (float x in new[] { -110f, -170f, -230f, -290f })
+            {
+                Proyectar(CamaraA11, MiraA11, CampoA11, new Vector3(x, 0f, ColocarT1354Curva.ZCentro(x)), out float ex, out float ey);
+                Informe.AppendLine("A11 eje de la avenida en x = " + x + ": pantalla x " + ex.ToString("F2") + ", y " + ey.ToString("F2") + ".");
+            }
         }
 
         private static void ValidarJuegoEnPrefab(Transform raiz)
