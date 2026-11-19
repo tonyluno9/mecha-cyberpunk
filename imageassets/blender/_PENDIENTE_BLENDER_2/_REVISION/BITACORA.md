@@ -526,3 +526,32 @@ Verificado reimportando las 18: medidas y pivotes correctos. Vistas: `_REVISION\
 - Variantes sin zip (solo .png, sin rigear): E17_b, E18_b, NP10_b, NP12_b. E19_a_2 se rigeo tambien (extra del zip).
 - Exportados: personajes\<Codigo>_<a|b>.fbx (armature + malla, texturas embebidas, escala 1, Y arriba, sin animacion salvo E17). Verificado reimportando: 52 huesos, -Y, alturas y pies en 0.
 - Pendiente/observaciones: en la T-pose del E16 y E20/E19 los brazos llevan piezas robot que rozan el torso al bajarlos; los dedos usan los pesos de Tripo sin retocar.
+
+
+## 19-nov — T-1380: ruedas/puertas/cofre/cristal de carros y rotores de drones y naves  (scripts _herramientas\t1380_*.py; sin .blend de trabajo: todo se regenera desde los FBX)
+Revisión de cada carro con renders (`_REVISION\T1380_carro_<COD>.png`: arriba con textura, abajo por colores con puertas y cofre abiertos; rojo = ruedas, verde = puertas, azul = cofre, cian = cristal) y de cada dron con `T1380_dron_<COD>.png` (abajo: rotores en rojo y girados 30° sobre su eje; el aro del ducto queda quieto, así se ve que el pivote está bien).
+- **Revisados (28)**: V01A, V01B, V02–V24, MT01, MT02, C19 (la patrulla es V05 y V06; V11, la camioneta de policía, ya estaba completa y solo tiene FBX). Ruedas: en los 28 son piezas aparte con el pivote en el centro de la llanta (desfase 0.000 medido), redondas (alto = ancho del círculo) y con el eje en X local. Cofre/puertas/cristal: V11–V21 y V24 ya los traían; MT01, MT02, C19, V07 y V08 son motos (sin puertas ni cofre).
+- **Arreglados (11, `t1380_car_parts.py`)**, mismo nombre en `carros\`:
+  - V02, V03, V04, V06, V09, V10 (puerta pintada en la carrocería, sin piezas): ahora **Cofre** (pivote en el borde de atrás, abre girando -X local; debajo, bahía de motor oscura con bloque, radiador, batería y filtro), **Puerta_I / Puerta_D** (la delantera, recortada de la carrocería con rayos; pivote en la bisagra de adelante; abren -Z local la I y +Z local la D) y **Cristal_Puerta_I/D** como hijo de cada puerta (material Cristal, tomado de Cristal_Laterales). Solo se abre la puerta delantera (la trasera y la de carga de V04 siguen pintadas).
+  - V09 y V10: las ruedas (r 0.137) sobresalían del cofre y de la salpicadera; se escalaron ×0.88 (r 0.12) y se bajaron para tocar el piso. Antes atravesaban la carrocería.
+  - V01A, V01B, V05 (carrocerías con el hueco de puerta abierto): se modelaron **Puerta_I / Puerta_D** nuevas (lámina de 1.8 cm con esquinas cortadas, pintura lisa tomada de la carrocería justo detrás de la puerta, pivote en la bisagra de adelante, abren igual). La parte de arriba del hueco sigue abierta (estilo buggy). Además se subió el fondo de la bahía del motor, que asomaba por debajo del carro (se veía una placa gris bajo las llantas delanteras).
+  - V22 y V23: la puerta de la ronda anterior era una tira delgada (V22) o un trozo mal cortado (V23). Se regresó a la carrocería y se volvió a cortar con las medidas de la costura (y -0.6..0.5, z 0.23..0.83), con su cristal de puerta. En V23 la carrocería traía pegados los restos de la llanta original (medios discos morados sobre las ruedas): se borraron 1527 caras.
+- **Sin cambios y por qué**: V12–V15, V19–V21, V24 bien. V16 (microbús): el cofre es chico y el filo de la puerta es irregular, pero está completo. V17/V18: la puerta incluye un trozo de salpicadera. Los cristales de V10, V22 y V23 siguen con bordes dentados (detección por color de la ronda anterior).
+- Escala: V01A–V11 siguen a escala Tripo (~1 m de largo; ×4.5 = real, como se avisó el 18-nov); V12–V24 en metros reales.
+
+### Drones y naves → `imageassets\blender\drones\<Codigo>[_a|_b].fbx`  (`t1380_drones.py`)
+Fuentes: nuevos-18nov\*.zip (DR02_a/b, DR03_a, DR04_a, NV03_a/b), modelos3d\DR01.zip y modelos3d\NV01_NaveTransporte.zip. Cada FBX: raíz vacía con el código, hijos **Cuerpo** y **Rotor_1..N**; frente = -Y Blender (+Z Unity), metros, texturas embebidas. Los rotores (aspas + cubo) se recortaron de la malla por geometría: se busca el círculo del ducto en la vista de planta (votación tipo Hough), se ajusta el centro con la pared interior del ducto y se separan las caras dentro de un cilindro un poco menor que el radio del ducto; el aro y los brazos se quedan en el Cuerpo. El origen de cada Rotor es el centro del giro y el eje de giro es el **Z local de Blender = Y local de Unity** (hélices horizontales). DR01 traía 50 piezas con 50 materiales: se unió todo en un atlas con 1 material.
+
+| FBX | Rotores | Eje de giro | Medida (m) | Nota |
+|---|---|---|---|---|
+| DR01 (dron policía) | 4 (Rotor_1 y 2 al frente) | Y local Unity | 0.80 × 0.62 × 0.33 | ~16k caras |
+| DR02_a / DR02_b (dron pesado) | 4 | Y | 1.80 × 1.48 × 0.78 (a) · 1.80 × 1.67 × 0.69 (b) | dos cañones al frente |
+| DR03_a (dron de carga) | 6 | Y | 2.08 × 2.40 × 1.17 | góndola esférica abajo |
+| DR04_a (explorador) | 1 (rotor grande arriba) | Y | 0.70 × 0.73 × 0.58 | el mástil se queda en el Cuerpo |
+| NV01 (nave de transporte) | 2 (ductos laterales) | Y | 12.0 × 12.0 × 4.6 | |
+| NV03_a / NV03_b (nave Nova) | 2 | Y | 9.0 × 8.2 × 3.4 (a) · 9.0 × 6.4 × 3.0 (b) | |
+| E13 (dron de asalto) | 4 | Y | 1.10 × 1.02 × 0.42 | **provisional**: no existe modelo 3D de E13 (solo el PNG); es DR02_b reducido |
+
+- No hay fuente 3D de DR03_b ni DR04_b (solo PNG en nuevos-18nov): no se generaron.
+- **Pendiente**: (1) E13 necesita su propio modelo de Tripo (el PNG pide azul y blanco con minigún y ojo rojo). (2) Las aspas se cortan 4 mm dentro del ducto: hay un hueco mínimo entre la punta y el aro, a propósito para que giren sin tocar. (3) Los rotores no giran por sí solos: el prefab de Unity debe girar cada Rotor_n sobre Y local (sentido contrario en pares). (4) En DR04 el rotor lleva solo el cubo y las aspas; la rejilla de barras que queda debajo es parte del Cuerpo.
+- Archivos: `_REVISION\T1380_carro_*.png` (28) y `T1380_dron_*.png` (9). Scripts: `t1380_survey.py` (inventario), `t1380_render.py` (renders), `t1380_medir.py` (vistas con rejilla), `t1380_car_parts.py` (puertas, cofre, ruedas), `t1380_drones.py` (rotores y exportación), `t1380_probe.py` (sonda de ductos).
