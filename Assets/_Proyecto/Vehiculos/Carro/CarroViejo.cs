@@ -193,6 +193,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         {
             Registro<IMontable>.Quitar(this);
             DetenerDerrape();
+            motor?.Apagar(false);
             controlesPropios?.Disable();
         }
 
@@ -228,7 +229,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             SoltarIA(); // T-986: al subir el jugador manda él
             Ocupado = true;
-            Sonidos.ReproducirEn("VEH_VIEJO_ARRANQUE", transform.position);
+            motorConArranque = true; // T-1475: el arranque suena una vez, en ActualizarMotor, con el grupo de su tipo
+            ActualizarMotor(0f);
             camaraCarro.Encender(true);
             TomarControl(true);
             OcupadoCambio?.Invoke(true);
@@ -251,6 +253,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             salidaForzada = false;
             Ocupado = false;
             DetenerDerrape();
+            ActualizarMotor(0f); // T-1475: apaga el bucle y suena APAGAR una vez
             camaraCarro.Encender(false);
             TomarControl(false);
             OcupadoCambio?.Invoke(false);
@@ -454,37 +457,60 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
-        private const float TonoMinimoMotor = 0.8f;
-        private const float TonoMaximoMotor = 2f;
-        private const float MetrosPorSegundoPorTono = 20f;
-        private const float AmplitudOscilacionMotor = 0.04f;
-        private const float FrecuenciaOscilacionMotor = 0.6f;
-        private const float RangoFaseMotor = 100f;
-        private float faseMotor = -1f;
-        private int bucleMotor = Sonidos.SinBucle;
+        [Header("Sonido (T-1475)")]
+        [Tooltip("Tipo de vehículo para el sonido del motor. Automático: se deduce de si es moto, la masa y el nombre del modelo.")]
+        [SerializeField] private bool tipoSonidoManual;
+        [Tooltip("Solo con tipo manual: grupo de sonidos del motor.")]
+        [SerializeField] private TipoVehiculoSonido tipoSonido = TipoVehiculoSonido.Normal;
 
-        // Motor en marcha mínima mientras alguien maneja; el tono sube con la rapidez.
-        private void ActualizarMotor()
+        private SonidoMotorCarro motor;
+        private bool motorConArranque;
+        private float velocidadVerticalAnterior;
+        private float segundosDesdeTope = ReglasSonidoVehiculoT1475.TopeSegundosMinimos;
+
+        /// <summary>T-1475: el tipo de vehículo que decide su grupo de sonidos.</summary>
+        public TipoVehiculoSonido TipoSonido => tipoSonidoManual
+            ? tipoSonido
+            : GrupoSonidoVehiculo.Detectar(GetComponent<ManejoMoto>() != null, config != null ? config.Masa : 0f, nombreModelo);
+
+        /// <summary>T-1475: ID del claxon de este vehículo (camión o normal).</summary>
+        public string IdClaxon => GrupoSonidoVehiculo.Para(TipoSonido).Claxon;
+
+        // T-1475: una sola voz de motor. El jugador oye ARRANQUE al subir y APAGAR al bajar; la IA solo el bucle. El tono sube con la rapidez.
+        private void ActualizarMotor(float dt)
         {
             bool suena = Ocupado || conductorIA != null;
-            if (suena && bucleMotor == Sonidos.SinBucle)
+            if (suena && (motor == null || !motor.Encendido))
             {
-                bucleMotor = Sonidos.ReproducirBucle("VEH_VIEJO_MOTOR_RALENTI", transform);
-            }
-            else if (!suena && bucleMotor != Sonidos.SinBucle)
-            {
-                Sonidos.DetenerBucle(bucleMotor);
-                bucleMotor = Sonidos.SinBucle;
-            }
-            if (bucleMotor != Sonidos.SinBucle)
-            {
-                if (faseMotor < 0f)
+                if (motor == null)
                 {
-                    faseMotor = UnityEngine.Random.value * RangoFaseMotor;
+                    motor = new SonidoMotorCarro(GrupoSonidoVehiculo.Para(TipoSonido), Mathf.Max(1f, config.VelocidadMaxima));
                 }
-                Sonidos.FijarTono(bucleMotor, ReglaMotorSonido.Tono(Rapidez, Time.time, faseMotor, TonoMinimoMotor, TonoMaximoMotor,
-                    MetrosPorSegundoPorTono, AmplitudOscilacionMotor, FrecuenciaOscilacionMotor));
+                motor.Encender(transform, Ocupado && motorConArranque);
+                motorConArranque = false;
             }
+            else if (!suena && motor != null && motor.Encendido)
+            {
+                motor.Apagar(true);
+            }
+            if (motor != null && motor.Encendido)
+            {
+                motor.Actualizar(Rapidez, TieneControl ? EntradaActual.Acelerar : 0f, dt);
+            }
+        }
+
+        // T-1475: golpe vertical brusco de la suspensión (tope o bache fuerte) con ruedas en el piso.
+        private void ActualizarTope(float dt)
+        {
+            float vy = cuerpo.linearVelocity.y;
+            segundosDesdeTope += dt;
+            if (RuedasEnPiso > 0 && Manejado
+                && ReglasSonidoVehiculoT1475.Tope(velocidadVerticalAnterior, vy, Rapidez, segundosDesdeTope))
+            {
+                segundosDesdeTope = 0f;
+                Sonidos.ReproducirEn(ReglasSonidoVehiculoT1475.IdTope, transform.position);
+            }
+            velocidadVerticalAnterior = vy;
         }
 
         private void FixedUpdate()
@@ -513,7 +539,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             Vector3 centroMasa = cuerpo.worldCenterOfMass;
 
             Velocidad = Vector3.Dot(cuerpo.linearVelocity, adelante);
-            ActualizarMotor();
+            ActualizarMotor(dt);
             EntradaActual = TieneControl ? LeerEntrada() : (conductorIA != null ? LeerConductorIA() : default);
 
             // Suspensión: un rayo por rueda. El motor y el agarre se reparten entre las ruedas que tocan piso.
@@ -528,6 +554,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 }
             }
             RuedasEnPiso = enPiso;
+            ActualizarTope(dt);
 
             if (enPiso > 0)
             {

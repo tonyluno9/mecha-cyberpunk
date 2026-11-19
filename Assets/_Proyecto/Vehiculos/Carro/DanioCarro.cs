@@ -183,7 +183,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 return;
             }
             proximoChoque = Time.time + config.SegundosEntreChoques;
-            Sonidos.ReproducirEn(rapidez >= config.UmbralChoqueFuerte ? "VEH_CHOQUE_FUERTE" : "VEH_CHOQUE_LEVE", transform.position);
+            // T-1475: choque leve, fuerte y, si es muy fuerte, también cristal roto.
+            foreach (string idChoque in ReglasSonidoVehiculoT1475.IdsChoque(rapidez, config.UmbralChoque, config.UmbralChoqueFuerte))
+            {
+                Sonidos.ReproducirEn(idChoque, transform.position);
+            }
             float danio = DanioDeChoque(rapidez, config.UmbralChoque, config.DanioPorChoque, calculo.Maxima, config.DanioMaximoPorChoque);
             if (danio <= 0f)
             {

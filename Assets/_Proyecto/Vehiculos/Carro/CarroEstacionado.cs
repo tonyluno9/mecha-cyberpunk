@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         [SerializeField] private bool esTuyo;
 
         private CarroViejo carro;
+        private readonly AlarmaCarro alarma = new AlarmaCarro();
 
         /// <summary>True si ya es del jugador (no vuelve a sumar calor).</summary>
         public bool EsTuyo => esTuyo;
@@ -48,6 +49,13 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 carro.OcupadoCambio -= AlCambiarOcupado;
             }
+            alarma.Detener();
+        }
+
+        // T-1475: la alarma suena unos segundos tras forzar el carro y se corta sola.
+        private void Update()
+        {
+            alarma.Actualizar(Time.deltaTime);
         }
 
         private void AplicarTinte()
@@ -171,6 +179,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 return;
             }
             Sonidos.ReproducirEn("VEH_FORZAR_PUERTA", transform.position);
+            alarma.Iniciar(transform);
             esTuyo = true;
             ICalor calor = Registro<ICalor>.Actual;
             if (calor != null)
