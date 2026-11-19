@@ -178,5 +178,43 @@ namespace MechaCyberpunk.Arte.Editor
             PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
             PrefabUtility.UnloadPrefabContents(raiz);
         }
+
+        /// <summary>Qué renderers atraviesa el rayo de la cámara K11 por la aguja oscura (viewport x 0.19, y 0.35..0.75).</summary>
+        public static void RayoK11()
+        {
+            var escena = UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/_Proyecto/Escenas/Ciudad_Prologo.unity");
+            var go = new GameObject("CamRayo"); var cam = go.AddComponent<Camera>();
+            cam.fieldOfView = 60f; cam.aspect = 1376f / 768f; cam.farClipPlane = 1100f;
+            go.transform.position = new Vector3(40f, 1.95f, -235.6f); go.transform.LookAt(new Vector3(-59f, 7f, -221.7f));
+            var log = new StringBuilder();
+            foreach (float vy in new[] { 0.4f, 0.55f, 0.7f })
+            {
+                var rayo = cam.ViewportPointToRay(new Vector3(0.19f, vy, 0f));
+                var lista = new System.Collections.Generic.List<(float, string)>();
+                foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+                {
+                    if (!r.enabled) continue;
+                    if (r.bounds.IntersectRay(rayo, out float d)) lista.Add((d, r.transform.GetHierarchyPath() + " | " + (r.sharedMaterial ? r.sharedMaterial.name + "[" + r.sharedMaterial.shader.name + "]" : "-") + " | " + r.bounds.size));
+                }
+                lista.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+                log.AppendLine("vy " + vy);
+                foreach (var e in lista.GetRange(0, System.Math.Min(12, lista.Count))) log.AppendLine($"  {e.Item1:0} m  {e.Item2}");
+            }
+            UnityEngine.Object.DestroyImmediate(go);
+            System.IO.File.WriteAllText("Logs/rayo-k11.txt", log.ToString());
+        }
+
+
+        /// <summary>El panel pintado T513 Tramo_3 (fondo-suburbios, 560 m de alto a 700 m) se asoma sobre el mar en K11 como una aguja oscura: se apaga, como T-1358 apagó los del sur y del este.</summary>
+        public static void ApagarFondoTramo3()
+        {
+            var escena = UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/_Proyecto/Escenas/Ciudad_Prologo.unity");
+            var raiz = System.Array.Find(escena.GetRootGameObjects(), g => g.name == "T513_Fondo");
+            var t = raiz == null ? null : raiz.transform.Find("Tramo_3_fondo-suburbios");
+            if (t != null) { t.gameObject.SetActive(false); Debug.Log("Correr19nov: apagado T513_Fondo/Tramo_3_fondo-suburbios"); }
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(escena);
+        }
+
+        private static string GetHierarchyPath(this Transform t) { var s = t.name; while (t.parent != null) { t = t.parent; s = t.name + "/" + s; } return s; }
     }
 }
