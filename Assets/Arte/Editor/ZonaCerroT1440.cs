@@ -62,6 +62,11 @@ namespace MechaCyberpunk.Arte.Editor
         public const float FondoPeldanoPiso = 0.3f;
         public const float XOesteDeLaCiudad = -358f;
         public const int PisosMaximos = 2;
+        public const int MaxCarros = 6;
+        public const long MaxTriangulosModelo = 20000;
+        public const float CorteCarro = 0.05f;
+        public const float CortePiso = 0.02f;
+        public const float CeldaMalla = 40f;
         /// <summary>Alto (m) al que se escala el modelo de casa que va de piso extra (el modelo mide ~7.5 m: se aplasta un poco).</summary>
         public const float AltoPisoModelo = 4.8f;
 
@@ -138,6 +143,8 @@ namespace MechaCyberpunk.Arte.Editor
                 Log("Apagadas por una corrida anterior y vueltas a encender: " + devueltas + ".");
                 Ctx c = Abrir(zona);
                 int lucesAntes = zona.GetComponentsInChildren<Light>(true).Length;
+                long trisAntes = Triangulos(zona.transform);
+                Log("Triángulos visibles de la zona antes: " + trisAntes + ".");
                 int objetosAntes = zona.GetComponentsInChildren<Transform>(true).Length;
                 Log("Luces antes: " + lucesAntes + ". Objetos antes: " + objetosAntes + ". Tamaño del prefab antes: " + Megas(RutaPrefab) + " MB.");
                 c.Obra = KitS2c.Empezar(Raiz, Semilla, zona.transform);
@@ -172,6 +179,7 @@ namespace MechaCyberpunk.Arte.Editor
                 int luces = zona.GetComponentsInChildren<Light>(true).Length;
                 int nuevas = c.Nuevo.GetComponentsInChildren<Light>(true).Length;
                 int objetos = c.Nuevo.GetComponentsInChildren<Transform>(true).Length;
+                Log("Triángulos visibles de la zona después: " + Triangulos(zona.transform) + " (solo T1440_Ladera: " + Triangulos(c.Nuevo) + "; antes de esta corrida: " + trisAntes + ").");
                 Log("Luces después: " + luces + " (nuevas " + nuevas + ", tope " + TopeLucesNuevas + "). Objetos nuevos: " + objetos + " (tope " + TopeObjetos + ").");
                 if (nuevas > TopeLucesNuevas || objetos > TopeObjetos)
                 {
@@ -474,12 +482,130 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        /// <summary>Un GameObject con la malla (y su collider igual a ella, si se pide). Devuelve null si la malla está vacía.</summary>
-        private static GameObject ObjetoMalla(Ctx c, Transform padre, string nombre, Malla m, Material mat, bool collider, bool sinSombras)
+        /// <summary>Triángulos de los MeshFilter activos con renderer encendido bajo la raíz.</summary>
+        private static long Triangulos(Transform raiz)
+        {
+            long n = 0;
+            foreach (MeshFilter mf in raiz.GetComponentsInChildren<MeshFilter>(false))
+            {
+                Renderer r = mf.GetComponent<Renderer>();
+                if (mf.sharedMesh == null || r == null || !r.enabled)
+                {
+                    continue;
+                }
+                for (int s = 0; s < mf.sharedMesh.subMeshCount; s++)
+                {
+                    n += mf.sharedMesh.GetIndexCount(s) / 3;
+                }
+            }
+            return n;
+        }
+
+        /// <summary>Triángulos de un prefab (sin instanciarlo).</summary>
+        private static long TriangulosPrefab(GameObject prefab)
+        {
+            long n = 0;
+            foreach (MeshFilter mf in prefab.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (mf.sharedMesh == null)
+                {
+                    continue;
+                }
+                for (int s = 0; s < mf.sharedMesh.subMeshCount; s++)
+                {
+                    n += mf.sharedMesh.GetIndexCount(s) / 3;
+                }
+            }
+            return n;
+        }
+
+        /// <summary>LODGroup de un solo nivel con culling a <paramref name="corte"/> de la altura de pantalla (si el objeto ya trae LODGroup, se sube el corte de su último nivel).</summary>
+        private static void Lod(GameObject go, float corte)
+        {
+            LODGroup lg = go.GetComponent<LODGroup>();
+            if (lg != null)
+            {
+                LOD[] ls = lg.GetLODs();
+                if (ls.Length > 0)
+                {
+                    ls[ls.Length - 1].screenRelativeTransitionHeight = Mathf.Max(ls[ls.Length - 1].screenRelativeTransitionHeight, corte);
+                    lg.SetLODs(ls);
+                    lg.RecalculateBounds();
+                }
+                return;
+            }
+            Renderer[] rs = go.GetComponentsInChildren<Renderer>(true).Where(r => !(r is ParticleSystemRenderer)).ToArray();
+            if (rs.Length == 0)
+            {
+                return;
+            }
+            lg = go.AddComponent<LODGroup>();
+            lg.SetLODs(new[] { new LOD(corte, rs) });
+            lg.RecalculateBounds();
+        }
+
+        /// <summary>Parte una malla sin collider en una por cada cuadro de 40 m (por el primer vértice de cada triángulo), todas con el mismo material: así se descartan por vista.</summary>
+        private static GameObject ObjetoCeldas(Ctx c, Transform padre, string nombre, Malla m, Material mat, bool sinSombras)
         {
             if (m.T.Count == 0)
             {
                 return null;
+            }
+            Dictionary<long, Malla> celdas = new Dictionary<long, Malla>();
+            Dictionary<long, Dictionary<int, int>> mapas = new Dictionary<long, Dictionary<int, int>>();
+            for (int i = 0; i + 2 < m.T.Count; i += 3)
+            {
+                Vector3 p = m.V[m.T[i]];
+                long clave = ((long)Mathf.FloorToInt(p.x / CeldaMalla) << 32) ^ (uint)Mathf.FloorToInt(p.z / CeldaMalla);
+                Malla sub;
+                Dictionary<int, int> map;
+                if (!celdas.TryGetValue(clave, out sub))
+                {
+                    sub = new Malla();
+                    map = new Dictionary<int, int>();
+                    celdas[clave] = sub;
+                    mapas[clave] = map;
+                }
+                else
+                {
+                    map = mapas[clave];
+                }
+                for (int k = 0; k < 3; k++)
+                {
+                    int viejo = m.T[i + k], nuevo;
+                    if (!map.TryGetValue(viejo, out nuevo))
+                    {
+                        nuevo = sub.V.Count;
+                        sub.V.Add(m.V[viejo]);
+                        sub.N.Add(m.N[viejo]);
+                        sub.Uv.Add(m.Uv[viejo]);
+                        map[viejo] = nuevo;
+                    }
+                    sub.T.Add(nuevo);
+                }
+            }
+            GameObject grupo = new GameObject(nombre);
+            grupo.transform.SetParent(padre, false);
+            int n = 0;
+            foreach (Malla sub in celdas.Values)
+            {
+                ObjetoMalla(c, grupo.transform, nombre + "_" + n, sub, mat, false, sinSombras, false);
+                n++;
+            }
+            Log("Malla " + nombre + ": " + (m.T.Count / 3) + " triángulos en " + n + " cuadros de " + CeldaMalla + " m.");
+            return grupo;
+        }
+
+        /// <summary>Un GameObject con la malla (y su collider igual a ella, si se pide). Devuelve null si la malla está vacía.</summary>
+        private static GameObject ObjetoMalla(Ctx c, Transform padre, string nombre, Malla m, Material mat, bool collider, bool sinSombras, bool porCeldas = true)
+        {
+            if (m.T.Count == 0)
+            {
+                return null;
+            }
+            if (!collider && porCeldas)
+            {
+                return ObjetoCeldas(c, padre, nombre, m, mat, sinSombras);
             }
             Mesh malla = m.Crear("T1440_" + nombre);
             c.Obra.Mallas.Add(malla);
@@ -1471,6 +1597,13 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
+                long tris = TriangulosPrefab(mo);
+                if (tris >= MaxTriangulosModelo)
+                {
+                    Log("Modelo " + nom + ": " + tris + " triángulos (tope " + MaxTriangulosModelo + "); se quita de la rotación de pisos.");
+                    continue;
+                }
+                Log("Modelo " + nom + ": " + tris + " triángulos; entra en la rotación de pisos.");
                 modelos.Add(mo);
             }
             Log("Modelos de casa para los pisos extra: " + modelos.Count + (modelos.Count == 0 ? " (se usa la casa lisa del kit)." : "."));
@@ -1581,6 +1714,7 @@ namespace MechaCyberpunk.Arte.Editor
                         roof += ajuste;
                         Physics.SyncTransforms();
                     }
+                    Lod(nuevo.gameObject, CortePiso);
                     c.Volumenes++;
                     puestos++;
                     if (modelo == null)
@@ -1649,7 +1783,7 @@ namespace MechaCyberpunk.Arte.Editor
                     foreach (Transform piso in pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")).ToList())
                     {
                         float pr;
-                        if (!MedirApoyo(c, piso, CajaPiso(piso), out pr))
+                        if (!MedirApoyo(c, piso, CajaPiso(piso), out pr) || pr > 0.3f)
                         {
                             Transform acc = pisos.Find("Acceso_" + piso.name);
                             if (acc != null)
@@ -2195,10 +2329,10 @@ namespace MechaCyberpunk.Arte.Editor
             List<Vector3> eje = CerroT1355Trazado.Zigzag();
             int n = 0, lado = 1;
             float acum = 0f;
-            for (int i = 1; i + 1 < eje.Count && n < 14; i++)
+            for (int i = 1; i + 1 < eje.Count && n < MaxCarros; i++)
             {
                 acum += new Vector2(eje[i].x - eje[i - 1].x, eje[i].z - eje[i - 1].z).magnitude;
-                if (acum < 24f)
+                if (acum < 40f)
                 {
                     continue;
                 }
@@ -2232,10 +2366,11 @@ namespace MechaCyberpunk.Arte.Editor
                 Physics.SyncTransforms();
                 Bounds b = Cubierta(car.transform);
                 car.transform.position += Vector3.up * (y - b.min.y);
+                Lod(car, CorteCarro);
                 Physics.SyncTransforms();
                 n++;
             }
-            Log("Carros viejos sobre el zigzag: " + n + ".");
+            Log("Carros viejos sobre el zigzag: " + n + " (tope " + MaxCarros + ", " + TriangulosPrefab(prefab) + " triángulos cada uno, LODGroup con culling al " + (CorteCarro * 100f) + " % de pantalla).");
         }
 
         // ================================================================ 4. Ciudad brillante abajo (YA NO SE USA: la ciudad de verdad está en la escena)
