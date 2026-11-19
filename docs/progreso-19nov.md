@@ -49,5 +49,12 @@ que diga "Qué sigue".
 - Pendiente de revisar: el look puso 0 luces de neón nuevas (no encontró neones por color); el Cerro solo tiene 5 casas nuevas porque rechazó 119 lotes.
 - 04:15 Fotos de todas las zonas (corrida aparte).
 
+- Ronda 1, fotos (docs/capturas/t-1384..t-1388): ya no hay escarcha, pero todo sale muy oscuro, los charcos son cuadros negros, no hay neones, el skyline no se ve y los encuadres de K13 y K18 están mal. Se lanzó la ronda 2 (docs/brief-ronda2-19nov.md): T-1392 look, T-1393 Malecón, T-1394 Cerro, T-1395 Autopista, T-1396 Puerto.
+- El disco C: se llenó (0 MB): se quitaron los worktrees de los subagentes que ya estaban integrados (sus ramas quedan). Ahora hay unos 13 GB libres.
+- T-1380 integrada: arregló 11 carros (puertas, cofre, cristal, ruedas) y separó los rotores de 9 drones y naves. Los FBX viejos quedaron en imageassets/blender/carros/_antes_T1380/.
+- T-1389b corrida: 23 personajes Humanoid válidos y el perro E17 (Generic). E16_b no tiene avatar válido. Peatones NP07–NP14 mezclados en la lista general (el sistema no reparte por zona). Nova suma E15, E16, E18 y el perro; los 30 SKULLS de la escena usan E19/E20.
+- T-1397 corrida: los 11 carros rearmados y los drones importados. Dron.prefab de la policía con DR01. No había drones de Nova ni de SKULLS en el código, así que se lanzó T-1398 (drones con ruta aérea para Nova, SKULLS, policía y tráfico aéreo).
+- T-1392 (look, ronda 2) lista: se corre al final, después de las zonas de la ronda 2.
+
 ## Qué sigue
 - Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
