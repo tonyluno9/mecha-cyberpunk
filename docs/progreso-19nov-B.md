@@ -54,6 +54,13 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
 - Ronda siguiente mandada: casas reales (CC06/CC07) en los pisos extra, peldaños oscuros, cámara A13 con la calle en diagonal;
   K13 con detalle a la derecha; K15 patio de ≥ 14 m; A15 bodegas primero y pilas de 3–4.
 
+- 09:40 Ronda 4 del Puerto empeoró (K15 con cajas pegadas al lente; A15 sin cámara, sin bodegas ni relleno). Las búsquedas automáticas
+  de cámara a ciegas no funcionan: se hizo Assets/Arte/Editor/CamarasB19nov.cs (Probar: lee Logs/camaras-b.txt y renderiza
+  candidatas) y se eligieron a ojo cámaras FIJAS: K15 (160, 1.7, -150)→(150, 12, -260) campo 55; A15 (320, 50, -150)→(230, 0, -230)
+  campo 60; A13 (-450, 55, 100)→(-330, 5, 20) campo 60 (docs/capturas/_vista19b/prueba/k15e, a15c, a13b).
+- Bug: los 150 paneles de "ciudad lejana" de T-1440 caían dentro de la ciudad y del Puerto; se quitan en su ronda 4.
+- No cabe otro Unity (12 GB de disco y 2.5 GB de RAM libres; la sesión A tiene los suyos).
+
 ## Qué sigue
 - Al volver cada subagente: merge de su rama en `integ/zonas-19nov-B` (en s2), correr Aplicar en orden T1440 → T1441 → T1442 → T1443,
   luego Validar y, en otra corrida, Fotos. Revisar las fotos y devolver errores.
