@@ -233,6 +233,88 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (var o in avatar) if (o is Avatar av) Debug.Log("Correr19nov: E16_b avatar valido=" + av.isValid + " humano=" + av.isHuman);
         }
 
+
+        /// <summary>Los FBX de drones (T-1397) traen texturas embebidas que no se extrajeron: se extraen y los materiales pasan a externos con su textura.</summary>
+        public static void TexturasDrones()
+        {
+            foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { "Assets/Arte/Vehiculos/Drones" }))
+            {
+                var ruta = AssetDatabase.GUIDToAssetPath(guid);
+                var imp = AssetImporter.GetAtPath(ruta) as ModelImporter;
+                if (imp == null) continue;
+                var dir = System.IO.Path.GetDirectoryName(ruta).Replace(System.IO.Path.DirectorySeparatorChar, '/');
+                var tex = dir + "/Texturas";
+                if (!AssetDatabase.IsValidFolder(tex)) AssetDatabase.CreateFolder(dir, "Texturas");
+                bool ok = imp.ExtractTextures(tex);
+                AssetDatabase.Refresh();
+                imp.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
+                imp.materialLocation = ModelImporterMaterialLocation.External;
+                imp.materialName = ModelImporterMaterialName.BasedOnMaterialName;
+                imp.materialSearch = ModelImporterMaterialSearch.Local;
+                imp.SaveAndReimport();
+                int con = 0, total = 0;
+                foreach (var g2 in AssetDatabase.FindAssets("t:Material", new[] { dir }))
+                {
+                    var m = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(g2));
+                    total++;
+                    if (m.shader.name != "Universal Render Pipeline/Lit")
+                    {
+                        var t = m.HasProperty("_MainTex") ? m.GetTexture("_MainTex") : null;
+                        m.shader = Shader.Find("Universal Render Pipeline/Lit");
+                        if (t != null) m.SetTexture("_BaseMap", t);
+                    }
+                    if (m.GetTexture("_BaseMap") != null) con++;
+                    EditorUtility.SetDirty(m);
+                }
+                Debug.Log("Correr19nov: drones " + ruta + " texturas extraidas=" + ok + " materiales " + con + "/" + total + " con textura");
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+
+        /// <summary>Material URP Lit con la textura de color (y normal si hay) para cada dron de T-1397, puesto en todos los renderers de su prefab Dron_*.</summary>
+        public static void MaterialesDrones()
+        {
+            var lit = Shader.Find("Universal Render Pipeline/Lit");
+            foreach (var pref in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Arte/Vehiculos/Drones/Prefabs" }))
+            {
+                var rutaPref = AssetDatabase.GUIDToAssetPath(pref);
+                var codigo = System.IO.Path.GetFileNameWithoutExtension(rutaPref).Replace("Dron_", "");
+                var dirTex = "Assets/Arte/Vehiculos/Drones/" + codigo + "/Texturas";
+                Texture2D color = null, normal = null;
+                foreach (var g in AssetDatabase.FindAssets("t:Texture2D", new[] { dirTex }))
+                {
+                    var rt = AssetDatabase.GUIDToAssetPath(g);
+                    var n = System.IO.Path.GetFileNameWithoutExtension(rt);
+                    if (n.EndsWith("_0_3")) { var ti = AssetImporter.GetAtPath(rt) as TextureImporter; if (ti != null && ti.textureType != TextureImporterType.NormalMap) { ti.textureType = TextureImporterType.NormalMap; ti.SaveAndReimport(); } normal = AssetDatabase.LoadAssetAtPath<Texture2D>(rt); }
+                    else if (n.EndsWith("_0_0") || n.StartsWith("atlas") || color == null && !n.Contains("roughness") && !n.Contains("metallic")) color = AssetDatabase.LoadAssetAtPath<Texture2D>(rt);
+                }
+                if (color == null) { Debug.LogWarning("Correr19nov: sin textura de color para " + codigo); continue; }
+                var rutaMat = "Assets/Arte/Vehiculos/Drones/" + codigo + "/M_" + codigo + ".mat";
+                var mat = AssetDatabase.LoadAssetAtPath<Material>(rutaMat);
+                if (mat == null) { mat = new Material(lit); AssetDatabase.CreateAsset(mat, rutaMat); }
+                mat.shader = lit;
+                mat.SetTexture("_BaseMap", color);
+                mat.SetColor("_BaseColor", Color.white);
+                if (normal != null) { mat.SetTexture("_BumpMap", normal); mat.EnableKeyword("_NORMALMAP"); }
+                mat.SetFloat("_Smoothness", 0.45f);
+                EditorUtility.SetDirty(mat);
+                var raiz = PrefabUtility.LoadPrefabContents(rutaPref);
+                int n2 = 0;
+                foreach (var r in raiz.GetComponentsInChildren<Renderer>(true))
+                {
+                    if (r is ParticleSystemRenderer || r.name.StartsWith("LuzNavegacion") || r.name.Contains("Halo")) continue;
+                    var mats = r.sharedMaterials;
+                    for (int i = 0; i < mats.Length; i++) mats[i] = mat;
+                    r.sharedMaterials = mats; n2++;
+                }
+                PrefabUtility.SaveAsPrefabAsset(raiz, rutaPref);
+                PrefabUtility.UnloadPrefabContents(raiz);
+                Debug.Log("Correr19nov: dron " + codigo + " con " + color.name + " en " + n2 + " renderers");
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         private static string GetHierarchyPath(this Transform t) { var s = t.name; while (t.parent != null) { t = t.parent; s = t.name + "/" + s; } return s; }
     }
 }

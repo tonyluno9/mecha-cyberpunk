@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Drones.GiroRotores
   velocidad: 360
   alternarSentido: 1
+  distanciaMaxima: 120
 --- !u!1001 &6963486853751477790
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -95,10 +96,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7031808166276622644, guid: c9b1ea08b0cf3484a9d0e49b11a2bd7b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: bda7aa5dd24bb7e4bb014da15bcbd069, type: 2}
+    - target: {fileID: -4020924224465817570, guid: c9b1ea08b0cf3484a9d0e49b11a2bd7b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: bda7aa5dd24bb7e4bb014da15bcbd069, type: 2}
     - target: {fileID: 919132149155446097, guid: c9b1ea08b0cf3484a9d0e49b11a2bd7b, type: 3}
       propertyPath: m_Name
       value: NV01
       objectReference: {fileID: 0}
+    - target: {fileID: 8741911205315556045, guid: c9b1ea08b0cf3484a9d0e49b11a2bd7b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: bda7aa5dd24bb7e4bb014da15bcbd069, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
