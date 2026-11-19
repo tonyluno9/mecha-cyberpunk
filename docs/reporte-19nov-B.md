@@ -33,7 +33,11 @@ K13 es la de T-1416 (-361.5, 12.85, 152)→(-355, 14, 60).
 **Veredicto honesto:** K15 se parece de verdad; K13 y A13 se parecen en elementos pero no en composición; A15 se parece en el encuadre, pero
 la niebla y la luz le quitan casi todo el parecido. Ninguna es "igual" a su referencia.
 
-## Pruebas (con la ronda 8, antes de las rondas 9–10)
+## Pruebas
+- Estado final (T-1440 r11, T-1441 r10, T-1442 r7, T-1443 r9): Validar sin fallos en las 4 tareas; EditMode de las zonas **102/102**;
+  T1440_Ladera.asset 2.9 MB, Cerro 41.5 MB, Puerto 7.8 MB.
+
+Con la ronda 8:
 - EditMode de las zonas, por clase (CerroT1355, PuertoT1357, ArreglosCerroT1363, ArreglosPuertoT1366, VariarCerroT1364, RendimientoCerroT1365,
   BarridoMapaT1360, PiezasZonasT1353): **102/102**. Tres regresiones de la ronda 7 se arreglaron en la 8: carros en el carril, luces con
   alcance de 20 m (tope 18) y 60 rejas fuera del LOD de su casa.

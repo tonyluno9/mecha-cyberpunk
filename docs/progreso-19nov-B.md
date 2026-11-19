@@ -74,10 +74,13 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
 - 10:57 La verificación final (en segundo plano) la detuvo Claude Code por falta de memoria a mitad de la cadena del Puerto
   (se guardó T1443.Aplicar r9; T1442 queda con su ronda 7 aplicada). No se relanzó. Reporte: docs/reporte-19nov-B.md.
 
+- T-1440 ronda 9 había inflado T1440_Ladera.asset a 134.8 MB y creado T1440_Combinados.asset de 99.7 MB: GitHub rechazó el push (no se subió
+  nada). Ronda 11 apagó esas combinaciones: T1440_Ladera.asset 2.9 MB, Cerro 41.5 MB, Puerto 7.8 MB. Estado final aplicado: Validar sin fallos
+  en las 4 tareas y EditMode de las zonas 102/102. Faltan los recorridos PlayMode, fps y fotos finales (ver Qué sigue; el paso 1 de Puerto ya se hizo).
+
 ## Qué sigue
 1. Con memoria libre y en PRIMER plano, en s2 (rama integ/zonas-19nov-B), una corrida por línea:
-   - Correr19nov.Correr -pasos ZonaPuertoT1443.Aplicar,ZonaPuertoT1442.Aplicar,ZonaPuertoT1443.Validar,ZonaPuertoT1442.Validar
-   - EditMode por clase: CerroT1355, PuertoT1357, ArreglosCerroT1363, ArreglosPuertoT1366, VariarCerroT1364, RendimientoCerroT1365, BarridoMapaT1360, PiezasZonasT1353
+   - (hecho: aplicar todo, Validar y EditMode 102/102)
    - PlayMode por clase: MechaCyberpunk.Tests.Personaje.RecorridoPuertoT1361Pruebas y luego RecorridoCerroT1361Pruebas (comparar con main: Cerro 6, Puerto 4 fallas)
    - PlayMode MechaCyberpunk.Tests.Mundo.RendimientoCerroT1362Pruebas -sufijo 19nov-B-final
    - Correr19nov.Correr -pasos ZonaCerroT1440.Fotos,ZonaCerroT1441.Fotos,ZonaPuertoT1443.Fotos,ZonaPuertoT1442.Fotos
