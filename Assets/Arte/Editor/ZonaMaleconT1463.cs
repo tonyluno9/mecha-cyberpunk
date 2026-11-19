@@ -42,6 +42,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float RadioCamara = 2.2f;
         private const float RadioPalmeraCamara = 6f;
         private const float RadioPalmeraK12 = 8f;
+        private const float MargenBoca = 2.5f;
         private const int TopeSpots = 36;
         private const int CupoLuces = 40;
 
@@ -220,6 +221,16 @@ namespace MechaCyberpunk.Arte.Editor
             return d;
         }
 
+        /// <summary>Si el punto cae dentro del rectángulo de una unión (ColocarT1358Orillas.Uniones: x0, z0, x1, z1) ensanchado por el margen: ahí no van troncos ni bases con collider.</summary>
+        private static bool EnBocaDeUnion(Vector3 p, float margen)
+        {
+            foreach ((string _, Vector4 r) in ColocarT1358Orillas.Uniones)
+            {
+                if (p.x >= r.x - margen && p.x <= r.z + margen && p.z >= r.y - margen && p.z <= r.w + margen) { return true; }
+            }
+            return false;
+        }
+
         private static float LateralDe(Vector3 p)
         {
             Marco(p.x, out Vector3 linea, out _, out Vector3 mar);
@@ -393,7 +404,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Marco(pt.x, out Vector3 linea, out _, out Vector3 mar);
                     Vector3 pos = linea + mar * LateralFila;
                     pos.y = ColocarT1354Curva.YBanqueta;
-                    if (Plano(pos, camK) < (esPalmera ? RadioPalmeraCamara : RadioCamara) || Plano(pos, ZonaMaleconT1413.CamaraK12) < RadioPalmeraK12) { omitidos++; continue; }
+                    if (Plano(pos, camK) < (esPalmera ? RadioPalmeraCamara : RadioCamara) || Plano(pos, ZonaMaleconT1413.CamaraK12) < RadioPalmeraK12 || EnBocaDeUnion(pos, MargenBoca)) { omitidos++; continue; }
                     GameObject go = esPalmera
                         ? PonerSimple(palmera, grupo, pos, Quaternion.Euler(0f, (float)obra.Azar.NextDouble() * 360f, 0f), 1.1f + (float)obra.Azar.NextDouble() * 0.3f, ocupado, 1.2f, "AR03_Palmera_" + nP)
                         : PonerSimple(farol, grupo, pos, Quaternion.LookRotation(mar), 1f, ocupado, 1f, "ML01_Farol_" + nF);
@@ -493,10 +504,24 @@ namespace MechaCyberpunk.Arte.Editor
             Informe.AppendLine("Charcos de luz: " + n + " planos aditivos naranjas de 9 m bajo los faroles (sin Light).");
         }
 
+        /// <summary>Textura de base que ya existe: la de T1354_Arena (la arena de T-1354) y, si no, la de T1356_Tierra.</summary>
+        private static Texture TexturaDeArena()
+        {
+            foreach (string n in new[] { "T1354_Arena", "T1356_Tierra" })
+            {
+                Material m = AssetDatabase.LoadAssetAtPath<Material>(KitS2c.Carpeta + "/" + n + ".mat");
+                Texture t = m != null && m.HasProperty("_BaseMap") ? m.GetTexture("_BaseMap") : null;
+                if (t != null) { return t; }
+            }
+            return null;
+        }
+
         /// <summary>La playa de T-1354 pasa de T1354_ArenaClara a T1463_Arena: arena grisácea mojada (0.35, 0.33, 0.30, suavidad 0.35).</summary>
         private static void PonerArena(Transform raiz)
         {
-            Material arena = KitS2c.Mat("T1463_Arena", () => KitS2c.Lit(new Color(0.35f, 0.33f, 0.30f), 0.35f));
+            AssetDatabase.DeleteAsset(KitS2c.Carpeta + "/T1463_Arena.mat");
+            Texture textura = TexturaDeArena();
+            Material arena = KitS2c.Mat("T1463_Arena", () => KitS2c.Lit(new Color(0.7f, 0.66f, 0.6f), 0.35f, textura));
             int n = 0;
             Transform mio = raiz.Find(NombreRaiz);
             foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
@@ -970,7 +995,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Marco(x, out Vector3 linea, out Vector3 tang, out Vector3 mar);
                 Vector3 pos = linea + mar * lateral;
                 pos.y = ColocarT1354Curva.YBanqueta;
-                if (Plano(pos, cam) < 1.5f || Mathf.Abs(Mathf.Abs(x) - 47f) < 3f) { continue; }
+                if (Plano(pos, cam) < 1.5f || Mathf.Abs(Mathf.Abs(x) - 47f) < 3f || EnBocaDeUnion(pos, 1f)) { continue; }
                 bool alBarandal = lateral > 14f;
                 Vector3 mira = alBarandal ? mar : (azar.NextDouble() < 0.5 ? tang : -tang);
                 GameObject v = visuales[n % visuales.Count];
@@ -995,6 +1020,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 GameObject p = prefabs[k % prefabs.Count];
                 if (p == null || Mathf.Abs(Mathf.Abs(x) - 47f) < 4f) { continue; }
+                if (EnBocaDeUnion(PuntoLateral(x, LateralBarandalGente + 0.5f, 0f), MargenBoca)) { continue; }
                 Marco(x, out Vector3 linea, out _, out Vector3 mar);
                 Vector3 suelo = linea + mar * (LateralBarandalGente + 0.5f);
                 suelo.y = ColocarT1354Curva.YBanqueta;
@@ -1127,6 +1153,7 @@ namespace MechaCyberpunk.Arte.Editor
                     ValidarPoses();
                     ValidarArena(raiz);
                     ValidarHacesK12(raiz);
+                    ValidarBocas(mio);
                 }
             }
             finally
@@ -1138,11 +1165,38 @@ namespace MechaCyberpunk.Arte.Editor
             if (fallos > 0) { Debug.LogError("[Arte] T-1463 Validar: " + fallos + " fallos (ver Logs/t1463-validar.txt)"); }
         }
 
+        private static void ValidarBocas(Transform mio)
+        {
+            int tapan = 0;
+            foreach (Transform g in new[] { mio.Find("Fila"), mio.Find("Basura") })
+            {
+                if (g == null) { continue; }
+                foreach (Transform t in g)
+                {
+                    if (t.GetComponentInChildren<Collider>(true) == null) { continue; }
+                    Bounds b = ZonaMaleconT1393.CajaDe(t.gameObject);
+                    foreach ((string nombre, Vector4 r) in ColocarT1358Orillas.Uniones)
+                    {
+                        if (b.max.x > r.x && b.min.x < r.z && b.max.z > r.y && b.min.z < r.w)
+                        {
+                            tapan++;
+                            Informe.AppendLine("  tapa la boca " + nombre + ": " + t.name + " en " + b.center.ToString("F1"));
+                        }
+                    }
+                }
+            }
+            Informe.AppendLine("Objetos de la fila y la basura con collider dentro de las bocas de las uniones: " + tapan);
+            Exigir(tapan == 0, tapan + " objetos con collider tapan la boca de una unión.");
+        }
+
         private static void ValidarArena(Transform raiz)
         {
             Transform mio = raiz.Find(NombreRaiz);
             Renderer[] playa = raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name == "Playa" && !t.IsChildOf(mio)).SelectMany(t => t.GetComponentsInChildren<Renderer>(true)).ToArray();
             int conArena = playa.Count(r => r.sharedMaterial != null && r.sharedMaterial.name == "T1463_Arena");
+            int conTextura = playa.Count(r => r.sharedMaterial != null && r.sharedMaterial.name == "T1463_Arena" && r.sharedMaterial.GetTexture("_BaseMap") != null);
+            Informe.AppendLine("Playa con textura de base: " + conTextura + " (la prueba SinGreyboxT506 no admite material liso).");
+            Exigir(conTextura == conArena, "la arena T1463_Arena no tiene textura de base.");
             Informe.AppendLine("Playa: " + playa.Length + " renderers, " + conArena + " con T1463_Arena.");
             Exigir(playa.Length > 0 && conArena == playa.Length, "la playa no tiene el material T1463_Arena.");
         }
