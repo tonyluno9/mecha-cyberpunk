@@ -142,10 +142,54 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Devuelve a su sitio los contenedores que una corrida anterior apagó.</summary>
         private static void RestaurarContenedores(Transform raiz)
         {
+            List<Transform> bloques = new List<Transform>();
             foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true).Where(x => x.name.StartsWith(PrefijoViejo)).ToList())
             {
                 t.name = t.name.Substring(PrefijoViejo.Length);
                 t.gameObject.SetActive(true);
+                if (t.parent != null && !bloques.Contains(t.parent))
+                {
+                    bloques.Add(t.parent);
+                }
+            }
+            foreach (Transform b in bloques)
+            {
+                RecalcularColliders(b);
+            }
+        }
+
+        /// <summary>
+        /// Cada BoxCollider del bloque es de una pila de contenedores (una fila y un lado). Se ajusta a los contenedores que siguen encendidos en su huella: se baja a su altura
+        /// actual o se apaga si ya no queda ninguno (así no hay muros invisibles); si vuelven a encenderse, se sube o se enciende otra vez.
+        /// </summary>
+        private static void RecalcularColliders(Transform bloque)
+        {
+            List<Transform> conts = bloque.Cast<Transform>().Where(t => t.gameObject.activeSelf && (t.name.StartsWith("PT01_Contenedor") || t.name.StartsWith("T1396_Grafiti_"))).ToList();
+            List<Bounds> cajas = conts.Select(Limites).ToList();
+            foreach (BoxCollider bc in bloque.GetComponents<BoxCollider>())
+            {
+                Vector3 centro = bloque.TransformPoint(bc.center);
+                Vector3 medio = Vector3.Scale(bc.size, bloque.lossyScale) * 0.5f;
+                Rect huella = Rect.MinMaxRect(centro.x - medio.x, centro.z - medio.z, centro.x + medio.x, centro.z + medio.z);
+                float tope = float.MinValue;
+                foreach (Bounds c in cajas)
+                {
+                    if (huella.Contains(new Vector2(c.center.x, c.center.z)))
+                    {
+                        tope = Mathf.Max(tope, c.max.y);
+                    }
+                }
+                if (tope == float.MinValue)
+                {
+                    bc.enabled = false;
+                    continue;
+                }
+                bc.enabled = true;
+                float baja = centro.y - medio.y;
+                float alto = tope - baja;
+                Vector3 local = bc.center;
+                bc.size = new Vector3(bc.size.x, alto / Mathf.Max(0.0001f, bloque.lossyScale.y), bc.size.z);
+                bc.center = new Vector3(local.x, bloque.InverseTransformPoint(new Vector3(centro.x, baja + alto * 0.5f, centro.z)).y, local.z);
             }
         }
 
@@ -160,6 +204,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             foreach (Transform bloque in cont.Cast<Transform>().Where(t => t.name.StartsWith("Bloque_")))
             {
+                int antes = n;
                 foreach (Transform c in bloque.Cast<Transform>().Where(t => t.gameObject.activeSelf && (t.name.StartsWith("PT01_Contenedor") || t.name.StartsWith("T1396_Grafiti_"))).ToList())
                 {
                     if (Huella(Limites(c)).Overlaps(Expandir(zona, -0.05f)))
@@ -168,6 +213,10 @@ namespace MechaCyberpunk.Arte.Editor
                         c.gameObject.SetActive(false);
                         n++;
                     }
+                }
+                if (n > antes)
+                {
+                    RecalcularColliders(bloque);
                 }
             }
             apagados += n;
@@ -489,6 +538,7 @@ namespace MechaCyberpunk.Arte.Editor
                             }
                         }
                     }
+                    fallos += RevisarMuros(raiz.transform, mia, v);
                 }
             }
             finally
@@ -499,6 +549,58 @@ namespace MechaCyberpunk.Arte.Editor
             Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/t1402-validar.txt", v.ToString());
             Debug.Log("[ZonaPuertoT1402] " + v);
+        }
+
+        /// <summary>
+        /// Muros invisibles: todo collider encendido de los bloques de contenedores (Contenedores/Bloque_*) y de lo nuevo (T1402) debe tener encima una malla visible que lo cubra:
+        /// en los bloques, renderers encendidos del bloque que toquen su caja y lleguen a su altura (con 0.35 m de margen); en lo demás, renderers del propio objeto, de sus hijos o de su padre.
+        /// Devuelve el número de fallos y los escribe en el informe.
+        /// </summary>
+        private static int RevisarMuros(Transform raiz, Transform mia, StringBuilder v)
+        {
+            int fallos = 0;
+            int revisados = 0;
+            Transform cont = raiz.Find("Contenedores");
+            List<Collider> colliders = new List<Collider>();
+            if (cont != null)
+            {
+                colliders.AddRange(cont.GetComponentsInChildren<Collider>(false).Where(c => c.enabled && c.gameObject.activeInHierarchy));
+            }
+            colliders.AddRange(mia.GetComponentsInChildren<Collider>(false).Where(c => c.enabled && c.gameObject.activeInHierarchy));
+            foreach (Collider c in colliders)
+            {
+                revisados++;
+                Bounds cb = c.bounds;
+                Bounds interior = cb;
+                interior.Expand(-0.1f);
+                List<Renderer> candidatos;
+                Transform bloque = c.transform;
+                while (bloque != null && !bloque.name.StartsWith("Bloque_") && bloque != mia)
+                {
+                    bloque = bloque.parent;
+                }
+                if (bloque != null && bloque != mia)
+                {
+                    candidatos = bloque.GetComponentsInChildren<Renderer>(false).Where(r => r.enabled && r.gameObject.activeInHierarchy).ToList();
+                }
+                else
+                {
+                    candidatos = c.GetComponentsInChildren<Renderer>(false).Where(r => r.enabled && r.gameObject.activeInHierarchy).ToList();
+                    if (candidatos.Count == 0 && c.transform.parent != null)
+                    {
+                        candidatos = c.transform.parent.GetComponentsInChildren<Renderer>(false).Where(r => r.enabled && r.gameObject.activeInHierarchy).ToList();
+                    }
+                }
+                List<Renderer> tocan = candidatos.Where(r => r.bounds.Intersects(interior)).ToList();
+                bool cubre = tocan.Count > 0 && tocan.Max(r => r.bounds.max.y) >= cb.max.y - 0.35f;
+                if (!cubre)
+                {
+                    v.AppendLine("MURO collider sin malla visible que lo cubra: " + c.transform.name + " (" + c.GetType().Name + ") en " + cb.center.ToString("F1") + " tamaño " + cb.size.ToString("F1"));
+                    fallos++;
+                }
+            }
+            v.AppendLine("Colliders revisados (bloques y T1402): " + revisados + "; muros invisibles: " + fallos);
+            return fallos;
         }
 
         // ---------------------------------------------------------------- Fotos
