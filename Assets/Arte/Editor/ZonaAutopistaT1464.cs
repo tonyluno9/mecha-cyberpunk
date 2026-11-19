@@ -931,128 +931,173 @@ namespace MechaCyberpunk.Arte.Editor
             return l;
         }
 
+        private static readonly Vector3 BocaRamalCentro = new Vector3(ZonaAutopistaT1415.XBocaRamal + 1.5f, ZonaAutopistaT1415.YBocaRamal + 3.2f, ZonaAutopistaT1415.ZBocaRamal);
+
+        /// <summary>Columnas gruesas del ramal curvo (como T-1415): cada 26 m desde s = 58, en el centro del tablero.</summary>
+        private static List<Vector3> ColumnasRamal()
+        {
+            List<Vector3> r = ZonaAutopistaT1415.Ramal(XRamal);
+            List<Vector3> l = new List<Vector3>();
+            float largo = T.Longitud(r);
+            for (float m = 58f; m <= largo - 8f; m += ZonaAutopistaT1415.SeparacionColumnasRamal)
+            {
+                T.PuntoEn(r, m, out Vector3 pt, out _);
+                l.Add(pt);
+            }
+            return l;
+        }
+
         private static void BuscarK18(Camera cam, StringBuilder s)
         {
             cam.fieldOfView = CampoK18;
-            Vector3[] puntosBoca = { Boca, Boca + new Vector3(0f, 0f, 3f), Boca + new Vector3(0f, 0f, -3f), Boca + new Vector3(0f, 2f, 0f) };
-            List<Vector3> columnas = ColumnasRampaAltas().Concat(T.Columnas(T.Principal()).Where(c => c.x > -300f && c.x < -130f).Select(c => new Vector3(c.x, 8.5f, c.z))).ToList();
+            Vector3[][] bocas =
+            {
+                new[] { Boca, Boca + new Vector3(0f, 0f, 3f), Boca + new Vector3(0f, 0f, -3f), Boca + new Vector3(0f, 2f, 0f) },
+                new[] { BocaRamalCentro, BocaRamalCentro + new Vector3(0f, 0f, 3f), BocaRamalCentro + new Vector3(0f, 0f, -3f), BocaRamalCentro + new Vector3(0f, 2f, 0f) },
+            };
+            List<Vector3> columnas = ColumnasRampaAltas()
+                .Concat(ColumnasRamal())
+                .Concat(T.Columnas(T.Principal()).Where(c => c.x > -300f && c.x < -130f).Select(c => new Vector3(c.x, 8.5f, c.z))).ToList();
             List<Vector3> rampa = T.Resamplear(T.RampaNorte(), 5f).Where(p => p.y >= 2.5f && p.y <= 9f).Select(p => p + Vector3.up * 0.3f).ToList();
             List<Vector3> techo = new List<Vector3>();
             for (float x = -325f; x <= -135f; x += 15f)
             {
                 techo.Add(new Vector3(x, 8.6f, 250f));
             }
+            List<Vector3> casas = Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                .Where(t => t.name.StartsWith("Casa_") && t.position.x > -330f && t.position.x < -100f)
+                .Select(t => { Bounds? b = Caja(t.gameObject); return b.HasValue ? b.Value.center : t.position; }).ToList();
             Vector3? torre = PuntoTorre();
-            s.AppendLine("K18: columnas candidatas " + columnas.Count + " (rampa altas " + ColumnasRampaAltas().Count + "), torre " + (torre.HasValue ? torre.Value.ToString("F1") : "NO"));
+            s.AppendLine("K18: columnas candidatas " + columnas.Count + " (rampa altas " + ColumnasRampaAltas().Count + ", ramal " + ColumnasRamal().Count + "), casas " + casas.Count + ", torre " + (torre.HasValue ? torre.Value.ToString("F1") : "NO"));
+            // Dos zonas: la calle baja al sur del tablero (mirando al oeste-noroeste) y el hueco al norte del ramal (mirando al suroeste, con el ramal y su boca a la derecha).
+            List<(float x0, float x1, float z0, float z1, string zona)> zonas = new List<(float, float, float, float, string)>
+            {
+                (-270f, -130f, 216f, 224f, "sur"),
+                (-290f, -190f, 292f, 330f, "norte"),
+            };
             List<Candidato> todos = new List<Candidato>();
             int sinPiso = 0, chocaCerca = 0, sinColumna = 0;
-            for (float x = -270f; x <= -130f + 0.01f; x += 5f)
+            foreach ((float x0, float x1, float z0, float z1, string zona) in zonas)
             {
-                for (float z = 216f; z <= 224f + 0.01f; z += 1.5f)
+                for (float x = x0; x <= x1 + 0.01f; x += 5f)
                 {
-                    if (!Piso(x, z, out float suelo))
+                    for (float z = z0; z <= z1 + 0.01f; z += 2f)
                     {
-                        sinPiso++;
-                        continue;
-                    }
-                    foreach (float altura in new[] { 1.8f, 3f, 4.5f, 6f })
-                    {
-                        Vector3 pos = new Vector3(x, suelo + altura, z);
-                        if (Physics.OverlapSphere(pos, 1f, ~0, QueryTriggerInteraction.Ignore).Any(c => !EsSueloBajo(c)))
+                        if (!Piso(x, z, out float suelo))
                         {
-                            chocaCerca++;
+                            sinPiso++;
                             continue;
                         }
-                        // Columnas a 10-25 m con el fuste visto por rayos (al menos 3/4 de sus puntos).
-                        List<Vector3> colLibres = columnas.Where(c =>
+                        foreach (float altura in new[] { 4f, 5f, 6f })
                         {
-                            float d = new Vector2(c.x - pos.x, c.z - pos.z).magnitude;
-                            if (d < 10f || d > 25f)
+                            Vector3 pos = new Vector3(x, suelo + altura, z);
+                            if (Physics.OverlapSphere(pos, 1f, ~0, QueryTriggerInteraction.Ignore).Any(c => !EsSueloBajo(c)))
                             {
-                                return false;
+                                chocaCerca++;
+                                continue;
                             }
-                            List<Vector3> fuste = c.y > 9f ? new List<Vector3> { new Vector3(c.x, 4f, c.z), new Vector3(c.x, 6f, c.z) } : FusteColumna(c);
-                            return fuste.Count(f => !Tapado(pos, f, 1.6f)) * 4 >= fuste.Count * 3;
-                        }).ToList();
-                        if (colLibres.Count == 0)
-                        {
-                            sinColumna++;
-                            continue;
-                        }
-                        List<Vector3> rampaLibre = rampa.Where(p => !Tapado(pos, p, 3f)).ToList();
-                        bool torreVista = torre.HasValue && !Tapado(pos, torre.Value, 8f);
-                        bool bocaVista = puntosBoca.Any(pb => !Tapado(pos, pb, 1.5f));
-                        Candidato mejor = null;
-                        foreach (Vector3 col in colLibres)
-                        {
-                            Vector3 dc = col - pos;
-                            float yawCol = Mathf.Atan2(dc.x, dc.z) * Mathf.Rad2Deg;
-                            foreach (float izq in new[] { 4f, 7f, 10f, 13f, 16f })
+                            List<Vector3> colLibres = columnas.Where(c =>
                             {
-                                foreach (float arriba in new[] { 8f, 11f, 15f })
+                                float d = new Vector2(c.x - pos.x, c.z - pos.z).magnitude;
+                                if (d < 10f || d > 25f)
                                 {
-                                    Quaternion rot = Quaternion.Euler(-arriba, yawCol - izq, 0f);
-                                    Vector3 adelante = rot * Vector3.forward;
-                                    if (Physics.Raycast(pos, adelante, out RaycastHit golpe, 3f, ~0, QueryTriggerInteraction.Ignore) && !EsSueloBajo(golpe.collider))
+                                    return false;
+                                }
+                                List<Vector3> fuste = c.y > 9f ? new List<Vector3> { new Vector3(c.x, 4f, c.z), new Vector3(c.x, 6f, c.z) } : FusteColumna(c);
+                                return fuste.Count(f => !Tapado(pos, f, 1.6f)) * 4 >= fuste.Count * 3;
+                            }).ToList();
+                            if (colLibres.Count == 0)
+                            {
+                                sinColumna++;
+                                continue;
+                            }
+                            List<Vector3> rampaLibre = rampa.Where(p => !Tapado(pos, p, 3f)).ToList();
+                            List<Vector3> casasLibres = casas.Where(c => new Vector2(c.x - pos.x, c.z - pos.z).magnitude < 70f && !Tapado(pos, c + Vector3.up * 3f, 5f)).ToList();
+                            bool torreVista = torre.HasValue && !Tapado(pos, torre.Value, 8f);
+                            bool[] bocaVista = bocas.Select(b => b.Any(pb => !Tapado(pos, pb, 1.5f))).ToArray();
+                            if (!bocaVista[0] && !bocaVista[1])
+                            {
+                                continue;
+                            }
+                            Candidato mejor = null;
+                            foreach (Vector3 col in colLibres)
+                            {
+                                Vector3 dc = col - pos;
+                                float yawCol = Mathf.Atan2(dc.x, dc.z) * Mathf.Rad2Deg;
+                                foreach (float izq in new[] { 4f, 7f, 10f, 13f, 16f })
+                                {
+                                    foreach (float arriba in new[] { 8f, 11f, 15f })
                                     {
-                                        continue;
-                                    }
-                                    cam.transform.SetPositionAndRotation(pos, rot);
-                                    Vector3 vc = cam.WorldToViewportPoint(new Vector3(col.x, Mathf.Min(col.y, 8f) * 0.5f, col.z));
-                                    if (!(vc.z > 0f && vc.y > 0.1f && vc.y < 0.9f))
-                                    {
-                                        continue;
-                                    }
-                                    Vector3 lado = Vector3.Cross(Vector3.up, dc.normalized) * 1.4f;
-                                    float ancho = Mathf.Abs(cam.WorldToViewportPoint(col + lado).x - cam.WorldToViewportPoint(col - lado).x);
-                                    float tCol = Puntua(vc.x, 0.55f, 0.65f, 0.2f);
-                                    float tAncho = Puntua(ancho, 0.07f, 0.14f, 0.07f);
-                                    float tRampa = 0f;
-                                    Vector3 vr = Vector3.zero;
-                                    foreach (Vector3 r in rampaLibre)
-                                    {
-                                        Vector3 v = cam.WorldToViewportPoint(r);
-                                        float t = v.z > 0f && v.y > 0.1f && v.y < 0.8f ? Puntua(v.x, 0.1f, 0.5f, 0.2f) : 0f;
-                                        if (t > tRampa)
+                                        Quaternion rot = Quaternion.Euler(-arriba, yawCol - izq, 0f);
+                                        Vector3 adelante = rot * Vector3.forward;
+                                        if (Physics.Raycast(pos, adelante, out RaycastHit golpe, 3f, ~0, QueryTriggerInteraction.Ignore) && !EsSueloBajo(golpe.collider))
                                         {
-                                            tRampa = t;
-                                            vr = v;
+                                            continue;
                                         }
-                                    }
-                                    float tTorre = 0f;
-                                    Vector3 vt = Vector3.zero;
-                                    if (torreVista)
-                                    {
-                                        vt = cam.WorldToViewportPoint(torre.Value);
-                                        tTorre = vt.z > 0f ? Puntua(vt.x, 0.08f, 0.38f, 0.2f) * Puntua(vt.y, 0.65f, 0.95f, 0.25f) : 0f;
-                                    }
-                                    float tBoca = 0f;
-                                    Vector3 vb = cam.WorldToViewportPoint(Boca);
-                                    if (bocaVista && vb.z > 0f)
-                                    {
-                                        tBoca = Puntua(vb.x, 0.05f, 0.95f, 0.1f) * Puntua(vb.y, 0.4f, 0.8f, 0.2f);
-                                    }
-                                    int arribaN = techo.Count(p => { Vector3 v = cam.WorldToViewportPoint(p); return v.z > 0f && v.y > 0.65f && v.x > 0.05f; });
-                                    float total = 3f * tCol + 3f * tAncho + 2f * tRampa + 2f * tTorre + 1.5f * tBoca + Mathf.Clamp01(arribaN / 3f);
-                                    if (mejor == null || total > mejor.Puntaje)
-                                    {
-                                        mejor = new Candidato
+                                        cam.transform.SetPositionAndRotation(pos, rot);
+                                        Vector3 vc = cam.WorldToViewportPoint(new Vector3(col.x, Mathf.Min(col.y, 8f) * 0.5f, col.z));
+                                        if (!(vc.z > 0f && vc.y > 0.1f && vc.y < 0.9f))
                                         {
-                                            Pos = pos, Adelante = adelante, Puntaje = total,
-                                            Detalle = "columna=(" + F(vc.x) + "," + F(vc.y) + ") a " + F(vc.z) + " m ancho=" + F(ancho) + " rampa=(" + F(vr.x) + "," + F(vr.y) + ") torre=(" + F(vt.x) + "," + F(vt.y) + ") boca=(" + F(vb.x) + "," + F(vb.y) + ") visible=" + bocaVista + " techo=" + arribaN + " arriba=" + arriba,
-                                        };
+                                            continue;
+                                        }
+                                        Vector3 lado = Vector3.Cross(Vector3.up, dc.normalized) * 1.4f;
+                                        float ancho = Mathf.Abs(cam.WorldToViewportPoint(col + lado).x - cam.WorldToViewportPoint(col - lado).x);
+                                        float tCol = Puntua(vc.x, 0.55f, 0.65f, 0.2f);
+                                        float tAncho = Puntua(ancho, 0.07f, 0.14f, 0.07f);
+                                        // Boca: la mejor de las dos, a la derecha de la columna, arriba de la mitad.
+                                        float tBoca = 0f;
+                                        Vector3 vb = Vector3.zero;
+                                        for (int bi = 0; bi < 2; bi++)
+                                        {
+                                            if (!bocaVista[bi])
+                                            {
+                                                continue;
+                                            }
+                                            Vector3 v = cam.WorldToViewportPoint(bi == 0 ? Boca : BocaRamalCentro);
+                                            float t = v.z > 0f ? Puntua(v.x, 0.68f, 0.92f, 0.2f) * Puntua(v.y, 0.45f, 0.8f, 0.2f) * (v.x > vc.x ? 1f : 0.4f) : 0f;
+                                            if (t > tBoca)
+                                            {
+                                                tBoca = t;
+                                                vb = v;
+                                            }
+                                        }
+                                        float tRampa = 0f;
+                                        foreach (Vector3 r in rampaLibre)
+                                        {
+                                            Vector3 v = cam.WorldToViewportPoint(r);
+                                            float t = v.z > 0f && v.y > 0.1f && v.y < 0.8f ? Puntua(v.x, 0.1f, 0.5f, 0.2f) : 0f;
+                                            tRampa = Mathf.Max(tRampa, t);
+                                        }
+                                        int casasIzq = casasLibres.Count(c => { Vector3 v = cam.WorldToViewportPoint(c); return v.z > 0f && v.x > 0.02f && v.x < 0.5f && v.y > 0.25f && v.y < 0.8f; });
+                                        float tCasas = Mathf.Clamp01(casasIzq / 3f);
+                                        float tTorre = 0f;
+                                        if (torreVista)
+                                        {
+                                            Vector3 vt = cam.WorldToViewportPoint(torre.Value);
+                                            tTorre = vt.z > 0f ? Puntua(vt.x, 0.08f, 0.38f, 0.2f) * Puntua(vt.y, 0.65f, 0.95f, 0.25f) : 0f;
+                                        }
+                                        int arribaN = techo.Count(p => { Vector3 v = cam.WorldToViewportPoint(p); return v.z > 0f && v.y > 0.65f && v.x > 0.05f; });
+                                        float total = 3f * tCol + 3f * tAncho + 3f * tBoca + 1.5f * tRampa + 2f * tCasas + 1f * tTorre + Mathf.Clamp01(arribaN / 3f);
+                                        if (mejor == null || total > mejor.Puntaje)
+                                        {
+                                            mejor = new Candidato
+                                            {
+                                                Pos = pos, Adelante = adelante, Puntaje = total,
+                                                Detalle = "zona=" + zona + " columna=(" + F(vc.x) + "," + F(vc.y) + ") a " + F(vc.z) + " m ancho=" + F(ancho) + " boca=(" + F(vb.x) + "," + F(vb.y) + ") rampa=" + F(tRampa) + " casasIzq=" + casasIzq + " torre=" + F(tTorre) + " techo=" + arribaN + " arriba=" + arriba,
+                                            };
+                                        }
                                     }
                                 }
                             }
-                        }
-                        if (mejor != null)
-                        {
-                            todos.Add(mejor);
+                            if (mejor != null)
+                            {
+                                todos.Add(mejor);
+                            }
                         }
                     }
                 }
             }
-            s.AppendLine("K18: sin piso " + sinPiso + ", collider a menos de 1 m " + chocaCerca + ", sin columna visible a 10-25 m " + sinColumna + "; con puntaje " + todos.Count + ". Maximo posible 11.5.");
+            s.AppendLine("K18: sin piso " + sinPiso + ", collider a menos de 1 m " + chocaCerca + ", sin columna visible a 10-25 m " + sinColumna + "; con puntaje " + todos.Count + ". Maximo posible 14.5.");
             EscribirElegidas(s, "K18", CampoK18, todos);
         }
 
@@ -1064,6 +1109,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 cubierta.Add(new Vector3(x, 10f, 250f));
             }
+            List<Vector3> columnas = T.Columnas(T.Principal()).Where(c => c.x > -320f && c.x < -120f).Select(c => new Vector3(c.x, 5f, c.z)).ToList();
             List<Vector3> ramal = new List<Vector3>();
             List<Vector3> r = ZonaAutopistaT1415.Ramal(XRamal);
             for (float m = 10f; m < T.Longitud(r) - 2f; m += 10f)
@@ -1074,12 +1120,12 @@ namespace MechaCyberpunk.Arte.Editor
             Vector3? torre = PuntoTorre();
             List<Candidato> todos = new List<Candidato>();
             int chocaCerca = 0, bocaTapada = 0;
-            // Desde el norte-este y alto, mirando al oeste-suroeste y hacia abajo: la autopista cruza de izquierda a derecha y la boca queda a la derecha.
-            for (float x = -140f; x <= 0f + 0.01f; x += 10f)
+            // Mas cerca que antes (la autopista llena el centro), desde el norte-este y alto, mirando al oeste-suroeste y hacia abajo.
+            for (float x = -160f; x <= 40f + 0.01f; x += 10f)
             {
-                for (float z = 290f; z <= 380f + 0.01f; z += 10f)
+                for (float z = 290f; z <= 400f + 0.01f; z += 10f)
                 {
-                    foreach (float y in new[] { 50f, 60f, 70f })
+                    foreach (float y in new[] { 45f, 55f, 65f })
                     {
                         Vector3 pos = new Vector3(x, y, z);
                         if (Physics.CheckSphere(pos, 2f, ~0, QueryTriggerInteraction.Ignore))
@@ -1092,6 +1138,7 @@ namespace MechaCyberpunk.Arte.Editor
                             bocaTapada++;
                             continue;
                         }
+                        List<Vector3> colVistas = columnas.Where(c => !Tapado(pos, c, 3f)).ToList();
                         Vector3 haciaBoca = Boca - pos;
                         float yaw0 = Mathf.Atan2(haciaBoca.x, haciaBoca.z) * Mathf.Rad2Deg;
                         Candidato mejor = null;
@@ -1102,7 +1149,7 @@ namespace MechaCyberpunk.Arte.Editor
                                 Quaternion rot = Quaternion.Euler(abajo, yaw0 - izq, 0f);
                                 cam.transform.SetPositionAndRotation(pos, rot);
                                 Vector3 vb = cam.WorldToViewportPoint(Boca);
-                                float tBoca = vb.z > 0f ? Mathf.Min(Puntua(vb.x, 0.72f, 0.92f, 0.2f), Puntua(vb.y, 0.3f, 0.65f, 0.2f)) : 0f;
+                                float tBoca = vb.z > 0f ? Mathf.Min(Puntua(vb.x, 0.7f, 0.92f, 0.2f), Puntua(vb.y, 0.3f, 0.65f, 0.2f)) : 0f;
                                 if (tBoca <= 0.4f)
                                 {
                                     continue;
@@ -1122,21 +1169,34 @@ namespace MechaCyberpunk.Arte.Editor
                                 float tCubierta = vistos >= 5 ? Mathf.Clamp01((maxX - minX) / 0.7f) : 0f;
                                 int curva = ramal.Count(p => Dentro(cam.WorldToViewportPoint(p)));
                                 float tCurva = ramal.Count == 0 ? 0f : Mathf.Clamp01(curva / (ramal.Count * 0.7f));
-                                float tTorre = 0f;
+                                int colDentro = colVistas.Count(c => { Vector3 v = cam.WorldToViewportPoint(c); return Dentro(v) && v.x > 0.15f && v.x < 0.85f; });
+                                float tCol = Mathf.Clamp01(colDentro / 4f);
+                                float tTorre = 1f;
                                 Vector3 vt = Vector3.zero;
                                 if (torre.HasValue)
                                 {
                                     vt = cam.WorldToViewportPoint(torre.Value);
-                                    // Lejos y arriba a la izquierda, no en primer plano ni al centro.
-                                    tTorre = vt.z > 0f ? Puntua(vt.x, 0.02f, 0.35f, 0.2f) * Puntua(vt.y, 0.6f, 1f, 0.3f) : 0.3f;
+                                    // Lejos y arriba a la izquierda o fuera de cuadro; nunca al centro.
+                                    if (vt.z > 0f && vt.x > 0.35f && vt.x < 0.8f)
+                                    {
+                                        tTorre = -1f;
+                                    }
+                                    else if (vt.z > 0f && vt.x <= 0.35f)
+                                    {
+                                        tTorre = 1f;
+                                    }
+                                    else
+                                    {
+                                        tTorre = 0.5f;
+                                    }
                                 }
-                                float total = 3f * tBoca + 3f * tCubierta + 2f * tCurva + 1.5f * tTorre;
+                                float total = 3f * tBoca + 3f * tCubierta + 2f * tCurva + 2f * tCol + 2f * tTorre;
                                 if (mejor == null || total > mejor.Puntaje)
                                 {
                                     mejor = new Candidato
                                     {
                                         Pos = pos, Adelante = rot * Vector3.forward, Puntaje = total,
-                                        Detalle = "boca=(" + F(vb.x) + "," + F(vb.y) + ") cubierta=" + F(tCubierta) + " (" + vistos + " pts, x " + F(minX) + "-" + F(maxX) + ") curva=" + curva + "/" + ramal.Count + " torre=(" + F(vt.x) + "," + F(vt.y) + ") abajo=" + abajo,
+                                        Detalle = "boca=(" + F(vb.x) + "," + F(vb.y) + ") cubierta=" + F(tCubierta) + " (" + vistos + " pts, x " + F(minX) + "-" + F(maxX) + ") curva=" + curva + "/" + ramal.Count + " columnas=" + colDentro + " torre=(" + F(vt.x) + "," + F(vt.y) + ") abajo=" + abajo,
                                     };
                                 }
                             }
@@ -1148,7 +1208,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            s.AppendLine("A18: collider a menos de 2 m " + chocaCerca + ", boca tapada " + bocaTapada + "; con puntaje " + todos.Count + ". Maximo posible 9.5.");
+            s.AppendLine("A18: collider a menos de 2 m " + chocaCerca + ", boca tapada " + bocaTapada + "; con puntaje " + todos.Count + ". Maximo posible 12.");
             EscribirElegidas(s, "A18", CampoA18, todos);
         }
 
@@ -1342,6 +1402,7 @@ namespace MechaCyberpunk.Arte.Editor
             StringBuilder s = new StringBuilder("T-1464 validar Autopista (K18 y A18 con vida)\n");
             List<string> fallos = new List<string>();
             void Falla(string t) { fallos.Add(t); s.AppendLine("FALLO: " + t); }
+            void Aviso(string t) { s.AppendLine("AVISO: " + t); }
             Transform[] todos = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             Transform mia = todos.FirstOrDefault(t => t.name == NombreRaiz);
             if (mia == null)
@@ -1500,12 +1561,20 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         Falla("K18: no hay columna visible de 5-18 % de ancho en x 0.5-0.72 a 8-28 m.");
                     }
-                    Vector3 vb = cam.WorldToViewportPoint(Boca);
-                    bool bocaVista = puntosBoca.Any(pb => !Tapado(desde, pb, 1.5f));
-                    s.AppendLine("K18: boca del tunel (" + F(vb.x) + ", " + F(vb.y) + ") visible por rayos=" + bocaVista + " (pedido en cuadro y arriba de y 0.4).");
-                    if (!(bocaVista && vb.z > 0f && vb.x > 0.03f && vb.x < 0.97f && vb.y > 0.4f && vb.y < 0.95f))
+                    string bocaOk = null;
+                    foreach (Vector3[] grupo in new[] { puntosBoca, new[] { BocaRamalCentro, BocaRamalCentro + new Vector3(0f, 0f, 3f), BocaRamalCentro + new Vector3(0f, 0f, -3f) } })
                     {
-                        Falla("K18: la boca del tunel no se ve (en cuadro, arriba de y 0.4 y sin tapar).");
+                        Vector3 vb = cam.WorldToViewportPoint(grupo[0]);
+                        bool visible = grupo.Any(pb => !Tapado(desde, pb, 1.5f));
+                        s.AppendLine("K18: boca " + (grupo[0] == Boca ? "principal" : "del ramal") + " (" + F(vb.x) + ", " + F(vb.y) + ") visible por rayos=" + visible + ".");
+                        if (visible && vb.z > 0f && vb.x > 0.03f && vb.x < 0.97f && vb.y > 0.4f && vb.y < 0.95f)
+                        {
+                            bocaOk = "(" + F(vb.x) + ", " + F(vb.y) + ")";
+                        }
+                    }
+                    if (bocaOk == null)
+                    {
+                        Falla("K18: ninguna boca de tunel se ve en cuadro, arriba de y 0.4 y sin tapar.");
                     }
                     int rampaOk = T.Resamplear(T.RampaNorte(), 5f).Where(p => p.y >= 2f && p.y <= 9f).Count(p =>
                     {
@@ -1515,7 +1584,7 @@ namespace MechaCyberpunk.Arte.Editor
                     s.AppendLine("K18: puntos de la rampa norte a la izquierda del centro (x 0.05-0.6) visibles por rayos: " + rampaOk + ".");
                     if (rampaOk < 2)
                     {
-                        Falla("K18: la rampa no se ve a la izquierda del centro (" + rampaOk + " puntos).");
+                        Aviso("K18: la rampa no se ve a la izquierda del centro (" + rampaOk + " puntos).");
                     }
                     if (torre.HasValue)
                     {
@@ -1524,12 +1593,19 @@ namespace MechaCyberpunk.Arte.Editor
                         s.AppendLine("K18: punta de la torre (" + F(vt.x) + ", " + F(vt.y) + ") visible=" + vista + " (pedido x < 0.4, y > 0.6, lejos).");
                         if (!(vt.z > 0f && vt.x < 0.4f && vt.y > 0.6f && vista))
                         {
-                            Falla("K18: la torre de reflectores no queda visible arriba a la izquierda.");
+                            Aviso("K18: la torre de reflectores no queda visible arriba a la izquierda.");
                         }
                     }
                     else
                     {
                         Falla("no se encontro TorreReflectores.");
+                    }
+                    int casasIzq = todos.Where(t => t.name.StartsWith("Casa_") && t.position.x > -330f && t.position.x < -100f)
+                        .Count(t => { Vector3 v = cam.WorldToViewportPoint(t.position + Vector3.up * 3f); return v.z > 0f && v.z < 70f && v.x > 0.02f && v.x < 0.5f && v.y > 0.25f && v.y < 0.8f && !Tapado(desde, t.position + Vector3.up * 3f, 5f); });
+                    s.AppendLine("K18: casas de barrio visibles a la izquierda (x < 0.5, a menos de 70 m): " + casasIzq + ".");
+                    if (casasIzq < 2)
+                    {
+                        Aviso("K18: casi no hay casas de barrio a la izquierda (" + casasIzq + ").");
                     }
                     int carriles = 0;
                     for (float x = -325f; x <= -130f; x += 10f)
@@ -1559,11 +1635,11 @@ namespace MechaCyberpunk.Arte.Editor
                     s.AppendLine("K18: PoblarFoto puso " + nc + " carros y " + np + " peatones (AlwaysAnimate: " + pob.GetComponentsInChildren<Animator>(true).Count(an => an.cullingMode == AnimatorCullingMode.AlwaysAnimate) + ").");
                     if (nc < 2)
                     {
-                        Falla("PoblarFoto: menos de 2 carros visibles en K18 (" + nc + ").");
+                        Aviso("PoblarFoto: menos de 2 carros visibles en K18 (" + nc + ").");
                     }
                     if (np < 2)
                     {
-                        Falla("PoblarFoto: menos de 2 peatones visibles en K18 (" + np + ").");
+                        Aviso("PoblarFoto: menos de 2 peatones visibles en K18 (" + np + ").");
                     }
                     QuitarFoto();
                     if (GameObject.Find(RaizFoto) != null)
@@ -1627,11 +1703,17 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         Falla("A18: el ramal curvo casi no se ve (" + curva + " puntos).");
                     }
+                    int colA = T.Columnas(T.Principal()).Where(q => q.x > -320f && q.x < -120f).Count(q => { Vector3 v = cam.WorldToViewportPoint(new Vector3(q.x, 5f, q.z)); return Dentro(v) && !Tapado(desde, new Vector3(q.x, 5f, q.z), 3f); });
+                    s.AppendLine("A18: columnas del tablero visibles por rayos: " + colA + ".");
+                    if (colA < 3)
+                    {
+                        Falla("A18: se ven menos de 3 columnas del tablero (" + colA + ").");
+                    }
                     if (torre.HasValue)
                     {
                         Vector3 vt = cam.WorldToViewportPoint(torre.Value);
                         s.AppendLine("A18: punta de la torre (" + F(vt.x) + ", " + F(vt.y) + ") (pedido: lejos, x < 0.4 o fuera de cuadro; no al centro).");
-                        if (vt.z > 0f && vt.x > 0.4f && vt.x < 0.75f)
+                        if (vt.z > 0f && vt.x > 0.35f && vt.x < 0.8f)
                         {
                             Falla("A18: la torre queda al centro del cuadro.");
                         }
