@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Arte.Editor
 {
     /// <summary>
     /// T-1402 (Puerto, ronda 3): corre DESPUÉS de ZonaPuertoT1396.Aplicar. Todo lo nuevo va bajo el hijo raíz "T1402_Puerto" del prefab T1357_Puerto, que Aplicar borra y rehace.
-    /// 1) Pilas de PU08 giradas 90 grados (cara larga con grafiti hacia el pasillo de x = 160) pegadas al borde este de la calle, como K15.
+    /// 1) Pilas de PU08 giradas 90 grados (cara larga con grafiti hacia el pasillo de x = 160) con su cara oeste en x = 166.5 (fuera del arroyo), como K15.
     /// 2) Postes de madera con lámpara y muchos cables sobre esa orilla (a las bodegas de enfrente y a los postes que ya había).
     /// 3) Tarimas, tambos, huacales y montacargas en el pasillo (en los huecos entre pilas y junto a las bodegas).
     /// 4) El arco claro del cielo es el skyline SK01_Este del Malecón (T-1393): Fotos lo registra y toma una foto con el arco apagado para confirmarlo.
@@ -25,7 +25,10 @@ namespace MechaCyberpunk.Arte.Editor
         public const string RutaPrefab = "Assets/Arte/Mundo/Zonas/T1357_Puerto.prefab";
         public const string Raiz = "T1402_Puerto";
         private const float YPatio = 0f;
-        private const float XBorde = ColocarT1357Puerto.XBloques - ColocarT1357Puerto.LargoBloque * 0.5f;
+        /// <summary>Cara oeste de las pilas giradas: la calle (x = 160, 12 m) llega a x = 166; con 0.5 m de margen nada de lo nuevo entra al arroyo.</summary>
+        private const float XCaraOeste = 166.5f;
+        private const float XPoste = 167.1f;
+        private const string PrefijoViejo = "T1402_Reemplazado_";
         private const int TopeLuces = 10;
         private const int TopeObjetos = 1500;
         private static readonly string[] Variantes = { "_a", "_b" };
@@ -33,7 +36,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // Pilas: (z del extremo norte, niveles de cada uno de los dos contenedores seguidos).
         private static readonly (float z, int[] niveles)[] Pilas = { (-89.5f, new[] { 3, 3 }), (-119.5f, new[] { 2, 3 }) };
-        private static readonly float[] ZPostes = { -88.2f, -116.7f, -157.5f };
+        private static readonly float[] ZPostes = { -115.0f, -157.5f };
 
         private static Rect Huella(Bounds b) => Rect.MinMaxRect(b.min.x, b.min.z, b.max.x, b.max.z);
 
@@ -58,7 +61,7 @@ namespace MechaCyberpunk.Arte.Editor
             List<Rect> r = new List<Rect>();
             foreach (Transform g in raiz)
             {
-                if (g.name != "Contenedores" && g.name != "Bodegas" && g.name != "Entrada" && g.name != "Postes" && g.name != "Patio" && g.name != "Muelle")
+                if (g.name != "Bodegas" && g.name != "Entrada" && g.name != "Postes" && g.name != "Patio" && g.name != "Muelle")
                 {
                     continue;
                 }
@@ -103,12 +106,13 @@ namespace MechaCyberpunk.Arte.Editor
                     Transform nuevo = new GameObject(Raiz).transform;
                     nuevo.SetParent(raiz.transform, false);
                     KitS2c.Obra o = new KitS2c.Obra { Raiz = nuevo, Azar = new System.Random(14020), Nombre = Raiz };
+                    RestaurarContenedores(raiz.transform);
                     List<Rect> ocupados = Obstaculos(raiz.transform);
                     List<Rect> mios = new List<Rect>();
 
-                    PonerPilas(nuevo, ocupados, mios);
+                    PonerPilas(raiz.transform, nuevo, ocupados, mios);
                     PostesYCables(raiz.transform, nuevo, o, ocupados, mios);
-                    PisoDetalle(nuevo, ocupados, mios);
+                    PisoDetalle(raiz.transform, nuevo, ocupados, mios);
 
                     KitS2c.Terminar(o);
                     foreach (Transform t in nuevo.GetComponentsInChildren<Transform>(true))
@@ -131,6 +135,43 @@ namespace MechaCyberpunk.Arte.Editor
             Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/t1402-aplicar.txt", informe.ToString());
             Debug.Log("[ZonaPuertoT1402] " + informe);
+        }
+
+        private static int apagados;
+
+        /// <summary>Devuelve a su sitio los contenedores que una corrida anterior apagó.</summary>
+        private static void RestaurarContenedores(Transform raiz)
+        {
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true).Where(x => x.name.StartsWith(PrefijoViejo)).ToList())
+            {
+                t.name = t.name.Substring(PrefijoViejo.Length);
+                t.gameObject.SetActive(true);
+            }
+        }
+
+        /// <summary>Apaga (y renombra, para poder restaurarlos) los contenedores viejos de los bloques cuya huella toque el rectángulo. Devuelve cuántos apagó.</summary>
+        private static int Despejar(Transform raiz, Rect zona)
+        {
+            Transform cont = raiz.Find("Contenedores");
+            int n = 0;
+            if (cont == null)
+            {
+                return 0;
+            }
+            foreach (Transform bloque in cont.Cast<Transform>().Where(t => t.name.StartsWith("Bloque_")))
+            {
+                foreach (Transform c in bloque.Cast<Transform>().Where(t => t.gameObject.activeSelf && (t.name.StartsWith("PT01_Contenedor") || t.name.StartsWith("T1396_Grafiti_"))).ToList())
+                {
+                    if (Huella(Limites(c)).Overlaps(Expandir(zona, -0.05f)))
+                    {
+                        c.name = PrefijoViejo + c.name;
+                        c.gameObject.SetActive(false);
+                        n++;
+                    }
+                }
+            }
+            apagados += n;
+            return n;
         }
 
         // ---------------------------------------------------------------- 1. Pilas PU08 giradas
@@ -169,7 +210,7 @@ namespace MechaCyberpunk.Arte.Editor
             return 90f;
         }
 
-        private static void PonerPilas(Transform nuevo, List<Rect> ocupados, List<Rect> mios)
+        private static void PonerPilas(Transform raiz, Transform nuevo, List<Rect> ocupados, List<Rect> mios)
         {
             Transform padre = new GameObject("PilasGrafiti").transform;
             padre.SetParent(nuevo, false);
@@ -190,6 +231,7 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             int puestos = 0, omitidos = 0;
+            apagados = 0;
             foreach ((float zNorte, int[] niveles) in Pilas)
             {
                 for (int k = 0; k < niveles.Length; k++)
@@ -208,15 +250,19 @@ namespace MechaCyberpunk.Arte.Editor
                         Vector3 e = (Mathf.Min(sx, sy, sz) < 0.8f || Mathf.Max(sx, sy, sz) > 1.25f) ? Vector3.one * Mathf.Min(sx, sy, sz) : new Vector3(sx, sy, sz);
                         g.transform.localScale = e;
                         Bounds b = Limites(g.transform);
-                        g.transform.position += new Vector3(XBorde - 0.05f - b.extents.x - b.center.x, yBase - b.min.y, zc - b.center.z);
+                        g.transform.position += new Vector3(XCaraOeste - b.min.x, yBase - b.min.y, zc - b.center.z);
                         Bounds fin = Limites(g.transform);
                         Rect h = Huella(fin);
                         if (n == 0 && ocupados.Any(r => r.Overlaps(Expandir(h, -0.05f))))
                         {
                             Object.DestroyImmediate(g);
                             omitidos++;
-                            Nota("Pila z " + zc.ToString("F1") + ": hay algo en la huella; se omite ese contenedor y su altura.");
+                            Nota("Pila z " + zc.ToString("F1") + ": hay una bodega u otra cosa en la huella; se omite ese contenedor y su altura.");
                             break;
+                        }
+                        if (n == 0)
+                        {
+                            Despejar(raiz, h);
                         }
                         yBase = fin.max.y;
                         if (n == 0)
@@ -234,8 +280,7 @@ namespace MechaCyberpunk.Arte.Editor
                 lg.SetLODs(new[] { new LOD(0.01f, rend) });
                 lg.RecalculateBounds();
             }
-            Nota("Pilas PU08 giradas 90 grados (cara larga con grafiti al oeste, hacia el pasillo): " + puestos + " contenedores en " + Pilas.Length + " pilas pegadas al borde este de la calle (x " + (XBorde - ColocarT1357Puerto.AnchoCont).ToString("F2") + " a " + XBorde.ToString("F2")
-                + ", la calle queda con unos 9.8 m libres); " + omitidos + " omitidos. Los colliders de PU08 quedan encendidos.");
+            Nota("Pilas PU08 giradas 90 grados (cara larga con grafiti al oeste, hacia el pasillo): " + puestos + " contenedores en " + Pilas.Length + " pilas con la cara oeste en x " + XCaraOeste.ToString("F1") + " (fuera del arroyo, que llega a x 166); contenedores viejos apagados para dejarles sitio: " + apagados + "; " + omitidos + " omitidos. Los colliders de PU08 quedan encendidos.");
         }
 
         // ---------------------------------------------------------------- 2. Postes y cables
@@ -247,13 +292,14 @@ namespace MechaCyberpunk.Arte.Editor
             List<Vector3> puntas = new List<Vector3>();
             foreach (float z in ZPostes)
             {
-                Vector3 pie = new Vector3(XBorde - 0.9f, YPatio, z);
+                Vector3 pie = new Vector3(XPoste, YPatio, z);
                 Rect h = Rect.MinMaxRect(pie.x - 0.4f, pie.z - 0.4f, pie.x + 0.4f, pie.z + 0.4f);
                 if (ocupados.Any(r => r.Overlaps(h)) || mios.Any(r => r.Overlaps(h)))
                 {
                     Nota("Poste z " + z + ": hay algo; no se pone.");
                     continue;
                 }
+                Despejar(raiz, h);
                 puntas.Add(KitS2c.Poste(o, padre, pie, Vector3.left, YPatio, true));
                 mios.Add(h);
             }
@@ -303,24 +349,21 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            Nota("Postes de madera con lámpara y transformador: " + puntas.Count + " en la orilla este (x " + (XBorde - 0.9f).ToString("F1") + "), " + cables + " cables (5 entre postes, 2 a cada poste vecino a menos de 26 m, 3 a la bodega de enfrente).");
+            Nota("Postes de madera con lámpara y transformador: " + puntas.Count + " en x " + XPoste.ToString("F1") + ", fuera del arroyo, en los huecos entre pilas, " + cables + " cables (5 entre postes, 2 a cada poste vecino a menos de 26 m, 3 a la bodega de enfrente).");
         }
 
         // ---------------------------------------------------------------- 3. Detalles de piso
 
-        private static void PisoDetalle(Transform nuevo, List<Rect> ocupados, List<Rect> mios)
+        private static void PisoDetalle(Transform raiz, Transform nuevo, List<Rect> ocupados, List<Rect> mios)
         {
             Transform padre = new GameObject("PisoDetalle").transform;
             padre.SetParent(nuevo, false);
             // (código, alto, x, z, giro)
             (string codigo, float alto, float x, float z, float giro)[] lista =
             {
-                ("PU06_Pallets", 1.2f, 164.5f, -118.9f, 12f), ("C16_Tambo", 1.0f, 165.0f, -114.9f, 0f), ("C16_Tambo", 1.0f, 164.9f, -113.9f, 40f),
-                ("C17_Huacales", 1.0f, 164.6f, -120.9f, 80f),
-                ("PU05_Montacargas", 2.6f, 157.0f, -100.0f, 110f), ("PU05_Montacargas", 2.6f, 156.6f, -128.0f, 70f),
-                ("PU06_Pallets", 1.2f, 155.9f, -96.0f, 5f), ("PU06_Pallets", 1.2f, 155.9f, -121.0f, 95f), ("C16_Tambo", 1.0f, 155.6f, -108.0f, 0f),
-                ("C16_Tambo", 1.0f, 155.9f, -108.9f, 30f), ("C17_Huacales", 1.0f, 155.8f, -114.5f, 20f), ("C16_Tambo", 1.0f, 155.7f, -134.0f, 0f),
-                ("PU06_Pallets", 1.2f, 164.7f, -160.0f, 20f), ("C16_Tambo", 1.0f, 164.9f, -158.9f, 0f),
+                ("PU05_Montacargas", 2.6f, 168.4f, -118.0f, 90f), ("PU06_Pallets", 1.2f, 168.3f, -115.6f, 12f), ("C16_Tambo", 1.0f, 167.5f, -113.9f, 0f),
+                ("C16_Tambo", 1.0f, 168.6f, -113.9f, 40f), ("C17_Huacales", 1.0f, 167.6f, -119.0f, 80f), ("PU06_Pallets", 1.2f, 168.2f, -120.2f, 5f),
+                ("C16_Tambo", 1.0f, 167.4f, -156.9f, 0f),
             };
             int puestos = 0;
             foreach ((string codigo, float alto, float x, float z, float giro) in lista)
@@ -340,12 +383,13 @@ namespace MechaCyberpunk.Arte.Editor
                 b = Limites(go.transform);
                 go.transform.position += new Vector3(x - b.center.x, YPatio - b.min.y, z - b.center.z);
                 Rect h = Huella(Limites(go.transform));
-                if (ocupados.Any(r => r.Overlaps(Expandir(h, -0.05f))) || mios.Any(r => r.Overlaps(Expandir(h, -0.05f))))
+                if (h.xMin < XCaraOeste - 0.05f || ocupados.Any(r => r.Overlaps(Expandir(h, -0.05f))) || mios.Any(r => r.Overlaps(Expandir(h, -0.05f))))
                 {
                     Object.DestroyImmediate(go);
                     Nota(codigo + " en (" + x + ", " + z + "): choca con algo; se omite.");
                     continue;
                 }
+                Despejar(raiz, h);
                 foreach (Collider c in go.GetComponentsInChildren<Collider>(true))
                 {
                     c.enabled = false;
@@ -353,7 +397,7 @@ namespace MechaCyberpunk.Arte.Editor
                 mios.Add(h);
                 puestos++;
             }
-            Nota("Detalles de piso: " + puestos + "/" + lista.Length + " (tarimas, tambos, huacales y 2 montacargas, sin collider, en los huecos entre pilas y junto a las bodegas, fuera del carril central).");
+            Nota("Detalles de piso: " + puestos + "/" + lista.Length + " (tarimas, tambos, huacales y 2 montacargas, sin collider, en los huecos entre pilas, fuera del arroyo (x >= 166.5)).");
         }
 
         // ---------------------------------------------------------------- Validar
@@ -399,9 +443,9 @@ namespace MechaCyberpunk.Arte.Editor
                                 v.AppendLine("FALLO " + nombre + ": no está girado (eje largo en x).");
                                 fallos++;
                             }
-                            if (b.max.x > XBorde + 0.05f)
+                            if (b.min.x < XCaraOeste - 0.05f)
                             {
-                                v.AppendLine("CHOQUE " + nombre + " entra en los bloques (x máx " + b.max.x.ToString("F2") + ").");
+                                v.AppendLine("CARRIL " + nombre + " invade el arroyo (x mín " + b.min.x.ToString("F2") + ").");
                                 fallos++;
                             }
                             bool apoyado = Mathf.Abs(b.min.y - YPatio) < 0.1f || cajas.Where((c, j) => j != i).Any(c => Mathf.Abs(c.max.y - b.min.y) < 0.1f && Mathf.Abs(c.center.z - b.center.z) < 1f);

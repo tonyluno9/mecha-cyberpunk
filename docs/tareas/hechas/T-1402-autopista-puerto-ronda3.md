@@ -8,4 +8,4 @@ Scripts (corren despues de los de la ronda 2; cada uno con Aplicar, Validar y Fo
 Fotos en docs/capturas/t-1402/.
 
 Autopista: camara bajo el tablero junto a una columna del tablero principal; torre de reflectores movida dentro del cuadro; torres del fondo bajadas; chatarra AU03 y charcos en primer plano.
-Puerto: pilas PU08 giradas 90 grados contra el borde este de la calle; postes de madera con cables; tarimas, tambos, huacales y montacargas; foto sin el arco SK01_Este del Malecon para confirmar la banda del cielo.
+Puerto: pilas PU08 giradas 90 grados con la cara oeste en x 166.5, fuera de la calle; postes de madera con cables; tarimas, tambos, huacales y montacargas; foto sin el arco SK01_Este del Malecon para confirmar la banda del cielo.
