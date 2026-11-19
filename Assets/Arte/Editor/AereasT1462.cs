@@ -88,6 +88,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float UmbralFondoT513 = 25f;
         public const float UmbralBrumaAltura = 14f;
         public const float UmbralSkyline = 100f;
+        public const float UmbralSkylineEste = 25f;
         public const float UmbralSueloLejano = 25f;
         private const float AlturaFotoAerea = 25f;
 
@@ -152,7 +153,12 @@ namespace MechaCyberpunk.Arte.Editor
             }
             else
             {
-                CrearGrupo(raiz.transform, "SkylineSK01", sky.GetComponentsInChildren<Renderer>(true), UmbralSkyline, log);
+                // El arco Este (al otro lado de la bahía y del puerto) se ve desde A13 como paneles verticales de ventanas sobre el vacío: se apaga sobre 25 m.
+                // El arco Oeste (el skyline de neón sobre el mar de A11) se queda hasta 100 m.
+                Renderer[] este = sky.GetComponentsInChildren<Renderer>(true).Where(r => RutaDe(r.transform).Contains("SK01_Este")).ToArray();
+                Renderer[] oeste = sky.GetComponentsInChildren<Renderer>(true).Except(este).ToArray();
+                CrearGrupo(raiz.transform, "SkylineSK01_Este", este, UmbralSkylineEste, log);
+                CrearGrupo(raiz.transform, "SkylineSK01", oeste, UmbralSkyline, log);
             }
 
             // Torres de fondo de la Autopista (placas de vidrio inclinadas que flotan sobre el horizonte) y los edificios cubo de las afueras T530 (bloques negros): se apagan por altura.
@@ -446,7 +452,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             OcultarPorAltura[] comps = Object.FindObjectsByType<OcultarPorAltura>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             log.AppendLine("componentes OcultarPorAltura: " + comps.Length + " (" + string.Join(", ", comps.Select(c => c.name + ":" + c.Cantidad + "@" + c.Umbral.ToString("0"))) + ")");
-            if (comps.Length < 6)
+            if (comps.Length < 7)
             {
                 fallas++;
                 log.AppendLine("FALLA: faltan componentes OcultarPorAltura (corre Aplicar)");
@@ -488,10 +494,10 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                     string ruta = RutaDe(d.R.transform);
                     float pct = PorcentajePantalla(cm, d.B);
-                    bool esT513 = ruta.StartsWith("T513_Fondo", StringComparison.Ordinal) || ruta.Contains("/Fondo/Torre") || (ruta.StartsWith("T530_Afueras", StringComparison.Ordinal) && ruta.Contains("/Edificio"));
+                    bool esT513 = ruta.StartsWith("T513_Fondo", StringComparison.Ordinal) || (ruta.Contains("/Fondo/Torre") && !ruta.Contains("TorreReflectores")) || (ruta.StartsWith("T530_Afueras", StringComparison.Ordinal) && ruta.Contains("/Edificio"));
                     bool esBruma = d.R.name.StartsWith("Bruma_", StringComparison.Ordinal);
                     bool esSky = ruta.Contains("/Skyline/");
-                    if (esT513 && y > UmbralFondoT513 || esBruma && y > UmbralBrumaAltura || esSky && y > UmbralSkyline)
+                    if (esT513 && y > UmbralFondoT513 || esBruma && y > UmbralBrumaAltura || esSky && y > (ruta.Contains("SK01_Este") ? UmbralSkylineEste : UmbralSkyline))
                     {
                         fallas++;
                         log.AppendLine("FALLA: " + kv.Key + " (y " + y.ToString("0") + ") ve encendido " + ruta);

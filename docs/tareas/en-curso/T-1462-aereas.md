@@ -56,3 +56,8 @@ skyline del Malecón como panel plano sobre el mar (K11) y niebla que tapa la zo
 - K12, forma blanca sobre el mar: `T1354_Malecon/T1413_Malecon/FaroLejano/ML04_Faro_Lejano/Visual` (malla tripo_node_3ebf74a8, 16.6x30.6x17.7, centro -60;20.3;-335, base y 5.0: flota 5 m sobre el mar) más los haces `T1413_Malecon/FaroLejano/Haz` y `T1404_Malecon/Faro/Faro_0/HazFaro_T1404/Haz`. Son de T-1413/T-1463, no míos.
 - K12, cruz blanca en el cielo: dron `T1398_DronesAereos/Ciudad/Ciudad_NV01_2/Dron/NV01/Cuerpo` (y Rotor_*), centro -70;100;-200 (tarea de drones/tráfico, no mía).
 - Validar: permitidos NucleosSodio (T1461), MuroFondo (interior del casino), T1355_Cerro/ y T1357_Puerto/ (de la sesión B). Ahora espera 6 componentes OcultarPorAltura.
+
+## Ronda 5
+- Paneles verticales con ventanas sobre el vacío (arriba a la derecha de A13): es el arco `T1354_Malecon/T1393_Malecon/Skyline/SK01_Este/Arco` (aditivo, a 850 m, centro 410;78;-203), el skyline pintado visto desde 68 m. Mío (Malecón). Ahora SK01_Este se apaga sobre 25 m (grupo `SkylineSK01_Este`); SK01_Oeste (skyline de neón sobre el mar de A11) sigue hasta 100 m.
+- La torre alta de ventanas azul arriba al centro-izquierda de A13 es `T1356_Autopista/T1386_Autopista/Fondo/TorreReflectores` (centro -300;~50;110): se queda porque sale en A18 (la excluyó Opus de TorresFondoAutopista; Validar también la excluye). Si estorba en A13, ocultarla sobre 80 m.
+- Validar espera 7 componentes OcultarPorAltura.
