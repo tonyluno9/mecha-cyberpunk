@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -32,6 +33,30 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 case "E11_JefeSnakes": return 1.95f;
                 case "E12_GuardiaPesadoNova": return 2.05f;
                 case "E14_JefeFinalNova": return 2.3f;
+                case "E15_CentinelaNova_a":
+                case "E15_CentinelaNova_b": return 1.85f;
+                case "E16_RobotPesadoNova_a":
+                case "E16_RobotPesadoNova_b": return 2.45f;
+                case "E18_EliteNova_a": return 1.9f;
+                case "E19_PandilleroSkulls_a":
+                case "E19_PandilleroSkulls_a_2":
+                case "E19_PandilleroSkulls_b": return 1.78f;
+                case "E20_MatonSkulls_a":
+                case "E20_MatonSkulls_b": return 1.88f;
+                case "NP07_Pescador_a":
+                case "NP07_Pescador_b": return 1.72f;
+                case "NP08_Turista_a":
+                case "NP08_Turista_b": return 1.75f;
+                case "NP09_Corredor_a":
+                case "NP09_Corredor_b": return 1.78f;
+                case "NP10_Elotero_a": return 1.65f;
+                case "NP11_Estibador_a":
+                case "NP11_Estibador_b": return 1.82f;
+                case "NP12_Abuela_a": return 1.55f;
+                case "NP13_Repartidor_a":
+                case "NP13_Repartidor_b": return 1.72f;
+                case "NP14_Oficinista_a":
+                case "NP14_Oficinista_b": return 1.75f;
                 case "RobotHombre":
                 case "GuardiaNova":
                 case "Policia": return 1.85f;
@@ -43,9 +68,26 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         private const int CuadrosInicioIdle = 0;
         private const float FactorUmbralCorrer = 0.5f;
 
-        public static string RutaModelo(string nombre) => Carpeta + "/" + nombre + "/" + nombre + ".fbx";
+        /// <summary>
+        /// T-1389b: las variantes (E15_CentinelaNova_a, NP07_Pescador_b, E19_PandilleroSkulls_a_2...) viven en la carpeta de su código
+        /// (Personajes/E15_CentinelaNova/); los demás personajes, en la carpeta de su nombre.
+        /// </summary>
+        public static string CarpetaDe(string nombre)
+        {
+            Match m = Regex.Match(nombre, @"^((?:E|NP)\d\d_[A-Za-z]+)_(?:a_2|a|b)$");
+            return Carpeta + "/" + (m.Success ? m.Groups[1].Value : nombre);
+        }
 
-        public static string RutaMaterialBase(string nombre) => Carpeta + "/" + nombre + "/Materiales/" + nombre + "_Base.mat";
+        public static string RutaModelo(string nombre) => CarpetaDe(nombre) + "/" + nombre + ".fbx";
+
+        public static string RutaMaterialBase(string nombre) => CarpetaDe(nombre) + "/Materiales/" + nombre + "_Base.mat";
+
+        /// <summary>Carpeta de las texturas del personaje: las de cada variante van aparte (sus nombres se repetirían).</summary>
+        public static string CarpetaTexturas(string nombre)
+        {
+            string aparte = CarpetaDe(nombre) + "/Texturas/" + nombre;
+            return AssetDatabase.IsValidFolder(aparte) ? aparte : CarpetaDe(nombre);
+        }
 
         [MenuItem("Mecha Cyberpunk/Personajes/T-520 Crear visuales de Tripo")]
         public static void CrearTodos()
@@ -388,7 +430,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public static Texture2D TexturaDeColor(string nombre)
         {
             Texture2D mejor = null;
-            foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { Carpeta + "/" + nombre }))
+            foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { CarpetaTexturas(nombre) }))
             {
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
                 if (!EsTexturaDeColor(Path.GetFileName(ruta)))

@@ -34,6 +34,18 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
 
+            if (assetPath.StartsWith(CarpetaPerroRobot))
+            {
+                // T-1389b: el perro robot (E17) es un cuadrúpedo Generic con sus clips (Perro_Idle, Perro_Caminar) dentro del FBX.
+                ModelImporter perro = (ModelImporter)assetImporter;
+                perro.importAnimation = true;
+                perro.animationType = ModelImporterAnimationType.Generic;
+                perro.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
+                perro.useFileScale = true;
+                perro.globalScale = 1f;
+                return;
+            }
+
             if (EsPersonajeDeTripo(assetPath))
             {
                 // T-500: personajes de Tripo con esqueleto y animaciones: se conservan (T-520: Humanoid con el avatar de su propio esqueleto).
@@ -65,7 +77,12 @@ namespace MechaCyberpunk.Arte.Editor
         {
             "man", "woman", "woman2", "SkullHombre", "Doctor", "Inventor", "Hacker", "RobotHombre", "GuardiaNova", "Mecanico", "Policia", "PJ01", "AL10", "AL11",
             "E10_PandilleroSnakes", "E11_JefeSnakes", "E12_GuardiaPesadoNova", "E14_JefeFinalNova",
+            // T-1389b: los rigeados en Blender (esqueleto Mixamo), una carpeta por código y un FBX por variante.
+            "E15_CentinelaNova", "E16_RobotPesadoNova", "E18_EliteNova", "E19_PandilleroSkulls", "E20_MatonSkulls",
+            "NP07_Pescador", "NP08_Turista", "NP09_Corredor", "NP10_Elotero", "NP11_Estibador", "NP12_Abuela", "NP13_Repartidor", "NP14_Oficinista",
         };
+
+        public const string CarpetaPerroRobot = "Assets/Arte/Personajes/E17_PerroRobotNova/";
 
         public static bool EsPersonajeDeTripo(string ruta)
         {

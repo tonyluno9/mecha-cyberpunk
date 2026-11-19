@@ -620,13 +620,18 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     pos = h.point;
                 }
-                GameObject p = (GameObject)PrefabUtility.InstantiatePrefab(prefabPandillero, grupo.transform);
+                // T-1389b: si existen las variantes E19/E20, los pandilleros salen por turnos con ellas (y sus datos sin el tinte oscuro de man).
+                string[] rutasNuevas = PersonajesNuevosT1389b.RutasPandilleroSkulls();
+                GameObject prefabNuevo = AssetDatabase.LoadAssetAtPath<GameObject>(rutasNuevas[(indice + i) % rutasNuevas.Length]);
+                DatosPandilleroAPie datosNuevos = AssetDatabase.LoadAssetAtPath<DatosPandilleroAPie>(PersonajesNuevosT1389b.RutaDatosSkullsNuevos);
+                bool conNuevo = prefabNuevo != null && datosNuevos != null;
+                GameObject p = (GameObject)PrefabUtility.InstantiatePrefab(conNuevo ? prefabNuevo : prefabPandillero, grupo.transform);
                 p.name = "Pandillero_" + (i + 1);
                 Vector3 mira = sitio.centro - pos;
                 mira.y = 0f;
                 p.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(mira.normalized, Vector3.up));
                 SerializedObject soP = new SerializedObject(p.GetComponent<PandilleroAPie>());
-                soP.FindProperty("datos").objectReferenceValue = calaveras;
+                soP.FindProperty("datos").objectReferenceValue = conNuevo ? datosNuevos : calaveras;
                 soP.ApplyModifiedPropertiesWithoutUndo();
             }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MechaCyberpunk.IA.Datos
@@ -13,6 +14,16 @@ namespace MechaCyberpunk.IA.Datos
         [SerializeField] private GameObject guardia;
         [SerializeField] private GameObject guardiaPesado;
         [SerializeField] private GameObject jefeFinal;
+        [Header("T-1389b: variantes nuevas")]
+        [Tooltip("Otros guardias de Nova (centinela E15, élite E18...): se reparten por turnos con el guardia base.")]
+        [SerializeField] private GameObject[] guardiasExtra = new GameObject[0];
+        [Tooltip("Otros guardias pesados (robot pesado E16...): se reparten por turnos con el pesado base.")]
+        [SerializeField] private GameObject[] pesadosExtra = new GameObject[0];
+        [Tooltip("Perros robot de Nova (E17): unidades de cuerpo a cuerpo.")]
+        [SerializeField] private GameObject[] perros = new GameObject[0];
+        [Min(0)] [SerializeField] private int perrosConCuatro;
+        [Min(0)] [SerializeField] private int perrosConCinco;
+        [Header("Cantidades")]
         [Min(0)] [SerializeField] private int guardiasConCuatro = 3;
         [Min(0)] [SerializeField] private int pesadosConCuatro = 1;
         [Min(0)] [SerializeField] private int guardiasConCinco = 5;
@@ -58,6 +69,41 @@ namespace MechaCyberpunk.IA.Datos
         public GameObject Guardia => guardia;
         public GameObject GuardiaPesado => guardiaPesado;
         public GameObject JefeFinal => jefeFinal;
+        public IReadOnlyList<GameObject> GuardiasExtra => guardiasExtra;
+        public IReadOnlyList<GameObject> PesadosExtra => pesadosExtra;
+        public IReadOnlyList<GameObject> Perros => perros;
+        public int CantidadPerros(int estrellas) => estrellas >= 5 ? perrosConCinco : perrosConCuatro;
+
+        /// <summary>Guardias que pueden salir: el base y sus variantes (el base primero).</summary>
+        public List<GameObject> TodosLosGuardias() => Juntar(guardia, guardiasExtra);
+
+        /// <summary>Pesados que pueden salir: el base y sus variantes (el base primero).</summary>
+        public List<GameObject> TodosLosPesados() => Juntar(guardiaPesado, pesadosExtra);
+
+        private static List<GameObject> Juntar(GameObject baseGo, GameObject[] extra)
+        {
+            var lista = new List<GameObject>();
+            if (baseGo != null) { lista.Add(baseGo); }
+            if (extra != null)
+            {
+                foreach (GameObject g in extra)
+                {
+                    if (g != null) { lista.Add(g); }
+                }
+            }
+            return lista;
+        }
+
+        /// <summary>Para el editor y las pruebas: pone las variantes nuevas.</summary>
+        public void ConfigurarVariantes(GameObject[] guardiasNuevos, GameObject[] pesadosNuevos, GameObject[] perrosNuevos, int perros4, int perros5)
+        {
+            guardiasExtra = guardiasNuevos ?? new GameObject[0];
+            pesadosExtra = pesadosNuevos ?? new GameObject[0];
+            perros = perrosNuevos ?? new GameObject[0];
+            perrosConCuatro = perros4;
+            perrosConCinco = perros5;
+        }
+
         public int Guardias(int estrellas) => estrellas >= 5 ? guardiasConCinco : guardiasConCuatro;
         public int Pesados(int estrellas) => estrellas >= 5 ? pesadosConCinco : pesadosConCuatro;
         public float DistanciaMinima => distanciaMinima;
