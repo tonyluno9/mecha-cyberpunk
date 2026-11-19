@@ -47,6 +47,13 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
   - Los .fbx.meta que Unity reescribe al importar (ruido de flotantes) se descartan con git restore antes de cada commit.
 - Ronda 2/3 lanzada a los 4 subagentes con las correcciones.
 
+- 09:05 Ronda 2/3 aplicada: Cerro con techos oscuros, 29 postes con charco de luz, 2 escaleras de ladera, 7 carros, 14 personas,
+  tendederos; Puerto K15 con patio de 3 bodegas, Puerto A15 con grúas asentadas. Validar: T1440 1, T1441 2, T1442 0, T1443 0 fallos.
+  Fotos: A13 sigue en "torres de cajas" con peldaños blancos; K13 sin casas a la izquierda (espejo); K15 pasillo angosto y pata de
+  grúa; A15 pilas bajas y sin bodegas. La sesión A hace niebla por altura en T-1462 (falta que la integre).
+- Ronda siguiente mandada: casas reales (CC06/CC07) en los pisos extra, peldaños oscuros, cámara A13 con la calle en diagonal;
+  K13 con detalle a la derecha; K15 patio de ≥ 14 m; A15 bodegas primero y pilas de 3–4.
+
 ## Qué sigue
 - Al volver cada subagente: merge de su rama en `integ/zonas-19nov-B` (en s2), correr Aplicar en orden T1440 → T1441 → T1442 → T1443,
   luego Validar y, en otra corrida, Fotos. Revisar las fotos y devolver errores.
