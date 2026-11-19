@@ -1,0 +1,97 @@
+T-1362 rendimiento (19nov-B-r7) 2026-11-19 10:13
+GPU: NVIDIA GeForce RTX 5070 Laptop GPU  |  resolución de medición 1920x1080 (RenderTexture ARGB32)
+ms = Stopwatch de Render + sincronización con la GPU, promedio y p95 de 180 frames; gpuMs = -1 (no se mide); deltaTimeMs = Time.unscaledDeltaTime; contador -1 = el recorder no existe, 0 = existe pero no contó.
+zona-n	ms	p95	FPS	gpuMs	batches	setpass	triangulos	vertices	sombras	deltaTimeMs	descripcion
+cerro-1	16.5	19.9	60.4	-1.0	9736	152	27918374	50084964	1373	18.7	a pie en la calle base, mirando a la ladera
+cerro-2	22.1	27.4	45.2	-1.0	13393	161	35120307	57704313	1498	24.8	calle base al sur, mirando a la ladera
+cerro-3	18.9	21.7	53.0	-1.0	11004	131	26075997	49020275	999	21.5	desde la calle U4 mirando a la ladera entera
+cerro-4	19.4	23.5	51.6	-1.0	11318	177	31201179	52372554	1572	21.9	zigzag, primer cuarto, mirando a la ladera
+cerro-5	14.2	18.0	70.4	-1.0	8938	160	32636450	49931597	1592	16.0	a media pierna del zigzag, mirando a la ladera
+cerro-6	13.3	16.9	75.4	-1.0	6572	131	24849225	35314788	1379	15.4	plaza de arriba, mirando al resto de la ladera
+cerro-7	16.6	20.8	60.3	-1.0	10703	162	35189531	53157430	1424	18.8	azotea alta mirando al resto
+cerro-8	17.6	22.9	56.9	-1.0	10652	131	24836392	47847598	986	20.0	calle base elevada 12 m, panorámica de toda la ladera
+puerto-1	5.7	6.9	175.9	-1.0	1288	57	4640927	5406576	420	7.3	a pie en el centro del patio, mirando al este
+puerto-2	8.1	9.5	123.9	-1.0	3046	75	10161910	14459875	649	10.2	esquina oeste del patio, mirando al centro
+puerto-3	7.6	8.8	132.0	-1.0	3096	73	9378863	13103268	776	9.7	muelle sur mirando al patio
+puerto-4	7.1	8.2	140.3	-1.0	2995	80	7760660	11829134	481	9.2	este del patio, 8 m de altura, panorámica
+
+Punto peor: cerro-2 (calle base al sur, mirando a la ladera)
+== 30 renderers visibles con más triángulos (LOD0 de la malla) ==
+90295	tripo_node_c81d487f	CarroViejo_Cerro_8
+90295	tripo_node_c81d487f	Carros
+90295	tripo_node_c81d487f	CarroViejo_Cerro_2
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	Casa_360
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+70706	tripo_node_81f11750	CC01_CasaCerro
+
+== Renderers por tipo de prop en la zona del punto peor (nombre y cantidad) ==
+Casa	4147
+Techos	730
+Cimiento	636
+Accesos	542
+Pisos	494
+Enlaces	385
+CC_CasaCerro	218
+Calle_Zigzag	169
+Muros	130
+Fachadas	106
+EscalerasLadera	104
+Casas	104
+Detalles	100
+Poste	95
+Azoteas	74
+Calle_Base	70
+Postes	69
+CC_Tendedero	58
+CC_Lavadero	58
+CE_BarandalTuboEscalera	54
+Charco	45
+Ventanas	45
+Acceso_A_Pierna_Oeste	44
+Calle	36
+Props	35
+Neones	33
+Barandal	32
+CE_EscaleraCerro	30
+Acceso_C_Pierna_Oeste	20
+Acceso_D_CalleBase_Oeste_-	18
+Lotes	16
+Calle_U	16
+Menudo	14
+Gente	11
+Carros	9
+CarroViejo_Cerro	8
+Cables	6
+CE_BarandalTubo	6
+Acceso_D_CalleBase_Oeste	6
+Faroles	4
+Neon	3
+Pasillo	2
+LuzNaranja	2
+Paseo	1
+Extra_Cables	1
+Ladera	1
