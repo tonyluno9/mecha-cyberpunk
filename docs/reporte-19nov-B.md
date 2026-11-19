@@ -54,10 +54,9 @@ Con la ronda 8:
   - El build de noviembre medía unas 2.5 veces más que esta prueba del editor, pero no se hizo build.
 
 ## Qué falta
-1. **Verificación final:** se cortó por falta de memoria a las 10:57, a mitad de la corrida, y no se relanzó. Falta:
-   - ZonaPuertoT1442.Aplicar, sobre T1443 r9 ya aplicada;
-   - las pruebas EditMode de las zonas;
-   - los recorridos de PlayMode del Cerro y del Puerto;
+1. **Verificación final:** la corrida en segundo plano se cortó por falta de memoria a las 10:57 y no se relanzó. Después ya se aplicó todo
+   (también ZonaPuertoT1442.Aplicar) y pasaron Validar y EditMode de las zonas (102/102). Falta:
+   - los recorridos de PlayMode del Cerro y del Puerto (contra main: Cerro 6 y Puerto 4 fallas que ya había);
    - el rendimiento y las fotos finales.
 
    Después va el merge --no-ff a main. El orden para correrlo está en docs/progreso-19nov-B.md.
