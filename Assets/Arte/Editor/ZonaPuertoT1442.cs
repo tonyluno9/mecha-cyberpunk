@@ -35,11 +35,12 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly StringBuilder informe = new StringBuilder();
 
         /// <summary>
-        /// Cámara propia de K15 (T-1442): ojos a 1.7 m en la calle de x = 160, junto a la pared de contenedores, mirando por el patio hacia el barco y las grúas del muelle.
-        /// La de T1396 estaba a 2.3 m y 84 m de la esquina; el muelle queda a ~140 m: las grúas (40 m) y el barco se ven a esa distancia sin mover nada del prefab.
+        /// Cámara de K15 (ronda 2): ojos a 1.7 m en el patio sobre el muelle oeste (x 117..183, z -222.4..-237), FUERA de las calles de tránsito, mirando al oeste.
+        /// A la izquierda las pilas de contenedores escalonadas (z -237..-234.6) con el barco PU02 y la grúa nueva detrás (50-60 m); a la derecha la hilera de bodegas (3 m).
         /// </summary>
-        public static readonly Vector3 CamaraK15 = new Vector3(158.6f, 1.7f, -100f);
-        public static readonly Vector3 MiraK15 = new Vector3(168f, 13f, -255f);
+        public static readonly Vector3 CamaraK15 = new Vector3(181.5f, 1.7f, -231.5f);
+        public static readonly Vector3 MiraK15 = new Vector3(118f, 6f, -233f);
+        private const float PatioZFrente = -229.3f, PatioZSur = -237.0f;
 
         private static void Nota(string t)
         {
@@ -181,11 +182,19 @@ namespace MechaCyberpunk.Arte.Editor
                 List<Rect> mios = new List<Rect>();
                 Nota("Huellas ya ocupadas en el prefab (T1357..T1443): " + ocupados.Count);
 
+                // Avenida (ronda 1): se deja, sin luces (las 8 luces son del patio).
                 Escaleras(nuevo, ocupados, mios);
                 Bodegas(raiz.transform, nuevo, o);
-                Charcos(nuevo, o, ocupados, mios);
+                Charcos(nuevo, o, ocupados, mios, "Charcos", Rect.MinMaxRect(154.6f, -205f, 165.4f, -88f), 8, new Vector2(1.8f, 4.8f), new Vector2(1.2f, 3f), false, null);
                 Props(nuevo, ocupados, mios);
-                Gente(nuevo, ocupados, mios);
+                Gente(nuevo, "Gente", 2, ocupados, mios, new System.Random(14422), false);
+                // Patio de K15 (ronda 2).
+                List<float> xLuces = new List<float>();
+                PatioBodegas(nuevo, o, ocupados, mios, xLuces);
+                PatioPilas(nuevo, ocupados, mios);
+                Charcos(nuevo, o, ocupados, mios, "CharcosPatio", Rect.MinMaxRect(121f, -234.2f, 181f, -229.8f), 16, new Vector2(4f, 9f), new Vector2(1.6f, 3.2f), true, xLuces);
+                PatioProps(nuevo, ocupados, mios);
+                Gente(nuevo, "GentePatio", 7, ocupados, mios, new System.Random(14423), true);
                 Muelle(raiz.transform, nuevo, o);
 
                 KitS2c.Terminar(o);
@@ -268,11 +277,11 @@ namespace MechaCyberpunk.Arte.Editor
             return g;
         }
 
-        private static void Escalera(Transform padre, string nombre, Vector3 pie, float alto)
+        private static void Escalera(Transform padre, string nombre, Vector3 pie, float alto, Vector3? dir = null)
         {
             GameObject go = new GameObject(nombre);
             go.transform.SetParent(padre, false);
-            go.transform.SetPositionAndRotation(pie, Quaternion.LookRotation(Vector3.back));
+            go.transform.SetPositionAndRotation(pie, Quaternion.LookRotation(dir ?? Vector3.back));
             PuntoTrepar p = go.AddComponent<PuntoTrepar>();
             SerializedObject so = new SerializedObject(p);
             so.FindProperty("tipo").enumValueIndex = (int)TipoTrepar.Escalera;
@@ -388,16 +397,6 @@ namespace MechaCyberpunk.Arte.Editor
                 GameObject t = KitS2c.Losa(o, padre, "Toldo_" + i, new Vector3(xw + 0.75f, 4.0f, zc), Quaternion.Euler(0f, 0f, -11f), new Vector3(1.6f, 0.07f, ancho), toldo, 1.5f, false);
                 t.name = "Toldo_" + i;
                 KitS2c.Losa(o, padre, "Lampara_" + i, new Vector3(xw + 0.3f, 3.75f, zc - 3.3f), Quaternion.identity, new Vector3(0.5f, 0.14f, 0.7f), lampara, 1f, false);
-                if (luces < 4)
-                {
-                    KitS2c.FocoPared(o, padre, new Vector3(xw + 0.1f, 3.5f, zc + 3.3f), Quaternion.LookRotation(Vector3.left));
-                    Light l = UltimaLuz(padre.GetChild(padre.childCount - 1));
-                    if (l != null)
-                    {
-                        l.color = Naranja;
-                    }
-                    luces++;
-                }
                 Color neon = i % 2 == 0 ? KitS2c.Turquesa : KitS2c.Magenta;
                 KitS2c.Neon(o, padre, new Vector3(xw, 3.2f, zc + (i % 2 == 0 ? 5.2f : -5.2f)), Vector3.right, Vector3.back, neon, true);
                 Transform neonObj = padre.GetChild(padre.childCount - 1);
@@ -406,16 +405,16 @@ namespace MechaCyberpunk.Arte.Editor
                     Object.DestroyImmediate(l.gameObject); // el letrero queda solo con su emisión (el tope de luces es de 8)
                 }
             }
-            Nota("Bodegas del lado oeste con detalle: " + bodegas.Count + " (toldo de lámina, lámpara emisiva, neón emisivo sin luz; " + luces + " focos de pared con luz).");
+            Nota("Bodegas del lado oeste con detalle: " + bodegas.Count + " (toldo de lámina, lámpara emisiva, neón emisivo; sin luces reales).");
         }
 
         // ---------------------------------------------------------------- 3. Charcos con reflejo
 
-        private static void Charcos(Transform nuevo, KitS2c.Obra o, List<Rect> ocupados, List<Rect> mios)
+        private static void Charcos(Transform nuevo, KitS2c.Obra o, List<Rect> ocupados, List<Rect> mios, string grupo, Rect region, int cuantos, Vector2 largoRango, Vector2 anchoRango, bool largoEnX, List<float> xSesgo)
         {
-            Transform padre = new GameObject("Charcos").transform;
+            Transform padre = new GameObject(grupo).transform;
             padre.SetParent(nuevo, false);
-            Mesh quad = new Mesh { name = Raiz + "_Charco" };
+            Mesh quad = new Mesh { name = Raiz + "_" + grupo };
             quad.SetVertices(new[] { new Vector3(-0.5f, -0.5f, 0f), new Vector3(0.5f, -0.5f, 0f), new Vector3(-0.5f, 0.5f, 0f), new Vector3(0.5f, 0.5f, 0f) });
             quad.SetNormals(new[] { Vector3.back, Vector3.back, Vector3.back, Vector3.back });
             quad.SetUVs(0, new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f) });
@@ -423,12 +422,19 @@ namespace MechaCyberpunk.Arte.Editor
             quad.RecalculateBounds();
             o.Mallas.Add(quad);
             int puestos = 0;
-            for (int i = 0; i < 60 && puestos < 26; i++)
+            for (int i = 0; i < cuantos * 6 && puestos < cuantos; i++)
             {
-                Vector3 p = new Vector3(o.Rango(154.6f, 165.4f), 0f, o.Rango(-88f, -205f));
-                float largo = o.Rango(1.8f, 4.8f), anchoC = o.Rango(1.2f, 3.0f), giro = o.Rango(0f, 180f);
-                Rect h = Rect.MinMaxRect(p.x - anchoC * 0.5f, p.z - largo * 0.5f, p.x + anchoC * 0.5f, p.z + largo * 0.5f);
-                if (!Libre(h, ocupados, mios))
+                float x = o.Rango(region.xMin, region.xMax);
+                if (xSesgo != null && xSesgo.Count > 0 && puestos % 2 == 0)
+                {
+                    x = Mathf.Clamp(o.Uno(xSesgo) + o.Rango(-2f, 2f), region.xMin, region.xMax); // donde pega la luz de lámparas y neones
+                }
+                Vector3 p = new Vector3(x, 0f, o.Rango(region.yMin, region.yMax));
+                float largo = o.Rango(largoRango.x, largoRango.y), anchoC = o.Rango(anchoRango.x, anchoRango.y);
+                float giro = largoEnX ? 90f + o.Rango(-15f, 15f) : o.Rango(0f, 180f);
+                float semiX = largoEnX ? largo * 0.5f : anchoC * 0.5f, semiZ = largoEnX ? anchoC * 0.5f : largo * 0.5f;
+                Rect h = Rect.MinMaxRect(p.x - semiX, p.z - semiZ, p.x + semiX, p.z + semiZ);
+                if (!Libre(Expandir(h, -0.4f), ocupados, mios))
                 {
                     continue;
                 }
@@ -453,7 +459,7 @@ namespace MechaCyberpunk.Arte.Editor
                 q.AddComponent<CharcoVisible>();
                 puestos++;
             }
-            Nota("Charcos con reflejo (shader MechaCyberpunk/Mundo/Charco y materiales S2c_Charco_0..3 del proyecto, sin editarlos): " + puestos);
+            Nota(grupo + ": " + puestos + " charcos con reflejo (shader y materiales S2c_Charco del proyecto, sin editarlos).");
         }
 
         // ---------------------------------------------------------------- 4. Props y gente
@@ -519,27 +525,24 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            // Dos reflectores de sodio sobre los montacargas más cercanos a la cámara (luces reales, sin sombras).
-            foreach (Vector3 m in montacargas.OrderByDescending(v => v.z).Take(2))
-            {
-                KitS2c.Luz(padre, m + new Vector3(0f, 6.5f, 0f), LightType.Spot, Naranja, 420f, 18f, 100f, Vector3.down);
-            }
-            Nota("Props de piso (montacargas, pallets, tambos, huacales) al borde de la calle (fuera de los 8.4 m centrales): " + total + "; reflectores de sodio: " + Mathf.Min(2, montacargas.Count));
+            Nota("Props de piso (montacargas, pallets, tambos, huacales) al borde de la calle (fuera de los 8.4 m centrales): " + total + "");
         }
 
-        private static void Gente(Transform nuevo, List<Rect> ocupados, List<Rect> mios)
+        private static void Gente(Transform nuevo, string grupo, int cuantos, List<Rect> ocupados, List<Rect> mios, System.Random azar, bool patio)
         {
-            Transform padre = new GameObject("Gente").transform;
+            Transform padre = new GameObject(grupo).transform;
             padre.SetParent(nuevo, false);
-            System.Random azar = new System.Random(14422);
             string[] modelos =
             {
                 "NP11_Estibador/NP11_Estibador_a", "NP11_Estibador/NP11_Estibador_b", "NP11_Estibador/NP11_Estibador_a", "NP11_Estibador/NP11_Estibador_b",
-                "NP11_Estibador/NP11_Estibador_a", "NP11_Estibador/NP11_Estibador_b", "NP13_Repartidor/NP13_Repartidor_a", "NP07_Pescador/NP07_Pescador_b",
+                "NP13_Repartidor/NP13_Repartidor_a", "NP11_Estibador/NP11_Estibador_a", "NP07_Pescador/NP07_Pescador_b", "NP11_Estibador/NP11_Estibador_b",
             };
             int puestos = 0;
-            foreach (string m in modelos)
+            for (int k = 0; k < cuantos; k++)
             {
+                string m = modelos[k % modelos.Length];
+                string carpeta = "Assets/Arte/Personajes/" + m.Substring(0, m.IndexOf('/'));
+                string nombre = Path.GetFileName(m);
                 string ruta = "Assets/Arte/Personajes/" + m;
                 GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(ruta + ".fbx");
                 RuntimeAnimatorController ctl = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(ruta + ".controller");
@@ -548,18 +551,27 @@ namespace MechaCyberpunk.Arte.Editor
                     Nota("FALTA " + ruta + ".fbx: se omite.");
                     continue;
                 }
-                for (int intento = 0; intento < 40; intento++)
+                for (int intento = 0; intento < 60; intento++)
                 {
-                    bool oeste = azar.Next(2) == 0;
-                    float x = oeste ? 154.7f + (float)azar.NextDouble() * 1.2f : 164.2f + (float)azar.NextDouble() * 1.4f;
-                    float z = -88f - (float)azar.NextDouble() * 110f;
+                    float x, z;
+                    if (patio)
+                    {
+                        x = 124f + (float)azar.NextDouble() * 54f;
+                        z = azar.Next(2) == 0 ? -230.4f - (float)azar.NextDouble() * 0.6f : -233.2f - (float)azar.NextDouble() * 0.5f;
+                    }
+                    else
+                    {
+                        bool oeste = azar.Next(2) == 0;
+                        x = oeste ? 154.7f + (float)azar.NextDouble() * 1.2f : 164.2f + (float)azar.NextDouble() * 1.4f;
+                        z = -88f - (float)azar.NextDouble() * 110f;
+                    }
                     Rect h = Rect.MinMaxRect(x - 0.4f, z - 0.4f, x + 0.4f, z + 0.4f);
-                    if (EnCalle(h) || !Libre(h, ocupados, mios))
+                    if ((!patio && EnCalle(h)) || !Libre(h, ocupados, mios))
                     {
                         continue;
                     }
                     GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(fbx, padre);
-                    go.name = Path.GetFileName(ruta) + "_" + puestos;
+                    go.name = nombre + "_" + puestos;
                     go.transform.SetPositionAndRotation(new Vector3(x, 0f, z), Quaternion.Euler(0f, (float)azar.NextDouble() * 360f, 0f));
                     foreach (Collider c in go.GetComponentsInChildren<Collider>(true))
                     {
@@ -575,16 +587,314 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         an.runtimeAnimatorController = ctl;
                     }
-                    else
-                    {
-                        Nota("AVISO: sin controller para " + ruta);
-                    }
+                    ArreglarBlanco(go, carpeta, nombre);
+                    PoseDe(go, ctl, azar);
                     mios.Add(h);
                     puestos++;
                     break;
                 }
             }
-            Nota("Gente (sin collider, con su Animator, pivote en los pies a y = 0): " + puestos + " de " + modelos.Length);
+            Nota(grupo + ": " + puestos + " de " + cuantos + " personas (sin collider, con Animator, material Base explícito y pose muestreada; pivote en los pies a y = 0).");
+        }
+
+        /// <summary>Los fbx de NP salen blancos si no traen su material: se asigna NP*_Base.mat (o una copia mía si su textura base falta) a toda ranura vacía o sin textura.</summary>
+        private static void ArreglarBlanco(GameObject go, string carpeta, string nombre)
+        {
+            Material baseMat = AssetDatabase.LoadAssetAtPath<Material>(carpeta + "/Materiales/" + nombre + "_Base.mat");
+            if (baseMat == null)
+            {
+                Nota("AVISO: no existe " + carpeta + "/Materiales/" + nombre + "_Base.mat");
+                return;
+            }
+            Material usar = baseMat;
+            string prop = baseMat.HasProperty("_BaseMap") ? "_BaseMap" : "_MainTex";
+            if (baseMat.GetTexture(prop) == null)
+            {
+                string[] rutas = AssetDatabase.FindAssets("t:Texture2D", new[] { carpeta + "/Texturas" }).Select(AssetDatabase.GUIDToAssetPath).ToArray();
+                string elegida = rutas.FirstOrDefault(r => Path.GetFileName(r).ToLowerInvariant().Contains("base") && r.Contains(nombre))
+                    ?? rutas.FirstOrDefault(r => r.Contains(nombre) && !Path.GetFileName(r).ToLowerInvariant().Contains("normal")) ?? rutas.FirstOrDefault();
+                Texture2D tex = elegida == null ? null : AssetDatabase.LoadAssetAtPath<Texture2D>(elegida);
+                if (tex == null)
+                {
+                    Nota("AVISO: " + nombre + " no tiene textura base en " + carpeta + "/Texturas; queda con su color.");
+                }
+                else
+                {
+                    usar = Mat("T1442_" + nombre + "_Base", () =>
+                    {
+                        Material c = new Material(baseMat);
+                        c.SetTexture(prop, tex);
+                        return c;
+                    });
+                    Nota("Material de " + nombre + ": copia propia con textura " + elegida);
+                }
+            }
+            foreach (Renderer r in go.GetComponentsInChildren<Renderer>(true))
+            {
+                Material[] ms = r.sharedMaterials;
+                for (int i = 0; i < ms.Length; i++)
+                {
+                    if (ms[i] == null || !ms[i].HasProperty("_BaseMap") || ms[i].GetTexture("_BaseMap") == null)
+                    {
+                        ms[i] = usar;
+                    }
+                }
+                r.sharedMaterials = ms;
+            }
+        }
+
+        /// <summary>El Animator no corre en el editor (salen en pose T): se muestrea un clip de trabajo o idle del controller para dejar la pose guardada.</summary>
+        private static void PoseDe(GameObject go, RuntimeAnimatorController ctl, System.Random azar)
+        {
+            if (ctl == null)
+            {
+                return;
+            }
+            AnimationClip[] clips = ctl.animationClips;
+            if (clips == null || clips.Length == 0)
+            {
+                Nota("AVISO: el controller de " + go.name + " no tiene clips.");
+                return;
+            }
+            AnimationClip clip = clips.FirstOrDefault(c => { string n = c.name.ToLowerInvariant(); return n.Contains("trabaj") || n.Contains("carg") || n.Contains("work"); })
+                ?? clips.FirstOrDefault(c => c.name.ToLowerInvariant().Contains("idle")) ?? clips[0];
+            clip.SampleAnimation(go, clip.length * (float)azar.NextDouble());
+        }
+
+        // ---------------------------------------------------------------- 4b. Patio de K15 (ronda 2)
+
+        private static float YawX(GameObject prefab, Transform padre)
+        {
+            string clave = prefab.name + "_X";
+            if (yawCache.TryGetValue(clave, out float ya))
+            {
+                return ya;
+            }
+            float yaw = 0f;
+            MethodInfo mi = typeof(ZonaPuertoT1396).GetMethod("CaraGrafiti", BindingFlags.NonPublic | BindingFlags.Static);
+            if (prefab.name.StartsWith("PU08") && mi != null)
+            {
+                object[] args = { prefab, padre, null, null, null };
+                mi.Invoke(null, args);
+                Vector3 cara = (Vector3)args[2];
+                bool largoEnX = (bool)args[3];
+                for (float y = 0f; y < 360f; y += 90f)
+                {
+                    Quaternion q = Quaternion.Euler(0f, y, 0f);
+                    Vector3 largo = q * (largoEnX ? Vector3.right : Vector3.forward);
+                    if (Mathf.Abs(largo.x) > 0.9f && Vector3.Dot(q * cara, Vector3.forward) > 0.9f)
+                    {
+                        yaw = y; // eje largo en x y la cara con grafiti al norte (hacia el pasillo)
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+                g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                Bounds b = Limites(g.transform);
+                yaw = b.size.x > b.size.z ? 0f : 90f;
+                Object.DestroyImmediate(g);
+            }
+            yawCache[clave] = yaw;
+            return yaw;
+        }
+
+        private static GameObject PonerContX(Transform padre, GameObject prefab, string nombre, float xCentro, float zCentro, float yBase)
+        {
+            GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            g.name = nombre;
+            g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, YawX(prefab, padre), 0f));
+            g.transform.localScale = Vector3.one;
+            Bounds b0 = Limites(g.transform);
+            float sx = ColocarT1357Puerto.LargoCont / b0.size.x, sy = ColocarT1357Puerto.AltoCont / b0.size.y, sz = ColocarT1357Puerto.AnchoCont / b0.size.z;
+            float menor = Mathf.Min(sx, sy, sz);
+            g.transform.localScale = (menor < 0.8f || Mathf.Max(sx, sy, sz) > 1.25f) ? Vector3.one * menor : new Vector3(sx, sy, sz);
+            Bounds b = Limites(g.transform);
+            g.transform.position += new Vector3(xCentro - b.center.x, yBase - b.min.y, zCentro - b.center.z);
+            BugsZonasT1410.AsegurarColliderYBarril(g);
+            return g;
+        }
+
+        private static void PatioBodegas(Transform nuevo, KitS2c.Obra o, List<Rect> ocupados, List<Rect> mios, List<float> xLuces)
+        {
+            Transform padre = new GameObject("PatioBodegas").transform;
+            padre.SetParent(nuevo, false);
+            string[] codigos = { "PU03_Bodega", "PU04_Bodega", "PU03_Bodega" };
+            float[] xs = { 170.5f, 150.5f, 130.5f };
+            Material toldo = Mat("T1442_Toldo", () => KitS2c.Lit(new Color(0.78f, 0.4f, 0.14f), 0.25f, KitS2c.TexMuro()));
+            Material lampara = Emisivo("T1442_LamparaNaranja", Naranja, 4f);
+            List<Bounds> puestas = new List<Bounds>();
+            for (int i = 0; i < codigos.Length; i++)
+            {
+                GameObject prefab = BuscarPrefab(codigos[i]);
+                if (prefab == null)
+                {
+                    Nota("FALTA " + codigos[i] + ": se omite la bodega del patio " + i);
+                    continue;
+                }
+                GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+                go.name = "Bodega_" + i;
+                go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, 180f, 0f)); // frente hacia -z, como la hilera norte de T1357
+                go.transform.localScale = Vector3.one;
+                Bounds b0 = Limites(go.transform);
+                go.transform.localScale = Vector3.one * Mathf.Min(19f / b0.size.x, 7f / b0.size.z);
+                Bounds b = Limites(go.transform);
+                go.transform.position += new Vector3(xs[i] - b.center.x, -b.min.y, PatioZFrente - b.min.z);
+                b = Limites(go.transform);
+                Rect h = Huella(b);
+                if (!Libre(h, ocupados, mios))
+                {
+                    Object.DestroyImmediate(go);
+                    Nota("Bodega del patio " + i + " en x " + xs[i] + ": hay algo (T1443 u otro); se omite.");
+                    continue;
+                }
+                mios.Add(h);
+                puestas.Add(b);
+                float zf = b.min.z, xc = b.center.x;
+                float yToldo = Mathf.Clamp(b.size.y * 0.62f, 3.7f, 4.4f);
+                KitS2c.Losa(o, padre, "Toldo_" + i, new Vector3(xc, yToldo, zf - 0.75f), Quaternion.Euler(-11f, 0f, 0f), new Vector3(Mathf.Min(8f, b.size.x * 0.45f), 0.07f, 1.6f), toldo, 1.5f, false);
+                KitS2c.Losa(o, padre, "Lampara_" + i, new Vector3(xc - 3.3f, yToldo - 0.3f, zf - 0.35f), Quaternion.identity, new Vector3(0.7f, 0.14f, 0.5f), lampara, 1f, false);
+                KitS2c.FocoPared(o, padre, new Vector3(xc + 3.3f, yToldo - 0.4f, zf - 0.1f), Quaternion.LookRotation(Vector3.forward));
+                Light l = UltimaLuz(padre.GetChild(padre.childCount - 1));
+                if (l != null)
+                {
+                    l.color = Naranja;
+                }
+                float xNeon = xc + (i % 2 == 0 ? 5.5f : -5.5f);
+                KitS2c.Neon(o, padre, new Vector3(xNeon, 3.2f, zf), Vector3.back, Vector3.Cross(Vector3.up, Vector3.back), i % 2 == 0 ? KitS2c.Magenta : KitS2c.Turquesa, true);
+                foreach (Light ln in padre.GetChild(padre.childCount - 1).GetComponentsInChildren<Light>(true).ToList())
+                {
+                    Object.DestroyImmediate(ln.gameObject); // neón solo con emisión
+                }
+                xLuces.Add(xc - 3.3f);
+                xLuces.Add(xc + 3.3f);
+                xLuces.Add(xNeon);
+            }
+            // Postes de madera con lámpara frente a las bodegas y cables entre ellos y a las fachadas.
+            List<Vector3> puntas = new List<Vector3>();
+            foreach (float x in new[] { 176.5f, 151f })
+            {
+                Vector3 pie = new Vector3(x, 0f, PatioZFrente - 1.0f);
+                Rect h = Rect.MinMaxRect(pie.x - 0.4f, pie.z - 0.4f, pie.x + 0.4f, pie.z + 0.4f);
+                if (!Libre(h, ocupados, mios))
+                {
+                    Nota("Poste del patio en x " + x + ": hay algo; no se pone.");
+                    continue;
+                }
+                puntas.Add(KitS2c.Poste(o, padre, pie, Vector3.back, 0f, true));
+                mios.Add(h);
+            }
+            int cables = 0;
+            for (int k = 0; k < puntas.Count; k++)
+            {
+                if (k + 1 < puntas.Count)
+                {
+                    foreach (float dy in new[] { 0f, -0.5f, -1f, 0.4f })
+                    {
+                        KitS2c.Cable(o, puntas[k] + Vector3.up * dy, puntas[k + 1] + Vector3.up * dy, 1.0f);
+                        cables++;
+                    }
+                }
+                foreach (Bounds b in puestas.Where(x => Mathf.Abs(x.center.x - puntas[k].x) < 22f))
+                {
+                    float yFin = Mathf.Min(6.0f, b.max.y - 0.5f);
+                    foreach (float dx in new[] { -0.4f, 0.4f })
+                    {
+                        KitS2c.Cable(o, puntas[k] + Vector3.right * dx, new Vector3(b.center.x + dx * 6f, yFin, b.min.z - 0.05f), 1.1f);
+                        cables++;
+                    }
+                }
+            }
+            Nota("Patio: " + puestas.Count + " bodegas PU03/PU04 (frente a z " + PatioZFrente + ", escala para 19 m de ancho y 7 de fondo), " + puntas.Count + " postes, " + cables + " cables; toldos, lámparas y neones.");
+        }
+
+        private static void PatioPilas(Transform nuevo, List<Rect> ocupados, List<Rect> mios)
+        {
+            Transform padre = new GameObject("PatioContenedores").transform;
+            padre.SetParent(nuevo, false);
+            string[] codigos = { "PU08_ContenedorGraffiti_a", "PT01_Contenedor40_Naranja", "PU08_ContenedorGraffiti_b", "PT01_Contenedor40_Azul", "PT01_Contenedor40_Rojo", "PT01_Contenedor40_Verde" };
+            List<GameObject> prefabs = codigos.Select(BuscarPrefab).Where(p => p != null).ToList();
+            if (prefabs.Count == 0)
+            {
+                Nota("Patio: no hay prefabs de contenedor.");
+                return;
+            }
+            float largo = ColocarT1357Puerto.LargoCont, alto = ColocarT1357Puerto.AltoCont, ancho = ColocarT1357Puerto.AnchoCont;
+            float zc = PatioZSur + ancho * 0.5f, zNorte = PatioZSur + ancho;
+            (float x0, int[] alturas)[] unidades = { (117.8f, new[] { 1, 2 }), (142.6f, new[] { 1, 2, 3 }) };
+            int u = 0, color = 0, total = 0;
+            foreach ((float x0, int[] alturas) in unidades)
+            {
+                List<Rect> rects = new List<Rect>();
+                for (int i = 0; i < alturas.Length; i++)
+                {
+                    float xa = x0 + i * (largo + 0.04f);
+                    rects.Add(Rect.MinMaxRect(xa, PatioZSur, xa + largo, zNorte));
+                }
+                Rect escalera = Rect.MinMaxRect(x0, zNorte, x0 + largo, zNorte + 0.95f);
+                if (rects.Any(r => !Libre(r, ocupados, mios)) || !Libre(escalera, ocupados, mios))
+                {
+                    Nota("Pila del patio " + u + " (x " + x0 + "): hay algo (T1443 u otro); se omite.");
+                    u++;
+                    continue;
+                }
+                for (int i = 0; i < alturas.Length; i++)
+                {
+                    float yBase = 0f;
+                    for (int n = 0; n < alturas[i]; n++)
+                    {
+                        GameObject g = PonerContX(padre, prefabs[color % prefabs.Count], "Cont_p" + u + "_" + i + "_" + n, rects[i].center.x, zc, yBase);
+                        color++;
+                        total++;
+                        yBase = Limites(g.transform).max.y;
+                    }
+                    mios.Add(rects[i]);
+                }
+                mios.Add(escalera);
+                Escalera(padre, "Escalera_Suelo_" + u, new Vector3(x0 + largo * 0.5f, 0f, zNorte + 0.3f), alto, Vector3.back);
+                for (int i = 0; i + 1 < alturas.Length; i++)
+                {
+                    Escalera(padre, "Escalera_Fila_" + u + "_" + i, new Vector3(rects[i].xMax - 0.25f, alturas[i] * alto, zc), alto, Vector3.right);
+                }
+                Nota("Pila del patio " + u + " con alturas " + string.Join("-", alturas) + " desde x " + x0 + " (sube de oeste a este; escalera al suelo por el norte y una por escalón).");
+                u++;
+            }
+            Nota("Contenedores del patio (colores y grafiti): " + total);
+        }
+
+        private static void PatioProps(Transform nuevo, List<Rect> ocupados, List<Rect> mios)
+        {
+            Transform padre = new GameObject("PatioProps").transform;
+            padre.SetParent(nuevo, false);
+            System.Random azar = new System.Random(14424);
+            int montacargas = 0, total = 0;
+            foreach (Vector2 xz in new[] { new Vector2(166f, -231.9f), new Vector2(141f, -232.3f) })
+            {
+                GameObject g = Poner(padre, "PU05_Montacargas", 2.6f, xz, (float)azar.NextDouble() * 360f, ocupados, mios, true);
+                if (g != null)
+                {
+                    montacargas++;
+                    KitS2c.Luz(padre, g.transform.position + Vector3.up * 6.5f, LightType.Spot, Naranja, 420f, 18f, 100f, Vector3.down);
+                }
+            }
+            (string codigo, float alto, int cuantos)[] lista = { ("PU06_Pallets", 1.2f, 6), ("C16_Tambo", 1.0f, 7), ("C17_Huacales", 1.0f, 5) };
+            foreach ((string codigo, float alto, int cuantos) in lista)
+            {
+                int puestos = 0;
+                for (int intento = 0; intento < 80 && puestos < cuantos; intento++)
+                {
+                    float x = 120f + (float)azar.NextDouble() * 59f;
+                    float z = azar.Next(2) == 0 ? -230.2f - (float)azar.NextDouble() * 0.5f : -233.6f + (float)azar.NextDouble() * 0.8f;
+                    if (Poner(padre, codigo, alto, new Vector2(x, z), (float)azar.NextDouble() * 360f, ocupados, mios, true) != null)
+                    {
+                        puestos++;
+                        total++;
+                    }
+                }
+            }
+            Nota("Patio: " + montacargas + " montacargas (con reflector de sodio cada uno) y " + total + " pallets, tambos y huacales con collider.");
         }
 
         // ---------------------------------------------------------------- 5. Barco y grúas con luces emisivas
@@ -671,7 +981,39 @@ namespace MechaCyberpunk.Arte.Editor
             }
             int gruas = 0;
             int balizasGruas = 0;
-            foreach (Transform g in muelle.Cast<Transform>().Where(t => t.gameObject.activeInHierarchy && t.name.StartsWith("PU01_Grua")))
+            List<Transform> todasGruas = muelle.Cast<Transform>().Where(t => t.gameObject.activeInHierarchy && t.name.StartsWith("PU01_Grua")).ToList();
+            // Grúa nueva en el muelle oeste (copia de una existente, 45 m al oeste de la más occidental) para que haya una a ~55 m de la cámara de K15.
+            if (todasGruas.Count > 0)
+            {
+                Transform modelo = todasGruas.OrderBy(t => Limites(t).center.x).First();
+                GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(modelo.gameObject);
+                if (fuente == null)
+                {
+                    Nota("Grúa nueva: la grúa " + modelo.name + " no es instancia de prefab; no se copia.");
+                }
+                else
+                {
+                    GameObject nueva = (GameObject)PrefabUtility.InstantiatePrefab(fuente, padre);
+                    nueva.name = "PU01_Grua_Nueva";
+                    nueva.transform.SetPositionAndRotation(modelo.position, modelo.rotation);
+                    nueva.transform.localScale = modelo.lossyScale;
+                    float xNueva = Limites(modelo).center.x - 45f;
+                    Bounds bn = Limites(nueva.transform);
+                    nueva.transform.position += new Vector3(xNueva - bn.center.x, 0f, 0f);
+                    Rect hn = Huella(Limites(nueva.transform));
+                    if (todasGruas.Any(t => Huella(Limites(t)).Overlaps(hn)) || hn.xMin < 116f)
+                    {
+                        Object.DestroyImmediate(nueva);
+                        Nota("Grúa nueva: no cabe en x " + xNueva.ToString("F0") + " (choca con otra grúa o sale del patio); se omite.");
+                    }
+                    else
+                    {
+                        todasGruas.Add(nueva.transform);
+                        Nota("Grúa nueva PU01_Grua_Nueva en x " + xNueva.ToString("F0") + ", misma z, y y escala que " + modelo.name + ".");
+                    }
+                }
+            }
+            foreach (Transform g in todasGruas)
             {
                 gruas++;
                 Bounds b = Limites(g);
@@ -733,12 +1075,12 @@ namespace MechaCyberpunk.Arte.Editor
 
                     // Piezas de piso: contenedores y props (con collider) de mi raíz.
                     List<Transform> suelo = new List<Transform>();
-                    foreach (string g in new[] { "Contenedores", "Props" })
+                    foreach (string g in new[] { "Contenedores", "Props", "PatioContenedores", "PatioProps", "PatioBodegas" })
                     {
                         Transform grupo = mia.Find(g);
                         if (grupo != null)
                         {
-                            suelo.AddRange(grupo.Cast<Transform>().Where(t => t.GetComponent<PuntoTrepar>() == null));
+                            suelo.AddRange(grupo.Cast<Transform>().Where(t => t.GetComponent<PuntoTrepar>() == null && (g != "PatioBodegas" || t.name.StartsWith("Bodega_"))));
                         }
                     }
                     List<Bounds> cajas = suelo.Select(Limites).ToList();
