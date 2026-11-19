@@ -19,7 +19,7 @@ TMP = os.path.join(tempfile.gettempdir(), "t1381_src")
 
 # altura real (m) por codigo
 ALTURA = {
-    'E15': 1.85, 'E16': 2.45, 'E17': 0.85, 'E18': 1.90, 'E19': 1.78, 'E20': 1.88,
+    'E15': 1.85, 'E16': 2.45, 'E17': 0.90, 'E18': 1.90, 'E19': 1.78, 'E20': 1.88,
     'NP07': 1.72, 'NP08': 1.75, 'NP09': 1.78, 'NP10': 1.65, 'NP11': 1.82, 'NP12': 1.55,
     'NP13': 1.72, 'NP14': 1.75,
 }
@@ -148,7 +148,7 @@ def _orden(arm):
     return out
 
 
-def poner_pose(arm, deltas, hips_mov=None):
+def poner_pose(arm, deltas, hips_mov=None, raiz=None):
     """deltas: {hueso: Matrix3 de rotacion en MUNDO respecto a su reposo}. Resto = reposo (hijos siguen al padre).
     hips_mov: Vector desplazamiento de Hips en mundo."""
     Aw3 = arm.matrix_world.to_3x3().normalized()
@@ -174,9 +174,10 @@ def poner_pose(arm, deltas, hips_mov=None):
         pb.location = (0, 0, 0)
         poseR[b.name] = Ra
     if hips_mov is not None:
-        hb = arm.data.bones[PRE + 'Hips']
+        raiz = raiz or (PRE + 'Hips')
+        hb = arm.data.bones[raiz]
         dl = (hb.matrix_local.to_3x3().normalized().inverted() @ (Aw3i @ hips_mov))
-        arm.pose.bones[PRE + 'Hips'].location = dl
+        arm.pose.bones[raiz].location = dl
     bpy.context.view_layer.update()
 
 
@@ -320,7 +321,7 @@ def vistas(me, arm, prefijo, vistas_=('frente', 'lado'), esq=False, xray=False):
     sk = esqueleto_visible(arm, radio=0.004 * alt / 1.8) if (esq and arm) else None
     for v in vistas_:
         d = {'frente': (0, -1, 0), 'lado': (1, 0, 0), 'atras': (0, 1, 0), '34': (-0.7, -0.7, 0.25)}[v]
-        camara(sc, c, max(alt * 1.15, (mx.x - mn.x) * 1.1), d)
+        camara(sc, c, max(alt * 1.15, (mx.x - mn.x) * 1.1, (mx.y - mn.y) * 1.1), d)
         renderizar(sc, prefijo + "_" + v + ".png")
     if sk:
         bpy.data.objects.remove(sk, do_unlink=True)
