@@ -133,8 +133,8 @@ namespace MechaCyberpunk.Arte.Editor
             tramos = new List<Tramo>
             {
                 // Corredores sur: del barrio (z -130) a la avenida del Malecón (z -218). Hacia el sur cambia de barrio a Malecón.
-                new Tramo { Nombre = "U1", Pts = new[] { V(-47f, -130f), V(-47f, -218f) }, IzqA = "Barrio", IzqB = "Malecon", DerA = "Barrio", DerB = "Malecon", Corte = 70f, Carros = 3, CosturaFin = true },
-                new Tramo { Nombre = "U2", Pts = new[] { V(47f, -130f), V(47f, -218f) }, IzqA = "Barrio", IzqB = "Malecon", DerA = "Barrio", DerB = "Malecon", Corte = 70f, Carros = 3, CosturaFin = true },
+                new Tramo { Nombre = "U1", Pts = new[] { V(-47f, -130f), V(-47f, -218f) }, IzqA = "Barrio", IzqB = "Malecon", DerA = "Barrio", DerB = "Malecon", Corte = 70f, Carros = 0, CosturaFin = true },
+                new Tramo { Nombre = "U2", Pts = new[] { V(47f, -130f), V(47f, -218f) }, IzqA = "Barrio", IzqB = "Malecon", DerA = "Barrio", DerB = "Malecon", Corte = 70f, Carros = 0, CosturaFin = true },
                 // U3: del Malecón (-300, -205) a la calle base del Cerro.
                 new Tramo { Nombre = "U3", Pts = new[] { V(-300f, -205f), V(-330f, -150f), V(-305f, -120f) }, IzqA = "Malecon", IzqB = "Cerro", DerA = "Malecon", DerB = "Cerro", Corte = 35f, Carros = 2, CosturaIni = true, CosturaFin = true },
                 // U4: del corredor oeste a la calle base. Calle oeste (x -242) y calle base (x -305).

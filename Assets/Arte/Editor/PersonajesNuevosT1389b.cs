@@ -68,7 +68,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Todas las variantes que hay en imageassets/blender/personajes/ (E19_a se omite: es la misma malla que E20_a).</summary>
         public static readonly string[] Variantes =
         {
-            "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a", "E16_RobotPesadoNova_b", "E17_PerroRobotNova_a", "E18_EliteNova_a",
+            "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a", "E17_PerroRobotNova_a", "E18_EliteNova_a",
             "E19_PandilleroSkulls_a_2", "E19_PandilleroSkulls_b", "E20_MatonSkulls_a", "E20_MatonSkulls_b",
             "NP07_Pescador_a", "NP07_Pescador_b", "NP08_Turista_a", "NP08_Turista_b", "NP09_Corredor_a", "NP09_Corredor_b", "NP10_Elotero_a",
             "NP11_Estibador_a", "NP11_Estibador_b", "NP12_Abuela_a", "NP13_Repartidor_a", "NP13_Repartidor_b", "NP14_Oficinista_a", "NP14_Oficinista_b",
@@ -85,7 +85,7 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly string[] GuardiasNova = { "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E18_EliteNova_a" };
 
         /// <summary>Variantes de guardia pesado de Nova (robot pesado E16).</summary>
-        public static readonly string[] PesadosNova = { "E16_RobotPesadoNova_a", "E16_RobotPesadoNova_b" };
+        public static readonly string[] PesadosNova = { "E16_RobotPesadoNova_a" };
 
         /// <summary>Variantes de pandillero SKULLS (E19 y E20).</summary>
         public static readonly string[] Skulls = { "E19_PandilleroSkulls_a_2", "E19_PandilleroSkulls_b", "E20_MatonSkulls_a", "E20_MatonSkulls_b" };
