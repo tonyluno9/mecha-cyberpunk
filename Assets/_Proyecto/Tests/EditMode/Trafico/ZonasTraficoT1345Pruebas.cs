@@ -82,7 +82,7 @@ namespace MechaCyberpunk.Tests
         {
             ConfigCarrosZonas config = Resources.Load<ConfigCarrosZonas>("ConfigCarrosZonas");
             Assert.IsNotNull(config);
-            Assert.AreEqual(6, config.Zonas.Count);
+            Assert.GreaterOrEqual(config.Zonas.Count, 6); // T-1389a suma Autopista y Cerro
             foreach (string nombre in new[] { "Deshuesadero", "Malecon", "NeonAlto", "LasLomas", "Avenida", "Puerto" })
             {
                 ConfigCarrosZonas.Zona z = config.Buscar(nombre);

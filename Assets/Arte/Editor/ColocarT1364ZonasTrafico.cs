@@ -58,7 +58,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         /// <summary>
         /// Las cajas de las zonas. Malecón se corta en x = 115 (ahí empieza el Puerto); la cubierta de la autopista (y 8..20) queda sobre el Deshuesadero (y -2..7.5);
-        /// la rampa este (x 280..320) es Avenida de piso a techo; Neón Alto y la avenida central no se tocan (47 / 46.5); Las Lomas empieza en z = 88.5.
+        /// la rampa este (x 280..320) y la cubierta son Autopista (T-1389a); el Cerro (x -480..-295) acaba en z 204.5 para no tocar el Deshuesadero; Neón Alto y la avenida central no se tocan (47 / 46.5); Las Lomas empieza en z = 88.5.
         /// </summary>
         public static readonly Caja[] Cajas =
         {
@@ -66,12 +66,13 @@ namespace MechaCyberpunk.Arte.Editor
             new Caja("Puerto", "ZonaTrafico_Puerto", new Vector3(115.5f, -5f, -250f), new Vector3(330f, 15f, -45f)),
             new Caja("NeonAlto", "ZonaTrafico_NeonAlto", new Vector3(47f, -2f, 0f), new Vector3(135f, 12f, 88f)),
             new Caja("NeonAlto", "ZonaTrafico_NeonAlto_CorredorEste", new Vector3(135.5f, -2f, -14f), new Vector3(280f, 12f, 14f)),
-            new Caja("Avenida", "ZonaTrafico_Avenida_Autopista", new Vector3(-330f, 8f, 235f), new Vector3(280f, 20f, 265f)),
-            new Caja("Avenida", "ZonaTrafico_Avenida_RampaEste", new Vector3(280.5f, -2f, 60f), new Vector3(320f, 20f, 265f)),
+            new Caja("Autopista", "ZonaTrafico_Autopista", new Vector3(-330f, 8f, 235f), new Vector3(280f, 20f, 265f)),
+            new Caja("Autopista", "ZonaTrafico_Autopista_RampaEste", new Vector3(280.5f, -2f, 60f), new Vector3(320f, 20f, 265f)),
             new Caja("Avenida", "ZonaTrafico_Avenida_Centro", new Vector3(-250f, -2f, -14f), new Vector3(46.5f, 6f, 14f)),
             new Caja("Deshuesadero", "ZonaTrafico_Deshuesadero", new Vector3(-330f, -2f, 205f), new Vector3(280f, 7.5f, 290f)),
             new Caja("LasLomas", "ZonaTrafico_LasLomas_Oeste", new Vector3(-57f, -2f, 88.5f), new Vector3(-37f, 12f, 201f)),
             new Caja("LasLomas", "ZonaTrafico_LasLomas_Este", new Vector3(37f, -2f, 88.5f), new Vector3(57f, 12f, 201f)),
+            new Caja("Cerro", "ZonaTrafico_Cerro", new Vector3(-480f, -20f, -170f), new Vector3(-295f, 60f, 204.5f)),
         };
 
         /// <summary>El nombre de zona del punto según la lista (la primera caja que lo contiene), o null. Función pura: la misma regla que ZonaTrafico.De.</summary>
