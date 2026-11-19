@@ -41,6 +41,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const float ExposicionNeonAlto = 0.8f;
         /// <summary>Para revisar: guarda la textura del reflejo de los charcos de cada foto en Logs/reflejo-*.png.</summary>
         public static bool GuardarReflejo = true;
+        /// <summary>Far clip de la cámara de las fotos (600 m hasta T-1392; el skyline SK01 está a 900 m, y la cámara del jugador usa 1000).</summary>
+        public static float LejosFoto = 600f;
         public static readonly Color AmbienteNoche = new Color(0.36f, 0.37f, 0.44f);
         public static readonly Color NubesDomo = new Color(0.06f, 0.08f, 0.14f);
         public static readonly Color BrilloCiudad = new Color(0.24f, 0.3f, 0.42f);
@@ -342,7 +344,7 @@ namespace MechaCyberpunk.Arte.Editor
             datos.renderPostProcessing = true;
             datos.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
             cam.nearClipPlane = 0.05f;
-            cam.farClipPlane = 600f;
+            cam.farClipPlane = LejosFoto;
             cam.fieldOfView = campo;
             cam.transform.position = desde;
             cam.transform.LookAt(hacia);
