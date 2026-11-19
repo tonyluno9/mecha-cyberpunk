@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MechaCyberpunk.Mundo.Reloj;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -79,9 +80,223 @@ namespace MechaCyberpunk.Arte.Editor
             Debug.Log("[Arte] " + log);
         }
 
+        // ------------------------------------------------------------------ paso 2: arreglos
+
+        public const string RutaAplicar = "Logs/t1462-aplicar.txt";
+        public const string RutaValidar = "Logs/t1462-validar.txt";
+        public const string RaizAereas = "T1462_Aereas";
+        public const float UmbralFondoT513 = 25f;
+        public const float UmbralBrumaAltura = 14f;
+        public const float UmbralSkyline = 100f;
+        private const float AlturaFotoAerea = 25f;
+
+        /// <summary>
+        /// Arregla lo que se ve roto desde arriba. Idempotente; guarda la escena.
+        ///  - T513_Fondo (paneles pintados: torres y bloques negros que flotan en la niebla): Tramo_3 apagado (era la aguja oscura sobre el mar en K11) y el resto
+        ///    se apaga por altura (OcultarPorAltura, umbral 25 m).
+        ///  - T1399_Bruma/Bruma_* (planos BrumaAltura a 10 m sobre la calle: desde arriba son la mancha blanca de A18): se apagan por altura (14 m).
+        ///  - Skyline SK01 del Malecón (arcos aditivos a 495 m): se apagan por encima de 100 m, donde se ven como un muro de luz colgado.
+        ///  - NieblaPorAltura en el objeto del CicloDiaNoche.
+        /// Los componentes de altura viven en la raíz de escena T1462_Aereas, que Aplicar borra y rehace.
+        /// </summary>
+        public static void Aplicar()
+        {
+            ColocarS2.Abrir();
+            Transform[] todos = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            var log = new StringBuilder("T-1462 Aplicar " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "\n");
+            OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
+
+            foreach (GameObject viejo in todos.Where(t => t != null && t.parent == null && t.name == RaizAereas).Select(t => t.gameObject).ToList())
+            {
+                Object.DestroyImmediate(viejo);
+            }
+            var raiz = new GameObject(RaizAereas);
+
+            // Fondo T513.
+            Transform t513 = todos.FirstOrDefault(t => t != null && t.parent == null && t.name == "T513_Fondo");
+            if (t513 == null)
+            {
+                log.AppendLine("FALTA T513_Fondo en la escena");
+            }
+            else
+            {
+                Transform t3 = t513.Find("Tramo_3_fondo-suburbios");
+                if (t3 != null)
+                {
+                    t3.gameObject.SetActive(false);
+                    log.AppendLine("Tramo_3_fondo-suburbios apagado (aguja oscura sobre el mar en K11)");
+                }
+                CrearGrupo(raiz.transform, "Fondo_T513", t513.GetComponentsInChildren<Renderer>(true), UmbralFondoT513, log);
+            }
+
+            // Bruma de altura.
+            Transform bruma = todos.FirstOrDefault(t => t != null && t.parent == null && t.name == "T1399_Bruma");
+            if (bruma == null)
+            {
+                log.AppendLine("FALTA T1399_Bruma en la escena");
+            }
+            else
+            {
+                Renderer[] planos = bruma.GetComponentsInChildren<Renderer>(true)
+                    .Where(r => r.name.StartsWith("Bruma_", StringComparison.Ordinal)).ToArray();
+                CrearGrupo(raiz.transform, "BrumaAltura", planos, UmbralBrumaAltura, log);
+            }
+
+            // Skyline del Malecón.
+            Transform malecon = todos.FirstOrDefault(t => t != null && t.parent == null && t.name == "T1354_Malecon");
+            Transform sky = malecon == null ? null : malecon.Find("T1393_Malecon/Skyline");
+            if (sky == null)
+            {
+                log.AppendLine("FALTA T1354_Malecon/T1393_Malecon/Skyline");
+            }
+            else
+            {
+                CrearGrupo(raiz.transform, "SkylineSK01", sky.GetComponentsInChildren<Renderer>(true), UmbralSkyline, log);
+            }
+
+            // Niebla por altura.
+            CicloDiaNoche ciclo = Object.FindFirstObjectByType<CicloDiaNoche>();
+            if (ciclo == null)
+            {
+                log.AppendLine("FALTA CicloDiaNoche en la escena");
+            }
+            else if (ciclo.GetComponent<NieblaPorAltura>() == null)
+            {
+                ciclo.gameObject.AddComponent<NieblaPorAltura>();
+                log.AppendLine("NieblaPorAltura agregado a " + ciclo.name);
+            }
+            else
+            {
+                log.AppendLine("NieblaPorAltura ya estaba en " + ciclo.name);
+            }
+
+            Directory.CreateDirectory("Logs");
+            File.WriteAllText(RutaAplicar, log.ToString());
+            ColocarS2.Informe.Clear();
+            ColocarS2.Informe.Append(log);
+            ColocarS2.Guardar("t1462-aplicar-escena");
+            Debug.Log("[Arte] " + log);
+        }
+
+        private static void CrearGrupo(Transform padre, string nombre, Renderer[] renderers, float umbral, StringBuilder log)
+        {
+            var go = new GameObject(nombre);
+            go.transform.SetParent(padre, false);
+            OcultarPorAltura o = go.AddComponent<OcultarPorAltura>();
+            var so = new SerializedObject(o);
+            SerializedProperty lista = so.FindProperty("renderers");
+            lista.arraySize = renderers.Length;
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                lista.GetArrayElementAtIndex(i).objectReferenceValue = renderers[i];
+            }
+            so.FindProperty("umbral").floatValue = umbral;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            log.AppendLine("Grupo " + nombre + ": " + renderers.Length + " renderers, se apagan sobre " + umbral.ToString("0") + " m");
+        }
+
+        /// <summary>
+        /// Repite el diagnóstico con los arreglos puestos (cada cámara aplica OcultarPorAltura a su altura) y falla en voz alta si en cuadro queda:
+        ///  - un renderer de T513_Fondo o BrumaAltura encendido en una cámara por encima de su umbral, o Tramo_3 activo;
+        ///  - un sospechoso C (fondo, skyline) o D (blanco/azul liso) de más de 1 % de pantalla, salvo lo permitido (halos, haces, cables);
+        ///  - la niebla por altura fuera de lo pedido (calle 1, 40-80 m entre 0.35 y 0.45, 150 m en 0.2 o menos).
+        /// Los A y B (calles grandes, cables, letreros colgados) se cuentan pero no fallan: son legítimos. Escribe Logs/t1462-validar.txt. No guarda la escena.
+        /// </summary>
+        public static void Validar()
+        {
+            ColocarS2.Abrir();
+            Physics.SyncTransforms();
+            Directory.CreateDirectory("Logs");
+            var log = new StringBuilder("T-1462 Validar " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "\n");
+            int fallas = 0;
+            OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
+
+            Transform t513 = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t != null && t.parent == null && t.name == "T513_Fondo");
+            Transform t3 = t513 == null ? null : t513.Find("Tramo_3_fondo-suburbios");
+            if (t3 != null && t3.gameObject.activeSelf)
+            {
+                fallas++;
+                log.AppendLine("FALLA: Tramo_3_fondo-suburbios sigue activo");
+            }
+            OcultarPorAltura[] comps = Object.FindObjectsByType<OcultarPorAltura>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            log.AppendLine("componentes OcultarPorAltura: " + comps.Length + " (" + string.Join(", ", comps.Select(c => c.name + ":" + c.Cantidad + "@" + c.Umbral.ToString("0"))) + ")");
+            if (comps.Length < 3)
+            {
+                fallas++;
+                log.AppendLine("FALLA: faltan componentes OcultarPorAltura (corre Aplicar)");
+            }
+            if (Object.FindFirstObjectByType<NieblaPorAltura>() == null)
+            {
+                fallas++;
+                log.AppendLine("FALLA: no hay NieblaPorAltura en la escena");
+            }
+            float f0 = CalculoNieblaAltura.Factor(0f), f40 = CalculoNieblaAltura.Factor(40f), f80 = CalculoNieblaAltura.Factor(80f), f150 = CalculoNieblaAltura.Factor(150f);
+            log.AppendLine("niebla: factor 0 m " + f0.ToString("0.00") + ", 40 m " + f40.ToString("0.00") + ", 80 m " + f80.ToString("0.00") + ", 150 m " + f150.ToString("0.00"));
+            if (f0 < 0.999f || f40 < 0.35f || f40 > 0.45f || f80 < 0.35f || f80 > 0.45f || f150 > 0.2f)
+            {
+                fallas++;
+                log.AppendLine("FALLA: factores de niebla fuera de lo pedido");
+            }
+
+            Dictionary<Renderer, Datos> res = Analizar(log, out List<Cam> camaras, out Dictionary<string, List<Datos>> porCam, true);
+            string[] permitidos = { "Halos", "HazTorre", "Haz", "FaroLejano", "Cables", "Cable", "Bruma_" };
+            var camY = camaras.ToDictionary(c => c.Nombre, c => c.Desde.y);
+            int sospechososC = 0;
+            foreach (KeyValuePair<string, List<Datos>> kv in porCam)
+            {
+                float y = camY[kv.Key];
+                OcultarPorAltura.AplicarATodos(y);
+                var cam = camaras.First(c => c.Nombre == kv.Key);
+                var go = new GameObject("T1462_CamVal") { hideFlags = HideFlags.HideAndDontSave };
+                Camera cm = go.AddComponent<Camera>();
+                cm.aspect = AspectoFoto;
+                cm.fieldOfView = cam.Campo;
+                cm.farClipPlane = LejosDiag;
+                cm.transform.position = cam.Desde;
+                cm.transform.LookAt(cam.Hacia);
+                foreach (Datos d in kv.Value)
+                {
+                    if (d.R == null || !d.R.enabled)
+                    {
+                        continue;
+                    }
+                    string ruta = RutaDe(d.R.transform);
+                    float pct = PorcentajePantalla(cm, d.B);
+                    bool esT513 = ruta.StartsWith("T513_Fondo", StringComparison.Ordinal);
+                    bool esBruma = d.R.name.StartsWith("Bruma_", StringComparison.Ordinal);
+                    bool esSky = ruta.Contains("/Skyline/");
+                    if (esT513 && y > UmbralFondoT513 || esBruma && y > UmbralBrumaAltura || esSky && y > UmbralSkyline)
+                    {
+                        fallas++;
+                        log.AppendLine("FALLA: " + kv.Key + " (y " + y.ToString("0") + ") ve encendido " + ruta);
+                        continue;
+                    }
+                    if ((d.Flags.Contains('C') || d.Flags.Contains('D')) && pct >= 1f && !permitidos.Any(p => ruta.Contains(p)))
+                    {
+                        sospechososC++;
+                        fallas++;
+                        log.AppendLine("FALLA: sospechoso [" + d.Flags + "] " + pct.ToString("0.0") + "% en " + kv.Key + ": " + ruta);
+                    }
+                }
+                Object.DestroyImmediate(go);
+            }
+            OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
+            log.AppendLine("sospechosos C/D no permitidos: " + sospechososC + "; sospechosos totales (incluye A/B legítimos): " + res.Count);
+            log.AppendLine(fallas == 0 ? "RESULTADO: OK" : "RESULTADO: " + fallas + " FALLAS");
+            File.WriteAllText(RutaValidar, log.ToString());
+            if (fallas > 0)
+            {
+                Debug.LogError("[Arte] T-1462 Validar: " + fallas + " fallas. Ver " + RutaValidar + "\n" + log);
+            }
+            else
+            {
+                Debug.Log("[Arte] " + log);
+            }
+        }
+
         // ------------------------------------------------------------------ análisis
 
-        private static Dictionary<Renderer, Datos> Analizar(StringBuilder log, out List<Cam> camaras, out Dictionary<string, List<Datos>> porCam)
+        private static Dictionary<Renderer, Datos> Analizar(StringBuilder log, out List<Cam> camaras, out Dictionary<string, List<Datos>> porCam, bool conAltura = false)
         {
             List<Renderer> rend = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
                 .Where(r => r != null && r.enabled && (r is MeshRenderer || r is SkinnedMeshRenderer) && r.gameObject.activeInHierarchy).ToList();
@@ -109,11 +324,15 @@ namespace MechaCyberpunk.Arte.Editor
                     cam.transform.position = c.Desde;
                     cam.transform.LookAt(c.Hacia);
                     Plane[] planos = GeometryUtility.CalculateFrustumPlanes(cam);
+                    if (conAltura)
+                    {
+                        OcultarPorAltura.AplicarATodos(c.Desde.y);
+                    }
                     var lista = new List<Datos>();
                     int dentro = 0;
                     foreach (Datos d in datos)
                     {
-                        if (d.R == null || !GeometryUtility.TestPlanesAABB(planos, d.B))
+                        if (d.R == null || (conAltura && !d.R.enabled) || !GeometryUtility.TestPlanesAABB(planos, d.B))
                         {
                             continue;
                         }
@@ -151,6 +370,10 @@ namespace MechaCyberpunk.Arte.Editor
             finally
             {
                 Object.DestroyImmediate(go);
+                if (conAltura)
+                {
+                    OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
+                }
             }
             return res;
         }
