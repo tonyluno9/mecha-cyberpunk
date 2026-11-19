@@ -227,7 +227,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             // 5) La velocidad real de los clips humanoides (el Avatar los reescala) se mide con movimiento de raíz y define el umbral.
             MedirVelocidades(prefab, out float vCaminar, out float vCorrer);
             float umbral = vCaminar > 0f && vCorrer > vCaminar ? Mathf.Lerp(vCaminar, vCorrer, FactorUmbralCorrer) : ReglasVisual.UmbralCorrer;
-            ConstructorControladorVisual.Construir(CreadorVisualPersonaje.RutaControlador(nombre), clips, out _, umbral);
+            ConstructorControladorVisual.Construir(CarpetaDe(nombre) + "/" + nombre + ".controller", clips, out _, umbral);
             AjustarPrefab(prefab, material, vCaminar, vCorrer, tieneApuntarDeVerdad);
             Debug.Log("[Personaje] T-520 Visual_" + nombre + ": alto " + alto + " m -> escala " + escala + ", Caminar " + vCaminar.ToString("0.00") + " m/s, Correr " + vCorrer.ToString("0.00") + " m/s, umbral " + umbral.ToString("0.00"));
             return prefab;
