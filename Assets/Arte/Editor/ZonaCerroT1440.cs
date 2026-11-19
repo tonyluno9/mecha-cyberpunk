@@ -66,6 +66,10 @@ namespace MechaCyberpunk.Arte.Editor
         public const long MaxTriangulosModelo = 20000;
         public const float CorteCarro = 0.05f;
         public const float CortePiso = 0.02f;
+        public const float CorteModelo = 0.04f;
+        public const int MaxModelosPiso = 40;
+        public const int MaxPisos = 110;
+        public const float DistanciaModelo = 120f;
         public const float CeldaMalla = 40f;
         /// <summary>Alto (m) al que se escala el modelo de casa que va de piso extra (el modelo mide ~7.5 m: se aplasta un poco).</summary>
         public const float AltoPisoModelo = 4.8f;
@@ -142,6 +146,10 @@ namespace MechaCyberpunk.Arte.Editor
                 int devueltas = Restaurar(zona);
                 Log("Apagadas por una corrida anterior y vueltas a encender: " + devueltas + ".");
                 Ctx c = Abrir(zona);
+                int rendAntes = 0;
+                Transform viejaRaiz = zona.transform.Find(Raiz);
+                long batchesAntes = viejaRaiz == null ? 0 : Batches(viejaRaiz, out rendAntes);
+                Log("T1440_Ladera antes de esta corrida: " + rendAntes + " renderers, ~" + batchesAntes + " batches estimados (renderers x materiales).");
                 int lucesAntes = zona.GetComponentsInChildren<Light>(true).Length;
                 long trisAntes = Triangulos(zona.transform);
                 Log("Triángulos visibles de la zona antes: " + trisAntes + ".");
@@ -180,6 +188,11 @@ namespace MechaCyberpunk.Arte.Editor
                 int nuevas = c.Nuevo.GetComponentsInChildren<Light>(true).Length;
                 int objetos = c.Nuevo.GetComponentsInChildren<Transform>(true).Length;
                 Log("Triángulos visibles de la zona después: " + Triangulos(zona.transform) + " (solo T1440_Ladera: " + Triangulos(c.Nuevo) + "; antes de esta corrida: " + trisAntes + ").");
+                int rendDespues;
+                long batchesDespues = Batches(c.Nuevo, out rendDespues);
+                int rendZona;
+                long batchesZona = Batches(zona.transform, out rendZona);
+                Log("T1440_Ladera después: " + rendDespues + " renderers, ~" + batchesDespues + " batches estimados (antes " + batchesAntes + "); zona entera: " + rendZona + " renderers, ~" + batchesZona + " batches.");
                 Log("Luces después: " + luces + " (nuevas " + nuevas + ", tope " + TopeLucesNuevas + "). Objetos nuevos: " + objetos + " (tope " + TopeObjetos + ").");
                 if (nuevas > TopeLucesNuevas || objetos > TopeObjetos)
                 {
@@ -501,6 +514,23 @@ namespace MechaCyberpunk.Arte.Editor
             return n;
         }
 
+        /// <summary>Batches estimados: renderers activos x materiales (cada material de cada renderer es una llamada de dibujo, antes de agrupar).</summary>
+        private static long Batches(Transform raiz, out int renderers)
+        {
+            long n = 0;
+            renderers = 0;
+            foreach (Renderer r in raiz.GetComponentsInChildren<Renderer>(false))
+            {
+                if (r is ParticleSystemRenderer || !r.enabled)
+                {
+                    continue;
+                }
+                renderers++;
+                n += Mathf.Max(1, r.sharedMaterials.Length);
+            }
+            return n;
+        }
+
         /// <summary>Triángulos de un prefab (sin instanciarlo).</summary>
         private static long TriangulosPrefab(GameObject prefab)
         {
@@ -597,7 +627,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Un GameObject con la malla (y su collider igual a ella, si se pide). Devuelve null si la malla está vacía.</summary>
-        private static GameObject ObjetoMalla(Ctx c, Transform padre, string nombre, Malla m, Material mat, bool collider, bool sinSombras, bool porCeldas = true)
+        private static GameObject ObjetoMalla(Ctx c, Transform padre, string nombre, Malla m, Material mat, bool collider, bool sinSombras, bool porCeldas = false)
         {
             if (m.T.Count == 0)
             {
@@ -1584,7 +1614,7 @@ namespace MechaCyberpunk.Arte.Editor
             }).ToList();
             Log("Casas de la ladera: " + casas.Count + ", con pisos extra planeados: " + orden.Count + ".");
             List<GameObject> modelos = new List<GameObject>();
-            foreach (string nom in new[] { "CC07_CasaCerro_a", "CC06_CasaCerro_b", "CC01_CasaCerro", "CC07_CasaCerro_b", "CC06_CasaCerro_a", "CC02_CasaCerro" })
+            foreach (string nom in new[] { "CC07_CasaCerro_a", "CC06_CasaCerro_b", "CC07_CasaCerro_b", "CC06_CasaCerro_a" })
             {
                 GameObject mo = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Zonas/CC/" + nom + ".prefab");
                 if (mo == null)
@@ -1598,12 +1628,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 long tris = TriangulosPrefab(mo);
-                if (tris >= MaxTriangulosModelo)
-                {
-                    Log("Modelo " + nom + ": " + tris + " triángulos (tope " + MaxTriangulosModelo + "); se quita de la rotación de pisos.");
-                    continue;
-                }
-                Log("Modelo " + nom + ": " + tris + " triángulos; entra en la rotación de pisos.");
+                Log("Modelo " + nom + ": " + tris + " triángulos; solo para los pisos del cuadro de A13 a menos de " + DistanciaModelo + " m (máximo " + MaxModelosPiso + ").");
                 modelos.Add(mo);
             }
             Log("Modelos de casa para los pisos extra: " + modelos.Count + (modelos.Count == 0 ? " (se usa la casa lisa del kit)." : "."));
@@ -1611,7 +1636,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 c.PtsCasa.Add(new Vector3(par.Key.Centro, par.Value, (par.Key.Z0 + par.Key.Z1) * 0.5f));
             }
-            int estrechas = 0, estorbo = 0, hechas = 0, malAsentados = 0;
+            int estrechas = 0, estorbo = 0, hechas = 0, malAsentados = 0, modelosUsados = 0;
             foreach (Casa k in orden)
             {
                 if (c.Nuevo.GetComponentsInChildren<Transform>(true).Length > TopeObjetosPisos)
@@ -1627,6 +1652,17 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 float roof = techos[k];
                 int tiers = (int)TiersDe(k);
+                float uF, vF;
+                bool enCuadro = EnCuadroA13(new Vector3(k.Centro, roof, (k.Z0 + k.Z1) * 0.5f), out uF, out vF) && uF > 0.03f && uF < 0.97f && vF > 0.05f && vF < 0.95f;
+                if (!enCuadro)
+                {
+                    tiers = Mathf.Min(tiers, 1); // fuera del cuadro de A13 solo un piso extra (menos batches)
+                }
+                if (c.Volumenes >= MaxPisos)
+                {
+                    Log("Tope de pisos extra (" + MaxPisos + "): se detiene.");
+                    break;
+                }
                 float xAtras = k.Normal > 0f ? k.X0 : k.X1;
                 float xF = k.Frente - k.Normal * RetiroPrimero;
                 float zc = (k.Z0 + k.Z1) * 0.5f;
@@ -1639,7 +1675,8 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         break;
                     }
-                    Vector3 mitad = new Vector3(fondo * 0.5f - 0.05f, modelos.Count > 0 ? AltoPisoModelo * 0.5f : 1.65f, anchoV * 0.5f - 0.05f);
+                    bool usaModelo = modelos.Count > 0 && modelosUsados < MaxModelosPiso && enCuadro && Vector3.Distance(A13Desde, new Vector3(k.Centro, roof, zc)) < DistanciaModelo;
+                    Vector3 mitad = new Vector3(fondo * 0.5f - 0.05f, usaModelo ? AltoPisoModelo * 0.5f : 1.65f, anchoV * 0.5f - 0.05f);
                     Bounds caja = new Bounds(new Vector3(xF - k.Normal * fondo * 0.5f, roof + 0.1f + mitad.y, zc), mitad * 2f);
                     List<Transform> aApagar = new List<Transform>();
                     if (!Despejar(c, k, caja, roof, aApagar))
@@ -1657,7 +1694,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                     Transform nuevo;
                     float alto;
-                    GameObject modelo = modelos.Count > 0 ? modelos[(c.Volumenes + t) % modelos.Count] : null;
+                    GameObject modelo = usaModelo ? modelos[(c.Volumenes + t) % modelos.Count] : null;
                     if (modelo != null)
                     {
                         // Casa REAL (CC06/CC07/CC01/CC02) escalada al hueco: ventanas con reja, puertas, pretil y su textura.
@@ -1714,7 +1751,11 @@ namespace MechaCyberpunk.Arte.Editor
                         roof += ajuste;
                         Physics.SyncTransforms();
                     }
-                    Lod(nuevo.gameObject, CortePiso);
+                    Lod(nuevo.gameObject, modelo != null ? CorteModelo : CortePiso);
+                    if (modelo != null)
+                    {
+                        modelosUsados++;
+                    }
                     c.Volumenes++;
                     puestos++;
                     if (modelo == null)
@@ -1733,6 +1774,7 @@ namespace MechaCyberpunk.Arte.Editor
                     hechas++;
                 }
             }
+            Log("Pisos con casa real (CC06/CC07): " + modelosUsados + " de " + c.Volumenes + "; el resto con la casa del kit.");
             Log("Pisos extra: " + c.Volumenes + " volúmenes en " + hechas + " casas (" + c.ConPeldanos + " con escalera de peldaños, " + c.ConEscalera + " con escalera de servicio); casas saltadas: "
                 + estrechas + " muy estrechas, " + estorbo + " con algo que estorbaba, " + malAsentados + " pisos quitados por no asentar.");
         }
@@ -1780,20 +1822,6 @@ namespace MechaCyberpunk.Arte.Editor
                             n++;
                         }
                     }
-                    foreach (Transform piso in pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")).ToList())
-                    {
-                        float pr;
-                        if (!MedirApoyo(c, piso, CajaPiso(piso), out pr) || pr > 0.3f)
-                        {
-                            Transform acc = pisos.Find("Acceso_" + piso.name);
-                            if (acc != null)
-                            {
-                                Apagar(c, acc, "acceso de un piso sin apoyo");
-                            }
-                            Apagar(c, piso, "piso sin nada debajo (la casa de abajo se apagó)");
-                            n++;
-                        }
-                    }
                     Transform pel = c.Nuevo.Find("EscalerasLadera/Peldanos");
                     MeshCollider mcE = pel == null ? null : pel.GetComponent<MeshCollider>();
                     if (mcE != null)
@@ -1828,6 +1856,31 @@ namespace MechaCyberpunk.Arte.Editor
                                     n++;
                                 }
                             }
+                        }
+                    }
+                    // Pisos sin apoyo (la casa de abajo se apagó, o el apoyo quedó a más de 0.3 m): se apagan, en pasadas porque un segundo piso puede apoyar en el primero.
+                    for (int pasada = 0; pasada < 3; pasada++)
+                    {
+                        Physics.SyncTransforms();
+                        int apagados = 0;
+                        foreach (Transform piso in pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")).ToList())
+                        {
+                            float pr;
+                            if (!MedirApoyo(c, piso, CajaPiso(piso), out pr) || pr > 0.3f)
+                            {
+                                Transform acc = pisos.Find("Acceso_" + piso.name);
+                                if (acc != null)
+                                {
+                                    Apagar(c, acc, "acceso de un piso sin apoyo");
+                                }
+                                Apagar(c, piso, "piso sin apoyo (diferencia " + pr.ToString("0.00", CultureInfo.InvariantCulture) + " m)");
+                                apagados++;
+                                n++;
+                            }
+                        }
+                        if (apagados == 0)
+                        {
+                            break;
                         }
                     }
                     Physics.SyncTransforms();
