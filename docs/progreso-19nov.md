@@ -39,5 +39,10 @@ que diga "Qué sigue".
 - 02:35 integ/ciudad-19nov compila (0 errores). Lanzadas también las zonas T-1384 a T-1387, T-1388 (uniones, prefab nuevo T1388_Uniones) y T-1389a (tráfico por zona y Carro_V11). Brief común de zonas: los subagentes solo entregan scripts (Aplicar, Validar, Fotos); los prefabs los genera Unity en la carpeta principal.
 - Orden para correr en Unity: T-1382.Aplicar → zonas (T-1384..T-1388 Aplicar) → T-1383.Aplicar (look al final) → en otra corrida, Fotos.
 
+- 03:10 Las ramas de los subagentes salieron de origin/main y no de integ: se les pidió hacer merge de integ. T-1382 integrada y corrida: 18 prefabs (_a y _b) de AU02, AU03, CC06, CC07, CC08, ML05, ML07, PU07 y PU08, materiales T07–T09 y el skyline SK01 (assets en 77676b2). ML06 solo tiene .png.
+- 03:15 W10: el arma de Nova solo existía sin versionar (imageassets/modelos-nuevos/W09_ArmaNova.png, nuevos-17nov/, modelos3d/*.zip, lote_17nov.json, pedido-arte-17nov.md, PROMPTS_ASSETS.md); renombrada a W10_ArmaNova. La granada sigue como W09.
+- 03:20 Integradas en integ: T-1383 (look), T-1384 (Malecón), T-1386 (Autopista), T-1387 (Puerto) y T-1389a (tráfico). Causa de la escarcha: S2c_Asfalto usa T535_Asfalto_Normal.png importada como Default en sRGB (y _BaseColor 2.4); se corrige la importación (Correr19nov.ArreglarNormalesAsfalto) y las zonas usan materiales propios.
+- 03:25 Corrida 1 de Unity con Correr19nov.Correr (todas las Aplicar y Validar); el resultado queda en Logs/correr19nov.txt.
+
 ## Qué sigue
 - Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
