@@ -110,6 +110,30 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>19-nov (E16_b): si el mapeo automático falla, usa el de la variante _a (mismos huesos) con el esqueleto de esta variante a su escala actual.</summary>
+        private static bool RearmarAvatarConHermana(string nombre, ModelImporter imp)
+        {
+            if (!nombre.EndsWith("_b")) { return false; }
+            var hermana = AssetImporter.GetAtPath(RutaModelo(nombre.Substring(0, nombre.Length - 2) + "_a")) as ModelImporter;
+            var modelo = AssetDatabase.LoadAssetAtPath<GameObject>(imp.assetPath);
+            if (hermana == null || modelo == null) { return false; }
+            var go = (GameObject)Object.Instantiate(modelo);
+            var hd = hermana.humanDescription;
+            var esq = new List<SkeletonBone>();
+            foreach (Transform t in go.GetComponentsInChildren<Transform>(true))
+            {
+                esq.Add(new SkeletonBone { name = t.name, position = t.localPosition, rotation = t.localRotation, scale = t.localScale });
+            }
+            hd.skeleton = esq.ToArray();
+            Avatar prueba = AvatarBuilder.BuildHumanAvatar(go, hd);
+            Object.DestroyImmediate(go);
+            if (prueba == null || !prueba.isHuman) { return false; }
+            imp.humanDescription = hd;
+            imp.SaveAndReimport();
+            Debug.Log("[Personaje] " + nombre + ": avatar rearmado con el mapeo de su variante _a.");
+            return true;
+        }
+
         public static GameObject Crear(string nombre)
         {
             string ruta = RutaModelo(nombre);
@@ -179,6 +203,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 {
                     clips[tipo] = c;
                 }
+            }
+            if ((avatar == null || !avatar.isHuman) && RearmarAvatarConHermana(nombre, imp))
+            {
+                foreach (Object o in AssetDatabase.LoadAllAssetsAtPath(ruta)) { if (o is Avatar a2) { avatar = a2; } }
             }
             if (avatar == null || !avatar.isHuman)
             {
