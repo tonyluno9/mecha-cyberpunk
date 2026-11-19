@@ -31,6 +31,7 @@ namespace MechaCyberpunk.IA.APie
         private ConfigRespuestaNova config;
         private readonly List<PandilleroAPie> guardias = new List<PandilleroAPie>();
         private readonly List<PandilleroAPie> pesados = new List<PandilleroAPie>();
+        private readonly List<PandilleroAPie> perros = new List<PandilleroAPie>();
         private PandilleroAPie jefe;
         private bool jefeSalio;
         private float proximaRevision;
@@ -49,6 +50,9 @@ namespace MechaCyberpunk.IA.APie
         public PandilleroAPie Jefe => jefe;
         public IReadOnlyList<PandilleroAPie> Guardias => guardias;
         public IReadOnlyList<PandilleroAPie> Pesados => pesados;
+        /// <summary>T-1389b: perros robot de Nova (E17) en juego.</summary>
+        public IReadOnlyList<PandilleroAPie> Perros => perros;
+        public int PerrosVivos => Vivos(perros);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void LimpiarEstatico()
@@ -105,6 +109,7 @@ namespace MechaCyberpunk.IA.APie
             Estrellas = config == null || Apagada || !hayPolicia ? 0 : EstrellasBusqueda.De(Registro<ICalor>.Actual);
             guardias.RemoveAll(p => p == null);
             pesados.RemoveAll(p => p == null);
+            perros.RemoveAll(p => p == null);
             if (jugador == null || jugador.Raiz == null || !EstrellasBusqueda.EsNova(Estrellas))
             {
                 anunciada = false;
@@ -141,8 +146,9 @@ namespace MechaCyberpunk.IA.APie
             if (Time.time >= proximaOleada)
             {
                 proximaOleada = Time.time + config.SegundosEntreOleadas;
-                Reponer(guardias, config.Guardia, config.Guardias(Estrellas), donde, "Nova_Guardia_");
-                Reponer(pesados, config.GuardiaPesado, config.Pesados(Estrellas), donde, "Nova_GuardiaPesado_");
+                Reponer(guardias, config.TodosLosGuardias(), config.Guardias(Estrellas), donde, "Nova_Guardia_");
+                Reponer(pesados, config.TodosLosPesados(), config.Pesados(Estrellas), donde, "Nova_GuardiaPesado_");
+                Reponer(perros, config.Perros, config.CantidadPerros(Estrellas), donde, "Nova_Perro_");
             }
             if (Estrellas >= EstrellasBusqueda.Total && !jefeSalio && config.JefeFinal != null)
             {
@@ -159,6 +165,7 @@ namespace MechaCyberpunk.IA.APie
             float vista = config.DistanciaVista;
             MarcarVistos(guardias, donde, vista);
             MarcarVistos(pesados, donde, vista);
+            MarcarVistos(perros, donde, vista);
             if (jefe != null && !jefe.EstaKO)
             {
                 MarcarVisto(jefe, donde, vista);
@@ -197,6 +204,10 @@ namespace MechaCyberpunk.IA.APie
             {
                 Azuzar(p, donde);
             }
+            foreach (PandilleroAPie p in perros)
+            {
+                Azuzar(p, donde);
+            }
             foreach (PandilleroAPie p in pesados)
             {
                 if (p == null || p.EstaKO)
@@ -232,14 +243,16 @@ namespace MechaCyberpunk.IA.APie
             p.Alerta = true;
         }
 
-        private void Reponer(List<PandilleroAPie> lista, GameObject prefab, int cantidad, Vector3 donde, string nombre)
+        // T-1389b: con varias variantes salen por turnos (la variante la da cuántos han salido ya de esa lista).
+        private void Reponer(List<PandilleroAPie> lista, IReadOnlyList<GameObject> prefabs, int cantidad, Vector3 donde, string nombre)
         {
-            if (prefab == null)
+            if (prefabs == null || prefabs.Count == 0)
             {
                 return;
             }
             for (int i = Vivos(lista); i < cantidad; i++)
             {
+                GameObject prefab = prefabs[lista.Count % prefabs.Count];
                 PandilleroAPie nuevo = Aparecer(prefab, donde, nombre + (lista.Count + 1));
                 if (nuevo == null)
                 {
@@ -343,6 +356,7 @@ namespace MechaCyberpunk.IA.APie
         {
             Quitar(guardias);
             Quitar(pesados);
+            Quitar(perros);
             if (jefe != null && !jefe.EstaKO)
             {
                 Destroy(jefe.gameObject);
@@ -359,6 +373,7 @@ namespace MechaCyberpunk.IA.APie
         {
             QuitarNoVistos(guardias);
             QuitarNoVistos(pesados);
+            QuitarNoVistos(perros);
             if (jefe != null && !jefe.EstaKO && !vistos.Contains(jefe))
             {
                 Destroy(jefe.gameObject);
