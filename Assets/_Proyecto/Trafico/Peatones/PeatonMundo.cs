@@ -199,6 +199,7 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Muerto = false;
+            visuales = GetComponentsInChildren<Renderer>(true); // T-1409: el visual por zona se crea después del Awake
             vida = config != null ? config.VidaPeaton : vida;
             if (capsula != null)
             {
@@ -286,6 +287,7 @@ namespace MechaCyberpunk.Trafico.Peatones
                 segundosMuerto += Time.deltaTime;
                 if (segundosMuerto >= SegundosCuerpo)
                 {
+                    visuales = GetComponentsInChildren<Renderer>(true);
                     foreach (Renderer r in visuales)
                     {
                         r.enabled = false;

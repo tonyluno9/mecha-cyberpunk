@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using MechaCyberpunk.Core;
+using MechaCyberpunk.Core.Mundo;
 using UnityEngine;
 
 namespace MechaCyberpunk.Trafico.Calle
@@ -6,7 +8,7 @@ namespace MechaCyberpunk.Trafico.Calle
     /// <summary>
     /// T-1345: una zona de la ciudad (caja orientada) que le dice al tráfico qué carros sacar ahí. Su <see cref="Nombre"/> casa con una zona de ConfigCarrosZonas.
     /// </summary>
-    public class ZonaTrafico : MonoBehaviour
+    public class ZonaTrafico : MonoBehaviour, IZonaDelMundo
     {
         private static readonly List<ZonaTrafico> activas = new List<ZonaTrafico>();
 
@@ -23,9 +25,21 @@ namespace MechaCyberpunk.Trafico.Calle
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar() => activas.Clear();
 
-        private void OnEnable() => activas.Add(this);
+        private void OnEnable()
+        {
+            activas.Add(this);
+            Registro<IZonaDelMundo>.Agregar(this); // T-1409: los peatones preguntan por la zona sin referenciar Trafico
+        }
 
-        private void OnDisable() => activas.Remove(this);
+        private void OnDisable()
+        {
+            activas.Remove(this);
+            Registro<IZonaDelMundo>.Quitar(this);
+        }
+
+        string IZonaDelMundo.NombreZona => nombre;
+
+        bool IZonaDelMundo.ContienePunto(Vector3 mundo) => Contiene(mundo);
 
         /// <summary>Lo usan el creador de editor y las pruebas.</summary>
         public void Definir(string nuevoNombre, Vector3 nuevoTamano)
