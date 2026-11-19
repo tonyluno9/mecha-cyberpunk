@@ -44,5 +44,10 @@ que diga "Qué sigue".
 - 03:20 Integradas en integ: T-1383 (look), T-1384 (Malecón), T-1386 (Autopista), T-1387 (Puerto) y T-1389a (tráfico). Causa de la escarcha: S2c_Asfalto usa T535_Asfalto_Normal.png importada como Default en sRGB (y _BaseColor 2.4); se corrige la importación (Correr19nov.ArreglarNormalesAsfalto) y las zonas usan materiales propios.
 - 03:25 Corrida 1 de Unity con Correr19nov.Correr (todas las Aplicar y Validar); el resultado queda en Logs/correr19nov.txt.
 
+- 04:10 Corridas 2 y 3: T-1385 (Cerro) y T-1388 (Uniones) no compilaban (corregido); con eso se aplicaron todas las zonas, las uniones (prefab nuevo T1388_Uniones de 6.8 MB), el tráfico (8 zonas, Carro_V11, PatrullaCamioneta, MT01/MT02) y el look (faroles de sodio, charcos, sondas, niebla, perfil de noche). Escena de 55.8 MB y Cerro de 32 MB. Commit cbd1302 con push.
+- T-1381 (rigs) integrada: 24 humanoides y el perro E17 en imageassets/blender/personajes/. E16_b quedó regular. Lanzada T-1389b, que mete esos personajes al juego (peatones y enemigos).
+- Pendiente de revisar: el look puso 0 luces de neón nuevas (no encontró neones por color); el Cerro solo tiene 5 casas nuevas porque rechazó 119 lotes.
+- 04:15 Fotos de todas las zonas (corrida aparte).
+
 ## Qué sigue
 - Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
