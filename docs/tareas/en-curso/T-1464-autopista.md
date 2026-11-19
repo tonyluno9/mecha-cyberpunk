@@ -22,3 +22,8 @@ Faroles, estelas >= 30, vida minima, luces <= 40, ramal abierto, K18 (boca x .65
 - Visuales NP01 a NP06 (solo existen NP07 a NP14).
 - Tablero curvo hacia el tunel principal (hoy es recto).
 - Material aditivo transparente para estelas (las actuales son opacas con degradado oscuro en las puntas).
+
+## Ronda 2 (tras la primera corrida)
+- BuscarCamara K18 ahora exige columna (de la rampa norte con tablero a 3 m o mas, o del principal) a 10-25 m con rayos al fuste, ancho en pantalla 7-14 %, x 0.55-0.65, mirada 8-15 grados hacia arriba, torre visible por rayo arriba a la izquierda. Aplicar engrosa esas columnas a 3.9 m.
+- A18 se busca desde el norte-este (x -140..0, z 290..380, y 50-70) mirando 20-40 grados hacia abajo, boca a la derecha, tablero cruzando, torre lejos a la izquierda.
+- Validar usa rayos de visibilidad y falla si no se cumple.
