@@ -142,9 +142,11 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("azoteas", () => Azoteas(c));
                 Paso("basura, bolsas, macetas y charcos", () => Basura(c));
                 Paso("gente", () => PonerGente(c));
+                Paso("postes del paseo", () => PostesPaseo(c));
                 Paso("cables", () => Cableado(c));
                 Paso("tendederos entre casas", () => Tendederos(c));
                 Paso("lotes", () => Volcar(c));
+                Paso("LOD", () => AgruparLod(c));
                 Estatico(c);
                 KitS2c.Terminar(c.Obra);
                 int luces = zona.GetComponentsInChildren<Light>(true).Length;
@@ -615,6 +617,52 @@ namespace MechaCyberpunk.Arte.Editor
                 n++;
             }
             Log("Lotes combinados: " + n + " objetos con " + pegados + " piezas pegadas; piezas de prefab que no se pudieron combinar (malla no leíble): " + conservados + ".");
+        }
+
+        /// <summary>Las piezas de prefab que no se pudieron combinar (malla no leíble) se agrupan por cuadro de 40 m bajo un LODGroup de un solo nivel que se apaga bajo el 2 % de la pantalla.</summary>
+        private static void AgruparLod(Ctx c)
+        {
+            int grupos = 0, piezas = 0;
+            foreach (string ruta in new[] { "Techos", "Fachadas", "Calle/Basura" })
+            {
+                Transform padre = c.Nuevo.Find(ruta);
+                if (padre == null)
+                {
+                    continue;
+                }
+                Dictionary<string, List<Transform>> celdas = new Dictionary<string, List<Transform>>();
+                foreach (Transform t in padre)
+                {
+                    if (t.name.StartsWith("NPC_") || t.GetComponentInChildren<Animator>() != null || t.GetComponentInChildren<Light>() != null || t.GetComponentInChildren<Renderer>() == null)
+                    {
+                        continue;
+                    }
+                    Bounds b = Cubierta(t);
+                    string clave = Mathf.FloorToInt(b.center.x / LadoLote) + "_" + Mathf.FloorToInt(b.center.z / LadoLote);
+                    if (!celdas.TryGetValue(clave, out List<Transform> lista))
+                    {
+                        lista = new List<Transform>();
+                        celdas[clave] = lista;
+                    }
+                    lista.Add(t);
+                }
+                foreach (KeyValuePair<string, List<Transform>> par in celdas)
+                {
+                    GameObject g = new GameObject("Lod_" + par.Key);
+                    g.transform.SetParent(padre, false);
+                    foreach (Transform t in par.Value)
+                    {
+                        t.SetParent(g.transform, true);
+                    }
+                    Renderer[] rs = g.GetComponentsInChildren<Renderer>().Where(r => !(r is ParticleSystemRenderer)).ToArray();
+                    LODGroup lg = g.AddComponent<LODGroup>();
+                    lg.SetLODs(new[] { new LOD(0.02f, rs) });
+                    lg.RecalculateBounds();
+                    grupos++;
+                    piezas += par.Value.Count;
+                }
+            }
+            Log("LODGroup (culling al 2 %) por cuadro de 40 m: " + grupos + " grupos con " + piezas + " objetos.");
         }
 
         // ================================================================ Ayudas de piso, bounds y piezas
@@ -1183,6 +1231,14 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 malAsentados++;
             }
+            // Con la caja real (no la predicha): si cierra el pasillo de 1.2 m o se sale de la casa, se quita.
+            VariarCerroT1364.CasaT hh = t.H;
+            if (EnPasillo(t, fin.center.x, fin.center.z, Mathf.Max(fin.extents.x, fin.extents.z) + 0.1f) || fin.min.x < hh.X0 || fin.max.x > hh.X1 || fin.min.z < hh.Z0 || fin.max.z > hh.Z1)
+            {
+                Object.DestroyImmediate(g);
+                Physics.SyncTransforms();
+                return false;
+            }
             c.Ocupado.Add(fin);
             PegarInstancia(g);
             return true;
@@ -1337,6 +1393,8 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 Vector3 salida = new Vector3(h.Normal, 0f, 0f);
+                // Las casas del oeste entre z = 60 y 150 son las de la derecha del cuadro de K13 (la ciudad queda espejada): ahí va el detalle fuerte.
+                bool fuerte = h.Normal > 0f && centro.z > 60f && centro.z < 150f;
                 Func<Transform> asegurar = () => padre;
                 int rejasCasa = 0;
                 // Puerta en el mundo (si la planta baja la tiene).
@@ -1353,7 +1411,7 @@ namespace MechaCyberpunk.Arte.Editor
                 float zc = centro.z;
                 int cuantas = 0;
                 // Lámpara de pared junto a la puerta.
-                if (c.Obra.Chance(0.7f) && cuantas < 4)
+                if (c.Obra.Chance(fuerte ? 0.95f : 0.7f) && cuantas < 5)
                 {
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     float zl = hayPuerta ? puerta.z + lado * (anchoPuerta * 0.5f + 0.5f) : zc + lado * (h.Z1 - h.Z0) * 0.36f;
@@ -1369,7 +1427,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 // Medidor al otro lado de la puerta.
-                if (medidor != null && hayPuerta && c.Obra.Chance(0.5f) && cuantas < 4)
+                if (medidor != null && hayPuerta && c.Obra.Chance(fuerte ? 0.85f : 0.5f) && cuantas < 6)
                 {
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     float zm = Mathf.Clamp(puerta.z + lado * (anchoPuerta * 0.5f + 0.6f), h.Z0 + 0.4f, h.Z1 - 0.4f);
@@ -1393,7 +1451,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 // Aire acondicionado en la pared.
-                if (aire != null && c.Obra.Chance(0.6f) && cuantas < 4 && h.Top - h.Base > 3.4f)
+                if (aire != null && c.Obra.Chance(fuerte ? 0.85f : 0.6f) && cuantas < 6 && h.Top - h.Base > 3.4f)
                 {
                     float za = c.Obra.Rango(h.Z0 + 0.9f, h.Z1 - 0.9f);
                     float ya = Mathf.Min(h.Base + (h.Top - h.Base > 5.4f ? 3.5f : 2.1f), h.Top - 1.4f);
@@ -1417,7 +1475,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 // Toldo de lámina sobre la puerta de los locales.
-                if (toldo != null && hayPuerta && baja.name.StartsWith("C01_Fachada") && c.Obra.Chance(0.6f) && anchoPuerta > 1.1f)
+                if (toldo != null && hayPuerta && baja.name.StartsWith("C01_Fachada") && c.Obra.Chance(fuerte ? 0.95f : 0.6f) && anchoPuerta > 1.1f)
                 {
                     Bounds bt = Medida(toldo);
                     float e = (anchoPuerta + 0.5f) / Mathf.Max(0.1f, bt.size.x);
@@ -1441,7 +1499,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 // Macetas junto a la puerta.
-                if (macetas != null && hayPuerta && c.Obra.Chance(0.2f) && cuantas < 4)
+                if (macetas != null && hayPuerta && c.Obra.Chance(fuerte ? 0.55f : 0.2f) && cuantas < 6)
                 {
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     float zm = Mathf.Clamp(puerta.z + lado * (anchoPuerta * 0.5f + 0.7f), h.Z0 + 0.5f, h.Z1 - 0.5f);
@@ -1479,7 +1537,7 @@ namespace MechaCyberpunk.Arte.Editor
                             continue;
                         }
                         puestas.Add(r);
-                        if (r.yMin < 1f || r.height > 2.2f || r.width > 2.4f || !c.Obra.Chance(0.55f))
+                        if (r.yMin < 1f || r.height > 2.2f || r.width > 2.4f || !c.Obra.Chance(fuerte ? 0.85f : 0.55f))
                         {
                             continue;
                         }
@@ -1490,7 +1548,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 // Letrero de neón chico (1 de cada 3 a 4 casas).
-                if (c.Obra.Chance(0.5f))
+                if (c.Obra.Chance(fuerte ? 0.85f : 0.5f))
                 {
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     bool bandera = c.Obra.Chance(0.7f);
@@ -1763,16 +1821,21 @@ namespace MechaCyberpunk.Arte.Editor
             for (int i = 0; i < 160 && total < 11; i++)
             {
                 // Los primeros 5 dentro del cuadro de K13 (z de 66 a 138; la cámara está en z = 152): banqueta oeste (derecha del cuadro), este o paseo.
-                float z = total < 5 ? c.Obra.Rango(66f, 138f) : c.Obra.Rango(ZVistaSur, ZVistaNorte - 4f);
+                bool enCuadro = total < 4;
+                float z = enCuadro ? c.Obra.Rango(118f, 146f) : c.Obra.Rango(ZVistaSur, ZVistaNorte - 4f);
                 bool oeste = c.Obra.Chance(0.5f);
                 float x = oeste ? XCentroCalle - 5.2f : (c.Obra.Chance(0.5f) ? XCentroCalle + 5.2f : XCentroCalle + 7f);
+                if (enCuadro && !EnCuadroK13(new Vector3(x, YCalle(z), z)))
+                {
+                    continue;
+                }
                 float y;
                 if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.6f)
                 {
                     continue;
                 }
                 Vector3 p = new Vector3(x, y, z);
-                if (puestos.Any(q => (q - p).magnitude < 5f) || !Libre(c, p + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
+                if (puestos.Any(q => (q - p).magnitude < (enCuadro ? 3.5f : 5f)) || !Libre(c, p + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
                 {
                     continue;
                 }
@@ -1810,6 +1873,23 @@ namespace MechaCyberpunk.Arte.Editor
             }
             c.Gente = total;
             Log("Gente de adorno: " + total + " (banquetas " + enCalle + ", azoteas " + techos + "). Todos parados en su reposo: el Animator no tiene animación de sentarse.");
+        }
+
+        /// <summary>true si el punto (pies de una persona) cae dentro del cuadro de la foto K13 (campo 66, 1376x768) a 6–30 m del lente, con un 10 % de margen interior.</summary>
+        private static bool EnCuadroK13(Vector3 p)
+        {
+            Vector3 adelante = (K13Hacia - K13Desde).normalized;
+            Vector3 derecha = Vector3.Cross(Vector3.up, adelante).normalized;
+            Vector3 arriba = Vector3.Cross(adelante, derecha);
+            Vector3 d = p + Vector3.up * 0.9f - K13Desde;
+            float prof = Vector3.Dot(d, adelante);
+            if (prof < 6f || prof > 30f)
+            {
+                return false;
+            }
+            float tanV = Mathf.Tan(CampoK13 * 0.5f * Mathf.Deg2Rad) * 0.9f;
+            float tanH = tanV * (1376f / 768f);
+            return Mathf.Abs(Vector3.Dot(d, derecha) / prof) < tanH && Mathf.Abs(Vector3.Dot(d, arriba) / prof) < tanV;
         }
 
         private static string RutaFbx(string nombre)
@@ -2004,6 +2084,39 @@ namespace MechaCyberpunk.Arte.Editor
             return Mathf.Sqrt(dx * dx + dz * dz);
         }
 
+        // ================================================================ Poste con transformador sobre el paseo (izquierda de K13)
+
+        private static void PostesPaseo(Ctx c)
+        {
+            Transform padre = Hijo(c.Nuevo, "Postes");
+            int n = 0;
+            foreach (float zq in new[] { 130f, 106f, 80f })
+            {
+                if (n >= 2)
+                {
+                    break;
+                }
+                float y;
+                float x = ZonaCerroT1416.XPaseo0 + 0.7f;
+                if (!Suelo(c, x, zq, YCalle(zq), out y) || Mathf.Abs(y - YCalle(zq)) > 0.6f)
+                {
+                    Log("Poste del paseo en z = " + zq + ": sin piso; no se pone.");
+                    continue;
+                }
+                Vector3 pie = new Vector3(x, y, zq);
+                if (!Libre(c, pie + Vector3.up * 2f, new Vector3(0.45f, 2f, 0.45f)) || c.Postes.Any(p => new Vector2(p.x - x, p.z - zq).magnitude < 8f))
+                {
+                    Log("Poste del paseo en z = " + zq + ": hay algo o ya hay un poste a menos de 8 m; no se pone.");
+                    continue;
+                }
+                Vector3 punta = KitS2c.Poste(c.Obra, padre, pie, Vector3.left, pie.y, n == 0);
+                c.Postes.Add(punta);
+                Physics.SyncTransforms();
+                n++;
+            }
+            Log("Postes nuevos sobre el paseo (el primero con transformador): " + n + ".");
+        }
+
         // ================================================================ Tendederos con ropa entre casas
 
         private static void Tendederos(Ctx c)
@@ -2018,7 +2131,7 @@ namespace MechaCyberpunk.Arte.Editor
             mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.back);
             Mesh prenda = mp.Crear("T1441_Prenda");
             c.Obra.Mallas.Add(prenda);
-            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f && (h.Z0 + h.Z1) * 0.5f > ZVistaSur && (h.Z0 + h.Z1) * 0.5f < ZVistaNorte).ToList();
+            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f && (h.Z0 + h.Z1) * 0.5f > ZVistaSur && (h.Z0 + h.Z1) * 0.5f < ZVistaNorte).OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - 110f)).ToList();
             List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Kit && h.Normal < 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle + 6.5f)) < 3f).ToList();
             int lineas = 0, prendas = 0;
             foreach (VariarCerroT1364.CasaT w in oeste)
@@ -2027,24 +2140,36 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     break;
                 }
-                VariarCerroT1364.CasaT e = este.OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - (w.Z0 + w.Z1) * 0.5f)).FirstOrDefault();
-                if (e == null || Mathf.Abs((e.Z0 + e.Z1) * 0.5f - (w.Z0 + w.Z1) * 0.5f) > 4f || !c.Obra.Chance(0.6f))
+                float z = (w.Z0 + w.Z1) * 0.5f;
+                VariarCerroT1364.CasaT e = este.OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - z)).FirstOrDefault();
+                bool conCasa = e != null && Mathf.Abs((e.Z0 + e.Z1) * 0.5f - z) <= 4f;
+                // Si la casa de enfrente está apagada (T1416 abre la vista), el cordel se ata a un poste del lado del paseo.
+                Vector3 poste = default;
+                bool conPoste = false;
+                if (!conCasa)
+                {
+                    foreach (Vector3 pp in c.Postes.Where(q => q.x > XCentroCalle + 2f && Mathf.Abs(q.z - z) < 10f).OrderBy(q => Mathf.Abs(q.z - z)).Take(1))
+                    {
+                        poste = pp;
+                        conPoste = true;
+                    }
+                }
+                if ((!conCasa && !conPoste) || !c.Obra.Chance(0.75f))
                 {
                     continue;
                 }
-                float z = (w.Z0 + w.Z1) * 0.5f;
                 float suelo;
                 if (!Suelo(c, XCentroCalle, z, YCalle(z), out suelo))
                 {
                     continue;
                 }
                 float y = suelo + c.Obra.Rango(3.6f, 4.6f);
-                if (y > Mathf.Min(w.Top, e.Top) - 0.8f)
+                if (y > (conCasa ? Mathf.Min(w.Top, e.Top) : w.Top) - 0.8f)
                 {
                     continue;
                 }
                 Vector3 a = new Vector3(w.X1 + 0.06f, y, z + c.Obra.Rango(-1f, 1f));
-                Vector3 b = new Vector3(e.X0 - 0.06f, y + c.Obra.Rango(-0.3f, 0.3f), z + c.Obra.Rango(-1f, 1f));
+                Vector3 b = conCasa ? new Vector3(e.X0 - 0.06f, y + c.Obra.Rango(-0.3f, 0.3f), z + c.Obra.Rango(-1f, 1f)) : new Vector3(poste.x, Mathf.Min(poste.y - 0.8f, y + c.Obra.Rango(-0.3f, 0.3f)), poste.z);
                 const float flecha = 0.4f;
                 if (!CableOk(c, a, b, flecha, 2))
                 {
@@ -2185,7 +2310,22 @@ namespace MechaCyberpunk.Arte.Editor
             int cosas = 0, flotan = 0, enterradas = 0, encimadas = 0, enPasillo = 0, grupos = 0;
             List<(Transform t, Bounds b)> todas = new List<(Transform, Bounds)>();
             // Lo combinado en lotes (antenas, parabólicas, varillas, tendederos, etc.) se asienta por construcción (t.Y); aquí quedan los objetos reales (tinacos con collider).
+            List<Transform> items = new List<Transform>();
             foreach (Transform t in techos)
+            {
+                if (t.name.StartsWith("Lod_"))
+                {
+                    foreach (Transform u in t)
+                    {
+                        items.Add(u);
+                    }
+                }
+                else
+                {
+                    items.Add(t);
+                }
+            }
+            foreach (Transform t in items)
             {
                 if (t.GetComponentInChildren<Animator>() != null || t.GetComponentInChildren<Renderer>() == null)
                 {
@@ -2341,7 +2481,7 @@ namespace MechaCyberpunk.Arte.Editor
                         sb.AppendLine("FALLO: el NPC " + t.name + " tiene collider.");
                     }
                     Vector3 p = t.position;
-                    if (p.z > 60f && p.z < 145f && Mathf.Abs(p.x - XCentroCalle) < 9f)
+                    if (EnCuadroK13(p))
                     {
                         enK13++;
                     }
@@ -2352,7 +2492,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            sb.AppendLine("Gente a la vista de K13 (z de 60 a 145 sobre la calle): " + enK13 + " (pedidas 3 a 5).");
+            sb.AppendLine("Gente dentro del cuadro de K13 (6 a 30 m del lente, campo " + CampoK13 + "): " + enK13 + " (pedidas 3 a 5).");
             if (enK13 < 3)
             {
                 sb.AppendLine("AVISO: menos de 3 personas en el cuadro de K13.");
