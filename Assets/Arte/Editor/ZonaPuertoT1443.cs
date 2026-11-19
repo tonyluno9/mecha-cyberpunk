@@ -87,6 +87,11 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly List<Vector3> pozas = new List<Vector3>();
         private static StringBuilder informe;
         private static int colocados;
+        private static readonly List<Bounds> contBounds = new List<Bounds>();
+        private static Vector3 camPos, camF, camR, camU;
+        private static bool hayCamara;
+        private const string SufijoApartado = "_T1443Apartado", SufijoColision = "_T1443Colision";
+        private const float TanV = 0.5774f, Aspecto = 1376f / 768f;
 
         // ================================================================ Aplicar
 
@@ -128,9 +133,11 @@ namespace MechaCyberpunk.Arte.Editor
                 Log("Antes: " + lucesAntes + " luces, " + objetosAntes + " objetos, prefab " + Megas(RutaPrefab) + " MB.");
                 obra = KitS2c.Empezar(Raiz, Semilla, zona.transform);
                 raiz = obra.Raiz;
+                RestaurarApartados();
                 CargarOcupados();
-                Paso("contenedores de colores", Contenedores);
+                Paso("cámara A15", BuscarCamara);
                 Paso("bodegas y detalles", Bodegas);
+                Paso("contenedores de colores", Contenedores);
                 Paso("caseta y reja", CasetaYReja);
                 Paso("postes y luz", Postes);
                 Paso("grúas", Gruas);
@@ -234,13 +241,13 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Material m = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
                 m.SetTexture("_BaseMap", TexRadial());
-                m.SetColor("_BaseColor", new Color(1f, 0.55f, 0.2f, 1f) * 0.55f);
+                m.SetColor("_BaseColor", new Color(1f, 0.6f, 0.25f, 0.6f));
                 m.SetFloat("_Surface", 1f);
-                m.SetFloat("_Blend", 2f);
-                m.SetFloat("_SrcBlend", 1f);
-                m.SetFloat("_DstBlend", 1f);
+                m.SetFloat("_Blend", 0f);
+                m.SetFloat("_SrcBlend", 5f);
+                m.SetFloat("_DstBlend", 10f);
                 m.SetFloat("_SrcBlendAlpha", 1f);
-                m.SetFloat("_DstBlendAlpha", 1f);
+                m.SetFloat("_DstBlendAlpha", 10f);
                 m.SetFloat("_ZWrite", 0f);
                 m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
                 m.SetOverrideTag("RenderType", "Transparent");
@@ -252,14 +259,14 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static Texture2D TexRadial()
         {
-            string ruta = Carpeta + "/T1443_PozaLuz.png";
+            string ruta = Carpeta + "/T1443_PozaLuzAlfa.png";
             Texture2D t = AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
             if (t != null)
             {
                 return t;
             }
             const int n = 64;
-            Texture2D img = new Texture2D(n, n, TextureFormat.RGB24, false);
+            Texture2D img = new Texture2D(n, n, TextureFormat.RGBA32, false);
             for (int y = 0; y < n; y++)
             {
                 for (int x = 0; x < n; x++)
@@ -267,7 +274,7 @@ namespace MechaCyberpunk.Arte.Editor
                     float dx = (x + 0.5f) / n * 2f - 1f, dy = (y + 0.5f) / n * 2f - 1f;
                     float v = Mathf.Clamp01(1f - Mathf.Sqrt(dx * dx + dy * dy));
                     v = v * v * (3f - 2f * v);
-                    img.SetPixel(x, y, new Color(v, v, v, 1f));
+                    img.SetPixel(x, y, new Color(1f, 1f, 1f, dx * dx + dy * dy >= 0.9f ? 0f : v * v));
                 }
             }
             File.WriteAllBytes(ruta, img.EncodeToPNG());
@@ -278,7 +285,8 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 ti.wrapMode = TextureWrapMode.Clamp;
                 ti.mipmapEnabled = false;
-                ti.alphaSource = TextureImporterAlphaSource.None;
+                ti.alphaSource = TextureImporterAlphaSource.FromInput;
+                ti.alphaIsTransparency = true;
                 ti.SaveAndReimport();
             }
             return AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
@@ -441,8 +449,256 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ================================================================ Lugar: ocupación, calles, suelo
 
+        private static bool EsContenedorViejo(Transform t)
+        {
+            return Categoria(t) == 0;
+        }
+
+        /// <summary>0 contenedor, 1 grúa, 2 barco, 3 bodega, -1 otra cosa (por el nombre de algún ancestro).</summary>
+        private static int Categoria(Transform t)
+        {
+            for (Transform p = t; p != null && p != zona.transform; p = p.parent)
+            {
+                string n = p.name;
+                if (n.Contains("Reemplazado") || n.EndsWith(SufijoApartado))
+                {
+                    return -1;
+                }
+                if (n.StartsWith("PU01_Grua")) return 1;
+                if (n.StartsWith("PU02_Barco")) return 2;
+                if (n.StartsWith("PU03_") || n.StartsWith("PU04_")) return 3;
+                if (n.StartsWith("PT01_Contenedor") || n.StartsWith("PU08")) return 0;
+            }
+            return -1;
+        }
+
+        private static bool LibreSinContenedores(Bounds b, float margen)
+        {
+            Bounds e = b;
+            e.Expand(new Vector3(margen * 2f, 0f, margen * 2f));
+            for (int i = 0; i < ocupados.Count; i++)
+            {
+                if (ocupados[i].Intersects(e) && !contBounds.Contains(ocupados[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>Reversible: apaga (y renombra con sufijo) los contenedores, escaleras y grafitis dentro de la caja y los colliders de su manzana.</summary>
+        private static void Apartar(Bounds b)
+        {
+            Bounds e = b;
+            e.Expand(new Vector3(1f, 0f, 1f));
+            int n = 0;
+            foreach (Transform t in zona.GetComponentsInChildren<Transform>(false).ToList())
+            {
+                if (t.IsChildOf(raiz) || t.name.EndsWith(SufijoApartado))
+                {
+                    continue;
+                }
+                bool candidato = t.name.StartsWith("PT01_Contenedor") || t.name.StartsWith("PU08") || t.name.Contains("Grafiti") || t.name.StartsWith("Escalera_");
+                if (!candidato || t.GetComponentInChildren<Renderer>() == null && !t.name.StartsWith("Escalera_"))
+                {
+                    continue;
+                }
+                Bounds bt = t.name.StartsWith("Escalera_") ? new Bounds(t.position, Vector3.one * 0.5f) : Medir(t.gameObject);
+                if (!e.Intersects(bt))
+                {
+                    continue;
+                }
+                Transform bloque = t.parent;
+                if (bloque != null && bloque.name.StartsWith("Bloque_") && !bloque.name.EndsWith(SufijoColision))
+                {
+                    foreach (BoxCollider bc in bloque.GetComponents<BoxCollider>())
+                    {
+                        bc.enabled = false;
+                    }
+                    bloque.name += SufijoColision;
+                }
+                t.name += SufijoApartado;
+                t.gameObject.SetActive(false);
+                n++;
+            }
+            ocupados.RemoveAll(o => contBounds.Contains(o) && o.Intersects(e));
+            Log("Apartadas " + n + " piezas de pilas (sufijo " + SufijoApartado + "; los colliders de su manzana se apagan y la manzana lleva " + SufijoColision + ").");
+        }
+
+        private static void RestaurarApartados()
+        {
+            int n = 0;
+            foreach (Transform t in zona.GetComponentsInChildren<Transform>(true).ToList())
+            {
+                if (t.name.EndsWith(SufijoApartado))
+                {
+                    t.name = t.name.Substring(0, t.name.Length - SufijoApartado.Length);
+                    t.gameObject.SetActive(true);
+                    n++;
+                }
+                else if (t.name.EndsWith(SufijoColision))
+                {
+                    t.name = t.name.Substring(0, t.name.Length - SufijoColision.Length);
+                    foreach (BoxCollider bc in t.GetComponents<BoxCollider>())
+                    {
+                        bc.enabled = true;
+                    }
+                    n++;
+                }
+            }
+            Log("Pilas apartadas por una corrida anterior: " + n + " restauradas.");
+        }
+
+        // ---------------------------------------------------------------- Cámara
+
+        private static bool Proyectar(Vector3 w, out float u, out float v, out float prof)
+        {
+            Vector3 d = w - camPos;
+            prof = Vector3.Dot(d, camF);
+            u = v = 0f;
+            if (prof < 3f)
+            {
+                return false;
+            }
+            u = 0.5f + 0.5f * Vector3.Dot(d, camR) / (prof * TanV * Aspecto);
+            v = 0.5f + 0.5f * Vector3.Dot(d, camU) / (prof * TanV);
+            return true;
+        }
+
+        /// <summary>
+        /// Busca la cámara A15: prueba posiciones (rejilla de 15 m), alturas 38/46/56 m, cabeceos 35/40/45 grados y 24 rumbos, y puntúa cuántas grúas y barco caen arriba a la izquierda,
+        /// bodegas abajo a la derecha, contenedores en el cuadro y cuántos cuartos del cuadro (4x4) tienen algo. La mira debe caer dentro del patio. Deja CamaraA y CamaraA/Mira bajo la raíz.
+        /// </summary>
+        private static void BuscarCamara()
+        {
+            List<Vector3> pts = new List<Vector3>();
+            List<int> cat = new List<int>();
+            int k = 0;
+            foreach (Renderer r in zona.GetComponentsInChildren<Renderer>(false))
+            {
+                if (r == null || !r.enabled || r is ParticleSystemRenderer || r.transform.IsChildOf(raiz))
+                {
+                    continue;
+                }
+                int c = Categoria(r.transform);
+                if (c < 0)
+                {
+                    continue;
+                }
+                Bounds b = r.bounds;
+                if (c == 0)
+                {
+                    if (k++ % 3 != 0 || b.size.x > 40f) continue;
+                    pts.Add(b.center); cat.Add(0);
+                }
+                else if (c == 1)
+                {
+                    pts.Add(b.center); cat.Add(1);
+                    pts.Add(new Vector3(b.center.x, b.max.y, b.center.z)); cat.Add(1);
+                }
+                else if (c == 2)
+                {
+                    pts.Add(b.center); cat.Add(2);
+                    pts.Add(b.center + new Vector3(b.size.x * 0.33f, 0f, 0f)); cat.Add(2);
+                    pts.Add(b.center - new Vector3(b.size.x * 0.33f, 0f, 0f)); cat.Add(2);
+                }
+                else
+                {
+                    pts.Add(b.center); cat.Add(3);
+                }
+            }
+            Vector3[] P = pts.ToArray();
+            int[] C = cat.ToArray();
+            Log("Búsqueda de cámara: " + P.Length + " puntos (contenedores " + C.Count(x => x == 0) + ", grúas " + C.Count(x => x == 1) + ", barco " + C.Count(x => x == 2) + ", bodegas " + C.Count(x => x == 3) + ").");
+            float tanH = TanV * Aspecto;
+            float mejor = -1f;
+            Vector3 mejorPos = Vector3.zero, mejorF = Vector3.forward;
+            float mejorYaw = 0f, mejorPitch = 0f;
+            float[] alturas = { 38f, 46f, 56f };
+            float[] cabeceos = { 35f, 40f, 45f };
+            List<(float s, Vector3 p, float yaw, float pitch)> tops = new List<(float, Vector3, float, float)>();
+            for (float x = 90f; x <= 360f; x += 15f)
+            {
+                for (float z = -20f; z >= -290f; z -= 15f)
+                {
+                    foreach (float h in alturas)
+                    {
+                        Vector3 pos = new Vector3(x, h, z);
+                        foreach (float pitch in cabeceos)
+                        {
+                            float cp = Mathf.Cos(pitch * Mathf.Deg2Rad), sp = Mathf.Sin(pitch * Mathf.Deg2Rad);
+                            for (int ya = 0; ya < 24; ya++)
+                            {
+                                float yaw = ya * 15f;
+                                float sy = Mathf.Sin(yaw * Mathf.Deg2Rad), cy = Mathf.Cos(yaw * Mathf.Deg2Rad);
+                                Vector3 f = new Vector3(sy * cp, -sp, cy * cp);
+                                Vector3 rr = new Vector3(cy, 0f, -sy);
+                                Vector3 uu = Vector3.Cross(f, rr);
+                                float t = h / sp;
+                                Vector3 suelo = pos + f * t;
+                                if (suelo.x < 125f || suelo.x > 310f || suelo.z > -55f || suelo.z < -245f)
+                                {
+                                    continue;
+                                }
+                                int cTL = 0, sTL = 0, bBR = 0, cC = 0, mask = 0;
+                                for (int i = 0; i < P.Length; i++)
+                                {
+                                    Vector3 d = P[i] - pos;
+                                    float prof = d.x * f.x + d.y * f.y + d.z * f.z;
+                                    if (prof < 8f || prof > 260f) continue;
+                                    float xx = (d.x * rr.x + d.z * rr.z) / (prof * tanH);
+                                    float yy = (d.x * uu.x + d.y * uu.y + d.z * uu.z) / (prof * TanV);
+                                    if (xx < -1f || xx > 1f || yy < -1f || yy > 1f) continue;
+                                    float u = 0.5f + 0.5f * xx, v = 0.5f + 0.5f * yy;
+                                    mask |= 1 << (Mathf.Min(3, (int)(u * 4f)) * 4 + Mathf.Min(3, (int)(v * 4f)));
+                                    int ct = C[i];
+                                    if (ct == 1 && u < 0.5f && v > 0.5f) cTL++;
+                                    else if (ct == 2 && u < 0.55f && v > 0.5f) sTL++;
+                                    else if (ct == 3 && u > 0.5f && v < 0.6f) bBR++;
+                                    else if (ct == 0) cC++;
+                                }
+                                int celdas = 0;
+                                for (int m = mask; m != 0; m &= m - 1) celdas++;
+                                float s = 2f * Mathf.Min(cTL, 4) / 4f + 2f * (sTL > 0 ? 1f : 0f) + 2f * Mathf.Min(bBR, 3) / 3f + 2f * Mathf.Min(cC, 80) / 80f + 2f * celdas / 16f;
+                                if (s > mejor)
+                                {
+                                    mejor = s; mejorPos = pos; mejorF = f; mejorYaw = yaw; mejorPitch = pitch;
+                                }
+                                if (s > 5f)
+                                {
+                                    tops.Add((s, pos, yaw, pitch));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var t3 in tops.OrderByDescending(a => a.s).Take(3))
+            {
+                Log("Cámara candidata: puntaje " + t3.s.ToString("F2") + " en " + t3.p.ToString("F0") + ", rumbo " + t3.yaw + ", cabeceo " + t3.pitch + ".");
+            }
+            if (mejor < 0f)
+            {
+                Log("AVISO: no hay cámara que muestre el patio; Fotos usa CamaraA15 fija.");
+                return;
+            }
+            camPos = mejorPos;
+            camF = mejorF;
+            camR = new Vector3(Mathf.Cos(mejorYaw * Mathf.Deg2Rad), 0f, -Mathf.Sin(mejorYaw * Mathf.Deg2Rad));
+            camU = Vector3.Cross(camF, camR);
+            hayCamara = true;
+            GameObject cam = new GameObject("CamaraA");
+            cam.transform.SetParent(raiz, false);
+            cam.transform.position = camPos;
+            GameObject mira = new GameObject("Mira");
+            mira.transform.SetParent(cam.transform, false);
+            mira.transform.position = camPos + camF * (camPos.y / Mathf.Sin(mejorPitch * Mathf.Deg2Rad));
+            Log("CÁMARA A15 ELEGIDA: " + camPos.ToString("F1") + " mirando a " + mira.transform.position.ToString("F1") + " (rumbo " + mejorYaw + ", cabeceo " + mejorPitch + ", altura " + camPos.y + ", campo 60), puntaje " + mejor.ToString("F2") + " de 10.");
+        }
+
         private static void CargarOcupados()
         {
+            contBounds.Clear();
             foreach (Renderer r in zona.GetComponentsInChildren<Renderer>(false))
             {
                 if (r == null || !r.enabled || r is ParticleSystemRenderer || r.transform.IsChildOf(raiz))
@@ -459,6 +715,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 ocupados.Add(b);
+                if (EsContenedorViejo(r.transform)) { contBounds.Add(b); }
             }
             Log("Renderers que cuentan como obstáculo: " + ocupados.Count + "; tramos de asfalto: " + tramos.Count + ".");
         }
@@ -618,6 +875,18 @@ namespace MechaCyberpunk.Arte.Editor
             }
             ocupados.Add(b);
             return go;
+        }
+
+        /// <summary>Como Medir pero sin los conos de halo (son luz, no volumen).</summary>
+        private static Bounds MedirSinHalo(GameObject go)
+        {
+            Renderer[] rs = go.GetComponentsInChildren<Renderer>(true).Where(r => r.name != "Halo").ToArray();
+            Bounds b = rs.Length > 0 ? rs[0].bounds : new Bounds(go.transform.position, Vector3.one);
+            foreach (Renderer r in rs)
+            {
+                b.Encapsulate(r.bounds);
+            }
+            return b;
         }
 
         private static List<Vector3> Vertices(Transform t)
@@ -808,89 +1077,139 @@ namespace MechaCyberpunk.Arte.Editor
             Lote magenta = LoteDe("NeonMagenta", Emisivo("NeonMagenta", new Color(0.3f, 0.02f, 0.2f), new Color(7f, 0.6f, 4.5f)));
             Lote turquesa = LoteDe("NeonTurquesa", Emisivo("NeonTurquesa", new Color(0.02f, 0.25f, 0.22f), new Color(0.5f, 6.5f, 6f)));
             Lote lampara = LoteDe("LamparasBodega", Emisivo("LamparaBodega", new Color(0.3f, 0.2f, 0.08f), new Color(9f, 4.5f, 1.4f)));
-            List<float> zs = new List<float>();
-            for (float z = -105f; z >= -205f; z -= 4f)
+            // Medida de una bodega (largo 26 m) sin girar: se instancia una vez y se borra.
+            GameObject prueba = Colocar(g, codigos[0], new Vector3(0f, YPatio, 0f), 0f, 26f, 0f, false);
+            if (prueba == null)
             {
-                zs.Add(z);
+                Log("Bodegas: falta PU03_Bodega.");
+                return;
             }
-            zs = zs.OrderBy(z => Mathf.Abs(z + 168f)).ToList();
+            Bounds m0 = Medir(prueba);
+            Object.DestroyImmediate(prueba);
+            Vector3 medida = m0.size;
+            Log("Bodega de prueba (largo 26): " + medida.ToString("F1") + " (x, y, z con yaw 0).");
             int puestas = 0;
-            foreach (float z in zs)
+            for (int ronda = 0; ronda < 2 && puestas < 3; ronda++)
             {
-                if (puestas >= 3)
+                bool apartar = ronda == 1;
+                if (apartar && puestas >= 2)
                 {
                     break;
                 }
-                string cod = codigos[puestas % 2];
-                GameObject go = Colocar(g, cod, new Vector3(281f, YPatio, z), 90f, 26f, 0f, false);
-                if (go == null)
+                List<(Vector3 centro, float yaw, float nota)> sitios = new List<(Vector3, float, float)>();
+                for (float x = 120f; x <= 314f; x += 3f)
                 {
-                    break;
+                    for (float z = -236f; z <= -52f; z += 3f)
+                    {
+                        for (int q = 0; q < 4; q++)
+                        {
+                            float yaw = q * 90f;
+                            Vector3 puerta = q == 0 ? Vector3.forward : q == 1 ? Vector3.right : q == 2 ? Vector3.back : Vector3.left;
+                            bool giro = q % 2 == 1;
+                            Vector3 tam = giro ? new Vector3(medida.z, medida.y, medida.x) : medida;
+                            Bounds b = new Bounds(new Vector3(x, tam.y * 0.5f, z), tam);
+                            if (x - tam.x * 0.5f < 118f || x + tam.x * 0.5f > 314f || z - tam.z * 0.5f < -236f || z + tam.z * 0.5f > -50f)
+                            {
+                                continue;
+                            }
+                            if (CercaK15(b.center) || EnCalle(b, 0.3f) || !(apartar ? LibreSinContenedores(b, 0.4f) : Libre(b, 0.4f)))
+                            {
+                                continue;
+                            }
+                            float u, v, prof;
+                            if (!hayCamara || !Proyectar(b.center, out u, out v, out prof) || prof > 220f || u < 0.45f || u > 0.97f || v < 0.04f || v > 0.6f)
+                            {
+                                continue;
+                            }
+                            Vector3 haciaCam = camPos - b.center;
+                            haciaCam.y = 0f;
+                            if (Vector3.Dot(puerta, haciaCam.normalized) < 0.2f)
+                            {
+                                continue;
+                            }
+                            sitios.Add((b.center, yaw, Vector2.Distance(new Vector2(u, v), new Vector2(0.75f, 0.3f))));
+                        }
+                    }
                 }
-                Bounds b = Medir(go);
-                if (b.size.x > MaxAnchoBodega)
+                foreach (var sitio in sitios.OrderBy(s => s.nota))
                 {
-                    float f = MaxAnchoBodega / b.size.x;
-                    go.transform.localScale *= f;
-                    b = Medir(go);
-                    go.transform.position += new Vector3(0f, YPatio - b.min.y, 0f);
-                    b = Medir(go);
-                }
-                go.transform.position += new Vector3(ParedEsteBodega - b.max.x, 0f, 0f);
-                b = Medir(go);
-                if (b.min.x < 273.8f || CercaK15(b.center) || EnCalle(b, 0.3f) || !Libre(b, 0.4f))
-                {
-                    Object.DestroyImmediate(go);
-                    continue;
-                }
-                ocupados.Add(b);
-                puestas++;
-                go.name = cod + "_T1443_" + puestas;
-                Log("Bodega " + go.name + ": x " + b.min.x.ToString("F1") + ".." + b.max.x.ToString("F1") + ", z " + b.min.z.ToString("F1") + ".." + b.max.z.ToString("F1") + ", alto " + b.size.y.ToString("F1") + " m.");
-
-                List<Vector3> vs = Vertices(go.transform);
-                float pared = b.max.x;
-                IEnumerable<Vector3> paredes = vs.Where(v => v.y > 0.5f && v.y < 3f);
-                if (paredes.Any())
-                {
-                    pared = paredes.Max(v => v.x);
-                }
-                // Ventiladores sobre la cumbrera (a lo largo de z).
-                for (int k = -1; k <= 1; k++)
-                {
-                    float vz = b.center.z + k * b.size.z * 0.27f;
-                    float vx = b.center.x;
-                    IEnumerable<Vector3> cerca = vs.Where(v => Mathf.Abs(v.x - vx) < 2f && Mathf.Abs(v.z - vz) < 2f);
-                    if (!cerca.Any())
+                    if (puestas >= 3)
+                    {
+                        break;
+                    }
+                    bool giro = Mathf.Abs(Mathf.Repeat(sitio.yaw, 180f) - 90f) < 1f;
+                    Vector3 tam = giro ? new Vector3(medida.z, medida.y, medida.x) : medida;
+                    Bounds pre = new Bounds(sitio.centro, tam);
+                    if (!(apartar ? LibreSinContenedores(pre, 0.4f) : Libre(pre, 0.4f)))
                     {
                         continue;
                     }
-                    float yt = cerca.Max(v => v.y);
-                    Caja(ventilador, new Vector3(vx, yt + 0.3f, vz), new Vector3(1.3f, 0.9f, 1.3f));
-                    Caja(tapa, new Vector3(vx, yt + 0.88f, vz), new Vector3(1.8f, 0.18f, 1.8f));
-                }
-                // Neones y lámparas en la pared de enfrente (este).
-                float zc = b.center.z;
-                Caja(magenta, new Vector3(pared + 0.12f, 4.6f, zc + b.size.z * 0.28f), new Vector3(0.14f, 1.8f, 0.4f));
-                Caja(turquesa, new Vector3(pared + 0.12f, 3.4f, zc - b.size.z * 0.3f), new Vector3(0.14f, 1.3f, 0.35f));
-                Caja(lampara, new Vector3(pared + 0.25f, 5.6f, zc + 4f), new Vector3(0.5f, 0.25f, 0.3f));
-                Caja(lampara, new Vector3(pared + 0.25f, 5.6f, zc - 4f), new Vector3(0.5f, 0.25f, 0.3f));
-                // Pallets, cajas, barriles y montacargas frente a la pared.
-                float xp = pared + 1.8f;
-                Poner(d, "PU06_Pallets", new Vector3(xp, YPatio, zc - 6f), obra.Rango(0f, 180f), 0f, 1.2f);
-                Poner(d, "PU06_Pallets", new Vector3(xp, YPatio, zc + 7f), obra.Rango(0f, 180f), 0f, 1.0f);
-                Poner(d, "C17_Huacales", new Vector3(xp, YPatio, zc + 1.5f), obra.Rango(0f, 360f), 0f, 1.0f);
-                Poner(d, "C17_Huacales", new Vector3(xp + 0.4f, YPatio, zc - 2.5f), obra.Rango(0f, 360f), 0f, 0.9f);
-                for (int i = 0; i < 3; i++)
-                {
-                    Poner(d, "C16_Tambo", new Vector3(xp + 1.4f + i * 0.2f, YPatio, zc + 9f + i * 1.0f), obra.Rango(0f, 360f), 0f, 1.0f);
-                }
-                if (puestas % 2 == 1)
-                {
-                    Poner(d, "PU05_Montacargas", new Vector3(xp + 2.2f, YPatio, zc - 10f), 90f, 0f, 2.6f);
+                    string cod = codigos[puestas % 2];
+                    GameObject go = Colocar(g, cod, new Vector3(sitio.centro.x, YPatio, sitio.centro.z), sitio.yaw, 26f, 0f, false);
+                    if (go == null)
+                    {
+                        break;
+                    }
+                    Bounds b = Medir(go);
+                    if (apartar)
+                    {
+                        Apartar(b);
+                    }
+                    ocupados.Add(b);
+                    puestas++;
+                    go.name = cod + "_T1443_" + puestas;
+                    Log("Bodega " + go.name + (apartar ? " (apartó pilas)" : "") + ": x " + b.min.x.ToString("F1") + ".." + b.max.x.ToString("F1") + ", z " + b.min.z.ToString("F1") + ".." + b.max.z.ToString("F1") + ", alto " + b.size.y.ToString("F1") + " m, yaw " + sitio.yaw + ".");
+                    DetallesBodega(go, d, sitio.yaw, ventilador, tapa, magenta, turquesa, lampara);
                 }
             }
-            Log("Bodegas nuevas: " + puestas + " (de 3 posibles en la franja este x 274..288, entre las pilas y la calle de x = 300).");
+            Log("Bodegas nuevas: " + puestas + " (abajo a la derecha de la cámara A15).");
+        }
+
+        private static void DetallesBodega(GameObject go, Transform d, float yaw, Lote ventilador, Lote tapa, Lote magenta, Lote turquesa, Lote lampara)
+        {
+            Bounds b = Medir(go);
+            List<Vector3> vs = Vertices(go.transform);
+            Quaternion giro = Quaternion.Euler(0f, yaw, 0f);
+            Vector3 puerta = giro * Vector3.forward; // yaw 0: puerta a +z; 90: a +x (como en T-1357)
+            Vector3 lado = Vector3.Cross(Vector3.up, puerta);
+            bool ejeX = Mathf.Abs(puerta.x) > 0.5f;
+            float pared = ejeX ? b.size.x * 0.5f : b.size.z * 0.5f;
+            IEnumerable<Vector3> paredes = vs.Where(v => v.y > 0.5f && v.y < 3f);
+            if (paredes.Any())
+            {
+                pared = paredes.Max(v => Vector3.Dot(v - b.center, puerta));
+            }
+            float mitadLargo = ejeX ? b.size.z * 0.5f : b.size.x * 0.5f;
+            for (int k = -1; k <= 1; k++)
+            {
+                Vector3 p = b.center + lado * (k * mitadLargo * 0.5f);
+                IEnumerable<Vector3> cerca = vs.Where(v => Mathf.Abs(v.x - p.x) < 2f && Mathf.Abs(v.z - p.z) < 2f);
+                if (!cerca.Any())
+                {
+                    continue;
+                }
+                float yt = cerca.Max(v => v.y);
+                Caja(ventilador, new Vector3(p.x, yt + 0.3f, p.z), new Vector3(1.3f, 0.9f, 1.3f));
+                Caja(tapa, new Vector3(p.x, yt + 0.88f, p.z), new Vector3(1.8f, 0.18f, 1.8f));
+            }
+            Vector3 cara = b.center + puerta * (pared + 0.12f);
+            Vector3 grosor = ejeX ? new Vector3(0.14f, 1f, 0.4f) : new Vector3(0.4f, 1f, 0.14f);
+            Caja(magenta, new Vector3(cara.x, 4.6f, cara.z) + lado * (mitadLargo * 0.55f), new Vector3(grosor.x, 1.8f, grosor.z));
+            Caja(turquesa, new Vector3(cara.x, 3.4f, cara.z) - lado * (mitadLargo * 0.6f), new Vector3(grosor.x, 1.3f, grosor.z));
+            Vector3 gl = ejeX ? new Vector3(0.5f, 0.25f, 0.3f) : new Vector3(0.3f, 0.25f, 0.5f);
+            Caja(lampara, new Vector3(cara.x, 5.6f, cara.z) + lado * 4f + puerta * 0.13f, gl);
+            Caja(lampara, new Vector3(cara.x, 5.6f, cara.z) - lado * 4f + puerta * 0.13f, gl);
+            Vector3 frente = b.center + puerta * (pared + 1.8f);
+            float ry = Mathf.Atan2(puerta.x, puerta.z) * Mathf.Rad2Deg;
+            Poner(d, "PU06_Pallets", frente - lado * 6f, ry + obra.Rango(-20f, 20f), 0f, 1.2f);
+            Poner(d, "PU06_Pallets", frente + lado * 7f, ry + obra.Rango(-20f, 20f), 0f, 1.0f);
+            Poner(d, "C17_Huacales", frente + lado * 1.5f, obra.Rango(0f, 360f), 0f, 1.0f);
+            Poner(d, "C17_Huacales", frente - lado * 2.5f + puerta * 0.4f, obra.Rango(0f, 360f), 0f, 0.9f);
+            for (int i = 0; i < 3; i++)
+            {
+                Poner(d, "C16_Tambo", frente + lado * (9f + i) + puerta * (1.4f + i * 0.2f), obra.Rango(0f, 360f), 0f, 1.0f);
+            }
+            Poner(d, "PU05_Montacargas", frente - lado * 10f + puerta * 2.8f, ry, 0f, 2.6f);
         }
 
         private static void CasetaYReja()
@@ -978,6 +1297,7 @@ namespace MechaCyberpunk.Arte.Editor
             Lote cabezas = LoteDe("CabezasPoste", Emisivo("CabezaPoste", new Color(0.4f, 0.22f, 0.08f), new Color(12f, 5.5f, 1.4f)));
             Lote poza = LoteDe("PozasLuz", MatPoza());
             int conLuz = 0, sinLuz = 0;
+            List<Vector3> ocupadosPostes = new List<Vector3>();
             Dictionary<string, int> usados = new Dictionary<string, int>();
             foreach (Vector3[] c in buenos)
             {
@@ -989,6 +1309,11 @@ namespace MechaCyberpunk.Arte.Editor
                 pie.y = Suelo(pie.x, pie.z);
                 Vector3 hacia = c[1];
                 Bounds cuerpo = new Bounds(pie + Vector3.up * 3f, new Vector3(1f, 6f, 1f));
+                if (!Libre(cuerpo, 0.5f) || ocupadosPostes.Any(q => Vector3.Distance(q, pie) < 9f))
+                {
+                    continue; // ya hay otro poste cerca (los dos de una esquina se encimaban)
+                }
+                ocupadosPostes.Add(pie);
                 if (conLuz < TopeLuces)
                 {
                     KitS2c.Poste(obra, g, pie, hacia, pie.y, false);
@@ -1066,14 +1391,39 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     peor = Mathf.Max(peor, Mathf.Abs(p.y - Suelo(p.x, p.z)));
                 }
-                float baja = minY - Suelo(pies[0].x, pies[0].z);
-                if (Mathf.Abs(baja) > 0.05f && Mathf.Abs(baja) < 3f)
+                // Muestras de las patas (una por cuadro de 0.5 m) y búsqueda del ajuste (dy, dz de hasta 3 m) con el peor error mínimo contra el piso.
+                List<Vector3> muestras = pies.GroupBy(p => new Vector2Int(Mathf.RoundToInt(p.x * 2f), Mathf.RoundToInt(p.z * 2f))).Select(gp => gp.First()).Take(40).ToList();
+                float mejorCosto = float.MaxValue, mejorDy = 0f, mejorDz = 0f;
+                for (float dz = -3f; dz <= 3.01f; dz += 0.5f)
                 {
-                    g.position += Vector3.down * baja;
+                    List<float> suelos = muestras.Select(m => Suelo(m.x, m.z + dz)).ToList();
+                    foreach (float s0 in suelos.Distinct().ToList())
+                    {
+                        float dy = s0 - minY;
+                        float costo = 0f;
+                        for (int i = 0; i < muestras.Count; i++)
+                        {
+                            costo = Mathf.Max(costo, Mathf.Abs(muestras[i].y + dy - suelos[i]));
+                        }
+                        costo += 0.01f * (Mathf.Abs(dz) + Mathf.Abs(dy));
+                        if (costo < mejorCosto)
+                        {
+                            mejorCosto = costo; mejorDy = dy; mejorDz = dz;
+                        }
+                    }
+                }
+                if (mejorCosto + 0.01f < peor && Mathf.Abs(mejorDy) < 3f)
+                {
+                    g.position += new Vector3(0f, mejorDy, mejorDz);
+                    Physics.SyncTransforms();
                     vs = Vertices(g);
-                    minY -= baja;
-                    maxY -= baja;
-                    Log("Grúa " + g.name + ": movida " + (-baja).ToString("F2") + " m en y para apoyar las patas en el muelle (antes a " + baja.ToString("F2") + " m).");
+                    minY += mejorDy;
+                    maxY += mejorDy;
+                    Log("Grúa " + g.name + ": movida dy " + mejorDy.ToString("F2") + " m (a y = piso) y dz " + mejorDz.ToString("F1") + " m; peor apoyo " + peor.ToString("F2") + " -> " + mejorCosto.ToString("F2") + " m.");
+                }
+                else if (peor > 0.05f)
+                {
+                    Log("AVISO grúa " + g.name + ": peor apoyo " + peor.ToString("F2") + " m y ningún ajuste de ±3 m lo mejora (mejor " + mejorCosto.ToString("F2") + ").");
                 }
                 List<Vector3> puntos = new List<Vector3>();
                 System.Action<Vector3, bool> agregar = (p, verde) =>
@@ -1148,6 +1498,24 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             float cubierta = validas[(int)(validas.Count * 0.35f)];
+            // La cubierta es el plano horizontal con más vértices (franjas de 0.25 m) en la franja central, entre el 10 % y el 75 % del alto del casco.
+            Dictionary<int, int> histograma = new Dictionary<int, int>();
+            foreach (Vector3 vh in vs)
+            {
+                if (Mathf.Abs(vh.z - b.center.z) < b.size.z * 0.35f && vh.y > b.min.y + b.size.y * 0.1f && vh.y < b.min.y + b.size.y * 0.75f)
+                {
+                    int cubo = Mathf.RoundToInt(vh.y * 4f);
+                    int cuenta;
+                    histograma.TryGetValue(cubo, out cuenta);
+                    histograma[cubo] = cuenta + 1;
+                }
+            }
+            if (histograma.Count > 0)
+            {
+                int mejorCubo = histograma.OrderByDescending(kv => kv.Value).First().Key;
+                Log("Barco: cubierta por histograma y = " + (mejorCubo / 4f).ToString("F2") + " (percentil daba " + cubierta.ToString("F2") + ").");
+                cubierta = mejorCubo / 4f;
+            }
             // Tramo plano más largo de la cubierta.
             int mejorIni = -1, mejorLen = 0, ini = -1;
             for (int i = 0; i <= nb; i++)
@@ -1312,7 +1680,7 @@ namespace MechaCyberpunk.Arte.Editor
                         {
                             continue;
                         }
-                        Tira(l, p, dir, paso + 0.02f, 0.22f, Suelo(p.x, p.z) + 0.02f);
+                        Tira(l, p, dir, paso + 0.02f, 0.34f, Suelo(p.x, p.z) + 0.02f);
                         bordes++;
                     }
                 }
@@ -1352,9 +1720,9 @@ namespace MechaCyberpunk.Arte.Editor
             dir.Normalize();
             Vector3 r = new Vector3(dir.z, 0f, -dir.x);
             Vector3 cola = new Vector3(centro.x, y, centro.z) - dir * 1.65f;
-            Tira(l, cola + dir * 1.1f, dir, 2.2f, 0.3f, y);
+            Tira(l, cola + dir * 1.1f, dir, 2.2f, 0.45f, y);
             Vector3 baseCabeza = cola + dir * 2.2f;
-            Triangulo(l, baseCabeza - r * 0.55f, baseCabeza + r * 0.55f, cola + dir * 3.3f, Vector3.up);
+            Triangulo(l, baseCabeza - r * 0.85f, baseCabeza + r * 0.85f, cola + dir * 3.3f, Vector3.up);
         }
 
         private static void Charcos()
@@ -1493,7 +1861,7 @@ namespace MechaCyberpunk.Arte.Editor
                     List<Bounds> cajas = new List<Bounds>();
                     foreach (Transform t in piezas)
                     {
-                        Bounds b = Medir(t.gameObject);
+                        Bounds b = MedirSinHalo(t.gameObject);
                         cajas.Add(b);
                         float suelo = Suelo(b.center.x, b.center.z);
                         if (Mathf.Abs(b.min.y - suelo) > 0.05f && !t.name.StartsWith("Poste"))
@@ -1539,10 +1907,13 @@ namespace MechaCyberpunk.Arte.Editor
                             List<Vector3> vs = Vertices(g);
                             if (vs.Count == 0) continue;
                             float minY = vs.Min(p => p.y);
-                            Vector3 pie = vs.OrderBy(p => p.y).First();
-                            float s = Suelo(pie.x, pie.z);
-                            bool bien = Mathf.Abs(minY - s) <= 0.05f;
-                            v.AppendLine((bien ? "Grúa " : "FALLA grúa ") + g.name + ": pata baja y " + minY.ToString("F2") + " vs piso " + s.ToString("F2"));
+                            float peorPata = 0f;
+                            foreach (Vector3 pp in vs.Where(q => q.y < minY + 0.3f).Take(60))
+                            {
+                                peorPata = Mathf.Max(peorPata, Mathf.Abs(pp.y - Suelo(pp.x, pp.z)));
+                            }
+                            bool bien = peorPata <= 0.05f;
+                            v.AppendLine((bien ? "Grúa " : "FALLA grúa ") + g.name + ": pata baja y " + minY.ToString("F2") + ", peor error contra el piso " + peorPata.ToString("F2") + " m");
                             if (!bien) fallos++;
                         }
                     }
@@ -1575,8 +1946,21 @@ namespace MechaCyberpunk.Arte.Editor
             Directory.CreateDirectory(Path.GetDirectoryName(RutaFoto));
             Physics.SyncTransforms();
             const string referencia = "imageassets/referencias/look/A15_Puerto_Aerea.png";
-            FotoCamara(CamaraA15, MiraA15, "Logs/t1443-a15-juego.png", CampoA15, AereasT1414.DensidadNieblaAerea);
-            FotoCamara(CamaraA15, MiraA15, "Logs/t1443-a15-niebla-juego.png", CampoA15, -1f);
+            Vector3 desde = CamaraA15, mira = MiraA15;
+            Transform patio = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t.name == Raiz);
+            Transform marca = patio != null ? patio.Find("CamaraA") : null;
+            if (marca != null && marca.Find("Mira") != null)
+            {
+                desde = marca.position;
+                mira = marca.Find("Mira").position;
+                Debug.Log("[ZonaPuertoT1443] Cámara de la búsqueda: " + desde + " -> " + mira);
+            }
+            else
+            {
+                Debug.LogWarning("[ZonaPuertoT1443] No hay " + Raiz + "/CamaraA (corre Aplicar): se usa la cámara fija.");
+            }
+            FotoCamara(desde, mira, "Logs/t1443-a15-juego.png", CampoA15, AereasT1414.DensidadNieblaAerea);
+            FotoCamara(desde, mira, "Logs/t1443-a15-niebla-juego.png", CampoA15, -1f);
             ColocarS2.LadoALado(referencia, "Logs/t1443-a15-juego.png", RutaFoto);
             ColocarS2.LadoALado(referencia, "Logs/t1443-a15-niebla-juego.png", RutaFoto.Replace(".png", "-niebla.png"));
             EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single); // sin guardar
