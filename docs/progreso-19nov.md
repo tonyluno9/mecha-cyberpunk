@@ -59,5 +59,9 @@ que diga "Qué sigue".
 - Ronda 2 aplicada completa: T-1393 Malecón (skyline en 2 arcos a 495 m, 27 neones, 76 cables; solo 1 ML05 cupo porque mide 14.7 m y las casas 5–7 m), T-1394 Cerro (70 enlaces entre azoteas, 45 escaleras de servicio, variedad CC, 26 neones, cámara K13 en la calle base), T-1395 Autopista (cámara K18 en la calle baja, postes C07, túnel iluminado, 25 faroles AU01 con placa de sodio), T-1396 Puerto (PU08 orientado, bodegas con alero, neón y lámparas, balizas en las grúas, barco a la vista), T-1398 (18 drones con ruta: Nova, SKULLS, policía y tráfico aéreo) y T-1392 look (charcos S2c con reflejo, ambiente y niebla más claros, volumen por zona, emisión de NE01, NE01B y NE02 encendida). Hay 1341 luces en la escena (el tope seguro es 1400).
 - Pruebas EditMode de las tareas nuevas: 218/222. Las 4 fallas se corrigieron: 3 eran de E16_b (se quitó) y 1 de carros en U1.
 
+- 03:10 Fotos de la ronda 2: hay neones, fachadas de color, charcos con reflejo y carros. Faltan la niebla y el cielo, el skyline del Malecón salía como panel liso (el material copiado tenía niebla; corregido con Correr19nov.ArreglarSkylineMalecon), los cables del Cerro estaban rotos, no había grafiti a la vista en el Puerto y la composición de K18 no coincidía. Se lanzó la ronda 3 (docs/brief-ronda3-19nov.md): T-1399 niebla y cielo, T-1400 Malecón (ML05 que ocupan 2 a 4 casas), T-1401 Cerro (cables) y T-1402 Autopista y Puerto.
+- El primer build de Juego falló por disco lleno ("Failed to write file"). Se quitaron 32 worktrees viejos del 17 y 18 de noviembre, todos limpios y ya integrados (sus ramas quedan): ahora hay 27 GB libres.
+- 03:45 Corrida 9: se aplica la ronda 3 y el look (T-1392 y luego T-1399).
+
 ## Qué sigue
 - Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
