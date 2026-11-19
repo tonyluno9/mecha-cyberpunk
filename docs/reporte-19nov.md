@@ -13,9 +13,9 @@ El paso a paso está en docs/progreso-19nov.md y lo que no quedó, en docs/pendi
 | Malecón | K11 | `docs/capturas/t-1404/malecon-k11.png` | Barandal y paseo con faroles de sodio, niebla sobre la bahía, skyline SK01 al otro lado del mar, fachadas con neón, aires y cables. Faltan la fila de palmeras de la referencia y la gente, que depende del tráfico de peatones en juego. |
 | Malecón, muelle | K12 | `docs/capturas/t-1393/malecon-k12.png` | Paseo, faro encendido (T-1404) y skyline. Faltan el puesto de mariscos con lona y las lanchas. |
 | Malecón, aérea | A11 | `docs/capturas/t-1393/malecon-a11.png` | |
-| Colonia del Cerro | K13 | `docs/capturas/t-1405/cerro-k13.png` | Calle base con casas de colores, neones, cables y carros, sin cables pegados a la cámara. Lejos de K13: la calle no sube como en la referencia (ver pendientes). |
-| Colonia del Cerro, aérea | A13 | `docs/capturas/t-1401/cerro-a13.png` | Azoteas con tinacos y antenas, unidas por escaleras y tablones. Lejos de A13: faltan las calles iluminadas que suben y la ciudad brillante abajo. |
-| Autopista elevada | K18 | `docs/capturas/t-1404/autopista-k18.png` | Calle baja con casas, neones y carros estacionados; tablero con barreras AU02 y faroles de sodio, chatarra AU03 a escala bajo el tablero, túnel iluminado. Falta la composición con la columna al centro y la rampa curva. |
+| Colonia del Cerro | K13 | `docs/capturas/t-1406/cerro-k13.png` | Ronda 5 (T-1406): callejón con escalera de concreto empinada y barandal que sube por la ladera (CE01 de z = 0, 27.5°), con casas a los lados, postes, cables y faroles. A diferencia de K13, la ciudad no queda a la derecha: la ladera sube al oeste y la ciudad está al este; se ve en `cerro-k13-bajada.png`. |
+| Colonia del Cerro, aérea | A13 | `docs/capturas/t-1406/cerro-a13.png` | Azoteas con tinacos y antenas, unidas por escaleras y tablones. Lejos de A13: faltan las calles iluminadas que suben y la ciudad brillante abajo. |
+| Autopista elevada | K18 | `docs/capturas/t-1407/k18.png` (ronda 5, cámara elegida por búsqueda automática; antes: `t-1404/autopista-k18.png`) | Calle baja con casas, neones y carros estacionados; tablero con barreras AU02 y faroles de sodio, chatarra AU03 a escala bajo el tablero, túnel iluminado. Falta la composición con la columna al centro y la rampa curva. |
 | Autopista, aérea | A18 | `docs/capturas/t-1402/autopista-a18.png` | |
 | Puerto | K15 | `docs/capturas/t-1402/puerto-k15.png` | El más parecido: contenedores PU08 con grafiti a la izquierda, bodegas de lámina con alero, neón magenta y turquesa y lámparas de sodio a la derecha, grúas con balizas en la bruma y pluma PU07 en la puerta U8. |
 | Puerto, aérea | A15 | `docs/capturas/t-1402/puerto-a15.png` | |
@@ -99,7 +99,23 @@ Las del 18-nov, antes de esta noche, están en `docs/capturas/zonas/_v_*.jpg`.
 Se midió en el build de Juego con `CyberCity.exe -medirFpsZonas` a 1920x1080 (`docs/fps-19nov/fps-zonas.txt`). La vista más lenta es Cerro/plaza_arriba, con 137 fps (el 1 % más lento, 103). Todas pasan de 50.
 No hizo falta combinar mallas ni poner oclusión. Lo que más pesa es la cantidad de triángulos del Cerro (unos 105 millones en vista), y eso es lo primero a bajar si una PC más débil no llega.
 
+## Ronda 5 (04:35 a 05:30)
+- **T-1406:** callejón que sube en el Cerro.
+- **T-1407:** cámara de K18 elegida por búsqueda automática, torre de reflectores con haces y placas de sodio bajo el tablero.
+- **T-1408:** E16_b rehecho en Blender. Unity sigue sin tomarlo como humano, así que queda fuera de Nova.
+- **T-1409:** peatones por zona, con un contrato nuevo en Core: `IZonaDelMundo` y `ZonasMundo`.
+- **T-1410:** arregló los bugs del mapa que encontró el EditMode completo (colliders, barriles, flotantes, encimados, greybox y bocas).
+- **T-1411:** actualizó las pruebas que guardaban el look viejo y arregló vehículos y clips.
+- **T-1412:** arregló las últimas fallas (contenedores, postes y halos).
+- **Drones:** les faltaba la textura y ya tienen material con ella.
+
 ## Pruebas
+- **EditMode completo:**
+  - primera corrida: 3336/3364;
+  - después de T-1410 y T-1411: 3365/3375;
+  - después de T-1412: 3373/3375.
+
+  Las 2 que quedaban: la de greybox (bruma y skyline) se corrigió y su clase da 9/9; `ReglasEnsamblados` (la PlayMode de Mundo, de Alan, referencia a Personaje) ya fallaba en main desde T-1361 del 18-nov.
 - **EditMode de las clases nuevas y de las zonas:** 160/161 antes del último arreglo; la falla (OrillasT1358, bocas de las uniones) se corrigió y su clase dio 4/4.
 - **EditMode de las tareas nuevas:** 218/222 en una corrida anterior. Las 4 fallas se corrigieron: 3 eran de E16_b (se quitó) y 1 de carros en U1.
 - No se corrió PlayMode, por la memoria: Blender estaba abierto y Claude Code paró dos corridas largas por falta de memoria.
