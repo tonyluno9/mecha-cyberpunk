@@ -1,0 +1,2248 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using MechaCyberpunk.Mundo.Ambiente;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+using UnityEngine.Rendering;
+using Object = UnityEngine.Object;
+
+namespace MechaCyberpunk.Arte.Editor
+{
+    /// <summary>
+    /// T-1441: detalle y vida de la Colonia del Cerro (K13 y A13). Corre DESPUÉS de T-1440 (alturas de casas, muros, escaleras y postes). Todo lo nuevo cuelga de la raíz
+    /// "T1441_Detalle" del prefab T1355_Cerro, que Aplicar borra y rehace (se puede correr dos veces). No apaga ni mueve nada: todo se coloca al momento de Aplicar
+    /// por rayo / bounds sobre lo que haya (nada con alturas fijas):
+    ///  - Fachadas (casas del kit a menos de 100 m de la cámara K13): aires, medidores, lámparas de pared con emisión cálida, rejas en las ventanas, toldos de lámina
+    ///    en los locales, macetas junto a la puerta y letreros de neón chicos (magenta, turquesa y verde, emisivos, sin luces).
+    ///  - Azoteas (todas las casas): hasta quedar con 2 a 5 cosas (tinacos negros con base, antenas, parabólicas, tendederos, lavaderos, varillas de castillo, cajas,
+    ///    tambos, chatarra, aires), sin cerrar un pasillo de 1.2 m entre los enlaces y accesos de azotea y sin encimarse.
+    ///  - Cables: racimos de 3 hilos entre postes, de poste a fachada y de fachada a fachada cruzando la calle (catenaria con el ayudante de KitS2c); nada a menos de 4 m de K13.
+    ///  - Calle: carros estacionados pegados a la banqueta (uno con faros encendidos y luz de piso turquesa), basura, bolsas, huacales, macetas y charcos.
+    ///  - Gente: NPCs de adorno (NP07 a NP14) parados en las banquetas y en azoteas, con su Animator y en pose de reposo, sin colliders.
+    /// Orden: T1385, T1394, T1401, T1405, T1406, T1416, T1440 (Ladera), luego T1441.Aplicar; T1441.Validar; Fotos en una corrida de Unity aparte.
+    /// </summary>
+    public static class ZonaCerroT1441
+    {
+        public const string RutaPrefab = ZonaCerroT1385.RutaPrefab;
+        public const string Raiz = "T1441_Detalle";
+        public const string RutaInforme = "Logs/t1441-aplicar.txt";
+        public const string RutaValidar = "Logs/t1441-validar.txt";
+        public const string CarpetaMateriales = "Assets/Arte/Mundo/Cerro";
+        public const string CarpetaFotos = "docs/capturas/_vista19b";
+        public const int Semilla = 14410;
+        public const long TopeBytesPrefab = 60L * 1024 * 1024;
+        public const int TopeLucesNuevas = 8;
+        public const int TopeObjetosNuevos = 3000;
+
+        public static readonly Vector3 K13Desde = ZonaCerroT1416.K13bDesde;
+        public static readonly Vector3 K13Hacia = ZonaCerroT1416.K13bHacia;
+        public const float CampoK13 = ZonaCerroT1416.CampoFoto;
+        public const float CampoA13 = 60f;
+
+        private const float DistanciaFachadas = 100f;
+        private const float DistanciaCable = 4.5f;
+        private const float AnchoPasillo = 1.2f;
+        private const float XCentroCalle = CerroT1355Trazado.XPierna2;
+        private const float MitadCarril = 2.25f;
+        private const float ZVistaNorte = 148f;
+        private const float ZVistaSur = 24f;
+        private const float AltoBanqueta = 0.2f;
+
+        private static readonly string[] RutasCarros =
+        {
+            "Assets/Arte/Vehiculos/Prefabs/V01a_CarroViejito.prefab", "Assets/Arte/Vehiculos/Prefabs/V01b_CarroPro.prefab", "Assets/Arte/Vehiculos/Prefabs/V02.prefab",
+            "Assets/Arte/Vehiculos/Prefabs/V03.prefab", "Assets/Arte/Vehiculos/Prefabs/V04.prefab", "Assets/Arte/Vehiculos/Prefabs/V05.prefab",
+        };
+
+        private static readonly string[] Gente =
+        {
+            "NP10_Elotero_a", "NP12_Abuela_a", "NP13_Repartidor_a", "NP13_Repartidor_b", "NP14_Oficinista_a", "NP14_Oficinista_b", "NP09_Corredor_a", "NP09_Corredor_b",
+            "NP08_Turista_a", "NP08_Turista_b", "NP07_Pescador_a", "NP11_Estibador_a",
+        };
+
+        private static StringBuilder informe;
+        private static readonly RaycastHit[] bufRayos = new RaycastHit[256];
+        private static readonly Collider[] bufCol = new Collider[256];
+        private static readonly Dictionary<string, Bounds> medidas = new Dictionary<string, Bounds>();
+        private static readonly Dictionary<string, GameObject> cache = new Dictionary<string, GameObject>();
+        private static readonly List<string> faltan = new List<string>();
+
+        private sealed class Techo
+        {
+            public VariarCerroT1364.CasaT H;
+            public float Nivel;
+            public int Existentes;
+            public readonly List<Bounds> Enlaces = new List<Bounds>();
+            public readonly List<(Vector2 a, Vector2 b)> Pasillos = new List<(Vector2, Vector2)>();
+            public Transform Grupo;
+        }
+
+        private sealed class Ctx
+        {
+            public GameObject Zona;
+            public PhysicsScene Fisica;
+            public Transform Terreno, Calles, Escaleras, Nuevo;
+            public KitS2c.Obra Obra;
+            public List<VariarCerroT1364.CasaT> Casas;
+            public readonly List<Techo> Techos = new List<Techo>();
+            public readonly List<Bounds> Ocupado = new List<Bounds>();
+            public readonly List<Bounds> OcupadoPared = new List<Bounds>();
+            public readonly List<Bounds> Enlaces = new List<Bounds>();
+            public readonly List<Vector3> Postes = new List<Vector3>();
+            public int Carros, Letreros, Fachadas, Azoteas, Cables, Gente, Basura, Charcos;
+            public Material Marco, MarcoOxido, Concreto, Gris, Negro, Madera;
+            public Material[] Neon;
+            public Material Calido;
+            public Material[] Bolsas;
+        }
+
+        // ================================================================ Aplicar
+
+        [MenuItem("Mecha Cyberpunk/T1441/Cerro detalle y vida: aplicar")]
+        public static void Aplicar()
+        {
+            informe = new StringBuilder("T-1441: detalle y vida del Cerro (" + RutaPrefab + ")\n");
+            medidas.Clear();
+            cache.Clear();
+            faltan.Clear();
+            GameObject zona = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                int lucesAntes = zona.GetComponentsInChildren<Light>(true).Length;
+                Log("Luces antes: " + lucesAntes + ". Tamaño del prefab antes: " + Megas(RutaPrefab) + " MB.");
+                Ctx c = new Ctx
+                {
+                    Zona = zona,
+                    Fisica = zona.scene.GetPhysicsScene(),
+                    Terreno = zona.transform.Find("Terreno"),
+                    Calles = zona.transform.Find("Calles"),
+                    Escaleras = zona.transform.Find("Escaleras"),
+                };
+                c.Obra = KitS2c.Empezar(Raiz, Semilla, zona.transform);
+                c.Nuevo = c.Obra.Raiz;
+                Physics.SyncTransforms();
+                Materiales(c);
+                c.Casas = VariarCerroT1364.Leer(zona.transform).Where(h => h.Raiz != null && h.Raiz.gameObject.activeInHierarchy).ToList();
+                Log("Casas activas: " + c.Casas.Count + " (kit " + c.Casas.Count(h => h.Kit) + ").");
+                Escanear(c);
+                Paso("carros", () => Carros(c));
+                Paso("fachadas", () => Fachadas(c));
+                Paso("azoteas", () => Azoteas(c));
+                Paso("basura, bolsas, macetas y charcos", () => Basura(c));
+                Paso("gente", () => PonerGente(c));
+                Paso("cables", () => Cableado(c));
+                Estatico(c);
+                KitS2c.Terminar(c.Obra);
+                int luces = zona.GetComponentsInChildren<Light>(true).Length;
+                int nuevas = c.Nuevo.GetComponentsInChildren<Light>(true).Length;
+                int objetos = c.Nuevo.GetComponentsInChildren<Transform>(true).Length - 1;
+                Log("Luces después: " + luces + " (nuevas " + nuevas + ", tope " + TopeLucesNuevas + "). Objetos nuevos: " + objetos + " (tope " + TopeObjetosNuevos + ").");
+                Log("Resumen: carros " + c.Carros + ", casas con fachada " + c.Fachadas + ", letreros " + c.Letreros + ", azoteas con objetos nuevos " + c.Azoteas + ", cables " + c.Cables
+                    + ", basura " + c.Basura + ", charcos " + c.Charcos + ", gente " + c.Gente + ".");
+                if (nuevas > TopeLucesNuevas || objetos > TopeObjetosNuevos)
+                {
+                    Log("AVISO: se pasó de un tope.");
+                }
+                Physics.SyncTransforms();
+                bool ok;
+                GameObject guardado = PrefabUtility.SaveAsPrefabAsset(zona, RutaPrefab, out ok);
+                Log(ok && guardado != null ? "Prefab guardado." : "ERROR: no se pudo guardar el prefab.");
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                Log("Tamaño del prefab después: " + Megas(RutaPrefab) + " MB (tope 60).");
+                if (faltan.Count > 0)
+                {
+                    Log("FALTAN assets: " + string.Join(", ", faltan.Distinct()) + ".");
+                }
+            }
+            catch (Exception e)
+            {
+                Log("ERROR: " + e);
+                Debug.LogError("[ZonaCerroT1441] " + e);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(zona);
+            }
+            Escribir(RutaInforme, informe);
+        }
+
+        private static void Paso(string nombre, Action accion)
+        {
+            try
+            {
+                accion();
+            }
+            catch (Exception e)
+            {
+                Log("ERROR en el paso '" + nombre + "': " + e);
+                Debug.LogError("[ZonaCerroT1441] " + nombre + ": " + e);
+            }
+        }
+
+        // ================================================================ Materiales y mallas generadas
+
+        private static void CarpetaMat()
+        {
+            if (!AssetDatabase.IsValidFolder(CarpetaMateriales))
+            {
+                AssetDatabase.CreateFolder("Assets/Arte/Mundo", "Cerro");
+            }
+        }
+
+        private static Material MatLit(string nombre, Color color, float suavidad, float metal = 0f)
+        {
+            CarpetaMat();
+            string ruta = CarpetaMateriales + "/T1441_" + nombre + ".mat";
+            Material m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+            if (m == null)
+            {
+                m = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "T1441_" + nombre };
+                AssetDatabase.CreateAsset(m, ruta);
+            }
+            m.SetColor("_BaseColor", color);
+            m.SetFloat("_Smoothness", suavidad);
+            m.SetFloat("_Metallic", metal);
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
+        /// <summary>Material emisivo propio (RealtimeEmissive; con None URP quita _EMISSION al reimportar).</summary>
+        private static Material MatEmi(string nombre, Color color, float intensidad)
+        {
+            Material m = MatLit(nombre, new Color(color.r * 0.2f, color.g * 0.2f, color.b * 0.2f, 1f), 0.3f);
+            m.EnableKeyword("_EMISSION");
+            m.SetColor("_EmissionColor", new Color(color.r * intensidad, color.g * intensidad, color.b * intensidad, 1f));
+            m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
+        private static void Materiales(Ctx c)
+        {
+            c.Marco = MatLit("MarcoNegro", new Color(0.06f, 0.06f, 0.07f), 0.35f, 0.4f);
+            c.MarcoOxido = MatLit("MetalOxido", new Color(0.36f, 0.2f, 0.12f), 0.3f, 0.3f);
+            c.Concreto = MatLit("Concreto", new Color(0.45f, 0.44f, 0.42f), 0.1f);
+            c.Gris = MatLit("GrisClaro", new Color(0.62f, 0.64f, 0.66f), 0.5f, 0.5f);
+            c.Negro = MatLit("Negro", new Color(0.03f, 0.03f, 0.035f), 0.4f);
+            c.Madera = MatLit("Madera", new Color(0.3f, 0.2f, 0.12f), 0.15f);
+            c.Neon = new[]
+            {
+                MatEmi("NeonMagenta", KitS2c.Magenta, 3.2f),
+                MatEmi("NeonTurquesa", KitS2c.Turquesa, 3.0f),
+                MatEmi("NeonVerde", new Color(0.35f, 1f, 0.3f), 2.8f),
+            };
+            c.Calido = MatEmi("LamparaCalida", new Color(1f, 0.7f, 0.35f), 3.4f);
+            c.Bolsas = new[]
+            {
+                MatLit("BolsaNegra", new Color(0.04f, 0.04f, 0.05f), 0.6f),
+                MatLit("BolsaAzul", new Color(0.12f, 0.2f, 0.45f), 0.6f),
+                MatLit("BolsaBlanca", new Color(0.7f, 0.72f, 0.7f), 0.5f),
+            };
+        }
+
+        private sealed class Malla
+        {
+            public readonly List<Vector3> V = new List<Vector3>();
+            public readonly List<Vector3> N = new List<Vector3>();
+            public readonly List<Vector2> Uv = new List<Vector2>();
+            public readonly List<int>[] T;
+
+            public Malla(int submallas)
+            {
+                T = new List<int>[submallas];
+                for (int i = 0; i < submallas; i++)
+                {
+                    T[i] = new List<int>();
+                }
+            }
+
+            /// <summary>Cuadrilátero a-b-c-d (en orden alrededor); la cara visible mira hacia <paramref name="normal"/>.</summary>
+            public void Quad(int sub, Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 normal)
+            {
+                normal.Normalize();
+                bool invertir = Vector3.Dot(Vector3.Cross(b - a, c - a), normal) < 0f;
+                int i0 = V.Count;
+                V.Add(a); V.Add(b); V.Add(c); V.Add(d);
+                for (int i = 0; i < 4; i++)
+                {
+                    N.Add(normal);
+                }
+                Uv.Add(new Vector2(0f, 0f)); Uv.Add(new Vector2(1f, 0f)); Uv.Add(new Vector2(1f, 1f)); Uv.Add(new Vector2(0f, 1f));
+                if (invertir)
+                {
+                    T[sub].AddRange(new[] { i0, i0 + 2, i0 + 1, i0, i0 + 3, i0 + 2 });
+                }
+                else
+                {
+                    T[sub].AddRange(new[] { i0, i0 + 1, i0 + 2, i0, i0 + 2, i0 + 3 });
+                }
+            }
+
+            private void Cara(int sub, Vector3 centro, Vector3 n, Vector3 u, Vector3 v, float hn, float hu, float hv)
+            {
+                Vector3 p = centro + n * hn;
+                Quad(sub, p + u * hu + v * hv, p - u * hu + v * hv, p - u * hu - v * hv, p + u * hu - v * hv, n);
+            }
+
+            public void Caja(int sub, Vector3 centro, Vector3 tam)
+            {
+                Vector3 h = tam * 0.5f;
+                Cara(sub, centro, Vector3.right, Vector3.up, Vector3.forward, h.x, h.y, h.z);
+                Cara(sub, centro, Vector3.left, Vector3.up, Vector3.forward, h.x, h.y, h.z);
+                Cara(sub, centro, Vector3.up, Vector3.right, Vector3.forward, h.y, h.x, h.z);
+                Cara(sub, centro, Vector3.down, Vector3.right, Vector3.forward, h.y, h.x, h.z);
+                Cara(sub, centro, Vector3.forward, Vector3.right, Vector3.up, h.z, h.x, h.y);
+                Cara(sub, centro, Vector3.back, Vector3.right, Vector3.up, h.z, h.x, h.y);
+            }
+
+            public void Tubo(int sub, Vector3 a, Vector3 b, float radio, int lados = 5)
+            {
+                Vector3 eje = (b - a).normalized;
+                Vector3 u = Vector3.Cross(eje, Vector3.up);
+                if (u.sqrMagnitude < 0.01f)
+                {
+                    u = Vector3.right;
+                }
+                u.Normalize();
+                Vector3 w = Vector3.Cross(eje, u).normalized;
+                for (int k = 0; k < lados; k++)
+                {
+                    float a0 = k * Mathf.PI * 2f / lados, a1 = (k + 1) * Mathf.PI * 2f / lados;
+                    Vector3 n0 = u * Mathf.Cos(a0) + w * Mathf.Sin(a0);
+                    Vector3 n1 = u * Mathf.Cos(a1) + w * Mathf.Sin(a1);
+                    Quad(sub, a + n0 * radio, a + n1 * radio, b + n1 * radio, b + n0 * radio, n0 + n1);
+                }
+            }
+
+            /// <summary>Superficie de revolución alrededor de Y con el perfil (radio, altura), girada y movida. Las normales miran hacia o lejos de <paramref name="interior"/> (local).</summary>
+            public void Revolver(int sub, Vector2[] perfil, int lados, Quaternion giro, Vector3 pos, Vector3 interior, bool haciaInterior)
+            {
+                for (int i = 0; i + 1 < perfil.Length; i++)
+                {
+                    for (int k = 0; k < lados; k++)
+                    {
+                        float a0 = k * Mathf.PI * 2f / lados, a1 = (k + 1) * Mathf.PI * 2f / lados;
+                        Vector3 pa = new Vector3(Mathf.Cos(a0) * perfil[i].x, perfil[i].y, Mathf.Sin(a0) * perfil[i].x);
+                        Vector3 pb = new Vector3(Mathf.Cos(a1) * perfil[i].x, perfil[i].y, Mathf.Sin(a1) * perfil[i].x);
+                        Vector3 pc = new Vector3(Mathf.Cos(a1) * perfil[i + 1].x, perfil[i + 1].y, Mathf.Sin(a1) * perfil[i + 1].x);
+                        Vector3 pd = new Vector3(Mathf.Cos(a0) * perfil[i + 1].x, perfil[i + 1].y, Mathf.Sin(a0) * perfil[i + 1].x);
+                        Vector3 n = Vector3.Cross(pc - pa, pd - pb);
+                        if (n.sqrMagnitude < 1e-10f)
+                        {
+                            continue;
+                        }
+                        Vector3 centro = (pa + pb + pc + pd) * 0.25f;
+                        float lado = Vector3.Dot(n, interior - centro);
+                        if ((lado > 0f) != haciaInterior)
+                        {
+                            n = -n;
+                        }
+                        Quad(sub, giro * pa + pos, giro * pb + pos, giro * pc + pos, giro * pd + pos, giro * n);
+                    }
+                }
+            }
+
+            public Mesh Crear(string nombre)
+            {
+                Mesh m = new Mesh { name = nombre, indexFormat = IndexFormat.UInt32 };
+                m.SetVertices(V);
+                m.SetNormals(N);
+                m.SetUVs(0, Uv);
+                m.subMeshCount = T.Length;
+                for (int i = 0; i < T.Length; i++)
+                {
+                    m.SetTriangles(T[i], i);
+                }
+                m.RecalculateBounds();
+                return m;
+            }
+        }
+
+        private static Mesh MallaReja()
+        {
+            // Unidad: x e y de -0.5 a 0.5; z de 0 a -0.07 (sale hacia -Z local, el frente de las fachadas del kit).
+            Malla m = new Malla(1);
+            const float g = 0.03f, p = 0.07f;
+            m.Caja(0, new Vector3(0f, 0.5f - g * 0.5f, -p * 0.5f), new Vector3(1f, g, p));
+            m.Caja(0, new Vector3(0f, -0.5f + g * 0.5f, -p * 0.5f), new Vector3(1f, g, p));
+            m.Caja(0, new Vector3(-0.5f + g * 0.5f, 0f, -p * 0.5f), new Vector3(g, 1f, p));
+            m.Caja(0, new Vector3(0.5f - g * 0.5f, 0f, -p * 0.5f), new Vector3(g, 1f, p));
+            for (int i = 1; i < 6; i++)
+            {
+                m.Caja(0, new Vector3(-0.5f + i / 6f, 0f, -p * 0.5f), new Vector3(0.022f, 1f, 0.03f));
+            }
+            m.Caja(0, new Vector3(0f, 0.02f, -p * 0.5f), new Vector3(1f, 0.025f, 0.03f));
+            return m.Crear("T1441_Reja");
+        }
+
+        /// <summary>Letrero de bandera (sale de la pared, sus dos caras se leen a lo largo de la calle). Local: +Z sale de la pared, X a lo largo, Y arriba; origen en la pared.</summary>
+        private static Mesh MallaBandera(string nombre, float fondo, float alto)
+        {
+            Malla m = new Malla(2);
+            const float grueso = 0.07f, salida = 0.14f;
+            m.Caja(0, new Vector3(0f, 0f, salida + fondo * 0.5f), new Vector3(grueso, alto, fondo));
+            m.Caja(0, new Vector3(0f, alto * 0.3f, salida * 0.5f), new Vector3(0.035f, 0.035f, salida));
+            m.Caja(0, new Vector3(0f, -alto * 0.3f, salida * 0.5f), new Vector3(0.035f, 0.035f, salida));
+            float zc = salida + fondo * 0.5f, hz = fondo * 0.5f - 0.04f, hy = alto * 0.5f - 0.04f;
+            foreach (float s in new[] { 1f, -1f })
+            {
+                float x = s * (grueso * 0.5f + 0.004f);
+                m.Quad(1, new Vector3(x, hy, zc + hz), new Vector3(x, hy, zc - hz), new Vector3(x, -hy, zc - hz), new Vector3(x, -hy, zc + hz), new Vector3(s, 0f, 0f));
+            }
+            return m.Crear(nombre);
+        }
+
+        /// <summary>Letrero plano pegado a la pared. Local: +Z sale de la pared.</summary>
+        private static Mesh MallaPlano(string nombre, float ancho, float alto)
+        {
+            Malla m = new Malla(2);
+            m.Caja(0, new Vector3(0f, 0f, 0.04f), new Vector3(ancho, alto, 0.08f));
+            float z = 0.084f, hx = ancho * 0.5f - 0.05f, hy = alto * 0.5f - 0.05f;
+            m.Quad(1, new Vector3(-hx, hy, z), new Vector3(hx, hy, z), new Vector3(hx, -hy, z), new Vector3(-hx, -hy, z), Vector3.forward);
+            return m.Crear(nombre);
+        }
+
+        /// <summary>Lámpara de pared: jaula oscura y vidrio cálido emisivo. Local: +Z sale de la pared.</summary>
+        private static Mesh MallaLampara()
+        {
+            Malla m = new Malla(2);
+            m.Caja(0, new Vector3(0f, 0f, 0.05f), new Vector3(0.2f, 0.34f, 0.1f));
+            m.Caja(0, new Vector3(0f, 0f, 0.14f), new Vector3(0.2f, 0.04f, 0.08f));
+            m.Caja(0, new Vector3(0f, 0.19f, 0.15f), new Vector3(0.24f, 0.04f, 0.14f));
+            m.Caja(1, new Vector3(0f, -0.02f, 0.15f), new Vector3(0.14f, 0.22f, 0.07f));
+            return m.Crear("T1441_Lampara");
+        }
+
+        private static Mesh MallaParabolica(int variante)
+        {
+            Malla m = new Malla(2);
+            m.Tubo(0, Vector3.zero, new Vector3(0f, 0.9f + 0.1f * variante, 0f), 0.035f, 6);
+            Vector2[] perfil = new Vector2[7];
+            for (int i = 0; i < perfil.Length; i++)
+            {
+                float r = 0.42f * i / (perfil.Length - 1);
+                perfil[i] = new Vector2(r, 0.16f * (r / 0.42f) * (r / 0.42f));
+            }
+            Quaternion giro = Quaternion.Euler(-55f - 8f * variante, 0f, 0f);
+            Vector3 pos = new Vector3(0f, 0.95f + 0.1f * variante, 0f);
+            m.Revolver(1, perfil, 10, giro, pos, new Vector3(0f, 5f, 0f), true);
+            Vector2[] atras = perfil.Select(p => new Vector2(p.x, p.y - 0.015f)).ToArray();
+            m.Revolver(1, atras, 10, giro, pos, new Vector3(0f, 5f, 0f), false);
+            Vector3 foco = pos + giro * new Vector3(0f, 0.3f, 0f);
+            m.Tubo(0, pos, foco, 0.012f, 4);
+            m.Caja(0, foco, new Vector3(0.06f, 0.06f, 0.06f));
+            return m.Crear("T1441_Parabolica" + variante);
+        }
+
+        /// <summary>Castillo de concreto con varillas que salen (sub 0 concreto, sub 1 varilla).</summary>
+        private static Mesh MallaVarillas(int variante)
+        {
+            System.Random az = new System.Random(77 + variante);
+            Malla m = new Malla(2);
+            m.Caja(0, new Vector3(0f, 0.25f, 0f), new Vector3(0.3f, 0.5f, 0.3f));
+            int n = 5 + variante % 3;
+            for (int i = 0; i < n; i++)
+            {
+                float ang = i * Mathf.PI * 2f / n;
+                Vector3 b = new Vector3(Mathf.Cos(ang) * 0.09f, 0.5f, Mathf.Sin(ang) * 0.09f);
+                float alto = 0.8f + (float)az.NextDouble() * 0.9f;
+                Vector3 a = b + new Vector3((float)(az.NextDouble() - 0.5) * 0.12f, alto, (float)(az.NextDouble() - 0.5) * 0.12f);
+                m.Tubo(1, b, a, 0.011f, 4);
+            }
+            return m.Crear("T1441_Varillas" + variante);
+        }
+
+        private static Mesh MallaBolsa(int variante)
+        {
+            Malla m = new Malla(1);
+            Vector2[] perfil = { new Vector2(0f, 0f), new Vector2(0.17f, 0.01f), new Vector2(0.25f, 0.12f), new Vector2(0.22f, 0.25f), new Vector2(0.12f, 0.34f), new Vector2(0.03f, 0.42f), new Vector2(0f, 0.4f) };
+            m.Revolver(0, perfil, 7, Quaternion.Euler(0f, 40f * variante, 0f), Vector3.zero, new Vector3(0f, 0.2f, 0f), false);
+            return m.Crear("T1441_Bolsa" + variante);
+        }
+
+        private static GameObject Generado(Transform padre, string nombre, Mesh malla, Material[] materiales, Vector3 pos, Quaternion giro, Vector3 escala, bool collider, bool sombra = false)
+        {
+            GameObject g = new GameObject(nombre);
+            g.transform.SetParent(padre, false);
+            g.transform.SetPositionAndRotation(pos, giro);
+            g.transform.localScale = escala;
+            g.AddComponent<MeshFilter>().sharedMesh = malla;
+            MeshRenderer mr = g.AddComponent<MeshRenderer>();
+            mr.sharedMaterials = materiales;
+            mr.shadowCastingMode = sombra ? ShadowCastingMode.On : ShadowCastingMode.Off;
+            if (collider)
+            {
+                g.AddComponent<MeshCollider>().sharedMesh = malla;
+            }
+            return g;
+        }
+
+        // ================================================================ Ayudas de piso, bounds y piezas
+
+        private static bool EsPiso(Ctx c, Transform t)
+        {
+            return (c.Terreno != null && t.IsChildOf(c.Terreno)) || (c.Calles != null && t.IsChildOf(c.Calles));
+        }
+
+        /// <summary>Piso caminable en (x, z): el punto más alto con normal hacia arriba entre yRef + 2.5 m y 4 m más abajo (no cuenta lo nuevo).</summary>
+        private static bool Suelo(Ctx c, float x, float z, float yRef, out float y)
+        {
+            y = float.MinValue;
+            bool ok = false;
+            int n = c.Fisica.Raycast(new Vector3(x, yRef + 2.5f, z), Vector3.down, bufRayos, 6.5f, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                Transform t = bufRayos[i].collider.transform;
+                if (t.IsChildOf(c.Nuevo) || bufRayos[i].normal.y < 0.9f)
+                {
+                    continue;
+                }
+                if (bufRayos[i].point.y > y)
+                {
+                    y = bufRayos[i].point.y;
+                    ok = true;
+                }
+            }
+            return ok;
+        }
+
+        private static float YCalle(float z)
+        {
+            return CerroT1355Trazado.AlturaPierna2(z) + AltoBanqueta;
+        }
+
+        private static bool Libre(Ctx c, Vector3 centro, Vector3 mitad)
+        {
+            int n = c.Fisica.OverlapBox(centro, mitad, bufCol, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                if (!EsPiso(c, bufCol[i].transform))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static Bounds Cubierta(Transform t)
+        {
+            Renderer[] rs = t.GetComponentsInChildren<Renderer>(true).Where(r => !(r is ParticleSystemRenderer)).ToArray();
+            if (rs.Length == 0)
+            {
+                return new Bounds(t.position, Vector3.zero);
+            }
+            Bounds b = rs[0].bounds;
+            for (int i = 1; i < rs.Length; i++)
+            {
+                b.Encapsulate(rs[i].bounds);
+            }
+            return b;
+        }
+
+        private static GameObject Cargar(string codigo)
+        {
+            if (cache.TryGetValue(codigo, out GameObject ya))
+            {
+                return ya;
+            }
+            GameObject p = null;
+            string guid = AssetDatabase.FindAssets(codigo + " t:Prefab").FirstOrDefault(g => Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(g)) == codigo);
+            if (guid != null)
+            {
+                p = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
+            }
+            if (p == null)
+            {
+                faltan.Add(codigo);
+            }
+            cache[codigo] = p;
+            return p;
+        }
+
+        private static GameObject CargarRuta(string ruta)
+        {
+            if (cache.TryGetValue(ruta, out GameObject ya))
+            {
+                return ya;
+            }
+            GameObject p = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            if (p == null)
+            {
+                faltan.Add(ruta);
+            }
+            cache[ruta] = p;
+            return p;
+        }
+
+        /// <summary>Caja del prefab sin girar ni escalar, en el origen.</summary>
+        private static Bounds Medida(GameObject prefab)
+        {
+            string clave = AssetDatabase.GetAssetPath(prefab) + "|" + prefab.name;
+            if (medidas.TryGetValue(clave, out Bounds ya))
+            {
+                return ya;
+            }
+            GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            Bounds b = Cubierta(g.transform);
+            Object.DestroyImmediate(g);
+            medidas[clave] = b;
+            return b;
+        }
+
+        private static Transform Hijo(Transform padre, string nombre)
+        {
+            Transform t = new GameObject(nombre).transform;
+            t.SetParent(padre, false);
+            return t;
+        }
+
+        private static GameObject Instanciar(GameObject prefab, Transform padre, string nombre)
+        {
+            GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            g.name = nombre;
+            return g;
+        }
+
+        private static float Distancia2D(Vector2 p, Vector2 a, Vector2 b)
+        {
+            Vector2 ab = b - a;
+            float l2 = ab.sqrMagnitude;
+            if (l2 < 1e-4f)
+            {
+                return (p - a).magnitude;
+            }
+            float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / l2);
+            return (p - (a + ab * t)).magnitude;
+        }
+
+        private static bool SolapaXZ(Bounds a, Bounds b, float margen)
+        {
+            return a.min.x < b.max.x + margen && a.max.x > b.min.x - margen && a.min.z < b.max.z + margen && a.max.z > b.min.z - margen;
+        }
+
+        // ================================================================ Escaneo (enlaces, postes, detalles viejos, azoteas)
+
+        private static bool EsDetalleTecho(Transform t)
+        {
+            string n = t.name;
+            return n.StartsWith("C09_Tinaco") || n.StartsWith("Tinaco_") || n.StartsWith("TK01") || n.StartsWith("CY04") || n.StartsWith("Antena_") || n.StartsWith("CC04") || n.StartsWith("CC05")
+                || n.StartsWith("Extra_Det_") || n.StartsWith("Aire_") || n.StartsWith("C10_Aire") || (n.StartsWith("Extra_Mov|") && (n.Contains("CC04") || n.Contains("CC05") || n.Contains("CY04")));
+        }
+
+        private static bool EsEnlace(Transform t)
+        {
+            return t.name.StartsWith("Enlace_") || t.name.StartsWith("Acceso_");
+        }
+
+        private static bool EsPoste(Transform t)
+        {
+            return t.name.StartsWith("Poste_") || t.name.StartsWith("C07_PosteLuz");
+        }
+
+        private static bool Ancestro(Transform t, Transform tope, Func<Transform, bool> prueba)
+        {
+            for (Transform p = t.parent; p != null && p != tope; p = p.parent)
+            {
+                if (prueba(p))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static void Escanear(Ctx c)
+        {
+            List<Vector3> detalles = new List<Vector3>();
+            foreach (Transform t in c.Zona.GetComponentsInChildren<Transform>(false))
+            {
+                if (t == c.Zona.transform || t.IsChildOf(c.Nuevo))
+                {
+                    continue;
+                }
+                if (EsEnlace(t) && !Ancestro(t, c.Zona.transform, EsEnlace))
+                {
+                    Bounds b = Cubierta(t);
+                    if (b.size.sqrMagnitude > 0.01f)
+                    {
+                        c.Enlaces.Add(b);
+                    }
+                }
+                else if (EsPoste(t) && !Ancestro(t, c.Zona.transform, EsPoste))
+                {
+                    Bounds b = Cubierta(t);
+                    c.Postes.Add(new Vector3(t.position.x, b.max.y > t.position.y + 2f ? b.max.y - 0.2f : t.position.y + 6.5f, t.position.z));
+                }
+                else if (EsDetalleTecho(t) && !Ancestro(t, c.Zona.transform, EsDetalleTecho))
+                {
+                    detalles.Add(t.position);
+                }
+            }
+            Log("Enlaces y accesos de azotea: " + c.Enlaces.Count + ". Postes: " + c.Postes.Count + ". Detalles de azotea ya puestos: " + detalles.Count + ".");
+            foreach (VariarCerroT1364.CasaT h in c.Casas)
+            {
+                float nivel;
+                if (!NivelTecho(c, h, out nivel))
+                {
+                    continue;
+                }
+                Techo t = new Techo { H = h, Nivel = nivel };
+                Bounds huella = new Bounds(new Vector3((h.X0 + h.X1) * 0.5f, nivel, (h.Z0 + h.Z1) * 0.5f), new Vector3(h.X1 - h.X0, 1f, h.Z1 - h.Z0));
+                foreach (Bounds e in c.Enlaces)
+                {
+                    if (SolapaXZ(huella, e, 1.0f) && e.max.y > nivel - 3f && e.min.y < nivel + 3f)
+                    {
+                        t.Enlaces.Add(e);
+                    }
+                }
+                List<Vector2> puntos = t.Enlaces.Take(5).Select(e => new Vector2(Mathf.Clamp(e.center.x, h.X0, h.X1), Mathf.Clamp(e.center.z, h.Z0, h.Z1))).ToList();
+                for (int i = 0; i < puntos.Count; i++)
+                {
+                    for (int j = i + 1; j < puntos.Count; j++)
+                    {
+                        t.Pasillos.Add((puntos[i], puntos[j]));
+                    }
+                }
+                foreach (Vector3 d in detalles)
+                {
+                    if (d.x > h.X0 - 0.3f && d.x < h.X1 + 0.3f && d.z > h.Z0 - 0.3f && d.z < h.Z1 + 0.3f && d.y > nivel - 1f && d.y < nivel + 5f)
+                    {
+                        t.Existentes++;
+                    }
+                }
+                c.Techos.Add(t);
+            }
+            Log("Azoteas planas medidas: " + c.Techos.Count + " de " + c.Casas.Count + " casas.");
+        }
+
+        /// <summary>Nivel de la azotea: el valor más común (3 de 9 rayos o más) entre los puntos planos que ve un rayo desde arriba.</summary>
+        private static bool NivelTecho(Ctx c, VariarCerroT1364.CasaT h, out float nivel)
+        {
+            nivel = h.Top;
+            if (h.X1 - h.X0 < 2.5f || h.Z1 - h.Z0 < 2.5f)
+            {
+                return false;
+            }
+            List<float> ys = new List<float>();
+            float[] f = { 0.2f, 0.5f, 0.8f };
+            foreach (float fx in f)
+            {
+                foreach (float fz in f)
+                {
+                    int n = c.Fisica.Raycast(new Vector3(Mathf.Lerp(h.X0, h.X1, fx), h.Top + 8f, Mathf.Lerp(h.Z0, h.Z1, fz)), Vector3.down, bufRayos, 16f, ~0, QueryTriggerInteraction.Ignore);
+                    float mejor = float.MinValue;
+                    for (int i = 0; i < n; i++)
+                    {
+                        Transform t = bufRayos[i].collider.transform;
+                        if (t.IsChildOf(c.Nuevo) || EsPiso(c, t) || bufRayos[i].normal.y < 0.95f)
+                        {
+                            continue;
+                        }
+                        if (bufRayos[i].point.y > mejor)
+                        {
+                            mejor = bufRayos[i].point.y;
+                        }
+                    }
+                    if (mejor > h.Top - 4f && mejor < h.Top + 7f)
+                    {
+                        ys.Add(mejor);
+                    }
+                }
+            }
+            if (ys.Count < 3)
+            {
+                return false;
+            }
+            float modo = 0f;
+            int cuenta = 0;
+            foreach (float y in ys)
+            {
+                int k = ys.Count(val => Mathf.Abs(val - y) < 0.15f);
+                if (k > cuenta || (k == cuenta && y < modo))
+                {
+                    cuenta = k;
+                    modo = y;
+                }
+            }
+            if (cuenta < 3)
+            {
+                return false;
+            }
+            nivel = ys.Where(val => Mathf.Abs(val - modo) < 0.15f).Average();
+            return true;
+        }
+
+        private static bool TechoEn(Ctx c, float x, float z, float nivel)
+        {
+            RaycastHit h;
+            return c.Fisica.Raycast(new Vector3(x, nivel + 1.5f, z), Vector3.down, out h, 3f, ~0, QueryTriggerInteraction.Ignore) && h.normal.y > 0.9f
+                && Mathf.Abs(h.point.y - nivel) < 0.25f && !EsPiso(c, h.collider.transform) && !h.collider.transform.IsChildOf(c.Nuevo);
+        }
+
+        /// <summary>Un centro libre de azotea para algo de medio tamaño (hx, hz) y alto: plano, sin colliders encima, sin encimarse ni cerrar los pasillos de 1.2 m.</summary>
+        private static bool BuscarHueco(Ctx c, Techo t, float hx, float hz, float alto, List<Vector2> candidatos, bool conPlano, out Vector2 pos)
+        {
+            pos = default;
+            VariarCerroT1364.CasaT h = t.H;
+            float margen = 0.4f;
+            foreach (Vector2 q in candidatos)
+            {
+                float x = q.x, z = q.y;
+                if (x - hx < h.X0 + margen || x + hx > h.X1 - margen || z - hz < h.Z0 + margen || z + hz > h.Z1 - margen)
+                {
+                    continue;
+                }
+                if (EnPasillo(t, x, z, Mathf.Max(hx, hz)))
+                {
+                    continue;
+                }
+                bool choca = false;
+                Bounds mio = new Bounds(new Vector3(x, t.Nivel, z), new Vector3(hx * 2f, 1f, hz * 2f));
+                foreach (Bounds o in c.Ocupado)
+                {
+                    if (SolapaXZ(mio, o, 0.35f) && o.max.y > t.Nivel - 0.5f && o.min.y < t.Nivel + 5f)
+                    {
+                        choca = true;
+                        break;
+                    }
+                }
+                if (choca)
+                {
+                    continue;
+                }
+                if (conPlano)
+                {
+                    bool plano = TechoEn(c, x, z, t.Nivel);
+                    foreach (Vector2 d in new[] { new Vector2(1f, 1f), new Vector2(1f, -1f), new Vector2(-1f, 1f), new Vector2(-1f, -1f) })
+                    {
+                        plano &= TechoEn(c, x + d.x * hx * 0.9f, z + d.y * hz * 0.9f, t.Nivel);
+                    }
+                    if (!plano)
+                    {
+                        continue;
+                    }
+                }
+                float a = Mathf.Max(0.2f, alto - 0.3f);
+                if (!Libre(c, new Vector3(x, t.Nivel + 0.2f + a * 0.5f, z), new Vector3(Mathf.Max(0.05f, hx - 0.05f), a * 0.5f, Mathf.Max(0.05f, hz - 0.05f))))
+                {
+                    continue;
+                }
+                pos = q;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>true si algo con radio <paramref name="radio"/> en (x, z) cierra un pasillo entre enlaces (1.2 m de ancho) o está a menos de 1.2 m de un enlace.</summary>
+        private static bool EnPasillo(Techo t, float x, float z, float radio)
+        {
+            Vector2 p = new Vector2(x, z);
+            foreach (Bounds e in t.Enlaces)
+            {
+                if (x > e.min.x - 1.2f - radio && x < e.max.x + 1.2f + radio && z > e.min.z - 1.2f - radio && z < e.max.z + 1.2f + radio)
+                {
+                    return true;
+                }
+            }
+            foreach ((Vector2 a, Vector2 b) in t.Pasillos)
+            {
+                if (Distancia2D(p, a, b) < AnchoPasillo * 0.5f + radio)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static List<Vector2> Candidatos(Ctx c, VariarCerroT1364.CasaT h, int n)
+        {
+            List<Vector2> r = new List<Vector2>();
+            for (int i = 0; i < n; i++)
+            {
+                r.Add(new Vector2(c.Obra.Rango(h.X0, h.X1), c.Obra.Rango(h.Z0, h.Z1)));
+            }
+            return r;
+        }
+
+        // ================================================================ Azoteas
+
+        private static void Azoteas(Ctx c)
+        {
+            Transform padre = Hijo(c.Nuevo, "Techos");
+            GameObject tinaco = Cargar("C09_Tinaco"), baseTinaco = Cargar("TK01_BaseTinaco"), antena = Cargar("CY04_AntenaAzotea");
+            GameObject tendedero = Cargar("CC04_Tendedero"), lavadero = Cargar("CC05_Lavadero"), huacales = Cargar("C17_Huacales"), tambo = Cargar("C16_Tambo");
+            GameObject chatarra = Cargar("IN02_Chatarra"), aire = Cargar("C10_AireAcondicionado");
+            Mesh[] parabolicas = { MallaParabolica(0), MallaParabolica(1), MallaParabolica(2) };
+            Mesh[] varillas = { MallaVarillas(0), MallaVarillas(1), MallaVarillas(2) };
+            c.Obra.Mallas.AddRange(parabolicas);
+            c.Obra.Mallas.AddRange(varillas);
+            (string tipo, float peso)[] tipos =
+            {
+                ("tinaco", 22f), ("antena", 16f), ("parabolica", 8f), ("tendedero", 12f), ("lavadero", 8f), ("varillas", 12f), ("caja", 8f), ("tambo", 6f), ("chatarra", 6f), ("aire", 8f),
+            };
+            float suma = tipos.Sum(x => x.peso);
+            int total = 0, conObjetos = 0, id = 0;
+            Dictionary<string, int> porTipo = new Dictionary<string, int>();
+            foreach (Techo t in c.Techos.OrderBy(q => q.H.X0).ThenBy(q => q.H.Z0))
+            {
+                id++;
+                float r = c.Obra.Rango(0f, 1f);
+                int objetivo = r < 0.2f ? 2 : (r < 0.55f ? 3 : (r < 0.8f ? 4 : 5));
+                int falta = objetivo - t.Existentes;
+                if (falta <= 0 || total >= 1500)
+                {
+                    continue;
+                }
+                bool conTinaco = false, conParabolica = false, conVarillas = false;
+                int puestos = 0;
+                for (int k = 0; k < falta + 2 && puestos < falta; k++)
+                {
+                    float q = c.Obra.Rango(0f, suma);
+                    string tipo = tipos[0].tipo;
+                    foreach ((string nombre, float peso) in tipos)
+                    {
+                        if (q < peso)
+                        {
+                            tipo = nombre;
+                            break;
+                        }
+                        q -= peso;
+                    }
+                    if ((tipo == "tinaco" && conTinaco) || (tipo == "parabolica" && conParabolica) || (tipo == "varillas" && conVarillas))
+                    {
+                        continue;
+                    }
+                    if (t.Grupo == null)
+                    {
+                        t.Grupo = Hijo(padre, "Azotea_" + id);
+                    }
+                    bool ok = false;
+                    switch (tipo)
+                    {
+                        case "tinaco":
+                            ok = PonerTinaco(c, t, tinaco, baseTinaco);
+                            conTinaco |= ok;
+                            break;
+                        case "antena":
+                            ok = PonerPrefab(c, t, antena, Vector3.one * 1.1f, "Antena") != null;
+                            break;
+                        case "parabolica":
+                            ok = PonerGenerado(c, t, parabolicas[id % 3], new[] { c.Gris, c.Gris }, 0.45f, 1.6f, "Parabolica", false);
+                            conParabolica |= ok;
+                            break;
+                        case "tendedero":
+                            ok = PonerPrefab(c, t, tendedero, Vector3.one, "Tendedero") != null;
+                            break;
+                        case "lavadero":
+                            ok = PonerPrefab(c, t, lavadero, Vector3.one, "Lavadero") != null;
+                            break;
+                        case "varillas":
+                            ok = PonerEsquina(c, t, varillas[id % 3], new[] { c.Concreto, c.MarcoOxido });
+                            conVarillas |= ok;
+                            break;
+                        case "caja":
+                            ok = PonerPrefab(c, t, huacales, Vector3.one, "Huacales") != null;
+                            break;
+                        case "tambo":
+                            ok = PonerPrefab(c, t, tambo, Vector3.one, "Tambo") != null;
+                            break;
+                        case "chatarra":
+                            if (chatarra != null)
+                            {
+                                Bounds m = Medida(chatarra);
+                                float e = Mathf.Min(1f, 1.8f / Mathf.Max(0.1f, Mathf.Max(m.size.x, m.size.z)));
+                                ok = PonerPrefab(c, t, chatarra, Vector3.one * e, "Chatarra") != null;
+                            }
+                            break;
+                        case "aire":
+                            ok = PonerPrefab(c, t, aire, Vector3.one, "Aire") != null;
+                            break;
+                    }
+                    if (ok)
+                    {
+                        puestos++;
+                        total++;
+                        porTipo[tipo] = (porTipo.TryGetValue(tipo, out int v) ? v : 0) + 1;
+                    }
+                }
+                if (puestos > 0)
+                {
+                    conObjetos++;
+                }
+                else if (t.Grupo != null)
+                {
+                    Object.DestroyImmediate(t.Grupo.gameObject);
+                    t.Grupo = null;
+                }
+            }
+            c.Azoteas = conObjetos;
+            Physics.SyncTransforms();
+            Log("Azoteas con objetos nuevos: " + conObjetos + "; objetos: " + total + " (" + string.Join(", ", porTipo.Select(p => p.Key + " " + p.Value)) + ").");
+        }
+
+        private static GameObject PonerPrefab(Ctx c, Techo t, GameObject prefab, Vector3 escala, string nombre)
+        {
+            if (prefab == null)
+            {
+                return null;
+            }
+            Bounds m = Medida(prefab);
+            Vector3 tam = new Vector3(m.size.x * escala.x, m.size.y * escala.y, m.size.z * escala.z);
+            int giroRand = c.Obra.Azar.Next(4);
+            bool cruzado = giroRand % 2 == 1;
+            float hx = (cruzado ? tam.z : tam.x) * 0.5f, hz = (cruzado ? tam.x : tam.z) * 0.5f;
+            Vector2 pos;
+            if (!BuscarHueco(c, t, hx, hz, tam.y, Candidatos(c, t.H, 14), true, out pos))
+            {
+                return null;
+            }
+            GameObject g = Instanciar(prefab, t.Grupo, nombre + "_" + t.Grupo.childCount);
+            g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, 90f * giroRand, 0f));
+            g.transform.localScale = escala;
+            Bounds b = Cubierta(g.transform);
+            g.transform.position += new Vector3(pos.x - b.center.x, t.Nivel - b.min.y, pos.y - b.center.z);
+            Physics.SyncTransforms();
+            c.Ocupado.Add(Cubierta(g.transform));
+            return g;
+        }
+
+        private static bool PonerTinaco(Ctx c, Techo t, GameObject tinaco, GameObject baseTinaco)
+        {
+            if (tinaco == null || baseTinaco == null)
+            {
+                return false;
+            }
+            Bounds mb = Medida(baseTinaco);
+            Vector3 escalaBase = new Vector3(1.6f / Mathf.Max(0.1f, mb.size.x), 0.7f / Mathf.Max(0.1f, mb.size.y), 1.6f / Mathf.Max(0.1f, mb.size.z));
+            Vector2 pos;
+            if (!BuscarHueco(c, t, 0.85f, 0.85f, 3.0f, Candidatos(c, t.H, 14), true, out pos))
+            {
+                return false;
+            }
+            GameObject gb = Instanciar(baseTinaco, t.Grupo, "BaseTinaco_" + t.Grupo.childCount);
+            gb.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            gb.transform.localScale = escalaBase;
+            Bounds bb = Cubierta(gb.transform);
+            gb.transform.position += new Vector3(pos.x - bb.center.x, t.Nivel - bb.min.y, pos.y - bb.center.z);
+            Physics.SyncTransforms();
+            bb = Cubierta(gb.transform);
+            GameObject gt = Instanciar(tinaco, t.Grupo, "Tinaco_" + t.Grupo.childCount);
+            gt.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f));
+            gt.transform.localScale = Vector3.one * 1.25f;
+            Bounds bt = Cubierta(gt.transform);
+            gt.transform.position += new Vector3(bb.center.x - bt.center.x, bb.max.y - bt.min.y, bb.center.z - bt.center.z);
+            Physics.SyncTransforms();
+            c.Ocupado.Add(Cubierta(gt.transform));
+            c.Ocupado.Add(bb);
+            return true;
+        }
+
+        private static bool PonerGenerado(Ctx c, Techo t, Mesh malla, Material[] mats, float radio, float alto, string nombre, bool collider)
+        {
+            Vector2 pos;
+            if (!BuscarHueco(c, t, radio, radio, alto, Candidatos(c, t.H, 14), true, out pos))
+            {
+                return false;
+            }
+            Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f);
+            GameObject g = Generado(t.Grupo, nombre + "_" + t.Grupo.childCount, malla, mats, new Vector3(pos.x, t.Nivel, pos.y), giro, Vector3.one, collider);
+            Physics.SyncTransforms();
+            c.Ocupado.Add(Cubierta(g.transform));
+            return true;
+        }
+
+        private static bool PonerEsquina(Ctx c, Techo t, Mesh malla, Material[] mats)
+        {
+            VariarCerroT1364.CasaT h = t.H;
+            List<Vector2> esquinas = new List<Vector2>
+            {
+                new Vector2(h.X0 + 0.7f, h.Z0 + 0.7f), new Vector2(h.X1 - 0.7f, h.Z0 + 0.7f), new Vector2(h.X0 + 0.7f, h.Z1 - 0.7f), new Vector2(h.X1 - 0.7f, h.Z1 - 0.7f),
+            };
+            Vector2 pos;
+            if (!BuscarHueco(c, t, 0.4f, 0.4f, 1.6f, esquinas.OrderBy(q => c.Obra.Azar.Next()).ToList(), true, out pos))
+            {
+                return false;
+            }
+            GameObject g = Generado(t.Grupo, "Varillas_" + t.Grupo.childCount, malla, mats, new Vector3(pos.x, t.Nivel, pos.y), Quaternion.Euler(0f, c.Obra.Rango(0f, 90f), 0f), Vector3.one, false);
+            Physics.SyncTransforms();
+            c.Ocupado.Add(Cubierta(g.transform));
+            return true;
+        }
+
+        // ================================================================ Fachadas
+
+        private static bool Pared(Ctx c, VariarCerroT1364.CasaT h, float y, float z, out Vector3 punto)
+        {
+            punto = default;
+            float xFrente = h.Normal > 0f ? h.X1 : h.X0;
+            Vector3 salida = new Vector3(h.Normal, 0f, 0f);
+            int n = c.Fisica.Raycast(new Vector3(xFrente + h.Normal * 1.5f, y, z), -salida, bufRayos, 3f, ~0, QueryTriggerInteraction.Ignore);
+            float mejor = float.MaxValue;
+            bool ok = false;
+            for (int i = 0; i < n; i++)
+            {
+                Transform t = bufRayos[i].collider.transform;
+                if (t.IsChildOf(c.Nuevo) || EsPiso(c, t) || bufRayos[i].normal.x * h.Normal < 0.8f || Mathf.Abs(bufRayos[i].point.x - xFrente) > 0.6f)
+                {
+                    continue;
+                }
+                if (bufRayos[i].distance < mejor)
+                {
+                    mejor = bufRayos[i].distance;
+                    punto = bufRayos[i].point;
+                    ok = true;
+                }
+            }
+            return ok;
+        }
+
+        /// <summary>Pone una pieza del kit (que mira a -Z) contra la pared: la cara de atrás sobre el punto, centrada en z y apoyada en yBase.</summary>
+        private static GameObject Montar(GameObject g, Vector3 pared, float yBase, float normal)
+        {
+            Vector3 salida = new Vector3(normal, 0f, 0f);
+            g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.LookRotation(-salida));
+            Bounds b = Cubierta(g.transform);
+            float mitadFondo = Mathf.Abs(salida.x) * b.extents.x + Mathf.Abs(salida.z) * b.extents.z;
+            float desfase = Vector3.Dot(pared, salida) - (Vector3.Dot(b.center, salida) - mitadFondo);
+            g.transform.position += salida * desfase + new Vector3(0f, yBase - b.min.y, pared.z - b.center.z);
+            return g;
+        }
+
+        private static void Fachadas(Ctx c)
+        {
+            Transform padre = Hijo(c.Nuevo, "Fachadas");
+            GameObject aire = Cargar("C10_AireAcondicionado"), medidor = Cargar("C14_RegistroMedidores"), macetas = Cargar("C20d_Macetas"), toldo = Cargar(KitS2c.CodigoToldo);
+            Mesh reja = MallaReja();
+            Mesh lampara = MallaLampara();
+            Mesh[] banderas = { MallaBandera("T1441_BanderaAlta", 0.5f, 1.25f), MallaBandera("T1441_BanderaMedia", 0.7f, 0.7f), MallaBandera("T1441_BanderaChica", 0.45f, 0.5f) };
+            Mesh[] planos = { MallaPlano("T1441_PlanoAncho", 1.1f, 0.4f), MallaPlano("T1441_PlanoChico", 0.6f, 0.6f) };
+            c.Obra.Mallas.Add(reja);
+            c.Obra.Mallas.Add(lampara);
+            c.Obra.Mallas.AddRange(banderas);
+            c.Obra.Mallas.AddRange(planos);
+            Vector3 camara = K13Desde;
+            int casas = 0, ac = 0, med = 0, lam = 0, rej = 0, tol = 0, mac = 0, neon = 0, intento = 0;
+            foreach (VariarCerroT1364.CasaT h in c.Casas.Where(x => x.Kit))
+            {
+                Vector3 centro = new Vector3((h.X0 + h.X1) * 0.5f, h.Base, (h.Z0 + h.Z1) * 0.5f);
+                if (new Vector2(centro.x - camara.x, centro.z - camara.z).magnitude > DistanciaFachadas)
+                {
+                    continue;
+                }
+                Transform baja = null;
+                foreach (Transform t in h.Raiz)
+                {
+                    if (t.name.StartsWith("C01_Fachada") || t.name.StartsWith("C02_Fachada"))
+                    {
+                        baja = t;
+                        break;
+                    }
+                }
+                KitS2c.Medida mb = null;
+                if (baja != null)
+                {
+                    try
+                    {
+                        mb = KitS2c.Medir(baja.name.Split(' ')[0]);
+                    }
+                    catch (Exception e)
+                    {
+                        Log("Medir " + baja.name + ": " + e.Message);
+                    }
+                }
+                intento++;
+                // Lo que ya está en la fachada (puerta, toldo, foco, neones, ventanas con luz) para no taparlo.
+                List<Bounds> prohibidos = new List<Bounds>();
+                foreach (Transform t in h.Raiz.GetComponentsInChildren<Transform>(false))
+                {
+                    if (t.name == "Puerta" || t.name == "Toldo" || t.name == "FocoPared" || t.name == "Neon" || t.name == "VentanaCalida")
+                    {
+                        Bounds b = Cubierta(t);
+                        b.Expand(0.3f);
+                        prohibidos.Add(b);
+                    }
+                }
+                Vector3 salida = new Vector3(h.Normal, 0f, 0f);
+                Transform grupo = null;
+                Func<Transform> asegurar = () =>
+                {
+                    if (grupo == null)
+                    {
+                        grupo = Hijo(padre, "Fachada_" + h.Raiz.name);
+                    }
+                    return grupo;
+                };
+                // Puerta en el mundo (si la planta baja la tiene).
+                bool hayPuerta = false;
+                Vector3 puerta = default;
+                float anchoPuerta = 1f;
+                if (baja != null && mb != null && mb.Vano.HasValue)
+                {
+                    Rect v = mb.Vano.Value;
+                    puerta = baja.TransformPoint(new Vector3(v.center.x, v.yMin, mb.Muro));
+                    anchoPuerta = v.width * Mathf.Abs(baja.lossyScale.x);
+                    hayPuerta = true;
+                }
+                float zc = centro.z;
+                int cuantas = 0;
+                // Lámpara de pared junto a la puerta.
+                if (c.Obra.Chance(0.55f) && cuantas < 4)
+                {
+                    float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
+                    float zl = hayPuerta ? puerta.z + lado * (anchoPuerta * 0.5f + 0.5f) : zc + lado * (h.Z1 - h.Z0) * 0.36f;
+                    zl = Mathf.Clamp(zl, h.Z0 + 0.4f, h.Z1 - 0.4f);
+                    float yl = (hayPuerta ? puerta.y : h.Base) + 2.4f;
+                    Vector3 p;
+                    if (Pared(c, h, yl, zl, out p) && Libre3D(prohibidos, c.OcupadoPared, p, yl, zl, 0.3f, 0.4f))
+                    {
+                        GameObject g = Generado(asegurar(), "Lampara", lampara, new[] { c.Marco, c.Calido }, p, Quaternion.LookRotation(salida), Vector3.one, false);
+                        c.OcupadoPared.Add(new Bounds(new Vector3(p.x, yl, zl), new Vector3(0.6f, 0.6f, 0.6f)));
+                        lam++;
+                        cuantas++;
+                    }
+                }
+                // Medidor al otro lado de la puerta.
+                if (medidor != null && hayPuerta && c.Obra.Chance(0.4f) && cuantas < 4)
+                {
+                    float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
+                    float zm = Mathf.Clamp(puerta.z + lado * (anchoPuerta * 0.5f + 0.6f), h.Z0 + 0.4f, h.Z1 - 0.4f);
+                    Vector3 p;
+                    if (Pared(c, h, puerta.y + 1.1f, zm, out p))
+                    {
+                        GameObject g = Instanciar(medidor, asegurar(), "Medidor");
+                        Montar(g, p, puerta.y + 0.9f, h.Normal);
+                        Physics.SyncTransforms();
+                        if (LibreObjeto(prohibidos, c.OcupadoPared, g))
+                        {
+                            c.OcupadoPared.Add(Cubierta(g.transform));
+                            med++;
+                            cuantas++;
+                        }
+                        else
+                        {
+                            Object.DestroyImmediate(g);
+                        }
+                    }
+                }
+                // Aire acondicionado en la pared.
+                if (aire != null && c.Obra.Chance(0.45f) && cuantas < 4 && h.Top - h.Base > 3.4f)
+                {
+                    float za = c.Obra.Rango(h.Z0 + 0.9f, h.Z1 - 0.9f);
+                    float ya = Mathf.Min(h.Base + (h.Top - h.Base > 5.4f ? 3.5f : 2.1f), h.Top - 1.4f);
+                    Vector3 p;
+                    if (Pared(c, h, ya + 0.3f, za, out p))
+                    {
+                        GameObject g = Instanciar(aire, asegurar(), "Aire");
+                        Montar(g, p, ya, h.Normal);
+                        Physics.SyncTransforms();
+                        if (LibreObjeto(prohibidos, c.OcupadoPared, g))
+                        {
+                            c.OcupadoPared.Add(Cubierta(g.transform));
+                            ac++;
+                            cuantas++;
+                        }
+                        else
+                        {
+                            Object.DestroyImmediate(g);
+                        }
+                    }
+                }
+                // Toldo de lámina sobre la puerta de los locales.
+                if (toldo != null && hayPuerta && baja.name.StartsWith("C01_Fachada") && c.Obra.Chance(0.6f) && anchoPuerta > 1.1f)
+                {
+                    Bounds bt = Medida(toldo);
+                    float e = (anchoPuerta + 0.5f) / Mathf.Max(0.1f, bt.size.x);
+                    Rect v = mb.Vano.Value;
+                    Vector3 dintel = baja.TransformPoint(new Vector3(v.center.x, v.yMax, mb.Muro));
+                    GameObject g = Instanciar(toldo, asegurar(), "Toldo");
+                    g.transform.SetPositionAndRotation(dintel - Vector3.up * 0.1f + salida * (bt.size.z * e * 0.5f), Quaternion.LookRotation(-salida));
+                    g.transform.localScale = Vector3.one * e;
+                    Physics.SyncTransforms();
+                    if (prohibidos.Any(b => b.Intersects(Cubierta(g.transform)) && b.size.y < 1f && b.center.y > dintel.y - 0.7f))
+                    {
+                        // ya hay algo sobre el dintel (neón o foco): no se encima
+                        Object.DestroyImmediate(g);
+                    }
+                    else
+                    {
+                        c.OcupadoPared.Add(Cubierta(g.transform));
+                        tol++;
+                        cuantas++;
+                    }
+                }
+                // Macetas junto a la puerta.
+                if (macetas != null && hayPuerta && c.Obra.Chance(0.2f) && cuantas < 4)
+                {
+                    float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
+                    float zm = Mathf.Clamp(puerta.z + lado * (anchoPuerta * 0.5f + 0.7f), h.Z0 + 0.5f, h.Z1 - 0.5f);
+                    float yg;
+                    float xBanq = (h.Normal > 0f ? h.X1 : h.X0) + h.Normal * 0.4f;
+                    if (Suelo(c, xBanq, zm, puerta.y, out yg) && Mathf.Abs(yg - puerta.y) < 0.4f)
+                    {
+                        GameObject g = Instanciar(macetas, asegurar(), "Macetas");
+                        g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.LookRotation(-salida));
+                        Bounds b = Cubierta(g.transform);
+                        g.transform.position += new Vector3(xBanq - b.center.x, yg - b.min.y, zm - b.center.z);
+                        Physics.SyncTransforms();
+                        Bounds mio = Cubierta(g.transform);
+                        if (b.size.x < 1.6f && b.size.z < 1.6f && Libre(c, mio.center + Vector3.up * 0.05f, mio.extents * 0.9f) && !prohibidos.Any(pb => pb.Intersects(mio)))
+                        {
+                            c.OcupadoPared.Add(mio);
+                            mac++;
+                            cuantas++;
+                        }
+                        else
+                        {
+                            Object.DestroyImmediate(g);
+                        }
+                    }
+                }
+                // Rejas en las ventanas de la planta baja.
+                if (baja != null && mb != null)
+                {
+                    List<Rect> puestas = new List<Rect>();
+                    foreach ((Rect r, float fondo) in mb.Huecos)
+                    {
+                        if (puestas.Any(p => p.Overlaps(r)))
+                        {
+                            continue;
+                        }
+                        puestas.Add(r);
+                        if (r.yMin < 1f || r.height > 2.2f || r.width > 2.4f || !c.Obra.Chance(0.4f))
+                        {
+                            continue;
+                        }
+                        GameObject gr = Generado(baja, "Reja", reja, new[] { c.MarcoOxido }, baja.TransformPoint(new Vector3(r.center.x, r.center.y, mb.Muro)), baja.rotation, Vector3.one, false);
+                        gr.transform.localScale = new Vector3(r.width * 1.04f, r.height * 1.04f, 1f);
+                        gr.transform.localPosition = new Vector3(r.center.x, r.center.y, mb.Muro);
+                        gr.transform.localRotation = Quaternion.identity;
+                        rej++;
+                    }
+                }
+                // Letrero de neón chico (1 de cada 3 a 4 casas).
+                if (c.Obra.Chance(0.3f))
+                {
+                    float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
+                    bool bandera = c.Obra.Chance(0.7f);
+                    int variante = bandera ? c.Obra.Azar.Next(banderas.Length) : c.Obra.Azar.Next(planos.Length);
+                    float alto = bandera ? (variante == 0 ? 1.25f : (variante == 1 ? 0.7f : 0.5f)) : (variante == 0 ? 0.4f : 0.6f);
+                    float zn = Mathf.Clamp(zc + lado * (h.Z1 - h.Z0) * 0.42f, h.Z0 + 0.5f, h.Z1 - 0.5f);
+                    float yn = Mathf.Min(h.Base + 3.0f + alto * 0.5f + c.Obra.Rango(0f, 0.5f), h.Top - 0.4f - alto * 0.5f);
+                    Vector3 p;
+                    if (yn - alto * 0.5f > h.Base + 2.0f && Pared(c, h, yn, zn, out p))
+                    {
+                        Material mat = c.Neon[(c.Letreros) % c.Neon.Length];
+                        Mesh malla = bandera ? banderas[variante] : planos[variante];
+                        Bounds caja = new Bounds(new Vector3(p.x + h.Normal * (bandera ? 0.4f : 0.05f), yn, zn), new Vector3(bandera ? 0.9f : 0.2f, alto + 0.1f, bandera ? 0.7f : (variante == 0 ? 1.2f : 0.7f)));
+                        if (Libre3D(prohibidos, c.OcupadoPared, caja.center, caja.center.y, caja.center.z, caja.extents.z, caja.extents.y, caja.extents.x))
+                        {
+                            Generado(asegurar(), "Neon", malla, new[] { c.Marco, mat }, new Vector3(p.x, yn, zn), Quaternion.LookRotation(salida), Vector3.one, false);
+                            c.OcupadoPared.Add(caja);
+                            c.Letreros++;
+                            neon++;
+                            cuantas++;
+                        }
+                    }
+                }
+                if (grupo != null && grupo.childCount > 0)
+                {
+                    casas++;
+                }
+                else if (grupo != null)
+                {
+                    Object.DestroyImmediate(grupo.gameObject);
+                }
+            }
+            c.Fachadas = casas;
+            Physics.SyncTransforms();
+            Log("Fachadas: " + casas + " casas con detalle de " + intento + " revisadas (aires " + ac + ", medidores " + med + ", lámparas " + lam + ", rejas " + rej + ", toldos " + tol + ", macetas " + mac + ", neones " + neon + ").");
+        }
+
+        private static bool Libre3D(List<Bounds> prohibidos, List<Bounds> puestos, Vector3 centro, float y, float z, float mitadZ, float mitadY, float mitadX = 0.3f)
+        {
+            Bounds mio = new Bounds(new Vector3(centro.x, y, z), new Vector3(mitadX * 2f, mitadY * 2f, mitadZ * 2f));
+            return LibreCaja(prohibidos, puestos, mio);
+        }
+
+        private static bool LibreObjeto(List<Bounds> prohibidos, List<Bounds> puestos, GameObject g)
+        {
+            return LibreCaja(prohibidos, puestos, Cubierta(g.transform));
+        }
+
+        private static bool LibreCaja(List<Bounds> prohibidos, List<Bounds> puestos, Bounds mio)
+        {
+            foreach (Bounds b in prohibidos)
+            {
+                if (b.Intersects(mio))
+                {
+                    return false;
+                }
+            }
+            foreach (Bounds b in puestos)
+            {
+                if (b.Intersects(mio))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // ================================================================ Calle: carros, basura, charcos
+
+        private static void Carros(Ctx c)
+        {
+            Transform calle = Hijo(c.Nuevo, "Calle");
+            Transform padre = Hijo(calle, "Carros");
+            List<GameObject> prefabs = RutasCarros.Select(CargarRuta).Where(p => p != null).ToList();
+            if (prefabs.Count == 0)
+            {
+                Log("FALTAN los visuales de carros en Assets/Arte/Vehiculos/Prefabs; no hay carros.");
+                return;
+            }
+            // Pegados a la banqueta (la calle mide 9 m: el carril de tránsito va en el centro, ±2.25 m); el primero lleva los faros encendidos.
+            (float x, float z, bool haciaSur, bool hero)[] sitios =
+            {
+                (XCentroCalle - 3.5f, 136f, false, true), (XCentroCalle - 3.5f, 112f, false, false), (XCentroCalle - 3.6f, 90f, true, false), (XCentroCalle - 3.5f, 58f, false, false),
+                (XCentroCalle + 3.5f, 118f, true, false), (XCentroCalle + 3.5f, 76f, true, false), (XCentroCalle + 3.5f, 42f, false, false),
+            };
+            Mesh farosMalla = null;
+            int n = 0, usados = 0;
+            foreach (var s in sitios)
+            {
+                GameObject prefab = prefabs[usados % prefabs.Count];
+                Bounds m = Medida(prefab);
+                if (m.size.z > 6f || m.size.x > 2.8f || m.size.z < 2f)
+                {
+                    Log("Carro " + prefab.name + " descartado por tamaño " + m.size.ToString("0.0") + ".");
+                    usados++;
+                    continue;
+                }
+                float yN, yS;
+                float mitad = m.size.z * 0.5f;
+                if (!Suelo(c, s.x, s.z + mitad * 0.7f, YCalle(s.z), out yN) || !Suelo(c, s.x, s.z - mitad * 0.7f, YCalle(s.z), out yS))
+                {
+                    Log("Carro en z = " + s.z + ": sin piso; no se pone.");
+                    continue;
+                }
+                float yMedio = (yN + yS) * 0.5f;
+                if (!Libre(c, new Vector3(s.x, yMedio + 0.95f, s.z), new Vector3(m.size.x * 0.5f + 0.1f, 0.6f, mitad + 0.25f)))
+                {
+                    Log("Carro en z = " + s.z + ": algo estorba; no se pone.");
+                    continue;
+                }
+                Vector3 dir = new Vector3(0f, (yN - yS) / (mitad * 1.4f), 1f);
+                if (s.haciaSur)
+                {
+                    dir = new Vector3(0f, -dir.y, -1f);
+                }
+                GameObject car = Instanciar(prefab, padre, "Carro_" + prefab.name + "_" + n);
+                car.transform.SetPositionAndRotation(new Vector3(s.x, yMedio, s.z), Quaternion.LookRotation(dir.normalized));
+                Physics.SyncTransforms();
+                Bounds b = Cubierta(car.transform);
+                car.transform.position += Vector3.up * (Mathf.Min(yN, yS) - b.min.y);
+                Physics.SyncTransforms();
+                foreach (Rigidbody rb in car.GetComponentsInChildren<Rigidbody>(true))
+                {
+                    rb.isKinematic = true;
+                }
+                if (s.hero)
+                {
+                    // Faros encendidos y luz de piso turquesa (como el carro de la referencia). Coordenadas locales de la caja del prefab; el frente es +Z.
+                    Malla fm = new Malla(2);
+                    float zf = m.max.z + 0.012f;
+                    float yf = m.min.y + m.size.y * 0.36f;
+                    foreach (float sx in new[] { -1f, 1f })
+                    {
+                        float xf = m.center.x + sx * m.size.x * 0.3f;
+                        fm.Quad(0, new Vector3(xf - 0.16f, yf + 0.07f, zf), new Vector3(xf + 0.16f, yf + 0.07f, zf), new Vector3(xf + 0.16f, yf - 0.07f, zf), new Vector3(xf - 0.16f, yf - 0.07f, zf), Vector3.forward);
+                    }
+                    fm.Caja(1, new Vector3(m.center.x, m.min.y + 0.12f, m.max.z - 0.15f), new Vector3(m.size.x * 0.8f, 0.03f, 0.04f));
+                    farosMalla = fm.Crear("T1441_FarosCarro");
+                    c.Obra.Mallas.Add(farosMalla);
+                    Material faros = MatEmi("Faros", new Color(1f, 0.92f, 0.7f), 4.5f);
+                    Generado(car.transform, "Faros", farosMalla, new[] { faros, c.Neon[1] }, car.transform.position, car.transform.rotation, Vector3.one, false);
+                    Vector3 frente = car.transform.position + car.transform.forward * (mitad + 0.5f) + Vector3.up * 0.7f;
+                    KitS2c.Luz(car.transform, frente, LightType.Spot, new Color(1f, 0.85f, 0.6f), 90f, 16f, 55f, car.transform.forward + Vector3.down * 0.12f);
+                }
+                c.Carros++;
+                n++;
+                usados++;
+            }
+            Log("Carros estacionados: " + n + " (visual sin lógica de manejo, de Assets/Arte/Vehiculos/Prefabs; sus Rigidbody, si los hay, quedan kinemáticos).");
+        }
+
+        private static void Basura(Ctx c)
+        {
+            Transform calle = c.Nuevo.Find("Calle") ?? Hijo(c.Nuevo, "Calle");
+            Transform padre = Hijo(calle, "Basura");
+            GameObject basurero = Cargar("C11_Basurero"), tambo = Cargar("C16_Tambo"), huacales = Cargar("C17_Huacales"), macetas = Cargar("C20d_Macetas");
+            Mesh[] bolsas = { MallaBolsa(0), MallaBolsa(1), MallaBolsa(2) };
+            c.Obra.Mallas.AddRange(bolsas);
+            float xBordeOeste = XCentroCalle - 4.5f - 0.45f;
+            List<float> usadasZ = new List<float>();
+            int nPrefabs = 0, nBolsas = 0;
+            GameObject[] lista = { basurero, tambo, huacales, macetas, tambo, huacales, basurero, huacales };
+            for (int i = 0; i < 26 && (nPrefabs < lista.Length || nBolsas < 10); i++)
+            {
+                float z = c.Obra.Rango(ZVistaSur + 4f, ZVistaNorte - 4f);
+                if (usadasZ.Any(u => Mathf.Abs(u - z) < 3.5f))
+                {
+                    continue;
+                }
+                bool oeste = c.Obra.Chance(0.65f);
+                float x = oeste ? xBordeOeste : XCentroCalle + 4.5f + 0.45f;
+                float y;
+                if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.6f)
+                {
+                    continue;
+                }
+                bool prefabToca = nPrefabs < lista.Length && (nBolsas >= 10 || c.Obra.Chance(0.5f));
+                if (prefabToca && lista[nPrefabs] != null)
+                {
+                    GameObject p = lista[nPrefabs];
+                    Bounds m = Medida(p);
+                    if (m.size.x > 1.6f || m.size.z > 1.6f)
+                    {
+                        nPrefabs++;
+                        continue;
+                    }
+                    if (!Libre(c, new Vector3(x, y + 0.1f + m.size.y * 0.5f, z), new Vector3(m.size.x * 0.5f, m.size.y * 0.5f - 0.05f, m.size.z * 0.5f)))
+                    {
+                        continue;
+                    }
+                    GameObject g = Instanciar(p, padre, p.name + "_" + padre.childCount);
+                    g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f));
+                    Bounds b = Cubierta(g.transform);
+                    g.transform.position += new Vector3(x - b.center.x, y - b.min.y, z - b.center.z);
+                    Physics.SyncTransforms();
+                    usadasZ.Add(z);
+                    nPrefabs++;
+                    c.Basura++;
+                }
+                else if (nBolsas < 10)
+                {
+                    int v = c.Obra.Azar.Next(3);
+                    float e = c.Obra.Rango(0.9f, 1.4f);
+                    if (!Libre(c, new Vector3(x, y + 0.3f, z), new Vector3(0.25f * e, 0.15f, 0.25f * e)))
+                    {
+                        continue;
+                    }
+                    Generado(padre, "Bolsa_" + nBolsas, bolsas[v], new[] { c.Bolsas[v] }, new Vector3(x, y, z), Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f), Vector3.one * e, false, true);
+                    usadasZ.Add(z - 1f);
+                    nBolsas++;
+                    c.Basura++;
+                }
+            }
+            Log("Basura en banquetas: " + nPrefabs + " piezas (basureros, tambos, huacales, macetas) y " + nBolsas + " bolsas.");
+            // Charcos: en la calle y las banquetas (decal que refleja; no estorban el paso).
+            int charcos = 0;
+            Transform charcosPadre = Hijo(calle, "Charcos");
+            for (int i = 0; i < 40 && charcos < 12; i++)
+            {
+                float z = c.Obra.Rango(ZVistaSur, ZVistaNorte);
+                float x = XCentroCalle + c.Obra.Rango(-4.4f, 4.4f);
+                float y;
+                if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.3f)
+                {
+                    continue;
+                }
+                float largo = c.Obra.Rango(1.4f, 3.2f), ancho = c.Obra.Rango(1.0f, 2.2f);
+                KitS2c.Charco(c.Obra, charcosPadre, new Vector3(x, y, z), largo, ancho, c.Obra.Rango(0f, 360f));
+                charcos++;
+            }
+            c.Charcos = charcos;
+            Log("Charcos: " + charcos + ".");
+        }
+
+        // ================================================================ Gente
+
+        private static void PonerGente(Ctx c)
+        {
+            Transform padre = Hijo(c.Nuevo, "Gente");
+            List<string> disponibles = Gente.Where(n => AssetDatabase.LoadAssetAtPath<GameObject>(RutaFbx(n)) != null).ToList();
+            if (disponibles.Count == 0)
+            {
+                Log("FALTAN los NPCs NP07..NP14 en Assets/Arte/Personajes; no hay gente.");
+                faltan.Add("NP07..NP14 (fbx en Assets/Arte/Personajes)");
+                return;
+            }
+            int total = 0;
+            List<Vector3> puestos = new List<Vector3>();
+            // Banquetas (oeste y este de la calle, entre las zonas visibles de K13).
+            for (int i = 0; i < 80 && total < 10; i++)
+            {
+                float z = c.Obra.Rango(ZVistaSur, ZVistaNorte - 4f);
+                bool oeste = c.Obra.Chance(0.6f);
+                float x = oeste ? XCentroCalle - 5.2f : XCentroCalle + 5.2f;
+                float y;
+                if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.6f)
+                {
+                    continue;
+                }
+                Vector3 p = new Vector3(x, y, z);
+                if (puestos.Any(q => (q - p).magnitude < 5f) || !Libre(c, p + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
+                {
+                    continue;
+                }
+                if (PonerNpc(c, padre, disponibles[c.Obra.Azar.Next(disponibles.Count)], p, oeste ? 90f : -90f + c.Obra.Rango(-40f, 40f)))
+                {
+                    puestos.Add(p);
+                    total++;
+                }
+            }
+            int enCalle = total;
+            // Azoteas: cerca de los accesos o a un lado del pasillo, donde hay hueco.
+            int techos = 0;
+            foreach (Techo t in c.Techos.Where(q => q.Enlaces.Count > 0).OrderBy(q => c.Obra.Azar.Next()))
+            {
+                if (techos >= 5)
+                {
+                    break;
+                }
+                Vector2 pos;
+                if (t.Grupo == null)
+                {
+                    t.Grupo = Hijo(c.Nuevo.Find("Techos") ?? c.Nuevo, "Azotea_N" + techos);
+                }
+                if (!BuscarHueco(c, t, 0.4f, 0.4f, 1.8f, Candidatos(c, t.H, 18), true, out pos))
+                {
+                    continue;
+                }
+                Vector3 p = new Vector3(pos.x, t.Nivel, pos.y);
+                if (PonerNpc(c, t.Grupo, disponibles[c.Obra.Azar.Next(disponibles.Count)], p, c.Obra.Rango(0f, 360f)))
+                {
+                    c.Ocupado.Add(new Bounds(p + Vector3.up * 0.9f, new Vector3(0.8f, 1.8f, 0.8f)));
+                    techos++;
+                    total++;
+                }
+            }
+            c.Gente = total;
+            Log("Gente de adorno: " + total + " (banquetas " + enCalle + ", azoteas " + techos + "). Todos parados en su reposo: el Animator no tiene animación de sentarse.");
+        }
+
+        private static string RutaFbx(string nombre)
+        {
+            string codigo = nombre.Substring(0, nombre.LastIndexOf('_'));
+            return "Assets/Arte/Personajes/" + codigo + "/" + nombre + ".fbx";
+        }
+
+        private static bool PonerNpc(Ctx c, Transform padre, string nombre, Vector3 pos, float yaw)
+        {
+            GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(RutaFbx(nombre));
+            if (fbx == null)
+            {
+                return false;
+            }
+            GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(fbx, padre);
+            g.name = "NPC_" + nombre + "_" + padre.childCount;
+            g.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, yaw, 0f));
+            RuntimeAnimatorController ctrl = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(RutaFbx(nombre).Replace(".fbx", ".controller"));
+            Animator an = g.GetComponent<Animator>();
+            if (an == null)
+            {
+                an = g.GetComponentInChildren<Animator>();
+            }
+            if (an == null)
+            {
+                an = g.AddComponent<Animator>();
+            }
+            if (ctrl != null)
+            {
+                an.runtimeAnimatorController = ctrl;
+                try
+                {
+                    AnimationClip clip = null;
+                    AnimatorController ac = ctrl as AnimatorController;
+                    if (ac != null && ac.layers.Length > 0 && ac.layers[0].stateMachine.defaultState != null)
+                    {
+                        clip = ac.layers[0].stateMachine.defaultState.motion as AnimationClip;
+                    }
+                    if (clip == null && ctrl.animationClips.Length > 0)
+                    {
+                        clip = ctrl.animationClips[0];
+                    }
+                    if (clip != null)
+                    {
+                        clip.SampleAnimation(g, Mathf.Min(0.3f, clip.length * 0.5f));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log("NPC " + nombre + ": no se pudo muestrear el reposo (" + e.Message + ").");
+                }
+            }
+            else
+            {
+                Log("NPC " + nombre + ": sin .controller.");
+            }
+            an.applyRootMotion = false;
+            // Asentar por el hueso más bajo de la pose (los bounds del fbx no sirven, ver altura animada).
+            float bajo = float.MaxValue, alto = float.MinValue;
+            foreach (Transform t in g.GetComponentsInChildren<Transform>())
+            {
+                bajo = Mathf.Min(bajo, t.position.y);
+                alto = Mathf.Max(alto, t.position.y);
+            }
+            g.transform.position += Vector3.up * (pos.y + 0.03f - bajo);
+            if (alto - bajo < 0.9f || alto - bajo > 2.4f)
+            {
+                Log("AVISO: " + g.name + " mide " + (alto - bajo).ToString("0.00", CultureInfo.InvariantCulture) + " m entre huesos.");
+            }
+            return true;
+        }
+
+        // ================================================================ Cables
+
+        private static bool CableOk(Ctx c, Vector3 a, Vector3 b, float flecha, int sinProbarFinal)
+        {
+            Vector3[] p = CalculoCatenaria.Puntos(a, b, flecha, 14);
+            for (int i = 0; i < p.Length; i++)
+            {
+                if (Vector3.Distance(p[i], K13Desde) < DistanciaCable)
+                {
+                    return false;
+                }
+                if (i < sinProbarFinal || i >= p.Length - sinProbarFinal)
+                {
+                    continue;
+                }
+                int n = c.Fisica.OverlapBox(p[i], new Vector3(0.12f, 0.12f, 0.12f), bufCol, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+                for (int k = 0; k < n; k++)
+                {
+                    if (!EsPiso(c, bufCol[k].transform))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static int Racimo(Ctx c, Vector3 a, Vector3 b, int hilos, float flecha, int sinProbarFinal)
+        {
+            int puestos = 0;
+            Vector3 lado = Vector3.Cross((b - a).normalized, Vector3.up).normalized;
+            for (int i = 0; i < hilos; i++)
+            {
+                float desv = (i - (hilos - 1) * 0.5f) * 0.22f;
+                Vector3 a2 = a + lado * desv + Vector3.down * (0.32f * i);
+                Vector3 b2 = b + lado * desv + Vector3.down * (0.32f * i + c.Obra.Rango(-0.1f, 0.1f));
+                float f = flecha * (1f + 0.18f * i);
+                if (CableOk(c, a2, b2, f, sinProbarFinal))
+                {
+                    KitS2c.Cable(c.Obra, a2, b2, f);
+                    puestos++;
+                }
+            }
+            return puestos;
+        }
+
+        private static void Cableado(Ctx c)
+        {
+            int porPostes = 0, aFachada = 0, cruzados = 0;
+            // 1. De poste a poste: cada poste con sus 2 vecinos más cercanos a menos de 42 m (3 hilos).
+            HashSet<long> hechos = new HashSet<long>();
+            for (int i = 0; i < c.Postes.Count; i++)
+            {
+                List<int> vecinos = Enumerable.Range(0, c.Postes.Count).Where(j => j != i && (c.Postes[j] - c.Postes[i]).magnitude < 42f && (c.Postes[j] - c.Postes[i]).magnitude > 4f)
+                    .OrderBy(j => (c.Postes[j] - c.Postes[i]).sqrMagnitude).Take(2).ToList();
+                foreach (int j in vecinos)
+                {
+                    long clave = (long)Mathf.Min(i, j) * 100000 + Mathf.Max(i, j);
+                    if (!hechos.Add(clave))
+                    {
+                        continue;
+                    }
+                    float largo = (c.Postes[j] - c.Postes[i]).magnitude;
+                    porPostes += Racimo(c, c.Postes[i] + Vector3.down * 0.15f, c.Postes[j] + Vector3.down * 0.15f, 3, 0.3f + 0.02f * largo, 1);
+                }
+            }
+            // 2. De cada poste a las 2 fachadas más cercanas (a menos de 16 m).
+            foreach (Vector3 poste in c.Postes)
+            {
+                List<VariarCerroT1364.CasaT> cerca = c.Casas.Where(h => h.Kit && PlanoADistancia(h, poste) < 16f && PlanoADistancia(h, poste) > 2.5f)
+                    .OrderBy(h => PlanoADistancia(h, poste)).Take(2).ToList();
+                foreach (VariarCerroT1364.CasaT h in cerca)
+                {
+                    float xf = (h.Normal > 0f ? h.X1 : h.X0) + h.Normal * 0.06f;
+                    float z = Mathf.Clamp(poste.z + c.Obra.Rango(-2f, 2f), h.Z0 + 0.4f, h.Z1 - 0.4f);
+                    float y = Mathf.Clamp(Mathf.Min(h.Top - 0.7f, poste.y - 0.9f), h.Base + 3.2f, poste.y + 0.5f);
+                    Vector3 pared = new Vector3(xf, y, z);
+                    float largo = (pared - poste).magnitude;
+                    if (Mathf.Abs(pared.y - poste.y) > 4.5f)
+                    {
+                        continue;
+                    }
+                    aFachada += Racimo(c, poste + Vector3.down * 0.5f, pared, 2, 0.25f + 0.02f * largo, 2);
+                }
+            }
+            // 3. De fachada a fachada cruzando la calle (arriba, a más de 5 m del piso).
+            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f).OrderBy(h => h.Z0).ToList();
+            List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Kit && h.Normal < 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle + 6.5f)) < 3f).ToList();
+            foreach (VariarCerroT1364.CasaT w in oeste)
+            {
+                if (cruzados >= 40)
+                {
+                    break;
+                }
+                VariarCerroT1364.CasaT e = este.OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - (w.Z0 + w.Z1) * 0.5f)).FirstOrDefault();
+                if (e == null || Mathf.Abs((e.Z0 + e.Z1) * 0.5f - (w.Z0 + w.Z1) * 0.5f) > 4f || !c.Obra.Chance(0.55f))
+                {
+                    continue;
+                }
+                float z = (w.Z0 + w.Z1) * 0.5f;
+                float y = Mathf.Min(w.Top, e.Top) - c.Obra.Rango(0.6f, 1.6f);
+                Vector3 a = new Vector3(w.X1 + 0.06f, y, z + c.Obra.Rango(-1f, 1f));
+                Vector3 b = new Vector3(e.X0 - 0.06f, y + c.Obra.Rango(-0.4f, 0.4f), z + c.Obra.Rango(-1f, 1f));
+                float suelo;
+                if (!Suelo(c, XCentroCalle, z, YCalle(z), out suelo) || y - suelo < 5f)
+                {
+                    continue;
+                }
+                cruzados += Racimo(c, a, b, 2, 0.35f + 0.02f * (b - a).magnitude, 2);
+            }
+            c.Cables = porPostes + aFachada + cruzados;
+            Log("Cables: de poste a poste " + porPostes + ", de poste a fachada " + aFachada + ", cruzando la calle " + cruzados + " (en racimos; ninguno a menos de " + DistanciaCable + " m de K13).");
+        }
+
+        private static float PlanoADistancia(VariarCerroT1364.CasaT h, Vector3 p)
+        {
+            float dx = Mathf.Max(h.X0 - p.x, 0f, p.x - h.X1);
+            float dz = Mathf.Max(h.Z0 - p.z, 0f, p.z - h.Z1);
+            return Mathf.Sqrt(dx * dx + dz * dz);
+        }
+
+        // ================================================================ Estático
+
+        private static void Estatico(Ctx c)
+        {
+            const StaticEditorFlags banderas = StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic | StaticEditorFlags.OccluderStatic;
+            int n = 0;
+            foreach (Transform t in c.Nuevo.GetComponentsInChildren<Transform>(true))
+            {
+                if (t == c.Nuevo || t.GetComponent<Light>() != null || t.GetComponentInParent<Rigidbody>() != null || t.GetComponentInParent<Animator>() != null)
+                {
+                    continue;
+                }
+                bool enCarro = false;
+                for (Transform p = t; p != null && p != c.Nuevo; p = p.parent)
+                {
+                    if (p.name.StartsWith("Carro_"))
+                    {
+                        enCarro = true;
+                    }
+                }
+                if (enCarro)
+                {
+                    continue;
+                }
+                GameObjectUtility.SetStaticEditorFlags(t.gameObject, banderas);
+                n++;
+            }
+            Log("Objetos marcados Static: " + n + ".");
+        }
+
+        // ================================================================ Validar
+
+        /// <summary>
+        /// Revisa el prefab ya con Aplicar y escribe Logs/t1441-validar.txt: objetos y luces nuevas, tamaño; cosas de azotea flotando o enterradas (5 cm), encimadas o en el pasillo de 1.2 m;
+        /// carros, basura y gente en el carril de tránsito; carros asentados; cables a más de 4 m de K13; colliders nuevos sin malla visible.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T1441/Cerro detalle y vida: validar")]
+        public static void Validar()
+        {
+            StringBuilder sb = new StringBuilder("T-1441: validación de " + RutaPrefab + "\n");
+            int fallos = 0, avisos = 0;
+            GameObject zona = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                Ctx c = new Ctx
+                {
+                    Zona = zona,
+                    Fisica = zona.scene.GetPhysicsScene(),
+                    Terreno = zona.transform.Find("Terreno"),
+                    Calles = zona.transform.Find("Calles"),
+                    Escaleras = zona.transform.Find("Escaleras"),
+                    Nuevo = zona.transform.Find(Raiz),
+                };
+                Physics.SyncTransforms();
+                if (c.Nuevo == null)
+                {
+                    sb.AppendLine("FALLO: no existe " + Raiz + " (corre Aplicar).");
+                    fallos++;
+                }
+                else
+                {
+                    int objetos = c.Nuevo.GetComponentsInChildren<Transform>(true).Length - 1;
+                    int luces = c.Nuevo.GetComponentsInChildren<Light>(true).Length;
+                    sb.AppendLine("Objetos nuevos: " + objetos + " (tope " + TopeObjetosNuevos + "). Luces nuevas: " + luces + " (tope " + TopeLucesNuevas + "). Luces del prefab: " + zona.GetComponentsInChildren<Light>(true).Length + ".");
+                    if (objetos > TopeObjetosNuevos || luces > TopeLucesNuevas)
+                    {
+                        sb.AppendLine("FALLO: se pasó de un tope.");
+                        fallos++;
+                    }
+                    sb.AppendLine("Prefab: " + Megas(RutaPrefab) + " MB (tope 60).");
+                    if (new FileInfo(Path.Combine(Directory.GetParent(Application.dataPath).FullName, RutaPrefab)).Length > TopeBytesPrefab)
+                    {
+                        sb.AppendLine("FALLO: el prefab pasa de 60 MB.");
+                        fallos++;
+                    }
+                    ValidarAzoteas(c, sb, ref fallos, ref avisos);
+                    ValidarCalle(c, sb, ref fallos, ref avisos);
+                    ValidarColliders(c, sb, ref fallos);
+                    ValidarCables(c, sb, ref fallos);
+                }
+            }
+            catch (Exception e)
+            {
+                sb.AppendLine("ERROR: " + e);
+                fallos++;
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(zona);
+            }
+            sb.AppendLine(fallos == 0 ? "RESULTADO: bien (" + avisos + " avisos)." : "RESULTADO: " + fallos + " FALLOS (" + avisos + " avisos).");
+            Escribir(RutaValidar, sb);
+            Debug.Log("[ZonaCerroT1441] " + sb);
+        }
+
+        private static void ValidarAzoteas(Ctx c, StringBuilder sb, ref int fallos, ref int avisos)
+        {
+            Transform techos = c.Nuevo.Find("Techos");
+            if (techos == null)
+            {
+                sb.AppendLine("AVISO: no hay Techos.");
+                avisos++;
+                return;
+            }
+            List<VariarCerroT1364.CasaT> casas = VariarCerroT1364.Leer(c.Zona.transform).Where(h => h.Raiz != null && h.Raiz.gameObject.activeInHierarchy).ToList();
+            List<Bounds> enlaces = new List<Bounds>();
+            foreach (Transform t in c.Zona.GetComponentsInChildren<Transform>(false))
+            {
+                if (!t.IsChildOf(c.Nuevo) && EsEnlace(t) && !Ancestro(t, c.Zona.transform, EsEnlace))
+                {
+                    Bounds b = Cubierta(t);
+                    if (b.size.sqrMagnitude > 0.01f)
+                    {
+                        enlaces.Add(b);
+                    }
+                }
+            }
+            int cosas = 0, flotan = 0, enterradas = 0, encimadas = 0, enPasillo = 0, grupos = 0;
+            List<(Transform t, Bounds b)> todas = new List<(Transform, Bounds)>();
+            foreach (Transform grupo in techos)
+            {
+                grupos++;
+                foreach (Transform t in grupo)
+                {
+                    if (t.GetComponentInChildren<Animator>() != null)
+                    {
+                        continue;
+                    }
+                    todas.Add((t, Cubierta(t)));
+                }
+            }
+            foreach ((Transform t, Bounds b) in todas)
+            {
+                cosas++;
+                Vector3 origen = new Vector3(b.center.x, b.min.y + 0.4f, b.center.z);
+                int n = c.Fisica.Raycast(origen, Vector3.down, bufRayos, 3f, ~0, QueryTriggerInteraction.Ignore);
+                float y = float.MinValue;
+                for (int i = 0; i < n; i++)
+                {
+                    if (bufRayos[i].collider.transform.IsChildOf(t) || EsPiso(c, bufRayos[i].collider.transform) || bufRayos[i].normal.y < 0.9f)
+                    {
+                        continue;
+                    }
+                    y = Mathf.Max(y, bufRayos[i].point.y);
+                }
+                if (y == float.MinValue)
+                {
+                    sb.AppendLine("AVISO: " + Ruta(t) + " sin superficie debajo en el centro (tinaco sobre base hueca o borde).");
+                    avisos++;
+                }
+                else if (b.min.y - y > 0.05f)
+                {
+                    flotan++;
+                    sb.AppendLine("FALLO: flota " + (b.min.y - y).ToString("0.00", CultureInfo.InvariantCulture) + " m: " + Ruta(t));
+                }
+                else if (y - b.min.y > 0.05f)
+                {
+                    enterradas++;
+                    sb.AppendLine("FALLO: enterrada " + (y - b.min.y).ToString("0.00", CultureInfo.InvariantCulture) + " m: " + Ruta(t));
+                }
+                foreach (VariarCerroT1364.CasaT h in casas)
+                {
+                    if (b.center.x < h.X0 || b.center.x > h.X1 || b.center.z < h.Z0 || b.center.z > h.Z1 || b.center.y < h.Base)
+                    {
+                        continue;
+                    }
+                    List<Bounds> sus = enlaces.Where(e => SolapaXZ(new Bounds(new Vector3((h.X0 + h.X1) * 0.5f, b.center.y, (h.Z0 + h.Z1) * 0.5f), new Vector3(h.X1 - h.X0, 1f, h.Z1 - h.Z0)), e, 1f)).Take(5).ToList();
+                    List<Vector2> puntos = sus.Select(e => new Vector2(Mathf.Clamp(e.center.x, h.X0, h.X1), Mathf.Clamp(e.center.z, h.Z0, h.Z1))).ToList();
+                    float radio = Mathf.Max(b.extents.x, b.extents.z);
+                    bool malo = sus.Any(e => SolapaXZ(b, e, 1.0f));
+                    for (int i = 0; i < puntos.Count && !malo; i++)
+                    {
+                        for (int j = i + 1; j < puntos.Count && !malo; j++)
+                        {
+                            malo = Distancia2D(new Vector2(b.center.x, b.center.z), puntos[i], puntos[j]) < AnchoPasillo * 0.5f + radio - 0.1f;
+                        }
+                    }
+                    if (malo)
+                    {
+                        enPasillo++;
+                        sb.AppendLine("FALLO: cierra el pasillo de " + AnchoPasillo + " m: " + Ruta(t));
+                    }
+                    break;
+                }
+            }
+            for (int i = 0; i < todas.Count; i++)
+            {
+                for (int j = i + 1; j < todas.Count; j++)
+                {
+                    if (todas[i].t.parent != todas[j].t.parent)
+                    {
+                        continue;
+                    }
+                    string a = todas[i].t.name, b = todas[j].t.name;
+                    bool par = (a.StartsWith("Tinaco_") && b.StartsWith("BaseTinaco_")) || (b.StartsWith("Tinaco_") && a.StartsWith("BaseTinaco_"));
+                    Bounds bi = todas[i].b, bj = todas[j].b;
+                    bi.Expand(-0.1f);
+                    bj.Expand(-0.1f);
+                    if (!par && bi.Intersects(bj))
+                    {
+                        encimadas++;
+                        sb.AppendLine("FALLO: encimadas " + Ruta(todas[i].t) + " y " + a + " con " + b + ".");
+                    }
+                }
+            }
+            sb.AppendLine("Azoteas: " + grupos + " con objetos nuevos, " + cosas + " cosas; flotando " + flotan + ", enterradas " + enterradas + ", encimadas " + encimadas + ", cerrando pasillo " + enPasillo + ".");
+            fallos += flotan + enterradas + encimadas + enPasillo;
+        }
+
+        private static void ValidarCalle(Ctx c, StringBuilder sb, ref int fallos, ref int avisos)
+        {
+            Transform calle = c.Nuevo.Find("Calle");
+            int carros = 0, enCarril = 0, flotan = 0;
+            if (calle != null)
+            {
+                Transform padreCarros = calle.Find("Carros");
+                if (padreCarros != null)
+                {
+                    foreach (Transform t in padreCarros)
+                    {
+                        carros++;
+                        Bounds b = Cubierta(t);
+                        float yN, yS;
+                        float yRef = YCalle(b.center.z);
+                        if (Mathf.Abs(b.center.x - XCentroCalle) - b.extents.x < MitadCarril)
+                        {
+                            enCarril++;
+                            sb.AppendLine("FALLO: carro en el carril de tránsito: " + t.name + " x = " + b.center.x.ToString("0.0", CultureInfo.InvariantCulture));
+                        }
+                        if (Suelo(c, b.center.x, b.center.z + b.extents.z * 0.7f, yRef, out yN) && Suelo(c, b.center.x, b.center.z - b.extents.z * 0.7f, yRef, out yS))
+                        {
+                            float gap = b.min.y - Mathf.Min(yN, yS);
+                            if (Mathf.Abs(gap) > 0.08f)
+                            {
+                                flotan++;
+                                sb.AppendLine("FALLO: carro " + t.name + " a " + gap.ToString("0.00", CultureInfo.InvariantCulture) + " m del piso.");
+                            }
+                        }
+                        else
+                        {
+                            avisos++;
+                            sb.AppendLine("AVISO: no se pudo medir el piso bajo " + t.name + ".");
+                        }
+                    }
+                }
+                Transform basura = calle.Find("Basura");
+                if (basura != null)
+                {
+                    foreach (Transform t in basura)
+                    {
+                        Bounds b = Cubierta(t);
+                        if (Mathf.Abs(b.center.x - XCentroCalle) - b.extents.x < MitadCarril)
+                        {
+                            enCarril++;
+                            sb.AppendLine("FALLO: basura en el carril: " + t.name);
+                        }
+                        float y;
+                        if (Suelo(c, b.center.x, b.center.z, YCalle(b.center.z), out y) && Mathf.Abs(b.min.y - y) > 0.06f)
+                        {
+                            flotan++;
+                            sb.AppendLine("FALLO: " + t.name + " a " + (b.min.y - y).ToString("0.00", CultureInfo.InvariantCulture) + " m del piso.");
+                        }
+                    }
+                }
+            }
+            Transform gente = c.Nuevo.Find("Gente");
+            int personas = 0;
+            foreach (Transform t in c.Nuevo.GetComponentsInChildren<Transform>(true))
+            {
+                if (t.name.StartsWith("NPC_"))
+                {
+                    personas++;
+                    if (t.GetComponentInChildren<Collider>() != null)
+                    {
+                        fallos++;
+                        sb.AppendLine("FALLO: el NPC " + t.name + " tiene collider.");
+                    }
+                    Vector3 p = t.position;
+                    if (Mathf.Abs(p.x - XCentroCalle) < MitadCarril && p.y < YCalle(p.z) + 1f)
+                    {
+                        enCarril++;
+                        sb.AppendLine("FALLO: NPC en el carril: " + t.name);
+                    }
+                }
+            }
+            sb.AppendLine("Calle: carros " + carros + ", gente " + personas + " (8 a 20 pedidos); en carril " + enCarril + ", flotando/enterrados " + flotan + ".");
+            if (personas < 8 || personas > 20)
+            {
+                sb.AppendLine("FALLO: la gente debe ser de 8 a 20.");
+                fallos++;
+            }
+            fallos += enCarril + flotan;
+        }
+
+        private static void ValidarColliders(Ctx c, StringBuilder sb, ref int fallos)
+        {
+            int sinMalla = 0, total = 0;
+            foreach (Collider col in c.Nuevo.GetComponentsInChildren<Collider>(true))
+            {
+                if (!col.enabled)
+                {
+                    continue;
+                }
+                total++;
+                Renderer r = col.GetComponent<Renderer>() ?? col.GetComponentInParent<Renderer>();
+                if (r == null)
+                {
+                    bool hijo = col.GetComponentInChildren<Renderer>() != null;
+                    if (!hijo)
+                    {
+                        sinMalla++;
+                        sb.AppendLine("FALLO: collider sin malla visible: " + Ruta(col.transform));
+                    }
+                }
+            }
+            sb.AppendLine("Colliders nuevos activos: " + total + ", sin malla visible: " + sinMalla + ".");
+            fallos += sinMalla;
+        }
+
+        private static void ValidarCables(Ctx c, StringBuilder sb, ref int fallos)
+        {
+            Transform cables = c.Nuevo.Find("Cables");
+            if (cables == null || cables.GetComponent<MeshFilter>() == null || cables.GetComponent<MeshFilter>().sharedMesh == null)
+            {
+                sb.AppendLine("AVISO: no hay malla de cables nuevos.");
+                return;
+            }
+            Mesh m = cables.GetComponent<MeshFilter>().sharedMesh;
+            float minimo = float.MaxValue;
+            foreach (Vector3 v in m.vertices)
+            {
+                minimo = Mathf.Min(minimo, Vector3.Distance(cables.TransformPoint(v), K13Desde));
+            }
+            sb.AppendLine("Cables nuevos: " + m.vertexCount / 4 + " anillos; distancia mínima a la cámara K13: " + minimo.ToString("0.0", CultureInfo.InvariantCulture) + " m (mínimo 4).");
+            if (minimo < 4f)
+            {
+                sb.AppendLine("FALLO: hay cables a menos de 4 m de la cámara K13.");
+                fallos++;
+            }
+        }
+
+        // ================================================================ Fotos
+
+        /// <summary>
+        /// Fotos de K13 (cámara de T1416: la ciudad queda a la izquierda al mirar cuesta arriba; la referencia la tiene a la derecha, pero mirando cuesta arriba por la calle sur no hay
+        /// otra salida sin espejar el mundo) y de A13 (la marca CamaraA de T1414 si existe) en docs/capturas/_vista19b/. No guarda nada en el prefab ni en la escena.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T1441/Cerro detalle y vida: fotos")]
+        public static void Fotos()
+        {
+            ColocarS2.Abrir();
+            Directory.CreateDirectory(CarpetaFotos);
+            Directory.CreateDirectory("Logs");
+            Physics.SyncTransforms();
+            // K13: los ojos 1.7 m sobre el piso que haya (T-1440 puede haber cambiado la altura de la calle).
+            Vector3 desde = K13Desde, hacia = K13Hacia;
+            RaycastHit golpe;
+            if (Physics.Raycast(new Vector3(desde.x, desde.y + 8f, desde.z), Vector3.down, out golpe, 20f) && Mathf.Abs(golpe.point.y + 1.7f - desde.y) < 3f)
+            {
+                float dy = golpe.point.y + 1.7f - desde.y;
+                desde.y += dy;
+                hacia.y += dy;
+            }
+            string juego = "Logs/t1441-cerro-k13-juego.png";
+            ColocarS2cLook.Foto(desde, hacia, juego, CampoK13);
+            ColocarS2.LadoALado("imageassets/referencias/look/K13_ColoniaCerro.png", juego, CarpetaFotos + "/cerro-k13-t1441.png");
+            // A13: la marca de T1414 (CamaraA/Mira bajo T1414_Cerro) o la cámara de T1394.
+            Vector3 desdeA = ZonaCerroT1394.A13Desde, haciaA = ZonaCerroT1394.A13Hacia;
+            Transform raiz = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t.name == "T1414_Cerro");
+            Transform marca = raiz != null ? raiz.Find(AereasT1414.NombreCamara) : null;
+            if (marca != null && marca.Find(AereasT1414.NombreMira) != null)
+            {
+                desdeA = marca.position;
+                haciaA = marca.Find(AereasT1414.NombreMira).position;
+            }
+            string juegoA = "Logs/t1441-cerro-a13-juego.png";
+            MethodInfo aerea = typeof(AereasT1414).GetMethod("FotoAerea", BindingFlags.NonPublic | BindingFlags.Static);
+            if (aerea != null)
+            {
+                aerea.Invoke(null, new object[] { desdeA, haciaA, juegoA, CampoA13, AereasT1414.DensidadNieblaAerea });
+            }
+            else
+            {
+                ColocarS2cLook.Foto(desdeA, haciaA, juegoA, CampoA13);
+            }
+            ColocarS2.LadoALado("imageassets/referencias/look/A13_ColoniaCerro_Aerea.png", juegoA, CarpetaFotos + "/cerro-a13-t1441.png");
+            Debug.Log("[ZonaCerroT1441] Fotos: K13 desde " + desde + " hacia " + hacia + "; A13 desde " + desdeA + " hacia " + haciaA + ".");
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ColocarS2.RutaEscena, UnityEditor.SceneManagement.OpenSceneMode.Single);
+        }
+
+        // ================================================================ Ayudas
+
+        private static void Log(string texto)
+        {
+            if (informe != null)
+            {
+                informe.AppendLine(texto);
+            }
+            Debug.Log("[ZonaCerroT1441] " + texto);
+        }
+
+        private static void Escribir(string ruta, StringBuilder sb)
+        {
+            string completa = Path.Combine(Directory.GetParent(Application.dataPath).FullName, ruta);
+            Directory.CreateDirectory(Path.GetDirectoryName(completa));
+            File.WriteAllText(completa, sb.ToString());
+        }
+
+        private static string Megas(string ruta)
+        {
+            string completa = Path.Combine(Directory.GetParent(Application.dataPath).FullName, ruta);
+            return File.Exists(completa) ? (new FileInfo(completa).Length / 1048576f).ToString("0.0", CultureInfo.InvariantCulture) : "?";
+        }
+
+        private static string Ruta(Transform t)
+        {
+            StringBuilder sb = new StringBuilder(t.name);
+            for (Transform p = t.parent; p != null; p = p.parent)
+            {
+                sb.Insert(0, p.name + "/");
+            }
+            return sb.ToString();
+        }
+    }
+}
