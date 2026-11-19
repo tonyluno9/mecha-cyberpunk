@@ -97,5 +97,37 @@ namespace MechaCyberpunk.Arte.Editor
             }
             UnityEditor.SceneManagement.EditorSceneManager.SaveScene(escena);
         }
+
+        /// <summary>T-1403 apagó también azoteas (AzoteaT1318), rieles de escalera y un arroyo: son legítimos (finos o planos). Se reencienden; quedan apagados solo los halos.</summary>
+        public static void ReencenderT1403()
+        {
+            var lineas = System.IO.File.ReadAllLines("Logs/t1403-apagados.txt");
+            var porPrefab = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string[]>>();
+            var quedan = new StringBuilder();
+            foreach (var l in lineas)
+            {
+                var c = l.Split('|');
+                if (c.Length < 3) continue;
+                if (c[2] == "Halo") { quedan.AppendLine(l); continue; }
+                if (!porPrefab.ContainsKey(c[0])) porPrefab[c[0]] = new System.Collections.Generic.List<string[]>();
+                porPrefab[c[0]].Add(c);
+            }
+            int n = 0;
+            foreach (var kv in porPrefab)
+            {
+                var raiz = PrefabUtility.LoadPrefabContents(kv.Key);
+                foreach (var c in kv.Value)
+                {
+                    Transform t = raiz.transform;
+                    foreach (var i in c[1].Split('/')) { int k = int.Parse(i); t = k < t.childCount ? t.GetChild(k) : null; if (t == null) break; }
+                    var r = t == null ? null : t.GetComponent<Renderer>();
+                    if (r != null && t.name == c[2]) { r.enabled = true; n++; }
+                }
+                PrefabUtility.SaveAsPrefabAsset(raiz, kv.Key);
+                PrefabUtility.UnloadPrefabContents(raiz);
+            }
+            System.IO.File.WriteAllText("Logs/t1403-apagados.txt", quedan.ToString());
+            Debug.Log("Correr19nov: reencendidos " + n + " renderers de T-1403");
+        }
     }
 }
