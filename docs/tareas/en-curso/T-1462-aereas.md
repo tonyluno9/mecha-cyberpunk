@@ -48,3 +48,11 @@ skyline del Malecón como panel plano sobre el mar (K11) y niebla que tapa la zo
 - Niebla: sobre 12 m de altura `NieblaPorAltura.AplicarNiebla` (la llama `CicloDiaNoche`) pasa a niebla Linear: inicio 0 a 200 m y fin 100 a 1200 m según la altura (calle = lo de siempre: exponencial cuadrática). Así los primeros 150-200 m se ven claros y el horizonte lejano se cubre poco a poco. Pruebas EditMode nuevas (Lineal y AplicarNiebla).
 - Validar: permitidos nuevos (Autopista/Fondo/Torre_*, TorreReflectores, FondoMar, Asfalto, Arroyo: son ciudad lejana y calles legítimas, eran los 475 falsos positivos).
 - Validar ahora mide "QUÉ SE VE" por píxel (id de color por renderer, pasada de opacos y pasada de transparentes) en el tercio superior (izq, centro, der) de A11, A13, A15 y A18, y en dos regiones de K12 (forma blanca sobre el mar y cruz en el cielo). Con eso se nombran las cajas negras de A13/A11 y lo blanco de K12 en la ronda siguiente.
+
+## Ronda 4 (id por píxel)
+- A13 arriba a la derecha: `T530_Afueras/Salida_*/Edificio` (cubos con MuroMundo, restos de las afueras viejas, base y 0 pero sin suelo alrededor) y SueloLejano. Ahora se apagan sobre 25 m (grupo `EdificiosAfueras`).
+- A13 arriba a la izquierda: `T1356_Autopista/Fondo/Torre_*` (y TorreReflectores), cientos de piezas pequeñas (por eso no salían en el top 8). Se apagan sobre 25 m (grupo `TorresFondoAutopista`).
+- Si siguen bloques negros en el borde superior de A13, la región nueva "franja-superior" de Validar (12 % de arriba, todo el ancho) los nombra.
+- K12, forma blanca sobre el mar: `T1354_Malecon/T1413_Malecon/FaroLejano/ML04_Faro_Lejano/Visual` (malla tripo_node_3ebf74a8, 16.6x30.6x17.7, centro -60;20.3;-335, base y 5.0: flota 5 m sobre el mar) más los haces `T1413_Malecon/FaroLejano/Haz` y `T1404_Malecon/Faro/Faro_0/HazFaro_T1404/Haz`. Son de T-1413/T-1463, no míos.
+- K12, cruz blanca en el cielo: dron `T1398_DronesAereos/Ciudad/Ciudad_NV01_2/Dron/NV01/Cuerpo` (y Rotor_*), centro -70;100;-200 (tarea de drones/tráfico, no mía).
+- Validar: permitidos NucleosSodio (T1461), MuroFondo (interior del casino), T1355_Cerro/ y T1357_Puerto/ (de la sesión B). Ahora espera 6 componentes OcultarPorAltura.

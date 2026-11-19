@@ -155,6 +155,20 @@ namespace MechaCyberpunk.Arte.Editor
                 CrearGrupo(raiz.transform, "SkylineSK01", sky.GetComponentsInChildren<Renderer>(true), UmbralSkyline, log);
             }
 
+            // Torres de fondo de la Autopista (placas de vidrio inclinadas que flotan sobre el horizonte) y los edificios cubo de las afueras T530 (bloques negros): se apagan por altura.
+            Transform autopista = todos.FirstOrDefault(t => t != null && t.parent == null && t.name == "T1356_Autopista");
+            if (autopista != null)
+            {
+                Renderer[] torres = autopista.GetComponentsInChildren<Renderer>(true).Where(r => RutaDe(r.transform).Contains("/Fondo/Torre")).ToArray();
+                CrearGrupo(raiz.transform, "TorresFondoAutopista", torres, UmbralFondoT513, log);
+            }
+            Transform afueras = todos.FirstOrDefault(t => t != null && t.parent == null && t.name == "T530_Afueras");
+            if (afueras != null)
+            {
+                Renderer[] cubos = afueras.GetComponentsInChildren<Renderer>(true).Where(r => RutaDe(r.transform).Contains("/Edificio")).ToArray();
+                CrearGrupo(raiz.transform, "EdificiosAfueras", cubos, UmbralFondoT513, log);
+            }
+
             // Piso de ciudad lejana: bajo todo, solo se ve con la cámara por encima de 25 m (a nivel de calle no existe).
             CrearSueloLejano(raiz.transform, log);
 
@@ -237,6 +251,7 @@ namespace MechaCyberpunk.Arte.Editor
             ("arriba-izq", new Rect(0f, 0.55f, 0.34f, 0.45f)),
             ("arriba-centro", new Rect(0.33f, 0.55f, 0.34f, 0.45f)),
             ("arriba-der", new Rect(0.66f, 0.55f, 0.34f, 0.45f)),
+            ("franja-superior", new Rect(0f, 0.88f, 1f, 0.12f)),
         };
 
         /// <summary>
@@ -431,7 +446,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             OcultarPorAltura[] comps = Object.FindObjectsByType<OcultarPorAltura>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             log.AppendLine("componentes OcultarPorAltura: " + comps.Length + " (" + string.Join(", ", comps.Select(c => c.name + ":" + c.Cantidad + "@" + c.Umbral.ToString("0"))) + ")");
-            if (comps.Length < 4)
+            if (comps.Length < 6)
             {
                 fallas++;
                 log.AppendLine("FALLA: faltan componentes OcultarPorAltura (corre Aplicar)");
@@ -450,7 +465,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             Dictionary<Renderer, Datos> res = Analizar(log, out List<Cam> camaras, out Dictionary<string, List<Datos>> porCam, true);
-            string[] permitidos = { "Halos", "HazTorre", "Haz", "FaroLejano", "Cables", "Cable", "Bruma_", "DerramesNeon", "Estelas", "T1464_Autopista", "PisoRespaldo", "Skyline", "SueloLejano", "/Fondo/Torre_", "TorreReflectores", "FondoMar", "Asfalto", "Arroyo" };
+            string[] permitidos = { "Halos", "HazTorre", "Haz", "FaroLejano", "Cables", "Cable", "Bruma_", "DerramesNeon", "Estelas", "T1464_Autopista", "PisoRespaldo", "Skyline", "SueloLejano", "/Fondo/Torre_", "TorreReflectores", "FondoMar", "Asfalto", "Arroyo", "NucleosSodio", "MuroFondo", "T1355_Cerro/", "T1357_Puerto/" };
             var camY = camaras.ToDictionary(c => c.Nombre, c => c.Desde.y);
             int sospechososC = 0;
             foreach (KeyValuePair<string, List<Datos>> kv in porCam)
@@ -473,7 +488,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                     string ruta = RutaDe(d.R.transform);
                     float pct = PorcentajePantalla(cm, d.B);
-                    bool esT513 = ruta.StartsWith("T513_Fondo", StringComparison.Ordinal);
+                    bool esT513 = ruta.StartsWith("T513_Fondo", StringComparison.Ordinal) || ruta.Contains("/Fondo/Torre") || (ruta.StartsWith("T530_Afueras", StringComparison.Ordinal) && ruta.Contains("/Edificio"));
                     bool esBruma = d.R.name.StartsWith("Bruma_", StringComparison.Ordinal);
                     bool esSky = ruta.Contains("/Skyline/");
                     if (esT513 && y > UmbralFondoT513 || esBruma && y > UmbralBrumaAltura || esSky && y > UmbralSkyline)
