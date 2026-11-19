@@ -29,6 +29,8 @@ Merge --no-ff a main y push (autorizado por Tony). "3d sonidos" no va a git (.gi
   PlayMode Tests.Sonido 19/19; PasosT596, DisparoLimpioT676 (acepta impacto de cabeza), ExplosionCarro, ChispeoPlasmaT1309 13/13.
   RecorridoRonda2Pruebas.MercadoTianguisEscopeta falla "El ambiente arranca apagado" (0.8 en vez de 0): código no tocado por estas tareas, falla vieja (piso de ambiente de T-977).
 
+- Build de la Demo detenido por Claude Code por falta de memoria; no se relanzó. Reporte: docs/reporte-sonidos-19nov.md. Merge a main.
+
 ## Qué sigue
 1. Build Builds/Demo (ConstruirDemo.Construir) y Builds/Juego (ConstruirDemo.ConstruirJuego), una a la vez.
-2. docs/reporte-sonidos-19nov.md, docs/sonidos-faltan.md, merge --no-ff a main y push.
+2. (hecho) reporte, faltantes, merge a main.
