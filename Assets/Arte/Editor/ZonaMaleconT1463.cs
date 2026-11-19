@@ -41,6 +41,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float XFilaHasta = 105f;
         private const float RadioCamara = 2.2f;
         private const float RadioPalmeraCamara = 6f;
+        private const float RadioPalmeraK12 = 8f;
         private const int TopeSpots = 36;
         private const int CupoLuces = 40;
 
@@ -300,6 +301,7 @@ namespace MechaCyberpunk.Arte.Editor
                 ApagarFilaVieja(raiz, apagados);
                 PonerFila(obra, raiz, mio);
                 ArreglarFarosExistentes(raiz);
+                ApagarHacesHaciaK12(raiz, apagados);
                 PonerFaroA11(obra, mio);
                 PonerArena(raiz);
                 PonerLetreros(raiz, mio);
@@ -350,7 +352,8 @@ namespace MechaCyberpunk.Arte.Editor
                 Bounds b = ZonaMaleconT1393.CajaDe(t.gameObject);
                 Vector3 c = b.size == Vector3.zero ? t.position : b.center;
                 float lateral = LateralDe(c);
-                if (c.x < XFilaDesde - 30f || c.x > XFilaHasta || lateral < 5f || lateral > 18f) { continue; }
+                bool frenteAK12 = Plano(c, ZonaMaleconT1413.CamaraK12) < RadioPalmeraK12;
+                if (!frenteAK12 && (c.x < XFilaDesde - 30f || c.x > XFilaHasta || lateral < 5f || lateral > 18f)) { continue; }
                 Apagar(raiz, apagados, t);
                 n++;
             }
@@ -390,7 +393,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Marco(pt.x, out Vector3 linea, out _, out Vector3 mar);
                     Vector3 pos = linea + mar * LateralFila;
                     pos.y = ColocarT1354Curva.YBanqueta;
-                    if (Plano(pos, camK) < (esPalmera ? RadioPalmeraCamara : RadioCamara)) { omitidos++; continue; }
+                    if (Plano(pos, camK) < (esPalmera ? RadioPalmeraCamara : RadioCamara) || Plano(pos, ZonaMaleconT1413.CamaraK12) < RadioPalmeraK12) { omitidos++; continue; }
                     GameObject go = esPalmera
                         ? PonerSimple(palmera, grupo, pos, Quaternion.Euler(0f, (float)obra.Azar.NextDouble() * 360f, 0f), 1.1f + (float)obra.Azar.NextDouble() * 0.3f, ocupado, 1.2f, "AR03_Palmera_" + nP)
                         : PonerSimple(farol, grupo, pos, Quaternion.LookRotation(mar), 1f, ocupado, 1f, "ML01_Farol_" + nF);
@@ -446,11 +449,13 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static Material MatCharcoLuz()
         {
+            // Se rehace siempre (KitS2c.Mat no regenera uno que ya existe): así los valores nuevos sí se aplican.
+            AssetDatabase.DeleteAsset(KitS2c.Carpeta + "/T1463_CharcoLuz.mat");
             return KitS2c.Mat("T1463_CharcoLuz", () =>
             {
                 Material m = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
                 m.SetTexture("_BaseMap", TexCharcoLuz());
-                m.SetColor("_BaseColor", KitS2c.Sodio * 0.55f);
+                m.SetColor("_BaseColor", KitS2c.Sodio * 2.2f);
                 m.SetFloat("_Surface", 1f);
                 m.SetFloat("_Blend", 2f);
                 m.SetFloat("_SrcBlend", 1f);
@@ -476,9 +481,9 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 GameObject q = new GameObject("CharcoLuz_" + n++);
                 q.transform.SetParent(grupo, false);
-                q.transform.position = new Vector3(pie.x, ColocarT1354Curva.YBanqueta + 0.03f, pie.z) + haciaAvenida * 1.6f;
+                q.transform.position = new Vector3(pie.x, ColocarT1354Curva.YBanqueta + 0.05f, pie.z) + haciaAvenida * 1.6f;
                 q.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-                q.transform.localScale = new Vector3(9f, 9f, 1f);
+                q.transform.localScale = new Vector3(10f, 10f, 1f);
                 q.AddComponent<MeshFilter>().sharedMesh = quad;
                 MeshRenderer mr = q.AddComponent<MeshRenderer>();
                 mr.sharedMaterial = mat;
@@ -590,6 +595,63 @@ namespace MechaCyberpunk.Arte.Editor
                     Object.DestroyImmediate(tmp);
                 }
             }
+        }
+        // ================================================================ Haces de frente en K12
+
+        /// <summary>Un renderer de haz (nombre con "Haz", fuera del faro de A11) que en K12 cae a la izquierda del centro (pantalla x entre -0.9 y 0) y apunta hacia la cámara.</summary>
+        private static bool HazDeFrenteEnK12(Renderer r, out float sx, out float sy, out float apunta)
+        {
+            sx = sy = apunta = 0f;
+            Transform faroA11 = r.transform.root.Find(NombreRaiz + "/FaroA11");
+            if (faroA11 != null && r.transform.IsChildOf(faroA11)) { return false; }
+            Vector3 cam = ZonaMaleconT1413.CamaraK12;
+            Bounds b = r.bounds;
+            if (!Proyectar(cam, ZonaMaleconT1413.MiraK12, ZonaMaleconT1413.CampoK12, b.center, out sx, out sy)) { return false; }
+            apunta = Vector3.Dot(r.transform.forward, (cam - b.center).normalized);
+            return sx >= -0.9f && sx <= 0f && Mathf.Abs(sy) <= 1f && apunta > 0.2f;
+        }
+
+        private static IEnumerable<Renderer> RenderersDeHaz(Transform raiz)
+        {
+            return raiz.GetComponentsInChildren<Renderer>(false).Where(r => r.gameObject.name.Contains("Haz") && !(r is ParticleSystemRenderer));
+        }
+
+        /// <summary>
+        /// En K12 una mancha blanca en forma de trapecio sobre el mar era un haz visto de frente: se proyectan a la cámara K12 los renderers "Haz" del Malecón y se apagan
+        /// (SetActive false, se reencienden al rehacer) los que caen a la izquierda del centro y apuntan a la cámara. El del faro de A11 se queda.
+        /// </summary>
+        private static void ApagarHacesHaciaK12(Transform raiz, Transform apagados)
+        {
+            int n = 0, total = 0;
+            foreach (Renderer r in RenderersDeHaz(raiz).ToList())
+            {
+                total++;
+                if (!HazDeFrenteEnK12(r, out float sx, out float sy, out float apunta)) { continue; }
+                Informe.AppendLine("Haz apagado por verse de frente en K12: " + Camino(raiz, r.transform) + " (" + r.gameObject.name + "), pantalla x " + sx.ToString("F2") + ", y " + sy.ToString("F2") + ", apunta a la cámara " + apunta.ToString("F2") + ".");
+                Apagar(raiz, apagados, r.transform);
+                n++;
+            }
+            Informe.AppendLine("Haces del Malecón revisados contra K12: " + total + ", apagados " + n + ".");
+        }
+
+        private static void ValidarHacesK12(Transform raiz)
+        {
+            int malos = 0;
+            foreach (Renderer r in RenderersDeHaz(raiz))
+            {
+                if (HazDeFrenteEnK12(r, out float sx, out float sy, out float apunta))
+                {
+                    malos++;
+                    Informe.AppendLine("  haz de frente en K12: " + r.transform.name + " x " + sx.ToString("F2") + ", y " + sy.ToString("F2") + ", apunta " + apunta.ToString("F2"));
+                }
+            }
+            Informe.AppendLine("Haces activos que se ven de frente en K12: " + malos);
+            Exigir(malos == 0, malos + " haces activos se ven de frente en K12.");
+            Transform mio = raiz.Find(NombreRaiz);
+            Vector3 k12 = ZonaMaleconT1413.CamaraK12;
+            int palmeras = raiz.GetComponentsInChildren<Transform>(false).Count(t => EsFilaVieja(t) && t.name.StartsWith("AR03_Palmera", StringComparison.Ordinal) && (t.parent == null || !EsFilaVieja(t.parent)) && Plano(ZonaMaleconT1393.CajaDe(t.gameObject).center, k12) < RadioPalmeraK12);
+            Informe.AppendLine("Palmeras activas a menos de " + RadioPalmeraK12 + " m de la cámara K12: " + palmeras);
+            Exigir(palmeras == 0, palmeras + " palmeras a menos de " + RadioPalmeraK12 + " m de la cámara K12.");
         }
         // ================================================================ Faros existentes (K12): sin mancha blanca
 
@@ -1064,6 +1126,7 @@ namespace MechaCyberpunk.Arte.Editor
                     ValidarJuegoEnPrefab(raiz);
                     ValidarPoses();
                     ValidarArena(raiz);
+                    ValidarHacesK12(raiz);
                 }
             }
             finally
