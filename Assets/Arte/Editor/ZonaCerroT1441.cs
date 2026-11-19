@@ -43,7 +43,7 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly Vector3 K13Desde = ZonaCerroT1416.K13bDesde;
         public static readonly Vector3 K13Hacia = ZonaCerroT1416.K13bHacia;
         public const float CampoK13 = ZonaCerroT1416.CampoFoto;
-        public const float CampoA13 = 60f;
+        public const float CampoA13 = ZonaCerroT1440.CampoA13;
 
         private const float DistanciaFachadas = 100f;
         private const float DistanciaCable = 4.5f;
@@ -133,6 +133,8 @@ namespace MechaCyberpunk.Arte.Editor
                 c.Obra = KitS2c.Empezar(Raiz, Semilla, zona.transform);
                 c.Nuevo = c.Obra.Raiz;
                 Physics.SyncTransforms();
+                actual = c;
+                calleMedida.Clear();
                 Materiales(c);
                 c.Casas = VariarCerroT1364.Leer(zona.transform).Where(h => h.Raiz != null && h.Raiz.gameObject.activeInHierarchy).ToList();
                 Log("Casas activas: " + c.Casas.Count + " (kit " + c.Casas.Count(h => h.Kit) + ").");
@@ -144,6 +146,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("gente", () => PonerGente(c));
                 Paso("postes del paseo", () => PostesPaseo(c));
                 Paso("cables", () => Cableado(c));
+                Paso("tendederos a la vista de K13", () => TendederosK13(c));
                 Paso("tendederos entre casas", () => Tendederos(c));
                 Paso("lotes", () => Volcar(c));
                 Paso("LOD", () => AgruparLod(c));
@@ -694,9 +697,34 @@ namespace MechaCyberpunk.Arte.Editor
             return ok;
         }
 
+        private static Ctx actual;
+        private static readonly Dictionary<int, float> calleMedida = new Dictionary<int, float>();
+
+        /// <summary>Altura de la banqueta en z: la calle medida con un rayo contra Terreno/Calles (T-1440 puede haber movido la calle) + 0.2 m; si no se mide, la del trazado.</summary>
         private static float YCalle(float z)
         {
-            return CerroT1355Trazado.AlturaPierna2(z) + AltoBanqueta;
+            float analitica = CerroT1355Trazado.AlturaPierna2(z) + AltoBanqueta;
+            if (actual == null)
+            {
+                return analitica;
+            }
+            int clave = Mathf.RoundToInt(z);
+            if (calleMedida.TryGetValue(clave, out float ya))
+            {
+                return ya;
+            }
+            float y = float.MinValue;
+            int n = actual.Fisica.Raycast(new Vector3(XCentroCalle, analitica + 25f, clave), Vector3.down, bufRayos, 60f, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                if (EsPiso(actual, bufRayos[i].collider.transform) && bufRayos[i].normal.y > 0.9f && bufRayos[i].point.y > y)
+                {
+                    y = bufRayos[i].point.y;
+                }
+            }
+            float r = y > float.MinValue && Mathf.Abs(y + AltoBanqueta - analitica) < 6f ? y + AltoBanqueta : analitica;
+            calleMedida[clave] = r;
+            return r;
         }
 
         private static bool Libre(Ctx c, Vector3 centro, Vector3 mitad)
@@ -879,7 +907,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Bounds huella = new Bounds(new Vector3((h.X0 + h.X1) * 0.5f, nivel, (h.Z0 + h.Z1) * 0.5f), new Vector3(h.X1 - h.X0, 1f, h.Z1 - h.Z0));
                 foreach (Bounds e in c.Enlaces)
                 {
-                    if (SolapaXZ(huella, e, 1.0f) && e.max.y > nivel - 3f && e.min.y < nivel + 3f)
+                    if (SolapaXZ(huella, e, 1.0f))
                     {
                         t.Enlaces.Add(e);
                     }
@@ -1265,7 +1293,15 @@ namespace MechaCyberpunk.Arte.Editor
             }
             GameObject g = Generado(t.Grupo, "Tinaco_" + (c.Contador++), malla, new[] { ladrillo, color }, new Vector3(pos.x, t.Y, pos.y), Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f), Vector3.one * e, true, true);
             Physics.SyncTransforms();
-            c.Ocupado.Add(Cubierta(g.transform));
+            Bounds fin = Cubierta(g.transform);
+            VariarCerroT1364.CasaT hh = t.H;
+            if (EnPasillo(t, fin.center.x, fin.center.z, Mathf.Max(fin.extents.x, fin.extents.z) + 0.1f) || fin.min.x < hh.X0 || fin.max.x > hh.X1 || fin.min.z < hh.Z0 || fin.max.z > hh.Z1)
+            {
+                Object.DestroyImmediate(g);
+                Physics.SyncTransforms();
+                return false;
+            }
+            c.Ocupado.Add(fin);
             return true;
         }
 
@@ -1818,31 +1854,62 @@ namespace MechaCyberpunk.Arte.Editor
             int total = 0;
             List<Vector3> puestos = new List<Vector3>();
             // Banquetas (oeste y este de la calle, entre las zonas visibles de K13).
-            for (int i = 0; i < 160 && total < 11; i++)
+            float[] columnas = { XCentroCalle - 5.2f, XCentroCalle + 5.2f, XCentroCalle + 7f, XCentroCalle - 4.0f, XCentroCalle + 4.0f };
+            int rechazos = 0;
+            Action<string> rechazo = motivo =>
             {
-                // Los primeros 5 dentro del cuadro de K13 (z de 66 a 138; la cámara está en z = 152): banqueta oeste (derecha del cuadro), este o paseo.
-                bool enCuadro = total < 4;
-                float z = enCuadro ? c.Obra.Rango(118f, 146f) : c.Obra.Rango(ZVistaSur, ZVistaNorte - 4f);
-                bool oeste = c.Obra.Chance(0.5f);
-                float x = oeste ? XCentroCalle - 5.2f : (c.Obra.Chance(0.5f) ? XCentroCalle + 5.2f : XCentroCalle + 7f);
-                if (enCuadro && !EnCuadroK13(new Vector3(x, YCalle(z), z)))
+                if (rechazos++ < 60)
                 {
+                    Log("  NPC rechazado: " + motivo);
+                }
+            };
+            for (int i = 0; i < 260 && total < 11; i++)
+            {
+                // Los primeros 4 dentro del cuadro de K13 (de 7 a 28 m del lente; la cámara está en z = 152): banquetas, paseo y borde de la calle junto a los carros.
+                bool enCuadro = total < 4;
+                float z = enCuadro ? c.Obra.Rango(124f, 146f) : c.Obra.Rango(ZVistaSur, ZVistaNorte - 4f);
+                float x = columnas[c.Obra.Azar.Next(columnas.Length)];
+                string donde = "(x " + x.ToString("0.0", CultureInfo.InvariantCulture) + ", z " + z.ToString("0.0", CultureInfo.InvariantCulture) + ")";
+                float yRef = YCalle(z);
+                if (enCuadro && !EnCuadroK13(new Vector3(x, yRef, z)))
+                {
+                    rechazo(donde + " fuera del cuadro de K13");
                     continue;
                 }
                 float y;
-                if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.6f)
+                if (!Suelo(c, x, z, yRef, out y))
                 {
+                    rechazo(donde + " sin piso medible (rayo desde y " + (yRef + 2.5f).ToString("0.0", CultureInfo.InvariantCulture) + ")");
+                    continue;
+                }
+                if (Mathf.Abs(y - yRef) > 0.6f)
+                {
+                    rechazo(donde + " piso a " + y.ToString("0.00", CultureInfo.InvariantCulture) + " y la banqueta medida a " + yRef.ToString("0.00", CultureInfo.InvariantCulture));
                     continue;
                 }
                 Vector3 p = new Vector3(x, y, z);
-                if (puestos.Any(q => (q - p).magnitude < (enCuadro ? 3.5f : 5f)) || !Libre(c, p + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
+                if (puestos.Any(q => (q - p).magnitude < (enCuadro ? 3.5f : 5f)))
                 {
+                    rechazo(donde + " muy cerca de otra persona");
                     continue;
                 }
-                if (PonerNpc(c, padre, disponibles[c.Obra.Azar.Next(disponibles.Count)], p, oeste ? 90f : -90f + c.Obra.Rango(-40f, 40f)))
+                if (!Libre(c, p + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
+                {
+                    rechazo(donde + " hay un collider (carro, poste, barandal u otra cosa)");
+                    continue;
+                }
+                if (PonerNpc(c, padre, disponibles[c.Obra.Azar.Next(disponibles.Count)], p, x < XCentroCalle ? 90f : -90f + c.Obra.Rango(-40f, 40f)))
                 {
                     puestos.Add(p);
                     total++;
+                    if (enCuadro)
+                    {
+                        Log("  NPC dentro del cuadro de K13 en " + donde + " y " + y.ToString("0.00", CultureInfo.InvariantCulture) + ".");
+                    }
+                }
+                else
+                {
+                    rechazo(donde + " no se pudo crear el fbx");
                 }
             }
             int enCalle = total;
@@ -1878,12 +1945,18 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>true si el punto (pies de una persona) cae dentro del cuadro de la foto K13 (campo 66, 1376x768) a 6–30 m del lente, con un 10 % de margen interior.</summary>
         private static bool EnCuadroK13(Vector3 p)
         {
+            return EnCuadroPunto(p + Vector3.up * 0.9f, 7f, 28f);
+        }
+
+        /// <summary>true si el punto cae dentro del cuadro de K13 a una profundidad entre min y max m del lente (10 % de margen interior).</summary>
+        private static bool EnCuadroPunto(Vector3 punto, float min, float max)
+        {
             Vector3 adelante = (K13Hacia - K13Desde).normalized;
             Vector3 derecha = Vector3.Cross(Vector3.up, adelante).normalized;
             Vector3 arriba = Vector3.Cross(adelante, derecha);
-            Vector3 d = p + Vector3.up * 0.9f - K13Desde;
+            Vector3 d = punto - K13Desde;
             float prof = Vector3.Dot(d, adelante);
-            if (prof < 6f || prof > 30f)
+            if (prof < min || prof > max)
             {
                 return false;
             }
@@ -2117,6 +2190,84 @@ namespace MechaCyberpunk.Arte.Editor
             Log("Postes nuevos sobre el paseo (el primero con transformador): " + n + ".");
         }
 
+        // ================================================================ Tendederos a la vista de K13 (casas de la derecha a postes de la izquierda)
+
+        private static void TendederosK13(Ctx c)
+        {
+            Material[] ropa =
+            {
+                MatLit("RopaRosa", new Color(0.9f, 0.3f, 0.6f), 0.1f), MatLit("RopaAzul", new Color(0.2f, 0.45f, 0.85f), 0.1f), MatLit("RopaAmarilla", new Color(0.95f, 0.8f, 0.2f), 0.1f),
+                MatLit("RopaBlanca", new Color(0.85f, 0.85f, 0.82f), 0.1f), MatLit("RopaVerde", new Color(0.3f, 0.7f, 0.45f), 0.1f), MatLit("RopaNaranja", new Color(0.95f, 0.5f, 0.15f), 0.1f),
+            };
+            Malla mp = new Malla(1);
+            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.forward);
+            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.back);
+            Mesh prenda = mp.Crear("T1441_PrendaK13");
+            c.Obra.Mallas.Add(prenda);
+            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f).ToList();
+            List<Vector3> postes = c.Postes.Where(q => q.x > XCentroCalle + 2f && q.z > 40f && q.z < 150f).OrderBy(q => Mathf.Abs(q.z - 110f)).ToList();
+            Log("Tendederos K13: " + oeste.Count + " casas del oeste y " + postes.Count + " postes del lado del paseo.");
+            HashSet<VariarCerroT1364.CasaT> usadas = new HashSet<VariarCerroT1364.CasaT>();
+            int lineas = 0, prendas = 0;
+            foreach (Vector3 poste in postes)
+            {
+                foreach (float off in new[] { 0f, -5f, 5f, -9f, 9f })
+                {
+                    if (lineas >= 3)
+                    {
+                        break;
+                    }
+                    float zt = poste.z + off;
+                    VariarCerroT1364.CasaT w = oeste.Where(h => !usadas.Contains(h)).OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - zt)).FirstOrDefault();
+                    if (w == null || Mathf.Abs((w.Z0 + w.Z1) * 0.5f - zt) > 4f)
+                    {
+                        continue;
+                    }
+                    float zc = (w.Z0 + w.Z1) * 0.5f;
+                    float suelo;
+                    if (!Suelo(c, XCentroCalle, zc, YCalle(zc), out suelo))
+                    {
+                        continue;
+                    }
+                    float y = Mathf.Min(suelo + c.Obra.Rango(4.0f, 5.0f), w.Top - 0.6f);
+                    if (y < suelo + 3.8f)
+                    {
+                        Log("  tendedero K13 en z " + zc.ToString("0", CultureInfo.InvariantCulture) + ": la casa es muy baja (" + (w.Top - suelo).ToString("0.0", CultureInfo.InvariantCulture) + " m sobre la calle).");
+                        continue;
+                    }
+                    Vector3 a = new Vector3(w.X1 + 0.06f, y, zc + c.Obra.Rango(-0.8f, 0.8f));
+                    Vector3 b = new Vector3(poste.x - 0.1f, Mathf.Min(poste.y - 0.6f, y + c.Obra.Rango(-0.3f, 0.4f)), poste.z);
+                    const float flecha = 0.45f;
+                    Vector3 medio = (a + b) * 0.5f + Vector3.down * 0.3f;
+                    if (!EnCuadroPunto(medio, 8f, 45f))
+                    {
+                        Log("  tendedero K13 en z " + zc.ToString("0", CultureInfo.InvariantCulture) + ": su punto medio cae fuera del cuadro.");
+                        continue;
+                    }
+                    if (!CableOk(c, a, b, flecha, 2))
+                    {
+                        Log("  tendedero K13 en z " + zc.ToString("0", CultureInfo.InvariantCulture) + ": el cable choca con algo o pasa a menos de " + DistanciaCable + " m de la cámara.");
+                        continue;
+                    }
+                    KitS2c.Cable(c.Obra, a, b, flecha, 0.012f);
+                    int n = c.Obra.Azar.Next(6, 9);
+                    for (int i = 0; i < n; i++)
+                    {
+                        float t = (i + 0.7f) / (n + 0.4f);
+                        Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t) + Vector3.down * 0.27f;
+                        Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(-12f, 12f), c.Obra.Rango(-6f, 6f));
+                        Pegar(prenda, new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, new Vector3(c.Obra.Rango(1f, 1.5f), c.Obra.Rango(1f, 1.4f), 1f)));
+                        prendas++;
+                    }
+                    usadas.Add(w);
+                    lineas++;
+                    Log("  tendedero K13 " + lineas + ": de la fachada (" + a.x.ToString("0.0", CultureInfo.InvariantCulture) + ", " + a.y.ToString("0.0", CultureInfo.InvariantCulture) + ", " + a.z.ToString("0.0", CultureInfo.InvariantCulture)
+                        + ") al poste en z " + poste.z.ToString("0", CultureInfo.InvariantCulture) + ", " + (a.y - suelo).ToString("0.0", CultureInfo.InvariantCulture) + " m sobre la calle.");
+                }
+            }
+            Log("Tendederos a la vista de K13: " + lineas + " (" + prendas + " prendas).");
+        }
+
         // ================================================================ Tendederos con ropa entre casas
 
         private static void Tendederos(Ctx c)
@@ -2244,6 +2395,8 @@ namespace MechaCyberpunk.Arte.Editor
                     Nuevo = zona.transform.Find(Raiz),
                 };
                 Physics.SyncTransforms();
+                actual = c;
+                calleMedida.Clear();
                 if (c.Nuevo == null)
                 {
                     sb.AppendLine("FALLO: no existe " + Raiz + " (corre Aplicar).");
@@ -2585,13 +2738,22 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2cLook.Foto(desde, hacia, juego, CampoK13);
             ColocarS2.LadoALado("imageassets/referencias/look/K13_ColoniaCerro.png", juego, CarpetaFotos + "/cerro-k13-t1441.png");
             // A13: la marca de T1414 (CamaraA/Mira bajo T1414_Cerro) o la cámara de T1394.
-            Vector3 desdeA = ZonaCerroT1394.A13Desde, haciaA = ZonaCerroT1394.A13Hacia;
-            Transform raiz = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t.name == "T1414_Cerro");
-            Transform marca = raiz != null ? raiz.Find(AereasT1414.NombreCamara) : null;
-            if (marca != null && marca.Find(AereasT1414.NombreMira) != null)
+            Vector3 desdeA = ZonaCerroT1440.A13Desde, haciaA = ZonaCerroT1440.A13Hacia;
+            Transform[] todos = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            // La marca de T-1440 (CamaraA13 bajo T1440_Ladera) manda; si no está, la de T-1414.
+            Transform raiz = todos.FirstOrDefault(t => t.name == ZonaCerroT1440.Raiz);
+            Transform marca = raiz != null ? raiz.Find(ZonaCerroT1440.NombreCamara) : null;
+            if (marca == null || marca.Find("Mira") == null)
+            {
+                raiz = todos.FirstOrDefault(t => t.name == "T1414_Cerro");
+                marca = raiz != null ? raiz.Find(AereasT1414.NombreCamara) : null;
+            }
+            Transform mira = marca != null ? (marca.Find("Mira") ?? marca.Find(AereasT1414.NombreMira)) : null;
+            if (marca != null && mira != null)
             {
                 desdeA = marca.position;
-                haciaA = marca.Find(AereasT1414.NombreMira).position;
+                haciaA = mira.position;
+                Debug.Log("[ZonaCerroT1441] A13 con la marca " + Ruta(marca) + ".");
             }
             string juegoA = "Logs/t1441-cerro-a13-juego.png";
             MethodInfo aerea = typeof(AereasT1414).GetMethod("FotoAerea", BindingFlags.NonPublic | BindingFlags.Static);
