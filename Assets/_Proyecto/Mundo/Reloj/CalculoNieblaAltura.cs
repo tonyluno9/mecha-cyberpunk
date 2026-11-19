@@ -14,6 +14,29 @@ namespace MechaCyberpunk.Mundo.Reloj
         private static readonly float[] Alturas = { AlturaCalle, 40f, 80f, 150f, 250f };
         private static readonly float[] Factores = { 1f, 0.45f, 0.35f, 0.15f, 0.1f };
 
+        /// <summary>Distancias (m) de la niebla lineal con la cámara muy arriba (factor 0): casi no hay niebla cerca y el horizonte lejano se cubre poco a poco.</summary>
+        public const float InicioLejos = 200f;
+        public const float FinLejos = 1200f;
+
+        /// <summary>Por debajo de esta fracción de "altura" (1 menos el factor) se conserva la niebla exponencial de siempre.</summary>
+        public const float UmbralLineal = 0.02f;
+
+        /// <summary>
+        /// Niebla lineal equivalente para cámaras altas. A nivel de calle (factor 1) empieza en 0 y acaba donde la exponencial cuadrática ya cubre casi todo (2 / densidad);
+        /// al subir, el inicio se aleja hasta <see cref="InicioLejos"/> y el fin hasta <see cref="FinLejos"/>: la densidad baja cerca y sigue tapando lejos.
+        /// </summary>
+        public static void Lineal(float densidadBase, float factor, out float inicio, out float fin)
+        {
+            float t = Mathf.Clamp01(1f - factor);
+            float finBase = densidadBase > 0.0001f ? 2f / densidadBase : FinLejos;
+            inicio = Mathf.Lerp(0f, InicioLejos, t);
+            fin = Mathf.Lerp(finBase, FinLejos, t);
+            if (fin < inicio + 1f)
+            {
+                fin = inicio + 1f;
+            }
+        }
+
         /// <summary>Factor (0 a 1) que multiplica la densidad de niebla a esa altura (m) sobre el piso. Interpolación lineal entre puntos.</summary>
         public static float Factor(float alturaSobrePiso)
         {

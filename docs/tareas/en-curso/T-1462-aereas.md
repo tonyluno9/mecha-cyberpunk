@@ -42,3 +42,9 @@ skyline del Malecón como panel plano sobre el mar (K11) y niebla que tapa la zo
 - Permitidos nuevos en Validar: DerramesNeon, Estelas, T1464_Autopista, PisoRespaldo, Skyline (bajo 100 m), CiudadRespaldo.
 - Cajas sobre el horizonte de A11: no pude nombrarlas con certeza. Validar ahora escribe una sección "ARRIBA" por cada aérea con los 30 renderers que más ocupan el tercio superior (ruta, malla, material, distancia).
 - Pruebas EditMode: 9 en NieblaPorAlturaPruebas (2 nuevas de OcultoPorDebajo y soloArriba).
+
+## Ronda 3
+- Quitada `CiudadRespaldo` (la rejilla de ventanas). Ahora `T1462_Aereas/SueloLejano`: plano de 4000 m a y -8, URP Lit azul-gris muy oscuro, mate, sin reflejos (`Assets/Arte/Mundo/Look/T1462_SueloLejano.mat`); solo se ve con la cámara sobre 25 m. Aplicar borra el material viejo.
+- Niebla: sobre 12 m de altura `NieblaPorAltura.AplicarNiebla` (la llama `CicloDiaNoche`) pasa a niebla Linear: inicio 0 a 200 m y fin 100 a 1200 m según la altura (calle = lo de siempre: exponencial cuadrática). Así los primeros 150-200 m se ven claros y el horizonte lejano se cubre poco a poco. Pruebas EditMode nuevas (Lineal y AplicarNiebla).
+- Validar: permitidos nuevos (Autopista/Fondo/Torre_*, TorreReflectores, FondoMar, Asfalto, Arroyo: son ciudad lejana y calles legítimas, eran los 475 falsos positivos).
+- Validar ahora mide "QUÉ SE VE" por píxel (id de color por renderer, pasada de opacos y pasada de transparentes) en el tercio superior (izq, centro, der) de A11, A13, A15 y A18, y en dos regiones de K12 (forma blanca sobre el mar y cruz en el cielo). Con eso se nombran las cajas negras de A13/A11 y lo blanco de K12 en la ronda siguiente.

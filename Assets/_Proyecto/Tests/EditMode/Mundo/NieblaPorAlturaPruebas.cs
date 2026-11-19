@@ -45,6 +45,61 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        public void Lineal_ANivelDeCalle_CubreComoLaExponencial()
+        {
+            CalculoNieblaAltura.Lineal(0.02f, 1f, out float inicio, out float fin);
+            Assert.AreEqual(0f, inicio, 1e-4f);
+            Assert.AreEqual(100f, fin, 1e-3f);
+        }
+
+        [Test]
+        public void Lineal_ArribaDejaVerCercaYTapaLejos()
+        {
+            CalculoNieblaAltura.Lineal(0.02f, 0.1f, out float inicio, out float fin);
+            Assert.GreaterOrEqual(inicio, 150f, "casi sin niebla en los primeros 150 m");
+            Assert.GreaterOrEqual(fin, 1000f);
+            Assert.Greater(fin, inicio);
+        }
+
+        [Test]
+        public void Lineal_SubiendoElInicioYElFinNuncaBajan()
+        {
+            CalculoNieblaAltura.Lineal(0.02f, 1f, out float i0, out float f0);
+            for (float h = 12f; h <= 300f; h += 4f)
+            {
+                CalculoNieblaAltura.Lineal(0.02f, CalculoNieblaAltura.Factor(h), out float i, out float f);
+                Assert.GreaterOrEqual(i, i0 - 1e-3f, "inicio h=" + h);
+                Assert.GreaterOrEqual(f, f0 - 1e-3f, "fin h=" + h);
+                i0 = i;
+                f0 = f;
+            }
+        }
+
+        [Test]
+        public void AplicarNiebla_ALaCalle_EsExponencialYArriba_EsLineal()
+        {
+            FogMode modo = RenderSettings.fogMode;
+            float densidad = RenderSettings.fogDensity;
+            try
+            {
+                NieblaPorAltura.Fijar(1f);
+                NieblaPorAltura.AplicarNiebla(0.02f);
+                Assert.AreEqual(FogMode.ExponentialSquared, RenderSettings.fogMode);
+                Assert.AreEqual(0.02f, RenderSettings.fogDensity, 1e-6f);
+                NieblaPorAltura.Fijar(0.15f);
+                NieblaPorAltura.AplicarNiebla(0.02f);
+                Assert.AreEqual(FogMode.Linear, RenderSettings.fogMode);
+                Assert.Greater(RenderSettings.fogEndDistance, RenderSettings.fogStartDistance);
+            }
+            finally
+            {
+                NieblaPorAltura.Fijar(1f);
+                RenderSettings.fogMode = modo;
+                RenderSettings.fogDensity = densidad;
+            }
+        }
+
+        [Test]
         public void Oculto_ConHisteresis_NoParpadea()
         {
             Assert.IsFalse(CalculoOcultarAltura.Oculto(false, 24f, 25f, 3f));
