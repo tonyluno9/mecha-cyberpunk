@@ -82,5 +82,20 @@ namespace MechaCyberpunk.Arte.Editor
             }
             AssetDatabase.SaveAssets();
         }
+
+        /// <summary>T-1400.QuitarColumna apagó el mástil de la grúa del barrio y las ventanas de una fachada de T530: son de los barrios, se reencienden.</summary>
+        public static void ReencenderBarrio()
+        {
+            var escena = UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/_Proyecto/Escenas/Ciudad_Prologo.unity");
+            foreach (var ruta in new[] { "Barrio/PulidoFinales/GruaYAndamio/MastilGrua", "T530_Afueras/Salida_4/Ventanas" })
+            {
+                var partes = ruta.Split('/');
+                var raiz = System.Array.Find(escena.GetRootGameObjects(), g => g.name == partes[0]);
+                var t = raiz == null ? null : raiz.transform.Find(string.Join("/", partes, 1, partes.Length - 1));
+                var r = t == null ? null : t.GetComponent<Renderer>();
+                if (r != null) { r.enabled = true; Debug.Log("Correr19nov: reencendido " + ruta); } else { Debug.LogWarning("Correr19nov: no está " + ruta); }
+            }
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(escena);
+        }
     }
 }
