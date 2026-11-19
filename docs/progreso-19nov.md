@@ -78,5 +78,7 @@ que diga "Qué sigue".
   - T-1409: peatones por zona, con un contrato nuevo en Core (IZonaDelMundo y ZonasMundo).
 - EditMode completo: 3336/3364 en la primera corrida. T-1410 arregló los bugs del mapa y T-1411 actualizó las pruebas que guardaban el look viejo, más vehículos y clips. Segunda corrida: 3365/3375. Las 10 fallas que quedan están en docs/fallas-editmode-19nov-b.md: 9 se le pasaron a T-1412 y 1 (ReglasEnsamblados, de T-1361) ya estaba en main.
 
+- 05:30 T-1412 aplicado. EditMode completo: 3373/3375; las 2 últimas de esta noche (drones sin textura, bruma en greybox) se corrigieron, y la que queda (ReglasEnsamblados) es de main. Builds finales de Demo y de Juego con Succeeded y 0 errores. FPS en el build final: el peor es Cerro/plaza_arriba con 136 (p1 109). Merge a main.
+
 ## Qué sigue
-- Integrar T-1412, correr de nuevo el EditMode completo, hacer otra vez los builds de Demo y Juego, actualizar el reporte con las fotos de la ronda 5 (t-1406, t-1407) y hacer merge a main.
+- Ver docs/pendientes-19nov.md.
