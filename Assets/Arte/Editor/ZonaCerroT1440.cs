@@ -47,8 +47,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const string NombreMira = "Mira";
 
         // A13b: sobre la ladera, al suroeste de la zona de escaleras, mirando al noreste (la ciudad, al este, queda a la derecha como en la referencia).
-        public static readonly Vector3 A13Desde = new Vector3(-420f, 58f, -40f);
-        public static readonly Vector3 A13Hacia = new Vector3(-340f, 8f, 35f);
+        public static readonly Vector3 A13Desde = new Vector3(-405f, 50f, -35f);
+        public static readonly Vector3 A13Hacia = new Vector3(-345f, 26f, 15f);
         public const float CampoA13 = 60f;
         public const float DensidadNieblaAerea = 0.008f;
         private const float AnchoFoto = 1376f, AltoFoto = 768f;
@@ -78,9 +78,9 @@ namespace MechaCyberpunk.Arte.Editor
         public const int EscalerasMaximas = 2;
 
         // Postes
-        public const float SeparacionPostes = 22f;
+        public const float SeparacionPostes = 14f;
         public const float DesdeEje = 5.25f;
-        public const float DistanciaPosteViejo = 9f;
+        public const float DistanciaPosteViejo = 6f;
         public const int LucesPostes = 8;
 
         private static StringBuilder informe;
@@ -109,7 +109,7 @@ namespace MechaCyberpunk.Arte.Editor
             public PhysicsScene Fisica;
             public Transform Terreno, Calles, Nuevo, Pisos, Marcas;
             public KitS2c.Obra Obra;
-            public Material Concreto, Tubo, Lampara, Pila;
+            public Material Concreto, Tubo, Lampara, Pila, Oscuro;
             public List<Rend> Rends = new List<Rend>();
             public readonly HashSet<Transform> Apagadas = new HashSet<Transform>();
             public int Volumenes, ConPeldanos, ConEscalera, Altura;
@@ -117,6 +117,7 @@ namespace MechaCyberpunk.Arte.Editor
             public Malla Escalerillas = new Malla();
             public Malla Brillo = new Malla();
             public Malla Charcos = new Malla();
+            public Malla Techos = new Malla();
         }
 
         // ================================================================ Aplicar
@@ -141,6 +142,15 @@ namespace MechaCyberpunk.Arte.Editor
                 c.Concreto = AssetDatabase.LoadAssetAtPath<Material>(ZonaCerroT1385.RutaM09) ?? KitS2c.MatBanqueta();
                 c.Tubo = MatPropio("T1440_Tubo", () => KitS2c.Lit(new Color(0.3f, 0.17f, 0.11f), 0.3f, KitS2c.TexMuro()));
                 c.Lampara = MatPropio("T1440_LamparaNaranja", () => Emisivo(new Color(0.15f, 0.09f, 0.04f), new Color(1f, 0.5f, 0.12f) * 4f));
+                c.Oscuro = MatPropio("T1440_ConcretoOscuro", () =>
+                {
+                    Material o = AssetDatabase.LoadAssetAtPath<Material>(ZonaCerroT1385.RutaM09);
+                    Material m = o != null ? new Material(o) : KitS2c.Lit(Color.white, 0.2f, KitS2c.TexMuro());
+                    m.SetColor("_BaseColor", new Color(0.34f, 0.29f, 0.26f));
+                    m.SetFloat("_Smoothness", 0.2f);
+                    m.SetTextureScale("_BaseMap", Vector2.one);
+                    return m;
+                });
                 c.Pila = MatPropio("T1440_PeldanoPiso", () => KitS2c.Lit(new Color(0.55f, 0.52f, 0.5f), 0.25f, KitS2c.TexMuro()));
                 Physics.SyncTransforms();
                 c.Rends = Reunir(c);
@@ -683,11 +693,24 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             // Lo que estorba en el pasillo (de la superficie para arriba): casas se apagan; postes y escaleras viejas lo descartan.
-            Bounds pasillo = new Bounds(new Vector3((XEscaleraArriba + XEscaleraAbajo) * 0.5f, (yA + yB) * 0.5f, z), new Vector3(XEscaleraAbajo - XEscaleraArriba, 40f, AnchoEscalera + 2.6f));
+            Bounds pasillo = new Bounds(new Vector3((XEscaleraArriba + XEscaleraAbajo) * 0.5f, (yA + yB) * 0.5f + 1f, z), new Vector3(XEscaleraAbajo - XEscaleraArriba, Mathf.Abs(yA - yB) + 26f, AnchoEscalera + 2.6f));
             foreach (Rend r in c.Rends)
             {
                 if (!r.R.gameObject.activeInHierarchy || !r.B.Intersects(pasillo))
                 {
+                    continue;
+                }
+                Transform poste = null;
+                for (Transform q = r.R.transform; q != null && q != c.Zona.transform; q = q.parent)
+                {
+                    if (q.name.StartsWith("Poste_") || q.name.StartsWith("PosteLejano_"))
+                    {
+                        poste = q;
+                    }
+                }
+                if (poste != null)
+                {
+                    p.Unidades.Add(poste); // un poste en el pasillo se apaga (reversible)
                     continue;
                 }
                 if (EsProtegido(c, r.R.transform))
@@ -703,7 +726,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static void Escaleras(Ctx c)
         {
             List<PlanEscalera> candidatas = new List<PlanEscalera>();
-            for (float z = -24f; z <= 36f; z += 3f)
+            for (float z = -24f; z <= 36f; z += 4f)
             {
                 candidatas.Add(Evaluar(c, z));
             }
@@ -712,8 +735,9 @@ namespace MechaCyberpunk.Arte.Editor
                 Log("Pasillo z = " + p.Z.ToString("0", CultureInfo.InvariantCulture) + ": desnivel " + (p.YArriba - p.YAbajo).ToString("0.0", CultureInfo.InvariantCulture) + " m, terreno sobre la escalera "
                     + p.Mala.ToString("0.00", CultureInfo.InvariantCulture) + " m, hueco " + p.Hueco.ToString("0.0", CultureInfo.InvariantCulture) + " m, casas a apagar " + p.Unidades.Count + (p.Protegido ? ", estorba un poste o escalera vieja" : "") + ".");
             }
-            List<PlanEscalera> buenas = candidatas.Where(p => p.Mala <= EntierroMaximo && p.Hueco <= HuecoMaximo && !p.Protegido && p.Pasos > 0 && p.Unidades.Count <= 8)
-                .OrderBy(p => p.Unidades.Count).ThenBy(p => p.Mala).ToList();
+            // El terreno se aplana bajo la escalera (AplanarTerreno): ya no importa el entierro; se prefieren los pasillos con menos casas a apagar.
+            List<PlanEscalera> buenas = candidatas.Where(p => !p.Protegido && p.Pasos > 0 && p.Unidades.Count <= 40)
+                .OrderBy(p => p.Unidades.Count).ToList();
             List<PlanEscalera> elegidas = new List<PlanEscalera>();
             foreach (PlanEscalera p in buenas)
             {
@@ -724,10 +748,19 @@ namespace MechaCyberpunk.Arte.Editor
             }
             if (elegidas.Count == 0)
             {
-                Log("AVISO: ningún pasillo entre la pierna 3 y la pierna 2 deja la escalera sin enterrar; no se pone ninguna (ver los pasillos de arriba).");
+                Log("AVISO: ningún pasillo entre la pierna 3 y la pierna 2 está libre de escaleras o muros viejos; no se pone ninguna (ver los pasillos de arriba).");
                 return;
             }
             Transform padre = Hijo(c.Nuevo, "EscalerasLadera");
+            foreach (PlanEscalera pe in elegidas)
+            {
+                foreach (Transform u in pe.Unidades)
+                {
+                    Apagar(c, u, "pasillo de la escalera z " + pe.Z);
+                }
+            }
+            Physics.SyncTransforms();
+            AplanarTerreno(c, elegidas);
             Malla rampa = new Malla();
             Malla tubos = new Malla();
             Malla brillo = c.Brillo;
@@ -735,17 +768,65 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (PlanEscalera p in elegidas.OrderBy(e => e.Z))
             {
                 numero++;
-                foreach (Transform u in p.Unidades)
-                {
-                    Apagar(c, u, "pasillo de la escalera " + numero);
-                }
-                Physics.SyncTransforms();
                 ConstruirEscalera(c, padre, p, numero, rampa, tubos, brillo);
             }
             ObjetoMalla(c, padre, "Peldanos", rampa, c.Concreto, true, false);
             ObjetoMalla(c, padre, "TubosBarandal", tubos, c.Tubo, false, true);
             Physics.SyncTransforms();
             Log("Escaleras de ladera: " + elegidas.Count + ".");
+        }
+
+        /// <summary>
+        /// La malla del terreno (Terreno/Ladera: vértices sueltos sobre una rejilla de 4 m, x múltiplo de 4 y z = 2 mod 4) se copia y los vértices de las dos columnas
+        /// z = Z - 2 y Z + 2, de x = -408 a -368, se llevan a 0.5 m bajo los peldaños: el terreno ni entierra la escalera ni la deja colgando. La copia se guarda en
+        /// Assets/Arte/Mundo/Cerro/T1440_Cerro_Ladera.asset. Una corrida nueva parte de la copia anterior (los pasillos viejos quedan aplanados).
+        /// </summary>
+        private static void AplanarTerreno(Ctx c, List<PlanEscalera> planes)
+        {
+            Transform ladera = c.Terreno == null ? null : c.Terreno.Find("Ladera");
+            MeshFilter mf = ladera == null ? null : ladera.GetComponent<MeshFilter>();
+            if (mf == null || mf.sharedMesh == null)
+            {
+                Log("AVISO: no hay Terreno/Ladera; el terreno no se aplana bajo las escaleras.");
+                return;
+            }
+            Mesh origen = mf.sharedMesh;
+            Vector3[] v = origen.vertices;
+            int cambiados = 0;
+            for (int i = 0; i < v.Length; i++)
+            {
+                Vector3 w = ladera.TransformPoint(v[i]);
+                foreach (PlanEscalera p in planes)
+                {
+                    if (w.x >= XEscaleraArriba + 0.5f && w.x <= XEscaleraAbajo + 1.5f && Mathf.Abs(w.z - p.Z) <= 2.01f)
+                    {
+                        w.y = AlturaEscalera(p, w.x) - 0.5f;
+                        v[i] = ladera.InverseTransformPoint(w);
+                        cambiados++;
+                        break;
+                    }
+                }
+            }
+            Mesh copia = Object.Instantiate(origen);
+            copia.name = "T1440_Cerro_Ladera";
+            copia.vertices = v;
+            copia.RecalculateBounds();
+            if (!AssetDatabase.IsValidFolder(CarpetaMat))
+            {
+                AssetDatabase.CreateFolder("Assets/Arte/Mundo", "Cerro");
+            }
+            string ruta = CarpetaMat + "/T1440_Cerro_Ladera.asset";
+            AssetDatabase.DeleteAsset(ruta);
+            AssetDatabase.CreateAsset(copia, ruta);
+            mf.sharedMesh = copia;
+            MeshCollider mc = ladera.GetComponent<MeshCollider>();
+            if (mc != null)
+            {
+                mc.sharedMesh = null;
+                mc.sharedMesh = copia;
+            }
+            Physics.SyncTransforms();
+            Log("Terreno: " + cambiados + " vértices aplanados bajo " + planes.Count + " escaleras (malla en " + ruta + ").");
         }
 
         private static void ConstruirEscalera(Ctx c, Transform padre, PlanEscalera p, int numero, Malla rampa, Malla tubos, Malla brillo)
@@ -832,23 +913,17 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         continue;
                     }
-                    float suelo = float.MaxValue;
-                    float superficie = float.MinValue;
+                    float superficie = float.MinValue, minimo = float.MaxValue;
                     for (float xs = x; xs <= x1 + 0.01f; xs += 1f)
                     {
-                        float g;
-                        if (Piso(c, xs, zm, 200f, false, out g))
-                        {
-                            suelo = Mathf.Min(suelo, g);
-                        }
-                        superficie = Mathf.Max(superficie, AlturaEscalera(p, xs));
+                        float ya = AlturaEscalera(p, xs);
+                        superficie = Mathf.Max(superficie, ya);
+                        minimo = Mathf.Min(minimo, ya);
                     }
-                    if (suelo == float.MaxValue)
-                    {
-                        continue;
-                    }
+                    // El terreno queda 0.5 m bajo los peldaños (AplanarTerreno): el muro baja 1.2 m bajo el más bajo para quedar metido.
+                    float suelo = minimo - 1.2f;
                     float alto = superficie + 0.9f - suelo;
-                    if (alto < 0.8f || alto > 6f)
+                    if (alto < 0.8f || alto > 9f)
                     {
                         continue;
                     }
@@ -857,7 +932,7 @@ namespace MechaCyberpunk.Arte.Editor
                     g2.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
                     g2.transform.localScale = new Vector3(largo / mm.x, alto / mm.y, 1f);
                     Bounds b = Cubierta(g2.transform);
-                    g2.transform.position += new Vector3((x + x1) * 0.5f - b.center.x, suelo - 0.25f - b.min.y, zm - b.center.z);
+                    g2.transform.position += new Vector3((x + x1) * 0.5f - b.center.x, suelo - b.min.y, zm - b.center.z);
                     Colisionar(g2);
                     puestos++;
                 }
@@ -944,13 +1019,39 @@ namespace MechaCyberpunk.Arte.Editor
             return true;
         }
 
-        /// <summary>Lo que estorba en la caja del piso nuevo: quita (apaga) los adornos sueltos de la azotea y devuelve false si hay algo que no se puede quitar.</summary>
+        /// <summary>Hijo de <paramref name="raiz"/> (directo) que contiene a <paramref name="t"/>.</summary>
+        private static Transform HijoDirecto(Transform raiz, Transform t)
+        {
+            Transform u = t;
+            while (u.parent != null && u.parent != raiz)
+            {
+                u = u.parent;
+            }
+            return u.parent == raiz ? u : null;
+        }
+
+        /// <summary>
+        /// Lo que estorba en la caja del piso nuevo: apaga (reversible) los adornos sueltos de la azotea, también los que cuelgan de la propia casa (tinaco, antena, tendedero,
+        /// aire, los de T-1441); devuelve false si hay algo que no se puede quitar (el cuerpo de la casa de al lado, un poste, una escalera vieja).
+        /// </summary>
         private static bool Despejar(Ctx c, Casa k, Bounds caja, float azotea, List<Transform> aApagar)
         {
             foreach (Rend r in c.Rends)
             {
-                if (!r.R.gameObject.activeInHierarchy || !r.B.Intersects(caja) || r.R.transform.IsChildOf(k.Raiz) || c.Apagadas.Contains(r.R.transform))
+                if (!r.R.gameObject.activeInHierarchy || !r.B.Intersects(caja) || c.Apagadas.Contains(r.R.transform))
                 {
+                    continue;
+                }
+                if (r.R.transform.IsChildOf(k.Raiz))
+                {
+                    if (r.B.min.y >= azotea - 0.4f && r.B.size.x <= 5f && r.B.size.z <= 5f)
+                    {
+                        Transform h = HijoDirecto(k.Raiz, r.R.transform);
+                        if (h != null && !aApagar.Contains(h))
+                        {
+                            aApagar.Add(h);
+                        }
+                    }
                     continue;
                 }
                 if (EsProtegido(c, r.R.transform))
@@ -971,11 +1072,23 @@ namespace MechaCyberpunk.Arte.Editor
             for (int i = 0; i < n; i++)
             {
                 Transform t = bufCol[i].transform;
-                if (EsPiso(c, t) || t.IsChildOf(c.Nuevo) || t.IsChildOf(k.Raiz) || bufCol[i].isTrigger)
+                if (EsPiso(c, t) || t.IsChildOf(c.Nuevo) || bufCol[i].isTrigger || c.Apagadas.Contains(t) || !t.gameObject.activeInHierarchy)
                 {
                     continue;
                 }
                 Bounds bc = bufCol[i].bounds;
+                if (t.IsChildOf(k.Raiz))
+                {
+                    if (bc.min.y >= azotea - 0.4f && bc.size.x <= 5f && bc.size.z <= 5f)
+                    {
+                        Transform h = HijoDirecto(k.Raiz, t);
+                        if (h != null && !aApagar.Contains(h))
+                        {
+                            aApagar.Add(h);
+                        }
+                    }
+                    continue;
+                }
                 if (bc.min.y < azotea - 0.4f || bc.size.x > 5f || bc.size.z > 5f || EsProtegido(c, t))
                 {
                     return false;
@@ -989,18 +1102,120 @@ namespace MechaCyberpunk.Arte.Editor
             return true;
         }
 
+        private static readonly Color[] Paleta =
+        {
+            new Color(0.1f, 0.72f, 0.7f), new Color(0.95f, 0.5f, 0.14f), new Color(0.9f, 0.3f, 0.52f),
+            new Color(0.95f, 0.78f, 0.2f), new Color(0.3f, 0.68f, 0.32f), new Color(0.25f, 0.42f, 0.85f),
+        };
+
+        /// <summary>Fachada y cuerpo del piso nuevo en un color saturado de la paleta (materiales propios; las ventanas emisivas no se tocan).</summary>
+        private static void PintarPiso(Transform casa, int idx)
+        {
+            Color col = Paleta[idx];
+            Material cuerpo = MatPropio("T1440_Cuerpo_" + idx, () => KitS2c.Lit(new Color(col.r * 0.85f, col.g * 0.85f, col.b * 0.85f), 0.15f, KitS2c.TexMuro()));
+            foreach (Renderer r in casa.GetComponentsInChildren<Renderer>(true))
+            {
+                if (r.gameObject.name == "Cuerpo")
+                {
+                    r.sharedMaterial = cuerpo;
+                    continue;
+                }
+                if (r.gameObject.name == "AzoteaT1318")
+                {
+                    continue;
+                }
+                Material[] ms = r.sharedMaterials;
+                bool cambio = false;
+                for (int i = 0; i < ms.Length; i++)
+                {
+                    Material o = ms[i];
+                    if (o == null || o.name.Contains("Ventana") || o.name.Contains("Neon") || (o.HasProperty("_EmissionColor") && o.IsKeywordEnabled("_EMISSION")))
+                    {
+                        continue;
+                    }
+                    string nombre = "T1440_" + o.name.Replace(" ", "_") + "_" + idx;
+                    ms[i] = MatPropio(nombre, () =>
+                    {
+                        Material m = new Material(o);
+                        m.SetColor("_BaseColor", col);
+                        return m;
+                    });
+                    cambio = true;
+                }
+                if (cambio)
+                {
+                    r.sharedMaterials = ms;
+                }
+            }
+        }
+
+        /// <summary>El piso apoya en su azotea: 5 rayos bajo su cuerpo deben coincidir (6 cm); devuelve cuánto hay que subirlo (o bajarlo) para que quede a ras.</summary>
+        private static bool Asentado(Ctx c, Transform piso, out float ajuste)
+        {
+            ajuste = 0f;
+            Transform cuerpo = piso.Find("Cuerpo");
+            BoxCollider col = cuerpo == null ? null : cuerpo.GetComponent<BoxCollider>();
+            if (col == null)
+            {
+                return false;
+            }
+            Bounds b = col.bounds;
+            List<float> hs = new List<float>();
+            foreach ((float fx, float fz) in new[] { (0.5f, 0.5f), (0.2f, 0.2f), (0.8f, 0.2f), (0.2f, 0.8f), (0.8f, 0.8f) })
+            {
+                Vector3 o = new Vector3(Mathf.Lerp(b.min.x, b.max.x, fx), b.min.y + 0.3f, Mathf.Lerp(b.min.z, b.max.z, fz));
+                int n = c.Fisica.Raycast(o, Vector3.down, bufRayos, 3f, ~0, QueryTriggerInteraction.Ignore);
+                float mejor = float.MinValue;
+                for (int i = 0; i < n; i++)
+                {
+                    if (!bufRayos[i].collider.transform.IsChildOf(piso) && bufRayos[i].point.y > mejor)
+                    {
+                        mejor = bufRayos[i].point.y;
+                    }
+                }
+                if (mejor > float.MinValue)
+                {
+                    hs.Add(mejor);
+                }
+            }
+            if (hs.Count < 3 || hs.Max() - hs.Min() > 0.06f)
+            {
+                return false;
+            }
+            ajuste = hs.Average() - b.min.y;
+            return Mathf.Abs(ajuste) <= 0.5f;
+        }
+
+        private static void Techo(Ctx c, float x0, float x1, float z0, float z1, float y)
+        {
+            float yy = y + 0.07f;
+            c.Techos.Quad(new Vector3(x0, yy, z0), new Vector3(x0, yy, z1), new Vector3(x1, yy, z1), new Vector3(x1, yy, z0), Vector3.up);
+        }
+
         private static void Pisos(Ctx c)
         {
             c.Pisos = Hijo(c.Nuevo, "Pisos");
             List<Casa> casas = Casas(c);
             Vector3 k13 = new Vector3(-360f, 13f, 100f);
-            List<Casa> orden = casas.Where(k => TiersDe(k) >= 1f).OrderBy(k =>
+            // Azoteas medidas de todas las casas: se cubren con una losa de concreto manchado oscuro (malla propia, reversible porque se rehace).
+            Dictionary<Casa, float> techos = new Dictionary<Casa, float>();
+            foreach (Casa kk in casas)
+            {
+                float ry;
+                if (Azotea(c, kk, out ry))
+                {
+                    techos[kk] = ry;
+                    Techo(c, kk.X0 + 0.25f, kk.X1 - 0.25f, kk.Z0 + 0.25f, kk.Z1 - 0.25f, ry);
+                }
+            }
+            Log("Azoteas viejas cubiertas con concreto oscuro: " + techos.Count + " de " + casas.Count + " casas.");
+            List<Casa> orden = casas.Where(k => TiersDe(k) >= 1f && techos.ContainsKey(k)).OrderBy(k =>
             {
                 Vector3 centro = new Vector3(k.Centro, k.Top, (k.Z0 + k.Z1) * 0.5f);
                 return Mathf.Min(Vector3.Distance(centro, A13Hacia), Vector3.Distance(centro, k13));
             }).ToList();
             Log("Casas de la ladera: " + casas.Count + ", con pisos extra planeados: " + orden.Count + ".");
-            int sinAzotea = 0, estrechas = 0, estorbo = 0, hechas = 0;
+            int estrechas = 0, estorbo = 0, hechas = 0, malAsentados = 0;
             foreach (Casa k in orden)
             {
                 if (c.Nuevo.GetComponentsInChildren<Transform>(true).Length > TopeObjetosPisos)
@@ -1014,12 +1229,7 @@ namespace MechaCyberpunk.Arte.Editor
                     estrechas++;
                     continue;
                 }
-                float roof;
-                if (!Azotea(c, k, out roof))
-                {
-                    sinAzotea++;
-                    continue;
-                }
+                float roof = techos[k];
                 int tiers = (int)TiersDe(k);
                 float xAtras = k.Normal > 0f ? k.X0 : k.X1;
                 float xF = k.Frente - k.Normal * RetiroPrimero;
@@ -1066,8 +1276,27 @@ namespace MechaCyberpunk.Arte.Editor
                     float alto = KitS2c.Casa(c.Obra, c.Pisos, new Vector3(xF, roof, zc), new Vector3(k.Normal, 0f, 0f), anchoV, fondo, e);
                     Transform nuevo = c.Pisos.GetChild(c.Pisos.childCount - 1);
                     nuevo.name = "Piso_" + c.Volumenes + "_t" + t;
+                    PintarPiso(nuevo, c.Obra.Azar.Next(Paleta.Length));
+                    Physics.SyncTransforms();
+                    float ajuste;
+                    if (!Asentado(c, nuevo, out ajuste))
+                    {
+                        Log("Piso " + nuevo.name + " (casa " + k.Raiz.name + "): no se asienta en la azotea medida (" + roof.ToString("0.00", CultureInfo.InvariantCulture) + "); se quita.");
+                        Object.DestroyImmediate(nuevo.gameObject);
+                        Physics.SyncTransforms();
+                        malAsentados++;
+                        break;
+                    }
+                    if (Mathf.Abs(ajuste) > 0.005f)
+                    {
+                        nuevo.position += Vector3.up * ajuste;
+                        roof += ajuste;
+                        Physics.SyncTransforms();
+                    }
                     c.Volumenes++;
                     puestos++;
+                    float xa = xF - k.Normal * fondo;
+                    Techo(c, Mathf.Min(xF, xa) + 0.05f, Mathf.Max(xF, xa) - 0.05f, zc - anchoV * 0.5f + 0.05f, zc + anchoV * 0.5f - 0.05f, roof + alto - 0.02f);
                     Acceso(c, k, nuevo, xF, roof, alto - 0.02f, zc, anchoV, t == 1 ? RetiroPrimero : RetiroSiguiente);
                     Physics.SyncTransforms();
                     roof += alto - 0.02f;
@@ -1080,9 +1309,77 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             Log("Pisos extra: " + c.Volumenes + " volúmenes en " + hechas + " casas (" + c.ConPeldanos + " con escalera de peldaños, " + c.ConEscalera + " con escalera de servicio); casas saltadas: "
-                + sinAzotea + " sin azotea medible, " + estrechas + " muy estrechas, " + estorbo + " con algo que estorbaba.");
+                + estrechas + " muy estrechas, " + estorbo + " con algo que estorbaba, " + malAsentados + " pisos quitados por no asentar.");
         }
 
+        /// <summary>
+        /// T-1441 pone adornos (antenas, lavaderos, tinacos) sobre las azoteas viejas, también donde ya hay un piso nuevo. Esto los apaga (reversible, en T1440_Ladera/Apagados)
+        /// cuando caen dentro del cuerpo de un piso. Se corre DESPUÉS de T-1441.Aplicar y ANTES de Validar.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T1440/Cerro ladera: despejar adornos bajo los pisos")]
+        public static void DespejarDetalles()
+        {
+            informe = new StringBuilder("T-1440: despejar adornos bajo los pisos nuevos\n");
+            GameObject zona = PrefabUtility.LoadPrefabContents(RutaPrefab);
+            try
+            {
+                Ctx c = Abrir(zona);
+                c.Nuevo = zona.transform.Find(Raiz);
+                Transform pisos = c.Nuevo == null ? null : c.Nuevo.Find("Pisos");
+                if (pisos == null)
+                {
+                    Log("No hay " + Raiz + "/Pisos; corre Aplicar.");
+                }
+                else
+                {
+                    c.Marcas = c.Nuevo.Find("Apagados") ?? Hijo(c.Nuevo, "Apagados");
+                    Physics.SyncTransforms();
+                    c.Rends = Reunir(c);
+                    int n = 0;
+                    foreach (Transform piso in pisos.Cast<Transform>().Where(t => t.name.StartsWith("Piso_")).ToList())
+                    {
+                        Transform cuerpo = piso.Find("Cuerpo");
+                        BoxCollider col = cuerpo == null ? null : cuerpo.GetComponent<BoxCollider>();
+                        if (col == null)
+                        {
+                            continue;
+                        }
+                        Bounds b = col.bounds;
+                        b.Expand(-0.1f);
+                        foreach (Rend r in c.Rends)
+                        {
+                            if (!r.R.gameObject.activeInHierarchy || !r.B.Intersects(b) || c.Apagadas.Contains(r.R.transform) || EsProtegido(c, r.R.transform))
+                            {
+                                continue;
+                            }
+                            if (r.B.min.y < col.bounds.min.y - 0.4f || r.B.size.x > 5f || r.B.size.z > 5f)
+                            {
+                                continue;
+                            }
+                            Apagar(c, Unidad(c, r.R.transform, 4.5f, 6f), "adorno dentro de " + piso.name);
+                            n++;
+                        }
+                    }
+                    Physics.SyncTransforms();
+                    Log("Adornos apagados: " + n + ".");
+                    bool ok;
+                    PrefabUtility.SaveAsPrefabAsset(zona, RutaPrefab, out ok);
+                    Log(ok ? "Prefab guardado." : "ERROR: no se pudo guardar el prefab.");
+                    AssetDatabase.SaveAssets();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("ERROR: " + ex);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(zona);
+            }
+            Escribir("Logs/t1440-despejar.txt", informe);
+        }
+
+        /// <summary>
         /// <summary>
         /// Peldaños de concreto sobre la terraza al frente (alza ≤ 0.2 m, huella 0.3 m) hasta la azotea del piso nuevo; si no caben a lo largo del frente,
         /// una escalera de servicio PuntoTrepar con su riel y peldaños (como las de T-1355).
@@ -1147,6 +1444,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform padre = Hijo(c.Nuevo, "Accesos");
             ObjetoMalla(c, padre, "PeldanosPisos", c.Peldanos, c.Pila, true, false);
             ObjetoMalla(c, padre, "EscalerillasServicio", c.Escalerillas, c.Tubo, false, true);
+            ObjetoMalla(c, Hijo(c.Nuevo, "Techos"), "TechosOscuros", c.Techos, c.Oscuro, false, true);
             Transform luz = Hijo(c.Nuevo, "LuzNaranja");
             ObjetoMalla(c, luz, "CabezasEmisivas", c.Brillo, c.Lampara, false, true);
             ObjetoMalla(c, luz, "CharcosLuz", c.Charcos, MatCharcoLuz(), false, true);
@@ -1159,6 +1457,24 @@ namespace MechaCyberpunk.Arte.Editor
             public Vector3 Pie, HaciaCalle;
             public float Dist;
             public int Pierna;
+        }
+
+        private static Vector3 EnCalle(Ctx c, float x, float z, float yRef)
+        {
+            float y;
+            if (Piso(c, x, z, yRef + 10f, true, out y) && Mathf.Abs(y - yRef) < 2f)
+            {
+                return new Vector3(x, y + 0.05f, z);
+            }
+            return new Vector3(x, yRef + 0.05f, z);
+        }
+
+        /// <summary>Charco de luz falso: un cuadrado de 2 x mitad (textura radial de borde suave) que sigue la altura de la calle.</summary>
+        private static void CharcoLuz(Ctx c, Vector3 centro, float yRef, float mitad)
+        {
+            Vector3 a = EnCalle(c, centro.x - mitad, centro.z - mitad, yRef), b = EnCalle(c, centro.x - mitad, centro.z + mitad, yRef);
+            Vector3 d = EnCalle(c, centro.x + mitad, centro.z + mitad, yRef), f = EnCalle(c, centro.x + mitad, centro.z - mitad, yRef);
+            c.Charcos.Quad(a, b, d, f, Vector3.up, new[] { new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(1f, 0f) });
         }
 
         private static void Postes(Ctx c)
@@ -1199,13 +1515,13 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 izq = new Vector3(-tan.z, 0f, tan.x);
                 lado = -lado;
                 Vector3 xz = new Vector3(eje[i].x, 0f, eje[i].z) + izq * lado * DesdeEje;
-                float y;
-                if (!Piso(c, xz.x, xz.z, 200f, true, out y))
+                float yCalle, yTodo;
+                if (!Piso(c, xz.x, xz.z, 200f, true, out yCalle) || !Piso(c, xz.x, xz.z, 200f, false, out yTodo) || yTodo - yCalle > 0.6f)
                 {
                     descartados++;
                     continue;
                 }
-                Vector3 pie = new Vector3(xz.x, y, xz.z);
+                Vector3 pie = new Vector3(xz.x, yTodo, xz.z); // el piso más alto bajo el poste (terreno o calle): asentado sobre lo que toca
                 if (viejos.Any(v => new Vector2(v.x - pie.x, v.z - pie.z).magnitude < DistanciaPosteViejo) || !LibreCaja(c, pie + Vector3.up * 2f, new Vector3(0.35f, 2f, 0.35f)))
                 {
                     descartados++;
@@ -1216,7 +1532,6 @@ namespace MechaCyberpunk.Arte.Editor
             Log("Postes planeados: " + plan.Count + " (" + descartados + " descartados por poste viejo a menos de " + DistanciaPosteViejo + " m, sin calle o con algo en el lugar).");
             HashSet<PostePlan> conLuz = new HashSet<PostePlan>(plan.OrderBy(p => p.Dist).Take(LucesPostes));
             List<Vector3> puntas = new List<Vector3>();
-            List<int> piernas = new List<int>();
             int reales = 0, baratos = 0;
             foreach (PostePlan p in plan)
             {
@@ -1232,23 +1547,44 @@ namespace MechaCyberpunk.Arte.Editor
                     punta = PosteBarato(c, padre, p, out cabeza);
                     baratos++;
                 }
-                c.Charcos.Quad(new Vector3(cabeza.x - 4.5f, p.Pie.y + 0.04f, cabeza.z - 4.5f), new Vector3(cabeza.x - 4.5f, p.Pie.y + 0.04f, cabeza.z + 4.5f), new Vector3(cabeza.x + 4.5f, p.Pie.y + 0.04f, cabeza.z + 4.5f),
-                    new Vector3(cabeza.x + 4.5f, p.Pie.y + 0.04f, cabeza.z - 4.5f), Vector3.up, new[] { new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(1f, 0f) });
+                CharcoLuz(c, new Vector3(cabeza.x, 0f, cabeza.z), p.Pie.y, 6.5f);
                 puntas.Add(punta);
-                piernas.Add(p.Pierna);
+            }
+            // Los postes viejos del zigzag también reciben su charco (sin Light nueva): así toda la calle queda iluminada en la vista aérea.
+            int charcosViejos = 0;
+            foreach (Vector3 v in viejos)
+            {
+                float dmin = float.MaxValue;
+                Vector3 q0 = v;
+                foreach (Vector3 q in eje)
+                {
+                    float d = new Vector2(q.x - v.x, q.z - v.z).magnitude;
+                    if (d < dmin)
+                    {
+                        dmin = d;
+                        q0 = q;
+                    }
+                }
+                if (dmin > 9f)
+                {
+                    continue;
+                }
+                Vector3 haciaEje = new Vector3(q0.x - v.x, 0f, q0.z - v.z).normalized;
+                CharcoLuz(c, new Vector3(v.x + haciaEje.x * 2.5f, 0f, v.z + haciaEje.z * 2.5f), v.y, 6f);
+                charcosViejos++;
             }
             int cables = 0;
             for (int i = 0; i + 1 < puntas.Count; i++)
             {
                 float d = Vector3.Distance(puntas[i], puntas[i + 1]);
-                if (d > 34f || d < 3f)
+                if (d > 30f || d < 3f)
                 {
                     continue;
                 }
                 foreach ((Vector3 a, Vector3 b, float flecha) in new[]
                 {
-                    (puntas[i] + Vector3.up * 0.2f, puntas[i + 1] + Vector3.up * 0.2f, 0.8f),
-                    (puntas[i] - Vector3.up * 0.35f, puntas[i + 1] - Vector3.up * 0.35f, 1.0f),
+                    (puntas[i] + Vector3.up * 0.2f, puntas[i + 1] + Vector3.up * 0.2f, 0.7f),
+                    (puntas[i] - Vector3.up * 0.35f, puntas[i + 1] - Vector3.up * 0.35f, 0.9f),
                 })
                 {
                     bool lejos = true;
@@ -1266,7 +1602,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            Log("Postes nuevos: " + plan.Count + " (" + reales + " con Light real y sodio, " + baratos + " con cabeza emisiva y charco falso), cables " + cables + ".");
+            Log("Postes nuevos: " + plan.Count + " (" + reales + " con Light real y sodio, " + baratos + " con cabeza emisiva y charco falso), charcos extra en postes viejos " + charcosViejos + ", cables " + cables + ".");
         }
 
         /// <summary>Poste C07 sin Light: la cabeza lleva un bloque emisivo naranja (malla común) y el charco de luz falso va aparte.</summary>
@@ -1298,6 +1634,10 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ================================================================ 4. Ciudad brillante abajo
 
+        /// <summary>
+        /// La ciudad es una FRANJA en el horizonte, bajo el nivel del Cerro: paneles anchos (25 a 70 m) y bajos (15 a 60 m de alto) a 300-700 m de las cámaras, ninguno a menos de
+        /// 250 m de A13 ni de K13b, con la base bajo el piso de la ciudad (-30 a -15 m) para que no cuelguen del cielo.
+        /// </summary>
         private static void Ciudad(Ctx c)
         {
             Transform padre = Hijo(c.Nuevo, "CiudadLejana");
@@ -1323,34 +1663,37 @@ namespace MechaCyberpunk.Arte.Editor
             Vector3 horizA = A13Hacia - A13Desde;
             horizA.y = 0f;
             horizA.Normalize();
-            int hechas = 0;
-            for (int i = 0; i < 110; i++)
+            int hechas = 0, intentos = 0;
+            float distMin = float.MaxValue;
+            while (hechas < 150 && intentos < 4000)
             {
-                bool paraK13 = i >= 72;
+                intentos++;
+                bool paraK13 = hechas >= 100;
                 Vector3 origen = paraK13 ? k13 : A13Desde;
                 Vector3 dir;
-                float dist;
                 if (paraK13)
                 {
                     // K13b mira al sur: la ciudad queda a la izquierda (este).
-                    float ang = -(float)azar.NextDouble() * 70f;
+                    float ang = -(float)azar.NextDouble() * 75f;
                     dir = Quaternion.Euler(0f, 180f + ang, 0f) * Vector3.forward;
-                    dist = 110f + (float)azar.NextDouble() * 270f;
                 }
                 else
                 {
-                    float ang = ((float)azar.NextDouble() * 2f - 1f) * 52f;
+                    float ang = ((float)azar.NextDouble() * 2f - 1f) * 58f;
                     dir = Quaternion.Euler(0f, ang, 0f) * horizA;
-                    dist = 190f + (float)azar.NextDouble() * 330f;
                 }
+                float dist = 300f + (float)azar.NextDouble() * 400f;
                 Vector3 centro = new Vector3(origen.x + dir.x * dist, 0f, origen.z + dir.z * dist);
-                if (centro.x < -262f)
+                float dA = new Vector2(centro.x - A13Desde.x, centro.z - A13Desde.z).magnitude;
+                float dK = new Vector2(centro.x - k13.x, centro.z - k13.z).magnitude;
+                if (centro.x < -262f || dA < 250f || dK < 250f)
                 {
-                    continue; // dentro o pegada a la ladera
+                    continue;
                 }
-                float ancho = 12f + (float)azar.NextDouble() * 18f;
-                float alto = 28f + (float)azar.NextDouble() * 70f + dist * 0.06f;
-                float suelo = -8f + (float)azar.NextDouble() * 8f;
+                distMin = Mathf.Min(distMin, Mathf.Min(dA, dK));
+                float ancho = 25f + (float)azar.NextDouble() * 45f;
+                float alto = 15f + (float)azar.NextDouble() * 45f;
+                float suelo = -30f + (float)azar.NextDouble() * 15f;
                 Vector3 normal = new Vector3(origen.x - centro.x, 0f, origen.z - centro.z).normalized;
                 Vector3 derecha = Vector3.Cross(Vector3.up, normal).normalized;
                 Vector3 a = centro - derecha * ancho * 0.5f + Vector3.up * suelo, b = centro + derecha * ancho * 0.5f + Vector3.up * suelo;
@@ -1364,7 +1707,7 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     int tipo = azar.Next(3);
                     Vector3 pc = centro + normal * 0.3f + Vector3.up * (suelo + alto * (0.35f + (float)azar.NextDouble() * 0.5f));
-                    float aw = ancho * 0.28f, ah = 4f + (float)azar.NextDouble() * 10f;
+                    float aw = ancho * 0.22f, ah = 3f + (float)azar.NextDouble() * 8f;
                     pantallas[tipo].Quad(pc - derecha * aw * 0.5f - Vector3.up * ah * 0.5f, pc + derecha * aw * 0.5f - Vector3.up * ah * 0.5f, pc + derecha * aw * 0.5f + Vector3.up * ah * 0.5f,
                         pc - derecha * aw * 0.5f + Vector3.up * ah * 0.5f, normal, new[] { Vector2.zero, Vector2.right, Vector2.one, Vector2.up });
                 }
@@ -1374,7 +1717,8 @@ namespace MechaCyberpunk.Arte.Editor
             ObjetoMalla(c, padre, "PantallasMagenta", pantallas[0], magenta, false, true);
             ObjetoMalla(c, padre, "PantallasTurquesa", pantallas[1], turquesa, false, true);
             ObjetoMalla(c, padre, "PantallasAmbar", pantallas[2], ambar, false, true);
-            Log("Ciudad lejana: " + hechas + " paneles de ventanas (110 a 520 m, base entre -8 y 0 m, bajo el Cerro), sin colliders ni sombras. SK01_Skyline ya lo pone la escena (arco de 900 m); aquí no se repite.");
+            Log("Ciudad lejana: " + hechas + " paneles de ventanas (300 a 700 m, 25-70 m de ancho, 15-60 m de alto, base entre -30 y -15 m; el más cercano a " + distMin.ToString("0", CultureInfo.InvariantCulture)
+                + " m de A13/K13b), sin colliders ni sombras. SK01_Skyline ya lo pone la escena (arco de 900 m); aquí no se repite.");
         }
 
         // ================================================================ Estático
