@@ -47,8 +47,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const string NombreMira = "Mira";
 
         // A13b: sobre la ladera, al suroeste de la zona de escaleras, mirando al noreste (la ciudad, al este, queda a la derecha como en la referencia).
-        public static readonly Vector3 A13Desde = new Vector3(-405f, 50f, -35f);
-        public static readonly Vector3 A13Hacia = new Vector3(-345f, 26f, 15f);
+        public static readonly Vector3 A13Desde = new Vector3(-450f, 55f, 100f);
+        public static readonly Vector3 A13Hacia = new Vector3(-330f, 5f, 20f);
         public const float CampoA13 = 60f;
         public const float DensidadNieblaAerea = 0.008f;
         private const float AnchoFoto = 1376f, AltoFoto = 768f;
@@ -77,10 +77,10 @@ namespace MechaCyberpunk.Arte.Editor
         public const float AnchoModulo = 2.3f;
         public const float EntierroMaximo = 0.35f;
         public const float HuecoMaximo = 2.3f;
-        public const int EscalerasMaximas = 2;
+        public const int EscalerasMaximas = 3;
 
         // Postes
-        public const float SeparacionPostes = 14f;
+        public const float SeparacionPostes = 11f;
         public const float DesdeEje = 5.25f;
         public const float DistanciaPosteViejo = 6f;
         public const int LucesPostes = 8;
@@ -161,8 +161,8 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("escaleras de ladera", () => Escaleras(c));
                 Paso("pisos extra", () => Pisos(c));
                 Paso("postes y cables", () => Postes(c));
-                Paso("ciudad brillante", () => Ciudad(c));
-                Paso("cámara A13 (búsqueda)", () => BuscarCamara(c));
+                Paso("carros", () => Carros(c));
+                Paso("cámara A13 (fija)", () => Camara(c));
                 Paso("mallas sueltas", () => MallasSueltas(c));
                 Estatico(c);
                 KitS2c.Terminar(c.Obra);
@@ -535,7 +535,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Charco de luz falso: textura radial (negro fuera) en un material aditivo sin sombras.</summary>
         private static Material MatCharcoLuz()
         {
-            return MatPropio("T1440_CharcoLuz", () =>
+            return MatPropio("T1440_CharcoLuz_b", () =>
             {
                 string ruta = CarpetaMat + "/T1440_CharcoLuz.png";
                 const int lado = 64;
@@ -562,7 +562,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Material m = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
                 m.SetTexture("_BaseMap", tex);
                 m.SetTexture("_MainTex", tex);
-                m.SetColor("_BaseColor", new Color(1f, 0.5f, 0.15f, 1f) * 0.75f);
+                m.SetColor("_BaseColor", new Color(1f, 0.5f, 0.15f, 1f) * 1.3f);
                 m.SetFloat("_Surface", 1f);
                 m.SetFloat("_Blend", 2f);
                 m.SetFloat("_SrcBlend", 1f);
@@ -900,7 +900,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             // El terreno se aplana bajo la escalera (AplanarTerreno): ya no importa el entierro; se prefieren los pasillos con menos casas a apagar.
             List<PlanEscalera> buenas = candidatas.Where(p => !p.Protegido && p.Pasos > 0 && p.Unidades.Count <= 40)
-                .OrderBy(p => p.Unidades.Count).ToList();
+                .OrderBy(p => p.Unidades.Count - p.Z * 0.3f).ToList();
             List<PlanEscalera> elegidas = new List<PlanEscalera>();
             foreach (PlanEscalera p in buenas)
             {
@@ -1135,9 +1135,9 @@ namespace MechaCyberpunk.Arte.Editor
                 return 0f; // lado de la ciudad: no se tapa la vista de K13b
             }
             float u = Mathf.Clamp01((-318f - k.Centro) / 130f);
-            float baseT = 2.3f * Mathf.Pow(u, 0.9f);
+            float baseT = 2.6f * Mathf.Pow(u, 0.8f);
             int h = Mathf.FloorToInt((k.Z0 + k.Z1) * 0.5f / 28f) * 73856093 ^ Mathf.FloorToInt(k.Centro / 34f) * 19349663;
-            float ruido = ((Mathf.Abs(h) % 3) - 1) * 0.6f;
+            float ruido = ((Mathf.Abs(h) % 3) - 1) * 0.95f;
             return Mathf.Clamp(Mathf.Round(baseT + ruido), 0f, PisosMaximos);
         }
 
@@ -1577,6 +1577,42 @@ namespace MechaCyberpunk.Arte.Editor
                             n++;
                         }
                     }
+                    Transform pel = c.Nuevo.Find("EscalerasLadera/Peldanos");
+                    MeshCollider mcE = pel == null ? null : pel.GetComponent<MeshCollider>();
+                    if (mcE != null)
+                    {
+                        Bounds bb = mcE.bounds;
+                        List<float> zs = new List<float>();
+                        for (float z = bb.min.z + 1.5f; z <= bb.max.z - 1.5f; z += 0.5f)
+                        {
+                            float yy;
+                            if (SuperficieEscalera(c, mcE, XEscaleraArriba + 3f, z, out yy) && !zs.Any(q => Mathf.Abs(q - z) < 4f))
+                            {
+                                zs.Add(z);
+                            }
+                        }
+                        foreach (float z in zs)
+                        {
+                            for (float xs = XEscaleraArriba; xs < XEscaleraAbajo - 0.5f; xs += 4f)
+                            {
+                                float ys;
+                                if (!SuperficieEscalera(c, mcE, xs + 2f, z, out ys))
+                                {
+                                    continue;
+                                }
+                                Bounds pas = new Bounds(new Vector3(xs + 2f, ys + 1.5f, z), new Vector3(4.4f, 3.4f, AnchoEscalera + 0.6f));
+                                foreach (Rend r in c.Rends)
+                                {
+                                    if (!r.R.gameObject.activeInHierarchy || !r.B.Intersects(pas) || c.Apagadas.Contains(r.R.transform) || EsProtegido(c, r.R.transform) || r.B.size.x > 40f)
+                                    {
+                                        continue;
+                                    }
+                                    Apagar(c, Unidad(c, r.R.transform, 14f, 30f), "sobre la escalera de z " + z.ToString("0", CultureInfo.InvariantCulture));
+                                    n++;
+                                }
+                            }
+                        }
+                    }
                     Physics.SyncTransforms();
                     Log("Adornos apagados: " + n + ".");
                     bool ok;
@@ -1861,7 +1897,64 @@ namespace MechaCyberpunk.Arte.Editor
             return p.Pie + Vector3.up * 6.75f;
         }
 
-        // ================================================================ 4. Ciudad brillante abajo
+        // ================================================================ Carros viejos sobre las piernas rectas del zigzag
+
+        private static void Carros(Ctx c)
+        {
+            Transform padre = Hijo(c.Nuevo, "Carros");
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Vehiculos/Prefabs/V01a_CarroViejito.prefab");
+            if (prefab == null)
+            {
+                Log("FALTA V01a_CarroViejito.prefab; sin carros.");
+                return;
+            }
+            List<Vector3> eje = CerroT1355Trazado.Zigzag();
+            int n = 0, lado = 1;
+            float acum = 0f;
+            for (int i = 1; i + 1 < eje.Count && n < 14; i++)
+            {
+                acum += new Vector2(eje[i].x - eje[i - 1].x, eje[i].z - eje[i - 1].z).magnitude;
+                if (acum < 24f)
+                {
+                    continue;
+                }
+                Vector3 tan = new Vector3(eje[i + 1].x - eje[i - 1].x, 0f, eje[i + 1].z - eje[i - 1].z);
+                if (tan.sqrMagnitude < 0.01f)
+                {
+                    continue;
+                }
+                tan.Normalize();
+                if (Mathf.Abs(tan.z) < 0.97f)
+                {
+                    continue; // solo tramos rectos de norte a sur (la caja de revisión va alineada a los ejes)
+                }
+                acum = 0f;
+                lado = -lado;
+                Vector3 izq = new Vector3(-tan.z, 0f, tan.x);
+                Vector3 xz = new Vector3(eje[i].x, 0f, eje[i].z) + izq * lado * 3.2f;
+                float y;
+                if (!Piso(c, xz.x, xz.z, 200f, true, out y))
+                {
+                    continue;
+                }
+                Vector3 pos = new Vector3(xz.x, y + 0.03f, xz.z);
+                if (!LibreCaja(c, pos + Vector3.up * 0.9f, new Vector3(1.0f, 0.6f, 2.2f)))
+                {
+                    continue;
+                }
+                GameObject car = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+                car.name = "CarroViejo_T1440_" + n;
+                car.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(lado > 0 ? tan : -tan));
+                Physics.SyncTransforms();
+                Bounds b = Cubierta(car.transform);
+                car.transform.position += Vector3.up * (y - b.min.y);
+                Physics.SyncTransforms();
+                n++;
+            }
+            Log("Carros viejos sobre el zigzag: " + n + ".");
+        }
+
+        // ================================================================ 4. Ciudad brillante abajo (YA NO SE USA: la ciudad de verdad está en la escena)
 
         /// <summary>
         /// La ciudad es una FRANJA en el horizonte, bajo el nivel del Cerro: paneles anchos (25 a 70 m) y bajos (15 a 60 m de alto) a 300-700 m de las cámaras, ninguno a menos de
@@ -1959,7 +2052,7 @@ namespace MechaCyberpunk.Arte.Editor
             int n = 0;
             foreach (Transform t in c.Nuevo.GetComponentsInChildren<Transform>(true))
             {
-                if (t == c.Nuevo || t.GetComponent<Light>() != null || t.GetComponentInParent<Rigidbody>() != null || t.GetComponent<MeshRenderer>() == null)
+                if (t == c.Nuevo || t.name.StartsWith("CarroViejo_") || t.GetComponentInParent<Rigidbody>() != null || t.GetComponent<Light>() != null || t.GetComponentInParent<Rigidbody>() != null || t.GetComponent<MeshRenderer>() == null)
                 {
                     continue;
                 }
