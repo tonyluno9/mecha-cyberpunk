@@ -10,5 +10,6 @@ compartidos, escena) y hace falta para que el Cerro y el Puerto se parezcan a K1
 | Charcos con reflejo en el Puerto: si el material de charco compartido no refleja en el patio, la sesión B necesita uno que sí (o que el piso mojado global cubra el Puerto) | puerto-k15.jpg | Material compartido |
 
 | La niebla del juego (densidad 0.02) borra todo a más de ~100 m: en A13 y A15 la franja de la ciudad, el agua y el barco no se ven. Pedido: niebla menos densa en las vistas aéreas (por altura de cámara) o un volumen por zona para el Cerro y el Puerto | cerro-a13-niebla-t1440.png, puerto-a15-t1443.png en docs/capturas/_vista19b/ | Niebla global |
+| En las vistas aéreas del Cerro salen torres de ventanas que FLOTAN en el cielo (sin base, arriba del cuadro) y una losa oscura enorme arriba a la izquierda; no son de T1355_Cerro | docs/capturas/_vista19b/prueba/a13a.png … a13e.png | Escena / fondo |
 
 Se irá agregando lo que digan las tareas T-1440 a T-1444.

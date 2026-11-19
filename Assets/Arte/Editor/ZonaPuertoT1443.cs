@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MechaCyberpunk.Core.Trepar;
 using MechaCyberpunk.Mundo.Ambiente;
 using MechaCyberpunk.Mundo.Reloj;
 using UnityEditor;
@@ -107,6 +108,7 @@ namespace MechaCyberpunk.Arte.Editor
             tramos.Clear();
             pozas.Clear();
             bodegasNuevas.Clear();
+            sitiosBodega.Clear();
             razones.Clear();
             hayCamara = false;
             colocados = 0;
@@ -144,6 +146,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("contenedores de colores", Contenedores);
                 Paso("caseta y reja", CasetaYReja);
                 Paso("postes y luz", Postes);
+                Paso("carriles estacionados", Carriles);
                 Paso("grúas", Gruas);
                 Paso("barco", Barco);
                 Paso("pintura", Pintura);
@@ -555,6 +558,38 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         // ---------------------------------------------------------------- Cámara
+        private static readonly List<Vector3> sitiosBodega = new List<Vector3>();
+        private const float SitioX = 25f, SitioZ = 24.4f, AltoSitio = 14f;
+
+        private static Bounds CajaSitio(Vector3 c)
+        {
+            return new Bounds(new Vector3(c.x, AltoSitio * 0.5f, c.z), new Vector3(SitioX, AltoSitio, SitioZ));
+        }
+
+        /// <summary>Pares de manzanas contiguas (misma x, filas consecutivas) del este del patio y lejos de la ciudad (norte y oeste): los centros de los sitios posibles para una bodega, del más lejano al más cercano.</summary>
+        private static List<Vector3> CandidatosSitios()
+        {
+            List<ColocarT1357Puerto.Bloque> bl = ColocarT1357Puerto.Bloques();
+            List<(Vector3 c, float lejos)> l = new List<(Vector3, float)>();
+            foreach (ColocarT1357Puerto.Bloque a in bl)
+            {
+                foreach (ColocarT1357Puerto.Bloque b in bl)
+                {
+                    if (Mathf.Abs(a.Centro.x - b.Centro.x) > 0.1f || Mathf.Abs(a.Centro.y - b.Centro.y - (ColocarT1357Puerto.FondoBloque + ColocarT1357Puerto.PasilloZ)) > 0.1f)
+                    {
+                        continue;
+                    }
+                    Vector3 c = new Vector3(a.Centro.x, 0f, (a.Centro.y + b.Centro.y) * 0.5f);
+                    Bounds caja = CajaSitio(c);
+                    if (c.x < 225f || CercaK15(c) || EnCalle(caja, 0.2f) || !LibreSinContenedores(caja, 0.3f))
+                    {
+                        continue;
+                    }
+                    l.Add((c, Mathf.Min(-45f - c.z, c.x - 115f)));
+                }
+            }
+            return l.OrderByDescending(t => t.lejos).Select(t => t.c).ToList();
+        }
 
         private static bool Proyectar(Vector3 w, out float u, out float v, out float prof)
         {
@@ -571,8 +606,9 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>
-        /// Busca la cámara A15: prueba posiciones (rejilla de 15 m), alturas 38/46/56 m, cabeceos 35/40/45 grados y 24 rumbos, y puntúa cuántas grúas y barco caen arriba a la izquierda,
-        /// bodegas abajo a la derecha, contenedores en el cuadro y cuántos cuartos del cuadro (4x4) tienen algo. La mira debe caer dentro del patio. Deja CamaraA y CamaraA/Mira bajo la raíz.
+        /// Ronda 4: primero se eligen los sitios de bodega y después la cámara. Para los 15 mejores juegos de 2 sitios (de los 6 más lejanos de la ciudad) busca la cámara (rejilla de 15 m de x 90 a 420 y z -20 a -330,
+        /// alturas 38/46/56, cabeceos 35/40/45, 24 rumbos) que deje TODOS los sitios abajo a la derecha (u 0.4 a 0.99, v 0.03 a 0.65) y con menos de 5 % de los rayos del cuadro (a menos de 160 m, contra los planos y = 0 y y = 25)
+        /// cayendo en la ciudad (z > -50 o x &lt; 118); puntúa grúas y barco arriba a la izquierda, contenedores y celdas del cuadro con algo. Aparta las manzanas de los sitios elegidos y deja CamaraA y CamaraA/Mira.
         /// </summary>
         private static void BuscarCamara()
         {
@@ -586,7 +622,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 int c = Categoria(r.transform);
-                if (c < 0)
+                if (c < 0 || c == 3)
                 {
                     continue;
                 }
@@ -601,106 +637,136 @@ namespace MechaCyberpunk.Arte.Editor
                     pts.Add(b.center); cat.Add(1);
                     pts.Add(new Vector3(b.center.x, b.max.y, b.center.z)); cat.Add(1);
                 }
-                else if (c == 2)
+                else
                 {
                     pts.Add(b.center); cat.Add(2);
                     pts.Add(b.center + new Vector3(b.size.x * 0.33f, 0f, 0f)); cat.Add(2);
                     pts.Add(b.center - new Vector3(b.size.x * 0.33f, 0f, 0f)); cat.Add(2);
                 }
-                else
-                {
-                    pts.Add(b.center); cat.Add(3);
-                }
             }
             Vector3[] P = pts.ToArray();
             int[] C = cat.ToArray();
-            Log("Búsqueda de cámara: " + P.Length + " puntos (contenedores " + C.Count(x => x == 0) + ", grúas " + C.Count(x => x == 1) + ", barco " + C.Count(x => x == 2) + ", bodegas " + C.Count(x => x == 3) + ").");
+            List<Vector3> cands = CandidatosSitios().Take(6).ToList();
+            Log("Sitios de bodega posibles (manzanas dobles del este, de más lejos a más cerca de la ciudad): " + string.Join(" ", cands.Select(c => c.ToString("F0"))));
+            List<List<Vector3>> juegos = new List<List<Vector3>>();
+            for (int i = 0; i < cands.Count; i++)
+            {
+                for (int j = i + 1; j < cands.Count; j++)
+                {
+                    if (Vector2.Distance(new Vector2(cands[i].x, cands[i].z), new Vector2(cands[j].x, cands[j].z)) > 26f)
+                    {
+                        juegos.Add(new List<Vector3> { cands[i], cands[j] });
+                    }
+                }
+            }
+            if (juegos.Count == 0)
+            {
+                foreach (Vector3 c in cands) juegos.Add(new List<Vector3> { c });
+            }
+            if (juegos.Count == 0)
+            {
+                Log("AVISO: no hay ningún sitio libre para bodegas; no se pone cámara de búsqueda (Fotos usa la fija).");
+                return;
+            }
             float tanH = TanV * Aspecto;
             float mejor = -1f;
             Vector3 mejorPos = Vector3.zero, mejorF = Vector3.forward;
             float mejorYaw = 0f, mejorPitch = 0f;
+            List<Vector3> mejorJuego = null;
             float[] alturas = { 38f, 46f, 56f };
             float[] cabeceos = { 35f, 40f, 45f };
-            List<(float s, Vector3 p, float yaw, float pitch)> tops = new List<(float, Vector3, float, float)>();
-            for (float x = 90f; x <= 360f; x += 15f)
+            foreach (List<Vector3> juego in juegos)
             {
-                for (float z = -20f; z >= -290f; z -= 15f)
+                Vector3[] S = juego.Select(s => new Vector3(s.x, 6f, s.z)).ToArray();
+                for (float x = 90f; x <= 420f; x += 15f)
                 {
-                    foreach (float h in alturas)
+                    for (float z = -20f; z >= -330f; z -= 15f)
                     {
-                        Vector3 pos = new Vector3(x, h, z);
-                        foreach (float pitch in cabeceos)
+                        foreach (float h in alturas)
                         {
-                            float cp = Mathf.Cos(pitch * Mathf.Deg2Rad), sp = Mathf.Sin(pitch * Mathf.Deg2Rad);
-                            for (int ya = 0; ya < 24; ya++)
+                            Vector3 pos = new Vector3(x, h, z);
+                            foreach (float pitch in cabeceos)
                             {
-                                float yaw = ya * 15f;
-                                float sy = Mathf.Sin(yaw * Mathf.Deg2Rad), cy = Mathf.Cos(yaw * Mathf.Deg2Rad);
-                                Vector3 f = new Vector3(sy * cp, -sp, cy * cp);
-                                Vector3 rr = new Vector3(cy, 0f, -sy);
-                                Vector3 uu = Vector3.Cross(f, rr);
-                                float t = h / sp;
-                                Vector3 suelo = pos + f * t;
-                                if (suelo.x < 125f || suelo.x > 310f || suelo.z > -55f || suelo.z < -245f)
+                                float cp = Mathf.Cos(pitch * Mathf.Deg2Rad), sp = Mathf.Sin(pitch * Mathf.Deg2Rad);
+                                for (int ya = 0; ya < 24; ya++)
                                 {
-                                    continue;
-                                }
-                                // Que ni el borde de abajo ni los lados del cuadro enseñen la ciudad: los rayos que caen al piso deben caer dentro del puerto (z < -40, x > 108; sur y este son agua).
-                                int malos = 0, total = 0;
-                                for (int gu = 0; gu < 7; gu++)
-                                {
-                                    for (int gv = 0; gv < 5; gv++)
+                                    float yaw = ya * 15f;
+                                    float sy = Mathf.Sin(yaw * Mathf.Deg2Rad), cy = Mathf.Cos(yaw * Mathf.Deg2Rad);
+                                    Vector3 f = new Vector3(sy * cp, -sp, cy * cp);
+                                    Vector3 rr = new Vector3(cy, 0f, -sy);
+                                    Vector3 uu = Vector3.Cross(f, rr);
+                                    Vector3 suelo = pos + f * (h / sp);
+                                    if (suelo.x < 120f || suelo.x > 335f || suelo.z > -55f || suelo.z < -255f)
                                     {
-                                        Vector3 dr = f + rr * ((-0.95f + gu * 0.3167f) * tanH) + uu * ((-0.95f + gv * 0.475f) * TanV);
-                                        if (dr.y > -0.02f) continue;
-                                        float tt = -pos.y / dr.y;
-                                        if (tt > 400f) continue;
-                                        Vector3 hp = pos + dr * tt;
-                                        total++;
-                                        if (hp.z > -40f || hp.x < 108f) malos++;
+                                        continue;
                                     }
-                                }
-                                if (total > 0 && malos > 0.1f * total) continue;
-                                int cTL = 0, sTL = 0, bBR = 0, cC = 0, mask = 0;
-                                for (int i = 0; i < P.Length; i++)
-                                {
-                                    Vector3 d = P[i] - pos;
-                                    float prof = d.x * f.x + d.y * f.y + d.z * f.z;
-                                    if (prof < 8f || prof > 260f) continue;
-                                    float xx = (d.x * rr.x + d.z * rr.z) / (prof * tanH);
-                                    float yy = (d.x * uu.x + d.y * uu.y + d.z * uu.z) / (prof * TanV);
-                                    if (xx < -1f || xx > 1f || yy < -1f || yy > 1f) continue;
-                                    float u = 0.5f + 0.5f * xx, v = 0.5f + 0.5f * yy;
-                                    mask |= 1 << (Mathf.Min(3, (int)(u * 4f)) * 4 + Mathf.Min(3, (int)(v * 4f)));
-                                    int ct = C[i];
-                                    if (ct == 1 && u < 0.5f && v > 0.5f) cTL++;
-                                    else if (ct == 2 && u < 0.55f && v > 0.5f) sTL++;
-                                    else if (ct == 3 && u > 0.5f && v < 0.6f) bBR++;
-                                    else if (ct == 0) cC++;
-                                }
-                                int celdas = 0;
-                                for (int m = mask; m != 0; m &= m - 1) celdas++;
-                                float s = 2f * Mathf.Min(cTL, 4) / 4f + 2f * (sTL > 0 ? 1f : 0f) + 2f * Mathf.Min(bBR, 3) / 3f + 2f * Mathf.Min(cC, 80) / 80f + 2f * celdas / 16f;
-                                if (s > mejor)
-                                {
-                                    mejor = s; mejorPos = pos; mejorF = f; mejorYaw = yaw; mejorPitch = pitch;
-                                }
-                                if (s > 5f)
-                                {
-                                    tops.Add((s, pos, yaw, pitch));
+                                    bool todos = true;
+                                    foreach (Vector3 s in S)
+                                    {
+                                        Vector3 d = s - pos;
+                                        float prof = Vector3.Dot(d, f);
+                                        if (prof < 8f || prof > 220f) { todos = false; break; }
+                                        float u = 0.5f + 0.5f * Vector3.Dot(d, rr) / (prof * tanH);
+                                        float v = 0.5f + 0.5f * Vector3.Dot(d, uu) / (prof * TanV);
+                                        if (u < 0.4f || u > 0.99f || v < 0.03f || v > 0.65f) { todos = false; break; }
+                                    }
+                                    if (!todos)
+                                    {
+                                        continue;
+                                    }
+                                    int malos = 0, total = 0;
+                                    for (int gu = 0; gu < 9; gu++)
+                                    {
+                                        for (int gv = 0; gv < 7; gv++)
+                                        {
+                                            Vector3 dr = f + rr * ((-0.97f + gu * 0.2425f) * tanH) + uu * ((-0.97f + gv * 0.3233f) * TanV);
+                                            if (dr.y > -0.02f) continue;
+                                            for (int pl = 0; pl < 2; pl++)
+                                            {
+                                                float tt = ((pl == 0 ? 0f : 25f) - pos.y) / dr.y;
+                                                if (tt < 0f || tt > 160f) continue;
+                                                Vector3 hp = pos + dr * tt;
+                                                total++;
+                                                if (hp.z > -50f || hp.x < 118f) malos++;
+                                            }
+                                        }
+                                    }
+                                    if (total > 0 && malos > 0.05f * total)
+                                    {
+                                        continue;
+                                    }
+                                    int cTL = 0, sTL = 0, cC = 0, mask = 0;
+                                    for (int i = 0; i < P.Length; i++)
+                                    {
+                                        Vector3 d = P[i] - pos;
+                                        float prof = d.x * f.x + d.y * f.y + d.z * f.z;
+                                        if (prof < 8f || prof > 260f) continue;
+                                        float xx = (d.x * rr.x + d.z * rr.z) / (prof * tanH);
+                                        float yy = (d.x * uu.x + d.y * uu.y + d.z * uu.z) / (prof * TanV);
+                                        if (xx < -1f || xx > 1f || yy < -1f || yy > 1f) continue;
+                                        float u = 0.5f + 0.5f * xx, v = 0.5f + 0.5f * yy;
+                                        mask |= 1 << (Mathf.Min(3, (int)(u * 4f)) * 4 + Mathf.Min(3, (int)(v * 4f)));
+                                        int ct = C[i];
+                                        if (ct == 1 && u < 0.5f && v > 0.5f) cTL++;
+                                        else if (ct == 2 && u < 0.55f && v > 0.5f) sTL++;
+                                        else if (ct == 0) cC++;
+                                    }
+                                    int celdas = 0;
+                                    for (int m = mask; m != 0; m &= m - 1) celdas++;
+                                    float score = 2f * Mathf.Min(cTL, 4) / 4f + 2f * (sTL > 0 ? 1f : 0f) + 2f + 2f * Mathf.Min(cC, 80) / 80f + 2f * celdas / 16f - 2f * (total > 0 ? malos / (float)total : 0f);
+                                    if (score > mejor)
+                                    {
+                                        mejor = score; mejorPos = pos; mejorF = f; mejorYaw = yaw; mejorPitch = pitch; mejorJuego = juego;
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            foreach (var t3 in tops.OrderByDescending(a => a.s).Take(3))
+            if (mejor < 0f || mejorJuego == null)
             {
-                Log("Cámara candidata: puntaje " + t3.s.ToString("F2") + " en " + t3.p.ToString("F0") + ", rumbo " + t3.yaw + ", cabeceo " + t3.pitch + ".");
-            }
-            if (mejor < 0f)
-            {
-                Log("AVISO: no hay cámara que muestre el patio; Fotos usa CamaraA15 fija.");
+                Log("AVISO: ninguna cámara deja los sitios de bodega abajo a la derecha con menos de 5 % de ciudad (" + juegos.Count + " juegos probados); no se colocan bodegas nuevas y Fotos usa la cámara fija.");
                 return;
             }
             camPos = mejorPos;
@@ -708,14 +774,21 @@ namespace MechaCyberpunk.Arte.Editor
             camR = new Vector3(Mathf.Cos(mejorYaw * Mathf.Deg2Rad), 0f, -Mathf.Sin(mejorYaw * Mathf.Deg2Rad));
             camU = Vector3.Cross(camF, camR);
             hayCamara = true;
+            sitiosBodega.Clear();
+            sitiosBodega.AddRange(mejorJuego);
             GameObject cam = new GameObject("CamaraA");
             cam.transform.SetParent(raiz, false);
             cam.transform.position = camPos;
             GameObject mira = new GameObject("Mira");
             mira.transform.SetParent(cam.transform, false);
             mira.transform.position = camPos + camF * (camPos.y / Mathf.Sin(mejorPitch * Mathf.Deg2Rad));
-            Log("CÁMARA A15 ELEGIDA: " + camPos.ToString("F1") + " mirando a " + mira.transform.position.ToString("F1") + " (rumbo " + mejorYaw + ", cabeceo " + mejorPitch + ", altura " + camPos.y + ", campo 60), puntaje " + mejor.ToString("F2") + " de 10.");
+            Log("CÁMARA A15 ELEGIDA: " + camPos.ToString("F1") + " mirando a " + mira.transform.position.ToString("F1") + " (rumbo " + mejorYaw + ", cabeceo " + mejorPitch + ", altura " + camPos.y + ", campo 60), puntaje " + mejor.ToString("F2") + " de 10; sitios de bodega " + string.Join(" ", mejorJuego.Select(s => s.ToString("F0"))) + ".");
+            foreach (Vector3 s in sitiosBodega)
+            {
+                Apartar(CajaSitio(s));
+            }
         }
+
 
         private static void CargarOcupados()
         {
@@ -1092,116 +1165,62 @@ namespace MechaCyberpunk.Arte.Editor
         {
             Transform g = Grupo("Bodegas");
             Transform d = Grupo("Detalles");
+            if (!hayCamara || sitiosBodega.Count == 0)
+            {
+                Log("Bodegas: no hay cámara ni sitios elegidos; 0 bodegas nuevas.");
+                return;
+            }
             string[] codigos = { "PU03_Bodega", "PU04_Bodega" };
             Lote ventilador = LoteDe("Ventiladores", Opaco("Ventilador", new Color(0.3f, 0.32f, 0.36f), 0.4f, 0.5f));
             Lote tapa = LoteDe("VentiladoresTapa", Opaco("VentiladorTapa", new Color(0.5f, 0.52f, 0.55f), 0.35f, 0.5f));
             Lote magenta = LoteDe("NeonMagenta", Emisivo("NeonMagenta", new Color(0.3f, 0.02f, 0.2f), new Color(7f, 0.6f, 4.5f)));
             Lote turquesa = LoteDe("NeonTurquesa", Emisivo("NeonTurquesa", new Color(0.02f, 0.25f, 0.22f), new Color(0.5f, 6.5f, 6f)));
             Lote lampara = LoteDe("LamparasBodega", Emisivo("LamparaBodega", new Color(0.3f, 0.2f, 0.08f), new Color(9f, 4.5f, 1.4f)));
-            // Medida de una bodega (largo 26 m) sin girar: se instancia una vez y se borra.
-            GameObject prueba = Colocar(g, codigos[0], new Vector3(0f, YPatio, 0f), 0f, 22f, 0f, false);
-            if (prueba == null)
-            {
-                Log("Bodegas: falta PU03_Bodega.");
-                return;
-            }
-            Bounds m0 = Medir(prueba);
-            Object.DestroyImmediate(prueba);
-            Vector3 medida = m0.size;
-            Log("Bodega de prueba (largo 22): " + medida.ToString("F1") + " (x, y, z con yaw 0).");
             int puestas = 0;
-            for (int ronda = 0; ronda < 2 && puestas < 3; ronda++)
+            foreach (Vector3 s in sitiosBodega)
             {
-                bool apartar = ronda == 1;
-                if (apartar && puestas >= 2)
+                Vector3 haciaCam = camPos - s;
+                haciaCam.y = 0f;
+                haciaCam.Normalize();
+                int mejorQ = 0;
+                float mejorD = -2f;
+                for (int q = 0; q < 4; q++)
                 {
-                    break;
-                }
-                List<(Vector3 centro, float yaw, float nota)> sitios = new List<(Vector3, float, float)>();
-                for (float x = 120f; x <= 314f; x += 3f)
-                {
-                    for (float z = -236f; z <= -52f; z += 3f)
+                    Vector3 puerta = q == 0 ? Vector3.forward : q == 1 ? Vector3.right : q == 2 ? Vector3.back : Vector3.left;
+                    float dp = Vector3.Dot(puerta, haciaCam);
+                    if (dp > mejorD)
                     {
-                        for (int q = 0; q < 4; q++)
-                        {
-                            float yaw = q * 90f;
-                            Vector3 puerta = q == 0 ? Vector3.forward : q == 1 ? Vector3.right : q == 2 ? Vector3.back : Vector3.left;
-                            bool giro = q % 2 == 1;
-                            Vector3 tam = giro ? new Vector3(medida.z, medida.y, medida.x) : medida;
-                            Bounds b = new Bounds(new Vector3(x, tam.y * 0.5f, z), tam);
-                            if (x - tam.x * 0.5f < 118f || x + tam.x * 0.5f > 314f || z - tam.z * 0.5f < -236f || z + tam.z * 0.5f > -50f)
-                            {
-                                Razon("fuera del patio");
-                                continue;
-                            }
-                            float u, v, prof;
-                            if (!hayCamara || !Proyectar(b.center, out u, out v, out prof) || prof > 220f || u < 0.4f || u > 0.99f || v < 0.02f || v > 0.65f)
-                            {
-                                Razon("fuera de abajo-derecha del cuadro");
-                                continue;
-                            }
-                            Vector3 haciaCam = camPos - b.center;
-                            haciaCam.y = 0f;
-                            if (Vector3.Dot(puerta, haciaCam.normalized) < 0.0f)
-                            {
-                                Razon("puerta de espaldas a la cámara");
-                                continue;
-                            }
-                            if (CercaK15(b.center))
-                            {
-                                Razon("a menos de 85 m de K15");
-                                continue;
-                            }
-                            if (EnCalle(b, 0.3f))
-                            {
-                                Razon("pisa el arroyo de una calle");
-                                continue;
-                            }
-                            if (!(apartar ? LibreSinContenedores(b, 0.4f) : Libre(b, 0.4f)))
-                            {
-                                Razon(apartar ? "choca con algo que no es contenedor" : "choca con algo existente");
-                                continue;
-                            }
-                            sitios.Add((b.center, yaw, Vector2.Distance(new Vector2(u, v), new Vector2(0.75f, 0.3f))));
-                        }
+                        mejorD = dp;
+                        mejorQ = q;
                     }
                 }
-                Log("Bodegas, pasada " + (ronda + 1) + (apartar ? " (apartando pilas)" : "") + ": " + sitios.Count + " sitios válidos. Descartados -> " + string.Join("; ", razones.Select(kv => kv.Key + ": " + kv.Value)));
-                razones.Clear();
-                foreach (var sitio in sitios.OrderBy(s => s.nota))
+                float yaw = mejorQ * 90f;
+                string cod = codigos[puestas % 2];
+                GameObject go = Colocar(g, cod, new Vector3(s.x, YPatio, s.z), yaw, 22f, 0f, false);
+                if (go == null)
                 {
-                    if (puestas >= 3)
-                    {
-                        break;
-                    }
-                    bool giro = Mathf.Abs(Mathf.Repeat(sitio.yaw, 180f) - 90f) < 1f;
-                    Vector3 tam = giro ? new Vector3(medida.z, medida.y, medida.x) : medida;
-                    Bounds pre = new Bounds(sitio.centro, tam);
-                    if (!(apartar ? LibreSinContenedores(pre, 0.4f) : Libre(pre, 0.4f)))
-                    {
-                        continue;
-                    }
-                    string cod = codigos[puestas % 2];
-                    GameObject go = Colocar(g, cod, new Vector3(sitio.centro.x, YPatio, sitio.centro.z), sitio.yaw, 22f, 0f, false);
-                    if (go == null)
-                    {
-                        break;
-                    }
-                    Bounds b = Medir(go);
-                    if (apartar)
-                    {
-                        Apartar(b);
-                    }
-                    ocupados.Add(b);
-                    bodegasNuevas.Add(b);
-                    puestas++;
-                    go.name = cod + "_T1443_" + puestas;
-                    Log("Bodega " + go.name + (apartar ? " (apartó pilas)" : "") + ": x " + b.min.x.ToString("F1") + ".." + b.max.x.ToString("F1") + ", z " + b.min.z.ToString("F1") + ".." + b.max.z.ToString("F1") + ", alto " + b.size.y.ToString("F1") + " m, yaw " + sitio.yaw + ".");
-                    DetallesBodega(go, d, sitio.yaw, ventilador, tapa, magenta, turquesa, lampara);
+                    Log("Bodegas: falta " + cod + ".");
+                    continue;
                 }
+                Bounds b = Medir(go);
+                if (b.size.x > SitioX - 1f || b.size.z > SitioZ - 1f)
+                {
+                    float f = Mathf.Min((SitioX - 1f) / b.size.x, (SitioZ - 1f) / b.size.z);
+                    go.transform.localScale *= f;
+                    b = Medir(go);
+                    go.transform.position += new Vector3(s.x - b.center.x, YPatio - b.min.y, s.z - b.center.z);
+                    b = Medir(go);
+                }
+                puestas++;
+                go.name = cod + "_T1443_" + puestas;
+                Log("Bodega " + go.name + " en el sitio " + s.ToString("F1") + ": x " + b.min.x.ToString("F1") + ".." + b.max.x.ToString("F1") + ", z " + b.min.z.ToString("F1") + ".." + b.max.z.ToString("F1") + ", alto " + b.size.y.ToString("F1") + " m, puerta mirando a la cámara (yaw " + yaw + ", coseno " + mejorD.ToString("F2") + ").");
+                DetallesBodega(go, d, yaw, ventilador, tapa, magenta, turquesa, lampara);
+                ocupados.Add(b);
+                bodegasNuevas.Add(b);
             }
-            Log("Bodegas nuevas: " + puestas + " (abajo a la derecha de la cámara A15).");
+            Log("Bodegas nuevas: " + puestas + " (en manzanas apartadas, abajo a la derecha de la cámara A15).");
         }
+
 
         private static readonly List<Bounds> bodegasNuevas = new List<Bounds>();
         private static readonly Dictionary<string, int> razones = new Dictionary<string, int>();
@@ -1261,8 +1280,9 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>
-        /// Rellena las manzanas visibles desde la cámara A15 hasta la altura de diseño de T-1357 (Bloques(): fila 0 de 1, cada fila sube 0 o 1, máx. 4): donde falta un contenedor o una capa
-        /// pone uno encima (PT01_Contenedor40 con color de la paleta). Cada manzana va en un grupo con LODGroup. Los colliders de la manzana ya cubren la altura de diseño.
+        /// Ronda 4: las manzanas visibles desde la cámara A15 se vuelven bloques compactos escalonados de 1, 2, 3 y 3 o 4 contenedores de alto (fila 0 a 1 para no tocar la escalera del suelo de T-1357):
+        /// rellena cada celda (2 columnas por 4 filas) con PT01_Contenedor40 de la paleta, apaga (reversible, sufijo) las escaleras de fila viejas de la manzana y pone escaleras PuntoTrepar nuevas de 2.59 m
+        /// (una por escalón de 1 contenedor, en la columna oeste, como T-1357) y colliders para la altura añadida. Cada manzana lleva su LODGroup.
         /// </summary>
         private static void Rellenar()
         {
@@ -1272,23 +1292,36 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             Transform g = Grupo("Relleno");
-            int idx = 0, bloques = 0, anadidos = 0, celdasVacias = 0;
+            int idx = 0, bloques = 0, anadidos = 0, escaleras = 0, ocultas = 0;
             foreach (ColocarT1357Puerto.Bloque bl in ColocarT1357Puerto.Bloques())
             {
                 idx++;
                 Vector3 cb = new Vector3(bl.Centro.x, 1f, bl.Centro.y);
                 float u, v, prof;
-                if (CercaK15(cb) || !Proyectar(cb, out u, out v, out prof) || u < -0.15f || u > 1.15f || v < -0.15f || v > 1.15f || prof > 240f)
+                if (CercaK15(cb) || !Proyectar(cb, out u, out v, out prof) || u < -0.2f || u > 1.2f || v < -0.2f || v > 1.2f || prof > 240f)
                 {
                     continue;
                 }
-                if (bodegasNuevas.Any(bb => new Bounds(cb, new Vector3(LargoBloque2, 4f, ColocarT1357Puerto.FondoBloque)).Intersects(bb)))
+                if (Libre(new Bounds(cb, new Vector3(4f, 0.5f, 4f)), 0f) || bodegasNuevas.Any(bb => new Bounds(cb, new Vector3(ColocarT1357Puerto.LargoBloque + 2f, 4f, ColocarT1357Puerto.FondoBloque + 2f)).Intersects(bb)))
                 {
-                    continue;
+                    continue; // manzana apartada o con una bodega nueva encima
                 }
+                int[] meta = { 1, 2, 3, obra.Chance(0.7f) ? 4 : 3 };
                 GameObject pila = new GameObject("Relleno_Bloque_" + idx);
                 pila.transform.SetParent(g, false);
-                int antes = anadidos;
+                Transform bloqueGo = zona.transform.Find("Contenedores/Bloque_" + idx);
+                if (bloqueGo != null)
+                {
+                    foreach (Transform t in bloqueGo.Cast<Transform>().ToList())
+                    {
+                        if (t.name.StartsWith("Escalera_Fila") && t.gameObject.activeSelf)
+                        {
+                            t.name += SufijoApartado;
+                            t.gameObject.SetActive(false);
+                            ocultas++;
+                        }
+                    }
+                }
                 for (int f = 0; f < ColocarT1357Puerto.Filas; f++)
                 {
                     float z = bl.ZFila(f);
@@ -1304,19 +1337,15 @@ namespace MechaCyberpunk.Arte.Editor
                             }
                         }
                         int tiers = Mathf.RoundToInt(top / AltoCont);
-                        int objetivo = bl.AlturaFila[f];
-                        if (tiers == 0)
+                        if (tiers == 0 && !Libre(new Bounds(new Vector3(x, AltoCont * 0.5f, z), new Vector3(LargoCont, AltoCont, AnchoCont)), 0.1f))
                         {
-                            Bounds celda = new Bounds(new Vector3(x, AltoCont * 0.5f, z), new Vector3(LargoCont, AltoCont, AnchoCont));
-                            if (!Libre(celda, 0.1f))
-                            {
-                                continue;
-                            }
-                            celdasVacias++;
+                            continue;
                         }
-                        for (int k = tiers; k < objetivo; k++)
+                        int objetivo = meta[f];
+                        float baseY = tiers == 0 ? 0f : top;
+                        for (int k = Mathf.Max(tiers, 0); k < objetivo; k++)
                         {
-                            float y = tiers == 0 ? k * AltoCont : top + (k - tiers) * AltoCont;
+                            float y = baseY + (k - tiers) * AltoCont;
                             GameObject cont = Colocar(pila.transform, "PT01_Contenedor40", new Vector3(x, y, z), obra.Chance(0.15f) ? 180f : 0f, LargoCont, 0f, true);
                             if (cont == null)
                             {
@@ -1325,6 +1354,21 @@ namespace MechaCyberpunk.Arte.Editor
                             Tintar(cont, ColorAlAzar());
                             anadidos++;
                         }
+                        if (objetivo > tiers)
+                        {
+                            float alto = (objetivo - tiers) * AltoCont;
+                            BoxCollider bc = pila.AddComponent<BoxCollider>();
+                            bc.center = new Vector3(x, baseY + alto * 0.5f, z);
+                            bc.size = new Vector3(LargoCont, alto, AnchoCont);
+                        }
+                    }
+                }
+                for (int f = 0; f < ColocarT1357Puerto.Filas - 1; f++)
+                {
+                    if (meta[f + 1] > meta[f])
+                    {
+                        EscaleraNueva(pila.transform, "Escalera_Fila" + f + "_T1443", new Vector3(bl.Centro.x - LargoCont * 0.5f, meta[f] * AltoCont, bl.ZFila(f) + ColocarT1357Puerto.PasoFila * 0.5f - 0.1f), AltoCont);
+                        escaleras++;
                     }
                 }
                 Renderer[] rs = pila.GetComponentsInChildren<Renderer>();
@@ -1335,13 +1379,75 @@ namespace MechaCyberpunk.Arte.Editor
                     lg.RecalculateBounds();
                     bloques++;
                 }
-                else
+            }
+            Log("Relleno de manzanas: " + anadidos + " contenedores nuevos en " + bloques + " manzanas visibles (metas 1, 2, 3, 3 o 4 de alto); " + escaleras + " escaleras PuntoTrepar nuevas de 2.59 m y " + ocultas + " escaleras de fila viejas apagadas (sufijo " + SufijoApartado + ").");
+        }
+
+        private static void EscaleraNueva(Transform padre, string nombre, Vector3 pie, float alto)
+        {
+            GameObject go = new GameObject(nombre);
+            go.transform.SetParent(padre, false);
+            go.transform.SetPositionAndRotation(pie, Quaternion.LookRotation(Vector3.forward));
+            PuntoTrepar p = go.AddComponent<PuntoTrepar>();
+            SerializedObject so = new SerializedObject(p);
+            so.FindProperty("tipo").enumValueIndex = (int)TipoTrepar.Escalera;
+            so.FindProperty("alturaSubida").floatValue = alto;
+            so.FindProperty("salida").vector3Value = new Vector3(0f, alto, 0.8f);
+            so.ApplyModifiedPropertiesWithoutUndo();
+            p.AjustarTrigger();
+        }
+
+        /// <summary>Montacargas, pallets y huacales estacionados en la orilla de las calles internas visibles (a 5 m del eje; el carril de tránsito de 3.6 m a cada lado queda libre).</summary>
+        private static void Carriles()
+        {
+            if (!hayCamara)
+            {
+                return;
+            }
+            Transform d = Grupo("Detalles");
+            string[] cods = { "PU05_Montacargas", "PU06_Pallets", "C17_Huacales", "PU06_Pallets", "C16_Tambo" };
+            float[] altos = { 2.6f, 1.2f, 1.0f, 1.0f, 1.0f };
+            int n = 0, puestos = 0;
+            foreach (Vector3[] calle in ColocarT1357Puerto.Calles())
+            {
+                for (int i = 1; i < calle.Length; i++)
                 {
-                    Object.DestroyImmediate(pila);
+                    Vector3 dir = calle[i] - calle[i - 1];
+                    float largo = dir.magnitude;
+                    dir /= largo;
+                    Vector3 der = Vector3.Cross(Vector3.up, dir);
+                    float ry = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+                    for (float t = 12f; t < largo - 12f; t += 9f)
+                    {
+                        n++;
+                        Vector3 pie = calle[i - 1] + dir * t + der * (n % 2 == 0 ? 5.0f : -5.0f);
+                        float u, v, prof;
+                        if (CercaK15(pie) || !Proyectar(pie, out u, out v, out prof) || u < 0f || u > 1f || v < 0f || v > 1f || prof > 220f)
+                        {
+                            continue;
+                        }
+                        int k = n % cods.Length;
+                        pie.y = Suelo(pie.x, pie.z);
+                        GameObject go = Colocar(d, cods[k], pie, ry + (k == 0 ? 0f : obra.Rango(-25f, 25f)), 0f, altos[k], false);
+                        if (go == null)
+                        {
+                            continue;
+                        }
+                        Bounds b = Medir(go);
+                        float lateral = Mathf.Abs(Vector3.Dot(b.center - calle[i - 1], der));
+                        if (!Libre(b, 0.15f) || lateral - Mathf.Max(b.extents.x, b.extents.z) < 3.8f)
+                        {
+                            Object.DestroyImmediate(go);
+                            continue;
+                        }
+                        ocupados.Add(b);
+                        puestos++;
+                    }
                 }
             }
-            Log("Relleno de manzanas: " + anadidos + " contenedores nuevos en " + bloques + " manzanas visibles (" + celdasVacias + " celdas que estaban vacías); altura de diseño 1 a 4. Las escaleras de T-1357 siguen en su lugar.");
+            Log("Carriles: " + puestos + " montacargas, pallets, huacales y tambos estacionados en la orilla de las calles (a 5 m del eje).");
         }
+
 
         private const float LargoBloque2 = ColocarT1357Puerto.LargoBloque;
 
