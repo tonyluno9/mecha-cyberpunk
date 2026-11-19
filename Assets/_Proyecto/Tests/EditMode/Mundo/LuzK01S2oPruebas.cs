@@ -34,14 +34,14 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Noche_NieblaAzulDelgadaYCieloLiso()
         {
             ConfigCicloDia ciclo = AssetDatabase.LoadAssetAtPath<ConfigCicloDia>(ColocarS2cLook.RutaCicloDia);
-            Assert.LessOrEqual(ciclo.DensidadNiebla(23f), 0.01f, "T-920: niebla mínima, el fondo de la ciudad se ve");
+            Assert.LessOrEqual(ciclo.DensidadNiebla(23f), 0.01f, "T-920: niebla fina, el fondo de la ciudad se ve (T-1399 la dejó en 0.009)");
             Color niebla = ciclo.ColorNiebla(23f);
             Assert.Greater(niebla.b, niebla.r, "niebla azul");
             Color cielo = ciclo.ColorCielo(23f);
             Assert.Greater(cielo.b, cielo.r * 2f, "cielo azul marino");
             Assert.Less(cielo.maxColorComponent, 0.2f, "oscuro");
             ConfigAmbienteNoche ambiente = AssetDatabase.LoadAssetAtPath<ConfigAmbienteNoche>(ColocarS2oLuz.RutaAmbienteNoche);
-            Assert.AreEqual(0f, ambiente.OpacidadNubes, 0.001f, "sin el domo de nubes");
+            Assert.AreEqual(0.6f, ambiente.OpacidadNubes, 0.001f, "T-1399 (19-nov, a propósito): el domo de nubes de noche con opacidad 0.6 (antes 0, sin domo)");
             foreach (string guid in AssetDatabase.FindAssets("t:Material", new[] { "Assets/Arte/Fondos/Materiales" }))
             {
                 Material m = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
@@ -59,7 +59,8 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.Greater(postes.Length, 50);
             foreach (Light l in postes)
             {
-                Assert.LessOrEqual(l.range, 16f, ColocarS2.Ruta(l.transform) + ": alcance corto (T-1331: 16 m, los postes iluminan más al oscurecer)");
+                // T-1392 (19-nov): los faroles de sodio de las zonas nuevas llegan a 22 m; los de los barrios, 16 m (T-1331).
+                Assert.LessOrEqual(l.range, LookNocheT1392.AlcanceSodio, ColocarS2.Ruta(l.transform) + ": alcance corto (T-1331: 16 m; sodio de zona T-1392: 22 m)");
             }
         }
 

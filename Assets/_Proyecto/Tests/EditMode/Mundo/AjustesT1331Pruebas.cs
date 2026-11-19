@@ -73,6 +73,13 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(16f, ColocarS2oLuz.RangoPoste);
             foreach (Light l in escena.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Light>(true)).Where(ColocarS2oLuz.EsPoste))
             {
+                // T-1392 (19-nov): en las zonas nuevas el sodio es 400 de intensidad y 22 m (en el Cerro 18 m, T-1365/T-1411); los barrios se quedan en 140 y 16 m.
+                bool deZona = Mathf.Approximately(l.intensity, LookNocheT1392.IntensidadSodio);
+                if (deZona)
+                {
+                    Assert.LessOrEqual(l.range, LookNocheT1392.AlcanceSodio + 0.001f, l.transform.parent.name);
+                    continue;
+                }
                 Assert.AreEqual(ColocarS2oLuz.IntensidadPoste, l.intensity, 0.001f, l.transform.parent.name);
                 Assert.AreEqual(ColocarS2oLuz.RangoPoste, l.range, 0.001f, l.transform.parent.name);
             }

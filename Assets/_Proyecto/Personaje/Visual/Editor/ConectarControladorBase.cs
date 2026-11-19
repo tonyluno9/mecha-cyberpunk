@@ -49,6 +49,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>T-1411: conecta un solo visual (papel, IK, velocidades de PJ01 sin implante) para que use los clips de PJ01. Se puede repetir.</summary>
+        public static void ConectarModeloConClipsPJ01(string modelo, string papel, bool mira)
+        {
+            ConectarPrefab(modelo, papel, mira, ReglasAnimacion.VelocidadClipCaminarSinImplante, ReglasAnimacion.VelocidadClipCorrerSinImplante);
+            AssetDatabase.SaveAssets();
+        }
+
         private static void ConectarPrefab(string modelo, string papel, bool mira, float caminar, float correr)
         {
             string ruta = CreadorVisualPersonaje.RutaPrefab(modelo);

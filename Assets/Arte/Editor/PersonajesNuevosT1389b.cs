@@ -195,7 +195,35 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 GameObject prefab = CreadorVisualTripo.Crear(v);
+                if (prefab != null)
+                {
+                    ConectarClipsPJ01(v);
+                }
                 Informe.AppendLine(prefab != null ? "  visual " + v + " creado" : "  FALLO visual " + v + ": revisa el log (avatar Humanoid no válido o sin modelo)");
+            }
+        }
+
+        /// <summary>
+        /// T-1411 (T-1004): los humanoides nuevos usan los clips de PJ01 como los demás NPC: el visual lleva el override de su papel sobre el ControladorBase
+        /// (E15, E16 y E18 Guardias; E19 y E20 SKULLS; peatones NP NPC), no el controlador con clips de Mixamo que arma CreadorVisualTripo. Se puede repetir.
+        /// </summary>
+        public static void ConectarClipsPJ01(string variante)
+        {
+            if (variante == PerroVariante || AssetDatabase.LoadAssetAtPath<GameObject>(RutaVisual(variante)) == null)
+            {
+                return;
+            }
+            string papel = variante.StartsWith("E15") || variante.StartsWith("E16") || variante.StartsWith("E18") ? "Guardias"
+                : variante.StartsWith("E19") || variante.StartsWith("E20") ? "SKULLS" : "NPC";
+            ConectarControladorBase.ConectarModeloConClipsPJ01(variante, papel, true);
+        }
+
+        /// <summary>T-1411: pone los clips de PJ01 en todos los visuales nuevos ya creados (sin volver a importar).</summary>
+        public static void ConectarTodosClipsPJ01()
+        {
+            foreach (string v in Variantes)
+            {
+                ConectarClipsPJ01(v);
             }
         }
 
