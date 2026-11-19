@@ -106,5 +106,58 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             Assert.AreEqual(30f, ColocarT1354Curva.LateralOrilla(-226f) - ColocarT1354Curva.LateralMuro, 1e-4f);
         }
+
+        // ---------------------------------------------------------------- T-1363: volumen local de luz y relleno de T530
+
+        [Test]
+        public void Volumen_CubreLaAvenidaYElPaseo()
+        {
+            Bounds caja = ColocarT1354Curva.CajaVolumen();
+            foreach (Vector3 p in ColocarT1354Curva.Avenida())
+            {
+                Assert.IsTrue(caja.Contains(new Vector3(p.x, 1f, p.z)), "la avenida queda fuera en " + p);
+                Assert.AreEqual(1f, ColocarT1354Curva.PesoVolumen(new Vector3(p.x, 1f, p.z)), 1e-4f);
+            }
+            foreach (Vector3 p in ColocarT1354Curva.BordeMar(-300f, 160f))
+            {
+                Vector3 paseo = new Vector3(p.x, 1f, p.z - 12f);
+                Assert.AreEqual(1f, ColocarT1354Curva.PesoVolumen(paseo), 1e-4f, "el paseo queda fuera en " + paseo);
+            }
+        }
+
+        [Test]
+        public void Volumen_NoAlcanzaLosBarriosViejos()
+        {
+            Assert.LessOrEqual(ColocarT1354Curva.VolumenZNorte + ColocarT1354Curva.VolumenMezcla, ColocarT1354Curva.ZBarriosViejos + 1e-4f);
+            for (float x = -400f; x <= 400f; x += 10f)
+            {
+                for (float z = -189.9f; z <= 120f; z += 10f)
+                {
+                    Assert.AreEqual(0f, ColocarT1354Curva.PesoVolumen(new Vector3(x, 1f, z)), 1e-6f, "la luz del Malecón llega a " + x + ", " + z);
+                }
+            }
+        }
+
+        [Test]
+        public void Volumen_MezclaDe15mYPrioridadAlta()
+        {
+            Assert.AreEqual(15f, ColocarT1354Curva.VolumenMezcla);
+            Assert.GreaterOrEqual(ColocarT1354Curva.VolumenPrioridad, 10f);
+            // A medio camino de la mezcla pesa la mitad.
+            Assert.AreEqual(0.5f, ColocarT1354Curva.PesoVolumen(new Vector3(-100f, 1f, ColocarT1354Curva.VolumenZNorte + 7.5f)), 1e-4f);
+        }
+
+        [Test]
+        public void RellenoT530_SoloSeApagaDetrasDeLasFachadasYCercaDeLaAvenida()
+        {
+            // Bloque del último tramo del corredor sur, a ~35 m de la avenida: se apaga.
+            Assert.IsTrue(ColocarT1354Curva.RellenoT530Apagable(new Vector3(-70f, 15f, -190f)));
+            Assert.IsTrue(ColocarT1354Curva.RellenoT530Apagable(new Vector3(60f, 15f, -200f)));
+            // Más al norte (la ciudad y el tramo medio del corredor): se queda.
+            Assert.IsFalse(ColocarT1354Curva.RellenoT530Apagable(new Vector3(-70f, 15f, -150f)));
+            Assert.IsFalse(ColocarT1354Curva.RellenoT530Apagable(new Vector3(-70f, 15f, -170f)));
+            // Al sur de la avenida (otro lado): no es relleno de T530.
+            Assert.IsFalse(ColocarT1354Curva.RellenoT530Apagable(new Vector3(-70f, 15f, -240f)));
+        }
     }
 }
