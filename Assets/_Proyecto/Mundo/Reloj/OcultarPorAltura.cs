@@ -22,6 +22,9 @@ namespace MechaCyberpunk.Mundo.Reloj
         [Tooltip("Altura del piso del mundo (m).")]
         [SerializeField] private float alturaPiso;
 
+        [Tooltip("Si es verdad, se invierte: los renderers solo se ven con la cámara por encima del umbral (fondos que existen para las vistas aéreas).")]
+        [SerializeField] private bool soloArriba;
+
         private Camera camara;
         private bool oculto;
 
@@ -46,10 +49,22 @@ namespace MechaCyberpunk.Mundo.Reloj
             Aplicar(float.NegativeInfinity);
         }
 
-        /// <summary>Pone el estado para una cámara a esa altura absoluta (m). Las fotos del editor la llaman a mano.</summary>
+        /// <summary>Pone el estado para una cámara a esa altura absoluta (m); con <see cref="float.NegativeInfinity"/> restaura todo visible. Las fotos del editor la llaman a mano.</summary>
         public void Aplicar(float alturaCamara)
         {
-            bool nuevo = CalculoOcultarAltura.Oculto(oculto, alturaCamara - alturaPiso, umbral, histeresis);
+            bool nuevo;
+            if (float.IsNegativeInfinity(alturaCamara))
+            {
+                nuevo = false; // restaurar: todo visible
+            }
+            else if (soloArriba)
+            {
+                nuevo = CalculoOcultarAltura.OcultoPorDebajo(oculto, alturaCamara - alturaPiso, umbral, histeresis);
+            }
+            else
+            {
+                nuevo = CalculoOcultarAltura.Oculto(oculto, alturaCamara - alturaPiso, umbral, histeresis);
+            }
             if (nuevo == oculto)
             {
                 return;

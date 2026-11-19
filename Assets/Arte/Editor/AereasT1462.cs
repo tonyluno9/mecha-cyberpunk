@@ -88,6 +88,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float UmbralFondoT513 = 25f;
         public const float UmbralBrumaAltura = 14f;
         public const float UmbralSkyline = 100f;
+        public const float UmbralCiudadRespaldo = 25f;
         private const float AlturaFotoAerea = 25f;
 
         /// <summary>
@@ -154,6 +155,9 @@ namespace MechaCyberpunk.Arte.Editor
                 CrearGrupo(raiz.transform, "SkylineSK01", sky.GetComponentsInChildren<Renderer>(true), UmbralSkyline, log);
             }
 
+            // Piso de ciudad lejana: bajo todo, solo se ve con la cámara por encima de 25 m (a nivel de calle no existe).
+            CrearCiudadRespaldo(raiz.transform, log);
+
             // Niebla por altura.
             CicloDiaNoche ciclo = Object.FindFirstObjectByType<CicloDiaNoche>();
             if (ciclo == null)
@@ -178,7 +182,97 @@ namespace MechaCyberpunk.Arte.Editor
             Debug.Log("[Arte] " + log);
         }
 
-        private static void CrearGrupo(Transform padre, string nombre, Renderer[] renderers, float umbral, StringBuilder log)
+        /// <summary>
+        /// Para las aéreas: los 30 renderers visibles (sin oclusión) que más espacio ocupan en el tercio de arriba de la pantalla (lo que queda sobre el horizonte), con su ruta,
+        /// malla, material y distancia. Ayuda a nombrar las cajas o bloques que se ven en el cielo.
+        /// </summary>
+        private static void ListarArriba(StringBuilder log, Cam c)
+        {
+            OcultarPorAltura.AplicarATodos(c.Desde.y);
+            var go = new GameObject("T1462_CamArriba") { hideFlags = HideFlags.HideAndDontSave };
+            Camera cam = go.AddComponent<Camera>();
+            cam.aspect = AspectoFoto;
+            cam.fieldOfView = c.Campo;
+            cam.farClipPlane = LejosDiag;
+            cam.transform.position = c.Desde;
+            cam.transform.LookAt(c.Hacia);
+            Plane[] planos = GeometryUtility.CalculateFrustumPlanes(cam);
+            var lista = new List<(Renderer r, float area, float dist)>();
+            foreach (Renderer r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (r == null || !r.enabled || !(r is MeshRenderer || r is SkinnedMeshRenderer) || !GeometryUtility.TestPlanesAABB(planos, r.bounds))
+                {
+                    continue;
+                }
+                Bounds b = r.bounds;
+                Vector3 v = cam.WorldToViewportPoint(b.center);
+                if (v.z <= 0f || v.y < 0.62f)
+                {
+                    continue;
+                }
+                float area = PorcentajePantalla(cam, b);
+                if (area >= 0.3f)
+                {
+                    lista.Add((r, area, Vector3.Distance(c.Desde, b.center)));
+                }
+            }
+            log.AppendLine();
+            log.AppendLine("== ARRIBA en " + c.Nombre + " (centro del renderer en el tercio superior, % de bounds)");
+            foreach ((Renderer r, float area, float dist) in lista.OrderByDescending(x => x.area).Take(30))
+            {
+                MeshFilter mf = r.GetComponent<MeshFilter>();
+                string mats = string.Join("+", r.sharedMaterials.Where(m => m != null).Select(m => m.name + "{" + (m.shader != null ? m.shader.name : "?") + "}"));
+                log.AppendLine("  " + area.ToString("0.0", CultureInfo.InvariantCulture) + "% a " + dist.ToString("0") + " m | " + RutaDe(r.transform) + " | malla " + (mf != null && mf.sharedMesh != null ? mf.sharedMesh.name : "?") + " | " + mats + " | tamaño " + V(r.bounds.size) + " centro " + V(r.bounds.center));
+            }
+            Object.DestroyImmediate(go);
+        }
+
+        public const string RutaMaterialRespaldo = "Assets/Arte/Mundo/Look/T1462_CiudadRespaldo.mat";
+        public const string RutaVentanasLejanas = "Assets/Arte/Mundo/Zonas/T1363_VentanasLejanas.png";
+        private const float YCiudadRespaldo = -8f;
+        private const float LadoCiudadRespaldo = 4000f;
+        private const float MetrosPorMosaico = 96f;
+        private static readonly Vector3 CentroCiudadRespaldo = new Vector3(-60f, YCiudadRespaldo, -100f);
+
+        /// <summary>
+        /// Lo que queda fuera del mapa visto desde arriba era el azul liso del fondo. Un plano enorme con la textura de ventanas lejanas (T1363: pared oscura con ventanas
+        /// cálidas, frías y magenta) bajo todo (y -8: bajo el mar y el piso de respaldo) lo hace leer como ciudad continua a oscuras con luces. Plano con material, sin collider ni sombras.
+        /// </summary>
+        private static void CrearCiudadRespaldo(Transform padre, StringBuilder log)
+        {
+            Texture2D tex = AssetDatabase.LoadAssetAtPath<Texture2D>(RutaVentanasLejanas);
+            Shader sh = Shader.Find("Universal Render Pipeline/Unlit");
+            if (tex == null || sh == null)
+            {
+                log.AppendLine("FALTA la textura " + RutaVentanasLejanas + " o el shader URP Unlit: sin CiudadRespaldo");
+                return;
+            }
+            Material mat = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialRespaldo);
+            if (mat == null)
+            {
+                mat = new Material(sh);
+                AssetDatabase.CreateAsset(mat, RutaMaterialRespaldo);
+            }
+            mat.shader = sh;
+            mat.SetTexture("_BaseMap", tex);
+            mat.SetColor("_BaseColor", new Color(1.1f, 1.1f, 1.1f, 1f));
+            mat.SetTextureScale("_BaseMap", Vector2.one * (LadoCiudadRespaldo / MetrosPorMosaico));
+            EditorUtility.SetDirty(mat);
+            GameObject plano = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            plano.name = "CiudadRespaldo";
+            Object.DestroyImmediate(plano.GetComponent<Collider>());
+            plano.transform.SetParent(padre, false);
+            plano.transform.SetPositionAndRotation(CentroCiudadRespaldo, Quaternion.Euler(90f, 0f, 0f));
+            plano.transform.localScale = new Vector3(LadoCiudadRespaldo, LadoCiudadRespaldo, 1f);
+            var r = plano.GetComponent<MeshRenderer>();
+            r.sharedMaterial = mat;
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            r.receiveShadows = false;
+            CrearGrupo(padre, "CiudadRespaldo_Arriba", new Renderer[] { r }, UmbralCiudadRespaldo, log, true);
+            log.AppendLine("CiudadRespaldo: plano de " + LadoCiudadRespaldo.ToString("0") + " m a y " + YCiudadRespaldo.ToString("0") + ", mosaico de " + MetrosPorMosaico.ToString("0") + " m, visible sobre " + UmbralCiudadRespaldo.ToString("0") + " m");
+        }
+
+        private static void CrearGrupo(Transform padre, string nombre, Renderer[] renderers, float umbral, StringBuilder log, bool soloArriba = false)
         {
             var go = new GameObject(nombre);
             go.transform.SetParent(padre, false);
@@ -191,6 +285,7 @@ namespace MechaCyberpunk.Arte.Editor
                 lista.GetArrayElementAtIndex(i).objectReferenceValue = renderers[i];
             }
             so.FindProperty("umbral").floatValue = umbral;
+            so.FindProperty("soloArriba").boolValue = soloArriba;
             so.ApplyModifiedPropertiesWithoutUndo();
             log.AppendLine("Grupo " + nombre + ": " + renderers.Length + " renderers, se apagan sobre " + umbral.ToString("0") + " m");
         }
@@ -220,7 +315,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             OcultarPorAltura[] comps = Object.FindObjectsByType<OcultarPorAltura>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             log.AppendLine("componentes OcultarPorAltura: " + comps.Length + " (" + string.Join(", ", comps.Select(c => c.name + ":" + c.Cantidad + "@" + c.Umbral.ToString("0"))) + ")");
-            if (comps.Length < 3)
+            if (comps.Length < 4)
             {
                 fallas++;
                 log.AppendLine("FALLA: faltan componentes OcultarPorAltura (corre Aplicar)");
@@ -239,7 +334,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             Dictionary<Renderer, Datos> res = Analizar(log, out List<Cam> camaras, out Dictionary<string, List<Datos>> porCam, true);
-            string[] permitidos = { "Halos", "HazTorre", "Haz", "FaroLejano", "Cables", "Cable", "Bruma_" };
+            string[] permitidos = { "Halos", "HazTorre", "Haz", "FaroLejano", "Cables", "Cable", "Bruma_", "DerramesNeon", "Estelas", "T1464_Autopista", "PisoRespaldo", "Skyline", "CiudadRespaldo" };
             var camY = camaras.ToDictionary(c => c.Nombre, c => c.Desde.y);
             int sospechososC = 0;
             foreach (KeyValuePair<string, List<Datos>> kv in porCam)
@@ -279,6 +374,10 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 Object.DestroyImmediate(go);
+            }
+            foreach (Cam c in camaras.Where(x => x.Nombre.StartsWith("A1", StringComparison.Ordinal)))
+            {
+                ListarArriba(log, c);
             }
             OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
             log.AppendLine("sospechosos C/D no permitidos: " + sospechososC + "; sospechosos totales (incluye A/B legítimos): " + res.Count);
