@@ -35,3 +35,6 @@ Dirige Opus en la carpeta principal, rama `integ/look-19nov-A` (sale de origin/m
 - 09:00 Ronda 2 aplicada y fotos r2 (commit 7bfe41d). El tono ya se parece (azul-gris con bruma, sodio cálido, K15 cerca). PisoReal de T-1461
   había tocado Carro_Cabina/Carroceria, T535_AsfaltoAfueras y Cerro_Terreno: restaurados. Mal: CiudadRespaldo (rejilla de cuadros) en las aéreas,
   bloques negros en A13, faro de T-1463 gigante en K11/A11, K18 sin casas/rampa/túnel. Ronda 3 mandada a los 4.
+- 09:12 Ronda 3 aplicada y fotos r3 (d2287d5). Rejilla quitada; A18 con autopista curva, estelas y ramal al túnel; A11 se lee; K18 con casas
+  y tablero. Mal: peatones en pose T, palmera pegada a la cámara en K11, sigue frío/azul, K18 sin columna ni túnel, torre al centro en A18,
+  bloques negros en A13. Ronda 4 (última de ajuste) mandada.
