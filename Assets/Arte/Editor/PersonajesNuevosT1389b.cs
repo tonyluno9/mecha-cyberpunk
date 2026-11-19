@@ -253,7 +253,7 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Informe.AppendLine("  perro: faltan clips (Perro_Idle " + (idle != null) + ", Perro_Caminar " + (caminar != null) + ")");
             }
-            AnimatorController controlador = ConstructorControladorVisual.Construir(CreadorVisualPersonaje.RutaControlador(PerroVariante), clips, out _);
+            AnimatorController controlador = ConstructorControladorVisual.Construir(CreadorVisualTripo.CarpetaDe(PerroVariante) + "/" + PerroVariante + ".controller", clips, out _);
             GameObject modelo = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorVisualPersonaje.RutaPrefab(PerroVariante))
                 ?? CreadorVisualPersonaje.ArmarPrefab(PerroVariante, modelo, avatar, controlador);
