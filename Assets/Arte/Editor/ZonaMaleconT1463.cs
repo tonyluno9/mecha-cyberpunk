@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // Fila del paseo
         private const float PasoFila = 15f;
-        private const float LateralFila = 12.4f;
+        private const float LateralFila = 11.2f;
         private const float XFilaDesde = -300f;
         private const float XFilaHasta = 105f;
         private const float RadioCamara = 2.2f;
@@ -50,11 +50,11 @@ namespace MechaCyberpunk.Arte.Editor
         // Cámaras
         private const float AlturaOjos = 1.9f;
         private const float CampoK11 = 60f;
-        private const float CampoA11 = 65f;
+        private const float CampoA11 = 70f;
         private const float Aspecto = 16f / 9f;
-        private static readonly Vector3 CamaraA11 = new Vector3(-120f, 40f, -268f);
-        private static readonly Vector3 MiraA11 = new Vector3(-190f, 0f, -230f);
-        private static readonly Vector2 CentroIslote = new Vector2(-258f, -300f);
+        private static readonly Vector3 CamaraA11 = new Vector3(-125f, 28f, -255f);
+        private static readonly Vector3 MiraA11 = new Vector3(-165f, 0f, -238f);
+        private static readonly Vector2 CentroIslote = new Vector2(-200f, -285f);
         private const string NombreFaroA11 = "ML04_Faro_T1463";
         private static readonly string[] NombresVisuales =
         {
@@ -85,7 +85,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>K11: en el paseo, a 9.6 m del eje de la avenida (la fila de palmeras queda a la izquierda y el barandal más allá), a 1.9 m de alto, mirando recto al oeste: la avenida que sigue curva a la derecha en pantalla.</summary>
-        public static Vector3 CamaraK11 => PuntoLateral(-150f, 9.6f, AlturaOjos);
+        public static Vector3 CamaraK11 => PuntoLateral(-150f, 8f, AlturaOjos);
 
         public static Vector3 MiraK11 => new Vector3(CamaraK11.x - 80f, 0.2f, CamaraK11.z);
 
@@ -368,7 +368,7 @@ namespace MechaCyberpunk.Arte.Editor
             List<Vector3> borde = ColocarT1354Curva.BordeMar(-330f, 175f);
             float largo = ColocarT1354Curva.Longitud(borde);
             // Un farol queda 6 m delante de la cámara de K11 (como en la referencia); los demás cada 15 m. Las palmeras van a medio camino entre dos faroles.
-            float dRef = DistanciaEnX(borde, CamaraK11.x - 6f);
+            float dRef = DistanciaEnX(borde, CamaraK11.x - 9f);
             Vector3 camK = CamaraK11;
             Vector3 camA = new Vector3(CamaraA11.x, 0f, CamaraA11.z);
             List<(GameObject go, Vector3 cabeza, Vector3 haciaAvenida)> faroles = new List<(GameObject, Vector3, Vector3)>();
@@ -457,8 +457,8 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Transform grupo = new GameObject("FaroA11").transform;
             grupo.SetParent(mio, false);
-            const float escalaRoca = 2.2f;
-            const float escalaFaro = 1.7f;
+            const float escalaRoca = 1.2f;
+            const float escalaFaro = 0.6f;
             Bounds rb = ZonaMaleconT1393.Medida(roca);
             float alto = Mathf.Max(0.5f, rb.size.y) * escalaRoca;
             float fondo = ColocarT1354Curva.YFondoPlaya - 0.4f;
@@ -498,13 +498,13 @@ namespace MechaCyberpunk.Arte.Editor
                 m.SetTexture("_Ruido", KitS2c.TexMuro());
                 return m;
             });
-            Mesh malla = MallaCono(150f, 1.5f, 13f);
+            Mesh malla = MallaCono(70f, 0.6f, 6f);
             malla.name = "T1463_HazFaro";
             obra.Mallas.Add(malla);
             GameObject haz = new GameObject("Haz");
             haz.transform.SetParent(grupo, false);
             haz.transform.position = lampara;
-            haz.transform.rotation = Quaternion.LookRotation(new Vector3(1f, -0.01f, 0.18f));
+            haz.transform.rotation = Quaternion.LookRotation(new Vector3(1f, -0.01f, -0.45f));
             haz.AddComponent<MeshFilter>().sharedMesh = malla;
             MeshRenderer mr = haz.AddComponent<MeshRenderer>();
             mr.sharedMaterial = mat;
@@ -626,12 +626,12 @@ namespace MechaCyberpunk.Arte.Editor
             int n = 0, enK11 = 0;
             List<(float x, float lateral)> sitios = new List<(float, float)>();
             // Gente de K11: junto al barandal, cerca de la cámara, y unos en la banqueta de enfrente.
-            foreach (float dx in new[] { 4f, 8f, 12f, 16f, 22f, 30f, 40f, 55f })
+            int ip = 0; foreach (float dx in new[] { 3f, 6f, 10f, 13f, 17f, 21f, 26f, 31f, 37f, 44f, 52f, 61f, 72f, 85f })
             {
-                sitios.Add((cam.x - dx, LateralBarandalGente - (float)azar.NextDouble() * 0.5f));
+                sitios.Add((cam.x - dx, ip++ % 2 == 0 ? LateralBarandalGente - (float)azar.NextDouble() * 0.3f : 13.3f + (float)azar.NextDouble() * 0.3f));
             }
             int ib = 0;
-            foreach (float dx in new[] { 8f, 14f, 20f, 27f, 34f, 42f, 52f, 63f, 75f, 90f, 105f })
+            foreach (float dx in new[] { 6f, 10f, 14f, 18f, 23f, 28f, 34f, 41f, 49f, 58f, 68f, 80f, 95f, 110f })
             {
                 sitios.Add((cam.x - dx, LateralBanquetaGente - (ib++ % 2) * 1.3f));
             }
@@ -646,7 +646,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 pos = linea + mar * lateral;
                 pos.y = ColocarT1354Curva.YBanqueta;
                 if (Plano(pos, cam) < 1.5f || Mathf.Abs(Mathf.Abs(x) - 47f) < 3f) { continue; }
-                bool alBarandal = lateral > 0f;
+                bool alBarandal = lateral > 14f;
                 Vector3 mira = alBarandal ? mar : (azar.NextDouble() < 0.5 ? tang : -tang);
                 GameObject v = visuales[n % visuales.Count];
                 PonerPersona(v, grupo, pos, mira, (alBarandal ? "Barandal_" : "Banqueta_") + n + "_" + v.name, azar, false);
@@ -961,7 +961,7 @@ namespace MechaCyberpunk.Arte.Editor
                 if (EsDelFrente(b, out _) && EnA11(b) && Proyectar(CamaraA11, MiraA11, CampoA11, b.center, out float sx, out _)) { sxA.Add(sx); }
             }
             int aLaDerA = sxA.Count(s => s > 0f);
-            Informe.AppendLine("A11 fachadas del frente en cuadro: " + sxA.Count + ", " + aLaDerA + " a la derecha del centro.");
+            int escalerasA11 = raiz.GetComponentsInChildren<Transform>(false).Count(t => t.name.StartsWith("ML02_EscaleraPlaya", StringComparison.Ordinal) && (t.parent == null || !t.parent.name.StartsWith("ML02_EscaleraPlaya", StringComparison.Ordinal)) && EnCuadro(CamaraA11, MiraA11, CampoA11, ZonaMaleconT1393.CajaDe(t.gameObject).center)); Informe.AppendLine("A11 escaleras a la playa en cuadro: " + escalerasA11 + " (pedido 2 o más)."); Exigir(escalerasA11 >= 2, "A11: menos de 2 escaleras a la playa en cuadro."); Informe.AppendLine("A11 fachadas del frente en cuadro: " + sxA.Count + ", " + aLaDerA + " a la derecha del centro.");
             Exigir(sxA.Count >= 3 && aLaDerA >= sxA.Count * 0.6f, "A11: las fachadas no caen a la derecha.");
             foreach (float x in new[] { -110f, -170f, -230f, -290f })
             {
