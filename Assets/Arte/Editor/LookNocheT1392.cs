@@ -186,7 +186,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- Faroles de sodio
 
-        private static bool EsSodio(Light l)
+        internal static bool EsSodio(Light l)
         {
             Color c = l.color;
             bool naranja = c.r >= 0.85f && c.g >= 0.35f && c.g <= 0.8f && c.b <= 0.5f;
@@ -345,7 +345,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly Dictionary<Material, Color?> ColoresNeon = new Dictionary<Material, Color?>();
 
         /// <summary>El color del letrero: promedio de hue de los píxeles brillantes del mapa de emisión (se lee el archivo, no hace falta que sea legible) o, si no, _EmissionColor.</summary>
-        private static Color? ColorDeNeon(Material m)
+        internal static Color? ColorDeNeon(Material m)
         {
             if (m == null || !m.HasProperty("_EmissionColor") || m.name.Contains("Ventana"))
             {
@@ -405,7 +405,7 @@ namespace MechaCyberpunk.Arte.Editor
             return resultado;
         }
 
-        private static bool Excluido(Renderer r)
+        internal static bool Excluido(Renderer r)
         {
             for (Transform t = r.transform; t != null; t = t.parent)
             {
@@ -522,7 +522,7 @@ namespace MechaCyberpunk.Arte.Editor
             return puestas;
         }
 
-        private static float DistanciaACalle(List<Vector3> pts, Vector3 p)
+        internal static float DistanciaACalle(List<Vector3> pts, Vector3 p)
         {
             float mejor = float.MaxValue;
             foreach (Vector3 q in pts)
