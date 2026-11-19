@@ -1216,7 +1216,6 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
-                }
                 ventanas += t.name == "Ventana" ? 1 : 0;
                 Vector3 dir = t.name == "Ventana" ? -t.forward : t.forward;
                 RaycastHit h;
