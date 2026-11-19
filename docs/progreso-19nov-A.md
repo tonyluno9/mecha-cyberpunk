@@ -38,3 +38,11 @@ Dirige Opus en la carpeta principal, rama `integ/look-19nov-A` (sale de origin/m
 - 09:12 Ronda 3 aplicada y fotos r3 (d2287d5). Rejilla quitada; A18 con autopista curva, estelas y ramal al túnel; A11 se lee; K18 con casas
   y tablero. Mal: peatones en pose T, palmera pegada a la cámara en K11, sigue frío/azul, K18 sin columna ni túnel, torre al centro en A18,
   bloques negros en A13. Ronda 4 (última de ajuste) mandada.
+- 09:15-09:45 Rondas 4 y 5: poses naturales, A18 con autopista curva, estelas y bocas iluminadas; K18, K12 (forma blanca) y A13 (paneles) no cedieron.
+- 09:45 EditMode Mundo 747/755 -> pruebas de valores viejos actualizadas, bugs (tambos, encimados, U1, greybox) corregidos -> 755/755.
+  ArreglosSesionA19nov.QuitarEncimadosNuevos quita encimados contra objetos fuera del prefab. OJO: correr AereasT1462.Aplicar DESPUÉS de
+  ZonaMaleconT1463.Aplicar (si no, vuelve el panel Tramo_3 sobre el mar de K11).
+- Pull de main: solo notas de B (docs/para-sesion-A-19nov.md). Fotos finales y builds Demo y Juego (Success, 0 errores). Reporte docs/reporte-19nov-A.md.
+
+## Qué sigue
+- Pendientes en docs/reporte-19nov-A.md (K18 por construir, calidez de K11/K12, lo no identificado de K12/A13/A18, FPS sin medir).
