@@ -32,3 +32,6 @@ Dirige Opus en la carpeta principal, rama `integ/look-19nov-A` (sale de origin/m
 - Fotos r1 (Logs/vista19b-r1): neón en fachadas, gente en el barandal, carros con luces, skyline con torres y haz del faro. Mal: negros aplastados,
   sodio quemado, halos como discos, sin niebla, paseo de K11 negro sin fila de palmeras, A11/K18/A18 mal encuadradas, isla flotante en A18.
   Correcciones mandadas a los 4 subagentes. EditMode NieblaPorAltura + PoseQuieta: 10/10.
+- 09:00 Ronda 2 aplicada y fotos r2 (commit 7bfe41d). El tono ya se parece (azul-gris con bruma, sodio cálido, K15 cerca). PisoReal de T-1461
+  había tocado Carro_Cabina/Carroceria, T535_AsfaltoAfueras y Cerro_Terreno: restaurados. Mal: CiudadRespaldo (rejilla de cuadros) en las aéreas,
+  bloques negros en A13, faro de T-1463 gigante en K11/A11, K18 sin casas/rampa/túnel. Ronda 3 mandada a los 4.
